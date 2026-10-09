@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
-  padding: 0 0 var(--space-lg); /* the hero sits flush with the top of the nav */
+  padding: 0 0 var(--space-lg);
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -38,13 +38,10 @@
   font-weight: var(--weight-medium);
 }
 
-/* Sits in the info-card row, so it matches the cards' height instead of the
-   button's own intrinsic one. */
 .home-tab__folder-btn {
   align-self: stretch;
 }
 
-/* Two-column layout that collapses to one column when there isn't room for two. */
 .home-tab__columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));

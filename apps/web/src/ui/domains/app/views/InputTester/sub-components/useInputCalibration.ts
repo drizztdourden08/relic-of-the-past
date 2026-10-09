@@ -1,12 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * State management hook for the InputCalibration page.
- *
- * Every controller is SDL3-claimed now (the browser Gamepad
- * API path has been removed), so connect/disconnect events for the log come
- * from the same SDL3 channels as everything else.
- */
-
 import { useState, useEffect, useMemo, useRef, useReducer } from 'react';
 import { controllerInputStore } from '../../../../../../lib/input/controller-input-store';
 import type { ControllerInputState, DeviceStickCalibration } from '../../../../../../lib/input/controller-input-store';
@@ -15,12 +7,8 @@ import type { HidControllerMap } from './HidCalibrationWizard';
 import type { TriggerCalibrationData } from './TriggerCalibrationWizard';
 import * as controllersStore from '@app/lib/input/controllers-store';
 import { useControllerDevices } from '../../../../../../lib/input/useControllerDevices';
-
-interface EventEntry {
-  time: number;
-  type: 'connect' | 'disconnect';
-  id: string;
-}
+import { EVENT_LOG_KEEP } from './useInputCalibration.constants';
+import type { EventEntry } from './useInputCalibration.type';
 
 const useInputCalibration = () => {
   const [events, setEvents] = useState<EventEntry[]>([]);
@@ -39,10 +27,6 @@ const useInputCalibration = () => {
 
   const { entries, groups: controllerGroups, isRescanPending, handleRescan, addMapping } = useControllerDevices();
 
-  // The definitive "is a controller connected" answer: the same SDL3 snapshot
-  // the cards render from, status 'ready'. controllerInputStore's own tally only
-  // counts devices that have sent at least one input report, so an untouched
-  // pad already visible as a card would read as disconnected there.
   const readyDeviceKeys = useMemo(
     () => entries.filter((entry) => entry.status === 'ready').map((entry) => entry.deviceKey),
     [entries],
@@ -54,7 +38,6 @@ const useInputCalibration = () => {
       .catch((e: unknown) => console.warn('[input] failed to load stick calibration', e));
   }, []);
 
-  // Subscribe to InputManager for all input state
   useEffect(() => {
     const inputMgr = getInputManager();
     const unsub = inputMgr.onInputState((hidStates, _pressedKeys) => {
@@ -64,14 +47,13 @@ const useInputCalibration = () => {
     return unsub;
   }, [readyDeviceKeys]);
 
-  // Direct connect/disconnect subscriptions for immediate UI updates and the event log.
   useEffect(() => {
     const unsubConnect = window.api.onControllerAdded((info) => {
       forceUpdate();
-      setEvents(prev => [...prev.slice(-49), { time: Date.now(), type: 'connect', id: info.name || info.deviceKey }]);
+      setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'connect', id: info.name || info.deviceKey }]);
     });
     const unsubRemoved = window.api.onControllerRemoved((deviceKey) => {
-      setEvents(prev => [...prev.slice(-49), { time: Date.now(), type: 'disconnect', id: deviceKey }]);
+      setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'disconnect', id: deviceKey }]);
     });
     const unsubDisconnect = controllerInputStore.onDisconnect(() => {
       forceUpdate();
@@ -83,7 +65,6 @@ const useInputCalibration = () => {
     };
   }, []);
 
-  // HID diagnostics (lightweight listener, no input polling)
   useEffect(() => {
     const unsubDiag = controllerInputStore.onDiag(() => {
       setControllerDiag([...controllerInputStore.getDiagLog()]);
@@ -110,7 +91,6 @@ const useInputCalibration = () => {
     await controllersStore.writeTriggerCalibration(deviceKey, axisIndex, cal);
   };
 
-  // Auto-scroll log
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [events, controllerDiag]);

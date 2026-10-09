@@ -1,54 +1,31 @@
-/* @layer renderer-components @kind data */
-/**
- * Shows a detected input device (gamepad or keyboard).
- * Two-column layout: left = controller icon (acts as status light + click to
- * assign), right = label + capabilities. An unavailable gamepad shows the
- * same explain+remedy notice as the Input Calibration page, and can't be
- * dragged or clicked to assign. SDL3 never opened it, so there's no preset
- * to bind against yet.
- */
-
+/* @layer renderer-components @kind component */
+import { useCallback } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
 import { ControllerCapabilityBadges } from '../../../../compounds/ControllerCapabilityBadges';
 import { UnavailableControllerNotice } from '../../../../compounds/UnavailableControllerNotice';
-import { publicAsset } from '@app/lib/assets/public-asset';
 import { setDeviceDragData } from './device-drag-data';
+import { DEVICE_FAMILY_ICON, SDL_TYPE_ICON } from './controls.constants';
 import type { DeviceCardProps } from './DeviceCard.type';
 import './DeviceCard.css';
-
-/** Map controller family → silhouette icon path */
-const FAMILY_ICON: Record<string, string> = {
-  xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
-  playstation: publicAsset('buttons/generic/generic_joystick.svg'),
-  nintendo: publicAsset('buttons/switch/controller_switch_pro.svg'),
-  '8bitdo': publicAsset('buttons/generic/generic_joystick.svg'),
-  keyboard: publicAsset('buttons/keyboard/keyboard.svg'),
-  generic: publicAsset('buttons/generic/generic_joystick.svg'),
-};
-
-/** Map specific SDL type → more accurate icon than the family default */
-const SDL_TYPE_ICON: Record<string, string> = {
-  gamecube: publicAsset('buttons/gc/controller_gamecube.svg'),
-};
 
 const DeviceCard = (props: DeviceCardProps) => {
   const { id, displayName, deviceFamily, sdlType, vendorId, productId, status, busType, hasRumble, hasGyro, onAssign, onAddMapping } = props;
   const isUnavailable = status === 'unavailable';
 
-  const handleDragStart = (e: React.DragEvent) => {
+  const handleDragStart = useCallback((e: React.DragEvent) => {
     if (isUnavailable) { e.preventDefault(); return; }
     setDeviceDragData(e, { id, displayName, sdlType, vendorId, productId });
-  };
+  }, [isUnavailable, id, displayName, sdlType, vendorId, productId]);
 
-  const handleAssign = () => {
+  const handleAssign = useCallback(() => {
     if (isUnavailable) return;
     onAssign?.({ sdlType, displayName, vendorId, productId });
-  };
+  }, [isUnavailable, onAssign, sdlType, displayName, vendorId, productId]);
 
-  const iconSrc = (sdlType && SDL_TYPE_ICON[sdlType]) ?? FAMILY_ICON[deviceFamily] ?? FAMILY_ICON.generic;
+  const iconSrc = (sdlType && SDL_TYPE_ICON[sdlType]) ?? DEVICE_FAMILY_ICON[deviceFamily] ?? DEVICE_FAMILY_ICON.generic;
   const statusClass = isUnavailable ? 'device-card__icon-btn--disconnected' : 'device-card__icon-btn--active';
   const statusTitle = isUnavailable ? 'Unavailable' : 'Click to assign';
 

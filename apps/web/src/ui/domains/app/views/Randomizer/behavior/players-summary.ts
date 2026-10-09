@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind logic */
-/** The room's players in one line: how many are online, how many the room has not said, and who has finished. */
 import type { NetworkPlayer } from '@app/lib/game/randomizer-client';
 
 const playersSummaryOf = (players: readonly NetworkPlayer[]): string => {

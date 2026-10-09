@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Same card as a settings page, so switching between a tab and its search feels like one surface. */
 .hub-search {
   flex: 1;
   min-height: 0;
@@ -13,7 +12,6 @@
   overflow: hidden;
 }
 
-/* Nothing typed yet: the empty state fills the card, centred. */
 .hub-search--idle {
   justify-content: center;
 }

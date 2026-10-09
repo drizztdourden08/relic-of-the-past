@@ -1,17 +1,9 @@
 /* @layer renderer-components @kind hook */
-/**
- * Gate in front of button capture: samples the idle stream briefly and, if
- * any bytes are still moving with nothing touched, opens a dialog listing
- * only those bytes with their live movement, before letting the user
- * proceed. See flaky-byte-detect.ts for the sampling itself.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type React from 'react';
 import { sampleFlakyBytes } from '../flaky-byte-detect';
 import type { FlakyByte } from '../flaky-byte-detect';
-
-/** How often the dialog's live movement readout refreshes while it's open. */
-const LIVE_REFRESH_MS = 200;
+import { LIVE_REFRESH_MS } from './useFlakyByteWarning.constants';
 
 const useFlakyByteWarning = (
   latestBytesRef: React.MutableRefObject<Uint8Array>,
@@ -24,9 +16,6 @@ const useFlakyByteWarning = (
   const proceedRef = useRef<() => void>(() => {});
   const livePeaksRef = useRef<Record<number, { min: number; max: number }>>({});
 
-  // Refreshes each flagged byte's own range while the dialog stays open, so
-  // the user can see whether it is still misbehaving right now, not just at
-  // the instant the check ran.
   useEffect(() => {
     if (!open) return;
     const interval = setInterval(() => {
@@ -43,8 +32,6 @@ const useFlakyByteWarning = (
     return () => clearInterval(interval);
   }, [open, flakyBytes, latestBytesRef]);
 
-  /** Runs the flaky-byte check; calls `onProceed` immediately when nothing is
-   *  flagged, or opens the dialog and defers `onProceed` to the user's choice. */
   const checkBeforeStart = useCallback((onProceed: () => void) => {
     sampleFlakyBytes(latestBytesRef, excludedRef.current).then((found) => {
       if (found.length === 0) { onProceed(); return; }

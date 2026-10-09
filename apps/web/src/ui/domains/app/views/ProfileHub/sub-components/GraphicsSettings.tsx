@@ -1,50 +1,29 @@
 /* @layer renderer-components @kind component */
-/** How the picture is drawn: renderer, quality, post-processing effects, and player appearance. */
 import { type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
+import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
-import { RENDERING_SECTION, ENHANCEMENTS_SECTION } from './SettingsView.constants';
-import { APPEARANCE_SECTION } from './graphics-settings-sections';
+import { GRAPHICS_SECTIONS } from './graphics-settings-sections.constants';
+import { isGraphicsSettingDisabled } from './graphics-settings-disabled';
 import { PlayerSpriteSelector } from './PlayerSpriteSelector';
-
-interface GraphicsSettingsProps {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-}
-
-const SECTIONS: Section[] = [RENDERING_SECTION, ENHANCEMENTS_SECTION, APPEARANCE_SECTION];
-
-// Pixel Perfect promises whole, identical source pixels, and bilinear interpolation would break that
-// upstream of everything else, so the core is handed LinearFiltering off and the control follows suit.
-//
-// enhancedMode7 and noSpriteLimits aren't registered FeatureDefs yet, so the DisabledOverlay lock
-// (driven by feature-registry.ts) can't reach them the way it does for e.g. extendedRendering, so lock them
-// by hand here instead, matching how buildPpuFlags forces both off under Vanilla Safe. newRenderer is
-// deliberately left enabled: its own description ("visually identical but significantly faster") makes it
-// a pure engine swap, not a divergence from stock rendering.
-const isDisabled = (key: string, settings: GameSettings): boolean => {
-  if (key === 'linearFiltering') return settings.pixelPerfect;
-  if (key === 'enhancedMode7' || key === 'noSpriteLimits') return !!settings.vanillaSafe;
-  return false;
-};
+import type { SettingsTabProps } from './settings-controls.type';
 
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   if (key !== 'linkSprite') return null;
   return <PlayerSpriteSelector value={settings.linkSprite} onChange={(v) => onChange({ linkSprite: v })} />;
 };
 
-const GraphicsSettings = (props: GraphicsSettingsProps) => {
+const GraphicsSettings = (props: SettingsTabProps) => {
   const { settings, onChange } = props;
   return (
     <SettingsLayout
-      sections={SECTIONS}
+      sections={GRAPHICS_SECTIONS}
       settings={settings}
       defaults={DEFAULT_SETTINGS}
       onChange={onChange}
       renderControl={renderControl}
-      isDisabled={isDisabled}
+      isDisabled={isGraphicsSettingDisabled}
       onOpenVanillaSafeSettings={openVanillaSafeSettings}
     />
   );

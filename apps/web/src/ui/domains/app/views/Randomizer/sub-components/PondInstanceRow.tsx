@@ -1,42 +1,14 @@
 /* @layer renderer-components @kind component */
-/**
- * One pond's tab: the copy control that fills it from another pond, the
- * setting held to the wallet (pond-wallet-top.ts), the model derived from it,
- * and the clamps the hold applied said under the row in the blocking colour.
- * One component per pond so each derivation gets its own memo instead of a
- * loop of hooks, and so switching tabs leaves the copy control empty again.
- */
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Text } from '@ds/primitives';
 import { PondImportControl } from '@domains/app/compounds/PondImportControl';
 import { WishingPondRow } from '@domains/app/compounds/WishingPondRow';
 import { holdPondToWallet } from '@shared/randomizer/world/pond/pond-wallet-top';
 import { NO_POND_DEMANDS } from '@shared/randomizer/world/pond/pond-demand-seed';
 import { pondRowModelOf, settingOfState } from '../../../../../../hooks/randomizer/pond-row-model';
-import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
-import type { PondCeilings } from '@shared/randomizer/world/pond/pond-ceilings';
-import type { PondImportSource } from '@domains/app/compounds/PondImportControl';
-import type { PondInstance } from '@shared/randomizer/world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { PondRowState } from '@domains/app/compounds/WishingPondRow';
-
-interface PondInstanceRowProps {
-  pond: PondInstance;
-  setting: PondSetting;
-  /** The most this profile's wallet, bag and quiver can hold. */
-  ceilings: PondCeilings;
-  /** What this seed rolled for the pond's rungs; none reads every throw as its price. */
-  demands?: PondDemandView;
-  /** The ponds this one may be filled from; none hides the copy control. */
-  sources?: readonly PondImportSource[];
-  readOnly?: boolean;
-  /** Every control drawn as its value in a tag: the read-only Options page. */
-  readout?: boolean;
-  onChange?: (next: PondSetting) => void;
-  onImport?: (source: string) => void;
-}
-
-const NO_SOURCES: readonly PondImportSource[] = [];
+import { NO_SOURCES } from './PondInstanceRow.constants';
+import type { PondInstanceRowProps } from './PondInstanceRow.type';
 
 const PondInstanceRow = (props: PondInstanceRowProps) => {
   const {
@@ -50,9 +22,12 @@ const PondInstanceRow = (props: PondInstanceRowProps) => {
     () => pondRowModelOf(held.setting, ceilings, pond, demands), [held, ceilings, pond, demands],
   );
 
-  const handleChange = onChange === undefined
-    ? undefined
-    : (next: PondRowState) => onChange(holdPondToWallet(settingOfState(next), walletTop, pond).setting);
+  const handleHeldChange = useCallback(
+    (next: PondRowState) => onChange?.(holdPondToWallet(settingOfState(next), walletTop, pond).setting),
+    [onChange, walletTop, pond],
+  );
+  const handleChange = onChange === undefined ? undefined : handleHeldChange;
+  const handleImport = useCallback(() => onImport?.(source), [onImport, source]);
 
   return (
     <>
@@ -62,7 +37,7 @@ const PondInstanceRow = (props: PondInstanceRowProps) => {
           value={source}
           disabled={readOnly}
           onValueChange={setSource}
-          onImport={() => onImport(source)}
+          onImport={handleImport}
         />
       )}
       <WishingPondRow model={model} readOnly={readOnly} readout={readout} onChange={handleChange} />

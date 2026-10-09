@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
-/** A player's checks done out of the slot's total, with a small bar; a dash while unknown. */
 import { Box, ProgressBar, Text } from '@ds/primitives';
 import { DASH } from '../behavior/network-format';
-
-interface ChecksCellProps {
-  checked: number | null;
-  total: number | null;
-}
+import type { ChecksCellProps } from './ChecksCell.type';
 
 const ChecksCell = ({ checked, total }: ChecksCellProps) => {
   if (checked === null || total === null) {

@@ -1,49 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * Button and axis mapping grid for the HID Calibration Wizard.
- */
-import type { CSSProperties } from 'react';
+import { useCallback } from 'react';
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
 import { Button } from '../../../../../../../design-system/primitives/Button';
-import type { AxisSubStep, CaptureState, InputItem } from '../hid-calibration.type';
 import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
-
-const MANUAL_HINT: CSSProperties = { fontSize: 11, color: 'var(--c-text-dim)' };
-
-interface ButtonMappingProps {
-  items: InputItem[];
-  buttonItems: InputItem[];
-  buttonCapturedCount: number;
-  activeIndex: number;
-  inputPhaseActive: boolean;
-  autoAdvance: boolean;
-  captureState: CaptureState;
-  axisSubStep: AxisSubStep;
-  instruction: string;
-  prereqsDone: boolean;
-  onStartButtons: () => void;
-  onSkip: () => void;
-  onGoBack: () => void;
-  onClickItem: (idx: number) => void;
-  onClearItem: (idx: number) => void;
-  setAutoAdvanceWrapped: (v: boolean) => void;
-  setInputPhaseActiveWrapped: (v: boolean) => void;
-  /** Overrides the hardcoded "4. Button & Axis Mapping" heading, for a host
-   *  reusing this grid at a different step number or for a different ask
-   *  (e.g. the diagnostics wizard's positional-capture step). */
-  stepTitle?: string;
-  /** Renders every item, including stick/trigger axes, instead of filtering
-   *  them out for the separate StickCards/TriggerCards UI byte-capture uses.
-   *  The positional-capture step has no such separate UI and asks about
-   *  sticks/triggers in this same one-by-one list. */
-  includeStickTriggerIds?: boolean;
-  /** Hides the "[1/2 positive]" / "[2/2 negative]" sub-step hint for axis
-   *  items. Byte-capture's axis capture is two-part (positive then
-   *  negative extreme); positional-capture asks about an axis in one shot,
-   *  so that hint would be misleading there. */
-  showAxisSubStep?: boolean;
-}
+import { ITEM_STYLE, MANUAL_HINT } from './ButtonMapping.constants';
+import type { ButtonMappingProps } from './ButtonMapping.type';
 
 const ButtonMapping = (props: ButtonMappingProps) => {
   const {
@@ -54,6 +16,8 @@ const ButtonMapping = (props: ButtonMappingProps) => {
     stepTitle = `4. Button & Axis Mapping (${buttonCapturedCount}/${buttonItems.length})`,
     includeStickTriggerIds = false, showAxisSubStep = true,
   } = props;
+  const stopAuto = useCallback(() => setAutoAdvanceWrapped(false), [setAutoAdvanceWrapped]);
+  const pauseInput = useCallback(() => setInputPhaseActiveWrapped(false), [setInputPhaseActiveWrapped]);
 
   if (!prereqsDone) return null;
 
@@ -83,7 +47,7 @@ const ButtonMapping = (props: ButtonMappingProps) => {
           return (
             <Box key={item.id}
               className={`hid-cal__input-item hid-cal__input-item--${item.status}${isActive ? ' hid-cal__input-item--focus' : ''}`}
-              style={{ cursor: prereqsDone ? 'pointer' : 'default' }}>
+              style={ITEM_STYLE}>
               <Text className="hid-cal__input-icon" onClick={() => prereqsDone && onClickItem(i)}>{icon}</Text>
               <Text className="hid-cal__input-name" onClick={() => prereqsDone && onClickItem(i)}>{item.label}{item.kind === 'axis' ? ' 🕹️' : ''}</Text>
               {item.result && <Text className="hid-cal__input-result">{item.result}</Text>}
@@ -105,15 +69,15 @@ const ButtonMapping = (props: ButtonMappingProps) => {
           <>
             <Button variant="tertiary" size="sm" onClick={onGoBack} disabled={activeIndex <= 0}>← Back</Button>
             <Button variant="tertiary" size="sm" onClick={onSkip}>Skip</Button>
-            <Button variant="tertiary" size="sm" onClick={() => setAutoAdvanceWrapped(false)}>Stop Auto</Button>
-            <Button variant="tertiary" size="sm" onClick={() => setInputPhaseActiveWrapped(false)}>Pause</Button>
+            <Button variant="tertiary" size="sm" onClick={stopAuto}>Stop Auto</Button>
+            <Button variant="tertiary" size="sm" onClick={pauseInput}>Pause</Button>
           </>
         ) : (
           <>
             <Text style={MANUAL_HINT}>
               Click a button above to detect, or click a byte in the grid to assign manually.
             </Text>
-            <Button variant="tertiary" size="sm" onClick={() => setInputPhaseActiveWrapped(false)}>Deselect</Button>
+            <Button variant="tertiary" size="sm" onClick={pauseInput}>Deselect</Button>
           </>
         )}
       </Box>

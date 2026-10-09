@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * One card with a port list for a multi-port adapter. Every port shows, occupied or not: there is
- * no reliable way yet to tell an empty port from a resting controller.
- */
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
@@ -10,15 +6,9 @@ import { ControllerPortRow } from '../../../compounds/ControllerPortRow';
 import { ControllerStatusBar } from '../../../compounds/ControllerStatusBar';
 import { UnavailableControllerNotice } from '../../../compounds/UnavailableControllerNotice';
 import { controllerCardInfo } from '../../../../../../lib/input/controller-card-info';
-import type { ControllerDeviceGroup } from '../../../../../../lib/input/controller-device-groups';
 import { CONTROLLER_ICON_MAP } from './input-cal-visuals';
 import type { ControllerInputState } from '../../../../../../lib/input/controller-input-store';
-
-interface AdapterControllerCardProps {
-  group: ControllerDeviceGroup;
-  controllerStates: Map<string, ControllerInputState>;
-  onAddMapping: (mapping: string) => Promise<boolean>;
-}
+import type { AdapterControllerCardProps } from './ControllerDeviceList.type';
 
 const liveHintFor = (state: ControllerInputState | undefined): string | undefined => {
   if (!state) return undefined;

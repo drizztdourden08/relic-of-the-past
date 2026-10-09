@@ -1,21 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * The spoiler tab: the SAME checks tracker the Checks widget renders, given
- * the room to be read properly. It shows every check holding what this seed
- * actually put there, counted as taken / available / left, and adds the one
- * grouping axis only a run can offer: the sweep sphere.
- *
- * Locations the placement carries but this app's check dataset does not are
- * reported instead of dropped: a spoiler that omits rows is worse
- * than one that says how many it could not place.
- */
 import { useMemo } from 'react';
 import { Box, Text } from '@ds/primitives';
 import { ChecksTracker } from '@domains/app/compounds/ChecksTracker';
-import { GROUP_DIMENSIONS, SPHERE_DIMENSION } from '@shared/game/logic/queries/check-grouping';
 import { useTrackerData } from '../../../../../../hooks/useTrackerData';
-
-const SPOILER_DIMENSIONS = [SPHERE_DIMENSION, ...GROUP_DIMENSIONS];
+import { SPOILER_DIMENSIONS } from './SpoilerPanel.constants';
 
 const countOf = (count: number, one: string, many: string): string => `${count} ${count === 1 ? one : many}`;
 
@@ -25,7 +13,7 @@ const SpoilerPanel = () => {
     snapshot, stats, groupTree, run, placement, placementView,
   } = useTrackerData({ initialGrouping: ['sphere'], initialViewMode: 'detailed' });
 
-  const notice = useMemo(() => {
+  const unplacedNotice = useMemo(() => {
     const { unmatchedLocations, unmatchedItems } = placementView;
     if (unmatchedLocations.length === 0 && unmatchedItems.length === 0) return null;
     const parts: string[] = [];
@@ -71,7 +59,7 @@ const SpoilerPanel = () => {
       statuses={snapshot}
       run={run}
       dimensions={SPOILER_DIMENSIONS}
-      notice={notice}
+      notice={unplacedNotice}
     />
   );
 };

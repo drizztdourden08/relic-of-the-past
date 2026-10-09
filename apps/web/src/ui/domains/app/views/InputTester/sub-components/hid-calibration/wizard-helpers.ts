@@ -1,67 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * Helper utilities for the HID Calibration Wizard rendering and state.
- */
-import type { MutableRefObject } from 'react';
-import type { AxisSubStep, ByteStatus, CaptureState, GyroState, InputItem } from './hid-calibration.type';
-import { AXIS_LABELS } from './hid-calibration.constants';
-
-// ── Device Identity ─────────────────────────────────────────────────────────
-
-/** Parses a "vid:pid" key (hex) into deviceInfoRef's numeric fields. A no-op
- *  when `key` is undefined, so a caller can pass an optional fallback without
- *  its own guard. */
-const applyVidPid = (deviceInfoRef: MutableRefObject<{ vendorId: number; productId: number }>, key: string | undefined): void => {
-  if (!key) return;
-  const [v, p] = key.split(':');
-  deviceInfoRef.current.vendorId = parseInt(v, 16);
-  deviceInfoRef.current.productId = parseInt(p, 16);
-};
-
-// ── Byte Status Computation ─────────────────────────────────────────────────
-
-const computeByteStatuses = (len: number, excluded: Set<number>, capturedStickBytes: Set<number>, capturedTriggerBytes: Set<number>, items: InputItem[]): ByteStatus[] => {
-  const statuses: ByteStatus[] = new Array(len).fill('unknown');
-  for (const i of excluded) {
-    if (i < len) statuses[i] = 'excluded';
-  }
-  for (const i of capturedStickBytes) {
-    if (i < len) statuses[i] = 'stick';
-  }
-  for (const i of capturedTriggerBytes) {
-    if (i < len) statuses[i] = 'trigger';
-  }
-  for (const item of items) {
-    if (item.mapping && item.status === 'captured') {
-      const bi = item.mapping.byteIndex;
-      if (bi < len) statuses[bi] = 'button';
-    }
-  }
-  return statuses;
-};
-
-// ── Instruction Text ────────────────────────────────────────────────────────
-
-const getInstructionText = (inputPhaseActive: boolean, items: InputItem[], activeIndex: number, captureState: CaptureState, axisSubStep: AxisSubStep): string => {
-  if (!inputPhaseActive) return '';
-  const item = items[activeIndex];
-  if (!item) return '';
-  if (item.status === 'captured') return `"${item.label}" captured. Click another button or click a byte to reassign.`;
-  if (captureState === 'confirming-press') return `Detecting "${item.label}"...`;
-  if (captureState === 'waiting-release') return `Got it! Release "${item.label}"...`;
-  if (item.kind === 'button') return `Press "${item.label}" on controller, or click a byte in the grid to assign manually.`;
-  const info = AXIS_LABELS[item.id];
-  if (axisSubStep === 'pos') return info?.pos ?? 'Push axis to positive extreme';
-  return info?.neg ?? 'Push axis to negative extreme';
-};
-
-// ── Byte Color ──────────────────────────────────────────────────────────────
-
-interface ByteColorResult {
-  bg: string;
-  border: string;
-  text: string;
-}
+import type { ByteColorResult, ByteStatus, GyroState } from './hid-calibration.type';
 
 const getByteColor = (idx: number, byteStatuses: ByteStatus[], gyroState: GyroState, gyroChangedBytes: Set<number>): ByteColorResult => {
   if (gyroState === 'recording' && gyroChangedBytes.has(idx)) {
@@ -77,5 +15,4 @@ const getByteColor = (idx: number, byteStatuses: ByteStatus[], gyroState: GyroSt
   }
 };
 
-export { applyVidPid, computeByteStatuses, getInstructionText, getByteColor };
-export type { ByteColorResult };
+export { getByteColor };

@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-/** ControlsSettings right column: detected input devices (draggable / clickable to assign).
- *  Gamepads render from the SDL3 controller snapshot (ready/unavailable, adapter
- *  grouping); the keyboard entry still comes from InputManager's device list. */
+import { useCallback } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
@@ -9,12 +7,17 @@ import { RescanButton } from '../../../../compounds/RescanButton';
 import { controllerCardInfo } from '../../../../../../../lib/input/controller-card-info';
 import { DeviceCard } from './DeviceCard';
 import { AdapterDeviceCard } from './AdapterDeviceCard';
-import type { useControlsSettings } from '../useControlsSettings';
+import type { DeviceAssignInfo } from './DeviceCard.type';
+import type { CtrlProps } from './controls.type';
 
-type Ctrl = ReturnType<typeof useControlsSettings>;
-
-const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
+const ControlsDevices = ({ ctrl }: CtrlProps) => {
   const keyboardDevices = ctrl.filteredDevices.filter((d) => d.type === 'keyboard');
+  const { setDevicesCollapsed, devicesCollapsed, setConfirmPreset } = ctrl;
+  const toggleCollapsed = useCallback(() => setDevicesCollapsed(!devicesCollapsed), [setDevicesCollapsed, devicesCollapsed]);
+  const handleAssign = useCallback((d: DeviceAssignInfo) => {
+    if (!d.sdlType) return;
+    setConfirmPreset({ sdlType: d.sdlType, deviceName: d.displayName, vid: d.vendorId ?? '', pid: d.productId ?? '' });
+  }, [setConfirmPreset]);
 
   return (
     <Box className={`controls-settings__devices-column ${ctrl.devicesCollapsed ? 'controls-settings__devices-column--collapsed' : ''}`}>
@@ -22,7 +25,7 @@ const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
         <Button
           variant="bare"
           className="controls-settings__col-toggle"
-          onClick={() => ctrl.setDevicesCollapsed(!ctrl.devicesCollapsed)}
+          onClick={toggleCollapsed}
           title={ctrl.devicesCollapsed ? 'Expand' : 'Collapse'}
         >
           {ctrl.devicesCollapsed ? '◀' : '▶'}
@@ -41,10 +44,7 @@ const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
             vendorId={null}
             productId={null}
             status="ready"
-            onAssign={(d) => {
-              if (!d.sdlType) return;
-              ctrl.setConfirmPreset({ sdlType: d.sdlType, deviceName: d.displayName, vid: '', pid: '' });
-            }}
+            onAssign={handleAssign}
           />
         ))}
 
@@ -54,10 +54,7 @@ const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
               <AdapterDeviceCard
                 key={`${group.vendorId}:${group.productId}`}
                 group={group}
-                onAssign={(d) => {
-                  if (!d.sdlType) return;
-                  ctrl.setConfirmPreset({ sdlType: d.sdlType, deviceName: d.displayName, vid: d.vendorId ?? '', pid: d.productId ?? '' });
-                }}
+                onAssign={handleAssign}
                 onAddMapping={ctrl.addMapping}
               />
             );
@@ -78,10 +75,7 @@ const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
               busType={entry.busType}
               hasRumble={entry.hasRumble}
               hasGyro={entry.hasGyro}
-              onAssign={(d) => {
-                if (!d.sdlType) return;
-                ctrl.setConfirmPreset({ sdlType: d.sdlType, deviceName: d.displayName, vid: d.vendorId ?? '', pid: d.productId ?? '' });
-              }}
+              onAssign={handleAssign}
               onAddMapping={ctrl.addMapping}
             />
           );

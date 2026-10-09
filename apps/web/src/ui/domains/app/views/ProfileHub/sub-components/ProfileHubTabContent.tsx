@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
-/**
- * The content of one hub tab. Shared by the active page and the search
- * results pane, which draws the same components through SettingsPageContext.
- */
 import { useContext } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import type { GameSettings } from '@shared/types/settings';
 import { SettingsPage } from '../../../compounds/SettingsPage';
 import { SettingsPageContext } from '../../../compounds/SettingsLayout';
 import { HomeTab } from './HomeTab';
@@ -19,21 +14,10 @@ import { ControlsSettings } from './ControlsSettings';
 import { HapticsSettings } from './HapticsSettings';
 import { DeveloperSettings } from './DeveloperSettings';
 import { MobileSettings } from './MobileSettings';
-import { GbaSettings } from './GbaSettings';
+import { GbaSettings } from './gba-settings';
 import { OnlineSettings } from './OnlineSettings';
 import { PROFILE_HUB_TABS } from '../ProfileHub.constants';
-import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
-
-interface ProfileHubTabContentProps {
-  tab: ProfileHubTab;
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-  profile: ProfileHubProps['profile'];
-  isGameRunning: boolean;
-  onStartGame: () => void;
-  onStopGame: () => void;
-  onResetGame: () => void;
-}
+import type { ProfileHubTabContentProps } from './ProfileHubBody.type';
 
 const ProfileHubTabContent = (props: ProfileHubTabContentProps) => {
   const { tab, settings, onChange, profile, isGameRunning, onStartGame, onStopGame, onResetGame } = props;
@@ -67,14 +51,12 @@ const ProfileHubTabContent = (props: ProfileHubTabContentProps) => {
     case 'developer': return <DeveloperSettings settings={settings} onChange={onChange} />;
     case 'mobile': return <MobileSettings settings={settings} onChange={onChange} />;
     case 'gba':
-      // A reference page with its own layout, not a SettingsLayout, so the page draws its header.
       return (
         <SettingsPage icon={<IconifyIcon icon={PROFILE_HUB_TABS.gba.navIcon} />} title={PROFILE_HUB_TABS.gba.label} backdrop={page?.backdrop}>
           <GbaSettings settings={settings} onChange={onChange} />
         </SettingsPage>
       );
     case 'controls':
-      // The binding screen lays out and scrolls its own columns, so the page only draws its header.
       return (
         <SettingsPage icon={<IconifyIcon icon={PROFILE_HUB_TABS.controls.navIcon} />} title={PROFILE_HUB_TABS.controls.label} backdrop={page?.backdrop} scroll={false}>
           <ControlsSettings settings={settings} onChange={onChange} profileId={profile.id} />

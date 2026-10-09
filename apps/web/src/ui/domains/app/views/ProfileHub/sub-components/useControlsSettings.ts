@@ -1,6 +1,2 @@
-/* @layer renderer-components @kind hook */
-/**
- * Re-exports from the controls-settings/ subfolder.
- * Kept for backwards compatibility with existing imports.
- */
+/* @layer renderer-components @kind barrel */
 export { useControlsSettings } from './controls-settings';

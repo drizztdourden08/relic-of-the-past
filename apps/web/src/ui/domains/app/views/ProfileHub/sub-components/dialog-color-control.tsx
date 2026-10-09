@@ -1,30 +1,23 @@
 /* @layer renderer-components @kind component */
-/**
- * A settings row for one hex colour: the label and description on the left, a swatch on the
- * right that opens the colour picker beside it.
- */
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import type { MouseEvent } from 'react';
 import { Flex } from '../../../../../design-system/primitives/Flex';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { ColorSwatch } from '../../../../../design-system/primitives/ColorSwatch';
 import { ColorPickerPopover } from '../../../../../design-system/composites/ColorPickerPopover';
+import type { DialogColorControlProps } from './settings-controls.type';
 import './dialog-color-control.css';
-
-interface DialogColorControlProps {
-  label: string;
-  description: string;
-  /** Current colour, `#rrggbb`. */
-  value: string;
-  /** The value a fresh profile carries, offered as the picker's reset target. */
-  original: string;
-  onChange: (hex: string) => void;
-  disabled?: boolean;
-}
 
 const DialogColorControl = (props: DialogColorControlProps) => {
   const { label, description, value, original, onChange, disabled = false } = props;
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLElement | null>(null);
+  const handleSwatchClick = useCallback((e: MouseEvent<HTMLElement>) => {
+    anchorRef.current = e.currentTarget;
+    setOpen((cur) => !cur);
+  }, []);
+  const handleReset = useCallback(() => onChange(original), [onChange, original]);
+  const handleClose = useCallback(() => setOpen(false), []);
 
   return (
     <Flex className={`dialog-color-control${disabled ? ' dialog-color-control--disabled' : ''}`} align="center" justify="between" gap="md">
@@ -38,10 +31,7 @@ const DialogColorControl = (props: DialogColorControlProps) => {
         edited={value.toLowerCase() !== original.toLowerCase()}
         title={value}
         disabled={disabled}
-        onClick={(e) => {
-          anchorRef.current = e.currentTarget;
-          setOpen((cur) => !cur);
-        }}
+        onClick={handleSwatchClick}
       />
       <ColorPickerPopover
         open={open}
@@ -51,8 +41,8 @@ const DialogColorControl = (props: DialogColorControlProps) => {
         disableAlpha
         title={label}
         original={original}
-        onReset={() => onChange(original)}
-        onClose={() => setOpen(false)}
+        onReset={handleReset}
+        onClose={handleClose}
       />
     </Flex>
   );

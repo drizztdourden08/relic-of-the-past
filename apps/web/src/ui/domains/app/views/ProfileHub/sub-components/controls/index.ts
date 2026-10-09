@@ -10,5 +10,5 @@ export { InputProfileList } from './InputProfileList';
 export { ModernControlsTab } from './ModernControlsTab';
 export { SchemeBanner } from './SchemeBanner';
 export { SlotRow } from './SlotRow';
-export { CORE_VERB_GROUPS, CORE_VERB_LABELS } from './core-verbs';
-export type { ControlsTabItem } from './ControlsTabs';
+export { CORE_VERB_GROUPS, CORE_VERB_LABELS } from './controls.constants';
+export type { ControlsTabItem } from './controls.type';

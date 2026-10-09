@@ -1,19 +1,11 @@
 /* @layer renderer-components @kind component */
-/** Where the session is connected, as whom, and in what state; the last session's, while none runs. */
 import { NetworkSection } from './NetworkSection';
 import { formatCountdown, formatSince, formatValue, formatYesNo } from '../behavior/network-format';
 import { stateChip } from '../behavior/network-tone';
-import { NOT_CONNECTED_HINT } from '../behavior/network-view';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
 import type { NetworkConnection } from '@app/lib/game/randomizer-client';
-import type { NetworkRow } from './NetworkSection';
-import type { NetworkView } from '../behavior/network-view';
-import type { PanelPlacement } from '../../../Randomizer.constants';
-
-interface ConnectionSectionProps {
-  placement: PanelPlacement;
-  view: NetworkView;
-  now: number;
-}
+import type { NetworkRow } from './NetworkSection.type';
+import type { ConnectionSectionProps } from './ConnectionSection.type';
 
 const worldText = (connection: NetworkConnection): string => {
   const { worldVersion, appWorldVersion } = connection;

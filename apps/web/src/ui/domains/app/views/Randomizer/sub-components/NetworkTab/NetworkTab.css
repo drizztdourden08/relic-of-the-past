@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Every number in the tab lines up in columns. */
 .network-tab,
 .network-tab__pill {
   font-variant-numeric: tabular-nums;
@@ -12,7 +11,6 @@
   gap: var(--space-2xs);
 }
 
-/* ── Players table: one grid, each row's cells joining its columns ── */
 .network-tab__players {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto auto auto;
@@ -21,7 +19,6 @@
   font-size: var(--text-sm);
 }
 
-/* The compact table: name, game, online and checks. */
 .network-tab__players[data-compact] {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
 }
@@ -45,7 +42,6 @@
   color: var(--c-text-dim);
 }
 
-/* Checks: the count over a small bar, right-aligned with the other numbers. */
 .network-tab__checks {
   display: flex;
   flex-direction: column;
@@ -68,7 +64,6 @@
   color: var(--c-gold-bright);
 }
 
-/* ── Run tab pill ── */
 .network-tab__pill {
   align-self: flex-start;
   display: inline-flex;

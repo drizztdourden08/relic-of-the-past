@@ -1,50 +1,28 @@
 /* @layer renderer-components @kind component */
+import { useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
-import type { LayerTileData } from './types';
+import type { LayerBlockProps } from './tooltip.type';
 import { S } from './styles';
 import { ClassificationRows } from './classification-rows';
 import { reachStatusFor } from './reach-status';
 
-interface LayerBlockProps {
-  name: string;
-  nameColor: string;
-  data: LayerTileData;
-  locked?: boolean;
-}
-
-// One layer block: name left, ITS OWN reach status right, over the shared classification rows.
 const LayerBlock = ({ name, nameColor, data, locked }: LayerBlockProps) => {
   const status = reachStatusFor(data.reach, data.classification.collision, data.isAboveLayer);
+  const nameStyle = useMemo(() => ({ color: nameColor }), [nameColor]);
+  const statusStyle = useMemo(() => ({ color: status.color }), [status.color]);
   return (
     <Box style={S.col}>
       <Box style={S.layerHeadRow}>
-        <Text style={{ color: nameColor }}>
+        <Text style={nameStyle}>
           {name}
           {locked && <Text style={S.lockedTag}> LOCKED</Text>}
         </Text>
-        <Text style={{ color: status.color }}>{status.label}</Text>
+        <Text style={statusStyle}>{status.label}</Text>
       </Box>
       <ClassificationRows attr={data.classification.attr} classification={data.classification} canPass={data.canPass} />
     </Box>
   );
 };
 
-interface DualLayerPanelsProps {
-  ground: LayerTileData;
-  above: LayerTileData;
-}
-
-/** Dual-layer mode: two LayerBlocks side by side, ground first. */
-const DualLayerPanels = ({ ground, above }: DualLayerPanelsProps) => (
-  <Box style={S.dualRow}>
-    <Box style={S.dualColLeft}>
-      <LayerBlock name="▼ GROUND" nameColor="var(--c-info)" data={ground} />
-    </Box>
-    <Box style={S.dualColRight}>
-      <LayerBlock name="▲ ABOVE" nameColor="var(--c-gold)" data={above} />
-    </Box>
-  </Box>
-);
-
-export { LayerBlock, DualLayerPanels };
+export { LayerBlock };

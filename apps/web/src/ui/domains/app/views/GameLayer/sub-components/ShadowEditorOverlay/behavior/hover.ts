@@ -1,22 +1,10 @@
 /* @layer renderer-components @kind logic */
 import { hitTestGizmo, buildGizmoContext } from '../../shadow-editor/gizmos';
-import type { GizmoPart } from '../../shadow-editor/gizmos';
-import { worldToDisplay } from './coords';
-import type { Vp, Point } from './coords';
-import type { ScreenData } from './hittest';
+import { worldToDisplay } from './world-to-display';
+import { LIGHT_HANDLE_HIT_RADIUS_SQ } from './overlay.constants';
+import type { HoverArgs, HoverResult } from './overlay.type';
 
-interface HoverArgs {
-  vp: Vp;
-  width: number;
-  height: number;
-  screenData: ScreenData;
-  selectedType: 'heightmap' | 'light' | null;
-  selectedElementId: string | null;
-  displayPos: Point;
-}
-
-/** Detect which gizmo part (if any) the cursor is over + the cursor to show. */
-const detectHover = (a: HoverArgs): { part: GizmoPart | null; cursor: string } => {
+const detectHover = (a: HoverArgs): HoverResult => {
   const { vp, width, height, screenData, selectedType, selectedElementId, displayPos } = a;
   if (selectedType === 'heightmap') {
     const el = screenData.heightmap.find((h) => h.id === selectedElementId);
@@ -36,7 +24,7 @@ const detectHover = (a: HoverArgs): { part: GizmoPart | null; cursor: string } =
     const light = screenData.lights.find((l) => l.id === selectedElementId);
     if (light) {
       const dp = worldToDisplay(vp, width, height, light.x, light.y);
-      if ((displayPos.x - dp.x) ** 2 + (displayPos.y - dp.y) ** 2 < 100) {
+      if ((displayPos.x - dp.x) ** 2 + (displayPos.y - dp.y) ** 2 < LIGHT_HANDLE_HIT_RADIUS_SQ) {
         return { part: 'move-center', cursor: 'move' };
       }
     }

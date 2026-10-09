@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { DialogShell } from '@ds/composites/DialogShell';
 import { Button, Box, Text } from '@ds/primitives';
 import type { HidWizardHandle } from '../HidCalibrationWizard';
@@ -17,11 +17,6 @@ import type { ControllerReportDialogProps } from './ControllerReportDialog.type'
 import './ControllerReportDialog.css';
 import '../diagnostics-wizard/DiagnosticsWizardDialog.css';
 
-/**
- * One persistent dialog: step content swaps inside a fixed header/footer shell. The diagnostic
- * portion is the same DiagnosticsFlowBody + DiagnosticsStepActions the standalone dialog renders,
- * so this report cannot drift from it.
- */
 const ControllerReportDialog = (props: ControllerReportDialogProps) => {
   const { open, onClose, deviceKey } = props;
   const form = useControllerReportForm(deviceKey);
@@ -31,22 +26,32 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
   const [copyStatus, flashCopy] = useFlashStatus();
   const filed = form.status === 'done' ? form.filed : null;
   const showResult = open && filed !== null;
+  const { reset, goToStep, wizard } = form;
+  const { goNext } = wizard;
 
-  const closeForm = () => {
+  const closeForm = useCallback(() => {
     onClose();
-    form.reset();
-  };
+    reset();
+  }, [onClose, reset]);
 
-  // window.open on an external URL is routed to the system browser by the main process.
-  const openAndClose = (url: string) => {
+  const openAndClose = useCallback((url: string) => {
     window.open(url, '_blank');
     closeForm();
-  };
+  }, [closeForm]);
 
-  const handleByteCaptureNext = () => {
+  const handleByteCaptureNext = useCallback(() => {
     wizardRef.current?.finish();
-    form.wizard.goNext();
-  };
+    goNext();
+  }, [goNext]);
+
+  const handleCopy = useCallback(() => handleCopyJson().then(flashCopy), [handleCopyJson, flashCopy]);
+  const goAbout = useCallback(() => goToStep('about'), [goToStep]);
+  const goUserInfo = useCallback(() => goToStep('user-info'), [goToStep]);
+  const goDiagnostics = useCallback(() => goToStep('diagnostics'), [goToStep]);
+  const sanctuaryUrl = filed?.sanctuaryUrl;
+  const issueUrl = filed?.issueUrl;
+  const openSanctuary = useCallback(() => { if (sanctuaryUrl) openAndClose(sanctuaryUrl); }, [openAndClose, sanctuaryUrl]);
+  const openIssue = useCallback(() => { if (issueUrl) openAndClose(issueUrl); }, [openAndClose, issueUrl]);
 
   const cancel = <Button variant="danger" onClick={closeForm}>Cancel</Button>;
 
@@ -54,7 +59,7 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
     <>
       {cancel}
       <Button variant="secondary" onClick={form.wizard.goBack} disabled={form.wizard.restoreStatus !== 'done'}>Back</Button>
-      <Button variant={copyStatus === 'error' ? 'danger' : 'tertiary'} onClick={() => handleCopyJson().then(flashCopy)}>
+      <Button variant={copyStatus === 'error' ? 'danger' : 'tertiary'} onClick={handleCopy}>
         {copyStatus === 'ok' ? 'Copied' : copyStatus === 'error' ? 'Failed' : 'Copy JSON'}
       </Button>
       <Button variant="primary" onClick={form.finishDiagnostics} disabled={!form.wizard.byteCapture}>
@@ -65,7 +70,7 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
     <DiagnosticsStepActions
       wizard={form.wizard}
       cancelAction={cancel}
-      introBack={() => form.goToStep('user-info')}
+      introBack={goUserInfo}
       onByteCaptureNext={handleByteCaptureNext}
       capturedCount={capturedCount}
     />
@@ -74,18 +79,18 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
   const actions = filed ? (
     <>
       <Button variant="secondary" onClick={closeForm}>Close</Button>
-      <Button variant="secondary" onClick={() => openAndClose(filed.sanctuaryUrl)}>See it in the Sanctuary</Button>
-      <Button variant="primary" onClick={() => openAndClose(filed.issueUrl)}>Open on GitHub</Button>
+      <Button variant="secondary" onClick={openSanctuary}>See it in the Sanctuary</Button>
+      <Button variant="primary" onClick={openIssue}>Open on GitHub</Button>
     </>
   ) : form.step === 'about' ? (
     <>
       {cancel}
-      <Button variant="primary" onClick={() => form.goToStep('user-info')}>Next</Button>
+      <Button variant="primary" onClick={goUserInfo}>Next</Button>
     </>
   ) : form.step === 'user-info' ? (
     <>
-      <Button variant="secondary" onClick={() => form.goToStep('about')}>Back</Button>
-      <Button variant="primary" onClick={() => form.goToStep('diagnostics')} disabled={!form.canLeaveUserInfo}>Next</Button>
+      <Button variant="secondary" onClick={goAbout}>Back</Button>
+      <Button variant="primary" onClick={goDiagnostics} disabled={!form.canLeaveUserInfo}>Next</Button>
     </>
   ) : form.step === 'diagnostics' ? diagnosticsActions : (
     <>

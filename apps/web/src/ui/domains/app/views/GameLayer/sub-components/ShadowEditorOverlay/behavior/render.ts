@@ -2,22 +2,14 @@
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
 import { buildGizmoContext, renderGizmo } from '../../shadow-editor/gizmos';
 import type { GizmoPart } from '../../shadow-editor/gizmos';
-import { screenIdFromVp, displayToWorld, worldToDisplay } from './coords';
-import type { Vp, Point } from './coords';
-import type { ScreenData } from './hittest';
-import { drawHeightmaps, drawLights, drawFreehandInProgress } from './render-elements';
-
-interface DrawArgs {
-  width: number;
-  height: number;
-  selectedElementId: string | null;
-  freehandPoints: Point[];
-  isDrawingFreehand: boolean;
-  hoveredGizmo: GizmoPart | null;
-  activeGizmo: GizmoPart | null;
-  mouseDisplay: Point | null;
-  getScreenData: (screenId: number) => ScreenData;
-}
+import { screenIdFromVp } from './screen-id-from-vp';
+import { displayToWorld } from './display-to-world';
+import { worldToDisplay } from './world-to-display';
+import { drawHeightmaps } from './draw-heightmaps';
+import { drawLights } from './draw-lights';
+import { drawFreehandInProgress } from './draw-freehand-in-progress';
+import { DRAG_PREVIEW_MIN_HALF_SIZE } from './overlay.constants';
+import type { DrawArgs, Point, ScreenData, Vp } from './overlay.type';
 
 const drawDragPreview = (ctx: CanvasRenderingContext2D, vp: Vp, width: number, height: number, mouseDisplay: Point | null): void => {
   const store = useShadowEditorStore.getState();
@@ -26,7 +18,7 @@ const drawDragPreview = (ctx: CanvasRenderingContext2D, vp: Vp, width: number, h
   const startDP = worldToDisplay(vp, width, height, store.dragStartWorld.x, store.dragStartWorld.y);
   const cx = (startDP.x + mouseDisplay.x) / 2, cy = (startDP.y + mouseDisplay.y) / 2;
   const hw = Math.abs(mouseDisplay.x - startDP.x) / 2, hh = Math.abs(mouseDisplay.y - startDP.y) / 2;
-  if (hw <= 2 && hh <= 2) return;
+  if (hw <= DRAG_PREVIEW_MIN_HALF_SIZE && hh <= DRAG_PREVIEW_MIN_HALF_SIZE) return;
   ctx.save();
   ctx.globalAlpha = 0.4;
   ctx.translate(cx, cy);
@@ -73,8 +65,6 @@ const drawSelectedGizmo = (ctx: CanvasRenderingContext2D, vp: Vp, width: number,
   }
 };
 
-/** Draw the full editor overlay for the current frame. Caller guarantees vp is
- *  valid, the location is the overworld, and preview mode is off. */
 const drawOverlay = (ctx: CanvasRenderingContext2D, vp: Vp, a: DrawArgs): void => {
   const screenData = a.getScreenData(screenIdFromVp(vp));
   drawHeightmaps(ctx, vp, a.width, a.height, screenData, a.selectedElementId);
@@ -85,5 +75,4 @@ const drawOverlay = (ctx: CanvasRenderingContext2D, vp: Vp, a: DrawArgs): void =
   ctx.globalAlpha = 1.0;
 };
 
-export type { DrawArgs };
 export { drawOverlay };

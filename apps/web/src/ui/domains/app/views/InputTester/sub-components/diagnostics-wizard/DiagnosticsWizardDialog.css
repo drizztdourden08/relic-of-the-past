@@ -9,15 +9,11 @@
   padding: var(--space-lg);
 }
 
-/* Header (title + step strip) and footer (actions) stay put; only the body scrolls. */
 .diagnostics-wizard .dialog__header,
 .diagnostics-wizard .dialog__actions {
   flex-shrink: 0;
 }
 
-/* The title shares its row with a five-step strip, and the shared header style
-   ellipsises the title when space runs short, which cut it to a single letter.
-   Let the row wrap and keep the title at its natural width instead. */
 .diagnostics-wizard .dialog__header {
   flex-wrap: wrap;
   row-gap: var(--space-sm);
@@ -40,8 +36,6 @@
   padding: var(--space-md) 0;
 }
 
-/* Covers the step instead of replacing it, so the choice stays visible
-   behind the read and the dialog does not jump size mid-transition. */
 .diagnostics-wizard__overlay {
   position: absolute;
   inset: 0;

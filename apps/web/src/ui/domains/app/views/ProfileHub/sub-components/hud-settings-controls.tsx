@@ -1,64 +1,18 @@
-/* @layer renderer-components @kind component */
-/** Per-key control renderer + option config for the HUD settings tab. */
+/* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { ToggleGroup } from '../../../../../design-system/primitives/ToggleGroup';
 import { HudStyleControl } from './HudStyleControl';
 import { AspectRatioControl } from './AspectRatioControl';
-import { aspectRatioValue, parseRatioString } from '@app/lib/game/aspect-ratio';
-import { renderDialogControl, isDialogDisabled } from './hud-dialog-controls';
-import { renderTitleControl, isTitleDisabled } from './hud-title-controls';
+import { renderDialogControl } from './hud-dialog-controls';
+import { renderTitleControl } from './hud-title-controls';
+import { hudRatioOptions } from './hud-ratio-options';
 import { hostDrawnHud } from '@shared/features/hud-style';
-
-const HUD_MODE_OPTIONS = [
-  { value: 'original', label: 'Original' },
-  { value: 'enhanced', label: 'Enhanced' },
-];
-
-const ASPECT_OPTIONS = [
-  { value: '4:3', label: '4:3' },
-  { value: '3:2', label: '3:2' },
-  { value: '16:9', label: '16:9' },
-  { value: '16:10', label: '16:10' },
-  { value: 'custom', label: 'Custom' },
-];
-
-// Disable fixed presets wider than the screen (the HUD clamps to it anyway); Match/Custom stay open.
-const getHudRatioOptions = (settings: GameSettings) => {
-  const screenVal = aspectRatioValue(settings.aspectRatio, settings.customAspectW, settings.customAspectH);
-  return [
-    { value: 'match', label: 'Match' },
-    ...ASPECT_OPTIONS.map((opt) =>
-      opt.value === 'custom' ? opt : { ...opt, disabled: parseRatioString(opt.value) > screenVal },
-    ),
-  ];
-};
-
-const HEART_OPTIONS = [
-  { value: 'original', label: 'Original' },
-  { value: 'smooth', label: 'Smooth' },
-];
-
-const MAGIC_OPTIONS = [
-  { value: 'original', label: 'Original' },
-  { value: 'accurate', label: 'Accurate' },
-];
-
-const COUNT_LAYOUT_OPTIONS = [
-  { value: 'centered', label: 'Centered' },
-  { value: 'original', label: 'Original' },
-];
-
-const COUNTDOWN_STYLE_OPTIONS = [
-  { value: 'pixel', label: 'Pixel' },
-  { value: 'smooth', label: 'Smooth' },
-];
-
-const ENHANCED_PARTS_OPTIONS = [
-  { value: 'main', label: 'Main' },
-  { value: 'pause', label: 'Pause' },
-];
+import {
+  COUNT_LAYOUT_OPTIONS, COUNTDOWN_STYLE_OPTIONS, ENHANCED_PARTS_OPTIONS, HEART_OPTIONS,
+  HUD_MODE_OPTIONS, MAGIC_OPTIONS,
+} from './hud-settings.constants';
 
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   switch (key) {
@@ -77,9 +31,6 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
         <HudStyleControl
           value={settings.hudStyle}
           settings={settings}
-          // Enhanced and Modern ARE the host-drawn HUD plus the host-owned menu, so either one
-          // carries the overlay settings it depends on instead of leaving the user to find them
-          // (mergeSettings applies the same rule to a stored profile).
           onChange={(v) => onChange(hostDrawnHud(v)
             ? { hudStyle: v, hudMode: 'enhanced', hudEnhancedParts: ['main', 'pause'] }
             : { hudStyle: v })}
@@ -91,7 +42,7 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
           label="Aspect Ratio"
           description="Match keeps the overlay in sync with the game viewport. Fixed ratios pin the HUD to a narrower area; Custom accepts any ratio."
           value={settings.hudRatio}
-          options={getHudRatioOptions(settings)}
+          options={hudRatioOptions(settings)}
           customW={settings.customHudAspectW}
           customH={settings.customHudAspectH}
           ratioKey="hudRatio"
@@ -150,12 +101,8 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
         />
       );
     default:
-      // The Title Screen and Dialog Box sections live in their own renderers, so this file stays under the line cap.
       return renderTitleControl(key, settings, onChange) ?? renderDialogControl(key, settings, onChange);
   }
 };
 
-/** The Title Screen and Dialog Box sections carry dependent rows; every other HUD row is always live. */
-const isDisabled = (key: string, settings: GameSettings): boolean => isTitleDisabled(key, settings) || isDialogDisabled(key, settings);
-
-export { renderControl, isDisabled };
+export { renderControl };

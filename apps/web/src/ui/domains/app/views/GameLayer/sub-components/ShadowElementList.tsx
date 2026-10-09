@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
-import { useCallback } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import { wasmGetViewportInfo } from '../../../../../../lib/game';
+import { overworldScreenIdOf } from '../behavior/overworld-screen-id';
 import './ShadowElementList.css';
 
 const ShadowElementList = () => {
@@ -16,20 +16,12 @@ const ShadowElementList = () => {
     heightLevels,
   } = useShadowEditorStore();
 
-  const getCurrentScreenId = useCallback((): number => {
-    const vp = wasmGetViewportInfo();
-    if (!vp) return 0;
-    const col = Math.floor((vp.cameraX + 128) / 512) & 7;
-    const row = Math.floor((vp.cameraY + 112) / 512) & 7;
-    return row * 8 + col;
-  }, []);
-
   if (!open) return null;
 
-  const screenId = getCurrentScreenId();
+  const vp = wasmGetViewportInfo();
+  const screenId = vp ? overworldScreenIdOf(vp) : 0;
   const screenData = getScreenData(screenId);
 
-  // Group shapes by their height level
   const getHeightLabel = (h: number): string => {
     const match = heightLevels.find((l) => Math.abs(l.value - h) < 0.005);
     return match ? match.label : `H${Math.round(h * 100)}%`;
@@ -48,7 +40,6 @@ const ShadowElementList = () => {
 
   return (
     <Box className="shadow-element-list">
-      {/* Shapes */}
       {screenData.heightmap.length > 0 && (
         <Box className="shadow-element-list__group">
           <Box className="shadow-element-list__group-header">
@@ -79,7 +70,6 @@ const ShadowElementList = () => {
         </Box>
       )}
 
-      {/* Lights */}
       {screenData.lights.length > 0 && (
         <Box className="shadow-element-list__group">
           <Box className="shadow-element-list__group-header">

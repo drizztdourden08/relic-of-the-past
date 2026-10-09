@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * Wires the shared diagnostics-wizard state machine into the report: the run stays closed (SDL
- * keeps its hold) until the diagnostics step, pre-selecting the report's device. The wizard's
- * byte capture is the calibration map; nothing here re-derives it.
- */
 import { useMemo } from 'react';
 import { usePlatform } from '@app/platform';
 import { useAppVersion } from '@app/hooks/useAppVersion';
@@ -22,8 +17,6 @@ const useReportDiagnostics = (deviceKey: string, isActive: boolean) => {
     return buildReport({
       deviceKey,
       name: map.name,
-      // No per-model preset: SDL's own capability report, already in the calibration map, is the
-      // identity signal, so resolvedPreset always reads null.
       deviceEntry: wizard.capturedLayout?.entry ?? null,
       preset: null,
       nativeStatus: {

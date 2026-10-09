@@ -1,14 +1,9 @@
 /* @layer renderer-components @kind hook */
-// Opens on onActiveProfileChange and auto-hides. No-op with a single profile, since cycling never fires.
-
 import { useState, useEffect, useRef } from 'react';
 import { getInputManager } from '../../../../../../lib/game';
-import type { FunctionAction, FunctionMapping, InputProfile } from '@shared/types/controls';
-
-const AUTO_HIDE_MS = 1600;
-
-const findMapping = (mappings: FunctionMapping[], action: FunctionAction): FunctionMapping | null =>
-  mappings.find(m => m.action === action && m.binding.type !== 'none') ?? null;
+import type { InputProfile } from '@shared/types/controls';
+import { findFunctionMapping } from './find-function-mapping';
+import { AUTO_HIDE_MS } from './useProfileSwitcher.constants';
 
 const useProfileSwitcher = (isRunning: boolean) => {
   const [open, setOpen] = useState(false);
@@ -34,8 +29,8 @@ const useProfileSwitcher = (isRunning: boolean) => {
     open,
     profiles,
     activeId,
-    prevMapping: findMapping(mappings, 'profile-prev'),
-    nextMapping: findMapping(mappings, 'profile-next'),
+    prevMapping: findFunctionMapping(mappings, 'profile-prev'),
+    nextMapping: findFunctionMapping(mappings, 'profile-next'),
   };
 };
 

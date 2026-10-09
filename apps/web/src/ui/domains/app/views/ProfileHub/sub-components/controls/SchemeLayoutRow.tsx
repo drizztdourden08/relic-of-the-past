@@ -1,37 +1,18 @@
 /* @layer renderer-components @kind component */
-/**
- * Which HUD arrangement this control scheme wears.
- *
- * It sits on the controls screen instead of in the HUD settings because that
- * is where it belongs: the layout is a property of the SCHEME, so the keyboard
- * profile and the pad profile each name their own and switching between them
- * swaps the slot list, the assignments and the HUD in one step.
- *
- * Two schemes may name the same layout. The picker does not stop that, and it
- * should not: editing a shared layout edits it for both, and "save a copy" in
- * the editor is how one of them forks.
- */
+import { useMemo } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Field } from '../../../../../../design-system/primitives/Field';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { Text } from '../../../../../../design-system/primitives/Text';
-import type { HudLayout } from '@shared/types/hud';
-
-interface SchemeLayoutRowProps {
-  value: string;
-  layouts: readonly HudLayout[];
-  /** No modern block yet, so there is no scheme to hang a layout on. */
-  disabled?: boolean;
-  onChange: (layoutId: string) => void;
-}
+import type { SchemeLayoutRowProps } from './controls.type';
 
 const SchemeLayoutRow = (props: SchemeLayoutRowProps) => {
   const { value, layouts, disabled = false, onChange } = props;
 
-  const options = layouts.map((layout) => ({
+  const options = useMemo(() => layouts.map((layout) => ({
     value: layout.id,
     label: layout.builtIn ? layout.name : `${layout.name} (custom)`,
-  }));
+  })), [layouts]);
 
   return (
     <Box className="modern-tab__layout">

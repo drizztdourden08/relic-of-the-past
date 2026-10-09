@@ -1,25 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * AbsentAssignments lists assignments on a slot number the list does not reach.
- *
- * A number can outrun the list: remove slots until there are four and an
- * assignment made on slot seven has nowhere to sit. It is kept anyway. Add
- * three slots back and it reattaches itself, because the assignment and the
- * slot are joined by the number and by nothing else (contract §19). Deleting it
- * would mean a player who trimmed their list and changed their mind loses what
- * they had set up.
- *
- * They are shown, muted, instead of hidden: an assignment that still exists
- * but does nothing is exactly the kind of state a settings screen should not
- * keep secret.
- */
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
-import { assignmentLabel } from './SlotRow';
+import { assignmentLabel } from './assignment-label';
 import { slotName } from '@shared/input/scheme';
-import type { AbsentAssignment } from '../controls-settings/useModernScheme';
+import type { AbsentAssignmentsProps } from './controls.type';
 
-const AbsentAssignments = ({ entries }: { entries: AbsentAssignment[] }) => {
+const AbsentAssignments = ({ entries }: AbsentAssignmentsProps) => {
   if (entries.length === 0) return null;
 
   return (

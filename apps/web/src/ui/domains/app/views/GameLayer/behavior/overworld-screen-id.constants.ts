@@ -1,0 +1,7 @@
+/* @layer renderer-components @kind constants */
+const VIEW_HALF_WIDTH = 128;
+const VIEW_HALF_HEIGHT = 112;
+const OVERWORLD_SCREEN_PX = 512;
+const OVERWORLD_GRID_SIDE = 8;
+
+export { VIEW_HALF_WIDTH, VIEW_HALF_HEIGHT, OVERWORLD_SCREEN_PX, OVERWORLD_GRID_SIDE };

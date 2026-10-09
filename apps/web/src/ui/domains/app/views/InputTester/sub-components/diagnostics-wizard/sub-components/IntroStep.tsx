@@ -1,16 +1,7 @@
 /* @layer renderer-components @kind component */
-/** Step 1: explains the run and shuts SDL's gamepad backend down right
- *  here, before any device list is shown, so step 2 lists a controller only
- *  through the raw HID enumeration or the SDL snapshot taken just before
- *  this release fires. Next and Back stay disabled in the dialog's footer
- *  until this status line reaches done. */
 import { Text } from '@ds/primitives';
-import type { HoldTransitionStatus } from '../behavior/useHoldTransition';
+import type { IntroStepProps } from './diagnostics-steps.type';
 import { HoldStatusLine } from './HoldStatusLine';
-
-interface IntroStepProps {
-  releaseStatus: HoldTransitionStatus;
-}
 
 const IntroStep = (props: IntroStepProps) => {
   const { releaseStatus } = props;

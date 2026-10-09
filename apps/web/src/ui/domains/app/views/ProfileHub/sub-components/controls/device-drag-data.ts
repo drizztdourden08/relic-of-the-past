@@ -1,23 +1,15 @@
 /* @layer renderer-components @kind logic */
-/**
- * Sets the drag payload a device card uses to hand itself to the binding
- * editor (useDragDrop.ts reads these same keys back out). Shared so
- * DeviceCard and AdapterDeviceCard agree on the wire format.
- */
-interface DeviceDragInfo {
-  id: string;
-  displayName: string;
-  sdlType: string | null;
-  vendorId: string | null;
-  productId: string | null;
-}
+import {
+  DRAG_DEVICE_ID, DRAG_DEVICE_NAME, DRAG_PID, DRAG_SDL_TYPE, DRAG_VID,
+} from '../controls-settings/controls-settings.constants';
+import type { DeviceDragInfo } from './controls.type';
 
 const setDeviceDragData = (e: React.DragEvent, info: DeviceDragInfo): void => {
-  e.dataTransfer.setData('application/x-device-id', info.id);
-  e.dataTransfer.setData('application/x-device-name', info.displayName);
-  e.dataTransfer.setData('application/x-sdl-type', info.sdlType ?? '');
-  e.dataTransfer.setData('application/x-vid', info.vendorId ?? '');
-  e.dataTransfer.setData('application/x-pid', info.productId ?? '');
+  e.dataTransfer.setData(DRAG_DEVICE_ID, info.id);
+  e.dataTransfer.setData(DRAG_DEVICE_NAME, info.displayName);
+  e.dataTransfer.setData(DRAG_SDL_TYPE, info.sdlType ?? '');
+  e.dataTransfer.setData(DRAG_VID, info.vendorId ?? '');
+  e.dataTransfer.setData(DRAG_PID, info.productId ?? '');
   e.dataTransfer.effectAllowed = 'copy';
 };
 

@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
-/** Warns that manual audio settings disagree with the chosen pack format, so music will play
- *  at the wrong speed. The old core only ever reported this to stderr. */
 import { Card } from '../../../../../design-system/primitives/Card';
 import { Text } from '../../../../../design-system/primitives/Text';
-
-interface MsuMismatchCalloutProps {
-  message: string;
-}
+import type { MsuMismatchCalloutProps } from './MsuDetectedSummary.type';
 
 const MsuMismatchCallout = (props: MsuMismatchCalloutProps) => {
   const { message } = props;

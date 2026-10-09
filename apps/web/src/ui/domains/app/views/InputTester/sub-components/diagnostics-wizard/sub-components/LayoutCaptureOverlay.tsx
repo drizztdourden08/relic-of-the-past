@@ -1,19 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * Covers the step while its controller's layout is being read. The read needs
- * SDL brought back up and taken down again, which takes long enough to notice,
- * so each stage is named, not left as an unexplained wait.
- */
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
 import { Spinner } from '../../../../../../../design-system/primitives/Spinner';
-import type { LayoutStage } from '../behavior/useLayoutCapture';
-
-interface LayoutCaptureOverlayProps {
-  stage: LayoutStage;
-  /** Named in the fetch line so it is obvious which pad is being read. */
-  deviceName: string;
-}
+import type { LayoutStage } from '../diagnostics-wizard.type';
+import type { LayoutCaptureOverlayProps } from './diagnostics-steps.type';
 
 const stageLabel = (stage: LayoutStage, deviceName: string): string => {
   if (stage === 'starting') return 'Starting SDL';

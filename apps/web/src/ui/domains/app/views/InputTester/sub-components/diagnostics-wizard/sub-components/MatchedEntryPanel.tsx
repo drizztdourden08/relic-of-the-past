@@ -1,18 +1,6 @@
 /* @layer renderer-components @kind component */
-/** What the real database actually knows about the selected device: SDL's
- *  own name, the gamecontrollerdb mapping line it loaded for this guid (or
- *  none), which calibration profile this run will use, and whether a byte
- *  capture can run at all for it. */
 import { Badge, Card, Text } from '@ds/primitives';
-import type { DeviceProfile } from '@shared/input';
-import type { ChooserDevice } from '../behavior/chooser-devices';
-
-interface MatchedEntryPanelProps {
-  entry: ChooserDevice;
-  name: string;
-  mapping: string | null;
-  profile: DeviceProfile | null;
-}
+import type { MatchedEntryPanelProps } from './diagnostics-steps.type';
 
 const MatchedEntryPanel = (props: MatchedEntryPanelProps) => {
   const { entry, name, mapping, profile } = props;

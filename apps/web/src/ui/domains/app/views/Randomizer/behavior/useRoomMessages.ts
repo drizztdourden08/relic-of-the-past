@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind hook */
-/**
- * Follows the Archipelago room's messages while an online session is live.
- * A local session or no session reads as an empty list.
- */
 import { useEffect, useState } from 'react';
 import type { ActiveSession, RoomMessage } from '../../../../../../lib/game/randomizer-client';
-
-const NO_LINES: readonly RoomMessage[] = [];
+import { NO_LINES } from './useRoomMessages.constants';
 
 const useRoomMessages = (session: ActiveSession | null): readonly RoomMessage[] => {
   const [lines, setLines] = useState<readonly RoomMessage[]>(NO_LINES);

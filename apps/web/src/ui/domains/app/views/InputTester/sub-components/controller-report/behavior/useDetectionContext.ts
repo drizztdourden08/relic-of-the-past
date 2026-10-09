@@ -3,17 +3,9 @@ import { useMemo } from 'react';
 import { recallControllerSdlType } from '@app/lib/input/controller-family-cache';
 import { recallControllerName } from '@app/lib/input/controller-name-cache';
 import { controllerInputStore } from '@app/lib/input/controller-input-store';
+import { RAW_LOG_TAIL } from '../controller-report.constants';
+import type { DetectionContext } from '../controller-report.type';
 
-interface DetectionContext {
-  detectedName: string;
-  sdlMatch: string | null;
-  inputApi: string;
-  vendorId: string;
-  productId: string;
-  hidReport: string;
-}
-
-/** What the app knows about a device (remembered name, SDL type, recent raw HID traffic) for a report bundle. */
 const useDetectionContext = (deviceKey: string): DetectionContext => {
   return useMemo(() => {
     const [vendorId = '0000', productId = '0000'] = deviceKey.split(':');
@@ -29,8 +21,8 @@ const useDetectionContext = (deviceKey: string): DetectionContext => {
       `vendorId: ${vendorId}  productId: ${productId}`,
       `SDL type: ${sdlType ?? 'none (not seen this session)'}`,
       '',
-      `Recent raw report log (last ${Math.min(rawLog.length, 20)} of ${rawLog.length}):`,
-      ...rawLog.slice(-20),
+      `Recent raw report log (last ${Math.min(rawLog.length, RAW_LOG_TAIL)} of ${rawLog.length}):`,
+      ...rawLog.slice(-RAW_LOG_TAIL),
     ].join('\n');
 
     return {

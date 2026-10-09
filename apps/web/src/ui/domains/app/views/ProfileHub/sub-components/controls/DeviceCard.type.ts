@@ -21,7 +21,6 @@ interface DeviceCardProps {
   hasRumble?: boolean;
   hasGyro?: boolean;
   onAssign?: (device: DeviceAssignInfo) => void;
-  /** Only rendered when `status` is 'unavailable'. */
   onAddMapping?: (mapping: string) => Promise<boolean>;
 }
 

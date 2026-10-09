@@ -1,18 +1,19 @@
 /* @layer renderer-components @kind component */
+import { useCallback } from 'react';
+import type { ChangeEvent } from 'react';
 import { Field, Text, TextInput, Textarea } from '@ds/primitives';
 import { githubHandleOf } from '@app/lib/sanctuary/github-handle';
 import { ReportingAsLine } from '../../../../../compounds/ReportingAsLine';
-import type { UseControllerReportForm } from '../controller-report-form.type';
+import type { UserInfoStepProps } from '../controller-report-form.type';
 
-type UserInfoStepProps = Pick<
-  UseControllerReportForm,
-  'me' | 'email' | 'setEmail' | 'emailTouched' | 'emailValid' | 'name' | 'setName' | 'additionalInfo' | 'setAdditionalInfo' | 'debugText'
->;
-
-/** Step 2 collects contact info plus the same auto-collected debug info the bug report attaches.
- *  Signed in, the account is the contact and the email and name fields go away. */
 const UserInfoStep = (props: UserInfoStepProps) => {
   const { me, email, setEmail, emailTouched, emailValid, name, setName, additionalInfo, setAdditionalInfo, debugText } = props;
+  const handleEmail = useCallback((e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value), [setEmail]);
+  const handleName = useCallback((e: ChangeEvent<HTMLInputElement>) => setName(e.target.value), [setName]);
+  const handleInfo = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>) => setAdditionalInfo(e.target.value),
+    [setAdditionalInfo],
+  );
 
   return (
     <>
@@ -21,17 +22,17 @@ const UserInfoStep = (props: UserInfoStepProps) => {
       ) : (
         <>
           <Field label="Email" required error={emailTouched && !emailValid ? 'Enter a valid email' : undefined}>
-            <TextInput type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <TextInput type="email" placeholder="you@example.com" value={email} onChange={handleEmail} />
           </Field>
 
           <Field label="Name" hint="Optional">
-            <TextInput placeholder="How should we credit the report?" value={name} onChange={(e) => setName(e.target.value)} />
+            <TextInput placeholder="How should we credit the report?" value={name} onChange={handleName} />
           </Field>
         </>
       )}
 
       <Field label="Additional info" hint="What happened? Which buttons or sticks are affected?">
-        <Textarea rows={4} value={additionalInfo} onChange={(e) => setAdditionalInfo(e.target.value)} />
+        <Textarea rows={4} value={additionalInfo} onChange={handleInfo} />
       </Field>
 
       <Text as="p" className="controller-report__hint">
@@ -43,4 +44,3 @@ const UserInfoStep = (props: UserInfoStepProps) => {
 };
 
 export { UserInfoStep };
-export type { UserInfoStepProps };

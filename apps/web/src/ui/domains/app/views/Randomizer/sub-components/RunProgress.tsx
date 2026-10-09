@@ -1,25 +1,13 @@
 /* @layer renderer-components @kind component */
-/**
- * The Run tab's progress: the checks taken out of the seed's locations as a bar, green for
- * taken and gold for what is reachable now, with its percent, then the counts as tiles. An
- * Archipelago run adds the items the room sent in and out and whether the goal was reported.
- * Everything follows the game live: the tracker reads the checks, the online session the
- * room's side.
- */
 import { ProgressBar, Text } from '@ds/primitives';
 import { DashboardPanel, StatTileGrid } from '@ds/composites';
 import type { StatTileProps } from '@ds/primitives';
 import { useTrackerData } from '../../../../../../hooks/useTrackerData';
-import { checkCountsOf, percentOf } from '../behavior/run-progress';
-import type { CheckCounts } from '../behavior/run-progress';
+import { checkCountsOf } from '../behavior/run-progress';
+import { percentOf } from '../behavior/checks-percent';
+import type { CheckCounts } from '../behavior/run-progress.type';
 import type { NetworkProgress } from '@app/lib/game/randomizer-client';
-import type { PanelPlacement } from '../Randomizer.constants';
-
-interface RunProgressProps {
-  placement: PanelPlacement;
-  /** The online session's side of the run; null for a local seed or before it connects. */
-  room: NetworkProgress | null;
-}
+import type { RunProgressProps } from './RunProgress.type';
 
 const checkTilesOf = (counts: CheckCounts): StatTileProps[] => {
   const tiles: StatTileProps[] = [{ label: 'checks taken', value: `${counts.taken} of ${counts.total}` }];

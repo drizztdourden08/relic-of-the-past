@@ -5,7 +5,6 @@ interface ShadowEditorOverlayProps {
   gameRunning: boolean;
 }
 
-/** Snapshot of a shape/light at drag start, for relative transforms. */
 interface GizmoStart {
   x: number;
   y: number;

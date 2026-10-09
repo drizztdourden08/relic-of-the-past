@@ -1,26 +1,12 @@
 /* @layer renderer-components @kind component */
-/**
- * Left column showing saved input profiles.
- * Active profile is highlighted. Supports create/delete/select/rename.
- */
-
-import { useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import type { InputProfile } from '@shared/types/controls';
 import { Button } from '../../../../../../design-system/primitives/Button';
-import { TextInput } from '../../../../../../design-system/primitives/TextInput';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
+import { InputProfileItem } from './InputProfileItem';
+import type { InputProfileListProps } from './controls.type';
 import './InputProfileList.css';
-
-interface InputProfileListProps {
-  profiles: InputProfile[];
-  activeId: string | null;
-  initialEditId?: string | null;
-  onSelect: (profile: InputProfile) => void;
-  onDelete: (profile: InputProfile) => void;
-  onRename: (profile: InputProfile, newName: string) => void;
-  onCreate: () => void;
-}
 
 const InputProfileList = (props: InputProfileListProps) => {
   const {
@@ -41,7 +27,11 @@ const InputProfileList = (props: InputProfileListProps) => {
     if (editingId) inputRef.current?.focus();
   }, [editingId]);
 
-  // Auto-enter edit mode for newly created profiles
+  const startEditing = useCallback((profile: InputProfile) => {
+    setEditingId(profile.id);
+    setEditValue(profile.name);
+  }, []);
+
   useEffect(() => {
     if (initialEditId && initialEditId !== consumedInitialRef.current) {
       consumedInitialRef.current = initialEditId;
@@ -50,17 +40,14 @@ const InputProfileList = (props: InputProfileListProps) => {
     }
   }, [initialEditId, profiles]);
 
-  const startEditing = (profile: InputProfile) => {
-    setEditingId(profile.id);
-    setEditValue(profile.name);
-  };
-
-  const commitEdit = (profile: InputProfile) => {
+  const commitEdit = useCallback((profile: InputProfile) => {
     if (editValue.trim()) {
       onRename(profile, editValue);
     }
     setEditingId(null);
-  };
+  }, [editValue, onRename]);
+
+  const cancelEdit = useCallback(() => setEditingId(null), []);
 
   return (
     <Box className="input-profile-list">
@@ -73,55 +60,20 @@ const InputProfileList = (props: InputProfileListProps) => {
           <Text as="p" className="input-profile-list__empty">No profiles yet</Text>
         )}
         {profiles.map((profile) => (
-          <Button
-            variant="bare"
+          <InputProfileItem
             key={profile.id}
-            className={`input-profile-list__item ${profile.id === activeId ? 'input-profile-list__item--active' : ''}`}
-            onClick={() => onSelect(profile)}
-            onDoubleClick={() => startEditing(profile)}
-          >
-            <Text className="input-profile-list__item-icon">
-              {profile.deviceType === 'keyboard' ? '⌨️' : '🎮'}
-            </Text>
-            {editingId === profile.id ? (
-              <TextInput
-                ref={inputRef}
-                className="input-profile-list__item-input"
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-                onBlur={() => commitEdit(profile)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') commitEdit(profile);
-                  // Consumed here, so the dismiss stack leaves the page alone.
-                  if (e.key === 'Escape') { e.preventDefault(); setEditingId(null); }
-                }}
-                onClick={(e) => e.stopPropagation()}
-              />
-            ) : (
-              <Text className="input-profile-list__item-name">{profile.name}</Text>
-            )}
-            {profile.id === activeId && editingId !== profile.id && (
-              <Text className="input-profile-list__item-badge" title="Active, drives the game">Active</Text>
-            )}
-            {editingId !== profile.id && (
-              <Text
-                className="input-profile-list__item-edit"
-                title="Rename profile"
-                onClick={(e) => { e.stopPropagation(); startEditing(profile); }}
-              >
-                ✏️
-              </Text>
-            )}
-            {!profile.isDefault && editingId !== profile.id && (
-              <Text
-                className="input-profile-list__item-delete"
-                title="Delete profile"
-                onClick={(e) => { e.stopPropagation(); onDelete(profile); }}
-              >
-                ✕
-              </Text>
-            )}
-          </Button>
+            profile={profile}
+            active={profile.id === activeId}
+            editing={editingId === profile.id}
+            editValue={editValue}
+            inputRef={inputRef}
+            onSelect={onSelect}
+            onDelete={onDelete}
+            onStartEditing={startEditing}
+            onCommitEdit={commitEdit}
+            onCancelEdit={cancelEdit}
+            onEditValueChange={setEditValue}
+          />
         ))}
       </Box>
 
@@ -132,6 +84,6 @@ const InputProfileList = (props: InputProfileListProps) => {
       </Box>
     </Box>
   );
-}
+};
 
 export { InputProfileList };

@@ -3,19 +3,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDebugTextBuilder, useDebugText } from '@app/lib/diagnostics';
 import { useReportContext } from '@app/lib/diagnostics/useReportContext';
 import { useHubSessionStore } from '@app/stores/hub-session';
-import type { ReportStep } from '../report-step-labels';
+import { EMAIL_RE } from '../controller-report.constants';
+import type { FiledControllerReport, ReportStep, SubmitStatus } from '../controller-report.type';
 import { useDetectionContext } from './useDetectionContext';
 import { useReportDiagnostics } from './useReportDiagnostics';
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-type SubmitStatus = 'idle' | 'submitting' | 'done' | 'error';
-
-interface FiledControllerReport {
-  reportId: string;
-  issueUrl: string;
-  sanctuaryUrl: string;
-}
 
 const useControllerReportForm = (deviceKey: string) => {
   const me = useHubSessionStore((s) => s.me);
@@ -33,8 +24,6 @@ const useControllerReportForm = (deviceKey: string) => {
   const detection = useDetectionContext(deviceKey);
   const { buildDebugText } = useDebugTextBuilder();
   const { debugText } = useDebugText(buildDebugText);
-  // The run stays open through the review step. Closing and reopening it would re-run the
-  // wizard's first step, which releases the hold, and only the positional-capture step restores it.
   const diagnosticsOpen = step === 'diagnostics' || step === 'confirm';
   const { wizard, diagnosticsReport } = useReportDiagnostics(deviceKey, diagnosticsOpen);
   const calibrationMap = wizard.byteCapture;
@@ -54,8 +43,6 @@ const useControllerReportForm = (deviceKey: string) => {
 
   const goToStep = useCallback((to: ReportStep) => setStep(to), []);
   const finishDiagnostics = useCallback(() => setStep('confirm'), []);
-
-  // Returns to the run's summary with both captures and the restored hold intact; nothing is re-run.
   const backToDiagnostics = useCallback(() => setStep('diagnostics'), []);
 
   const submit = useCallback(async () => {
@@ -66,7 +53,6 @@ const useControllerReportForm = (deviceKey: string) => {
         request: {
           kind: 'controller',
           subject: `${subjectPrefix}Controller ${detection.detectedName} (${detection.vendorId}:${detection.productId})`,
-          // Only what the reporter wrote; every captured artefact goes through controllerReport below.
           description: [
             !me && name.trim() ? `Reported by: ${name.trim()}` : null,
             additionalInfo.trim() || 'No additional info provided.',

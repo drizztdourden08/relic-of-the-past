@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * Copy-to-clipboard and debug-folder save for the assembled diagnostics
- * report, over the same write-debug-capture channel the wizard has always
- * used. Both report real success or failure, never an unconditional one.
- */
 import { useCallback } from 'react';
 import type { GamepadDiagnosticsReport } from '../diagnostics.type';
 

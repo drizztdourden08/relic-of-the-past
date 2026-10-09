@@ -1,20 +1,19 @@
 /* @layer renderer-components @kind component */
-
-import { type RefObject, type CSSProperties } from 'react';
+import { useCallback } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../design-system/primitives/Button';
-import type { EventEntry } from './useInputCalibration';
-
-const TITLE_ROW: CSSProperties = { display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' };
-
-interface DiagnosticsLogProps {
-  events: EventEntry[];
-  controllerDiag: string[];
-  logRef: RefObject<HTMLDivElement | null>;
-}
+import { TITLE_ROW } from './DiagnosticsLog.constants';
+import type { DiagnosticsLogProps } from './DiagnosticsLog.type';
 
 const DiagnosticsLog = (props: DiagnosticsLogProps) => {
   const { events, controllerDiag, logRef } = props;
+  const copyLog = useCallback(() => {
+    const lines = [
+      ...events.map(ev => `[${new Date(ev.time).toLocaleTimeString()}] ${ev.type.toUpperCase()} ${ev.id}`),
+      ...controllerDiag,
+    ];
+    navigator.clipboard.writeText(lines.join('\n'));
+  }, [events, controllerDiag]);
 
   return (
     <Box className="input-cal__section">
@@ -23,13 +22,7 @@ const DiagnosticsLog = (props: DiagnosticsLogProps) => {
         <Button
           variant="tertiary"
           size="sm"
-          onClick={() => {
-            const lines = [
-              ...events.map(ev => `[${new Date(ev.time).toLocaleTimeString()}] ${ev.type.toUpperCase()} ${ev.id}`),
-              ...controllerDiag,
-            ];
-            navigator.clipboard.writeText(lines.join('\n'));
-          }}
+          onClick={copyLog}
         >
           Copy
         </Button>

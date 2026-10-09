@@ -1,7 +1,26 @@
 /* @layer renderer-components @kind logic */
 import type { ConnectionInfo } from '@shared/game/navigation';
-import type { DrawContext } from './draw-context';
-import { EDGE_COLORS } from '../navigation-overlay.type';
+import type { DrawContext } from './draw.type';
+import { EDGE_COLORS } from '../navigation-overlay.constants';
+
+const connectionTile = (edge: string, pos: number, isIntraRoom: boolean): [number, number] | null => {
+  if (isIntraRoom) {
+    switch (edge) {
+      case 'north': return [32, pos];
+      case 'south': return [31, pos];
+      case 'east': return [pos, 31];
+      case 'west': return [pos, 32];
+      default: return null;
+    }
+  }
+  switch (edge) {
+    case 'north': return [0, pos];
+    case 'south': return [63, pos];
+    case 'east': return [pos, 63];
+    case 'west': return [pos, 0];
+    default: return null;
+  }
+};
 
 const drawConnections = (dc: DrawContext, connections: ConnectionInfo[]): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, dotRadius, screenWorldX, screenWorldY, getScreenWorldOrigin } = dc;
@@ -13,24 +32,9 @@ const drawConnections = (dc: DrawContext, connections: ConnectionInfo[]): void =
       ? getScreenWorldOrigin(conn.sourceScreen)
       : { x: screenWorldX, y: screenWorldY };
     for (const pos of conn.positions) {
-      let r: number, c: number;
-      if (conn.isIntraRoom) {
-        switch (conn.edge) {
-          case 'north': r = 32; c = pos; break;
-          case 'south': r = 31; c = pos; break;
-          case 'east': r = pos; c = 31; break;
-          case 'west': r = pos; c = 32; break;
-          default: continue;
-        }
-      } else {
-        switch (conn.edge) {
-          case 'north': r = 0; c = pos; break;
-          case 'south': r = 63; c = pos; break;
-          case 'east': r = pos; c = 63; break;
-          case 'west': r = pos; c = 0; break;
-          default: continue;
-        }
-      }
+      const tile = connectionTile(conn.edge, pos, !!conn.isIntraRoom);
+      if (!tile) continue;
+      const [r, c] = tile;
 
       const worldX = connOrigin.x + c * TILE_PX + TILE_PX / 2;
       const worldY = connOrigin.y + r * TILE_PX + TILE_PX / 2;

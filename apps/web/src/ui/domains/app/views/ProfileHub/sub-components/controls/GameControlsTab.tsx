@@ -1,25 +1,14 @@
 /* @layer renderer-components @kind component */
-/**
- * GameControlsTab is the classic per-button mapping list.
- *
- * Carries the core verbs too: the four menu verbs drive the pause menu under
- * the classic scheme just as they do under the modern one, so they are bound
- * here instead of only on a tab a classic player never opens.
- */
-import { SNES_ACTION_LABELS, SNES_BUTTON_LABELS } from '@shared/types/controls';
-import { getSnesIconUrl } from '@app/lib/input/button-icons';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
-import { BindingRow } from './BindingRow';
+import { SnesBindingRow } from './SnesBindingRow';
 import { BindingListHeader } from './BindingListHeader';
 import { CoreBindingsGroup } from './CoreBindingsGroup';
 import { HapticsToggle } from './HapticsToggle';
-import type { useControlsSettings } from '../useControlsSettings';
+import type { CtrlProps } from './controls.type';
 
-type Ctrl = ReturnType<typeof useControlsSettings>;
-
-const GameControlsTab = ({ ctrl }: { ctrl: Ctrl }) => {
+const GameControlsTab = ({ ctrl }: CtrlProps) => {
   return (
     <>
       <Box
@@ -35,23 +24,20 @@ const GameControlsTab = ({ ctrl }: { ctrl: Ctrl }) => {
         <Box className="controls-settings__binding-list">
           <BindingListHeader middleLabel="SNES" />
           {ctrl.displayMappings.map((mapping) => (
-            <BindingRow
+            <SnesBindingRow
               key={mapping.snesButton}
-              actionLabel={SNES_ACTION_LABELS[mapping.snesButton]}
-              middleLabel={SNES_BUTTON_LABELS[mapping.snesButton]}
-              middleIconUrl={getSnesIconUrl(mapping.snesButton)}
+              snesButton={mapping.snesButton}
               binding={mapping.binding}
               bindingIcon={mapping.icon}
               deviceIconUrl={mapping.deviceIconUrl}
-              onRebind={() => ctrl.handleSnesRebind(mapping.snesButton)}
-              onClear={() => ctrl.handleSnesClear(mapping.snesButton)}
+              onRebind={ctrl.handleSnesRebind}
+              onClear={ctrl.handleSnesClear}
             />
           ))}
           <CoreBindingsGroup core={ctrl.coreBindings} icons={ctrl.coreIcons} onRebind={ctrl.handleCoreRebind} />
         </Box>
       </Box>
 
-      {/* Used inputs summary */}
       <Box className="controls-settings__used-inputs">
         <Box className="controls-settings__used-inputs-header">Required Inputs</Box>
         <Box className="controls-settings__used-inputs-list">

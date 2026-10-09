@@ -1,12 +1,4 @@
-/* @layer renderer-components @kind component */
-/**
- * The volume-group sliders for the Audio settings tab: master, music, ambience and SFX.
- *
- * Master always applies; the three group sliders only do anything once the independent-mix
- * toggle is on, so they render disabled until then.  Ambience is app-mixed only, and the sound
- * chip cannot split its own ambience out of its mix, so that slider governs the replacement
- * ambient bed a pack plays, never the original audio.
- */
+/* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { Slider } from '../../../../../design-system/primitives/Slider';

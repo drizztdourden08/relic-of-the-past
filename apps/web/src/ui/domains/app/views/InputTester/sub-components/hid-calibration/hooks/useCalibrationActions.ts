@@ -1,13 +1,11 @@
 /* @layer renderer-components @kind hook */
-/**
- * Action handlers for the HID Calibration Wizard.
- * Separated from useHidCalibration for file-size compliance.
- */
 import { useCallback } from 'react';
 import type { HidButtonMapping } from '../hid-calibration.type';
-import type { ActionDeps } from './action-deps';
-import { ANALOG_THRESHOLD_DELTA, STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
+import type { ActionDeps } from './action-deps.type';
+import { ANALOG_THRESHOLD_DELTA, BYTE_MAX, STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { findCounterBytes, hex, popcount } from '../hid-analysis';
+import { ANALOG_MIN_CHANGED_BITS, ANALOG_THRESHOLD_FRACTION, FULL_BYTE_MASK } from '../hid-analysis/hid-analysis.constants';
+import { DEFAULT_REPORT_LENGTH } from './useCalibrationActions.constants';
 import { useCalibrationExport } from './useCalibrationExport';
 import { useStickActions } from './useStickActions';
 import { useTriggerActions } from './useTriggerActions';
@@ -25,8 +23,8 @@ const useCalibrationActions = (d: ActionDeps) => {
   }, [d.detectedProfile, d.addLog]);
 
   const handleGyroStart = useCallback(() => {
-    const len = d.latestBytes.length || 64;
-    d.gyroMinsRef.current = new Uint8Array(len).fill(255); d.gyroMaxsRef.current = new Uint8Array(len).fill(0); d.gyroBufferRef.current = [];
+    const len = d.latestBytes.length || DEFAULT_REPORT_LENGTH;
+    d.gyroMinsRef.current = new Uint8Array(len).fill(BYTE_MAX); d.gyroMaxsRef.current = new Uint8Array(len).fill(0); d.gyroBufferRef.current = [];
     d.gyroRecordingRef.current = true; d.setGyroState('recording'); d.setGyroChangedBytes(new Set());
     d.addLog('Gyro recording started. Tilt, rotate and shake the controller...');
   }, [d.latestBytes.length, d.addLog]);
@@ -36,8 +34,6 @@ const useCalibrationActions = (d: ActionDeps) => {
     for (let i = 0; i < len; i++) { if (d.gyroMaxsRef.current[i] !== d.gyroMinsRef.current[i]) excl.add(i); }
     const counters = findCounterBytes(d.gyroBufferRef.current); for (const c of counters) excl.add(c);
     d.excludedRef.current = excl; d.setGyroExcluded(new Set(excl)); d.setGyroState('done');
-    // Remembered separately from excludedRef so a later stick capture can
-    // reconsider only what gyro itself flagged. See stick-gyro-reclaim.ts.
     d.gyroExcludedBytesRef.current = new Set(excl);
     d.addLog(`✓ Gyro done: ${excl.size} bytes excluded (${counters.size} counters, ${excl.size - counters.size} gyro/accel)`);
     d.updateByteStatuses(len);
@@ -68,14 +64,6 @@ const useCalibrationActions = (d: ActionDeps) => {
     handleTriggerPickMode, handleTriggerBytePicked, handleConfirmTriggerPick, handleCancelTriggerPick,
   } = useTriggerActions(d);
 
-  /**
-   * Button detection is nothing but a comparison against the resting report:
-   * findButtonBits walks min(baseline.length, frame.length), so with no
-   * baseline it compares zero bytes and every press is discarded in silence.
-   * Sticks and triggers do not need one, which is why capture could look
-   * half-working. Captured here on demand so starting a capture can never be
-   * the thing that does nothing.
-   */
   const ensureBaseline = useCallback((): boolean => {
     if (d.baselineRef.current.length > 0) return true;
     if (d.latestBytes.length === 0) { d.addLog('⚠ No reports received yet. Press nothing and try again.'); return false; }
@@ -109,9 +97,9 @@ const useCalibrationActions = (d: ActionDeps) => {
     const bl = d.baselineRef.current; const currentVal = d.latestBytes[byteIdx] ?? 0; const baseVal = bl[byteIdx] ?? 0;
     const delta = Math.abs(currentVal - baseVal); const xor = currentVal ^ baseVal;
     let mapping: HidButtonMapping; let result: string;
-    if (delta >= ANALOG_THRESHOLD_DELTA && popcount(xor) > 3) {
-      const threshold = baseVal + Math.floor(delta / 3); mapping = { byteIndex: byteIdx, bitMask: 0xFF, threshold, restValue: baseVal }; result = `byte[${byteIdx}] analog (rest=${baseVal}, threshold=${threshold}) (manual)`;
-    } else { const bitMask = xor !== 0 ? xor : 0xFF; mapping = { byteIndex: byteIdx, bitMask }; result = `byte[${byteIdx}] & 0x${hex(bitMask)} (manual)`; }
+    if (delta >= ANALOG_THRESHOLD_DELTA && popcount(xor) > ANALOG_MIN_CHANGED_BITS) {
+      const threshold = baseVal + Math.floor(delta / ANALOG_THRESHOLD_FRACTION); mapping = { byteIndex: byteIdx, bitMask: FULL_BYTE_MASK, threshold, restValue: baseVal }; result = `byte[${byteIdx}] analog (rest=${baseVal}, threshold=${threshold}) (manual)`;
+    } else { const bitMask = xor !== 0 ? xor : FULL_BYTE_MASK; mapping = { byteIndex: byteIdx, bitMask }; result = `byte[${byteIdx}] & 0x${hex(bitMask)} (manual)`; }
     d.addLog(`✓ ${item.label}: ${result}`);
     d.setItems(prev => prev.map((it, i) => i === idx ? { ...it, status: 'captured', result, mapping } : it));
     if (d.latestBytes.length > 0) d.updateByteStatuses(d.latestBytes.length);
@@ -140,10 +128,6 @@ const useCalibrationActions = (d: ActionDeps) => {
     d.addLog(`→ ${item.label}`);
   }, [d.addLog, ensureBaseline]);
 
-  // Two-state toggle, regardless of what the byte was already classified as:
-  // the first click excludes it (clearing any stick/trigger/button
-  // classification so the exclusion actually shows), the next click returns
-  // it to unregistered. Never cycles into a classification by clicking.
   const handleByteClick = useCallback((idx: number) => {
     if (d.stickPickMode) { handleStickBytePicked(idx); return; }
     if (d.triggerPickMode) { handleTriggerBytePicked(idx); return; }

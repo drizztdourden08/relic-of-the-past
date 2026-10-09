@@ -5,23 +5,20 @@ import { TextInput } from '../../../../../design-system/primitives/TextInput';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../design-system/primitives/Button';
 import * as msuStore from '@app/lib/storage/msu-store';
+import type { MsuImportProps, MsuImportStatus } from './MsuDetectedSummary.type';
+import { MSU_ARCHIVE_TYPES } from './MsuDetectedSummary.constants';
 import './MsuImport.css';
-
-interface MsuImportProps {
-  profileId: string;
-}
 
 const MsuImport = (props: MsuImportProps) => {
   const { profileId } = props;
   const [url, setUrl] = useState('');
-  const [status, setStatus] = useState<{ message: string; variant: '' | 'error' | 'success' }>({ message: '', variant: '' });
+  const [status, setStatus] = useState<MsuImportStatus>({ message: '', variant: '' });
   const [busy, setBusy] = useState(false);
 
   const handleDownload = useCallback(async () => {
     const trimmed = url.trim();
     if (!trimmed) return;
 
-    // Basic URL validation
     try {
       new URL(trimmed);
     } catch {
@@ -66,9 +63,11 @@ const MsuImport = (props: MsuImportProps) => {
     }
   }, [profileId]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !busy) handleDownload();
-  };
+  }, [busy, handleDownload]);
+
+  const handleUrlChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value), []);
 
   const statusClass = status.variant ? `msu-import__status msu-import__status--${status.variant}` : 'msu-import__status';
 
@@ -80,7 +79,7 @@ const MsuImport = (props: MsuImportProps) => {
           type="text"
           placeholder="Paste MSU pack download URL..."
           value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={handleUrlChange}
           onKeyDown={handleKeyDown}
           disabled={busy}
         />
@@ -95,7 +94,7 @@ const MsuImport = (props: MsuImportProps) => {
       </Box>
       <Box className="msu-import__divider">or</Box>
       <DropZone
-        accept={['.zip', '.7z', '.rar']}
+        accept={MSU_ARCHIVE_TYPES}
         label="Drop MSU pack here"
         hint=".zip, .7z, or .rar archive"
         disabled={busy}

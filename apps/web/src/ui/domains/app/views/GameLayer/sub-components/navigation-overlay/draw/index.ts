@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind barrel */
 export { buildDrawContext } from './draw-context';
-export type { DrawContext, ViewportInfo } from './draw-context';
+export type { DrawContext, ViewportInfo } from './draw.type';
 export { drawReachableDots } from './draw-dots';
 export { drawPathPreview } from './draw-path';
-export { drawCliffArrows, drawStairArrows } from './draw-arrows';
+export { drawCliffArrows } from './draw-cliff-arrows';
+export { drawStairArrows } from './draw-stair-arrows';
 export { drawConnections } from './draw-connections';
 export { drawEntrances } from './draw-entrances';
-export { drawFallHoleSpawns, drawPitStripes } from './draw-fall-zones';
+export { drawFallHoleSpawns } from './draw-fall-hole-spawns';
+export { drawPitStripes } from './draw-pit-stripes';
 export { drawPlayerDebug } from './draw-player-debug';

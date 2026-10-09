@@ -1,32 +1,15 @@
 /* @layer renderer-components @kind component */
-/**
- * The hub's search pane: every setting matching the query, from every tab,
- * with its real control. Each tab draws its own rows in results mode (see
- * SettingsPageContext), grouped under the tab's name with a way to open it.
- */
 import { useMemo } from 'react';
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import type { GameSettings } from '@shared/types/settings';
 import { Box } from '../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { EmptyState } from '../../../../../../design-system/primitives/EmptyState';
 import { SearchSpark } from '../../../../../../design-system/composites/SearchSpark';
-import { SettingsPageContext } from '../../../../compounds/SettingsLayout';
-import { PROFILE_HUB_TABS } from '../../ProfileHub.constants';
-import { ProfileHubTabContent, type ProfileHubTabContentProps } from '../ProfileHubTabContent';
 import { matchTabs } from './match-tabs';
-import type { ProfileHubTab } from '../../ProfileHub.type';
+import { HubSearchTabChip } from './HubSearchTabChip';
+import { HubSearchGroup } from './HubSearchGroup';
+import { IDLE_MARK_SIZE } from './hub-search.constants';
+import type { HubSearchResultsProps } from './hub-search.type';
 import './HubSearchResults.css';
-
-type HubSearchResultsProps = Omit<ProfileHubTabContentProps, 'tab'> & {
-  query: string;
-  tabs: readonly ProfileHubTab[];
-  settings: GameSettings;
-  onOpenTab: (tab: ProfileHubTab) => void;
-};
-
-const IDLE_MARK_SIZE = 40;
 
 const HubSearchResults = (props: HubSearchResultsProps) => {
   const { query, tabs, onOpenTab, ...content } = props;
@@ -55,10 +38,7 @@ const HubSearchResults = (props: HubSearchResultsProps) => {
         {matches.byName.length > 0 && (
           <Box className="hub-search__tabs">
             {matches.byName.map((tab) => (
-              <Button key={tab} variant="bare" className="hub-search__tab-chip" onClick={() => onOpenTab(tab)}>
-                <IconifyIcon icon={PROFILE_HUB_TABS[tab].navIcon} aria-hidden="true" />
-                Open {PROFILE_HUB_TABS[tab].label}
-              </Button>
+              <HubSearchTabChip key={tab} tab={tab} onOpenTab={onOpenTab} />
             ))}
           </Box>
         )}
@@ -68,23 +48,9 @@ const HubSearchResults = (props: HubSearchResultsProps) => {
         {matches.total === 0 && (
           <EmptyState className="hub-search__empty" message="Try a shorter word, or the name of what the setting changes." />
         )}
-        {matches.withRows.map(({ tab, count }) => {
-          const spec = PROFILE_HUB_TABS[tab];
-          const icon = <IconifyIcon icon={spec.navIcon} />;
-          return (
-            <Box as="section" key={tab} className="hub-search__group" aria-label={spec.label}>
-              <Box className="hub-search__group-head">
-                <Box as="span" className="hub-search__group-icon" aria-hidden="true">{icon}</Box>
-                <Text as="h3" className="hub-search__group-title">{spec.label}</Text>
-                <Text className="hub-search__group-count">{count}</Text>
-                <Button variant="bare" className="hub-search__open" onClick={() => onOpenTab(tab)}>Open tab</Button>
-              </Box>
-              <SettingsPageContext.Provider value={{ variant: 'results', icon, title: spec.label, query: q }}>
-                <ProfileHubTabContent {...content} tab={tab} />
-              </SettingsPageContext.Provider>
-            </Box>
-          );
-        })}
+        {matches.withRows.map(({ tab, count }) => (
+          <HubSearchGroup key={tab} tab={tab} count={count} query={q} content={content} onOpenTab={onOpenTab} />
+        ))}
       </Box>
     </Box>
   );

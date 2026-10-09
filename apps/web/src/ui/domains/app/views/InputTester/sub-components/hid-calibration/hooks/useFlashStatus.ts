@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind hook */
-/** Tracks a transient 'ok'/'error' status that auto-resets to 'idle' after a
- *  short delay, so a button can show it worked without wiring up a toast system. */
 import { useCallback, useState } from 'react';
-
-type FlashStatus = 'idle' | 'ok' | 'error';
-const FLASH_DURATION_MS = 2000;
+import { FLASH_DURATION_MS } from './useFlashStatus.constants';
+import type { FlashStatus } from './useFlashStatus.type';
 
 const useFlashStatus = (): [FlashStatus, (ok: boolean) => void] => {
   const [status, setStatus] = useState<FlashStatus>('idle');

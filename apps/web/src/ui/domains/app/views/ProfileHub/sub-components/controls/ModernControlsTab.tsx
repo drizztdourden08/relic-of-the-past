@@ -1,21 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * ModernControlsTab is the player's own slot list, plus the core verbs.
- *
- * THE LIST IS BUILT HERE, not derived. "Add slot" appends an empty numbered
- * slot; the minus on a row removes one and closes the gap, renumbering what is
- * below it. There is no cap and no category filter (contract §19), so someone
- * with a thirty-button device can add thirty rows and a keyboard player can add
- * as many keys as they like. The old face-and-d-pad-only derivation made that
- * impossible.
- *
- * THE HUD LAYOUT IS HERE TOO, at the foot of the list. It belongs to the
- * scheme, not to a global HUD setting, so switching control profile switches
- * the arrangement along with the slots and what they fire.
- *
- * An empty slot is a row, on purpose. It has a number, it draws in the HUD, and
- * it is the answer to "where could I put this?".
- */
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
@@ -24,14 +7,11 @@ import { CoreBindingsGroup } from './CoreBindingsGroup';
 import { SlotRow } from './SlotRow';
 import { AbsentAssignments } from './AbsentAssignments';
 import { SchemeLayoutRow } from './SchemeLayoutRow';
-import type { useControlsSettings } from '../useControlsSettings';
+import { EMPTY_HINT } from './controls.constants';
+import type { CtrlProps } from './controls.type';
 import './ModernControlsTab.css';
 
-type Ctrl = ReturnType<typeof useControlsSettings>;
-
-const EMPTY_HINT = 'Assign a controller to this profile to see its slots. Drop one from the Devices column.';
-
-const ModernControlsTab = ({ ctrl }: { ctrl: Ctrl }) => {
+const ModernControlsTab = ({ ctrl }: CtrlProps) => {
   return (
     <Box
       className={`controls-settings__bindings ${ctrl.dragOverBindings ? 'controls-settings__bindings--drag-over' : ''}`}

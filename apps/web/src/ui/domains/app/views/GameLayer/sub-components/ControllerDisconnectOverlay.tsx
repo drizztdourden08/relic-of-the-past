@@ -5,16 +5,8 @@ import { Text } from '../../../../../design-system/primitives/Text';
 import { InputGlyph } from '../../../compounds/InputGlyph';
 import { resolveFunctionMappingIcon } from '../../../../../../lib/game';
 import type { FunctionMapping } from '@shared/types/controls';
+import type { ControllerDisconnectOverlayProps } from './ControllerDisconnectOverlay.type';
 import './ControllerDisconnectOverlay.css';
-
-interface ControllerDisconnectOverlayProps {
-  controllerName: string;
-  pauseMapping: FunctionMapping | null;
-  prevMapping: FunctionMapping | null;
-  nextMapping: FunctionMapping | null;
-  canSwitchProfile: boolean;
-  onResume: () => void;
-}
 
 const glyph = (m: FunctionMapping) => (
   <InputGlyph binding={m.binding} icon={m.icon ?? resolveFunctionMappingIcon(m)} showLabel={false} />

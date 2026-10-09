@@ -1,7 +1,8 @@
-/* @layer renderer-components @kind data */
-import { CREDITS, getUsageLabel } from '@shared/credits';
+/* @layer renderer-components @kind component */
+import { CREDITS } from '@shared/credits';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
+import { CreditEntryCard } from './CreditEntryCard';
 import './CreditsTab.css';
 
 const CreditsPage = () => {
@@ -19,41 +20,13 @@ const CreditsPage = () => {
           <Text as="h3" className="credits-tab__section-title">{category.title}</Text>
           <Box className="credits-tab__entries">
             {category.entries.map((entry) => (
-              <Box key={`${category.id}-${entry.name}`} className="credits-tab__entry">
-                <Box className="credits-tab__entry-header">
-                  <Text className="credits-tab__entry-name">{entry.name}</Text>
-                  <Text className="credits-tab__entry-project">
-                    {entry.url ? (
-                      <Box
-                        as="a"
-                        className="credits-tab__link"
-                        href={entry.url}
-                        onClick={(e) => { e.preventDefault(); window.open(entry.url); }}
-                      >
-                        {entry.project}
-                      </Box>
-                    ) : (
-                      entry.project
-                    )}
-                  </Text>
-                  {entry.license && (
-                    <Text className="credits-tab__entry-license">{entry.license}</Text>
-                  )}
-                </Box>
-                <Text as="p" className="credits-tab__entry-description">{entry.description}</Text>
-                <Box className="credits-tab__entry-usage">
-                  <Text className="credits-tab__usage-badge" data-level={entry.usage}>
-                    {getUsageLabel(entry.usage)}
-                  </Text>
-                  <Text className="credits-tab__usage-note">{entry.usageNote}</Text>
-                </Box>
-              </Box>
+              <CreditEntryCard key={`${category.id}-${entry.name}`} entry={entry} />
             ))}
           </Box>
         </Box>
       ))}
     </Box>
   );
-}
+};
 
 export { CreditsPage };

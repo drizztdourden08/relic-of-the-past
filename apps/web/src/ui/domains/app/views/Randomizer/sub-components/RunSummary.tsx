@@ -1,31 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * The facts of the run on the Run tab's dashboard: the live session state as the header's
- * chip, then which profile it belongs to, the seed it was generated from and, once a local
- * session has armed, the plan counters it armed with, all as tiles. An Archipelago run adds its
- * connection tiles and a one-line network status that opens the Network tab. The frozen options
- * are summed up by OptionsSummary and listed on the Options tab; the placement is the spoiler
- * tab's.
- */
 import { Chip, Text } from '@ds/primitives';
 import { DashboardPanel, StatTileGrid } from '@ds/composites';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
-import type { ActiveSession, SessionSource } from '@app/lib/game/randomizer-client';
-import { counterTilesOf, summaryTilesOf } from '../behavior/run-summary-tiles';
+import { summaryTilesOf } from '../behavior/run-summary-tiles';
+import { counterTilesOf } from '../behavior/counter-tiles';
 import { sessionToneOf } from '../behavior/session-tone';
 import { NetworkPill } from './NetworkTab';
-import type { PanelPlacement } from '../Randomizer.constants';
-
-interface RunSummaryProps {
-  placement: PanelPlacement;
-  profileName: string;
-  config: ProfileRandomizerConfig;
-  session: ActiveSession | null;
-  source: SessionSource | null;
-  status: ActiveSession['status'];
-  gameRunning: boolean;
-  onOpenNetwork: () => void;
-}
+import type { RunSummaryProps } from './RunSummary.type';
 
 const RunSummary = (props: RunSummaryProps) => {
   const { placement, profileName, config, session, source, status, gameRunning, onOpenNetwork } = props;

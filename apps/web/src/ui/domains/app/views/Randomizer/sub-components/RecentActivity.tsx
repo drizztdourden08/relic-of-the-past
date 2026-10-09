@@ -1,23 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * The Run tab's last few moments of the run, newest first: the activity feed kept to what
- * matters in a run (behavior/recent-activity.ts), drawn with the log panel's own rows and
- * coloured by kind in the Logs tab's palette. The whole feed is the Logs tab, one click away.
- */
 import { useMemo } from 'react';
 import { Button, Text } from '@ds/primitives';
 import { DashboardPanel, LogLines } from '@ds/composites';
 import { recentActivityOf } from '../behavior/recent-activity';
-import type { LogEntry } from '../../../../../../lib/log-bus';
-import type { RoomMessage } from '../../../../../../lib/game/randomizer-client';
-import type { PanelPlacement } from '../Randomizer.constants';
-
-interface RecentActivityProps {
-  placement: PanelPlacement;
-  entries: LogEntry[];
-  roomLines: readonly RoomMessage[];
-  onOpenLog: () => void;
-}
+import type { RecentActivityProps } from './RecentActivity.type';
 
 const RecentActivity = (props: RecentActivityProps) => {
   const { placement, entries, roomLines, onOpenLog } = props;

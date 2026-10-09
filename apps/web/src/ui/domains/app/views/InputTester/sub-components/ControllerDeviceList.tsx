@@ -1,24 +1,20 @@
 /* @layer renderer-components @kind component */
-// SDL3 is the only controller transport now, so every group here is shown exactly once.
 import { useMemo } from 'react';
-import type { ControllerInputState, DeviceStickCalibration } from '../../../../../../lib/input/controller-input-store';
-import type { ControllerDeviceGroup } from '../../../../../../lib/input/controller-device-groups';
+import type { ControllerInputState } from '../../../../../../lib/input/controller-input-store';
 import { resolveDeviceFromEntry } from '../../../../../../lib/input/resolve-device';
 import type { ResolvedDevice } from '@shared/input/family';
-import type { TriggerCalibrationData } from './TriggerCalibrationWizard';
 import { ControllerCard } from './ControllerCard';
 import { UnavailableControllerCard } from './UnavailableControllerCard';
 import { AdapterControllerCard } from './AdapterControllerCard';
+import { IDLE_AXIS_SLOTS, IDLE_BUTTON_SLOTS } from './ControllerDeviceList.constants';
+import type { ControllerDeviceListProps } from './ControllerDeviceList.type';
 
-interface ControllerDeviceListProps {
-  groups: ControllerDeviceGroup[];
-  controllerStates: Map<string, ControllerInputState>;
-  stickCalibrationStore: Record<string, DeviceStickCalibration>;
-  onStickCalibrationComplete: (cal: DeviceStickCalibration) => void;
-  onTriggerCalibrationComplete: (deviceKey: string, axisIndex: number, cal: TriggerCalibrationData) => void;
-  onAddMapping: (mapping: string) => Promise<boolean>;
-  onReportDevice: (deviceKey: string) => void;
-}
+const idleStateFor = (deviceKey: string): ControllerInputState => ({
+  deviceKey,
+  buttons: new Array(IDLE_BUTTON_SLOTS).fill(false),
+  axes: new Array(IDLE_AXIS_SLOTS).fill(0),
+  timestamp: 0,
+});
 
 const ControllerDeviceList = (props: ControllerDeviceListProps) => {
   const {
@@ -26,7 +22,6 @@ const ControllerDeviceList = (props: ControllerDeviceListProps) => {
     onStickCalibrationComplete, onTriggerCalibrationComplete, onAddMapping, onReportDevice,
   } = props;
 
-  // Keyed off `groups` (changes only on a snapshot update), not on every `controllerStates` tick (up to 60/s).
   const resolvedByKey = useMemo(() => {
     const map = new Map<string, ResolvedDevice>();
     for (const group of groups) {
@@ -60,12 +55,7 @@ const ControllerDeviceList = (props: ControllerDeviceListProps) => {
 
           const resolvedDevice = resolvedByKey.get(port.deviceKey);
           if (!resolvedDevice) return null;
-          const state = controllerStates.get(port.deviceKey) ?? {
-            deviceKey: port.deviceKey,
-            buttons: new Array(32).fill(false),
-            axes: new Array(6).fill(0),
-            timestamp: 0,
-          };
+          const state = controllerStates.get(port.deviceKey) ?? idleStateFor(port.deviceKey);
 
           return (
             <ControllerCard
@@ -80,7 +70,7 @@ const ControllerDeviceList = (props: ControllerDeviceListProps) => {
               onReportDevice={onReportDevice}
               hasGyro={port.entry.hasGyro}
               onStickCalibrationComplete={onStickCalibrationComplete}
-              onTriggerCalibrationComplete={(axisIndex, cal) => onTriggerCalibrationComplete(port.deviceKey, axisIndex, cal)}
+              onTriggerCalibrationComplete={onTriggerCalibrationComplete}
             />
           );
         })}

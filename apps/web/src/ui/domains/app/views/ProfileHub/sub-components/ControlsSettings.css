@@ -5,7 +5,6 @@
   overflow: hidden;
 }
 
-/* ─── Left sidebar ─── */
 .controls-settings__sidebar {
   display: flex;
   flex-direction: column;
@@ -25,7 +24,6 @@
   display: none;
 }
 
-/* Collapsed icon strip showing just the device icons for quick selection */
 .controls-settings__sidebar-icons {
   display: none;
   flex-direction: column;
@@ -62,7 +60,6 @@
   background: var(--c-gold-soft);
 }
 
-/* ─── Shared column header (title + toggle) ─── */
 .controls-settings__col-header {
   display: flex;
   align-items: center;
@@ -82,7 +79,6 @@
   white-space: nowrap;
 }
 
-/* When collapsed, rotate the title vertically */
 .controls-settings__sidebar--collapsed .controls-settings__col-header,
 .controls-settings__devices-column--collapsed .controls-settings__col-header {
   flex-direction: column;
@@ -118,7 +114,6 @@
   color: var(--c-text);
 }
 
-/* ─── Center: binding editor ─── */
 .controls-settings__main {
   flex: 1;
   display: flex;
@@ -129,9 +124,6 @@
   min-width: 0;
 }
 
-/* Tab bar now uses the DS TabBar primitive. */
-
-/* ─── Placeholder tab ─── */
 .controls-settings__placeholder {
   flex: 1;
   display: flex;
@@ -145,7 +137,6 @@
   font-style: italic;
 }
 
-/* ─── Right sidebar: detected devices ─── */
 .controls-settings__devices-column {
   width: fit-content;
   max-width: 260px;
@@ -163,7 +154,6 @@
   padding: var(--space-sm);
 }
 
-/* When collapsed, hide the label text in each card but keep the card structure intact */
 .controls-settings__devices-column--collapsed .device-card__info {
   display: none;
 }
@@ -173,12 +163,10 @@
   gap: 0;
 }
 
-/* Hide expanded-only content */
 .controls-settings__devices-column--collapsed .controls-settings__devices-column-expanded {
   display: none;
 }
 
-/* ─── Section headers ─── */
 .controls-settings__section-header {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
@@ -192,7 +180,6 @@
   flex-shrink: 0;
 }
 
-/* ─── Detected devices ─── */
 .controls-settings__device-list {
   display: flex;
   flex-direction: column;
@@ -212,7 +199,6 @@
   line-height: 1.4;
 }
 
-/* ─── Binding editor ─── */
 .controls-settings__bindings {
   flex: 1;
   display: flex;
@@ -229,7 +215,6 @@
   padding: var(--space-md) var(--space-md) var(--space-sm);
 }
 
-/* Heading + haptics toggle share one row, toggle pinned to the far end. */
 .controls-settings__section-header-row {
   display: flex;
   align-items: center;
@@ -262,7 +247,6 @@
   overflow-y: auto;
 }
 
-/* ─── Used Inputs summary ─── */
 .controls-settings__used-inputs {
   flex-shrink: 0;
   border: 1px solid var(--c-border);
@@ -321,8 +305,6 @@
   color: var(--c-text-muted);
 }
 
-/* Short viewport (landscape phones): reclaim vertical space by dropping the bottom
-   Required Inputs summary and the "Button Mappings" section header. */
 @media (height <= 520px) {
   .controls-settings__used-inputs {
     display: none;

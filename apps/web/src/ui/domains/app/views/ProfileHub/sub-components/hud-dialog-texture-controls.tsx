@@ -1,5 +1,4 @@
-/* @layer renderer-components @kind component */
-/** Control renderer for the Texture subsection of the Dialog Box settings. */
+/* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
@@ -7,42 +6,9 @@ import { SegmentedControl } from '../../../../../design-system/primitives/Segmen
 import { Slider } from '../../../../../design-system/primitives/Slider';
 import { DialogColorControl } from './dialog-color-control';
 import { DialogStopSlider } from './dialog-stop-slider';
-
-/** Cell size multipliers the Size slider offers. */
-const DIALOG_TEXTURE_SCALES = [0.5, 0.75, 1, 1.5, 2] as const;
-
-const TEXTURE_OPTIONS = [
-  { value: 'none', label: 'None' },
-  { value: 'triforce-outline', label: 'Triforce' },
-  { value: 'triforce-filled', label: 'Triforce Filled' },
-  { value: 'hex', label: 'Hex' },
-  { value: 'scanlines', label: 'Scanlines' },
-  { value: 'stripes', label: 'Stripes' },
-];
-
-const ANIMATION_OPTIONS = [
-  { value: 'none', label: 'Still' },
-  { value: 'scroll', label: 'Scroll' },
-  { value: 'drift', label: 'Drift' },
-  { value: 'twinkle', label: 'Twinkle' },
-  { value: 'pulse', label: 'Pulse' },
-];
-
-const SPEED_OPTIONS = [
-  { value: 'slow', label: 'Slow' },
-  { value: 'normal', label: 'Normal' },
-  { value: 'fast', label: 'Fast' },
-];
-
-/**
- * Only the rows this subsection owns get an answer. The Dialog Box section runs every one of its
- * keys through this rule, so claiming a key that belongs to another subsection idles that row too.
- */
-const isTextureDisabled = (key: string, settings: GameSettings): boolean => {
-  if (!key.startsWith('dialogTexture') || key === 'dialogTexture') return false;
-  if (settings.dialogTexture === 'none') return true;
-  return key === 'dialogTextureSpeed' && settings.dialogTextureAnimation === 'none';
-};
+import {
+  ANIMATION_OPTIONS, DIALOG_TEXTURE_SCALES, SPEED_OPTIONS, TEXTURE_OPTIONS,
+} from './hud-settings.constants';
 
 const renderTextureControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void, disabled: boolean): ReactNode | null => {
   switch (key) {
@@ -148,4 +114,4 @@ const renderTextureControl = (key: string, settings: GameSettings, onChange: (pa
   }
 };
 
-export { renderTextureControl, isTextureDisabled };
+export { renderTextureControl };

@@ -1,9 +1,5 @@
-/* @layer renderer-components @kind data */
-/**
- * Byte-level HID calibration. Flow: profile, GYRO (manual start/stop), IDLE (one-click baseline),
- * STICKS (full circle auto-detects the 2 widest-range bytes), BUTTONS (auto-detect on non-excluded bytes).
- */
-import { forwardRef, useEffect, useImperativeHandle } from 'react';
+/* @layer renderer-components @kind component */
+import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from './hid-calibration/hid-calibration.type';
@@ -31,12 +27,14 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
     onCapturedCountChange?.(wiz.capturedCount);
   }, [wiz.capturedCount, onCapturedCountChange]);
 
-  // The device and layout are settled before this mounts; this covers the one frame before the layout arrives.
+  const { handleCopyJson, handleSaveDebugFile } = wiz;
+  const handleCopy = useCallback(() => handleCopyJson().then(flashCopy), [handleCopyJson, flashCopy]);
+  const handleSave = useCallback(() => handleSaveDebugFile().then(flashSave), [handleSaveDebugFile, flashSave]);
+
   if (wiz.phase === 'select-profile') return null;
 
   return (
     <Box className="hid-cal">
-      {/* Header */}
       <Box className="hid-cal__header">
         <Text as="h3" className="hid-cal__title">Byte capture for {wiz.profile?.name ?? 'Controller'}</Text>
         {!hideOwnActions && (
@@ -44,8 +42,8 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
             copyStatus={copyStatus}
             saveStatus={saveStatus}
             capturedCount={wiz.capturedCount}
-            onCopyJson={() => wiz.handleCopyJson().then(flashCopy)}
-            onSaveDebugFile={() => wiz.handleSaveDebugFile().then(flashSave)}
+            onCopyJson={handleCopy}
+            onSaveDebugFile={handleSave}
             onFinish={wiz.handleFinish}
             onCancel={onCancel}
           />
@@ -56,7 +54,6 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
 
       <LiveParserOutput profile={wiz.profile} state={wiz.liveParsedState} />
 
-      {/* Prereqs: Gyro + Idle */}
       <PrereqCards
         hasGyro={wiz.hasGyro}
         gyroState={wiz.gyroState}
@@ -71,10 +68,8 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
         onIdleRedo={wiz.handleIdleRedo}
       />
 
-      {/* Sticks + Triggers */}
       <StickTriggerSection wiz={wiz} />
 
-      {/* Button Mapping */}
       <ButtonMapping
         items={wiz.items}
         buttonItems={wiz.buttonItems}
@@ -95,8 +90,6 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
         setInputPhaseActiveWrapped={wiz.setInputPhaseActiveWrapped}
       />
 
-      {/* A controller held exclusively at a lower level has no raw HID bytes; the wizard still
-          runs on gamepad and joystick data, so show a notice, not an empty grid. */}
       {wiz.rawAvailable ? (
         <ByteGrid
           latestBytes={wiz.latestBytes}
@@ -120,7 +113,6 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
         <RawAvailabilityNotice available={false} reason={wiz.rawUnavailableReason} />
       )}
 
-      {/* Log */}
       <CalibrationLog log={wiz.log} logRef={wiz.logRef} />
 
       <FlakyByteWarningDialog

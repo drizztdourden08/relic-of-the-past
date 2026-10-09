@@ -119,7 +119,6 @@
   overflow: hidden;
 }
 
-/* Continuous shimmer: a stutter means the UI thread is blocked. */
 .input-cal__card::after {
   content: '';
   position: absolute;

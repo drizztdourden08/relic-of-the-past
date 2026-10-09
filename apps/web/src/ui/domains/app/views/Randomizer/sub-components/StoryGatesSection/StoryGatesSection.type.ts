@@ -4,9 +4,7 @@ import type { RandomizerOptionRowProps } from '@domains/app/compounds/Randomizer
 
 interface StoryGatesSectionProps {
   setting: StoryGateSetting;
-  /** The pool impact cell of a row, where the panel has one. */
   cellOf?: (key: string) => RandomizerOptionRowProps['impact'];
-  /** Absent for a read-only view. */
   onChange?: (setting: StoryGateSetting) => void;
 }
 

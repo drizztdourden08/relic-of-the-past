@@ -1,8 +1,4 @@
-/* @layer renderer-components @kind component */
-/**
- * Control renderer + disabled rules for the Dialog Box section of the HUD settings tab: the box,
- * text and background rows live here, the border and texture rows in their own renderers.
- */
+/* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { DIALOG_FONT_SCALES, DIALOG_STROKE_WIDTHS } from '@shared/game/dialog/pacing';
@@ -11,38 +7,11 @@ import { SegmentedControl } from '../../../../../design-system/primitives/Segmen
 import { Slider } from '../../../../../design-system/primitives/Slider';
 import { DialogStopSlider } from './dialog-stop-slider';
 import { DialogColorControl } from './dialog-color-control';
-import { renderBorderControl, isBorderDisabled } from './hud-dialog-border-controls';
-import { renderTextureControl, isTextureDisabled } from './hud-dialog-texture-controls';
+import { renderBorderControl } from './hud-dialog-border-controls';
+import { renderTextureControl } from './hud-dialog-texture-controls';
 import { renderHighlightControl } from './hud-dialog-highlight-controls';
-
-const BOX_OPTIONS = [
-  { value: 'original', label: 'Original' },
-  { value: 'enhanced', label: 'Enhanced' },
-];
-
-const FONT_OPTIONS = [
-  { value: 'original', label: 'Original' },
-  { value: 'modern', label: 'Modern' },
-];
-
-const FIT_OPTIONS = [
-  { value: 'full', label: 'Full' },
-  { value: 'message', label: 'Message' },
-  { value: 'fit', label: 'Fit' },
-];
-
-const MODERN_ONLY_KEYS = new Set(['dialogFontScale', 'dialogInkColor', 'dialogStrokeColor', 'dialogStrokeWidth']);
-
-/** Rows that act on both boxes, so the original box leaves them live. */
-const EITHER_BOX_KEYS = new Set(['dialogBox', 'hudHighlightPrimary', 'hudHighlightSecondary']);
-
-/** Every other row describes the enhanced box, so the original box idles them all. */
-const isDialogDisabled = (key: string, settings: GameSettings): boolean => {
-  if (EITHER_BOX_KEYS.has(key)) return false;
-  if (settings.dialogBox === 'original') return true;
-  if (MODERN_ONLY_KEYS.has(key) && settings.dialogFont === 'original') return true;
-  return isBorderDisabled(key, settings) || isTextureDisabled(key, settings);
-};
+import { isDialogDisabled } from './hud-dialog-disabled';
+import { BOX_OPTIONS, FIT_OPTIONS, FONT_OPTIONS } from './hud-settings.constants';
 
 const renderDialogControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   const disabled = isDialogDisabled(key, settings);
@@ -156,4 +125,4 @@ const renderDialogControl = (key: string, settings: GameSettings, onChange: (pat
   }
 };
 
-export { renderDialogControl, isDialogDisabled };
+export { renderDialogControl };

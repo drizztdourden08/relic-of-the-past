@@ -44,7 +44,6 @@
   outline-offset: -2px;
 }
 
-/* Action label, first column */
 .binding-row__action-label {
   width: 90px;
   font-size: var(--text-base);
@@ -53,7 +52,6 @@
   flex-shrink: 0;
 }
 
-/* SNES label, second column */
 .binding-row__snes-label {
   width: 80px;
   font-size: var(--text-sm);
@@ -62,7 +60,6 @@
   flex-shrink: 0;
 }
 
-/* Icon slots, fixed width for both SNES and binding icons */
 .binding-row__icon-slot {
   width: 28px;
   height: 28px;
@@ -78,7 +75,6 @@
   object-fit: contain;
 }
 
-/* Source-controller glyph, only rendered when a profile mixes devices */
 .binding-row__device-icon-slot {
   width: var(--space-lg);
   height: var(--space-lg);
@@ -95,7 +91,6 @@
   object-fit: contain;
 }
 
-/* Binding label, right column */
 .binding-row__binding-label {
   flex: 1;
   font-size: var(--text-base);
@@ -111,7 +106,6 @@
   font-style: italic;
 }
 
-/* Clear button */
 .binding-row__clear {
   width: 22px;
   height: 22px;

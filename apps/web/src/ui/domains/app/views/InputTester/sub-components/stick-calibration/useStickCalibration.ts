@@ -1,52 +1,45 @@
 /* @layer renderer-components @kind hook */
-/**
- * State machine hook for 3-step stick calibration.
- */
-
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { controllerInputStore } from '../../../../../../../lib/input/controller-input-store';
 import {
   CENTER_SAMPLE_FRAMES,
   DEFAULT_INNER_DEADZONE,
   DEFAULT_OUTER_DEADZONE,
+  MIN_STICK_RANGE,
+  STICK_RAW_CENTER,
+  STICK_RAW_MAX,
+} from './stick-calibration.constants';
+import type {
+  DeviceStickCalibration, Step, StickCalibrationData, UseStickCalibrationOptions,
 } from './stick-calibration.type';
-import type { DeviceStickCalibration, Step, StickCalibrationData } from './stick-calibration.type';
 
-interface Options {
-  existingCalibration?: DeviceStickCalibration | null;
-  target?: 'left' | 'right';
-  deviceKey?: string;
-}
-
-const useStickCalibration = (options: Options) => {
+const useStickCalibration = (options: UseStickCalibrationOptions) => {
   const { existingCalibration, target, deviceKey } = options;
   const [step, setStep] = useState<Step>('center');
   const calibrateLeft = target !== 'right';
   const calibrateRight = target !== 'left';
 
-  // Raw 12-bit values (live)
-  const [rawLX, setRawLX] = useState(2048);
-  const [rawLY, setRawLY] = useState(2048);
-  const [rawRX, setRawRX] = useState(2048);
-  const [rawRY, setRawRY] = useState(2048);
+  const [rawLX, setRawLX] = useState(STICK_RAW_CENTER);
+  const [rawLY, setRawLY] = useState(STICK_RAW_CENTER);
+  const [rawRX, setRawRX] = useState(STICK_RAW_CENTER);
+  const [rawRY, setRawRY] = useState(STICK_RAW_CENTER);
 
-  // Center calibration
   const centerSamplesRef = useRef<{ lx: number[]; ly: number[]; rx: number[]; ry: number[] }>({
     lx: [], ly: [], rx: [], ry: [],
   });
   const [centerDone, setCenterDone] = useState(false);
   const [centerProgress, setCenterProgress] = useState(0);
-  const [centerValues, setCenterValues] = useState({ lx: 2048, ly: 2048, rx: 2048, ry: 2048 });
+  const [centerValues, setCenterValues] = useState({
+    lx: STICK_RAW_CENTER, ly: STICK_RAW_CENTER, rx: STICK_RAW_CENTER, ry: STICK_RAW_CENTER,
+  });
 
-  // Range calibration
   const [rangeMinMax, setRangeMinMax] = useState({
-    lxMin: 4095, lxMax: 0, lyMin: 4095, lyMax: 0,
-    rxMin: 4095, rxMax: 0, ryMin: 4095, ryMax: 0,
+    lxMin: STICK_RAW_MAX, lxMax: 0, lyMin: STICK_RAW_MAX, lyMax: 0,
+    rxMin: STICK_RAW_MAX, rxMax: 0, ryMin: STICK_RAW_MAX, ryMax: 0,
   });
   const rangeMinMaxRef = useRef(rangeMinMax);
   const [rangeDone, setRangeDone] = useState(false);
 
-  // Review deadzones
   const [innerDz, setInnerDz] = useState(
     existingCalibration?.left.innerDeadzone ?? DEFAULT_INNER_DEADZONE,
   );
@@ -54,7 +47,6 @@ const useStickCalibration = (options: Options) => {
     existingCalibration?.left.outerDeadzone ?? DEFAULT_OUTER_DEADZONE,
   );
 
-  // Subscribe to input
   useEffect(() => {
     const unsub = controllerInputStore.onInput((state) => {
       if (deviceKey && state.deviceKey !== deviceKey) return;
@@ -65,7 +57,6 @@ const useStickCalibration = (options: Options) => {
     return unsub;
   }, []);
 
-  // Center sampling
   const startCenter = useCallback(() => {
     centerSamplesRef.current = { lx: [], ly: [], rx: [], ry: [] };
     setCenterDone(false);
@@ -85,7 +76,6 @@ const useStickCalibration = (options: Options) => {
     }
   }, [step, centerDone, rawLX, rawLY, rawRX, rawRY]);
 
-  // Range tracking
   useEffect(() => {
     if (step !== 'range') return;
     const prev = rangeMinMaxRef.current;
@@ -97,16 +87,14 @@ const useStickCalibration = (options: Options) => {
     };
     rangeMinMaxRef.current = next;
     setRangeMinMax(next);
-    const minRange = 500;
-    const leftOk = !calibrateLeft || (next.lxMax - next.lxMin > minRange && next.lyMax - next.lyMin > minRange);
-    const rightOk = !calibrateRight || (next.rxMax - next.rxMin > minRange && next.ryMax - next.ryMin > minRange);
+    const leftOk = !calibrateLeft || (next.lxMax - next.lxMin > MIN_STICK_RANGE && next.lyMax - next.lyMin > MIN_STICK_RANGE);
+    const rightOk = !calibrateRight || (next.rxMax - next.rxMin > MIN_STICK_RANGE && next.ryMax - next.ryMin > MIN_STICK_RANGE);
     if (leftOk && rightOk) setRangeDone(true);
   }, [step, rawLX, rawLY, rawRX, rawRY]);
 
-  // Build calibration data
   const buildCalibration = useCallback((): DeviceStickCalibration => {
     const defaultCal: StickCalibrationData = {
-      centerX: 2048, centerY: 2048, minX: 0, maxX: 4095, minY: 0, maxY: 4095,
+      centerX: STICK_RAW_CENTER, centerY: STICK_RAW_CENTER, minX: 0, maxX: STICK_RAW_MAX, minY: 0, maxY: STICK_RAW_MAX,
       innerDeadzone: DEFAULT_INNER_DEADZONE, outerDeadzone: DEFAULT_OUTER_DEADZONE,
     };
     const left: StickCalibrationData = calibrateLeft ? {
@@ -124,7 +112,6 @@ const useStickCalibration = (options: Options) => {
     return { left, right, updatedAt: new Date().toISOString() };
   }, [centerValues, rangeMinMax, innerDz, outerDz, calibrateLeft, calibrateRight, existingCalibration]);
 
-  // Navigation helpers
   const goToRange = useCallback(() => {
     const mm = {
       lxMin: centerValues.lx, lxMax: centerValues.lx,

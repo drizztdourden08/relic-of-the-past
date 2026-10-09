@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback } from 'react';
-import type { CSSProperties } from 'react';
+import type React from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { useNavigationOverlayStore } from '../../../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
@@ -11,30 +11,13 @@ import { PathControlsLegend } from './PathControlsLegend';
 import { OverlayLegend } from './OverlayLegend';
 import { DotLegend } from './DotLegend';
 import { ArrowLegend } from './ArrowLegend';
-
-const IL: Record<string, CSSProperties> = {
-  overlay: { position: 'absolute', inset: 0, zIndex: 6 },
-  // Both containers are pointer-events:none so the overlay never eats a game click;
-  // each panel re-enables pointer events for its own collapse chevron.
-  controls: { position: 'absolute', top: 6, left: 6, zIndex: 7, pointerEvents: 'none' },
-  legends: {
-    position: 'absolute', bottom: 6, right: 6, zIndex: 7,
-    display: 'flex', gap: 6, alignItems: 'flex-end', pointerEvents: 'none',
-  },
-  // Arrows sit directly above the on-screen list, in the right-hand column.
-  legendColumn: { display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'stretch' },
-};
+import { INITIAL_MOUSE_STATE, LAYOUT_STYLES } from './NavigationOverlay.constants';
 
 const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
   const { visible, result, annotations } = useNavigationOverlayStore();
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
 
-  const [mouseState, setMouseState] = useState<MouseState>({
-    leftHeld: false,
-    lockTarget: false,
-    hoverTile: null,
-    lockedTile: null,
-  });
+  const [mouseState, setMouseState] = useState<MouseState>(INITIAL_MOUSE_STATE);
   const mouseStateRef = useRef(mouseState);
 
   useEffect(() => {
@@ -75,7 +58,7 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
 
   return (
     <Box
-      style={IL.overlay}
+      style={LAYOUT_STYLES.overlay}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onContextMenu={handleContextMenu}
@@ -98,12 +81,12 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
           pathPreviewState={mouseState}
         />
       )}
-      <Box style={IL.controls}>
+      <Box style={LAYOUT_STYLES.controls}>
         <PathControlsLegend />
       </Box>
-      <Box style={IL.legends}>
+      <Box style={LAYOUT_STYLES.legends}>
         <DotLegend />
-        <Box style={IL.legendColumn}>
+        <Box style={LAYOUT_STYLES.legendColumn}>
           <ArrowLegend />
           <OverlayLegend annotations={annotations} />
         </Box>

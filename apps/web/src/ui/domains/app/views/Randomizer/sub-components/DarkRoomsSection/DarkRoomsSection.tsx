@@ -1,32 +1,14 @@
 /* @layer renderer-components @kind component */
-/**
- * The dark-room section of an options panel: the requirement, then the items
- * that satisfy it as a row of tiles.
- *
- * A light is an ITEM, so the tile carries it: its own art, a tick, nothing
- * else. The section says what it is for once, at the head, and then only
- * speaks again when something is actually wrong.
- *
- * Two things can be wrong, and they read differently on purpose. A tile a
- * sibling setting holds off carries its reason in the blocking colour, since
- * a control that cannot be moved has to say why. Unticking every light is
- * allowed, but it leaves the requirement above asking for something nothing
- * can meet, so the rule reads unlit rooms as passable and the seed rolls
- * blind: that is not an error, it is a consequence, so it is stated in a
- * banner instead of flagged on a control. The setting handed back on every edit is the STORED one,
- * the mask living in the tiles, so lifting it returns the player's own answer.
- *
- * The read-only Options page shares this section with no handler, so a stored
- * snapshot reads the same way, every value drawn as a tag.
- */
+import { useCallback } from 'react';
 import { Box, Text } from '@ds/primitives';
 import { AlertBanner } from '@domains/app/compounds/AlertBanner';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
-import { DARK_ROOM_REQUIRED_OPTION } from './behavior/dark-room-option-defs';
+import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { DarkRoomLightField } from '@shared/randomizer/world/dark-rooms/dark-room.type';
 import { useDarkRoomLightTiles } from './behavior/useDarkRoomLightTiles';
 import { DarkRoomLightTile } from './sub-components/DarkRoomLightTile';
-import { BLIND_NOTE, DARK_ROOMS_TITLE, LIGHTS_LABEL } from './DarkRoomsSection.constants';
+import { BLIND_NOTE, DARK_ROOMS_TITLE, DARK_ROOM_REQUIRED_OPTION, LIGHTS_LABEL } from './DarkRoomsSection.constants';
 import type { DarkRoomsSectionProps } from './DarkRoomsSection.type';
 import './DarkRoomsSection.css';
 
@@ -34,11 +16,18 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
   const { setting, impact, forced, onChange } = props;
   const readOnly = onChange === undefined;
   const tiles = useDarkRoomLightTiles(setting.lights, forced);
-  // The requirement only shapes the seed logic. A ticked light lights rooms
-  // either way, so the tiles stay editable and keep their values when it is off.
   const reasons = tiles.filter((tile) => tile.reason !== undefined);
-  // Asked for a light with none left to count: the seed is rolled blind.
-  const blind = setting.requireLight && tiles.every((tile) => !tile.checked);
+  const rolledBlind = setting.requireLight && tiles.every((tile) => !tile.checked);
+  const changeRequirement = useCallback(
+    (next: OptionValue) => onChange?.({ ...setting, requireLight: Boolean(next) }),
+    [onChange, setting],
+  );
+  const changeLight = useCallback(
+    (field: DarkRoomLightField, checked: boolean) => onChange?.({
+      ...setting, lights: { ...setting.lights, [field]: checked },
+    }),
+    [onChange, setting],
+  );
 
   return (
     <RandomizerOptionGroup title={DARK_ROOMS_TITLE} live className="dark-rooms">
@@ -48,9 +37,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
           value={setting.requireLight}
           impact={impact}
           readout={readOnly}
-          onChange={readOnly
-            ? undefined
-            : (next) => onChange({ ...setting, requireLight: Boolean(next) })}
+          onChange={readOnly ? undefined : changeRequirement}
         />
       )}
       <Text className="dark-rooms__label">{LIGHTS_LABEL}</Text>
@@ -61,16 +48,14 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
             tile={tile}
             disabled={readOnly}
             readout={readOnly}
-            onChange={readOnly ? undefined : (checked) => onChange({
-              ...setting, lights: { ...setting.lights, [tile.field]: checked },
-            })}
+            onChange={readOnly ? undefined : changeLight}
           />
         ))}
       </Box>
       {reasons.map((tile) => (
         <Text key={tile.field} className="dark-rooms__reason">{`${tile.name} ${tile.reason}`}</Text>
       ))}
-      {blind && <AlertBanner className="dark-rooms__banner">{BLIND_NOTE}</AlertBanner>}
+      {rolledBlind && <AlertBanner className="dark-rooms__banner">{BLIND_NOTE}</AlertBanner>}
     </RandomizerOptionGroup>
   );
 };

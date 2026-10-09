@@ -1,19 +1,33 @@
 /* @layer renderer-components @kind component */
-/** Create / overwrite / delete confirmation dialogs for the Home tab. */
+import { useCallback } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import { Dialog } from '../../../../../../design-system/composites/Dialog';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Box } from '../../../../../../design-system/primitives/Box';
-import type { HomeTabSaves } from './useHomeTabSaves';
-import { IMPORT_CONFIRM_WORD } from './useHomeTabSramImport';
+import { IMPORT_CONFIRM_WORD, SAVE_NAME_MAX_LENGTH } from './home-tab.constants';
+import type { HomeTabDialogsProps } from './home-tab.type';
 import './HomeTabDialogs.css';
 
-const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
+const HomeTabDialogs = ({ saves }: HomeTabDialogsProps) => {
   const {
     dialog, setDialog, newSaveName, setNewSaveName, importConfirmText, setImportConfirmText,
     handleConfirmCreate, handleConfirmOverwrite, handleConfirmDelete,
     handleCancelImportSram, handleConfirmImportSram,
   } = saves;
+  const confirmWordTyped = importConfirmText.trim().toLowerCase() === IMPORT_CONFIRM_WORD;
+
+  const closeDialog = useCallback(() => setDialog({ type: null }), [setDialog]);
+  const handleNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => setNewSaveName(e.target.value), [setNewSaveName]);
+  const handleNameKey = useCallback((e: KeyboardEvent) => { if (e.key === 'Enter') handleConfirmCreate(); }, [handleConfirmCreate]);
+  const handleConfirmChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => setImportConfirmText(e.target.value),
+    [setImportConfirmText],
+  );
+  const handleConfirmKey = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Enter' && confirmWordTyped) handleConfirmImportSram();
+  }, [confirmWordTyped, handleConfirmImportSram]);
+
   return (
     <>
       <Dialog
@@ -23,15 +37,15 @@ const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
         confirmLabel="Save"
         cancelLabel="Cancel"
         onConfirm={handleConfirmCreate}
-        onCancel={() => setDialog({ type: null })}
+        onCancel={closeDialog}
       >
         <TextInput
           className="home-tab__save-name-input"
           value={newSaveName}
-          onChange={(e) => setNewSaveName(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleConfirmCreate(); }}
+          onChange={handleNameChange}
+          onKeyDown={handleNameKey}
           placeholder="Save name..."
-          maxLength={64}
+          maxLength={SAVE_NAME_MAX_LENGTH}
           autoFocus
         />
       </Dialog>
@@ -44,7 +58,7 @@ const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
         cancelLabel="Cancel"
         variant="danger"
         onConfirm={handleConfirmOverwrite}
-        onCancel={() => setDialog({ type: null })}
+        onCancel={closeDialog}
       />
 
       <Dialog
@@ -55,7 +69,7 @@ const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
         cancelLabel="Cancel"
         variant="danger"
         onConfirm={handleConfirmDelete}
-        onCancel={() => setDialog({ type: null })}
+        onCancel={closeDialog}
       />
 
       <Dialog
@@ -64,7 +78,7 @@ const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
         message=""
         confirmLabel="Import"
         cancelLabel="Cancel"
-        confirmDisabled={importConfirmText.trim().toLowerCase() !== IMPORT_CONFIRM_WORD}
+        confirmDisabled={!confirmWordTyped}
         variant="danger"
         onConfirm={handleConfirmImportSram}
         onCancel={handleCancelImportSram}
@@ -83,8 +97,8 @@ const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
         <TextInput
           className="home-tab__import-confirm-input"
           value={importConfirmText}
-          onChange={(e) => setImportConfirmText(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter' && importConfirmText.trim().toLowerCase() === IMPORT_CONFIRM_WORD) handleConfirmImportSram(); }}
+          onChange={handleConfirmChange}
+          onKeyDown={handleConfirmKey}
           placeholder={IMPORT_CONFIRM_WORD}
           autoFocus
         />
@@ -96,8 +110,8 @@ const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
         message=""
         confirmLabel="OK"
         hideCancel
-        onConfirm={() => setDialog({ type: null })}
-        onCancel={() => setDialog({ type: null })}
+        onConfirm={closeDialog}
+        onCancel={closeDialog}
       >
         <Box className="home-tab-dialogs__callout home-tab-dialogs__callout--bad">
           <Text as="span" className="home-tab-dialogs__callout-icon">⚠</Text>

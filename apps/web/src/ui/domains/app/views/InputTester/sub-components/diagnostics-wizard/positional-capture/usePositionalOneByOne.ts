@@ -1,34 +1,17 @@
 /* @layer renderer-components @kind hook */
-/**
- * Orchestration for the rebuilt positional-capture step: the same one-by-one
- * interaction ButtonMapping already renders for byte-capture (prompt, wait,
- * record, advance, skip, go back), driven here from joystick-level samples
- * instead of raw-byte diffs. Builds its ask list from the connected device's
- * own resolved controls (see build-positional-targets.ts); trimTargetsToDevice
- * is a safety net against the first live sample, since the resolved list
- * should already match exactly what the device reports.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { controllerInputStore } from '@app/lib/input/controller-input-store';
 import type { ControllerJoystickSample } from '@shared/ipc';
-import type { ResolvedDevice } from '@shared/input/family';
 import type { InputItem } from '../../hid-calibration/hid-calibration.type';
 import { buildPositionalTargets } from './build-positional-targets';
 import {
   buildRecord, describeRecord, detectFiredIndex, growAxisRanges, instructionFor,
   isAtRest, startAxisRanges, trimTargetsToDevice, widestAxis,
 } from './positional-detect';
-import type { AxisRanges } from './positional-detect';
-import type { PositionalCaptureRecord, PositionalTarget } from './positional-capture.type';
-
-interface UsePositionalOneByOneProps {
-  deviceKey: string | null;
-  active: boolean;
-  resolvedDevice: ResolvedDevice | null;
-}
-
-const toItem = (target: PositionalTarget): InputItem =>
-  ({ kind: target.kind, id: target.id, label: target.label, category: target.category, status: 'pending' });
+import { toInputItem as toItem } from './to-input-item';
+import type {
+  AxisRanges, PositionalCaptureRecord, PositionalTarget, UsePositionalOneByOneProps,
+} from './positional-capture.type';
 
 const usePositionalOneByOne = (props: UsePositionalOneByOneProps) => {
   const { deviceKey, active, resolvedDevice } = props;
@@ -52,7 +35,6 @@ const usePositionalOneByOne = (props: UsePositionalOneByOneProps) => {
   const setInputPhaseActiveWrapped = useCallback((v: boolean) => { inputPhaseActiveRef.current = v; setInputPhaseActive(v); }, []);
   const setAutoAdvanceWrapped = useCallback((v: boolean) => { autoAdvanceRef.current = v; setAutoAdvance(v); }, []);
 
-  // Builds the ask list once per device, stable while this step stays active.
   useEffect(() => {
     if (!active) return;
     const targets = buildPositionalTargets(resolvedDevice);
@@ -68,9 +50,6 @@ const usePositionalOneByOne = (props: UsePositionalOneByOneProps) => {
     activeIndexRef.current = idx; setActiveIndex(idx);
     baselineRef.current = latestSampleRef.current;
     rangesRef.current = latestSampleRef.current ? startAxisRanges(latestSampleRef.current) : [];
-    // The controller is usually still moving from the previous answer. Nothing
-    // is accepted until it has come back to rest, which is what keeps one stick
-    // sweep from answering every remaining item in a single frame.
     awaitingRestRef.current = true;
     setItems((prev) => prev.map((it, i) => (i === idx ? { ...it, status: 'active' } : it)));
   }, []);
@@ -91,10 +70,6 @@ const usePositionalOneByOne = (props: UsePositionalOneByOneProps) => {
     if (autoAdvanceRef.current) advance();
   }, [advance]);
 
-  // Reads the same decoded gamepad layer the calibration screen uses, so a
-  // recorded position means what its name says. The joystick layer underneath
-  // numbers its buttons and axes differently, and naming those numbers with
-  // positional names produced records that disagreed with the rest of the app.
   useEffect(() => {
     if (!active || !deviceKey) return;
     const unsub = controllerInputStore.onInput((state) => {
@@ -107,9 +82,6 @@ const usePositionalOneByOne = (props: UsePositionalOneByOneProps) => {
       const baseline = baselineRef.current;
       if (!target || !baseline) return;
 
-      // Hold everything until the pad settles after the previous answer, then
-      // re-baseline from that resting position so this item measures only what
-      // the user does next.
       if (awaitingRestRef.current) {
         if (!isAtRest(baseline, sample)) return;
         awaitingRestRef.current = false;
@@ -124,9 +96,6 @@ const usePositionalOneByOne = (props: UsePositionalOneByOneProps) => {
         return;
       }
 
-      // An axis is identified by how far it travels, not by the first frame it
-      // moves. The answer lands once the control returns to rest, so the whole
-      // motion is measured before advancing.
       rangesRef.current = growAxisRanges(rangesRef.current, sample);
       const candidate = widestAxis(rangesRef.current);
       if (candidate !== null && isAtRest(baseline, sample)) answerActive('captured', candidate);

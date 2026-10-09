@@ -1,12 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The Randomizer page's Network tab, for an Archipelago profile, as a dashboard: the server
- * setup with its Test connection, then the connection, its health, this slot's progress, the
- * room's players and the server's rules, all live from the online session
- * (behavior/useNetworkStatus.ts). With the game stopped every panel still stands: the setup
- * stays editable, and the rest show the last session's picture on this connection, marked as
- * such, or say they fill in once the game connects. Where each panel sits is NETWORK_PANELS.
- */
+import { useMemo } from 'react';
 import { Text } from '@ds/primitives';
 import { DashboardGrid, DashboardPanel } from '@ds/composites';
 import { useNetworkStatus } from './behavior/useNetworkStatus';
@@ -23,7 +16,7 @@ import './NetworkTab.css';
 
 const NetworkTab = ({ config, onSaveConnection, frame }: NetworkTabProps) => {
   const { status, last, now } = useNetworkStatus();
-  const view = networkViewOf(status, last, config);
+  const view = useMemo(() => networkViewOf(status, last, config), [status, last, config]);
 
   return frame(
     <DashboardGrid className="network-tab">

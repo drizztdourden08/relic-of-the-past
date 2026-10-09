@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// A device the lister sees but SDL3 has not claimed: no live data, so only identity, status and remedies.
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
@@ -8,12 +7,7 @@ import { ControllerStatusBar } from '../../../compounds/ControllerStatusBar';
 import { UnavailableControllerNotice } from '../../../compounds/UnavailableControllerNotice';
 import { controllerCardInfo } from '../../../../../../lib/input/controller-card-info';
 import { CONTROLLER_ICON_MAP } from './input-cal-visuals';
-import type { DeviceEntry } from '@shared/ipc';
-
-interface UnavailableControllerCardProps {
-  entry: DeviceEntry;
-  onAddMapping: (mapping: string) => Promise<boolean>;
-}
+import type { UnavailableControllerCardProps } from './ControllerDeviceList.type';
 
 const UnavailableControllerCard = (props: UnavailableControllerCardProps) => {
   const { entry, onAddMapping } = props;

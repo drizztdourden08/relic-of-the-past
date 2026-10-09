@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind constants */
-/**
- * Constants for the HID Calibration Wizard.
- */
-
 const STICK_IDS = new Set(['leftX', 'leftY', 'rightX', 'rightY']);
 const TRIGGER_IDS = new Set(['leftTrigger', 'rightTrigger']);
 
-/** Minimum byte delta to consider a change "analog" and not digital */
 const ANALOG_THRESHOLD_DELTA = 30;
 
 const STICK_RANGE_THRESHOLD = 60;
@@ -23,7 +18,12 @@ const AXIS_LABELS: Record<string, { pos: string; neg: string }> = {
 const TRIGGER_RANGE_THRESHOLD = 40;
 const TRIGGER_STABLE_FRAMES = 6;
 
+const BYTE_MAX = 255;
+const BYTE_MID = 128;
+
 export {
+  BYTE_MAX,
+  BYTE_MID,
   ANALOG_THRESHOLD_DELTA,
   AXIS_LABELS,
   CONFIRM_FRAMES,

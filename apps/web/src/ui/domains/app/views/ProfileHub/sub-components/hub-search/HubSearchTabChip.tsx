@@ -1,0 +1,18 @@
+/* @layer renderer-components @kind component */
+import { useCallback } from 'react';
+import { Icon as IconifyIcon } from '@iconify/react/offline';
+import { Button } from '../../../../../../design-system/primitives/Button';
+import { PROFILE_HUB_TABS } from '../../ProfileHub.constants';
+import type { HubSearchTabChipProps } from './hub-search.type';
+
+const HubSearchTabChip = ({ tab, onOpenTab }: HubSearchTabChipProps) => {
+  const handleClick = useCallback(() => onOpenTab(tab), [onOpenTab, tab]);
+  return (
+    <Button variant="bare" className="hub-search__tab-chip" onClick={handleClick}>
+      <IconifyIcon icon={PROFILE_HUB_TABS[tab].navIcon} aria-hidden="true" />
+      Open {PROFILE_HUB_TABS[tab].label}
+    </Button>
+  );
+};
+
+export { HubSearchTabChip };

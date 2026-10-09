@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* ─── Joystick Circle Tester ─── */
-
 .input-cal__sticks {
   display: flex;
   gap: var(--space-xl);
@@ -48,7 +46,6 @@
 }
 
 .input-cal__stick-crosshair::before {
-  /* Horizontal line */
   top: 50%;
   left: 0;
   right: 0;
@@ -56,7 +53,6 @@
 }
 
 .input-cal__stick-crosshair::after {
-  /* Vertical line */
   left: 50%;
   top: 0;
   bottom: 0;
@@ -91,15 +87,11 @@
   font-family: var(--font-mono);
 }
 
-/* ─── Vibration ─── */
-
 .input-cal__vibrate-btn {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
 }
-
-/* ─── Log Section ─── */
 
 .input-cal__log {
   padding: var(--space-md);
@@ -124,8 +116,6 @@
 .input-cal__log-entry--disconnect {
   color: var(--c-danger);
 }
-
-/* ─── Calibration Result ─── */
 
 .input-cal__result {
   background: var(--c-surface);
@@ -157,8 +147,6 @@
   color: var(--c-text-dim);
   border: 1px solid var(--c-border);
 }
-
-/* ─── No controllers ─── */
 
 .input-cal__empty {
   text-align: center;

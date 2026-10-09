@@ -1,15 +1,9 @@
 /* @layer renderer-components @kind component */
-/** One read-only row in the Game Boy Advance difference catalogue: label, detail text,
-  * and an evidence badge. Presentational only: no data fetching, no state. */
-import type { GbaDifference } from '@shared/features/gba-difference.type';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Badge } from '../../../../../../design-system/primitives/Badge';
+import type { GbaDifferenceRowProps } from './gba-settings.type';
 import './GbaDifferenceRow.css';
-
-interface GbaDifferenceRowProps {
-  difference: GbaDifference;
-}
 
 const GbaDifferenceRow = (props: GbaDifferenceRowProps) => {
   const { difference } = props;

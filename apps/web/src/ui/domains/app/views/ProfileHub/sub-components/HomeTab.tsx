@@ -11,7 +11,8 @@ import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
 import { useHomeRandomizerStatus } from './home-tab/useHomeRandomizerStatus';
 import { useHomeSaveFileChecks } from './home-tab/useHomeSaveFileChecks';
 import { deriveProfileMode } from './home-tab/derive-profile-mode';
-import { buildProfileFacts, buildRandomizerFacts } from './home-tab/build-summary-facts';
+import { buildProfileFacts } from './home-tab/build-summary-facts';
+import { buildRandomizerFacts } from './home-tab/build-randomizer-facts';
 import { HomeTabColumns } from './home-tab/HomeTabColumns';
 import { HomeTabDialogs } from './home-tab/HomeTabDialogs';
 import type { HomeTabProps } from './home-tab/home-tab.type';
@@ -44,6 +45,17 @@ const HomeTab = (props: HomeTabProps) => {
     }
   }, [storage, profileId]);
 
+  const handleOpenFolderClick = useCallback(() => void handleOpenFolder(), [handleOpenFolder]);
+  const handleImportSramClick = useCallback(() => void handleImportSram(), [handleImportSram]);
+
+  const lastSave = useMemo(() => (heroSave ? {
+    name: heroSave.name,
+    timestamp: heroSave.timestamp,
+    screenshotUrl: normalScreenshots[heroSave.id] ?? null,
+    busy: busyNormal === heroSave.id,
+    onLoad: () => handleLoadNormal(heroSave.id),
+  } : null), [heroSave, normalScreenshots, busyNormal, handleLoadNormal]);
+
   return (
     <Box className="home-tab">
       <ProfileHero
@@ -52,13 +64,7 @@ const HomeTab = (props: HomeTabProps) => {
         facts={facts}
         runFacts={randomizerFacts}
         progress={saveFileChecks}
-        lastSave={heroSave ? {
-          name: heroSave.name,
-          timestamp: heroSave.timestamp,
-          screenshotUrl: normalScreenshots[heroSave.id] ?? null,
-          busy: busyNormal === heroSave.id,
-          onLoad: () => handleLoadNormal(heroSave.id),
-        } : null}
+        lastSave={lastSave}
         actions={(
           <HubGameControls
             isGameRunning={isGameRunning}
@@ -70,8 +76,8 @@ const HomeTab = (props: HomeTabProps) => {
           />
         )}
         canRevealFolder={capabilities.revealDataFolder}
-        onOpenFolder={() => void handleOpenFolder()}
-        onImportSram={() => void handleImportSram()}
+        onOpenFolder={handleOpenFolderClick}
+        onImportSram={handleImportSramClick}
       />
 
       <HomeTabColumns saves={saves} isGameRunning={isGameRunning} />

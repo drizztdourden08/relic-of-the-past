@@ -1,25 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * Gyro and Idle prerequisite cards for the HID Calibration Wizard.
- */
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
 import { Button } from '../../../../../../../design-system/primitives/Button';
-import type { GyroState, IdleState } from '../hid-calibration.type';
-
-interface PrereqCardsProps {
-  hasGyro: boolean;
-  gyroState: GyroState;
-  idleState: IdleState;
-  gyroExcluded: Set<number>;
-  latestBytesLength: number;
-  onGyroStart: () => void;
-  onGyroStop: () => void;
-  onGyroRedo: () => void;
-  onGyroSkip: () => void;
-  onIdleCapture: () => void;
-  onIdleRedo: () => void;
-}
+import type { PrereqCardsProps } from './PrereqCards.type';
 
 const PrereqCards = (props: PrereqCardsProps) => {
   const { hasGyro, gyroState, idleState, gyroExcluded, latestBytesLength, onGyroStart, onGyroStop, onGyroRedo, onGyroSkip, onIdleCapture, onIdleRedo } = props;

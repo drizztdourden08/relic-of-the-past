@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// Its own box, not a section of the dot legend: an arrow is an edge between tiles, not a property of one.
 import type { CSSProperties } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';

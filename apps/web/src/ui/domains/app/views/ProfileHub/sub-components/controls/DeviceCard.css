@@ -35,7 +35,6 @@
   gap: var(--space-sm);
 }
 
-/* ─── Icon button (replaces status light) ─── */
 .device-card__left {
   display: flex;
   flex-direction: column;

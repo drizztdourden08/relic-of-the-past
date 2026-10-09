@@ -3,12 +3,8 @@ import { Box } from '../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
+import type { HeightLevelPickerProps } from './HeightLevelPicker.type';
 import './HeightLevelPicker.css';
-
-interface HeightLevelPickerProps {
-  value: number;
-  onChange: (value: number) => void;
-}
 
 const HeightLevelPicker = ({ value, onChange }: HeightLevelPickerProps) => {
   const heightLevels = useShadowEditorStore((s) => s.heightLevels);
