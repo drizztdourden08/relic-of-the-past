@@ -1,14 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Places one layer's sources on an offline render timeline, reproducing what its live
- * scheduler (../schedulers/*) would have done over the same stretch of time.
- *
- * The live schedulers are event-driven, so a timer fires and a voice starts. Offline there is no
- * clock, so the same rules are unrolled ahead of time into `start(when)` calls. Each mode is
- * matched deliberately: `random` uses a gap-then-fire order (the live one waits before its
- * first event), and `interval` walks its offsets as a cycle whose length is the last offset,
- * both exactly as those files do it. `loop` is involved enough to live in ./schedule-loop.
- */
 import type { ResolvedLayer } from './layer-window';
 import { intervalPoints } from './layer-window';
 import type { PlaySource, ScheduleOptions } from './place-source';
@@ -28,16 +18,11 @@ const scheduleRandom = (play: PlaySource,
   const max = Math.max(0, Math.max(minDelaySeconds, maxDelaySeconds));
   const random = streamFor(options.seed, resolved.index);
 
-  // The live scheduler waits a gap before its first event, so the first one is not at t=0.
   let at = nextInRange(random, min, max);
   for (let events = 0; events < MAX_EVENTS && at < options.windowSeconds; events += 1) {
     const buffer = resolved.buffers[nextIndex(random, resolved.buffers.length)];
     play(buffer, at);
-    // The gap is drawn either way, so the option changes only the spacing and never the sequence
-    // of choices: one seed keeps picking the same files however the pack is authored.
     const gap = nextInRange(random, min, max);
-    // Waiting for completion measures the gap from where this sound ENDS, so nothing overlaps;
-    // otherwise it is measured from the start and a long sound runs into the next one.
     const step = waitForCompletion ? buffer.duration + gap : gap;
     if (step <= 0) break;
     at += step;
@@ -49,8 +34,6 @@ const scheduleInterval = (play: PlaySource,
   if (resolved.layer.mode.kind !== 'interval') return;
   const points = intervalPoints(resolved.layer.mode.atSeconds);
   if (points.length === 0) return;
-  // The cycle repeats every `last offset`, which is what the live scheduler's wrap-around gap
-  // works out to, and each offset draws the file at its own position in the list.
   const cycle = points[points.length - 1];
   const { buffers } = resolved;
 
@@ -59,8 +42,8 @@ const scheduleInterval = (play: PlaySource,
     const at = Math.floor(event / points.length) * cycle + points[point];
     if (at >= options.windowSeconds) break;
     play(buffers[buffers.length > 1 ? point % buffers.length : 0], at);
-    // Every offset at zero has no cycle to repeat: fire the list once and stop.
-    if (cycle <= 0 && point === points.length - 1) break;
+    const firedOnceWithNoCycle = cycle <= 0 && point === points.length - 1;
+    if (firedOnceWithNoCycle) break;
   }
 };
 

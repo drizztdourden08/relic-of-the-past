@@ -1,5 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/** `once`: play one file through and stop. Resuming picks up mid-file. */
 import type { LayerResume } from '@shared/types/msu-manifest';
 import type { LayerActivity, LayerContext, LayerScheduler } from './scheduler.type';
 import type { Voice } from '../voice';
@@ -19,7 +18,6 @@ const createOnceScheduler = (ctx: LayerContext): LayerScheduler => {
     });
   };
 
-  // A finished one-shot resumes from the start instead of replaying its tail.
   const position = (): LayerResume => ({
     fileIndex,
     offsetSeconds: finished ? 0 : (voice?.offsetSeconds() ?? 0),

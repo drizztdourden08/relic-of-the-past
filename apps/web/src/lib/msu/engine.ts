@@ -1,53 +1,13 @@
 /* @layer renderer-lib @kind logic */
-/**
- * The single entry point for replacement audio; nothing above it touches an audio node.
- * Four channels: music and ambient replace on a new id, the two effect channels layer (see
- * `channel.ts`). Gain chain, outermost last: per-layer volume -> the game's own fades -> the
- * volume group (music/ambient follow the music slider, effects the SFX one) -> shared output.
- * Separate stages so a fade cannot clobber a user setting and vice versa.
- */
-import type { MsuPackManifest, MsuResumeState } from '@shared/types/msu-manifest';
+import type { MsuResumeState } from '@shared/types/msu-manifest';
 import { remapDeluxeTrack } from '@shared/game/data/msu-deluxe-remap';
 import { buildChannels } from './build-channels';
 import type { ChannelReport, MsuChannelName } from './channel';
 import { SOUND_CHANNELS } from './sound-claim';
-import type { LayerReport } from './channel';
-import type { LoadBytes } from './track-loader';
-import { applyFade, isFadeControl } from './fade';
+import { applyFade, isFadeControl, MUSIC_FADE_OUT, MUSIC_FULL_VOLUME } from './fade';
 import { createTitleReset } from './title-reset';
-
-interface MsuEngineOptions {
-  ctx: BaseAudioContext;
-  destination: AudioNode;
-  manifest: MsuPackManifest;
-  loadBytes: LoadBytes;
-  /** Whether to apply the extended per-area/per-entrance track remapping. */
-  isDeluxe: boolean;
-  /** Current music volume, 0-100. Read on each change so a live slider applies at once. */
-  musicVolume: () => number;
-  /** Current SFX volume, 0-100; replacement effects follow this slider, not the music one. Omitted (single-track preview) means the music volume. */
-  sfxVolume?: () => number;
-  /** The ambient bed's own slider; falls back to the music one where the setting is absent. */
-  ambientVolume?: () => number;
-  /** Whether re-entering an area resumes its music. Read per track change, so a mid-session toggle applies at once. Omitted for one-off previews. */
-  resumeEnabled?: () => boolean;
-  /** Whether reaching the title screen forgets those positions, so the next run starts from the top. Read per event. */
-  resetAtTitle?: () => boolean;
-  onError?: (message: string) => void;
-  /** Reported when a return to the title actually dropped something. */
-  onReset?: () => void;
-  /** Reports each track that starts, for diagnostics: how many layers decoded. */
-  onTrack?: (trackNum: number, layerCount: number, resumed: boolean) => void;
-  /** The same, for the ambient bed. Effects are far too frequent to report one at a time. */
-  onAmbient?: (soundId: number, layerCount: number, resumed: boolean) => void;
-}
-
-/** The music channel's live state, in the shape the studio's preview has always read. */
-interface TrackReport {
-  trackNum: number;
-  elapsedSeconds: number;
-  layers: LayerReport[];
-}
+import type { MsuEngineOptions, TrackReport } from './engine.type';
+import { CHIP_ONLY_CONTROL_MASK } from './engine.constants';
 
 const createMsuEngine = (options: MsuEngineOptions) => {
   const {
@@ -57,8 +17,6 @@ const createMsuEngine = (options: MsuEngineOptions) => {
   } = options;
 
   const readSfxVolume = sfxVolume ?? musicVolume;
-  // The bed is its own group: it is neither music nor a one-shot, and the reason the setting
-  // exists is to hold a storm under a quiet piece without touching either slider.
   const readAmbientVolume = ambientVolume ?? musicVolume;
   const musicGain = ctx.createGain();
   const ambientGain = ctx.createGain();
@@ -79,39 +37,29 @@ const createMsuEngine = (options: MsuEngineOptions) => {
   const all = [music, ambient, channels.sfx1, channels.sfx2];
   const titleReset = createTitleReset(channels, resetAtTitle, onReset);
 
-  /** The game's music-control byte: below 0xf0 selects a track (0 = silence), 0xf1..0xf3 are volume transitions, the rest of 0xf0.. only concerns the chip. */
-  // Whether the music has been faded to silence and not brought back. A faded track is still
-  // active in the graph, but reporting it as playing would make the game skip the re-select
-  // that is the only thing that brings the sound back.
   let fadedToZero = false;
 
+  const targetTrack = (ctrl: number, entrance: number, overworldArea: number): number =>
+    (isDeluxe ? remapDeluxeTrack(ctrl, { overworldArea, entrance }) : ctrl);
+
   const onMusicCtrl = (ctrl: number, module: number, entrance: number, overworldArea: number): void => {
-    // Ahead of the select below, so the track this event starts is the one that begins fresh.
     titleReset(module);
     if (isFadeControl(ctrl)) {
-      if (ctrl === 0xf1) fadedToZero = true;
-      if (ctrl === 0xf3) fadedToZero = false;
+      if (ctrl === MUSIC_FADE_OUT) fadedToZero = true;
+      if (ctrl === MUSIC_FULL_VOLUME) fadedToZero = false;
       applyFade(music.fadeNode, ctx.currentTime, ctrl);
       return;
     }
-    if ((ctrl & 0xf0) === 0xf0) return;
+    if ((ctrl & CHIP_ONLY_CONTROL_MASK) === CHIP_ONLY_CONTROL_MASK) return;
     fadedToZero = false;
-    music.trigger(isDeluxe ? remapDeluxeTrack(ctrl, { overworldArea, entrance }) : ctrl);
+    music.trigger(targetTrack(ctrl, entrance, overworldArea));
   };
 
-  /**
-   * The game's "is this track playing" question. The track is remapped first, so two areas
-   * sharing one vanilla byte compare as different music where the pack differs (music changes
-   * at plain screen edges). A track faded to silence answers no, so the post-fade re-select is
-   * never skipped.
-   */
   const isPlayingTrack = (ctrl: number, entrance: number, overworldArea: number): boolean => {
     if (fadedToZero) return false;
-    const target = isDeluxe ? remapDeluxeTrack(ctrl, { overworldArea, entrance }) : ctrl;
-    return music.report()?.id === target;
+    return music.report()?.id === targetTrack(ctrl, entrance, overworldArea);
   };
 
-  /** A sound the core handed over, on its channel index (0 ambient, 1 sfx1, 2 sfx2). Only claimed ids arrive, so an unknown channel is the only guard. */
   const onGameSound = (channel: number, id: number, pan: number): void => {
     const name = SOUND_CHANNELS[channel];
     if (!name) return;
@@ -124,7 +72,6 @@ const createMsuEngine = (options: MsuEngineOptions) => {
     sfxGain.gain.value = readSfxVolume() / 100;
   };
 
-  /** Live positions for a save's metadata: music plus the bed alongside it. Effects are absent (a one-shot has no position). */
   const snapshot = (): MsuResumeState | null => {
     const track = music.snapshot();
     if (!track) return null;
@@ -136,23 +83,18 @@ const createMsuEngine = (options: MsuEngineOptions) => {
     };
   };
 
-  /** What every layer of the playing track is doing right now. */
   const report = (): TrackReport | null => {
     const state = music.report();
     if (!state) return null;
     return { trackNum: state.id, elapsedSeconds: state.elapsedSeconds, layers: state.layers };
   };
 
-  /** The same for any channel. This is how the studio watches the beds and the effects. */
   const reportChannel = (name: MsuChannelName): ChannelReport | null => channels[name].report();
 
-  /** Resume the audio a loaded save was playing. */
   const restore = (state: MsuResumeState | null): void => {
     music.restore(state ? { id: state.trackNum, layers: state.layers } : null);
-    // `undefined` is a snapshot taken before beds were resumable: it says nothing about the
-    // ambient channel, so leave it alone instead of silencing a bed the core just re-announced.
-    // `null` is a save that had none.
-    if (state?.ambient === undefined) return;
+    const savedBeforeBedsResumed = state?.ambient === undefined;
+    if (savedBeforeBedsResumed) return;
     ambient.restore(state.ambient ? { id: state.ambient.soundId, layers: state.ambient.layers } : null);
   };
 
@@ -167,7 +109,6 @@ const createMsuEngine = (options: MsuEngineOptions) => {
   return { onMusicCtrl, onGameSound, isPlayingTrack, syncVolume, snapshot, report, reportChannel, restore, stop, dispose };
 };
 
-type MsuEngine = ReturnType<typeof createMsuEngine>;
-
 export { createMsuEngine };
-export type { MsuEngine, MsuEngineOptions, TrackReport, LayerReport, ChannelReport, MsuChannelName };
+export type { MsuEngine, MsuEngineOptions, TrackReport } from './engine.type';
+export type { LayerReport, ChannelReport, MsuChannelName } from './channel';
