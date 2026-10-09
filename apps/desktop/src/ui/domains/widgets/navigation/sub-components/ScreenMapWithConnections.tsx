@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import type { ConnectionInfo, ScreenBundleGrid, FloodFillResult } from '@shared/game/navigation';
+import type { ConnectionInfo, FloodFillResult } from '@rotp/game-core';
+import type { ScreenBundleGrid } from '@rotp/game-data';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';
 import { IndoorMinimap } from './IndoorMinimap';
 import { OverworldMinimap } from './OverworldMinimap';

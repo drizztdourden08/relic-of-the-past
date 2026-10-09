@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import type { SimArea } from '@shared/game/simulation';
+import type { SimArea } from '@rotp/navigation';
 import { computeBigScreenGroup } from '@domains/widgets/navigation/widget-helpers';
-import { locationForScreen } from '../screen-location';
+import { locationForScreen } from '@rotp/navigation';
 
 const screenAreaInfo = (screenId: string): SimArea | undefined => {
   const loc = locationForScreen(screenId);

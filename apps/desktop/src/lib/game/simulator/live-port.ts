@@ -1,14 +1,15 @@
 /* @layer bridge-wasm @kind logic */
-import type { SimulatorPort, RoomSectionSplit } from '@shared/game/simulation';
+import type { SimulatorPort } from '@rotp/navigation';
+import type { RoomSectionSplit } from '@rotp/game-core';
 import type { ItemId } from '@rotp/game-data';
 import { captureStateBuffer, loadStateFromBuffer, reassertFeatureFlags, deliveryQueue, setSimulatorSupport } from '../';
 import { setAutoSkipDialogOverride, setDeveloperToolsOverride } from '@rotp/game-core';
 import { onItemReceived } from '../tracker';
 import { observe } from './observe';
 import { getScreenGrids } from '../flood';
-import { getRoomChests, getRoomSprites, getOverworldSprites, getRoomDoors } from './interactables';
+import { getRoomChests, getRoomSprites, getOverworldSprites, getRoomDoors } from '@rotp/navigation';
 import { wasmGetRoomTagsFor, wasmGetSpriteCombat, wasmGetCombatTables, wasmGetRoomLayoutInfo, roomSectionSplitFrom } from '../';
-import { trigger } from './trigger';
+import { trigger } from '@rotp/navigation';
 
 const setAutoSkipDialog = (on: boolean | null): void => {
   setAutoSkipDialogOverride(on);

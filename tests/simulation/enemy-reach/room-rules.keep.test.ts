@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import { evaluateRoomThreat } from '../../../shared/game/simulation/engine/enemy-reach';
+import { evaluateRoomThreat } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { BOW, DAMAGE_CLASS_COUNT, ROOM_CLEAR_EXEMPT_FLAG, SWORD_1, SWORD_4 } from './enemy-reach.constants';
 import { grids } from './grids';

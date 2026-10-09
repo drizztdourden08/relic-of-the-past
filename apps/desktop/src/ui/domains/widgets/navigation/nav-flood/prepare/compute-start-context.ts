@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import { screenOriginFor } from '../../../../../../lib/game/flood';
-import { linkStartTile } from '@shared/game/navigation/link-start-tile';
+import { linkStartTile } from '@rotp/navigation';
 import type { StartContext, StartContextArgs } from '../nav-flood.type';
 
 const computeStartContext = (args: StartContextArgs): StartContext => {

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { ScreenAnnotation, ScreenAnnotations } from '@shared/game/simulation';
+import type { ScreenAnnotation, ScreenAnnotations } from '@rotp/navigation';
 
 interface ScreenPanelProps {
   annotations: readonly ScreenAnnotations[];

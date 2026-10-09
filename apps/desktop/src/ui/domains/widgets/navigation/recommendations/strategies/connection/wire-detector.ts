@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import { registerDetector } from '@shared/game/recommendations';
-import { detectorFromStrategy } from '@shared/game/recommendations/compare';
+import { registerDetector } from '@rotp/navigation';
+import { detectorFromStrategy } from '@rotp/navigation';
 import { connectionStrategy } from './connection.strategy';
 import { onUnresolvableConnection } from './unresolvable-screen';
 

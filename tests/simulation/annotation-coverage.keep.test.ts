@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { ANNOTATION_STYLES, DRAWN_KINDS } from '../../apps/desktop/src/ui/domains/app/views/GameLayer/sub-components/navigation-overlay/annotation-style';
-import type { AnnotationKind } from '../../shared/game/simulation';
+import type { AnnotationKind } from '@rotp/navigation';
 
 const EXPECTED_KINDS: AnnotationKind[] = [
   'chest', 'big-chest', 'npc-check', 'standing-item',

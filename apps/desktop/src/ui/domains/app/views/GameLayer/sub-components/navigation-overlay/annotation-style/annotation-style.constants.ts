@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { AnnotationKind } from '@shared/game/simulation';
+import type { AnnotationKind } from '@rotp/navigation';
 import type { AnnotationStyle } from './annotation-style.type';
 
 const LOCK_COLOR = '#e8a33d';

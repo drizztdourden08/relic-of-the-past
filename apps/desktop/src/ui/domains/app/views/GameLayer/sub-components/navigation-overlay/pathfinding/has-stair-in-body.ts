@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types/grid.constants';
+import { STAIRS_TRAVERSAL_STATE } from '@rotp/navigation';
 import type { ReachState } from '@rotp/game-core';
 
 const hasStairInBody = (row: number, col: number, reachable: ReachState[][]): boolean => {

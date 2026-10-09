@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { TileInteractable } from '@shared/game/navigation/tile-classification';
+import type { TileInteractable } from '@rotp/navigation';
 
 const interactableText = (interactable: TileInteractable): string => `${interactable.kind} · ${interactable.state}`;
 

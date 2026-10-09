@@ -1,18 +1,18 @@
 /* @layer bridge-wasm @kind logic */
-import type { ConnectionInfo, GridPos, ScreenCrossing } from '@shared/game/navigation';
-import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import type { SimExit } from '@shared/game/simulation';
+import type { ConnectionInfo, GridPos, ScreenCrossing } from '@rotp/game-core';
+import type { TileReq } from '@rotp/game-data';
+import type { SimExit } from '@rotp/navigation';
 import { computeBigScreenGroup } from '@domains/widgets/navigation/widget-helpers';
-import { collectCrossings } from '../crossings';
-import { connectionCrossingId, midOf, takeableCrossing, usableCrossings } from '../usable-crossings';
-import { floodOneOverworld, summarizeRun } from './flood-screen';
+import { collectCrossings } from '@rotp/navigation';
+import { connectionCrossingId, midOf, takeableCrossing, usableCrossings } from '@rotp/navigation';
+import { floodOneOverworld, summarizeRun } from '@rotp/navigation';
 import { owScreenId, interiorScreenId, spawnTile, screenAreaInfo } from './screen-resolve';
-import { stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, reachedGrid, AREA_EXIT_BIAS } from './exit-order';
+import { stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, reachedGrid, AREA_EXIT_BIAS } from '@rotp/navigation';
 import { detectRoom } from './room-exits';
-import { dedupe } from './dedupe';
-import { locationForScreen } from './screen-location';
-import { SCREEN_EXIT_UNREACHED } from './screen-exits.constants';
-import type { DetectedScreen, OrderedExit, OverworldExitPass } from './screen-exits.type';
+import { dedupe } from '@rotp/navigation';
+import { locationForScreen } from '@rotp/navigation';
+import { SCREEN_EXIT_UNREACHED } from '@rotp/navigation';
+import type { DetectedScreen, OrderedExit, OverworldExitPass } from '@rotp/navigation';
 
 const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
 
@@ -104,4 +104,4 @@ const detectScreenExits = (screenId: string, opts?: { entryTile?: GridPos; items
 };
 
 export { detectScreenExits };
-export type { DetectedScreen } from './screen-exits.type';
+export type { DetectedScreen } from '@rotp/navigation';

@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 
 const mocks = vi.hoisted(() => ({
   create: vi.fn(),

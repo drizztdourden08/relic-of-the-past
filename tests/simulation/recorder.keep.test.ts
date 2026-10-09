@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { ObservedCheck } from '../../shared/game/simulation/recording/recorder';
-import { createRecorder, recordCheck } from '../../shared/game/simulation/recording/recorder';
-import { buildDatasetSuggestions } from '../../shared/game/simulation/recording/dataset-updates';
+import type { ObservedCheck } from '@rotp/navigation';
+import { createRecorder, recordCheck } from '@rotp/navigation';
+import { buildDatasetSuggestions } from '@rotp/navigation';
 
 const unidentifiedAt = (screenId: string, roomId: number, row: number, col: number): ObservedCheck => ({
   checkId: null,

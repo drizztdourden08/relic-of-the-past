@@ -1,6 +1,7 @@
 /* @layer renderer-stores @kind types */
-import type { FloodFillResult, ConnectionInfo, ScreenBundleGrid, ScreenCrossings } from '@shared/game/navigation';
-import type { ScreenAnnotations } from '@shared/game/simulation';
+import type { FloodFillResult, ConnectionInfo, ScreenCrossings } from '@rotp/game-core';
+import type { ScreenBundleGrid } from '@rotp/game-data';
+import type { ScreenAnnotations } from '@rotp/navigation';
 
 interface PathTile { row: number; col: number; attr: number; }
 interface FallHoleSpawn { gridRow: number; gridCol: number; entranceId: number; }

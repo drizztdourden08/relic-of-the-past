@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import type { DetectedCheck, SimEvent } from '../../../shared/game/simulation/types';
-import { chestKey } from '../../../shared/game/simulation/engine/discover';
-import { closeIdleDungeonGroups, reopenLedgersFor } from '../../../shared/game/simulation/engine/dungeon-ledger-lifecycle';
-import { onCheckVerified } from '../../../shared/game/simulation/engine/explorer';
+import type { DetectedCheck, SimEvent } from '@rotp/navigation';
+import { chestKey } from '@rotp/navigation';
+import { closeIdleDungeonGroups, reopenLedgersFor } from '@rotp/navigation';
+import { onCheckVerified } from '@rotp/navigation';
 import { dungeonGroupOf } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import { BOMB_PICKUP, CASTLE_SCREEN, SEWERS_PALACE, SEWERS_ROOM, SEWERS_SCREEN } from './dungeon-ledger.constants';

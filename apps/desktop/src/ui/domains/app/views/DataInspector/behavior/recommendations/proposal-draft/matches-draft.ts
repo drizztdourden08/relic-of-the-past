@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import type { ProposalDraft } from '../recommendations.type';
 
 const matchesDraft = (draft: ProposalDraft, entry: Recommendation | null): boolean =>

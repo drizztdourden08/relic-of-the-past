@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind data */
-import type { SetProbe } from '@shared/game/recommendations/compare';
-import type { ObservedTransition } from '@shared/game/recommendations';
+import type { SetProbe } from '@rotp/navigation';
+import type { ObservedTransition } from '@rotp/game-core';
 import { datasetKey, transitionKey } from './screen-endpoint';
 import { readPointsDataset } from './points/read-points-dataset';
 import { readPointsLive } from './points/read-points-live';

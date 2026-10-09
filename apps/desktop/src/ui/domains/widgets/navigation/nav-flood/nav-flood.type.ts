@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind types */
-import type { ConnectionInfo, FloodFillResult, ScreenCrossing } from '@shared/game/navigation';
-import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import type { enrichEntrances } from '@app/lib/game/flood/overworld-entrances';
+import type { ConnectionInfo, FloodFillResult, ScreenCrossing } from '@rotp/game-core';
+import type { TileReq } from '@rotp/game-data';
+import type { enrichEntrances } from '@rotp/navigation';
 import type { wasmGetRoomLayoutInfo, wasmGetViewportInfo } from '../../../../../lib/game';
 
 type EdgeName = 'north' | 'south' | 'east' | 'west';

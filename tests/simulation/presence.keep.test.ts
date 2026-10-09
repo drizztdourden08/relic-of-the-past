@@ -1,7 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { PresenceCondition, PresenceGameState } from '../../shared/game/simulation/presence/state';
-import { evaluatePresence, BOSS_DEAD_BIT } from '../../shared/game/simulation/presence/evaluate';
+import type { PresenceCondition } from '@rotp/game-data';
+import type { PresenceGameState } from '@rotp/navigation';
+import { evaluatePresence, BOSS_DEAD_BIT } from '@rotp/navigation';
 import type { ItemId } from '@rotp/game-data';
 
 const baseState = (partial: Partial<PresenceGameState> = {}): PresenceGameState => ({

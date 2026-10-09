@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ObservedTransition } from '@shared/game/recommendations';
+import type { ObservedTransition } from '@rotp/game-core';
 import { resolveRealDestId } from '../../../../connection-audit-resolve';
 
 const transitionKey = (item: ObservedTransition): string =>

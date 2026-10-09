@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind data */
-import type { FieldProbe } from '@shared/game/recommendations/compare';
+import type { FieldProbe } from '@rotp/navigation';
 import { navProbeApplies } from './nav/nav-probe-applies';
 import { readNavProbe } from './nav/read-nav-probe';
 

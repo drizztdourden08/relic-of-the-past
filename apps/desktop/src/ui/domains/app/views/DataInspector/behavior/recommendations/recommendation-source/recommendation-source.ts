@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import { RECOMMENDATIONS_KIND, RECOMMENDATIONS_NAV_ITEM } from '../../../DataInspector.constants';
 import type { InspectorRow, InspectorSource } from '../../../DataInspector.type';
 import { recommendationRows } from '../recommendation-rows';

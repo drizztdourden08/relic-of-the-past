@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
+import type { FloodFillResult, ConnectionInfo } from '@rotp/game-core';
 import type { NavMode } from '../../../../../stores/navigation-overlay-store';
 
 interface FunctionsPanelProps {

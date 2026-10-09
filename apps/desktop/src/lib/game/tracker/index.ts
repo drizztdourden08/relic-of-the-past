@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind barrel */
-export type { RawInventoryState } from './inventory';
-export { parseInventoryBuffer, inventoryToItemSet } from './inventory';
+export type { RawInventoryState } from '@rotp/navigation';
+export { parseInventoryBuffer, inventoryToItemSet } from '@rotp/navigation';
 export type { UnknownItemEntry } from './bridge';
 export {
   initTrackerBridge,

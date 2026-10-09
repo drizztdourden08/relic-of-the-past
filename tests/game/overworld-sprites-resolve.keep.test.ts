@@ -1,7 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('@app/lib/game', () => ({
+vi.mock('@rotp/game-core', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   wasmGetOverworldSpriteSpawns: vi.fn(),
   wasmGetAreaHeads: vi.fn(),
   wasmGetRoomChests: vi.fn(),
@@ -10,8 +11,8 @@ vi.mock('@app/lib/game', () => ({
   wasmGetRoomCellLocks: vi.fn(),
 }));
 
-import { wasmGetOverworldSpriteSpawns, wasmGetAreaHeads } from '@app/lib/game';
-import { getOverworldSprites } from '@app/lib/game/simulator/interactables';
+import { wasmGetOverworldSpriteSpawns, wasmGetAreaHeads } from '@rotp/game-core';
+import { getOverworldSprites } from '@rotp/navigation';
 
 const HEAD = 24;
 const heads = (() => {

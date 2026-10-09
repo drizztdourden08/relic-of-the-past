@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import { LAYER_CHANGE_BLOCKED_STAIRCASE } from './layer-display.constants';
 import type { LayerDisplayMode } from '../tooltip.type';
 

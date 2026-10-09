@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { SimEvent } from '@shared/game/simulation';
+import type { SimEvent } from '@rotp/navigation';
 import type { LogRow } from '@drizztdourden08/tessera/composites';
 import { classifyEvent } from './classify-event';
 import { computeIndents } from './compute-indents';

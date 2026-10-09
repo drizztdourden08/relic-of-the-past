@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
-import { diffsByRecordFrom } from '@shared/game/recommendations';
-import type { DetectionContext, Difference } from '@shared/game/recommendations';
+import { diffsByRecordFrom } from '@rotp/navigation';
+import type { DetectionContext, Difference } from '@rotp/navigation';
 import { useContextSignature } from './useContextSignature';
 
 const useComparison = (context: DetectionContext): ReadonlyMap<string, ReadonlyMap<string, Difference>> => {

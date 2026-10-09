@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import type { EngineState, SimEvent } from '@shared/game/simulation';
-import { screenLabel } from '@shared/game/simulation';
+import type { EngineState, SimEvent } from '@rotp/navigation';
+import { screenLabel } from '@rotp/navigation';
 import { detectFor } from '../../../../../../lib/game/simulator/observe';
 import type { DetectCache } from '../../../../../../lib/game/simulator/observe';
 

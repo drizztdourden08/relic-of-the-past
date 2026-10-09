@@ -1,5 +1,5 @@
 /* @layer tests @kind type */
-import type { SimChest } from '../../../shared/game/simulation/types';
+import type { SimChest } from '@rotp/navigation';
 
 interface WorldChest extends SimChest {
   screenId: string;

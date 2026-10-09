@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import type { ConnectionRecord, ScreenId } from '@rotp/game-data';
-import type { ScreenObservations } from '@shared/game/recommendations';
+import type { ScreenObservations } from '@rotp/navigation';
 import { auditableFromHere } from '../screen-endpoint';
 
 const unprovableIndoors = (observations: ScreenObservations, record: ConnectionRecord): boolean =>

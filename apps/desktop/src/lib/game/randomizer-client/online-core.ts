@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { setOnlineBits, AP_DEATH_LINK_BIT, AP_ONLINE_BIT } from '../gate-word-5';
 import { getApRoomHash, setApRoomHash } from '@rotp/randomizer';
-import { clearCollectedChecks } from '../tracker/collected-checks';
+import { clearCollectedChecks } from '@rotp/navigation';
 import { armFireReporting } from './override-fire-registry';
 import { pauseLocationPolling, startLocationPolling } from './location-poller';
 import { buildScoutPlan } from './online-overrides';

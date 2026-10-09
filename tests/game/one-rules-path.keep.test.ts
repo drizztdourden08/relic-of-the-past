@@ -4,7 +4,7 @@ import { all, getDungeon, ITEM_GROUP_IDS } from '@rotp/game-data';
 import { standardNameOfCheck } from '@rotp/game-data';
 import { screensOfRegions } from '@rotp/game-data';
 import { buildNormalPlacement } from '@rotp/randomizer';
-import { grantedInventory, recordRowOverrides } from '@app/lib/game/tracker/record-row-inputs';
+import { grantedInventory, recordRowOverrides } from '@rotp/navigation';
 import type { ItemId } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 

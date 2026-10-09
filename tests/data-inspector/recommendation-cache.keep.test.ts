@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type * as CacheModule from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-cache';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 
 let cache: typeof CacheModule;
 let loadRecommendations: ReturnType<typeof vi.fn>;

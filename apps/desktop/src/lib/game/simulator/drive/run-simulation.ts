@@ -1,15 +1,15 @@
 /* @layer bridge-wasm @kind logic */
-import type { SimulatorPort, EngineState, SimConfig, SimRunConfig } from '@shared/game/simulation';
+import type { SimulatorPort, EngineState, SimConfig, SimRunConfig } from '@rotp/navigation';
 import type { ItemId } from '@rotp/game-data';
 import { getItem } from '@rotp/game-data';
-import { createEngine, createEngineState, createRecorder, recordTransition, recordDoorGate, buildEndSummary } from '@shared/game/simulation';
+import { createEngine, createEngineState, createRecorder, recordTransition, recordDoorGate, buildEndSummary } from '@rotp/navigation';
 import { buildObservation, detectFor, waitAfterTrigger } from '../observe';
-import type { DetectedScreen } from '../screen-exits.type';
-import { describeScreen } from './describe-screen';
-import { recordEvents } from './record-events';
-import { noteEvents } from './note-events';
-import { visitOf } from './visit-of';
-import type { CheckLog, DriveResult, DriveTally, LogLine, PathStep, ScreenFloodLog, VisitLog } from './drive.type';
+import type { DetectedScreen } from '@rotp/navigation';
+import { describeScreen } from '@rotp/navigation';
+import { recordEvents } from '@rotp/navigation';
+import { noteEvents } from '@rotp/navigation';
+import { visitOf } from '@rotp/navigation';
+import type { CheckLog, DriveResult, DriveTally, LogLine, PathStep, ScreenFloodLog, VisitLog } from '@rotp/navigation';
 
 const itemNames = (items: ReadonlySet<ItemId>): string[] => [...items].map((id) => getItem(id).name).sort();
 

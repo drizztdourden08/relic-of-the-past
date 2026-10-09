@@ -1,5 +1,5 @@
 /* @layer test @kind helper */
-import type { ScreenObservations } from '@shared/game/recommendations';
+import type { ScreenObservations } from '@rotp/navigation';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,

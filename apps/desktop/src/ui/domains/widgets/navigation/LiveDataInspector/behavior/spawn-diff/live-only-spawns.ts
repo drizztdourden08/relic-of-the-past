@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import type { ScreenSpawn } from '@rotp/game-data';
-import type { Difference } from '@shared/game/recommendations';
+import type { Difference } from '@rotp/navigation';
 import { spawnKey } from './spawn-key';
 
 const liveOnlySpawns = (spawns: readonly ScreenSpawn[], diff: Difference | undefined): readonly ScreenSpawn[] => {

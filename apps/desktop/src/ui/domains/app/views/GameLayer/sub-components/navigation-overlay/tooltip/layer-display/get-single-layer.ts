@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { LayerReach } from '../tooltip.type';
 
 const getSingleLayer = (result: FloodFillResult, reach: LayerReach): 0 | 1 => {

@@ -6,15 +6,15 @@ import { find } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
 import { computePlacementAvailability } from '@rotp/randomizer';
 import { buildNormalPlacement } from '@rotp/randomizer';
-import { computeCompletedChecks } from '@app/lib/game/tracker/completed-checks-core';
+import { computeCompletedChecks } from '@rotp/navigation';
 import { PROGRESS_OFFSETS } from '@rotp/game-core';
 import { SRM_EVENT_LEDGER } from '@rotp/game-core';
-import { inventoryToItemSet, parseInventoryBuffer } from '@app/lib/game/tracker/inventory';
+import { inventoryToItemSet, parseInventoryBuffer } from '@rotp/navigation';
 import { Core } from '../story-events/core-harness';
 import { CORPUS_SEEDS, ROOT, corpusSaves } from './corpus';
 
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };
-const { trackerReachableScreens, trackerStatuses } = await import('@app/lib/game/tracker/tracker-statuses');
+const { trackerReachableScreens, trackerStatuses } = await import('../../packages/navigation/src/tracker/tracker-statuses');
 const { standardCheckName } = await import('../../packages/randomizer/src/client/check-names');
 
 const LABEL = process.env.ROTP_NET_LABEL ?? '';

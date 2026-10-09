@@ -1,11 +1,11 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { detectorsFor } from '@shared/game/recommendations';
-import '@shared/game/recommendations/strategies/actor';
-import '@shared/game/recommendations/strategies/check';
-import '@shared/game/recommendations/strategies/dungeon';
-import '@shared/game/recommendations/strategies/item';
-import '@shared/game/recommendations/strategy-detectors';
+import { detectorsFor } from '@rotp/navigation';
+import '@rotp/navigation';
+import '@rotp/navigation';
+import '@rotp/navigation';
+import '@rotp/navigation';
+import '@rotp/navigation';
 
 describe('the strategy barrels phase 5 replaced the shared detectors barrel with', () => {
   it('installs one strategy-backed detector for each kind it covers', () => {

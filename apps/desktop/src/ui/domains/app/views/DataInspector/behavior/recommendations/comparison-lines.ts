@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { linesForPaths } from '@shared/game/recommendations';
+import { linesForPaths } from '@rotp/navigation';
 import type { DetailTab } from '@drizztdourden08/tessera/data';
 import type { InspectorRow, InspectorSource } from '../../DataInspector.type';
 import { NO_LINES } from './recommendations.constants';

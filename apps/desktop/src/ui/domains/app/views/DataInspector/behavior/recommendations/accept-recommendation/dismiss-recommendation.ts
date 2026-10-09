@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import { decideRecommendation } from '../recommendation-cache';
 
 const dismissRecommendation = (entry: Recommendation): Promise<void> =>

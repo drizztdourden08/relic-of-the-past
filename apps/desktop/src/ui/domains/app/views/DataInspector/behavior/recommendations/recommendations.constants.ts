@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind data */
 import type { SchemaConfig } from '@drizztdourden08/tessera/data';
-import type { Confidence, Recommendation } from '@shared/game/recommendations';
+import type { Confidence, Recommendation } from '@rotp/navigation';
 import type { ProposalDraft } from './recommendations.type';
 
 const NO_RECOMMENDATIONS: readonly Recommendation[] = [];

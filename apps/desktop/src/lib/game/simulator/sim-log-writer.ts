@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import type { SimEvent } from '@shared/game/simulation';
-import type { SimLogWriter } from './sim-log-writer.type';
+import type { SimEvent } from '@rotp/navigation';
+import type { SimLogWriter } from '@rotp/navigation';
 
 const createSimLogWriter = (runId: string): SimLogWriter => {
   let chain: Promise<unknown> = Promise.resolve();
@@ -19,4 +19,4 @@ const createSimLogWriter = (runId: string): SimLogWriter => {
 };
 
 export { createSimLogWriter };
-export type { SimLogWriter } from './sim-log-writer.type';
+export type { SimLogWriter } from '@rotp/navigation';

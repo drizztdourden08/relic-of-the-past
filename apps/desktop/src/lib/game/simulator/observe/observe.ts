@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-import type { SimObservation, FlagSnapshot } from '@shared/game/simulation';
-import { emptySnapshot, buildPresenceState, emptyPresenceState } from '@shared/game/simulation';
+import type { SimObservation, FlagSnapshot } from '@rotp/navigation';
+import { emptySnapshot, buildPresenceState, emptyPresenceState } from '@rotp/navigation';
 import { wasmReadFlagSnapshot } from '../../';
 import { getCurrentInventory, pollInventoryState } from '../../tracker';
 import { readMapState } from '@rotp/game-core';
-import { IDLE_VIRTUAL } from './observe.constants';
-import { virtualFrom } from './virtual-from';
+import { IDLE_VIRTUAL } from '@rotp/navigation';
+import { virtualFrom } from '@rotp/navigation';
 
 const readFlags = (): FlagSnapshot => wasmReadFlagSnapshot() ?? emptySnapshot();
 

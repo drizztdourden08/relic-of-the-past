@@ -1,15 +1,15 @@
 /* @layer bridge-wasm @kind logic */
-import type { GridPos } from '@shared/game/navigation';
-import type { SimLocation } from '@shared/game/simulation';
+import type { GridPos } from '@rotp/game-core';
+import type { SimLocation } from '@rotp/navigation';
 import { computeBigScreenGroup } from '@domains/widgets/navigation/widget-helpers';
-import { STAIR_ID_BASE } from '../room-entrances';
-import { createSeedLedger } from '../area-seeds';
-import { crossingLanding } from '../crossing-landing';
-import { roomLandingTile } from '../room-landing-tile';
-import { MAX_INDOOR_ROOMS, MAX_ITERATIONS } from './flood-area.constants';
-import { floodOneScreen } from './flood-one-screen';
-import { entrancesForScreen } from './entrances-for-screen';
-import type { AreaFloodRequest, ScreenFloodResult } from './flood-area.type';
+import { STAIR_ID_BASE } from '@rotp/navigation';
+import { createSeedLedger } from '@rotp/navigation';
+import { crossingLanding } from '@rotp/navigation';
+import { roomLandingTile } from '@rotp/navigation';
+import { MAX_INDOOR_ROOMS, MAX_ITERATIONS } from '@rotp/navigation';
+import { floodOneScreen } from '@rotp/navigation';
+import { entrancesForScreen } from '@rotp/navigation';
+import type { AreaFloodRequest, ScreenFloodResult } from '@rotp/navigation';
 
 const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
   const { isIndoors, primaryScreenIndex, startPos, ...shared } = req;

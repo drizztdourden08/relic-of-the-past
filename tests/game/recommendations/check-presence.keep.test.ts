@@ -2,9 +2,10 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { all, getCheck, getItem, getScreen, registerRecord, replaceRecord, unregisterRecord } from '@rotp/game-data';
 import type { CheckRecord, ScreenId } from '@rotp/game-data';
-import type { ChestObservation, DetectionContext, ScreenObservations } from '@shared/game/recommendations';
-import { detectorFromStrategy } from '@shared/game/recommendations/compare';
-import { checkStrategy } from '@shared/game/recommendations/strategies/check';
+import type { ChestObservation } from '@rotp/game-core';
+import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
+import { detectorFromStrategy } from '@rotp/navigation';
+import { checkStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 
 const ROOM = 260;

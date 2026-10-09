@@ -66,6 +66,7 @@
     "@rotp/input-mapping": "workspace:*",
     "@rotp/languages": "workspace:*",
     "@rotp/msu": "workspace:*",
+    "@rotp/navigation": "workspace:*",
     "@rotp/packs": "workspace:*",
     "@rotp/randomizer": "workspace:*",
     "@rotp/roms": "workspace:*",

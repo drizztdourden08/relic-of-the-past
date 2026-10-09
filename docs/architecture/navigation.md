@@ -45,14 +45,14 @@ overlay draws (`annotate-screen.ts`). All three consumers (the navigation widget
 screen and what state it is in: a list of `{ kind, tile, label, state, detail, requires }` items, the
 check tallies for the minimap badge, and the decoded room tags.
 
-`apps/desktop/src/lib/game/flood/annotate-screen.ts` derives it from the **same reads the simulator gates
+`packages/navigation/src/flood/annotate-screen.ts` derives it from the **same reads the simulator gates
 its targets on**: locks and gates, sprites with their key-carrier markers, chests (named after what
 they will actually yield) and room tags. Each family maps through `annotate/`. The flood runs first
 and decides which items are actually touchable, so the overlay, both minimaps and the widget's "On this
 screen" panel cannot disagree with the run.
 
 Ways on and off a screen are **not** annotations. Entrances, doors, stairs, holes, teleports and
-walkable screen edges come from `apps/desktop/src/lib/game/crossings/`, which resolves each one's
+walkable screen edges come from `packages/navigation/src/crossings/`, which resolves each one's
 destination, tile and availability in one place; they draw through their own icon renderer and list in
 the widget's Connections panel.
 

@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { it, expect, afterAll } from 'vitest';
-import type { SimEvent, DetectedCheck } from '../../../shared/game/simulation/types';
-import { createEngine } from '../../../shared/game/simulation/engine/engine';
-import { createEngineState } from '../../../shared/game/simulation/engine/state';
-import { buildAdjacency } from '../../../shared/game/simulation/engine/traversal';
+import type { SimEvent, DetectedCheck } from '@rotp/navigation';
+import { createEngine } from '@rotp/navigation';
+import { createEngineState } from '@rotp/navigation';
+import { buildAdjacency } from '@rotp/navigation';
 import { unregisterRecord } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import {

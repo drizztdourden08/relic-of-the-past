@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { ScreenBundleGrid } from '@shared/game/navigation';
+import type { ScreenBundleGrid } from '@rotp/game-data';
 import type { EdgeRow } from '../nav-flood/nav-flood.type';
 
 interface EdgeCardProps {

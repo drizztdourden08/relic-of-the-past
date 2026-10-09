@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
 import type { GridPos } from '@rotp/game-core';
-import type { ScreenGridBundle } from '../../../shared/game/simulation/types';
+import type { ScreenGridBundle } from '@rotp/navigation';
 import { GRID_SIZE } from './enemy-reach.constants';
 
 const grids = {

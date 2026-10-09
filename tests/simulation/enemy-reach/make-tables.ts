@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { CombatTables } from '../../../shared/game/simulation/types';
+import type { CombatTables } from '@rotp/navigation';
 import { ANCILLA_COUNT, BLOCKING_ATTR } from './enemy-reach.constants';
 
 const makeTables = (overrides: Partial<CombatTables> = {}): CombatTables => ({

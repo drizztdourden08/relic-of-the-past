@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { buildConnectionNav } from '../../../shared/game/navigation/analysis/connection-nav-from-flood';
+import { buildConnectionNav } from '@rotp/navigation';
 import { serializeConnectionRecord } from '@rotp/game-data';
-import type { ConnectionInfo } from '../../../shared/game/navigation';
+import type { ConnectionInfo } from '@rotp/game-core';
 import type { ConnectionRecord } from '@rotp/game-data';
 
 const makeInfo = (over: Partial<ConnectionInfo>): ConnectionInfo => ({

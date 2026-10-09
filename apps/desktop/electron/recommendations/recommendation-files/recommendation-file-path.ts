@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { recommendationFile } from '@shared/game/recommendations';
+import { recommendationFile } from '@rotp/navigation';
 import type { EntityKind } from '@rotp/game-data';
 import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 

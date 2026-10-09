@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import type { ConnectionRecord } from '@rotp/game-data';
-import type { ScreenObservations } from '@shared/game/recommendations';
+import type { ScreenObservations } from '@rotp/navigation';
 import { isCurrentRoom } from './is-current-room';
 
 const tilesProbeApplies = (observations: ScreenObservations, record: ConnectionRecord): boolean =>

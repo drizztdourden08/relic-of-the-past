@@ -2,17 +2,17 @@
 import { useEffect, useRef } from 'react';
 import { applyRecommendationPass } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-cache';
 import { ENTITY_KINDS } from '@app/ui/domains/app/views/DataInspector/DataInspector.constants';
-import { runDetectionSweep } from '@shared/game/recommendations';
-import type { DetectionContext } from '@shared/game/recommendations';
+import { runDetectionSweep } from '@rotp/navigation';
+import type { DetectionContext } from '@rotp/navigation';
 import { useContextSignature } from './useContextSignature';
 import { PASS_DEBOUNCE_MS } from '../LiveDataInspector.constants';
 import '../../recommendations/strategies/connection';
-import '@shared/game/recommendations/strategies/screen';
-import '@shared/game/recommendations/strategies/actor';
-import '@shared/game/recommendations/strategies/check';
-import '@shared/game/recommendations/strategies/dungeon';
-import '@shared/game/recommendations/strategies/item';
-import '@shared/game/recommendations/strategy-detectors';
+import '@rotp/navigation';
+import '@rotp/navigation';
+import '@rotp/navigation';
+import '@rotp/navigation';
+import '@rotp/navigation';
+import '@rotp/navigation';
 import '../../recommendations/strategies/connection/wire-detector';
 
 const runPass = (context: DetectionContext): void => {

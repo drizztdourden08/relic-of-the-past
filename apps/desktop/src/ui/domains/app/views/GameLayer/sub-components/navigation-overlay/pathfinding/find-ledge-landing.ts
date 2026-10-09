@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
+import { GRID_SIZE } from '@rotp/navigation';
 import type { ReachState } from '@rotp/game-core';
 import type { GridPos } from '../navigation-overlay.type';
 import { isReachable2x2 } from './is-reachable-2x2';

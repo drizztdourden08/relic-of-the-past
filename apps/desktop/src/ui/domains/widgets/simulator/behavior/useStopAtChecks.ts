@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind hook */
 import { useState, useEffect, useMemo } from 'react';
 import type { CheckStatus } from '@rotp/game-data';
-import { normalPlacement } from '@app/lib/game/tracker/normal-placement-ref';
-import { trackerStatuses } from '@app/lib/game/tracker/tracker-statuses';
+import { normalPlacement } from '@rotp/navigation';
+import { trackerStatuses } from '@rotp/navigation';
 import { find } from '@rotp/game-data';
 import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
 import { filterChecks } from '@rotp/game-data';

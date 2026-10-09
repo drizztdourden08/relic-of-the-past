@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { SimChest } from '../../../shared/game/simulation/types';
+import type { SimChest } from '@rotp/navigation';
 import { SEWERS_ROOM } from './dungeon-ledger.constants';
 
 const makeChest = (chestIndex: number, opened = false): SimChest => ({

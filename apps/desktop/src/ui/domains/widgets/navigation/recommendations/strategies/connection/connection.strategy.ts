@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ComparisonStrategy } from '@shared/game/recommendations/compare';
+import type { ComparisonStrategy } from '@rotp/navigation';
 import { INDOOR_EDGE_PROBE } from './indoor-edge.set';
 import { NAV_PROBE } from './nav.probe';
 import { CONNECTION_CROSSING_PROBE } from './points.set';

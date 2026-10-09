@@ -2,7 +2,7 @@
 import { getScreenLookup } from '@rotp/game-data';
 import { screenForRoomIndex } from '@rotp/game-data';
 import type { ScreenId } from '@rotp/game-data';
-import type { ObservedDestKind } from '@shared/game/recommendations';
+import type { ObservedDestKind } from '@rotp/game-core';
 
 const resolveRealDestId = (kind: ObservedDestKind, index: number): ScreenId | null => {
   if (kind === 'screen') return getScreenLookup().byOverworldScreen.get(index)?.id ?? null;

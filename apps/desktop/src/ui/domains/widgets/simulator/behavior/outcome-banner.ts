@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { SimOutcome } from '@shared/game/simulation';
+import type { SimOutcome } from '@rotp/navigation';
 import { getCheck } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
 import type { OutcomeBanner } from '../SimulatorWidget.type';

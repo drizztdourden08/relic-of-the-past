@@ -1,8 +1,9 @@
 /* @layer renderer-widgets @kind logic */
 import type { ScreenId } from '@rotp/game-data';
-import { unread } from '@shared/game/recommendations/compare';
-import type { Probe } from '@shared/game/recommendations/compare';
-import type { ObservedTransition, ScreenObservations } from '@shared/game/recommendations';
+import { unread } from '@rotp/navigation';
+import type { Probe } from '@rotp/navigation';
+import type { ObservedTransition } from '@rotp/game-core';
+import type { ScreenObservations } from '@rotp/navigation';
 import { storedOnFarSide, transitionKey } from '../screen-endpoint';
 import { readIndoorEdgeDataset } from './read-indoor-edge-dataset';
 

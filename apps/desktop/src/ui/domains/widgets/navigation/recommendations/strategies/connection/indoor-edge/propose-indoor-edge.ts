@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 import type { ScreenId } from '@rotp/game-data';
-import type { ObservedTransition, ScreenObservations } from '@shared/game/recommendations';
+import type { ObservedTransition } from '@rotp/game-core';
+import type { ScreenObservations } from '@rotp/navigation';
 import { buildConnectionRecord } from '../../../../build-connection-record';
 import { resolveRealDestId } from '../../../../connection-audit-resolve';
 

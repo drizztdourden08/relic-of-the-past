@@ -1,9 +1,9 @@
 /* @layer renderer-widgets @kind logic */
 import { connectionTagKeysOf, toScreenIdOf } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
-import { buildConnectionNav } from '@shared/game/navigation/analysis/connection-nav-from-flood';
-import { known, unread } from '@shared/game/recommendations/compare';
-import type { ScreenObservations } from '@shared/game/recommendations';
+import { buildConnectionNav } from '@rotp/navigation';
+import { known, unread } from '@rotp/navigation';
+import type { ScreenObservations } from '@rotp/navigation';
 import { findFloodForTarget } from '../../../../connection-tile-display';
 
 const readNavProbe = (observations: ScreenObservations, record: ConnectionRecord) => {

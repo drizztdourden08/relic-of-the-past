@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { SimSprite } from '../../shared/game/simulation/types';
-import { planTrigger, planSpriteTrigger } from '../../shared/game/simulation/trigger/trigger-plans';
+import type { SimSprite } from '@rotp/navigation';
+import { planTrigger, planSpriteTrigger } from '@rotp/navigation';
 import { find } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 

@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback, useMemo } from 'react';
-import { normalPlacement } from '../../lib/game/tracker/normal-placement-ref';
-import { trackerCheckRecords } from '../../lib/game/tracker/tracker-roster';
-import { trackerStatuses } from '../../lib/game/tracker/tracker-statuses';
+import { normalPlacement } from '@rotp/navigation';
+import { trackerCheckRecords } from '@rotp/navigation';
+import { trackerStatuses } from '@rotp/navigation';
 import { liveChestItems } from '@rotp/game-data';
 import { find } from '@rotp/game-data';
 import { buildGroupTree, filterChecks, smallKeyDoorsOf } from '@rotp/game-data';

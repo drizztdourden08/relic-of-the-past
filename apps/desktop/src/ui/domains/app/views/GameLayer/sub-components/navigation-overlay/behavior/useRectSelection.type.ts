@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type React from 'react';
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { wasmGetViewportInfo } from '../../../../../../../../lib/game';
 import type { GridPos } from '../navigation-overlay.type';
 

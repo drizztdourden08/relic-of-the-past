@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import { CONFIDENCE_RANK } from '../recommendations.constants';
 
 const byConfidenceThenAge = (a: Recommendation, b: Recommendation): number =>

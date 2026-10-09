@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind types */
-import type { ScreenAnnotations } from '@shared/game/simulation';
-import type { GridPos } from '@shared/game/navigation';
+import type { ScreenAnnotations } from '@rotp/navigation';
+import type { GridPos } from '@rotp/game-core';
 import type { ScreenMatchResult } from '@rotp/game-data';
 import type {
   wasmGetProgressIndicator,

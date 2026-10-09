@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ConnectionInfo } from '@shared/game/navigation';
+import type { ConnectionInfo } from '@rotp/game-core';
 import { resolveRealDestId } from '../connection-audit-resolve';
 
 const findFloodForTarget = (floodConnections: ConnectionInfo[], toId: string): ConnectionInfo | undefined => {

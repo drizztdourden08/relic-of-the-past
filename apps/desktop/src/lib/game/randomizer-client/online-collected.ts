@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { pollRoomFlags } from '../tracker';
-import { addCollectedChecks } from '../tracker/collected-checks';
+import { addCollectedChecks } from '@rotp/navigation';
 import { suppressLocationReport } from './location-poller';
 import { markLocationFired } from './override-fire-registry';
 import { checkIdOfLocation } from '@rotp/randomizer';

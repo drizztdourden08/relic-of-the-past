@@ -2,11 +2,11 @@
 import { describe, expect, it } from 'vitest';
 import { all } from '@rotp/game-data';
 import type { CheckRecord, ItemId } from '@rotp/game-data';
-import { computeCompletedChecks } from '@app/lib/game/tracker/completed-checks-core';
-import type { ProgressReaders } from '@app/lib/game/tracker/completed-checks-core';
+import { computeCompletedChecks } from '@rotp/navigation';
+import type { ProgressReaders } from '@rotp/navigation';
 import { EVENT_BIT, LAST_EVENT_BIT } from '@rotp/game-data';
-import { computeEventStatus } from '@app/lib/game/tracker/event-status';
-import { buildPresenceState } from '@shared/game/simulation/presence/state';
+import { computeEventStatus } from '@rotp/navigation';
+import { buildPresenceState } from '@rotp/navigation';
 
 const events = (): CheckRecord[] => all('check').filter((c) => c.kind === 'event');
 const byName = (name: string): CheckRecord => {

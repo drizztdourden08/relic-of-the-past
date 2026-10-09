@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { SimObservation, FlagSnapshot } from '../../../shared/game/simulation/types';
+import type { SimObservation, FlagSnapshot } from '@rotp/navigation';
 
 const baseObs = (flags: FlagSnapshot): SimObservation => ({
   virtual: { screenId: 'A', tile: { row: 0, col: 0 } },

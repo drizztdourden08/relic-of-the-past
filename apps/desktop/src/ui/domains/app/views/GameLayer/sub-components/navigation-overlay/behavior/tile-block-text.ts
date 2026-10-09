@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import { REACH_BLOCKED, REACH_OPEN } from '../pathfinding/pathfinding.constants';
 
 const reachMark = (reach: number): string => (reach === REACH_BLOCKED ? '-' : reach === REACH_OPEN ? '+' : '~');

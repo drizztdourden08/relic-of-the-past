@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import type { InspectorRow } from '../../../DataInspector.type';
 import { decideRecommendation } from '../recommendation-cache';
 import type { AcceptOutcome } from '../recommendations.type';

@@ -1,0 +1,26 @@
+{
+  "name": "@rotp/navigation",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Flood fill, the simulator, the tracker, crossings and recommendations.",
+  "type": "module",
+  "sideEffects": [
+    "./src/index.ts",
+    "./src/recommendations/strategies/actor/index.ts",
+    "./src/recommendations/strategies/check/index.ts",
+    "./src/recommendations/strategies/dungeon/index.ts",
+    "./src/recommendations/strategies/item/index.ts",
+    "./src/recommendations/strategies/screen/index.ts",
+    "./src/recommendations/strategy-detectors.ts"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@iconify-icons/game-icons": "^1.2.1",
+    "@rotp/game-core": "workspace:*",
+    "@rotp/game-data": "workspace:*",
+    "@rotp/randomizer": "workspace:*"
+  }
+}

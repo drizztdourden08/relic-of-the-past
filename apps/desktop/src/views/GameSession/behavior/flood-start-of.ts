@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
-import type { GridPos } from '@shared/game/navigation';
-import { linkStartTile } from '@shared/game/navigation/link-start-tile';
+import type { GridPos } from '@rotp/game-core';
+import { linkStartTile } from '@rotp/navigation';
 import { screenOriginFor } from '@app/lib/game/flood';
 import type { wasmGetViewportInfo } from '@app/lib/game';
 

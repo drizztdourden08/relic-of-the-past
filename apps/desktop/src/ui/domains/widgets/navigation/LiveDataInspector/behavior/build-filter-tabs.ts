@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import { FILTER_LABELS, FILTER_ORDER } from '../LiveDataInspector.constants';
 import type { FilterTab, RecommendationFilter } from '../LiveDataInspector.type';
 

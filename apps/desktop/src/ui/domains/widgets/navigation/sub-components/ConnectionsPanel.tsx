@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { landingCrossings, listedCrossings } from '@app/lib/crossing-sections';
+import { landingCrossings, listedCrossings } from '@rotp/navigation';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { CrossingCard } from './CrossingCard';

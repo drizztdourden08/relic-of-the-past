@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import {
   NO_DRAFT, editedDraft, isAmended, proposalOf, revertedDraft,
 } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/proposal-draft';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 
 const finding = (id: string, proposed: Record<string, unknown>): Recommendation => ({
   id,

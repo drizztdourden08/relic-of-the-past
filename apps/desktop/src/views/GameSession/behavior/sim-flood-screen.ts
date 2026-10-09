@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
-import type { SimRunConfig } from '@shared/game/simulation';
-import { linkStartTile } from '@shared/game/navigation/link-start-tile';
+import type { SimRunConfig } from '@rotp/navigation';
+import { linkStartTile } from '@rotp/navigation';
 import { wasmGetViewportInfo } from '@app/lib/game';
 import { floodOverworldScreen } from '@app/lib/game/simulator';
 import { overworldOrigin } from '@app/lib/game/flood';

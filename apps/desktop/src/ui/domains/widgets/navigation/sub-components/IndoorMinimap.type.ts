@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind types */
-import type { ConnectionInfo, ScreenBundleGrid, FloodFillResult } from '@shared/game/navigation';
+import type { ConnectionInfo, FloodFillResult } from '@rotp/game-core';
+import type { ScreenBundleGrid } from '@rotp/game-data';
 
 interface MinimapProps {
   bundle: ScreenBundleGrid;

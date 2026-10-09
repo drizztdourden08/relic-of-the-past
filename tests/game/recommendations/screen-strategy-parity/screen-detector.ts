@@ -1,6 +1,6 @@
 /* @layer test @kind helper */
-import { detectorFromStrategy } from '@shared/game/recommendations/compare';
-import { screenStrategy } from '@shared/game/recommendations/strategies/screen';
+import { detectorFromStrategy } from '@rotp/navigation';
+import { screenStrategy } from '@rotp/navigation';
 
 const screenDetector = detectorFromStrategy(screenStrategy);
 

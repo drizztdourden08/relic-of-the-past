@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind data */
-import type { FieldProbe } from '@shared/game/recommendations/compare';
+import type { FieldProbe } from '@rotp/navigation';
 import { tilesProbeApplies } from './tiles/tiles-probe-applies';
 import { readTilesProbe } from './tiles/read-tiles-probe';
 

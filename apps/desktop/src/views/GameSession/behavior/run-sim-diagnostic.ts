@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import type { SimRunConfig } from '@shared/game/simulation';
+import type { SimRunConfig } from '@rotp/navigation';
 import { probeRoom, scanRoomsForSprite } from '@app/lib/game/simulator';
 import { simFloodScreen } from './sim-flood-screen';
 import { simCombatSprite } from './sim-combat-sprite';

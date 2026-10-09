@@ -1,13 +1,13 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import type { ConnectionRecord } from '@rotp/game-data';
-import { createEngine } from '../../../shared/game/simulation/engine/engine';
-import { createEngineState } from '../../../shared/game/simulation/engine/state';
-import type { SimTarget } from '../../../shared/game/simulation/engine/state';
-import { buildAdjacency } from '../../../shared/game/simulation/engine/traversal';
-import { resetFrontier } from '../../../shared/game/simulation/engine/explorer';
-import { discoverTargets } from '../../../shared/game/simulation/engine/discover';
-import { emptySnapshot } from '../../../shared/game/simulation/detect/flag-snapshot';
+import { createEngine } from '@rotp/navigation';
+import { createEngineState } from '@rotp/navigation';
+import type { SimTarget } from '@rotp/navigation';
+import { buildAdjacency } from '@rotp/navigation';
+import { resetFrontier } from '@rotp/navigation';
+import { discoverTargets } from '@rotp/navigation';
+import { emptySnapshot } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { FakeWorld } from '../engine-loop/fake-world';
 import {

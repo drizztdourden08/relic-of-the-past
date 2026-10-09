@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { buildFilterTabs } from './build-filter-tabs';
 import { filterEntries } from './filter-entries';

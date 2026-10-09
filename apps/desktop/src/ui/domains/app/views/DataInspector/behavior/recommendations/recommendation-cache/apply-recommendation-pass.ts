@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
 import type { EntityKind } from '@rotp/game-data';
-import type { DetectionContext, DraftRecommendation } from '@shared/game/recommendations';
+import type { DetectionContext, DraftRecommendation } from '@rotp/navigation';
 import { storeRecommendations } from './store-recommendations';
 
 const applyRecommendationPass = async (

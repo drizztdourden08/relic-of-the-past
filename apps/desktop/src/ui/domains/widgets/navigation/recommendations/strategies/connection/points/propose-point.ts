@@ -1,7 +1,8 @@
 /* @layer renderer-widgets @kind logic */
 import type { ScreenId } from '@rotp/game-data';
-import { buildConnectionNav } from '@shared/game/navigation/analysis/connection-nav-from-flood';
-import type { ObservedTransition, ScreenObservations } from '@shared/game/recommendations';
+import { buildConnectionNav } from '@rotp/navigation';
+import type { ObservedTransition } from '@rotp/game-core';
+import type { ScreenObservations } from '@rotp/navigation';
 import { buildConnectionRecord } from '../../../../build-connection-record';
 import { resolveRealDestId } from '../../../../connection-audit-resolve';
 import { findFloodForTarget } from '../../../../connection-tile-display';

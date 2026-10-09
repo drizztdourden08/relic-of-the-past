@@ -3,13 +3,12 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { all, find } from '@rotp/game-data';
 import { toScreenIdOf } from '@rotp/game-data';
 import type { ConnectionRecord, ScreenId } from '@rotp/game-data';
-import {
-  createRecommendationStore, detectorsFor, memoryStorage, recommendationFile, runDetection,
-} from '@shared/game/recommendations';
-import type { DetectionContext, ObservedTransition, ScreenObservations } from '@shared/game/recommendations';
+import { createRecommendationStore, detectorsFor, memoryStorage, recommendationFile, runDetection } from '@rotp/navigation';
+import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
+import type { ObservedTransition } from '@rotp/game-core';
 import '@app/ui/domains/widgets/navigation/recommendations/strategies/connection';
-import '@shared/game/recommendations/strategies/screen';
-import '@shared/game/recommendations/strategy-detectors';
+import '@rotp/navigation';
+import '@rotp/navigation';
 import '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/wire-detector';
 import { describeDataset } from '../../dataset-guard';
 

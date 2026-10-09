@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 
 const neighbourOf = (order: readonly Recommendation[], id: string): string | null => {
   const at = order.findIndex(entry => entry.id === id);

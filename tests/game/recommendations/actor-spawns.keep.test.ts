@@ -1,9 +1,9 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
 import { all } from '@rotp/game-data';
-import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
-import { detectorFromStrategy } from '@shared/game/recommendations/compare';
-import { actorStrategy } from '@shared/game/recommendations/strategies/actor';
+import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
+import { detectorFromStrategy } from '@rotp/navigation';
+import { actorStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 
 const UNCATALOGUED = Math.max(...all('actor').map(a => a.gameId.spriteType ?? 0)) + 5;

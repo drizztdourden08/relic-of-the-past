@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import { dataRevision } from '@rotp/game-core';
-import type { DetectionContext } from '@shared/game/recommendations';
+import type { DetectionContext } from '@rotp/navigation';
 
 const signatureOf = (context: DetectionContext): string => {
   const { observations } = context;

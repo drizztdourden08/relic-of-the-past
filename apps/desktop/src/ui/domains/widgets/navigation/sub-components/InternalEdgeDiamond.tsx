@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import type { ConnectionInfo, ScreenBundleGrid } from '@shared/game/navigation';
+import type { ConnectionInfo } from '@rotp/game-core';
+import type { ScreenBundleGrid } from '@rotp/game-data';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';

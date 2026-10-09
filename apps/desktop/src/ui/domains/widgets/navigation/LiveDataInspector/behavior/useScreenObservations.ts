@@ -9,7 +9,7 @@ import {
 } from '@app/lib/game';
 import { getPalaceMismatches } from '@rotp/game-data';
 import type { ScreenGameId } from '@rotp/game-data';
-import type { LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveWalkBoundary } from '@shared/game/recommendations';
+import type { LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveWalkBoundary } from '@rotp/game-core';
 import { useScreenDetection } from '../../hooks';
 import { useRealTransitions } from '../../useRealTransitions';
 import { useConnectionStatus } from '../../hooks/useConnectionStatus';

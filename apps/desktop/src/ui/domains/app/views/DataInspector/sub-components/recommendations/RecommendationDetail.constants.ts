@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind data */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 
 const CURRENT_TITLE = 'Current';
 const PROPOSED_TITLE = 'Proposed';

@@ -47,7 +47,7 @@ const {
   probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
 } = await import('../../packages/randomizer/src/client/npc-capability');
 const { executeEntry } = await import('../../packages/randomizer/src/delivery-execute');
-const { withCollectedChecks } = await import('@app/lib/game/tracker/collected-checks');
+const { withCollectedChecks } = await import('../../packages/navigation/src/tracker/collected-checks');
 const { rebaselineEntries } = await import('../../packages/randomizer/src/client/poll-rebaseline');
 
 const settle = async (): Promise<void> => {

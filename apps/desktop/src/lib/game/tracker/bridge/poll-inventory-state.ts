@@ -2,9 +2,9 @@
 import { getItem } from '@rotp/game-data';
 import { getModule } from '@rotp/game-core';
 import { log } from '../../../log-bus';
-import { inventoryToItemSet, parseInventoryBuffer, setsEqual } from '../inventory';
+import { inventoryToItemSet, parseInventoryBuffer, setsEqual } from '@rotp/navigation';
 import { pollRoomFlags } from './poll-room-flags';
-import { trackerState } from './tracker-state';
+import { trackerState } from '@rotp/navigation';
 import type { EmscriptenModule } from '@rotp/game-core';
 
 const readInventory = (heap: Uint8Array, ptr: number, force: boolean): void => {

@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import type { RecommendationRow } from '../recommendations.type';
 import { byConfidenceThenAge } from './by-confidence-then-age';
 import { openRecommendations } from './open-recommendations';

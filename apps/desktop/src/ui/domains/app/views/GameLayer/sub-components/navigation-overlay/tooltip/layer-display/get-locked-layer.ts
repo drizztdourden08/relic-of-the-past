@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 
 const getLockedLayer = (result: FloodFillResult): 0 | 1 => {
   return result.startLayer ?? 0;

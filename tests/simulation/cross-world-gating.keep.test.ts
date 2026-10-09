@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { buildAdjacency, reachableFrom, inventoryToReachTokens, requirementsMet } from '../../shared/game/simulation';
-import type { CanPass, ScreenEdge, ReachContext } from '../../shared/game/simulation';
+import { buildAdjacency, reachableFrom, inventoryToReachTokens, requirementsMet } from '@rotp/navigation';
+import type { CanPass, ScreenEdge, ReachContext } from '@rotp/navigation';
 import { getScreen } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 

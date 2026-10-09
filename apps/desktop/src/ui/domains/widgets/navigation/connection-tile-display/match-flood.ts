@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ConnectionInfo } from '@shared/game/navigation';
+import type { ConnectionInfo } from '@rotp/game-core';
 import { findFloodForTarget } from './find-flood-for-target';
 
 const matchFlood = (

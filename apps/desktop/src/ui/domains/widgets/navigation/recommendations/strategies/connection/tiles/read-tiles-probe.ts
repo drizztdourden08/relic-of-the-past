@@ -1,8 +1,9 @@
 /* @layer renderer-widgets @kind logic */
 import { get, toScreenIdOrNone } from '@rotp/game-data';
 import type { ConnectionRecord, ConnectionTile } from '@rotp/game-data';
-import { known, unread } from '@shared/game/recommendations/compare';
-import type { LiveWalkBoundary, ScreenObservations } from '@shared/game/recommendations';
+import { known, unread } from '@rotp/navigation';
+import type { LiveWalkBoundary } from '@rotp/game-core';
+import type { ScreenObservations } from '@rotp/navigation';
 
 const tilesFor = (boundaries: readonly LiveWalkBoundary[], destRoom: number): ConnectionTile[] =>
   boundaries.filter(b => b.destRoom === destRoom).map(b => ({ x: b.col, y: b.row }));

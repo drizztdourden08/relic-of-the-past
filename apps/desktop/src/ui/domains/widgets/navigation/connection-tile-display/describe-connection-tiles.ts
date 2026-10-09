@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import type { ConnectionInfo, ConnectionNavData } from '@shared/game/navigation';
+import type { ConnectionInfo } from '@rotp/game-core';
+import type { ConnectionNavData } from '@rotp/game-data';
 import { matchFlood } from './match-flood';
 
 const describeNav = (nav: ConnectionNavData): string | null => {

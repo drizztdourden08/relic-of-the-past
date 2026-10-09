@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { ViewportInfo, wasmGetLiveSprites } from '../../../../../../../../lib/game';
 import type { GridPos } from '../navigation-overlay.type';
 

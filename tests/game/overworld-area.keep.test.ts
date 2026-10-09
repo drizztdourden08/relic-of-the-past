@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { resolveAreaSprite } from '@app/lib/game/simulator/overworld-area';
+import { resolveAreaSprite } from '@rotp/navigation';
 
 const HEAD = 24;
 const SCREENS_PER_ROW = 8;

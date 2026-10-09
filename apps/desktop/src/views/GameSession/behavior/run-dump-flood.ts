@@ -1,8 +1,8 @@
 /* @layer renderer-appshell @kind logic */
 import { annotateScreen, propagateArea } from '@app/lib/game/flood';
-import { floodRoomRun } from '@app/lib/game/simulator/flood-room';
-import { floodOneOverworld } from '@app/lib/game/simulator/flood-screen';
-import { enrichEntrances } from '@app/lib/game/flood/overworld-entrances';
+import { floodRoomRun } from '@rotp/navigation';
+import { floodOneOverworld } from '@rotp/navigation';
+import { enrichEntrances } from '@rotp/navigation';
 import { wasmBuildOverworldAttrGrid } from '@app/lib/game';
 import { computeFloodFill } from './compute-flood-fill';
 import { computeOverworldFloodFill } from './compute-overworld-flood-fill';

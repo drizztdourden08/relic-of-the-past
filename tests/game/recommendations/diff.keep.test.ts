@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { changedPaths, linesForPaths } from '@shared/game/recommendations';
+import { changedPaths, linesForPaths } from '@rotp/navigation';
 import { serializeConnectionRecord } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
 

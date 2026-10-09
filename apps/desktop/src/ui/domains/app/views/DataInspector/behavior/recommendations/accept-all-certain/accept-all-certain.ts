@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import type { AcceptOutcome, BatchResult } from '../recommendations.type';
 import { certainOnly } from './certain-only';
 

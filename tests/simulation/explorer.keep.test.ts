@@ -1,18 +1,10 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { createEngineState } from '../../shared/game/simulation/engine/state';
-import {
-  addKey,
-  spendKey,
-  keyAvailable,
-  buildReachContext,
-  applyItem,
-  syncReachTokens,
-  onCheckVerified,
-} from '../../shared/game/simulation/engine/explorer';
-import { requirementsMet } from '../../shared/game/simulation/requirements-map';
-import { evaluateOutcome } from '../../shared/game/simulation/engine/goal';
-import type { DetectedCheck } from '../../shared/game/simulation/types';
+import { createEngineState } from '@rotp/navigation';
+import { addKey, spendKey, keyAvailable, buildReachContext, applyItem, syncReachTokens, onCheckVerified } from '@rotp/navigation';
+import { requirementsMet } from '@rotp/navigation';
+import { evaluateOutcome } from '@rotp/navigation';
+import type { DetectedCheck } from '@rotp/navigation';
 import { describeDataset } from '../dataset-guard';
 
 const EASTERN = 'dungeon-003';

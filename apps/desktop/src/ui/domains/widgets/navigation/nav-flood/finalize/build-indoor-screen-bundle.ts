@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import { wasmGetDungeonMapPosition } from '../../../../../../lib/game';
-import type { ScreenBundleGrid } from '@shared/game/navigation';
+import type { ScreenBundleGrid } from '@rotp/game-data';
 import type { IndoorBundleArgs } from '../nav-flood.type';
 
 const buildIndoorScreenBundle = (args: IndoorBundleArgs): ScreenBundleGrid => {

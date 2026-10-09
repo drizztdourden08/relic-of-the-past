@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ScreenAnnotation } from '@shared/game/simulation';
+import type { ScreenAnnotation } from '@rotp/navigation';
 import { GROUP_OF, GROUP_ORDER, GROUP_TITLES } from './ScreenPanel.constants';
 import type { AnnotationGroup, GroupId } from './ScreenPanel.type';
 

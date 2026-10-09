@@ -1,17 +1,17 @@
 /* @layer bridge-wasm @kind logic */
-import type { GridPos } from '@shared/game/navigation';
-import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import type { SimExit } from '@shared/game/simulation';
-import { collectCrossings } from '../crossings';
-import { usableCrossings } from '../usable-crossings';
-import { summarizeRun } from './flood-screen';
-import { floodRoomRun } from './flood-room';
+import type { GridPos } from '@rotp/game-core';
+import type { TileReq } from '@rotp/game-data';
+import type { SimExit } from '@rotp/navigation';
+import { collectCrossings } from '@rotp/navigation';
+import { usableCrossings } from '@rotp/navigation';
+import { summarizeRun } from '@rotp/navigation';
+import { floodRoomRun } from '@rotp/navigation';
 import { cachedEntranceOf } from './screen-resolve';
-import { stepDistances, distanceAt, sortExitsByDistance, reachedGrid } from './exit-order';
+import { stepDistances, distanceAt, sortExitsByDistance, reachedGrid } from '@rotp/navigation';
 import { roomCrossingExits } from './room-crossing-exits';
-import { dedupe } from './dedupe';
-import { OUTSIDE_ORIGINS, ROOM_EXIT_UNREACHED } from './room-exits.constants';
-import type { DetectedScreen } from './screen-exits.type';
+import { dedupe } from '@rotp/navigation';
+import { OUTSIDE_ORIGINS, ROOM_EXIT_UNREACHED } from '@rotp/navigation';
+import type { DetectedScreen } from '@rotp/navigation';
 
 const roomCounts = (exits: readonly SimExit[]): { entranceCount: number; edgeCount: number } => {
   const outside = exits.filter((e) => OUTSIDE_ORIGINS.has(e.origin ?? ''));

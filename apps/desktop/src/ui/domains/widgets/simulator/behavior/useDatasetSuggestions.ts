@@ -2,7 +2,7 @@
 import { appApi } from '@app/ipc/app-api';
 import type { ScreenEditorApi } from '@shared/ipc';
 import { useCallback, useMemo } from 'react';
-import type { DatasetSuggestion } from '@shared/game/simulation';
+import type { DatasetSuggestion } from '@rotp/navigation';
 import { RECORD_REQUIRED } from '../SimulatorWidget.constants';
 import type { ApplyResult, CheckWriter } from '../SimulatorWidget.type';
 

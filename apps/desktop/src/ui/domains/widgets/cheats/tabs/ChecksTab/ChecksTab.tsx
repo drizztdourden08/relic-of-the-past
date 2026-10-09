@@ -7,7 +7,7 @@ import {
   getCompletedChecks, grantFromCheck, onCompletedChecksChanged, planCheckGrant,
 } from '@app/lib/game';
 import type { CheckGrantPlan } from '@app/lib/game';
-import { trackerCheckRecords } from '@app/lib/game/tracker/tracker-roster';
+import { trackerCheckRecords } from '@rotp/navigation';
 import { getSessionState, subscribeSessionStore } from '@app/lib/game/randomizer-client';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';

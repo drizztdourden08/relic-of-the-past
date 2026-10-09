@@ -1,10 +1,10 @@
 /* @layer renderer-appshell @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import type { SimRunConfig, SimulatorPort } from '@shared/game/simulation';
-import { buildSimRunReport, formatEndSummary } from '@shared/game/simulation';
+import type { SimRunConfig, SimulatorPort } from '@rotp/navigation';
+import { buildSimRunReport, formatEndSummary } from '@rotp/navigation';
 import { getDungeon, getItem } from '@rotp/game-data';
 import { runSimulation } from '@app/lib/game/simulator';
-import { readLoadout } from '@app/lib/game/simulator/read-loadout';
+import { readLoadout } from '@rotp/navigation';
 
 const runFullSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise<void> => {
   const { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks, log, tally, endSummary } = await runSimulation(port, config);

@@ -838,7 +838,7 @@ Each granted id is resolved against the live receive tally and the tracker's cur
 
 ### widgets/navigation/LiveDataInspector/behavior/useLiveContext.ts
 
-Assembles the live `DetectionContext` for the current screen, the one piece the recommendation engine does not build for itself, since a detector only receives observations and never reads the game. `origin` is always `live`; the simulator's recording path (`shared/game/simulation/recording/`) is a separate producer of the same shape.
+Assembles the live `DetectionContext` for the current screen, the one piece the recommendation engine does not build for itself, since a detector only receives observations and never reads the game. `origin` is always `live`; the simulator's recording path (`packages/navigation/src/simulation/recording/`) is a separate producer of the same shape.
 
 ### widgets/navigation/LiveDataInspector/behavior/useRecommendationFilter.ts
 
@@ -854,7 +854,7 @@ The room addressable simulator queries (`wasmGetRoomSpriteSpawns`, `wasmGetOverw
 
 ### widgets/navigation/LiveDataInspector/behavior/spawn-diff
 
-`SPAWNS_PROBE` (`shared/game/recommendations/strategies/screen/spawns.set.ts`) reports the union of the record's own spawns and every live spawn resolved this pass as `diff.liveValue`, so it is always a superset of the record's list; a reviewer only acts on the entries the record does not carry yet. A spawn's identity is its actor and tile, the same key the probe uses. `diff.liveValue` carries a `ScreenSpawn[]` by the probe's contract even though the comparison engine types a difference's payload `unknown`.
+`SPAWNS_PROBE` (`packages/navigation/src/recommendations/strategies/screen/spawns.set.ts`) reports the union of the record's own spawns and every live spawn resolved this pass as `diff.liveValue`, so it is always a superset of the record's list; a reviewer only acts on the entries the record does not carry yet. A spawn's identity is its actor and tile, the same key the probe uses. `diff.liveValue` carries a `ScreenSpawn[]` by the probe's contract even though the comparison engine types a difference's payload `unknown`.
 
 ### widgets/navigation/LiveDataInspector/behavior/accept-all-certain-here.ts
 

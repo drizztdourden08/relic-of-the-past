@@ -6,7 +6,7 @@ import { createScrollSyncController } from './scroll-sync-controller';
 import { followerScrollTo } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
 import type { Lead, PaneSide } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
 import type * as DetailModule from '@app/ui/domains/app/views/DataInspector/sub-components/recommendations/RecommendationDetail';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import { describeDataset } from '../dataset-guard';
 
 interface Position { top: number; left: number }

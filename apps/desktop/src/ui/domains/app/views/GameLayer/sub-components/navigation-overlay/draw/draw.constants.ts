@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { ScreenAnnotation } from '@shared/game/simulation';
+import type { ScreenAnnotation } from '@rotp/navigation';
 
 const TILE_PX = 8;
 const MIN_DOT_RADIUS = 2.5;

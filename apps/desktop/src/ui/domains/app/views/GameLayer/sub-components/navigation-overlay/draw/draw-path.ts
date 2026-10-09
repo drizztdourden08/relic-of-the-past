@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { DrawContext, LockedPathTile } from './draw.type';
 import type { GridPos, MouseState } from '../navigation-overlay.type';
 import { findNearest2x2Goal, findPath2x2FromPlayer } from '../pathfinding';

@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 import { getItemByGameId } from '@rotp/game-data';
 import { log } from '../../../log-bus';
-import { notifyUnknownItems } from './notify-unknown-items';
+import { notifyUnknownItems } from '@rotp/navigation';
 import { pollInventoryState } from './poll-inventory-state';
-import { trackerState } from './tracker-state';
-import type { UnknownItemEntry } from './bridge.type';
+import { trackerState } from '@rotp/navigation';
+import type { UnknownItemEntry } from '@rotp/navigation';
 
 const handleItemReceived = (itemId: number, method: number): void => {
   const item = getItemByGameId({ receiveItemId: itemId });

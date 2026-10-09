@@ -1,12 +1,12 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import type { CheckRecord } from '@rotp/game-data';
-import type { SimChest, DetectedCheck } from '../../../shared/game/simulation/types';
+import type { SimChest, DetectedCheck } from '@rotp/navigation';
 import type { FloodFillResult } from '@rotp/game-core';
-import { createEngineState } from '../../../shared/game/simulation/engine/state';
-import { onCheckVerified } from '../../../shared/game/simulation/engine/explorer';
-import { discoverTargets } from '../../../shared/game/simulation/engine/discover';
-import { emptySnapshot } from '../../../shared/game/simulation/detect/flag-snapshot';
+import { createEngineState } from '@rotp/navigation';
+import { onCheckVerified } from '@rotp/navigation';
+import { discoverTargets } from '@rotp/navigation';
+import { emptySnapshot } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { BIG_KEY, BOMBS_ID, KAKARIKO_TAVERN_ROOM, SMALL_KEY } from './engine-review-fixes.constants';
 import { baseObs } from './base-obs';

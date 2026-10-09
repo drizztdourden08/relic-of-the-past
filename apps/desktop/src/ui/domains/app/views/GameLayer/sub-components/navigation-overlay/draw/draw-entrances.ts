@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
-import type { ScreenCrossing, ScreenCrossings } from '@shared/game/navigation';
-import { markerCrossings } from '@app/lib/crossing-sections';
+import type { ScreenCrossing, ScreenCrossings } from '@rotp/game-core';
+import { markerCrossings } from '@rotp/navigation';
 import type { DrawContext } from './draw.type';
 import { EDGE_COLORS } from '../navigation-overlay.constants';
-import { crossingIcon } from '../../../../../../../../lib/entrance-icons';
+import { crossingIcon } from '@rotp/navigation';
 
 const iconImageCache = new Map<string, HTMLImageElement>();
 

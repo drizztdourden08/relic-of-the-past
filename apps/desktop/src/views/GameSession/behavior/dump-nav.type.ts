@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind types */
-import type { FloodFillResult, ConnectionInfo, GridPos } from '@shared/game/navigation';
-import type { ScreenAnnotations } from '@shared/game/simulation';
+import type { FloodFillResult, ConnectionInfo, GridPos } from '@rotp/game-core';
+import type { ScreenAnnotations } from '@rotp/navigation';
 
 interface MatchingEntrance {
   id: number;

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
 import { wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetSpriteCombat } from '@app/lib/game';
-import type { LiveSpriteObservation, SpriteCombatObservation } from '@shared/game/recommendations';
+import type { LiveSpriteObservation, SpriteCombatObservation } from '@rotp/game-core';
 import type { SpriteLiveObservations } from '../LiveDataInspector.type';
 
 const useSpriteObservations = (isIndoors: boolean, roomIndex: number, overworldScreenIndex: number): SpriteLiveObservations => {

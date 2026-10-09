@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind hook */
 import { useCallback, useSyncExternalStore } from 'react';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import { allRecommendations, subscribeRecommendations } from '../recommendation-cache';
 
 const subscribe = (listener: () => void): (() => void) => subscribeRecommendations(listener);

@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-import type { EngineState } from '@shared/game/simulation';
+import type { EngineState } from '@rotp/navigation';
 import { detectScreenExits } from '../screen-exits';
-import type { DetectedScreen } from '../screen-exits.type';
-import { ENTRY_REGION_SHIFT } from './observe.constants';
-import { floodItems } from './flood-items';
-import type { DetectCache } from './observe.type';
+import type { DetectedScreen } from '@rotp/navigation';
+import { ENTRY_REGION_SHIFT } from '@rotp/navigation';
+import { floodItems } from '@rotp/navigation';
+import type { DetectCache } from '@rotp/navigation';
 
 const detectFor = (state: EngineState, cache: DetectCache): DetectedScreen | null => {
   const t = state.virtual.tile;

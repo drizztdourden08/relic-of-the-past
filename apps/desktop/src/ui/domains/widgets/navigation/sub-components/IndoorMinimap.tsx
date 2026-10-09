@@ -1,10 +1,10 @@
 /* @layer renderer-widgets @kind component */
 import { useMemo } from 'react';
 import { Icon } from '@iconify/react/offline';
-import type { ConnectionInfo } from '@shared/game/navigation';
-import { landingCrossings, markerCrossings } from '@app/lib/crossing-sections';
+import type { ConnectionInfo } from '@rotp/game-core';
+import { landingCrossings, markerCrossings } from '@rotp/navigation';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { crossingIcon } from '../../../../../lib/entrance-icons';
+import { crossingIcon } from '@rotp/navigation';
 import { wasmGetRoomLayoutInfo } from '../../../../../lib/game';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { EDGE_COLORS } from '../navigation.constants';

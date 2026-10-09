@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ScreenAnnotations } from '@shared/game/simulation';
+import type { ScreenAnnotations } from '@rotp/navigation';
 import type { DrawContext } from './draw.type';
 import { ANNOTATION_STYLES } from '../annotation-style';
 import { ANCHOR_NUDGE_TILES, BLOCKED_STRIKE_COLOR, DOOR_KINDS } from './draw.constants';

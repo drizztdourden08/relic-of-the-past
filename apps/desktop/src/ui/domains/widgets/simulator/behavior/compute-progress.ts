@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { EngineState } from '@shared/game/simulation';
+import type { EngineState } from '@rotp/navigation';
 import type { SimProgress } from '@app/stores/simulator-store';
 
 const computeProgress = (state: EngineState): SimProgress => ({

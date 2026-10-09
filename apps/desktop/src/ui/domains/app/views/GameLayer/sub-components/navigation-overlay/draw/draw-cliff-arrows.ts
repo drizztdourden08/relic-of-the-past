@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { DrawContext } from './draw.type';
 import { ARROW_HEAD_SPREAD, CLIFF_ARROW_COLOR } from './draw.constants';
 

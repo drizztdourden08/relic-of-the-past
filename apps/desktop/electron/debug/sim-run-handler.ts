@@ -4,7 +4,7 @@ import { join } from 'path';
 import { handle } from '@drizztdourden08/brock-electron/main';
 import { getWorkspaceRoot } from '../screen-editor/workspace-root';
 import { writeFile, mkdir } from 'fs/promises';
-import type { SimRunConfig } from '@shared/game/simulation';
+import type { SimRunConfig } from '@rotp/navigation';
 import type { CheckId } from '@rotp/game-data';
 import { DEFAULT_MAX_STEPS } from './sim-run-handler.constants';
 

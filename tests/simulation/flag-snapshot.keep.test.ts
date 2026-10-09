@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { emptySnapshot, cloneSnapshot, diffSnapshots } from '../../shared/game/simulation/detect/flag-snapshot';
-import { matchDiffs } from '../../shared/game/simulation/detect/check-matcher';
+import { emptySnapshot, cloneSnapshot, diffSnapshots } from '@rotp/navigation';
+import { matchDiffs } from '@rotp/navigation';
 import { describeDataset } from '../dataset-guard';
 
 const CHEST_SLOT_0_MASK = 0x10;

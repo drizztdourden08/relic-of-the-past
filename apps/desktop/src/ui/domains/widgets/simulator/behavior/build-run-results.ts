@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import type { EngineState, RecorderState } from '@shared/game/simulation';
-import { buildDatasetSuggestions, buildSoftlockReport } from '@shared/game/simulation';
+import type { EngineState, RecorderState } from '@rotp/navigation';
+import { buildDatasetSuggestions, buildSoftlockReport } from '@rotp/navigation';
 import type { RunResults } from '../SimulatorWidget.type';
 
 const buildRunResults = (state: EngineState, recorder: RecorderState): RunResults => ({

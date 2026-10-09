@@ -1,7 +1,7 @@
 /* @layer tests @kind helper */
-import type { SimObservation, TriggerAction, FlagSnapshot } from '../../../shared/game/simulation/types';
-import type { EngineState } from '../../../shared/game/simulation/engine/state';
-import { emptySnapshot, cloneSnapshot } from '../../../shared/game/simulation/detect/flag-snapshot';
+import type { SimObservation, TriggerAction, FlagSnapshot } from '@rotp/navigation';
+import type { EngineState } from '@rotp/navigation';
+import { emptySnapshot, cloneSnapshot } from '@rotp/navigation';
 import { getItemByGameId } from '@rotp/game-data';
 import type { ItemId } from '@rotp/game-data';
 import { CHEST_OPEN_MASKS } from './engine-loop.constants';

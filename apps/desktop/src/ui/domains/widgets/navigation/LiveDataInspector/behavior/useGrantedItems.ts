@@ -2,7 +2,7 @@
 import { useSyncExternalStore } from 'react';
 import { wasmGetReceiveCount } from '@app/lib/game';
 import { getCurrentInventory } from '@app/lib/game/tracker';
-import type { GrantedItemObservation } from '@shared/game/recommendations';
+import type { GrantedItemObservation } from '@rotp/game-core';
 import { grantedItemIds, subscribeGrantedItems } from './granted-items-store';
 
 const useGrantedItems = (): readonly GrantedItemObservation[] => {

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 import { wasmGetToggleFloorPositions } from '../../../../../../lib/game';
-import { togglesLayer } from '../../../../../../lib/game/crossings';
-import type { ConnectionInfo } from '@shared/game/navigation';
+import { togglesLayer } from '@rotp/navigation';
+import type { ConnectionInfo } from '@rotp/game-core';
 
 const annotateLayerToggles = (allConnections: ConnectionInfo[], isIndoors: boolean): void => {
   if (!isIndoors) return;

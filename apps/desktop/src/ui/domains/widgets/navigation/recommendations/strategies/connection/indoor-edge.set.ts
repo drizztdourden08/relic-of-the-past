@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind data */
-import type { SetProbe } from '@shared/game/recommendations/compare';
-import type { ObservedTransition } from '@shared/game/recommendations';
+import type { SetProbe } from '@rotp/navigation';
+import type { ObservedTransition } from '@rotp/game-core';
 import { datasetKey, transitionKey } from './screen-endpoint';
 import { readIndoorEdgeDataset } from './indoor-edge/read-indoor-edge-dataset';
 import { readIndoorEdgeLive } from './indoor-edge/read-indoor-edge-live';

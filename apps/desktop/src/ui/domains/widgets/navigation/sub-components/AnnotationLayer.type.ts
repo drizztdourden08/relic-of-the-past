@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { ScreenAnnotations } from '@shared/game/simulation';
+import type { ScreenAnnotations } from '@rotp/navigation';
 
 interface AnnotationLayerProps {
   annotations: ScreenAnnotations | null;

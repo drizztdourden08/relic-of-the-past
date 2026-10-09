@@ -730,7 +730,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 
 - Derives ScreenAnnotations for one screen from the SAME game reads the simulator's discovery uses, so what the overlay draws is what the run acts on. Nothing here derives game facts again: doors (including cell locks), sprites with their key carrier markers, chests and room tags all arrive from the existing bridge queries.
 - Ways on and off the screen are NOT annotations. Those are crossings (lib/game/crossings), with their own producer and renderer. This file only orchestrates; mapping per family lives in `annotate/`.
-- Room header tags 0x01 to 0x13 are kill gates: the room's doors open when it is cleared (see sim kill triggers). The same range is KILL_GATE_TAG in shared/game/simulation/engine/discover.ts.
+- Room header tags 0x01 to 0x13 are kill gates: the room's doors open when it is cleared (see sim kill triggers). The same range is KILL_GATE_TAG in packages/navigation/src/simulation/engine/discover.ts.
 - A chest is named by what it will ACTUALLY yield: the vanilla duplicate rule swaps an already owned item for its alternate, so a save that owns the lamp must not be promised a Lamp when the run would deliver 5 Rupees. The item name IS the label, so the detail carries the slot instead (repeating the name renders "Lamp Lamp"); the slot tells two chests with the same item apart.
 - A big chest is its own kind: it is gated on the big key, so it must not read as an ordinary available check.
 - A big area's spawn table lists every screen's sprites, already resolved to their true screen, so one belonging to a neighbour is drawn when THAT screen is annotated.

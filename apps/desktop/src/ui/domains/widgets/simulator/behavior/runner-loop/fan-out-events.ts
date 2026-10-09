@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import type { DetectedCheck, RecorderState, SimEvent } from '@shared/game/simulation';
-import { recordCheck } from '@shared/game/simulation';
+import type { DetectedCheck, RecorderState, SimEvent } from '@rotp/navigation';
+import { recordCheck } from '@rotp/navigation';
 import { log } from '@app/lib/log-bus';
 import { locationForScreen } from '../../../../../../lib/game/simulator/observe';
 import type { SimLogSink } from '../../SimulatorWidget.type';

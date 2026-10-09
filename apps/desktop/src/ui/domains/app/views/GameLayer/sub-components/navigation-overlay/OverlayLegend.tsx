@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import type { ScreenAnnotations } from '@shared/game/simulation';
+import type { ScreenAnnotations } from '@rotp/navigation';
 import { ANNOTATION_STYLES } from './annotation-style';
 import { CollapsiblePanel } from './CollapsiblePanel';
 import { useNavigationOverlayStore } from '@app/stores/navigation-overlay-store';

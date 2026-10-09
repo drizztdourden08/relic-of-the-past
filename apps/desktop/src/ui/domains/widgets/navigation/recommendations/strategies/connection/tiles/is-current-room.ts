@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import { get } from '@rotp/game-data';
-import type { ScreenObservations } from '@shared/game/recommendations';
+import type { ScreenObservations } from '@rotp/navigation';
 
 const isCurrentRoom = (observations: ScreenObservations, screenId: string): boolean => {
   const live = observations.liveGameId;

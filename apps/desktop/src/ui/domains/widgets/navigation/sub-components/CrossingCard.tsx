@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import { Icon } from '@iconify/react/offline';
-import type { ScreenCrossing } from '@shared/game/navigation';
+import type { ScreenCrossing } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { crossingIcon } from '../../../../../lib/entrance-icons';
+import { crossingIcon } from '@rotp/navigation';
 import { S } from '../styles';
 import { ReqIcon } from './ReqIcon';
 import { IL } from './CrossingCard.constants';

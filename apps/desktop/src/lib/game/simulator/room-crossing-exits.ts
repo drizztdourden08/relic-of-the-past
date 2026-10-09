@@ -1,15 +1,15 @@
 /* @layer bridge-wasm @kind logic */
-import type { ConnectionInfo, GridPos, ScreenCrossing, ScreenCrossings } from '@shared/game/navigation';
-import type { SimExit } from '@shared/game/simulation';
+import type { ConnectionInfo, GridPos, ScreenCrossing, ScreenCrossings } from '@rotp/game-core';
+import type { SimExit } from '@rotp/navigation';
 import { wasmGetRoomDoorInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundariesFor } from '../';
-import { enrichEntrances } from '../flood/overworld-entrances';
-import { connectionCrossingId, midOf, takeableCrossing } from '../usable-crossings';
-import { entryFromEdge } from './exit-order';
-import type { EdgeName } from './exit-order';
-import { OPPOSITE } from './room-doorways';
+import { enrichEntrances } from '@rotp/navigation';
+import { connectionCrossingId, midOf, takeableCrossing } from '@rotp/navigation';
+import { entryFromEdge } from '@rotp/navigation';
+import type { EdgeName } from '@rotp/navigation';
+import { OPPOSITE } from '@rotp/navigation';
 import { interiorScreenId, owScreenId, screenAreaInfo } from './screen-resolve';
-import { LAST_ROW, OUTDOOR_LANDING_DEPTH, WARP_DOOR, WARP_SIDES } from './room-crossing-exits.constants';
-import type { RoomExitContext, RoomExitPass } from './room-crossing-exits.type';
+import { LAST_ROW, OUTDOOR_LANDING_DEPTH, WARP_DOOR, WARP_SIDES } from '@rotp/navigation';
+import type { RoomExitContext, RoomExitPass } from '@rotp/navigation';
 
 const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
 const lastNumber = (id: string): number => Number(id.slice(id.lastIndexOf(':') + 1));
@@ -148,4 +148,4 @@ const roomCrossingExits = (crossings: ScreenCrossings, context: RoomExitContext)
 };
 
 export { roomCrossingExits };
-export type { RoomExitContext } from './room-crossing-exits.type';
+export type { RoomExitContext } from '@rotp/navigation';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { DrawContext } from './draw.type';
 import type { FallHoleSpawn } from '../../../../../../../../stores/navigation-overlay-store';
 import { FALL_ZONE_COLOR } from './draw.constants';

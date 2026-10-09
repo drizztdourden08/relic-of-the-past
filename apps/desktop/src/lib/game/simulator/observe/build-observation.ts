@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
-import type { SimObservation, SimulatorPort, SimSprite, CombatContext, EngineState } from '@shared/game/simulation';
+import type { SimObservation, SimulatorPort, SimSprite, CombatContext, EngineState } from '@rotp/navigation';
 import type { ItemId } from '@rotp/game-data';
-import { locationForScreen } from '../screen-location';
+import { locationForScreen } from '@rotp/navigation';
 import { detectFor } from './detect-for';
-import type { DetectCache } from './observe.type';
+import type { DetectCache } from '@rotp/navigation';
 
 const combatFor = (port: SimulatorPort, sprites: SimSprite[]): CombatContext => {
   const bySpriteType: Record<number, ReturnType<SimulatorPort['getSpriteCombat']>> = {};

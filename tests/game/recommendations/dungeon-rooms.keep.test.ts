@@ -2,9 +2,9 @@
 import { describe, it, expect } from 'vitest';
 import { all, getScreen } from '@rotp/game-data';
 import type { DungeonRecord, ScreenId } from '@rotp/game-data';
-import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
-import { detectorFromStrategy } from '@shared/game/recommendations/compare';
-import { dungeonStrategy } from '@shared/game/recommendations/strategies/dungeon';
+import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
+import { detectorFromStrategy } from '@rotp/navigation';
+import { dungeonStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({

@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind types */
 import type { ViewKey } from '@drizztdourden08/tessera/data';
 import type { EntityKind } from '@rotp/game-data';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 
 interface PendingRecord {
   kind: EntityKind;

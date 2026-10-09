@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import type { ConnectionTag } from '@rotp/game-data';
-import type { ObservedTransition } from '@shared/game/recommendations';
+import type { ObservedTransition } from '@rotp/game-core';
 
 const inferTags = (transition: ObservedTransition): ConnectionTag[] => {
   if (transition.source === 'stair') return ['transit:stairs', 'ctx:internal'];

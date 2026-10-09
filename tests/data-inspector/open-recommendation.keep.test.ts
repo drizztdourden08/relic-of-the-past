@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useDataViewStore } from '@app/stores/data-view-store';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 
 const finding = (id: string): Recommendation => ({
   id,

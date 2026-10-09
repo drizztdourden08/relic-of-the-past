@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
-import type { DetectionContext } from '@shared/game/recommendations';
+import type { DetectionContext } from '@rotp/navigation';
 import { useChestObservations } from './useChestObservations';
 import { useGrantedItems } from './useGrantedItems';
 import { useScreenObservations } from './useScreenObservations';

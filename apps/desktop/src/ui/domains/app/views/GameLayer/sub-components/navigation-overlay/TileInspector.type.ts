@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { FloodFillResult } from '@shared/game/navigation';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { MouseState } from './navigation-overlay.type';
 
 interface TileInspectorProps {

@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind logic */
 import { gameIdLabel } from '@rotp/game-data';
-import type { ObservedTransition } from '@shared/game/recommendations';
-import type { UnresolvableMapper } from '@shared/game/recommendations/compare';
-import { buildScreenDraftRecord } from '@shared/game/recommendations/strategies/screen/screen-draft';
+import type { ObservedTransition } from '@rotp/game-core';
+import type { UnresolvableMapper } from '@rotp/navigation';
+import { buildScreenDraftRecord } from '@rotp/navigation';
 import type { CrossingIdentity } from './connection.type';
 import { EMPTY_ROOM_SLOT } from './connection.constants';
 

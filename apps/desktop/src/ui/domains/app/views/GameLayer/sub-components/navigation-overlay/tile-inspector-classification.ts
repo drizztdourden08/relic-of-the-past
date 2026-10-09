@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
-import { classifyTile, resolveRoomContext, roomTypeLabel } from '@shared/game/navigation/tile-classification';
+import { classifyTile, resolveRoomContext, roomTypeLabel } from '@rotp/navigation';
 import type { ReachState } from '@rotp/game-core';
-import type { SimDoor } from '@shared/game/simulation';
-import { getRoomDoors } from '@app/lib/game/simulator/interactables';
+import type { SimDoor } from '@rotp/navigation';
+import { getRoomDoors } from '@rotp/navigation';
 import { wasmGetReplacementTileState, wasmGetChestLocations } from '@app/lib/game';
 import { getLayerDisplayMode } from './tooltip/layer-display/get-layer-display-mode';
 import { getLockedLayer } from './tooltip/layer-display/get-locked-layer';

@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { ScreenAnnotation } from '../../shared/game/simulation';
-import { roomTagName } from '../../shared/game/simulation';
+import type { ScreenAnnotation } from '@rotp/navigation';
+import { roomTagName } from '@rotp/navigation';
 import { groupAnnotations } from '../../apps/desktop/src/ui/domains/widgets/navigation/sub-components/ScreenPanel/annotation-rows';
 import { describeDataset } from '../dataset-guard';
 

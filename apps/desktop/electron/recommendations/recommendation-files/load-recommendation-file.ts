@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { EntityKind } from '@rotp/game-data';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 import { readJsonFile } from '@drizztdourden08/brock-electron/main';
 import { recommendationFilePath } from './recommendation-file-path';
 

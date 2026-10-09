@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ScreenAnnotations } from '@shared/game/simulation';
+import type { ScreenAnnotations } from '@rotp/navigation';
 import { annotateScreen } from '../../../../../lib/game/flood';
 import { screenIdForGameId } from '@rotp/game-data';
 import type { AnnotateArgs } from './nav-flood.type';

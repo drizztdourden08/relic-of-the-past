@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import {
   acceptAllCertain, certainOnly,
 } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/accept-all-certain';
-import type { Recommendation } from '@shared/game/recommendations';
+import type { Recommendation } from '@rotp/navigation';
 
 const finding = (over: Partial<Recommendation> = {}): Recommendation => ({
   id: 'r-1',

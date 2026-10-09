@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
+import { GRID_SIZE } from '@rotp/navigation';
 import type { ReachState } from '@rotp/game-core';
 import { REACH_OPEN } from './pathfinding.constants';
 

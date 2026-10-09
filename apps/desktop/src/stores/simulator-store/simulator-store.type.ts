@@ -1,11 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type {
-  SimEvent,
-  SimOutcome,
-  SimPhase,
-  DatasetSuggestion,
-  SoftlockReport,
-} from '@shared/game/simulation';
+import type { SimEvent, SimOutcome, SimPhase, DatasetSuggestion, SoftlockReport } from '@rotp/navigation';
 
 type RunStatus = 'idle' | 'running' | 'paused' | 'done';
 

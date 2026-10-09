@@ -2,12 +2,12 @@
 export { createLiveGamePort } from './live-port';
 export { runSimulation } from './drive';
 export type { DriveResult } from './drive';
-export { floodOverworldScreen } from './flood-screen';
-export type { ScreenFlood } from './flood-screen';
-export { floodRoomScreen } from './flood-room';
+export { floodOverworldScreen } from '@rotp/navigation';
+export type { ScreenFlood } from '@rotp/navigation';
+export { floodRoomScreen } from '@rotp/navigation';
 export { detectScreenExits } from './screen-exits';
 export { probeRoom } from './probe-room';
-export { scanRoomsForSprite } from './scan-sprite';
+export { scanRoomsForSprite } from '@rotp/navigation';
 export type { RoomProbe } from './probe-room';
 export type { DetectedScreen } from './screen-exits';
 export { screenAreaInfo } from './screen-resolve';

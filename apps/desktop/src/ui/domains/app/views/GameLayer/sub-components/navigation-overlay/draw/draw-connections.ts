@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ConnectionInfo } from '@shared/game/navigation';
+import type { ConnectionInfo } from '@rotp/game-core';
 import type { DrawContext } from './draw.type';
 import { EDGE_COLORS } from '../navigation-overlay.constants';
 

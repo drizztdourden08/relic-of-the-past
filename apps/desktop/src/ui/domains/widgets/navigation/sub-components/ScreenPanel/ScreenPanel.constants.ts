@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind constants */
-import type { AnnotationKind } from '@shared/game/simulation';
+import type { AnnotationKind } from '@rotp/navigation';
 import type { GroupId } from './ScreenPanel.type';
 
 const GROUP_OF: Partial<Record<AnnotationKind, GroupId>> = {

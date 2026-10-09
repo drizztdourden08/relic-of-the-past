@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import type { ScreenCrossing } from '@shared/game/navigation';
+import type { ScreenCrossing } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { ReqIcon } from './ReqIcon';

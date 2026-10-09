@@ -1,16 +1,16 @@
 /* @layer bridge-wasm @kind barrel */
-export { destroyTrackerBridge } from './destroy-tracker-bridge';
-export { getCompletedChecks } from './get-completed-checks';
-export { getCurrentInventory } from './get-current-inventory';
-export { getEventStatus } from './get-event-status';
-export { getUnknownItems } from './get-unknown-items';
+export { destroyTrackerBridge } from '@rotp/navigation';
+export { getCompletedChecks } from '@rotp/navigation';
+export { getCurrentInventory } from '@rotp/navigation';
+export { getEventStatus } from '@rotp/navigation';
+export { getUnknownItems } from '@rotp/navigation';
 export { initTrackerBridge } from './init-tracker-bridge';
-export { loadUnknownItems } from './load-unknown-items';
-export { onCompletedChecksChanged } from './on-completed-checks-changed';
-export { onEventStatusChanged } from './on-event-status-changed';
-export { onInventoryChanged } from './on-inventory-changed';
-export { onItemReceived } from './on-item-received';
-export { onUnknownItem } from './on-unknown-item';
+export { loadUnknownItems } from '@rotp/navigation';
+export { onCompletedChecksChanged } from '@rotp/navigation';
+export { onEventStatusChanged } from '@rotp/navigation';
+export { onInventoryChanged } from '@rotp/navigation';
+export { onItemReceived } from '@rotp/navigation';
+export { onUnknownItem } from '@rotp/navigation';
 export { pollInventoryState } from './poll-inventory-state';
 export { pollRoomFlags } from './poll-room-flags';
-export type { UnknownItemEntry } from './bridge.type';
+export type { UnknownItemEntry } from '@rotp/navigation';

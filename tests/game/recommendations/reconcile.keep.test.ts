@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { reconcile, scopedToPass, recommendationId } from '@shared/game/recommendations';
-import type { DraftRecommendation, Recommendation } from '@shared/game/recommendations';
+import { reconcile, scopedToPass, recommendationId } from '@rotp/navigation';
+import type { DraftRecommendation, Recommendation } from '@rotp/navigation';
 
 const draft = (overrides: Partial<DraftRecommendation<'screen'>> = {}): DraftRecommendation<'screen'> => ({
   kind: 'screen',

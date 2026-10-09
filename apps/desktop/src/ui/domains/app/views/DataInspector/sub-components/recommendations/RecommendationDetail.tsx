@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useCallback, useMemo } from 'react';
-import { changedPaths } from '@shared/game/recommendations';
+import { changedPaths } from '@rotp/navigation';
 import { buildSchema } from '@drizztdourden08/tessera/data';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { COLLECTION_SOURCES } from '../../behavior/collection-sources';
