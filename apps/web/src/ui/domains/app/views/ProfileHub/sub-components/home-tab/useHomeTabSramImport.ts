@@ -1,27 +1,17 @@
 /* @layer renderer-components @kind hook */
-/** Picking, validating, and importing a raw SRAM save into this profile's sram.dat. */
 import { useState, useCallback } from 'react';
-import type { FilePickerPort } from '@shared/platform';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { log } from '../../../../../../../lib/log-bus';
-import type { DialogState } from './home-tab.type';
 import { validSramSlots } from '@app/lib/game/save-file/sram-slots';
+import { SRAM_BYTES, SRAM_EXTENSIONS } from './home-tab.constants';
+import type { UseHomeTabSramImportParams } from './home-tab.type';
 
-const SRAM_BYTES = 8192; // core/zelda3/src/zelda_rtl.c:1345, the cartridge's fixed SRAM size
-const IMPORT_CONFIRM_WORD = 'import'; // typed, not the filename, so it is a deliberate action and not a memory test
-
-const useHomeTabSramImport = (params: {
-  profileId: string;
-  filePicker: FilePickerPort;
-  dialog: DialogState;
-  setDialog: (dialog: DialogState) => void;
-  showToast: (message: string) => void;
-}) => {
+const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
   const { profileId, filePicker, dialog, setDialog, showToast } = params;
   const [importConfirmText, setImportConfirmText] = useState('');
 
   const handleImportSram = useCallback(async () => {
-    const picked = await filePicker.pickFile({ extensions: ['srm', 'sav', 'dat'] });
+    const picked = await filePicker.pickFile({ extensions: SRAM_EXTENSIONS });
     if (!picked) return;
 
     if (picked.bytes.byteLength !== SRAM_BYTES) {
@@ -72,4 +62,4 @@ const useHomeTabSramImport = (params: {
   };
 };
 
-export { useHomeTabSramImport, IMPORT_CONFIRM_WORD };
+export { useHomeTabSramImport };

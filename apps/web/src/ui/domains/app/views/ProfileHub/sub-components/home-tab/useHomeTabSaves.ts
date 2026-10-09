@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind hook */
-/** All Home-tab save/session state, data loading, and action handlers. */
 import { useState, useEffect, useCallback } from 'react';
 import { usePlatform } from '@app/platform';
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
@@ -10,13 +9,18 @@ import { saveMusicPosition, restoreMusicPosition } from '../../../../../../../li
 import { listSessions } from '../../../../../../../lib/game/session-tracker';
 import { log } from '../../../../../../../lib/log-bus';
 import * as savesStore from '@app/lib/storage/saves-store';
-import type { SlotInfo, DialogState } from './home-tab.type';
-import { QUICK_SAVE_SLOTS, defaultSaveName, ensureGameRunning, captureCanvasScreenshot } from './home-tab-helpers';
-import { fetchQuickSlots, fetchNormalSaves, fetchAutoSaves } from './home-tab-data';
+import type { SlotInfo, DialogState, UseHomeTabSavesParams } from './home-tab.type';
+import { QUICK_SAVE_SLOTS, SESSION_LIST_LIMIT } from './home-tab.constants';
+import { defaultSaveName } from './default-save-name';
+import { ensureGameRunning } from './ensure-game-running';
+import { captureCanvasScreenshot } from './capture-canvas-screenshot';
+import { fetchQuickSlots } from './fetch-quick-slots';
+import { fetchNormalSaves } from './fetch-normal-saves';
+import { fetchAutoSaves } from './fetch-auto-saves';
 import { useHomeTabToasts } from './useHomeTabToasts';
 import { useHomeTabSramImport } from './useHomeTabSramImport';
 
-const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; onStartGame: () => void }) => {
+const useHomeTabSaves = (params: UseHomeTabSavesParams) => {
   const { profileId, isGameRunning, onStartGame } = params;
   const { filePicker } = usePlatform();
   const { toasts, showToast, dismissToast } = useHomeTabToasts();
@@ -49,7 +53,7 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
   };
   const loadSessions = async () => {
     const list = await listSessions(profileId);
-    setSessions(list.slice(0, 20));
+    setSessions(list.slice(0, SESSION_LIST_LIMIT));
   };
 
   useEffect(() => {
@@ -59,11 +63,8 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     loadSessions();
   }, [profileId]);
 
-  // The timer writes auto-saves while this tab is open: follow it, so the newest one is on the
-  // list the moment it exists.
   useEffect(() => onAutoSavesChanged(() => { loadAutoSaves(); }), [profileId]);
 
-  // ─── Quick save handlers ───
   const handleQuickSave = useCallback(async (slot: number) => {
     setBusySlot(slot);
     log.app(`Saving state to slot ${slot + 1}`);
@@ -79,7 +80,6 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     setBusySlot(null);
   }, [profileId, isGameRunning, onStartGame]);
 
-  // ─── Normal save handlers ───
   const handleCreateNormalSave = useCallback(() => {
     setNewSaveName(defaultSaveName());
     setDialog({ type: 'create' });
@@ -151,7 +151,6 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     await loadNormalSaves();
   }, [profileId]);
 
-  // ─── Auto-save handlers ───
   const handleLoadAuto = useCallback(async (id: string) => {
     setBusyAuto(id);
     log.app(`Loading auto-save: ${id}`);
@@ -184,6 +183,4 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
 };
 
 export { useHomeTabSaves };
-export type { HomeTabSaves };
-
-type HomeTabSaves = ReturnType<typeof useHomeTabSaves>;
+export type { HomeTabSaves } from './home-tab.type';

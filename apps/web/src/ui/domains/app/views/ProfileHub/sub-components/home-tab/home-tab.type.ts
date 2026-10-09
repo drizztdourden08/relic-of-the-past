@@ -1,5 +1,8 @@
 /* @layer renderer-components @kind types */
+import type { FilePickerPort } from '@shared/platform';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { AutoSaveInfo, NormalSaveInfo } from '@shared/types/saves';
+import type { useHomeTabSaves } from './useHomeTabSaves';
 
 interface HomeTabProps {
   profileId: string;
@@ -10,25 +13,20 @@ interface HomeTabProps {
   onResetGame: () => void;
   lastPlayed?: number;
   created?: number;
-  /** Frozen at profile creation; presence marks a randomized playthrough. */
   randomizer?: ProfileRandomizerConfig;
   vanillaSafe: boolean;
 }
 
-/** One label/value cell of the home summary panel. */
 interface SummaryFact {
   label: string;
   value: string;
-  /** Full value for the hover tooltip when the cell truncates. */
   title?: string;
   mono?: boolean;
   capitalize?: boolean;
 }
 
-/** Offline checks readout for one battery-save file (label = slot + 1). */
 interface SaveFileChecks {
   slot: number;
-  /** The player name stored in the file; null when blank. */
   name: string | null;
   taken: number;
   available: number;
@@ -50,4 +48,51 @@ interface DialogState {
   detail?: string;
 }
 
-export type { HomeTabProps, SaveFileChecks, SlotInfo, DialogState, SummaryFact };
+interface ProfileFactsInput {
+  romFile: string;
+  lastPlayed?: number;
+  created?: number;
+}
+
+interface HomeRandomizerStatus {
+  sessionStatusLabel: string;
+}
+
+interface SavesWithScreenshots<T> {
+  list: T[];
+  screenshots: Record<string, string>;
+}
+
+type NormalSavesData = SavesWithScreenshots<NormalSaveInfo>;
+type AutoSavesData = SavesWithScreenshots<AutoSaveInfo>;
+
+interface UseHomeTabSavesParams {
+  profileId: string;
+  isGameRunning: boolean;
+  onStartGame: () => void;
+}
+
+interface UseHomeTabSramImportParams {
+  profileId: string;
+  filePicker: FilePickerPort;
+  dialog: DialogState;
+  setDialog: (dialog: DialogState) => void;
+  showToast: (message: string) => void;
+}
+
+type HomeTabSaves = ReturnType<typeof useHomeTabSaves>;
+
+interface HomeTabColumnsProps {
+  saves: HomeTabSaves;
+  isGameRunning: boolean;
+}
+
+interface HomeTabDialogsProps {
+  saves: HomeTabSaves;
+}
+
+export type {
+  AutoSavesData, DialogState, HomeRandomizerStatus, HomeTabColumnsProps, HomeTabDialogsProps,
+  HomeTabProps, HomeTabSaves, NormalSavesData, ProfileFactsInput, SaveFileChecks, SlotInfo,
+  SummaryFact, UseHomeTabSavesParams, UseHomeTabSramImportParams,
+};

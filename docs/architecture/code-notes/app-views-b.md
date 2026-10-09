@@ -1110,3 +1110,91 @@ The controller assigned to the active profile: connection and activation status,
 ## ProfileHub/sub-components/controls/InputProfileList.tsx
 
 The saved input profiles, with the active one highlighted, and create, delete, select and rename. A newly created profile opens straight into rename. Escape in the rename field is consumed there, so the dismiss stack leaves the page alone.
+
+## ProfileHub/sub-components/RefreshRateControl/RefreshRateControl.tsx
+
+- The target refresh rate picker, plus the display's state right now and a way to change it for good. Two routes to the same end are kept side by side on purpose: the fullscreen toggle above borrows the rate only while fullscreen and hands it back, while "Change refresh rate" sets it and leaves it. Players who dislike the blink on entering fullscreen want the second, players who want their desktop untouched want the first.
+- `detectedHz` is the rate detected now, which may be finer grained than what the OS reports. `value` is the stored preference, where 0 means the highest multiple of 60 available.
+- A stored rate the display no longer offers would leave nothing selected, so the highest is used, which is also what 0 resolves to.
+- The detected value leads the readout: it comes from the shared store, which is read again after a switch, so it is the only one of the three guaranteed to match the display now. The host status behind it is fetched only when the preference changes and goes stale once the rate is changed from here.
+
+## ProfileHub/sub-components/RefreshRateControl/sub-components/ChangeRefreshRateDialog.tsx
+
+Confirms changing the display's refresh rate for good. It is worth a dialog because it reaches outside the game and changes a system setting. The wording covers what a player needs before saying yes: it lasts, how to undo it, and that a temporary alternative exists.
+
+## ProfileHub/sub-components/RefreshRateControl/behavior/useApplyRefreshRate.ts
+
+Applies a refresh rate for good and reports the host's verdict, including any failure reason. Afterwards every readout of the display is stale (the panel's detected line, the title bar counter and its incompatible-rate tag), so it reads the rate again once the switch settles: a mode change is not instant, and measuring mid-switch would sample the old rate. When the host cannot be reached at all, the previous status stays showing.
+
+## ProfileHub/sub-components/hub-search/HubSearchResults.tsx
+
+The hub's search pane: every setting matching the query, from every tab, with its real control. Each tab draws its own rows in results mode (through SettingsPageContext), grouped under the tab's name with a way to open it.
+
+## ProfileHub/sub-components/hub-search/match-tabs.ts
+
+What a hub search matches, per tab: how many setting rows (by the same filter the settings pages use, so a count always equals the rows drawn), and the tabs whose own name matches even when no row does (Controls has no rows at all). `withRows` is in nav order.
+
+## ProfileHub/sub-components/home-tab/home-tab.type.ts
+
+- `randomizer` is frozen at profile creation, and its presence marks a randomized playthrough.
+- `SummaryFact` is one label and value cell of the home summary, and `title` is the full value for the tooltip when the cell truncates.
+- `SaveFileChecks` is the offline checks readout for one battery save file (labelled slot + 1). `name` is the player name stored in the file, null when blank.
+
+## ProfileHub/sub-components/home-tab/home-tab.constants.ts
+
+- `BOOT_WAIT_MS` is the ceiling on waiting out a boot. It is long because a first run extracts assets before the core starts.
+- `SRAM_BYTES` is the cartridge's fixed SRAM size (`core/zelda3/src/zelda_rtl.c`, line 1345).
+- `IMPORT_CONFIRM_WORD` is typed, not the filename, so importing is a deliberate action and not a memory test.
+- `RUN_OF_MODE` is the run a profile mode reads its saves as. Vanilla Safe reads none.
+
+## ProfileHub/sub-components/home-tab/ensure-game-running.ts
+
+Resolves once the core can take a command, booting it first if nothing is on its way. `isGameRunning` is the caller's view flag: it says the game view has its asset blob, which happens about two seconds before the core exists. Trusting it let a load fire into a null module and be dropped, so the boot went ahead with no state loaded. The bridge's own state decides here, and the flag only answers whether a boot has been asked for, so a second one is not started.
+
+## ProfileHub/sub-components/home-tab/capture-canvas-screenshot.ts
+
+Captures the rendered game frame as a PNG buffer, the same path quick saves use.
+
+## ProfileHub/sub-components/home-tab/fetch-quick-slots.ts
+
+The Home tab's data fetchers (quick slots, normal saves, auto saves) each return null on error, so the caller keeps its previous state.
+
+## ProfileHub/sub-components/home-tab/build-summary-facts.ts
+
+The home hero's fact rows: the profile row (ROM, dates) and, for a randomized profile only, the run row (seed, connection, session status) in `build-randomizer-facts.ts`, with the per-save-file strips beside it. The mode is the hero's title, so it is not a fact. Checks progress is not a fact either: the live subscription is empty with no game running, so the per-save-file strips carry it from the save on disk.
+
+## ProfileHub/sub-components/home-tab/compute-save-file-checks.ts
+
+The per-save-file checks readout, computed offline from the profile's battery save on disk, with the same taken, available and left counts the Checks widget derives. One row per save file holding a valid game. A seed's saves are rated against its frozen placement and a plain game's against the placement where nothing moved (`normal-placement.ts`), so both go through the same availability snapshot. An online run has no placement on disk, so it shows nothing.
+
+## ProfileHub/sub-components/home-tab/derive-profile-mode.ts
+
+Which play mode a profile is in, for the home summary's badge. The randomizer config wins (it is frozen at creation and cannot be turned off), and the Vanilla Safe setting splits the rest into safe and plain vanilla.
+
+## ProfileHub/sub-components/home-tab/useHomeTabSaves.ts
+
+All Home tab save and session state, data loading and action handlers. The timer writes auto saves while the tab is open, so the hook follows it and the newest one is listed the moment it exists.
+
+## ProfileHub/sub-components/home-tab/useHomeTabSramImport.ts
+
+Picks, validates and imports a raw SRAM save into the profile's `sram.dat`.
+
+## ProfileHub/sub-components/home-tab/useHomeTabToasts.ts
+
+The Home tab's own toast queue, separate from ProfileHub's so the two features never share mutable state.
+
+## ProfileHub/sub-components/home-tab/useHomeRandomizerStatus.ts
+
+Live randomizer session status for the home summary. It is a pure subscription: the session store pushes status changes, so the hook adds no polling. Checks progress no longer comes from here, because the live completed-checks subscription is empty while no game runs and showed a false zero.
+
+## ProfileHub/sub-components/home-tab/useHomeSaveFileChecks.ts
+
+The per-save-file checks readout for the home hero, computed offline from the battery save on disk, so it never shows the live subscription's false zero. Off for Vanilla Safe. The file on disk is the last in-game save, so reading it mid-session is safe. It is computed again on mount (each time the hub opens), on a profile or mode change, and when a session starts or ends.
+
+## ProfileHub/sub-components/home-tab/HomeTabColumns.tsx
+
+The Home tab's two columns: quick saves and play sessions on the left, normal and auto saves on the right.
+
+## ProfileHub/sub-components/home-tab/HomeTabDialogs.tsx
+
+The create, overwrite, delete and SRAM import confirmation dialogs for the Home tab.

@@ -1,23 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * Confirms changing the display's refresh rate for good.
- *
- * Worth a dialog because it reaches outside the game and changes a system setting. The wording
- * covers the three things a player needs to know before saying yes: it lasts, how to undo it,
- * and that there is a temporary alternative if they would rather not.
- */
-import { Dialog } from '../../../../../../design-system/composites/Dialog';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import './RefreshRateControl.css';
-
-interface ChangeRefreshRateDialogProps {
-  open: boolean;
-  targetHz: number;
-  currentHz: number | null;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+import { Dialog } from '../../../../../../../design-system/composites/Dialog';
+import { Box } from '../../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../../design-system/primitives/Text';
+import type { ChangeRefreshRateDialogProps } from '../RefreshRateControl.type';
 
 const ChangeRefreshRateDialog = (props: ChangeRefreshRateDialogProps) => {
   const { open, targetHz, currentHz, onConfirm, onCancel } = props;

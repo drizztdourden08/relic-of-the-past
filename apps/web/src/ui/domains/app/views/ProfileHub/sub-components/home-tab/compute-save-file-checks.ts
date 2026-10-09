@@ -1,13 +1,4 @@
 /* @layer renderer-components @kind logic */
-/**
- * Per-save-file checks readout, computed OFFLINE from the profile's battery save on disk, with
- * the same taken / available / left the Checks widget derives. One row per save file that holds
- * a valid game.
- *
- * One reading for every run: a seed's saves are rated against its frozen placement, and a plain
- * game's against the placement where nothing moved (normal-placement.ts), so both go through the
- * same availability snapshot. An online run has no placement on disk, so it shows nothing.
- */
 import { all } from '@shared/game/data';
 import type { RunKind } from '@shared/game/logic';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
@@ -33,7 +24,6 @@ const countStatuses = (slot: number, name: string | null, snapshot: ReadonlyMap<
   return { slot, name, taken, available, left, total: snapshot.size };
 };
 
-/** The placement this profile's saves are judged over: the seed's own, or the one where nothing moved. */
 const placementFor = async (profileId: string, runKind: RunKind): Promise<Placement | null> => {
   if (runKind === 'online') return null;
   return runKind === 'seed' ? loadRandomizerPlacement(profileId) : normalPlacement();
@@ -53,7 +43,7 @@ const computeSaveFileChecks = async (profileId: string, runKind: RunKind): Promi
   const rows: SaveFileChecks[] = [];
   for (let slot = 0; slot < SRAM_SLOT_COUNT; slot++) {
     const completed = offlineCompletedChecks(sram, slot, isArmed);
-    if (completed === null) continue; // empty or corrupt slot
+    if (completed === null) continue;
     const snapshot = computeTrackerSnapshot(placement, completed, checks);
     rows.push(countStatuses(slot, offlinePlayerName(sram, slot), snapshot));
   }

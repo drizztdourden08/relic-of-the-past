@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-/** Home tab two-column layout: quick saves + sessions (left), normal + auto saves (right). */
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
@@ -7,9 +6,9 @@ import { SaveSlot } from '../../../../compounds/SaveSlot';
 import { NormalSaveCard } from '../../../../compounds/NormalSaveCard';
 import { AutoSaveCard } from '../../../../compounds/AutoSaveCard';
 import { PlaySessionCard } from '../../../../compounds/PlaySessionCard';
-import type { HomeTabSaves } from './useHomeTabSaves';
+import type { HomeTabColumnsProps } from './home-tab.type';
 
-const HomeTabColumns = ({ saves, isGameRunning }: { saves: HomeTabSaves; isGameRunning: boolean }) => {
+const HomeTabColumns = ({ saves, isGameRunning }: HomeTabColumnsProps) => {
   const {
     slots, busySlot, handleQuickSave, handleQuickLoad, sessions,
     normalSaves, normalScreenshots, busyNormal, handleCreateNormalSave, handleLoadNormal,
@@ -18,7 +17,6 @@ const HomeTabColumns = ({ saves, isGameRunning }: { saves: HomeTabSaves; isGameR
   } = saves;
   return (
     <Box className="home-tab__columns">
-      {/* Left column: Quick Saves + Play Sessions */}
       <Box className="home-tab__col-left">
         <Box as="section" className="home-tab__section">
           <Text as="h3" className="home-tab__section-title">Quick Saves</Text>
@@ -53,7 +51,6 @@ const HomeTabColumns = ({ saves, isGameRunning }: { saves: HomeTabSaves; isGameR
         </Box>
       </Box>
 
-      {/* Right column: Normal Saves + Auto Saves */}
       <Box className="home-tab__col-right">
         <Box as="section" className="home-tab__section">
           <Box className="home-tab__section-header">
