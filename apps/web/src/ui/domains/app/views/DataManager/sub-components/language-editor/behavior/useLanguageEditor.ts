@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * The translation editor's data layer: loads one set, holds it while edited,
- * validates it live, persists on a debounce. Reads and writes go through the
- * renderer languages store, not window.api, so the same call works on the
- * desktop host and the browser host (where window.api is only a stub).
- */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type {
   GlossaryTerm, LanguageSet, SetStructure, TextGroupId, Token, Variable,
@@ -20,16 +14,12 @@ import {
 import { nameEditFor } from './variable-edits';
 import { useEntryIssues } from './useEntryIssues';
 import { useSetPersistence } from './useSetPersistence';
+import { NO_TERMS, NO_VARIABLES } from './useLanguageEditor.constants';
 
-const NO_VARIABLES: Variable[] = [];
-const NO_TERMS: GlossaryTerm[] = [];
-
-/** `readOnly` is an installed set: every edit is refused here, so nothing is marked or written. */
 const useLanguageEditor = (id: string | null, readOnly = false): LanguageEditorState => {
   const [set, setSet] = useState<LanguageSet | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Mirrors `set` so an edit can read the current value without depending on it.
   const current = useRef<LanguageSet | null>(null);
 
   const { dirty, saving, saveError, markEdited, reset, saveNow } = useSetPersistence();
@@ -61,7 +51,6 @@ const useLanguageEditor = (id: string | null, readOnly = false): LanguageEditorS
     return () => { cancelled = true; };
   }, [adopt, id]);
 
-  /** Applies one immutable transform, then marks the result for a debounced write. */
   const apply = useCallback((change: (from: LanguageSet) => LanguageSet) => {
     const from = current.current;
     if (!from || readOnly) return;
@@ -104,13 +93,9 @@ const useLanguageEditor = (id: string | null, readOnly = false): LanguageEditorS
     apply((from) => withTextValue(from, group, key, value));
   }, [apply]);
 
-  // The stored pair folded into the one list the UI edits, the same way the
-  // write path does, so what is shown is what a save will persist.
   const glossary = set?.glossary;
   const names = set?.names;
   const stored = set?.variables;
-  // Keyed on the three fields, not the set: a new variable list per keystroke
-  // would invalidate the layout cache for the whole set.
   const variables = useMemo(
     () => (glossary === undefined || names === undefined
       ? NO_VARIABLES

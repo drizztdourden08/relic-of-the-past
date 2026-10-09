@@ -1,14 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/*
- * The group rail: a short fixed list beside the rows it chooses between.
- *
- * Selection is carried by the gold border and fill the rest of the app uses for
- * it, not by weight alone. The tally line already varies in weight and colour,
- * so a bolder title would read as another degree of "more written" and not
- * as "this is the one open".
- */
-
 .text-group-rail {
   display: flex;
   flex-direction: column;
@@ -63,7 +53,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Nothing left to write in this group. */
 .text-group-rail__tally[data-done='true'] {
   color: var(--c-gold);
 }

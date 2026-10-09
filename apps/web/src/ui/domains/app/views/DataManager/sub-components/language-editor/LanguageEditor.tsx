@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The translation editor: one language set, edited a line at a time. The
- * glossary and the menu-name table are one Variables tab on purpose: as two
- * lists a translator had to work out which one a piece of text lived in.
- */
 import { useCallback, useMemo, useState } from 'react';
-import type { ReactNode } from 'react';
 import { Box, TabBar, EmptyState, Spinner } from '@ds/primitives';
 import { buildVariableIndex } from '@shared/game/language';
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
@@ -26,27 +20,11 @@ import { UnbuiltPane } from './sub-components/UnbuiltPane';
 import { useTextGroups } from './behavior/useTextGroups';
 import { FindHardcodedDialog } from './sub-components/variables';
 import { selectEntries } from './behavior/select-entries';
-import type { EntryFilter } from './sub-components/DialogueTab';
-import type { DialogueEntry } from '@shared/game/language';
+import type { EntryFilter } from './sub-components/DialogueTab.type';
 import type { TabItem } from '@ds/primitives';
+import { LOCKED, NO_ENTRIES, TEXT_SUMMARY, VARIABLES_SUMMARY } from './LanguageEditor.constants';
+import type { LanguageEditorProps } from './LanguageEditor.type';
 import './LanguageEditor.css';
-
-type LanguageEditorProps = {
-  /** The set to edit; null renders the empty state. */
-  id: string | null;
-  /** An installed set: it opens and previews, and nothing in it changes. */
-  readOnly?: boolean;
-  /** The origin bar of an installed set, shown above its header. */
-  origin?: ReactNode;
-};
-
-const NO_ENTRIES: DialogueEntry[] = [];
-
-/** Marks the two tabs whose surfaces are built but not yet connected to the game. */
-const LOCKED = '🔒';
-
-const VARIABLES_SUMMARY = 'Substitutions are listed and editable here, but nothing reads them yet.';
-const TEXT_SUMMARY = 'Every string the game shows is listed here, but none of it is baked yet.';
 
 const LanguageEditor = (props: LanguageEditorProps) => {
   const { id, readOnly = false, origin = null } = props;
@@ -193,4 +171,3 @@ const LanguageEditor = (props: LanguageEditorProps) => {
 };
 
 export { LanguageEditor };
-export type { LanguageEditorProps };

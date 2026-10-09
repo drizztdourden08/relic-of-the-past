@@ -1,26 +1,11 @@
 /* @layer renderer-components @kind hook */
-/**
- * The one place that holds both `useEntryView` (what is open) and
- * `useEntryDraft` (what is unsaved). Entering the editor starts a draft if
- * none exists; leaving it keeps the draft. Commit and cancel drop the entry
- * back to reading. The handlers close over a live ref, so their identity is
- * fixed and the list can memoize its few hundred rows.
- */
 import { useCallback, useMemo, useRef } from 'react';
 import { useEntryDraft } from './useEntryDraft';
 import { useEntryView } from '@domains/packs/language/behavior/useEntryView';
 import type { DialogueEntry, Token } from '@shared/game/language';
-import type { EntryDraftState } from './useEntryDraft';
-import type { EntryViewMode, EntryViewState } from '@domains/packs/language/behavior/useEntryView';
-
-type EntryOpenState = {
-  view: EntryViewState;
-  /** The drafts, with commit and cancel also returning the entry to reading. */
-  draft: EntryDraftState;
-  open: (id: number) => void;
-  close: (id: number) => void;
-  setMode: (id: number, mode: EntryViewMode) => void;
-};
+import type { EntryDraftState } from './useEntryDraft.type';
+import type { EntryViewMode } from '@domains/packs/language/behavior/useEntryView';
+import type { EntryOpenState } from './useEntryOpen.type';
 
 const useEntryOpen = (
   entries: DialogueEntry[],
@@ -71,4 +56,3 @@ const useEntryOpen = (
 };
 
 export { useEntryOpen };
-export type { EntryOpenState };

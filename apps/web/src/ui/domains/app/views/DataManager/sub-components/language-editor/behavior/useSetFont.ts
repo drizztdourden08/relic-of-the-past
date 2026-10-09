@@ -1,22 +1,9 @@
 /* @layer renderer-components @kind hook */
-/**
- * One language set's font, as React state. The read is memoised in
- * load-set-font; the returned object is memoised because consumers feed
- * `sheet`/`metrics` straight into a canvas redraw effect's dependency list.
- */
 import { useEffect, useMemo, useState } from 'react';
-import type { GlyphMetrics, GlyphSheet } from '@shared/game/language/layout/types';
 import { loadSetFont } from './load-set-font';
 import type { SetFontAssets } from './load-set-font';
+import type { SetFontState } from './useSetFont.type';
 
-/** What a preview needs to draw, plus whether the read is still in flight. */
-type SetFontState = {
-  sheet: GlyphSheet | null;
-  metrics: GlyphMetrics | null;
-  loading: boolean;
-};
-
-/** Pass `base` (the set's base language code) when the set is already loaded to save a second read. */
 const useSetFont = (setId: string | null, base?: string): SetFontState => {
   const [assets, setAssets] = useState<SetFontAssets | null>(null);
   const [loading, setLoading] = useState<boolean>(Boolean(setId));
@@ -44,4 +31,3 @@ const useSetFont = (setId: string | null, base?: string): SetFontState => {
 };
 
 export { useSetFont };
-export type { SetFontState };

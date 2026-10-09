@@ -1,25 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * One variable in the insert list. Its own component so the click handler is
- * bound once per row, not rebuilt inline on every keystroke in the filter
- * above it.
- *
- * A row the engine owns is offered like any other and carries a small padlock.
- * The game supplying the value means there is nothing to translate, not that a
- * line cannot reference it. The player's name is the commonest insert of all.
- */
 import { useCallback } from 'react';
 import { Icon as SymbolIcon } from '@iconify/react/offline';
 import lockIcon from '@iconify-icons/lucide/lock';
 import { Button, Text } from '@ds/primitives';
-import type { Variable } from '@shared/game/language';
-
-type VariableChoiceProps = {
-  variable: Variable;
-  onPick: (variable: Variable) => void;
-};
-
-const LOCK_PX = 11;
+import { LOCK_PX } from './VariableChoice.constants';
+import type { VariableChoiceProps } from './VariableChoice.type';
 
 const VariableChoice = (props: VariableChoiceProps) => {
   const { variable, onPick } = props;
@@ -49,4 +34,3 @@ const VariableChoice = (props: VariableChoiceProps) => {
 };
 
 export { VariableChoice };
-export type { VariableChoiceProps };

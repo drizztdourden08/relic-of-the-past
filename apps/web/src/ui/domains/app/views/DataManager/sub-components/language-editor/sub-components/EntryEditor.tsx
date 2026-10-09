@@ -1,50 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * Edit mode for one dialogue entry: the editor itself, the message-wide
- * settings, and the commit pair.
- *
- * Per-line width lives in the editor's own gutter, beside the line it measures,
- * and the entry's identity lives in the panel around this, so neither is
- * repeated here.
- *
- * Saving is refused while a row is too long. The engine keeps writing past the
- * edge of the box instead of wrapping, painting over the line below, so an
- * overlong row is a defect that cannot be seen until someone plays that scene.
- * That is exactly the kind of thing an editor should not let out.
- *
- * Message-wide settings and the insert pickers live in the editor's own
- * toolbar now; this wrapper carries only the commit pair and the save gate.
- */
 import { Box, Text, Button } from '@ds/primitives';
 import { DialogueEditor } from '../editor-ui';
 import { overflowReason } from './overflow-reason';
-import type { GlossaryTerm, SetStructure, Token, Variable } from '@shared/game/language';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
-import type { GlyphMetrics, GlyphSheet, RowFit } from '@shared/game/language/layout/types';
+import type { EntryEditorProps } from './EntryEditor.type';
 import './EntryEditor.css';
-
-type EntryEditorProps = {
-  /** The DRAFT tokens. The parent holds the committed entry. */
-  tokens: Token[];
-  rows: RowFit[];
-  cfg: LanguageConfig;
-  /** Every variable carrying literal text, so a reference can be measured. */
-  glossary: GlossaryTerm[];
-  /** The whole substitution list, for the insert picker. */
-  variables: Variable[];
-  /** The set's glyph widths; null while the font loads. */
-  metrics: GlyphMetrics | null;
-  /** The set's glyph tiles, which a picture character is drawn from. */
-  sheet: GlyphSheet | null;
-  structureMode: SetStructure;
-  dirty: boolean;
-  /** An installed set: the line shows in the editor and cannot be changed or saved. */
-  readOnly?: boolean;
-  onChangeTokens: (tokens: Token[]) => void;
-  onChangeStructureMode: (mode: SetStructure) => void;
-  onSave: () => void;
-  onCancel: () => void;
-};
 
 const EntryEditor = (props: EntryEditorProps) => {
   const {
@@ -82,4 +41,3 @@ const EntryEditor = (props: EntryEditorProps) => {
 };
 
 export { EntryEditor };
-export type { EntryEditorProps };

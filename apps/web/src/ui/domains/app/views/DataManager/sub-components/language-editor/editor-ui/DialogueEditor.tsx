@@ -1,21 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The dialogue editor: an ordinary writing surface that keeps itself valid for
- * the game.
- *
- * Typing wraps at the row's real width, rows number themselves, a full box
- * scrolls, and a wait is a property of a line, not a thing to type --
- * all of that lives in the schema's plugins. What remains here is chrome, and
- * as little of it as possible: one icon toolbar, the surface, and a quiet
- * status line that names the caret's box and row the way a word processor
- * counts pages.
- *
- * The font is reachable by the node view at ITS render time instead of handed
- * over once at build time: the node view is built once per extension list and
- * the pack's font is read from disk asynchronously, so a value captured there
- * would stay null for good. Same story for the automation mode, which the
- * structure plugins read from the live runtime, not a captured prop.
- */
 import { useEffect, useMemo, useRef } from 'react';
 import { EditorContent } from '@tiptap/react';
 import { Box, Text } from '@ds/primitives';
@@ -27,36 +10,13 @@ import { LineEndMarkers } from './line-end-markers';
 import { withTokenNodeView } from './token-node-view';
 import { useDialogueEditor } from './behavior/useDialogueEditor';
 import { updateEditorRuntime } from '../editor/editor-runtime';
-import type {
-  DialogueLineView, GlossaryTerm, GlyphMetrics, GlyphSheet, SetStructure, Token, Variable,
-} from '@shared/game/language';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
+import type { DialogueLineView } from '@shared/game/language';
 import type { GlyphFont } from './editor-ui.type';
+import { EMPTY_METRICS, PLACEHOLDER } from './DialogueEditor.constants';
+import type { DialogueEditorProps } from './DialogueEditor.type';
 import './DialogueEditor.css';
+import './DialogueEditor.lines.css';
 
-type DialogueEditorProps = {
-  tokens: Token[];
-  cfg: LanguageConfig;
-  glossary: GlossaryTerm[];
-  /** The whole substitution list, for the toolbar's insert popover. */
-  variables: Variable[];
-  /** The set's glyph widths; null while the font is still loading. */
-  metrics: GlyphMetrics | null;
-  /** The set's glyph tiles, which a picture character is drawn from. */
-  sheet: GlyphSheet | null;
-  structureMode: SetStructure;
-  readOnly?: boolean;
-  onChange: (tokens: Token[]) => void;
-  onChangeStructureMode: (mode: SetStructure) => void;
-};
-
-/** Prompt shown while a line is empty. */
-const PLACEHOLDER = 'Type the line\u2026';
-
-/** Stands in until the set's font arrives; claims no widths. */
-const EMPTY_METRICS: GlyphMetrics = { widths: new Uint8Array(0), alphabet: [] };
-
-/** The caret's whereabouts, in the player's terms. */
 const statusOf = (lines: DialogueLineView[], caretLine: number | null): { text: string; over: boolean } => {
   const line = caretLine === null ? undefined : lines[caretLine];
   if (line === undefined) {
@@ -78,16 +38,8 @@ const DialogueEditor = (props: DialogueEditorProps) => {
   const fontRef = useRef<GlyphFont>(font);
   fontRef.current = font;
 
-  // The structure plugins read the mode live -- see editor-runtime.ts.
   useEffect(() => { updateEditorRuntime({ mode: structureMode }); }, [structureMode]);
 
-  /*
-   * The extension list is keyed on the glyph set's CONTENTS plus font
-   * readiness, not on object identity: the editor survives glossary churn and
-   * is rebuilt exactly once, when the pack's font lands -- atoms are portals
-   * the editor owns, and that single step is what redraws the ones already on
-   * screen.
-   */
   const glyphKey = useMemo(() => [...glyphNames].join('\u0000'), [glyphNames]);
   const fontReady = sheet !== null && metrics !== null;
   const extensions = useMemo(
@@ -139,4 +91,3 @@ const DialogueEditor = (props: DialogueEditorProps) => {
 };
 
 export { DialogueEditor };
-export type { DialogueEditorProps };

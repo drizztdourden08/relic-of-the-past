@@ -1,11 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/*
- * A toolbar button and the card it may open. The card positions against the
- * wrapper, which is why the wrapper, not the button, carries
- * `position: relative`.
- */
-
 .toolbar-button {
   position: relative;
   display: inline-flex;

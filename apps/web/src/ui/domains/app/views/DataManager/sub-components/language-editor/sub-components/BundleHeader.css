@@ -1,11 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/*
- * The set's identity, pinned above the entry list: name and origin first, the
- * countable facts in a quiet mono row, save state last so it reads as status
- * and not as part of the name.
- */
-
 .bundle-header {
   display: flex;
   flex-direction: column;

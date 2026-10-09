@@ -1,14 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/*
- * The hardcoded-name scan, one decision per row.
- *
- * The tick and the name lead; the phrase, the counts and the near-miss note
- * follow in a fixed order so a reader compares like with like down the list. The
- * note is last because it is the one part that does NOT change what applying
- * does.
- */
-
 .hardcoded-dialog {
   display: flex;
   flex-direction: column;
@@ -65,7 +55,6 @@
   white-space: nowrap;
 }
 
-/* Stated, never applied: these differ only in case. */
 .hardcoded-row__misses {
   color: var(--c-warning);
   font-size: var(--text-xs);

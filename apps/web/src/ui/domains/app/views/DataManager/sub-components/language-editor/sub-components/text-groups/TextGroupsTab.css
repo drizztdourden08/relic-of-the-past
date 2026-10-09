@@ -1,16 +1,6 @@
 /* @layer renderer-components @kind style */
-
-/*
- * The tab fills the detail pane: the rail and the panel head stay put while only
- * the rows scroll, so the group being worked on and the count of what is shown
- * never leave the screen as a translator works down a long group.
- */
-
 .text-groups-tab {
   display: grid;
-
-  /* The rail names four groups; the rest of this narrow pane belongs to the
-     rows, which carry the fields a translator actually types into. */
   grid-template-columns: minmax(0, 17ch) minmax(0, 1fr);
   gap: var(--space-sm);
   flex: 1;
@@ -41,10 +31,6 @@
   padding: var(--space-2xs);
 }
 
-/*
- * Says what is missing and how to reach it. Sits at the foot of the drawn rows,
- * which is where a translator arrives expecting the rest of them.
- */
 .text-groups-tab__capped {
   padding: var(--space-sm) var(--space-xs);
   border-top: var(--border-width-thin) solid var(--c-border);
@@ -52,7 +38,6 @@
   font-size: var(--text-sm);
 }
 
-/* A caveat about the whole group, stated once above its rows. */
 .text-groups-tab__note {
   margin: 0;
   padding: var(--space-2xs) var(--space-xs);

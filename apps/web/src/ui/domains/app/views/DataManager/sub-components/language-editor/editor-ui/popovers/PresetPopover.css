@@ -1,11 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/*
- * Four words on one line where they fit, wrapping when they do not. The values
- * read as a scale from shortest up, so their order carries meaning and the
- * buttons keep equal weight instead of singling one out as the default.
- */
-
 .preset-popover__list {
   display: flex;
   flex-wrap: wrap;

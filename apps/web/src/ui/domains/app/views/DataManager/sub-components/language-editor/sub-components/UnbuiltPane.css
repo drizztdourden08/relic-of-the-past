@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind style */
-
 .unbuilt-pane {
   display: flex;
   flex: 1;
@@ -8,10 +7,6 @@
   min-height: 0;
 }
 
-/*
- * Deliberately OUTSIDE the covered region: the scrim blurs what it sits over, and
- * the one thing that must stay readable is the reason it is there.
- */
 .unbuilt-pane__notice {
   display: flex;
   align-items: baseline;
@@ -39,22 +34,12 @@
   min-height: 0;
 }
 
-/*
- * The shared scrim is the vanilla-safe green, which reads as a setting the owner
- * chose. This lock is not a choice but work that has not happened, so it takes
- * the warning tone the notice above it already uses.
- *
- * It is also held at the TOP, not centred: the surface it covers scrolls
- * to a thousand rows, so the scrim is as tall as the content and a centred
- * message would land far below the fold.
- */
 .unbuilt-pane__body .disabled-overlay__scrim {
   justify-content: flex-start;
   background: var(--c-warning-soft);
   border-color: var(--c-warning);
 }
 
-/* Stays in view however deep the covered list is scrolled. */
 .unbuilt-pane__body .disabled-overlay__message {
   position: sticky;
   top: 0;

@@ -1,19 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * One message-wide setting as a label and a short list of values. Its own
- * component so the change handler is bound once per setting, and so one handler
- * upstream serves all three by taking the code name back with the value.
- */
 import { useCallback } from 'react';
 import { Box, Select, Text } from '@ds/primitives';
-import type { SettingField } from './settings-fields';
-
-type SettingRowProps = {
-  field: SettingField;
-  /** Empty string means "automatic", so the code is not present at all. */
-  value: string;
-  onChange: (name: string, value: string) => void;
-};
+import type { SettingRowProps } from './SettingRow.type';
 
 const SettingRow = (props: SettingRowProps) => {
   const { field, value, onChange } = props;
@@ -39,4 +27,3 @@ const SettingRow = (props: SettingRowProps) => {
 };
 
 export { SettingRow };
-export type { SettingRowProps };

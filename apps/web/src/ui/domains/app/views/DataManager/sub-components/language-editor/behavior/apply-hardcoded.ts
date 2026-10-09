@@ -1,22 +1,9 @@
 /* @layer renderer-components @kind logic */
-/**
- * Turns accepted hardcoded-name occurrences into new token streams: each
- * accepted run of literal text is replaced by a reference. Only exact matches
- * are applied; a case-insensitive near miss would silently recase a line.
- * Cuts inside one token go left to right with a cursor, so an overlapping
- * pair is dropped instead of producing a half-eaten phrase.
- */
 import type { DialogueEntry, Occurrence, Token } from '@shared/game/language';
-
-/** Accepted occurrences for one entry, as the tokens that entry should carry. */
-type EntryRewrite = {
-  entryId: number;
-  tokens: Token[];
-};
+import type { EntryRewrite } from './apply-hardcoded.type';
 
 const isApplicable = (occurrence: Occurrence): boolean => occurrence.match === 'exact';
 
-/** Occurrences bucketed by the text token they sit in. */
 const byTokenIndex = (picks: Occurrence[]): Map<number, Occurrence[]> => {
   const buckets = new Map<number, Occurrence[]>();
   for (const pick of picks) {
@@ -27,7 +14,6 @@ const byTokenIndex = (picks: Occurrence[]): Map<number, Occurrence[]> => {
   return buckets;
 };
 
-/** One text token, cut around every accepted run inside it. */
 const cutToken = (text: string, hits: Occurrence[]): Token[] => {
   const out: Token[] = [];
   let cursor = 0;
@@ -53,7 +39,6 @@ const rewriteTokens = (tokens: Token[], picks: Occurrence[]): Token[] => {
   });
 };
 
-/** Every entry the accepted occurrences change, with its new stream. Untouched entries are absent. */
 const applyHardcoded = (entries: DialogueEntry[], accepted: Occurrence[]): EntryRewrite[] => {
   const applicable = accepted.filter(isApplicable);
   const byEntry = new Map<number, Occurrence[]>();
@@ -73,4 +58,3 @@ const applyHardcoded = (entries: DialogueEntry[], accepted: Occurrence[]): Entry
 };
 
 export { applyHardcoded };
-export type { EntryRewrite };
