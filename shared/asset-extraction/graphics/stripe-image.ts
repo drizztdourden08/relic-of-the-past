@@ -1,16 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * The game's stripe image format (HandleStripes14 in core/zelda3/src/nmi.c): runs of
- * VRAM words, each copied or repeated, across the tilemap or down it, ending at a byte
- * with the top bit set. The title screen and the story intro both upload their
- * pictures this way.
- */
 import type { RomData } from '../rom/rom-types';
 
-/**
- * Writes the stripe list at SNES address |start| into |vram| (word-addressed). Returns the
- * address just past its terminator, where a list stored back to back with it begins.
- */
 const applyStripes = (vram: Uint16Array, rom: RomData, start: number): number => {
   let p = start;
   while (!(rom.getByte(p) & 0x80)) {

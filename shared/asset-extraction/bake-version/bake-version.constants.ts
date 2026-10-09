@@ -1,0 +1,9 @@
+/* @layer shared-asset-extraction @kind constants */
+const CURRENT_BAKE_VERSION = 4;
+
+const STAMP_OFFSET = 48;
+const STAMP_MAGIC = 'RPBK';
+const VERSION_OFFSET = STAMP_OFFSET + STAMP_MAGIC.length;
+const HEADER_MIN_BYTES = 88;
+
+export { CURRENT_BAKE_VERSION, HEADER_MIN_BYTES, STAMP_MAGIC, STAMP_OFFSET, VERSION_OFFSET };

@@ -1,8 +1,4 @@
 /* @layer shared-store @kind logic */
-/**
- * Character sprites: one `.rsp` file in the sprite library, under a name no other file has, so
- * a store install never replaces a sprite the player made. Uninstall removes that one file.
- */
 import type { FileStore } from '@shared/platform';
 import { parseRsp, isRspName } from '@shared/storage/link-sprites/parse-rsp';
 import {
@@ -28,7 +24,6 @@ const uninstall = async (installedName: string, files: FileStore): Promise<void>
   await deleteLinkSprite(files, installedName);
 };
 
-/** Moves the file to the sprite's own name once that name is free (after an update). */
 const settleName = async (installedName: string, ownName: string, files: FileStore): Promise<string> => {
   if (ownName === installedName || await readLinkSprite(files, ownName)) return installedName;
   const bytes = await readLinkSprite(files, installedName);

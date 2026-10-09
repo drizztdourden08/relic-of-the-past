@@ -1,9 +1,4 @@
 /* @layer shared-store @kind logic */
-/**
- * Language sets: a `.rlang` unpacked into a new set folder under a free id. Uninstall removes
- * that folder. Rebaking the asset blob afterwards is the host's step, since the bake runs
- * where the ROM and the assets are.
- */
 import type { FileStore } from '@shared/platform';
 import { importRlang } from '@shared/storage/languages/import-rlang';
 import { assertValidSetId } from '@shared/storage/languages/set-id';

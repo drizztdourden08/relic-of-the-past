@@ -1,5 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/** Parses extracted music text back into compilable entity structures. */
 import type {
   CompiledPattern,
   CompiledPhrase,
@@ -8,8 +7,8 @@ import type {
   CompiledSong,
   CompiledSongList,
   Entity,
-} from './compile-types';
-import { kEffectNamesDict, kKeysDict } from './compile-types';
+} from './compile-types.type';
+import { kEffectNamesDict, kKeysDict } from './compile-lookups.constants';
 import type { NameRegistry } from './name-registry';
 
 const parseFile = (text: string, registry: NameRegistry): Entity[] => {

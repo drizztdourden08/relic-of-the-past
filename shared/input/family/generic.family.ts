@@ -1,24 +1,9 @@
 /* @layer shared-input @kind data */
-/**
- * Generic family display metadata: the fallback for 'standard' (a device
- * the platform already normalizes) and 'unknown' (a device SDL cannot
- * classify at all). This is the Null Object of the family layer; every
- * lookup lands here eventually, so it always answers instead of leaving a
- * gap for a caller to branch around. Icons carried over from the existing
- * generic preset.
- */
-
-import { registerFamily } from './family-registry';
 import type { FamilyMetadata } from './family.type';
 
 const GENERIC_FAMILY: FamilyMetadata = {
   types: ['standard', 'unknown'],
   brandLogoKey: 'generic',
-  // This is also the terminal fallback (ctx.generic) for every OTHER family's
-  // chain, and the only thing standing behind an 'unknown' device that no
-  // specific family claims. So unlike the named families above, every
-  // position is covered here, buttons and axes alike. Nothing may reach the
-  // bare positional name or an empty icon string once this has answered.
   buttonLabels: {
     SOUTH: 'Button 1 (South)',
     EAST: 'Button 2 (East)',
@@ -91,12 +76,6 @@ const GENERIC_FAMILY: FamilyMetadata = {
     LEFT_TRIGGER: 'generic-trigger-a',
     RIGHT_TRIGGER: 'generic-trigger-b',
   },
-  // The d-pad entries stay. They are movement's SECOND default binding, not
-  // its only one (see axisConsoleDefaults), and this table is also read as a
-  // position -> console button LAYOUT by the built-in glyph packs
-  // (shared/input/glyphs/built-in-packs.ts): dropping the four directions
-  // here would silently strip the d-pad glyphs out of the Console and
-  // Keyboard packs, which has nothing to do with what a pad is bound to.
   consoleDefaults: {
     SOUTH: 'A',
     EAST: 'B',
@@ -111,20 +90,10 @@ const GENERIC_FAMILY: FamilyMetadata = {
     DPAD_LEFT: 'Left',
     DPAD_RIGHT: 'Right',
   },
-  // MOVEMENT'S DEFAULT, FOR EVERY GAMEPAD FAMILY. SDL normalizes the left
-  // stick to LEFT_X/LEFT_Y whatever the pad is, and this family is the
-  // terminal fallback in every other family's resolve chain, so one table
-  // here is the whole answer for Nintendo, Xbox, PlayStation, GameCube and
-  // unrecognized pads alike. A family that ever needs to disagree overrides
-  // it the same way it overrides any other field.
-  //
-  // SDL's Y axis points down, so '-' is up and '+' is down.
   axisConsoleDefaults: {
     LEFT_X: { '-': 'Left', '+': 'Right' },
     LEFT_Y: { '-': 'Up', '+': 'Down' },
   },
 };
-
-registerFamily(GENERIC_FAMILY);
 
 export { GENERIC_FAMILY };

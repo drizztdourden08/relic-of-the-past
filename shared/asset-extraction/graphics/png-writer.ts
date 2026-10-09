@@ -1,18 +1,10 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * PNG image creation using pngjs.
- * Replaces Python's PIL Image for sprite/tile output.
- */
 import { PNG } from 'pngjs';
 import type { RGBA } from './palette';
 
-/**
- * Simple RGBA image buffer for compositing tiles before PNG export.
- */
 class ImageBuffer {
   readonly width: number;
   readonly height: number;
-  /** Raw RGBA pixel data (4 bytes per pixel, row-major) */
   readonly data: Buffer;
 
   constructor(width: number, height: number) {
@@ -21,7 +13,6 @@ class ImageBuffer {
     this.data = Buffer.alloc(width * height * 4);
   }
 
-  /** Set a single pixel. Coordinates are unchecked for performance. */
   putPixel(x: number, y: number, color: RGBA): void {
     const offset = (y * this.width + x) * 4;
     this.data[offset] = color[0];
@@ -30,7 +21,6 @@ class ImageBuffer {
     this.data[offset + 3] = color[3];
   }
 
-  /** Get a single pixel. */
   getPixel(x: number, y: number): RGBA {
     const offset = (y * this.width + x) * 4;
     return [
@@ -41,10 +31,6 @@ class ImageBuffer {
     ];
   }
 
-  /**
-   * Paste another image onto this one at (dx, dy).
-   * Only non-transparent pixels are pasted (alpha > 0).
-   */
   paste(src: ImageBuffer, dx: number, dy: number): void {
     for (let y = 0; y < src.height; y++) {
       for (let x = 0; x < src.width; x++) {
@@ -59,7 +45,6 @@ class ImageBuffer {
     }
   }
 
-  /** Flip horizontally (in-place, returns this for chaining) */
   flipX(): ImageBuffer {
     const flipped = new ImageBuffer(this.width, this.height);
     for (let y = 0; y < this.height; y++) {
@@ -75,7 +60,6 @@ class ImageBuffer {
     return flipped;
   }
 
-  /** Flip vertically (returns new buffer) */
   flipY(): ImageBuffer {
     const flipped = new ImageBuffer(this.width, this.height);
     for (let y = 0; y < this.height; y++) {
@@ -91,7 +75,6 @@ class ImageBuffer {
     return flipped;
   }
 
-  /** Scale up by integer factor (nearest-neighbor) */
   scale(factor: number): ImageBuffer {
     const scaled = new ImageBuffer(this.width * factor, this.height * factor);
     for (let y = 0; y < this.height; y++) {
@@ -115,7 +98,6 @@ class ImageBuffer {
     return scaled;
   }
 
-  /** Encode to PNG buffer */
   toPngBuffer(): Buffer {
     const png = new PNG({ width: this.width, height: this.height });
     this.data.copy(png.data);

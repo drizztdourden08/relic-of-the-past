@@ -1,38 +1,9 @@
 /* @layer shared-input @kind logic */
-/**
- * Turns two consecutive function reads into the pause machine's events.
- *
- * RISING EDGES ONLY. A menu must not act on a held button (holding confirm
- * for two frames is one confirm, not sixty), so every event here fires on
- * the frame a function goes from up to down and never again until it is
- * released. Auto-repeat, if the menu ever wants it, belongs to the machine
- * that owns the cursor, not to this reader.
- *
- * Emission order is fixed (move, confirm, cancel, prevScreen, nextScreen,
- * pause, slot) so a frame that presses two things at once always reduces the
- * same way: the cursor moves before what lands on it is confirmed, and pause
- * (which can close the menu) is handled after the verbs that assume it is
- * still open.
- *
- * ONE PRESS, ONE MEANING. Contract §11 puts a menu verb and a gameplay slot on
- * the same physical button on purpose, so a button the menu consumes as a verb
- * would otherwise ALSO rise as a slot here, and a slot press assigns. That is
- * ordinary navigation silently rewriting the player's setup: walking Items →
- * Gear → Status re-assigned every screen key to whatever the cursor landed on.
- * `shadowed` names the slots in that position; their edges are dropped, because
- * the verb is what the player pressed the button for while the menu is open.
- * The set is a property of the BINDINGS, not of the frame, which is why it
- * arrives as a parameter. This reader is handed two masks and cannot see that
- * `confirm` and slot 4 are one key (see menu-shadowed-slots.ts).
- */
 import { DIRECTION_BIT } from './function-mask';
+import { MOVE_ORDER } from './menu-edges.constants';
 import type { FunctionMask } from './function-mask';
 import type { SlotIndex } from '../../types/controls';
 import type { PauseEvent } from '@shared/game/logic/pause/pause-machine';
-
-type MoveDirection = 'up' | 'down' | 'left' | 'right';
-
-const MOVE_ORDER: readonly MoveDirection[] = ['up', 'down', 'left', 'right'];
 
 const rose = (now: boolean, prev: boolean): boolean => now && !prev;
 
@@ -66,4 +37,3 @@ const menuEdges = (
 };
 
 export { menuEdges };
-export type { MoveDirection };

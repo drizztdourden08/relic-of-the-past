@@ -1,7 +1,5 @@
 /* @layer shared-storage @kind logic */
-/** Fetch a URL to bytes with optional progress, replacing electron.net on every platform. */
-
-type DownloadProgress = (loaded: number, total: number | null) => void;
+import type { DownloadProgress } from './download.type';
 
 const fetchToBytes = async (url: string, onProgress?: DownloadProgress): Promise<Uint8Array> => {
   const res = await fetch(url);

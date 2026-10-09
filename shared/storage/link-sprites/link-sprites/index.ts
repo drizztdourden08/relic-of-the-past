@@ -1,0 +1,9 @@
+/* @layer shared-storage @kind barrel */
+export { LINK_SPRITES_DIR } from './link-sprites.constants';
+export { listLinkSprites } from './list-link-sprites';
+export { spriteStem } from './sprite-stem';
+export { safeFileName } from './safe-file-name';
+export { freeSpriteName } from './free-sprite-name';
+export { writeLinkSprite } from './write-link-sprite';
+export { deleteLinkSprite } from './delete-link-sprite';
+export { readLinkSprite } from './read-link-sprite';

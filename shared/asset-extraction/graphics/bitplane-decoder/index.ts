@@ -1,0 +1,9 @@
+/* @layer shared-asset-extraction @kind barrel */
+export { decode2bppTile } from './decode-2bpp-tile';
+export { decode2bppTileset } from './decode-2bpp-tileset';
+export { decode3bppTile } from './decode-3bpp-tile';
+export { decode3bppTileset } from './decode-3bpp-tileset';
+export { decode4bppTile } from './decode-4bpp-tile';
+export { decode4bppTileset } from './decode-4bpp-tileset';
+export { flipTileX } from './flip-tile-x';
+export { flipTileY } from './flip-tile-y';

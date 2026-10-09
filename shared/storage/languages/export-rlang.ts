@@ -1,9 +1,4 @@
 /* @layer shared-storage @kind logic */
-/**
- * Exports one language set as `.rlang`. The files go out exactly as they sit in the set's
- * folder, in a fixed order with the archive's fixed timestamp, so two exports of the same set
- * agree byte for byte. Everything is DEFLATE-d: a set is JSON plus two small font tables.
- */
 import type { FileStore } from '@shared/platform';
 import { zipEntries } from '../archive-write';
 import type { ZipEntry } from '../archive-write';

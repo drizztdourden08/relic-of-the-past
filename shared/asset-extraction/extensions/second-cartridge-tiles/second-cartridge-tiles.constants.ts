@@ -1,0 +1,10 @@
+/* @layer shared-asset-extraction @kind constants */
+const MAP8_FOREGROUND_PRIORITY_BIT = 0x2000;
+
+const MAP8_WORDS_PER_MAP16_CELL = 4;
+
+const BASE_MAP16_COUNT = 3752;
+
+const WALL_CELLS = [0x0a14, 0x0a0c];
+
+export { BASE_MAP16_COUNT, MAP8_FOREGROUND_PRIORITY_BIT, MAP8_WORDS_PER_MAP16_CELL, WALL_CELLS };

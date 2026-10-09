@@ -1,6 +1,4 @@
 /* @layer shared-storage @kind logic */
-/** Short random id (8 hex/uuid chars), matching the desktop stores' id length. */
-
 const newId = (): string => {
   const uuid = globalThis.crypto?.randomUUID?.();
   if (uuid) return uuid.slice(0, 8);

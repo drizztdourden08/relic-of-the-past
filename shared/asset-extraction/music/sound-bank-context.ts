@@ -1,8 +1,10 @@
 /* @layer shared-asset-extraction @kind logic */
-/** Manages SPC memory state and decodes song/phrase/pattern structures. */
 import type { RomData } from '../rom/rom-types';
-import type { MusicEntity, Pattern, Phrase, PhraseLoop, Song, SongList } from './extract-types';
-import { kEffectByteLength, kEffectNames, noteToStr } from './extract-types';
+import type { MusicEntity, Pattern, Phrase, Song, SongList } from './extract-types.type';
+import { copySoundBank } from './copy-sound-bank';
+import { createMusicEntity } from './create-music-entity';
+import { noteToStr } from './note-to-str';
+import { kEffectByteLength, kEffectNames } from './spc-command-tables.data';
 
 class SoundBankContext {
   memory: (number | null)[] = new Array(65536).fill(null);
@@ -26,22 +28,7 @@ class SoundBankContext {
   loadSoundBank(rom: RomData, ea: number, memIn?: (number | null)[]): number {
     if (memIn) this.memory = [...memIn];
     else this.memory = new Array(65536).fill(null);
-
-    let j = 0;
-    while (true) {
-      const numBytes = rom.getWord(ea);
-      const target = rom.getWord(ea + 2);
-      if (numBytes === 0) return target;
-      ea += 4;
-      for (let i = 0; i < numBytes; i++) {
-        this.memory[target + i] = rom.getByte(ea);
-        ea += 1;
-        if ((ea & 0xffff) < 0x8000) ea += 0x8000;
-      }
-      j++;
-      if (j > 256) break;
-    }
-    return 0;
+    return copySoundBank(rom, ea, this.memory);
   }
 
   getTypeForEa<T extends MusicEntity>(ea: number, type: T['type']): T | null {
@@ -56,13 +43,7 @@ class SoundBankContext {
       return existing as T;
     }
 
-    const entity = { type, ea, name: `${type}_0x${ea.toString(16)}`, isImported: false } as unknown as T;
-    if (type === 'Song') (entity as unknown as Song).index = 0;
-    if (type === 'Song') (entity as unknown as Song).phrases = [];
-    if (type === 'Phrase') (entity as unknown as Phrase).patterns = [];
-    if (type === 'Pattern') (entity as unknown as Pattern).lines = [];
-    if (type === 'SongList') (entity as unknown as SongList).songs = [];
-
+    const entity = createMusicEntity<T>(ea, type);
     this.typesForEa.set(ea, entity);
     if (this.getByte(ea) !== null) {
       this.pqueue.push([ea, entity]);

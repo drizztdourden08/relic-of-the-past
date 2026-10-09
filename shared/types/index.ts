@@ -1,14 +1,4 @@
-/* @layer shared-types @kind logic */
-// Shared type definitions for Relic of the Past
-
-/** Events emitted by the game core */
-interface GameEvent {
-  type: string;
-  timestamp: number;
-  payload: unknown;
-}
-
-// Re-export game domain types from their canonical location
+/* @layer shared-types @kind barrel */
 export type { SeedData, LocationEntry, GoalMode, MedallionConfig, SaveMeta } from '../game/seed';
 export type { AutoSaveInfo, AutoSaveSettings, NormalSaveInfo, QuickSaveSlotInfo } from './saves';
 export type {
@@ -20,5 +10,4 @@ export type {
   ShadowCastingProject,
 } from './shadow-casting';
 export { DEFAULT_LIGHTING_CONFIG, EMPTY_SHADOW_PROJECT } from './shadow-casting';
-
-export type { GameEvent };
+export type { GameEvent } from './game-event.type';

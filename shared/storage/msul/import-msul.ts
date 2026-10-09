@@ -1,26 +1,10 @@
 /* @layer shared-storage @kind logic */
-/**
- * Reads a `.msul` pack back into a manifest and its files, the exact inverse of
- * apps/web/src/lib/msu/export/export-msul, so a pack exported and re-imported is the pack you
- * started with.
- *
- * Every failure here is something a user did (picked the wrong file, hand-edited a manifest,
- * carries a pack from a newer build), so each one throws a message written for them instead of one written
- * for a log. The validation is spelled out instead of delegated to storage's `parseManifest`,
- * which collapses every cause into null and could only produce one generic message.
- */
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
 import { isZip, unzip } from '@shared/storage/archive';
 import type { ArchiveEntry } from '@shared/storage/archive';
+import type { MsulPack } from './import-msul.type';
 
-interface MsulPack {
-  manifest: MsuPackManifest;
-  /** Every non-manifest entry, in archive order. */
-  files: ArchiveEntry[];
-}
-
-/** The shape check the format's own version guarantee rests on. */
 const isManifestShape = (value: unknown): value is MsuPackManifest => {
   const manifest = value as MsuPackManifest | null;
   return !!manifest && typeof manifest === 'object'

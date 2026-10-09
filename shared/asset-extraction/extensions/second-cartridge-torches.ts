@@ -1,29 +1,10 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * The second cartridge's lightable torches.
- *
- * A torch is not part of a room's picture. The engine registers one from a table of
- * [room, position..., terminator] entries, and that same table doubles as the save data for
- * which torches are burning (the position word's high bit). The cartridge ships this table
- * as the base game's, word for word, with its own dungeon's entries appended past the point
- * the base game stops scanning at - so its torches come from data exactly like every other
- * torch in the game, and the only thing missing on our side was the appended tail.
- *
- * Found by matching the base game's own copy, not by a stored offset: the two are
- * byte-identical up to the append point, which makes the base table its own address.
- */
-
 import type { GbaRomReader } from '../rom/gba-rom';
 import type { RomData } from '../rom/rom-types';
 import { bankedRoomId } from './second-cartridge-bank';
-
-const BASE_TABLE_ADDRESS = 0x84f36a;
-const BASE_TABLE_WORDS = 144;
-const ENTRY_TERMINATOR = 0xffff;
-// Enough of the table to be unique in an 8MB cartridge, short enough to survive an edit to it.
-const MATCH_BYTES = 64;
-// A generous ceiling on the appended tail; the read stops at the table's own end long before.
-const MAX_APPENDED_WORDS = 256;
+import {
+  BASE_TABLE_ADDRESS, BASE_TABLE_WORDS, ENTRY_TERMINATOR, MATCH_BYTES, MAX_APPENDED_WORDS,
+} from './second-cartridge-torches.constants';
 
 const baseTableBytes = (snes: RomData): Buffer => {
   const words = snes.getWords(BASE_TABLE_ADDRESS, BASE_TABLE_WORDS);
@@ -32,13 +13,6 @@ const baseTableBytes = (snes: RomData): Buffer => {
   return bytes;
 };
 
-/**
- * The appended entries, rewritten into the engine's room numbering.
- *
- * Entries run until one names no room, which is how the cartridge closes the table. Rooms the
- * dungeon does not own are dropped: the tail is read positionally, so anything unexpected in
- * it stays out of the engine's table instead of being trusted.
- */
 const torchTableRecord = (gba: GbaRomReader, snes: RomData, roomIds: ReadonlySet<number>): Buffer => {
   const at = gba.bytes.indexOf(baseTableBytes(snes).subarray(0, MATCH_BYTES));
   if (at < 0) return Buffer.alloc(0);

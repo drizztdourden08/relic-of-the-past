@@ -1,14 +1,5 @@
 /* @layer shared-input @kind data */
-/**
- * Default key mappings for keyboard input. The keyboard has no SDL entry, so unlike every
- * gamepad default this stays a plain hand-authored mapping, not one derived from the family layer.
- */
-
-import type { DevicePreset, ButtonMapping } from '../types/controls';
-
-const kb = (snesButton: ButtonMapping['snesButton'], code: string, label: string): ButtonMapping => {
-  return { snesButton, binding: { type: 'keyboard', code, label }, icon: null };
-};
+import type { DevicePreset } from '../types/controls';
 
 const KEYBOARD_DEFAULT: DevicePreset = {
   id: 'keyboard-default',
@@ -18,18 +9,18 @@ const KEYBOARD_DEFAULT: DevicePreset = {
   vendorIds: [],
   productIds: [],
   defaultMappings: [
-    kb('Up',     'ArrowUp',    'Arrow Up'),
-    kb('Down',   'ArrowDown',  'Arrow Down'),
-    kb('Left',   'ArrowLeft',  'Arrow Left'),
-    kb('Right',  'ArrowRight', 'Arrow Right'),
-    kb('A',      'KeyD',       'D'),
-    kb('B',      'KeyS',       'S'),
-    kb('X',      'KeyA',       'A'),
-    kb('Y',      'KeyW',       'W'),
-    kb('L',      'KeyQ',       'Q'),
-    kb('R',      'KeyE',       'E'),
-    kb('Start',  'Enter',      'Enter'),
-    kb('Select', 'ShiftRight', 'R.Shift'),
+    { snesButton: 'Up', binding: { type: 'keyboard', code: 'ArrowUp', label: 'Arrow Up' }, icon: null },
+    { snesButton: 'Down', binding: { type: 'keyboard', code: 'ArrowDown', label: 'Arrow Down' }, icon: null },
+    { snesButton: 'Left', binding: { type: 'keyboard', code: 'ArrowLeft', label: 'Arrow Left' }, icon: null },
+    { snesButton: 'Right', binding: { type: 'keyboard', code: 'ArrowRight', label: 'Arrow Right' }, icon: null },
+    { snesButton: 'A', binding: { type: 'keyboard', code: 'KeyD', label: 'D' }, icon: null },
+    { snesButton: 'B', binding: { type: 'keyboard', code: 'KeyS', label: 'S' }, icon: null },
+    { snesButton: 'X', binding: { type: 'keyboard', code: 'KeyA', label: 'A' }, icon: null },
+    { snesButton: 'Y', binding: { type: 'keyboard', code: 'KeyW', label: 'W' }, icon: null },
+    { snesButton: 'L', binding: { type: 'keyboard', code: 'KeyQ', label: 'Q' }, icon: null },
+    { snesButton: 'R', binding: { type: 'keyboard', code: 'KeyE', label: 'E' }, icon: null },
+    { snesButton: 'Start', binding: { type: 'keyboard', code: 'Enter', label: 'Enter' }, icon: null },
+    { snesButton: 'Select', binding: { type: 'keyboard', code: 'ShiftRight', label: 'R.Shift' }, icon: null },
   ],
   brandLogoKey: 'keyboard',
   buttonIcons: {},

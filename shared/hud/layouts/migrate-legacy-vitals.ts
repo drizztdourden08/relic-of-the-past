@@ -1,43 +1,17 @@
 /* @layer shared-hud @kind logic */
-/**
- * A stored document may still name one of the four opaque kinds phase 5 of
- * `plans/hud-data-binding.html` deleted (`life`, `magic`, `consumables`,
- * `wallet`) - a saved layout does not update itself the moment a build
- * ships. `load-layout.ts` runs every document through this ONCE, before
- * `validateLayout` ever sees it: a node naming one of the four is replaced
- * by that preset's own expanded subtree. No alias survives - the kind does
- * not keep working under a deprecated name, because an alias is exactly how
- * a project ends up with two ways to draw a heart forever (the plan's own
- * words for why presets are expand-and-forget in the first place).
- *
- * THE NODE'S OWN BOX PROPERTIES SURVIVE THE SWAP; ITS `element`/`children`
- * DO NOT. A player who set `scale: 0.75` or a custom `margin` on their own
- * `wallet` element kept that choice - it is carried onto the replacement
- * subtree's root - but there is nothing sensible to keep from the deleted
- * element spec itself.
- *
- * Runs on the RAW, untrusted value. Nothing here assumes the document is
- * otherwise well-formed - a malformed neighbour is still `validateLayout`'s
- * job to catch, exactly as before this pass existed.
- */
-
 import { instantiatePreset } from '../presets';
+import { CONSUMABLE_PRESET_IDS, LEGACY_TYPES } from './migrate-legacy-vitals.constants';
 import type { HudNode } from '../../types/hud/hud-node';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
-/** `consumables` was never one subtree - it was three counters (bomb, arrow,
- *  key) stacked in a column with no gap, which is exactly how the built-in
- *  layouts assemble the same three presets today. */
 const composedConsumables = (): HudNode => {
-  const rows = ['bomb-indicator', 'arrow-indicator', 'key-indicator']
+  const rows = CONSUMABLE_PRESET_IDS
     .map((id) => instantiatePreset(id))
     .filter((node): node is HudNode => node !== null);
   return { kind: 'container', id: 'consumables', direction: 'column', children: rows };
 };
-
-const LEGACY_TYPES: readonly string[] = ['life', 'magic', 'consumables', 'wallet'];
 
 const legacyReplacement = (type: string): HudNode | null => {
   if (type === 'life') return instantiatePreset('hearts');
@@ -47,7 +21,6 @@ const legacyReplacement = (type: string): HudNode | null => {
   return null;
 };
 
-/** One node (still raw JSON), migrated and recursed into. */
 const migrateNode = (value: unknown): unknown => {
   if (!isRecord(value)) return value;
 
@@ -88,9 +61,6 @@ const migrateNode = (value: unknown): unknown => {
   return value;
 };
 
-/** The whole document, migrated - the screen and everything under it. Runs
- *  AFTER `migrate-screen.ts` has folded `regions[]` in, so there is exactly
- *  one tree to walk, not nine. */
 const migrateLegacyVitals = (value: unknown): unknown => {
   if (!isRecord(value) || !isRecord(value.screen)) return value;
   return { ...value, screen: migrateNode(value.screen) };

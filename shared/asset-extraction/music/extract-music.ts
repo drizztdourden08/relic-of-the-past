@@ -1,10 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Loads SPC sound banks from ROM, decodes songs/phrases/patterns/SFX, and produces text
- * plus sample output. Ported from upstream's extract_music.py.
- */
 import type { RomData } from '../rom/rom-types';
-import type { MusicExtractionResult } from './extract-types';
+import type { MusicExtractionResult } from './extract-types.type';
 import { SoundBankContext } from './sound-bank-context';
 import { formatEntity } from './format-entities';
 import { printAllSfx } from './decode-sfx';
@@ -62,4 +58,3 @@ const extractSoundData = (rom: RomData): MusicExtractionResult => {
 };
 
 export { extractSoundData };
-export type { MusicExtractionResult };

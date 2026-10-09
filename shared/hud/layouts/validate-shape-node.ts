@@ -1,17 +1,9 @@
 /* @layer shared-hud @kind logic */
-/**
- * `shape` is checked the same way every other element spec is: one property
- * at a time, refusing instead of guessing at anything malformed. See
- * `hud-shape.ts` for why this leaf exists at all.
- */
-
-import { checkKeys, isRecord } from './validate-box';
+import { checkKeys } from './validate-box';
 import { validateValue } from './validate-value';
+import { SHAPE_KEYS, SHAPES } from './validate-shape-node.constants';
 import type { Issues } from './validate-box';
 import type { HudShapeKind, HudShapeSpec } from '../../types/hud/hud-shape';
-
-const SHAPES: readonly HudShapeKind[] = ['heart', 'magic-bar'];
-const SHAPE_KEYS = ['type', 'shape', 'fill', 'armor', 'bands'] as const;
 
 const isHudShapeKind = (value: string): value is HudShapeKind => (SHAPES as readonly string[]).includes(value);
 

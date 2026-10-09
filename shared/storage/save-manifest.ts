@@ -1,16 +1,7 @@
 /* @layer shared-storage @kind logic */
-/**
- * Manifest-backed save store over FileStore. Each entry is a `{id}.sav` + optional
- * `{id}.png` pair tracked in `manifest.json`. Shared mechanics for normal + auto
- * saves (mirrors the Electron manifest-store, now platform-neutral).
- */
 import type { FileStore } from '@shared/platform';
+import type { ManifestEntry, ValidManifestEntry } from './save-manifest.type';
 import { msuSidecarPath } from './save-paths';
-
-interface ManifestEntry {
-  id: string;
-  timestamp: number;
-}
 
 const createManifestSaves = <T extends ManifestEntry>(files: FileStore, dir: string) => {
   const sav = (id: string): string => `${dir}/${id}.sav`;
@@ -27,9 +18,6 @@ const createManifestSaves = <T extends ManifestEntry>(files: FileStore, dir: str
   const writeManifest = (entries: T[]): Promise<void> =>
     files.writeText(manifestPath, JSON.stringify(entries, null, 2));
 
-  // Writing over a save invalidates its music-resume sidecar: the position belonged
-  // to the state that was there before. A caller with a fresh snapshot writes it
-  // after this call, never before.
   const writePair = async (id: string, data: Uint8Array, screenshot?: Uint8Array): Promise<void> => {
     await files.writeBytes(sav(id), data);
     if (screenshot) await files.writeBytes(png(id), screenshot);
@@ -43,9 +31,8 @@ const createManifestSaves = <T extends ManifestEntry>(files: FileStore, dir: str
     await writeManifest(manifest);
   };
 
-  // Manifest entries whose .sav still exists, newest first, with size + screenshot flag.
-  const valid = async (): Promise<{ entry: T; bytes: number; hasScreenshot: boolean }[]> => {
-    const out: { entry: T; bytes: number; hasScreenshot: boolean }[] = [];
+  const valid = async (): Promise<ValidManifestEntry<T>[]> => {
+    const out: ValidManifestEntry<T>[] = [];
     for (const entry of await readManifest()) {
       const stat = await files.stat(sav(entry.id));
       if (!stat) continue;
@@ -63,7 +50,7 @@ const createManifestSaves = <T extends ManifestEntry>(files: FileStore, dir: str
     await writeManifest(manifest.filter((e) => e.id !== id));
     await files.remove(sav(id));
     await files.remove(png(id));
-    await files.remove(msu(id)); // the music-resume sidecar dies with its save
+    await files.remove(msu(id));
   };
 
   return { sav, png, msu, readManifest, writeManifest, writePair, append, valid, load, loadScreenshot, remove };

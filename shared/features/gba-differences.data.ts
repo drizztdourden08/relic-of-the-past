@@ -1,9 +1,4 @@
 /* @layer shared @kind data */
-
-/** Read-only catalogue of everything the Game Boy Advance release changes. This is
-  * @kind data, which is why the game's own proper names are allowed here while code,
-  * labels and comments elsewhere must stay neutral. */
-
 import type { GbaDifference } from './gba-difference.type';
 
 const GBA_DIFFERENCES: GbaDifference[] = [

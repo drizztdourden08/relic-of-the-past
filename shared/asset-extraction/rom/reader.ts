@@ -1,8 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Sequential byte reader with SNES bank-aware auto-advancement.
- * Replaces Python's `Reader` class and the `get_byte` callback pattern.
- */
 import type { RomData } from './rom-types';
 
 class RomReader {
@@ -14,12 +10,10 @@ class RomReader {
     this.ea = startAddress;
   }
 
-  /** Current SNES address */
   get address(): number {
     return this.ea;
   }
 
-  /** Read next byte and advance address (with bank-crossing) */
   next(): number {
     const r = this.rom.getByte(this.ea);
     this.ea += 1;
@@ -29,14 +23,12 @@ class RomReader {
     return r;
   }
 
-  /** Read next 16-bit word (little-endian) and advance */
   nextWord(): number {
     const lo = this.next();
     const hi = this.next();
     return lo | (hi << 8);
   }
 
-  /** Read next 24-bit value (little-endian) and advance */
   next24(): number {
     const lo = this.next();
     const mid = this.next();
@@ -44,7 +36,6 @@ class RomReader {
     return lo | (mid << 8) | (hi << 16);
   }
 
-  /** Read N bytes and advance */
   nextBytes(n: number): Buffer {
     const result = Buffer.alloc(n);
     for (let i = 0; i < n; i++) {

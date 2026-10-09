@@ -1,21 +1,10 @@
 /* @layer shared-hud @kind logic */
-/**
- * `button` holds a control's bind and a face per state. `idle` is the only
- * required state; anything else missing falls back to it at render time
- * (`HudButton`), so this file only has to check the shapes it was given, not
- * fill the fallback in itself.
- */
-
 import { checkKeys, isRecord, numberAt } from './validate-box';
 import { SDL_AXIS, SDL_BUTTON } from '../../input/sdl-buttons';
+import { BUTTON_KEYS, OPTIONAL_STATES, STATES, VERBS } from './validate-button-node.constants';
 import type { Issues } from './validate-box';
 import type { HudButtonBind, HudButtonFace, HudButtonSpec, HudButtonVerb } from '../../types/hud/hud-button';
 
-const VERBS = ['up', 'down', 'left', 'right', 'pause', 'map'] as const;
-const STATES = ['idle', 'pressed', 'held', 'unassigned'] as const;
-
-/** Same rule `validate-node.ts`'s `glyph` element checks a position against -
- *  duplicated instead of imported, since that file will import THIS one. */
 const isGlyphPosition = (value: string): boolean => value === 'DPAD' || value in SDL_BUTTON || value in SDL_AXIS;
 
 const bindAt = (value: unknown, path: string, issues: Issues): HudButtonBind | null => {
@@ -67,15 +56,13 @@ const statesAt = (value: unknown, path: string, issues: Issues): HudButtonSpec['
   const idle = faceAt(value.idle, `${path}.idle`, issues);
   if (!idle) return null;
   const rest: Partial<HudButtonSpec['states']> = {};
-  (['pressed', 'held', 'unassigned'] as const).forEach((state) => {
+  OPTIONAL_STATES.forEach((state) => {
     if (value[state] === undefined) return;
     const face = faceAt(value[state], `${path}.${state}`, issues);
     if (face) rest[state] = face;
   });
   return { idle, ...rest };
 };
-
-const BUTTON_KEYS = ['type', 'bind', 'states'] as const;
 
 const buttonSpec = (value: Record<string, unknown>, path: string, issues: Issues): HudButtonSpec | null => {
   checkKeys(value, BUTTON_KEYS, path, issues);

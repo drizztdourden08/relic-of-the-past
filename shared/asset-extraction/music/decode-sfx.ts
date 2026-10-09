@@ -1,19 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 import type { SoundBankContext } from './sound-bank-context';
-import { noteToStr } from './extract-types';
-
-// ─── Types ───
-
-interface SfxLine {
-  kind: 'note' | 'effect' | 'restart' | 'fallthrough';
-  effectName?: string;
-  note?: string | null;
-  noteLength?: number | null;
-  volumeLeft?: number | null;
-  volumeRight?: number | null;
-}
-
-// ─── Decoding ───
+import { noteToStr } from './note-to-str';
+import type { SfxLine } from './decode-sfx.type';
 
 const decodeSfx = (ctx: SoundBankContext, ea: number, nextAddr: number): SfxLine[] => {
   const r: SfxLine[] = [];
@@ -73,8 +61,6 @@ const decodeSfx = (ctx: SoundBankContext, ea: number, nextAddr: number): SfxLine
   }
 };
 
-// ─── Formatting ───
-
 const formatSfxLine = (line: SfxLine): string => {
   if (line.kind === 'fallthrough') return 'Fallthrough';
   if (line.kind === 'restart') return 'Restart';
@@ -87,8 +73,6 @@ const formatSfxLine = (line: SfxLine): string => {
   const r0 = line.effectName ? ' ' + line.effectName : '';
   return `${aa} ${bb} ${cc} ${dd}${r0}`;
 };
-
-// ─── Print all SFX ───
 
 const printAllSfx = (ctx: SoundBankContext): string => {
   const items = new Set<number>();

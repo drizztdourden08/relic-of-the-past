@@ -25,17 +25,17 @@ const PALACE_BEHAVIOR_SPECS = {
   roomTags: {
     0x40: {
       status: 'requires-port',
-      triggerHelper: 0x080cafb4,
+      triggerRoutine: 0x080cafb4,
       effects: ['play GBA sound 0x7B', 'set room event state 0x1C', 'clear active tag slot'],
     },
     0x41: {
       status: 'requires-port',
-      triggerHelper: 0x0807b100,
+      triggerRoutine: 0x0807b100,
       effects: ['advance a 0x13-step room state', 'play GBA sound 0x7B', 'toggle room state bit', 'rebuild room state'],
     },
     0x42: {
       status: 'requires-port',
-      triggerHelper: 0x08079f90,
+      triggerRoutine: 0x08079f90,
       effects: ['test active room actors and room state', 'update room transition state', 'play GBA sound 0x3B'],
     },
   },
@@ -43,7 +43,7 @@ const PALACE_BEHAVIOR_SPECS = {
     status: 'requires-port',
     normalDispatchEntry: null,
     observedConsumer: 0x080c68bc,
-    replacementHelper: 0x080c66a4,
+    replacementRoutine: 0x080c66a4,
     replacementType: 0xe6,
   },
   modifiedBosses: PALACE_BOSS_ROOMS,

@@ -1,0 +1,16 @@
+/* @layer shared-types @kind constants */
+const MAX_CROSSFADE_SECONDS = 10;
+
+const MSUL_EXTENSION = 'msul';
+const MSUL_MANIFEST_NAME = 'pack.json';
+
+const VANILLA_TRACK_COUNT = 34;
+
+const DELUXE_TRACK_THRESHOLD = 37;
+
+const SOUND_ID_COUNT = 64;
+
+export {
+  MSUL_EXTENSION, MSUL_MANIFEST_NAME, DELUXE_TRACK_THRESHOLD, VANILLA_TRACK_COUNT,
+  MAX_CROSSFADE_SECONDS, SOUND_ID_COUNT,
+};

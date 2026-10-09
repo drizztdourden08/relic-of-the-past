@@ -1,37 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Decoder for the captions on the sixteen closing scenes.
- *
- * Format. `kEnding0_Offs` (SNES 0x8EC2E1, 17 words) brackets each scene's slice
- * of `kEnding0_Data` (0x8EBF4C, 917 bytes). A slice is a run of records shaped
- * `[vram address word][control word][character indexes...]`, where the number of
- * characters is `((control >> 9) & 0x7f) + 1`. Records use the same 160-entry
- * character set as the credits roll.
- *
- * Roles. Each scene carries a caption in the small 8x8 font and a place name in the large 8x16
- * font. The large one costs two records (upper halves, then lower halves, at two tilemap
- * addresses), so the upper record is dropped and the lower one is emitted as `location`.
- * Small-font records are emitted as `title`. Extra records of a role are suffixed `-2`, `-3`;
- * only scene 2 does this, opening with a stray one-character record before its caption.
- *
- * Limits. Every record writes horizontally into a 32x32 tilemap, so every caption gets a
- * 32-tile row positioned by its start column. The record's own length is not a ceiling, since
- * the offset table lets a record be repacked to any size.
- */
 import type { RomData } from '../../rom/rom-types';
-import type { DecodedLine } from './types';
+import type { DecodedLine } from './menu-text.type';
 import { endingCharAt, isBlank, isLargeBottom, isLargeTop } from './charset';
-
-const OFFSETS_ADDR = 0x8ec2e1;
-const DATA_ADDR = 0x8ebf4c;
-const DATA_SIZE = 917;
-const SCENE_COUNT = 16;
-
-/** Header size in bytes: one address word plus one control word. */
-const RECORD_HEADER = 4;
-
-/** Width of one tilemap row. */
-const ROW_TILES = 32;
+import { DATA_ADDR, DATA_SIZE, OFFSETS_ADDR, RECORD_HEADER, ROW_TILES, SCENE_COUNT } from './decode-captions.constants';
 
 const readScene = (data: Buffer, start: number, end: number): number[][] => {
   const records: number[][] = [];

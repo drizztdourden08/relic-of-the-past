@@ -1,6 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/** Tracks compiled music entities by name for cross-referencing. */
-import type { Entity } from './compile-types';
+import type { Entity } from './compile-types.type';
 
 class NameRegistry {
   private types = new Map<string, Entity>();

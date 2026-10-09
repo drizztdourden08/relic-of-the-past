@@ -1,0 +1,52 @@
+/* @layer shared-store @kind constants */
+import type { SignatureMark, ZipEntry } from './zip-directory.type';
+
+const END_BYTES = 22;
+const MAX_COMMENT = 0xffff;
+const TAIL_BYTES = END_BYTES + MAX_COMMENT;
+const DIRECTORY_RECORD_BYTES = 46;
+const ZIP64_LOCATOR_BYTES = 20;
+const ZIP64_MARK_16 = 0xffff;
+const ZIP64_MARK_32 = 0xffffffff;
+const METHODS: Record<number, ZipEntry['method']> = { 0: 'store', 8: 'deflate' };
+
+const END_RECORD_MARK: SignatureMark = [0x05, 0x06];
+const ZIP64_LOCATOR_MARK: SignatureMark = [0x06, 0x07];
+const DIRECTORY_RECORD_MARK: SignatureMark = [0x01, 0x02];
+
+const END_ENTRY_COUNT_AT = 10;
+const END_DIRECTORY_BYTES_AT = 12;
+const END_DIRECTORY_OFFSET_AT = 16;
+
+const RECORD_FLAGS_AT = 8;
+const RECORD_METHOD_AT = 10;
+const RECORD_COMPRESSED_BYTES_AT = 20;
+const RECORD_BYTES_AT = 24;
+const RECORD_NAME_LENGTH_AT = 28;
+const RECORD_EXTRA_LENGTH_AT = 30;
+const RECORD_COMMENT_LENGTH_AT = 32;
+const RECORD_OFFSET_AT = 42;
+
+export {
+  END_BYTES,
+  TAIL_BYTES,
+  DIRECTORY_RECORD_BYTES,
+  ZIP64_LOCATOR_BYTES,
+  ZIP64_MARK_16,
+  ZIP64_MARK_32,
+  METHODS,
+  END_RECORD_MARK,
+  ZIP64_LOCATOR_MARK,
+  DIRECTORY_RECORD_MARK,
+  END_ENTRY_COUNT_AT,
+  END_DIRECTORY_BYTES_AT,
+  END_DIRECTORY_OFFSET_AT,
+  RECORD_FLAGS_AT,
+  RECORD_METHOD_AT,
+  RECORD_COMPRESSED_BYTES_AT,
+  RECORD_BYTES_AT,
+  RECORD_NAME_LENGTH_AT,
+  RECORD_EXTRA_LENGTH_AT,
+  RECORD_COMMENT_LENGTH_AT,
+  RECORD_OFFSET_AT,
+};

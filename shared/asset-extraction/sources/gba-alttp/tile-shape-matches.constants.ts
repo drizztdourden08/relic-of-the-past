@@ -1,0 +1,14 @@
+/* @layer shared-asset-extraction @kind constants */
+const TILES_PER_SHEET = 64;
+
+const SOURCE_3BPP_TILE_BYTES = 24;
+
+const TILE_4BPP_BYTES = 32;
+
+const TILE_ROWS = 8;
+
+const PLANE_2_OFFSET_4BPP = 16;
+
+const PLANE_2_OFFSET_3BPP = 16;
+
+export { PLANE_2_OFFSET_3BPP, PLANE_2_OFFSET_4BPP, SOURCE_3BPP_TILE_BYTES, TILE_4BPP_BYTES, TILE_ROWS, TILES_PER_SHEET };

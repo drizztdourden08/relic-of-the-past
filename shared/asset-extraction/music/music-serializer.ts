@@ -1,5 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/** Writes compiled music entities into SPC memory layout. */
 import type {
   CompiledPattern,
   CompiledPhrase,
@@ -8,8 +7,8 @@ import type {
   CompiledSong,
   CompiledSongList,
   Entity,
-} from './compile-types';
-import { kEffectNamesDict, kGapStartAddrs, kKeysDict } from './compile-types';
+} from './compile-types.type';
+import { kEffectNamesDict, kGapStartAddrs, kKeysDict } from './compile-lookups.constants';
 
 class MusicSerializer {
   memory: (number | null)[] = new Array(65536).fill(null);
@@ -118,12 +117,8 @@ class MusicSerializer {
             this.write([0xf9, kKeysDict.get(lineCmd)! | 0x80,
               parseInt(lineArgs[4]), parseInt(lineArgs[5]), parseInt(lineArgs[6])]);
           }
-        } else {
-          if (lineCmd === '.') {
-            // rest/tie needs no extra byte
-          } else {
-            this.write([kKeysDict.get(lineCmd)! | 0x80]);
-          }
+        } else if (lineCmd !== '.') {
+          this.write([kKeysDict.get(lineCmd)! | 0x80]);
         }
       }
     }

@@ -1,0 +1,27 @@
+/* @layer shared-asset-extraction @kind constants */
+const SCREEN_TILES = 32;
+
+const SCREEN_PX = 256;
+
+const VRAM_ADDRESS_MASK = 0x7fff;
+
+const TILE_4BPP_WORDS = 16;
+
+const PALETTE_ROW_COLOURS = 16;
+
+const CHAR_INDEX_MASK = 0x3ff;
+
+const PALETTE_SHIFT = 10;
+
+const PALETTE_MASK = 7;
+
+const FLIP_X_BIT = 0x4000;
+
+const FLIP_Y_BIT = 0x8000;
+
+const NAME_TABLE_ROW_CHARS = 16;
+
+export {
+  CHAR_INDEX_MASK, FLIP_X_BIT, FLIP_Y_BIT, NAME_TABLE_ROW_CHARS, PALETTE_MASK, PALETTE_ROW_COLOURS, PALETTE_SHIFT,
+  SCREEN_PX, SCREEN_TILES, TILE_4BPP_WORDS, VRAM_ADDRESS_MASK,
+};

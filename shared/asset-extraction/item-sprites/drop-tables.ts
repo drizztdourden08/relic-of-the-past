@@ -1,6 +1,4 @@
 /* @layer shared-asset-extraction @kind data */
-/** Sprite lookup tables ported from extract-item-sprites.py, read by the drop decoder. */
-
 const kTab1Sprite = [
   200, 0, 107, 0, 0, 0, 0, 0, 0, 203, 0, 8, 10, 11, 0, 0,
   13, 0, 0, 86, 0, 0, 15, 17, 0, 19, 0, 0, 0, 0, 20, 0,
@@ -47,7 +45,6 @@ const kNumExt = [2, 2, 0, 2, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 const kNumX = [0, 0, 8, 0, 0, 8, 0, 0, 8, 0, 0, 2, 0, 0, 2, 0, 0, 0];
 const kNumY = [0, 0, 8, 0, 0, 8, 0, 0, 8, 0, 8, 8, 0, 8, 8, 0, 8, 8];
 
-// Decode table for receipt (reused by drop-bigkey)
 const kDecodeTab = [
   0x9c0, 0x30, 0x60, 0x90, 0xc0, 0x300, 0x318, 0x330,
   0x348, 0x360, 0x378, 0x390, 0x930, 0x3f0, 0x420, 0x450,
