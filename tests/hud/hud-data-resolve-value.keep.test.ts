@@ -1,11 +1,4 @@
 /* @layer test @kind test */
-/**
- * `resolveValue` is the seam a bad expression cannot get past: whatever
- * `compileExpr`/`evaluate` produce, this is where `1/0` stops being able to
- * become a repeat count of `Infinity`. Every case here either asserts the
- * documented clamp (`resolve-value.ts`'s own comment) or proves the function
- * never throws, because nothing downstream is written to catch it if it did.
- */
 import { describe, expect, it } from 'vitest';
 import { MAX_SAFE_RESULT, clampFinite, resolveValue } from '@shared/hud/data';
 import type { Value } from '@shared/types/hud';

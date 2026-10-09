@@ -1192,6 +1192,165 @@ The three blessed nav baselines (`.claude/nav-baselines/<state>/dump-nav.json`) 
 an exact match. `screen-133`, `screen-119` and `screen-061` are `hc-0x80`, `hc-0x51` and
 `lw-13`. Room 0x80 belongs to palace 0x02; the mismatch case reports palace 0x00.
 
+## hud
+
+The HUD layout editor suites. Section numbers (§50, §55 and so on) in test names refer to the
+design passes of the layout editor plan.
+
+### hud/layout-bands.harness
+
+The Layout section measuring rig, shared by `hud-grid-strip` and `hud-layout-bands`: SSR the
+real components, load the real token, primitive and editor stylesheets into headless Chromium,
+and read the boxes at three rails. The rails are the widths that exist: 188 was measured until
+the rails became draggable, but `PANEL_MIN_WIDTH` is 220, so no gesture reaches anything
+narrower; 220 is the floor, 232 the narrow case, 320 the default.
+
+- The composed block had five bands (title, settings panel, strip, lattice, legend) and now
+  has three: the strip, the lattice, the legend. The settings are `LayoutSection`'s own flat
+  sub sections, which the `section` cases render whole.
+- The block is composed here instead of driven, because SSR renders the initial state and
+  nothing in the harness can click. It mirrors `GridEditor.tsx` band for band, and
+  `hud-layout-bands` greps that file to prove it still does.
+- `probe` runs in the page through `page.evaluate`, so it may close over nothing; every
+  constant it needs is declared inside it. A box paints when it has a non transparent
+  background or any visible border, and only the section's own chrome is asked; controls are
+  meant to be drawn. The legend's key strip is a deliberate sideways scroller, so what is
+  inside it is exempt from the overflow check, but the strip itself is not.
+- One toolbar row is a 26px button plus 2px of padding above and below. It was 32 while the
+  strip wore the toolbar's border; the strip is flat now, so the border went with it. The
+  guarantee is unchanged: one row, the same in every state.
+
+### hud/hud-layout-bands.keep.test.ts
+
+The totals half of the Layout section, measured; the geometry is `hud-grid-strip`.
+
+- A grid section measured 689.5 / 689.5 / 637 (§50), 474.5 / 414.5 / 399.5 (§51), 579 / 579 /
+  564 (§54), 447 / 447 / 433 (§55), then 455 / 455 / 413 (§56): 8px taller at the two narrow
+  rails and 20px shorter at the default. It spent width on section one's three labels and two
+  32px alignment tile rows where the 3x3 pad was one 82px square; it bought every piece of
+  section one on one line at 320. At 220 and 232 the pieces need two lines, and the gap
+  field's 28px is 2px more than the 26px rows beside it. A layout packed by measured width is
+  supposed to answer differently at a different width.
+- A flex section measured 152 / 124 / 124 (§51 and §54), 150 (§55), 164 then 198 (§56), then
+  362 / 362 / 334 (§58), and 358 / 358 / 330 once the strip's 2px sunken well went. The growth
+  is a flex manipulation section (title, strip, child cells, legend), Flow as its own titled
+  section (because `direction` turns the alignment tiles and a section may not rearrange itself
+  when one of its own options is pressed), and section one's second gap cell and Overlay piece,
+  which make it the same section under both engines. The grid's numbers did not change.
+- Nothing escapes the rail, down to 220.
+- The block's band order is grepped out of `GridEditor.tsx`, so a band added, moved or dropped
+  fails here instead of the numbers measuring something no longer on screen. §51's
+  `persistent` prop, §54's settings panel, its heading box and the strip's old `controls` slot
+  must stay gone. `LayoutSection.tsx` mounts four sections in the order Layout, Flow,
+  Alignment, manipulation; both manipulation components hang off one slot titled for the
+  engine in force, and the two wrappers §54 needed are mounted from nowhere.
+
+### hud/hud-grid-strip
+
+The geometry half, on the same rig. Each claim is one of the maintainer's requests turned into
+a rectangle:
+
+- Its own section means a title with a gold rule and the content under it: three titled
+  sections under a grid, four under a flex container, named by concern. Flow is its own section
+  because `direction` turns the alignment diagrams.
+- No box around anything: nothing in the section's own chrome paints a background or border.
+  §54 drew three nested surfaces (the block's card, the settings well, the alignment pad's
+  well); the only thing that paints now is the sub section rule, a border on the title.
+- Section one keeps labels (Type, Overlay, Gap), the same three under either engine, packed
+  into as few lines as their measured widths allow: two lines at 220 and 232, one at 320. Lines
+  are counted by overlapping vertical ranges, since the 28px gap field is centred against the
+  26px icon rows.
+- No empty space: the gap piece reaches the section's right edge, within 1px since a `1fr`
+  track can land on a half pixel. A grid's two gap fields share one line and clear 50px each
+  (54 at 320, 98 at 220); §55 had stacked them because the alignment pad was still in this
+  section.
+- Every alignment tile has one size, in full lines: a grid's two axes are a line each, and a
+  flex container's six main axis values fold into two lines of three above the cross axis.
+- The add column and add row `+` sit at the very end of their header strips.
+- A flex container has the same two gap fields and the same overlay box as a grid; §57 showed
+  the flow engine always spent a gap on each axis and `guide` belongs to any container.
+- The toolbar strip is one row in every selection state at every rail. A track used to add an
+  81px size field to five buttons behind its chip, 287.4px against a 224px strip at 232, so it
+  wrapped; the size moved onto the track's own header. The lattice never moves between states.
+
+### hud/hud-data-compile-expr.keep.test.ts
+
+`compileExpr` is the piece everything above it assumes cannot fail: it never throws, never
+hangs, and never lets a document smuggle real JavaScript past the arithmetic the plan promised.
+Every nasty input the phase one plan names has its own case. One correction to the plan:
+expr-eval uses the words `and` and `or` for logic, not `&&` and `||`; the plan's worked examples
+use the wrong dialect, the fixture's `last-heart-gate` is the corrected form, and
+`javascript-and` proves the original spelling fails.
+
+- `||` concatenates strings in expr-eval. Left enabled, `life_current || 0` with life at 11
+  produced "110", which numeric coercion turned into 110: a wrong number with no error. `&&`
+  has no meaning in the grammar and says so.
+- `random()` parses and evaluates but gives a different number every call, so a layout using it
+  cannot be previewed, diffed or drawn the same twice. It is refused after the parse, because
+  expr-eval has no per function switch and deleting it would only turn it into an unknown name
+  failing at evaluate time. It is refused nested and as a bare name too.
+- An unknown variable name is syntactically fine; which names are known is `validate-value`'s
+  job. A second compile of the same text adds nothing to the cache and returns the same object.
+
+### hud/hud-data-resolve-value.keep.test.ts
+
+`resolveValue` is the seam a bad expression cannot get past: whatever `compileExpr` and
+`evaluate` produce, this is where `1/0` stops becoming a repeat count of `Infinity`. Each case
+asserts the documented clamp or proves the function never throws, since nothing downstream
+catches.
+
+### hud/hud-data-validate-value.keep.test.ts
+
+`validateValue` is the hook in `validate-layout.ts` for the phase that gives a `HudBox` field a
+real `Value` type. Nothing on the document schema calls it yet, so it is tested directly. An
+unparseable expression and an unknown variable are both refused with a message naming the
+field and, where one exists, the column, and it never half succeeds.
+
+### hud/hud-data-variables.keep.test.ts
+
+The flat variable table: the fifteen names the plan's data surface lists, the three countdown
+names §62 added (for a formula or a switch to read), the three scope extras kept out of the
+table, and the scope builder that turns the HUD's vitals fields into the numbers an expression
+evaluates against.
+
+### hud/hud-editor-step.keep.test.ts
+
+§55 built `StepNumberInput` (a `ValueInput` with its spinner hidden and its own buttons) so a gap
+could move by the editor's step; `ValueInput` already took a `step`, so it was replaced. The
+editor step context reaches `ValueField`; an explicit `step` beats it, since a 0 to 1 fraction
+nudged by 8 is as broken as a gap nudged by 1; the default outside a provider is 1, as before
+the context existed. Every `ValueField` call site is read off disk and checked: a value in HUD
+pixels takes the session step, and anything else (a count, an angle, a duration, opacity, an
+amount) passes its own. The lists are the review, kept as code so the next field must join one.
+`StepNumberInput` stays deleted and the CSS rule that hid the spinner went with it.
+
+### hud/hud-layout-section-one.keep.test.ts
+
+Section one is byte for byte the same section under both engines, except which Type button is
+lit (§58). The maintainer's rule: nothing in a section may change when another option in the
+same section is pressed. §56 asserted the breakage as a feature (a different gap cell count and
+a grid only overlay), which is why six rounds passed every gate and were rejected. So section one
+is rendered for a grid and a flex container, the two `aria-pressed` flags and the lit class are
+stripped, and the markup must be identical. The cut is at the second sub section's wrapper,
+because that wrapper carries the next section's label (Alignment or Flow). Alignment belongs to
+section three. §57 gave `ContainerOverlay` a flex drawing, so the overlay is offered under both
+engines. Both engines mount a manipulation component that asks the platform for the modifier
+key's name, hence the platform stub. Behaviour is `hud-grid-settings`, geometry is
+`hud-grid-strip`, and the stage's reaction is the e2e layout options specs.
+
+### hud/hud-stage-cells.keep.test.ts
+
+The stage's grid drawings cover the grid they draw. `gridCellRects(container, box, unit, ctx)`
+wants `box` and its answer in one space, with `unit` that space's pixels per authored pixel. The
+stage echo and grid overlay passed the game pixel rect with the display scale as `unit` and
+painted the result as display pixels. Fixed tracks came out right; the area a `fill` track shares
+stayed in game pixels, so the grid drew at `1 / displayScale` of its size, 72% at the editor's
+~1.39. The older echo test missed it twice: it computed its expectation with the same wrong call
+and had no `fill` track. So the property is asserted against a rectangle that does not come from
+the solve: all cells together are exactly the container's placed rect at the display scale. One
+case shows what the old convention produced. A grid inside a scaled subtree (the compact layout
+at 0.75) solves with its own unit: a 124px authored band is 93 game pixels wide.
+
 ## input/haptic-gates.keep.test.ts
 
 Two gate layers must both pass for an in game event to rumble. The C master gate is

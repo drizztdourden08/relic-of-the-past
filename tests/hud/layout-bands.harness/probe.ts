@@ -1,36 +1,7 @@
 /* @layer tests @kind helper */
-/**
- * THE BROWSER HALF of the Layout-section rig. `probe` is serialized by
- * `page.evaluate`, so it may close over NOTHING. Every constant it needs is
- * declared inside it, and that is why it is a file instead of a function in
- * `layout-bands.harness.ts`: pulling it out is the only way to keep either file
- * under the 200-line cap without condensing the assertions they exist to make.
- */
-interface Box { h: number; top: number; bottom: number; left: number; right: number }
-
-interface Measured {
-  case: string;
-  height: number;
-  parts: Record<string, Box>;
-  /** Every gap field, and every sub-section title in the case. */
-  steps: Box[];
-  /** Every labelled piece in section one, and every alignment tile row. */
-  pieces: Box[];
-  /** The label beside each section-one piece, in order. */
-  labels: string[];
-  tiles: Box[];
-  titles: string[];
-  /** The two `+`s and the last header on each axis, which §55 put "at the very end". */
-  adds: Record<string, Box>;
-  lastHeads: Record<string, Box>;
-  /** Every box in the case that paints a background or draws a border, by class.
-   *  It is the "stop putting container with border everywhere" evidence. */
-  painted: string[];
-  overflow: number;
-}
+import type { Box, Measured } from './layout-bands.type';
 
 const probe = (): Measured[] => {
-  /** The boxes of the section's own chrome that §54 painted and §55 must not. */
   const OWN = ['hud-subsec', 'hud-subsec__body', 'hud-layout-set', 'hud-layout-set__piece',
     'hud-layout-set__gap', 'hud-layout-set__overlay', 'hud-align', 'hud-align__row',
     'hud-align__tiles', 'hud-engine-row', 'hud-grid', 'hud-layout-sections',
@@ -68,9 +39,6 @@ const probe = (): Measured[] => {
       if (last) lastHeads[axis] = boxOf(last);
     }
 
-    // A box "paints" if it has a non-transparent background or any visible
-    // border. Only the section's OWN chrome is asked. Controls (buttons,
-    // inputs, swatches, the lattice's cells) are meant to be drawn.
     const painted = OWN.flatMap((name) => Array.from(sec.querySelectorAll(`.${name}`))
       .filter((el) => {
         const cs = getComputedStyle(el);
@@ -79,8 +47,6 @@ const probe = (): Measured[] => {
             .some((side) => parseFloat(cs.getPropertyValue(`border-${side}-width`)) > 0);
       }).map(() => name));
 
-    // The legend's cap strip is a deliberate sideways scroller, so what is inside
-    // it is exempt; the strip itself is not.
     let overflow = 0;
     for (const el of Array.from(sec.querySelectorAll('*'))) {
       if (el.parentElement?.closest('.hud-grid__keys')) continue;
@@ -106,13 +72,4 @@ const probe = (): Measured[] => {
   return out;
 };
 
-/**
- * THE RAILS THAT EXIST. 188 was measured from §34 to §54 and has not been
- * reachable since the rails became draggable: `PANEL_MIN_WIDTH` is 220, so the
- * inspector cannot be made narrower than that by any gesture. Measuring a width
- * the UI refuses to produce is how §54 came to record a wrap nobody could see;
- * 220 is the real floor, 232 the brief's narrow case, 320 the default.
- */
-
 export { probe };
-export type { Box, Measured };

@@ -1,14 +1,4 @@
 /* @layer test @kind test */
-/**
- * `validateValue` is the hook wired into `validate-layout.ts` for the phase
- * that gives a `HudBox` field an actual `Value` type. Nothing on the document
- * schema calls it yet (see the file's own header), so this tests it directly,
- * the same way `validate-box.ts`'s helpers are tested before anything calls
- * them through a full document. Every case matches the TEST HARD list: an
- * unparseable expression and an unknown variable are both refused with a
- * message naming the field and, where one exists, the column - and the whole
- * thing never half-succeeds into a value the caller should trust.
- */
 import { describe, expect, it } from 'vitest';
 import expressions from '../fixtures/hud-expressions.json';
 import { validateValue } from '@shared/hud/layouts';
