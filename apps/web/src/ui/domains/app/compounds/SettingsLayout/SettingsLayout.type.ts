@@ -36,11 +36,6 @@ interface SettingsLayoutProps {
   emptyMessage?: string;
 }
 
-interface ItemRun {
-  lock: SettingLockCause | null;
-  items: SettingItem[];
-}
-
 interface ItemGroup {
   id: string | null;
   title: string | null;
@@ -69,18 +64,18 @@ type SettingsSectionsProps = Omit<SettingsLayoutProps, 'sections'> & {
   isLockedKey: (key: string) => boolean;
 };
 
-interface SectionHeadingProps {
-  title: string;
-  changedCount: number;
-  onReset: () => void;
+interface SettingToggleProps {
+  item: SettingItem;
+  settings: GameSettings;
+  disabled: boolean;
+  onChange: (patch: Partial<GameSettings>) => void;
 }
 
 export type {
   ItemGroup,
-  ItemRun,
   ResolvedSection,
-  SectionHeadingProps,
   SettingItem,
+  SettingToggleProps,
   SettingLockCause,
   SettingsLayoutProps,
   SettingsPageContextValue,

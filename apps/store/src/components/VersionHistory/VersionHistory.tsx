@@ -1,6 +1,5 @@
 /* @layer store-site @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
-import { Chip } from '@site-kit/components/Chip/Chip';
+import { Box, Button, Status, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDay } from '@site-kit/lib/format-date';
 import { approvedAtOf } from '../../catalog/approved-versions/approved-at-of';
@@ -23,12 +22,12 @@ const VersionHistory = (props: VersionHistoryProps) => {
       {versions.map((version) => (
         <Box key={version.n} className="version-history__row" role="row">
           <Text as="span" role="cell" className="version-history__semver">
-            {version.semver} {version.n === liveVersion && <Chip tone="green">live</Chip>}
+            {version.semver} {version.n === liveVersion && <Status variant="pill" tone="success">live</Status>}
           </Text>
           <Text as="span" role="cell" className="version-history__num">{formatDay(approvedAtOf(version))}</Text>
           <Text as="span" role="cell" className="version-history__changes">{version.changelog || '-'}</Text>
           <Text as="span" role="cell" className="version-history__num">
-            {version.removed ? <Chip tone="muted">file removed</Chip> : formatBytes(version.bytes)}
+            {version.removed ? <Status variant="pill" tone="neutral">file removed</Status> : formatBytes(version.bytes)}
           </Text>
           {onDelete && (
             <Box role="cell">

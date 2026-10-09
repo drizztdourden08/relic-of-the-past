@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Image } from '@drizztdourden08/tessera/primitives';
+import { Box, Image, Pressable } from '@drizztdourden08/tessera/primitives';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
-import type { ControlHint } from '../../../sub-components/ControlGlyph.type';
+import type { ControlHint } from '../../../sub-components/ControlHint.type';
 import { GIVE_HINT, TIERS_HINT, TOGGLE_HINT } from '../ItemsTab.constants';
 import type { SlotCellProps } from '../ItemsTab.type';
 
@@ -22,8 +22,7 @@ const SlotCell = (props: SlotCellProps) => {
   ].filter(Boolean).join(' ');
 
   return (
-    <Button
-      variant="bare"
+    <Pressable
       className={className}
       style={{ width: size, height, ...style }}
       onClick={onClick}
@@ -46,7 +45,7 @@ const SlotCell = (props: SlotCellProps) => {
           fallback={<Box className="cheats-items__ghost cheats-items__ghost--missing" style={{ width: size, height }} />}
         />
       )}
-    </Button>
+    </Pressable>
   );
 };
 

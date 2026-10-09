@@ -7,7 +7,7 @@ import './HeroProgress.css';
 const HeroProgress = (props: { files: HeroProgressFile[] }) => {
   const { files } = props;
   return (
-    <Box className="hero__glass hero-progress">
+    <Box className="hero-progress">
       <Box className="hero-progress__head">
         <Text className="hero__eyebrow">Progress</Text>
         <Box className="hero-progress__legend" aria-hidden="true">

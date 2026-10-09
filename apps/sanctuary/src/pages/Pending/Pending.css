@@ -1,11 +1,11 @@
 /* @layer sanctuary-site @kind style */
-.pending__signout.btn--bare {
+.pending__signout {
   display: inline;
   color: var(--c-text-dim);
   text-decoration: underline;
   font-size: inherit;
 }
 
-.pending__signout.btn--bare:hover {
+.pending__signout:hover {
   color: var(--c-text);
 }

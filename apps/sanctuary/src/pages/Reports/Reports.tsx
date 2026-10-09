@@ -32,7 +32,6 @@ const Reports = (props: ReportsProps) => {
         onSearchChange={view.setSearch}
         searchPlaceholder={SEARCH_PLACEHOLDER}
         searchLabel="Search reports"
-        facets={page.facets}
       />
       <SavedViewsMenu state={view.savedViews} />
     </>

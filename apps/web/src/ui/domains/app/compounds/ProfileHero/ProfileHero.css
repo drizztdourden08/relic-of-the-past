@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind style */
 
-.profile-hero .profile-hero__art {
-  left: var(--profile-hero-art-left);
-  bottom: var(--space-lg);
-  height: var(--profile-hero-art-h);
-  image-rendering: pixelated;
-  filter: drop-shadow(0 var(--space-sm) var(--space-lg) color-mix(in srgb, var(--c-bg) 70%, transparent));
+.profile-hero__capitalize {
+  text-transform: capitalize;
 }
 
 .profile-hero__save {

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDismissable } from '@drizztdourden08/tessera/primitives';
+import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { SLOP } from './useDragGesture.constants';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { Armed, DragGesture, DragGestureInput } from './useDragGesture.type';
@@ -62,7 +62,7 @@ const useDragGesture = <T,>(input: DragGestureInput<T>): DragGesture<T> => {
     };
   }, [reset, threshold]);
 
-  useDismissable({ active: sourceId !== null, level: 'drag', onDismiss: reset });
+  useEscapeStack({ active: sourceId !== null, level: 'drag', onEscape: reset });
 
   const start = useCallback((event: ReactPointerEvent, id: string) => {
     if (event.button !== 0) return;

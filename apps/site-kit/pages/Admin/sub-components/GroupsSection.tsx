@@ -1,13 +1,11 @@
 /* @layer site-kit @kind component */
 import { useState } from 'react';
-import { DEFAULT_GROUP_ID } from '@shared/hub/group-types';
 import { Button, Flex, Text } from '@drizztdourden08/tessera/primitives';
-import { Dialog, SettingsSection } from '@drizztdourden08/tessera/composites';
-import { Row } from '../../../components/Row/Row';
-import { Chip } from '../../../components/Chip/Chip';
+import { Dialog, ListItemList, SettingsSection } from '@drizztdourden08/tessera/composites';
 import type { GroupView } from '../../../api/hub-responses.type';
 import { groupSummary } from '../behavior/group-summary';
 import { GroupEditor } from './GroupEditor';
+import { GroupRow } from './GroupRow';
 import { useDiscordRoles } from '../behavior/useDiscordRoles';
 import { useSiteDefinition } from '../../../site/site-context';
 import type { Editing, GroupsSectionProps } from './GroupsSection.type';
@@ -21,27 +19,24 @@ const GroupsSection = (props: GroupsSectionProps) => {
   const [editing, setEditing] = useState<Editing>(null);
   const [deleting, setDeleting] = useState<GroupView | null>(null);
 
-  const value = (group: GroupView) => (
-    <Flex gap="sm" align="center" wrap>
-      {group.id === DEFAULT_GROUP_ID && <Chip tone="gold">default</Chip>}
-      <Text as="span" variant="caption">{groupSummary(group, discord.byId, models)}</Text>
-    </Flex>
-  );
-  const action = (group: GroupView) => (
-    <>
-      <Button variant="ghost" size="sm" disabled={busy} onClick={() => setEditing({ kind: 'edit', group })}>Edit</Button>
-      {group.id !== DEFAULT_GROUP_ID && (
-        <Button variant="ghost" size="sm" disabled={busy} onClick={() => setDeleting(group)}>Delete</Button>
-      )}
-    </>
-  );
-
+  const editGroup = (group: GroupView) => setEditing({ kind: 'edit', group });
   const editorGroup = editing?.kind === 'edit' ? editing.group : null;
 
   return (
     <SettingsSection title="Groups" description="What each group sees. A Discord role fills a group; an admin can add people by hand.">
       {loading && <Text as="p" variant="caption">Loading groups</Text>}
-      {groups.map((group) => <Row key={group.id} label={group.name} value={value(group)} action={action(group)} />)}
+      <ListItemList label="Groups">
+        {groups.map((group) => (
+          <GroupRow
+            key={group.id}
+            group={group}
+            summary={groupSummary(group, discord.byId, models)}
+            busy={busy}
+            onEdit={editGroup}
+            onDelete={setDeleting}
+          />
+        ))}
+      </ListItemList>
       {editing
         ? (
           <GroupEditor

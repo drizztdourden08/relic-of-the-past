@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Icon } from '@iconify/react/offline';
 import { Flex } from '@drizztdourden08/tessera/primitives';
-import { SettingsPage } from '@domains/app/compounds/SettingsPage';
+import { SettingsPage } from '@drizztdourden08/tessera/composites';
 import type { TitledPageProps } from './TitledPage.type';
 import '@site-kit/layout/SitePage/SitePage.css';
 

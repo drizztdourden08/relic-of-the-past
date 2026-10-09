@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDismissable } from '@drizztdourden08/tessera/primitives';
+import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { usePlatform } from '@app/platform';
 import { nextIndexRun } from '../../../behavior/index-selection';
 import type { PointerEvent as ReactPointerEvent } from 'react';
@@ -32,7 +32,7 @@ const useFlexSelection = (containerId: string, count: number) => {
 
   const clear = useCallback(() => select({ kind: 'none' }), [select]);
 
-  useDismissable({ active: selection.kind !== 'none', level: 'popover', onDismiss: clear });
+  useEscapeStack({ active: selection.kind !== 'none', level: 'popover', onEscape: clear });
 
   const pick = useCallback((index: number, event: ReactPointerEvent): void => {
     setCursor(index);

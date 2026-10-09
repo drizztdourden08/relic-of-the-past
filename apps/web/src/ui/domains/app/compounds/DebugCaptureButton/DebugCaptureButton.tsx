@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import play from '@iconify-icons/lucide/play';
 import square from '@iconify-icons/lucide/square';
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { FfmpegRequiredDialog } from '@domains/app/compounds/FfmpegRequiredDialog';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
 import { useDebugCapture } from './behavior/useDebugCapture';
@@ -33,8 +33,7 @@ const DebugCaptureButton = ({ profileId, onPointerDown, onPointerMove, onPointer
     <Box className={`debug-capture-glow${isCapturing ? ' debug-capture-glow--active' : ''}`}>
       <Box as="span" className="debug-capture-glow__layer debug-capture-glow__layer--1" aria-hidden />
       <Box as="span" className="debug-capture-glow__layer debug-capture-glow__layer--2" aria-hidden />
-      <Button
-        variant="bare"
+      <Pressable
         className={`debug-round-button debug-capture-button${isCapturing ? ' debug-capture-button--active' : ''}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -44,7 +43,7 @@ const DebugCaptureButton = ({ profileId, onPointerDown, onPointerMove, onPointer
         aria-label={isCapturing ? 'Stop debug capture' : 'Start debug capture'}
       >
         <IconifyIcon icon={isCapturing ? square : play} width={14} height={14} />
-      </Button>
+      </Pressable>
       {isCapturing && (
         <Text as="span" className="debug-floating-controls__status-label">{formatElapsed(elapsedMs)}</Text>
       )}

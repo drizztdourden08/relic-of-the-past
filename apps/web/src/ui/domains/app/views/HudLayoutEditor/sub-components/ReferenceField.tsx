@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './HudLayoutEditor.content.css';
-import { Button, Field, Text, Thumbnail } from '@drizztdourden08/tessera/primitives';
+import { Button, Field, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { CARET } from './ReferenceField.constants';
 import type { ReferenceFieldProps } from './ReferenceField.type';
 
@@ -20,7 +20,7 @@ const ReferenceField = (props: ReferenceFieldProps) => {
         onClick={onOpen}
       >
         {specimen === undefined
-          ? <Thumbnail src={src} alt="" placeholder={placeholder} className="hud-ref-field__thumb" />
+          ? <Image frame src={src} alt="" fallback={placeholder} className="hud-ref-field__thumb" />
           : <Text className="hud-ref-field__specimen">{specimen}</Text>}
         <Text className="hud-ref-field__name">{name}</Text>
         {kind !== undefined && <Text className="hud-ref-field__kind">{kind}</Text>}

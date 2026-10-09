@@ -4,7 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
-import { dismissStackDepth } from '@drizztdourden08/tessera/primitives';
+import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
+import type { EscapeStack } from '@drizztdourden08/tessera/primitives';
 import { MotionTransport } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/MotionTransport';
 import {
   MotionPreviewContext, useMotionPreviewState,
@@ -31,6 +32,19 @@ const stubMatchMedia = (): void => {
 };
 
 let mounted: { root: Root; host: HTMLElement } | null = null;
+
+const escapeStack = (): EscapeStack => {
+  const found: EscapeStack[] = [];
+  const root = createRoot(document.createElement('div'));
+  const Probe = (): null => { found.push(useEscapeStack()); return null; };
+  act(() => { root.render(h(Probe)); });
+  act(() => { root.unmount(); });
+  const stack = found[0];
+  if (!stack) throw new Error('the escape stack probe never rendered');
+  return stack;
+};
+
+const dismissStackDepth = (): number => escapeStack().depth();
 
 const mount = (node: ReactNode): void => {
   const host = document.createElement('div');

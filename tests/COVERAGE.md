@@ -26,7 +26,7 @@
 | BootProgressBar / boot-progress-store | none | none |
 | MobileChrome | none | none |
 | BugReport (+ electron github report-issue/ipc-handlers) | none | none |
-| About / SpriteDebug / DesignGallery / LogOverlay | none | none |
+| About / SpriteDebug / LogOverlay | none | none |
 | AppMain / GameOverlay / TitleBar / ProfilePage | none | none |
 | HudLayoutEditor (draft memento, drag-to-place, anchor/offset math, glyph import) | tests/hud/hud-inspector-geometry.keep.test.ts | partial. Contract §37 covers the offset math (`behavior/offset.ts`: zero deletes the key, negatives survive, and the stage drag composes to the same write as the panel field) and the region re-anchor (`setRegionAnchor`). The draft/commit path (`useLayoutDraft`) and glyph import are still untested. The stage has no drag left to cover (§47): `hud-stage-select-only.keep.test.ts` drives a real press/move/release on it and asserts the document is untouched, and the offset math is now reached only from the panel field |
 | HudLayoutEditor inspector row LAYOUT (the collapsed-field bug, F2 of `plans/hud-inspector-ux-review.html`) | tests/hud/hud-inspector-collapsed-fields.keep.test.ts | partial. One of two tests in this repo that render DOM and measure it: SSR'd rows + the real stylesheets in headless Chromium, asserting the numeric field's typing width at 289/232/188 px of rail and that nothing overflows. Covers the four rows phase 1 fixed and pins the keyframe value it provably cannot (contract §34, re-measured in §35 and again in §36 after the mode switch was deleted, where it is still 0 and the pin stays); no other inspector row is measured here |
@@ -84,23 +84,15 @@
 | ChecksWidget / DebugWidget / InventoryWidget / LogsWidget / CheatsWidget | none | none |
 | **Widget composite (drag/resize/dock chrome shared by all 7 widgets)** | none | **none. The single biggest gap in the UI layer** |
 
-## Design system (`apps/web/src/ui/design-system/`)
+## Design system (Tessera, `@drizztdourden08/tessera`)
+
+RotP's own copy of the design system is gone. Every primitive, composite, field kit and the data engine (schema, filter, table, view state, the Escape stack) now comes from Tessera, which owns and tests them in its own repository. RotP keeps tests only for what it builds on top of them.
 
 | Area | Tests | Verdict |
 |---|---|---|
-| DataTable + data/table + data/schema | 17 files under tests/design-system | covered. The deepest-tested subsystem in the app |
-| RecordEditor (all field-shape variants) | 10 files under tests/design-system | covered |
-| CompactRecordView | compact-record-view-render, compact-record-view-identity | covered |
-| field-kits (array/boolean/enum/id-ref/number/object/string/structured/union) | 6 files under tests/design-system | covered |
-| FilterBar + data/filter | 6 files under tests/design-system | covered |
-| data/view-state (durable load/save, race protection) | 4 files under tests/design-system | covered |
-| ScrollArea sync, Portal anchor-tracking, SegmentedControl, PositionInput, TagInput, CodeBlock, CreateRecordDialog | 1 file each under tests/design-system | covered |
-| §50. The legend primitives `KeyCap` and `MouseGlyph` | tests/design-system/keycap-mouse-glyph.keep.test.ts | covered. Every label the legends print comes out as a `<kbd>` cap, a glyph cap carries a spoken form and falls back to its own label without one, the size is a class, not a second component; and all four mouse parts render as four DIFFERENT drawings over one unchanging body, each named in words, with a drag lighting the same ear as a click plus the travel (a drag is the button HELD). Not asserted: how either one looks |
-| DeleteGuardDialog | delete-guard-route (via RecordEditor) | partial. The dialog component itself is untested |
-| §33/§44. `Escape` and the dismiss stack (`Portal/behavior/{dismiss-stack,use-dismissable}.ts`, and every surface on it) | tests/design-system/dismiss-stack.keep.test.ts, tests/design-system/escape-layered-surfaces.keep.test.ts | covered. Level beats registration order in both mount orders, a `Select`/`DialogShell`/popover closes before the layer around it, a non-dismissable dialog swallows the key instead of passing it down, a hidden layer registers nothing, and (§44) `Drawer`, which is ALWAYS mounted, claims nothing while closed, takes the key while open, and loses it to a popover opened inside it |
-| Dialog/DialogShell/FullScreenLayer/ListItemRow/MasterDetailLayout/Overlay/SettingsSection/SettingsShell/SideNav/WindowHeader/WizardDialogShell | none | none (mostly presentational shells) |
-| DropdownMenu, Select, TagPicker, SectionNav | none | none |
-| Toggle/Toast/DropZone/NumberInput/RangeInput/Slider/Stepper/ToggleGroup/Tooltip/Checkbox/RadioGroup/Badge/StatusBadge/ProgressBar/ProgressRing/Thumbnail/TabBar/Svg | none | n/a. Pure presentational primitives, not counted as a gap |
+| Tessera parts: DataTable, RecordEditor, CompactRecordView, field kits, FilterBar, view state, the Escape stack, menus, inputs and every other primitive or composite | Tessera's own suite | n/a. Owned and tested by Tessera, not counted here |
+| RotP's theme (`apps/web/src/theme.css`: the game text tokens, the dialogue face and the game screen sizes) | none | n/a. Tokens only |
+| SpritePicker (`ui/domains/app/compounds/SpritePicker`), kept in RotP because Tessera has no part for the game's sprite set | none | none |
 
 ## Electron main process / IPC (`apps/desktop/electron/`)
 
@@ -135,7 +127,7 @@
 | Native ids on the records, against the cartridge: a screen's entranceId lands in that screen's room and no mouth is claimed by more screens than the ROM has slots for it, every room a door opens into has a screen carrying one of its doors and no room carries more doors than the cartridge reaches it by, a dungeon screen's entrance belongs to its palace, a connection's entranceId sits on a mouth of its own overworld area, an exitId names the exit that leaves that room, a stairIndex names the room-header slot that travels there, a bossRoomId is a room the cartridge tags as a boss room and matches the C hand table it will generate, every chest check resolves in the native chest table, every key requirement on a dungeon crossing is backed by a lock the room's own door list declares, every area-head event sits on an area that is its own head, and every mouth of the 129 slots is carried by a screen apart from two fall holes whose landing room a door already holds | tests/game/data/rom-facts.keep.test.ts (shared/randomizer/audit/rom-native-tables.ts, rom-room-doors.ts, rom-census.ts) | covered. Every room a door opens into now holds a screen; skips without a US ROM, so a clone with none stays green |
 | The regression net: every check's status, the inventory and the reachable screens, for every save and seed of the corpus, compared against a blessed run | tests/regression/run-snapshot.keep.test.ts, tests/regression/run-compare.keep.test.ts (corpus.ts, expected-changes.data.ts) | covered. A step declares the rows it may move, and the location keys it drops from every world, in expected-changes.data.ts; a refactor declares none |
 | Connection-points model (screenId/toConnectionId/canExit pairing) | tests/game/data/connection-pairing.keep.test.ts | covered. 2 of 6 invariants are marked `test.todo` for known pre-existing data gaps (see file header) |
-| Enumeration system | tests/game/data/enumeration-*, tests/design-system/enum-* | covered |
+| Enumeration system | tests/game/data/enumeration-* | covered. The enum editor tiers moved to Tessera's field kits with the design system |
 | Tags/taxonomy | tests/game/data/check-content-tags.keep.test.ts | partial. connection-tags and item-categories are untested directly |
 | One rules path, on this side of the seam: the engine's regions named as dataset screens (logic/regions/reachable-screens.ts), and the two settings the record-read rows are judged with (the Big Key grant, the unlit-room grant, the medallion and pedestal overrides) | tests/game/one-rules-path.keep.test.ts | covered. Successor to the retired resolver.keep.test.ts, case for case: the old file guarded a second reachability graph and a second location-rule table, and both are gone |
 | logic/evaluate-requirement + logic/record-statuses (the dataset's own requirement language, and the status of a row no world holds a location for) | tests/game/one-rules-path.keep.test.ts (inputs) + tests/story-events/t6-tracker.keep.test.ts (the event sweep) | partial. computeRecordStatuses has no unit test of its own |

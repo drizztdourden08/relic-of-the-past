@@ -1,16 +1,16 @@
 /* @layer sanctuary-site @kind component */
-import { Chip } from '@site-kit/components/Chip/Chip';
+import { Link, Status } from '@drizztdourden08/tessera/primitives';
 import type { IssueStateChipProps } from './IssueStateChip.type';
 
 const IssueStateChip = (props: IssueStateChipProps) => {
   const { issue, className } = props;
-  const tone = issue.state === 'open' ? 'green' : 'muted';
-  const label = `${issue.state} #${issue.number}`;
-  return (
-    <Chip tone={tone} href={issue.url} className={className}>
-      {label}{issue.url ? ` ${'↗'}` : ''}
-    </Chip>
+  const status = (
+    <Status variant="pill" dot tone={issue.state === 'open' ? 'success' : 'neutral'} className={issue.url ? undefined : className}>
+      {`${issue.state} #${issue.number}`}
+    </Status>
   );
+  if (!issue.url) return status;
+  return <Link href={issue.url} external tone="neutral" variant="subtle" className={className}>{status}</Link>;
 };
 
 export { IssueStateChip };

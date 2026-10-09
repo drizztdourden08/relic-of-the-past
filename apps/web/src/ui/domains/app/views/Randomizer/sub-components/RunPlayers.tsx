@@ -1,24 +1,24 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
-import { DashboardPanel } from '@drizztdourden08/tessera/composites';
 import { PlayersTable } from './NetworkTab';
 import { playersSummaryOf } from '../behavior/players-summary';
+import { DashboardCard } from './DashboardCard';
 import { EMPTY, WAITING } from './RunPlayers.constants';
 import type { RunPlayersProps } from './RunPlayers.type';
 
 const RunPlayers = ({ placement, players }: RunPlayersProps) => {
   if (players === null || players.length === 0) {
     return (
-      <DashboardPanel {...placement} title="Players">
+      <DashboardCard placement={placement} title="Players">
         <Text className="randomizer-page__hint">{players === null ? WAITING : EMPTY}</Text>
-      </DashboardPanel>
+      </DashboardCard>
     );
   }
 
   return (
-    <DashboardPanel {...placement} title="Players" subtitle={playersSummaryOf(players)}>
+    <DashboardCard placement={placement} title="Players" subtitle={playersSummaryOf(players)}>
       <PlayersTable players={players} compact />
-    </DashboardPanel>
+    </DashboardCard>
   );
 };
 

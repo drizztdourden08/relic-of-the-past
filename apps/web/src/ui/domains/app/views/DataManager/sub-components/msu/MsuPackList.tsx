@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Status, IconButton, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Status, IconButton, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@app/utils/formatBytes';
 import { HookshopChip } from '@domains/app/compounds/HookshopChip';
@@ -27,7 +27,7 @@ const MsuPackList = (props: MsuPackListProps) => {
       {packs.map((pack) => (
         <ListItemRow
           key={pack.name}
-          icon="🎵"
+          icon={<Icon name="headphones" />}
           name={pack.name}
           meta={
             <>
@@ -37,7 +37,7 @@ const MsuPackList = (props: MsuPackListProps) => {
               </Status>
             </>
           }
-          badge={isInstalled(pack.name) ? <HookshopChip /> : undefined}
+          columns={isInstalled(pack.name) ? [{ primary: <HookshopChip />, align: 'end' }] : undefined}
           selected={selected === pack.name}
           onClick={() => onSelect(pack.name)}
           action={
@@ -47,7 +47,7 @@ const MsuPackList = (props: MsuPackListProps) => {
               label={isInstalled(pack.name) ? 'Uninstall' : 'Delete'}
               onClick={(e) => handleDeleteClick(e, pack.name)}
             >
-              ✕
+              <Icon name="x" />
             </IconButton>
           }
         />

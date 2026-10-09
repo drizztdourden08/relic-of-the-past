@@ -1,33 +1,19 @@
 /* @layer renderer-components @kind style */
 
+.normal-save-card--busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 .normal-save-card__thumb {
   width: 64px;
   height: 44px;
 }
 
 .normal-save-card__name {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: var(--c-text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   cursor: default;
 }
 
 .normal-save-card__name-input {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: var(--c-text);
-  background: var(--c-hover);
-  border: 1px solid var(--c-primary);
-  border-radius: var(--radius-sm);
-  padding: var(--space-xs) var(--space-xs);
-  outline: none;
   width: 100%;
-}
-
-.normal-save-card__time {
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
 }

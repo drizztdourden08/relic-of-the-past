@@ -16,17 +16,17 @@ const ACTIVITY_RULES: readonly [RegExp, ActivityKind, string][] = [
 ];
 
 const ACTIVITY_KINDS: LogKindDef[] = [
-  { id: 'session', label: 'Session' },
-  { id: 'plan', label: 'Plan' },
-  { id: 'override', label: 'Overrides' },
-  { id: 'deliver', label: 'Deliveries' },
-  { id: 'check', label: 'Checks' },
-  { id: 'receipt', label: 'Receipts' },
-  { id: 'online', label: 'Connection' },
-  { id: 'ap', label: 'Archipelago' },
-  { id: 'info', label: 'Info' },
-  { id: 'warn', label: 'Warnings' },
-  { id: 'error', label: 'Errors' },
+  { id: 'session', label: 'Session', tone: 'primary', toneMessage: true },
+  { id: 'plan', label: 'Plan', tone: 'info', toneMessage: true },
+  { id: 'override', label: 'Overrides', tone: 'dim', toneMessage: true },
+  { id: 'deliver', label: 'Deliveries', tone: 'primary', toneMessage: true },
+  { id: 'check', label: 'Checks', tone: 'secondary' },
+  { id: 'receipt', label: 'Receipts', tone: 'dim', toneMessage: true },
+  { id: 'online', label: 'Connection', tone: 'info' },
+  { id: 'ap', label: 'Archipelago', tone: 'primary' },
+  { id: 'info', label: 'Info', tone: 'muted' },
+  { id: 'warn', label: 'Warnings', tone: 'warning', toneMessage: true },
+  { id: 'error', label: 'Errors', tone: 'danger', toneMessage: true },
 ];
 
 const SESSION_PREFIX = /^\[[^\]]+]\s*/;

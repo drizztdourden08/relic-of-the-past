@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { FAMILY_EMOJI } from './controls.constants';
 import type { AssignedDeviceCardProps } from './controls.type';
 import './AssignedControllerCard.css';
@@ -26,9 +26,9 @@ const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
     <Box className={`assigned-controller ${!isConnected ? 'assigned-controller--disconnected' : ''}`}>
       <Box className="assigned-controller__header">
         <Text className="assigned-controller__label">Assigned Controller</Text>
-        <Button variant="bare" className="assigned-controller__unassign" onClick={onUnassign} title="Unassign controller">
-          ✕
-        </Button>
+        <IconButton variant="ghost" tone="danger" size="xs" onClick={onUnassign} label="Unassign controller">
+          <Icon name="x" />
+        </IconButton>
       </Box>
       <Box className="assigned-controller__body">
         <Box className={`assigned-controller__status-dot ${statusClass}`} />

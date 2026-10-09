@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback } from 'react';
 import type { MouseEvent } from 'react';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable } from '@drizztdourden08/tessera/primitives';
 import { HudLife } from '@domains/hud';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetHealth, cheatSetMaxHealth } from '@app/lib/game';
@@ -49,9 +49,8 @@ const LifeEditor = ({ scale, spritesBase }: HudPieceProps) => {
       />
       <Box className="cheats-player__heart-grid" style={gridStyle}>
         {Array.from({ length: HEART_CELLS }, (_, cell) => (
-          <Button
+          <Pressable
             key={cell}
-            variant="bare"
             className={`cheats-player__heart-cell${cell >= owned ? ' cheats-player__heart-cell--ghost' : ''}`}
             aria-label={heartCellTitle(cell, healthCapacity)}
             onClick={(e) => handleCell(cell, 0, e)}

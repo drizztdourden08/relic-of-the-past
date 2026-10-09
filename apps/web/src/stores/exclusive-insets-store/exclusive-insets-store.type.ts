@@ -1,9 +1,14 @@
 /* @layer renderer-stores @kind types */
-import type { ExclusiveInsets } from '@drizztdourden08/tessera/composites';
+interface ExclusiveInsets {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
 
 interface ExclusiveInsetsState {
   insets: ExclusiveInsets;
   setInsets: (insets: ExclusiveInsets) => void;
 }
 
-export type { ExclusiveInsetsState };
+export type { ExclusiveInsets, ExclusiveInsetsState };

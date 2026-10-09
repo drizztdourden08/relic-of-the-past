@@ -2,9 +2,7 @@
 import { Box, Text, Image, Icon, Spinner } from '@drizztdourden08/tessera/primitives';
 import './SaveSlot.css';
 import {
-  LOAD_GLYPH, SAVE_GLYPH, ARM_TIMEOUT_MS,
-  NO_SCREENSHOT_FRAME_PATHS, NO_SCREENSHOT_FRAME_CIRCLES,
-  NO_SCREENSHOT_CANCEL_PATHS, NO_SCREENSHOT_CANCEL_CIRCLES,
+  LOAD_GLYPH, SAVE_GLYPH, ARM_TIMEOUT_MS, NO_SCREENSHOT_CANCEL, NO_SCREENSHOT_FRAME,
 } from './SaveSlot.constants';
 import { useArmedAction } from './behavior/useArmedAction';
 import { SlotActionButton } from './sub-components/SlotActionButton';
@@ -46,8 +44,7 @@ const SaveSlot = (props: SaveSlotProps) => {
             <Box className="save-slot__empty-badge">
               <Icon
                 className="save-slot__badge-frame"
-                paths={NO_SCREENSHOT_FRAME_PATHS}
-                circles={NO_SCREENSHOT_FRAME_CIRCLES}
+                path={NO_SCREENSHOT_FRAME}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={1.1}
@@ -56,8 +53,7 @@ const SaveSlot = (props: SaveSlotProps) => {
               />
               <Icon
                 className="save-slot__badge-cancel"
-                paths={NO_SCREENSHOT_CANCEL_PATHS}
-                circles={NO_SCREENSHOT_CANCEL_CIRCLES}
+                path={NO_SCREENSHOT_CANCEL}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={1.3}

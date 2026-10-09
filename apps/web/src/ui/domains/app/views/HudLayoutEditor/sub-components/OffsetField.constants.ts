@@ -1,4 +1,4 @@
 /* @layer renderer-components @kind constants */
-const AXES = { x: { label: 'x' }, y: { label: 'y' } } as const;
+const OFFSET_PATTERN = 'x {x:number "x"}  y {y:number "y"}';
 
-export { AXES };
+export { OFFSET_PATTERN };

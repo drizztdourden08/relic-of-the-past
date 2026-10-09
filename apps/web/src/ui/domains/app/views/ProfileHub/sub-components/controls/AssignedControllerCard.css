@@ -29,21 +29,6 @@
   color: var(--c-text-dim);
 }
 
-.assigned-controller__unassign {
-  background: none;
-  border: none;
-  color: var(--c-text-muted);
-  cursor: pointer;
-  font-size: var(--text-sm);
-  padding: var(--space-xs) var(--space-xs);
-  border-radius: var(--radius-sm);
-  transition: color 0.12s;
-}
-
-.assigned-controller__unassign:hover {
-  color: var(--c-danger);
-}
-
 .assigned-controller__body {
   display: flex;
   align-items: center;

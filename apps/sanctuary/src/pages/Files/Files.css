@@ -19,10 +19,6 @@
   text-transform: uppercase;
 }
 
-.versions .row__key {
-  flex-basis: auto;
-}
-
 .versions .dropzone {
   padding: var(--space-sm);
 }
@@ -38,7 +34,7 @@
   overflow-wrap: anywhere;
 }
 
-.version-dialog__row .row__value {
+.version-dialog__row .stat-row__value {
   overflow-wrap: anywhere;
 }
 

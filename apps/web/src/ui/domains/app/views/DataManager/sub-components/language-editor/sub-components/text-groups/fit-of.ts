@@ -5,8 +5,8 @@ import type { SlotFit } from './text-groups.type';
 
 const variantFor = (used: number, max: number): ProgressTone => {
   if (used > max) return 'danger';
-  if (used >= max) return 'gold';
-  return 'green';
+  if (used >= max) return 'primary';
+  return 'secondary';
 };
 
 const fitOf = (limit: TextLimit, value: string): SlotFit | null => {

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
-import type { SettingsPageAnchor } from '../../../../compounds/SettingsPage';
+import type { SettingsPageAnchor } from '@drizztdourden08/tessera/composites';
 
 interface NetworkTabProps {
   config: ProfileRandomizerConfig | null;

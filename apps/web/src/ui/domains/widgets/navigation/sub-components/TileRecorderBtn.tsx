@@ -1,8 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useState, useEffect, useRef } from 'react';
-import { Button } from '@drizztdourden08/tessera/primitives';
+import { Button, Icon } from '@drizztdourden08/tessera/primitives';
 import { wasmGetViewportInfo } from '../../../../../lib/game';
-import { S } from '../styles';
 
 const TileRecorderBtn = ({ attrGrid, overworldScreenIndex }: { attrGrid: number[][] | null; overworldScreenIndex: number }) => {
   const [recording, setRecording] = useState(false);
@@ -17,7 +16,7 @@ const TileRecorderBtn = ({ attrGrid, overworldScreenIndex }: { attrGrid: number[
     }
     const poll = () => {
       const vp = wasmGetViewportInfo();
-      if (vp && vp.locationModule === 9) {
+      if (vp?.locationModule === 9) {
         const screenWorldX = (overworldScreenIndex & 7) * 512;
         const screenWorldY = (((overworldScreenIndex >> 3) & 7)) * 512;
         const tileCol = Math.floor((vp.linkX - screenWorldX) / 8);
@@ -43,12 +42,12 @@ const TileRecorderBtn = ({ attrGrid, overworldScreenIndex }: { attrGrid: number[
 
   return (
     <>
-      <Button variant="bare" style={{ ...S.btn, ...(attrGrid ? {} : S.btnDisabled) }} onClick={toggle} disabled={!attrGrid}>
-        {recording ? '⏹ Rec' : '⏺ Rec'}
+      <Button variant="secondary" size="xs" active={recording} icon={<Icon name={recording ? 'square' : 'circle-dot'} />} onClick={toggle} disabled={!attrGrid}>
+        Rec
       </Button>
       {tiles.length > 0 && !recording && (
-        <Button variant="bare" style={S.btn} onClick={() => navigator.clipboard.writeText(tiles.map(t => `[${t.row},${t.col}] 0x${t.attr.toString(16).padStart(2, '0')}`).join('\n'))}>
-          📋 Tiles
+        <Button variant="secondary" size="xs" icon={<Icon name="copy" />} onClick={() => navigator.clipboard.writeText(tiles.map(t => `[${t.row},${t.col}] 0x${t.attr.toString(16).padStart(2, '0')}`).join('\n'))}>
+          Tiles
         </Button>
       )}
     </>

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box, Button, Field, Flex, IconButton, NumberInput } from '@drizztdourden08/tessera/primitives';
+import { Box, Field, Flex, IconButton, NumberInput, Pressable } from '@drizztdourden08/tessera/primitives';
 import { ColorField } from './ColorField';
 import { swatchOf } from '../behavior/appearance-summary';
 import './HudLayoutEditor.appearance.css';
@@ -73,9 +73,8 @@ const GradientRamp = (props: GradientRampProps) => {
         onDoubleClick={(event) => addStop(atFromEvent(event.clientX))}
       >
         {stops.map((s, i) => (
-          <Button
+          <Pressable
             key={i}
-            variant="bare"
             className="hud-ramp__stop"
             aria-label={`Stop ${i + 1} at ${s.at}`}
             aria-pressed={i === index}

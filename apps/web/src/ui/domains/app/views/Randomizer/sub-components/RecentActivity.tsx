@@ -1,8 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
 import { Button, Text } from '@drizztdourden08/tessera/primitives';
-import { DashboardPanel, LogLines } from '@drizztdourden08/tessera/composites';
+import { LogPanel } from '@drizztdourden08/tessera/composites';
 import { recentActivityOf } from '../behavior/recent-activity';
+import { RECENT_HEIGHT } from '../behavior/recent-activity.constants';
+import { ACTIVITY_KINDS } from '../behavior/randomizer-log-style.constants';
+import { DashboardCard } from './DashboardCard';
 import type { RecentActivityProps } from './RecentActivity.type';
 
 const RecentActivity = (props: RecentActivityProps) => {
@@ -11,11 +14,11 @@ const RecentActivity = (props: RecentActivityProps) => {
   const openLog = <Button variant="secondary" size="sm" onClick={onOpenLog}>Open log</Button>;
 
   return (
-    <DashboardPanel {...placement} title="Recent activity" action={openLog}>
+    <DashboardCard placement={placement} title="Recent activity" actions={openLog}>
       {rows.length === 0
         ? <Text className="randomizer-page__hint">Nothing yet. Checks, items and the session show here as they happen.</Text>
-        : <LogLines rows={rows} className="randomizer-log" />}
-    </DashboardPanel>
+        : <LogPanel rows={rows} kinds={ACTIVITY_KINDS} toolbar={false} height={RECENT_HEIGHT} className="randomizer-log" />}
+    </DashboardCard>
   );
 };
 

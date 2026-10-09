@@ -47,29 +47,3 @@
   padding: var(--space-xs) var(--space-xs);
   text-align: center;
 }
-
-.height-level-editor__remove,
-.height-level-editor__add-btn {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: var(--c-hover);
-  color: var(--c-text-muted);
-  font-size: var(--text-sm);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.height-level-editor__remove:hover {
-  background: var(--c-danger-soft);
-  color: var(--c-danger);
-}
-
-.height-level-editor__add-btn:hover {
-  background: var(--c-info-soft);
-  color: var(--c-primary);
-}

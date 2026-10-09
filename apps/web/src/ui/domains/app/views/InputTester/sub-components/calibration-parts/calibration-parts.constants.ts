@@ -9,11 +9,6 @@ const CALIBRATION_STYLE: Record<string, CSSProperties> = {
   actions12: { display: 'flex', gap: 8, marginTop: 12 },
   actions16: { display: 'flex', gap: 8, marginTop: 16 },
   hint: { fontSize: 11, color: 'var(--c-text-muted)', alignSelf: 'center' },
-  dzLabel: { fontSize: 12 },
-  dzRow: { display: 'flex', justifyContent: 'space-between' },
-  dzPct: { fontFamily: 'monospace', color: 'var(--c-text-muted)' },
-  full: { width: '100%' },
-  dzNote: { fontSize: 10, color: 'var(--c-text-muted)' },
 };
 
 const PROGRESS_FILL: CSSProperties = {

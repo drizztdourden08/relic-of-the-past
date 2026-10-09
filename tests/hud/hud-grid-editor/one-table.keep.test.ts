@@ -79,9 +79,9 @@ describe('one table drives the toolbar and the legend', () => {
 
   it('draws the keys as CAPS and the pointer as a MOUSE, not as prose', () => {
     mountGrid();
-    expect(document.querySelectorAll('.hud-grid__key .keycap').length).toBeGreaterThan(0);
-    expect(document.querySelectorAll('.hud-grid__key .mouse-glyph').length).toBe(4);
+    expect(document.querySelectorAll('.hud-grid__key .shortcut__cap').length).toBeGreaterThan(0);
+    expect(document.querySelectorAll('.hud-grid__key .shortcut__mouse').length).toBe(4);
     expect(legendCaps().join(' ')).toContain('Ctrl');
-    expect(document.querySelector('.mouse-glyph--drag')).not.toBeNull();
+    expect(document.querySelector('.hud-grid__key .hud-grid__drag')).not.toBeNull();
   });
 });

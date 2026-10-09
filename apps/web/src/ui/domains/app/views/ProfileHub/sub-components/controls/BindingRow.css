@@ -107,29 +107,14 @@
 }
 
 .binding-row__clear {
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
-  background: transparent;
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  color: var(--c-text-muted);
-  font-size: var(--text-sm);
-  cursor: pointer;
   opacity: 0;
-  transition: opacity 0.12s, color 0.12s, border-color 0.12s;
+  transition: opacity 0.12s;
 }
 
-.binding-row:hover .binding-row__clear {
+.binding-row:hover .binding-row__clear,
+.binding-row__clear:focus-visible {
   opacity: 1;
-}
-
-.binding-row__clear:hover {
-  color: var(--c-danger);
-  border-color: var(--c-danger);
 }
 
 .binding-row--reserved {

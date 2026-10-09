@@ -5,6 +5,7 @@ import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import { useNavigationOverlayStore } from '@app/stores/navigation-overlay-store';
 import type { NavMode } from '@app/stores/navigation-overlay-store';
 import { MODE_OPTIONS } from './FunctionsPanel.constants';
+import { MODE_HINT } from './NavigationWidgetSettings.constants';
 
 const NavigationWidgetSettings = () => {
   const mode = useNavigationOverlayStore((s) => s.mode);
@@ -17,7 +18,7 @@ const NavigationWidgetSettings = () => {
   };
 
   return (
-    <ControlMenuRow label="Mode" hint="Auto floods on every screen change">
+    <ControlMenuRow label="Mode" hint={MODE_HINT}>
       <SegmentedControl<NavMode> value={mode} options={MODE_OPTIONS} onChange={handleChange} />
     </ControlMenuRow>
   );

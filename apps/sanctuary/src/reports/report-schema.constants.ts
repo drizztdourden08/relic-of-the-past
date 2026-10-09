@@ -66,6 +66,7 @@ const REPORT_SCHEMA_CONFIG: SchemaConfig = {
   hidden: ['id', 'issue.url', 'issue.closedAt'],
   kinds: {
     subject: 'string',
+    kind: 'enum',
     'reporter.displayName': 'string',
     'reporter.githubHandle': 'string',
     appVersion: 'string',

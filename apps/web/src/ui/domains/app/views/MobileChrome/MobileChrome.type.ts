@@ -1,16 +1,7 @@
 /* @layer renderer-components @kind types */
+import type { MenuGroup } from '@drizztdourden08/tessera/composites';
 import type { PageId } from '@app/App/types';
 import type { TitleBarProps } from '../TitleBar/TitleBar.type';
-
-interface DrawerMenuItem {
-  key: string;
-  icon?: string;
-  label: string;
-  onClick?: () => void;
-  checked?: boolean;
-  disabled?: boolean;
-  children?: DrawerMenuItem[];
-}
 
 interface MobileChromeProps extends TitleBarProps {
   activePage: PageId;
@@ -25,11 +16,11 @@ interface BackDeps {
 }
 
 interface OptionsDrawerProps {
-  items: DrawerMenuItem[];
+  groups: readonly MenuGroup[];
   fps: number;
   showFps: boolean;
   isMuted: boolean;
   onToggleMute?: () => void;
 }
 
-export type { BackDeps, DrawerMenuItem, MobileChromeProps, OptionsDrawerProps };
+export type { BackDeps, MobileChromeProps, OptionsDrawerProps };

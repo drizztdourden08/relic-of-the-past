@@ -1,13 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { CSSProperties } from 'react';
+type PromoteBox = Record<'--promote-left' | '--promote-top' | '--promote-width' | '--promote-height', string>;
 
-interface PromoteBox {
-  '--promote-left': string;
-  '--promote-top': string;
-  '--promote-width': string;
-  '--promote-height': string;
-}
-
-interface PromoteOverlay { className: string; style: CSSProperties | undefined }
+interface PromoteOverlay { className: string }
 
 export type { PromoteBox, PromoteOverlay };

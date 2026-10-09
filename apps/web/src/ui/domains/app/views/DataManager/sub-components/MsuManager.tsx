@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
 import { ImportForm } from './ImportForm';
-import { Text } from '@drizztdourden08/tessera/primitives';
+import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { canTrashMsuPack, deleteMsuPack } from '@app/lib/storage/msu-store';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
@@ -84,23 +84,25 @@ const MsuManager = (props: MsuManagerProps) => {
     <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdated={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
 
-  const detail = selected === null
-    ? <Text>Select a music pack to edit its slots, layers and sounds</Text>
-    : msu.loadingFiles
-      ? <Text>Loading...</Text>
-      : (
-        <MsuStudio
-          msu={msu}
-          pack={selected}
-          readOnly={installed !== null}
-          origin={origin}
-          tab={tab}
-          onTabChange={setTab}
-          onDeleteConfirm={onDeleteConfirm}
-        />
-      );
+  const studio = msu.loadingFiles || selected === null ? <Text>Loading...</Text> : (
+    <MsuStudio
+      msu={msu}
+      pack={selected}
+      readOnly={installed !== null}
+      origin={origin}
+      tab={tab}
+      onTabChange={setTab}
+      onDeleteConfirm={onDeleteConfirm}
+    />
+  );
 
-  return <ListDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
+  return (
+    <ListDetailLayout
+      list={list}
+      detail={selected === null ? null : studio}
+      emptyDetail={<EmptyState message="Select a music pack to edit its slots, layers and sounds" />}
+    />
+  );
 };
 
 export { MsuManager };

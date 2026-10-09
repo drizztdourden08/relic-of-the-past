@@ -14,6 +14,10 @@
   flex-shrink: 0;
   width: 2rem;
   height: 2rem;
+}
+
+.hud-ref-field__thumb .image__img {
+  object-fit: contain;
   image-rendering: pixelated;
 }
 

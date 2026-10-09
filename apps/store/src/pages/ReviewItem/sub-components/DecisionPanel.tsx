@@ -2,12 +2,11 @@
 import { useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import downloadIcon from '@iconify-icons/lucide/download';
-import { Field, Stack, Text, Textarea } from '@drizztdourden08/tessera/primitives';
+import { Field, Link, Stack, Text, Textarea } from '@drizztdourden08/tessera/primitives';
 import type { ReviewEntry } from '@shared/store/api-types';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
-import { ExternalLink } from '@site-kit/components/ExternalLink/ExternalLink';
-import { Link } from '@site-kit/router/Link';
+import { AppLink } from '@site-kit/router/AppLink';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { authorPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
@@ -22,7 +21,7 @@ const fieldsOf = (entry: ReviewEntry): DetailField[] => {
   const version = versionOfEntry(entry);
   const live = liveVersionOf(item);
   const fields: DetailField[] = [
-    { label: 'author', value: <Link to={authorPath(item.author.userId)}>{item.author.displayName}</Link> },
+    { label: 'author', value: <AppLink to={authorPath(item.author.userId)}>{item.author.displayName}</AppLink> },
     { label: 'live now', value: live ? `${live.semver} · ${formatCount(item.stats.installs30d)} installs this month` : 'nothing yet' },
   ];
   return version ? [...fields, { label: 'size', value: formatBytes(version.bytes) }] : fields;
@@ -38,9 +37,9 @@ const DecisionPanel = (props: DecisionPanelProps) => {
     <>
       <ReviewButtons entry={entry} version={version} note={note} actions={actions} />
       {entry.downloadUrl && (
-        <ExternalLink href={entry.downloadUrl} className="btn btn--secondary btn--sm">
+        <Link href={entry.downloadUrl} external className="btn btn--secondary btn--toned btn--sm">
           <IconifyIcon icon={downloadIcon} aria-hidden="true" /> Download
-        </ExternalLink>
+        </Link>
       )}
     </>
   );

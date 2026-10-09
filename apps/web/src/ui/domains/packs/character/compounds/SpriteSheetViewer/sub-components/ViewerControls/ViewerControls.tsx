@@ -1,7 +1,10 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, RangeInput, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, SegmentedControl, Slider } from '@drizztdourden08/tessera/primitives';
 import { VIEW_OPTIONS, MIN_SCALE, MAX_SCALE } from '../../SpriteSheetViewer.constants';
 import type { ViewerControlsProps } from '../../SpriteSheetViewer.type';
+
+const fpsText = (fps: number): string => `${fps} fps`;
+const zoomText = (zoom: number): string => `Zoom ${zoom}x`;
 
 const ViewerControls = (props: ViewerControlsProps) => {
   const { view, clock, scale, onView, onScale } = props;
@@ -13,19 +16,27 @@ const ViewerControls = (props: ViewerControlsProps) => {
         {clock.playing ? 'Pause' : 'Play'}
       </Button>
       <Button variant="ghost" size="sm" onClick={clock.stepOnce}>Step</Button>
-      <Text className="sprite-viewer__control-label">{clock.fps} fps</Text>
-      <RangeInput
+      <Slider
+        className="sprite-viewer__slider"
+        size="sm"
+        aria-label="Frames per second"
         min={clock.MIN_FPS}
         max={clock.MAX_FPS}
         value={clock.fps}
-        onChange={(e) => clock.setFps(Number(e.target.value))}
+        showValue
+        formatValue={fpsText}
+        onChange={clock.setFps}
       />
-      <Text className="sprite-viewer__control-label">Zoom {scale}x</Text>
-      <RangeInput
+      <Slider
+        className="sprite-viewer__slider"
+        size="sm"
+        aria-label="Zoom"
         min={MIN_SCALE}
         max={MAX_SCALE}
         value={scale}
-        onChange={(e) => onScale(Number(e.target.value))}
+        showValue
+        formatValue={zoomText}
+        onChange={onScale}
       />
     </Box>
   );

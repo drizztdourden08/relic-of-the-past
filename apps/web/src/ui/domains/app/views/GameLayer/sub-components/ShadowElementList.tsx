@@ -1,18 +1,14 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, EmptyState, Icon, Text } from '@drizztdourden08/tessera/primitives';
+import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import { wasmGetViewportInfo } from '../../../../../../lib/game';
 import { overworldScreenIdOf } from '../behavior/overworld-screen-id';
+import { SHAPE_GLYPHS } from './ShadowElementList.constants';
 import './ShadowElementList.css';
 
 const ShadowElementList = () => {
-  const {
-    open,
-    selectedElementId,
-    setSelectedElement,
-    getScreenData,
-    heightLevels,
-  } = useShadowEditorStore();
+  const { open, selectedElementId, setSelectedElement, getScreenData, heightLevels } = useShadowEditorStore();
 
   if (!open) return null;
 
@@ -25,83 +21,47 @@ const ShadowElementList = () => {
     return match ? match.label : `H${Math.round(h * 100)}%`;
   };
 
-  const getShapeIcon = (type: string, sides?: number): string => {
-    if (type === 'freehand') return '✏';
-    switch (sides) {
-      case 3: return '△';
-      case 4: return '◻';
-      case 5: return '⬠';
-      case 6: return '⬡';
-      default: return sides && sides >= 8 ? '◯' : '⬡';
-    }
+  const getShapeIcon = (type: string, sides = 4) => {
+    if (type === 'freehand') return <Icon name="pencil" />;
+    if (sides === 4) return <Icon name="square" />;
+    if (sides >= 8) return <Icon name="circle" />;
+    return <Text as="span">{SHAPE_GLYPHS[sides] ?? SHAPE_GLYPHS[6]}</Text>;
   };
 
   return (
     <Box className="shadow-element-list">
       {screenData.heightmap.length > 0 && (
-        <Box className="shadow-element-list__group">
-          <Box className="shadow-element-list__group-header">
-            <Text className="shadow-element-list__group-icon">⬡</Text>
-            <Text>Shapes</Text>
-            <Text className="shadow-element-list__count">{screenData.heightmap.length}</Text>
-          </Box>
-          <Box className="shadow-element-list__items">
-            {screenData.heightmap.map((el) => (
-              <Button
-                variant="bare"
-                key={el.id}
-                className={`shadow-element-list__item${el.id === selectedElementId ? ' shadow-element-list__item--active' : ''}`}
-                onClick={() => setSelectedElement(el.id, 'heightmap')}
-              >
-                <Text className="shadow-element-list__item-icon">
-                  {getShapeIcon(el.shape.type, el.shape.sides)}
-                </Text>
-                <Text className="shadow-element-list__item-name">
-                  {el.shape.type === 'freehand' ? 'Freehand' : `${el.shape.sides ?? 4}-gon`}
-                </Text>
-                <Text className="shadow-element-list__item-tag">
-                  {getHeightLabel(el.height)}
-                </Text>
-              </Button>
-            ))}
-          </Box>
-        </Box>
+        <ListItemList heading="Shapes" count={screenData.heightmap.length}>
+          {screenData.heightmap.map((el) => (
+            <ListItemRow
+              key={el.id}
+              icon={getShapeIcon(el.shape.type, el.shape.sides)}
+              name={el.shape.type === 'freehand' ? 'Freehand' : `${el.shape.sides ?? 4}-gon`}
+              columns={[{ primary: getHeightLabel(el.height), align: 'end' }]}
+              selected={el.id === selectedElementId}
+              onClick={() => setSelectedElement(el.id, 'heightmap')}
+            />
+          ))}
+        </ListItemList>
       )}
 
       {screenData.lights.length > 0 && (
-        <Box className="shadow-element-list__group">
-          <Box className="shadow-element-list__group-header">
-            <Text className="shadow-element-list__group-icon">💡</Text>
-            <Text>Lights</Text>
-            <Text className="shadow-element-list__count">{screenData.lights.length}</Text>
-          </Box>
-          <Box className="shadow-element-list__items">
-            {screenData.lights.map((light) => (
-              <Button
-                variant="bare"
-                key={light.id}
-                className={`shadow-element-list__item${light.id === selectedElementId ? ' shadow-element-list__item--active' : ''}`}
-                onClick={() => setSelectedElement(light.id, 'light')}
-              >
-                <Text className="shadow-element-list__item-icon">
-                  {light.type === 'point' ? '💡' : '🔦'}
-                </Text>
-                <Text className="shadow-element-list__item-name">
-                  {light.type === 'point' ? 'Point' : 'Area'} Light
-                </Text>
-                <Text className="shadow-element-list__item-tag">
-                  r{light.radius}
-                </Text>
-              </Button>
-            ))}
-          </Box>
-        </Box>
+        <ListItemList heading="Lights" count={screenData.lights.length}>
+          {screenData.lights.map((light) => (
+            <ListItemRow
+              key={light.id}
+              icon={<Icon name={light.type === 'point' ? 'sun' : 'square'} />}
+              name={`${light.type === 'point' ? 'Point' : 'Area'} Light`}
+              columns={[{ primary: `r${light.radius}`, align: 'end' }]}
+              selected={light.id === selectedElementId}
+              onClick={() => setSelectedElement(light.id, 'light')}
+            />
+          ))}
+        </ListItemList>
       )}
 
       {screenData.heightmap.length === 0 && screenData.lights.length === 0 && (
-        <Box className="shadow-element-list__empty">
-          No elements on this screen
-        </Box>
+        <EmptyState message="No elements on this screen" />
       )}
     </Box>
   );

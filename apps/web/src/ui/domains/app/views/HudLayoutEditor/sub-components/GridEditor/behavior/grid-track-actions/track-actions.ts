@@ -43,7 +43,7 @@ const trackActions = (ctx: GridActionContext): GridAction[] => {
     {
       key: 'remove', kind: 'button', icon: GRID_ICONS.remove, group: 'remove',
       label: `Remove ${name}. Its children move to the nearest track`,
-      shortcut: { keys: ['Del'] }, run: removeRun(ctx, axis, indices),
+      shortcut: { keys: ['delete'] }, run: removeRun(ctx, axis, indices),
     },
   ];
 };

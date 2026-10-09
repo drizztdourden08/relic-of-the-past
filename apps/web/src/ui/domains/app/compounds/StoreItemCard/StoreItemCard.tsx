@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Status, Card, Flex, Stack, Text, Thumbnail } from '@drizztdourden08/tessera/primitives';
+import { Status, Card, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { Stars } from '../Stars';
 import { KIND_ICONS, KIND_LABELS } from './StoreItemCard.constants';
 import type { StoreItemCardProps } from './StoreItemCard.type';
@@ -28,11 +28,12 @@ const StoreItemCard = (props: StoreItemCardProps) => {
       onClick={handleClick}
       onKeyDown={handleKey}
     >
-      <Thumbnail
+      <Image
+        frame
         className="store-item-card__image"
-        src={imageUrl}
+        src={imageUrl ?? undefined}
         alt=""
-        placeholder={<Text as="span" className="store-item-card__icon"><IconifyIcon icon={KIND_ICONS[item.kind]} /></Text>}
+        fallback={<Text as="span" className="store-item-card__icon"><IconifyIcon icon={KIND_ICONS[item.kind]} /></Text>}
       />
       <Stack gap="xs" className="store-item-card__body">
         <Text as="span" className="store-item-card__kind">{KIND_LABELS[item.kind]}</Text>

@@ -240,26 +240,7 @@
 }
 
 .hid-cal__input-clear {
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  color: var(--c-text-muted);
-  font-size: var(--text-base);
-  line-height: 1;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  padding: 0;
   margin-left: var(--space-xs);
-}
-
-.hid-cal__input-clear:hover {
-  background: var(--c-danger-dim);
-  color: var(--c-danger);
 }
 
 .hid-cal__input-item--pending:hover,

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { BindingListHeader } from './BindingListHeader';
 import { CoreBindingsGroup } from './CoreBindingsGroup';
 import { SlotRow } from './SlotRow';
@@ -45,8 +45,8 @@ const ModernControlsTab = ({ ctrl }: CtrlProps) => {
           </Text>
         )}
         <Box className="modern-tab__add">
-          <Button variant="bare" className="modern-tab__add-button" onClick={ctrl.addModernSlot}>
-            + Add slot
+          <Button variant="ghost" size="sm" icon={<Icon name="plus" />} onClick={ctrl.addModernSlot}>
+            Add slot
           </Button>
         </Box>
 

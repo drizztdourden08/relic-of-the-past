@@ -1,11 +1,5 @@
 /* @layer store-site @kind style */
 
-.hero.item-hero {
-  --hero-h: var(--item-hero-h);
-  --hero-intro-w: minmax(0, 2fr);
-  --hero-side-w: 0px;
-}
-
 .item-hero .item-hero__picture {
   width: 100%;
   height: 100%;
@@ -17,14 +11,9 @@
   margin: 0;
   max-width: 60ch;
   color: var(--c-text);
-  text-shadow: 0 var(--space-2xs) var(--space-md) color-mix(in srgb, var(--c-bg) 80%, transparent);
 }
 
 .item-hero .item-hero__byline {
   color: var(--c-text-dim);
   font-size: var(--text-sm);
-}
-
-.item-hero .item-hero__author {
-  color: var(--c-primary);
 }

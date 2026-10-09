@@ -20,7 +20,7 @@ const open = async (): Promise<Rig> => {
   });
   const window = await app.firstWindow();
   await window.waitForLoadState('domcontentloaded');
-  await window.waitForSelector('.titlebar', { timeout: 60_000 });
+  await window.waitForSelector('.window-title-bar', { timeout: 60_000 });
   const cdp = await app.context().newCDPSession(window);
   await cdp.send('Emulation.setDeviceMetricsOverride', TALL_VIEWPORT);
   await window.click('[aria-label="Menu"]');

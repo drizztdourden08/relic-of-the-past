@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useRef, useState } from 'react';
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { useCapacityLadder } from '../../../behavior/useCapacityLadder';
 import { useInPlay } from '../../../behavior/useInPlay';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
@@ -54,9 +54,8 @@ const MagicLevelBar = ({ scale }: MagicLevelBarProps) => {
       onMouseLeave={() => { setHovered(null); hint.onMouseLeave(); }}
     >
       {ladder.map((step, index) => (
-        <Button
+        <Pressable
           key={step.rung}
-          variant="bare"
           className="cheats-player__level"
           data-filled={index <= held ? '' : undefined}
           data-held={index === held ? '' : undefined}
@@ -70,7 +69,7 @@ const MagicLevelBar = ({ scale }: MagicLevelBarProps) => {
         >
           <Text className="cheats-player__level-label">{labelOfCap(step.cap)}</Text>
           <Box as="span" className="cheats-player__level-step" style={{ width: tile }} />
-        </Button>
+        </Pressable>
       ))}
     </Box>
   );

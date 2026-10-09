@@ -1,11 +1,9 @@
 /* @layer store-site @kind component */
-import { Box, Button, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, EmptyState, Flex, Pressable, Stack, Tag, Text } from '@drizztdourden08/tessera/primitives';
 import { KIND_CONTAINER } from '@shared/store/containers';
-import { Chip } from '@site-kit/components/Chip/Chip';
-import { Link } from '@site-kit/router/Link';
+import { AppLink } from '@site-kit/router/AppLink';
 import { formatAverage } from '../../lib/format-count/format-average';
 import { formatCount } from '../../lib/format-count/format-count';
-import { EmptyState } from '../EmptyState/EmptyState';
 import { InstallButton } from '../InstallButton/InstallButton';
 import { itemColorStyle } from '../../lib/item-color-style';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
@@ -18,13 +16,13 @@ import './FeaturedHero.css';
 const FeaturedHero = (props: FeaturedHeroProps) => {
   const { items, itemPath } = props;
   const { index, select, hold, release } = useRotation(items.length);
-  const item = items[index];
-  if (!item) return <EmptyState message="Nothing featured yet." shape="banner" label="Featured" />;
+  const item = items.at(index);
+  if (!item) return <Box as="section" aria-label="Featured"><EmptyState message="Nothing featured yet." size="hero" /></Box>;
   return (
     <Box as="section" className="featured-hero" style={itemColorStyle(item.color)} aria-label="Featured" onMouseEnter={hold} onMouseLeave={release} onFocus={hold} onBlur={release}>
       <ItemPicture picture={item.banner ?? item.card} kind={item.kind} role="banner" color={item.color} className="featured-hero__picture" />
       <Stack align="start" className="featured-hero__copy">
-        <Chip tone="gold">Featured</Chip>
+        <Tag color="primary">Featured</Tag>
         <Text as="h2" className="featured-hero__name">{item.name}</Text>
         <Flex align="center" gap="sm" wrap>
           <KindChip kind={item.kind} />
@@ -34,13 +32,12 @@ const FeaturedHero = (props: FeaturedHeroProps) => {
         <Text as="p" className="featured-hero__summary">{item.summary}, by {item.author.displayName}.</Text>
         <Flex align="center" gap="sm" className="featured-hero__actions">
           <InstallButton itemId={item.id} container={item.semver ? KIND_CONTAINER[item.kind] : null} />
-          <Link to={itemPath(item)} className="btn btn--tertiary btn--sm">Open</Link>
+          <AppLink to={itemPath(item)} className="btn btn--tertiary btn--toned btn--sm">Open</AppLink>
           {items.length > 1 && (
             <Flex gap="xs" className="featured-hero__dots">
               {items.map((entry, i) => (
-                <Button
+                <Pressable
                   key={entry.id}
-                  variant="bare"
                   className="featured-hero__dot"
                   data-on={i === index || undefined}
                   aria-label={`Show ${entry.name}`}

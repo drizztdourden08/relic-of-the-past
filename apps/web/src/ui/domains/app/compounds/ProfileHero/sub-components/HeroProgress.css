@@ -50,22 +50,6 @@
   white-space: nowrap;
 }
 
-.hero-progress__bar {
-  display: flex;
-  height: var(--profile-hero-bar-h);
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--c-text) 12%, transparent);
-  overflow: hidden;
-}
-
-.hero-progress__seg--taken {
-  background: var(--c-secondary);
-}
-
-.hero-progress__seg--available {
-  background: var(--c-warning);
-}
-
 .hero-progress__pct {
   font-size: var(--text-base);
   font-weight: var(--weight-bold);

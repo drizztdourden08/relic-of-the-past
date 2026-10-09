@@ -59,35 +59,9 @@
   gap: var(--space-sm);
 }
 
-.tracker-filters__search-icon {
-  position: absolute;
-  left: var(--space-sm);
-  color: var(--c-text-muted);
-  pointer-events: none;
-}
-
 .tracker-filters__input {
   flex: 1;
   min-width: 0;
-  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xl);
-  font-size: var(--text-sm);
-}
-
-.tracker-filters__toggle {
-  position: relative;
-  display: inline-flex;
-  flex-shrink: 0;
-}
-
-.tracker-filters__count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  pointer-events: none;
-  font-size: var(--text-xs);
-  padding: 0 var(--space-2xs);
-  min-width: 13px;
-  text-align: center;
 }
 
 .tracker-filters__controls {

@@ -16,7 +16,6 @@ interface TitleBarProps {
   onShowInputTester: () => void;
   onShowHudLayout: () => void;
   onShowCredits: () => void;
-  onShowDesignGallery: () => void;
   onShowSpriteDebug: () => void;
   onShowDataInspector: () => void;
   onShowConnectionDebug: () => void;
@@ -41,21 +40,4 @@ interface TitleBarProps {
   onCheckForUpdates?: () => void;
 }
 
-interface InstanceBadgeProps {
-  name: string;
-}
-
-interface RefreshRateTagProps {
-  onClick: () => void;
-}
-
-interface WindowControlsProps {
-  isMaximized: boolean;
-}
-
-export type {
-  InstanceBadgeProps,
-  RefreshRateTagProps,
-  TitleBarProps,
-  WindowControlsProps,
-};
+export type { TitleBarProps };

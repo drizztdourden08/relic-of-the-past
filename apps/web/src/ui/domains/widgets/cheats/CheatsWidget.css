@@ -44,37 +44,6 @@
 }
 
 
-.cheats-glyph--mouse {
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  width: 16px;
-  height: 16px;
-  color: var(--c-text-dim);
-  flex: 0 0 auto;
-}
-
-.cheats-glyph--mouse > * {
-  grid-area: 1 / 1;
-}
-
-.cheats-glyph--key {
-  display: inline-block;
-  min-width: 16px;
-  padding: var(--space-2xs) var(--space-xs);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  line-height: 1;
-  text-align: center;
-  color: var(--c-text-dim);
-  background: var(--c-surface);
-  border: var(--border-width-thin) solid var(--c-border-strong);
-  border-bottom-width: 2px;
-  border-radius: var(--radius-sm);
-  flex: 0 0 auto;
-}
-
-
 .cheats-legend {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -133,9 +102,8 @@
 
 
 .cheats-popover {
-  position: fixed;
+  --anchored-gap: var(--space-2xs);
   pointer-events: auto;
-  visibility: hidden;
   display: grid;
   gap: var(--space-2xs);
   min-width: 160px;
@@ -144,10 +112,6 @@
   border: var(--border-width-thin) solid var(--c-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-dropdown);
-}
-
-.cheats-popover[data-placed] {
-  visibility: visible;
 }
 
 .cheats-popover__title {

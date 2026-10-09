@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
-import { Toggle } from '@app/ui/design-system/primitives/Toggle';
+import { Toggle } from '@drizztdourden08/tessera/primitives';
 import { legacyMaster } from './legacy-master';
 import type { SettingsPatch } from './settings-controls.type';
 

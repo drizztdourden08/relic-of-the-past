@@ -102,7 +102,6 @@ const DataInspector = () => {
           className={`data-inspector__master-detail${folded ? ' data-inspector__master-detail--folded' : ''}${comparing ? ' data-inspector__master-detail--comparing' : ''}`}
           list={list}
           detail={detail}
-          detailEmpty={isCollection && !record}
         />
       </Box>
     </Box>

@@ -1,14 +1,15 @@
 /* @layer renderer-components @kind logic */
 import { HUD_PRESETS, instantiatePreset } from '@shared/hud/presets';
-import type { MenuEntry } from '@drizztdourden08/tessera/composites';
+import { menuIcon } from './menu-icon';
+import type { MenuNode } from '@drizztdourden08/tessera/composites';
 import type { MenuDeps } from './toolbar-menus.type';
 
-const subtreePresetItems = (deps: MenuDeps): MenuEntry[] =>
+const subtreePresetItems = (deps: MenuDeps): MenuNode[] =>
   HUD_PRESETS.map((preset) => ({
-    key: preset.id,
-    icon: preset.icon,
+    id: preset.id,
+    icon: menuIcon(preset.icon),
     label: preset.name,
-    onClick: () => {
+    onSelect: () => {
       const node = instantiatePreset(preset.id);
       if (node) deps.insert(node);
     },

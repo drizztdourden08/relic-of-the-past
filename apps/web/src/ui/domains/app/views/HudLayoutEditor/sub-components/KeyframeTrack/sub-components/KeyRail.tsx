@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef } from 'react';
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { atFromPointer } from '../../../behavior/keyframe-track';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { NUDGE, NUDGE_COARSE } from './KeyRail.constants';
@@ -56,9 +56,8 @@ const KeyRail = (props: KeyRailProps) => {
         <Box className="hud-kftrack__line" />
         {head !== null && <Box className="hud-kftrack__head" style={{ left: pct(head) }} />}
         {keyframes.map((keyframe, index) => (
-          <Button
+          <Pressable
             key={index}
-            variant="bare"
             className={`hud-kftrack__key${index === selected ? ' is-selected' : ''}`}
             style={{ left: pct(keyframe.at) }}
             aria-label={`Keyframe ${index + 1} at ${keyframe.at}`}

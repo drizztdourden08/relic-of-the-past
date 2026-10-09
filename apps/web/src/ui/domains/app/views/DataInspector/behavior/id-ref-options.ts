@@ -1,8 +1,7 @@
 /* @layer renderer-app @kind logic */
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
-import { IDENTITY_PATH } from '@drizztdourden08/tessera/composites';
 import type { IdRefOption } from '@drizztdourden08/tessera/composites';
-import { NARROWED_KIND, NO_OPTIONS } from '../DataInspector.constants';
+import { IDENTITY_PATH, NARROWED_KIND, NO_OPTIONS } from '../DataInspector.constants';
 import { areaIdOf } from './area-id-of';
 import { asEntityKind } from './as-entity-kind';
 import { optionsFor } from './options-for';

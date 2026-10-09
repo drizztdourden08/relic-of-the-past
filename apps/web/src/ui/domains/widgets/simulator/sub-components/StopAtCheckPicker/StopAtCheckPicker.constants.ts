@@ -1,6 +1,9 @@
 /* @layer renderer-widgets @kind constants */
 import type { CheckKind } from '@shared/game/data';
-import type { ItemFilterOption, StatusFilterOption } from './StopAtCheckPicker.type';
+import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
+import type { ListItemShape } from '@drizztdourden08/tessera/composites';
+import type { SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
+import type { ItemFilter, StatusFilter } from '@shared/game/logic/queries/check-grouping';
 
 const CHECK_TYPE_ICONS: Record<CheckKind, string> = {
   chest: '🧰',
@@ -17,19 +20,26 @@ const CHECK_TYPE_ICONS: Record<CheckKind, string> = {
   'pond-slot': '⛲',
 };
 
-const ITEM_FILTERS: ItemFilterOption[] = [
+const ITEM_FILTERS: SegmentOption<ItemFilter>[] = [
   { value: 'all', label: 'All' },
   { value: 'rewards', label: 'Rewards' },
   { value: 'non-rewards', label: 'Junk' },
 ];
 
-const STATUS_FILTERS: StatusFilterOption[] = [
+const STATUS_FILTERS: SegmentOption<StatusFilter>[] = [
   { value: 'all', label: 'All', title: 'Any status' },
-  { value: 'reachable', label: '●', title: 'Reachable' },
-  { value: 'completed', label: '✓', title: 'Completed' },
-  { value: 'blocked', label: '○', title: 'Blocked' },
+  { value: 'reachable', icon: 'circle-dot', hint: { label: 'Reachable', description: 'Checks you can reach now' } },
+  { value: 'completed', icon: 'check', hint: { label: 'Completed', description: 'Checks already done' } },
+  { value: 'blocked', icon: 'circle', hint: { label: 'Blocked', description: 'Checks still out of reach' } },
 ];
 
 const TAG_CATEGORIES = ['world', 'location', 'area', 'content'] as const;
 
-export { CHECK_TYPE_ICONS, ITEM_FILTERS, STATUS_FILTERS, TAG_CATEGORIES };
+const FACET_GROUPS: TagPickerGroup[] = TAG_CATEGORIES.map((category) => ({
+  id: category,
+  options: CHECK_FACET_DEFS.filter((facet) => facet.category === category).map((facet) => ({ value: facet.id, label: facet.label })),
+}));
+
+const LIST_SHAPE: ListItemShape = { icon: true, columns: 1, action: false };
+
+export { CHECK_TYPE_ICONS, FACET_GROUPS, ITEM_FILTERS, LIST_SHAPE, STATUS_FILTERS };

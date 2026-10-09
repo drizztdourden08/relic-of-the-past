@@ -15,7 +15,7 @@ const navProps = {
   onImportRom: NOOP, onSwitchProfile: NOOP, onShowProfile: NOOP, onShowLogs: NOOP,
   onToggleSaveStates: NOOP, onToggleInventory: NOOP, onToggleChecks: NOOP, onToggleDebug: NOOP,
   onToggleCheats: NOOP, onShowDataManager: NOOP, onShowInputTester: NOOP, onShowCredits: NOOP,
-  onShowDesignGallery: NOOP, onShowSpriteDebug: NOOP, onShowConnectionDebug: NOOP,
+  onShowSpriteDebug: NOOP, onShowConnectionDebug: NOOP,
   onToggleDataset: NOOP, onToggleSimulator: NOOP, onShowShadowEditor: NOOP, onShowAbout: NOOP,
   activeProfile: null, gameRunning: false, widgetVisibility: {},
 } as unknown as TitleBarProps;

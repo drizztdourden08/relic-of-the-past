@@ -1,106 +1,96 @@
 /* @layer renderer-components @kind logic */
+import type { MenuGroup, MenuItem } from '@drizztdourden08/tessera/composites';
 import { getWidgetDefinition } from '@drizztdourden08/tessera/composites';
-import type { MenuBuilderDeps, MenuItems } from './title-bar-menu.type';
+import { WIDGET_DEFINITIONS } from '@app/App/widgets/widget-definitions.constants';
+import type { MenuBuilderDeps } from './title-bar-menu.type';
 
-const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
+const buildWidgetItems = (deps: MenuBuilderDeps): MenuItem[] => {
   const {
-    closeMenu, win, activeProfile, gameRunning,
-    onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
-    onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator, onToggleMusic,
-    onShowInputTester, onShowHudLayout, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout, onShowRandomizer,
-    widgetVisibility = {}, developerToolsEnabled = false,
+    closeMenu, onToggleInventory, onToggleChecks, onToggleCheats, onShowLogs, onToggleDebug,
+    onShowConnectionDebug, onToggleDataset, onToggleSimulator, onToggleMusic, widgetVisibility = {}, developerToolsEnabled = false,
   } = deps;
+  const check = (id: string, label: string, icon: MenuItem['icon'], run: () => void): MenuItem => ({
+    id, label, icon, kind: 'check', checked: !!widgetVisibility[id], onSelect: () => { closeMenu(); run(); },
+  });
+  return [
+    check('inventory', 'Inventory Tracker', 'package', onToggleInventory),
+    check('checks', 'Checks Tracker', 'map', onToggleChecks),
+    check('cheats', 'Cheats', 'zap', onToggleCheats),
+    check('logs', 'Logs', 'file-text', onShowLogs),
+    check('debug', 'Game State', 'radio', onToggleDebug),
+    check('navigation', 'Location & Navigation', 'compass', onShowConnectionDebug),
+    check('dataset', 'Live Data Inspector', 'layers', onToggleDataset),
+    check('simulator', 'Simulator', 'play', onToggleSimulator),
+    check('music', 'Music Debugger', 'headphones', onToggleMusic),
+  ].filter((item) => developerToolsEnabled || !getWidgetDefinition(WIDGET_DEFINITIONS, item.id)?.devOnly);
+};
 
-  const widgetItems = [
-    { key: 'inventory', icon: '🎒', label: 'Inventory Tracker', checked: widgetVisibility.inventory, onClick: () => { closeMenu(); onToggleInventory(); } },
-    { key: 'checks', icon: '🗺️', label: 'Checks Tracker', checked: widgetVisibility.checks, onClick: () => { closeMenu(); onToggleChecks(); } },
-    { key: 'cheats', icon: '⚡', label: 'Cheats', checked: widgetVisibility.cheats, onClick: () => { closeMenu(); onToggleCheats(); } },
-    { key: 'logs', icon: '📋', label: 'Logs', checked: widgetVisibility.logs, onClick: () => { closeMenu(); onShowLogs(); } },
-    { key: 'debug', icon: '📡', label: 'Game State', checked: widgetVisibility.debug, onClick: () => { closeMenu(); onToggleDebug(); } },
-    { key: 'navigation', icon: '🔗', label: 'Location & Navigation', checked: widgetVisibility.navigation, onClick: () => { closeMenu(); onShowConnectionDebug(); } },
-    { key: 'dataset', icon: '📊', label: 'Live Data Inspector', checked: widgetVisibility.dataset, onClick: () => { closeMenu(); onToggleDataset(); } },
-    { key: 'simulator', icon: '🤖', label: 'Simulator', checked: widgetVisibility.simulator, onClick: () => { closeMenu(); onToggleSimulator(); } },
-    { key: 'music', icon: '🎵', label: 'Music Debugger', checked: widgetVisibility.music, onClick: () => { closeMenu(); onToggleMusic(); } },
-  ].filter((item) => developerToolsEnabled || !getWidgetDefinition(item.key)?.devOnly);
+const buildDataItems = (deps: MenuBuilderDeps): MenuItem[] => {
+  const { closeMenu, onShowDataManager } = deps;
+  const tab = (id: string, label: string, icon: MenuItem['icon'], target: string): MenuItem => ({
+    id, label, icon, onSelect: () => { closeMenu(); onShowDataManager(target); },
+  });
+  return [
+    tab('data-home', 'Home', 'house', 'home'),
+    tab('profiles', 'Profiles', 'users', 'profiles'),
+    tab('roms', 'ROMs', 'gamepad-2', 'roms'),
+    tab('languages', 'Language Studio', 'globe', 'languages'),
+    tab('msu', 'MSU Studio', 'headphones', 'msu'),
+    tab('sprites', 'Sprites', 'image', 'sprites'),
+    tab('player-sprites', 'Character Studio', 'user', 'linkSprites'),
+  ];
+};
 
+const buildAdvancedItems = (deps: MenuBuilderDeps): MenuItem[] => {
+  const {
+    closeMenu, win, onShowInputTester, onShowHudLayout, onShowDataInspector, onShowSpriteDebug, onShowShadowEditor,
+    developerToolsEnabled = false,
+  } = deps;
+  const item = (id: string, label: string, icon: MenuItem['icon'], run: () => void): MenuItem => ({
+    id, label, icon, onSelect: () => { closeMenu(); run(); },
+  });
+  return [
+    item('input-tester', 'Input Calibration', 'gamepad-2', onShowInputTester),
+    item('hud-layout', 'HUD Layout Editor', 'layout-list', onShowHudLayout),
+    item('data-inspector', 'Data Inspector', 'search', onShowDataInspector),
+    ...(developerToolsEnabled ? [
+      item('dev-console', 'Dev Console', 'braces', () => win.openDevTools()),
+      item('sprite-debug', 'Sprite Debug', 'image', onShowSpriteDebug),
+      item('shadow-editor', 'Shadow Editor', 'moon', onShowShadowEditor),
+    ] : []),
+  ];
+};
+
+const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuGroup[] => {
+  const { closeMenu, win, activeProfile, gameRunning, onShowProfile, onToggleSaveStates, onShowRandomizer } = deps;
+  const { onCheckForUpdates, onShowCredits, onShowAbout } = deps;
+  const run = (fn: () => void) => () => { closeMenu(); fn(); };
   return [
     {
-      key: 'home',
-      icon: '🏠',
-      label: 'Home',
-      disabled: !activeProfile,
-      onClick: () => { closeMenu(); onShowProfile(); },
-    },
-    {
-      key: 'save-states',
-      icon: '💾',
-      label: 'Save States',
-      disabled: !gameRunning,
-      onClick: () => { closeMenu(); onToggleSaveStates(); },
-    },
-    {
-      key: 'randomizer',
-      icon: '🎲',
-      label: 'Randomizer',
-      onClick: () => { closeMenu(); onShowRandomizer(); },
-    },
-    'separator',
-    {
-      key: 'data',
-      icon: '📦',
-      label: 'Data',
-      children: [
-        { key: 'data-home', icon: '🏠', label: 'Home', onClick: () => { closeMenu(); onShowDataManager('home'); } },
-        { key: 'profiles', icon: '👤', label: 'Profiles', onClick: () => { closeMenu(); onShowDataManager('profiles'); } },
-        { key: 'roms', icon: '🎮', label: 'ROMs', onClick: () => { closeMenu(); onShowDataManager('roms'); } },
-        { key: 'languages', icon: '🌐', label: 'Language Studio', onClick: () => { closeMenu(); onShowDataManager('languages'); } },
-        { key: 'msu', icon: '🎵', label: 'MSU Studio', onClick: () => { closeMenu(); onShowDataManager('msu'); } },
-        { key: 'sprites', icon: '🖼️', label: 'Sprites', onClick: () => { closeMenu(); onShowDataManager('sprites'); } },
-        { key: 'player-sprites', icon: '🧝', label: 'Character Studio', onClick: () => { closeMenu(); onShowDataManager('linkSprites'); } },
+      id: 'play',
+      items: [
+        { id: 'home', label: 'Home', icon: 'house', disabled: !activeProfile, onSelect: run(onShowProfile) },
+        { id: 'save-states', label: 'Save States', icon: 'save', disabled: !gameRunning, onSelect: run(onToggleSaveStates) },
+        { id: 'randomizer', label: 'Randomizer', icon: 'sparkles', onSelect: run(onShowRandomizer) },
       ],
     },
     {
-      key: 'widgets',
-      icon: '🔧',
-      label: 'Widgets',
-      children: widgetItems,
-    },
-    {
-      key: 'advanced',
-      icon: '⚙️',
-      label: 'Advanced',
-      children: [
-        { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
-        { key: 'hud-layout', icon: '🧩', label: 'HUD Layout Editor', onClick: () => { closeMenu(); onShowHudLayout(); } },
-        { key: 'data-inspector', icon: '🔍', label: 'Data Inspector', onClick: () => { closeMenu(); onShowDataInspector(); } },
-        ...(developerToolsEnabled ? [
-          { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); win.openDevTools(); } },
-          { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },
-          { key: 'design-gallery', icon: '🎨', label: 'Design Gallery', onClick: () => { closeMenu(); onShowDesignGallery(); } },
-          { key: 'shadow-editor', icon: '🌓', label: 'Shadow Editor', onClick: () => { closeMenu(); onShowShadowEditor(); } },
-        ] : []),
+      id: 'tools',
+      items: [
+        { id: 'data', label: 'Data', icon: 'archive', children: buildDataItems(deps) },
+        { id: 'widgets', label: 'Widgets', icon: 'layout-grid', children: buildWidgetItems(deps) },
+        { id: 'advanced', label: 'Advanced', icon: 'settings', children: buildAdvancedItems(deps) },
       ],
     },
-    'separator',
-    ...(onCheckForUpdates ? [{
-      key: 'check-updates',
-      icon: '🔄',
-      label: 'Check for Updates',
-      onClick: () => { closeMenu(); onCheckForUpdates(); },
-    }] : []),
     {
-      key: 'credits',
-      icon: '📜',
-      label: 'Credits',
-      onClick: () => { closeMenu(); onShowCredits(); },
+      id: 'app',
+      items: [
+        ...(onCheckForUpdates ? [{ id: 'check-updates', label: 'Check for Updates', icon: 'refresh-cw' as const, onSelect: run(onCheckForUpdates) }] : []),
+        { id: 'credits', label: 'Credits', icon: 'trophy', onSelect: run(onShowCredits) },
+        { id: 'about', label: 'About', icon: 'info', onSelect: run(onShowAbout) },
+        { id: 'quit', label: 'Quit', icon: 'log-out', onSelect: () => win.close() },
+      ],
     },
-    {
-      key: 'about',
-      icon: 'ℹ️',
-      label: 'About',
-      onClick: () => { closeMenu(); onShowAbout(); },
-    },
-    { key: 'quit', icon: '✕', label: 'Quit', onClick: () => win.close() },
   ];
 };
 

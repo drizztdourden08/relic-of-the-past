@@ -81,7 +81,7 @@ interface CheckCardProps {
 }
 
 interface CheckListProps {
-  checks: CheckRecord[];
+  checks: readonly CheckRecord[];
   statuses: Map<string, CheckStatus>;
   eventStatus?: ReadonlyMap<string, boolean>;
   viewMode: ViewMode;
@@ -119,6 +119,11 @@ interface TrackerGroupTreeProps {
   onToggleGroup?: (key: string) => void;
 }
 
+interface CheckBatch {
+  key: string;
+  checks: readonly CheckRecord[];
+}
+
 interface TrackerSummaryProps {
   completed: number;
   reachable: number;
@@ -127,7 +132,7 @@ interface TrackerSummaryProps {
 }
 
 export type {
-  CheckCardProps, CheckListProps, CheckStatusIconProps, ChecksTrackerProps, StatusKey, SwapBadgeProps,
+  CheckBatch, CheckCardProps, CheckListProps, CheckStatusIconProps, ChecksTrackerProps, StatusKey, SwapBadgeProps,
   TrackerCheckRowProps, TrackerFilterPanelsProps, TrackerFiltersProps, TrackerGroupTreeProps,
   TrackerLogicTogglesProps, TrackerPanels, TrackerStats, TrackerSummaryProps, ViewMode,
 };

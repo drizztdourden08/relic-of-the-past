@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { Fragment } from 'react';
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Pressable } from '@drizztdourden08/tessera/primitives';
 import type { ReactNode } from 'react';
 import type { EditorAction } from '../selection-bands.type';
 
@@ -15,8 +14,7 @@ const renderRows = (actions: readonly EditorAction[]): ReactNode[] => {
     out.push(
       <Fragment key={action.key}>
         {separator && <Box className="hud-toolbar__sep" />}
-        <Button
-          variant="bare"
+        <Pressable
           className="hud-toolbar__button"
           aria-label={action.label}
           title={action.label}
@@ -24,8 +22,8 @@ const renderRows = (actions: readonly EditorAction[]): ReactNode[] => {
           disabled={action.disabled}
           onClick={action.disabled ? undefined : action.run}
         >
-          {action.icon && <IconifyIcon icon={action.icon} width={16} height={16} aria-hidden />}
-        </Button>
+          {action.icon && <Icon icon={action.icon} size={16} aria-hidden />}
+        </Pressable>
       </Fragment>,
     );
   }

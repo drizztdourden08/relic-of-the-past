@@ -10,7 +10,7 @@ const FeatureButton = (props: FeatureButtonProps) => {
   const { item, listing } = props;
   if (item.featured) {
     return (
-      <Button variant="secondary" size="sm" icon={<IconifyIcon icon={starOffIcon} />} busy={listing.busy} onClick={() => void listing.unfeature(item.id)}>
+      <Button variant="secondary" size="sm" icon={<IconifyIcon icon={starOffIcon} />} loading={listing.busy} onClick={() => void listing.unfeature(item.id)}>
         Remove from featured
       </Button>
     );
@@ -22,7 +22,7 @@ const FeatureButton = (props: FeatureButtonProps) => {
       size="sm"
       icon={<IconifyIcon icon={starIcon} />}
       disabled={!published}
-      busy={listing.busy}
+      loading={listing.busy}
       title={published ? 'Add it to the featured row on the home page' : NOT_PUBLISHED}
       onClick={() => void listing.feature(item.id)}
     >

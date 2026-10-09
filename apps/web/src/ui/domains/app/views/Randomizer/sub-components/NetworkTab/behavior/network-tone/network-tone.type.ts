@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind types */
-type Tone = 'ok' | 'warn' | 'bad' | 'idle' | 'dim';
+import type { StatusTone } from '@drizztdourden08/tessera/primitives';
+
+type Tone = StatusTone;
 
 interface Chip {
   tone: Tone;

@@ -1,36 +1,20 @@
 /* @layer renderer-components @kind component */
-import { Box, RangeSlider, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { JumpChipsEditor } from '../../JumpChipsEditor';
+import { LadderRange } from './LadderRange';
 import { LadderReadout } from './LadderReadout';
 import { RowLine } from './RowLine';
 import { itemsLabel } from '../behavior/items-label';
-import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
 import type { CapacityRowState, LadderControlsProps } from '../CapacityFamilyRow.type';
 
 const LadderControls = (props: LadderControlsProps) => {
   const { model, readOnly, readout = false, onChange } = props;
   if (readout) return <LadderReadout model={model} />;
-  const {
-    stops, state, rangeStep, labelEvery, span, minCount, maxCount, maxJump, hasCurve, curveOptions,
-    problem, label, floorNote,
-  } = model;
-  const [start, max] = state.range;
+  const { state, span, minCount, maxCount, maxJump, hasCurve, curveOptions, problem } = model;
 
   return (
     <>
-      <RowLine label="range" note={floorNote}>
-        <RangeSlider
-          className="capacity-row__range"
-          stops={stops}
-          value={state.range}
-          step={rangeStep}
-          labelEvery={labelEvery}
-          disabled={readOnly}
-          ariaLabel={label}
-          onChange={(range) => onChange({ range })}
-        />
-        <Text className="capacity-row__readout">{`${stops[start]} to ${stops[max]}`}</Text>
-      </RowLine>
+      <LadderRange model={model} readOnly={readOnly} onChange={onChange} />
       <RowLine label="items">
         {maxCount > minCount ? (
           <Box className="capacity-row__grow">
@@ -52,7 +36,7 @@ const LadderControls = (props: LadderControlsProps) => {
             className="capacity-row__curve"
             size="sm"
             value={state.curve}
-            groups={curveOptions as SelectGroup[]}
+            groups={curveOptions}
             disabled={readOnly}
             onChange={(curve) => onChange({ curve: curve as CapacityRowState['curve'] })}
           />

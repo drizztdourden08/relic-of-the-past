@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind logic */
-import type { StatTileProps } from '@drizztdourden08/tessera/composites';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
 import type { SessionSource } from '@app/lib/game/randomizer-client';
+import { SOURCE_LABEL } from './run-summary-tiles.constants';
+import type { RunTile } from './run-tile.type';
 
-const sourceLabel = (source: SessionSource | null): string =>
-  source === 'profile' ? 'started by this profile' : source === 'manual' ? 'started manually' : 'not started';
+const sourceLabel = (source: SessionSource | null): string => (source === null ? 'not started' : SOURCE_LABEL[source]);
 
-const summaryTilesOf = (profileName: string, config: ProfileRandomizerConfig, source: SessionSource | null): StatTileProps[] => {
-  const tiles: StatTileProps[] = [
+const summaryTilesOf = (profileName: string, config: ProfileRandomizerConfig, source: SessionSource | null): RunTile[] => {
+  const tiles: RunTile[] = [
     { label: 'profile', value: profileName },
     { label: 'seed', value: config.seed },
     { label: 'mode', value: config.mode },

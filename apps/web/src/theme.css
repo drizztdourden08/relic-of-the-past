@@ -1,0 +1,35 @@
+/* @layer renderer-design-system @kind style */
+@import url('./tokens/game-text.css');
+@import url('./fonts/game-font.css');
+
+:root {
+  --c-gold-shade: #8c6a2a;
+  --c-gold-deep: #50431f;
+
+  --duration-slice-exit: 0.5s;
+  --duration-slice-pulse: 1.1s;
+
+  --titlebar-btn-width: calc(46 * var(--size-1));
+  --mode-badge-d: calc(80 * var(--size-1));
+  --summary-fact-maxw: calc(220 * var(--size-1));
+  --profile-hero-art-left: calc(232 * var(--size-1));
+  --profile-hero-art-h: calc(256 * var(--size-1));
+  --profile-hero-bar-h: calc(6 * var(--size-1));
+  --profile-hero-thumb-w: calc(160 * var(--size-1));
+  --option-control-w: calc(200 * var(--size-1));
+  --option-impact-w: calc(140 * var(--size-1));
+  --capacity-line-label-w: calc(56 * var(--size-1));
+  --capacity-slider-w-min: calc(160 * var(--size-1));
+  --capacity-curve-w: calc(200 * var(--size-1));
+  --pond-label-w-max: calc(200 * var(--size-1));
+  --item-sprite-d: calc(24 * var(--size-1));
+  --price-symbol-d: calc(14 * var(--size-1));
+  --shop-card-w-min: calc(260 * var(--size-1));
+  --shop-slot-box-h: calc(34 * var(--size-1));
+  --tier-box-h: calc(28 * var(--size-1));
+  --dark-room-tile-d: calc(64 * var(--size-1));
+  --dark-room-sprite-d: calc(32 * var(--size-1));
+  --store-card-w-min: calc(200 * var(--size-1));
+  --store-detail-w: calc(340 * var(--size-1));
+  --store-sign-in-w: calc(480 * var(--size-1));
+}

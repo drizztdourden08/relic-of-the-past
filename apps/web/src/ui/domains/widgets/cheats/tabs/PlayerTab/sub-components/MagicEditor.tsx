@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { HudMagicMeter } from '@domains/hud';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetMagic } from '@app/lib/game';
@@ -63,9 +63,8 @@ const MagicEditor = ({ scale, spritesBase }: HudPieceProps) => {
           {Array.from({ length: MAGIC_LEVELS }, (_, row) => {
             const level = MAGIC_LEVELS - row;
             return (
-              <Button
+              <Pressable
                 key={level}
-                variant="bare"
                 className="cheats-player__magic-row"
                 data-held={level <= held ? '' : undefined}
                 aria-label={`Magic ${percentOf(level)}`}

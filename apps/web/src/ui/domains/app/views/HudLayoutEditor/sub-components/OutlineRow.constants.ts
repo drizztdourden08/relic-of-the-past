@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind constants */
+import type { IconPath } from '@drizztdourden08/tessera/primitives';
 import type { DropZone } from '../behavior/drop-intent';
 
 const DROP_CLASS: Readonly<Record<DropZone, string>> = {
@@ -8,6 +9,6 @@ const DROP_CLASS: Readonly<Record<DropZone, string>> = {
   after: 'is-drop-after',
 };
 
-const CARET_PATH = 'M5.5 3 L10.5 8 L5.5 13 Z';
+const CARET_ICON: IconPath = { d: 'M5.5 3 L10.5 8 L5.5 13 Z' };
 
-export { CARET_PATH, DROP_CLASS };
+export { CARET_ICON, DROP_CLASS };

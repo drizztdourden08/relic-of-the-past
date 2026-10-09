@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useState } from 'react';
-import { Box, Button, Image } from '@drizztdourden08/tessera/primitives';
+import { Box, Image, Pressable } from '@drizztdourden08/tessera/primitives';
 import { PauseBorderBox } from '@domains/hud';
 import { getSlotSprite } from '@domains/hud/composites/PauseItemSlot';
 import { useGameUIStore } from '@app/stores/game-ui-store';
@@ -57,9 +57,8 @@ const BottleRack = ({ scale, spritesBase }: HudPieceProps) => {
           const sprite = spriteUrlOf(spritesBase, isGhost ? BottleContents.Empty : value);
           const style = { left: tile * (BOTTLE_GAP_TILES + slot * (BOTTLE_TILES + BOTTLE_GAP_TILES)), top: tile * BOTTLE_GAP_TILES, width: size, height: size };
           return (
-            <Button
+            <Pressable
               key={slot}
-              variant="bare"
               className={`cheats-player__bottle${isGhost ? ' cheats-player__bottle--ghost' : ''}`}
               style={style}
               title={`Bottle ${slot + 1}: ${labelOf(value)}`}
@@ -69,7 +68,7 @@ const BottleRack = ({ scale, spritesBase }: HudPieceProps) => {
               onClick={(e) => setOpen({ slot, anchor: e.currentTarget })}
             >
               {sprite && <Image className="cheats-player__bottle-sprite" src={sprite} alt="" draggable={false} />}
-            </Button>
+            </Pressable>
           );
         })}
       </PauseBorderBox>

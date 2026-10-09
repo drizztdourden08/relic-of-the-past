@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box, ColorSwatch, IconButton, Text } from '@drizztdourden08/tessera/primitives';
-import { Icon as IconifyIcon } from '@iconify/react/offline';
+import { Box, ColorSwatch, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import { EngineToggle } from './EngineToggle';
 import { LayoutSettingsPiece } from './LayoutSettingsPiece';
@@ -43,7 +42,7 @@ const LayoutSettings = (props: LayoutSettingsProps) => {
               data-action="grid-overlay"
               onClick={overlay.onToggleOverlay}
             >
-              <IconifyIcon icon={TOOLBAR_ICONS.gridView} width={16} height={16} aria-hidden />
+              <Icon icon={TOOLBAR_ICONS.gridView} size={16} aria-hidden />
             </IconButton>
             <ColorPickerPopover
               open={open}

@@ -1,25 +1,26 @@
 /* @layer renderer-components @kind component */
 import { ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
-import { DashboardPanel, StatTileGrid } from '@drizztdourden08/tessera/composites';
-import type { StatTileProps } from '@drizztdourden08/tessera/composites';
 import { useTrackerData } from '../../../../../../hooks/useTrackerData';
 import { checkCountsOf } from '../behavior/run-progress';
 import { percentOf } from '../behavior/checks-percent';
 import type { CheckCounts } from '../behavior/run-progress.type';
+import type { RunTile } from '../behavior/run-tile.type';
 import type { NetworkProgress } from '@app/lib/game/randomizer-client';
+import { DashboardCard } from './DashboardCard';
+import { StatTiles } from './StatTiles';
 import type { RunProgressProps } from './RunProgress.type';
 
-const checkTilesOf = (counts: CheckCounts): StatTileProps[] => {
-  const tiles: StatTileProps[] = [{ label: 'checks taken', value: `${counts.taken} of ${counts.total}` }];
+const checkTilesOf = (counts: CheckCounts): RunTile[] => {
+  const tiles: RunTile[] = [{ label: 'checks taken', value: `${counts.taken} of ${counts.total}` }];
   if (counts.available !== null) tiles.push({ label: 'available', value: String(counts.available) });
   if (counts.left !== null) tiles.push({ label: 'left', value: String(counts.left) });
   return tiles;
 };
 
-const roomTilesOf = (room: NetworkProgress): StatTileProps[] => [
+const roomTilesOf = (room: NetworkProgress): RunTile[] => [
   { label: 'items received', value: String(room.itemsReceived) },
   { label: 'items sent', value: String(room.itemsSentToOthers) },
-  { label: 'goal', value: room.goalReported ? 'complete' : 'not yet', tone: room.goalReported ? 'ok' : undefined },
+  { label: 'goal', value: room.goalReported ? 'complete' : 'not yet', tone: room.goalReported ? 'success' : undefined },
 ];
 
 const RunProgress = ({ placement, room }: RunProgressProps) => {
@@ -28,7 +29,7 @@ const RunProgress = ({ placement, room }: RunProgressProps) => {
   const tiles = [...(counts === null ? [] : checkTilesOf(counts)), ...(room === null ? [] : roomTilesOf(room))];
 
   return (
-    <DashboardPanel {...placement} title="Progress">
+    <DashboardCard placement={placement} title="Progress">
       {counts === null ? (
         <Text className="randomizer-page__hint">The progress shows once the game boots and the session loads the seed.</Text>
       ) : (
@@ -38,11 +39,13 @@ const RunProgress = ({ placement, room }: RunProgressProps) => {
           secondaryTone="primary"
           tone="secondary"
           max={Math.max(counts.total, 1)}
-          readout={`${percentOf(counts)}%`}
+          label="Checks taken"
+          showValue
+          formatValue={() => `${percentOf(counts)}%`}
         />
       )}
-      {tiles.length > 0 && <StatTileGrid tiles={tiles} />}
-    </DashboardPanel>
+      {tiles.length > 0 && <StatTiles tiles={tiles} />}
+    </DashboardCard>
   );
 };
 

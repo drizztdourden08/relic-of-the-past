@@ -1,22 +1,20 @@
 /* @layer site-kit @kind component */
-import { Box, Button, Flex, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
-import { Chip } from '../Chip/Chip';
+import { Box, Flex, Pressable, ProgressBar, Status, Text } from '@drizztdourden08/tessera/primitives';
 import { percentOf } from './behavior/percent-of';
 import { rowLines } from './behavior/row-lines';
 import { RowActions } from './sub-components/RowActions';
-import { BAR_VARIANTS, PHASE_CHIPS } from './UploadRow.constants';
+import { BAR_VARIANTS, PHASE_STATUSES } from './UploadRow.constants';
 import type { UploadRowProps } from './UploadRow.type';
 import './UploadRow.css';
 
 const UploadRow = (props: UploadRowProps) => {
   const { job, onOpen, onCancel, onDismiss, onPickFile } = props;
-  const chip = PHASE_CHIPS[job.phase];
   const { transfer, timeLeft, note } = rowLines(job);
   return (
     <Box className="upload-row" data-phase={job.phase} onClick={() => onOpen(job.id)}>
       <Flex align="center" gap="sm" justify="between">
-        <Button variant="bare" className="upload-row__label" title={job.label}>{job.label}</Button>
-        <Chip tone={chip.tone}>{chip.label}</Chip>
+        <Pressable className="upload-row__label" title={job.label}>{job.label}</Pressable>
+        <Status variant="pill" map={PHASE_STATUSES} value={job.phase} />
       </Flex>
       {job.bytes > 0 && <ProgressBar value={percentOf(job)} tone={BAR_VARIANTS[job.phase] ?? 'primary'} live />}
       {(transfer || timeLeft) && (

@@ -7,7 +7,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import type * as InspectorModule from '../../apps/web/src/ui/domains/app/views/DataInspector';
 import type * as DetailTabsModule from '../../apps/web/src/ui/domains/app/views/DataInspector/sub-components/DetailTabs';
 import type * as SourcesModule from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
-import type * as SchemaModule from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import type * as SchemaModule from '@drizztdourden08/tessera/data';
 import type { DetailTab } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
@@ -34,7 +34,7 @@ beforeEach(async () => {
   ({ COLLECTION_SOURCES } = await import(
     '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources'
   ));
-  ({ buildSchema } = await import('../../apps/web/src/ui/design-system/data/schema/build-schema'));
+  ({ buildSchema } = await import('@drizztdourden08/tessera/data'));
 });
 
 afterEach(() => {

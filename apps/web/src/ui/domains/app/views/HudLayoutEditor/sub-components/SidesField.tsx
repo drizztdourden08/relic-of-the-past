@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Field } from '@drizztdourden08/tessera/primitives';
+import { Box, Field, Pressable } from '@drizztdourden08/tessera/primitives';
 import { SIDES } from './EdgesField.constants';
 import './HudLayoutEditor.appearance.css';
 import type { HudBorderSides } from '@shared/types/hud';
@@ -20,9 +20,8 @@ const SidesField = (props: SidesFieldProps) => {
     <Field size="sm" label={label}>
       <Box className="hud-sides" role="group" aria-label={label}>
         {SIDES.map((side) => (
-          <Button
+          <Pressable
             key={side}
-            variant="bare"
             className={`hud-sides__edge hud-sides__edge--${side}`}
             aria-label={`${label} ${side}`}
             aria-pressed={isOn(side)}

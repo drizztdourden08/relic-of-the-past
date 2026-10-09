@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState, useEffect } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { ToastContainer } from '@drizztdourden08/tessera/composites';
 import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import { useSearchStore } from '@app/stores/search-store';
 import { useProfileSettings } from './behavior/useProfileSettings';
@@ -16,7 +15,7 @@ const ProfileHub = (props: ProfileHubProps) => {
   const activeTab = controlledTab ?? internalTab;
   const setActiveTab = useCallback((tab: ProfileHubTab) => { onTabChange?.(tab); setInternalTab(tab); }, [onTabChange]);
 
-  const { settings, handleSettingsChange, toasts, dismissToast } = useProfileSettings(props);
+  const { settings, handleSettingsChange } = useProfileSettings(props);
 
   useEffect(() => { applyNotchMode(settings.renderIntoNotch); }, [settings.renderIntoNotch]);
 
@@ -54,7 +53,6 @@ const ProfileHub = (props: ProfileHubProps) => {
         onStopGame={onStopGame}
         onResetGame={onResetGame}
       />
-      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </Box>
   );
 };

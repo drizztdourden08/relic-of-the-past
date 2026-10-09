@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { KeyboardEvent } from 'react';
-import { Button, Text, EmojiIcon } from '@drizztdourden08/tessera/primitives';
+import { Pressable, Text, EmojiIcon } from '@drizztdourden08/tessera/primitives';
 import './SlotActionButton.css';
 import type { SlotActionButtonProps } from './SlotActionButton.type';
 
@@ -20,8 +20,7 @@ const SlotActionButton = (props: SlotActionButtonProps) => {
   };
 
   return (
-    <Button
-      variant="bare"
+    <Pressable
       className={className}
       onClick={onPress}
       onBlur={onDisarm}
@@ -34,7 +33,7 @@ const SlotActionButton = (props: SlotActionButtonProps) => {
       <Text className="slot-action__glyph">
         <EmojiIcon glyph={glyph} size="lg" className="slot-action__emoji" />
       </Text>
-    </Button>
+    </Pressable>
   );
 };
 

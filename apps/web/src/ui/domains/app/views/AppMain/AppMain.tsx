@@ -1,14 +1,10 @@
 /* @layer renderer-app @kind component */
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { subscribeGameState } from '@app/lib/game/wasm-bridge';
 import { Box, Image } from '@drizztdourden08/tessera/primitives';
-import { WidgetManager, useWidgetLayout } from '@drizztdourden08/tessera/composites';
+import { WidgetManager } from '@drizztdourden08/tessera/composites';
 import { WIDGET_CONTENT, WIDGET_SETTINGS_CONTENT } from '@domains/widgets';
-import { widgetLayoutIO } from '@app/lib/storage/widget-state';
-import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
-import { useDevToolsWidgetGate } from '@app/App/behavior/useDevToolsWidgetGate';
-import { useWidgetPrefs } from '@app/App/behavior/useWidgetPrefs';
-import { useWidgetDisabledGate } from '@app/App/behavior/useWidgetDisabledGate';
+import { WIDGET_DEFINITIONS } from '@app/App/widgets/widget-definitions.constants';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
 import { PageRouter } from '@app/App/PageRouter';
 import { useAppNavigation } from '@app/App/behavior/useAppNavigation';
@@ -41,6 +37,8 @@ import { GameLayer } from '../GameLayer';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
 import { DebugFloatingControls } from '../../compounds/DebugFloatingControls';
 import { applyLoadedProfile } from './behavior/apply-loaded-profile';
+import { useAppWidgets } from './behavior/useAppWidgets';
+import { WIDGET_MAKE_ROOM_HINT } from './AppMain.constants';
 import { AppDialogs } from './sub-components/AppDialogs';
 import './AppMain.css';
 
@@ -60,11 +58,9 @@ const AppMain = () => {
     onGameClear: () => game.clearGame(),
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
-  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetLayoutIO, window.api.startup);
-  useWidgetPrefs(profileMgmt.activeProfile?.id ?? null);
-  const developerToolsEnabled = useDevToolsWidgetGate(widgets.layout, widgets.close, window.api.startup.widgets);
-  const { vanillaSafe, settings: liveSettings, onOpenSettings: onOpenWidgetSettings } = useWidgetDisabledGate(nav.setActivePage);
-  const setExclusiveInsets = useExclusiveInsetsStore((s) => s.setInsets);
+  const {
+    widgets, contentRef, developerToolsEnabled, resolveDisabled, onOpenSettings: onOpenWidgetSettings, onMainRect, widgetVisibility,
+  } = useAppWidgets(profileMgmt.activeProfile?.id ?? null, nav.setActivePage);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
 
@@ -93,8 +89,6 @@ const AppMain = () => {
 
   useShellReady(startup.settled);
 
-  const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
-
   const chromeProps: TitleBarProps = buildChromeProps({
     profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility, developerToolsEnabled,
     handleShowProfile, handleShowDataManager, handleShowShadowEditor,
@@ -107,7 +101,7 @@ const AppMain = () => {
         ? <TitleBar {...chromeProps} />
         : <MobileChrome {...chromeProps} activePage={nav.activePage} onClosePage={() => nav.setActivePage('none')} />}
 
-      <Box className="app__content">
+      <Box className="app__content" ref={contentRef}>
         {!game.isRunning && (
           <Image className="app__bg-logo" src="./logos/logo/logo-512.png" alt="" />
         )}
@@ -145,18 +139,18 @@ const AppMain = () => {
         />
 
         <WidgetManager
+          definitions={WIDGET_DEFINITIONS}
           layout={widgets.layout}
+          onLayoutChange={widgets.setLayout}
           contextActive={game.isRunning}
           pageOpen={nav.activePage !== 'none'}
-          onUpdate={widgets.update}
-          onClose={widgets.close}
-          onInsetsChange={setExclusiveInsets}
           settingsContent={WIDGET_SETTINGS_CONTENT}
           developerToolsEnabled={developerToolsEnabled}
           startupForcedWidgetIds={window.api.startup.widgets}
-          vanillaSafe={vanillaSafe}
-          settings={liveSettings}
+          resolveDisabled={resolveDisabled}
           onOpenSettings={onOpenWidgetSettings}
+          onMainRect={onMainRect}
+          makeRoomHint={WIDGET_MAKE_ROOM_HINT}
         >
           {WIDGET_CONTENT}
         </WidgetManager>

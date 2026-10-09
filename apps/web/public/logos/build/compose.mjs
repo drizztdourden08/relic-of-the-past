@@ -16,7 +16,6 @@ const SRC = resolve(WEB, 'src');
 const ALIAS = {
   '@shared': resolve(ROOT, 'shared'),
   '@app': SRC,
-  '@ds': resolve(SRC, 'ui/design-system'),
   '@domains': resolve(SRC, 'ui/domains'),
 };
 

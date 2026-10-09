@@ -3,11 +3,12 @@ import { useState, useCallback } from 'react';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { log } from '../../../../../../../lib/log-bus';
 import { validSramSlots } from '@app/lib/game/save-file/sram-slots';
-import { SRAM_BYTES, SRAM_EXTENSIONS } from './home-tab.constants';
+import { toast } from '@drizztdourden08/tessera/composites';
+import { SRAM_BYTES, SRAM_EXTENSIONS, TOAST_DURATION_MS } from './home-tab.constants';
 import type { UseHomeTabSramImportParams } from './home-tab.type';
 
 const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
-  const { profileId, filePicker, dialog, setDialog, showToast } = params;
+  const { profileId, filePicker, dialog, setDialog } = params;
   const [importConfirmText, setImportConfirmText] = useState('');
 
   const handleImportSram = useCallback(async () => {
@@ -54,8 +55,8 @@ const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
     if (!pendingBytes) return;
     await savesStore.writeSram(profileId, pendingBytes.buffer as ArrayBuffer);
     log.app(`Imported SRAM save from "${targetName}". It takes effect next time this profile loads`);
-    showToast(`Save imported from "${targetName}"`);
-  }, [profileId, dialog, setDialog, showToast]);
+    toast({ message: `Save imported from "${targetName}"`, variant: 'success', duration: TOAST_DURATION_MS });
+  }, [profileId, dialog, setDialog]);
 
   return {
     importConfirmText, setImportConfirmText, handleImportSram, handleCancelImportSram, handleConfirmImportSram,

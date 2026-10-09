@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Checkbox, RangeSlider, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Checkbox, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag, rangeLabelOf } from '../OptionValueTag';
 import type { CurrencyPriceRowProps } from './CurrencyPriceRow.type';
 import './CurrencyPriceRow.css';
@@ -16,12 +16,14 @@ const CurrencyPriceRow = (props: CurrencyPriceRowProps) => {
   ) : stops !== undefined && range !== undefined && readout ? (
     <OptionValueTag value={rangeLabelOf(stops, range)} />
   ) : stops !== undefined && range !== undefined ? (
-    <RangeSlider
+    <Slider
+      range
       stops={stops}
       value={range}
       disabled={readOnly || !enabled}
-      labelEvery={Math.max(1, Math.floor(stops.length / 5))}
-      ariaLabel={`${label} price range`}
+      labels={`every ${Math.max(1, Math.floor(stops.length / 5))}`}
+      showValue={false}
+      aria-label={`${label} price range`}
       onChange={(next) => onRangeChange?.(next)}
     />
   ) : undefined;

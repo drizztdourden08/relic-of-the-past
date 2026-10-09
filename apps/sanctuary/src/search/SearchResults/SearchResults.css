@@ -3,52 +3,10 @@
 .site-search {
   flex: 1;
   min-height: 0;
+}
+
+.site-search__table {
   display: flex;
   flex-direction: column;
-  background: var(--c-panel);
-  backdrop-filter: blur(var(--blur));
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-}
-
-.site-search--idle {
-  justify-content: center;
-}
-
-.site-search__empty {
-  margin-block: auto;
-}
-
-.site-search__head {
-  flex-shrink: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-sm) var(--space-lg);
-  min-height: var(--content-header-h-compact);
-  padding: var(--space-sm) var(--space-xl);
-  border-bottom: 1px solid var(--c-border);
-}
-
-.site-search__summary {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semi);
-  color: var(--c-text);
-}
-
-.site-search__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
-}
-
-.site-search__body {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xl);
-  padding: var(--pad-page);
+  max-height: var(--search-table-maxh);
 }

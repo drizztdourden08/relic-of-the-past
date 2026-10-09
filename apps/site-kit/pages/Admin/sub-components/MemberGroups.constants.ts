@@ -1,4 +1,6 @@
 /* @layer site-kit @kind constants */
-const PORTALLED_MENU_SELECTOR = '.dropdown-menu';
+import type { MenuTrigger } from '@drizztdourden08/tessera/composites';
 
-export { PORTALLED_MENU_SELECTOR };
+const GROUPS_TRIGGER: MenuTrigger = { label: 'Groups', icon: 'chevron-down', iconSide: 'end' };
+
+export { GROUPS_TRIGGER };

@@ -2,7 +2,7 @@
 import reviewIcon from '@iconify-icons/lucide/clipboard-check';
 import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
-import { Link } from '@site-kit/router/Link';
+import { AppLink } from '@site-kit/router/AppLink';
 import { PackContentsPanel } from '../../components/PackContentsPanel/PackContentsPanel';
 import { ReviewChip } from '../../components/ReviewChip/ReviewChip';
 import { TitledPage } from '../../layout/TitledPage/TitledPage';
@@ -19,7 +19,7 @@ const ReviewItem = (props: ReviewItemProps) => {
   const { rowId } = props;
   const page = useReviewItemPage(rowId);
   const { entry, preview } = page;
-  const back = <Link to={page.listPath} className="review-item__back">{'‹'} Reviewer Hub</Link>;
+  const back = <AppLink to={page.listPath} className="review-item__back">{'‹'} Reviewer Hub</AppLink>;
 
   if (!entry || !preview) {
     return (

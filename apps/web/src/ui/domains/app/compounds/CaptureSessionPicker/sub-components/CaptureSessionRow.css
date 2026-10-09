@@ -68,10 +68,3 @@
   color: var(--c-text);
   white-space: nowrap;
 }
-
-.capture-session-row__tag {
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--c-text-muted);
-}

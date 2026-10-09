@@ -61,18 +61,3 @@
   padding: var(--space-sm) var(--space-md);
 }
 
-.modern-tab__add-button {
-  padding: var(--space-2xs) var(--space-sm);
-  background: transparent;
-  border: 1px dashed var(--c-border);
-  border-radius: var(--radius-sm);
-  color: var(--c-text-dim);
-  font-size: var(--text-sm);
-  cursor: pointer;
-  transition: color 0.12s, border-color 0.12s;
-}
-
-.modern-tab__add-button:hover {
-  color: var(--c-primary-bright);
-  border-color: var(--c-primary);
-}

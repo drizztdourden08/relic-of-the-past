@@ -5,7 +5,7 @@ import upIcon from '@iconify-icons/lucide/arrow-up';
 import downIcon from '@iconify-icons/lucide/arrow-down';
 import removeIcon from '@iconify-icons/lucide/x';
 import { Button, Flex, IconButton, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { Row } from '@site-kit/components/Row/Row';
+import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { KindChip } from '../../../components/KindChip/KindChip';
 import type { FeaturedOrderProps } from './FeaturedOrder.type';
 
@@ -28,14 +28,18 @@ const FeaturedOrder = (props: FeaturedOrderProps) => {
     <Stack gap="sm" align="stretch">
       <Text as="p" variant="caption">To feature an item, open its page and press Feature.</Text>
       {featured.length === 0 && <Text as="p" variant="caption">Nothing is featured. The home page skips the featured row.</Text>}
-      {featured.map((id, index) => {
-        const item = byId.get(id);
-        const value = item ? <Flex gap="sm" align="center">{item.name} <KindChip kind={item.kind} /></Flex> : `${id} (no longer listed)`;
-        return <Row key={id} label={String(index + 1)} value={value} action={controls(id, index)} />;
-      })}
+      {featured.length > 0 && (
+        <ListItemList label="Featured order">
+          {featured.map((id, index) => {
+            const item = byId.get(id);
+            const value = item ? <Flex gap="sm" align="center">{item.name} <KindChip kind={item.kind} /></Flex> : `${id} (no longer listed)`;
+            return <ListItemRow key={id} name={String(index + 1)} columns={[{ primary: value }]} action={controls(id, index)} actionVisibility="always" />;
+          })}
+        </ListItemList>
+      )}
       {featured.length > 0 && (
         <Flex gap="sm" align="center" wrap>
-          <Button variant="primary" size="sm" busy={busy} onClick={() => void settings.saveFeatured()}>Save the order</Button>
+          <Button variant="primary" size="sm" loading={busy} onClick={() => void settings.saveFeatured()}>Save the order</Button>
         </Flex>
       )}
     </Stack>

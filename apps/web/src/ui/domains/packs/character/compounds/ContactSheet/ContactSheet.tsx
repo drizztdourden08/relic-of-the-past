@@ -1,8 +1,9 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Grid, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { PoseCanvas } from '../PoseCanvas';
 import { POSE_ATLAS, poseCanvasSize } from '@shared/game/data/native-tables/player-pose-atlas';
 import { labelFor } from '@shared/game/data/native-tables/player-state-labels';
+import { CELL_MIN_PX } from './ContactSheet.constants';
 import type { ContactSheetProps } from './ContactSheet.type';
 import './ContactSheet.css';
 
@@ -11,24 +12,15 @@ const { width: POSE_WIDTH } = poseCanvasSize();
 const ContactSheet = (props: ContactSheetProps) => {
   const { sheet, row, tick, scale, onSelect } = props;
 
-  const cellMinStyle = { '--contact-sheet-cell-min': `${POSE_WIDTH * scale}px` } as React.CSSProperties;
-
   return (
-    <Box className="contact-sheet" style={cellMinStyle}>
+    <Grid minColWidth={Math.max(CELL_MIN_PX, POSE_WIDTH * scale)} gap="sm">
       {POSE_ATLAS.states.map((state) => (
-        <Box
-          key={state.action}
-          className="contact-sheet__cell"
-          role="button"
-          tabIndex={0}
-          onClick={() => onSelect(state.action)}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelect(state.action); }}
-        >
+        <Pressable key={state.action} className="contact-sheet__cell" onClick={() => onSelect(state.action)}>
           <PoseCanvas sheet={sheet} row={row} state={state} facing={1} tick={tick} scale={scale} />
           <Text className="contact-sheet__label">{labelFor(state.action).label}</Text>
-        </Box>
+        </Pressable>
       ))}
-    </Box>
+    </Grid>
   );
 };
 

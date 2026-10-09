@@ -1,6 +1,6 @@
 /* @layer site-kit @kind component */
 import { Button } from '@drizztdourden08/tessera/primitives';
-import { Row } from '../Row/Row';
+import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatDay, formatAgo } from '../../lib/format-date';
 import { PLATFORM_LABELS } from './DeviceRow.constants';
 import type { DeviceRowProps } from './DeviceRow.type';
@@ -13,7 +13,7 @@ const DeviceRow = (props: DeviceRowProps) => {
       Revoke
     </Button>
   );
-  return <Row label={PLATFORM_LABELS[device.platform]} value={value} action={action} />;
+  return <ListItemRow name={PLATFORM_LABELS[device.platform]} columns={[{ primary: value }]} action={action} actionVisibility="always" />;
 };
 
 export { DeviceRow };

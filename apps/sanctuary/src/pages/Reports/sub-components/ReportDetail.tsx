@@ -1,12 +1,11 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
 import { LIMITS } from '@shared/sanctuary/limits';
-import { Button } from '@drizztdourden08/tessera/primitives';
+import { Button, Link } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { IssueStateChip } from '../../../components/IssueStateChip/IssueStateChip';
-import { ExternalLink } from '@site-kit/components/ExternalLink/ExternalLink';
 import type { ReportView } from '../../../api/api-responses.type';
 import { ANONYMOUS, contentsLine } from '../../../reports/report-row';
 import { formatBytes } from '@site-kit/lib/format-bytes';
@@ -50,9 +49,9 @@ const ReportDetail = (props: ReportDetailProps) => {
       <Button variant="primary" size="sm" disabled={busy || !report.zip} onClick={() => void actions.download(report.id)}>
         Download zip
       </Button>
-      <ExternalLink href={report.issue.url} className="btn btn--secondary btn--sm">
-        Open issue {'↗'}
-      </ExternalLink>
+      <Link href={report.issue.url} external className="btn btn--secondary btn--toned btn--sm">
+        Open issue
+      </Link>
       <Button variant="secondary" size="sm" disabled={busy} onClick={() => void actions.extend(report.id)}>
         Extend +{LIMITS.extendDays} d
       </Button>

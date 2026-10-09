@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect } from 'react';
-import { Box, IconButton, Slider, Text, useDismissable } from '@drizztdourden08/tessera/primitives';
+import { Box, IconButton, Slider, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { useMotionPreview } from '../behavior/motion-preview';
 import type { MotionTransportProps } from './MotionTransport.type';
 
@@ -11,7 +11,7 @@ const MotionTransport = (props: MotionTransportProps) => {
 
   useEffect(() => { setSpan?.(spanMs); }, [setSpan, spanMs]);
 
-  useDismissable({ active: preview?.playing === true, level: 'dialog', onDismiss: () => preview?.pause() });
+  useEscapeStack({ active: preview?.playing === true, level: 'dialog', onEscape: () => preview?.pause() });
 
   if (!preview) return null;
 

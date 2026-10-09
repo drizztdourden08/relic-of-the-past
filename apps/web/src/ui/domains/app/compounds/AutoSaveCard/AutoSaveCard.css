@@ -1,30 +1,11 @@
 /* @layer renderer-components @kind style */
 
+.auto-save-card--busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 .auto-save-card__thumb {
   width: 56px;
   height: 38px;
-}
-
-.auto-save-card__time {
-  font-size: var(--text-xs);
-  color: var(--c-text-dim);
-}
-
-.auto-save-card__badge {
-  font-size: var(--text-xs);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-lg);
-  font-weight: var(--weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.auto-save-card__badge--timer {
-  background: var(--c-info-soft);
-  color: var(--c-info);
-}
-
-.auto-save-card__badge--quit {
-  background: var(--c-warning-soft);
-  color: var(--c-warning);
 }

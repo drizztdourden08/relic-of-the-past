@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text, Thumbnail } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, Image, Text } from '@drizztdourden08/tessera/primitives';
 import type { HeroLastSave } from '../ProfileHero.type';
 
 const formatSaveTime = (timestamp: number): string => new Date(timestamp).toLocaleString(undefined, {
@@ -9,12 +9,13 @@ const formatSaveTime = (timestamp: number): string => new Date(timestamp).toLoca
 const HeroLastSaveTile = (props: { save: HeroLastSave }) => {
   const { save } = props;
   return (
-    <Box className="hero__glass profile-hero__save">
-      <Thumbnail
-        src={save.screenshotUrl}
+    <Box className="profile-hero__save">
+      <Image
+        frame
+        src={save.screenshotUrl ?? undefined}
         alt={save.name}
         className="profile-hero__save-thumb"
-        placeholder={<Text className="profile-hero__save-empty">No screenshot</Text>}
+        fallback={<Text className="profile-hero__save-empty">No screenshot</Text>}
       />
       <Box className="profile-hero__save-body">
         <Box className="profile-hero__save-text">

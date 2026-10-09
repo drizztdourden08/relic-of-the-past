@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind constants */
 import { BottleContents, cheatSetArrows, cheatSetBombs, cheatSetRupees, cheatSetSmallKeys } from '@app/lib/game';
-import type { ControlHint } from '../../sub-components/ControlGlyph.type';
+import type { ControlHint } from '../../sub-components/ControlHint.type';
 import type { BottleOption, BottleSlot, CounterSpec } from './PlayerTab.type';
 
 const PLAYER_TILES_WIDE = 16;
@@ -64,8 +64,8 @@ const LEGEND: readonly ControlHint[] = [
   { glyph: 'mouse-left', label: 'set a value where you click, or type it' },
   { glyph: 'mouse-right', label: 'containers on a heart; steps on a number' },
   { glyph: 'wheel', label: 'one up or down on a number or the meter' },
-  { glyph: 'key', keyName: 'Enter', label: 'commit a typed value' },
-  { glyph: 'key', keyName: 'Esc', label: 'cancel typing, close a box' },
+  { glyph: 'key', keyName: 'enter', label: 'commit a typed value' },
+  { glyph: 'key', keyName: 'esc', label: 'cancel typing, close a box' },
 ];
 
 const SNES_TILE = 8;

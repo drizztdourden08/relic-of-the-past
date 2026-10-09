@@ -5,7 +5,7 @@ import { buildTitleBarMenuItems } from '../TitleBar/behavior/title-bar-menu';
 import { OptionsDrawer } from './sub-components/OptionsDrawer';
 import { useMobileChrome } from './behavior/useMobileChrome';
 import './MobileChrome.css';
-import type { DrawerMenuItem, MobileChromeProps } from './MobileChrome.type';
+import type { MobileChromeProps } from './MobileChrome.type';
 
 const MobileChrome = (props: MobileChromeProps) => {
   const { window: win } = usePlatform();
@@ -16,17 +16,15 @@ const MobileChrome = (props: MobileChromeProps) => {
     onHome: () => { if (props.activeProfile) props.onShowProfile(); },
   });
 
-  const items = buildTitleBarMenuItems(
-    { ...props, win, closeMenu: closeOptions } as Parameters<typeof buildTitleBarMenuItems>[0],
-  ).filter((item): item is Exclude<typeof item, string> => item !== 'separator') as unknown as DrawerMenuItem[];
+  const groups = buildTitleBarMenuItems({ ...props, win, closeMenu: closeOptions });
 
   return (
     <Drawer open={optionsOpen} onClose={closeOptions} side="right" label="Options">
       <OptionsDrawer
-        items={items}
+        groups={groups}
         fps={fps}
-        showFps={!!props.showFps && props.gameRunning}
-        isMuted={!!props.isMuted}
+        showFps={Boolean(props.showFps) && props.gameRunning}
+        isMuted={Boolean(props.isMuted)}
         onToggleMute={props.onToggleMute}
       />
     </Drawer>

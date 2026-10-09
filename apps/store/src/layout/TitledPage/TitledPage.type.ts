@@ -1,7 +1,7 @@
 /* @layer store-site @kind types */
 import type { ReactNode } from 'react';
 import type { IconifyIcon } from '@iconify/react/offline';
-import type { SettingsPageTabs } from '@domains/app/compounds/SettingsPage';
+import type { SettingsPageTabs } from '@drizztdourden08/tessera/composites';
 
 type TitledPageProps = {
   icon: IconifyIcon;

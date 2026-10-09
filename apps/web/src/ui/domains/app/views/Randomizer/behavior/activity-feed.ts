@@ -4,7 +4,7 @@ import type { LogEntry } from '../../../../../../lib/log-bus';
 import { activityRowOf } from './activity-row';
 import { formatTime } from './format-time';
 import { isRoomEcho } from './is-room-echo';
-import { AP_KIND, AP_TAG, NOTHING_HIDDEN } from './activity-feed.constants';
+import { AP_KIND, AP_TAG } from './activity-feed.constants';
 import type { RoomMessage } from '../../../../../../lib/game/randomizer-client';
 import type { ActivityItem } from './activity-feed.type';
 
@@ -26,15 +26,12 @@ const mergeByTime = (first: ActivityItem[], second: ActivityItem[]): ActivityIte
   return merged.concat(first.slice(i), second.slice(j));
 };
 
-const buildActivityRows = (
-  entries: readonly LogEntry[], lines: readonly RoomMessage[], hidden: ReadonlySet<string> = NOTHING_HIDDEN,
-): LogRow[] => {
+const buildActivityRows = (entries: readonly LogEntry[], lines: readonly RoomMessage[]): LogRow[] => {
   const own = entries
     .filter((entry) => !isRoomEcho(entry, lines))
     .map((entry) => ({ at: entry.timestamp, row: activityRowOf(entry) }));
   const room = lines.map((line) => ({ at: line.at, row: roomRowOf(line) }));
-  const rows = mergeByTime(own, room).map((item) => item.row);
-  return hidden.size > 0 ? rows.filter((row) => !hidden.has(row.kind)) : rows;
+  return mergeByTime(own, room).map((item) => item.row);
 };
 
 export { buildActivityRows };

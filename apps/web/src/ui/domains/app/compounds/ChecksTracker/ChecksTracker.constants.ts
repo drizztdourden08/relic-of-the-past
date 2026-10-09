@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
 import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
 import type { ItemFilter, ShowMode } from '@shared/game/logic/queries/check-grouping';
-import type { IconProps, SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
+import type { IconPath, SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
 import type { StatusKey, TrackerPanels } from './ChecksTracker.type';
 
 const CHECK_PATHS = [
@@ -47,10 +47,6 @@ const CLOSE_PATHS = [
   'M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z',
 ];
 
-const SEARCH_PATHS = [
-  'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0',
-];
-
 const CLOSED_PANELS: TrackerPanels = { filters: false, groupConfig: false, tags: false };
 
 const SHOW_MODE_OPTIONS: SegmentOption<ShowMode>[] = [
@@ -87,11 +83,11 @@ const STATUS_LABELS: Record<StatusKey, string> = {
   total: 'Every check',
 };
 
-const STATUS_SHAPES: Record<StatusKey, Pick<IconProps, 'paths' | 'circles'>> = {
-  completed: { paths: CHECK_PATHS },
+const STATUS_SHAPES: Record<StatusKey, IconPath> = {
+  completed: { d: CHECK_PATHS },
   reachable: { circles: DOT_CIRCLES },
-  blocked: { paths: RING_PATHS },
-  total: { paths: STACK_PATHS },
+  blocked: { d: RING_PATHS },
+  total: { d: STACK_PATHS },
 };
 
 const SUMMARY_STATS: { key: StatusKey; label: string }[] = [
@@ -105,6 +101,6 @@ const EVENT_MARK = './logos/logo/logo-128.png';
 
 export {
   CHECK_PATHS, CLOSED_PANELS, CLOSE_PATHS, DOT_CIRCLES, EVENT_MARK, FUNNEL_PATHS, GRID_PATHS, ITEM_FILTER_OPTIONS,
-  LIST_DETAIL_PATHS, LIST_PATHS, MAX_DIMENSIONS, NESTED_PATHS, RING_PATHS, SEARCH_PATHS, SHOW_MODE_OPTIONS,
+  LIST_DETAIL_PATHS, LIST_PATHS, MAX_DIMENSIONS, NESTED_PATHS, RING_PATHS, SHOW_MODE_OPTIONS,
   STACK_PATHS, STATUS_LABELS, STATUS_SHAPES, SUMMARY_STATS, TAG_GROUPS, TAG_MODE_OPTIONS, TAG_PATHS,
 };

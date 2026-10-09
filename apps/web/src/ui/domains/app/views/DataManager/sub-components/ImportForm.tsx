@@ -76,12 +76,13 @@ const ImportForm = (props: ImportFormProps) => {
           disabled={isDisabled}
         />
         <Button
-          variant="bare"
-          className="import-form__download-btn"
+          variant="primary"
+          size="sm"
           onClick={handleDownload}
+          loading={busy}
           disabled={isDisabled || !url.trim()}
         >
-          {busy ? '...' : 'Download'}
+          Download
         </Button>
       </Box>
       <Box className="import-form__divider">or</Box>

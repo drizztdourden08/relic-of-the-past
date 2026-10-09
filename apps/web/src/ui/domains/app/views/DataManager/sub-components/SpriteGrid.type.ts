@@ -7,14 +7,6 @@ interface SpriteGridProps {
 
 type CategoryFilter = 'all' | SpriteCategory;
 
-interface CatButtonProps {
-  label: string;
-  value: CategoryFilter;
-  current: string;
-  onClick: (value: CategoryFilter) => void;
-  count: number;
-}
-
 interface SpriteCardProps {
   file: string;
   label: string;
@@ -22,4 +14,4 @@ interface SpriteCardProps {
   baseUrl: string;
 }
 
-export type { SpriteGridProps, CategoryFilter, CatButtonProps, SpriteCardProps };
+export type { SpriteGridProps, CategoryFilter, SpriteCardProps };

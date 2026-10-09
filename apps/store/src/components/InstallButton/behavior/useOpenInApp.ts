@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useRef } from 'react';
 import { formatInstallLink } from '@shared/store/deep-link';
-import { showToast } from '@site-kit/toast/toast-store';
+import { toast } from '@drizztdourden08/tessera/composites';
 import { ANSWER_MS, NOT_ANSWERED, NOT_ANSWERED_MS } from './useOpenInApp.constants';
 
 const useOpenInApp = (itemId: string) => {
@@ -21,7 +21,7 @@ const useOpenInApp = (itemId: string) => {
     timer.current = window.setTimeout(() => {
       window.removeEventListener('blur', onLeave);
       document.removeEventListener('visibilitychange', onLeave);
-      if (!answered && document.hasFocus()) showToast({ message: NOT_ANSWERED, variant: 'warning', duration: NOT_ANSWERED_MS });
+      if (!answered && document.hasFocus()) toast({ message: NOT_ANSWERED, variant: 'warning', duration: NOT_ANSWERED_MS });
     }, ANSWER_MS);
   }, [itemId]);
 };

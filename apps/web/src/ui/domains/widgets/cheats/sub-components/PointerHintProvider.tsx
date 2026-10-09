@@ -1,11 +1,11 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useMemo, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
-import { Box, Portal, Text } from '@drizztdourden08/tessera/primitives';
-import { ControlGlyph } from './ControlGlyph';
+import { Box, Portal, Shortcut, Text } from '@drizztdourden08/tessera/primitives';
 import { PointerHintContext } from '../behavior/pointer-hint-context';
+import { shortcutOf } from '../behavior/shortcut-of';
 import type { PointerHintApi, PointerHintState } from '../CheatsWidget.type';
-import type { ControlHint } from './ControlGlyph.type';
+import type { ControlHint } from './ControlHint.type';
 import { POINTER_OFFSET, VIEWPORT_EDGE } from './PointerHintProvider.constants';
 import type { PointerHintProviderProps } from './PointerHintProvider.type';
 
@@ -38,7 +38,7 @@ const PointerHintProvider = ({ children }: PointerHintProviderProps) => {
             <Text className="cheats-pointer-hint__title">{state.title}</Text>
             {state.items.map((item) => (
               <Box key={`${item.glyph}-${item.label}`} className="cheats-pointer-hint__row">
-                <ControlGlyph kind={item.glyph} keyName={item.keyName} />
+                <Shortcut size="xs" {...shortcutOf(item)} />
                 <Text className="cheats-pointer-hint__label">{item.label}</Text>
               </Box>
             ))}

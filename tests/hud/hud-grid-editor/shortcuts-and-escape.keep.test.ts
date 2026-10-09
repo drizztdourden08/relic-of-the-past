@@ -22,7 +22,7 @@ describe('every shortcut does what the legend draws', () => {
     mountGrid(patch);
     down(header('column 2'));
     expect(document.querySelector('.hud-grid__key[data-shortcut="move-earlier"]')?.textContent)
-      .toContain('←');
+      .toContain('Left arrow');
     press('ArrowLeft');
     expect(patch).toHaveBeenCalledTimes(1);
     expect(patch.mock.calls[0][0].columns).toEqual(['fill', 'auto', 'auto']);

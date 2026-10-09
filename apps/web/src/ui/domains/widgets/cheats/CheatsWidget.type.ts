@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind types */
 import type { MouseEvent } from 'react';
 import type { CapacityRung, CheatCategory } from '@app/lib/game';
-import type { ControlHint } from './sub-components/ControlGlyph.type';
+import type { ControlHint } from './sub-components/ControlHint.type';
 
 type CheatTab = 'player' | 'items' | 'rules' | 'checks';
 
@@ -17,8 +17,6 @@ type PointerHintApi = {
   move: (e: MouseEvent) => void;
   hide: () => void;
 };
-
-type Placement = { left: number; top: number; placed: boolean };
 
 type CapacityLadder = {
   ladder: CapacityRung[];
@@ -39,4 +37,4 @@ type CheatTabProps = {
   gates: CheatGates;
 };
 
-export type { CapacityLadder, CheatGates, CheatTab, CheatTabProps, Placement, PointerHintApi, PointerHintState };
+export type { CapacityLadder, CheatGates, CheatTab, CheatTabProps, PointerHintApi, PointerHintState };

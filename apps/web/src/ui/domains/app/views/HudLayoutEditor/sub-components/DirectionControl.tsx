@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box, Field, IconButton } from '@drizztdourden08/tessera/primitives';
+import { Box, Field, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { DIRECTIONS } from './DirectionControl.constants';
 import './HudLayoutEditor.layout.css';
 import './HudLayoutEditor.layout-set.css';
@@ -21,7 +20,7 @@ const DirectionControl = (props: DirectionControlProps) => {
           label={option.label}
           onClick={() => onChange(option.value)}
         >
-          <IconifyIcon icon={option.icon} width={16} height={16} aria-hidden />
+          <Icon icon={option.icon} size={16} aria-hidden />
         </IconButton>
       ))}
     </Box>

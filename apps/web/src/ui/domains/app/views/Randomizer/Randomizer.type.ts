@@ -1,10 +1,13 @@
 /* @layer renderer-components @kind types */
 import type { IconifyIcon } from '@iconify/react/offline';
-import type { DashboardPanelProps } from '@drizztdourden08/tessera/composites';
+import type { GridSpan } from '@drizztdourden08/tessera/primitives';
 
 type RandomizerTab = 'run' | 'options' | 'network' | 'online' | 'logs' | 'spoiler';
 
-type PanelPlacement = Required<Pick<DashboardPanelProps, 'section' | 'span'>>;
+interface PanelPlacement {
+  section: string;
+  span: GridSpan;
+}
 
 interface RandomizerTabSpec {
   label: string;

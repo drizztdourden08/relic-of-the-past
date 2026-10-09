@@ -69,16 +69,6 @@
   color: var(--c-text-dim);
 }
 
-.credits-tab__link {
-  color: var(--c-primary);
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.credits-tab__link:hover {
-  text-decoration: underline;
-}
-
 .credits-tab__entry-license {
   font-size: var(--text-base);
   padding: var(--space-xs) var(--space-sm);

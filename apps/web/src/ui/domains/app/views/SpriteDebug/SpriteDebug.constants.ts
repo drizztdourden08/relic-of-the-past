@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind constants */
 import type React from 'react';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
+import type { ReviewStatus } from './SpriteDebug.type';
 
 const S: Record<string, React.CSSProperties> = {
   modeHint: {
@@ -16,27 +18,6 @@ const S: Record<string, React.CSSProperties> = {
     flexShrink: 0,
     flexWrap: 'wrap',
   },
-  tabGroup: {
-    display: 'flex',
-    gap: 0,
-    borderRadius: 4,
-    overflow: 'hidden',
-    border: '1px solid var(--c-border-strong)',
-  },
-  catTab: {
-    padding: '3px 10px',
-    background: 'var(--c-hover)',
-    border: 'none',
-    color: 'var(--c-text-dim)',
-    fontSize: 11,
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-    transition: 'all 0.1s',
-  },
-  catTabActive: {
-    background: 'var(--c-selected)',
-    color: 'var(--c-primary-bright)',
-  },
   stats: {
     display: 'flex',
     gap: 10,
@@ -46,32 +27,6 @@ const S: Record<string, React.CSSProperties> = {
     display: 'flex',
     gap: 4,
     marginLeft: 'auto',
-  },
-  filterBtn: {
-    padding: '3px 10px',
-    background: 'var(--c-hover)',
-    border: '1px solid var(--c-border-strong)',
-    borderRadius: 4,
-    color: 'var(--c-text-dim)',
-    fontSize: 11,
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-  },
-  filterBtnActive: {
-    background: 'var(--c-selected)',
-    borderColor: 'var(--c-primary)',
-    color: 'var(--c-primary-bright)',
-  },
-  resetBtn: {
-    padding: '3px 10px',
-    background: 'var(--c-danger-soft)',
-    border: '1px solid var(--c-danger-soft)',
-    borderRadius: 4,
-    color: 'var(--c-danger)',
-    fontSize: 11,
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-    marginLeft: 8,
   },
   grid: {
     flex: 1,
@@ -130,27 +85,6 @@ const S: Record<string, React.CSSProperties> = {
     fontSize: 10,
     color: 'var(--c-text-muted)',
   },
-  statusBtns: {
-    display: 'flex',
-    gap: 3,
-    flexShrink: 0,
-  },
-  statusBtn: {
-    width: 24,
-    height: 24,
-    borderRadius: 4,
-    border: '1px solid var(--c-border-strong)',
-    background: 'transparent',
-    cursor: 'pointer',
-    fontSize: 13,
-    fontWeight: 700,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
-    fontFamily: 'inherit',
-    transition: 'all 0.1s',
-  },
   commentInput: {
     marginTop: 4,
     padding: '4px 6px',
@@ -177,9 +111,23 @@ const LABEL_STYLES: Record<string, React.CSSProperties> = {
   dim: { color: 'var(--c-text-dim)' },
   danger: { color: 'var(--c-danger)' },
   muted: { color: 'var(--c-text-muted)' },
-  count: { opacity: 0.5, fontSize: 10 },
 };
 
 const NONE_LABEL: React.CSSProperties = { fontSize: 9, color: 'var(--c-text-muted)' };
 
-export { LABEL_STYLES, MODES, NONE_LABEL, S };
+const FILTER_OPTIONS: SegmentOption<'all' | ReviewStatus>[] = [
+  { value: 'all', label: 'All' },
+  { value: 'neutral', label: 'Unchecked' },
+  { value: 'good', label: 'Good' },
+  { value: 'yellow', label: 'Re-review' },
+  { value: 'bad', label: 'Bad' },
+];
+
+const STATUS_OPTIONS: SegmentOption<ReviewStatus>[] = [
+  { value: 'good', icon: 'check', hint: { label: 'Good', description: 'The sprite is right' } },
+  { value: 'yellow', icon: 'circle-dot', hint: { label: 'Re-review', description: 'Look at this one again' } },
+  { value: 'neutral', icon: 'circle', hint: { label: 'Unchecked', description: 'Not reviewed yet' } },
+  { value: 'bad', icon: 'x', hint: { label: 'Bad', description: 'The sprite is wrong' } },
+];
+
+export { FILTER_OPTIONS, LABEL_STYLES, MODES, NONE_LABEL, S, STATUS_OPTIONS };

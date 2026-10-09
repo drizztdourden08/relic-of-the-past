@@ -135,11 +135,6 @@
   100% { left: 100%; }
 }
 
-@keyframes axis-rec-flash {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
-}
-
 .input-cal__card:hover {
   border-color: var(--c-border);
 }

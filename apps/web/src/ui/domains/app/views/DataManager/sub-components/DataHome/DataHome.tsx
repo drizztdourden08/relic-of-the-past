@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 import { usePlatform } from '@app/platform';
-import { Box, Text, Button, Spinner } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Button, Icon, Spinner } from '@drizztdourden08/tessera/primitives';
 import { useStorageSummary } from './behavior/useStorageSummary';
 import { formatBytes } from './behavior/formatBytes';
-import { DOMAIN_ICONS } from './DataHome.constants';
+import { DomainTiles } from './sub-components/DomainTiles';
 import './DataHome.css';
 
 const DataHome = () => {
@@ -24,24 +24,13 @@ const DataHome = () => {
         )}
       </Box>
 
-      {loading && !summary ? (
+      {summary ? <DomainTiles domains={summary.domains} /> : loading && (
         <Box className="data-home__loading"><Spinner size="sm" /></Box>
-      ) : (
-        <Box className="data-home__grid">
-          {summary?.domains.map((d) => (
-            <Box key={d.domain} className="data-home__card">
-              <Text className="data-home__card-icon">{DOMAIN_ICONS[d.domain] ?? '📁'}</Text>
-              <Text className="data-home__card-count">{d.count}</Text>
-              <Text className="data-home__card-label">{d.label}</Text>
-              <Text className="data-home__card-size">{formatBytes(d.bytes)}</Text>
-            </Box>
-          ))}
-        </Box>
       )}
 
       <Box className="data-home__footer">
         <Text className="data-home__total">Total on disk: {formatBytes(summary?.totalBytes ?? 0)}</Text>
-        <Button variant="bare" size="sm" onClick={refresh}>Refresh</Button>
+        <Button variant="ghost" size="sm" icon={<Icon name="refresh-cw" />} onClick={refresh}>Refresh</Button>
       </Box>
     </Box>
   );

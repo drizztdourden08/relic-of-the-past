@@ -5,7 +5,7 @@ import listChecksIcon from '@iconify-icons/lucide/list-checks';
 import networkIcon from '@iconify-icons/lucide/network';
 import globeIcon from '@iconify-icons/lucide/globe';
 import slidersHorizontalIcon from '@iconify-icons/lucide/sliders-horizontal';
-import type { SettingsPageAnchor } from '../../compounds/SettingsPage';
+import type { SettingsPageAnchor } from '@drizztdourden08/tessera/composites';
 import type { PanelPlacement, RandomizerNavGroup, RandomizerTab, RandomizerTabSpec } from './Randomizer.type';
 
 const RANDOMIZER_TABS: Record<RandomizerTab, RandomizerTabSpec> = {
@@ -30,6 +30,8 @@ const RUN_PANELS = {
   pool: { section: 'options-summary', span: 1 },
   settings: { section: 'options-settings', span: 2 },
 } as const satisfies Record<string, PanelPlacement>;
+
+const NO_RUN_PANEL: PanelPlacement = { section: 'run', span: 'full' };
 
 const RUN_ANCHORS: SettingsPageAnchor[] = [
   { id: RUN_PANELS.summary.section, label: 'Summary' },
@@ -61,4 +63,4 @@ const NETWORK_ANCHORS: SettingsPageAnchor[] = [
   { id: NETWORK_PANELS.server.section, label: 'Server' },
 ];
 
-export { LOCAL_RUN_ANCHORS, NETWORK_ANCHORS, NETWORK_PANELS, NOT_RANDOMIZED, RANDOMIZER_NAV_GROUPS, RANDOMIZER_TABS, RUN_ANCHORS, RUN_PANELS };
+export { LOCAL_RUN_ANCHORS, NETWORK_ANCHORS, NETWORK_PANELS, NO_RUN_PANEL, NOT_RANDOMIZED, RANDOMIZER_NAV_GROUPS, RANDOMIZER_TABS, RUN_ANCHORS, RUN_PANELS };

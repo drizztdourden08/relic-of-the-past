@@ -53,7 +53,7 @@ const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
                   className="tracker-filters__group-remove"
                   onClick={() => removeDimension(i)}
                 >
-                  <Icon paths={CLOSE_PATHS} size={9} />
+                  <Icon path={{ d: CLOSE_PATHS }} size={9} />
                 </IconButton>
               </Box>
             ))}

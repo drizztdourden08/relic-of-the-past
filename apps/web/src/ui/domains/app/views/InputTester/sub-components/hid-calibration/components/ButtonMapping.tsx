@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Button, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { ITEM_STYLE, MANUAL_HINT } from './ButtonMapping.constants';
 import type { ButtonMappingProps } from './ButtonMapping.type';
@@ -50,8 +50,8 @@ const ButtonMapping = (props: ButtonMappingProps) => {
               <Text className="hid-cal__input-name" onClick={() => prereqsDone && onClickItem(i)}>{item.label}{item.kind === 'axis' ? ' 🕹️' : ''}</Text>
               {item.result && <Text className="hid-cal__input-result">{item.result}</Text>}
               {canClear && (
-                <Button variant="bare" className="hid-cal__input-clear" title={`Clear ${item.label}`}
-                  onClick={(e) => { e.stopPropagation(); onClearItem(i); }}>×</Button>
+                <IconButton variant="ghost" tone="danger" size="xs" className="hid-cal__input-clear" label={`Clear ${item.label}`}
+                  onClick={(e) => { e.stopPropagation(); onClearItem(i); }}><Icon name="x" /></IconButton>
               )}
             </Box>
           );

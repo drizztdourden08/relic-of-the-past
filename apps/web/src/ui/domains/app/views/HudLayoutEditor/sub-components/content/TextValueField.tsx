@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Field, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Box, Field, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
 import { resolveValue } from '@shared/hud/data';
 import { readExpr } from '../../behavior/check-expr';
 import { useInstanceScopes } from '../../behavior/formula-scope';
@@ -24,7 +24,6 @@ const TextValueField = (props: TextValueFieldProps) => {
       label="value"
       error={problem?.message}
       className={`hud-value-field${promote.className}`}
-      style={promote.style}
     >
       <Box className="hud-value-input hud-value-field__row" data-formula={field.formula ? 'true' : undefined}>
         <TextInput
@@ -41,14 +40,13 @@ const TextValueField = (props: TextValueFieldProps) => {
           onKeyDown={(event) => field.handleKeyDown(event.key, () => event.preventDefault())}
         />
         {field.focused && !field.formula && (
-          <Button
-            variant="bare"
+          <Pressable
             className="hud-value-input__chip"
             title="Drive this from the game, or type ="
             aria-label="Write a formula"
             onMouseDown={(event) => event.preventDefault()}
             onClick={field.startFormula}
-          >=</Button>
+          >=</Pressable>
         )}
       </Box>
 

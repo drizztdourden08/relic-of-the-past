@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box, IconButton } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { ENGINES } from './EngineToggle.constants';
 import './HudLayoutEditor.layout.css';
 import './HudLayoutEditor.layout-set.css';
@@ -21,7 +20,7 @@ const EngineToggle = (props: EngineToggleProps) => {
           data-engine={engine.value}
           onClick={() => onChange(engine.value)}
         >
-          <IconifyIcon icon={engine.icon} width={16} height={16} aria-hidden />
+          <Icon icon={engine.icon} size={16} aria-hidden />
         </IconButton>
       ))}
     </Box>

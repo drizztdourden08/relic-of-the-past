@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { InputProfileList } from './InputProfileList';
 import { SidebarProfileButton } from './SidebarProfileButton';
 import type { CtrlProps } from './controls.type';
@@ -12,14 +12,9 @@ const ControlsSidebar = ({ ctrl }: CtrlProps) => {
   return (
     <Box className={`controls-settings__sidebar ${ctrl.sidebarCollapsed ? 'controls-settings__sidebar--collapsed' : ''}`}>
       <Box className="controls-settings__col-header">
-        <Button
-          variant="bare"
-          className="controls-settings__col-toggle"
-          onClick={toggleCollapsed}
-          title={ctrl.sidebarCollapsed ? 'Expand' : 'Collapse'}
-        >
-          {ctrl.sidebarCollapsed ? '▶' : '◀'}
-        </Button>
+        <IconButton variant="ghost" size="xs" onClick={toggleCollapsed} label={ctrl.sidebarCollapsed ? 'Expand' : 'Collapse'}>
+          <Icon name={ctrl.sidebarCollapsed ? 'chevron-right' : 'chevron-left'} />
+        </IconButton>
         <Text className="controls-settings__col-title">Profiles</Text>
       </Box>
       <Box className="controls-settings__sidebar-icons">

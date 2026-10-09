@@ -6,7 +6,6 @@
   "include": [
     "src/**/*",
     "../site-kit/**/*",
-    "../web/src/ui/design-system/**/*",
     "../web/src/ui/domains/packs/**/*",
     "../web/src/lib/msu/decode/**/*",
     "../web/src/lib/game/snes-color/**/*",

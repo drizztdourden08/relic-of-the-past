@@ -1,22 +1,6 @@
 /* @layer site-kit @kind style */
 
-.saved-views__trigger.btn {
+.saved-views__menu {
   align-self: flex-end;
-  height: var(--control-h-sm);
-  gap: var(--space-xs);
   white-space: nowrap;
-}
-
-.saved-views__eyebrow {
-  color: var(--c-text-muted);
-  font-size: var(--text-xs);
-  letter-spacing: var(--eyebrow-tracking);
-  text-transform: uppercase;
-}
-
-.saved-views__name {
-  color: var(--c-primary);
-  max-width: var(--view-name-maxw);
-  overflow: hidden;
-  text-overflow: ellipsis;
 }

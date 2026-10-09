@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { usePlatform } from '@app/platform';
-import type { ToastItem } from '@drizztdourden08/tessera/composites';
+import { toast } from '@drizztdourden08/tessera/composites';
 import { DEFAULT_SETTINGS, mergeSettings } from '../../../../../../lib/game/settings';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../../../../lib/game';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
@@ -29,7 +29,6 @@ const useProfileSettings = (props: ProfileHubProps) => {
 
   const { window: win } = usePlatform();
   const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
-  const [toasts, setToasts] = useState<ToastItem[]>([]);
   const restartToastShownRef = useRef(false);
   const wasRunningRef = useRef(isGameRunning);
   const loadedRef = useRef(false);
@@ -41,7 +40,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
     }
     if (wasRunningRef.current && !isGameRunning) {
       restartToastShownRef.current = false;
-      setToasts((prev) => prev.filter((t) => t.id !== RESTART_TOAST_ID));
+      toast.dismiss(RESTART_TOAST_ID);
     }
     wasRunningRef.current = isGameRunning;
   }, [isGameRunning]);
@@ -67,7 +66,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
     setSettings((prev) => {
       const next = { ...prev, ...patch };
       applySettingsSideEffects(patch, next, {
-        profileId: profile.id, isGameRunning, changedKeys, restartToastShownRef, setToasts,
+        profileId: profile.id, isGameRunning, changedKeys, restartToastShownRef,
         setFullscreen: win.setFullscreen,
         onWindowModeChange, onConstraintSettingsChange, onMasterVolumeChange, onDisplayPerfChange,
         onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange, onPixelPerfectChange,
@@ -135,20 +134,13 @@ const useProfileSettings = (props: ProfileHubProps) => {
   useEffect(() => {
     const handler = () => {
       handleSettingsChange({ hudStyle: 'vanilla' });
-      setToasts((prev) => [
-        ...prev.filter((t) => t.id !== ENHANCED_FALLBACK_TOAST_ID),
-        { id: ENHANCED_FALLBACK_TOAST_ID, message: ENHANCED_FALLBACK_MESSAGE, variant: 'danger' as const },
-      ]);
+      toast({ id: ENHANCED_FALLBACK_TOAST_ID, message: ENHANCED_FALLBACK_MESSAGE, variant: 'danger', duration: 0 });
     };
     window.addEventListener(ENHANCED_FALLBACK_EVENT, handler);
     return () => window.removeEventListener(ENHANCED_FALLBACK_EVENT, handler);
   }, [handleSettingsChange]);
 
-  const dismissToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
-
-  return { settings, handleSettingsChange, toasts, dismissToast };
+  return { settings, handleSettingsChange };
 };
 
 export { useProfileSettings };

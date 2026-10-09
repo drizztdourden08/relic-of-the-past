@@ -128,9 +128,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
       value={formRandomizer}
       onChange={(next) => setFormRandomizer({ ...formRandomizer, ...next })}
     />
-  ) : !selectedProfile ? (
-    <Text>Select a profile to view details · Double-click to open</Text>
-  ) : (
+  ) : selectedProfile && (
     <ProfileDetailPanel
       profile={selectedProfile}
       settings={settings}
@@ -144,10 +142,9 @@ const ProfileManager = (props: ProfileManagerProps) => {
 
   return (
     <ListDetailLayout
-      className={showOptionsPane ? 'master-detail--rand-options' : ''}
       list={list}
       detail={detail}
-      detailEmpty={!showOptionsPane && !selectedProfile}
+      emptyDetail={<EmptyState message="Select a profile to view details · Double-click to open" />}
     />
   );
 };

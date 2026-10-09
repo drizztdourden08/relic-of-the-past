@@ -1,40 +1,38 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
+import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { checkTypeIcon } from './behavior/check-type-icon';
+import { LIST_SHAPE } from './StopAtCheckPicker.constants';
 import type { StopAtCheckListProps } from './StopAtCheckPicker.type';
 
 const StopAtCheckList = (props: StopAtCheckListProps) => {
   const { checks, selectedId, statuses, onSelect } = props;
 
   return (
-    <Box className="stop-picker__list">
-      <Button
-        variant="bare"
-        className={`stop-picker__row ${selectedId === '' ? 'stop-picker__row--selected' : ''}`}
-        onClick={() => onSelect('')}
-      >
-        <Text className="stop-picker__row-icon">∞</Text>
-        <Text className="stop-picker__row-name">No stop (full run)</Text>
-      </Button>
-
+    <>
+      <ListItemList className="stop-picker__list" label="Stop at check" shape={LIST_SHAPE}>
+        <ListItemRow
+          icon={<Text className="stop-picker__row-icon">∞</Text>}
+          name="No stop (full run)"
+          selected={selectedId === ''}
+          onClick={() => onSelect('')}
+        />
+        {checks.map((check) => (
+          <ListItemRow
+            key={check.id}
+            className={`stop-picker__row--${statuses.get(check.id) ?? 'blocked'}`}
+            icon={<Text className="stop-picker__row-icon" title={check.kind}>{checkTypeIcon(check.kind)}</Text>}
+            name={check.name}
+            columns={[{ primary: <Text className="stop-picker__row-id">{check.id}</Text>, align: 'end' }]}
+            selected={selectedId === check.id}
+            onClick={() => onSelect(check.id)}
+          />
+        ))}
+      </ListItemList>
       {checks.length === 0 && (
         <Text className="stop-picker__empty">No checks match these filters.</Text>
       )}
-
-      {checks.map((check) => (
-        <Button
-          variant="bare"
-          key={check.id}
-          className={`stop-picker__row stop-picker__row--${statuses.get(check.id) ?? 'blocked'} ${selectedId === check.id ? 'stop-picker__row--selected' : ''}`}
-          onClick={() => onSelect(check.id)}
-          title={check.kind}
-        >
-          <Text className="stop-picker__row-icon">{checkTypeIcon(check.kind)}</Text>
-          <Text className="stop-picker__row-name">{check.name}</Text>
-          <Text className="stop-picker__row-id">{check.id}</Text>
-        </Button>
-      ))}
-    </Box>
+    </>
   );
 };
 

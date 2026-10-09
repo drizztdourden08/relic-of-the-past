@@ -31,12 +31,6 @@
   padding-right: var(--space-sm);
 }
 
-.randomizer-options .tab-bar__badge {
-  background: var(--c-primary-soft);
-  color: var(--c-primary-bright);
-  font-variant-numeric: tabular-nums;
-}
-
 .randomizer-options__header {
   display: flex;
   flex-direction: column;
@@ -48,11 +42,4 @@
   color: var(--c-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-@media (width <= 900px) {
-  .master-detail--rand-options {
-    grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, auto) minmax(0, 1fr);
-  }
 }

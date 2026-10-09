@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Button, Text, Image } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { ControllerPortRow } from '../../../../compounds/ControllerPortRow';
 import { UnavailableControllerNotice } from '../../../../compounds/UnavailableControllerNotice';
 import { controllerCardInfo } from '../../../../../../../lib/input/controller-card-info';
@@ -31,9 +31,9 @@ const AdapterDeviceCard = (props: AdapterDeviceCardProps) => {
     <Box className={`device-card ${hasReadyPort ? '' : 'device-card--disconnected'}`} draggable={hasReadyPort} onDragStart={handleDragStart}>
       <Box className="device-card__row">
         <Box className="device-card__left">
-          <Button variant="bare" className={`device-card__icon-btn ${hasReadyPort ? 'device-card__icon-btn--active' : 'device-card__icon-btn--disconnected'}`} onClick={handleAssign} title="Adapter">
+          <Pressable className={`device-card__icon-btn ${hasReadyPort ? 'device-card__icon-btn--active' : 'device-card__icon-btn--disconnected'}`} onClick={handleAssign} title="Adapter">
             <Image src={iconSrc} alt={info.deviceFamily} className="device-card__icon" />
-          </Button>
+          </Pressable>
         </Box>
         <Box className="device-card__info">
           <Text className="device-card__name">{info.displayName}</Text>

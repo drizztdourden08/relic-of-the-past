@@ -25,7 +25,7 @@ const ProgressSection = ({ placement, view }: ProgressSectionProps) => {
       empty={NOT_CONNECTED_HINT}
     >
       {progress !== null && progress.total > 0 && (
-        <ProgressBar value={progress.checked} max={progress.total} tone="secondary" readout={`${Math.round((progress.checked / progress.total) * 100)}%`} />
+        <ProgressBar value={progress.checked} max={progress.total} tone="secondary" label="Locations checked" showValue />
       )}
     </NetworkSection>
   );

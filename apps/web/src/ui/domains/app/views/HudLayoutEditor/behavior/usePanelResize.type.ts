@@ -1,14 +1,13 @@
 /* @layer renderer-components @kind types */
-import type { RefObject } from 'react';
-import type { ResizeBinding } from '@drizztdourden08/tessera/primitives';
+import type { ResizeHandleProps } from '@drizztdourden08/tessera/composites';
+
+type PanelResizeBinding = Pick<ResizeHandleProps, 'value' | 'min' | 'max' | 'onResize'>;
 
 interface PanelResize {
   outlineWidth: number;
   inspectorWidth: number;
-  outlineRailRef: RefObject<HTMLElement | null>;
-  inspectorRailRef: RefObject<HTMLElement | null>;
-  outlineResize: ResizeBinding;
-  inspectorResize: ResizeBinding;
+  outlineResize: PanelResizeBinding;
+  inspectorResize: PanelResizeBinding;
 }
 
-export type { PanelResize };
+export type { PanelResize, PanelResizeBinding };

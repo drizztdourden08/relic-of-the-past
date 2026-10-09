@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { usePlatform } from '@app/platform';
 import { useSearchStore } from '@app/stores/search-store';
 import { isPrimaryModifier } from '@shared/platform';
-import { dismissStackDepth } from '@drizztdourden08/tessera/primitives';
+import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { PageId, ConfirmDialog } from '../App.type';
 
 const useKeyboardShortcuts = (
@@ -15,6 +15,7 @@ const useKeyboardShortcuts = (
 ) => {
   const { window: win, info } = usePlatform();
   const os = info.os;
+  const escapeStack = useEscapeStack();
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.altKey && e.key === 'Enter') {
@@ -35,7 +36,7 @@ const useKeyboardShortcuts = (
       }
       if (e.key !== 'Escape') return;
 
-      if (dismissStackDepth() > 0) return;
+      if (escapeStack.depth() > 0) return;
       e.preventDefault();
 
       if (dialog) { dismissDialog(); return; }
@@ -44,7 +45,7 @@ const useKeyboardShortcuts = (
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [win, os, nav, activeProfile, dialog, dismissDialog, developerToolsEnabled]);
+  }, [win, os, nav, activeProfile, dialog, dismissDialog, developerToolsEnabled, escapeStack]);
 };
 
 export { useKeyboardShortcuts };

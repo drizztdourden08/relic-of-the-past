@@ -151,7 +151,7 @@ Whether the checks tracker widget is on screen right now. The widget reports it 
 
 ## stores/exclusive-insets-store
 
-Broadcasts the insets of docked widgets, computed by the Widget layout system, to the consumers that need them (GameLayer, overlays). The Widget composite stays presentational and emits insets through a callback. Views wire that callback to this store, which keeps store ownership out of the bare design-system tier.
+Broadcasts the room docked widgets take around the game, to the consumers that need it (GameLayer, overlays). Tessera's WidgetManager reports the main view's rectangle through `onMainRect`; AppMain turns that rectangle into the four insets and writes them here, so the store stays out of the Tessera parts.
 
 ## stores/profile-connection-store
 

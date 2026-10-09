@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box, Button, Flex, Stack, Text, Thumbnail } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils';
 import { storeMediaUrl } from '@app/lib/store/store-site';
 import { KIND_ICONS, KIND_LABELS } from '../../../compounds/StoreItemCard';
@@ -19,7 +19,7 @@ const StoreDetail = (props: StoreDetailProps) => {
 
   return (
     <Stack gap="md" className="store-detail">
-      <Thumbnail className="store-detail__image" src={storeMediaUrl(item.card)} alt="" placeholder={icon} />
+      <Image frame className="store-detail__image" src={storeMediaUrl(item.card) ?? undefined} alt="" fallback={icon} />
       <Text as="h3" className="store-detail__name">{item.name}</Text>
       <Text as="p" className="store__lead">{item.summary}</Text>
       <Box className="store-detail__facts">

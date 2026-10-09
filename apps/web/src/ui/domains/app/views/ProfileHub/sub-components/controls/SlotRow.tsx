@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { BindingRow } from './BindingRow';
 import { assignmentLabel } from './assignment-label';
 import { slotName } from '@shared/input/scheme';
@@ -19,14 +19,9 @@ const SlotRow = ({ slot, assignment, onRebind, onRemove }: SlotRowProps) => {
         bindingIcon={slot.icon}
         onRebind={handleRebind}
       />
-      <Button
-        variant="bare"
-        className="slot-row__remove"
-        title={`Remove ${slotName(slot.index)}`}
-        onClick={handleRemove}
-      >
-        −
-      </Button>
+      <IconButton variant="ghost" tone="danger" size="sm" label={`Remove ${slotName(slot.index)}`} onClick={handleRemove}>
+        <Icon name="trash-2" />
+      </IconButton>
     </Box>
   );
 };

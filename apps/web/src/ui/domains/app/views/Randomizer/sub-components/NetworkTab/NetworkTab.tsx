@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Text } from '@drizztdourden08/tessera/primitives';
-import { DashboardGrid, DashboardPanel } from '@drizztdourden08/tessera/composites';
+import { Grid, Text } from '@drizztdourden08/tessera/primitives';
+import { DashboardCard } from '../DashboardCard';
+import { PANEL_MIN_WIDTH } from '../StatTiles.constants';
 import { useNetworkStatus } from './behavior/useNetworkStatus';
 import { networkViewOf } from './behavior/network-view';
 import { ConnectionEditor } from './sub-components/ConnectionEditor';
@@ -19,18 +20,18 @@ const NetworkTab = ({ config, onSaveConnection, frame }: NetworkTabProps) => {
   const view = useMemo(() => networkViewOf(status, last, config), [status, last, config]);
 
   return frame(
-    <DashboardGrid className="network-tab">
-      <DashboardPanel {...NETWORK_PANELS.setup} title="Server setup">
+    <Grid minColWidth={PANEL_MIN_WIDTH} gap="lg" dense className="network-tab">
+      <DashboardCard placement={NETWORK_PANELS.setup} title="Server setup">
         {config === null
           ? <Text className="randomizer-page__hint">No Archipelago profile is open.</Text>
           : <ConnectionEditor config={config} sessionError={status?.connection.error ?? null} onSave={onSaveConnection} />}
-      </DashboardPanel>
+      </DashboardCard>
       <ConnectionSection placement={NETWORK_PANELS.connection} view={view} now={now} />
       <HealthSection placement={NETWORK_PANELS.health} view={view} now={now} />
       <ProgressSection placement={NETWORK_PANELS.progress} view={view} />
       <PlayersSection placement={NETWORK_PANELS.players} view={view} />
       <ServerSection placement={NETWORK_PANELS.server} view={view} />
-    </DashboardGrid>,
+    </Grid>,
     NETWORK_ANCHORS,
   );
 };

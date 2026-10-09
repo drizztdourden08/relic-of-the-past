@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import type { FormulaProblemProps } from './FormulaProblem.type';
 
 const FormulaProblem = (props: FormulaProblemProps) => {
@@ -9,9 +9,9 @@ const FormulaProblem = (props: FormulaProblemProps) => {
   return (
     <>
       {problem.fix && (
-        <Button variant="bare" className="hud-value-input__fix" onClick={() => onFix(problem.fix?.expr ?? '')}>
+        <Pressable className="hud-value-input__fix" onClick={() => onFix(problem.fix?.expr ?? '')}>
           {problem.fix.label} ↵
-        </Button>
+        </Pressable>
       )}
       {problem.suggestion !== undefined && <Text className="hud-inspect__warning">{problem.suggestion}</Text>}
       {problem.column !== undefined && <Text className="hud-value-input__column">column {problem.column}</Text>}

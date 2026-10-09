@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
 import { HudNumber } from '@domains/hud';
 import { useNumberEdit } from '../behavior/useNumberEdit';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
@@ -35,8 +35,7 @@ const NumberCell = (props: NumberCellProps) => {
           onBlur={edit.commit}
         />
       ) : (
-        <Button
-          variant="bare"
+        <Pressable
           className="cheats-player__number-hit"
           aria-label={`Edit ${label}`}
           onClick={edit.begin}

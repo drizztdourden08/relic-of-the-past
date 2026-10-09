@@ -1,24 +1,21 @@
 /* @layer site-kit @kind component */
 import { PROVIDERS } from '@shared/hub/providers';
 import { Box, Stack, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
-import { SettingsSection } from '@drizztdourden08/tessera/composites';
+import { ListItemList, ListItemRow, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SitePage } from '../../layout/SitePage/SitePage';
-import { Row } from '../../components/Row/Row';
 import { AccessChip } from '../../components/AccessChip/AccessChip';
 import { GroupChips } from '../../components/GroupChips/GroupChips';
 import { IdentityRow } from '../../components/IdentityRow/IdentityRow';
-import { DeviceRow } from '../../components/DeviceRow/DeviceRow';
 import { useSessionContext } from '../../session/session-context';
 import { formatDay } from '../../lib/format-date';
 import { useAccountActions } from './behavior/useAccountActions';
-import { useDevices } from './behavior/useDevices';
+import { DevicesSection } from './sub-components/DevicesSection';
 import { ANCHORS, SOURCE_LABELS } from './Account.constants';
 import './Account.css';
 
 const Account = () => {
   const { me, access, identities, groups } = useSessionContext();
   const actions = useAccountActions();
-  const devices = useDevices();
   if (!me || !access) return null;
 
   const accessValue = `${SOURCE_LABELS[access.source]} · checked ${formatDay(access.checkedAt)}`;
@@ -35,38 +32,32 @@ const Account = () => {
 
         <Box data-section="access">
           <SettingsSection title="Access">
-            <Row label={<AccessChip state={access.state} />} value={accessValue} action={recheckButton} />
-            <Row
-              label="Groups"
-              value={<GroupChips groups={groups} manualIds={me.groupIds} roleIds={me.roleGroupIds} />}
-            />
+            <ListItemList label="Access">
+              <ListItemRow name={<AccessChip state={access.state} />} columns={[{ primary: accessValue }]} action={recheckButton} actionVisibility="always" />
+              <ListItemRow name="Groups" columns={[{ primary: <GroupChips groups={groups} manualIds={me.groupIds} roleIds={me.roleGroupIds} /> }]} />
+            </ListItemList>
           </SettingsSection>
         </Box>
 
         <Box data-section="sign-in">
           <SettingsSection title="Sign-in methods" description="The last method cannot be unlinked.">
-            {PROVIDERS.map((provider) => (
-              <IdentityRow
-                key={provider}
-                provider={provider}
-                identity={identities.find((identity) => identity.provider === provider) ?? null}
-                canUnlink={identities.length > 1}
-                busy={actions.busy}
-                onUnlink={(p) => void actions.unlink(p)}
-              />
-            ))}
+            <ListItemList label="Sign-in methods">
+              {PROVIDERS.map((provider) => (
+                <IdentityRow
+                  key={provider}
+                  provider={provider}
+                  identity={identities.find((identity) => identity.provider === provider) ?? null}
+                  canUnlink={identities.length > 1}
+                  busy={actions.busy}
+                  onUnlink={(p) => void actions.unlink(p)}
+                />
+              ))}
+            </ListItemList>
           </SettingsSection>
         </Box>
 
         <Box data-section="devices">
-          <SettingsSection title="Signed-in devices" description="The app, on each machine it is signed in on.">
-            {devices.devices === null && <Text as="p" variant="caption">Loading devices</Text>}
-            {devices.devices?.length === 0 && <Text as="p" variant="caption">No device is signed in.</Text>}
-            {devices.devices?.map((device) => (
-              <DeviceRow key={device.id} device={device} busy={devices.busy} onRevoke={(id) => void devices.revoke(id)} />
-            ))}
-            {devices.error && <Text as="p" variant="caption" role="alert">{devices.error}</Text>}
-          </SettingsSection>
+          <DevicesSection />
         </Box>
 
         <Flex gap="sm" align="center">

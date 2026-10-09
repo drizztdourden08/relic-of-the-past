@@ -24,7 +24,6 @@ export default defineConfig({
     alias: {
       '@shared': resolve(SITE_ROOT, '../../shared'),
       '@app': WEB_SRC,
-      '@ds': resolve(WEB_SRC, 'ui/design-system'),
       '@domains': resolve(WEB_SRC, 'ui/domains'),
       '@site-kit': resolve(SITE_ROOT, '../site-kit'),
     },

@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import type { MouseEvent } from 'react';
 import { getUsageLabel } from '@shared/credits';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Link, Text } from '@drizztdourden08/tessera/primitives';
 import type { CreditEntryCardProps } from './CreditsTab.type';
 
 const CreditEntryCard = ({ entry }: CreditEntryCardProps) => {
@@ -15,14 +15,9 @@ const CreditEntryCard = ({ entry }: CreditEntryCardProps) => {
         <Text className="credits-tab__entry-name">{entry.name}</Text>
         <Text className="credits-tab__entry-project">
           {url ? (
-            <Box
-              as="a"
-              className="credits-tab__link"
-              href={url}
-              onClick={handleLinkClick}
-            >
+            <Link href={url} external onClick={handleLinkClick}>
               {entry.project}
-            </Box>
+            </Link>
           ) : (
             entry.project
           )}

@@ -10,6 +10,7 @@ import arrowUpToLine from '@iconify-icons/lucide/arrow-up-to-line';
 import trashIcon from '@iconify-icons/lucide/trash-2';
 import { drawn } from './drawn';
 import type { IconifyIcon } from '@iconify/types';
+import type { ShortcutKey } from '@drizztdourden08/tessera/primitives';
 import type { TrackAxis } from '../../GridEditor.type';
 
 const GRID_ICONS = {
@@ -26,7 +27,7 @@ const LATER_ICON: Record<TrackAxis, IconifyIcon> = { columns: arrowRight, rows: 
 const START_ICON: Record<TrackAxis, IconifyIcon> = { columns: arrowLeftToLine, rows: arrowUpToLine };
 const END_ICON: Record<TrackAxis, IconifyIcon> = { columns: arrowRightToLine, rows: arrowDownToLine };
 
-const EARLIER_KEY: Record<TrackAxis, string> = { columns: '←', rows: '↑' };
-const LATER_KEY: Record<TrackAxis, string> = { columns: '→', rows: '↓' };
+const EARLIER_KEY: Record<TrackAxis, ShortcutKey> = { columns: 'left', rows: 'up' };
+const LATER_KEY: Record<TrackAxis, ShortcutKey> = { columns: 'right', rows: 'down' };
 
 export { EARLIER_ICON, EARLIER_KEY, END_ICON, GRID_ICONS, LATER_ICON, LATER_KEY, START_ICON };

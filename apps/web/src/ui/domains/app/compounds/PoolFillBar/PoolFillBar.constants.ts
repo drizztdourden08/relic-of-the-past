@@ -2,13 +2,15 @@
 import type { SegmentEntry } from './PoolFillBar.type';
 
 const SEGMENTS: readonly SegmentEntry[] = [
-  { key: 'items', tone: 'green', label: 'items in pool', title: 'Items the shuffle places that are neither a capacity upgrade nor filler' },
-  { key: 'upgrades', tone: 'upgrade', label: 'upgrades', title: 'Capacity upgrade items, each in a filler\'s place' },
-  { key: 'filler', tone: 'warning', label: 'filler', title: 'Balance filler still in the pool' },
-  { key: 'fixed', tone: 'danger', label: 'fixed', title: 'Spots settled before the shuffle' },
-  { key: 'prizes', tone: 'info', label: 'prizes', title: 'The ten boss-reward slots, pre-placed from their own fixed pool' },
+  { key: 'items', color: 'secondary', label: 'items in pool' },
+  { key: 'upgrades', color: 'violet', label: 'upgrades' },
+  { key: 'filler', color: 'warning', label: 'filler' },
+  { key: 'fixed', color: 'danger', label: 'fixed' },
+  { key: 'prizes', color: 'info', label: 'prizes' },
 ];
 
 const TOTAL_TITLE = 'Every location this seed generates, the same total the Checks widget shows';
 
-export { SEGMENTS, TOTAL_TITLE };
+const BAR_LABEL = 'Item pool';
+
+export { BAR_LABEL, SEGMENTS, TOTAL_TITLE };

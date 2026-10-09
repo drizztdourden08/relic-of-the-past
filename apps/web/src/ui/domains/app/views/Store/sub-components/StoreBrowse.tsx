@@ -31,8 +31,8 @@ const StoreBrowse = (props: StoreBrowseProps) => {
     <ListDetailLayout
       className="store-browse"
       list={list}
-      detail={<StoreDetailPanel store={store} />}
-      detailEmpty={!selectedId}
+      detail={selectedId ? <StoreDetailPanel store={store} /> : null}
+      emptyDetail={<EmptyState message="Select a pack to see it here" />}
     />
   );
 };

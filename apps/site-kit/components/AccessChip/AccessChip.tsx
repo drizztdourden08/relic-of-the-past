@@ -1,11 +1,11 @@
 /* @layer site-kit @kind component */
-import { Chip } from '../Chip/Chip';
-import { TONES } from './AccessChip.constants';
+import { Status } from '@drizztdourden08/tessera/primitives';
+import { ACCESS_STATUSES } from './AccessChip.constants';
 import type { AccessChipProps } from './AccessChip.type';
 
 const AccessChip = (props: AccessChipProps) => {
   const { state, className } = props;
-  return <Chip tone={TONES[state]} className={className}>{state}</Chip>;
+  return <Status variant="pill" map={ACCESS_STATUSES} value={state} className={className} />;
 };
 
 export { AccessChip };

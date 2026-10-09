@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { useState, useRef, useCallback, useMemo } from 'react';
-import { Button, Svg, SvgCircle } from '@drizztdourden08/tessera/primitives';
+import { useState, useRef, useCallback } from 'react';
+import { Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { RECORD_DONE_FLASH_MS } from './input-cal-visuals.constants';
 import type { AxisRecordButtonProps } from './input-cal-visuals.type';
 
@@ -34,25 +34,17 @@ const AxisRecordButton = ({ getValues, label }: AxisRecordButtonProps) => {
     setTimeout(() => setDone(false), RECORD_DONE_FLASH_MS);
   }, [label]);
 
-  const color = done ? 'var(--c-secondary-bright)' : recording ? 'var(--c-danger)' : 'var(--c-text-muted)';
-  const buttonStyle = useMemo(() => ({
-    width: 18, height: 18, padding: 0, border: 'none', borderRadius: 4,
-    background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-    animation: recording ? 'axis-rec-flash 0.6s ease-in-out infinite' : undefined,
-  }), [recording]);
-
   return (
-    <Button
-      variant="bare"
+    <IconButton
+      variant="ghost"
+      size="xs"
+      tone={recording ? 'danger' : undefined}
+      active={recording}
       onClick={recording ? stopRecording : startRecording}
-      title={recording ? 'Stop recording & copy to clipboard' : `Record ${label} axis data`}
-      style={buttonStyle}
+      label={recording ? 'Stop recording & copy to clipboard' : `Record ${label} axis data`}
     >
-      <Svg width="14" height="14" viewBox="0 0 14 14">
-        <SvgCircle cx="7" cy="7" r="6" fill="none" stroke={color} strokeWidth="1.5" />
-        <SvgCircle cx="7" cy="7" r="3" fill={color} />
-      </Svg>
-    </Button>
+      <Icon name={done ? 'check' : 'circle-dot'} />
+    </IconButton>
   );
 };
 

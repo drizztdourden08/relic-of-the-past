@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import wrapIcon from '@iconify-icons/lucide/wrap-text';
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { DirectionControl } from './DirectionControl';
 import { SubSection } from './SubSection';
 import { WRAP_LABEL } from './FlowSettings.constants';
@@ -29,7 +28,7 @@ const FlowSettings = (props: FlowSettingsProps) => {
             data-action="wrap"
             onClick={() => onWrap(!wrap)}
           >
-            <IconifyIcon icon={wrapIcon} width={16} height={16} aria-hidden />
+            <Icon icon={wrapIcon} size={16} aria-hidden />
           </IconButton>
         </Box>
       </Box>

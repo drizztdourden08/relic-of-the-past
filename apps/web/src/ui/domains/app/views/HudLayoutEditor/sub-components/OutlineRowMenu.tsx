@@ -1,30 +1,25 @@
 /* @layer renderer-components @kind component */
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
-import { primaryModifierLabel } from '@shared/platform';
-import { usePlatform } from '@app/platform';
-import { ARROW, stepOptions } from '../behavior/step-intent';
-import type { MenuEntry } from '@drizztdourden08/tessera/composites';
+import { STEP_ICON, STEP_KEY, stepOptions } from '../behavior/step-intent';
+import type { MenuNode } from '@drizztdourden08/tessera/composites';
 import type { OutlineRowMenuProps } from './OutlineRowMenu.type';
 
 const OutlineRowMenu = (props: OutlineRowMenuProps) => {
   const { doc, id, anchorRef, removable, onStep, onRemove, onClose } = props;
-  const key = primaryModifierLabel(usePlatform().info.os);
 
-  const items: MenuEntry[] = stepOptions(doc, id).map((option) => ({
-    key: option.direction,
-    icon: ARROW[option.direction],
+  const items: MenuNode[] = stepOptions(doc, id).map((option) => ({
+    id: option.direction,
+    icon: STEP_ICON[option.direction],
     label: option.label,
-    shortcut: `${key} ${ARROW[option.direction]}`,
+    shortcut: `mod+${STEP_KEY[option.direction]}`,
     disabled: !option.enabled,
-    onClick: () => { onStep(option.direction); onClose(); },
+    onSelect: () => onStep(option.direction),
   }));
   if (removable) {
-    items.push('separator', {
-      key: 'remove', icon: '✕', label: 'Delete', onClick: () => { onRemove(); onClose(); },
-    });
+    items.push({ separator: true }, { id: 'remove', icon: 'x', label: 'Delete', tone: 'danger', onSelect: onRemove });
   }
 
-  return <DropdownMenu items={items} anchorRef={anchorRef} onClose={onClose} />;
+  return <DropdownMenu groups={[{ id: 'outline-row', items }]} label="Outline row" anchorRef={anchorRef} onClose={onClose} />;
 };
 
 export { OutlineRowMenu };

@@ -32,7 +32,7 @@ const rotpExtension = {
   description: 'Relic of the Past: the dataset facade, the primitives tiers and the HUD inline styles',
   eslint: {
     options: {
-      primitivesGlobs: ['**/ui/design-system/primitives/**/*.tsx', '**/ui/domains/hud/primitives/**/*.tsx'],
+      primitivesGlobs: ['**/ui/domains/hud/primitives/**/*.tsx'],
       inlineStyle: [{
         files: ['**/ui/domains/hud/**/*.{ts,tsx}'],
         why: 'The HUD redraws the in-game interface pixel for pixel in the SNES palette, so its inline styles hold game positions and colours, not design tokens.',

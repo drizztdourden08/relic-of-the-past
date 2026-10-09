@@ -1,11 +1,11 @@
 /* @layer store-site @kind component */
-import { Chip } from '@site-kit/components/Chip/Chip';
+import { Status } from '@drizztdourden08/tessera/primitives';
 import type { ReviewChipProps } from './ReviewChip.type';
-import { REVIEW_LABELS, REVIEW_TONES } from './ReviewChip.constants';
+import { REVIEW_STATUSES } from './ReviewChip.constants';
 
 const ReviewChip = (props: ReviewChipProps) => {
   const { state } = props;
-  return <Chip tone={REVIEW_TONES[state]}>{REVIEW_LABELS[state]}</Chip>;
+  return <Status variant="pill" map={REVIEW_STATUSES} value={state} />;
 };
 
 export { ReviewChip };

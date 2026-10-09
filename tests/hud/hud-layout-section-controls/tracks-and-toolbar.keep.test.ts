@@ -5,10 +5,14 @@ import { validateLayout } from '@shared/hud/layouts';
 import { insertTrack, moveTrack, removeTrack, setTrack, trackText } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/track-extents';
 import { newGrid } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/new-node';
 import { buildToolbarGroups } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/toolbar-menus';
+import type { MenuItem, MenuNode } from '@drizztdourden08/tessera/composites';
 import type { Extent, HudGridContainer, HudLayout, HudNode } from '@shared/types/hud';
 import { VIEW } from './section-controls.constants';
 import { boxCell as cell } from './box-cell';
 import { docOf } from './doc-of';
+
+const menuItems = (nodes: readonly MenuNode[]): MenuItem[] =>
+  nodes.filter((node): node is MenuItem => !('separator' in node));
 
 interface ViewSnapshot {
   gridOverlayEnabled: boolean;
@@ -68,16 +72,16 @@ describe('a grid is insertable from the toolbar, and so is an overlay', () => {
   it('offers Grid and Overlay beside Row and Column - there is no Stack (§42)', () => {
     const inserted: HudNode[] = [];
     const groups = buildToolbarGroups({ insert: (node) => inserted.push(node) });
-    const container = groups.find((g) => g.key === 'container');
-    expect(container?.items.map((i) => i.key)).toEqual(['row', 'column', 'overlay', 'grid']);
-    container?.items.find((i) => i.key === 'grid')?.onClick?.();
+    const container = menuItems(groups.find((g) => g.key === 'container')?.items ?? []);
+    expect(container.map((i) => i.id)).toEqual(['row', 'column', 'overlay', 'grid']);
+    container.find((i) => i.id === 'grid')?.onSelect?.();
     expect(inserted[0]).toMatchObject({ kind: 'container', layout: 'grid', columns: ['auto', 'auto'], rows: ['auto', 'auto'] });
   });
 
   it('the Overlay preset is a 1x1 grid that hugs instead of stretching', () => {
     const inserted: HudNode[] = [];
     const groups = buildToolbarGroups({ insert: (node) => inserted.push(node) });
-    groups.find((g) => g.key === 'container')?.items.find((i) => i.key === 'overlay')?.onClick?.();
+    menuItems(groups.find((g) => g.key === 'container')?.items ?? []).find((i) => i.id === 'overlay')?.onSelect?.();
     expect(inserted[0]).toMatchObject({
       kind: 'container', layout: 'grid', columns: ['auto'], rows: ['auto'],
       justifyItems: 'start', alignItems: 'start',

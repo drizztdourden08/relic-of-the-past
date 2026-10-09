@@ -2,7 +2,7 @@
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
-import { Link } from '@site-kit/router/Link';
+import { AppLink } from '@site-kit/router/AppLink';
 import { itemPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { detailFieldsOf, detailTitleOf, entryOf } from '../behavior/publication-detail';
@@ -25,9 +25,9 @@ const PublicationDetail = (props: PublicationDetailProps) => {
   const buttons = (
     <>
       {version && <VersionActions item={item} version={version} actions={actions} />}
-      <Link to={`/publications/${encodeURIComponent(item.id)}/version`} className="btn btn--secondary btn--sm">New version</Link>
-      <Link to={`/publications/${encodeURIComponent(item.id)}/listing`} className="btn btn--tertiary btn--sm">Edit listing</Link>
-      {item.status === 'published' && <Link to={itemPath(item)} className="btn btn--tertiary btn--sm">Open {'›'}</Link>}
+      <AppLink to={`/publications/${encodeURIComponent(item.id)}/version`} className="btn btn--secondary btn--toned btn--sm">New version</AppLink>
+      <AppLink to={`/publications/${encodeURIComponent(item.id)}/listing`} className="btn btn--tertiary btn--toned btn--sm">Edit listing</AppLink>
+      {item.status === 'published' && <AppLink to={itemPath(item)} className="btn btn--tertiary btn--toned btn--sm">Open {'›'}</AppLink>}
     </>
   );
 

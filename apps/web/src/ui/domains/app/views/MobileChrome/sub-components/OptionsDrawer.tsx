@@ -1,27 +1,41 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text, Image } from '@drizztdourden08/tessera/primitives';
-import type { DrawerMenuItem, OptionsDrawerProps } from '../MobileChrome.type';
+import type { ReactNode } from 'react';
+import type { MenuItem, MenuNode } from '@drizztdourden08/tessera/composites';
+import { Box, Button, Icon, Image, Text } from '@drizztdourden08/tessera/primitives';
+import type { OptionsDrawerProps } from '../MobileChrome.type';
 
-const renderItem = (item: DrawerMenuItem) => {
+const iconOf = (icon: MenuItem['icon']): ReactNode =>
+  typeof icon === 'string' ? <Icon name={icon} /> : icon;
+
+const isItem = (node: MenuNode): node is MenuItem => !('separator' in node);
+
+const renderItem = (item: MenuItem): ReactNode => {
   if (item.children?.length) {
     return (
-      <Box key={item.key} className="options-drawer__group">
-        <Text className="options-drawer__group-title">{item.icon} {item.label}</Text>
-        {item.children.map((child) => renderItem(child))}
+      <Box key={item.id} className="options-drawer__group">
+        <Text className="options-drawer__group-title">{item.label}</Text>
+        {item.children.filter(isItem).map(renderItem)}
       </Box>
     );
   }
   return (
-    <Button key={item.key} variant="bare" className="options-drawer__item" disabled={item.disabled} onClick={item.onClick}>
-      <Text className="options-drawer__icon">{item.icon}</Text>
-      <Text className="options-drawer__label">{item.label}</Text>
-      {item.checked ? <Text className="options-drawer__check">✓</Text> : null}
+    <Button
+      key={item.id}
+      variant="ghost"
+      fullWidth
+      className="options-drawer__item"
+      icon={iconOf(item.icon)}
+      disabled={item.disabled}
+      active={item.checked}
+      onClick={item.onSelect}
+    >
+      {item.label}
     </Button>
   );
 };
 
 const OptionsDrawer = (props: OptionsDrawerProps) => {
-  const { items, fps, showFps, isMuted, onToggleMute } = props;
+  const { groups, fps, showFps, isMuted, onToggleMute } = props;
 
   return (
     <Box className="options-drawer">
@@ -31,13 +45,14 @@ const OptionsDrawer = (props: OptionsDrawerProps) => {
         {showFps ? <Text className="options-drawer__fps">{fps} FPS</Text> : null}
       </Box>
       <Box className="options-drawer__quick">
-        <Button variant="bare" className="options-drawer__item" onClick={onToggleMute}>
-          <Text className="options-drawer__icon">{isMuted ? '🔇' : '🔊'}</Text>
-          <Text className="options-drawer__label">{isMuted ? 'Unmute' : 'Mute'}</Text>
+        <Button variant="ghost" fullWidth className="options-drawer__item" icon={<Icon name={isMuted ? 'volume-x' : 'volume-2'} />} onClick={onToggleMute}>
+          {isMuted ? 'Unmute' : 'Mute'}
         </Button>
       </Box>
       <Box className="options-drawer__list">
-        {items.map((item) => renderItem(item))}
+        {groups.map((group) => (
+          <Box key={group.id} className="options-drawer__section">{group.items.filter(isItem).map(renderItem)}</Box>
+        ))}
       </Box>
     </Box>
   );

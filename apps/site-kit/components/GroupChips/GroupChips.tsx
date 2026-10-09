@@ -1,6 +1,5 @@
 /* @layer site-kit @kind component */
-import { Flex, Text } from '@drizztdourden08/tessera/primitives';
-import { Chip } from '../Chip/Chip';
+import { Flex, Tag, Text } from '@drizztdourden08/tessera/primitives';
 import type { GroupChipsProps } from './GroupChips.type';
 
 const GroupChips = (props: GroupChipsProps) => {
@@ -10,9 +9,9 @@ const GroupChips = (props: GroupChipsProps) => {
     <Flex gap="sm" align="center" wrap>
       {groups.map((group) => (
         <Flex key={group.id} gap="xs" align="center">
-          <Chip tone="gold">{group.name}</Chip>
-          {manualIds.includes(group.id) && <Chip tone="muted">by hand</Chip>}
-          {roleIds.includes(group.id) && <Chip tone="info">Discord</Chip>}
+          <Tag color="primary">{group.name}</Tag>
+          {manualIds.includes(group.id) && <Tag>by hand</Tag>}
+          {roleIds.includes(group.id) && <Tag variant="urgency" color="info">Discord</Tag>}
         </Flex>
       ))}
     </Flex>

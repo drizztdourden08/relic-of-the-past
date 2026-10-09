@@ -1,8 +1,11 @@
 /* @layer renderer-components @kind component */
-import { Box, KeyCap, MouseGlyph, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { usePlatform } from '@app/platform';
 import { useGridSolve } from '../../behavior/grid-solve';
 import { GridLattice, covers, occupantsOf, rowCountFor } from '../GridLattice';
+import { PointerCaps } from '../SelectionBands';
 import { useCellPick } from './behavior/useCellPick';
+import { CELL_PICK_KEYS } from './CellPicker.constants';
 import './CellPicker.css';
 import type { KeyboardEvent } from 'react';
 import type { CellRef, LatticeCellState } from '../GridLattice';
@@ -15,6 +18,7 @@ const CellPicker = (props: CellPickerProps) => {
   const rows = rowCountFor(container, occupants);
   const mine = occupants.find((o) => o.id === childId);
   const pick = useCellPick({ place, onChange });
+  const os = usePlatform().info.os;
 
   const cellState = (cell: CellRef): LatticeCellState => {
     const isMine = !!mine && covers(mine, cell.column, cell.row);
@@ -60,19 +64,12 @@ const CellPicker = (props: CellPickerProps) => {
         onKeyDown={onKeyDown}
       />
       <Box className="hud-cellpick__legend">
-        <Box className="hud-grid__key">
-          <MouseGlyph part="left" />
-          <Text className="hud-grid__key-text">set the cell</Text>
-        </Box>
-        <Box className="hud-grid__key">
-          <KeyCap label="⇧" />
-          <MouseGlyph part="left" />
-          <Text className="hud-grid__key-text">span to here</Text>
-        </Box>
-        <Box className="hud-grid__key">
-          <MouseGlyph part="drag" />
-          <Text className="hud-grid__key-text">span a rectangle</Text>
-        </Box>
+        {CELL_PICK_KEYS.map((entry) => (
+          <Box key={entry.key} className="hud-grid__key">
+            <PointerCaps shortcut={entry.shortcut} os={os} />
+            <Text className="hud-grid__key-text">{entry.label}</Text>
+          </Box>
+        ))}
       </Box>
       <Text className="hud-editor__hint">
         This edits {childId} only. The parent&apos;s columns and rows are edited in its own Layout section.

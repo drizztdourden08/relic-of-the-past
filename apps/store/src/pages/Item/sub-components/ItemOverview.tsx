@@ -1,11 +1,10 @@
 /* @layer store-site @kind component */
-import { SettingsSection } from '@drizztdourden08/tessera/composites';
+import { Markdown, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreItem } from '@shared/store/types';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { formatDay } from '@site-kit/lib/format-date';
 import { KindChip } from '../../../components/KindChip/KindChip';
-import { Markdown } from '../../../components/Markdown/Markdown';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { formatCount } from '../../../lib/format-count';

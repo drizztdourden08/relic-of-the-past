@@ -1,12 +1,11 @@
 /* @layer store-site @kind component */
-import { Flex, Text } from '@drizztdourden08/tessera/primitives';
+import { Flex, Status, Text } from '@drizztdourden08/tessera/primitives';
 import type { ItemCardView } from '@shared/store/home-types';
 import { KIND_CONTAINER } from '@shared/store/containers';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { TagList } from '@site-kit/components/TagList/TagList';
-import { Chip } from '@site-kit/components/Chip/Chip';
-import { Link } from '@site-kit/router/Link';
+import { AppLink } from '@site-kit/router/AppLink';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import type { ItemResponse } from '@shared/store/api-types';
 import { InstallButton } from '../../../components/InstallButton/InstallButton';
@@ -27,7 +26,7 @@ const versionLine = (card: ItemCardView, detail: ItemResponse | null): string =>
 
 const fieldsOf = (card: ItemCardView, detail: ItemResponse | null): DetailField[] => [
   { label: 'kind', value: <KindChip kind={card.kind} /> },
-  { label: 'author', value: <Link to={authorPath(card.author.userId)}>{card.author.displayName}</Link> },
+  { label: 'author', value: <AppLink to={authorPath(card.author.userId)}>{card.author.displayName}</AppLink> },
   { label: 'version', value: versionLine(card, detail) },
   { label: 'installs', value: detail ? formatCount(detail.item.stats.installs) : `${formatCount(card.installs30d)} this month` },
   { label: 'license', value: detail?.item.license || '-' },
@@ -42,7 +41,7 @@ const fieldsOf = (card: ItemCardView, detail: ItemResponse | null): DetailField[
       </Flex>
     ),
   },
-  ...(detail?.installed ? [{ label: 'you', value: <Chip tone="green">installed</Chip> }] : []),
+  ...(detail?.installed ? [{ label: 'you', value: <Status variant="pill" tone="success">installed</Status> }] : []),
 ];
 
 const ItemSideCard = (props: ItemSideCardProps) => {
@@ -50,7 +49,7 @@ const ItemSideCard = (props: ItemSideCardProps) => {
   const actions = (
     <>
       <InstallButton itemId={item.id} container={item.semver ? KIND_CONTAINER[item.kind] : null} />
-      <Link to={itemPath(item)} className="btn btn--tertiary btn--sm">Open {'›'}</Link>
+      <AppLink to={itemPath(item)} className="btn btn--tertiary btn--toned btn--sm">Open {'›'}</AppLink>
     </>
   );
   return (

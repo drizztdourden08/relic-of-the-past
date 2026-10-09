@@ -1165,14 +1165,6 @@ only while the drawer is open and a game runs. Back routing is registered once a
 latest state through a ref: an open drawer closes first (either edge); the left edge (Esc) closes
 the current page or else opens Home; the right edge opens the Options menu.
 
-### views/DesignGallery/DesignGallery.tsx
-
-An in-app storybook built from the design system, reachable from the title bar's Advanced menu.
-The gallery sits inside the padded FullScreenLayer, so it drops the settings shell's own padding
-and the nav and content line up with the window title. No primitive exists for a glass card or a
-selected card, so the container demos are styled in DesignGallery.css. The selection controls
-story shows that an active state is always gold.
-
 ### views/GameOverlay/GameOverlay.tsx
 
 Sized to the game canvas with `pointer-events: none`, so the canvas keeps the mouse; the host drawn
@@ -1288,49 +1280,32 @@ Each button and card lives in its own file. The shared label colours sit in `LAB
 
 ### views/TitleBar/TitleBar.tsx
 
-The refresh rate sits beside the FPS so the two can be compared at a glance.
-The game runs at 60, and a refresh rate that is not a whole multiple of 60 makes scrolling look uneven.
-An automated launch shows the Sentri logo so a screenshot identifies itself.
+Tessera's `WindowTitleBar` draws the bar: the main menu, the actions, the brand in the middle and the window buttons.
+RotP feeds it the menu groups, the actions and the window state, and acts on each control.
+Borderless mode passes `concealed`, and fullscreen tucks the bar the same way; the bar peeks back on its own.
+An automated launch shows the Sentri logo beside its instance name so a screenshot identifies itself.
 
-### views/TitleBar/behavior/useTitleBarPeek.ts
+### views/TitleBar/behavior/title-bar-actions.ts
 
-Fullscreen state is tracked apart from the window mode.
-In borderless or fullscreen mode the bar hides, and it peeks back when the mouse enters the top zone.
-`TITLEBAR_PEEK_ZONE_PX` matches `--titlebar-height`.
-The bar stays shown while the mouse is over the bar itself, and hides when the mouse leaves the bar.
+Search (primary tone with the twinkle), Report a bug, Mute and, in game, Save States are command actions.
+The update notice, the FPS readout and the refresh rate warning are status actions, so a narrow window folds them into the menu.
+The refresh rate sits beside the FPS so the two can be compared at a glance; the game runs at 60, and a rate that is not a whole multiple of 60 makes scrolling look uneven. Its warning opens the Display settings.
 
-### views/TitleBar/behavior/useTitleBar.ts
+### views/TitleBar/behavior/useWindowState.ts
 
-The menu closes on a click outside it.
-A click inside the trigger area or inside the portal rendered dropdown keeps it open.
+Tracks maximized, fullscreen and pinned, and maps each `WindowTitleBar` control onto the platform's window port.
 
 ### views/TitleBar/behavior/title-bar-menu.ts
 
-Builds the dropdown menu tree from the bar's props and `closeMenu`.
+Builds the menu as Tessera `MenuGroup`s from the bar's props and `closeMenu`; widgets are check items.
 Under Advanced, Input Calibration, the HUD Layout Editor and the Data Inspector are real user options, so they are always listed.
 The rest are developer tools, listed only when developer tools are on.
 
 ### views/TitleBar/TitleBar.type.ts
 
-`widgetVisibility` holds each toggleable widget's visibility by widget id, for the menu checkmarks.
+`widgetVisibility` holds each toggleable widget's open state by widget id, for the menu checkmarks.
 `developerToolsEnabled` is the master gate for developer only menu entries.
-`onShowDisplaySettings` opens the Display settings, and the refresh rate tag uses it.
-
-### views/TitleBar/sub-components/InstanceBadge.tsx
-
-Marks the window as a named instance: an automated launch running beside the user's own app.
-It is informational, not a warning. The name is the identifier, so it is shown in full.
-
-### views/TitleBar/sub-components/RefreshRateTag.tsx
-
-Flags a display refresh rate the game cannot show evenly.
-It sits next to the FPS readout because that is where someone looks when motion feels wrong.
-A click goes straight to the setting that fixes it.
-
-### views/TitleBar/TitleBar.constants.ts
-
-The icons are the overflow menu dots, the pin, the muted speaker, the speaker with waves and the floppy disk for save states.
-The window control icons use a 12 unit viewBox, except the fullscreen pair, which uses 16.
+`onShowDisplaySettings` opens the Display settings, and the refresh rate warning uses it.
 
 ### views/SearchPalette/SearchPalette.tsx
 
@@ -1413,7 +1388,7 @@ Add an entry only when a real callback exists.
 Flattens the title bar menu into entries: screens and the developer commands under Advanced.
 The menu is already the app's nav manifest on every platform, and the mobile drawer reuses it as is.
 Every item carries its own live click handler, so a new menu item is searchable with no upkeep.
-A search row prints its icon as a character. A Lucide icon has no character, so that row goes without one.
+Each entry carries the menu item's icon drawn as a Tessera `Icon`.
 
 ### views/SearchPalette/behavior/catalog/settings-source.ts
 
@@ -1892,7 +1867,7 @@ The source is built per entry list, not cached, because the rows change whenever
 ### views/DataInspector/behavior/recommendations/use-comparison-scroll
 
 Keeps the two comparison panes scrolled together. The side the user scrolled leads and gets no `scrollTo`. Only the other side is driven.
-The follower's programmatic scroll fires a native event, which the `ScrollArea` guard swallows so it cannot bounce the leader (see `create-scroll-guard.ts` and `tests/design-system/scroll-area-sync.keep.test.ts`).
+The follower's programmatic scroll fires a native event, which the `ScrollArea` guard swallows so it cannot bounce the leader (Tessera's `ScrollArea` sync, tested in Tessera).
 `followerScrollTo` gives the leader's offset to the follower and nothing to the leader. It is pure, so it is testable without a DOM.
 
 ### views/DataInspector/behavior/recommendations/use-recommendations

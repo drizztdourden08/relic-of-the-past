@@ -11,7 +11,7 @@ import * as languagesStore from '@app/lib/storage/languages-store';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@domains/app/views/InstalledOriginBar';
 import { LanguageSetList } from './LanguageSetList';
-import { Text, Box, Select, Field } from '@drizztdourden08/tessera/primitives';
+import { Text, Box, Select, Field, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 
 const LanguageManager = (props: LanguageManagerProps) => {
@@ -156,9 +156,9 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const origin = installed === null ? null : (
     <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdated={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
-  const detail = <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} />;
+  const detail = selected ? <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} /> : null;
 
-  return <ListDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
+  return <ListDetailLayout list={list} detail={detail} emptyDetail={<EmptyState message="Select a language set to edit" />} />;
 };
 
 export { LanguageManager };

@@ -1,12 +1,12 @@
 /* @layer site-kit @kind constants */
+import { defineStatuses } from '@drizztdourden08/tessera/primitives';
 import type { AccessState } from '@shared/hub/types';
-import type { ChipTone } from '../Chip/Chip.type';
 
-const TONES: Record<AccessState, ChipTone> = {
-  admin: 'gold',
-  member: 'green',
-  pending: 'warning',
-  revoked: 'danger',
-};
+const ACCESS_STATUSES = defineStatuses({
+  admin: { label: 'admin', tone: 'primary' },
+  member: { label: 'member', tone: 'success' },
+  pending: { label: 'pending', tone: 'warning' },
+  revoked: { label: 'revoked', tone: 'danger' },
+}) satisfies Record<AccessState, unknown>;
 
-export { TONES };
+export { ACCESS_STATUSES };

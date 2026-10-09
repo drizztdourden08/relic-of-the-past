@@ -2258,7 +2258,7 @@ The field half of the engine; `compare-set.ts` is the collection half. For every
 
 ### recommendations/compare/record-path
 
-Get and set over the path grammar the diff produces: dotted keys and bracketed array indices (`gameId.roomIndex`, `tags[2]`). The renderer's `apps/web/src/ui/design-system/data/schema/path.ts` uses a dot numeric grammar (`items.0.name`) and lives where `shared/` may never import from, so this is a small local parser that behaves the same way. `getPath` never throws. `setPath` clones every container along the path and creates missing ones, leaving the input untouched. `SEGMENT_PATTERN` matches one dotted key run or one bracketed index, in path order.
+Get and set over the path grammar the diff produces: dotted keys and bracketed array indices (`gameId.roomIndex`, `tags[2]`). Tessera's data engine (`@drizztdourden08/tessera/data`, the schema path helpers) uses a dot numeric grammar (`items.0.name`) and lives where `shared/` may never import from, so this is a small local parser that behaves the same way. `getPath` never throws. `setPath` clones every container along the path and creates missing ones, leaving the input untouched. `SEGMENT_PATTERN` matches one dotted key run or one bracketed index, in path order.
 
 ### recommendations/compare/strategy-registry
 

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useContext } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { SettingsPage } from '../../../compounds/SettingsPage';
+import { SettingsPage } from '@drizztdourden08/tessera/composites';
 import { SettingsPageContext } from '../../../compounds/SettingsLayout';
 import { HomeTab } from './HomeTab';
 import { SettingsView } from './SettingsView';

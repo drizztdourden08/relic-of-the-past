@@ -1,13 +1,14 @@
 /* @layer renderer-components @kind component */
-import { EmptyState } from '@drizztdourden08/tessera/primitives';
-import { DashboardGrid, DashboardPanel } from '@drizztdourden08/tessera/composites';
+import { EmptyState, Grid } from '@drizztdourden08/tessera/primitives';
+import { DashboardCard } from './DashboardCard';
+import { PANEL_MIN_WIDTH } from './StatTiles.constants';
 import { RunSummary } from './RunSummary';
 import { RunProgress } from './RunProgress';
 import { RunPlayers } from './RunPlayers';
 import { RecentActivity } from './RecentActivity';
 import { OptionsSummary } from './OptionsSummary';
 import { useNetworkStatus } from './NetworkTab';
-import { NOT_RANDOMIZED, RUN_PANELS } from '../Randomizer.constants';
+import { NO_RUN_PANEL, NOT_RANDOMIZED, RUN_PANELS } from '../Randomizer.constants';
 import type { RunTabProps } from './RunTab.type';
 
 const RunTab = (props: RunTabProps) => {
@@ -19,16 +20,16 @@ const RunTab = (props: RunTabProps) => {
 
   if (!config || !profileId || !profileName) {
     return (
-      <DashboardGrid>
-        <DashboardPanel title="Run" span="full">
+      <Grid minColWidth={PANEL_MIN_WIDTH} gap="lg" dense>
+        <DashboardCard title="Run" placement={NO_RUN_PANEL}>
           <EmptyState message={profileName ? NOT_RANDOMIZED : 'No active profile.'} />
-        </DashboardPanel>
-      </DashboardGrid>
+        </DashboardCard>
+      </Grid>
     );
   }
 
   return (
-    <DashboardGrid>
+    <Grid minColWidth={PANEL_MIN_WIDTH} gap="lg" dense>
       <RunSummary
         placement={RUN_PANELS.summary}
         profileName={profileName}
@@ -49,7 +50,7 @@ const RunTab = (props: RunTabProps) => {
         seed={config.seed}
         onOpenOptions={onOpenOptions}
       />
-    </DashboardGrid>
+    </Grid>
   );
 };
 

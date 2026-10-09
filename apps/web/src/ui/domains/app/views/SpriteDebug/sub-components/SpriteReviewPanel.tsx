@@ -7,8 +7,8 @@ import {
 } from '@shared/game/data';
 import type { SpriteCategory } from '@shared/game/data';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
-import { CategoryButton } from './CategoryButton';
+import { Box, Button, Tabs } from '@drizztdourden08/tessera/primitives';
+import type { TabItem } from '@drizztdourden08/tessera/primitives';
 import { FilterBtns } from './FilterBtns';
 import { ReviewStats } from './ReviewStats';
 import { SpriteImageCard } from './SpriteImageCard';
@@ -56,11 +56,12 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
     return c;
   }, [data]);
 
-  const catCounts = useMemo(() => {
-    const cc: Record<string, number> = { all: SPRITE_MANIFEST.length };
-    for (const cat of CATEGORY_ORDER) cc[cat] = SPRITE_MANIFEST.filter(s => s.category === cat).length;
-    return cc;
-  }, []);
+  const catTabs = useMemo((): TabItem[] => [
+    { id: 'all', label: 'All', badge: SPRITE_MANIFEST.length },
+    ...CATEGORY_ORDER.map((c) => ({
+      id: c, label: CATEGORY_LABELS[c], badge: SPRITE_MANIFEST.filter((s) => s.category === c).length,
+    })),
+  ], []);
 
   const filtered = useMemo(() => SPRITE_MANIFEST.filter(s => {
     if (catFilter !== 'all' && s.category !== catFilter) return false;
@@ -73,16 +74,11 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   return (
     <>
       <Box style={S.header}>
-        <Box style={S.tabGroup}>
-          <CategoryButton label="All" value="all" current={catFilter} onClick={v => setCatFilter(v as never)} count={catCounts.all} />
-          {CATEGORY_ORDER.map(c => (
-            <CategoryButton key={c} label={CATEGORY_LABELS[c]} value={c} current={catFilter} onClick={v => setCatFilter(v as never)} count={catCounts[c]} />
-          ))}
-        </Box>
+        <Tabs tabs={catTabs} activeTab={catFilter} onTabChange={(id) => setCatFilter(id as 'all' | SpriteCategory)} />
         <ReviewStats counts={counts} total={SPRITE_MANIFEST.length} />
         <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <Button variant="bare" onClick={() => { setData({}); saveSpriteReview({}); }} style={S.resetBtn}>Reset</Button>
+          <Button variant="danger" size="xs" onClick={() => { setData({}); saveSpriteReview({}); }}>Reset</Button>
         </Box>
       </Box>
       <Box style={S.grid}>

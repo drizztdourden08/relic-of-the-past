@@ -7,7 +7,7 @@ const CheckStatusIcon = (props: CheckStatusIconProps) => {
   const { status, size = 12 } = props;
   return (
     <Icon
-      {...STATUS_SHAPES[status]}
+      path={STATUS_SHAPES[status]}
       className={`tracker-status-icon tracker-status-icon--${status}`}
       size={size}
       role="img"

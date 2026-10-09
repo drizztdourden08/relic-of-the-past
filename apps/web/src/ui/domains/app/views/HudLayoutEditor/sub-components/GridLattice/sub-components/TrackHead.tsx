@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import { EXTENT_MODES, extentFor, modeOf } from '../../../behavior/track-extents';
 import type { TrackHeadProps } from './TrackHead.type';
@@ -30,8 +30,7 @@ const TrackHead = (props: TrackHeadProps) => {
       onPointerDown={onPointerDown}
     >
       {sizing ? (
-        <Button
-          variant="bare"
+        <Pressable
           className="hud-lattice__size"
           aria-label={`${title}. Change its size`}
           aria-haspopup="menu"
@@ -40,7 +39,7 @@ const TrackHead = (props: TrackHeadProps) => {
           onClick={() => setOpen((was) => !was)}
         >
           {`${EXTENT_MODES.find((entry) => entry.mode === mode)?.suffix ?? 'auto'}▾`}
-        </Button>
+        </Pressable>
       ) : (
         <Text className="hud-lattice__head-text">{text}</Text>
       )}
@@ -49,12 +48,16 @@ const TrackHead = (props: TrackHeadProps) => {
           anchorRef={anchor}
           align="start"
           onClose={() => setOpen(false)}
-          items={EXTENT_MODES.map((entry) => ({
-            key: entry.mode,
-            label: entry.label,
-            checked: entry.mode === mode,
-            onClick: () => { setOpen(false); onSize?.(extentFor(entry.mode, extent)); },
-          }))}
+          groups={[{
+            id: 'modes',
+            items: EXTENT_MODES.map((entry) => ({
+              id: entry.mode,
+              label: entry.label,
+              kind: 'radio' as const,
+              checked: entry.mode === mode,
+              onSelect: () => { setOpen(false); onSize?.(extentFor(entry.mode, extent)); },
+            })),
+          }]}
         />
       )}
     </Box>

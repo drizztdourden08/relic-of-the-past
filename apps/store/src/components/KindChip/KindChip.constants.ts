@@ -1,7 +1,7 @@
 /* @layer store-site @kind constants */
+import type { TagNormalColor } from '@drizztdourden08/tessera/primitives';
 import type { StoreKind } from '@shared/store/types';
-import type { ChipTone } from '@site-kit/components/Chip/Chip';
 
-const KIND_TONES: Record<StoreKind, ChipTone> = { music: 'gold', character: 'green', language: 'info' };
+const KIND_TONES: Record<StoreKind, TagNormalColor> = { music: 'primary', character: 'secondary', language: 'tertiary' };
 
 export { KIND_TONES };

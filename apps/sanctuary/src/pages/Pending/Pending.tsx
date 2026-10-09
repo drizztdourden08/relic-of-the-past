@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { useCallback, useState } from 'react';
 import { PROVIDER_LABELS } from '@shared/hub/providers';
-import { Stack, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Stack, Button, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { SiteFrame } from '@site-kit/layout/SiteFrame/SiteFrame';
 import { Gate } from '@site-kit/components/Gate/Gate';
 import { ProviderButton } from '@site-kit/components/ProviderButton/ProviderButton';
@@ -34,7 +34,7 @@ const Pending = () => {
   const footnote = (
     <>
       signed in with {signedInWith} {'·'}{' '}
-      <Button variant="bare" className="pending__signout" onClick={() => void signOut()}>sign out</Button>
+      <Pressable className="pending__signout" onClick={() => void signOut()}>sign out</Pressable>
     </>
   );
 

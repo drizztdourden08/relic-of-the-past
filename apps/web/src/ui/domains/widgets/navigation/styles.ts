@@ -20,11 +20,6 @@ const S: Record<string, CSSProperties> = {
   locName: { fontSize: 13, fontWeight: 700, color: 'var(--c-text)' },
   meta: { fontSize: 10, color: 'var(--c-text-muted)' },
   actions: { display: 'flex', gap: 4, flexWrap: 'wrap' },
-  btn: {
-    padding: '3px 8px', background: 'var(--c-secondary-soft)', border: '1px solid var(--c-secondary-soft)',
-    borderRadius: 'var(--radius-sm)', color: 'var(--c-secondary-bright)', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
-  },
-  btnDisabled: { opacity: 0.35, cursor: 'not-allowed' },
   infoBox: { display: 'flex', flexDirection: 'column', gap: 1, padding: '4px 6px', borderRadius: 'var(--radius-sm)', background: 'var(--c-hover)', border: '1px solid var(--c-border)' },
   infoRow: { display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--c-text-dim)' },
   infoLabel: { color: 'var(--c-text-muted)' },

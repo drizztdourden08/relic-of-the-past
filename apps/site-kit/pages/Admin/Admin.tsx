@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { AdminUser } from '../../api/hub-responses.type';
 import { Stack, Box, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
-import { SettingsSection } from '@drizztdourden08/tessera/composites';
+import { ListItemList, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SitePage } from '../../layout/SitePage/SitePage';
 import { AdminUserRow } from './sub-components/AdminUserRow';
 import { GroupsSection } from './sub-components/GroupsSection';
@@ -57,21 +57,23 @@ const Admin = () => {
         <Box data-section="pending">
           <SettingsSection title="Pending" description={`${byState.pending.length} waiting`}>
             {!loading && byState.pending.length === 0 && empty('Nobody is waiting.')}
-            {byState.pending.map((row) => userRow(row, pendingActions(row)))}
+            <ListItemList label="Pending">{byState.pending.map((row) => userRow(row, pendingActions(row)))}</ListItemList>
           </SettingsSection>
         </Box>
 
         <Box data-section="members">
           <SettingsSection title="Members" description={members === 1 ? '1 member' : `${members} members`}>
-            {byState.admin.map((row) => userRow(row))}
-            {byState.member.map((row) => userRow(row, memberActions(row)))}
+            <ListItemList label="Members">
+              {byState.admin.map((row) => userRow(row))}
+              {byState.member.map((row) => userRow(row, memberActions(row)))}
+            </ListItemList>
           </SettingsSection>
         </Box>
 
         <Box data-section="revoked">
           <SettingsSection title="Revoked" description={`${byState.revoked.length} revoked`}>
             {!loading && byState.revoked.length === 0 && empty('Nobody is revoked.')}
-            {byState.revoked.map((row) => userRow(row, groupsMenu(row)))}
+            <ListItemList label="Revoked">{byState.revoked.map((row) => userRow(row, groupsMenu(row)))}</ListItemList>
           </SettingsSection>
         </Box>
       </Stack>

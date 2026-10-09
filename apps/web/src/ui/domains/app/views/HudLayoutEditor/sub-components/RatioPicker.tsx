@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
-import { EDITOR_RATIOS } from '../HudLayoutEditor.constants';
+import { Box, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
+import { RATIO_OPTIONS } from './RatioPicker.constants';
 import type { RatioPickerProps } from './RatioPicker.type';
 
 const RatioPicker = (props: RatioPickerProps) => {
@@ -9,20 +9,7 @@ const RatioPicker = (props: RatioPickerProps) => {
   return (
     <Box className="hud-toolbar__field">
       <Text className="hud-toolbar__field-label">Ratio</Text>
-      <Box className="hud-toolbar__chips">
-        {EDITOR_RATIOS.map((ratio) => (
-          <Button
-            key={ratio.id}
-            variant="bare"
-            className={`hud-toolbar__chip${ratio.id === value ? ' is-selected' : ''}`}
-            aria-pressed={ratio.id === value}
-            title={`${ratio.view.w} x ${ratio.view.h} game pixels`}
-            onClick={() => onChange(ratio.id)}
-          >
-            {ratio.label}
-          </Button>
-        ))}
-      </Box>
+      <SegmentedControl size="sm" aria-label="Ratio" value={value} options={RATIO_OPTIONS} onChange={onChange} />
     </Box>
   );
 };

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { Pressable } from '@drizztdourden08/tessera/primitives';
 import { cheatSetInventorySlot, CheatSlot } from '@app/lib/game';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseBorderBox, PauseCrystalIcon, PauseLabel, PausePendantIcon } from '@domains/hud';
@@ -21,9 +21,9 @@ const ProgressEditor = ({ scale, spritesBase }: PanelProps) => {
 
   return (
     <PauseBorderBox color="yellow" cols={PROGRESS_PANEL.cols} rows={PROGRESS_PANEL.rows} scale={scale} spritesBase={spritesBase}>
-      <Button variant="bare" className="cheats-items__toggle" title={`Show ${other}`} onClick={() => setChosen(other)}>
+      <Pressable className="cheats-items__toggle" title={`Show ${other}`} onClick={() => setChosen(other)}>
         <PauseLabel name={view} tiles={5} scale={scale} spritesBase={spritesBase} />
-      </Button>
+      </Pressable>
 
       {view === 'pendants' && PENDANT_SPOTS.map(({ bit, x, y, variant, name }) => {
         const held = (pendants & bit) !== 0;

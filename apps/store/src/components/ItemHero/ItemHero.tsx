@@ -1,8 +1,7 @@
 /* @layer store-site @kind component */
-import { Hero } from '@domains/app/compounds/Hero';
-import { HeroFacts } from '@domains/app/compounds/HeroFacts';
-import { Box, Flex, Text } from '@drizztdourden08/tessera/primitives';
-import { Link } from '@site-kit/router/Link';
+import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Hero } from '@drizztdourden08/tessera/composites';
+import { AppLink } from '@site-kit/router/AppLink';
 import { authorPath } from '../../catalog/item-paths/author-path';
 import { KIND_PLURALS } from '../../lib/kinds/kinds.constants';
 import { averageOf } from '../../lib/format-count/average-of';
@@ -14,28 +13,28 @@ import './ItemHero.css';
 
 const ItemHero = (props: ItemHeroProps) => {
   const { item, version, actions } = props;
-  const backdrop = (
+  const picture = (
     <ItemPicture picture={item.banner ?? item.card} kind={item.kind} color={item.color} role="banner" className="item-hero__picture" />
   );
-  const intro = (
-    <>
-      <Text className="hero__eyebrow">{KIND_PLURALS[item.kind]}</Text>
-      <Text as="h2" className="hero__title">{item.name}</Text>
+  const about = (
+    <Stack gap="sm" align="stretch">
       <Text as="p" className="item-hero__summary">{item.summary}</Text>
       <Flex align="center" gap="sm" wrap className="item-hero__byline">
-        <Text as="span">by <Link to={authorPath(item.author.userId)} className="item-hero__author">{item.author.displayName}</Link></Text>
+        <Text as="span">by <AppLink to={authorPath(item.author.userId)}>{item.author.displayName}</AppLink></Text>
         <Stars value={averageOf(item.stats.ratingSum, item.stats.ratingCount)} />
       </Flex>
-      {actions && <Box className="hero__actions">{actions}</Box>}
-    </>
+    </Stack>
   );
   return (
     <Hero
-      ariaLabel={item.name}
+      label={item.name}
       className="item-hero"
-      backdrop={backdrop}
-      intro={intro}
-      bottom={<HeroFacts facts={itemHeroFacts(item, version)} />}
+      eyebrow={KIND_PLURALS[item.kind]}
+      title={item.name}
+      backdrop={{ kind: 'node', node: picture }}
+      actions={actions}
+      aside={about}
+      facts={[itemHeroFacts(item, version)]}
     />
   );
 };

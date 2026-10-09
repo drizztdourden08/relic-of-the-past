@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { useState } from 'react';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable } from '@drizztdourden08/tessera/primitives';
 import type { StarsProps } from './Stars.type';
 import { COUNTS, STAR } from './Stars.constants';
 import './Stars.css';
@@ -23,9 +23,8 @@ const Stars = (props: StarsProps) => {
   return (
     <Box as="span" className={`${cls} stars--picker`} role="group" aria-label="Your rating" onMouseLeave={() => setHover(null)}>
       {COUNTS.map((n) => (
-        <Button
+        <Pressable
           key={n}
-          variant="bare"
           className="stars__star"
           data-on={n <= filled || undefined}
           aria-label={n === 1 ? 'Rate 1 star' : `Rate ${n} stars`}
@@ -37,7 +36,7 @@ const Stars = (props: StarsProps) => {
           onClick={() => onChange(n)}
         >
           {STAR}
-        </Button>
+        </Pressable>
       ))}
     </Box>
   );

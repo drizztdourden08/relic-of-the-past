@@ -1,9 +1,8 @@
 /* @layer sanctuary-site @kind component */
 import { useEffect, useRef, useState } from 'react';
 import { LIMITS } from '@shared/sanctuary/limits';
-import { Button, Field, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Button, Field, Stack, StatRow, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
-import { Row } from '@site-kit/components/Row/Row';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { nextVersionNumber, versionLabel } from '../../../files/file-versions';
 import { NOTE_ID } from './VersionUploadDialog.constants';
@@ -34,7 +33,7 @@ const VersionUploadDialog = (props: VersionUploadDialogProps) => {
       {request && (
         <Stack gap="md" align="stretch">
           <Text as="p" className="version-dialog__lead">{next} of {request.file.name}</Text>
-          <Row label="file" value={`${request.dropped.name} · ${formatBytes(request.dropped.size)}`} className="version-dialog__row" />
+          <StatRow label="file" value={`${request.dropped.name} · ${formatBytes(request.dropped.size)}`} className="version-dialog__row" />
           <Field label="What changed (optional)" htmlFor={NOTE_ID} hint={`${note.length} / ${LIMITS.noteMaxChars}`}>
             <TextInput
               id={NOTE_ID}

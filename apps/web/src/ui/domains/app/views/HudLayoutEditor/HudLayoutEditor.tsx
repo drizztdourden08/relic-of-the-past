@@ -59,7 +59,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
           />
 
           <Box className="hud-editor__body">
-            <Box ref={panels.outlineRailRef} className="hud-editor__rail" style={{ width: panels.outlineWidth }}>
+            <Box id="hud-editor-outline" className="hud-editor__rail" style={{ width: panels.outlineWidth }}>
               <OutlinePanel
                 doc={layout}
                 selectedId={edits.selectedId}
@@ -70,7 +70,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
               />
             </Box>
 
-            <ResizeHandle axis="horizontal" label="Resize outline panel" resize={panels.outlineResize} />
+            <ResizeHandle label="Resize outline panel" controls="hud-editor-outline" {...panels.outlineResize} />
 
             <Box className="hud-editor__stage-column">
               <EditorStage
@@ -88,9 +88,9 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
               <EditorStepStrip step={editorStep} onStepChange={setEditorStep} />
             </Box>
 
-            <ResizeHandle axis="horizontal" label="Resize inspector panel" resize={panels.inspectorResize} />
+            <ResizeHandle label="Resize inspector panel" controls="hud-editor-inspector" edge="end" {...panels.inspectorResize} />
 
-            <Box ref={panels.inspectorRailRef} className="hud-editor__rail" style={{ width: panels.inspectorWidth }}>
+            <Box id="hud-editor-inspector" className="hud-editor__rail" style={{ width: panels.inspectorWidth }}>
               <EditorStepContext.Provider value={editorStep}>
               <SlotSchemeContext.Provider value={sample.slots}>
               <GridSolveContext.Provider value={gridSolve}>

@@ -1,17 +1,13 @@
 /* @layer renderer-components @kind hook */
-import { useState, useRef, useEffect, useCallback, type KeyboardEvent } from 'react';
-import { useDismissable } from '@drizztdourden08/tessera/primitives';
-import { usePlatform } from '@app/platform';
+import { useCallback, useMemo } from 'react';
 import { useSearchStore } from '@app/stores/search-store';
-import { isPrimaryModifier } from '@shared/platform';
-import type { GameSettings } from '@shared/types/settings';
 import type { TitleBarProps } from '../../TitleBar/TitleBar.type';
-import type { RunTargetDeps, SearchEntry } from '../SearchPalette.type';
+import type { RunTargetDeps, SearchEntry, SearchPaletteItem } from '../SearchPalette.type';
+import { paletteGroups } from './palette-groups';
 import { useSearchResults } from './useSearchResults';
 import { useRunTarget } from './useRunTarget';
 
 const useSearchPalette = (navProps: TitleBarProps, navDeps: RunTargetDeps) => {
-  const os = usePlatform().info.os;
   const open = useSearchStore((s) => s.open);
   const query = useSearchStore((s) => s.query);
   const setQuery = useSearchStore((s) => s.setQuery);
@@ -22,40 +18,17 @@ const useSearchPalette = (navProps: TitleBarProps, navDeps: RunTargetDeps) => {
   const { catalog, results } = useSearchResults(navProps);
   const { runEntry } = useRunTarget(navDeps);
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => { if (open) inputRef.current?.focus(); }, [open]);
-  useEffect(() => { setActiveIndex(0); }, [results]);
-
-  useDismissable({ active: open, level: 'dialog', onDismiss: closePalette });
-
   const toggleEntry = useCallback((entry: SearchEntry) => {
     if (!entry.settingKey || !applyPatch || !settings) return;
-    const current = (settings as unknown as Record<string, unknown>)[entry.settingKey];
+    const current: unknown = settings[entry.settingKey];
     if (typeof current !== 'boolean') return;
-    applyPatch({ [entry.settingKey]: !current } as Partial<GameSettings>);
+    applyPatch({ [entry.settingKey]: !current });
   }, [applyPatch, settings]);
 
-  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') { e.preventDefault(); closePalette(); return; }
-    if (e.key === 'ArrowDown') { e.preventDefault(); setActiveIndex((i) => Math.min(i + 1, results.length - 1)); return; }
-    if (e.key === 'ArrowUp') { e.preventDefault(); setActiveIndex((i) => Math.max(i - 1, 0)); return; }
-    if (e.key !== 'Enter') return;
-    const entry = results[activeIndex];
-    if (!entry) return;
-    e.preventDefault();
-    if (isPrimaryModifier(e, os)) toggleEntry(entry);
-    else runEntry(entry);
-  }, [results, activeIndex, os, runEntry, toggleEntry, closePalette]);
+  const groups = useMemo(() => paletteGroups(catalog, results, query, toggleEntry), [catalog, results, query, toggleEntry]);
+  const runItem = useCallback((item: SearchPaletteItem) => runEntry(item.entry), [runEntry]);
 
-  return {
-    open,
-    query, setQuery,
-    catalog, results, activeIndex, setActiveIndex,
-    inputRef, handleKeyDown,
-    runEntry, toggleEntry, closePalette,
-  };
+  return { open, query, setQuery, groups, runItem, closePalette };
 };
 
 export { useSearchPalette };

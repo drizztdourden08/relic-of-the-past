@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box, Text, Select, Button, Field, ButtonRow, EmptyState, IconButton } from '@drizztdourden08/tessera/primitives';
+import { Box, Select, Button, Field, ButtonRow, EmptyState, IconButton } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { SpriteGrid } from './SpriteGrid';
 import { ImportProgress } from './ImportProgress';
@@ -132,11 +132,13 @@ const SpriteManager = (props: SpriteManagerProps) => {
     </>
   );
 
-  const detail = selectedRom
-    ? <SpriteGrid baseUrl={spriteBaseUrl} />
-    : <Text>Select an imported ROM to view its sprites</Text>;
-
-  return <ListDetailLayout list={list} detail={detail} detailEmpty={!selectedRom} />;
+  return (
+    <ListDetailLayout
+      list={list}
+      detail={selectedRom ? <SpriteGrid baseUrl={spriteBaseUrl} /> : null}
+      emptyDetail={<EmptyState message="Select an imported ROM to view its sprites" />}
+    />
+  );
 };
 
 export { SpriteManager };

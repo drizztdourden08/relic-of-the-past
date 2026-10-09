@@ -1,9 +1,10 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useState } from 'react';
-import { Box, Text, TextInput, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, SearchInput } from '@drizztdourden08/tessera/primitives';
+import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { POSE_ATLAS, facingsOf, framesOf } from '@shared/game/data/native-tables/player-pose-atlas';
 import { STATE_LABELS, GROUP_LABELS, labelFor } from '@shared/game/data/native-tables/player-state-labels';
-import { GROUP_ORDER } from './StateList.constants';
+import { GROUP_ORDER, ROW_SHAPE } from './StateList.constants';
 import type { StateListProps } from './StateList.type';
 import './StateList.css';
 
@@ -23,30 +24,27 @@ const StateList = (props: StateListProps) => {
 
   return (
     <Box className="state-list">
-      <TextInput
+      <SearchInput
         value={filter}
-        onChange={(e) => setFilter(e.target.value)}
+        onChange={setFilter}
         placeholder={`Filter ${STATE_LABELS.length} states...`}
       />
       <Box className="state-list__scroll">
         {grouped.map(({ group, items }) => (
-          <Box key={group}>
-            <Text className="state-list__group">{GROUP_LABELS[group]}</Text>
+          <ListItemList key={group} heading={GROUP_LABELS[group]} count={items.length} shape={ROW_SHAPE}>
             {items.map(({ state, meta }) => {
               const total = facingsOf(state).reduce<number>((n, f) => n + framesOf(state, f).length, 0);
               return (
-                <Button
+                <ListItemRow
                   key={state.action}
-                  variant="bare"
-                  className={`state-list__item${selected === state.action ? ' state-list__item--active' : ''}`}
+                  name={meta.label}
+                  columns={[{ primary: total, align: 'end' }]}
+                  selected={selected === state.action}
                   onClick={() => onSelect(state.action)}
-                >
-                  <Text as="span" className="state-list__name">{meta.label}</Text>
-                  <Text as="span" className="state-list__count">{total}</Text>
-                </Button>
+                />
               );
             })}
-          </Box>
+          </ListItemList>
         ))}
       </Box>
     </Box>

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { useState } from 'react';
-import { Box, Button, DropZone, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
+import { useMemo, useState } from 'react';
+import { Box, Button, DropZone, IconButton, SegmentedControl, Select, Text } from '@drizztdourden08/tessera/primitives';
 import { AUTO_PACK_ID } from '@shared/input/glyphs';
 import { GLYPH_IMAGE_TYPES } from '../HudLayoutEditor.constants';
 import type { GlyphPosition } from '@app/lib/hud/custom-glyph-store';
@@ -9,6 +9,10 @@ import type { GlyphPackPickerProps } from './GlyphPackPicker.type';
 const GlyphPackPicker = (props: GlyphPackPickerProps) => {
   const { value, packs, custom, positions, busy, onChange, onCreatePack, onDeletePack, onImport, onRemove } = props;
   const [position, setPosition] = useState<GlyphPosition | ''>('');
+  const packOptions = useMemo(
+    () => [{ value: AUTO_PACK_ID, label: 'Auto' }, ...packs.map((pack) => ({ value: pack.id, label: pack.name }))],
+    [packs],
+  );
 
   const selectedCustom = custom.find((pack) => pack.id === value) ?? null;
   const target = (position || positions[0]) as GlyphPosition | undefined;
@@ -17,25 +21,7 @@ const GlyphPackPicker = (props: GlyphPackPickerProps) => {
   return (
     <Box className="hud-editor-packs">
       <Box className="hud-editor-packs__row">
-        <Button
-          variant="bare"
-          className={`hud-editor-packs__chip${value === AUTO_PACK_ID ? ' is-selected' : ''}`}
-          aria-pressed={value === AUTO_PACK_ID}
-          onClick={() => onChange(AUTO_PACK_ID)}
-        >
-          Auto
-        </Button>
-        {packs.map((pack) => (
-          <Button
-            variant="bare"
-            key={pack.id}
-            className={`hud-editor-packs__chip${value === pack.id ? ' is-selected' : ''}${pack.builtIn ? '' : ' is-custom'}`}
-            aria-pressed={value === pack.id}
-            onClick={() => onChange(pack.id)}
-          >
-            {pack.name}
-          </Button>
-        ))}
+        <SegmentedControl size="sm" aria-label="Glyph pack" value={value} options={packOptions} onChange={onChange} />
         <Button variant="ghost" size="sm" disabled={busy} onClick={onCreatePack}>+ Import your own</Button>
       </Box>
 

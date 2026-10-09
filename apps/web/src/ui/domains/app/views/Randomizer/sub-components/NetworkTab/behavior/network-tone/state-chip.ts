@@ -8,7 +8,7 @@ const stateChip = (connection: NetworkConnection, now: number): Chip => {
   const { state, reconnectAttempt, nextRetryAt, retryInFlight } = connection;
   if (state === 'reconnecting') {
     const when = retryInFlight ? 'trying now' : `try ${reconnectAttempt} in ${formatCountdown(nextRetryAt, now)}`;
-    return { tone: 'warn', label: `reconnecting, ${when}` };
+    return { tone: 'warning', label: `reconnecting, ${when}` };
   }
   return { tone: STATE_TONE[state], label: state };
 };

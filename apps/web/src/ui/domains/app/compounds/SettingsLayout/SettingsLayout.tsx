@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useContext, useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { SettingsPage } from '../SettingsPage';
+import { SettingsPage } from '@drizztdourden08/tessera/composites';
 import { resolveSections } from './behavior/resolve-sections';
 import { useLockCause } from './behavior/useLockCause';
 import { SettingsSections } from './sub-components/SettingsSections';

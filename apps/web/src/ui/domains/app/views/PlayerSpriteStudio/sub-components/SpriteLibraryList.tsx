@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button, Image, IconButton, EmptyState, Status } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Button, Icon, Image, IconButton, EmptyState, Status } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { HookshopChip } from '../../../compounds/HookshopChip';
 import { ImportForm } from '../../DataManager/sub-components/ImportForm';
@@ -36,10 +36,10 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
             key={entry.name}
             icon={entry.preview
               ? <Image className="sprite-library__thumb" src={entry.preview} alt={entry.label} draggable={false} />
-              : '🧝'}
+              : <Icon name="user" />}
             name={entry.label}
             meta={<Status tone="neutral">{entry.container}</Status>}
-            badge={isInstalled(entry.name) ? <HookshopChip /> : undefined}
+            columns={isInstalled(entry.name) ? [{ primary: <HookshopChip />, align: 'end' }] : undefined}
             selected={selected === entry.name}
             onClick={() => onSelect(entry.name)}
             action={
@@ -49,7 +49,7 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
                 label={isInstalled(entry.name) ? 'Uninstall' : 'Delete'}
                 onClick={(e) => { e.stopPropagation(); onDelete(entry.name); }}
               >
-                ✕
+                <Icon name="x" />
               </IconButton>
             }
           />

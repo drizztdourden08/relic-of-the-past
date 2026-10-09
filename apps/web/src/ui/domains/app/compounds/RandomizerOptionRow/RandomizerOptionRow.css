@@ -45,14 +45,6 @@
 
 .rand-opt-row__tag {
   flex: none;
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  padding: 0 var(--space-xs);
-  white-space: nowrap;
 }
 
 .rand-opt-row__description {

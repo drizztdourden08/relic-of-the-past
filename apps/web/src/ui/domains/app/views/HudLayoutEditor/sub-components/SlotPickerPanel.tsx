@@ -1,12 +1,15 @@
 /* @layer renderer-components @kind component */
-import { useState } from 'react';
-import { Portal, usePickerPopover, Box, Button, IconButton, NumberInput, Text, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { useRef, useState } from 'react';
+import { Anchored, Box, EmptyState, NumberInput, Pressable, Text } from '@drizztdourden08/tessera/primitives';
+import { usePickerDismiss } from '@domains/app/compounds/SpritePicker';
+import { SlotPickActions } from './SlotPickActions';
 import type { SlotPickerPanelProps } from './SlotPickerPanel.type';
 
 const SlotPickerPanel = (props: SlotPickerPanelProps) => {
   const { open, anchorRef, slotNumbers, onClose, onPickItem, onPickGlyph, onPickNumber } = props;
   const [manual, setManual] = useState(1);
-  const { position, panelRef } = usePickerPopover({ open, anchorRef, onClose, estimatedWidth: 260, estimatedHeight: 320 });
+  const panelRef = useRef<HTMLDivElement>(null);
+  usePickerDismiss({ open, anchorRef, panelRef, onClose });
 
   if (!open) return null;
 
@@ -19,61 +22,40 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
   };
 
   return (
-    <Portal layer="popover">
-      <Box
-        ref={panelRef}
-        className="hud-picker-grid"
-        data-drop-up={position?.dropUp ? 'true' : undefined}
-        style={position ? { top: position.top, left: position.left } : undefined}
-      >
-        <Box className="hud-slot-picker__manual">
-          <Text className="hud-slot-picker__label">Any slot</Text>
-          <NumberInput min={1} value={manual} onChange={setManual} />
-          {onPickNumber ? (
-            <IconButton
-              variant="ghost" size="sm" label="Use this slot number" title="Use this number"
-              disabled={!manualValid} onClick={() => pick(onPickNumber, manual)}
-            >↵</IconButton>
-          ) : (
-            <>
-              <IconButton
-                variant="ghost" size="sm" label="Item placeholder" title="Item placeholder"
-                disabled={!manualValid} onClick={() => pick(onPickItem, manual)}
-              >▫</IconButton>
-              <IconButton
-                variant="ghost" size="sm" label="Glyph of this slot" title="Glyph of this slot"
-                disabled={!manualValid} onClick={() => pick(onPickGlyph, manual)}
-              >◉</IconButton>
-            </>
-          )}
-        </Box>
-        <Box className="hud-slot-picker__rows">
-          {numbers.length === 0 ? (
-            <EmptyState message="No scheme previewed. Type a slot number above." />
-          ) : numbers.map((index) => (
-            <Box key={index} className="hud-slot-picker__row">
-              {onPickNumber ? (
-                <Button variant="bare" className="hud-slot-picker__label" onClick={() => pick(onPickNumber, index)}>
-                  Slot {index}
-                </Button>
-              ) : (
-                <>
-                  <Text className="hud-slot-picker__label">Slot {index}</Text>
-                  <IconButton
-                    variant="ghost" size="sm" label={`Item placeholder for slot ${index}`} title="Item placeholder"
-                    onClick={() => pick(onPickItem, index)}
-                  >▫</IconButton>
-                  <IconButton
-                    variant="ghost" size="sm" label={`Glyph of slot ${index}`} title="Glyph of this slot"
-                    onClick={() => pick(onPickGlyph, index)}
-                  >◉</IconButton>
-                </>
-              )}
-            </Box>
-          ))}
-        </Box>
+    <Anchored ref={panelRef} anchorRef={anchorRef} placement="bottom-start" layer="popover" className="hud-picker-grid">
+      <Box className="hud-slot-picker__manual">
+        <Text className="hud-slot-picker__label">Any slot</Text>
+        <NumberInput min={1} value={manual} onChange={setManual} />
+        <SlotPickActions
+          disabled={!manualValid}
+          onPickNumber={onPickNumber && (() => pick(onPickNumber, manual))}
+          onPickItem={() => pick(onPickItem, manual)}
+          onPickGlyph={() => pick(onPickGlyph, manual)}
+        />
       </Box>
-    </Portal>
+      <Box className="hud-slot-picker__rows">
+        {numbers.length === 0 ? (
+          <EmptyState message="No scheme previewed. Type a slot number above." />
+        ) : numbers.map((index) => (
+          <Box key={index} className="hud-slot-picker__row">
+            {onPickNumber ? (
+              <Pressable className="hud-slot-picker__label" onClick={() => pick(onPickNumber, index)}>
+                Slot {index}
+              </Pressable>
+            ) : (
+              <>
+                <Text className="hud-slot-picker__label">Slot {index}</Text>
+                <SlotPickActions
+                  index={index}
+                  onPickItem={() => pick(onPickItem, index)}
+                  onPickGlyph={() => pick(onPickGlyph, index)}
+                />
+              </>
+            )}
+          </Box>
+        ))}
+      </Box>
+    </Anchored>
   );
 };
 

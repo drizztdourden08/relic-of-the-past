@@ -80,13 +80,8 @@ const MsuImport = (props: MsuImportProps) => {
           onKeyDown={handleKeyDown}
           disabled={busy}
         />
-        <Button
-          variant="bare"
-          className="msu-import__download-btn"
-          onClick={handleDownload}
-          disabled={busy || !url.trim()}
-        >
-          {busy ? '...' : 'Download'}
+        <Button variant="secondary" size="sm" onClick={handleDownload} loading={busy} disabled={busy || !url.trim()}>
+          Download
         </Button>
       </Box>
       <Box className="msu-import__divider">or</Box>

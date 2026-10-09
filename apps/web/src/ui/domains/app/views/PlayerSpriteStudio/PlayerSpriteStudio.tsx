@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useMemo, useCallback } from 'react';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { useWearing } from '@domains/packs/character/behavior/useWearing';
 import { SpriteSheetViewer } from '@domains/packs/character/compounds/SpriteSheetViewer';
@@ -91,9 +91,7 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
 
   const status = error ?? uninstallError;
 
-  const detail = !sheet ? (
-    <Text>Select a sprite to open it, or create one from the stock sheet.</Text>
-  ) : (
+  const detail = !sheet ? null : (
     <Box className="sprite-studio">
       {installed && (
         <InstalledOriginBar pack={installed} onDuplicated={openAfter} onUpdated={openAfter} onUninstalled={handleUninstalled} />
@@ -135,7 +133,14 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
     </Box>
   );
 
-  return <ListDetailLayout className="sprite-studio-layout" list={list} detail={detail} detailEmpty={!sheet} />;
+  return (
+    <ListDetailLayout
+      className="sprite-studio-layout"
+      list={list}
+      detail={detail}
+      emptyDetail={<EmptyState message="Select a sprite to open it, or create one from the stock sheet." />}
+    />
+  );
 };
 
 export { PlayerSpriteStudio };

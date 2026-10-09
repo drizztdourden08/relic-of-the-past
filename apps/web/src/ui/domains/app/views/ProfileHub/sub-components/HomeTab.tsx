@@ -6,7 +6,6 @@ import { ProfileHero } from '../../../compounds/ProfileHero';
 import { SceneBackdrop } from '../../../../title';
 import { HubGameControls } from './HubGameControls';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { ToastContainer } from '@drizztdourden08/tessera/composites';
 import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
 import { useHomeRandomizerStatus } from './home-tab/useHomeRandomizerStatus';
 import { useHomeSaveFileChecks } from './home-tab/useHomeSaveFileChecks';
@@ -21,7 +20,7 @@ import './HomeTab.css';
 const HomeTab = (props: HomeTabProps) => {
   const { profileId, romFile, isGameRunning, onStartGame, onStopGame, onResetGame, lastPlayed, created, randomizer, vanillaSafe } = props;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
-  const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram, toasts, dismissToast } = saves;
+  const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram } = saves;
   const { storage, capabilities } = usePlatform();
   const randomizerStatus = useHomeRandomizerStatus();
   const mode = deriveProfileMode(randomizer, vanillaSafe);
@@ -82,7 +81,6 @@ const HomeTab = (props: HomeTabProps) => {
 
       <HomeTabColumns saves={saves} isGameRunning={isGameRunning} />
       <HomeTabDialogs saves={saves} />
-      <ToastContainer toasts={toasts} onDismiss={dismissToast} position="bottom-left" />
     </Box>
   );
 };

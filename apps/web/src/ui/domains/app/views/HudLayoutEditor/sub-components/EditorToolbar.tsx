@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDismissable, Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
-import { SpritePicker } from '@drizztdourden08/tessera/composites';
+import { useEscapeStack, Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { SpritePicker } from '@domains/app/compounds/SpritePicker';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@shared/game/data/sprite-manifest/manifest';
 import { ToolbarMenu } from './ToolbarMenu';
@@ -13,7 +13,6 @@ import { SpriteExtractionNotice } from './SpriteExtractionNotice';
 import { TOOLBAR_ICONS, buildToolbarGroups, presetItems, subtreePresetItems } from '../behavior/toolbar-menus';
 import { newElement } from '../behavior/new-node';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
-import { Icon as IconifyIcon } from '@iconify/react/offline';
 import type { EditorToolbarProps } from './EditorToolbar.type';
 
 const spriteUrl = (file: string): string => `${getSpritesBase()}${file}.png`;
@@ -41,7 +40,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 
   const close = useCallback(() => setOpenKey(null), []);
 
-  useDismissable({ active: openKey !== null, level: 'menu', onDismiss: close });
+  useEscapeStack({ active: openKey !== null, level: 'menu', onEscape: close });
   const toggle = useCallback((key: string) => setOpenKey((current) => (current === key ? null : key)), []);
   const groups = buildToolbarGroups({ insert });
   const groupItems = (key: string) => groups.find((group) => group.key === key)?.items ?? [];
@@ -100,7 +99,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 
       <ToolbarMenu
         icon={TOOLBAR_ICONS.preset} label="Preset"
-        items={[...subtreePresetItems({ insert }), 'separator', ...presetItems(layouts, draftId, onStartFrom)]}
+        items={[...subtreePresetItems({ insert }), { separator: true }, ...presetItems(layouts, draftId, onStartFrom)]}
         open={openKey === 'preset'} onToggle={() => toggle('preset')} onClose={close}
       />
 
@@ -113,7 +112,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
         title="Snap resize to the 8px game grid and to sibling edges, with an alignment guide"
         onClick={toggleSnapping}
       >
-        <IconifyIcon icon={TOOLBAR_ICONS.snapping} width={16} height={16} aria-hidden />
+        <Icon icon={TOOLBAR_ICONS.snapping} size={16} aria-hidden />
       </IconButton>
 
       <Text className="hud-toolbar__target" title="Where the next insert lands">

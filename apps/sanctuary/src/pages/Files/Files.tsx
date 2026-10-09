@@ -39,7 +39,6 @@ const Files = (props: FilesProps) => {
         onSearchChange={view.setSearch}
         searchPlaceholder={SEARCH_PLACEHOLDER}
         searchLabel="Search files"
-        facets={page.facets}
       />
       <SavedViewsMenu state={view.savedViews} />
     </>

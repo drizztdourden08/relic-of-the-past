@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { AlertBanner } from '@domains/app/compounds/AlertBanner';
+import { Box, Callout, Text } from '@drizztdourden08/tessera/primitives';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
 import type { OptionValue } from '@shared/randomizer/world/options.type';
@@ -55,7 +54,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
       {reasons.map((tile) => (
         <Text key={tile.field} className="dark-rooms__reason">{`${tile.name} ${tile.reason}`}</Text>
       ))}
-      {rolledBlind && <AlertBanner className="dark-rooms__banner">{BLIND_NOTE}</AlertBanner>}
+      {rolledBlind && <Callout tone="primary" className="dark-rooms__banner">{BLIND_NOTE}</Callout>}
     </RandomizerOptionGroup>
   );
 };

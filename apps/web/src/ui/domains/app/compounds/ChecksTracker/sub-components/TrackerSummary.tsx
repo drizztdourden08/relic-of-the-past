@@ -18,7 +18,9 @@ const TrackerSummary = (props: TrackerSummaryProps) => {
         secondaryTone="primary"
         tone="secondary"
         max={Math.max(total, 1)}
-        readout={<Text title="Percent complete">{pct}%</Text>}
+        label="Percent complete"
+        showValue
+        formatValue={() => `${pct}%`}
       />
       <Box className="tracker-summary__stats">
         {SUMMARY_STATS.map(({ key, label }) => (

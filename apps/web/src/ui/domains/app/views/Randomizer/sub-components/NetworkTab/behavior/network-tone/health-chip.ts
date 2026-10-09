@@ -7,7 +7,7 @@ const healthChip = (status: NetworkStatus, now: number): Chip => {
   const { connection, health } = status;
   if (connection.state !== 'connected') return { tone: STATE_TONE[connection.state], label: connection.state };
   const quiet = health.lastPacketAt === null || now - health.lastPacketAt > STALE_AFTER_MS;
-  return quiet ? { tone: 'warn', label: 'no reply' } : { tone: 'ok', label: 'healthy' };
+  return quiet ? { tone: 'warning', label: 'no reply' } : { tone: 'success', label: 'healthy' };
 };
 
 export { healthChip };

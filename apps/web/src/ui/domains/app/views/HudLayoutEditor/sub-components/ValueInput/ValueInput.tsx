@@ -2,7 +2,7 @@
 import './ValueInput.css';
 import './sub-components/InstanceStrip.css';
 import './sub-components/FormulaMenu.css';
-import { Box, Button, Field, Icon, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Box, Field, Icon, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
 import { resolveValue } from '@shared/hud/data';
 import { readExpr } from '../../behavior/check-expr';
 import { useInstanceScopes } from '../../behavior/formula-scope';
@@ -12,7 +12,7 @@ import { useValueInput } from './behavior/useValueInput';
 import { FormulaFeedback } from './sub-components/FormulaFeedback';
 import { FormulaMenu } from './sub-components/FormulaMenu';
 import { FormulaProblem } from './sub-components/FormulaProblem';
-import { CHEVRON_DOWN, CHEVRON_UP, NOT_A_NUMBER } from './ValueInput.constants';
+import { NOT_A_NUMBER } from './ValueInput.constants';
 import type { ValueInputProps } from './ValueInput.type';
 
 const ValueInput = (props: ValueInputProps) => {
@@ -43,7 +43,6 @@ const ValueInput = (props: ValueInputProps) => {
       hint={hint ?? (readOnly ? derivedFrom : undefined)}
       error={problem?.message ?? literalProblem}
       className={`hud-value-field ${className}${promote.className}`}
-      style={promote.style}
     >
       <Box className="hud-value-input hud-value-field__row" data-formula={field.formula ? 'true' : undefined}>
         <TextInput
@@ -64,34 +63,32 @@ const ValueInput = (props: ValueInputProps) => {
 
         {field.canStep && !readOnly && (
           <Box className="hud-value-input__spin">
-            <Button variant="bare" tabIndex={-1} aria-label={`Increment ${named}`} onClick={() => field.stepBy(1)}>
-              <Icon size={12} paths={[CHEVRON_UP]} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-            </Button>
-            <Button variant="bare" tabIndex={-1} aria-label={`Decrement ${named}`} onClick={() => field.stepBy(-1)}>
-              <Icon size={12} paths={[CHEVRON_DOWN]} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-            </Button>
+            <Pressable tabIndex={-1} aria-label={`Increment ${named}`} onClick={() => field.stepBy(1)}>
+              <Icon size={12} name="chevron-up" />
+            </Pressable>
+            <Pressable tabIndex={-1} aria-label={`Decrement ${named}`} onClick={() => field.stepBy(-1)}>
+              <Icon size={12} name="chevron-down" />
+            </Pressable>
           </Box>
         )}
 
         {field.focused && !field.formula && !readOnly && (
-          <Button
-            variant="bare"
+          <Pressable
             className="hud-value-input__chip"
             title="Drive this from the game, or type ="
             aria-label="Write a formula"
             onMouseDown={(event) => event.preventDefault()}
             onClick={field.startFormula}
-          >=</Button>
+          >=</Pressable>
         )}
 
         {field.formula && !readOnly && (
-          <Button
-            variant="bare"
+          <Pressable
             className="hud-value-input__fx"
             aria-label="Insert a name or a formula"
             onMouseDown={(event) => event.preventDefault()}
             onClick={field.openMenu}
-          >ƒ ▾</Button>
+          >ƒ ▾</Pressable>
         )}
       </Box>
 

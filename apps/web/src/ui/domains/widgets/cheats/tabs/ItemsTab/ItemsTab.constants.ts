@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind constants */
 import { CheatSlot } from '@app/lib/game';
-import type { ControlHint } from '../../sub-components/ControlGlyph.type';
+import type { ControlHint } from '../../sub-components/ControlHint.type';
 import type { DungeonItem, EquipmentBytes, GearSlot, SlotName } from './ItemsTab.type';
 
 const ITEMS_TILES_WIDE = 21;

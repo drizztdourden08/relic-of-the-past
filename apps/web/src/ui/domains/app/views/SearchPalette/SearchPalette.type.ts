@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { KeyboardEvent, RefObject } from 'react';
+import type { ReactNode } from 'react';
+import type { CommandPaletteItem } from '@drizztdourden08/tessera/composites';
 import type { GameSettings } from '@shared/types/settings';
 import type { WindowControlsPort } from '@shared/platform';
 import type { TitleBarProps } from '../TitleBar/TitleBar.type';
@@ -18,7 +19,7 @@ interface SearchEntry {
   id: string;
   kind: SearchKind;
   label: string;
-  icon?: string;
+  icon?: ReactNode;
   breadcrumb: string[];
   description?: string;
   keywords?: string;
@@ -54,30 +55,8 @@ interface SearchPaletteProps {
   navDeps: RunTargetDeps;
 }
 
-interface SearchInputProps {
-  inputRef: RefObject<HTMLInputElement | null>;
-  value: string;
-  onChange: (value: string) => void;
-  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
-  resultCount: number;
-}
-
-interface SearchResultListProps {
-  catalog: SearchEntry[];
-  results: SearchEntry[];
-  query: string;
-  activeIndex: number;
-  setActiveIndex: (i: number) => void;
-  onSelect: (entry: SearchEntry) => void;
-  onToggle: (entry: SearchEntry) => void;
-}
-
-interface SearchResultRowProps {
+interface SearchPaletteItem extends CommandPaletteItem {
   entry: SearchEntry;
-  active: boolean;
-  onSelect: () => void;
-  onToggle: () => void;
-  onHover: () => void;
 }
 
 interface FieldWeights {
@@ -98,11 +77,9 @@ export type {
   RunTargetDeps,
   SearchContext,
   SearchEntry,
-  SearchInputProps,
   SearchKind,
+  SearchPaletteItem,
   SearchPaletteProps,
-  SearchResultListProps,
-  SearchResultRowProps,
   SearchSource,
   SearchTarget,
 };

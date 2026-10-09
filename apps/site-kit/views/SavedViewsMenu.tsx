@@ -1,48 +1,31 @@
 /* @layer site-kit @kind component */
 import { useMemo, useState } from 'react';
-import { Button, Text } from '@drizztdourden08/tessera/primitives';
-import { Dialog, DropdownMenu, useAnchorMenu } from '@drizztdourden08/tessera/composites';
-import type { MenuEntry } from '@drizztdourden08/tessera/composites';
+import { Text } from '@drizztdourden08/tessera/primitives';
+import { Dialog, DropdownMenu } from '@drizztdourden08/tessera/composites';
 import { NameDialog } from './NameDialog';
-import { PORTALLED_MENU_SELECTOR } from './SavedViewsMenu.constants';
+import { savedViewGroups } from './saved-view-groups';
 import type { Prompt, SavedViewsMenuProps } from './SavedViewsMenu.type';
 import './SavedViewsMenu.css';
 
 const SavedViewsMenu = (props: SavedViewsMenuProps) => {
   const { state } = props;
-  const { views, active, busy, error } = state;
-  const menu = useAnchorMenu<HTMLButtonElement>(PORTALLED_MENU_SELECTOR);
+  const { active, busy, error } = state;
   const [prompt, setPrompt] = useState<Prompt>(null);
 
-  const items = useMemo<MenuEntry[]>(() => {
-    const pick = (action: () => void) => () => { menu.close(); action(); };
-    const list: MenuEntry[] = views.map((view) => ({
-      key: view.id,
-      label: view.name,
-      checked: view.id === active?.id,
-      onClick: pick(() => void state.apply(view.id)),
-    }));
-    if (list.length) list.push('separator');
-    list.push({ key: 'save', label: 'Save current as...', onClick: pick(() => setPrompt('save')) });
-    if (active) {
-      list.push(
-        { key: 'update', label: `Update "${active.name}"`, onClick: pick(() => void state.update(active.id)) },
-        { key: 'rename', label: 'Rename...', onClick: pick(() => setPrompt('rename')) },
-        { key: 'delete', label: 'Delete', onClick: pick(() => setPrompt('delete')) },
-      );
-    }
-    return list;
-  }, [views, active, state, menu]);
+  const groups = useMemo(() => savedViewGroups(state, setPrompt), [state]);
 
   return (
     <>
-      <Button ref={menu.anchorRef} variant="secondary" size="sm" className="saved-views__trigger" disabled={busy} onClick={menu.toggle}>
-        <Text as="span" className="saved-views__eyebrow">View</Text>
-        <Text as="span" className="saved-views__name">{active ? active.name : 'Current'}</Text>
-        <Text as="span" aria-hidden="true">{'▾'}</Text>
-      </Button>
+      <DropdownMenu
+        trigger={{ label: `View: ${active ? active.name : 'Current'}`, icon: 'chevron-down', iconSide: 'end' }}
+        variant="secondary"
+        size="sm"
+        align="end"
+        disabled={busy}
+        className="saved-views__menu"
+        groups={groups}
+      />
       {error && <Text as="span" variant="caption" role="alert">{error}</Text>}
-      {menu.open && <DropdownMenu items={items} anchorRef={menu.anchorRef} align="end" />}
       <NameDialog
         open={prompt === 'save'}
         title="Save view"

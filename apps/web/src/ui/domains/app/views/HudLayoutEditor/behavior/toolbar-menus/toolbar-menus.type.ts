@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { MenuEntry, MenuIconSource } from '@drizztdourden08/tessera/composites';
+import type { IconifyIcon } from '@iconify/types';
+import type { MenuNode } from '@drizztdourden08/tessera/composites';
 import type { HudNode } from '@shared/types/hud';
 
 interface MenuDeps {
@@ -8,9 +9,9 @@ interface MenuDeps {
 
 interface ToolbarGroup {
   key: string;
-  icon: MenuIconSource;
+  icon: IconifyIcon;
   label: string;
-  items: MenuEntry[];
+  items: MenuNode[];
 }
 
 export type { MenuDeps, ToolbarGroup };

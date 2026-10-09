@@ -65,7 +65,7 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
         <ReviewStats counts={counts} total={ALL_ITEMS.length} />
         <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <Button variant="bare" onClick={() => { setData({}); saveSpriteDebug({}); }} style={S.resetBtn}>Reset</Button>
+          <Button variant="danger" size="xs" onClick={() => { setData({}); saveSpriteDebug({}); }}>Reset</Button>
         </Box>
       </Box>
       <Box style={S.grid}>

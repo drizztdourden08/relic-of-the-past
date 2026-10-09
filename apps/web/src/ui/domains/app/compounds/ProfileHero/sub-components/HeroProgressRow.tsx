@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import type { HeroProgressFile } from '../ProfileHero.type';
 
 const share = (count: number, total: number): number => (total > 0 ? (count / total) * 100 : 0);
@@ -11,18 +11,19 @@ const rowTitle = (file: HeroProgressFile): string =>
 
 const HeroProgressRow = (props: { file: HeroProgressFile }) => {
   const { file } = props;
-  const takenPct = share(file.taken, file.total);
   return (
     <Box className="hero-progress__row" title={rowTitle(file)}>
       <Text className="hero-progress__file">{fileLabel(file)}</Text>
-      <Box className="hero-progress__bar">
-        <Box className="hero-progress__seg hero-progress__seg--taken" style={{ width: `${takenPct}%` }} />
-        <Box
-          className="hero-progress__seg hero-progress__seg--available"
-          style={{ width: `${share(file.available, file.total)}%` }}
-        />
-      </Box>
-      <Text className="hero-progress__pct">{Math.floor(takenPct)}%</Text>
+      <ProgressBar
+        className="hero-progress__bar"
+        value={file.taken}
+        secondaryValue={file.taken + file.available}
+        max={Math.max(1, file.total)}
+        tone="secondary"
+        secondaryTone="warning"
+        label={rowTitle(file)}
+      />
+      <Text className="hero-progress__pct">{Math.floor(share(file.taken, file.total))}%</Text>
       <Text className="hero-progress__count">{file.taken}/{file.total}</Text>
     </Box>
   );

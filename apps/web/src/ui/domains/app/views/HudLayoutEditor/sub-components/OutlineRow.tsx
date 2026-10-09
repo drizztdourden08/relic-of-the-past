@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
-import { CARET_PATH, DROP_CLASS } from './OutlineRow.constants';
+import { Box, Icon, IconButton, Pressable, Text } from '@drizztdourden08/tessera/primitives';
+import { CARET_ICON, DROP_CLASS } from './OutlineRow.constants';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { OutlineRowProps } from './OutlineRow.type';
 
@@ -52,12 +52,12 @@ const OutlineRow = (props: OutlineRowProps) => {
           label={collapsed ? `Expand ${label}` : `Collapse ${label}`}
           onClick={(event) => { event.stopPropagation(); onToggleCollapse(); }}
         >
-          <Icon className="hud-outline__caret-mark" paths={[CARET_PATH]} size={12} aria-hidden />
+          <Icon className="hud-outline__caret-mark" path={CARET_ICON} size={12} aria-hidden />
         </IconButton>
       ) : (
         <Box className="hud-outline__caret-spacer" aria-hidden />
       )}
-      <Button variant="bare" className="hud-outline__name" aria-pressed={selected} onClick={onSelect}>
+      <Pressable className="hud-outline__name" aria-pressed={selected} onClick={onSelect}>
         <Text className="hud-outline__glyph" aria-hidden>{kind === 'container' ? '▤' : '◦'}</Text>
         <Text className="hud-outline__text">{label}</Text>
         {cell && <Text className="hud-outline__badge">{cell}</Text>}
@@ -67,7 +67,7 @@ const OutlineRow = (props: OutlineRowProps) => {
             slot {missingSlots.join(', ')} out of range
           </Text>
         )}
-      </Button>
+      </Pressable>
       {!locked && !isScreen && <IconButton variant="ghost" size="sm" label={`Remove ${label}`} onClick={onRemove}>✕</IconButton>}
     </Box>
   );

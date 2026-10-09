@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box, Button, Field, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Field, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import { NumberCell } from './NumberCell';
 import { EXTENT_MODES as MODES, modeOf } from '../behavior/track-extents';
@@ -45,27 +45,30 @@ const ExtentField = (props: ExtentFieldProps) => {
         ) : (
           <Text className="hud-extent__mode">{suffix}</Text>
         )}
-        <Button
-          variant="bare"
+        <Pressable
           className="hud-extent__unit"
           aria-label={`${label} unit is ${suffix}`}
           aria-haspopup="menu"
           onClick={() => setOpen((was) => !was)}
         >
           {hasNumber ? `${suffix} ▾` : '▾'}
-        </Button>
+        </Pressable>
       </Box>
       {open && (
         <DropdownMenu
           anchorRef={anchor}
           align="end"
           onClose={() => setOpen(false)}
-          items={MODES.map((entry) => ({
-            key: entry.mode,
-            label: entry.label,
-            checked: entry.mode === mode,
-            onClick: () => setMode(entry.mode),
-          }))}
+          groups={[{
+            id: 'modes',
+            items: MODES.map((entry) => ({
+              id: entry.mode,
+              label: entry.label,
+              kind: 'radio' as const,
+              checked: entry.mode === mode,
+              onSelect: () => setMode(entry.mode),
+            })),
+          }]}
         />
       )}
     </>

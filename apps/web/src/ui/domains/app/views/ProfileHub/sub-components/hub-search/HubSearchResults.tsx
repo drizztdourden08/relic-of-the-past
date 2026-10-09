@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, Text, EmptyState } from '@drizztdourden08/tessera/primitives';
-import { SearchSpark } from '@drizztdourden08/tessera/composites';
+import { Box, Text, EmptyState, Icon } from '@drizztdourden08/tessera/primitives';
 import { matchTabs } from './match-tabs';
 import { HubSearchTabChip } from './HubSearchTabChip';
 import { HubSearchGroup } from './HubSearchGroup';
@@ -20,7 +19,7 @@ const HubSearchResults = (props: HubSearchResultsProps) => {
       <Box as="section" className="hub-search hub-search--idle" aria-label="Search">
         <EmptyState
           className="hub-search__empty"
-          icon={<SearchSpark size={IDLE_MARK_SIZE} />}
+          icon={<Icon name="search" effect="twinkle" className="search-glass" size={IDLE_MARK_SIZE} />}
           message="Type to search every setting, on every tab."
         />
       </Box>

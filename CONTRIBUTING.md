@@ -42,7 +42,7 @@ The highlights:
 
 - **≤ 200 lines per file**, one thing per file, deep logical folders
 - **Arrow functions only**; exports grouped at the end; `import type { ... }` for type-only imports
-- No raw hex/colors in component CSS; no raw HTML outside design-system primitives
+- No raw hex/colors in component CSS; no raw HTML where a Tessera primitive covers it
 - Every file is tagged (`@layer`/`@kind`) and analyzed
 
 Before opening a PR, run the same gate CI runs:

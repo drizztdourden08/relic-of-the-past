@@ -26,7 +26,7 @@ const useDataInspector = () => {
   );
   const schema = useMemo(() => buildSchema(source.rows, source.config), [source]);
 
-  const { snapshot, setSnapshot } = useViewState(queryViewKey(kind), schema, NO_COLUMNS);
+  const { snapshot, setSnapshot } = useViewState({ key: queryViewKey(kind), schema, fallbackColumns: NO_COLUMNS });
   const { selectedId, selectIn } = useRecordSelection(kind);
 
   const clauses = snapshot.filters;

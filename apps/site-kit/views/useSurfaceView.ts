@@ -12,7 +12,7 @@ const useSurfaceView = (views: SiteViews, surface: string, schema: SchemaLike) =
   const reload = useCallback(() => setNonce((n) => n + 1), []);
 
   const queryKey = keys.keyFor(surface, 'query', nonce);
-  const { snapshot, setSnapshot } = useViewState(queryKey, schema, NO_COLUMNS, undefined, storage);
+  const { snapshot, setSnapshot } = useViewState({ key: queryKey, schema, fallbackColumns: NO_COLUMNS, storage });
   const clauses = snapshot.filters;
   const setClauses = useCallback((next: readonly FilterClause[]) => {
     setSnapshot(capture(QUERY_HALF_TABLE, next, snapshot.tab, snapshot.collapsed));

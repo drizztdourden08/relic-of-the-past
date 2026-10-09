@@ -1,7 +1,6 @@
 /* @layer sanctuary-site @kind component */
-import { Button, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Button, Flex, Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
-import { Row } from '@site-kit/components/Row/Row';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { nextVersionNumber, versionLabel } from '../../../files/file-versions';
@@ -30,8 +29,8 @@ const SameNameDialog = (props: SameNameDialogProps) => {
     <DialogShell open={question !== null} onClose={onClose} title="This file already exists" actions={actions} className="version-dialog">
       {question && (
         <Stack gap="sm" align="stretch">
-          <Row label="dropped" value={`${question.dropped.name} · ${formatBytes(question.dropped.size)}`} className="version-dialog__row" />
-          <Row label="matches" value={matched} className="version-dialog__row" />
+          <StatRow label="dropped" value={`${question.dropped.name} · ${formatBytes(question.dropped.size)}`} className="version-dialog__row" />
+          <StatRow label="matches" value={matched} className="version-dialog__row" />
         </Stack>
       )}
     </DialogShell>

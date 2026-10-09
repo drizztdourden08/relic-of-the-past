@@ -5,6 +5,7 @@ import {
 import { axisOf } from './axis-of';
 import { moveRun } from './move-run';
 import { nameOf } from './name-of';
+import type { ShortcutKey } from '@drizztdourden08/tessera/primitives';
 import type { EditorAction, FlexActionContext } from '../../FlexEditor.type';
 
 const contextualActions = (ctx: FlexActionContext): EditorAction[] => {
@@ -18,7 +19,7 @@ const contextualActions = (ctx: FlexActionContext): EditorAction[] => {
 
   const move = (
     key: string, group: string, icon: EditorAction['icon'], label: string,
-    can: boolean, from: number, to: number, cap?: string,
+    can: boolean, from: number, to: number, cap?: ShortcutKey,
   ): EditorAction => ({
     key, kind: 'button', icon, group, label: `Move ${name} ${label}`, disabled: !can,
     ...(cap === undefined ? {} : { shortcut: { keys: [cap] } }),

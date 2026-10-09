@@ -105,28 +105,6 @@
   border-top: 1px solid var(--c-border);
 }
 
-.home-tab__new-save-btn {
-  font-size: var(--text-xs);
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--c-border);
-  background: var(--c-hover);
-  color: var(--c-text-dim);
-  cursor: pointer;
-  font-weight: var(--weight-medium);
-  transition: background 0.15s, color 0.15s;
-}
-
-.home-tab__new-save-btn:hover:not(:disabled) {
-  background: var(--c-hover);
-  color: var(--c-text);
-}
-
-.home-tab__new-save-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
 .home-tab__save-name-input {
   width: 100%;
   padding: var(--space-sm) var(--space-md);

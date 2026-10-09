@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
-import { Button, TextInput, Text } from '@drizztdourden08/tessera/primitives';
+import { Icon, Pressable, Status, TextInput, Text } from '@drizztdourden08/tessera/primitives';
 import type { InputProfileItemProps } from './controls.type';
 
 const stopPropagation = (e: MouseEvent) => e.stopPropagation();
@@ -24,15 +24,12 @@ const InputProfileItem = (props: InputProfileItemProps) => {
   const handleDeleteClick = useCallback((e: MouseEvent) => { e.stopPropagation(); onDelete(profile); }, [onDelete, profile]);
 
   return (
-    <Button
-      variant="bare"
+    <Pressable
       className={`input-profile-list__item ${active ? 'input-profile-list__item--active' : ''}`}
       onClick={handleSelect}
       onDoubleClick={handleStartEditing}
     >
-      <Text className="input-profile-list__item-icon">
-        {profile.deviceType === 'keyboard' ? '⌨️' : '🎮'}
-      </Text>
+      <Icon className="input-profile-list__item-icon" name={profile.deviceType === 'keyboard' ? 'keyboard' : 'gamepad-2'} />
       {editing ? (
         <TextInput
           ref={inputRef}
@@ -47,7 +44,7 @@ const InputProfileItem = (props: InputProfileItemProps) => {
         <Text className="input-profile-list__item-name">{profile.name}</Text>
       )}
       {active && !editing && (
-        <Text className="input-profile-list__item-badge" title="Active, drives the game">Active</Text>
+        <Status tone="primary" variant="pill" title="Active, drives the game">Active</Status>
       )}
       {!editing && (
         <Text
@@ -55,7 +52,7 @@ const InputProfileItem = (props: InputProfileItemProps) => {
           title="Rename profile"
           onClick={handleEditClick}
         >
-          ✏️
+          <Icon name="pencil" />
         </Text>
       )}
       {!profile.isDefault && !editing && (
@@ -64,10 +61,10 @@ const InputProfileItem = (props: InputProfileItemProps) => {
           title="Delete profile"
           onClick={handleDeleteClick}
         >
-          ✕
+          <Icon name="x" />
         </Text>
       )}
-    </Button>
+    </Pressable>
   );
 };
 

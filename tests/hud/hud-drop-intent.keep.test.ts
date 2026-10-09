@@ -1,8 +1,12 @@
 /* @layer tests @kind test */
+// @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { pushDismissable, topDismissLevel } from '@drizztdourden08/tessera/primitives';
+import { act, createElement } from 'react';
+import { createRoot } from 'react-dom/client';
+import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
+import type { EscapeLevel, EscapeStack } from '@drizztdourden08/tessera/primitives';
 import {
   applyDrop, outlineIntent, refusalFor, refusalText, zoneIn,
 } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
@@ -10,6 +14,26 @@ import { siteOf } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/
 import type { HudLayout, HudNode } from '../../shared/types/hud';
 
 const EDITOR = resolve(__dirname, '../../apps/web/src/ui/domains/app/views/HudLayoutEditor');
+
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
+const pushEscapeLevel = (level: EscapeLevel): (() => void) => {
+  const root = createRoot(document.createElement('div'));
+  const Layer = (): null => { useEscapeStack({ level, onEscape: () => {} }); return null; };
+  act(() => { root.render(createElement(Layer)); });
+  return () => act(() => { root.unmount(); });
+};
+
+const escapeStack = (): EscapeStack => {
+  const found: EscapeStack[] = [];
+  const root = createRoot(document.createElement('div'));
+  const Probe = (): null => { found.push(useEscapeStack()); return null; };
+  act(() => { root.render(createElement(Probe)); });
+  act(() => { root.unmount(); });
+  const stack = found[0];
+  if (!stack) throw new Error('the escape stack probe never rendered');
+  return stack;
+};
 const tsIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? tsIn(join(dir, e.name)) : (/\.tsx?$/.test(e.name) ? [join(dir, e.name)] : [])));
 
@@ -178,12 +202,14 @@ describe('single ownership, and the new dismiss level', () => {
   });
 
   it('puts `drag` above `popover`, so Escape mid-drag cancels the drag', () => {
-    const closePopover = pushDismissable('popover', () => {});
-    expect(topDismissLevel()).toBe('popover');
-    const cancelDrag = pushDismissable('drag', () => {});
-    expect(topDismissLevel()).toBe('drag');
+    const stack = escapeStack();
+    const closePopover = pushEscapeLevel('popover');
+    expect(stack.top()).toBe('popover');
+    const cancelDrag = pushEscapeLevel('drag');
+    expect(stack.top()).toBe('drag');
     cancelDrag();
-    expect(topDismissLevel()).toBe('popover');
+    expect(stack.top()).toBe('popover');
     closePopover();
+    expect(stack.depth()).toBe(0);
   });
 });

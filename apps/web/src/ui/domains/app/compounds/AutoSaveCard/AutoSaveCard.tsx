@@ -1,8 +1,12 @@
 /* @layer renderer-components @kind component */
-import { Thumbnail, Text, Flex, Button, IconButton } from '@drizztdourden08/tessera/primitives';
-import { SaveCard } from '../SaveCard';
+import { Button, IconButton, Image, Tag } from '@drizztdourden08/tessera/primitives';
+import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { AutoSaveCardProps } from './AutoSaveCard.type';
 import './AutoSaveCard.css';
+
+const formatTime = (timestamp: number): string => new Date(timestamp).toLocaleString(undefined, {
+  month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit',
+});
 
 const AutoSaveCard = (props: AutoSaveCardProps) => {
   const { id, timestamp, trigger, screenshotUrl, busy, onLoad, onDelete } = props;
@@ -18,24 +22,20 @@ const AutoSaveCard = (props: AutoSaveCardProps) => {
     </>
   );
 
+  const badge = (
+    <Tag variant="urgency" color={trigger === 'quit' ? 'warning' : 'info'}>
+      {trigger === 'quit' ? 'On Quit' : 'Timer'}
+    </Tag>
+  );
+
   return (
-    <SaveCard
-      variant="row"
-      busy={busy}
-      thumb={<Thumbnail src={screenshotUrl} alt="Auto-save" className="auto-save-card__thumb" />}
-      actions={actions}
-    >
-      <Flex align="center" gap="sm">
-        <Text className="auto-save-card__time">
-          {new Date(timestamp).toLocaleString(undefined, {
-            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit',
-          })}
-        </Text>
-        <Text className={`auto-save-card__badge auto-save-card__badge--${trigger}`}>
-          {trigger === 'quit' ? 'On Quit' : 'Timer'}
-        </Text>
-      </Flex>
-    </SaveCard>
+    <ListItemRow
+      className={busy ? 'auto-save-card auto-save-card--busy' : 'auto-save-card'}
+      icon={<Image frame src={screenshotUrl ?? undefined} alt="Auto-save" className="auto-save-card__thumb" />}
+      name={formatTime(timestamp)}
+      columns={[{ primary: badge, align: 'end' }]}
+      action={actions}
+    />
   );
 };
 

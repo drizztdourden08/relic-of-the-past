@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Button, Text, Image } from '@drizztdourden08/tessera/primitives';
+import { Box, Pressable, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { ControllerCapabilityBadges } from '../../../../compounds/ControllerCapabilityBadges';
 import { UnavailableControllerNotice } from '../../../../compounds/UnavailableControllerNotice';
 import { setDeviceDragData } from './device-drag-data';
@@ -30,9 +30,9 @@ const DeviceCard = (props: DeviceCardProps) => {
     <Box className={`device-card ${isUnavailable ? 'device-card--disconnected' : ''}`} draggable={!isUnavailable} onDragStart={handleDragStart} data-device-id={id}>
       <Box className="device-card__row">
         <Box className="device-card__left">
-          <Button variant="bare" className={`device-card__icon-btn ${statusClass}`} onClick={handleAssign} title={statusTitle}>
+          <Pressable className={`device-card__icon-btn ${statusClass}`} onClick={handleAssign} title={statusTitle}>
             <Image src={iconSrc} alt={deviceFamily} className="device-card__icon" />
-          </Button>
+          </Pressable>
         </Box>
         <Box className="device-card__info">
           <Text className="device-card__name">{displayName}</Text>

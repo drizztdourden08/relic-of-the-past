@@ -26,7 +26,7 @@ flowchart TD
         E["Node/OS/fs/native HID/USB · windows · protocols<br/>profiles · saves · ROMs · dialogs · ipc-handlers → register*()"]
     end
     subgraph REN["Renderer (apps/web/src/)"]
-        R["design-system/ tokens · components/ 4 tiers<br/>primitive / composite / compound / view + widgets<br/>stores/ · lib/ · hooks/ · hud/"]
+        R["Tessera parts + theme.css · ui/domains compounds and views<br/>primitive / composite / compound / view + widgets<br/>stores/ · lib/ · hooks/ · hud/"]
     end
     CORE -->|"ccall / HEAPU8 / EM_ASM"| BRIDGE
     BRIDGE --> SHARED
@@ -72,8 +72,8 @@ If a change would break an invariant, the code is in the wrong zone. Re-place it
 | Pure game rule/algorithm/data, no React/Node | `shared/game/` (navigation / checks / items / data / logic / seed) | Must stay pure & testable. |
 | Parses a ROM / builds assets | `shared/asset-extraction/` | One `compile-*` per domain. |
 | Type shared by renderer + electron | `shared/types/` | Otherwise a local `types.ts`. |
-| Generic UI atom (Button, Select) | `ui/design-system/primitives/` | presentational, no data |
-| Generic structural combo (Card, Dialog, Overlay) | `ui/design-system/composites/` | presentational, no data |
+| Generic UI atom (Button, Select) | Tessera `@drizztdourden08/tessera/primitives` | use the part; a missing one is a Tessera proposal |
+| Generic structural combo (Card, Dialog, Overlay) | Tessera `@drizztdourden08/tessera/composites` | use the part; a missing one is a Tessera proposal |
 | Domain-specific presentational card/form (ProfileCard, SaveSlot) | `ui/domains/app/compounds/` | takes a domain prop, fetches nothing |
 | Feature/page with logic + data | `ui/domains/app/views/` or `ui/domains/widgets/` | owns stores/IPC/game; logic in `behavior/` |
 | A view that draws game state the way the game draws it | compose `ui/domains/hud/` compounds from the view or widget | the HUD compounds are presentational, so a widget may lay hit zones over them (the cheat console does) |

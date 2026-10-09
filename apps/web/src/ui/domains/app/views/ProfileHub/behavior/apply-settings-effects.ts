@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { GameSettings } from '@shared/types/settings';
+import { toast } from '@drizztdourden08/tessera/composites';
 import { pushLiveSettings, LIVE_SETTINGS } from '../../../../../../lib/game';
 import { writeConfig } from '../../../../../../lib/storage/profile-store';
 import { enhancedAspectAllowed } from '../../../../../../lib/game/settings';
@@ -19,14 +20,11 @@ import {
 import type { SettingsEffectDeps } from './settings-effects.type';
 
 const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettings, deps: SettingsEffectDeps): void => {
-  const { profileId, isGameRunning, changedKeys, restartToastShownRef, setToasts } = deps;
+  const { profileId, isGameRunning, changedKeys, restartToastShownRef } = deps;
 
   writeConfig(profileId, { ...next }).catch((e: unknown) => {
     console.error('[settings] failed to persist config', e);
-    setToasts((prev) => [
-      ...prev.filter((t) => t.id !== CONFIG_SAVE_FAILED_TOAST_ID),
-      { id: CONFIG_SAVE_FAILED_TOAST_ID, message: 'Failed to save settings', variant: 'danger' as const },
-    ]);
+    toast({ id: CONFIG_SAVE_FAILED_TOAST_ID, message: 'Failed to save settings', variant: 'danger', duration: 0 });
   });
 
   notifySettingsParent(patch, next, deps);
@@ -56,14 +54,12 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
     const restartKeys = changedKeys.filter((k) => !LIVE_SETTINGS.has(k));
     if (restartKeys.length > 0 && !restartToastShownRef.current) {
       restartToastShownRef.current = true;
-      setToasts((prev) => [
-        ...prev.filter((t) => t.id !== RESTART_TOAST_ID),
-        {
-          id: RESTART_TOAST_ID,
-          message: 'Some changes require a game restart to take effect',
-          variant: 'danger' as const,
-        },
-      ]);
+      toast({
+        id: RESTART_TOAST_ID,
+        message: 'Some changes require a game restart to take effect',
+        variant: 'danger',
+        duration: 0,
+      });
     }
   }
 };

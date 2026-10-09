@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { HeroFact } from '@domains/app/compounds/HeroFacts';
+import type { FactsPanelFact } from '@drizztdourden08/tessera/composites';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { formatDay } from '@site-kit/lib/format-date';
 import { factsLine } from '../../../catalog/facts-line';
@@ -11,7 +11,7 @@ const ratingValue = (item: StoreItem): string => {
   return `${formatAverage(ratingSum / ratingCount)} from ${formatCount(ratingCount)}`;
 };
 
-const itemHeroFacts = (item: StoreItem, version: StoreVersion | null): HeroFact[] => {
+const itemHeroFacts = (item: StoreItem, version: StoreVersion | null): FactsPanelFact[] => {
   const contents = version ? factsLine(version.facts) : null;
   return [
     { label: 'Version', value: version ? version.semver : 'none approved yet', mono: true },

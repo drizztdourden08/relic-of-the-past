@@ -8,9 +8,7 @@ import { toFileRow } from '../../../files/file-row';
 import { buildFileSchema } from '../../../files/file-schema';
 import { useSurfaceView } from '@site-kit/views/useSurfaceView';
 import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views.constants';
-import { useFacet } from '@site-kit/views/useFacet';
 import { filterRows } from '@site-kit/views/filter-rows';
-import type { FileRow } from '../../../files/file-row';
 import { DEFAULT_UPLOAD_TYPE } from '../Files.constants';
 import { isFileType } from './is-file-type';
 import { fileScopeTabs, scopePredicate, shownScopeId } from './file-scopes';
@@ -19,8 +17,6 @@ import { useBatchDownload } from './useBatchDownload';
 import { useFileActions } from './useFileActions';
 import { useFileSelection } from './useFileSelection';
 import { useDropFlow } from './useDropFlow';
-
-const ownerOf = (row: FileRow) => row.owner.displayName;
 
 const useFilesPage = (selectedId: string | null) => {
   const { me, access, rights } = useSessionContext();
@@ -35,12 +31,10 @@ const useFilesPage = (selectedId: string | null) => {
   const rows = useMemo(() => data.files.map(toFileRow), [data.files]);
   const schema = useMemo(() => buildFileSchema(rows), [rows]);
   const view = useSurfaceView(SANCTUARY_VIEWS, 'files', schema);
-  const owners = useFacet({ id: 'owners', label: 'Show owners', rows, valueOf: ownerOf });
-
   const inScope = useMemo(() => rows.filter(scopePredicate(scopeId, meId)), [rows, scopeId, meId]);
   const shown = useMemo(
-    () => owners.apply(filterRows({ rows: inScope, schema, clauses: view.clauses, search: view.search })),
-    [owners, inScope, schema, view.clauses, view.search],
+    () => filterRows({ rows: inScope, schema, clauses: view.clauses, search: view.search }),
+    [inScope, schema, view.clauses, view.search],
   );
 
   const tabs = useMemo(() => fileScopeTabs(rows, meId, types), [rows, meId, types]);
@@ -90,7 +84,6 @@ const useFilesPage = (selectedId: string | null) => {
     scope: { tabs, activeId: scopeId, select: selectScope, bytes: scopeBytes },
     schema,
     view,
-    facets: [owners.facet],
     shown,
     knownTags,
     selected,

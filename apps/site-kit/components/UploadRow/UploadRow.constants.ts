@@ -1,18 +1,18 @@
 /* @layer site-kit @kind constants */
+import { defineStatuses } from '@drizztdourden08/tessera/primitives';
 import type { ProgressTone } from '@drizztdourden08/tessera/primitives';
-import type { ChipTone } from '../Chip/Chip.type';
 import type { UploadPhase } from '../../upload/upload-job.type';
 
-const PHASE_CHIPS: Record<UploadPhase, { label: string; tone: ChipTone }> = {
-  queued: { label: 'queued', tone: 'muted' },
+const PHASE_STATUSES = defineStatuses({
+  queued: { label: 'queued', tone: 'neutral' },
   hashing: { label: 'checking', tone: 'info' },
-  uploading: { label: 'uploading', tone: 'gold' },
+  uploading: { label: 'uploading', tone: 'primary' },
   verifying: { label: 'verifying', tone: 'info' },
-  done: { label: 'done', tone: 'green' },
+  done: { label: 'done', tone: 'success' },
   failed: { label: 'failed', tone: 'danger' },
   'needs-file': { label: 'paused', tone: 'warning' },
-};
+}) satisfies Record<UploadPhase, unknown>;
 
-const BAR_VARIANTS: Partial<Record<UploadPhase, ProgressTone>> = { done: 'green', failed: 'danger' };
+const BAR_VARIANTS: Partial<Record<UploadPhase, ProgressTone>> = { done: 'success', failed: 'danger' };
 
-export { PHASE_CHIPS, BAR_VARIANTS };
+export { PHASE_STATUSES, BAR_VARIANTS };

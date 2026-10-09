@@ -25,7 +25,7 @@ you are"; green means "this is the primary action"; everything else stays quiet.
 
 ## 1. Color roles (semantic)
 
-All color comes from `design-system/tokens/color.css`. Components use tokens,
+All color comes from Tessera's tokens and the RotP palette (`palettes/rotp.css`). Components use tokens,
 not raw hex/rgb, which stylelint enforces. Pick by role, not by hue:
 
 ### 1.1 The surface elevation ladder
@@ -153,7 +153,7 @@ Dialog enter = fade+scale 0.95→1 over .15s. Use these tokens, not hand-rolled 
 
 ## 4. Controls (the part that's most inconsistent today)
 
-Default to a design-system primitive, and reach for one whenever a primitive
+Default to a Tessera primitive, and reach for one whenever a primitive
 already covers the control. Primitives and their canonical look:
 
 | Primitive | Look | Selected state |

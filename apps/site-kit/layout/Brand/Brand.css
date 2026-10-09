@@ -6,6 +6,7 @@
   gap: var(--space-sm);
   min-width: 0;
   color: var(--c-primary);
+  text-decoration: none;
 }
 
 .brand__logo {

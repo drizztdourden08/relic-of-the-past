@@ -57,25 +57,6 @@
 }
 
 .options-drawer__item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  width: 100%;
-  padding: var(--space-md);
-  min-height: 44px;
-}
-
-.options-drawer__icon {
-  width: 1.4em;
-  text-align: center;
-  flex: none;
-}
-
-.options-drawer__label {
-  flex: 1;
-  text-align: left;
-}
-
-.options-drawer__check {
-  color: var(--c-primary);
+  justify-content: flex-start;
+  min-height: var(--size-48);
 }

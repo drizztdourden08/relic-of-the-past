@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { SpritePicker } from '@drizztdourden08/tessera/composites';
+import { SpritePicker } from '@domains/app/compounds/SpritePicker';
 import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@shared/game/data/sprite-manifest/manifest';
 import { spriteLabel, spriteUrl } from '../../behavior/node-art';
 import { ReferenceField } from '../ReferenceField';

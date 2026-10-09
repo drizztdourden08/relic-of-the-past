@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDismissable } from '@drizztdourden08/tessera/primitives';
+import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { isPrimaryModifier } from '@shared/platform';
 import { usePlatform } from '@app/platform';
 import { cellKey, rectCells } from '../../GridLattice';
@@ -30,7 +30,7 @@ const useGridSelection = (containerId: string) => {
     select({ kind: 'none' });
   }, [select]);
 
-  useDismissable({ active: selection.kind !== 'none', level: 'popover', onDismiss: clear });
+  useEscapeStack({ active: selection.kind !== 'none', level: 'popover', onEscape: clear });
 
   const cellsDown = useCallback((cell: CellRef, event: ReactPointerEvent): void => {
     setCursor(cell);

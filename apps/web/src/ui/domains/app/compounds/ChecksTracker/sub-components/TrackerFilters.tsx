@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Status, Box, Button, Icon, IconButton, SegmentedControl, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Badge, Box, Button, Icon, IconButton, SearchInput, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import {
-  CLOSED_PANELS, FUNNEL_PATHS, ITEM_FILTER_OPTIONS, NESTED_PATHS, SEARCH_PATHS, SHOW_MODE_OPTIONS, TAG_PATHS,
+  CLOSED_PANELS, FUNNEL_PATHS, ITEM_FILTER_OPTIONS, NESTED_PATHS, SHOW_MODE_OPTIONS, TAG_PATHS,
 } from '../ChecksTracker.constants';
 import type { TrackerFiltersProps, TrackerPanels } from '../ChecksTracker.type';
 import { activeLogicToggles } from '../behavior/active-logic-toggles';
@@ -29,16 +29,14 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
   return (
     <Box className="tracker-filters">
       <Box className="tracker-filters__search">
-        <Icon className="tracker-filters__search-icon" paths={SEARCH_PATHS} size={12} />
-        <TextInput
-          type="text"
+        <SearchInput
           className="tracker-filters__input"
           placeholder="Search checks..."
           value={filter.searchQuery}
-          onChange={(e) => onFilterChange({ ...filter, searchQuery: e.target.value })}
+          onChange={(searchQuery) => onFilterChange({ ...filter, searchQuery })}
           aria-label="Search checks"
         />
-        <Box className="tracker-filters__toggle">
+        <Badge value={activeCount} color="warning" label={`${activeCount} filters active`}>
           <IconButton
             variant="ghost"
             size="sm"
@@ -47,12 +45,9 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             title="Filters and view options"
             onClick={() => setOpen({ ...open, filters: !showFilters })}
           >
-            <Icon paths={FUNNEL_PATHS} size={13} />
+            <Icon path={{ d: FUNNEL_PATHS }} size={13} />
           </IconButton>
-          {activeCount > 0 && (
-            <Status className="tracker-filters__count" tone="warning">{activeCount}</Status>
-          )}
-        </Box>
+        </Badge>
       </Box>
 
       <Box className="tracker-filters__show-mode">
@@ -80,7 +75,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             variant="tertiary"
             size="sm"
             active={filter.activeFacets.length > 0}
-            icon={<Icon paths={TAG_PATHS} size={12} />}
+            icon={<Icon path={{ d: TAG_PATHS }} size={12} />}
             onClick={() => setOpen({ ...open, tags: !showTagFilter })}
           >
             Tags{filter.activeFacets.length > 0 ? ` (${filter.activeFacets.length})` : ''}
@@ -89,7 +84,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             variant="tertiary"
             size="sm"
             active={grouping.length > 0}
-            icon={<Icon paths={NESTED_PATHS} size={12} />}
+            icon={<Icon path={{ d: NESTED_PATHS }} size={12} />}
             onClick={() => setOpen({ ...open, groupConfig: !showGroupConfig })}
           >
             Group{grouping.length > 0 ? ` (${grouping.length})` : ''}

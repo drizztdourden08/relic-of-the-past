@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { RescanButton } from '../../../../compounds/RescanButton';
 import { controllerCardInfo } from '../../../../../../../lib/input/controller-card-info';
 import { DeviceCard } from './DeviceCard';
@@ -20,14 +20,9 @@ const ControlsDevices = ({ ctrl }: CtrlProps) => {
   return (
     <Box className={`controls-settings__devices-column ${ctrl.devicesCollapsed ? 'controls-settings__devices-column--collapsed' : ''}`}>
       <Box className="controls-settings__col-header">
-        <Button
-          variant="bare"
-          className="controls-settings__col-toggle"
-          onClick={toggleCollapsed}
-          title={ctrl.devicesCollapsed ? 'Expand' : 'Collapse'}
-        >
-          {ctrl.devicesCollapsed ? '◀' : '▶'}
-        </Button>
+        <IconButton variant="ghost" size="xs" onClick={toggleCollapsed} label={ctrl.devicesCollapsed ? 'Expand' : 'Collapse'}>
+          <Icon name={ctrl.devicesCollapsed ? 'chevron-left' : 'chevron-right'} />
+        </IconButton>
         <Text className="controls-settings__col-title">Devices</Text>
         <RescanButton isPending={ctrl.isRescanPending} onRescan={ctrl.handleRescan} />
       </Box>

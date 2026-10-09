@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Checkbox, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Checkbox, IconButton, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import './HudLayoutEditor.appearance.css';
 import type { SubsectionGroupProps } from './SubsectionGroup.type';
 
@@ -19,8 +19,7 @@ const SubsectionGroup = (props: SubsectionGroupProps) => {
             onChange={(next) => onEnabledChange(next)}
           />
         )}
-        <Button
-          variant="bare"
+        <Pressable
           className="hud-subgroup__trigger"
           aria-expanded={on && open}
           disabled={!on}
@@ -32,7 +31,7 @@ const SubsectionGroup = (props: SubsectionGroupProps) => {
           )}
           <Text className="hud-subgroup__summary">{summary}</Text>
           <Text className="hud-subgroup__caret" aria-hidden>{on && open ? '▾' : '▸'}</Text>
-        </Button>
+        </Pressable>
         {action && (
           <IconButton variant="ghost" size="sm" label={action.label} onClick={action.onClick}>
             {action.icon}

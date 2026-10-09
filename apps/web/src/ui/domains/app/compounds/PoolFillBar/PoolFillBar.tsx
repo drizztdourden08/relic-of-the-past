@@ -1,22 +1,15 @@
 /* @layer renderer-components @kind component */
-import { Box, SegmentedBar, Text } from '@drizztdourden08/tessera/primitives';
-import { Legend } from '@drizztdourden08/tessera/composites';
-import type { LegendEntry, LegendTotal } from '@drizztdourden08/tessera/composites';
-import { SEGMENTS, TOTAL_TITLE } from './PoolFillBar.constants';
+import { Box, StackedBar, Text } from '@drizztdourden08/tessera/primitives';
+import type { StackedBarSegment } from '@drizztdourden08/tessera/primitives';
+import { BAR_LABEL, SEGMENTS, TOTAL_TITLE } from './PoolFillBar.constants';
 import type { PoolFillBarProps, PoolFillTotals } from './PoolFillBar.type';
 import './PoolFillBar.css';
 
-const entriesOf = (totals: PoolFillTotals): LegendEntry[] =>
-  SEGMENTS.map((segment) => ({ ...segment, value: totals[segment.key] }));
-
-const totalOf = (entries: readonly LegendEntry[]): LegendTotal => ({
-  label: 'total',
-  value: entries.reduce((sum, entry) => sum + entry.value, 0),
-  title: TOTAL_TITLE,
-});
+const segmentsOf = (totals: PoolFillTotals): StackedBarSegment[] =>
+  SEGMENTS.map(({ key, label, color }) => ({ id: key, label, color, value: totals[key] }));
 
 const PoolFillBar = (props: PoolFillBarProps) => {
-  const { totals, error, legend = 'inline', className = '' } = props;
+  const { totals, error, className = '' } = props;
   const classes = `pool-fill${className ? ` ${className}` : ''}`;
   if (totals === null) {
     return (
@@ -25,11 +18,12 @@ const PoolFillBar = (props: PoolFillBarProps) => {
       </Box>
     );
   }
-  const entries = entriesOf(totals);
+  const segments = segmentsOf(totals);
+  const total = segments.reduce((sum, segment) => sum + segment.value, 0);
   return (
     <Box className={classes}>
-      <SegmentedBar segments={entries} />
-      <Legend entries={entries} total={totalOf(entries)} variant={legend} />
+      <StackedBar segments={segments} label={BAR_LABEL} legend />
+      <Text className="pool-fill__total" title={TOTAL_TITLE}>{`total ${total}`}</Text>
     </Box>
   );
 };

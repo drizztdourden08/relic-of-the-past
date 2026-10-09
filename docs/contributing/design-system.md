@@ -1,24 +1,22 @@
 <!-- @layer docs @kind doc -->
 # Design System Structure & Rules
 
-The foundation for the app's UI is a set of design tokens plus a four-tier
-component library. All code obeys @docs/contributing/coding-standards.md. For where
-UI fits in the wider app, see @docs/architecture/overview.md.
+The app's UI is built on [Tessera](https://github.com/drizztdourden08/tessera)
+(`@drizztdourden08/tessera`): its tokens, its primitives and composites, its field kits
+and its data engine. RotP adds only what is its own: domain compounds, views, the HUD
+and a small theme. All code obeys @docs/contributing/coding-standards.md. For where UI
+fits in the wider app, see @docs/architecture/overview.md.
 
 ## Where things actually live
 
-All UI lives under `apps/web/src/ui/`, split into a reusable
-`design-system/` and app-facing `domains/`:
-
 ```
-ui/
-├── design-system/          @ds/*  - reusable, domain-agnostic
-│   ├── tokens/             concept files (color, space, size, radius, border,
-│   │                       typography, shadow, motion, z-index, opacity, reset)
-│   │                       + index.css (the single @import entry; imported once in main.tsx)
-│   ├── primitives/         tier 1 - generic atoms; the one place raw HTML is allowed
-│   └── composites/         tier 2 - generic structural combos
-└── domains/                @domains/*  - domain-specific UI
+@drizztdourden08/tessera     tokens.css, palettes/rotp.css, primitives, composites,
+                             data, field-kits, color-picker (reusable, domain-agnostic)
+apps/web/src/
+├── theme.css               RotP's own tokens, unlayered, imported after Tessera's
+├── tokens/game-text.css    colours and geometry of text the game draws
+├── fonts/                  the dialogue face (game-font.css, alttp-ext.woff2, licence)
+└── ui/domains/             @domains/*  - domain-specific UI
     ├── app/
     │   ├── compounds/      tier 3 - domain presentational
     │   └── views/          tier 4 - page/feature with logic + data
@@ -26,117 +24,88 @@ ui/
     └── hud/                domain: game HUD (own primitives/composites/compounds/views)
 ```
 
-Aliases: `@ds/*` → `ui/design-system/*`, `@domains/*` → `ui/domains/*` (plus the
-existing `@app/*` → `apps/web/src/*`, `@shared/*`). Non-presentational code
-(`App/`, `stores/`, `lib/`, `hooks/`, `utils/`) stays at `src/` root.
+Each app entry imports `@drizztdourden08/tessera/tokens.css`, then
+`@drizztdourden08/tessera/palettes/rotp.css`, then RotP's `theme.css`, and sets
+`data-palette="rotp"` on its root element. The root renders inside
+`TesseraProvider` (and, in the desktop app, `ViewStorageProvider` with RotP's
+saved view snapshots). The two sites (Sanctuary and the Hookshop store) do the same.
+
+Aliases: `@domains/*` → `ui/domains/*`, `@app/*` → `apps/web/src/*`, `@shared/*`.
+Non-presentational code (`App/`, `stores/`, `lib/`, `hooks/`, `utils/`) stays at `src/`
+root.
 
 ## The four component tiers
 
-Every UI component is exactly one tier. Pick the tier first, then build it in the
-right folder. The first three are bare, self-contained, and presentational: data comes
-in via props and callbacks, with no access to stores, `window.api`, `lib/game`, or
-navigation. Only Views are wired to data and logic.
+Every UI component is exactly one tier. Primitives and composites come from Tessera;
+RotP writes compounds and views. The first three tiers are bare, self-contained, and
+presentational: data comes in via props and callbacks, with no access to stores,
+`window.api`, `lib/game`, or navigation. Only Views are wired to data and logic.
 
 | Tier | What it is | Domain-aware? | Logic/data? | Lives in | Real examples |
 |------|-----------|---------------|-------------|----------|---------------|
-| **Primitive** | Generic UI atom | ❌ generic | ❌ | `components/primitives/` | Button, Select, Toggle, TextInput, Badge, Slider, TabBar, Toast |
-| **Composite** | Generic **structural** unit built from primitives | ❌ generic | ❌ | `components/composites/` | Card, Dialog, Overlay, DropdownMenu, FullScreenLayer, SettingsLayout, Widget |
-| **Compound** | **Domain-specific** presentational unit composed from primitives/composites | ✅ a concept | ❌ (data via props) | `components/compounds/` | ProfileCard, RomCard, SaveSlot, HeroSaveCard, CreateProfileForm |
-| **View** | Page/feature with business logic + data | ✅ | ✅ stores, IPC, game | `components/views/`, `widgets/` | ProfileHub, GameLayer, TrackerView, SpriteDebug, TitleBar |
-
-**Primitive:** a generic atom with no domain knowledge. `<Button>`, `<Select>`,
-`<Toggle>`. Pure props in, events out, reusable in any app.
-
-**Composite:** a generic, reusable structural or layout component built from
-primitives, still domain-agnostic. `<Card>`, `<Dialog>`, `<Overlay>`,
-`<DropdownMenu>`. Often a small Facade over markup and tokens.
+| **Primitive** | Generic UI atom | no | no | Tessera `primitives` | Button, Select, Toggle, TextInput, Status, Slider, Tabs |
+| **Composite** | Generic structural unit built from primitives | no | no | Tessera `composites` | Card, Dialog, DropdownMenu, WindowTitleBar, Widget, DataTable |
+| **Compound** | Domain-specific presentational unit | yes, a concept | no (data via props) | `ui/domains/app/compounds/` | ProfileCard, RomCard, SaveSlot, SpritePicker |
+| **View** | Page/feature with business logic + data | yes | stores, IPC, game | `ui/domains/app/views/`, `widgets/` | ProfileHub, GameLayer, TitleBar |
 
 **Compound:** a domain-specific presentational component for a concrete concept,
-composed from primitives and composites. `<ProfileCard>`, `<RomCard>`, `<SaveSlot>`.
-It knows a domain shape (it takes a `Profile`/`Rom`/`Slot` prop) but stays bare: it
-fetches nothing, owns no store, and fires callbacks up. Here "compound" means a
-composed domain card or form, which is different from the React-Context "compound
-components" pattern.
+composed from Tessera parts. It knows a domain shape (it takes a `Profile`/`Rom`/`Slot`
+prop) but stays bare: it fetches nothing, owns no store, and fires callbacks up.
 
 **View:** the container. Owns state via Zustand stores, `window.api` IPC, or
-`lib/game`, and passes data and callbacks down into the bare tiers. It's the only tier
-with business logic, which lives in its `behavior/` hooks.
+`lib/game`, and passes data and callbacks down into the bare tiers. Its business logic
+lives in its `behavior/` hooks.
 
-> **Hard boundary:** primitives, composites, and compounds keep clear of stores,
-> `window.api`, `lib/game`, and navigation imports. Data flows in via props only. If a
-> bare component needs to fetch or subscribe, it's really a View, so move it. This
-> container/presentational split is what keeps the library reusable and testable.
+> **Hard boundary:** compounds keep clear of stores, `window.api`, `lib/game`, and
+> navigation imports. If a bare component needs to fetch or subscribe, it is a View.
 
-### Choosing the tier
+### Choosing the part
 
+- Tessera has a part for it? Use it. A RotP part that repeats a Tessera part is replaced
+  and deleted.
 - Touches stores, IPC, game, or navigation, or owns state? → **View**.
-- Tied to a specific domain concept but purely presentational? → **Compound**.
-- Generic structural combo of primitives, domain-agnostic? → **Composite**.
-- Generic single atom? → **Primitive**.
+- Tied to a game or app concept and purely presentational? → **Compound**.
+- Generic and missing from Tessera? Propose it for Tessera; until then keep it as a
+  compound and say so in its folder's usage.
 
 ## Per-component structure (enforced by the structure-policy)
 
 ```
 <tier>/<Name>/
-├── <Name>.tsx          - one component, arrow fn, exports at end, ≤200 lines  ┐
-├── <Name>.css          - scoped styles, tokens only, class names prefixed     │ ONLY
-├── <Name>.type.ts      - <Name>Props etc. (exports at end)                    │ these
-├── <Name>.constants.ts - static config (optional)                            │ at root
-├── index.ts            - barrel (re-export only)                              ┘
+├── <Name>.tsx          - one component, arrow fn, exports at end, ≤200 lines
+├── <Name>.css          - scoped styles, tokens only, class names prefixed
+├── <Name>.type.ts      - <Name>Props etc. (exports at end)
+├── <Name>.constants.ts - static config (optional)
+├── index.ts            - barrel (re-export only)
 ├── behavior/           - hooks/handlers, one per file
 └── sub-components/<Child>/  - children used only here (recursive: same shape)
 ```
-
-Root files are name-prefixed (`<Name>.type.ts`, `<Name>.constants.ts`). The
-structure-policy (R12, see below) flags any other file at the component root, or any
-subfolder besides `behavior/` and `sub-components/`.
 
 ## Rules
 
 **Tokens**
 
-1. `ui/design-system/tokens/` (one concept file per category) is the single
-   source of truth. Use `var(--token)`, with no raw hex and no magic px.
-2. For a new design value, add a token first, then use it.
-3. Get readability from value contrast and the spacing scale, not ad-hoc numbers.
+1. Tessera's tokens are the source of truth: colours by role (`--c-primary`,
+   `--c-secondary`, `--c-text`, ...), one size scale (`--size-*`), spacing, radii, type.
+   Use `var(--token)`, with no raw hex and no magic px.
+2. `theme.css` holds only what Tessera has no token for: the game text tokens, the
+   dialogue face and the sizes of RotP's own screens. A new value goes there only when
+   no Tessera token fits.
 
 **Components**
-4. One component per folder; one thing per file; ≤200 lines; arrow fn; exports at end.
-5. **Rule of two:** a UI pattern used 2+ times gets extracted to the right tier rather
-   than copy-pasted. The second occurrence is the trigger.
-6. Express variants via props and data-attributes/CSS, not duplicated components
-   (`<Button variant="danger">`, not `DangerButton`).
+
+3. One component per folder; one thing per file; ≤200 lines; arrow fn; exports at end.
+4. **Rule of two:** a UI pattern used 2+ times gets extracted to the right tier rather
+   than copy-pasted.
+5. Express variants via props and data-attributes/CSS, not duplicated components.
 
 **Styling**
-7. Colocate CSS as `<Name>.css` with scoped, prefixed class names so nothing bleeds
-   globally. Prefer CSS over inline `style`.
-8. Reserve inline `style={{}}` for dynamic values such as computed transforms
-   and measured sizes.
 
-**Boundaries**
-9. `ui/design-system/` holds tokens plus reusable primitives and composites, free of
-   logic and data imports (see the hard boundary above). Domain UI lives in `ui/domains/`.
-10. Views compose the lower tiers and leave primitive styling to the primitives.
-
-## Mechanical enforcement
-
-Three policies back the rules above. They're warnings for now and flip to errors once
-each reaches zero. See the full rules table in
-@docs/contributing/coding-standards.md.
-
-| Rule | Tool | What it flags |
-|------|------|---------------|
-| **R11 no-raw-html** | ESLint (`local/no-raw-html`) | any lowercase JSX element outside `primitives/`; use `Box`/`Text`/`Flex`/`Button`/... |
-| **R12 structure-policy** | analyze adapter | component-root files other than `<Name>.{tsx,css,type.ts,constants.ts}`+`index.ts`, or subfolders other than `behavior/`/`sub-components/` |
-| **R13 token-policy** | stylelint (`color-no-hex`, `color-named`) | raw hex / named colors in `ui/**` component CSS (tokens/ exempt) |
-
-Reports: `pnpm run report` (all three) · `report:html` · `report:structure` ·
-`report:tokens`. Form controls (`input`/`select`/`textarea`) are already a hard
-error outside primitives.
+6. Colocate CSS as `<Name>.css` with scoped, prefixed class names. Prefer CSS over
+   inline `style`; keep inline styles for computed values.
 
 ## Growing it
 
-New UI need → pick the tier (above) → check for an existing component to reuse → if
-none exists and it's reusable, create it in the right tier folder → wire data only at the
-View tier. Every change runs the `coding-standards` checkup and is placed per
-@docs/architecture/overview.md.
+New UI need → find the Tessera part → if none fits, pick the tier → build it in the
+right folder → wire data only at the View tier. Every change runs the
+`coding-standards` checkup and is placed per @docs/architecture/overview.md.

@@ -1,0 +1,9 @@
+/* @layer renderer-widgets @kind style */
+
+.sim-log-dialog {
+  width: min(1100px, 95vw);
+  max-width: 95vw;
+  height: min(82vh, 900px);
+  display: flex;
+  flex-direction: column;
+}

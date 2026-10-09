@@ -1,10 +1,14 @@
 /* @layer renderer-components @kind types */
 import type { IconifyIcon } from '@iconify/types';
-import type { MousePart } from '@drizztdourden08/tessera/primitives';
+import type { MouseButton, ShortcutKey } from '@drizztdourden08/tessera/primitives';
+
+type EditorKey = ShortcutKey | 'mod';
+
+type EditorPointer = MouseButton | 'drag';
 
 interface EditorShortcut {
-  keys?: readonly string[];
-  mouse?: MousePart;
+  keys?: readonly EditorKey[];
+  mouse?: EditorPointer;
 }
 
 type EditorActionKind = 'button' | 'gesture';
@@ -22,4 +26,4 @@ interface EditorAction {
 
 interface LegendEntry { key: string; label: string; shortcut: EditorShortcut }
 
-export type { EditorAction, EditorActionKind, EditorShortcut, LegendEntry };
+export type { EditorAction, EditorActionKind, EditorKey, EditorPointer, EditorShortcut, LegendEntry };

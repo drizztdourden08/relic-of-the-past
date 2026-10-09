@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { createScrollSyncController } from '@drizztdourden08/tessera/primitives';
+import { createScrollSyncController } from './scroll-sync-controller';
 import { followerScrollTo } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
 import type { Lead, PaneSide } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
 import type * as DetailModule from '@app/ui/domains/app/views/DataInspector/sub-components/recommendations/RecommendationDetail';
@@ -166,7 +166,7 @@ describeDataset('the two panes share one tab', () => {
   it('opens the same tab on both sides, on every tab', () => {
     for (const tab of ['json', 'ts', 'editor'] as const) {
       const html = render(tab);
-      const active = html.split('tab-bar__tab--active').length - 1;
+      const active = html.split('tabs__tab--active').length - 1;
       expect(active, tab).toBe(2);
     }
   });

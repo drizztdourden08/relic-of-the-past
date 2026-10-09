@@ -17,13 +17,11 @@ import { captureCanvasScreenshot } from './capture-canvas-screenshot';
 import { fetchQuickSlots } from './fetch-quick-slots';
 import { fetchNormalSaves } from './fetch-normal-saves';
 import { fetchAutoSaves } from './fetch-auto-saves';
-import { useHomeTabToasts } from './useHomeTabToasts';
 import { useHomeTabSramImport } from './useHomeTabSramImport';
 
 const useHomeTabSaves = (params: UseHomeTabSavesParams) => {
   const { profileId, isGameRunning, onStartGame } = params;
   const { filePicker } = usePlatform();
-  const { toasts, showToast, dismissToast } = useHomeTabToasts();
 
   const [slots, setSlots] = useState<SlotInfo[]>(() =>
     Array.from({ length: QUICK_SAVE_SLOTS }, (_, i) => ({ slot: i, timestamp: null, screenshot: null }))
@@ -40,7 +38,7 @@ const useHomeTabSaves = (params: UseHomeTabSavesParams) => {
   const [newSaveName, setNewSaveName] = useState('');
   const {
     importConfirmText, setImportConfirmText, handleImportSram, handleCancelImportSram, handleConfirmImportSram,
-  } = useHomeTabSramImport({ profileId, filePicker, dialog, setDialog, showToast });
+  } = useHomeTabSramImport({ profileId, filePicker, dialog, setDialog });
 
   const loadQuickSlots = async () => { const d = await fetchQuickSlots(profileId); if (d) setSlots(d); };
   const loadNormalSaves = async () => {
@@ -174,7 +172,7 @@ const useHomeTabSaves = (params: UseHomeTabSavesParams) => {
 
   return {
     slots, busySlot, normalSaves, normalScreenshots, busyNormal, autoSaves, autoScreenshots, busyAuto, sessions,
-    dialog, setDialog, newSaveName, setNewSaveName, heroSave, toasts, dismissToast,
+    dialog, setDialog, newSaveName, setNewSaveName, heroSave,
     importConfirmText, setImportConfirmText,
     handleQuickSave, handleQuickLoad, handleCreateNormalSave, handleConfirmCreate, handleLoadNormal,
     handleOverwriteNormal, handleConfirmOverwrite, handleDeleteNormal, handleConfirmDelete, handleRenameNormal,

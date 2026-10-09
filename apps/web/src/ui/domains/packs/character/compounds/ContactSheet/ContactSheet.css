@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind style */
-.contact-sheet {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(max(5rem, var(--contact-sheet-cell-min, 0px)), 1fr));
-  gap: var(--space-sm);
-}
-
 .contact-sheet__cell {
   display: flex;
   flex-direction: column;
@@ -13,7 +7,6 @@
   padding: var(--space-xs);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  cursor: pointer;
 }
 
 .contact-sheet__cell:hover {

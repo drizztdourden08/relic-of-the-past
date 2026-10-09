@@ -44,7 +44,7 @@ const FILE_SCHEMA_CONFIG: SchemaConfig = {
     'tags[]': 'string',
     rev: 'string',
     version: 'string',
-    'owner.displayName': 'string',
+    'owner.displayName': 'enum',
     size: 'string',
     note: 'string',
     createdAt: 'string',
@@ -62,4 +62,6 @@ const FILE_DEFAULT_COLUMNS: readonly TableColumn[] = [
   { path: 'size', fit: true },
 ];
 
-export { SAMPLE_ROWS, FILE_SCHEMA_CONFIG, FILE_DEFAULT_COLUMNS };
+const OWNER_NAME_PATH = 'owner.displayName';
+
+export { SAMPLE_ROWS, FILE_SCHEMA_CONFIG, FILE_DEFAULT_COLUMNS, OWNER_NAME_PATH };

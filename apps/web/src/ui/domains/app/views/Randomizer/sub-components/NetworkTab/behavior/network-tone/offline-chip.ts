@@ -2,6 +2,6 @@
 import type { Chip } from './network-tone.type';
 
 const offlineChip = (hasLastSession: boolean): Chip =>
-  (hasLastSession ? { tone: 'dim', label: 'last session' } : { tone: 'idle', label: 'not connected' });
+  (hasLastSession ? { tone: 'info', label: 'last session' } : { tone: 'neutral', label: 'not connected' });
 
 export { offlineChip };

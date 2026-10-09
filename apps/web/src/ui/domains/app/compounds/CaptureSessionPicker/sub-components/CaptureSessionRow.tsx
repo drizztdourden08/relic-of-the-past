@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import trash2 from '@iconify-icons/lucide/trash-2';
-import { Box, Checkbox, Text, Button, Image } from '@drizztdourden08/tessera/primitives';
+import { Box, Checkbox, Text, Pressable, Image, Tag } from '@drizztdourden08/tessera/primitives';
 import { Video } from '@drizztdourden08/tessera/composites';
 import { useCyclingFrame } from '../behavior/useCyclingFrame';
 import type { CaptureSessionRowProps } from '../CaptureSessionPicker.type';
@@ -35,18 +35,18 @@ const CaptureSessionRow = (props: CaptureSessionRowProps) => {
             ariaLabel={`Include recording from ${formatTimestamp(session.startedAt)}`}
           />
         </Box>
-        <Button
-          variant="bare"
+        <Pressable
           className="capture-session-row__delete"
           onClick={(e) => { e.stopPropagation(); onRequestDelete(session.sessionKey); }}
           title="Delete recording"
+          aria-label="Delete recording"
         >
           <IconifyIcon icon={trash2} width={14} height={14} />
-        </Button>
+        </Pressable>
       </Box>
       <Box className="capture-session-row__meta">
         <Text className="capture-session-row__time">{formatTimestamp(session.startedAt)}</Text>
-        {session.sentAt != null && <Text className="capture-session-row__tag">Sent</Text>}
+        {session.sentAt != null && <Tag>Sent</Tag>}
       </Box>
     </Box>
   );

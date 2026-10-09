@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { KeyboardEvent, MouseEvent } from 'react';
-import { Box, Button, Text, Image } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { getBindingLabel, getBindingIconUrl } from '@app/lib/input/binding-display';
 import type { BindingRowProps } from './controls.type';
 import './BindingRow.css';
@@ -51,14 +51,9 @@ const BindingRow = (props: BindingRowProps) => {
       <Text className={`binding-row__binding-label ${isNone ? 'binding-row__binding-label--none' : ''}`}>{bindingLabel}</Text>
 
       {onClear && !isNone && (
-        <Button
-          variant="bare"
-          className="binding-row__clear"
-          title="Clear binding"
-          onClick={handleClear}
-        >
-          ✕
-        </Button>
+        <IconButton variant="ghost" tone="danger" size="xs" className="binding-row__clear" label="Clear binding" onClick={handleClear}>
+          <Icon name="x" />
+        </IconButton>
       )}
     </Box>
   );

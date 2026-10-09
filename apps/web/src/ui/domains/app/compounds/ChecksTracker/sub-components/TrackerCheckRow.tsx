@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Status, Text } from '@drizztdourden08/tessera/primitives';
 import { getItem } from '@shared/game/data';
 import { CheckStatusIcon } from './CheckStatusIcon';
 import { SwapBadge } from './SwapBadge';
@@ -18,7 +18,7 @@ const TrackerCheckRow = (props: TrackerCheckRowProps) => {
         <Text className="tracker-check__item">{displayItem ?? '-'}</Text>
       )}
       {now !== undefined && (now || status === 'completed') && (
-        <Text className={`tracker-check__now tracker-check__now--${now ? 'on' : 'off'}`}>{now ? 'now' : 'not now'}</Text>
+        <Status tone={now ? 'success' : 'neutral'} variant="pill">{now ? 'now' : 'not now'}</Status>
       )}
       <SwapBadge check={check} shown={itemId} />
       <Text className="tracker-check__type">{check.kind}</Text>

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './HudLayoutEditor.motion.css';
-import { Box, Button, Field, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Field, NumberInput, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import {
   DEFAULT_STEPS, MIN_STEPS, NAMED_EASINGS, stepsCountOf, stepsName,
 } from '../behavior/easing-curves';
@@ -16,15 +16,14 @@ const EasingPicker = (props: EasingPickerProps) => {
     <Field size="sm" label={label} hint={value ?? unsetHint}>
       <Box className="hud-easing">
         {allowDefault && (
-          <Button
-            variant="bare"
+          <Pressable
             className={`hud-easing__tile hud-easing__tile--word${value === undefined ? ' is-on' : ''}`}
             aria-pressed={value === undefined}
             aria-label="default easing"
             onClick={() => onChange(undefined)}
           >
             <Text className="hud-easing__word">auto</Text>
-          </Button>
+          </Pressable>
         )}
         {NAMED_EASINGS.map((name) => (
           <EasingCurveTile key={name} name={name} label={name} on={value === name} onPick={() => onChange(name)} />

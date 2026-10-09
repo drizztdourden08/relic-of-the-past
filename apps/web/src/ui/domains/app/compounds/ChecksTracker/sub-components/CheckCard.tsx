@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Image, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Image, Status, Text } from '@drizztdourden08/tessera/primitives';
 import { getItem } from '@shared/game/data';
 import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
 import { EVENT_MARK } from '../ChecksTracker.constants';
@@ -25,7 +25,7 @@ const CheckCard = ({ check, status, item: itemId, foreignItem, now }: CheckCardP
         <Text className="tracker-card__check-name">{isEvent ? 'Event' : check.name}</Text>
       </Box>
       {showNow && (
-        <Text className={`tracker-check__now tracker-card__now tracker-check__now--${now ? 'on' : 'off'}`}>{now ? 'now' : 'not now'}</Text>
+        <Status className="tracker-card__now" tone={now ? 'success' : 'neutral'} variant="pill">{now ? 'now' : 'not now'}</Status>
       )}
       <SwapBadge check={check} shown={shownId} />
     </Box>

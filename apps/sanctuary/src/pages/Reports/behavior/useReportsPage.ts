@@ -7,14 +7,10 @@ import { toReportRow } from '../../../reports/report-row';
 import { buildReportSchema } from '../../../reports/report-schema';
 import { useSurfaceView } from '@site-kit/views/useSurfaceView';
 import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views.constants';
-import { useFacet } from '@site-kit/views/useFacet';
 import { filterRows } from '@site-kit/views/filter-rows';
-import type { ReportRow } from '../../../reports/report-row';
 import { scopePredicate, reportScopeTabs } from './report-scopes';
 import { useReportActions } from './useReportActions';
 import { REPORTS_PATH } from './useReportsPage.constants';
-
-const kindOf = (row: ReportRow) => row.kind;
 
 const useReportsPage = (selectedId: string | null) => {
   const { me, access } = useSessionContext();
@@ -34,11 +30,9 @@ const useReportsPage = (selectedId: string | null) => {
   const allRows = useMemo(() => data.reports.map(toReportRow), [data.reports]);
   const schema = useMemo(() => buildReportSchema(allRows), [allRows]);
   const view = useSurfaceView(SANCTUARY_VIEWS, 'reports', schema);
-  const kinds = useFacet({ id: 'kinds', label: 'Show kinds', rows: allRows, valueOf: kindOf });
-
   const shown = useMemo(
-    () => kinds.apply(filterRows({ rows, schema, clauses: view.clauses, search: view.search })),
-    [kinds, rows, schema, view.clauses, view.search],
+    () => filterRows({ rows, schema, clauses: view.clauses, search: view.search }),
+    [rows, schema, view.clauses, view.search],
   );
 
   const tabs = useMemo(() => reportScopeTabs(data.reports, meId, visitedAt), [data.reports, meId, visitedAt]);
@@ -63,7 +57,6 @@ const useReportsPage = (selectedId: string | null) => {
     scope: { tabs, activeId: scopeId, select: setScopeId, openCount },
     schema,
     view,
-    facets: [kinds.facet],
     shown,
     selected,
     select,

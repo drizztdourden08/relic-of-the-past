@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind style */
 .hud-formula-menu {
-  position: fixed;
+  --anchored-gap: var(--space-xs);
+
   pointer-events: auto;
   display: flex;
   flex-direction: column;
@@ -13,10 +14,6 @@
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-dropdown);
-}
-
-.hud-formula-menu[data-drop-up='true'] {
-  transform: translateY(-100%);
 }
 
 .hud-formula-menu__group {

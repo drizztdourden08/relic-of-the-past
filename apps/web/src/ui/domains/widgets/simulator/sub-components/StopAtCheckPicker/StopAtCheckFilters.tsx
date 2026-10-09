@@ -1,89 +1,47 @@
 /* @layer renderer-widgets @kind component */
-import { useCallback, useState } from 'react';
-import { Box, Button, TextInput } from '@drizztdourden08/tessera/primitives';
-import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
-import { ITEM_FILTERS, STATUS_FILTERS, TAG_CATEGORIES } from './StopAtCheckPicker.constants';
+import { Box, Disclosure, SearchInput, SegmentedControl, TagPicker } from '@drizztdourden08/tessera/primitives';
+import { FACET_GROUPS, ITEM_FILTERS, STATUS_FILTERS } from './StopAtCheckPicker.constants';
 import type { StopAtCheckFiltersProps } from './StopAtCheckPicker.type';
 
 const StopAtCheckFilters = (props: StopAtCheckFiltersProps) => {
   const { filter, onFilterChange } = props;
-  const [showTags, setShowTags] = useState(false);
-
-  const itemFilter = filter.itemFilter ?? 'all';
-  const statusFilter = filter.statusFilter ?? 'all';
-
-  const toggleFacet = useCallback((facetId: string) => {
-    const activeFacets = filter.activeFacets.includes(facetId)
-      ? filter.activeFacets.filter((f) => f !== facetId)
-      : [...filter.activeFacets, facetId];
-    onFilterChange({ ...filter, activeFacets });
-  }, [filter, onFilterChange]);
+  const tagCount = filter.activeFacets.length;
 
   return (
     <Box className="stop-picker__filters">
-      <TextInput
-        type="text"
+      <SearchInput
         className="stop-picker__search"
         placeholder="Search checks..."
         value={filter.searchQuery}
-        onChange={(e) => onFilterChange({ ...filter, searchQuery: e.target.value })}
+        onChange={(searchQuery) => onFilterChange({ ...filter, searchQuery })}
       />
 
       <Box className="stop-picker__filter-row">
-        {ITEM_FILTERS.map((opt) => (
-          <Button
-            variant="bare"
-            size="sm"
-            key={opt.value}
-            className={`stop-picker__chip ${itemFilter === opt.value ? 'stop-picker__chip--active' : ''}`}
-            onClick={() => onFilterChange({ ...filter, itemFilter: opt.value })}
-          >
-            {opt.label}
-          </Button>
-        ))}
-        <Box className="stop-picker__filter-spacer" />
-        {STATUS_FILTERS.map((opt) => (
-          <Button
-            variant="bare"
-            size="sm"
-            key={opt.value}
-            title={opt.title}
-            className={`stop-picker__chip ${statusFilter === opt.value ? 'stop-picker__chip--active' : ''}`}
-            onClick={() => onFilterChange({ ...filter, statusFilter: opt.value })}
-          >
-            {opt.label}
-          </Button>
-        ))}
+        <SegmentedControl
+          size="sm"
+          value={filter.itemFilter ?? 'all'}
+          options={ITEM_FILTERS}
+          onChange={(itemFilter) => onFilterChange({ ...filter, itemFilter })}
+        />
+        <SegmentedControl
+          size="sm"
+          value={filter.statusFilter ?? 'all'}
+          options={STATUS_FILTERS}
+          onChange={(statusFilter) => onFilterChange({ ...filter, statusFilter })}
+        />
       </Box>
 
-      <Button
-        variant="bare"
-        size="sm"
-        className={`stop-picker__chip ${filter.activeFacets.length > 0 ? 'stop-picker__chip--active' : ''}`}
-        onClick={() => setShowTags((v) => !v)}
-      >
-        Tags{filter.activeFacets.length > 0 ? ` (${filter.activeFacets.length})` : ''}
-      </Button>
-
-      {showTags && (
+      <Disclosure size="sm" summary={tagCount > 0 ? `Tags (${tagCount})` : 'Tags'}>
         <Box className="stop-picker__tags">
-          {TAG_CATEGORIES.map((cat) => (
-            <Box key={cat} className="stop-picker__tag-group">
-              {CHECK_FACET_DEFS.filter((t) => t.category === cat).map((t) => (
-                <Button
-                  variant="bare"
-                  size="sm"
-                  key={t.id}
-                  className={`stop-picker__chip ${filter.activeFacets.includes(t.id) ? 'stop-picker__chip--active' : ''}`}
-                  onClick={() => toggleFacet(t.id)}
-                >
-                  {t.label}
-                </Button>
-              ))}
-            </Box>
-          ))}
+          <TagPicker
+            size="sm"
+            aria-label="Tags"
+            value={filter.activeFacets}
+            groups={FACET_GROUPS}
+            onChange={(activeFacets) => onFilterChange({ ...filter, activeFacets })}
+          />
         </Box>
-      )}
+      </Disclosure>
     </Box>
   );
 };

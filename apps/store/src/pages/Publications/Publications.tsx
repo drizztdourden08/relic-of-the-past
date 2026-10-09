@@ -5,7 +5,7 @@ import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { Workbench } from '@site-kit/layout/Workbench/Workbench';
 import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
-import { Link } from '@site-kit/router/Link';
+import { AppLink } from '@site-kit/router/AppLink';
 import { useSessionContext } from '@site-kit/session/session-context';
 import { authorPath } from '../../catalog/item-paths';
 import { publicationRowId } from '../../publications/publication-row';
@@ -65,7 +65,7 @@ const Publications = (props: PublicationsProps) => {
       <Stack gap="md" align="stretch" className="publications">
         <Flex align="baseline" gap="sm" wrap>
           <Text as="span" variant="caption" className="publications__totals">{page.totals}</Text>
-          {me && <Link to={authorPath(me.id)} className="publications__public">View my public page {'›'}</Link>}
+          {me && <AppLink to={authorPath(me.id)} className="publications__public">View my public page {'›'}</AppLink>}
         </Flex>
         {publications.error && <Text as="p" variant="caption" role="alert">{publications.error}</Text>}
         <Workbench toolbar={toolbar} table={table} detail={null} />

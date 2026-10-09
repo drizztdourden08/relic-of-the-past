@@ -7,13 +7,28 @@
   background: var(--c-bg);
 }
 
-.site__header {
-  display: flex;
-  align-items: center;
+.site .site__header {
+  margin-inline: calc(var(--space-md) * -1);
+}
+
+.site__logo {
   flex: 0 0 auto;
-  min-height: var(--topbar-h);
-  padding: 0 var(--space-xs);
-  background: var(--c-bg);
+  height: var(--brand-logo-h);
+  width: auto;
+  user-select: none;
+}
+
+.site__wordmark {
+  font-family: var(--font-game);
+  font-size: var(--game-cell-h);
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--c-primary);
+  -webkit-text-stroke: var(--border-width-thick) var(--c-bg);
+  paint-order: stroke fill;
+  -webkit-font-smoothing: none;
+  font-synthesis: none;
+  white-space: nowrap;
 }
 
 .site__body {

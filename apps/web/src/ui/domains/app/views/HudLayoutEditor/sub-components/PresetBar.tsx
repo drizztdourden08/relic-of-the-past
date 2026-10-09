@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { PresetBarProps } from './PresetBar.type';
 
 const PresetBar = (props: PresetBarProps) => {
@@ -9,21 +10,17 @@ const PresetBar = (props: PresetBarProps) => {
   return (
     <Box className="hud-editor-presets">
       <Text className="hud-editor__label">Start from</Text>
-      <Box className="hud-editor-list">
+      <ListItemList label="Layouts" className="hud-editor-list">
         {layouts.map((layout) => (
-          <Button
-            variant="bare"
+          <ListItemRow
             key={layout.id}
-            className={`hud-editor-list__row${layout.id === draft.id ? ' is-selected' : ''}`}
-            aria-pressed={layout.id === draft.id}
-            disabled={busy}
-            onClick={() => onStartFrom(layout)}
-          >
-            <Text className="hud-editor-list__name">{layout.name}</Text>
-            <Text className="hud-editor-list__kind">{layout.builtIn ? 'built-in' : 'custom'}</Text>
-          </Button>
+            name={layout.name}
+            meta={layout.builtIn ? 'built-in' : 'custom'}
+            selected={layout.id === draft.id}
+            onClick={busy ? undefined : () => onStartFrom(layout)}
+          />
         ))}
-      </Box>
+      </ListItemList>
 
       <TextInput
         value={draft.name}

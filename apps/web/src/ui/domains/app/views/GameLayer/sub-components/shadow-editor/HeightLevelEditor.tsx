@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, Button, TextInput, NumberInput } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, TextInput, NumberInput } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import './HeightLevelEditor.css';
 
@@ -42,14 +42,9 @@ const HeightLevelEditor = () => {
                 if (!isNaN(v)) updateHeightLevel(i, { value: Math.min(1, Math.max(0, v)) });
               }}
             />
-            <Button
-              variant="bare"
-              className="height-level-editor__remove"
-              onClick={() => removeHeightLevel(i)}
-              title="Remove"
-            >
-              ✕
-            </Button>
+            <IconButton variant="ghost" tone="danger" size="xs" label="Remove" onClick={() => removeHeightLevel(i)}>
+              <Icon name="x" />
+            </IconButton>
           </Box>
         ))}
       </Box>
@@ -70,14 +65,9 @@ const HeightLevelEditor = () => {
           step={0.05}
           onChange={(e) => setNewValue(e.target.value)}
         />
-        <Button
-          variant="bare"
-          className="height-level-editor__add-btn"
-          onClick={handleAdd}
-          title="Add level"
-        >
-          +
-        </Button>
+        <IconButton variant="ghost" size="xs" label="Add level" onClick={handleAdd}>
+          <Icon name="plus" />
+        </IconButton>
       </Box>
     </Box>
   );

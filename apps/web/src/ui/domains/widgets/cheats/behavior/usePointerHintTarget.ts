@@ -2,7 +2,7 @@
 import { useContext, useMemo } from 'react';
 import type { MouseEvent } from 'react';
 import { PointerHintContext } from './pointer-hint-context';
-import type { ControlHint } from '../sub-components/ControlGlyph.type';
+import type { ControlHint } from '../sub-components/ControlHint.type';
 
 const usePointerHintTarget = (title: string, items: readonly ControlHint[]) => {
   const { show, move, hide } = useContext(PointerHintContext);

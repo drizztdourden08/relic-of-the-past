@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, Select, Slider, Text, TextInput, Toggle } from '@drizztdourden08/tessera/primitives';
+import { Box, Select, Slider, Tag, Text, TextInput, Toggle } from '@drizztdourden08/tessera/primitives';
 import { OptionDescription } from '../OptionDescription';
 import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { PoolImpactCell } from '../PoolImpactCell';
@@ -68,7 +68,7 @@ const RandomizerOptionRow = (props: RandomizerOptionRowProps) => {
       <Box className="rand-opt-row__text">
         <Box className="rand-opt-row__title">
           <Text className="rand-opt-row__label">{option.displayName}</Text>
-          {tag != null && <Text className="rand-opt-row__tag">{tag}</Text>}
+          {tag != null && <Tag className="rand-opt-row__tag">{tag}</Tag>}
         </Box>
         <OptionDescription
           className="rand-opt-row__description"

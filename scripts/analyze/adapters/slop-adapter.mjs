@@ -34,7 +34,7 @@ const OPT_OUT = /slop-ok/;
 // they are linted and fixed here, then pushed back to the vault.
 const NOT_OURS = [
   /^\.claude\//,
-  /^apps\/web\/src\/ui\/design-system\/fonts\//,
+  /^apps\/web\/src\/fonts\//,
   /^apps\/mobile\/android\/gradlew/,
   /^scripts\/analyze\/report\.json$/,
 ];

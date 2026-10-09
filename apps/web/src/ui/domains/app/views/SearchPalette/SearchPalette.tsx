@@ -1,46 +1,23 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { CommandPalette } from '@drizztdourden08/tessera/composites';
 import type { SearchPaletteProps } from './SearchPalette.type';
 import { useSearchPalette } from './behavior/useSearchPalette';
-import { SearchInput } from './sub-components/SearchInput';
-import { SearchResultList } from './sub-components/SearchResultList';
-import './SearchPalette.css';
 
 const SearchPalette = (props: SearchPaletteProps) => {
   const { navProps, navDeps } = props;
-  const {
-    open,
-    query, setQuery,
-    catalog, results, activeIndex, setActiveIndex,
-    inputRef, handleKeyDown,
-    runEntry, toggleEntry, closePalette,
-  } = useSearchPalette(navProps, navDeps);
+  const { open, query, setQuery, groups, runItem, closePalette } = useSearchPalette(navProps, navDeps);
 
   return (
-    <>
-      {open && <Box className="search-scrim" onClick={closePalette} />}
-      <Box className={`search-palette${open ? ' is-open' : ''}`} role="dialog" aria-label="Search" aria-hidden={!open}>
-        <Text as="span" className="search-palette__topedge" aria-hidden />
-        <SearchInput
-          inputRef={inputRef}
-          value={query}
-          onChange={setQuery}
-          onKeyDown={handleKeyDown}
-          resultCount={results.length}
-        />
-        <Box className="search-palette__body">
-          <SearchResultList
-            catalog={catalog}
-            results={results}
-            query={query}
-            activeIndex={activeIndex}
-            setActiveIndex={setActiveIndex}
-            onSelect={runEntry}
-            onToggle={toggleEntry}
-          />
-        </Box>
-      </Box>
-    </>
+    <CommandPalette
+      open={open}
+      onClose={closePalette}
+      query={query}
+      onQueryChange={setQuery}
+      groups={groups}
+      onSelect={runItem}
+      placeholder="Search settings, screens, anything..."
+      label="Search"
+    />
   );
 };
 

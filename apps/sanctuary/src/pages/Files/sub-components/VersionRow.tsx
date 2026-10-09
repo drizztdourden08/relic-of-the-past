@@ -1,8 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import type { FileVersion } from '@shared/sanctuary/file-types';
-import { Button, Flex, Text } from '@drizztdourden08/tessera/primitives';
-import { Row } from '@site-kit/components/Row/Row';
-import { Chip } from '@site-kit/components/Chip/Chip';
+import { Button, Flex, Status, Tag, Text } from '@drizztdourden08/tessera/primitives';
+import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatAgo } from '@site-kit/lib/format-date';
 import { versionLabel } from '../../../files/file-versions';
 import type { VersionRowProps } from './VersionRow.type';
@@ -16,11 +15,11 @@ const detailOf = (version: FileVersion) => {
 const VersionRow = (props: VersionRowProps) => {
   const { version, current, canManage, busy, onDownload, onRestore, onDelete } = props;
   const { n } = version;
-  const label = <Chip tone={current ? 'gold' : 'neutral'}>{versionLabel(n)}</Chip>;
+  const label = <Tag color={current ? 'primary' : 'neutral'}>{versionLabel(n)}</Tag>;
   const value = (
     <Flex gap="sm" align="center" wrap>
       <Text as="span" variant="caption">{detailOf(version)}</Text>
-      {current && <Chip tone="green">current</Chip>}
+      {current && <Status variant="pill" tone="success">current</Status>}
     </Flex>
   );
   const action = (
@@ -34,7 +33,7 @@ const VersionRow = (props: VersionRowProps) => {
       )}
     </>
   );
-  return <Row label={label} value={value} action={action} className="versions__row" />;
+  return <ListItemRow name={label} columns={[{ primary: value }]} action={action} actionVisibility="always" className="versions__row" />;
 };
 
 export { VersionRow };

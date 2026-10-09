@@ -2,8 +2,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { ToastContainer } from '@drizztdourden08/tessera/composites';
-import type { ToastItem } from '@drizztdourden08/tessera/composites';
 import { shownItemOf } from '@shared/game/logic/queries/check-contents';
 import type { RunContext } from '@shared/game/logic/queries/check-grouping';
 import {
@@ -16,6 +14,8 @@ import { useTrackerPresenceStore } from '@app/stores/tracker-presence-store';
 import { useCheckToasts } from './behavior/useCheckToasts';
 import { useOnlineNoticeToasts } from './behavior/useOnlineNoticeToasts';
 import { OnlineNoticeToast } from './sub-components/OnlineNoticeToast';
+import { PlayAreaNotice } from './sub-components/PlayAreaNotice';
+import type { PlayAreaNoticeItem } from './sub-components/PlayAreaNotice.type';
 import { TOAST_DURATION_MS } from './CheckToasts.constants';
 import type { CheckToastsProps } from './CheckToasts.type';
 import './CheckToasts.css';
@@ -33,13 +33,11 @@ const CheckToasts = ({ width, height }: CheckToastsProps) => {
     return { kind: runKindOfSession(sessionState), placedItems: view.itemByCheck, foreignItems: view.foreignByCheck };
   }, [sessionState]);
 
-  const toasts: ToastItem[] = useMemo(() => entries.flatMap(({ id, check, paid }) => {
+  const toasts: PlayAreaNoticeItem[] = useMemo(() => entries.flatMap(({ id, check, paid }) => {
     if (check.statusOnly) return [];
     return [{
       id,
-      message: check.name,
-      variant: 'bare' as const,
-      duration: TOAST_DURATION_MS,
+      label: check.name,
       content: (
         <Box className="check-toast">
           <CheckCard
@@ -51,11 +49,9 @@ const CheckToasts = ({ width, height }: CheckToastsProps) => {
     }];
   }), [entries, run]);
 
-  const noticeToasts: ToastItem[] = useMemo(() => notices.entries.map(({ id, notice }) => ({
+  const noticeToasts: PlayAreaNoticeItem[] = useMemo(() => notices.entries.map(({ id, notice }) => ({
     id,
-    message: notice.text,
-    variant: 'bare' as const,
-    duration: TOAST_DURATION_MS,
+    label: notice.text,
     content: <OnlineNoticeToast notice={notice} />,
   })), [notices.entries]);
 
@@ -73,7 +69,13 @@ const CheckToasts = ({ width, height }: CheckToastsProps) => {
 
   return (
     <Box className="check-toasts" style={style}>
-      <ToastContainer toasts={allToasts} onDismiss={dismissAny} position="bottom-left" anchored />
+      {allToasts.length > 0 && (
+        <Box className="play-area-notices">
+          {allToasts.map((item) => (
+            <PlayAreaNotice key={item.id} item={item} duration={TOAST_DURATION_MS} onDismiss={dismissAny} />
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, Button, Field, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Field, Icon, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { NumberCell } from './NumberCell';
 import { compactEdges } from '../behavior/offset';
 import { OFFSET_SIDES, SIDES } from './BoxModelField.constants';
@@ -57,16 +57,15 @@ const BoxModelField = (props: BoxModelFieldProps) => {
           <Text className="hud-box-model__centre">{centre}</Text>
         </Box>
 
-        <Button
-          variant="bare"
+        <Pressable
           className={`hud-box-model__link${linked ? ' is-on' : ''}`}
           aria-pressed={linked}
           aria-label="Link the four padding edges"
           title="Type one number into any padding edge and all four follow."
           onClick={() => setLinked((was) => !was)}
         >
-          ⛓
-        </Button>
+          <Icon name="link" size={12} aria-hidden />
+        </Pressable>
       </Box>
     </Field>
   );

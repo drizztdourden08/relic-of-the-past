@@ -1,6 +1,15 @@
 /* @layer renderer-components @kind constants */
-const DOMAIN_ICONS: Record<string, string> = {
-  profiles: '👤', roms: '🎮', sprites: '🖼️', linkSprites: '🧝', languages: '🌐', msu: '🎵', assets: '📦', saves: '💾',
+import type { IconName } from '@drizztdourden08/tessera/primitives';
+
+const DOMAIN_ICONS: Record<string, IconName> = {
+  profiles: 'user',
+  roms: 'gamepad-2',
+  sprites: 'image',
+  linkSprites: 'palette',
+  languages: 'globe',
+  msu: 'headphones',
+  assets: 'package',
+  saves: 'save',
 };
 
 export { DOMAIN_ICONS };

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { SaveSlot } from '../../../../compounds/SaveSlot';
 import { NormalSaveCard } from '../../../../compounds/NormalSaveCard';
 import { AutoSaveCard } from '../../../../compounds/AutoSaveCard';
@@ -54,13 +54,14 @@ const HomeTabColumns = ({ saves, isGameRunning }: HomeTabColumnsProps) => {
           <Box className="home-tab__section-header">
             <Text as="h3" className="home-tab__section-title">Saves</Text>
             <Button
-              variant="bare"
-              className="home-tab__new-save-btn"
+              variant="secondary"
+              size="xs"
+              icon={<Icon name="plus" />}
               onClick={handleCreateNormalSave}
               disabled={!isGameRunning}
               title={isGameRunning ? 'Create a new save' : 'Start game to save'}
             >
-              + New Save
+              New Save
             </Button>
           </Box>
           {normalSaves.length === 0 ? (

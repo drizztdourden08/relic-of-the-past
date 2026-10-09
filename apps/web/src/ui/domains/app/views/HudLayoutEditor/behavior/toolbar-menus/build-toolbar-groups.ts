@@ -14,22 +14,23 @@ import timerIcon from '@iconify-icons/lucide/timer';
 import {
   newButton, newContainer, newCountdown, newElement, newGrid, newOverlap, newRepeat, newSwitch, newText,
 } from '../new-node';
-import type { MenuEntry } from '@drizztdourden08/tessera/composites';
+import { menuIcon } from './menu-icon';
+import type { MenuNode } from '@drizztdourden08/tessera/composites';
 import type { MenuDeps, ToolbarGroup } from './toolbar-menus.type';
 
-const containerItems = (deps: MenuDeps): MenuEntry[] => ([
-  { key: 'row', icon: columnsIcon, label: 'Row', onClick: () => deps.insert(newContainer('row')) },
-  { key: 'column', icon: rowsIcon, label: 'Column', onClick: () => deps.insert(newContainer('column')) },
-  { key: 'overlay', icon: layersIcon, label: 'Overlay', onClick: () => deps.insert(newOverlap()) },
-  { key: 'grid', icon: gridIcon, label: 'Grid', onClick: () => deps.insert(newGrid()) },
+const containerItems = (deps: MenuDeps): MenuNode[] => ([
+  { id: 'row', icon: menuIcon(columnsIcon), label: 'Row', onSelect: () => deps.insert(newContainer('row')) },
+  { id: 'column', icon: menuIcon(rowsIcon), label: 'Column', onSelect: () => deps.insert(newContainer('column')) },
+  { id: 'overlay', icon: menuIcon(layersIcon), label: 'Overlay', onSelect: () => deps.insert(newOverlap()) },
+  { id: 'grid', icon: menuIcon(gridIcon), label: 'Grid', onSelect: () => deps.insert(newGrid()) },
 ]);
 
-const dynamicsItems = (deps: MenuDeps): MenuEntry[] => ([
-  { key: 'text', icon: typeIcon, label: 'Text', onClick: () => deps.insert(newText()) },
-  { key: 'button', icon: circleDotIcon, label: 'Button', onClick: () => deps.insert(newButton()) },
-  { key: 'repeat', icon: repeatIcon, label: 'Repeat', onClick: () => deps.insert(newRepeat()) },
-  { key: 'switch', icon: gitBranchIcon, label: 'Switch', onClick: () => deps.insert(newSwitch()) },
-  { key: 'countdown', icon: timerIcon, label: 'Countdown', onClick: () => deps.insert(newCountdown()) },
+const dynamicsItems = (deps: MenuDeps): MenuNode[] => ([
+  { id: 'text', icon: menuIcon(typeIcon), label: 'Text', onSelect: () => deps.insert(newText()) },
+  { id: 'button', icon: menuIcon(circleDotIcon), label: 'Button', onSelect: () => deps.insert(newButton()) },
+  { id: 'repeat', icon: menuIcon(repeatIcon), label: 'Repeat', onSelect: () => deps.insert(newRepeat()) },
+  { id: 'switch', icon: menuIcon(gitBranchIcon), label: 'Switch', onSelect: () => deps.insert(newSwitch()) },
+  { id: 'countdown', icon: menuIcon(timerIcon), label: 'Countdown', onSelect: () => deps.insert(newCountdown()) },
 ]);
 
 const buildToolbarGroups = (deps: MenuDeps): ToolbarGroup[] => [
@@ -38,7 +39,9 @@ const buildToolbarGroups = (deps: MenuDeps): ToolbarGroup[] => [
     key: 'spacer',
     icon: moveHorizontalIcon,
     label: 'Spacer',
-    items: [{ key: 'spacer', icon: moveHorizontalIcon, label: 'Spacer', onClick: () => deps.insert(newElement({ type: 'spacer' })) }],
+    items: [{
+      id: 'spacer', icon: menuIcon(moveHorizontalIcon), label: 'Spacer', onSelect: () => deps.insert(newElement({ type: 'spacer' })),
+    }],
   },
   { key: 'dynamics', icon: zapIcon, label: 'Dynamics', items: dynamicsItems(deps) },
 ];

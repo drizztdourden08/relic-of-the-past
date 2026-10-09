@@ -77,7 +77,6 @@ interface UseHomeTabSramImportParams {
   filePicker: FilePickerPort;
   dialog: DialogState;
   setDialog: (dialog: DialogState) => void;
-  showToast: (message: string) => void;
 }
 
 type HomeTabSaves = ReturnType<typeof useHomeTabSaves>;

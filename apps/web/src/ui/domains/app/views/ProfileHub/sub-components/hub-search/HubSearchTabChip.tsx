@@ -8,8 +8,7 @@ import type { HubSearchTabChipProps } from './hub-search.type';
 const HubSearchTabChip = ({ tab, onOpenTab }: HubSearchTabChipProps) => {
   const handleClick = useCallback(() => onOpenTab(tab), [onOpenTab, tab]);
   return (
-    <Button variant="bare" className="hub-search__tab-chip" onClick={handleClick}>
-      <IconifyIcon icon={PROFILE_HUB_TABS[tab].navIcon} aria-hidden="true" />
+    <Button variant="secondary" size="sm" icon={<IconifyIcon icon={PROFILE_HUB_TABS[tab].navIcon} aria-hidden="true" />} onClick={handleClick}>
       Open {PROFILE_HUB_TABS[tab].label}
     </Button>
   );

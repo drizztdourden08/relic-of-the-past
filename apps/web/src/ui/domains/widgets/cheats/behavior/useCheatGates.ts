@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { cheatCategoryAllowed } from '@app/lib/game';
 import type { CheatCategory } from '@app/lib/game';
 import { useGameUIStore } from '@app/stores/game-ui-store';
-import { DISABLED_SETTING_MESSAGES } from '@drizztdourden08/tessera/composites';
+import { DISABLED_SETTING_MESSAGES } from '@domains/app/disabled-setting-messages.constants';
 import { CATEGORIES, CATEGORY_LABEL, GATES_RECHECK_MS } from '../CheatsWidget.constants';
 import type { CheatGates } from '../CheatsWidget.type';
 

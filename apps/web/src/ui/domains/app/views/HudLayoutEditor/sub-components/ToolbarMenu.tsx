@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef } from 'react';
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Pressable } from '@drizztdourden08/tessera/primitives';
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import type { ToolbarMenuProps } from './ToolbarMenu.type';
 
@@ -12,8 +11,7 @@ const ToolbarMenu = (props: ToolbarMenuProps) => {
 
   return (
     <Box ref={anchor} className="hud-toolbar__group">
-      <Button
-        variant="bare"
+      <Pressable
         className={`hud-toolbar__button${open ? ' is-open' : ''}`}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -22,13 +20,13 @@ const ToolbarMenu = (props: ToolbarMenuProps) => {
         disabled={disabled || empty}
         onClick={onToggle}
       >
-        <IconifyIcon className="hud-toolbar__icon" icon={icon} width={16} height={16} aria-hidden />
-      </Button>
+        <Icon className="hud-toolbar__icon" icon={icon} size={16} aria-hidden />
+      </Pressable>
       {open && (panel
         ? panel(anchor)
         : (
           <Box className="hud-toolbar__menu" onClick={onClose}>
-            <DropdownMenu items={items ?? []} anchorRef={anchor} />
+            <DropdownMenu groups={[{ id: label, items: items ?? [] }]} label={label} anchorRef={anchor} onClose={onClose} />
           </Box>
         ))}
     </Box>

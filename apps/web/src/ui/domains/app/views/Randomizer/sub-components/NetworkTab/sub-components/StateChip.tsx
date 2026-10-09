@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
-import { Chip } from '@drizztdourden08/tessera/primitives';
+import { Status } from '@drizztdourden08/tessera/primitives';
 import type { Chip as ChipModel } from '../behavior/network-tone';
 
-const StateChip = ({ tone, label }: ChipModel) => <Chip tone={tone} caps>{label}</Chip>;
+const StateChip = ({ tone, label }: ChipModel) => <Status tone={tone} variant="pill" dot>{label}</Status>;
 
 export { StateChip };

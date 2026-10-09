@@ -44,44 +44,6 @@
   white-space: nowrap;
 }
 
-.data-home__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--space-sm);
-}
-
-.data-home__card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-md);
-  background: var(--c-inset);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
-}
-
-.data-home__card-icon {
-  font-size: var(--text-xl);
-}
-
-.data-home__card-count {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semi);
-  color: var(--c-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.data-home__card-label {
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-}
-
-.data-home__card-size {
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-}
-
 .data-home__loading {
   display: flex;
   justify-content: center;

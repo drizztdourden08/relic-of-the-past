@@ -5,7 +5,7 @@ import type { ListingEdit, StoreItem, StoreVersion } from '@shared/store/types';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDateTime } from '@site-kit/lib/format-date';
-import { Chip } from '@site-kit/components/Chip/Chip';
+import { Status, Tag } from '@drizztdourden08/tessera/primitives';
 import { ReviewChip } from '../../../../components/ReviewChip/ReviewChip';
 import type { ReviewChipState } from '../../../../components/ReviewChip/ReviewChip';
 import { factsLine } from '../../../../catalog/facts-line';
@@ -28,14 +28,14 @@ const versionFields = (item: StoreItem, v: StoreVersion, now: number): DetailFie
   { label: 'sha256', value: v.sha256 ? `${v.sha256.slice(0, SHA_EDGE)}...${v.sha256.slice(-SHA_EDGE)}` : '-' },
 ];
 
-const changedFields = (edit: ListingEdit): ReactNode => Object.keys(edit.patch).map((key) => <Chip key={key}>{key}</Chip>);
+const changedFields = (edit: ListingEdit): ReactNode => Object.keys(edit.patch).map((key) => <Tag key={key}>{key}</Tag>);
 
 const detailFieldsOf = (item: StoreItem, target: PublicationTarget, now: number): DetailField[] => {
   const { version, edit } = entryOf(item, target);
   const head: DetailField = { label: 'item', value: item.name };
   if (version) return [head, ...reviewFields(chipStateOf(version), version.review), ...versionFields(item, version, now)];
   if (edit) return [head, ...reviewFields(edit.review.state, edit.review), { label: 'changes', value: changedFields(edit) }];
-  return [head, { label: 'status', value: <Chip tone="muted">draft</Chip> }, { label: 'next', value: 'Upload a first version to send it to review.' }];
+  return [head, { label: 'status', value: <Status variant="pill" tone="neutral">draft</Status> }, { label: 'next', value: 'Upload a first version to send it to review.' }];
 };
 
 export { detailFieldsOf };

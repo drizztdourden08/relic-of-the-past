@@ -68,7 +68,6 @@ const loadDataset = async () => {
       alias: {
         '@shared': abs('shared'),
         '@app': abs('apps/web/src'),
-        '@ds': abs('apps/web/src/ui/design-system'),
         '@domains': abs('apps/web/src/ui/domains'),
       },
     },

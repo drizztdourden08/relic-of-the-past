@@ -26,31 +26,6 @@
 .simulator__progress {
   display: flex;
   flex-direction: column;
-  background: var(--c-inset);
-  border: 1px solid var(--c-hairline);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.simulator__progress-row {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-md);
-  padding: var(--space-xs) var(--space-sm);
-}
-
-.simulator__progress-row:nth-child(odd) {
-  background: var(--c-hover);
-}
-
-.simulator__progress-label {
-  color: var(--c-text-dim);
-}
-
-.simulator__progress-value {
-  font-family: var(--font-mono);
-  color: var(--c-text);
-  overflow-wrap: anywhere;
 }
 
 .simulator__trail {
@@ -105,23 +80,6 @@
 .simulator__log {
   display: flex;
   flex-direction: column;
-}
-
-.simulator__log-open {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-  width: 100%;
-}
-
-.simulator__log-count {
-  padding: 0 var(--space-xs);
-  border-radius: var(--radius-sm);
-  background: var(--c-inset);
-  color: var(--c-text-faint);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
 }
 
 .simulator__suggestions-empty {

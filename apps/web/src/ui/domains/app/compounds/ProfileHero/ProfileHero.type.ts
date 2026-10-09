@@ -1,7 +1,14 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { HeroFact } from '../HeroFacts';
 import type { ProfileModeId } from '../ModeBadge';
+
+interface HeroFact {
+  label: string;
+  value: string;
+  title?: string;
+  mono?: boolean;
+  capitalize?: boolean;
+}
 
 interface HeroLastSave {
   name: string;

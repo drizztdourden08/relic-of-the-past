@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { HookshopHighlight } from '@domains/app/compounds/HookshopHighlight';
-import { Markdown } from '../../../components/Markdown/Markdown';
+import { Markdown } from '@drizztdourden08/tessera/composites';
 import { HIGHLIGHT_PIXEL } from './Welcome.constants';
 import type { WelcomeProps } from './Welcome.type';
 

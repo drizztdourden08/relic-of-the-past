@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, SectionHeader } from '@drizztdourden08/tessera/primitives';
 import { SettingsPageContext } from '../../../../compounds/SettingsLayout';
 import { PROFILE_HUB_TABS } from '../../ProfileHub.constants';
 import { ProfileHubTabContent } from '../ProfileHubTabContent';
@@ -18,12 +18,11 @@ const HubSearchGroup = ({ tab, count, query, content, onOpenTab }: HubSearchGrou
 
   return (
     <Box as="section" className="hub-search__group" aria-label={spec.label}>
-      <Box className="hub-search__group-head">
-        <Box as="span" className="hub-search__group-icon" aria-hidden="true">{icon}</Box>
-        <Text as="h3" className="hub-search__group-title">{spec.label}</Text>
-        <Text className="hub-search__group-count">{count}</Text>
-        <Button variant="bare" className="hub-search__open" onClick={handleOpen}>Open tab</Button>
-      </Box>
+      <SectionHeader
+        title={<><Box as="span" className="hub-search__group-icon" aria-hidden="true">{icon}</Box> {spec.label}</>}
+        count={count}
+        action={<Button variant="secondary" size="sm" onClick={handleOpen}>Open tab</Button>}
+      />
       <SettingsPageContext.Provider value={pageContext}>
         <ProfileHubTabContent {...content} tab={tab} />
       </SettingsPageContext.Provider>

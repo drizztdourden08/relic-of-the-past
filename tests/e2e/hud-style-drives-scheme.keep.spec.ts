@@ -31,7 +31,7 @@ const openProfile = async (instance: string, profile: string): Promise<Hub> => {
   });
   const page = await app.firstWindow();
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForSelector('.titlebar', { timeout: 60_000 });
+  await page.waitForSelector('.window-title-bar', { timeout: 60_000 });
   const cdp = await app.context().newCDPSession(page);
   await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1500, height: 1200, deviceScaleFactor: 1, mobile: false });
   await page.waitForTimeout(1200);
@@ -145,7 +145,7 @@ test.describe('HUD style drives the control scheme', () => {
       expect(await page.$$eval('[data-setting-key="hudEnhancedParts"] button',
         (els) => els.filter((el) => el.getAttribute('aria-pressed') === 'true').map((el) => (el.textContent ?? '').trim()),
       )).toEqual(['Main', 'Pause']);
-      await shoot('08-enhanced-picked', '.settings-layout__subsection');
+      await shoot('08-enhanced-picked', '.settings-section__group');
 
       await page.locator(STYLE_SEGMENTS, { hasText: 'Modern' }).click();
       await page.waitForTimeout(1200);
