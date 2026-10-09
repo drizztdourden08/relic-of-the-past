@@ -1,21 +1,9 @@
 /* @layer tests @kind test */
-/**
- * Guards the dungeon dataset's `palaceIndex` against what the GAME reports.
- * A dungeon screen is keyed by `palaceIndex:roomIndex`; on a mismatch the
- * detector still finds it via the room-only `palace-scan` fallback, so a
- * mislabel costs the exact key without breaking anything visible. The three
- * blessed nav baselines (`.claude/nav-baselines/<state>/dump-nav.json`) are
- * pinned to `exact`.
- *
- * screen-133/119/061 are the dataset ids for hc-0x80/hc-0x51/lw-13, looked up
- * via scripts/generate-ids/output/id-manifest.json.
- */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { resolveCurrentScreenDetailed } from '../../../shared/game/logic/queries/detection';
 import { clearPalaceMismatches, getPalaceMismatches } from '../../../shared/game/logic/queries/palace-fallback';
 import { describeDataset } from '../../dataset-guard';
 
-/** The live values each baseline dump records: isIndoors, palace, room, ow screen, entrance. */
 const BASELINES = {
   'test-jail-cell': { isIndoors: true, palaceIndex: 0x02, roomIndex: 0x80, overworldScreenIndex: 0x00, whichEntrance: 0x04, screenId: 'screen-133' },
   'test-throne-room': { isIndoors: true, palaceIndex: 0x02, roomIndex: 0x51, overworldScreenIndex: 0x00, whichEntrance: 0x04, screenId: 'screen-119' },
@@ -62,7 +50,6 @@ describeDataset('screen detection still catches a mislabelled room with the pala
   });
 
   it('resolves the room anyway and reports the mismatch', () => {
-    // 0x80 is a Castle room (palace 0x02); pretend the game reported the Sewers.
     const match = resolveCurrentScreenDetailed(true, 0x00, 0x80, 0x00);
     expect(match?.screen.id).toBe('screen-133');
     expect(match?.method).toBe('palace-scan');

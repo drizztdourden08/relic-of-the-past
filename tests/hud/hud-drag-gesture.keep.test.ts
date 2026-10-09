@@ -1,34 +1,5 @@
-// @vitest-environment jsdom
 /* @layer tests @kind test */
-/**
- * PREVIEW, THEN COMMIT. A drag writes the document ONCE.
- *
- * THE SHIPPED DEFECT THIS PINS. §37's stage nudge called `onOffset` on EVERY
- * `pointermove`: a one-second drag was dozens of document writes and dozens of
- * full relayouts of the tree under the cursor, and once this editor grows a
- * history it would be dozens of entries to undo one nudge. §43 closed it in
- * `behavior/useDragGesture.ts`, and the count is what proves it closed.
- *
- * IT IS COUNTED ON THE OUTLINE NOW (§47). The stage's nudge is gone with every
- * other pointer drag on that surface, so the gesture it used to be driven
- * through is driven here through the OUTLINE's drop instead. That is the hook's
- * one remaining caller, with the same preview/commit discipline. The claim is
- * arithmetic, not aesthetic, so it is counted instead of described:
- * drive a real gesture and assert `onDrop` fires EXACTLY ONCE, after the release
- * and never before it. (What the stage does instead is
- * `hud-stage-select-only.keep.test.ts`, which counts to zero.)
- *
- * The other half of the same rule is that cancel is free, because nothing was
- * written: `Escape` mid-drag leaves the document untouched, and it reaches the
- * drag instead of whatever is underneath it (§33's `drag` level).
- *
- * jsdom has no `PointerEvent`, no pointer capture and no `elementFromPoint`; a
- * `MouseEvent` under the pointer event names carries the only two fields any of
- * this reads (`clientX`/`clientY`), every capture call in the gesture is
- * optional by design so the same code path runs here as in a browser, and the
- * hit test is answered from a flat list of fixed-height rows exactly as
- * `hud-drag-ghost.keep.test.ts` does it (see that file's own note).
- */
+// @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -120,9 +91,6 @@ const mountOutline = (onDrop: (ids: readonly string[], intent: unknown) => void)
   })));
 };
 
-/** Press on `magic-bar`, then `frames` moves inside the lower half of `hearts`'
- *  middle band. It is the same drop every frame, which is the point: the preview
- *  re-resolves and the document still is not written. */
 const driveFrames = (frames: number): number => {
   layOutRows();
   const target = rowFor('hearts').top + 14;
@@ -139,11 +107,7 @@ describe('one drag is one edit', () => {
     mountOutline(onDrop);
     const target = driveFrames(12);
 
-    // TWELVE frames of a live drag, and the document has not been touched.
-    // Against the code §43 replaced this is twelve writes.
     expect(onDrop).toHaveBeenCalledTimes(0);
-    // It is not idle, though. Every frame resolved, and the card says
-    // what the release would do.
     expect(document.querySelector('.hud-ghost__kind')?.textContent).toBe('into row');
     expect(document.querySelector('.hud-ghost__l2')?.textContent).toBe('position 3 of 3');
 

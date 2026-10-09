@@ -9,14 +9,8 @@ import {
 import { DEFAULT_SETTINGS, serializeToIni } from '../../apps/web/src/lib/game/settings';
 import { buildFeatureFlags } from '../../apps/web/src/lib/game/live-settings-flags';
 
-// Two gate layers must both pass for an in-game event to rumble:
-//   1. The C master gate (enhanced_features0 & kFeatures0_Haptics), reached via
-//      the boot INI (Haptics key) and the live push (buildFeatureFlags).
-//   2. Seven JS granular gates in the haptic service, one per event category.
-// This locks both: the master bit on both paths, and each granular gate
-// blocking only its own category.
-
-const HAPTICS_BIT = 1048576; // kFeatures0_Haptics, which must match features.h / live-settings-flags.ts
+const HAPTICS_BIT = 1048576;
+const BOMBS_ITEM = 1;
 
 const settings = (over: Partial<HapticSettings> = {}): HapticSettings => ({
   enabled: true, intensity: 100,
@@ -25,8 +19,6 @@ const settings = (over: Partial<HapticSettings> = {}): HapticSettings => ({
   ...over,
 });
 
-// Advance the clock a long way on every read so per-pattern cooldowns (module-level state that
-// persists across cases) never block a fresh fire. We assert gating, not debounce timing.
 let clock = 0;
 vi.spyOn(performance, 'now').mockImplementation(() => (clock += 100_000));
 
@@ -37,13 +29,12 @@ beforeEach(() => {
   resetDashState();
 });
 
-// Fire every event entry point once; returns how many reached the vibrate function.
 const fireAll = () => {
   handleHapticEvent(HapticEventType.SWORD_SWING, 0);
   handleHapticEvent(HapticEventType.SWORD_HIT_ENEMY, 8);
   handleHapticEvent(HapticEventType.SWORD_CLINK, 0);
   handleHapticEvent(HapticEventType.DAMAGE_TAKEN, 8);
-  handleHapticEvent(HapticEventType.ITEM_USED, 1 /* BOMBS */);
+  handleHapticEvent(HapticEventType.ITEM_USED, BOMBS_ITEM);
   handleHapticEvent(HapticEventType.ENVIRONMENTAL, EnvironmentalEvent.BOMB_EXPLODE);
   handleDashPulse();
 };
@@ -73,7 +64,7 @@ describe('haptics granular gates each block only their own category', () => {
   it('sword swing', () => {
     updateHapticSettings(settings({ swordSwing: false }));
     handleHapticEvent(HapticEventType.SWORD_SWING, 0);
-    handleSpinAttack(); // spin-attack release rides the same toggle
+    handleSpinAttack();
     expect(calls).toBe(0);
     updateHapticSettings(settings({ swordSwing: true }));
     handleHapticEvent(HapticEventType.SWORD_SWING, 0);
@@ -101,7 +92,7 @@ describe('haptics granular gates each block only their own category', () => {
   it('damage taken (incl. death)', () => {
     updateHapticSettings(settings({ damageTaken: false }));
     handleHapticEvent(HapticEventType.DAMAGE_TAKEN, 8);
-    handleDeath(); // death rides the same toggle
+    handleDeath();
     expect(calls).toBe(0);
     updateHapticSettings(settings({ damageTaken: true }));
     handleHapticEvent(HapticEventType.DAMAGE_TAKEN, 8);
@@ -110,12 +101,12 @@ describe('haptics granular gates each block only their own category', () => {
 
   it('item use (incl. hookshot-wall + boomerang-catch)', () => {
     updateHapticSettings(settings({ itemUse: false }));
-    handleHapticEvent(HapticEventType.ITEM_USED, 1 /* BOMBS */);
+    handleHapticEvent(HapticEventType.ITEM_USED, BOMBS_ITEM);
     handleHapticEvent(HapticEventType.HOOKSHOT_WALL, 0);
     handleHapticEvent(HapticEventType.BOOMERANG_CATCH, 0);
     expect(calls).toBe(0);
     updateHapticSettings(settings({ itemUse: true }));
-    handleHapticEvent(HapticEventType.ITEM_USED, 1 /* BOMBS */);
+    handleHapticEvent(HapticEventType.ITEM_USED, BOMBS_ITEM);
     expect(calls).toBe(1);
   });
 
@@ -124,7 +115,7 @@ describe('haptics granular gates each block only their own category', () => {
     handleDashPulse();
     expect(calls).toBe(0);
     updateHapticSettings(settings({ dashVibration: true }));
-    resetDashState(); // clear the inter-pulse throttle
+    resetDashState();
     handleDashPulse();
     expect(calls).toBe(1);
   });
@@ -132,7 +123,7 @@ describe('haptics granular gates each block only their own category', () => {
   it('environmental effects', () => {
     updateHapticSettings(settings({ environmentalEffects: false }));
     handleHapticEvent(HapticEventType.ENVIRONMENTAL, EnvironmentalEvent.BOMB_EXPLODE);
-    handleEnvironmental(EnvironmentalEvent.MIRROR_WARP); // polling path rides the same toggle
+    handleEnvironmental(EnvironmentalEvent.MIRROR_WARP);
     expect(calls).toBe(0);
     updateHapticSettings(settings({ environmentalEffects: true }));
     handleHapticEvent(HapticEventType.ENVIRONMENTAL, EnvironmentalEvent.BOMB_EXPLODE);
@@ -140,9 +131,8 @@ describe('haptics granular gates each block only their own category', () => {
   });
 
   it('an unrelated toggle being off does not block other categories', () => {
-    // Only sword-swing off; everything else must still pass.
     updateHapticSettings(settings({ swordSwing: false }));
-    fireAll(); // sword-swing is one of the 7 fired; the other 6 should ring
+    fireAll();
     expect(calls).toBe(6);
   });
 });

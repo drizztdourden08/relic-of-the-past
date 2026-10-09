@@ -9,11 +9,6 @@ import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/bui
 import type * as DataTableModule from '../../apps/web/src/ui/design-system/composites/DataTable';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests (no jsdom): real collections render, a keyless table is
-// silent. Drag and drop, carets, actions and the portalled ⋯ / + menus need a
-// live DOM. HeaderCell, GroupRow, the footer and view-signature each have
-// their own file.
-
 const screens = all('screen') as readonly Record<string, unknown>[];
 const connections = all('connection') as readonly Record<string, unknown>[];
 const getRowId = (row: Record<string, unknown>): string => String(row.id);
@@ -26,8 +21,6 @@ beforeEach(async () => {
   vi.resetModules();
   load = vi.fn().mockResolvedValue({});
   save = vi.fn().mockResolvedValue(undefined);
-  // The view-state binding reaches lib/storage -> log-bus, which touches
-  // window at module load, so the stub has to precede the import.
   vi.stubGlobal('window', {
     api: { uiViews: { load, save } },
     addEventListener: () => {},
@@ -63,8 +56,8 @@ describeDataset('DataTable renders real collections', () => {
 
   it('shows only the fallback columns when it is given some', () => {
     const markup = renderTable(screens, { fallbackColumns: [{ path: 'id' }, { path: 'kind' }] });
-    // Two columns plus the trailing cell, which now holds nothing.
-    expect(markup.match(/data-table__header-cell(?!--trailing)/g)).toHaveLength(3);
+    const twoColumnsAndTheEmptyTrailingCell = 3;
+    expect(markup.match(/data-table__header-cell(?!--trailing)/g)).toHaveLength(twoColumnsAndTheEmptyTrailingCell);
     expect(markup).toContain('data-table__header-cell--trailing');
   });
 
@@ -75,8 +68,6 @@ describeDataset('DataTable renders real collections', () => {
   });
 
   it('draws a boundary line at every column\'s trailing edge, not only under the cursor', () => {
-    // The seam element carries the line; its resting colour is what makes the
-    // boundary permanent, and there is exactly one per real column.
     const markup = renderTable(screens, { fallbackColumns: [{ path: 'id' }, { path: 'kind' }] });
     expect(markup.match(/data-table__resize/g)).toHaveLength(2);
   });
@@ -101,7 +92,6 @@ describeDataset('DataTable renders real collections', () => {
 
   it('parks a ghost per header carrying real values out of that column', () => {
     const markup = renderTable(screens, { fallbackColumns: [{ path: 'id' }] });
-    // One strip per column, each holding a capped sample and owning the rest.
     expect(markup.match(/data-table__drag-ghost"/g)).toHaveLength(1);
     expect(markup).toContain(getRowId(screens[0]));
     expect(markup).toContain(`+${screens.length - 6} more`);
@@ -141,8 +131,6 @@ describeDataset('DataTable renders real collections', () => {
   });
 
   it('publishes one track list for the whole grid, with nothing measured yet', () => {
-    // Nothing has been laid out on the server, so no column can be falling back
-    // to its content width. Every one is on the track its own state asks for.
     const markup = renderTable(screens, { fallbackColumns: [{ path: 'id' }, { path: 'kind' }] });
     expect(markup).toContain('--dt-tracks');
     expect(markup).not.toContain('1fr 1fr');

@@ -1,5 +1,4 @@
 /* @layer test @kind test */
-/** Disconnect pause: the game pauses when ANY device in the active profile's map goes missing, not just the assigned one. */
 
 import { describe, it, expect } from 'vitest';
 import type { InputProfile, ButtonMapping, DetectedDevice, AssignedDevice } from '@shared/types/controls';
@@ -37,7 +36,7 @@ describe('PauseManager.checkControllerDisconnect', () => {
   it('pauses when a mapped device is missing, naming it', () => {
     const { pm, events } = makePM();
     const p = profile([padBinding('045e', '02ff', 0)], assigned('057e', '2009', 'Switch Pro'));
-    const connected = new Set(['045e:02ff']); // the Switch (057e:2009) is gone
+    const connected = new Set(['045e:02ff']);
     pm.checkControllerDisconnect(p, connected, [device('057e', '2009', 'Switch Pro')]);
     expect(pm.isPaused).toBe(true);
     expect(events.at(-1)).toEqual({ paused: true, name: 'Switch Pro' });
@@ -59,7 +58,7 @@ describe('PauseManager.checkControllerDisconnect', () => {
 
   it('is a no-op when already paused', () => {
     const { pm, events } = makePM();
-    pm.togglePause(); // manual pause
+    pm.togglePause();
     const before = events.length;
     pm.checkControllerDisconnect(profile([padBinding('045e', '02ff', 0)], null), new Set(), []);
     expect(events.length).toBe(before);
@@ -81,7 +80,8 @@ describe('PauseManager.resumeIfPresent', () => {
   it('does not resume while a mapped device is still missing (a wrong controller connects)', () => {
     const { pm } = makePM();
     pm.checkControllerDisconnect(p(), new Set(), [device('057e', '2009', 'Switch Pro')]);
-    pm.resumeIfPresent(p(), new Set(['1234:5678'])); // unrelated pad
+    const unrelatedPad = '1234:5678';
+    pm.resumeIfPresent(p(), new Set([unrelatedPad]));
     expect(pm.isPaused).toBe(true);
   });
 
@@ -108,7 +108,7 @@ describe('PauseManager.reevaluateForProfile (profile switch)', () => {
     pm.checkControllerDisconnect(gone, new Set(), [device('057e', '2009', 'Switch Pro')]);
     expect(pm.isPaused).toBe(true);
     const kbd = profile([{ snesButton: 'A', binding: { type: 'keyboard', code: 'KeyZ' }, icon: null }], null);
-    pm.reevaluateForProfile(kbd, new Set(), []); // keyboard profile has no mapped pads
+    pm.reevaluateForProfile(kbd, new Set(), []);
     expect(pm.isPaused).toBe(false);
   });
 

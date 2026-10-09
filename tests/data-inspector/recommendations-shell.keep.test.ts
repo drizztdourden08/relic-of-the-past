@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The shell around the comparison view: the permanent rail entry (a review
- * pass is navigable directly, like the eleven real collections) and the
- * foldable detail column (the Controls page's Profiles column mechanism,
- * reused). Pinned: which glyph is shown, and the modifier class the CSS hangs off.
- */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -57,14 +51,10 @@ describe('the foldable detail column', () => {
     expect(html).toContain('◀');
   });
 
-  // The CSS hides the content instead of unmounting it, so a fold never
-  // discards a half-made amendment in the pane behind it.
   it('keeps the panes mounted while folded', () => {
     expect(render('Comparison', true)).toContain('the panes');
   });
 
-  // The component knows nothing about recommendations: it takes any title and
-  // children, so a plain collection's detail pane uses it too (DataInspector.tsx).
   it('works the same for a plain collection\'s title as for the comparison\'s', () => {
     const html = render('Screens', true);
     expect(html).toContain('collapsible-detail--collapsed');

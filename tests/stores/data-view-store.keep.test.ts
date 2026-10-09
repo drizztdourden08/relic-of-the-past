@@ -3,10 +3,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { DEFAULT_SESSION_VIEW, useDataViewStore } from '../../apps/web/src/stores/data-view-store';
 import type { ViewKey } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 
-// Session state is in-memory, keyed like durable snapshots. Pinned: isolation
-// (one collection's view never leaks into another's) and the default for an
-// unwritten key.
-
 const SCREEN = 'data-inspector:screen' as ViewKey;
 const ITEM = 'data-inspector:item' as ViewKey;
 
@@ -67,15 +63,10 @@ describe('data-view-store keeps per-key isolation', () => {
     useDataViewStore.getState().setSessionView(SCREEN, { ...DEFAULT_SESSION_VIEW, scrollTop: 10, selectedId: 'screen-1' });
     useDataViewStore.getState().setSessionView(SCREEN, { ...DEFAULT_SESSION_VIEW, scrollTop: 30 });
 
-    // The second call carried no selectedId, and whole-object semantics mean
-    // it is gone, not merged forward from the first call.
     expect(useDataViewStore.getState().getSessionView(SCREEN)).toEqual({ ...DEFAULT_SESSION_VIEW, scrollTop: 30 });
   });
 });
 
-// `openRecord` is the plain-record sibling of `openRecommendation`: same
-// bargain (stash the request, ring the registered opener), a different field
-// so a pending finding and a pending plain record never clobber each other.
 describe('data-view-store openRecord, the plain-record handoff', () => {
   it('starts with nothing pending', () => {
     expect(useDataViewStore.getState().pendingRecord).toBeNull();

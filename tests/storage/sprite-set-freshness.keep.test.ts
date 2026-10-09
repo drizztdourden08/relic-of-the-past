@@ -1,17 +1,4 @@
 /* @layer test @kind test */
-/**
- * The two hops an item listing's art depends on, both of which have silently
- * broken before.
- *
- * 1. The STALENESS decision. Every extraction bump (a new format version, a new
- *    binary beside the PNGs, a changed drawing) has to keep answering the same
- *    three questions the same way, or a complete current set gets thrown away
- *    and rewritten on every boot, or, worse, an incomplete one is kept.
- * 2. The URL of a REWRITTEN set. An extraction clears the folder before writing
- *    it again at the same names, so every image on screen fails for the
- *    duration and the primitive remembers the failure per source. Unless the
- *    URLs change, the rows stay on placeholders for the rest of the session.
- */
 import { describe, it, expect, beforeEach } from 'vitest';
 import * as sprites from '@shared/storage/sprites';
 import { EXTRACTION_STAMP_FILE, extractionVersionOf } from '@shared/asset-extraction/item-sprites/extraction-stamp';
@@ -32,7 +19,6 @@ const DEFS = SPRITE_DEFINITIONS as unknown as { file: string }[];
 const EXPECTED = sprites.extractedFileNames(DEFS);
 const VERSION = extractionVersionOf(DEFS as never);
 
-/** A set exactly as the current extraction would leave it on disk. */
 const writeCurrentSet = async (files: FileStore): Promise<void> => {
   for (const name of EXPECTED) await files.writeBytes(`${DIR}/${name}`, new Uint8Array([1]));
   await files.writeText(`${DIR}/${EXTRACTION_STAMP_FILE}`, JSON.stringify({ version: VERSION }));

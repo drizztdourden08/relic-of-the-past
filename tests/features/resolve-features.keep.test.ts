@@ -3,11 +3,6 @@ import { describe, it, expect } from 'vitest';
 import { resolveFeatures, requirementClosure, suggestionsFor } from '../../shared/features/resolve-features';
 import { FEATURES_BY_ID } from '../../shared/features/feature-registry';
 
-// Locks the rendering dependency tree (plans/settings-registry-map.md §4): a
-// child never resolves on while its parent is off, in any order.
-// Tree: extendedRendering → linearWorldTilemap → {ultrawideRendering, tallRendering};
-//       cameraLockToViewport → extendedRendering; smoothTransitions → cameraLockToViewport.
-
 describe('resolveFeatures prunes requirements', () => {
   it('drops a child whose requirement is missing', () => {
     const { effective, autoDisabled } = resolveFeatures(['cameraLockToViewport']);
@@ -22,7 +17,6 @@ describe('resolveFeatures prunes requirements', () => {
   });
 
   it('prunes to a fixpoint, so disabling the root cascades to grandchildren', () => {
-    // tallRendering → linearWorldTilemap → extendedRendering. Without the root the whole chain collapses.
     const { effective } = resolveFeatures(['linearWorldTilemap', 'tallRendering']);
     expect(effective.size).toBe(0);
   });

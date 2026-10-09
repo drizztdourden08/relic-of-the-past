@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The recommendations pseudo-collection's rows. Columns are KIND-AGNOSTIC
- * (a findings list mixes collections). Order is review order: certain first
- * (the batch-accept gate), oldest first within each. A decided finding is gone
- * from the list, which is what makes Reject "remove from view".
- */
 import { describe, it, expect } from 'vitest';
 import {
   byConfidenceThenAge, openRecommendations, recommendationRows,
@@ -12,9 +6,6 @@ import {
 import {
   RECOMMENDATION_GROUP_BY, RECOMMENDATION_SCHEMA, recommendationSource,
 } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-source';
-// Imported from its own module instead of the `@ds/data` barrel on purpose:
-// the barrel pulls in the view-state binding, which touches `window` at
-// module load.
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import type { Recommendation } from '@shared/game/recommendations';
 
@@ -50,14 +41,10 @@ describe('recommendationRows builds one flat, kind-agnostic table', () => {
       entry({ id: 'a', kind: 'screen', targetId: 'screen-001' }),
       entry({ id: 'b', kind: 'item', targetId: 'item-004' }),
     ]);
-    // Every row declares the same keys, so nothing leaks in from one record shape.
     expect(Object.keys(rows[0])).toEqual(Object.keys(rows[1]));
   });
 
   it('keeps a create\'s missing target/screen as null, not a placeholder string', () => {
-    // A literal dash would be a sampled STRING that fails the id pattern and
-    // degrades the column to text (see the file header). null is invisible to
-    // the sampler.
     const [row] = recommendationRows([entry({ action: 'create', targetId: null, screenId: null })]);
     expect(row.targetId).toBeNull();
     expect(row.screenId).toBeNull();
@@ -141,7 +128,6 @@ describe('the pseudo-collection source', () => {
   it('identifies a row by the finding id, and declares no write path', () => {
     const source = recommendationSource([entry({ id: 'r-42' })]);
     expect(source.getId(source.rows[0])).toBe('r-42');
-    // A finding is not a record: nothing here creates, emits or saves one.
     expect(source.onSave).toBeUndefined();
     expect(source.serialize).toBeUndefined();
   });

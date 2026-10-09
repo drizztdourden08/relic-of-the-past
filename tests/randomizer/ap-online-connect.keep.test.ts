@@ -1,12 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Reaching the room, against the fake server and the recording core: a server that is down
- * at the first connect is retried on the backoff with a countdown until it answers, and a
- * refusal is not retried and reads as one sentence. An item at a negative location is the
- * server's own, even when this slot asked for it. The save in play is bound to the room at
- * Connected and after every save swap, before any check or item crosses: a save of another
- * room ends the session with nothing sent.
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
 import { backoffDelay } from '@app/lib/game/randomizer-client/reconnect';

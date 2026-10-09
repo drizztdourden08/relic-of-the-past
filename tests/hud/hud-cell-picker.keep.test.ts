@@ -1,16 +1,5 @@
-// @vitest-environment jsdom
 /* @layer tests @kind test */
-/**
- * §50's `CellPicker` is the child's own control, and the ONLY place in the panel
- * where clicking a cell writes anything.
- *
- * THE TWO CONTROLS LOOK ALIKE AND MEAN OPPOSITE THINGS, which is exactly the
- * confusion the maintainer warned about, so the pair of properties asserted here
- * is the pair that keeps them apart: this one writes a child and cannot touch a
- * track; `GridEditor` writes tracks and cannot touch a child
- * (`hud-grid-editor.keep.test.ts`). Each one says which it is in its own header,
- * and that is asserted too, because it is the only thing a reader has to go on.
- */
+// @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -105,7 +94,6 @@ describe('shift and drag set the span', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     over(cell(2, 2));
     over(cell(3, 3));
-    // Nothing is written while the pointer travels.
     expect(onChange).toHaveBeenCalledTimes(1);
     up(cell(3, 3));
     expect(onChange).toHaveBeenCalledTimes(2);

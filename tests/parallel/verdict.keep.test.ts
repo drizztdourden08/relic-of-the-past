@@ -1,9 +1,4 @@
 /* @layer test @kind test */
-/**
- * The verdict rules decide whether an agent worktree may be handed over or
- * deleted. The case that matters is the refusal: uncommitted or unlanded work
- * must never come out claimable or deletable.
- */
 import { describe, it, expect } from 'vitest';
 // @ts-expect-error -- plain .mjs tooling module, no type declarations by design
 import { VERDICTS, assess, bestToClaim, verdictFor } from '../../scripts/parallel/verdict.mjs';

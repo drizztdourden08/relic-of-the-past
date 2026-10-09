@@ -4,8 +4,9 @@ import { emptySnapshot, cloneSnapshot, diffSnapshots } from '../../shared/game/s
 import { matchDiffs } from '../../shared/game/simulation/detect/check-matcher';
 import { describeDataset } from '../dataset-guard';
 
-/** Chest-open bit for slot 0, taken from the same native fact the matcher uses. */
 const CHEST_SLOT_0_MASK = 0x10;
+const STARTING_HOUSE_ROOM = 0x104;
+const UNCLAIMED_ROOM = 0x2;
 
 describeDataset('flag-snapshot diffing', () => {
   it('produces no diffs for identical snapshots', () => {
@@ -17,18 +18,18 @@ describeDataset('flag-snapshot diffing', () => {
   it('reports the changed word, index, and newly-set bits for a room flag', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.dungInfo[0x104] |= CHEST_SLOT_0_MASK; // Link's House chest 0
+    after.dungInfo[STARTING_HOUSE_ROOM] |= CHEST_SLOT_0_MASK;
 
     const diffs = diffSnapshots(before, after);
     expect(diffs).toHaveLength(1);
-    expect(diffs[0]).toMatchObject({ kind: 'room', index: 0x104, setBits: CHEST_SLOT_0_MASK });
+    expect(diffs[0]).toMatchObject({ kind: 'room', index: STARTING_HOUSE_ROOM, setBits: CHEST_SLOT_0_MASK });
   });
 
   it('diffs overworld and progress buffers independently', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.owEventInfo[0x81] |= 0x40; // Zora's Ledge
-    after.progress[2] |= 0x02;       // Bottle Merchant bit
+    after.owEventInfo[0x81] |= 0x40;
+    after.progress[2] |= 0x02;
 
     const diffs = diffSnapshots(before, after);
     const kinds = diffs.map(d => d.kind).sort();
@@ -45,17 +46,16 @@ describeDataset('flag-snapshot diffing', () => {
   it('identifies a room-flag diff as the check whose chest bit it is', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.dungInfo[0x104] |= CHEST_SLOT_0_MASK;
+    after.dungInfo[STARTING_HOUSE_ROOM] |= CHEST_SLOT_0_MASK;
     const matched = matchDiffs(diffSnapshots(before, after));
-    // The identity is the id; the name is only asserted as derived output.
     expect(matched?.id).toBe('check-026');
-    expect(matched?.gameId).toMatchObject({ roomId: 0x104, chestIndex: 0 });
+    expect(matched?.gameId).toMatchObject({ roomId: STARTING_HOUSE_ROOM, chestIndex: 0 });
   });
 
   it('identifies nothing when no check owns the changed bit', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.dungInfo[0x2] |= 0x10; // no check maps to room 0x02 chest 0
+    after.dungInfo[UNCLAIMED_ROOM] |= CHEST_SLOT_0_MASK;
     expect(matchDiffs(diffSnapshots(before, after))).toBeUndefined();
   });
 });

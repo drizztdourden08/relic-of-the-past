@@ -10,12 +10,6 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests (no jsdom): WHICH control a closed set is offered as, and
-// that it renders. Clicking, dragging and keys are not covered.
-//
-// Every enum editor is a decorator around its picker (see OpenSetControl), so
-// the prop-level assertions reach through that one hop.
-
 const SEGMENTED = 'class="segmented';
 const CHIPS = 'class="tag-picker';
 const DROPDOWN = 'class="select-trigger';
@@ -73,9 +67,6 @@ describeDataset('the enum editor control follows the option count', () => {
     expect(chips).toContain('role="radiogroup"');
   });
 
-  // Changed deliberately: this used to assert a value outside the derived set
-  // showed as no selection. The derived set is what has been SEEN, not what is
-  // allowed, so that hid real values and escape-hatch entries.
   it('shows a value the option list has never seen, and marks it active', () => {
     const markup = renderEnumEditor(enumField(6), 'nothing-like-it');
     expect(markup).toContain('nothing-like-it');

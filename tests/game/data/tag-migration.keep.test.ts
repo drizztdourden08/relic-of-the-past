@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * What the migration from string tags to tag references has to keep true.
- * The old data is gone; this checks the property the migration was FOR: every
- * tag a record holds resolves to a term the collection may carry, with no raw
- * term left and no id pointing at nothing.
- */
 import { describe, it, expect } from 'vitest';
 import { all, CONNECTION_TAG_METADATA, tagById, tagKeysOf, TAG_METADATA } from '@shared/game/data';
 import type { EntityKind } from '@shared/game/data';

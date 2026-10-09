@@ -1,28 +1,4 @@
 /* @layer test @kind test */
-/**
- * Switching a container's engine CONVERTS it, and cannot crash the editor.
- *
- * THE BUG. The editor applies edits through `patchNode`, which shallow-merges.
- * The switch handed it a freshly built flex container, so a grid was not
- * replaced - `layout: 'flex'` was laid over it, leaving `columns`, `rows`,
- * `justifyItems`, `alignItems` (unsavable: the validator refuses them) and a
- * grid's `gap: { x, y }` where flex reads one `Value`. `resolveValue` then read
- * `.expr` off an object that had none and threw inside the layout pass; nothing
- * sits above the stage to catch it, so clicking "flex" took the editor down.
- * It needed only a gap to have been set first.
- *
- * Both halves are pinned: the conversion leaves nothing of the other engine
- * behind, and the resolver keeps its own "never throws" promise even when
- * handed the malformed shape - so the NEXT merge bug costs a wrong gap, not
- * the screen.
- *
- * SINCE §57 THE FIRST HALF HAS LESS TO DO. `gap` is `{ x, y }` under BOTH
- * engines and `guide` belongs to any container, so neither is converted and
- * neither is dropped - they pass straight through, in both directions. The
- * crash above cannot be re-created by a gap at all; the malformed-shape cases
- * at the foot of this file are what still stand between a future merge bug and
- * the editor.
- */
 import { describe, expect, it } from 'vitest';
 import { layoutHud } from '../../shared/hud/engine';
 import { validateLayout } from '../../shared/hud/layouts';
@@ -49,8 +25,6 @@ describe('grid -> flex, with the gap that used to crash it', () => {
   const node = screenOf(flex) as unknown as Record<string, unknown>;
 
   it('leaves nothing of the grid behind', () => {
-    // `guide` is NOT in this list since §57: it is a CONTAINER's overlay colour,
-    // not a grid's, and the stage draws a flex container's slots in it too.
     for (const key of ['columns', 'rows', 'justifyItems', 'alignItems']) {
       expect(key in node, `${key} should be gone`).toBe(false);
     }
@@ -58,10 +32,6 @@ describe('grid -> flex, with the gap that used to crash it', () => {
   });
 
   it('passes the gap straight through - both axes, untouched (§57)', () => {
-    // There is no longer a key the two engines spell differently. `x` is
-    // horizontal and `y` vertical under flex as well, so a row that was a grid
-    // keeps the SAME two numbers instead of collapsing to the one along its
-    // flow: nothing is lost, and flipping back restores the grid exactly.
     expect(node.direction).toBe('row');
     expect(node.gap).toEqual({ x: 2, y: 3 });
   });
@@ -95,15 +65,12 @@ describe('flex -> grid, and back again', () => {
   });
 
   it('never strands a child outside the new grid', () => {
-    // The screen's children still name column 3 from before the round trip.
     expect((node.columns as unknown[]).length).toBeGreaterThanOrEqual(3);
     expect(validateLayout(JSON.parse(JSON.stringify(grid))).errors).toEqual([]);
     expect(() => layoutHud(grid, VIEW, {})).not.toThrow();
   });
 
   it('passes a flex gap straight through to the grid (§57)', () => {
-    // A flex gap IS `{ x, y }` now, so the conversion has nothing to reshape:
-    // the pair arrives as it left, both axes intact.
     const gapped = patchNode(flex, flex.screen.id, { gap: { x: 4, y: 6 } } as never);
     expect((screenOf(switched(gapped, 'grid')) as unknown as Record<string, unknown>).gap).toEqual({ x: 4, y: 6 });
   });

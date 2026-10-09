@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The default id-ref display: `defaultIdRefDisplay` resolves a kind off the
- * id's own prefix when neither column nor field supplies one (the
- * Recommendations table's `targetId` column). Split from
- * `id-ref-display.test.ts` for the line cap.
- */
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -18,7 +12,6 @@ import type * as DataRowModule from '../../apps/web/src/ui/design-system/composi
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-/** What a generic row looks like once it is through a dot-path read. */
 type InspectorLikeRow = Record<string, unknown>;
 
 const screens = all('screen') as unknown as readonly InspectorLikeRow[];
@@ -30,9 +23,6 @@ const NAME_PATH = 'name';
 let DataRow: typeof DataRowModule.DataRow;
 
 beforeAll(async () => {
-  // record-links.ts is a plain @shared/game/data import and needs no stub, but
-  // DataRow's own module graph reaches the same view-state chain the sibling
-  // file stubs for. See that file's note.
   vi.stubGlobal('window', {
     api: { uiViews: { load: vi.fn().mockResolvedValue({}), save: vi.fn().mockResolvedValue(undefined) } },
     addEventListener: () => {},
@@ -49,7 +39,6 @@ const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   return field;
 };
 
-/** A screen that really does point at an area, and the area it points at. */
 const sample = (() => {
   const row = screens.find((entry) => typeof entry[AREA_PATH] === 'string');
   if (!row) throw new Error('no screen carries an area reference');
@@ -77,9 +66,6 @@ describeDataset('substituteDisplay falls back by default for a column with no di
     expect(substituteDisplay(sample.id, textField, { resolveDefault: defaultIdRefDisplay })).toBeUndefined();
   });
 
-  // A MIXED column (every row's id names a different collection, like the
-  // Recommendations `targetId`) has no single `field.targetKind`. Each id
-  // resolves on its own.
   it('resolves per row from the id itself when the column carries no targetKind', () => {
     const [actor] = all('actor');
     const mixedField: FieldDescriptor = { ...field, targetKind: undefined };
@@ -88,14 +74,7 @@ describeDataset('substituteDisplay falls back by default for a column with no di
   });
 });
 
-/**
- * Stand-in for the Recommendations `targetId` column: `buildSchema` derives
- * `targetKind: undefined`, so only each row's own id says what it points at.
- * Wired with no `displayField`, as the real table is.
- */
 describeDataset('the rendered table with a mixed-target-kind column and only the default resolver wired', () => {
-  // `sample.id` is an AREA id (see `sample` above). Paired with an actor,
-  // that is already two different collections in one column.
   const [actor] = all('actor');
   const mixedRows = [
     { id: 'finding-1', targetId: sample.id },
@@ -137,19 +116,12 @@ describeDataset('the rendered table with a mixed-target-kind column and only the
     expect(markup).not.toContain(`>${actor.id}<`);
   });
 
-  // Navigation already falls back to the id's prefix (`resolveIdRef` in
-  // `id-ref-target.ts`). The display fix must not change that.
   it('still resolves to the right collection on click, via the id\'s own prefix', () => {
     expect(entityKindFromId(actor.id)).toBe('actor');
     expect(entityKindFromId(sample.id)).toBe('area');
   });
 });
 
-/**
- * A collection's own `id` infers as `idRef` to its own collection. With the
- * default resolver it would show the record's name instead of the id, so the
- * `Id` column is exempt.
- */
 describeDataset('the identity field is exempt from the default and always shows its own id', () => {
   const idField = fieldAt(screens, 'id');
 

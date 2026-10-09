@@ -100,8 +100,6 @@ describe('serializeConnectionRecord emits a record', () => {
   });
 });
 
-// Compile-time guard: the shape the serializer emits must be a valid
-// ConnectionRecord.nav. If ConnectionNavData drifts, this const fails tsc.
 const ROUND_TRIP: ConnectionRecord = {
   id: 'connection-897',
   kind: 'edge',

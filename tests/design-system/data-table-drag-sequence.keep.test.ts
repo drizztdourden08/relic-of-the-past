@@ -15,16 +15,6 @@ import type {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
 import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// The failure this file exists for: the FIRST drop landed and every drop after
-// was refused. So every case runs a gesture, checks it landed, then runs
-// ANOTHER against the list the first produced.
-//
-// The refusal was geometric: columns step aside to open a gap, and a cursor
-// held still ends up on bare grid no cell owns, which the browser cancels
-// (`dragend` fires, `drop` never does). That needs a real browser. Pinned here:
-// the surface behind the cells says yes to the drag, and a cell's own drop is
-// not answered twice.
-
 const PATHS = ['a', 'b', 'c', 'd', 'e'] as const;
 const COLUMNS: readonly TableColumn[] = PATHS.map((path) => ({ path }));
 
@@ -57,8 +47,6 @@ describe('two reorders in a row, each read off what the last one left', () => {
 
   it('reads the second drag off the NEW positions because the old index is a different column now', () => {
     const once = reorderColumn(COLUMNS, 'a', 3);
-    /* 'a' sat at 0 and now sits at 3; a second gesture that still thought it
-       was at 0 would pick up 'b' instead and land somewhere else entirely. */
     expect(indexOf(once, 'a')).toBe(3);
     expect(pathsOf(reorderColumn(once, once[0].path, 4))).toEqual(['c', 'd', 'a', 'e', 'b']);
   });
@@ -94,10 +82,6 @@ describe('the preview still tells the truth on the second gesture', () => {
     });
   });
 });
-
-// The hook, driven straight. No DOM, so it never commits state, which is the
-// condition the drop handler must survive: with no remembered path it falls
-// back to the one the drag carries.
 
 interface FakeEvent {
   event: DragEvent<HTMLElement>;

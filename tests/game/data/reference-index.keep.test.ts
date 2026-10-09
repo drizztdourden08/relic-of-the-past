@@ -1,30 +1,24 @@
 /* @layer tests @kind test */
-/**
- * `referencesTo` backs the delete-guard UI ("what still points at this before
- * you remove it"): it must find a real reference and return empty for a group
- * nothing points at.
- */
 import { describe, it, expect } from 'vitest';
 import { referencesTo } from '../../../shared/game/data/relationships/reference-index';
 import { all, ITEM_GROUP_IDS } from '@shared/game/data';
 import { describeDataset } from '../../dataset-guard';
 
+const CHECK_NEEDING_THREE_PENDANTS = 'check-072';
+const CHECK_NEEDING_A_BOTTLE = 'check-041';
+
 describeDataset('referencesTo', () => {
   it('finds the check that uses a given item group', () => {
-    // check-072 requires { count: { groupId: Pendants, n: 3 } } in its own data.
     const hits = referencesTo('item-group', ITEM_GROUP_IDS.Pendants);
-    expect(hits).toContainEqual({ kind: 'check', id: 'check-072', field: 'requirements' });
+    expect(hits).toContainEqual({ kind: 'check', id: CHECK_NEEDING_THREE_PENDANTS, field: 'requirements' });
   });
 
   it('finds a second, independent check that uses a different item group', () => {
-    // check-041 requires { count: { groupId: Bottles, n: 1 } } in its own data.
     const hits = referencesTo('item-group', ITEM_GROUP_IDS.Bottles);
-    expect(hits).toContainEqual({ kind: 'check', id: 'check-041', field: 'requirements' });
+    expect(hits).toContainEqual({ kind: 'check', id: CHECK_NEEDING_A_BOTTLE, field: 'requirements' });
   });
 
   it('returns empty for an item group nothing currently references', () => {
-    // Swords is a real, seeded group, but no CheckRecord/ConnectionRecord/ActorRecord
-    // bakes a { count: { groupId: Swords } } leaf into its static requirements today.
     expect(referencesTo('item-group', ITEM_GROUP_IDS.Swords)).toEqual([]);
   });
 
@@ -33,8 +27,6 @@ describeDataset('referencesTo', () => {
   });
 
   it('finds a tag reference on the real screen or connection that carries it', () => {
-    // Picks a real tag off the live dataset instead of hardcoding an id, so
-    // the assertion holds regardless of how the seed data is renumbered.
     const tagged = all('screen').find(screen => screen.tags.length > 0);
     expect(tagged).toBeDefined();
     const tagId = tagged!.tags[0];

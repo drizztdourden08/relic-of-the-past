@@ -1,11 +1,4 @@
 /* @layer test @kind test */
-/**
- * Phase 5 of `plans/hud-data-binding.html`: the eight prebuilt subtrees, the
- * migration that rewrites a stored document naming one of the four deleted
- * kinds (`life`/`magic`/`consumables`/`wallet`), and the `shape` leaf those
- * two things lean on (a heart and the magic bar - see `hud-shape.ts` for why
- * a sprite/tint composition cannot draw either).
- */
 import { describe, expect, it } from 'vitest';
 import { quantiseHeartFill } from '@app/ui/domains/hud/compounds/HudShape';
 import { aspectOf, intrinsicSize, layoutHud } from '@shared/hud/engine';
@@ -47,8 +40,6 @@ describe('the eight presets - every one is a valid, self-contained subtree', () 
     if (!a || !b) return;
     const idsA = everyId(a);
     const idsB = everyId(b);
-    // No collision within one copy, none against the other, and none against
-    // the template's own ids - two inserts of the same preset never collide.
     expect(new Set(idsA).size).toBe(idsA.length);
     expect(idsA.some((id) => idsB.includes(id))).toBe(false);
   });
@@ -91,9 +82,8 @@ describe('a heart is a shape, not a sprite switch - the model this phase had to 
   });
 
   it('original mode quantises a continuous fraction the same way the console rounds up to the next quarter heart', () => {
-    // A heart at exactly 4/8 (half) reads half; just over reads half until 5/8.
     expect(quantiseHeartFill(0)).toBe(0);
-    expect(quantiseHeartFill(1 / 8)).toBe(0.5); // rounds up to the next quarter
+    expect(quantiseHeartFill(1 / 8)).toBe(0.5);
     expect(quantiseHeartFill(4 / 8)).toBe(0.5);
     expect(quantiseHeartFill(5 / 8)).toBe(1);
     expect(quantiseHeartFill(1)).toBe(1);
@@ -125,7 +115,6 @@ describe('a stored document naming a deleted kind is migrated once, on load', ()
     expect(result.ok, type).toBe(true);
     if (!result.ok) return;
     const migrated = (result.doc.screen.children[0] as HudContainer).children[0];
-    // No alias: the deleted kind never appears anywhere in what comes back.
     expect(JSON.stringify(migrated)).not.toContain(`"${type}"`);
   });
 
@@ -133,9 +122,6 @@ describe('a stored document naming a deleted kind is migrated once, on load', ()
     const result = tryLoadLayout(legacyDoc('wallet'));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    // `scale: 0.5` was authored on the old `wallet` node directly - it must
-    // survive onto the replacement subtree's root, the same as a player's own
-    // saved layout would expect.
     expect((result.doc.screen.children[0] as HudContainer).children[0].scale).toBe(0.5);
   });
 

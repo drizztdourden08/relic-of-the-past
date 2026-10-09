@@ -1,11 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The renderer's read model of the recommendation store. It never merges an
- * edit of its own: a verdict goes to the main process and what comes back
- * replaces the cache wholesale, so two quick accepts cannot disagree. The
- * flattened snapshot must be stable between changes (`useSyncExternalStore`
- * compares it; a fresh array per read re-renders forever).
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type * as CacheModule from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-cache';
 import type { Recommendation } from '@shared/game/recommendations';

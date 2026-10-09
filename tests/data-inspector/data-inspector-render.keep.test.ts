@@ -11,12 +11,6 @@ import type * as SchemaModule from '../../apps/web/src/ui/design-system/data/sch
 import type { DetailTab } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests (no jsdom). The active collection is React state, which SSR
-// cannot drive, so the detail panel is rendered once per collection against
-// its own source, schema and first record, on each of the three tabs.
-// Not covered: clicking a row or an id reference, switching collection, and
-// anything portalled.
-
 const KINDS = ['screen', 'connection', 'check', 'item', 'dungeon', 'area', 'location', 'actor'] as const;
 const TABS: readonly DetailTab[] = ['json', 'ts', 'editor'];
 
@@ -27,8 +21,6 @@ let buildSchema: typeof SchemaModule.buildSchema;
 
 beforeEach(async () => {
   vi.resetModules();
-  // The view-state binding reaches lib/storage -> log-bus, which touches
-  // window at module load, so the stub has to precede the import.
   vi.stubGlobal('window', {
     api: { uiViews: { load: vi.fn().mockResolvedValue({}), save: vi.fn().mockResolvedValue(undefined) } },
     addEventListener: () => {},
@@ -74,9 +66,6 @@ describeDataset('DataInspector', () => {
     for (const kind of KINDS) expect(html, kind).toContain(`>${COLLECTION_SOURCES[kind].label}<`);
   });
 
-  // The delegated handler reads these two attributes off the clicked element,
-  // so their presence in the markup is the half of that contract a renderless
-  // test can check. The click itself needs a DOM and is not covered here.
   it('publishes what an id reference points at, for the click handler to read', () => {
     const html = renderToStaticMarkup(createElement(DataInspector));
     expect(html).toContain('data-id-ref=');
@@ -101,9 +90,6 @@ describeDataset('DataInspector detail panel', () => {
     }
   });
 
-  // Every collection is writable now, so the note this used to look for has
-  // nowhere left to appear. What is still worth pinning is the other half of
-  // the same rule: a collection with a write path must not be told it has none.
   it('never claims a writable collection cannot save', () => {
     const NOTE = 'No write path is wired';
     for (const kind of KINDS) {

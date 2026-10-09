@@ -14,14 +14,6 @@ import type { LoadGuard } from '../../apps/web/src/ui/design-system/data/view-st
 import type { TableState, ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// The reported bug: clear the filter clauses one at a time and an EARLIER set
-// reappears. A read still in flight when the user started editing came back
-// describing the old view and was applied unconditionally.
-//
-// No DOM here, so the sequence replays what the hook does: the real
-// beginDurableLoad, the real repository, the real markEdited-then-write, with
-// the answer held back until after the removals. The race is deterministic.
-
 const KEY = 'data-inspector-query:screen' as ViewKey;
 const OTHER_KEY = 'data-inspector-query:check' as ViewKey;
 const NO_TABLE: TableState = { columns: [], sort: [], groupBy: [] };
@@ -43,7 +35,6 @@ const clauseOn = (value: string): FilterClause =>
 const withFilters = (...filters: readonly FilterClause[]): ViewSnapshot =>
   capture(NO_TABLE, filters);
 
-/** Lets the whole promise chain (load -> apply, load -> queued write) settle. */
 const settle = async (): Promise<void> => {
   await vi.advanceTimersByTimeAsync(0);
 };
@@ -108,7 +99,6 @@ describe('load guard and which read is still allowed to land', () => {
 });
 
 describe('a read that comes back late', () => {
-  /** Stands in for the hook: local state, one guard, and the two calls it makes. */
   const mountView = (key: ViewKey) => {
     const guard: LoadGuard = createLoadGuard();
     const view = { snapshot: withFilters(), guard };
@@ -136,12 +126,10 @@ describe('a read that comes back late', () => {
     const { view, setSnapshot } = mountView(KEY);
     const [first, second, third] = [clauseOn('a'), clauseOn('b'), clauseOn('c')];
 
-    // The user clears three clauses one at a time while the read is still out.
     setSnapshot(withFilters(first, second));
     setSnapshot(withFilters(first));
     setSnapshot(withFilters());
 
-    // Only now does the disk answer, with what was saved before this session.
     answer({ [KEY]: withFilters(third) });
     await settle();
 
@@ -182,8 +170,6 @@ describe('switching collections', () => {
     const saved = clauseOn('kept');
     load.mockResolvedValue({ [OTHER_KEY]: withFilters(saved) });
 
-    // One hook instance, two keys in turn: the first is edited, then the effect
-    // re-runs for the second and there is nothing local to preserve.
     const guard = createLoadGuard();
     let snapshot: ViewSnapshot = withFilters();
 

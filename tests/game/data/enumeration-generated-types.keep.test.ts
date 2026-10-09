@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * `enumeration.generated.type.ts` is committed, not built on the fly, so an edit to
- * `ALL_ENUMERATION` without `npm run generate:enum-types` would go unnoticed.
- * This regenerates the source in memory and diffs it byte for byte.
- */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, it, expect } from 'vitest';
@@ -13,7 +8,6 @@ import { describeDataset } from '../../dataset-guard';
 
 const GENERATED_FILE = resolve(__dirname, '../../../shared/game/data/enumeration/enumeration.generated.type.ts');
 
-/** The categories the generator emits a union for: the rule, not a count. */
 const GENERATED_CATEGORIES = new Set(Object.keys(CATEGORY_TYPE_NAMES as Record<string, string>));
 
 describeDataset('enumeration/enumeration.generated.type.ts', () => {
@@ -23,9 +17,6 @@ describeDataset('enumeration/enumeration.generated.type.ts', () => {
     expect(committed).toBe(fresh);
   });
 
-  // Only the categories the generator actually emits. A category can be seeded for its labels alone
-  // and deliberately left out of the codegen (progress-tier labels a numeric field, so retyping it to
-  // a string union would be wrong), and those values are correctly absent from the generated source.
   it('carries every value ALL_ENUMERATION seeds for each generated category', () => {
     const source = readFileSync(GENERATED_FILE, 'utf8');
     const byCategory = new Map<string, string[]>();
@@ -40,12 +31,6 @@ describeDataset('enumeration/enumeration.generated.type.ts', () => {
     }
   });
 
-  /**
-   * A category earns a union only when the field it labels stores the value as a
-   * string. One labels a numeric field, so generating its union would retype
-   * that field to string literals. The generator's category table is what
-   * decides, and this holds that line.
-   */
   it('leaves a category that labels a non-string field out of the unions', () => {
     const source = readFileSync(GENERATED_FILE, 'utf8');
     const ungenerated = ALL_ENUMERATION.filter((entry) => !GENERATED_CATEGORIES.has(entry.category));

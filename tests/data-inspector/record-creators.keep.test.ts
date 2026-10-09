@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The create-flow's write half: one adapter per collection's `Allocate*`
- * shape. Each folds the record into the live registry, publishes it as an
- * id-ref option, and rebuilds the `CollectionSource`.
- */
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';

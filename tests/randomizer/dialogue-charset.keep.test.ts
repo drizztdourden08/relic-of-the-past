@@ -1,12 +1,4 @@
 /* @layer tests @kind test */
-/**
- * What a composed line can draw in the game's own message box. Every character an Archipelago
- * name can hold either encodes to a real glyph (one of the language's own, or an extra glyph
- * written into a spare slot of its font) or to a documented fallback: an accented letter to its
- * base letter, a bracket to a parenthesis when no slot is left, anything else to a question mark.
- * Every glyph code a line can reach has a known width, the extra glyphs are drawn the way the
- * font draws its own, and a name keeps every character it was typed with.
- */
 import { describe, expect, it } from 'vitest';
 import { compressStrings } from '@shared/asset-extraction/text/dialogue-encoder';
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
@@ -21,24 +13,20 @@ import { toDialogueText } from '@app/lib/game/session-dialogue/dialogue-text';
 import { compressMarkedStrings } from '@app/lib/game/session-dialogue/highlight-bytes';
 import type { DialogueCharset } from '@shared/game/dialog/dialogue-charset';
 
-/** The characters the request named, as they turn up in slot, item and location names. */
 const REQUIRED = "_-.,'()!?&+/:#%*\";=<>[]~@^`";
 const PRINTABLE_ASCII = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');
 const SAMPLES = ['Drizztdourden_', 'Bottle (Fairy)', "Kokiri's Emerald", 'Buy Deku Stick (1)', 'Rupees (100)', 'Ice Trap!', 'A&B'];
 
-/** A charset as the session builds it, with a stand-in width of 6 for every baked glyph. */
 const charsetOf = (code: string): DialogueCharset => {
   const { alphabet } = kLanguages[code];
   const widths = new Uint8Array(kFontTypes[code].widthCount).fill(6);
   return dialogueCharsetOf(alphabet, widths, extraGlyphSlots(alphabet, widths.length));
 };
 
-/** The glyph code each character of drawable |text| reaches. */
 const codesOf = (text: string, charset: DialogueCharset): number[] =>
   [...text].map((ch) => extraSlotOfToken(ch) ?? charset.alphabet.indexOf(ch));
 
 const LANGUAGES = ['us', 'de', 'fr', 'fr-c'];
-/** European fonts have 16 spare slots for the 21 characters they lack; these five fall back. */
 const EU_FALLBACKS: Readonly<Record<string, string>> = { '{': '(', '}': ')', '\\': '/', '|': '?', $: '?' };
 
 describe('coverage of the native box', () => {
@@ -169,10 +157,11 @@ describe('the extra glyphs are drawn as the font draws its own', () => {
     const underscore = EXTRA_GLYPHS.find((glyph) => glyph.char === '_');
     const tiles = extraGlyphTiles(underscore!);
     expect(tiles).toHaveLength(32);
-    // Row 13 is the bottom tile's row 5: body ####, plane 1, columns 1-4.
-    expect(tiles[16 + 5 * 2 + 1]).toBe(0b01111000);
-    // Its edge (plane 0) rings the body on columns 0 and 5.
-    expect(tiles[16 + 5 * 2]).toBe(0b10000100);
+    const bottomTileRow5 = 16 + 5 * 2;
+    const bodyPlane = bottomTileRow5 + 1;
+    const edgePlane = bottomTileRow5;
+    expect(tiles[bodyPlane]).toBe(0b01111000);
+    expect(tiles[edgePlane]).toBe(0b10000100);
     expect([...tiles.subarray(0, 16)].every((byte) => byte === 0)).toBe(true);
   });
 });

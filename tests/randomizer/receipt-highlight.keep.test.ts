@@ -1,12 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Randomizer message highlights. Every composed line marks what was found in the primary
- * highlight and who it came from or went to in the secondary one; the composer turns the markup
- * into the core's highlight bytes (core/game-hooks/dialog_highlight.c), measures it as zero
- * pixels, and closes and reopens a span at every row break; a copy meant for reading strips it.
- * The two colours default to the app's gold and green, snapped to the game's 15-bit colours the
- * same way the core's own defaults are.
- */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -33,7 +25,6 @@ const US = kLanguages.us;
 const WIDTHS = new Uint8Array(US.alphabet.length).fill(6);
 const US_CHARSET = dialogueCharsetOf(US.alphabet, WIDTHS, []);
 
-/** The words inside every span |marker| opens in |text|. */
 const spansOf = (text: string, marker: string): string[] => {
   const spans: string[] = [];
   let at = text.indexOf(marker);

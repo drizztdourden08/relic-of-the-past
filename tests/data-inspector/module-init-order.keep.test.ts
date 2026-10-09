@@ -1,18 +1,7 @@
 /* @layer tests @kind test */
-/**
- * These modules form a cycle: record-writers -> id-ref-options ->
- * collection-sources -> record-writers. A cycle only faults when something is
- * READ during module evaluation, which collection-sources used to do (eager
- * build at module scope). Entering through collection-sources worked;
- * entering through record-writers hit an undefined RECORD_WRITERS.
- *
- * So the assertion is about ENTRY POINT: each module must be safe to import
- * first, in a fresh graph.
- */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DATA_INSPECTOR = '../../apps/web/src/ui/domains/app/views/DataInspector/behavior';
-/** The first import loads the whole data graph cold: about three seconds alone, more under a full run. */
 const COLD_GRAPH_TIMEOUT_MS = 30_000;
 
 describe('module init order from every entry point into the cycle', () => {
@@ -23,8 +12,6 @@ describe('module init order from every entry point into the cycle', () => {
   it('survives entering through record-writers, the one that used to throw', async () => {
     const { RECORD_WRITERS } = await import(`${DATA_INSPECTOR}/record-writers`);
 
-    // Populated, not merely defined: reading a writer is what the crash used
-    // to poison, so an empty-but-present map would still be a regression.
     expect(RECORD_WRITERS.tag).toBeTypeOf('function');
     expect(RECORD_WRITERS.screen).toBeTypeOf('function');
   }, COLD_GRAPH_TIMEOUT_MS);
@@ -47,8 +34,6 @@ describe('module init order from every entry point into the cycle', () => {
     expect(COLLECTION_SOURCES.tag.onSave).toBeTypeOf('function');
   });
 
-  // The write path is what the cycle exists to serve, so pin that it is wired
-  // after a record-writers-first load, not only that the import returned.
   it('wires a collection its write path when record-writers loaded first', async () => {
     await import(`${DATA_INSPECTOR}/record-writers`);
     const { COLLECTION_SOURCES } = await import(`${DATA_INSPECTOR}/collection-sources`);

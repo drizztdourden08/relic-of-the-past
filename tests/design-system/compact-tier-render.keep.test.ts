@@ -1,23 +1,4 @@
 /* @layer tests @kind test */
-/*
- * The compact tier's correctness claim, pinned.
- *
- * Every one of these eight components gained a `size?: 'sm' | 'md'` prop that
- * defaults to `md`, and the whole claim of that change is that NO RENDERED
- * PIXEL MOVES: a call site that omits `size` must emit exactly the markup it
- * emitted before the prop existed. The markup strings below were captured from
- * the pre-change components (read out of git HEAD and rendered side by side
- * with the current ones). Trailing spaces in the class attributes are included
- * because those come from the class templates, and a "tidy-up" that removes one
- * is a real change to the emitted bytes.
- *
- * So: if a later change makes `md` mean something else, these fail. That is
- * the point of the file. Nothing here asserts what `sm` LOOKS like. Pixels
- * are CSS, and compact-tier-tokens.keep.test.ts pins those.
- *
- * There is no jsdom in this repo, so these are SSR string comparisons, matching
- * the other *-render.keep.test.ts suites.
- */
 import { describe, it, expect } from 'vitest';
 import { createElement, type ComponentType } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -37,17 +18,13 @@ const noop = (): void => undefined;
 const render = (component: unknown, props: Props): string =>
   renderToStaticMarkup(createElement(component as ComponentType<Props>, props));
 
-/** The class attribute of the outermost element, which is the only thing `size` touches. */
 const rootClass = (markup: string): string => /class="([^"]*)"/.exec(markup)?.[1] ?? '';
 
 interface Case {
   name: string;
   component: unknown;
-  /** Props with no `size`, as an existing call site writes them. */
   props: Props;
-  /** Exactly what that call site rendered before the prop existed. */
   markup: string;
-  /** The class attribute `size="sm"` produces, and only it. */
   smClass: string;
 }
 
@@ -87,8 +64,6 @@ const CASES: Case[] = [
   {
     name: 'Toggle',
     component: Toggle,
-    // An explicit id: without one the input takes a per-instance useId() value, which is not
-    // stable across renders and has nothing to do with the tier being checked here.
     props: { checked: false, onChange: noop, label: 'L', id: 'toggle-l' },
     markup: '<label class="toggle " for="toggle-l"><span class="toggle__text"><span class="toggle__label">L</span></span>'
       + '<input id="toggle-l" type="checkbox" class="toggle__input" role="switch" aria-checked="false"/>'
@@ -148,16 +123,12 @@ describe('the compact tier `sm` adds one modifier class and changes nothing else
     it(`${c.name} adds exactly its --sm class`, () => {
       const sm = render(c.component, { ...c.props, size: 'sm' });
       expect(rootClass(sm)).toBe(c.smClass);
-      // Same tree, same attributes, same text: the tier is entirely CSS.
       expect(sm.replace(c.smClass, rootClass(c.markup))).toBe(c.markup);
     });
   }
 });
 
 describe('the compact tier `size` prop never reaches the DOM as an attribute', () => {
-  // TextInput and NumberInput both extend InputHTMLAttributes, which carries the
-  // native `size` (a character count). The tier took the name; `htmlSize` keeps
-  // the attribute reachable. Neither may leak the other's value.
   it('TextInput does not emit size="sm"', () => {
     expect(render(TextInput, { value: 'x', onChange: noop, size: 'sm' })).not.toContain('size=');
   });

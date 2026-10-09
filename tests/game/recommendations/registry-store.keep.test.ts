@@ -1,9 +1,4 @@
 /* @layer test @kind test */
-/**
- * The registry barrel installs the built-ins, and a pass scopes reconciliation
- * to what ran. Without the scoping a pass on one screen resolves every finding
- * about every other one, which looks like the store working.
- */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { all, find } from '@shared/game/data';
 import { toScreenIdOf } from '@shared/game/data';
@@ -15,7 +10,6 @@ import type { DetectionContext, ObservedTransition, ScreenObservations } from '@
 import '@app/ui/domains/widgets/navigation/recommendations/strategies/connection';
 import '@shared/game/recommendations/strategies/screen';
 import '@shared/game/recommendations/strategy-detectors';
-// Must come after `strategy-detectors`. See `wire-detector.ts`'s own header.
 import '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/wire-detector';
 import { describeDataset } from '../../dataset-guard';
 
@@ -33,12 +27,6 @@ const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObserv
   ...overrides,
 });
 
-/**
- * A screen with auditable outgoing edges plus a transition that backs none.
- * `existingConnections` comes straight from the dataset registry, as
- * `use-screen-observations.ts` does; the `strategy:connection` `SetProbe`s
- * read `observations.existingConnections`, not the registry.
- */
 const auditableScreen = () => {
   const screen = all('screen').find(s =>
     find('connection', c => c.screenId === s.id && toScreenIdOf(c) !== s.id && c.kind !== 'edge').length > 0);
@@ -54,9 +42,6 @@ const contextFor = (screenId: ScreenId, realTransitions: ObservedTransition[], e
 
 describeDataset('the detector barrel', () => {
   it('installs a detector for both kinds it covers', () => {
-    // A screen carries two: the comparison strategy that judges it against live
-    // memory, and `screen:geography`, which judges the record against the rest
-    // of the dataset, an inconsistency the game cannot be asked about.
     expect(detectorsFor('connection').map(d => d.id).sort())
       .toEqual(['strategy:connection']);
     expect(detectorsFor('screen').map(d => d.id).sort())
@@ -109,7 +94,6 @@ describeDataset('the recommendation store', () => {
     const run = runDetection('connection', context);
     await store.applyPass('connection', context, run.detectorIds, run.drafts, 1000);
 
-    // A second pass on a DIFFERENT screen that finds nothing at all.
     const elsewhere = all('screen').find(s => s.id !== screenId) as { id: ScreenId };
     const empty = contextFor(elsewhere.id, []);
     const after = await store.applyPass('connection', empty, run.detectorIds, [], 2000);

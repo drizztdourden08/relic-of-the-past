@@ -1,11 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Editing an online profile's connection after creation (T30): the profile patch takes only
- * the connection keys and refuses a patch naming anything else, whole; a profile stuck on a
- * wrong room password is fixed by one save, which reconnects the session on the new password
- * against the in-process server and reaches connected with no restart; a `host:port` typed
- * into the host field splits itself, and the port is checked.
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createProfile, loadProfile, updateProfile } from '@shared/storage/profiles';
 import { applyConnectionPatch } from '@shared/storage/randomizer-connection-patch';

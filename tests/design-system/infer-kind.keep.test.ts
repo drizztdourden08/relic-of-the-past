@@ -6,9 +6,6 @@ import {
 } from '../../apps/web/src/ui/design-system/data/schema/infer-kind';
 import { describeDataset } from '../dataset-guard';
 
-// Every downstream decision (operators, control, sort) hangs off inference.
-// One case per kind, plus the edges between neighbouring kinds.
-
 const distinct = (count: number): string[] =>
   Array.from({ length: count }, (_, i) => `value-${i}`);
 
@@ -40,9 +37,8 @@ describeDataset('inferKind with one case per kind', () => {
   });
 
   it('reads variant object shapes as a union', () => {
-    // No shared key at all, so these are two disjoint branches.
-    expect(inferKind([{ itemId: 'item-001' }, { anyOf: [] }])).toBe('union');
-    // Same key, primitive on one branch and a container on the other.
+    const noSharedKey = [{ itemId: 'item-001' }, { anyOf: [] }];
+    expect(inferKind(noSharedKey)).toBe('union');
     expect(inferKind([{ at: 'edge' }, { at: { x: 1 } }])).toBe('union');
   });
 });
@@ -91,25 +87,18 @@ describeDataset('inferKind and the details a descriptor carries', () => {
   });
 });
 
-// Real dataset regression cases for the subset-chain fix: a field that is
-// really one shape with optional keys must NOT be misread as a union just
-// because some sampled objects carry fewer keys than others.
 describeDataset('inferKind subset-chain regression on real dataset shapes', () => {
   it('reads screen.position as object: dungeon screens add floor, overworld screens do not', () => {
     const positions = all('screen')
       .map((screen) => screen.position)
       .filter((position): position is NonNullable<typeof position> => position !== undefined);
     expect(positions.length).toBeGreaterThan(0);
-    // Confirms the fixture actually exercises both branch sizes, not just one.
     expect(positions.some((p) => p.floor !== undefined)).toBe(true);
     expect(positions.some((p) => p.floor === undefined)).toBe(true);
     expect(inferKind(positions)).toBe('object');
   });
 
   it('reads connection.placement as object: a border point only ADDS `side` on top of an area one', () => {
-    // The connection-model migration replaced the old discriminated placement
-    // (a real union, no shared key) with one shape where `side` is an additive
-    // optional field: the subset-chain case, so `object`, not `union`.
     const placements = all('connection').map((connection) => connection.placement);
     expect(placements.length).toBeGreaterThan(0);
     expect(placements.some((p) => p.form === 'border')).toBe(true);
@@ -130,9 +119,6 @@ describeDataset('inferKind subset-chain regression on real dataset shapes', () =
       .map((item) => item.weapon?.range)
       .filter((range): range is NonNullable<typeof range> => range !== undefined);
     expect(ranges.length).toBeGreaterThan(0);
-    // The three branches observed in the real data ({kind} ⊂ {kind,tiles} ⊂
-    // {kind,tiles,sourced}) form a chain instead of diverging, even though
-    // the TS type itself is written as a discriminated union.
     expect(ranges.some((r) => r.kind === 'unbounded')).toBe(true);
     expect(ranges.some((r) => r.kind === 'estimated')).toBe(true);
     expect(ranges.some((r) => r.kind === 'contact')).toBe(true);

@@ -1,0 +1,80 @@
+/* @layer tests @kind test */
+import { expect, it } from 'vitest';
+import { all, getCheck } from '@shared/game/data';
+import { REGION_GRAPH } from '@shared/randomizer/world/rules/tables/region-graph.data';
+import { isSeedLocation } from '@shared/randomizer/world/seed-locations';
+import { CANONICAL_SLOTS } from '@shared/randomizer/world/shops/shop-slot-facts';
+import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
+import { crossingsByRegion, regionRecords } from '@shared/randomizer/world/world-from-records';
+import type { RegionId } from '@shared/game/data/types';
+import { describeDataset } from '../../dataset-guard';
+import {
+  CROSSINGS_NO_PASSAGE_MAKES, DUNGEON_LOCATIONS, PASSAGES_WITH_A_CROSSING, PLACELESS_ROWS_AT_MOST,
+  SCREENLESS_REGIONS_AT_MOST, SEED_LOCATIONS, WORLD_EVENTS, WORLD_LOCATIONS, WORLD_LOCATIONS_NO_KEY_DROPS,
+} from './world-from-records.constants';
+import { vanillaWorld } from './vanilla-world';
+
+describeDataset('the records say which rows a seed fills', () => {
+  it('picks the spots out of the collection, and gives every one of them a region', () => {
+    const spots = all('check').filter(isSeedLocation);
+    expect(spots).toHaveLength(SEED_LOCATIONS);
+    expect(spots.filter((check) => check.regionId === undefined).map((check) => check.id)).toEqual([]);
+  });
+
+  it('builds a world of exactly those spots, under the option that invents some of them', () => {
+    expect(vanillaWorld().locationsByKey.size).toBe(WORLD_LOCATIONS);
+    expect([...vanillaWorld().eventsByKey.values()].filter((event) => getCheck(event.key).regionId === event.region))
+      .toHaveLength(WORLD_EVENTS);
+    expect(vanillaWorld(false).locationsByKey.size).toBe(WORLD_LOCATIONS_NO_KEY_DROPS);
+  });
+
+  it('gives each dungeon the spots its own wings hold, in create order', () => {
+    const built = vanillaWorld();
+    const counts = [...built.dungeons.values()].map((dungeon) => dungeon.regions
+      .reduce((sum, id) => sum + (built.regions.get(id)?.locations.length ?? 0), 0));
+    expect(counts).toEqual(DUNGEON_LOCATIONS);
+  });
+
+  it('leaves the shelves and the pond rungs to their own switches, which open none by default', () => {
+    const built = vanillaWorld();
+    expect(CANONICAL_SLOTS.filter((row) => built.locationsByKey.has(row.checkId))).toEqual([]);
+    const rungs = POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key));
+    expect(rungs.filter((key) => built.locationsByKey.has(key))).toEqual([]);
+  });
+
+  it('leaves a region only on the rows that stand for a place', () => {
+    const placeless = all('check').filter((check) => check.regionId === undefined);
+    expect(placeless.every((check) => check.kind === 'event' && check.screenId === undefined)).toBe(true);
+    expect(placeless.length).toBeLessThanOrEqual(PLACELESS_ROWS_AT_MOST);
+  });
+
+  it('holds sixteen regions no screen carries, which is why a screen cannot answer for this', () => {
+    const owned = new Set(all('screen').map((screen) => screen.regionId));
+    const screenless = regionRecords().filter((region) => !owned.has(region.id));
+    expect(screenless.length).toBeLessThanOrEqual(SCREENLESS_REGIONS_AT_MOST);
+  });
+});
+
+describeDataset('a passage names its crossing where the records can say which one', () => {
+  it('names one where exactly one crossing joins the same pair', () => {
+    const byPair = new Map<string, RegionId[]>();
+    for (const crossing of [...crossingsByRegion().values()].flat()) {
+      const key = `${crossing.from}>${crossing.to}`;
+      byPair.set(key, [...(byPair.get(key) ?? []), crossing.connectionId]);
+    }
+    const named = REGION_GRAPH.filter((row) => row.connectionId !== undefined);
+    expect(named.length).toBeGreaterThanOrEqual(PASSAGES_WITH_A_CROSSING);
+    const wrong = named.filter((row) => {
+      const only = byPair.get(`${row.from}>${row.to}`);
+      return only?.length !== 1 || only[0] !== row.connectionId;
+    });
+    expect(wrong.map((row) => row.exit)).toEqual([]);
+  });
+
+  it('leaves the crossings no passage joins, which is the gap still to close', () => {
+    const joined = new Set(REGION_GRAPH.map((row) => `${row.from}>${row.to}`));
+    const orphans = [...crossingsByRegion().values()].flat()
+      .filter((crossing) => !joined.has(`${crossing.from}>${crossing.to}`));
+    expect(orphans.length).toBeLessThanOrEqual(CROSSINGS_NO_PASSAGE_MAKES);
+  });
+});

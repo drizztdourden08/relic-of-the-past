@@ -4,19 +4,20 @@ import type { UIMode } from '@shared/game/types';
 import { parseGameUIBuffer } from '../../apps/web/src/lib/game/ui-bridge-parser';
 import { isMainHudVisibleForMode } from '../../apps/web/src/ui/domains/hud/hud-visibility';
 
-// The buffer is read up to byte 124; a fresh zeroed array is enough since only
-// the main-module byte (offset 0) drives the mode for these cases.
+const UI_BUFFER_SIZE = 128;
+const MAIN_MODULE_OFFSET = 0;
+const ATTRACT_MODULE = 20;
+const FILE_MENU_MODULES = [0, 1, 2, 3, 4];
+
 const modeForModule = (mainModule: number): UIMode => {
-  const buffer = new Uint8Array(128);
-  buffer[0] = mainModule;
+  const buffer = new Uint8Array(UI_BUFFER_SIZE);
+  buffer[MAIN_MODULE_OFFSET] = mainModule;
   return parseGameUIBuffer(buffer, 0).mode;
 };
 
 describe('deriveUIMode (via parseGameUIBuffer)', () => {
   it('maps the intro attract demo and file-select menus to title (HUD hidden)', () => {
-    // Module14_Attract (20) is the intro "video"; 2-4 are the file copy/erase/
-    // name submenus. None are gameplay, so the main HUD must not leak into them.
-    for (const mainModule of [0, 1, 2, 3, 4, 20]) {
+    for (const mainModule of [...FILE_MENU_MODULES, ATTRACT_MODULE]) {
       expect(modeForModule(mainModule)).toBe('title');
       expect(isMainHudVisibleForMode(modeForModule(mainModule))).toBe(false);
     }

@@ -1,12 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The multiworld client against an in-process server (ap-fake-server.ts) and a recording
- * core (ap-fake-core.ts), in node: the handshake, slot data, the received index across a
- * reconnect, the gap Sync, the own-pickup echo, server items, offline checks, the goal, the
- * reconnect backoff, rendered messages and the server address candidates. DeathLink and the
- * world package version are in ap-deathlink.keep.test.ts; the shared room and boot are in
- * ap-protocol-harness.ts.
- */
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
 import { serverUrlCandidates } from '@app/lib/game/randomizer-client/server-url';
@@ -14,7 +6,6 @@ import { createFakeServer, VERSION } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import { boot, installClientHarness, item, makeRoom, OWN, settle } from './ap-protocol-harness';
 
-// The real bus installs window error handlers on import; node has no window.
 vi.mock('@app/lib/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };

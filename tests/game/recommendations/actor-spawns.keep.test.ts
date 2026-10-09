@@ -1,10 +1,4 @@
 /* @layer test @kind test */
-/**
- * The `actor` strategy's spawns set probe: a live sprite spawn with no
- * ActorRecord for its sprite type. The finding's `key` is `spawn:<n>` (the set
- * probe's `noun` + `liveKey`, per `compare/detector-from-strategy.ts`), where
- * the deleted detector used `spriteType:<n>`.
- */
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
@@ -12,7 +6,6 @@ import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { actorStrategy } from '@shared/game/recommendations/strategies/actor';
 import { describeDataset } from '../../dataset-guard';
 
-/** A sprite type no ActorRecord in the real dataset uses. */
 const UNCATALOGUED = Math.max(...all('actor').map(a => a.gameId.spriteType ?? 0)) + 5;
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
@@ -50,8 +43,6 @@ describeDataset('actor strategy (spawns probe)', () => {
     expect(draft.key).toBe(`spawn:${UNCATALOGUED}`);
     expect(draft.proposed).not.toHaveProperty('id');
     expect((draft.proposed as { gameId: { spriteType: number } }).gameId.spriteType).toBe(UNCATALOGUED);
-    // No native combat row was supplied, so 'object' is the classification and
-    // never a guessed 'enemy'/'npc'/'boss'.
     expect((draft.proposed as { kind: string }).kind).toBe('object');
   });
 

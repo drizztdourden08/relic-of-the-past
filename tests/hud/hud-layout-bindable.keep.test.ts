@@ -1,18 +1,4 @@
 /* @layer test @kind test */
-/**
- * Phase 2 of `plans/hud-data-binding.html`: bindable boxes. `size`, `scale`,
- * `opacity`, `gap` and `visible` all take a `Value`, resolved against
- * `MeasureContext.scope` before anything is measured.
- *
- * THE ACCEPTANCE PROOF THE PLAN NAMES: the magic bar becomes authorable with
- * NO new element kind - a sprite whose `size.w` is
- * `{ from: 'data', expr: 'magic_current / 128 * 24' }`. See "the magic bar"
- * below. Its final PAINTED rect is asserted through a CONTAINER sibling
- * (`rectOf`), never through the sprite's own placed rect - an element is
- * always CONTAINED to its intrinsic aspect (`hud-layout-engine.keep.test.ts`
- * already proves that rule), so only a container's rect equals its resolved
- * box exactly. `measureBox` proves the same width directly, box-side.
- */
 import { describe, expect, it } from 'vitest';
 import { layoutHud, measureBox, placedById } from '@shared/hud/engine';
 import type { HudContainer, HudLayout, HudNode } from '@shared/types/hud';
@@ -23,16 +9,10 @@ const leaf = (id: string, extra: Partial<HudNode> = {}): HudNode => ({
   kind: 'element', id, element: { type: 'slot', index: 1 }, ...extra,
 } as HudNode);
 
-/** A childless container's placed rect equals its resolved box exactly - it
- *  is never run through `containRect`, which only an element is. Using one
- *  here is what lets a test assert a bound `size` without an intrinsic aspect
- *  getting in the way. */
 const box = (id: string, extra: Partial<HudContainer> = {}): HudNode => ({
   kind: 'container', id, direction: 'row', children: [], ...extra,
 } as HudNode);
 
-/** The screen the nine anchors became (§42): three bands each way, with this
- *  root in the top-left cell - exactly what `anchor: 'top-left'` used to say. */
 const docOf = (root: HudContainer): HudLayout => ({
   id: 'test',
   name: 'Test',
@@ -75,7 +55,6 @@ describe('the magic bar - size.w bound to an expression, no new element kind', (
   it('zero magic resolves to a zero-width box, which LEAVES THE FLOW entirely', () => {
     const doc = docOf(row([magicBar(), leaf('after')], { gap: { x: 4, y: 4 } }));
     expect(rectOf(doc, 'magic-bar', { magic_current: 0 })).toBeUndefined();
-    // and it takes its gap with it - "after" sits at x0, not x4.
     expect(rectOf(doc, 'after', { magic_current: 0 })?.x).toBe(0);
   });
 

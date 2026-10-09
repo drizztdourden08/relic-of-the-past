@@ -1,20 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The dataset held against itself, exhaustively.
- *
- * Every id one record points at another with has to resolve to a record of the RIGHT kind,
- * every id has to be unique inside its own collection and spelled with that collection's
- * prefix, a screen has to agree with its area, location and region about which world it is
- * in, and every event row has to own a ledger bit inside the ledger.
- *
- * It replaces a sampling suite, which took one record per case off the live data and asserted
- * the reverse index found it. Sampling proves the index works; it says nothing about the other
- * five hundred rows, and a dangling id is exactly the fault that hides in the one row nobody
- * sampled. Reading is cheap here, so everything is read.
- *
- * Every failure prints the record and the field, so a finding is a row to open and not a
- * number to chase (`record-references.ts` carries that provenance).
- */
 import { describe, expect, it } from 'vitest';
 import { PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID, all, get } from '@shared/game/data';
 import { KIND_ID_PREFIXES } from '@shared/game/data/types/ids';
@@ -23,16 +7,8 @@ import type { EntityKind } from '@shared/game/data/types';
 import { recordReferences } from './record-references';
 import { describeDataset } from '../../dataset-guard';
 
-/** Every collection the registry seeds. */
 const KINDS = Object.keys(KIND_ID_PREFIXES) as EntityKind[];
 
-/**
- * The one pair of ids on purpose held by no record.
- *
- * The menu and save-and-quit pseudo-screen is not anywhere in the world, so it carries the
- * two "no place assigned" ids the facade declares and nothing answers for either. Adding a
- * second entry here means a record lost its place, not that this list was too short.
- */
 const UNPLACED = [PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID] as readonly string[];
 
 describeDataset('every id a record points at', () => {
@@ -40,9 +16,6 @@ describeDataset('every id a record points at', () => {
 
   it('collects a reference from every collection that holds one', () => {
     const fields = new Set(references.map((reference) => reference.field));
-    // A walk that silently stopped covering a field is the failure this catches: the count
-    // only ever grows (11765 as this was written), and the named four are the ones most
-    // easily lost to a type change.
     expect(references.length).toBeGreaterThan(10000);
     for (const field of ['toConnectionId', 'vanillaItemIds', 'regionId', 'roomScreenIds']) {
       expect(fields, field).toContain(field);
@@ -92,7 +65,6 @@ describeDataset('every id a record carries', () => {
 });
 
 describeDataset('a screen and the places above it', () => {
-  /** An area spanning both worlds agrees with a screen in either one. */
   const agrees = (above: string, screen: string): boolean => above === 'both' || above === screen;
 
   it('agrees with its area about the world', () => {
@@ -162,15 +134,9 @@ describeDataset('the event ledger', () => {
       .map(([bit, group]) => ({ bit, events: group.filter((row) => row.kind === 'event') }))
       .filter((entry) => entry.events.length > 1)
       .map((entry) => `bit ${entry.bit}: ${entry.events.map((row) => row.id).join(', ')}`);
-    // One fact, one record: the floodgate's twin rows were merged into "Floodgate lever pulled".
     expect(shared).toEqual([]);
   });
 
-  /**
-   * A location and an event row CAN share a bit: the ledger records the fact once and both
-   * read it, which is how a dungeon's reward pickup and its "reward taken" row work. What
-   * cannot happen is two locations on one bit, or a location on a bit no event row owns.
-   */
   it('pairs every location on a bit with exactly one event row', () => {
     const wrong = [...byBit]
       .map(([bit, group]) => ({

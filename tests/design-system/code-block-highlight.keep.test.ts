@@ -1,5 +1,4 @@
 /* @layer tests @kind test */
-/** SSR smoke test (no jsdom): the `highlightedLines` diff is purely additive, compared as markup strings. */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -10,9 +9,6 @@ const CODE = 'const a = 1;\nconst b = 2;\nconst c = 3;';
 const render = (highlightedLines?: readonly number[]): string =>
   renderToStaticMarkup(createElement(CodeBlock, { code: CODE, language: 'typescript', highlightedLines }));
 
-/** Splits rendered markup into one chunk per source line, in order. Every
- * line div is a sibling with no nested divs (tokens render as spans), so this
- * split is exact. */
 const lineChunksOf = (markup: string): string[] => markup.split('<div class="code-block__line').slice(1);
 
 describe('CodeBlock highlightedLines', () => {

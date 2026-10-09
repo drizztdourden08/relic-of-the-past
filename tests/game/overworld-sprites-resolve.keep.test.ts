@@ -1,8 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect, vi } from 'vitest';
 
-// getOverworldSprites reads two bridge queries directly: the spawn table and
-// the area-head table, so both are mocked here instead of running the game.
 vi.mock('@app/lib/game', () => ({
   wasmGetOverworldSpriteSpawns: vi.fn(),
   wasmGetAreaHeads: vi.fn(),

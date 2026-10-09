@@ -1,5 +1,4 @@
 /* @layer test @kind test */
-/** Reconciliation stops duplicate findings and makes a dismissal stick. Both failures are silent in the UI. */
 import { describe, it, expect } from 'vitest';
 import { reconcile, scopedToPass, recommendationId } from '@shared/game/recommendations';
 import type { DraftRecommendation, Recommendation } from '@shared/game/recommendations';

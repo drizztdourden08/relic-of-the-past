@@ -1,17 +1,4 @@
 /* @layer test @kind test */
-/**
- * The `item` strategy (`strategy:item`): a granted native item with no
- * ItemRecord, or a record whose aliasOf rule the observed grant contradicts.
- *
- * The create side is three `SetProbe`s (`grants.set.ts`: chest contents,
- * native receive count, tracker inventory delta) because confidence and
- * evidence source are fixed per probe. The alias side is two `FieldProbe`s
- * (`alias.probes.ts`). All five share one detector id, so the tie-break (chest
- * beats grant for the same id) falls out of `runDetection`'s dedup and the
- * registration order in `item.strategy.ts`. That dedup lives in
- * `runDetection`, not `detector.detect()`, so this file drives the strategy
- * through `registerDetector`+`runDetection`, as `runPass` does in production.
- */
 import { describe, it, expect } from 'vitest';
 import { all, getItem, getItemByGameId } from '@shared/game/data';
 import type { ItemId, ItemRecord } from '@shared/game/data';
@@ -45,7 +32,6 @@ const roomChest = (itemId: number, overrides: Partial<ChestObservation> = {}): C
 
 const uncatalogued = (): number => Math.max(...all('item').map(i => i.gameId?.receiveItemId ?? 0)) + 5;
 
-/** An item whose chest swaps to an alternate once its own item is already owned. */
 const aliasedItem = (): ItemRecord => {
   const item = all('item').find(i => i.aliasOf && i.gameId?.receiveItemId != null);
   if (!item) throw new Error('dataset has no aliasOf item with a receiveItemId');
@@ -109,7 +95,6 @@ describeDataset('item strategy on chest contents', () => {
 
     expect(drafts).toHaveLength(1);
     const [draft] = drafts;
-    // Enumerable native table, so this outranks a single observed grant.
     expect(draft.confidence).toBe('certain');
     expect(draft.evidence[0].source).toBe('native:room-chests');
     expect(draft.key).toBe(`item:${unknown}`);

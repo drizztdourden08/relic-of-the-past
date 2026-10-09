@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * `recordsFor`: every record relating to the current screen, not just one. The
- * bug this replaces (`observations.existingConnections[0]`) only showed the
- * FIRST connection, so these use real multi-record screens.
- */
 import { describe, it, expect } from 'vitest';
 import {
   all, find, getActorByGameId, getDungeonByGameId, getItemByGameId, getScreen,
@@ -86,7 +81,7 @@ describeDataset('recordsFor an actor, one card per DISTINCT sprite type, not per
 
     const liveSprites: readonly LiveSpriteObservation[] = [
       { spriteType: first.gameId.spriteType!, col: 0, row: 0, floor: 0 },
-      { spriteType: first.gameId.spriteType!, col: 1, row: 1, floor: 0 }, // a second spawn of the SAME type
+      { spriteType: first.gameId.spriteType!, col: 1, row: 1, floor: 0 },
       { spriteType: second.gameId.spriteType!, col: 2, row: 2, floor: 0 },
     ];
     const ctx = baseContext({ observations: { liveSprites } as never });

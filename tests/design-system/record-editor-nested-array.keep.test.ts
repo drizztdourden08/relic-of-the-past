@@ -5,11 +5,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 
-// A requirement SET (`RequirementSet = TraversalRequirement[][]` in
-// nav-data.types.ts) is an OR-of-AND list: an array whose element is ITSELF an
-// array of strings, one level deeper than `ArrayFieldEditor` serves. The
-// `array-kit` read-only fallback used to be all that was offered.
-
 const REQUIREMENT_STRING: FieldDescriptor = {
   path: 'requirements[][]', label: 'Requirements item item', kind: 'string', optional: false,
 };

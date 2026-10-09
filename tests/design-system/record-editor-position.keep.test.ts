@@ -11,10 +11,6 @@ import {
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests plus unit tests over the shape check and bounds rule: which
-// control a grid position is offered as and which limits reach it. Typing and
-// clamping need a browser.
-
 const PAIR_CONTROL = 'class="position-input';
 
 const screens = all('screen');

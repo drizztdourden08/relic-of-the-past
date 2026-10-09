@@ -1,20 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Every location of an Archipelago placement has a way to reach the room. A session sends a
- * location's LocationChecks from one of two paths: the substitution seam (an armed override's
- * fire id, override-fire-registry.ts) or the poller (a plan detection, or the tracker's own
- * sweep over the record). A location with neither can never be sent, so the item on it never
- * reaches its owner and the room can never finish.
- *
- * The room is a generated seed served as scouts under the frozen ids, armed through the same
- * armScouted the live session runs. The default options are also the options of the first
- * two-game test room (Relic next to Ship of Harkinian, 341 locations), so the first case is
- * that room's shape. The tracker's check total must equal the room's location count too:
- * events and status-only rows stay listed, but they are not locations of the slot.
- *
- * After a collect, every location the room holds as checked shows done on its row, the shop
- * restocks and pond rungs included, which have no record and read the taken set instead.
- */
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { generateFromSnapshot } from '@shared/randomizer/generate';
@@ -50,7 +34,6 @@ vi.mock('@app/lib/game/quiver-icon', () => iconSet('QuiverIcon'));
 vi.mock('@app/lib/game/currency-symbols', () => iconSet('CurrencySymbols'));
 vi.mock('@app/lib/game/upgrade-icons', () => iconSet('UpgradeIcons'));
 vi.mock('@app/lib/game/foreign-icons', () => ({ applyForeignIcons: async () => false, clearForeignIcons: () => undefined }));
-// Records every location the session hands a fire id: the substitution path of that location.
 vi.mock('@app/lib/game/randomizer-client/override-fire-registry', async (importOriginal) => {
   const real = await importOriginal<typeof FireRegistry>();
   return {
@@ -89,7 +72,6 @@ const OTHER_SLOT = 2;
 interface CoverageCase {
   name: string;
   overrides: Record<string, OptionValue>;
-  /** Every Nth location holds another player's item, as in a real multiworld. */
   foreignEvery?: number;
 }
 
@@ -121,7 +103,6 @@ const roomOf = (overrides: Record<string, OptionValue>, foreignEvery: number | u
   return { scouts, slotData: slotData.slotData };
 };
 
-/** The room armed through the live session's armScouted, with the keys the scouts name. */
 const armRoom = async (overrides: Record<string, OptionValue>, foreignEvery: number | undefined) => {
   const module = installFakeModule(setModule);
   const { scouts, slotData } = roomOf(overrides, foreignEvery);
@@ -187,7 +168,6 @@ describe('every collected location shows as done', () => {
     const counted = rows.filter((check) => isCountedCheck(check));
     expect(counted.length).toBe(keys.length);
     expect(counted.filter((check) => statuses.get(check.id) === 'completed').length).toBe(foreignKeys.length);
-    // A pond rung with no record is typed like the rungs that have one.
     const rungs = rows.filter((check) => check.id.startsWith('check-virtual-slot-pond-'));
     expect(rungs.length).toBeGreaterThan(0);
     expect(rungs.filter((check) => check.kind !== 'pond-slot').map((check) => check.name)).toEqual([]);

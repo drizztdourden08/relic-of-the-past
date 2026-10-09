@@ -1,15 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Guard: every option the player may change has to reach the generator.
- *
- * The creation panel and the profile writer once built their catalog
- * overrides separately, so a row wired into one and forgotten in the other
- * froze silently: the control moved, the snapshot kept the baseline, and
- * the pool, the totals and the seed never saw it. Both now read
- * randomizerChoiceOverrides, and the first case below walks the WHOLE
- * catalog against it, so the next unwired option fails here instead of
- * looking like a dead control in the app.
- */
 import { describe, expect, it } from 'vitest';
 import { randomizerChoiceOverrides, snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import { partitionCatalogByLock } from '@app/ui/domains/app/compounds/RandomizerOptionRow/behavior/partitionCatalogByLock';
@@ -45,8 +34,6 @@ const BASE: RandomizerOptionChoices = {
   smallKeyShuffle: DEFAULT_DUNGEON_ITEM_SETTING.smallKey,
   compassShuffle: DEFAULT_DUNGEON_ITEM_SETTING.compass,
   mapShuffle: DEFAULT_DUNGEON_ITEM_SETTING.map,
-  // The fixture is the unshuffled base the shop cases measure against; the
-  // fresh-profile scope itself starts shuffled, so the mode is pinned here.
   shops: { ...defaultShopScope(), mode: 'vanilla' },
   shopPrices: {},
   capacityEnabled: true,
@@ -76,15 +63,8 @@ const NO_DELIVERABLE = {};
 
 describe('every unlocked catalog row reaches the generator', () => {
   it('covers the whole catalog, since an unwired row would freeze silently', () => {
-    // The price block hands its whole key set through verbatim, so the choice
-    // that exercises the coverage is one carrying all of them.
-    // Every key the block owns, the reference's percentage included. That one
-    // is a number, so it is written as one instead of as a tick.
     const everyPrice = Object.fromEntries(SHOP_PRICE_BLOCK_KEYS.map((key) =>
       [key, SHOP_PRICE_OPTION_KEYS.includes(key) ? false : 100]));
-    // Read by VALUE, not by key presence: a choice field left off the object
-    // still puts its catalog key in the map with nothing behind it, which is
-    // exactly the half-wired row this case exists to catch.
     const overrides = randomizerChoiceOverrides({ ...BASE, shopPrices: everyPrice });
     const unwired = optionCatalog
       .filter((option) => !option.locked)
@@ -103,11 +83,6 @@ describe('every unlocked catalog row reaches the generator', () => {
   });
 });
 
-/**
- * The whole shop scope, ticked and shuffled: the choice every case below
- * varies. One purchase per slot, so a slot is one location in the counts; the
- * fresh-profile scope stocks two, which the depth case sets for itself.
- */
 const shopChoice = (
   overrides: Partial<RandomizerOptionChoices['shops']>,
 ): RandomizerOptionChoices => ({

@@ -1,16 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Where a record is filed, against the real dataset.
- *
- * Checks are held to the strongest claim: EVERY check record must resolve to
- * the file it is committed in, so a create can never land somewhere its
- * siblings are not. Nothing is split by size any more, so there is no group of
- * sibling files to fall back on: the resolved path is the file, exactly.
- *
- * Item, actor, dungeon, area and location follow the same convention from the
- * other side (see record-file-targets.ts): one file per category, per kind, per
- * dungeon or per world. Pinned: that choice, and that the file exists.
- */
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { describe, expect, it } from 'vitest';
@@ -23,10 +11,10 @@ import type { ItemCategory } from '@shared/game/data/taxonomy/item-categories';
 import { describeDataset } from '../../dataset-guard';
 
 const DATA_ROOT = join(__dirname, '..', '..', '..', 'shared', 'game', 'data', 'records');
+const EVENT_CHECK_ID_BASE = 300;
 
 const dataFile = (relativePath: string): string => join(DATA_ROOT, relativePath);
 
-/** The path a resolver named, or a failure message that says why it named none. */
 const resolved = (target: { relativePath: string | null; unresolved?: string }): string => {
   expect(target.unresolved, target.unresolved).toBeUndefined();
   return target.relativePath as string;
@@ -42,10 +30,9 @@ describeDataset('the file a check is filed in', () => {
   const holdsCheck = (relativePath: string, id: string): boolean =>
     existsSync(dataFile(relativePath)) && readFileSync(dataFile(relativePath), 'utf-8').includes(`id: '${id}'`);
 
-  /** An event record is written as a numbered spec, so its file names the number, not the id. */
   const holdsEvent = (relativePath: string, id: string): boolean => {
     if (!existsSync(dataFile(relativePath))) return false;
-    const n = Number(id.slice('check-'.length)) - 300;
+    const n = Number(id.slice('check-'.length)) - EVENT_CHECK_ID_BASE;
     return new RegExp(`\\bn: ${n},`).test(readFileSync(dataFile(relativePath), 'utf-8'));
   };
 
@@ -53,8 +40,6 @@ describeDataset('the file a check is filed in', () => {
     const misfiled: string[] = [];
     for (const check of checks) {
       const target = checkRecordFile(check);
-      // A handful of story rows name neither a dungeon nor a screen, and the event groups
-      // that span two files are refused by design; both are asserted separately below.
       if (!target.relativePath) continue;
       const found = check.kind === 'event'
         ? holdsEvent(target.relativePath, check.id) || holdsCheck(target.relativePath, check.id)

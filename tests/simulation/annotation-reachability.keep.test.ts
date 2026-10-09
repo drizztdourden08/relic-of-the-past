@@ -1,14 +1,8 @@
 /* @layer tests @kind test */
-/**
- * The Secret Passage case: the uncle blocks the corridor, so the chest behind
- * him must NOT read as available. A feature's own tile is usually solid (a
- * chest is a wall tile), so reachability is judged from the tiles around it.
- */
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '../../shared/game/simulation';
 import { markUnreachable, reachableNear, TOUCH } from '../../apps/web/src/lib/game/flood/annotate/reachability';
 
-/** 20x20 grid, reachable only in the rows above `wall`. */
 const gridBlockedBelow = (wall: number): number[][] =>
   Array.from({ length: 20 }, (_, r) => Array.from({ length: 20 }, () => (r < wall ? 1 : 0)));
 
@@ -18,7 +12,6 @@ const at = (kind: ScreenAnnotation['kind'], row: number, col: number, extra: Par
 describe('annotation reachability', () => {
   it('counts a solid feature reachable when a neighbour tile is walkable', () => {
     const grid = gridBlockedBelow(10);
-    // The tile itself is unreachable (row 10) but row 9 above it is walkable.
     expect(grid[10][5]).toBe(0);
     expect(reachableNear(grid, 10, 5)).toBe(true);
   });

@@ -1,9 +1,4 @@
 /* @layer test @kind spec */
-/**
- * T6: the tracker's event records resolve from a synthetic heap: ledger bits, vanilla bits,
- * the derived pass (held items, all-of, a dungeon's own records), the older-file fallbacks.
- * Pure functions, no game.
- */
 import { describe, expect, it } from 'vitest';
 import { all } from '@shared/game/data';
 import type { CheckRecord, ItemId } from '@shared/game/data';
@@ -66,7 +61,6 @@ describe('T6: event records', () => {
     expect(done.has(byName('Old Man rescued').id)).toBe(true);
     expect(done.has(byName('Master Sword pulled').id)).toBe(true);
     expect(done.has(byName('Agahnim 1 beaten').id)).toBe(true);
-    // A ledger event answers from its own bit alone: a later beat does not stand in for it.
     expect(done.has(byName('Dark World reached').id)).toBe(false);
     expect(done.has(byName('Ganon beaten').id)).toBe(false);
   });

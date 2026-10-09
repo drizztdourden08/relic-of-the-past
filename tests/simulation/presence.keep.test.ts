@@ -24,7 +24,6 @@ describe('evaluatePresence', () => {
     const cond: PresenceCondition = { progressFlag: 0x10, state: 'clear' };
     expect(evaluatePresence(cond, baseState({ progressFlags: 0x00 }))).toBe(true);
     expect(evaluatePresence(cond, baseState({ progressFlags: 0x10 }))).toBe(false);
-    // The masked bit set among others still counts as set.
     expect(evaluatePresence(cond, baseState({ progressFlags: 0x1f }))).toBe(false);
     expect(evaluatePresence({ progressFlag: 0x10, state: 'set' }, baseState({ progressFlags: 0x10 }))).toBe(true);
   });

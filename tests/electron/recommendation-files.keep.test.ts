@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The recommendation store's main-process half, against a throwaway userData
- * root (the same bargain `review-files.test.ts` makes).
- *
- * The property that matters is the per-kind queue. Every operation is a
- * read-modify-write of a whole collection file, and the queue must wrap the
- * WHOLE operation, not just the write: queueing only the save would still let
- * two decisions read the same snapshot. A batch accept depends on this.
- */
 import { mkdtemp, rm } from 'fs/promises';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -76,8 +67,6 @@ describe('the store, on disk', () => {
 });
 
 describe('two decisions on one collection', () => {
-  // Both read-modify-write the same file. Unqueued, the second one's read
-  // predates the first one's write and the first verdict is lost.
   it('both land when each holds the kind\'s turn for its whole operation', async () => {
     await recommendationStorage.save('tag', [entry('r-1'), entry('r-2')]);
     const store = createRecommendationStore(recommendationStorage);
@@ -91,9 +80,6 @@ describe('two decisions on one collection', () => {
     expect(file.map(item => item.state)).toEqual(['accepted', 'dismissed']);
   });
 
-  // The contrast: the same two operations without the queue cannot keep both.
-  // Either the later write overwrites the earlier verdict, or the two writes
-  // collide on the file itself and it reads back as nothing.
   it('would lose a verdict without the queue', async () => {
     await recommendationStorage.save('tag', [entry('r-1'), entry('r-2')]);
     const store = createRecommendationStore(recommendationStorage);

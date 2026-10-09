@@ -8,11 +8,6 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
 import { describeDataset } from '../dataset-guard';
 
-// The identity field ("id") stays read-only on a writable record: the fix for
-// the rename-then-clobber bug (record-writers.ts uses the EDITED id as the
-// file-search key) and, for item-group, the sibling-id footgun (7 rows make
-// `id` infer as an enum, rendering a dropdown of other records' ids).
-
 const noop = async (): Promise<void> => undefined;
 
 const inputTagFor = (markup: string, value: string): string => {
@@ -57,8 +52,6 @@ describeDataset('RecordEditor keeps the identity field read-only', () => {
     const rows = all('item-group');
     const record = rows[0];
     const field = buildSchema(rows).find((entry) => entry.path === 'id');
-    // Confirms the premise: with 7 rows, id infers as a closed set, which is
-    // exactly what routed it to a picker in the first place.
     expect(field?.kind).toBe('enum');
 
     const sibling = rows.find((row) => row.id !== record.id);
@@ -69,12 +62,7 @@ describeDataset('RecordEditor keeps the identity field read-only', () => {
       schema: buildSchema(rows),
       onSave: noop,
     }));
-    // The sibling's id still appears as an option (it is a real enum value),
-    // but the button for it must be disabled, so it can no longer be picked.
     expect(buttonTagFor(markup, String(sibling?.id))).toContain('disabled=""');
-    // A sibling member field on the same record stays editable.
-    // (`label` is not used for this check: with only 7 rows it infers as its
-    // own enum, same as `id`, so it is not a representative "ordinary" field.)
     expect(inputTagFor(markup, String(record.memberIds[0]))).not.toContain('disabled=""');
   });
 });

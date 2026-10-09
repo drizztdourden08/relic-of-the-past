@@ -1,10 +1,4 @@
 /* @layer test @kind test */
-/**
- * The flat variable table: the exact fifteen names the plan's data-surface
- * section lists plus the three countdown names §62 added, the three scope extras kept OUT of the table proper, and the
- * scope-builder that turns the HUD's existing vitals fields into the numbers
- * an expression actually evaluates against.
- */
 import { describe, expect, it } from 'vitest';
 import {
   HUD_SCOPE_EXTRAS, HUD_VARIABLES, hudDataScope, hudVariableNamesFor, isHudScopeExtra, isHudVariableName,
@@ -16,7 +10,6 @@ const PLAN_VARIABLES = [
   'life_current', 'life_max', 'magic_current', 'magic_max', 'half_magic', 'armor',
   'arrow_current', 'arrow_max', 'bomb_current', 'bomb_max', 'key_current',
   'rupee_current', 'rupee_max', 'silver_arrows', 'slot_count',
-  // §62: the HUD countdown, for a formula or a switch to read.
   'countdown_active', 'countdown_seconds', 'countdown_frames',
 ];
 

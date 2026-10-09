@@ -1,14 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Which consequence lines a tick set produces, and that the table they come
- * from has not drifted from the derivation it describes.
- *
- * The lines are the panel's live reading of `derivedItemPower`, so the load-
- * bearing assertion here is the lockstep one: for any tick set, the switches
- * the derivation masks on are exactly the switches the visible lines stand
- * for. Everything else is the plain contract: nothing while the ladder is
- * whole, the beam-only three while the first rung alone is ticked.
- */
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
 import { derivedItemPower } from '@shared/randomizer/world/item-power/item-power-rule';
@@ -22,7 +12,6 @@ import {
 import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
 import type { ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
 
-/** The default set with the blade family's ticks replaced. */
 const withSwordTicks = (ticks: readonly boolean[]): ProgressiveSetting => ({
   ...defaultProgressiveSetting(), sword: ticks,
 });
@@ -30,7 +19,6 @@ const withSwordTicks = (ticks: readonly boolean[]): ProgressiveSetting => ({
 const termsOf = (setting: ProgressiveSetting): readonly string[] =>
   progressiveTickConsequences(setting).map(({ term }) => term);
 
-/** The switches the derivation masks on for this tick set. */
 const maskedFieldsOf = (setting: ProgressiveSetting): readonly string[] => {
   const derived = derivedItemPower(
     DEFAULT_ITEM_POWER, swordReachable(setting), beamSwordReachable(setting));
@@ -38,7 +26,6 @@ const maskedFieldsOf = (setting: ProgressiveSetting): readonly string[] => {
     .filter((field) => derived[field] !== DEFAULT_ITEM_POWER[field]);
 };
 
-/** The switches the visible lines stand for, in table order. */
 const shownFieldsOf = (setting: ProgressiveSetting): readonly string[] => {
   const shown = new Set(termsOf(setting));
   return TICK_CONSEQUENCES.filter(({ line }) => shown.has(line.term)).map(({ field }) => field);

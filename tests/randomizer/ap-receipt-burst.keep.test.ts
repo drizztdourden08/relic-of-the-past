@@ -1,11 +1,4 @@
 /* @layer tests @kind test */
-/**
- * A burst of received items (a goal's collect sends every remaining item in one packet). Each
- * item's line is composed when its delivery reaches the front of the queue, so 200 items queued
- * at once each show their own line and none falls back to the class line, while the ring of 32
- * never holds more than the delivery in flight. Runs the real composer against the recording
- * core (ap-fake-module.ts); the queue is a recording stand-in driven in order, as the real one runs.
- */
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { packPackedBytes, unpackPackedBytes } from '@shared/asset-extraction/packed-bytes';
 import { RANDOMIZER_MSG_BASE, RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
@@ -63,7 +56,6 @@ const chunkAt = (id: number): Uint8Array | undefined => {
   return blob === undefined ? undefined : unpackPackedBytes(unpackPackedBytes(blob)[1])[id];
 };
 
-/** Item |i| of the burst: every fifth from the server, every seventh a progressive wallet. */
 const burstItem = (i: number): { item: string; sender: string | null } => ({
   item: i % 7 === 3 ? WALLET : `Treasure ${i}`,
   sender: i % 5 === 0 ? null : `Player ${i % 3}`,
@@ -100,7 +92,6 @@ it('gives each of 200 items received at once its own line at delivery time', () 
     expect(entry.messageOf()).toBe(id);
     held.add(id);
     shown.push(chunkAt(id));
-    // A progressive item's detail page keeps its id and bytes through the burst.
     expect(chunkAt(plannedIds[1])).toEqual(detailPage);
     entry.onGranted?.();
     entry.onComplete?.();
@@ -108,7 +99,6 @@ it('gives each of 200 items received at once its own line at delivery time', () 
   expect(held.size).toBeLessThanOrEqual(ARRIVAL_SLOTS);
   expect(queue.warnings).toEqual([]);
 
-  // The same lines composed as planned lines: byte for byte what each receipt showed.
   const reference = setSessionReceiptMessages([...planned, ...items.map(lineOf)]) as number[];
   items.forEach((_, i) => expect(shown[i]).toEqual(chunkAt(reference[planned.length + i])));
   expect(new Set(shown.map((chunk) => chunk?.join(','))).size).toBe(new Set(items.map(lineOf)).size);

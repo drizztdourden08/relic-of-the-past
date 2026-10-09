@@ -7,10 +7,6 @@ import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/bui
 import type * as TableViewModule from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/use-table-view';
 import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// What counts as a layout change, and proof that the table hook and the
-// persisted view snapshot start from the same seed. See data-table-render.test.ts
-// for why the render suite (SSR, no effects) cannot prove the latter on its own.
-
 const screens = all('screen') as readonly Record<string, unknown>[];
 
 let signatureOf: typeof TableViewModule.signatureOf;
@@ -19,8 +15,6 @@ beforeEach(async () => {
   vi.resetModules();
   const load = vi.fn().mockResolvedValue({});
   const save = vi.fn().mockResolvedValue(undefined);
-  // The view-state binding reaches lib/storage -> log-bus, which touches
-  // window at module load, so the stub has to precede the import.
   vi.stubGlobal('window', {
     api: { uiViews: { load, save } },
     addEventListener: () => {},
@@ -36,10 +30,6 @@ afterEach(() => {
 });
 
 describe('the two sides start in sync, so the first render never writes', () => {
-  // The SSR assertions in data-table-render.test.ts cannot prove this (effects
-  // never run). What does: the table hook and the view snapshot are seeded
-  // from the same column list, so the capture effect's guard is true on the
-  // first pass. Asserted here directly.
   const sameSeed = async (initial: readonly TableColumn[]): Promise<boolean> => {
     const { initialState } = await import('../../apps/web/src/ui/design-system/data/table/use-data-table');
     const { emptySnapshot } = await import('../../apps/web/src/ui/design-system/data/view-state/snapshot');

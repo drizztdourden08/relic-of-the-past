@@ -11,9 +11,6 @@ import type { IdRefOption, IdRefOptionResolver } from '../../apps/web/src/ui/des
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests: which control an id reference is offered as, and that the
-// injected lookup reaches it with real rows. Opening and typing need a browser.
-
 const INPUT = '<input';
 const DROPDOWN = 'class="select-trigger';
 
@@ -159,7 +156,6 @@ describeDataset('the whole form, wired end to end', () => {
       onSave: async () => undefined,
       resolveIdRefOptions: resolveIdRefOptionsFor,
     }));
-    // Order and membership both matter for a list of references, so the rows stay.
     expect(markup).toContain('aria-label="Move up"');
     expect(markup).toContain('+ Add');
     const options = resolveIdRefOptionsFor('screen', fieldAt(rows, 'screenId'));

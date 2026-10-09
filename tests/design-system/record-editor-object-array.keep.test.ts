@@ -12,14 +12,9 @@ import { numberBoundsResolverFor } from '../../apps/web/src/ui/domains/app/views
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests plus unit tests over the two helpers: an element's fields
-// get the same real controls a top-level field gets. Add, drag and dropdown
-// need a browser.
-
 const PICKER = 'class="select-trigger';
 
 const screens = all('screen');
-/** Rendering every screen takes under two seconds alone and more under a full parallel run. */
 const WHOLE_COLLECTION_TIMEOUT_MS = 30_000;
 
 const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {

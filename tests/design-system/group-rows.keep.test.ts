@@ -6,9 +6,6 @@ import type { GroupedRow } from '../../apps/web/src/ui/design-system/data/table/
 import { deriveRows } from '../../apps/web/src/ui/design-system/data/table/derive-rows';
 import { getPath } from '../../apps/web/src/ui/design-system/data/schema/path';
 
-// Grouping nests: a group's children are either the next level or the rows
-// themselves, so a renderer walks the tree and collapsing is a local decision.
-
 interface Row { world: string; kind: string; id: string }
 
 const ROWS: Row[] = [

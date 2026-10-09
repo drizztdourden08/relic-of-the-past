@@ -3,10 +3,6 @@ import { describe, it, expect } from 'vitest';
 import type { SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 
-// The config is a DIFF over the derived base, never a replacement. Everything
-// below is really one assertion said several ways: whatever the config does not
-// mention keeps exactly what the data said.
-
 const ROWS = [
   { id: 'screen-001', name: 'first', size: 3, nested: { deep: { flag: true } }, only: 'here' },
   { id: 'screen-002', name: 'second', size: 5, nested: { deep: { flag: false } } },

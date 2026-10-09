@@ -1,11 +1,4 @@
 /* @layer test @kind test */
-/**
- * The `dungeon` strategy's room-screens probe: the loaded room resolves to a
- * dungeon whose roomScreenIds does not list this screen. The probe reads
- * "the screen we are on" off `observations.match?.screen.id` (see
- * `rooms.probe.ts`), so `contextFor` builds a matching `ScreenMatchResult`,
- * as production does (`use-screen-observations.ts`).
- */
 import { describe, it, expect } from 'vitest';
 import { all, getScreen } from '@shared/game/data';
 import type { DungeonRecord, ScreenId } from '@shared/game/data';
@@ -28,8 +21,6 @@ const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObserv
   ...overrides,
 });
 
-/** Mirrors `use-screen-observations.ts`: `context.screenId` and
- *  `observations.match?.screen.id` always agree in production. */
 const contextFor = (screenId: ScreenId | null, o: Partial<ScreenObservations>): DetectionContext => {
   const match = screenId ? { screen: getScreen(screenId), method: 'exact' as const } : null;
   return { origin: 'live', screenId, observations: observations({ match, ...o }) };
@@ -61,7 +52,6 @@ describeDataset('dungeon strategy (room-screens probe)', () => {
     expect(draft.confidence).toBe('certain');
     expect((draft.current as DungeonRecord).roomScreenIds).not.toContain(missingScreen.id);
     expect((draft.proposed as DungeonRecord).roomScreenIds).toContain(missingScreen.id);
-    // Nothing else about the record changes.
     expect((draft.proposed as DungeonRecord).roomScreenIds.length).toBe(dungeon.roomScreenIds.length + 1);
   });
 

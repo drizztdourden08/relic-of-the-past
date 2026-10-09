@@ -1,10 +1,4 @@
 /* @layer test @kind test */
-/**
- * The automation predicate decides whether a launch may write the shared
- * configuration (default profile, window position). It must answer YES for
- * every automation flag, including a run that forgot `--instance`, and NO for
- * an ordinary launch; a false NO lets an agent run repoint the user's profile.
- */
 import { describe, it, expect, afterEach } from 'vitest';
 // @ts-expect-error -- plain .ts module under electron/, imported here for its pure logic
 import { AUTOMATION_FLAGS, isAutomationLaunch } from '../../apps/desktop/electron/instance/automation-launch';
@@ -37,7 +31,6 @@ describe('isAutomationLaunch', () => {
   });
 
   it('catches an automated run that forgot --instance', () => {
-    // The case that motivated widening the guard: pinned to another profile, no instance.
     withArgv(['--no-focus', '--muted', '--profile=agent-one', '--auto-state=test-jail-cell'], () =>
       expect(isAutomationLaunch()).toBe(true));
   });
@@ -48,8 +41,6 @@ describe('isAutomationLaunch', () => {
   });
 
   it('covers the two shared files by covering their triggers', () => {
-    // app.json is written via loadProfileForGame (--auto-state / --screenshot paths);
-    // window-state.json on close. Both are reached by these flags.
     for (const flag of ['--auto-state=1', '--screenshot=x', '--instance=a', '--window-size=800x600']) {
       withArgv([flag], () => expect(isAutomationLaunch(), flag).toBe(true));
     }

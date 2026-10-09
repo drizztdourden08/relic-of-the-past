@@ -1,16 +1,4 @@
 /* @layer tests @kind test */
-/**
- * What keeps the comparison panes reading as ONE view: the same open tab and
- * the same scroll offset.
- *
- * The tab needs no mechanism: `DetailTabs` is fully controlled, so both panes
- * get the same `{tab, onTabChange}` pair; the SSR pass proves it reaches both.
- *
- * The scroll uses `ScrollArea`'s guard (tests/design-system/scroll-area-sync.test.ts):
- * the side the user scrolled leads, the other follows, and the follower's
- * programmatic scroll is swallowed. The controllers below are wired as the two
- * `ScrollArea`s are, with `followerScrollTo` deciding which side is driven.
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -62,7 +50,6 @@ describeDataset('followerScrollTo drives only the follower', () => {
 });
 
 describeDataset('the pane pair, wired as the component wires it', () => {
-  /** Two real controllers plus the leader/follower rule. `fireNativeScroll` fires only when `scrollTo()` moved the node. */
   const buildPanes = () => {
     const nodes: Record<PaneSide, FakeNode> = { current: createFakeNode(), proposed: createFakeNode() };
     const controllers = {
@@ -112,7 +99,6 @@ describeDataset('the pane pair, wired as the component wires it', () => {
 
     expect(nodes.current.scrollTop).toBe(300);
     expect(nodes.proposed.scrollTop).toBe(300);
-    // One programmatic move per real scroll, on the follower only.
     expect(nodes.current.scrollToCalls + nodes.proposed.scrollToCalls).toBe(3);
   });
 
@@ -146,8 +132,6 @@ describeDataset('the two panes share one tab', () => {
 
   beforeEach(async () => {
     vi.resetModules();
-    // The view-state binding reaches lib/storage -> log-bus, which touches
-    // window at module load, so the stub has to precede the import.
     vi.stubGlobal('window', {
       api: {
         uiViews: { load: vi.fn().mockResolvedValue({}), save: vi.fn().mockResolvedValue(undefined) },

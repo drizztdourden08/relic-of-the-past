@@ -1,11 +1,4 @@
 /* @layer tests @kind test */
-/**
- * DeathLink's toasts, read at the online notice seam (online-notices.ts) that the play area's
- * toast stack listens to, with the online client against an in-process server and a recording
- * core: a room death that kills Link, one that finds him already down, and our own death sent
- * out, each with the exact line the toast shows. No death the room caused, and no bounce of our
- * own, raises one.
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
 import { onOnlineNotice } from '@app/lib/game/randomizer-client/online-notices';

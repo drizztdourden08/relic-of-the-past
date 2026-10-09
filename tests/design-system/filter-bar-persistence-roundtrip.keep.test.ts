@@ -9,12 +9,6 @@ import { capture } from '../../apps/web/src/ui/design-system/data/view-state/sna
 import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 import type { TableState, ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 
-// The debounced write path end to end: what a rapid add/remove/add sequence
-// leaves on disk once the 400ms debounce (lib/storage/ui-views.ts) flushes.
-// Nothing mocks `saveViewSnapshot`/`loadViewSnapshot`: the reported bug
-// ("filters being added without me doing it") was live persistence, so this
-// uses the real repository like view-state-load-race.test.ts, for the write side.
-
 const KEY = 'data-inspector-query:screen' as ViewKey;
 const ROWS = [{ id: 'item-001', name: 'alpha' }];
 const schema = createSchemaIndex(buildSchema(ROWS));
@@ -101,7 +95,6 @@ describe('a full add/remove sequence round-trips through the disk repository', (
     await vi.advanceTimersByTimeAsync(400);
 
     const writtenMap = save.mock.calls[0][0];
-    // Simulate the next launch: a cold module, reading back exactly what got written.
     vi.resetModules();
     load = vi.fn().mockResolvedValue(writtenMap);
     save = vi.fn().mockResolvedValue(undefined);

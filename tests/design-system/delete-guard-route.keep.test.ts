@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The delete-guard's rule, pulled out of `useDeleteGuard` as a pure function:
- * a referenced record stops at confirmation, an unreferenced one deletes
- * immediately with no dialog.
- */
 import { describe, it, expect } from 'vitest';
 import { all, ITEM_GROUP_IDS } from '@shared/game/data';
 import { referencesTo } from '../../shared/game/data/relationships/reference-index';
@@ -47,8 +42,6 @@ describeDataset('routeDelete against the real dataset', () => {
   });
 
   it('deletes an item group nothing currently references with no confirmation', () => {
-    // Swords is a real, seeded group with no static Requirement pointing at it today
-    // (pinned by reference-index.test.ts). This is the guard's "no friction" path for real data.
     const hits = referencesTo('item-group', ITEM_GROUP_IDS.Swords);
     expect(hits).toEqual([]);
     expect(routeDelete(hits)).toEqual({ kind: 'immediate' });

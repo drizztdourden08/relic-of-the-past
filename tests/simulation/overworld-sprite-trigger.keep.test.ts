@@ -5,11 +5,6 @@ import { planTrigger, planSpriteTrigger } from '../../shared/game/simulation/tri
 import { find } from '../../shared/game/data';
 import { describeDataset } from '../dataset-guard';
 
-// Overworld sprite → TriggerAction mapping. Outdoor discovery uses the same
-// kind-based dispatch as indoors: NPC-kind sprites resolve their flag/item
-// payload from the check records' gameId by spriteType; anything else maps to
-// null so the engine skips it (no invented overworld mask).
-
 const KING_ZORA_TYPE = 0x52;
 const ZORAS_DOMAIN_SCREEN = 0x0f;
 

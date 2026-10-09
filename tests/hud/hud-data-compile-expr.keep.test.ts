@@ -1,17 +1,4 @@
 /* @layer test @kind test */
-/**
- * `compileExpr` is the piece everything above it assumes cannot fail: it must
- * never throw, never hang, and never let a document smuggle real JavaScript
- * past the arithmetic the plan promised. Every nasty input the phase-1 plan
- * calls out by name gets its own case here.
- *
- * ONE CORRECTION TO THE PLAN, proved by `disabled operators` below: expr-eval
- * does not use `&&`/`||` for logical AND/OR - it uses the words `and`/`or`
- * (`||` is string concatenation instead). The plan's own worked examples
- * ("index == count - 1 && item < 8") are written in the wrong dialect; the
- * fixture's `last-heart-gate` entry is the corrected form, and
- * `javascript-and` proves the original spelling fails.
- */
 import { describe, expect, it } from 'vitest';
 import expressions from '../fixtures/hud-expressions.json';
 import { MAX_EXPR_LENGTH, compileExpr, compileExprCacheSize } from '@shared/hud/data';
@@ -48,14 +35,6 @@ describe('compileExpr - disabled operators really are rejected', () => {
     expect(compileExpr(expressions.invalid['in-operator']).ok).toBe(false);
   });
 
-  /**
-   * THE DANGEROUS HALF OF A PAIR. In expr-eval `||` concatenates strings - it is
-   * not the logical or, which is `or`. Left enabled, `life_current || 0` parsed
-   * clean and, with life at 11, produced the string "110" that `compile-expr`'s
-   * own numeric coercion turned into 110: a wrong number with no error anywhere,
-   * because the parse was valid and the variable was known. Its twin `&&` was
-   * never a risk - it has no meaning in this grammar at all and says so.
-   */
   it('refuses `||`, which concatenates instead of or-ing, and used to answer 110 for 11', () => {
     expect(compileExpr('life_current || 0').ok).toBe(false);
   });
@@ -67,27 +46,11 @@ describe('compileExpr - disabled operators really are rejected', () => {
     expect(compileExpr('not half_magic').ok).toBe(true);
   });
 
-  /**
-   * THE OTHER HALF OF `||`'s LESSON, and the second of the two `shared/`
-   * one-liners the UX review asks for. `random()` parses and evaluates without
-   * complaint, and produces a DIFFERENT number on every call - so a layout using
-   * it cannot be previewed (the live result under the field disagrees with
-   * itself between renders), cannot be diffed, and draws differently on two
-   * loads of the same document. Nothing in the chain would ever have said so.
-   *
-   * Refused AFTER the parse, not by dropping it from `parser.functions`:
-   * expr-eval has no per-function switch, and deleting the entry would only
-   * demote `random` to an unknown name that fails at EVALUATE time, which is a
-   * runtime surprise instead of an authoring error.
-   */
   it('refuses random(), which would make a HUD non-deterministic frame to frame', () => {
     const refused = compileExpr('random()');
     expect(refused.ok).toBe(false);
     expect(refused.ok === false && refused.message).toContain('re-rolls on every frame');
-    // Nested just as dead: `symbols()` names it wherever it is called from.
     expect(compileExpr('ceil(random() * life_max)').ok).toBe(false);
-    // And as a bare name, which is how it would be smuggled past a check that
-    // only looked for the call parens.
     expect(compileExpr('random').ok).toBe(false);
   });
 
@@ -106,8 +69,6 @@ describe('compileExpr - malformed and pathological input', () => {
   });
 
   it('refuses an unknown-variable expression at compile time not at all - it is a syntax question', () => {
-    // An unknown NAME is syntactically fine; "which names are known" is
-    // validate-value.ts's job, layered on top. compile-expr only parses.
     expect(compileExpr(expressions.invalid['unknown-variable']).ok).toBe(true);
   });
 
@@ -142,8 +103,8 @@ describe('compileExpr - the parse-once cache', () => {
     const grew = compileExprCacheSize();
     const second = compileExpr(source);
     expect(grew).toBe(before + 1);
-    expect(compileExprCacheSize()).toBe(grew); // second call added nothing
-    expect(second).toBe(first); // same object, not a re-parse that happens to agree
+    expect(compileExprCacheSize()).toBe(grew);
+    expect(second).toBe(first);
   });
 
   it('a different source gets its own cache entry', () => {

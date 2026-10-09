@@ -1,15 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The Archipelago id tables (shared/randomizer/archipelago/ap-ids.data.ts) are complete,
- * unique and FROZEN.
- *
- * Complete: every location the widest world declares and every item any option can put in
- * the pool has an id, and no story event carries one. Unique: no id is used twice across both
- * tables, and no name twice within one. Frozen: the ids handed out so far are pinned by a
- * digest over the first FROZEN_* ids of each table. Appending new ids past them leaves the
- * digest alone; editing, reusing or removing one fails, because a seed already generated
- * carries those numbers. After an append, raise the count and the digest together.
- */
 import { createHash } from 'crypto';
 import { describe, expect, it } from 'vitest';
 import { optionByKey } from '@shared/randomizer/world/options.data';
@@ -31,19 +20,9 @@ import { RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data
 import { ALL_SHOP_SLOT_LOCATIONS } from '@shared/randomizer/world/shops/shop-slots';
 import { describeDataset } from '../dataset-guard';
 
-/** How many ids each table has handed out and pinned. Only ever raised, never lowered. */
 const FROZEN_LOCATIONS = 472;
 const FROZEN_ITEMS = 277;
 
-/**
- * sha256 over `id=key` lines of the frozen ids, in id order.
- *
- * The location digest was re-pinned once for a rename that kept every id and every name: the
- * 155 shop keys moved from a shelf's check id (`check-638`) and its restocks
- * (`slot-check-638-2`) to `kakariko-shop-shelf_left-slot_1` and `..._slot_2`. With each new key
- * mapped back to its old one, the table hashes to the previous digest,
- * 736690669490347d1fa78bcf312613bccf0ef65db28c5f02c7978f1ebb55c9d9.
- */
 const LOCATION_DIGEST = 'a44c5f9c4d75ff6cd75636b16ac097b15afd8c9288ca102be82de1b0b5ede22f';
 const ITEM_DIGEST = '0b93d5ec195651666495bd173f75f2610b480c1344cd9a202ee12d84d2125161';
 

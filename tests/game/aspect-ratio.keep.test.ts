@@ -6,25 +6,25 @@ describe('validateCustomRatio', () => {
   it('accepts ratios from 4:3 up to the wide ceiling', () => {
     expect(validateCustomRatio(4, 3).valid).toBe(true);
     expect(validateCustomRatio(16, 9).valid).toBe(true);
-    expect(validateCustomRatio(32, 9).valid).toBe(true); // 3.56, still within the ~4.27 (1024px linear-world) cap
+    expect(validateCustomRatio(32, 9).valid).toBe(true);
   });
 
   it('accepts tall (taller-than-4:3) ratios down to the portrait floor', () => {
-    expect(validateCustomRatio(5, 4).valid).toBe(true); // 1.25
-    expect(validateCustomRatio(1, 1).valid).toBe(true); // square
-    expect(validateCustomRatio(3, 4).valid).toBe(true); // 0.75 portrait
-    expect(validateCustomRatio(9, 16).valid).toBe(true); // 0.5625, still within the 256/480 floor
+    expect(validateCustomRatio(5, 4).valid).toBe(true);
+    expect(validateCustomRatio(1, 1).valid).toBe(true);
+    expect(validateCustomRatio(3, 4).valid).toBe(true);
+    expect(validateCustomRatio(9, 16).valid).toBe(true);
   });
 
   it('rejects ratios taller than the portrait floor', () => {
-    const r = validateCustomRatio(1, 2); // 0.5 < 256/480 ≈ 0.533
+    const r = validateCustomRatio(1, 2);
     expect(r.valid).toBe(false);
     expect(r.error).toMatch(/tall/i);
   });
 
   it('rejects ratios wider than the max', () => {
-    expect(validateCustomRatio(9, 2).valid).toBe(false); // 4.5 > ~4.27
-    expect(validateCustomRatio(5, 1).valid).toBe(false); // 5.0
+    expect(validateCustomRatio(9, 2).valid).toBe(false);
+    expect(validateCustomRatio(5, 1).valid).toBe(false);
   });
 
   it('rejects non-integer or non-positive input', () => {
@@ -48,12 +48,12 @@ describe('detectScreenRatio', () => {
   });
 
   it('renders a 5:4 screen at its own (mildly tall) ratio', () => {
-    vi.stubGlobal('window', { screen: { width: 1280, height: 1024 } }); // 1.25, now filled instead of clamped to 4:3
+    vi.stubGlobal('window', { screen: { width: 1280, height: 1024 } });
     expect(detectScreenRatio()).toEqual({ w: 5, h: 4 });
   });
 
   it('clamps ultra-wide screens to the max', () => {
-    vi.stubGlobal('window', { screen: { width: 5120, height: 1080 } }); // 4.74
+    vi.stubGlobal('window', { screen: { width: 5120, height: 1080 } });
     const { w, h } = detectScreenRatio();
     expect(w / h).toBeLessThanOrEqual(MAX_ASPECT + 1e-6);
   });

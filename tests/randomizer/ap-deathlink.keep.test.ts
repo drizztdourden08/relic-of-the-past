@@ -1,16 +1,10 @@
 /* @layer tests @kind test */
-/**
- * The multiworld client's DeathLink both ways, with the slot data deciding over the profile flag,
- * and its refusal of a slot from another world package version. Split from ap-protocol.keep.test.ts;
- * the shared room and boot are in ap-protocol-harness.ts.
- */
 import { describe, expect, it, vi } from 'vitest';
 import { parseSlotData } from '@shared/randomizer/archipelago/parse-slot-data';
 import { AP_WORLD_VERSION } from '@shared/randomizer/archipelago/ap-game';
 import { boot, installClientHarness, makeRoom, settle } from './ap-protocol-harness';
 import type { FakeRoom, FakeServer } from './ap-fake-server';
 
-// The real bus installs window error handlers on import; node has no window.
 vi.mock('@app/lib/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
@@ -24,7 +18,6 @@ const withDeathLink = (deathLink: boolean): FakeRoom => {
   return room;
 };
 
-/** The DeathLink bounces only: the network ping is a Bounce too. */
 const deathLinkBounces = (server: FakeServer) => server.of('Bounce').filter((packet) => packet.tags?.includes('DeathLink'));
 
 describe('DeathLink', () => {
@@ -67,7 +60,6 @@ describe('DeathLink', () => {
     server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source: 'Zelda', time: 0, cause: 'fell' } }]);
     await settle();
     expect(core.kills).toBe(1);
-    // The fairy revived Link, so the core reported nothing and cleared its room-kill flag.
     await vi.advanceTimersByTimeAsync(6000);
     core.die(0);
     expect(deathLinkBounces(server)).toEqual([{

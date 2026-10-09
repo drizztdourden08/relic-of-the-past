@@ -1,10 +1,4 @@
 /* @layer test @kind test */
-/**
- * The shared `detectors/` barrel was deleted in phase 5; every kind (`actor`,
- * `check`, `dungeon`, `item`) is a comparison strategy now. Importing each
- * strategy's barrel, then `strategy-detectors`, installs a `strategy:<kind>`
- * detector per kind.
- */
 import { describe, it, expect } from 'vitest';
 import { detectorsFor } from '@shared/game/recommendations';
 import '@shared/game/recommendations/strategies/actor';

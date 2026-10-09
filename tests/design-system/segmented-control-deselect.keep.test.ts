@@ -1,8 +1,4 @@
 /* @layer tests @kind test */
-/**
- * SegmentedControl's click decision as a plain function (no jsdom). The wiring
- * is covered at the SSR/props level in enum-kit-tiering.test.ts.
- */
 import { describe, it, expect } from 'vitest';
 import { resolveClick } from '../../apps/web/src/ui/design-system/primitives/SegmentedControl/behavior/resolve-click';
 

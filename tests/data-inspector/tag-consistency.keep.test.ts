@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * `create-tag.ts`'s `isTagKey` gate never runs against a straight edit of a
- * `TagRecord`. `writeTag` (`record-writers.ts`) is the one save path every tag
- * edit goes through, so the check lives there: `name` must read
- * `namespace:value`, or the save is refused before the write channel.
- */
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';

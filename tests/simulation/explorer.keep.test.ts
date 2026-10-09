@@ -15,7 +15,6 @@ import { evaluateOutcome } from '../../shared/game/simulation/engine/goal';
 import type { DetectedCheck } from '../../shared/game/simulation/types';
 import { describeDataset } from '../dataset-guard';
 
-/** dungeon-003 is the third dungeon; the id is the identity, its name is not. */
 const EASTERN = 'dungeon-003';
 const TITANS_MITTS = 'item-029';
 const HAMMER = 'item-010';
@@ -33,7 +32,7 @@ describe('explorer with consumable small keys', () => {
 
     expect(spendKey(s, EASTERN)).toBe(true);
     expect(spendKey(s, EASTERN)).toBe(true);
-    expect(spendKey(s, EASTERN)).toBe(false); // none left
+    expect(spendKey(s, EASTERN)).toBe(false);
     expect(keyAvailable(s, EASTERN)).toBe(false);
   });
 
@@ -80,8 +79,6 @@ describeDataset('explorer and the unlock-reset rule', () => {
     onCheckVerified(s, detected({ itemReceived: HAMMER, checkId: 'check-072' }));
     expect(s.epoch).toBe(1);
     expect(s.frontier).toHaveLength(0);
-    // Localized refresh: only the current screen re-floods; other visits stay,
-    // and progressSinceEpoch stays set so the exhaustion pass sweeps later.
     expect(s.visited.has('A')).toBe(false);
     expect(s.visited.has('B')).toBe(true);
     expect(s.progressSinceEpoch).toBe(true);

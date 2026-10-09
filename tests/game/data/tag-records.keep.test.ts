@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The tag collection and the migration that produced it. Pinned: the seed is
- * COMPLETE and LOSSLESS (every taxonomy term has exactly one record under the
- * same label, and back), and every reference the migrated screen and
- * connection records hold resolves.
- */
 import { describe, it, expect } from 'vitest';
 import {
   ALL_TAGS, all, CONNECTION_TAG_METADATA, CONTENT_TAG_METADATA, find, getTag, tagById, tagByKey,
@@ -55,7 +49,6 @@ describeDataset('the tag collection', () => {
   it('reaches the facade like any other kind', () => {
     expect(all('tag')).toHaveLength(ALL_TAGS.length);
     expect(getTag('tag-001').name).toBe(ALL_TAGS[0].name);
-    // A miss throws and says which id: the getter no longer fabricates a record to answer with.
     expect(() => getTag('tag-999')).toThrow("no tag record with id 'tag-999'");
   });
 });
