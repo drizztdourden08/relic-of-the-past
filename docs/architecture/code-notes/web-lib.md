@@ -179,6 +179,142 @@ over a set that is on disk.
 Sprite URLs carry the revision. A view that memoizes them recomputes when the revision moves,
 or it keeps serving the URLs that failed while the folder was being written.
 
+## storage
+
+Each store binds a library in `shared/storage/` to the platform FileStore and mirrors the
+old `window.api` method names, so call sites swap one for one and persistence runs per OS
+through the platform layer.
+
+## storage/assets-store
+
+The `.dat` is checked and loaded over FileStore and extracted in a Web Worker: ROMs and
+language sets are read here, the worker bakes them, and the base blob plus one sidecar per
+optional cartridge are written back. The base and each supplement are separate files, so
+rebuilding the base never destroys a supplement; they are joined only when loading, because
+the core expects a single buffer. The bake pulls in the whole dialogue compression path,
+which belongs off the UI thread.
+
+- A missing blob is not stale. The missing file path already recompiles; staleness only
+  concerns a blob that exists but predates the current bake format (`bake-version.ts`).
+- A supplement whose cartridge is gone must not linger as a stale sidecar.
+- After a bake, anything already running booted with the previous blob and is now behind,
+  so the game assets store is told.
+- `recompileAll` rebuilds every ROM that already has a cached `.dat`, after a language set
+  changes.
+
+## storage/audio-probe.ts
+
+ffprobe is a native process and only runs in the main process. On a host without that IPC
+surface (mobile, browser) the probe resolves null, which callers already treat as nothing
+knowable, so no caller needs a host check.
+
+## storage/extraction-client.ts
+
+One Web Worker per job.
+
+## storage/import-progress-bus
+
+Import runs in the renderer over FileStore, so progress is published on this bus, never as a
+main process IPC event. `useImportProgress` subscribes to it.
+
+## storage/languages-store
+
+- Saving, creating and duplicating a set all rebake every blob, which is expensive, so
+  callers debounce edits.
+- `getLanguageSetFont` returns the set's glyph tiles plus its per glyph advance table and
+  never rebakes, so a preview can ask freely. `exportLanguageSet` packs the set folder as
+  `.rlang` and never rebakes either.
+
+## storage/link-sprites-store
+
+Validation is per container: a ZSPR by its magic, a sprite pack by being a readable zip with a
+manifest, so a mislabelled file is rejected on import, not at boot. `writeLinkSprite`
+overwrites in place for the studio's save and skips the rename that import applies.
+
+## storage/menu-text-store.ts
+
+The menu, credits and closing caption bodies are decoded on demand from the player's own
+ROM. They are not in a language pack (the extractor copies their bytes undecoded) and are
+game derived text, so they may never be committed. Results are cached per language because
+reaching them means reading a whole ROM. The set's own language is preferred, but another
+region's ROM still shows a translator what each slot holds, and the answering language
+travels with the result. A ROM the pipeline cannot read is skipped. No matching ROM is an
+ordinary state, not a failure.
+
+## storage/msu-store
+
+- `listMsuPackEntries` lists every file in the pack folder except the manifest; this is what
+  an export stores.
+- The audio probe is passed to the metadata read unconditionally. It answers null when no
+  decoder is installed, so the encoded rows stay unfilled.
+- `canTrashMsuPack` is true when a deleted pack goes to the system recycle bin and false when
+  it is removed for good.
+- The import result type comes from `msu-contract`, so the renderer cannot fall behind what
+  an import reports.
+
+## storage/profile-store
+
+`app.json` decides which profile opens by default and is shared by every launch. Loading a
+profile for play writes it on each run, so `setLastProfile` does nothing on any automated
+launch, named instance or not; otherwise the user's next normal launch would resume an
+automated run's profile. The gate sits at this single seam so no call site can forget it.
+`updateActiveInputProfileId` merges the active input profile id into the config without
+clobbering other settings, for the profile cycle shortcut outside the settings screen.
+
+## storage/roms-store
+
+Import runs in the renderer (pick or download, unzip or raw, then FileStore) and reports on
+the import progress bus. Every import names its kind. The base cartridge boots the game; a
+supplement only adds to one, is digest checked before it is written, and never replaces a
+file already there.
+
+## storage/saves-store
+
+Every save state leaves through one of the four writers (quick state, normal save, its
+overwrite, auto save), so the version and format stamp is applied there and not at each call
+site. SRAM is excluded: it is the game's own save file and has nothing to do with snapshot
+layout. Screenshots come back as base64 strings.
+
+## storage/sprites-store
+
+The sprite base URL comes from the platform (`app-sprite://` or `convertFileSrc`). A build
+without sprite definitions extracts nothing and can never call a set stale. The staleness
+rule itself lives in the shared store (`sprites.isStale`); this side only supplies what this
+build emits. The capacity, gear, quiver, pool and shop price symbol reads return the binary
+from the ROM's extracted set, or null before it exists.
+
+## storage/ui-views
+
+The single boundary for durable view state, keyed and app level, not per profile (see
+`shared/ipc/ui-views-contract.ts`). Nothing else touches `window.api.uiViews`; a composite
+that wants persistence goes through `useViewState`. The whole map loads once and is cached,
+every mutation rewrites the whole map, and writes are fire and forget: a failed write logs and
+is dropped. Rapid saves collapse into one write about 400 ms later. A save before the map has
+loaded waits for the load first, because writing early would clobber every other
+collection's saved layout with a file holding only this key. Entries that are not well formed
+snapshots are dropped on load.
+
+## storage/widget-prefs
+
+What a widget's content remembers (tab, filter, view mode), as opposed to its frame. Values
+are `unknown` on purpose: each widget owns its keys and shapes, and the bargain is that a
+value survives a JSON round trip. Prefs come from untrusted JSON, so a wrong shaped file is
+dropped, a version mismatch fails by design (bump the version to discard stale prefs, never
+migrate), and one malformed widget entry is dropped without taking its neighbours. Known
+keys: `tab` (cheats, live data inspector), `viewMode` (checks, inventory), `grouping` and
+`filter` (checks), `mode` (navigation). Widget ids match `WIDGET_DEFINITIONS`.
+
+## storage/widget-state
+
+The single boundary for a profile's widgets: the layout the Widget composite writes and the
+per widget prefs. Both live in `profiles/<id>/tracker.json`, so one cache and one debounced
+write serve both and neither clobbers the other. The blob loads once per profile, every
+mutation rewrites the cached whole, and rapid writes coalesce. `flushWidgetBlob` exists
+because a debounce nobody forces drops whatever the user did just before the window closed.
+Loading a second profile flushes the first one's pending write first. A patch before the file
+is known reads first, or it would write a blob holding only that key. Before this existed a
+drag wrote the whole file on every mouse move and overlapping read modify writes lost data.
+
 ## store/store-site
 
 The Hookshop origin is a placeholder until the store's domain exists. The main process names
