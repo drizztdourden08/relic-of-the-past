@@ -1,25 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * A `text` element is a string or a number, drawn in the game's own extracted
- * glyphs or a real font. A "counter" is this with a numeric `value` and
- * zero-padding already set. That is the toolbar's own Counter button, not a second
- * kind (`hud-text.ts`'s own header).
- *
- * THE OUTER `text | ƒx` SWITCH IS GONE, AND IT WAS DESTRUCTIVE (phase 9).
- * Choosing `text` on a value that held a formula wrote `''` over it; choosing
- * `data` on a string wrote `{ from: 'data', expr: '0' }` over that. Nothing
- * warned and nothing undid it, while the `ValueField` the switch wrapped went
- * to real trouble to preserve exactly the thing the switch above it threw
- * away. `TextValueField` is one field with one rule: a leading `=` makes it a
- * formula and is never stored, `==` escapes a literal `=`.
- *
- * DIGITS AND PAD NOW FOLLOW THE PROPERTY THEY QUALIFY, not the old switch.
- * `hud-text.ts` says they are "meaningful only when `value` resolves to a
- * number", which is true of a bound expression AND of a typed numeral, and was
- * never true of the `data` mode specifically.
- */
-// The face specimen below is `.hud-ref-field__specimen`; this row would
-// otherwise depend on `FontPicker` happening to be imported to bring the sheet.
 import '../HudLayoutEditor.content.css';
 import { Box } from '@ds/primitives/Box';
 import { Field } from '@ds/primitives/Field';
@@ -33,32 +12,12 @@ import { FontPicker } from '../FontPicker';
 import { PaintField } from '../PaintField';
 import { ValueField } from '../ValueField';
 import { TextValueField } from './TextValueField';
-import type { HudElementSpec, HudTextAlign, HudTextPad, HudTextSpriteSet } from '@shared/types/hud';
-
-type TextSpec = Extract<HudElementSpec, { type: 'text' }>;
-
-interface TextContentProps {
-  spec: TextSpec;
-  onChange: (patch: Partial<TextSpec>) => void;
-  scope: Readonly<Record<string, number>>;
-  insideRepeat?: boolean;
-}
-
-const ALIGNS: readonly HudTextAlign[] = ['start', 'center', 'end'];
-const PADS: readonly HudTextPad[] = ['none', 'zero', 'space'];
-
-/** The two extracted sheets, and what each of them can actually draw. The
- *  digits-only limit is knowledge the editor has had all along and has never
- *  once said (`hud-text.ts`: "the HUD's own digits, no letters"). */
-const SPRITE_SETS: readonly { value: HudTextSpriteSet; label: string; specimen: string; warn?: string }[] = [
-  { value: 'hud-digits', label: 'HUD digits', specimen: '07', warn: 'This face has digits only. Letters will not draw.' },
-  { value: 'pause-letters', label: 'Pause letters', specimen: 'Ab', warn: undefined },
-];
+import { ALIGNS, PADS, SPRITE_SETS } from './TextContent.constants';
+import type { HudTextAlign, HudTextPad, HudTextSpriteSet } from '@shared/types/hud';
+import type { TextContentProps, TextSpec } from './TextContent.type';
 
 const TextContent = (props: TextContentProps) => {
   const { spec, onChange, scope, insideRepeat } = props;
-  // `format` qualifies a value that RESOLVES to a number: an expression, or a
-  // typed numeral. A plain string ignores it, so it is not offered for one.
   const numeric = typeof spec.value !== 'string';
   const face = spec.face;
   const set = face.from === 'sprite' ? SPRITE_SETS.find((entry) => entry.value === face.set) : undefined;
@@ -112,12 +71,6 @@ const TextContent = (props: TextContentProps) => {
           <Select size="sm" value={spec.align ?? 'start'} options={ALIGNS.map((a) => ({ value: a, label: a }))} onChange={(align) => onChange({ align: align as HudTextAlign })} />
         </Field>
         <Field size="sm" label="tracking" className="hud-inspect__extent">
-          {/* NOT a `Slider`: `tracking` is extra letter-spacing in SNES px and
-              the model declares no bound for it at any layer. `hud-text.ts`
-              has no range, `validate-text-node.ts` only asks that it be a
-              number, and the renderer never clamps it. A slider needs two
-              ends, and inventing them here would be the panel asserting a rule
-              the document does not have. */}
           <NumberInput size="sm" aria-label="Tracking" step={1} disabled={spec.face.from === 'sprite'} value={spec.tracking ?? 0} onChange={(tracking) => onChange({ tracking: tracking === 0 ? undefined : tracking })} />
         </Field>
       </Box>
@@ -126,4 +79,4 @@ const TextContent = (props: TextContentProps) => {
 };
 
 export { TextContent };
-export type { TextContentProps };
+export type { TextContentProps } from './TextContent.type';
