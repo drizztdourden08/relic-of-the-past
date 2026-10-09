@@ -12,7 +12,7 @@
  */
 
 import { DIFFICULTY_OPTION_DESCRIPTIONS } from './difficulty/difficulty-options.constants';
-import { POND_OPTION_DESCRIPTIONS } from './pond/pond-option-descriptions.data';
+import { POND_OPTION_DESCRIPTIONS } from './pond/pond-option-descriptions.constants';
 import { PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive/progressive-options.constants';
 import { PROGRESSIVE_MODE_DESCRIPTIONS } from './progressive/progressive-mode-options.constants';
 import { RETRO_OPTION_DESCRIPTIONS } from './retro/retro-options.data';

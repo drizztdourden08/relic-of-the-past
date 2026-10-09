@@ -1,5 +1,4 @@
 /* @layer shared-game @kind barrel */
-/** Barrel for the pond model (instances, modes, price ladder, plan, prize slots, rupee gems). */
 export {
   POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER, POND_VANILLA_PRICE, POND_VANILLA_THROWS,
 } from './pond-ladder.data';
@@ -21,7 +20,7 @@ export {
   POND_ASK_ROW_BY_KIND, POND_BOMB_STOPS, POND_BOTTLE_ROW, POND_BOTTLE_STOPS, asksOnlyRupees,
   pondRupeesOnlyAsk,
 } from './pond-ask.data';
-export type { PondAskRow, PondCurrencyRow } from './pond-ask.data';
+export type { PondAskRow, PondCurrencyRow } from './pond.type';
 export type {
   PondAskAmountKind, PondAskCurrency, PondAskSetting, PondBottleAsk, PondDemandView,
 } from './pond-ask.type';
@@ -32,35 +31,35 @@ export {
 export { askOfSetting, parsePondAsk, pondAskValuesOf, readPondAsk } from './pond-ask-from-snapshot';
 export { demandCandidatesOf, pickDemandItem } from './pond-demand-item';
 export { isDemandableItem } from './pond-demand-eligibility';
-export { HOLDABLE_CATEGORIES, UNHELD_ITEMS } from './pond-demand-eligibility.data';
+export { HOLDABLE_CATEGORIES, UNHELD_ITEMS } from './holdable-items.constants';
 export { DEMAND_ITEM_ORDER, DEMAND_ITEM_RANK } from './pond-demand-order.data';
 export { rollPondDemands } from './pond-demand-roll';
 export { amountAt, curvePositionsOf, stopIndexOf } from './pond-demand-ramp';
-export type { PondAskRange } from './pond-demand-ramp';
+export type { PondAskRange } from './pond.type';
 export { POND_SHARE_KEY, effectivePondProfiles, readsPondShare } from './pond-share';
 export {
   POND_FIELDS, POND_MODE_KEYS, POND_OPTION_KEYS, isPondValueKey, pondIdOfModeKey, pondKeyOf, pondModeKeyOf,
 } from './pond-option-keys';
-export type { PondField } from './pond-option-keys';
+export type { PondField } from './pond.type';
 export { customPricesOf, pondPlanOf, rungOf } from './pond-plan';
 export { parsePondSetting, pondSettingFromSnapshot, pondValuesOf } from './pond-from-snapshot';
-export type { ParsedPondSetting } from './pond-from-snapshot';
+export type { ParsedPondSetting } from './pond.type';
 export {
   parsePondProfiles, pondProfileValuesOf, pondProfilesFromSnapshot,
 } from './pond-profiles-from-snapshot';
-export type { ParsedPondProfiles } from './pond-profiles-from-snapshot';
+export type { ParsedPondProfiles } from './pond.type';
 export type { PondProfiles } from './pond-profiles.type';
 export {
   POND_CERTIFIED_SPOTS, isPondDeliverable, isPondExtraLocation, pondCertifiedSpotsOf, pondPrizeLocations,
   presentPondSlots,
 } from './pond-spots';
 export { POND_GEM_SLOTS, RUPEE_DENOMINATIONS } from './rupee-gems.data';
-export type { RupeeDenomination } from './rupee-gems.data';
+export type { RupeeDenomination } from './pond.type';
 export { decomposeRupees, describeRupees, rupeeVolleysOf } from './rupee-gems';
 export { holdPondToWallet, pondCeilingRungOf, pondWalletTopOf } from './pond-wallet-top';
-export type { HeldPondSetting } from './pond-wallet-top';
+export type { HeldPondSetting } from './pond.type';
 export { VANILLA_POND_CEILINGS, pondCeilingsOf } from './pond-ceilings';
-export type { PondCeilings } from './pond-ceilings';
+export type { PondCeilings } from './pond.type';
 export type {
   PondCustomSetting, PondFixedSetting, PondMode, PondPlan, PondSetting, PondThrow,
 } from './pond-profile.type';
