@@ -829,6 +829,68 @@ that kept every id and name: the 155 shop keys moved from a shelf's check id and
 to `<shop>-shelf_<side>-slot_<n>` (previous digest
 `736690669490347d1fa78bcf312613bccf0ef65db28c5f02c7978f1ebb55c9d9`).
 
+### randomizer/ap-online-core.keep.test.ts
+
+The real online core runs against the recording module. The online bits of gate word 5 live
+exactly as long as the session. A location holding another player's item arms the icon id of
+that player's game (Ship of Harkinian plays Ocarina of Time, so the ocarina's picture, at
+`0xB0` plus its place) with a line naming the item and who it went to. The sentinel and the
+icon ids are pinned to the core's own definitions in `foreign_item.c`. A queued grant reports
+itself granted only when the core confirms it. The room's checked locations show done in the
+tracker and leave the poller for good, with no game flag written: a shelf's first stock ticks
+the shelf's record, its restock has none to tick, and the poller's baseline never reports a
+suppressed key. Modules that call the bridge at load are imported first, so the bridge
+finishes loading before those calls.
+
+### randomizer/ap-session-parity
+
+A local seed and a one player room serving the same seed must set the game up identically.
+Both sessions run against the same recording core. Every override, gate, table and file the
+core is handed, plus every receipt line composed and every icon set applied, is the armed set.
+The two sets must match call for call and argument for argument, in any order.
+
+The one planned difference is the online bits of gate word 5: each online write carries
+`kFeatures5_ApOnline`, and with it masked off the word is the local one. A room names the
+item and its owner in a foreign line, which a local seed cannot, so the names are replaced
+before comparing. The room recounts its spheres over the items it holds, so a handed away
+case skips the sphere count.
+
+The shipped defaults already open character checks, world items, key drops, a custom capacity
+pond and progressive custom capacity, so the other cases each move one of those. The last
+case carries its spots through slot data the way a player file hands them to the server, as
+every other probed spot, so a client that ignored them would arm more. The quiver has no
+record: it is placed like any item and arrives as the single arrow receipt (`retro_shelf.c`),
+which the game reads as the bow's quiver. The foreign case puts another player's item on every
+pond rung, every pond prize and the first shop shelf; the local seed carries `item-foreign`
+at the same spots and no setter may refuse the sentinel. No pool icons load, so the room arms
+the plain sentinel, the id a local seed arms. Composed dialogue and icon sets need a real
+asset blob and ROM, so they are mocked; what the session hands them is what must match. The
+preload API answers every call with an empty list, so no file or profile is touched.
+
+### randomizer/progressive-tier-generation.keep.test.ts
+
+A returned placement is the proof of beatability: `generatePlacement` returns one only after
+the sweep collected every location and reached the goal, so a tick set that rolls thirty seeds
+in a row plays. A set that cannot be rolled is refused up front, naming the rung, because a
+load bearing rung left out would make a seed with no ending. The blade rungs used to be on
+that list. The core now has the stand ins of the reference's swordless mode: a hanging cloth
+door can be pulled down, and the hammer breaks the tower's seal and lands on the last fight.
+All four blade copies are vanilla items of character checks, so with those checks out of the
+shuffle the pool never carries one and a tick has nothing to take. Only with both scope tables
+shuffled can the blade ticks reach anything.
+
+### randomizer/progressive-tier-probe.keep.test.ts
+
+The built wasm is loaded in node the way the capacity probe loads it, a family's mask is armed
+the way a session arms it (`WasmSetProgressiveTiers`), and the virtual id (0x62 blade, 0x66
+bow, families in `progressive_grants.c` order) is resolved through the grant resolver as a
+seam would. A copy hands over the lowest rung still present at or above the tier held, so
+unticking a middle rung shortens the ladder. Past the top rung a copy is twenty rupees. A
+family with nothing ticked puts no copy in the pool, so a zero mask means never armed and
+gives the whole ladder back, which keeps a silent session byte identical. The bow byte keeps
+the arrow state in its low bit, so 3 is the top rung held. Skips without the wasm, the asset
+blob or the vault fixture.
+
 ### randomizer/ap-online-connect.keep.test.ts and ap-online-recovery.keep.test.ts
 
 A server that is down at the first connect is retried on the backoff with a countdown; a

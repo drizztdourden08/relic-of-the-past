@@ -1,18 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Generation sweeps over representative tier tick sets. A returned placement is
- * itself the proof of beatability: generatePlacement only hands one back once
- * the sweep has collected every location AND reached the goal, so a set that
- * rolls thirty seeds in a row is a set that plays.
- *
- * The sets that cannot be rolled are pinned just as hard, because that is the
- * point of the guard: a rung that is load-bearing under the rules this app
- * transcribes leaves a seed with no ending, and the generator must say so up
- * front, naming the rung, instead of handing over a placement nobody can finish.
- * The blade rungs used to be on that list and no longer are, because the core grew
- * the stand-ins the reference's swordless mode has, so a file with no blade in
- * it reaches the ending on the hammer and a pulled-down cloth door.
- */
 import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
 import { ITEM } from '@shared/randomizer/world/item-ids.data';
 import { describe, expect, it } from 'vitest';
@@ -29,7 +15,6 @@ import type { ProgressiveFamilyId, ProgressiveSetting } from '@shared/randomizer
 
 const SEEDS = 30;
 
-/** The default set with the named rungs unticked. */
 const withUnticked = (...off: Array<[ProgressiveFamilyId, number]>): ProgressiveSetting => {
   const setting = defaultProgressiveSetting() as Record<ProgressiveFamilyId, boolean[]>;
   for (const [family, index] of off) setting[family][index] = false;
@@ -38,13 +23,6 @@ const withUnticked = (...off: Array<[ProgressiveFamilyId, number]>): Progressive
 
 const snapshotOf = (setting: ProgressiveSetting) => buildOptionsSnapshot(progressiveValuesOf(setting));
 
-/**
- * The same snapshot with both scope tables shuffled and every one of their
- * locations proven deliverable. It is the only reading under which the blade
- * ticks can reach anything: with the character and world checks OUT of the
- * shuffle, all four blade copies are claimed by their own vanilla givers and
- * the shuffled pool carries none to take out (the first case below pins that).
- */
 const shuffledScopeSnapshot = (setting: ProgressiveSetting) => buildOptionsSnapshot({
   ...progressiveValuesOf(setting), include_npc_checks: true, include_world_items: true,
 });
@@ -76,8 +54,6 @@ const ROLLABLE: Array<[string, ProgressiveSetting]> = [
   ['no top blade', NO_GOLD_SWORD],
   ['no top armour', NO_TOP_MAIL],
   ['a blade rung missing from the middle', NO_MIDDLE_SWORD],
-  // Both blade-poor sets roll now that the core carries the stand-ins: a hanging cloth door
-  // can be pulled down, and the hammer breaks the tower's seal and lands on the last fight.
   ['no blade at all', NO_SWORDS],
   ['the first blade only', ONLY_FIRST_SWORD],
 ];
@@ -136,9 +112,6 @@ describe('an unticked rung leaves the pool the same size', () => {
   });
 
   it('reaches nothing while the blades are handed over by checks left out of the shuffle', () => {
-    // All four blade copies are the vanilla items of character checks, so with those
-    // checks locked the shuffled pool never carried one and a tick has nothing to take:
-    // those givers go on handing their tiers over whatever the ticks say.
     expect(countIn(poolOf(ALL_ON), ITEM.progressiveSword)).toBe(0);
     expect(countIn(poolOf(NO_GOLD_SWORD), ITEM.progressiveSword)).toBe(0);
     expect(poolOf(NO_GOLD_SWORD).length).toBe(poolOf(ALL_ON).length);

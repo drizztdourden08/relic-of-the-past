@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The real online core (online-core.ts) against the recording module (ap-fake-module.ts):
- * the online bits of gate word 5 live exactly as long as the session, and a location holding
- * another player's item arms the icon id of that player's game with a line naming the item and
- * who it went to. The sentinel and the icon ids a plan carries are pinned to the core's own
- * definitions. A queued grant reports
- * itself granted only when the core confirms it, and the room's checked locations show done in
- * the tracker and leave the poller for good, with no game flag written.
- */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -47,7 +38,6 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 (globalThis as { window?: unknown }).window ??= {
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
-// The modules that call the bridge at load go first (see ap-session-parity.keep.test.ts).
 await import('@app/lib/game/cheats');
 const { setModule } = await import('@app/lib/game/wasm-bridge');
 const { defaultOnlineCore } = await import('@app/lib/game/randomizer-client/online-core');
@@ -112,7 +102,6 @@ describe('the real online core', () => {
     const placement = generateFromSnapshot('foreign-item', snapshot, probeDeliverableNpcLocations(),
       probeDeliverablePondLocations(), probeDeliverableWorldLocations());
     const room = soloRoomOf(placement, snapshot);
-    // The first chest of the escape, handed to a second player.
     const location = AP_LOCATION_IDS['check-012'];
     room.placements[location] = { item: 0x52510000, location, player: 2, flags: 0 };
     room.players.push({ team: 0, slot: 2, alias: 'Zelda_', name: 'Zelda_' });
@@ -132,7 +121,6 @@ describe('the real online core', () => {
       const lineIndex = lines.findIndex((line) => plain(line)[0] === 'Progressive Scale sent to Zelda_!');
       expect(lineIndex).toBeGreaterThanOrEqual(0);
       expect(plain(lines[lineIndex]).at(-1)).toBe('Sent to Zelda_!');
-      // Ship of Harkinian plays Ocarina of Time: the ocarina's picture, id 0xB0 + its place.
       const ocarinaId = FOREIGN_ICON_FIRST_ID + FOREIGN_ICON_FILES.indexOf('pool-ocarina-of-time');
       const foreignArms = core.calls.filter((call) => call.includes(`,${ocarinaId},${1000 + lineIndex}`));
       expect(foreignArms).toHaveLength(1);
@@ -163,7 +151,6 @@ describe('the real online core', () => {
   it('shows the room\'s checked locations done and takes them out of the poller, writing no flag', () => {
     const core = installFakeModule(setModule);
     try {
-      // A shelf's first stock ticks the shelf's record; its restock has none to tick.
       defaultOnlineCore.markCollected([
         'check-012', 'kakariko-shop-shelf_left-slot_1', 'kakariko-shop-shelf_left-slot_2',
       ]);
@@ -171,7 +158,6 @@ describe('the real online core', () => {
       expect(core.calls.filter((call) => !call.startsWith('WasmSetGateWord'))).toEqual([]);
       defaultOnlineCore.disarm();
       expect([...withCollectedChecks(new Set())]).toEqual([]);
-      // The poller's baseline never reports a suppressed key, whatever the save shows.
       expect(rebaselineEntries({
         entries: [{ key: 'check-012' }], suppressed: new Set(['check-012']), isComplete: () => true, isKnownReported: () => false,
       }).toReport).toEqual([]);

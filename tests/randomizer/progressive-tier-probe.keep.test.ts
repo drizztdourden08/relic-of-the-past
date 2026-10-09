@@ -1,16 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Headless core probe for the progressive tier masks. The built wasm is loaded
- * in node the way the capacity probe loads it, a family's mask is armed the way
- * a session arms it (WasmSetProgressiveTiers), and the family's virtual id is
- * resolved through the grant resolver exactly as a seam would. Pinned: a copy
- * hands over the LOWEST rung still present at or above the tier already held,
- * so unticking a middle rung shortens the ladder instead of leaving a hole;
- * an unarmed family walks the full ladder, which is the arithmetic the core had
- * before the masks existed.
- *
- * Skips when the wasm, the asset blob or the vault fixture is absent.
- */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
@@ -23,13 +11,10 @@ const FIXTURE = resolve(ROOT, 'tests/fixtures/save-states/test-links-house.sav')
 const FEATURES0_DEVELOPER_TOOLS = 1073741824;
 const FEATURES3_RECEIPT_EXPORT = 32768;
 
-/** progressive_grants.c: 0x62 blade, 0x66 bow. */
 const ID = { sword: 0x62, bow: 0x66 };
-/** progressive_grants.c kFamilies order. */
 const FAMILY = { sword: 0, bow: 4 };
 const SWORD_TIER_ID = [0x49, 0x01, 0x02, 0x03];
 const BOW_TIER_ID = [0x0b, 0x3b];
-/** The twenty-rupee replacement handed out past the top rung. */
 const CAP_ITEM = 0x36;
 
 const WRAM = { swordType: 0xf359, itemBow: 0xf340 };
@@ -71,7 +56,6 @@ describeCore('progressive tier masks in the built core (headless)', () => {
     for (let i = 0; i < n; i += 1) expect(call('WasmDevRunFrame', 0)).toBe(1);
   };
 
-  /** The id a copy of |virtualId| would hand over with the family standing on |tier|. */
   const grantAt = (virtualId: number, addr: number, raw: number): number => {
     set8(addr, raw);
     return call('WasmProbeResolveGrant', virtualId);
@@ -110,8 +94,8 @@ describeCore('progressive tier masks in the built core (headless)', () => {
   });
 
   it('an unticked middle rung shortens the ladder instead of leaving a hole in it', () => {
-    // Rungs 0, 2, 3 present: the second copy skips straight past the missing one.
-    call('WasmSetProgressiveTiers', FAMILY.sword, 0b1101);
+    const rungsZeroTwoThree = 0b1101;
+    call('WasmSetProgressiveTiers', FAMILY.sword, rungsZeroTwoThree);
     expect(grantAt(ID.sword, WRAM.swordType, 0)).toBe(SWORD_TIER_ID[0]);
     expect(grantAt(ID.sword, WRAM.swordType, 1)).toBe(SWORD_TIER_ID[2]);
     expect(grantAt(ID.sword, WRAM.swordType, 3)).toBe(SWORD_TIER_ID[3]);
@@ -125,9 +109,6 @@ describeCore('progressive tier masks in the built core (headless)', () => {
   });
 
   it('an empty mask is the DISARMED spelling, not "no rungs"', () => {
-    // A family with nothing ticked puts no copy in the pool at all, so the core is never
-    // asked to resolve one; zero therefore means "never armed" and gives the whole ladder
-    // back, which is what keeps a session that says nothing byte-identical.
     call('WasmSetProgressiveTiers', FAMILY.sword, 0);
     expect(grantAt(ID.sword, WRAM.swordType, 0)).toBe(SWORD_TIER_ID[0]);
     expect(grantAt(ID.sword, WRAM.swordType, 1)).toBe(SWORD_TIER_ID[1]);
@@ -135,11 +116,10 @@ describeCore('progressive tier masks in the built core (headless)', () => {
 
   it('the bow reads its half-scale tier through the mask too', () => {
     call('WasmSetProgressiveTiers', FAMILY.bow, 0b10);
-    // link_item_bow 0: no bow held, so the first copy hands over the top rung directly.
-    expect(grantAt(ID.bow, WRAM.itemBow, 0)).toBe(BOW_TIER_ID[1]);
-    // The byte carries the arrow state in its low bit, so 3 is that same top rung held:
-    // nothing is left above it and a second copy is surplus.
-    expect(grantAt(ID.bow, WRAM.itemBow, 3)).toBe(CAP_ITEM);
+    const noBowHeld = 0;
+    const topRungHeldWithArrows = 3;
+    expect(grantAt(ID.bow, WRAM.itemBow, noBowHeld)).toBe(BOW_TIER_ID[1]);
+    expect(grantAt(ID.bow, WRAM.itemBow, topRungHeldWithArrows)).toBe(CAP_ITEM);
     call('WasmClearProgressiveTiers');
     expect(grantAt(ID.bow, WRAM.itemBow, 0)).toBe(BOW_TIER_ID[0]);
   });
