@@ -7,7 +7,7 @@ const isShortcutChord = (e: KeyboardEvent): boolean =>
 
 const keyDown = (m: InputManager, e: KeyboardEvent): void => {
   if (isTextInput(e.target)) return;
-  if (e.code === 'Escape') return;
+  if (e.code === 'Escape' || e.key === 'Escape') return;
   m.allPressedKeys.add(e.code);
   m.rawDispatcher.emit({ type: 'keyboard', code: e.code }, 'keyboard');
 

@@ -24,6 +24,14 @@ allprojects {
     }
 }
 
+subprojects { sub ->
+    if (sub.name == 'drizztdourden08-brock-input') {
+        sub.plugins.withId('com.android.library') {
+            sub.android.externalNativeBuild.cmake.buildStagingDirectory = new File(rootProject.projectDir, 'build/cxx-input')
+        }
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
