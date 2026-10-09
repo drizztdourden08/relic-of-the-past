@@ -20,7 +20,6 @@ const DW_OVERWORLD_SKULL_WOODS_CONNECTIONS: ConnectionRecord[] = [
   },
   {
     id: 'connection-656',
-    // Entrance slot 40 is the door into room 0x57, and it sits on overworld screen 0x49.
     screenId: 'screen-262',
     toConnectionId: 'connection-1018',
     kind: 'hole',

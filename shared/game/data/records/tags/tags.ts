@@ -1,15 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * The tag vocabulary, as records.
- *
- * Seeded from the two taxonomy tables (taxonomy/screen-tags.ts and
- * taxonomy/connection-tags.ts) in namespace order, then declaration order
- * within a namespace, so the numbering is reproducible, not authored.
- * A term added after the seed is appended by the id allocator and lives only
- * here. The taxonomy tables stay the seed, not the source of truth.
- *
- * Every entry reads namespace:value. Nothing without a separator belongs here.
- */
 import type { TagRecord } from '@shared/game/data/types';
 
 const ALL_TAGS: TagRecord[] = [

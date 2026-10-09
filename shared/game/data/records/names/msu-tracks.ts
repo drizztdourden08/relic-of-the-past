@@ -1,28 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * Names for the game's music slots, one record per MSU-1 track number.
- *
- * Numbers 1-34 are the vanilla music slots every MSU-1 pack for this game uses. There is no slot 35
- * or 36. The rest are the extended per-area and per-interior slots this app's Deluxe numbering adds
- * on top, and every one of them is DERIVED, never guessed:
- *
- *   - 37-58, 110, 112 come from inverting OVERWORLD_AREA_TRACKS (shared/game/data/msu-deluxe-remap.ts).
- *     Each area index was resolved to a screen record by gameId.overworldIndex, and the track is named
- *     for the region those areas have in common.
- *   - 59-107 and 114 come from inverting ENTRANCE_TRACKS. Each entrance index was resolved against the
- *     ROM's own entrance tables (room at $82C813, palace at $82D48B, default music at $82D82E) and the
- *     overworld door/hole tables ($9BB96F / $9BBB73 / $9BB826 / $9BB84C), which say exactly which
- *     overworld area each door sits on. A group whose entrances all carry a palace index is named from
- *     PALACE_INDEX_NAMES; the rest are named from the areas their doors sit on.
- *
- * Where an interior could not be pinned down, the name states the derivation instead of inventing one.
- * A single room number can hold several unrelated interiors in different quadrants (entrances 0x69 and
- * 0x6A both land in room 0x10E yet open onto different overworld areas), and this repo's interior
- * screen records carry no quadrant, so a room number alone does not identify a place.
- *
- * Self-contained on purpose: no type import, no annotation. The loader casts at the consumer
- * (shared/game/data/msu-track-names.ts), so the shape is checked where it is used.
- */
 
 const MSU_TRACK_NAMES = [
   { trackNum: 1, name: 'Title ~ Link to the Past' },
@@ -60,7 +36,6 @@ const MSU_TRACK_NAMES = [
   { trackNum: 33, name: 'Ending Sequence' },
   { trackNum: 34, name: 'Staff Roll' },
 
-  // Per-area replacements, inverted from OVERWORLD_AREA_TRACKS.
   { trackNum: 37, name: 'Light World: Lost Woods' },
   { trackNum: 38, name: 'Light World: Death Mountain' },
   { trackNum: 39, name: 'Light World: Eastern Summit' },
@@ -84,7 +59,6 @@ const MSU_TRACK_NAMES = [
   { trackNum: 57, name: 'Dark World: Wilted Wetlands and Depressing Grove' },
   { trackNum: 58, name: 'Dark World: Digging Game Field' },
 
-  // Per-entrance replacements, inverted from ENTRANCE_TRACKS.
   { trackNum: 59, name: 'Houses: Starting House and village homes' },
   { trackNum: 60, name: 'Sanctuary' },
   { trackNum: 61, name: 'Hyrule Castle' },

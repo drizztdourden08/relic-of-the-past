@@ -272,8 +272,6 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     gameId: {},
     kind: 'overworld',
     world: 'light',
-    // The ledge is walked in the light world and reached by the mirror from the dark mountain,
-    // which is the world region-032 carries.
     name: 'Mimic Cave Ledge',
     areaId: 'area-008',
     locationId: 'location-009',

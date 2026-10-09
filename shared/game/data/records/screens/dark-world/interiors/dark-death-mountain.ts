@@ -122,8 +122,6 @@ const DW_INTERIORS_DARK_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'dark',
     interiorKind: 'cave',
-    // Entrances 22 and 23 both stand on overworld 0x4A and open into rooms 0xFB and 0xEB. This
-    // is the lower door; screen-494 is the upper one.
     name: 'Bumper Cave',
     areaId: 'area-002',
     locationId: 'location-004',
@@ -141,8 +139,6 @@ const DW_INTERIORS_DARK_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'dark',
     interiorKind: 'cave',
-    // Entrance 23 stands on overworld 0x4A, above entrance 22: the upper of the two rooms
-    // 0xEB's header staircase links, and the one screen-230 opens onto.
     name: 'Bumper Cave (Top)',
     areaId: 'area-002',
     locationId: 'location-004',

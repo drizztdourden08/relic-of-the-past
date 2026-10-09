@@ -4,11 +4,6 @@ import type { ActorRecord } from '@shared/game/data/types';
 
 const BOSSES_ACTORS: ActorRecord[] = [
   {
-    // Boss of the mountain tower dungeon. tables.py's kSpriteNames swaps this
-    // with the common enemy at 0x18 (MiniMoldorm). The decompilation's own
-    // function names disambiguate: Sprite_09_GiantMoldorm (this one) vs
-    // Sprite_18_MiniMoldorm (actor-056, enemies.ts). kBossRooms (dungeon.c:20)
-    // confirms room 51 is a boss room, consistent with that dungeon's boss.
     id: 'actor-137',
     gameId: { spriteType: 9 },
     kind: 'boss',
@@ -45,7 +40,6 @@ const BOSSES_ACTORS: ActorRecord[] = [
     name: 'Arrghus',
   },
   {
-    // Sprite_92_HelmasaurKing (sprite_main.h:753).
     id: 'actor-143',
     gameId: { spriteType: 146 },
     kind: 'boss',
@@ -58,28 +52,24 @@ const BOSSES_ACTORS: ActorRecord[] = [
     name: 'KholdStare',
   },
   {
-    // The census had a typo ('Viterous') for Sprite_BD_Vitreous (sprite_main.h:727).
     id: 'actor-145',
     gameId: { spriteType: 189 },
     kind: 'boss',
     name: 'Vitreous',
   },
   {
-    // Sprite_CB_TrinexxRockHead (sprite_main.h:649).
     id: 'actor-146',
     gameId: { spriteType: 203 },
     kind: 'boss',
     name: 'Trinexx (Rock Head)',
   },
   {
-    // Sprite_CC calls Sprite_TrinexxFire_AddFireGarnish (sprite_main.c:1550), so it is the fire head.
     id: 'actor-147',
     gameId: { spriteType: 204 },
     kind: 'boss',
     name: 'Trinexx (Fire Head)',
   },
   {
-    // Third Trinexx head, by elimination from Rock (0xCB) and Fire (0xCC).
     id: 'actor-148',
     gameId: { spriteType: 205 },
     kind: 'boss',

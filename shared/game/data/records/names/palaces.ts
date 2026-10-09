@@ -1,13 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * Palace-index display labels, keyed by the raw value from RAM $040C
- * (cur_palace_index_x2). The value is DOUBLED because the game's own dungeon
- * tables are indexed by `cur_palace_index_x2 >> 1`. Cave and house rooms report 0xFF.
- *
- * Rendering only. A palace index resolves to an entity via
- * `dungeonForPalaceIndex` (data/record-file-targets.ts); nothing keys a lookup,
- * a requirement or a destination path off these strings.
- */
 
 const PALACE_INDEX_NAMES: Record<number, string> = {
   0x00: 'Hyrule Castle (Sewers)',

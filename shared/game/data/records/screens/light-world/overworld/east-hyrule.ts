@@ -128,8 +128,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     gameId: { overworldIndex: 15 },
     kind: 'overworld',
     world: 'light',
-    // Overworld 0x0F is the river country east of the castle, not the mountain. Entrance 92
-    // stands on it and opens into room 0x114, which screen-218 holds.
     name: 'Zora Falls Outskirts',
     areaId: 'area-010',
     locationId: 'location-012',

@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-/** The screens no area owns. */
 
 import type { ScreenRecord } from '@shared/game/data/types';
 

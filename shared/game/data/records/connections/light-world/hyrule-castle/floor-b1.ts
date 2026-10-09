@@ -201,8 +201,6 @@ const LW_HYRULE_CASTLE_FLOOR_B1_CONNECTIONS: ConnectionRecord[] = [
     kind: 'entrance',
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
-    // Hole slot 18 is the grave behind the sanctuary, and it drops into room 0x11. screen-102
-    // carries the same mouth as an entrance id, so one reading of it sits on each screen.
     gameId: { holeIndex: 18 },
     tags: [],
   },

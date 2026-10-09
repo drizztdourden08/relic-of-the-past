@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-/** The half of the floor reached through the burned skull. */
 
 import type { ScreenRecord } from '@shared/game/data/types';
 
@@ -9,7 +8,6 @@ const DW_SKULL_WOODS_BACK_SCREENS: ScreenRecord[] = [
     gameId: { roomIndex: 88, palaceIndex: 16, entranceId: 42 },
     kind: 'dungeon',
     world: 'dark',
-    // Hole slot 0 (entrance 118) drops into room 0x58 as well; entrance 42 is its door.
     name: 'Map Room',
     areaId: 'area-015',
     locationId: 'location-024',

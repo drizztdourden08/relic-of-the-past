@@ -20,7 +20,6 @@ const DW_GANONS_TOWER_FLOOR_B2_B1_SCREENS: ScreenRecord[] = [
     gameId: { roomIndex: 149, palaceIndex: 26 },
     kind: 'dungeon',
     world: 'dark',
-    // name unknown: no check, no reference room
     name: 'Ganon\'s Tower room 0x95',
     areaId: 'area-002',
     locationId: 'location-014',
@@ -38,7 +37,6 @@ const DW_GANONS_TOWER_FLOOR_B2_B1_SCREENS: ScreenRecord[] = [
     gameId: { roomIndex: 150, palaceIndex: 26 },
     kind: 'dungeon',
     world: 'dark',
-    // name unknown: no check, no reference room
     name: 'Ganon\'s Tower room 0x96',
     areaId: 'area-002',
     locationId: 'location-014',
@@ -83,7 +81,6 @@ const DW_GANONS_TOWER_FLOOR_B2_B1_SCREENS: ScreenRecord[] = [
     gameId: { roomIndex: 166, palaceIndex: 26 },
     kind: 'dungeon',
     world: 'dark',
-    // name unknown: no check, no reference room
     name: 'Ganon\'s Tower room 0xA6',
     areaId: 'area-002',
     locationId: 'location-014',

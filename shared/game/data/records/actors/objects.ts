@@ -34,14 +34,12 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'FloorMove',
   },
   {
-    // Sprite_0C_OctorokStone (sprite_main.h) is a crumbling rock hazard, Octorok-family.
     id: 'actor-156',
     gameId: { spriteType: 12 },
     kind: 'object',
     name: 'Octorok Stone',
   },
   {
-    // Sprite_14_ThievesTownGrate (sprite_main.h).
     id: 'actor-157',
     gameId: { spriteType: 20 },
     kind: 'object',
@@ -60,21 +58,18 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'Statue',
   },
   {
-    // Sprite_1D_FluteQuest (sprite_main.h) is the flute-summon interaction point.
     id: 'actor-160',
     gameId: { spriteType: 29 },
     kind: 'object',
     name: 'Flute Quest',
   },
   {
-    // Sprite_1E_CrystalSwitch (sprite_main.h).
     id: 'actor-161',
     gameId: { spriteType: 30 },
     kind: 'object',
     name: 'Crystal Switch',
   },
   {
-    // Sprite_21_WaterSwitch (sprite_main.h).
     id: 'actor-162',
     gameId: { spriteType: 33 },
     kind: 'object',
@@ -93,7 +88,6 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'Waterfall',
   },
   {
-    // Sprite_38_EyeStatue (sprite_main.h).
     id: 'actor-177',
     gameId: { spriteType: 56 },
     kind: 'object',
@@ -112,36 +106,30 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'ElectricBarrier',
   },
   {
-    // Sprite_4D_Toppo (sprite_main.h) is a distinct creature, not the player
-    // character's bunny transformation.
     id: 'actor-182',
     gameId: { spriteType: 77 },
     kind: 'object',
     name: 'Toppo',
   },
   {
-    // The census's 'GlassSquirrel' does not match Sprite_50_Cannonball (sprite_main.h).
     id: 'actor-183',
     gameId: { spriteType: 80 },
     kind: 'object',
     name: 'Cannonball',
   },
   {
-    // The census's 'HyliaObstacle' named the wrong area for Sprite_57_DesertStatue (sprite_main.h).
     id: 'actor-184',
     gameId: { spriteType: 87 },
     kind: 'object',
     name: 'Desert Statue',
   },
   {
-    // Sprite_59_LostWoodsBird (sprite_main.h).
     id: 'actor-185',
     gameId: { spriteType: 89 },
     kind: 'object',
     name: 'Lost Woods Bird',
   },
   {
-    // Sprite_5A_LostWoodsSquirrel (sprite_main.h).
     id: 'actor-186',
     gameId: { spriteType: 90 },
     kind: 'object',
@@ -208,7 +196,6 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'Cannon(Up)',
   },
   {
-    // Sprite_6C_MirrorPortal (sprite_main.h).
     id: 'actor-197',
     gameId: { spriteType: 108 },
     kind: 'object',
@@ -227,30 +214,24 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'Runner',
   },
   {
-    // The census's 'OneShotMagicBal' was a truncated name for Sprite_7B_AgahnimBalls (sprite_main.h).
     id: 'actor-202',
     gameId: { spriteType: 123 },
     kind: 'object',
     name: 'Agahnim Balls',
   },
   {
-    // Sprite_7D_BigSpike (sprite_main.h).
     id: 'actor-203',
     gameId: { spriteType: 125 },
     kind: 'object',
     name: 'Big Spike',
   },
   {
-    // Sprite_7E_Firebar_Clockwise (sprite_main.h) is the rotating fire-bar hazard, not a "blade".
     id: 'actor-204',
     gameId: { spriteType: 126 },
     kind: 'object',
     name: 'Firebar (Clockwise)',
   },
   {
-    // Counter-clockwise sibling of actor-204 (spriteType 0x7E, adjacent 0x7F). No direct
-    // decompilation name was found for 0x7F, so this one is inferred from the paired
-    // numbering the census itself uses.
     id: 'actor-205',
     gameId: { spriteType: 127 },
     kind: 'object',
@@ -263,16 +244,12 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'SpikeBlock',
   },
   {
-    // Sprite_93_Bumper (sprite_main.h) is the pinball-style bounce obstacle.
     id: 'actor-208',
     gameId: { spriteType: 147 },
     kind: 'object',
     name: 'Bumper',
   },
   {
-    // Sprite_95_LaserEyeLeft (sprite_main.h), term order corrected to 'LaserEye' from
-    // 'EyeLaser'. Direction label is kept as the census assigned it; see the report, it
-    // was not re-verified per direction.
     id: 'actor-209',
     gameId: { spriteType: 149 },
     kind: 'object',
@@ -357,8 +334,6 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'Inscription',
   },
   {
-    // Sprite_B4_PurpleChest (sprite_main.h) is the chest prop itself, distinct from the
-    // 'Purple Chest' NPC merchant (actor-008, spriteType 57 / Sprite_39_Locksmith).
     id: 'actor-224',
     gameId: { spriteType: 180 },
     kind: 'object',
@@ -413,7 +388,6 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'BigFairy',
   },
   {
-    // The census's 'Transform/Smoke' was a malformed dual-guess for Sprite_D1_BunnyBeam (sprite_main.h).
     id: 'actor-239',
     gameId: { spriteType: 209 },
     kind: 'object',
@@ -534,7 +508,6 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'FakeSword',
   },
   {
-    // Sprite_E9_PotionShop (sprite_main.h).
     id: 'actor-260',
     gameId: { spriteType: 233 },
     kind: 'object',
@@ -547,7 +520,6 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'HeartPie',
   },
   {
-    // Sprite_EC_ThrownItem (sprite_main.h).
     id: 'actor-263',
     gameId: { spriteType: 236 },
     kind: 'object',
@@ -560,7 +532,6 @@ const OBJECTS_ACTORS: ActorRecord[] = [
     name: 'Mantle',
   },
   {
-    // Spelling fix ('Medallian' -> 'Medallion'), matches Sprite_F2_MedallionTablet.
     id: 'actor-265',
     gameId: { spriteType: 242 },
     kind: 'object',

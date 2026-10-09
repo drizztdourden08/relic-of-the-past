@@ -59,7 +59,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS: ConnectionRecord[] = [
     kind: 'teleport',
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: false,
-    // The cartridge has one door into this dungeon: entrance 55, which lands in room 0x0C.
     gameId: { entranceId: 55 },
     tags: [],
   },

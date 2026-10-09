@@ -4,13 +4,6 @@ import type { ActorRecord } from '@shared/game/data/types';
 
 const TRIGGERS_ACTORS: ActorRecord[] = [
   {
-    // kDungTagroutines[0x01] = RoomTag_NorthWestTrigger, which gates on the NW
-    // quadrant then calls RoomTag_QuadrantTrigger (dungeon.c:203,360). Only
-    // matches roomTag 1 exactly. The record's old name claimed a "family
-    // 0x01-0x13" that this single-valued gameId can never resolve.
-    // The real family (kDungTagroutines[0x01-0x13] and its repeat at
-    // [0x29-0x32]) is spread across this record and actor-268..271 below,
-    // each for a roomTag value confirmed to occur in real room data.
     id: 'actor-024',
     gameId: { roomTag: 1 },
     kind: 'trigger',
@@ -53,10 +46,6 @@ const TRIGGERS_ACTORS: ActorRecord[] = [
     effect: 'switch drains the room\'s water',
   },
   {
-    // dungeon.c:1696-1705 (case 0x18) draws and tracks it exactly like a chest but through
-    // dung_num_bigkey_locks_x2, the same counter the big key unlock path checks. Only
-    // appears in the escape-sequence jail cell (Hyrule Castle, dungeon-001), so the
-    // dungeon's big key resolves to a single, unambiguous item here.
     id: 'actor-030',
     gameId: { objectSubIndex: 24 },
     kind: 'trigger',
@@ -218,19 +207,7 @@ const TRIGGERS_ACTORS: ActorRecord[] = [
     name: 'Kill Drop',
     effect: '"virtually kill" a room\'s meaningful enemy, granting its drop the way a real kill does (WasmSimKillDrop)',
   },
-  // kDungTagroutines[0x01-0x13] (dungeon.c:202-221) is one full "clear the room"
-  // cycle (NorthWestTrigger, 7 other quadrant gates, QuadrantTrigger, RoomTrigger)
-  // and it repeats verbatim at [0x29-0x32] (dungeon.c:243-252). actor-024 only
-  // covered roomTag 1 (the first cycle's NW gate); a prior audit found room tags
-  // 41, 42, 43 and 50 in real room data with no actor to resolve to. Cross-checked
-  // against kDungTagroutines directly: all four dispatch into the same family.
-  // Ids appended (267 was the prior max) instead of folded into actor-024,
-  // because ActorGameId.roomTag is a single number and cannot represent a set.
   {
-    // kDungTagroutines[0x29] = RoomTag_NorthWestTrigger is the same function as
-    // actor-024 (dungeon.c:243), reused for a different set of rooms. Inside
-    // RoomTag_QuadrantTrigger the raw tag value (41) is >= 0x29, so this instance
-    // reveals a chest instead of lifting a trapdoor (dungeon.c:4400-4420).
     id: 'actor-268',
     gameId: { roomTag: 41 },
     kind: 'trigger',
@@ -238,8 +215,6 @@ const TRIGGERS_ACTORS: ActorRecord[] = [
     effect: 'kill every enemy in the room\'s NW quadrant → reveals a chest',
   },
   {
-    // kDungTagroutines[0x2A] = Dung_TagRoutine_0x2A, gated on the NE quadrant, then
-    // calls RoomTag_QuadrantTrigger the same way (dungeon.c:244,365-368).
     id: 'actor-269',
     gameId: { roomTag: 42 },
     kind: 'trigger',
@@ -247,8 +222,6 @@ const TRIGGERS_ACTORS: ActorRecord[] = [
     effect: 'kill every enemy in the room\'s NE quadrant → reveals a chest',
   },
   {
-    // kDungTagroutines[0x2B] = Dung_TagRoutine_0x2B, gated on the SW quadrant, then
-    // calls RoomTag_QuadrantTrigger the same way (dungeon.c:245,370-373).
     id: 'actor-270',
     gameId: { roomTag: 43 },
     kind: 'trigger',
@@ -256,9 +229,6 @@ const TRIGGERS_ACTORS: ActorRecord[] = [
     effect: 'kill every enemy in the room\'s SW quadrant → reveals a chest',
   },
   {
-    // kDungTagroutines[0x32] = RoomTag_RoomTrigger is the same handler as roomTag 10.
-    // Since the raw tag (50) isn't literally 10, it takes the chest-reveal branch
-    // instead of the trapdoor branch (dungeon.c:252,4432-4440).
     id: 'actor-271',
     gameId: { roomTag: 50 },
     kind: 'trigger',

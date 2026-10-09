@@ -69,13 +69,9 @@ const DW_GANONS_TOWER_FLOOR_3_6_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-354',
-    // Room 0x3C is the Hookshot Cave, whose four chests the cartridge puts there, and the
-    // dungeon map draws no room here. The number is dropped; the four crossings this screen
-    // carries are real, so the screen stays.
     gameId: { palaceIndex: 26 },
     kind: 'dungeon',
     world: 'dark',
-    // name unknown: no check, no reference room, and no room number to name it by
     name: 'Ganon\'s Tower unnumbered room',
     areaId: 'area-002',
     locationId: 'location-014',

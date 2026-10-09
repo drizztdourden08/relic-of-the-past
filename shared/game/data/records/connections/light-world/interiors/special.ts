@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-/** The connections of the screens no area owns. */
 
 import type { ConnectionRecord } from '@shared/game/data/types';
 

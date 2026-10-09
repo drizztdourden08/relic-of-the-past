@@ -109,7 +109,6 @@ const DW_GANONS_TOWER_FLOOR_0_SCREENS: ScreenRecord[] = [
     gameId: { roomIndex: 156, palaceIndex: 26 },
     kind: 'dungeon',
     world: 'dark',
-    // name unknown: no check, no reference room
     name: 'Ganon\'s Tower room 0x9C',
     areaId: 'area-002',
     locationId: 'location-014',

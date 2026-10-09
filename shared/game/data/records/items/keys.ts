@@ -1,8 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * The universal small key: the one key record that belongs to no dungeon, so it files by
- * what it is. Every dungeon's own small and big key sits with that dungeon.
- */
 
 import type { ItemRecord } from '@shared/game/data/types';
 
