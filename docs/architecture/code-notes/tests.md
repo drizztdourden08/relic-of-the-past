@@ -1313,6 +1313,147 @@ names §62 added (for a formula or a switch to read), the three scope extras kep
 table, and the scope builder that turns the HUD's vitals fields into the numbers an expression
 evaluates against.
 
+### hud/hud-engine-switch.keep.test.ts
+
+Switching a container's engine converts it and cannot crash the editor. The editor applies edits
+through `patchNode`, which shallow merges. The switch handed it a new flex container, so
+`layout: 'flex'` was laid over the grid, leaving `columns`, `rows`, `justifyItems`, `alignItems`
+(unsavable, the validator refuses them) and a grid gap where flex then read one `Value`.
+`resolveValue` read `.expr` off an object with none and threw inside the layout pass; nothing
+catches above the stage, so clicking flex took the editor down once a gap had been set. Both
+halves are pinned: the conversion leaves nothing of the other engine, and the resolver keeps its
+never throws promise on the malformed shape, so the next merge bug costs a wrong gap, not the
+screen. Since §57 `gap` is `{ x, y }` under both engines (x horizontal, y vertical) and `guide`
+belongs to any container, so both pass straight through in either direction and flipping back
+restores the grid exactly. The round trip never strands a child outside the new grid.
+
+### hud/hud-layout-documents.keep.test.ts
+
+A built in and a custom layout are the same document. Every shipped arrangement goes through the
+loader a player's saved layout uses, so built in is a label, not a second authoring path; if a
+built in ever needed something a saved layout cannot have, the format is too short, which the
+first case checks by turning a built in into a custom layout and getting identical pixels. A bad
+document fails loudly, at the wrong path, and never half draws. Cases edit documents as loose
+JSON because they stand in for a hand edited file. `$comment` is documentation for readers and
+does not survive into the model. A band is a direct child of the screen (what a `regions` entry
+became in §42), so its own alignment is what can be wrong, not an anchor name. The glyph and
+sprite cases walk to the first real `glyph` and `sprite` leaves; `hearts` is an id already used,
+for the repeated id case.
+
+### hud/hud-layout-bindable.keep.test.ts
+
+Bindable boxes (phase 2 of the HUD data binding plan): `size`, `scale`, `opacity`, `gap` and
+`visible` take a `Value` resolved against `MeasureContext.scope` before measuring. The acceptance
+proof is the magic bar authored with no new element kind: a sprite whose `size.w` is
+`magic_current / 128 * 24`. Its painted rect is asserted through a childless container sibling,
+because an element is always contained to its intrinsic aspect while a container's placed rect
+equals its resolved box; `measureBox` proves the same width box side. The test screen is three
+bands each way with the root in the top left cell, what `anchor: 'top-left'` used to say. A
+hidden bar takes its gap with it.
+
+### hud/hud-presets.keep.test.ts
+
+Phase 5 of the HUD data binding plan: the eight prebuilt subtrees, the migration that rewrites a
+stored document naming one of the four deleted kinds (life, magic, consumables, wallet), and the
+`shape` leaf they lean on (a heart and the magic bar, which a sprite and tint composition cannot
+draw; see `hud-shape.ts`). Two inserts of the same preset never collide in ids, with each other
+or the template. Original mode rounds a heart's fill up to the next quarter as the console does.
+The deleted kind never appears in the migrated document, and a `scale` authored on the old node
+survives onto the replacement subtree's root.
+
+### hud/hud-appearance-escape.keep.test.ts
+
+The prerequisite of the appearance phase, checked against what was built. The inspector UX
+review blocked `SubsectionGroup` because Escape closed the whole `FullScreenLayer` instead of the
+popover in front of it, losing the editor to close a colour picker. §33 fixed the mechanism on a
+stand in popover (`escape-layered-surfaces`); this suite proves it on the real chain, reached by
+clicks: `FullScreenLayer`, `AppearanceSection`, a `SubsectionGroup` opened from its header (a
+collapsed group renders only its summary), `ColorField`, and the `ColorPickerPopover` its swatch
+opens. One press closes the picker and leaves the layer; the second closes the layer. The picker
+mounts long after the layer, so ordering alone proves nothing; the layer and picker are two
+stack entries and closing the inner pops one. A `SubsectionGroup` is not a dismissable surface,
+so with no picker open Escape goes to the layer; a group that ate Escape to collapse would put
+the editor back where §33 found it. jsdom has no `ResizeObserver`, which the radius row's
+`SegmentedControl` builds on mount, so a no op stands in; widths are measured in real Chromium by
+`hud-appearance-controls`.
+
+### hud/hud-cell-picker.keep.test.ts
+
+`CellPicker` (§50) is the child's own control and the only place in the panel where clicking a
+cell writes anything. It looks like `GridEditor` and means the opposite: it writes a child and
+cannot touch a track, while `GridEditor` writes tracks and cannot touch a child. Each says which
+it is in its own header. Nothing is written while the pointer travels.
+
+### hud/hud-container-gap.keep.test.ts
+
+§57: a gap is `{ x, y }` under both engines, and `x` is always horizontal. Section one holds the
+container's Type and what is true of any container, and pressing Type changed the gap beside it
+(two fields for a grid, one for flex). The model was wrong, not the panel: `place-flow.ts`
+already spent the one number on two gaps, between items along the main axis and between wrapped
+lines (`flow.ts` `linesSize`). So the acceptance test is pixel identity: `{ x: n, y: n }` is what
+the engine did with `gap: n`, the migration is a rewrite (the built ins keep every number), and a
+legacy document is saved in the new shape. What is new is that the two axes can differ on a flex
+container, pinned at exact positions and turning with `direction`: a row separates items by `x`
+and lines by `y`, a column the reverse. A row that does not wrap has no second line, so only the
+item gap is spent.
+
+### hud/hud-countdown-node.keep.test.ts
+
+§62: the HUD countdown as a layout element. The kind validates and refuses at the right path; it
+measures as the pixel pie's 44x44 box, and both pie compounds agree; it is not placed while
+nothing counts, leaving a flex line and a grid as `visible: false` does; a `switch` reads the
+three new variables through `expand`; its drawn origin snaps to whole game pixels (an odd view
+width centres it on a half pixel) for this kind only; and a parsed UI state buffer reaches a
+rendered pie in the shipped layout with no store. It spans the whole screen grid only so it sizes
+no track, so it is not counted as a grid occupant (that would mark all nine cells taken, found on
+the grand merge test run), except in its own cell picker.
+
+### hud/hud-drag-gesture.keep.test.ts
+
+Preview, then commit: a drag writes the document once. §37's stage nudge called `onOffset` on
+every pointer move, so a one second drag was dozens of writes and relayouts, and would be dozens
+of undo entries. §43 closed it in `behavior/useDragGesture.ts`. The stage nudge is gone (§47), so
+the gesture is driven through the outline's drop, the hook's remaining caller: twelve live frames
+write nothing while the ghost card says what the release would do, and `onDrop` fires exactly
+once, after release. Cancel is free: Escape mid drag leaves the document untouched and reaches
+the drag first (§33's `drag` level). jsdom has no `PointerEvent`, pointer capture or
+`elementFromPoint`, so a `MouseEvent` under the pointer event names carries `clientX` and
+`clientY`, capture calls are optional by design, and the hit test reads a flat list of fixed
+height rows as `hud-drag-ghost` does.
+
+### hud/hud-motion-preview.keep.test.ts
+
+Phase 10's stage integration, mounted: the scrub reaching the clock, and the Escape interaction.
+Everything else in Motion is what gets written to the document, answered as pure functions by
+`hud-motion-controls`. The transport is a `requestAnimationFrame` loop on a shared clock and a
+key eight surfaces used to fight over. A playing preview registers on the dismiss stack at
+`dialog`, so Escape stops playback and the editor stays up; a second press closes the editor.
+With no transport use the stage gets `null`, not 0, so it runs its own free clock and existing
+animations never freeze at t=0. `matchMedia` is stubbed because jsdom has none and
+`useReducedMotion` reads it; one case turns reduced motion on, and then the stage gets no
+override and holds the rest pose. The hook is imported from its own file, because the renderer
+barrel pulls in the art layer, the input libraries and `window.api`.
+
+### hud/hud-node-style.keep.test.ts
+
+Phase 4 of the HUD data binding plan: the box grows a face. The document side has
+`validateLayout` refuse a bad `style` and a grid container's own fields; the render side has
+`resolveNodeStyle` turn a validated style into CSS, with `outline` and `tint` combined into one
+`filter`. The outline width cap makes 999 and `OUTLINE_MAX_WIDTH` resolve to the same filter.
+
+### hud/hud-stage-select-only.keep.test.ts
+
+The stage selects and nothing else (§47). After §46 the maintainer could still drag on the full
+layout preview; §37's margin nudge and the corner scale handle are both gone (a resize is a drag),
+and `scale` and `offset` are edited in Size and Box and Placement. Absence of a test cannot prove
+the stage no longer drags, since a `pointermove` handler could return unnoticed, so the gesture
+is still driven (a press, six frames of 6 display pixels, a release) and the suite asserts no
+write, the node still selected, and no snap guide, scale handle, drop surface or ghost.
+`StageSelection` is mounted with no write prop at all, so a drag would have to grow a prop, which
+is a review. A click is a click: an unselected box, a container and the screen root all select on
+pointer down the first time. The source may contain no other pointer handler and neither drag
+hook; it still names `behavior/offset.ts` in prose, so only the import is forbidden.
+
 ### hud/hud-editor-step.keep.test.ts
 
 §55 built `StepNumberInput` (a `ValueInput` with its spinner hidden and its own buttons) so a gap

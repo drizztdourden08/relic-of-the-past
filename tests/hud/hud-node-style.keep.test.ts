@@ -1,12 +1,4 @@
 /* @layer test @kind test */
-/**
- * Phase 4 of `plans/hud-data-binding.html`: the box grows a face. Two halves,
- * each with its own describe block - the DOCUMENT side (`validateLayout`
- * refuses a bad `style`, and a grid container's own fields, the same way
- * every other field in this document is checked) and the RENDER side
- * (`resolveNodeStyle` turns a validated `HudBoxStyle` into real CSS, with
- * `outline` and `tint` combined into one `filter`).
- */
 import { describe, expect, it } from 'vitest';
 import defaultJson from '@shared/hud/layouts/built-in/default.json';
 import { tryLoadLayout } from '@shared/hud/layouts';
@@ -18,9 +10,6 @@ const edited = (change: (doc: Record<string, unknown>) => void): unknown => {
   return copy;
 };
 
-/** The root of the first region, as loose JSON - the one place these tests
- *  reach in to attach a `style` or a `layout: 'grid'`, exactly the way
- *  `hud-layout-documents.keep.test.ts` reaches in to attach anything else. */
 const rootOf = (doc: Record<string, unknown>): Record<string, unknown> =>
   ((doc.screen as Record<string, unknown>).children as Record<string, unknown>[])[0];
 
@@ -139,8 +128,6 @@ describe('resolveNodeStyle - the CSS half', () => {
   it('outline width is CAPPED, even when the bound expression asks for more', () => {
     const capped = resolveNodeStyle({ outline: { width: 999, color: '#f00' } }, {});
     const small = resolveNodeStyle({ outline: { width: OUTLINE_MAX_WIDTH, color: '#f00' } }, {});
-    // Both resolve to the SAME filter - the cap makes 999 and OUTLINE_MAX_WIDTH
-    // indistinguishable, which is the cap doing its job.
     expect(capped.filter).toBe(small.filter);
   });
 

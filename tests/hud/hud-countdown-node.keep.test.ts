@@ -1,16 +1,5 @@
 /* @layer test @kind test */
 // @vitest-environment jsdom
-/**
- * §62: the HUD countdown as a layout element.
- *
- * What is pinned here: the kind validates and refuses at the right path; it
- * measures as the pixel pie's own 44x44 box, and the two pie compounds agree
- * with that number; it is NOT PLACED while nothing counts, so it leaves a flex
- * line and a grid alike exactly as `visible: false` does; a `switch` can read the
- * three new variables through `expand`; the drawn origin snaps to whole game
- * pixels for this kind and no other; and the live path from a parsed UI-state
- * buffer to a rendered pie in the shipped layout, end to end with no store.
- */
 import { describe, expect, it } from 'vitest';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -130,13 +119,10 @@ describe('the live path: a parsed reading to a pie on the shipped layout', () =>
     const scope = hudDataScope(VITALS, 8, source);
     expect(scope).toMatchObject(ACTIVE);
 
-    // An odd view width centres the box on a half pixel; the drawing rounds it.
     const placed = layoutHud(layoutById('default') as HudLayout, { w: 399, h: 224 }, { scope, hearts: 3 });
     const node = placedById(placed, 'countdown');
     expect(node?.rect).toEqual({ x: 177.5, y: 168, w: 44, h: 44 });
 
-    // What `HudNodeRenderer` positions it at (`drawOrigin` times the display
-    // scale), and what its art draws: the pixel pie with the seconds on it.
     expect(drawOrigin(node as PlacedNode)).toEqual({ x: 178, y: 168 });
     const markup = renderToStaticMarkup(h(HudNodeCountdown, {
       spec: { type: 'countdown' }, countdown: art, scale: 2, spritesBase: 'sprites/',
@@ -156,9 +142,6 @@ describe('the live path: a parsed reading to a pie on the shipped layout', () =>
       .toBeUndefined();
   });
 
-  // The grid editor's lattice and cell picker read occupants. The countdown spans the
-  // whole screen grid only so it sizes no track; counting it would mark all nine cells
-  // taken (found on the grand-merge test run). It still shows in its OWN cell picker.
   it('is no grid occupant, except in its own cell picker', () => {
     const screen = (layoutById('default') as HudLayout).screen;
     const ids = (keep?: string) => occupantsOf(screen, keep).map((o) => o.id);
