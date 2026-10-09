@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind types */
 import type {
   EventContract as RotpEvent, InvokeContract as RotpInvoke, ScreenEditorApi, ShadowCastingApi,
-} from '@shared/ipc';
+} from '@app/ipc';
 
 type NamespacedChannel = `shadow-casting:${string}` | `screenEditor:${string}`;
 

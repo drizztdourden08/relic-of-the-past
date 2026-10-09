@@ -4,7 +4,7 @@ import { join } from 'path';
 import { serializeTagRecord } from '@rotp/game-data';
 import { splitTagKey } from '@rotp/game-data';
 import type { TagRecord } from '@rotp/game-data';
-import type { Allocated, AllocateTagArgs, AllocateTagResult } from '@shared/ipc/screen-editor-contract';
+import type { Allocated, AllocateTagArgs, AllocateTagResult } from '@app/ipc/screen-editor-contract';
 import { withAllocatedIds } from '../id-allocator';
 import { insertBeforeArrayClose } from '../source-writers';
 import { CONVENTION, NO_SCOPE, TAGS_FILE } from './tag-writer.constants';

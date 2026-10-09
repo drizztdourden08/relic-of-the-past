@@ -4,7 +4,7 @@ import type { FileStore } from '@drizztdourden08/brock-core';
 import {
   getAppState, listProfiles, loadProfile, createProfile, updateProfile,
   deleteProfile, setLastProfile, readConfig, writeConfig,
-} from '@shared/storage/profiles';
+} from '@app/profiles/storage';
 
 const memFiles = (): FileStore => {
   const store = new Map<string, string>();

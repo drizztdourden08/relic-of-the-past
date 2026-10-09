@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
-import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
+import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
 import { encodeArgs } from './encode-args';
 import { encodeProgress } from './encode-progress';
 import type { EncodeRequest } from './flac-encode.type';

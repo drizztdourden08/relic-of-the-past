@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useState, useCallback, useEffect } from 'react';
 import { useProfiles, useProfilesStore } from '@drizztdourden08/brock-react';
-import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
+import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
 import { runCreateProfileFlow } from './create-profile-flow';
 import { log } from '@app/lib/log-bus';
 import { spriteRomOf } from '@rotp/packs';

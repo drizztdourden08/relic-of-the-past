@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { fetchToBytes } from '@shared/storage/download';
-import type { MsuResult } from '@shared/ipc/msu-contract';
+import { fetchToBytes } from '@app/download/download';
+import type { MsuResult } from '@app/ipc/msu-contract';
 import { emitMsuProgress } from './emit-msu-progress';
 import { installMsuTracks } from './install-msu-tracks';
 

@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { CheckRecord } from '@rotp/game-data';
-import type { AllocateRecordArgs, AllocateRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { AllocateRecordArgs, AllocateRecordResult } from '@app/ipc/screen-editor-contract';
 import { createRecord } from '../dataset-record-writer';
 import { CHECK_SPEC } from './check-writer.constants';
 

@@ -3,7 +3,7 @@ import { rm } from 'fs/promises';
 import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { forgetSession } from './capture-manifest';
 import { CAPTURES_SUBDIR } from './finalize-capture-session';
-import type { DebugCaptureDeleteSessionResult } from '@shared/types/debug-report';
+import type { DebugCaptureDeleteSessionResult } from '@app/debug-report';
 
 const deleteSession = async (profileId: string, sessionKey: string): Promise<DebugCaptureDeleteSessionResult> => {
   try {

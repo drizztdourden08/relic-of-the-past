@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import type { HubMe } from '@shared/ipc';
+import type { HubMe } from '@app/ipc';
 import { appApi } from '@app/ipc/app-api';
 import type { AppApi } from '@app/ipc/app-api.type';
 

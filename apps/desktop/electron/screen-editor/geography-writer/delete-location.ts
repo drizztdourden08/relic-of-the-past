@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { DeleteRecordArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { DeleteRecordArgs, WriteRecordResult } from '@app/ipc/screen-editor-contract';
 import { deleteRecord } from '../dataset-record-writer';
 import { LOCATION_SPEC } from './geography-writer.constants';
 

@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { copyFile } from 'fs/promises';
 import { join } from 'path';
-import type { DebugCaptureScreenshot } from '@shared/types/debug-report';
+import type { DebugCaptureScreenshot } from '@app/debug-report';
 import { frameName, pickEvenlySpread, budgetedFrameCount } from '../capture-frame-budget';
 import { PACKAGED_BUDGET_BYTES } from './finalize-capture-session.constants';
 

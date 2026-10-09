@@ -2,7 +2,7 @@
 import type { RomImportResult } from '@rotp/roms';
 import type { RomKind } from '@rotp/roms';
 import { roms } from '@rotp/roms';
-import { fetchToBytes } from '@shared/storage/download';
+import { fetchToBytes } from '@app/download/download';
 import { platformFiles } from '../platform-files';
 import { emitRomProgress } from './emit-rom-progress';
 import { finalizeRomImport } from './finalize-rom-import';

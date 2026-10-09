@@ -1,8 +1,8 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import type { Profile, ProfilePatch } from '@shared/types/profile';
+import type { Profile, ProfilePatch } from '@app/profiles/types';
 import { writeJson } from '@drizztdourden08/brock-core';
-import { applyProfilePatch } from '../profile-patch';
+import { applyProfilePatch } from './profile-patch';
 import { loadProfile } from './load-profile';
 import { profileFile } from './profile-file';
 

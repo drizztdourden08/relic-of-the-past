@@ -2,7 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "../..",
-    "types": ["vite/client"]
+    "types": [
+      "vite/client"
+    ]
   },
-  "include": ["src/**/*", "../site-kit/**/*","../../shared/**/*"]
+  "include": [
+    "src/**/*",
+    "../site-kit/**/*"
+  ]
 }

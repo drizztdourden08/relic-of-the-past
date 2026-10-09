@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { join } from 'path';
 import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
-import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
+import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
 import { VIDEO_FPS } from './finalize-capture-session.constants';
 
 const encodeFromFrameDir = async (tools: ToolsMain, frameDir: string, outPath: string): Promise<boolean> => {

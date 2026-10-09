@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { SessionSource } from '@app/lib/game/randomizer-client';
 import { SOURCE_LABEL } from './run-summary-tiles.constants';
 import type { RunTile } from './run-tile.type';

@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { serializeEnumerationRecord } from '@rotp/game-data';
 import type { EnumerationEntry } from '@rotp/game-data';
-import type { WriteEnumerationArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { WriteEnumerationArgs, WriteRecordResult } from '@app/ipc/screen-editor-contract';
 import { replaceById } from '../source-writers';
 import { ENUMERATION_FILE } from './enumeration-writer.constants';
 import { regenerateTypes } from './regenerate-types';

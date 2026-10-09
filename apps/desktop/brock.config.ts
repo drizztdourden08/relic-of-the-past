@@ -24,7 +24,7 @@ export default defineBrockConfig({
   targets: ['desktop', 'android', 'web'],
   modules: ['updater', 'secrets', 'display', 'tools', 'catalog', 'port-kit', 'input'],
   build: {
-    aliases: { '@shared': '../../shared', '@domains': 'src/ui/domains', '@site-kit': '../site-kit' },
+    aliases: { '@domains': 'src/ui/domains', '@site-kit': '../site-kit' },
     nodePolyfills: { globals: { Buffer: true, process: true } },
   },
   gate: { scripts: ['generate:check', 'state-format', 'generate:gba-asset-index:check'], clangFormat: ['core/game-hooks'] },

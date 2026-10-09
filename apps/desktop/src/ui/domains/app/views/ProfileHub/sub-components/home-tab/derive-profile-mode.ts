@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { ProfileModeId } from '../../../../compounds/ModeBadge';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 
 const deriveProfileMode = (
   randomizer: ProfileRandomizerConfig | undefined,

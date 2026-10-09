@@ -4,7 +4,7 @@ import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
 import type { OptimizeProgress } from '@rotp/msu';
 import { emit, handle, getMainWindow } from '@drizztdourden08/brock-electron/main';
 import { getTools } from '@drizztdourden08/brock-tools/main';
-import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
+import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
 import { analyzePack } from './optimize/analyze';
 import { convertPack } from './optimize/run';
 import { TOOL_MISSING } from './optimize-handlers.constants';

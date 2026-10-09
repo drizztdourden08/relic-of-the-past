@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { isZip, unzip } from '@rotp/roms';
-import type { MsuResult } from '@shared/ipc/msu-contract';
+import type { MsuResult } from '@app/ipc/msu-contract';
 import { platformFiles } from '../platform-files';
 import { errorMessage } from '../error-message';
 import type { MsuTrackEntry } from './msu-store.type';

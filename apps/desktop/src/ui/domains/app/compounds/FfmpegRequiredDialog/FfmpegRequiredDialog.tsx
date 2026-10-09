@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { useTool } from '@drizztdourden08/brock-tools/renderer';
-import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
+import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
 import { FfmpegInstallStep } from '../FfmpegInstallStep';
 import type { FfmpegRequiredDialogProps } from './FfmpegRequiredDialog.type';
 

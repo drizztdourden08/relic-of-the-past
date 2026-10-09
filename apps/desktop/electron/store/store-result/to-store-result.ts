@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { StoreResult } from '@shared/ipc';
+import type { StoreResult } from '@app/ipc';
 import { errorText } from './error-text';
 
 const toStoreResult = async <T>(run: () => Promise<T>): Promise<StoreResult<T>> => {

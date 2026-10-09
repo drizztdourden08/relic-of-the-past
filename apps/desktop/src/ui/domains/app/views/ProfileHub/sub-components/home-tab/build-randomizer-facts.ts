@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { HomeRandomizerStatus, SummaryFact } from './home-tab.type';
 
 const buildRandomizerFacts = (

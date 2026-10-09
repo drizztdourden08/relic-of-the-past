@@ -1,19 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["vite/client"]
+    "types": [
+      "vite/client"
+    ]
   },
   "include": [
     "src/**/*",
     "../site-kit/**/*",
-    "../desktop/src/ui/domains/packs/**/*",
-    "../desktop/src/lib/msu/decode/**/*",
-    "../desktop/src/lib/game/snes-color/**/*",
-    "../desktop/src/lib/game/player-sheet/resolve-palette.ts",
-    "../desktop/src/lib/game/player-sheet/compose-frame.ts",
-    "../desktop/src/lib/game/player-sheet/draw-tiles/**/*",
-    "../desktop/src/lib/game/player-sheet/flatten-palette/**/*",
-    "../desktop/src/lib/game/player-sheet/sheet-png/**/*",
-    "../../shared/**/*"
+    "../desktop/src/ui/domains/packs/**/*"
   ]
 }

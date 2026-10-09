@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { RandomizerConnectionPatch } from '@shared/types/profile';
+import type { RandomizerConnectionPatch } from '@app/profiles/types';
 import type { ServerSetupDraft } from './server-setup-draft.type';
 import { serverUrlOf } from './server-url-of';
 

@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { SanctuarySubmitInput, SanctuarySubmitResult } from '@shared/ipc';
+import type { SanctuarySubmitInput, SanctuarySubmitResult } from '@app/ipc';
 import { reportPageUrl } from '../report-page';
 import { fileReport } from './file-report';
 import { messageOf } from './message-of';

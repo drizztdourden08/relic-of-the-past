@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { ItemRecord } from '@rotp/game-data';
-import type { WriteRecordArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { WriteRecordArgs, WriteRecordResult } from '@app/ipc/screen-editor-contract';
 import { updateRecord } from '../dataset-record-writer';
 import { ITEM_SPEC } from './item-writer.constants';
 

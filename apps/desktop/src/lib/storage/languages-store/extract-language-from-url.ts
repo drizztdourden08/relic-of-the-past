@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { fetchToBytes } from '@shared/storage/download';
+import { fetchToBytes } from '@app/download/download';
 import type { LanguageResult } from './languages-store.type';
 import { emitLanguageProgress } from './emit-language-progress';
 import { extractFromBytes } from './extract-from-bytes';

@@ -1,5 +1,5 @@
 /* @layer electron-main @kind types */
-import type { DebugCaptureSessionSummary } from '@shared/types/debug-report';
+import type { DebugCaptureSessionSummary } from '@app/debug-report';
 
 type PreviewInfo = Pick<DebugCaptureSessionSummary, 'previewUrl' | 'previewFrameUrls' | 'previewKind'>;
 

@@ -4226,7 +4226,7 @@ from the ROM's extracted set, or null before it exists.
 ## storage/ui-views
 
 The single boundary for durable view state, keyed and app level, not per profile (see
-`shared/ipc/ui-views-contract.ts`). Nothing else touches `window.api.uiViews`; a composite
+`apps/desktop/src/ipc/ui-views-contract.ts`). Nothing else touches `window.api.uiViews`; a composite
 that wants persistence goes through `useViewState`. The whole map loads once and is cached,
 every mutation rewrites the whole map, and writes are fire and forget: a failed write logs and
 is dropped. Rapid saves collapse into one write about 400 ms later. A save before the map has

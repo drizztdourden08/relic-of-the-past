@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DebugCaptureSessionSummary } from '@shared/types/debug-report';
+import type { DebugCaptureSessionSummary } from '@app/debug-report';
 
 interface CaptureSessionPickerProps {
   sessions: DebugCaptureSessionSummary[];

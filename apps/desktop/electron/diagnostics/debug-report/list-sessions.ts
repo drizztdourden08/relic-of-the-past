@@ -4,7 +4,7 @@ import { join } from 'path';
 import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { readCaptureManifest } from './capture-manifest';
 import { CAPTURES_SUBDIR, PACKAGED_SUBDIR } from './finalize-capture-session';
-import type { DebugCaptureSessionSummary } from '@shared/types/debug-report';
+import type { DebugCaptureSessionSummary } from '@app/debug-report';
 import type { PreviewInfo } from './list-sessions.type';
 
 const startedAtOf = (sessionKey: string): number => {

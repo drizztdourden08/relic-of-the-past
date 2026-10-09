@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind types */
 import type { PendingScreenRecord } from '@rotp/game-data';
 import type { AreaId, AreaRecord, DungeonId, LocationId, LocationRecord, ScreenRecord, ScreenTag, ScreenWorld } from '@rotp/game-data';
-import type { Allocated } from '@shared/ipc/screen-editor-contract';
+import type { Allocated } from '@app/ipc/screen-editor-contract';
 
 type AllocatedArea = Allocated<AreaRecord>;
 type AllocatedLocation = Allocated<LocationRecord>;

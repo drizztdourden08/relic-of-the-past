@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import type { CreateProfileOptions } from '@shared/types/profile';
+import type { CreateProfileOptions } from '@app/profiles/types';
 import { deliverableListsOf } from '@rotp/randomizer';
 import {
   probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,

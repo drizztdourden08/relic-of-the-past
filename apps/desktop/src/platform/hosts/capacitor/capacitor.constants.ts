@@ -1,6 +1,6 @@
 /* @layer renderer-other @kind constants */
 import { Directory } from '@capacitor/filesystem';
-import type { DataDomain } from '@shared/platform/ports/storage.type';
+import type { DataDomain } from '@app/platform/rotp-platform/ports/storage.type';
 
 const DIR = Directory.Data;
 

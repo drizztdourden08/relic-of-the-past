@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { SanctuaryReportSnapshot } from '@shared/ipc';
+import type { SanctuaryReportSnapshot } from '@app/ipc';
 import { SNAPSHOT_TTL_MS } from './report-snapshot.constants';
 import { reportSnapshotSlot } from './report-snapshot-slot';
 

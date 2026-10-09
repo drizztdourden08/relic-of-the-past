@@ -1,6 +1,6 @@
 /* @layer renderer-other @kind hook */
 import { useEffect, useState } from 'react';
-import type { ImportProgress } from '@shared/ipc';
+import type { ImportProgress } from '@app/ipc';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { subscribeImportProgress } from '@app/lib/storage/import-progress-bus';
 import type { ImportKind, ImportProgressState } from './use-import-progress.type';

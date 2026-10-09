@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import { useGameAssetsStore } from '@app/stores/game-assets-store';
-import type { Profile } from '@shared/types/profile';
+import type { Profile } from '@app/profiles/types';
 
 const useReloadTarget = (
   profile: Profile | null,

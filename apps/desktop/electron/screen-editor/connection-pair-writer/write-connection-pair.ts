@@ -2,7 +2,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import { serializeConnectionRecord } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
-import type { WriteConnectionPairArgs, WriteConnectionPairResult } from '@shared/ipc/screen-editor-contract';
+import type { WriteConnectionPairArgs, WriteConnectionPairResult } from '@app/ipc/screen-editor-contract';
 import { resolveSourceFile } from '../resolve-source-file';
 import { insertBeforeArrayClose, removeById } from '../source-writers';
 import { withAllocatedIds } from '../id-allocator';

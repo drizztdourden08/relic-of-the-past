@@ -4,7 +4,7 @@ import { loadRandomizerPlacement } from '@app/lib/randomizer-placement-io';
 import {
   normalizeServerUrl, probeOnlineServer, setPendingBoot,
 } from '@app/lib/game/randomizer-client';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { GateResult } from './randomizer-boot-gate.type';
 import { rerollPlacement } from './reroll-placement';
 

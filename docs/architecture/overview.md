@@ -67,7 +67,7 @@ If a change would break an invariant, the code is in the wrong zone. Re-place it
 
 | The new code | Goes in | Notes |
 |----------------|---------|-------|
-| Needs Node/OS/fs/native, windows, ROM/profile/save IO | `apps/desktop/electron/<domain>/` behind a `domain:action` IPC handler | Add the channel to the `shared/ipc/` contract + join map (`window.api` type derives). Use the `electron` skill. |
+| Needs Node/OS/fs/native, windows, ROM/profile/save IO | `apps/desktop/electron/<domain>/` behind a `domain:action` IPC handler | Add the channel to the `apps/desktop/src/ipc/` contract + join map (`window.api` type derives). Use the `electron` skill. |
 | Talks to the running game / WASM | `apps/desktop/src/lib/game/` | New C function → `add-wasm-function` (C + bridge; `EMSCRIPTEN_KEEPALIVE` auto-exports, so there is no export list). |
 | Pure game rule/algorithm/data, no React/Node | `shared/game/` (navigation / checks / items / data / logic / seed) | Must stay pure & testable. |
 | Parses a ROM / builds assets | `shared/asset-extraction/` | One `compile-*` per domain. |

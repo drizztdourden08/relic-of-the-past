@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import type { DeleteTagArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { DeleteTagArgs, WriteRecordResult } from '@app/ipc/screen-editor-contract';
 import { removeById } from '../source-writers';
 import { TAGS_FILE } from './tag-writer.constants';
 

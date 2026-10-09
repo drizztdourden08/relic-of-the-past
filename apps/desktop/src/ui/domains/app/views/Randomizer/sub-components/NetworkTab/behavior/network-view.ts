@@ -2,7 +2,7 @@
 import { onlineConfigOfProfile } from '@app/lib/game/randomizer-client';
 import { offlineChip } from './network-tone';
 import type { NetworkStatus } from '@app/lib/game/randomizer-client';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { NetworkView } from './network-view.type';
 
 const isThisConnection = (last: NetworkStatus, config: ProfileRandomizerConfig): boolean => {

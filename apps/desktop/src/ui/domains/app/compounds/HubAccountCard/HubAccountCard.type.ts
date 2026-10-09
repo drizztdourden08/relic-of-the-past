@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HubMe } from '@shared/ipc';
+import type { HubMe } from '@app/ipc';
 
 type HubAccountState = 'signed-out' | 'waiting' | 'signed-in';
 

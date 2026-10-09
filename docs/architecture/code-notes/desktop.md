@@ -519,7 +519,7 @@ The main process keeps no save store. The renderer writes saves over the FileSto
 
 ### profiles/ipc-handlers.ts
 
-`profiles:update` whitelists by design, with the rule shared with the renderer's store (`shared/storage/profile-patch.ts`): an absent field is left alone, null clears it, and of `randomizer` only the connection moves. `updateProfile` in `store/` is a whole profile write; field whitelisting happens in this handler, so `randomizer` stays exactly as loaded and is never patched there.
+`profiles:update` whitelists by design, with the rule shared with the renderer's store (`apps/desktop/src/profiles/storage/profile-patch.ts`): an absent field is left alone, null clears it, and of `randomizer` only the connection moves. `updateProfile` in `store/` is a whole profile write; field whitelisting happens in this handler, so `randomizer` stays exactly as loaded and is never patched there.
 
 ## roms
 

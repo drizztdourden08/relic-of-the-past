@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { HUB_ROUTES } from '@rotp/hub-contracts';
-import type { HubMe } from '@shared/ipc';
+import type { HubMe } from '@app/ipc';
 import { callApi, isApiError } from './client';
 import type { HubApi } from './endpoints';
 import { readToken, clearToken } from './token-store';

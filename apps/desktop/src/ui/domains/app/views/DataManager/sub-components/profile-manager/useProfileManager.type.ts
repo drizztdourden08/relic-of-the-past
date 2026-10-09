@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
+import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
 
 interface UseProfileManagerParams {
   profiles: Profile[];

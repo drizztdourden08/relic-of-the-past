@@ -4,7 +4,7 @@ import { handle } from '@drizztdourden08/brock-electron/main';
 import { getTools } from '@drizztdourden08/brock-tools/main';
 import type {
   DebugCaptureFinalizeResult, DebugCaptureSessionSummary, DebugCaptureDeleteSessionResult,
-} from '@shared/types/debug-report';
+} from '@app/debug-report';
 import { finalizeCaptureSession } from './finalize-capture-session';
 import { listCaptureSessions } from './list-sessions';
 import { deleteSession } from './delete-session';

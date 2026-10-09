@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { appApi } from '@app/ipc/app-api';
-import type { ScreenEditorApi } from '@shared/ipc';
+import type { ScreenEditorApi } from '@app/ipc';
 import { useCallback, useMemo } from 'react';
 import type { DatasetSuggestion } from '@rotp/navigation';
 import { RECORD_REQUIRED } from '../SimulatorWidget.constants';

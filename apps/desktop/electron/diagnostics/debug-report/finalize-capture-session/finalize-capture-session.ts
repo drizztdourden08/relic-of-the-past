@@ -2,8 +2,8 @@
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
-import type { DebugCaptureFinalizeInput, DebugCaptureFinalizeResult } from '@shared/types/debug-report';
-import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
+import type { DebugCaptureFinalizeInput, DebugCaptureFinalizeResult } from '@app/debug-report';
+import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
 import { frameName } from '../capture-frame-budget';
 import { buildPackagedFrames } from './build-packaged-frames';
 import { buildPackagedVideo } from './build-packaged-video';

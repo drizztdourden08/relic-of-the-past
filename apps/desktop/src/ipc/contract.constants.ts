@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind constants */
 import { defineChannels, event, invoke } from '@drizztdourden08/brock-core';
-import type { EventContract as RotpEvent, InvokeContract as RotpInvoke } from '@shared/ipc';
+import type { EventContract as RotpEvent, InvokeContract as RotpInvoke } from '@app/ipc';
 
 const APP_CHANNELS = defineChannels({
   fileTrash: invoke<RotpInvoke['file:trash']>()('file:trash'),

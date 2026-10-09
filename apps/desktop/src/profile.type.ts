@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind types */
 import type { ProfileCreateExtension, ProfileExtension, ProfilePatchExtension } from '@drizztdourden08/brock-core/augment';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 
 declare module '@drizztdourden08/brock-core/augment' {
   interface ProfileExtension {

@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createProfile, loadProfile, updateProfile } from '@shared/storage/profiles';
-import { applyConnectionPatch } from '@shared/storage/randomizer-connection-patch';
+import { createProfile, loadProfile, updateProfile } from '@app/profiles/storage';
+import { applyConnectionPatch } from '@app/profiles/connection-patch/randomizer-connection-patch';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
 import { getSessionState, startOnline, stopActive } from '@app/lib/game/randomizer-client/session-store';
 import { onlineConfigOfProfile } from '@app/lib/game/randomizer-client/online-config-of-profile';
@@ -13,7 +13,7 @@ import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import type { FakeServer } from './ap-fake-server';
 import type { OnlineSessionConfig } from '@rotp/randomizer';
-import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
+import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
 import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 
 const fake = vi.hoisted(() => ({ server: null as FakeServer | null }));

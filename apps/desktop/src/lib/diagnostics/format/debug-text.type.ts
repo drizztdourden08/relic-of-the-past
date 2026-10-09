@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { SystemDiagnostics } from '@shared/types/diagnostics';
+import type { SystemDiagnostics } from '@app/diagnostics-types';
 import type { RendererDiagnostics } from '../diagnostics.type';
 
 interface DebugTextInput {

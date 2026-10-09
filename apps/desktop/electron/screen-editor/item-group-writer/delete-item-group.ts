@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import type { DeleteItemGroupArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { DeleteItemGroupArgs, WriteRecordResult } from '@app/ipc/screen-editor-contract';
 import { removeById } from '../source-writers';
 import { ITEM_GROUPS_FILE } from './item-group-writer.constants';
 import { symbolicNeedle } from './symbolic-needle';

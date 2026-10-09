@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
 import type { ProbedAudio } from '@rotp/msu';
-import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
+import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
 import { parseProbeJson } from './ffprobe-parse';
 import { PROBE_ARGS, PROBE_TIMEOUT_MS } from './ffmpeg-tool.constants';
 import { cachedProbe, rememberProbe } from './probe-cache';

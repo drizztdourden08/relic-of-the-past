@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { DebugCaptureSnapshot, DebugCaptureScreenshot } from '@shared/types/debug-report';
+import type { DebugCaptureSnapshot, DebugCaptureScreenshot } from '@app/debug-report';
 
 interface DebugCaptureStore {
   isCapturing: boolean;

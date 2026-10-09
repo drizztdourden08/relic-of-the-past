@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import type { DebugCaptureSnapshot } from '@shared/types/debug-report';
+import type { DebugCaptureSnapshot } from '@app/debug-report';
 import { useGameUIStore } from '../game-ui-store';
 
 const takeSnapshot = (session: number): DebugCaptureSnapshot => {

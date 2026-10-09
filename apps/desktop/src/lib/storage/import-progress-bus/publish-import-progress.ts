@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { ImportProgress } from '@shared/ipc';
+import type { ImportProgress } from '@app/ipc';
 import { progressListeners } from './progress-listeners';
 
 const publishImportProgress = (progress: ImportProgress): void => {

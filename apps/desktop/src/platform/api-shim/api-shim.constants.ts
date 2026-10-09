@@ -1,5 +1,5 @@
 /* @layer renderer-other @kind constants */
-import type { ScreenEditorApi } from '@shared/ipc';
+import type { ScreenEditorApi } from '@app/ipc';
 import { readNativeAppVersion } from './read-native-app-version';
 import { refuseEdit } from './refuse-edit';
 

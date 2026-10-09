@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
-import type { WriteRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { WriteRecordResult } from '@app/ipc/screen-editor-contract';
 import type { WriteResult } from './source-writers';
 
 const editSourceFile = async (

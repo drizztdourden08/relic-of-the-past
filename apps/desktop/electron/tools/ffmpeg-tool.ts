@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { ToolDef } from '@drizztdourden08/brock-tools/main';
-import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
+import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
 import { resolveFfmpegDownload } from './ffmpeg-release';
 import { FFMPEG_LINUX_HINT, FFMPEG_OTHER_HINT, FFMPEG_VERSION } from './ffmpeg-tool.constants';
 

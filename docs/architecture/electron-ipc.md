@@ -15,19 +15,19 @@ flowchart LR
 ```
 
 Every channel's signature lives once, in a channel-keyed contract under
-`shared/ipc/`. The preload, the main-process handlers, and the renderer's
+`apps/desktop/src/ipc/`. The preload, the main-process handlers, and the renderer's
 `window.api` are all type-checked against it, so a wrong channel name, argument,
 or return type is a compile error in any of the three.
 
-- Contracts (`shared/ipc/`) are the single source of truth, split by direction:
+- Contracts (`apps/desktop/src/ipc/`) are the single source of truth, split by direction:
   `InvokeContract` (request→response, `invoke`/`handle`), `SendContract`
   (fire-and-forget renderer→main, `send`/`on`), and `EventContract` (main→renderer,
   `emit`/`subscribe`). Each lives in its own `*-contract.type.ts`; `InvokeContract`
-  joins one contract per domain (`shared/ipc/invoke/` and the `<domain>-contract`
+  joins one contract per domain (`apps/desktop/src/ipc/invoke/` and the `<domain>-contract`
   files beside it).
-- The join maps (`shared/ipc/maps/*.data.ts`: `INVOKE_MAP`, `SEND_MAP`, `EVENT_MAP`)
+- The join maps (`apps/desktop/src/ipc/maps/*.data.ts`: `INVOKE_MAP`, `SEND_MAP`, `EVENT_MAP`)
   are the only tables linking a friendly `window.api` method name to its channel.
-  `IpcApi` (the `window.api` type, in `shared/ipc/api.type.ts`, which
+  `IpcApi` (the `window.api` type, in `apps/desktop/src/ipc/api.type.ts`, which
   `apps/desktop/src/env.d.ts` puts on `window`) is derived from the contracts and maps, so a
   method's signature is never hand-written twice.
 - Typed wrappers cover both sides. Main uses `handle`/`on`/`emit` (`electron/lib/ipc/handle/`);

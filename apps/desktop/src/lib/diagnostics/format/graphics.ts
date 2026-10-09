@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { GpuDevice, GpuDiagnostics } from '@shared/types/diagnostics';
+import type { GpuDevice, GpuDiagnostics } from '@app/diagnostics-types';
 import type { WebglDiagnostics } from '../diagnostics.type';
 import type { DebugSection } from './section.type';
 import { section } from './section';

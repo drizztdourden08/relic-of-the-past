@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
+import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
 import type { Placement } from '@rotp/randomizer';
 import { log } from '@app/lib/log-bus';
 import * as profileStore from '@app/lib/storage/profile-store';

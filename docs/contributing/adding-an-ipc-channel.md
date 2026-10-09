@@ -2,7 +2,7 @@
 # Adding an IPC Channel
 
 The renderer reaches the main process only through IPC. Every channel is typed
-end-to-end against a single contract in `shared/ipc/`, so the compiler keeps the
+end-to-end against a single contract in `apps/desktop/src/ipc/`, so the compiler keeps the
 three sites (handler, preload, renderer) in sync without relying on convention. See
 [Electron & IPC](../architecture/electron-ipc.md) for the architecture.
 
@@ -24,8 +24,8 @@ Channels are named **`domain:action`** (e.g. `profiles:list`, `saves:normal:crea
 
 ### 1. Declare the channel in its domain's invoke contract
 
-`InvokeContract` (`shared/ipc/invoke-contract.type.ts`) joins one contract per domain:
-`shared/ipc/invoke/*-invoke-contract.type.ts`, or a `<domain>-contract.type.ts` (or
+`InvokeContract` (`apps/desktop/src/ipc/invoke-contract.type.ts`) joins one contract per domain:
+`apps/desktop/src/ipc/invoke/*-invoke-contract.type.ts`, or a `<domain>-contract.type.ts` (or
 folder) beside it. Add the line to the one your channel belongs to, or add a contract
 and extend `InvokeContract` with it. This is the single source of truth for the signature:
 
@@ -33,11 +33,11 @@ and extend `InvokeContract` with it. This is the single source of truth for the 
 'foo:get': (id: string) => Promise<FooResult>;
 ```
 
-### 2. Map a friendly name in `shared/ipc/maps/invoke-map.data.ts`
+### 2. Map a friendly name in `apps/desktop/src/ipc/maps/invoke-map.data.ts`
 
 Add one line to `INVOKE_MAP`, the only place the method↔channel link is written.
 `satisfies` rejects a typo'd channel. `IpcApi` (the `window.api` type, in
-`shared/ipc/api.type.ts`) and the preload method are derived automatically, so
+`apps/desktop/src/ipc/api.type.ts`) and the preload method are derived automatically, so
 `apps/desktop/src/env.d.ts` stays untouched.
 
 ```ts
@@ -75,14 +75,14 @@ Call it from the renderer as `window.api.getFoo(id)`. The types come through.
 ## Events (`emit` / `subscribe`)
 
 Add to `EventContract` (the value is the listener signature), then to
-`EVENT_MAP` (`shared/ipc/maps/event-map.data.ts`) as `onFooChange: 'foo:change'`. Emit from main with
+`EVENT_MAP` (`apps/desktop/src/ipc/maps/event-map.data.ts`) as `onFooChange: 'foo:change'`. Emit from main with
 `emit(win, 'foo:change', payload)`; the renderer gets `window.api.onFooChange(cb)`
 returning an unsubscribe function (generated).
 
 ## Checklist
 
 - [ ] Channel named `domain:action`, with the correct direction (invoke/send/event).
-- [ ] Signature added to the matching contract in `shared/ipc/`.
+- [ ] Signature added to the matching contract in `apps/desktop/src/ipc/`.
 - [ ] Method↔channel line added to the join map (flat methods), or wired in a
       nested namespace (preload). Leave `env.d.ts` alone.
 - [ ] Handler uses the typed `handle`/`on`/`emit` and is listed in `IPC_HANDLERS`.

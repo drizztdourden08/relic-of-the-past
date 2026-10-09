@@ -2,7 +2,7 @@
 import { log } from '../../log-bus';
 import { onlineConfigOfProfile } from './online-config-of-profile';
 import { getPendingBoot, getSessionState, setPendingBoot, startOnline } from './session-store';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 
 const reconnectProfileSession = async (profileId: string, config: ProfileRandomizerConfig): Promise<void> => {
   const pending = getPendingBoot();

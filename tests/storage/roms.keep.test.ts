@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import JSZip from 'jszip';
 import { roms } from '@rotp/roms';
-import * as profiles from '@shared/storage/profiles';
+import * as profiles from '@app/profiles/storage';
 import { createMemFileStore } from './mem-file-store';
 
 describe('roms store (over FileStore)', () => {

@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { serializeItemGroupRecord } from '@rotp/game-data';
 import type { ItemGroupRecord } from '@rotp/game-data';
-import type { Allocated, AllocateItemGroupArgs, AllocateItemGroupResult } from '@shared/ipc/screen-editor-contract';
+import type { Allocated, AllocateItemGroupArgs, AllocateItemGroupResult } from '@app/ipc/screen-editor-contract';
 import { withAllocatedIds } from '../id-allocator';
 import { insertBeforeArrayClose } from '../source-writers';
 import { ITEM_GROUPS_FILE } from './item-group-writer.constants';

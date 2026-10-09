@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
 import type { Placement } from '@rotp/randomizer';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import { log } from '@app/lib/log-bus';
 import { saveRandomizerPlacement } from '@app/lib/randomizer-placement-io';
 import { rollPlacement } from './roll-placement';

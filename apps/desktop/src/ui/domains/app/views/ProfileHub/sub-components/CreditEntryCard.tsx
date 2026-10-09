@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { MouseEvent } from 'react';
-import { getUsageLabel } from '@shared/credits';
+import { getUsageLabel } from '@app/credits';
 import { Box, Link, Text } from '@drizztdourden08/tessera/primitives';
 import type { CreditEntryCardProps } from './CreditsTab.type';
 

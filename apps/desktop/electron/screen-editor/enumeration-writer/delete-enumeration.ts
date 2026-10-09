@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import type { DeleteEnumerationArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { DeleteEnumerationArgs, WriteRecordResult } from '@app/ipc/screen-editor-contract';
 import { removeById } from '../source-writers';
 import { ENUMERATION_FILE } from './enumeration-writer.constants';
 import { regenerateTypes } from './regenerate-types';

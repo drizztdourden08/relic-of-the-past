@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { ActiveSession, SessionSource } from '@app/lib/game/randomizer-client';
 import type { PanelPlacement } from '../Randomizer.type';
 

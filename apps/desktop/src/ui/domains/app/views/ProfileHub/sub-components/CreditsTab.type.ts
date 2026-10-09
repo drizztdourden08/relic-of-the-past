@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { CreditEntry } from '@shared/credits';
+import type { CreditEntry } from '@app/credits';
 
 interface CreditEntryCardProps {
   entry: CreditEntry;

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { SystemDiagnostics } from '@shared/types/diagnostics';
+import type { SystemDiagnostics } from '@app/diagnostics-types';
 import type { DebugSection } from './section.type';
 import { section } from './section';
 import { ghz, gib } from './units';

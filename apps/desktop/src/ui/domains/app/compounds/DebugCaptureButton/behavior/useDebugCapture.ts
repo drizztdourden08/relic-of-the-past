@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
 import { toolsApi } from '@drizztdourden08/brock-tools/renderer';
-import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
+import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
 
 const useDebugCapture = (profileId: string) => {

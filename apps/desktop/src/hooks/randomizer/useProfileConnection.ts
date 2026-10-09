@@ -4,8 +4,8 @@ import { loadProfile } from '@drizztdourden08/brock-react';
 import { updateProfile } from '@app/lib/storage/profile-store';
 import { reconnectProfileSession } from '@app/lib/game/randomizer-client';
 import { useProfileConnectionStore } from '@app/stores/profile-connection-store';
-import { applyConnectionPatch } from '@shared/storage/randomizer-connection-patch';
-import type { RandomizerConnectionPatch } from '@shared/types/profile';
+import { applyConnectionPatch } from '@app/profiles/connection-patch/randomizer-connection-patch';
+import type { RandomizerConnectionPatch } from '@app/profiles/types';
 import type { ProfileConnection } from './use-profile-connection.type';
 
 const useProfileConnection = (profile: Profile | null): ProfileConnection => {

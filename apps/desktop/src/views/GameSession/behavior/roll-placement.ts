@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
 import type { Placement } from '@rotp/randomizer';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import { generateFromSnapshot } from '@rotp/randomizer';
 import { normalizeRandomizerOptions } from '@rotp/randomizer';
 import {

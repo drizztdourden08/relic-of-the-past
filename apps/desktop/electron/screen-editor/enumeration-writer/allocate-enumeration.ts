@@ -5,7 +5,7 @@ import { serializeEnumerationRecord } from '@rotp/game-data';
 import type { EnumerationEntry } from '@rotp/game-data';
 import type {
   Allocated, AllocateEnumerationArgs, AllocateEnumerationResult,
-} from '@shared/ipc/screen-editor-contract';
+} from '@app/ipc/screen-editor-contract';
 import { withAllocatedIds } from '../id-allocator';
 import { escapeSingleQuote, insertBeforeArrayClose } from '../source-writers';
 import { ENUMERATION_FILE } from './enumeration-writer.constants';

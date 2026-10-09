@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
+import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
 
 interface ConnectionEditorProps {
   config: ProfileRandomizerConfig;

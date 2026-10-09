@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { Unnumbered } from '@rotp/game-data';
-import type { Allocated, AllocateRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { Allocated, AllocateRecordResult } from '@app/ipc/screen-editor-contract';
 import { startRecordFile } from '../record-file-template';
 import { withAllocatedIds } from '../id-allocator';
 import { resolveSourceFile } from '../resolve-source-file';

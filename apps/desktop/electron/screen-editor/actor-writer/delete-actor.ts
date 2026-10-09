@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { DeleteRecordArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
+import type { DeleteRecordArgs, WriteRecordResult } from '@app/ipc/screen-editor-contract';
 import { deleteRecord } from '../dataset-record-writer';
 import { ACTOR_SPEC } from './actor-writer.constants';
 

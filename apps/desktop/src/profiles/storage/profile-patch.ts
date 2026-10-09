@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
-import { applyConnectionPatch } from './randomizer-connection-patch';
-import type { Profile, ProfilePatch } from '@shared/types/profile';
+import { applyConnectionPatch } from '../connection-patch/randomizer-connection-patch';
+import type { Profile, ProfilePatch } from '@app/profiles/types';
 
 const applyProfilePatch = (profile: Profile, patch: ProfilePatch): Profile => {
   const { name, language, msuPack, randomizerConnection } = patch;

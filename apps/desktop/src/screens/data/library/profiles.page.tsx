@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind component */
 import { useCallback } from 'react';
 import type { PageProps, ScreenMeta } from '@drizztdourden08/brock-react';
-import type { CreateProfileOptions } from '@shared/types/profile';
+import type { CreateProfileOptions } from '@app/profiles/types';
 import { useDataLibrary } from '@domains/app/views/DataManager/behavior/useDataLibrary';
 import { ProfileManager } from '@domains/app/views/DataManager/sub-components/ProfileManager';
 

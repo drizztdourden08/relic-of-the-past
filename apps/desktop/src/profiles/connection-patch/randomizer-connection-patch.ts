@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
+import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
 import { CONNECTION_KEYS, FLAG_KEYS, TEXT_KEYS } from './randomizer-connection-patch.constants';
 
 const refuse = (reason: string): never => {

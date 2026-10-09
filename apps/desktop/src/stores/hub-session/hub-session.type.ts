@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind types */
 import type { SiteId } from '@rotp/hub-contracts';
-import type { HubMe } from '@shared/ipc';
+import type { HubMe } from '@app/ipc';
 
 type HubSessionState = 'signed-out' | 'waiting' | 'signed-in';
 

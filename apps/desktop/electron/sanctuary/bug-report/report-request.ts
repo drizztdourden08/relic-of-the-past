@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { app } from 'electron';
 import type { BugReportPayload } from '@drizztdourden08/brock-core/types';
-import type { SanctuaryReportSnapshot } from '@shared/ipc';
+import type { SanctuaryReportSnapshot } from '@app/ipc';
 import type { ReportContext, ReportZip, SubmitReportRequest } from '@rotp/hub-contracts';
 import { devicePlatform, PLATFORM_LABELS } from '../../hub/device';
 import { MAX_DEBUG_INFO_CHARS } from './bug-report.constants';

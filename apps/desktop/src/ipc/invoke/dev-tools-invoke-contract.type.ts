@@ -4,7 +4,7 @@ import type { SimRunConfig } from '@rotp/navigation';
 import type {
   DebugCaptureFinalizeInput, DebugCaptureFinalizeResult,
   DebugCaptureSessionSummary, DebugCaptureDeleteSessionResult,
-} from '@shared/types/debug-report';
+} from '@app/debug-report';
 import type { EntityKind } from '@rotp/game-data';
 import type { UiViewsMap } from '../ui-views-contract.type';
 import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from '../recommendation-contract.type';

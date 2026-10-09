@@ -1,5 +1,5 @@
 /* @layer renderer-other @kind types */
-import type { ImportProgress } from '@shared/ipc';
+import type { ImportProgress } from '@app/ipc';
 
 type ImportKind = ImportProgress['kind'];
 type ImportPhase = ImportProgress['phase'];

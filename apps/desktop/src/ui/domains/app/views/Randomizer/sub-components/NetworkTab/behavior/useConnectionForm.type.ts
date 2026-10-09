@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ServerSetupDraft } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import type { ServerProbe } from '@app/hooks/randomizer/server-setup/useServerProbe';
-import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
+import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
 
 interface ConnectionFormParams {
   config: ProfileRandomizerConfig;

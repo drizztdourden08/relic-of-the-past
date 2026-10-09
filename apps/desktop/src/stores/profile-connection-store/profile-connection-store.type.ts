@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 
 interface ProfileConnectionState {
   saved: Readonly<Record<string, ProfileRandomizerConfig>>;

@@ -1,13 +1,21 @@
 {
   "extends": "@drizztdourden08/brock-lint-config/tsconfig/react.json",
   "compilerOptions": {
-    "types": ["node", "vite/client"],
+    "types": [
+      "node",
+      "vite/client"
+    ],
     "noUncheckedIndexedAccess": false,
     "paths": {
-      "@shared/*": ["./shared/*"],
-      "@app/*": ["./apps/desktop/src/*"],
-      "@domains/*": ["./apps/desktop/src/ui/domains/*"],
-      "@site-kit/*": ["./apps/site-kit/*"]
+      "@app/*": [
+        "./apps/desktop/src/*"
+      ],
+      "@domains/*": [
+        "./apps/desktop/src/ui/domains/*"
+      ],
+      "@site-kit/*": [
+        "./apps/site-kit/*"
+      ]
     }
   },
   "include": [
@@ -16,8 +24,12 @@
     "apps/store/src/**/*",
     "apps/site-kit/**/*",
     "apps/desktop/electron/**/*",
-    "shared/**/*",
     "packages/*/src/**/*"
   ],
-  "exclude": ["node_modules", "dist", "out", "core"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "out",
+    "core"
+  ]
 }

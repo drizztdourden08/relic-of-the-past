@@ -22,7 +22,6 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@shared': resolve(SITE_ROOT, '../../shared'),
       '@app': WEB_SRC,
       '@domains': resolve(WEB_SRC, 'ui/domains'),
       '@site-kit': resolve(SITE_ROOT, '../site-kit'),

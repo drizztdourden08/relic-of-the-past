@@ -12,7 +12,7 @@ import { useSpriteExport } from './behavior/useSpriteExport';
 import { SpriteLibraryList } from './sub-components/SpriteLibraryList';
 import { PaletteEditor } from './sub-components/PaletteEditor';
 import { StudioToolbar } from './sub-components/StudioToolbar';
-import { fetchToBytes } from '@shared/storage/download';
+import { fetchToBytes } from '@app/download/download';
 import './PlayerSpriteStudio.css';
 import type { PlayerSpriteStudioProps } from './PlayerSpriteStudio.type';
 

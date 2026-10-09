@@ -6,7 +6,7 @@ import { usePlatform } from '@drizztdourden08/brock-react';
 import { useAppVersion } from '@app/hooks/useAppVersion';
 import { buildDebugText } from './format/debug-text';
 import { collectRendererDiagnostics } from './collect-renderer';
-import type { SystemDiagnostics } from '@shared/types/diagnostics';
+import type { SystemDiagnostics } from '@app/diagnostics-types';
 import type { DebugTextBuilder } from './useDebugTextBuilder.type';
 import { HOST_LABEL, OS_LABEL } from './useDebugTextBuilder.constants';
 
