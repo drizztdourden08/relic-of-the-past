@@ -11,7 +11,7 @@ import {
   hasBeamSword, hasFireSource, hasMeleeWeapon, hasSword,
 } from '../state-helpers';
 import { canRetrieveTablet, canUseMedallion, hasCrystals, hasMireMedallion, hasTurtleRockMedallion } from '../state-helpers-world';
-import { BOMBS_HELD_CHECK } from '../events/bombs-record';
+import { BOMBS_HELD_CHECK } from '../events/bombs-record.constants';
 import { RETRO_QUIVER_ITEM } from '../retro/retro-bow.data';
 import { retroQuiverRegions } from '../retro/retro-shops';
 import {
