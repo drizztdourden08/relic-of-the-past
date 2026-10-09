@@ -1,6 +1,4 @@
 /* @layer hub-core @kind logic */
-/** A bearer-authenticated GET that returns the parsed JSON, or throws with the
- *  status when the provider refuses. Provider tokens only ever pass through here. */
 import { badGateway } from '../../http/http-error';
 
 const getJson = async <T = Record<string, unknown>>(url: string, accessToken: string): Promise<T> => {

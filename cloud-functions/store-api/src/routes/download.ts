@@ -1,9 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/download { version? }. Holds the player to the daily download count and
- *  byte cap, records the install, and answers a presigned GET of the live version (or the
- *  approved version asked for) with its checksum and container. Only keys under packs/ are
- *  ever signed here, so nothing unreviewed can leave through this route. An approved version
- *  whose file was pruned is refused with the reason. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { DownloadResponse } from '../../../../shared/store/api-types';
 import { HUB_LIMITS } from '../../../../shared/hub/limits';
@@ -17,7 +12,7 @@ import { now } from '../../../hub-core/db/firestore';
 import { rateLimitRepo } from '../../../hub-core/db/rate-limit-repo';
 import type { Route } from '../../../hub-core/route.type';
 import { requirePlayer } from '../auth/player';
-import { DAY_MS } from '../db/daily-repo';
+import { DAY_MS } from '../db/daily-repo.constants';
 import { quotaRepo } from '../db/quota-repo';
 import { loadVisibleItem } from '../items/item-guards';
 import { isAuthor } from '../items/project-item';

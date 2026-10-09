@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** POST /admin/revoke/:userId { note }. Flips the grant row to revoked, which
- *  outranks every rule but the admin list, clears the person's manual groups,
- *  and bumps the session version so their open browsers drop out too. */
 import { HUB_ROUTES, adminRevokeSchema } from '../../../shared/hub';
 import { conflict, notFound } from '../http/http-error';
 import { parseBody } from '../http/parse-body';

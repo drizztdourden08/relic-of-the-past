@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** POST /auth/signout[?everywhere]
- *  Clears the cookie. With `everywhere`, bumps the session version so every
- *  other browser's cookie stops verifying too. */
 import { HUB_ROUTES } from '../../../shared/hub';
 import { queryFlag } from '../http/query';
 import { clearSessionCookie, readSession } from '../auth/session';

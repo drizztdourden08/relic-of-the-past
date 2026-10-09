@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/relist. A reviewer brings an unlisted item back to the status its
- *  versions give it. An item whose author is banned from the store stays unlisted. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
 import { conflict } from '../../../hub-core/http/http-error';

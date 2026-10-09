@@ -1,5 +1,4 @@
 /* @layer hub-core @kind logic */
-/** DELETE /me/views/:id. Removes one of the caller's saved views. */
 import { HUB_ROUTES } from '../../../shared/hub';
 import { notFound } from '../http/http-error';
 import { requireCaller } from '../auth/require-caller';

@@ -1,7 +1,4 @@
 /* @layer root-config @kind logic */
-/** GET /reports?mine&state&cursor. Every caller with the reports right sees
- *  every report; without it the list is empty. An anonymous reporter's email is
- *  only in the admin's copy. */
 import { SANCTUARY_ROUTES, canSeeReports } from '../../../../shared/sanctuary';
 import { badRequest } from '../../../hub-core/http/http-error';
 import { queryFlag, queryParam } from '../../../hub-core/http/query';
@@ -10,8 +7,7 @@ import { reportsRepo } from '../db/reports-repo';
 import { viewReport } from '../reports/report-view';
 import type { Route } from '../../../hub-core/route.type';
 import { SANCTUARY_SITE } from '../site';
-
-const PAGE_SIZE = 200;
+import { PAGE_SIZE } from './reports-list.constants';
 
 const readState = (raw: string | undefined): 'open' | 'closed' | null => {
   if (raw === undefined) return null;

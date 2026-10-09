@@ -1,9 +1,4 @@
 /* @layer store-api @kind logic */
-/** Approving a version moves its pack from incoming/ to packs/ inside the bucket: copy,
- *  record, then delete the upload. packs/ only ever holds approved packs, so a leaked
- *  download link cannot serve anything unreviewed. A copy left behind by a refused record
- *  is overwritten by the next approval of the same version. Once recorded, the item's
- *  older approved files are pruned to what its kind keeps. */
 import { STORE_KEYS } from '../../../../shared/store/keys';
 import type { StoreItem, StoreVersion } from '../../../../shared/store/types';
 import { itemsRepo } from '../db/items-repo';

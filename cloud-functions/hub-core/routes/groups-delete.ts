@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** DELETE /groups/:id, admin only. Removes the group, takes its id off every
- *  person who held it, and runs their access chain again so someone left with
- *  no group drops back to pending. The default group stays. */
 import { DEFAULT_GROUP_ID, HUB_ROUTES } from '../../../shared/hub';
 import { conflict, notFound } from '../http/http-error';
 import { requireAdmin } from '../auth/require-admin';

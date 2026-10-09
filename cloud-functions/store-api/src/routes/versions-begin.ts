@@ -1,10 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/versions { changelog, container, bytes, sha256 }. The author starts the
- *  next version: the entry is appended as uploading and a multipart upload opens under
- *  incoming/. Versions number themselves: the nth one the item ever started is n.0.0, so
- *  nobody types a number and each is higher than the last, deleted ones included. One version
- *  is in flight at a time (uploading, ready or waiting), the container is the kind's own, and
- *  the item needs its card first. A deleted or rejected version leaves room for the next. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { VersionBeginResponse } from '../../../../shared/store/api-types';
 import { HUB_LIMITS } from '../../../../shared/hub/limits';
@@ -23,8 +17,7 @@ import { itemsRepo } from '../db/items-repo';
 import { loadOwnItem } from '../items/item-guards';
 import { lastVersionNumber } from '../items/versions';
 import { storeBucket } from '../storage/store-bucket';
-
-const ZIP = 'application/zip';
+import { ZIP } from './versions-begin.constants';
 
 const versionsBegin: Route = {
   ...STORE_ROUTES.versionsBegin,

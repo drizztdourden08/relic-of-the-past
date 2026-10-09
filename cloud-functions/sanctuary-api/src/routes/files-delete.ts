@@ -1,7 +1,4 @@
 /* @layer root-config @kind logic */
-/** DELETE /files/:id. Soft-deletes the record and removes the object of every
- *  version, aborting the multipart upload of any version that never finished.
- *  Owner or admin. */
 import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import type { FileVersion, SanctuaryFile } from '../../../../shared/sanctuary';
 import { requireMember } from '../../../hub-core/auth/require-member';
@@ -11,7 +8,6 @@ import { filesBucket } from '../storage/files-bucket';
 import type { Route } from '../../../hub-core/route.type';
 import { SANCTUARY_SITE } from '../site';
 
-/** A first upload carries its multipart id on the file and on its version 1. */
 const dropVersion = async (file: SanctuaryFile, version: FileVersion): Promise<void> => {
   const upload = version.upload ?? (version.n === file.currentVersion ? file.upload : null);
   if (version.status === 'uploading' || file.status === 'uploading') {

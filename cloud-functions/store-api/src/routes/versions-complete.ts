@@ -1,9 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/versions/:n/complete { etags }. Completes the multipart upload, then
- *  holds the object to its declared size and the kind's cap, reads its manifest from the
- *  head of the file and hashes it whole. A good upload is ready, with the facts its manifest
- *  gave, until the author sends it for review; any refusal removes the object and the entry,
- *  and says why. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { VersionCompleteResponse } from '../../../../shared/store/api-types';
 import { versionCompleteSchema } from '../../../../shared/store/schemas';
@@ -16,7 +11,7 @@ import { loadOwnItem } from '../items/item-guards';
 import { dropVersion, loadVersion, replaceVersion, versionOf } from '../items/versions';
 import { statusAfter } from '../items/item-status';
 import { verifyVersion } from '../items/verify-version';
-import type { VerifiedVersion } from '../items/verify-version';
+import type { VerifiedVersion } from '../items/verify-version.type';
 import { storeBucket } from '../storage/store-bucket';
 import { signItem } from '../media/sign-media';
 

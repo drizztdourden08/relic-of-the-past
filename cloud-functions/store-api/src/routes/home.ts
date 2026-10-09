@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /home. The welcome message and the four shelves, built from indexed queries and
- *  served from memory for five minutes. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { HomeResponse } from '../../../../shared/store/api-types';
 import type { Route } from '../../../hub-core/route.type';

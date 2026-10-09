@@ -1,8 +1,4 @@
 /* @layer store-api @kind logic */
-/** Retention after an approval: an item keeps the files of its newest approved versions, as
- *  many as STORE_LIMITS.filesKept gives its kind, and the older approved versions lose theirs.
- *  Their rows stay, stamped as pruned. The live version is the newest approved one, so it is
- *  always kept. */
 import { STORE_LIMITS } from '../../../../shared/store/limits';
 import type { StoreItem, StoreVersion } from '../../../../shared/store/types';
 import { itemsRepo } from '../db/items-repo';
@@ -29,4 +25,4 @@ const pruneFiles = async (item: StoreItem, at: number): Promise<StoreItem> => {
   return updated;
 };
 
-export { filesToPrune, pruneFiles };
+export { pruneFiles };

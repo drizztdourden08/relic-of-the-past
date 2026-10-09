@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** The card a shelf or the catalogue shows for an item: listing text, pictures, the live
- *  version and the totals. Nothing on it is private, so it needs no projection. */
 import type { ItemCardView } from '../../../../shared/store/home-types';
 import type { StoreItem } from '../../../../shared/store/types';
 import { liveVersionOf } from './versions';
@@ -24,4 +22,4 @@ const toCardView = (item: StoreItem): ItemCardView => ({
   installs30d: item.stats.installs30d,
 });
 
-export { toCardView, ratingAverage };
+export { toCardView };

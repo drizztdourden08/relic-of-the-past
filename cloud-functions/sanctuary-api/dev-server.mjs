@@ -1,9 +1,4 @@
 /* @layer root-config @kind logic */
-/**
- * Runs the bundled API locally for the Sanctuary dev site, on the port its /api proxy
- * expects. `npm run sanctuary:api` from the repo root. Bundle it first (npm run bundle in
- * this folder); the deployed function never runs this file.
- */
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { createRequire } from 'node:module';

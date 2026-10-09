@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** DELETE /items/:id/feature. Anyone holding the store's feature permission takes an item
- *  out of the home page's featured row, from the item's own page. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
 import type { Route } from '../../../hub-core/route.type';

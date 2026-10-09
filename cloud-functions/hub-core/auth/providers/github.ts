@@ -1,17 +1,10 @@
 /* @layer hub-core @kind logic */
-/** GitHub as an identity source. The handle is the login, which the issue body
- *  mentions and the collaborator rule looks up. GitHub's OAuth flow has no PKCE,
- *  so the verifier is ignored here; the signed state still binds the callback. */
 import { GitHub } from 'arctic';
 import { readHubEnv } from '../../env';
 import { getJson } from './get-json';
+import { API, SCOPES } from './github.constants';
+import type { GitHubEmail, GitHubUser } from './github.type';
 import type { OAuthProvider } from './provider.type';
-
-const SCOPES = ['read:user', 'user:email'];
-const API = 'https://api.github.com';
-
-type GitHubUser = { id: number; login: string; avatar_url?: string | null; email?: string | null };
-type GitHubEmail = { email: string; primary: boolean; verified: boolean };
 
 const client = (redirect: string): GitHub => {
   const env = readHubEnv();
@@ -29,8 +22,8 @@ const primaryEmail = async (accessToken: string, fallback: string | null): Promi
 
 const githubProvider: OAuthProvider = {
   name: 'github',
-  authUrl: (state, _verifier, redirect) => client(redirect).createAuthorizationURL(state, SCOPES),
-  exchange: async (code, _verifier, redirect) => ({
+  authUrl: (state, _unusedPkceVerifier, redirect) => client(redirect).createAuthorizationURL(state, SCOPES),
+  exchange: async (code, _unusedPkceVerifier, redirect) => ({
     accessToken: (await client(redirect).validateAuthorizationCode(code)).accessToken(),
   }),
   profile: async (accessToken) => {

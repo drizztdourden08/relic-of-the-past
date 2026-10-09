@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/feature. Anyone holding the store's feature permission adds a published
- *  item to the end of the home page's featured row, from the item's own page. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
 import { STORE_LIMITS } from '../../../../shared/store/limits';

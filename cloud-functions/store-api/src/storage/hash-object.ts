@@ -1,5 +1,4 @@
 /* @layer store-api @kind logic */
-/** The sha256 of a stored object, read as a stream so a large pack never sits in memory. */
 import { createHash } from 'node:crypto';
 import type { Storage } from '../../../hub-core/storage/create-storage';
 

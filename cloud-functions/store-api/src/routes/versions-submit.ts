@@ -1,8 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/versions/:n/submit. The author sends a ready version to the review queue,
- *  or resubmits a rejected one while its file is kept. The item's one version in flight must
- *  be this one, and a resubmit cannot come back under a newer approved version. A resubmit
- *  starts a fresh review, so the last decision and its note are cleared. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
 import type { StoreItem } from '../../../../shared/store/types';

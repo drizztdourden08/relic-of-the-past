@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** Writes the featured row, first to last: the order in store-settings, mirrored onto each
- *  item's `featured`, cleared on the ones that left. The home page is rebuilt on its next read. */
 import type { Person } from '../../../../shared/store/types';
 import { now } from '../../../hub-core/db/firestore';
 import { itemsRepo } from '../db/items-repo';

@@ -1,6 +1,4 @@
 /* @layer hub-core @kind logic */
-/** GET /groups, admin only. Every group with how many people are in it and how
- *  many of those an admin added by hand. */
 import { HUB_ROUTES } from '../../../shared/hub';
 import type { Group, HubUser } from '../../../shared/hub';
 import { requireAdmin } from '../auth/require-admin';
@@ -9,8 +7,7 @@ import { groupsRepo } from '../db/groups-repo';
 import { usersRepo } from '../db/users-repo';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
-
-type GroupWithCounts = Group & { memberCount: number; manualCount: number };
+import type { GroupWithCounts } from './groups-list.type';
 
 const withCounts = (group: Group, users: HubUser[]): GroupWithCounts => ({
   ...group,
@@ -28,4 +25,4 @@ const groupsList = (site: SiteConfig): Route => ({
 });
 
 export { groupsList };
-export type { GroupWithCounts };
+export type { GroupWithCounts } from './groups-list.type';

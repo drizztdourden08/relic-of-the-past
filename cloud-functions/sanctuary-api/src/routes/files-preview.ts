@@ -1,9 +1,4 @@
 /* @layer root-config @kind logic */
-/**
- * POST /files/:id/preview?v=<n>. A short-lived link that shows the file in the browser
- * (the image viewer, the video player) instead of saving it. The current version unless
- * `v` names another. Viewing is not a download, so the counter stays as it is.
- */
 import { LIMITS, SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import { conflict } from '../../../hub-core/http/http-error';
 import { queryParam } from '../../../hub-core/http/query';

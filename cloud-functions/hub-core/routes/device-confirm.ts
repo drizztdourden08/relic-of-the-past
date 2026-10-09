@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** POST /device/confirm { userCode }, session only. The signed-in user
- *  approves a pending code and the device becomes theirs. Refused after
- *  expiry or a second use, since a used code is no longer pending. */
 import { HUB_ROUTES, deviceConfirmSchema } from '../../../shared/hub';
 import { notFound } from '../http/http-error';
 import { parseBody } from '../http/parse-body';

@@ -1,12 +1,7 @@
 /* @layer hub-core @kind logic */
-/** Devices carry the device-code handshake in a `code` block that is cleared
- *  once the app has received its token, so the confirmed row is a plain Device. */
 import type { Device } from '../../../shared/hub';
+import type { DeviceDoc } from './devices-repo.type';
 import { collection, now } from './firestore';
-
-type CodeStatus = 'pending' | 'confirmed' | 'denied';
-type DeviceCode = { userCode: string; pollSecretHash: string; expiresAt: number; status: CodeStatus };
-type DeviceDoc = Device & { code: DeviceCode | null };
 
 const devices = () => collection('devices');
 
@@ -33,7 +28,6 @@ const confirm = async (id: string, userId: string, label: string): Promise<void>
   await devices().doc(id).update({ userId, label, 'code.status': 'confirmed' });
 };
 
-/** Records the delivered token's hash and closes the handshake in one write. */
 const deliverToken = async (id: string, tokenHash: string): Promise<void> => {
   await devices().doc(id).update({ tokenHash, code: null, lastSeenAt: now() });
 };
@@ -62,4 +56,4 @@ const remove = async (id: string): Promise<void> => {
 const devicesRepo = { create, get, byUserCode, byTokenHash, confirm, deliverToken, touch, listForUser, revoke, remove };
 
 export { devicesRepo };
-export type { DeviceDoc, DeviceCode, CodeStatus };
+export type { DeviceDoc, DeviceCode, CodeStatus } from './devices-repo.type';

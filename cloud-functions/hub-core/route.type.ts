@@ -10,8 +10,6 @@ type RouteContext = {
 
 type RouteHandler = (ctx: RouteContext) => Promise<void>;
 
-/** One entry of the route table. `path` uses `:name` segments, matched after
- *  the prefix the Hosting rewrite leaves on the URL is stripped. */
 type Route = {
   method: HttpMethod;
   path: string;

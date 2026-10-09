@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** POST /me/unlink/:provider. Removes one identity and decides access to this site again,
- *  since the removed one may have been what granted it. The last identity stays, or the
- *  account would have no way back in. */
 import { HUB_ROUTES, isProvider } from '../../../shared/hub';
 import { badRequest, conflict, notFound } from '../http/http-error';
 import { requireSession } from '../auth/require-session';

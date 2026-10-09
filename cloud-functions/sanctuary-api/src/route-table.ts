@@ -1,7 +1,4 @@
-/* @layer root-config @kind logic */
-/** The Sanctuary's own routes, one file each: files, versions, reports and the sweep. The
- *  account routes come first from hub-core. Order matters only where two patterns could
- *  match the same path; none do here. */
+/* @layer root-config @kind data */
 import type { Route } from '../../hub-core/route.type';
 import { filesList } from './routes/files-list';
 import { filesBegin } from './routes/files-begin';

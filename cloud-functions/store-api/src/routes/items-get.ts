@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /items/:id. The item as this caller may see it, with their own rating and whether
- *  they installed it. An item they may not see answers as missing. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemResponse } from '../../../../shared/store/api-types';
 import type { Route } from '../../../hub-core/route.type';

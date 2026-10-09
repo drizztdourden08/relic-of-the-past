@@ -1,6 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /admin/sweep, for Cloud Scheduler, behind hub-core's scheduler guard. Nothing a
- *  browser session can call. */
 import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import { requireScheduler } from '../../../hub-core/scheduler/scheduler-guard';
 import type { Route } from '../../../hub-core/route.type';

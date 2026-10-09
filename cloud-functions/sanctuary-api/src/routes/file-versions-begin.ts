@@ -1,8 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files/:id/versions. Anyone who can see the file's type starts its next
- *  version: the entry is appended as uploading and a multipart upload opens at
- *  files/<id>/v<n>. Two versions started at once cannot share a number; the
- *  later one is refused and its upload aborted. */
 import { LIMITS, SANCTUARY_ROUTES, beginVersionSchema } from '../../../../shared/sanctuary';
 import type { FileVersion } from '../../../../shared/sanctuary';
 import { conflict } from '../../../hub-core/http/http-error';

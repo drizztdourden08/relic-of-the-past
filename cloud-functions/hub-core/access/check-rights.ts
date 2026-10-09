@@ -1,6 +1,4 @@
 /* @layer hub-core @kind logic */
-/** A group's rights for this site hold only permissions its model knows. Another site's
- *  list keeps the shape the shared schema checked; that site checks the names. */
 import type { GroupRights, RightsModel } from '../../../shared/hub';
 import { badRequest } from '../http/http-error';
 

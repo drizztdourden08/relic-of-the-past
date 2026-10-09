@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /review. Waiting versions and listing edits, oldest first, for anyone holding the
- *  store's review permission. A version entry carries a short-lived link to its upload. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ReviewQueueResponse } from '../../../../shared/store/api-types';
 import type { Route } from '../../../hub-core/route.type';

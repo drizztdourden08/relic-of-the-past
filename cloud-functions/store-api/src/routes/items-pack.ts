@@ -1,9 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /items/:id/pack. For any signed-in player who may see the item, an inline signed link
- *  to the live version's pack, so the item page's Contents tab reads it in parts without an
- *  install. Only an approved file under packs/ is ever signed here. Each link counts toward
- *  the player's daily preview cap, kept apart from the download cap. An item with no live
- *  version, or whose live file was removed, is refused with the reason. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { PackLinkResponse } from '../../../../shared/store/api-types';
 import { HUB_LIMITS } from '../../../../shared/hub/limits';
@@ -14,12 +9,11 @@ import { conflict, notFound, tooMany } from '../../../hub-core/http/http-error';
 import { rateLimitRepo } from '../../../hub-core/db/rate-limit-repo';
 import type { Route } from '../../../hub-core/route.type';
 import { requirePlayer } from '../auth/player';
-import { DAY_MS } from '../db/daily-repo';
+import { DAY_MS } from '../db/daily-repo.constants';
 import { loadVisibleItem } from '../items/item-guards';
 import { versionOf } from '../items/versions';
 import { storeBucket } from '../storage/store-bucket';
-
-const OVER_CAP = `You have opened ${STORE_LIMITS.packPreviewsPerDay} pack previews today. Previews open again tomorrow.`;
+import { OVER_CAP } from './items-pack.constants';
 
 const livePack = (item: StoreItem): StoreVersion & { packKey: string } => {
   const version = item.liveVersion === null ? null : versionOf(item, item.liveVersion);

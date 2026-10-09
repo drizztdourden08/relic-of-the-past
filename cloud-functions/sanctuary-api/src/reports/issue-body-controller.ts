@@ -1,8 +1,7 @@
 /* @layer root-config @kind logic */
-/** A controller report: the player shape plus one collapsed block per recorded
- *  artefact, in a fixed order, whatever the wizard captured. */
 import type { SubmitReportRequest } from '../../../../shared/sanctuary';
-import { debugInfoBlock, detailsBlock } from './details-block';
+import { debugInfoBlock } from './debug-info-block';
+import { detailsBlock } from './details-block';
 import type { IssueBodyRenderer } from './issue-body.type';
 
 const controllerBlocks = (report: SubmitReportRequest['controllerReport']): string[] => {

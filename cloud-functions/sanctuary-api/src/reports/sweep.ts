@@ -1,18 +1,14 @@
 /* @layer root-config @kind logic */
-/** The daily pass: every open issue is read by number and its close written
- *  back, then every report past its expiry loses its zip and its record. The
- *  closed state written here is what the site shows. */
 import type { Report } from '../../../../shared/sanctuary';
 import { reportsRepo } from '../db/reports-repo';
 import { now } from '../../../hub-core/db/firestore';
 import { github } from '../github/issues';
 import { filesBucket } from '../storage/files-bucket';
 import { reportKey } from '../storage/keys';
-import { expiryOf, isExpired } from './expiry';
+import { expiryOf } from './expiry';
+import { isExpired } from './is-expired';
+import type { SweepResult } from './sweep.type';
 
-type SweepResult = { checked: number; closed: number; deleted: number };
-
-/** Reads the issue when the record still says open; returns the report as it now stands. */
 const refreshIssue = async (report: Report): Promise<Report> => {
   if (report.issue.state === 'closed') return report;
   const issue = await github.getIssue(report.issue.number);
@@ -43,4 +39,3 @@ const sweepReports = async (): Promise<SweepResult> => {
 };
 
 export { sweepReports };
-export type { SweepResult };

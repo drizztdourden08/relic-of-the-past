@@ -1,8 +1,4 @@
 /* @layer hub-core @kind logic */
-/** PUT /admin/users/:userId/groups { groupIds }, admin only. Replaces the
- *  person's manual groups and runs their access chain again without a provider
- *  token, so their role groups stay as last read. Giving a revoked person any
- *  group lifts the revoke; an empty list leaves it in place. */
 import { HUB_ROUTES, setGroupsSchema } from '../../../shared/hub';
 import { badRequest, notFound } from '../http/http-error';
 import { parseBody } from '../http/parse-body';

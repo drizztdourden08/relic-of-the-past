@@ -1,7 +1,4 @@
 /* @layer root-config @kind logic */
-/** DELETE /files/:id/versions/:n. Owner or admin. Removes one version's object
- *  (or aborts its unfinished upload) and its entry. The current version and a
- *  file's only version stay; restore another one first. */
 import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import type { FileVersion, SanctuaryFile } from '../../../../shared/sanctuary';
 import { conflict } from '../../../hub-core/http/http-error';
@@ -19,7 +16,6 @@ const assertDeletable = (file: SanctuaryFile, n: number): void => {
   if (file.currentVersion === n) throw conflict('The current version cannot be deleted. Restore another one first.');
 };
 
-/** The uploader may drop their own unfinished version, which is how a failed upload cleans up. */
 const isOwnUnfinished = (version: FileVersion, member: Member): boolean =>
   version.status === 'uploading' && version.by.userId === member.user.id;
 

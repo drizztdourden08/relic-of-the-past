@@ -1,7 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files/:id/parts { parts: [n..m], partsDone? }. Presigned PUT URLs for a batch of
- *  part numbers of the first upload, each bound to its upload id, one hour each.
- *  `partsDone` is how many parts the uploader already has up; the record keeps it. */
 import { SANCTUARY_ROUTES, signPartsSchema } from '../../../../shared/sanctuary';
 import { badRequest, conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';

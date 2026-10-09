@@ -1,11 +1,4 @@
 /* @layer hub-core @kind logic */
-/**
- * GET /discord/roles. The server's roles for the group editor's picker, read with the
- * hub bot (no permissions, it only has to be in the server). Leaves out
- * @everyone and the roles Discord manages for bots and integrations, since nobody can
- * be given those by hand. Cached for a minute. Without a bot token the answer is an
- * empty list and `available: false`, and the editor falls back to typing an id.
- */
 import { HUB_ROUTES } from '../../../shared/hub';
 import type { DiscordRole } from '../../../shared/hub';
 import { readHubEnv } from '../env';
@@ -13,20 +6,19 @@ import { badGateway } from '../http/http-error';
 import { requireAdmin } from '../auth/require-admin';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
+import { API, CACHE_MS } from './discord-roles.constants';
+import type { CachedRoles, RawRole } from './discord-roles.type';
 
-type RawRole = { id: string; name: string; color: number; position: number; managed: boolean };
+let cached: CachedRoles | null = null;
 
-const API = 'https://discord.com/api/v10';
-const CACHE_MS = 60_000;
-
-let cached: { at: number; roles: DiscordRole[] } | null = null;
+const isAssignableRole = (role: RawRole, guildId: string): boolean => role.id !== guildId && !role.managed;
 
 const fetchRoles = async (token: string, guildId: string): Promise<DiscordRole[]> => {
   const response = await fetch(`${API}/guilds/${guildId}/roles`, { headers: { Authorization: `Bot ${token}` } });
   if (!response.ok) throw badGateway(`Discord answered ${response.status} for the role list.`);
   const raw = (await response.json()) as RawRole[];
   return raw
-    .filter((role) => role.id !== guildId && !role.managed)
+    .filter((role) => isAssignableRole(role, guildId))
     .sort((a, b) => b.position - a.position)
     .map(({ id, name, color, position }) => ({ id, name, color, position }));
 };

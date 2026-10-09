@@ -1,15 +1,10 @@
 /* @layer hub-core @kind logic */
-/** Google as an identity source. The subject is the stable `sub`; the handle is
- *  the email, which is the only name Google shows that a contributor recognises. */
 import { Google } from 'arctic';
 import { readHubEnv } from '../../env';
 import { getJson } from './get-json';
+import { SCOPES, USERINFO } from './google.constants';
+import type { GoogleUser } from './google.type';
 import type { OAuthProvider } from './provider.type';
-
-const SCOPES = ['openid', 'email', 'profile'];
-const USERINFO = 'https://openidconnect.googleapis.com/v1/userinfo';
-
-type GoogleUser = { sub: string; email?: string | null; name?: string | null; picture?: string | null };
 
 const client = (redirect: string): Google => {
   const env = readHubEnv();

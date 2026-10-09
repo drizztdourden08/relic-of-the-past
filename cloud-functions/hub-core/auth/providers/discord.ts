@@ -1,17 +1,10 @@
 /* @layer hub-core @kind logic */
-/** Discord as an identity source. Scopes: identify for the profile, email, and
- *  guilds.members.read so the access chain can read the user's own member
- *  object in the contributor guild with the same token. */
 import { Discord } from 'arctic';
 import { readHubEnv } from '../../env';
+import { API, CDN, SCOPES } from './discord.constants';
+import type { DiscordUser } from './discord.type';
 import { getJson } from './get-json';
 import type { OAuthProvider } from './provider.type';
-
-const SCOPES = ['identify', 'email', 'guilds.members.read'];
-const API = 'https://discord.com/api';
-const CDN = 'https://cdn.discordapp.com';
-
-type DiscordUser = { id: string; username: string; email?: string | null; avatar?: string | null };
 
 const client = (redirect: string): Discord => {
   const env = readHubEnv();

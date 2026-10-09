@@ -1,8 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/media { role, bytes, sha256 }. A presigned PUT for the author's card or
- *  banner, under a key named by the picture's hash, so a pending edit never replaces the
- *  live picture. The signed length binds the upload to the declared size, which the schema
- *  holds to the role's cap; the listing route checks the object once it arrived. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { MediaUploadResponse } from '../../../../shared/store/api-types';
 import { HUB_LIMITS } from '../../../../shared/hub/limits';
@@ -13,8 +9,7 @@ import type { Route } from '../../../hub-core/route.type';
 import { requirePlayer } from '../auth/player';
 import { loadOwnItem } from '../items/item-guards';
 import { storeBucket } from '../storage/store-bucket';
-
-const SHA_PREFIX_CHARS = 8;
+import { SHA_PREFIX_CHARS } from './items-media.constants';
 
 const itemsMedia: Route = {
   ...STORE_ROUTES.itemsMedia,

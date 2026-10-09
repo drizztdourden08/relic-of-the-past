@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** GET /auth/:provider/start?intent=signin|link|device&return=/path
- *  Writes the signed state cookie and sends the browser to the provider.
- *  A link needs a session, so a stray click cannot attach a provider to nobody. */
 import { generateCodeVerifier } from 'arctic';
 import { HUB_ROUTES } from '../../../shared/hub';
 import { badRequest } from '../http/http-error';
@@ -13,8 +10,7 @@ import type { OauthIntent } from '../auth/oauth-state';
 import { requireSession } from '../auth/require-session';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
-
-const INTENTS: OauthIntent[] = ['signin', 'link', 'device'];
+import { INTENTS } from './auth-start.constants';
 
 const readIntent = (raw: string | undefined): OauthIntent =>
   (INTENTS as string[]).includes(raw ?? '') ? (raw as OauthIntent) : 'signin';

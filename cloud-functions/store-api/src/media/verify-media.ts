@@ -1,7 +1,4 @@
 /* @layer store-api @kind logic */
-/** A listing that names a picture is checked against the bucket before it is kept: the key
- *  belongs to this item and role, the size is the role's, and the object arrived within the
- *  role's byte cap. An oversized object is removed. */
 import type { ListingPatchBody } from '../../../../shared/store/schemas';
 import type { MediaRole } from '../../../../shared/store/keys';
 import { STORE_LIMITS } from '../../../../shared/store/limits';
@@ -26,4 +23,4 @@ const verifyListingMedia = async (itemId: string, patch: ListingPatchBody): Prom
   if (patch.banner) await verifyMedia(itemId, 'banner', patch.banner);
 };
 
-export { verifyMedia, verifyListingMedia };
+export { verifyListingMedia };

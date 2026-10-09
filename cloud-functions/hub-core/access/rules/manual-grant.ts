@@ -1,5 +1,4 @@
 /* @layer hub-core @kind logic */
-/** The groups an admin put the user in by hand. */
 import { knownIds } from '../membership';
 import type { GroupRule } from '../access-rule.type';
 

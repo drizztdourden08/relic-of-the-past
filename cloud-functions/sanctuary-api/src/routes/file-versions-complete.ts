@@ -1,8 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files/:id/versions/:n/complete { etags }. Completes the version's
- *  multipart upload and HEADs it against the declared size. A good upload
- *  becomes the current version and its facts move to the top of the record; a
- *  size mismatch drops the object and the entry. */
 import { LIMITS, SANCTUARY_ROUTES, completeFileSchema } from '../../../../shared/sanctuary';
 import { badRequest, conflict, notFound } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';

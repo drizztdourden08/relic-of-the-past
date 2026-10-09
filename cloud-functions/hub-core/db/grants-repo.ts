@@ -1,10 +1,6 @@
 /* @layer hub-core @kind logic */
-/** One doc per user the admin queue touched. A grant and a revoke are the same
- *  row with `revoked` flipped, so the last admin action is what the chain sees. */
-import type { AccessGrant } from '../../../shared/hub';
 import { collection } from './firestore';
-
-type GrantDoc = AccessGrant & { revoked: boolean };
+import type { GrantDoc } from './grants-repo.type';
 
 const grants = () => collection('grants');
 
@@ -20,4 +16,4 @@ const set = async (doc: GrantDoc): Promise<void> => {
 const grantsRepo = { get, set };
 
 export { grantsRepo };
-export type { GrantDoc };
+export type { GrantDoc } from './grants-repo.type';

@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** Every account route a site serves: sign-in, me, saved views, devices, groups and the
- *  admin queue, bound to one site's config. A site's function puts these first in its
- *  table and its own routes after. No two patterns here match the same path. */
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
 import { authStart } from './auth-start';

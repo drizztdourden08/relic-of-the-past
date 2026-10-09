@@ -1,7 +1,4 @@
 /* @layer store-api @kind logic */
-/** PUT /home/featured { itemIds }. The featured row, first to last, for anyone holding the
- *  store's feature permission. Every id must name a published item. The order is kept in
- *  store-settings and mirrored onto each item's `featured`, cleared on the ones that left. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { FeaturedResponse } from '../../../../shared/store/api-types';
 import { featuredSchema } from '../../../../shared/store/schemas';

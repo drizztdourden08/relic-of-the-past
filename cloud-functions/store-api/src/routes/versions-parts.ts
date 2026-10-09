@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /items/:id/versions/:n/parts. The parts of an uploading version already in the
- *  bucket, for its author only, so an upload cut off by a reload sends only what is missing. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { UploadedPartsResponse } from '../../../../shared/store/api-types';
 import { conflict } from '../../../hub-core/http/http-error';
