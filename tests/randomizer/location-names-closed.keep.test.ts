@@ -1,16 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Closed-world guard over locations, now that the engine reads them off the records.
- *
- * Every spot of the world is a check row the one rule picks out (world/seed-locations.ts), so
- * the world the graph declares IS the set every other table has to agree with. The id-keyed
- * tables are checked against it: every key they name has to be a location the world really
- * holds. Most of those reach the rule registry, which throws on an unknown target; the tables
- * listed here do not, so a stale id would sit there doing nothing.
- *
- * Normal is a placement over that same world, so the other direction is its own: it must fill
- * every declared location, and nothing else.
- */
 import { describe, expect, it } from 'vitest';
 import { buildNormalPlacement, normalWorldOptions } from '@shared/randomizer/normal-placement';
 import { buildWorld } from '@shared/randomizer/world/build-world';
@@ -48,10 +36,6 @@ import { FINAL_TOWER_RULES } from '@shared/randomizer/world/rules/tables/dungeon
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { RuleEntry } from '@shared/randomizer/world/rules/rule-entry.type';
 
-/**
- * Every location the world can hold: the graph built with key drops on and every pond selling
- * its whole ladder, which is the widest set any option can open.
- */
 const DECLARED: ReadonlySet<LocationKey> = new Set(buildWorld({
   ...normalWorldOptions({}),
   pondLocations: [...POND_LOCATION_SET, ...CAPACITY_UPGRADE_LOCATIONS.keys()],
@@ -62,7 +46,6 @@ const isLocation = (key: string): boolean =>
 
 const notLocations = (keys: Iterable<string>): string[] => [...keys].filter((key) => !isLocation(key));
 
-/** The story events of the world: never a location, and the only thing an event row may name. */
 const STORY_EVENTS: ReadonlySet<string> = new Set(WORLD_EVENT_IDS);
 
 const RULE_TABLES: Readonly<Record<string, readonly RuleEntry[]>> = {
@@ -99,18 +82,15 @@ const KEYED_TABLES: readonly (readonly [string, readonly string[]])[] = [
   ['pond-rungs POND_LOCATION_SET', [...POND_LOCATION_SET]],
   ['rules/tables lamps LAMP_LOCATIONS', LAMP_LOCATIONS],
   ['rules/tables lamps ESCAPE_DARK_LOCATIONS', ESCAPE_DARK_LOCATIONS],
-  // The source exempts two story events alongside the locations; those two are events here.
   ['rules/tables bunny-lists', [...BUNNY_ACCESSIBLE_LOCATIONS].filter((key) => !STORY_EVENTS.has(key))],
   ['rules/tables item-rules FULL_ACCESS_ALWAYS_ALLOW', [...FULL_ACCESS_ALWAYS_ALLOW]],
   ['rules priced-entries PRICED_ENTRIES', PRICED_ENTRIES.filter((e) => e.kind === 'location').map((e) => e.target)],
   ...Object.entries(RULE_TABLES)
     .map(([label, table]): readonly [string, readonly string[]] =>
       [`rules/tables ${label}`, table.filter((entry) => entry.kind === 'location').map((entry) => entry.target)])
-    // A table may rule only passages and events (the goal's own table does).
     .filter(([, keys]) => keys.length > 0),
 ];
 
-/** The pond slots a setting invents, which exist as keys and never as records. */
 const POND_SLOTS: ReadonlySet<LocationKey> = new Set([
   ...POND_LOCATION_SET, ...CAPACITY_UPGRADE_LOCATIONS.keys(),
 ]);
@@ -136,7 +116,6 @@ describe('Normal fills the world it is built over', () => {
   it('fills every declared location, and only locations the world declares', () => {
     const filled = new Set(Object.keys(buildNormalPlacement().locations));
     expect([...filled].filter((key) => !isLocation(key))).toEqual([]);
-    // A pond slot is a location only where a pond sells it, and Normal sells none.
     expect([...DECLARED].filter((key) => !filled.has(key) && !POND_SLOTS.has(key))).toEqual([]);
   });
 });

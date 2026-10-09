@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Quiet receipts. With a kind's option on, a rupee, bomb or arrow the randomizer delivers (from
- * another player, the server or a local seed's delivery) goes straight in through
- * WasmGrantQuietReceipt, takes no receipt line and completes at once; a placed one is armed with
- * the silent line. With it off, it runs the receipt flow with its own per-source line. Under the
- * retro bow the single arrow is the quiver, never quiet. When the core answers that a queued
- * receipt is no longer quiet, the ordinary receipt runs in its place. The real server delivery,
- * delivery api, queue and gate word run against a recording core.
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
 import { deliverItem } from '@app/lib/game/delivery-api';
@@ -29,7 +20,6 @@ const ALL_ON = { rupees: true, bombs: true, arrows: true };
 const core = vi.hoisted(() => ({
   calls: [] as [string, number[]][],
   lines: [] as string[],
-  /** What WasmGrantQuietReceipt answers: 1 granted, 2 not quiet. */
   quietStatus: 1,
 }));
 
@@ -60,7 +50,6 @@ vi.mock('@app/lib/game/session-dialogue', () => ({
   releaseSessionReceiptMessage: () => undefined,
 }));
 
-/** The queue's frame loop, driven by hand: every queued callback runs once per step. */
 const frames: FrameRequestCallback[] = [];
 const step = (count: number): void => {
   for (let i = 0; i < count; i += 1) frames.splice(0).forEach((cb) => cb(0));

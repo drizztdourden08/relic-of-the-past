@@ -806,6 +806,146 @@ A local placement served as a one player room: the slot data a world package wou
 every location's item under the frozen Archipelago ids. It is what a solo multiworld of the
 same seed looks like to the client.
 
+### randomizer: suites in node
+
+Several suites stub `window` with an `addEventListener` before a dynamic import, or mock
+`@app/lib/log-bus`, because the real log bus installs window error handlers on import and
+node has no window.
+
+### randomizer/ap-deathlink.keep.test.ts
+
+DeathLink follows the slot data over the profile flag, and a slot from another world package
+version is refused. Only bounces tagged DeathLink count; the network ping is a Bounce too.
+When a fairy revives Link, the core reports nothing and clears its room kill flag.
+
+### randomizer/ap-ids.keep.test.ts
+
+The Archipelago id tables are complete (every location of the widest world and every item any
+option can pool has an id; no story event has one), unique, and frozen: a digest over the
+first `FROZEN_*` ids of each table pins them. Appending ids leaves the digest alone; editing,
+reusing or removing one fails, because generated seeds carry those numbers. After an append,
+raise the count and the digest together. The location digest was repinned once for a rename
+that kept every id and name: the 155 shop keys moved from a shelf's check id and its restocks
+to `<shop>-shelf_<side>-slot_<n>` (previous digest
+`736690669490347d1fa78bcf312613bccf0ef65db28c5f02c7978f1ebb55c9d9`).
+
+### randomizer/ap-online-connect.keep.test.ts and ap-online-recovery.keep.test.ts
+
+A server that is down at the first connect is retried on the backoff with a countdown; a
+refusal is not retried. An item at a negative location is the server's own, even when this
+slot asked for it. The save in play is bound to the room at Connected and after every save
+swap, before any check or item crosses; a save of another room ends the session with nothing
+sent. The received index moves only on a grant, every save swap asks for the list again, and a
+location the save shows done is still not reported again by a reconnect's baseline.
+
+### randomizer/ap-quiet-receipts.keep.test.ts
+
+With a kind's option on, a delivered rupee, bomb or arrow goes in through
+`WasmGrantQuietReceipt` (answering 1 granted, 2 not quiet) with no receipt line; a placed one
+is armed with the silent line. Under the retro bow the single arrow is the quiver, never
+quiet. When the core says a queued receipt is no longer quiet, the ordinary receipt runs.
+
+### randomizer/ap-receipt-burst.keep.test.ts
+
+A goal's collect sends every remaining item in one packet. Each item's line is composed when
+its delivery reaches the front of the queue, so 200 items each show their own line, while the
+ring of 32 never holds more than the delivery in flight. A progressive item's detail page
+keeps its id and bytes through the burst.
+
+### randomizer/ap-report-coverage.keep.test.ts
+
+A session sends a location from one of two paths: the substitution seam (an armed override's
+fire id) or the poller (a plan detection, or the tracker's sweep). A location with neither can
+never be sent, so the room could never finish. The default options match the first two game
+test room (341 locations). The tracker's check total must equal the room's location count;
+events and status rows stay listed but are not locations. After a collect, shop restocks and
+pond rungs read the taken set, since they have no record.
+
+### randomizer/capacity-pond-rule
+
+The pond is the only native source of the explosives and projectiles upgrades, so a family
+left Vanilla while the pond hands out pool items would have no source anywhere. The suite
+walks every combination the two tabs can reach, settles it, and proves the hole never
+appears, settling is stable, and every control still offered leads to another sound pair.
+Under the retro bow every shot is paid for, so the projectiles family reads Vanilla and needs
+no source. A Custom family carries its ladder in the seed and asks the pond for nothing.
+
+### randomizer/dialogue-charset.keep.test.ts
+
+Every character an Archipelago name can hold encodes to a real glyph (the language's own, or
+an extra glyph in a spare font slot) or to a documented fallback: an accented letter to its
+base letter, a bracket to a parenthesis when no slot is left, anything else to a question
+mark. European fonts have 16 spare slots for the 21 characters they lack, so five fall back.
+An extra glyph packs as two 2bpp tiles, top then bottom; plane 1 is the body and plane 0 the
+edge ringing it.
+
+### randomizer/hook-save-bytes.keep.test.ts
+
+`core/game-hooks/save_bytes.h` is the source of truth with its own `_Static_assert`s, which
+only fire on a core rebuild and cannot see TS. The test parses the header's flat
+`#define NAME 0xHEX` lines; generating the TS instead would only move the drift to a stale
+artifact.
+
+### randomizer/key-drop-size.keep.test.ts
+
+The core matches a drop override on room and drop size, so a key drop armed at the wrong size
+never fires and the vanilla key is granted. A drop whose vanilla item is its dungeon's Big
+Key is armed large, every other one small.
+
+### randomizer/location-names-closed.keep.test.ts
+
+Every spot of the world is a check row (`world/seed-locations.ts`), so the world the graph
+declares is the set every id keyed table must agree with. Most tables reach the rule
+registry, which throws on an unknown target; the tables listed here do not, so a stale id
+would sit there unnoticed. The declared set is the widest any option opens (key drops on,
+every pond selling its whole ladder). The bunny list exempts two story events alongside its
+locations. A rule table may hold only passages and events. A pond slot is a location only
+where a pond sells it, and Normal sells none.
+
+### randomizer/option-wiring.keep.test.ts
+
+The creation panel and the profile writer once built their overrides separately, so a row
+wired into one froze silently. Both read `randomizerChoiceOverrides` now, and the suite walks
+the whole catalog by value, since a missing field still puts its key in the map with nothing
+behind it. The price block's percentage is a number, every other key a tick. The base fixture
+pins the shop mode to vanilla, because a fresh profile starts shuffled; the shop cases stock
+one purchase per slot.
+
+### randomizer/plan-covers-placement.keep.test.ts
+
+Every location a placement names must appear in the physical plan as an entry or an explicit
+error; that gap once let shuffled dungeon prizes vanish between generation and the session.
+Shop slots reach the session through seams of their own (the hut and the bomb counter too),
+so every mode and both depths are pinned, and a shelf slot must never be an error row.
+
+### randomizer/pool-listing-sprites.keep.test.ts
+
+Two hops leave the options panel drawing placeholders over sprites on disk. The panel renders
+inside the profile creation form, possibly with no active profile and no ROM picked, so
+`spriteRomOf` lets a ready ROM stand in. And every sprite an item record names must be one the
+extraction writes, or the row asks for a URL that 404s over `app-sprite://`.
+
+### randomizer/progressive-tick-consequences.keep.test.ts
+
+The consequence lines are the panel's live reading of `derivedItemPower`; for any tick set,
+the switches the derivation masks on must be exactly the ones the visible lines stand for.
+
+### randomizer/receipt-highlight.keep.test.ts
+
+Every composed line marks what was found in the primary highlight and who it came from or
+went to in the secondary one. The composer turns the markup into the core's highlight bytes
+(`core/game-hooks/dialog_highlight.c`), measures it as zero pixels, and reopens a span at
+every row break. The two colours default to the app's gold and green, snapped to 15 bit
+colour as the core's own defaults are.
+
+### randomizer/shop-slots-panel.keep.test.ts
+
+The count control was once fed the stored slot count, which custom mode never reads, so it
+sat still while the ticks moved. In custom mode the opened set is the ticked set, so a slider
+would always sit full; the modes the ticks alone decide show a read out. A new profile ticks
+every shelf slot and the bomb counter; the potion seller's three cauldrons start unticked,
+since a cauldron holding a shuffled item is opt in.
+
 ### randomizer/rule-parity-harness and rule-node-parity.keep.test.ts
 
 The guard that the rules answer exactly as they did before they became node trees

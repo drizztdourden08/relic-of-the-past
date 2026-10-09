@@ -1,11 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The online session's notices, read at the seam the play area's toast stack listens to
- * (online-notices.ts), with the online client against an in-process server and a recording
- * core: each PrintJSON kind, the connection's changes and a DeathLink death raise the right
- * kind with the exact line. Then the toast queue (notice-burst.ts): a kind the settings turn off
- * queues nothing, and a burst folds into one counted summary.
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
 import { onOnlineNotice } from '@app/lib/game/randomizer-client/online-notices';

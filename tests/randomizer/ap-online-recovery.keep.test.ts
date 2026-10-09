@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The online client's recovery paths against the fake server and the recording core: the
- * received list asked for again once the game can take items, the scout arm that finishes
- * after a stop, a refused scout, and the offline baseline that reports an armed pickup made
- * while no client was connected. Then the save file: nothing is delivered while no file is in
- * play, the index moves only on a grant, every save swap asks for the list again and the
- * re-read index filters it, a save bound to another room takes nothing, and the room's own
- * checked locations are marked collected.
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
 import { rebaselineEntries } from '@app/lib/game/randomizer-client/poll-rebaseline';
@@ -258,7 +249,6 @@ describe('the room\'s checked locations', () => {
     server.push([{ cmd: 'RoomUpdate', checked_locations: [2] }]);
     await settle();
     expect([...core.collected]).toEqual(['check-001', 'check-002']);
-    // The save now shows it done too; a reconnect's baseline still does not report it.
     core.localComplete.add('check-002');
     server.drop();
     await settle();

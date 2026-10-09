@@ -1,23 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The numbers and the titles the Shops tab shows for a scope.
- *
- * The count control used to be fed the STORED slot count, which the custom
- * mode never reads, so it sat still while the ticks moved, and its fill
- * climbed as the ceiling under it dropped. Both it and the total sentence now
- * read the opened set's own size.
- *
- * It was still drawn as a SLIDER in every mode after that, which was the same
- * lie told the other way round: in the custom mode the opened set IS the
- * ticked set, so the value equals the maximum whatever the ticks do and the
- * bar sits hard against the end while the number beside it falls. The modes
- * that do not take a count out of the ticked set now get a read-out instead,
- * and that is pinned here.
- *
- * Also pinned: what a BRAND-NEW profile's scope ticks. Every shelf slot and
- * the bomb counter start ticked; the potion seller's three cauldrons start
- * unticked, because a cauldron holding a shuffled item is opt-in.
- */
 import { describe, expect, it } from 'vitest';
 import { summaryOf, withSlotTicked } from '@app/ui/domains/app/compounds/ShopSlotsBlock/behavior/shop-scope-edits';
 import { shopTotalTextOf } from '@app/ui/domains/app/compounds/ShopSlotsBlock/behavior/shop-total-text';
@@ -34,7 +15,6 @@ import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot'
 import { shopScopeOfValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
 import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
 
-/** A stale stored count, which is what made the control lie in the first place. */
 const STALE_COUNT = 12;
 
 const scopeOf = (over: Partial<ShopScope>): ShopScope =>
@@ -117,7 +97,6 @@ describe('the cards are split by world and named for their section', () => {
 });
 
 describe('the count is drawn as whatever it honestly is', () => {
-  /** What the slider's own fill formula would report for a control, 0..1. */
   const fillOf = (value: number, max: number): number => value / max;
 
   it('reads out instead of sliding in the modes the ticks alone decide', () => {
@@ -134,7 +113,6 @@ describe('the count is drawn as whatever it honestly is', () => {
     if (control.kind !== 'slider') return;
     expect(control.value).toBe(summary.opened);
     expect(control.max).toBe(summary.ticked);
-    // The whole point of keeping it: the fill is short of the end.
     expect(fillOf(control.value, control.max)).toBeLessThan(1);
   });
 
@@ -143,7 +121,6 @@ describe('the count is drawn as whatever it honestly is', () => {
     for (const index of scope.enabled.slice(0, 4)) {
       scope = withSlotTicked(scope, index, false);
       const control = shopCountControlOf(summaryOf(scope));
-      // A read-out has no fill to be wrong; a slider here would report 1.
       expect(control.kind).toBe('readout');
       if (control.kind !== 'readout') return;
       expect(control.value).toContain(String(summaryOf(scope).opened));

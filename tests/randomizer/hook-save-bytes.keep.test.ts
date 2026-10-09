@@ -1,16 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The hook-owned save-byte registry is internally consistent, and the TS mirror
- * says exactly what the C header says.
- *
- * The C header (core/game-hooks/save_bytes.h) is the source of truth and carries
- * its own _Static_asserts, but those only fire when the core is rebuilt, and they
- * cannot see the TS side at all. This test PARSES the header instead of generating
- * the TS from it: the header is a flat list of `#define NAME 0xHEX` lines, so the
- * parse is unambiguous, and nothing has to stay regenerated. A generated file would
- * only move the drift one step, from "two hand-written tables" to "a table and a
- * stale artifact nobody re-ran the generator for".
- */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -18,7 +6,6 @@ import * as mirror from '@app/lib/game/save-file/hook-save-bytes';
 
 const HEADER = resolve(__dirname, '../../core/game-hooks/save_bytes.h');
 
-/** Every `#define NAME <integer>` in the header, as a name → value map. */
 const parseHeader = (): Record<string, number> => {
   const source = readFileSync(HEADER, 'utf8');
   const defines: Record<string, number> = {};
@@ -29,7 +16,6 @@ const parseHeader = (): Record<string, number> => {
   return defines;
 };
 
-/** Every claim in the registry, in the ascending order the header lists them. */
 const CLAIMS: ReadonlyArray<readonly [string, string]> = [
   ['SRM_SUBSTITUTION_TAKEN', 'SRM_SUBSTITUTION_TAKEN_COUNT'],
   ['SRM_WALLET_LADDER_INDEX', ''],

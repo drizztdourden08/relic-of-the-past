@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The core matches a drop override on (room, drop size), so a key drop armed at the wrong
- * size never fires and the vanilla key is granted. Every key drop whose vanilla item is its
- * dungeon's Big Key must be armed large, every other one small, and no two armed drops may
- * share a room and a size.
- */
 import { describe, expect, it } from 'vitest';
 import { getCheck, getDungeon } from '@shared/game/data';
 import { generatePlacement } from '@shared/randomizer/world/fill/generate';
@@ -12,8 +6,6 @@ import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { KEY_DROP_LOCATIONS } from '@shared/randomizer/world/scope-tables';
 import type { CheckId } from '@shared/game/data';
 
-// The bridge chain pulls in log-bus, which wires window handlers at import
-// time; this suite runs in node, so a stand-in goes in before the dynamic import.
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };
 const { buildPhysicalPlan } = await import('@app/lib/game/randomizer-client/placement-bridge');
 
