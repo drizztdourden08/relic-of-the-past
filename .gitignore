@@ -1,3 +1,17 @@
+# Every folder that needs ignoring is a dot-folder, and the .*/ line below
+# ignores them all, at any depth. A dot-folder the repo tracks gets a ! line
+# here. Never add a line for a single dot-folder: .*/ already covers it.
+.*/
+!.github/
+!.changeset/
+!.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/copilot-instructions.md
+!.brock/
+.brock/profile-config.json
+!.githooks/
+
 # Implementation plans (working docs, never committed)
 /plans
 
@@ -17,10 +31,20 @@ out/
 !/build/installer-splash.gif
 __pycache__/
 *.tsbuildinfo
-.wiki-build/
 
-# Firebase CLI deploy cache
-.firebase/
+# Brock generated outputs: brock icons and brock package write these
+**/build/icons/
+**/build/splash/
+**/build/installer-splash.png
+**/public/logos/icon.svg
+**/public/logos/icon.ico
+**/public/logos/icon-256.png
+**/public/logos/icon-32.png
+**/public/logos/icon-24.png
+**/public/logos/icon-bot.svg
+**/public/logos/icon-bot.ico
+**/public/logos/icon-bot-256.png
+**/public/logos/mark.svg
 
 # WASM build artifacts
 core/wasm-build/output/
@@ -45,12 +69,10 @@ apps/web/public/sprites/
 release/
 
 # Capacitor / Android build artifacts (native project is committed; output is not)
-apps/mobile/android/.gradle/
 apps/mobile/android/build/
 apps/mobile/android/app/build/
 apps/mobile/android/app/src/main/assets/public/
 apps/mobile/android/local.properties
-apps/mobile/android/.idea/
 apps/mobile/android/capacitor-cordova-android-plugins/
 # Launcher icons + splash are generated at build time from apps/mobile/assets/logo.png
 # by `@capacitor/assets` (npm run cap:sync). Only the source is committed.
@@ -72,10 +94,6 @@ assets/*.smc
 .DS_Store
 Thumbs.db
 Desktop.ini
-
-# IDE
-.vscode/settings.json
-.idea/
 
 # Test ROMs (user-provided, never committed)
 test-roms/
@@ -125,31 +143,20 @@ seeds/
 config/
 !shared/config/
 scripts/analyze/report.json
-.claude/worktrees/
 
-# Per-worktree isolated user data (the app's --user-data flag points here)
-.user-data/
-
-# Per-worktree port slot (shared/config/port-slot.ts)
+# Per-worktree port slots (shared/config/port-slot.ts, and the Brock thread CLI's)
 .rotp-port-slot
-
-# Loop scheduler transient lock
-.claude/scheduled_tasks.lock
+.brock-port-slot
 
 # Claude config lives in the private claude-config repo and is never committed here
-.claude/
 CLAUDE.md
 
 # AI config lives in the private ai-config repo and is never committed here
 .ai-config.json
-.ai/
 AGENTS.md
 .github/copilot-instructions.md
 
-.claude/settings.json
-.codex/config.toml
-
-# ── Private vault (rotp-vault) ──
+# Private vault (rotp-vault)
 # Only ROM-derived binary fixtures live in the private companion repo now, synced in
 # by scripts/vault/sync.mjs. The transcribed dataset (shared/game/data/records/) and
 # nav baselines are plain text and are tracked directly in this repo instead.

@@ -1,0 +1,10 @@
+{
+  "threshold": 0,
+  "minTokens": 50,
+  "minLines": 5,
+  "format": ["typescript", "tsx", "javascript", "css"],
+  "ignore": ["**/node_modules/**", "**/dist/**", "**/out/**", "**/release/**", "**/fonts/**"],
+  "gitignore": true,
+  "reporters": ["console"],
+  "absolute": false
+}

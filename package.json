@@ -84,7 +84,12 @@
     "vault:status": "node scripts/vault/sync.mjs --status",
     "vault:force-pull": "node scripts/vault/sync.mjs --force-pull",
     "vault:force-push": "node scripts/vault/sync.mjs --force-push",
-    "safety": "node scripts/safety/cli.mjs"
+    "safety": "node scripts/safety/cli.mjs",
+    "lint:md": "markdownlint-cli2",
+    "structure": "brock structure --check",
+    "prose": "brock prose",
+    "deadcode": "brock knip",
+    "duplicates": "jscpd ."
   },
   "dependencies": {
     "@capacitor-community/keep-awake": "catalog:",
@@ -125,6 +130,11 @@
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "catalog:",
+    "@drizztdourden08/brock-build": "catalog:",
+    "@drizztdourden08/brock-lint-config": "catalog:",
+    "@drizztdourden08/brock-plugin-snes": "catalog:",
+    "@drizztdourden08/brock-thread": "catalog:",
+    "@drizztdourden08/tessera": "catalog:",
     "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.60.0",
     "@types/js-yaml": "^4.0.9",
@@ -142,7 +152,9 @@
     "electron-vite": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
+    "jscpd": "catalog:",
     "jsdom": "^29.1.1",
+    "knip": "catalog:",
     "markdownlint-cli2": "catalog:",
     "node-addon-api": "catalog:",
     "playwright": "^1.60.0",
@@ -159,5 +171,11 @@
     "vite": "catalog:",
     "vite-plugin-node-polyfills": "^0.28.0",
     "vitest": "catalog:"
+  },
+  "brock": {
+    "version": "0.36.0"
+  },
+  "bin": {
+    "rotp": "./bin/rotp.mjs"
   }
 }

@@ -1,18 +1,8 @@
 {
+  "extends": "@drizztdourden08/brock-lint-config/tsconfig/react.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "sourceMap": true,
+    "types": ["node", "vite/client"],
+    "noUncheckedIndexedAccess": false,
     "paths": {
       "@shared/*": ["./shared/*"],
       "@app/*": ["./apps/web/src/*"],

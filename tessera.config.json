@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/@drizztdourden08/tessera/tessera.config.schema.json",
+  "theme": {
+    "palette": "rotp"
+  },
+  "apps": {
+    "apps/web": {
+      "parts": {
+        "views": "apps/web/src/views"
+      }
+    },
+    "apps/desktop": {
+      "parts": {
+        "views": "apps/desktop/src/views"
+      }
+    },
+    "apps/sanctuary": {
+      "parts": {
+        "views": "apps/sanctuary/src/views"
+      }
+    },
+    "apps/store": {
+      "parts": {
+        "views": "apps/store/src/views"
+      }
+    },
+    "apps/mobile": {
+      "parts": {
+        "views": "apps/mobile/src/views"
+      }
+    }
+  }
+}
