@@ -2,7 +2,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { act } from 'react';
-import { useHudEditorViewStore } from '../../../apps/web/src/stores/hud-editor-view-store';
+import { useHudEditorViewStore } from '../../../apps/desktop/src/stores/hud-editor-view-store';
 import { ROW } from './drag-timers.constants';
 import { installOutlineRig } from './install-outline-rig';
 

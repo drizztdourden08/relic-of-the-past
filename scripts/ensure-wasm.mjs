@@ -1,6 +1,6 @@
 /* @layer tooling-scripts @kind build */
 /**
- * Check that the WASM core (apps/web/public/wasm/zelda3.{js,wasm}) exists and is
+ * Check that the WASM core (apps/desktop/public/wasm/zelda3.{js,wasm}) exists and is
  * newer than every C source and build.mjs; rebuild via core/wasm-build/build.mjs
  * otherwise. Wired as predev/prebuild. On Windows it sources emsdk_env first
  * ($EMSDK, else the main checkout's third_party/emsdk). On Linux/macOS emcc must be on PATH
@@ -12,7 +12,7 @@ import { tmpdir } from 'node:os';
 import { execSync } from 'node:child_process';
 
 const repoRoot = resolve(import.meta.dirname, '..');
-const wasmOutputs = ['zelda3.js', 'zelda3.wasm'].map((f) => join(repoRoot, 'apps/web/public/wasm', f));
+const wasmOutputs = ['zelda3.js', 'zelda3.wasm'].map((f) => join(repoRoot, 'apps/desktop/public/wasm', f));
 const buildScript = join(repoRoot, 'core/wasm-build/build.mjs');
 const sourceRoots = ['core/zelda3/src', 'core/zelda3/snes', 'core/game-hooks', 'core/wasm-build'].map((d) => join(repoRoot, d));
 const SOURCE_EXTS = new Set(['.c', '.h']);

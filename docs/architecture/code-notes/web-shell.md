@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Web shell code notes
 
-Notes for the renderer shell: `apps/web/src/` outside `lib/` and `ui/`. That covers `App/`, `hooks/`, `stores/`, `platform/`, `utils/`, `main.tsx` and `env.d.ts`. Each heading names a file. The code carries no comments, so the facts a reader cannot get from the code live here.
+Notes for the renderer shell: `apps/desktop/src/` outside `lib/` and `ui/`. That covers `App/`, `hooks/`, `stores/`, `platform/`, `utils/`, `main.tsx` and `env.d.ts`. Each heading names a file. The code carries no comments, so the facts a reader cannot get from the code live here.
 
 ## platform/install-api-shim.ts
 
@@ -52,7 +52,7 @@ The Capacitor host adapter for Android and iOS. Window controls do nothing, sinc
 
 ## platform/hosts/capacitor/controller-host.ts
 
-The Capacitor `ControllerHost`. The ControllerSdl3 plugin (`apps/mobile/android/.../controllersdl3/ControllerSdl3Plugin.java`) runs the SDL3 gamepad backend inside the app's own WebView process on Android. This host starts the plugin once, decodes its added, removed and state events into a live device map (`controller-sdl3-store.ts`), and answers decoded button and axis state and rumble through the `ControllerHost` port, like the desktop SDL3 addon. The raw HID members of the port (`write`, `onReport`, `onDeviceOpened`, `getOpenKeys`, `onMainPerf`) have no SDL3 equivalent and do nothing, the same as on desktop.
+The Capacitor `ControllerHost`. The ControllerSdl3 plugin (`apps/desktop/mobile/android/.../controllersdl3/ControllerSdl3Plugin.java`) runs the SDL3 gamepad backend inside the app's own WebView process on Android. This host starts the plugin once, decodes its added, removed and state events into a live device map (`controller-sdl3-store.ts`), and answers decoded button and axis state and rumble through the `ControllerHost` port, like the desktop SDL3 addon. The raw HID members of the port (`write`, `onReport`, `onDeviceOpened`, `getOpenKeys`, `onMainPerf`) have no SDL3 equivalent and do nothing, the same as on desktop.
 
 The device snapshot (`controller:list`, `controller:devices`, `controller:removed`) is not part of this port. The device list and calibration screens read those off `window.api`, so creating this host also installs real implementations for those three channels (`install-controller-api.ts`).
 

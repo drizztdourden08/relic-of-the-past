@@ -1,8 +1,8 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
 import type { UIMode } from '@shared/game/types';
-import { parseGameUIBuffer } from '../../apps/web/src/lib/game/ui-bridge-parser';
-import { isMainHudVisibleForMode } from '../../apps/web/src/ui/domains/hud/hud-visibility';
+import { parseGameUIBuffer } from '../../apps/desktop/src/lib/game/ui-bridge-parser';
+import { isMainHudVisibleForMode } from '../../apps/desktop/src/ui/domains/hud/hud-visibility';
 
 const UI_BUFFER_SIZE = 128;
 const MAIN_MODULE_OFFSET = 0;

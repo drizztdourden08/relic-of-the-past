@@ -18,7 +18,7 @@ const { trackerReachableScreens, trackerStatuses } = await import('@app/lib/game
 const { standardCheckName } = await import('@app/lib/game/randomizer-client/check-names');
 
 const LABEL = process.env.ROTP_NET_LABEL ?? '';
-const JS = resolve(ROOT, 'apps/web/public/wasm/zelda3.js');
+const JS = resolve(ROOT, 'apps/desktop/public/wasm/zelda3.js');
 const OUT_DIR = resolve(ROOT, '.user-data/net');
 const BLOCK = 0xf000;
 const GATE_TRACKER_QUERIES = 1024;

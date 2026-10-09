@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { TrailStop } from '../../apps/web/src/stores/simulator-store';
-import { haulAt } from '../../apps/web/src/ui/domains/widgets/simulator/sub-components/trail-haul';
+import type { TrailStop } from '../../apps/desktop/src/stores/simulator-store';
+import { haulAt } from '../../apps/desktop/src/ui/domains/widgets/simulator/sub-components/trail-haul';
 
 const stop = (screenId: string, checksAt: number): TrailStop => ({ screenId, epoch: 0, checksAt });
 

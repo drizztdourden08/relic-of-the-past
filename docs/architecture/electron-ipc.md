@@ -28,7 +28,7 @@ or return type is a compile error in any of the three.
 - The join maps (`shared/ipc/maps/*.data.ts`: `INVOKE_MAP`, `SEND_MAP`, `EVENT_MAP`)
   are the only tables linking a friendly `window.api` method name to its channel.
   `IpcApi` (the `window.api` type, in `shared/ipc/api.type.ts`, which
-  `apps/web/src/env.d.ts` puts on `window`) is derived from the contracts and maps, so a
+  `apps/desktop/src/env.d.ts` puts on `window`) is derived from the contracts and maps, so a
   method's signature is never hand-written twice.
 - Typed wrappers cover both sides. Main uses `handle`/`on`/`emit` (`electron/lib/ipc/handle/`);
   preload uses `invoke`/`send`/`subscribe` plus the `buildInvoke`/`buildSend`/`buildEvents`

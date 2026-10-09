@@ -3,11 +3,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { ghostFor } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
-import { outlineIntent } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
-import { DragGhost } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/DragGhost';
-import { OutlinePanel } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
-import { PlatformContext } from '../../../apps/web/src/platform/PlatformProvider';
+import { ghostFor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
+import { outlineIntent } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
+import { DragGhost } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/DragGhost';
+import { OutlinePanel } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
+import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
 import type { Platform } from '../../../shared/platform';
 import { DOC } from './ghost-doc.constants';
 

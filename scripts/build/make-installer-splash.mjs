@@ -1,7 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 /**
  * Builds the installer splash as an animated GIF, matching the app's boot splash
- * (apps/web/src/splash.html) frame for frame: black ground, 192px mark, a 28px ring
+ * (apps/desktop/src/splash.html) frame for frame: black ground, 192px mark, a 28px ring
  * whose top quarter is gold, one revolution every 0.7s.
  */
 import { createRequire } from 'module';
@@ -58,7 +58,7 @@ const ringSvg = (angle) => `
   </g>
 </svg>`;
 
-const logo = await sharp(join(ROOT, 'apps/web/public/logos/logo/logo-256.png'))
+const logo = await sharp(join(ROOT, 'apps/desktop/public/logos/logo/logo-256.png'))
   .resize(LOGO, LOGO, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
   .png()
   .toBuffer();

@@ -33,7 +33,7 @@
   // Emulator save states are test fixtures and cannot carry a header comment.
   "**/*.sav":   { "kind": "asset" },
 
-  "apps/web/public/**":   { "kind": "asset" },
+  "apps/desktop/public/**":   { "kind": "asset" },
   // Generated Emscripten output, mirrored for the desktop shell (gitignored).
   "apps/desktop/public/wasm/**": { "kind": "asset" },
   // Named save states the tests + nav baselines load; documented in their README.

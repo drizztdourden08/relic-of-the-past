@@ -5,12 +5,12 @@ import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { StageSelection } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/StageSelection';
+import { StageSelection } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/StageSelection';
 import type { PlacedNode } from '../../shared/hud/engine';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-const EDITOR = resolve(__dirname, '../../apps/web/src/ui/domains/app/views/HudLayoutEditor');
+const EDITOR = resolve(__dirname, '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
 
 const SCREEN = {
   id: 'screen',

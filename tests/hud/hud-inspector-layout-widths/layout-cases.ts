@@ -1,15 +1,15 @@
 /* @layer tests @kind helper */
 import { createElement as h } from 'react';
-import { AlignmentTiles } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/AlignmentTiles';
-import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/align-options';
-import { ColorField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ColorField';
-import { DirectionControl } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/DirectionControl';
-import { ExtentField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ExtentField';
+import { AlignmentTiles } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/AlignmentTiles';
+import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/align-options';
+import { ColorField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ColorField';
+import { DirectionControl } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/DirectionControl';
+import { ExtentField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ExtentField';
 import { IconButton } from '@drizztdourden08/tessera/primitives';
-import { GridEditor } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
-import { PlatformContext } from '../../../apps/web/src/platform/PlatformProvider';
+import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
+import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
 import type { Platform } from '../../../shared/platform';
-import type { AlignRowSpec } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/AlignmentTiles';
+import type { AlignRowSpec } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/AlignmentTiles';
 import type { HudGridContainer } from '../../../shared/types/hud';
 
 const noop = (): void => {};

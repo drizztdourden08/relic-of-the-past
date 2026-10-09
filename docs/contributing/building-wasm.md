@@ -17,7 +17,7 @@
 ## Build manually (`build.bat`, the script `ensure-wasm` invokes)
 
 `core/wasm-build/build.bat` is a thin wrapper around `build.mjs` (the single source of truth for the
-source list and emcc flags); it writes straight to `apps/web/public/wasm/` (with debug info).
+source list and emcc flags); it writes straight to `apps/desktop/public/wasm/` (with debug info).
 `ensure-wasm` calls it for you, but you can run it directly. Activate the Emscripten env first:
 
 ```bash
@@ -31,7 +31,7 @@ renderer) to pick up the new module.
 ## One build, three entry points
 
 `build.mjs` holds the source list and emcc flags **once**. It is the single source of truth and
-writes to `apps/web/public/wasm/`. Everything else just delegates to it, so the build can never drift
+writes to `apps/desktop/public/wasm/`. Everything else just delegates to it, so the build can never drift
 between platforms:
 
 | Entry point | When | Notes |

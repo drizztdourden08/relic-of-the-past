@@ -20,7 +20,7 @@ Collision grids and room geometry come from the WASM core on demand:
 
 ## The flood facade
 
-`apps/web/src/lib/game/flood/` is the renderer-side facade that pulls those queries through the bridge.
+`apps/desktop/src/lib/game/flood/` is the renderer-side facade that pulls those queries through the bridge.
 It is the single source for grids (`screen-grids.ts`), flood options (`flood-options.ts`), the indoor
 entrance list (`room-entrances.ts`), screen origins (`world-origin.ts`) and the screen annotations the
 overlay draws (`annotate-screen.ts`). All three consumers (the navigation widget, the simulator and the
@@ -45,14 +45,14 @@ overlay draws (`annotate-screen.ts`). All three consumers (the navigation widget
 screen and what state it is in: a list of `{ kind, tile, label, state, detail, requires }` items, the
 check tallies for the minimap badge, and the decoded room tags.
 
-`apps/web/src/lib/game/flood/annotate-screen.ts` derives it from the **same reads the simulator gates
+`apps/desktop/src/lib/game/flood/annotate-screen.ts` derives it from the **same reads the simulator gates
 its targets on**: locks and gates, sprites with their key-carrier markers, chests (named after what
 they will actually yield) and room tags. Each family maps through `annotate/`. The flood runs first
 and decides which items are actually touchable, so the overlay, both minimaps and the widget's "On this
 screen" panel cannot disagree with the run.
 
 Ways on and off a screen are **not** annotations. Entrances, doors, stairs, holes, teleports and
-walkable screen edges come from `apps/web/src/lib/game/crossings/`, which resolves each one's
+walkable screen edges come from `apps/desktop/src/lib/game/crossings/`, which resolves each one's
 destination, tile and availability in one place; they draw through their own icon renderer and list in
 the widget's Connections panel.
 

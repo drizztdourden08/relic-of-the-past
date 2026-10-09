@@ -189,7 +189,7 @@ int main(int argc, char **argv) {
   // is configured (the live JS path in emscripten_io.c needs no such handling: by the time it runs,
   // real frames have already synced the gate for real). Config is the only trustworthy signal this
   // early, because LinkGraphics only lands in the INI when the profile has a sprite configured AND
-  // Vanilla Safe is off (see linkGraphicsIni in apps/web/src/lib/game/settings.ts). So seed the WRAM bit
+  // Vanilla Safe is off (see linkGraphicsIni in apps/desktop/src/lib/game/settings.ts). So seed the WRAM bit
   // directly from that instead of consulting the not-yet-synced gate. g_ram is a plain static array
   // (zelda_rtl.c), so this write is safe before WasmZeldaInitialize() runs; Startup_InitializeMemory()
   // zeroes it again on the first real frame regardless, and SyncGateWords re-syncs it correctly from
@@ -263,7 +263,7 @@ int main(int argc, char **argv) {
   // per-category permission bits are PERMISSIONS, not independent toggles, and CheatGate() requires
   // CheatsEnabled AND the category bit, so granting all four alongside the master here is the only way
   // any cheat can ever activate; this derivation must mirror buildFeatureWord3() in
-  // apps/web/src/lib/game/live-settings-flags.ts exactly, or cheats boot half-on (master set, no category
+  // apps/desktop/src/lib/game/live-settings-flags.ts exactly, or cheats boot half-on (master set, no category
   // permissions) until the user touches a setting. Vanilla Safe still wins even if both were saved on:
   // SyncGateWords() masks every cheat bit off whenever kFeatures3_VanillaSafe is set, regardless of what
   // set this word.

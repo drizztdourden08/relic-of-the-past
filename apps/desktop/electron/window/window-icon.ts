@@ -6,7 +6,7 @@ import { LOGO_CANDIDATES, SENTRI_CANDIDATES } from './window-icon.constants';
 
 const logoPath = (file: string): string =>
   is.dev
-    ? join(__dirname, '../../apps/web/public/logos', file)
+    ? join(__dirname, '../../public/logos', file)
     : join(__dirname, '../renderer/logos', file);
 
 const forPlatform = (candidates: string[]): string[] =>

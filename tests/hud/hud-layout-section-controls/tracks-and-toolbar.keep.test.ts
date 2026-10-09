@@ -2,9 +2,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { layoutHud, placedById } from '@shared/hud/engine';
 import { validateLayout } from '@shared/hud/layouts';
-import { insertTrack, moveTrack, removeTrack, setTrack, trackText } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/track-extents';
-import { newGrid } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/new-node';
-import { buildToolbarGroups } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/toolbar-menus';
+import { insertTrack, moveTrack, removeTrack, setTrack, trackText } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/track-extents';
+import { newGrid } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/new-node';
+import { buildToolbarGroups } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/toolbar-menus';
 import type { MenuItem, MenuNode } from '@drizztdourden08/tessera/composites';
 import type { Extent, HudGridContainer, HudLayout, HudNode } from '@shared/types/hud';
 import { VIEW } from './section-controls.constants';

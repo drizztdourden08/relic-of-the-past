@@ -1,0 +1,18 @@
+{
+  "extends": "@drizztdourden08/brock-lint-config/tsconfig/react.json",
+  "compilerOptions": {
+    "types": ["node", "vite/client"],
+    "paths": {
+      "@app/*": ["./src/*"],
+      "@shared/*": ["../../shared/*"],
+      "@domains/*": ["./src/ui/domains/*"],
+      "@site-kit/*": ["../site-kit/*"],
+      "react": ["./node_modules/@types/react", "../../node_modules/@types/react"],
+      "react/*": ["./node_modules/@types/react/*", "../../node_modules/@types/react/*"],
+      "react-dom": ["./node_modules/@types/react-dom", "../../node_modules/@types/react-dom"],
+      "react-dom/*": ["./node_modules/@types/react-dom/*", "../../node_modules/@types/react-dom/*"]
+    }
+  },
+  "include": ["src", "electron", "tests", ".brock/*.ts", "brock.config.ts"],
+  "exclude": ["node_modules", "dist", "release"]
+}

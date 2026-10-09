@@ -6,7 +6,7 @@ import { existsSync, readFileSync, rmSync } from 'fs';
 import { TEST_INSTANCE, ensureTestProfile } from './ensure-test-profile';
 
 const PROJECT_ROOT = join(__dirname, '..', '..');
-const MAIN_JS = join(PROJECT_ROOT, 'dist', 'electron', 'main.js');
+const MAIN_JS = join(PROJECT_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
 const DUMP_PATH = join(PROJECT_ROOT, 'debug-output', 'dump-nav.json');
 
 interface Expected {

@@ -5,15 +5,15 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { GhostCard } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/DragGhost';
-import { CellPicker } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
-import { PlatformContext } from '../../apps/web/src/platform/PlatformProvider';
-import { ghostPosition } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
+import { GhostCard } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/DragGhost';
+import { CellPicker } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
+import { PlatformContext } from '../../apps/desktop/src/platform/PlatformProvider';
+import { ghostPosition } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
 import type { Platform } from '../../shared/platform';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
-const ED = `${ROOT}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
+const ED = `${ROOT}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
@@ -21,7 +21,7 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
   ...cssIn(`${DS}/theme`),
-  `${ROOT}/apps/web/src/theme.css`,
+  `${ROOT}/apps/desktop/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
   ...cssIn(`${DS}/composites`),
   ...cssIn(ED),

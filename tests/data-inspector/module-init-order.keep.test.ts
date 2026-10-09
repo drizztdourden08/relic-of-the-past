@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const DATA_INSPECTOR = '../../apps/web/src/ui/domains/app/views/DataInspector/behavior';
+const DATA_INSPECTOR = '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior';
 const COLD_GRAPH_TIMEOUT_MS = 30_000;
 
 describe('module init order from every entry point into the cycle', () => {

@@ -21,7 +21,7 @@
 // the owner and the meaning, and add the two matching asserts. The gaps (0xF406-0xF40F,
 // 0xF41E-0xF41F, 0xF45D-0xF4FD) are free.
 //
-// THE TS MIRROR. apps/web/src/lib/game/save-file/hook-save-bytes.ts restates these
+// THE TS MIRROR. apps/desktop/src/lib/game/save-file/hook-save-bytes.ts restates these
 // addresses for the offline save-file reader; tests/randomizer/hook-save-bytes.test.ts
 // parses THIS header and fails if the two ever disagree.
 #ifndef GAME_HOOKS_SAVE_BYTES_H

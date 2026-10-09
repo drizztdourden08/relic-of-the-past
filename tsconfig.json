@@ -5,13 +5,13 @@
     "noUncheckedIndexedAccess": false,
     "paths": {
       "@shared/*": ["./shared/*"],
-      "@app/*": ["./apps/web/src/*"],
-      "@domains/*": ["./apps/web/src/ui/domains/*"],
+      "@app/*": ["./apps/desktop/src/*"],
+      "@domains/*": ["./apps/desktop/src/ui/domains/*"],
       "@site-kit/*": ["./apps/site-kit/*"]
     }
   },
   "include": [
-    "apps/web/src/**/*",
+    "apps/desktop/src/**/*",
     "apps/sanctuary/src/**/*",
     "apps/store/src/**/*",
     "apps/site-kit/**/*",

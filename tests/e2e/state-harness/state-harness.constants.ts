@@ -2,7 +2,7 @@
 import { join } from 'path';
 
 const PROJECT_ROOT = join(__dirname, '..', '..', '..');
-const MAIN_JS = join(PROJECT_ROOT, 'dist', 'electron', 'main.js');
+const MAIN_JS = join(PROJECT_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
 const FIXTURES = join(PROJECT_ROOT, 'tests', 'fixtures', 'save-states');
 const SETTLE_MS = 16_000;
 const PRESS_HOLD_MS = 200;

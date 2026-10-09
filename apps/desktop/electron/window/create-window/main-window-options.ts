@@ -27,7 +27,7 @@ const mainWindowOptions = (
   focusable: !noFocus,
   paintWhenInitiallyHidden: true,
   webPreferences: {
-    preload: join(__dirname, '../preload/preload.js'),
+    preload: join(__dirname, '../preload/preload.mjs'),
     sandbox: false,
     contextIsolation: true,
     nodeIntegration: false,

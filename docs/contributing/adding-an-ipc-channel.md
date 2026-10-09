@@ -38,7 +38,7 @@ and extend `InvokeContract` with it. This is the single source of truth for the 
 Add one line to `INVOKE_MAP`, the only place the method↔channel link is written.
 `satisfies` rejects a typo'd channel. `IpcApi` (the `window.api` type, in
 `shared/ipc/api.type.ts`) and the preload method are derived automatically, so
-`apps/web/src/env.d.ts` stays untouched.
+`apps/desktop/src/env.d.ts` stays untouched.
 
 ```ts
 getFoo: 'foo:get',

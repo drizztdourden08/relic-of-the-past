@@ -44,7 +44,7 @@ A  added        M  modified        D  deleted        R  renamed/moved
 Mark every entry. Example:
 
 ```
-apps/web/src/
+apps/desktop/src/
 ├── components/views/SaveManager/
 │   ├── A  SaveManager.tsx          (view - owns state, composes primitives)
 │   ├── A  behavior/useSaveSlots.ts (data: IPC + store)
@@ -53,7 +53,7 @@ apps/web/src/
 ├── components/compounds/
 │   └── A  SlotCard/SlotCard.tsx    (compound - domain card from Card + primitives)
 └── M  lib/game/save-states.ts      (+ deleteSlot())
-D  apps/web/src/widgets/OldSavePanel.tsx
+D  apps/desktop/src/widgets/OldSavePanel.tsx
 ```
 
 ## Data model: show real code

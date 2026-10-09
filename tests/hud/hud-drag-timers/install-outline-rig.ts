@@ -2,9 +2,9 @@
 import { afterEach, beforeEach, vi } from 'vitest';
 import { act, createElement as h } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { OutlinePanel } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
-import { useHudEditorViewStore } from '../../../apps/web/src/stores/hud-editor-view-store';
-import { PlatformContext } from '../../../apps/web/src/platform/PlatformProvider';
+import { OutlinePanel } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
+import { useHudEditorViewStore } from '../../../apps/desktop/src/stores/hud-editor-view-store';
+import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
 import { DOC, PLATFORM, ROW, VIEW } from './drag-timers.constants';
 
 const installOutlineRig = () => {

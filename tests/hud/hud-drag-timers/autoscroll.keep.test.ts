@@ -2,7 +2,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 import { act } from 'react';
-import { HOT, RATE, rateFor, scrollerFor } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/use-drag-autoscroll';
+import { HOT, RATE, rateFor, scrollerFor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/use-drag-autoscroll';
 import { VIEW } from './drag-timers.constants';
 import { installOutlineRig } from './install-outline-rig';
 

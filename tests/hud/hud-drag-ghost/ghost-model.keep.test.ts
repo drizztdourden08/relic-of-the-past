@@ -2,8 +2,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   containerKind, ghostFor, ghostPosition,
-} from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
-import { outlineIntent } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
+} from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
+import { outlineIntent } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
 import { DOC } from './ghost-doc.constants';
 
 describe('line 1 states the KIND, in §42\'s vocabulary and no other', () => {

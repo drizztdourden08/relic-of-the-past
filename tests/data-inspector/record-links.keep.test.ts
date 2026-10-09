@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
 import {
   defaultIdRefDisplay, entityKindFromId, resolveRecordLabel,
-} from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-links';
+} from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/record-links';
 import { describeDataset } from '../dataset-guard';
 
 describeDataset('entityKindFromId', () => {

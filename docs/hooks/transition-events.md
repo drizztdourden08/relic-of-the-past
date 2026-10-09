@@ -5,7 +5,7 @@
 module or dungeon submodule transition has just finished, replacing what used to be a
 polling loop in the navigation widget's auto mode.
 
-**Source:** `core/game-hooks/transition_events.c` (C side), `apps/web/src/lib/game/events/`
+**Source:** `core/game-hooks/transition_events.c` (C side), `apps/desktop/src/lib/game/events/`
 (TS bridge).
 
 ## Why an event instead of polling a flag

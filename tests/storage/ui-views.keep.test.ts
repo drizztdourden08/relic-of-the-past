@@ -20,7 +20,7 @@ beforeEach(async () => {
     removeEventListener: () => {},
   });
   vi.useFakeTimers();
-  ({ loadViewSnapshot, saveViewSnapshot } = await import('../../apps/web/src/lib/storage/ui-views'));
+  ({ loadViewSnapshot, saveViewSnapshot } = await import('../../apps/desktop/src/lib/storage/ui-views'));
 });
 
 afterEach(() => {

@@ -6,8 +6,8 @@ import {
   updateHapticSettings, setVibrateFunction, handleHapticEvent,
   handleDashPulse, handleDeath, handleSpinAttack, handleEnvironmental, resetDashState,
 } from '@shared/input/haptics';
-import { DEFAULT_SETTINGS, serializeToIni } from '../../apps/web/src/lib/game/settings';
-import { buildFeatureFlags } from '../../apps/web/src/lib/game/live-settings-flags';
+import { DEFAULT_SETTINGS, serializeToIni } from '../../apps/desktop/src/lib/game/settings';
+import { buildFeatureFlags } from '../../apps/desktop/src/lib/game/live-settings-flags';
 
 const HAPTICS_BIT = 1048576;
 const BOMBS_ITEM = 1;

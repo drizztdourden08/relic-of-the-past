@@ -16,8 +16,9 @@
 
 ```bash
 pnpm install          # install deps; auto-fetches the Electron binary (ensure-electron)
-pnpm run dev          # electron-vite dev server + Electron (auto-builds WASM if missing/stale)
-pnpm run build        # production build (electron-vite), auto-builds WASM too
+pnpm run dev          # brock dev in apps/desktop: dev server + Electron (auto-builds WASM if missing/stale)
+pnpm run build        # packaged Windows build (brock build in apps/desktop, then electron-builder), auto-builds WASM too
+pnpm run build:web    # brock web build in apps/desktop: the renderer alone, into apps/desktop/dist/web
 pnpm run build:win    # packaged build (see package.json for :mac / :linux)
 ```
 
@@ -75,12 +76,12 @@ app extracts what it needs locally. See [Quick Start](../getting-started/quick-s
 |------|------|
 | `core/zelda3/` | Vendored C decompilation (treat as upstream). |
 | `core/game-hooks/` · `core/wasm-build/` | Our C hook layer + Emscripten build. |
-| `apps/web/src/` | React renderer (`lib/game/` is the bridge; `stores/`, `ui/`). |
+| `apps/desktop/src/` | React renderer (`lib/game/` is the bridge; `stores/`, `ui/`). |
 | `apps/desktop/electron/` | Main process + preload ([Electron & IPC](../architecture/electron-ipc.md)). |
 | `shared/` | Pure code shared by renderer + electron ([asset-extraction](../architecture/asset-extraction.md), [navigation](../architecture/navigation.md), types). |
 | `tests/` · `scripts/` · `docs/` | Tests, build helpers, documentation. |
 
-Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`. See the
+Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`. See the
 [Architecture overview](../architecture/overview.md) for zones and dependency invariants.
 
 ## The private companion repository (optional)

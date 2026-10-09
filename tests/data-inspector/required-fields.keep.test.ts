@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { requiredPaths } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/required-fields';
-import { blankRecordFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/blank-record';
+import { requiredPaths } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/required-fields';
+import { blankRecordFor } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/blank-record';
 import { getPath } from '@drizztdourden08/tessera/data';
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 

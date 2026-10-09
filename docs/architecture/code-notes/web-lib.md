@@ -1,8 +1,8 @@
 <!-- @layer docs @kind doc -->
-# Code notes: apps/web/src/lib
+# Code notes: apps/desktop/src/lib
 
 Facts about the renderer library that the code cannot say on its own. Each heading names
-the source file (or folder) the note belongs to, relative to `apps/web/src/lib`.
+the source file (or folder) the note belongs to, relative to `apps/desktop/src/lib`.
 
 ## assets/public-asset.ts
 

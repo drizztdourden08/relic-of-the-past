@@ -118,7 +118,7 @@ Native text interaction for the main window: a right click menu (Copy, Paste, Se
 
 ### window/window-icon.ts
 
-Resolves the window and taskbar icon. A named instance (an agent launch) wears Sentri so it is recognisable from the taskbar. Windows renders a multi resolution `.ico` better than a downscaled PNG, so it gets the `.ico` first and the PNG after; elsewhere only the PNG shows. Every candidate is optional and the logo's PNG is the last resort, so a missing asset never breaks a launch. Dev serves from the source tree; a packaged build serves from the bundled renderer. The files come from `npm run logos` (`apps/web/public/logos`).
+Resolves the window and taskbar icon. A named instance (an agent launch) wears Sentri so it is recognisable from the taskbar. Windows renders a multi resolution `.ico` better than a downscaled PNG, so it gets the `.ico` first and the PNG after; elsewhere only the PNG shows. Every candidate is optional and the logo's PNG is the last resort, so a missing asset never breaks a launch. Dev serves from the source tree; a packaged build serves from the bundled renderer. The files come from `npm run logos` (`apps/desktop/public/logos`).
 
 ### window/window-state/
 
@@ -240,7 +240,7 @@ In `start`, the order matters: `listDevices()` bottoms out in SDL's own hidapi, 
 
 Loader and typed wrapper for the SDL3 gamepad Node-API addon. The addon is required at runtime on first use, so a missing or unbuilt addon degrades to "this transport is unavailable" and the app still starts. The load result is cached, failure included. Pure transport: no button or axis interpretation happens here.
 
-Addon candidates, in priority order: packaged resources (shipped as extraResources, never packed into asar, see `scripts/build/electron-builder.config.js`; `resourcesPath` is only set once packaged); the source tree prebuilt resolved from the bundled main (electron-vite bundles main two levels below the repo root, so `__dirname` never holds a `prebuilds/` of its own); the same path from `process.cwd()` (electron-vite dev runs at the repo root); then a local dev build.
+Addon candidates, in priority order: packaged resources (shipped as extraResources, never packed into asar, see `scripts/build/electron-builder.config.js`; `resourcesPath` is only set once packaged); the source tree prebuilt resolved from the bundled main (the build puts main at `apps/desktop/dist/electron`, two levels below the app folder, so `__dirname` never holds a `prebuilds/` of its own); the same path from `process.cwd()` (`brock dev` runs in the app folder); then a local dev build.
 
 The types describe the raw transport surface only: the fixed SDL button order and axis layout the addon reports. They carry no device specific or SNES mapping meaning.
 

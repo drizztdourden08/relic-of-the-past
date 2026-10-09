@@ -5,7 +5,7 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 
 const PROJECT_ROOT = join(__dirname, '..');
-const MAIN_JS = join(PROJECT_ROOT, 'dist', 'electron', 'main.js');
+const MAIN_JS = join(PROJECT_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
 
 const SLOT = process.env.SNAPSHOT_SLOT ?? '2';
 const NAME = process.env.SNAPSHOT_NAME ?? 'snapshot';

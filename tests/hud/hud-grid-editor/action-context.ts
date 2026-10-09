@@ -1,9 +1,9 @@
 /* @layer tests @kind helper */
-import { occupantsOf } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridLattice';
+import { occupantsOf } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridLattice';
 import type { HudGridContainer } from '../../../shared/types/hud';
 import type {
   GridActionContext, GridSelection,
-} from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
+} from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 
 const ignore = (): void => {};
 

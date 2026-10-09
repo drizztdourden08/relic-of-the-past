@@ -2,7 +2,7 @@
 
 # Code notes: app views A
 
-Facts about the Data Manager and the HUD layout editor views that the code cannot say by itself. Each heading names a file or folder under `apps/web/src/ui/domains/app/views/`.
+Facts about the Data Manager and the HUD layout editor views that the code cannot say by itself. Each heading names a file or folder under `apps/desktop/src/ui/domains/app/views/`.
 
 ## DataManager
 

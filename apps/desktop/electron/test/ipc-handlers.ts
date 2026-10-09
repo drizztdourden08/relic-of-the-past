@@ -2,6 +2,7 @@
 import { BrowserWindow, app } from 'electron';
 import { join } from 'path';
 import { handle } from '../lib/ipc/handle';
+import { getWorkspaceRoot } from '../screen-editor/workspace-root';
 import { writeFile, mkdir } from 'fs/promises';
 
 const parseTestArgs = (): { autoState: number | string | null; screenshot: string | null } => {
@@ -34,7 +35,7 @@ const registerTestHandlers = (): void => {
 
     const appRoot = app.isPackaged
       ? join(app.getAppPath(), '../..')
-      : join(__dirname, '../..');
+      : getWorkspaceRoot();
     const dir = join(appRoot, 'tests', 'screenshots');
     await mkdir(dir, { recursive: true });
     const outPath = join(dir, `${name}.png`);

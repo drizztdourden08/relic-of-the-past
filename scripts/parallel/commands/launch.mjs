@@ -21,8 +21,8 @@ const run = async ({ positional }) => {
   if (entry.status.missing) throw new Error(`"${name}" has no checkout on disk. Run: pnpm wt doctor`);
 
   const { path } = entry.record;
-  if (!existsSync(join(path, 'dist', 'electron', 'main.js'))) {
-    throw new Error(`No build in ${path}. Run "pnpm exec electron-vite build" there first (pnpm run build deletes dist).`);
+  if (!existsSync(join(path, 'apps', 'desktop', 'dist', 'electron', 'main.js'))) {
+    throw new Error(`No build in ${path}. Run "pnpm --filter ./apps/desktop build" there first (pnpm run build deletes dist).`);
   }
 
   const args = launchArgs(name, extra);

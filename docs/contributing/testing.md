@@ -101,4 +101,4 @@ Playwright specs are **throwaway by default**. The app changes quickly and specs
 
 A spec becomes permanent only when the maintainer asks for it. Those live in `tests/e2e/` with a `.keep.spec.ts` suffix and are documented in that folder's README, which records what each one guards against. Don't add one, or move a spec there, on your own initiative. If a throwaway looks worth keeping, say so and ask.
 
-A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/test/ipc-handlers.ts` and `apps/web/src/App/behavior/useAutoTest.ts`. If you think one needs to change, check with the maintainer first.
+A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/test/ipc-handlers.ts` and `apps/desktop/src/App/behavior/useAutoTest.ts`. If you think one needs to change, check with the maintainer first.

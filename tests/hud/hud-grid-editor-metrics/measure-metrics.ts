@@ -8,7 +8,7 @@ import { metricsCases } from './metrics-cases';
 import type { Cells, Frozen, Heads, MetricsRig, Read, Scroller } from './metrics.type';
 
 const designSystem = resolve(__dirname, '../../../node_modules/@drizztdourden08/tessera/src');
-const rotpTheme = resolve(__dirname, '../../../apps/web/src/theme.css');
+const rotpTheme = resolve(__dirname, '../../../apps/desktop/src/theme.css');
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));

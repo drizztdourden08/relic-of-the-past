@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import type { Platform } from '../../../shared/platform';
 import type { HudContainer } from '../../../shared/types/hud';
 
-const EDITOR = resolve(__dirname, '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor');
+const EDITOR = resolve(__dirname, '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
 
 const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
 

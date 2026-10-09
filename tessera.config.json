@@ -4,11 +4,6 @@
     "palette": "rotp"
   },
   "apps": {
-    "apps/web": {
-      "parts": {
-        "views": "apps/web/src/views"
-      }
-    },
     "apps/desktop": {
       "parts": {
         "views": "apps/desktop/src/views"
@@ -23,11 +18,5 @@
       "parts": {
         "views": "apps/store/src/views"
       }
-    },
-    "apps/mobile": {
-      "parts": {
-        "views": "apps/mobile/src/views"
-      }
-    }
-  }
+    }  }
 }

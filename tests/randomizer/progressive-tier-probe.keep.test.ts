@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 const ROOT = resolve(__dirname, '../..');
-const WASM_JS = resolve(ROOT, 'apps/web/public/wasm/zelda3.js');
+const WASM_JS = resolve(ROOT, 'apps/desktop/public/wasm/zelda3.js');
 const FIXTURE = resolve(ROOT, 'tests/fixtures/save-states/test-links-house.sav');
 
 const FEATURES0_DEVELOPER_TOOLS = 1073741824;

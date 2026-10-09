@@ -1,5 +1,5 @@
 /* @layer electron-main @kind constants */
-const SOURCE_TREE_RELATIVE = 'apps/desktop/electron/input/native/sdl3/prebuilds';
+const SOURCE_TREE_RELATIVE = 'electron/input/native/sdl3/prebuilds';
 
 const SDL_BUTTON_NAMES = [
   'SOUTH',

@@ -3,6 +3,7 @@ import { app, shell } from 'electron';
 import { join } from 'path';
 import { appendFile, mkdir, access } from 'fs/promises';
 import { handle } from '../lib/ipc/handle';
+import { getWorkspaceRoot } from '../screen-editor/workspace-root';
 import type { Result } from './sim-log-handler.type';
 
 const sanitizeRunId = (runId: string): string => runId.replace(/[^A-Za-z0-9_-]/g, '_');
@@ -10,7 +11,7 @@ const sanitizeRunId = (runId: string): string => runId.replace(/[^A-Za-z0-9_-]/g
 const getSimLogDir = (): string => {
   const appRoot = app.isPackaged
     ? join(app.getAppPath(), '../..')
-    : join(__dirname, '../..');
+    : getWorkspaceRoot();
   return join(appRoot, 'debug-output', 'simulator');
 };
 

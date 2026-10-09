@@ -2,7 +2,7 @@
 import { join } from 'path';
 
 const PROJECT_ROOT = join(__dirname, '..', '..', '..');
-const MAIN_JS = join(PROJECT_ROOT, 'dist', 'electron', 'main.js');
+const MAIN_JS = join(PROJECT_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
 const USER_DATA = 'C:\\Users\\drizz\\AppData\\Local\\Temp\\rotp-pr';
 const SHOTS = join(PROJECT_ROOT, 'tests', 'screenshots', 'layout-options');
 const SETTLE_MS = 260;

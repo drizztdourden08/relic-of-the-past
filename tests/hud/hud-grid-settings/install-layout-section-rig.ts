@@ -2,9 +2,9 @@
 import { afterEach } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { useHudEditorViewStore } from '../../../apps/web/src/stores/hud-editor-view-store';
-import { LayoutSection } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
-import { PlatformContext } from '../../../apps/web/src/platform/PlatformProvider';
+import { useHudEditorViewStore } from '../../../apps/desktop/src/stores/hud-editor-view-store';
+import { LayoutSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
 import type { HudContainer, HudGridContainer } from '../../../shared/types/hud';
 import { PLATFORM } from './grid-settings.constants';
 import { screenRoot } from './screen-root';

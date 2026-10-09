@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '../../shared/game/simulation';
-import { markUnreachable, reachableNear, TOUCH } from '../../apps/web/src/lib/game/flood/annotate/reachability';
+import { markUnreachable, reachableNear, TOUCH } from '../../apps/desktop/src/lib/game/flood/annotate/reachability';
 
 const gridBlockedBelow = (wall: number): number[][] =>
   Array.from({ length: 20 }, (_, r) => Array.from({ length: 20 }, () => (r < wall ? 1 : 0)));

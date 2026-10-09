@@ -50,7 +50,7 @@ jobs:
 
       - name: Build WASM core
         # emcc is on PATH here (setup-emsdk), so the shared build script runs directly
-        # and writes into apps/web/public/wasm, which is where cap:sync picks it up for the APK.
+        # and writes into apps/desktop/public/wasm, which the web build copies into the APK.
         run: node core/wasm-build/build.mjs
 
       # The record dataset is vault-only, so a plain checkout builds an APK with an
@@ -68,25 +68,18 @@ jobs:
       - name: Verify the dataset landed
         run: node scripts/vault/check-dataset.mjs
 
-      - name: Build web bundle + sync into the Android project
-        run: pnpm run cap:sync
-
       - name: Decode signing keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/relic-release.jks"
 
+      # Web build, Capacitor sync into apps/desktop/mobile/android, then the signed Gradle build.
       - name: Build signed release APK
-        working-directory: apps/mobile/android
         env:
-          RELIC_KEYSTORE_FILE: ${{ runner.temp }}/relic-release.jks
-          RELIC_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          RELIC_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          RELIC_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          BROCK_KEYSTORE_FILE: ${{ runner.temp }}/relic-release.jks
+          BROCK_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          BROCK_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
-          chmod +x ./gradlew
-          ./gradlew assembleRelease --no-daemon
-
-      - name: Stage APK
-        run: cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk rotp-android.apk
+          chmod +x apps/desktop/mobile/android/gradlew
+          pnpm --dir apps/desktop exec brock mobile build --release --out "$GITHUB_WORKSPACE/rotp-android.apk"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v7

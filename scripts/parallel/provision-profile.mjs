@@ -135,7 +135,7 @@ const keyboardInputProfile = async (now) => {
  * `seedFixtureSaves` (default true) merges `tests/fixtures/save-states/` into the named
  * saves; a no-op when no vault checkout is found. `seedCheats` (default true) sets
  * `cheatsEnabled` in a freshly written config.json only; the cheat category bits follow
- * from the master switch in buildFeatureWord3 (apps/web/src/lib/game/live-settings-flags.ts).
+ * from the master switch in buildFeatureWord3 (apps/desktop/src/lib/game/live-settings-flags.ts).
  */
 const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot, seedFixtureSaves: withFixtures = true, seedCheats = true }) => {
   const now = Date.now();

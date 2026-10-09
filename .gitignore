@@ -59,31 +59,25 @@ third_party/
 apps/desktop/electron/input/native/sdl3/build/
 apps/desktop/electron/input/native/sdl3/prebuilds/
 
-apps/web/public/wasm/
 apps/desktop/public/wasm/
 
 # Extracted sprites (generated at runtime)
-apps/web/public/sprites/
+apps/desktop/public/sprites/
 
 # Electron
 release/
 
 # Capacitor / Android build artifacts (native project is committed; output is not)
-apps/mobile/android/build/
-apps/mobile/android/app/build/
-apps/mobile/android/app/src/main/assets/public/
-apps/mobile/android/local.properties
-apps/mobile/android/capacitor-cordova-android-plugins/
-# Launcher icons + splash are generated at build time from apps/mobile/assets/logo.png
-# by `@capacitor/assets` (npm run cap:sync). Only the source is committed.
-apps/mobile/android/app/src/main/res/mipmap-*/ic_launcher*.png
-apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher*.xml
-apps/mobile/android/app/src/main/res/drawable*/splash.png
+apps/desktop/mobile/android/build/
+apps/desktop/mobile/android/app/build/
+apps/desktop/mobile/android/app/src/main/assets/public/
+apps/desktop/mobile/android/local.properties
+apps/desktop/mobile/android/capacitor-cordova-android-plugins/
 # SDL's own Java classes are staged into the build dir from the pinned SDL3
 # source (app/build.gradle: stageSdlJava), never copied into this repo. A copy
 # here would drift from the native library it pairs with, so one appearing is a
 # mistake and must not be committed.
-apps/mobile/android/app/src/main/java/org/
+apps/desktop/mobile/android/app/src/main/java/org/
 
 # Assets (user-provided)
 assets/assets.dat
@@ -169,4 +163,4 @@ tests/fixtures/save-states/
 .vault-state.json
 
 # Derived .msul document icon (built by scripts/build/make-msul-icon.mjs)
-apps/web/public/logos/generated/
+apps/desktop/public/logos/generated/

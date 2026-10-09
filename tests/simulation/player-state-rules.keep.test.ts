@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { playerStates, PlayerState } from '../../apps/web/src/lib/game/player-state-rules';
-import type { PlayerStateInfo } from '../../apps/web/src/lib/game/bridge/player-state';
+import { playerStates, PlayerState } from '../../apps/desktop/src/lib/game/player-state-rules';
+import type { PlayerStateInfo } from '../../apps/desktop/src/lib/game/bridge/player-state';
 
 const info = (over: Partial<PlayerStateInfo> = {}): PlayerStateInfo => ({
   handlerState: PlayerState.ground,

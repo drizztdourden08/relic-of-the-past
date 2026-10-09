@@ -7,7 +7,7 @@
 #
 # Prerequisite: the Emscripten SDK is activated (emcc on PATH).
 # Usage:  make        (emcc already resolves; emmake is not required)
-# Output: apps/web/public/wasm/zelda3.{js,wasm}
+# Output: apps/desktop/public/wasm/zelda3.{js,wasm}
 
 .PHONY: all clean
 
@@ -15,4 +15,4 @@ all:
 	node build.mjs
 
 clean:
-	rm -rf ../../apps/web/public/wasm/zelda3.js ../../apps/web/public/wasm/zelda3.wasm
+	rm -rf ../../apps/desktop/public/wasm/zelda3.js ../../apps/desktop/public/wasm/zelda3.wasm

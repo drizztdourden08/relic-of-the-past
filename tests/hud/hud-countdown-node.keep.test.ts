@@ -6,16 +6,16 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { hudDataScope } from '@shared/hud/data';
 import { intrinsicSize, layoutHud, placedById } from '@shared/hud/engine';
 import { COUNTDOWN_SIZE, layoutById, validateLayout } from '@shared/hud/layouts';
-import { parseGameUIBuffer } from '../../apps/web/src/lib/game/ui-bridge-parser';
-import { advanceCountdown, IDLE_TRACK } from '../../apps/web/src/lib/game/hud-countdown-track';
-import { countdownBox } from '../../apps/web/src/ui/domains/hud/compounds/HudCountdown';
-import { HudNodeCountdown } from '../../apps/web/src/ui/domains/hud/compounds/HudNodeRenderer/sub-components/HudNodeCountdown';
-import { drawOrigin } from '../../apps/web/src/ui/domains/hud/compounds/HudNodeRenderer/behavior/draw-origin';
+import { parseGameUIBuffer } from '../../apps/desktop/src/lib/game/ui-bridge-parser';
+import { advanceCountdown, IDLE_TRACK } from '../../apps/desktop/src/lib/game/hud-countdown-track';
+import { countdownBox } from '../../apps/desktop/src/ui/domains/hud/compounds/HudCountdown';
+import { HudNodeCountdown } from '../../apps/desktop/src/ui/domains/hud/compounds/HudNodeRenderer/sub-components/HudNodeCountdown';
+import { drawOrigin } from '../../apps/desktop/src/ui/domains/hud/compounds/HudNodeRenderer/behavior/draw-origin';
 import {
   countdownInset, countdownVariantOf,
-} from '../../apps/web/src/ui/domains/hud/compounds/HudNodeRenderer/behavior/countdown-art';
-import { countdownContentOf } from '../../apps/web/src/ui/domains/hud/views/HudLayoutView/behavior/countdown-content';
-import { occupantsOf } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridLattice';
+} from '../../apps/desktop/src/ui/domains/hud/compounds/HudNodeRenderer/behavior/countdown-art';
+import { countdownContentOf } from '../../apps/desktop/src/ui/domains/hud/views/HudLayoutView/behavior/countdown-content';
+import { occupantsOf } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridLattice';
 import type { PlacedNode } from '@shared/hud/engine';
 import type { HudLayout, HudNode } from '@shared/types/hud';
 

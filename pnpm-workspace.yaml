@@ -1,5 +1,5 @@
 packages:
-  - 'apps/mobile'
+  - 'apps/desktop'
   - 'cloud-functions/*'
 
 catalog:

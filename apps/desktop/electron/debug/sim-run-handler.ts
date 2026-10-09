@@ -2,6 +2,7 @@
 import { app } from 'electron';
 import { join } from 'path';
 import { handle } from '../lib/ipc/handle';
+import { getWorkspaceRoot } from '../screen-editor/workspace-root';
 import { writeFile, mkdir } from 'fs/promises';
 import type { SimRunConfig } from '@shared/game/simulation';
 import type { CheckId } from '@shared/game/data';
@@ -45,7 +46,7 @@ const registerSimRunHandler = (): void => {
   handle('debug:getSimRunConfig', () => config);
 
   handle('debug:writeSimRun', async (_event, data: unknown) => {
-    const appRoot = app.isPackaged ? join(app.getAppPath(), '../..') : join(__dirname, '../..');
+    const appRoot = app.isPackaged ? join(app.getAppPath(), '../..') : getWorkspaceRoot();
     const dir = join(appRoot, 'debug-output');
     await mkdir(dir, { recursive: true });
     const outPath = join(dir, 'sim-run.json');

@@ -8,7 +8,7 @@ import type { AppearanceRig, Measured } from './appearance.type';
 
 const root = resolve(__dirname, '../../..');
 const designSystem = `${root}/node_modules/@drizztdourden08/tessera/src`;
-const editor = `${root}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
+const editor = `${root}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
@@ -16,7 +16,7 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 const sheets = (): string[] => [
   ...cssIn(`${designSystem}/tokens`).filter((f) => !f.endsWith('index.css')),
   ...cssIn(`${designSystem}/theme`),
-  `${root}/apps/web/src/theme.css`,
+  `${root}/apps/desktop/src/theme.css`,
   ...cssIn(`${designSystem}/primitives`),
   ...cssIn(`${designSystem}/composites`),
   ...cssIn(editor),

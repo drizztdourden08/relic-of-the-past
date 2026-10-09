@@ -11,7 +11,7 @@ export default defineWorkspace({
   provision: [brockProfile()],
   plugins: [snesPlugin],
   snes: {
-    wasm: { output: 'apps/web/public/wasm' },
+    wasm: { output: 'apps/desktop/public/wasm' },
     roms: {
       sha1: {
         '6D4F10A8B10E10DBE624CB23CF03B88BB8252973': 'us',

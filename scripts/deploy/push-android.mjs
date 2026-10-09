@@ -6,7 +6,7 @@
  *   pnpm push:android                   build + install + launch on the emulator/device
  *   pnpm push:android --apk <path>      install a prebuilt APK instead
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { loadConfig } from './config.mjs';
@@ -86,17 +86,14 @@ const pushRoms = (serial) => {
   );
 };
 
-// Build the debug APK with the Gradle wrapper, then install + launch it via adb.
+// Build the debug APK (web build, cap sync, Gradle assembleDebug), then install + launch it via adb.
 const deployCapacitor = (serial) => {
-  const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'));
-  if (!pkg.scripts?.['cap:sync']) {
-    fail('No "cap:sync" script. Set up the Capacitor project first. See docs/contributing/testing-linux-and-android.md.');
+  const android = join(process.cwd(), 'apps', 'desktop', 'mobile', 'android');
+  if (!existsSync(android)) {
+    fail('No Android project at apps/desktop/mobile/android. See docs/contributing/testing-linux-and-android.md.');
   }
-  run('pnpm', ['run', 'cap:sync'], { shell: true });
-  const android = join(process.cwd(), 'apps', 'mobile', 'android');
-  const gradlew = join(android, process.platform === 'win32' ? 'gradlew.bat' : 'gradlew');
   log('Building debug APK...');
-  run(gradlew, ['assembleDebug'], { cwd: android, shell: true });
+  run('pnpm', ['--dir', 'apps/desktop', 'exec', 'brock', 'mobile', 'build'], { shell: true });
   const apk = join(android, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
   log(`Installing + launching on ${serial}...`);
   run(adb, ['-s', serial, 'install', '-r', apk]);

@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { stepDistances, distanceAt, decodeScore } from '../../apps/web/src/lib/game/simulator/exit-order';
+import { stepDistances, distanceAt, decodeScore } from '../../apps/desktop/src/lib/game/simulator/exit-order';
 
 const GRID = 64;
 const UNREACHED = 0xffff;

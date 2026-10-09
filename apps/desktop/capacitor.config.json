@@ -1,0 +1,9 @@
+{
+  "appId": "com.relicofthepast.app",
+  "appName": "Relic of the Past",
+  "webDir": "dist/web",
+  "android": {
+    "path": "mobile/android",
+    "allowMixedContent": false
+  }
+}

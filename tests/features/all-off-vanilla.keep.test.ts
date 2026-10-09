@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
-import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '../../apps/web/src/lib/game/live-settings-flags';
+import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '../../apps/desktop/src/lib/game/live-settings-flags';
 
 const allOff = {
   aspectRatio: '4:3',

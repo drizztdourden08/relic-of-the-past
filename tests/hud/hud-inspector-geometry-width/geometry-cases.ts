@@ -1,12 +1,12 @@
 /* @layer tests @kind helper */
 import { createElement as h } from 'react';
-import { BoxModelField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/BoxModelField';
-import { ExtentField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ExtentField';
-import { GridEditor } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
-import { MinMaxField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/MinMaxField';
-import { OffsetField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/OffsetField';
-import { SizeBoxSection } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/SizeBoxSection';
-import { PlatformContext } from '../../../apps/web/src/platform/PlatformProvider';
+import { BoxModelField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/BoxModelField';
+import { ExtentField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ExtentField';
+import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
+import { MinMaxField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/MinMaxField';
+import { OffsetField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OffsetField';
+import { SizeBoxSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/SizeBoxSection';
+import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
 import type { Platform } from '../../../shared/platform';
 import type { HudGridContainer, HudNode } from '../../../shared/types/hud';
 

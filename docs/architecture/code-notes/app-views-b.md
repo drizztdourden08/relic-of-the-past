@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # App views B code notes
 
-Notes for four renderer views under `apps/web/src/ui/domains/app/views/`: `ProfileHub/`, `InputTester/`, `GameLayer/` and `Randomizer/`. Each heading names a file or folder relative to that `views/` folder. The code carries no comments, so the facts a reader cannot get from the code live here.
+Notes for four renderer views under `apps/desktop/src/ui/domains/app/views/`: `ProfileHub/`, `InputTester/`, `GameLayer/` and `Randomizer/`. Each heading names a file or folder relative to that `views/` folder. The code carries no comments, so the facts a reader cannot get from the code live here.
 
 ## Randomizer/behavior/activity-feed.ts
 

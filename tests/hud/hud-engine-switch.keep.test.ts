@@ -5,7 +5,7 @@ import { validateLayout } from '../../shared/hud/layouts';
 import { BUILT_IN_LAYOUTS } from '../../shared/hud/layouts/built-in-layouts';
 import { engineSwitchPatch } from '../../shared/hud/layouts/convert-engine';
 import { resolveValue } from '../../shared/hud/data/resolve-value';
-import { nodeById, patchNode } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/node-edits';
+import { nodeById, patchNode } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/node-edits';
 import type { HudContainer, HudLayout } from '../../shared/types/hud';
 import type { Value } from '../../shared/types/hud/hud-value';
 

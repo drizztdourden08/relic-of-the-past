@@ -1,8 +1,8 @@
 <!-- @layer docs @kind doc -->
 # UI domains: code notes
 
-Facts about the code under `apps/web/src/ui/domains/` (every domain except `app`) that the code cannot say by itself.
-Each heading names a file by its path under `apps/web/src/ui/domains/`.
+Facts about the code under `apps/desktop/src/ui/domains/` (every domain except `app`) that the code cannot say by itself.
+Each heading names a file by its path under `apps/desktop/src/ui/domains/`.
 
 ## title
 
@@ -77,7 +77,7 @@ The open water starts 30 percent of the way down the lake; the mirrored trees ow
 
 ### title/scene/scene-files/scene-files.constants.ts
 
-The scene tiles are bundled under `apps/web/src/assets/title-scene/light/`: one sky strip, every numbered variant (`<stem>_<n>.png`) of the mountains, trees and clouds, plus the castle. The title screen and the home backdrop both draw from this one lookup.
+The scene tiles are bundled under `apps/desktop/src/assets/title-scene/light/`: one sky strip, every numbered variant (`<stem>_<n>.png`) of the mountains, trees and clouds, plus the castle. The title screen and the home backdrop both draw from this one lookup.
 
 ### title/views/SceneBackdrop/SceneBackdrop.tsx
 

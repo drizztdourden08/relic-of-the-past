@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { activeStates, SLOT } from '../../apps/web/src/lib/game/active-states';
-import type { StateSnapshot } from '../../apps/web/src/lib/game/active-states';
+import { activeStates, SLOT } from '../../apps/desktop/src/lib/game/active-states';
+import type { StateSnapshot } from '../../apps/desktop/src/lib/game/active-states';
 
 const snap = (over: Partial<Record<number, number>> = {}, follower = 0): StateSnapshot => {
   const progress = new Array(16).fill(0);

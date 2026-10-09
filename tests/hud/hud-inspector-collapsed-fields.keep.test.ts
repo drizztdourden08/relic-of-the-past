@@ -5,14 +5,14 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { ValueField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
-import { KeyframeTrack } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/KeyframeTrack';
-import { PaintField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/PaintField';
+import { ValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
+import { KeyframeTrack } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/KeyframeTrack';
+import { PaintField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/PaintField';
 import { Field, Select } from '@drizztdourden08/tessera/primitives';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
-const ED = `${ROOT}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
+const ED = `${ROOT}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
@@ -20,7 +20,7 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
   ...cssIn(`${DS}/theme`),
-  `${ROOT}/apps/web/src/theme.css`,
+  `${ROOT}/apps/desktop/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
   ...cssIn(`${DS}/composites`),
   ...cssIn(ED),

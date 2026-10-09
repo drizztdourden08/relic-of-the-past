@@ -8,7 +8,7 @@
 const BASE_FLAGS = ['--no-focus', '--muted'];
 
 const launchArgs = (name, extra = []) => [
-  'dist/electron/main.js',
+  'apps/desktop/dist/electron/main.js',
   ...BASE_FLAGS,
   `--instance=${name}`,
   ...extra,

@@ -5,8 +5,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { Core, ROOT, fixtureNames } from './core-harness';
 import type { Step } from './core-harness';
 
-const NEW_JS = resolve(ROOT, 'apps/web/public/wasm/zelda3.js');
-const BASE_JS = process.env.ROTP_BASELINE_WASM_JS ?? resolve(ROOT, '.user-data/baseline-core/apps/web/public/wasm/zelda3.js');
+const NEW_JS = resolve(ROOT, 'apps/desktop/public/wasm/zelda3.js');
+const BASE_JS = process.env.ROTP_BASELINE_WASM_JS ?? resolve(ROOT, '.user-data/baseline-core/apps/desktop/public/wasm/zelda3.js');
 
 const FRAME_COUNTER = 0x1a;
 const STORY_GATE_WORD = 5;

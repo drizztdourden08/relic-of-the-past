@@ -1,13 +1,13 @@
 /* @layer tests @kind helper */
 import { createElement as h } from 'react';
-import { GridSolveContext } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/grid-solve';
-import { CellPicker } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
-import { GridEditor } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
-import { StageGridEcho } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/StageGridEcho';
-import { PlatformContext } from '../../../apps/web/src/platform/PlatformProvider';
+import { GridSolveContext } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/grid-solve';
+import { CellPicker } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
+import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
+import { StageGridEcho } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/StageGridEcho';
+import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
 import type { HudGridContainer } from '../../../shared/types/hud';
 import type { PlacedNode } from '../../../shared/hud/engine';
-import type { EditorSampleState } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/useSampleState.type';
+import type { EditorSampleState } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/useSampleState.type';
 import { CTX, ECHO_BOX, ECHO_GRID, ECHO_SCALE, PLATFORM, STATES, THREE, TWELVE } from './metrics.constants';
 import { solveOf } from './solve-of';
 

@@ -49,8 +49,8 @@ const args = [
   '--packDir', packDir,
   '--mainExe', linux ? 'relic-of-the-past' : 'Relic of the Past.exe',
   '--icon', linux
-    ? join('apps', 'web', 'public', 'logos', 'logo-256.png')
-    : join('apps', 'web', 'public', 'logos', 'icon.ico'),
+    ? join('apps', 'desktop', 'public', 'logos', 'logo-256.png')
+    : join('apps', 'desktop', 'public', 'logos', 'icon.ico'),
   '--outputDir', outputDir,
 ];
 

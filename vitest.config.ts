@@ -20,8 +20,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@shared': resolve(__dirname, 'shared'),
-      '@app': resolve(__dirname, 'apps/web/src'),
-      '@domains': resolve(__dirname, 'apps/web/src/ui/domains'),
+      '@app': resolve(__dirname, 'apps/desktop/src'),
+      '@domains': resolve(__dirname, 'apps/desktop/src/ui/domains'),
     },
   },
 });

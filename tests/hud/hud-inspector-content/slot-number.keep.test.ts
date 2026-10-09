@@ -16,7 +16,7 @@ vi.hoisted(() => {
 
 import { createElement as h } from 'react';
 import { readFileSync } from 'fs';
-import { SlotRefField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/SlotRefField';
+import { SlotRefField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SlotRefField';
 import { EDITOR, PACKS, SLOTS } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
 

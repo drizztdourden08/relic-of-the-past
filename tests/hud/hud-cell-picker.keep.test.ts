@@ -3,8 +3,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { CellPicker } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
-import { PlatformContext } from '../../apps/web/src/platform/PlatformProvider';
+import { CellPicker } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
+import { PlatformContext } from '../../apps/desktop/src/platform/PlatformProvider';
 import type { Platform } from '../../shared/platform';
 import type { HudGridContainer, HudNode } from '../../shared/types/hud';
 

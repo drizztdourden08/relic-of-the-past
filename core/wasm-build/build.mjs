@@ -9,7 +9,7 @@
  * Linux/macOS CI via emscripten-core/setup-emsdk).
  *
  * Prerequisite: the Emscripten SDK must be activated so `emcc` resolves.
- * Output: apps/web/public/wasm/zelda3.{js,wasm}, the path the renderer, the
+ * Output: apps/desktop/public/wasm/zelda3.{js,wasm}, the path the renderer, the
  * electron build, and `cap sync` (Android) all consume.
  *
  * NOTE: there is no EXPORTED_FUNCTIONS list of Wasm* exports. Every JS-callable
@@ -25,7 +25,7 @@ import { join, resolve } from 'node:path';
 const here = import.meta.dirname;
 const zelda3 = resolve(here, '..', 'zelda3');
 const hooks = resolve(here, '..', 'game-hooks');
-const outputDir = resolve(here, '..', '..', 'apps', 'web', 'public', 'wasm');
+const outputDir = resolve(here, '..', '..', 'apps', 'desktop', 'public', 'wasm');
 
 const z = (...p) => join(zelda3, ...p);
 const h = (...p) => join(hooks, ...p);
@@ -145,6 +145,11 @@ const run = () => {
     console.error('\nBUILD FAILED');
     process.exit(result.status ?? 1);
   }
+
+  // zelda3.js is a CommonJS factory, but it sits inside the app package, which is an ES
+  // module package. This marker keeps Node's require() of it (tests, the layout probe,
+  // the headless harness) reading it as CommonJS.
+  writeFileSync(join(outputDir, 'package.json'), `${JSON.stringify({ type: 'commonjs' })}\n`);
 
   console.log('\n============================================');
   console.log('Build successful!');

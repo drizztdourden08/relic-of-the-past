@@ -2,8 +2,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { LayoutSection } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
-import { PlatformContext } from '../../apps/web/src/platform/PlatformProvider';
+import { LayoutSection } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { PlatformContext } from '../../apps/desktop/src/platform/PlatformProvider';
 import type { Platform } from '../../shared/platform';
 import type { HudContainer, HudGridContainer } from '../../shared/types/hud';
 

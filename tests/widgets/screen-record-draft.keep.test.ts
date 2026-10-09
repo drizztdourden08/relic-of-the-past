@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { tagIdsForKeys } from '@shared/game/data';
-import { buildScreenRecord } from '../../apps/web/src/ui/domains/widgets/navigation/screen-editor/build-screen-record';
-import type { ScreenDraft } from '../../apps/web/src/ui/domains/widgets/navigation/screen-editor/build-screen-record';
+import { buildScreenRecord } from '../../apps/desktop/src/ui/domains/widgets/navigation/screen-editor/build-screen-record';
+import type { ScreenDraft } from '../../apps/desktop/src/ui/domains/widgets/navigation/screen-editor/build-screen-record';
 
 const draft = (over: Partial<ScreenDraft>): ScreenDraft => ({
   kind: 'dungeon',

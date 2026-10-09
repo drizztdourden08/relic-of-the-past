@@ -4,9 +4,9 @@ import {
 } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import type * as InspectorModule from '../../apps/web/src/ui/domains/app/views/DataInspector';
-import type * as DetailTabsModule from '../../apps/web/src/ui/domains/app/views/DataInspector/sub-components/DetailTabs';
-import type * as SourcesModule from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
+import type * as InspectorModule from '../../apps/desktop/src/ui/domains/app/views/DataInspector';
+import type * as DetailTabsModule from '../../apps/desktop/src/ui/domains/app/views/DataInspector/sub-components/DetailTabs';
+import type * as SourcesModule from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
 import type * as SchemaModule from '@drizztdourden08/tessera/data';
 import type { DetailTab } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
@@ -27,12 +27,12 @@ beforeEach(async () => {
     removeEventListener: () => {},
     matchMedia: () => ({ matches: false, addEventListener: () => {}, removeEventListener: () => {} }),
   });
-  ({ DataInspector } = await import('../../apps/web/src/ui/domains/app/views/DataInspector'));
+  ({ DataInspector } = await import('../../apps/desktop/src/ui/domains/app/views/DataInspector'));
   ({ DetailTabs } = await import(
-    '../../apps/web/src/ui/domains/app/views/DataInspector/sub-components/DetailTabs'
+    '../../apps/desktop/src/ui/domains/app/views/DataInspector/sub-components/DetailTabs'
   ));
   ({ COLLECTION_SOURCES } = await import(
-    '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources'
+    '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/collection-sources'
   ));
   ({ buildSchema } = await import('@drizztdourden08/tessera/data'));
 });

@@ -69,8 +69,8 @@ const bootstrapWorktree = async ({ worktree, skipBuild }) => {
   await buildWasmExclusively(worktree);
   const wasmAt = new Date().toISOString();
 
-  // electron-vite build directly, not `pnpm run build`: that one deletes dist/ at the end.
-  runIn(worktree, 'pnpm', ['exec', 'electron-vite', 'build'], 'Building the app');
+  // The app's own build (brock build in apps/desktop), not the root `pnpm run build`: that one packages and deletes dist/.
+  runIn(worktree, 'pnpm', ['--filter', './apps/desktop', 'build'], 'Building the app');
   const distAt = new Date().toISOString();
 
   return { installedAt, wasmAt, distAt };

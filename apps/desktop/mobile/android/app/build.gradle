@@ -1,0 +1,144 @@
+import groovy.json.JsonSlurper
+
+apply plugin: 'com.android.application'
+
+// App version derived from the app's own package.json (apps/desktop) so the APK tracks releases.
+def appPkg = new JsonSlurper().parse(file("../../../package.json"))
+def appVersionName = appPkg.version
+def (vMaj, vMin, vPat) = appVersionName.tokenize('.').collect { it.toInteger() }
+def appVersionCode = vMaj * 10000 + vMin * 100 + vPat
+
+// The controller-input plugin's native build links against the SAME SDL3 source the
+// desktop Node addon uses; that addon's package.json is the one place the version is
+// pinned (`npm run ensure-sdl3` fetches it).
+def sdl3Pkg = new JsonSlurper().parse(file("../../../electron/input/native/sdl3/package.json"))
+// Forward slashes even on Windows: a raw backslash path flows into a generated
+// try_compile() project (SDL3's cmake/sdlcpu.cmake) where backslash+letter is an
+// invalid string escape.
+// -Psdl3Root=<folder> points a worktree at the main checkout's third_party/sdl3.
+def sdl3Root = findProperty('sdl3Root') ?: "../../../../../third_party/sdl3"
+def sdl3SourceDir = file("${sdl3Root}/SDL3-${sdl3Pkg.sdl3}").absolutePath.replace('\\', '/')
+
+// APK size vs. device coverage: arm64-v8a alone covers effectively all
+// controller-capable phones since ~2017. Add armeabi-v7a/x86_64 if older-device or
+// emulator coverage matters more than the size cost.
+def controllerAbis = ["arm64-v8a"]
+
+// SDL's Java classes are staged inside the build dir so there is no vendored copy
+// to review or keep in step with the pinned release.
+def sdlJavaDir = layout.buildDirectory.dir("generated/sdl3-java").get().asFile
+def sdlJavaUpstream = file("${sdl3SourceDir}/android-project/app/src/main/java/org/libsdl/app")
+
+// Refuses to build without the fetched source: a missing SDL class would otherwise
+// fail much later with an unhelpful ClassNotFoundException at runtime.
+tasks.register('stageSdlJava', Copy) {
+    doFirst {
+        if (!sdlJavaUpstream.exists()) {
+            throw new GradleException(
+                "SDL3 Java sources not found at ${sdlJavaUpstream}.\n" +
+                "Run `npm run ensure-sdl3` from the repo root to fetch the pinned SDL3 release.")
+        }
+    }
+    from sdlJavaUpstream
+    into new File(sdlJavaDir, "org/libsdl/app")
+}
+tasks.configureEach { task ->
+    if (task.name == 'preBuild') task.dependsOn 'stageSdlJava'
+}
+
+android {
+    namespace = "com.relicofthepast.app"
+    compileSdk = rootProject.ext.compileSdkVersion
+    ndkVersion "27.2.12479018"
+    defaultConfig {
+        applicationId "com.relicofthepast.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode appVersionCode
+        versionName appVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+        externalNativeBuild {
+            cmake {
+                arguments "-DSDL3_SOURCE_DIR=${sdl3SourceDir}", "-DANDROID_STL=c++_shared"
+                abiFilters(*controllerAbis)
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/controllersdl3/CMakeLists.txt"
+            version "3.22.1"
+        }
+    }
+    // SDL's Java classes come straight from the fetched SDL3 source: they are the
+    // Java half of the JNI contract the native library implements, so the two
+    // halves cannot drift apart.
+    sourceSets {
+        main {
+            java.srcDirs += sdlJavaDir
+        }
+    }
+    signingConfigs {
+        release {
+            // Creds come from env vars (CI) or gradle properties (local). When absent,
+            // the release build stays unsigned. Build a debug APK instead.
+            def ksFile = System.getenv('BROCK_KEYSTORE_FILE') ?: findProperty('BROCK_KEYSTORE_FILE')
+            if (ksFile) {
+                def ksPassword = System.getenv('BROCK_KEYSTORE_PASSWORD') ?: findProperty('BROCK_KEYSTORE_PASSWORD')
+                storeFile file(ksFile)
+                storePassword ksPassword
+                keyAlias System.getenv('BROCK_KEY_ALIAS') ?: (findProperty('BROCK_KEY_ALIAS') ?: 'relic')
+                keyPassword System.getenv('BROCK_KEY_PASSWORD') ?: (findProperty('BROCK_KEY_PASSWORD') ?: ksPassword)
+            }
+        }
+    }
+    buildTypes {
+        debug {
+            // Own package, so a debug build never displaces an installed release
+            // build (their signatures can never match).
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (System.getenv('BROCK_KEYSTORE_FILE') ?: findProperty('BROCK_KEYSTORE_FILE')) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}

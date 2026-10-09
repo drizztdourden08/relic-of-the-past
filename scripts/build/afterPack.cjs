@@ -71,7 +71,7 @@ exports.default = async function afterPack(context) {
   trimUnusedFiles(context.appOutDir);
 
   const exePath = path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.exe`);
-  const icoPath = path.resolve(__dirname, '../../apps/web/public/logos/logo/logo.ico');
+  const icoPath = path.resolve(__dirname, '../../apps/desktop/public/logos/logo/logo.ico');
 
   // The name Windows and browsers show for the exe ("Open Relic of the Past?") is its
   // FileDescription; left alone it reads "Electron", so the app's own name goes in too.

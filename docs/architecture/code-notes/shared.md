@@ -834,7 +834,7 @@ The rendering dependency chain is: extended rendering, then linear world tilemap
 
 Hiding the native HUD is not a registry feature. It runs through `g_hud_hide_mask` via `WasmSetHudHidden` and follows the HUD style setting, so it owns no features0 bit.
 
-`offscreenAI` is a three way setting, but a registry entry carries one bit. The entry is the idle bit, the default. Paused maps to the older `kFeatures0_PauseOffscreenAI` bit, and vanilla sets neither. See `offscreenAiMode` in `apps/web/src/lib/game/settings.ts`.
+`offscreenAI` is a three way setting, but a registry entry carries one bit. The entry is the idle bit, the default. Paused maps to the older `kFeatures0_PauseOffscreenAI` bit, and vanilla sets neither. See `offscreenAiMode` in `apps/desktop/src/lib/game/settings.ts`.
 
 `allowDiving` is not a Vanilla Safe casualty on purpose. It rides with the extra dungeon, which is added content and not a parity question, and the room it exists for cannot be crossed without it.
 
@@ -1076,7 +1076,7 @@ The one flat table every HUD expression evaluates against, so the editor's varia
 
 ### hud/data/variables/variables.type.ts
 
-`HudVitalsSource` names the fields of the renderer's `HudVitalsContent` structurally, because `shared/` is the dependency leaf and cannot import from `apps/web`. A real `HudVitalsContent` satisfies it with no adapter, and `tsc` catches any drift.
+`HudVitalsSource` names the fields of the renderer's `HudVitalsContent` structurally, because `shared/` is the dependency leaf and cannot import from `apps/desktop/src`. A real `HudVitalsContent` satisfies it with no adapter, and `tsc` catches any drift.
 
 ### hud/engine/bake-values/bake-gate.ts
 
@@ -2238,7 +2238,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 ### storage/link-sprites/parse-rsp/index.ts
 
-- The write side, which renders the courtesy PNG, stays in the renderer (`apps/web/src/lib/game/rsp.ts`). Reading needs no canvas, so it lives here for every host: the renderer, Electron main and the store.
+- The write side, which renders the courtesy PNG, stays in the renderer (`apps/desktop/src/lib/game/rsp.ts`). Reading needs no canvas, so it lives here for every host: the renderer, Electron main and the store.
 - The ZIP local file header check is cheap enough to run before handing bytes to JSZip.
 
 ### storage/link-sprites/rsp.type.ts
@@ -2317,7 +2317,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 ### storage/msul/import-msul.ts
 
-- Reads a `.msul` pack back into a manifest and its files, the exact inverse of `apps/web/src/lib/msu/export/export-msul`, so a pack exported and imported again is the pack you started with.
+- Reads a `.msul` pack back into a manifest and its files, the exact inverse of `apps/desktop/src/lib/msu/export/export-msul`, so a pack exported and imported again is the pack you started with.
 - Every failure is something a user did (wrong file, hand-edited manifest, a pack from a newer build), so each throws a message written for them. The validation is spelled out here because `parseManifest` collapses every cause into null and could only give one generic message.
 - `files` holds every non-manifest entry, in archive order.
 

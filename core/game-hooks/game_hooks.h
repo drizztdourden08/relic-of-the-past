@@ -591,7 +591,7 @@ enum {
 };
 // The line a placed quiet rupee, bomb or arrow is armed with: no dialogue line has this id, and the
 // message seam shows no text for it (receipt_messages.c, kFeatures5_QuietMask). Mirrored by
-// QUIET_RECEIPT_MSG in apps/web/src/lib/game/quiet-receipts.ts.
+// QUIET_RECEIPT_MSG in apps/desktop/src/lib/game/quiet-receipts.ts.
 #define kReceiptMsg_Silent 0x7fff
 
 // Arm |msg| as the finishing receipt's message unless one is already armed. A one-shot the host

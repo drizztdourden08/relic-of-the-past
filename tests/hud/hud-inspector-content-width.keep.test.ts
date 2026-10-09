@@ -13,16 +13,16 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { BoundedValueField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/BoundedValueField';
-import { ReferenceField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ReferenceField';
-import { SlotRefField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/SlotRefField';
-import { TextValueField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/TextValueField';
-import { GlyphContent } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/GlyphContent';
+import { BoundedValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/BoundedValueField';
+import { ReferenceField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ReferenceField';
+import { SlotRefField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SlotRefField';
+import { TextValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/TextValueField';
+import { GlyphContent } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/GlyphContent';
 import type { ModernSlot } from '../../shared/types/controls';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
-const ED = `${ROOT}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
+const ED = `${ROOT}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
@@ -30,7 +30,7 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
   ...cssIn(`${DS}/theme`),
-  `${ROOT}/apps/web/src/theme.css`,
+  `${ROOT}/apps/desktop/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
   ...cssIn(`${DS}/composites`),
   ...cssIn(ED),

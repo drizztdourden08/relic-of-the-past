@@ -12,7 +12,7 @@ fits in the wider app, see @docs/architecture/overview.md.
 ```
 @drizztdourden08/tessera     tokens.css, palettes/rotp.css, primitives, composites,
                              data, field-kits, color-picker (reusable, domain-agnostic)
-apps/web/src/
+apps/desktop/src/
 ├── theme.css               RotP's own tokens, unlayered, imported after Tessera's
 ├── tokens/game-text.css    colours and geometry of text the game draws
 ├── fonts/                  the dialogue face (game-font.css, alttp-ext.woff2, licence)
@@ -30,7 +30,7 @@ Each app entry imports `@drizztdourden08/tessera/tokens.css`, then
 `TesseraProvider` (and, in the desktop app, `ViewStorageProvider` with RotP's
 saved view snapshots). The two sites (Sanctuary and the Hookshop store) do the same.
 
-Aliases: `@domains/*` → `ui/domains/*`, `@app/*` → `apps/web/src/*`, `@shared/*`.
+Aliases: `@domains/*` → `ui/domains/*`, `@app/*` → `apps/desktop/src/*`, `@shared/*`.
 Non-presentational code (`App/`, `stores/`, `lib/`, `hooks/`, `utils/`) stays at `src/`
 root.
 

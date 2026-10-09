@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '../../shared/game/simulation';
 import { roomTagName } from '../../shared/game/simulation';
-import { groupAnnotations } from '../../apps/web/src/ui/domains/widgets/navigation/sub-components/ScreenPanel/annotation-rows';
+import { groupAnnotations } from '../../apps/desktop/src/ui/domains/widgets/navigation/sub-components/ScreenPanel/annotation-rows';
 import { describeDataset } from '../dataset-guard';
 
 const at = (kind: ScreenAnnotation['kind'], label: string, extra: Partial<ScreenAnnotation> = {}): ScreenAnnotation =>

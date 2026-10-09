@@ -13,8 +13,8 @@ import path from 'path';
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'release', 'coverage', '.vite', 'out', 'build-output', 'saves', 'test-roms', 'assets', 'temp-scripts', 'worktrees', 'third_party']);
 // Native prebuilds are copied in at install time, so they are not ours either.
 const SKIP_REL = [
-  'apps/web/public/wasm',
-  'apps/mobile/android',
+  'apps/desktop/public/wasm',
+  'apps/desktop/mobile/android',
   '.claude/worktrees',
   'apps/desktop/electron/input/native/sdl3/prebuilds',
 ];

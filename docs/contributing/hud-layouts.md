@@ -13,7 +13,7 @@ For the player-facing description of the same screens, see
 > **Where the code lives.** The model and all its maths are portable and React-free:
 > types in `shared/types/hud/`, geometry in `shared/hud/layouts/`, glyph resolution in
 > `shared/input/glyphs/`. The renderer half is `HudLayoutView` (live HUD) and
-> `HudLayoutEditor` (the editor), with per-profile storage in `apps/web/src/lib/hud/`.
+> `HudLayoutEditor` (the editor), with per-profile storage in `apps/desktop/src/lib/hud/`.
 
 ## The layout model
 
@@ -258,7 +258,7 @@ first and `tsc` will point at every site that has to answer for it.
    `DEFAULT_HUD_LAYOUT.placements`. The other presets map over the default's
    placements, so they pick the element up for free.
 4. **Build the element itself** as a HUD compound under
-   `apps/web/src/ui/domains/hud/compounds/`. Keep it bare and presentational, taking a
+   `apps/desktop/src/ui/domains/hud/compounds/`. Keep it bare and presentational, taking a
    `scale` and its data as props. See [Design System](design-system.md) for the tiers.
 5. **`HudLayoutView.elementFor`**: add the `case` that renders it.
 6. **`HudLayoutEditor.constants.ts`**: add the id to `ELEMENT_ORDER` and a label to

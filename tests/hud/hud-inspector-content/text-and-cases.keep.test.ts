@@ -16,10 +16,10 @@ vi.hoisted(() => {
 
 import { act, createElement as h } from 'react';
 import { expand } from '../../../shared/hud/engine';
-import { caseMatches, matchLabel, winnerIn } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/case-match';
-import { textOfTextValue, textValueOf } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/value-text';
-import { CaseListEditor } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/CaseListEditor';
-import { TextContent } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/TextContent';
+import { caseMatches, matchLabel, winnerIn } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/case-match';
+import { textOfTextValue, textValueOf } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/value-text';
+import { CaseListEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CaseListEditor';
+import { TextContent } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/TextContent';
 import type { HudNode, HudSwitchSpec } from '../../../shared/types/hud';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';

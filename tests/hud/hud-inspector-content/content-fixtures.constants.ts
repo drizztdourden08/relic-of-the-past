@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import type { GlyphPack } from '../../../shared/types/hud';
 import type { ModernSlot } from '../../../shared/types/controls';
 
-const EDITOR = resolve(__dirname, '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor');
+const EDITOR = resolve(__dirname, '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
 
 const PACKS: readonly GlyphPack[] = [{
   id: 'generic',

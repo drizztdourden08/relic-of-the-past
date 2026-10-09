@@ -2,10 +2,10 @@
 # Code notes: app views and compounds
 
 Facts about the renderer's app domain that the code cannot say on its own. It covers the
-compounds under `apps/web/src/ui/domains/app/compounds/` and the app views under
-`apps/web/src/ui/domains/app/views/`, apart from DataManager, HudLayoutEditor, ProfileHub,
+compounds under `apps/desktop/src/ui/domains/app/compounds/` and the app views under
+`apps/desktop/src/ui/domains/app/views/`, apart from DataManager, HudLayoutEditor, ProfileHub,
 InputTester, GameLayer and Randomizer, which have their own pages. Each heading names a file,
-relative to `apps/web/src/ui/domains/app/`.
+relative to `apps/desktop/src/ui/domains/app/`.
 
 ## Compounds
 
@@ -233,7 +233,7 @@ positioned parent, and every length is a count of mascot pixels times the parent
 Sizes and places of the pieces in assets/mascot, in mascot pixels. `at` is the piece's top left
 corner on the body (the eye has one per eye), and a pod's `pivot` is the point it turns around,
 in its own pixels. A redrawn piece changes its numbers here. The logo build script
-(`apps/web/public/logos/build/compose.mjs`) loads this file and `behavior/mascot-layout.ts` by
+(`apps/desktop/public/logos/build/compose.mjs`) loads this file and `behavior/mascot-layout.ts` by
 path, so both keep their names.
 
 ### compounds/Mascot/behavior/mascot-layout.ts
@@ -244,7 +244,7 @@ on the grid.
 ### compounds/ModeBadge/ModeBadge.tsx
 
 The badge says at a glance what kind of playthrough a profile is. The art lives in
-`apps/web/src/assets/mode-badges/` as `mode-<id>.png`: a 128 pixel transparent square (the
+`apps/desktop/src/assets/mode-badges/` as `mode-<id>.png`: a 128 pixel transparent square (the
 source art trimmed, squared and downscaled with a quality filter), drawn smoothly at
 `--mode-badge-d`. The glob in `behavior/mode-badge-src.constants.ts` resolves to an empty map
 until a file exists, so dropping a PNG in swaps the monogram chip for the image with no code
@@ -403,7 +403,7 @@ row and is null on an unrandomized profile.
 
 ### compounds/ProfileHero/behavior/hero-art-src.ts
 
-Hero art lives in `apps/web/src/assets/home-hero/` as `hero-art-<mode>.png`: a 128 pixel square
+Hero art lives in `apps/desktop/src/assets/home-hero/` as `hero-art-<mode>.png`: a 128 pixel square
 piece of pixel art on a transparent ground, drawn at twice its pixels so it stays pixel art. A
 mode without its piece shows the backdrop alone.
 
