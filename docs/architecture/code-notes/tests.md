@@ -29,6 +29,104 @@ The `.sav` fixture is a live save the reference emulator writes during play, so 
 hold whatever the tester last did. The test asserts the shape of the decode, never story
 state.
 
+## data-inspector
+
+Several suites import `buildSchema` from its own module, never from the `@ds/data` barrel:
+the barrel pulls in the view state binding, which touches `window` at module load. For the
+same reason, suites that render the inspector stub `window` and then import the component
+fresh after `vi.resetModules()`, because the binding reaches `lib/storage` and the log bus.
+
+### data-inspector/accept-all-certain.keep.test.ts
+
+Batch accept is a loop, never a `Promise.all`: two findings often land in the same source
+file, and every write reads, waits for the IPC round trip, then writes back. Overlapped, one
+edit is lost; the contrast case shows it. The gate is `certain`, because `likely` evidence
+only proves presence and must not be written unreviewed.
+
+### data-inspector/accept-recommendation.keep.test.ts
+
+Accepting writes first and records the verdict second; a verdict before the write would
+mark done a finding nobody applied. The four collaborators are mocked because each really
+writes to disk or to the store. An update is keyed by `targetId`, the identity the store
+reconciles on.
+
+### data-inspector/collection-sources.keep.test.ts
+
+Every id is `<prefix>-<digits>`; the prefix is the kind name except `item-group` (`ig`) and
+`enumeration` (`enum`), see `KIND_ID_PREFIXES`. Default column sets are typed by hand, so a
+typo would open a column that renders nothing. Editor groups may name a path no row
+carries, so the check is that no path is claimed twice: the layout would render it in the
+first group and drop the other.
+
+### data-inspector/comparison-view-sync.keep.test.ts
+
+The comparison panes read as one view: the same tab and the same scroll offset. `DetailTabs`
+is fully controlled, so both panes take the same `{tab, onTabChange}`. Scrolling uses the
+`ScrollArea` guard: the side the user scrolled leads, the other follows, and the follower's
+programmatic scroll is swallowed, so each real scroll makes one programmatic move.
+
+### data-inspector/data-inspector-render.keep.test.ts
+
+Server side render smoke tests. The active collection is React state that SSR cannot drive,
+so the detail panel renders once per collection on each tab. Clicking a row or an id
+reference, switching collection and anything portalled are not covered. The id reference
+attributes are the half of the click contract a renderless test can check.
+
+### data-inspector/module-init-order.keep.test.ts
+
+`record-writers`, `id-ref-options` and `collection-sources` form an import cycle. A cycle
+only faults when something is read during module evaluation, so each module must be safe to
+import first in a fresh graph, with `RECORD_WRITERS` populated. The first import loads the
+whole data graph cold, about three seconds alone, hence the long timeout.
+
+### data-inspector/open-recommendation.keep.test.ts
+
+`openRecommendation` is the one call that brings a finding on screen from outside the
+inspector. The shell registers how to bring the inspector forward (its `useAppNavigation`
+effect), the caller hands over what to show, and the view consumes the request once. The
+request is stored before the page opens, because a shell may render the inspector
+synchronously. The opener is not store state, so registering it again notifies nobody.
+
+### data-inspector/proposal-draft.keep.test.ts
+
+A reviewer may amend a proposal before accepting. The editable copy never reaches the store,
+where a new detection would collide with a half made edit. Revert drops the amendment; it is
+no undo history. The amendment is keyed to its finding, so selecting another drops it.
+
+### data-inspector/recommendation-cache.keep.test.ts
+
+The renderer's read model never merges an edit of its own: a verdict goes to the main
+process and the answer replaces the cache whole. The flattened snapshot must stay the same
+array between changes, because `useSyncExternalStore` compares it.
+
+### data-inspector/recommendation-rows.keep.test.ts
+
+Columns are the same for every kind, since one findings list mixes collections. Rows sort
+certain first, then oldest first. A decided finding leaves the list, which is what makes
+Reject remove it from view. A missing target or screen stays `null`: a placeholder string
+would be sampled, fail the id pattern and turn the column into plain text.
+
+### data-inspector/recommendations-shell.keep.test.ts
+
+The folded detail column is hidden by CSS and stays mounted, so folding never discards a
+half made amendment. The shell knows nothing about recommendations; a plain collection's
+detail pane uses it too.
+
+### data-inspector/record-creators.keep.test.ts
+
+One adapter per collection's `Allocate*` shape. Each folds the record into the live
+registry, publishes it as an id reference option and rebuilds the collection source.
+
+### data-inspector/record-links.keep.test.ts
+
+The Recommendations `targetId` column points at a different collection per row, so it has
+no single target kind and each id resolves by its own prefix.
+
+### data-inspector/tag-consistency.keep.test.ts
+
+The `isTagKey` gate in `create-tag.ts` never runs on a direct edit, so `writeTag` checks that
+`name` reads `namespace:value` and refuses the save before the write channel.
+
 ## electron/recommendation-files.keep.test.ts
 
 Every recommendation operation reads, changes and writes a whole collection file. The per

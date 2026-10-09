@@ -1,12 +1,4 @@
 /* @layer tests @kind test */
-/**
- * `openRecommendation` is the one call anything outside this screen makes to get
- * a finding on screen. Neither side can reach the other: the shell owns page
- * state as local React state, a widget owns none. The shell registers how to
- * bring the inspector forward, the caller hands over what to show, the view
- * consumes the request once landed. The registration itself is the shell's
- * `useAppNavigation` effect.
- */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import type { Recommendation } from '@shared/game/recommendations';
@@ -48,8 +40,6 @@ describe('openRecommendation', () => {
     expect(open).toHaveBeenCalledTimes(1);
   });
 
-  // Order matters: a shell that renders the inspector synchronously must find
-  // the request already stored by the time it mounts.
   it('stores the request before it opens the page', () => {
     let seen: string | null = null;
     useDataViewStore.getState().registerInspectorOpener(() => {
@@ -84,8 +74,6 @@ describe('openRecommendation', () => {
     expect(open).not.toHaveBeenCalled();
   });
 
-  // The opener is deliberately NOT store state: re-registering it must not
-  // notify anything subscribed to the views slice.
   it('does not re-render subscribers when the shell re-registers', () => {
     const listener = vi.fn();
     const unsubscribe = useDataViewStore.subscribe(listener);

@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Accepting a finding routes to the CRUD verb its action names, in a fixed
- * order: write, then record the verdict. A verdict before the write would mark a
- * finding done that nobody applied, so a refused write leaves both untouched and
- * the finding open.
- *
- * The four collaborators are mocked because each really writes to disk or
- * the recommendation store.
- */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Recommendation } from '@shared/game/recommendations';
 
@@ -80,8 +71,6 @@ describe('acceptRecommendation uses one verb per action', () => {
     expect(mocks.remove).not.toHaveBeenCalled();
   });
 
-  // The store reconciles on targetId, so the write is keyed by that identity
-  // and not by whatever id the proposal happens to be carrying.
   it('keys an update by the target, not by the id on the proposal', async () => {
     await acceptRecommendation(finding(), { id: 'tag-999', value: 'cavern' });
     expect(mocks.write).toHaveBeenCalledWith({ id: 'tag-001', value: 'cavern' });

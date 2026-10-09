@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Batch accept, and why it is a loop, not a `Promise.all`: two findings often
- * land in the SAME source file, and every write is a read-modify-write. Fired
- * concurrently, one edit is lost. The fixture runs both ways: through
- * `acceptAllCertain` (keeps both) and concurrently (loses one).
- *
- * The gate is `certain`: `likely` evidence only proves presence and must not
- * be written unreviewed.
- */
 import { describe, it, expect, vi } from 'vitest';
 import {
   acceptAllCertain, certainOnly,
@@ -33,10 +24,6 @@ const finding = (over: Partial<Recommendation> = {}): Recommendation => ({
   ...over,
 } as Recommendation);
 
-/**
- * A stand-in source file, written the way the real writers write: read, wait
- * (the IPC round trip), write back. The gap is where an interleaved accept corrupts it.
- */
 const createSourceFile = () => {
   let contents: string[] = [];
   return {
@@ -88,8 +75,6 @@ describe('acceptAllCertain with two findings in one source file', () => {
     expect(result.failures).toEqual([]);
   });
 
-  // The contrast that gives the test above its meaning: the same two writes,
-  // overlapped, lose one. This is the corruption the sequential loop prevents.
   it('would lose one of the two if the same writes overlapped', async () => {
     const file = createSourceFile();
     await Promise.all(certainOnly(twoInOneFile).map(entry => file.apply(entry.id)));

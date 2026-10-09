@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The tag collection as the inspector sees it: its own collection, a schema
- * with the hierarchy on it, and a `tags` field on any OTHER collection reading
- * as a reference to it (what puts the real picker behind a former free-text edit).
- */
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
 import { COLLECTION_SOURCES } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
@@ -65,13 +60,11 @@ describeDataset('a tag field is now a reference', () => {
     const field = fieldAt(all('screen'), 'tags');
     const options = resolveIdRefOptionsFor('tag', field.of ?? field);
     expect(options).toHaveLength(all('tag').length);
-    // The label a picker shows is the term, which is what a person searches for.
     expect(options.find(option => option.value === 'tag-001')?.label).toBe('env:outdoor');
   });
 
   it('resolves a clicked reference back to the tag collection', () => {
     expect(resolveIdRef('tag-001', 'tag')).toEqual({ kind: 'tag', id: 'tag-001', label: 'env:outdoor' });
-    // And from the id alone, with no published target kind.
     expect(resolveIdRef('tag-001', undefined)?.kind).toBe('tag');
   });
 });

@@ -6,10 +6,6 @@ import { resolveIdRef } from '../../apps/web/src/ui/domains/app/views/DataInspec
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import { describeDataset } from '../dataset-guard';
 
-// The adapter layer against the real dataset. `buildSchema` is imported from its
-// own module instead of the ds/data barrel on purpose: the barrel pulls in the
-// view-state binding, which touches `window` at module load.
-
 describeDataset('collection sources', () => {
   it('adapts every collection, with real rows behind each one', () => {
     expect(Object.keys(COLLECTION_SOURCES)).toHaveLength(ENTITY_KINDS.length);
@@ -21,9 +17,6 @@ describeDataset('collection sources', () => {
     }
   });
 
-  // Every id is `${prefix}-${digits}`, where the prefix equals the kind name
-  // for every kind except `item-group` (`ig`) and `enumeration` (`enum`). See
-  // `KIND_ID_PREFIXES`.
   it('identifies a row by the id the row itself carries, prefixed with its kind', () => {
     const idPrefixes: Partial<Record<string, string>> = { 'item-group': 'ig', enumeration: 'enum' };
     for (const kind of ENTITY_KINDS) {
@@ -36,8 +29,6 @@ describeDataset('collection sources', () => {
     }
   });
 
-  // Every collection with a write path also has a serializer, so its source
-  // tab shows exactly the text a save would produce.
   it('emits source text for every collection that has a serializer, and the record is in it', () => {
     for (const kind of ENTITY_KINDS) {
       const source = COLLECTION_SOURCES[kind];
@@ -48,8 +39,6 @@ describeDataset('collection sources', () => {
     }
   });
 
-  // A default column set is a list of paths typed by hand; a typo there would
-  // silently open the table with a column that renders nothing.
   it('names only paths the derived schema actually has in every default column set', () => {
     for (const kind of ENTITY_KINDS) {
       const source = COLLECTION_SOURCES[kind];
@@ -60,9 +49,6 @@ describeDataset('collection sources', () => {
     }
   });
 
-  // Editor groups may name a path no row carries, so existence is not the
-  // assertion. Claiming a field twice is: the layout would render it in the
-  // first group and silently drop the other.
   it('claims each grouped path once per collection', () => {
     for (const kind of ENTITY_KINDS) {
       const groups = COLLECTION_SOURCES[kind].config?.groups ?? [];

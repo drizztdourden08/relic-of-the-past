@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * `entityKindFromId` resolves a kind from an id's prefix. `item-group` and
- * `enumeration` mint under `ig-NNN` and `enum-NNN` (see `KIND_ID_PREFIXES`),
- * so the explicit prefix→kind lookup is pinned, plus every kind whose prefix
- * equals its name.
- */
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
 import {
@@ -70,8 +64,6 @@ describeDataset('defaultIdRefDisplay names a column that has no displayField', (
     expect(defaultIdRefDisplay(dungeon.id, 'nowhere')).toBe(dungeon.name);
   });
 
-  // The Recommendations `targetId` column points at a different collection per
-  // row, so it has no single `targetKind`; each id resolves on its own.
   it('resolves each id by its OWN kind with no hint, for a column mixing several kinds', () => {
     const [screen] = all('screen');
     const [connection] = all('connection');

@@ -1,11 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Revert, and the state it reverts. A reviewer may amend a proposal before
- * accepting, so the comparison view keeps an editable copy that must never
- * reach the store (a re-detection would collide with a half-made edit).
- * Revert is not an undo history: it drops the amendment. The amendment is
- * keyed to its finding, so selecting another drops it with no clean-up step.
- */
 import { describe, it, expect } from 'vitest';
 import {
   NO_DRAFT, editedDraft, isAmended, proposalOf, revertedDraft,
