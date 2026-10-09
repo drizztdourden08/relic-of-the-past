@@ -1,10 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The armed overrides an online baseline must still look at. Their completion reports live
- * from the substitution seam, so the plan never polls them; a pickup made while no client
- * was connected fired to nobody, and only the save (the tracker's completed set, which reads
- * an armed giver's real taken-bit) still shows it.
- */
 import { FIRE_REPORTED_CLASSES } from './fire-reported-classes';
 import type { PhysicalPlan } from './physical-plan.type';
 import type { PollEntry } from './location-poller';

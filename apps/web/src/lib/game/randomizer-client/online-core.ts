@@ -1,10 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The real game behind the online client's seam (online-core.type.ts): the gate bits a
- * session sets before it connects, the teardown when it ends, scouting and arming the
- * scouted placement, delivery, polling, what the save keeps of the room (the received index
- * and the room hash), the room's collected checks and DeathLink.
- */
 import { setOnlineBits, AP_DEATH_LINK_BIT, AP_ONLINE_BIT } from '../gate-word-5';
 import { getApRoomHash, setApRoomHash } from '../ap-room-hash';
 import { clearCollectedChecks } from '../tracker/collected-checks';
@@ -28,9 +22,6 @@ import type { OnlineCore } from './online-core.type';
 const onlineBitsFor = (deathLink: boolean): number => AP_ONLINE_BIT | (deathLink ? AP_DEATH_LINK_BIT : 0);
 
 const arm: OnlineCore['arm'] = async (config) => {
-  // The foreign sentinel must be a grant id before the first scouted override arms, and a
-  // death must report from the first frame. disarm() runs on every stop path (a refused
-  // connection included), so a failed start leaves neither bit set.
   setOnlineBits(onlineBitsFor(config.deathLink === true));
 };
 
@@ -43,10 +34,6 @@ const disarm = (): void => {
   setOnlineBits(0);
 };
 
-/**
- * The goal's poll row. The event is read from the ledger, which no detection covers, so the
- * row carries none and the poller answers it from the tracker's own sweep (location-poller.ts).
- */
 const goalEntry: OnlineCore['goalEntry'] = () => {
   const detection = detectionOf(GOAL_CHECK);
   return detection === null
@@ -66,8 +53,6 @@ const defaultOnlineCore: OnlineCore = {
   onSaveSwap,
   goalEntry,
   startPolling: (reporter, entries, isKnownReported) => {
-    // The scouted session armed the fire channel with the same reporter; a reconnect before
-    // the scouts were armed still reports every substitution it sees.
     armFireReporting(reporter);
     startLocationPolling(reporter, entries, isKnownReported);
   },

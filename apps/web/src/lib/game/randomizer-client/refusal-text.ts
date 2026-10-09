@@ -1,9 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * A ConnectionRefused in words: one short sentence per error code the protocol names. The
- * network tab shows the sentence; the log keeps the codes.
- */
-
 const refusalSentence = (code: string, slotName: string): string => {
   switch (code) {
     case 'InvalidSlot':
@@ -21,10 +16,9 @@ const refusalSentence = (code: string, slotName: string): string => {
   }
 };
 
-/** Every distinct sentence for the codes, in order; the server may send none. */
 const refusalText = (codes: readonly string[], slotName: string): string => {
   const sentences = [...new Set(codes.map((code) => refusalSentence(code, slotName)))];
   return sentences.length > 0 ? sentences.join(' ') : 'The server refused the connection.';
 };
 
-export { refusalSentence, refusalText };
+export { refusalText };

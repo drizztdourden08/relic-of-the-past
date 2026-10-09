@@ -1,46 +1,12 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * A read-only connection to another player's slot, the way a tracker makes one: Connect
- * under that slot's name with the Tracker tag and no game, which the server accepts without
- * the slot's game, sends no items to and takes no checks from. NoText spares it the room's
- * chat. Its Connected holds the slot's checked and missing locations, and every RoomUpdate
- * after it the newly checked ones: that is the only way the server shares another slot's
- * progress. A drop redials on the backoff of reconnect.ts; a refusal ends the link.
- */
 import { log } from '../../log-bus';
 import { parseServerPackets, versionOf } from './online-handshake';
 import { openSocketLink } from './online-socket';
 import { createReconnector } from './reconnect';
+import { NO_ITEMS_HANDLING, TRACKER_TAGS } from './tracker-link.constants';
 import type { ApConnectPacket, ApServerPacket } from './ap-protocol.type';
-import type { CreateSocket } from './ap-socket.type';
 import type { SocketLink } from './online-socket';
-
-const TRACKER_TAGS: readonly string[] = ['Tracker', 'NoText'];
-
-interface TrackerLinkConfig {
-  url: string;
-  slot: number;
-  name: string;
-  password?: string;
-  /** This install's client id plus `-tracker-<slot>`. */
-  uuid: string;
-  createSocket: CreateSocket;
-  /** The link's progress or state moved. */
-  onChange(): void;
-}
-
-interface TrackerProgress {
-  checked: number;
-  total: number;
-}
-
-interface TrackerLink {
-  /** Null until the slot was accepted once. */
-  readonly progress: TrackerProgress | null;
-  /** The slot is accepted on the live socket. */
-  readonly linked: boolean;
-  close(): void;
-}
+import type { TrackerLink, TrackerLinkConfig } from './tracker-link.type';
 
 const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
   const { url, slot, name, password, uuid, createSocket, onChange } = config;
@@ -52,7 +18,7 @@ const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
 
   const connectPacket = (packet: Extract<ApServerPacket, { cmd: 'RoomInfo' }>): ApConnectPacket => ({
     cmd: 'Connect', game: '', name, password: password ? password : null, uuid, version: versionOf(packet),
-    items_handling: 0, tags: [...TRACKER_TAGS], slot_data: false,
+    items_handling: NO_ITEMS_HANDLING, tags: [...TRACKER_TAGS], slot_data: false,
   });
 
   const handle = (packet: ApServerPacket): void => {
@@ -105,5 +71,5 @@ const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
   };
 };
 
-export { createTrackerLink, TRACKER_TAGS };
-export type { TrackerLink, TrackerLinkConfig, TrackerProgress };
+export { createTrackerLink };
+export type { TrackerLink, TrackerLinkConfig, TrackerProgress } from './tracker-link.type';

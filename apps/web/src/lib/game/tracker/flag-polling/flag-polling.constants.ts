@@ -1,0 +1,12 @@
+/* @layer bridge-wasm @kind constants */
+const PROGRESS_BYTES = 32;
+const OW_EVENT_BYTES = 0x82;
+const ROOM_WORDS = 0x140;
+const STORY_STATUS_BYTES = 4;
+const SAVE_DUNG_INFO_RAM = 0xf000;
+const BED_STATE_RAM = 0x37c;
+const OUT_OF_BED_STATE = 2;
+
+export {
+  PROGRESS_BYTES, OW_EVENT_BYTES, ROOM_WORDS, STORY_STATUS_BYTES, SAVE_DUNG_INFO_RAM, BED_STATE_RAM, OUT_OF_BED_STATE,
+};

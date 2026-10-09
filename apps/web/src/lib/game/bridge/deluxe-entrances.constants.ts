@@ -1,0 +1,6 @@
+/* @layer bridge-wasm @kind constants */
+const ENTRANCE_MASK_WORDS = 5;
+const ENTRANCES_PER_WORD_SHIFT = 5;
+const ENTRANCE_BIT_MASK = 31;
+
+export { ENTRANCE_MASK_WORDS, ENTRANCES_PER_WORD_SHIFT, ENTRANCE_BIT_MASK };

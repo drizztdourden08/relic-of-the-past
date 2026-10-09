@@ -1,0 +1,19 @@
+/* @layer bridge-wasm @kind barrel */
+export { wasmGetRoomChests } from './wasm-get-room-chests';
+export { wasmGetRoomSpriteSpawns } from './wasm-get-room-sprite-spawns';
+export { wasmGetOverworldSpriteSpawns } from './wasm-get-overworld-sprite-spawns';
+export { wasmGetRoomDoorInfo } from './wasm-get-room-door-info';
+export { wasmSimUnlockDoor } from './wasm-sim-unlock-door';
+export { wasmSimCloseDoor } from './wasm-sim-close-door';
+export { wasmSimKillDrop } from './wasm-sim-kill-drop';
+export { wasmSimFollowerAttach } from './wasm-sim-follower-attach';
+export { wasmSimFollowerRescue } from './wasm-sim-follower-rescue';
+export { wasmSimPushMantle } from './wasm-sim-push-mantle';
+export { wasmSimMarkMapIcons } from './wasm-sim-mark-map-icons';
+export { wasmGetReceiveCount } from './wasm-get-receive-count';
+export { wasmGetReceiveSite } from './wasm-get-receive-site';
+export { wasmGetRoomCellLocks } from './wasm-get-room-cell-locks';
+export { wasmSimOpenCellLock } from './wasm-sim-open-cell-lock';
+export { wasmTriggerOverworldCheck } from './wasm-trigger-overworld-check';
+export { wasmReadFlagSnapshot } from './wasm-read-flag-snapshot';
+export type { SimChestRaw, SimSpriteRaw, SimDoorRaw, SimDoorDirection, SimFlagSnapshot } from './sim-queries.type';

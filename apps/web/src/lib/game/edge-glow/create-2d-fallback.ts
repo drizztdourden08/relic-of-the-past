@@ -1,12 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * 2D passthrough fallback for the Edge Glow renderer.
- *
- * Used when WebGL is unavailable: it just copies the game canvas into the fx
- * canvas each frame and no-ops every effect control, so the game still renders.
- */
-
-import type { EdgeGlowRenderer } from './types';
+import type { EdgeGlowRenderer } from './edge-glow.type';
 
 const create2DFallbackRenderer = (fxCanvas: HTMLCanvasElement): EdgeGlowRenderer | null => {
   const ctx = fxCanvas.getContext('2d');

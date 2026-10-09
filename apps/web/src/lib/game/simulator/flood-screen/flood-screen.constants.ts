@@ -1,0 +1,7 @@
+/* @layer bridge-wasm @kind constants */
+const EDGE_DIAGNOSTIC_ROWS: readonly number[] = [0, 1, 2, 3, 60, 61, 62, 63];
+const EDGE_DIAGNOSTIC_COL_FROM = 14;
+const EDGE_DIAGNOSTIC_COL_TO = 32;
+const SPRITE_REACH_RADIUS = 2;
+
+export { EDGE_DIAGNOSTIC_ROWS, EDGE_DIAGNOSTIC_COL_FROM, EDGE_DIAGNOSTIC_COL_TO, SPRITE_REACH_RADIUS };

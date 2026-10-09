@@ -109,6 +109,590 @@ where it comes out, a crossing into another room shows what that room is. Stair 
 the exit door icon in gold, palace toggle walk boundaries use the secret door in purple,
 and a door to a header travel slot uses the portal.
 
+## game/dialog
+
+- `active-alphabet`: glyph ids to text for the modern font, in the active language's alphabet,
+  read the way the core reads it (the `Language` key of `/zelda3.ini`, `us` by default).
+  Picture glyphs keep their bracketed token name so a row renderer can draw them from the glyph
+  sheet. Extra glyphs a session wrote into the font's spare slots read as their own characters
+  (`extra-glyphs.ts`).
+- `dialog-bridge`: a per frame read of the dialog mirror from the UI bridge's animation frame
+  loop; only a changed frame reaches the store. A closed gate reads as an inactive frame, so the
+  host box stands down the moment the override is refused, and stopping the bridge does the same,
+  or the last frame would stay painted over what comes next. After a load restores the mirror,
+  the box reads closed for one poll so every per message latch lets go, and the next poll reports
+  the restored frame even when it equals the last one.
+- `glyph-atlas`: the active language's dialogue font as one offscreen canvas, drawn from the
+  sheet the core renders from (`WasmGetDialogFont`, 0 the tiles, 1 the width table). Glyph `c`
+  sits at column `c & 15`, row `c >> 4`, in 8 by 16 cells, painted with the live CGRAM palette so
+  a colour line or another box palette shows as the game shows it. Palette entry 0 is the
+  transparent ground and entry 2 a letter's body, which a highlight repaints
+  (`dialog_highlight.c`). Built once per font and palette, keyed by the sheet's heap address and
+  size (both change with the language) and the palette words; more than eight keys means the
+  sheet or palette moved on and the cache is dropped.
+- `parse-dialog-state`: decodes the dialog mirror (`core/game-hooks/dialog_mirror.c`). Header,
+  20 bytes: 0 active; 1 flags (bit 0 bordered, bit 1 story, bit 2 native box withheld); 2 and 3
+  the top left word address; 4 render state; 5 last command; 6 choice index; 7 scroll step; 8
+  and 9 message id; 10 to 12 cells per row; 13 generation; 14 the message's widest row; 15 its
+  most rows; 16 and 17, 18 and 19 the text layer's signed horizontal and vertical scroll. Then
+  3 rows of 40 cells of glyph, x, and width with the highlight span in the high nibble.
+
+## game/edge-glow
+
+A WebGL post process that fills the black bars around the game: a mirror pass reflects game
+pixels into the bars, progressive Gaussian blur passes soften the reflection, and a composite
+blends the sharp reflection near the edge into the blurred one further out, with animated
+Voronoi noise modulating blur, saturation and opacity, plus a pixelation mask and an edge fade.
+Fullscreen quads are drawn as two triangles (six vertices). Without WebGL a 2D fallback copies
+the game canvas each frame and ignores every effect control, so the game still renders. A clean
+frame, when given, is uploaded separately and mirrored with its blue and red channels swapped.
+
+## game/events
+
+The bridge for `window.__onTransitionSettled` (`GameHook_ModuleFrameEnd` in
+`transition_events.c`). The core fires it once per frame on which a module or dungeon
+submodule transition has just finished, gated on the Developer Tools setting; subscribing while
+the setting is off is harmless, since the core never calls in. Kinds, from the dungeon
+submodule that just finished (module 7 is the dungeon, 9 the overworld): `room` is an inter
+room doorway (submodule 2), `quadrant` an intra room scroll (1), `doors` shutters, unlocks and
+cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x10` to `0x13`),
+`entered` the player entering a gameplay module (submodule 0, in or out of a dungeon), and
+`other` any remaining submodule returning to 0.
+
+## game/observations
+
+Every real transition leaving the current screen, taken from the crossings facade so one
+producer serves the navigation widget, the simulator and the recommendations. `usableCrossings`
+applies the span and plausibility filters, so a border bundle the simulator refuses is not
+offered here either. Sources use the vocabulary the connection probes join on. A doorway
+through an outer wall is enumerable, so a dataset without one has a gap worth proposing.
+Outdoors only doors and pits are enumerable: a respawn leads nowhere, and a hole read from
+indoors is where the player lands, not a way out. A screen edge scroll proves presence, never
+absence, so it is graded apart (`flood`) and can back no removal. Presence only: `available` is
+never consulted, since a crossing gated behind an item is still a crossing the dataset should
+carry, and grading it on the loadout would make findings come and go with the inventory.
+
+## game/player-sheet
+
+- `draw-tiles`: everything the sprite studio draws reduces to a rectangular run of tiles taken
+  from the 16 column sheet, looked up through a resolved 16 colour row, optionally flipped. The
+  engine stores one copy of the art and sets flip bits in OAM, so a preview does the same.
+  Palette index 0 is left untouched, not written as transparent black, so overlapping quads
+  compose the way sprites do.
+- `compose-frame.ts`: a pose atlas frame is up to two 16 by 16 halves, each a 2 by 2 block of
+  tiles from its own sheet offset; the halves are not adjacent on the sheet, so they are
+  composed. Quads are drawn in atlas order so the lower half lands over the upper, matching
+  the OAM order the engine writes. The origin is passed in because quad offsets can be negative.
+- `resolve-palette.ts`: builds the 16 colours the PPU would hold for an outfit and glove level,
+  mirroring `PushBank` in `core/game-hooks/player_sprite.c`: entry 0 stays transparent, 1 to 15
+  come from the outfit, and equipped gloves replace one entry. Each entry is packed little
+  endian RGBA ready for ImageData.
+- `flatten-palette`: the override layer is sparse (only edited outfits and the glove pair), so a
+  colour is read from the override first and the original second. A ZSPR export and the boot
+  flatten go through here. An empty override means Revert has nothing to undo; edits return a
+  new override and never touch the original.
+- `load-sheet`: one place picks the container from the extension. A ZSPR may take a stock
+  palette for a sheet that ships tiles only; a pack carries its own palettes. The core only
+  reads ZSPR (the INI names one path and `PlayerSprite_Apply` checks the magic), so a pack is
+  flattened before it is staged for boot or pushed to a running game; a ZSPR passes through
+  untouched.
+- `delete-sprite.ts`: a profile's `linkSprite` is only a file name, so deleting the file alone
+  leaves a dangling selection: the boot logs not found and falls back to the stock sheet, which
+  reads as the setting changing itself. Every profile that selected it is reset, not just the
+  active one, since the library is global. Only the active profile's selection is the one the
+  core is wearing, so the live game returns to stock only when that profile was among them.
+- `sheet-png`: the whole sheet as one PNG (16 by 56 tiles, 128 by 448 pixels), for the tile
+  sheet view and the preview inside a pack. It is drawn in the green outfit, the one the game
+  starts in.
+- `thumbnail.ts`: the front facing standing pose is the sheet's first 2 by 3 tiles, the one pose
+  addressable without the pose atlas, so the library list stays cheap.
+
+## game/save-file
+
+- `hook-save-bytes.ts`: the TS mirror of the hook owned save byte registry. The addresses are
+  allocated in `core/game-hooks/save_bytes.h`, the single source of truth with compile time
+  no overlap checks; this mirror exists so the offline save reader and the headless probes name
+  the same bytes. Nothing may change here alone: `tests/randomizer/hook-save-bytes.keep.test.ts`
+  parses the header and fails when the two disagree. `SAVE_BLOCK_BASE` (`0xF000`) is the base of
+  the battery block the game saves and checksums; `0xF406` to `0xF4FD` is the hook layer's run.
+  Owners: substitution completion bits, one per possession gated giver (`npc_overrides.c`); the
+  wallet ladder rung and one empty rung flag per counted family, explosives, projectiles, meter
+  (`capacity_profile.c`); one bit per palace for a dungeon's falling reward handed over, and the
+  crystal bit the receipt in flight must bank, 0 for none (`prize_grants.c`); throws paid for in
+  a planned pond sequence (`pond_plan.c`); throws taken at each item throwing water, in its own
+  counter order (`wish_pond_plan.c`); the sword level the smiths keep while tempering, as
+  `0x80 | level` (`smith_sword.c`); one byte per canonical shop slot, armed steps already bought
+  (`shop_table.c`); one bit per event the game never records itself
+  (`events/event_ledger.c`); how many multiworld items this file took, 16 bit little endian
+  (`ap_received_index.c`); the FNV-1a hash of the multiworld room's seed name, 32 bit little
+  endian, 0 for no room yet (`ap_room_hash.c`).
+- `sram-slots`: ports the game's file layout and checksum (`SaveGameFile` in `messaging.c`,
+  `Intro_CheckCksum` in `select_file.c`). The 8 KiB battery save holds three `0x500` byte file
+  blocks at `0x000`, `0x500` and `0xA00`, each mirrored `0xF00` later; a block is valid when its
+  `0x280` little endian words sum to `0x5A5A`. The primary copy is used when it checksums, else
+  the backup (the game's own fallback), else the slot is empty or corrupt.
+- `offline-inventory.ts`: rebuilds the 34 byte buffer `WasmGetInventoryState` fills
+  (`state_queries.c`) from the slot block, so live and offline share one parser. Offsets are the
+  vanilla `variables.h` addresses minus `0xF000`: `0x340` to `0x347` bow to bombos, `0x348` to
+  `0x34E` ether to book (`0x34F` is the bottle cursor), `0x350` to `0x357` somaria to moon
+  pearl, `0x359` to `0x35B` sword, shield, armor, `0x35C` to `0x35F` bottles, `0x374` pendants,
+  `0x37A` crystals, `0x36B` heart pieces, `0x36C` health capacity. Keep in step with the C buffer.
+- `offline-player-name.ts`: ports the game's decode (`Text_WritePlayerName`,
+  `Text_FilterPlayerNameCharacters` in `messaging.c`): six 16 bit name screen tile words at block
+  offset `0x3D9`, each folded to a dialogue font code (tiles from `0x76` are digits, shifted down
+  by `0x42`; `0x5F`, `0x60`, `0x61` map to `0x08`, `0x22`, `0x3E`), then looked up in the US
+  alphabet. A bracketed entry is an icon glyph with no plain text form and reads as `?`.
+- `offline-progress.ts`: adapts a slot block to the same three readers the live poller feeds the
+  shared sweep, so both agree on what done means. A save on disk has no loaded room, and the
+  sleep check resolves through the progress indicator fallback. The event ledger sits in the same
+  block, so a save answers it too. `isArmed` routes substitution: a check the placement arms
+  reads the real taken bit instead of a possession proxy.
+- `progress-offsets.ts`: the offline mirror of `WasmGetProgressFlags` (`state_queries.c`), each
+  buffer index mapped to its byte offset inside one file block. By index: 0 progress indicator,
+  1 progress flags, 2 progress indicator 3, 3 swim gear, 4 running gear, 5 catching net, 6
+  reflector, 7 third medallion, 8 magic consumption scale, 9 to 11 the low bytes of room `0x109`,
+  `0x123` and `0x11E` flag words, 12 the sleep step counter (live WRAM only, no offline source;
+  its check falls back to index 0 through `check-facts.ts`), 13 tagalong id, 14 small key count,
+  15 big key word low byte, 16 to 18 the high bytes of those three room words, 19 starting point
+  id, 20 map marker state, 21, 22 and 25 the substitution completion bytes, 23 and 24 the
+  explosives and projectiles tier bytes (the pond's persisted purchase level), 26 the wallet
+  ladder index (0 on a vanilla file), 27 to 29 the explosives, projectiles and meter empty rung
+  flags (1 while a Custom family sits below its grid), 30 throws taken out of a planned pond (0
+  on a file that never met a plan; the completion fact of its prize slots). Rows from hook owned
+  bytes come from `hook-save-bytes.ts`, so the table cannot drift from the registry.
+
+## game/shadow-casting
+
+A WebGL pipeline: a single channel heightmap rasterized on the CPU from shape elements, a shadow
+pass that ray marches through it for the sun and point lights, an optional separable blur that
+softens shadow edges (up to 8 px, skipped in debug mode or below 0.1 px), and a composite that
+outputs the light map, which CSS `mix-blend-mode: multiply` combines with the game. The
+heightmap is rebuilt every frame in viewport local space, matching the NavigationOverlay's
+coordinates: the view origin is subtracted from world coordinates, and light positions are
+offset the same way. The heightmap is one byte per pixel and its width need not be a multiple
+of 4, so row alignment is set to 1. Inside a shape the height is hard edged and full. A shape
+with 32 or more sides is treated as an ellipse, otherwise as a regular polygon with rounded
+corners; freehand shapes use point in polygon tests. A light coloured `sample` takes its colour
+from the game canvas at its position. Lights are capped at 16. With no screen data, or when
+disabled, the canvas is cleared to fully transparent. The default viewport is 512 by 240 SNES
+pixels.
+
+## game/session-dialogue
+
+Owns the per-session pool of pre-rendered receipt lines and pushes them into the core's live
+dialogue memory. The composed blob is the active language's baked bytes verbatim (dictionary and
+every baked line, class templates included) plus one compressed line per session message. It is
+written to the virtual FS as `/session_dialogue.bin` and adopted by `WasmLoadSessionDialogue`
+(session_dialogue.c), which returns the adopted line count, 0 when it refused and kept the baked
+blob. Per-seed text never touches the shared asset blob; the baked class lines at 397 to 401 stay
+the fallback for any grant without a pre-rendered line.
+
+- A line arrives as candidates, fullest first (receipt-line.type.ts). The composer keeps the
+  first one that fits the three visible rows against the language's real glyph widths.
+- The pool is composed again whenever the session renders its lines again (the tracker moved a
+  found or total number). The ids stay put because the count and order do. The swap is safe
+  between frames because the text engine copies a line out of the blob when a message opens,
+  never while it shows. Encoded lines are cached by text, so a refresh encodes only what changed.
+- The pool has two parts. The arrivals come first: a fixed ring of slots for lines appended at
+  runtime (an online receipt). The planned lines follow, and a set replaces them whatever their
+  count, since the ring never changes size and so no set can move an arrival.
+- `baseChunksOf`: a blob from an older bake stops short of the newer templates, so the ones it
+  lacks are appended and the fixed template ids stay correct below the session lines. Without
+  this a session line would sit at an id the core shows as a template line.
+- A Language Studio set compiles under its own id. Its base encoder cannot be recovered here, so
+  the class template lines stay the fallback.
+- `prepareLine` makes the fitting candidate drawable (dialogue-text) and wraps it into line
+  commands. A yes or no line lays its question out above its two answers (choice-message); a
+  detail page opens on a key and scrolls in (page-message).
+- `setSessionReceiptMessages` replaces the planned lines with any count and returns their message
+  ids, or null when kept baked. Pending arrivals keep their ids and text.
+- `appendSessionReceiptMessage` puts one arrival in a free ring slot and returns its id, or null
+  when kept baked or while every slot is still held by a pending delivery. The id goes back
+  through `releaseSessionReceiptMessage` once that delivery completes.
+- `clearSessionDialogue` drops the pool and restores the baked blob (session stop).
+
+### game/session-dialogue/active-dialogue.ts
+
+Reads the asset blob and INI back from the running module's virtual FS and extracts, at the byte
+level, what the composer needs: the active language code (INI `Language`, default `us`, the same
+read the core does at boot), its packed dictionary, its per-line compressed chunks in message id
+order, and its per-glyph pixel widths indexed by alphabet position. Reusing bytes means the
+vanilla lines are never encoded again, so the composed blob carries them bit identical to the
+bake. `dialogueIndexOf` is ZeldaSetLanguage's lookup in TS, default index 0.
+
+### game/session-dialogue/arrival-ring
+
+The received-item lines of a session: a fixed ring of `ARRIVAL_SLOTS` (32) slots at the front of
+the pool. A slot is taken when an online receipt reaches the front of the delivery queue and
+handed back once the queue reports that delivery complete, so its id is reused by a later
+arrival. The pool never grows past the ring however long the session runs; only the delivery in
+flight holds a slot. A free slot holds an empty line, never shown because no delivery holds its
+id. `next` is where the search for a free slot starts, so a released id is the last one reused.
+`takeSlot` returns null while every slot is held. A released slot keeps its line until a later
+arrival takes it.
+
+### game/session-dialogue/choice-message.ts
+
+A yes or no question laid out the way the game's own two answer prompts are. The box shows three
+rows and the choose command parks the cursor on the last two (messaging.c
+RenderText_Draw_Choose2LowOr3 draws a fixed arrow over dialogue rows 1 and 2), and the engine
+never waits on its own. So the answers leave one row for the question (`INLINE_QUESTION_ROWS`),
+and anything longer is paged, never scrolled away: the line fills the box, the player clears it
+with a key, then the two answers scroll in under the line's short prompt. That is the shape of
+the game's own long prompt at the mysterious pond. Paging is the normal case: the composer keeps
+the fullest wording the box can page and lays a question inline only when that wording is a
+single row. The answers are indented the way the game's own two answer lines are. On a paged
+question the rows it does not fill are opened empty, so the box holds three rows before the
+scrolls line up, as the game's long prompt opens its third row. A question past three rows pages
+at every break so none of it scrolls unread. The row above the answers is the line's own prompt
+when one fits, else the last row of the question.
+
+### game/session-dialogue/dialogue-text.ts
+
+Any text as a message box can draw it; every composer runs its words through this. Each
+character resolves to the first rule that applies:
+
+1. Highlight markup passes through untouched (highlight-markup.ts).
+2. A character the language's alphabet draws stays itself.
+3. A character with an extra glyph (dialogue-charset.ts) becomes its slot token.
+4. Typographic forms become their plain one: dashes a hyphen, curly quotes straight ones, the
+   ellipsis three dots, any space a space.
+5. A compatibility or accented form becomes its base (a full width letter the letter, an
+   accented letter the plain one, a ligature its letters). A Latin letter with no such base takes
+   its usual spelling (`LETTERS`: ß to ss, æ to ae, ł to l).
+6. With no slot left for it, a bracket becomes a parenthesis, a backslash a slash and a semicolon
+   a comma (`NEAREST`).
+7. A control or joining character draws nothing.
+8. Anything else (another script, an emoji) is a question mark, which every alphabet draws.
+
+Runs of spaces fold into one and the ends are trimmed. `MAX_DEPTH` (2) bounds replacement
+chains: a replacement's own characters resolve once more, no further.
+
+### game/session-dialogue/extra-glyphs
+
+Hands the extra glyphs (extra-glyphs.data.ts) to the core, which writes them into the active
+font's spare slots (core/game-hooks/dialog_extra_glyphs.c). One table entry per glyph,
+`ENTRY_BYTES` (34) long: its slot, its width, then its two tiles from `TILE_OFFSET` (2). The core
+keeps the copy it built while the table stays the same, so loading on every compose costs a
+compare. A core without the export draws no extra glyph and the composer falls back for those
+characters. `loadExtraGlyphs` returns true when the core took every one. `sessionCharset` is the
+charset a session line is composed in: the alphabet and font widths plus the extra glyphs the
+core took (none from a core without them). `clearExtraGlyphs` gives the font its own glyphs back
+at session stop. The slots the core took are kept too (`loadedExtraGlyphs`), for the modern face
+of the enhanced box, which looks a glyph code up as text (game/dialog/active-alphabet).
+
+### game/session-dialogue/highlight-bytes
+
+Encodes a prepared line that carries highlight markup or extra glyph tokens. The text between
+them is compressed on its own, so no dictionary word reaches across one, and each becomes the
+core's control bytes:
+
+- A highlight marker (core/game-hooks/dialog_highlight.c): one byte 0x80 plus span in the US
+  encoding, 0x87 then 0x50 plus span in the European one; span 0 closes, 1 is primary, 2 is
+  secondary.
+- An extra glyph (dialog_extra_glyphs.c): 0x83 then its slot in the US encoding, 0x87 then its
+  slot in the European one.
+
+A line with neither encodes exactly as the plain encoder makes it.
+
+### game/session-dialogue/page-message.ts
+
+A detail page laid out the way the game moves a long line on to its next box. The core shows a
+detail page right after the receipt's own line, in the same box (receipt_pages.c joins the two).
+The engine has no command that clears the box, so the page opens with a key wait, then each row
+scrolls in from the bottom. Three scrolls push every row of the first page away, so a page
+shorter than the box scrolls in empty rows after its own and never shares the box with the page
+before it. A page past three rows waits for a key again before each further row, as a long line
+does. The page keeps the fullest wording that fits the box on its own.
+
+### game/session-dialogue/wrap-message
+
+Message text layout. A line already made drawable is word wrapped against the real per-glyph
+pixel widths into the box's line commands: `[2]` and `[3]` for rows two and three,
+`[Waitkey][Scroll]` for every row past the visible three. The engine renders variable width
+glyphs and never wraps on its own. The alphabet and widths are a charset's, so an extra glyph's
+token measures by its slot.
+
+- A row past the third scrolls the top row off the box, and the engine never waits on its own, so
+  each of those breaks carries a `[Waitkey]` first. Without it a long line pushes its own opening
+  away before it can be read, which is what the game's own long lines pause for.
+- Highlight markup passes through untouched and measures zero pixels: it becomes control bytes
+  the engine draws nothing for.
+- `LINE_WIDTH_PX` (164) is the usable pixels per row minus a safety margin: the engine draws 21
+  tiles of 8 px per row (messaging.c RenderText_Refresh) and advances the pen by each glyph's own
+  width (VWF_RenderSingle), never wrapping. `VISIBLE_ROWS` (3) is the rows the box shows at once.
+  `FALLBACK_WIDTH_PX` (8) is assumed for a character missing from the width table.
+- A word with no letter or digit (an arrow or another lone symbol) binds to the words on both
+  sides, so a range such as `0 > 99` stays on one row and no row ends or starts with the arrow.
+- `fitReceiptLine` picks the fullest candidate that fits the visible rows, or the last one when
+  none does.
+
+## game/tracker/bridge
+
+Connects the core's item and check notifications to the tracker. It installs
+`window.__onItemReceived`, polls the inventory state every 2 seconds (`POLL_INTERVAL_MS`), and
+polls room, overworld and progress flags for check completion beside it.
+
+- A delivered item reaches listeners as its dataset id plus the native index the game reported.
+  The name is left out on purpose: a listener that wants one looks it up from the id, so two
+  consumers can never disagree about what an item is called.
+- The inventory change is logged by name, so a reader can recognise what the player picked up.
+- Progression events are checks, never inventory: they arrive with the rest of the completed set
+  from the flag poll, which reads the same progress bytes.
+- Room flags are polled alongside the inventory even when the inventory read failed; a read that
+  throws means the module may not be ready yet. A zero inventory pointer skips both.
+- The item callback defers its poll to the next microtask to avoid calling back into WASM while
+  the callback is still on the WASM stack (it fires through EM_ASM inside, for example,
+  WasmCheatGiveItem).
+- A fresh game start resets the unknown items, and the first poll is forced so the tracker shows
+  the current game state at once.
+- `pollEventStatus` reads the live side of the reversible events beside the completed set.
+
+## game/tracker/check-facts
+
+Per-record native fact tests: whether a check record's own `gameId` reads as complete from the
+live WASM heap. Each record is tested on its own fields, so a fact shared by two records (a boss
+and its prize flip the same room bit) resolves both; no reverse lookup that could only hand back
+one winner. The one fact with no record-owned address is the "out of bed" read (a direct WRAM
+offset), which is what the facade's reverse index stays for.
+
+- `CHEST_OPEN_MASKS` are the room-state slots for the bits a chest-open word can carry.
+- `BED_STATE_BUFFER_INDEX` (12) is the progress buffer index that carries
+  player_sleep_in_bed_state.
+- `isRoomFactMet` checks a chest slot or a direct room mask bit, whichever the record carries. A
+  gift giver's own room bit (`roomFlag`) is read through the room reader, so the room the player
+  stands in answers from its live bits: the save block only gets them when the room is left.
+- `isOverworldFactMet` reads an overworld event bit (standing items, dig spots, events).
+- `isProgressFactMet` reads an NPC progress buffer bit or an event threshold.
+- `isEventFactMet` reads a ledger bit (core/game-hooks/events/event_ids.h): an event the game
+  never records for itself.
+- `isOutOfBedFallbackMet`: a save loaded past the first gift is out of bed even if the bed state
+  byte no longer says so, so the progress indicator (buffer index 0) answers too. Only for the
+  record owning `BED_STATE_BUFFER_INDEX`.
+- `outOfBedCheckId` resolves the out of bed check from the raw native fact, the one legitimate use
+  of the reverse index left in polling.
+
+## game/tracker/collected-checks
+
+Checks the multiworld room holds as done while the save does not: a location collected for this
+slot by `!collect`, or checked in another session of the same slot. The tracker shows them
+completed, as the room does. The game's own completion flags are never written: this is the
+app's view alone, and it goes with the online session. `addCollectedChecks` returns true when any
+id was new. `withCollectedChecks` adds every collected check to the completed set the save shows.
+
+## game/tracker/completed-checks-core.ts
+
+The per-check completion sweep, shared by the live poller (flag-polling) and the offline battery
+save reader (save-file/offline-progress.ts). Every check record is tested against whichever of
+its own gameId fields describe a detection mode. A null reader stands for a source that is not
+available (a gated live query, or the offline path's missing live WRAM byte) and skips its modes
+instead of reading zeros, since zero can satisfy an equality threshold, so a made up read is not a
+safe "no".
+
+- `readEventByte` reads the event ledger bytes (WasmGetEventBytes, or the battery file's own
+  copy). `inventory` is the items held, for the derived pass's held-item events; null skips them.
+- A physically armed substitution row never completes off its record's possession proxy, because
+  the vanilla item can arrive from anywhere in a shuffled seed. The substitution seam persists the
+  real taken bit instead (progress bytes 21 and 22). Normal profiles never arm, so they keep the
+  proxy.
+- Armed rows answer from their own taken bit alone in the derived pass too: a fallback that reads
+  the vanilla item would tick them the moment that item turned up anywhere on the seed.
+
+## game/tracker/derived-checks.ts
+
+The derived pass of the completion sweep: the records that are true because of other records. A
+combined event names the records it is made of (`derived`), a dungeon-wide event names a dungeon
+and the kinds it sums (`derivedDungeon`), and a check the game keeps no flag for answers from a
+vanilla `fallback`. Records are visited in dataset order, so a combined event only names records
+that come before it; one pass is enough. `armed` lists the rows a seed has armed: their own taken
+bit is the only answer, never a fallback.
+
+## game/tracker/event-status
+
+The live side of the reversible events: for every record with a `now` condition, whether it holds
+this poll. Pure over a presence snapshot, the same language the simulator reads NPC presence
+with, so a status is one declarative condition on the record and nothing else. It never touches
+the completed set: an event that happened stays ticked, and this only says whether it is true
+right now.
+
+## game/tracker/flag-polling
+
+Reads WASM memory to find which checks are completed. Detection is driven by each check record's
+own `gameId`, never by a name-keyed table: this module only builds the live heap readers (with
+the loaded room's live bits folded into its room word) and hands them to the shared sweep
+(completed-checks-core), which the offline battery save reader feeds with file-backed readers of
+the same shape.
+
+- The event ledger and the story status bytes are read guarded: a core built before them has no
+  export to call.
+- The bed state is also read directly, for the window before the progress buffer is filled:
+  save_dung_info sits at g_ram + 0xF000 (`SAVE_DUNG_INFO_RAM`), so the base comes off the room
+  pointer, and the bed state byte is at 0x37C (`BED_STATE_RAM`).
+- What the online room holds as done shows as done too (collected-checks).
+- `PROGRESS_BYTES`, `OW_EVENT_BYTES` and `ROOM_WORDS` are how many progress bytes, overworld event
+  bytes and room words the exports expose.
+
+## game/tracker/inventory
+
+Reads the 39 byte buffer from WasmGetInventoryState and turns it into a set of item ids. The set
+is keyed by dataset id, never by display name. Names are not unique (two records share several
+of them), so a name-keyed owned set loses records by construction; ids also mean the compiler
+rejects a display string mistaken for an owned item. The slot to id mapping lives in item-ids.
+
+- `bigKeys` is one bit per dungeon, the core's own big key word. `bombCapacity` is how many bombs
+  the bag holds, zero only on a file that starts without a bag. `bombsEverHeld` is true once a
+  bomb has ever been held (the ledger's bit). `swordAtSmiths` is the sword the smiths keep while
+  `sword` reads 255: 0x80 or level, or 0 (smith_sword.c).
+- Bow slot values 1 and 2 are one rung, 3 and up is two; the byte is not a rung count here.
+- While the smiths keep the sword to temper it (sprite_main.c, the tempering payment) the game
+  writes level 255. Read as a level that held every sword up to Golden, which completed the
+  Pyramid Fairy's Golden Sword row the moment the smith was paid. The sword is still the
+  player's, since it comes back at the pickup, so a row that asks for it must not drop out and
+  come back. A payment made before the level was recorded (`SWORD_KEPT_UNRECORDED`) means a sword
+  went over at an unknown level.
+- Bombs are spent and found again all the time. Before the first one, a rule that asks for bombs
+  is not met; after it, an empty count is a refill away, so it stays met as long as the player can
+  carry any. The count alone would flip a dozen rows at every last bomb.
+- The mirror counts at slot value 2; value 1 is the scroll before the upgrade.
+- The top flute value replaces the plain one instead of stacking on it.
+
+## game/tracker/item-ids
+
+Raw inventory slot values to dataset item ids, never display names. Two sources only: the game's
+`Link_ReceiveItem` index resolved through the facade (the dataset owns the join), and an explicit
+id for items with no receive index (pendants and crystals are SRAM bits, not pickups). Resolution
+is lazy (per poll) because a published dataset bundle can replace the records.
+
+- `LADDERS` are progression ladders as native receive indices, weakest rung first. The raw slot
+  byte counts rungs held, and every rung below is held too (a top tier sword still answers "any
+  sword"). Bow slot values 1 and 2 are the plain bow, 3 and up adds the silver one on top.
+- `BY_VALUE` covers slots where the raw byte selects one item instead of climbing a ladder. A
+  bottle's value is its contents; the slot being non-empty is handled separately (`BOTTLE_SLOT`,
+  an empty bottle).
+- `SIMPLE` covers plain held or not held bytes. No record expresses bomb capacity (the dataset
+  only has pickups), so the standard bomb pickup stands in for "carries bombs". The same gap
+  leaves `ITEM_TO_TOKEN`'s bomb key unmatched.
+- `MIRROR` is held at slot value 2.
+- `PENDANT_BITS` and `CRYSTAL_BITS` map SRAM bits to ids for items never granted through
+  `Link_ReceiveItem`. The pendants point at item-056, 057 and 058, the trio the Pendants group and
+  the sage's `presence` and `requirements` name. Bit order follows the core's own
+  kDungeonCrystalPendantBit (zelda_rtl.c) read against the receive id each boss grants
+  (kBossFinishedFallingItem to kFallingItem_Type): 0x04 and 0x37 green, 0x02 and 0x39 blue, 0x01
+  and 0x38 red.
+- `BIG_KEY_BITS`: the core keys the word by dungeon index (kUpperBitmasks: the highest bit is
+  index 0), and the castle's key can land under the sewers' index or the castle's own, so both
+  bits name it.
+- `addLadder` adds every rung up to `held`, so a tier byte yields its whole progression.
+
+## game/tracker/normal-placement-ref.ts
+
+Normal's placement, built once for the session. Nothing about it varies while the app runs: every
+location holds what the unmodified game puts there, and no rng is drawn. Two tracker surfaces and
+the simulator's picker ask for it, so it is built on the first ask and kept.
+
+## game/tracker/record-row-inputs
+
+What the file's own settings hand the rows that are read from the dataset. Two shapes, both off
+the placement, so the plain game and a seed are set the same way:
+
+- Overrides, for the three rows whose requirement is a setting: what the pedestal asks for, and
+  the medallion each of the two gated entrances wants. Their rules cannot be written into the
+  dataset because the answer moves with the profile. Any three dungeons has no single requirement
+  to name, so the pendant count stands in for it. The medallion entrance's rule is human, armed,
+  and carrying what this seed asks for.
+- Grants, for the two tracker switches. A door whose key is held is open, and a room you carry a
+  light into is lit, so the switches hand the reader the item instead of rewriting the rule. The
+  seed's own accepted lights come in this way too: the records name the Lamp, and a player seeing
+  by a Fire Rod on a seed that counts one reads as seeing.
+
+`LAMP` is the one item every unlit room record names, so granting it is what "can see" means to a
+record. `LIGHT_WORLD_CLEARED` is the combined event "All Light World dungeons cleared"
+(records/checks/events/world.ts, n 283). `bigKeyItemIds` is every Big Key the dataset knows.
+Nothing here comes from a second rule table; before this the same four answers came out of a
+resolver that also carried a copy of every location rule.
+
+## game/tracker/tracker-count.ts
+
+Whether a tracker row counts toward the run's check total. The roster also lists rows that are
+not checks: the event records (beating Agahnim, the frog, the smiths among them) and the status
+only rows. Those stay in the list, but a total is its item locations only, which is what an
+Archipelago room counts for the slot.
+
+## game/tracker/tracker-roster.ts
+
+The rows the app lists for a run, built once and read by every surface that lists them: the
+Checks widget, the randomizer page's spoiler tab and the cheat console's Checks tab. On a seed
+the roster is the seed's own: every record the placement names, plus a virtual row for each
+location no record covers (shelves, chiefly), plus the event rows. No event is a location of a
+seed, so the two lists never share a row. Without a placement it is the dataset's own list,
+which is where the fairy rungs and the intro's story beats live: real rows that were never
+locations of any world.
+
+## game/tracker/tracker-statuses
+
+Every check's status, from one engine, for the plain game and for a seed alike. Which reading
+answers a row depends on the row, never on the mode:
+
+- A row the world holds a location for is answered by the generator, over the placement handed
+  in. Normal's placement is the one where nothing moved (normal-placement.ts), so the engine
+  cannot tell the two modes apart.
+- A row it holds no location for is answered from the dataset's own record, against the place
+  the row happens at. That is every event, because an event is a thing that happened and no
+  location of any world, and the fairy rungs while no pond sells them. On a seed those rungs are
+  locations, so the same rule sends them to the engine instead.
+
+The place comes from the engine too: its reachable regions, named as dataset screens
+(logic/regions/reachable-screens.ts), so there is one graph. `fired` holds locations the session
+recorded as taken where no check record could see it. `smallKeyDoors` off reads every small key
+door as open (world/small-keys.ts). `trackerReachableScreens` gives the screens the engine says
+the player can stand on.
+
+## game/webgl/gl-helpers
+
+Shared WebGL helpers for every fullscreen post process pipeline (shadow casting, edge glow).
+Filter and draw mode are parameters so each pipeline supplies only what differs; `label`
+prefixes compile and link errors.
+
+## game/instantiate-wasm.ts
+
+The WASM instantiation override that avoids `WebAssembly.instantiateStreaming`. That path
+crashes the Electron renderer (0xC0000005) while compiling this module, which leaves the game
+black the moment it starts. It was seen both over http (dev) and file (the built app) on recent
+Chromium, so the non-streaming `WebAssembly.instantiate` is always used. The background warmup
+usually has the module fetched and compiled already: when a cached compiled module exists it is
+instantiated straight from it, skipping fetch and compile. Otherwise the bytes are fetched (also
+cached by the warmup) and compiled here.
+
+## game/wasm-bridge
+
+The singleton core holding the Emscripten module reference and game state, plus a re-export hub
+for the per-concern bridge facades (bridge). Every other game module imports from here to reach
+the running module. The bridge modules import `getModule` and `getGameState` from here and only
+call them at runtime, so the re-export cycle is safe.
+
+- `UI_STATE_BUFFER_SIZE` (133) is the size of the UI state buffer exported from C; the last byte
+  in use is 132 (core/game-hooks/ui_state.c).
+- `subscribeGameState` replays the current state to a new subscriber, deferred one microtask so
+  the caller's unsubscribe handle is assigned before a listener that calls it runs. Without the
+  replay, a subscriber that starts waiting after the status already became `running` never sees
+  the transition and hangs: useAutoTest and useSimRun call waitForRunning only once
+  loadProfileForGame has resolved, which itself sets the status to `running`.
+- `setInput` pushes a SNES input bitmask to the running module, called by the InputManager each
+  frame. It stays self-contained (no import from bridge/wasm-call) so wasm-bridge has no static
+  edge into wasm-call. That edge completed a two-way cycle which, combined with lifecycle's
+  dynamic import of this module, could be evaluated as a second instance under the Vite dev
+  server and desync the startGame re-entry guard.
+- The raw host menu commands are re-exported here, but app code goes through game/host-menu,
+  which is where the takeover's wanted state and the equipped item re-assert live.
+
+## game/wasm-warmup
+
+Background WASM warmup in three stages: inject the Emscripten glue (defines `window.Zelda3`;
+built with MODULARIZE, so nothing runs until called), fetch the .wasm bytes (streamed over http,
+one IPC blob over file), then `WebAssembly.compile` into a cached module that startGame reuses
+(instantiate-wasm). `warmWasmCore` runs once and reports progress. Over file the bytes come as one
+IPC blob with no progress; over http with no length header the progress is indeterminate.
+
 ## hub/hub-session.ts
 
 The Electron adapter keeps the device token in the OS keychain through IPC. A host with no

@@ -1,0 +1,7 @@
+/* @layer bridge-wasm @kind constants */
+const QUIET_RECEIPT_GRANTED = 1;
+const QUIET_RECEIPT_NOT_QUIET = 2;
+const RECEIPT_REFUSED = 0;
+const HEART_PIECE_ID = 0x17;
+
+export { QUIET_RECEIPT_GRANTED, QUIET_RECEIPT_NOT_QUIET, RECEIPT_REFUSED, HEART_PIECE_ID };

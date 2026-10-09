@@ -1,24 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * DeathLink turned on and off for the session: the core's gate bit and the room link
- * (death-link.ts) together. The profile's flag switches it on at start; the slot data the room
- * hands over on Connected has the last word (slot-death-link.ts).
- */
 import { createDeathLink } from './death-link';
-import type { ApBouncedPacket } from './ap-protocol.type';
-import type { DeathLink, DeathLinkDeps } from './death-link';
-import type { OnlineCore } from './online-core.type';
-
-interface DeathLinkSwitchDeps extends DeathLinkDeps {
-  core: Pick<OnlineCore, 'killLink' | 'onLinkDied' | 'setDeathLink'>;
-}
-
-interface DeathLinkSwitch {
-  set(enabled: boolean): void;
-  handleBounced(packet: ApBouncedPacket): void;
-  /** Session end: the link goes, the gate bit goes with the core's own disarm. */
-  dispose(): void;
-}
+import type { DeathLink } from './death-link.type';
+import type { DeathLinkSwitch, DeathLinkSwitchDeps } from './death-link-switch.type';
 
 const createDeathLinkSwitch = (deps: DeathLinkSwitchDeps): DeathLinkSwitch => {
   const { core } = deps;
@@ -39,4 +22,4 @@ const createDeathLinkSwitch = (deps: DeathLinkSwitchDeps): DeathLinkSwitch => {
 };
 
 export { createDeathLinkSwitch };
-export type { DeathLinkSwitch };
+export type { DeathLinkSwitch } from './death-link-switch.type';

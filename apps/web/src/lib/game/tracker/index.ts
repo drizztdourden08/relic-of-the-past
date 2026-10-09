@@ -1,4 +1,4 @@
-/* @layer bridge-wasm @kind logic */
+/* @layer bridge-wasm @kind barrel */
 export type { RawInventoryState } from './inventory';
 export { parseInventoryBuffer, inventoryToItemSet } from './inventory';
 export type { UnknownItemEntry } from './bridge';

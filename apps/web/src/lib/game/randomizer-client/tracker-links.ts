@@ -1,34 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * One tracker link (tracker-link.ts) per other player on this slot's team, opened once the
- * main connection's roster settled (network-roster.ts) and closed with that connection.
- * Off when the profile says not to track the others, since each is a socket of its own.
- */
 import { createTrackerLink } from './tracker-link';
-import type { CreateSocket } from './ap-socket.type';
-import type { OnlineRoom } from './online-room';
-import type { OnlineSessionConfig } from './online-session-config.type';
-import type { TrackerLink, TrackerProgress } from './tracker-link';
-
-interface TrackerLinksDeps {
-  config: OnlineSessionConfig;
-  room: OnlineRoom;
-  createSocket: CreateSocket;
-  /** The URL the main connection opened on; null before it did. */
-  url(): string | null;
-  /** This install's client id. */
-  uuid(): string;
-  onChange(): void;
-}
-
-interface TrackerLinks {
-  /** A link for every other player not linked yet. */
-  open(): void;
-  closeAll(): void;
-  progressOf(slot: number): TrackerProgress | null;
-  isLinked(slot: number): boolean;
-  readonly size: number;
-}
+import type { TrackerLink } from './tracker-link';
+import type { TrackerLinks, TrackerLinksDeps } from './tracker-links.type';
 
 const createTrackerLinks = (deps: TrackerLinksDeps): TrackerLinks => {
   const { config, room, createSocket, url, uuid, onChange } = deps;
@@ -58,4 +31,4 @@ const createTrackerLinks = (deps: TrackerLinksDeps): TrackerLinks => {
 };
 
 export { createTrackerLinks };
-export type { TrackerLinks, TrackerLinksDeps };
+export type { TrackerLinks, TrackerLinksDeps } from './tracker-links.type';

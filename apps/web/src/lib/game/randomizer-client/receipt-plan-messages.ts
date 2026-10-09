@@ -1,26 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Plan receipt texts: renders one contextual receipt line per planned grant
- * of a physical plan (chest override, scripted-giver override, queue
- * delivery) from the frozen placement and the seed's found/total numbers,
- * and records the baked class-template id each grant falls back to when the
- * session dialogue cannot be composed. Vanilla-locked locations keep their
- * native message and get neither. The capacity lines follow: a progressive
- * placement appends one line per planned rung per Custom family
- * (capacity-rung-lines.ts), a fixed-jump placement one line per (jump,
- * starting rung) (capacity-fixed-lines.ts), so the core can show the climb a
- * pickup actually applied. The pond's own three situations follow last (the
- * price of a toss, a throw that won nothing, an emptied pond,
- * pond-lines.ts): one line per distinct price and per distinct refund of its
- * plan, so a toss announces its real amount instead of a native line that
- * names amounts no plan charges. The award line comes in two, one for a water
- * that still holds a prize and one for the throw that took the last, so a
- * player always knows whether the pond is worth returning to. The wish
- * ponds' two host lines follow (wish-pond-lines.ts), and the lines every
- * pond speaks for a rung that asks for something close the pool
- * (pond-demand-messages.ts).
- */
-
 import { locationDisplayName } from '@shared/randomizer/world/display-names/location-display-name';
 import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
 import { RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
@@ -34,88 +12,31 @@ import { isForeignItem } from '@shared/randomizer/archipelago/foreign-item';
 import { wishPondLinesOf } from './wish-pond-lines';
 import { foreignItemLine } from './foreign-item-line';
 import { appendPondDemandLines } from './pond-demand-messages';
+import { NO_POND_LINES } from './receipt-plan-messages.constants';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { CapacityFamilyId } from '@shared/randomizer/world/capacity';
 import type { ReceiptCountOf } from '@shared/randomizer/receipt-text/receipt-counts';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
-import type { PlanPondDemandLines } from './pond-demand-messages';
 import type { ForeignItemOf } from './foreign-item-line';
+import type { PlanFixedLine, PlanPondLines, PlanReceiptTexts } from './receipt-plan-messages.type';
 
-/** One fixed-jump capacity line: the entry the core selects by the live rung. */
-interface PlanFixedLine {
-  family: CapacityFamilyId;
-  fromRung: number;
-  jump: number;
-  /** Index into |lines|. */
-  index: number;
-}
-
-/** Where the pond's own lines landed in the pool, which the arming looks up by amount. */
-interface PlanPondLines {
-  /** throw price → index into |lines|. */
-  byPrice: ReadonlyMap<number, number>;
-  /** throw refund → index into |lines|. */
-  byRefund: ReadonlyMap<number, number>;
-  /** Index of the award line for a water that still holds a prize; -1 for a native pond. */
-  awardMore: number;
-  /** Index of the award line for the throw that took the last prize; -1 for a native pond. */
-  awardLast: number;
-  /** Index of the emptied-pond line, or -1 when the pond keeps its native loop. */
-  closed: number;
-}
-
-/** Where the wish ponds' two host lines landed in the pool; -1 when neither water is planned. */
-interface PlanWishPondLines {
-  award: number;
-  closed: number;
-}
-
-interface PlanReceiptTexts {
-  /** The rendered lines, in allocation order. */
-  lines: ReceiptLine[];
-  /** location name → index into |lines|. */
-  indexByLocation: Map<string, number>;
-  /** location name → baked class-template id (the compose-failure fallback). */
-  fallbackByLocation: Map<string, number>;
-  /** family → indices into |lines| of its rung lines, in plan order (progressive placements only). */
-  rungIndexByFamily: Map<CapacityFamilyId, readonly number[]>;
-  /** The (jump, starting rung) lines (fixed-jump placements only). */
-  fixedLines: PlanFixedLine[];
-  /** The pond's price / consolation / closing lines (non-legacy ponds only). */
-  pondLines: PlanPondLines;
-  wishPondLines: PlanWishPondLines;
-  /** Each asking rung's ask, refuse and award lines, by the core's (pond, rung) key. */
-  pondDemandLines: PlanPondDemandLines;
-}
-
-/** The empty pond allocation: a legacy pond speaks with its own native lines. */
-const NO_POND_LINES: PlanPondLines = {
-  byPrice: new Map(), byRefund: new Map(), awardMore: -1, awardLast: -1, closed: -1,
-};
-
-/**
- * Append the pond's lines and say where each landed. The plan is re-derived
- * from the setting and the placement's own seed, exactly as the session's
- * arming does, so the prices these lines quote are the prices charged.
- */
 const appendPondLines = (placement: Placement, lines: ReceiptLine[]): PlanPondLines => {
-  // The lines the core speaks belong to the one pond it arms, the capacity one.
-  const setting = placement.stats.ponds.capacity;
-  if (setting.mode === 'capacity') return NO_POND_LINES;
-  const { prices, refunds, lines: pondLines } = pondLinesOf(pondPlanOf(setting));
+  const coreArmedPond = placement.stats.ponds.capacity;
+  if (coreArmedPond.mode === 'capacity') return NO_POND_LINES;
+  const { prices, refunds, lines: pondLines } = pondLinesOf(pondPlanOf(coreArmedPond));
   const base = lines.length;
+  const end = base + pondLines.length;
   lines.push(...pondLines);
   return {
     byPrice: new Map(prices.map((price, offset) => [price, base + offset])),
     byRefund: new Map(refunds.map((refund, offset) => [refund, base + prices.length + offset])),
-    awardMore: base + pondLines.length - 3,
-    awardLast: base + pondLines.length - 2,
-    closed: base + pondLines.length - 1,
+    awardMore: end - 3,
+    awardLast: end - 2,
+    closed: end - 1,
   };
 };
 
-/** The baked class line matching this grant, mirroring the core's own routing. */
 const fallbackClassId = (entry: PlanEntry): number => {
   if (entry.planClass === 'deliver') return RANDOMIZER_RECEIPT_MSG.delivered;
   const itemClass = classifyReceiptItem(entry.item);
@@ -124,7 +45,6 @@ const fallbackClassId = (entry: PlanEntry): number => {
   return RANDOMIZER_RECEIPT_MSG.generic;
 };
 
-/** One planned grant's line; another player's item says what it was and who it went to. */
 const entryLine = (entry: PlanEntry, countOf: ReceiptCountOf, foreignItemOf?: ForeignItemOf): ReceiptLine =>
   (isForeignItem(entry.item) ? foreignItemLine(foreignItemOf?.(entry.location)) : renderReceiptMessage({
     kind: entry.planClass === 'deliver' ? 'delivered' : 'physical',
@@ -171,4 +91,6 @@ const buildPlanReceiptTexts = (
 };
 
 export { buildPlanReceiptTexts };
-export type { PlanFixedLine, PlanPondLines, PlanReceiptTexts, PlanWishPondLines };
+export type {
+  PlanFixedLine, PlanPondLines, PlanReceiptTexts, PlanWishPondLines,
+} from './receipt-plan-messages.type';

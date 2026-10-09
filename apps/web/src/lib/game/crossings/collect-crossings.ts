@@ -22,11 +22,6 @@ const buildPass = (scope: CrossingScope): CrossingPass => {
   };
 };
 
-/**
- * Border bundles for the pass. A caller holding the widget's own connections
- * passes them, which is the only way intra-room scrolls arrive, because deriving
- * them needs the room's scroll boundary, which the flood result does not carry.
- */
 const connectionsFor = (scope: CrossingScope): readonly ConnectionInfo[] => {
   if (scope.connections) return scope.connections;
   return scope.flood ? getConnections(scope.flood) : [];
@@ -40,8 +35,7 @@ const indoorCrossings = (pass: CrossingPass): ScreenCrossing[] => [
   ...exitTableCrossing(pass),
 ];
 
-/** One record per crossing id; a door read from two tables is still one door. */
-const byId = (crossings: readonly ScreenCrossing[]): ScreenCrossing[] => {
+const uniqueById = (crossings: readonly ScreenCrossing[]): ScreenCrossing[] => {
   const seen = new Map<string, ScreenCrossing>();
   for (const crossing of crossings) {
     if (!seen.has(crossing.id)) seen.set(crossing.id, crossing);
@@ -49,11 +43,6 @@ const byId = (crossings: readonly ScreenCrossing[]): ScreenCrossing[] => {
   return [...seen.values()];
 };
 
-/**
- * THE producer of every way on or off one screen. Nothing is filtered out for
- * being unusable: a crossing the player cannot take is emitted with
- * `available: false` and the requirements it asks for.
- */
 const collectCrossings = (scope: CrossingScope): ScreenCrossings => {
   const pass = buildPass(scope);
   const here = scope.isIndoors ? roomTarget(scope.roomIndex) : overworldTarget(scope.owScreenIndex);
@@ -61,8 +50,8 @@ const collectCrossings = (scope: CrossingScope): ScreenCrossings => {
   return {
     screenId: here.target.screenId,
     screenIndex: scope.isIndoors ? scope.roomIndex : scope.owScreenIndex,
-    entrances: byId(entrances),
-    edges: byId(edgeCrossings(pass, connectionsFor(scope))),
+    entrances: uniqueById(entrances),
+    edges: uniqueById(edgeCrossings(pass, connectionsFor(scope))),
   };
 };
 

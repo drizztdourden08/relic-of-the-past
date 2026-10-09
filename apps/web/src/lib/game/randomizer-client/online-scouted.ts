@@ -1,10 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * LocationInfo, the scout answer: the game arms the session over the placement the scouts
- * become, polling switches to that plan's own entries, and the received items held until
- * now run. A session stopped while it armed disarms again, and a placement the plan refuses
- * ends the session the way a local seed with plan errors does.
- */
 import { isKnownReported, withGoal } from './online-connected';
 import { releaseHeldReceived } from './online-received';
 import type { ApLocationInfoPacket } from './ap-protocol.type';

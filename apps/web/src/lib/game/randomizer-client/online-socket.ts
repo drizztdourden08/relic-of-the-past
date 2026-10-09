@@ -1,24 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * One connection to the room, over the candidate URLs of server-url.ts in order: a socket
- * that closes without ever opening hands over to the next candidate (wss:// failing on an
- * online server that only speaks ws:// falls back to it). The session hears one close, for
- * the last socket.
- */
 import type { ApSocket, CreateSocket } from './ap-socket.type';
-
-interface SocketLinkHandlers {
-  onOpen(url: string): void;
-  onMessage(data: string): void;
-  /** `opened`: whether any candidate ever opened (a drop, versus nothing answering). */
-  onClose(opened: boolean): void;
-}
-
-interface SocketLink {
-  send(data: string): void;
-  /** False when no socket is left to close, so the caller cleans up itself. */
-  close(): boolean;
-}
+import type { SocketLink, SocketLinkHandlers } from './online-socket.type';
 
 const openSocketLink = (
   candidates: readonly string[], createSocket: CreateSocket, handlers: SocketLinkHandlers,
@@ -33,7 +15,6 @@ const openSocketLink = (
     try {
       socket = createSocket(url);
     } catch {
-      // Deferred, so the caller holds the link before it hears the close.
       if (hasNext && !closing) tryAt(index + 1);
       else queueMicrotask(() => handlers.onClose(false));
       return;
@@ -45,7 +26,7 @@ const openSocketLink = (
       handlers.onOpen(url);
     };
     socket.onmessage = (event) => handlers.onMessage(String(event.data));
-    socket.onerror = () => undefined; // The close that follows decides.
+    socket.onerror = () => undefined;
     socket.onclose = () => {
       if (current !== socket) return;
       current = null;
@@ -61,7 +42,9 @@ const openSocketLink = (
     send(data) {
       try {
         current?.send(data);
-      } catch { /* not open yet or already closing: the reconnect resends what matters */ }
+      } catch {
+        return;
+      }
     },
     close() {
       closing = true;
@@ -73,4 +56,4 @@ const openSocketLink = (
 };
 
 export { openSocketLink };
-export type { SocketLink, SocketLinkHandlers };
+export type { SocketLink, SocketLinkHandlers } from './online-socket.type';

@@ -1,11 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The room's players on this slot's team, in slot order. This slot is online while its own
- * connection is; every other one as network-presence.ts has it. The status is the slot's
- * client status, except that one needing a connected client reads unknown while the slot is
- * offline (a tracker holding the slot keeps the server's value alive). This slot's checks
- * come from the room; another slot's from its tracker link (tracker-links.ts), when one is up.
- */
 import type { NameTables } from './ap-names';
 import type { PlayerStatus } from './client-status';
 import type { NetworkPlayer } from './network-status.type';

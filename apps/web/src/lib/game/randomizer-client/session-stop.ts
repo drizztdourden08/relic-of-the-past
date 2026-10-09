@@ -1,9 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The one teardown of a randomizer session: every table, gate and seam session-start.ts
- * can arm, emptied in the order the core needs. Safe to run on a session that armed
- * nothing, which is how a refused or never-connected session ends.
- */
 import { clear as clearDeliveryQueue } from '../delivery-queue';
 import { disarmReceiptGates } from '../receipt-grants';
 import { clearItemOverrides } from '../randomizer';
@@ -20,7 +15,7 @@ import { clearQuiverIcon } from '../quiver-icon';
 import { clearCurrencySymbols } from '../currency-symbols';
 import { clearArmedShopEntries } from './apply-overrides';
 import { disarmCapacitySession } from './capacity-session';
-import { disarmPondSession } from './pond-session';
+import { disarmPondSession } from './disarm-pond-session';
 import { disarmItemBehavior } from './item-behavior-session';
 import { disarmFireReporting } from './override-fire-registry';
 import { stopLocationPolling } from './location-poller';
@@ -34,7 +29,6 @@ const disarmSession = (): void => {
   clearDropOverrides();
   clearStandingOverrides();
   clearScriptedGrantOverrides();
-  // The shelf table too: left armed, the next session (or plain play) inherited every shelf.
   clearShopSlotOverrides();
   disarmPrizeShuffle();
   disarmDungeonItemGrants();
@@ -44,11 +38,8 @@ const disarmSession = (): void => {
   clearGearIcons();
   clearQuiverIcon();
   clearCurrencySymbols();
-  // Drop still-queued deliveries with the session, because a stopped session must not
-  // leave receipt entries retrying forever (clear() resolves completions safely).
   clearDeliveryQueue();
   disarmReceiptGates();
-  // Restore the baked dialogue blob, since the session's pre-rendered lines go with it.
   clearSessionDialogue();
 };
 

@@ -1,0 +1,19 @@
+/* @layer bridge-wasm @kind logic */
+import { all } from '@shared/game/data';
+import type { CheckId, CheckRecord } from '@shared/game/data';
+import { evaluatePresence } from '@shared/game/simulation/presence/evaluate';
+import type { PresenceGameState } from '@shared/game/simulation/presence/state';
+
+const computeEventStatus = (
+  state: PresenceGameState,
+  checks: readonly CheckRecord[] = all('check'),
+): Map<CheckId, boolean> => {
+  const status = new Map<CheckId, boolean>();
+  for (const check of checks) {
+    if (check.now === undefined) continue;
+    status.set(check.id, evaluatePresence(check.now, state));
+  }
+  return status;
+};
+
+export { computeEventStatus };

@@ -1,0 +1,10 @@
+/* @layer bridge-wasm @kind logic */
+import { setSoundTrace } from '../bridge/host-gates';
+import { musicDebugState } from './music-debug-state';
+
+const setMusicDebugArmed = (on: boolean): void => {
+  musicDebugState.armed = on;
+  setSoundTrace(on);
+};
+
+export { setMusicDebugArmed };

@@ -1,10 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * THE grid source for every flood (widget, simulator, offline dumper). Acquisition varies by
- * LOCATION, not by caller: the occupied room has live tables (runtime door state, staircase
- * kind, tile context); any other room is rebuilt addressably from ROM data. Blocker footprints
- * are stamped here into every layer so no consumer can forget them (see blockers.ts).
- */
 import type { SimLocation, ScreenGridBundle } from '@shared/game/simulation';
 import {
   wasmBuildOverworldAttrGrid,
@@ -15,16 +9,11 @@ import {
   wasmGetOverworldVariant,
   wasmGetStaircaseType,
 } from '../';
-import { readMapState } from '../simulator/read-game-state';
-import { emptyGrid64, toGrid64 } from './grid-convert';
+import { emptyGrid64 } from './empty-grid64';
+import { toGrid64 } from './to-grid64';
+import { isLoadedRoom } from './is-loaded-room';
 import { stampIndoorBlockers } from './blockers';
 import { stampBombedWalls } from './bombed-walls';
-
-/** True when `roomId` is the indoor room the game is standing in right now. */
-const isLoadedRoom = (roomId: number): boolean => {
-  const live = readMapState();
-  return live?.isIndoors === true && live.roomIndex === roomId;
-};
 
 const overworldBundle = (owScreenIndex: number): ScreenGridBundle => {
   const flat = wasmBuildOverworldAttrGrid(owScreenIndex);
@@ -37,45 +26,40 @@ const overworldBundle = (owScreenIndex: number): ScreenGridBundle => {
   };
 };
 
-/**
- * The occupied room is READ from the live tables; any other room is rebuilt from ROM. A
- * rebuild throws away runtime state (opened doorway transit tiles, a lifted pot, a pushed
- * block), so the live room must never be rebuilt.
- */
 const indoorAttrGrid = (roomId: number, live: boolean): number[][] => {
   if (live) return wasmGetIndoorLayer0Grid() ?? emptyGrid64();
   const flat = wasmBuildRoomAttrGrid(roomId);
   return flat ? toGrid64(flat) : emptyGrid64();
 };
 
+const attachLiveLayers = (bundle: ScreenGridBundle): void => {
+  const dual = wasmGetIndoorDualLayerGrids();
+  if (dual) bundle.dualLayerGrids = { layer0: dual.layer0, layer1: dual.layer1 };
+  const staircase = wasmGetStaircaseType();
+  if (staircase != null && staircase >= 0) bundle.staircaseType = staircase;
+};
+
+const attachRebuiltLayers = (bundle: ScreenGridBundle, roomId: number): void => {
+  const dual = wasmBuildRoomDualLayerGrids(roomId);
+  if (dual) bundle.dualLayerGrids = { layer0: dual.layer0, layer1: dual.layer1 };
+};
+
 const indoorBundle = (roomId: number): ScreenGridBundle => {
-  // Settled before any read: it picks where every grid below comes from.
   const live = isLoadedRoom(roomId);
   const bundle: ScreenGridBundle = {
     screenIndex: roomId,
     indoors: true,
     rawAttrGrid: indoorAttrGrid(roomId, live),
   };
-  if (live) {
-    const dual = wasmGetIndoorDualLayerGrids();
-    if (dual) bundle.dualLayerGrids = { layer0: dual.layer0, layer1: dual.layer1 };
-    const staircase = wasmGetStaircaseType();
-    if (staircase != null && staircase >= 0) bundle.staircaseType = staircase;
-  } else {
-    // Remote rooms build BOTH layers addressably. Split-level rooms (the castle
-    // basements) keep their walkable floor on BG1 and flood as solid otherwise.
-    const dual = wasmBuildRoomDualLayerGrids(roomId);
-    if (dual) bundle.dualLayerGrids = { layer0: dual.layer0, layer1: dual.layer1 };
-  }
-  // The dual-layer flood reads the layer grids, not rawAttrGrid, so stamp them all.
-  const grids = [bundle.rawAttrGrid, ...(bundle.dualLayerGrids ? [bundle.dualLayerGrids.layer0, bundle.dualLayerGrids.layer1] : [])];
-  stampIndoorBlockers(roomId, grids, live);
-  // Walls the run has already blown open read as floor from here on.
-  stampBombedWalls(roomId, grids);
+  if (live) attachLiveLayers(bundle);
+  else attachRebuiltLayers(bundle, roomId);
+  const everyFloodedLayer = [bundle.rawAttrGrid, ...(bundle.dualLayerGrids ? [bundle.dualLayerGrids.layer0, bundle.dualLayerGrids.layer1] : [])];
+  stampIndoorBlockers(roomId, everyFloodedLayer, live);
+  stampBombedWalls(roomId, everyFloodedLayer);
   return bundle;
 };
 
 const getScreenGrids = (loc: SimLocation): ScreenGridBundle =>
   loc.isIndoors ? indoorBundle(loc.roomId) : overworldBundle(loc.owScreenIndex);
 
-export { getScreenGrids, isLoadedRoom };
+export { getScreenGrids };

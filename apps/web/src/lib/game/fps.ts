@@ -1,8 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Read the current frame rate from the running WASM module.
- */
-
 import { getModule } from './wasm-bridge';
 
 const getFps = (): number => {

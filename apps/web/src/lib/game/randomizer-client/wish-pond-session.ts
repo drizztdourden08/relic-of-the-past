@@ -1,22 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Wish-pond arming for a session, the impure half: hands both waters' rungs to
- * the core in the single call it takes (the core empties both tables at once),
- * then each armed water's two host lines, and logs one line per water. The
- * translation itself is wish-pond-rungs.ts.
- *
- * Arm after the plan's own overrides: a water at its native economy pays out
- * through the npc entries those put in the table, and a custom rung's fire id
- * comes from the same ledger they allocate from.
- *
- * A planned water hands over the next rung on each visit, and a spent water
- * only shows its closing line. A rung with no demand takes no throw and asks
- * nothing. A rung with one asks for it first, through the visit every pond
- * shares (pond-demand-session.ts arms the demands and their lines).
- */
-
 import { log } from '../../log-bus';
-import { clearWishPondPlan, setWishPondLines, setWishPondRungs } from '../wish-pond-plan';
+import { setWishPondLines, setWishPondRungs } from '../wish-pond-plan';
 import type { WishPondSessionPlan, WishPondWaterPlan } from './wish-pond-rungs';
 
 const hex = (id: number): string => `0x${id.toString(16).padStart(2, '0')}`;
@@ -46,8 +30,4 @@ const armWishPondSession = (plan: WishPondSessionPlan, tag: string): void => {
   }
 };
 
-const disarmWishPondSession = (): void => {
-  clearWishPondPlan();
-};
-
-export { armWishPondSession, disarmWishPondSession };
+export { armWishPondSession };

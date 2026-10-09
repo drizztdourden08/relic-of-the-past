@@ -8,12 +8,6 @@ import type { CrossingPass, CrossingParts } from './crossings.type';
 const stepsFor = (pass: CrossingPass, tile: ScreenCrossing['tile']): number | undefined =>
   pass.dist ? decodeScore(distanceAt(pass.dist, tile)).steps : undefined;
 
-/**
- * Assembles one `ScreenCrossing` from what a detector found plus what the pass
- * knows, so the walk distance, the words for how the crossing is taken and the
- * availability verdict are derived the same way for a door, a stair, a hole and
- * a border scroll.
- */
 const makeCrossing = (pass: CrossingPass, parts: CrossingParts): ScreenCrossing => {
   const { id, tile, target, edgeSig, requirements = [] } = parts;
   const steps = stepsFor(pass, tile);

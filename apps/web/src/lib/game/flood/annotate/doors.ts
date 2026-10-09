@@ -1,40 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * One door record → one annotation, for the doors that are a LOCK or a GATE. A
- * door that is a way through to somewhere else is a crossing instead
- * (apps/web/src/lib/game/crossings/), so it does not come through here.
- *
- * Doors that share a `kind` are separated by their raw kDoorType (the throne push
- * wall reads as 'normal'), and cell locks are not door-table records at all.
- *
- * A shutter in a kill-gate room carries WHY it is shut: those are the trap
- * shutters that close behind the player and only reopen when the room is cleared.
- */
-import type { ScreenAnnotation, AnnotationKind } from '@shared/game/simulation';
+import type { ScreenAnnotation } from '@shared/game/simulation';
 import type { SimDoor } from '@shared/game/simulation';
-
-/** kDoorType_ThroneRoom is the push wall that needs the follower in tow. */
-const THRONE_DOOR = 0x14;
-
-const DOOR_KIND: Partial<Record<SimDoor['kind'], AnnotationKind>> = {
-  'small-key': 'key-door',
-  'big-key': 'big-key-door',
-  bombable: 'bombable',
-  shutter: 'shutter',
-};
-
-const REQUIRES: Partial<Record<AnnotationKind, string[]>> = {
-  'key-door': ['smallkey:*'],
-  'big-key-door': ['bigkey:*'],
-  bombable: ['bombs'],
-};
-
-interface DoorContext {
-  /** The follower is in tow, so the throne push wall will open. */
-  followerReady: boolean;
-  /** The room's doors open by clearing it, so shutters here are the trap kind. */
-  killGated: boolean;
-}
+import { DOOR_KIND, REQUIRES, THRONE_DOOR } from './doors.constants';
+import type { DoorContext } from './doors.type';
 
 const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | null => {
   const tile = door.tiles[0];
@@ -62,5 +30,5 @@ const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | nul
   };
 };
 
-export { doorAnnotation, THRONE_DOOR };
-export type { DoorContext };
+export { doorAnnotation };
+export type { DoorContext } from './doors.type';

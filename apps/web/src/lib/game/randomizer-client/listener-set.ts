@@ -1,11 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-/** A set of listeners with an unsubscribe per add, where one listener that throws never stops the rest. */
-
-interface ListenerSet<A extends unknown[]> {
-  readonly size: number;
-  add(listener: (...args: A) => void): () => void;
-  emit(...args: A): void;
-}
+import type { ListenerSet } from './listener-set.type';
 
 const createListenerSet = <A extends unknown[]>(): ListenerSet<A> => {
   const listeners = new Set<(...args: A) => void>();
@@ -17,11 +11,11 @@ const createListenerSet = <A extends unknown[]>(): ListenerSet<A> => {
     },
     emit(...args) {
       for (const listener of listeners) {
-        try { listener(...args); } catch { /* a bad listener never breaks the session */ }
+        try { listener(...args); } catch { continue; }
       }
     },
   };
 };
 
 export { createListenerSet };
-export type { ListenerSet };
+export type { ListenerSet } from './listener-set.type';

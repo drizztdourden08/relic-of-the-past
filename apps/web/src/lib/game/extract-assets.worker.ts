@@ -1,9 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Runs the pure-TS extraction pipeline off the UI thread (Buffer/
- * crypto/fs polyfilled by vite-plugin-node-polyfills). Handles asset compilation
- * and per-language extraction. Inputs/outputs are plain bytes; Buffers are built here.
- */
 import { loadRomFromBuffer } from '@shared/asset-extraction/rom/rom-loader';
 import { loadGbaAlttpRomFromBuffer } from '@shared/asset-extraction/rom/gba-rom';
 import {
@@ -13,31 +8,12 @@ import { compileAlttpAssetSet } from '@shared/asset-extraction/compile-alttp-ass
 import { extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
 import { compileSets } from '@shared/game/language';
 import type { SetBakeInput } from '@shared/game/language';
-import { extractSpriteBuffers, type SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
-import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
+import { extractSpriteBuffers } from '@shared/asset-extraction/item-sprites/extract-items';
+import type { SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
+import type { AssetsResult, SupplementRoms, WorkerScope } from './extract-assets.worker.type';
 
-type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
-type Req =
-  | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: SetBakeInput[] }
-  | { op: 'language'; romBytes: Uint8Array; code: string }
-  | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] }
-  | { op: 'menu-text'; romBytes: Uint8Array };
+const ctx = self as unknown as WorkerScope;
 
-interface AssetsResult {
-  base: Uint8Array;
-  sidecars: { id: AssetSourceId; bytes: Uint8Array }[];
-  /** Optional sources that failed. The base is still valid; the UI surfaces these. */
-  failures: { id: AssetSourceId; reason: string }[];
-}
-
-const ctx = self as unknown as {
-  onmessage: ((e: MessageEvent<Req>) => void) | null;
-  postMessage: (msg: unknown) => void;
-};
-
-// The renderer's compile, and the only one that builds the second cartridge's supplement. The
-// Electron main process also rebuilds the base blob after a language or store change; that
-// path writes only the base file, so the supplement beside it survives the rebuild.
 const runAssets = async (
   romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: SetBakeInput[],
 ): Promise<AssetsResult> => {
@@ -78,21 +54,12 @@ const runLanguage = (romBytes: Uint8Array, code: string) => {
 const runSprites = (romBytes: Uint8Array, defs: SpriteDef[]) =>
   extractSpriteBuffers(loadRomFromBuffer(Buffer.from(romBytes)), defs);
 
-/*
- * The menu, credits and closing captions. The extractor copies these bodies
- * into the blob without decoding them, so the studio reads them straight from
- * the player's own file, here off the UI thread, because reaching them means
- * parsing a whole ROM.
- */
 const runMenuText = (romBytes: Uint8Array) => {
   const rom = loadRomFromBuffer(Buffer.from(romBytes), true);
-  // Decoded through the ROM'S OWN alphabet, never a requested one: reading these
-  // glyphs against the wrong language yields nonsense, not nothing. The
-  // caller is told which language answered and decides what to do about it.
-  const code = rom.language;
+  const romOwnLanguage = rom.language;
   return {
-    language: code,
-    menu: decodeMenuText(rom, code),
+    language: romOwnLanguage,
+    menu: decodeMenuText(rom, romOwnLanguage),
     credits: [...decodeCredits(rom), ...decodeEndingCaptions(rom)],
   };
 };

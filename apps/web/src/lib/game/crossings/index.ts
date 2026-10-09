@@ -8,4 +8,4 @@ export type { CrossingPass, CrossingParts, CrossingScope } from './crossings.typ
 export type { DoorRecord, DoorSide } from './place-tile';
 export type { ResolvedTarget } from './resolve-target';
 export type { Availability } from './availability';
-export type { TogglePosition } from './layer-toggle';
+export type { TogglePosition } from './layer-toggle.type';

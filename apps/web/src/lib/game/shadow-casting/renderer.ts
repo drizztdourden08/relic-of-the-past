@@ -1,21 +1,19 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * WebGL post-processing pipeline for shadow casting.
- *
- * Architecture:
- *   1. Heightmap texture: CPU-rasterized from shape elements, uploaded when data changes
- *   2. Shadow pass: Ray-march through heightmap for sun + point lights
- *   3. Blur pass: Soften shadow edges (H + V separable blur)
- *   4. Composite pass: Multiply light map over game frame
- */
-
-import type { ShadowRenderer, ShadowRendererOptions } from './types';
+import type { ShadowRenderer, ShadowRendererOptions } from './shadow-casting.type';
 import type { ScreenShadowData } from '@shared/types/shadow-casting';
-import { DEFAULT_LIGHTING_CONFIG } from '@shared/types/shadow-casting';
-import { createFBO, destroyFBO, drawQuad, type FBO } from '../webgl/gl-helpers';
+import { createFBO, createTexture, destroyFBO } from '../webgl/gl-helpers';
 import { buildHeightmapTexture } from './heightmap-builder';
-import { computeLightUniforms, MAX_LIGHTS } from './light-calculator';
-import { compilePrograms, getUniformLocations } from './shadow-programs';
+import { computeLightUniforms } from './light-calculator';
+import { compilePrograms } from './compile-programs';
+import { getUniformLocations } from './get-uniform-locations';
+import type { ShadowPipeline, ShadowState } from './shadow-programs.type';
+import {
+  DEFAULT_SNES_HEIGHT, DEFAULT_SNES_WIDTH, MAX_BLUR_PX, MIN_BLUR_RADIUS, QUAD_STRIP,
+} from './renderer.constants';
+import { createHeightmapTexture } from './create-heightmap-texture';
+import { renderShadowPass } from './render-shadow-pass';
+import { renderBlurPasses } from './render-blur-passes';
+import { renderCompositePass } from './render-composite-pass';
 
 const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendererOptions = {}): ShadowRenderer | null => {
   const glOrNull = canvas.getContext('webgl', {
@@ -37,219 +35,111 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
     console.error('[ShadowCasting] Failed to compile shader programs');
     return null;
   }
-  const { shadow: shadowProg, blur: blurProg, composite: compositeProg } = progs;
-
-  const { shadow: shadowUniforms, blur: blurUniforms, composite: compositeUniforms } = getUniformLocations(gl, progs);
+  const uniforms = getUniformLocations(gl, progs);
 
   const quadBuffer = gl.createBuffer()!;
   gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(QUAD_STRIP), gl.STATIC_DRAW);
 
-  let width = canvas.width;
-  let height = canvas.height;
-  let shadowFBO = createFBO(gl, width, height);
-  let blurFBO1 = createFBO(gl, width, height);
-  let blurFBO2 = createFBO(gl, width, height);
+  const width = canvas.width;
+  const height = canvas.height;
+  const state: ShadowState = {
+    width,
+    height,
+    shadowFBO: createFBO(gl, width, height),
+    blurFBO1: createFBO(gl, width, height),
+    blurFBO2: createFBO(gl, width, height),
+    enabled: false,
+    debugMode: false,
+    screenData: null,
+    viewOriginX: 0,
+    viewOriginY: 0,
+    snesWidth: DEFAULT_SNES_WIDTH,
+    snesHeight: DEFAULT_SNES_HEIGHT,
+  };
+  const heightmapTex = createHeightmapTexture(gl, width, height);
+  const gameTex = createTexture(gl, gl.LINEAR);
+  const pipe: ShadowPipeline = { gl, progs, uniforms, quadBuffer, heightmapTex, gameTex };
 
-  // Heightmap is rebuilt every frame at viewport dimensions (matches game canvas exactly)
-  const heightmapTex = gl.createTexture()!;
-  gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, width, height, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, new Uint8Array(width * height));
-
-  const gameTex = gl.createTexture()!;
-  gl.bindTexture(gl.TEXTURE_2D, gameTex);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-  let enabled = false;
-  let debugMode = false;
-  let screenData: ScreenShadowData | null = null;
-
-  // Viewport world-space origin (viewLeft, viewTop), updated every frame
-  let viewOriginX = 0;
-  let viewOriginY = 0;
-  // Viewport size in SNES pixels
-  let snesWidth = 512;
-  let snesHeight = 240;
-
-  const rebuildHeightmap = (): void => {
-        if (!screenData || screenData.heightmap.length === 0) return;
-        // Build heightmap in viewport-local space, exactly matching the NavigationOverlay's coords.
-        // offset = (viewLeft, viewTop) converts world coords → viewport-local coords.
-        const texData = buildHeightmapTexture(screenData.heightmap, snesWidth, snesHeight, viewOriginX, viewOriginY);
-        gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
-        // LUMINANCE = 1 byte/pixel; width may not be multiple of 4, so disable row alignment
-        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, snesWidth, snesHeight, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, texData);
-      };
+  const rebuildHeightmap = (data: ScreenShadowData): void => {
+    if (data.heightmap.length === 0) return;
+    const texData = buildHeightmapTexture(data.heightmap, state.snesWidth, state.snesHeight, state.viewOriginX, state.viewOriginY);
+    gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, state.snesWidth, state.snesHeight, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, texData);
+  };
 
   const resizeFBOs = (w: number, h: number): void => {
-        destroyFBO(gl, shadowFBO);
-        destroyFBO(gl, blurFBO1);
-        destroyFBO(gl, blurFBO2);
-        shadowFBO = createFBO(gl, w, h);
-        blurFBO1 = createFBO(gl, w, h);
-        blurFBO2 = createFBO(gl, w, h);
-        width = w;
-        height = h;
-      };
+    destroyFBO(gl, state.shadowFBO);
+    destroyFBO(gl, state.blurFBO1);
+    destroyFBO(gl, state.blurFBO2);
+    state.shadowFBO = createFBO(gl, w, h);
+    state.blurFBO1 = createFBO(gl, w, h);
+    state.blurFBO2 = createFBO(gl, w, h);
+    state.width = w;
+    state.height = h;
+  };
+
+  const render = (gameCanvas: HTMLCanvasElement, time: number): void => {
+    const screenData = state.screenData;
+    if (!state.enabled || !screenData) {
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      return;
+    }
+    rebuildHeightmap(screenData);
+
+    gl.bindTexture(gl.TEXTURE_2D, gameTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gameCanvas);
+
+    const lighting = screenData.lighting;
+    const lights = computeLightUniforms(screenData.lights, gameCanvas);
+    for (let i = 0; i < lights.numLights; i++) {
+      lights.positions[i * 3] -= state.viewOriginX;
+      lights.positions[i * 3 + 1] -= state.viewOriginY;
+    }
+
+    renderShadowPass(pipe, state, lighting, lights, time);
+
+    const blurRadius = lighting.shadowSoftness * MAX_BLUR_PX;
+    const blurred = blurRadius > MIN_BLUR_RADIUS && !state.debugMode;
+    if (blurred) renderBlurPasses(pipe, state, blurRadius);
+
+    renderCompositePass(pipe, state, blurred ? state.blurFBO2.texture : state.shadowFBO.texture);
+  };
 
   const renderer: ShadowRenderer = {
-    render(gameCanvas: HTMLCanvasElement, time: number): void {
-      if (!enabled || !screenData) {
-        // Clear to fully transparent so it doesn't affect the game
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        return;
-      }
-
-      // Rebuild heightmap every frame at current viewport position
-      // (matches NavigationOverlay's coordinate approach exactly)
-      rebuildHeightmap();
-
-      // Upload game canvas as texture
-      gl.bindTexture(gl.TEXTURE_2D, gameTex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gameCanvas);
-
-      const lighting = screenData.lighting;
-      const lightUniforms = computeLightUniforms(screenData.lights, gameCanvas);
-
-      // Offset light positions to viewport-local space
-      for (let i = 0; i < lightUniforms.numLights; i++) {
-        lightUniforms.positions[i * 3] -= viewOriginX;
-        lightUniforms.positions[i * 3 + 1] -= viewOriginY;
-      }
-
-      // Pass 1: shadow computation.
-      gl.bindFramebuffer(gl.FRAMEBUFFER, shadowFBO.framebuffer);
-      gl.viewport(0, 0, width, height);
-      gl.useProgram(shadowProg);
-
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
-      gl.uniform1i(shadowUniforms.heightmap, 0);
-
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, gameTex);
-      gl.uniform1i(shadowUniforms.gameTexture, 1);
-
-      gl.uniform2f(shadowUniforms.resolution, snesWidth, snesHeight);
-      gl.uniform1f(shadowUniforms.sunEnabled, lighting.sunEnabled ? 1.0 : 0.0);
-      gl.uniform1f(shadowUniforms.sunAngle, lighting.sunAngle * Math.PI / 180);
-      gl.uniform1f(shadowUniforms.sunElevation, lighting.sunElevation * Math.PI / 180);
-      gl.uniform1f(shadowUniforms.sunIntensity, lighting.sunIntensity);
-      gl.uniform1f(shadowUniforms.ambientIntensity, lighting.ambientIntensity);
-      gl.uniform1f(shadowUniforms.time, time / 1000);
-      gl.uniform1f(shadowUniforms.dayNightCycle, lighting.dayNightCycle ? 1.0 : 0.0);
-      gl.uniform1f(shadowUniforms.cycleSpeed, lighting.cycleSpeed);
-      gl.uniform1f(shadowUniforms.debugMode, debugMode ? 1.0 : 0.0);
-
-      // Upload light uniforms
-      gl.uniform1i(shadowUniforms.numLights, lightUniforms.numLights);
-      gl.uniform3fv(shadowUniforms.lightPos, lightUniforms.positions);
-      gl.uniform3fv(shadowUniforms.lightColor, lightUniforms.colors);
-      gl.uniform1fv(shadowUniforms.lightIntensity, lightUniforms.intensities);
-      gl.uniform1fv(shadowUniforms.lightCastShadow, lightUniforms.castShadows);
-
-      drawQuad(gl, shadowProg, quadBuffer);
-
-      // Pass 2: horizontal blur.
-      const blurRadius = lighting.shadowSoftness * 8.0; // 0-8px blur
-      if (blurRadius > 0.1 && !debugMode) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, blurFBO1.framebuffer);
-        gl.viewport(0, 0, width, height);
-        gl.useProgram(blurProg);
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, shadowFBO.texture);
-        gl.uniform1i(blurUniforms.texture, 0);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
-        gl.uniform1i(blurUniforms.heightmap, 1);
-        gl.uniform2f(blurUniforms.resolution, width, height);
-        gl.uniform1f(blurUniforms.radius, blurRadius);
-        gl.uniform2f(blurUniforms.direction, 1.0, 0.0);
-
-        drawQuad(gl, blurProg, quadBuffer);
-
-        // Pass 3: vertical blur.
-        gl.bindFramebuffer(gl.FRAMEBUFFER, blurFBO2.framebuffer);
-        gl.viewport(0, 0, width, height);
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, blurFBO1.texture);
-        gl.uniform1i(blurUniforms.texture, 0);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
-        gl.uniform1i(blurUniforms.heightmap, 1);
-        gl.uniform2f(blurUniforms.direction, 0.0, 1.0);
-
-        drawQuad(gl, blurProg, quadBuffer);
-      }
-
-      // Pass 4: composite.
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      gl.viewport(0, 0, width, height);
-      gl.useProgram(compositeProg);
-
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, gameTex);
-      gl.uniform1i(compositeUniforms.gameTexture, 0);
-
-      gl.activeTexture(gl.TEXTURE1);
-      const lightTex = (blurRadius > 0.1 && !debugMode) ? blurFBO2.texture : shadowFBO.texture;
-      gl.bindTexture(gl.TEXTURE_2D, lightTex);
-      gl.uniform1i(compositeUniforms.lightTexture, 1);
-
-      drawQuad(gl, compositeProg, quadBuffer);
-    },
-
+    render,
     setScreenData(data: ScreenShadowData | null): void {
-      screenData = data;
+      state.screenData = data;
       if (!data || (data.heightmap.length === 0 && data.lights.length === 0)) {
-        enabled = false;
+        state.enabled = false;
       }
     },
-
     setScreenOrigin(viewLeft: number, viewTop: number, viewWidth: number, viewHeight: number): void {
-      viewOriginX = viewLeft;
-      viewOriginY = viewTop;
-      snesWidth = viewWidth;
-      snesHeight = viewHeight;
+      state.viewOriginX = viewLeft;
+      state.viewOriginY = viewTop;
+      state.snesWidth = viewWidth;
+      state.snesHeight = viewHeight;
     },
-
     resize(w: number, h: number): void {
-      if (w === width && h === height) return;
+      if (w === state.width && h === state.height) return;
       canvas.width = w;
       canvas.height = h;
       resizeFBOs(w, h);
     },
-
-    setEnabled(value: boolean): void {
-      enabled = value;
-    },
-
-    setDebugMode(value: boolean): void {
-      debugMode = value;
-    },
-
+    setEnabled(value: boolean): void { state.enabled = value; },
+    setDebugMode(value: boolean): void { state.debugMode = value; },
     dispose(): void {
       gl.deleteTexture(heightmapTex);
       gl.deleteTexture(gameTex);
       gl.deleteBuffer(quadBuffer);
-      gl.deleteProgram(shadowProg);
-      gl.deleteProgram(blurProg);
-      gl.deleteProgram(compositeProg);
-      destroyFBO(gl, shadowFBO);
-      destroyFBO(gl, blurFBO1);
-      destroyFBO(gl, blurFBO2);
+      gl.deleteProgram(progs.shadow);
+      gl.deleteProgram(progs.blur);
+      gl.deleteProgram(progs.composite);
+      destroyFBO(gl, state.shadowFBO);
+      destroyFBO(gl, state.blurFBO1);
+      destroyFBO(gl, state.blurFBO2);
     },
   };
 

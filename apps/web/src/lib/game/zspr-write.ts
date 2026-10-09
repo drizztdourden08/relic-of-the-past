@@ -1,18 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Serialize a PlayerSheet back to ZSPR, for the studio's export and for the boot path (the
- * core only reads ZSPR). The override layer is folded onto the original: the file carries one
- * palette, so whichever layer the caller asks for is the one that survives.
- */
-import { SHEET_BYTES, COLORS_PER_OUTFIT, OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
 import type { SheetPalette, PlayerSheet } from '@shared/game/data/player-sheet/types';
-import { HEADER_BYTES, OUTFIT_BLOCK, GLOVE_BLOCK } from './zspr';
+import type { ZsprOptions } from './zspr-write.type';
+import { SHEET_BYTES, COLORS_PER_OUTFIT, OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
+import { HEADER_BYTES, OUTFIT_BLOCK, GLOVE_BLOCK, ZSPR_MAGIC, ZSPR_HEADER } from './zspr';
 import { flattenPalette } from './player-sheet/flatten-palette';
+import { CHECKSUM_SEED, SPRITE_TYPE_PLAYER, ZSPR_VERSION } from './zspr-write.constants';
 
-const SPRITE_TYPE_PLAYER = 1;
-const ZSPR_VERSION = 1;
-
-/** NUL-terminated UTF-16LE for the display name and the author. */
 const utf16z = (text: string): Uint8Array => {
   const out = new Uint8Array(text.length * 2 + 2);
   for (let i = 0; i < text.length; i++) {
@@ -23,7 +16,6 @@ const utf16z = (text: string): Uint8Array => {
   return out;
 };
 
-/** NUL-terminated ASCII for the third string, a short credit line. */
 const asciiz = (text: string): Uint8Array => {
   const out = new Uint8Array(text.length + 1);
   for (let i = 0; i < text.length; i++) out[i] = text.charCodeAt(i) & 0x7f;
@@ -46,28 +38,16 @@ const paletteToBytes = (palette: SheetPalette): Uint8Array => {
   return out;
 };
 
-/**
- * The spec's checksum: a 16-bit sum of every byte, followed by `0xFFFF - sum`. The four
- * checksum bytes are summed as the seed value `FF FF 00 00`, not zero, which is what
- * reproduces other tools' output byte for byte. Nothing here validates it.
- */
-const CHECKSUM_AT = 5;
-const CHECKSUM_SEED = [0xff, 0xff, 0x00, 0x00];
-
 const checksumOf = (bytes: Uint8Array): number => {
+  const checksumAt = ZSPR_HEADER.checksum;
   let sum = CHECKSUM_SEED.reduce((a, b) => a + b, 0);
   for (let i = 0; i < bytes.length; i++) {
-    if (i >= CHECKSUM_AT && i < CHECKSUM_AT + CHECKSUM_SEED.length) continue;
+    if (i >= checksumAt && i < checksumAt + CHECKSUM_SEED.length) continue;
     sum = (sum + bytes[i]) & 0xffff;
   }
   sum &= 0xffff;
   return sum | ((0xffff - sum) << 16);
 };
-
-interface ZsprOptions {
-  /** 'override' bakes the edits (the default); 'original' writes the palette as imported. */
-  layer?: 'override' | 'original';
-}
 
 const toZsprBytes = (sheet: PlayerSheet, options: ZsprOptions = {}): Uint8Array => {
   const { layer = 'override' } = options;
@@ -79,21 +59,21 @@ const toZsprBytes = (sheet: PlayerSheet, options: ZsprOptions = {}): Uint8Array 
 
   const out = new Uint8Array(pixelOffs + SHEET_BYTES + palette.length);
   const view = new DataView(out.buffer);
-  out.set([0x5a, 0x53, 0x50, 0x52], 0);
-  out[4] = ZSPR_VERSION;
-  view.setUint32(9, pixelOffs, true);
-  view.setUint16(13, SHEET_BYTES, true);
-  view.setUint32(15, pixelOffs + SHEET_BYTES, true);
-  view.setUint16(19, palette.length, true);
-  view.setUint16(21, SPRITE_TYPE_PLAYER, true);
+  out.set(ZSPR_MAGIC, 0);
+  out[ZSPR_HEADER.version] = ZSPR_VERSION;
+  view.setUint32(ZSPR_HEADER.pixelOffset, pixelOffs, true);
+  view.setUint16(ZSPR_HEADER.pixelLength, SHEET_BYTES, true);
+  view.setUint32(ZSPR_HEADER.paletteOffset, pixelOffs + SHEET_BYTES, true);
+  view.setUint16(ZSPR_HEADER.paletteLength, palette.length, true);
+  view.setUint16(ZSPR_HEADER.spriteType, SPRITE_TYPE_PLAYER, true);
   out.set(name, HEADER_BYTES);
   out.set(author, HEADER_BYTES + name.length);
   out.set(authorShort, HEADER_BYTES + name.length + author.length);
   out.set(sheet.pixels.subarray(0, SHEET_BYTES), pixelOffs);
   out.set(palette, pixelOffs + SHEET_BYTES);
-  view.setUint32(5, checksumOf(out), true);
+  view.setUint32(ZSPR_HEADER.checksum, checksumOf(out), true);
   return out;
 };
 
 export { toZsprBytes };
-export type { ZsprOptions };
+export type { ZsprOptions } from './zspr-write.type';

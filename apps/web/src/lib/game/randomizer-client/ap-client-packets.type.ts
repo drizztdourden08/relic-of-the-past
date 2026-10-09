@@ -1,5 +1,4 @@
 /* @layer bridge-wasm @kind types */
-/** Client to server packets of the multiworld protocol. */
 import type { ApVersion } from './ap-protocol.type';
 
 interface ApGetDataPackagePacket {
@@ -40,7 +39,6 @@ interface ApLocationChecksPacket {
   locations: number[];
 }
 
-/** status 30 is CLIENT_GOAL. */
 interface ApStatusUpdatePacket {
   cmd: 'StatusUpdate';
   status: number;
@@ -59,13 +57,11 @@ interface ApBouncePacket {
   data: Record<string, unknown>;
 }
 
-/** Reads data storage keys; the `_read_` ones are the server's own (a slot's client status). */
 interface ApGetPacket {
   cmd: 'Get';
   keys: string[];
 }
 
-/** Asks for a SetReply whenever one of these keys changes. */
 interface ApSetNotifyPacket {
   cmd: 'SetNotify';
   keys: string[];
