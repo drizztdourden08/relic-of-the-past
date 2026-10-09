@@ -1408,6 +1408,45 @@ rendered pie in the shipped layout with no store. It spans the whole screen grid
 no track, so it is not counted as a grid occupant (that would mark all nine cells taken, found on
 the grand merge test run), except in its own cell picker.
 
+### hud/hud-drop-intent.keep.test.ts
+
+Phase 1 of the HUD drag and drop plan tests the resolver headless: every refusal reason and the
+outline vocabulary before a pointer event exists, since the resolver is cheap to get wrong and
+expensive to debug through a gesture. The fixture is a screen grid of three columns holding
+`hud` (a row: `hearts` with three pips, then `magic`), `wallet` (a leaf in cell 1,3), `rep` (a
+repeat of 8 whose template `tpl` holds `fill`) and `sw` (a switch of `full` and `empty`).
+
+- Inserting at the front of a container is newly possible. The old `resolveDrop` answered the end
+  of the children for every `inside`, so the front of a collapsed container or of the screen was
+  unreachable; it is reproduced verbatim so the defect is a fact. It also left the screen (a row
+  with no siblings) a dead quarter row zone. The screen's own child order is now the whole paint
+  order, so putting a backdrop behind everything has a gesture. A leaf has no inside band.
+- Validity never retargets: a refusal names both nodes and stops instead of walking out to a
+  legal ancestor. Dropping `hud` onto a pip resolves to `hearts`, still inside the subtree, so it
+  is refused as a descendant. A switch is locked, but its container descendants are ordinary
+  targets, which is how a heart's inner arrangement is authored. A bound repeat count has no
+  literal, so the worst case is `MAX_REPEAT_COUNT`: 200 passes of 33 nodes is 6,600, over the
+  5,000 budget, and the refusal is found during the drag so the ghost never lies.
+- A node leaving the screen grid for a flex parent drops its cell (zero is absent, per
+  `offset.ts`); reordered inside its own parent it keeps it.
+- `moveNode` has exactly one caller, the same structural check §37.1 used for `margin.left`.
+
+### hud/hud-layout-grid.keep.test.ts
+
+Phase 4 of the HUD data binding plan: the grid placement engine beside the flex flow.
+`place-grid.ts` and `grid-cells.ts` own the arithmetic; this proves explicit placement, auto flow
+(which starts at 1,1 and ignores a partial column), spans, `fill` tracks and per item alignment.
+Row templates are explicit unless a case is about implicit rows, because a childless cell is 0x0
+and an `auto` row off empty fixtures would collapse to zero and leave the flow. Cells are
+childless containers so their placed rect equals their box. Two children may name the same cell
+(an overlay); paint order puts the second on the first. `alignSelf` overrides both axes for its
+child (one field, by design), so the child needs its own height once it is not `stretch`.
+`gridCellRects` returns every cell, empty ones included, because an editor must name a column with
+no child in it; §44 factored `solveGrid` out of `childBoxesGrid` so there is one track solve, and
+the cells are the ones children were placed by. §46 removed its only caller but kept it for the
+coming cell highlight overlay. A grid grows rows, never columns, so one implicit row past the last
+is offered (40px of a 60px grid with one 20px row) and no fourth column.
+
 ### hud/hud-drag-indicators.keep.test.ts
 
 The drag's own marks, measured in headless Chromium with the real stylesheets, walked rather
