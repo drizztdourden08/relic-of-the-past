@@ -1675,6 +1675,36 @@ the collapsed fields harness at 289 / 232 / 188 px.
 - The duration and delay pair, at `md` 138.5px each against 141.3 needed (contract §34.4), at
   `sm` 31.2px at the default, is now 99.5 / 71 / 49 per field after the mode switch's removal.
 
+### hud/hud-inspector-value-input
+
+Phase 4 of the inspector UX review: the one value field and the aids that make it writable.
+Everything but its width (`hud-inspector-value-input-width`), needing no browser.
+
+- The leading `=` rule is data: a bare numeral is a number, a marked one an expression, the
+  marker is never stored (every shipped layout loads unchanged), `==` escapes it, and whether the
+  field steps as a number is a predicate over the text, so the spinner and arrow keys vanish the
+  moment `=` is typed with no mode to reconcile.
+- The error table feeds the shipped parser's own message to the translator and asserts the
+  English; the raw strings were probed by instantiating the parser as `compile-expr.ts` does, and
+  each is asserted beside its translation since the table is worthless if they drift. An unknown
+  name keeps `validate-value.ts`'s wording minus its path prefix and column. `||` used to parse and
+  answer 1120 for 112 and 0 with no error, until `concatenate: false`. The three deliberately
+  disabled features (lists, assignment, `in`) are told apart by reading the source, since the
+  lexer reports `in` with the same string as two adjacent values. `check-expr.ts` restates the
+  name rule of `validate-value.ts` (which formats for a file report), and a table guards that
+  both agree on whether a formula is broken.
+- `random()` is refused at parse time with a sentence; every other function compiles.
+- The formula menu is a claim about a list: `index`, `count` and `item` are offered only inside a
+  repeat and shown disabled with a reason outside; `delta` only where `validate-motion.ts` passes
+  it; `&&` and `||` appear only in the notes on `and` and `or`, never as entries; and no listed
+  function is a dead end (the parser enables `length`, `join`, `map`, `filter`, `fold`, `indexOf`,
+  `fac` and `gamma`, but the scope is a flat object of numbers).
+- The worked starting points compile; the `_current` and `_max` fractions are generated from the
+  variable table; repeat only shapes appear only inside a repeat.
+- A formula in a repeat produces one value per instance, with scopes shaped like
+  `engine/expand.ts`'s, so the heart formula reads fourteen full and six empty instead of one
+  sample.
+
 ### hud/hud-inspector-value-input-width.keep.test.ts
 
 Phase 4 of the inspector UX review, measured in headless Chromium at 289 / 232 / 188 px (the 320
