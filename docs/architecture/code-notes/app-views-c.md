@@ -1964,5 +1964,3 @@ The four verdicts. Revert stays disabled until there are amendments, and the bat
 ### views/DataInspector/sub-components/recommendations/RecommendationSummary.tsx
 
 The claim, the confidence and the evidence, above the two panes. Evidence is shown in full: it is what lets a reviewer disagree for a reason.
-
-ENDMARK
