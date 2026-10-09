@@ -1,16 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Which artwork the chips wear.
- *
- * "Auto" is the default and means the pad in hand: a player who never opens
- * this setting sees their own controller. Choosing a pack explicitly overrides
- * the device, and a custom pack overrides only the positions it has an
- * image for and inherits the rest, so importing a single button is a
- * one-minute job instead of a twenty-glyph commitment.
- *
- * Only the positions the current cluster actually draws are offered, because a
- * glyph imported for a control this pad does not report is invisible work.
- */
 import { useState } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -21,21 +9,7 @@ import { Text } from '@ds/primitives/Text';
 import { AUTO_PACK_ID } from '@shared/input/glyphs';
 import { GLYPH_IMAGE_TYPES } from '../HudLayoutEditor.constants';
 import type { GlyphPosition } from '@app/lib/hud/custom-glyph-store';
-import type { GlyphPack } from '@shared/types/hud';
-
-interface GlyphPackPickerProps {
-  value: string;
-  packs: readonly GlyphPack[];
-  custom: readonly GlyphPack[];
-  /** The positions this cluster draws, which are the only ones worth importing for. */
-  positions: readonly GlyphPosition[];
-  busy: boolean;
-  onChange: (packId: string) => void;
-  onCreatePack: () => void;
-  onDeletePack: (packId: string) => void;
-  onImport: (packId: string, position: GlyphPosition, file: File) => void;
-  onRemove: (packId: string, position: GlyphPosition) => void;
-}
+import type { GlyphPackPickerProps } from './GlyphPackPicker.type';
 
 const GlyphPackPicker = (props: GlyphPackPickerProps) => {
   const { value, packs, custom, positions, busy, onChange, onCreatePack, onDeletePack, onImport, onRemove } = props;
@@ -128,4 +102,4 @@ const GlyphPackPicker = (props: GlyphPackPickerProps) => {
 };
 
 export { GlyphPackPicker };
-export type { GlyphPackPickerProps };
+export type { GlyphPackPickerProps } from './GlyphPackPicker.type';

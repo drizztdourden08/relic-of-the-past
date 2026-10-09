@@ -36,7 +36,8 @@ import { AlignmentTiles } from '../AlignmentTiles';
 import { FlexEditor } from '../FlexEditor';
 import { FlowSettings } from '../FlowSettings';
 import { GridEditor } from '../GridEditor';
-import { DEFAULT_GUIDE, LayoutSettings } from '../LayoutSettings';
+import { LayoutSettings } from '../LayoutSettings';
+import { DEFAULT_GUIDE } from '../LayoutSettings.constants';
 import { SubSection } from '../SubSection';
 import {
   flexAlignRows, gapCellsOf, gridAlignRows,

@@ -1,37 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The bar across the top: everything that can be added, and everything the
- * preview is judged against.
- *
- * ICON-ONLY, grouped by what a button makes (containers, leaves, presets,
- * view toggles), with a separator between groups instead of a label on
- * each button; the tooltip carries the name. Sprite and Glyph do not open a
- * list: they open a picker grid, because a sprite or a glyph is something you
- * recognise by its picture, never by its filename.
- *
- * WHAT THE PREVIEW IS JUDGED AGAINST lives on the right: the display ratio and
- * the ground. Both are session-only and never written to the document,
- * which is why they are not mixed in with the inserts. The glyph pack IS
- * written to the document (`layout.glyphPack`) and is edited in one place
- * only: the inspector rail's `GlyphPackPicker`, which also owns custom-pack
- * import/management. This toolbar does not duplicate that control.
- *
- * ONE MENU OPEN AT A TIME, closed by choosing, by Escape, or by pressing
- * anywhere that is not a menu.
- *
- * THE GRID-VIEW TOGGLE IS NOT HERE ANY MORE (§55). "show grid overlay should be
- * in the same section (first)", so it MOVED to `LayoutSettings`, beside the
- * guide colour whose lines it draws; it is not mirrored here, because two
- * controls for one boolean is the `guide.show` mistake that pass also deleted.
- * `snapping` stays: it is about the STAGE's drag, which is this bar's own
- * business, and there is no section in the rail that it belongs to.
- *
- * THE ICONS ARE LUCIDE (§50), through `@iconify/react`, from one table in
- * `behavior/toolbar-menus.ts`. They were Unicode characters, which is a font
- * the OS chose instead of a picture this project drew, and the grid editor's
- * new toolbar is built from the same pieces so the two read as one kind of
- * thing.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDismissable } from '@ds/primitives/Portal';
 import { Box } from '@ds/primitives/Box';
@@ -50,27 +17,9 @@ import { TOOLBAR_ICONS, buildToolbarGroups, presetItems, subtreePresetItems } fr
 import { newElement } from '../behavior/new-node';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import type { EditorGround, EditorRatio } from '../HudLayoutEditor.constants';
-import type { GlyphPack, HudLayout, HudNode } from '@shared/types/hud';
+import type { EditorToolbarProps } from './EditorToolbar.type';
 
 const spriteUrl = (file: string): string => `${getSpritesBase()}${file}.png`;
-
-interface EditorToolbarProps {
-  insert: (node: HudNode) => void;
-  layouts: readonly HudLayout[];
-  draftId: string;
-  onStartFrom: (layout: HudLayout) => void;
-  /** Slot numbers the previewed scheme currently has. A shortcut in the Slot
-   *  panel, never a cap on what can be typed there. */
-  slotNumbers: readonly number[];
-  glyphPacks: readonly GlyphPack[];
-  ratio: EditorRatio;
-  onRatioChange: (id: string) => void;
-  ground: EditorGround | null;
-  onGroundChange: (file: string) => void;
-  /** The container the selection points at, where the next insert will land. */
-  targetLabel: string;
-}
 
 const EditorToolbar = (props: EditorToolbarProps) => {
   const {
@@ -82,8 +31,6 @@ const EditorToolbar = (props: EditorToolbarProps) => {
   const snapping = useHudEditorViewStore((s) => s.snappingEnabled);
   const toggleSnapping = useHudEditorViewStore((s) => s.toggleSnapping);
 
-  // A press anywhere that is neither the bar nor an open panel closes it. The
-  // panel may be portalled, so "inside" has to be asked of it too.
   useEffect(() => {
     if (!openKey) return;
     const dismiss = (event: Event): void => {
@@ -97,10 +44,6 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 
   const close = useCallback(() => setOpenKey(null), []);
 
-  // The bar owns "one open at a time", so it is the bar and not each menu that
-  // registers at the `menu` level. A picker panel it opens registers itself at
-  // `popover` and therefore wins, which is why Escape over the sprite grid
-  // closes the grid, not the whole editor behind it.
   useDismissable({ active: openKey !== null, level: 'menu', onDismiss: close });
   const toggle = useCallback((key: string) => setOpenKey((current) => (current === key ? null : key)), []);
   const groups = buildToolbarGroups({ insert });
@@ -189,4 +132,4 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 };
 
 export { EditorToolbar };
-export type { EditorToolbarProps };
+export type { EditorToolbarProps } from './EditorToolbar.type';

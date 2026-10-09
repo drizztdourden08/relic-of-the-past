@@ -1,16 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The Glyph insert, picked by eye: tabs are the packs, tiles are the actual
- * artwork. Replaces the old pack-then-position nested menu, which asked a
- * player to recognise a control by its SDL name (`LEFT_SHOULDER`) instead of
- * its picture.
- *
- * Each tile resolves through the same fallback chain the live HUD draws with
- * (pack → its declared fallback → generic), so a position this pack does not
- * own its own art for still shows the picture it would actually get instead
- * of a blank square. A position nothing anywhere draws is left out of
- * the grid, because there is nothing to look at.
- */
 import { useMemo, useState } from 'react';
 import { Portal, usePickerPopover } from '@ds/primitives/Portal';
 import { Box } from '@ds/primitives/Box';
@@ -21,16 +9,8 @@ import { Thumbnail } from '@ds/primitives/Thumbnail';
 import { AUTO_PACK_ID, GENERIC_PACK_ID, findGlyphPack } from '@shared/input/glyphs';
 import { GLYPH_POSITIONS } from '../behavior/toolbar-menus';
 import { glyphSourceFor, glyphUrlOf } from '../behavior/glyph-art';
-import type { RefObject } from 'react';
-import type { GlyphPack, HudGlyphPosition } from '@shared/types/hud';
-
-interface GlyphPickerGridProps {
-  open: boolean;
-  anchorRef: RefObject<HTMLElement | null>;
-  packs: readonly GlyphPack[];
-  onClose: () => void;
-  onPick: (params: { position: HudGlyphPosition; pack?: string }) => void;
-}
+import type { HudGlyphPosition } from '@shared/types/hud';
+import type { GlyphPickerGridProps } from './GlyphPickerGrid.type';
 
 const GlyphPickerGrid = (props: GlyphPickerGridProps) => {
   const { open, anchorRef, packs, onClose, onPick } = props;
@@ -84,4 +64,4 @@ const GlyphPickerGrid = (props: GlyphPickerGridProps) => {
 };
 
 export { GlyphPickerGrid };
-export type { GlyphPickerGridProps };
+export type { GlyphPickerGridProps } from './GlyphPickerGrid.type';
