@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { navigate } from '@site-kit/router/useLocation';
+import { navigate } from '@rotp/design';
 import { reviewPack } from '../../../api/review-endpoints';
 import { usePackLink } from '../../../lib/pack-link/usePackLink';
 import { useReviewActions } from '../../Review/behavior/useReviewActions';

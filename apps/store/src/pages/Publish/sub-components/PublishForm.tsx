@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Button, Checkbox, Field, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { navigate } from '@site-kit/router/useLocation';
+import { navigate } from '@rotp/design';
 import { SUBMIT_LABELS } from '../Publish.constants';
 import { usePublishForm } from '../behavior/usePublishForm';
 import { useScrollToFirstError } from '../behavior/useScrollToFirstError';

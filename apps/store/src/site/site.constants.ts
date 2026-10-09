@@ -1,6 +1,6 @@
 /* @layer store-site @kind constants */
 import { STORE_RIGHTS } from '@rotp/hub-contracts';
-import type { SiteDefinition } from '@site-kit/site/site-definition.type';
+import type { SiteDefinition } from '@rotp/design';
 import { StoreDataProvider } from '../data/StoreDataProvider';
 import { StoreSearchResults } from '../search/StoreSearchResults/StoreSearchResults';
 import { STORE_VIEW_KEYS } from '../views/store-views';

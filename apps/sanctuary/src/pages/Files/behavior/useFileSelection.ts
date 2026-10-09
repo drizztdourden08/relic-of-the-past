@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
-import { navigate } from '@site-kit/router/useLocation';
+import { navigate } from '@rotp/design';
 import { FILES_PATH, NO_IDS } from './useFileSelection.constants';
 
 const routeOf = (ids: ReadonlySet<string>) => {

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { LockedEntryCardProps } from './LockedEntryCard.type';
-import '@domains/packs/language/compounds/entry/EntryCardCollapsed.css';
+import '@rotp/design';
 
 const LockedEntryCard = (props: LockedEntryCardProps) => {
   const { id, reason } = props;

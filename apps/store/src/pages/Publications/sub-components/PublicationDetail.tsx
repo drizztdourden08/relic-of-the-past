@@ -1,8 +1,8 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
-import { AppLink } from '@site-kit/router/AppLink';
+import { DetailPane } from '@rotp/design';
+import { AppLink } from '@rotp/design';
 import { itemPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { detailFieldsOf, detailTitleOf, entryOf } from '../behavior/publication-detail';

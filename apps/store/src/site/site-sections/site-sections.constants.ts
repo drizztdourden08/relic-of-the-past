@@ -6,7 +6,7 @@ import userIcon from '@iconify-icons/lucide/user';
 import reviewIcon from '@iconify-icons/lucide/clipboard-check';
 import settingsIcon from '@iconify-icons/lucide/settings';
 import type { StorePermission } from '@rotp/hub-contracts';
-import type { SiteNavGroup, SiteSection } from '@site-kit/site/site-definition.type';
+import type { SiteNavGroup, SiteSection } from '@rotp/design';
 import { KIND_ICONS, KIND_PLURALS, KIND_SECTIONS } from '../../lib/kinds';
 import type { StoreSectionId } from './site-sections.type';
 

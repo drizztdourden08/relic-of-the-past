@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
-import { TagList } from '@site-kit/components/TagList/TagList';
+import { TagList } from '@rotp/design';
 import { ItemPicture } from '../../../components/ItemPicture/ItemPicture';
 import type { ListingEditPreviewProps } from './ListingEditPreview.type';
 

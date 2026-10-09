@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { StoreItem } from '@rotp/hub-contracts';
 import { hasRight } from '@rotp/hub-contracts';
-import { useSessionContext } from '@site-kit/session/session-context';
+import { useSessionContext } from '@rotp/design';
 import { useItem } from '../../../catalog/useItem';
 import { approvedVersions, liveVersionOf } from '../../../catalog/approved-versions';
 import { useListingToggle } from '../../../catalog/useListingToggle';

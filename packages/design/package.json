@@ -1,0 +1,31 @@
+{
+  "name": "@rotp/design",
+  "version": "0.0.0",
+  "private": true,
+  "description": "React parts shared by the desktop app and the sites.",
+  "type": "module",
+  "sideEffects": [
+    "./src/packs/language/compounds/entry/EntryListItem.tsx",
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./packs": "./src/packs.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@drizztdourden08/tessera": "catalog:",
+    "@iconify-icons/logos": "^1.2.37",
+    "@iconify-icons/lucide": "^1.2.135",
+    "@iconify-icons/simple-icons": "^1.2.75",
+    "@iconify/react": "^6.0.2",
+    "@rotp/asset-extraction": "workspace:*",
+    "@rotp/game-data": "workspace:*",
+    "@rotp/hub-client": "workspace:*",
+    "@rotp/hub-contracts": "workspace:*",
+    "@rotp/languages": "workspace:*",
+    "@rotp/msu": "workspace:*",
+    "@rotp/packs": "workspace:*",
+    "react": "catalog:"
+  }
+}

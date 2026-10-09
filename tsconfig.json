@@ -12,9 +12,6 @@
       ],
       "@domains/*": [
         "./apps/desktop/src/ui/domains/*"
-      ],
-      "@site-kit/*": [
-        "./apps/site-kit/*"
       ]
     }
   },
@@ -22,7 +19,6 @@
     "apps/desktop/src/**/*",
     "apps/sanctuary/src/**/*",
     "apps/store/src/**/*",
-    "apps/site-kit/**/*",
     "apps/desktop/electron/**/*",
     "packages/*/src/**/*"
   ],

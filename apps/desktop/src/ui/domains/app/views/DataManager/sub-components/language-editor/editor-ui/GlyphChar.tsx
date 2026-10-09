@@ -3,11 +3,11 @@ import { Box, Canvas, Text } from '@drizztdourden08/tessera/primitives';
 import { widthOf } from '@rotp/languages';
 import { isMergedSecond, mergedSecondOf } from '../editor/merged-glyph';
 import { pictureGlyphIndex } from './glyph-index';
-import { CELL_W, useGlyphCanvas } from '@domains/packs/language/compounds/glyph';
+import { CELL_W, useGlyphCanvas } from '@rotp/design/packs';
 import type { CSSProperties } from 'react';
 import type { GlyphMetrics } from '@rotp/languages';
 import type { GlyphCharProps } from './GlyphChar.type';
-import '@domains/packs/language/compounds/glyph/GlyphChar.css';
+import '@rotp/design';
 
 const advanceStyle = (
   glyphs: (number | null)[],

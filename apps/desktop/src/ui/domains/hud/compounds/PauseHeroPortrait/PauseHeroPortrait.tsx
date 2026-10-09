@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { PoseCanvas } from '@domains/packs/character/compounds/PoseCanvas';
+import { PoseCanvas } from '@rotp/design/packs';
 import { HudBox } from '../../primitives/HudBox';
 import './PauseHeroPortrait.css';
 import { POSE_H, POSE_W } from './PauseHeroPortrait.constants';

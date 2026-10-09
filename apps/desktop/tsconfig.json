@@ -12,9 +12,6 @@
       "@domains/*": [
         "./src/ui/domains/*"
       ],
-      "@site-kit/*": [
-        "../site-kit/*"
-      ],
       "react": [
         "./node_modules/@types/react",
         "../../node_modules/@types/react"

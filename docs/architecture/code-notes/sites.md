@@ -814,7 +814,7 @@ AdminQueueResponse lists everyone holding a record on this site.
 
 The `2026-09-23 14:02` shape sorts as text in the order it reads, so a table column can hold it.
 
-## apps/site-kit/session/session-context/session-context.type.ts
+## packages/design/src/session/session-context/session-context.type.ts
 
 `access` is null with no session, or before the user's first sign-in on this site.
 `groups` holds groups added by hand, from Discord, or by the default fallback.
@@ -899,7 +899,7 @@ The browser keeps its own copy of the file only while the origin's free quota ex
 `T` is where a job goes and must survive IndexedDB (plain data and Blobs). `R` is the record the API answers with.
 `bind` gives the record's later steps, and is also how a restored job reaches its record. `stepsOf` must use the ids in FILE_STEP for the file's own steps.
 
-## apps/site-kit/upload/useLeaveGuard/useLeaveGuard.ts
+## packages/design/src/hooks/useLeaveGuard/useLeaveGuard.ts
 
 Leaving only pauses a job (the next visit continues it), so the browser's own prompt is enough and shows no text of ours. Older browsers show the prompt only when `returnValue` is set, which is why the handler assigns it.
 
@@ -911,27 +911,27 @@ NEW_TAB is spread onto the Box and not written as attributes, because the Box pr
 
 NEW_TAB is spread onto the Box and not written as attributes, because the Box primitive types anchor attributes loosely.
 
-## apps/site-kit/components/GroupChips/GroupChips.tsx
+## packages/design/src/compounds/GroupChips/GroupChips.tsx
 
 A group with neither marker (by hand, Discord) is the default group a GitHub collaborator falls back to.
 
-## apps/site-kit/components/MediaPreview/usePixelArt.ts
+## packages/design/src/compounds/MediaPreview/usePixelArt.ts
 
 An image with neither side above PIXEL_ART_MAX_SIDE pixels counts as pixel art (a sprite, a tile sheet). Pixel art is enlarged to fill its frame and drawn with hard pixel edges. A larger image is only ever shrunk and keeps smooth scaling.
 
-## apps/site-kit/components/MediaViewer/MediaViewer.css
+## packages/design/src/compounds/MediaViewer/MediaViewer.css
 
 The media is centred with auto margins so an oversized image still scrolls from its top left corner. Centring with flex alignment would cut off its top and left.
 
-## apps/site-kit/components/ProviderButton/ProviderButton.tsx
+## packages/design/src/compounds/ProviderButton/ProviderButton.tsx
 
 The button sends the browser to the API start route, which redirects to the provider; nothing is fetched. Without returnTo the API picks the landing page.
 
-## apps/site-kit/components/ProviderButton/provider-marks.ts
+## packages/design/src/compounds/ProviderButton/provider-marks.ts
 
 The Discord and GitHub marks are single colour and drawn in the button text colour. The Google mark is its four colour G, which Google's brand guidelines require.
 
-## apps/site-kit/components/RoleName/RoleName.tsx
+## packages/design/src/compounds/RoleName/RoleName.tsx
 
 A Discord role colour is RGB as a number, and 0 means no colour; the dot then takes the dim text colour, as Discord draws it. The colour is the role's own data, so it reaches CSS as the --role-color custom property and not as a design token.
 
@@ -939,71 +939,71 @@ A Discord role colour is RGB as a number, and 0 means no colour; the dot then ta
 
 Toasts sit bottom left so they never cover the uploads tray on the right. The frame mounts the layer once on every page; anything shows a toast with showToast.
 
-## apps/site-kit/components/UploadTray/UploadTray.css
+## packages/design/src/compounds/UploadTray/UploadTray.css
 
 The Portal overlay layer is click-through; the tray sets pointer-events back to auto.
 
-## apps/site-kit/layout/Brand/Brand.css
+## packages/design/src/compounds/Brand/Brand.css
 
 The wordmark is a pixel face: whole game cells only, no letter spacing, no font smoothing. The text stroke is painted behind the fill so the pixel letterforms keep their full width. The hero wordmark is a whole multiple of the game cell height so the letters stay sharp.
 
-## apps/site-kit/layout/SiteFrame/SiteFrame.css
+## packages/design/src/compounds/SiteFrame/SiteFrame.css
 
 The frame is the viewport: pages scroll inside main, never the document. The body gap leaves room for the nav's round toggle on its right edge.
 
-## apps/site-kit/layout/SiteFrame/sub-components/MemberFrame.tsx
+## packages/design/src/compounds/SiteFrame/sub-components/MemberFrame.tsx
 
 The member frame stays mounted while member pages change, so the nav keeps its width, its search text and its focus. While the search is in use the pane shows the results in place of the page; the route does not change.
 
-## apps/site-kit/layout/SiteNav/SiteNav.css
+## packages/design/src/compounds/SiteNav/SiteNav.css
 
 The brand shows its wordmark only while the nav is open, so it never widens the column when the nav is closed.
 
-## apps/site-kit/layout/SiteNav/sub-components/NavAvatar.css
+## packages/design/src/compounds/SiteNav/sub-components/NavAvatar.css
 
 The nav sizes its icons by font size, so the avatar is one em square, the same box an icon glyph takes.
 
-## apps/site-kit/layout/SitePage/SitePage.tsx
+## packages/design/src/compounds/SitePage/SitePage.tsx
 
 The flex row is always rendered, so the card is not remounted when the aside comes and goes.
 
-## apps/site-kit/layout/SitePage/SitePage.css
+## packages/design/src/compounds/SitePage/SitePage.css
 
 Header actions stretch to the full height of the header row so a drop target there is a real box, and they give up width when the line runs short.
 
-## apps/site-kit/layout/Workbench/Workbench.css
+## packages/design/src/compounds/Workbench/Workbench.css
 
 The table owns its scrolling. The column gives it the height and caps its width, so a wide column set scrolls inside the table and does not spill under the detail pane.
 
-## apps/site-kit/pages/Admin/behavior/useAdminQueue.ts
+## packages/design/src/views/Admin/behavior/useAdminQueue.ts
 
 Setting groups sends the person's whole manual group list, then reloads, because the API may move the person between access states. Ignore on a pending user is a revoke: the user stays out of the content until an admin gives them a group.
 
-## apps/site-kit/pages/Admin/behavior/useDiscordRoles.ts
+## packages/design/src/views/Admin/behavior/useDiscordRoles.ts
 
 available is false when the API has no Discord bot to ask; the group editor then falls back to typing a role id.
 
-## apps/site-kit/pages/Admin/behavior/useGroups.ts
+## packages/design/src/views/Admin/behavior/useGroups.ts
 
 Every write reloads the list because member counts are computed by the API. save with a null id creates a group; otherwise the whole body is sent as a patch. save resolves true on success so the editor knows to close.
 
-## apps/site-kit/pages/Admin/sub-components/GroupEditor.constants.ts
+## packages/design/src/views/Admin/sub-components/GroupEditor.constants.ts
 
 GROUP_NAME_MAX_CHARS mirrors MAX_GROUP_NAME_CHARS in packages/hub-contracts/src/hub/schemas/group-schemas.ts, which does not export it.
 
-## apps/site-kit/pages/Admin/sub-components/GroupEditor.tsx
+## packages/design/src/views/Admin/sub-components/GroupEditor.tsx
 
 The body is checked against the shared createGroupSchema, so what Save sends is what the API accepts. The rights of a site with no editor on this page are kept as they were. A single site's rights section has no heading.
 
-## apps/site-kit/pages/Admin/sub-components/MemberGroups.constants.ts
+## packages/design/src/views/Admin/sub-components/MemberGroups.constants.ts
 
 PORTALLED_MENU_SELECTOR names the portalled dropdown, so a click inside it does not count as an outside click.
 
-## apps/site-kit/pages/Admin/sub-components/MemberGroups.tsx
+## packages/design/src/views/Admin/sub-components/MemberGroups.tsx
 
 A click sends the person's whole manual group list. A group held through a Discord role is ticked and locked here because only the role decides it.
 
-## apps/site-kit/pages/Admin/sub-components/RolePicker.tsx
+## packages/design/src/views/Admin/sub-components/RolePicker.tsx
 
 A linked role the Discord server no longer has stays listed, marked, so an edit never drops it unless the admin picks another.
 

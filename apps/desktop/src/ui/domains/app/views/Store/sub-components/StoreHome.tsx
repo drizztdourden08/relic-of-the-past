@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Button, Flex, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { HookshopHighlight } from '../../../compounds/HookshopHighlight';
+import { HookshopHighlight } from '@rotp/design/packs';
 import type { StoreHomeProps } from '../Store.type';
 import { HIGHLIGHT_PIXEL } from '../Store.constants';
 import { updatesLine } from '../behavior/updates-line';

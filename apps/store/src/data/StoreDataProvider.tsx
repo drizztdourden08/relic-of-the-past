@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { useEffect, useMemo } from 'react';
-import { UploadLayer } from '@site-kit/components/UploadLayer';
+import { UploadLayer } from '@rotp/design';
 import { useCatalog } from '../catalog/useCatalog';
 import { usePublications } from '../publications/usePublications';
 import { STORE_QUEUE } from '../upload/store-queue/store-queue.constants';

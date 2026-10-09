@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { GlossaryTerm, LanguageSet, SetStructure, TextGroupId, Token, Variable } from '@rotp/languages';
 import { getLanguageSet } from '@app/lib/storage/languages-store';
-import { literalTermsOf, variablesOf } from '@domains/packs/language/behavior/set-variables';
+import { literalTermsOf, variablesOf } from '@rotp/design/packs';
 import type { LanguageEditorState, NameEdit } from '../language-editor.type';
 import {
   withEntryNote, withEntryTokens, withGlossaryTerm, withManyEntryTokens, withNameValue,

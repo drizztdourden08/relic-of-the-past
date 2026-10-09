@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { PackContents } from '@domains/packs/views/PackContents';
+import { PackContents } from '@rotp/design/packs';
 import type { PackContentsPanelProps } from './PackContentsPanel.type';
 
 const PackContentsPanel = (props: PackContentsPanelProps) => {

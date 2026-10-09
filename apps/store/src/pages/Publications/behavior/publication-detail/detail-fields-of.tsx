@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import type { Review } from '@rotp/hub-contracts';
 import type { ListingEdit, StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
+import type { DetailField } from '@rotp/design';
 import { formatBytes } from '@rotp/hub-client';
 import { formatDateTime } from '@rotp/hub-client';
 import { Status, Tag } from '@drizztdourden08/tessera/primitives';

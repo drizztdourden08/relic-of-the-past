@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind barrel */
-export { SOUND_CHANNEL_LABELS, soundHexId } from '@domains/packs/music/behavior/sound-names';
+export { SOUND_CHANNEL_LABELS, soundHexId } from '@rotp/design/packs';
 export { SOUND_CHANNEL_TAGS, EFFECT_CHANNELS, STUDIO_TABS } from './sound-labels.constants';
 export { soundTitle } from './sound-title';
 export { soundChannelTag } from './sound-channel-tag';

@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { ScrollArea, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { PopoverShell } from './PopoverShell';
 import { VariableChoice } from './VariableChoice';
-import { filterVariables } from '@domains/packs/language/compounds/variables/variable-groups';
+import { filterVariables } from '@rotp/design/packs';
 import { tokenForVariable } from '../../sub-components/variables/variable-token';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import type { Variable } from '@rotp/languages';

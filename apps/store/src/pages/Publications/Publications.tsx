@@ -1,12 +1,12 @@
 /* @layer store-site @kind component */
 import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { DataTable, FilterBar } from '@drizztdourden08/tessera/composites';
-import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
-import { SitePage } from '@site-kit/layout/SitePage/SitePage';
-import { Workbench } from '@site-kit/layout/Workbench/Workbench';
-import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
-import { AppLink } from '@site-kit/router/AppLink';
-import { useSessionContext } from '@site-kit/session/session-context';
+import { SideColumn } from '@rotp/design';
+import { SitePage } from '@rotp/design';
+import { Workbench } from '@rotp/design';
+import { SavedViewsMenu } from '@rotp/design';
+import { AppLink } from '@rotp/design';
+import { useSessionContext } from '@rotp/design';
 import { authorPath } from '../../catalog/item-paths';
 import { publicationRowId } from '../../publications/publication-row';
 import { PUBLICATION_DEFAULT_COLUMNS, PUBLICATION_DEFAULT_GROUP_BY } from '../../publications/publication-schema';

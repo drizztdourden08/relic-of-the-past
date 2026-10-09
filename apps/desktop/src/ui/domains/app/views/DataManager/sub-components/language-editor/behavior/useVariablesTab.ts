@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
 import { findHardcoded } from '@rotp/languages';
-import { countVariableUses } from '@domains/packs/language/behavior/entry-selectors';
-import { filterVariables } from '@domains/packs/language/compounds/variables/variable-groups';
-import type { VariableFilter } from '@domains/packs/language/compounds/variables/variable-groups';
+import { countVariableUses } from '@rotp/design/packs';
+import { filterVariables } from '@rotp/design/packs';
+import type { VariableFilter } from '@rotp/design/packs';
 import { acceptedOf, groupHardcoded } from './hardcoded-report';
 import { applyHardcoded } from './apply-hardcoded';
 import { NO_GROUPS } from './useVariablesTab.constants';

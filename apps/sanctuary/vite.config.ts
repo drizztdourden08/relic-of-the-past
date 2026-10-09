@@ -24,7 +24,6 @@ export default defineConfig({
     alias: {
       '@app': WEB_SRC,
       '@domains': resolve(WEB_SRC, 'ui/domains'),
-      '@site-kit': resolve(SITE_ROOT, '../site-kit'),
     },
   },
   server: {

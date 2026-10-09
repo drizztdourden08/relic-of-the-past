@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { VariableFilter } from '@domains/packs/language/compounds/variables/variable-groups';
+import type { VariableFilter } from '@rotp/design/packs';
 import type { DialogueEntry, Token, Variable } from '@rotp/languages';
 import type { HardcodedGroup } from './hardcoded-report';
 

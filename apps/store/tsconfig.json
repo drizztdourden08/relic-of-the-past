@@ -6,8 +6,6 @@
     ]
   },
   "include": [
-    "src/**/*",
-    "../site-kit/**/*",
-    "../desktop/src/ui/domains/packs/**/*"
+    "src/**/*"
   ]
 }

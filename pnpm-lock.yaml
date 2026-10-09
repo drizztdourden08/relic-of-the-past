@@ -295,6 +295,9 @@ importers:
       '@rotp/asset-extraction':
         specifier: workspace:*
         version: link:packages/asset-extraction
+      '@rotp/design':
+        specifier: workspace:*
+        version: link:packages/design
       '@rotp/features':
         specifier: workspace:*
         version: link:packages/features
@@ -517,6 +520,9 @@ importers:
       '@rotp/asset-extraction':
         specifier: workspace:*
         version: link:../../packages/asset-extraction
+      '@rotp/design':
+        specifier: workspace:*
+        version: link:../../packages/design
       '@rotp/features':
         specifier: workspace:*
         version: link:../../packages/features
@@ -794,6 +800,48 @@ importers:
       pngjs:
         specifier: 'catalog:'
         version: 7.0.0
+
+  packages/design:
+    dependencies:
+      '@drizztdourden08/tessera':
+        specifier: 'catalog:'
+        version: 0.30.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@iconify-icons/logos':
+        specifier: ^1.2.37
+        version: 1.2.37
+      '@iconify-icons/lucide':
+        specifier: ^1.2.135
+        version: 1.2.136
+      '@iconify-icons/simple-icons':
+        specifier: ^1.2.75
+        version: 1.2.75
+      '@iconify/react':
+        specifier: ^6.0.2
+        version: 6.0.2(react@19.2.7)
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:../asset-extraction
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
+      '@rotp/hub-client':
+        specifier: workspace:*
+        version: link:../hub-client
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../hub-contracts
+      '@rotp/languages':
+        specifier: workspace:*
+        version: link:../languages
+      '@rotp/msu':
+        specifier: workspace:*
+        version: link:../msu
+      '@rotp/packs':
+        specifier: workspace:*
+        version: link:../packs
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
 
   packages/features:
     dependencies:
@@ -1468,9 +1516,6 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
       typescript: '>=5.0'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@electron-internal/extract-zip@1.0.2':
     resolution: {integrity: sha512-VJuNETNPEhrmQEZezeTZO5TZMV+dobBRyJ7zHjGJWIhMS7m7W1UeClt69u4hkUxv9ZZVxuli/E9Yvc4gDNHGsg==}
@@ -7991,7 +8036,6 @@ snapshots:
       react-color: 2.19.3(react@19.2.7)
       react-dom: 19.2.7(react@19.2.7)
       react-markdown: 10.1.0(@types/react@19.2.17)(react@19.2.7)
-    optionalDependencies:
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/react'

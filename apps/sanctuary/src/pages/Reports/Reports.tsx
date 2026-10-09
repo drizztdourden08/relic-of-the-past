@@ -2,9 +2,9 @@
 import { useMemo } from 'react';
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { DataTable, FilterBar } from '@drizztdourden08/tessera/composites';
-import { SitePage } from '@site-kit/layout/SitePage/SitePage';
-import { Workbench } from '@site-kit/layout/Workbench/Workbench';
-import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
+import { SitePage } from '@rotp/design';
+import { Workbench } from '@rotp/design';
+import { SavedViewsMenu } from '@rotp/design';
 import { reportRowId } from '../../reports/report-row';
 import { REPORT_DEFAULT_COLUMNS, REPORT_DEFAULT_GROUP_BY } from '../../reports/report-schema.constants';
 import { useReportsPage } from './behavior/useReportsPage';

@@ -59,6 +59,7 @@
     "@iconify-icons/simple-icons": "^1.2.75",
     "@iconify/react": "^6.0.2",
     "@rotp/asset-extraction": "workspace:*",
+    "@rotp/design": "workspace:*",
     "@rotp/features": "workspace:*",
     "@rotp/game-core": "workspace:*",
     "@rotp/game-data": "workspace:*",

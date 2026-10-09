@@ -1,13 +1,13 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { navigate } from '@site-kit/router/useLocation';
-import { useSessionContext } from '@site-kit/session/session-context';
+import { navigate } from '@rotp/design';
+import { useSessionContext } from '@rotp/design';
 import { useSiteData } from '../../../data/useSiteData';
 import { toReportRow } from '../../../reports/report-row';
 import { buildReportSchema } from '../../../reports/report-schema';
-import { useSurfaceView } from '@site-kit/views/useSurfaceView';
+import { useSurfaceView } from '@rotp/design';
 import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views.constants';
-import { filterRows } from '@site-kit/views/filter-rows';
+import { filterRows } from '@rotp/design';
 import { scopePredicate, reportScopeTabs } from './report-scopes';
 import { useReportActions } from './useReportActions';
 import { REPORTS_PATH } from './useReportsPage.constants';

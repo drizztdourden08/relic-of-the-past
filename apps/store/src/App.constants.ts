@@ -1,6 +1,6 @@
 /* @layer store-site @kind constants */
 import { createElement } from 'react';
-import { HookshopHighlight } from '@domains/app/compounds/HookshopHighlight';
+import { HookshopHighlight } from '@rotp/design/packs';
 import { Barred } from './pages/Barred/Barred';
 
 const SIGN_IN_ART_PIXEL_SIZE = 3;

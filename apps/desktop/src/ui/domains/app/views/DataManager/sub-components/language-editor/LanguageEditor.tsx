@@ -4,10 +4,10 @@ import { Box, Tabs, EmptyState, Spinner } from '@drizztdourden08/tessera/primiti
 import { buildVariableIndex } from '@rotp/languages';
 import { kLanguages } from '@rotp/asset-extraction';
 import { useLanguageEditor } from './behavior/useLanguageEditor';
-import { useTranslationSearch } from '@domains/packs/language/behavior/useTranslationSearch';
-import { useEntryLayout } from '@domains/packs/language/behavior/useEntryLayout';
-import { filterEntriesByHits } from '@domains/packs/language/behavior/entry-selectors';
-import { VariablesTable } from '@domains/packs/language/compounds/variables';
+import { useTranslationSearch } from '@rotp/design/packs';
+import { useEntryLayout } from '@rotp/design/packs';
+import { filterEntriesByHits } from '@rotp/design/packs';
+import { VariablesTable } from '@rotp/design/packs';
 import { useSetFont } from './behavior/useSetFont';
 import { useEntryOpen } from './behavior/useEntryOpen';
 import { useVariablesTab } from './behavior/useVariablesTab';

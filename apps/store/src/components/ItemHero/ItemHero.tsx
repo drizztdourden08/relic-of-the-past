@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { Hero } from '@drizztdourden08/tessera/composites';
-import { AppLink } from '@site-kit/router/AppLink';
+import { AppLink } from '@rotp/design';
 import { authorPath } from '../../catalog/item-paths/author-path';
 import { KIND_PLURALS } from '../../lib/kinds/kinds.constants';
 import { averageOf } from '../../lib/format-count/average-of';

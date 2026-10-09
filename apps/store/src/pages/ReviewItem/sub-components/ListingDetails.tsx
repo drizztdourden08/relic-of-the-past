@@ -2,7 +2,7 @@
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { Box, Flex, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import type { MediaRef } from '@rotp/hub-contracts';
-import { TagList } from '@site-kit/components/TagList/TagList';
+import { TagList } from '@rotp/design';
 import { itemColorStyle } from '../../../lib/item-color-style';
 import type { ListingDetailsProps } from './ListingDetails.type';
 

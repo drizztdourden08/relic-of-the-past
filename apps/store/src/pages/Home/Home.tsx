@@ -1,8 +1,8 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { ItemCardView } from '@rotp/hub-contracts';
-import { SitePage } from '@site-kit/layout/SitePage/SitePage';
-import { useSessionContext } from '@site-kit/session/session-context';
+import { SitePage } from '@rotp/design';
+import { useSessionContext } from '@rotp/design';
 import { FeaturedHero } from '../../components/FeaturedHero/FeaturedHero';
 import { Shelf } from '../../components/Shelf/Shelf';
 import { itemPath } from '../../catalog/item-paths';

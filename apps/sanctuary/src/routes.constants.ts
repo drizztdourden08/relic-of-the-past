@@ -1,11 +1,11 @@
 /* @layer sanctuary-site @kind constants */
 import { createElement } from 'react';
 import { REPORTS_PERMISSION } from '@rotp/hub-contracts';
-import type { RouteEntry } from '@site-kit/router/route-table';
-import { SignIn } from '@site-kit/pages/SignIn/SignIn';
-import { Account } from '@site-kit/pages/Account/Account';
-import { Admin } from '@site-kit/pages/Admin/Admin';
-import { Device } from '@site-kit/pages/Device/Device';
+import type { RouteEntry } from '@rotp/design';
+import { SignIn } from '@rotp/design';
+import { Account } from '@rotp/design';
+import { Admin } from '@rotp/design';
+import { Device } from '@rotp/design';
 import { Files } from './pages/Files/Files';
 import { Reports } from './pages/Reports/Reports';
 import { SANCTUARY_SITE_UI } from './site/site.constants';

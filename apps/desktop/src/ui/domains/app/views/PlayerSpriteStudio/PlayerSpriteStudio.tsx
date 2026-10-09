@@ -2,8 +2,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
-import { useWearing } from '@domains/packs/character/behavior/useWearing';
-import { SpriteSheetViewer } from '@domains/packs/character/compounds/SpriteSheetViewer';
+import { useWearing } from '@rotp/design/packs';
+import { SpriteSheetViewer } from '@rotp/design/packs';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '../InstalledOriginBar';
 import { useSpriteLibrary } from './behavior/useSpriteLibrary';

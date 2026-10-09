@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { EntryViewMode, EntryViewState } from '@domains/packs/language/behavior/useEntryView';
+import type { EntryViewMode, EntryViewState } from '@rotp/design/packs';
 import type { EntryDraftState } from './useEntryDraft.type';
 
 type EntryOpenState = {

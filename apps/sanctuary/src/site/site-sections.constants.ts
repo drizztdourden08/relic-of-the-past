@@ -4,7 +4,7 @@ import flagIcon from '@iconify-icons/lucide/flag';
 import userIcon from '@iconify-icons/lucide/user';
 import shieldIcon from '@iconify-icons/lucide/shield';
 import { REPORTS_PERMISSION } from '@rotp/hub-contracts';
-import type { SiteNavGroup, SiteSection } from '@site-kit/site/site-definition.type';
+import type { SiteNavGroup, SiteSection } from '@rotp/design';
 import type { SiteSectionId } from './site-sections.type';
 
 const SITE_SECTIONS: Record<SiteSectionId, SiteSection> = {

@@ -4,8 +4,8 @@ import type { LanguageConfig } from '@rotp/asset-extraction';
 import type { GlyphMetrics, GlyphSheet } from '@rotp/languages';
 import type { EntryIssueMap } from '../language-editor.type';
 import type { EntryDraftState } from '../behavior/useEntryDraft.type';
-import type { LayoutLookup } from '@domains/packs/language/behavior/useEntryLayout';
-import type { EntryViewMode, EntryViewState } from '@domains/packs/language/behavior/useEntryView';
+import type { LayoutLookup } from '@rotp/design/packs';
+import type { EntryViewMode, EntryViewState } from '@rotp/design/packs';
 
 type EntryFilter = 'all' | 'warnings' | 'choices';
 

@@ -133,6 +133,7 @@
     "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.60.0",
     "@rotp/asset-extraction": "workspace:*",
+    "@rotp/design": "workspace:*",
     "@rotp/features": "workspace:*",
     "@rotp/game-core": "workspace:*",
     "@rotp/game-data": "workspace:*",

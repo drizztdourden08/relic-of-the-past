@@ -2,10 +2,10 @@
 import { useCallback, useState } from 'react';
 import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { Stack, Button, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import { SiteFrame } from '@site-kit/layout/SiteFrame/SiteFrame';
-import { Gate } from '@site-kit/components/Gate/Gate';
-import { ProviderButton } from '@site-kit/components/ProviderButton/ProviderButton';
-import { useSessionContext } from '@site-kit/session/session-context';
+import { SiteFrame } from '@rotp/design';
+import { Gate } from '@rotp/design';
+import { ProviderButton } from '@rotp/design';
+import { useSessionContext } from '@rotp/design';
 import { recheckAccess } from '@rotp/hub-client';
 import { errorMessage } from '@rotp/hub-client';
 import './Pending.css';

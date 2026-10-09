@@ -3,7 +3,7 @@ import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@rotp/hub-contracts';
 import type { FileType } from '@rotp/hub-contracts';
 import { REPORTS_PERMISSION, SANCTUARY_RIGHTS, filePermission } from '@rotp/hub-contracts';
 import { Checkbox, Field, Flex, Toggle } from '@drizztdourden08/tessera/primitives';
-import type { RightsEditorProps } from '@site-kit/site/site-definition.type';
+import type { RightsEditorProps } from '@rotp/design';
 
 const withPermission = (value: readonly string[], permission: string, on: boolean): string[] =>
   SANCTUARY_RIGHTS.all.filter((entry) => (entry === permission ? on : value.includes(entry)));

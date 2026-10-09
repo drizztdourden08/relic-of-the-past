@@ -2,10 +2,10 @@
 import { Flex, Status, Text } from '@drizztdourden08/tessera/primitives';
 import type { ItemCardView } from '@rotp/hub-contracts';
 import { KIND_CONTAINER } from '@rotp/hub-contracts';
-import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
-import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
-import { TagList } from '@site-kit/components/TagList/TagList';
-import { AppLink } from '@site-kit/router/AppLink';
+import { DetailPane } from '@rotp/design';
+import type { DetailField } from '@rotp/design';
+import { TagList } from '@rotp/design';
+import { AppLink } from '@rotp/design';
 import { formatBytes } from '@rotp/hub-client';
 import type { ItemResponse } from '@rotp/hub-contracts';
 import { InstallButton } from '../../../components/InstallButton/InstallButton';

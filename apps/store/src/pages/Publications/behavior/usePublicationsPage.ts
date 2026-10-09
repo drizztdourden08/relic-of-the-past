@@ -1,8 +1,8 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { navigate } from '@site-kit/router/useLocation';
-import { useSurfaceView } from '@site-kit/views/useSurfaceView';
-import { filterRows } from '@site-kit/views/filter-rows';
+import { navigate } from '@rotp/design';
+import { useSurfaceView } from '@rotp/design';
+import { filterRows } from '@rotp/design';
 import { useStoreData } from '../../../data/store-data-context';
 import { STORE_VIEWS } from '../../../views/store-views';
 import { parseRowId, rowsOfItem } from '../../../publications/publication-row';

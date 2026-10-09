@@ -1,8 +1,8 @@
 /* @layer store-site @kind component */
-import type { RouteEntry } from '@site-kit/router/route-table';
-import { SignIn } from '@site-kit/pages/SignIn/SignIn';
-import { Account } from '@site-kit/pages/Account/Account';
-import { Device } from '@site-kit/pages/Device/Device';
+import type { RouteEntry } from '@rotp/design';
+import { SignIn } from '@rotp/design';
+import { Account } from '@rotp/design';
+import { Device } from '@rotp/design';
 import { STORE_KINDS, KIND_SECTIONS } from './lib/kinds/kinds.constants';
 import { FEATURE_PERMISSION, REVIEW_PERMISSION } from './site/site-sections/site-sections.constants';
 import { STORE_SITE_UI } from './site/site.constants';

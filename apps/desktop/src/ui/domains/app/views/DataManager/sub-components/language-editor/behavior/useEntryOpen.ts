@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useRef } from 'react';
 import { useEntryDraft } from './useEntryDraft';
-import { useEntryView } from '@domains/packs/language/behavior/useEntryView';
+import { useEntryView } from '@rotp/design/packs';
 import type { DialogueEntry, Token } from '@rotp/languages';
 import type { EntryDraftState } from './useEntryDraft.type';
-import type { EntryViewMode } from '@domains/packs/language/behavior/useEntryView';
+import type { EntryViewMode } from '@rotp/design/packs';
 import type { EntryOpenState } from './useEntryOpen.type';
 
 const useEntryOpen = (

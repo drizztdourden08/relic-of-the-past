@@ -1,6 +1,6 @@
 /* @layer store-site @kind constants */
-import { createViewKeys } from '@site-kit/views/create-view-keys';
-import { createViewStorage } from '@site-kit/views/create-view-storage';
+import { createViewKeys } from '@rotp/design';
+import { createViewStorage } from '@rotp/design';
 
 const STORE_VIEW_SURFACES = ['browse', 'publications', 'review'] as const;
 

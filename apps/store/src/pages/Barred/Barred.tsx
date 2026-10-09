@@ -1,9 +1,9 @@
 /* @layer store-site @kind component */
 import { useCallback, useState } from 'react';
 import { Button, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { SiteFrame } from '@site-kit/layout/SiteFrame/SiteFrame';
-import { Gate } from '@site-kit/components/Gate/Gate';
-import { useSessionContext } from '@site-kit/session/session-context';
+import { SiteFrame } from '@rotp/design';
+import { Gate } from '@rotp/design';
+import { useSessionContext } from '@rotp/design';
 import { recheckAccess } from '@rotp/hub-client';
 import { errorMessage } from '@rotp/hub-client';
 

@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { PackSource } from '@domains/packs/pack-source.type';
+import type { PackSource } from '@rotp/design/packs';
 
 type ManifestViewProps = {
   source: PackSource | null;

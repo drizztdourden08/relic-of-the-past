@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { setFontAssets } from '@domains/packs/language/behavior/set-font-assets';
-import type { SetFontAssets } from '@domains/packs/language/behavior/set-font-assets';
+import { setFontAssets } from '@rotp/design/packs';
+import type { SetFontAssets } from '@rotp/design/packs';
 import { getLanguageSet, getLanguageSetFont } from '@app/lib/storage/languages-store';
 
 const assetsBySetId = new Map<string, Promise<SetFontAssets | null>>();

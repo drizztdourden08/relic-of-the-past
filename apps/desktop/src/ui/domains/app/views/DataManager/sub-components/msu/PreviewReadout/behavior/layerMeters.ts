@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { LayerReport } from '@rotp/msu';
-import { clock } from '@domains/packs/music/behavior/clock';
+import { clock } from '@rotp/design/packs';
 import { voiceCaptions } from './voiceCaptions';
 import { shortName } from './shortName';
 import { GAP_MODES } from './layerMeters.constants';

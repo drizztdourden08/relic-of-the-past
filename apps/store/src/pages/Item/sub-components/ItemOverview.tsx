@@ -2,7 +2,7 @@
 import { Markdown, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreItem } from '@rotp/hub-contracts';
-import { TagList } from '@site-kit/components/TagList/TagList';
+import { TagList } from '@rotp/design';
 import { formatDay } from '@rotp/hub-client';
 import { KindChip } from '../../../components/KindChip/KindChip';
 import { factsLine } from '../../../catalog/facts-line';

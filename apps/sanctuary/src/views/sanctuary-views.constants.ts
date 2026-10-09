@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind constants */
 import { SANCTUARY_VIEW_SURFACES } from '@rotp/hub-contracts';
-import { createViewKeys } from '@site-kit/views/create-view-keys';
-import { createViewStorage } from '@site-kit/views/create-view-storage';
+import { createViewKeys } from '@rotp/design';
+import { createViewStorage } from '@rotp/design';
 
 const SANCTUARY_VIEW_KEYS = createViewKeys('sanctuary', SANCTUARY_VIEW_SURFACES);
 

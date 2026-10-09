@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import type { MouseEvent } from 'react';
 import { Box, EmptyState } from '@drizztdourden08/tessera/primitives';
-import { routeAnchorClick } from '@site-kit/router/route-anchor-click';
+import { routeAnchorClick } from '@rotp/design';
 import { ItemCard } from '../ItemCard/ItemCard';
 import type { ItemGridProps } from './ItemGrid.type';
 import { CARD_SELECTOR } from './ItemGrid.constants';
