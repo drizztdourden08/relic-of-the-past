@@ -1,16 +1,20 @@
 /* @layer shared-game @kind barrel */
-export { compareSet, compareSets } from './compare-sets';
+export { classify } from './classify';
+export { compareField } from './compare-field';
+export { compareSet } from './compare-set';
+export { compareSets } from './compare-sets';
 export { deepEqual } from './deep-equal';
 export { detectorFromStrategy } from './detector-from-strategy';
 export { diffsByRecordFrom } from './diffs-by-record';
-export type { UnresolvableMapper } from './detector-from-strategy';
-export { defaultFormat, hex2, hex4, isAbsent, known, unread } from './probe-helpers';
-export { classify, compareField, runComparison } from './run-comparison';
-export { getPath, setPath } from './set-path';
+export type { UnresolvableMapper } from './detector-from-strategy.type';
+export { isAbsent, known, unread } from './probe-reading';
+export { defaultFormat, hex2, hex4 } from './value-format';
+export { runComparison } from './run-comparison';
+export { getPath, setPath } from './record-path';
 export {
   allStrategies, clearStrategies, registerStrategy, strategyFor,
 } from './strategy-registry';
-export type { ComparisonStrategy, FieldProbe, Probe, SetProbe } from './probe.types';
+export type { ComparisonStrategy, FieldProbe, Probe, SetProbe } from './probe.type';
 export type {
   Difference, DifferenceStatus, SetDifference, SetDifferenceStatus, SubjectComparison,
-} from './difference.types';
+} from './difference.type';

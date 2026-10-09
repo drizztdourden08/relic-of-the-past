@@ -1,31 +1,7 @@
 /* @layer shared-game @kind data */
-/**
- * Glyphs the dialogue fonts lack, drawn in the game's own style, so any name another game sends
- * shows as it was typed. The core writes each one into a spare slot of the active font
- * (core/game-hooks/dialog_extra_glyphs.c) and the composer encodes the character to that slot.
- *
- * Every glyph is the font's own cell: 8 columns by 16 rows, the top 8 rows one tile and the bottom
- * 8 the next. In the rows, ' ' is the transparent ground, '.' the dark edge (palette entry 1) and
- * '#' the letter's body (entry 2). The body is one pixel wide like the game's letters, starts on
- * column 1, and sits on the same lines: capitals from row 2, the baseline on row 12, descenders to
- * row 14. The edge rings the body on every side, the way every glyph in the sheet has it. The
- * width is the pen advance, body plus one edge column on each side, and every edge pixel lies
- * inside it because the engine draws only that many columns.
- *
- * The list is in priority order. A font with fewer spare slots than missing characters takes them
- * from the top, so the characters that turn up most in player and item names come first.
- */
-
-interface ExtraGlyph {
-  char: string;
-  /** Pen advance in pixels, 1..8, as the font's width table stores it. */
-  width: number;
-  /** 16 rows of 8 pixels: ' ' ground, '.' edge, '#' body. */
-  rows: readonly string[];
-}
+import type { ExtraGlyph } from './extra-glyph.type';
 
 const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
-  // underscore
   {
     char: '_',
     width: 6,
@@ -48,7 +24,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // colon
   {
     char: ':',
     width: 4,
@@ -71,7 +46,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // ampersand
   {
     char: '&',
     width: 7,
@@ -94,7 +68,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // hyphen
   {
     char: '-',
     width: 6,
@@ -117,7 +90,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // apostrophe
   {
     char: "'",
     width: 4,
@@ -140,7 +112,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // slash
   {
     char: '/',
     width: 6,
@@ -163,7 +134,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // plus
   {
     char: '+',
     width: 7,
@@ -186,7 +156,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // number sign
   {
     char: '#',
     width: 7,
@@ -209,7 +178,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // asterisk
   {
     char: '*',
     width: 7,
@@ -232,7 +200,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // percent
   {
     char: '%',
     width: 7,
@@ -255,7 +222,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // semicolon
   {
     char: ';',
     width: 4,
@@ -278,7 +244,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '...     ',
     ],
   },
-  // equals
   {
     char: '=',
     width: 6,
@@ -301,7 +266,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // left bracket
   {
     char: '[',
     width: 5,
@@ -324,7 +288,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // right bracket
   {
     char: ']',
     width: 5,
@@ -347,7 +310,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // left pointer, drawn as the US font's own
   {
     char: '<',
     width: 8,
@@ -370,7 +332,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // right pointer, drawn as the US font's own
   {
     char: '>',
     width: 8,
@@ -393,7 +354,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // tilde
   {
     char: '~',
     width: 7,
@@ -416,7 +376,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // at sign
   {
     char: '@',
     width: 7,
@@ -439,7 +398,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // caret
   {
     char: '^',
     width: 7,
@@ -462,7 +420,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // grave accent
   {
     char: '`',
     width: 4,
@@ -485,7 +442,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // left brace
   {
     char: '{',
     width: 6,
@@ -508,7 +464,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // right brace
   {
     char: '}',
     width: 6,
@@ -531,7 +486,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // vertical bar
   {
     char: '|',
     width: 3,
@@ -554,7 +508,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '...     ',
     ],
   },
-  // backslash
   {
     char: '\\',
     width: 6,
@@ -577,7 +530,6 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
       '        ',
     ],
   },
-  // dollar sign
   {
     char: '$',
     width: 7,
@@ -603,4 +555,4 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
 ];
 
 export { EXTRA_GLYPHS };
-export type { ExtraGlyph };
+export type { ExtraGlyph } from './extra-glyph.type';

@@ -1,13 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * Whether a dataset requirement is met by what is held and what is done.
- *
- * This is the dataset's own little language (an item, an earlier check, allOf, anyOf, a count over
- * an item group, or plainly impossible), and nothing more. It is not a rules engine and never
- * decides where a player can go: detection reads a record's `derived` and `fallback` with it
- * (tracker/derived-checks.ts), the simulator reads a boss gate with it, and the rows no world
- * holds a location for are judged with it (logic/record-statuses.ts).
- */
 import { membersOf } from '../data';
 import type { CheckId, ItemId, Requirement } from '../data';
 

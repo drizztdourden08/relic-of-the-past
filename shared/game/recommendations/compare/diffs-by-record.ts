@@ -1,23 +1,10 @@
 /* @layer shared-game @kind logic */
-/**
- * Every live FIELD difference across every registered comparison strategy,
- * keyed by record id then by field path. This is the shape a caller with a record
- * id can look its own differences up from directly, without re-deriving
- * them from a strategy's own subject list.
- *
- * Only `runComparison`'s field probes feed this map, never `compareSets`: a
- * set difference (`SetDifference`) describes a whole record that is missing
- * or unbacked, not a field on a record already on screen, so it has no path
- * to key this map by and no row to attach a bracket to. `detector-from-
- * strategy.ts` already turns those into their own create/delete
- * recommendations, which is where that kind of finding belongs.
- */
 import type { EntityKind } from '../../data/types';
-import { allStrategies } from './strategy-registry';
-import { runComparison } from './run-comparison';
-import type { ComparisonStrategy } from './probe.types';
-import type { Difference } from './difference.types';
 import type { DetectionContext } from '../detection-types';
+import type { Difference } from './difference.type';
+import type { ComparisonStrategy } from './probe.type';
+import { runComparison } from './run-comparison';
+import { allStrategies } from './strategy-registry';
 
 const diffsByRecordFrom = (
   context: DetectionContext,

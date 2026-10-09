@@ -1,17 +1,6 @@
 /* @layer shared-game @kind logic */
-/**
- * Token stream to bracket string. The export half of the adapter, and the
- * exact inverse of `parseTokens` for every string the dialogue decoder can
- * emit. The output feeds the existing compression path, so the shape must match
- * `formatDialogueText` byte for byte: a param is rendered decimal and padded to
- * a minimum of two digits (`0` -> `00`, `15` -> `15`, `255` -> `255`).
- *
- * A `ref` token cannot be serialized: glossary references are expanded by
- * `resolveRefs` first, and reaching one here means that step was skipped.
- */
 import type { Token } from '../types';
 
-/** Same padding rule the decoder uses when it renders a command param. */
 const formatParam = (param: number): string => String(param).padStart(2, '0');
 
 const bracket = (name: string, param: number | undefined): string => (

@@ -1,29 +1,8 @@
-/* @layer shared-game @kind data */
-/**
- * Maps WASM entrance tables to connection points.
- *
- * Uses WASM entrance positions + exit screen map to identify which
- * ConnectionPointData corresponds to which game entrance ID.
- *
- * Input: WASM entrance data (wasmGetOverworldEntrances, wasmGetExitScreenMap)
- * Output: ConnectionPointData[] for each screen
- */
-
+/* @layer shared-game @kind logic */
 import type { ConnectionPointData } from '../nav-data.types';
-import type { OverworldEntrance } from '../types';
+import type { EntranceResolverInput, ResolvedEntrance } from './entrance-resolver.type';
 import { GRID_SIZE } from '../types';
-
-interface EntranceResolverInput {
-  entrances: OverworldEntrance[];
-  exitScreenByRoom: Map<number, number>;
-  entranceRooms: Uint16Array;
-}
-
-interface ResolvedEntrance {
-  screenIndex: number;
-  entranceId: number;
-  point: ConnectionPointData;
-}
+import { DARK_WORLD_FLAG } from './analysis.constants';
 
 const resolveEntrances = (input: EntranceResolverInput): ResolvedEntrance[] => {
   const { entrances, exitScreenByRoom } = input;
@@ -34,27 +13,19 @@ const resolveEntrances = (input: EntranceResolverInput): ResolvedEntrance[] => {
     const row = Math.min(ent.gridRow, GRID_SIZE - 1);
     const col = Math.min(ent.gridCol, GRID_SIZE - 1);
 
-    // Determine world prefix from screen index
-    const world = screenIndex >= 0x40 ? 'dw' : 'lw';
+    const world = screenIndex >= DARK_WORLD_FLAG ? 'dw' : 'lw';
     const screenHex = screenIndex.toString(16).padStart(2, '0');
-    const id = `${world}-${screenHex}-door-${ent.id}`;
-
-    // Determine exit screen for this entrance (which overworld screen the exit returns to)
     const exitScreen = exitScreenByRoom.get(ent.roomId);
+    const isPassage = exitScreen !== undefined && exitScreen !== screenIndex;
 
     const point: ConnectionPointData = {
-      id,
-      tiles: [], // Doors don't have border tile arrays
-      requirements: [], // No tile-level requirements to reach the door itself
+      id: `${world}-${screenHex}-door-${ent.id}`,
+      tiles: [],
+      requirements: [],
       position: { row, col },
       entranceIndex: ent.id,
-      oneWay: null, // Most entrances are bidirectional
+      oneWay: isPassage ? 'enter' : null,
     };
-
-    // If exit screen differs from the entrance's area, it's a passage (one-way enter here)
-    if (exitScreen !== undefined && exitScreen !== screenIndex) {
-      point.oneWay = 'enter';
-    }
 
     results.push({ screenIndex, entranceId: ent.id, point });
   }
@@ -63,4 +34,4 @@ const resolveEntrances = (input: EntranceResolverInput): ResolvedEntrance[] => {
 };
 
 export { resolveEntrances };
-export type { EntranceResolverInput, ResolvedEntrance };
+export type { EntranceResolverInput, ResolvedEntrance } from './entrance-resolver.type';

@@ -1,37 +1,29 @@
 /* @layer shared-game @kind logic */
-/** Convert Link's world-pixel position to his flood-fill start tile on a 64×64 screen grid. */
+import type { GridPos } from './types';
+import type { LinkStartTileArgs } from './link-start-tile.type';
+import { GRID_SIZE } from './types';
+import { HITBOX_SIZE_PX, HITBOX_TOP_OFFSET_PX, TILE_PX } from './link-start-tile.constants';
 
-interface LinkStartTileArgs {
-  linkX: number;
-  linkY: number;
-  screenWorldX: number;
-  screenWorldY: number;
-}
+const clampToGrid = (v: number): number => Math.max(0, Math.min(GRID_SIZE - 1, v));
 
-/**
- * Nearest tile of the player's 16x16 collision hitbox (the lower half of the sprite,
- * with the head skipped and the hitbox starting 8px below the sprite top), matching
- * the overlay debug footprint.
- */
-const linkStartTile = ({ linkX, linkY, screenWorldX, screenWorldY }: LinkStartTileArgs): { row: number; col: number } => {
+const linkStartTile = ({ linkX, linkY, screenWorldX, screenWorldY }: LinkStartTileArgs): GridPos => {
   const relPixelX = linkX - screenWorldX;
-  const relPixelY = (linkY + 8) - screenWorldY;
+  const relPixelY = (linkY + HITBOX_TOP_OFFSET_PX) - screenWorldY;
 
-  const tileMinCol = Math.floor(relPixelX / 8);
-  const tileMaxCol = Math.floor((relPixelX + 15) / 8);
-  const tileMinRow = Math.floor(relPixelY / 8);
-  const tileMaxRow = Math.floor((relPixelY + 15) / 8);
+  const tileMinCol = Math.floor(relPixelX / TILE_PX);
+  const tileMaxCol = Math.floor((relPixelX + HITBOX_SIZE_PX - 1) / TILE_PX);
+  const tileMinRow = Math.floor(relPixelY / TILE_PX);
+  const tileMaxRow = Math.floor((relPixelY + HITBOX_SIZE_PX - 1) / TILE_PX);
 
-  const centerCol = relPixelX / 8 + 0.5;
-  const centerRow = relPixelY / 8 + 0.5;
-  const clamp = (v: number) => Math.max(0, Math.min(63, v));
+  const centerCol = relPixelX / TILE_PX + 0.5;
+  const centerRow = relPixelY / TILE_PX + 0.5;
 
-  let best: { row: number; col: number } | null = null;
+  let best: GridPos | null = null;
   let bestD2 = Number.POSITIVE_INFINITY;
   for (let r = tileMinRow; r <= tileMaxRow; r++) {
     for (let c = tileMinCol; c <= tileMaxCol; c++) {
-      const rr = clamp(r);
-      const cc = clamp(c);
+      const rr = clampToGrid(r);
+      const cc = clampToGrid(c);
       const dr = rr - centerRow;
       const dc = cc - centerCol;
       const d2 = dr * dr + dc * dc;
@@ -41,7 +33,8 @@ const linkStartTile = ({ linkX, linkY, screenWorldX, screenWorldY }: LinkStartTi
       }
     }
   }
-  return best ?? { row: clamp(Math.floor(centerRow)), col: clamp(Math.floor(centerCol)) };
+  return best ?? { row: clampToGrid(Math.floor(centerRow)), col: clampToGrid(Math.floor(centerCol)) };
 };
 
 export { linkStartTile };
+export type { LinkStartTileArgs } from './link-start-tile.type';

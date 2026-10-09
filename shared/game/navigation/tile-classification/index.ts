@@ -2,6 +2,8 @@
 export { classifyTile } from './classify-tile';
 export { classifyTileAttr } from './classify-collision';
 export { resolveInteractable } from './resolve-interactable';
-export type { ResolveInteractableParams } from './resolve-interactable';
-export { resolveRoomContext, roomTypeLabel } from './resolve-room-context';
-export type { RoomContext, TileInteractable, TileClassification, ClassifyTileParams } from './types';
+export { resolveRoomContext } from './resolve-room-context';
+export { roomTypeLabel } from './room-type-label';
+export type {
+  ClassifyTileParams, ResolveInteractableParams, RoomContext, TileClassification, TileInteractable,
+} from './tile-classification.type';

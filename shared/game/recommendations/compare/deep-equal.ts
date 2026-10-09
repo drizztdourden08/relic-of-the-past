@@ -1,24 +1,11 @@
 /* @layer shared-game @kind logic */
-/**
- * Structural equality for one probe's value against the record's current
- * value. Split out of `run-comparison.ts` to keep that file under the size
- * cap once the classification and formatting logic sit alongside it.
- *
- * `undefined`, `null` and a missing key all compare equal to one another. A
- * record that never declared a field, one that set it to `undefined`, and one
- * that set it to `null` all mean "nothing here" throughout this codebase (see
- * `known()` in `probe-helpers.ts`, which folds a live `null` reading to
- * `undefined` for exactly this reason), so none of the three should read as a
- * difference against either of the others.
- */
-
-const isPlainObject = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
+import { isPlainObject } from '../is-plain-object';
+import { isAbsent } from './probe-reading';
 
 const deepEqual = (a: unknown, b: unknown): boolean => {
   if (Object.is(a, b)) return true;
-  if (a === undefined || a === null) return b === undefined || b === null;
-  if (b === undefined || b === null) return false;
+  if (isAbsent(a)) return isAbsent(b);
+  if (isAbsent(b)) return false;
 
   if (Array.isArray(a) || Array.isArray(b)) {
     if (!Array.isArray(a) || !Array.isArray(b)) return false;

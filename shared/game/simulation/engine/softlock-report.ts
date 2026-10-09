@@ -1,24 +1,12 @@
 /* @layer shared-game @kind logic */
-/**
- * Builds the SoftlockReport from a finished run: the checks completed, the
- * checks left blocked (with the requirement sets that gate their screen), and
- * the screens never reached.
- */
 import type { TraversalRequirement } from '../../navigation/nav-data.types';
 import type { SoftlockReport } from '../types';
 import { find } from '../../data';
-import type { CheckRecord, ScreenRecord } from '../../data';
-import type { Adjacency } from './traversal';
-import { buildAdjacency } from './traversal';
-import type { EngineState } from './state';
+import type { Adjacency } from './traversal/traversal.type';
+import { buildAdjacency } from './traversal/build-adjacency';
+import type { EngineState } from './state/state.type';
+import type { ReportDeps } from './softlock-report.type';
 
-interface ReportDeps {
-  adjacency?: Adjacency;
-  checks?: CheckRecord[];
-  screens?: ScreenRecord[];
-}
-
-/** Requirement sets on every edge that leads into a screen, which is why it stayed blocked. */
 const gatesInto = (adjacency: Adjacency, screenId: string): TraversalRequirement[][] => {
   const missing: TraversalRequirement[][] = [];
   for (const edges of adjacency.values()) {
@@ -38,8 +26,6 @@ const buildSoftlockReport = (state: EngineState, deps: ReportDeps = {}): Softloc
 
   const completed = [...state.completedChecks];
   const blocked = checks
-    // By id: the name join marked all 11 dungeons' "Big Chest" complete the
-    // moment any one of them was, so a blocked chest vanished from the report.
     .filter(c => !state.completedChecks.has(c.id) && (!c.screenId || !state.reachedScreens.has(c.screenId)))
     .map(c => ({ checkId: c.id, missing: c.screenId ? gatesInto(adjacency, c.screenId) : [] }));
   const unreachedScreens = screens.map(s => s.id).filter(id => !state.reachedScreens.has(id));
@@ -48,4 +34,4 @@ const buildSoftlockReport = (state: EngineState, deps: ReportDeps = {}): Softloc
 };
 
 export { buildSoftlockReport };
-export type { ReportDeps };
+export type { ReportDeps } from './softlock-report.type';

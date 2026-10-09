@@ -1,0 +1,17 @@
+/* @layer shared-game @kind constants */
+const BG3_TILEMAP_BASE = 0x6000;
+const TILEMAP_COLS = 32;
+const TILE_PX = 8;
+const FRAME_COLS = 24;
+const FRAME_ROWS = 8;
+const TEXT_AREA_COLS = 21;
+const TEXT_ROW_PX = 16;
+const TEXT_ROWS = 3;
+const SCREEN_W = 256;
+const SCREEN_H = 224;
+const INK_OPTICAL_OFFSET_Y = 1;
+
+export {
+  BG3_TILEMAP_BASE, FRAME_COLS, FRAME_ROWS, INK_OPTICAL_OFFSET_Y, SCREEN_H, SCREEN_W, TEXT_AREA_COLS, TEXT_ROW_PX, TEXT_ROWS,
+  TILE_PX, TILEMAP_COLS,
+};

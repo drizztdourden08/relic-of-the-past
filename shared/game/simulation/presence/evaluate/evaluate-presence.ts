@@ -1,0 +1,39 @@
+/* @layer shared-game @kind logic */
+import type { BitState, PresenceCondition } from '../../../data';
+import type { PresenceGameState } from '../presence.type';
+import { BOSS_DEAD_BIT } from '../presence.constants';
+
+const bitMatches = (value: number, mask: number, state: BitState): boolean => {
+  const present = (value & mask) !== 0;
+  return state === 'set' ? present : !present;
+};
+
+const evaluatePresence = (condition: PresenceCondition | undefined, state: PresenceGameState): boolean => {
+  if (!condition) return true;
+
+  if ('progressFlag' in condition) return bitMatches(state.progressFlags, condition.progressFlag, condition.state);
+  if ('progressIndicator3' in condition) {
+    return bitMatches(state.progressIndicator3, condition.progressIndicator3, condition.state);
+  }
+  if ('itemId' in condition) return state.inventory.has(condition.itemId) === condition.owned;
+  if ('follower' in condition) return state.followerIndicator === 0;
+  if ('followerEq' in condition) return state.followerIndicator === condition.followerEq;
+  if ('owEvent' in condition) {
+    return bitMatches(state.owEventInfo[condition.owEvent.screen] ?? 0, condition.owEvent.mask, condition.state);
+  }
+  if ('roomBossDead' in condition) {
+    const dead = ((state.roomState[condition.roomBossDead] ?? 0) & BOSS_DEAD_BIT) !== 0;
+    return dead === condition.dead;
+  }
+  if ('progressIndicatorEq' in condition) return state.progressIndicator === condition.progressIndicatorEq;
+  if ('progressIndicatorLt' in condition) return state.progressIndicator < condition.progressIndicatorLt;
+  if ('darkWorld' in condition) return (state.status?.darkWorld ?? false) === condition.darkWorld;
+  if ('bunny' in condition) return (state.status?.bunny ?? false) === condition.bunny;
+  if ('crystalSwitchFlipped' in condition) return (state.status?.crystalSwitchFlipped ?? false) === condition.crystalSwitchFlipped;
+  if ('desertStatuesMoved' in condition) return (state.status?.desertStatuesMoved ?? false) === condition.desertStatuesMoved;
+  if ('and' in condition) return condition.and.every((c) => evaluatePresence(c, state));
+  if ('or' in condition) return condition.or.some((c) => evaluatePresence(c, state));
+  return !evaluatePresence(condition.not, state);
+};
+
+export { evaluatePresence };

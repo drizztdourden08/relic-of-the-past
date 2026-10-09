@@ -1,0 +1,7 @@
+/* @layer shared-game @kind constants */
+const REGION_GRID_SIZE = 64;
+const LANDING_SCAN_WINDOW = 3;
+const ENTRY_STAMP_RADIUS = 2;
+const SAME_DOORWAY_RADIUS = 6;
+
+export { REGION_GRID_SIZE, LANDING_SCAN_WINDOW, ENTRY_STAMP_RADIUS, SAME_DOORWAY_RADIUS };

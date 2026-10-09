@@ -1,16 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * The items referenced anywhere in the check/connection requirement graph
- * (`CheckRecord.requirements` + `ConnectionRecord.requirements`). Receiving one
- * of these can change whether a gated check becomes triggerable, as with boss
- * gates, medallion checks and pendant/crystal counts, so picking it up must trigger a
- * reach re-flood even when the item carries no direct traversal token.
- *
- * The requirement graph is id-based and so is this set. It used to resolve every
- * id to a display name on the way out, purely because the simulator's inventory
- * was a name set; with the inventory keyed by id that step is gone, and with it
- * the chance of two records collapsing onto one shared name.
- */
 import type { ItemId, Requirement } from '../data';
 import { find, membersOf } from '../data';
 
@@ -48,6 +36,6 @@ const buildLogicReferencedItems = (): Set<ItemId> => {
   return ids;
 };
 
-const LOGIC_REFERENCED_ITEMS: ReadonlySet<ItemId> = buildLogicReferencedItems();
+const logicReferencedItems: ReadonlySet<ItemId> = buildLogicReferencedItems();
 
-export { LOGIC_REFERENCED_ITEMS };
+export { logicReferencedItems };

@@ -16,7 +16,7 @@ export type {
   ScreenVariantInfo,
   VariantCondition,
   World,
-} from './screen';
+} from './screen.type';
 export type {
   CountdownState,
   DungeonProgressState,

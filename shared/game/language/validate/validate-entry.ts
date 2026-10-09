@@ -1,24 +1,8 @@
 /* @layer shared-game @kind logic */
 import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
 import type { Token } from '../types';
+import type { EntryIssue } from './validate.type';
 
-/**
- * One problem found in a dialogue entry's tokens, surfaced live in the
- * translation editor before a bake attempt would fail.
- */
-type EntryIssue =
-  | { kind: 'char-not-in-alphabet'; ch: string }
-  | { kind: 'ref-unresolved'; key: string };
-
-/**
- * Walk one `text` token's string the same way the encoder's greedy matcher
- * does (`encodeGreedyFromDict` in dialogue-encoder.ts, alphabet branch): a
- * `[...]`-bracketed run is matched whole against the alphabet, everything
- * else is matched one character at a time. Dictionary matching is not
- * simulated, because every dictionary entry is itself composed of alphabet
- * characters (encodeDictionary enforces this), so skipping it never turns a
- * bake-time success into a reported failure here.
- */
 const findInvalidChars = (text: string, alphabet: ReadonlySet<string>): string[] => {
   const offenders: string[] = [];
   let i = 0;
@@ -46,13 +30,6 @@ const findInvalidChars = (text: string, alphabet: ReadonlySet<string>): string[]
   return offenders;
 };
 
-/**
- * Predict, without baking, whether a dialogue entry's tokens will encode
- * without error: every `text` token's characters must resolve against the
- * language's alphabet, and every `ref` token's key must resolve against the
- * glossary. `cmd`/`break`/`var` tokens are assumed well-formed by the editor
- * and are not checked here.
- */
 const validateEntry = (
   tokens: Token[],
   cfg: LanguageConfig,
@@ -78,4 +55,3 @@ const validateEntry = (
 };
 
 export { validateEntry };
-export type { EntryIssue };

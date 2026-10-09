@@ -1,15 +1,7 @@
-/* @layer shared-game @kind logic */
-// ─── Entry Point #1: Single Screen Flood Fill ────────────────────────────────
+/* @layer shared-game @kind barrel */
 export { floodFillScreen, getConnections } from './flood-fill';
-export type { FloodFillOptions } from './flood-fill';
-export type { QuadrantBounds } from './flood-fill';
-
-// ─── Entry Point #2: Multi-Screen Flood Fill ─────────────────────────────────
-
-// ─── Connection destination naming ───────────────────────────────────────────
+export type { FloodFillOptions, QuadrantBounds } from './flood-fill';
 export { getConnectionDestinationName } from './connection-names';
-
-// ─── Types ───────────────────────────────────────────────────────────────────
 export type {
   TilePassability, LedgeDir, GridPos, WorldPos,
   CollisionGrid, Map32Tables, OverworldEntrance,
@@ -19,13 +11,9 @@ export type {
   ScreenPath, TilePath, RouteStep, Route,
   NavigationStep, NavigationResult, PathfindingOptions,
 } from './types';
-
-// ─── Crossings (one record for every way on or off a screen) ─────────────────
 export type {
   CrossingClass, CrossingOrigin, CrossingSpan, CrossingTarget, ScreenCrossing, ScreenCrossings,
-} from './crossing.types';
-
-// ─── Utilities ───────────────────────────────────────────────────────────────
+} from './crossing.type';
 export { classifyTileAttr } from './tile-classification';
 export {
   TILE_ATTRS,
@@ -44,17 +32,13 @@ export {
 export type { TileReq, TileLabel, TilePass, TileCat, TileAttrDef } from './tile-attrs';
 export { unmetRequirements } from './core/inventory';
 export { PriorityQueue } from './core/priority-queue';
-
-// ─── Screen Bundles ──────────────────────────────────────────────────────────
 export { buildScreenBundle } from './screen-bundles';
 export type { ScreenBundle } from './screen-bundles';
-
-// ─── Door Gates (door records → BFS gated cells) ─────────────────────────────
-
-// ─── Navigation Data Types (for analysis + pathfinder) ───────────────────────
 export type {
   TraversalRequirement, RequirementSet, ConnectionTransitType,
   RegionNavData, ConnectionNavData, ConnectionPointData,
   NavObstacle, NavFeature, NavVariant,
 } from './nav-data.types';
-export { isEntranceUsable, usableEntrances, usableEntranceTransition } from './flood-fill/entrance-usable';
+export { isEntranceUsable } from './flood-fill/is-entrance-usable';
+export { usableEntrances } from './flood-fill/usable-entrances';
+export { usableEntranceTransition } from './flood-fill/usable-entrance-transition';
