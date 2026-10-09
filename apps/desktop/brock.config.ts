@@ -18,4 +18,5 @@ export default defineBrockConfig({
     aliases: { '@shared': '../../shared', '@domains': 'src/ui/domains', '@site-kit': '../site-kit' },
     nodePolyfills: { globals: { Buffer: true, process: true } },
   },
+  gate: { scripts: ['generate:check', 'state-format', 'generate:gba-asset-index:check'], clangFormat: ['core/game-hooks'] },
 });

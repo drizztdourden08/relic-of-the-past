@@ -1,0 +1,28 @@
+# Managed by brock sync while gate.clangFormat in brock.config.ts names C sources. Needs clang-format 16 or later.
+# Two-space indent, attached braces, short ifs, loops, cases and functions kept on one line, a pointer star
+# beside the name, and no column limit, so the line breaks already in the code stay where they are.
+BasedOnStyle: Google
+Language: Cpp
+ColumnLimit: 0
+IndentWidth: 2
+ContinuationIndentWidth: 2
+UseTab: Never
+PointerAlignment: Right
+DerivePointerAlignment: false
+BreakBeforeBraces: Attach
+IndentCaseLabels: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+AllowShortBlocksOnASingleLine: Empty
+AlignAfterOpenBracket: Align
+AlignOperands: AlignAfterOperator
+BreakBeforeBinaryOperators: NonAssignment
+AlignTrailingComments:
+  Kind: Leave
+SpacesBeforeTrailingComments: 2
+ReflowComments: false
+SortIncludes: Never
+IncludeBlocks: Preserve
+MaxEmptyLinesToKeep: 2
