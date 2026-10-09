@@ -1,4 +1,8 @@
 /* @layer electron-main @kind barrel */
-export { openSplash, setSplashStatus, closeSplash } from './splash-window';
-export { armReveal, revealMainWindow, REVEAL_MS } from './reveal';
+export { openSplash } from './open-splash';
+export { setSplashStatus } from './set-splash-status';
+export { closeSplash } from './close-splash';
+export { armReveal } from './arm-reveal';
+export { revealMainWindow } from './reveal-main-window';
+export { REVEAL_MS } from './reveal.constants';
 export { fadeWindow } from './fade-window';
