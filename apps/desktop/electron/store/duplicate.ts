@@ -1,11 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Duplicating an installed item into one the player can edit. The install record names the
- * item and its licence; a licence that does not allow copies is refused with its reason.
- * Otherwise the kind's duplicate writes the copy through the store's in-process file store,
- * crediting the original in `basedOn`. A language copy is baked into the game assets after,
- * the way an install does it.
- */
 import type { StoreDuplicateResult } from '@shared/ipc';
 import type { BasedOn } from '@shared/store/based-on';
 import type { InstalledPack } from '@shared/store/installed-types';

@@ -1,9 +1,7 @@
 /* @layer electron-main @kind logic */
-/** Forward a log line to the renderer's in-app log console (the 'log:entry' channel). */
 import { getMainWindow } from '../window';
 import { emit } from './ipc/handle';
-
-type LogLevel = 'info' | 'warn' | 'error';
+import type { LogLevel } from './renderer-log.type';
 
 const logToRenderer = (channel: string, level: LogLevel, message: string): void => {
   const win = getMainWindow();

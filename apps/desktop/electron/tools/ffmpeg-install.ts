@@ -1,13 +1,8 @@
 /* @layer electron-main @kind logic */
-/**
- * Install the optional ffmpeg tool on request: resolve the current release asset, download
- * it, verify it, keep the two binaries. The order is the security property: the checksum is
- * checked while the download is still an inert file in temp.
- */
 import { rm } from 'fs/promises';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
 import { PINNED_FFMPEG } from '@shared/types/ffmpeg-tool';
-import { downloadToTemp } from '../lib/download';
+import { downloadToTempFile } from '../lib/download';
 import { extractEntriesByBasename } from '../lib/archive';
 import { errMessage } from '../lib/result';
 import type { FfmpegBinaries } from './ffmpeg-paths';
@@ -15,11 +10,8 @@ import { canDownload, exeName, ffmpegToolDir, managedBinaries } from './ffmpeg-p
 import { ffmpegState, locateFfmpeg } from './ffmpeg-locate';
 import { resolveFfmpegAsset } from './ffmpeg-release';
 import { verifyDownload } from './ffmpeg-verify';
+import type { StateReporter } from './ffmpeg-install.type';
 
-/** Reports each state the install passes through, for a progress bar. */
-type StateReporter = (state: FfmpegState) => void;
-
-/** Keep only the two binaries. Throws when the archive did not carry both. */
 const extractBinaries = async (archivePath: string): Promise<FfmpegBinaries> => {
   const wanted = new Set([exeName('ffmpeg').toLowerCase(), exeName('ffprobe').toLowerCase()]);
   const written = await extractEntriesByBasename(archivePath, wanted, ffmpegToolDir());
@@ -39,7 +31,7 @@ const runInstall = async (report: StateReporter): Promise<FfmpegState> => {
   let archivePath: string | null = null;
   try {
     report({ status: 'downloading', receivedBytes: 0, totalBytes: asset.sizeBytes });
-    archivePath = await downloadToTemp(asset.downloadUrl, '.zip', (received, total) => {
+    archivePath = await downloadToTempFile(asset.downloadUrl, '.zip', (received, total) => {
       report({ status: 'downloading', receivedBytes: received, totalBytes: total ?? asset.sizeBytes });
     });
     report({ status: 'verifying' });
@@ -50,17 +42,16 @@ const runInstall = async (report: StateReporter): Promise<FfmpegState> => {
   }
 };
 
-// One install at a time: a second request joins the first.
-let pending: Promise<FfmpegState> | null = null;
+let runningInstall: Promise<FfmpegState> | null = null;
 
 const installFfmpeg = (report: StateReporter): Promise<FfmpegState> => {
-  if (!pending) {
-    pending = runInstall(report)
+  if (!runningInstall) {
+    runningInstall = runInstall(report)
       .catch((err: unknown): FfmpegState => ({ status: 'failed', reason: errMessage(err) }))
       .then((state) => { report(state); return state; })
-      .finally(() => { pending = null; });
+      .finally(() => { runningInstall = null; });
   }
-  return pending;
+  return runningInstall;
 };
 
 export { installFfmpeg };

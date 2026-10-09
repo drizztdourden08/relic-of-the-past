@@ -1,20 +1,15 @@
 /* @layer electron-main @kind logic */
-/** The shared-account channels: device sign-in, cancel, sign out and who am I. The sign-in
- *  runs against the API of the site that asked, so the confirm page opens on that site; the
- *  token it yields serves every site. */
 import type { SiteId } from '@shared/hub';
 import type { HubSignInResult } from '@shared/ipc';
 import { handle, emit } from '../lib/ipc/handle';
 import { getMainWindow } from '../window';
 import { beginDeviceSignIn, cancelDeviceSignIn } from './device-auth';
-import { SANCTUARY_API, STORE_API } from './endpoints';
+import { SANCTUARY_API } from './endpoints';
 import type { HubApi } from './endpoints';
 import { fetchMe } from './identity';
+import { SITE_APIS } from './ipc-handlers.constants';
 import { clearToken, canStore } from './token-store';
 
-const SITE_APIS: Record<SiteId, HubApi> = { sanctuary: SANCTUARY_API, store: STORE_API };
-
-/** The site's API; anything the renderer sends that is not a known site signs in to the Sanctuary. */
 const apiForSite = (site: SiteId | undefined): HubApi =>
   site === 'store' ? SITE_APIS.store : SITE_APIS.sanctuary;
 
