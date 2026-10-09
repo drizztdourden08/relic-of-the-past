@@ -5,5 +5,5 @@ export type { GridLatticeProps, LatticeCellState, TrackAxis } from './GridLattic
 export {
   ADD, CELL_MIN, GUTTER, HEAD, ROW_IDEAL, VIEWPORT, boundsOf, cellKey, covers, emptyOn,
   latticeHeight, occupantsAt, occupantsOf, originsIn, rectCells, rowCountFor, trackTemplate,
-} from './lattice-geometry';
-export type { CellBounds, CellRef, Occupant } from './lattice-geometry';
+} from './behavior/lattice-geometry';
+export type { CellBounds, CellRef, Occupant } from './behavior/lattice-geometry';

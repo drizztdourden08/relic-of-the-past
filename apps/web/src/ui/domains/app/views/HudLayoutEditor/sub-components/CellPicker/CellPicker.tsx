@@ -6,7 +6,7 @@ import { Text } from '@ds/primitives/Text';
 import { useGridSolve } from '../../behavior/grid-solve';
 import { GridLattice, covers, occupantsOf, rowCountFor } from '../GridLattice';
 import { useCellPick } from './behavior/useCellPick';
-import './HudLayoutEditor.cellpick.css';
+import './CellPicker.css';
 import type { KeyboardEvent } from 'react';
 import type { CellRef, LatticeCellState } from '../GridLattice';
 import type { CellPickerProps } from './CellPicker.type';

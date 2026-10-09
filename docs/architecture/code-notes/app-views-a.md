@@ -1673,7 +1673,7 @@ The start from list is the same list `PresetBar` shows.
 
 A grid's track list, as list edits.
 They live outside the component because a track list is the one thing in this section a document can get structurally wrong (`columns` may never be empty), and the edits are testable without rendering.
-`trackWeight` is a gauge, not geometry: the lattice takes its proportions from the engine's solve (`lattice-geometry.ts`), so this weight sizes nothing a pointer aims at.
+`trackWeight` is a gauge, not geometry: the lattice takes its proportions from the engine's solve (`GridLattice/behavior/lattice-geometry`), so this weight sizes nothing a pointer aims at.
 `fill` draws wider than `auto`, and the measured modes scale off typed numbers: 16 game pixels and 25% both land on 1.
 The four extent modes live here, because both `ExtentField` and the selected track's header (`TrackHead`) offer them.
 A bare expression is `px` shorthand, as `hud-node.ts` notes.
@@ -1781,7 +1781,7 @@ The timer resets on leaving the row, and `pending` drives the caret's wait, the 
 
 ### HudLayoutEditor/behavior/useTextValue.ts
 
-The draft and commit half of `TextValueField`, applying `use-value-input`'s rules to a string.
+The draft and commit half of `TextValueField`, applying `useValueInput`'s rules to a string.
 There is no mode switch: one field, one string, and a leading `=` is the only thing that means formula.
 The old `text | ƒx` switch destroyed the formula on a round trip.
 A literal commits on change, so the stage follows typing; a formula commits on blur or Enter, so a half typed one never reaches the document.
@@ -2479,7 +2479,7 @@ Every piece is one row, so pieces wrap into as few lines as their widths allow a
 Each label sits beside its control, because the row is 26px tall: a word costs about 30px of width, a label line about 14px of height per piece.
 The gap piece grows so the section is flush at both ends at the 320px rail.
 `.hud-layout-set__overlay`'s `position: relative` anchors the colour popover.
-The two gap cells share a box that a formula being typed floats over; `promote-overlay` measures it, so the overlay never covers the `GAP` label, and both cells wrap together.
+The two gap cells share a box that a formula being typed floats over; `usePromoteOverlay` measures it, so the overlay never covers the `GAP` label, and both cells wrap together.
 The flex flow row is icon buttons on the panel background with no border, wrapping at narrow rails, using the same `2xs` and `sm` gaps as section one.
 `.hud-extent--bare` is the grid toolbar's bare extent wrapper.
 
@@ -2700,7 +2700,7 @@ Each of the two look alike controls states in its own heading what it writes, wh
 `container` is the parent, shown whole and never changed.
 Selected means this child stands on the cell, so the selection and the child's footprint are the same rectangle.
 
-### HudLayoutEditor/sub-components/CellPicker/HudLayoutEditor.cellpick.css
+### HudLayoutEditor/sub-components/CellPicker/CellPicker.css
 
 The picker shares the lattice sheet and its drawing, and owns only its frame and its legend.
 A second copy of the lattice rules would let the two controls drift into looking like different grids.
@@ -2990,7 +2990,7 @@ One tab stop: the body takes focus and the cursor is `aria-activedescendant`. A 
 
 An empty `auto` track is drawn at the floor, and the header title says so instead of letting 24px pass for its size.
 
-### HudLayoutEditor/sub-components/GridLattice/lattice-geometry
+### HudLayoutEditor/sub-components/GridLattice/behavior/lattice-geometry
 
 The lattice's arithmetic: addresses, rectangles, occupancy and proportions.
 The cells match the real tracks. Track sizes come from the engine's `solveGrid` as `fr` weights with a `minmax(24px, ...)` floor, so a track keeps its share until that would fall below the target size. The whole drawing is one `grid-template` string, which also lets it be rendered and measured in a headless browser.
@@ -3141,8 +3141,8 @@ The spinner exists while the text is a bare numeral, so it comes and goes as `=`
 The `=` chip is 12px on the focused row only.
 Promotion: the root keeps its resting height (`--promote-height`) and the control is lifted out to span the row. Both numbers are measured before the class lands.
 
-### HudLayoutEditor/sub-components/ValueInput/ValueInput.formula.css
+### HudLayoutEditor/sub-components/ValueInput/sub-components/FormulaMenu.css
 
-The instance strip and the formula menu, imported right after `ValueInput.css`.
+The formula menu's sheet. `ValueInput.tsx` imports it, with `InstanceStrip.css`, right after `ValueInput.css`, so the cascade order is the one the single sheet had.
 The variable list is a popover with a filter because eighteen names is about 290px, taller than most sections.
 A name out of scope is listed and explained, never dropped, so an author who saw `index` yesterday does not think the editor is broken.

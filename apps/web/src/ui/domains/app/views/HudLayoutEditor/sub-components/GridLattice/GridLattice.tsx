@@ -6,7 +6,7 @@ import { AddTrackButton } from './sub-components/AddTrackButton';
 import { TrackHead } from './sub-components/TrackHead';
 import {
   ADD, GUTTER, HEAD, emptyOn, latticeHeight, occupantsAt, trackTemplate,
-} from './lattice-geometry';
+} from './behavior/lattice-geometry';
 import { idOf } from './behavior/cell-id';
 import { headTitle } from './behavior/head-title';
 import './HudLayoutEditor.lattice.css';

@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import './ValueInput.css';
-import './ValueInput.formula.css';
+import './sub-components/InstanceStrip.css';
+import './sub-components/FormulaMenu.css';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';

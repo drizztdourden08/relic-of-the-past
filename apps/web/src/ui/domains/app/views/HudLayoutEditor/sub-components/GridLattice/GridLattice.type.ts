@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { KeyboardEvent, PointerEvent } from 'react';
 import type { Extent } from '@shared/types/hud';
-import type { CellRef, Occupant } from './lattice-geometry';
+import type { CellRef, Occupant } from './behavior/lattice-geometry';
 
 type LatticeCellState = 'empty' | 'occupied' | 'selected' | 'occupied-selected';
 
