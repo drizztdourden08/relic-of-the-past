@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useCallback } from 'react';
-import { useEnhancedSaveSlot } from '@app/ui/domains/app/views/SaveStateOverlay/behavior/useEnhancedSaveSlot';
+import { useEnhancedSaveSlot } from '@app/views/SaveStateOverlay/behavior/useEnhancedSaveSlot';
 import { useSaveOverlayStore } from '@app/stores/save-overlay-store';
 
 const useSaveOverlay = (saveState: { enhancedSaveSlot: boolean; saveHoldDuration: number }, isRunning: boolean) => {

@@ -39,7 +39,7 @@
   // Named save states the tests + nav baselines load; documented in their README.
   "tests/fixtures/save-states/**": { "kind": "asset" },
   // Attribution for the ported world logic, kept beside the port itself.
-  // Documented in shared/randomizer/world/NOTICE.md.
+  // Documented in packages/randomizer/src/world/NOTICE.md.
   "packages/randomizer/src/world/LICENSE": { "layer": "shared-game", "kind": "doc" },
   "packages/randomizer/src/world/NOTICE.md": { "layer": "shared-game", "kind": "doc" },
   // Kept (permanent) app-driven specs. Documented in tests/e2e/README.md.
@@ -47,9 +47,9 @@
   // The folder's own README is prose, or the rule above would lint it as a test.
   "tests/e2e/*.md": { "kind": "doc" },
 
-  "shared/game/data/**":      { "kind": "data" },
+  "packages/game-data/src/data/**": { "kind": "data" },
   "packages/input-mapping/src/data/**":     { "kind": "data" },
-  "shared/asset-extraction/**/data/**": { "kind": "data" },
+  "packages/asset-extraction/**/data/**": { "kind": "data" },
   "**/*.data.ts":             { "kind": "data" },
 
   // Root files that cannot carry an in-file tag comment.

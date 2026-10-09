@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { OutlinePanel } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
+import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudLayout, HudNode } from '@rotp/hud';

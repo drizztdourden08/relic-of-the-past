@@ -10,12 +10,12 @@ import { checkIdOfLocation } from '@rotp/randomizer';
 import type { CheckId } from '@rotp/game-data';
 import type { LocationKey } from '@rotp/randomizer';
 import type { OptionValue } from '@rotp/randomizer';
-import type * as FireRegistry from '@app/lib/game/randomizer-client/override-fire-registry';
+import type * as FireRegistry from '@app/game/randomizer-client/override-fire-registry';
 
 const errors = vi.hoisted(() => [] as string[]);
 const allocated = vi.hoisted(() => new Set<string>());
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   const error = (line: string): void => { errors.push(line); };
   const randomizer = (line: string, level?: string): void => {
@@ -23,18 +23,18 @@ vi.mock('@app/lib/log-bus', () => {
   };
   return { log: { core: quiet, app: quiet, randomizer, wasm: quiet, ipc: quiet, sim: quiet, error } };
 });
-vi.mock('@app/lib/game/session-dialogue', () => ({
+vi.mock('@app/game/session-dialogue', () => ({
   setSessionReceiptMessages: (lines: unknown[]) => lines.map((_, index) => 1000 + index),
   appendSessionReceiptMessage: () => null,
   clearSessionDialogue: () => undefined,
 }));
 const iconSet = (name: string) => ({ [`apply${name}`]: async () => true, [`clear${name}`]: () => undefined });
-vi.mock('@app/lib/game/gear-icons', () => iconSet('GearIcons'));
-vi.mock('@app/lib/game/quiver-icon', () => iconSet('QuiverIcon'));
-vi.mock('@app/lib/game/currency-symbols', () => iconSet('CurrencySymbols'));
-vi.mock('@app/lib/game/upgrade-icons', () => iconSet('UpgradeIcons'));
-vi.mock('@app/lib/game/foreign-icons', () => ({ applyForeignIcons: async () => false, clearForeignIcons: () => undefined }));
-vi.mock('@app/lib/game/randomizer-client/override-fire-registry', async (importOriginal) => {
+vi.mock('@app/game/gear-icons', () => iconSet('GearIcons'));
+vi.mock('@app/game/quiver-icon', () => iconSet('QuiverIcon'));
+vi.mock('@app/game/currency-symbols', () => iconSet('CurrencySymbols'));
+vi.mock('@app/game/upgrade-icons', () => iconSet('UpgradeIcons'));
+vi.mock('@app/game/foreign-icons', () => ({ applyForeignIcons: async () => false, clearForeignIcons: () => undefined }));
+vi.mock('@app/game/randomizer-client/override-fire-registry', async (importOriginal) => {
   const real = await importOriginal<typeof FireRegistry>();
   return {
     ...real,
@@ -53,13 +53,13 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 await import('../../packages/game-core/src/cheats');
 const { setModule } = await import('../../packages/game-core/src/wasm-bridge');
 const { installFakeModule } = await import('./ap-fake-module');
-const { armScouted } = await import('@app/lib/game/randomizer-client/online-arm-scouted');
-const { disarmFireReporting, firedLocations } = await import('@app/lib/game/randomizer-client/override-fire-registry');
+const { armScouted } = await import('@app/game/randomizer-client/online-arm-scouted');
+const { disarmFireReporting, firedLocations } = await import('@app/game/randomizer-client/override-fire-registry');
 const { trackerCheckRecords } = await import('../../packages/navigation/src/tracker/tracker-roster');
 const { isCountedCheck } = await import('../../packages/navigation/src/tracker/tracker-count');
 const { trackerStatuses } = await import('../../packages/navigation/src/tracker/tracker-statuses');
 const { clearCollectedChecks, withCollectedChecks } = await import('../../packages/navigation/src/tracker/collected-checks');
-const { markCollected } = await import('@app/lib/game/randomizer-client/online-collected');
+const { markCollected } = await import('@app/game/randomizer-client/online-collected');
 const { virtualCheckIdOf } = await import('../../packages/randomizer/src/client/virtual-locations');
 const { parseSlotData } = await import('../../packages/randomizer/src/archipelago/parse-slot-data');
 const {

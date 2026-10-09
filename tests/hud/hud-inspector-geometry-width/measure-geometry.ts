@@ -8,7 +8,7 @@ import type { GeometryRig, Measured } from './geometry-width.type';
 
 const root = resolve(__dirname, '../../..');
 const designSystem = `${root}/node_modules/@drizztdourden08/tessera/src`;
-const editor = `${root}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
+const editor = `${root}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));

@@ -1,12 +1,12 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
+import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import { serverUrlCandidates } from '@rotp/randomizer';
 import { createFakeServer, VERSION } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import { boot, installClientHarness, item, makeRoom, OWN, settle } from './ap-protocol-harness';
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });

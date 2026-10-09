@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
 import { solveGrid } from '@rotp/hud';
-import type { GridSolve } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/grid-solve';
+import type { GridSolve } from '@app/views/HudLayoutEditor/behavior/grid-solve';
 import type { HudGridContainer } from '@rotp/hud';
 import { CTX, VIEW } from './metrics.constants';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind logic */
 import { inventoryToReachTokens } from '@rotp/navigation';
 import type { TileReq } from '@rotp/game-data';
-import { getCurrentInventory } from '@app/lib/game/tracker';
+import { getCurrentInventory } from '@app/game/tracker';
 import { TILE_REQS } from './dump-nav.constants';
 
 const dumpFloodItems = (): TileReq[] => {

@@ -22,7 +22,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@app': WEB_SRC,
-      '@domains': resolve(WEB_SRC, 'ui/domains'),
     },
   },
   server: {

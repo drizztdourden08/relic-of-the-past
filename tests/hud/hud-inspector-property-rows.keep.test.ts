@@ -5,13 +5,13 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { EdgesField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/EdgesField';
-import { ValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
+import { EdgesField } from '@app/views/HudLayoutEditor/sub-components/EdgesField';
+import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import { Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
-const EDITOR = `${ROOT}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor`;
+const EDITOR = `${ROOT}/apps/desktop/src/views/HudLayoutEditor`;
 const ED = `${EDITOR}/sub-components`;
 
 const filesIn = (dir: string, ext: string): string[] => readdirSync(dir, { withFileTypes: true })

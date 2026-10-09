@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { CellPicker } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
+import { CellPicker } from '@app/views/HudLayoutEditor/sub-components/CellPicker';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudGridContainer, HudNode } from '@rotp/hud';

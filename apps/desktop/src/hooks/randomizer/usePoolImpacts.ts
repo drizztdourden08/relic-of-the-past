@@ -6,7 +6,7 @@ import { deliverableSets } from './deliverable-sets';
 import { poolImpactCell } from './impact-cell';
 import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { PoolImpact } from '@rotp/randomizer';
-import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
+import type { ImpactCell } from '@app/compounds/PoolImpactCell';
 import type { PoolImpacts } from './use-pool-impacts.type';
 import { UNAVAILABLE } from './use-pool-impacts.constants';
 

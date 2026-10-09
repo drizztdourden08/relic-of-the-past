@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { defineBootTask } from '@drizztdourden08/brock-react';
-import { warmWasmCore } from '@app/lib/game/wasm-warmup';
+import { warmWasmCore } from '@app/game/wasm-warmup';
 import { WASM_WARMUP_TIMEOUT_MS } from './wasm-warmup.task.constants';
 
 export default defineBootTask({

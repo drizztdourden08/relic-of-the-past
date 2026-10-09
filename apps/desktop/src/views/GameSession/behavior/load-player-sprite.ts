@@ -1,8 +1,8 @@
 /* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { setLinkSpriteData } from '@app/lib/game';
-import { log } from '@app/lib/log-bus';
-import { readSpriteAsZspr } from '@app/lib/game/player-sheet/load-sheet';
+import { setLinkSpriteData } from '@app/game';
+import { log } from '@app/log-bus';
+import { readSpriteAsZspr } from '@app/game/player-sheet/load-sheet';
 
 const loadPlayerSprite = async (settings: GameSettings) => {
   if (!settings.linkSprite) { setLinkSpriteData(null); return; }

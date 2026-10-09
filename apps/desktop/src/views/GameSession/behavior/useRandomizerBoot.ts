@@ -1,12 +1,12 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect, useRef } from 'react';
-import { subscribeGameState } from '@app/lib/game';
+import { subscribeGameState } from '@app/game';
 import {
   clearPendingBoot, getPendingBoot, onlineConfigOfProfile,
   startLocalFromPlacement, startOnline, stopActive,
-} from '@app/lib/game/randomizer-client';
-import { log } from '@app/lib/log-bus';
-import type { PendingBoot } from '@app/lib/game/randomizer-client';
+} from '@app/game/randomizer-client';
+import { log } from '@app/log-bus';
+import type { PendingBoot } from '@app/game/randomizer-client';
 
 const startPendingSession = (pending: PendingBoot): void => {
   const { config, placement } = pending;

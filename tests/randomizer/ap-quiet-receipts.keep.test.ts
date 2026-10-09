@@ -1,12 +1,12 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderFromServer, renderOnline } from '@rotp/randomizer';
-import { deliverItem } from '@app/lib/game/delivery-api';
-import { clear, deliveryQueue, startProcessing, stopProcessing } from '@app/lib/game/delivery-queue';
-import { setQuietReceiptBits } from '@app/lib/game/gate-word-5';
+import { deliverItem } from '@app/game/delivery-api';
+import { clear, deliveryQueue, startProcessing, stopProcessing } from '@app/game/delivery-queue';
+import { setQuietReceiptBits } from '@app/game/gate-word-5';
 import { setSessionGate } from '@rotp/game-core';
 import { QUIET_RECEIPT_MSG, quietMessageFor } from '@rotp/randomizer';
-import { cancelServerDeliveries, deliverServerItem } from '@app/lib/game/randomizer-client/server-delivery';
+import { cancelServerDeliveries, deliverServerItem } from '@app/game/randomizer-client/server-delivery';
 
 const RUPEES_20 = 0x36;
 const BOMBS_3 = 0x28;
@@ -25,7 +25,7 @@ const core = vi.hoisted(() => ({
 
 const LOCAL_ID: Record<string, number> = { 'Rupees (20)': 0x36, 'Bombs (3)': 0x28, 'Arrows (10)': 0x44 };
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
@@ -39,11 +39,11 @@ vi.mock('../../packages/game-core/src/wasm-bridge', () => ({
     },
   }),
 }));
-vi.mock('@app/lib/game/receipt-grants', () => ({ armReceiptGates: () => undefined }));
+vi.mock('@app/game/receipt-grants', () => ({ armReceiptGates: () => undefined }));
 vi.mock('../../packages/randomizer/src/client/online-items', () => ({
   resolveServerItemLocalId: (name: string) => LOCAL_ID[name] ?? BOW,
 }));
-vi.mock('@app/lib/game/session-dialogue', () => ({
+vi.mock('@app/game/session-dialogue', () => ({
   appendSessionReceiptMessage: (line: string) => {
     core.lines.push(line);
     return 900 + core.lines.length;

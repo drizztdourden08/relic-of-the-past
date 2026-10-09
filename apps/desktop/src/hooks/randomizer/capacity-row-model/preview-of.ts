@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { ladderClamps, planOf } from '@rotp/randomizer';
 import type { CapacityFamily, FamilyPlan, FamilySetting } from '@rotp/randomizer';
-import type { LadderPreviewProps } from '@domains/app/compounds/LadderPreview';
+import type { LadderPreviewProps } from '@app/compounds/LadderPreview';
 import { JUMP_LABEL, PROGRESSIVE_NOTE, VANILLA_NOTE } from './capacity-row-model.constants';
 import { stopsOf } from './stops-of';
 

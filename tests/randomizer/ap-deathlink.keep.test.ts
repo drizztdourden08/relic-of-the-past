@@ -5,7 +5,7 @@ import { AP_WORLD_VERSION } from '@rotp/randomizer';
 import { boot, installClientHarness, makeRoom, settle } from './ap-protocol-harness';
 import type { FakeRoom, FakeServer } from './ap-fake-server';
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });

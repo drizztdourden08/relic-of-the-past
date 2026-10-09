@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import type { GlyphPack } from '@rotp/input-mapping';
 import type { ModernSlot } from '@rotp/game-data';
 
-const EDITOR = resolve(__dirname, '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
+const EDITOR = resolve(__dirname, '../../../apps/desktop/src/views/HudLayoutEditor');
 
 const PACKS: readonly GlyphPack[] = [{
   id: 'generic',

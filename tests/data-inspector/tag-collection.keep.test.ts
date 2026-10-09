@@ -1,12 +1,12 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { all } from '@rotp/game-data';
-import { COLLECTION_SOURCES } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
+import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
 import {
   ENTITY_KINDS, KIND_NAV_ITEMS,
-} from '../../apps/desktop/src/ui/domains/app/views/DataInspector/DataInspector.constants';
-import { resolveIdRefOptionsFor } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
-import { resolveIdRef } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/id-ref-target';
+} from '@app/views/DataInspector/DataInspector.constants';
+import { resolveIdRefOptionsFor } from '@app/views/DataInspector/behavior/id-ref-options';
+import { resolveIdRef } from '@app/views/DataInspector/behavior/id-ref-target';
 import { buildSchema } from '@drizztdourden08/tessera/data';
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';

@@ -3,7 +3,7 @@ import { itemKeyName } from '@rotp/randomizer';
 import { poolItemSpriteOfKey } from './pool-item-sprite-of-key';
 import type { ItemKey } from '@rotp/randomizer';
 import type { ItemPool } from '@rotp/randomizer';
-import type { PoolListingGroup, PoolListingRow } from '@domains/app/compounds/PoolListing';
+import type { PoolListingGroup, PoolListingRow } from '@app/compounds/PoolListing';
 
 const rowsOf = (items: readonly ItemKey[], spritesAvailable: boolean): PoolListingRow[] => {
   const counts = new Map<ItemKey, number>();

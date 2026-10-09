@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { useSpriteLibrary } from '@domains/app/views/PlayerSpriteStudio/behavior/useSpriteLibrary';
+import { useSpriteLibrary } from '@app/views/PlayerSpriteStudio/behavior/useSpriteLibrary';
 import { SpriteChoiceCard } from './sub-components/SpriteChoiceCard';
 import type { PlayerSpriteSelectorProps, SpriteChoice } from './PlayerSpriteSelector.type';
 import './PlayerSpriteSelector.css';

@@ -5,7 +5,7 @@ import { generateFromSnapshot } from '@rotp/randomizer';
 import { normalizeRandomizerOptions } from '@rotp/randomizer';
 import {
   probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
-} from '@app/lib/game/randomizer-client';
+} from '@app/game/randomizer-client';
 
 const rollPlacement = (config: ProfileRandomizerConfig): Placement => {
   const snapshot = normalizeRandomizerOptions(config.options);

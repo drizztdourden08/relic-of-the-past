@@ -3,7 +3,7 @@ import { useProfilesStore } from '@drizztdourden08/brock-react';
 import type { ReportContext } from '@rotp/hub-contracts';
 import { appApi } from '@app/ipc/app-api';
 import type { AppApi } from '@app/ipc/app-api.type';
-import { captureStateBuffer } from '@app/lib/game/state-buffers';
+import { captureStateBuffer } from '@app/game/state-buffers';
 
 const sendReportSnapshot = async (context: ReportContext): Promise<void> => {
   const api = appApi() as Partial<AppApi> | undefined;

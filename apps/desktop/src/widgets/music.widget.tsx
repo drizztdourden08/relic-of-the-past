@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
-import { MusicWidgetContent } from '@app/ui/domains/widgets/music';
+import { MusicWidgetContent } from '@app/views/MusicWidget';
 import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {

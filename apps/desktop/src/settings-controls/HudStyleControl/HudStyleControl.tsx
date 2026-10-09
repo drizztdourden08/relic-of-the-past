@@ -4,7 +4,7 @@ import type { GameSettings } from '@rotp/features';
 import { SegmentedControl, Button, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import { enhancedAspectAllowed } from '@rotp/game-core';
-import * as spritesStore from '@app/lib/storage/sprites-store';
+import * as spritesStore from '@app/storage/sprites-store';
 import { NO_SPRITES, STYLE_DESCRIPTION, TOO_NARROW } from './HudStyleControl.constants';
 import type { HudStyleControlProps } from './HudStyleControl.type';
 import './HudStyleControl.css';

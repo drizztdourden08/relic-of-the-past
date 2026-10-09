@@ -11,8 +11,8 @@ import { renderFromServer, renderOnline } from '@rotp/randomizer';
 import { renderReceiptMessage } from '@rotp/randomizer';
 import {
   clearSessionDialogue, prepareLine, setSessionReceiptMessages,
-} from '@app/lib/game/session-dialogue/session-dialogue';
-import { cancelServerDeliveries } from '@app/lib/game/randomizer-client/server-delivery';
+} from '@app/game/session-dialogue/session-dialogue';
+import { cancelServerDeliveries } from '@app/game/randomizer-client/server-delivery';
 import type { ReceiptLine } from '@rotp/game-core';
 import { installFakeModule } from '../ap-fake-module';
 import type { FakeModule } from '../ap-fake-module';
@@ -26,13 +26,13 @@ const queue = vi.hoisted(() => ({
   removed: [] as string[],
 }));
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
 vi.mock('../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
 vi.mock('../../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
-vi.mock('@app/lib/game/delivery-api', () => ({
+vi.mock('@app/game/delivery-api', () => ({
   deliverItem: (
     _id: number, _label: string, _source: string, messageId?: number | (() => number), onComplete?: () => void,
     onGranted?: () => void,
@@ -44,7 +44,7 @@ vi.mock('@app/lib/game/delivery-api', () => ({
     return id;
   },
 }));
-vi.mock('@app/lib/game/delivery-queue', () => ({
+vi.mock('@app/game/delivery-queue', () => ({
   remove: (id: string) => {
     queue.removed.push(id);
     return true;

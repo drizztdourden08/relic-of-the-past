@@ -2,10 +2,10 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'fs';
-import { gridActions } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-actions';
+import { gridActions } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-actions';
 import type {
   GridSelection,
-} from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
+} from '@app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 import { EDITOR } from './grid-editor.constants';
 import { actionContext as ctxFor } from './action-context';
 import { installGridRig } from './install-grid-rig';

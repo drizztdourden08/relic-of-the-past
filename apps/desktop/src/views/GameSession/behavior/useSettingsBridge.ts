@@ -4,10 +4,10 @@ import { usePlatform, useProfilesStore, useSettingsStore } from '@drizztdourden0
 import { toast } from '@drizztdourden08/tessera/composites';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@rotp/features';
 import type { GameSettings } from '@rotp/features';
-import { getInputManager, pushLiveSettings, LIVE_SETTINGS } from '@app/lib/game';
+import { getInputManager, pushLiveSettings, LIVE_SETTINGS } from '@app/game';
 import { mergeSettings } from '@rotp/game-core';
-import { log } from '@app/lib/log-bus';
-import { setHudProfileId } from '@app/lib/hud/active-profile';
+import { log } from '@app/log-bus';
+import { setHudProfileId } from '@app/hud/active-profile';
 import { syncControlSettings } from '@app/stores/control-scheme-store';
 import { ENHANCED_FALLBACK_EVENT, ENHANCED_FALLBACK_MESSAGE, ENHANCED_FALLBACK_TOAST_ID } from '@rotp/game-core';
 import { applySettingsSideEffects } from '@app/settings-effects/apply-settings-effects';

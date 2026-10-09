@@ -9,21 +9,21 @@ const mocks = vi.hoisted(() => ({
   decide: vi.fn(),
 }));
 
-vi.mock('@app/ui/domains/app/views/DataInspector/behavior/record-creators', () => ({
+vi.mock('@app/views/DataInspector/behavior/record-creators', () => ({
   RECORD_CREATORS: { tag: mocks.create },
 }));
-vi.mock('@app/ui/domains/app/views/DataInspector/behavior/record-writers', () => ({
+vi.mock('@app/views/DataInspector/behavior/record-writers', () => ({
   RECORD_WRITERS: { tag: mocks.write },
 }));
-vi.mock('@app/ui/domains/app/views/DataInspector/behavior/delete-record', () => ({
+vi.mock('@app/views/DataInspector/behavior/delete-record', () => ({
   recordDeleterFor: (kind: string) => (kind === 'tag' ? mocks.remove : undefined),
 }));
-vi.mock('@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-cache', () => ({
+vi.mock('@app/views/DataInspector/behavior/recommendations/recommendation-cache', () => ({
   decideRecommendation: mocks.decide,
 }));
 
 const { acceptRecommendation, dismissRecommendation } = await import(
-  '@app/ui/domains/app/views/DataInspector/behavior/recommendations/accept-recommendation'
+  '@app/views/DataInspector/behavior/recommendations/accept-recommendation'
 );
 
 const finding = (over: Partial<Recommendation> = {}): Recommendation => ({

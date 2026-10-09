@@ -2,7 +2,7 @@
 import { useSettings } from '@drizztdourden08/brock-react';
 import type { ScreenMeta, SearchEntrySeed } from '@drizztdourden08/brock-react';
 import type { AppSettings } from '@app/settings.type';
-import { GbaSettings } from '@domains/app/views/ProfileHub/sub-components/gba-settings';
+import { GbaSettings } from '@app/views/ProfileHub/sub-components/gba-settings';
 
 const meta: ScreenMeta = { title: 'Game Boy Advance', icon: 'puzzle', order: 5, keywords: ['gba', 'game boy advance', 'second cartridge', 'four swords', 'extra dungeon'] };
 

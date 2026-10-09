@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import type { ScreenMeta } from '@drizztdourden08/brock-react';
-import { InputCalibration } from '@domains/app/views/InputTester';
+import { InputCalibration } from '@app/views/InputTester';
 
 const meta: ScreenMeta = { title: 'Controller Diagnostics', icon: 'gamepad-2', menu: 'Advanced', requiresProfile: false, keywords: ['controller', 'gamepad', 'hid', 'rumble', 'diagnostics', 'report', 'raw bytes'] };
 

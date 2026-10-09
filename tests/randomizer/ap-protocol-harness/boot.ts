@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
+import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import type { OnlineSessionConfig } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeRoom } from '../ap-fake-server';

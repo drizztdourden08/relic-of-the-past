@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import type { ObservedTransition } from '@rotp/game-core';
-import { inferTags } from '../../../apps/desktop/src/ui/domains/widgets/navigation/recommendations/strategies/connection/points.set';
+import { inferTags } from '@app/views/NavigationWidget/recommendations/strategies/connection/points.set';
 
 const transitionOf = (source: string): ObservedTransition => ({ source, kind: 'room', index: 0x55 });
 

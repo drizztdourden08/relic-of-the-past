@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
-import { DebugWidgetContent } from '@app/ui/domains/widgets/debug';
+import { DebugWidgetContent } from '@app/views/DebugWidget';
 import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {

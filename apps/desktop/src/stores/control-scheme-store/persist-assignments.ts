@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 import { getProfileId } from '@rotp/game-core';
-import { readConfig, writeConfig } from '@app/lib/storage/profile-store';
+import { readConfig, writeConfig } from '@app/storage/profile-store';
 import type { Assignments } from './control-scheme-store.type';
 
 let writeQueue: Promise<void> = Promise.resolve();

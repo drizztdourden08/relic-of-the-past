@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { GameSettings } from '@rotp/features';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@rotp/features';
-import { getInputManager } from '@app/lib/game';
+import { getInputManager } from '@app/game';
 import type { SettingsEffectDeps } from './settings-effects.type';
 
 const notifySettingsParent = (patch: Partial<GameSettings>, next: GameSettings, deps: SettingsEffectDeps): void => {

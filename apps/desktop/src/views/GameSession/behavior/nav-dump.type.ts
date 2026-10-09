@@ -8,7 +8,7 @@ import type {
   wasmGetRoomLayoutInfo,
   wasmGetToggleFloorPositions,
   wasmGetViewportInfo,
-} from '@app/lib/game';
+} from '@app/game';
 import type { FallHoleLanding, FloodFillDump, MatchingEntrance, StairInfo, TravelDest } from './dump-nav.type';
 
 type DumpSlot = number | string;

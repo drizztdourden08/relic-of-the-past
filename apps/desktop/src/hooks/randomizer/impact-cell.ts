@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
+import type { ImpactCell } from '@app/compounds/PoolImpactCell';
 import type { PoolImpact } from '@rotp/randomizer';
 import { NOTE_LABEL } from './impact-cell.constants';
 import { signedCount } from './signed-count';

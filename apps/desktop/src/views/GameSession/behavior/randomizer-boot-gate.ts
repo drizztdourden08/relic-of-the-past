@@ -1,9 +1,9 @@
 /* @layer renderer-appshell @kind logic */
-import { log } from '@app/lib/log-bus';
-import { loadRandomizerPlacement } from '@app/lib/randomizer-placement-io';
+import { log } from '@app/log-bus';
+import { loadRandomizerPlacement } from '@app/randomizer-placement-io';
 import {
   normalizeServerUrl, probeOnlineServer, setPendingBoot,
-} from '@app/lib/game/randomizer-client';
+} from '@app/game/randomizer-client';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { GateResult } from './randomizer-boot-gate.type';
 import { rerollPlacement } from './reroll-placement';

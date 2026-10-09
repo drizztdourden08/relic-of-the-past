@@ -3,7 +3,7 @@ import { POND_PRICE_LADDER } from '@rotp/randomizer';
 import { asksOnlyRupees } from '@rotp/randomizer';
 import type { CurveId } from '@rotp/randomizer';
 import type { PondSetting } from '@rotp/randomizer';
-import type { PondRowState } from '@domains/app/compounds/WishingPondRow';
+import type { PondRowState } from '@app/compounds/WishingPondRow';
 
 const askPart = (state: PondRowState, start: number, max: number) => {
   const ask = { ...state.ask, rupees: { ...state.ask.rupees, min: start, max } };

@@ -11,7 +11,7 @@ import type { PondDemandView } from '@rotp/randomizer';
 import type { PondCeilings } from '@rotp/randomizer';
 import type { PondInstance } from '@rotp/randomizer';
 import type { PondSetting } from '@rotp/randomizer';
-import type { PondRowModel } from '@domains/app/compounds/WishingPondRow';
+import type { PondRowModel } from '@app/compounds/WishingPondRow';
 import { CURVE_OPTIONS, MODE_LABELS, PRICE_STOPS } from './pond-row-model.constants';
 import { stateOfSetting } from './state-of-setting';
 

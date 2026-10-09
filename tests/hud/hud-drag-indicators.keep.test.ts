@@ -5,15 +5,15 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { GhostCard } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/DragGhost';
-import { CellPicker } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
+import { GhostCard } from '@app/views/HudLayoutEditor/sub-components/DragGhost';
+import { CellPicker } from '@app/views/HudLayoutEditor/sub-components/CellPicker';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import { ghostPosition } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
+import { ghostPosition } from '@app/views/HudLayoutEditor/behavior/drop-ghost';
 import type { Platform } from '@drizztdourden08/brock-core';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
-const ED = `${ROOT}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
+const ED = `${ROOT}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));

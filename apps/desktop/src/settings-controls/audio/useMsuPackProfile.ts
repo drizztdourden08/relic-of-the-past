@@ -2,8 +2,8 @@
 import { useState, useEffect } from 'react';
 import type { MsuPackProfile } from '@rotp/features';
 import { detectMsuPackProfile } from '@rotp/features';
-import * as msuStore from '@app/lib/storage/msu-store';
-import * as profileStore from '@app/lib/storage/profile-store';
+import * as msuStore from '@app/storage/msu-store';
+import * as profileStore from '@app/storage/profile-store';
 
 const useMsuPackProfile = (profileId: string) => {
   const [pack, setPack] = useState<MsuPackProfile | null>(null);

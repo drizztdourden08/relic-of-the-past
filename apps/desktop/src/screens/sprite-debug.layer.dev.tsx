@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind component */
 import type { CardProps, ScreenMeta } from '@drizztdourden08/brock-react';
 import { useGameSession } from '@app/hooks/useGameSession';
-import { SpriteDebug } from '@domains/app/views/SpriteDebug';
+import { SpriteDebug } from '@app/views/SpriteDebug';
 
 const meta: ScreenMeta = { title: 'Sprite Debug', icon: 'bug', menu: 'Advanced', devOnly: true, shortcut: 'Mod+Shift+D', keywords: ['sprite', 'review', 'items', 'debug'] };
 

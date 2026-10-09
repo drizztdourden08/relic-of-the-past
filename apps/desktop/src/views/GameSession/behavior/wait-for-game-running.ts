@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import { subscribeGameState } from '@app/lib/game';
+import { subscribeGameState } from '@app/game';
 
 const waitForGameRunning = (isCancelled: () => boolean): Promise<void> => new Promise<void>((resolve) => {
   const unsub = subscribeGameState((state) => {

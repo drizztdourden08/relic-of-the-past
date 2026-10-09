@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
+import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import { PING_INTERVAL_MS, PING_TAG } from '@rotp/randomizer';
 import { AP_WORLD_VERSION } from '@rotp/randomizer';
-import { stateChip } from '@app/ui/domains/app/views/Randomizer/sub-components/NetworkTab/behavior/network-tone';
+import { stateChip } from '@app/views/Randomizer/sub-components/NetworkTab/behavior/network-tone';
 import type { LocationKey } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeServer } from '../ap-fake-server';
@@ -12,7 +12,7 @@ import { OWN, boot, settle } from '../ap-protocol-harness';
 import { installNetworkHarness } from './install-network-harness';
 import { networkRoom as makeRoom } from './network-room';
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });

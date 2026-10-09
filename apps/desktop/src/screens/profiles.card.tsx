@@ -2,8 +2,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { ProfilesScreen } from '@drizztdourden08/brock-react';
 import type { ScreenMeta } from '@drizztdourden08/brock-react';
-import { CreateProfileForm } from '@domains/app/compounds/CreateProfileForm';
-import { useDataLibrary } from '@domains/app/views/DataManager/behavior/useDataLibrary';
+import { CreateProfileForm } from '@app/compounds/CreateProfileForm';
+import { useDataLibrary } from '@app/views/DataManager/behavior/useDataLibrary';
 
 const meta: ScreenMeta = { title: 'Profiles', icon: 'users', requiresProfile: false, keywords: ['profile', 'switch', 'create', 'rename', 'delete', 'rom'] };
 

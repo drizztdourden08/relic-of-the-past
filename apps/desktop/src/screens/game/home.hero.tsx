@@ -4,7 +4,7 @@ import { useSettings } from '@drizztdourden08/brock-react';
 import type { HeroProps, ScreenMeta } from '@drizztdourden08/brock-react';
 import { useGameSession } from '@app/hooks/useGameSession';
 import type { AppSettings } from '@app/settings.type';
-import { HomeHeroContent } from '@domains/app/views/ProfileHub/sub-components/home-tab/HomeHeroContent';
+import { HomeHeroContent } from '@app/views/ProfileHub/sub-components/home-tab/HomeHeroContent';
 
 const meta: ScreenMeta = { title: 'Home', icon: 'house', keywords: ['play', 'start', 'stop', 'reset', 'saves', 'quick save', 'auto save', 'play sessions', 'progress', 'import save'] };
 

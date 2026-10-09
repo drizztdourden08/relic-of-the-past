@@ -2,7 +2,7 @@
 import { useProfiles, useSettings } from '@drizztdourden08/brock-react';
 import type { PageProps, ScreenMeta, SearchEntrySeed } from '@drizztdourden08/brock-react';
 import type { AppSettings } from '@app/settings.type';
-import { ControlsSettings } from '@domains/app/views/ProfileHub/sub-components/ControlsSettings';
+import { ControlsSettings } from '@app/views/ProfileHub/sub-components/ControlsSettings';
 
 const meta: ScreenMeta = { title: 'Controls', icon: 'keyboard', order: 4, fill: true, keywords: ['controls', 'bindings', 'keys', 'gamepad', 'controller', 'buttons'] };
 

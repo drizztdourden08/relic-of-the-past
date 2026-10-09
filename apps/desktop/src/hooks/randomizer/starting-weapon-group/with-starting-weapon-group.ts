@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { PoolListingGroup } from '@domains/app/compounds/PoolListing';
+import type { PoolListingGroup } from '@app/compounds/PoolListing';
 import { POOL_PARTITION_IDS } from './starting-weapon-group.constants';
 
 const withStartingWeaponGroup = (

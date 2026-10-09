@@ -4,7 +4,7 @@ import { uncleWeaponCandidates } from '@rotp/randomizer';
 import { isUnrecordedItem } from '@rotp/randomizer';
 import { itemKeyName } from '@rotp/randomizer';
 import type { ItemKey } from '@rotp/randomizer';
-import type { PoolListingGroup, PoolListingRow } from '@domains/app/compounds/PoolListing';
+import type { PoolListingGroup, PoolListingRow } from '@app/compounds/PoolListing';
 import { REFERENCE_ORDER, STARTING_WEAPON_GROUP_ID } from './starting-weapon-group.constants';
 
 const spriteOf = (item: ItemKey): string | undefined =>

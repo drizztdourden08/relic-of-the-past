@@ -4,8 +4,8 @@ import { all, getConnection, registerRecord, unregisterRecord } from '@rotp/game
 import type { ConnectionId, ConnectionRecord, ScreenId } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy } from '@rotp/navigation';
-import { connectionStrategy } from '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/connection.strategy';
-import { onUnresolvableConnection } from '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/unresolvable-screen';
+import { connectionStrategy } from '@app/views/NavigationWidget/recommendations/strategies/connection/connection.strategy';
+import { onUnresolvableConnection } from '@app/views/NavigationWidget/recommendations/strategies/connection/unresolvable-screen';
 import { describeDataset } from '../../dataset-guard';
 
 const detector = detectorFromStrategy(connectionStrategy, onUnresolvableConnection);

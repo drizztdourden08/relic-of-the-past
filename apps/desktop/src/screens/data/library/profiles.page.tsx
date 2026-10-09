@@ -2,8 +2,8 @@
 import { useCallback } from 'react';
 import type { PageProps, ScreenMeta } from '@drizztdourden08/brock-react';
 import type { CreateProfileOptions } from '@app/profiles/types';
-import { useDataLibrary } from '@domains/app/views/DataManager/behavior/useDataLibrary';
-import { ProfileManager } from '@domains/app/views/DataManager/sub-components/ProfileManager';
+import { useDataLibrary } from '@app/views/DataManager/behavior/useDataLibrary';
+import { ProfileManager } from '@app/views/DataManager/sub-components/ProfileManager';
 
 const meta: ScreenMeta = { title: 'Profiles', icon: 'users', order: 1, fill: true, keywords: ['profile', 'create', 'delete', 'preset', 'language', 'msu', 'randomizer', 'archipelago'] };
 

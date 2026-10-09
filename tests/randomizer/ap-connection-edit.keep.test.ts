@@ -2,10 +2,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createProfile, loadProfile, updateProfile } from '@app/profiles/storage';
 import { applyConnectionPatch } from '@app/profiles/connection-patch/randomizer-connection-patch';
-import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
-import { getSessionState, startOnline, stopActive } from '@app/lib/game/randomizer-client/session-store';
-import { onlineConfigOfProfile } from '@app/lib/game/randomizer-client/online-config-of-profile';
-import { reconnectProfileSession } from '@app/lib/game/randomizer-client/profile-reconnect';
+import { createOnlineClient } from '@app/game/randomizer-client/online-client';
+import { getSessionState, startOnline, stopActive } from '@app/game/randomizer-client/session-store';
+import { onlineConfigOfProfile } from '@app/game/randomizer-client/online-config-of-profile';
+import { reconnectProfileSession } from '@app/game/randomizer-client/profile-reconnect';
 import { joinServerAddress, serverAddressError, splitServerAddress } from '@rotp/randomizer';
 import { absorbPort, draftError, draftOf, patchOf } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { createMemFileStore } from '../storage/mem-file-store';
@@ -18,12 +18,12 @@ import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 
 const fake = vi.hoisted(() => ({ server: null as FakeServer | null }));
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
-vi.mock('@app/lib/game/randomizer-client/local-session', () => ({ createLocalSession: () => null }));
-vi.mock('@app/lib/game/randomizer-client/online-session', () => ({
+vi.mock('@app/game/randomizer-client/local-session', () => ({ createLocalSession: () => null }));
+vi.mock('@app/game/randomizer-client/online-session', () => ({
   createOnlineSession: (config: OnlineSessionConfig) =>
     createOnlineClient(config, { core: createFakeCore(), createSocket: fake.server!.createSocket }),
 }));

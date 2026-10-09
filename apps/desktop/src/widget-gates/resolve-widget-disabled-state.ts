@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { DISABLED_SETTING_MESSAGES } from '@domains/app/disabled-setting-messages.constants';
+import { DISABLED_SETTING_MESSAGES } from '@app/settings-controls/disabled-setting-messages.constants';
 import type { WidgetDisabledState, WidgetGate } from './widget-gate.type';
 
 const messageFor = (settingId: string): string =>

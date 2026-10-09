@@ -1,18 +1,18 @@
 /* @layer tests @kind helper */
 import { createElement as h } from 'react';
-import { GridLattice, occupantsOf, rowCountFor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridLattice';
-import { contextualActions, gestureActions } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-actions';
-import { cellStateOf } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-cell-state';
-import { chipOf, statusOf } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-status';
-import { trackExtentOf } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-track-actions';
-import { SelectionLegend } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionLegend';
-import { SelectionToolbar } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionToolbar';
-import { LayoutSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { GridLattice, occupantsOf, rowCountFor } from '@app/views/HudLayoutEditor/sub-components/GridLattice';
+import { contextualActions, gestureActions } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-actions';
+import { cellStateOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-cell-state';
+import { chipOf, statusOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-status';
+import { trackExtentOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-track-actions';
+import { SelectionLegend } from '@app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionLegend';
+import { SelectionToolbar } from '@app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionToolbar';
+import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { ReactNode } from 'react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudContainer, HudGridContainer, HudNode } from '@rotp/hud';
-import type { GridActionContext, GridSelection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
+import type { GridActionContext, GridSelection } from '@app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 import { SELECTIONS } from './layout-bands.constants';
 
 const noop = (): void => {};

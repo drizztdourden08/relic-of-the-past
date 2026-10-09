@@ -4,8 +4,8 @@ import { formatBytes } from '@drizztdourden08/brock-core';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import type { HeroProps, ScreenMeta } from '@drizztdourden08/brock-react';
 import { Button, Icon, Spinner, Text } from '@drizztdourden08/tessera/primitives';
-import { DomainTiles } from '@domains/app/views/DataManager/sub-components/data-overview/DomainTiles';
-import { useStorageSummary } from '@domains/app/views/DataManager/sub-components/data-overview/useStorageSummary';
+import { DomainTiles } from '@app/views/DataManager/sub-components/data-overview/DomainTiles';
+import { useStorageSummary } from '@app/views/DataManager/sub-components/data-overview/useStorageSummary';
 
 const meta: ScreenMeta = { title: 'Home', icon: 'house', keywords: ['data', 'overview', 'disk', 'folder', 'total', 'library'] };
 

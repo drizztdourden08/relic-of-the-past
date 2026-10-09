@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback } from 'react';
 import { loadProfile } from '@drizztdourden08/brock-react';
-import { updateProfile } from '@app/lib/storage/profile-store';
-import { reconnectProfileSession } from '@app/lib/game/randomizer-client';
+import { updateProfile } from '@app/storage/profile-store';
+import { reconnectProfileSession } from '@app/game/randomizer-client';
 import { useProfileConnectionStore } from '@app/stores/profile-connection-store';
 import { applyConnectionPatch } from '@app/profiles/connection-patch/randomizer-connection-patch';
 import type { RandomizerConnectionPatch } from '@app/profiles/types';

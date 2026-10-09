@@ -1,9 +1,9 @@
 /* @layer renderer-appshell @kind hook */
 import { appApi } from '@app/ipc/app-api';
 import { useEffect, useRef } from 'react';
-import { loadState, loadStateRef } from '@app/lib/game';
-import { createLiveGamePort } from '@app/lib/game/simulator';
-import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
+import { loadState, loadStateRef } from '@app/game';
+import { createLiveGamePort } from '@app/game/simulator';
+import { pauseSramSync, resumeSramSync } from '@app/game/sram-sync';
 import type { SimRunDeps } from './useSimRun.type';
 import { FEATURE_LATCH_MS, SIM_START_SETTLE_MS } from './sim-run.constants';
 import { EXIT_DELAY_MS, RENDER_SETTLE_MS } from './auto-launch.constants';

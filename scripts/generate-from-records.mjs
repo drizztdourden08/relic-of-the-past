@@ -67,7 +67,6 @@ const loadDataset = async () => {
     resolve: {
       alias: {
         '@app': abs('apps/desktop/src'),
-        '@domains': abs('apps/desktop/src/ui/domains'),
       },
     },
   });

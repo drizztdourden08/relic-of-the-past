@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { DeliveryEntry, DeliveryQueueState } from '../../lib/game/delivery-queue';
+import type { DeliveryEntry, DeliveryQueueState } from '../../game/delivery-queue';
 
 interface DeliveryQueueStore {
   pending: DeliveryEntry[];

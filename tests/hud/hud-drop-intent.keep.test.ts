@@ -9,11 +9,11 @@ import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { EscapeLevel, EscapeStack } from '@drizztdourden08/tessera/primitives';
 import {
   applyDrop, outlineIntent, refusalFor, refusalText, zoneIn,
-} from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
-import { siteOf } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/node-edits';
+} from '@app/views/HudLayoutEditor/behavior/drop-intent';
+import { siteOf } from '@app/views/HudLayoutEditor/behavior/node-edits';
 import type { HudLayout, HudNode } from '@rotp/hud';
 
-const EDITOR = resolve(__dirname, '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
+const EDITOR = resolve(__dirname, '../../apps/desktop/src/views/HudLayoutEditor');
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

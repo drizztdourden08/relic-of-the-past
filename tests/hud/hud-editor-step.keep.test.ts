@@ -5,13 +5,13 @@ import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { EditorStepContext } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/editor-step';
-import { ValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
+import { EditorStepContext } from '@app/views/HudLayoutEditor/behavior/editor-step';
+import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import type { Value } from '@rotp/hud';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-const ED = resolve(__dirname, '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
+const ED = resolve(__dirname, '../../apps/desktop/src/views/HudLayoutEditor');
 let mounted: { root: Root; host: HTMLElement } | null = null;
 let written: Value | undefined;
 

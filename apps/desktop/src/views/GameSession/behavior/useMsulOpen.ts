@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import type { OpenRequest } from '@drizztdourden08/brock-core';
 import { useAppOpen } from '@drizztdourden08/brock-react';
 import { appApi } from '@app/ipc/app-api';
-import { installMsulFile } from '@app/lib/storage/msu-store';
-import { log } from '@app/lib/log-bus';
+import { installMsulFile } from '@app/storage/msu-store';
+import { log } from '@app/log-bus';
 
 const stemOf = (filePath: string): string =>
   (filePath.split(/[\\/]/).pop() ?? '').replace(/\.msul$/i, '');

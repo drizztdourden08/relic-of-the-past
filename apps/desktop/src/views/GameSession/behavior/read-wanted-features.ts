@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import { getModule } from '@app/lib/game';
+import { getModule } from '@app/game';
 import { FEATURES_QUERY_FAILED, MODULE_UNREACHABLE } from './sim-run.constants';
 
 const readWantedFeatures = (): number => {

@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { FAMILIES, NO_WALLET_FLOOR } from '@rotp/randomizer';
 import { capacityRowModelOf } from './capacity-row-model';
-import type { CapacityRowModel } from '@domains/app/compounds/CapacityFamilyRow';
+import type { CapacityRowModel } from '@app/compounds/CapacityFamilyRow';
 import type { CapacityRowsInput } from './use-capacity-rows.type';
 import { NO_FORCED } from './use-capacity-rows.constants';
 

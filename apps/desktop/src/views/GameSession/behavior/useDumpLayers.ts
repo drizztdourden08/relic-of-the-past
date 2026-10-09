@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { appApi } from '@app/ipc/app-api';
 import { useEffect, useRef } from 'react';
-import { loadState, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer, wasmGetViewportInfo } from '@app/lib/game';
+import { loadState, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer, wasmGetViewportInfo } from '@app/game';
 import type { DumpLayersDeps } from './useDumpLayers.type';
 import type { HoverVerification } from './dump-layers.type';
 import { EXIT_DELAY_MS, RENDER_SETTLE_MS } from './auto-launch.constants';

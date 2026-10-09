@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import { liveSettingsNow } from '@app/lib/game/live-settings';
+import { liveSettingsNow } from '@app/game/live-settings';
 import { controlSettingsMemo } from './control-settings-memo';
 import { syncControlSettings } from './sync-control-settings';
 

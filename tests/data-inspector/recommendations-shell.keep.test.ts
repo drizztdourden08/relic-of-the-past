@@ -4,8 +4,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
   KIND_NAV_ITEMS, NAV_ITEMS, RECOMMENDATIONS_KIND, isEntityKind, queryViewKey, tableViewKey,
-} from '@app/ui/domains/app/views/DataInspector/DataInspector.constants';
-import { CollapsibleDetail } from '@app/ui/domains/app/views/DataInspector/sub-components/CollapsibleDetail';
+} from '@app/views/DataInspector/DataInspector.constants';
+import { CollapsibleDetail } from '@app/views/DataInspector/sub-components/CollapsibleDetail';
 
 describe('the rail entry', () => {
   it('is always present, last, regardless of the active kind', () => {

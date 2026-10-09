@@ -1,10 +1,10 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { compileExpr } from '@rotp/hud';
-import { readExpr } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/check-expr';
-import { formulaGroups } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/formula-catalog';
-import { formulaStarters } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/formula-starters';
-import { instanceScopes } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/formula-scope';
+import { readExpr } from '@app/views/HudLayoutEditor/behavior/check-expr';
+import { formulaGroups } from '@app/views/HudLayoutEditor/behavior/formula-catalog';
+import { formulaStarters } from '@app/views/HudLayoutEditor/behavior/formula-starters';
+import { instanceScopes } from '@app/views/HudLayoutEditor/behavior/formula-scope';
 
 const scope = { life_current: 112, life_max: 160 };
 

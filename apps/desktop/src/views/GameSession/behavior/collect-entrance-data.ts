@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import { spawnLandingTile } from '@app/lib/game/flood';
+import { spawnLandingTile } from '@app/game/flood';
 import type { EntranceDataInput, FallHoleLanding, MatchingEntrance } from './dump-nav.type';
 
 const collectEntranceData = (input: EntranceDataInput) => {

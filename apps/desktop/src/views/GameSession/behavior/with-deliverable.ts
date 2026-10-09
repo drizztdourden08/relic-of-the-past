@@ -3,7 +3,7 @@ import type { CreateProfileOptions } from '@app/profiles/types';
 import { deliverableListsOf } from '@rotp/randomizer';
 import {
   probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
-} from '@app/lib/game/randomizer-client';
+} from '@app/game/randomizer-client';
 
 const withDeliverable = (opts: CreateProfileOptions): CreateProfileOptions => {
   const { randomizer } = opts;

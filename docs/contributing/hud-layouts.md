@@ -258,7 +258,7 @@ first and `tsc` will point at every site that has to answer for it.
    `DEFAULT_HUD_LAYOUT.placements`. The other presets map over the default's
    placements, so they pick the element up for free.
 4. **Build the element itself** as a HUD compound under
-   `apps/desktop/src/ui/domains/hud/compounds/`. Keep it bare and presentational, taking a
+   `apps/desktop/src/compounds/`. Keep it bare and presentational, taking a
    `scale` and its data as props. See [Design System](design-system.md) for the tiers.
 5. **`HudLayoutView.elementFor`**: add the `case` that renders it.
 6. **`HudLayoutEditor.constants.ts`**: add the id to `ELEMENT_ORDER` and a label to

@@ -8,14 +8,14 @@ import { intrinsicSize, layoutHud, placedById } from '@rotp/hud';
 import { COUNTDOWN_SIZE, layoutById, validateLayout } from '@rotp/hud';
 import { parseGameUIBuffer } from '@rotp/game-core';
 import { advanceCountdown, IDLE_TRACK } from '@rotp/hud';
-import { countdownBox } from '../../apps/desktop/src/ui/domains/hud/compounds/HudCountdown';
-import { HudNodeCountdown } from '../../apps/desktop/src/ui/domains/hud/compounds/HudNodeRenderer/sub-components/HudNodeCountdown';
-import { drawOrigin } from '../../apps/desktop/src/ui/domains/hud/compounds/HudNodeRenderer/behavior/draw-origin';
+import { countdownBox } from '@app/compounds/HudCountdown';
+import { HudNodeCountdown } from '@app/compounds/HudNodeRenderer/sub-components/HudNodeCountdown';
+import { drawOrigin } from '@app/compounds/HudNodeRenderer/behavior/draw-origin';
 import {
   countdownInset, countdownVariantOf,
-} from '../../apps/desktop/src/ui/domains/hud/compounds/HudNodeRenderer/behavior/countdown-art';
-import { countdownContentOf } from '../../apps/desktop/src/ui/domains/hud/views/HudLayoutView/behavior/countdown-content';
-import { occupantsOf } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridLattice';
+} from '@app/compounds/HudNodeRenderer/behavior/countdown-art';
+import { countdownContentOf } from '@app/views/HudLayoutView/behavior/countdown-content';
+import { occupantsOf } from '@app/views/HudLayoutEditor/sub-components/GridLattice';
 import type { PlacedNode } from '@rotp/hud';
 import type { HudLayout, HudNode } from '@rotp/hud';
 

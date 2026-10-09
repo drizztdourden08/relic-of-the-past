@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, vi } from 'vitest';
 import { act, createElement as h } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { OutlinePanel } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
+import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { useHudEditorViewStore } from '../../../apps/desktop/src/stores/hud-editor-view-store';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import { DOC, PLATFORM, ROW, VIEW } from './drag-timers.constants';

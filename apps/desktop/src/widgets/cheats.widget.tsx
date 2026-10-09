@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
-import { CheatsWidgetContent } from '@app/ui/domains/widgets/cheats';
+import { CheatsWidgetContent } from '@app/views/CheatsWidget';
 import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {

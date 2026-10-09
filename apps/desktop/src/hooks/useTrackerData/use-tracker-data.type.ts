@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind types */
 import type { GroupDimension } from '@rotp/game-data';
-import type { ViewMode } from '../../ui/domains/app/compounds/ChecksTracker';
+import type { ViewMode } from '../../compounds/ChecksTracker';
 
 interface TrackerDataOptions {
   initialGrouping?: GroupDimension[];

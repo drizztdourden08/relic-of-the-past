@@ -3,13 +3,13 @@ import { useMemo } from 'react';
 import { buildFillWorld } from '@rotp/randomizer';
 import { fillOptionsFromSnapshot } from '@rotp/randomizer';
 import { UNCLE_LOCATION } from '@rotp/randomizer';
-import { useSpriteAvailability } from '../../lib/sprites/useSpriteAvailability';
-import { useSpriteRevision } from '../../lib/sprites/useSpriteRevision';
+import { useSpriteAvailability } from '../useSpriteAvailability';
+import { useSpriteRevision } from '../useSpriteRevision';
 import { deliverableSets } from './deliverable-sets';
 import { poolListingGroupsOf } from './pool-listing-model';
 import { startingWeaponGroupOf, withStartingWeaponGroup } from './starting-weapon-group';
 import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
-import type { PoolListingGroup } from '@domains/app/compounds/PoolListing';
+import type { PoolListingGroup } from '@app/compounds/PoolListing';
 import { NO_GROUPS } from './use-pool-listing.constants';
 
 const usePoolListing = (

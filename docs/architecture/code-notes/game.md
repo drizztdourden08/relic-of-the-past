@@ -1035,7 +1035,7 @@ keys: `<record-id>-<tier>` for an item (the tier is always the last segment), th
 content value, the panel key. An override folds back onto it without a translation step. The
 ability words have no data home yet (they are still an array in the drawing component), so they
 are restated here: `ABILITY_WORDS` copies the hardcoded `abilityGrid` array in
-`apps/desktop/src/ui/domains/hud/compounds/PauseAbilitiesPanel/PauseAbilitiesPanel.tsx`, because
+`apps/desktop/src/compounds/PauseAbilitiesPanel/PauseAbilitiesPanel.tsx`, because
 nothing under `shared/` may reach into `apps/`.
 
 Every one of these surfaces draws from a fixed A to Z ramp, not the set's glyph sheet, hence

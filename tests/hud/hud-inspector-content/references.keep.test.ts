@@ -16,10 +16,10 @@ vi.hoisted(() => {
 });
 
 import { createElement as h } from 'react';
-import { nodeArtOf } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/node-art';
-import { ButtonStateRow } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ButtonStateRow';
-import { GlyphContent } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/GlyphContent';
-import { RepeatContent } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/RepeatContent';
+import { nodeArtOf } from '@app/views/HudLayoutEditor/behavior/node-art';
+import { ButtonStateRow } from '@app/views/HudLayoutEditor/sub-components/ButtonStateRow';
+import { GlyphContent } from '@app/views/HudLayoutEditor/sub-components/content/GlyphContent';
+import { RepeatContent } from '@app/views/HudLayoutEditor/sub-components/content/RepeatContent';
 import type { HudNode } from '@rotp/hud';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';

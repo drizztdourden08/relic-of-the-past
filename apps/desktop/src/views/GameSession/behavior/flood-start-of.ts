@@ -1,8 +1,8 @@
 /* @layer renderer-appshell @kind logic */
 import type { GridPos } from '@rotp/game-core';
 import { linkStartTile } from '@rotp/navigation';
-import { screenOriginFor } from '@app/lib/game/flood';
-import type { wasmGetViewportInfo } from '@app/lib/game';
+import { screenOriginFor } from '@app/game/flood';
+import type { wasmGetViewportInfo } from '@app/game';
 
 const floodStartOf = (
   isIndoors: boolean,

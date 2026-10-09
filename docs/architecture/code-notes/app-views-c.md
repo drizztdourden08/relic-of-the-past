@@ -3,7 +3,7 @@
 
 Facts about the renderer's app domain that the code cannot say on its own. It covers the
 compounds under `apps/desktop/src/ui/domains/app/compounds/` and the app views under
-`apps/desktop/src/ui/domains/app/views/`, apart from DataManager, HudLayoutEditor, ProfileHub,
+`apps/desktop/src/views/`, apart from DataManager, HudLayoutEditor, ProfileHub,
 InputTester, GameLayer and Randomizer, which have their own pages. Each heading names a file,
 relative to `apps/desktop/src/ui/domains/app/`.
 

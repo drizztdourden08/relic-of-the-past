@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useState, useCallback, useEffect } from 'react';
-import { subscribeGameState, resetGame } from '@app/lib/game';
+import { subscribeGameState, resetGame } from '@app/game';
 import { useGameAssetsStore } from '@app/stores/game-assets-store';
 
 const useGameLifecycle = () => {

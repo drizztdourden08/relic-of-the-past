@@ -3,12 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
 import { gridCellRects } from '@rotp/hud';
-import { stageCellRects } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/stage-cells';
+import { stageCellRects } from '@app/views/HudLayoutEditor/behavior/stage-cells';
 import type { PlacedNode } from '@rotp/hud';
 import type { HudGridContainer } from '@rotp/hud';
 import type { Rect } from '@rotp/hud';
 
-const EDITOR = resolve(__dirname, '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
+const EDITOR = resolve(__dirname, '../../apps/desktop/src/views/HudLayoutEditor');
 
 const SCREEN: HudGridContainer = {
   kind: 'container', id: 'screen', layout: 'grid',

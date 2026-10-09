@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { FAMILIES, NO_WALLET_FLOOR, planOf } from '@rotp/randomizer';
 import type { CapacityFamily, CapacityFamilyId, CapacityProfile, FamilySetting, WalletFloor, WalletSetting } from '@rotp/randomizer';
-import type { CapacityRowState } from '@domains/app/compounds/CapacityFamilyRow';
+import type { CapacityRowState } from '@app/compounds/CapacityFamilyRow';
 import { isPresetChoice } from './is-preset-choice';
 import { presetOfChoice } from './preset-of-choice';
 import { rowStateOf } from './row-state-of';

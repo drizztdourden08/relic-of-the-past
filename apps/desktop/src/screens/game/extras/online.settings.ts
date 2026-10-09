@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind config */
 import { useProfilesStore } from '@drizztdourden08/brock-react';
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
-import { runKindOfProfile } from '@app/lib/game/randomizer-client';
+import { runKindOfProfile } from '@app/game/randomizer-client';
 
 const meta: ScreenMeta = { title: 'Online', icon: 'globe', order: 3, keywords: ['online', 'archipelago', 'multiworld', 'deathlink', 'notifications'] };
 

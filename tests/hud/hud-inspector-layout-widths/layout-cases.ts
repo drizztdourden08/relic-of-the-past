@@ -1,15 +1,15 @@
 /* @layer tests @kind helper */
 import { createElement as h } from 'react';
-import { AlignmentTiles } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/AlignmentTiles';
-import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/align-options';
-import { ColorField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ColorField';
-import { DirectionControl } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/DirectionControl';
-import { ExtentField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ExtentField';
+import { AlignmentTiles } from '@app/views/HudLayoutEditor/sub-components/AlignmentTiles';
+import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '@app/views/HudLayoutEditor/behavior/align-options';
+import { ColorField } from '@app/views/HudLayoutEditor/sub-components/ColorField';
+import { DirectionControl } from '@app/views/HudLayoutEditor/sub-components/DirectionControl';
+import { ExtentField } from '@app/views/HudLayoutEditor/sub-components/ExtentField';
 import { IconButton } from '@drizztdourden08/tessera/primitives';
-import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
+import { GridEditor } from '@app/views/HudLayoutEditor/sub-components/GridEditor';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
-import type { AlignRowSpec } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/AlignmentTiles';
+import type { AlignRowSpec } from '@app/views/HudLayoutEditor/sub-components/AlignmentTiles';
 import type { HudGridContainer } from '@rotp/hud';
 
 const noop = (): void => {};

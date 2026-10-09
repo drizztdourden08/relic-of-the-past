@@ -1,11 +1,11 @@
 /* @layer tests @kind constants */
 import { resolve } from 'path';
-import type { GridSelection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
+import type { GridSelection } from '@app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 
 const ROOT_DIR = resolve(__dirname, '../../..');
 const DESIGN_SYSTEM_DIR = `${ROOT_DIR}/node_modules/@drizztdourden08/tessera/src`;
 const ROTP_THEME = `${ROOT_DIR}/apps/desktop/src/theme.css`;
-const EDITOR_DIR = `${ROOT_DIR}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
+const EDITOR_DIR = `${ROOT_DIR}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
 const GRID_EDITOR_SRC = `${EDITOR_DIR}/GridEditor/GridEditor.tsx`;
 const LAYOUT_SECTION_SRC = `${EDITOR_DIR}/sections/LayoutSection.tsx`;
 

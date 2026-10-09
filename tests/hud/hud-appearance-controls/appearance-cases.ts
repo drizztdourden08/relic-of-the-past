@@ -1,12 +1,12 @@
 /* @layer tests @kind helper */
 import { createElement as h, type ReactNode } from 'react';
-import { AppearanceSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/AppearanceSection';
-import { GradientRamp } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GradientRamp';
-import { PaintField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/PaintField';
-import { SidesField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SidesField';
-import { SlotChips } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SlotChips';
-import { SubsectionGroup } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SubsectionGroup';
-import { ValueField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
+import { AppearanceSection } from '@app/views/HudLayoutEditor/sub-components/sections/AppearanceSection';
+import { GradientRamp } from '@app/views/HudLayoutEditor/sub-components/GradientRamp';
+import { PaintField } from '@app/views/HudLayoutEditor/sub-components/PaintField';
+import { SidesField } from '@app/views/HudLayoutEditor/sub-components/SidesField';
+import { SlotChips } from '@app/views/HudLayoutEditor/sub-components/SlotChips';
+import { SubsectionGroup } from '@app/views/HudLayoutEditor/sub-components/SubsectionGroup';
+import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import type { HudNode } from '@rotp/hud';
 
 const noop = (): void => {};

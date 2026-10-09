@@ -4,10 +4,10 @@ import type { LocationKey } from '@rotp/randomizer';
 import type { CheckId, ItemId } from '@rotp/game-data';
 import {
   getCompletedChecks, getCurrentInventory, getEventStatus, onCompletedChecksChanged, onEventStatusChanged, onInventoryChanged,
-} from '../../lib/game';
+} from '../../game';
 import {
   firedLocations, getSessionState, onFiredLocation, subscribeSessionStore,
-} from '../../lib/game/randomizer-client';
+} from '../../game/randomizer-client';
 
 const useLiveTrackerInputs = () => {
   const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());

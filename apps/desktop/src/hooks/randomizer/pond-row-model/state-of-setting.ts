@@ -2,7 +2,7 @@
 import { POND_PRICE_LADDER } from '@rotp/randomizer';
 import { askOfSetting } from '@rotp/randomizer';
 import type { PondSetting } from '@rotp/randomizer';
-import type { PondRowState } from '@domains/app/compounds/WishingPondRow';
+import type { PondRowState } from '@app/compounds/WishingPondRow';
 
 const stateOfSetting = (setting: PondSetting): PondRowState => {
   const custom = setting.mode === 'custom' ? setting : undefined;

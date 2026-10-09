@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import type { ImportProgress } from '@app/ipc';
 import { formatBytes } from '@drizztdourden08/brock-core';
-import { subscribeImportProgress } from '@app/lib/storage/import-progress-bus';
+import { subscribeImportProgress } from '@app/storage/import-progress-bus';
 import type { ImportKind, ImportProgressState } from './use-import-progress.type';
 import { IDLE, PHASE_VERB } from './use-import-progress.constants';
 

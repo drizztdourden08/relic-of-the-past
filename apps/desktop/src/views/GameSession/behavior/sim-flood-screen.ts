@@ -1,9 +1,9 @@
 /* @layer renderer-appshell @kind logic */
 import type { SimRunConfig } from '@rotp/navigation';
 import { linkStartTile } from '@rotp/navigation';
-import { wasmGetViewportInfo } from '@app/lib/game';
-import { floodOverworldScreen } from '@app/lib/game/simulator';
-import { overworldOrigin } from '@app/lib/game/flood';
+import { wasmGetViewportInfo } from '@app/game';
+import { floodOverworldScreen } from '@app/game/simulator';
+import { overworldOrigin } from '@app/game/flood';
 
 const simFloodScreen = (config: SimRunConfig, floodScreen: number) => {
   const vp = wasmGetViewportInfo();

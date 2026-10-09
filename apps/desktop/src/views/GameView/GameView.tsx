@@ -1,9 +1,9 @@
 /* @layer renderer-app @kind component */
 import { bugReport, useDeveloperTools } from '@drizztdourden08/brock-react';
 import { Box, Image } from '@drizztdourden08/tessera/primitives';
-import { GameLayer } from '@app/ui/domains/app/views/GameLayer';
-import { SaveStateOverlay } from '@app/ui/domains/app/views/SaveStateOverlay/SaveStateOverlay';
-import { DebugFloatingControls } from '@app/ui/domains/app/compounds/DebugFloatingControls';
+import { GameLayer } from '@app/views/GameLayer';
+import { SaveStateOverlay } from '@app/views/SaveStateOverlay/SaveStateOverlay';
+import { DebugFloatingControls } from '@app/compounds/DebugFloatingControls';
 import { useGameSession } from '@app/hooks/useGameSession';
 import { BACKGROUND_LOGO } from './GameView.constants';
 import './GameView.css';

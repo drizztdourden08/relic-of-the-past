@@ -14,16 +14,16 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { BoundedValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/BoundedValueField';
-import { ReferenceField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ReferenceField';
-import { SlotRefField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SlotRefField';
-import { TextValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/TextValueField';
-import { GlyphContent } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/GlyphContent';
+import { BoundedValueField } from '@app/views/HudLayoutEditor/sub-components/BoundedValueField';
+import { ReferenceField } from '@app/views/HudLayoutEditor/sub-components/ReferenceField';
+import { SlotRefField } from '@app/views/HudLayoutEditor/sub-components/SlotRefField';
+import { TextValueField } from '@app/views/HudLayoutEditor/sub-components/content/TextValueField';
+import { GlyphContent } from '@app/views/HudLayoutEditor/sub-components/content/GlyphContent';
 import type { ModernSlot } from '@rotp/game-data';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
-const ED = `${ROOT}/apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
+const ED = `${ROOT}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));

@@ -6,13 +6,13 @@ import { createRoot, type Root } from 'react-dom/client';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { EscapeStack } from '@drizztdourden08/tessera/primitives';
-import { MotionTransport } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/MotionTransport';
+import { MotionTransport } from '@app/views/HudLayoutEditor/sub-components/MotionTransport';
 import {
   MotionPreviewContext, useMotionPreviewState,
-} from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/motion-preview';
+} from '@app/views/HudLayoutEditor/behavior/motion-preview';
 import {
   useReducedMotion,
-} from '../../apps/desktop/src/ui/domains/hud/compounds/HudNodeRenderer/sub-components/HudNodeMotion/useReducedMotion';
+} from '@app/compounds/HudNodeRenderer/sub-components/HudNodeMotion/useReducedMotion';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

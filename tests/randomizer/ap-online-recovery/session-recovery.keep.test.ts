@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
+import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import { rebaselineEntries } from '@rotp/randomizer';
 import { baselineEntriesOf } from '@rotp/randomizer';
 import type { CreateSocket } from '@rotp/randomizer';
@@ -11,7 +11,7 @@ import { item, settle } from '../ap-protocol-harness';
 import { installRecoveryHarness } from './install-recovery-harness';
 import { recoveryRoom as makeRoom } from './recovery-room';
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });

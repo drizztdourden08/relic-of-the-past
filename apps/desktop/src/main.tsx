@@ -19,7 +19,7 @@ import { SETTINGS } from './main.constants';
 import { LEGAL_TEXT } from './legal.constants';
 import { product } from './product';
 import type { AppSettings } from './settings.type';
-import './lib/log-bus';
+import './log-bus';
 
 installAppShim();
 

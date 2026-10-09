@@ -6,7 +6,7 @@ import { boot, settle } from '../ap-protocol-harness';
 import { installNetworkHarness } from './install-network-harness';
 import { networkRoom as makeRoom } from './network-room';
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });

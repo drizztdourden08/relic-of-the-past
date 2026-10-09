@@ -5,7 +5,7 @@ import { validateLayout } from '@rotp/hud';
 import { BUILT_IN_LAYOUTS } from '@rotp/hud';
 import { engineSwitchPatch } from '@rotp/hud';
 import { resolveValue } from '@rotp/hud';
-import { nodeById, patchNode } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/node-edits';
+import { nodeById, patchNode } from '@app/views/HudLayoutEditor/behavior/node-edits';
 import type { HudContainer, HudLayout } from '@rotp/hud';
 import type { Value } from '@rotp/hud';
 

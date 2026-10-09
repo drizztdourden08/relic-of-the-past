@@ -5,9 +5,9 @@ import { RANDOMIZER_MSG_BASE, RANDOMIZER_RECEIPT_MSG } from '@rotp/asset-extract
 import { progressiveCapacityItemName } from '@rotp/game-data';
 import { renderCapacityStep } from '@rotp/randomizer';
 import { renderFromServer, renderOnline } from '@rotp/randomizer';
-import { clearSessionDialogue, setSessionReceiptMessages } from '@app/lib/game/session-dialogue/session-dialogue';
+import { clearSessionDialogue, setSessionReceiptMessages } from '@app/game/session-dialogue/session-dialogue';
 import { ARRIVAL_SLOTS } from '@rotp/game-core';
-import { cancelServerDeliveries, deliverServerItem } from '@app/lib/game/randomizer-client/server-delivery';
+import { cancelServerDeliveries, deliverServerItem } from '@app/game/randomizer-client/server-delivery';
 import { installFakeModule } from './ap-fake-module';
 import type { FakeModule } from './ap-fake-module';
 
@@ -17,14 +17,14 @@ const queue = vi.hoisted(() => ({
   warnings: [] as string[],
 }));
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   const randomizer = (line: string, level?: string): void => { if (level === 'warn') queue.warnings.push(line); };
   return { log: { core: quiet, app: quiet, randomizer, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
 vi.mock('../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
 vi.mock('../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
-vi.mock('@app/lib/game/delivery-api', () => ({
+vi.mock('@app/game/delivery-api', () => ({
   deliverItem: (
     _id: number, _label: string, _source: string, messageId?: number | (() => number), onComplete?: () => void,
     onGranted?: () => void,
@@ -34,7 +34,7 @@ vi.mock('@app/lib/game/delivery-api', () => ({
     return `dlv_${queue.entries.length}`;
   },
 }));
-vi.mock('@app/lib/game/delivery-queue', () => ({ remove: () => true }));
+vi.mock('@app/game/delivery-queue', () => ({ remove: () => true }));
 vi.mock('../../packages/game-core/src/session-dialogue/active-dialogue', () => ({
   readActiveDialogue: () => ({
     code: 'us',

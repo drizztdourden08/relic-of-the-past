@@ -3,7 +3,7 @@ import { appApi } from '@app/ipc/app-api';
 import type { SimRunConfig, SimulatorPort } from '@rotp/navigation';
 import { buildSimRunReport, formatEndSummary } from '@rotp/navigation';
 import { getDungeon, getItem } from '@rotp/game-data';
-import { runSimulation } from '@app/lib/game/simulator';
+import { runSimulation } from '@app/game/simulator';
 import { readLoadout } from '@rotp/navigation';
 
 const runFullSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise<void> => {

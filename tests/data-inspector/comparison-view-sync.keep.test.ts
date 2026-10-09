@@ -3,9 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createScrollSyncController } from './scroll-sync-controller';
-import { followerScrollTo } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
-import type { Lead, PaneSide } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
-import type * as DetailModule from '@app/ui/domains/app/views/DataInspector/sub-components/recommendations/RecommendationDetail';
+import { followerScrollTo } from '@app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
+import type { Lead, PaneSide } from '@app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
+import type * as DetailModule from '@app/views/DataInspector/sub-components/recommendations/RecommendationDetail';
 import type { Recommendation } from '@rotp/navigation';
 import { describeDataset } from '../dataset-guard';
 
@@ -142,7 +142,7 @@ describeDataset('the two panes share one tab', () => {
       matchMedia: () => ({ matches: false, addEventListener: () => {}, removeEventListener: () => {} }),
     });
     ({ RecommendationDetail } = await import(
-      '@app/ui/domains/app/views/DataInspector/sub-components/recommendations/RecommendationDetail'
+      '@app/views/DataInspector/sub-components/recommendations/RecommendationDetail'
     ));
   });
 

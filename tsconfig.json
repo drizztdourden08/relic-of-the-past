@@ -9,9 +9,6 @@
     "paths": {
       "@app/*": [
         "./apps/desktop/src/*"
-      ],
-      "@domains/*": [
-        "./apps/desktop/src/ui/domains/*"
       ]
     }
   },

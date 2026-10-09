@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
 import { POND_MODE_KEYS } from '@rotp/randomizer';
-import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
+import type { LockedOptionGroup } from '@app/compounds/RandomizerOptionRow';
 import type { OptionDef } from '@rotp/randomizer';
 import type { PondMode } from '@rotp/randomizer';
 

@@ -1,8 +1,8 @@
 /* @layer renderer-appshell @kind logic */
 import type { Placement } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
-import { log } from '@app/lib/log-bus';
-import { saveRandomizerPlacement } from '@app/lib/randomizer-placement-io';
+import { log } from '@app/log-bus';
+import { saveRandomizerPlacement } from '@app/randomizer-placement-io';
 import { rollPlacement } from './roll-placement';
 
 const rerollPlacement = async (profileId: string, config: ProfileRandomizerConfig): Promise<Placement | null> => {

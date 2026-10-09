@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind constants */
 import type { ViewStorage } from '@drizztdourden08/tessera/data';
-import { loadViewSnapshot, saveViewSnapshot } from '@app/lib/storage/ui-views';
+import { loadViewSnapshot, saveViewSnapshot } from '@app/storage/ui-views';
 
 const TITLEBAR_HEIGHT = 38;
 

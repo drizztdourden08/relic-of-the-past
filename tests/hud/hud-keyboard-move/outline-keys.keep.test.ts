@@ -2,7 +2,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { act, createElement as h } from 'react';
-import { OutlinePanel } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
+import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { DOC } from './keyboard-move.constants';
 import { installPanelHarness } from './install-panel-harness';
 

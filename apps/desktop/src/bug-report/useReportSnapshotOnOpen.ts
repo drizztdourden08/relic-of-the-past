@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind hook */
 import { useEffect, useRef } from 'react';
 import { useBugReportStore } from '@drizztdourden08/brock-react';
-import { useReportContext } from '@app/lib/diagnostics/useReportContext';
+import { useReportContext } from '@app/hooks/useReportContext';
 import { sendReportSnapshot } from './send-report-snapshot';
 
 const useReportSnapshotOnOpen = (): void => {

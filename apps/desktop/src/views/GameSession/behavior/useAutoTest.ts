@@ -1,12 +1,12 @@
 /* @layer renderer-appshell @kind hook */
 import { appApi } from '@app/ipc/app-api';
 import { useEffect, useRef } from 'react';
-import { loadStateRef } from '@app/lib/game';
-import { log } from '@app/lib/log-bus';
+import { loadStateRef } from '@app/game';
+import { log } from '@app/log-bus';
 import type { AutoTestDeps } from './useAutoTest.type';
 import { RENDER_SETTLE_MS } from './auto-launch.constants';
 import { waitForGameRunning } from './wait-for-game-running';
-import { isAutoStart } from '@app/lib/startup/is-auto-start';
+import { isAutoStart } from '@app/startup/is-auto-start';
 
 const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
   const didRun = useRef(false);

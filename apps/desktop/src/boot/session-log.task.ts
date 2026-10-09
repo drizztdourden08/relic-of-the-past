@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { defineBootTask } from '@drizztdourden08/brock-react';
-import { installSessionLogTap } from '@app/lib/diagnostics/session-log';
+import { installSessionLogTap } from '@app/diagnostics/session-log';
 
 export default defineBootTask({
   label: 'Opening the session log',

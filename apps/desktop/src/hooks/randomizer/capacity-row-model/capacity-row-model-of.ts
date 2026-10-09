@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { NO_WALLET_FLOOR, capacityFieldsOf, defaultFamilyBonus, freeSequenceProblem, minCountFor, planOf } from '@rotp/randomizer';
-import type { CapacityRowModel } from '@domains/app/compounds/CapacityFamilyRow';
+import type { CapacityRowModel } from '@app/compounds/CapacityFamilyRow';
 import { rowStateOf } from '../capacity-row-state';
 import { familyImpactCell } from '../family-impact-cell';
 import type { CapacityRowInput } from './capacity-row-model.type';

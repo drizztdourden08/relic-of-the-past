@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import { wasmGetGameUIState } from '@app/lib/game';
+import { wasmGetGameUIState } from '@app/game';
 import type { NavLocation } from './nav-dump.type';
 import { NO_PALACE, UI_STATE_OFFSETS } from './nav-dump.constants';
 

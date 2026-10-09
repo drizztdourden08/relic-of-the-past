@@ -12,7 +12,7 @@ const gridOf = (columns: Extent[], rows: Extent[], children: HudNode[], id = 'g'
 
 const many = (count: number): Extent[] => Array.from({ length: count }, () => 'auto' as const);
 
-const EDITOR_DIR = resolve(__dirname, '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components');
+const EDITOR_DIR = resolve(__dirname, '../../../apps/desktop/src/views/HudLayoutEditor/sub-components');
 const ECHO = { containerId: 'echo-grid', c0: 2, c1: 3, r0: 1, r1: 1 };
 const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
 const CTX: MeasureContext = { hearts: { max: 3, current: 3 }, filledSlots: [], scope: {} } as unknown as MeasureContext;

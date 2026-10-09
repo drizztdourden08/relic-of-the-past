@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import type { PoolListingGroup } from '@domains/app/compounds/PoolListing';
+import type { PoolListingGroup } from '@app/compounds/PoolListing';
 
 const NO_GROUPS: readonly PoolListingGroup[] = [];
 

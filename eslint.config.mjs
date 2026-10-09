@@ -30,9 +30,14 @@ const rotpExtension = {
   description: 'Relic of the Past: the dataset facade, the primitives tiers and the HUD inline styles',
   eslint: {
     options: {
-      primitivesGlobs: ['**/ui/domains/hud/primitives/**/*.tsx'],
+      primitivesGlobs: ['apps/desktop/src/primitives/**/*.tsx'],
       inlineStyle: [{
-        files: ['**/ui/domains/hud/**/*.{ts,tsx}'],
+        files: [
+          'apps/desktop/src/{primitives,composites,hud}/**/*.{ts,tsx}',
+          'apps/desktop/src/compounds/{DialogBox,DialogPrompts,DialogRows,HudButton,HudCountdown,HudLife,HudMagicBar,HudNodeRenderer,HudShape,HudText,PauseAbilitiesPanel,PauseBottlePanel,PauseEquipmentPanel,PauseGearScreen,PauseHeroPortrait,PauseItemGrid,PauseItemsScreen,PauseNamePanel,PauseNavLegend,PauseProgressPanel,PauseStatusScreen}/**/*.{ts,tsx}',
+          'apps/desktop/src/views/{DeliveryQueueIndicator,DialogView,EnhancedPauseView,HudLayoutView,HudUnavailableNotice,HudView,LocationNotification,PauseMenuView}/**/*.{ts,tsx}',
+          'apps/desktop/src/hooks/{useHud,useLocationNotification,usePauseMenu}.ts',
+        ],
         why: 'The HUD redraws the in-game interface pixel for pixel in the SNES palette, so its inline styles hold game positions and colours, not design tokens.',
       }],
     },

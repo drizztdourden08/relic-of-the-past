@@ -14,11 +14,11 @@ import { soloRoomOf } from './ap-solo-room';
 
 const lines = vi.hoisted(() => [] as unknown[]);
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
-vi.mock('@app/lib/game/session-dialogue', () => ({
+vi.mock('@app/game/session-dialogue', () => ({
   setSessionReceiptMessages: (next: unknown[]) => {
     lines.splice(0, lines.length, ...next);
     return next.map((_, index) => 1000 + index);
@@ -27,11 +27,11 @@ vi.mock('@app/lib/game/session-dialogue', () => ({
   clearSessionDialogue: () => undefined,
 }));
 const iconSet = (name: string) => ({ [`apply${name}`]: async () => true, [`clear${name}`]: () => undefined });
-vi.mock('@app/lib/game/gear-icons', () => iconSet('GearIcons'));
-vi.mock('@app/lib/game/quiver-icon', () => iconSet('QuiverIcon'));
-vi.mock('@app/lib/game/currency-symbols', () => iconSet('CurrencySymbols'));
-vi.mock('@app/lib/game/upgrade-icons', () => iconSet('UpgradeIcons'));
-vi.mock('@app/lib/game/foreign-icons', () => iconSet('ForeignIcons'));
+vi.mock('@app/game/gear-icons', () => iconSet('GearIcons'));
+vi.mock('@app/game/quiver-icon', () => iconSet('QuiverIcon'));
+vi.mock('@app/game/currency-symbols', () => iconSet('CurrencySymbols'));
+vi.mock('@app/game/upgrade-icons', () => iconSet('UpgradeIcons'));
+vi.mock('@app/game/foreign-icons', () => iconSet('ForeignIcons'));
 
 const answerEmpty = (): Promise<unknown[]> => Promise.resolve([]);
 const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { get: () => answerEmpty }) });
@@ -40,9 +40,9 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 };
 await import('../../packages/game-core/src/cheats');
 const { setModule } = await import('../../packages/game-core/src/wasm-bridge');
-const { defaultOnlineCore } = await import('@app/lib/game/randomizer-client/online-core');
-const { createOnlineClient } = await import('@app/lib/game/randomizer-client/online-client');
-const { AP_DEATH_LINK_BIT, AP_ONLINE_BIT, gateWord5Now } = await import('@app/lib/game/gate-word-5');
+const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-core');
+const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
+const { AP_DEATH_LINK_BIT, AP_ONLINE_BIT, gateWord5Now } = await import('@app/game/gate-word-5');
 const {
   probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
 } = await import('../../packages/randomizer/src/client/npc-capability');

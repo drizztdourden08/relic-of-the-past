@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import { wasmGetSpriteCombat, wasmGetCombatTables } from '@app/lib/game';
+import { wasmGetSpriteCombat, wasmGetCombatTables } from '@app/game';
 import { ROOM_CLEAR_EXEMPT_BIT } from './sim-run.constants';
 import { readWantedFeatures } from './read-wanted-features';
 

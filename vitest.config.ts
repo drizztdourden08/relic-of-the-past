@@ -20,7 +20,6 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: '@app', replacement: resolve(__dirname, 'apps/desktop/src') },
-      { find: '@domains', replacement: resolve(__dirname, 'apps/desktop/src/ui/domains') },
       { find: /^@drizztdourden08\/brock-react$/, replacement: resolve(__dirname, 'apps/desktop/node_modules/@drizztdourden08/brock-react/src/index.ts') },
       { find: /^@drizztdourden08\/brock-core$/, replacement: resolve(__dirname, 'apps/desktop/node_modules/@drizztdourden08/brock-core/src/index.ts') },
     ],

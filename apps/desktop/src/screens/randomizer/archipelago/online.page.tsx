@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import type { PageProps, ScreenMeta } from '@drizztdourden08/brock-react';
-import { Randomizer } from '@domains/app/views/Randomizer';
+import { Randomizer } from '@app/views/Randomizer';
 
 const meta: ScreenMeta = { title: 'Online', icon: 'globe', order: 2, keywords: ['archipelago', 'death link', 'track other players'] };
 

@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
-import * as assetsStore from '@app/lib/storage/assets-store';
-import { log } from '@app/lib/log-bus';
+import * as assetsStore from '@app/storage/assets-store';
+import { log } from '@app/log-bus';
 
 const ensureProfileAssets = async (romFile: string): Promise<ArrayBuffer | null> => {
   const hasAssets = await assetsStore.checkAssets(romFile);

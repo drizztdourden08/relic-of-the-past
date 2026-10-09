@@ -12,10 +12,10 @@ import { createServer } from 'vite';
 const WEB = resolve(import.meta.dirname, '..', '..', '..');
 const ROOT = resolve(WEB, '..', '..');
 const SRC = resolve(WEB, 'src');
+const DESIGN = resolve(ROOT, 'packages', 'design', 'src');
 
 const ALIAS = {
   '@app': SRC,
-  '@domains': resolve(SRC, 'ui/domains'),
 };
 
 const inner = (file) => readFileSync(file, 'utf8').replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
@@ -31,8 +31,8 @@ const place = (file, p) => {
 const wrap = (body, w, h) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" shape-rendering="crispEdges">${body}</svg>\n`;
 
-const MASCOT = resolve(SRC, 'assets/mascot');
-const HOOKSHOP = resolve(SRC, 'assets/hookshop');
+const MASCOT = resolve(DESIGN, 'assets/mascot');
+const HOOKSHOP = resolve(DESIGN, 'assets/hookshop');
 const MASCOT_FILES = {
   body: 'mascot-body.svg', visor: 'mascot-visor.svg', eye: 'mascot-eye.svg', podLeft: 'mascot-pod-left.svg', podRight: 'mascot-pod-right.svg',
 };
@@ -44,11 +44,11 @@ const HOOKSHOP_FILES = {
 /** Loads the app's layout modules; call `close` when done or the process stays up. */
 const openLayouts = async () => {
   const server = await createServer({
-    configFile: false, root: SRC, logLevel: 'silent', appType: 'custom',
+    configFile: false, root: DESIGN, logLevel: 'silent', appType: 'custom',
     resolve: { alias: ALIAS }, esbuild: { jsx: 'automatic' },
     server: { middlewareMode: true, watch: null, hmr: false },
   });
-  const load = (path) => server.ssrLoadModule(`/ui/domains/app/compounds/${path}`);
+  const load = (path) => server.ssrLoadModule(`/compounds/${path}`);
   const [mascot, mascotParts, scene, sceneParts, hookshot] = await Promise.all([
     load('Mascot/behavior/mascot-layout.ts'), load('Mascot/Mascot.constants.ts'),
     load('HookshopHighlight/behavior/scene-layout.ts'), load('HookshopHighlight/HookshopHighlight.constants.ts'),

@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { UIMode } from '@rotp/game-data';
 import { parseGameUIBuffer } from '@rotp/game-core';
-import { isMainHudVisibleForMode } from '../../apps/desktop/src/ui/domains/hud/hud-visibility';
+import { isMainHudVisibleForMode } from '@app/hud/hud-visibility';
 
 const UI_BUFFER_SIZE = 128;
 const MAIN_MODULE_OFFSET = 0;

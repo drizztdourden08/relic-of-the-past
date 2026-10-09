@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect } from 'react';
-import { getFps } from '@app/lib/game';
+import { getFps } from '@app/game';
 
 const useFpsReadout = (showFps: boolean, gameRunning: boolean) => {
   const [fps, setFps] = useState(0);

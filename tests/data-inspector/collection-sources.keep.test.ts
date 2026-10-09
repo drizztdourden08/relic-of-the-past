@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { COLLECTION_SOURCES } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
-import { ENTITY_KINDS } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/DataInspector.constants';
-import { resolveIdRef } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/id-ref-target';
+import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
+import { ENTITY_KINDS } from '@app/views/DataInspector/DataInspector.constants';
+import { resolveIdRef } from '@app/views/DataInspector/behavior/id-ref-target';
 import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 

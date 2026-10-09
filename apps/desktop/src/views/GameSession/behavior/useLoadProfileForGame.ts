@@ -1,12 +1,12 @@
 /* @layer renderer-appshell @kind hook */
 import { useCallback } from 'react';
 import type { GameSettings } from '@rotp/features';
-import { log } from '@app/lib/log-bus';
-import { resetGame, setAutoSaveConfig } from '@app/lib/game';
+import { log } from '@app/log-bus';
+import { resetGame, setAutoSaveConfig } from '@app/game';
 import { serializeToIni, mergeSettings } from '@rotp/game-core';
-import * as profileStore from '@app/lib/storage/profile-store';
-import { loadMsuPack } from '@app/lib/game/msu-pack-loader';
-import { resetSession } from '@app/lib/game/randomizer-client';
+import * as profileStore from '@app/storage/profile-store';
+import { loadMsuPack } from '@app/game/msu-pack-loader';
+import { resetSession } from '@app/game/randomizer-client';
 import type { LoadProfileForGameDeps } from './useProfileManagement.type';
 import { ensureProfileAssets } from './ensure-profile-assets';
 import { loadInputProfile } from './load-input-profile';

@@ -16,7 +16,7 @@ import {
   wasmBuildRoomAttrGrid,
   wasmGetToggleFloorPositions,
   wasmGetIndoorDualLayerGrids,
-} from '@app/lib/game';
+} from '@app/game';
 import { resolveCurrentScreenDetailed } from '@rotp/game-data';
 import type { VariantGameState } from '@rotp/game-data';
 import type { DumpSlot } from './nav-dump.type';

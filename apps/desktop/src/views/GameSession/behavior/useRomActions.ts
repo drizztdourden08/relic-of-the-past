@@ -1,8 +1,8 @@
 /* @layer renderer-appshell @kind hook */
 import { useState, useCallback } from 'react';
-import { log } from '@app/lib/log-bus';
-import * as romsStore from '@app/lib/storage/roms-store';
-import * as assetsStore from '@app/lib/storage/assets-store';
+import { log } from '@app/log-bus';
+import * as romsStore from '@app/storage/roms-store';
+import * as assetsStore from '@app/storage/assets-store';
 import type { RomActionsDeps } from './useProfileManagement.type';
 
 const useRomActions = (deps: RomActionsDeps) => {

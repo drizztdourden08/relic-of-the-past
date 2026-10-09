@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { publicAsset } from '../../apps/desktop/src/lib/assets/public-asset';
+import { publicAsset } from '@app/public-asset/public-asset';
 
 describe('publicAsset', () => {
   it('joins BASE_URL with a clean path, stripping any leading slash or dot-slash', () => {

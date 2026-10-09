@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { primeLiveSettings } from '@app/lib/game';
+import { primeLiveSettings } from '@app/game';
 import { applyNotchMode } from '@drizztdourden08/brock-react';
 import type { LoadedProfile, LoadedProfileTargets } from '../GameSession.type';
 

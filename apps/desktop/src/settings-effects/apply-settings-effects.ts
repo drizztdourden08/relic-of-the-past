@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { GameSettings } from '@rotp/features';
 import { toast } from '@drizztdourden08/tessera/composites';
-import { pushLiveSettings, LIVE_SETTINGS } from '@app/lib/game';
+import { pushLiveSettings, LIVE_SETTINGS } from '@app/game';
 import { enhancedAspectAllowed } from '@rotp/game-core';
 import { requestEnhancedFallback } from '@rotp/game-core';
 import { hostDrawnHud } from '@rotp/features';

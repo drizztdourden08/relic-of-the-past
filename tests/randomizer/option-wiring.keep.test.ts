@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import { randomizerChoiceOverrides, snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
-import { partitionCatalogByLock } from '@app/ui/domains/app/compounds/RandomizerOptionRow/behavior/partitionCatalogByLock';
+import { partitionCatalogByLock } from '@app/compounds/RandomizerOptionRow/behavior/partitionCatalogByLock';
 import { OPTION_GROUPS, optionCatalog } from '@rotp/randomizer';
 import { DEFAULT_CAPACITY_BONUS, customSetting } from '@rotp/randomizer';
 import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';

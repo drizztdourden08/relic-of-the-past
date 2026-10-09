@@ -18,12 +18,12 @@ import { handAway } from './hand-away';
 const armed = vi.hoisted(() => [] as string[]);
 const errors = vi.hoisted(() => [] as string[]);
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   const error = (line: string): void => { errors.push(line); };
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error } };
 });
-vi.mock('@app/lib/game/session-dialogue', () => ({
+vi.mock('@app/game/session-dialogue', () => ({
   setSessionReceiptMessages: (lines: unknown[]) => {
     armed.push(`receipt lines ${JSON.stringify(lines)}`);
     return lines.map((_, index) => 1000 + index);
@@ -41,11 +41,11 @@ const iconSet = (name: string) => ({
   },
   [`clear${name}`]: () => undefined,
 });
-vi.mock('@app/lib/game/gear-icons', () => iconSet('GearIcons'));
-vi.mock('@app/lib/game/quiver-icon', () => iconSet('QuiverIcon'));
-vi.mock('@app/lib/game/currency-symbols', () => iconSet('CurrencySymbols'));
-vi.mock('@app/lib/game/upgrade-icons', () => iconSet('UpgradeIcons'));
-vi.mock('@app/lib/game/foreign-icons', () => ({ applyForeignIcons: async () => false, clearForeignIcons: () => undefined }));
+vi.mock('@app/game/gear-icons', () => iconSet('GearIcons'));
+vi.mock('@app/game/quiver-icon', () => iconSet('QuiverIcon'));
+vi.mock('@app/game/currency-symbols', () => iconSet('CurrencySymbols'));
+vi.mock('@app/game/upgrade-icons', () => iconSet('UpgradeIcons'));
+vi.mock('@app/game/foreign-icons', () => ({ applyForeignIcons: async () => false, clearForeignIcons: () => undefined }));
 
 const answerEmpty = (): Promise<unknown[]> => Promise.resolve([]);
 const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { get: () => answerEmpty }) });
@@ -54,10 +54,10 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 };
 await import('../../../packages/game-core/src/cheats');
 const { setModule } = await import('../../../packages/game-core/src/wasm-bridge');
-const { createLocalSession } = await import('@app/lib/game/randomizer-client/local-session');
-const { createOnlineClient } = await import('@app/lib/game/randomizer-client/online-client');
-const { defaultOnlineCore } = await import('@app/lib/game/randomizer-client/online-core');
-const { AP_ONLINE_BIT, AP_DEATH_LINK_BIT } = await import('@app/lib/game/gate-word-5');
+const { createLocalSession } = await import('@app/game/randomizer-client/local-session');
+const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
+const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-core');
+const { AP_ONLINE_BIT, AP_DEATH_LINK_BIT } = await import('@app/game/gate-word-5');
 const {
   probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
 } = await import('../../../packages/randomizer/src/client/npc-capability');

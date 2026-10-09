@@ -3,10 +3,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { ghostFor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
-import { outlineIntent } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
-import { DragGhost } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/DragGhost';
-import { OutlinePanel } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
+import { ghostFor } from '@app/views/HudLayoutEditor/behavior/drop-ghost';
+import { outlineIntent } from '@app/views/HudLayoutEditor/behavior/drop-intent';
+import { DragGhost } from '@app/views/HudLayoutEditor/sub-components/DragGhost';
+import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import { DOC } from './ghost-doc.constants';

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
-import { LiveDataInspectorContent } from '@app/ui/domains/widgets/navigation';
+import { LiveDataInspectorContent } from '@app/views/NavigationWidget';
 import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {

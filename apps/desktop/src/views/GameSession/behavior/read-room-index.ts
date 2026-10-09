@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import { wasmGetGameUIState } from '@app/lib/game';
+import { wasmGetGameUIState } from '@app/game';
 import { UI_STATE_OFFSETS } from './nav-dump.constants';
 
 const readRoomIndex = (): number | null => {

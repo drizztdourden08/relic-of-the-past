@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { DEFAULT_SLOT_NAME } from '@app/lib/game/randomizer-client/online-config-of-profile';
+import { DEFAULT_SLOT_NAME } from '@app/game/randomizer-client/online-config-of-profile';
 import { splitServerAddress } from '@rotp/randomizer';
 import type { ConnectionFields, ServerSetupDraft } from './server-setup-draft.type';
 

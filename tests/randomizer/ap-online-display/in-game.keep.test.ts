@@ -19,7 +19,7 @@ import { POOL_SPRITE_DEFINITIONS } from '@rotp/game-data';
 import type { ImageBuffer } from '@rotp/asset-extraction';
 import type { RGBA } from '@rotp/asset-extraction';
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
-import { InventoryWidgetContent, InventoryWidgetSettings } from '@app/ui/domains/widgets/inventory';
+import { InventoryWidgetContent, InventoryWidgetSettings } from '@app/views/InventoryWidget';
 import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {

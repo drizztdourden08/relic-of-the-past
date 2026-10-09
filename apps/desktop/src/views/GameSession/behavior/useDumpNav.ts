@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { appApi } from '@app/ipc/app-api';
 import { useEffect, useRef } from 'react';
-import { loadStateRef } from '@app/lib/game';
+import { loadStateRef } from '@app/game';
 import type { DumpNavDeps } from './useDumpNav.type';
 import { DUMP_SETTLE_MS } from './nav-dump.constants';
 import { EXIT_DELAY_MS } from './auto-launch.constants';

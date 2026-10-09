@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
+import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import { backoffDelay } from '@rotp/randomizer';
 import { refusalText } from '@rotp/randomizer';
 import { roomHashOf } from '@rotp/randomizer';
@@ -12,7 +12,7 @@ import type { FakeCore } from './ap-fake-core';
 
 const logged = vi.hoisted(() => [] as string[]);
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   const randomizer = (message: string): void => { logged.push(message); };
   return { log: { core: quiet, app: quiet, randomizer, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };

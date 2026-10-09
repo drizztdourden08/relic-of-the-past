@@ -3,9 +3,9 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { all } from '@rotp/game-data';
-import { RECORD_CREATORS } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/record-creators';
-import { COLLECTION_SOURCES } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
-import { resolveIdRefOptionsFor } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
+import { RECORD_CREATORS } from '@app/views/DataInspector/behavior/record-creators';
+import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
+import { resolveIdRefOptionsFor } from '@app/views/DataInspector/behavior/id-ref-options';
 
 const stubApi = () => ({
   allocateTag: vi.fn(),

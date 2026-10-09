@@ -1,11 +1,11 @@
 /* @layer tests @kind test */
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
-import { gridActions } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-actions';
-import { legendEntries } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionLegend';
+import { gridActions } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-actions';
+import { legendEntries } from '@app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionLegend';
 import type {
   GridSelection,
-} from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
+} from '@app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 import { actionContext as ctxFor } from './action-context';
 import { installGridRig } from './install-grid-rig';
 import { screenRoot } from './screen-root';

@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind component */
 import type { PageProps, ScreenMeta, SearchEntrySeed } from '@drizztdourden08/brock-react';
 import { useGameSession } from '@app/hooks/useGameSession';
-import { Store, isStoreSection } from '@domains/app/views/Store';
+import { Store, isStoreSection } from '@app/views/Store';
 
 const meta: ScreenMeta = { title: 'Hookshop', icon: 'package', order: 1, fill: true, keywords: ['store', 'shop', 'packs', 'install', 'download'] };
 

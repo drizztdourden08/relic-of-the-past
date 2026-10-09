@@ -2,9 +2,9 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { createElement as h } from 'react';
-import { BoxModelField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/BoxModelField';
-import { MinMaxField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/MinMaxField';
-import { SizeBoxSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/SizeBoxSection';
+import { BoxModelField } from '@app/views/HudLayoutEditor/sub-components/BoxModelField';
+import { MinMaxField } from '@app/views/HudLayoutEditor/sub-components/MinMaxField';
+import { SizeBoxSection } from '@app/views/HudLayoutEditor/sub-components/sections/SizeBoxSection';
 import type { HudNode } from '@rotp/hud';
 import { installPlatformHarness } from './install-platform-harness';
 import { spacerNode as node } from './spacer-node';

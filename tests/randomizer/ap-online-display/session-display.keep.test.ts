@@ -4,13 +4,13 @@ import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME } from '@rotp/randomizer';
 import { ITEM } from '@rotp/randomizer';
 import { itemKeyName } from '@rotp/randomizer';
 import { buildPlacementView } from '@rotp/randomizer';
-import { currentRun } from '@app/lib/game/randomizer-client/run-kind';
+import { currentRun } from '@app/game/randomizer-client/run-kind';
 import { virtualCheckIdOf } from '@rotp/randomizer';
 import {
   getSessionState, resetSession, startOnline, stopActive,
-} from '@app/lib/game/randomizer-client/session-store';
+} from '@app/game/randomizer-client/session-store';
 import type { ForeignOwners } from '@rotp/randomizer';
-import type { OnlineSession } from '@app/lib/game/randomizer-client/online-session';
+import type { OnlineSession } from '@app/game/randomizer-client/online-session';
 import type { LocationKey } from '@rotp/randomizer';
 import type { Placement } from '@rotp/randomizer';
 
@@ -24,12 +24,12 @@ interface FakeOnline {
 
 const online = vi.hoisted(() => ({ next: null as FakeOnline | null }));
 
-vi.mock('@app/lib/log-bus', () => {
+vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
-vi.mock('@app/lib/game/randomizer-client/online-session', () => ({ createOnlineSession: () => online.next?.session }));
-vi.mock('@app/lib/game/randomizer-client/local-session', () => ({ createLocalSession: () => null }));
+vi.mock('@app/game/randomizer-client/online-session', () => ({ createOnlineSession: () => online.next?.session }));
+vi.mock('@app/game/randomizer-client/local-session', () => ({ createLocalSession: () => null }));
 
 const createFakeOnline = (): FakeOnline => {
   let status: Status = 'idle';
