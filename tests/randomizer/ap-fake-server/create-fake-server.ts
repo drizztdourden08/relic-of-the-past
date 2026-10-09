@@ -1,61 +1,10 @@
 /* @layer tests @kind helper */
-/**
- * An in-process multiworld server for the protocol test: every socket the client opens lands
- * here, and the server answers the way a real room does (RoomInfo on open, the data package,
- * Connected then the full ReceivedItems list, scout answers, Sync, data storage reads,
- * `!players`). A Connect with the Tracker tag makes a tracker socket, answered with the
- * named slot's locations (ap-fake-tracker.ts). Every message crosses on a microtask, like a
- * network hop. Nothing touches a disk or a profile.
- */
-import { answerStorage, answerTracker } from './ap-fake-tracker';
 import type { ApSocket, CreateSocket } from '@app/lib/game/randomizer-client/ap-socket.type';
-import type {
-  ApClientPacket, ApGameData, ApNetworkItem, ApNetworkPlayer, ApServerPacket,
-} from '@app/lib/game/randomizer-client/ap-protocol.type';
-import type { FakeTrackedSlot } from './ap-fake-tracker';
-
-interface FakeRoom {
-  password?: string;
-  games: Record<string, ApGameData>;
-  items: ApNetworkItem[];
-  checked: number[];
-  missing: number[];
-  players: ApNetworkPlayer[];
-  slotInfo: Record<string, { name: string; game: string; type: number; group_members: number[] }>;
-  slotData: unknown;
-  /** Scouted location id to the item placed there. */
-  placements: Record<number, ApNetworkItem>;
-  /** URLs whose socket never opens (a wss:// the server does not answer). */
-  refusedUrls: Set<string>;
-  /** The room's seed name, sent in RoomInfo; absent, RoomInfo names none. */
-  seedName?: string;
-  /** Each slot's client status (0 when absent), read through `_read_client_status_0_<slot>`. */
-  clientStatus?: Record<number, number>;
-  /** The CommandResult line `!players` gets; absent, the server never answers it. */
-  playersReply?: string;
-  /** The slots a tracker may connect to, by slot name. */
-  tracked?: Record<string, FakeTrackedSlot>;
-  /** Every key a SetNotify asked to watch, filled by the server. */
-  notified?: Set<string>;
-}
-
-interface FakeServer {
-  readonly createSocket: CreateSocket;
-  readonly urls: string[];
-  /** Every client packet, all sockets, in order. */
-  readonly received: ApClientPacket[];
-  /** To the main (game) socket. */
-  push(packets: ApServerPacket[]): void;
-  /** To the open tracker sockets of the slot named. */
-  pushTracker(name: string, packets: ApServerPacket[]): void;
-  /** The slot names of the open tracker sockets. */
-  trackers(): string[];
-  /** The server drops the live socket. */
-  drop(): void;
-  of<C extends ApClientPacket['cmd']>(cmd: C): Extract<ApClientPacket, { cmd: C }>[];
-}
-
-const VERSION = { major: 0, minor: 6, build: 3, class: 'Version' as const };
+import type { ApClientPacket, ApServerPacket } from '@app/lib/game/randomizer-client/ap-protocol.type';
+import { VERSION } from './ap-fake-server.constants';
+import type { FakeRoom, FakeServer } from './ap-fake-server.type';
+import { answerStorage } from './answer-storage';
+import { answerTracker } from './answer-tracker';
 
 const createFakeServer = (room: FakeRoom): FakeServer => {
   const urls: string[] = [];
@@ -133,8 +82,8 @@ const createFakeServer = (room: FakeRoom): FakeServer => {
         return;
       }
       open.add(socket);
-      // A second socket while the game's is up is a tracker's, until its Connect says.
-      if (live === null) live = socket;
+      const firstSocketIsTheGames = live === null;
+      if (firstSocketIsTheGames) live = socket;
       socket.onopen?.({});
       const checksums = Object.fromEntries(Object.entries(room.games).map(([game, data]) => [game, data.checksum ?? '']));
       pushTo(socket, [{
@@ -162,5 +111,4 @@ const createFakeServer = (room: FakeRoom): FakeServer => {
   };
 };
 
-export { createFakeServer, VERSION };
-export type { FakeRoom, FakeServer };
+export { createFakeServer };

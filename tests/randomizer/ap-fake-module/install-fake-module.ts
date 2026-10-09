@@ -1,31 +1,6 @@
 /* @layer tests @kind helper */
-/**
- * A stand-in for the Emscripten module that records every call the app makes into the core:
- * each ccall with its arguments, and each file written to its virtual FS. What a session arms
- * is exactly this record, so two sessions that record the same calls set the game up the
- * same way. Reads (WasmGet*, WasmCanReceive*) are not arming and are kept apart.
- *
- * The session dialogue is answered as the core answers it: WasmLoadSessionDialogue adopts
- * the last blob written to its file and returns that blob's line count.
- */
 import { unpackPackedBytes } from '@shared/asset-extraction/packed-bytes';
-
-/** The bridge's own setter, passed in: importing the bridge here would load it too early. */
-type SetModule = (mod: never) => void;
-
-interface FakeModule {
-  /** Every arming call, in order: `Name(args as JSON)`. */
-  readonly calls: string[];
-  /** Every read, in order. */
-  readonly reads: string[];
-  /** The last bytes written to each virtual FS path. */
-  readonly files: ReadonlyMap<string, Uint8Array>;
-  /** What an export answers from now on (every other one answers 1). */
-  setReturn(name: string, value: number): void;
-  clear(): void;
-  /** Uninstalls the module from the bridge. */
-  remove(): void;
-}
+import type { FakeModule, SetModule } from './ap-fake-module.type';
 
 const isRead = (name: string): boolean => /^Wasm(Get|Can|Is|Read|Probe)/.test(name) || name === 'WasmForeignItemId';
 
@@ -35,9 +10,13 @@ const checksum = (bytes: Uint8Array): number => bytes.reduce((sum, byte) => (sum
 
 const SESSION_DIALOGUE_FILE = '/session_dialogue.bin';
 
-/** The line count of a session dialogue blob: [dictionary, [line chunks]]. */
 const sessionDialogueLines = (blob: Uint8Array | undefined): number =>
   (blob === undefined ? 0 : unpackPackedBytes(unpackPackedBytes(blob)[1] ?? new Uint8Array(0)).length);
+
+const answerEveryWasmExport = (base: Record<string, unknown>): Record<string, unknown> => new Proxy(base, {
+  get: (target, key) => (typeof key === 'string' && key.startsWith('_Wasm') && !(key in target)
+    ? () => 1 : target[key as string]),
+});
 
 const installFakeModule = (setModule: SetModule): FakeModule => {
   const calls: string[] = [];
@@ -73,12 +52,7 @@ const installFakeModule = (setModule: SetModule): FakeModule => {
     HEAPU32: new Uint32Array(heap),
     HEAP32: new Int32Array(heap),
   };
-  // Every `_Wasm*` export exists, so an export probe (typeof mod._Name === 'function') answers yes.
-  const mod = new Proxy(base, {
-    get: (target, key) => (typeof key === 'string' && key.startsWith('_Wasm') && !(key in target)
-      ? () => 1 : target[key as string]),
-  });
-  setModule(mod as never);
+  setModule(answerEveryWasmExport(base) as never);
   return {
     calls,
     reads,
@@ -94,4 +68,3 @@ const installFakeModule = (setModule: SetModule): FakeModule => {
 };
 
 export { installFakeModule };
-export type { FakeModule };

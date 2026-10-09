@@ -759,6 +759,74 @@ On macOS and iOS the primary modifier is Cmd alone; a bare Ctrl means something 
 An unknown OS accepts either key, because the web host reports `os: 'unknown'` and guessing
 Ctrl would break Safari on a Mac.
 
+## randomizer
+
+### randomizer/ap-fake-core
+
+An `OnlineCore` that records what the client asked of it. Its poller runs the real baseline
+decision (`poll-rebaseline.ts`) once, as the first tick would, over the checks the test
+declares complete in the save. A queued item is granted at once unless `holdGrants` is set;
+then it waits until `grantNext()`, as the delivery queue holds it until the player can
+receive. `notReady` names items the game cannot take until `becomeReady()`. A save swap
+(`setInPlay`, `swapSave`) fires the client's `onSaveSwap` listener, as a state load or an
+entered file does. A delivery with a null sender is an item the server itself sent. A kill
+while `down` answers `down` and is not counted.
+
+### randomizer/ap-fake-module
+
+A stand in for the Emscripten module that records every `ccall` and every file written to its
+virtual FS. What a session arms is exactly this record, so two sessions recording the same
+calls set the game up the same way. Reads (`WasmGet*`, `WasmCanReceive*` and the like) are
+kept apart. `WasmLoadSessionDialogue` adopts the last blob written to its file and returns
+its line count, as the core does. Every `_Wasm*` export exists, so an export probe answers
+yes. The bridge's own setter is passed in, because importing the bridge here would load it
+too early.
+
+### randomizer/ap-fake-server
+
+An in process multiworld server: every socket the client opens lands here, and it answers as
+a real room does (RoomInfo on open, the data package, Connected then the full ReceivedItems
+list, scout answers, Sync, data storage reads, `!players`). A Connect with the Tracker tag
+makes a tracker socket answered with the named slot's own locations; a second socket while
+the game's is up counts as a tracker until its Connect says otherwise. A Get of
+`_read_client_status_<team>_<slot>` returns the slot's status, or null when the room fills
+none. `!players` through Say returns the chat echo, then the CommandResult line. Every
+message crosses on a microtask, like a network hop. Nothing touches a disk or a profile.
+
+### randomizer/ap-protocol-harness
+
+The shared setup of the multiworld client tests: a two player room, a client booted against
+the fake server with a recording core, fake timers and a stand in `localStorage`. Each test
+file still mocks the log bus itself, since a mock is hoisted per file.
+
+### randomizer/ap-solo-room.ts
+
+A local placement served as a one player room: the slot data a world package would send
+(options, rolled values and, when given, the deliverable spots) and a scout answer holding
+every location's item under the frozen Archipelago ids. It is what a solo multiworld of the
+same seed looks like to the client.
+
+### randomizer/rule-parity-harness and rule-node-parity.keep.test.ts
+
+The guard that the rules answer exactly as they did before they became node trees
+(`world/rules/rule-node.type.ts`). The digests were captured from the closure only engine:
+every location, story event and exit rule, asked over 5000 seeded random collection states
+per option set (mulberry32, so the states repeat on every run). Half of the states see a
+random fill seam, so rules that read placements answer both ways; `actRecord` attaches a
+random record of done acts, as a world built from a save does. The generation half pins whole
+placements for 20 seeds; a placement digest spells out maps and sets so every entry counts.
+The export half inlines every derived helper down to the primitive list, sends the trees
+through JSON and back, and asks them beside the engine's own rules.
+
+A digest moves on purpose only when a rule is meant to change; recapture it in the same
+change and say which rule moved. Recaptures so far were renames that moved no answer: event
+slots keyed by item check ids becoming ledger event records, shop purchases keyed by shelf and
+slot, the flute and floodgate slots becoming story events, the event pairs becoming story
+events of the world (the capacity shop token went too; only the "capacity vanilla" rule digest
+moved, and no placement), the Activated Flute (`item-075`) becoming an ordinary item, the Flute
+becoming the Progressive Ocarina family (`item-179`), and the placement stats dropping
+`capacityShuffle`.
+
 ## regression
 
 The regression net. `run-snapshot` records what every save in the corpus reports into

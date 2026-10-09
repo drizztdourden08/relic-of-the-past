@@ -1,11 +1,4 @@
 /* @layer tests @kind helper */
-/**
- * A local placement served as a one-player room: the slot data a world package would send
- * for it (its options, the values its generator rolled and, when given, the deliverable spots
- * its world was built with) and a scout answer holding every
- * location's item under the frozen Archipelago ids. What a solo multiworld of the same seed
- * looks like to the client.
- */
 import { AP_GAME } from '@shared/randomizer/archipelago/ap-game';
 import { AP_ITEM_IDS, AP_LOCATION_IDS } from '@shared/randomizer/archipelago/ap-ids.data';
 import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
