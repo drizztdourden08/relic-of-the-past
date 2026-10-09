@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind barrel */
-export { GridLattice, idOf } from './GridLattice';
+export { GridLattice } from './GridLattice';
+export { idOf } from './behavior/cell-id';
 export type { GridLatticeProps, LatticeCellState, TrackAxis } from './GridLattice.type';
 export {
   ADD, CELL_MIN, GUTTER, HEAD, ROW_IDEAL, VIEWPORT, boundsOf, cellKey, covers, emptyOn,
