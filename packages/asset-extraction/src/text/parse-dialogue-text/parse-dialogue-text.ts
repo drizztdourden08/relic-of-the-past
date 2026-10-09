@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-import type { DialogueLine } from '@shared/types/language';
+import type { DialogueLine } from '../../sets-types';
 import { LINE_RE } from './parse-dialogue-text.constants';
 
 const parseDialogueText = (text: string): DialogueLine[] => {

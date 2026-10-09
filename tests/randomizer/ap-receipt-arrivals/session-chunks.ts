@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { unpackPackedBytes } from '@shared/asset-extraction/packed-bytes';
+import { unpackPackedBytes } from '@rotp/asset-extraction';
 import type { FakeModule } from '../ap-fake-module';
 
 const SESSION_FILE = '/session_dialogue.bin';

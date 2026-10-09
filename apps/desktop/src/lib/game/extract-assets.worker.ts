@@ -1,15 +1,13 @@
 /* @layer bridge-wasm @kind logic */
-import { loadRomFromBuffer } from '@shared/asset-extraction/rom/rom-loader';
-import { loadGbaAlttpRomFromBuffer } from '@shared/asset-extraction/rom/gba-rom';
-import {
-  decodeCredits, decodeEndingCaptions, decodeMenuText,
-} from '@shared/asset-extraction/text/menu-text';
-import { compileAlttpAssetSet } from '@shared/asset-extraction/compile-alttp-asset-set';
-import { extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
+import { loadRomFromBuffer } from '@rotp/asset-extraction';
+import { loadGbaAlttpRomFromBuffer } from '@rotp/asset-extraction';
+import { decodeCredits, decodeEndingCaptions, decodeMenuText } from '@rotp/asset-extraction';
+import { compileAlttpAssetSet } from '@rotp/asset-extraction';
+import { extractLangEntry } from '@rotp/asset-extraction';
 import { compileSets } from '@shared/game/language';
 import type { SetBakeInput } from '@shared/game/language';
-import { extractSpriteBuffers } from '@shared/asset-extraction/item-sprites/extract-items';
-import type { SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
+import { extractSpriteBuffers } from '@rotp/asset-extraction';
+import type { SpriteDef } from '@rotp/asset-extraction';
 import type { AssetsResult, SupplementRoms, WorkerScope } from './extract-assets.worker.type';
 
 const ctx = self as unknown as WorkerScope;

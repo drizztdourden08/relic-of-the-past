@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { LanguagePack } from '@shared/types/language';
+import type { LanguagePack } from '@rotp/asset-extraction';
 import type { DialogueEntry, LanguageSet } from '../types';
 import { parseTokens } from '../tokens/parse-tokens';
 import { emptyNameTable } from './empty-name-table';

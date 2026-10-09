@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
+import { kLanguages } from '@rotp/game-data';
 import type { SetFontBytes } from '@shared/storage/languages/types';
 import type { SetFontAssets } from './language-behavior.type';
 

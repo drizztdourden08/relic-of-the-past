@@ -3,7 +3,7 @@ import { codeInfoFor } from '@shared/game/language';
 import { MESSAGE_SETTING_NAMES } from '../../sub-components/message-settings';
 import { paramValuesFor } from '../../sub-components/code-params';
 import { AUTO_OPTION } from './settings-fields.constants';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
+import type { LanguageConfig } from '@rotp/game-data';
 import type { SettingField } from './settings-fields.type';
 
 const settingFieldsFor = (cfg: LanguageConfig): SettingField[] => (

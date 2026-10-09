@@ -7,19 +7,17 @@ import { fitReceiptLine } from '@app/lib/game/session-dialogue/wrap-message';
 import { toDialogueText } from '@app/lib/game/session-dialogue/dialogue-text';
 import { dialogueCharsetOf, extraGlyphSlots, readableText } from '@rotp/game-data';
 import { stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup';
-import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
-import {
-  buildForeignIconsFile, FOREIGN_ICON_FILES, FOREIGN_ICON_PALETTE_BYTES,
-} from '@shared/asset-extraction/item-sprites/foreign-icons';
-import { chromaOf, toOklab } from '@shared/asset-extraction/graphics/oklab';
-import { snesToRgba } from '@shared/asset-extraction/graphics/palette';
-import { NEUTRAL_CHROMA } from '@shared/asset-extraction/item-sprites/perceptual-match';
-import { extractArtBadge } from '@shared/asset-extraction/item-sprites/art-badge';
-import { artImage } from '@shared/asset-extraction/item-sprites/art-picture';
-import { quantizeIconPerceptual } from '@shared/asset-extraction/item-sprites/perceptual-quantize';
+import { kLanguages } from '@rotp/game-data';
+import { buildForeignIconsFile, FOREIGN_ICON_FILES, FOREIGN_ICON_PALETTE_BYTES } from '@rotp/asset-extraction';
+import { chromaOf, toOklab } from '@rotp/asset-extraction';
+import { snesToRgba } from '@rotp/asset-extraction';
+import { NEUTRAL_CHROMA } from '@rotp/asset-extraction';
+import { extractArtBadge } from '@rotp/asset-extraction';
+import { artImage } from '@rotp/asset-extraction';
+import { quantizeIconPerceptual } from '@rotp/asset-extraction';
 import { POOL_SPRITE_DEFINITIONS } from '@rotp/game-data';
-import type { ImageBuffer } from '@shared/asset-extraction/graphics/png-writer';
-import type { RGBA } from '@shared/asset-extraction/graphics/palette';
+import type { ImageBuffer } from '@rotp/asset-extraction';
+import type { RGBA } from '@rotp/asset-extraction';
 
 vi.mock('@app/lib/log-bus', () => {
   const quiet = (): void => undefined;

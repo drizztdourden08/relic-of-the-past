@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { snesToLinear } from '../../asset-extraction/rom/snes-address';
+import { snesToLinear } from '@rotp/asset-extraction';
 import { stripCopierHeader } from './strip-copier-header';
 import type { RomByteReader } from './rom-byte-reader.type';
 

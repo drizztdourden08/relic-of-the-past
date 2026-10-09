@@ -1,8 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { compressStrings } from '@shared/asset-extraction/text/dialogue-encoder';
-import {
-  RANDOMIZER_MSG_BASE, randomizerTemplateTexts,
-} from '@shared/asset-extraction/text/data/randomizer-templates';
+import { compressStrings } from '@rotp/asset-extraction';
+import { RANDOMIZER_MSG_BASE, randomizerTemplateTexts } from '@rotp/asset-extraction';
 import type { ActiveDialogue } from '../active-dialogue.type';
 
 const baseChunksOf = (dialogue: ActiveDialogue): Uint8Array[] | null => {

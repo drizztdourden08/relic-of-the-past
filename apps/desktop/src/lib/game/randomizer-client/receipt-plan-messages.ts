@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { locationDisplayName } from '@shared/randomizer/world/display-names/location-display-name';
 import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
-import { RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
+import { RANDOMIZER_RECEIPT_MSG } from '@rotp/asset-extraction';
 import { classifyReceiptItem } from '@shared/randomizer/receipt-text/receipt-item-class';
 import { renderReceiptMessage } from '@shared/randomizer/receipt-text/render-receipt-message';
 import { capacityRungLinesOf } from '@shared/randomizer/receipt-text/capacity-rung-lines';

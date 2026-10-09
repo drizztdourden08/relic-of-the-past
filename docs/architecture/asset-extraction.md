@@ -15,7 +15,7 @@ flowchart TD
     CMP --> AB["asset-builder/ · serializes → zelda3_assets.dat"]
 ```
 
-Public surface is the barrel `shared/asset-extraction/index.ts`.
+Public surface is the barrel `packages/asset-extraction/src/index.ts`.
 
 ## Layout
 

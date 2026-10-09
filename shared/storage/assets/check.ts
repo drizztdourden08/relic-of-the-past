@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import { SUPPLEMENT_IDS } from '@shared/asset-extraction/sources/source-ids';
+import { SUPPLEMENT_IDS } from '@rotp/asset-extraction';
 import type { FileStore } from '@drizztdourden08/brock-core';
 import { basePath } from './base-path';
 import { sidecarPath } from './sidecar-path';

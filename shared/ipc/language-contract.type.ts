@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { LanguagePack, LanguageSummary } from '@shared/types/language';
+import type { LanguagePack, LanguageSummary } from '@rotp/asset-extraction';
 import type { LanguageSet } from '@shared/game/language';
 import type { LanguageSetSummary, CreateSetParams } from '@shared/storage/languages';
 import type { InvokeResult } from './invoke/invoke-result.type';

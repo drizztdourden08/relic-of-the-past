@@ -39,7 +39,7 @@
 // The hold-up receipt ancilla.
 #define ANCILLA_ITEM_RECEIPT 0x22
 // The sprite palette row every icon is quantized to. Mirrored by CAPACITY_ICON_PALETTE_ROW
-// in shared/asset-extraction/item-sprites/capacity-icons.ts (the extractor that writes the
+// in packages/asset-extraction/src/item-sprites/capacity-icons.ts (the extractor that writes the
 // file): change both together. Row 4 fits all four pictures best, since it holds the badge's
 // green, which the refill receipts' row 2 lacks.
 #define ICON_PALETTE_ROW 4

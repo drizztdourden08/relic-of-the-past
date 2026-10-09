@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { writeFile, mkdir } from 'fs/promises';
-import type { RomData } from '@shared/asset-extraction/rom/rom-types';
-import { extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
-import type { LanguageMeta } from '@shared/types/language';
+import type { RomData } from '@rotp/asset-extraction';
+import { extractLangEntry } from '@rotp/asset-extraction';
+import type { LanguageMeta } from '@rotp/asset-extraction';
 import { languagePackPaths } from './language-pack-paths';
 
 const extractLanguagePack = async (rom: RomData, code: string): Promise<LanguageMeta> => {

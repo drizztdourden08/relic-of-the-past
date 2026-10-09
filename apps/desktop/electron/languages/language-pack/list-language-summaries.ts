@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { LanguageMeta, LanguageSummary } from '@shared/types/language';
+import type { LanguageMeta, LanguageSummary } from '@rotp/asset-extraction';
 import { listLanguageCodes } from './list-language-codes';
 import { readMeta } from './read-meta';
 

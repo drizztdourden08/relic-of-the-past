@@ -292,6 +292,9 @@ importers:
       '@playwright/test':
         specifier: ^1.60.0
         version: 1.60.0
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:packages/asset-extraction
       '@rotp/game-data':
         specifier: workspace:*
         version: link:packages/game-data
@@ -475,6 +478,9 @@ importers:
       '@iconify/react':
         specifier: ^6.0.2
         version: 6.0.2(react@19.2.7)
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:../../packages/asset-extraction
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../../packages/game-data
@@ -720,6 +726,15 @@ importers:
       typescript:
         specifier: catalog:functions
         version: 5.9.3
+
+  packages/asset-extraction:
+    dependencies:
+      js-yaml:
+        specifier: ^4.1.1
+        version: 4.2.0
+      pngjs:
+        specifier: 'catalog:'
+        version: 7.0.0
 
   packages/game-data: {}
 

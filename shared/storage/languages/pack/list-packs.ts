@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import type { LanguageSummary } from '@shared/types/language';
+import type { LanguageSummary } from '@rotp/asset-extraction';
 import { readLegacyMeta } from './read-legacy-meta';
 
 const listPacks = async (files: FileStore): Promise<LanguageSummary[]> => {

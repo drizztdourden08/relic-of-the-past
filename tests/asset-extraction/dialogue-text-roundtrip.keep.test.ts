@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { formatDialogueText } from '@shared/asset-extraction/text/dialogue-decoder';
-import { parseDialogueText, dialogueTexts } from '@shared/asset-extraction/text/parse-dialogue-text';
+import { formatDialogueText } from '@rotp/asset-extraction';
+import { parseDialogueText, dialogueTexts } from '@rotp/asset-extraction';
 
 describe('dialogue text round-trip', () => {
   const asDecoded = (texts: string[]) => texts.map((text) => ({ text, srcData: [] }));

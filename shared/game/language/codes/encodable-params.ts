@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
-import { kCmdInfo } from '@shared/asset-extraction/text/dialogue-encoder';
+import type { LanguageConfig } from '@rotp/game-data';
+import { kCmdInfo } from '@rotp/asset-extraction';
 import { ORG_PARAM_RANGE, ORG_PARAM_SLOT_BYTES } from './code-catalog.constants';
 
 const orgEncodableParams = (name: string, cfg: LanguageConfig): number[] | null => {

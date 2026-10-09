@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { LanguageMeta } from '@shared/types/language';
+import type { LanguageMeta } from '@rotp/asset-extraction';
 import type { ExtractedPack } from '../types';
 
 const metaFromExtracted = (pack: ExtractedPack): LanguageMeta => ({

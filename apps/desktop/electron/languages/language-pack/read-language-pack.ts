@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { readFile } from 'fs/promises';
-import { parseDialogueText } from '@shared/asset-extraction/text/parse-dialogue-text';
-import type { LanguagePack } from '@shared/types/language';
+import { parseDialogueText } from '@rotp/asset-extraction';
+import type { LanguagePack } from '@rotp/asset-extraction';
 import { languagePackPaths } from './language-pack-paths';
 import { readMeta } from './read-meta';
 

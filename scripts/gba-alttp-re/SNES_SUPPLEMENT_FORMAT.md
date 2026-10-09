@@ -53,7 +53,7 @@ The production compiler entry is
 `compile-rom-assets.ts`. The command under `scripts/gba-alttp-re` is only a diagnostic
 CLI that expands the packed result into inspectable per-room files and previews.
 
-`shared/asset-extraction/compile-alttp-asset-set.ts` is the source aggregator used by
+`packages/asset-extraction/src/compile-alttp-asset-set.ts` is the source aggregator used by
 the production flow. It requires the SNES base source and accepts the validated GBA
 ALttP source optionally. It returns a byte-identical `base` container and, when
 provided, a `gbaSupplement` container. Source-specific address mapping and decoding

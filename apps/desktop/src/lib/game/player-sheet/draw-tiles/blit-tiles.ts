@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { decode4bppTile } from '@shared/asset-extraction/graphics';
+import { decode4bppTile } from '@rotp/asset-extraction';
 import { SHEET_COLS } from '@rotp/game-data';
 import type { BlitArgs } from './draw-tiles.type';
 import { TILE, TILE_BYTES } from './draw-tiles.constants';

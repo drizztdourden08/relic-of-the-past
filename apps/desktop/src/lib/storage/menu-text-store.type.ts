@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { DecodedLine } from '@shared/asset-extraction/text/menu-text';
+import type { DecodedLine } from '@rotp/asset-extraction';
 
 type DecodedText = {
   language: string;

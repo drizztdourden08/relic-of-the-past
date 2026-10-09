@@ -2,24 +2,12 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
-import { compileGbaAlttpSupplement } from '../../shared/asset-extraction/compile-resources-gba-alttp';
-import { decode4bppTile } from '../../shared/asset-extraction/graphics/bitplane-decoder';
-import {
-  convertGbaMapWordToSnes,
-  convertGbaSheetToSnes4bpp,
-  decodeGbaPacked4bppTile,
-} from '../../shared/asset-extraction/graphics/gba-native';
-import { loadGbaAlttpRomFromBuffer } from '../../shared/asset-extraction/rom/gba-rom';
-import { loadRomFromBuffer } from '../../shared/asset-extraction/rom/rom-loader';
-import {
-  GbaAlttpDungeonSource,
-  PALACE_ROOM_IDS,
-  decodeGbaAlttpSaveProgression,
-  extractEntityHandlerTable,
-  extractRoomTagHandlerTable,
-  extractGbaAlttpText,
-  extractDungeonSpriteGraphics,
-} from '../../shared/asset-extraction/sources/gba-alttp';
+import { compileGbaAlttpSupplement } from '@rotp/asset-extraction';
+import { decode4bppTile } from '@rotp/asset-extraction';
+import { convertGbaMapWordToSnes, convertGbaSheetToSnes4bpp, decodeGbaPacked4bppTile } from '@rotp/asset-extraction';
+import { loadGbaAlttpRomFromBuffer } from '@rotp/asset-extraction';
+import { loadRomFromBuffer } from '@rotp/asset-extraction';
+import { GbaAlttpDungeonSource, PALACE_ROOM_IDS, decodeGbaAlttpSaveProgression, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText, extractDungeonSpriteGraphics } from '@rotp/asset-extraction';
 
 describe('GBA to SNES native translation', () => {
   it('moves GBA palette and flip bits into the SNES tilemap layout', () => {

@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind types */
-import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
+import type { AssetSourceId } from '@rotp/asset-extraction';
 
 type RomKind = 'snes-alttp' | 'gba-alttp';
 

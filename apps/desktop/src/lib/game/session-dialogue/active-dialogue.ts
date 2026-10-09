@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { findDatAsset } from '@shared/asset-extraction/dat-container';
-import { unpackPackedBytes } from '@shared/asset-extraction/packed-bytes';
+import { findDatAsset } from '@rotp/asset-extraction';
+import { unpackPackedBytes } from '@rotp/asset-extraction';
 import type { EmscriptenModule } from '../types';
 import type { ActiveDialogue } from './active-dialogue.type';
 

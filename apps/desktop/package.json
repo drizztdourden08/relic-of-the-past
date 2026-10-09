@@ -58,6 +58,7 @@
     "@iconify-icons/lucide": "^1.2.135",
     "@iconify-icons/simple-icons": "^1.2.75",
     "@iconify/react": "^6.0.2",
+    "@rotp/asset-extraction": "workspace:*",
     "@rotp/game-data": "workspace:*",
     "@tiptap/core": "^3.30.2",
     "@tiptap/extension-document": "^3.30.2",

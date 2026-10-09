@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFile } from 'fs/promises';
-import type { LanguageMeta } from '@shared/types/language';
+import type { LanguageMeta } from '@rotp/asset-extraction';
 import { languagePackPaths } from './language-pack-paths';
 
 const readMeta = async (code: string): Promise<LanguageMeta | null> => {

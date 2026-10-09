@@ -38,7 +38,7 @@
 #define GEAR_DECODE_SLOT 0xBD40
 #define GEAR_TILE_BYTES 32
 // The sprite palette row every picture is quantized to. Mirrored by GEAR_ICON_PALETTE_ROW
-// in shared/asset-extraction/item-sprites/gear-icons.ts (the extractor that writes the
+// in packages/asset-extraction/src/item-sprites/gear-icons.ts (the extractor that writes the
 // file): change both together. Row 4 is the best fit of the four main sprite rows and the
 // only one whose colours are identical in both world halves.
 #define GEAR_PALETTE_ROW 4

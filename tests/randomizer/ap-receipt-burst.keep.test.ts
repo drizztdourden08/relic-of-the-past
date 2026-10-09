@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { packPackedBytes, unpackPackedBytes } from '@shared/asset-extraction/packed-bytes';
-import { RANDOMIZER_MSG_BASE, RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
+import { packPackedBytes, unpackPackedBytes } from '@rotp/asset-extraction';
+import { RANDOMIZER_MSG_BASE, RANDOMIZER_RECEIPT_MSG } from '@rotp/asset-extraction';
 import { progressiveCapacityItemName } from '@rotp/game-data';
 import { renderCapacityStep } from '@shared/randomizer/receipt-text/capacity-rung-values';
 import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';

@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind types */
-import type { DialogueLine } from '@shared/types/language';
+import type { DialogueLine } from '../../sets-types';
 
 interface PackedLangEntry {
   code: string;

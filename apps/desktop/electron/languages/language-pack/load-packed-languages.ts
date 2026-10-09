@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile } from 'fs/promises';
-import { buildPackedEntry } from '@shared/asset-extraction/text/build-language-entry';
-import type { PackedLangEntry } from '@shared/asset-extraction/text/build-language-entry';
-import { dialogueTexts } from '@shared/asset-extraction/text/parse-dialogue-text';
+import { buildPackedEntry } from '@rotp/asset-extraction';
+import type { PackedLangEntry } from '@rotp/asset-extraction';
+import { dialogueTexts } from '@rotp/asset-extraction';
 import { languagePackPaths } from './language-pack-paths';
 import { listLanguageCodes } from './list-language-codes';
 

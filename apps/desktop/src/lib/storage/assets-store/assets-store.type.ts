@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
+import type { AssetSourceId } from '@rotp/asset-extraction';
 
 interface AssetsResult {
   base: Uint8Array;

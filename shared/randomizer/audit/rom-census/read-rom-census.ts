@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { snesToLinear } from '../../../asset-extraction/rom/snes-address';
+import { snesToLinear } from '@rotp/asset-extraction';
 import { CHEST_TABLE_COUNT, CHEST_TABLE_ENTRY_SIZE, CHEST_TABLE_SNES_ADDRESS } from '../audit.constants';
 import { stripCopierHeader } from '../strip-copier-header';
 import { BIG_CHEST_FLAG, CHEST_ITEM_BYTE_OFFSET, ROOM_ID_MASK } from './rom-census.constants';

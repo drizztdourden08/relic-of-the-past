@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { FOREIGN_ICON_FILES } from '@shared/asset-extraction/item-sprites/foreign-icons';
+import { FOREIGN_ICON_FILES } from '@rotp/asset-extraction';
 import { POOL_ICON_FALLBACK, poolIconFileOf } from '@rotp/game-data';
 import { FOREIGN_ICON_FIRST_ID } from '../foreign-item-sentinel';
 

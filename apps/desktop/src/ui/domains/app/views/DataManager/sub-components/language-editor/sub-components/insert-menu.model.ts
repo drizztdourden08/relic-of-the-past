@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { codeInfoFor, isGlyphName } from '@shared/game/language';
 import type { GlossaryTerm, Token } from '@shared/game/language';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
+import type { LanguageConfig } from '@rotp/game-data';
 import { paramValuesFor } from './code-params';
 import { BRACKETED, CODE_ORDER, SECTION_OF_CODE } from './insert-menu.constants';
 import type { InsertChoice, InsertGroup, InsertOption, SectionId } from './insert-menu.type';

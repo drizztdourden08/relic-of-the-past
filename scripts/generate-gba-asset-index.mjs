@@ -35,14 +35,14 @@ import path from 'node:path';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = path.join(SCRIPT_DIR, '..');
-const manifestSourceFor = (root) => path.join(root, 'shared/asset-extraction/sources/gba-alttp/asset-manifest.ts');
+const manifestSourceFor = (root) => path.join(root, 'packages/asset-extraction/src/sources/gba-alttp/asset-manifest.ts');
 const outputPathFor = (root) => path.join(root, 'core/game-hooks/gba_asset_index.generated.h');
 
 const HEADER = `/* @layer core-game-hooks @kind generated */
 /**
  * GENERATED: do not hand-edit. Regenerate with \`npm run generate:gba-asset-index\`
  * (scripts/generate-gba-asset-index.mjs), which reads
- * shared/asset-extraction/sources/gba-alttp/asset-manifest.ts and emits one
+ * packages/asset-extraction/src/sources/gba-alttp/asset-manifest.ts and emits one
  * enum member per GBA ALttP supplement asset, in manifest order.
  */
 #ifndef ZELDA3_GBA_ASSET_INDEX_GENERATED_H_

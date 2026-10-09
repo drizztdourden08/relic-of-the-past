@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo } from 'react';
-import { snesToRgba } from '@shared/asset-extraction/graphics/palette';
+import { snesToRgba } from '@rotp/asset-extraction';
 import { hexToSnes15 } from '@rotp/game-data';
 import { getGlyphAtlas } from '../../../../../../lib/game/dialog/glyph-atlas';
 import { NO_ATLASES } from '../DialogView.constants';

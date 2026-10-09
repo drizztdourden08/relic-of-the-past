@@ -2,7 +2,7 @@
 import { createHash } from 'crypto';
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { ZELDA3_SHA1_US } from '@shared/asset-extraction/rom/rom-loader';
+import { ZELDA3_SHA1_US } from '@rotp/asset-extraction';
 import { bodyOf } from './body-of';
 import { CANDIDATE_DIRS, REPO } from './rom-fixture.constants';
 

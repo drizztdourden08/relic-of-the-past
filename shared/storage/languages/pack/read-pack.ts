@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import type { LanguagePack } from '@shared/types/language';
-import { parseDialogueText } from '@shared/asset-extraction/text/parse-dialogue-text';
+import type { LanguagePack } from '@rotp/asset-extraction';
+import { parseDialogueText } from '@rotp/asset-extraction';
 import { fontPath, legacyDialoguePath } from '../paths';
 import { readLegacyMeta } from './read-legacy-meta';
 

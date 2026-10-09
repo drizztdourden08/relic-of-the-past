@@ -2,7 +2,7 @@
 /**
  * GENERATED: do not hand-edit. Regenerate with `npm run generate:gba-asset-index`
  * (scripts/generate-gba-asset-index.mjs), which reads
- * shared/asset-extraction/sources/gba-alttp/asset-manifest.ts and emits one
+ * packages/asset-extraction/src/sources/gba-alttp/asset-manifest.ts and emits one
  * enum member per GBA ALttP supplement asset, in manifest order.
  */
 #ifndef ZELDA3_GBA_ASSET_INDEX_GENERATED_H_

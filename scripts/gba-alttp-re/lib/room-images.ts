@@ -2,7 +2,7 @@
 /** Debug pictures of an exported room: its layers drawn with its palette, and its collision. */
 
 import { PNG } from 'pngjs';
-import { decode4bppTile } from '../../../shared/asset-extraction/graphics/bitplane-decoder';
+import { decode4bppTile } from '@rotp/asset-extraction';
 
 const decodeColor = (value: number): readonly [number, number, number, number] => [
   Math.round((value & 0x1f) * 255 / 31),

@@ -85,7 +85,7 @@ then judge the screenshot against that ground truth.
 ## 5. Where reference sprites live
 
 Extracted by `apps/desktop/electron/sprites/ipc-handlers.ts` via
-`shared/asset-extraction/item-sprites/`, driven by
+`packages/asset-extraction/src/item-sprites/`, driven by
 `shared/game/sprites/definitions.json`.
 
 - **Location:** `%AppData%\relic-of-the-past\sprites\<rom-stem>\<file>.png`

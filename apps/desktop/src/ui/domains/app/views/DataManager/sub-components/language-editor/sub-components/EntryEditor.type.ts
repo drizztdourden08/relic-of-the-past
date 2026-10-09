@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { GlossaryTerm, SetStructure, Token, Variable } from '@shared/game/language';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
+import type { LanguageConfig } from '@rotp/game-data';
 import type { GlyphMetrics, GlyphSheet, RowFit } from '@shared/game/language/layout/types';
 
 type EntryEditorProps = {

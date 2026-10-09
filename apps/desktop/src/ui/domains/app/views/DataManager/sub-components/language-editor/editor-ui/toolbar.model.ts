@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { buildInsertGroups } from '../sub-components/insert-menu.model';
 import { isMergedSecond, mergedSecondOf } from '../editor/merged-glyph';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
+import type { LanguageConfig } from '@rotp/game-data';
 import type { InsertOption } from '../sub-components/insert-menu.type';
 import type { ToolbarItem } from './editor-ui.type';
 import { GLYPH_GROUP } from './toolbar.model.constants';

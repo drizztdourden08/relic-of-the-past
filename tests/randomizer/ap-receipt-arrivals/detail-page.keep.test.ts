@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { packPackedBytes } from '@shared/asset-extraction/packed-bytes';
-import { RANDOMIZER_MSG_BASE } from '@shared/asset-extraction/text/data/randomizer-templates';
-import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
+import { packPackedBytes } from '@rotp/asset-extraction';
+import { RANDOMIZER_MSG_BASE } from '@rotp/asset-extraction';
+import { kLanguages } from '@rotp/game-data';
 import { dialogueCharsetOf } from '@rotp/game-data';
 import { progressiveCapacityItemName } from '@rotp/game-data';
 import { renderCapacityStep } from '@shared/randomizer/receipt-text/capacity-rung-values';

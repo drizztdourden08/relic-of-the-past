@@ -2,7 +2,7 @@
 import type {
   GlossaryTerm, GlyphMetrics, GlyphSheet, SetStructure, Token, Variable,
 } from '@shared/game/language';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
+import type { LanguageConfig } from '@rotp/game-data';
 
 type DialogueEditorProps = {
   tokens: Token[];

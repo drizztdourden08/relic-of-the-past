@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { unpackPackedBytes } from '@shared/asset-extraction/packed-bytes';
+import { unpackPackedBytes } from '@rotp/asset-extraction';
 import type { FakeModule, SetModule } from './ap-fake-module.type';
 
 const isRead = (name: string): boolean => /^Wasm(Get|Can|Is|Read|Probe)/.test(name) || name === 'WasmForeignItemId';

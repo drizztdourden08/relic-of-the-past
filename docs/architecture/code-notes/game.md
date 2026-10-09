@@ -220,7 +220,7 @@ counts frames of its own for the choreography.
 ### title/title-layout.ts
 
 Positions in the 256x224 frame, measured from the ROM with the title extractor
-(`shared/asset-extraction/title-screen`) and the intro's own sprite tables (`ending.c`).
+(`packages/asset-extraction/src/title-screen`) and the intro's own sprite tables (`ending.c`).
 
 - `LOGO_AT` is the logo's top left corner, the drawn extent of the BG1 tilemap.
 - `SWORD_X` is the sword picture's left edge. `SWORD_TOP_FOR_BASE` is the row its top lands on

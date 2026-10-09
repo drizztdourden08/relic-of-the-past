@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { writeFile, access } from 'fs/promises';
-import { loadRom } from '@shared/asset-extraction/rom/load-rom-file';
-import { compileResources } from '@shared/asset-extraction/compile-resources';
+import { loadRom } from '@rotp/asset-extraction';
+import { compileResources } from '@rotp/asset-extraction';
 import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { datName } from '@shared/storage/assets';
 import { logToRenderer } from '../../lib/renderer-log';

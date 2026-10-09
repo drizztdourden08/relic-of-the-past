@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import * as assets from '@shared/storage/assets';
 import type { SetBakeInput } from '@shared/game/language';
-import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
+import type { AssetSourceId } from '@rotp/asset-extraction';
 import { markAssetsBaked } from '@app/stores/game-assets-store';
 import { runOnWorker } from '../extraction-client';
 import { platformFiles } from '../platform-files';

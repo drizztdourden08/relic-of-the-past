@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import * as sprites from '@shared/storage/sprites';
-import type { SpriteBuffer } from '@shared/asset-extraction/item-sprites/extract-items';
+import type { SpriteBuffer } from '@rotp/asset-extraction';
 import { runOnWorker } from '../extraction-client';
 import { publishImportProgress } from '../import-progress-bus';
 import { platformFiles } from '../platform-files';

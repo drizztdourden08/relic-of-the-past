@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { compressStrings } from '@shared/asset-extraction/text/dialogue-encoder';
+import { compressStrings } from '@rotp/asset-extraction';
 import { splitControls } from './split-controls';
 
 const encodeControlled = (runs: readonly string[], controls: readonly number[][], code: string): Uint8Array => {

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
-import { packPackedBytes } from '@shared/asset-extraction/packed-bytes';
+import { kLanguages } from '@rotp/game-data';
+import { packPackedBytes } from '@rotp/asset-extraction';
 import { log } from '../../../log-bus';
 import { getModule } from '../../wasm-bridge';
 import { readActiveDialogue } from '../active-dialogue';

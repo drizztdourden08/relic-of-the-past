@@ -1,11 +1,11 @@
 /* @layer test @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
 import * as sprites from '@shared/storage/sprites';
-import { EXTRACTION_STAMP_FILE, extractionVersionOf } from '@shared/asset-extraction/item-sprites/extraction-stamp';
-import { CURRENCY_SYMBOLS_FILE } from '@shared/asset-extraction/item-sprites/currency-symbols';
-import { FOREIGN_ICONS_FILE } from '@shared/asset-extraction/item-sprites/foreign-icons';
-import { GEAR_ICONS_FILE } from '@shared/asset-extraction/item-sprites/gear-icons';
-import { QUIVER_ICON_FILE } from '@shared/asset-extraction/item-sprites/quiver-icon';
+import { EXTRACTION_STAMP_FILE, extractionVersionOf } from '@rotp/asset-extraction';
+import { CURRENCY_SYMBOLS_FILE } from '@rotp/asset-extraction';
+import { FOREIGN_ICONS_FILE } from '@rotp/asset-extraction';
+import { GEAR_ICONS_FILE } from '@rotp/asset-extraction';
+import { QUIVER_ICON_FILE } from '@rotp/asset-extraction';
 import { SPRITE_DEFINITIONS } from '@rotp/game-data';
 import { getCapacityUpgradeSprite, setSpritesBase, setSpritesRevision } from '@rotp/game-data';
 import { createMemFileStore } from './mem-file-store';

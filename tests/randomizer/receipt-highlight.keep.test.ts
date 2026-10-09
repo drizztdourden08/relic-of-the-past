@@ -2,8 +2,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { compressStrings } from '@shared/asset-extraction/text/dialogue-encoder';
-import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
+import { compressStrings } from '@rotp/asset-extraction';
+import { kLanguages } from '@rotp/game-data';
 import {
   HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, primary, secondary, stripHighlight,
 } from '@shared/randomizer/receipt-text/highlight-markup';

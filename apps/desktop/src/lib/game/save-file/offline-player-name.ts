@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
+import { kLanguages } from '@rotp/game-data';
 import { slotBlockOffset } from './sram-slots';
 import {
   DIGIT_TILE_SHIFT, FIRST_DIGIT_TILE, NAME_LENGTH, NAME_OFFSET, SPECIAL_TILE_CODES,

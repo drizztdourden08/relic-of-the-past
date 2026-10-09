@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { decode2bppTile } from '@shared/asset-extraction/graphics/bitplane-decoder';
+import { decode2bppTile } from '@rotp/asset-extraction';
 import { edgeAt, sheetHolds, topTileOf } from './glyph-cell-geometry';
 import { BOTTOM_TILE_STEP, CELL_H, CELL_W, RAMP_FILL, TILE_BYTES, TILE_SIDE } from './glyph.constants';
 import type { GlyphStore } from './glyph.type';

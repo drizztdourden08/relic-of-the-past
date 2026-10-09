@@ -1,0 +1,15 @@
+{
+  "name": "@rotp/asset-extraction",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Reads a user ROM and builds the asset blob the game core loads.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.1",
+    "pngjs": "catalog:"
+  }
+}

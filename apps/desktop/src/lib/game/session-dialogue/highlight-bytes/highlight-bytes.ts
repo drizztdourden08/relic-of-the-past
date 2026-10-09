@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { usesNewFormat } from '@shared/asset-extraction/text/data/language-data';
+import { usesNewFormat } from '@rotp/asset-extraction';
 import { EU_HIGHLIGHT_SUB, EU_PREFIX, US_HIGHLIGHT_BYTE } from './highlight-bytes.constants';
 
 const highlightBytes = (kind: number, code: string): number[] =>

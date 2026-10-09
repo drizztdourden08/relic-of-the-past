@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { codeInfoFor, encodableParams } from '@shared/game/language';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
+import type { LanguageConfig } from '@rotp/game-data';
 
 const paramValuesFor = (name: string, cfg: LanguageConfig): number[] | null => {
   const encodable = encodableParams(name, cfg);

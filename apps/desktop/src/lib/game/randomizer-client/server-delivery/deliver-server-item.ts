@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
+import { RANDOMIZER_RECEIPT_MSG } from '@rotp/asset-extraction';
 import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
 import { deliverItem } from '../../delivery-api';
 import { appendSessionReceiptMessage, releaseSessionReceiptMessage } from '../../session-dialogue';

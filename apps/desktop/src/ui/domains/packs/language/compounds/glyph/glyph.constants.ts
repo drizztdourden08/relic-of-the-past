@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { GLYPH_RAMP } from '@shared/asset-extraction/text/data/glyph-ramp';
+import { GLYPH_RAMP } from '@rotp/asset-extraction';
 
 const CELL_W = 8;
 const CELL_H = 16;

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID, FOREIGN_ITEM_ID } from '@app/lib/game/foreign-item-sentinel';
-import { FOREIGN_ICON_FILES } from '@shared/asset-extraction/item-sprites/foreign-icons';
+import { FOREIGN_ICON_FILES } from '@rotp/asset-extraction';
 import { buildOptionsSnapshot, normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import { generateFromSnapshot } from '@shared/randomizer/generate';
 import { AP_LOCATION_IDS } from '@shared/randomizer/archipelago/ap-ids.data';

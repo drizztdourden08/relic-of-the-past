@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
-import { SUPPLEMENT_IDS } from '@shared/asset-extraction/sources/source-ids';
-import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
+import { SUPPLEMENT_IDS } from '@rotp/asset-extraction';
+import type { AssetSourceId } from '@rotp/asset-extraction';
 import type { FileStore } from '@drizztdourden08/brock-core';
 import { supplementRomFile } from './supplement-rom-file';
 

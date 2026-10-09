@@ -2,7 +2,7 @@
 import type {
   DialogueEntry, GlossaryTerm, SetStructure, Variable, VariableIndex,
 } from '@shared/game/language';
-import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
+import type { LanguageConfig } from '@rotp/game-data';
 import type { GlyphMetrics, GlyphSheet } from '@shared/game/language/layout/types';
 import type { EntryIssueMap } from '../language-editor.type';
 import type { EntryDraftState } from '../behavior/useEntryDraft.type';

@@ -3,28 +3,10 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { compileGbaAlttpSupplement } from '../../shared/asset-extraction/compile-resources-gba-alttp';
-import { loadGbaAlttpRomFromBuffer } from '../../shared/asset-extraction/rom/gba-rom';
-import { loadRomFromBuffer } from '../../shared/asset-extraction/rom/rom-loader';
-import {
-  GbaAlttpDungeonSource,
-  GBA_NEW_ENTITY_HANDLERS,
-  PALACE_AUDIO_REFERENCES,
-  PALACE_BEHAVIOR_SPECS,
-  PALACE_ROOM_IDS,
-  PALACE_BOSS_ROOMS,
-  PALACE_ENTITY_TYPES,
-  PALACE_PROGRESSION_ANCHORS,
-  PALACE_ROOM_TAGS,
-  extractDungeonPalette,
-  extractDungeonSpriteGraphics,
-  extractEntityHandlerTable,
-  extractRoomTagHandlerTable,
-  extractGbaAlttpText,
-  extractPalaceSnes4bppTiles,
-  extractPalaceSpritePalettes,
-  decodeGbaAlttpSaveProgression,
-} from '../../shared/asset-extraction/sources/gba-alttp';
+import { compileGbaAlttpSupplement } from '@rotp/asset-extraction';
+import { loadGbaAlttpRomFromBuffer } from '@rotp/asset-extraction';
+import { loadRomFromBuffer } from '@rotp/asset-extraction';
+import { GbaAlttpDungeonSource, GBA_NEW_ENTITY_HANDLERS, PALACE_AUDIO_REFERENCES, PALACE_BEHAVIOR_SPECS, PALACE_ROOM_IDS, PALACE_BOSS_ROOMS, PALACE_ENTITY_TYPES, PALACE_PROGRESSION_ANCHORS, PALACE_ROOM_TAGS, extractDungeonPalette, extractDungeonSpriteGraphics, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText, extractPalaceSnes4bppTiles, extractPalaceSpritePalettes, decodeGbaAlttpSaveProgression } from '@rotp/asset-extraction';
 import { parseArguments } from './lib/export-arguments';
 import { entityBytes, secretBytes, wordsToBuffer } from './lib/room-bytes';
 import { renderCollision, renderRoom } from './lib/room-images';

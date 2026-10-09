@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { LanguagePack } from '@shared/types/language';
+import type { LanguagePack } from '@rotp/asset-extraction';
 import * as languages from '@shared/storage/languages';
 import { platformFiles } from '../platform-files';
 

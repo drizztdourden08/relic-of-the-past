@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind types */
 import type { SetBakeInput } from '@shared/game/language';
-import type { SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
-import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
+import type { SpriteDef } from '@rotp/asset-extraction';
+import type { AssetSourceId } from '@rotp/asset-extraction';
 
 type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
 

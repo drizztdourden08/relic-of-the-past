@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { PackedLangEntry } from '@shared/asset-extraction/text/build-language-entry';
+import type { PackedLangEntry } from '@rotp/asset-extraction';
 import type { SetBakeInput } from './compile.type';
 import { compileSet } from './compile-set';
 
