@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Canvas } from '../../../../../../design-system/primitives/Canvas';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import type { GizmoPart } from '../shadow-editor/gizmos';
-import type { Vp, Point } from './behavior/coords';
+import type { Vp, Point } from './behavior/overlay.type';
 import type { GizmoStart, ShadowEditorOverlayProps } from './ShadowEditorOverlay.type';
 import { useOverlayKeyboard } from './behavior/useOverlayKeyboard';
 import { useOverlayInteractions } from './behavior/useOverlayInteractions';
@@ -62,9 +62,21 @@ const ShadowEditorOverlay = (props: ShadowEditorOverlayProps) => {
     getScreenData: s.getScreenData,
   });
 
-  if (!s.open || !gameRunning) return null;
-
   const interactive = !s.previewMode && (s.activeTool === 'select' || s.activeTool === 'polygon' || s.activeTool === 'freehand' || s.activeTool === 'point-light' || s.activeTool === 'shape-light');
+  const { cursor } = interactions;
+  const canvasStyle = useMemo(() => ({
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width,
+    height,
+    pointerEvents: interactive ? 'auto' as const : 'none' as const,
+    zIndex: 10,
+    cursor,
+  }), [width, height, interactive, cursor]);
+
+  if (!s.open || !gameRunning) return null;
 
   return (
     <Canvas
@@ -76,17 +88,7 @@ const ShadowEditorOverlay = (props: ShadowEditorOverlayProps) => {
       onMouseUp={interactions.handleMouseUp}
       onContextMenu={interactions.handleContextMenu}
       onDoubleClick={interactions.handleDoubleClick}
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width,
-        height,
-        pointerEvents: interactive ? 'auto' : 'none',
-        zIndex: 10,
-        cursor: interactions.cursor,
-      }}
+      style={canvasStyle}
     />
   );
 };

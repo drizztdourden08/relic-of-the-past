@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
-import type { TooltipData } from './types';
+import type { ExtraRowsProps, TooltipData } from './tooltip.type';
 import { S } from './styles';
-
-interface ExtraRowsProps {
-  tooltip: TooltipData;
-}
 
 const isAnyLayerReachable = (tooltip: TooltipData): boolean => {
   const { layers } = tooltip;
@@ -15,13 +11,12 @@ const isAnyLayerReachable = (tooltip: TooltipData): boolean => {
     : layers.primary.reach !== 0;
 };
 
-// Path requirements show only once a layer is reached.
 const TooltipExtraRows = ({ tooltip }: ExtraRowsProps) => (
   <>
     {isAnyLayerReachable(tooltip) && (
       <Box style={S.row}>
         <Text style={S.dim}>path reqs:</Text>
-        <Text style={{ color: tooltip.pathReqs ? 'var(--c-gold)' : 'var(--c-text-muted)' }}>
+        <Text style={tooltip.pathReqs ? S.gold : S.muted}>
           {tooltip.pathReqs || 'none'}
         </Text>
       </Box>
@@ -32,7 +27,7 @@ const TooltipExtraRows = ({ tooltip }: ExtraRowsProps) => (
     </Box>
     <Box style={S.row}>
       <Text style={S.dim}>Blocked In Last Flood Fill:</Text>
-      <Text style={{ color: tooltip.bfsBlocked ? 'var(--c-danger)' : 'var(--c-text-muted)' }}>
+      <Text style={tooltip.bfsBlocked ? S.danger : S.muted}>
         {tooltip.bfsBlocked ? 'yes' : 'no'}
       </Text>
     </Box>

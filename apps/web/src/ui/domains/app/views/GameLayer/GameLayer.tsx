@@ -1,10 +1,9 @@
 /* @layer renderer-components @kind component */
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Canvas } from '../../../../design-system/primitives/Canvas';
 import { useGameState } from './behavior/useGameState';
-import { getInputManager } from '../../../../../lib/game';
 import type { EdgeGlowRenderer } from '../../../../../lib/game/edge-glow';
 import type { ShadowRenderer } from '../../../../../lib/game/shadow-casting';
 import type { ShadowCastingProject } from '@shared/types/shadow-casting';
@@ -15,6 +14,9 @@ import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconne
 import { ProfileSwitcherOverlay } from './sub-components/ProfileSwitcherOverlay';
 import { useControllerOverlay } from './behavior/useControllerOverlay';
 import { useProfileSwitcher } from './behavior/useProfileSwitcher';
+import { useCanvasDisplaySize } from './behavior/useCanvasDisplaySize';
+import { useCanvasBufferSize } from './behavior/useCanvasBufferSize';
+import { useControllerPause } from './behavior/useControllerPause';
 import { NavigationOverlay } from './sub-components/navigation-overlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
 import { ShadowEditorPanel } from './sub-components/ShadowEditorPanel';
@@ -23,6 +25,7 @@ import { CheckToasts } from '../CheckToasts';
 import { GameOverlay } from '../GameOverlay';
 import { useEdgeGlowLoop } from './behavior/useEdgeGlowLoop';
 import { useShadowCastingLoop } from './behavior/useShadowCastingLoop';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, MANUAL_PAUSE_NAME, NORMAL_BLEND_STYLE } from './GameLayer.constants';
 import './GameLayer.css';
 import type { GameLayerProps } from './GameLayer.type';
 
@@ -42,55 +45,13 @@ const GameLayer = (props: GameLayerProps) => {
   const { status, error, start } = useGameState();
   const [canvasKey, setCanvasKey] = useState(0);
   const hasStartedRef = useRef(false);
-  const [controllerPaused, setControllerPaused] = useState(false);
-  const [disconnectedName, setDisconnectedName] = useState('');
-  const [bufSize, setBufSize] = useState({ w: 512, h: 448 });
+  const { bufSize, setBufSize } = useCanvasBufferSize(canvasRef, status, canvasKey);
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
-
-  // Docked widgets shrink the game area.
-  const exclusiveInsets = useExclusiveInsetsStore((s) => s.insets);
+  const dockedWidgetInsets = useExclusiveInsetsStore((s) => s.insets);
 
   const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
-  // Depends on `status`: SDL/Emscripten removes inline styles during WASM init, so re-apply once 'running'.
-  useEffect(() => {
-    const applyStyles = () => {
-      const canvas = canvasRef.current;
-      const fxCanvas = fxCanvasRef.current;
-      const shadowCanvas = shadowCanvasRef.current;
-      if (canvas) {
-        canvas.style.width = `${fitSize.width}px`;
-        canvas.style.height = `${fitSize.height}px`;
-      }
-      if (fxCanvas) {
-        fxCanvas.style.width = `${fitSize.width}px`;
-        fxCanvas.style.height = `${fitSize.height}px`;
-      }
-      if (shadowCanvas) {
-        shadowCanvas.style.width = `${fitSize.width}px`;
-        shadowCanvas.style.height = `${fitSize.height}px`;
-      }
-    };
-    applyStyles();
-    // Re-apply after a frame to override any SDL style manipulation during init.
-    if (status === 'running') {
-      const id = requestAnimationFrame(applyStyles);
-      return () => cancelAnimationFrame(id);
-    }
-  }, [fitSize, status]);
-
-  // Sync buffer size from canvas after WASM starts (SDL may change canvas.width/height)
-  useEffect(() => {
-    if (status !== 'running') return;
-    const id = requestAnimationFrame(() => {
-      const canvas = canvasRef.current;
-      if (canvas && (canvas.width !== bufSize.w || canvas.height !== bufSize.h)) {
-        setBufSize({ w: canvas.width, h: canvas.height });
-      }
-    });
-    return () => cancelAnimationFrame(id);
-  }, [status, canvasKey]);
-
+  useCanvasDisplaySize([canvasRef, fxCanvasRef, shadowCanvasRef], fitSize, status);
 
   useEdgeGlowLoop({ status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, edgeEffectRef, setBufSize });
   useShadowCastingLoop({ status, canvasKey, canvasRef, shadowCanvasRef, shadowRendererRef, shadowProjectRef, shadowCastingRef });
@@ -102,44 +63,26 @@ const GameLayer = (props: GameLayerProps) => {
     }
   }, [assetData, status, start, configIni, profileId, canvasKey]);
 
-  // A new canvas element when returning to idle AFTER a game has run (crash/reset), not on first mount.
   useEffect(() => {
-    if (status === 'idle' && hasStartedRef.current) {
+    const returnedToIdleAfterRun = status === 'idle' && hasStartedRef.current;
+    if (returnedToIdleAfterRun) {
       setCanvasKey((k) => k + 1);
     }
   }, [status]);
 
-  useEffect(() => {
-    if (status !== 'running') return;
-    const inputMgr = getInputManager();
-    const unsub = inputMgr.onPauseChange((paused, name) => {
-      setControllerPaused(paused);
-      setDisconnectedName(name);
-    });
-    return unsub;
-  }, [status]);
-
-  // On game start, verify the profile's mapped controller is actually present.
-  // Delay so HID enumeration / gamepad activation has a moment to populate.
-  useEffect(() => {
-    if (status !== 'running') return;
-    const id = setTimeout(() => getInputManager().checkControllerPresence(), 800);
-    return () => clearTimeout(id);
-  }, [status]);
-
+  const { controllerPaused, disconnectedName } = useControllerPause(status);
   const overlay = useControllerOverlay(controllerPaused);
   const profileSwitcher = useProfileSwitcher(status === 'running');
+  const { left, right, top, bottom } = dockedWidgetInsets;
+  const insetStyle = useMemo(
+    () => ((left || right || top || bottom) ? { left, right, top, bottom } : undefined),
+    [left, right, top, bottom],
+  );
+  const running = status === 'running';
+  const isManualPause = !disconnectedName || disconnectedName === MANUAL_PAUSE_NAME;
 
   return (
-    <Box
-      className="game-layer"
-      ref={containerRef}
-      style={
-        (exclusiveInsets.left || exclusiveInsets.right || exclusiveInsets.top || exclusiveInsets.bottom)
-          ? { left: exclusiveInsets.left, right: exclusiveInsets.right, top: exclusiveInsets.top, bottom: exclusiveInsets.bottom }
-          : undefined
-      }
-    >
+    <Box className="game-layer" ref={containerRef} style={insetStyle}>
       {status === 'error' && (
         <Box className="game-layer__status-overlay">
           <Text className="game-layer__status-text game-layer__status-text--error">Error: {error}</Text>
@@ -149,28 +92,28 @@ const GameLayer = (props: GameLayerProps) => {
         key={canvasKey}
         ref={canvasRef}
         id="canvas"
-        className={`game-layer__canvas${status === 'running' ? ' game-layer__canvas--hidden' : ' game-layer__canvas--idle'}`}
-        width={512}
-        height={448}
+        className={`game-layer__canvas${running ? ' game-layer__canvas--hidden' : ' game-layer__canvas--idle'}`}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
         tabIndex={0}
       />
       <Canvas
         key={`fx-${canvasKey}`}
         ref={fxCanvasRef}
-        className={`game-layer__fx-canvas${status !== 'running' ? ' game-layer__fx-canvas--hidden' : ''}`}
-        width={512}
-        height={448}
+        className={`game-layer__fx-canvas${!running ? ' game-layer__fx-canvas--hidden' : ''}`}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
       />
       <Canvas
         key={`shadow-${canvasKey}`}
         ref={shadowCanvasRef}
-        className={`game-layer__shadow-canvas${status !== 'running' ? ' game-layer__shadow-canvas--hidden' : ''}`}
-        style={shadowDebugMode ? { mixBlendMode: 'normal' } : undefined}
-        width={512}
-        height={448}
+        className={`game-layer__shadow-canvas${!running ? ' game-layer__shadow-canvas--hidden' : ''}`}
+        style={shadowDebugMode ? NORMAL_BLEND_STYLE : undefined}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
       />
 
-      {controllerPaused && status === 'running' && disconnectedName && disconnectedName !== 'Manual pause' && (
+      {controllerPaused && running && !isManualPause && (
         <ControllerDisconnectOverlay
           controllerName={disconnectedName}
           pauseMapping={overlay.pauseMapping}
@@ -180,7 +123,7 @@ const GameLayer = (props: GameLayerProps) => {
           onResume={overlay.onResume}
         />
       )}
-      {controllerPaused && status === 'running' && (!disconnectedName || disconnectedName === 'Manual pause') && (
+      {controllerPaused && running && isManualPause && (
         <Box className="game-layer__pause-overlay">
           <Box className="game-layer__pause-icon">
             <Box className="game-layer__pause-bar" />
@@ -188,7 +131,7 @@ const GameLayer = (props: GameLayerProps) => {
           </Box>
         </Box>
       )}
-      {status === 'running' && (
+      {running && (
         <ProfileSwitcherOverlay
           open={profileSwitcher.open}
           profiles={profileSwitcher.profiles}
@@ -197,12 +140,12 @@ const GameLayer = (props: GameLayerProps) => {
           nextMapping={profileSwitcher.nextMapping}
         />
       )}
-      {status === 'running' && <NavigationOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
-      {status === 'running' && developerToolsEnabled && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
-      {status === 'running' && developerToolsEnabled && <ShadowEditorPanel />}
-      {status === 'running' && developerToolsEnabled && <ShadowElementList />}
-      {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} profileId={profileId} />}
-      {status === 'running' && <CheckToasts width={fitSize.width} height={fitSize.height} />}
+      {running && <NavigationOverlay width={fitSize.width} height={fitSize.height} gameRunning={running} />}
+      {running && developerToolsEnabled && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={running} />}
+      {running && developerToolsEnabled && <ShadowEditorPanel />}
+      {running && developerToolsEnabled && <ShadowElementList />}
+      {running && <GameOverlay width={fitSize.width} height={fitSize.height} profileId={profileId} />}
+      {running && <CheckToasts width={fitSize.width} height={fitSize.height} />}
     </Box>
   );
 };

@@ -14,10 +14,6 @@ const S: Record<string, CSSProperties> = {
   none: { color: 'var(--c-text-faint)', fontSize: 9 },
 };
 
-/**
- * Only the annotation kinds PRESENT get a legend row; a full 20-row key would dwarf the game view.
- * A kind switched off in the navigation widget shows struck through here.
- */
 const OverlayLegend = ({ annotations }: { annotations?: readonly ScreenAnnotations[] }) => {
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
   const present = [...new Set((annotations ?? []).flatMap((s) => s.items).map((a) => a.kind))]

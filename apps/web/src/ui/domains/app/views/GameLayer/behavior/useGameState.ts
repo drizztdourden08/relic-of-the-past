@@ -20,7 +20,6 @@ const useGameState = () => {
     });
   }, []);
 
-  // Reset the guard when status goes back to idle (e.g. after crash + new asset data)
   useEffect(() => {
     if (status === 'idle') startedRef.current = false;
   }, [status]);
@@ -35,6 +34,6 @@ const useGameState = () => {
   );
 
   return { status, error, start };
-}
+};
 
 export { useGameState };

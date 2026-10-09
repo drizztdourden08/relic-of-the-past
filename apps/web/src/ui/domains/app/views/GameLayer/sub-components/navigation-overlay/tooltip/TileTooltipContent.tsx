@@ -1,24 +1,20 @@
 /* @layer renderer-components @kind component */
+import { useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
-import type { TooltipData } from './types';
+import type { TileTooltipContentProps } from './tooltip.type';
 import { S } from './styles';
-import { LayerBlock, DualLayerPanels } from './layer-panels';
+import { LayerBlock } from './layer-panels';
+import { DualLayerPanels } from './dual-layer-panels';
 import { TooltipExtraRows } from './extra-rows';
+import { ABOVE_HEADING, GROUND_HEADING } from './layer-display/layer-display.constants';
 
-interface TileTooltipContentProps {
-  tooltip: TooltipData;
-}
-
-/**
- * ONE tooltip layout for single/dual/locked modes: header, one or two layer blocks, extra rows.
- * Modes differ only in how many `LayerBlock`s render; the row list lives in classification-rows.tsx.
- */
 const TileTooltipContent = ({ tooltip }: TileTooltipContentProps) => {
-  const { layers } = tooltip;
+  const { layers, x, y } = tooltip;
+  const containerStyle = useMemo(() => ({ ...S.container, left: x, top: y }), [x, y]);
 
   return (
-    <Box style={{ ...S.container, left: tooltip.x, top: tooltip.y }}>
+    <Box style={containerStyle}>
       <Box style={S.headerRow}>
         <Text style={S.muted}>[{tooltip.row},{tooltip.col}]</Text>
         <Text style={S.dim}>{tooltip.roomTypeLabel}</Text>
@@ -28,7 +24,7 @@ const TileTooltipContent = ({ tooltip }: TileTooltipContentProps) => {
 
       {layers.mode === 'locked' && (
         <LayerBlock
-          name={layers.lockedLayer === 0 ? '▲ ABOVE' : '▼ GROUND'}
+          name={layers.lockedLayer === 0 ? ABOVE_HEADING : GROUND_HEADING}
           nameColor={layers.lockedLayer === 0 ? 'var(--c-gold)' : 'var(--c-info)'}
           data={layers.primary}
           locked
@@ -36,7 +32,7 @@ const TileTooltipContent = ({ tooltip }: TileTooltipContentProps) => {
       )}
 
       {layers.mode === 'single' && (
-        <LayerBlock name="▼ GROUND" nameColor="var(--c-info)" data={layers.primary} />
+        <LayerBlock name={GROUND_HEADING} nameColor="var(--c-info)" data={layers.primary} />
       )}
 
       <TooltipExtraRows tooltip={tooltip} />

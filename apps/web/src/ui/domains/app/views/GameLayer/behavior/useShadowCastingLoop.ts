@@ -1,24 +1,14 @@
 /* @layer renderer-components @kind hook */
-/** Shadow-casting shader render loop for GameLayer (per-overworld-screen heightmap/lights). */
 import { useRef } from 'react';
-import type React from 'react';
 import { wasmGetViewportInfo } from '../../../../../../lib/game';
 import { createShadowRenderer } from '../../../../../../lib/game/shadow-casting';
 import type { ShadowRenderer } from '../../../../../../lib/game/shadow-casting';
-import type { ShadowCastingProject } from '@shared/types/shadow-casting';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import { useCanvasOverlayLoop } from './useCanvasOverlayLoop';
+import { overworldScreenIdOf } from './overworld-screen-id';
 import { viewOrigin } from '@app/lib/game/bridge/view-origin';
-
-interface ShadowLoopParams {
-  status: string;
-  canvasKey: number;
-  canvasRef: React.RefObject<HTMLCanvasElement | null>;
-  shadowCanvasRef: React.RefObject<HTMLCanvasElement | null>;
-  shadowRendererRef: React.MutableRefObject<ShadowRenderer | null>;
-  shadowProjectRef: React.MutableRefObject<ShadowCastingProject | null>;
-  shadowCastingRef: React.MutableRefObject<boolean>;
-}
+import { OVERWORLD_MODULE } from '../GameLayer.constants';
+import type { ShadowLoopParams } from './useShadowCastingLoop.type';
 
 const useShadowCastingLoop = (params: ShadowLoopParams): void => {
   const { status, canvasKey, canvasRef, shadowCanvasRef, shadowRendererRef, shadowProjectRef, shadowCastingRef } = params;
@@ -37,13 +27,12 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
       } catch {
         shadowProjectRef.current = null;
       }
-      // Subscribe to editor store so live edits are reflected; unsubscribe on teardown.
-      const unsub = useShadowEditorStore.subscribe((state) => {
+      const unsubscribeLiveEdits = useShadowEditorStore.subscribe((state) => {
         if (state.dirty || state.open) {
           shadowProjectRef.current = state.project;
         }
       });
-      return unsub;
+      return unsubscribeLiveEdits;
     },
     createRenderer: (fxCanvas) => createShadowRenderer(fxCanvas),
     onFrame: ({ renderer, gameCanvas, fxCanvas, time }) => {
@@ -53,20 +42,14 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
         return;
       }
 
-      // Sync buffer size
       if (gameCanvas.width !== fxCanvas.width || gameCanvas.height !== fxCanvas.height) {
         renderer.resize(gameCanvas.width, gameCanvas.height);
       }
 
-      // Detect current overworld screen from camera position
       const vp = wasmGetViewportInfo();
       let screenId = -1;
-      if (vp && vp.locationModule === 9) {
-        const screenCol = Math.floor((vp.cameraX + 128) / 512) & 7;
-        const screenRow = Math.floor((vp.cameraY + 112) / 512) & 7;
-        screenId = screenRow * 8 + screenCol;
-
-        // Update the viewport origin every frame, through the same helper the overlays use.
+      if (vp && vp.locationModule === OVERWORLD_MODULE) {
+        screenId = overworldScreenIdOf(vp);
         const { viewLeft, viewTop } = viewOrigin(vp);
         renderer.setScreenOrigin(viewLeft, viewTop, vp.snesWidth, vp.snesHeight);
       }

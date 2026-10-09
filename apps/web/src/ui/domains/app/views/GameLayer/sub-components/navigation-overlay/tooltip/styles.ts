@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind data */
 import type { CSSProperties } from 'react';
 
-// Static styles; only per-tile colours and the tooltip's x/y stay inline.
 const S: Record<string, CSSProperties> = {
   container: {
     position: 'absolute',
@@ -35,6 +34,8 @@ const S: Record<string, CSSProperties> = {
   dim: { color: 'var(--c-text-dim)' },
   text: { color: 'var(--c-text)' },
   warning: { color: 'var(--c-warning)' },
+  gold: { color: 'var(--c-gold)' },
+  danger: { color: 'var(--c-danger)' },
 };
 
 export { S };

@@ -5,20 +5,18 @@ import { useNavigationOverlayStore } from '../../../../../../../stores/navigatio
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
 import type { ReachState } from '@shared/game/navigation/types';
-import type { Props, MouseState } from './navigation-overlay.type';
 import { buildDrawContext } from './draw/draw-context';
 import { drawReachableDots } from './draw/draw-dots';
 import { drawPathPreview } from './draw/draw-path';
-import { drawCliffArrows, drawStairArrows } from './draw/draw-arrows';
+import { drawCliffArrows } from './draw/draw-cliff-arrows';
+import { drawStairArrows } from './draw/draw-stair-arrows';
 import { drawConnections } from './draw/draw-connections';
 import { drawEntrances } from './draw/draw-entrances';
-import { drawFallHoleSpawns, drawPitStripes } from './draw/draw-fall-zones';
+import { drawFallHoleSpawns } from './draw/draw-fall-hole-spawns';
+import { drawPitStripes } from './draw/draw-pit-stripes';
 import { drawPlayerDebug } from './draw/draw-player-debug';
 import { drawAnnotations } from './draw/draw-annotations';
-
-interface OverlayCanvasProps extends Props {
-  mouseStateRef: React.RefObject<MouseState>;
-}
+import type { OverlayCanvasProps } from './OverlayCanvas.type';
 
 const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -69,7 +67,6 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
         drawFallHoleSpawns(dc, fallHoleSpawns, activeScreenIndex, drawResults);
       }
       drawPitStripes(dc, drawResults);
-      // Annotations last so locks/triggers/exits sit above the reachability art.
       if (annotations.length) drawAnnotations(dc, annotations, hiddenKinds);
       drawPlayerDebug(dc, vp, wasmGetLiveSprites());
 
@@ -80,21 +77,23 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
     return () => cancelAnimationFrame(rafRef.current);
   }, [visible, result, results, connections, fallHoleSpawns, crossings, annotations, hiddenKinds, width, height, gameRunning, activeScreenIndex, isIndoors, roomIndex, layer1ReachableOverride, mouseStateRef, setLockedPath]);
 
+  const canvasStyle = useMemo(() => ({
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width,
+    height,
+    pointerEvents: 'none' as const,
+    zIndex: 5,
+  }), [width, height]);
+
   return (
     <Canvas
       ref={canvasRef}
       width={width}
       height={height}
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width,
-        height,
-        pointerEvents: 'none',
-        zIndex: 5,
-      }}
+      style={canvasStyle}
     />
   );
 };

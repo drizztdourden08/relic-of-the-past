@@ -8,7 +8,6 @@ const S: Record<string, CSSProperties> = {
   gold: { color: 'var(--c-gold)' },
 };
 
-/** How to drive the overlay. Sits top-left, out of the way of the legends. */
 const PathControlsLegend = () => {
   return (
     <CollapsiblePanel title="controls">

@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind logic */
-/** Maps a mouse event to a 64×64 tile (row,col) within the active screen. */
 import type React from 'react';
+import { GRID_SIZE } from '@shared/game/navigation/types';
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo } from '../../../../../../../lib/game';
 import type { GridPos } from './navigation-overlay.type';
 import { screenOriginFor } from '@app/lib/game/flood';
 import { viewOrigin } from '@app/lib/game/bridge/view-origin';
+import { TILE_PX } from './pathfinding/pathfinding.constants';
 
 const mouseEventToTile = (
   e: React.MouseEvent<HTMLDivElement>,
@@ -19,10 +20,8 @@ const mouseEventToTile = (
   const rect = e.currentTarget.getBoundingClientRect();
   const mx = e.clientX - rect.left;
   const my = e.clientY - rect.top;
-  const snesW = vp.snesWidth;
-  const snesH = vp.snesHeight;
-  const scaleX = width / snesW;
-  const scaleY = height / snesH;
+  const scaleX = width / vp.snesWidth;
+  const scaleY = height / vp.snesHeight;
   const snesX = mx / scaleX;
   const snesY = my / scaleY;
   const { viewLeft, viewTop } = viewOrigin(vp);
@@ -31,9 +30,9 @@ const mouseEventToTile = (
   const { x: screenWorldX, y: screenWorldY } = screenOriginFor({
     isIndoors, linkX: vp.linkX, linkY: vp.linkY, screenIndex: result.screenIndex,
   });
-  const col = Math.floor((worldX - screenWorldX) / 8);
-  const row = Math.floor((worldY - screenWorldY) / 8);
-  if (row < 0 || row >= 64 || col < 0 || col >= 64) return null;
+  const col = Math.floor((worldX - screenWorldX) / TILE_PX);
+  const row = Math.floor((worldY - screenWorldY) / TILE_PX);
+  if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE) return null;
   return { row, col };
 };
 

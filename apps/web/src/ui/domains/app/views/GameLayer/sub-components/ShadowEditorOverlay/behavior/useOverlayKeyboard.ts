@@ -1,21 +1,11 @@
 /* @layer renderer-components @kind hook */
 import { useEffect } from 'react';
-import type { MutableRefObject } from 'react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
 import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
-import type { ShadowCastingProject } from '@shared/types/shadow-casting';
-import { screenIdFromVp } from './coords';
-import type { Vp } from './coords';
+import { screenIdFromVp } from './screen-id-from-vp';
+import type { OverlayKeyboardArgs } from './overlay.type';
 
-interface Args {
-  open: boolean;
-  loadProject: (p: ShadowCastingProject) => void;
-  vpRef: MutableRefObject<Vp | null>;
-}
-
-/** Loads the project on open and wires editor keyboard shortcuts (undo/redo/
- *  delete/save/escape) while the editor is open. */
-const useOverlayKeyboard = (a: Args): void => {
+const useOverlayKeyboard = (a: OverlayKeyboardArgs): void => {
   const { open, loadProject, vpRef } = a;
 
   useEffect(() => {

@@ -1,57 +1,21 @@
 /* @layer renderer-components @kind logic */
 import type { MouseEvent } from 'react';
-import type { MutableRefObject, RefObject } from 'react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
-import type { HeightmapElement, LightSource } from '@shared/types/shadow-casting';
-import { screenIdFromVp, displayToWorld, getCanvasPos } from './coords';
-import type { Vp, Point } from './coords';
+import { screenIdFromVp } from './screen-id-from-vp';
+import { displayToWorld } from './display-to-world';
+import { getCanvasPos } from './canvas-pos';
 import { hitTest } from './hittest';
-import type { ScreenData } from './hittest';
-import { genId, createShapeFromDrag, finalizeFreehand } from './shapes';
-import { applyHeightmapGizmo, applyLightGizmo } from './gizmo-drag';
+import { genId } from './gen-id';
+import { createShapeFromDrag } from './create-shape-from-drag';
+import { finalizeFreehand } from './finalize-freehand';
+import { applyHeightmapGizmo } from './heightmap-gizmo-drag';
+import { applyLightGizmo } from './light-gizmo-drag';
 import { detectHover } from './hover';
+import { DRAG_START_THRESHOLD } from './overlay.constants';
 import type { GizmoStart } from '../ShadowEditorOverlay.type';
-import type { GizmoPart } from '../../shadow-editor/gizmos';
+import type { ElementType, HandlerDeps, PointerContext, ScreenData } from './overlay.type';
 
-type Tool = 'select' | 'polygon' | 'shape-light' | 'point-light' | 'freehand';
-
-interface HandlerDeps {
-  canvasRef: RefObject<HTMLCanvasElement | null>;
-  vpRef: MutableRefObject<Vp | null>;
-  mouseDisplayRef: MutableRefObject<Point | null>;
-  hoveredGizmoRef: MutableRefObject<GizmoPart | null>;
-  activeGizmoRef: MutableRefObject<GizmoPart | null>;
-  gizmoStartRef: MutableRefObject<GizmoStart | null>;
-  dragMovedRef: MutableRefObject<boolean>;
-  width: number;
-  height: number;
-  activeTool: Tool;
-  selectedElementId: string | null;
-  isDragging: boolean;
-  dragStartWorld: Point | null;
-  isDrawingFreehand: boolean;
-  freehandPoints: Point[];
-  polygonSides: number;
-  polygonCornerRadius: number;
-  defaultSmoothing: number;
-  defaultLightIntensity: number;
-  defaultLightRadius: number;
-  getScreenData: (screenId: number) => ScreenData;
-  addHeightmapElement: (screenId: number, el: HeightmapElement) => void;
-  addLight: (screenId: number, light: LightSource) => void;
-  setSelectedElement: (id: string | null, type: 'heightmap' | 'light' | null) => void;
-  updateHeightmapElement: (screenId: number, id: string, patch: Partial<HeightmapElement>) => void;
-  updateLight: (screenId: number, id: string, patch: Partial<LightSource>) => void;
-  getEffectiveHeight: () => number;
-  addFreehandPoint: (p: Point) => void;
-  clearFreehandPoints: () => void;
-  setIsDrawingFreehand: (v: boolean) => void;
-  setIsDragging: (v: boolean) => void;
-  setDragStartWorld: (p: Point | null) => void;
-  setCursor: (c: string) => void;
-}
-
-const snapshot = (sd: ScreenData, type: 'heightmap' | 'light', id: string): GizmoStart | null => {
+const snapshot = (sd: ScreenData, type: ElementType, id: string): GizmoStart | null => {
   if (type === 'heightmap') {
     const el = sd.heightmap.find((h) => h.id === id);
     return el ? { x: el.shape.x, y: el.shape.y, width: el.shape.width, height: el.shape.height, rotation: el.shape.rotation ?? 0 } : null;
@@ -61,7 +25,7 @@ const snapshot = (sd: ScreenData, type: 'heightmap' | 'light', id: string): Gizm
 };
 
 const createMouseHandlers = (d: HandlerDeps) => {
-  const ctx = (e: MouseEvent): { vp: Vp; pos: Point; world: Point; screenId: number } | null => {
+  const ctx = (e: MouseEvent): PointerContext | null => {
     const canvas = d.canvasRef.current, vp = d.vpRef.current;
     if (!canvas || !vp) return null;
     const pos = getCanvasPos(e.clientX, e.clientY, canvas);
@@ -130,7 +94,7 @@ const createMouseHandlers = (d: HandlerDeps) => {
       const screenId = screenIdFromVp(vp), sd = d.getScreenData(screenId), gizmoStart = d.gizmoStartRef.current;
       if (!gizmoStart) return;
       const dx = world.x - d.dragStartWorld.x, dy = world.y - d.dragStartWorld.y;
-      if (!d.dragMovedRef.current && (Math.abs(dx) > 2 || Math.abs(dy) > 2)) d.dragMovedRef.current = true;
+      if (!d.dragMovedRef.current && (Math.abs(dx) > DRAG_START_THRESHOLD || Math.abs(dy) > DRAG_START_THRESHOLD)) d.dragMovedRef.current = true;
       if (!d.dragMovedRef.current) return;
       if (store.selectedType === 'heightmap') {
         const el = sd.heightmap.find((h) => h.id === d.selectedElementId);
@@ -201,5 +165,4 @@ const createMouseHandlers = (d: HandlerDeps) => {
   return { handleMouseDown, handleMouseUp, handleMouseMove, handleDoubleClick, handleContextMenu };
 };
 
-export type { HandlerDeps, Tool };
 export { createMouseHandlers };

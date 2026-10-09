@@ -1,30 +1,22 @@
 /* @layer renderer-components @kind component */
-import { useRef, useEffect, useState, useCallback } from 'react';
-import type { CSSProperties } from 'react';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import type React from 'react';
 import { Box } from '@ds/primitives/Box';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
-import type { FloodFillResult } from '@shared/game/navigation';
-import type { MouseState } from './navigation-overlay.type';
 import { TileTooltipContent, type TooltipData } from './tooltip';
 import { mouseEventToTile } from './tile-inspector-coords';
-import { useRectSelection } from './tile-inspector-rect-selection';
-import { buildSpriteInfo, computePathTooltipPosition } from './tile-inspector-tooltip';
+import { useRectSelection } from './behavior/useRectSelection';
+import { buildSpriteInfo } from './tile-inspector-tooltip/build-sprite-info';
+import { computePathTooltipPosition } from './tile-inspector-tooltip/compute-path-tooltip-position';
 import { buildTooltipLayers } from './tile-inspector-classification';
 import { viewOrigin } from '@app/lib/game/bridge/view-origin';
+import {
+  COPIED_TOAST, DEBUG_TOOLTIP_TOP, SCREEN_GRID_MASK, SCREEN_PX, SCREEN_TILES, TILE_PX, TOOLTIP_OFFSET_X, TOOLTIP_OFFSET_Y,
+} from './TileInspector.constants';
+import type { DebugHoverWindow, TileInspectorProps } from './TileInspector.type';
 
-const COPIED_TOAST: CSSProperties = { position: 'absolute', left: '50%', top: 8, transform: 'translateX(-50%)', background: 'var(--c-green)', color: 'var(--c-text)', padding: '4px 12px', borderRadius: 'var(--r-sm)', fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold', pointerEvents: 'none', zIndex: 8 };
-
-interface TileInspectorProps {
-  width: number;
-  height: number;
-  result: FloodFillResult;
-  overworldScreenIndex: number;
-  roomIndex: number;
-  isIndoors: boolean;
-  onHoverTile?: (row: number, col: number) => void;
-  pathPreviewState?: MouseState;
-}
+const outsideScreen = (row: number, col: number): boolean => row < 0 || row >= SCREEN_TILES || col < 0 || col >= SCREEN_TILES;
 
 const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex, isIndoors, onHoverTile, pathPreviewState }: TileInspectorProps) => {
   const equipment = useGameUIStore(s => s.equipment);
@@ -46,23 +38,24 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
   }, []);
 
   useEffect(() => {
-    (window as any).__debugHoverTile = (col: number, row: number) => {
+    const debugWindow = window as DebugHoverWindow;
+    debugWindow.__debugHoverTile = (col: number, row: number) => {
       const vp = vpRef.current;
       if (!vp || !result.attrGrid) return false;
-      if (row < 0 || row >= 64 || col < 0 || col >= 64) return false;
+      if (outsideScreen(row, col)) return false;
 
       const { roomTypeLabel, layers } = buildTooltipLayers({
         result, row, col, roomIndex, isIndoors, rawPalaceIndexX2: palaceIndex,
         reachableByLayer: result.reachableByLayer, equipment, inventoryItems,
       });
       setTooltip({
-        x: width / 2, y: 40, row, col, roomTypeLabel, layers,
+        x: width / 2, y: DEBUG_TOOLTIP_TOP, row, col, roomTypeLabel, layers,
         pathReqs: result.reqGrid?.[row]?.[col] ?? '',
         bfsBlocked: false, spriteInfo: [],
       });
       return true;
     };
-    return () => { delete (window as any).__debugHoverTile; };
+    return () => { delete debugWindow.__debugHoverTile; };
   }, [result, width, height, roomIndex, isIndoors, palaceIndex, equipment, inventoryItems]);
 
   const mouseToTile = useCallback(
@@ -74,6 +67,11 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
     mouseToTile, result, width, height, isIndoors, vpRef,
   });
 
+  const clearHover = useCallback(() => {
+    setTooltip(null);
+    if (onHoverTile) onHoverTile(-1, -1);
+  }, [onHoverTile]);
+
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (rectSel?.active) {
       handleRectMouseMove(e);
@@ -82,32 +80,26 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
 
     const vp = vpRef.current;
     if (!vp || !result.attrGrid) {
-      setTooltip(null);
-      if (onHoverTile) onHoverTile(-1, -1);
+      clearHover();
       return;
     }
 
     const rect = e.currentTarget.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
-    const snesW = vp.snesWidth;
-    const snesH = vp.snesHeight;
-    const scaleX = width / snesW;
-    const scaleY = height / snesH;
-    const snesX = mx / scaleX;
-    const snesY = my / scaleY;
+    const scaleX = width / vp.snesWidth;
+    const scaleY = height / vp.snesHeight;
     const { viewLeft, viewTop } = viewOrigin(vp);
-    const worldX = snesX + viewLeft;
-    const worldY = snesY + viewTop;
-    const screenWorldX = isIndoors ? (Math.floor(vp.linkX / 512) * 512) : ((result.screenIndex & 7) * 512);
-    const screenWorldY = isIndoors ? (Math.floor(vp.linkY / 512) * 512) : (((result.screenIndex >> 3) & 7) * 512);
+    const worldX = mx / scaleX + viewLeft;
+    const worldY = my / scaleY + viewTop;
+    const screenWorldX = isIndoors ? (Math.floor(vp.linkX / SCREEN_PX) * SCREEN_PX) : ((result.screenIndex & SCREEN_GRID_MASK) * SCREEN_PX);
+    const screenWorldY = isIndoors ? (Math.floor(vp.linkY / SCREEN_PX) * SCREEN_PX) : (((result.screenIndex >> 3) & SCREEN_GRID_MASK) * SCREEN_PX);
 
-    const tileCol = Math.floor((worldX - screenWorldX) / 8);
-    const tileRow = Math.floor((worldY - screenWorldY) / 8);
+    const tileCol = Math.floor((worldX - screenWorldX) / TILE_PX);
+    const tileRow = Math.floor((worldY - screenWorldY) / TILE_PX);
 
-    if (tileRow < 0 || tileRow >= 64 || tileCol < 0 || tileCol >= 64) {
-      setTooltip(null);
-      if (onHoverTile) onHoverTile(-1, -1);
+    if (outsideScreen(tileRow, tileCol)) {
+      clearHover();
       return;
     }
 
@@ -126,7 +118,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
           scaleX, scaleY, mx, my, width, height, result,
           lockTarget: !!pathPreviewState?.lockTarget,
         })
-      : { tipX: mx + 14, tipY: my - 60 };
+      : { tipX: mx + TOOLTIP_OFFSET_X, tipY: my + TOOLTIP_OFFSET_Y };
 
     const { roomTypeLabel, layers } = buildTooltipLayers({
       result, row: tileRow, col: tileCol, roomIndex, isIndoors, rawPalaceIndexX2: palaceIndex,
@@ -140,7 +132,26 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
       bfsBlocked, spriteInfo,
     });
     if (onHoverTile) onHoverTile(tileRow, tileCol);
-  }, [width, height, result, overworldScreenIndex, roomIndex, isIndoors, palaceIndex, equipment, inventoryItems, onHoverTile, pathPreviewState, rectSel?.active, handleRectMouseMove]);
+  }, [width, height, result, overworldScreenIndex, roomIndex, isIndoors, palaceIndex, equipment, inventoryItems, onHoverTile, pathPreviewState, rectSel?.active, handleRectMouseMove, clearHover]);
+
+  const selecting = !!rectSel?.active;
+  const inspectorStyle = useMemo(() => ({
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width, height,
+    zIndex: 6,
+    cursor: selecting ? 'crosshair' : undefined,
+  }), [width, height, selecting]);
+  const selectionStyle = useMemo(() => (selectionRect ? {
+    position: 'absolute' as const,
+    left: selectionRect.x, top: selectionRect.y,
+    width: selectionRect.w, height: selectionRect.h,
+    border: '2px solid var(--c-gold)',
+    background: 'var(--c-gold-soft)',
+    pointerEvents: 'none' as const, zIndex: 7,
+  } : undefined), [selectionRect]);
 
   return (
     <Box
@@ -148,27 +159,10 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
       onMouseMove={handleMouseMove}
       onMouseDown={handleRectMouseDown}
       onMouseUp={handleRectMouseUp}
-      onMouseLeave={() => { setTooltip(null); if (onHoverTile) onHoverTile(-1, -1); }}
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width, height,
-        zIndex: 6,
-        cursor: rectSel?.active ? 'crosshair' : undefined,
-      }}
+      onMouseLeave={clearHover}
+      style={inspectorStyle}
     >
-      {selectionRect && (
-        <Box style={{
-          position: 'absolute',
-          left: selectionRect.x, top: selectionRect.y,
-          width: selectionRect.w, height: selectionRect.h,
-          border: '2px solid var(--c-gold)',
-          background: 'var(--c-gold-soft)',
-          pointerEvents: 'none', zIndex: 7,
-        }} />
-      )}
+      {selectionRect && <Box style={selectionStyle} />}
       {copied && rectSel && !rectSel.active && (
         <Box style={COPIED_TOAST}>
           Tile data copied to clipboard! ({selectionRect?.tileCount} tiles)

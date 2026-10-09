@@ -1,32 +1,12 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useRef } from 'react';
-import type { MutableRefObject, RefObject } from 'react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
 import { wasmGetViewportInfo } from '@app/lib/game';
 import { drawOverlay } from './render';
-import type { Vp, Point } from './coords';
-import type { GizmoPart } from '../../shadow-editor/gizmos';
-import type { ScreenData } from './hittest';
+import { OVERWORLD_MODULE } from '../../../GameLayer.constants';
+import type { OverlayRenderArgs } from './overlay.type';
 
-interface Args {
-  canvasRef: RefObject<HTMLCanvasElement | null>;
-  vpRef: MutableRefObject<Vp | null>;
-  mouseDisplayRef: MutableRefObject<Point | null>;
-  hoveredGizmoRef: MutableRefObject<GizmoPart | null>;
-  activeGizmoRef: MutableRefObject<GizmoPart | null>;
-  open: boolean;
-  gameRunning: boolean;
-  width: number;
-  height: number;
-  selectedElementId: string | null;
-  freehandPoints: Point[];
-  isDrawingFreehand: boolean;
-  project: unknown;
-  getScreenData: (screenId: number) => ScreenData;
-}
-
-/** Drives the requestAnimationFrame loop that draws the editor overlay. */
-const useOverlayRender = (a: Args): void => {
+const useOverlayRender = (a: OverlayRenderArgs): void => {
   const rafRef = useRef<number>(0);
   const { canvasRef, vpRef, mouseDisplayRef, hoveredGizmoRef, activeGizmoRef } = a;
   const { open, gameRunning, width, height, selectedElementId, freehandPoints, isDrawingFreehand, project, getScreenData } = a;
@@ -44,7 +24,7 @@ const useOverlayRender = (a: Args): void => {
       const vp = wasmGetViewportInfo();
       vpRef.current = vp;
       ctx.clearRect(0, 0, width, height);
-      if (!vp || vp.locationModule !== 9) { rafRef.current = requestAnimationFrame(draw); return; }
+      if (!vp || vp.locationModule !== OVERWORLD_MODULE) { rafRef.current = requestAnimationFrame(draw); return; }
       if (useShadowEditorStore.getState().previewMode) { rafRef.current = requestAnimationFrame(draw); return; }
       drawOverlay(ctx, vp, {
         width, height, selectedElementId, freehandPoints, isDrawingFreehand,

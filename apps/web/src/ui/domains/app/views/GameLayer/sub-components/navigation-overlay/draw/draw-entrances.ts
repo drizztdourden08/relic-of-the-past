@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
 import type { ScreenCrossing, ScreenCrossings } from '@shared/game/navigation';
 import { markerCrossings } from '@app/lib/crossing-sections';
-import type { DrawContext } from './draw-context';
-import { EDGE_COLORS } from '../navigation-overlay.type';
+import type { DrawContext } from './draw.type';
+import { EDGE_COLORS } from '../navigation-overlay.constants';
 import { crossingIcon } from '../../../../../../../../lib/entrance-icons';
 
 const iconImageCache = new Map<string, HTMLImageElement>();
@@ -20,7 +20,6 @@ const getIconImageFor = (crossing: ScreenCrossing): HTMLImageElement | null => {
   return img;
 };
 
-/** Markers on the tile the crossings facade placed each crossing on. */
 const drawEntrances = (dc: DrawContext, crossings: readonly ScreenCrossings[], isIndoors: boolean): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 

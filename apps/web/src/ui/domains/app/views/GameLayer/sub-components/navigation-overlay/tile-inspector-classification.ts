@@ -1,35 +1,18 @@
 /* @layer renderer-components @kind logic */
-/**
- * Builds one hover's tooltip data: room context and side-tables resolved ONCE, then `classifyTile`
- * per shown layer. Nothing here re-derives a fact classifyTile already owns.
- */
 import { classifyTile, resolveRoomContext, roomTypeLabel } from '@shared/game/navigation/tile-classification';
-import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import type { SimDoor } from '@shared/game/simulation';
 import { getRoomDoors } from '@app/lib/game/simulator/interactables';
 import { wasmGetReplacementTileState, wasmGetChestLocations } from '@app/lib/game';
-import { getLayerDisplayMode, getLockedLayer } from './tooltip/layer-display';
-import type { LayerTileData, TooltipLayers } from './tooltip/types';
+import { getLayerDisplayMode } from './tooltip/layer-display/get-layer-display-mode';
+import { getLockedLayer } from './tooltip/layer-display/get-locked-layer';
+import type { LayerTileData, TooltipLayers } from './tooltip/tooltip.type';
 import { computeCanPass } from './tile-inspector-tooltip';
+import type { BuildTooltipLayersParams, TooltipLayersBuild } from './tile-inspector-classification.type';
 
-interface BuildTooltipLayersParams {
-  result: FloodFillResult;
-  row: number;
-  col: number;
-  roomIndex: number;
-  isIndoors: boolean;
-  /** Raw `cur_palace_index_x2` (0xff sentinel), the same shape resolveRoomContext expects. */
-  rawPalaceIndexX2: number;
-  reachableByLayer?: [ReachState[][], ReachState[][]];
-  equipment: { gloves: number; boots: unknown; flippers: unknown };
-  inventoryItems: ArrayLike<number>;
-}
+const hasOwnContent = (attr: number, reach: ReachState): boolean => attr !== 0x00 || reach !== 0;
 
-/** The dual-mode fallback gate. True once a layer's own attr or reach carries real content. */
-const hasContent = (attr: number, reach: ReachState): boolean => attr !== 0x00 || reach !== 0;
-
-const buildTooltipLayers = (params: BuildTooltipLayersParams): { roomTypeLabel: string; layers: TooltipLayers } => {
+const buildTooltipLayers = (params: BuildTooltipLayersParams): TooltipLayersBuild => {
   const { result, row, col, roomIndex, isIndoors, rawPalaceIndexX2, reachableByLayer, equipment, inventoryItems } = params;
 
   const room = resolveRoomContext(isIndoors, rawPalaceIndexX2);
@@ -71,7 +54,7 @@ const buildTooltipLayers = (params: BuildTooltipLayersParams): { roomTypeLabel: 
     };
   }
 
-  if (!hasContent(a0, r0) || !hasContent(a1, r1)) return { roomTypeLabel: label, layers: single() };
+  if (!hasOwnContent(a0, r0) || !hasOwnContent(a1, r1)) return { roomTypeLabel: label, layers: single() };
 
   return {
     roomTypeLabel: label,

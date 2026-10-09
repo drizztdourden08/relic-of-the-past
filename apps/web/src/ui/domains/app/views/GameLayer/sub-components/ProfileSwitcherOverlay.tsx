@@ -4,16 +4,9 @@ import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { InputGlyph } from '../../../compounds/InputGlyph';
 import { resolveFunctionMappingIcon } from '../../../../../../lib/game';
-import type { FunctionMapping, InputProfile } from '@shared/types/controls';
+import type { FunctionMapping } from '@shared/types/controls';
+import type { ProfileSwitcherOverlayProps } from './ProfileSwitcherOverlay.type';
 import './ProfileSwitcherOverlay.css';
-
-interface ProfileSwitcherOverlayProps {
-  open: boolean;
-  profiles: InputProfile[];
-  activeId: string | null;
-  prevMapping: FunctionMapping | null;
-  nextMapping: FunctionMapping | null;
-}
 
 const hintGlyph = (m: FunctionMapping | null) =>
   m ? <InputGlyph binding={m.binding} icon={m.icon ?? resolveFunctionMappingIcon(m)} showLabel={false} /> : null;

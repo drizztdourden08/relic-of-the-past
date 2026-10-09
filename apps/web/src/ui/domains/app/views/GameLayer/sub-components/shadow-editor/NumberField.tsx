@@ -1,20 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useRef, useState, useEffect } from 'react';
+import type React from 'react';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
+import type { NumberFieldProps } from './NumberField.type';
 import './NumberField.css';
-
-interface NumberFieldProps {
-  value: number;
-  onChange: (value: number) => void;
-  label?: string;
-  icon?: string;
-  min?: number;
-  max?: number;
-  step?: number;
-  suffix?: string;
-}
 
 const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix }: NumberFieldProps) => {
   const [editing, setEditing] = useState(false);
@@ -46,7 +37,6 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
     }
   }, [editing]);
 
-  // Scrub on drag
   const scrubRef = useRef({ startX: 0, startVal: 0, active: false });
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
@@ -69,6 +59,15 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
     scrubRef.current.active = false;
   }, []);
 
+  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value), []);
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') commit();
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setEditing(false);
+    }
+  }, [commit]);
+
   return (
     <Box className="number-field">
       {(icon || label) && (
@@ -79,14 +78,9 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
           ref={inputRef}
           className="number-field__input"
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={handleTextChange}
           onBlur={commit}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') commit();
-            // preventDefault marks the key consumed here, so the dismiss stack
-            // leaves the surface this field sits on alone.
-            if (e.key === 'Escape') { e.preventDefault(); setEditing(false); }
-          }}
+          onKeyDown={handleKeyDown}
         />
       ) : (
         <Text
