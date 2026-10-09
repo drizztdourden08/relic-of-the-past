@@ -1,26 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * The lattice's selection, and the one drag in the editor.
- *
- * A CLICK WRITES NOTHING. That is the bug this amendment was opened for: §48
- * let a plain click on a cell commit an armed placement, so picking a cell to
- * insert a column beside it MOVED a child instead. There is no commit here any
- * more (no `commitAt`, no `commitSpan`, no `originAt`), and a click, a
- * `{mod}`-click, a `Shift`-click and a drag across cells all leave the document
- * byte-identical. What a press changes is which rows the toolbar offers and
- * which rectangle the stage echoes.
- *
- * THE DRAG SELECTS, IT NEVER MOVES. Nothing is written while the pointer travels
- * and nothing is written when it is released; the release only ends the
- * rectangle.
- *
- * EVERY MODIFIER GOES THROUGH `isPrimaryModifier` (§43.6), never a literal
- * `ctrlKey`, so `Cmd` works on a Mac and the legend beneath cannot disagree with
- * the key that actually does it.
- *
- * `Escape` REGISTERS ON THE DISMISS STACK AT `popover` (§33), so it clears the
- * selection and leaves the editor's own layer standing behind it.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDismissable } from '@ds/primitives/Portal';
 import { isPrimaryModifier } from '@shared/platform';
@@ -80,13 +58,8 @@ const useGridSelection = (containerId: string) => {
     setSelection({ kind: 'cells', cells: rectCells(from, cell), anchor: from });
   }, []);
 
-  /** The release ends the rectangle and does nothing else, because there is no
-   *  commit left for a pointer to claim. */
   const endDrag = useCallback((): void => { dragFrom.current = null; }, []);
 
-  // THE PICK RULE IS SHARED WITH THE FLEX EDITOR'S CELLS (§58). A strip of
-  // numbered things answers a press the same way wherever it is drawn, so
-  // `behavior/index-selection.ts` owns it and neither copy can drift.
   const selectTrack = useCallback((axis: TrackAxis, index: number, event: ReactPointerEvent): void => {
     dragFrom.current = null;
     setSelection((current) => {
