@@ -49,7 +49,6 @@ const LW_OVERWORLD_DESERT_CHECKS: CheckRecord[] = [
     name: 'Bombos Tablet',
     vanillaItemIds: ['item-016'],
     scope: 'world-item',
-    // The bit above is a seed's own; a plain file answers from the medallion itself.
     requirements: canRetrieveTablet,
     fallback: { itemId: 'item-016' },
     review: {

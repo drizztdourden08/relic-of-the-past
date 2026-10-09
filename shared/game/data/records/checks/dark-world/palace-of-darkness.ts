@@ -192,7 +192,6 @@ const DW_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-156',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 25 },
     kind: 'prize',
     screenId: 'screen-373',

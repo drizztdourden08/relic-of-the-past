@@ -121,39 +121,6 @@ const LW_OVERWORLD_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     vanillaItemIds: ['item-024'],
     scope: 'world-item',
   },
-  // The Happiness Pond's counter-bump slots (sprite_main.c:11416
-  // Sprite_HappinessPond, dungeon_room_index 21 = the low byte of room
-  // 0x115); no chest/NPC table entry exists for any of them, so completion reads
-  // the save-block byte the purchase writes (variables.h:1103-1104).
-  //
-  // The pond sells SEVEN upgrades per family, not one: the byte counts 0-7 and each
-  // purchase adds a tier, so a row per tier is what the player actually collects and
-  // what makes 3/7 legible in the tracker. Only the FIRST of each family is a location
-  // of the randomizer world (its capacity-shuffle fairy slot holds one pool item), which is why
-  // only those two carry the standard name the crosswalk needs
-  // (check-name-overrides.data.ts) and the other twelve appear on a vanilla profile
-  // alone: placementCheckRecords drops any check the placement does not name.
-  //
-  // Each family is one ladder of the fairy's, numbered from one, so the two read as
-  // what they are and never as a side of a pond. The family word is load-bearing: the
-  // pond's own prize rungs are numbered "<fairy> N" with nothing between, so a tier
-  // named that way would be a second location answering to a rung's name.
-  // The Happiness Pond's counter-bump slots (sprite_main.c:11416
-  // Sprite_HappinessPond, dungeon_room_index 21 = the low byte of room
-  // 0x115); no chest/NPC table entry exists for any of them, so completion reads
-  // the save-block byte the purchase writes (variables.h:1103-1104).
-  //
-  // The pond sells SEVEN upgrades per family, not one: the byte counts 0-7 and each
-  // purchase adds a tier, so a row per tier is what the player actually collects and
-  // what makes 3/7 legible in the tracker. Only the FIRST of each family is a location
-  // of the randomizer world (its capacity-shuffle fairy slot holds one pool item), so the
-  // other twelve appear on a normal profile alone: placementCheckRecords drops any check
-  // the placement does not name.
-  //
-  // Each family is one ladder of the fairy's, numbered from one, so the two read as
-  // what they are and never as a side of a pond. The family word is load-bearing: the
-  // pond's own prize rungs are numbered "<fairy> N" with nothing between, so a tier
-  // named that way would be a second location answering to a rung's name.
   {
     id: 'check-273',
     gameId: { bufferIndex: 23, compare: 'gte', value: 1 },
@@ -298,8 +265,6 @@ const LW_OVERWORLD_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     name: 'Hylia Fairy Arrows 7',
     vanillaItemIds: ['item-129'],
   },
-  // The cave shelf by the lake. It shares room 0x0112 with the dark mountain cave's door, so
-  // the overworld area the player walked in from tells the two apart (CheckGameId.shopSeam).
   {
     id: 'check-641',
     gameId: { shopSeam: { roomId: 274, entrance: 88, owArea: 53, subtype: 7 } },

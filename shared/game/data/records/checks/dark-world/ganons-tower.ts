@@ -471,9 +471,6 @@ const DW_GANONS_TOWER_CHECKS: CheckRecord[] = [
     tags: ['tag-083'],
     review: { status: 'accepted', source: 'person', at: '2026-08-26T03:06:52.923Z' },
   },
-  // Two chests the native table holds that no record named. Each is the only chest of its
-  // room, so the room and the slot are the whole key, and the item byte is the cartridge's.
-  // Both are 'fixed': a real pickup a player opens, and one the seed never fills.
   {
     id: 'check-657',
     gameId: { roomId: 5, chestIndex: 0 },

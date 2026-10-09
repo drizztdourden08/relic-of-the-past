@@ -52,6 +52,132 @@ under `shared/game/data/`. The records hold the data; this page holds the why.
   `dung_num_bigkey_locks_x2`, the counter the big key unlock checks. It appears only in Zelda's cell
   in Hyrule Castle, so the big key that clears it is that dungeon's.
 
+## records/checks (item checks)
+
+- A dungeon's reward pickup has its own ledger bit, separate from the boss.
+- Some pickups have no flag in the game: it tests the item itself (the mushroom, the flute spot, the
+  library book). Their rows read the same way on a plain file, through `fallback`. The mushroom
+  leaves the inventory at the witch's, so her powder and her own check also count. The mushroom
+  spot stays empty only while the powder is held (`SpritePrep_Mushroom`); until then it grows back,
+  so the taken row reads "not now".
+- Some gifts have no flag either (the wishing pond, the tablets, the flute boy). A seed has its own
+  bit for them in `gameId`; a plain file answers from the item held, or from the item that later
+  replaces it (a better shield, the flute that replaces the shovel).
+- A check whose vanilla item has a stand in (the lamp, the blue boomerang) pays out once the real
+  item is held, through the item's `aliasOf`.
+- The lumberjack tree's heart piece sits on top of the tree, reached by dashing into it once
+  Agahnim has fallen. The door at its foot leads under the ledge.
+- Paradox Cave: the five chests are the upper room; the two behind the bombable wall by the lowest
+  mouth are the lower room.
+- The smiths temper the sword once the two of them are back together (the story's own record).
+- The digging game lends a shovel for the round, so it needs none.
+- The Brewery and the chest game share room 262, told apart by chest bit (0x10 against 0x400). The
+  chest game row is the top prize of the once only minigame roll (`OpenMiniGameChest`).
+- There is no "Blacksmith Ruins Rupees" pickup on the cartridge: overworld 0x63 carries no sprite,
+  and the bushes on the ruins (0x62) hide green rupees that come back.
+- Two Ganon's Tower chests (check 657 on) are in the native chest table but in no reference: each is
+  the only chest of its room, so room and slot are the whole key. Both are fixed, real pickups no
+  seed fills.
+- Happiness Pond (room 0x115): each upgrade family sells seven tiers. The save byte counts 0 to 7
+  (variables.h), and there is no chest or sprite table entry, so completion reads that byte. Only the
+  first tier of each family is a location of the randomizer world; the other twelve show on a normal
+  profile alone, because placement drops any check it does not name. Each family is numbered as one
+  ladder of the fairy's, and the family word in the name matters: the pond's own prize rungs are
+  named "fairy N", so a tier named that way would collide with a rung.
+- The cursed pond in the dark world uses the same sprite (0x72) and grant as the Waterfall Fairy,
+  one room over; the room tells them apart.
+- Shops (`gameId.shopSeam`): room 0x10F is one shelf room that four dark world doors open onto (the
+  lake, the lumberjacks, and two in the village), and room 0x112 is shared by the lake cave and the
+  dark mountain cave. In both, the overworld area the player walked in from tells the shelves apart.
+  A room that holds one shop alone (the village shelf, the shield shop at 0x110) names it by room.
+  The mountain shelf reached by an inner stair has no overworld door of its own, so its room names
+  it.
+- The witch's three cauldrons are a shop of their own sprites, listed in the order the handler
+  dispatches their subtypes, which is not where each pot stands. The powder trade in that room is a
+  separate check.
+- The bomb shop's refill is sold from its own sprite. Subtype 2 in the same room is the story bomb,
+  which starts a follower instead of handing an item over, so it is not a slot.
+
+## checks/ and records/checks/events
+
+- Events are written as numbered rows (`EventSpec`, in `checks/event-spec.type.ts`), never as full
+  records. The checks loader (`checks/checks.constants.ts`) turns each row into a record with
+  `eventRecord`, and passes a row that is already a full `CheckRecord` through untouched, because
+  the dev editor's writer can append one to an event file. The loader then sorts every check by id:
+  the derived pass reads the list in order, and a derived record only names lower numbers.
+- An event's id is its number plus 300 (`check-300` upward, after the item checks). The number
+  blocks: 0 to 59 the story and its statuses (`story.ts`), 60 to 199 ten per dungeon plus the
+  dungeons' extra stages (`dungeons/`), 200 to 307 the held items, fairies, areas, places and
+  combined rows (`world.ts`), 310 and up the overworld acts (`acts.ts`). Numbers 1, 4 and 5 are left
+  unused so the others keep their ids.
+- `event-screens.data.ts` and `event-regions.data.ts` are generated: the screen each event lists
+  under, and its region (the one its screen carries, or for a dungeon stage the wing its dungeon is
+  entered through; number 37 keeps the region the reference gives it). An event that stands for no
+  place (a held item, a status, a combined row) has no entry. The event names live in the rows, the
+  screen names in the screen records.
+- A dungeon stage event that happens in one room lists under that room (rooms by the number the
+  game reads, `event_receipts.c`), so it opens with the room and not at the front door. The two
+  Turtle Rock ledges outside its side doors are reached only from inside the dungeon.
+- The boss and prize ledger bits are indexed by palace, and the Skull Woods front entrances by
+  number. `checks/indexed-event-bits.constants.ts` builds those tables from the generated
+  `EVENT_BIT`, so the rows can read them as data (`BOSS_KILLED_BIT[2]`).
+- `EARLY_STORY_EVENTS` are the seven story moments the tracker recorded before the events' range
+  existed. They keep their old ids, so they are written as full records.
+- A story beat inside a dungeon files under it with an empty sub area, so it keeps its bare name:
+  the standard name orders the seed's locations, and a prefix would reorder the fill.
+- Story facts:
+  - The jail is the castle's big key door: the jailer's key opens it.
+  - Aginah: the game's own flag (progress flags 0x20) is set when his sprite first runs, on
+    entering the cave. The ledger bit is one of his lines on screen.
+  - "Bottle bought from the merchant" is named for the purchase; the man's own row is the item check.
+  - The smiths take whatever sword is in hand, none included; only a tempered one is refused, and a
+    seed lifts that. So the reunion is the whole requirement for tempering.
+  - The weathervane's overworld bit is written when the flute releases the bird. That is also the
+    flute's activation, and the randomizer's activated flute slot sits on this row. The activated
+    flute replaces the plain one, so either satisfies it.
+  - The floodgate lever has a ledger bit because the game erases its own dam bits on the next
+    overworld load.
+  - Three pegs behind a heavy rock, hammered in order, open the warp to the dark mountain top.
+  - "Dark World reached" counts the first step in from anywhere, the mountain warp as much as the
+    castle gate.
+  - The frog and smith rows carry the flag fields the simulator writes when it talks to the sprite
+    (`Smithy_Frog`, `Smithy_Homecoming`), found by sprite type.
+  - "Purple Chest found" is picking the chest up, before the smith opens it.
+  - The desert statues keep no flag: they step aside while a live flag is up, and it drops when the
+    desert screen is left. The ledger keeps that the prayer was ever said.
+  - Statuses are things true for a while. "Kakariko guards on alert" has an ever side (stage 2
+    reached); the other three have none, so they are `statusOnly`.
+  - Uncle (`check-002`) is found wounded and hands over his sword and shield; he survives.
+  - The throne room shelf needs Zelda following, since she pushes it with the player.
+  - The map marker stage keeps climbing after Sahasrahla's quest, so it is read as "at least".
+- Overworld acts open a cave mouth for good. The game writes each to the overworld event byte of
+  the area the mouth stands on, always the head of a large area: bit 0x20 when a staircase is
+  uncovered by lifting or dashing, bit 0x02 when a wall is bombed. Every area is the one the ROM's
+  secrets table names, and fourteen were checked against the saves of a real run.
+  - The desert and dark Death Mountain are large areas: the mouths sit on 0x31 and 0x46, the byte is
+    the head's. Kakariko too: the bomb hut sits on 0x20.
+  - The two rupee caves share one interior room; which area holds which name is not settled.
+  - The lumberjack tree falls on the exit from the first Agahnim fight, not on the dash.
+  - A dark world act needs the moon pearl: a bunny lifts nothing and sets nothing.
+- `world.ts`: the game keeps only the bomb count; the ledger keeps that a bomb was ever held. Room
+  0x10C is shared by the Hookshot fairy cave and the Mimic Cave; the game marks both quarters (0x0A)
+  as soon as the player walks in, so the far side of the water is recorded by the core from where the
+  player stands (`event_watch.c`). Two open regions are a pocket behind a rock on a screen anyone can
+  walk onto, so each is read from the cave the pocket leads into. The places block starts at 290 so
+  it does not run into the combined rows; "Path to Zora" is open country in front of the rock.
+- A Swamp Palace stage: the locked door at the top of the big chest room opens with the key under a
+  pot across the water in that room, a hookshot away (check 170). Everything north of it is behind it.
+- Hyrule Castle has no boss: its stages are the escape.
+
+## requirements/helpers.ts
+
+- No item record stands for "can use bombs". The first bomb pickup (`item-041`) stands in for it.
+- `canSeeInDarkRooms` is a rule of comfort: the game lets a player walk a dark room blind. The
+  tracker's resolver swaps this exact object for the lights the file accepts, or for nothing when
+  dark rooms are not asked to be lit, so it must stay one shared object. Read on its own it is the
+  lamp.
+- The medallion rules are the vanilla ones: Misery Mire wants Ether, Turtle Rock wants Quake.
+
 ## records/dungeons
 
 - The two Agahnim fights (castle tower and Ganon's Tower) grant no item. Their boss check is the

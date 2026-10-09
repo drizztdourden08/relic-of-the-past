@@ -18,8 +18,6 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
     id: 'check-044',
     gameId: { roomId: 226, mask: 512 },
     kind: 'standing',
-    // The ledge the heart piece sits on is the top of the tree, reached by dashing into it once
-    // Agahnim has fallen. The door at its foot leads under the ledge.
     screenId: 'screen-226',
     regionId: 'region-097',
     name: 'Lumberjack Tree',
@@ -63,8 +61,6 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
     kind: 'chest',
     screenId: 'screen-459',
     regionId: 'region-126',
-    // The five chests are the cave's upper room; the two behind the wall to bomb by the lowest
-    // mouth are the lower one.
     name: 'Paradox Cave Upper - Far Left',
     vanillaItemIds: ['item-055'],
     review: {
@@ -140,7 +136,6 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
     kind: 'chest',
     screenId: 'screen-213',
     regionId: 'region-126',
-    // The two chests behind the wall to bomb by the lowest mouth: the lower room.
     name: 'Paradox Cave Lower - Left',
     vanillaItemIds: ['item-041'],
     review: {
@@ -179,7 +174,6 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
     name: 'Ether Tablet',
     vanillaItemIds: ['item-017'],
     scope: 'world-item',
-    // The bit above is a seed's own; a plain file answers from the medallion itself.
     requirements: canRetrieveTablet,
     fallback: { itemId: 'item-017' },
     review: {
@@ -216,8 +210,6 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
     vanillaItemIds: ['item-024'],
     scope: 'world-item',
   },
-  // The shelf reached by an inner stair from the cave that shares its room, so no overworld
-  // door of its own reaches it and the room names it alone (CheckGameId.shopSeam).
   {
     id: 'check-635',
     gameId: { shopSeam: { roomId: 255, entrance: 30, owArea: null, subtype: 7 } },

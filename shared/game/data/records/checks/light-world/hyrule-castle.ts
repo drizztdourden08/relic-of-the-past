@@ -34,7 +34,6 @@ const LW_HYRULE_CASTLE_CHECKS: CheckRecord[] = [
     regionId: 'region-169',
     dungeonId: 'dungeon-001',
     name: 'Zelda\'s Chest',
-    // The Lamp, which pays its stand-in once one is held (item-019 aliasOf).
     vanillaItemIds: ['item-019'],
     review: {
       status: 'accepted',

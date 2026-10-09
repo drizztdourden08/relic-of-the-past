@@ -13,9 +13,6 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CHECKS: CheckRecord[] = [
     name: 'Mushroom',
     vanillaItemIds: ['item-042'],
     scope: 'world-item',
-    // The game keeps no flag for this pickup: it tests the item itself. So does a plain file's row. The mushroom leaves the inventory at the Witch's, so her powder and her own check answer too.
-    // The spot stays empty only while the Witch's powder is held (SpritePrep_Mushroom): until then
-    // the mushroom grows back, so the taken row reads 'not now'.
     now: { itemId: 'item-014', owned: true },
     fallback: { anyOf: [{ itemId: 'item-042' }, { itemId: 'item-014' }, { checkId: 'check-056' }] },
   },
@@ -42,7 +39,6 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CHECKS: CheckRecord[] = [
     name: 'Flute Spot',
     vanillaItemIds: ['item-021'],
     scope: 'world-item',
-    // The game keeps no flag for this pickup: it tests the item itself. So does a plain file's row. Any flute: it is upgraded in place.
     requirements: { itemId: 'item-020' },
     fallback: { anyOf: [{ itemId: 'item-021' }, { itemId: 'item-075' }] },
   },
@@ -91,8 +87,6 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CHECKS: CheckRecord[] = [
     id: 'check-042',
     gameId: { bufferIndex: 2, mask: 1, flagType: 2, flagMask: 1, itemId: 22, spriteType: 43, postGfx: 1 },
     kind: 'npc',
-    // Under the bridge east of the house, in the open Light World: without a screen the row had no
-    // place to be reached from and could never show as available.
     screenId: 'screen-026',
     regionId: 'region-008',
     name: 'Hobo',

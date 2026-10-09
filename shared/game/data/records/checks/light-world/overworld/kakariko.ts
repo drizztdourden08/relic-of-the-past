@@ -92,7 +92,6 @@ const LW_OVERWORLD_KAKARIKO_CHECKS: CheckRecord[] = [
     screenId: 'screen-200',
     regionId: 'region-086',
     name: 'Chicken House',
-    // The Blue Boomerang, which pays its stand-in once a boomerang is held (item-013 aliasOf).
     vanillaItemIds: ['item-013'],
     review: {
       status: 'accepted',
@@ -185,7 +184,6 @@ const LW_OVERWORLD_KAKARIKO_CHECKS: CheckRecord[] = [
     presence: { and: [{ progressIndicator3: 32, state: 'set' }, { not: { followerEq: 8 } }] },
     visualNote: 'Smiths hammering animation (gfx 4)',
     sourceFunc: 'Smithy_Main',
-    // The smith tempers the sword once the two are back together (the story's own record).
     requirements: { checkId: 'check-336' },
   },
   {
@@ -231,7 +229,6 @@ const LW_OVERWORLD_KAKARIKO_CHECKS: CheckRecord[] = [
     name: 'Library',
     vanillaItemIds: ['item-030'],
     scope: 'world-item',
-    // The game keeps no flag for this pickup: it tests the item itself. So does a plain file's row.
     requirements: { itemId: 'item-076' },
     fallback: { itemId: 'item-030' },
   },
@@ -245,7 +242,6 @@ const LW_OVERWORLD_KAKARIKO_CHECKS: CheckRecord[] = [
     vanillaItemIds: ['item-024'],
     scope: 'world-item',
   },
-  // The village shelf. Its room is its own, so the seam's area field is only a refinement.
   {
     id: 'check-638',
     gameId: { shopSeam: { roomId: 287, entrance: 70, owArea: 24, subtype: 7 } },

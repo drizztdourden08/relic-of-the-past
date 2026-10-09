@@ -3,8 +3,6 @@
 import type { CheckRecord } from '@shared/game/data/types';
 
 const DW_OVERWORLD_SKULL_WOODS_CHECKS: CheckRecord[] = [
-  // The shelf behind the lumberjacks' door, the same room 0x010F the other three dark-world
-  // doors open onto; the overworld area is the discriminator (CheckGameId.shopSeam).
   {
     id: 'check-644',
     gameId: { shopSeam: { roomId: 271, entrance: 96, owArea: 66, subtype: 7 } },

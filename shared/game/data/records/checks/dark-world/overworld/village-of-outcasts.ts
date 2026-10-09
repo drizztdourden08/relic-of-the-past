@@ -3,10 +3,6 @@
 import type { CheckRecord } from '@shared/game/data/types';
 
 const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_CHECKS: CheckRecord[] = [
-  // check-083, "Blacksmith Ruins Rupees", is gone: the ROM has no such pickup. The screen it named
-  // (0x63, a quarter of the pyramid's area) carries no sprite, the smithy's ruins (0x62) hold the
-  // purple chest and chickens, and what hides under bushes there is green rupees that come back.
-  // Its bit was never written by the game, so the row could only ever read as available.
   {
     id: 'check-271',
     gameId: { roomId: 295, mask: 1024 },
@@ -33,7 +29,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_CHECKS: CheckRecord[] = [
     vanillaItemIds: ['item-024'],
     scope: 'world-item',
     price: 80,
-    // No Shovel of your own: the man running the game lends one for the round.
   },
   {
     id: 'check-268',
@@ -67,9 +62,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_CHECKS: CheckRecord[] = [
       at: '2026-08-26T03:06:52.923Z',
     },
   },
-  // Shares room 262 with Brewery on purpose: vanilla puts both in one underworld
-  // room, told apart by chest bit (0x10 vs 0x400), never aliasing each other.
-  // The top prize of the once-only minigame roll (OpenMiniGameChest).
   {
     id: 'check-270',
     gameId: { roomId: 262, chestIndex: 6 },
@@ -88,9 +80,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_CHECKS: CheckRecord[] = [
       at: '2026-08-26T03:06:52.923Z',
     },
   },
-  // Three shelves stand in this area. The shield shop has a room of its own (0x0110); the
-  // other two share room 0x010F with the lake and lumberjack doors, so the overworld area
-  // the player walked in from is what tells those apart (CheckGameId.shopSeam).
   {
     id: 'check-629',
     gameId: { shopSeam: { roomId: 272, entrance: 87, owArea: 90, subtype: 9 } },

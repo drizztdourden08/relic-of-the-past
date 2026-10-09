@@ -84,7 +84,6 @@ const LW_EASTERN_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-122',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 21 },
     kind: 'prize',
     screenId: 'screen-151',
