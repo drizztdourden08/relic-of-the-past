@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* The percentage under the currencies, on the block's grid like them: the
-   name where the ticks sit, the slider where the ranges sit. It dims as a
-   whole while nothing is ticked, on the same terms as a currency that is off. */
-
 .shop-price-modifier-row--off {
   opacity: var(--opacity-muted);
 }

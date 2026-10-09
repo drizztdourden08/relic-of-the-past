@@ -1,18 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The rupee pond in the options panel: the head line naming the mode the
- * player picked (the dropdown itself sits with their other choices, under its
- * own section), the controls the mode asks for, and the price schedule as a
- * preview in every mode. Bare: the
- * model arrives derived, edits leave as a row state. Reuses the same range,
- * slider, curve and jump-chip controls the capacity families use, so the two
- * sections read and behave identically.
- *
- * Every setting the mode asks for sits on ONE grid: a label track and a
- * control track. So a demand's tick, a slider's name and the curve's name all
- * start on the same vertical line, their controls all start on the next, and
- * no setting spends a line of its own on its name.
- */
 import { Box, Slider, Text } from '@ds/primitives';
 import { LadderPreview } from '../LadderPreview';
 import { OptionValueTag } from '../OptionValueTag';

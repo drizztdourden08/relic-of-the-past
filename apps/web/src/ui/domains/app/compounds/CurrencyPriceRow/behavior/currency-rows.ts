@@ -1,62 +1,17 @@
 /* @layer renderer-components @kind logic */
-/**
- * The counted-currency rows a price block draws: one per currency a shelf may
- * charge, each already matched against the two things the rest of the panel
- * decides for it. The row definitions and the catalog keys behind them arrive
- * from the block, so every options block that charges a currency shares this
- * one derivation.
- *
- * THE CEILING. A price can never exceed what the profile can pay, so a row's
- * range stops where its currency does: the top rung the capacity profile
- * reaches for rupees, arrows and bombs, and the heart ceiling less one for
- * hearts. The ladder of stops is rebuilt from that ceiling on every render,
- * so shrinking the wallet on the capacity tab shortens the rupee range here
- * at once, and a stored end above the new ceiling reads as the ceiling.
- *
- * THE RULE. A currency the seed has nothing of (shop-price-currency-rule)
- * shows unticked and greyed with the reason on its own row, while the stored
- * tick is left alone so it comes straight back when the rule lets go.
- */
 import { stopsFor } from './price-stops';
 import { priceCeilingsOf } from '@shared/randomizer/world/shops/shop-price-ceilings';
 import {
   blockedCurrencyKeysOfValues, blockedCurrencyNote,
 } from '@shared/randomizer/world/shops/shop-price-currency-rule';
 import { shopPricePlanOf } from '@shared/randomizer/world/shops/shop-price-plan';
-import type { CurrencyKeyHelpers } from '../CurrencyPriceRow.type';
+import type { CurrencyCatalogKeys, CurrencyRowModel, Values } from '../CurrencyPriceRow.type';
 import type { CapacityProfile } from '@shared/randomizer/world/capacity';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
 import type { CurrencyRow } from '@shared/randomizer/world/shops/shop-price-options.data';
-import type { ShopCountedCurrency } from '@shared/randomizer/world/shops/shop-price.type';
-
-type Values = Readonly<Record<string, OptionValue>>;
-
-interface CurrencyRowModel {
-  currency: ShopCountedCurrency;
-  /** The currency in the player's own words. */
-  label: string;
-  /** Its opt-in key, and the two ends of its range: what an edit writes. */
-  key: string;
-  minKey: string;
-  maxKey: string;
-  /** Shown ticked: the stored tick, unless a rule holds the currency off. */
-  checked: boolean;
-  /** The seed has nothing of this currency: the row is greyed and cannot be ticked. */
-  blocked: boolean;
-  /** Why this row is greyed; empty while it is not. */
-  note: string;
-  /** The most a price in this currency may ask for right now. */
-  ceiling: number;
-  /** The amounts the two thumbs may sit on, up to the ceiling. */
-  stops: readonly string[];
-  /** [low, high] indexes into `stops`; a stored end above the ceiling reads as the ceiling. */
-  range: readonly [number, number];
-}
 
 const numberAt = (values: Values, key: string, fallback: number): number =>
   (typeof values[key] === 'number' ? values[key] : fallback);
 
-/** The stop nearest an amount, the amount first held under the ceiling. */
 const nearestStop = (stops: readonly string[], amount: number, ceiling: number): number => {
   const clamped = Math.min(amount, ceiling);
   return stops.reduce((best, stop, index) =>
@@ -65,7 +20,7 @@ const nearestStop = (stops: readonly string[], amount: number, ceiling: number):
 
 const currencyRowsOf = (
   values: Values, capacity: CapacityProfile,
-  rows: readonly CurrencyRow[], keys: CurrencyKeyHelpers,
+  rows: readonly CurrencyRow[], keys: CurrencyCatalogKeys,
 ): readonly CurrencyRowModel[] => {
   const ceilings = priceCeilingsOf(shopPricePlanOf(values), capacity);
   const blockedKeys = blockedCurrencyKeysOfValues(values);

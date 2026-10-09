@@ -393,4 +393,395 @@ Hookshop. The game side needs a profile, so it stays off until one exists. The R
 offered only for a profile with a randomizer config, local or Archipelago. Data and the Hookshop
 are always open. The Hookshop tab uses lucide's store icon until a Hookshop logo is drawn.
 
+### compounds/ProfileHero/ProfileHero.tsx
+
+The Home tab hero, drawn through the shared Hero: the scene the host hands in as a full bleed
+backdrop, the mode's piece (sword, shield) beside the intro, the mode and its game controls on
+the left (Play, or Pause, Stop and Reset while a game runs), the last save on the right, and the
+facts and per file progress along the bottom. `runFacts` holds the seed, connection and session
+row and is null on an unrandomized profile.
+
+### compounds/ProfileHero/behavior/hero-art-src.ts
+
+Hero art lives in `apps/web/src/assets/home-hero/` as `hero-art-<mode>.png`: a 128 pixel square
+piece of pixel art on a transparent ground, drawn at twice its pixels so it stays pixel art. A
+mode without its piece shows the backdrop alone.
+
+### compounds/ProfileHero/sub-components/HeroProgress.tsx
+
+One row per save file holding a game, with a segmented bar in the Checks widget's palette (green
+taken, yellow available now, grey left), the percent done and the raw counts. A file shows as
+slot plus one, under the name typed on the file select screen when there is one. The rows share
+one grid, so every bar, percent and count lines up.
+
+### compounds/ShopPricesBlock/ShopPricesBlock.tsx
+
+One row per currency a shelf may charge (a checkbox and the range its rolled amount is drawn
+from), the bottle row with the contents a shelf may demand, and the percentage every rolled price
+is scaled by. With nothing ticked no price is rolled and every shelf charges what the unmodified
+game charges. Each counted range ends where its currency does: the capacity profile decides how
+many rupees, arrows and bombs the seed can ever hold and the heart ceiling how many hearts, so a
+range the player cannot pay for cannot be set. The percentage has nothing to scale until a
+counted currency is ticked and stays frozen until then; a bottle price carries no amount, so it
+is never scaled. Two rules grey a row from elsewhere on the panel and say why on that row: a
+bottle content whose cauldron went to the shuffle cannot be demanded as a price, and arrows have
+nothing to pay with once retro bow has taken them out of the world. The stored tick is kept, so
+the choice comes back when the rule lets go. `onChange` takes one patch per edit because a range
+writes both ends together; two calls in the same tick would each build on the old values and the
+first end would be lost.
+
+### compounds/ShopPricesBlock/ShopPricesBlock.css
+
+Every row spans the block's two column grid as a subgrid: its checkbox or label in the first
+track and its control in the second, so all the sliders start on one vertical line however long
+the names are. Each row stays a real box, so dimming and the blocked marker cover the whole line.
+
+### compounds/ShopPricesBlock/behavior/bottle-content-rows.ts
+
+The potion rule is read once here, and each content answers for itself on its own row. A cauldron
+blocks its own content and nothing else: ticking the red cauldron greys the red row, says why on
+it, and leaves blue and green as they were.
+
+### compounds/ShopPricesBlock/sub-components/ShopPriceModifierRow.tsx
+
+The percentage has no opt in, since a hundred per cent already means "leave the ranges alone". It
+dims and freezes as a whole while no currency is ticked, on the same terms as a currency that is
+off.
+
+### compounds/RandomizerOptionRow/RandomizerOptionRow.tsx
+
+One row of the options panel: the name with a status tag, the catalog's short line under it, the
+control, and the In Pool cell, on the catalog's fixed grid so a value that changes width never
+moves the control. A row the catalog locks renders its control disabled at reduced opacity, and
+the tag says why. A row the catalog leaves open can still be frozen by the panel (`disabled`),
+when another choice has taken the setting out of the player's hands: it keeps its own tag, and a
+`note` in the blocking colour says which setting decided it. That row keeps full contrast,
+because the value shown is the value the seed is built with and the sentence must not dim with
+it. A `readout` row draws the value as a tag in the control's track. The frozen run view passes
+no handler, so a range shows the recorded value without offering a drag that could not be saved.
+The In Pool cell sits on the title's baseline, not the description's.
+
+### compounds/RandomizerOptionRow/behavior/partitionCatalogByLock.ts
+
+Splits the option catalog by lock state so every consumer shows the same shape: the unlocked
+options first, flat in catalog order and also grouped by section (so a newly supported option
+lands under its real heading), then the locked remainder grouped in catalog group order with
+empty groups dropped. It runs on each entry's `locked` flag alone, so unlocking an option in the
+catalog moves it into the choices on its own. Options that a dedicated block owns are left out of
+the plain list: the capacity rows (one family row each in CapacityUpgradesBlock, with the master
+switch, the progressive switch and the pickup bonus rows), the shop slot and price rows, the
+pond's value rows (the pond's mode row stays in the list, under its section, because that is the
+choice offered there), the progressive tier ticks and their per family order rows
+(ProgressiveTiersBlock), the five dark room rows (DarkRoomsSection), the retro switch with its
+two arrow prices, and the difficulty block's copy multiples and heart ceiling. The test in
+`tests/randomizer/option-wiring.keep.test.ts` imports this file by path, which is why it keeps
+its camelCase name. `catalog-by-lock.ts` partitions the shipped catalog once, since the catalog
+is static module data.
+
+### compounds/SettingsPage/SettingsPage.tsx
+
+A settings tab: one header line (glowing icon, title, then the section anchors or the host's own
+view tabs, after a divider) over an optional scene backdrop, with the settings scrolling on their
+own beneath it. A gradient fades the scene out behind the title so the text always reads. Once the
+settings scroll, the header compacts but stays in place, and the host's actions ride along with
+it. An anchor's `id` matches a `data-section` element in the body, so the page needs no refs into
+its content. `scroll` is false when the content scrolls its own columns, as the Controls tab does.
+
+### compounds/SettingsPage/behavior/useScrollSpy.ts
+
+The header compacts once the body scrolls past `COMPACT_AFTER` pixels and expands again only when
+the body is back at its top while it still overflows. Compacting hands the header's height to the
+body, which can remove the overflow on a page that barely scrolls, and the browser then clamps
+`scrollTop` to 0 on its own. Reading that clamp as a return to the top expanded the header, which
+brought the overflow back, and the page flipped between the two states without end. A compacted
+page whose content now fits has no scroll left to report, so an upward wheel at the top expands
+the header there. The current section is the lowest one already above the line `CURRENT_SLACK`
+pixels below the body's top; sections side by side on a dashboard row share one top, and the
+first of them stands for the row.
+
+### compounds/UpdateDialog/UpdateDialog.tsx
+
+A confirmed break and "could not check" are different claims, so they get different headings and
+colours: red only for a break that was confirmed, gold for the weaker claim, because saying the
+second in red would teach people to ignore the red. A pre-release warning is gold too, a choice
+with a caveat and not an error. The save state note follows the picker, not the offered update,
+so switching rows answers it again; reinstalling the running version is the one case with nothing
+to say. It sits above the release notes because it decides whether the notes are worth reading.
+The note about going back a version comes last, since it is the way out when an update made
+things worse. The body is one column with one gap, so every combination of blocks is spaced the
+same and no block adds its own vertical margin. `canInstall` is false when a build can see an
+update but not install it (macOS today); `onApply(null)` installs the newest release.
+
+### compounds/UpdateDialog/behavior/render-notes.ts
+
+Links in the release notes are stripped to plain text so they are not clickable.
+
+### compounds/UpdateDialog/behavior/useVersionChoice.ts
+
+The version list loads when the dialog opens, not up front, and the newest release is preselected
+so the common case stays one press. The list is one group, newest first, with pre-releases marked
+in the row: the toggle above already says whether they are offered, and a selected pre-release
+warns for itself. A row's size is the download, not the package: a forward step is usually a
+small delta, and the package size made a routine update look like a fresh install.
+
+### compounds/Hookshot/Hookshot.tsx
+
+Handle, chain links and head, each its own pixel art sprite, laid along a cubic Bezier `curve` in
+mascot pixels. The links follow the curve pin to pin, so any path works without redrawing the
+art. The handle's muzzle sits on the curve's start and the head's back on its end. It fills its
+positioned parent and sizes itself from the parent's `--px`, the size of one mascot pixel. Only
+the part inside `clip` shows, which is how the head can vanish behind something.
+
+### compounds/Hookshot/Hookshot.constants.ts
+
+Sizes and anchor points of the hookshot sprites in assets/hookshop, in mascot pixels. A redrawn
+sprite changes its numbers here. Both links hold their pins the same distance apart, so faces and
+edges alternate along one pitch. The logo build script loads `behavior/hookshot-layout.ts` by
+path, so that file keeps its name and its `layoutHookshot` export.
+
+### compounds/Hookshot/behavior/hookshot-layout.ts
+
+Links hang pin to pin, each turned to its own chord, alternating face on and edge on like a real
+chain; the face on links come first, then the edge on links that pass through them. The handle
+and the head are each turned along the curve. `tip` is where the head's point lands.
+
+### compounds/Hookshot/behavior/hookshot-curve.ts
+
+The curve of a hookshot held by its grip at `grip` and fired at `angle` degrees: the chain runs
+`length` pixels and its end has turned `bend` degrees further, in an even arc.
+
+### compounds/Hookshot/behavior/pin-chain.ts
+
+The curve is sampled into a fine polyline, then stepped pin to pin so every link is a straight
+chord of one length. A longer step runs off the end and a shorter one stops short, so a binary
+search finds the step that just fits, and the last pin lands on the curve's end.
+
+### compounds/ProgressiveTiersBlock/ProgressiveTiersBlock.tsx
+
+The tiered families, one card each, with a box per tier: the same shape the shop block uses for
+its shelves, because it is the same question, which of a fixed set of slots are in the seed.
+Under the grid the block says what the ticks have done to the world. Emptying the blade family,
+or leaving only the rung that throws no beam, relaxes five rules that would otherwise have no
+answer: the tablets, the medallion doors, a hanging cloth door, the tower's seal and the last
+fight. Each is a line only while it is true, so the default set says nothing. The block also says
+when a tick set cannot be rolled at all: two rungs are load bearing under the rules this version
+transcribes, and the generator refuses without them. That refusal carries the blocking colour,
+not the advisory one. Both readings are derived from the ticks as they are edited, never stored.
+An absent `onChange` renders the read-only Options page; an absent `onModesChange` freezes only
+the order controls.
+
+### compounds/ProgressiveTiersBlock/ProgressiveTiersBlock.css
+
+The cards pack across the panel and wrap, each at the width of the rungs it holds. The families
+have different rung counts, so a shared track width made every card as wide as the widest and
+left the two rung families mostly empty. Wrapping keeps it responsive without a media query,
+since the panel lives in a split pane.
+
+### compounds/ProgressiveTiersBlock/behavior/progressive-cards.ts
+
+The count line is the point of the card. A rung is one copy of the family's item in the pool, so
+"3 of 4" says exactly what unticking did: the fourth copy is a small rupee pickup now, without the
+player knowing the pool arithmetic. Names come from the dataset
+(`progressive/progressive-display-names.ts`); a checkout without it keeps the short neutral words
+of the family table. Each box's catalog key is also its React key.
+
+### compounds/ProgressiveTiersBlock/sub-components/ProgressiveTierCard.tsx
+
+The rung boxes are the only tick control. A family is in the seed because something is ticked,
+so a whole family tick would be a second way of saying the same thing. A card with nothing ticked
+wears a dashed edge, because "this family is gone" otherwise looks like a card that failed to
+draw. The order control sits below the boxes, set off by a hairline, because it only means
+something once a rung is ticked; with the family emptied it has nothing to order and draws inert.
+
+### compounds/ProgressiveTiersBlock/sub-components/ProgressiveTierCard.css
+
+A card is drawn at the width of what it holds and may still be squeezed by a narrower pane, which
+keeps the pane from scrolling sideways. The rungs are one centred row, since a ladder reads
+across; a row too long wraps its last boxes, and only a box wider than the card shrinks, folding
+its name. The boxes are squared off to read as rungs, with the tick beside its name. Their rules
+are written through the card so they outrank the checkbox's own single class rules whatever order
+the sheets load in. The box height is a floor so every box in every card comes out level, and the
+tick keeps its size because a flex row would otherwise squeeze the input before the text.
+
+### compounds/CurrencyPriceRow/CurrencyPriceRow.tsx
+
+One row of a currency price section: the checkbox that opts a currency in, and beside it the two
+thumb range a rolled price is drawn from, disabled until the currency is ticked. A row may also
+pass checkboxes as children: on their own they take the range's place, and under a range they
+fall to a line of their own across the row, indented to the control track, so the tick and its
+range stay together on the first line. A row a rule elsewhere has taken away is blocked: its tick
+is inert and off, a danger marker runs down its left, and the line saying why takes the range's
+place, so the greying reads as a consequence of another setting. A row that is merely off dims
+as a whole. The rows and their catalog keys belong to whichever block draws them, so this
+compound takes both as plain data and never reaches for one block's keys.
+
+### compounds/CurrencyPriceRow/behavior/currency-rows.ts
+
+A price can never exceed what the profile can pay, so a row's range stops where its currency
+does: the top rung the capacity profile reaches for rupees, arrows and bombs, and the heart
+ceiling less one for hearts. The stops are rebuilt from that ceiling on every render, so
+shrinking the wallet on the capacity tab shortens the rupee range at once, and a stored end above
+the new ceiling reads as the ceiling. A currency the seed has nothing of
+(`shop-price-currency-rule`) shows unticked and greyed with the reason on its row, while the
+stored tick is left alone so it comes back when the rule lets go.
+
+### compounds/CurrencyPriceRow/behavior/price-stops.ts
+
+Every whole number up to `FINE_LIMIT` is a stop whatever the ceiling: small amounts are what a
+price row is usually set to, and a ladder that skipped them showed a stored 10 as 0. Above that
+the ladder coarsens to `COARSE_STEP`, because a thumb that has to find one exact rupee in a
+thousand is not a usable control. The ceiling is always the last stop.
+
+### compounds/CurrencyPriceRow/sub-components/BottleContentRow.tsx
+
+Two different reasons grey a bottle content and they must not read alike. The whole bottle row
+being off is a setting the player can undo on the spot; a blocked content is a consequence of the
+shop scope above (its cauldron went to the shuffle). Only the second carries a note, takes the
+whole line and wears the danger marker.
+
+### compounds/SaveSlot/SaveSlot.tsx
+
+Only a slot that holds a save but has no screenshot gets the placeholder; an empty slot stays
+bare. The placeholder mascot uses a relative `src`, because the packaged renderer is served from
+`file://`, where a leading slash resolves to the filesystem root; the title bar and the About view
+load these logos the same way. The action bar is the bottom slice of the card, blackened to stay
+legible over the shot, with Load on the left and Save on the right in DOM order too, so the tab
+order matches what is drawn. Each action takes one click to arm and a second to confirm. The
+busy spinner covers the card with a scrim while the screenshot is captured and the slots reload.
+
+### compounds/SaveSlot/SaveSlot.css
+
+The card's width comes from its container and its height follows the SNES frame (256 by 224). The
+placeholder stops short of the action bar so the mascot is centred in the visible area. The
+no screenshot badge is two layers on one 16 unit grid so the cancel ring carries its own colour;
+the coordinates centre the combined ink, and a halo in the card's background colour keeps the
+frame's strokes from blending into the ring. The mascot hops right then left forever, each jump
+running crouch, launch, arc, land and settle. Squash and stretch happen off the feet
+(`transform-origin` at the bottom edge) so push off and impact read as weight, and the arc frames
+are spaced wide near the apex and tight near the ground, which gives the jump its gravity under
+linear timing.
+
+### compounds/SaveSlot/behavior/useArmedAction.ts
+
+Two click confirmation: the first press arms one action and a second press on the same action
+performs it. Arming the other action, waiting past the timeout, or showing new slot data all
+disarm. `resetKey` is a digest of the data the slot shows, so any change disarms without a render
+round trip.
+
+### compounds/SaveSlot/sub-components/SlotActionButton/SlotActionButton.tsx
+
+No colour, filter or mask reaches the glyph: the emoji keeps its own palette, and only the half
+behind it tints on hover, focus and arming. The glyph is its own stacking context so the armed
+halo sits behind the emoji and above the button's tint. While armed the emoji bobs and a green and
+gold halo wanders behind it.
+
+### compounds/WishingPondRow/WishingPondRow.tsx
+
+The rupee pond in the options panel: the head line naming the mode the player picked (the
+dropdown itself sits with their other choices, under its own section), the controls the mode
+asks for, and the price schedule as a preview in every mode. It reuses the range, slider, curve
+and jump chip controls of the capacity families, with the same tracks and rhythm, so the two
+sections read and behave alike. Every setting the mode asks for sits on one grid of a label track
+and a control track, so a demand's tick, a slider's name and the curve's name all start on one
+vertical line, their controls on the next, and no setting spends a line on its own name. The
+label track sizes to its content up to `--pond-label-w-max`, past which a long name wraps. Each
+line is a subgrid so its dimming and blocked marker cover the whole line. `PondRowState` holds
+indexes and choices, never prices: `range` holds the price ladder indexes of the first and the
+final throw. Custom alone lets the player set prices; every mode but the legacy one carries pool
+items. A price the wallet could not hold is held down to what it can and noted in the blocking
+colour.
+
+### compounds/WishingPondRow/sub-components/PondAskControls.tsx
+
+What the fairy may ask for, drawn with the same row the shop prices use (CurrencyPriceRow) so a
+demand and a shelf price read alike. Each row costs one line on the block's grid, and the caption
+above them spans the width as the group's title. Rupees, bombs and arrows carry a two thumb
+range; the rupee one is the pond's price ladder, so moving it moves the ladder and the preview.
+The bottle row counts how many bottles she may name and keeps its contents on the line under its
+range. The item row is a tick alone, because what she asks to see is one item and no amount of
+it. The edits in `behavior/ask-with-*.ts` are pure: the whole ask goes in and comes back out. The
+bottle's two ends use the same writer as bombs and arrows, since the row has the same shape.
+
+### compounds/WishingPondRow/sub-components/PondPriceControls.tsx
+
+The Custom mode ladder controls: how many throws the pond sells, the curve that cuts the climb,
+and the free sequence chips when the curve is "free". The climb's two ends are the rupee row of
+the ask block above, because they are the same pair of amounts: what the ladder charges is what
+she asks for.
+
+### compounds/SettingsLayout/SettingsLayout.tsx
+
+One settings tab. The host supplies `SettingsPageContext`: as a `page` the tab is a SettingsPage
+whose header links to each section; as `results` it is only the rows matching the query (already
+lowercased and trimmed), bare, so a search pane can stack every tab's matches with their real
+controls, and nothing at all when none match. A section holds either a flat list of items or
+named subsections, never both: a subject with nothing to divide takes `items` and gets no second
+heading, so the nav shows the section alone. Omitting `defaults` renders bare headings with no
+reset action. `onOpenVanillaSafeSettings` makes the Vanilla Safe lock interactive; without it the
+action is inert.
+
+### compounds/SettingsLayout/behavior/randomizer-lock-context.ts
+
+The active profile's randomizer frozen setting keys travel to SettingsLayout as a context: about
+ten settings tabs sit between the profile owner (ProfileHub) and the layout, and none of them care
+about the value, so a prop would mean a pass through on every one. It is empty when the profile
+has no randomizer config.
+
+### compounds/SettingsLayout/behavior/useLockCause.ts
+
+Two causes lock a setting. A profile with a randomizer config pins the keys in its frozen set for
+the profile's whole life. Vanilla Safe locks every setting that stops working under it, and that
+set comes from two places: the registry flag `affectsVanillaParity` covers the gate word features,
+and `vanilla-safe-settings.ts` covers the rest (cheats, MSU, the custom sprite, the overlay HUD,
+the two hand gated renderer effects), which Vanilla Safe forces off in the INI or the PPU flags
+without any FeatureDef.
+
+### compounds/SettingsLayout/behavior/partition-by-lock-state.ts
+
+A subsection's items are split into contiguous runs by lock cause, so a block of neighbouring
+items locked for the same reason gets one overlay (one message, one action). A lone locked item
+still gets its own small overlay. Runs with different causes never merge.
+
+### compounds/SettingsLayout/behavior/resolve-sections.ts
+
+A section with subsections yields a titled group per subsection; a flat section yields one
+untitled group, which draws no second heading and anchors on the section itself. Empty groups and
+sections are dropped, so a search that matches nothing leaves no stray heading.
+
+### compounds/SettingsLayout/behavior/changed-keys.ts
+
+What "reset this section" would change. A key counts only when the defaults know it, the control
+is not locked and the stored value differs, so a section at its defaults offers nothing to press
+and a locked row is never written over. A search narrows a section to the rows it shows, and the
+reset follows: it offers exactly the settings in front of the reader. Values are primitives,
+arrays and small objects, so a serialized compare is enough. A few items address a field inside a
+settings object (`haptics.intensity`), so keys are dotted paths.
+
+### compounds/SettingsLayout/behavior/defaults-patch.ts
+
+A nested field starts from the live parent object, so siblings the section never listed survive
+the reset.
+
+### compounds/SettingsLayout/sub-components/SettingsSections.tsx
+
+The randomizer lock is permanent for the profile, so its overlay names its cause and offers no
+action; the Vanilla Safe lock keeps its deep link to the Vanilla Safe settings.
+
+### compounds/SettingsLayout/SettingsLayout.css
+
+The page chrome (header, anchors, scroll) belongs to SettingsPage; this sheet covers only the
+section, subsection and group content. The title and its reset action share the section's
+underline, so the action reads as part of the heading and not the first row. The action sits back
+at reduced opacity until the heading is hovered or it holds focus, so a panel of sections is not a
+column of competing buttons; its glyph hugs the right edge and the armed pair grows leftward.
+Every direct slot of a group, a plain row or a locked run wrapped in one overlay, gets the same
+divider, and rows stacked inside a locked run get their own, since the slot rule sees the run as
+one slot. A search palette deep link pulses gold on the row it lands on.
+
+### compounds/SettingsLayout/sub-components/SectionHeading.tsx
+
+The reset icon is a counter clockwise arrow: the arc, then the corner that heads it.
+`changedCount` is how many settings in the section differ from their default; zero rests the
+action.
+
 ENDMARK

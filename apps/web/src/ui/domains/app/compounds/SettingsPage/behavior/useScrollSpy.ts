@@ -1,24 +1,7 @@
 /* @layer renderer-components @kind hook */
-/**
- * Follows the settings body's scroll: which section anchor is current, and
- * whether the page has scrolled far enough for the header to compact. Anchor
- * targets are the body's `[data-section]` elements, so the page needs no refs
- * into its content.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { COMPACT_AFTER, CURRENT_SLACK } from './useScrollSpy.constants';
 
-/** Scroll distance (px) past which the header compacts. */
-const COMPACT_AFTER = 24;
-/** How far below the body's top edge a section still counts as current (px). */
-const CURRENT_SLACK = 48;
-
-/**
- * Compacts past the threshold and expands only once the body is back at its top while it
- * still overflows. Compacting hands the header's height to the body, which can remove the
- * overflow on a page that barely scrolls; the browser then clamps scrollTop to 0 on its own.
- * Reading that clamp as a return to the top expanded the header, which brought the overflow
- * back, and the page flipped between the two states without end.
- */
 const nextCompact = (body: HTMLElement, was: boolean): boolean => {
   if (body.scrollTop > COMPACT_AFTER) return true;
   if (!was) return false;
@@ -38,8 +21,6 @@ const useScrollSpy = (ids: readonly string[]) => {
     if (!body) return;
     setCompact((was) => nextCompact(body, was));
     const top = body.getBoundingClientRect().top + CURRENT_SLACK;
-    // The lowest section already under the line. Sections side by side on a dashboard row share
-    // one top, and the first of them stands for the row.
     let current = ids[0] ?? '';
     let currentTop = Number.NEGATIVE_INFINITY;
     for (const id of ids) {
@@ -55,8 +36,6 @@ const useScrollSpy = (ids: readonly string[]) => {
   useEffect(() => {
     const body = bodyRef.current;
     if (!body) return;
-    // A compacted page whose content now fits has no scroll left to report, so an upward
-    // wheel at the top is what expands the header there.
     const expandOnWheelUp = (e: WheelEvent) => {
       if (e.deltaY < 0 && body.scrollTop === 0) setCompact(false);
     };

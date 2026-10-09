@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-/** Floating glass tile on the hero's right: the last save's screenshot, name and load. */
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../design-system/primitives/Text';

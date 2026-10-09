@@ -1,19 +1,12 @@
 /* @layer renderer-components @kind component */
-/**
- * A settings tab: one header line (glowing icon, title, then the section anchors or the
- * host's own view tabs) over an optional scene backdrop, with the settings scrolling on
- * their own beneath it. Once the settings scroll, the header compacts but stays in place.
- */
 import { useMemo } from 'react';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { HeaderTabs } from '../../../../design-system/composites/HeaderTabs';
 import { useScrollSpy } from './behavior/useScrollSpy';
-import type { SettingsPageAnchor, SettingsPageProps } from './SettingsPage.type';
+import { NO_ANCHORS, TABS_CLASS } from './SettingsPage.constants';
+import type { SettingsPageProps } from './SettingsPage.type';
 import './SettingsPage.css';
-
-const NO_ANCHORS: SettingsPageAnchor[] = [];
-const TABS_CLASS = 'settings-page__tabs';
 
 const SettingsPage = (props: SettingsPageProps) => {
   const { icon, title, backdrop, anchors = NO_ANCHORS, tabs, scroll = true, actions, children } = props;

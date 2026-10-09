@@ -1,22 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ArmedAction, ArmedState, UseArmedActionParams } from './useArmedAction.type';
 
-type ArmedAction = 'load' | 'save';
-
-type ArmedState = { action: ArmedAction; key: string };
-
-type UseArmedActionParams = {
-  /** How long an armed button waits for its confirming click. */
-  timeoutMs: number;
-  /** Digest of the data the slot shows. Any change disarms without a render round-trip. */
-  resetKey: string;
-};
-
-/**
- * Two-click confirmation: the first press arms one action, the second press on
- * that same action performs it. Arming another action, waiting past the
- * timeout, or showing new slot data all disarm.
- */
 const useArmedAction = ({ timeoutMs, resetKey }: UseArmedActionParams) => {
   const [state, setState] = useState<ArmedState | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

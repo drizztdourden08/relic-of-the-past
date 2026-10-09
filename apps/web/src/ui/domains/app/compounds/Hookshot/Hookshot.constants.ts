@@ -1,9 +1,4 @@
-/* @layer renderer-components @kind generated */
-/**
- * Sizes and anchor points of the hookshot sprites in assets/hookshop, in mascot pixels.
- * A redrawn sprite changes its numbers here too. Both links hold their pins the same
- * distance apart, so faces and edges alternate along one pitch.
- */
+/* @layer renderer-components @kind data */
 const HOOKSHOT_PARTS = {
   handle: {
     w: 9,

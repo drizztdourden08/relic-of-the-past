@@ -1,26 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * Normalizes the two shapes a section can take into the one shape the panel renders.
- * A section with subsections yields a titled group per subsection; a flat section yields
- * a single untitled group, which draws no second heading and anchors on the section itself.
- * Empty groups and empty sections are dropped, so a search that matches nothing leaves no
- * stray heading behind.
- */
-import type { Section, SettingItem } from '../SettingsLayout.type';
-
-interface ItemGroup {
-  /** Scroll anchor. null for the untitled group of a flat section, which the section anchors for. */
-  id: string | null;
-  /** null when the group carries no heading of its own. */
-  title: string | null;
-  items: SettingItem[];
-}
-
-interface ResolvedSection {
-  id: string;
-  title: string;
-  groups: ItemGroup[];
-}
+import type { ItemGroup, ResolvedSection, Section, SettingItem } from '../SettingsLayout.type';
 
 const groupsOf = (section: Section): ItemGroup[] =>
   section.subsections

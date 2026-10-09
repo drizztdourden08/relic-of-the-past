@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* The rupee pond: a head line naming the mode, the controls that mode asks
-   for, and the price schedule as a preview. Same tracks and same rhythm as a
-   capacity family row, so the two sections line up. */
-
 .pond-row {
   display: flex;
   flex-direction: column;
@@ -39,18 +35,9 @@
   line-height: 1.5;
 }
 
-/* A price the wallet could not hold, held down to what it can: the blocking
-   colour, the same sentence colour the overruled rows of the list wear. */
 .pond-row__note--held {
   color: var(--c-danger);
 }
-
-/* Every setting the mode asks for, on ONE grid: the name (a tick, or a plain
-   label) in the first track and the control in the second. One grid for the
-   whole block is the point, so the demand ticks, the throw count, the curve
-   and the item count all start on the same vertical line and every control
-   starts on the next. The label track sizes to its content up to a cap, past
-   which a long name wraps instead of squeezing the control beside it. */
 
 .pond-row__custom {
   display: grid;
@@ -60,9 +47,6 @@
   min-width: 0;
 }
 
-/* Each line spans the grid and inherits its tracks, so it stays a real box
-   (its dimming and its blocked marker apply to the whole line) while its two
-   cells sit on the shared columns, centred against each other. */
 .pond-row__custom > * {
   display: grid;
   grid-column: 1 / -1;
@@ -80,8 +64,6 @@
   letter-spacing: 0.5px;
 }
 
-/* The one caption that titles a group of lines instead of naming a control:
-   it takes the whole width and keeps room over the rows it heads. */
 .pond-row__custom > .pond-row__group-caption {
   display: block;
   padding-top: var(--space-xs);

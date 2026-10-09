@@ -1,33 +1,14 @@
 /* @layer renderer-components @kind component */
-/**
- * The Custom-mode ladder controls of the pond: how many throws it sells, the
- * curve that cuts the climb, and the free-sequence chips when the curve is
- * "free". Each one is a line of the block's own grid, its name in the label
- * track and its control beside it, so they read as the same column of settings
- * the demand rows above them make.
- *
- * The climb's two ends are the rupee row of the ask block above
- * (PondAskControls), because they are the same pair of amounts: what the
- * ladder charges is what she asks for.
- */
 import { Select, Slider } from '@ds/primitives';
 import { JumpChipsEditor } from '../../JumpChipsEditor';
 import { OptionValueTag, choiceLabelOf, stepsLabelOf } from '../../OptionValueTag';
 import { PondOptionLine } from './PondOptionLine';
 import type { SelectOption } from '@ds/primitives';
-import type { PondRowModel, PondRowState } from '../WishingPondRow.type';
-
-interface PondPriceControlsProps {
-  model: PondRowModel;
-  readOnly: boolean;
-  /** Every value as a tag in place of its control: the read-only panel. */
-  readout?: boolean;
-  onChange: (part: Partial<PondRowState>) => void;
-}
+import type { PondControlsProps, PondRowState } from '../WishingPondRow.type';
 
 const throwsLabel = (count: number): string => `${count} throw${count === 1 ? '' : 's'}`;
 
-const PondPriceControls = (props: PondPriceControlsProps) => {
+const PondPriceControls = (props: PondControlsProps) => {
   const { model, readOnly, readout = false, onChange } = props;
   const { state, curveOptions, maxThrows } = model;
   const [low, high] = state.range;
@@ -78,4 +59,3 @@ const PondPriceControls = (props: PondPriceControlsProps) => {
 };
 
 export { PondPriceControls };
-export type { PondPriceControlsProps };

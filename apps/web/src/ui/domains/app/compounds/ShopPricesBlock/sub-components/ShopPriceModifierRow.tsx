@@ -1,25 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * The percentage every rolled price is scaled by: its name in the block's
- * first track, one slider in the second, no opt-in, since a hundred per cent
- * already means "leave the ranges alone". It dims and freezes while no
- * currency is ticked: with nothing rolled there is no price to scale.
- */
 import { Box, Slider, Text } from '@ds/primitives';
 import { OptionValueTag } from '../../OptionValueTag';
+import type { ShopPriceModifierRowProps } from './ShopPriceModifierRow.type';
 import './ShopPriceModifierRow.css';
-
-interface ShopPriceModifierRowProps {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  /** No currency is ticked, or the whole section is frozen. */
-  disabled: boolean;
-  /** Show the percentage as a tag in place of the slider: the read-only panel. */
-  readout?: boolean;
-  onChange?: (next: number) => void;
-}
 
 const percent = (value: number): string => `${value}%`;
 

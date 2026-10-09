@@ -1,14 +1,9 @@
 /* @layer renderer-components @kind types */
-/**
- * The shapes a currency-price section hands this compound. The rows and the
- * keys behind them belong to whichever options block is drawing them, so the
- * row components and their behavior take both as plain data and never reach
- * for one block's catalog keys.
- */
+import type { ReactNode } from 'react';
+import type { OptionValue } from '@shared/randomizer/world/options.type';
 import type { ShopBottleContent, ShopCountedCurrency } from '@shared/randomizer/world/shops/shop-price.type';
 
-/** Where a block's catalog keys come from: the opt-in and the two range ends. */
-interface CurrencyKeyHelpers {
+interface CurrencyCatalogKeys {
   keyOf: (currency: ShopCountedCurrency) => string;
   minKeyOf: (currency: ShopCountedCurrency) => string;
   maxKeyOf: (currency: ShopCountedCurrency) => string;
@@ -16,15 +11,49 @@ interface CurrencyKeyHelpers {
 
 interface BottleContentRowModel {
   content: ShopBottleContent;
-  /** The content in the player's own words. */
   label: string;
-  /** Its catalog key: what an edit on this row writes. */
   key: string;
   checked: boolean;
-  /** Its cauldron went to the shuffle: the row is greyed and cannot be ticked. */
   blocked: boolean;
-  /** Why this row is greyed; empty while it is not. */
   note: string;
 }
 
-export type { BottleContentRowModel, CurrencyKeyHelpers };
+interface CurrencyPriceRowProps {
+  label: string;
+  enabled: boolean;
+  onEnabledChange?: (enabled: boolean) => void;
+  blocked?: boolean;
+  note?: string;
+  stops?: readonly string[];
+  range?: readonly [number, number];
+  onRangeChange?: (next: [number, number]) => void;
+  readout?: boolean;
+  children?: ReactNode;
+}
+
+interface BottleContentRowProps {
+  row: BottleContentRowModel;
+  disabled: boolean;
+  readout?: boolean;
+  onChange?: (checked: boolean) => void;
+}
+
+type Values = Readonly<Record<string, OptionValue>>;
+
+interface CurrencyRowModel {
+  currency: ShopCountedCurrency;
+  label: string;
+  key: string;
+  minKey: string;
+  maxKey: string;
+  checked: boolean;
+  blocked: boolean;
+  note: string;
+  ceiling: number;
+  stops: readonly string[];
+  range: readonly [number, number];
+}
+
+export type {
+  BottleContentRowModel, BottleContentRowProps, CurrencyCatalogKeys, CurrencyPriceRowProps, CurrencyRowModel, Values,
+};

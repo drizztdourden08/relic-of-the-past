@@ -1,29 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The "Shop prices" section of an options panel: one row per currency a
- * shelf may charge, each a checkbox with the range its rolled amount is drawn
- * from beside it; the bottle row, a checkbox with the contents a shelf may
- * demand ticked inline; and the percentage every rolled price is scaled by.
- * With nothing ticked no price is rolled and every shelf charges what the
- * unmodified game charges.
- *
- * Shared by the creation panel and the read-only Options page; the rows arrive
- * derived from the snapshot values, and edits leave keyed by catalog key.
- *
- * Each counted range ends where its currency does: the capacity profile
- * decides how many rupees, arrows and bombs the seed can ever hold and the
- * heart ceiling how many hearts, so the rows read their top off it
- * (CurrencyPriceRow's currency-rows) and a range the player cannot pay for
- * cannot be set. The percentage has nothing to scale until a counted
- * currency is ticked, and freezes until one is; a bottle price carries no
- * amount, so it is never scaled.
- *
- * Two rules grey a row from elsewhere on the panel, and each says why on the
- * row it greys: a bottle content whose cauldron went to the shuffle cannot be
- * demanded as a price, and the arrows currency has nothing to pay with once
- * retro bow has taken arrows out of the world. The stored tick is kept, so
- * the choice comes straight back when the rule lets go.
- */
 import { Box } from '@ds/primitives';
 import { BottleContentRow, CurrencyPriceRow, currencyRowsOf } from '../CurrencyPriceRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
@@ -32,33 +7,10 @@ import { bottleContentRowsOf } from './behavior/bottle-content-rows';
 import {
   BOTTLE_KEY, CURRENCY_ROWS, SHOP_PRICE_MODIFIER_DEFAULT, SHOP_PRICE_MODIFIER_KEY,
   SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_MIN,
-  currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf,
 } from '@shared/randomizer/world/shops/shop-price-options.data';
-import type { CurrencyKeyHelpers } from '../CurrencyPriceRow';
-import type { CapacityProfile } from '@shared/randomizer/world/capacity';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import { SHOP_CURRENCY_KEYS } from './ShopPricesBlock.constants';
+import type { ShopPricesBlockProps } from './ShopPricesBlock.type';
 import './ShopPricesBlock.css';
-
-interface ShopPricesBlockProps {
-  values: Readonly<Record<string, OptionValue>>;
-  /** The reconciled capacity profile: what each counted range may climb to. */
-  capacity: CapacityProfile;
-  /**
-   * One patch per edit, keyed by catalog key. A patch instead of a single
-   * key because the range writes both ends together; two separate calls in
-   * the same tick would each build on the pre-edit values and the first end
-   * would be lost. Absent renders the section frozen, which is also how
-   * vanilla shops show it.
-   */
-  onChange?: (patch: Readonly<Record<string, OptionValue>>) => void;
-  /** Every tick, range and percentage shows as a tag: the read-only Options page. */
-  readout?: boolean;
-}
-
-/** The shop's own catalog keys, the ones the shared currency rows are built from. */
-const SHOP_CURRENCY_KEYS: CurrencyKeyHelpers = {
-  keyOf: currencyKeyOf, minKeyOf: currencyMinKeyOf, maxKeyOf: currencyMaxKeyOf,
-};
 
 const boolAt = (values: ShopPricesBlockProps['values'], key: string): boolean => values[key] === true;
 const numberAt = (values: ShopPricesBlockProps['values'], key: string, fallback: number): number =>
@@ -69,8 +21,6 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
   const currencyRows = currencyRowsOf(values, capacity, CURRENCY_ROWS, SHOP_CURRENCY_KEYS);
   const bottleRows = bottleContentRowsOf(values);
   const bottleOn = boolAt(values, BOTTLE_KEY);
-  // A percentage of nothing is nothing: with no counted currency in play there
-  // is no rolled price for it to scale, so the row is frozen.
   const countedOn = currencyRows.some((row) => row.checked);
 
   return (

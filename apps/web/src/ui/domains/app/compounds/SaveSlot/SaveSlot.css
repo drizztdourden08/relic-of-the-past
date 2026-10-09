@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* ─── Save Slot ─── */
-
 .save-slot {
   display: flex;
   flex-direction: column;
@@ -14,8 +12,6 @@
   pointer-events: none;
 }
 
-/* Busy spinner covers the card with a scrim so feedback reads while the
-   screenshot is captured and the slots reload. */
 .save-slot__spinner {
   position: absolute;
   inset: 0;
@@ -26,9 +22,6 @@
   background: var(--c-scrim-game);
 }
 
-/* ─── Card (screenshot + overlaid controls) ───
-   Width is driven by the container (overlay slot / Home grid cell); height
-   follows the SNES frame aspect. */
 .save-slot__card {
   position: relative;
   width: 100%;
@@ -53,7 +46,6 @@
   border-color: var(--c-danger);
 }
 
-/* Hold-to-save fill overlay that rises from the bottom */
 .save-slot__fill {
   position: absolute;
   bottom: 0;
@@ -74,8 +66,6 @@
   image-rendering: pixelated;
 }
 
-/* Placeholder for a slot with no screenshot. Stops short of the action bar so the
-   mascot is centred in the visible area, not behind the Load/Save split. */
 .save-slot__empty {
   position: absolute;
   inset: 0 0 30%;
@@ -95,7 +85,6 @@
   pointer-events: none;
 }
 
-/* Both layers share the grid, so their coordinates alone decide the overlap. */
 .save-slot__empty-badge svg {
   position: absolute;
   inset: 0;
@@ -108,8 +97,6 @@
   opacity: 0.34;
 }
 
-/* The ring reads as a separate object in front of the frame: its own colour, plus a halo in
-   the card's own background so the frame's strokes stop short of it instead of blending. */
 .save-slot__badge-cancel {
   color: var(--c-danger);
   opacity: 0.6;
@@ -131,11 +118,6 @@
   animation: save-slot-mascot-hop var(--duration-mascot-hop) linear infinite;
 }
 
-/* Two jumps per cycle: over to the right, then back to the left, forever. Each one
-   runs crouch → launch → arc → land → settle. Squash and stretch happen off the feet
-   (transform-origin sits at the bottom edge), so the push-off and the impact read as
-   weight, not as a resize. The arc frames are spaced wide near the apex and tight near
-   the ground, which is what gives the jump its gravity under linear time. */
 @keyframes save-slot-mascot-hop {
   0%   { transform: translate(-34%, 0)    scale(1, 1); }
   5%   { transform: translate(-34%, 0)    scale(1.14, 0.86); }
@@ -162,7 +144,6 @@
   }
 }
 
-/* Overlaid slot number, top left */
 .save-slot__num {
   position: absolute;
   top: 3px;
@@ -175,7 +156,6 @@
   pointer-events: none;
 }
 
-/* Overlaid shortcut key, top right */
 .save-slot__key {
   position: absolute;
   top: 3px;
@@ -191,8 +171,6 @@
   pointer-events: none;
 }
 
-/* Split action bar: the bottom slice of the card, blackened so it stays legible
-   over the screenshot, split into two flush halves (Load | Save), see SlotActionButton. */
 .save-slot__actions {
   position: absolute;
   left: 0;
@@ -205,7 +183,6 @@
   background: var(--c-scrim);
 }
 
-/* Timestamp below card */
 .save-slot__time {
   font-size: var(--text-xs);
   color: var(--c-text-muted);
