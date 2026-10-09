@@ -77,8 +77,10 @@ const tsEntry = (a) => `  {
     affectsVanillaParity: true,
     live: true,
   },`
+// The TS module carries only the gate header: its .generated name says it is generated, and
+// docs/architecture/code-notes/shared.md ("features/feature-registry/") names this script and the catalog.
 const ts = `/* @layer shared @kind data */
-${banner('FeatureDef entries for the 42 split bug-fix toggles.')}import type { FeatureDef } from './feature.type';
+import type { FeatureDef } from './feature.type';
 
 const BUNDLE_FIXES: FeatureDef[] = [
 ${allocated.map(tsEntry).join('\n')}

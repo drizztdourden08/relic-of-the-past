@@ -2,7 +2,7 @@
 import type { EventSpec } from '@shared/game/data/checks/event-spec.type';
 import { BOSS_KILLED_BIT } from '@shared/game/data/checks/indexed-event-bits.constants';
 import { hasFireSource, hasSword } from '@shared/game/data/requirements/helpers';
-import { EVENT_BIT as E } from '../event-bits';
+import { EVENT_BIT as E } from '../event-bits.generated';
 
 const GANONS_TOWER_EVENTS: EventSpec[] = [
   { n: 170, name: "Ganon's Tower: started", group: 'dungeon', dungeonId: 'dungeon-013', gameId: { roomId: 0x0c, mask: 0x0f } },

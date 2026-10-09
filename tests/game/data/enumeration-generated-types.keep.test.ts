@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 /**
- * `generated-types.ts` is committed, not built on the fly, so an edit to
+ * `enumeration.generated.type.ts` is committed, not built on the fly, so an edit to
  * `ALL_ENUMERATION` without `npm run generate:enum-types` would go unnoticed.
  * This regenerates the source in memory and diffs it byte for byte.
  */
@@ -11,12 +11,12 @@ import { ALL_ENUMERATION } from '@shared/game/data';
 import { buildGeneratedTypesSource, CATEGORY_TYPE_NAMES } from '../../../scripts/generate-enum-types.mjs';
 import { describeDataset } from '../../dataset-guard';
 
-const GENERATED_FILE = resolve(__dirname, '../../../shared/game/data/enumeration/generated-types.ts');
+const GENERATED_FILE = resolve(__dirname, '../../../shared/game/data/enumeration/enumeration.generated.type.ts');
 
 /** The categories the generator emits a union for: the rule, not a count. */
 const GENERATED_CATEGORIES = new Set(Object.keys(CATEGORY_TYPE_NAMES as Record<string, string>));
 
-describeDataset('enumeration/generated-types.ts', () => {
+describeDataset('enumeration/enumeration.generated.type.ts', () => {
   it('matches what generate-enum-types.mjs would emit from the current ALL_ENUMERATION', () => {
     const committed = readFileSync(GENERATED_FILE, 'utf8');
     const fresh = buildGeneratedTypesSource(ALL_ENUMERATION);
@@ -70,7 +70,7 @@ describeDataset('review-status category', () => {
     }
   });
 
-  it('regenerated a real ReviewStatus union in generated-types.ts', () => {
+  it('regenerated a real ReviewStatus union in enumeration.generated.type.ts', () => {
     const source = readFileSync(GENERATED_FILE, 'utf8');
     expect(source).toContain("type ReviewStatus = 'untouched' | 'in-review' | 'needs-work' | 'accepted' | 'verified';");
     expect(source).toMatch(/export type \{[\s\S]*\bReviewStatus\b[\s\S]*\};/);

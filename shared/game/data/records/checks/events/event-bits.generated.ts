@@ -1,22 +1,13 @@
-/* @layer shared-game @kind generated */
-/**
- * GENERATED FILE. Do not hand-edit; run `npm run generate`
- * (scripts/generate-from-records.mjs).
- *
- * Source: core/game-hooks/events/event_ids.h, the event ledger's bit order
- *
- * The order is frozen, so these numbers are save-file facts. A new event is appended at the end
- * of the header, never inserted. Boss and prize bits are indexed by the palace index.
- */
+/* @layer shared-game @kind data */
 
 const EVENT_BIT = {
-  bossKilled: (palace: number): number => palace,
+  bossKilled: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
   rematchArmos: 14,
   rematchLanmolas: 15,
   rematchMoldorm: 16,
   ganonBeaten: 17,
   gameCompleted: 18,
-  prizeTaken: (palace: number): number => 19 + palace,
+  prizeTaken: [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
   oldManRescued: 33,
   magicBat: 34,
   powderBag: 35,
@@ -74,7 +65,7 @@ const EVENT_BIT = {
   areaDarkDeathMountainTop: 87,
   areaPyramidLedge: 88,
   areaDarkLakeHyliaIsland: 89,
-  skullWoodsEntrance: (n: number): number => 90 + n,
+  skullWoodsEntrance: [90, 91, 92, 93, 94],
   turtleRockBigChestLedge: 95,
   turtleRockLaserBridge: 96,
   floodgatePulled: 97,
@@ -101,7 +92,6 @@ const EVENT_BIT = {
   hookshotFairyFarSide: 118,
 } as const;
 
-/** The highest bit the core's list holds, which is the entry before `kEventCount`. */
 const LAST_EVENT_BIT = EVENT_BIT.hookshotFairyFarSide;
 
 export { EVENT_BIT, LAST_EVENT_BIT };

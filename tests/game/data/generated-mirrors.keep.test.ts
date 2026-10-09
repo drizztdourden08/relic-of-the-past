@@ -22,10 +22,13 @@ const SCRIPT = join('scripts', 'generate-from-records.mjs');
 
 /** The generated files, as the plan's `[G]` list names them. */
 const GENERATED = [
-  'shared/game/data/records/checks/events/event-bits.ts',
-  'shared/game/data/taxonomy/screen-tags.ts',
-  'shared/game/data/taxonomy/connection-tags.ts',
-  'shared/game/data/taxonomy/check-content-tags.ts',
+  'shared/game/data/records/checks/events/event-bits.generated.ts',
+  'shared/game/data/taxonomy/screen-tags.generated.ts',
+  'shared/game/data/taxonomy/screen-tags.generated.type.ts',
+  'shared/game/data/taxonomy/connection-tags.generated.ts',
+  'shared/game/data/taxonomy/connection-tags.generated.type.ts',
+  'shared/game/data/taxonomy/check-content-tags.generated.ts',
+  'shared/game/data/taxonomy/check-content-tags.generated.type.ts',
   'core/game-hooks/story_events.c',
   'core/game-hooks/prize_presentation.c',
 ];

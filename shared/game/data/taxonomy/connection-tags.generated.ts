@@ -1,38 +1,5 @@
-/* @layer shared-game @kind generated */
-/**
- * GENERATED FILE. Do not hand-edit; run `npm run generate`
- * (scripts/generate-from-records.mjs).
- *
- * Source: records/tags, every tag record that applies to a connection
- *
- * Direction is read off `canExit` (connections/derive.ts), so the retired `dir:one-way` and
- * `dir:two-way` terms have no replacement here.
- */
-
-type TransitTag =
-  | 'transit:door' | 'transit:hole' | 'transit:ledge' | 'transit:stairs' | 'transit:warp'
-  | 'transit:mirror' | 'transit:waterfall' | 'transit:walk' | 'transit:swim' | 'transit:grave'
-  | 'transit:bomb' | 'transit:bonk' | 'transit:rock' | 'transit:push' | 'transit:hookshot';
-
-type BarrierTag =
-  | 'barrier:none' | 'barrier:small-key' | 'barrier:big-key' | 'barrier:bomb'
-  | 'barrier:gloves' | 'barrier:hammer' | 'barrier:dark' | 'barrier:medallion'
-  | 'barrier:crystals' | 'barrier:event' | 'barrier:dash' | 'barrier:hookshot'
-  | 'barrier:swim' | 'barrier:fire' | 'barrier:book' | 'barrier:glitch';
-
-type ContextTag =
-  | 'ctx:entrance' | 'ctx:exit' | 'ctx:internal' | 'ctx:cross-world' | 'ctx:save-quit'
-  | 'ctx:boss' | 'ctx:overworld' | 'ctx:dungeon-enter' | 'ctx:shortcut';
-
-type ConnectionTag = TransitTag | BarrierTag | ContextTag;
-
-type ConnectionTagNamespace = 'transit' | 'barrier' | 'ctx';
-
-interface ConnectionTagMetadata {
-  id: ConnectionTag;
-  label: string;
-  namespace: ConnectionTagNamespace;
-}
+/* @layer shared-game @kind data */
+import type { ConnectionTagMetadata, ConnectionTagNamespace } from './connection-tags.generated.type';
 
 const CONNECTION_TAG_NAMESPACES: { id: ConnectionTagNamespace; label: string }[] = [
   { id: 'transit', label: 'Transit' },
@@ -84,6 +51,3 @@ const CONNECTION_TAG_METADATA: ConnectionTagMetadata[] = [
 ];
 
 export { CONNECTION_TAG_METADATA, CONNECTION_TAG_NAMESPACES };
-export type {
-  BarrierTag, ConnectionTag, ConnectionTagMetadata, ConnectionTagNamespace, ContextTag, TransitTag,
-};

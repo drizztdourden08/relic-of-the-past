@@ -1,14 +1,11 @@
 /* @layer shared-game @kind constants */
-import { EVENT_BIT } from '../records/checks/events/event-bits';
+import { EVENT_BIT } from '../records/checks/events/event-bits.generated';
 
 const PALACE_COUNT = 14;
 const SKULL_WOODS_FRONT_ENTRANCE_COUNT = 5;
 
-const BOSS_KILLED_BIT: readonly number[] = Array.from({ length: PALACE_COUNT }, (_, palace) => EVENT_BIT.bossKilled(palace));
-const PRIZE_TAKEN_BIT: readonly number[] = Array.from({ length: PALACE_COUNT }, (_, palace) => EVENT_BIT.prizeTaken(palace));
-const SKULL_WOODS_ENTRANCE_BIT: readonly number[] = Array.from(
-  { length: SKULL_WOODS_FRONT_ENTRANCE_COUNT },
-  (_, entrance) => EVENT_BIT.skullWoodsEntrance(entrance),
-);
+const BOSS_KILLED_BIT: readonly number[] = EVENT_BIT.bossKilled;
+const PRIZE_TAKEN_BIT: readonly number[] = EVENT_BIT.prizeTaken;
+const SKULL_WOODS_ENTRANCE_BIT: readonly number[] = EVENT_BIT.skullWoodsEntrance;
 
 export { BOSS_KILLED_BIT, PALACE_COUNT, PRIZE_TAKEN_BIT, SKULL_WOODS_ENTRANCE_BIT, SKULL_WOODS_FRONT_ENTRANCE_COUNT };

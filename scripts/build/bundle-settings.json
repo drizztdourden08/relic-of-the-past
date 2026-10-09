@@ -264,7 +264,7 @@
     {
       "id": "boomerangTerminateWhenEmptyHanded",
       "name": "Boomerang stuck on empty-hand release",
-      "userMessage": "Boomerang ends correctly when released early with nothing in hand, instead of getting stuck.",
+      "userMessage": "Boomerang ends when released early with nothing in hand, instead of getting stuck.",
       "category": "gameplay-affecting",
       "bundleFlag": "MiscBugFixes",
       "sites": [
@@ -404,7 +404,7 @@
     {
       "id": "widescreenLinkHideViaOffscreenY",
       "name": "Widescreen Link hide",
-      "userMessage": "Hides Link correctly across the full widescreen view (blinking, cape, doorways) instead of only off the normal 4:3 screen.",
+      "userMessage": "Hides Link across the full widescreen view (blinking, cape, doorways) instead of only off the normal 4:3 screen.",
       "category": "visual-only",
       "bundleFlag": "WidescreenVisualFixes",
       "sites": [

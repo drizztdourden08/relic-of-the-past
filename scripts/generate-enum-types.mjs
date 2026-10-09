@@ -2,8 +2,9 @@
  * @layer tooling-scripts
  * @kind logic
  *
- * Generates `shared/game/data/enumeration/generated-types.ts` from `ALL_ENUMERATION`:
- * one `export type <Name> = 'a' | 'b' | ...;` per category, in seed order. The
+ * Generates `shared/game/data/enumeration/enumeration.generated.type.ts` from
+ * `ALL_ENUMERATION`: one `type <Name> = 'a' | 'b' | ...;` per category, in seed order,
+ * under the gate's `@layer`/`@kind` header and no other comment. The
  * `.ts` source is imported directly (Node 24 strips erasable TypeScript; the module
  * has no runtime deps). Run with `npm run generate:enum-types`, which invokes
  * `generate-enum-types-cli.mjs`.
@@ -21,7 +22,7 @@ import path from 'node:path';
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = path.join(SCRIPT_DIR, '..');
 const enumerationSourceFor = (root) => path.join(root, 'shared/game/data/records/enumeration/enumeration.ts');
-const outputPathFor = (root) => path.join(root, 'shared/game/data/enumeration/generated-types.ts');
+const outputPathFor = (root) => path.join(root, 'shared/game/data/enumeration/enumeration.generated.type.ts');
 
 /** category → the exported type name every consuming file already expects. */
 const CATEGORY_TYPE_NAMES = {
@@ -37,12 +38,7 @@ const CATEGORY_TYPE_NAMES = {
   'review-status': 'ReviewStatus',
 };
 
-const HEADER = `/* @layer shared-game @kind generated */
-/**
- * GENERATED FILE. Do not hand-edit. Regenerate with \`npm run generate:enum-types\`
- * (scripts/generate-enum-types.mjs), which reads \`ALL_ENUMERATION\`
- * (../enumeration.ts) and emits one union type per category.
- */
+const HEADER = `/* @layer shared-game @kind types */
 `;
 
 /** One `export type Name = 'a' | 'b';` line per category, in seed order, first-seen-wins for dupes. */

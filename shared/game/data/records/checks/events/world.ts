@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import type { EventSpec } from '@shared/game/data/checks/event-spec.type';
-import { EVENT_BIT as E } from './event-bits';
+import { EVENT_BIT as E } from './event-bits.generated';
 
 const VISITED = 0x0f;
 

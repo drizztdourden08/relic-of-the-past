@@ -2,7 +2,7 @@
 import type { CheckId, DungeonId, ItemId, SpriteId } from '../ids';
 import type { ItemCategory } from '../../taxonomy/item-categories';
 import type { WeaponProfile } from '../combat';
-import type { ItemOrigin } from '../../enumeration/generated-types';
+import type { ItemOrigin } from '../../enumeration/enumeration.generated.type';
 import type { ReviewMark } from '../review';
 
 interface ItemGameId {

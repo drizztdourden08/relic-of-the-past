@@ -13,8 +13,9 @@
  * `shared/game/data/index.ts`, which seeds the registry, so a target reads records
  * through the facade getters and never imports a record file by path.
  *
- * Two output shapes. A TypeScript target owns its whole file and starts with a header
- * naming this script and its sources. A C target owns one table inside a file that also
+ * Two output shapes. A TypeScript target owns its whole file, is named `*.generated.ts`
+ * (or `*.generated.type.ts` for its types) and carries no comment but the gate's
+ * `@layer`/`@kind` header. A C target owns one table inside a file that also
  * holds hand code, so it is spliced between a pair of "generated: begin" and
  * "generated: end" block comments and the surrounding C is left alone.
  *
@@ -41,17 +42,18 @@
  *                               its display words, not a byte table in the cartridge, so
  *                               there is no address to read them from.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const EVENT_IDS_H = 'core/game-hooks/events/event_ids.h';
-const RUN_HINT = 'npm run generate';
+const RUN_HINT = 'pnpm run generate';
 
 const abs = (rel) => path.join(ROOT, rel);
 const read = (rel) => readFileSync(abs(rel), 'utf8');
+const readIfPresent = (rel) => (existsSync(abs(rel)) ? read(rel) : null);
 
 /** The dataset, seeded exactly as the app seeds it. */
 const loadDataset = async () => {
@@ -88,25 +90,23 @@ const wrapped = (text, prefix, width = 98) => {
   return lines.join('\n');
 };
 
-const header = (layer, source, note) => `/* @layer ${layer} @kind generated */
 /**
- * GENERATED FILE. Do not hand-edit; run \`${RUN_HINT}\`
- * (scripts/generate-from-records.mjs).
- *
-${wrapped(`Source: ${source}`, ' * ')}
-${note === undefined ? ' */' : ` *\n${wrapped(note, ' * ')}\n */`}
-`;
+ * The only text a generated TypeScript file carries above its code: the gate's header. That
+ * it is generated is said by its `.generated` name, and where it comes from by
+ * docs/architecture/code-notes/game-data.md ("Generated files").
+ */
+const header = (layer, kind) => `/* @layer ${layer} @kind ${kind} */\n`;
 
-// ─── event-bits.ts, from the ledger's own header ─────────────────────────────────────────
+// ─── event-bits.generated.ts, from the ledger's own header ─────────────────────────────────────────
 
 /**
- * Runs of ledger bits the TypeScript side reads through one indexed accessor. The C side
- * spells every slot out, because an enum cannot hold a run.
+ * Runs of ledger bits the TypeScript side reads as one array, indexed by palace or by
+ * entrance number. The C side spells every slot out, because an enum cannot hold a run.
  */
 const EVENT_BIT_RUNS = [
-  { key: 'bossKilled', param: 'palace', first: 'kEvent_BossKilled_Sewers', last: 'kEvent_BossKilled_GanonsTower' },
-  { key: 'prizeTaken', param: 'palace', first: 'kEvent_PrizeTaken_Sewers', last: 'kEvent_PrizeTaken_GanonsTower' },
-  { key: 'skullWoodsEntrance', param: 'n', first: 'kEvent_SkullWoodsEntrance_0', last: 'kEvent_SkullWoodsEntrance_4' },
+  { key: 'bossKilled', first: 'kEvent_BossKilled_Sewers', last: 'kEvent_BossKilled_GanonsTower' },
+  { key: 'prizeTaken', first: 'kEvent_PrizeTaken_Sewers', last: 'kEvent_PrizeTaken_GanonsTower' },
+  { key: 'skullWoodsEntrance', first: 'kEvent_SkullWoodsEntrance_0', last: 'kEvent_SkullWoodsEntrance_4' },
 ];
 
 /** The seven keys whose TypeScript name is not the camel-case of the C one. */
@@ -156,22 +156,19 @@ const buildEventBits = () => {
       return;
     }
     if (grouped.first !== index) return;
-    const offset = index === 0 ? grouped.run.param : `${index} + ${grouped.run.param}`;
-    lines.push(`  ${grouped.run.key}: (${grouped.run.param}: number): number => ${offset},`);
+    const bits = names.map((_, i) => i).filter((i) => runOf.get(names[i])?.run === grouped.run);
+    lines.push(`  ${grouped.run.key}: [${bits.join(', ')}],`);
   });
 
   const last = names[names.length - 1];
   if (runOf.has(last)) throw new Error('generate: the last ledger bit is part of a run, so LAST_EVENT_BIT has no key');
   const lastKey = EVENT_BIT_NAMES[last] ?? camelOf(last);
 
-  const note = 'The order is frozen, so these numbers are save-file facts. A new event is appended '
-    + 'at the end of the header, never inserted. Boss and prize bits are indexed by the palace index.';
-  return `${header('shared-game', `${EVENT_IDS_H}, the event ledger's bit order`, note)}
+  return `${header('shared-game', 'data')}
 const EVENT_BIT = {
 ${lines.join('\n')}
 } as const;
 
-/** The highest bit the core's list holds, which is the entry before \`kEventCount\`. */
 const LAST_EVENT_BIT = EVENT_BIT.${lastKey};
 
 export { EVENT_BIT, LAST_EVENT_BIT };
@@ -181,17 +178,16 @@ export { EVENT_BIT, LAST_EVENT_BIT };
 // ─── the three tag taxonomies, from records/tags ─────────────────────────────────────────
 
 /**
- * One entry per taxonomy file: which collection's tags it covers, and the names its
- * consumers import. A namespace with its own sub-union is named here; a taxonomy of one
- * namespace has none, and its union is built straight from the values.
+ * One entry per taxonomy: which collection's tags it covers, and the names its consumers
+ * import. Each taxonomy is two files, `<base>.generated.type.ts` for the unions and the
+ * metadata shape and `<base>.generated.ts` for the two tables. A namespace with its own
+ * sub-union is named here; a taxonomy of one namespace has none, and its union is built
+ * straight from the values.
  */
 const TAXONOMIES = [
   {
-    path: 'shared/game/data/taxonomy/screen-tags.ts',
+    base: 'shared/game/data/taxonomy/screen-tags',
     appliesTo: 'screen',
-    what: 'every tag record that applies to a screen',
-    note: 'Our own vocabulary for categorizing a screen, not a game value. The query helpers live '
-      + 'in logic/queries.',
     union: 'ScreenTag',
     namespaceUnion: 'TagNamespace',
     metadataType: 'TagMetadata',
@@ -200,11 +196,8 @@ const TAXONOMIES = [
     groups: { env: 'EnvironmentTag', role: 'RoleTag', hazard: 'HazardTag', loot: 'LootTag', traverse: 'TraversalTag' },
   },
   {
-    path: 'shared/game/data/taxonomy/connection-tags.ts',
+    base: 'shared/game/data/taxonomy/connection-tags',
     appliesTo: 'connection',
-    what: 'every tag record that applies to a connection',
-    note: 'Direction is read off `canExit` (connections/derive.ts), so the retired `dir:one-way` '
-      + 'and `dir:two-way` terms have no replacement here.',
     union: 'ConnectionTag',
     namespaceUnion: 'ConnectionTagNamespace',
     metadataType: 'ConnectionTagMetadata',
@@ -213,11 +206,8 @@ const TAXONOMIES = [
     groups: { transit: 'TransitTag', barrier: 'BarrierTag', ctx: 'ContextTag' },
   },
   {
-    path: 'shared/game/data/taxonomy/check-content-tags.ts',
+    base: 'shared/game/data/taxonomy/check-content-tags',
     appliesTo: 'check',
-    what: 'every tag record that applies to a check',
-    note: "A check's content is the one check tag family no other record states, so it is stored "
-      + 'instead of recomputed on every read.',
     union: 'ContentTag',
     metadataType: 'ContentTagMetadata',
     metadata: 'CONTENT_TAG_METADATA',
@@ -277,26 +267,34 @@ const buildTaxonomy = (spec, data) => {
   namespace: ${namespaceType};
 }`);
 
-  blocks.push(`const ${spec.namespaces}: { id: ${namespaceType}; label: string }[] = [
-${namespaceIds.map((id) => `  { id: ${quoted(id)}, label: ${quoted(namespaceLabels.get(id))} },`).join('\n')}
-];`);
-
-  blocks.push(`const ${spec.metadata}: ${spec.metadataType}[] = [
-${tags.map((tag) => `  { id: ${quoted(tag.name)}, label: ${quoted(tag.label)}, namespace: ${quoted(tag.namespace)} },`).join('\n')}
-];`);
-
   const typeExports = [
     spec.union, spec.metadataType, spec.namespaceUnion,
     ...namespaceIds.map((id) => spec.groups[id]),
   ].filter(Boolean).sort();
 
   const typeExportLine = `export type { ${typeExports.join(', ')} };`;
-  return `${header('shared-game', `records/tags, ${spec.what}`, spec.note)}
+  const typeSource = `${header('shared-game', 'types')}
 ${blocks.join('\n\n')}
 
-export { ${[spec.metadata, spec.namespaces].sort().join(', ')} };
 ${typeExportLine.length <= 98 ? typeExportLine : `export type {\n${wrapped(typeExports.join(', '), '  ')},\n};`}
 `;
+
+  const tables = [
+    `const ${spec.namespaces}: { id: ${namespaceType}; label: string }[] = [
+${namespaceIds.map((id) => `  { id: ${quoted(id)}, label: ${quoted(namespaceLabels.get(id))} },`).join('\n')}
+];`,
+    `const ${spec.metadata}: ${spec.metadataType}[] = [
+${tags.map((tag) => `  { id: ${quoted(tag.name)}, label: ${quoted(tag.label)}, namespace: ${quoted(tag.namespace)} },`).join('\n')}
+];`,
+  ];
+  const typeImports = [spec.metadataType, spec.namespaceUnion].filter(Boolean).sort().join(', ');
+  const dataSource = `${header('shared-game', 'data')}import type { ${typeImports} } from './${path.basename(spec.base)}.generated.type';
+
+${tables.join('\n\n')}
+
+export { ${[spec.metadata, spec.namespaces].sort().join(', ')} };
+`;
+  return { typeSource, dataSource };
 };
 
 // ─── the C tables, spliced into our own hook layer ───────────────────────────────────────
@@ -354,9 +352,17 @@ const spliceCTable = (source, name, table) => {
 
 // ─── the run ─────────────────────────────────────────────────────────────────────────────
 
+const taxonomyTargets = (spec, data) => {
+  const { typeSource, dataSource } = buildTaxonomy(spec, data);
+  return [
+    { path: `${spec.base}.generated.type.ts`, content: typeSource },
+    { path: `${spec.base}.generated.ts`, content: dataSource },
+  ];
+};
+
 const targetsFor = (data) => [
-  { path: 'shared/game/data/records/checks/events/event-bits.ts', content: buildEventBits() },
-  ...TAXONOMIES.map((spec) => ({ path: spec.path, content: buildTaxonomy(spec, data) })),
+  { path: 'shared/game/data/records/checks/events/event-bits.generated.ts', content: buildEventBits() },
+  ...TAXONOMIES.flatMap((spec) => taxonomyTargets(spec, data)),
   ...C_TABLES.map((table) => ({
     path: table.file,
     content: spliceCTable(read(table.file), table.name, table.build(data)),
@@ -377,7 +383,7 @@ const run = async () => {
   const stale = [];
   for (const target of targets) {
     const label = target.label ?? target.path;
-    const current = read(target.path);
+    const current = readIfPresent(target.path);
     if (current === target.content) { console.log(`up to date  ${label}`); continue; }
     if (checkOnly) { stale.push(label); console.log(`STALE       ${label}`); continue; }
     writeFileSync(abs(target.path), target.content, 'utf8');

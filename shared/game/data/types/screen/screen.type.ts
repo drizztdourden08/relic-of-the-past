@@ -3,7 +3,7 @@ import type { ActorId, AreaId, LocationId, RegionId, ScreenId, TagId } from '../
 import type { RegionBounds } from '../region';
 import type { ReviewMark } from '../review';
 import type { RegionNavData } from '../../../navigation/nav-data.types';
-import type { InteriorKind, ScreenKind, World } from '../../enumeration/generated-types';
+import type { InteriorKind, ScreenKind, World } from '../../enumeration/enumeration.generated.type';
 
 type ScreenWorld = Exclude<World, 'both'>;
 

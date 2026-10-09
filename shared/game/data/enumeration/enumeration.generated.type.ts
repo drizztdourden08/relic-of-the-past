@@ -1,9 +1,4 @@
-/* @layer shared-game @kind generated */
-/**
- * GENERATED FILE. Do not hand-edit. Regenerate with `npm run generate:enum-types`
- * (scripts/generate-enum-types.mjs), which reads `ALL_ENUMERATION`
- * (../enumeration.ts) and emits one union type per category.
- */
+/* @layer shared-game @kind types */
 
 type World = 'light' | 'dark' | 'both';
 type ScreenKind = 'overworld' | 'dungeon' | 'interior';

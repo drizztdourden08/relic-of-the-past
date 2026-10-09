@@ -55,7 +55,7 @@ describe('generateEnumTypes(root) lets an explicit root win over the file-relati
     // temp root, not a fallback to the real committed file.
     const outputPath = await generateEnumTypes(tempRoot);
 
-    expect(outputPath).toBe(join(enumDir, 'generated-types.ts'));
+    expect(outputPath).toBe(join(enumDir, 'enumeration.generated.type.ts'));
     const generated = readFileSync(outputPath, 'utf-8');
     expect(generated).toContain("type World = 'light' | 'dark';");
   });

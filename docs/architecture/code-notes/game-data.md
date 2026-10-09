@@ -4,6 +4,37 @@
 Facts about `shared/game/data/` that the code cannot say on its own. Each heading names a file
 under `shared/game/data/`. The records hold the data; this page holds the why.
 
+## Generated files
+
+A file whose name holds `.generated` is written by a script. Never edit one by hand: change
+its source and run the script again. The generated file carries the gate's `@layer`/`@kind`
+header and no other comment, so what it comes from is written here.
+
+- `records/checks/events/event-bits.generated.ts`, from the `EventId` enum in
+  `core/game-hooks/events/event_ids.h` (the event ledger's bit order), by
+  `pnpm run generate` (`scripts/generate-from-records.mjs`). The order is frozen, so these
+  numbers are save file facts. A new event is appended at the end of the header, never
+  inserted. The boss killed and prize taken runs are arrays indexed by the palace index, the
+  Skull Woods front entrances by entrance number. `LAST_EVENT_BIT` is the entry before
+  `kEventCount`, the highest bit the core's list holds.
+- `taxonomy/screen-tags.generated.ts` and `.generated.type.ts`, from every tag record that
+  applies to a screen, by the same script. This is our own vocabulary for sorting screens, not
+  a game value. The query helpers live in `logic/queries`.
+- `taxonomy/connection-tags.generated.ts` and `.generated.type.ts`, from every tag record that
+  applies to a connection. Direction is read off `canExit` (`connections/derive.ts`), so the
+  retired `dir:one-way` and `dir:two-way` terms have no replacement here.
+- `taxonomy/check-content-tags.generated.ts` and `.generated.type.ts`, from every tag record
+  that applies to a check. A check's content is the one check tag family no other record
+  states, so it is stored and not recomputed on every read.
+- `enumeration/enumeration.generated.type.ts`, one union per category of `ALL_ENUMERATION`
+  (`records/enumeration/enumeration.ts`), by `pnpm run generate:enum-types`
+  (`scripts/generate-enum-types.mjs`). The dev editor's enumeration writer runs it after
+  every write.
+
+`pnpm run generate:check` writes nothing and fails on a file that differs from a fresh run;
+`tests/game/data/generated-mirrors.keep.test.ts` runs it, and
+`tests/game/data/enumeration-generated-types.keep.test.ts` does the same for the unions.
+
 ## records/actors/bosses.ts
 
 - Sprite type 0x09 is the giant Moldorm, the mountain tower's boss. Sprite type 0x18 is the small
@@ -119,7 +150,7 @@ under `shared/game/data/`. The records hold the data; this page holds the why.
   game reads, `event_receipts.c`), so it opens with the room and not at the front door. The two
   Turtle Rock ledges outside its side doors are reached only from inside the dungeon.
 - The boss and prize ledger bits are indexed by palace, and the Skull Woods front entrances by
-  number. `checks/indexed-event-bits.constants.ts` builds those tables from the generated
+  number. `checks/indexed-event-bits.constants.ts` names those runs of the generated
   `EVENT_BIT`, so the rows can read them as data (`BOSS_KILLED_BIT[2]`).
 - `EARLY_STORY_EVENTS` are the seven story moments the tracker recorded before the events' range
   existed. They keep their old ids, so they are written as full records.

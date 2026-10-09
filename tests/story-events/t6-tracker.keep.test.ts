@@ -105,8 +105,8 @@ describe('T6: event records', () => {
     }
     h.rooms.set(0x07, (h.rooms.get(0x07) ?? 0) | 0x800);
     h.rooms.set(0x31, (h.rooms.get(0x31) ?? 0) | 0x8000);
-    h.ledger.add(EVENT_BIT.bossKilled(10));
-    h.ledger.add(EVENT_BIT.prizeTaken(10));
+    h.ledger.add(EVENT_BIT.bossKilled[10]);
+    h.ledger.add(EVENT_BIT.prizeTaken[10]);
     const done = sweep(h);
     expect(done.has(byName('Tower of Hera: all chests opened').id)).toBe(true);
     expect(done.has(byName('Tower of Hera: all keys collected').id)).toBe(true);

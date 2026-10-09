@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ScreenTag } from '../taxonomy/screen-tags';
+import type { ScreenTag } from '../taxonomy/screen-tags.generated.type';
 import { tagKeysOf } from './tag-keys-of';
 
 const screenTagKeysOf = (ids: readonly string[]): readonly ScreenTag[] =>

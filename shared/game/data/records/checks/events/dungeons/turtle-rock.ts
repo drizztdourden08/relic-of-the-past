@@ -2,7 +2,7 @@
 import type { EventSpec } from '@shared/game/data/checks/event-spec.type';
 import { BOSS_KILLED_BIT, PRIZE_TAKEN_BIT } from '@shared/game/data/checks/indexed-event-bits.constants';
 import { canSeeInDarkRooms } from '@shared/game/data/requirements/helpers';
-import { EVENT_BIT as E } from '../event-bits';
+import { EVENT_BIT as E } from '../event-bits.generated';
 
 const TURTLE_ROCK_EVENTS: EventSpec[] = [
   { n: 160, name: 'Turtle Rock: started', group: 'dungeon', dungeonId: 'dungeon-012', gameId: { roomId: 0xd6, mask: 0x0f } },
