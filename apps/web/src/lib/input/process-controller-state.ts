@@ -1,25 +1,8 @@
 /* @layer renderer-lib @kind logic */
-/**
- * SDL3 controller state intake. The native addon already decodes and
- * factory-calibrates raw reports into normalized buttons/axes, so this
- * bypasses the legacy per-device HID report parser (process-hid-report.ts)
- * entirely.
- *
- * Trigger calibration applies here, since it operates on the normalized 0..1
- * domain. SDL's sticks arrive already normalized to -1..1.
- */
+import { SDL_AXIS } from '@shared/input/sdl-buttons';
 import { applyTriggerCalibration } from './stick-calibration';
-import type { TriggerCalibration } from './stick-calibration';
-import type { ControllerInputState } from './controller-input-store-types';
-
-interface ControllerStateHost {
-  states: Map<string, ControllerInputState>;
-  listeners: Set<(state: ControllerInputState) => void>;
-  connectedDeviceKeys: Set<string>;
-  connected: boolean;
-  log(msg: string): void;
-  getTriggerCalibration(deviceKey: string, axisIndex: number): TriggerCalibration | undefined;
-}
+import type { ControllerInputState } from './controller-input-store.type';
+import type { ControllerStateHost } from './process-controller-state.type';
 
 const markConnected = (host: ControllerStateHost, deviceKey: string): void => {
   if (host.connectedDeviceKeys.has(deviceKey)) return;
@@ -30,7 +13,7 @@ const markConnected = (host: ControllerStateHost, deviceKey: string): void => {
 
 const processControllerState = (host: ControllerStateHost, deviceKey: string, buttons: boolean[], axes: number[]): void => {
   const resolvedAxes = [...axes];
-  for (let i = 4; i < resolvedAxes.length; i++) {
+  for (let i: number = SDL_AXIS.LEFT_TRIGGER; i < resolvedAxes.length; i++) {
     const triggerCal = host.getTriggerCalibration(deviceKey, i);
     if (triggerCal) resolvedAxes[i] = applyTriggerCalibration(resolvedAxes[i], triggerCal);
   }

@@ -1,14 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Renderer-side resolver from a DeviceEntry (the SDL3 controller snapshot)
- * to a ResolvedDevice: the single place both the calibration cards
- * (InputTester) and the controls screen (ProfileHub) ask "what does this
- * device have, and how do I show it". SDL's own hasButton/hasAxis/
- * buttonLabels decide what exists; the family layer (shared/input/family)
- * only decides how to label/icon it. Neither a preset nor DEVICE_DATABASE
- * is consulted here, so the two screens can no longer disagree; they both
- * call this.
- */
 import {
   buildDisplayContext,
   resolveBrandLogoKey,
@@ -20,12 +10,6 @@ import type { DeviceEntry } from '@shared/ipc';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 
-/**
- * Resolves one snapshot entry. An 'unavailable' entry was never opened by
- * SDL, so it carries no hasButton/hasAxis/buttonLabels; those default to
- * empty arrays here, which resolveDeviceControls turns into an empty
- * control list, not a guess.
- */
 const resolveDeviceFromEntry = (entry: DeviceEntry): ResolvedDevice => {
   const vendorId = toHex4(entry.vendorId);
   const productId = toHex4(entry.productId);
