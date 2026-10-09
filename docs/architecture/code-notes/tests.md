@@ -1494,6 +1494,20 @@ back to start, as `between` always has. A sprite's own `box` (the 16x8 bomb and 
 declares a non square aspect; a heart is always 8x8 and the magic bar 80x16, since the row that
 repeats hearts is what grows. The screen's 3x3 bands reproduce the nine anchors' numbers.
 
+### hud/hud-motion
+
+Phase 6 of the HUD data binding plan (Motion): `animation` and `transition`, plus the reflow
+warning the validator reports as data. The two proofs the plan named: staggering with
+`delay: 'index * 80'` in a repeat (each instance bakes its delay to a different literal, 0, 80,
+160, 240, 320, so one shared clock samples different points and the hearts do not pulse in
+lockstep), and `steps(n)`, discrete instead of interpolated, the mechanism that replaces a GIF for
+anything reactive (four 16px frames land on exactly four rungs). The last heart pulse gates on
+the last heart that is neither full nor empty. Before its delay an animation sits at the rest
+pose. Expressions use `and`, `or` and `not` (contract §22.6): the plan's own `&&` spelling is
+refused. `index`, `count` and `item` exist only inside a repeat's child. Width and height
+animating inside a flow container warn; the six safe properties do not, and nothing warns inside
+an overlay (children sharing one grid cell, what replaced `stack` in §42), since nothing reflows.
+
 ### hud/hud-motion-controls.keep.test.ts
 
 Phase 10 of the inspector UX review is Motion. What the new controls write is a question about
