@@ -1158,14 +1158,14 @@ field.
 ### language/variables/variable-index.ts
 
 A key lookup over a variable list, built once per expansion pass. The first entry wins on a
-duplicate key. `variablesFromLegacy` puts the engine's two entries ahead of everything else, so a
+duplicate key. `variablesFromNameTables` puts the engine's two entries ahead of everything else, so a
 locked entry can never be shadowed by a term that shares its key. The game owns those two, and a
 set cannot define them again.
 
 ### language/variables/variables-from-name-tables.ts
 
 The bridge between the one variable list and the two tables that came before it.
-`variablesFromNameTables` (exported as `variablesFromLegacy`) folds a glossary and a name table into
+`variablesFromNameTables` folds a glossary and a name table into
 one list; `legacyFromVariables` projects a list back into the pair, so the pause menu, the bake
 step and the editor's tables keep reading what they always read. The result order is the engine's
 two first (locked, so they always win a key clash), then the translator's terms, then the menu

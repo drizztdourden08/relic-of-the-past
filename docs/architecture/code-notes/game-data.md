@@ -19,7 +19,7 @@ header and no other comment, so what it comes from is written here.
   `kEventCount`, the highest bit the core's list holds.
 - `taxonomy/screen-tags.generated.ts` and `.generated.type.ts`, from every tag record that
   applies to a screen, by the same script. This is our own vocabulary for sorting screens, not
-  a game value. The query helpers live in `logic/queries`.
+  a game value. A screen's tags are read through `tags/screen-tag-keys-of.ts`.
 - `taxonomy/connection-tags.generated.ts` and `.generated.type.ts`, from every tag record that
   applies to a connection. Direction is read off `canExit` (`connections/derive.ts`), so the
   retired `dir:one-way` and `dir:two-way` terms have no replacement here.

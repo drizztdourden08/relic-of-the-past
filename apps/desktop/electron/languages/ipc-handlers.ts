@@ -12,7 +12,7 @@ import { extractLanguagePack, listLanguageSummaries, readLanguagePack } from './
 import { recompileAllAssets } from '../assets/compile-rom-assets';
 import { createNodeFileStore } from '../lib/node-file-store';
 import { createSet, duplicateSet, getSet, list, saveSet } from '@shared/storage/languages';
-import type { NewSetParams } from '@shared/storage/languages';
+import type { CreateSetParams } from '@shared/storage/languages';
 import type { LanguageSet } from '@shared/game/language';
 import { setDir } from '@shared/storage/languages/paths';
 import { refuseInstalled } from '../storage/installed-guard';
@@ -103,7 +103,7 @@ const registerLanguageHandlers = () => {
     await recompileAllAssets();
   });
 
-  handle('languages:createSet', async (_event, params: NewSetParams) => {
+  handle('languages:createSet', async (_event, params: CreateSetParams) => {
     await refuseInstalledSet(params.id);
     const set = await createSet(files, params);
     await recompileAllAssets();

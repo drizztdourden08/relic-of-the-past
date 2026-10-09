@@ -4,11 +4,11 @@ import type { LanguageSet } from '@shared/game/language';
 import { emptyNameTable } from '@shared/game/language';
 import { assertFreeSetId } from '../set-id';
 import { clone } from './clone';
-import type { NewSetParams } from './create.type';
+import type { CreateSetParams } from './create.type';
 import { requireSet } from './require-set';
 import { saveWithFont } from './save-with-font';
 
-const createSet = async (files: FileStore, params: NewSetParams): Promise<LanguageSet> => {
+const createSet = async (files: FileStore, params: CreateSetParams): Promise<LanguageSet> => {
   const { id, name, base } = params;
   await assertFreeSetId(files, id);
   const source = await requireSet(files, base);

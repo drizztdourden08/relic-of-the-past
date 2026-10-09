@@ -2,7 +2,7 @@
 export { builtinVariables, ENGINE_SAMPLES, isBuiltinKey, NUMBER_KEY, PLAYER_NAME_KEY } from './builtin';
 export { findHardcoded } from './find-hardcoded';
 export { legacyFromVariables } from './legacy-from-variables';
-export { variablesFromNameTables as variablesFromLegacy } from './variables-from-name-tables';
+export { variablesFromNameTables } from './variables-from-name-tables';
 export { hardcodedCandidates } from './hardcoded-candidates';
 export { mergeVariableMeta } from './merge-meta';
 export { resolve } from './resolve';

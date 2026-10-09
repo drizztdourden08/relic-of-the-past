@@ -1,7 +1,7 @@
 /* @layer shared-types @kind types */
 import type { LanguagePack, LanguageSummary } from '@shared/types/language';
 import type { LanguageSet } from '@shared/game/language';
-import type { LanguageSetSummary, NewSetParams } from '@shared/storage/languages';
+import type { LanguageSetSummary, CreateSetParams } from '@shared/storage/languages';
 import type { InvokeResult } from './invoke/invoke-result.type';
 
 interface LanguageInvokeContract {
@@ -15,7 +15,7 @@ interface LanguageInvokeContract {
   'languages:listSets': () => Promise<LanguageSetSummary[]>;
   'languages:getSet': (id: string) => Promise<LanguageSet | null>;
   'languages:saveSet': (set: LanguageSet) => Promise<void>;
-  'languages:createSet': (params: NewSetParams) => Promise<LanguageSet>;
+  'languages:createSet': (params: CreateSetParams) => Promise<LanguageSet>;
   'languages:duplicateSet': (sourceId: string, id: string, name: string) => Promise<LanguageSet>;
 }
 

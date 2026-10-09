@@ -36,7 +36,7 @@ export { CODE_CATALOG, codeInfoFor, encodableParams, isGlyphName, structuralEntr
 export type { CodeInfo, CodeParamRange, CodeRisk, CodeScope, StructuralEntry } from './codes';
 export {
   buildVariableIndex, builtinVariables, findHardcoded, legacyFromVariables, mergeVariableMeta,
-  resolve, scanRun, variablesFromLegacy,
+  resolve, scanRun, variablesFromNameTables,
 } from './variables';
 export type {
   LegacyNameData, Occurrence, ResolveOptions, Variable, VariableIndex, VariableKind,
