@@ -1635,6 +1635,34 @@ less 32: 289px at the 320 default, 188px at the 220 minimum. Every threshold was
   class.
 - Nothing escapes the rail at any width.
 
+### hud/hud-inspector-content
+
+The behaviour half of phase 9 of the inspector UX review; widths are in
+`hud-inspector-content-width`.
+
+- A reference shows its referent for all five kinds, and picking one round trips through the
+  document unchanged. The real editor is mounted, the real control clicked, the real picker
+  opened, and the written patch read back. The control is the artwork (an image, not the token in
+  a box); the button state row has no free text sprite slug left; a subtree reference says go
+  (an arrow caret) because the subtree is edited in place. `nodeArtOf` is the shared answer both
+  call sites render. Round tripping means the validator accepts the document and a JSON reload
+  gives the same tree.
+- The text mode switch discarded expressions: `TextContent` carried an outer text or formula
+  `SegmentedControl` whose text branch wrote `''` over a bound value. The test is the property it
+  broke: with a formula in the field, clicking every button in the section writes no `value`.
+  That fails on the old file and knows nothing about the switch, so it keeps working as controls
+  are added. A bare `24` is a number (so `format.digits` and `pad` still mean something), `==24`
+  is the literal string `=24`.
+- The live match marker is the engine's own answer, checked against `expand()` for the same
+  scope, not a second reading of the rule. Over a repeat it counts instances.
+- A slot number past the previewed scheme is still legal: drawn empty, explained in one line,
+  still the number typed. The old standing disclaimer, true of every slot and printed as a hint
+  at three fields, is gone from every field (the model's file headers still state it), and no
+  field asks for a slot with a bare spinner.
+- `window.api` is stubbed before the imports because the glyph art resolver reaches the custom
+  glyph store, which reaches the desktop bridge at module scope; `ResizeObserver` is a no op
+  because jsdom has no layout for `SegmentedControl`'s indicator.
+
 ### hud/hud-inspector-content-width.keep.test.ts
 
 Phase 9 of the inspector UX review, measured; the behaviour half is `hud-inspector-content`. Most
