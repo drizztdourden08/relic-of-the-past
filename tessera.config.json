@@ -1,22 +1,29 @@
 {
   "$schema": "./node_modules/@drizztdourden08/tessera/tessera.config.schema.json",
+  "package": "@rotp/design",
+  "parts": {
+    "compounds": "packages/design/src/compounds",
+    "views": "packages/design/src/views"
+  },
   "theme": {
     "palette": "rotp"
   },
   "apps": {
     "apps/desktop": {
       "parts": {
-        "views": "apps/desktop/src/views"
+        "compounds": ["apps/desktop/src/compounds", "packages/design/src/compounds"],
+        "views": ["apps/desktop/src/views", "packages/design/src/views"]
       }
     },
     "apps/sanctuary": {
       "parts": {
-        "views": "apps/sanctuary/src/views"
+        "views": ["apps/sanctuary/src/views", "packages/design/src/views"]
       }
     },
     "apps/store": {
       "parts": {
-        "views": "apps/store/src/views"
+        "views": ["apps/store/src/views", "packages/design/src/views"]
       }
-    }  }
+    }
+  }
 }

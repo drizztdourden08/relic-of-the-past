@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { Status, Box, EmptyState, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
 import type { MusicDebugEvent } from '@rotp/msu';
-import { OWNER_LABELS, OWNER_VARIANTS } from '../music.constants';
+import { OWNER_LABELS, OWNER_VARIANTS } from '../MusicWidget.constants';
 
 const timeOf = (at: number): string => {
   const date = new Date(at);

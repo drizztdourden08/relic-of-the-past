@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../styles';
+import { S } from '../../../nav-widget/styles';
 import { DescRow } from './DescRow';
 import type { PlayerStatePanelProps } from './PlayerStatePanel.type';
 

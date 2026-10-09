@@ -2,7 +2,7 @@
 import type { ConnectionInfo } from '@rotp/game-core';
 import type { ScreenBundleGrid } from '@rotp/game-data';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../styles';
+import { S } from '../../../nav-widget/styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import { ReqIcon } from './ReqIcon';
 import { REQ_ROW } from './InternalEdgeDiamond.constants';

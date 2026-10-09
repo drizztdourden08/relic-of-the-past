@@ -2,7 +2,7 @@
 import type { ConnectionInfo, GridPos, ScreenCrossing } from '@rotp/game-core';
 import type { TileReq } from '@rotp/game-data';
 import type { SimExit } from '@rotp/navigation';
-import { computeBigScreenGroup } from '@app/views/NavigationWidget/widget-helpers';
+import { computeBigScreenGroup } from '@app/nav-widget/widget-helpers';
 import { collectCrossings } from '@rotp/navigation';
 import { connectionCrossingId, midOf, takeableCrossing, usableCrossings } from '@rotp/navigation';
 import { floodOneOverworld, summarizeRun } from '@rotp/navigation';

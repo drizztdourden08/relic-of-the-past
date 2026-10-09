@@ -2,8 +2,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { isMsuSessionActive, msuChannelReport } from '@app/game/msu-session';
 import { createPreviewReportStore } from '@app/views/DataManager/sub-components/msu/behavior/preview-report-store';
-import { CHANNEL_TITLES, CHANNELS } from '../music.constants';
-import type { LiveChannel } from '../music.type';
+import { CHANNEL_TITLES, CHANNELS } from '../MusicWidget.constants';
+import type { LiveChannel } from '../MusicWidget.type';
 
 const programDetail = (id: number, overlappingSets: number): string =>
   overlappingSets > 1 ? `id 0x${id.toString(16)} · ${overlappingSets} overlapping` : `id 0x${id.toString(16)}`;
@@ -37,4 +37,4 @@ const useLiveChannels = () => {
 };
 
 export { useLiveChannels };
-export type { LiveChannel } from '../music.type';
+export type { LiveChannel } from '../MusicWidget.type';

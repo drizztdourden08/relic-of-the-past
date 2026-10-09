@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Svg, SvgLine, SvgRect, SvgText } from '@drizztdourden08/tessera/primitives';
-import { EDGE_COLORS } from '../navigation.constants';
+import { EDGE_COLORS } from '../NavigationWidget.constants';
 import { SVG_STYLE } from './InternalEdgeSvg.constants';
 
 const InternalEdgeSvg = ({ edge, fromName, toName }: { edge: string; fromName: string; toName: string }) => {

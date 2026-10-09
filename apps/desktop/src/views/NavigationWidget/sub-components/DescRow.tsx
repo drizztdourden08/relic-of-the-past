@@ -2,7 +2,7 @@
 import type { ReactNode, CSSProperties } from 'react';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../styles';
+import { S } from '../../../nav-widget/styles';
 import { IL } from './DescRow.constants';
 
 const DescRow = ({ label, desc, children }: { label: string; desc: string; children: ReactNode }) => {

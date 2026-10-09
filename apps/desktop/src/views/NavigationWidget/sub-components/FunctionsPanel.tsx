@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Button, Icon, SegmentedControl, StatRow } from '@drizztdourden08/tessera/primitives';
-import { S } from '../styles';
+import { S } from '../../../nav-widget/styles';
 import { TileRecorderBtn } from './TileRecorderBtn';
 import { PathCopyBtn } from './PathCopyBtn';
 import type { FunctionsPanelProps } from './FunctionsPanel.type';

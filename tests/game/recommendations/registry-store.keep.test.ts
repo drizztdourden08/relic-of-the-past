@@ -6,10 +6,10 @@ import type { ConnectionRecord, ScreenId } from '@rotp/game-data';
 import { createRecommendationStore, detectorsFor, memoryStorage, recommendationFile, runDetection } from '@rotp/navigation';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import type { ObservedTransition } from '@rotp/game-core';
-import '@app/views/NavigationWidget/recommendations/strategies/connection';
+import '@app/nav-widget/recommendations/strategies/connection';
 import '@rotp/navigation';
 import '@rotp/navigation';
-import '@app/views/NavigationWidget/recommendations/strategies/connection/wire-detector';
+import '@app/nav-widget/recommendations/strategies/connection/wire-detector';
 import { describeDataset } from '../../dataset-guard';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({

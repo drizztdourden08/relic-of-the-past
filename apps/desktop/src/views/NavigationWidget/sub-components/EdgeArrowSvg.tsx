@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Svg, SvgPath } from '@drizztdourden08/tessera/primitives';
-import { EDGE_COLORS } from '../navigation.constants';
+import { EDGE_COLORS } from '../NavigationWidget.constants';
 import { SVG_STYLE } from './EdgeArrowSvg.constants';
 
 const EdgeArrowSvg = ({ edge, size }: { edge: string; size: number }) => {

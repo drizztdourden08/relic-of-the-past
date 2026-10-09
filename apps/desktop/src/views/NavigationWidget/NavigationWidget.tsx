@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from './styles';
+import { S } from '../../nav-widget/styles';
 import { ScreenMapWithConnections } from './sub-components';
 import { FunctionsPanel } from './sub-components/FunctionsPanel';
 import { GameStatePanel } from './sub-components/GameStatePanel';
@@ -8,7 +8,7 @@ import { PlayerStatePanel } from './sub-components/PlayerStatePanel';
 import { ConnectionsPanel } from './sub-components/ConnectionsPanel';
 import { ScreenPanel } from './sub-components/ScreenPanel';
 import { ActiveStates } from './sub-components/ActiveStates';
-import { useNavigation } from './useNavigation';
+import { useNavigation } from './behavior/useNavigation';
 
 const NavigationWidgetContent = () => {
   const {

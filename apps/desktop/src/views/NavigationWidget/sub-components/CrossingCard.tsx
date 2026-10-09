@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react/offline';
 import type { ScreenCrossing } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { crossingIcon } from '@rotp/navigation';
-import { S } from '../styles';
+import { S } from '../../../nav-widget/styles';
 import { ReqIcon } from './ReqIcon';
 import { IL } from './CrossingCard.constants';
 

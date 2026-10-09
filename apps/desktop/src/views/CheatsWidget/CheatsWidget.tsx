@@ -1,10 +1,10 @@
 /* @layer renderer-widgets @kind component */
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
-import { PlayerTab } from './tabs/PlayerTab';
-import { ItemsTab } from './tabs/ItemsTab';
-import { RulesTab } from './tabs/RulesTab';
-import { ChecksTab } from './tabs/ChecksTab';
+import { PlayerTab } from './sub-components/PlayerTab';
+import { ItemsTab } from './sub-components/ItemsTab';
+import { RulesTab } from './sub-components/RulesTab';
+import { ChecksTab } from './sub-components/ChecksTab';
 import { useCheatGates } from './behavior/useCheatGates';
 import { TAB_IDS, TABS } from './CheatsWidget.constants';
 import type { CheatTab } from './CheatsWidget.type';

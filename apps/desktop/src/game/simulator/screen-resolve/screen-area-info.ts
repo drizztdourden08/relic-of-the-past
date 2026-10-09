@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { SimArea } from '@rotp/navigation';
-import { computeBigScreenGroup } from '@app/views/NavigationWidget/widget-helpers';
+import { computeBigScreenGroup } from '@app/nav-widget/widget-helpers';
 import { locationForScreen } from '@rotp/navigation';
 
 const screenAreaInfo = (screenId: string): SimArea | undefined => {

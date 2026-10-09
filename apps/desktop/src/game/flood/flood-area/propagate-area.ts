@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { GridPos } from '@rotp/game-core';
 import type { SimLocation } from '@rotp/navigation';
-import { computeBigScreenGroup } from '@app/views/NavigationWidget/widget-helpers';
+import { computeBigScreenGroup } from '@app/nav-widget/widget-helpers';
 import { STAIR_ID_BASE } from '@rotp/navigation';
 import { createSeedLedger } from '@rotp/navigation';
 import { crossingLanding } from '@rotp/navigation';

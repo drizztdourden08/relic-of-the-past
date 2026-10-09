@@ -8,7 +8,7 @@ import {
   buildPlacementView, getSessionState, runKindOfSession, subscribeSessionStore,
 } from '@app/game/randomizer-client';
 import { CheckCard } from '@app/compounds/ChecksTracker';
-import { CHECKS_PREF_KEY, NOTIFY_PREF, NOTIFY_WHEN_CLOSED_PREF } from '@app/views/ChecksWidget/checks.constants';
+import { CHECKS_PREF_KEY, NOTIFY_PREF, NOTIFY_WHEN_CLOSED_PREF } from '@app/views/ChecksWidget/ChecksWidget.constants';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { useTrackerPresenceStore } from '@app/stores/tracker-presence-store';
 import { useCheckToasts } from './behavior/useCheckToasts';

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import type { ScreenCrossing } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../styles';
+import { S } from '../../../nav-widget/styles';
 import { ReqIcon } from './ReqIcon';
 import { EdgeArrowSvg } from './EdgeArrowSvg';
 import { IL } from './EdgeCard.constants';

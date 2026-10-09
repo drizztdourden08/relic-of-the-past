@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import type { ConnectionTag } from '@rotp/game-data';
-import { connectionIssues } from '@app/views/NavigationWidget/connection-issues';
+import { connectionIssues } from '@app/nav-widget/connection-issues';
 import { describeDataset } from '../../dataset-guard';
 
 const KNOWN_ID = 'screen-028';

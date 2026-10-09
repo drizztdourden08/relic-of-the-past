@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind types */
 import type { ScreenBundleGrid } from '@rotp/game-data';
-import type { EdgeRow } from '../nav-flood/nav-flood.type';
+import type { EdgeRow } from '../../../nav-widget/nav-flood/nav-flood.type';
 
 interface EdgeCardProps {
   row: EdgeRow;

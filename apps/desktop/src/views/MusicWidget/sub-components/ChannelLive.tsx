@@ -2,7 +2,7 @@
 import { Status, Box, StatRow } from '@drizztdourden08/tessera/primitives';
 import { PreviewReadout } from '@app/views/DataManager/sub-components/msu/PreviewReadout';
 import { usePreviewReport } from '@app/views/DataManager/sub-components/msu/behavior/usePreviewReport';
-import type { LiveChannel } from '../music.type';
+import type { LiveChannel } from '../MusicWidget.type';
 
 const ChannelLive = (props: { channel: LiveChannel }) => {
   const { channel } = props;

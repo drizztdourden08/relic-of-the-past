@@ -3,7 +3,7 @@ import type { InventoryViewMode } from '@rotp/game-data';
 import { SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
 import { useInventoryViewMode } from '../behavior/useInventoryViewMode';
-import { VIEW_OPTIONS } from '../inventory.constants';
+import { VIEW_OPTIONS } from '../InventoryWidget.constants';
 
 const InventoryWidgetSettings = () => {
   const [viewMode, setViewMode] = useInventoryViewMode();

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import type { ConnectionInfo } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../styles';
+import { S } from '../../../nav-widget/styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import { IL } from './InternalEdgesSection.constants';
 import type { InternalEdgesSectionProps } from './InternalEdgesSection.type';

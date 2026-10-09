@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { landingCrossings, listedCrossings } from '@rotp/navigation';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../styles';
+import { S } from '../../../nav-widget/styles';
 import { CrossingCard } from './CrossingCard';
 import { EdgeCard } from './EdgeCard';
 import { InternalEdgesSection } from './InternalEdgesSection';

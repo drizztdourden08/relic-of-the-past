@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
 import { ANNOTATION_STYLES } from '../../../GameLayer/sub-components/navigation-overlay/annotation-style';
-import { S } from '../../styles';
+import { S } from '../../../../nav-widget/styles';
 import { PS } from './styles';
 import { groupAnnotations } from './annotation-rows';
 import type { ScreenPanelProps } from './ScreenPanel.type';

@@ -6,9 +6,9 @@ import type { ConnectionRecord, ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { ConnectionInfo } from '@rotp/game-core';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy } from '@rotp/navigation';
-import { CONNECTION_ISSUE, connectionIssues } from '@app/views/NavigationWidget/connection-issues';
-import { describeConnectionTiles, findFloodForTarget } from '@app/views/NavigationWidget/connection-tile-display';
-import { connectionStrategy } from '@app/views/NavigationWidget/recommendations/strategies/connection/connection.strategy';
+import { CONNECTION_ISSUE, connectionIssues } from '@app/nav-widget/connection-issues';
+import { describeConnectionTiles, findFloodForTarget } from '@app/nav-widget/connection-tile-display';
+import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection.strategy';
 import { describeDataset } from '../../dataset-guard';
 
 const navDetector = detectorFromStrategy(connectionStrategy);

@@ -6,7 +6,7 @@ import type { ViewMode } from '@app/compounds/ChecksTracker';
 import { useStickyHeader } from '../behavior/useStickyHeader';
 import {
   CHECKS_PREF_KEY, NOTIFY_PREF, NOTIFY_WHEN_CLOSED_PREF, VIEW_MODE_DEFAULT, VIEW_MODE_PREF, VIEW_OPTIONS,
-} from '../checks.constants';
+} from '../ChecksWidget.constants';
 import { NOTIFY_HINT, NOTIFY_WHEN_CLOSED_HINT, PIN_HEADER_HINT } from './ChecksWidgetSettings.constants';
 
 const ChecksWidgetSettings = () => {
