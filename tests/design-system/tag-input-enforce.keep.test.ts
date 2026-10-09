@@ -1,12 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The one field that REFUSES a value, and every field that still does not.
- * Enforcement exists for a single case: a tag list whose values are references,
- * where inventing a term means minting a record. Everywhere else stays advisory;
- * an opt-in that silently became the default would break every other tag entry.
- *
- * No jsdom, so the decision a keystroke resolves to is covered as a pure function.
- */
 import { describe, it, expect } from 'vitest';
 import {
   adviseTag, blocksCreate,
@@ -39,7 +31,6 @@ describe('an enforcing entry', () => {
   it('never refuses a value the vocabulary already holds, convention or not', () => {
     expect(decide('env:outdoor', true)).toBe(false);
     expect(decide('legacy-untagged', true)).toBe(false);
-    // Case is not what makes it new, because the entry resolves to the existing value.
     expect(decide('LEGACY-UNTAGGED', true)).toBe(false);
   });
 

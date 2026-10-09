@@ -4,10 +4,6 @@ import { all } from '@shared/game/data';
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import { describeDataset } from '../dataset-guard';
 
-// Derivation has to survive the real thing, not just a fixture: hundreds of rows,
-// deep nesting, optional branches and arrays of objects. These pin the kinds
-// inferred for load-bearing paths, so any change to inference shows up here.
-
 const probe = (rows: readonly unknown[]) => createSchemaIndex(buildSchema(rows));
 
 describeDataset('buildSchema on a large, deeply nested collection', () => {
@@ -36,14 +32,9 @@ describeDataset('buildSchema on a large, deeply nested collection', () => {
   });
 
   it('recognises genuine variant shapes as unions and uniform ones as objects', () => {
-    // Branches that never co-occur: one requirement is an id, another is a list.
     expect(schema.byPath('requirements')?.kind).toBe('union');
-    // Placement is one uniform shape now (form/rect/tiles, `side` an additive
-    // optional field on a border point), not a discriminated union anymore.
-    // See the connection-model migration report.
     expect(schema.byPath('placement')?.kind).toBe('object');
     expect(schema.byPath('placement.form')?.kind).toBe('enum');
-    // One consistent shape, so an object, and it nests three levels deep.
     expect(schema.byPath('placement.rect')?.kind).toBe('object');
     expect(schema.byPath('placement.rect.x')?.kind).toBe('number');
   });
@@ -61,9 +52,6 @@ describeDataset('buildSchema on a second real collection', () => {
     expect(schema.byPath('id')?.kind).toBe('idRef');
     expect(schema.byPath('category')?.kind).toBe('enum');
     expect(schema.byPath('name')?.kind).toBe('string');
-    // Uniform nested shape → object. weapon.range's branches only ever ADD a
-    // key on top of the smaller ones (unbounded ⊂ estimated ⊂ contact), so
-    // it's one shape with optional fields, not a genuine variant, so object.
     expect(schema.byPath('gameId')?.kind).toBe('object');
     expect(schema.byPath('gameId.receiveItemId')?.kind).toBe('number');
     expect(schema.byPath('weapon.range')?.kind).toBe('object');
@@ -73,7 +61,6 @@ describeDataset('buildSchema on a second real collection', () => {
   it('flattens depth-first, and every flattened path resolves', () => {
     const flat = schema.all();
     for (const field of flat) expect(schema.byPath(field.path)).toBe(field);
-    // A parent always precedes its own children in the flattened order.
     const parent = flat.findIndex((f) => f.path === 'weapon');
     const child = flat.findIndex((f) => f.path === 'weapon.range');
     expect(parent).toBeGreaterThanOrEqual(0);

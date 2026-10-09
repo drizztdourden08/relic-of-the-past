@@ -8,12 +8,6 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// A requirement expression's `anyOf`/`allOf` is an ARRAY OF A UNION (own an
-// item, own a check, own N of a group, nest, or the impossible sentinel), which
-// `ObjectArrayEditor` cannot serve (one fixed element shape). SSR smoke tests
-// over a synthetic fixture: branch-aware rows render and the add/remove/branch
-// picker plumbing is present. Clicking and dragging need a browser.
-
 const ITEM_BRANCH: FieldDescriptor = {
   path: 'anyOf[].itemId', label: 'Item id', kind: 'idRef', optional: true, targetKind: 'item',
 };
@@ -63,7 +57,6 @@ describeDataset('a list of variant requirements gets a branch-aware editor', () 
     expect(markup).toContain('Item id');
     expect(markup).toContain('Group id');
     expect(markup).toContain('>N<');
-    // The sibling branch never shown for either element.
     expect(markup).not.toContain('Check id');
   });
 

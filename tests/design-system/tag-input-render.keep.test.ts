@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * SSR smoke tests (no jsdom): the control renders empty, holding chips, and
- * disabled. The portal panel (reads `document`), typing and keys need a
- * browser; their rules are covered in tag-input-values.test.ts.
- */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -69,7 +64,6 @@ describe('TagInput holding several chips', () => {
     const markup = render({ value: ['env:outdoor', 'lonely'] });
     expect(markup).toContain('tag-input__chip--off-convention');
     expect(markup).toContain('>lonely</span>');
-    // One flag for the one offender, not for the well-formed neighbour.
     expect(markup.match(/tag-input__chip--off-convention/g)).toHaveLength(1);
   });
 

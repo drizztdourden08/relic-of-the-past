@@ -8,12 +8,7 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import type { SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests (no jsdom): the form builds for real records of several
-// shapes, read-only and interactive. Typing, Save and the pending/error states
-// need a browser.
-
 const noop = async (): Promise<void> => undefined;
-/** Rendering a whole collection takes under two seconds alone and more under a full parallel run. */
 const WHOLE_COLLECTION_TIMEOUT_MS = 30_000;
 
 const render = (
@@ -65,12 +60,7 @@ describeDataset('RecordEditor on a real record from several collections', () => 
 
 describeDataset('what RecordEditor auto-layout puts on the page', () => {
   const rows = all('connection');
-  // Placement is a plain nested object now, not a discriminated union, so the
-  // area-form record covers nested-object recursion, not union-branch detection.
   const withRect = rows.find((row) => row.placement.form === 'area') ?? rows[0];
-  // `requirements` IS still a genuine discriminated union on a connection
-  // record (itemId / checkId / allOf / anyOf / count / impossible), so it is
-  // the union-branch fixture below instead of `placement`.
   const withAllOf = rows.find((row) => (row.requirements as { allOf?: unknown[] } | undefined)?.allOf?.length);
 
   it('labels the fields it derived, with no config to name them', () => {
@@ -81,8 +71,6 @@ describeDataset('what RecordEditor auto-layout puts on the page', () => {
 
   it('recurses into a nested object inside a plain field', () => {
     const markup = render(withRect, rows, true);
-    // The schema is derived from the whole collection, so `side` (border-only
-    // elsewhere) appears as optional here. Only the nested `Rect` recursion is pinned.
     expect(markup).toContain('Placement');
     expect(markup).toContain('Rect');
     expect(markup).toContain('record-editor__nested');
@@ -113,9 +101,6 @@ describeDataset('what RecordEditor auto-layout puts on the page', () => {
   });
 
   it('offers add, remove and reorder for a list of single values', () => {
-    // A list of references, which is a sequence: order and membership both
-    // matter, so it keeps the rows. (A list of TAGS deliberately does not; the
-    // tag-array tests cover that.)
     const dungeons = all('dungeon');
     const withRooms = dungeons.find((row) => (row.roomScreenIds?.length ?? 0) > 1) ?? dungeons[0];
     const markup = render(withRooms, dungeons, true);
@@ -125,13 +110,9 @@ describeDataset('what RecordEditor auto-layout puts on the page', () => {
   });
 
   it('gives a list of VARIANT elements a branch-aware editor, not the read-only summary', () => {
-    // Full behaviour in `record-editor-variant-array.test.ts`. This pins that a
-    // real requirement's `anyOf` reaches the branch editor, not the `array-kit` fallback.
     const checks = all('check');
     const withAnyOf = checks.find((row) => (row.requirements?.anyOf?.length ?? 0) > 1);
     expect(withAnyOf).toBeDefined();
-    // Hide the list of references on the same record, so the only list left is
-    // the one made of variants.
     const config: SchemaConfig = { hidden: ['vanillaItemIds'] };
     const markup = render(withAnyOf, checks, true, config);
     expect(markup).toContain('Any Of');

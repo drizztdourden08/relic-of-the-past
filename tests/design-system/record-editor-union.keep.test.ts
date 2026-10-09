@@ -6,10 +6,6 @@ import { detectUnionBranch } from '../../apps/web/src/ui/design-system/composite
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// Branch detection is only worth anything against the real variants, so these
-// pull the shapes out of the live dataset instead of fixing them in a fixture.
-// If a variant is added or dropped upstream, these tests see it.
-
 const connections = all('connection');
 const schema = createSchemaIndex(buildSchema(connections));
 
@@ -19,7 +15,6 @@ const fieldAt = (path: string): FieldDescriptor => {
   return field;
 };
 
-/** Every distinct key-set observed at `key`, mapped to one real value that has it. */
 const variantsOf = (key: string): Map<string, Record<string, unknown>> => {
   const seen = new Map<string, Record<string, unknown>>();
   for (const row of connections) {
@@ -50,8 +45,6 @@ describeDataset('union branch detection on a requirement expression', () => {
     for (const [shape, value] of variants) {
       const branch = detectUnionBranch(field, value);
       expect(branch.status, shape).toBe('resolved');
-      // Nothing from a sibling branch leaks in: an item requirement offers the
-      // item and not the list operators, and vice versa.
       expect(keysShown(field, value), shape).toEqual(shape.split('+'));
       expect(branch.extraKeys, shape).toEqual([]);
     }
@@ -67,20 +60,12 @@ describeDataset('union branch detection on a requirement expression', () => {
 });
 
 describeDataset('union branch detection now that placement is no longer a union', () => {
-  // Placement is one plain shape now (`side` only on a border point): an object
-  // with an optional field, not a union, so `buildSchema` infers `object` (see
-  // infer-kind.ts's isKeySubsetChain). Pinned so a future real disjunction
-  // shows up as a diff.
   it('infers as an object, not a union', () => {
     expect(fieldAt('placement').kind).toBe('object');
   });
 });
 
 describeDataset('union branch detection on the same union shape in another collection', () => {
-  // `check.requirements` is the same Requirement DSL as `connection.requirements`,
-  // so branch detection is not keyed to one collection's schema.
-  // (item.weapon.range was the nested case before the object-vs-union inference
-  // was tightened; it is a subset chain, so it now infers as `object`.)
   const nested = createSchemaIndex(buildSchema(all('check')));
   const field = nested.byPath('requirements');
 

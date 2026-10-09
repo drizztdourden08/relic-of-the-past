@@ -13,9 +13,6 @@ import {
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests plus unit tests over the resolver: which control a tag list
-// is offered as and what vocabulary reaches it. Typing and picking need a browser.
-
 const TAG_ENTRY = 'class="tag-input';
 const ROW_EDITOR = 'aria-label="Move up"';
 
@@ -36,14 +33,12 @@ const render = (record: unknown, rows: readonly unknown[]): string =>
     ),
   }));
 
-/** The terms one record's stored tag references stand for. */
 const keysOf = (record: { tags: readonly string[] }): readonly string[] => tagKeysOf(record.tags);
 
 describeDataset('which list of strings is a list of tags', () => {
   it('says yes for the real tag fields, which now hold references named `tags`', () => {
     for (const kind of ['screen', 'connection'] as const) {
       const field = fieldAt(all(kind), 'tags');
-      // Every stored value is a `tag-NNN`, so the elements derive as references.
       expect(field.of?.kind, kind).toBe('idRef');
       expect(field.of?.targetKind, kind).toBe('tag');
       expect(isTagsField(field), kind).toBe(true);
@@ -90,7 +85,6 @@ describeDataset('the vocabulary behind a tag field', () => {
   it('offers the whole canonical taxonomy, including terms nobody has used yet', () => {
     const canonical = TAG_METADATA.map((entry) => entry.id);
     for (const tag of canonical) expect(screenTags, tag).toContain(tag);
-    // The dataset uses far fewer than the taxonomy defines, and that gap is the point.
     expect(canonical.length).toBeGreaterThan(0);
   });
 
@@ -123,7 +117,6 @@ describeDataset('the vocabulary behind a tag field', () => {
   it('answers per collection, with that collection\'s own taxonomy', () => {
     const connectionTags = resolveTagSuggestionsFor('connection', fieldAt(all('connection'), 'tags'));
     for (const entry of CONNECTION_TAG_METADATA) expect(connectionTags).toContain(entry.id);
-    // The two vocabularies are different sets.
     expect(connectionTags).not.toContain(TAG_METADATA[0].id);
   });
 
@@ -144,10 +137,7 @@ describeDataset('the whole form, with a real tag list on it', () => {
     const record = screens.find((row) => row.tags.length > 1) ?? screens[0];
     const markup = render(record, screens);
     expect(markup).toContain(TAG_ENTRY);
-    // The chips read as terms even though the record stores references.
     for (const key of keysOf(record)) expect(markup, key).toContain(key);
-    // The rows are what the tag entry replaces, and screens have no other list
-    // of single values on them apart from a reference list.
     expect(markup.indexOf(TAG_ENTRY)).toBeGreaterThan(-1);
   });
 

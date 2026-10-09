@@ -8,9 +8,6 @@ import { layoutGroups } from '../../apps/web/src/ui/design-system/composites/Rec
 import type { FieldDescriptor, SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// The two pieces of the editor that are pure functions: what counts as changed,
-// and how a schema lays itself out with and without a config to steer it.
-
 const connections = all('connection');
 const withRect = connections.find((row) => row.placement.form === 'area');
 if (!withRect) throw new Error('the dataset no longer holds an area placement');
@@ -49,8 +46,6 @@ describeDataset('dirty tracking of which paths changed', () => {
   it('does not call a value edited back to what it was a change', () => {
     const original = withRect.placement?.at === 'area' ? withRect.placement.rect.x : 0;
     const working = setPath(setPath(withRect, 'placement.rect.x', 999), 'placement.rect.x', original);
-    // The container was rewritten, so identity says different and only the
-    // serialised compare gets this right.
     expect(working.placement).not.toBe(withRect.placement);
     expect(hasPathChanged(withRect, working, 'placement')).toBe(false);
     expect(hasPathChanged(withRect, working, '')).toBe(false);

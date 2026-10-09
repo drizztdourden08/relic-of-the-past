@@ -480,6 +480,135 @@ that never changes, so they read as states of one object; the drag variant adds 
 Every consumer reads values by dot path, so `getPath` is on the hot path of filtering, sorting
 and rendering. Its one hard requirement is that it never throws, whatever shape the row has.
 
+### design-system/position-input
+
+The interaction rules are tested as the pure functions the hook is built from, and the markup
+by SSR; typing and focus need the running app. Each axis answers to its own bounds, so -5 is
+out for the grid axis and in for the signed one. A disabled input disables both fields and the
+two chevrons per axis.
+
+### design-system/record-editor-identity-readonly.keep.test.ts
+
+The identity field stays read only on a writable record. It fixes the rename then clobber bug
+(the record writers use the edited id as the file search key) and, for item groups, the
+sibling id trap: with 7 rows, `id` infers as a closed set and rendered a dropdown of other
+records' ids. The sibling's id still appears as an option, being a real enum value, but its
+button is disabled. A member field on the same record stays editable; `label` is not used for
+that check, because with 7 rows it also infers as an enum.
+
+### design-system/record-editor-nested-array.keep.test.ts
+
+A requirement set (`RequirementSet = TraversalRequirement[][]`) is an OR of AND lists: an array
+whose element is itself an array of strings, one level deeper than `ArrayFieldEditor` serves.
+The array kit's read only fallback used to be all that was offered.
+
+### design-system/record-editor-object-array.keep.test.ts
+
+An element's fields get the same real controls a top level field gets; add, drag and dropdown
+need a browser. Rendering every screen takes under two seconds alone and longer under a full
+parallel run, so the whole collection case has a 30 second timeout.
+
+### design-system/record-editor-position.keep.test.ts
+
+Which control a grid position is offered as and which limits reach it, through the shape check
+and bounds rule; typing and clamping need a browser.
+
+### design-system/record-editor-render.keep.test.ts
+
+The form builds for real records of several shapes, read only and interactive; typing, Save
+and the pending and error states need a browser. A whole collection render gets the same 30
+second timeout. Placement is a plain nested object, so the area form record covers nested
+object recursion. `requirements` is still a real discriminated union on a connection (item,
+check, all of, any of, count, impossible), so it is the union branch fixture. The schema comes
+from the whole collection, so `side` appears as optional; only the nested `Rect` recursion is
+pinned. A list of references is a sequence, so it keeps add, remove and reorder rows; a list
+of tags does not (see the tag suite). A real requirement's `anyOf` reaches the branch editor;
+the reference list on the same record is hidden so the variant list is the only one left.
+
+### design-system/record-editor-state.keep.test.ts
+
+The two pure pieces of the editor: what counts as changed, and how a schema lays out with and
+without a config. Writing a value back to its original rewrites the container, so identity says
+different and only the serialised compare is right.
+
+### design-system/record-editor-tags.keep.test.ts
+
+Which control a tag list is offered as and what vocabulary reaches it; typing and picking need
+a browser. Every stored value is a `tag-NNN`, so the elements derive as references, while the
+chips read as the terms they stand for. The dataset uses far fewer tags than the taxonomy
+defines, which is the point of offering the taxonomy. Screens and connections have different
+vocabularies. The tag entry replaces the reference rows a list would otherwise get.
+
+### design-system/record-editor-union.keep.test.ts
+
+Branch detection is only worth testing against real variants, so the shapes come from the live
+dataset; a variant added or dropped upstream shows up here. Nothing from a sibling branch leaks
+in: an item requirement offers the item and not the list operators. Placement is one plain
+shape (`side` only on a border point), so `buildSchema` infers an object (the key subset chain
+in `infer-kind.ts`), pinned so a future real disjunction shows as a diff. `check.requirements`
+uses the same requirement language as `connection.requirements`, so detection is not keyed to
+one collection. `item.weapon.range` was the nested case before inference was tightened; it is a
+subset chain and now infers as an object.
+
+### design-system/record-editor-variant-array.keep.test.ts
+
+A requirement's `anyOf` or `allOf` is an array of a union (own an item, own a check, own N of a
+group, nest, or the impossible sentinel), which `ObjectArrayEditor` cannot serve with its one
+fixed element shape. Over a synthetic fixture, branch aware rows render, the add, remove and
+branch picker plumbing is present, and a sibling branch's fields never show. Clicking and
+dragging need a browser.
+
+### design-system/referenced-by-render.keep.test.ts
+
+The empty state copy with no hits, and grouping by kind with counts. Groups start collapsed,
+because a record can carry hundreds of hits, so the referencing rows only exist after a click
+and are not covered here.
+
+### design-system/schema-real-data.keep.test.ts
+
+Derivation has to survive the real data: hundreds of rows, deep nesting, optional branches and
+arrays of objects. The suite pins the kinds inferred for load bearing paths, so any change to
+inference shows up. Requirements are a real union (one is an id, another a list). Placement is
+one uniform shape (form, rect, tiles, with `side` an additive optional field), so an object
+nesting three levels deep. An item's `weapon.range` branches only add keys on top of the smaller
+ones (unbounded, estimated, contact), so it is one shape with optional fields. A parent always
+precedes its own children in the flattened order.
+
+### design-system/scroll-area-sync.keep.test.ts
+
+ScrollArea's sync lives in `create-scroll-sync-controller.ts` and `create-scroll-guard.ts` so it
+runs without a DOM. A fake node stands in for the element, and its native scroll fires only when
+`scrollTo()` changed the offset, as a browser would. A smooth scroll fires several intermediate
+events before arrival, so the guard suppresses all of them, including the arrival itself, and
+lets the next real scroll through. In the mirrored pair each side is one ScrollArea wired as
+`ScrollArea.tsx` wires it; without the guard the pair would recurse forever, and the source side
+is never scrolled back.
+
+### design-system/segmented-control-deselect.keep.test.ts
+
+SegmentedControl's click decision as a plain function; the wiring is covered at the props level
+in `enum-kit-tiering`.
+
+### design-system/table-state
+
+The table hook is a thin binding over pure transforms. There is no renderer, so the transforms
+are exercised directly and the hook's sequences are replayed through them, which is the same
+state machine. The insert index for "add column before" is that column's own index, and "after"
+is one past it; both are where the new column ends up. The generic sort fallback compares
+stringified values, so 9 would sort before 10 until a number comparator is registered.
+
+### design-system/tag-input
+
+`tag-input-values` and `tag-input-convention` cover the TagInput's decisions as plain functions,
+since keystrokes cannot be dispatched without jsdom. The convention check is advisory and never
+blocks an add. `tag-input-render` renders the control empty, holding chips and disabled; the
+portal panel reads `document`, so it needs a browser. Only the chip that breaks the convention
+is flagged, not its well formed neighbour. `tag-input-enforce` covers the one field that refuses
+a value: a tag list whose values are references, where inventing a term means minting a record.
+Everywhere else stays advisory, because an opt in that became the default would break every
+other tag entry. Case alone does not make a value new, because the entry resolves to the
+existing value.
+
 ## e2e
 
 `tests/e2e/README.md` describes what each permanent spec guards. The notes below hold what

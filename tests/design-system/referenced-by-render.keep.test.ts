@@ -5,10 +5,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { ReferencedBy } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 import type { ReferencedByHit } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 
-// SSR smoke tests: the empty-state copy with no hits, and grouping by kind
-// with counts. Groups start COLLAPSED (a record can carry hundreds of hits), so
-// the referencing rows only exist after a click; not covered here.
-
 const EMPTY_TEXT = 'Not referenced anywhere.';
 
 const render = (hits: readonly ReferencedByHit[]): string =>

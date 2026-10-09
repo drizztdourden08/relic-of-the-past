@@ -1,39 +1,18 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { createElement } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
-import { PositionInput } from '../../apps/web/src/ui/design-system/primitives/PositionInput';
 import {
   clampAxis,
   clampPosition,
   isValidForAxis,
   isWithinAxis,
-} from '../../apps/web/src/ui/design-system/primitives/PositionInput/behavior/clamp-axis';
+} from '../../../apps/web/src/ui/design-system/primitives/PositionInput/behavior/clamp-axis';
 import {
   SETTLED,
   displayValue,
   resolveTyped,
   settleDraft,
-} from '../../apps/web/src/ui/design-system/primitives/PositionInput/behavior/draft-rules';
-import type { PositionAxis, PositionInputProps } from '../../apps/web/src/ui/design-system/primitives/PositionInput';
-
-// No jsdom: the interaction rules are tested as the pure functions the hook is
-// built from, the markup by SSR. Typing and focus need the running app.
-
-const GRID: PositionAxis = { min: 0, max: 63 };
-const SIGNED: PositionAxis = { min: -8, max: 8 };
-const OPEN: PositionAxis = {};
-
-const render = (props: Partial<PositionInputProps> = {}): string =>
-  renderToStaticMarkup(
-    createElement(PositionInput, {
-      value: { x: 3, y: 4 },
-      onChange: () => undefined,
-      ...props,
-    }),
-  );
-
-const attrs = (markup: string): string[] => markup.match(/<input[^>]*>/g) ?? [];
+} from '../../../apps/web/src/ui/design-system/primitives/PositionInput/behavior/draft-rules';
+import { GRID, OPEN, SIGNED } from './position-input.constants';
 
 describe('bounds clamp each end of an axis', () => {
   it('leaves a value inside the range alone', () => {
@@ -76,7 +55,6 @@ describe('bounds clamp each end of an axis', () => {
   it('clamps the two axes independently of one another', () => {
     expect(clampPosition({ x: 99, y: -50 }, GRID, SIGNED)).toEqual({ x: 63, y: -8 });
     expect(clampPosition({ x: -5, y: 99 }, GRID, SIGNED)).toEqual({ x: 0, y: 8 });
-    // Each axis answers to its own bounds: -5 is out for the grid, in for the signed one.
     expect(clampPosition({ x: -5, y: -5 }, GRID, SIGNED)).toEqual({ x: 0, y: -5 });
     expect(clampPosition({ x: 99, y: 99 }, OPEN, GRID)).toEqual({ x: 99, y: 63 });
   });
@@ -161,76 +139,5 @@ describe('what the field displays while it is being edited', () => {
 
   it('shows nothing instead of NaN when the committed value itself is broken', () => {
     expect(displayValue(SETTLED, Number.NaN)).toBe('');
-  });
-});
-
-describe('rendering the markup a screen binds to', () => {
-  it('renders two fields as one labelled group', () => {
-    const markup = render({ label: 'Grid position', x: GRID, y: GRID });
-    expect(attrs(markup)).toHaveLength(2);
-    expect(markup).toContain('role="group"');
-    expect(markup).toContain('aria-label="Grid position"');
-    expect(markup).toContain('Grid position');
-  });
-
-  it('caps the axes X and Y by default, and takes an override', () => {
-    expect(render()).toContain('>X<');
-    expect(render()).toContain('>Y<');
-    const named = render({ x: { label: 'Col' }, y: { label: 'Row' } });
-    expect(named).toContain('>Col<');
-    expect(named).toContain('>Row<');
-  });
-
-  it('puts each axis bound on its own field', () => {
-    const [first, second] = attrs(render({ x: GRID, y: SIGNED }));
-    expect(first).toContain('min="0"');
-    expect(first).toContain('max="63"');
-    expect(second).toContain('min="-8"');
-    expect(second).toContain('max="8"');
-  });
-
-  it('renders an axis with no bounds at all, leaving both ends open', () => {
-    const markup = render();
-    expect(attrs(markup)).toHaveLength(2);
-    expect(markup).not.toContain('min=');
-    expect(markup).not.toContain('max=');
-  });
-
-  it('renders with a bound on one end only', () => {
-    const [first] = attrs(render({ x: { min: 0 } }));
-    expect(first).toContain('min="0"');
-    expect(first).not.toContain('max=');
-  });
-
-  it('steps by one unless the axis says otherwise', () => {
-    expect(attrs(render())[0]).toContain('step="1"');
-    const stepped = attrs(render({ x: { ...GRID, step: 8 }, y: GRID }));
-    expect(stepped[0]).toContain('step="8"');
-    expect(stepped[1]).toContain('step="1"');
-  });
-
-  it('shows the value it was given on each axis', () => {
-    const [first, second] = attrs(render({ value: { x: 12, y: 34 } }));
-    expect(first).toContain('value="12"');
-    expect(second).toContain('value="34"');
-  });
-
-  it('renders an empty field instead of NaN for a broken value', () => {
-    const [first] = attrs(render({ value: { x: Number.NaN, y: 0 } }));
-    expect(first).toContain('value=""');
-  });
-
-  it('makes both axes inert when disabled, including fields and spinners', () => {
-    const markup = render({ disabled: true, x: GRID, y: GRID });
-    expect(attrs(markup).every((tag) => tag.includes('disabled'))).toBe(true);
-    // Two chevrons per axis, all four disabled with the fields.
-    expect(markup.match(/<button[^>]*disabled/g)).toHaveLength(4);
-    expect(markup).toContain('position-input--disabled');
-  });
-
-  it('leaves both axes interactive by default', () => {
-    const markup = render();
-    expect(attrs(markup).some((tag) => tag.includes('disabled'))).toBe(false);
-    expect(markup).not.toContain('position-input--disabled');
   });
 });
