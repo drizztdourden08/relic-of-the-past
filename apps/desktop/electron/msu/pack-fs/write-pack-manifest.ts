@@ -2,7 +2,7 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
 import type { MsuPackManifest } from '@rotp/game-data';
-import { serializeManifest } from '@shared/storage/msu-edit';
+import { serializeManifest } from '@rotp/msu';
 import { manifestPath } from './manifest-path';
 import { packInventory } from './pack-inventory';
 import { withPackName } from './with-pack-name';

@@ -1,13 +1,13 @@
 /* @layer bridge-wasm @kind logic */
-import { createMsuEngine } from '../../msu/engine';
+import { createMsuEngine } from '@rotp/msu';
 import { log } from '../../log-bus';
 import { getMasterAudioTarget } from '@rotp/game-core';
 import { announceCoreMusic } from '@rotp/game-core';
 import { setDeluxeEntrances } from '@rotp/game-core';
 import { setExternalMusic } from '@rotp/game-core';
-import { publishSoundClaims } from '../msu-sound-claims';
-import { msuSessionState } from './msu-session-state';
-import type { MsuSessionOptions } from './msu-session.type';
+import { publishSoundClaims } from '@rotp/msu';
+import { msuSessionState } from '@rotp/msu';
+import type { MsuSessionOptions } from '@rotp/msu';
 
 const createEngine = (ctx: AudioContext, destination: AudioNode, options: MsuSessionOptions) => createMsuEngine({
   ctx,

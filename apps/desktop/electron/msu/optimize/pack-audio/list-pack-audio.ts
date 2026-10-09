@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { join } from 'path';
 import { readdir, stat } from 'fs/promises';
-import { isAudioFile } from '@shared/storage/msu-paths';
+import { isAudioFile } from '@rotp/msu';
 import { packPath } from '../../pack-fs';
 import type { PackAudioFile } from './pack-audio.type';
 

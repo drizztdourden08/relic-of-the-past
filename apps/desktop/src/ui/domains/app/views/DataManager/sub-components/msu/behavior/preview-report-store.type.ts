@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LayerReport } from '@app/lib/msu/engine';
+import type { LayerReport } from '@rotp/msu';
 import type { createPreviewReportStore } from './preview-report-store';
 
 interface PreviewReport {

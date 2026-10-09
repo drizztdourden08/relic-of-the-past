@@ -2,7 +2,7 @@
 import { appApi } from '@app/ipc/app-api';
 import { useCallback, useEffect, useState } from 'react';
 import { useTool } from '@drizztdourden08/brock-tools/renderer';
-import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@shared/types/msu-optimize';
+import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@rotp/msu';
 import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
 import type { OptimizeParams, OptimizeStep } from './useOptimize.type';
 

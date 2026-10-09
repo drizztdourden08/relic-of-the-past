@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { ProbedAudio } from '@shared/types/audio-probe';
+import type { ProbedAudio } from '@rotp/msu';
 import type { ProbeReport } from './ffprobe-parse.type';
 
 const num = (value: string | number | undefined): number | null => {

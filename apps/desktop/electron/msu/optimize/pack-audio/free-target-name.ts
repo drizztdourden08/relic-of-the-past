@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { OPTIMIZE_TARGET_EXTENSION } from '@shared/types/msu-optimize';
+import { OPTIMIZE_TARGET_EXTENSION } from '@rotp/msu';
 import { stemOf } from './stem-of';
 
 const freeTargetName = (name: string, taken: Set<string>): string => {

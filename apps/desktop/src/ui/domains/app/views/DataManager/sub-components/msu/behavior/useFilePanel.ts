@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { MsuFileMetadata } from '@shared/storage/msu';
-import { withFileRenamed } from '@shared/storage/msu-layer-edit';
+import type { MsuFileMetadata } from '@rotp/msu';
+import { withFileRenamed } from '@rotp/msu';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { extensionOf, sanitizeFileName } from './track-file-name';
 import { failure } from './failure';

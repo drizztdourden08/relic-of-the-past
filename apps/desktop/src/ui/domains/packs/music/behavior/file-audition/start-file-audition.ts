@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { decodeAudioFile } from '@app/lib/msu/decode/decode-audio-file';
+import { decodeAudioFile } from '@rotp/msu';
 import { auditionState } from './audition-state';
 import { stopFileAudition } from './stop-file-audition';
 import type { Audition } from './file-audition.type';

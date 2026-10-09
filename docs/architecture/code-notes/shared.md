@@ -2246,7 +2246,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 ### storage/msul/import-msul.ts
 
-- Reads a `.msul` pack back into a manifest and its files, the exact inverse of `apps/desktop/src/lib/msu/export/export-msul`, so a pack exported and imported again is the pack you started with.
+- Reads a `.msul` pack back into a manifest and its files, the exact inverse of `packages/msu/src/player/export/export-msul`, so a pack exported and imported again is the pack you started with.
 - Every failure is something a user did (wrong file, hand-edited manifest, a pack from a newer build), so each throws a message written for them. The validation is spelled out here because `parseManifest` collapses every cause into null and could only give one generic message.
 - `files` holds every non-manifest entry, in archive order.
 

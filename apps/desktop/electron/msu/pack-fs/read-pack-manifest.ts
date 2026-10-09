@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { MsuPackManifest } from '@rotp/game-data';
-import { parseManifest } from '@shared/storage/msu-edit';
+import { parseManifest } from '@rotp/hub-contracts';
 import { manifestPath } from './manifest-path';
 import { readPackText } from './read-pack-text';
 import { withPackName } from './with-pack-name';

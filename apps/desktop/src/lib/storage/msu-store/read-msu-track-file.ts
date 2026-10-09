@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import * as msu from '@shared/storage/msu';
+import { msu } from '@rotp/msu';
 import { platformFiles } from '../platform-files';
 
 const readMsuTrackFile = async (pack: string, fileName: string): Promise<ArrayBuffer> => {

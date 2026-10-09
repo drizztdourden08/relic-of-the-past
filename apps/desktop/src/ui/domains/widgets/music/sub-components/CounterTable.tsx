@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Box, EmptyState, StatRow } from '@drizztdourden08/tessera/primitives';
-import type { MusicDebugCounter } from '@app/lib/game/music-debug';
+import type { MusicDebugCounter } from '@rotp/msu';
 
 const splitOf = (row: MusicDebugCounter): string => {
   if (row.skipped > 0 || row.key.startsWith('roll:')) {

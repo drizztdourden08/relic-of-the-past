@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { ProbedAudio } from '@shared/types/audio-probe';
+import type { ProbedAudio } from '@rotp/msu';
 
 interface FfmpegInvokeContract {
   'ffmpeg:probeAudio': (dataPath: string) => Promise<ProbedAudio | null>;

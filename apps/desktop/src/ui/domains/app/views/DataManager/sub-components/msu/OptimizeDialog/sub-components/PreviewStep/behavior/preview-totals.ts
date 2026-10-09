@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { OptimizeCandidate } from '@shared/types/msu-optimize';
+import type { OptimizeCandidate } from '@rotp/msu';
 import { EMPTY } from './preview-totals.constants';
 import type { PreviewTotals } from './preview-totals.type';
 

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { MsuPackManifest } from '@rotp/game-data';
-import { effectivePackManifest } from '@shared/storage/msu-classic-manifest';
+import { effectivePackManifest } from '@rotp/msu';
 import type { TrackInfo } from '../../msu.type';
 
 const effectiveManifest = (

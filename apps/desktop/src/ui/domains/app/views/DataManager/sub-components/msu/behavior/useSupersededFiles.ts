@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { supersededMap, withSupersededRepointed } from '@shared/storage/msu-superseded';
+import { supersededMap, withSupersededRepointed } from '@rotp/msu';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { failure } from './failure';
 import type { ActionResult } from '../msu.type';

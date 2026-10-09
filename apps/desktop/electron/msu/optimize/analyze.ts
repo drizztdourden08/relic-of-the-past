@@ -2,7 +2,7 @@
 import { mkdtemp, rm } from 'fs/promises';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import type { OptimizeAnalysis } from '@shared/types/msu-optimize';
+import type { OptimizeAnalysis } from '@rotp/msu';
 import { packFilePath } from '../pack-fs';
 import { measureCandidate } from './measure';
 import { listPackAudio, pendingConversions } from './pack-audio';

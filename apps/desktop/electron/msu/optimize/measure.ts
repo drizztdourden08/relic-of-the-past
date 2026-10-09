@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { rm, stat } from 'fs/promises';
 import { join } from 'path';
-import type { OptimizeCandidate } from '@shared/types/msu-optimize';
-import { OPTIMIZE_SLICE_SECONDS } from '@shared/types/msu-optimize';
+import type { OptimizeCandidate } from '@rotp/msu';
+import { OPTIMIZE_SLICE_SECONDS } from '@rotp/msu';
 import type { AudioSource } from './audio-source';
 import { describeSource } from './audio-source';
 import { encodeToTarget } from './flac-encode';

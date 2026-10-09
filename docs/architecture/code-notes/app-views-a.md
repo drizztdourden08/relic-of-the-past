@@ -304,7 +304,7 @@ Exports as `.msul` (whole) or MSU-1 (flattened, playable elsewhere). MSU-1 decod
 
 ### DataManager/sub-components/msu/behavior/usePackImport.ts
 
-Reads a dropped `.msul` into a pack. The install itself lives in `shared/storage/msul/install-msul-pack`, shared with the file association path and the store. A pack that lists more than it holds is named at once, while the archive is to hand.
+Reads a dropped `.msul` into a pack. The install itself lives in `packages/msu/src/msul/install-msul-pack`, shared with the file association path and the store. A pack that lists more than it holds is named at once, while the archive is to hand.
 
 ### DataManager/sub-components/msu/behavior/usePackList.ts
 

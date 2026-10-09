@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuFileMetadata } from '@shared/storage/msu';
+import type { MsuFileMetadata } from '@rotp/msu';
 import type { Audition } from '@domains/packs/music/behavior/file-audition';
 
 interface FileRowProps {

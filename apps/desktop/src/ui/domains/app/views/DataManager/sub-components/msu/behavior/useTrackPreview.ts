@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import type { MsuPackManifest } from '@rotp/game-data';
-import type { MsuEngine } from '@app/lib/msu/engine';
+import type { MsuEngine } from '@rotp/msu';
 import { usePreviewSession } from './usePreviewSession';
 import type { PreviewReport } from './preview-report-store.type';
 import { trackPreviewKey } from './preview-key';

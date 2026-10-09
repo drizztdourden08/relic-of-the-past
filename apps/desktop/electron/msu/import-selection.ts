@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { dirname, basename } from 'path';
-import { trackNumberOf } from '@shared/storage/msu-paths';
+import { trackNumberOf } from '@rotp/msu';
 import type { PackSelection } from './import-selection.type';
 
 const depthOf = (path: string): number => dirname(path).split(/[\/]/).length;

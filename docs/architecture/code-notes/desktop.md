@@ -268,7 +268,7 @@ IPC for normalising a pack to one audio format: measure first, convert second. T
 
 Where one pack's files are on disk, and its manifest read and written, over Node fs. Pack and file names come from the renderer, so every name that becomes a path segment is checked for traversal before it is joined (`safeName`). The manifest format comes from `shared/storage/msu-edit`, so the Node handlers and the FileStore backed renderer cannot drift on what a `pack.json` is. A pack installed from the Hookshop is read only (`refuseInstalledPack` throws).
 
-A pack's name is its folder; the name inside its settings follows it on read and on write. `readPackManifest` returns null for a classic pack (no manifest) and for one that is unreadable or of an unknown version. The file inventory uses the same rule as the FileStore side (`shared/storage/msu-inventory`): regular files, manifest excepted. It is read from the folder at write time; a file that vanishes mid listing is skipped.
+A pack's name is its folder; the name inside its settings follows it on read and on write. `readPackManifest` returns null for a classic pack (no manifest) and for one that is unreadable or of an unknown version. The file inventory uses the same rule as the FileStore side (`packages/msu/src/inventory`): regular files, manifest excepted. It is read from the folder at write time; a file that vanishes mid listing is skipped.
 
 ### msu/resume-handlers.ts
 

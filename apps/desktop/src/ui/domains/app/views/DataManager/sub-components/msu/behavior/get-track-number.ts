@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { trackNumberOf } from '@shared/storage/msu-paths';
+import { trackNumberOf } from '@rotp/msu';
 
 const getTrackNumber = (filename: string): number | null => trackNumberOf(filename);
 

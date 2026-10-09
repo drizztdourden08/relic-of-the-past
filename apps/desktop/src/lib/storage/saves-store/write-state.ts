@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { deleteMsuResume } from '@shared/storage/msu-resume';
+import { deleteMsuResume } from '@rotp/msu';
 import { platformFiles } from '../platform-files';
 import { portSaveStore } from './port-save-store';
 import { saveBytes } from './save-bytes';

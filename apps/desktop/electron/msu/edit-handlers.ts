@@ -2,8 +2,8 @@
 import { join, dirname } from 'path';
 import { writeFile, readdir, rename, rm, stat, mkdir } from 'fs/promises';
 import type { MsuPackManifest, MsuPackMeta } from '@rotp/game-data';
-import { isAudioFile } from '@shared/storage/msu-paths';
-import { newManifest } from '@shared/storage/msu-edit';
+import { isAudioFile } from '@rotp/msu';
+import { newManifest } from '@rotp/msu';
 import { handle } from '@drizztdourden08/brock-electron/main';
 import {
   packFilePath, packPath, pathExists, readPackManifest, refuseInstalledPack, writePackManifest,

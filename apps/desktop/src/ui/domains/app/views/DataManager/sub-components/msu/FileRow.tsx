@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Status, Box, IconButton, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import type { MsuFileMetadata } from '@shared/storage/msu';
+import type { MsuFileMetadata } from '@rotp/msu';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { FilePlayer } from '@domains/packs/music/compounds/FilePlayer';
 import { clock } from '@domains/packs/music/behavior/clock';

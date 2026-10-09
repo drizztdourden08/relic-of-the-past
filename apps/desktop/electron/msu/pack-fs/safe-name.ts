@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { isSafeName } from '@shared/storage/msu-paths';
+import { isSafeName } from '@rotp/msu';
 
 const safeName = (name: string): string => {
   if (!isSafeName(name)) throw new Error('Invalid filename');

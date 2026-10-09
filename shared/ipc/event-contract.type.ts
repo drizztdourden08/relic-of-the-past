@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { OptimizeProgress } from '@shared/types/msu-optimize';
+import type { OptimizeProgress } from '@rotp/msu';
 
 interface ImportProgress {
   kind: 'rom' | 'msu' | 'language' | 'sprite' | 'linkSprite';

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import * as msu from '@shared/storage/msu';
+import { msu } from '@rotp/msu';
 import { platformFiles } from '../platform-files';
 import { probeAudioFile } from '../audio-probe';
 

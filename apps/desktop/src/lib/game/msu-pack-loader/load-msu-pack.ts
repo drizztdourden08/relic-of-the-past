@@ -3,8 +3,8 @@ import { log } from '../../log-bus';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { detectMsuPackProfile, resolveMsuPlayback } from '@rotp/features';
 import { stopMsuSession } from '../msu-session';
-import { msuPackSessionOwner } from './msu-pack-session-owner';
-import type { Settings } from './msu-pack-loader.type';
+import { msuPackSessionOwner } from '@rotp/msu';
+import type { Settings } from '@rotp/msu';
 import { startPackSession } from './start-pack-session';
 
 const loadMsuPack = async (profile: Profile, settings: Settings) => {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { OptimizeAnalysis } from '@shared/types/msu-optimize';
+import type { OptimizeAnalysis } from '@rotp/msu';
 
 interface PreviewStepProps {
   analysis: OptimizeAnalysis;

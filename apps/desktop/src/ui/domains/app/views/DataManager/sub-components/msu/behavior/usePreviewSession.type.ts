@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { MsuPackManifest } from '@rotp/game-data';
-import type { MsuEngine } from '@app/lib/msu/engine';
+import type { MsuEngine } from '@rotp/msu';
 import type { PreviewReport } from './preview-report-store.type';
 
 type ReadReport = (engine: MsuEngine) => PreviewReport | null;

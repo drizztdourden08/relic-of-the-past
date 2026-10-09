@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
 import type { MsuPackManifest } from '@rotp/game-data';
-import { exportMsulPack } from '@app/lib/msu/export/export-msul';
-import { exportMsu1Pack } from '@app/lib/msu/export/export-msu1';
-import { decodeAudioFile } from '@app/lib/msu/decode/decode-audio-file';
+import { exportMsulPack } from '@rotp/msu';
+import { exportMsu1Pack } from '@rotp/msu';
+import { decodeAudioFile } from '@rotp/msu';
 import { listMsuPackEntries, readMsuTrackFile } from '@app/lib/storage/msu-store';
 import { saveBytesAsFile } from './save-bytes';
 import { failure } from './failure';

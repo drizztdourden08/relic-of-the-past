@@ -1,6 +1,6 @@
 /* @layer electron-main @kind types */
 import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
-import type { OptimizeProgress } from '@shared/types/msu-optimize';
+import type { OptimizeProgress } from '@rotp/msu';
 
 type ProgressReporter = (progress: OptimizeProgress) => void;
 

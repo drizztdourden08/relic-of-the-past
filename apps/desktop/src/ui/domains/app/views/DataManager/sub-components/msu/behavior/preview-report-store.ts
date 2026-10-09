@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { LayerReport } from '@app/lib/msu/engine';
+import type { LayerReport } from '@rotp/msu';
 import { SECONDS, TENTHS } from './preview-report-store.constants';
 import type { Listener, PreviewReport, ReportedVoice } from './preview-report-store.type';
 

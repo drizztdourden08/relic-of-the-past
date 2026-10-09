@@ -1,9 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useEffect, useSyncExternalStore } from 'react';
-import {
-  clearMusicDebug, getMusicDebugCounters, getMusicDebugEvents,
-  setMusicDebugArmed, subscribeMusicDebug,
-} from '@app/lib/game/music-debug';
+import { clearMusicDebug, getMusicDebugCounters, getMusicDebugEvents, setMusicDebugArmed, subscribeMusicDebug } from '@rotp/msu';
 
 const useMusicDebugData = () => {
   useEffect(() => {

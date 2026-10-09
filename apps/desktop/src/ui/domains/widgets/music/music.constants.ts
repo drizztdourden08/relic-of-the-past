@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind constants */
-import type { MsuChannelName } from '@app/lib/msu/engine';
+import type { MsuChannelName } from '@rotp/msu';
 import type { StatusTone } from '@drizztdourden08/tessera/primitives';
-import type { MusicDebugOwner } from '@app/lib/game/music-debug';
+import type { MusicDebugOwner } from '@rotp/msu';
 
 const CHANNELS: readonly MsuChannelName[] = ['music', 'ambient', 'sfx1', 'sfx2'];
 

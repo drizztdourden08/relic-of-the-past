@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 import type { PreviewTarget } from '@rotp/game-core';
-import type { PlayOutcome } from './original-sound.type';
+import type { PlayOutcome } from '@rotp/msu';
 import { ensurePreviewModule } from '../preview-core';
-import { audioContext } from './audio-context';
-import { loadOriginalSound } from './load-original-sound';
-import { originalSoundState } from './original-sound-state';
-import { stopOriginalSound } from './stop-original-sound';
-import { CONTINUOUS } from './original-sound.constants';
+import { audioContext } from '@rotp/msu';
+import { loadOriginalSound } from '@rotp/msu';
+import { originalSoundState } from '@rotp/msu';
+import { stopOriginalSound } from '@rotp/msu';
+import { CONTINUOUS } from '@rotp/msu';
 
 const playOriginalSound = async (
   target: PreviewTarget,

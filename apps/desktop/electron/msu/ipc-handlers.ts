@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { join, basename } from 'path';
-import { isAudioFile, trackNumberOf } from '@shared/storage/msu-paths';
+import { isAudioFile, trackNumberOf } from '@rotp/msu';
 import { handle, getUserDataPath, toArrayBuffer } from '@drizztdourden08/brock-electron/main';
 import { readFile, readdir, mkdir, copyFile, rm, stat } from 'fs/promises';
 import { resolveSourceFiles, type ImportSource } from '../lib/import-source';

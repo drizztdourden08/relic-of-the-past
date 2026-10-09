@@ -13,7 +13,7 @@ import { callIfExported } from '@rotp/game-core';
 import { FEATURES3_GATE_WORD } from '@rotp/game-core';
 import { liveSettingsState } from '@rotp/game-core';
 import { pushDisplaySwitches } from '@rotp/game-core';
-import { pushVolumes } from './push-volumes';
+import { pushVolumes } from '@rotp/msu';
 
 const pushFeatureWords = (mod: EmscriptenModule, settings: GameSettings): number => {
   const features = buildFeatureFlags(settings);

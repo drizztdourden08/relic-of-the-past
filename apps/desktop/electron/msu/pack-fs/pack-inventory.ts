@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { join } from 'path';
 import { readdir, stat } from 'fs/promises';
-import { isInventoryName, sortInventory } from '@shared/storage/msu-inventory';
+import { isInventoryName, sortInventory } from '@rotp/msu';
 import { packPath } from './pack-path';
 
 const packInventory = async (pack: string): Promise<string[]> => {

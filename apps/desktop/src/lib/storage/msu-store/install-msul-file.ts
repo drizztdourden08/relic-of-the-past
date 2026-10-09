@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { installMsulPack } from '@shared/storage/msul/install-msul-pack';
-import type { InstallResult } from '@shared/storage/msul/install-msul-pack';
+import { installMsulPack } from '@rotp/msu';
+import type { InstallResult } from '@rotp/msu';
 import { platformFiles } from '../platform-files';
 import { emitMsuProgress } from './emit-msu-progress';
 

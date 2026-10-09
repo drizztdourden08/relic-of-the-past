@@ -1,6 +1,6 @@
 /* @layer shared-ipc @kind types */
 import type { MsuPackManifest, MsuPackMeta, MsuResumeState } from '@rotp/game-data';
-import type { OptimizeAnalysis, OptimizeRunResult } from '@shared/types/msu-optimize';
+import type { OptimizeAnalysis, OptimizeRunResult } from '@rotp/msu';
 import type { SaveKind } from '@rotp/game-core';
 
 type MsuResult = {

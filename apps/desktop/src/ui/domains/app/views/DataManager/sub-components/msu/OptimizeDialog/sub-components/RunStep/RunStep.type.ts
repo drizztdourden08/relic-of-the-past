@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { OptimizeProgress, OptimizeRunResult } from '@shared/types/msu-optimize';
+import type { OptimizeProgress, OptimizeRunResult } from '@rotp/msu';
 
 interface RunStepProps {
   progress: OptimizeProgress | null;

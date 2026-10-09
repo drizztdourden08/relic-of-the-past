@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { stat } from 'fs/promises';
-import type { ProbedAudio } from '@shared/types/audio-probe';
+import type { ProbedAudio } from '@rotp/msu';
 import { loadCache } from './load-cache';
 import { scheduleFlush } from './schedule-flush';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { LayerReport } from '@app/lib/msu/engine';
+import type { LayerReport } from '@rotp/msu';
 import { clock } from '@domains/packs/music/behavior/clock';
 import { voiceCaptions } from './voiceCaptions';
 import { shortName } from './shortName';

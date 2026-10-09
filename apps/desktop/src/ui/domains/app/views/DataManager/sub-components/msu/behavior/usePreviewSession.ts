@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useRef, useState } from 'react';
-import { createMsuEngine } from '@app/lib/msu/engine';
-import type { MsuEngine } from '@app/lib/msu/engine';
+import { createMsuEngine } from '@rotp/msu';
+import type { MsuEngine } from '@rotp/msu';
 import { readMsuTrackFile } from '@app/lib/storage/msu-store';
 import { createPreviewReportStore } from './preview-report-store';
 import type { PreviewRun, PreviewSession } from './usePreviewSession.type';

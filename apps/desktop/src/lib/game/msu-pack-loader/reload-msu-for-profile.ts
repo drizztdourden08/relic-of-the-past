@@ -2,7 +2,7 @@
 import { listProfiles, readConfig } from '@app/lib/storage/profile-store';
 import { mergeSettings as merge } from '@rotp/game-core';
 import { loadMsuPack } from './load-msu-pack';
-import { msuPackSessionOwner } from './msu-pack-session-owner';
+import { msuPackSessionOwner } from '@rotp/msu';
 
 const reloadMsuForProfile = async (profileId: string): Promise<boolean> => {
   if (msuPackSessionOwner.profileId !== profileId) return false;
