@@ -1,14 +1,4 @@
 /* @layer test @kind test */
-/**
- * The layout pass itself: the rules the built-ins do not exercise.
- *
- * Two things are load-bearing enough to be asserted, not assumed. An
- * element is CONTAINED and never stretched, whatever box it is given - there is
- * no code path in the engine that writes a width and a height independently.
- * And an invisible node leaves the flow entirely instead of holding its place,
- * because a hole where an element used to be is the defect the recursive model
- * exists to remove.
- */
 import { describe, expect, it } from 'vitest';
 import { aspectOf, containRect, intrinsicSize, layoutHud, measureBox, placedById } from '@shared/hud/engine';
 import { validateLayout } from '@shared/hud/layouts';
@@ -20,8 +10,6 @@ const leaf = (id: string, extra: Partial<HudNode> = {}): HudNode => ({
   kind: 'element', id, element: { type: 'slot', index: 1 }, ...extra,
 } as HudNode);
 
-/** The screen the nine anchors became (§42): three bands each way, this root
- *  in the top-left cell - exactly what `anchor: 'top-left'` used to say. */
 const screenOf = (root: HudContainer, place = { column: 1, row: 1 }, extra: Partial<HudContainer> = {}): HudContainer => ({
   kind: 'container',
   id: 'screen',
@@ -54,8 +42,6 @@ describe('boxes, extents and the flow', () => {
   });
 
   it('an overlay - one grid cell, every child in it - moves them only by their own margins', () => {
-    // What `direction: 'stack'` used to be (§42). Both children name (1,1),
-    // which is never refused; only auto-flow avoids a taken cell.
     const at = { column: 1, row: 1 };
     const doc = docOf({
       kind: 'container',
@@ -69,8 +55,6 @@ describe('boxes, extents and the flow', () => {
     });
     expect(rectOf(doc, 'a')).toEqual({ x: 0, y: 0, w: 16, h: 16 });
     expect(rectOf(doc, 'b')).toEqual({ x: -4, y: 6, w: 16, h: 16 });
-    // The overlay's own box holds the margined child, negatives included -
-    // the auto track is sized off the OUTER size, as the flex line always was.
     expect(rectOf(doc, 'root')).toEqual({ x: 0, y: 0, w: 16, h: 22 });
   });
 
@@ -79,9 +63,6 @@ describe('boxes, extents and the flow', () => {
       leaf('half', { size: { w: { pct: 50 } } }),
       leaf('rest', { size: { w: 'fill' } }),
     ], { size: { w: { px: 200 } } }));
-    // Both boxes come out 100 wide - half of 200, and everything that was left -
-    // and the 16px sprite in each is CONTAINED in its box, not stretched
-    // across it, so what each one draws is centred in its hundred.
     expect(rectOf(doc, 'half')?.w).toBe(16);
     expect(rectOf(doc, 'half')?.x).toBe(42);
     expect(rectOf(doc, 'rest')?.x).toBe(142);
@@ -104,21 +85,6 @@ describe('boxes, extents and the flow', () => {
     expect(rectOf(doc, 'a')?.y).toBe(12);
   });
 
-  /**
-   * THE THREE DISTRIBUTIONS, AT EXACT PIXELS (§56). Three 16px children in a
-   * 96px row leave 48px free, which divides exactly by all three rules, so
-   * these are the real numbers, not rounded ones:
-   *
-   * | justify | end gaps | inner gaps | x positions |
-   * |---|---|---|---|
-   * | `between` | 0 | 24 | 0 · 40 · 80 |
-   * | `around`  | 8 (half) | 16 | 8 · 40 · 72 |
-   * | `evenly`  | 12 | 12 | 12 · 40 · 68 |
-   *
-   * The MIDDLE child is at 40 under all three because a symmetric line has to put it
-   * there, so the whole difference is at the ENDS, which is exactly what the
-   * three tiles in the panel draw.
-   */
   describe('the three space distributions put the ends where they say', () => {
     const three = (justify: 'between' | 'around' | 'evenly'): (number | undefined)[] => {
       const doc = docOf(row([leaf('a'), leaf('b'), leaf('c')], {
@@ -134,9 +100,6 @@ describe('boxes, extents and the flow', () => {
     });
 
     it('falls back to start for a line of one, the way between always has', () => {
-      // There is no pair to put anything between, and inventing a centring the
-      // author did not ask for is what `between` has declined to do since it
-      // was written. The two new values match it instead of differing.
       for (const justify of ['between', 'around', 'evenly'] as const) {
         const doc = docOf(row([leaf('only')], { size: { w: { px: 96 } }, justify }));
         expect(`${justify} ${rectOf(doc, 'only')?.x}`).toBe(`${justify} 0`);
@@ -172,16 +135,10 @@ describe('nothing ever stretches', () => {
     const rect = rectOf(doc, 'a');
     expect(rect?.w).toBe(rect?.h);
     expect(aspectOf({ type: 'slot', index: 1 })).toBe(1);
-    // A sprite's own `box` (phase 5, `plans/hud-data-binding.html`) is what a
-    // non-square asset - the bomb/arrow counters, 16x8 - declares instead of
-    // the default 16x16 tile.
     expect(aspectOf({ type: 'sprite', file: 'x', box: { w: 24, h: 8 } })).toBe(3);
   });
 
   it('a shape draws at a fixed size whatever context it is measured in', () => {
-    // `heart`/`magic-bar` (phase 5) replace the old `life`/`magic` kinds -
-    // one heart is always 8x8 and the bar always 80x16, because the ROW that
-    // repeats a heart per container is what grows now, not the leaf itself.
     expect(intrinsicSize({ type: 'shape', shape: 'heart', fill: 1 })).toEqual({ w: 8, h: 8 });
     expect(intrinsicSize({ type: 'shape', shape: 'magic-bar', fill: 1 }, { hearts: 3 })).toEqual({ w: 80, h: 16 });
   });
@@ -189,9 +146,6 @@ describe('nothing ever stretches', () => {
 
 describe('cells, visibility, opacity and dimming', () => {
   it('each band of the screen pins its child, and margins measure inward from it', () => {
-    // The nine anchors, re-expressed as the 3x3 they always were (§42):
-    // `top-left` is (1,1) hugging start/start, `bottom-right` is (3,3) end/end,
-    // `center` is (2,2). The numbers are the ones the anchors produced.
     const at = (place: { column: number; row: number }, extra: Partial<HudContainer>) => {
       const root = row([leaf('a')], { margin: { left: 8, top: 8, right: 8, bottom: 8 } });
       const doc: HudLayout = {

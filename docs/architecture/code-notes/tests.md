@@ -1408,6 +1408,54 @@ rendered pie in the shipped layout with no store. It spans the whole screen grid
 no track, so it is not counted as a grid occupant (that would mark all nine cells taken, found on
 the grand merge test run), except in its own cell picker.
 
+### hud/hud-drag-indicators.keep.test.ts
+
+The drag's own marks, measured in headless Chromium with the real stylesheets, walked rather
+than listed (§36.9: a list silently measures an unstyled control the day a sheet moves). §46
+removed §44's stage drop surface, the most visual part of the plan (the 2px insertion line and
+caps, the cell wash, the co place hatch, the band ring), so none of it is asserted. What remains
+is what the outline draws: a 24px pan band at each end of the scroller (a zero height sticky
+child and a pseudo element, costing no layout, because undrawn auto scroll is the version nobody
+understands), the ghost's offset from the cursor and its corner flip (which keeps it on screen),
+and the cell hatch. A sibling occupied cell is a destination and wears a hatch rather than a fill
+or a dim, since landing there stacks the two; that hatch moved from the stage (§45) into the
+lattice (§48) and into `CellPicker` (§50), the only control that places a child, as its
+`occupied-selected` state. The fixture child spans both columns of row 1, so one cell is shared
+and hatched and the other is its own. The probe keys boxes by the first `hud-` class anywhere in
+the list, because a design system `Button` puts its own classes first, plus the lattice's
+`data-state`, or every cell would collapse onto one entry.
+
+### hud/hud-layout-engine.keep.test.ts
+
+The layout pass's rules that the built ins do not exercise. An element is contained and never
+stretched, whatever box it gets; no code path writes a width and height independently, so two
+fill boxes of 100 each draw their 16px sprites centred. An invisible node leaves the flow instead
+of holding a hole. An overlay (one grid cell, every child in it, what `stack` became in §42)
+moves children only by their margins, and its auto track is sized off their outer size,
+negatives included. The three space distributions at exact pixels (§56): three 16px children in
+a 96px row leave 48px; `between` gives ends 0 and inner 24 (0, 40, 80), `around` ends 8 and inner
+16 (8, 40, 72), `evenly` 12 everywhere (12, 40, 68). The middle child is at 40 under all three, so
+the difference is at the ends, which is what the panel's three tiles draw. A line of one falls
+back to start, as `between` always has. A sprite's own `box` (the 16x8 bomb and arrow counters)
+declares a non square aspect; a heart is always 8x8 and the magic bar 80x16, since the row that
+repeats hearts is what grows. The screen's 3x3 bands reproduce the nine anchors' numbers.
+
+### hud/hud-motion-controls.keep.test.ts
+
+Phase 10 of the inspector UX review is Motion. What the new controls write is a question about
+the document, so it is proven without a browser (`hud-inspector-collapsed-fields` owns the
+widths). A key drag writes `at` rounded to two decimals, so a saved document carries no sub pixel
+noise, and keys cannot cross: a middle key stops a minimum gap short of a neighbour and the outer
+keys answer to the track's ends. Keys stay sorted, so `sampleKeyframes` never sees a swap. The
+easing picker only emits strings `validate-motion.ts` accepts and never `steps(0)`, which the
+validator refuses. Thumbnails sample the engine's own `easingFn`: `ease-in` sits below the
+diagonal at the midpoint and `ease-out` above it (a smaller SVG y). With nothing bound the
+property list is still all six and nothing is driven; `position` is driven by being inside a
+repeat. Unchecking the last property keeps the enter; clearing the enter too collapses the
+transition. An enter only transition now validates (properties had to be non empty, so a fade in
+alone could not be expressed). A reflow warning names the animated property, so the section can
+put the note under the right card.
+
 ### hud/hud-drag-gesture.keep.test.ts
 
 Preview, then commit: a drag writes the document once. §37's stage nudge called `onOffset` on
@@ -1478,6 +1526,67 @@ section three. §57 gave `ContainerOverlay` a flex drawing, so the overlay is of
 engines. Both engines mount a manipulation component that asks the platform for the modifier
 key's name, hence the platform stub. Behaviour is `hud-grid-settings`, geometry is
 `hud-grid-strip`, and the stage's reaction is the e2e layout options specs.
+
+### hud/hud-grid-track-edits.keep.test.ts
+
+§50's document rule: a track edit just happens and the children follow. §48 refused to remove a
+column a child started in and told the author to move the child first; the maintainer's rule
+puts the obligation on the document instead. Each case is one sentence of the rule, and the last
+two are the invariant: after any sequence of edits every child's `place` is in range, every span
+fits, and `validateLayout` accepts the result. What sits before a removed track does not move,
+which a naive subtract one from everybody gets wrong; a child in a removed column lands on the
+track that took its index. A collapsed span loses the key entirely, since a key present and
+undefined survives a JSON round trip. Columns keep one track; rows empty back to implicit. A grid
+with no declared rows still shows the rows its children reach, so those are materialised before
+an insert, which must mean what the eye saw.
+
+### hud/hud-inspector-value-input-width.keep.test.ts
+
+Phase 4 of the inspector UX review, measured in headless Chromium at 289 / 232 / 188 px (the 320
+default rail less 32, the wireframe width, and the 220 minimum less 32). Deleting the value mode
+switch gave back 66.3px of `SegmentedControl` plus its 2px gap on every numeric row, turning the
+duration and delay pair (the same shape as the grid gap pair) from 31.2 / 2.7 / 0 into 99.5 / 71
+/ 49; at `md` (contract §34.4) two fields sharing 281px got 138.5 each against 141.3 needed. The
+stylesheets are walked, not listed, because `ValueInput.css` lives in its own folder and a listed
+set measured an unstyled control while still passing. A half width formula stays half width at
+rest; its sibling sits to the right (tops differ only because the row aligns to flex end and the
+formula's result line makes its field taller). Promotion (§58) is an overlay: the field keeps its
+height (`--promote-height`) and its control floats over the row, so the sibling never moves. §36
+promoted with `flex: 1 0 100%`, which reflowed the pair and broke the maintainer's rule that
+touching a control may not rearrange what is beside it. The probe applies the class with the
+four numbers `behavior/promote-overlay.ts` measures, mirroring its `boxFor`, since an SSR page
+cannot focus; the real hook runs in the e2e layout options spec. The promoted width is 233.5 /
+176.5 / 132.5, 4px under §36 for the 2px padding each side that makes it read as a card on the
+row.
+
+### hud/hud-screen-grid.keep.test.ts
+
+§42: two engines, not three, and a screen root that is a real grid. The bar is pixel identity: a
+migration rewriting `regions` into `screen.children` and every `stack` into a one cell grid must
+draw the shipped HUD unchanged, so the real numbers off the shipped document are pinned: the
+three bands' corners (top left, bottom left, top right), the face button diamond (four satellites
+round a centre, each sprite on its glyph, which a `stack` read as a column would have split), and
+the d pad cross. They were measured before the change; if one moves, the migration is wrong. The
+old overlay `stack` (children moved by their own margins, a negative one hanging outside) is now
+an `auto` track sized off its items' outer size. The rules the collapse rests on: an explicit
+cell is never refused for being taken and auto flow walks past one; two screen children may
+overlap; paint order for co placed children is `order`, then document order; and the screen's
+rectangle is not a question it can answer. The §62 countdown is centred with its box bottom 12px
+up, so the disc (4px in) is two tiles up; the shipped document minus its countdown places
+everything else unchanged.
+
+### hud/hud-screen-root.keep.test.ts
+
+The screen: the document's one root, always exactly the view. It is not a special case: it is
+placed like any container, passes opacity to what sits on it, and its padding is the one inset
+everything sits inside (398 minus 8 padding minus a 10px marker is 380). It carries a background
+like any box; the test uses a token so the inline style lint rule never has to tell the document
+apart from real inline styles. The screen has no size to author, and a document that tries is
+refused by name, since a silently dropped key is how a hand edited file starts lying. Its engine
+is not locked (§42, reversing §38.4): it is a grid whose `[auto, fill, auto]` template is the nine
+anchors. A pre §42 document (`regions` beside a `stack` screen, as every stored layout is until
+its first save) opens in the new shape with no alias left; a centred band spans its whole axis
+from track 1, so it centres in the view as `center` did instead of in the middle track.
 
 ### hud/hud-stage-cells.keep.test.ts
 

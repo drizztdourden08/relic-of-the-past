@@ -1,19 +1,4 @@
 /* @layer test @kind test */
-/**
- * THE SCREEN: the document's one root, always exactly the view.
- *
- * The thing worth pinning is that it is not a special case in the engine - it
- * is placed like any other container, it inherits opacity into what sits on it,
- * and its padding is the one inset everything below it sits inside. The other
- * half is the lock: the screen has no size to author, and a document that tries
- * is refused by name, not ignored, because a silently dropped
- * key is how a hand-edited file starts lying to its author.
- *
- * ITS ENGINE IS NOT LOCKED (§42, reversing §38.4). The screen is a grid whose
- * `[auto, fill, auto]` template IS the nine anchors, so `layout`, `columns` and
- * `rows` are the whole of how a layout is arranged - the last case here proves
- * a screen may name its own.
- */
 import { describe, expect, it } from 'vitest';
 import { layoutHud } from '@shared/hud/engine';
 import { tryLoadLayout, validateLayout } from '@shared/hud/layouts';
@@ -25,7 +10,6 @@ const marker: HudContainer = {
   id: 'marker', kind: 'container', direction: 'row', size: { w: { px: 10 }, h: { px: 10 } }, children: [],
 };
 
-/** The screen's default template: the 3x3 the nine anchors always were. */
 const BANDS = {
   layout: 'grid' as const,
   columns: ['auto', 'fill', 'auto'] as const,
@@ -72,7 +56,6 @@ describe('the screen root', () => {
       ),
       VIEW,
     );
-    // 398 - 8 (padding) - 10 (the marker) = 380; 224 - 8 - 10 = 206.
     expect(bottomRight.find((node) => node.id === 'marker')?.rect).toMatchObject({ x: 380, y: 206 });
   });
 
@@ -86,8 +69,6 @@ describe('the screen root', () => {
   });
 
   it('carries a background like any other box, because it IS any other box', () => {
-    // A Paint is any CSS colour string; a token keeps the lint rule that guards
-    // real inline styles from having to tell this document apart from one.
     const doc = docWith({ style: { background: 'var(--c-surface)' } });
     expect(doc.screen.style?.background).toBe('var(--c-surface)');
     expect(layoutHud(doc, VIEW).find((node) => node.id === 'screen')).toBeDefined();
@@ -156,8 +137,6 @@ describe('the screen lock', () => {
 });
 
 describe('a pre-§42 document opens, and opens in the new shape', () => {
-  /** `regions[]` beside a `stack` screen - what every stored layout looks like
-   *  until the first save after this change. */
   const stored = {
     id: 'stored',
     name: 'Stored',
@@ -179,14 +158,8 @@ describe('a pre-§42 document opens, and opens in the new shape', () => {
       .toEqual([
         { column: 1, row: 1 },
         { column: 3, row: 3 },
-        // A centred band spans its whole axis FROM TRACK 1, so it centres in
-        // the VIEW the way `center` always did instead of inside the middle
-        // track alone - which would drift the moment the two outer bands
-        // stopped being the same width.
         { column: 1, row: 1, colSpan: 3, rowSpan: 3 },
       ]);
-    // NO ALIAS SURVIVES: `regions` is not a key of the document any more, and
-    // no node under it still names `stack`.
     expect(JSON.stringify(result.doc)).not.toContain('regions');
     expect(JSON.stringify(result.doc)).not.toContain('stack');
   });

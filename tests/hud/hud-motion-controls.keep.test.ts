@@ -1,19 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Phase 10 of `plans/hud-inspector-ux-review.html` is Motion. The rules the new
- * controls WRITE, proven without a browser, because every one of them is a
- * question about the document that comes out the other side instead of about
- * pixels (`hud-inspector-collapsed-fields.keep.test.ts` owns the widths).
- *
- * The four claims worth pinning:
- *   1. a drag writes `at` correctly and keys cannot cross,
- *   2. the easing picker can only emit strings `validate-motion.ts` accepts.
- *      Above all it never emits `steps(0)`, which the validator refuses outright,
- *   3. an enter-only transition is a document that LOADS (it was refused
- *      before this phase, which would have made "enter/exit always reachable"
- *      a control that writes an unsavable file),
- *   4. a reflow warning can be matched to the animation that caused it.
- */
 import { describe, it, expect } from 'vitest';
 import {
   addKeyAt, atFromPointer, canRemoveKey, clampAt, MIN_GAP, moveKey, removeKey,
@@ -39,8 +24,6 @@ describe('KeyframeTrack: dragging a diamond', () => {
     expect(atFromPointer(100, rail)).toBe(0);
     expect(atFromPointer(300, rail)).toBe(1);
     expect(atFromPointer(150, rail)).toBe(0.25);
-    // Rounded to two decimals: a saved document should not carry the pointer's
-    // sub-pixel noise.
     expect(atFromPointer(177, rail)).toBe(0.39);
   });
 
@@ -52,13 +35,9 @@ describe('KeyframeTrack: dragging a diamond', () => {
   });
 
   it('never lets a key cross the one before it', () => {
-    // The middle key, dragged well past the last one, stops a gap short.
     expect(clampAt(THREE, 1, 1.4)).toBe(1 - MIN_GAP);
-    // ...and well before the first.
     expect(clampAt(THREE, 1, -0.4)).toBe(MIN_GAP);
-    // Anything between the neighbours is left exactly where it was dropped.
     expect(clampAt(THREE, 1, 0.9)).toBe(0.9);
-    // The outer two answer to the track's own ends, not to a neighbour.
     expect(clampAt(THREE, 0, -2)).toBe(0);
     expect(clampAt(THREE, 2, 5)).toBe(1);
   });
@@ -66,7 +45,6 @@ describe('KeyframeTrack: dragging a diamond', () => {
   it('keeps the track in the order the diamonds are drawn in, after a drag', () => {
     const moved = moveKey(THREE, 1, 1.4);
     expect(moved.map((k) => k.at)).toEqual([0, 0.99, 1]);
-    // Sorted ascending either way, so `sampleKeyframes` never sees a swap.
     expect([...moved].sort((a, b) => a.at - b.at).map((k) => k.at)).toEqual([0, 0.99, 1]);
   });
 
@@ -115,8 +93,6 @@ describe('EasingPicker: exactly the strings the engine accepts', () => {
   });
 
   it('cannot produce steps(0), which is the one steps value the validator refuses', () => {
-    // The refusal is real, so the clamp below is load-bearing, not
-    // decorative.
     expect(issuesFor('steps(0)').length).toBeGreaterThan(0);
     [0, -1, -99, 0.4, NaN, Infinity].forEach((n) => {
       const produced = stepsName(n);
@@ -134,16 +110,12 @@ describe('EasingPicker: exactly the strings the engine accepts', () => {
   });
 
   it('draws each thumbnail from the ENGINE\'s own curve, not a hand-drawn one', () => {
-    // `ease-in` is below the diagonal at the midpoint and `ease-out` above it,
-    // which is the whole visual difference the tiles exist to show. y is
-    // flipped in SVG, so "above" is a SMALLER y.
     const midY = (name: string): number => {
       const points = curvePath(name).split(/[ML]/).filter(Boolean).map((p) => p.trim().split(' ').map(Number));
       return points[Math.floor(points.length / 2)][1];
     };
     expect(midY('ease-in')).toBeGreaterThan(midY('linear'));
     expect(midY('ease-out')).toBeLessThan(midY('linear'));
-    // And the sampling really is `easingFn`: linear's midpoint is the diagonal.
     expect(midY('linear')).toBeCloseTo(16 - easingFn('linear')(0.5) * 16, 1);
   });
 });
@@ -157,10 +129,7 @@ describe('Transitions and enter/exit', () => {
     expect([...TRANSITION_PROPERTIES]).toEqual(['size', 'position', 'opacity', 'scale', 'tint', 'color']);
     const bound = leaf({ opacity: { from: 'data', expr: 'life_current / 8' } });
     expect([...drivenProperties(bound, false)]).toEqual(['opacity']);
-    // Nothing bound: the list is still all six, and `driven` is empty. The
-    // section renders every row and marks them, instead of returning early.
     expect(drivenProperties(leaf({}), false).size).toBe(0);
-    // `position` is driven purely by being inside a repeat.
     expect(drivenProperties(leaf({}), true).has('position')).toBe(true);
   });
 
@@ -170,18 +139,12 @@ describe('Transitions and enter/exit', () => {
     const withBoth = mergeTransition(withEnter, { properties: ['opacity'] });
     expect(withBoth?.enter).toBeDefined();
     expect(withBoth?.properties).toEqual(['opacity']);
-    // Unchecking the last property leaves the enter standing...
     const propsCleared = mergeTransition(withBoth, { properties: [] });
     expect(propsCleared?.enter).toBeDefined();
-    // ...and clearing the enter as well collapses the whole object.
     expect(mergeTransition(propsCleared, { enter: undefined })).toBeUndefined();
   });
 
   it('writes an ENTER-ONLY transition that the validator accepts', () => {
-    // This is the fix that makes "enter/exit always reachable" real rather
-    // than a control that writes a document Save refuses: `properties` was
-    // required to be NON-EMPTY, so a node whose only motion need is a fade-in
-    // could not be expressed at all.
     const issues: string[] = [];
     const value = mergeTransition(undefined, { exit: { properties: ['scale'], duration: 120 } });
     expect(validateTransition(value, 't', issues)).toBeDefined();
@@ -215,8 +178,6 @@ describe('the reflow warning lands on the property that caused it', () => {
     const warnings = collectReflowWarnings(row as never);
     const mine = warnings.filter((w) => w.startsWith('heart:'));
     expect(mine).toHaveLength(1);
-    // The section matches on this substring to put the note under the right
-    // card's own property control instead of banner-ing the whole section.
     expect(mine.find((w) => w.includes("animating 'width'"))).toBeDefined();
     expect(mine.find((w) => w.includes("animating 'scale'"))).toBeUndefined();
   });

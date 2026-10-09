@@ -1,18 +1,4 @@
 /* @layer tests @kind test */
-/**
- * §50's document rule: A TRACK EDIT JUST HAPPENS, AND THE CHILDREN FOLLOW.
- *
- * §48 refused to remove a column a child originated in and told the author to
- * move the child first. The maintainer's rule replaces that with an obligation
- * on the document instead of the person: "child are handled automatically
- * when changing the grid layout (moved to still be valid when changing something
- * in the grid mostly)."
- *
- * Every case below is one sentence of that rule, and the last two are the
- * INVARIANT, not a case: after any sequence of edits, every child's
- * `place` is in range and every span fits, and `validateLayout` accepts the
- * result. That is the half a table of examples cannot prove.
- */
 import { describe, expect, it } from 'vitest';
 import { editGridTracks, validateLayout } from '../../shared/hud/layouts';
 import type { TrackEdit } from '../../shared/hud/layouts';
@@ -45,8 +31,6 @@ describe('removing a track takes its children somewhere real', () => {
     const next = editGridTracks(grid(), { op: 'remove', axis: 'columns', index: 1 });
     expect(next.columns.length).toBe(3);
     expect(placeOf(next, 'after')).toEqual({ column: 2, row: 1 });
-    // And what was BEFORE it does not move, which is the half a naive
-    // "subtract one from everybody" gets wrong.
     expect(placeOf(next, 'before')).toEqual({ column: 1, row: 1 });
   });
 
@@ -57,8 +41,6 @@ describe('removing a track takes its children somewhere real', () => {
 
   it('falls forward to the track AFTER when the removed one was the first', () => {
     const next = editGridTracks(grid(), { op: 'remove', axis: 'columns', index: 0 });
-    // `before` stood in column 1; column 1 is gone, so it lands on what is now
-    // column 1, the track that used to be column 2.
     expect(placeOf(next, 'before')).toEqual({ column: 1, row: 1 });
     expect(placeOf(next, 'inside')).toEqual({ column: 1, row: 1 });
   });
@@ -71,8 +53,6 @@ describe('removing a track takes its children somewhere real', () => {
   it('drops the span key entirely once it is back to one track', () => {
     let next = editGridTracks(grid(), { op: 'remove', axis: 'columns', index: 2 });
     next = editGridTracks(next, { op: 'remove', axis: 'columns', index: 2 });
-    // Not `{ colSpan: 1 }` and not `{ colSpan: undefined }`: a key that is
-    // present and undefined survives a JSON round trip as a key.
     expect(placeOf(next, 'band')).toEqual({ column: 2, row: 2 });
     expect('colSpan' in (placeOf(next, 'band') ?? {})).toBe(false);
   });
@@ -80,7 +60,6 @@ describe('removing a track takes its children somewhere real', () => {
   it('refuses only the one structural floor, because a grid needs a column', () => {
     const one = gridOf(1, 1, [leaf('solo', { column: 1, row: 1 })]);
     expect(editGridTracks(one, { op: 'remove', axis: 'columns', index: 0 })).toBe(one);
-    // Rows have no such floor: they empty back to implicit.
     const rowless = editGridTracks(one, { op: 'remove', axis: 'rows', index: 0 });
     expect(rowless.rows).toBeUndefined();
     expect(placeOf(rowless, 'solo')).toEqual({ column: 1, row: 1 });
@@ -113,8 +92,6 @@ describe('inserting a track pushes what is at or after it away', () => {
   });
 
   it('materialises implicit rows before editing them, so a visible row is real', () => {
-    // A grid with no declared `rows` still SHOWS the rows its children reach,
-    // and an insert above one of those has to mean what the eye saw.
     const implicit = {
       kind: 'container', id: 'g', layout: 'grid', columns: ['auto'],
       children: [leaf('low', { column: 1, row: 3 })],
