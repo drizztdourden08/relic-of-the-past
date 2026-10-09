@@ -17,7 +17,7 @@ const frameworkBin = () => {
 };
 
 if (!existsSync(join(HERE, 'dist', 'index.js'))) {
-  console.error('No dist/index.js. Run `npm run bundle` in cloud-functions/sanctuary-api first.');
+  console.error('No dist/index.js. Run `pnpm run bundle` in cloud-functions/sanctuary-api first.');
   process.exit(1);
 }
 
