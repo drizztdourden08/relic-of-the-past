@@ -9,22 +9,21 @@ Facts about `apps/desktop/electron/` that the code cannot say on its own: protoc
 
 The main process entry. Its top level runs in a fixed order, and each step depends on the ones before it:
 
-1. Velopack first (`runVelopackHooksFirst`): its install, update and uninstall hooks may restart the process, so nothing of the app's own may happen before it. The document types (`.msul`, `.rsp`, `.rlang`) ride on those hooks: registered after install and every update, removed before uninstall. Windows only; the other platforms get them from the package. Velopack loads lazily, so on a distro too old for its Linux module the app still starts, without self update.
+1. Velopack first: the Brock updater module (`@drizztdourden08/brock-updater`) runs its install, update and uninstall hooks before anything of the app's own. The document types (`.msul`, `.rsp`, `.rlang`) and the `relic-of-the-past` link scheme are declared in `brock.config.ts` (`fileAssociations`, `protocols`), and Brock registers them.
 2. The portable `data` folder (every other location derives from userData), then `--user-data`, which outranks it.
 3. `app.setName('relic-of-the-past')`, so dev and production share one userData path.
 4. Crash forensics, after the userData decisions (the crash dump folder derives from userData) and before any child process.
 5. The named instance identity, before the first window exists (a no op on a normal launch).
 6. The privileged `app-sprite` and `app-debug-capture` schemes.
 7. `disable-features=CalculateNativeWinOcclusion` keeps requestAnimationFrame alive when the window is occluded (for example a `--no-focus` launch behind other windows); otherwise Chromium pauses frames and stalls the headless game loop. Several `--disable-features` values must share one switch, comma separated.
-8. macOS can deliver a store install link before the app is ready, so `listenForOpenUrl` runs here.
 
-When the app is ready: a process started by an install link while the player's app runs hands the link over and quits. In dev the HTTP cache is cleared so static asset changes show at once. Paths and data folders are prepared (the installed size registry fix is cosmetic and not awaited), and the previous `session.log` is rotated so the renderer's batches land in a file scoped to this launch. Then every IPC handler registers (`startup/ipc-handlers.constants.ts`; their order does not matter), the main window is created, and the dev file logger mirrors console output to disk in dev. `--boot-timing` logs boot milestones from the first main process timestamp. With `--dump-layers` the renderer console is forwarded to stdout. Input handlers register after `initPaths`, because the calibration and profile stores resolve paths through `getUserDataPath`. A `.msul` the app was launched with reaches the renderer's importer, and store install links arrive from argv, macOS, or a process the browser started. The application menu carries only the clipboard shortcuts; debug items live in the in app Advanced menu.
+When the app is ready: in dev the HTTP cache is cleared so static asset changes show at once. Paths and data folders are prepared (the installed size registry fix is cosmetic and not awaited), and the previous `session.log` is rotated so the renderer's batches land in a file scoped to this launch. Then every IPC handler registers (`startup/ipc-handlers.constants.ts`; their order does not matter), the main window is created, and the dev file logger mirrors console output to disk in dev. `--boot-timing` logs boot milestones from the first main process timestamp. With `--dump-layers` the renderer console is forwarded to stdout. Opened files and install links reach the app through Brock's `onOpen` (see `documents/open-document.ts`). The application menu carries only the clipboard shortcuts; debug items live in the in app Advanced menu.
 
-On quit, input stops and the display refresh rate is restored, so quitting from fullscreen never leaves the player's display on a rate they did not pick.
+On quit, the Brock display module puts back the refresh rate it changed and the Brock input module stops the controllers.
 
 ### startup/
 
-Wiring that `main.ts` runs once the window exists. `IPC_HANDLERS` lists every handler group; the screen editor writes to source files, so it registers in dev only, never in a packaged build. Wiring that needs the live window stays in `main.ts` after `createWindow()`. `forwardWindowEvents` sends window state to the renderer. The synced refresh rate switch rides on the fullscreen transitions, not on renderer state, so the display is handed back even when the window is closed straight out of fullscreen. Test and automation launches (`--window-size`, `--fresh`) must not overwrite the saved window bounds (`isEphemeralLaunch`).
+Wiring that `main.ts` runs once the window exists. `IPC_HANDLERS` lists every handler group; the screen editor writes to source files, so it registers in dev only, never in a packaged build. Wiring that needs the live window stays in `main.ts` after `createWindow()`. `forwardWindowEvents` sends window state to the renderer. Test and automation launches (`--window-size`, `--fresh`) must not overwrite the saved window bounds (`isEphemeralLaunch`).
 
 ### preload.ts
 
@@ -200,69 +199,13 @@ The WebHID and WebUSB choosers on the main window session. The USB device choose
 
 ## display
 
-### display/mode-switch/
-
-Applies a synced refresh rate for the duration of fullscreen, and puts the original back. It is driven from the main process, not the renderer, because the restore has to survive the window closing, the app quitting, or the process dying. A player stranded on a rate they did not choose is a worse bug than the judder this fixes. It only changes the rate in fullscreen; windowed mode is composited by the desktop anyway.
-
-- `Preference.targetHz` is the desired rate, or 0 for "the highest multiple of 60 this display offers".
-- `rateToRestore` is the rate in effect before anything was touched. Non null means a restore is owed. It is set only after a switch succeeded, and only to the rate the display came from.
-- `syncedRateMap` maps each multiple of 60 label to the actual rate to request for it. A display often reports both the NTSC variant and the exact rate (Windows lists 59 and 60, 119 and 120). Both pass the tolerance check, but the game runs at 60.0988, so 59.94 slips a frame every few seconds. Each group collapses to one label with the closest match, which is why the exact rate may differ from the label.
-- The current rate is compared against the exact rate, not the label, so sitting on 59.94 still moves to 60.
-- `restoreRate` clears the owed rate before calling the driver, so a failing driver cannot leave the app retrying forever on every event.
-- Leaving fullscreen always restores. Turning the preference off mid session hands the display back at once. `restoreOnShutdown` is the last restore at app shutdown, so a quit from fullscreen cannot strand the display.
-- `applyPermanently` is the explicit "Change refresh rate" action. Nothing is recorded for restoring, because the player asked for this to stick, and a pending fullscreen restore is dropped: it would drag the display back off the rate just chosen.
-
-### display/refresh-rate.ts
-
-The refresh rate of the display the game window is on, not the primary display. Electron reports the current rate only, with no mode list. The mode list comes from the native driver where available and is empty otherwise; the renderer then derives candidate rates arithmetically. A `displayFrequency` of 0 means the platform declined to report one, not a real 0 Hz. The driver already restricts itself to the current resolution, so every rate it lists is one a switch reaches without changing resolution. With no display server (headless CI), it reports nothing and the renderer measures the rate itself.
-
-### display/native/
-
-`getDisplayModeDriver` picks the platform's display mode driver once, at first use; constructing one loads native bindings, which startup should not pay for. A platform without one gets an inert driver that reports why, so callers never branch on `process.platform` themselves.
-
-Every driver method may fail softly. `available` false means no binding could load or the OS has no implementation. An empty rate list, or false from `setRate`, means the platform has one but the display or compositor would not cooperate. The caller reports either state to the user. `unavailableReason` is the text the UI shows. `listRates` returns the rates offered at the current resolution, so switching changes only the rate.
-
-### display/native/koffi-loader.ts
-
-koffi is required at runtime, lazily and cached, so a missing or unloadable binding degrades to "this setting is unavailable" and the app still starts. koffi is Node-API based, so it loads under Electron's ABI without a rebuild (verified against Electron 42 and Node 24). It is only ever reached from the main process: native code has no business in the renderer or the mobile bundle.
-
-### display/native/windows.ts
-
-Windows driver, through user32 via koffi. Two things learned the hard way:
-
-- Electron reports DIPs while the OS reports physical pixels (a 4K screen at 200% scaling is 1920x1080 to Electron and 3840x2160 to user32). Mode matching therefore uses the values read back from `EnumDisplaySettingsW`, never Electron's display size.
-- Windows rounds rates to whole numbers, reporting 119 and 120 for 119.88.
-
-`CDS_FULLSCREEN` asks Windows to treat the change as belonging to this process, so the original mode comes back on its own after a crash. Every resolution, rate and depth combination is its own mode entry, so the list is long (`MAX_MODES`). `setRate` restates the resolution along with the rate (`DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFREQUENCY`), so a driver that ignores a partial DEVMODE cannot read it as a resolution change.
-
-### display/native/macos.ts
-
-macOS driver, through CoreGraphics and CoreFoundation via koffi. `CGDisplayModeGetRefreshRate` returns 0 for displays that do not report a rate, so 0 means unknown and is filtered out. The two Copy calls transfer ownership, so `withModes` releases both after every use; skipping that would leak on every poll. Not verified on hardware: it was written from the documented CoreGraphics surface (opaque handles only), and every path fails softly, so the worst case on an untested Mac is the setting declaring itself unavailable.
-
-### display/native/linux.ts
-
-Linux driver, through the xrandr CLI. No FFI on purpose: xrandr ships with every X11 desktop, and libXrandr's soname varies by distribution. Wayland is the limitation: xrandr reports nothing or only sees XWayland, so the rate list is empty and the setting reports itself unavailable. Per compositor tools (wlr-randr, kscreen-doctor) would each need their own driver. Not verified on hardware; it needs a pass in the Linux VM.
-
-The `xrandr` output lists an output line, then indented mode lines whose rates carry markers:
-
-```
-DP-1 connected primary 2560x1440+0+0 ...
-   2560x1440    143.97*+ 120.00   99.95    59.95
-```
-
-`*` marks the active rate and `+` the preferred one, so both are stripped before parsing. Parsing stops at the first connected output with a geometry, which is the one in use, and a new unindented line ends that output's mode block. xrandr exits 0 even when a rate is silently rounded, so `setRate` confirms by reading the rate back. The driver probes once at construction, which also tells whether the session is one xrandr can see.
+The refresh rate readout, the synced rate for fullscreen with its restore on leaving fullscreen or quitting, the "Change refresh rate" action and the native mode drivers (user32 and CoreGraphics through koffi, xrandr on Linux) come from the Brock display module (`@drizztdourden08/brock-display`). The main process keeps no display code of its own.
 
 ## documents
 
-### documents/document-associations/
+### documents/open-document.ts
 
-Registers the app's document types with Windows (`.msul` music packs, `.rsp` characters, `.rlang` language sets) and takes them back out, along with the store's install link type the app claims at run time. electron-builder only writes associations through its NSIS and MSI installers, and Windows ships through Velopack from a plain directory build, which registers no file types.
-
-The keys are written under HKCU classes (no elevation, right for a per user install) through `reg.exe` with an argument array: no dependency, no shell quoting. This runs inside Velopack's fast callbacks, which exit the process the moment the callback returns, so the work is synchronous on purpose. A failure is logged and swallowed: it must never turn into an install that did not complete. Deleting a key that is already absent is not an error.
-
-The `.msul` icon ships as an extra resource (see the electron-builder config); the other types use the app's own icon.
-
-`notifyShell` tells the shell the associations changed. Without it a running Explorer keeps showing "MSUL File" with a blank icon until restarted (verified). No Node binding exists, so it goes through a one line PowerShell call to `SHChangeNotify`. It is best effort: the keys are already written, and Explorer catches up on its next restart.
+Every file the app is opened with arrives through Brock's `onOpen` (`handlers/documents-handlers.ts`), on any platform and at any time, so nothing here reads argv or the macOS `open-file` event. A `.rsp` character or a `.rlang` language set is imported here (`import-document.ts`); a `.msul` music pack belongs to the renderer's importer (`useMsulOpen`), so this file ignores it.
 
 ### documents/import-document.ts
 
@@ -316,10 +259,6 @@ Track numbers are then made unique as a backstop: two files at the same level ca
 `isMsuFile` uses the shared audio extension set, so a format the pack can hold is a format the pack is counted by. A private `(pcm|opuz|msu)` pattern here once made a converted pack list as empty. An import resolves a source to its tracks and copies them into the pack folder; extras in subfolders are not tracks, and two files cannot share a slot (see `import-selection.ts`). `skippedNested` and `skippedDuplicate` report the files left out for each reason.
 
 `msu:readMsulFile` only reads `.msul` files: it reads a path outside the app's own storage, so it must not become a general purpose file reader for the renderer.
-
-### msu/open-file.ts
-
-Opening a pack file from the desktop. Windows and Linux pass the path in argv; macOS delivers an `open-file` event, at any time. Both dispatch on the extension. A `.msul` music pack goes to the renderer, which owns that import; a `.rsp` character or a `.rlang` language set is imported here through the shared installers. There is no single instance lock (a person's session and an automated one must coexist), so a file association launch is a new process that starts with a path; no attempt is made to find a running instance. Pack paths in argv skip the executable and any `--flags`. A file association launch races window creation, so dispatch waits for the renderer to finish loading.
 
 ### msu/optimize-handlers.ts
 
@@ -404,73 +343,7 @@ Remembers what ffprobe said about a file, so it is asked once per file, not once
 
 ## updater
 
-### updater/ (overview)
-
-The updater's IPC surface and its startup check. Velopack owns the download, the verification and the swap. What lives here is the decision to check, the list of versions the picker offers, and the hand off.
-
-### updater/run-check.ts
-
-Without Velopack there is nothing to install with, but the release list still answers the only question the update badge asks (`check-without-velopack.ts`). macOS lives on that path. With Velopack, `AllowVersionDowngrade` also makes its check answer with an older build, so a target that is not newer than the running version is treated as up to date; otherwise a machine on the newest release would be told an earlier version "is available". The version list is fetched alongside a found update so the picker is populated when it opens. Velopack's result carries no asset list, so the save state verdict starts as unverifiable and the release listing fills it in.
-
-### updater/register-updater-handlers.ts
-
-- `updater:capabilities`: the update harness claims the picker so every version can be inspected side by side. Pressing install there still fails at Velopack, which is the truth.
-- `updater:openReleasePage` is the way out for a build that can see an update but not apply one.
-- `updater:listVersions` is only meaningful when this build can install, or the harness is up to look at choices. The plan is main process detail and is stripped; the renderer picks by version string.
-- `updater:setPrefs` refreshes the list, because the pre release preference is part of the update source.
-- `updater:apply` takes null for the newest release (resolved from the same list the picker shows) or a version string for that exact build.
-
-### updater/apply-update.ts
-
-Downloading and applying, for the newest release or a version the user picked. The download runs here so its progress shows in the app's own UI; the swap runs in Velopack's Update.exe after the app exits, which is what lets it replace the files the app runs from. The apply is silent (no Velopack UI, the app already showed its own progress) and restarts the app once the swap is done.
-
-The plan from the feed is handed over in Velopack's own shape: the base release and the ordered deltas that walk to the target, or an empty list when the plan decided a full install is the only option. This once passed no deltas at all, so every explicitly picked version downloaded a whole package while the picker advertised the delta size; both now read the same plan. There is deliberately no separate "install the newest" path. That one asked Velopack to work out the target itself, which could answer nothing while the picker's list was fully populated, and reported that as "there is no newer version to install".
-
-### updater/latest-release.ts
-
-The newest published version, read straight from the release page. This is the check for platforms that cannot install an update themselves. It needs nothing but the release list, so it works wherever the app runs, and asks the same question the in app updater asks: is there something newer than this build? `release-page-url.ts` is where someone is sent when the app cannot install the update for them.
-
-### updater/target-format.ts
-
-Whether a version being offered reads the save states this build writes. The format id travels in the asset file name (`state-format-<id>.json`), so the release listing the updater already fetches answers for every version at once; the file's contents are for a human reading the release page. A version that publishes no such asset is unverifiable, never "compatible": guessing optimistically is how save states get lost without warning. An asset that is present but unparseable is a stronger signal than a missing one (something published a format and it could not be read). Releases from before the id was published are not unknown: every build then wrote the baseline format. Without that rule every historical version would show a warning.
-
-### updater/update-manager/
-
-The Velopack `UpdateManager` is built on demand. It throws when the app was not installed by Velopack (every dev run and portable copy), and the pre release preference is part of the source, so switching it builds a new one. `getUpdateManager` returns null when this build cannot update itself (a dev run, a portable copy, anything Velopack does not recognise, or a system Velopack cannot load on); callers treat null as "not available", not an error. Downgrades are allowed because the version picker offers older builds on purpose; without that, stepping back off a bad release is refused.
-
-- `--update-source=<dir>` points the updater at a local folder of packed releases, so the install and update path can be exercised before anything is published.
-- `isUpdateHarness` is true when a developer pointed the updater at a fixture origin (`ROTP_UPDATE_API_ORIGIN`). A dev run then behaves like a packaged one for checking and listing, so the dialog can be looked at without publishing. Applying still goes through Velopack and still fails there.
-- `canCheckForUpdates` is true for any packaged build, including ones that cannot install what they find: knowing an update exists is useful even when applying means the release page.
-
-### updater/updater-prefs/
-
-The one updater preference is whether pre releases are offered. It is app level, not per profile, because it decides what the app installs, not how it plays. Stable is the default: anyone who wants pre releases opts in, and a fresh install does not inherit that choice.
-
-### updater/updater.constants.ts
-
-- `API_ORIGIN` is where the release list is read from. It can be overridden so the whole update path can point at a local fixture server; it is unset in every shipped build.
-- Releases are tagged `v<version>`, which is how a feed entry finds its release.
-- `FIRST_CHECK_DELAY_MS` delays the first check so startup work does not compete with it.
-- `FEED_FILE` is the release index Velopack writes next to each release. The channel suffix is the platform name (no build passes `--channel`), so one file lists every version.
-- `MAX_DELTAS` is how many deltas Velopack chains before pulling the whole package. The picker's size uses the same number, or the dialog promises 80 KB and fetches 137 MB.
-
-### updater/updater.type.ts
-
-A `VersionCandidate` is a version the picker offers plus how to get there: the base release and the ordered deltas Velopack walks. The plan stays in the main process, since the renderer picks by version string and never sees a feed entry.
-
-### updater/velopack-loader.ts
-
-Velopack is required at runtime, lazily and cached, not imported statically. Velopack loads its native module the moment the package is required (its index lists the loader's keys, which loads the binding), and the prebuilt Linux module needs a recent glibc (2.39 as of 1.2.161). A static import would throw before any app code runs, and the app would never start on older distros. Loaded here, a failure degrades to "no self update".
-
-### updater/version-compare.ts
-
-Version ordering, on its own so the feed and the format check can both use it without importing each other. It compares x.y.z numerically; a build with a pre release suffix sorts below a plain one.
-
-### updater/version-feed.ts
-
-Every installable version, for the picker, newest first. Velopack's own check only reports the newest applicable release, so the list comes from the release index it publishes beside each release. That index carries the checksums, which is why the picker cannot be built from the GitHub API alone: an entry without its hash fails verification at install time. The release page supplies what the index does not: which tags are pre releases and when each was published. The newest index lists every release Velopack knew about when it was packed, so one fetch covers the whole history. The index is accepted as an object with an `Assets` array or as a bare array, so a format change does not take the picker with it. Both the full and delta tables are built before any row is planned, since a chain is only known once every version between here and there has been seen. Each row's save state verdict is read off the release listing already in hand.
-
-`planFor` decides how to get from the current version to a target, in the shape Velopack asks for. Velopack's model is a walk: a base full release plus the ordered deltas that carry it to the target (`UpdateInfo.DeltasToTarget`), and `downloadUpdateAsync` falls back to the full package by itself if preparing any delta fails. This is deliberately the one place that decision is made: the size in the picker and the bytes the download fetches both come from this plan, because computing them separately is how the dialog once promised 80 KB while the code fetched a full package. Deltas are dropped, leaving a plain full install, when the target is not newer (a downgrade or a reinstall, where Velopack only allows full updates), when the installed version is not in the feed (no base to walk from), when any version in between has no delta published, or when the chain is longer than Velopack will chain (`MaximumDeltasBeforeFallback`).
+Self update comes from the Brock updater module (`@drizztdourden08/brock-updater`): the Velopack hooks, the update check, the version picker, the download and the swap. The release feed is the `repo` in `brock.config.ts`, and the main process keeps no updater code of its own.
 
 ## recommendations
 
@@ -484,73 +357,37 @@ The disk adapter behind `RecommendationStorage`: one file per collection at `Dat
 
 ## store (the Hookshop)
 
-### store/install.ts
-
-Installing one item: the API grants a download of an approved version, the bytes land in a temp file with progress, the size and sha256 are checked, the container's installer unpacks them, and the registry records what it wrote. Installing an item that is already installed is an update: the new copy goes in first, profiles that used the old copy are pointed at the new one, the old copy is removed, and the new one moves to its own name now that it is free (`settledName`). A language is baked into the game assets after, the way the language editor's save does it. A cancel is honoured up to the end of verification; after that the files are being written.
+The catalogue reads, install jobs with their progress and cancel, the checks a download passes (size cap, https, sha256), uninstall, the installed record and `relic-of-the-past://install` links come from the Brock catalog module (`@drizztdourden08/brock-catalog`). RotP keeps what a pack is and where it lands: the configuration in `hookshop/`, the installers in `shared/store/install`, and duplicating.
 
 ### store/ipc-handlers.ts
 
-The Hookshop channels. Every read goes to the store API with the device token from the main process. Install, uninstall and duplicate run here too, so the renderer holds neither the token nor a download URL, and only this process writes into an installed item.
+Configures the Hookshop on the catalog module (`hookshop/`) and keeps the one channel of its own, `store:duplicate`. The device token stays in the main process, so the renderer holds neither the token nor a download URL.
 
-### store/boot/
+### store/hookshop/
 
-The Hookshop's part of startup, in the order `main.ts` calls it. Before the app is ready, macOS link events are caught (`listenForOpenUrl`). Once it is ready and before any window, a process the browser started with a link hands it to the player's running app and quits (`quitIfHandedOff`, which returns true while the process is exiting). Once the main window exists, links reach that window, the player's app listens for links other processes hand over, and the install link type is claimed (`bootStoreLinks`). Automation launches skip the hand off, the listening and the claim.
+The catalog module's configuration for the store API.
 
-### store/catalog/
-
-The catalogue reads: the home page, every published item, one item. The API pages the item list; `fetchItems` follows the cursor so the tab gets the whole list at once and searches it locally, as the store site does. `MAX_PAGES` is a backstop against a cursor that never ends, far above the catalogue's size. The item id and kind come from the renderer, so both are checked before they reach a URL.
-
-### store/deep-link/
-
-`relic-of-the-past://install` links. The protocol is claimed by the player's own app only: never by an automation launch, and never by a development build, which would take the links away from the installed app. A link arrives three ways: in argv when the browser started this process, as the macOS `open-url` event (possibly before the app is ready, so it is registered early), or over the hand off pipe from a process the browser started. Each one is held until the renderer's shell has painted (`window:shellReady`), then sent as `store:openInstall`, and the window comes forward, since the player just asked for the install in the browser.
+- `endpoint/` sends the device token as a Bearer header. With no token, `hubFetch` answers a 401 itself, and a 401 from the site drops the token, so the tab shows the sign in card either way.
+- `schema/` parses each answer of the store API (an item, a page, the home page, a download grant). A grant without the pack's kind, author or licence is refused, since the install record needs all three.
+- `installers/` wraps each container's installer from `shared/store/install` as a catalog installer over `storeFiles`, and `maxBytes` holds a download to the cap for its kind.
+- `hooks/`: before an update or an uninstall removes a copy, `releasePack` points every profile that selected it at the replacement, or back to the default. After a language set is installed or removed, the game assets are baked again.
+- `isInstalling` and `installedPacks` read the module's jobs and installed record for the rest of the main process.
 
 ### store/duplicate.ts
 
 Duplicating an installed item into one the player can edit. The install record names the item and its licence; a licence that does not allow copies is refused with its reason. Otherwise the kind's duplicate writes the copy through the store's in process file store, crediting the original in `basedOn`. A language copy is baked into the game assets after, the way an install does it.
 
-### store/handoff-message/
-
-What crosses the hand off pipe: one install link on one line, answered with one line. Anything else is refused, since the pipe is open to every process of this user: an oversized message, a second line, or text that is not exactly an install link. An install link is at most 256 characters; `MAX_MESSAGE_CHARS` leaves room for the line end and nothing more. `parseHandoffMessage` returns null while the line is incomplete or when it is refused; `isMessagePending` says whether the text so far can still become a message.
-
-### store/link-handoff/
-
-Brings a store install link to the running app without a single instance lock. The player's app listens on a pipe named after its user data folder (a named pipe on Windows, a socket in that folder elsewhere), so a portable copy and an installed one keep their own. A process the browser started with a link tries the pipe first: when an app answers, it hands the link over and quits; when none does, it starts normally and installs the link itself. Automation launches never listen and never hand off, so a test window and the player's window never trade links. When another copy already listens, it keeps the links. A socket file left by an app that exited is stale (nothing answers on it) and is removed before listening again; Windows pipes never linger.
-
-### store/install-jobs/
-
-The installs running now, one per item. A second request for an item that is already installing is refused (`beginJob` returns null), and cancel finds the install's controller here.
-
-### store/installed-registry/
-
-What the Hookshop installed: `store/installed.json` under the Data root, one record per item. It runs on the `FileStore` port, so a test can drive it on a store in memory. Every change is a read, modify, write in one queue, so two installs finishing together never drop each other's record. `put` adds the record or replaces the one for the same item (an update). A file that does not parse reads as empty, and a record missing a field is skipped, so a damaged file never blocks the tab. A record without a well formed origin (listing name, author as a person, licence id, none empty) is skipped the same way.
-
 ### store/store-files/
 
-The Data root the Hookshop installs into, and the one installed registry every install and uninstall shares, so its write queue covers them all.
+The Data root the Hookshop installs into, as one in process file store that every installer and the duplicate share.
 
 ### store/repoint-profiles.ts
 
 A pack a profile selects is never left dangling. Each kind lives in one field: a music pack in the profile's `msuPack`, a language set in its `language`, a character in its config's `linkSprite`. Every profile is checked, since the library is global. An update points the selection at the new copy; an uninstall passes null, which is each field's default. It returns the ids of the profiles that changed.
 
-### store/run-install/
-
-The install and uninstall channels around `installItem` and `uninstallItem`: the request from the renderer is checked, one install per item runs at a time, each step is sent to the window as `store:installProgress`, and the outcome becomes the channel's answer.
-
-### store/store-client/
-
-One call to the store API as this device. The device token is read here and never leaves the main process. No token, or a 401, reads as signed out so the Hookshop tab can show the sign in card; a 401 also drops the token, the same as the identity check does.
-
 ### store/store-result/
 
-Wraps a store call into the answer every read channel gives: its data, or why not.
-
-### store/uninstall/
-
-Removing what the Hookshop installed. The profiles let go of the pack first (`retirePack` points them at the replacement, or null for the default), then its installer removes exactly what it wrote, then the record goes. A language change is baked into the game assets after, the way the language editor's save does it.
-
-### store/verify-download/
-
-The checks a download passes before anything is unpacked. The grant must describe the item that was asked for, in the container its kind ships in, within the kind's size cap, over https, naming its author and licence for the install record. The bytes that arrived must match its size and sha256 exactly.
+Wraps a store call into the answer `store:duplicate` gives: its data, or why not.
 
 ## hub
 
@@ -558,9 +395,13 @@ The checks a download passes before anything is unpacked. The grant must describ
 
 One JSON call to a site's API. The device token rides as a Bearer header when one is given. A non 2xx answer becomes an error carrying the status and the API's own message, so callers can tell a revoked token (401) from a network failure.
 
-### hub/device-auth/
+### hub/sign-in/
 
-The device code sign in. Begin asks the API for a short user code, hands the code to the renderer, opens the site on the confirm page and polls until the person confirmed (a token comes back once), denied, or the code expired. One sign in runs at a time; cancel ends it. A newer begin may already own the cancel slot, so a run only clears its own handle when it ends. `deviceLabel` is the text the site shows on the confirm page and the devices list, for example "Windows · DESKTOP-4F2".
+The device code sign in runs on the sign-in driver of the Brock secrets module (`@drizztdourden08/brock-secrets`), which opens the confirm page, polls, cancels and hands over the token. `hubSignInProvider` gives it one provider per site: begin asks that site's API for a short user code, poll asks whether the person confirmed, and the token goes to `token-store/`. A system that cannot encrypt the token refuses before the browser opens.
+
+### hub/device/
+
+`deviceLabel` is the text the site shows on the confirm page and the devices list, for example "Windows · DESKTOP-4F2". `devicePlatform` reads anything that is not Windows or macOS as Linux.
 
 ### hub/endpoints/
 
@@ -572,25 +413,29 @@ Who this device is signed in as: `GET /me` with the stored token. A 401 means th
 
 ### hub/ipc-handlers.ts
 
-The shared account channels: device sign in, cancel, sign out and who am I. The sign in runs against the API of the site that asked, so the confirm page opens on that site; the token it yields serves every site. Anything the renderer sends that is not a known site signs in to the Sanctuary.
+Registers one sign-in provider per site with the secrets module, so the confirm page opens on the site that asked while the token serves every site. The channels of its own are `hub:signOut`, which cancels any sign in still waiting and drops the token, and `hub:me`.
 
 ### hub/token-store/
 
-The device token, one file in userData, encrypted with the OS keychain through `safeStorage`. One token serves every site's API; the file keeps its first name (`sanctuary-device.token`) so a sign in made before the hub existed still counts. Without a working `safeStorage` the token is never written: a plain text token on disk is worse than asking the person to sign in again next launch. `saveToken` throws then, so the sign in reports it. `readToken` returns null when no token is stored or the stored one can no longer be decrypted.
+The device token, kept as the `hub-token` secret of the Brock secrets module, which encrypts it with `safeStorage`. One token serves every site's API. Without a working `safeStorage` nothing is written: `saveToken` throws, so the sign in reports it. `readToken` returns null when no token is stored.
 
 ## sanctuary
 
 ### sanctuary/ipc-handlers.ts
 
-The Sanctuary's own channels: filing a report and retrying its zip upload. Signing in belongs to the shared account (`hub/ipc-handlers.ts`).
+The Sanctuary's own channels. `sanctuary:submitReport` files a report with no attachment. `sanctuary:reportSnapshot` keeps what the renderer saw when the bug report dialog opened (`report-snapshot/`). Signing in belongs to the shared account (`hub/ipc-handlers.ts`).
 
-### sanctuary/report-attachment.ts
+### sanctuary/bug-report/
 
-The zip a report carries, built with the debug report machinery, plus the counts the Sanctuary shows in its Reports table. The zip is held in the pending report cache under `pendingId` until it is uploaded. Nothing to attach (no saves, no checked recordings) is not a failure: the report files plain.
+The transport behind Brock's bug report dialog (`bugReport` in `main.ts`): it files the report on the Sanctuary, whose API also opens the GitHub issue. Signed out, it refuses before anything is built. Otherwise it builds the debug zip with Brock's `collectDebugFiles` and `writeDebugZip`, adding the profile's settings, profile, randomizer and input files, every quick slot, the 5 newest named saves, the 2 newest auto saves, the live state from the snapshot, and the newest unsent capture sessions that fit `CAPTURE_BUDGET_BYTES`. The report is filed first and the zip uploaded after, so a zip that is too large or fails to upload still leaves a filed report, and the receipt says the debug files are missing. Capture sessions are marked sent only once the upload went through. The temporary zip is always removed.
+
+### sanctuary/report-snapshot/
+
+The context, the profile id and a live save state, sent by the renderer when the bug report dialog opens, since the main process cannot read the running game. The transport takes it once. A snapshot older than 30 minutes is ignored, and without one the report falls back to the launch's profile or the last one played.
 
 ### sanctuary/submit-report/
 
-Filing a report: build the zip, `POST /reports` (which creates the record and the GitHub issue in one call and answers with a presigned PUT), send the zip straight to the bucket, then `POST /reports/:id/complete`. A failed upload leaves the record with no zip and the zip in the pending cache under the report id, so a retry sends the same bytes again without rebuilding. `uploadUrls` keeps the presigned PUT per report id for that retry. The zip is cached under a local id before the API mints the report id, so it is moved to the report id the renderer holds. Sessions are marked sent only once the upload went through.
+The calls to the Sanctuary API. `fileReport` is `POST /reports`, which creates the record and the GitHub issue in one call and answers with a presigned PUT for the zip. `uploadReportZip` sends the zip straight to the bucket, then `POST /reports/:id/complete`. A failed upload leaves the record with no zip; nothing is kept for a retry.
 
 ## screen-editor
 
@@ -668,17 +513,7 @@ Locates the repo root the editor writes into by walking up to the ancestor that 
 
 ## saves
 
-### saves/manifest-store.ts
-
-A generic manifest backed save store: `{id}.sav` plus an optional `{id}.png` in a per profile folder, tracked by `manifest.json`. The normal and auto save stores share it; each supplies the folder and the entry to info mapping, and composes overwrite, rename and prune from the returned primitives. A save's music resume sidecar (`{id}.msu.json`) is written by the audio engine but owned by the save. Writing over a save removes its sidecar, because the position belonged to the state that was there before; a caller with a fresh snapshot writes it afterwards. `list` skips orphaned manifest entries whose file is missing and returns the newest first.
-
-### saves/store/
-
-Per profile SRAM and quick save slots. Writing SRAM first moves the existing `sram.dat` to `sram.bak`. A quick slot is written over in place, so its music resume sidecar goes with the state it described; a caller with a fresh snapshot writes it after the call. There are 12 quick slots (`QUICK_SAVE_SLOTS`); slot info lists only the slots that exist.
-
-### saves/auto-store/
-
-Auto saves are pruned oldest first down to the requested count, capped at `ABSOLUTE_MAX_ENTRIES` (20); the default is 5.
+The main process keeps no save store. The renderer writes saves over the FileStore: SRAM and quick slots through the Brock port kit (`@drizztdourden08/brock-port-kit`), named and auto saves through `shared/storage/saves`.
 
 ## profiles
 
@@ -688,9 +523,7 @@ Auto saves are pruned oldest first down to the requested count, capped at `ABSOL
 
 ## roms
 
-### roms/ipc-handlers.ts
-
-A resolved ROM is copied into the roms folder, and the answer says whether it already existed. For a URL import, a download that is not an archive is accepted as a raw ROM when plausible (not empty, at most `RAW_ROM_MAX_BYTES`, 8 MB); a real archive with no ROM falls through to the "no ROM file found" error.
+The main process has no ROM channel. The Brock port kit creates the roms and assets folders, and the renderer imports ROMs over the FileStore (`lib/storage/roms-store`, on `shared/storage/roms`).
 
 ## storage
 
@@ -791,10 +624,6 @@ Node level failure hooks for the main process. `uncaughtExceptionMonitor` is use
 
 Records how the app was asked to leave, so a log that ends in a quit can be told apart from one that ends in a death. The origin is whichever fired first: `window-all-closed` (the user closed the window), `app.quit` (an explicit call, such as the updater's), `app.exit` (the immediate form). A quit event with no origin recorded came from outside the app's code: the OS ending the session, a signal, or a kill. `app.quit` and `app.exit` are wrapped, never replaced: the original runs unchanged after the mark. Lines are written synchronously; `quit` is the last event before exit.
 
-### diagnostics/debug-report/build-zip.ts
-
-Assembles one debug report zip from the collected files, what the renderer sent, and the capture sessions the picker checked.
-
 ### diagnostics/debug-report/capture-frame-budget/
 
 Frame selection math for downsampling a capture session to fit a byte budget, shared between the video path (budget against the encoded video's own size) and the no ffmpeg fallback (budget against raw PNG bytes). Frames are picked at even intervals across the whole sequence, so downsampling thins detail out evenly and never cuts the start or the end off. `budgetedFrameCount` assumes size scales roughly linearly with frame count; a session already under budget keeps every frame.
@@ -805,11 +634,7 @@ Tracks which capture sessions have been uploaded in a report, per profile, at `d
 
 ### diagnostics/debug-report/collect-capture-sessions.ts
 
-Reads what a report ships for each capture session the picker checked: the position timeline plus whatever `finalize-capture-session/` put in `packaged/` (a size budgeted video, or a PNG fallback). Never the unlimited local frames or full video, which stay on disk for review whether or not a report is sent. Which sessions ship is the caller's explicit choice (`sessionKeys`, from the picker); nothing here decides eligibility or changes disk state. A session is marked sent only once the report uploads (`capture-manifest/`).
-
-### diagnostics/debug-report/collect-files.ts
-
-Gathers everything a debug report bundles besides the save state, which the renderer already holds: the profile's settings and randomizer config (read off disk, so the renderer never threads live settings down through the packaging call), plus whichever of the app's always on log files exist for this session.
+Reads what a report ships for each capture session the picker checked: the position timeline plus whatever `finalize-capture-session/` put in `packaged/` (a size budgeted video, or a PNG fallback). Never the unlimited local frames or full video, which stay on disk for review whether or not a report is sent. Which sessions ship is the caller's choice (`sessionKeys`; the bug report transport picks the newest unsent ones within its budget, see `sanctuary/bug-report/`); nothing here decides eligibility or changes disk state. A session is marked sent only once the report uploads (`capture-manifest/`).
 
 ### diagnostics/debug-report/delete-session.ts
 
@@ -825,10 +650,6 @@ Two videos come out, because the local copy and the one a report ships follow di
 
 The session listing for the bug report picker: every recorded capture session for a profile, with a small preview and its sent state. Unlike `collect-capture-sessions.ts`, it is not filtered to eligible sessions, since the player picks what ships. Without ffmpeg, `packaged/` holds the evenly spread PNG subset instead of a video, and every one of those frames goes to the picker so it can cycle through them as a stand in video.
 
-### diagnostics/debug-report/pending-reports/
-
-An in memory cache of built but not yet uploaded debug report zips, keyed by the report id made at build time. Building (collecting saves, encoding capture video, zipping) is local and can be slow; sending is the only step that touches the network and can fail on its own, and it happens only once the GitHub issue carrying this id is confirmed created. Splitting them means a failed upload retries only the send, against the same cached zip. Entries older than the TTL (30 minutes) are dropped lazily on lookup, since a report left unsent that long is better rebuilt; the TTL is generous because the id also has to survive however long the user spends filling in the bug report form. A lookup returns the whole entry, because a send also needs the session keys and profile id to mark them sent.
-
 ## protocol
 
 ### protocol/
@@ -837,9 +658,13 @@ An in memory cache of built but not yet uploaded debug report zips, keyed by the
 
 ## wasm
 
-### wasm/ipc-handlers.ts
+The Brock port kit serves the WASM core bytes to a renderer loaded over `file://`, where `fetch()` is blocked (`window.api.portKit.readCore`). The main process keeps no core code of its own.
 
-Serves the WASM core bytes to the renderer. In the built app the renderer loads over `file://`, where `fetch()` is blocked, so it asks the main process for the bytes and instantiates them with the non streaming `WebAssembly.instantiate`, which also avoids the `instantiateStreaming` renderer crash. The path mirrors the window's `loadFile('../renderer/index.html')` anchor.
+## automation
+
+### automation/arm-game-screenshot-watchdog.ts
+
+A `--game-screenshot` run (a `--screenshot` that waits for the game, see `defer-game-screenshot.ts`) exits with code 1 when the app has not finished booting within 60 s, or when no screenshot was taken within 240 s. A boot that stalls would otherwise leave a headless window running forever with nothing to report. Both timers are unref'd, so they never keep the process alive.
 
 ## ui-views
 

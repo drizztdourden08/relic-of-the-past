@@ -34,10 +34,6 @@ carry the report.
 
 - `build-report-subject.ts`: the prefilled report subject is the version and, while a game
   runs, the screen it is on, then a colon for the person to finish the sentence.
-- `collect-save-states.ts`: a debug report packages every quick slot, the 5 newest normal
-  saves, the 2 newest auto saves, and one fresh live capture. The live capture writes to a
-  scratch WASM slot and unlinks it at once, so packaging a report never creates a save the
-  player did not ask for.
 - `collect-renderer.ts`: the refresh rate probe is the only slow one (it watches real
   frames), so it runs alongside the audio probe.
 - `probe-audio.ts`: the mixer runs inside the wasm module, so the probe opens a short lived
@@ -48,8 +44,8 @@ carry the report.
   DOM typings. SDL3 claims every controller directly (the Gamepad API path is gone). The probe
   reads the device snapshot from the controller layer, not the input manager's cache (which
   exists only after the manager started) and not the reported input set (SDL emits state only
-  on change, so an untouched pad would be missing). Names come from the session's
-  `controller:added` cache, then the snapshot's fields. Device ids carry the vendor and
+  on change, so an untouched pad would be missing). Names come from the controller name
+  cache (fed by the input module's `onAdded`), then the snapshot's fields. Device ids carry the vendor and
   product pair a controller mapping report needs.
 - `probe-display.ts`: scale factor and colour capability decide how the pixel art scaler
   behaves, so they matter for blurry or mis-sized output reports.
@@ -3310,7 +3306,8 @@ Background WASM warmup in three stages: inject the Emscripten glue (defines `win
 built with MODULARIZE, so nothing runs until called), fetch the .wasm bytes (streamed over http,
 one IPC blob over file), then `WebAssembly.compile` into a cached module that startGame reuses
 (instantiate-wasm). `warmWasmCore` runs once and reports progress. Over file the bytes come as one
-IPC blob with no progress; over http with no length header the progress is indeterminate.
+blob from the Brock port kit (`readCore`) with no progress; over http with no length header the
+progress is indeterminate.
 
 ## game/webgl/gl-helpers
 
@@ -3342,19 +3339,6 @@ prefixes compile and link errors.
 - Three strings follow, in this order: the display name and the author as NUL terminated UTF-16LE, then the author again as NUL terminated ASCII for a short in game credit. The two data blocks sit wherever the header's offsets point, in practice just past those strings.
 - The palette block is four outfits of 15 words followed by two glove words. A sheet may ship tiles only; that parses as long as a stock palette is supplied to stand in, which mirrors PlayerSprite_Apply keeping the player on the stock row for a short block.
 - `parseZspr` returns a sheet with an empty override layer, or null when the bytes are not a ZSPR.
-
-## hub/hub-session.ts
-
-The Electron adapter keeps the device token in the OS keychain through IPC. A host with no
-main process (web, mobile) always answers signed out. The choice is made once, on whether
-`window.api` carries the hub channels.
-
-## hub/hub-session.type.ts
-
-`signIn` resolves once the browser confirmed, denied, or the code expired. The confirm page
-opens on `site`, or on the Sanctuary when it is omitted. The account and the token are the
-same either way. `subscribeDeviceCode` delivers the user code to confirm while `signIn` is
-pending.
 
 ## hud/active-profile
 
@@ -3443,10 +3427,10 @@ and drop, which resolves the defaults through the family layer.
 ## input/controller-device-groups.ts
 
 Groups the snapshot by vendor and product id, so an adapter that presents one entry per port
-renders as one group with a port list. The main process suffixes `#N` to the device key of the
-second and later devices sharing a vid:pid (`sdl3-device-key.ts`); that is read back to number
-ports. Unclaimed listed devices sharing a vid:pid never get a suffix (only SDL claimed devices
-go through the assigner), so arrival order is the fallback. A blank product name falls back to
+renders as one group with a port list. The Brock input module suffixes `#N` to the device key
+of the second and later devices sharing a vid:pid; that is read back to number ports.
+Unclaimed listed devices sharing a vid:pid never get a suffix (only SDL claimed devices get a
+key assigned), so arrival order is the fallback. A blank product name falls back to
 the first group member that has one.
 
 ## input/controller-family-cache
@@ -4228,7 +4212,8 @@ file already there.
 Every save state leaves through one of the four writers (quick state, normal save, its
 overwrite, auto save), so the version and format stamp is applied there and not at each call
 site. SRAM is excluded: it is the game's own save file and has nothing to do with snapshot
-layout. Screenshots come back as base64 strings.
+layout. Screenshots come back as base64 strings. SRAM and quick slots go through the Brock port
+kit's save store (`port-save-store.ts`); named and auto saves through `shared/storage/saves`.
 
 ## storage/sprites-store
 
@@ -4269,6 +4254,12 @@ because a debounce nobody forces drops whatever the user did just before the win
 Loading a second profile flushes the first one's pending write first. A patch before the file
 is known reads first, or it would write a blob holding only that key. Before this existed a
 drag wrote the whole file on every mouse move and overlapping read modify writes lost data.
+
+## store/hookshop-reads
+
+The Hookshop's catalogue reads (the home page, every item, one item) through the Brock catalog
+module, typed with the store API's own shapes. Without the module (a host with no main process)
+each read answers `NO_CATALOG`, a failure the tab shows like any other.
 
 ## store/store-site
 

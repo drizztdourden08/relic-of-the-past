@@ -2289,8 +2289,8 @@ frame counter at 0x1A must move so the script provably ran.
 The baseline core is built out of band and the suite skips without it. Point
 `ROTP_BASELINE_WASM_JS` at a master build's `zelda3.js`, or build one into
 `.user-data/baseline-core` with
-`git archive origin/master core scripts/ensure-wasm.mjs package.json | tar -x -C .user-data/baseline-core`
-and then `node scripts/ensure-wasm.mjs` inside that folder, with the emsdk environment active.
+`git archive origin/master core | tar -x -C .user-data/baseline-core`
+and then `node core/wasm-build/build.mjs` inside that folder, with the emsdk environment active.
 
 ## story-events/t6-tracker.keep.test.ts
 

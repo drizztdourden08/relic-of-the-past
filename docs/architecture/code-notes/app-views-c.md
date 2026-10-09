@@ -66,8 +66,8 @@ gamepad.
 
 ### compounds/ControllerStatusBadge/ControllerStatusBadge.tsx
 
-Ready means SDL3 claimed the device. Unavailable means the device lister sees it but SDL3 did
-not claim it.
+Ready means SDL3 claimed the device. Unavailable means the Brock input module lists it but SDL3
+did not claim it.
 
 ### compounds/ControllerPortRow/ControllerPortRow.tsx
 
@@ -500,31 +500,6 @@ page whose content now fits has no scroll left to report, so an upward wheel at 
 the header there. The current section is the lowest one already above the line `CURRENT_SLACK`
 pixels below the body's top; sections side by side on a dashboard row share one top, and the
 first of them stands for the row.
-
-### compounds/UpdateDialog/UpdateDialog.tsx
-
-A confirmed break and "could not check" are different claims, so they get different headings and
-colours: red only for a break that was confirmed, gold for the weaker claim, because saying the
-second in red would teach people to ignore the red. A pre-release warning is gold too, a choice
-with a caveat and not an error. The save state note follows the picker, not the offered update,
-so switching rows answers it again; reinstalling the running version is the one case with nothing
-to say. It sits above the release notes because it decides whether the notes are worth reading.
-The note about going back a version comes last, since it is the way out when an update made
-things worse. The body is one column with one gap, so every combination of blocks is spaced the
-same and no block adds its own vertical margin. `canInstall` is false when a build can see an
-update but not install it (macOS today); `onApply(null)` installs the newest release.
-
-### compounds/UpdateDialog/behavior/render-notes.ts
-
-Links in the release notes are stripped to plain text so they are not clickable.
-
-### compounds/UpdateDialog/behavior/useVersionChoice.ts
-
-The version list loads when the dialog opens, not up front, and the newest release is preselected
-so the common case stays one press. The list is one group, newest first, with pre-releases marked
-in the row: the toggle above already says whether they are offered, and a selected pre-release
-warns for itself. A row's size is the download, not the package: a forward step is usually a
-small delta, and the package size made a routine update look like a fresh install.
 
 ### compounds/Hookshot/Hookshot.tsx
 
@@ -1062,7 +1037,7 @@ store install link the browser opened lands on the Hookshop tab (`useStoreLinks`
 surfaces its own evidence: the logs widget opens on the spot. On electron the splash hands over
 to the main window only once startup has settled and painted, so the first frame the player sees
 is the finished shell. `AppDialogs` holds every app level dialog outside the main content stack
-(the confirm dialog, the updater, the bug report form and the boot progress bar), so AppMain stays
+(the confirm dialog, the bug report form and the boot progress bar), so AppMain stays
 about composing the game view.
 
 ### views/AppMain/AppMain.css
@@ -1084,7 +1059,7 @@ crosses the full width.
 ### views/BugReport/BugReportDialog.tsx
 
 Attaching a debug report only makes sense while logging is on for the profile. The dialog is
-reached from several places (the floating button, "Report a bug" in the menu, the updater), and
+reached from several places (the floating button, "Report a bug" in the menu), and
 this check is the one gate they all share, so a caller never tracks the live setting itself.
 `window.open` on an external URL is routed to the system browser by the main process. The picker
 column gets the larger share of the dialog because its two column preview grid needs real width to
@@ -1290,7 +1265,7 @@ An automated launch shows the Sentri logo beside its instance name so a screensh
 ### views/TitleBar/behavior/title-bar-actions.ts
 
 Search (primary tone with the twinkle), Report a bug, Mute and, in game, Save States are command actions.
-The update notice, the FPS readout and the refresh rate warning are status actions, so a narrow window folds them into the menu.
+The FPS readout and the refresh rate warning are status actions, so a narrow window folds them into the menu. The update notice comes from the Brock updater module.
 The refresh rate sits beside the FPS so the two can be compared at a glance; the game runs at 60, and a rate that is not a whole multiple of 60 makes scrolling look uneven. Its warning opens the Display settings.
 
 ### views/TitleBar/behavior/useWindowState.ts
@@ -1409,6 +1384,7 @@ The hub only renders with an active profile, so without one the source returns n
 ### views/Store/Store.tsx
 
 The Hookshop tab: browse, install, update and uninstall packs from the community store.
+Installs, the installed record and install links run on the Brock catalog module (`@drizztdourden08/brock-catalog`); this tab is the store's own pages around it.
 Publishing, ratings and profiles live on the site.
 It is built like the Data Manager: its side nav, then the page for the selected section.
 
@@ -1426,9 +1402,7 @@ A waiting link from the site is said in gold and framed so it is not missed.
 `StoreSection` is the side nav: Home, Browse, the three kinds, then what is installed.
 `onLibraryChanged` runs when an install or uninstall changed what profiles can select, so the shell's lists refresh.
 `onDeleteConfirm` is the shell's confirm dialog, the one the Data Manager asks with before deleting.
-An `InstallJob` is one running or failed install, keyed by item. Its progress is null until the first report and while the API grants the download.
 An `InstalledRow` is an installed pack beside its catalogue card, when the catalogue still lists it. `hasUpdate` means the live version differs from the installed one.
-`onInstalled` runs after a finished install, so the installed list and the shell's lists refresh.
 On an installed row, updating needs the store while uninstalling works signed out.
 
 ### views/Store/Store.constants.ts
@@ -1449,26 +1423,23 @@ Every installed pack with its card, newest install first.
 
 The facts the detail panel reads off a full item: its live version here, and its average rating in `average-of.ts`.
 
-### views/Store/behavior/progress-ratio.ts
-
-What a running install shows: how full its bar is, from 0 to 1. A step whose size is not known yet reads as empty.
-`progress-line.ts` gives the one line naming the step it is on.
-
 ### views/Store/behavior/useCatalog.ts
 
-The home page and the whole catalogue, loaded together once signed in.
+The home page and the whole catalogue, loaded together once signed in, through the catalog module's reads (`lib/store/hookshop-reads`).
 A refused token reports signed out, so the account refreshes and the tab shows the sign in card.
 
-### views/Store/behavior/useInstall.ts
+### views/Store/behavior/useInstallBar.ts
 
-Installing and updating, one job per item.
-The main process reports each step on `store:installProgress`, and the job keeps the latest one for the bar.
-An update is an install of the live version over the installed one. A cancelled install ends with no error.
+One item's install bar from the catalog module (`useCatalogItem`, `CatalogInstallBar`): install, update, cancel and progress run as the module's job. Uninstall goes through the shell's confirm dialog first, and a refused token reports signed out.
+`useDetailBar.ts` feeds it the selected item; `live-update.ts` says whether its live version differs from the installed one.
 
-### views/Store/behavior/useInstalled.ts
+### views/Store/behavior/useLibraryRefresh.ts
 
-What the Hookshop installed on this computer, from the installed store the editors lock against, so an install or uninstall here shows in every editor at once.
-The tab reads the record fresh each time it opens, and the watch keeps it current after that.
+Any install, update or uninstall changes what profiles can select, so the shell's lists refresh on the catalog module's change event.
+
+### views/Store/behavior/useLinkInstall.ts
+
+Starts the install a browser link asked for, through the catalog module. A refused token reports signed out, so the link waits for the sign in.
 
 ### views/Store/behavior/useItemDetail.ts
 
@@ -1517,10 +1488,6 @@ A grid of item cards, shared by the shelves and Browse.
 ### views/Store/sub-components/StoreHome.tsx
 
 Home: the welcome with the Hookshop highlight, a line when installed packs have updates, then the featured row and the popular shelf.
-
-### views/Store/sub-components/StoreInstallBar.tsx
-
-A running install: its bar, the step it is on, and Cancel while the download runs.
 
 ### views/Store/sub-components/StoreInstalledList.tsx
 

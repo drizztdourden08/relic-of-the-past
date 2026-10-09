@@ -375,7 +375,6 @@ A per-device rumble multiplier on top of the family strength curve in `shared/in
 - `initialProfileId` skips the profile picker and starts live calibration against that profile. `initialHasGyro` goes with it and is ignored when `initialProfileId` is unset.
 - `HidWizardHandle` is the imperative surface for a `hideOwnActions` host. `copyJson` resolves true on success and false on failure, for example a denied clipboard write.
 
-
 ## InputTester/sub-components/controller-report/ControllerReportDialog.tsx
 
 - One persistent dialog: the step content swaps inside a fixed header and footer shell. The diagnostic portion is the same `DiagnosticsFlowBody` and `DiagnosticsStepActions` that the standalone diagnostics dialog renders, so the report cannot drift from it.
@@ -552,7 +551,6 @@ The fixed wizard steps, in order. Byte capture shows only for a controller the r
 ## ProfileHub/ProfileHub.constants.ts
 
 - `PROFILE_HUB_TABS` is the single registry of every ProfileHub tab: icons, label, and (when the tab is a SettingsLayout screen) the function that builds its sections from the current settings. It is a `Record<ProfileHubTab, ...>`, so adding a tab to the union without describing it here is a compile error. That keeps it in sync with the hub's nav, its search results and the search palette's catalog with no manual bookkeeping.
-- `buildPerformanceSection` normally takes the live refresh rate and synced-rate status, which come from hooks and not settings. The search catalog only needs the section's labels and keywords for indexing, so it is built with the neutral `NEUTRAL_SYNCED_RATE` placeholder.
 - The GBA tab is a read-only reference catalogue, not a SettingsLayout screen, so it has no sections to index.
 - `PROFILE_HUB_NAV_GROUPS` are the nav's groups in order. Home is not in a group: it is pinned above them.
 
@@ -653,14 +651,6 @@ Pixel Perfect only has meaning under Letterbox. Fit and Stretch bypass the fit m
 
 The game advances exactly 60 times a second, so a display running at a whole multiple of 60 shows every frame for the same length of time. One that does not holds some frames longer than others, and no pacing on our side can even that out. The V-Sync description says so and names the rate that would help, so the player is not left wondering why V-Sync did nothing.
 
-## ProfileHub/sub-components/synced-rate-description.ts
-
-The synced refresh rate switch describes what it will do, including handing the display back, because changing a system setting on someone's behalf should never be a surprise.
-
-## ProfileHub/sub-components/build-performance-section.ts
-
-The target refresh rate picker appears only once the switch is on and there is a real choice to make.
-
 ## ProfileHub/sub-components/SettingsView.constants.ts
 
 - Shadow Casting (`postProcessingShadows`) is not exposed in the Enhancements section yet, because the subsystem is a work in progress.
@@ -674,11 +664,11 @@ Builds the Display section from the current settings. With Extended Rendering on
 
 - How the game reaches the screen, drawn as three tabs that share one set of controls and cascades: Display (rendering geometry and frame pacing), Camera and Window. `part` says which of the three tabs this view is.
 - `withAspectCascade` resets the ratio when a capability is turned off, so the active ratio stays valid.
-- Pushing the synced rate preference also arms it for the session. The host applies it on the next fullscreen transition, not on this call.
+- The synced refresh rate and the target rate picker are on the Brock display module's Display tab (`@drizztdourden08/brock-display`), not here.
 
 ## ProfileHub/sub-components/SettingsView.controls.tsx
 
-The per-key control renderer for the Display tab: aspect ratio, window, viewport, off-screen behaviour and refresh rate. The off-screen behaviour description is shown under the control for whichever option is selected, so each option explains itself and the player does not have to guess what Idle does to an enemy they can see that is ignoring them. The `offscreenAI` setting key keeps its name, since it is part of the shared settings type.
+The per-key control renderer for the Display tab: aspect ratio, window, viewport and off-screen behaviour. The off-screen behaviour description is shown under the control for whichever option is selected, so each option explains itself and the player does not have to guess what Idle does to an enemy they can see that is ignoring them. The `offscreenAI` setting key keeps its name, since it is part of the shared settings type.
 
 ## ProfileHub/sub-components/online-settings-sections.constants.ts
 
@@ -1065,21 +1055,6 @@ The controller assigned to the active profile: connection and activation status,
 ## ProfileHub/sub-components/controls/InputProfileList.tsx
 
 The saved input profiles, with the active one highlighted, and create, delete, select and rename. A newly created profile opens straight into rename. Escape in the rename field is consumed there, so the dismiss stack leaves the page alone.
-
-## ProfileHub/sub-components/RefreshRateControl/RefreshRateControl.tsx
-
-- The target refresh rate picker, plus the display's state right now and a way to change it for good. Two routes to the same end are kept side by side on purpose: the fullscreen toggle above borrows the rate only while fullscreen and hands it back, while "Change refresh rate" sets it and leaves it. Players who dislike the blink on entering fullscreen want the second, players who want their desktop untouched want the first.
-- `detectedHz` is the rate detected now, which may be finer grained than what the OS reports. `value` is the stored preference, where 0 means the highest multiple of 60 available.
-- A stored rate the display no longer offers would leave nothing selected, so the highest is used, which is also what 0 resolves to.
-- The detected value leads the readout: it comes from the shared store, which is read again after a switch, so it is the only one of the three guaranteed to match the display now. The host status behind it is fetched only when the preference changes and goes stale once the rate is changed from here.
-
-## ProfileHub/sub-components/RefreshRateControl/sub-components/ChangeRefreshRateDialog.tsx
-
-Confirms changing the display's refresh rate for good. It gets a dialog because it reaches outside the game and changes a system setting. The wording covers what a player needs before saying yes: it lasts, how to undo it, and that a temporary alternative exists.
-
-## ProfileHub/sub-components/RefreshRateControl/behavior/useApplyRefreshRate.ts
-
-Applies a refresh rate for good and reports the host's verdict, including any failure reason. Afterwards every readout of the display is stale (the panel's detected line, the title bar counter and its incompatible-rate tag), so it reads the rate again once the switch settles: a mode change is not instant, and measuring mid-switch would sample the old rate. When the host cannot be reached at all, the previous status stays showing.
 
 ## ProfileHub/sub-components/hub-search/HubSearchResults.tsx
 

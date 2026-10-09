@@ -35,34 +35,24 @@ A boot-safe `window.api` stub for hosts with no preload to inject one: Capacitor
 The Electron host adapter. It fulfills the platform ports by delegating to the `window.api` that the preload injects.
 
 - The device port stays inert. Desktop handles keeping the screen awake and saving on close through its own window lifecycle, and the controllers carry desktop haptics.
-- The display port: the OS knows the rate of the display the window sits on, and the renderer's measurement refines it. Modes stay empty because Electron cannot enumerate them.
-- The controller host: raw HID enumeration, reads and writes went away with node-hid. SDL3 claims every controller directly and reports state that is already decoded (`onControllerState`). The host keeps the full shape of the port, because the Android USB OTG plugin on Capacitor still fulfills it, and turns those methods into the plain browser no-ops. Only `vibratePattern` and `onControllerState` are real on desktop.
+- There is no display or controller port: the refresh rate comes from the Brock display module and the controllers from the Brock input module, on every host.
 
 ## platform/hosts/web-factory.ts
 
 The plain browser host adapter, for a renderer opened over http with neither Electron nor Capacitor. It is also the fallback when host detection finds nothing. No window chrome and no persistent storage.
 
 - The device port is best effort: the wake lock, `navigator.vibrate` and page visibility.
-- The display port reports nothing. A browser has no standard refresh rate API, so the renderer's frame timing measurement is the only signal, and the port reports nothing instead of guessing.
 - `saveFile`: a browser cannot tell whether a download completed, and there is no cancel signal to tell apart. A started download is reported as saved.
 
 ## platform/hosts/capacitor-factory.ts
 
-The Capacitor host adapter for Android and iOS. Window controls do nothing, since mobile has no window chrome. Files go through the Filesystem plugin. Controllers come from the Brock input module's `BrockInput` plugin through `inputApi()`, the same API as on desktop. Any `window.api` call that has no port yet hits the boot-safe shim in `platform/api-shim`.
+The Capacitor host adapter for Android and iOS. Window controls do nothing, since mobile has no window chrome. Files go through the Filesystem plugin. Controllers come from the Brock input module's `BrockInput` plugin through `inputApi()`, the same API as on desktop, and the refresh rate from the Brock display module's `BrockDisplay` plugin, which asks Android for a rate that divides evenly into 60. Any `window.api` call that has no port yet hits the boot-safe shim in `platform/api-shim`.
 
 ## platform/hosts/capacitor/device.ts
 
 The Capacitor `DevicePort`: keep the screen awake during play (`@capacitor-community/keep-awake`), device haptics (`@capacitor/haptics`), and an app-backgrounded hook (`appStateChange` from `@capacitor/app`) used to save when the app goes to the background. Haptics buzz the phone on game events, since most Bluetooth pads expose no rumble through the WebView.
 
 `onBackButton`: `MainActivity` intercepts Back and dispatches a `rotpback` window event carrying the swipe edge (it reads `BackEventCompat.getSwipeEdge`). The `backButton` event of `@capacitor/app` is not used because it cannot tell left from right.
-
-## platform/hosts/capacitor/display.ts
-
-Android reports its supported rates and lets an app state the rate it intends to present at, which the platform then uses to pick a display mode. That request is made once per session, at startup, and is not exposed as a setting: there is no mode for the user to choose between, and the platform may decline anyway. Repeating it on every status read would be pointless churn.
-
-A failed request means an older build without the plugin, or a platform that declined. The measured rate still drives the advisory, so there is nothing to recover.
-
-Every reported mode is marked `sameResolution`, because Android switches modes itself and every reported rate is reachable at the current resolution. The synced rate calls report unsupported: there is no user-facing switch on Android, since the platform owns mode selection and only takes a hint.
 
 ## platform/hosts/capacitor/file-picker.ts
 
@@ -75,10 +65,6 @@ Saving goes to the device's Documents directory, not through a share sheet. The 
 ## platform/hosts/capacitor/file-store.ts
 
 The Capacitor `FileStore`, backed by app-private storage through the Filesystem plugin (`Directory.Data`). Paths are the same logical paths used on Electron, relative to the data root. Binary data crosses the bridge as base64. Removing a missing file and creating a folder that already exists both do nothing.
-
-## platform/hosts/capacitor/frame-rate-plugin
-
-The bridge to the Android FrameRate plugin. It asks the platform for a refresh rate that divides evenly into the game's 60 frames a second. Android decides whether to honour it, so nothing here reports the display as definitely changed: only what was requested and what the display says it is doing. `supportedHz` arrives comma separated, because Capacitor bridges float arrays poorly. `parseSupportedHz` drops anything unusable.
 
 ## platform/hosts/capacitor/storage.ts
 
@@ -148,23 +134,13 @@ A widget is unmounted the moment any screen opens, which is intended, so nothing
 
 Screen and transition notification state, fed by a subscription to map changes in `game-ui-store`. A `null` screen or transition means that notification is hidden. `showScreen` and `showTransition` say whether each kind is turned on.
 
-## stores/refresh-rate-store
-
-One reading of the display, shared by everything that shows it. It is a store, not a hook per consumer, because the rate can change while the app runs: the player switches it from the settings panel, or the OS switches it on entering fullscreen. Two independent hooks would each hold a stale copy, so the title bar could still claim 144 Hz while the settings panel that just changed it says 120.
-
-`reading` is true while a read is in flight, so overlapping calls do not stack measurements. `refresh` reads the host value again and measures again, and is safe to call repeatedly. The host value lands first and is usually enough. The measurement refines it, and is the only source at all on web and mobile. When the host cannot answer (`readHostRefreshRate`), the measurement still runs.
-
-## stores/installed-store
-
-What the Hookshop installed on this computer, read from the main process's record. One store serves the Hookshop tab and every editor, so an install, an update, an uninstall or a duplicate shows its lock everywhere at once.
-
-`reload` reads the record again. Off Electron there is no record, so the list stays empty. `watch` loads the record and starts listening to install progress; later calls do nothing. The last unpack step of any install schedules a reload `RECORD_SETTLE_MS` later, because the main process writes the record just after the last unpack report.
-
-`installedFor` returns the install record of one item, by its kind and the name it has on disk, or `null` for the player's own.
-
 ## stores/hub-session
 
-Who the app is signed in as, on the shared accounts. One store, because two surfaces read it at once: the account card (sign in, the code, sign out) and the bug report forms (the reporter line, and whether an email is asked). `refresh` runs at boot and after every sign-in or sign-out. A token the site revoked reads as signed out on the next refresh. `userCode` is the code to type on the site while waiting, `null` otherwise. `signIn` opens the confirm page on the given site, or on the Sanctuary when none is given.
+Who the app is signed in as, on the shared accounts. One store, because two surfaces read it at once: the account card (sign in, the code, sign out) and the bug report forms (the reporter line, and whether an email is asked). `refresh` runs at boot and after every sign-in or sign-out. A token the site revoked reads as signed out on the next refresh. `userCode` is the code to type on the site while waiting, `null` otherwise. `signIn` opens the confirm page on the given site, or on the Sanctuary when none is given. The sign in itself runs on the Brock secrets module's sign-in store (`useSignInStore`); this store adds the account the site answers with.
+
+## bug-report/
+
+The renderer's half of the Sanctuary bug report; the dialog is Brock's and the transport runs in the main process (`electron/sanctuary/bug-report/`). `useReportSnapshotOnOpen` sends the report context, the active profile and a live save state the moment the dialog opens, because only the renderer can read the running game. `useSignedOutIssueFallback` swaps in a transport that opens a prefilled GitHub issue while nobody is signed in, so a signed out player can still report.
 
 ## stores/hud-layout-store
 
@@ -360,13 +336,17 @@ The item is asserted again on both edges. On open, because the native menu's ini
 
 Fetches the app version through IPC. It lives in the renderer hooks layer, which may use `window.api`, so presentational components receive the version as a prop.
 
-## hooks/useRefreshRate.ts
+## hooks/useRefreshRateTitleBarItem.ts
 
-Subscribes to the shared display rate reading and starts the first read on mount. It is thin on purpose: the reading lives in the store, so every consumer sees the same value, and a change made in one place (the settings panel switching the rate) shows at once in another (the title bar's readout and its incompatible-rate tag). Only the first mount measures. The store drops overlapping calls, so several consumers mounting together still produce one reading.
+The title bar's incompatible refresh rate tag, shown while the FPS readout is on and the rate is not a whole multiple of 60. The rate itself comes from the Brock display module (`useRefreshRate`, `effectiveHz`, `isSyncedRate`), which also owns the synced rate and its Display tab; the tag opens that tab.
+
+## hooks/useInstalledPacks.ts
+
+What the Hookshop installed on this computer, read from the Brock catalog module's installed record (`useCatalogInstalled`) and turned into `InstalledPack`s. One record serves the Hookshop tab and every editor, so an install, an update, an uninstall or a duplicate shows its lock everywhere at once. The first caller starts the record's watch.
 
 ## hooks/useInstalledKind.ts
 
-The installed items of one kind, for an editor that locks them. `pack` is the install record of the selected item, or `null` for the player's own, and `packFor` answers the same for any row of the list. It starts the installed store's watch, so the first editor opened loads the record.
+The installed items of one kind, for an editor that locks them. `pack` is the install record of the selected item, or `null` for the player's own, and `packFor` answers the same for any row of the list. It reads `useInstalledPacks`, so the first editor opened loads the record.
 
 ## hooks/useWidgetPref.ts
 
@@ -374,19 +354,9 @@ A `useState` drop-in whose value belongs to the profile instead of the component
 
 The value must survive a JSON round trip; see `widget-prefs.ts` for why that is the only constraint. The cast to `T` is the one place the `unknown` storage shape meets a caller's type. A pref written by an older build with another shape lands there; the widget reads it as `T` and the next write corrects it.
 
-## hooks/useSyncedRate.ts
-
-The synced refresh rate status, and the push of the preference down to the host. The host owns applying and restoring the rate, because that has to survive the window closing or the app quitting straight out of fullscreen. The hook only reports what the host can do and forwards the player's choice. `push` forwards the preference and takes back the host's updated view of it; when the host cannot do it, the status already says so. The preference is pushed again whenever the stored value changes, so the host's copy never drifts from the profile. That includes the first mount, which arms it for the session.
-
 ## hooks/useIsNarrow.ts
 
 Whether an element is narrower than a width given in rem. It is measured on the element itself, so a pane squeezed by its neighbours answers the same as a small window. A layout that changes shape when narrow (a side pane becoming a tab) reads it; one that only restyles uses a container query instead. With no ResizeObserver (a test without a DOM) nothing is measured and the answer stays wide. An element of no width has not been laid out yet and says nothing about the window, so it is skipped.
-
-## hooks/measure-refresh-rate.ts
-
-Measures the display's refresh rate from the spacing of frame callbacks. It is the only signal on every target: the web has no refresh rate API, and mobile reports nothing without a native plugin. Frame callbacks are aligned to the vertical blank, so the gap between them is the refresh interval. Against a display the OS reported as 120 Hz, it returned 120.00.
-
-The first `WARMUP_FRAMES` callbacks are discarded, because intervals right after a loop starts are noisy. `SAMPLE_FRAMES` samples absorb a stray long frame without making the readout feel slow. The answer is the median, not the mean, so one dropped frame (which doubles a single interval) cannot drag it down. It resolves `null` when the rate could not be read.
 
 ## hooks/useImportProgress.ts
 
@@ -394,7 +364,7 @@ Subscribes to the main process `import:progress` event and reduces the stream fo
 
 ## hooks/useInstalledActions.ts
 
-What an editor can do with an installed item: uninstall it, make an editable copy, or update it to the store's live version. Each goes through the same store IPC the Hookshop tab uses, then reloads the installed store so every lock follows. Each answers what the editor selects next: the copy's name, the updated item's name, or whether the uninstall went through. A cancelled update wrote nothing, so there is nothing to report.
+What an editor can do with an installed item: uninstall it, make an editable copy, or update it to the store's live version. Uninstall and update go through the Brock catalog module the Hookshop tab uses, the copy through `store:duplicate`, and each then reloads the module's installed record so every lock follows. Each answers what the editor selects next: the copy's name, the updated item's name, or whether the uninstall went through. A cancelled update wrote nothing, so there is nothing to report.
 
 ## hooks/useSafeAreaInsets
 
@@ -411,15 +381,6 @@ The device's safe area insets (notch, display cutout), in CSS px. The Android sh
 `fitProportional` returns the largest size that keeps the source proportions, filling one axis exactly.
 
 Moving the window to a monitor with another display scaling changes the device pixel ratio without changing the container's CSS size, so the resize observer never fires; the `resolution` media query does. It is armed again on each change, because a query only matches the ratio it was built with. Only pixel-perfect mode depends on the ratio, so nothing else pays for the listener.
-
-## hooks/useAutoUpdate.ts
-
-- `percent` is the share of the package downloaded, while the status is `downloading`.
-- `versions` lists every installable release, newest first, and stays empty until the picker opens. `loadVersions` fills it, kept apart from the check so opening the dialog is cheap.
-- `currentVersion` is what is running, so the dialog can name it and label the action correctly.
-- An update may have been found before the hook mounted, so it asks for one on mount.
-- `apply(null)` takes the newest release; a version string takes that exact build.
-- `openReleasePage` is the way out where the app can see an update but cannot install it.
 
 ## hooks/useTrackerData
 
@@ -862,7 +823,7 @@ The live canvas reflects the rendered width (custom ratios included), so it is p
 
 ## App/behavior/useMsulOpen.ts
 
-Imports a music pack the app was opened with, from the desktop file association. The main process reports the path (`msu:openPack`). Reading it needs a trip back through IPC because the renderer cannot open an arbitrary path itself. The import is the one the Data Manager performs, so an opened pack and a dropped pack land the same way.
+Imports a music pack the app was opened with, from the desktop file association. Brock reports the path (`useAppOpen`), and this hook takes only `.msul` files. Reading it needs a trip back through IPC because the renderer cannot open an arbitrary path itself. The import is the one the Data Manager performs, so an opened pack and a dropped pack land the same way.
 
 ## App/behavior/useRandomizerBoot.ts
 
@@ -890,7 +851,7 @@ A named instance pins its own profile, matched by id first, then by name. An unk
 
 ## App/behavior/useStoreLinks.ts
 
-A store install link the browser opened lands on the Hookshop tab whatever page was open: the link waits in the link store and the tab installs it. It does nothing off Electron.
+A store install link the browser opened lands on the Hookshop tab whatever page was open: the Brock catalog module delivers it (`useCatalogLinks`), the link waits in the link store and the tab installs it. It does nothing off Electron.
 
 ## App/behavior/useWasmWarmup.ts
 

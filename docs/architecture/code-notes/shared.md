@@ -805,16 +805,7 @@ The project credits. Keep them in step with `CREDITS.md` at the repository root.
 
 ### display/refresh-rate/
 
-Refresh rate arithmetic, shared by the main process and the renderer. The core advances 60 times a second, so a display whose rate is a whole multiple of 60 shows every frame for an equal span. 144 Hz is the common offender: 144 / 60 is 2.4, so frames alternate between two and three refreshes, which reads as stutter while scrolling. 60, 120 and 240 divide evenly.
-
-- `GAME_HZ` is the frame rate the core runs at (NTSC).
-- `HZ_TOLERANCE`: rates are reported and measured loosely (59.94, 119.88, 143.98), so comparisons allow this much slack.
-- `MIN_MEASURED_HZ`: a measurement is trusted only once it has settled; below this, the OS value is preferred.
-- `effectiveHz` lets a settled measurement win over the OS value: it is the cadence frames are presented at, and it stays right where the OS reports nothing or 0.
-- `nearestMultiple` returns the multiple count, so 143.98 gives 2.
-- `syncedRateOptions` lists the multiples of 60 at or below the display rate, ascending: 144 Hz gives 60 and 120, 240 Hz gives 60, 120, 180 and 240. It rounds up by the tolerance first, so a 119.88 reading still offers 120.
-- `bestSyncedRate` is the highest evenly dividing rate, or null when the display cannot manage even 60.
-- `targetRateOptions` prefers the modes the host enumerated. The arithmetic fallback keeps the picker useful where modes cannot be listed, at the cost of maybe offering a rate the display turns down (the switch itself reports that).
+`GAME_HZ` is the frame rate the core runs at (NTSC, 60.0988). The refresh rate arithmetic (whether a display rate is a whole multiple of 60, the synced rate options, which reading to trust) comes from the Brock display module (`@drizztdourden08/brock-display`).
 
 ### display/turbo-speed/
 
@@ -1783,10 +1774,8 @@ Event channels, main to renderer: `webContents.send` paired with `ipcRenderer.on
 `ImportProgress` reports a data import (ROM, MSU, language, sprites). `id` is the correlation key: the pack name, the language code or the ROM stem. `loaded` is bytes downloaded, or the item index while copying or extracting; `total` is the content length or the item count. `message` is a readable label or the error text.
 
 - `msu:optimize:progress` sends one report per file, for the measuring pass and the converting pass alike. While a file converts it also carries `fileFraction`, read from the encoder's own progress lines.
-- `msu:openPack` carries a `.msul` pack the app was opened with (file association or open file).
-- `hub:deviceCode` carries the user code to confirm on the site during a device sign in, sent as soon as the API minted it, so the account card can show it while the browser opens.
-- `store:installProgress` reports each step of a running Hookshop install. `store:openInstall` carries a store install link the browser opened, in this process or handed over by the process the link started.
-- The controller events come from the SDL3 native transport (see `apps/desktop/electron/input/sdl3-source.ts`). `controller:devices` is a full snapshot that covers devices SDL has not claimed (see `device-availability.ts`). `controller:raw` is one HID report read while a diagnostic raw capture is open (`controller:start-raw-capture`). `controller:joystick` is one joystick level sample while a diagnostic joystick capture is open. `controller:hold-changed` says whether the gamepad subsystem is held open for a raw HID capture (`controller:release-hold`, `controller:restore-hold`).
+
+Opened files and install links, the sign in's user code, Hookshop install progress and every controller event come from Brock and its modules (`onOpen`, the secrets, catalog and input modules), not from this contract.
 
 ### ipc/ffmpeg-contract.type.ts
 
@@ -1794,30 +1783,25 @@ The one RotP ffmpeg channel: probe one media file. State and install come from t
 
 ### ipc/hub-contract.type.ts
 
-The shared account channels: the device code sign in and the signed in identity. One device token serves every site's API. The user code shown while the app waits for the browser arrives on the `hub:deviceCode` event.
+The shared account channels: sign out and the signed in identity. One device token serves every site's API. The device code sign in itself, with its user code and cancel, runs on the Brock secrets module's sign-in driver.
 
-- `HubSignInFailure`: why a sign in ended without a token.
 - `HubMe`: the signed in identity as the account card shows it, null when no device token is held. `deviceLabel` is this device's label as the API recorded it at confirm time.
-- `hub:beginDeviceSignIn` opens the browser on the site and polls until the device is confirmed, denied or expired. The site decides whose confirm page opens, the Sanctuary when omitted; either way the token serves every site.
-- `hub:cancelDeviceSignIn` stops the poll; the pending begin resolves with reason `cancelled`.
-- `hub:signOut` drops the device token. The device row on the site stays until it is revoked there.
+- `hub:signOut` cancels any sign in still waiting and drops the device token. The device row on the site stays until it is revoked there.
 - `hub:me` is null when no token is held, or when the API no longer accepts it (the token is dropped then).
 
 ### ipc/invoke-contract.type.ts
 
-Request and response channels: `ipcRenderer.invoke` paired with `ipcMain.handle`. `InvokeContract` is the one source of truth for every invoke channel's signature; the preload and the main process handlers are checked against it. It joins one interface per domain (host, profile data, dev tools, screen editor, updater, controller, language, MSU, ffmpeg, Sanctuary, account, Hookshop), each split out to keep files short.
+Request and response channels: `ipcRenderer.invoke` paired with `ipcMain.handle`. `InvokeContract` is the one source of truth for every invoke channel's signature; the preload and the main process handlers are checked against it. It joins one interface per domain (host, profile data, dev tools, screen editor, controller, language, MSU, ffmpeg, Sanctuary, account, Hookshop), each split out to keep files short.
 
 ### ipc/invoke/
 
-- `host-invoke-contract.type.ts`: the user data path, the host hardware and OS readout for the About page, the Data location with reveal and per domain usage, the generic file store (POSIX paths relative to the Data root), the WASM core bytes (the renderer instantiates without streaming because `file://` cannot fetch), window queries, the refresh rate of the screen the window is on, and dialogs.
-- `profile-data-invoke-contract.type.ts`: profiles, ROMs, assets, quick state saves, named and auto saves, per profile config, sessions and the tracker, input profiles and calibration, sprites.
-- `dev-tools-invoke-contract.type.ts`: review data, the Data Inspector view state, the recommendation store, test automation, debug dumps, the simulator run log (a detailed JSONL sink), shadow casting, and the debug report tool.
+- `host-invoke-contract.type.ts`: the user data path, the host hardware and OS readout for the About page, the Data location with reveal and per domain usage, the generic file store (POSIX paths relative to the Data root), window queries and dialogs. The WASM core bytes come from the Brock port kit and the refresh rate from the Brock display module.
+- `profile-data-invoke-contract.type.ts`: profiles, per profile config, sessions and the tracker, input profiles, sprites. ROMs, assets and saves are read and written over the file store, and calibration belongs to the Brock input module.
+- `dev-tools-invoke-contract.type.ts`: review data, the Data Inspector view state, the recommendation store, test automation, debug dumps, the simulator run log (a detailed JSONL sink), shadow casting, and the debug capture sessions.
   - The view state (`uiViews:*`) is one whole file at app level, not per profile, and the renderer repo debounces it.
   - The recommendation store keeps one file per collection (`Data/recommendations/<kind>.json`). The collection lives in the main process: folding a pass and recording a verdict are read, modify, write over a whole file, and an IPC round trip in between would let two callers interleave.
-  - A debug capture recording finalizes the moment it stops: raw frames, the position timeline and an ffmpeg encoded video land in their own folder under `debug-captures/<profileId>/` at once, never deferred to packaging. `debug-capture:listSessions` lists every recorded session for the picker (`BugReportDialog`) and never changes anything on disk; `debug-capture:deleteSession` deletes one.
-  - `debug-report:build` zips the save, settings and randomizer config plus the capture sessions the picker had checked. It is local only and returns the id of the zip the main process holds in memory. Filing and uploading go through the Sanctuary channels, which build the same zip themselves; this channel stays for headless and tooling callers.
+  - A debug capture recording finalizes the moment it stops: raw frames, the position timeline and an ffmpeg encoded video land in their own folder under `debug-captures/<profileId>/` at once, never deferred to packaging. `debug-capture:listSessions` lists every recorded session for the picker (`BugReportDialog`) and never changes anything on disk; `debug-capture:deleteSession` deletes one. The report zip itself is built by the bug report transport in the main process (`apps/desktop/electron/sanctuary/bug-report/`), with no channel of its own.
 - `screen-editor-invoke-contract.type.ts`: the dev only screen editor. Record payloads carry no id and no source text: the main process allocates the id and serializes with the dataset's own emitter. The six collections added after the record facade share one generic payload trio. `writeCheckRecord` has its suffix because the older text based `writeCheck` still has callers. Area and location already mint through `allocateGeography` (a display name, not a whole record), so they only gain write and delete.
-- `updater-invoke-contract.type.ts`: the auto updater, a nested namespace in the friendly API. `updater:capabilities` says whether this build can check only, or check and install. `updater:openReleasePage` opens the release page for a version, for builds that cannot install one. `updater:listVersions` lists every installable release, newest first, for the version picker. `updater:apply` with null installs the newest release; a version string installs that exact build.
 
 ### ipc/language-contract.type.ts
 
@@ -1825,7 +1809,7 @@ Channels for translation data. Two generations coexist on purpose. The legacy ch
 
 ### ipc/maps/
 
-The only join tables between the renderer's friendly `window.api` method names and the namespaced IPC channels. Every value is checked with `satisfies` to be a real channel, and the friendly API types derive from these tables (see `api.type.ts`), so a method's signature is never written twice. Nested namespaces (updater, shadowCasting, screenEditor) are wired explicitly in the preload. The rows for the sites on the shared accounts (account sign in, the Sanctuary, the Hookshop) live in `site-maps.data.ts` and are spread into the invoke and event tables, which stay the one join the preload and `window.api` read.
+The only join tables between the renderer's friendly `window.api` method names and the namespaced IPC channels. Every value is checked with `satisfies` to be a real channel, and the friendly API types derive from these tables (see `api.type.ts`), so a method's signature is never written twice. Nested namespaces (shadowCasting, screenEditor) are wired explicitly in the preload. The rows for the sites on the shared accounts (account sign in, the Sanctuary, the Hookshop) live in `site-maps.data.ts` and are spread into the invoke and event tables, which stay the one join the preload and `window.api` read.
 
 ### ipc/msu-contract/
 
@@ -1846,11 +1830,9 @@ Wire types for the recommendation store's three channels. The engine's own shape
 
 ### ipc/sanctuary-contract.type.ts
 
-The Sanctuary channels: the bug report submission and its upload retry. Signing in belongs to the shared account (`hub-contract.type.ts`).
+The Sanctuary channels. Signing in belongs to the shared account (`hub-contract.type.ts`), and a report with its debug zip is sent by the main process transport behind Brock's bug report dialog, not over a channel here.
 
-`SanctuarySubmitInput` is what the renderer hands over to file a report. The main process fills in the attachment sizes once it has built the zip. `profileId` is the active profile when a debug report may be attached; null files the report plain. `sessionKeys` are exactly the capture sessions the picker had checked.
-
-In `SanctuarySubmitResult`, `uploaded` is false when nothing was attached or the zip upload failed. A failed upload carries `error` and can be retried with `sanctuary:retryUpload` against the same report id. A report that could not be filed at all answers with `error` alone.
+`SanctuarySubmitInput` files a report with no attachment; a report that could not be filed answers with `error` alone. `SanctuaryReportSnapshot` is what the renderer sends when the bug report dialog opens: the report context, the active profile and a live save state, which only the renderer can read.
 
 ### ipc/screen-editor-contract/
 
@@ -1878,32 +1860,15 @@ Fire and forget channels, renderer to main: `ipcRenderer.send` paired with `ipcM
 
 ### ipc/store-contract.type.ts
 
-The Hookshop channels: the catalogue, one item, and installing, updating, uninstalling and duplicating packs. The main process calls the store API with the device token, so the renderer never holds it. Install progress and browser install links arrive on the `store:installProgress` and `store:openInstall` events.
+The one Hookshop channel of RotP's own. The catalogue, installs, updates, uninstalls, progress and install links run on the Brock catalog module (`window.api.catalog`).
 
-- `StoreResult`: every call answers with its data or why not. `signedOut` is set when no device token is held or the API refused it, so the view can show the sign in card.
-- `StoreInstallRequest.version`: null takes the live version.
-- `StoreInstallResult`: a cancelled install answers `cancelled` with nothing written.
-- `StoreUninstallResult.releasedProfiles`: the profiles whose selection pointed at the pack and went back to the default.
+- `StoreResult`: the call answers with its data or why not. `signedOut` is set when no device token is held or the API refused it, so the view can show the sign in card.
 - `StoreDuplicateResult`: the editable copy's kind and its pack folder, sprite file name or set id.
-- `StoreOpenInstall`: a `relic-of-the-past://install/<id>` link the browser opened.
-- `store:items` lists every published item over all pages, or those of one kind.
-- `store:install` downloads, checks the sha256, unpacks and records. An installed item is replaced, which is an update.
-- `store:uninstall` releases any profile that selects the pack, removes its files and drops the record.
 - `store:duplicate` copies an installed item to a free new name the player can edit, crediting the original in the copy's `basedOn`. It is refused, with the reason, when the licence does not allow copies.
-- `store:cancel` stops the install of that item; its pending `store:install` answers cancelled.
 
 ### ipc/ui-views-contract.type.ts
 
 The durable view state store's wire payload: one whole file map keyed by `ViewKey` (`surface:collection`), loaded and saved as one unit. The main process treats every entry as opaque JSON and never reshapes it, because the real shape (`ViewSnapshot`) belongs to the renderer's design system data layer and `shared/` never depends on renderer code. The renderer's `lib/storage/ui-views.ts` validates each entry against `ViewSnapshot` before trusting it.
-
-### ipc/updater-contract/
-
-Shapes shared by the updater's main process side and the renderer. The feed entry a version was built from stays in main; the renderer picks by version string.
-
-- `UpdateInfo.saveStates` and `VersionOption.saveStates`: whether that version reads the save states the running build writes, or whether picking it would leave them unreadable.
-- `VersionOption.size`: bytes of the full package. `downloadSize`: bytes this choice would download from where the app is now; an upgrade sums the deltas, while going back, reinstalling or an unusable delta chain costs the full package. It is the number worth showing.
-- `downgrade`: older than what is running. `installed`: exactly what is running, so choosing it is a reinstall.
-- `UpdaterCapabilities.canCheck`: worth asking whether a newer version exists. `canInstall`: able to download and apply it, where the alternative is sending the player to the release page.
 
 ## Platform
 
@@ -1936,7 +1901,7 @@ A `FileStore` held in memory, with bytes, text and a modification time. Tests us
 The platform model has two independent axes, the host shell and the OS, plus derived capability flags. Application code branches on a capability (`caps.windowChrome`), never on a host or OS name.
 
 - `windowChrome`: custom title bar with minimize, maximize and close.
-- `nativeHid`: raw HID enumerate, read and write. Only Capacitor's Android USB OTG plugin has it; the desktop reads controllers through SDL3's already decoded state.
+- `nativeHid`: raw HID enumerate, read and write. Controllers themselves come from the Brock input module on every host, through SDL3's already decoded state.
 - `touchControls`: the host needs an on screen virtual gamepad.
 - `customProtocol`: `app-sprite://` style asset serving.
 - `selfUpdate`: the host can install updates itself.
@@ -1949,15 +1914,6 @@ The platform model has two independent axes, the host shell and the OS, plus der
 Device lifecycle concerns with no desktop equivalent: keeping the screen awake during gameplay (`keepAwake`, released by `allowSleep`), device haptics (the phone buzzing, distinct from controller rumble, a no-op where unavailable), and `onAppPause` for backgrounding (save on background, as the desktop saves on close). Electron does nothing here; Capacitor uses the KeepAwake, Haptics and App plugins.
 
 `onBackButton` intercepts Android back so the app handles it and does not navigate away. The edge says which side a back swipe came from (`right` for a button press or no gesture). A no-op where there is no back action.
-
-### platform/ports/display.type.ts
-
-What the host can tell about the screen refresh rate. It is read only by design: every host can answer (the desktop from the OS, mobile and web from frame timing). Changing the rate needs native code per OS.
-
-- `getRefreshRate`: hosts that know nothing return nulls, never guesses.
-- `getSyncedRateStatus`: whether a rate switch is possible here, and what it would offer.
-- `setSyncedRatePreference`: stores the preference. The host applies it on fullscreen transitions.
-- `applyRefreshRate`: changes the rate and keeps it. Only choosing another rate, here or in the OS, undoes it.
 
 ### platform/ports/file-picker.type.ts
 
@@ -2350,9 +2306,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 ### storage/saves/index.ts
 
-- Mirrors the Electron layout under `profiles/<id>/saves/` (`sram.dat` and `sram.bak`, `quick/save{N}.sav` and `.png`, `normal/` and `auto/` manifests), so existing desktop saves load unchanged.
-- An SRAM write keeps the previous file as a single backup, `sram.bak`.
-- A quick slot is written over in place, so its music resume sidecar goes with the state it described.
+- Named and auto saves under `profiles/<id>/saves/` (`normal/` and `auto/`, each with its manifest), plus the quick slot listing. SRAM (`sram.dat`, kept once as `sram.bak`) and the quick slots themselves (`quick/save{N}.sav` and `.png`) are written by the Brock port kit (`@drizztdourden08/brock-port-kit`) in the same layout.
 
 ### storage/sprite-manifest-digest/index.ts
 
@@ -2405,10 +2359,10 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 ### store/deep-link/deep-link.constants.ts
 
-- The install link is `relic-of-the-past://install/<docId>` with an optional `?v=<n>`. The link type is the app's name, since browsers show it when they ask to open the app. `INSTALL_SCHEME` is also listed in electron-builder.config.js `protocols`.
-- The link arrives from the OS (a new process's argv, or the hand off pipe), so the parser accepts that exact shape and nothing else: no other host, path segment, query key or fragment. One trailing slash before the query is tolerated, since some launchers append one to a custom scheme URL.
+- The install link is `relic-of-the-past://install/<docId>` with an optional `?v=<n>`. The link type is the app's name, since browsers show it when they ask to open the app. `INSTALL_SCHEME` is also listed in `brock.config.ts` `protocols`.
+- Claiming the scheme and parsing a link that arrives from the OS belong to the Brock catalog module (`linkScheme` in the Hookshop config); this folder keeps the scheme and the link format.
 - The item id follows Firestore's document id rules, narrowed to the characters an id this store creates can hold: letters, digits, `_` and `-`, at most 128, never `__...__`.
-- `InstallLink.version` is a specific version's `n`; null installs the live version. `installLinkFromArgv` returns the first argv entry that parses as an install link.
+- `InstallLink.version` is a specific version's `n`; null installs the live version.
 
 ### store/home-types/home-types.type.ts
 
@@ -2444,10 +2398,10 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 ### store/installed-types/installed-types.type.ts
 
-- The app keeps what it installed from the store in `store/installed.json` under the Data root, written by the main process. The record makes uninstall and update exact, because `installedName` is the one thing an installer wrote.
-- `InstalledOrigin` is the listing an install came from, as the download grant named it. A record without an origin is not valid and is dropped on read.
+- What the app installed from the store is the Brock catalog module's installed record, written by the main process. The record makes uninstall and update exact, because `installedName` is the one thing an installer wrote.
+- `InstalledRecordView` is the shape of one catalog record as RotP reads it. `packOfRecord` turns it into an `InstalledPack`, or null when its kind and container do not match or its origin or semver is missing, so a damaged record never reaches an editor.
+- `InstalledOrigin` is the listing an install came from, as the download grant named it.
 - `InstalledPack.version` is the version's `n`, compared with the item's liveVersion to offer an update. `installedName` is the music pack folder, the sprite file name, or the language set id.
-- `InstalledRegistry` is the whole file.
 
 ### store/item-color/item-color.constants.ts
 
@@ -2602,7 +2556,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `DetectedDevice` is a device seen at runtime and is not persisted. `id` is a unique runtime id such as `gamepad-0` or `keyboard-0`. `rawId` is the `Gamepad.id` string or `Standard Keyboard`. `displayName` is the resolved name, such as `Xbox Series X|S Controller`.
 - `DetectedDevice.sdlType` is SDL's own gamepad type (SdlGamepadType in shared/input/sdl-buttons), kept a plain string so this file does not depend on shared/input. The keyboard entry uses the sentinel `keyboard`, never null.
 - `connected` is HID level presence. `activated` means the Web Gamepad API is active (a button was pressed at least once). `inputApi` is the API this controller uses for input reading.
-- `hasRumble` and `hasGyro` are real capabilities reported by SDL3 (`controller:added`); false, not unknown, when the device was not detected through that surface.
+- `hasRumble` and `hasGyro` are real capabilities reported by SDL3 (the input module's `onAdded`); false, not unknown, when the device was not detected through that surface.
 - `AssignedDevice` is persisted with the profile. `DevicePreset` ships with the app; its `vendorIds` and `productIds` are lowercase hex strings it matches, and `buttonIcons` is the icon set for the device family.
 
 ### types/controls/functions/functions.constants.ts
@@ -2635,10 +2589,8 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `DebugCaptureSnapshot` is one sample of where Link and the game were, taken while capture is running. `session` numbers the start and stop cycle it belongs to (1, 2, ...), so several recordings in one report stay distinguishable.
 - `DebugCaptureScreenshot` is one frame grabbed alongside a snapshot, only while capture is running.
 - `DebugCaptureFinalizeInput` is what the renderer hands off the moment a recording stops: the raw frames and the position timeline for that one session, keyed by `sessionKey` (its own folder under `debug-captures/<profileId>/`). Finalizing writes both to disk and encodes them into a video at once; packaging a report never waits on this, it zips whatever session folders exist.
-- `DebugReportSaveEntry`: a report includes every quick slot, the 5 newest normal saves, the 2 newest auto saves, and a fresh `live` capture taken when the report was sent (never written to the profile's own save stores). `ref` is the quick slot number, the normal or auto save's id, or `live`, as a string.
-- `DebugReportPackageInput` is what the renderer sends the main process to build (not yet send) the report. `sessionKeys` is exactly what the picker had checked, since which capture sessions ship is the player's choice.
 - `DebugCaptureSessionSummary` is one recorded capture session as the picker lists it. `sentAt` comes from the profile's capture manifest, not the session folder (see capture-manifest.ts). `previewKind: 'images'` (no ffmpeg, PNG fallback) carries every packaged frame in `previewFrameUrls` so the picker can cycle through them as a fake video.
-- Building a report is local only (collect files, zip, sweep in finalized capture sessions) and never touches the network: it returns the id of the zip the main process holds in memory. `sanctuary:submitReport` files the report and uploads that zip; a failed upload is retried against the same id with `sanctuary:retryUpload`.
+- The report zip (saves, profile files, logs and capture sessions) is built and uploaded by the bug report transport in the main process (`apps/desktop/electron/sanctuary/bug-report/`), so no report shape crosses IPC.
 
 ### types/diagnostics/diagnostics.type.ts
 
@@ -2647,16 +2599,6 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `DisplayDiagnostics.bounds` is the logical (DIP) bounds in the virtual desktop, as the window manager sees them. `nativeSize` is the logical size multiplied by the scale factor.
 - `GpuDiagnostics.features` maps each feature to its acceleration status (`enabled`, `disabled_software`, ...).
 - `OsDiagnostics.version` is the human readable OS name, such as the edition string on Windows.
-
-### types/display/display.type.ts
-
-- `DisplayModeInfo.sameResolution` is true when the mode matches the display's current resolution, so switching to it changes only the refresh rate and leaves window layout alone.
-- `reportedHz` comes from the OS. It is authoritative but unavailable on some hosts (mobile WebView, plain web) and is sometimes reported as 0 even on desktop.
-- `measuredHz` is derived from the spacing of vblank aligned frame callbacks. It works everywhere but needs a moment of sampling and carries a little noise.
-- `modes` is empty when the host cannot enumerate display modes.
-- `SyncedRateStatus.supported` is false when this platform or session cannot change the rate at all; `unsupportedReason` is then shown to the user.
-- `availableRates` lists the multiples of 60 this display offers, which is what the target picker lists.
-- `activeHz` is the rate the app switched to, or null when it has changed nothing. `bestHz` is the highest evenly dividing rate the display can manage. `lastError` says why the most recent attempt failed.
 
 ### types/ffmpeg-tool/ffmpeg-tool.constants.ts
 
@@ -2947,8 +2889,6 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `autoSaveIntervalSeconds` ranges 60 to 1800, default 300. `autoSaveMaxEntries` ranges 1 to 20, default 5.
 - `disableFrameDelay` is legacy: only the native SDL main loop reads it (not the WASM build). It is kept so existing profiles and the INI round trip unchanged. `vsync` supersedes it.
 - `vsync` drives the core's frame loop from the display's vertical blank (requestAnimationFrame) and gates the game step on a 60.0988 Hz accumulator, so the speed stays right on any refresh rate. Off is the timer pacing the app always used. It can be toggled live.
-- `syncedRefreshRate`: while in fullscreen, switch the display to a refresh rate that is a whole multiple of the game's 60 steps a second, and put the original back on leaving fullscreen or quitting. Only meaningful on desktop, where the platform can change modes.
-- `syncedRefreshRateHz` is the target rate. 0 means the highest multiple of 60 the display offers, which is what a fresh profile gets. A stored rate the display stops offering falls back to that.
 - `turboEnabled` runs the game faster than real time while the Turbo shortcut is held. Off means the core never leaves real time. It can be toggled live. `turboSpeed` is the multiplier, one of the rungs in shared/display/turbo-speed.ts.
 
 ### types/settings/graphics-settings.type.ts
@@ -2956,6 +2896,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `windowScale` (1 to 5), `fullscreen` and `outputMethod` are legacy INI fields, unused in Electron.
 - `linkSprite` is the id or filename of a custom Link sprite in the global sprite library (under %AppData%), or null for the original. At game start the bridge writes the `.zspr` to MEMFS and sets the LinkGraphics key.
 - `windowMode`, `startFullscreen`, `viewportConstraint` and `pixelPerfect` are managed by Electron.
+- `displayMonitor`, `syncedRateInFullscreen` and `syncedRateTargetHz` are the Brock display module's keys, read and written by its Display tab: the screen to use, whether to switch to a whole multiple of 60 while in fullscreen, and the target rate (0 for the highest the display offers).
 - `pixelPerfect` snaps the canvas to a whole number of source pixels, measured in device pixels so display scaling cannot reintroduce uneven pixel sizes. It trades a little image size for a scroll that never shimmers. Renderer only (not serialized to the INI). Only meaningful when `viewportConstraint` is `none`, because the other modes bypass the fit math. It forces `linearFiltering` off while enabled.
 - `renderIntoNotch` (mobile): true (default) renders under the camera cutout, full bleed; false keeps UI and canvas inside the usable screen. Renderer only (not serialized to the INI).
 - `hideSpaceBeyondWalls` paints the space past the walls of a house, a cave or the sanctuary black. The core decides per frame (hide_space_beyond_walls.c), so dungeons and the overworld are never touched.
