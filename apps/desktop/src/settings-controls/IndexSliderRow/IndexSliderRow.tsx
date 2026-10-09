@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { KeyedControlRow } from '../ControlRow';
+import { KeyedControlRow } from '../KeyedControlRow';
 import type { IndexSliderRowProps } from './IndexSliderRow.type';
 
 const IndexSliderRow = (props: IndexSliderRowProps) => {

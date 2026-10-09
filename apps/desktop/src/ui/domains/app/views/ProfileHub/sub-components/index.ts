@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind barrel */
-export { AudioSettings } from './AudioSettings';
 export { ControlsSettings } from './ControlsSettings';
 export { CreditsPage } from './CreditsTab';
-export { GameplaySettings } from './GameplaySettings';
-export { HapticsSettings } from './HapticsSettings';
-export { HomeTab } from './HomeTab';
-export { HudSettings } from './HudSettings';
-export { MsuImport } from './MsuImport';
 export { OnlineSettings } from './OnlineSettings';

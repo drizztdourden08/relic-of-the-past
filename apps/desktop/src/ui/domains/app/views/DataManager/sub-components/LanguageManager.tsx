@@ -13,9 +13,6 @@ import { InstalledOriginBar, useConfirmUninstall } from '@domains/app/views/Inst
 import { LanguageSetList } from './LanguageSetList';
 import { Text, Box, Select, Field, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
-import './DataManager.lists.css';
-import './DataManager.forms.css';
-import './DataManager.detail.css';
 
 const LanguageManager = (props: LanguageManagerProps) => {
   const { onDeleteConfirm } = props;

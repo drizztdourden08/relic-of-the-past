@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Status, Button, IconButton, Select, TextInput, Field, EmptyState, ButtonRow, SegmentedControl, Spinner } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Status, Button, IconButton, Select, TextInput, Field, EmptyState, ButtonRow, SegmentedControl, Spinner, Stack, Icon } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout, ListItemRow } from '@drizztdourden08/tessera/composites';
-import './DataManager.lists.css';
-import './DataManager.forms.css';
-import './DataManager.detail.css';
 import { formatRelativeTime } from '../../../../../../utils';
 import { useProfileManager } from './profile-manager/useProfileManager';
 import { ProfileDetailPanel } from './profile-manager/ProfileDetailPanel';
@@ -36,11 +33,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
 
   const list = (
     <>
-      {loadingProfile && (
-        <Box className="data-list__loading">
-          <ListItemRow selected icon={<Spinner size="sm" />} name={`Loading profile: ${loadingProfile}...`} />
-        </Box>
-      )}
+      {loadingProfile && <ListItemRow selected icon={<Spinner size="sm" />} name={`Loading profile: ${loadingProfile}...`} />}
       {creating ? (
         <Box className="profile-form" onKeyDown={handleKeyDown}>
           <Field label="Profile Name">
@@ -94,18 +87,18 @@ const ProfileManager = (props: ProfileManagerProps) => {
         </Box>
       ) : (
         readyRoms.length > 0 && (
-          <Button variant="primary" fullWidth icon="+" onClick={() => { setFormError(null); setCreating(true); }}>
+          <Button variant="primary" fullWidth icon={<Icon name="plus" />} onClick={() => { setFormError(null); setCreating(true); }}>
             New Profile
           </Button>
         )
       )}
 
-      <Box className="data-list">
+      <Stack gap="xs">
         {profiles.length === 0 && <EmptyState message="No profiles yet. Import a ROM to get started." />}
         {profiles.map((profile) => (
           <ListItemRow
             key={profile.id}
-            icon="👤"
+            icon={<Icon name="user" />}
             name={
               <>
                 {profile.name}
@@ -118,12 +111,12 @@ const ProfileManager = (props: ProfileManagerProps) => {
             onDoubleClick={() => onSelectProfile(profile)}
             action={
               <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); onDeleteProfile(profile.id); }}>
-                ✕
+                <Icon name="x" />
               </IconButton>
             }
           />
         ))}
-      </Box>
+      </Stack>
     </>
   );
 

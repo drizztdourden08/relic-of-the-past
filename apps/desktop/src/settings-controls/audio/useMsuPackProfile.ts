@@ -25,7 +25,7 @@ const useMsuPackProfile = (profileId: string) => {
         setPack(known ? detectMsuPackProfile(tracks, manifest !== null) : null);
       }
     };
-    detect();
+    void detect();
     return () => { cancelled = true; };
   }, [profileId]);
 

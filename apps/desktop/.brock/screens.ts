@@ -12,6 +12,21 @@ import DataStoragePage, { meta as dataStoragePageMeta } from '../src/screens/dat
 import DataStudiosCharactersPage, { meta as dataStudiosCharactersPageMeta } from '../src/screens/data/studios/characters.page';
 import DataStudiosLanguagesPage, { meta as dataStudiosLanguagesPageMeta } from '../src/screens/data/studios/languages.page';
 import DataStudiosMsuPage, { meta as dataStudiosMsuPageMeta } from '../src/screens/data/studios/msu.page';
+import GameExtrasBugfixesSettings, { meta as gameExtrasBugfixesSettingsMeta } from '../src/screens/game/extras/bugfixes.settings';
+import GameExtrasContributingSettings, { meta as gameExtrasContributingSettingsMeta } from '../src/screens/game/extras/contributing.settings';
+import GameExtrasGbaCustom, { meta as gameExtrasGbaCustomMeta } from '../src/screens/game/extras/gba.custom';
+import GameExtrasHapticsSettings, { meta as gameExtrasHapticsSettingsMeta } from '../src/screens/game/extras/haptics.settings';
+import GameExtrasMobileSettings, { meta as gameExtrasMobileSettingsMeta } from '../src/screens/game/extras/mobile.settings';
+import GameExtrasOnlineSettings, { meta as gameExtrasOnlineSettingsMeta } from '../src/screens/game/extras/online.settings';
+import GameGameplayAudioSettings, { meta as gameGameplayAudioSettingsMeta } from '../src/screens/game/gameplay/audio.settings';
+import GameGameplayControlsCustom, { meta as gameGameplayControlsCustomMeta } from '../src/screens/game/gameplay/controls.custom';
+import GameGameplayGameplaySettings, { meta as gameGameplayGameplaySettingsMeta } from '../src/screens/game/gameplay/gameplay.settings';
+import GameGameplayHudSettings, { meta as gameGameplayHudSettingsMeta } from '../src/screens/game/gameplay/hud.settings';
+import GameHomeHero, { meta as gameHomeHeroMeta } from '../src/screens/game/home.hero';
+import GameVideoCameraSettings, { meta as gameVideoCameraSettingsMeta } from '../src/screens/game/video/camera.settings';
+import GameVideoDisplaySettings, { meta as gameVideoDisplaySettingsMeta } from '../src/screens/game/video/display.settings';
+import GameVideoGraphicsSettings, { meta as gameVideoGraphicsSettingsMeta } from '../src/screens/game/video/graphics.settings';
+import GameVideoWindowSettings, { meta as gameVideoWindowSettingsMeta } from '../src/screens/game/video/window.settings';
 import GameViewBase, { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
 import HudLayoutLayer, { meta as hudLayoutLayerMeta } from '../src/screens/hud-layout.layer';
 import InputCalibrationCard, { meta as inputCalibrationCardMeta } from '../src/screens/input-calibration.card';
@@ -34,6 +49,21 @@ const screenTree = buildScreenTree(config, [
   { kind: 'page', bucket: 'data', group: 'studios', id: 'characters', component: DataStudiosCharactersPage, meta: dataStudiosCharactersPageMeta },
   { kind: 'page', bucket: 'data', group: 'studios', id: 'languages', component: DataStudiosLanguagesPage, meta: dataStudiosLanguagesPageMeta },
   { kind: 'page', bucket: 'data', group: 'studios', id: 'msu', component: DataStudiosMsuPage, meta: dataStudiosMsuPageMeta },
+  { kind: 'settings', bucket: 'game', group: 'extras', id: 'bugfixes', sections: GameExtrasBugfixesSettings, meta: gameExtrasBugfixesSettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'extras', id: 'contributing', sections: GameExtrasContributingSettings, meta: gameExtrasContributingSettingsMeta },
+  { kind: 'custom', bucket: 'game', group: 'extras', id: 'gba', component: GameExtrasGbaCustom, meta: gameExtrasGbaCustomMeta },
+  { kind: 'settings', bucket: 'game', group: 'extras', id: 'haptics', sections: GameExtrasHapticsSettings, meta: gameExtrasHapticsSettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'extras', id: 'mobile', sections: GameExtrasMobileSettings, meta: gameExtrasMobileSettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'extras', id: 'online', sections: GameExtrasOnlineSettings, meta: gameExtrasOnlineSettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'gameplay', id: 'audio', sections: GameGameplayAudioSettings, meta: gameGameplayAudioSettingsMeta },
+  { kind: 'custom', bucket: 'game', group: 'gameplay', id: 'controls', component: GameGameplayControlsCustom, meta: gameGameplayControlsCustomMeta },
+  { kind: 'settings', bucket: 'game', group: 'gameplay', id: 'gameplay', sections: GameGameplayGameplaySettings, meta: gameGameplayGameplaySettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'gameplay', id: 'hud', sections: GameGameplayHudSettings, meta: gameGameplayHudSettingsMeta },
+  { kind: 'hero', bucket: 'game', id: 'home', component: GameHomeHero, meta: gameHomeHeroMeta },
+  { kind: 'settings', bucket: 'game', group: 'video', id: 'camera', sections: GameVideoCameraSettings, meta: gameVideoCameraSettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'video', id: 'display', sections: GameVideoDisplaySettings, meta: gameVideoDisplaySettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'video', id: 'graphics', sections: GameVideoGraphicsSettings, meta: gameVideoGraphicsSettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'video', id: 'window', sections: GameVideoWindowSettings, meta: gameVideoWindowSettingsMeta },
   { kind: 'base', id: 'game-view', component: GameViewBase, meta: gameViewBaseMeta },
   { kind: 'layer', id: 'hud-layout', component: HudLayoutLayer, meta: hudLayoutLayerMeta },
   { kind: 'card', id: 'input-calibration', component: InputCalibrationCard, meta: inputCalibrationCardMeta },

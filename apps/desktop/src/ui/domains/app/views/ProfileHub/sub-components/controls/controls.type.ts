@@ -8,7 +8,7 @@ import type {
 } from '@shared/types/controls';
 import type { ControllerDeviceGroup } from '../../../../../../../lib/input/controller-device-groups';
 import type { AbsentAssignment, ControlsTab } from '../controls-settings/controls-settings.type';
-import type { useControlsSettings } from '../useControlsSettings';
+import type { useControlsSettings } from '../controls-settings';
 import type { DeviceAssignInfo } from './DeviceCard.type';
 
 type ControlsCtrl = ReturnType<typeof useControlsSettings>;

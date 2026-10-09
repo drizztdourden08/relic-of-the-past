@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { HookshopChip } from '@domains/app/compounds/HookshopChip';
-import { Box, Icon, IconButton, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { Icon, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { LanguageSetListProps } from './LanguageSetList.type';
 
@@ -8,7 +8,7 @@ const LanguageSetList = (props: LanguageSetListProps) => {
   const { sets, selected, labelOf, isInstalled, onSelect, onDelete } = props;
 
   return (
-    <Box className="data-list">
+    <Stack gap="xs">
       {sets.length === 0 && <EmptyState message="No languages extracted yet" />}
       {sets.map((set) => (
         <ListItemRow
@@ -31,7 +31,7 @@ const LanguageSetList = (props: LanguageSetListProps) => {
           }
         />
       ))}
-    </Box>
+    </Stack>
   );
 };
 

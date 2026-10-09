@@ -1,19 +1,17 @@
 /* @layer renderer-components @kind types */
+import type { HeroSlots } from '@drizztdourden08/brock-react';
+import type { Profile } from '@drizztdourden08/brock-core';
 import type { FilePickerPort } from '@shared/platform';
-import type { ProfileRandomizerConfig } from '@shared/types/profile';
 import type { AutoSaveInfo, NormalSaveInfo } from '@shared/types/saves';
 import type { useHomeTabSaves } from './useHomeTabSaves';
 
-interface HomeTabProps {
-  profileId: string;
-  romFile: string;
+interface HomeHeroContentProps {
+  slots: HeroSlots;
+  profile: Profile;
   isGameRunning: boolean;
   onStartGame: () => void;
   onStopGame: () => void;
   onResetGame: () => void;
-  lastPlayed?: number;
-  created?: number;
-  randomizer?: ProfileRandomizerConfig;
   vanillaSafe: boolean;
 }
 
@@ -92,6 +90,6 @@ interface HomeTabDialogsProps {
 
 export type {
   AutoSavesData, DialogState, HomeRandomizerStatus, HomeTabColumnsProps, HomeTabDialogsProps,
-  HomeTabProps, HomeTabSaves, NormalSavesData, ProfileFactsInput, SaveFileChecks, SlotInfo,
+  HomeHeroContentProps, HomeTabSaves, NormalSavesData, ProfileFactsInput, SaveFileChecks, SlotInfo,
   SummaryFact, UseHomeTabSavesParams, UseHomeTabSramImportParams,
 };

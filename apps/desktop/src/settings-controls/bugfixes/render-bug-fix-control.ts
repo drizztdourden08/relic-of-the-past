@@ -1,7 +1,8 @@
 /* @layer renderer-app @kind logic */
+import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
-import { KeyedControlRow } from '../ControlRow';
+import { KeyedControlRow } from '../KeyedControlRow';
 import { legacyMaster } from './legacy-master';
 import type { ControlContext } from '../settings-controls.type';
 
@@ -10,13 +11,8 @@ const renderBugFixControl = (key: string, ctx: ControlContext): ReactNode | null
   const fix = BUNDLE_FIXES.find((f) => f.id === key);
   if (!fix) return null;
   const checked = settings.bugFixToggles?.[key] ?? legacyMaster(fix.bundleOrigin, settings);
-  return (
-    <KeyedControlRow
-      settingKey={key}
-      input={{ kind: 'toggle', value: checked, onChange: (next) => onChange({ bugFixToggles: { ...settings.bugFixToggles, [key]: next } }) }}
-      disabled={disabled}
-    />
-  );
+  const toggle = (next: boolean) => onChange({ bugFixToggles: { ...settings.bugFixToggles, [key]: next } });
+  return createElement(KeyedControlRow, { settingKey: key, input: { kind: 'toggle', value: checked, onChange: toggle }, disabled });
 };
 
 export { renderBugFixControl };

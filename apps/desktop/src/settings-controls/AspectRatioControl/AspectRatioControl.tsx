@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { GameSettings } from '@shared/types/settings';
 import { validateCustomRatio, detectScreenRatio, screenReadout, viewportReadout, niceRatio, effectiveCustomRatio } from '@app/lib/game/aspect-ratio';
 import type { RatioReadout } from '@app/lib/game/aspect-ratio';
 import { useSafeAreaInsets } from '@drizztdourden08/brock-react';
@@ -45,18 +44,18 @@ const AspectRatioControl = (props: AspectRatioControlProps) => {
   const handleMain = useCallback((next: string) => {
     if (next === 'wide') {
       const fallback = widePresets?.[0]?.value ?? '16:9';
-      onChange({ [ratioKey]: wideValues.has(value) ? value : fallback } as Partial<GameSettings>);
+      onChange({ [ratioKey]: wideValues.has(value) ? value : fallback });
     } else if (next === 'tall') {
       const fallback = tallPresets?.[0]?.value ?? '3:4';
-      onChange({ [ratioKey]: tallValues.has(value) ? value : fallback } as Partial<GameSettings>);
+      onChange({ [ratioKey]: tallValues.has(value) ? value : fallback });
     } else if (next === 'preset') {
       const fallback = presetOptions?.[0]?.value ?? '16:9';
-      onChange({ [ratioKey]: presetValues.has(value) ? value : fallback } as Partial<GameSettings>);
+      onChange({ [ratioKey]: presetValues.has(value) ? value : fallback });
     } else if (next === 'custom' && !(customW > 0 && customH > 0)) {
       const d = detectScreenRatio(renderIntoNotch);
-      onChange({ [ratioKey]: 'custom', [wKey]: d.w, [hKey]: d.h } as Partial<GameSettings>);
+      onChange({ [ratioKey]: 'custom', [wKey]: d.w, [hKey]: d.h });
     } else {
-      onChange({ [ratioKey]: next } as Partial<GameSettings>);
+      onChange({ [ratioKey]: next });
     }
   }, [
     value, widePresets, tallPresets, presetOptions, wideValues, tallValues, presetValues,
@@ -65,18 +64,18 @@ const AspectRatioControl = (props: AspectRatioControlProps) => {
 
   const commit = useCallback((nw: number, nh: number) => {
     setW(nw); setH(nh);
-    if (validateCustomRatio(nw, nh).valid) onChange({ [wKey]: nw, [hKey]: nh } as Partial<GameSettings>);
+    if (validateCustomRatio(nw, nh).valid) onChange({ [wKey]: nw, [hKey]: nh });
   }, [onChange, wKey, hKey]);
 
   const handlePreset = useCallback(
-    (v: string) => onChange({ [ratioKey]: v } as Partial<GameSettings>),
+    (v: string) => onChange({ [ratioKey]: v }),
     [onChange, ratioKey],
   );
   const handleWidth = useCallback((n: number) => commit(n, h), [commit, h]);
   const handleHeight = useCallback((n: number) => commit(w, n), [commit, w]);
 
   const check = validateCustomRatio(w, h);
-  const isRecommended = !!recommendedValue && mainValue === recommendedValue;
+  const isRecommended = Boolean(recommendedValue) && mainValue === recommendedValue;
 
   return (
     <Box className="aspect-ratio-control">

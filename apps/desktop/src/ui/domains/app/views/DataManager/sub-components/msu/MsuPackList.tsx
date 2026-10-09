@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Icon, Status, IconButton, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { Icon, Status, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@app/utils/formatBytes';
 import { HookshopChip } from '@domains/app/compounds/HookshopChip';
@@ -16,14 +16,14 @@ const MsuPackList = (props: MsuPackListProps) => {
 
   if (packs.length === 0) {
     return (
-      <Box className="data-list">
+      <Stack gap="xs">
         <EmptyState message="No music packs yet. Create an empty one or import a pack" />
-      </Box>
+      </Stack>
     );
   }
 
   return (
-    <Box className="data-list">
+    <Stack gap="xs">
       {packs.map((pack) => (
         <ListItemRow
           key={pack.name}
@@ -52,7 +52,7 @@ const MsuPackList = (props: MsuPackListProps) => {
           }
         />
       ))}
-    </Box>
+    </Stack>
   );
 };
 

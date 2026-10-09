@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { resolveAudioConfig } from '@shared/features/msu-auto-config';
 import type { GameSettings } from '@shared/types/settings';
-import { KeyedControlRow } from '../ControlRow';
+import { KeyedControlRow } from '../KeyedControlRow';
 import { MsuDetectedSummary } from './MsuDetectedSummary';
 import { MSU_OPTIONS } from './audio-controls.constants';
 import { useActiveMsuPack } from './useActiveMsuPack';

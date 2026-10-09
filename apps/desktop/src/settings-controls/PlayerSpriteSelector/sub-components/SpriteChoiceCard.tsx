@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, type KeyboardEvent } from 'react';
-import { Box, Text, Image } from '@drizztdourden08/tessera/primitives';
-import type { SpriteChoiceCardProps } from './PlayerSpriteSelector.type';
+import { Box, Icon, Image, Text } from '@drizztdourden08/tessera/primitives';
+import type { SpriteChoiceCardProps } from '../PlayerSpriteSelector.type';
 
 const SpriteChoiceCard = ({ choice, selected, onChange }: SpriteChoiceCardProps) => {
   const { name, label, preview } = choice;
@@ -20,7 +20,7 @@ const SpriteChoiceCard = ({ choice, selected, onChange }: SpriteChoiceCardProps)
     >
       {preview
         ? <Image className="sprite-choice__preview" src={preview} alt={label} draggable={false} />
-        : <Box className="sprite-choice__preview sprite-choice__preview--none"><Text>{name ? '?' : '🟢'}</Text></Box>}
+        : <Box className="sprite-choice__preview sprite-choice__preview--none">{name ? <Text>?</Text> : <Icon name="circle" />}</Box>}
       <Text className="sprite-choice__label">{label}</Text>
     </Box>
   );

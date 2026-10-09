@@ -25,7 +25,8 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
     { value: 'modern' as const, label: 'Modern', disabled: !available || !wideEnough },
   ], [available, wideEnough]);
 
-  const notice = !available ? NO_SPRITES : !wideEnough ? TOO_NARROW : null;
+  const tooNarrow = wideEnough ? null : TOO_NARROW;
+  const notice = available ? tooNarrow : NO_SPRITES;
 
   const handleExtract = useCallback(async () => {
     if (!romFile || extracting) return;

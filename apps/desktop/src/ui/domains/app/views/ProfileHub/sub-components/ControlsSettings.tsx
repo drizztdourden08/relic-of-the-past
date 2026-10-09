@@ -1,21 +1,22 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { openSettingsTarget } from '@app/stores/search-store';
+import { openSetting } from '@app/settings-nav/open-setting';
 import { BindingListener } from './controls/BindingListener';
 import { ControlsSidebar } from './controls/ControlsSidebar';
 import { ControlsMain } from './controls/ControlsMain';
 import { ControlsDevices } from './controls/ControlsDevices';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { useControlsSettings } from './useControlsSettings';
+import { SearchAnchor } from '@drizztdourden08/brock-react';
+import { useControlsSettings } from './controls-settings';
 import { listeningLabel } from './controls-settings/listening-label';
-import type { ProfileScopedTabProps } from './settings-controls.type';
+import type { ControlsSettingsProps } from './ControlsSettings.type';
 import './ControlsSettings.css';
 
-const openCheatsSettings = () => openSettingsTarget('cheatsEnabled');
-const openHudStyle = () => openSettingsTarget('hudStyle');
+const openCheatsSettings = () => openSetting('cheatsEnabled');
+const openHudStyle = () => openSetting('hudStyle');
 
-const ControlsSettings = (props: ProfileScopedTabProps) => {
+const ControlsSettings = (props: ControlsSettingsProps) => {
   const { settings, onChange, profileId } = props;
   const ctrl = useControlsSettings({ settings, onChange, profileId });
   const { setListeningFor, setConfirmPreset, setDeleteTarget } = ctrl;
@@ -25,14 +26,20 @@ const ControlsSettings = (props: ProfileScopedTabProps) => {
 
   return (
     <Box className="controls-settings">
-      <ControlsSidebar ctrl={ctrl} />
-      <ControlsMain
-        ctrl={ctrl}
-        cheatsEnabled={settings.cheatsEnabled}
-        onOpenCheatsSettings={openCheatsSettings}
-        onOpenHudStyle={openHudStyle}
-      />
-      <ControlsDevices ctrl={ctrl} />
+      <SearchAnchor anchor="input-profiles" className="controls-settings__anchor">
+        <ControlsSidebar ctrl={ctrl} />
+      </SearchAnchor>
+      <SearchAnchor anchor="bindings" className="controls-settings__anchor controls-settings__anchor--main">
+        <ControlsMain
+          ctrl={ctrl}
+          cheatsEnabled={settings.cheatsEnabled}
+          onOpenCheatsSettings={openCheatsSettings}
+          onOpenHudStyle={openHudStyle}
+        />
+      </SearchAnchor>
+      <SearchAnchor anchor="devices" className="controls-settings__anchor">
+        <ControlsDevices ctrl={ctrl} />
+      </SearchAnchor>
 
       {ctrl.listeningFor && (
         <BindingListener
@@ -43,7 +50,7 @@ const ControlsSettings = (props: ProfileScopedTabProps) => {
       )}
 
       <Dialog
-        open={!!ctrl.confirmPreset}
+        open={Boolean(ctrl.confirmPreset)}
         title="Apply Controller Preset"
         message={`Assign "${ctrl.confirmPreset?.deviceName ?? ''}" to this profile and apply its default mappings? This will overwrite all current bindings.`}
         confirmLabel="Apply"
@@ -53,7 +60,7 @@ const ControlsSettings = (props: ProfileScopedTabProps) => {
       />
 
       <Dialog
-        open={!!ctrl.deleteTarget}
+        open={Boolean(ctrl.deleteTarget)}
         title="Delete Input Profile"
         message={`Delete "${ctrl.deleteTarget?.name ?? ''}"? This cannot be undone.`}
         variant="danger"

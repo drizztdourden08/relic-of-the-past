@@ -7,7 +7,7 @@ import type { DialogStopSliderProps } from './gameplay.type';
 const DialogStopSlider = (props: DialogStopSliderProps) => {
   const { stops, value, onChange, label, description, disabled = false, formatStop = formatDialogSpeed } = props;
   const stopAt = useCallback(
-    (index: number): number => stops[Math.min(stops.length - 1, Math.max(0, Math.round(index)))],
+    (index: number): number => stops[Math.min(stops.length - 1, Math.max(0, Math.round(index)))] ?? 0,
     [stops],
   );
   const handleChange = useCallback((index: number) => onChange(stopAt(index)), [onChange, stopAt]);

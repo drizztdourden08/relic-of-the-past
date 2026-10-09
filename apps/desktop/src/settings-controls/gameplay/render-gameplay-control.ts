@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { DIALOG_SPEED_STOPS, formatDialogSpeed } from '@shared/game/dialog/pacing';
 import type { DialogSpeedStop } from '@shared/game/dialog/pacing';
@@ -13,16 +14,14 @@ const renderGameplayControl = (key: string, ctx: ControlContext): ReactNode | nu
   const { settings, onChange, disabled } = ctx;
   switch (key) {
     case 'turboSpeed':
-      return (
-        <IndexSliderRow
-          settingKey={key}
-          index={turboSpeedIndex(settings.turboSpeed)}
-          count={TURBO_SPEEDS.length}
-          formatIndex={formatTurboIndex}
-          onIndex={(index) => onChange({ turboSpeed: turboSpeedAt(index) })}
-          disabled={disabled}
-        />
-      );
+      return createElement(IndexSliderRow, {
+        settingKey: key,
+        index: turboSpeedIndex(settings.turboSpeed),
+        count: TURBO_SPEEDS.length,
+        formatIndex: formatTurboIndex,
+        onIndex: (index: number) => onChange({ turboSpeed: turboSpeedAt(index) }),
+        disabled,
+      });
     case 'dialogSpeed':
       return stopSliderRow({
         settingKey: key,
@@ -33,16 +32,14 @@ const renderGameplayControl = (key: string, ctx: ControlContext): ReactNode | nu
         disabled,
       });
     case 'dialogHoldToAccelerate':
-      return (
-        <DialogHoldRow
-          label="Hold A to Accelerate"
-          description="While A is held, dialog plays at the speed on the right"
-          enabled={settings.dialogHoldToAccelerate}
-          speed={settings.dialogHoldSpeed}
-          disabled={disabled}
-          onChange={onChange}
-        />
-      );
+      return createElement(DialogHoldRow, {
+        label: 'Hold A to Accelerate',
+        description: 'While A is held, dialog plays at the speed on the right',
+        enabled: settings.dialogHoldToAccelerate,
+        speed: settings.dialogHoldSpeed,
+        disabled,
+        onChange,
+      });
     default:
       return null;
   }

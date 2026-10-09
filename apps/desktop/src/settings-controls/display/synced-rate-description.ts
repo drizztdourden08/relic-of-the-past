@@ -1,4 +1,4 @@
-/* @layer renderer-components @kind logic */
+/* @layer renderer-app @kind logic */
 import type { SyncedRateStatus } from '@shared/types/display';
 
 const syncedRateDescription = (status: SyncedRateStatus): string => {

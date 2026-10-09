@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box, Select, Button, Field, ButtonRow, EmptyState, IconButton } from '@drizztdourden08/tessera/primitives';
+import { Box, Select, Button, Field, ButtonRow, EmptyState, IconButton, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { SpriteGrid } from './SpriteGrid';
 import { ImportProgress } from './ImportProgress';
@@ -9,9 +9,6 @@ import * as spritesStore from '@app/lib/storage/sprites-store';
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import type { ExtractedStatus, SpriteManagerProps } from './SpriteManager.type';
 import './SpriteManager.css';
-import './DataManager.lists.css';
-import './DataManager.forms.css';
-import './DataManager.detail.css';
 
 const SpriteManager = (props: SpriteManagerProps) => {
   const { romStatuses } = props;
@@ -114,7 +111,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
         )}
       </Box>
 
-      <Box className="data-list">
+      <Stack gap="xs">
         {importedRoms.length === 0 && <EmptyState message="No sprites extracted yet" />}
         {importedRoms.map((r) => (
           <ListItemRow
@@ -131,7 +128,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
             }
           />
         ))}
-      </Box>
+      </Stack>
     </>
   );
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Status, Box, IconButton, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { Status, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { ROM_KINDS } from '@shared/storage/rom-kinds';
 import { formatBytes } from '@app/utils/formatBytes';
@@ -10,7 +10,7 @@ const RomList = (props: RomListProps) => {
   const isEmpty = romStatuses.length === 0 && supplements.length === 0;
 
   return (
-    <Box className="data-list">
+    <Stack gap="xs">
       {isEmpty && <EmptyState message="No ROMs imported yet" />}
       {romStatuses.map((rom) => (
         <ListItemRow
@@ -57,7 +57,7 @@ const RomList = (props: RomListProps) => {
           }
         />
       ))}
-    </Box>
+    </Stack>
   );
 };
 

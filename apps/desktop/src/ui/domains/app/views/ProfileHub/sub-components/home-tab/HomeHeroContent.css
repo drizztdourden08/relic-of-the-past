@@ -1,0 +1,54 @@
+/* @layer renderer-components @kind style */
+
+.profile-hero__capitalize {
+  text-transform: capitalize;
+}
+
+.profile-hero__save {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-sm);
+}
+
+.profile-hero__save-thumb {
+  width: var(--profile-hero-thumb-w);
+  aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+}
+
+.profile-hero__save-empty {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.profile-hero__save-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.profile-hero__save-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.profile-hero__save-name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-hero__save-time {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}

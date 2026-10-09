@@ -12,9 +12,6 @@ import { MsuPackToolbar } from './msu/MsuPackToolbar';
 import { MsuStudio } from './msu/MsuStudio';
 import type { StudioTab } from './msu/sound-labels';
 import type { MsuManagerProps } from './msu/msu.type';
-import './DataManager.lists.css';
-import './DataManager.forms.css';
-import './DataManager.detail.css';
 
 const MsuManager = (props: MsuManagerProps) => {
   const { onDeleteConfirm, onRefresh } = props;

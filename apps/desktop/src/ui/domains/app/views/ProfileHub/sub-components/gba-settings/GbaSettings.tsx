@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { Box, Text, Toggle, Field, TextInput, SegmentedControl, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
+import { SearchAnchor } from '@drizztdourden08/brock-react';
 import { GbaDifferenceRow } from './GbaDifferenceRow';
 import { useGbaAvailability } from './behavior/useGbaAvailability';
 import { groupFilteredDifferences } from './group-differences';
@@ -29,15 +30,17 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
 
   return (
     <Box className="gba-settings">
-      <Toggle
-        label="Extra Dungeon"
-        description={extraDungeonDescription}
-        checked={settings.extraDungeon}
-        onChange={handleExtraDungeonChange}
-        disabled={!hasSupplement}
-      />
+      <SearchAnchor anchor="extraDungeon">
+        <Toggle
+          label="Extra Dungeon"
+          description={extraDungeonDescription}
+          checked={settings.extraDungeon}
+          onChange={handleExtraDungeonChange}
+          disabled={!hasSupplement}
+        />
+      </SearchAnchor>
 
-      <Box className="gba-settings__catalogue">
+      <SearchAnchor anchor="gba-differences" className="gba-settings__catalogue">
         <Text as="p" className="gba-settings__note">
           Everything below is documented for reference. None of these differences
           can be switched on or off yet.
@@ -70,7 +73,7 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
             ))}
           </SettingsSection>
         ))}
-      </Box>
+      </SearchAnchor>
     </Box>
   );
 };

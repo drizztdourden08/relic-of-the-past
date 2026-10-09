@@ -47,7 +47,22 @@ const GROUP_VOLUME_KEYS = ['musicVolume', 'ambientVolume', 'sfxVolume'];
 
 const DEVICE_KEYS = ['audioFreq', 'audioChannels', 'audioSamples'];
 
+const VOLUME_ROWS = {
+  masterVolume: { label: 'Master Volume', description: 'Controls the overall game volume, so it affects all audio output', mutedKey: null },
+  musicVolume: {
+    label: 'Music Volume',
+    description: 'Sets the music level for the original soundtrack and any music pack alike, since a pack plays in place of it, not alongside it',
+    mutedKey: 'musicMuted',
+  },
+  ambientVolume: {
+    label: 'Ambience Volume',
+    description: 'Sets the replacement ambient-bed level for rain, waterfalls and wind played by a pack. The sound chip cannot split its own ambience, so this governs replacement audio only',
+    mutedKey: 'ambientMuted',
+  },
+  sfxVolume: { label: 'SFX Volume', description: 'Sets the sound-effects level', mutedKey: 'sfxMuted' },
+} as const;
+
 export {
   BUFFER_STEPS, CHANNEL_OPTIONS, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_STEP, DEVICE_DESCRIPTIONS, DEVICE_KEYS, FREQ_OPTIONS,
-  GROUP_VOLUME_KEYS, MSU_OPTIONS, PACK_DEPENDENT_KEYS,
+  GROUP_VOLUME_KEYS, MSU_OPTIONS, PACK_DEPENDENT_KEYS, VOLUME_ROWS,
 };

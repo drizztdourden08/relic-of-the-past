@@ -1,0 +1,27 @@
+/* @layer renderer-app @kind config */
+import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { isMobileHost } from '@app/platform/is-mobile-host';
+
+const meta: ScreenMeta = { title: 'Mobile', icon: 'maximize-2', order: 6, keywords: ['mobile', 'phone', 'tablet', 'notch', 'cutout'] };
+
+const mobile: Section[] = [
+  {
+    id: 'mobile',
+    title: 'Display',
+    items: [
+      { key: 'renderIntoNotch', label: 'Render under camera cutout', description: 'On: the game and UI use the full screen, extending under the camera notch. Off: keep everything inside the usable screen area.', hint: 'On, the picture reaches under the camera cutout. Off keeps it clear of the cutout.', keywords: 'notch cutout camera safe area fullscreen mobile display edge' },
+    ],
+  },
+];
+
+const notice: Section[] = [
+  { id: 'mobile-notice', title: 'Phone and tablet', items: [{ key: 'notice.mobileOnly', label: 'Phone and tablet only', noDescription: true, hint: 'Open the app on a phone or tablet to set these.' }] },
+];
+
+const sections = (): Section[] => {
+  if (isMobileHost()) return mobile;
+  return notice;
+};
+
+export default sections;
+export { meta };

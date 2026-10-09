@@ -5,6 +5,7 @@ import { NormalSaveCard } from '../../../../compounds/NormalSaveCard';
 import { AutoSaveCard } from '../../../../compounds/AutoSaveCard';
 import { PlaySessionCard } from '../../../../compounds/PlaySessionCard';
 import type { HomeTabColumnsProps } from './home-tab.type';
+import './HomeTabColumns.css';
 
 const HomeTabColumns = ({ saves, isGameRunning }: HomeTabColumnsProps) => {
   const {

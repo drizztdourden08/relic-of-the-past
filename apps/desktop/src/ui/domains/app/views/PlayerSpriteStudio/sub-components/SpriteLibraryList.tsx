@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button, Icon, Image, IconButton, EmptyState, Status } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Button, Icon, Image, IconButton, EmptyState, Status, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { HookshopChip } from '../../../compounds/HookshopChip';
 import { ImportForm } from '../../DataManager/sub-components/ImportForm';
@@ -29,7 +29,7 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
         onUrlImport={onUrlImport}
         onFileImport={onFileImport}
       />
-      <Box className="data-list">
+      <Stack gap="xs">
         {entries.length === 0 && <EmptyState message="No player sprites yet" />}
         {entries.map((entry) => (
           <ListItemRow
@@ -54,7 +54,7 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
             }
           />
         ))}
-      </Box>
+      </Stack>
     </>
   );
 };

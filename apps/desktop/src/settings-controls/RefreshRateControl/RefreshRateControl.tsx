@@ -13,7 +13,7 @@ const RefreshRateControl = (props: RefreshRateControlProps) => {
   const { apply, applying, result } = useApplyRefreshRate();
 
   const rates = status.availableRates;
-  const selected = value > 0 && rates.includes(value) ? value : rates[rates.length - 1];
+  const selected = value > 0 && rates.includes(value) ? value : rates.at(-1) ?? value;
   const currentHz = detectedHz ?? result?.currentHz ?? status.currentHz;
   const compatible = isSyncedRate(currentHz);
 

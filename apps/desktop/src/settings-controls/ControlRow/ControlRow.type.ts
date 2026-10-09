@@ -15,14 +15,10 @@ interface ControlRowProps extends ControlRowLook {
   description?: string;
 }
 
-interface KeyedControlRowProps extends ControlRowLook {
-  settingKey: string;
-}
-
 interface SettingItemText {
   title: string;
   hint: string;
   description?: string;
 }
 
-export type { ControlRowProps, KeyedControlRowProps, SettingItemText };
+export type { ControlRowLook, ControlRowProps, SettingItemText };

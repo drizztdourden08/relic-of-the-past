@@ -16,6 +16,7 @@ import { installAppShim } from './platform/api-shim';
 import { rotpShellModule } from './shell/rotp-shell-module';
 import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
 import { SETTINGS } from './main.constants';
+import { LEGAL_TEXT } from './legal.constants';
 import { product } from './product';
 import type { AppSettings } from './settings.type';
 import './lib/log-bus';
@@ -41,6 +42,7 @@ createRoot(root).render(
       titleBar={appTitleBar}
       tours={appTours}
       profileHooks={rotpProfileHooks}
+      legalText={LEGAL_TEXT}
     />
   </StrictMode>,
 );

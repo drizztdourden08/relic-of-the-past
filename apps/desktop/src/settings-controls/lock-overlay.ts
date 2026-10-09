@@ -1,4 +1,5 @@
-/* @layer renderer-app @kind component */
+/* @layer renderer-app @kind logic */
+import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import type { LockOverlayProps } from '@drizztdourden08/brock-react';
@@ -9,16 +10,13 @@ const openVanillaSafe = (): void => openSetting('vanillaSafe');
 
 const lockOverlay = (props: LockOverlayProps): ReactNode => {
   const { cause, children } = props;
-  return (
-    <DisabledOverlay
-      active
-      contained
-      message={DISABLED_SETTING_MESSAGES[cause] ?? cause}
-      onOpenSettings={cause === 'vanillaSafe' ? openVanillaSafe : undefined}
-    >
-      {children}
-    </DisabledOverlay>
-  );
+  return createElement(DisabledOverlay, {
+    active: true,
+    contained: true,
+    message: DISABLED_SETTING_MESSAGES[cause] ?? cause,
+    onOpenSettings: cause === 'vanillaSafe' ? openVanillaSafe : undefined,
+    children,
+  });
 };
 
 export { lockOverlay };
