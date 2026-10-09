@@ -78,11 +78,14 @@ export type {
 } from './region.type';
 export { buildFillWorld, fillEligibleLocations } from './fill/fill-world';
 export type { FillWorld, FillWorldOptions } from './fill/fill-world.type';
-export { FillError, canFillLocation, fillRestrictive } from './fill/fill';
-export type { FillRestrictiveInput } from './fill/fill';
+export { FillError } from './fill/fill-error';
+export { canFillLocation } from './fill/can-fill-location';
+export { fillRestrictive } from './fill/fill-restrictive';
+export type { FillRestrictiveInput } from './fill/fill.type';
 export { prefillDungeonItems } from './fill/dungeon-fill';
-export { createAssumedState, sweepPlacedItems } from './fill/sweep';
-export type { AssumedState } from './fill/sweep';
+export { createAssumedState } from './fill/create-assumed-state';
+export { sweepPlacedItems } from './fill/sweep-placed-items';
+export type { AssumedState } from './fill/fill.type';
 export { sweepPlacementSpheres } from './fill/verify-placement';
 export { verifyStandardEscape } from './fill/verify-standard';
 export { takeUncleWeapon, uncleWeaponCandidates } from './pool/uncle-weapon';
@@ -90,8 +93,9 @@ export type { WeaponPicker } from './pool/uncle-weapon';
 export {
   UNCLE_LOCATION, UNCLE_USABLE_WEAPONS,
 } from './pool/standard-escape.data';
-export type { PlacementSphere, PlacementSweep } from './fill/verify-placement';
-export { generatePlacement, MAX_PLACEMENT_ATTEMPTS } from './fill/generate';
+export type { PlacementSphere, PlacementSweep } from './fill/fill.type';
+export { generatePlacement } from './fill/generate';
+export { MAX_PLACEMENT_ATTEMPTS } from './fill/fill.constants';
 export type { Placement, PlacementStats } from './fill/placement.type';
 export { fillFlagsOf, fillOptionsFromSnapshot } from './fill/fill-options-from-snapshot';
 export type { DeliverableSets, FillPickers, SnapshotFillFlags } from './fill/fill-options-from-snapshot';
