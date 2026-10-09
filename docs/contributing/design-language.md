@@ -227,7 +227,7 @@ color from the neutral glass token instead of a one-off blue rgb.
 - [ ] `z-index` is a **token** (§3.5).
 - [ ] Selected = **gold**; the one CTA = **green**; destructive = **danger**; info = **blue (text only)**.
 - [ ] Widths come from the **dialog/panel/widget width tokens** (§5).
-- [ ] Run `npm run report` → stylelint/structure/raw-html all clean.
+- [ ] Run `pnpm run report` → stylelint/structure/raw-html all clean.
 
 ---
 

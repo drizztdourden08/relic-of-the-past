@@ -5,31 +5,31 @@ Several people and several automated sessions can work this repo at the same tim
 each in a separate checkout with its own build, and each able to run the app without
 disturbing anyone else's game data.
 
-Two pieces make that work: a pool of **worktrees** managed by `npm run wt`, and a
+Two pieces make that work: a pool of **worktrees** managed by `pnpm wt`, and a
 **named instance** flag on the app itself.
 
 ## Quick start
 
 ```bash
-npm run wt:list
+pnpm wt:list
 ```
 
 ```bash
-npm run wt -- claim --any --ttl 4h
+pnpm wt claim --any --ttl 4h
 ```
 
 `claim` prints the worktree path and a ready-to-run launch command. Work in that
 directory, then hand it back:
 
 ```bash
-npm run wt -- release <name>
+pnpm wt release <name>
 ```
 
 If the pool has nothing free, create a worktree. This takes a few minutes and about
 800 MB, which is why reusing one is preferred:
 
 ```bash
-npm run wt -- new <name>
+pnpm wt new <name>
 ```
 
 ## Commands
@@ -107,7 +107,7 @@ would otherwise replace ours as soon as the game starts. On Windows an instance 
 its own taskbar identity, so it groups separately from your app instead of merging with it.
 
 ```bash
-npx electron dist/electron/main.js --no-focus --muted --instance=big-key
+pnpm exec electron dist/electron/main.js --no-focus --muted --instance=big-key
 ```
 
 `--no-focus --muted` keep the window inactive and silent. Always use them for an
@@ -142,7 +142,7 @@ profile **and that profile's save states**.
 > `git worktree remove` follows those links and deletes the contents of the real
 > directories. `wt clean` detaches the links first and refuses to continue if any
 > remain. If you ever do lose them: `.claude/` is restored by the ai-config bootstrap
-> and the dataset by `npm run vault:sync`.
+> and the dataset by `pnpm run vault:sync`.
 
 ## Keeping branches in step
 

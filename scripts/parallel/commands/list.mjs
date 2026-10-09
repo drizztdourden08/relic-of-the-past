@@ -61,7 +61,7 @@ const run = async ({ options }) => {
   }
 
   if (entries.length === 0) {
-    console.log(`No agent worktrees yet. Create one with:\n  npm run wt -- new <name>\n\nPool root: ${worktreeRoot}`);
+    console.log(`No agent worktrees yet. Create one with:\n  pnpm wtnew <name>\n\nPool root: ${worktreeRoot}`);
     return;
   }
 
@@ -70,7 +70,7 @@ const run = async ({ options }) => {
 
 const command = {
   summary: 'Show every worktree with its live verdict',
-  usage: 'npm run wt -- list [--json]',
+  usage: 'pnpm wtlist [--json]',
   run,
 };
 

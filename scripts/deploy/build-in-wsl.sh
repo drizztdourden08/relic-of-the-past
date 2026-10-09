@@ -15,7 +15,10 @@ command -v node >/dev/null 2>&1 || {
   echo "[build-in-wsl] Node not found. Run scripts/deploy/setup-wsl-builder.sh first." >&2
   exit 1
 }
-echo "[build-in-wsl] node $(node -v), npm $(npm -v)"
+# corepack provides the pnpm version that package.json pins in packageManager.
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+corepack enable
+echo "[build-in-wsl] node $(node -v), pnpm $(pnpm -v)"
 
-npm install
-npm run build:linux
+pnpm install --frozen-lockfile
+pnpm run build:linux

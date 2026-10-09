@@ -11,12 +11,12 @@ is the short version GitHub surfaces, and points here.
 
 ## Start here
 
-1. [Build from Source](build-from-source.md) needs Node ≥ 24, `npm install`, `npm run dev`. The WASM
+1. [Build from Source](build-from-source.md) needs Node ≥ 24, pnpm 10, `pnpm install`, `pnpm run dev`. The WASM
    core is committed prebuilt, so you don't need Emscripten for normal work.
 2. [Coding Standards](coding-standards.md) sets ≤200 lines/file, arrow functions, exports at end,
    one-thing-per-file, deep folders. ESLint and hooks enforce all of it.
-3. Under [File Tagging & Analysis](file-tagging.md), every file carries `@layer`/`@kind`, and `npm run analyze`
-   gates changed files. New file → `npm run analyze:tag`.
+3. Under [File Tagging & Analysis](file-tagging.md), every file carries `@layer`/`@kind`, and `pnpm run analyze`
+   gates changed files. New file → `pnpm run analyze:tag`.
 4. Under [Plan Format](plan-format.md), every implementation plan names its design pattern(s), shows a
    CRUD filetree, the data model in TS, and a flow diagram.
 
@@ -37,7 +37,7 @@ is the short version GitHub surfaces, and points here.
 ## Before you open a PR
 
 ```bash
-npm run ci    # tsc + eslint + repo analysis
+pnpm run ci   # tsc + eslint + repo analysis
 ```
 
 - [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, and so on), scoped where helpful.

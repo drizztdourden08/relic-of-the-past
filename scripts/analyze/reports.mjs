@@ -3,7 +3,7 @@
  * @kind logic
  *
  * Design-system enforcement reports. Reads scripts/analyze/report.json (run
- * `npm run analyze -- --json` first; the npm `report*` scripts do this) and
+ * `pnpm run analyze` first; the `report*` package scripts do this) and
  * prints the raw-HTML (R11), structure (R12), and token (R13) findings.
  * Usage: node scripts/analyze/reports.mjs [html|structure|tokens|all]
  */

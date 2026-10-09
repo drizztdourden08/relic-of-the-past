@@ -7,15 +7,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1139.0",
-    "@aws-sdk/s3-request-presigner": "^3.1139.0",
-    "@google-cloud/firestore": "^7.11.6",
-    "@google-cloud/functions-framework": "^3.5.1",
-    "arctic": "^3.7.0",
-    "jose": "^6.2.12",
-    "zod": "^3.25.76"
+    "@aws-sdk/client-s3": "catalog:",
+    "@aws-sdk/s3-request-presigner": "catalog:",
+    "@google-cloud/firestore": "catalog:",
+    "@google-cloud/functions-framework": "catalog:",
+    "arctic": "catalog:",
+    "jose": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "catalog:functions"
   }
 }

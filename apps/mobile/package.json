@@ -2,17 +2,17 @@
   "name": "@relic/mobile",
   "version": "0.8.5",
   "private": true,
-  "description": "Capacitor (Android/iOS) host for Relic of the Past. Wraps the apps/web renderer bundle. Modules resolve from the hoisted root node_modules.",
+  "description": "Capacitor (Android/iOS) host for Relic of the Past. Wraps the apps/web renderer bundle. A pnpm workspace member: versions come from the root catalog.",
   "dependencies": {
-    "@capacitor-community/keep-awake": "^8.0.1",
-    "@capacitor/android": "^8.4.0",
-    "@capacitor/app": "^8.1.0",
-    "@capacitor/core": "^8.4.0",
-    "@capacitor/filesystem": "^8.1.2",
-    "@capacitor/haptics": "^8.0.2",
-    "@capawesome/capacitor-file-picker": "^8.0.2"
+    "@capacitor-community/keep-awake": "catalog:",
+    "@capacitor/android": "catalog:",
+    "@capacitor/app": "catalog:",
+    "@capacitor/core": "catalog:",
+    "@capacitor/filesystem": "catalog:",
+    "@capacitor/haptics": "catalog:",
+    "@capawesome/capacitor-file-picker": "catalog:"
   },
   "devDependencies": {
-    "@capacitor/cli": "^8.4.0"
+    "@capacitor/cli": "catalog:"
   }
 }

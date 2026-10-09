@@ -29,7 +29,7 @@ const refuse = (name, verdict) => {
     throw new Error(`"${name}" holds uncommitted or unlanded work. Land or discard it first, by hand.`);
   }
   if (verdict === VERDICTS.MISSING) {
-    throw new Error(`"${name}" has no checkout on disk. Run: npm run wt -- doctor`);
+    throw new Error(`"${name}" has no checkout on disk. Run: pnpm wtdoctor`);
   }
   throw new Error(`"${name}" cannot be claimed (${verdict}).`);
 };
@@ -42,18 +42,18 @@ const pickTarget = (positional, options) => {
     if (!best) {
       throw new Error(
         entries.length === 0
-          ? 'The pool is empty. Create one with: npm run wt -- new <name>'
-          : 'No free worktree. Check the pool with: npm run wt:list. Then wait, or create one with: npm run wt -- new <name>',
+          ? 'The pool is empty. Create one with: pnpm wtnew <name>'
+          : 'No free worktree. Check the pool with: pnpm wt:list. Then wait, or create one with: pnpm wtnew <name>',
       );
     }
     return best;
   }
 
   const [name] = positional;
-  if (!name) throw new Error('Usage: npm run wt -- claim <name> | --any [--ttl 4h]');
+  if (!name) throw new Error('Usage: pnpm wtclaim <name> | --any [--ttl 4h]');
 
   const entry = entries.find((e) => e.record.name === name);
-  if (!entry) throw new Error(`No worktree named "${name}". Run: npm run wt -- list`);
+  if (!entry) throw new Error(`No worktree named "${name}". Run: pnpm wtlist`);
   if (!entry.assessment.claimable) refuse(name, entry.assessment.verdict);
   return entry;
 };
@@ -88,7 +88,7 @@ const run = async ({ positional, options }) => {
 
 const command = {
   summary: 'Lease a worktree (--any picks the best free one)',
-  usage: 'npm run wt -- claim <name> | --any [--ttl 4h] [--no-refresh]',
+  usage: 'pnpm wtclaim <name> | --any [--ttl 4h] [--no-refresh]',
   run,
 };
 

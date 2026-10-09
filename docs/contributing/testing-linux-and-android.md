@@ -7,11 +7,11 @@ Windows dev box. The tooling lives in `scripts/deploy/`.
 ## Commands
 
 ```powershell
-npm run push:linux                    # build and launch on the VM
-npm run push:linux -- --build-only    # build the Linux AppImage only
-npm run emulator:start                # boot the Android emulator
-npm run push:android                  # build, install, and launch on the emulator
-npm run push:android -- --apk <path>  # install a prebuilt APK
+pnpm push:linux                    # build and launch on the VM
+pnpm push:linux --build-only       # build the Linux AppImage only
+pnpm emulator:start                # boot the Android emulator
+pnpm push:android                  # build, install, and launch on the emulator
+pnpm push:android --apk <path>     # install a prebuilt APK
 ```
 
 ## Test ROMs

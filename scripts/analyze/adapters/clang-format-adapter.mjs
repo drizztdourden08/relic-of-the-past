@@ -14,7 +14,7 @@ const run = async (records, ctx) => {
   const { root } = ctx;
   const out = [];
   for (const r of records) {
-    const res = sh(`npx clang-format --dry-run -Werror "${r.rel}"`, root);
+    const res = sh(`pnpm exec clang-format --dry-run -Werror "${r.rel}"`, root);
     if (/warning:|error:/.test(res.stderr)) {
       out.push({ path: r.rel, tool: 'clang-format', rule: 'format', severity: 'error', message: 'file is not clang-formatted' });
     }
@@ -25,7 +25,7 @@ const run = async (records, ctx) => {
 const adapter = {
   name: 'clang-format',
   appliesTo: (r) => r.kind === 'native' && !r.vendored,
-  available: (root) => toolExists('npx clang-format', root) && fs.existsSync(path.join(root, '.clang-format')),
+  available: (root) => toolExists('pnpm exec clang-format', root) && fs.existsSync(path.join(root, '.clang-format')),
   run,
 };
 

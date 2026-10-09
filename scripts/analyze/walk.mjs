@@ -20,7 +20,7 @@ const SKIP_REL = [
 ];
 // Compiled binaries have no source lines; classified as logic they report nonsense.
 const SKIP_FILE =
-  /(\.jsonl|\.bmp|\.map|\.csv|\.lock|package-lock\.json|\.so(\.\d+)*|\.dylib|\.dll|\.node|\.a|\.lib|\.obj|\.pdb|\.exe)$/i;
+  /(\.jsonl|\.bmp|\.map|\.csv|\.lock|pnpm-lock\.yaml|\.so(\.\d+)*|\.dylib|\.dll|\.node|\.a|\.lib|\.obj|\.pdb|\.exe)$/i;
 
 const walkFiles = (root, dir = root, acc = []) => {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

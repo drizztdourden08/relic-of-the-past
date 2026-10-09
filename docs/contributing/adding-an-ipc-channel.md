@@ -82,5 +82,5 @@ returning an unsubscribe function (generated).
       nested namespace (preload). Leave `env.d.ts` alone.
 - [ ] Handler uses the typed `handle`/`on`/`emit` and is registered in `main.ts`.
 - [ ] Raw `ipcMain`/`ipcRenderer`/`webContents.send` stays inside `electron/lib/ipc/`.
-- [ ] `npm run lint` green (the contract makes any drift a type error).
+- [ ] `pnpm run lint` green (the contract makes any drift a type error).
 - [ ] No native module imported into the renderer, and no security flags weakened.

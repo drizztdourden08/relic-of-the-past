@@ -16,15 +16,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # No version input: the action reads packageManager from package.json.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        # npm install instead of ci, because the lockfile resolves differently across npm
-        # versions/platforms with the ensure-electron auto-fetch setup; install is tolerant.
-        run: npm install --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
 
       - name: Lint, typecheck, analyze, and WASM export-drift check
-        run: npm run ci
+        run: pnpm run ci

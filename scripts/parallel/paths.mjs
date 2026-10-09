@@ -1,7 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 /**
  * Worktrees sit beside the repo, never inside it: each carries ~800 MB of node_modules
- * that would otherwise land in the path of `npm run analyze`, eslint and vitest.
+ * that would otherwise land in the path of `pnpm run analyze`, eslint and vitest.
  * Override the location with ROTP_WORKTREE_ROOT.
  */
 import { resolve, join } from 'node:path';

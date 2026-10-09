@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
       # GitHub wikis only render pages at the repo ROOT, and pages in subdirectories
       # redirect to their raw blob and 404. docs/ is organised into folders, so
       # flatten it to root-level slugs and rewrite intra-doc links before

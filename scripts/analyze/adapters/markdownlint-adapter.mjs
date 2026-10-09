@@ -21,7 +21,7 @@ const run = async (records, ctx) => {
     ? batchQuoted(records.map((r) => r.rel)).map((b) => `--no-globs ${b}`)
     : ['"**/*.md"'];
   const lines = targets.flatMap((t) => {
-    const { stderr, stdout } = sh(`npx markdownlint-cli2 ${t}`, root);
+    const { stderr, stdout } = sh(`pnpm exec markdownlint-cli2 ${t}`, root);
     return `${stdout}\n${stderr}`.split('\n');
   });
   const out = [];
@@ -39,7 +39,7 @@ const run = async (records, ctx) => {
 const adapter = {
   name: 'markdownlint',
   appliesTo: (r) => r.lang === 'Markdown' && !r.vendored,
-  available: (root) => toolExists('npx markdownlint-cli2', root),
+  available: (root) => toolExists('pnpm exec markdownlint-cli2', root),
   run,
 };
 

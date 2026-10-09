@@ -14,6 +14,6 @@ const launchArgs = (name, extra = []) => [
   ...extra,
 ];
 
-const launchLine = (name, extra = []) => `npx electron ${launchArgs(name, extra).join(' ')}`;
+const launchLine = (name, extra = []) => `pnpm exec electron ${launchArgs(name, extra).join(' ')}`;
 
 export { BASE_FLAGS, launchArgs, launchLine };

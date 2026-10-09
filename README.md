@@ -65,19 +65,20 @@ and [Installation](docs/getting-started/installation.md) guides for details.
 
 ## Build from source
 
-Requires **Node.js ≥ 24** (see [`.nvmrc`](.nvmrc)). The WebAssembly core is committed prebuilt, so a
-normal build does **not** need the Emscripten SDK.
+Requires **Node.js ≥ 24** (see [`.nvmrc`](.nvmrc)) and **pnpm 10**. Run `corepack enable` once
+and Node provides the pnpm version that `package.json` pins. The WebAssembly core is committed
+prebuilt, so a normal build does **not** need the Emscripten SDK.
 
 ```bash
-npm install        # install dependencies
-npm run dev        # run the app in development
-npm run build:win  # produce a packaged build (see package.json for mac/linux)
+pnpm install        # install dependencies
+pnpm run dev        # run the app in development
+pnpm run build:win  # produce a packaged build (see package.json for mac/linux)
 ```
 
 Quality checks (run by CI on every push/PR):
 
 ```bash
-npm run ci         # tsc + eslint + repo analysis
+pnpm run ci         # tsc + eslint + repo analysis
 ```
 
 > Rebuilding the WebAssembly core is a separate manual step and is only needed when changing C code

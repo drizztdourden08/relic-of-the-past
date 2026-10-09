@@ -43,7 +43,7 @@ const buildWasmExclusively = async (cwd) => {
 
   writeFileSync(wasmLockPath, `${process.pid}`, 'utf8');
   try {
-    runIn(cwd, 'npm', ['run', 'ensure-wasm'], 'Building the WASM core');
+    runIn(cwd, 'pnpm', ['run', 'ensure-wasm'], 'Building the WASM core');
   } finally {
     rmSync(wasmLockPath, { force: true });
   }
@@ -63,14 +63,14 @@ const bootstrapWorktree = async ({ worktree, skipBuild }) => {
     return { installedAt: null, wasmAt: null, distAt: null };
   }
 
-  runIn(worktree, 'npm', ['install'], 'Installing dependencies (this is the slow part)');
+  runIn(worktree, 'pnpm', ['install', '--frozen-lockfile'], 'Installing dependencies (this is the slow part)');
   const installedAt = new Date().toISOString();
 
   await buildWasmExclusively(worktree);
   const wasmAt = new Date().toISOString();
 
-  // electron-vite build directly, not `npm run build`: that one deletes dist/ at the end.
-  runIn(worktree, 'npx', ['electron-vite', 'build'], 'Building the app');
+  // electron-vite build directly, not `pnpm run build`: that one deletes dist/ at the end.
+  runIn(worktree, 'pnpm', ['exec', 'electron-vite', 'build'], 'Building the app');
   const distAt = new Date().toISOString();
 
   return { installedAt, wasmAt, distAt };

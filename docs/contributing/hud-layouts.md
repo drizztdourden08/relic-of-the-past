@@ -312,4 +312,4 @@ blocks it.
 - [ ] The cluster is 72 wide with the face cross alone, 148 with the d-pad free, and no wider for any pad you can find.
 - [ ] Glyphs are keyed by SDL position, never by a printed letter.
 - [ ] A custom-pack change still resolves through the fallback chain, not around it.
-- [ ] `npm run ci` green, and `tests/COVERAGE.md` updated if you added a kept test.
+- [ ] `pnpm run ci` green, and `tests/COVERAGE.md` updated if you added a kept test.

@@ -20,16 +20,16 @@ const run = async ({ positional, options }) => {
     return;
   }
 
-  if (!name) throw new Error('Usage: npm run wt -- refresh <name> | --all');
+  if (!name) throw new Error('Usage: pnpm wtrefresh <name> | --all');
 
   const entry = surveyOne(name);
-  if (!entry) throw new Error(`No worktree named "${name}". Run: npm run wt -- list`);
+  if (!entry) throw new Error(`No worktree named "${name}". Run: pnpm wtlist`);
   refreshWorktree(entry.record);
 };
 
 const command = {
   summary: 'Fetch and rebase a worktree onto the base branch',
-  usage: 'npm run wt -- refresh <name> | --all',
+  usage: 'pnpm wtrefresh <name> | --all',
   run,
 };
 

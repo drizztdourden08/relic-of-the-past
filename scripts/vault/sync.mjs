@@ -127,7 +127,7 @@ const main = () => {
   const guard = guardMirroredDeletions({ entries, vaultDir, mode: MODE });
   if (guard.blocked) {
     // Exit 0 on purpose: this runs in postinstall, nothing was changed on either side,
-    // and failing every `npm install` would do more damage than the declined deletion.
+    // and failing every `pnpm install` would do more damage than the declined deletion.
     for (const line of refusalLines(guard)) say(line);
     return;
   }

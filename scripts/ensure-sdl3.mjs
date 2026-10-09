@@ -12,7 +12,7 @@
  * build from source via fetch-sdl3.mjs + build-sdl3.mjs + cmake-js; the only path
  * that needs a toolchain.
  *
- * Never fails `npm install`/`dev`/`build` outright: a missing addon degrades to
+ * Never fails `pnpm install`/`dev`/`build` outright: a missing addon degrades to
  * "this transport is unavailable" (index.ts handles that).
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync, copyFileSync } from 'node:fs';

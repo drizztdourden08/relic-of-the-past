@@ -19,9 +19,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # No version input: the action reads packageManager from package.json.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
+          cache: pnpm
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -42,7 +46,7 @@ jobs:
           version: 3.1.51
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
 
       - name: Build WASM core
         # emcc is on PATH here (setup-emsdk), so the shared build script runs directly
@@ -50,7 +54,7 @@ jobs:
         run: node core/wasm-build/build.mjs
 
       # The record dataset is vault-only, so a plain checkout builds an APK with an
-      # empty dataset. Runs after npm install so the two-way postinstall sync has
+      # empty dataset. Runs after pnpm install so the two-way postinstall sync has
       # already skipped and cannot write back. See release.yml for the full note.
       - name: Fetch the private dataset
         env:
@@ -65,7 +69,7 @@ jobs:
         run: node scripts/vault/check-dataset.mjs
 
       - name: Build web bundle + sync into the Android project
-        run: npm run cap:sync
+        run: pnpm run cap:sync
 
       - name: Decode signing keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/relic-release.jks"

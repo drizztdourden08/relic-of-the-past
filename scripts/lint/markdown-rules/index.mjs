@@ -7,7 +7,7 @@
  *
  * Wired up by `customRules` in .markdownlint-cli2.jsonc. Code fences, indented
  * code blocks and inline code spans are masked out first, so a sample command
- * such as `npm run ensure-wasm` is left alone.
+ * such as `pnpm run ensure-wasm` is left alone.
  *
  * Disable one line with an HTML comment:
  *   <!-- markdownlint-disable-next-line no-em-dash -->

@@ -1,0 +1,60 @@
+packages:
+  - 'apps/mobile'
+  - 'cloud-functions/*'
+
+catalog:
+  '@aws-sdk/client-s3': ^3.1139.0
+  '@aws-sdk/s3-request-presigner': ^3.1139.0
+  '@capacitor-community/keep-awake': ^8.0.1
+  '@capacitor/android': ^8.4.0
+  '@capacitor/app': ^8.1.0
+  '@capacitor/cli': ^8.4.0
+  '@capacitor/core': ^8.4.0
+  '@capacitor/filesystem': ^8.1.2
+  '@capacitor/haptics': ^8.0.2
+  '@capawesome/capacitor-file-picker': ^8.0.2
+  '@electron-toolkit/utils': ^4.0.0
+  '@google-cloud/firestore': ^7.11.6
+  '@google-cloud/functions-framework': ^3.5.1
+  '@types/node': ^24.19.0
+  '@types/react': ^19.2.15
+  '@types/react-dom': ^19.2.3
+  '@vitejs/plugin-react': ^5.2.0
+  arctic: ^3.7.0
+  cmake-js: ^8.0.0
+  electron: ^42.2.0
+  electron-builder: ^26.8.1
+  electron-vite: ^5.0.0
+  esbuild: ^0.25.0
+  eslint: ^10.4.0
+  eslint-plugin-react-hooks: ^7.1.1
+  jose: ^6.2.12
+  markdownlint-cli2: ^0.22.1
+  node-addon-api: ^8.9.1
+  pngjs: ^7.0.0
+  rcedit: ^5.0.2
+  react: ^19.2.6
+  react-dom: ^19.2.6
+  stylelint: ^17.13.0
+  stylelint-config-standard: ^40.0.0
+  typescript: ^6.0.3
+  typescript-eslint: ^8.60.1
+  velopack: ^1.2.110-ge826545
+  vite: ^7.3.3
+  vitest: ^4.1.7
+  zod: ^3.25.76
+  zustand: ^5.0.13
+
+catalogs:
+  functions:
+    typescript: ^5.9.3
+
+onlyBuiltDependencies:
+  - electron
+  - esbuild
+  - koffi
+  - sharp
+
+ignoredBuiltDependencies:
+  - electron-winstaller
+  - protobufjs

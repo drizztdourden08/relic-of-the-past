@@ -9,11 +9,11 @@ import { currentHolder, isHeld } from '../lease.mjs';
 
 const run = async ({ positional }) => {
   const [name] = positional;
-  if (!name) throw new Error('Usage: npm run wt -- release <name>');
+  if (!name) throw new Error('Usage: pnpm wtrelease <name>');
 
   const released = await updateRegistry((registry) => {
     const record = findRecord(registry, name);
-    if (!record) throw new Error(`No worktree named "${name}". Run: npm run wt -- list`);
+    if (!record) throw new Error(`No worktree named "${name}". Run: pnpm wtlist`);
 
     const previous = record.lease;
     record.lease = null;
@@ -35,7 +35,7 @@ const run = async ({ positional }) => {
 
 const command = {
   summary: 'Return a worktree to the pool',
-  usage: 'npm run wt -- release <name>',
+  usage: 'pnpm wtrelease <name>',
   run,
 };
 

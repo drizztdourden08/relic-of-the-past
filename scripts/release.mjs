@@ -6,14 +6,14 @@
  * locally here.
  *
  * Usage (the version can be positional or a flag; a leading "v" is optional):
- *   npm run release -- 0.9.0                # positional
- *   npm run release -- --version 0.9.0      # long flag (also --version=0.9.0)
- *   npm run release -- -v 0.9.0             # short flag (also -v0.9.0 / --v0.9.0)
- *   npm run release -- 0.9.0 --latest       # publish immediately as the latest release
- *   npm run release -- 0.9.0 --prerelease   # publish for pre-release testers only
- *   npm run release -- 0.9.0 --full         # also build the installer + portable downloads
- *   npm run release:last                    # highest release-notes/v*.md, published as latest
- *   npm run release -- --last               # highest release-notes/v*.md (add --latest to publish)
+ *   pnpm release 0.9.0                # positional
+ *   pnpm release --version 0.9.0      # long flag (also --version=0.9.0)
+ *   pnpm release -v 0.9.0             # short flag (also -v0.9.0 / --v0.9.0)
+ *   pnpm release 0.9.0 --latest       # publish immediately as the latest release
+ *   pnpm release 0.9.0 --prerelease   # publish for pre-release testers only
+ *   pnpm release 0.9.0 --full         # also build the installer + portable downloads
+ *   pnpm release:last                 # highest release-notes/v*.md, published as latest
+ *   pnpm release --last               # highest release-notes/v*.md (add --latest to publish)
  *
  * Preconditions (also enforced server-side by the workflow):
  *   - release-notes/v<version>.md exists and is committed/pushed to master
@@ -90,7 +90,7 @@ const run = () => {
   const version = last ? highestNotesVersion() : explicitVersion;
 
   if (!version) {
-    fail('Missing version. Examples: npm run release -- 0.9.0   |   npm run release -- 0.9.0 --prerelease   |   npm run release:last');
+    fail('Missing version. Examples: pnpm release 0.9.0   |   pnpm release 0.9.0 --prerelease   |   pnpm release:last');
   }
 
   // The workflow would honour both at once and hand GitHub a pre-release marked as

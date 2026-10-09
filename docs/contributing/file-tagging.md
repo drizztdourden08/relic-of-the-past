@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # File tagging & whole-project analysis
 
-Every file in the repo is tagged and analyzed by one harness: **`npm run analyze`**
+Every file in the repo is tagged and analyzed by one harness: **`pnpm run analyze`**
 (`scripts/analyze/analyze.mjs`). This is the single source of truth for project
 health across **all** languages, including the ones eslint cannot read.
 
@@ -28,7 +28,7 @@ Each file carries two tags:
    comment (JSON, binaries, asm) and to bulk-tag trees we must not edit (vendored
    `core/zelda3/**`). Manifest entries are authoritative.
 
-Add/refresh headers automatically: **`npm run analyze:tag`** (idempotent, so it skips
+Add/refresh headers automatically: **`pnpm run analyze:tag`** (idempotent, so it skips
 files already tagged). New comment-less or vendored files → add a manifest glob.
 
 ## Per-kind policy (`scripts/analyze/policy.mjs`)
@@ -61,10 +61,10 @@ never gating, because it's an upstream project we don't fully own.
 
 | command | purpose |
 |---|---|
-| `npm run analyze` | full report over every file (+ `report.json`) |
-| `npm run analyze:diff` | only files changed vs HEAD |
-| `npm run analyze:ci` | diff + **exit 1 on gating violations** (the gate) |
-| `npm run analyze:tag` | insert missing `@layer/@kind` headers |
+| `pnpm run analyze` | full report over every file (+ `report.json`) |
+| `pnpm run analyze:diff` | only files changed vs HEAD |
+| `pnpm run analyze:ci` | diff + **exit 1 on gating violations** (the gate) |
+| `pnpm run analyze:tag` | insert missing `@layer/@kind` headers |
 
 The **Stop hook** runs `analyze:ci` on changed files after every turn, so size /
 quality regressions are caught on exactly the files you touched.

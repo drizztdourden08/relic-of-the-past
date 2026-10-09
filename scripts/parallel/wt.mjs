@@ -17,12 +17,12 @@ const loadCommand = async (name) => {
 
 const printHelp = async () => {
   console.log('Agent worktree pool\n');
-  console.log('Usage: npm run wt -- <command> [args]\n');
+  console.log('Usage: pnpm wt <command> [args]\n');
   for (const name of COMMANDS) {
     const { summary } = await loadCommand(name);
     console.log(`  ${name.padEnd(9)} ${summary}`);
   }
-  console.log('\nDetail: npm run wt -- <command> --help');
+  console.log('\nDetail: pnpm wt <command> --help');
 };
 
 const run = async () => {

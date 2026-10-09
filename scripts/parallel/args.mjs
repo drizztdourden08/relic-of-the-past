@@ -1,6 +1,6 @@
 /* @layer tooling-scripts @kind logic */
 // Minimal argv splitting: positionals, `--flag` booleans, `--key value` / `--key=value`.
-// Dependency-free so `wt` works in a half-bootstrapped worktree, before npm install.
+// Dependency-free so `wt` works in a half-bootstrapped worktree, before pnpm install.
 
 const parseArgs = (argv) => {
   const positional = [];

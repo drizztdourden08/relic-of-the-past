@@ -13,7 +13,7 @@ const LANGS = new Set(['TypeScript', 'TypeScript-React', 'JavaScript', 'JavaScri
 const lint = (target, root) => {
   // Changed files are passed explicitly, so a config-ignored one (vite.config.ts) would
   // otherwise come back as a "File ignored" warning instead of being skipped.
-  const { stdout } = sh(`npx eslint ${target} -f json --no-warn-ignored`, root);
+  const { stdout } = sh(`pnpm exec eslint ${target} -f json --no-warn-ignored`, root);
   const start = stdout.indexOf('[');
   if (start < 0) return [];
   try { return JSON.parse(stdout.slice(start)); } catch { return []; }
@@ -35,7 +35,7 @@ const run = async (records, ctx) => {
 const adapter = {
   name: 'eslint',
   appliesTo: (r) => LANGS.has(r.lang) && !r.vendored,
-  available: (root) => toolExists('npx eslint', root),
+  available: (root) => toolExists('pnpm exec eslint', root),
   run,
 };
 

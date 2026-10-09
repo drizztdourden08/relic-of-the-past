@@ -1,7 +1,7 @@
 /* @layer root-config @kind logic */
 /**
  * Runs the bundled API locally for the Sanctuary dev site, on the port its /api proxy
- * expects. `npm run sanctuary:api` from the repo root. Bundle it first (npm run bundle in
+ * expects. `pnpm run sanctuary:api` from the repo root. Bundle it first (pnpm run bundle in
  * this folder); the deployed function never runs this file.
  */
 import { spawn } from 'node:child_process';
@@ -22,7 +22,7 @@ const frameworkBin = () => {
 };
 
 if (!existsSync(join(HERE, 'dist', 'index.js'))) {
-  console.error('No dist/index.js. Run `npm run bundle` in cloud-functions/sanctuary-api first.');
+  console.error('No dist/index.js. Run `pnpm run bundle` in cloud-functions/sanctuary-api first.');
   process.exit(1);
 }
 

@@ -12,6 +12,7 @@ conventions we follow. By participating you agree to keep interactions respectfu
 ## Prerequisites
 
 - **Node.js ≥ 24** (see [`.nvmrc`](.nvmrc))
+- **pnpm 10**. Run `corepack enable` once and Node provides the version `package.json` pins.
 - A legally obtained *A Link to the Past* ROM, supplied at runtime (never committed)
 - The WebAssembly core is committed prebuilt, so a normal build does **not** require the Emscripten
   SDK. You only need it when changing C code under `core/`.
@@ -19,8 +20,8 @@ conventions we follow. By participating you agree to keep interactions respectfu
 ## Getting set up
 
 ```bash
-npm install
-npm run dev          # run the app in development
+pnpm install
+pnpm run dev         # run the app in development
 ```
 
 See the [Quick Start](docs/getting-started/quick-start.md) for first-run details, and the
@@ -47,7 +48,7 @@ The highlights:
 Before opening a PR, run the same gate CI runs:
 
 ```bash
-npm run ci    # tsc + eslint + repo analysis
+pnpm run ci   # tsc + eslint + repo analysis
 ```
 
 If you change C code in `core/`, rebuild the WASM. New `Wasm*` exports only need
@@ -67,7 +68,7 @@ flags (`--auto-state`, `--screenshot`, `--dump-layers`, `--dump-nav`). They are 
 - Use [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`,
   `refactor:`, `docs:`, and so on), scoped where helpful (e.g. `fix(design): ...`).
 - Branch from `master`; keep PRs focused and small.
-- Fill out the PR template and make sure `npm run ci` passes.
+- Fill out the PR template and make sure `pnpm run ci` passes.
 - Update relevant docs when behavior changes.
 
 ## Reporting bugs & requesting features

@@ -66,6 +66,6 @@ event. This is the one sanctioned reason to edit `zelda3/`: a single call line, 
 ## Finally
 
 1. [Rebuild WASM](building-wasm.md), since C changes only take effect after a rebuild.
-2. Restart `npm run dev`.
+2. Restart `pnpm run dev`.
 3. Trigger the function/event and confirm. A "function not found" at `ccall` means the C function is
    missing its `EMSCRIPTEN_KEEPALIVE` tag, or the WASM wasn't rebuilt.

@@ -19,5 +19,7 @@ export NVM_DIR="$HOME/.nvm"
 . "$NVM_DIR/nvm.sh"
 nvm install 24
 nvm alias default 24
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+corepack enable
 
-echo "[setup-vm-builder] done. node $(node -v), npm $(npm -v)"
+echo "[setup-vm-builder] done. node $(node -v), corepack pnpm enabled"

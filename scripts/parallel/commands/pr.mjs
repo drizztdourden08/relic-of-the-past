@@ -23,14 +23,14 @@ const parsePr = (value) => {
 
 const run = async ({ positional }) => {
   const [name, value] = positional;
-  if (!name || !value) throw new Error('Usage: npm run wt -- pr <name> <url|number>');
+  if (!name || !value) throw new Error('Usage: pnpm wtpr <name> <url|number>');
 
   const pr = parsePr(value);
   if (!pr) throw new Error(`"${value}" is not a PR url or number.`);
 
   await updateRegistry((registry) => {
     const record = findRecord(registry, name);
-    if (!record) throw new Error(`No worktree named "${name}". Run: npm run wt -- list`);
+    if (!record) throw new Error(`No worktree named "${name}". Run: pnpm wtlist`);
     record.pr = pr;
     record.lastUsedAt = new Date().toISOString();
   });
@@ -40,7 +40,7 @@ const run = async ({ positional }) => {
 
 const command = {
   summary: 'Record the PR opened from a worktree',
-  usage: 'npm run wt -- pr <name> <url|number>',
+  usage: 'pnpm wtpr <name> <url|number>',
   run,
 };
 

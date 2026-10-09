@@ -2,9 +2,9 @@
 /**
  * Bring up the Android emulator and deploy the Capacitor build to it.
  *
- *   npm run emulator:start                 boot the AVD and wait until it's ready
- *   npm run push:android                   build + install + launch on the emulator/device
- *   npm run push:android -- --apk <path>   install a prebuilt APK instead
+ *   pnpm emulator:start                 boot the AVD and wait until it's ready
+ *   pnpm push:android                   build + install + launch on the emulator/device
+ *   pnpm push:android --apk <path>      install a prebuilt APK instead
  */
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -92,7 +92,7 @@ const deployCapacitor = (serial) => {
   if (!pkg.scripts?.['cap:sync']) {
     fail('No "cap:sync" script. Set up the Capacitor project first. See docs/contributing/testing-linux-and-android.md.');
   }
-  run('npm', ['run', 'cap:sync'], { shell: true });
+  run('pnpm', ['run', 'cap:sync'], { shell: true });
   const android = join(process.cwd(), 'apps', 'mobile', 'android');
   const gradlew = join(android, process.platform === 'win32' ? 'gradlew.bat' : 'gradlew');
   log('Building debug APK...');

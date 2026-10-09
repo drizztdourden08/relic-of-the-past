@@ -17,10 +17,13 @@ command -v node >/dev/null 2>&1 || {
   echo "[build-in-vm] Node not found. Run scripts/deploy/setup-vm-builder.sh first." >&2
   exit 1
 }
-echo "[build-in-vm] node $(node -v), npm $(npm -v)"
+# corepack provides the pnpm version that package.json pins in packageManager.
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+corepack enable
+echo "[build-in-vm] node $(node -v), pnpm $(pnpm -v)"
 
-npm install
-npm run build:linux
+pnpm install --frozen-lockfile
+pnpm run build:linux
 
 APPIMAGE="$(ls release/*.AppImage 2>/dev/null | head -n1)"
 [ -n "$APPIMAGE" ] || { echo "[build-in-vm] No AppImage produced." >&2; exit 1; }

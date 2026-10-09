@@ -6,7 +6,7 @@
 Logic is covered by Vitest. Run the file you're working on, not the whole suite:
 
 ```bash
-npx vitest run tests/<file>
+pnpm exec vitest run tests/<file>
 ```
 
 Tests live under `tests/`.
@@ -21,7 +21,7 @@ Don't add the `.keep` suffix, or rename an existing test to add it, on your own 
 
 ## Checking the running app
 
-The app can drive itself from the command line, which is usually quicker than a browser test for confirming a change. Build first with `npm run build`, make sure a profile and the save slots you reference exist, then run the built app with a flag:
+The app can drive itself from the command line, which is usually quicker than a browser test for confirming a change. Build first with `pnpm run build`, make sure a profile and the save slots you reference exist, then run the built app with a flag:
 
 | Flag | What it does |
 |------|--------------|
@@ -36,12 +36,12 @@ The app can drive itself from the command line, which is usually quicker than a 
 For example:
 
 ```bash
-npx electron dist/electron/main.js --no-focus --muted --instance=big-key --auto-state=test-jail-cell --screenshot=snapshot
+pnpm exec electron dist/electron/main.js --no-focus --muted --instance=big-key --auto-state=test-jail-cell --screenshot=snapshot
 ```
 
 The JSON dumps are the most reliable way to check navigation and collision behavior, so read those instead of squinting at a screenshot.
 
-Launch test runs with `--no-focus --muted` so the window doesn't grab focus while you work. For a quick dev-server boot check, use `npm run dev -- -- --no-focus --muted`.
+Launch test runs with `--no-focus --muted` so the window doesn't grab focus while you work. For a quick dev-server boot check, use `pnpm run dev -- --no-focus --muted`.
 
 ### Mandatory: an automated launch always names its own profile
 
@@ -51,7 +51,7 @@ Launch test runs with `--no-focus --muted` so the window doesn't grab focus whil
 > relied on for their own testing, so an automated run must leave them exactly as it found
 > them.
 
-An `--instance=NAME` launch gets its own profile (created by `npm run wt -- new NAME`,
+An `--instance=NAME` launch gets its own profile (created by `pnpm wt new NAME`,
 pre-loaded with a copy of the named save states) and identifies itself on screen and on the
 taskbar, so it is never mistaken for the real app. See
 [parallel-worktrees.md](parallel-worktrees.md).

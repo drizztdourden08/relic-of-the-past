@@ -19,7 +19,7 @@ const PROTECTED_ROOTS = [
 /**
  * Snapshots live outside refs/heads so `git push`, `--all` and `--tags` never send
  * them: they carry ROMs and save data, and the repo is public. They are ordinary
- * commits for log/show/diff; `npm run safety -- list` lists them. `git push --mirror`
+ * commits for log/show/diff; `pnpm safety list` lists them. `git push --mirror`
  * would still carry them. Do not run that against this repo.
  */
 const SAFETY_NAMESPACE = 'refs/safety';

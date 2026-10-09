@@ -2,7 +2,7 @@ name: Release
 run-name: Release ${{ inputs.version }}${{ inputs.set_latest == true && ' (latest)' || ' (draft)' }}
 
 # One way in: trigger this workflow with a version (e.g. 0.9.0), either from the
-# GitHub UI (Run workflow) or locally with `npm run release -- 0.9.0 [--latest]`.
+# GitHub UI (Run workflow) or locally with `pnpm release 0.9.0 [--latest]`.
 # Both routes pass the SAME params. If release-notes/v0.9.0.md exists and the tag
 # does not, this bumps package.json, commits "release: v0.9.0" to master, tags it,
 # and runs the full build, as a draft or published-as-latest when set_latest is on.
@@ -61,22 +61,25 @@ jobs:
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
+      # No version input: the action reads packageManager from package.json.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
 
       - name: Quality gate (lint, typecheck, analyze, WASM export-drift)
-        run: npm run ci
+        run: pnpm run ci
 
       - name: Check required files exist
         run: |
           echo "Checking critical files..."
           test -f package.json || { echo "Missing package.json"; exit 1; }
-          test -f package-lock.json || { echo "Missing package-lock.json"; exit 1; }
+          test -f pnpm-lock.yaml || { echo "Missing pnpm-lock.yaml"; exit 1; }
           test -f scripts/build/electron-builder.config.js || { echo "Missing electron-builder config"; exit 1; }
           test -f electron.vite.config.ts || { echo "Missing electron.vite.config.ts"; exit 1; }
           test -d core/wasm-build || { echo "Missing core/wasm-build"; exit 1; }
@@ -87,10 +90,10 @@ jobs:
         # The gate above has passed, so it is safe to bump, commit, and tag now.
         run: |
           TAG="${{ steps.resolve.outputs.tag }}"
-          npm version "${TAG#v}" --no-git-tag-version --allow-same-version
+          pnpm version "${TAG#v}" --no-git-tag-version --allow-same-version
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package.json package-lock.json
+          git add package.json
           # Re-releasing a version that's already bumped (e.g. recovering a failed
           # run) leaves nothing to commit. That's fine: skip the commit and just tag.
           if git diff --cached --quiet; then
@@ -134,10 +137,13 @@ jobs:
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
+      # No version input: the action reads packageManager from package.json.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
       - name: Setup Emscripten
         uses: emscripten-core/setup-emsdk@v16
@@ -168,7 +174,7 @@ jobs:
         run: node scripts/build/check-state-format.mjs
         shell: bash
 
-      # Before npm install, not after: its postinstall builds SDL, and SDL only
+      # Before pnpm install, not after: its postinstall builds SDL, and SDL only
       # compiles its libusb backend if libusb is already present. Installed
       # afterwards, that first build silently produced an SDL with no libusb
       # support at all, which is what shipped on Linux in 0.15.1.
@@ -181,7 +187,7 @@ jobs:
         run: brew install libusb pkg-config
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
 
       - name: Build the input addon from source
         # --force so the release ships an addon built from THIS commit. Without
@@ -233,7 +239,7 @@ jobs:
       # v0.17.0 through v0.18.0 shipped that way, green, with sprite extraction
       # silently writing zero files.
       #
-      # After npm install on purpose: postinstall runs the two-way vault sync, and
+      # After pnpm install on purpose: postinstall runs the two-way vault sync, and
       # it must not find a vault to write back to. By here it has already run and
       # skipped, so this pull is the only direction that happens.
       - name: Fetch the private dataset
@@ -253,7 +259,7 @@ jobs:
         run: node scripts/vault/check-dataset.mjs
 
       # The .msul document icon is generated from the committed logo, not checked in,
-      # and the npm prebuild hooks that generate it are not on this path, because the release
+      # and the package prebuild hooks that generate it are not on this path, because the release
       # calls electron-vite and electron-builder directly. Without it the macOS build
       # fails outright looking for msul.icns, and Windows silently ships a pack file
       # with no document icon, which is the worse of the two.
@@ -267,8 +273,8 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npx electron-vite build
-          npx electron-builder ${{ matrix.args }} --publish never --config scripts/build/electron-builder.config.js -c.directories.output=release/${{ matrix.platform }}
+          pnpm exec electron-vite build
+          pnpm exec electron-builder ${{ matrix.args }} --publish never --config scripts/build/electron-builder.config.js -c.directories.output=release/${{ matrix.platform }}
 
       # Downloading the previous release first is what lets vpk build a delta against
       # it and list every version in the release index. There is nothing to fetch for
@@ -364,7 +370,7 @@ jobs:
 
   build-android:
     # The signed Android APK is part of the SAME release run as the desktop builds,
-    # so every release path (UI "Run workflow" or `npm run release`) ships it
+    # so every release path (UI "Run workflow" or `pnpm release`) ships it
     # alongside win/mac/linux. Signing secrets: see android-release.yml header.
     needs: prepare
     runs-on: ubuntu-latest
@@ -373,10 +379,13 @@ jobs:
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
+      # No version input: the action reads packageManager from package.json.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -411,10 +420,10 @@ jobs:
         run: node core/wasm-build/build.mjs
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
 
       # The Android plugin compiles SDL from the same pinned source tree the
-      # desktop addon uses, and nothing else here puts it on disk: npm install
+      # desktop addon uses, and nothing else here puts it on disk: pnpm install
       # only fetches it while building the addon from source, which it skips
       # entirely once a prebuilt exists for the pinned versions. Asking for it
       # directly keeps the Android build independent of that.
@@ -436,7 +445,7 @@ jobs:
         run: node scripts/vault/check-dataset.mjs
 
       - name: Build web bundle + sync into the Android project
-        run: npm run cap:sync
+        run: pnpm run cap:sync
 
       - name: Decode signing keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/relic-release.jks"

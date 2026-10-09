@@ -55,6 +55,9 @@
   // Root files that cannot carry an in-file tag comment.
   "LICENSE":                  { "layer": "root-config", "kind": "doc" },
   ".nvmrc":                   { "layer": "root-config", "kind": "config" },
+  // pnpm workspace config, kept in the shape `brock adopt` writes, so no tag comment.
+  ".npmrc":                   { "layer": "root-config", "kind": "config" },
+  "pnpm-workspace.yaml":      { "layer": "root-config", "kind": "config" },
 
   // GitHub community health files & workflows (issue templates carry YAML
   // frontmatter, so they cannot hold an in-file tag comment).

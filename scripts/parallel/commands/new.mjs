@@ -19,7 +19,7 @@ const NAME_RULE = /^[a-z0-9][a-z0-9-]{0,38}$/;
 
 /** Matches the app's own --instance validation: the name becomes a directory. */
 const assertName = (name) => {
-  if (!name) throw new Error('Usage: npm run wt -- new <name> [--from <ref>] [--rom <file>] [--quick-slot <N>] [--no-build]');
+  if (!name) throw new Error('Usage: pnpm wtnew <name> [--from <ref>] [--rom <file>] [--quick-slot <N>] [--no-build]');
   if (!NAME_RULE.test(name)) {
     throw new Error(`"${name}" is not a valid name. Use lowercase letters, digits and dashes, max 39 chars.`);
   }
@@ -39,7 +39,7 @@ const resolveQuickSlot = (raw) => {
 const assertBranchFree = (branch) => {
   // A clear message here beats letting `worktree add` fail cryptically.
   if (git(['rev-parse', '--verify', branch], repoRoot)) {
-    throw new Error(`Branch ${branch} already exists. Pick another name, or: npm run wt -- clean <name>`);
+    throw new Error(`Branch ${branch} already exists. Pick another name, or: pnpm wtclean <name>`);
   }
 };
 
@@ -65,7 +65,7 @@ const run = async ({ positional, options }) => {
   assertName(name);
 
   const existing = await updateRegistry((registry) => findRecord(registry, name));
-  if (existing) throw new Error(`"${name}" is already in the registry. Run: npm run wt -- list`);
+  if (existing) throw new Error(`"${name}" is already in the registry. Run: pnpm wtlist`);
 
   const { path, branch, baseCommit } = addWorktree(name, typeof options.from === 'string' ? options.from : null);
   const build = await bootstrapWorktree({ worktree: path, skipBuild: flag(options, 'no-build') });
@@ -98,12 +98,12 @@ const run = async ({ positional, options }) => {
   console.log(`Branch:   ${branch}`);
   console.log(`Profile:  ${name}`);
   console.log(`\nLaunch:\n  ${launchLine(name)}`);
-  console.log('\nClaim it for a session with:\n  npm run wt -- claim ' + name);
+  console.log('\nClaim it for a session with:\n  pnpm wtclaim ' + name);
 };
 
 const command = {
   summary: 'Create a worktree, its branch and its profile (slow)',
-  usage: 'npm run wt -- new <name> [--from <ref>] [--rom <file>] [--quick-slot <N>] [--no-build]',
+  usage: 'pnpm wtnew <name> [--from <ref>] [--rom <file>] [--quick-slot <N>] [--no-build]',
   run,
 };
 

@@ -1,9 +1,10 @@
+<!-- @layer tooling-scripts @kind doc -->
 # GBA ALttP supplement format
 
 Run the GBA extractor beside the existing SNES ROM importer:
 
 ```powershell
-npm run gba:extract-palace -- --rom "path/to/alttp-four-swords.gba" --out "path/to/output"
+pnpm gba:extract-palace --rom "path/to/alttp-four-swords.gba" --out "path/to/output"
 ```
 
 The command validates the unheadered US ROM SHA-256 by default. Its default ROM

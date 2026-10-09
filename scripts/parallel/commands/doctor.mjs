@@ -77,7 +77,7 @@ const run = async ({ options }) => {
 
 const command = {
   summary: 'Reconcile the registry with what is on disk',
-  usage: 'npm run wt -- doctor [--verbose]',
+  usage: 'pnpm wt doctor [--verbose]',
   run,
 };
 

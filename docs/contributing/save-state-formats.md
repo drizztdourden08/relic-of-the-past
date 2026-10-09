@@ -30,7 +30,7 @@ a release runner.
 It runs automatically at the end of every WASM build, so any path that rebuilds the core
 refreshes the id.
 
-The generated file is **committed**. `npm run ci` does not build wasm, so a gitignored module
+The generated file is **committed**. `pnpm run ci` does not build wasm, so a gitignored module
 would break typecheck on a fresh clone. Committing it also means a layout change shows up as a
 one-line diff in review instead of a surprise during a release.
 
@@ -43,7 +43,7 @@ You will find out on your own: the next build regenerates the id, and the diff a
 2. That is all. The release publishes the id as an asset, and every older build in the field
    picks it up on its next update check.
 
-If you skip step 1, `npm run state-format` fails and so does the release. The gate is not
+If you skip step 1, `pnpm run state-format` fails and so does the release. The gate is not
 asking you to predict the id, since it already has it. It is refusing to publish a change nobody
 described.
 

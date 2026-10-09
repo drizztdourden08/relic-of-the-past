@@ -1,6 +1,6 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `npm run safety -- <command>`: manual control of the snapshots.
+ * `pnpm safety<command>`: manual control of the snapshots.
  *
  *   snapshot [label]   take one now
  *   list               every snapshot, newest first, and what retention would do
@@ -34,7 +34,7 @@ const reportVerify = (ref, result) => {
   console.error(`\n✗ ${result.missing.length} protected file(s) present in ${ref} are GONE from disk:`);
   for (const p of result.missing.slice(0, 20)) console.error(`    ${p}`);
   if (result.missing.length > 20) console.error(`    ...and ${result.missing.length - 20} more`);
-  console.error(`\nGet them back with:  npm run safety -- restore ${ref}\n`);
+  console.error(`\nGet them back with:  pnpm safetyrestore ${ref}\n`);
   return false;
 };
 
@@ -52,12 +52,12 @@ const run = () => {
     return;
   }
   if (command === 'verify') {
-    if (!arg) throw new Error('Usage: npm run safety -- verify <branch-or-sha>');
+    if (!arg) throw new Error('Usage: pnpm safetyverify <branch-or-sha>');
     if (!reportVerify(arg, verifyAgainst(arg))) process.exitCode = 1;
     return;
   }
   if (command === 'restore') {
-    if (!arg) throw new Error('Usage: npm run safety -- restore <branch-or-sha>');
+    if (!arg) throw new Error('Usage: pnpm safetyrestore <branch-or-sha>');
     const { files, roots } = restoreFrom(arg);
     console.log(files > 0
       ? `Restored ${files} file(s) from ${arg}: ${roots.join(', ')}`
@@ -70,7 +70,7 @@ const run = () => {
     return;
   }
 
-  console.log('Usage: npm run safety -- snapshot [label] | list | verify <ref> | restore <ref> | prune');
+  console.log('Usage: pnpm safetysnapshot [label] | list | verify <ref> | restore <ref> | prune');
 };
 
 try {

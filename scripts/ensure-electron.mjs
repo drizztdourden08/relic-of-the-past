@@ -8,7 +8,7 @@
  * Wired as postinstall and predev/prebuild. Locked files are reported, never
  * force-killed: the user may be running the app alongside.
  */
-import { existsSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, realpathSync, rmSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
@@ -63,12 +63,14 @@ const brokenReason = () => {
   return null;
 };
 
-// Reinstall the exact version the lockfile pins, so a repair can't drift the tree.
-const wantedSpec = () => {
-  const locked = readJson(join(repoRoot, 'package-lock.json'))?.packages?.['node_modules/electron']?.version;
-  if (locked) return `electron@${locked}`;
-  const range = readJson(join(repoRoot, 'package.json'))?.devDependencies?.electron;
-  return range ? `electron@${range}` : 'electron';
+// node_modules/electron is a pnpm link into node_modules/.pnpm. Clear the real folder
+// so the forced install below writes it again from the store.
+const realPackageDir = () => {
+  try {
+    return realpathSync(packageDir);
+  } catch {
+    return packageDir;
+  }
 };
 
 const runInstallScript = () => {
@@ -80,21 +82,21 @@ const runInstallScript = () => {
   }
 };
 
+// Reinstall from the lockfile, so a repair can't drift the tree.
 const reinstallPackage = () => {
-  const spec = wantedSpec();
-  console.log(`[ensure-electron] Reinstalling ${spec} (this downloads ~100 MB)...`);
+  console.log('[ensure-electron] Reinstalling electron from the lockfile (this downloads ~100 MB)...');
   try {
-    rmSync(packageDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    rmSync(realPackageDir(), { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
   } catch {
     console.error(
-      '[ensure-electron] Could not clear node_modules/electron. A file in it is in use. Close any instance of the app running from this checkout, then run `npm run ensure-electron`.',
+      '[ensure-electron] Could not clear node_modules/electron. A file in it is in use. Close any instance of the app running from this checkout, then run `pnpm run ensure-electron`.',
     );
     process.exit(1);
   }
   try {
-    execSync(`npm install ${spec} --no-save --no-audit --no-fund`, { cwd: repoRoot, stdio: 'inherit' });
+    execSync('pnpm install --frozen-lockfile --force', { cwd: repoRoot, stdio: 'inherit' });
   } catch {
-    console.error('[ensure-electron] `npm install` failed. See the output above (offline? registry unreachable?).');
+    console.error('[ensure-electron] `pnpm install` failed. See the output above (offline? registry unreachable?).');
     process.exit(1);
   }
 };
@@ -115,7 +117,7 @@ if (brokenReason()) {
 
 const remaining = brokenReason();
 if (remaining) {
-  console.error(`[ensure-electron] Repair finished but ${remaining}. Delete node_modules/electron and run \`npm install\`.`);
+  console.error(`[ensure-electron] Repair finished but ${remaining}. Delete node_modules/electron and run \`pnpm install\`.`);
   process.exit(1);
 }
 console.log('[ensure-electron] Electron binary is ready.');

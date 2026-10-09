@@ -130,7 +130,7 @@ each reaches zero. See the full rules table in
 | **R12 structure-policy** | analyze adapter | component-root files other than `<Name>.{tsx,css,type.ts,constants.ts}`+`index.ts`, or subfolders other than `behavior/`/`sub-components/` |
 | **R13 token-policy** | stylelint (`color-no-hex`, `color-named`) | raw hex / named colors in `ui/**` component CSS (tokens/ exempt) |
 
-Reports: `npm run report` (all three) · `report:html` · `report:structure` ·
+Reports: `pnpm run report` (all three) · `report:html` · `report:structure` ·
 `report:tokens`. Form controls (`input`/`select`/`textarea`) are already a hard
 error outside primitives.
 

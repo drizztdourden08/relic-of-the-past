@@ -1,11 +1,11 @@
 <!-- @layer docs @kind doc -->
 # Building the WASM Core
 
-> ⚠️ **You only need this when you change the C code.** `npm run dev` and `npm run build` run an
+> ⚠️ **You only need this when you change the C code.** `pnpm run dev` and `pnpm run build` run an
 > `ensure-wasm` step that rebuilds the WASM core automatically whenever it's missing or a C source is
 > newer than the last build, so normal app work needs nothing extra. The build output is gitignored,
 > not committed. C changes under `core/` take effect on the next `dev`/`build`. To force a
-> rebuild now, run `npm run ensure-wasm`.
+> rebuild now, run `pnpm run ensure-wasm`.
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ cmd /c "<emsdk>\emsdk_env.bat && cd /d <repo>\core\wasm-build && build.bat"
 ```
 
 On success it prints `Build successful!` and the two output files (`zelda3.js`, `zelda3.wasm`); on
-failure `BUILD FAILED` with the compiler error. After building, restart `npm run dev` (or reload the
+failure `BUILD FAILED` with the compiler error. After building, restart `pnpm run dev` (or reload the
 renderer) to pick up the new module.
 
 ## One build, three entry points

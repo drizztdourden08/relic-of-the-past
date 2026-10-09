@@ -4,29 +4,31 @@
 ## Prerequisites
 
 - Node.js ≥ 24 (see [`.nvmrc`](https://github.com/drizztdourden08/relic-of-the-past/blob/master/.nvmrc)).
+- pnpm 10. Run `corepack enable` once and Node provides the version `package.json` pins in
+  `packageManager`. The repo is a pnpm workspace, and `pnpm install` installs every package in it.
 - A legally obtained *A Link to the Past* ROM, supplied at runtime and kept out of commits.
 - Emscripten SDK (Windows; at `third_party/emsdk` in the main checkout, or `$EMSDK`; version pinned in `package.json`). The WASM core
-  is gitignored, not committed. `npm run dev` / `npm run build` auto-build it on first run, and
+  is gitignored, not committed. `pnpm run dev` / `pnpm run build` auto-build it on first run, and
   again whenever C under `core/` changes, via the `ensure-wasm` pre-step. See
   [Building the WASM Core](building-wasm.md).
 
 ## Run & build
 
 ```bash
-npm install          # install deps; auto-fetches the Electron binary (ensure-electron)
-npm run dev          # electron-vite dev server + Electron (auto-builds WASM if missing/stale)
-npm run build        # production build (electron-vite), auto-builds WASM too
-npm run build:win    # packaged build (see package.json for :mac / :linux)
+pnpm install          # install deps; auto-fetches the Electron binary (ensure-electron)
+pnpm run dev          # electron-vite dev server + Electron (auto-builds WASM if missing/stale)
+pnpm run build        # production build (electron-vite), auto-builds WASM too
+pnpm run build:win    # packaged build (see package.json for :mac / :linux)
 ```
 
-`npm install` runs `ensure-electron` (re-fetches Electron's native binary if a bare `node_modules`
+`pnpm install` runs `ensure-electron` (re-fetches Electron's native binary if a bare `node_modules`
 left it out), and `dev`/`build` run `ensure-wasm` first. That is a fast mtime check, and it rebuilds the
-WASM core only when it's missing or a C source changed. Force a WASM rebuild with `npm run ensure-wasm`.
+WASM core only when it's missing or a C source changed. Force a WASM rebuild with `pnpm run ensure-wasm`.
 
 For testing, always launch so the app never steals focus or makes noise:
 
 ```bash
-npm run dev -- -- --no-focus --muted
+pnpm run dev -- --no-focus --muted
 ```
 
 ## Local ports
@@ -36,10 +38,10 @@ are defined once, in `shared/config/ports.constants.ts`; nothing else writes a p
 
 | Offset | Role |
 |---|---|
-| +0 | the app's renderer dev server (`npm run dev`) |
+| +0 | the app's renderer dev server (`pnpm run dev`) |
 | +1 | reserved for a component catalogue |
-| +2 | the Sanctuary site (`npm run sanctuary:dev`) |
-| +3 | the Sanctuary API (`npm run sanctuary:api`), which the site proxies `/api` to |
+| +2 | the Sanctuary site (`pnpm run sanctuary:dev`) |
+| +3 | the Sanctuary API (`pnpm run sanctuary:api`), which the site proxies `/api` to |
 | +4 | a static file server, for testing install manifests |
 | +5 | the mGBA Lua socket tracer |
 | +6 to +9 | free for other project tools |
@@ -52,9 +54,9 @@ already in use stops them with an error instead of moving them somewhere unexpec
 ## Quality gate
 
 ```bash
-npm run lint     # tsc --noEmit && eslint .
-npm run analyze  # classify + lint ALL file types (analyze:diff / :ci / :tag variants)
-npm run ci       # tsc + eslint + repo analysis (what CI runs)
+pnpm run lint     # tsc --noEmit && eslint .
+pnpm run analyze  # classify + lint ALL file types (analyze:diff / :ci / :tag variants)
+pnpm run ci       # tsc + eslint + repo analysis (what CI runs)
 ```
 
 A PostToolUse lint hook flags coding-standard violations on every edit, and a Stop hook gates changed
@@ -93,7 +95,7 @@ needs no access to the private one.
 **You do not need the private repository.** Without access:
 
 - the app builds and runs, with the full record dataset already in place,
-- `npm run lint` and the unit tests pass,
+- `pnpm run lint` and the unit tests pass,
 - the end-to-end tests that need a save state report as *skipped*.
 
 The private repository is a **sibling checkout**, not something this repository clones.
@@ -104,7 +106,7 @@ The path is the whole mapping; there is nothing else to configure, and anything 
 vault keeps outside `tree/` is never touched.
 
 ```bash
-npm run vault:sync
+pnpm run vault:sync
 ```
 
 Sync runs **both ways**. It indexes both sides by content, compares them against the
@@ -114,22 +116,22 @@ checkout, and a deletion on either side is carried across. Anything edited on *b
 sides since the last sync is a conflict, so it is reported and left alone. Writes into the
 vault are committed there on its current branch; pushing them onward is left to you.
 
-It also runs automatically after `npm install`, and is a no-op with a single line of
+It also runs automatically after `pnpm install`, and is a no-op with a single line of
 output when you have no access, and it never fails a build. To see what would change
 without writing anything:
 
 ```bash
-npm run vault:status
+pnpm run vault:status
 ```
 
 To settle conflicts wholesale, declare a winner:
 
 ```bash
-npm run vault:force-pull
+pnpm run vault:force-pull
 ```
 
 ```bash
-npm run vault:force-push
+pnpm run vault:force-push
 ```
 
 Access is granted per contributor; ask the repository owner if you need it.

@@ -4,7 +4,7 @@
  * globs under `shared/game/data/records/` resolve to empty when the folder is absent,
  * so "no dataset" and "the dataset failed to arrive" look the same: v0.17.0 through
  * v0.18.0 shipped empty with a green build. This runs in the release workflow only,
- * right after the vault fetch. Never on `npm run ci`, which must stay green without
+ * right after the vault fetch. Never on `pnpm run ci`, which must stay green without
  * a vault.
  *
  *   node scripts/vault/check-dataset.mjs

@@ -160,7 +160,7 @@ const run = async ({ positional, options }) => {
     console.error(`\n[wt] STOP. This removal made ${check.missing.length} protected file(s) disappear:`);
     for (const path of check.missing.slice(0, 10)) console.error(`       ${path}`);
     if (check.missing.length > 10) console.error(`       ...and ${check.missing.length - 10} more`);
-    console.error(`\n       Restore them with:  npm run safety -- restore ${snapshot.ref}\n`);
+    console.error(`\n       Restore them with:  pnpm safety restore ${snapshot.ref}\n`);
     process.exitCode = 1;
   }
 
@@ -177,7 +177,7 @@ const run = async ({ positional, options }) => {
 
 const command = {
   summary: 'Remove finished worktrees (dry run without --yes)',
-  usage: 'npm run wt -- clean [<name>] [--merged] [--stale 7d] [--yes]',
+  usage: 'pnpm wt clean [<name>] [--merged] [--stale 7d] [--yes]',
   run,
 };
 

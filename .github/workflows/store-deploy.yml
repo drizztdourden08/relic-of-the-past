@@ -45,29 +45,35 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # No version input: the action reads packageManager from package.json.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
-          cache: npm
+          node-version: 24
+          cache: pnpm
 
-      # The function bundles shared/ from the repo root, so the root
-      # dependencies have to be present before the function build runs.
-      - name: Install root dependencies
-        run: npm ci --no-audit --no-fund
-
-      # The account routes, sessions and sign-in live in cloud-functions/hub-core. esbuild
-      # resolves jose and arctic from the importing file's folder, so hub-core needs its
-      # own node_modules before the function is bundled.
-      - name: Install hub-core dependencies
-        working-directory: cloud-functions/hub-core
-        run: npm ci --no-audit --no-fund
+      # The function bundles shared/ from the repo root, and the account routes,
+      # sessions and sign-in from cloud-functions/hub-core. esbuild resolves jose and
+      # arctic from the importing file's folder, so the root, hub-core and the function
+      # all need their own node_modules. One workspace install gives all three.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build the function
         working-directory: cloud-functions/store-api
         run: |
-          npm ci --no-audit --no-fund
-          npm run bundle
+          pnpm run bundle
           test -f dist/index.js || { echo "::error::dist/index.js missing after build"; exit 1; }
+
+      # The cloud build installs the runtime dependencies with npm, which cannot read
+      # catalog: versions. pnpm pack writes the manifest with the catalog ranges filled in.
+      - name: Resolve the function manifest for the cloud build
+        working-directory: cloud-functions/store-api
+        run: |
+          pnpm pack --pack-destination "$RUNNER_TEMP"
+          tar -xzf "$RUNNER_TEMP"/store-api-function-*.tgz -C "$RUNNER_TEMP" package/package.json
+          cp "$RUNNER_TEMP/package/package.json" package.json
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -103,16 +109,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # No version input: the action reads packageManager from package.json.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
-          cache: npm
+          node-version: 24
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
 
       - name: Build the site
-        run: npm run store:build
+        run: pnpm run store:build
 
       # The auth action exports GOOGLE_APPLICATION_CREDENTIALS, which firebase-tools
       # picks up on its own, so no login step follows.
@@ -124,4 +133,4 @@ jobs:
 
       # The root firebase.json names the store as a hosting target.
       - name: Deploy hosting
-        run: npx firebase-tools deploy --only hosting:store --project "$GCP_PROJECT" --non-interactive
+        run: pnpm dlx firebase-tools deploy --only hosting:store --project "$GCP_PROJECT" --non-interactive
