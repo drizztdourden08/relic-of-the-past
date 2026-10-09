@@ -12,25 +12,20 @@ interface CssRect {
   h: number;
 }
 
-/** The fill behind the text. */
 interface DialogGroundLook {
   color: string;
-  /** 0..1 */
   opacity: number;
 }
 
-/** The border around the text and the marks inside its corners. */
 interface DialogBorderLook {
   kind: DialogBorder;
   thickness: DialogBorderThickness;
   color: string;
   corner: DialogCorner;
   mark: DialogCornerMark;
-  /** Degrees the top-left mark turns; the others mirror it. */
   markAngle: number;
 }
 
-/** The repeating pattern on the ground. */
 interface DialogTextureLook {
   texture: DialogTexture;
   color: string;
@@ -44,13 +39,10 @@ interface DialogTextureLook {
 
 interface DialogBoxProps {
   rect: CssRect;
-  /** False for a floating message, which draws only its ground. */
   bordered: boolean;
-  /** One game tile in CSS pixels. */
   tile: number;
   spritesBase: string;
   ground: DialogGroundLook;
-  /** Fade the ground out toward its edges; ignored under a border. */
   feathered: boolean;
   border: DialogBorderLook;
   texture: DialogTextureLook;

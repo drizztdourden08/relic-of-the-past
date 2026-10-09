@@ -1,22 +1,10 @@
 /* @layer renderer-hud @kind hook */
-/**
- * Subscribes to game-ui-store map changes and fires screen/transition
- * notifications via location-notification-store. Call once in GameOverlay so
- * the subscription lives for the entire game session.
- */
-
 import { useEffect, useRef } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useLocationNotificationStore } from '../../../../stores/location-notification-store';
 import { resolveCurrentScreen } from '@shared/game/logic/queries/detection';
 import type { ScreenRecord } from '@shared/game/data';
-
-/** Auto-dismiss delay in ms */
-const SCREEN_DISMISS_MS = 3000;
-const TRANSITION_DISMISS_MS = 2000;
-
-/** Location notifications belong to the in-progress navigation feature. Flip to true when it ships. */
-const NOTIFICATIONS_ENABLED: boolean = false;
+import { NOTIFICATIONS_ENABLED, SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS } from './hooks.constants';
 
 const useLocationNotification = () => {
   const prevDetectedRef = useRef<ScreenRecord | null>(null);
@@ -32,7 +20,6 @@ const useLocationNotification = () => {
       const map = state.map;
       const prevMap = prevState?.map;
 
-      // Only process if room or screen actually changed
       if (
         prevMap &&
         map.roomIndex === prevMap.roomIndex &&
@@ -41,7 +28,6 @@ const useLocationNotification = () => {
         return;
       }
 
-      // Deduplicate against ref (for initial mount / rapid re-renders)
       if (map.roomIndex === prevRoomRef.current && map.overworldScreenIndex === prevOwScreenRef.current) {
         return;
       }
@@ -50,10 +36,8 @@ const useLocationNotification = () => {
 
       const store = useLocationNotificationStore.getState();
 
-      // Skip if notifications are disabled
       if (!store.showScreen && !store.showTransition) return;
 
-      // Resolve current screen from game state
       const detected = resolveCurrentScreen(
         map.isIndoors,
         map.palaceIndex,
@@ -67,22 +51,17 @@ const useLocationNotification = () => {
       const prev = prevDetectedRef.current;
       prevDetectedRef.current = detected;
 
-      // Skip if same screen
       if (prev && prev.id === detected.id) return;
 
-      // ─── Screen notification ───
-      // Only fire if location changed (same zone = no notification)
       if (store.showScreen && (!prev || prev.locationId !== detected.locationId)) {
         store.setScreen(detected);
 
-        // Auto-dismiss
         if (screenTimerRef.current) clearTimeout(screenTimerRef.current);
         screenTimerRef.current = setTimeout(() => {
           useLocationNotificationStore.getState().clearScreen();
         }, SCREEN_DISMISS_MS);
       }
 
-      // ─── Transition notification (name change within same location) ───
       if (store.showTransition && prev && prev.locationId === detected.locationId && prev.name !== detected.name) {
         const entrance = detected.name;
         store.setTransition(entrance);
@@ -102,4 +81,4 @@ const useLocationNotification = () => {
   }, []);
 };
 
-export { useLocationNotification, SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS };
+export { useLocationNotification };

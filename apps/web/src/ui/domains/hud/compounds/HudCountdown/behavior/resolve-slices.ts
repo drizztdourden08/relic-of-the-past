@@ -1,9 +1,4 @@
 /* @layer renderer-hud @kind logic */
-/**
- * Cuts a countdown into slices and says how many are left. A countdown at least as long as the
- * slice count gets that many equal shares of its time, and a slice leaves each time one share is
- * used up. A shorter one gets one slice per second. No slice is left once the seconds reach zero.
- */
 import { SHARE_EPSILON, SLICE_COUNT } from '../HudCountdown.constants';
 import type { SliceLayout } from '../HudCountdown.type';
 

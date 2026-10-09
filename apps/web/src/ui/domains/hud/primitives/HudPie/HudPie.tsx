@@ -1,16 +1,11 @@
 /* @layer renderer-hud @kind component */
-/**
- * A round pie of equal slices that empties clockwise. A slice that is out fades while it slides
- * away from the centre, and the next one to leave breathes. Motion lives in HudPie.css.
- */
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import { DISC_RADIUS, HUB_RADIUS, SLICE_STROKE, VIEW_HALF } from './HudPie.constants';
-import { buildSlices, sliceStateAt } from './behavior/slice-geometry';
+import { DISC_RADIUS, HUB_RADIUS, SLICE_STROKE, VIEW_BOX } from './HudPie.constants';
+import { buildSlices } from './behavior/build-slices';
+import { sliceStateAt } from './behavior/slice-state-at';
 import type { HudPieProps } from './HudPie.type';
 import './HudPie.css';
-
-const VIEW_BOX = `${-VIEW_HALF} ${-VIEW_HALF} ${VIEW_HALF * 2} ${VIEW_HALF * 2}`;
 
 const HudPie = (props: HudPieProps) => {
   const { sliceCount, slicesLeft, size } = props;

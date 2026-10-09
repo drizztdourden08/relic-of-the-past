@@ -1,15 +1,5 @@
 /* @layer renderer-hud @kind component */
-/**
- * Renders a multi-tile label strip (condensed HUD text).
- * Labels are pre-composed sprites where each 8×8 tile contains ~2 characters.
- */
-
-interface PauseLabelProps {
-  name: string;
-  tiles: number;
-  scale: number;
-  spritesBase: string;
-}
+import type { PauseLabelProps } from './PauseLabel.type';
 
 const PauseLabel = ({ name, tiles, scale, spritesBase }: PauseLabelProps) => {
   const tile = 8 * scale;
@@ -26,4 +16,3 @@ const PauseLabel = ({ name, tiles, scale, spritesBase }: PauseLabelProps) => {
 };
 
 export { PauseLabel };
-export type { PauseLabelProps };

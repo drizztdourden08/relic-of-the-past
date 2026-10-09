@@ -1,25 +1,11 @@
-/* @layer renderer-hud @kind data */
-/**
- * The Y-button item grid (5 columns × 4 rows = 20 slots) in a green border box
- * with the Y-button indicator. Game layout: tiles (1,5)→(19,19) = 19×15 tiles;
- * each item is 2×2 tiles with 1-tile gaps.
- */
+/* @layer renderer-hud @kind component */
 import { HudBox } from '../../primitives/HudBox';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseItemSlot } from '../../composites/PauseItemSlot';
 import { PauseButtonLabel } from '../../composites/PauseButtonLabel';
 import { PauseLabel } from '../../primitives/PauseLabel';
+import type { PauseItemGridProps } from './PauseItemGrid.type';
 
-interface PauseItemGridProps {
-  items: number[];
-  selectedIndex: number;
-  staticSelection?: boolean;
-  scale: number;
-  spritesBase: string;
-  style?: React.CSSProperties;
-}
-
-/** Visual order = sequential save-RAM indices 0-19. */
 const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBase, style }: PauseItemGridProps) => {
   const tile = 8 * scale;
   const innerCols = 17;
@@ -28,12 +14,10 @@ const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBa
   return (
     <HudBox style={{ position: 'relative', ...style }}>
     <PauseBorderBox color="green" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
-      {/* Y-button indicator */}
       <HudBox style={{ position: 'absolute', top: 0, left: 0 }}>
         <PauseButtonLabel button="y" scale={scale} spritesBase={spritesBase} />
       </HudBox>
 
-      {/* Item grid of 5 cols × 4 rows, positioned to match the SNES BG3 layout */}
       <HudBox style={{
         display: 'grid',
         gridTemplateColumns: `repeat(5, ${tile * 2}px)`,
@@ -56,7 +40,6 @@ const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBa
         ))}
       </HudBox>
     </PauseBorderBox>
-    {/* "ITEM" label on top border, col 2 */}
     <HudBox style={{ position: 'absolute', top: 0, left: tile * 2, zIndex: 1, background: 'black' }}>
       <PauseLabel name="item" tiles={2} scale={scale} spritesBase={spritesBase} />
     </HudBox>
@@ -65,4 +48,3 @@ const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBa
 };
 
 export { PauseItemGrid };
-export type { PauseItemGridProps };

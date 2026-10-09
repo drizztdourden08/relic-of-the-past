@@ -1,30 +1,8 @@
 /* @layer renderer-hud @kind component */
-/**
- * One row of the game's own glyphs, drawn from a glyph atlas into a canvas. Each cell is copied
- * from the atlas at its pen x, so the row lays out exactly as the engine's bitmap did. A highlighted
- * cell is copied from its highlight's atlas instead, when one is given. The backing store is sized
- * in device pixels and smoothing is off, so the face stays a pixel face.
- */
 import { useLayoutEffect, useRef } from 'react';
 import type { DialogCell } from '@shared/game/dialog/dialog-frame.types';
-
-/** Atlas geometry: 16 glyphs per row, 8 by 16 cells. */
-const ATLAS_COLUMNS = 16;
-const CELL_W = 8;
-const CELL_H = 16;
-
-const NO_HIGHLIGHTS: readonly (HTMLCanvasElement | null)[] = [];
-
-interface GlyphRowProps {
-  cells: DialogCell[];
-  atlas: HTMLCanvasElement;
-  /** The primary then the secondary highlight's atlas; a missing one draws from |atlas|. */
-  highlightAtlases?: readonly (HTMLCanvasElement | null)[];
-  /** CSS pixels per game pixel, magnification included. */
-  unit: number;
-  /** Row width in game pixels. */
-  widthPx: number;
-}
+import { ATLAS_COLUMNS, CELL_H, CELL_W, NO_HIGHLIGHTS } from './GlyphRow.constants';
+import type { GlyphRowProps } from './GlyphRow.type';
 
 const sourceOf = (cell: DialogCell, atlas: HTMLCanvasElement, highlights: readonly (HTMLCanvasElement | null)[]): HTMLCanvasElement =>
   (cell.highlight ? highlights[cell.highlight - 1] ?? atlas : atlas);
@@ -67,4 +45,3 @@ const GlyphRow = (props: GlyphRowProps) => {
 };
 
 export { GlyphRow };
-export type { GlyphRowProps };

@@ -1,6 +1,7 @@
 /* @layer renderer-hud @kind component */
 import { HudBox } from '../../primitives/HudBox';
-import { useHud, SNES_HEIGHT } from '../../hooks/useHud';
+import { useHud } from '../../hooks/useHud';
+import { SNES_HEIGHT } from '../../hooks/hooks.constants';
 import { useHudSettingsStore } from '../../../../../stores/hud-settings-store';
 import { HudMagicMeter } from '../../composites/HudMagicMeter';
 import { HudCurrentItem } from '../../composites/HudCurrentItem';
@@ -24,21 +25,15 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
     const w = el.clientWidth;
     if (h <= 0 || w <= 0) return;
 
-    // One game pixel in CSS pixels. Measured against the canvas's native height, which already counts
-    // the rows a tall view adds and the 240-line mode's sixteen, so a game pixel is the size the core
-    // drew it at in every shape.
     const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
     const nativeH = canvas ? canvas.height / 2 : SNES_HEIGHT;
     const newScale = h / nativeH;
     setScale(newScale);
 
-    // Determine HUD content width based on chosen ratio
     const numericRatio = aspectRatioValue(hudRatio, customW, customH);
     if (numericRatio <= 0) {
-      // 'match': use full container width
       setHudWidth(undefined);
     } else {
-      // Clamp: HUD ratio can't be wider than the screen
       const screenRatio = w / h;
       const effectiveRatio = Math.min(numericRatio, screenRatio);
       setHudWidth(Math.floor(h * effectiveRatio));
@@ -58,11 +53,8 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
   const { spritesBase } = config;
   const tile = 8 * scale;
 
-  // Keys: game uses 0xFF (255) to indicate "no key display"
   const showKeys = data.keys !== 255 && data.keys !== 0xFF;
-  // Rupee counter needs a 4th digit once the "Larger Wallet" cap raises it past 999.
   const rupeeDigits = data.maxRupees > 999 ? 4 : 3;
-  // Bow value >= 3 means Silver Arrows have been obtained. Mirrors hud.c's Hud_Update_Inventory.
   const hasSilverArrows = data.items[0] >= 3;
 
   const counts = (
@@ -100,11 +92,6 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
         transition: slideTransition,
       }}
     >
-      {/* Content centred at the chosen ratio width, and placed against the rendered frame on both axes:
-          the left and right groups sit two tiles in from its edges, the bar 1.75 tiles below its top. A
-          wide view spreads the groups over the columns it adds and a tall view puts the bar over the rows
-          it adds, so the HUD reaches the corners of whatever shape is on screen. The pause menu it slides
-          against measures the same way. */}
       <HudBox style={{
         position: 'relative',
         display: 'flex',
@@ -115,7 +102,6 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
         width: hudWidth != null ? hudWidth : '100%',
         margin: hudWidth != null ? '0 auto' : undefined,
       }}>
-          {/* Left group: magic meter + item box + counts (original mode) */}
           <HudBox style={{ display: 'flex', alignItems: 'flex-start', marginLeft: 2 * tile }}>
             <HudMagicMeter
               value={data.magicPower}
@@ -139,22 +125,17 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
             )}
           </HudBox>
 
-          {/* Middle group: counts (centered mode only) */}
           {countLayout === 'centered' && (
             <HudBox style={{ display: 'flex', alignItems: 'flex-start', gap: tile }}>
               {counts}
             </HudBox>
           )}
 
-          {/* Right group: life */}
           <HudBox style={{ marginRight: 2 * tile }}>
             <HudLife
               healthCurrent={data.healthCurrent}
               healthCapacity={data.healthCapacity}
               heartMode={heartMode}
-              // The Original style is a replica of the console's own bar, drawn
-              // from sprites extracted out of the ROM. Both opt-ins say the same
-              // thing: this bar is the console's, not ours.
               heartArt="sprite"
               showCaption
               scale={scale}
@@ -162,7 +143,6 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
             />
           </HudBox>
 
-          {/* Bottom centre: the countdown of the digging game and the Super Bomb. It draws nothing until one runs. */}
           <HudCountdownSlot variant={countdownStyle} scale={scale} spritesBase={spritesBase} />
       </HudBox>
     </HudBox>

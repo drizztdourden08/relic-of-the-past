@@ -1,14 +1,9 @@
 /* @layer renderer-hud @kind hook */
-/**
- * Paints a texture canvas: once for a still pattern, every animation frame for a moving one. A
- * viewer who asked for reduced motion gets the still pattern. The clock starts once per canvas
- * and survives repaints, so a box that grows as its text types keeps its motion continuous.
- */
 import { useEffect, useRef } from 'react';
 import type { RefObject } from 'react';
 import type { DialogTextureAnimation } from '@shared/game/dialog/box-style';
 import { paintTexture } from '../../../../../../lib/dialog-texture/paint-texture';
-import type { DialogTextureProps } from '../DialogTexture';
+import type { DialogTextureProps } from '../DialogTexture.type';
 
 const reducedMotion = (): boolean =>
   typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

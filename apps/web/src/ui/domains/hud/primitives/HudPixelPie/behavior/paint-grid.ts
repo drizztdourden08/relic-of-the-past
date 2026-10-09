@@ -1,21 +1,6 @@
 /* @layer renderer-hud @kind logic */
-/**
- * Paints a grid of palette indices into a canvas whose backing store is the grid itself, one canvas
- * pixel per game pixel. The browser scales it up with no smoothing, so every cell stays a hard square
- * at any HUD scale. The colours come from the custom properties HudPixelPie.css sets from the tokens.
- */
-import { INK } from '../HudPixelPie.constants';
+import { INK, INK_PROPERTIES } from '../HudPixelPie.constants';
 import type { PiePalette } from '../HudPixelPie.type';
-
-/** Custom property per palette index. Index 0 is clear and has none. */
-const INK_PROPERTIES: Record<number, string> = {
-  [INK.outline]: '--hud-pixel-pie-outline',
-  [INK.backing]: '--hud-pixel-pie-backing',
-  [INK.deep]: '--hud-pixel-pie-deep',
-  [INK.shade]: '--hud-pixel-pie-shade',
-  [INK.lit]: '--hud-pixel-pie-lit',
-  [INK.bright]: '--hud-pixel-pie-bright',
-};
 
 const readPalette = (canvas: HTMLCanvasElement): PiePalette => {
   const style = getComputedStyle(canvas);

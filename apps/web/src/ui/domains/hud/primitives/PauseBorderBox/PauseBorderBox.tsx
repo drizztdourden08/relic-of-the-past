@@ -1,23 +1,9 @@
-/* @layer renderer-hud @kind data */
-/**
- * Bordered box from 8 tiled DOM elements: 4 corner images + 4 edge divs with
- * background-repeat. All dimensions are integer pixels so the tiles meet.
- * `cols`/`rows` are the inner size in tiles; total size is +2 each way.
- */
-
-interface PauseBorderBoxProps {
-  color: 'green' | 'blue' | 'gray' | 'yellow' | 'red';
-  cols: number;
-  rows: number;
-  scale: number;
-  spritesBase: string;
-  style?: React.CSSProperties;
-  children?: React.ReactNode;
-}
+/* @layer renderer-hud @kind component */
+import type { PauseBorderBoxProps } from './PauseBorderBox.type';
 
 const PauseBorderBox = (props: PauseBorderBoxProps) => {
   const { color, cols, rows, scale, spritesBase, style, children } = props;
-  const T = Math.round(8 * scale); // tile size in integer px
+  const T = Math.round(8 * scale);
   const totalW = (cols + 2) * T;
   const totalH = (rows + 2) * T;
 
@@ -40,7 +26,6 @@ const PauseBorderBox = (props: PauseBorderBoxProps) => {
 
   const bgInset = Math.round(T * 7 / 16);
 
-  // SVG outline filter copied from HudSprite, a cross-shaped black outline via feMorphology
   const s = scale;
   const outlineSvg = [
     `<svg xmlns='http://www.w3.org/2000/svg'>`,
@@ -57,9 +42,7 @@ const PauseBorderBox = (props: PauseBorderBoxProps) => {
 
   return (
     <div className="pause-panel" style={{ position: 'relative', width: totalW, height: totalH, ...style }}>
-      {/* Black background, inset so it doesn't bleed past the outer border edge */}
       <div style={{ background: 'black', position: 'absolute', inset: bgInset }} />
-      {/* Content area */}
       <div className="pause-panel__content" style={{
         position: 'absolute',
         top: T,
@@ -71,7 +54,6 @@ const PauseBorderBox = (props: PauseBorderBoxProps) => {
       }}>
         {children}
       </div>
-      {/* Border tiles on top, with outline filter */}
       <div className="pause-panel__border" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', filter: outlineFilter }}>
         <img src={corner} style={{ ...cornerStyle, top: 0, left: 0 }} />
         <img src={corner} style={{ ...cornerStyle, top: 0, right: 0, transform: 'scaleX(-1)' }} />
@@ -87,4 +69,3 @@ const PauseBorderBox = (props: PauseBorderBoxProps) => {
 };
 
 export { PauseBorderBox };
-export type { PauseBorderBoxProps };

@@ -1,11 +1,4 @@
 /* @layer renderer-hud @kind component */
-/**
- * The message box: a ground with an optional texture, the text, and a border on top. The border is
- * the game's own three tiles (corner, horizontal edge, vertical edge, the rest flipped), a drawn
- * single or double line with the chosen corners and corner marks, or nothing. When the tiles are
- * not extracted yet the original border falls back to a drawn single line. A feathered ground with no
- * border around it spreads a little past the box and fades out toward every edge.
- */
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { DialogCorner } from '@shared/game/dialog/box-style';
@@ -19,7 +12,6 @@ import type { DialogBoxProps } from './DialogBox.type';
 const groundFill = (color: string, opacity: number): string =>
   `color-mix(in srgb, ${color} ${Math.round(opacity * 100)}%, transparent)`;
 
-/** Solid in the middle, clear at both ends of one axis, over `fade` pixels. */
 const edgeFade = (direction: string, fade: number): string =>
   `linear-gradient(${direction}, transparent, black ${fade}px, black calc(100% - ${fade}px), transparent)`;
 
@@ -42,7 +34,6 @@ const DialogBox = (props: DialogBoxProps) => {
   const cornerStyle: CSSProperties = { position: 'absolute', width: tile, height: tile, imageRendering: 'pixelated' };
   const edgeStyle: CSSProperties = { position: 'absolute', imageRendering: 'pixelated', backgroundSize: `${tile}px ${tile}px` };
   const feathered = wantsFeather && !useTiles && !drawn;
-  // A feathered ground reaches a tile past the box and fades over two, so the words sit on near full shade.
   const inset = useTiles ? Math.round(tile / 2) : (feathered ? -tile : 0);
   const groundCorner: DialogCorner = useTiles ? 'square' : (bordered ? border.corner : 'rounded');
   const shape = feathered ? featherStyle(2 * tile) : groundShape(groundCorner, bordered ? tile : Math.round(tile / 2));

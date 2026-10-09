@@ -1,42 +1,8 @@
 /* @layer renderer-hud @kind hook */
-/**
- * A node's own `transition.enter`/`exit` - "a `repeat`'s count changing is not
- * a value transition, it is a node appearing or disappearing" (the plan's own
- * words). Two mechanisms, because arriving and leaving are not symmetric in
- * React: an ARRIVING node is already in `nodes` and just needs one extra
- * render to flip from its pre-enter style to rest, under a `transition` CSS
- * string, which is the standard two-frame mount fade. A LEAVING node is
- * ALREADY GONE from `nodes` the instant its `repeat` stops producing it -
- * there is nothing left to ease unless this hook keeps drawing a GHOST of it,
- * at its last known rect, for exactly `exit.duration` ms.
- *
- * KNOWN, ACCEPTED LIMIT: a ghost is keyed by node id: a `repeat` instance that
- * exits and a DIFFERENT instance that enters with the SAME id within one
- * exit window are not expected here (`expand.ts`'s own `#index` suffixing
- * means this only bites an id an author reused by hand, not an ordinary
- * repeat resize).
- */
 import { useEffect, useRef, useState } from 'react';
-import type { CSSProperties } from 'react';
 import type { PlacedNode } from '@shared/hud/engine';
-
-interface Ghost { placed: PlacedNode; removeAt: number }
-
-interface EnterExitResult {
-  /** The nodes to actually render this frame - `nodes` plus any still-fading
-   *  ghost, in the order they should paint. */
-  renderNodes: readonly PlacedNode[];
-  /** The one-shot pre-enter override for a node that just arrived - opacity/
-   *  scale/position pulled TOWARD rest, cleared on the render right after. */
-  enterStyle: (id: string) => CSSProperties;
-  /** A ghost's own exit override - opacity/scale/position pushed AWAY from
-   *  rest, active for its whole `removeAt` window. */
-  exitStyle: (id: string) => CSSProperties;
-  transitionCss: (id: string) => string | undefined;
-}
-
-const PRE_ENTER: CSSProperties = { opacity: 0, transform: 'scale(0.85)' };
-const POST_EXIT: CSSProperties = { opacity: 0, transform: 'scale(0.85)' };
+import { POST_EXIT, PRE_ENTER } from './HudNodeMotion.constants';
+import type { EnterExitResult, Ghost } from './HudNodeMotion.type';
 
 const useEnterExit = (nodes: readonly PlacedNode[]): EnterExitResult => {
   const seenRef = useRef<Set<string>>(new Set());
@@ -57,9 +23,6 @@ const useEnterExit = (nodes: readonly PlacedNode[]): EnterExitResult => {
 
     if (arrivals.length) {
       setEnteringIds((prev) => new Set([...prev, ...arrivals.map((p) => p.id)]));
-      // One frame later: drop the pre-enter override so the CSS transition
-      // (already active, since `transitionCss` does not gate on this state)
-      // eases from it to rest.
       const raf = requestAnimationFrame(() => {
         setEnteringIds((prev) => {
           const next = new Set(prev);

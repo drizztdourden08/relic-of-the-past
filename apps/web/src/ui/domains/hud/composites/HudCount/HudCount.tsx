@@ -2,21 +2,8 @@
 import { HudBox } from '../../primitives/HudBox';
 import { HudNumber } from '../../primitives/HudNumber';
 import { HudSprite } from '../../primitives/HudSprite';
+import type { HudCountProps } from './HudCount.type';
 
-interface HudCountProps {
-  /** Icon sprite filename (without extension) */
-  icon: string;
-  /** Icon width in SNES pixels (8 for single-tile, 16 for double) */
-  iconWidth?: number;
-  value: number;
-  digits?: number;
-  /** Renders the count in the "at max" yellow digit variant. See the "Indicate Max Resources" setting. */
-  isMax?: boolean;
-  scale: number;
-  spritesBase: string;
-}
-
-/** Vertical flex stack: icon on top, digits below. No absolute positioning. */
 const HudCount = (props: HudCountProps) => {
   const { icon, iconWidth = 8, value, digits = 2, isMax = false, scale, spritesBase } = props;
 
@@ -38,4 +25,3 @@ const HudCount = (props: HudCountProps) => {
 };
 
 export { HudCount };
-export type { HudCountProps };

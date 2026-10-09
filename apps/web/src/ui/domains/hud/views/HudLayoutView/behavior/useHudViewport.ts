@@ -9,7 +9,7 @@
  * reports a wide play field and an anchored element keeps its own corner.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { SNES_HEIGHT, SNES_WIDTH } from '../../../hooks/useHud';
+import { SNES_HEIGHT, SNES_WIDTH } from '../../../hooks/hooks.constants';
 import type { Size } from '@shared/hud/layouts';
 
 const CANVAS_ID = 'canvas';

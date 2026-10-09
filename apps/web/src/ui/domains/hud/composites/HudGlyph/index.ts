@@ -1,3 +1,4 @@
 /* @layer renderer-hud @kind barrel */
-export { HudGlyph, GLYPH_SIZE } from './HudGlyph';
-export type { HudGlyphProps } from './HudGlyph';
+export { HudGlyph } from './HudGlyph';
+export { GLYPH_SIZE } from './HudGlyph.constants';
+export type { HudGlyphProps } from './HudGlyph.type';

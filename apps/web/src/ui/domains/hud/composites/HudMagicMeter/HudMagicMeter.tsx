@@ -1,35 +1,12 @@
 /* @layer renderer-hud @kind component */
 import { HudBox } from '../../primitives/HudBox';
-import { HudImage } from '../../primitives/HudImage';
 import { outlineFilter } from '../../primitives/HudSprite';
+import type { HudMagicMeterProps } from './HudMagicMeter.type';
+import { MagicAccurate } from './sub-components/MagicAccurate';
+import { MagicOriginal } from './sub-components/MagicOriginal';
 
-type MagicMeterMode = 'original' | 'accurate';
-
-interface HudMagicMeterProps {
-  value: number;
-  halfMagic: boolean;
-  mode: MagicMeterMode;
-  scale: number;
-  spritesBase: string;
-}
-
-const MAGIC_GREEN = '#00d800';
-const MAGIC_WHITE = '#f8f8f8';
-
-/**
- * 3 tiles wide × 6 tiles tall (matches SNES tilemap exactly).
- *
- *   Row 0: TL  | Top    | TR
- *   Row 1: Left| fill[0]| Right
- *   Row 2: Left| fill[1]| Right
- *   Row 3: Left| fill[2]| Right
- *   Row 4: Left| fill[3]| Right
- *   Row 5: BL  | Bottom | BR
- *
- * Magic 0-128 → 16 fill levels across 4 interior cells (bottom-up).
- */
 const HudMagicMeter = (props: HudMagicMeterProps) => {
-  const { value, halfMagic, mode, scale, spritesBase } = props;
+  const { value, mode, scale, spritesBase } = props;
 
   const tile = 8 * scale;
   const frameW = 3 * tile;
@@ -37,7 +14,6 @@ const HudMagicMeter = (props: HudMagicMeterProps) => {
 
   const fillLevel = Math.min(Math.max((value + 7) >> 3, 0), 16);
 
-  // Black interior fill: inset 0.8 tiles from each edge of the 3×6 frame
   const inset = tile * 0.8;
   const interiorFill = (
     <HudBox style={{
@@ -70,129 +46,4 @@ const HudMagicMeter = (props: HudMagicMeterProps) => {
   );
 };
 
-const getFillSprites = (fillLevel: number): string[] => {
-  const fills: string[] = ['hud-magic-fill-empty', 'hud-magic-fill-empty', 'hud-magic-fill-empty', 'hud-magic-fill-empty'];
-
-  for (let row = 3; row >= 0; row--) {
-    const rowStart = (3 - row) * 4;
-    const rowFill = fillLevel - rowStart;
-
-    if (rowFill <= 0) {
-      fills[row] = 'hud-magic-fill-empty';
-    } else if (rowFill >= 4) {
-      fills[row] = 'hud-magic-fill-full';
-    } else if (rowFill === 1) {
-      fills[row] = 'hud-magic-cap';
-    } else if (rowFill === 2) {
-      fills[row] = 'hud-magic-fill-quarter';
-    } else if (rowFill === 3) {
-      fills[row] = 'hud-magic-fill-half';
-    }
-  }
-
-  return fills;
-};
-
-const MagicOriginal = (props: { tile: number; spritesBase: string; fillLevel: number }) => {
-  const { tile, spritesBase, fillLevel } = props;
-  const fills = getFillSprites(fillLevel);
-
-  return (
-    <>
-      {/* Row 0: TL | Top | TR */}
-      <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
-
-      {/* Rows 1-4: Left | Fill | Right */}
-      {fills.map((fill, i) => (
-        <HudBox key={i} style={{ position: 'absolute', left: 0, top: tile * (i + 1), width: tile * 3, height: tile }}>
-          <HudImage src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile}
-            style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
-          <HudImage src={`${spritesBase}${fill}.png`} width={tile} height={tile}
-            style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-          <HudImage src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile}
-            style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
-        </HudBox>
-      ))}
-
-      {/* Row 5: BL | Bottom | BR */}
-      <HudImage src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: 0, top: tile * 5, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile, top: tile * 5, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
-    </>
-  );
-};
-
-const MagicAccurate = (props: { tile: number; scale: number; spritesBase: string; value: number }) => {
-  const { tile, scale, spritesBase, value } = props;
-
-  const inset = tile * 0.8;
-  const interiorW = tile * 3 - inset * 2;
-  const interiorH = tile * 6 - inset * 2;
-  const fillFraction = Math.min(Math.max(value / 128, 0), 1);
-  const fillH = fillFraction * interiorH;
-  const whiteInset = 2 * scale; // white line is narrower than fill
-
-  return (
-    <>
-      {/* Frame border tiles at z-index 2, above the black bg and green fill */}
-      <HudBox style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
-        <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
-        <HudImage src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-        <HudImage src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
-        {Array.from({ length: 4 }).map((_, i) => (
-          <HudBox key={i}>
-            <HudImage src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile}
-              style={{ position: 'absolute', left: 0, top: tile * (i + 1), imageRendering: 'pixelated' }} />
-            <HudImage src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile}
-              style={{ position: 'absolute', left: tile * 2, top: tile * (i + 1), imageRendering: 'pixelated' }} />
-          </HudBox>
-        ))}
-        <HudImage src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: 0, top: tile * 5, imageRendering: 'pixelated' }} />
-        <HudImage src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: tile, top: tile * 5, imageRendering: 'pixelated' }} />
-        <HudImage src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
-      </HudBox>
-
-      {/* Green fill grows from the bottom by percentage */}
-      {fillFraction > 0 && (
-        <HudBox style={{
-          position: 'absolute',
-          left: inset,
-          bottom: inset,
-          width: interiorW,
-          height: fillH,
-          backgroundColor: MAGIC_GREEN,
-          zIndex: 1,
-        }}>
-          {/* White cap line at top of green fill */}
-          {fillFraction < 1 && (
-            <HudBox style={{
-              position: 'absolute',
-              left: whiteInset,
-              top: 0,
-              width: interiorW - whiteInset * 2,
-              height: scale,
-              backgroundColor: MAGIC_WHITE,
-            }} />
-          )}
-        </HudBox>
-      )}
-    </>
-  );
-};
-
 export { HudMagicMeter };
-export type { MagicMeterMode, HudMagicMeterProps };

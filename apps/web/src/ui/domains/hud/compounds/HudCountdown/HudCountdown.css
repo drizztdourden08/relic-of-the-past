@@ -3,7 +3,6 @@
   position: relative;
 }
 
-/* The digits sit over the middle of the pie. */
 .hud-countdown__number {
   position: absolute;
   inset: 0;

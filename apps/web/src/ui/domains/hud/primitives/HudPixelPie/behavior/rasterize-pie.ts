@@ -1,23 +1,16 @@
 /* @layer renderer-hud @kind logic */
-/**
- * Draws one frame of the pixel pie as palette indices, row by row. Slices already out leave the
- * dark disc showing. The next slice to leave takes its pulse colour. The slice that just went is
- * drawn again a whole number of pixels out along its bisector, thinned by an ordered dither.
- */
 import { DITHER, EXIT_STEPS, INK, PULSE_LEVELS } from '../HudPixelPie.constants';
 import type { PieFrame, SliceMap } from '../HudPixelPie.type';
-import { buildSliceMap, pushOffset } from './slice-map';
+import { buildSliceMap } from './build-slice-map';
+import { pushOffset } from './push-offset';
 
-/** The shaded band sits one colour step under the slice body, and never under the shade itself. */
 const rimOf = (body: number): number => Math.max(INK.shade, body - 1);
 
-/** Colour of one slice cell: deep under the digits, a step down on the shaded band, else the body. */
 const inkOf = (body: number, map: SliceMap, cell: number): number => {
   if (map.hub[cell] === 1) return INK.deep;
   return map.rim[cell] === 1 ? rimOf(body) : body;
 };
 
-/** Quarters of a leaving slice still drawn at |step|: all four at the first step, one at the last. */
 const quartersKept = (step: number): number => EXIT_STEPS + 1 - step;
 
 const drawLeaving = (grid: Uint8Array, map: SliceMap, index: number, step: number): void => {
