@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { DetectedDevice } from '@shared/types/controls';
+import type { DetectedDevice } from '@shared/types/controls/devices/devices.type';
 
 const detectKeyboard = (index = 0): DetectedDevice => ({
   id: `keyboard-${index}`,

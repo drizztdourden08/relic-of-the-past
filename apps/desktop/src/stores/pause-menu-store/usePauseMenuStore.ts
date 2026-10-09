@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
-import { reducePause } from '@shared/game/logic/pause';
+import { reducePause } from '@rotp/game-data';
 import type { PauseMenuStore } from './pause-menu-store.type';
 import { CLOSED, NO_ACTIONS } from './pause-menu-store.constants';
 import { pauseContext } from './pause-context';

@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind types */
 import type { ReportContext } from '@shared/sanctuary';
-import type { GameScreenId } from '@shared/game/logic/queries/game-id';
-import type { GameUIState } from '@shared/game/types';
+import type { GameScreenId } from '@rotp/game-data';
+import type { GameUIState } from '@rotp/game-data';
 
 interface ReportContextResult {
   context: ReportContext;

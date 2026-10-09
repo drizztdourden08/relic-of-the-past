@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Status, Select, Button } from '@drizztdourden08/tessera/primitives';
-import { formatRelativeTime } from '../../../../../../../utils';
+import { formatRelativeTime } from '@drizztdourden08/brock-core';
 import { updateProfile } from '../../../../../../../lib/storage/profile-store';
 import { reloadMsuForProfile } from '@app/lib/game/msu-pack-loader';
 import { languageLabel } from '../language-label';

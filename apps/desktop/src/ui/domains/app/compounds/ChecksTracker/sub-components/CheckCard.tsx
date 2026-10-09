@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Image, Status, Text } from '@drizztdourden08/tessera/primitives';
-import { getItem } from '@shared/game/data';
-import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
+import { getItem } from '@rotp/game-data';
+import { getItemSprite } from '@rotp/game-data';
 import { EVENT_MARK } from '../ChecksTracker.constants';
 import type { CheckCardProps } from '../ChecksTracker.type';
 import { CardSpritePlaceholder } from './CardSpritePlaceholder';

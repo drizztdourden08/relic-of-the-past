@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Image, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import { spriteUrlOf } from '@shared/game/logic/queries/item-sprites';
+import { spriteUrlOf } from '@rotp/game-data';
 import { SpritePlaceholder } from './SpritePlaceholder';
 import type { ActionTileProps } from '../RulesTab.type';
 

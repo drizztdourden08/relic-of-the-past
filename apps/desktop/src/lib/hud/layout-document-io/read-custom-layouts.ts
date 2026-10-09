@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { readJson } from '@shared/storage/json';
+import { readJson } from '@drizztdourden08/brock-core';
 import { tryLoadLayout } from '@shared/hud/layouts';
 import { activeProfileId } from '../active-profile';
 import type { StoredLayouts } from './layout-document-io.type';

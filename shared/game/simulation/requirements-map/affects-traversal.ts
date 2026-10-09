@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ItemId } from '../../data';
+import type { ItemId } from '@rotp/game-data';
 import type { FlagDiff } from '../types';
 import { itemAffectsTraversal } from './item-affects-traversal';
 

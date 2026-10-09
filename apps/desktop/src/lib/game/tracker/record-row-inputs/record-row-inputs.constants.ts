@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind constants */
 import type { DarkRoomLightField } from '@shared/randomizer/world/dark-rooms';
-import type { ItemId, Requirement } from '@shared/game/data';
+import type { ItemId, Requirement } from '@rotp/game-data';
 
 const LAMP: ItemId = 'item-019';
 const MOON_PEARL: ItemId = 'item-032';

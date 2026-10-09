@@ -3,15 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { compressStrings } from '@shared/asset-extraction/text/dialogue-encoder';
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
 import { kFontTypes } from '@shared/asset-extraction/text/data/font-data';
-import {
-  GLYPH_SLOTS, alphabetChars, dialogueCharsetOf, displayAlphabetOf, extraGlyphSlots, extraSlotOfToken, readableText,
-} from '@shared/game/dialog/dialogue-charset';
-import { EXTRA_GLYPHS } from '@shared/game/dialog/extra-glyphs.data';
-import { extraGlyphTiles } from '@shared/game/dialog/extra-glyph-tiles';
+import { GLYPH_SLOTS, alphabetChars, dialogueCharsetOf, displayAlphabetOf, extraGlyphSlots, extraSlotOfToken, readableText } from '@rotp/game-data';
+import { EXTRA_GLYPHS } from '@rotp/game-data';
+import { extraGlyphTiles } from '@rotp/game-data';
 import { primary, secondary, stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup';
 import { toDialogueText } from '@app/lib/game/session-dialogue/dialogue-text';
 import { compressMarkedStrings } from '@app/lib/game/session-dialogue/highlight-bytes';
-import type { DialogueCharset } from '@shared/game/dialog/dialogue-charset';
+import type { DialogueCharset } from '@rotp/game-data';
 
 const REQUIRED = "_-.,'()!?&+/:#%*\";=<>[]~@^`";
 const PRINTABLE_ASCII = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');

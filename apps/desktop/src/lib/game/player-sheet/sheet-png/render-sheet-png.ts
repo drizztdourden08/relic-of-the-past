@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { PlayerSheet, Wearing } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet, Wearing } from '@rotp/game-data';
 import { DEFAULT_WEARING, SHEET_PNG_HEIGHT, SHEET_PNG_WIDTH } from './sheet-png.constants';
 import { drawSheet } from './draw-sheet';
 

@@ -2,7 +2,7 @@
 import { Status, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { ROM_KINDS } from '@shared/storage/rom-kinds';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import type { RomListProps } from './RomList.type';
 
 const RomList = (props: RomListProps) => {

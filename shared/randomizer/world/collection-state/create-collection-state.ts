@@ -2,7 +2,7 @@
 import { updateReachableRegions } from '../update-reachable-regions';
 import { isItemUsable } from '../item-usability';
 import { progressiveSettingOf, progressiveTierMapOf } from '../progressive/progressive-reach';
-import type { RegionId } from '@shared/game/data/types/ids';
+import type { RegionId } from '@rotp/game-data';
 import type { World } from '../world.type';
 import type { CollectionState, Holding } from '../collection-state.type';
 

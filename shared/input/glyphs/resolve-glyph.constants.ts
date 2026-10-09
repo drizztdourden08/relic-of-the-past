@@ -1,6 +1,6 @@
 /* @layer shared-input @kind constants */
 import { GENERIC_PACK_ID } from './built-in-packs';
-import type { DeviceFamily } from '../../types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 
 const AUTO_PACK_ID = 'auto';
 

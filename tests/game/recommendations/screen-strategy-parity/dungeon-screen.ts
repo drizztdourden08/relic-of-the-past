@@ -1,6 +1,6 @@
 /* @layer test @kind helper */
-import { all } from '@shared/game/data';
-import type { ScreenRecord } from '@shared/game/data';
+import { all } from '@rotp/game-data';
+import type { ScreenRecord } from '@rotp/game-data';
 
 const dungeonScreen = (exclude?: string): ScreenRecord => {
   const screen = all('screen').find(s =>

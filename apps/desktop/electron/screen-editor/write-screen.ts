@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
-import { serializeScreenRecord } from '@shared/game/data/record-codegen';
-import type { ScreenRecord } from '@shared/game/data/types';
+import { serializeScreenRecord } from '@rotp/game-data';
+import type { ScreenRecord } from '@rotp/game-data';
 import type { WriteRecordResult, WriteScreenArgs } from '@shared/ipc/screen-editor-contract';
 import { editSourceFile } from './edit-source-file';
 import { withAllocatedIds } from './id-allocator';

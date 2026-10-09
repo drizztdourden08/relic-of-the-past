@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import {
-  SPRITE_MANIFEST,
-  CATEGORY_LABELS,
-  CATEGORY_ORDER,
-} from '@shared/game/data';
-import type { SpriteCategory } from '@shared/game/data';
+import { SPRITE_MANIFEST, CATEGORY_LABELS, CATEGORY_ORDER } from '@rotp/game-data';
+import type { SpriteCategory } from '@rotp/game-data';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
 import { Box, Button, Tabs } from '@drizztdourden08/tessera/primitives';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';

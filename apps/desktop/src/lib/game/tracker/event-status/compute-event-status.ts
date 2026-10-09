@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { all } from '@shared/game/data';
-import type { CheckId, CheckRecord } from '@shared/game/data';
+import { all } from '@rotp/game-data';
+import type { CheckId, CheckRecord } from '@rotp/game-data';
 import { evaluatePresence } from '@shared/game/simulation/presence/evaluate';
 import type { PresenceGameState } from '@shared/game/simulation/presence/state';
 

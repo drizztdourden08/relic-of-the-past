@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { FunctionMapping, FunctionAction } from '@shared/types/controls';
-import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
+import type { FunctionMapping, FunctionAction } from '@shared/types/controls/functions/functions.type';
+import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls/functions/functions.constants';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
 import type { AllowedDevices } from './profile-devices';
 import { deviceKeyFor, scopedEntries, setScoped } from './device-scoped-map';

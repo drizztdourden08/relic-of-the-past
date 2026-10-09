@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { MsuPackMeta } from '@shared/types/msu-manifest';
 import { assertSafeName, packDir } from '../msu-paths';
 import { newManifest } from './new-manifest';

@@ -1,6 +1,6 @@
 /* @layer shared-input @kind types */
 import type { ResolvedControl } from '../../family/family.type';
-import type { CoreBindings, ModernSlot } from '../../../types/controls';
+import type { CoreBindings, ModernSlot } from '@rotp/game-data';
 
 interface SlotSource {
   core: CoreBindings;

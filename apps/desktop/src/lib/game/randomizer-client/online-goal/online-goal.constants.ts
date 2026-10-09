@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 
 const GOAL_CHECK: CheckId = 'check-351';
 

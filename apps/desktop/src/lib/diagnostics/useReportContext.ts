@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind hook */
 import { useMemo } from 'react';
-import type { GameScreenId } from '@shared/game/logic/queries/game-id';
-import { screenIdForGameId } from '@shared/game/logic/queries/game-id';
-import type { GameUIState } from '@shared/game/types';
+import type { GameScreenId } from '@rotp/game-data';
+import { screenIdForGameId } from '@rotp/game-data';
+import type { GameUIState } from '@rotp/game-data';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useDebugTextBuilder } from './useDebugTextBuilder';
 import { buildReportSubject } from './build-report-subject';

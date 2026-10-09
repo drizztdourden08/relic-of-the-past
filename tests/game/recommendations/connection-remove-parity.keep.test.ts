@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect, afterEach } from 'vitest';
-import { all, getConnection, registerRecord, unregisterRecord } from '@shared/game/data';
-import type { ConnectionId, ConnectionRecord, ScreenId } from '@shared/game/data';
+import { all, getConnection, registerRecord, unregisterRecord } from '@rotp/game-data';
+import type { ConnectionId, ConnectionRecord, ScreenId } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { connectionStrategy } from '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/connection.strategy';

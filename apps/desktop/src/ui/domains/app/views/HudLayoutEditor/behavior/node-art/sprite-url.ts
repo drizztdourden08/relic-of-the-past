@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
+import { getSpritesBase } from '@rotp/game-data';
 
 const spriteUrl = (file: string): string => `${getSpritesBase()}${file}.png`;
 

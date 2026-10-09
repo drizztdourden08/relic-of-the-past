@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { RequirementSet } from '../nav-data.types';
+import type { RequirementSet } from '@rotp/game-data';
 import type { TileReq } from '../tile-attrs';
 import type { GridPos } from '../types';
 import type { DetectedRequirement, RequirementDetectorInput } from './requirement-detector.type';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet } from '@rotp/game-data';
 import type { ResolvedRow } from '@app/lib/game/player-sheet/resolve-palette';
 
 interface ContactSheetProps {

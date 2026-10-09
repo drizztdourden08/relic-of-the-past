@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { EntityKind } from '../../data/types';
+import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext } from '../detection-types';
 import type { Difference } from './difference.type';
 import type { ComparisonStrategy } from './probe.type';

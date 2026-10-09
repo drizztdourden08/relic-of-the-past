@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { CAPACITY_FAMILY_IDS } from '@shared/game/data/capacity-upgrade-names.data';
+import { CAPACITY_FAMILY_IDS } from '@rotp/game-data';
 import { CAPACITY_FIELDS_OF } from './capacity-option-keys.constants';
 import { capacityKeyOf } from './capacity-key-of';
 

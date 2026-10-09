@@ -2,7 +2,7 @@
 import { WORLD_EVENTS } from './story-event-rule.constants';
 import { compileRule } from '../rules/rule-eval';
 import { has } from '../rules/rule-node-build';
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 import type { Rule } from '../world.type';
 
 const storyEvent = (checkId: CheckId): Rule => {

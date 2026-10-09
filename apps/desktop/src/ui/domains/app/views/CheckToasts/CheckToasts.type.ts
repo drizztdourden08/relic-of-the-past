@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { CheckRecord, ItemId } from '@shared/game/data';
+import type { CheckRecord, ItemId } from '@rotp/game-data';
 import type { OnlineNotice } from '@app/lib/game/randomizer-client';
 
 interface CheckToastsProps {

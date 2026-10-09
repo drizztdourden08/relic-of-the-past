@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ItemId } from '../../data';
+import type { ItemId } from '@rotp/game-data';
 
 interface StoryStatus {
   darkWorld: boolean;

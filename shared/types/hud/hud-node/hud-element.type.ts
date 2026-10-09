@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { SdlAxisName, SdlButtonName } from '../../../input/sdl-buttons';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 import type { HudButtonSpec } from '../hud-button';
 import type { HudCountdownSpec } from '../hud-countdown';
 import type { HudShapeSpec } from '../hud-shape';

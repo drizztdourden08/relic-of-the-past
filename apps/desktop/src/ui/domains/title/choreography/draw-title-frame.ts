@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind logic */
-import { brightness, flashOn, logoAlpha, phaseOf, sceneAlpha, swordShown, triforceShown } from '@shared/game/title/title-phase';
-import { SWORD_REST_BASE } from '@shared/game/title/title-layout';
+import { brightness, flashOn, logoAlpha, phaseOf, sceneAlpha, swordShown, triforceShown } from '@rotp/game-data';
+import { SWORD_REST_BASE } from '@rotp/game-data';
 import type { TitleFrameInput } from './choreography.type';
 import { drawSword } from './draw-sword';
 import { drawTriforce } from './draw-triforce';

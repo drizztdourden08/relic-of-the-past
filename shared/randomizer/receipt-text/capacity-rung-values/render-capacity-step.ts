@@ -1,11 +1,11 @@
 /* @layer shared-game @kind logic */
-import { CAPACITY_RECEIPT_LABELS } from '@shared/game/data/capacity-upgrade-names.data';
+import { CAPACITY_RECEIPT_LABELS } from '@rotp/game-data';
 import { primary } from '../highlight-markup';
 import { detailPage } from '../receipt-line.type';
 import { capacityRungText } from './capacity-rung-text';
 import { VALUE_UNIT } from './capacity-rung-values.constants';
 import { growthVerb } from './growth-verb';
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import type { CapacityFamilyId } from '@rotp/game-data';
 import type { ReceiptLine } from '../receipt-line.type';
 
 const capacityTierText = (tiers: number): string => `${tiers} tier${tiers === 1 ? '' : 's'}`;

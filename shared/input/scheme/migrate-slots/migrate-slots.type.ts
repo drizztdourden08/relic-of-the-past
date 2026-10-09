@@ -1,5 +1,5 @@
 /* @layer shared-input @kind types */
-import type { ModernSlot, SlotAssignment, SlotIndex } from '../../../types/controls/scheme';
+import type { ModernSlot, SlotAssignment, SlotIndex } from '@rotp/game-data';
 
 type OldSlot = Partial<ModernSlot> & { id?: unknown };
 

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
-import type { ConnectionKind, ConnectionSide, ScreenId } from '../data';
-import type { GameScreenId } from '../logic/queries/game-id';
+import type { ConnectionKind, ConnectionSide, ScreenId } from '@rotp/game-data';
+import type { GameScreenId } from '@rotp/game-data';
 import type { GridPos } from './types';
 
 type CrossingClass = 'entrance' | 'edge';

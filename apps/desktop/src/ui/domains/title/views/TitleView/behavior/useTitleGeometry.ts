@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FRAME_H, FRAME_W, HORIZON_Y } from '@shared/game/title/title-layout';
+import { FRAME_H, FRAME_W, HORIZON_Y } from '@rotp/game-data';
 import { wasmGetViewportInfo } from '@app/lib/game/wasm-bridge';
 import { linesAbovePicture } from '@app/lib/game/bridge/view-origin';
 import type { SceneGeometry } from '../../../scene/scene.type';

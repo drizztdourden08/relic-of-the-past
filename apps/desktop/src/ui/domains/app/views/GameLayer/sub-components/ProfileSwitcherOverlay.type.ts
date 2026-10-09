@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { FunctionMapping, InputProfile } from '@shared/types/controls';
+import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 
 interface ProfileSwitcherOverlayProps {
   open: boolean;

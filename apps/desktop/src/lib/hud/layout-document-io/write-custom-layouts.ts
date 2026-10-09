@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { writeJson } from '@shared/storage/json';
+import { writeJson } from '@drizztdourden08/brock-core';
 import { tryLoadLayout } from '@shared/hud/layouts';
 import type { HudLayout } from '@shared/types/hud';
 import { activeProfileId } from '../active-profile';

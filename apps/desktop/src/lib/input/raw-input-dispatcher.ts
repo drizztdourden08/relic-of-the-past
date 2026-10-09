@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { InputBinding } from '@shared/types/controls';
+import type { InputBinding } from '@rotp/game-data';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
 import type { AxisDirection, RawInputEvent, RawInputListener } from './raw-input-dispatcher.type';
 

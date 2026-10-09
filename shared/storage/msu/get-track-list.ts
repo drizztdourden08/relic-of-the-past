@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { packDir, trackNumberOf } from '../msu-paths';
 import { extensionOf } from './extension-of';
 import type { MsuTrackFile } from './msu.type';

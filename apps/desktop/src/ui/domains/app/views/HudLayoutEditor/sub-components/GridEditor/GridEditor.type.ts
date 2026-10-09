@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { EditorAction, EditorActionKind, EditorShortcut } from '../SelectionBands';
 import type { HudGridContainer } from '@shared/types/hud';
-import type { OsKind } from '@shared/platform';
+import type { OsKind } from '@drizztdourden08/brock-core';
 import type { CellRef, Occupant, TrackAxis } from '../GridLattice';
 
 type GridSelection =

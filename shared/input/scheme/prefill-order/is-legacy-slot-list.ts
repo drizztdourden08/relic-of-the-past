@@ -1,5 +1,5 @@
 /* @layer shared-input @kind logic */
-import type { ModernSlot } from '../../../types/controls/scheme';
+import type { ModernSlot } from '@rotp/game-data';
 
 const isLegacySlotList = (raw: readonly unknown[]): boolean =>
   raw.every((entry) => {

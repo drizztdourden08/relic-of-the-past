@@ -9,7 +9,7 @@ import {
 import { compileRule } from '../../rule-eval';
 import { all, has, option } from '../../rule-node-build';
 import { FINAL_FIGHT_SILVER_HITS } from '../../../final-fight.constants';
-import type { ActorId } from '@shared/game/data/types/ids';
+import type { ActorId } from '@rotp/game-data';
 import type { Rule } from '../../../world.type';
 
 const armosDefeat: Rule = anyOf(

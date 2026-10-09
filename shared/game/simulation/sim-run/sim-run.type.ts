@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckId } from '../../data';
+import type { CheckId } from '@rotp/game-data';
 import type { SimOutcome, DatasetSuggestion } from '../types';
 
 interface SimRunConfig {

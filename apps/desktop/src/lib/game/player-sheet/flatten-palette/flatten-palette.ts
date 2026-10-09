@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { OutfitId, OutfitPalette, SheetPalette, PlayerSheet } from '@shared/game/data/player-sheet/types';
-import { OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
+import type { OutfitId, OutfitPalette, SheetPalette, PlayerSheet } from '@rotp/game-data';
+import { OUTFIT_IDS } from '@rotp/game-data';
 
 const flattenPalette = (sheet: PlayerSheet): SheetPalette => {
   const { original, override } = sheet;

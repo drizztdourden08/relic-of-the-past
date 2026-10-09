@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { MsuLayer } from '@shared/types/msu-manifest';
-import { newId } from '@shared/storage/id';
+import { newId } from '@drizztdourden08/brock-core';
 import { DEFAULT_MODES } from './layer-ops.constants';
 
 const createLayer = (existing: MsuLayer[], oneShot = false): MsuLayer => ({

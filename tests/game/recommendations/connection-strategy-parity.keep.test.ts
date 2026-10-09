@@ -1,8 +1,8 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, connectionTagKeysOf, find } from '@shared/game/data';
-import { toScreenIdOf, toScreenIdOrNone } from '@shared/game/data';
-import type { ConnectionRecord, ScreenId, ScreenRecord } from '@shared/game/data';
+import { all, connectionTagKeysOf, find } from '@rotp/game-data';
+import { toScreenIdOf, toScreenIdOrNone } from '@rotp/game-data';
+import type { ConnectionRecord, ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';

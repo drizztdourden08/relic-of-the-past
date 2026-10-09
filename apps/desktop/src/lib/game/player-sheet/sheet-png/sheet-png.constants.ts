@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind constants */
-import { SHEET_COLS, SHEET_BYTES } from '@shared/game/data/player-sheet/types';
-import type { Wearing } from '@shared/game/data/player-sheet/types';
+import { SHEET_COLS, SHEET_BYTES } from '@rotp/game-data';
+import type { Wearing } from '@rotp/game-data';
 import { TILE } from '../draw-tiles';
 
 const SHEET_ROWS = SHEET_BYTES / (SHEET_COLS * 32);

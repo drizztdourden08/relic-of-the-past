@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { DetectedCheck, SimEvent } from '../../types';
-import { getItem } from '../../../data';
-import { dungeonForScreen } from '../../../logic/queries/dungeon-group';
+import { getItem } from '@rotp/game-data';
+import { dungeonForScreen } from '@rotp/game-data';
 import { affectsTraversal } from '../../requirements-map/affects-traversal';
 import { reopenLedgersFor } from '../dungeon-ledger-lifecycle/reopen-ledgers-for';
 import type { EngineState } from '../state/state.type';

@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
-import type { GameUIState } from '@shared/game/types';
+import type { GameUIState } from '@rotp/game-data';
 import type { GameUIStore } from './game-ui-store.type';
 import { INITIAL_GAME_UI_STATE } from './game-ui-store.constants';
 

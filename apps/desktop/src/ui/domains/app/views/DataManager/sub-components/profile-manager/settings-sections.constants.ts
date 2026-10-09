@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
 import { DEFAULT_TURBO_SPEED, formatTurboSpeed } from '@shared/display/turbo-speed';
-import { formatDialogSpeed } from '@shared/game/dialog/pacing';
+import { formatDialogSpeed } from '@rotp/game-data';
 import { capitalizeSetting } from './capitalize-setting';
 import type { SettingsSection } from './settings-sections.type';
 

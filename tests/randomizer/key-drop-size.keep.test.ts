@@ -1,10 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { getCheck, getDungeon } from '@shared/game/data';
+import { getCheck, getDungeon } from '@rotp/game-data';
 import { generatePlacement } from '@shared/randomizer/world/fill/generate';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { KEY_DROP_LOCATIONS } from '@shared/randomizer/world/scope-tables';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };
 const { buildPhysicalPlan } = await import('@app/lib/game/randomizer-client/placement-bridge');

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ScreenId } from '@shared/game/data';
+import type { ScreenId } from '@rotp/game-data';
 import { unread } from '@shared/game/recommendations/compare';
 import type { Probe } from '@shared/game/recommendations/compare';
 import type { ObservedTransition, ScreenObservations } from '@shared/game/recommendations';

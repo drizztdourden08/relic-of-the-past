@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet } from '@rotp/game-data';
 import type { RspManifest, RspSource, RspExtras } from '@shared/storage/link-sprites/rsp.type';
 import { RSP_VERSION } from '@shared/storage/link-sprites/rsp.type';
 

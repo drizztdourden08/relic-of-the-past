@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { getItem, vanillaPrizeGrantIdOfName } from '@shared/game/data';
-import type { CheckRecord } from '@shared/game/data';
+import { getItem, vanillaPrizeGrantIdOfName } from '@rotp/game-data';
+import type { CheckRecord } from '@rotp/game-data';
 import { BOSS_PRIZE_GRANT_ID, MAX_NATIVE_GRANT_ID } from './native-grant-id.constants';
 
 const dungeonRewardGrantIdOf = (vanillaItem: string): number | undefined => {

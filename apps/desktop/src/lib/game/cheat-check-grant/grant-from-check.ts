@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import { log } from '../../log-bus';
 import { getSessionState } from '../randomizer-client/session-store';
 import { suppressLocationReport } from '../randomizer-client/location-poller';

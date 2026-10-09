@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind logic */
-import { MIRRORED_PIECE, PIECE_SIZE } from '@shared/game/title/title-layout';
-import type { TitlePiece } from '@shared/game/title/title-frame.type';
+import { MIRRORED_PIECE, PIECE_SIZE } from '@rotp/game-data';
+import type { TitlePiece } from '@rotp/game-data';
 import type { TriforcePicture } from './choreography.type';
 
 const drawTriforce = (ctx: CanvasRenderingContext2D, picture: TriforcePicture, pieces: readonly TitlePiece[], frameX: number, frameY: number): void => {

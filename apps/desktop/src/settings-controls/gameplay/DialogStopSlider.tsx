@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { formatDialogSpeed, nearestStopIndex } from '@shared/game/dialog/pacing';
+import { formatDialogSpeed, nearestStopIndex } from '@rotp/game-data';
 import { Slider } from '@drizztdourden08/tessera/primitives';
 import type { DialogStopSliderProps } from './gameplay.type';
 

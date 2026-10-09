@@ -5,7 +5,7 @@ import type {
   DebugCaptureFinalizeInput, DebugCaptureFinalizeResult,
   DebugCaptureSessionSummary, DebugCaptureDeleteSessionResult,
 } from '@shared/types/debug-report';
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import type { UiViewsMap } from '../ui-views-contract.type';
 import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from '../recommendation-contract.type';
 import type { InvokeResult, ReviewMap } from './invoke-result.type';

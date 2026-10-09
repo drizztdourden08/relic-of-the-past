@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { CheckRecord } from '@shared/game/data/types';
+import type { CheckRecord } from '@rotp/game-data';
 import type { Sink } from './record-references.type';
 import { walkPresence } from './walk-presence';
 import { walkRequirement } from './walk-requirement';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { TileBehavior, TileVisual } from '../../data/types';
+import type { TileBehavior, TileVisual } from '@rotp/game-data';
 import type { SimDoor } from '../../simulation';
 import type { TilePassability } from '../types';
 

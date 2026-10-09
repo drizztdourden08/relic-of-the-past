@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { resolveFunctionMappingIcon } from '../../../../../../lib/game';
-import type { FunctionMapping } from '@shared/types/controls';
+import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
 import type { BindingInfo } from '../SaveStateOverlay.type';
 
 const bindingInfo = (m: FunctionMapping): BindingInfo => ({

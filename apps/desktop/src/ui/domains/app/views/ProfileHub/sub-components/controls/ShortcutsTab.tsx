@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { SHORTCUT_ACTIONS } from '@shared/types/controls';
+import { SHORTCUT_ACTIONS } from '@shared/types/controls/functions/functions.constants';
 import { getButtonIconUrl } from '@app/lib/input/button-icons';
 import { Box, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { FunctionBindingRow } from './FunctionBindingRow';

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckGameId } from '@shared/game/data';
+import type { CheckGameId } from '@rotp/game-data';
 
 const thresholdMet = (val: number, compare: 'gte' | 'eq' | 'any-of', value: number | number[] | undefined): boolean => {
   if (compare === 'gte') return val >= (value as number);

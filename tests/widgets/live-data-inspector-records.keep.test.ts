@@ -1,10 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  all, find, getActorByGameId, getDungeonByGameId, getItemByGameId, getScreen,
-} from '@shared/game/data';
+import { all, find, getActorByGameId, getDungeonByGameId, getItemByGameId, getScreen } from '@rotp/game-data';
 import { recordsFor } from '../../apps/desktop/src/ui/domains/widgets/navigation/LiveDataInspector/behavior/use-current-records';
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext, LiveSpriteObservation } from '@shared/game/recommendations';
 import { describeDataset } from '../dataset-guard';
 

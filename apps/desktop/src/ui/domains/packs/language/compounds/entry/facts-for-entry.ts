@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { triggerSourceFor } from '@shared/game/data/dialogue-context';
+import { triggerSourceFor } from '@rotp/game-data';
 import { triggerFactsOf } from './trigger-facts';
 import type { TriggerFacts } from './entry.type';
 

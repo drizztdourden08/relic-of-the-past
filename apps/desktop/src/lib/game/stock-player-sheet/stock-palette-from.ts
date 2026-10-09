@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import type { OutfitId, OutfitPalette, SheetPalette } from '@shared/game/data/player-sheet/types';
+import type { OutfitId, OutfitPalette, SheetPalette } from '@rotp/game-data';
 import { readDatEntry } from '@shared/asset-extraction/dat-reader';
-import { COLORS_PER_OUTFIT, OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
-import { STOCK_GLOVES } from '@shared/game/data/player-sheet/stock-palette';
+import { COLORS_PER_OUTFIT, OUTFIT_IDS } from '@rotp/game-data';
+import { STOCK_GLOVES } from '@rotp/game-data';
 import { BYTES_PER_COLOR_WORD, GEAR_PALETTE_KEY } from './stock-player-sheet.constants';
 
 const paletteFromWords = (words: Uint8Array): SheetPalette | null => {

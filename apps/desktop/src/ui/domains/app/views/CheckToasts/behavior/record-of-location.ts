@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { get } from '@shared/game/data';
-import type { CheckRecord } from '@shared/game/data';
+import { get } from '@rotp/game-data';
+import type { CheckRecord } from '@rotp/game-data';
 import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { virtualCheckIdOf } from '@app/lib/game/randomizer-client/virtual-locations';

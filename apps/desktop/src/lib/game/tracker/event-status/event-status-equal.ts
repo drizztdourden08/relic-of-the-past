@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 
 const eventStatusEqual = (a: ReadonlyMap<CheckId, boolean>, b: ReadonlyMap<CheckId, boolean>): boolean => {
   if (a.size !== b.size) return false;

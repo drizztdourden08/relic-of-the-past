@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import { recommendationQueues } from './recommendation-queues';
 
 const queued = <T>(kind: EntityKind, task: () => Promise<T>): Promise<T> => {

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Checkbox, DropZone, EmptyState, Field, SectionHeader, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import { FileRow } from './FileRow';
 import { PackSummary } from './PackSummary';
 import { OptimizeDialog } from './OptimizeDialog';

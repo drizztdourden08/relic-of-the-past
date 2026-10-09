@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { ConnectionTag } from '../../../shared/game/data';
+import type { ConnectionTag } from '@rotp/game-data';
 import { connectionIssues } from '../../../apps/desktop/src/ui/domains/widgets/navigation/connection-issues';
 import { describeDataset } from '../../dataset-guard';
 

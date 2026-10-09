@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { LanguagePack } from '@shared/types/language';
 import { parseDialogueText } from '@shared/asset-extraction/text/parse-dialogue-text';
 import { fontPath, legacyDialoguePath } from '../paths';

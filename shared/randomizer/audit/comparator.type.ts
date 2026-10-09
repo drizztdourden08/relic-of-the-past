@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckRecord, ItemRecord } from '../../game/data/types';
+import type { CheckRecord, ItemRecord } from '@rotp/game-data';
 import type { ReferenceLocation } from './reference-source.type';
 import type { RomCensus } from './rom-census/rom-census.type';
 

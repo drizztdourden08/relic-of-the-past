@@ -1,0 +1,11 @@
+{
+  "name": "@rotp/game-data",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The A Link to the Past dataset: records, screen ids, logic, game types and the facade that reads them.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  }
+}

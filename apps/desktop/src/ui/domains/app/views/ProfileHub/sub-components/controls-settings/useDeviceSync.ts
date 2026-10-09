@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect } from 'react';
-import type { DetectedDevice } from '@shared/types/controls';
+import type { DetectedDevice } from '@shared/types/controls/devices/devices.type';
 import { getInputManager } from '../../../../../../../lib/input/input-manager';
 import { useControllerDevices } from '../../../../../../../lib/input/useControllerDevices';
 

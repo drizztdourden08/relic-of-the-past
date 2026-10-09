@@ -1,5 +1,5 @@
 /* @layer shared-hud @kind logic */
-import { newId } from '../../storage/id';
+import { newId } from '@drizztdourden08/brock-core';
 import type { HudNode } from '../../types/hud/hud-node';
 
 const rekey = (node: HudNode): HudNode => {

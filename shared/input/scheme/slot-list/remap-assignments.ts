@@ -1,5 +1,5 @@
 /* @layer shared-input @kind logic */
-import type { SlotAssignment, SlotIndex } from '../../../types/controls/scheme';
+import type { SlotAssignment, SlotIndex } from '@rotp/game-data';
 
 const remapAssignments = (
   assignments: Readonly<Record<SlotIndex, SlotAssignment>>,

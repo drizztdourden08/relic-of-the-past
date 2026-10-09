@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { EntityKind, ScreenId } from '../../data/types';
+import type { EntityKind, ScreenId } from '@rotp/game-data';
 import type { ScreenObservations } from '../detection-types';
 import { compareField } from './compare-field';
 import type { Difference, SubjectComparison } from './difference.type';

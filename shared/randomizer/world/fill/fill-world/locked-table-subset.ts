@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { LocationKey } from '../../location-key';
 
 const lockedTableSubset = (

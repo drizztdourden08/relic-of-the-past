@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { REGION_GRAPH } from '../rules/tables/region-graph.data';
-import type { RegionId } from '@shared/game/data/types/ids';
+import type { RegionId } from '@rotp/game-data';
 import type { RegionGraphRow } from '../region.type';
 
 const passagesBySource = (): ReadonlyMap<RegionId, readonly RegionGraphRow[]> => {

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GearLadderKind } from '@shared/game/logic/pause';
+import type { GearLadderKind } from '@rotp/game-data';
 import { wasmHostSetGear } from '../bridge/host-menu';
 import { GEAR_KIND_ARG } from './host-menu.constants';
 

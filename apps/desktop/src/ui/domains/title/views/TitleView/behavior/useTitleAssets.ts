@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useState } from 'react';
-import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
-import type { TitleSwordPicture } from '@shared/game/title/title-swords';
+import { getSpritesBase } from '@rotp/game-data';
+import type { TitleSwordPicture } from '@rotp/game-data';
 import { getPlatform } from '@drizztdourden08/brock-react';
 import { useSpriteAvailabilityStore } from '../../../../../../stores/sprite-availability-store';
 import { LIGHT_SCENE_FILES } from '../../../scene/scene-files';

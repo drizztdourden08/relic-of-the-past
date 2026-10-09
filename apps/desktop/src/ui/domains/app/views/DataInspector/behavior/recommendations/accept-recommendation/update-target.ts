@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import type { InspectorRow } from '../../../DataInspector.type';
 import { RECORD_WRITERS } from '../../record-writers';
 import type { AcceptOutcome } from '../recommendations.type';

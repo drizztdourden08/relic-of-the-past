@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { progressTierLabel } from '@shared/game/logic/queries/progress-tier';
+import { progressTierLabel } from '@rotp/game-data';
 import type { StateRule } from './active-states.type';
 import { FIRST_REPORTED_TIER, NO_KEY_COUNT, SLOT, TAGALONG_NAMES } from './active-states.constants';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 import type { SimOutcome } from '@shared/game/simulation';
-import { getCheck } from '@shared/game/data';
-import type { CheckId } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
+import type { CheckId } from '@rotp/game-data';
 import type { OutcomeBanner } from '../SimulatorWidget.type';
 
 const resolveStopName = (stopAtCheckId: CheckId | ''): string =>

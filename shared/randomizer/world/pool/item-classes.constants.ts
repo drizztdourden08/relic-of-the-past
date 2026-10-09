@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { EXPLOSIVES_UPGRADE_NAMES, PROJECTILES_UPGRADE_NAMES } from '@shared/game/data/capacity-upgrade-names.data';
+import { EXPLOSIVES_UPGRADE_NAMES, PROJECTILES_UPGRADE_NAMES } from '@rotp/game-data';
 import { itemKeyOfName } from '../display-names/item-key-name';
 import { RETRO_QUIVER_ITEM } from '../retro/retro-bow.data';
 import { itemsClassed } from './items-classed';

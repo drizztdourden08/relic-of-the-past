@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { RequirementSet } from '../nav-data.types';
+import type { RequirementSet } from '@rotp/game-data';
 import type { GridPos } from '../types';
 
 interface RequirementDetectorInput {

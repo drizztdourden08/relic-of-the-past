@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { ConnectionTransitType } from '../nav-data.types';
+import type { ConnectionTransitType } from '@rotp/game-data';
 
 const TRANSIT_TAG_PREFIX = 'transit:';
 const BARRIER_TAG_PREFIX = 'barrier:';

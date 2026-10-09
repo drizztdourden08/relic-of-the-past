@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet } from '@rotp/game-data';
 import type { WearingState } from '../../behavior/useWearing';
 import type { AnimationClock } from '../../behavior/useAnimationClock.type';
 

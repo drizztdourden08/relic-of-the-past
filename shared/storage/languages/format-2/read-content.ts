@@ -1,8 +1,8 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { Variable } from '@shared/game/language';
 import { legacyFromVariables } from '@shared/game/language';
-import { readJson } from '../../json';
+import { readJson } from '@drizztdourden08/brock-core';
 import { variablesPath } from '../paths';
 import { asStructure } from './as-structure';
 import type { SetContent } from './format-2.type';

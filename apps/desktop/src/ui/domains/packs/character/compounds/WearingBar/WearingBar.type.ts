@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { OutfitId, GloveLevel } from '@shared/game/data/player-sheet/types';
+import type { OutfitId, GloveLevel } from '@rotp/game-data';
 
 interface WearingBarProps {
   outfit: OutfitId;

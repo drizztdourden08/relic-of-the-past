@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind constants */
-import { get, KIND_ID_PREFIXES } from '@shared/game/data';
-import type { EntityKind } from '@shared/game/data';
+import { get, KIND_ID_PREFIXES } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
 import { ENTITY_KINDS } from '../../DataInspector.constants';
 import type { NamedRecord } from '../../DataInspector.type';
 import { getEnumerationRecord } from './get-enumeration-record';

@@ -3,7 +3,7 @@ import { toDialogueText } from './dialogue-text';
 import { VISIBLE_ROWS, fitsRows, wrapRows } from './wrap-message';
 import { CHOOSE_COMMAND, ROW_COMMANDS, SCROLL_COMMAND, WAIT_COMMAND } from './message-commands.constants';
 import { INLINE_QUESTION_ROWS, NO_INDENT, YES_INDENT } from './choice-message.constants';
-import type { DialogueCharset } from '@shared/game/dialog/dialogue-charset';
+import type { DialogueCharset } from '@rotp/game-data';
 import type { ChoiceReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 
 const answerRowsOf = (line: ChoiceReceiptLine, charset: DialogueCharset): string[] => [

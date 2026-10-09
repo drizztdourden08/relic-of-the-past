@@ -1,7 +1,7 @@
 /* @layer shared-input @kind logic */
 import { GAMEPLAY_VERBS } from './core-positions.constants';
 import { positionOfBinding } from './position-of-binding';
-import type { CoreBindings } from '../../../types/controls';
+import type { CoreBindings } from '@rotp/game-data';
 import type { SdlPosition } from './core-positions.type';
 
 const corePositions = (core: CoreBindings): Set<SdlPosition> => {

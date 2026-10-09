@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import { all } from '@shared/game/data';
-import type { EntityKind } from '@shared/game/data';
+import { all } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
 import { RECORD_WRITERS } from '../record-writers';
 import { SCHEMA_CONFIGS } from '../schema-config';
 import type { InspectorRow, InspectorSource } from '../../DataInspector.type';

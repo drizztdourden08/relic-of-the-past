@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getCheck } from '@shared/game/data';
-import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
+import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
-import { chestSwapOf } from '@shared/game/logic/queries/chest-stand-ins';
+import { chestSwapOf } from '@rotp/game-data';
 import { getCompletedChecks, onCompletedChecksChanged, onItemReceived } from '@app/lib/game';
 import { isToastQuiet } from '@app/lib/game/play-quiet';
 import { firedLocations, onFiredLocation } from '@app/lib/game/randomizer-client';

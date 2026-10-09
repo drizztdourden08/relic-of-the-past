@@ -2,7 +2,7 @@
  * @layer tooling-scripts
  * @kind logic
  *
- * Generates `shared/game/data/enumeration/enumeration.generated.type.ts` from
+ * Generates `packages/game-data/src/data/enumeration/enumeration.generated.type.ts` from
  * `ALL_ENUMERATION`: one `type <Name> = 'a' | 'b' | ...;` per category, in seed order,
  * under the gate's `@layer`/`@kind` header and no other comment. The
  * `.ts` source is imported directly (Node 24 strips erasable TypeScript; the module
@@ -21,8 +21,8 @@ import path from 'node:path';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = path.join(SCRIPT_DIR, '..');
-const enumerationSourceFor = (root) => path.join(root, 'shared/game/data/records/enumeration/enumeration.ts');
-const outputPathFor = (root) => path.join(root, 'shared/game/data/enumeration/enumeration.generated.type.ts');
+const enumerationSourceFor = (root) => path.join(root, 'packages/game-data/src/data/records/enumeration/enumeration.ts');
+const outputPathFor = (root) => path.join(root, 'packages/game-data/src/data/enumeration/enumeration.generated.type.ts');
 
 /** category → the exported type name every consuming file already expects. */
 const CATEGORY_TYPE_NAMES = {

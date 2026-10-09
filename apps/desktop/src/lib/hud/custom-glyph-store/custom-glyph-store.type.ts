@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { SdlAxisName, SdlButtonName } from '@shared/input/sdl-buttons';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 
 type GlyphPosition = SdlButtonName | SdlAxisName;
 

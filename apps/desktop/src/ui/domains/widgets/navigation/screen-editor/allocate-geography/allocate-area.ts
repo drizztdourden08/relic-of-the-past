@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import type { AreaRecord } from '@shared/game/data';
+import type { AreaRecord } from '@rotp/game-data';
 import type { AllocatedArea, Allocation } from '../screen-editor.type';
 
 const allocateArea = async (name: string, world: AreaRecord['world']): Promise<Allocation<AllocatedArea>> => {

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ROOM_TAG_NAMES } from '../data/native-tables';
+import { ROOM_TAG_NAMES } from '@rotp/game-data';
 import { CLEAR_ROOM_TAG_NAME } from './room-tags.constants';
 import { isClearRoomTag } from './is-clear-room-tag';
 

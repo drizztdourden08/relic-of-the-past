@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import type { RecordReference } from './record-references.type';
 import { checkReferences } from './check-references';
 import { screenReferences } from './screen-references';

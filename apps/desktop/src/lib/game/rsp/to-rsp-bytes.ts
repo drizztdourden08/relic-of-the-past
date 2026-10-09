@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import JSZip from 'jszip';
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet } from '@rotp/game-data';
 import type { RspWriteOptions } from './rsp.type';
-import { SHEET_BYTES } from '@shared/game/data/player-sheet/types';
+import { SHEET_BYTES } from '@rotp/game-data';
 import { MANIFEST_ENTRY, SHEET_ENTRY, PREVIEW_ENTRY } from '@shared/storage/link-sprites/rsp.type';
 import { renderSheetPng } from '../player-sheet/sheet-png';
 import { manifestOf } from './manifest-of';

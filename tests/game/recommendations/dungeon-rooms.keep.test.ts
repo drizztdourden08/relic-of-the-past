@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, getScreen } from '@shared/game/data';
-import type { DungeonRecord, ScreenId } from '@shared/game/data';
+import { all, getScreen } from '@rotp/game-data';
+import type { DungeonRecord, ScreenId } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { dungeonStrategy } from '@shared/game/recommendations/strategies/dungeon';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { GameSettings } from '@shared/types/settings';
-import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
+import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls/functions/functions.constants';
 import { getInputManager } from '@app/lib/game';
 import type { SettingsEffectDeps } from './settings-effects.type';
 

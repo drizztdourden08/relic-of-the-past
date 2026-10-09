@@ -6,9 +6,7 @@ import type {
   WriteConnectionPairArgs, WriteConnectionPairResult, WriteConnectionsArgs, WriteEnumerationArgs, WriteItemGroupArgs,
   WriteRecordArgs, WriteRecordResult, WriteScreenArgs, WriteTagArgs,
 } from '../screen-editor-contract';
-import type {
-  ActorRecord, AreaRecord, CheckRecord, DungeonRecord, ItemRecord, LocationRecord,
-} from '@shared/game/data/types';
+import type { ActorRecord, AreaRecord, CheckRecord, DungeonRecord, ItemRecord, LocationRecord } from '@rotp/game-data';
 import type { InvokeResult } from './invoke-result.type';
 
 interface ScreenEditorInvokeContract {

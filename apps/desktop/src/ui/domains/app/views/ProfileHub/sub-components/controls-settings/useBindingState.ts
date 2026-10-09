@@ -1,15 +1,10 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback, useMemo } from 'react';
 import type { CoreVerb } from '@shared/input/scheme';
-import type {
-  InputProfile,
-  InputBinding,
-  ModernSlot,
-  SnesButton,
-  FunctionAction,
-  FunctionMapping,
-} from '@shared/types/controls';
-import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { InputBinding, ModernSlot, SnesButton } from '@rotp/game-data';
+import type { FunctionAction, FunctionMapping } from '@shared/types/controls/functions/functions.type';
+import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls/functions/functions.constants';
 import { resolveFunctionMappingIcon } from '../../../../../../../lib/input/input-manager';
 import { allowedDevices } from '@app/lib/input/profile-devices';
 import { resolveLiveFamilyIcon } from './family-icon-map';

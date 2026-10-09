@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { RunKind } from '@shared/game/logic';
+import type { RunKind } from '@rotp/game-data';
 import type { ProfileModeId } from '../../../../compounds/ModeBadge';
 
 const QUICK_SAVE_SLOTS = 12;

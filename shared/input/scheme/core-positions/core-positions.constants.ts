@@ -1,6 +1,6 @@
 /* @layer shared-input @kind constants */
-import { SDL_AXIS, SDL_BUTTON } from '../../sdl-buttons';
-import type { SdlAxisName, SdlButtonName } from '../../sdl-buttons';
+import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 
 const BUTTON_BY_INDEX = new Map<number, SdlButtonName>(
   (Object.keys(SDL_BUTTON) as SdlButtonName[]).map(name => [SDL_BUTTON[name], name]),

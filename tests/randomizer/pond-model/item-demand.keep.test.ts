@@ -11,7 +11,7 @@ import { rollPondDemands } from '@shared/randomizer/world/pond/pond-demand-roll'
 import { pondRupeesOnlyAsk } from '@shared/randomizer/world/pond/pond-ask.data';
 import { POND_INSTANCE_BY_ID } from '@shared/randomizer/world/pond/pond-instances';
 import { REFERENCE_CAPACITY_PROFILE } from '@shared/randomizer/world/capacity/capacity-profile-defaults';
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { createRng } from '@shared/randomizer/rng';
 import { CUSTOM } from './pond-model.constants';
 

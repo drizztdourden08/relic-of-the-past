@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
-import { DIALOG_FONT_SCALES, DIALOG_STROKE_WIDTHS } from '@shared/game/dialog/pacing';
+import { DIALOG_FONT_SCALES, DIALOG_STROKE_WIDTHS } from '@rotp/game-data';
 import { hostDrawnHud } from '@shared/features/hud-style';
 import type { GameSettings } from '@shared/types/settings';
 import { HudStyleControl } from '../HudStyleControl';

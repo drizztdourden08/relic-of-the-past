@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { setSpritesBase, setSpritesRevision } from '@shared/game/logic/queries/item-sprites';
+import { setSpritesBase, setSpritesRevision } from '@rotp/game-data';
 import { useSpriteAvailabilityStore } from '../../stores/sprite-availability-store';
 import { log } from '../log-bus';
 import * as spritesStore from '../storage/sprites-store';

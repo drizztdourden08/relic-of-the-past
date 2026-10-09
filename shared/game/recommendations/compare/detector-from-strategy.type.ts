@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { EntityKind } from '../../data/types';
+import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext } from '../detection-types';
 import type { DraftRecommendation } from '../types';
 import type { SetDifference } from './difference.type';

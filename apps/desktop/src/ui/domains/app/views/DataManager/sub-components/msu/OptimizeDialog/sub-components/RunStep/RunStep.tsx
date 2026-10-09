@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import type { RunStepProps } from './RunStep.type';
 
 const convertedSoFar = (progress: RunStepProps['progress']): number =>

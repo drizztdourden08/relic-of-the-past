@@ -2,8 +2,8 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, it } from 'vitest';
-import { find } from '@shared/game/data';
-import type { CheckId } from '@shared/game/data';
+import { find } from '@rotp/game-data';
+import type { CheckId } from '@rotp/game-data';
 import { computePlacementAvailability } from '@shared/randomizer/placement-availability';
 import { buildNormalPlacement } from '@shared/randomizer/normal-placement';
 import { computeCompletedChecks } from '@app/lib/game/tracker/completed-checks-core';

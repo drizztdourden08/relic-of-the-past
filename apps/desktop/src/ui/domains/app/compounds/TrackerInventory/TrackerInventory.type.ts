@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { InventoryCategory, InventorySlot, InventoryViewMode, ItemId } from '@shared/game/data';
+import type { InventoryCategory, InventorySlot, InventoryViewMode, ItemId } from '@rotp/game-data';
 
 interface TrackerInventoryProps {
   inventory: ReadonlySet<ItemId>;

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { TraversalRequirement } from '../../navigation/nav-data.types';
-import type { ItemId } from '../../data';
+import type { TraversalRequirement } from '@rotp/game-data';
+import type { ItemId } from '@rotp/game-data';
 import { BARE_HANDS_LIFT } from './requirements-map.constants';
 import { tokensForItem } from './tokens-for-item';
 

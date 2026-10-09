@@ -1,6 +1,6 @@
 /* @layer shared-input @kind types */
-import type { SdlAxisName, SdlButtonName } from '../../sdl-buttons';
-import type { CoreBindings } from '../../../types/controls';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
+import type { CoreBindings } from '@rotp/game-data';
 
 type CoreVerb = keyof CoreBindings;
 

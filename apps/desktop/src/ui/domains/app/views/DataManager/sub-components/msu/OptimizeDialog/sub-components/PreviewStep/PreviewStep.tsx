@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
 import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import { previewTotals } from './behavior/preview-totals';
 import { CandidateRow } from './sub-components/CandidateRow';
 import type { PreviewStepProps } from './PreviewStep.type';

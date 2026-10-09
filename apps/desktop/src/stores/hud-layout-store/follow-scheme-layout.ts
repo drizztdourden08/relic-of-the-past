@@ -2,7 +2,7 @@
 import { DEFAULT_LAYOUT } from '@shared/hud/layouts';
 import { resolveStoredLayout } from '@app/lib/hud/layout-document-io';
 import { onSchemeBindings } from '@app/lib/input/scheme-runtime';
-import type { ModernBindings } from '@shared/types/controls';
+import type { ModernBindings } from '@rotp/game-data';
 import { useHudLayoutStore } from './useHudLayoutStore';
 
 let wantedLayoutId = DEFAULT_LAYOUT.id;

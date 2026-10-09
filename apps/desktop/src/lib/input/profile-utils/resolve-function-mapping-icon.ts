@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { FunctionMapping, ButtonIcon } from '@shared/types/controls';
+import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
+import type { ButtonIcon } from '@rotp/game-data';
 import { resolveIconByVidPid } from './resolve-icon-by-vid-pid';
 
 const resolveFunctionMappingIcon = (m: FunctionMapping, liveSdlType?: string | null): ButtonIcon | null => {

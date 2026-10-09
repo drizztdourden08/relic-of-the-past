@@ -1,8 +1,8 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { isZip, unzip } from '../archive';
 import type { ArchiveEntry } from '../archive';
-import { writeJson } from '../json';
+import { writeJson } from '@drizztdourden08/brock-core';
 import { getSet, getSetFont } from './read';
 import { ACCEPTED_PAYLOAD, REQUIRED_PAYLOAD, RLANG_HEADER_ENTRY, isSetHeader } from './rlang-format';
 import type { SetHeader } from './rlang-format';

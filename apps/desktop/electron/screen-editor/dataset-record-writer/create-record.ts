@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { Unnumbered } from '@shared/game/data/record-codegen';
+import type { Unnumbered } from '@rotp/game-data';
 import type { Allocated, AllocateRecordResult } from '@shared/ipc/screen-editor-contract';
 import { startRecordFile } from '../record-file-template';
 import { withAllocatedIds } from '../id-allocator';

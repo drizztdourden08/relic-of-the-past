@@ -2,15 +2,15 @@
 import { computePlacementReach } from '@shared/randomizer/placement-availability';
 import { BIG_KEY_ITEMS } from '@shared/randomizer/world/big-keys';
 import { fullKeyRing } from '@shared/randomizer/world/small-keys';
-import { screensOfRegions } from '@shared/game/logic/regions/reachable-screens';
+import { screensOfRegions } from '@rotp/game-data';
 import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { completedLocationKeys } from '../check-names';
 import { VIRTUAL_PREFIX, virtualLocationOf } from '../virtual-locations';
 import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
+import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
+import type { CheckStatus } from '@rotp/game-data';
 import type { TrackerReading } from './tracker-availability.type';
 
 const trackerReading = (

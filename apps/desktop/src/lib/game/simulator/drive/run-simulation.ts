@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { SimulatorPort, EngineState, SimConfig, SimRunConfig } from '@shared/game/simulation';
-import type { ItemId } from '@shared/game/data';
-import { getItem } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
+import { getItem } from '@rotp/game-data';
 import { createEngine, createEngineState, createRecorder, recordTransition, recordDoorGate, buildEndSummary } from '@shared/game/simulation';
 import { buildObservation, detectFor, waitAfterTrigger } from '../observe';
 import type { DetectedScreen } from '../screen-exits.type';

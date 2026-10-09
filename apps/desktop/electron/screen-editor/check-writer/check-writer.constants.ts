@@ -1,7 +1,7 @@
 /* @layer electron-main @kind constants */
-import { serializeCheckRecord } from '@shared/game/data/record-codegen';
-import { checkRecordFile } from '@shared/game/data/record-file-targets';
-import type { CheckRecord } from '@shared/game/data/types';
+import { serializeCheckRecord } from '@rotp/game-data';
+import { checkRecordFile } from '@rotp/game-data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { RecordWriterSpec } from '../dataset-record-writer';
 
 const CHECK_SPEC: RecordWriterSpec<CheckRecord> = {

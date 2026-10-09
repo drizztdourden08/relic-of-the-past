@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { isSlotKey } from '../location-key';
 import { shopSlotLocationOf } from '../shops/shop-slots';
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 
 const checkIdOfLocation = (key: string): CheckId | undefined => {
   const shop = shopSlotLocationOf(key);

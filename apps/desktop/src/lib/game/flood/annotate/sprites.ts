@@ -4,7 +4,7 @@ import type { SimSprite } from '@shared/game/simulation';
 import { checkForStandingItem } from '@shared/game/simulation';
 import { npcCheckFor } from './npc-checks';
 import { standingItemId } from '../../simulator/sprite-kinds';
-import { itemLabel } from '@shared/game/logic/queries/item-duplicates';
+import { itemLabel } from '@rotp/game-data';
 import { PRINCESS_SPRITE, PULL_SWITCH_FIRST, PULL_SWITCH_LAST } from './sprites.constants';
 import type { SpriteContext } from './sprites.type';
 

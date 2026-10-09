@@ -1,10 +1,10 @@
 /* @layer test @kind spec */
 import { describe, expect, it } from 'vitest';
-import { all } from '@shared/game/data';
-import type { CheckRecord, ItemId } from '@shared/game/data';
+import { all } from '@rotp/game-data';
+import type { CheckRecord, ItemId } from '@rotp/game-data';
 import { computeCompletedChecks } from '@app/lib/game/tracker/completed-checks-core';
 import type { ProgressReaders } from '@app/lib/game/tracker/completed-checks-core';
-import { EVENT_BIT, LAST_EVENT_BIT } from '@shared/game/data';
+import { EVENT_BIT, LAST_EVENT_BIT } from '@rotp/game-data';
 import { computeEventStatus } from '@app/lib/game/tracker/event-status';
 import { buildPresenceState } from '@shared/game/simulation/presence/state';
 

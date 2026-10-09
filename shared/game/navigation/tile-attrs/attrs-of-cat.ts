@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TileAttrDef, TileCat } from '../../data/types/tile-attrs-types';
+import type { TileAttrDef, TileCat } from '@rotp/game-data';
 
 const attrsOfCat = (map: Readonly<Record<number, TileAttrDef>>, cat: TileCat): ReadonlySet<number> => {
   const s = new Set<number>();

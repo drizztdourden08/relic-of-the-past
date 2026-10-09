@@ -6,7 +6,7 @@
  */
 const PROTECTED_ROOTS = [
   '.claude',
-  'shared/game/data/records',
+  'packages/game-data/src/data/records',
   'tests/fixtures/save-states',
   'test-roms',
   'assets',

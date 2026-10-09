@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import type { Wearing } from '@shared/game/data/player-sheet/types';
+import type { Wearing } from '@rotp/game-data';
 
 const STANDING_COLS = 2;
 const STANDING_ROWS = 3;

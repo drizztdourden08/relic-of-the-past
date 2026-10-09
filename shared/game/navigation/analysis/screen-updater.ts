@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { RegionNavData, NavObstacle, TraversalRequirement } from '../nav-data.types';
+import type { RegionNavData, NavObstacle, TraversalRequirement } from '@rotp/game-data';
 import type { FloodFillResult } from '../types';
 import type { ResolvedEntrance } from './entrance-resolver.type';
 import type { ScreenNavUpdate, ScreenUpdaterInput } from './screen-updater.type';

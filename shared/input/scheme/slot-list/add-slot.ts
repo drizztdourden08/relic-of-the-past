@@ -2,7 +2,7 @@
 import { FIRST_SLOT, UNBOUND } from './slot-list.constants';
 import { renumberSlots } from './renumber-slots';
 import { slotName } from './slot-name';
-import type { ModernSlot } from '../../../types/controls/scheme';
+import type { ModernSlot } from '@rotp/game-data';
 import type { SlotListEdit, SlotSeed } from './slot-list.type';
 
 const addSlot = (slots: readonly ModernSlot[], seed?: SlotSeed): SlotListEdit => {

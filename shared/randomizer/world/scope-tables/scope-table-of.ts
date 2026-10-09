@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
-import { standardNameOfCheck } from '@shared/game/data/check-standard-name';
+import { standardNameOfCheck } from '@rotp/game-data';
 import { scopedChecks } from './scoped-checks';
 import { scopeRowsOf } from './scope-rows-of';
-import type { ItemId } from '@shared/game/data/types/ids';
-import type { CheckRecord } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
 import type { CheckScope } from './scope-tables.type';
 

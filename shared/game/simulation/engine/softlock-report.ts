@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import type { TraversalRequirement } from '../../navigation/nav-data.types';
+import type { TraversalRequirement } from '@rotp/game-data';
 import type { SoftlockReport } from '../types';
-import { find } from '../../data';
+import { find } from '@rotp/game-data';
 import type { Adjacency } from './traversal/traversal.type';
 import { buildAdjacency } from './traversal/build-adjacency';
 import type { EngineState } from './state/state.type';

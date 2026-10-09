@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { addNative } from './add-native';
 
 const addByValue = (out: Set<ItemId>, table: Readonly<Record<number, number>>, value: number): void => {

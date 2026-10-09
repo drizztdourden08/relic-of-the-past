@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
 import { ITEM } from '../item-ids.data';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 
 const ALWAYS_ITEMS: readonly ItemId[] = [
   ITEM.bombos, ITEM.bookOfMudora, ITEM.caneOfSomaria, ITEM.ether, ITEM.fireRod, ITEM.flippers, ITEM.progressiveOcarina, ITEM.hammer,

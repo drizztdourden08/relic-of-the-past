@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { NormalSaveInfo } from '@shared/types/saves';
-import { newId } from '../../id';
+import { newId } from '@drizztdourden08/brock-core';
 import type { NormalEntry } from '../saves.type';
 import { normalSaves } from './normal-saves';
 

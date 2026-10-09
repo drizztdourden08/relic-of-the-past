@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { SAMPLE_ITEM_POOL } from './sample-state.constants';
-import type { ModernSlot, SlotAssignment, SlotIndex } from '@shared/types/controls/scheme';
+import type { ModernSlot, SlotAssignment, SlotIndex } from '@rotp/game-data';
 
 const sampleSlotAssignments = (
   slots: readonly ModernSlot[],

@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { CURRENCY_SYMBOLS_FILE } from '@shared/asset-extraction/item-sprites/currency-symbols';
 import { readSetFile } from './read-set-file';
 

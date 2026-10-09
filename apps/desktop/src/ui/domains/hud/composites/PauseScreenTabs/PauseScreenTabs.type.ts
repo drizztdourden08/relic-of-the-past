@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { PauseScreen } from '@shared/game/logic/pause';
+import type { PauseScreen } from '@rotp/game-data';
 
 interface ScreenTab {
   id: PauseScreen;

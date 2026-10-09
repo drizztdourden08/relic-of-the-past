@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { TraversalRequirement } from '../../navigation/nav-data.types';
+import type { TraversalRequirement } from '@rotp/game-data';
 
 const BARE_HANDS_LIFT: TraversalRequirement = 'lift.1';
 

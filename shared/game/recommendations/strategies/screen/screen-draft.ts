@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID } from '../../../data/facade';
-import type { ScreenGameId, ScreenRecord } from '../../../data/types';
+import { PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID } from '@rotp/game-data';
+import type { ScreenGameId, ScreenRecord } from '@rotp/game-data';
 
 const buildScreenDraftRecord = (
   gameId: ScreenGameId,

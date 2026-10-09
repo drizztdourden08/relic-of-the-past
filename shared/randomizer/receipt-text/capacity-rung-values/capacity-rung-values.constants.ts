@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import type { CapacityFamilyId } from '@rotp/game-data';
 
 const GROWTH_VERB: Readonly<Record<CapacityFamilyId, string>> = {
   explosives: 'swell',

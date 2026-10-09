@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 
 const EMPTY_INVENTORY: ReadonlySet<ItemId> = new Set();
 

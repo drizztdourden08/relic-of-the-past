@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { find, getItemByGameId } from '@shared/game/data';
-import { gameIdLabel } from '@shared/game/logic/queries/game-id';
-import type { TriggerSourceRow } from '@shared/game/data/dialogue-context';
+import { find, getItemByGameId } from '@rotp/game-data';
+import { gameIdLabel } from '@rotp/game-data';
+import type { TriggerSourceRow } from '@rotp/game-data';
 import { NO_FACTS } from './entry.constants';
 import type { TriggerFacts } from './entry.type';
 

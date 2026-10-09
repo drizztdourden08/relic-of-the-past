@@ -4,7 +4,7 @@ import { choiceMessageText } from '../choice-message';
 import { toDialogueText } from '../dialogue-text';
 import { pageMessageText } from '../page-message';
 import { fitReceiptLine, wrapMessageText } from '../wrap-message';
-import type { DialogueCharset } from '@shared/game/dialog/dialogue-charset';
+import type { DialogueCharset } from '@rotp/game-data';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 
 const prepareLine = (line: ReceiptLine, charset: DialogueCharset): string => {

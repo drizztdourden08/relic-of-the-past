@@ -19,7 +19,7 @@ import { ReferenceField } from '../../apps/desktop/src/ui/domains/app/views/HudL
 import { SlotRefField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SlotRefField';
 import { TextValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/TextValueField';
 import { GlyphContent } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/GlyphContent';
-import type { ModernSlot } from '../../shared/types/controls';
+import type { ModernSlot } from '@rotp/game-data';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;

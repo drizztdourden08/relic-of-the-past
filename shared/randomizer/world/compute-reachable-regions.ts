@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { updateReachableRegions } from './update-reachable-regions';
-import type { RegionId } from '@shared/game/data/types/ids';
+import type { RegionId } from '@rotp/game-data';
 import type { World } from './world.type';
 import type { CollectionState } from './collection-state.type';
 

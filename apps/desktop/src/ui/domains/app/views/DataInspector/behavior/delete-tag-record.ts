@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { unregisterTag } from '@shared/game/data';
-import type { TagId } from '@shared/game/data';
+import { unregisterTag } from '@rotp/game-data';
+import type { TagId } from '@rotp/game-data';
 import type { DeleteResult } from '../DataInspector.type';
 import { invalidateTagSuggestions } from './tag-suggestions';
 import { unregisterIdRefOption } from './unregister-id-ref-option';

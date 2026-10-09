@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { all, getRegion, getScreen } from '@shared/game/data';
-import type { RegionId, ScreenId } from '@shared/game/data/types';
+import { all, getRegion, getScreen } from '@rotp/game-data';
+import type { RegionId, ScreenId } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 const REGION_COUNT = 239;

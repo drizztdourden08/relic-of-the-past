@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
-import type { SlotIndex } from '@shared/types/controls';
-import type { PauseContext, PauseState } from '@shared/game/logic/pause';
-import { planAssignment } from '@shared/game/logic/pause';
+import type { SlotIndex } from '@rotp/game-data';
+import type { PauseContext, PauseState } from '@rotp/game-data';
+import { planAssignment } from '@rotp/game-data';
 import { useControlSchemeStore } from '../control-scheme-store';
 
 const assignFromCursor = (state: PauseState, slot: SlotIndex, ctx: PauseContext): boolean => {

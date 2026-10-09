@@ -4,7 +4,7 @@ import { addCollectedChecks } from '../tracker/collected-checks';
 import { suppressLocationReport } from './location-poller';
 import { markLocationFired } from './override-fire-registry';
 import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 
 const markCollected = (keys: readonly LocationKey[]): void => {

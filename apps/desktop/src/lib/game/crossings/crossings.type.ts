@@ -2,7 +2,7 @@
 import type { ConnectionInfo, FloodFillResult, GridPos } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import type { ConnectionKind, ConnectionSide } from '@shared/game/data';
+import type { ConnectionKind, ConnectionSide } from '@rotp/game-data';
 import type { CrossingClass, CrossingOrigin, CrossingSpan } from '@shared/game/navigation';
 import type { ResolvedTarget } from './resolve-target';
 

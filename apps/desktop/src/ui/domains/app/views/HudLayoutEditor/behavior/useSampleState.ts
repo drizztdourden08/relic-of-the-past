@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
 import { hudDataScope } from '@shared/hud/data';
-import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
+import { getSpritesBase } from '@rotp/game-data';
 import { buildSlotContent } from '@app/lib/hud/slot-content';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useHudSettingsStore } from '@app/stores/hud-settings-store';

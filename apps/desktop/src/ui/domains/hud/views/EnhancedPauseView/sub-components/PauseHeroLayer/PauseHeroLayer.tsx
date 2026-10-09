@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { stateFor } from '@shared/game/data/native-tables/player-pose-atlas';
+import { stateFor } from '@rotp/game-data';
 import { HudBox } from '../../../../primitives/HudBox';
 import { PauseHeroPortrait, POSE_ORIGIN } from '../../../../compounds/PauseHeroPortrait';
 import { useHeroAnchor } from '../../behavior/useHeroAnchor';

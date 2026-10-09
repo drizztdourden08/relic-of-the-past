@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import { cheatItemGrantAllowed } from '../cheats';
 import { isWritable } from './is-writable';
 import { markPlanOf } from './mark-plan-of';

@@ -1,8 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import {
-  asNativeReceiveId, dungeonItemReceiveIdOfRecord, getItem, progressiveReceiveIdOfItem,
-  upgradeReceiveIdOfItem,
-} from '@shared/game/data';
+import { asNativeReceiveId, dungeonItemReceiveIdOfRecord, getItem, progressiveReceiveIdOfItem, upgradeReceiveIdOfItem } from '@rotp/game-data';
 
 const resolveAssignedItemId = (itemId: string): number | undefined => {
   const virtual = progressiveReceiveIdOfItem(itemId) ?? upgradeReceiveIdOfItem(itemId);

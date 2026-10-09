@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { ScreenRecord } from '@shared/game/data';
+import type { ScreenRecord } from '@rotp/game-data';
 
 interface LocationNotification {
   screen: ScreenRecord;

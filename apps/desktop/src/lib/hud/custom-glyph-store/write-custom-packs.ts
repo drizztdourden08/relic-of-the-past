@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { writeJson } from '@shared/storage/json';
+import { writeJson } from '@drizztdourden08/brock-core';
 import type { GlyphPack } from '@shared/types/hud';
 import { activeProfileId } from '../active-profile';
 import { glyphFiles } from './glyph-files';

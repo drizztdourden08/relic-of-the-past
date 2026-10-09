@@ -1,7 +1,7 @@
 /* @layer shared-hud @kind logic */
 import { COUNTDOWN_SIZE, MAGIC_SIZE } from '../../layouts/element-sizes';
 import { resolveTextContent, textIntrinsicSize } from '../resolve-text';
-import { SPRITE_BOX_BY_FILE } from '../../../game/data/sprite-manifest/manifest';
+import { SPRITE_BOX_BY_FILE } from '@rotp/game-data';
 import { EMPTY_SIZE, HEART_SHAPE_SIZE, TILE_SIZE } from './intrinsic-size.constants';
 import type { HudElementSpec } from '../../../types/hud/hud-node';
 import type { MeasureContext } from '../engine.type';

@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { clampRumbleStrength } from '@shared/input/haptics-rumble-strength';
-import { writeJson } from '../json';
+import { writeJson } from '@drizztdourden08/brock-core';
 import { readRumbleStrength } from './read-rumble-strength';
 import { RUMBLE_STRENGTH_FILE } from './rumble-strength.constants';
 

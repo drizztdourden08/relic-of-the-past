@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { it, expect } from 'vitest';
-import type { ScreenRecord } from '@shared/game/data';
-import type { ScreenMatchResult } from '@shared/game/logic/queries/detection';
+import type { ScreenRecord } from '@rotp/game-data';
+import type { ScreenMatchResult } from '@rotp/game-data';
 import { describeDataset } from '../../../dataset-guard';
 import { contextFor } from './context-for';
 import { dungeonScreen } from './dungeon-screen';

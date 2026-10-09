@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind types */
 import type { ReactNode } from 'react';
-import type { GearLadderKind, PauseSection } from '@shared/game/logic/pause';
+import type { GearLadderKind, PauseSection } from '@rotp/game-data';
 import type { GearRowCell } from './sub-components/PauseGearRow';
 
 type GearSection = Extract<PauseSection, GearLadderKind | 'passive'>;

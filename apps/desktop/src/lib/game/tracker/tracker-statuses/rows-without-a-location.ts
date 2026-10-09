@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import { VIRTUAL_PREFIX } from './tracker-statuses.constants';
 

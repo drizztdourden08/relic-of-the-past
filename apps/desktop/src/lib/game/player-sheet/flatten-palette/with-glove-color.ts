@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { PaletteOverride, PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { PaletteOverride, PlayerSheet } from '@rotp/game-data';
 
 const withGloveColor = (sheet: PlayerSheet, slot: 0 | 1, word: number): PaletteOverride => {
   const current = sheet.override.gloves ?? sheet.original.gloves;

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { ItemId } from '../../data';
-import { ITEM_TO_TOKEN } from '../../data/native-tables';
+import type { ItemId } from '@rotp/game-data';
+import { ITEM_TO_TOKEN } from '@rotp/game-data';
 import { logicReferencedItems } from '../logic-referenced-items';
 import { keyKindOf } from '../key-items';
 

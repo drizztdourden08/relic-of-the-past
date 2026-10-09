@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { ItemId } from '../../data';
-import { getItemByGameId } from '../../data';
+import type { ItemId } from '@rotp/game-data';
+import { getItemByGameId } from '@rotp/game-data';
 import type { KeyKind } from './key-items.type';
 import { BIG_KEY_RECEIVE_ID, SMALL_KEY_RECEIVE_ID } from './key-items.constants';
 

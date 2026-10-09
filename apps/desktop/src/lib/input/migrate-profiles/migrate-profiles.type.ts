@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { InputProfile } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 
 interface MigrationOutcome {
   profiles: InputProfile[];

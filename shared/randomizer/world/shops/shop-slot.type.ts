@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
-import type { CheckId, ShopSeamKind, ShopSlotPosition } from '@shared/game/data';
-import type { ItemId, RegionId } from '@shared/game/data/types/ids';
+import type { CheckId, ShopSeamKind, ShopSlotPosition } from '@rotp/game-data';
+import type { ItemId, RegionId } from '@rotp/game-data';
 import type { LocationKey, ShelfSide } from '../location-key';
 
 type ShopWorld = 'light' | 'dark';

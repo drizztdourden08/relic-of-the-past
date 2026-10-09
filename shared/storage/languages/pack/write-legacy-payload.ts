@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { legacyDialoguePath, legacyMetaPath } from '../paths';
 import type { ExtractedPack } from '../types';
 import { metaFromExtracted } from './meta-from-extracted';

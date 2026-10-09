@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind types */
-import type { OutfitPalette, SheetPalette, PaletteOverride, SheetMeta } from '@shared/game/data/player-sheet/types';
+import type { OutfitPalette, SheetPalette, PaletteOverride, SheetMeta } from '@rotp/game-data';
 
 interface RspSource {
   kind: 'zspr' | 'stock' | 'rsp';

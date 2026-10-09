@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { DetectedDevice, InputProfile, SnesButton } from '@shared/types/controls';
+import type { DetectedDevice, InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { SnesButton } from '@rotp/game-data';
 import { getBindingIconUrl, getBindingLabel } from './binding-display';
 import { getSnesIconUrl } from './button-icons';
 import { padHex } from './profile-devices';

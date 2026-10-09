@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { DebugZipEntry } from '@drizztdourden08/brock-electron/main';
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 
 const parsed = (text: string | null): unknown => {
   if (text === null) return null;

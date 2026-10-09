@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { CheckId, CheckRecord } from '@shared/game/data';
+import type { CheckId, CheckRecord } from '@rotp/game-data';
 
 const mergeStatusOnlyChecks = (
   completedChecks: ReadonlySet<CheckId>,

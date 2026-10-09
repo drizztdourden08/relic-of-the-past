@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import type { InventoryViewMode } from '@shared/game/data';
+import type { InventoryViewMode } from '@rotp/game-data';
 import { SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
 import { useInventoryViewMode } from '../behavior/useInventoryViewMode';

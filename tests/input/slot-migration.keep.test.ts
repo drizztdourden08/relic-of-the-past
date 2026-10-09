@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { SlotMigrationError, migrateScheme, migrateSlotList } from '@shared/input/scheme';
-import type { SlotAssignment } from '@shared/types/controls';
+import type { SlotAssignment } from '@rotp/game-data';
 
 const fixture = (name: string): unknown =>
   JSON.parse(readFileSync(resolve(__dirname, '../fixtures', name), 'utf8'));

@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind component */
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
-import type { DialogCorner } from '@shared/game/dialog/box-style';
-import { groundShape } from '@shared/game/dialog/frame-geometry';
+import type { DialogCorner } from '@rotp/game-data';
+import { groundShape } from '@rotp/game-data';
 import { HudBox } from '../../primitives/HudBox';
 import { HudImage } from '../../primitives/HudImage';
 import { DialogFrame } from '../../primitives/DialogFrame';

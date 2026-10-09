@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { findOne, getScreenByGameId } from '@shared/game/data';
-import type { ScreenRecord } from '@shared/game/data';
+import { findOne, getScreenByGameId } from '@rotp/game-data';
+import type { ScreenRecord } from '@rotp/game-data';
 import type { TraversalId } from '@shared/game/simulation';
 import { SYNTHETIC_OW, SYNTHETIC_ROOM } from '../screen-location.constants';
 import { interiorFor } from './interior-for';

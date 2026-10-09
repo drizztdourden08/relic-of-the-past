@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { shopSlotFactsOf } from './shop-slot-facts-of';
 import type { ShopSlotFacts, ShopWorld } from '../shop-slot.type';
 

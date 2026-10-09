@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { bumpDataRevision } from '@app/lib/game/data-revision';
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import { refreshCollectionSource } from './collection-sources';
 import { registerIdRefOption } from './register-id-ref-option';
 import { resolveRecordLabel } from './record-links';

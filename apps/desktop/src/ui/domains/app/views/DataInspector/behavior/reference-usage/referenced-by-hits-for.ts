@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { referencesTo } from '@shared/game/data/relationships/reference-index';
+import { referencesTo } from '@rotp/game-data';
 import type { ReferencedByHit } from '@drizztdourden08/tessera/composites';
 import { resolveRecordLabel } from '../record-links';
 import { isReferenceGuarded } from './is-reference-guarded';

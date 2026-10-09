@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { findOne } from '../../../data';
-import type { ScreenId, ScreenRecord } from '../../../data/types';
+import { findOne } from '@rotp/game-data';
+import type { ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { ComparisonStrategy } from '../../compare/probe.type';
 import type { ScreenObservations } from '../../detection-types';
 import { gameIdProbes } from './game-id.probes';

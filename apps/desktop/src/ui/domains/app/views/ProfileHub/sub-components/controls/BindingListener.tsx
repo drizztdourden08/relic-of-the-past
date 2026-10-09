@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useState } from 'react';
 import type { MouseEvent } from 'react';
-import type { InputBinding } from '@shared/types/controls';
+import type { InputBinding } from '@rotp/game-data';
 import { getInputManager } from '../../../../../../../lib/input/input-manager';
 import { Portal, Box } from '@drizztdourden08/tessera/primitives';
 import { CANCEL_ARM_DELAY_MS, LISTEN_ARM_DELAY_MS, MODIFIER_CODES } from './controls.constants';

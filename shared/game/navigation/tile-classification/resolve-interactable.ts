@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import type { TileBehavior } from '../../data/types';
+import type { TileBehavior } from '@rotp/game-data';
 import type { SimDoor } from '../../simulation';
 import type { ResolveInteractableParams, TileInteractable } from './tile-classification.type';
-import { MANIPULABLE_NAMES } from '../../data/native-tables';
+import { MANIPULABLE_NAMES } from '@rotp/game-data';
 import { CHEST_ATTR_BASE, CHEST_SHUT_FLAG, MANIPULABLE_KIND_MASK, SLOT_MASK } from './tile-classification.constants';
 
 const resolveDoor = (attr: number, doors: readonly SimDoor[]): TileInteractable | undefined => {

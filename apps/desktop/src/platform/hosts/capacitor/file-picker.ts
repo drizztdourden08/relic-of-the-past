@@ -1,7 +1,7 @@
 /* @layer renderer-other @kind logic */
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { Filesystem, Directory } from '@capacitor/filesystem';
-import type { FilePickerPort } from '@shared/platform';
+import type { FilePickerPort } from '@drizztdourden08/brock-core';
 
 const bytesToBase64 = (bytes: Uint8Array): string => {
   let binary = '';

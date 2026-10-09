@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
-import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
+import { getSpritesBase } from '@rotp/game-data';
 import { useConsoleScale } from '../../behavior/useConsoleScale';
 import { PointerHintProvider } from '../../sub-components/PointerHintProvider';
 import { useInPlay } from '../../behavior/useInPlay';

@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind types */
 import type { ReactNode } from 'react';
-import type { ItemCell, PauseSection } from '@shared/game/logic/pause';
+import type { ItemCell, PauseSection } from '@rotp/game-data';
 
 type ItemsSection = Extract<PauseSection, 'items' | 'bottles'>;
 

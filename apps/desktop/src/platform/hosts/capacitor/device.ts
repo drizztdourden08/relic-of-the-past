@@ -2,7 +2,7 @@
 import { KeepAwake } from '@capacitor-community/keep-awake';
 import { Haptics } from '@capacitor/haptics';
 import { App } from '@capacitor/app';
-import type { DevicePort } from '@shared/platform';
+import type { DevicePort } from '@drizztdourden08/brock-core';
 
 const createCapacitorDevice = (): DevicePort => ({
   keepAwake: () => { KeepAwake.keepAwake().catch(() => {}); },

@@ -1,5 +1,5 @@
 /* @layer shared-input @kind constants */
-import type { InputBinding } from '../../../types/controls/bindings';
+import type { InputBinding } from '@rotp/game-data';
 
 const FIRST_SLOT = 1;
 

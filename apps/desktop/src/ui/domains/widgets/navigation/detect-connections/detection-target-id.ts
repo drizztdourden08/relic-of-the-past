@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import type { ScreenId } from '@shared/game/data';
-import { screenForRoomIndex } from '@shared/game/logic/queries/room-screen';
+import type { ScreenId } from '@rotp/game-data';
+import { screenForRoomIndex } from '@rotp/game-data';
 import type { DetectedConnection } from '../navigation.type';
 import { overworldScreen } from './overworld-screen';
 

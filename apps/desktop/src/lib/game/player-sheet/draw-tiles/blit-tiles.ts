@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { decode4bppTile } from '@shared/asset-extraction/graphics';
-import { SHEET_COLS } from '@shared/game/data/player-sheet/types';
+import { SHEET_COLS } from '@rotp/game-data';
 import type { BlitArgs } from './draw-tiles.type';
 import { TILE, TILE_BYTES } from './draw-tiles.constants';
 

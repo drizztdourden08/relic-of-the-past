@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { QuickSaveSlotInfo } from '@shared/types/saves';
 import { quickDir } from '../../save-paths';
 import { QUICK_SLOTS } from '../saves.constants';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { all } from '@shared/game/data';
-import type { RegionRecord } from '@shared/game/data/types';
+import { all } from '@rotp/game-data';
+import type { RegionRecord } from '@rotp/game-data';
 
 let ordered: readonly RegionRecord[] | null = null;
 

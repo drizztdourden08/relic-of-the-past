@@ -2,7 +2,7 @@
 import { Box, Flex, IconButton } from '@drizztdourden08/tessera/primitives';
 import { CompactRecordView } from '@drizztdourden08/tessera/composites';
 import { useDataViewStore } from '@app/stores/data-view-store';
-import type { ReviewMark } from '@shared/game/data';
+import type { ReviewMark } from '@rotp/game-data';
 import { EDIT_LABEL } from '../LiveDataInspector.constants';
 import type { RecordCardProps } from '../LiveDataInspector.type';
 import { ReviewControls } from './ReviewControls';

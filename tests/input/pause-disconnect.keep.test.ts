@@ -1,7 +1,8 @@
 /* @layer test @kind test */
 
 import { describe, it, expect } from 'vitest';
-import type { InputProfile, ButtonMapping, DetectedDevice, AssignedDevice } from '@shared/types/controls';
+import type { InputProfile, DetectedDevice, AssignedDevice } from '@shared/types/controls/devices/devices.type';
+import type { ButtonMapping } from '@rotp/game-data';
 import { PauseManager } from '@app/lib/input/pause-manager';
 
 const padBinding = (vid: string, pid: string, index: number): ButtonMapping => ({

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { CheckRecord, ItemRecord } from '../../../game/data/types';
+import type { CheckRecord, ItemRecord } from '@rotp/game-data';
 import type { CensusFindings, ChestMismatch, RomCensus, VanillaItemDiff } from './rom-census.type';
 
 const censusFindings = (

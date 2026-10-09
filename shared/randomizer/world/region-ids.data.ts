@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { RegionId } from '@shared/game/data/types/ids';
+import type { RegionId } from '@rotp/game-data';
 
 const REGION = {
   start: 'region-001',

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import type { DialogTexture } from '@shared/game/dialog/box-style';
+import type { DialogTexture } from '@rotp/game-data';
 import type { PatternSpec } from './patterns.type';
 import { HEX_RADIUS, HEX_WIDTH } from './patterns.constants';
 import { drawHexagon } from './draw-hexagon';

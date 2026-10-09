@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import { PIECE_SIZE } from '@shared/game/title/title-layout';
+import { PIECE_SIZE } from '@rotp/game-data';
 import type { TriforcePicture } from './choreography.type';
 import { POLY_TILE_ROW_ORDER, SECOND_BITPLANE_PAIR_OFFSET, TILE_BYTES, TILE_PIXELS, TILES_PER_ROW } from './triforce.constants';
 

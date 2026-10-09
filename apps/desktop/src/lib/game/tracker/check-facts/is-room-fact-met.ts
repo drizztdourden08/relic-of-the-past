@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckGameId } from '@shared/game/data';
+import type { CheckGameId } from '@rotp/game-data';
 import { CHEST_OPEN_MASKS } from './check-facts.constants';
 
 const isRoomFactMet = (gameId: CheckGameId, readRoomWord: (roomId: number) => number): boolean => {

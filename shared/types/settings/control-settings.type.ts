@@ -1,5 +1,6 @@
 /* @layer shared-types @kind types */
-import type { FunctionMapping, ModernScheme } from '../controls';
+import type { FunctionMapping } from '../controls/functions/functions.type';
+import type { ModernScheme } from '@rotp/game-data';
 import type { HapticSettings } from './haptic-settings.type';
 
 interface ControlSettings {

@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { registerEnumerationRecord } from '@shared/game/data';
-import type { EnumerationEntry } from '@shared/game/data';
+import { registerEnumerationRecord } from '@rotp/game-data';
+import type { EnumerationEntry } from '@rotp/game-data';
 import type { RecordCreator } from '../record-creators.type';
 import { settleCreatedRecord } from '../settle-created-record';
 

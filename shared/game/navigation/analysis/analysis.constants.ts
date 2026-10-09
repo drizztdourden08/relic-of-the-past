@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { TraversalRequirement } from '../nav-data.types';
+import type { TraversalRequirement } from '@rotp/game-data';
 
 const DARK_WORLD_FLAG = 0x40;
 

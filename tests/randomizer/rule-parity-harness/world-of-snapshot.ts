@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { createRng } from '@shared/randomizer/rng';
 import { ITEM, UNRECORDED } from '@shared/randomizer/world/item-ids.data';
 import { buildFillWorld } from '@shared/randomizer/world/fill/fill-world';

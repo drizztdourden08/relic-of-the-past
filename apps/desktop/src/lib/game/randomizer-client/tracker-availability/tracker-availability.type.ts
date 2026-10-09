@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
-import type { CheckId } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
+import type { CheckId } from '@rotp/game-data';
+import type { CheckStatus } from '@rotp/game-data';
 
 interface TrackerReading {
   statuses: Map<CheckId, CheckStatus>;

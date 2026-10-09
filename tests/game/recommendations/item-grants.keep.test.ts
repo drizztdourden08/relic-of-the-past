@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, getItem, getItemByGameId } from '@shared/game/data';
-import type { ItemId, ItemRecord } from '@shared/game/data';
+import { all, getItem, getItemByGameId } from '@rotp/game-data';
+import type { ItemId, ItemRecord } from '@rotp/game-data';
 import {
   registerDetector, runDetection,
 } from '@shared/game/recommendations';

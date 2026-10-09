@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { canReachEvent } from './can-reach-event';
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 import type { CollectionState } from '../../collection-state';
 
 const reachableEvents = (state: CollectionState): CheckId[] => {

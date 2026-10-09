@@ -1,7 +1,7 @@
 /* @layer shared-input @kind logic */
 import { MENU_CONSUMED_VERBS } from './menu-shadowed-slots.constants';
 import { sameControl } from './same-control';
-import type { ModernBindings, SlotIndex } from '../../types/controls';
+import type { ModernBindings, SlotIndex } from '@rotp/game-data';
 
 const menuShadowedSlots = (bindings: ModernBindings): Set<SlotIndex> => {
   const verbs = MENU_CONSUMED_VERBS.map(verb => bindings.core[verb]);

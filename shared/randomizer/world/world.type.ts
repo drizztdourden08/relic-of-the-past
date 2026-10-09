@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckId, RegionId } from '@shared/game/data/types/ids';
+import type { CheckId, RegionId } from '@rotp/game-data';
 import type { WorldDungeon, WorldEvent, WorldLocation, Region } from './region.type';
 import type { ItemKey } from './item-ids.data';
 import type { LocationKey } from './location-key.type';

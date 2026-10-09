@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind constants */
-import { WALLET_SLOT_COUNT, WALLET_VIRT_FIRST, WALLET_VIRT_LAST } from '@shared/game/data';
+import { WALLET_SLOT_COUNT, WALLET_VIRT_FIRST, WALLET_VIRT_LAST } from '@rotp/game-data';
 import { FAMILIES, WALLET_LADDER_LAST, maxSpanOf } from '@shared/randomizer/world/capacity';
-import type { CapacityFamilyId } from '@shared/game/data';
+import type { CapacityFamilyId } from '@rotp/game-data';
 
 const CAPACITY_FAMILY_INDEX: Readonly<Record<CapacityFamilyId, number>> = {
   explosives: 0,

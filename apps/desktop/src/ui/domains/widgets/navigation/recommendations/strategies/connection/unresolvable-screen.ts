@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import { gameIdLabel } from '@shared/game/logic/queries/game-id';
+import { gameIdLabel } from '@rotp/game-data';
 import type { ObservedTransition } from '@shared/game/recommendations';
 import type { UnresolvableMapper } from '@shared/game/recommendations/compare';
 import { buildScreenDraftRecord } from '@shared/game/recommendations/strategies/screen/screen-draft';

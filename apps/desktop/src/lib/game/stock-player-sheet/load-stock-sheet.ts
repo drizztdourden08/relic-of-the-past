@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet } from '@rotp/game-data';
 import { readDatEntry } from '@shared/asset-extraction/dat-reader';
-import { SHEET_BYTES } from '@shared/game/data/player-sheet/types';
+import { SHEET_BYTES } from '@rotp/game-data';
 import { loadAssets } from '@app/lib/storage/assets-store';
 import { stockPaletteFrom } from './stock-palette-from';
 import { TILES_KEY } from './stock-player-sheet.constants';

@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind types */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import type { Confidence, Recommendation, RecommendationAction } from '@shared/game/recommendations';
 import type { ScrollPosition } from '@drizztdourden08/tessera/primitives';
 import type { InspectorRow } from '../../DataInspector.type';

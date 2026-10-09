@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { VirtualPlayer } from '@shared/game/simulation';
 import type { GridPos } from '@shared/game/navigation';
-import type { MapState } from '@shared/game/types';
+import type { MapState } from '@rotp/game-data';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 import { screenOriginFor } from '../../flood';
 import { interiorScreenId } from '../screen-resolve';

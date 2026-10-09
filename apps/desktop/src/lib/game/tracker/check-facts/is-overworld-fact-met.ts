@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckGameId } from '@shared/game/data';
+import type { CheckGameId } from '@rotp/game-data';
 
 const isOverworldFactMet = (gameId: CheckGameId, readOwByte: (owScreen: number) => number): boolean => {
   const { owScreen, mask } = gameId;

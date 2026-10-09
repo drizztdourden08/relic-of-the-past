@@ -1,5 +1,5 @@
 /* @layer test @kind helper */
-import { SNES_BUTTON_BITS } from '@shared/types/controls';
+import { SNES_BUTTON_BITS } from '@rotp/game-data';
 import type { Button } from './core-harness.type';
 
 const maskOf = (hold: readonly Button[]): number =>

@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
 import { useState, useCallback, useMemo } from 'react';
-import type { OutfitId, PlayerSheet, SheetPalette } from '@shared/game/data/player-sheet/types';
+import type { OutfitId, PlayerSheet, SheetPalette } from '@rotp/game-data';
 import { loadSheet, saveSheet } from '@app/lib/game/player-sheet/load-sheet';
 import { withColor, withGloveColor, isEmptyOverride } from '@app/lib/game/player-sheet/flatten-palette';
 import { loadStockSheet } from '@app/lib/game/stock-player-sheet';

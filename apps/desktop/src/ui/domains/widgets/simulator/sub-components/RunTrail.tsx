@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { getScreen } from '@shared/game/data';
-import type { ScreenId } from '@shared/game/data';
+import { getScreen } from '@rotp/game-data';
+import type { ScreenId } from '@rotp/game-data';
 import { haulAt } from './trail-haul';
 import type { RunTrailProps } from '../SimulatorWidget.type';
 

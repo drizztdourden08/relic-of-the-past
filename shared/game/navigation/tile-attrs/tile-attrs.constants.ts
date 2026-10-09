@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { OVERWORLD_TILE_ATTRS } from '../../data/native-tables';
+import { OVERWORLD_TILE_ATTRS } from '@rotp/game-data';
 import { attrsOfCat } from './attrs-of-cat';
 import { getHookshotTargetTiles } from './get-hookshot-target-tiles';
 

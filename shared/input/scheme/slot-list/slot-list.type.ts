@@ -1,6 +1,6 @@
 /* @layer shared-input @kind types */
-import type { InputBinding } from '../../../types/controls/bindings';
-import type { ModernSlot, SlotIndex } from '../../../types/controls/scheme';
+import type { InputBinding } from '@rotp/game-data';
+import type { ModernSlot, SlotIndex } from '@rotp/game-data';
 
 interface SlotListEdit {
   slots: ModernSlot[];

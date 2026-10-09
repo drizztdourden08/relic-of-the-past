@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import {
   addBits, addByValue, addLadder, addNative,
   BIG_KEY_BITS, BOTTLE_SLOT, BY_VALUE, CRYSTAL_BITS, LADDERS, MIRROR, PENDANT_BITS, SIMPLE,

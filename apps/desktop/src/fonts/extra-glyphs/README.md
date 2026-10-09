@@ -5,7 +5,7 @@ The original face has no glyph for these printable ASCII characters:
 
 `#` `$` `%` `&` `*` `+` `/` `;` `=` `@` `[` `\` `]` `^` `_` `` ` `` `{` `}` `~`
 
-Each SVG here is the source outline for one of them, and `alttp-ext.woff2` in the parent folder carries them. The shapes are the bodies of the in-game glyphs in `shared/game/dialog/extra-glyphs.data.ts`, so the web face and the game's dialog box draw the same letters. The dark edge of the in-game glyphs is left out: on the web, the `.game-text` stroke draws it.
+Each SVG here is the source outline for one of them, and `alttp-ext.woff2` in the parent folder carries them. The shapes are the bodies of the in-game glyphs in `packages/game-data/src/dialog/extra-glyphs.data.ts`, so the web face and the game's dialog box draw the same letters. The dark edge of the in-game glyphs is left out: on the web, the `.game-text` stroke draws it.
 
 `preview.svg` shows every glyph on its pixel grid.
 

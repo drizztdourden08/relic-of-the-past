@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { getDungeonByGameId } from '../../../data';
-import type { DungeonRecord, ScreenId } from '../../../data';
+import { getDungeonByGameId } from '@rotp/game-data';
+import type { DungeonRecord, ScreenId } from '@rotp/game-data';
 import type { ComparisonStrategy } from '../../compare/probe.type';
 import type { ScreenObservations } from '../../detection-types';
 import { roomScreensProbe } from './rooms.probe';

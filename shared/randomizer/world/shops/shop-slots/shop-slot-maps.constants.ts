@@ -2,7 +2,7 @@
 import { CANONICAL_SLOTS } from '../shop-slot-facts';
 import { shopSlotLocationKey } from '../shop-location-keys';
 import { MAX_SHOP_SLOT_DEPTH } from './shop-slots.constants';
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 import type { LocationKey } from '../../location-key';
 import type { ShopSlotLocation } from '../shop-slot.type';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import { buildSuggestions } from './build-suggestions';
 import { suggestionCache } from './suggestion-cache';
 

@@ -1,12 +1,6 @@
 /* @layer shared-ipc @kind types */
-import type {
-  AreaId, AreaRecord, ConnectionId, EntityKind, EnumerationCategory, EnumerationEntry, EnumerationId, ItemGroupId,
-  ItemGroupRecord, ItemId, LocationRecord, ScreenId, TagId, TagRecord,
-} from '../../game/data/types';
-import type {
-  PendingConnectionRecord, PendingEnumerationRecord, PendingItemGroupRecord, PendingScreenRecord, PendingTagRecord,
-  Unnumbered,
-} from '../../game/data/record-codegen';
+import type { AreaId, AreaRecord, ConnectionId, EntityKind, EnumerationCategory, EnumerationEntry, EnumerationId, ItemGroupId, ItemGroupRecord, ItemId, LocationRecord, ScreenId, TagId, TagRecord } from '@rotp/game-data';
+import type { PendingConnectionRecord, PendingEnumerationRecord, PendingItemGroupRecord, PendingScreenRecord, PendingTagRecord, Unnumbered } from '@rotp/game-data';
 
 declare const allocatedBrand: unique symbol;
 

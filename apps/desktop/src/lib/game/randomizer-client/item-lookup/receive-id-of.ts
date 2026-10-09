@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { asNativeReceiveId, getItem } from '@shared/game/data';
-import type { ItemRecord } from '@shared/game/data';
+import { asNativeReceiveId, getItem } from '@rotp/game-data';
+import type { ItemRecord } from '@rotp/game-data';
 
 const receiveIdOf = (record: ItemRecord | undefined): number | undefined => {
   if (!record) return undefined;

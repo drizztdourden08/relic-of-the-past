@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { EntityKind, EntityRecordMap } from '../../data/types';
+import type { EntityKind, EntityRecordMap } from '@rotp/game-data';
 import type { DetectionContext, RecommendationDetector } from '../detection-types';
 import type { DraftRecommendation } from '../types';
 import { compareSet } from './compare-set';

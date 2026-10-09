@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { DungeonId } from '../../../data';
+import type { DungeonId } from '@rotp/game-data';
 import type { EngineState } from '../state/state.type';
 
 const spendKey = (state: EngineState, dungeon: DungeonId): boolean => {

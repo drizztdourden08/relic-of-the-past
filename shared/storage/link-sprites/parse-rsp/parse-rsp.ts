@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
 import JSZip from 'jszip';
-import { SHEET_BYTES } from '@shared/game/data/player-sheet/types';
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import { SHEET_BYTES } from '@rotp/game-data';
+import type { PlayerSheet } from '@rotp/game-data';
 import { MANIFEST_ENTRY, SHEET_ENTRY } from '../rsp.constants';
 import { isRspManifest } from './is-rsp-manifest';
 import { looksLikeZip } from './looks-like-zip';

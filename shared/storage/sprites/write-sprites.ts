@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
-import { writeJson } from '../json';
+import type { FileStore } from '@drizztdourden08/brock-core';
+import { writeJson } from '@drizztdourden08/brock-core';
 import { spriteManifestDigest } from '../sprite-manifest-digest';
 import { spriteDir } from './sprite-dir';
 import { RECEIPT_FILE } from './sprites.constants';

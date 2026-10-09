@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { SimObservation, SimulatorPort, SimSprite, CombatContext, EngineState } from '@shared/game/simulation';
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { locationForScreen } from '../screen-location';
 import { detectFor } from './detect-for';
 import type { DetectCache } from './observe.type';

@@ -13,7 +13,7 @@ const record = (fields: string): string => `  {\n${fields}  },\n`;
 const setUpWriterWorkspace = (): WriterWorkspace => {
   let root = '';
 
-  const recordPath = (relativePath: string): string => join(root, 'shared', 'game', 'data', 'records', relativePath);
+  const recordPath = (relativePath: string): string => join(root, 'packages', 'game-data', 'src', 'data', 'records', relativePath);
 
   const seed = async (relativePath: string, contents: string): Promise<void> => {
     const path = recordPath(relativePath);

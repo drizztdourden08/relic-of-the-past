@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ScreenSpawn } from '@shared/game/data';
+import type { ScreenSpawn } from '@rotp/game-data';
 import type { Difference } from '@shared/game/recommendations';
 import { spawnKey } from './spawn-key';
 

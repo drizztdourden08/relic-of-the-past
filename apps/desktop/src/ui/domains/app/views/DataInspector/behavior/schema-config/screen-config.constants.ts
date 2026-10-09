@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind constants */
-import { progressTierOptions } from '@shared/game/logic/queries/progress-tier';
+import { progressTierOptions } from '@rotp/game-data';
 import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 
 const SCREEN_CONFIG: SchemaConfig = {

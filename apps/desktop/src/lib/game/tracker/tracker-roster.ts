@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { placementCheckRecords, eventCheckRecords } from '../randomizer-client/virtual-locations';
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 
 const trackerCheckRecords = (

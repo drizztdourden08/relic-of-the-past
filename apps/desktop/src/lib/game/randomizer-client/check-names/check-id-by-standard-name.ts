@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import type { ReverseNameState } from './check-names.type';
 import { standardCheckName } from './standard-check-name';
 

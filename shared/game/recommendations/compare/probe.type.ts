@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { EntityKind, EntityRecordMap, ScreenId } from '../../data/types';
+import type { EntityKind, EntityRecordMap, ScreenId } from '@rotp/game-data';
 import type { ScreenObservations } from '../detection-types';
 import type { Confidence, ProposedRecord } from '../types';
 

@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { packPackedBytes, unpackPackedBytes } from '@shared/asset-extraction/packed-bytes';
 import { RANDOMIZER_MSG_BASE, RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
-import { progressiveCapacityItemName } from '@shared/game/data/capacity-progressive-item';
+import { progressiveCapacityItemName } from '@rotp/game-data';
 import { renderCapacityStep } from '@shared/randomizer/receipt-text/capacity-rung-values';
 import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
 import { clearSessionDialogue, setSessionReceiptMessages } from '@app/lib/game/session-dialogue/session-dialogue';

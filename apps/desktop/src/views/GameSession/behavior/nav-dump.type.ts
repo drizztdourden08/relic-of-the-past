@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind types */
 import type { ScreenAnnotations } from '@shared/game/simulation';
 import type { GridPos } from '@shared/game/navigation';
-import type { ScreenMatchResult } from '@shared/game/logic/queries/detection';
+import type { ScreenMatchResult } from '@rotp/game-data';
 import type {
   wasmGetProgressIndicator,
   wasmGetRoomDoorBoundaryTiles,

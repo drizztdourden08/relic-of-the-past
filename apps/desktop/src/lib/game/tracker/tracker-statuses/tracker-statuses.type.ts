@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
+import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 

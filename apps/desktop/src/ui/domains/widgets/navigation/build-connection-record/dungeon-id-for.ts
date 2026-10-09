@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import { findOne } from '@shared/game/data';
-import type { DungeonId, ScreenId } from '@shared/game/data';
+import { findOne } from '@rotp/game-data';
+import type { DungeonId, ScreenId } from '@rotp/game-data';
 
 const dungeonIdFor = (fromScreenId: ScreenId, toScreenId: ScreenId): DungeonId | undefined => {
   const of = (id: ScreenId) => findOne('dungeon', d => d.roomScreenIds.includes(id))?.id;

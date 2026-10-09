@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Status, Text } from '@drizztdourden08/tessera/primitives';
-import { getItem } from '@shared/game/data';
+import { getItem } from '@rotp/game-data';
 import { CheckStatusIcon } from './CheckStatusIcon';
 import { SwapBadge } from './SwapBadge';
 import type { TrackerCheckRowProps } from '../ChecksTracker.type';

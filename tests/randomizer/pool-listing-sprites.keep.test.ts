@@ -1,14 +1,12 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { CAPACITY_FAMILY_IDS, all } from '@shared/game/data';
-import {
-  getCapacityUpgradeSprite, getItemSprite, setSpritesBase,
-} from '@shared/game/logic/queries/item-sprites';
+import { CAPACITY_FAMILY_IDS, all } from '@rotp/game-data';
+import { getCapacityUpgradeSprite, getItemSprite, setSpritesBase } from '@rotp/game-data';
 import { extractedFileNames } from '@shared/storage/sprites';
-import { SPRITE_DEFINITIONS } from '@shared/game/data/sprite-manifest/manifest';
+import { SPRITE_DEFINITIONS } from '@rotp/game-data';
 import { spriteRomOf } from '@app/lib/sprites/sprite-rom';
 import { describeDataset } from '../dataset-guard';
-import type { ItemRecord } from '@shared/game/data';
+import type { ItemRecord } from '@rotp/game-data';
 
 const BASE = 'app-sprite://sprites/A Rom Stem/';
 const romOf = (romFile: string, hasAssets: boolean) => ({ romFile, hasAssets, assetSize: null });

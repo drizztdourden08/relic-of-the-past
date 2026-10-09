@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { contextFor } from '@shared/game/data/dialogue-context';
+import { contextFor } from '@rotp/game-data';
 import type { DialogueEntry } from '@shared/game/language';
 import type { SelectParams } from './select-entries.type';
 

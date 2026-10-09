@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
-import { find } from '@shared/game/data';
-import { spriteFilename } from '@shared/game/logic/queries/item-sprites';
+import { find } from '@rotp/game-data';
+import { spriteFilename } from '@rotp/game-data';
 
 const ALL_ITEMS = find('item', () => true).map(item => ({
   id: item.id,

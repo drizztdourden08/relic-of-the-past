@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { AUTO_ABS_MAX, AUTO_DEFAULT_MAX } from '../saves.constants';
 import { autoSaves } from './auto-saves';
 

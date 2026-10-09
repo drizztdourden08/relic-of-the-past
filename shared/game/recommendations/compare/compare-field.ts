@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { EntityKind, EntityRecordMap } from '../../data/types';
+import type { EntityKind, EntityRecordMap } from '@rotp/game-data';
 import type { ScreenObservations } from '../detection-types';
 import { classify } from './classify';
 import { deepEqual } from './deep-equal';

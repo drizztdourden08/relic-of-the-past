@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ScreenRecord } from '../../../data/types';
+import type { ScreenRecord } from '@rotp/game-data';
 import type { ScreenObservations } from '../../detection-types';
 
 const isCurrentScreen = (observations: ScreenObservations, record: ScreenRecord): boolean =>

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import type { PackSummaryProps } from './PackSummary.type';
 
 const PackSummary = (props: PackSummaryProps) => {

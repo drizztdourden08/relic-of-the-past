@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
-import type { PauseContext } from '@shared/game/logic/pause';
-import { arrowTypeOf, buildItemCells } from '@shared/game/logic/pause';
+import type { PauseContext } from '@rotp/game-data';
+import { arrowTypeOf, buildItemCells } from '@rotp/game-data';
 import { ownedMax } from '@app/lib/game/gear-ownership';
 import { wantedActiveItem } from '@app/lib/game/host-menu';
 import { useGameUIStore } from '../game-ui-store';

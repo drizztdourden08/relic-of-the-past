@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { manifestPath } from './manifest-path';
 import { parseManifest } from './parse-manifest';

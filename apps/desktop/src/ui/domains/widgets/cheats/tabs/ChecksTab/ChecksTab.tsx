@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import { find, getScreen } from '@shared/game/data';
-import type { CheckId, CheckRecord } from '@shared/game/data';
+import { find, getScreen } from '@rotp/game-data';
+import type { CheckId, CheckRecord } from '@rotp/game-data';
 import {
   getCompletedChecks, grantFromCheck, onCompletedChecksChanged, planCheckGrant,
 } from '@app/lib/game';

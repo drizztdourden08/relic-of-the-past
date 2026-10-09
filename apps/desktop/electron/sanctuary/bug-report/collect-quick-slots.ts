@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { quickDir } from '@shared/storage/save-paths';
 import type { QuickSlot } from './bug-report.type';
 import { QUICK_SLOT_FILE } from './bug-report.constants';

@@ -1,8 +1,8 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { connectionRecordFile } from '@shared/game/data/record-file-targets';
-import type { ConnectionRecord } from '@shared/game/data';
-import type { PendingConnectionRecord } from '@shared/game/data/record-codegen';
+import { connectionRecordFile } from '@rotp/game-data';
+import type { ConnectionRecord } from '@rotp/game-data';
+import type { PendingConnectionRecord } from '@rotp/game-data';
 import type { RecordWriter } from '../../DataInspector.type';
 import { pathOf } from './path-of';
 import { settleWrite } from './settle-write';

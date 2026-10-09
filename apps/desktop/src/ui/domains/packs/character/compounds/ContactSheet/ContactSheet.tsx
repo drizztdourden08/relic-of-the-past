@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Grid, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { PoseCanvas } from '../PoseCanvas';
-import { POSE_ATLAS, poseCanvasSize } from '@shared/game/data/native-tables/player-pose-atlas';
-import { labelFor } from '@shared/game/data/native-tables/player-state-labels';
+import { POSE_ATLAS, poseCanvasSize } from '@rotp/game-data';
+import { labelFor } from '@rotp/game-data';
 import { CELL_MIN_PX } from './ContactSheet.constants';
 import type { ContactSheetProps } from './ContactSheet.type';
 import './ContactSheet.css';

@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind types */
 import type { ControlSchemeId, FunctionMask } from '@shared/input/scheme';
-import type { PauseEvent } from '@shared/game/logic/pause';
-import type { CoreBindings, ModernBindings, ModernScheme } from '@shared/types/controls';
+import type { PauseEvent } from '@rotp/game-data';
+import type { CoreBindings, ModernBindings, ModernScheme } from '@rotp/game-data';
 
 interface MenuSink {
   open: boolean;

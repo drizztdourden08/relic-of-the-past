@@ -1,6 +1,6 @@
 /* @layer renderer-other @kind logic */
 import { App } from '@capacitor/app';
-import type { WindowControlsPort } from '@shared/platform';
+import type { WindowControlsPort } from '@drizztdourden08/brock-core';
 
 const noopUnsub = () => () => {};
 

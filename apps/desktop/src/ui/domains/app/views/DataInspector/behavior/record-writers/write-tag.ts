@@ -1,8 +1,8 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { isTagKey, replaceTagRecord } from '@shared/game/data';
-import type { TagRecord } from '@shared/game/data';
-import type { PendingTagRecord } from '@shared/game/data/record-codegen';
+import { isTagKey, replaceTagRecord } from '@rotp/game-data';
+import type { TagRecord } from '@rotp/game-data';
+import type { PendingTagRecord } from '@rotp/game-data';
 import { TAG_NAME_MISMATCH } from '../../DataInspector.constants';
 import type { RecordWriter } from '../../DataInspector.type';
 import { invalidateTagSuggestions } from '../tag-suggestions';

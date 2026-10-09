@@ -1,6 +1,6 @@
 /* @layer shared-input @kind logic */
 import { FIRST_SLOT } from './slot-list.constants';
-import type { ModernSlot, SlotIndex } from '../../../types/controls/scheme';
+import type { ModernSlot, SlotIndex } from '@rotp/game-data';
 import type { SlotListEdit } from './slot-list.type';
 
 const renumberSlots = (slots: readonly ModernSlot[]): SlotListEdit => {

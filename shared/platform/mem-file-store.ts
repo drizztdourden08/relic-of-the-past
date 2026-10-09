@@ -1,5 +1,5 @@
 /* @layer shared-platform @kind logic */
-import type { FileStore } from './ports/file-store.type';
+import type { FileStore } from '@drizztdourden08/brock-core';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();

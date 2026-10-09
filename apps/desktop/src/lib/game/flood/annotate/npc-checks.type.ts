@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 
 interface NpcCheck {
   checkId: CheckId;

@@ -1,5 +1,5 @@
 /* @layer shared-types @kind barrel */
-export type { SeedData, LocationEntry, GoalMode, MedallionConfig, SaveMeta } from '../game/seed';
+export type { SeedData, LocationEntry, GoalMode, MedallionConfig, SaveMeta } from '@rotp/game-data';
 export type { AutoSaveInfo, AutoSaveSettings, NormalSaveInfo, QuickSaveSlotInfo } from './saves';
 export type {
   ShapeDefinition,

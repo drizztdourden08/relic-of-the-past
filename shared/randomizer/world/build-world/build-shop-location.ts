@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { RegionId } from '@shared/game/data/types/ids';
+import type { RegionId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
 import type { WorldLocation } from '../region.type';
 

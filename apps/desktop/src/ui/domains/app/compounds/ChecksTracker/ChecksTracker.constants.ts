@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
-import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
-import type { ItemFilter, ShowMode } from '@shared/game/logic/queries/check-grouping';
+import { CHECK_FACET_DEFS } from '@rotp/game-data';
+import type { ItemFilter, ShowMode } from '@rotp/game-data';
 import type { IconPath, SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
 import type { StatusKey, TrackerPanels } from './ChecksTracker.type';
 

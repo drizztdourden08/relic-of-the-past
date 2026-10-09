@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind constants */
 import type { LogKindDef } from '@drizztdourden08/tessera/composites';
-import type { FilterState } from '@shared/game/logic/queries/check-grouping';
+import type { FilterState } from '@rotp/game-data';
 import type { LogKind } from './SimulatorWidget.type';
 
 const SAFETY_CAP = 50_000;

@@ -1,7 +1,5 @@
 /* @layer renderer-app @kind constants */
-import type {
-  ActorRecord, AreaRecord, CheckRecord, DungeonRecord, EntityKind, ItemRecord, LocationRecord,
-} from '@shared/game/data';
+import type { ActorRecord, AreaRecord, CheckRecord, DungeonRecord, EntityKind, ItemRecord, LocationRecord } from '@rotp/game-data';
 import type { RecordWriter } from '../../DataInspector.type';
 import { screenEditor } from '../screen-editor';
 import { facadeWriter } from './facade-writer';

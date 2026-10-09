@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { LanguageSet } from '@shared/game/language';
 import { saveSet } from '../write';
 import { copyFont } from './copy-font';

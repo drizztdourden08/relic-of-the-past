@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
-import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
+import { getSpritesBase } from '@rotp/game-data';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetHealth } from '@app/lib/game';
 import { useConsoleScale } from '../../behavior/useConsoleScale';

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ExtraGlyphSlot } from '@shared/game/dialog/dialogue-charset';
+import type { ExtraGlyphSlot } from '@rotp/game-data';
 import type { EmscriptenModule } from '../../types';
 import { coreTakesGlyphs } from './core-takes-glyphs';
 import { extraGlyphsState } from './extra-glyphs-state';

@@ -3,8 +3,8 @@ import { KEYBOARD_DEFAULT } from '../../keyboard-default';
 import { buildCore } from './build-core';
 import { KEYBOARD_CORE_SOURCE, UNBOUND } from './default-modern-bindings.constants';
 import { keyboardSlots } from './keyboard-slots';
-import type { SnesButton } from '../../../types/controls/snes';
-import type { InputBinding, ModernBindings } from '../../../types/controls';
+import type { SnesButton } from '@rotp/game-data';
+import type { InputBinding, ModernBindings } from '@rotp/game-data';
 
 const keyboardBindingFor = (snesButton: SnesButton): InputBinding => {
   return KEYBOARD_DEFAULT.defaultMappings.find(mapping => mapping.snesButton === snesButton)?.binding ?? UNBOUND;

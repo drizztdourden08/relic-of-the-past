@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, CONNECTION_TAG_METADATA, tagById, tagKeysOf, TAG_METADATA } from '@shared/game/data';
-import type { EntityKind } from '@shared/game/data';
+import { all, CONNECTION_TAG_METADATA, tagById, tagKeysOf, TAG_METADATA } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 const TAGGED: readonly EntityKind[] = ['screen', 'connection'];

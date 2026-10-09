@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import type { DialogCell, DialogFrame } from '@shared/game/dialog/dialog-frame.types';
-import { kindOf } from '@shared/game/dialog/dialog-kind';
-import { waitOf } from '@shared/game/dialog/dialog-wait';
+import type { DialogCell, DialogFrame } from '@rotp/game-data';
+import { kindOf } from '@rotp/game-data';
+import { waitOf } from '@rotp/game-data';
 import { readU16 } from '../../bridge/wasm-call';
 import {
   CELL_BYTES, CELL_HIGHLIGHT_SHIFT, CELL_WIDTH_MASK, CELLS_PER_ROW, FLAG_BORDERED, FLAG_NATIVE_HIDDEN, FLAG_STORY,

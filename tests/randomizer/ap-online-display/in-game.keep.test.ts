@@ -5,7 +5,7 @@ import { foreignIconIdOfGame } from '@app/lib/game/randomizer-client/foreign-ico
 import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID } from '@app/lib/game/foreign-item-sentinel';
 import { fitReceiptLine } from '@app/lib/game/session-dialogue/wrap-message';
 import { toDialogueText } from '@app/lib/game/session-dialogue/dialogue-text';
-import { dialogueCharsetOf, extraGlyphSlots, readableText } from '@shared/game/dialog/dialogue-charset';
+import { dialogueCharsetOf, extraGlyphSlots, readableText } from '@rotp/game-data';
 import { stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup';
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
 import {
@@ -17,7 +17,7 @@ import { NEUTRAL_CHROMA } from '@shared/asset-extraction/item-sprites/perceptual
 import { extractArtBadge } from '@shared/asset-extraction/item-sprites/art-badge';
 import { artImage } from '@shared/asset-extraction/item-sprites/art-picture';
 import { quantizeIconPerceptual } from '@shared/asset-extraction/item-sprites/perceptual-quantize';
-import { POOL_SPRITE_DEFINITIONS } from '@shared/game/data/sprite-manifest/pool-sprites';
+import { POOL_SPRITE_DEFINITIONS } from '@rotp/game-data';
 import type { ImageBuffer } from '@shared/asset-extraction/graphics/png-writer';
 import type { RGBA } from '@shared/asset-extraction/graphics/palette';
 

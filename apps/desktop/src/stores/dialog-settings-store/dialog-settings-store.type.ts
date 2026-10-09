@@ -1,9 +1,6 @@
 /* @layer renderer-stores @kind types */
-import type { PromptControls } from '@shared/game/dialog/dialog-prompts';
-import type {
-  DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark,
-  DialogTexture, DialogTextureAnimation, DialogTextureSpeed,
-} from '@shared/game/dialog/box-style';
+import type { PromptControls } from '@rotp/game-data';
+import type { DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark, DialogTexture, DialogTextureAnimation, DialogTextureSpeed } from '@rotp/game-data';
 
 interface DialogBoxSettings {
   box: 'original' | 'enhanced';

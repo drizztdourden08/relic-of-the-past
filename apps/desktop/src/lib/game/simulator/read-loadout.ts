@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { wasmGetGameUIState, wasmGetReceiveCount, wasmGetReceiveSite } from '../';
 import { parseGameUIBuffer } from '../ui-bridge';
-import { dungeonGroupName, dungeonGroupOf } from '@shared/game/logic/queries/dungeon-group';
+import { dungeonGroupName, dungeonGroupOf } from '@rotp/game-data';
 import {
   DUNGEON_BIT_TOP, DUNGEON_SLOTS, ITEM_ID_COUNT, PER_HEART, RECEIVE_SITES,
 } from './read-loadout.constants';

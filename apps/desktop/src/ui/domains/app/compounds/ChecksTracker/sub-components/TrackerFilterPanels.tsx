@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
-import type { GroupDimension } from '@shared/game/logic/queries/check-grouping';
-import { GROUP_DIMENSIONS } from '@shared/game/logic/queries/check-grouping';
+import type { GroupDimension } from '@rotp/game-data';
+import { GROUP_DIMENSIONS } from '@rotp/game-data';
 import { Box, Button, Card, Icon, IconButton, SegmentedControl, Text, TagPicker } from '@drizztdourden08/tessera/primitives';
 import { CLOSE_PATHS, MAX_DIMENSIONS, TAG_GROUPS, TAG_MODE_OPTIONS } from '../ChecksTracker.constants';
 import type { TrackerFilterPanelsProps } from '../ChecksTracker.type';

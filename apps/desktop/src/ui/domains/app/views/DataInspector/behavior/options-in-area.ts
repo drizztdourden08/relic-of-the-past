@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import { locationsInArea } from '@shared/game/logic/queries/area-locations';
-import type { EntityKind } from '@shared/game/data';
+import { locationsInArea } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
 import type { IdRefOption } from '@drizztdourden08/tessera/composites';
 import { narrowedOptionCache } from './narrowed-option-cache';
 import { optionsFor } from './options-for';

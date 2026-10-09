@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { GroupTree } from '@drizztdourden08/tessera/composites';
 import type { TreeNode } from '@drizztdourden08/tessera/composites';
-import type { GroupNode } from '@shared/game/logic/queries/check-grouping';
+import type { GroupNode } from '@rotp/game-data';
 import type { CheckBatch, TrackerGroupTreeProps } from '../ChecksTracker.type';
 import { CheckList } from './CheckList';
 import { GroupCounts } from './GroupCounts';

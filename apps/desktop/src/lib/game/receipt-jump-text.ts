@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { isProgressiveCapacityReceiveId, upgradeFamilyOfReceiveId, upgradeJumpOfReceiveId } from '@shared/game/data';
+import { isProgressiveCapacityReceiveId, upgradeFamilyOfReceiveId, upgradeJumpOfReceiveId } from '@rotp/game-data';
 import { capacityFamilyLabel, capacityJumpText } from '@shared/randomizer/receipt-text/capacity-jump-text';
 import { sessionWalletTable } from './randomizer-client/session-wallet-table';
 

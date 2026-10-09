@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { CheckId, ItemId } from '@shared/game/data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 
 type ItemReceivedListener = (itemId: ItemId, nativeItemId: number, method: number) => void;
 type InventoryChangedListener = (inventory: Set<ItemId>) => void;

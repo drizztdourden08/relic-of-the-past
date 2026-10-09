@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import type { PricedEntry } from '../rules.type';
 
 const PRICED_WITHOUT_RECORDS: readonly PricedEntry[] = [

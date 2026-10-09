@@ -6,7 +6,7 @@ import { loadStockSheet } from '@app/lib/game/stock-player-sheet';
 import { liveSettingsNow } from '@app/lib/game/live-settings';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
-import type { GloveLevel, OutfitId, PlayerSheet, Wearing } from '@shared/game/data/player-sheet/types';
+import type { GloveLevel, OutfitId, PlayerSheet, Wearing } from '@rotp/game-data';
 import { ARMOUR_OUTFITS, MAX_GLOVES } from '../EnhancedPauseView.constants';
 import type { HeroWearing } from '../EnhancedPauseView.type';
 

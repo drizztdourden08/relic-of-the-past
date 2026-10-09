@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 import type { ScreenAnnotations } from '@shared/game/simulation';
 import { annotateScreen } from '../../../../../lib/game/flood';
-import { screenIdForGameId } from '@shared/game/logic/queries/game-id';
+import { screenIdForGameId } from '@rotp/game-data';
 import type { AnnotateArgs } from './nav-flood.type';
 
 const annotateFlooded = (args: AnnotateArgs): ScreenAnnotations[] => {

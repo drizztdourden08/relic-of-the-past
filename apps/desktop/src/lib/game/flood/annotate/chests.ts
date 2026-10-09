@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { ScreenAnnotation, SimChest } from '@shared/game/simulation';
-import type { ItemId } from '@shared/game/data';
-import { itemLabel, resolveDuplicate } from '@shared/game/logic/queries/item-duplicates';
+import type { ItemId } from '@rotp/game-data';
+import { itemLabel, resolveDuplicate } from '@rotp/game-data';
 
 const chestAnnotation = (chest: SimChest, inventory: ReadonlySet<ItemId>): ScreenAnnotation => {
   const yielded = chest.itemId !== undefined ? resolveDuplicate(chest.itemId, inventory) : undefined;

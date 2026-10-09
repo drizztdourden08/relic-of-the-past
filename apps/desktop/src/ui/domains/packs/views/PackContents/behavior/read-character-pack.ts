@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { parseRsp } from '@shared/storage/link-sprites/parse-rsp';
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet } from '@rotp/game-data';
 import type { PackSource } from '../../../pack-source.type';
 
 const readCharacterPack = async (source: PackSource): Promise<PlayerSheet> => {

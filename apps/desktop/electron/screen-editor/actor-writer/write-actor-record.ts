@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { ActorRecord } from '@shared/game/data/types';
+import type { ActorRecord } from '@rotp/game-data';
 import type { WriteRecordArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
 import { updateRecord } from '../dataset-record-writer';
 import { ACTOR_SPEC } from './actor-writer.constants';

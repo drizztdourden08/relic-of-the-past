@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { FlagDiff } from '../../types';
-import type { CheckRecord } from '../../../data';
+import type { CheckRecord } from '@rotp/game-data';
 import { ALL_CHECKS, CHEST_OPEN_MASKS, WHOLE_BYTE_MASK } from './check-matcher.constants';
 
 const matchRoom = (diff: FlagDiff): CheckRecord | undefined => {

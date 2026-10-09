@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { CheckKind } from '../../game/data/types';
+import type { CheckKind } from '@rotp/game-data';
 
 const SHAPE_RULE = 'A1-shape';
 const UNIQUE_RULE = 'A2-unique';

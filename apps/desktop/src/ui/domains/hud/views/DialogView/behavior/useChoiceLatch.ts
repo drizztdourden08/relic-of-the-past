@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useRef } from 'react';
-import type { DialogFrame, DialogWait } from '@shared/game/dialog/dialog-frame.types';
+import type { DialogFrame, DialogWait } from '@rotp/game-data';
 
 const isChoice = (wait: DialogWait): boolean => wait === 'choice' || wait === 'item';
 

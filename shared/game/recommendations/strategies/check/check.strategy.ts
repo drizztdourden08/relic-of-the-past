@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { getCheckByGameId } from '../../../data';
-import type { CheckRecord, ScreenId } from '../../../data';
+import { getCheckByGameId } from '@rotp/game-data';
+import type { CheckRecord, ScreenId } from '@rotp/game-data';
 import type { ComparisonStrategy } from '../../compare/probe.type';
 import type { ScreenObservations } from '../../detection-types';
 import { chestPresenceProbe } from './chests.set';

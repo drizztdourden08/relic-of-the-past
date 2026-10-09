@@ -2,7 +2,7 @@
 import { appApi } from '@app/ipc/app-api';
 import type { SimRunConfig, SimulatorPort } from '@shared/game/simulation';
 import { buildSimRunReport, formatEndSummary } from '@shared/game/simulation';
-import { getDungeon, getItem } from '@shared/game/data';
+import { getDungeon, getItem } from '@rotp/game-data';
 import { runSimulation } from '@app/lib/game/simulator';
 import { readLoadout } from '@app/lib/game/simulator/read-loadout';
 

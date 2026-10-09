@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { migrateSlotList } from '@shared/input/scheme';
-import type { InputProfile } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 
 const migrateProfile = (raw: unknown): InputProfile => {
   const profile = raw as InputProfile & { modern?: { core: unknown; slots: unknown } };

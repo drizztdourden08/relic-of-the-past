@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useRef } from 'react';
-import type { DialogFrame } from '@shared/game/dialog/dialog-frame.types';
+import type { DialogFrame } from '@rotp/game-data';
 
 const useOpeningMessage = (frame: DialogFrame): number => {
   const { generation, messageId } = frame;

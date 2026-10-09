@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { usePlatform, useProfilesStore, useSettingsStore } from '@drizztdourden08/brock-react';
 import { toast } from '@drizztdourden08/tessera/composites';
-import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
+import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls/functions/functions.constants';
 import type { GameSettings } from '@shared/types/settings';
 import { getInputManager, pushLiveSettings, LIVE_SETTINGS } from '@app/lib/game';
 import { mergeSettings } from '@app/lib/game/settings';

@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
-import { readJson } from '../../json';
+import type { FileStore } from '@drizztdourden08/brock-core';
+import { readJson } from '@drizztdourden08/brock-core';
 import { setMetaPath } from '../paths';
 
 const readHeader = (files: FileStore, id: string): Promise<Record<string, unknown>> =>

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { EntityKind, EntityRecordMap } from '../../data/types';
+import type { EntityKind, EntityRecordMap } from '@rotp/game-data';
 import type { Confidence, ProposedRecord } from '../types';
 
 type DifferenceStatus = 'mismatch' | 'missing-in-dataset' | 'unbacked-in-dataset';

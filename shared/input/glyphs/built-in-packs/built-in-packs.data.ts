@@ -1,5 +1,5 @@
 /* @layer shared-input @kind data */
-import type { SnesButton } from '../../../types/controls';
+import type { SnesButton } from '@rotp/game-data';
 import type { IconKeyTable } from './built-in-packs.type';
 
 const GENERIC_PACK_ART: IconKeyTable = {

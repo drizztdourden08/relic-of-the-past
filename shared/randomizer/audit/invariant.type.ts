@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckRecord, DungeonRecord, ItemRecord, ScreenRecord } from '../../game/data/types';
+import type { CheckRecord, DungeonRecord, ItemRecord, ScreenRecord } from '@rotp/game-data';
 
 interface InvariantFinding {
   rule: string;

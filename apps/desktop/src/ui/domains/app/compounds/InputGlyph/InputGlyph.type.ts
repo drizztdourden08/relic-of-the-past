@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { InputBinding, ButtonIcon } from '@shared/types/controls';
+import type { InputBinding, ButtonIcon } from '@rotp/game-data';
 
 interface InputGlyphProps {
   binding?: InputBinding;

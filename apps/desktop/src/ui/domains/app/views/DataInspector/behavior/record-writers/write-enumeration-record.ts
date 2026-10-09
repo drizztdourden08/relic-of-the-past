@@ -1,8 +1,8 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { replaceEnumerationRecord } from '@shared/game/data';
-import type { EnumerationEntry } from '@shared/game/data';
-import type { PendingEnumerationRecord } from '@shared/game/data/record-codegen';
+import { replaceEnumerationRecord } from '@rotp/game-data';
+import type { EnumerationEntry } from '@rotp/game-data';
+import type { PendingEnumerationRecord } from '@rotp/game-data';
 import type { RecordWriter } from '../../DataInspector.type';
 import { updateIdRefOption } from '../update-id-ref-option';
 import { settleWrite } from './settle-write';

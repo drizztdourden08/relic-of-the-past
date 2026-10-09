@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { SNES_ACTION_LABELS, SNES_BUTTON_LABELS } from '@shared/types/controls';
+import { SNES_ACTION_LABELS, SNES_BUTTON_LABELS } from '@rotp/game-data';
 import { getSnesIconUrl } from '@app/lib/input/button-icons';
 import { BindingRow } from './BindingRow';
 import type { SnesBindingRowProps } from './controls.type';

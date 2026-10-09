@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import { voidCall } from '../bridge/wasm-call';
 import type { MarkPlan } from './cheat-check-mark.type';
 import { BUFFER_INDEX_OF_FLAG_TYPE, NO_ITEM_SENTINEL, SUBSTITUTION_BUFFER_INDEXES } from './cheat-check-mark.constants';

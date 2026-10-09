@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useRef, useState } from 'react';
 import { Anchored, Box, Button, Portal, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
-import { getCheck } from '@shared/game/data';
-import type { CheckId } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
+import type { CheckId } from '@rotp/game-data';
 import { useStopAtChecks } from '../../behavior/useStopAtChecks';
 import { StopAtCheckFilters } from './StopAtCheckFilters';
 import { StopAtCheckList } from './StopAtCheckList';

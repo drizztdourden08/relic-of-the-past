@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { serializeTagRecord } from '@shared/game/data/record-codegen';
-import type { TagRecord } from '@shared/game/data/types';
+import { serializeTagRecord } from '@rotp/game-data';
+import type { TagRecord } from '@rotp/game-data';
 import type { WriteRecordResult, WriteTagArgs } from '@shared/ipc/screen-editor-contract';
 import { replaceById } from '../source-writers';
 import { TAGS_FILE } from './tag-writer.constants';

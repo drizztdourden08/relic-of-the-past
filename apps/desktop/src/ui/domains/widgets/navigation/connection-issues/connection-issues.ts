@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import { findOne } from '@shared/game/data';
+import { findOne } from '@rotp/game-data';
 import type { ConnectionIssueInput } from '../navigation.type';
 import { CONNECTION_ISSUE } from './connection-issues.constants';
 import { unknownScreen } from './unknown-screen';

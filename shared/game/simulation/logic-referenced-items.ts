@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { ItemId, Requirement } from '../data';
-import { find, membersOf } from '../data';
+import type { ItemId, Requirement } from '@rotp/game-data';
+import { find, membersOf } from '@rotp/game-data';
 
 const collectItemIds = (req: Requirement, out: Set<ItemId>): void => {
   if ('impossible' in req || 'checkId' in req) return;

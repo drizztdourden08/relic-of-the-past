@@ -1,7 +1,7 @@
 /* @layer shared-game @kind constants */
 import { DUNGEON_ORDER } from '../fill/dungeon-order.data';
 import { worldDungeonOf } from '../world-dungeon';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 
 const BIG_KEY_ITEMS: readonly ItemId[] = DUNGEON_ORDER
   .map((id) => worldDungeonOf(id).bigKey)

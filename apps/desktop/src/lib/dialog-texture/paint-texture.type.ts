@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { DialogTexture, DialogTextureAnimation, DialogTextureSpeed } from '@shared/game/dialog/box-style';
+import type { DialogTexture, DialogTextureAnimation, DialogTextureSpeed } from '@rotp/game-data';
 
 interface TextureFrame {
   texture: DialogTexture;

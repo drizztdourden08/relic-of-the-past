@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { getCheck } from '@shared/game/data';
-import { standardNameOfCheck } from '@shared/game/data/check-standard-name';
+import { getCheck } from '@rotp/game-data';
+import { standardNameOfCheck } from '@rotp/game-data';
 
 const standardCheckName = (checkId: string): string => standardNameOfCheck(getCheck(checkId));
 

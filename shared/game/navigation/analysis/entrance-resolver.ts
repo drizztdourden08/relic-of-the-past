@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ConnectionPointData } from '../nav-data.types';
+import type { ConnectionPointData } from '@rotp/game-data';
 import type { EntranceResolverInput, ResolvedEntrance } from './entrance-resolver.type';
 import { GRID_SIZE } from '../types';
 import { DARK_WORLD_FLAG } from './analysis.constants';

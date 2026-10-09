@@ -1,5 +1,5 @@
 /* @layer shared-input @kind logic */
-import { SDL_AXIS, SDL_BUTTON } from '../sdl-buttons';
+import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import { DEFAULT_TRIGGER_PRESS_THRESHOLD } from './live-control-state.constants';
 import type { ResolvedControl } from './family.type';
 import type { LiveControlState } from './live-control-state.type';

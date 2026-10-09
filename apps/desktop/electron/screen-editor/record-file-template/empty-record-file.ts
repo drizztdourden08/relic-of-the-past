@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { recordArrayName } from '@shared/game/data/record-file-targets';
+import { recordArrayName } from '@rotp/game-data';
 import { RECORD_TYPES_MODULE } from './empty-record-file.constants';
 
 const emptyRecordFile = (relativePath: string, recordType: string): string | null => {

@@ -5,8 +5,8 @@ import { wrapName } from '../../PauseMenuView/behavior/wrap-name';
 import {
   ASSIGN_HINT, GEAR_HINT, GEAR_HINTS, HINT_COLUMNS, REFUSE_HINT, REFUSE_MS,
 } from '../EnhancedPauseView.constants';
-import type { PauseScreen, PauseSection } from '@shared/game/logic/pause';
-import type { SlotIndex } from '@shared/types/controls/scheme';
+import type { PauseScreen, PauseSection } from '@rotp/game-data';
+import type { SlotIndex } from '@rotp/game-data';
 import type { PauseAssign } from '../EnhancedPauseView.type';
 
 const standingHint = (screen: PauseScreen, section: PauseSection): string => {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { msuTrackName } from '@shared/game/data/msu-track-names';
+import { msuTrackName } from '@rotp/game-data';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import type { SlotRow } from '../../TrackList.type';
 import { filesOf } from './files-of';

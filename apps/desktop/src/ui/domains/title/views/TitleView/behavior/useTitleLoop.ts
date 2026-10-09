@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useMemo, useRef } from 'react';
 import { wasmGetTitleFrame, wasmGetTitleHidden, wasmGetTitlePalette, wasmGetTitlePoly, wasmSetTitleHidden } from '@app/lib/game/wasm-bridge';
-import { phaseOf } from '@shared/game/title/title-phase';
+import { phaseOf } from '@rotp/game-data';
 import { buildScene } from '../../../scene/compose-scene';
 import { createTriforcePicture } from '../../../choreography/create-triforce-picture';
 import { drawTitleFrame } from '../../../choreography/draw-title-frame';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { GridPos } from '../../../navigation/types';
-import { getConnection } from '../../../data';
+import { getConnection } from '@rotp/game-data';
 import type { SimExit } from '../../types';
 import type { ScreenEdge } from '../traversal/traversal.type';
 import { SCREEN_CENTER } from '../engine.constants';

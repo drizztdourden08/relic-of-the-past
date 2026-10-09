@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { TitleSword } from '../../game/title/title-swords';
+import type { TitleSword } from '@rotp/game-data';
 
 interface HudSettings {
   hudMode: 'original' | 'enhanced';

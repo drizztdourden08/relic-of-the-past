@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind types */
-import type { CheckId, CheckRecord } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
-import type { FilterState } from '@shared/game/logic/queries/check-grouping';
+import type { CheckId, CheckRecord } from '@rotp/game-data';
+import type { CheckStatus } from '@rotp/game-data';
+import type { FilterState } from '@rotp/game-data';
 
 interface StopAtCheckPickerProps {
   stopAtCheckId: CheckId | '';

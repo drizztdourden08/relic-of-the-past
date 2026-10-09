@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { QuietReceiptKind } from '@shared/game/quiet-receipts';
+import type { QuietReceiptKind } from '@rotp/game-data';
 
 const GATE_WORD = 5;
 

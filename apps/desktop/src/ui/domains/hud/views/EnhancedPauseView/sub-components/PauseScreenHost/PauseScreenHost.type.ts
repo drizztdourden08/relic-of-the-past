@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { PauseScreen, PauseSection } from '@shared/game/logic/pause';
+import type { PauseScreen, PauseSection } from '@rotp/game-data';
 import type { HeartMode } from '../../../../primitives/HudHeart';
 import type { DungeonItemCell } from '../../../../compounds/PauseStatusScreen';
 import type { GearModel, ItemModel } from '../../EnhancedPauseView.type';

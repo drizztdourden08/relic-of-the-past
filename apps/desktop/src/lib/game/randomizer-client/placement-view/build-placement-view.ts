@@ -6,7 +6,7 @@ import { virtualCheckIdOf } from '../virtual-locations';
 import { emptyView } from './empty-view';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import type { ForeignOwners } from '../foreign-item-line';
 import type { PlacementView } from './placement-view.type';
 

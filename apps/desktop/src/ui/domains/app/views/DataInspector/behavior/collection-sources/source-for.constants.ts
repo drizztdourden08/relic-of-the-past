@@ -1,10 +1,6 @@
 /* @layer renderer-app @kind constants */
-import {
-  serializeActorRecord, serializeAreaRecord, serializeCheckRecord, serializeConnectionRecord,
-  serializeDungeonRecord, serializeEnumerationRecord, serializeItemGroupRecord, serializeItemRecord,
-  serializeLocationRecord, serializeScreenRecord, serializeTagRecord,
-} from '@shared/game/data/record-codegen';
-import type { EntityKind } from '@shared/game/data';
+import { serializeActorRecord, serializeAreaRecord, serializeCheckRecord, serializeConnectionRecord, serializeDungeonRecord, serializeEnumerationRecord, serializeItemGroupRecord, serializeItemRecord, serializeLocationRecord, serializeScreenRecord, serializeTagRecord } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
 import { KIND_NAV_ITEMS } from '../../DataInspector.constants';
 import type { Serializer } from '../../DataInspector.type';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { newId } from '@shared/storage/id';
+import { newId } from '@drizztdourden08/brock-core';
 import type { HudLayout } from '@shared/types/hud';
 
 const forkLayout = (source: HudLayout, name: string): HudLayout => ({

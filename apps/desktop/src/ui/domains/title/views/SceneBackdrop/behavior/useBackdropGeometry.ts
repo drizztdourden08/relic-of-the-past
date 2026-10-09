@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FRAME_H, FRAME_W, HORIZON_Y } from '@shared/game/title/title-layout';
+import { FRAME_H, FRAME_W, HORIZON_Y } from '@rotp/game-data';
 import type { SceneGeometry } from '../../../scene/scene.type';
 import type { BackdropGeometry } from '../SceneBackdrop.type';
 

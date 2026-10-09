@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
-import { sha256Hex } from '../hash';
+import type { FileStore } from '@drizztdourden08/brock-core';
+import { sha256Hex } from '@drizztdourden08/brock-core';
 import type { RomInfo } from './roms.type';
 
 const getInfo = async (files: FileStore, romFile: string): Promise<RomInfo | null> => {

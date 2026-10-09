@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import { getPalaceName } from '@shared/game/logic/queries/dungeon-values';
-import type { ScreenMatchResult } from '@shared/game/logic/queries/detection';
+import { getPalaceName } from '@rotp/game-data';
+import type { ScreenMatchResult } from '@rotp/game-data';
 import type { DataCorrection, ScreenDataStatusResult } from './navigation.type';
 
 const hex = (n: number): string => `0x${n.toString(16).toUpperCase()}`;

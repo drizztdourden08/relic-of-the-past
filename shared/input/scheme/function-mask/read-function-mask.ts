@@ -2,7 +2,7 @@
 import { isBindingDown } from '../binding-pressed';
 import { DIRECTION_BIT } from './function-mask.constants';
 import type { InputSample } from '../binding-pressed.type';
-import type { CoreBindings, ModernBindings } from '../../../types/controls/scheme';
+import type { CoreBindings, ModernBindings } from '@rotp/game-data';
 import type { FunctionMask } from './function-mask.type';
 
 const readDpad = (core: CoreBindings, sample: InputSample): number => {

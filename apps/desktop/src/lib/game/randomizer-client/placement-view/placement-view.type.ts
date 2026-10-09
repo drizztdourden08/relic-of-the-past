@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { CheckId, ItemId } from '@shared/game/data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 
 interface PlacementView {
   itemByCheck: Map<CheckId, ItemId>;

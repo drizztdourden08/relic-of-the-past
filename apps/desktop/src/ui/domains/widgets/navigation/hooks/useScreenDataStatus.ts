@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
-import type { ScreenMatchResult } from '@shared/game/logic/queries/detection';
+import type { ScreenMatchResult } from '@rotp/game-data';
 import { screenDataStatus } from '../screen-data-status';
 import type { ScreenDataStatusResult } from '../navigation.type';
 

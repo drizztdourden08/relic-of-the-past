@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { MSU1_HEADER_BYTES, MSU1_MAGIC_TEXT } from '@shared/types/msu1-format';
 import { packFile } from '../msu-paths';
 import { MSU1_LOOP_SAMPLE_OFFSET } from './msu.constants';

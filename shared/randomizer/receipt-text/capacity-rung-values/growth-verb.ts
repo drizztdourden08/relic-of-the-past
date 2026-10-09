@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { GROWTH_VERB, PLURAL_LABEL } from './capacity-rung-values.constants';
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import type { CapacityFamilyId } from '@rotp/game-data';
 
 const growthVerb = (family: CapacityFamilyId): string => {
   const verb = GROWTH_VERB[family];

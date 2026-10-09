@@ -32,8 +32,8 @@ afterEach(() => {
 describe('generateEnumTypes(root) lets an explicit root win over the file-relative guess', () => {
   it('reads and writes under the GIVEN root, not the script\'s own directory', async () => {
     tempRoot = mkdtempSync(join(tmpdir(), 'enum-root-'));
-    const recordsDir = join(tempRoot, 'shared', 'game', 'data', 'records', 'enumeration');
-    const enumDir = join(tempRoot, 'shared', 'game', 'data', 'enumeration');
+    const recordsDir = join(tempRoot, 'packages', 'game-data', 'src', 'data', 'records', 'enumeration');
+    const enumDir = join(tempRoot, 'packages', 'game-data', 'src', 'data', 'enumeration');
     mkdirSync(recordsDir, { recursive: true });
     mkdirSync(enumDir, { recursive: true });
     writeFileSync(join(recordsDir, 'enumeration.ts'), FIXTURE_ENUMERATION);

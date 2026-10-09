@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getItem } from '@shared/game/data';
+import { getItem } from '@rotp/game-data';
 import { getModule } from '../../wasm-bridge';
 import { log } from '../../../log-bus';
 import { inventoryToItemSet, parseInventoryBuffer, setsEqual } from '../inventory';

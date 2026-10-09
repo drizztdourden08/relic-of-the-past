@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import type { CheckRecord } from '../../../shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { SimChest, DetectedCheck } from '../../../shared/game/simulation/types';
 import type { FloodFillResult } from '../../../shared/game/navigation/types';
 import { createEngineState } from '../../../shared/game/simulation/engine/state';

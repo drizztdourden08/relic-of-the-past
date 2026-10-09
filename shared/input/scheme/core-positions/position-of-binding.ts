@@ -1,6 +1,6 @@
 /* @layer shared-input @kind logic */
 import { AXIS_BY_INDEX, BUTTON_BY_INDEX, TRIGGER_AXIS_NAMES } from './core-positions.constants';
-import type { InputBinding } from '../../../types/controls';
+import type { InputBinding } from '@rotp/game-data';
 import type { SdlPosition } from './core-positions.type';
 
 const positionOfBinding = (binding: InputBinding): SdlPosition | null => {

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { flavorBaseName } from './flavor-base-name';
 import { itemByName } from './item-by-name';
 

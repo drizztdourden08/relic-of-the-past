@@ -1,6 +1,6 @@
 /* @layer shared-input @kind logic */
 import { CORE_VERBS } from './default-modern-bindings.constants';
-import type { CoreBindings, InputBinding } from '../../../types/controls';
+import type { CoreBindings, InputBinding } from '@rotp/game-data';
 import type { CoreVerb } from './default-modern-bindings.type';
 
 const buildCore = (bindingFor: (verb: CoreVerb) => InputBinding): CoreBindings => {

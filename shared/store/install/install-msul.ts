@@ -1,5 +1,5 @@
 /* @layer shared-store @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { deletePack, renamePack } from '@shared/storage/msu';
 import { assertSafeName, packDir } from '@shared/storage/msu-paths';
 import { installMsulPack } from '@shared/storage/msul/install-msul-pack';

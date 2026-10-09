@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind constants */
-import type { ActorRecord, CheckRecord, DungeonRecord, EntityKind, ItemRecord } from '@shared/game/data';
+import type { ActorRecord, CheckRecord, DungeonRecord, EntityKind, ItemRecord } from '@rotp/game-data';
 import { createConnection } from '../create-connection';
 import type { RecordCreator } from '../record-creators.type';
 import { screenEditor } from '../screen-editor';

@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { defaultSlotList } from '@shared/input/scheme';
 import type { ResolvedControl } from '@shared/input/family/family.type';
-import type { CoreBindings } from '@shared/types/controls';
+import type { CoreBindings } from '@rotp/game-data';
 
 const button = (position: string): ResolvedControl =>
   ({ position, kind: 'button', category: 'face', label: position, icon: null } as ResolvedControl);

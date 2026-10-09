@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import { LOGO_AT } from '@shared/game/title/title-layout';
+import { LOGO_AT } from '@rotp/game-data';
 import type { Picture } from '../choreography.type';
 
 const drawLogo = (ctx: CanvasRenderingContext2D, { img, scale }: Picture, alpha: number, frameX: number, frameY: number): void => {

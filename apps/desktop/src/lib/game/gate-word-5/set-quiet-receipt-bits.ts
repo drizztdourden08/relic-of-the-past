@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { QUIET_RECEIPT_KINDS } from '@shared/game/quiet-receipts';
-import type { QuietReceiptKind } from '@shared/game/quiet-receipts';
+import { QUIET_RECEIPT_KINDS } from '@rotp/game-data';
+import type { QuietReceiptKind } from '@rotp/game-data';
 import { QUIET_RECEIPT_BITS } from './gate-word-5.constants';
 import { gateWord5State } from './gate-word-5-state';
 import { writeGateWord5 } from './write-gate-word-5';

@@ -89,7 +89,7 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`. See t
 Some material this project uses is derived from the original game and is not tracked in
 this repository: the named save states the end-to-end tests load. Those live in a
 separate **private** repository and are copied into place on demand. The record dataset
-itself is not one of them: `shared/game/data/records/` (screens, connections, checks,
+itself is not one of them: `packages/game-data/src/data/records/` (screens, connections, checks,
 items, actors and the rest) is an ordinary tracked directory in this repository, and
 needs no access to the private one.
 

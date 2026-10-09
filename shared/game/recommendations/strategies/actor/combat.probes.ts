@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ActorRecord } from '../../../data';
+import type { ActorRecord } from '@rotp/game-data';
 import { known, unread } from '../../compare/probe-reading';
 import type { FieldProbe, Probe } from '../../compare/probe.type';
 import type { ScreenObservations } from '../../detection-types';

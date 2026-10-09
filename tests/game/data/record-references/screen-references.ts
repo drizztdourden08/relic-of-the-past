@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { ScreenRecord } from '@shared/game/data/types';
+import type { ScreenRecord } from '@rotp/game-data';
 import type { Sink } from './record-references.type';
 
 const screenReferences = (screen: ScreenRecord, take: Sink): void => {

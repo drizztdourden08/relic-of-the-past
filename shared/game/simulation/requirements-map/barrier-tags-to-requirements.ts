@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import type { RequirementSet, TraversalRequirement } from '../../navigation/nav-data.types';
-import type { ConnectionTag } from '../../data';
-import { BARRIER_TO_TOKEN } from '../../data/native-tables';
+import type { RequirementSet, TraversalRequirement } from '@rotp/game-data';
+import type { ConnectionTag } from '@rotp/game-data';
+import { BARRIER_TO_TOKEN } from '@rotp/game-data';
 
 const barrierTagsToRequirements = (tags: readonly ConnectionTag[]): RequirementSet => {
   const group: TraversalRequirement[] = [];

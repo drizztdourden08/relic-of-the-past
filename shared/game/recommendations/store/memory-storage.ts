@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { EntityKind } from '../../data/types';
+import type { EntityKind } from '@rotp/game-data';
 import type { Recommendation } from '../types';
 import type { RecommendationStorage } from './store.type';
 

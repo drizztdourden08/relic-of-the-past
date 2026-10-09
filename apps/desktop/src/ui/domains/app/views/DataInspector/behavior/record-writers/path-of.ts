@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { FileTarget } from '@shared/game/data/record-file-targets';
+import type { FileTarget } from '@rotp/game-data';
 import { NO_SOURCE_FILE } from '../../DataInspector.constants';
 
 const pathOf = (target: FileTarget): string => {

@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
 import type { MsuTrackDef } from '@shared/types/msu-manifest';
-import { trackRepeats } from '@shared/game/data/msu-track-repeat';
+import { trackRepeats } from '@rotp/game-data';
 import type { ClassicTrack } from './msu-classic-manifest.type';
 
 const classicTrackDef = (track: ClassicTrack): MsuTrackDef => ({

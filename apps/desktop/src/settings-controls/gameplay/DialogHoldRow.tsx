@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { DIALOG_HOLD_STOPS } from '@shared/game/dialog/pacing';
-import type { DialogHoldStop } from '@shared/game/dialog/pacing';
+import { DIALOG_HOLD_STOPS } from '@rotp/game-data';
+import type { DialogHoldStop } from '@rotp/game-data';
 import { Flex, Toggle } from '@drizztdourden08/tessera/primitives';
 import { DialogStopSlider } from './DialogStopSlider';
 import type { DialogHoldRowProps } from './gameplay.type';

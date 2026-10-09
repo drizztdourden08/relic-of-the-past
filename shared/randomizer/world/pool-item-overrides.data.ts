@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import { ITEM } from './item-ids.data';
-import type { CheckId, ItemId } from '@shared/game/data/types/ids';
+import type { CheckId, ItemId } from '@rotp/game-data';
 
 const POOL_ITEM_OVERRIDES: Readonly<Partial<Record<CheckId, ItemId>>> = {
   'check-017': ITEM.progressiveSword,

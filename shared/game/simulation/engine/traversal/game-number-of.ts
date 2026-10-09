@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { get } from '../../../data';
+import { get } from '@rotp/game-data';
 
 const gameNumberOf = (id: string): number => {
   const gameId = get('screen', id)?.gameId;

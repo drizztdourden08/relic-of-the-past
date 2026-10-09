@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { SDL_BUTTON } from '@shared/input/sdl-buttons';
+import { SDL_BUTTON } from '@rotp/game-data';
 import type { ResolvedControl } from '@shared/input/family';
-import type { InputBinding } from '@shared/types/controls';
+import type { InputBinding } from '@rotp/game-data';
 import type { SlotDisplay } from './controls-settings.type';
 
 const controlForBinding = (

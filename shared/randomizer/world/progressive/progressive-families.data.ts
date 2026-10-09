@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import { ITEM } from '../item-ids.data';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type {
   ProgressiveFamilyDef, ProgressiveFamilyId, ProgressiveSetting, ProgressiveTierTicks,
 } from './progressive.type';

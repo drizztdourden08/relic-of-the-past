@@ -1,7 +1,7 @@
 /* @layer electron-main @kind constants */
-import { serializeAreaRecord, serializeLocationRecord } from '@shared/game/data/record-codegen';
-import { areaRecordFile, locationRecordFile } from '@shared/game/data/record-file-targets';
-import type { AreaRecord, LocationRecord } from '@shared/game/data/types';
+import { serializeAreaRecord, serializeLocationRecord } from '@rotp/game-data';
+import { areaRecordFile, locationRecordFile } from '@rotp/game-data';
+import type { AreaRecord, LocationRecord } from '@rotp/game-data';
 import type { RecordWriterSpec } from '../dataset-record-writer';
 
 const AREA_SPEC: RecordWriterSpec<AreaRecord> = {

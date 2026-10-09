@@ -6,7 +6,7 @@ import { checkExtraction, writeExtractionReceipt } from './extraction-state';
 import { logToRenderer } from '../lib/renderer-log';
 import { makeImportReporter } from '../lib/import-progress';
 import { extractAllItemSprites } from '@shared/asset-extraction/item-sprites/extract-items-node';
-import { SPRITE_DEFINITIONS } from '@shared/game/data/sprite-manifest/manifest';
+import { SPRITE_DEFINITIONS } from '@rotp/game-data';
 
 const spriteDir = (romFile: string): string => {
   const stem = basename(romFile, extname(romFile));

@@ -1,6 +1,6 @@
 /* @layer shared-input @kind types */
-import type { SnesButton } from '../../types/controls';
-import type { SdlAxisName, SdlButtonName, SdlGamepadType } from '../sdl-buttons';
+import type { SnesButton } from '@rotp/game-data';
+import type { SdlAxisName, SdlButtonName, SdlGamepadType } from '@rotp/game-data';
 
 type ConsoleButton = SnesButton;
 

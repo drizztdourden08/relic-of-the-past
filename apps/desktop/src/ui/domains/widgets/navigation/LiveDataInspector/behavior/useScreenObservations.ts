@@ -7,8 +7,8 @@ import {
   wasmGetRoomTagsFor, wasmGetDungeonMapPosition, wasmGetEntranceSpawns,
   wasmGetRoomWalkBoundaries, wasmGetRoomDoorBoundaryTiles,
 } from '@app/lib/game';
-import { getPalaceMismatches } from '@shared/game/logic/queries/palace-fallback';
-import type { ScreenGameId } from '@shared/game/data';
+import { getPalaceMismatches } from '@rotp/game-data';
+import type { ScreenGameId } from '@rotp/game-data';
 import type { LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveWalkBoundary } from '@shared/game/recommendations';
 import { useScreenDetection } from '../../hooks';
 import { useRealTransitions } from '../../useRealTransitions';

@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { registerItemGroupRecord } from '@shared/game/data';
-import type { ItemGroupRecord } from '@shared/game/data';
+import { registerItemGroupRecord } from '@rotp/game-data';
+import type { ItemGroupRecord } from '@rotp/game-data';
 import type { RecordCreator } from '../record-creators.type';
 import { settleCreatedRecord } from '../settle-created-record';
 

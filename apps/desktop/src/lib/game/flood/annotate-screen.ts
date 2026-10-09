@@ -7,7 +7,7 @@ import { getRoomChests, getRoomDoors, getRoomSprites, getOverworldSprites } from
 import { wasmGetRoomTagsFor } from '../';
 import { isFollowerActive } from '../follower-state';
 import { getCompletedChecks, getCurrentInventory } from '../tracker';
-import type { CheckId, ItemId } from '@shared/game/data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 import { doorAnnotation } from './annotate/doors';
 import { spriteAnnotation } from './annotate/sprites';
 import { chestAnnotation } from './annotate/chests';

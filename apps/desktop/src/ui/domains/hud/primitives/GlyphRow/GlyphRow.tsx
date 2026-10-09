@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind component */
 import { useLayoutEffect, useRef } from 'react';
-import type { DialogCell } from '@shared/game/dialog/dialog-frame.types';
+import type { DialogCell } from '@rotp/game-data';
 import { ATLAS_COLUMNS, CELL_H, CELL_W, NO_HIGHLIGHTS } from './GlyphRow.constants';
 import type { GlyphRowProps } from './GlyphRow.type';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ModernSlot, SlotIndex } from '@shared/types/controls/scheme';
+import type { ModernSlot, SlotIndex } from '@rotp/game-data';
 
 const sampleSlot = (index: SlotIndex, position: string, label: string): ModernSlot => ({
   index,

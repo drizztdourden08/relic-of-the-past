@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckId, RegionId } from '@shared/game/data/types/ids';
+import type { CheckId, RegionId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
 import type { CollectionState } from '../collection-state.type';
 import type { SeedValue, World } from '../world.type';

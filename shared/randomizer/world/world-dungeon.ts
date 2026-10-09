@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { DUNGEON_RECORD_BY_ID } from './world-dungeon.constants';
-import type { DungeonId } from '@shared/game/data/types/ids';
+import type { DungeonId } from '@rotp/game-data';
 import type { WorldDungeon } from './region.type';
 
 const worldDungeonOf = (id: DungeonId): WorldDungeon => {

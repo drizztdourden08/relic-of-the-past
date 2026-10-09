@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import { getItemByGameId } from '@shared/game/data';
+import { getItemByGameId } from '@rotp/game-data';
 import { BY_VALUE, LADDERS, MIRROR, SIMPLE } from '@app/lib/game/tracker/item-ids';
 import { CheatSlot } from '@app/lib/game';
 import { getSlotSprite } from '@domains/hud/composites/PauseItemSlot';

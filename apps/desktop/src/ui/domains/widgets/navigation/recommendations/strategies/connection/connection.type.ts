@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind types */
-import type { GameScreenId } from '@shared/game/logic/queries/game-id';
-import type { ScreenGameId } from '@shared/game/data';
+import type { GameScreenId } from '@rotp/game-data';
+import type { ScreenGameId } from '@rotp/game-data';
 
 interface CrossingIdentity {
   native: GameScreenId;

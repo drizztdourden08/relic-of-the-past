@@ -2,7 +2,7 @@
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import { GRID_SIZE, STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types';
-import { DRAW_DOTS_LEDGE_ATTRS } from '@shared/game/data/native-tables';
+import { DRAW_DOTS_LEDGE_ATTRS } from '@rotp/game-data';
 import type { DrawContext } from './draw.type';
 import {
   DOT_COLOR_REACHABLE, DOT_COLOR_REQ, RING_COLOR_ABOVE, RING_COLOR_BOTH, RING_COLOR_GROUND,

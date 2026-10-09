@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
-import type { TraversalRequirement } from '../../navigation/nav-data.types';
-import type { CheckId } from '../../data';
+import type { TraversalRequirement } from '@rotp/game-data';
+import type { CheckId } from '@rotp/game-data';
 
 type SimPhase =
   | 'idle'

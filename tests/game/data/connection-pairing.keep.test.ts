@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, getConnection } from '@shared/game/data';
+import { all, getConnection } from '@rotp/game-data';
 
 const ALL_CONNECTIONS = all('connection');
 

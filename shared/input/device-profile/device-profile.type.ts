@@ -1,6 +1,6 @@
 /* @layer shared-input @kind types */
-import type { DeviceFamily, InputApi } from '../../types/controls';
-import type { SdlGamepadType } from '../sdl-buttons';
+import type { DeviceFamily, InputApi } from '@rotp/game-data';
+import type { SdlGamepadType } from '@rotp/game-data';
 
 interface DeviceProfileButton {
   id: string;

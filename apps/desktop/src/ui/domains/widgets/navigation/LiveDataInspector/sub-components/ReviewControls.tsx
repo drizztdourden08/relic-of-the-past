@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Box, Select, Text, Textarea } from '@drizztdourden08/tessera/primitives';
 import { RECORD_WRITERS } from '@app/ui/domains/app/views/DataInspector/behavior/record-writers';
-import type { ReviewMark, ReviewStatus } from '@shared/game/data';
+import type { ReviewMark, ReviewStatus } from '@rotp/game-data';
 import type { InspectorRow } from '@app/ui/domains/app/views/DataInspector/DataInspector.type';
 import { reviewStamp } from '../behavior/review-stamp';
 import { REVIEW_STATUS_OPTIONS, REVIEW_TITLE, REVIEW_UNTOUCHED } from '../LiveDataInspector.constants';

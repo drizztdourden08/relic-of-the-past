@@ -1,11 +1,11 @@
 /* @layer shared-game @kind logic */
-import { upgradeItemOfName } from '@shared/game/data/capacity-upgrade-item';
-import { progressiveCapacityFamilyOf } from '@shared/game/data/capacity-progressive-item';
+import { upgradeItemOfName } from '@rotp/game-data';
+import { progressiveCapacityFamilyOf } from '@rotp/game-data';
 import { PROGRESSION_ITEMS, USEFUL_ITEMS } from '../world/pool/item-classes.constants';
 import { itemKeyOfName } from '../world/display-names/item-key-name';
 import { DUNGEON_ITEM_RE, PROGRESSIVE_PREFIX } from './receipt-text.constants';
 import { PIECE_BY_BASE } from './receipt-item-class.constants';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { ReceiptItemClass } from './receipt-item-class.type';
 
 const isJunkName = (itemName: string): boolean => {

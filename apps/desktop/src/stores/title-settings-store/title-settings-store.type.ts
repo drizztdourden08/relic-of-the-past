@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { TitleSword } from '@shared/game/title/title-swords';
+import type { TitleSword } from '@rotp/game-data';
 
 interface TitleSettings {
   screen: 'original' | 'reimagined';

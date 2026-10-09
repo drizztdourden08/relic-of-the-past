@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 
 type CheckScope = NonNullable<CheckRecord['scope']>;
 

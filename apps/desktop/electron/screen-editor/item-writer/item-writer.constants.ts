@@ -1,7 +1,7 @@
 /* @layer electron-main @kind constants */
-import { serializeItemRecord } from '@shared/game/data/record-codegen';
-import { itemRecordFile } from '@shared/game/data/record-file-targets';
-import type { ItemRecord } from '@shared/game/data/types';
+import { serializeItemRecord } from '@rotp/game-data';
+import { itemRecordFile } from '@rotp/game-data';
+import type { ItemRecord } from '@rotp/game-data';
 import type { RecordWriterSpec } from '../dataset-record-writer';
 
 const ITEM_SPEC: RecordWriterSpec<ItemRecord> = {

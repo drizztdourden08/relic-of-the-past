@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ConnectionRecord } from '@shared/game/data';
+import type { ConnectionRecord } from '@rotp/game-data';
 import type { ScreenObservations } from '@shared/game/recommendations';
 import { isCurrentRoom } from './is-current-room';
 

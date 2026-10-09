@@ -1,5 +1,5 @@
 /* @layer tests @kind type */
-import type { EntityKind } from '@shared/game/data/types';
+import type { EntityKind } from '@rotp/game-data';
 
 interface RecordReference {
   from: string;

@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
-import { nearestStopIndex } from '@shared/game/dialog/pacing';
+import { nearestStopIndex } from '@rotp/game-data';
 import { IndexSliderRow } from '../IndexSliderRow';
 import type { StopSliderInput } from '../IndexSliderRow.type';
 

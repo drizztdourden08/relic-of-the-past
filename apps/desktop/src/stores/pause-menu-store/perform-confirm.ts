@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
-import type { PauseContext, PauseState } from '@shared/game/logic/pause';
-import { planConfirm } from '@shared/game/logic/pause';
+import type { PauseContext, PauseState } from '@rotp/game-data';
+import { planConfirm } from '@rotp/game-data';
 import { setGear } from '@app/lib/game/host-menu';
 
 const performConfirm = (state: PauseState, ctx: PauseContext): boolean => {

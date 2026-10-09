@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 
 const canGrantVanilla = (check: CheckRecord): boolean => {
   const { roomId, chestIndex, flagType, flagMask, itemId, spriteType, postGfx } = check.gameId;

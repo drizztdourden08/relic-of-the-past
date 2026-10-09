@@ -2,7 +2,7 @@
 import { PROGRESSION_TIERS } from '../progression-tiers.constants';
 import { FAMILY_OF_POOL_ITEM } from './progressive-reach.constants';
 import { tickedIndexesOf } from './ticked-indexes-of';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { ProgressiveSetting } from '../progressive.type';
 
 const progressiveTierMapOf = (setting: ProgressiveSetting): ReadonlyMap<string, readonly ItemId[]> =>

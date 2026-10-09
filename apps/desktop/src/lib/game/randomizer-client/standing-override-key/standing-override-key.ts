@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-import { getCheck } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
 import {
   BONK_KEY_ROOMS, DASH_ITEM_SPRITE, DUNGEON_KEY_ITEM_ID, HALF_ANY, HALF_BY_MASK, HALF_FALLBACK_BY_ROOM,
   HEART_PIECE_ITEM_ID, PRIZE_SPRITE,
 } from './standing-override-key.constants';
 import { isWorldItemKind } from './is-world-item-kind';
-import type { CheckId, CheckRecord } from '@shared/game/data';
+import type { CheckId, CheckRecord } from '@rotp/game-data';
 import type { StandingOverrideTarget } from '../../standing-overrides';
 
 const indoorHalfOf = (check: CheckRecord): number => {

@@ -4,8 +4,8 @@ import { renumberSlots, slotName } from '../slot-list';
 import { isRecord } from './is-record';
 import { oldIdsOf } from './old-ids-of';
 import { SlotMigrationError } from './slot-migration-error';
-import type { InputBinding } from '../../../types/controls/bindings';
-import type { SlotIndex } from '../../../types/controls/scheme';
+import type { InputBinding } from '@rotp/game-data';
+import type { SlotIndex } from '@rotp/game-data';
 import type { MigratedSlotList, OldSlot } from './migrate-slots.type';
 
 const migrateSlotList = (raw: unknown): MigratedSlotList => {

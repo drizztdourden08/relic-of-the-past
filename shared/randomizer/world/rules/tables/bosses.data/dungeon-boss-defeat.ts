@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { getDungeon } from '@shared/game/data';
+import { getDungeon } from '@rotp/game-data';
 import { BOSS_RULES } from './bosses.constants';
-import type { DungeonId } from '@shared/game/data/types/ids';
+import type { DungeonId } from '@rotp/game-data';
 import type { Rule } from '../../../world.type';
 
 const dungeonBossDefeat = (dungeonId: DungeonId): Rule => {

@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { SpritePicker } from '@domains/app/compounds/SpritePicker';
-import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@shared/game/data/sprite-manifest/manifest';
+import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
 import { spriteLabel, spriteUrl } from '../../behavior/node-art';
 import { ReferenceField } from '../ReferenceField';
 import { SpriteExtractionNotice } from '../SpriteExtractionNotice';

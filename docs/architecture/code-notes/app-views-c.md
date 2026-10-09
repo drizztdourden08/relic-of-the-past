@@ -1598,7 +1598,7 @@ The shapes live in their own file so `create-connection.ts` can share them witho
 
 ### views/DataInspector/behavior/create-connection.ts
 
-A connection is never created alone: every `ConnectionRecord` needs a real `toConnectionId` partner (`shared/game/data/types/connection.ts`). Two shapes reach here, told apart by `pendingPartnerScreenId`.
+A connection is never created alone: every `ConnectionRecord` needs a real `toConnectionId` partner (`packages/game-data/src/data/types/connection.ts`). Two shapes reach here, told apart by `pendingPartnerScreenId`.
 When the far screen already holds a point aimed back here, it is a normal single record insert through `writeConnections`.
 When it does not, `toConnectionId` carries the `pendingPartnerId` sentinel (`data/connections/pending-partner.ts`). Both halves are minted through `writeConnectionPair`, which allocates two ids on one allocator turn. `connection-pair-writer.ts` owns that atomicity, and it overwrites the far half's placeholder partner id with the allocated near id.
 The partner's placement is left empty. The live tiles probe fills it in once the player visits that screen.

@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { AudioProbe } from '@shared/types/audio-probe';
 import { isAudioFile, packDir } from '../msu-paths';
 import { baseMetadata } from './base-metadata';

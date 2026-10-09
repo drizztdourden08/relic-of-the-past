@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { unregisterItemGroupRecord } from '@shared/game/data';
-import type { ItemGroupId } from '@shared/game/data';
+import { unregisterItemGroupRecord } from '@rotp/game-data';
+import type { ItemGroupId } from '@rotp/game-data';
 import type { DeleteResult } from '../DataInspector.type';
 import { unregisterIdRefOption } from './unregister-id-ref-option';
 

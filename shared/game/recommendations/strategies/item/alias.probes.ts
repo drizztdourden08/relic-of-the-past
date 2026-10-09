@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { getItem } from '../../../data';
-import type { ItemId, ItemRecord } from '../../../data';
-import { resolveDuplicate } from '../../../logic/queries/item-duplicates';
+import { getItem } from '@rotp/game-data';
+import type { ItemId, ItemRecord } from '@rotp/game-data';
+import { resolveDuplicate } from '@rotp/game-data';
 import { known } from '../../compare/probe-reading';
 import type { FieldProbe } from '../../compare/probe.type';
 import type { GrantedItemObservation, ScreenObservations } from '../../detection-types';

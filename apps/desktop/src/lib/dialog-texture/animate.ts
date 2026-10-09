@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { DialogTextureAnimation, DialogTextureSpeed } from '@shared/game/dialog/box-style';
-import { textureSpeedFactor } from '@shared/game/dialog/box-style';
+import type { DialogTextureAnimation, DialogTextureSpeed } from '@rotp/game-data';
+import { textureSpeedFactor } from '@rotp/game-data';
 import type { AnimationState } from './animate.type';
 import { SLIDE_GAME_PX_PER_SECOND, TWINKLE_DARK_SHARE, TWINKLE_LIT_SHARE } from './animate.constants';
 import { seededNoise } from './seeded-noise';

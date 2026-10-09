@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { InputProfile } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 import { migrateProfiles } from './migrate-profiles';
 
 const migrateProfilesLoudly = (raw: readonly unknown[]): InputProfile[] => {

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { all } from '../../../data';
-import type { ActorRecord } from '../../../data';
+import { all } from '@rotp/game-data';
+import type { ActorRecord } from '@rotp/game-data';
 import { unread } from '../../compare/probe-reading';
 import type { Probe, SetProbe } from '../../compare/probe.type';
 import type { LiveSpriteObservation, ScreenObservations } from '../../detection-types';

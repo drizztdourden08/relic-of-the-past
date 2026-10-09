@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
 import { ITEM } from '../item-ids.data';
-import type { ItemCategory } from '@shared/game/data/taxonomy/item-categories';
+import type { ItemCategory } from '@rotp/game-data';
 
 const HOLDABLE_CATEGORIES: ReadonlySet<ItemCategory> =
   new Set<ItemCategory>(['equipment', 'weapon', 'medallion', 'crystal']);

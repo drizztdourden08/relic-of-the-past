@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { Flex, SegmentedControl, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import { SpritePicker } from '@domains/app/compounds/SpritePicker';
-import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@shared/game/data/sprite-manifest/manifest';
+import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
 import { glyphArtUrl } from '../behavior/glyph-art';
 import { spriteLabel, spriteUrl } from '../behavior/node-art';
 import { GlyphPickerGrid } from './GlyphPickerGrid';

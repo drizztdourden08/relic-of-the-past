@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
 import { createProfileStore } from '@drizztdourden08/brock-core';
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { SUPPLEMENT_IDS } from '@shared/asset-extraction/sources/source-ids';
 import { datName, sidecarName } from '../assets';
 import { ROM_KINDS, isBaseRom, kindOfFile } from '../rom-kinds';

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { isPrimaryModifier } from '@shared/platform';
+import { isPrimaryModifier } from '@shared/platform/is-primary-modifier';
 import { runBetween } from './run-between';
-import type { OsKind } from '@shared/platform';
+import type { OsKind } from '@drizztdourden08/brock-core';
 import type { IndexRun, PressModifiers } from './index-selection.type';
 
 const nextIndexRun = (

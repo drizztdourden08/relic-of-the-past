@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import { get } from '@shared/game/data';
+import { get } from '@rotp/game-data';
 import type { ScreenObservations } from '@shared/game/recommendations';
 
 const isCurrentRoom = (observations: ScreenObservations, screenId: string): boolean => {

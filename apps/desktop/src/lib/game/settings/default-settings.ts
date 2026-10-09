@@ -3,7 +3,7 @@ import { DEFAULT_DISPLAY_SETTINGS } from '@drizztdourden08/brock-display';
 import type { GameSettings } from '@shared/types/settings';
 import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
 import { ONLINE_NOTICE_DEFAULTS } from '@shared/randomizer/archipelago/online-notice-settings';
-import { QUIET_RECEIPT_DEFAULTS } from '@shared/game/quiet-receipts';
+import { QUIET_RECEIPT_DEFAULTS } from '@rotp/game-data';
 
 const DEFAULT_SETTINGS: GameSettings = {
   autosave: false,

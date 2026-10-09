@@ -1,6 +1,6 @@
 /* @layer shared-hud @kind logic */
 import { checkKeys, isRecord, numberAt } from './validate-box';
-import { SDL_AXIS, SDL_BUTTON } from '../../input/sdl-buttons';
+import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import { BUTTON_KEYS, OPTIONAL_STATES, STATES, VERBS } from './validate-button-node.constants';
 import type { Issues } from './validate-box';
 import type { HudButtonBind, HudButtonFace, HudButtonSpec, HudButtonVerb } from '../../types/hud/hud-button';

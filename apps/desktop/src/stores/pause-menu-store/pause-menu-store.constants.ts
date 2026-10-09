@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind constants */
-import type { PauseState } from '@shared/game/logic/pause';
+import type { PauseState } from '@rotp/game-data';
 import type { PauseCursorActions } from './pause-menu-store.type';
 
 const CLOSED: PauseState = { phase: 'closed' };

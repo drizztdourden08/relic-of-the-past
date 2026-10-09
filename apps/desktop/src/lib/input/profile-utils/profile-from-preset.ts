@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { InputProfile, DevicePreset } from '@shared/types/controls';
+import type { InputProfile, DevicePreset } from '@shared/types/controls/devices/devices.type';
 
 const profileFromPreset = (preset: DevicePreset): InputProfile => ({
   id: `default-${preset.id}`,

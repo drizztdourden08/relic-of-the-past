@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useState } from 'react';
-import type { TitleProgress } from '@shared/game/title/title-frame.type';
-import { DEFAULT_PROGRESS, mostAdvancedSave } from '@shared/game/title/title-progress';
+import type { TitleProgress } from '@rotp/game-data';
+import { DEFAULT_PROGRESS, mostAdvancedSave } from '@rotp/game-data';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { SRAM_READER } from '../TitleView.constants';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useRef, useState } from 'react';
-import { advanceHeroIdle, heroPoseAt, startHeroIdle } from '@shared/game/logic/hero-idle';
-import type { HeroIdleState, HeroPose } from '@shared/game/logic/hero-idle';
+import { advanceHeroIdle, heroPoseAt, startHeroIdle } from '@rotp/game-data';
+import type { HeroIdleState, HeroPose } from '@rotp/game-data';
 import { AT_REST, GAME_FPS } from '../EnhancedPauseView.constants';
 
 const samePose = (a: HeroPose, b: HeroPose): boolean =>

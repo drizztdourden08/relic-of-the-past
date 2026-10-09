@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { CAPACITY_FAMILY_IDS } from '@shared/game/data/capacity-upgrade-names.data';
+import { CAPACITY_FAMILY_IDS } from '@rotp/game-data';
 import { capacityBonusBaseKeyOf } from './capacity-bonus-base-key-of';
 import { capacityBonusKeyOf } from './capacity-bonus-key-of';
 import { clampBonusPercent } from './clamp-bonus-percent';

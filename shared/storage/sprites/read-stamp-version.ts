@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { EXTRACTION_STAMP_FILE, parseExtractionStamp } from '@shared/asset-extraction/item-sprites/extraction-stamp';
 import { spriteDir } from './sprite-dir';
 

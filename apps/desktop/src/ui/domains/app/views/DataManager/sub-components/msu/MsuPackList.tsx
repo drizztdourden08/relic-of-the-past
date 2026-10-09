@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { Icon, Status, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import { HookshopChip } from '@domains/app/compounds/HookshopChip';
 import type { MsuPackListProps } from './MsuPackList.type';
 

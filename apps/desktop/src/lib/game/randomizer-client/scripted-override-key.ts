@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { getCheck } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
 import { SCRIPTED_SURFACE_BY_CHECK } from './scripted-override-key.constants';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { ScriptedGrantSurface } from '../scripted-grant-overrides';
 
 const assertCheckInDataset = (checkId: CheckId): void => {

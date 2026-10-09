@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { TextOverrides } from '@shared/game/language';
-import { readJson } from '../../json';
+import { readJson } from '@drizztdourden08/brock-core';
 import { textPath } from '../paths';
 
 const readText = (files: FileStore, id: string): Promise<TextOverrides> =>

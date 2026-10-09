@@ -1,12 +1,12 @@
 /* @layer renderer-widgets @kind hook */
 import { useState, useEffect, useMemo } from 'react';
-import type { CheckStatus } from '@shared/game/logic';
+import type { CheckStatus } from '@rotp/game-data';
 import { normalPlacement } from '@app/lib/game/tracker/normal-placement-ref';
 import { trackerStatuses } from '@app/lib/game/tracker/tracker-statuses';
-import { find } from '@shared/game/data';
-import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
-import { filterChecks } from '@shared/game/logic/queries/check-grouping';
-import type { FilterState } from '@shared/game/logic/queries/check-grouping';
+import { find } from '@rotp/game-data';
+import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
+import { filterChecks } from '@rotp/game-data';
+import type { FilterState } from '@rotp/game-data';
 import {
   onInventoryChanged, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks,

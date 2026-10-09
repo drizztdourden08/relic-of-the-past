@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind logic */
-import { GLINT_RUN_MAX, GLINT_TOP_OFFSET, GLINT_X, HILT_SPARKLE_AT, SWORD_TOP_FOR_BASE, SWORD_X } from '@shared/game/title/title-layout';
-import type { TitleFrame } from '@shared/game/title/title-frame.type';
+import { GLINT_RUN_MAX, GLINT_TOP_OFFSET, GLINT_X, HILT_SPARKLE_AT, SWORD_TOP_FOR_BASE, SWORD_X } from '@rotp/game-data';
+import type { TitleFrame } from '@rotp/game-data';
 import type { Picture } from './choreography.type';
 import { drawStar } from './draw-star';
 import { STAR_ARM, STAR_CORE } from './draw-star.constants';

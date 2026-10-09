@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { DetectedDevice, DeviceFamily } from '@shared/types/controls';
+import type { DetectedDevice } from '@shared/types/controls/devices/devices.type';
+import type { DeviceFamily } from '@rotp/game-data';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { resolveDeviceFromEntry } from '../resolve-device';
 

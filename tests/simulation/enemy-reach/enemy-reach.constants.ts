@@ -1,5 +1,5 @@
 /* @layer tests @kind constants */
-import type { ItemId } from '../../../shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 
 const BOW: ItemId = 'item-012';
 const SWORD_1: ItemId = 'item-074';

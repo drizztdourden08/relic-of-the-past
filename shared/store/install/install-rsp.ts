@@ -1,5 +1,5 @@
 /* @layer shared-store @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { parseRsp, isRspName } from '@shared/storage/link-sprites/parse-rsp';
 import {
   deleteLinkSprite, freeSpriteName, readLinkSprite, safeFileName, writeLinkSprite,

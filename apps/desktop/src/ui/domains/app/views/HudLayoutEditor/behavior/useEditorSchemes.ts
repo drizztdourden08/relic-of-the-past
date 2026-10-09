@@ -8,7 +8,8 @@ import { getInputManager } from '@app/lib/input/input-manager';
 import { liveSettingsNow } from '@app/lib/game/live-settings';
 import { readConfig } from '@app/lib/storage/profile-store';
 import { migrateProfilesLoudly } from '@app/lib/input/migrate-profiles';
-import type { InputProfile, ModernBindings } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { ModernBindings } from '@rotp/game-data';
 import type { EditorScheme, EditorSchemes } from './useEditorSchemes.type';
 
 const useEditorSchemes = (): EditorSchemes => {

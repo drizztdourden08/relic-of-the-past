@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { DialogTexture } from '@shared/game/dialog/box-style';
+import type { DialogTexture } from '@rotp/game-data';
 import type { PatternSpec } from './patterns.type';
 import { PATTERNS } from './pattern-table.constants';
 

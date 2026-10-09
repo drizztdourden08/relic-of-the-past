@@ -34,11 +34,7 @@ export { unmetRequirements } from './core/inventory';
 export { PriorityQueue } from './core/priority-queue';
 export { buildScreenBundle } from './screen-bundles';
 export type { ScreenBundleGrid } from './screen-bundles';
-export type {
-  TraversalRequirement, RequirementSet, ConnectionTransitType,
-  RegionNavData, ConnectionNavData, ConnectionPointData,
-  NavObstacle, NavFeature, NavVariant,
-} from './nav-data.types';
+export type { TraversalRequirement, RequirementSet, ConnectionTransitType, RegionNavData, ConnectionNavData, ConnectionPointData, NavObstacle, NavFeature, NavVariant } from '@rotp/game-data';
 export { isEntranceUsable } from './flood-fill/is-entrance-usable';
 export { usableEntrances } from './flood-fill/usable-entrances';
 export { usableEntranceTransition } from './flood-fill/usable-entrance-transition';

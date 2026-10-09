@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { Button } from '@drizztdourden08/tessera/primitives';
-import { nextTitleSword, titleSwordLabel } from '@shared/game/title/title-swords';
+import { nextTitleSword, titleSwordLabel } from '@rotp/game-data';
 import { KeyedControlRow } from '../KeyedControlRow';
 import type { ControlContext } from '../settings-controls.type';
 

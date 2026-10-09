@@ -2,8 +2,8 @@
 import { useEffect, useRef } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useLocationNotificationStore } from '../../../../stores/location-notification-store';
-import { resolveCurrentScreen } from '@shared/game/logic/queries/detection';
-import type { ScreenRecord } from '@shared/game/data';
+import { resolveCurrentScreen } from '@rotp/game-data';
+import type { ScreenRecord } from '@rotp/game-data';
 import { NOTIFICATIONS_ENABLED, SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS } from './hooks.constants';
 
 const useLocationNotification = () => {

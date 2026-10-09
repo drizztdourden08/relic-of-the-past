@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getItemByGameId } from '@shared/game/data';
+import { getItemByGameId } from '@rotp/game-data';
 import { log } from '../../../log-bus';
 import { notifyUnknownItems } from './notify-unknown-items';
 import { pollInventoryState } from './poll-inventory-state';

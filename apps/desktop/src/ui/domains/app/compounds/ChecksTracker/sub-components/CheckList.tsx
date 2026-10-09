@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { shownItemsOf } from '@shared/game/logic/queries/check-contents';
+import { shownItemsOf } from '@rotp/game-data';
 import { CheckCard } from './CheckCard';
 import { TrackerCheckRow } from './TrackerCheckRow';
 import type { CheckListProps } from '../ChecksTracker.type';

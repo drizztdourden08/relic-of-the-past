@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { GridPos, ScreenVariant } from '../../navigation/types';
-import type { ItemId } from '../../data';
+import type { ItemId } from '@rotp/game-data';
 import type { TraversalId } from '../traversal-id.type';
 import type { PresenceGameState } from '../presence/presence.type';
 import type { CombatContext } from './combat.type';

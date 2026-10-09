@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext, DraftRecommendation } from '@shared/game/recommendations';
 import { storeRecommendations } from './store-recommendations';
 

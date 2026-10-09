@@ -3,7 +3,7 @@ import { isCheckPhysicallyArmed } from '../../randomizer-client/override-fire-re
 import { computeCompletedChecks } from '../completed-checks-core';
 import { outOfBedCheckId } from '../check-facts';
 import { withCollectedChecks } from '../collected-checks';
-import type { CheckId, ItemId } from '@shared/game/data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 import { BED_STATE_RAM, OUT_OF_BED_STATE, SAVE_DUNG_INFO_RAM } from './flag-polling.constants';
 import { roomWordReader } from './room-word-reader';
 import type { WasmModule } from './flag-polling.type';

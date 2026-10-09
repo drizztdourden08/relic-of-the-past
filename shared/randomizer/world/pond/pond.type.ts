@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { ItemKey } from '../item-ids.data';
 import type { LocationKey } from '../location-key';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';

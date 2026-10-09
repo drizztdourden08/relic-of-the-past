@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind component */
 import { useCallback, useRef, useState } from 'react';
-import { resolveTitleSword } from '@shared/game/title/title-swords';
+import { resolveTitleSword } from '@rotp/game-data';
 import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { HudBox } from '../../../hud/primitives/HudBox';
 import { useTitleSettingsStore } from '../../../../../stores/title-settings-store';

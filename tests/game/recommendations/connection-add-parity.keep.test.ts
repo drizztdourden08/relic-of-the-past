@@ -1,8 +1,8 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, findOne, registerRecord, unregisterRecord } from '@shared/game/data';
-import { toScreenIdOf } from '@shared/game/data';
-import type { ConnectionId, ScreenId, ScreenRecord } from '@shared/game/data';
+import { all, findOne, registerRecord, unregisterRecord } from '@rotp/game-data';
+import { toScreenIdOf } from '@rotp/game-data';
+import type { ConnectionId, ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { resolveRealDestId } from '@app/ui/domains/widgets/navigation/connection-audit-resolve';

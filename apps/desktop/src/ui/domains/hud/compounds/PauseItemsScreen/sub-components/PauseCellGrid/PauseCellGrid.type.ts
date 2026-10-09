@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { ItemCell } from '@shared/game/logic/pause';
+import type { ItemCell } from '@rotp/game-data';
 
 interface PauseCellGridProps {
   cells: readonly ItemCell[];

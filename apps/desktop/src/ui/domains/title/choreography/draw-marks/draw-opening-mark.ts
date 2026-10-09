@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import { FRAME_W } from '@shared/game/title/title-layout';
+import { FRAME_W } from '@rotp/game-data';
 import { MARK_SIZE, MARK_Y } from './draw-marks.constants';
 
 const drawOpeningMark = (ctx: CanvasRenderingContext2D, img: HTMLImageElement, frameX: number, frameY: number): void => {

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { pondSlotModelOf } from '../pond-slot-model-of';
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { PondId, PondInstance, PondSlot } from '../pond-instance.type';
 
 const labelOf = (name: string, ladder: string | undefined): string => {

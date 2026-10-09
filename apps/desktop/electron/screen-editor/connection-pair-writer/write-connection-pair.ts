@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
-import { serializeConnectionRecord } from '@shared/game/data/record-codegen';
-import type { ConnectionRecord } from '@shared/game/data/types';
+import { serializeConnectionRecord } from '@rotp/game-data';
+import type { ConnectionRecord } from '@rotp/game-data';
 import type { WriteConnectionPairArgs, WriteConnectionPairResult } from '@shared/ipc/screen-editor-contract';
 import { resolveSourceFile } from '../resolve-source-file';
 import { insertBeforeArrayClose, removeById } from '../source-writers';

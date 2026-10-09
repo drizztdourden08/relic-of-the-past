@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
-import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
+import { getItemSprite } from '@rotp/game-data';
 import {
   DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS,
 } from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
-import { getItem } from '@shared/game/data';
+import { getItem } from '@rotp/game-data';
 import type {
   DarkRoomLightField, DarkRoomLights,
 } from '@shared/randomizer/world/dark-rooms/dark-room.type';

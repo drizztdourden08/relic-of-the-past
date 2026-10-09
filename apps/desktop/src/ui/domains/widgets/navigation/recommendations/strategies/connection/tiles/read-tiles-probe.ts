@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import { get, toScreenIdOrNone } from '@shared/game/data';
-import type { ConnectionRecord, ConnectionTile } from '@shared/game/data';
+import { get, toScreenIdOrNone } from '@rotp/game-data';
+import type { ConnectionRecord, ConnectionTile } from '@rotp/game-data';
 import { known, unread } from '@shared/game/recommendations/compare';
 import type { LiveWalkBoundary, ScreenObservations } from '@shared/game/recommendations';
 

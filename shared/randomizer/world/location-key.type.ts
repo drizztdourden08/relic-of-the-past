@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 
 type SlotKey = `slot-${string}`;
 

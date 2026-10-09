@@ -1,9 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  ALL_TAGS, all, CONNECTION_TAG_METADATA, CONTENT_TAG_METADATA, find, getTag, tagById, tagByKey,
-  tagIdForKey, tagIdsForKeys, tagKey, tagKeysOf, tagsFor, TAG_METADATA,
-} from '@shared/game/data';
+import { ALL_TAGS, all, CONNECTION_TAG_METADATA, CONTENT_TAG_METADATA, find, getTag, tagById, tagByKey, tagIdForKey, tagIdsForKeys, tagKey, tagKeysOf, tagsFor, TAG_METADATA } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 const SEED = [

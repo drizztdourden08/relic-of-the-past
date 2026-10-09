@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { DungeonId, ItemId } from '../../../data';
+import type { DungeonId, ItemId } from '@rotp/game-data';
 import { tokensForItem } from '../../requirements-map/tokens-for-item';
 import { keyKindOf } from '../../key-items';
 import type { EngineState } from '../state/state.type';

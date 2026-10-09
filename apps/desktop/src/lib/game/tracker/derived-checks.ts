@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { all, hasTagKey } from '@shared/game/data';
-import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
-import { evaluateRequirement } from '@shared/game/logic';
+import { all, hasTagKey } from '@rotp/game-data';
+import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
+import { evaluateRequirement } from '@rotp/game-data';
 import { EMPTY_INVENTORY } from './derived-checks.constants';
 
 const dungeonMembers = (record: CheckRecord, checks: readonly CheckRecord[]): CheckRecord[] => {

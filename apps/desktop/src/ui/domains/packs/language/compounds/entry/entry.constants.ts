@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
 import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import type { Block } from '@shared/game/language';
-import type { DialogueTrigger } from '@shared/game/data/dialogue-context';
+import type { DialogueTrigger } from '@rotp/game-data';
 import type { EntryViewMode } from '../../behavior/language-behavior.type';
 import type { FitChip, TriggerFacts } from './entry.type';
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { CAPACITY_UPGRADE_LOCATIONS, NPC_SCOPE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';

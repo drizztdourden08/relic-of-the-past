@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { isHighlightMarker } from '@shared/randomizer/receipt-text/highlight-markup';
-import { alphabetChars } from '@shared/game/dialog/dialogue-charset';
-import type { DialogueCharset } from '@shared/game/dialog/dialogue-charset';
+import { alphabetChars } from '@rotp/game-data';
+import type { DialogueCharset } from '@rotp/game-data';
 import type { Resolver } from './dialogue-text.type';
 import {
   COMBINING, INVISIBLE, LETTERS, MAX_DEPTH, NEAREST, SPACE, TYPOGRAPHIC, UNKNOWN,

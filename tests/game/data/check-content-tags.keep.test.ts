@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { getCheck, hasTagKey } from '@shared/game/data';
+import { getCheck, hasTagKey } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 describeDataset('check content tags', () => {

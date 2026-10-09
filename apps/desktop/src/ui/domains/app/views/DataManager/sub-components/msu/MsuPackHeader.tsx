@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useState } from 'react';
 import { Box, Button, ButtonRow, Flex, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import type { MsuPackHeaderProps } from './MsuPackHeader.type';
 
 const MsuPackHeader = (props: MsuPackHeaderProps) => {

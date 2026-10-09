@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { INVENTORY_LAYOUT } from '@shared/game/data';
+import { INVENTORY_LAYOUT } from '@rotp/game-data';
 import type { InventoryViewProps } from '../TrackerInventory.type';
 import { TrackerInventoryCategory } from './TrackerInventoryCategory';
 

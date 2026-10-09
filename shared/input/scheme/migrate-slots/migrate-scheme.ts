@@ -3,7 +3,7 @@ import { isRecord } from './is-record';
 import { migrateSlotList } from './migrate-slot-list';
 import { slotFromOldId } from './slot-from-old-id';
 import { SlotMigrationError } from './slot-migration-error';
-import type { SlotAssignment, SlotIndex } from '../../../types/controls/scheme';
+import type { SlotAssignment, SlotIndex } from '@rotp/game-data';
 import type { MigratedScheme } from './migrate-slots.type';
 
 const migrateScheme = (rawSlots: unknown, rawAssignments: unknown): MigratedScheme => {

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, SegmentedControl } from '@drizztdourden08/tessera/primitives';
-import type { OutfitId, GloveLevel } from '@shared/game/data/player-sheet/types';
+import type { OutfitId, GloveLevel } from '@rotp/game-data';
 import { GLOVE_OPTIONS, OUTFIT_OPTIONS } from './WearingBar.constants';
 import type { WearingBarProps } from './WearingBar.type';
 import './WearingBar.css';

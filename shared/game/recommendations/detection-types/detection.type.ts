@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
-import type { EntityKind, ConnectionRecord, ScreenGameId, ScreenId } from '../../data/types';
-import type { ScreenMatchResult } from '../../logic/queries/detection';
-import type { PalaceMismatch } from '../../logic/queries/palace-fallback';
+import type { EntityKind, ConnectionRecord, ScreenGameId, ScreenId } from '@rotp/game-data';
+import type { ScreenMatchResult } from '@rotp/game-data';
+import type { PalaceMismatch } from '@rotp/game-data';
 import type { ConnectionInfo } from '../../navigation/types';
 import type { DraftRecommendation, RecommendationOrigin } from '../types';
 import type {

@@ -12,7 +12,7 @@ import tagIcon from '@iconify-icons/lucide/tag';
 import boxesIcon from '@iconify-icons/lucide/boxes';
 import typeIcon from '@iconify-icons/lucide/type';
 import alertIcon from '@iconify-icons/lucide/alert-triangle';
-import type { ConnectionPlacement, EntityKind } from '@shared/game/data';
+import type { ConnectionPlacement, EntityKind } from '@rotp/game-data';
 import type { DetailTab, FieldDescriptor, TableColumn, TableState } from '@drizztdourden08/tessera/data';
 import type { IdRefTargetField, IdRefOption, NumberBounds } from '@drizztdourden08/tessera/composites';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';

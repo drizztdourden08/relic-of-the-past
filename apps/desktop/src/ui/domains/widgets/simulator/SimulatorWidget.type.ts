@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind types */
 import type { DatasetSuggestion, SimEvent, SimOutcome, SoftlockReport } from '@shared/game/simulation';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { RunStatus, SimProgress, TrailStop } from '@app/stores/simulator-store';
 
 interface RunControl {

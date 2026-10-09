@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { InputBinding } from '@shared/types/controls';
+import type { InputBinding } from '@rotp/game-data';
 
 interface RawInputEvent {
   binding: InputBinding;

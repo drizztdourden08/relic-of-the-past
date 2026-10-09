@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { Requirement } from '@shared/game/data/types';
+import type { Requirement } from '@rotp/game-data';
 import type { Sink } from './record-references.type';
 
 const walkRequirement = (requirement: Requirement, field: string, take: Sink): void => {

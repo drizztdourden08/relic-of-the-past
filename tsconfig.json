@@ -16,7 +16,8 @@
     "apps/store/src/**/*",
     "apps/site-kit/**/*",
     "apps/desktop/electron/**/*",
-    "shared/**/*"
+    "shared/**/*",
+    "packages/*/src/**/*"
   ],
   "exclude": ["node_modules", "dist", "out", "core"]
 }

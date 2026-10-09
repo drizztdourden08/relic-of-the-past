@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { LanguageSet } from '@shared/game/language';
-import { writeJson } from '../../json';
+import { writeJson } from '@drizztdourden08/brock-core';
 import { writeContent } from '../format-2';
 import { dialoguePath, textPath } from '../paths';
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckGameId } from '@shared/game/data';
+import type { CheckGameId } from '@rotp/game-data';
 import { CHEST_MASK_BASE } from './check-detection.constants';
 import type { CheckDetection } from './check-detection.type';
 

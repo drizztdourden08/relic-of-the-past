@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { GROUP_DIMENSIONS, SPHERE_DIMENSION } from '@shared/game/logic/queries/check-grouping';
+import { GROUP_DIMENSIONS, SPHERE_DIMENSION } from '@rotp/game-data';
 
 const SPOILER_DIMENSIONS = [SPHERE_DIMENSION, ...GROUP_DIMENSIONS];
 

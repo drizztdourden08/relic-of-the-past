@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { itemGroupById } from '@shared/game/data';
+import { itemGroupById } from '@rotp/game-data';
 import type { NamedRecord } from '../../DataInspector.type';
 
 const getItemGroupRecord = (id: string): NamedRecord | undefined => {

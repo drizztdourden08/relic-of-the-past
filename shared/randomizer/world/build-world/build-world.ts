@@ -4,7 +4,7 @@ import { worldDungeonOf } from '../world-dungeon';
 import { GOAL_EVENT } from '../events/story-events.data';
 import { ALLOW_ANY_ITEM } from './build-world.constants';
 import { wiredRegionsOf } from './wired-regions-of';
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
 import type { WorldEvent, WorldLocation } from '../region.type';
 import type { World, ItemRule, Rule } from '../world.type';

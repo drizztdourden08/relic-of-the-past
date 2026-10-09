@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { SHEET_COLS } from '@shared/game/data/player-sheet/types';
-import type { PlayerSheet, Wearing } from '@shared/game/data/player-sheet/types';
+import { SHEET_COLS } from '@rotp/game-data';
+import type { PlayerSheet, Wearing } from '@rotp/game-data';
 import { resolvePalette } from '../resolve-palette';
 import { blitTiles } from '../draw-tiles';
 import { SHEET_PNG_HEIGHT, SHEET_PNG_WIDTH, SHEET_ROWS } from './sheet-png.constants';

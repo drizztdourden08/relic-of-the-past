@@ -5,7 +5,7 @@ import { handle } from '@drizztdourden08/brock-electron/main';
 import { getWorkspaceRoot } from '../screen-editor/workspace-root';
 import { writeFile, mkdir } from 'fs/promises';
 import type { SimRunConfig } from '@shared/game/simulation';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import { DEFAULT_MAX_STEPS } from './sim-run-handler.constants';
 
 const isCheckId = (value: string): value is CheckId => value.startsWith('check-');

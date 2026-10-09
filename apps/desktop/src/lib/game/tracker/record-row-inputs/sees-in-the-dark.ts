@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { DARK_ROOM_LIGHT_FIELDS } from '@shared/randomizer/world/dark-rooms';
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import { LIGHT_ITEM } from './record-row-inputs.constants';
 

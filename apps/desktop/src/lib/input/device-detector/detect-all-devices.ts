@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { DetectedDevice } from '@shared/types/controls';
+import type { DetectedDevice } from '@shared/types/controls/devices/devices.type';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { detectFromEntry } from './detect-from-entry';
 import { detectKeyboard } from './detect-keyboard';

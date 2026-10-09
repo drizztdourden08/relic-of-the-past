@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { VISIBLE_ROWS, fitReceiptLine, wrapRows } from './wrap-message';
 import { SCROLL_COMMAND, WAIT_COMMAND } from './message-commands.constants';
-import type { DialogueCharset } from '@shared/game/dialog/dialogue-charset';
+import type { DialogueCharset } from '@rotp/game-data';
 
 const paddedRows = (rows: readonly string[]): string[] =>
   [...rows, ...Array.from({ length: Math.max(0, VISIBLE_ROWS - rows.length) }, () => '')];

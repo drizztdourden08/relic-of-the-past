@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind constants */
-import type { InventoryViewMode } from '@shared/game/data';
+import type { InventoryViewMode } from '@rotp/game-data';
 
 const DEFAULT_VIEW_MODE: InventoryViewMode = 'default';
 

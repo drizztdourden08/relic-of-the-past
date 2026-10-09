@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { KEY_DROP_LOCATIONS } from '../../scope-tables';
 import { allOf } from '../combinators';
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 import type { LocationKey } from '../../location-key.type';
 import type { World, Rule } from '../../world.type';
 import type { RuleEntry } from '../rule-entry.type';

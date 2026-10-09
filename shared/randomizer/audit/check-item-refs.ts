@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { NEEDS_RECEIVE_ID } from './invariant.constants';
-import type { ItemRecord } from '../../game/data/types';
+import type { ItemRecord } from '@rotp/game-data';
 import type { InvariantFinding, InvariantInput } from './invariant.type';
 
 const checkItemRefs = ({ checks, items }: InvariantInput): InvariantFinding[] => {

@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { DialogBorderThickness, DialogCorner, DialogCornerMark } from '@shared/game/dialog/box-style';
+import type { DialogBorderThickness, DialogCorner, DialogCornerMark } from '@rotp/game-data';
 
 interface DialogFrameProps {
   width: number;

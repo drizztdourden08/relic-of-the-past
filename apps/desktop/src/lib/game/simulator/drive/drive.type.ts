@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type { EngineState, RecorderState, buildEndSummary } from '@shared/game/simulation';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { GridPos } from '@shared/game/navigation';
 
 interface ScreenFloodLog {

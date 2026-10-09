@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { GamepadSample, InputSample } from '@shared/input/scheme';
-import { SDL_AXIS } from '@shared/input/sdl-buttons';
+import { SDL_AXIS } from '@rotp/game-data';
 import { resolveAxisPressThreshold, STICK_DIRECTION_PRESS_THRESHOLD } from '../axis-press-threshold';
 import type { AllowedDevices } from '../profile-devices';
 import { NO_KEYS } from './scheme-runtime.constants';

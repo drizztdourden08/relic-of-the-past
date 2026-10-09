@@ -5,7 +5,7 @@ import {
 import { ITEM } from '../world/item-ids.data';
 import { checkIdOfLocation } from '../world/location-record';
 import { DUNGEON_FIELD_OF_GENERIC_ITEM } from './normal-placement.constants';
-import type { CheckId, ItemId, RegionId } from '../../game/data/types/ids';
+import type { CheckId, ItemId, RegionId } from '@rotp/game-data';
 import type { ItemKey } from '../world/item-ids.data';
 import type { LocationKey } from '../world/location-key';
 import type { WorldDungeon } from '../world/region.type';

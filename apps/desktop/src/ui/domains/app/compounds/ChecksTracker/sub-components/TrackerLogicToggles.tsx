@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { smallKeyDoorsOf } from '@shared/game/logic/queries/check-grouping';
+import { smallKeyDoorsOf } from '@rotp/game-data';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import type { TrackerLogicTogglesProps } from '../ChecksTracker.type';
 

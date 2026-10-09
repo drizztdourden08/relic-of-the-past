@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { INGAME_ITEMS_GRID, INGAME_EQUIPMENT, INGAME_PASSIVES } from '@shared/game/data';
+import { INGAME_ITEMS_GRID, INGAME_EQUIPMENT, INGAME_PASSIVES } from '@rotp/game-data';
 import type { InventoryViewProps } from '../TrackerInventory.type';
 import { TrackerInventorySlot } from './TrackerInventorySlot';
 

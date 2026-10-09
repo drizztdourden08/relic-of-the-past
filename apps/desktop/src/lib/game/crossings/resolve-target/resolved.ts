@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameScreenId } from '@shared/game/logic/queries/game-id';
+import type { GameScreenId } from '@rotp/game-data';
 import type { CrossingTarget } from '@shared/game/navigation';
 import type { ResolvedTarget } from './resolve-target.type';
 

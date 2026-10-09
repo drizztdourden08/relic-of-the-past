@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { sha256Hex } from '@shared/storage/hash';
+import { sha256Hex } from '@drizztdourden08/brock-core';
 import type { DedupedFiles, LoadBytes } from './dedupe-files.type';
 
 const dedupeByContent = async (names: string[], loadBytes: LoadBytes): Promise<DedupedFiles> => {

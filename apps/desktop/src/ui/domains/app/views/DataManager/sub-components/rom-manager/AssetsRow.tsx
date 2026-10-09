@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Text, Button } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import { IL } from './RomDetailPanel.constants';
 import type { AssetsRowProps } from './RomDetailPanel.type';
 

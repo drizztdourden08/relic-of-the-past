@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { smallKeyDoorsOf } from '@shared/game/logic/queries/check-grouping';
-import type { FilterState, RunContext } from '@shared/game/logic/queries/check-grouping';
+import { smallKeyDoorsOf } from '@rotp/game-data';
+import type { FilterState, RunContext } from '@rotp/game-data';
 
 const activeLogicToggles = (filter: FilterState, run?: RunContext): number =>
   ((filter.bigKeyDoors ?? true) ? 0 : 1) + ((filter.darkRoomsNeedLight ?? true) ? 0 : 1) + ((filter.shopShelves ?? false) ? 1 : 0)

@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { all } from '@shared/game/data';
-import type { ItemId } from '@shared/game/data';
+import { all } from '@rotp/game-data';
+import type { ItemId } from '@rotp/game-data';
 
 let bigKeys: readonly ItemId[] | null = null;
 

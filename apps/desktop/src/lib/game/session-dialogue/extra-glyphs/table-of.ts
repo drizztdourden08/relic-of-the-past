@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { EXTRA_GLYPHS } from '@shared/game/dialog/extra-glyphs.data';
-import { extraGlyphTiles } from '@shared/game/dialog/extra-glyph-tiles';
-import type { ExtraGlyphSlot } from '@shared/game/dialog/dialogue-charset';
+import { EXTRA_GLYPHS } from '@rotp/game-data';
+import { extraGlyphTiles } from '@rotp/game-data';
+import type { ExtraGlyphSlot } from '@rotp/game-data';
 import { ENTRY_BYTES, TILE_OFFSET } from './extra-glyphs.constants';
 
 const tableOf = (extras: readonly ExtraGlyphSlot[]): Uint8Array => {

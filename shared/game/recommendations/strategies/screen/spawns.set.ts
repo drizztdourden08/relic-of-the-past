@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { getActorByGameId } from '../../../data';
-import type { ActorId, ScreenRecord, ScreenSpawn } from '../../../data/types';
+import { getActorByGameId } from '@rotp/game-data';
+import type { ActorId, ScreenRecord, ScreenSpawn } from '@rotp/game-data';
 import { known, unread } from '../../compare/probe-reading';
 import type { FieldProbe, Probe } from '../../compare/probe.type';
 import type { LiveSpriteObservation, ScreenObservations } from '../../detection-types';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { all } from '@shared/game/data';
-import type { RunKind } from '@shared/game/logic';
+import { all } from '@rotp/game-data';
+import type { RunKind } from '@rotp/game-data';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { loadRandomizerPlacement } from '@app/lib/randomizer-placement-io';
@@ -9,7 +9,7 @@ import { offlinePlayerName } from '@app/lib/game/save-file/offline-player-name';
 import { SRAM_SLOT_COUNT } from '@app/lib/game/save-file/sram-slots';
 import { normalPlacement } from '@app/lib/game/tracker/normal-placement-ref';
 import { armedCheckIdsOfPlacement, computeTrackerSnapshot } from '@app/lib/game/randomizer-client';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { SaveFileChecks } from './home-tab.type';
 
 const countStatuses = (slot: number, name: string | null, snapshot: ReadonlyMap<CheckId, string>): SaveFileChecks => {

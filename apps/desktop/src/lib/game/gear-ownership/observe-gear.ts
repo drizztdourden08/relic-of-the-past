@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { arrowTypeOf } from '@shared/game/logic/pause';
-import type { GameUIState } from '@shared/game/types';
+import { arrowTypeOf } from '@rotp/game-data';
+import type { GameUIState } from '@rotp/game-data';
 import { getProfileId } from '../wasm-bridge';
 import type { GearTiers } from './gear-ownership.type';
 import { gearOwnershipState } from './gear-ownership-state';

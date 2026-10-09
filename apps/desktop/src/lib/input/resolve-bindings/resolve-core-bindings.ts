@@ -1,7 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { defaultCoreBindings, keyboardModernBindings } from '@shared/input/scheme';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import type { CoreBindings, InputProfile } from '@shared/types/controls';
+import type { CoreBindings } from '@rotp/game-data';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 import { resolveDeviceFromEntry } from '../resolve-device';
 import { profileDevice } from './profile-device';
 

@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import { tagsFor } from '@shared/game/data';
-import type { EntityKind } from '@shared/game/data';
+import { tagsFor } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
 import { valuesInUse } from './values-in-use';
 
 const buildSuggestions = (kind: EntityKind, path: string): readonly string[] => {

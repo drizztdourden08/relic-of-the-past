@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { FlagDiff } from '../../types';
-import type { CheckRecord } from '../../../data';
+import type { CheckRecord } from '@rotp/game-data';
 import { matchDiff } from './match-diff';
 
 const matchDiffs = (diffs: FlagDiff[]): CheckRecord | undefined => {

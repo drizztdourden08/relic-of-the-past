@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { COLLECTION_SOURCES } from '../../apps/desktop/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
 import {
   ENTITY_KINDS, KIND_NAV_ITEMS,

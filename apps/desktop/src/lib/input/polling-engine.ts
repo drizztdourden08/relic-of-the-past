@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { SnesButton } from '@shared/types/controls';
-import { SNES_BUTTON_BITS } from '@shared/types/controls';
+import type { SnesButton } from '@rotp/game-data';
+import { SNES_BUTTON_BITS } from '@rotp/game-data';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
 import type { AllowedDevices } from './profile-devices';
 import { scopedEntries } from './device-scoped-map';

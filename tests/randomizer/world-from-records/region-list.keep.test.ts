@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { expect, it } from 'vitest';
-import { getRegion } from '@shared/game/data';
+import { getRegion } from '@rotp/game-data';
 import { REGION_GRAPH } from '@shared/randomizer/world/rules/tables/region-graph.data';
 import { DUNGEON_ORDER } from '@shared/randomizer/world/fill/dungeon-order.data';
 import { REGION } from '@shared/randomizer/world/region-ids.data';

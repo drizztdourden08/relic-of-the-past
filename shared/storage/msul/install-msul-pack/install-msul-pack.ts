@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { createPack, listPacks, writeManifest, writeTrackFile } from '../../msu';
 import { readMsulPack } from '../import-msul';
 import { FALLBACK_PACK_NAME } from './install-msul-pack.constants';

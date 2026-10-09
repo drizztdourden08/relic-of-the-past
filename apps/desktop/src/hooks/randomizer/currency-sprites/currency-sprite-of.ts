@@ -1,5 +1,5 @@
 /* @layer renderer-hooks @kind logic */
-import { spriteUrlOf } from '@shared/game/logic/queries/item-sprites';
+import { spriteUrlOf } from '@rotp/game-data';
 import type { ShopCountedCurrency } from '@shared/randomizer/world/shops/shop-price.type';
 import { CURRENCY_SPRITE_FILES } from './currency-sprites.constants';
 

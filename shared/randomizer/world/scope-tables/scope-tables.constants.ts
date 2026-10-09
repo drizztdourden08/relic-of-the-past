@@ -1,9 +1,9 @@
 /* @layer shared-game @kind constants */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { scopedChecks } from './scoped-checks';
 import { scopeRowsOf } from './scope-rows-of';
 import { scopeTableOf } from './scope-table-of';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
 
 const NPC_SCOPE_LOCATIONS: ReadonlyMap<LocationKey, ItemId> = scopeTableOf('npc');

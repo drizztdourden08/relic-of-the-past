@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { find, getDungeonByGameId, getItemByGameId } from '../../../data';
-import type { CheckRecord, ScreenId } from '../../../data';
+import { find, getDungeonByGameId, getItemByGameId } from '@rotp/game-data';
+import type { CheckRecord, ScreenId } from '@rotp/game-data';
 import { unread } from '../../compare/probe-reading';
 import type { Probe, SetProbe } from '../../compare/probe.type';
 import type { ScreenObservations } from '../../detection-types';

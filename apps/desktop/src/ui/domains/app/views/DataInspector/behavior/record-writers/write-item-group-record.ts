@@ -1,8 +1,8 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { replaceItemGroupRecord } from '@shared/game/data';
-import type { ItemGroupRecord } from '@shared/game/data';
-import type { PendingItemGroupRecord } from '@shared/game/data/record-codegen';
+import { replaceItemGroupRecord } from '@rotp/game-data';
+import type { ItemGroupRecord } from '@rotp/game-data';
+import type { PendingItemGroupRecord } from '@rotp/game-data';
 import type { RecordWriter } from '../../DataInspector.type';
 import { updateIdRefOption } from '../update-id-ref-option';
 import { settleWrite } from './settle-write';

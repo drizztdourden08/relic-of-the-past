@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { SimSprite } from '../../types';
-import type { CheckRecord } from '../../../data';
-import { getCheckByGameId } from '../../../data';
+import type { CheckRecord } from '@rotp/game-data';
+import { getCheckByGameId } from '@rotp/game-data';
 import { OW_PICKUP_MASK } from './trigger-plans.constants';
 import { indoorPickupSlot } from './indoor-pickup-slot';
 

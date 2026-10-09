@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 
 const completedLocationKeys = (

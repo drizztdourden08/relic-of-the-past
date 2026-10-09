@@ -2,7 +2,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { expect, it } from 'vitest';
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { censusFindings, readRomCensus } from '@shared/randomizer/audit/rom-census';
 import { describeRom, usRom } from '../rom-fixture';
 import { BOSS_TAGS, CHEST_ROW_EXCEPTIONS, CORE, SPECIAL_SCREENS } from './rom-facts.constants';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { find, tagKeysOf } from '../../data';
-import { toScreenIdOf } from '../../data/connections/derive';
+import { find, tagKeysOf } from '@rotp/game-data';
+import { toScreenIdOf } from '@rotp/game-data';
 import { buildDatasetSuggestions } from '../recording/dataset-updates';
 import type { EngineState } from '../engine/state';
 import type { RecorderState } from '../recording/recorder';

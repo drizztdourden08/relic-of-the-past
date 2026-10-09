@@ -1,9 +1,9 @@
 /* @layer shared-input @kind logic */
 import { keyboardGlyphPath } from './keyboard-glyph-path';
 import { resolveGlyph } from './resolve-glyph';
-import type { DeviceFamily } from '../../types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 import type { GlyphPack, GlyphSource } from '../../types/hud/glyph-pack';
-import type { ModernSlot } from '../../types/controls/scheme';
+import type { ModernSlot } from '@rotp/game-data';
 
 const slotGlyph = (
   slot: ModernSlot,

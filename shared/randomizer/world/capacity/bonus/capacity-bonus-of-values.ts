@@ -1,11 +1,11 @@
 /* @layer shared-game @kind logic */
-import { CAPACITY_FAMILY_IDS } from '@shared/game/data/capacity-upgrade-names.data';
+import { CAPACITY_FAMILY_IDS } from '@rotp/game-data';
 import { optionNumberOf } from '../option-number-of';
 import { DEFAULT_CAPACITY_BONUS } from './capacity-bonus.data';
 import { capacityBonusBaseKeyOf } from './capacity-bonus-base-key-of';
 import { capacityBonusKeyOf } from './capacity-bonus-key-of';
 import { clampBonusPercent } from './clamp-bonus-percent';
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import type { CapacityFamilyId } from '@rotp/game-data';
 import type { OptionValue, PartialOptionValues } from '../../options.type';
 import type { CapacityBonusSetting, FamilyBonus } from './capacity-bonus.type';
 

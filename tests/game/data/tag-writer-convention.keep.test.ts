@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { allocateTag } from '../../../apps/desktop/electron/screen-editor/tag-writer';
-import { splitTagKey } from '@shared/game/data';
+import { splitTagKey } from '@rotp/game-data';
 
 const NO_ROOT = '/definitely-not-a-workspace';
 

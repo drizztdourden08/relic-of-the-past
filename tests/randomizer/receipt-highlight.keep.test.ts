@@ -12,12 +12,12 @@ import { renderFromServer, renderJunk, renderOnline, renderProgressive } from '@
 import { receiptLineCandidates } from '@shared/randomizer/receipt-text/receipt-line.type';
 import { pondDemandLinesOf } from '@shared/randomizer/receipt-text/pond-demand-lines';
 import { renderCapacityStep } from '@shared/randomizer/receipt-text/capacity-rung-values';
-import { hexToSnes15 } from '@shared/game/dialog/highlight-color';
+import { hexToSnes15 } from '@rotp/game-data';
 import { foreignItemLine } from '@app/lib/game/randomizer-client/foreign-item-line';
 import { compressMarkedStrings } from '@app/lib/game/session-dialogue/highlight-bytes';
 import { wrapMessageText, wrapRows } from '@app/lib/game/session-dialogue/wrap-message';
 import { toDialogueText } from '@app/lib/game/session-dialogue/dialogue-text';
-import { dialogueCharsetOf } from '@shared/game/dialog/dialogue-charset';
+import { dialogueCharsetOf } from '@rotp/game-data';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 

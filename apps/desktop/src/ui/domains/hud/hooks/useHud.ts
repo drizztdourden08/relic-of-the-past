@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useGameUIStore } from '../../../../stores/game-ui-store';
-import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
+import { getSpritesBase } from '@rotp/game-data';
 import type { HudConfig, HudData, UseHudResult } from './hooks.type';
 
 const useHud = (scale: number): UseHudResult => {

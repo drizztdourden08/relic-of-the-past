@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { DialogCell, DialogFrame } from '@shared/game/dialog/dialog-frame.types';
+import type { DialogCell, DialogFrame } from '@rotp/game-data';
 
 const rowChanged = (a: DialogCell[], b: DialogCell[]): boolean => {
   if (a.length !== b.length) return true;

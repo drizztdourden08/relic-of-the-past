@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { DialogFrame } from '@shared/game/dialog/dialog-frame.types';
+import type { DialogFrame } from '@rotp/game-data';
 
 interface DialogStore {
   frame: DialogFrame;

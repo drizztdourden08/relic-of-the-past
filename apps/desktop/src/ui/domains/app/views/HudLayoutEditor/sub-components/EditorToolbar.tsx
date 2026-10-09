@@ -2,8 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEscapeStack, Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { SpritePicker } from '@domains/app/compounds/SpritePicker';
-import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
-import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@shared/game/data/sprite-manifest/manifest';
+import { getSpritesBase } from '@rotp/game-data';
+import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
 import { ToolbarMenu } from './ToolbarMenu';
 import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { GroundPicker } from './GroundPicker';

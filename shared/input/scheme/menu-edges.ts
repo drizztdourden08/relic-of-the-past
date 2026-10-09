@@ -2,8 +2,8 @@
 import { DIRECTION_BIT } from './function-mask';
 import { MOVE_ORDER } from './menu-edges.constants';
 import type { FunctionMask } from './function-mask';
-import type { SlotIndex } from '../../types/controls';
-import type { PauseEvent } from '@shared/game/logic/pause/pause-machine';
+import type { SlotIndex } from '@rotp/game-data';
+import type { PauseEvent } from '@rotp/game-data';
 
 const rose = (now: boolean, prev: boolean): boolean => now && !prev;
 

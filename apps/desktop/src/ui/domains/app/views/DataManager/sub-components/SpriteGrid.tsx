@@ -2,7 +2,7 @@
 import { useState, useMemo } from 'react';
 import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
-import { SPRITE_MANIFEST, CATEGORY_LABELS, CATEGORY_ORDER } from '@shared/game/data';
+import { SPRITE_MANIFEST, CATEGORY_LABELS, CATEGORY_ORDER } from '@rotp/game-data';
 import { SpriteCard } from './SpriteCard';
 import type { CategoryFilter, SpriteGridProps } from './SpriteGrid.type';
 

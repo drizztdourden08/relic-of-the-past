@@ -1,9 +1,9 @@
 /* @layer renderer-widgets @kind constants */
-import type { CheckKind } from '@shared/game/data';
-import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
+import type { CheckKind } from '@rotp/game-data';
+import { CHECK_FACET_DEFS } from '@rotp/game-data';
 import type { ListItemShape } from '@drizztdourden08/tessera/composites';
 import type { SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
-import type { ItemFilter, StatusFilter } from '@shared/game/logic/queries/check-grouping';
+import type { ItemFilter, StatusFilter } from '@rotp/game-data';
 
 const CHECK_TYPE_ICONS: Record<CheckKind, string> = {
   chest: '🧰',

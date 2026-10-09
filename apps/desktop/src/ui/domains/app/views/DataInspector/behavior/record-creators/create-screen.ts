@@ -1,10 +1,10 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { registerRecord } from '@shared/game/data';
-import { screenRecordFile } from '@shared/game/data/record-file-targets';
-import type { ScreenRecord } from '@shared/game/data';
-import type { ScreenHome } from '@shared/game/data/record-file-targets';
-import type { PendingScreenRecord } from '@shared/game/data/record-codegen';
+import { registerRecord } from '@rotp/game-data';
+import { screenRecordFile } from '@rotp/game-data';
+import type { ScreenRecord } from '@rotp/game-data';
+import type { ScreenHome } from '@rotp/game-data';
+import type { PendingScreenRecord } from '@rotp/game-data';
 import { NO_SOURCE_FILE } from '../../DataInspector.constants';
 import type { RecordCreator } from '../record-creators.type';
 import { settleCreatedRecord } from '../settle-created-record';

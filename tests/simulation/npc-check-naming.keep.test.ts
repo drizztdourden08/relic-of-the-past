@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { CheckId } from '../../shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import { npcCheckFor } from '../../apps/desktop/src/lib/game/flood/annotate/npc-checks';
 import { describeDataset } from '../dataset-guard';
 

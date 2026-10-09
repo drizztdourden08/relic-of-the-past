@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { HudNodeContent } from '@domains/hud/compounds/HudNodeRenderer';
-import type { ModernSlot } from '@shared/types/controls/scheme';
+import type { ModernSlot } from '@rotp/game-data';
 import type { GlyphPack } from '@shared/types/hud';
 import type { Size } from '@shared/hud/layouts';
 

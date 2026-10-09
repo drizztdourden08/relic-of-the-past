@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { PresenceCondition, PresenceGameState } from '../../shared/game/simulation/presence/state';
 import { evaluatePresence, BOSS_DEAD_BIT } from '../../shared/game/simulation/presence/evaluate';
-import type { ItemId } from '../../shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 
 const baseState = (partial: Partial<PresenceGameState> = {}): PresenceGameState => ({
   progressFlags: 0,

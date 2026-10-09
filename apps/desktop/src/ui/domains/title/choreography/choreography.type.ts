@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { TitleFrame } from '@shared/game/title/title-frame.type';
+import type { TitleFrame } from '@rotp/game-data';
 import type { Scene, SceneClock } from '../scene/scene.type';
 
 interface Picture {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { GROUND_TILE_SPRITE_DEFINITIONS } from '@shared/game/data/sprite-manifest/ground-tiles';
+import { GROUND_TILE_SPRITE_DEFINITIONS } from '@rotp/game-data';
 import type { EditorGround, EditorRatio } from './HudLayoutEditor.type';
 
 const GLYPH_IMAGE_TYPES = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'];

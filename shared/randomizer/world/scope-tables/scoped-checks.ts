@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { all } from '@shared/game/data';
-import type { CheckRecord } from '@shared/game/data';
+import { all } from '@rotp/game-data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { CheckScope } from './scope-tables.type';
 
 const scopedChecks = (scope: CheckScope): readonly CheckRecord[] =>

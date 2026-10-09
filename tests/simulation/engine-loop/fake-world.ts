@@ -2,8 +2,8 @@
 import type { SimObservation, TriggerAction, FlagSnapshot } from '../../../shared/game/simulation/types';
 import type { EngineState } from '../../../shared/game/simulation/engine/state';
 import { emptySnapshot, cloneSnapshot } from '../../../shared/game/simulation/detect/flag-snapshot';
-import { getItemByGameId } from '../../../shared/game/data';
-import type { ItemId } from '../../../shared/game/data';
+import { getItemByGameId } from '@rotp/game-data';
+import type { ItemId } from '@rotp/game-data';
 import { CHEST_OPEN_MASKS } from './engine-loop.constants';
 import type { WorldChest } from './engine-loop.type';
 

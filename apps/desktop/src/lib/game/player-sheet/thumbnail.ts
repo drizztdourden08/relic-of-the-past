@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { PlayerSheet, Wearing } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet, Wearing } from '@rotp/game-data';
 import { resolvePalette } from './resolve-palette';
 import { blitTiles, TILE } from './draw-tiles';
 import { DEFAULT_WEARING, STANDING_COLS, STANDING_ROWS } from './thumbnail.constants';

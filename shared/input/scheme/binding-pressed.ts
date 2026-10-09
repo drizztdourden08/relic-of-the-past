@@ -1,6 +1,6 @@
 /* @layer shared-input @kind logic */
 import { DEFAULT_AXIS_THRESHOLD, DEFAULT_TRIGGER_THRESHOLD, TRIGGER_AXES } from './binding-pressed.constants';
-import type { InputBinding } from '../../types/controls/bindings';
+import type { InputBinding } from '@rotp/game-data';
 import type { InputSample } from './binding-pressed.type';
 
 const thresholdFor = (axisIndex: number, sample: InputSample): number => {

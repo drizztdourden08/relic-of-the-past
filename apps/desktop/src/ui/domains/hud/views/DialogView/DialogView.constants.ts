@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind constants */
-import type { SnesButton } from '@shared/types/controls';
-import type { PromptButton } from '@shared/game/dialog/dialog-prompts';
-import type { EquipmentState } from '@shared/game/types/game-state';
+import type { SnesButton } from '@rotp/game-data';
+import type { PromptButton } from '@rotp/game-data';
+import type { EquipmentState } from '@rotp/game-data';
 import type { DialogScale } from './DialogView.type';
 
 const STORY_LEGEND_MESSAGE = 0x112;

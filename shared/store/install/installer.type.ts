@@ -1,5 +1,5 @@
 /* @layer shared-store @kind types */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { Container } from '../types';
 
 type InstallPhase = 'download' | 'verify' | 'unpack';

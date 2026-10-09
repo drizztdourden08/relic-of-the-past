@@ -1,7 +1,7 @@
 /* @layer shared-game @kind constants */
-import { ITEM_GROUP_IDS, membersOf } from '@shared/game/data';
+import { ITEM_GROUP_IDS, membersOf } from '@rotp/game-data';
 import { ITEM } from '../item-ids.data';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { MedallionId } from './item-groups.type';
 
 const BOTTLE_ITEMS: readonly ItemId[] = membersOf(ITEM_GROUP_IDS.Bottles);

@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
-import type { ConnectionRecord } from '../../../shared/game/data';
-import { registerRecord, unregisterRecord } from '../../../shared/game/data';
+import type { ConnectionRecord } from '@rotp/game-data';
+import { registerRecord, unregisterRecord } from '@rotp/game-data';
 import { EMPTY_PLACEMENT } from './engine-loop.constants';
 
 const makeConnections = (lockBToC: boolean): ConnectionRecord[] => {

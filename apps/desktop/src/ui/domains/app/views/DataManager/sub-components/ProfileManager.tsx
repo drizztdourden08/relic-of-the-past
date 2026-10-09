@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Status, Button, IconButton, Select, TextInput, Field, EmptyState, ButtonRow, SegmentedControl, Spinner, Stack, Icon } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout, ListItemRow } from '@drizztdourden08/tessera/composites';
-import { formatRelativeTime } from '../../../../../../utils';
+import { formatRelativeTime } from '@drizztdourden08/brock-core';
 import { useProfileManager } from './profile-manager/useProfileManager';
 import { ProfileDetailPanel } from './profile-manager/ProfileDetailPanel';
 import { RandomizerFields } from './profile-manager/RandomizerFields';

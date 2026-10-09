@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import { getScreen } from '@shared/game/data';
-import { dungeonForPalaceIndex } from '@shared/game/data/record-file-targets';
+import { getScreen } from '@rotp/game-data';
+import { dungeonForPalaceIndex } from '@rotp/game-data';
 import type { DungeonGeography } from './screen-editor.type';
 
 const dungeonGeographyFor = (palaceIndex: number): DungeonGeography | null => {

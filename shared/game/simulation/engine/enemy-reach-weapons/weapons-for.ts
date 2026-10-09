@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { ItemId, RangeProfile } from '../../../data';
-import { getItem } from '../../../data';
+import type { ItemId, RangeProfile } from '@rotp/game-data';
+import { getItem } from '@rotp/game-data';
 import type { CombatTables } from '../../types';
 import type { Weapon } from '../enemy-reach/enemy-reach.type';
 import {

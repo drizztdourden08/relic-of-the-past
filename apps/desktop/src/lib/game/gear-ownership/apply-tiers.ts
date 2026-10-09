@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { getPlatform } from '@drizztdourden08/brock-react';
-import { writeJson } from '@shared/storage/json';
+import { writeJson } from '@drizztdourden08/brock-core';
 import type { GearTiers, SlotRecord } from './gear-ownership.type';
 import { NO_GEAR, PINNED_SLOT_KEY } from './gear-ownership.constants';
 import { gearOwnershipState } from './gear-ownership-state';

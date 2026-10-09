@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Status, Box, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import type { TrackRowProps } from './msu.type';
 
 const TrackRow = (props: TrackRowProps) => {

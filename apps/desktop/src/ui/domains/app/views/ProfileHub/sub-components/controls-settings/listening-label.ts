@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { SNES_BUTTON_LABELS, FUNCTION_ACTION_LABELS } from '@shared/types/controls';
+import { SNES_BUTTON_LABELS } from '@rotp/game-data';
+import { FUNCTION_ACTION_LABELS } from '@shared/types/controls/functions/functions.constants';
 import { CORE_VERB_LABELS } from '../controls/controls.constants';
 import type { ListeningTarget } from './controls-settings.type';
 

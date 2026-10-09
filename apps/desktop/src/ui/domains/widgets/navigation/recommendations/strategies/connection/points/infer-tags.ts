@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ConnectionTag } from '@shared/game/data';
+import type { ConnectionTag } from '@rotp/game-data';
 import type { ObservedTransition } from '@shared/game/recommendations';
 
 const inferTags = (transition: ObservedTransition): ConnectionTag[] => {

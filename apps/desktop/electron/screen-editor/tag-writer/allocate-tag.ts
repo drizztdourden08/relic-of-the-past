@@ -1,9 +1,9 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { serializeTagRecord } from '@shared/game/data/record-codegen';
-import { splitTagKey } from '@shared/game/data';
-import type { TagRecord } from '@shared/game/data/types';
+import { serializeTagRecord } from '@rotp/game-data';
+import { splitTagKey } from '@rotp/game-data';
+import type { TagRecord } from '@rotp/game-data';
 import type { Allocated, AllocateTagArgs, AllocateTagResult } from '@shared/ipc/screen-editor-contract';
 import { withAllocatedIds } from '../id-allocator';
 import { insertBeforeArrayClose } from '../source-writers';

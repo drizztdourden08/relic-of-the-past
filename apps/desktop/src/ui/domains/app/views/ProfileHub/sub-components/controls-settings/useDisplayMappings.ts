@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import { SNES_BUTTONS } from '@shared/types/controls';
+import { SNES_BUTTONS } from '@rotp/game-data';
 import { allowedDevices } from '@app/lib/input/profile-devices';
 import { recallControllerName } from '@app/lib/input/controller-name-cache';
 import { resolveIconByVidPid } from '@app/lib/input/profile-utils';

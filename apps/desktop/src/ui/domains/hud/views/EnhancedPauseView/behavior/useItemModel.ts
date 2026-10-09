@@ -1,10 +1,10 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo } from 'react';
-import { ITEM_SLOT_COUNT, buildItemCells } from '@shared/game/logic/pause';
+import { ITEM_SLOT_COUNT, buildItemCells } from '@rotp/game-data';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useLocalizedNames } from '../../PauseMenuView/behavior/useLocalizedNames';
 import { wrapName } from '../../PauseMenuView/behavior/wrap-name';
-import type { PauseNameKey } from '@shared/game/logic/pause';
+import type { PauseNameKey } from '@rotp/game-data';
 import type { ItemsSection } from '../../../compounds/PauseItemsScreen';
 import type { ItemModel } from '../EnhancedPauseView.type';
 

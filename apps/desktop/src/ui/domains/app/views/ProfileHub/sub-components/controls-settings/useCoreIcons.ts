@@ -4,7 +4,7 @@ import { resolveIconByVidPid } from '@app/lib/input/profile-utils';
 import { findLiveDevice } from './live-device';
 import { padHex } from './pad-hex';
 import type { CoreVerb } from '@shared/input/scheme';
-import type { CoreBindings } from '@shared/types/controls';
+import type { CoreBindings } from '@rotp/game-data';
 import type { CoreIcons, UseCoreIconsArgs } from './controls-settings.type';
 
 const useCoreIcons = ({ activeProfile, devices, core }: UseCoreIconsArgs): CoreIcons => {

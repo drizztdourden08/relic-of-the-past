@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { PICTURE_GLYPH_SPRITES } from '@shared/game/data/sprite-manifest/picture-glyph-sprites';
+import { PICTURE_GLYPH_SPRITES } from '@rotp/game-data';
 
 const bareName = (token: string): string => token.replace(/^\[|\]$/g, '');
 

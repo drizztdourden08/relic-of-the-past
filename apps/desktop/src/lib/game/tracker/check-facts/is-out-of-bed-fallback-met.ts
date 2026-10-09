@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckGameId } from '@shared/game/data';
+import type { CheckGameId } from '@rotp/game-data';
 import { BED_STATE_BUFFER_INDEX } from './check-facts.constants';
 
 const isOutOfBedFallbackMet = (gameId: CheckGameId, readProgByte: (bufferIndex: number) => number): boolean =>

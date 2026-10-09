@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import {
   getAppState, listProfiles, loadProfile, createProfile, updateProfile,
   deleteProfile, setLastProfile, readConfig, writeConfig,

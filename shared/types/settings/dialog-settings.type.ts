@@ -1,9 +1,6 @@
 /* @layer shared-types @kind types */
-import type { DialogHoldStop, DialogSpeedStop, DialogStrokeWidth } from '../../game/dialog/pacing';
-import type {
-  DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark,
-  DialogTexture, DialogTextureAnimation, DialogTextureSpeed,
-} from '../../game/dialog/box-style';
+import type { DialogHoldStop, DialogSpeedStop, DialogStrokeWidth } from '@rotp/game-data';
+import type { DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark, DialogTexture, DialogTextureAnimation, DialogTextureSpeed } from '@rotp/game-data';
 
 interface DialogSettings {
   dialogSpeed: DialogSpeedStop;

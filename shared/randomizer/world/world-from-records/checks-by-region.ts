@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { all } from '@shared/game/data';
-import type { CheckId, RegionId } from '@shared/game/data/types/ids';
+import { all } from '@rotp/game-data';
+import type { CheckId, RegionId } from '@rotp/game-data';
 
 let checks: Map<RegionId, readonly CheckId[]> | null = null;
 

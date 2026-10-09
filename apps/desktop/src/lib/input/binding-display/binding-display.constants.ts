@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import { SDL_AXIS } from '@shared/input/sdl-buttons';
+import { SDL_AXIS } from '@rotp/game-data';
 
 const AXIS_FALLBACK: Record<number, Record<'-' | '+', string>> = {
   [SDL_AXIS.LEFT_X]: { '-': 'generic-stick-left', '+': 'generic-stick-right' },

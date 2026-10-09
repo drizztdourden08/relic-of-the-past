@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { buildAdjacency, reachableFrom, inventoryToReachTokens, requirementsMet } from '../../shared/game/simulation';
 import type { CanPass, ScreenEdge, ReachContext } from '../../shared/game/simulation';
-import { getScreen } from '../../shared/game/data';
+import { getScreen } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 
 const emptyInventoryContext = (): ReachContext => ({

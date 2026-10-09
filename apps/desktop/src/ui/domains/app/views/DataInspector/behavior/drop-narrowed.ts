@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import { narrowedOptionCache } from './narrowed-option-cache';
 
 const dropNarrowed = (kind: EntityKind): void => {

@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { ConnectionRecord, CheckId } from '../../../shared/game/data';
+import type { ConnectionRecord, CheckId } from '@rotp/game-data';
 import { createEngine } from '../../../shared/game/simulation/engine/engine';
 import { createEngineState } from '../../../shared/game/simulation/engine/state';
 import { buildAdjacency } from '../../../shared/game/simulation/engine/traversal';

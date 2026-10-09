@@ -4,7 +4,7 @@ import type { SimEvent, DetectedCheck } from '../../../shared/game/simulation/ty
 import { createEngine } from '../../../shared/game/simulation/engine/engine';
 import { createEngineState } from '../../../shared/game/simulation/engine/state';
 import { buildAdjacency } from '../../../shared/game/simulation/engine/traversal';
-import { unregisterRecord } from '../../../shared/game/data';
+import { unregisterRecord } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import {
   BOMBS_ID, CONNECTION_IDS, HAMMER_ID, HOUSE_CHECK, KAKARIKO_TAVERN_ROOM, LAMP_ID, LINKS_HOUSE_ROOM, STEP_LIMIT,

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameUIState } from '@shared/game/types';
+import type { GameUIState } from '@rotp/game-data';
 import { wasmGetGameUIState } from '../wasm-bridge';
 import { pollHapticState } from '../haptic-polling';
 import { parseGameUIBuffer } from '../ui-bridge-parser';

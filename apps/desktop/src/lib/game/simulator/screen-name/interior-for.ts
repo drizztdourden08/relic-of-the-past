@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { find, getScreenByGameId } from '@shared/game/data';
-import type { ScreenRecord } from '@shared/game/data';
+import { find, getScreenByGameId } from '@rotp/game-data';
+import type { ScreenRecord } from '@rotp/game-data';
 
 const interiorFor = (roomIndex: number, palace?: number): ScreenRecord | undefined => {
   if (palace !== undefined) {

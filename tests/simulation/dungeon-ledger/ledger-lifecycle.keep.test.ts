@@ -4,7 +4,7 @@ import type { DetectedCheck, SimEvent } from '../../../shared/game/simulation/ty
 import { chestKey } from '../../../shared/game/simulation/engine/discover';
 import { closeIdleDungeonGroups, reopenLedgersFor } from '../../../shared/game/simulation/engine/dungeon-ledger-lifecycle';
 import { onCheckVerified } from '../../../shared/game/simulation/engine/explorer';
-import { dungeonGroupOf } from '../../../shared/game/logic/queries/dungeon-group';
+import { dungeonGroupOf } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import { BOMB_PICKUP, CASTLE_SCREEN, SEWERS_PALACE, SEWERS_ROOM, SEWERS_SCREEN } from './dungeon-ledger.constants';
 import { freshState } from './fresh-state';

@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import type { CheckId, CheckRecord } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
-import { isListedRow } from '@shared/game/logic/queries/check-grouping';
-import type { FilterState, RunContext } from '@shared/game/logic/queries/check-grouping';
+import type { CheckId, CheckRecord } from '@rotp/game-data';
+import type { CheckStatus } from '@rotp/game-data';
+import { isListedRow } from '@rotp/game-data';
+import type { FilterState, RunContext } from '@rotp/game-data';
 import type { TrackerStats } from './use-tracker-data.type';
 
 const countTrackerStats = (

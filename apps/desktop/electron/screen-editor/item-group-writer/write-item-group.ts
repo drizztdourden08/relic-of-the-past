@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { serializeItemGroupRecord } from '@shared/game/data/record-codegen';
-import type { ItemGroupRecord } from '@shared/game/data/types';
+import { serializeItemGroupRecord } from '@rotp/game-data';
+import type { ItemGroupRecord } from '@rotp/game-data';
 import type { WriteItemGroupArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
 import { replaceById } from '../source-writers';
 import { ITEM_GROUPS_FILE } from './item-group-writer.constants';

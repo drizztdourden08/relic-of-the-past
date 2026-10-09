@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Image } from '@drizztdourden08/tessera/primitives';
-import { CATEGORY_LABELS } from '@shared/game/data';
+import { CATEGORY_LABELS } from '@rotp/game-data';
 import type { SpriteCardProps } from './SpriteGrid.type';
 
 const SpriteCard = (props: SpriteCardProps) => {

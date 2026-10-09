@@ -1,6 +1,6 @@
 /* @layer renderer-other @kind logic */
 import { Filesystem, Encoding } from '@capacitor/filesystem';
-import type { FileStore, FileStat } from '@shared/platform';
+import type { FileStore, FileStat } from '@drizztdourden08/brock-core';
 import { DIR } from './capacitor.constants';
 
 const bytesToBase64 = (bytes: Uint8Array): string => {

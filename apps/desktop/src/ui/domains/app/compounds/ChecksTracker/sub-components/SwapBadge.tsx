@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Status } from '@drizztdourden08/tessera/primitives';
-import { getItem } from '@shared/game/data';
-import { chestSwapOf } from '@shared/game/logic/queries/chest-stand-ins';
+import { getItem } from '@rotp/game-data';
+import { chestSwapOf } from '@rotp/game-data';
 import type { SwapBadgeProps } from '../ChecksTracker.type';
 
 const SwapBadge = ({ check, shown }: SwapBadgeProps) => {

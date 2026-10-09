@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { isDeliverable } from './is-deliverable';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { OutfitId, PaletteOverride, PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { OutfitId, PaletteOverride, PlayerSheet } from '@rotp/game-data';
 
 const withColor = (sheet: PlayerSheet, outfit: OutfitId, index: number, word: number): PaletteOverride => {
   const { original, override } = sheet;

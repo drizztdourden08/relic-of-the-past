@@ -1,8 +1,8 @@
 /* @layer shared-input @kind logic */
-import { SDL_AXIS, SDL_BUTTON } from '../../sdl-buttons';
+import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import { RESERVED_CATEGORY } from './derive-slots.constants';
 import type { ResolvedControl } from '../../family/family.type';
-import type { InputBinding, ModernSlot } from '../../../types/controls';
+import type { InputBinding, ModernSlot } from '@rotp/game-data';
 
 const pressableBinding = (control: ResolvedControl): InputBinding | null => {
   if (control.kind === 'button') {

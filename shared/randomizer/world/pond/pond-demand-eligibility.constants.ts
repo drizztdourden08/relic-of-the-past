@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.data';
 import { isHoldableRecord } from './is-holdable-record';
 import type { ItemKey } from '../item-ids.data';

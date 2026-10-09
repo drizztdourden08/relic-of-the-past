@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind component */
-import type { DialogCornerMark } from '@shared/game/dialog/box-style';
-import { strokeWidthsOf } from '@shared/game/dialog/box-style';
-import { cornerAtInset, cornerPlacements, framePath, triforcePath } from '@shared/game/dialog/frame-geometry';
+import type { DialogCornerMark } from '@rotp/game-data';
+import { strokeWidthsOf } from '@rotp/game-data';
+import { cornerAtInset, cornerPlacements, framePath, triforcePath } from '@rotp/game-data';
 import type { DialogFrameProps } from './DialogFrame.type';
 
 const markShape = (mark: DialogCornerMark, tile: number) => {

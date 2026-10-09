@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { SimObservation, SimEvent, DetectedCheck } from '../types';
-import { getItem } from '../../data';
-import type { CheckRecord, ItemId } from '../../data';
+import { getItem } from '@rotp/game-data';
+import type { CheckRecord, ItemId } from '@rotp/game-data';
 import { diffSnapshots } from '../detect/flag-snapshot/diff-snapshots';
 import { emptySnapshot } from '../detect/flag-snapshot/empty-snapshot';
 import { matchDiffs } from '../detect/check-matcher/match-diffs';

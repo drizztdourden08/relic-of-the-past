@@ -2,7 +2,7 @@
 import type { HeartMode } from '../../primitives/HudHeart';
 import type { HudCountdownVariant } from '../HudCountdown';
 import type { PlacedNode } from '@shared/hud/engine';
-import type { SlotIndex } from '@shared/types/controls/scheme';
+import type { SlotIndex } from '@rotp/game-data';
 import type { GlyphSource, HudElementSpec } from '@shared/types/hud';
 
 type HudGlyphSpec = Extract<HudElementSpec, { type: 'glyph' }>;

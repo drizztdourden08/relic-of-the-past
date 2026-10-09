@@ -1,6 +1,6 @@
 /* @layer shared-types @kind types */
 import type { OnlineNoticeSettings } from '../../randomizer/archipelago/online-notice-settings';
-import type { QuietReceiptSettings } from '../../game/quiet-receipts';
+import type { QuietReceiptSettings } from '@rotp/game-data';
 import type { AspectSettings } from './aspect-settings.type';
 import type { AudioSettings } from './audio-settings.type';
 import type { ControlSettings } from './control-settings.type';

@@ -1,10 +1,10 @@
 /* @layer shared-game @kind logic */
-import { getCheck } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
 import { isSeedLocation } from '../seed-locations';
 import { REGION_LOCATION_ORDER } from '../fill/location-order.data';
 import { POND_REGION_LOCATIONS } from '../pond/pond-region-locations';
 import { checksByRegion } from '../world-from-records';
-import type { RegionId } from '@shared/game/data/types/ids';
+import type { RegionId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
 
 const regionLocationKeys = (regionId: RegionId): readonly LocationKey[] => {

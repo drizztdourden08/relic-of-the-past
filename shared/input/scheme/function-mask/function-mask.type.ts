@@ -1,5 +1,5 @@
 /* @layer shared-input @kind types */
-import type { SlotIndex } from '../../../types/controls/scheme';
+import type { SlotIndex } from '@rotp/game-data';
 
 interface MenuMask {
   confirm: boolean;

@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useRef } from 'react';
 import type { RefObject } from 'react';
-import type { DialogTextureAnimation } from '@shared/game/dialog/box-style';
+import type { DialogTextureAnimation } from '@rotp/game-data';
 import { paintTexture } from '../../../../../../lib/dialog-texture/paint-texture';
 import type { DialogTextureProps } from '../DialogTexture.type';
 

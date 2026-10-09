@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { CheckRecord } from '../../../data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { ChestObservation, ScreenObservations } from '../../detection-types';
 import { roomIdOf } from './room-id-of';
 

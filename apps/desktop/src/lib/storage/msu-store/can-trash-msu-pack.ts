@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { platformFiles } from '../platform-files';
 
-const canTrashMsuPack = (): boolean => platformFiles().trash !== undefined;
+const canTrashMsuPack = (): boolean => 'trash' in platformFiles();
 
 export { canTrashMsuPack };

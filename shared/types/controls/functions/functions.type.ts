@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { ButtonIcon, InputBinding } from '../bindings';
+import type { ButtonIcon, InputBinding } from '@rotp/game-data';
 import type { FUNCTION_ACTIONS } from './functions.constants';
 
 type FunctionAction = (typeof FUNCTION_ACTIONS)[number];

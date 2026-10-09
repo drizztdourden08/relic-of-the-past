@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-import { getCheck, getScreen } from '@shared/game/data';
+import { getCheck, getScreen } from '@rotp/game-data';
 import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
 import { isSlotKey } from '@shared/randomizer/world/location-key';
 import { nativeGrantIdOf } from './native-grant-id';
 import { standingOverrideKeyOf, worldGrantReceiveIdOf } from './standing-override-key';
-import type { CheckId, CheckRecord } from '@shared/game/data';
+import type { CheckId, CheckRecord } from '@rotp/game-data';
 import { ROOMLESS_GRANT_CHECKS, SPRITE_KEY_CERTIFIED } from './npc-override-key.constants';
 import type { AmbiguousRoomlessCache, NpcOverrideKey } from './npc-override-key.type';
 

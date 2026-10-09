@@ -10,8 +10,8 @@ import { ANY_BUTTON, CONFIRM_VERBS, LEGEND_VERBS, STICK_OF_AXIS } from '../Enhan
 import type { NavLegendEntry } from '../../../compounds/PauseNavLegend';
 import type { PauseCursorActions } from '@app/stores/pause-menu-store';
 import type { SdlPosition } from '@shared/input/scheme';
-import type { ModernBindings } from '@shared/types/controls/scheme';
-import type { DeviceFamily, InputBinding } from '@shared/types/controls';
+import type { ModernBindings } from '@rotp/game-data';
+import type { DeviceFamily, InputBinding } from '@rotp/game-data';
 import type { GlyphPack, GlyphSource } from '@shared/types/hud';
 import type { LegendRow } from '../EnhancedPauseView.type';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import { LOGO_AT, SWORD_REST_BASE, SWORD_TOP_FOR_BASE, SWORD_X } from '@shared/game/title/title-layout';
+import { LOGO_AT, SWORD_REST_BASE, SWORD_TOP_FOR_BASE, SWORD_X } from '@rotp/game-data';
 import type { Picture, PixelSet, ShinePixels } from './choreography.type';
 import { OPAQUE_ALPHA_FROM } from './shine-pixels.constants';
 

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckRecord, ScreenRecord } from '../../data';
+import type { CheckRecord, ScreenRecord } from '@rotp/game-data';
 import type { Adjacency } from './traversal/traversal.type';
 
 interface ReportDeps {

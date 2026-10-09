@@ -3,7 +3,7 @@ import type { RefObject } from 'react';
 import type { HudCountdownSource } from '@shared/hud/data';
 import type { PlacedNode } from '@shared/hud/engine';
 import type { Rect, Size } from '@shared/hud/layouts';
-import type { ModernBindings, SlotAssignment, SlotIndex } from '@shared/types/controls/scheme';
+import type { ModernBindings, SlotAssignment, SlotIndex } from '@rotp/game-data';
 import type { HudCountdownContent, HudVitalsContent } from '../../compounds/HudNodeRenderer';
 
 interface HudLayoutViewProps {

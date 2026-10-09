@@ -11,7 +11,7 @@ import { firedLocations, onFiredLocation } from './override-fire-registry';
 import { buildPlanReceiptTexts } from './receipt-plan-messages';
 import { pondDemandLineKey } from './pond-demand-line-key';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { PhysicalPlan } from './physical-plan.type';
 import type { ForeignItemOf } from './foreign-item-line';
 import type { SessionReceiptTexts } from './receipt-text-refresh.type';

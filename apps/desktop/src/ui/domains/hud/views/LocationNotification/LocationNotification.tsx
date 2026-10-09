@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { getLocation } from '@shared/game/data';
+import { getLocation } from '@rotp/game-data';
 import { HudBox } from '../../primitives/HudBox';
 import { useLocationNotificationStore } from '../../../../../stores/location-notification-store';
 import { SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS } from '../../hooks/hooks.constants';

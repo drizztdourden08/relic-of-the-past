@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { PalaceMismatch } from '../../../logic/queries/palace-fallback';
+import type { PalaceMismatch } from '@rotp/game-data';
 import type { ScreenObservations } from '../../detection-types';
 
 const resolvedPalaceMismatches = (observations: ScreenObservations): readonly PalaceMismatch[] => {

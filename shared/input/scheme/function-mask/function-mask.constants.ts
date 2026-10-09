@@ -1,5 +1,5 @@
 /* @layer shared-input @kind constants */
-import { SNES_BUTTON_BITS } from '../../../types/controls/snes';
+import { SNES_BUTTON_BITS } from '@rotp/game-data';
 import type { MenuMask } from './function-mask.type';
 
 const DIRECTION_BIT = {

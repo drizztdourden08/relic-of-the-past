@@ -4,7 +4,7 @@ import { locationDisplayName } from '@shared/randomizer/world/display-names/loca
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
 import { POND_RUNGS_BY_ID } from '@shared/randomizer/world/pond/pond-rungs';
 import { POND_REGION_LOCATIONS } from '@shared/randomizer/world/pond/pond-region-locations';
-import { find } from '@shared/game/data';
+import { find } from '@rotp/game-data';
 
 describe('pond slot identity', () => {
   it('every pond slot is a location of the world', () => {

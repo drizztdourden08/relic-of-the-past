@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { AmbientRole } from '@shared/game/data/ambient-reach';
+import type { AmbientRole } from '@rotp/game-data';
 
 const AUDIO_ACCEPT = ['.wav', '.mp3', '.ogg', '.flac', '.opus', '.pcm'];
 

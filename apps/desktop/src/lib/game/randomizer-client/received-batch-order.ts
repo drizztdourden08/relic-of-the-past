@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { isCapacityUpgradeItemName } from '@shared/game/data';
+import { isCapacityUpgradeItemName } from '@rotp/game-data';
 import type { ReceivedEntry } from './received-batch-order.type';
 
 const receivedBatchOrder = (

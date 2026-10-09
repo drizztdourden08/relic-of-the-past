@@ -4,7 +4,7 @@ import { slotBlockOffset } from './sram-slots';
 import { OW_EVENT_BASE, PROGRESS_OFFSETS, ROOM_FLAGS_BASE } from './progress-offsets';
 import { SRM_EVENT_LEDGER } from './hook-save-bytes';
 import { blockOffsetOf } from './block-offset-of';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 
 const offlineCompletedChecks = (
   sram: Uint8Array,

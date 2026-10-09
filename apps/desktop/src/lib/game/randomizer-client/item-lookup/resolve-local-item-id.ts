@@ -1,7 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import {
-  dungeonItemReceiveIdOfRecord, getItem, prizeReceiveIdOfName, progressiveReceiveIdOfName, upgradeReceiveIdOfName,
-} from '@shared/game/data';
+import { dungeonItemReceiveIdOfRecord, getItem, prizeReceiveIdOfName, progressiveReceiveIdOfName, upgradeReceiveIdOfName } from '@rotp/game-data';
 import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
 import { RETRO_QUIVER_GRANT_ITEM, RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data';
 import { sessionWalletTable } from '../session-wallet-table';

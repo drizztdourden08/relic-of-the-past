@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { DeviceFamily } from '@shared/types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 
 interface ControllerCardInfo {
   vendorId: string;

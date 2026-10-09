@@ -3,7 +3,7 @@ import { BOTTLE_ITEMS } from '../item-groups';
 import { PLAIN_BOTTLE } from './scope-subtraction.constants';
 import { scopeRows } from './scope-rows';
 import { isDungeonScopedItem } from './is-dungeon-scoped-item';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { ItemKey } from '../item-ids.data';
 import type { LocationKey } from '../location-key';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { CHEAT_ACTIONS } from '@shared/types/controls';
+import { CHEAT_ACTIONS } from '@shared/types/controls/functions/functions.constants';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import { DISABLED_SETTING_MESSAGES } from '@domains/app/disabled-setting-messages.constants';

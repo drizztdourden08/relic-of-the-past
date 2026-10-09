@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { gameIdLabel } from '@shared/game/logic/queries/game-id';
+import { gameIdLabel } from '@rotp/game-data';
 import type { SubjectContext } from './build-report-subject.type';
 
 const buildReportSubject = ({ version, gameId }: SubjectContext): string =>

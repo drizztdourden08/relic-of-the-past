@@ -1,9 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect, afterEach } from 'vitest';
-import {
-  all, getCheck, getItem, getScreen, registerRecord, replaceRecord, unregisterRecord,
-} from '@shared/game/data';
-import type { CheckRecord, ScreenId } from '@shared/game/data';
+import { all, getCheck, getItem, getScreen, registerRecord, replaceRecord, unregisterRecord } from '@rotp/game-data';
+import type { CheckRecord, ScreenId } from '@rotp/game-data';
 import type { ChestObservation, DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { checkStrategy } from '@shared/game/recommendations/strategies/check';

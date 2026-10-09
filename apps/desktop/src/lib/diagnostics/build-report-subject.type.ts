@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { GameScreenId } from '@shared/game/logic/queries/game-id';
+import type { GameScreenId } from '@rotp/game-data';
 
 interface SubjectContext {
   version: string;

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { BorderEdge, ConnectionInfo, GridPos } from '../types';
-import type { ConnectionNavData, ConnectionPointData, RequirementSet, TraversalRequirement } from '../nav-data.types';
-import type { ConnectionTag } from '../../data';
+import type { ConnectionNavData, ConnectionPointData, RequirementSet, TraversalRequirement } from '@rotp/game-data';
+import type { ConnectionTag } from '@rotp/game-data';
 import { GRID_SIZE } from '../types';
 import { transitTypeFromTags } from './transit-type-from-tags';
 import { EDGE_TO_DIR } from './connection-nav-from-flood.constants';

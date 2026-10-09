@@ -7,7 +7,7 @@ import { resolveNodeStyle } from './sub-components/HudNodeStyle';
 import { EMPTY_SCOPE, ORIGIN } from './HudNodeRenderer.constants';
 import type { HudNodeRendererProps } from './HudNodeRenderer.type';
 import type { HudNode } from '@shared/types/hud';
-import type { SlotIndex } from '@shared/types/controls/scheme';
+import type { SlotIndex } from '@rotp/game-data';
 
 const slotOf = (node: HudNode): SlotIndex | null => {
   if (node.kind !== 'element') return null;

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { bigKeyItemIds } from './big-key-item-ids';
 import { LAMP } from './record-row-inputs.constants';
 import { seesInTheDark } from './sees-in-the-dark';

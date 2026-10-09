@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { findOne } from '../../data';
+import { findOne } from '@rotp/game-data';
 import type { TraversalId } from '../traversal-id.type';
 
 const labels = new Map<TraversalId, string>();

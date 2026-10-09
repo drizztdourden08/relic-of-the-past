@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { SetBakeInput } from '@shared/game/language';
 import { getSet, getSetFont, list as listSets } from '../languages';
 

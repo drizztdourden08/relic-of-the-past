@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import type { CapacityFamilyId } from '@rotp/game-data';
 
 interface FamilyBonus {
   percent: number;

@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { applyTriggerCalibration, useCalibrationStore } from '@drizztdourden08/brock-input/renderer';
-import { SDL_AXIS } from '@shared/input/sdl-buttons';
+import { SDL_AXIS } from '@rotp/game-data';
 import type { ControllerInputState } from './controller-input-store.type';
 import type { ControllerStateHost } from './process-controller-state.type';
 

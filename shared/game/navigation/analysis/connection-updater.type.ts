@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
-import type { ConnectionNavData } from '../nav-data.types';
-import type { ScreenConnection } from '../../types';
+import type { ConnectionNavData } from '@rotp/game-data';
+import type { ScreenConnection } from '@rotp/game-data';
 import type { ResolvedEntrance } from './entrance-resolver.type';
 import type { BorderBundle } from './border-bundles';
 

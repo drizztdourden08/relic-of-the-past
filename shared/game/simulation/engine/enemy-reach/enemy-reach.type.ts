@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { GridPos } from '../../../navigation/types';
-import type { ItemId } from '../../../data';
+import type { ItemId } from '@rotp/game-data';
 import type { SimSprite, ScreenGridBundle, CombatContext, RoomSectionSplit } from '../../types';
 
 type ReachKind = 'contact' | 'travelling';

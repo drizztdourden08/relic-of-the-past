@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { buildPresenceState } from '@shared/game/simulation/presence/state';
 import { computeEventStatus } from '../event-status';
-import type { CheckId, ItemId } from '@shared/game/data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 import { OW_EVENT_BYTES, PROGRESS_BYTES, ROOM_WORDS, STORY_STATUS_BYTES } from './flag-polling.constants';
 import type { WasmModule } from './flag-polling.type';
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { UIMode } from '@shared/game/types';
+import type { UIMode } from '@rotp/game-data';
 
 const MODULE = {
   intro: 0,

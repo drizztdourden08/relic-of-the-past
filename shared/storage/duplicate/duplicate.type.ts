@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind types */
-import type { FileStore } from '@shared/platform';
-import type { BasedOn } from '@shared/store/based-on';
+import type { FileStore } from '@drizztdourden08/brock-core';
+import type { BasedOn } from '@rotp/game-data';
 
 type DuplicateOutcome = { name: string };
 

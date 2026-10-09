@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind hook */
 import { useEffect, useState } from 'react';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { CheckId, ItemId } from '@shared/game/data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 import {
   getCompletedChecks, getCurrentInventory, getEventStatus, onCompletedChecksChanged, onEventStatusChanged, onInventoryChanged,
 } from '../../lib/game';

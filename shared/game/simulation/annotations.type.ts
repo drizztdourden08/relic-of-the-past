@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { GridPos } from '../navigation/types';
-import type { CheckId } from '../data';
+import type { CheckId } from '@rotp/game-data';
 
 type PickupAnnotationKind = 'chest' | 'big-chest' | 'npc-check' | 'standing-item';
 

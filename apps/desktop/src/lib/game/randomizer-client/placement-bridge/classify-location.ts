@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getCheck } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
 import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
 import { detectionOf, withProgressBaseline } from '../check-detection';
 import { freestandingKeyDropOf } from '../freestanding-key-drops';
@@ -14,7 +14,7 @@ import { planItemLabel } from '../plan-item-label';
 import { targetLocalIdOf } from '../plan-target-id';
 import { lockedVanillaRow } from './locked-vanilla-row';
 import { npcGrantOf } from './npc-grant-of';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { ScopeFlags } from '../scope-lock';

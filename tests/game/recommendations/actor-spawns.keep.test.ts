@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { actorStrategy } from '@shared/game/recommendations/strategies/actor';

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 
 interface RoomThreatProbe {
   inventory: ItemId[];

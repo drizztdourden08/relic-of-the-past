@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { migrateLegacySet } from '../migrate';
 import type { LanguageSetSummary } from '../types';
 import { readDialogue } from './read-dialogue';

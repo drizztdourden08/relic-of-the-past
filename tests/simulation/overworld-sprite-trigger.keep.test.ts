@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { SimSprite } from '../../shared/game/simulation/types';
 import { planTrigger, planSpriteTrigger } from '../../shared/game/simulation/trigger/trigger-plans';
-import { find } from '../../shared/game/data';
+import { find } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 
 const KING_ZORA_TYPE = 0x52;

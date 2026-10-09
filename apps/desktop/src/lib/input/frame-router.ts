@@ -6,7 +6,7 @@ import { ownsHudItem } from './item-ownership';
 import { setActiveItem } from '../game/host-menu';
 import type { SchemeRuntime } from './scheme-runtime';
 import type { InputSample } from '@shared/input/scheme';
-import type { ModernBindings } from '@shared/types/controls';
+import type { ModernBindings } from '@rotp/game-data';
 import type { InputManager } from './input-manager';
 import { KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from './frame-router.constants';
 

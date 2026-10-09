@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 
 const isSeedLocation = (check: CheckRecord): boolean => {
   const { kind, scope } = check;

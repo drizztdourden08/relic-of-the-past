@@ -2,7 +2,7 @@
 import { chestAddressToTableIndex } from './chest-address-to-table-index';
 import { joinCrosswalk } from './join-crosswalk';
 import { vanillaVerdict } from './comparator-vanilla';
-import type { CheckRecord, ItemRecord } from '../../game/data/types';
+import type { CheckRecord, ItemRecord } from '@rotp/game-data';
 import type { ReferenceLocation } from './reference-source.type';
 import type { ChestVerdict, ComparatorInput } from './comparator.type';
 import type { RomCensus, RomChest } from './rom-census/rom-census.type';

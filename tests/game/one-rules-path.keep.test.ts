@@ -1,11 +1,11 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { all, getDungeon, ITEM_GROUP_IDS } from '@shared/game/data';
-import { standardNameOfCheck } from '@shared/game/data/check-standard-name';
-import { screensOfRegions } from '@shared/game/logic/regions/reachable-screens';
+import { all, getDungeon, ITEM_GROUP_IDS } from '@rotp/game-data';
+import { standardNameOfCheck } from '@rotp/game-data';
+import { screensOfRegions } from '@rotp/game-data';
 import { buildNormalPlacement } from '@shared/randomizer/normal-placement';
 import { grantedInventory, recordRowOverrides } from '@app/lib/game/tracker/record-row-inputs';
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 
 const LAMP: ItemId = 'item-019';

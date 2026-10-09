@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { TitleFrame } from '@shared/game/title/title-frame.type';
+import type { TitleFrame } from '@rotp/game-data';
 import { readI16 } from './read-i16';
 import { PIECE_X_OFFSET, PIECE_Y_OFFSET, TRIFORCE_PIECES } from './title.constants';
 

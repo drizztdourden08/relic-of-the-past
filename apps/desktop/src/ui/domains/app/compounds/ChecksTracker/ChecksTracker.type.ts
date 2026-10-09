@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { CheckRecord, ItemId } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
-import type {
-  FilterState, GroupDimension, GroupDimensionDef, GroupNode, RunContext,
-} from '@shared/game/logic/queries/check-grouping';
+import type { CheckRecord, ItemId } from '@rotp/game-data';
+import type { CheckStatus } from '@rotp/game-data';
+import type { FilterState, GroupDimension, GroupDimensionDef, GroupNode, RunContext } from '@rotp/game-data';
 
 type ViewMode = 'compact' | 'detailed' | 'visual';
 

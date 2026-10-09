@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ItemRecord } from '../../game/data/types';
+import type { ItemRecord } from '@rotp/game-data';
 import type { VanillaResolution } from './comparator.type';
 
 const resolveVanillaReceiveId = (

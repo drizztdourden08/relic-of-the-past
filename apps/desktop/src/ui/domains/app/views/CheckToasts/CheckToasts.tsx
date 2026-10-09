@@ -2,8 +2,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { shownItemOf } from '@shared/game/logic/queries/check-contents';
-import type { RunContext } from '@shared/game/logic/queries/check-grouping';
+import { shownItemOf } from '@rotp/game-data';
+import type { RunContext } from '@rotp/game-data';
 import {
   buildPlacementView, getSessionState, runKindOfSession, subscribeSessionStore,
 } from '@app/lib/game/randomizer-client';

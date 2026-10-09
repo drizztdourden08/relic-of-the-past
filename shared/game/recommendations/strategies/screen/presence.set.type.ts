@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
-import type { ScreenId } from '../../../data/types';
-import type { GameScreenId } from '../../../logic/queries/game-id';
+import type { ScreenId } from '@rotp/game-data';
+import type { GameScreenId } from '@rotp/game-data';
 
 interface CurrentScreenIdentity {
   gameId: GameScreenId;

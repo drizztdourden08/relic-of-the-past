@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { InputProfile } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 import { KEYBOARD_DEFAULT } from '@shared/input';
 import { getInputManager, profileFromPreset } from '../../../../../../../lib/input/input-manager';
 import { readInputProfiles, writeInputProfiles } from '@app/lib/storage/profile-data-store';

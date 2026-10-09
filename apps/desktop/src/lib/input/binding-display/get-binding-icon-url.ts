@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { InputBinding, ButtonIcon } from '@shared/types/controls';
+import type { InputBinding, ButtonIcon } from '@rotp/game-data';
 import { getButtonIconUrl, keyCodeToIconId } from '../button-icons';
 import { AXIS_FALLBACK } from './binding-display.constants';
 

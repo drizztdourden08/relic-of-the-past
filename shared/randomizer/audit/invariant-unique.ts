@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { BOSS_KILL_MASK, UNIQUE_RULE } from './invariant.constants';
-import type { CheckRecord } from '../../game/data/types';
+import type { CheckRecord } from '@rotp/game-data';
 import type { InvariantFinding, InvariantInput } from './invariant.type';
 
 const isBossPrizePair = (a: CheckRecord, b: CheckRecord): boolean =>

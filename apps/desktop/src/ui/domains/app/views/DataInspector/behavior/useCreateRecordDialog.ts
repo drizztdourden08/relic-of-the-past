@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { blankRecordFor } from './blank-record';
 import { createSchemaFor } from './create-schema';

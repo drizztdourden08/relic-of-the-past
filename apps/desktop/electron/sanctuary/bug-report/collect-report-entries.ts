@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { ReportEntries } from './bug-report.type';
 import { collectProfileFiles } from './collect-profile-files';
 import { collectReportCaptures } from './collect-report-captures';

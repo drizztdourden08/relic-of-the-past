@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { SlotAssignment } from '@shared/types/controls';
+import type { SlotAssignment } from '@rotp/game-data';
 
 const assignmentLabel = (assignment: SlotAssignment | undefined): string => {
   if (!assignment) return 'Unassigned';

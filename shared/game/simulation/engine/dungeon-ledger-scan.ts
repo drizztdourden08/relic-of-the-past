@@ -1,12 +1,12 @@
 /* @layer shared-game @kind logic */
 import type { SimObservation } from '../types';
-import type { DungeonId } from '../../data';
+import type { DungeonId } from '@rotp/game-data';
 import { keyAvailable } from './explorer/key-available';
 import { chestKey } from './discover/chest-key';
 import { spriteKey } from './discover/sprite-key';
 import { attrGridsOf } from './discover-bombs/attr-grids-of';
 import { isBombableAttr } from './discover-bombs/is-bombable-attr';
-import { dungeonGroupForScreen, dungeonForScreen } from '../../logic/queries/dungeon-group';
+import { dungeonGroupForScreen, dungeonForScreen } from '@rotp/game-data';
 import { ensureLedger } from './dungeon-ledger/ensure-ledger';
 import { upsertOwed } from './dungeon-ledger/upsert-owed';
 import { pruneDoneChecks } from './dungeon-ledger/prune-done-checks';

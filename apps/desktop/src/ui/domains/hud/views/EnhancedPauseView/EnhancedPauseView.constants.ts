@@ -1,10 +1,10 @@
 /* @layer renderer-hud @kind constants */
 import { HUD_EDGE_INSET, VITALS_RESERVE } from '@shared/hud/layouts';
-import { SDL_AXIS } from '@shared/input/sdl-buttons';
-import { OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
-import type { GearLadderKind, PauseScreen, PauseSection } from '@shared/game/logic/pause';
-import type { HeroPose } from '@shared/game/logic/hero-idle';
-import type { OutfitId } from '@shared/game/data/player-sheet/types';
+import { SDL_AXIS } from '@rotp/game-data';
+import { OUTFIT_IDS } from '@rotp/game-data';
+import type { GearLadderKind, PauseScreen, PauseSection } from '@rotp/game-data';
+import type { HeroPose } from '@rotp/game-data';
+import type { OutfitId } from '@rotp/game-data';
 import type { SdlPosition } from '@shared/input/scheme';
 import type { GearSection } from '../../compounds/PauseGearScreen';
 import type { BrowsingView } from './EnhancedPauseView.type';

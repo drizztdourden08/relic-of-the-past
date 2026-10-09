@@ -7,7 +7,7 @@ let cached: string | null = null;
 const findRepoRoot = (start: string): string | null => {
   let dir = start;
   for (;;) {
-    if (existsSync(join(dir, 'shared', 'game', 'data'))) return dir;
+    if (existsSync(join(dir, 'packages', 'game-data', 'src', 'data'))) return dir;
     const parent = dirname(dir);
     if (parent === dir) return null;
     dir = parent;

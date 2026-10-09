@@ -7,7 +7,7 @@ import { useControlSchemeStore } from '@app/stores/control-scheme-store';
 import { declaredDeviceFamily } from './declared-family';
 import { deviceFamilyOf } from './device-family';
 import { useGlyphPacks } from './useGlyphPacks';
-import type { ModernSlot } from '@shared/types/controls/scheme';
+import type { ModernSlot } from '@rotp/game-data';
 import type { SlotContent } from '@app/lib/hud/slot-content';
 import type { ControlSchemeSlice } from '../HudLayoutView.type';
 

@@ -1,7 +1,7 @@
 /* @layer tests @kind helper */
 import { afterAll } from 'vitest';
-import type { ConnectionId, ConnectionRecord } from '../../../shared/game/data';
-import { registerRecord, unregisterRecord } from '../../../shared/game/data';
+import type { ConnectionId, ConnectionRecord } from '@rotp/game-data';
+import { registerRecord, unregisterRecord } from '@rotp/game-data';
 
 const EMPTY_PLACEMENT = { form: 'area' as const, tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } };
 

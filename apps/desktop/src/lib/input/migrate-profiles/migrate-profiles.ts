@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { InputProfile } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 import type { MigrationOutcome } from './migrate-profiles.type';
 import { migrateProfile } from './migrate-profile';
 

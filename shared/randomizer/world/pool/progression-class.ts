@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { capacityFamilyOfItemName } from '@shared/game/data/capacity-upgrade-item';
+import { capacityFamilyOfItemName } from '@rotp/game-data';
 import { itemKeyName } from '../display-names/item-key-name';
 import { familyOfDungeonItem } from '../dungeon-items/dungeon-item-modes';
 import { WALLET } from '../capacity/capacity-family';

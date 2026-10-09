@@ -2,7 +2,7 @@
 import { ITEM } from '../world/item-ids.data';
 import { REFERENCE_DARK_ROOM_SETTING } from '../world/dark-rooms/dark-room-lights.data';
 import { VANILLA_MEDALLIONS } from '../world/item-groups';
-import type { ItemId } from '../../game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { DungeonItemField } from './normal-placement.type';
 
 const ORIGINAL_MEDALLIONS = VANILLA_MEDALLIONS;

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { SimEvent } from '../../types';
-import { dungeonGroupForScreen, dungeonGroupName } from '../../../logic/queries/dungeon-group';
+import { dungeonGroupForScreen, dungeonGroupName } from '@rotp/game-data';
 import { narrative } from '../event-log/narrative';
 import type { EngineState } from '../state/state.type';
 

@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import { PALACE_NONE } from '../../../logic/queries/dungeon-values';
-import { gameIdLabel } from '../../../logic/queries/game-id';
-import type { GameScreenId } from '../../../logic/queries/game-id';
-import type { ScreenGameId, ScreenRecord } from '../../../data/types';
+import { PALACE_NONE } from '@rotp/game-data';
+import { gameIdLabel } from '@rotp/game-data';
+import type { GameScreenId } from '@rotp/game-data';
+import type { ScreenGameId, ScreenRecord } from '@rotp/game-data';
 import { unread } from '../../compare/probe-reading';
 import type { Probe, SetProbe } from '../../compare/probe.type';
 import type { ScreenObservations } from '../../detection-types';

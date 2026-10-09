@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import { ENTITY_KINDS } from '../DataInspector.constants';
 
 const asEntityKind = (value: string | undefined): EntityKind | undefined =>

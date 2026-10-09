@@ -3,7 +3,7 @@
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { InputGlyph } from '../../../compounds/InputGlyph';
 import { resolveFunctionMappingIcon } from '../../../../../../lib/game';
-import type { FunctionMapping } from '@shared/types/controls';
+import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
 import type { ProfileSwitcherOverlayProps } from './ProfileSwitcherOverlay.type';
 import './ProfileSwitcherOverlay.css';
 

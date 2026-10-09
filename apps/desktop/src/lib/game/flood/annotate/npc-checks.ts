@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { npcConfigForSprite } from '@shared/game/simulation';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { NpcCheck } from './npc-checks.type';
 
 const npcCheckFor = (

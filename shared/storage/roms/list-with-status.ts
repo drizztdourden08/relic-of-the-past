@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { datName } from '../assets';
 import { listRoms } from './list-roms';
 import type { RomStatus } from './roms.type';

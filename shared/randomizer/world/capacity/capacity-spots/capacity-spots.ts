@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { all, getItem } from '@shared/game/data';
-import { capacityFamilyOfItemName } from '@shared/game/data/capacity-upgrade-item';
-import type { CheckRecord } from '@shared/game/data/types';
+import { all, getItem } from '@rotp/game-data';
+import { capacityFamilyOfItemName } from '@rotp/game-data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { LocationKey } from '../../location-key';
 import type { CapacityFamilyId } from '../capacity-profile.type';
 

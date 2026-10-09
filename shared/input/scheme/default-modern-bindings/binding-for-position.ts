@@ -1,9 +1,9 @@
 /* @layer shared-input @kind logic */
-import { SDL_AXIS, SDL_BUTTON } from '../../sdl-buttons';
+import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import { axisEndLabel } from '../../axis-end-label';
 import { UNBOUND } from './default-modern-bindings.constants';
 import type { ResolvedControl } from '../../family/family.type';
-import type { InputBinding } from '../../../types/controls';
+import type { InputBinding } from '@rotp/game-data';
 import type { AxisPosition, CorePosition } from './default-modern-bindings.type';
 
 const isAxisPosition = (position: CorePosition): position is AxisPosition =>

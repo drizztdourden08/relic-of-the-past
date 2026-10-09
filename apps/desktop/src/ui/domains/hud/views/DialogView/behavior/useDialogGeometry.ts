@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo, useRef } from 'react';
-import type { DialogFrame } from '@shared/game/dialog/dialog-frame.types';
-import { layoutBox, TILE_PX } from '@shared/game/dialog/box-geometry';
-import type { BoxLayout } from '@shared/game/dialog/box-geometry';
+import type { DialogFrame } from '@rotp/game-data';
+import { layoutBox, TILE_PX } from '@rotp/game-data';
+import type { BoxLayout } from '@rotp/game-data';
 import type { DialogGeometry, DialogScale, GeometryOptions } from '../DialogView.type';
 
 const useDialogGeometry = (frame: DialogFrame, options: GeometryOptions, metrics: DialogScale): DialogGeometry => {

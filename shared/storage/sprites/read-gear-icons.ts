@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { GEAR_ICONS_FILE } from '@shared/asset-extraction/item-sprites/gear-icons';
 import { readSetFile } from './read-set-file';
 

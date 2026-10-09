@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import { LOGO_AT } from '@shared/game/title/title-layout';
+import { LOGO_AT } from '@rotp/game-data';
 import { seededRandom } from '../scene/seeded-random';
 import type { LogoSweep } from './choreography.type';
 import { easeSweep } from './ease-sweep';

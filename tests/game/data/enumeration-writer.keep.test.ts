@@ -19,11 +19,11 @@ export { ALL_ENUMERATION };
 `;
 
 const sourceOf = (): Promise<string> =>
-  readFile(join(root, 'shared', 'game', 'data', 'records', 'enumeration', 'enumeration.ts'), 'utf-8');
+  readFile(join(root, 'packages', 'game-data', 'src', 'data', 'records', 'enumeration', 'enumeration.ts'), 'utf-8');
 
 beforeEach(async () => {
   root = await mkdtemp(join(tmpdir(), 'rotp-enumeration-'));
-  const path = join(root, 'shared', 'game', 'data', 'records', 'enumeration', 'enumeration.ts');
+  const path = join(root, 'packages', 'game-data', 'src', 'data', 'records', 'enumeration', 'enumeration.ts');
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, ENUMERATION_SEED, 'utf-8');
 });

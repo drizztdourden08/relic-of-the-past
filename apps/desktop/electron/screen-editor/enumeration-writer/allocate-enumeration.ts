@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { serializeEnumerationRecord } from '@shared/game/data/record-codegen';
-import type { EnumerationEntry } from '@shared/game/data/types';
+import { serializeEnumerationRecord } from '@rotp/game-data';
+import type { EnumerationEntry } from '@rotp/game-data';
 import type {
   Allocated, AllocateEnumerationArgs, AllocateEnumerationResult,
 } from '@shared/ipc/screen-editor-contract';

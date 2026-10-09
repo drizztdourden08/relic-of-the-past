@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { DialogFrame } from '@shared/game/dialog/dialog-frame.types';
+import type { DialogFrame } from '@rotp/game-data';
 
 const HEADER_BYTES = 20;
 const ROWS = 3;

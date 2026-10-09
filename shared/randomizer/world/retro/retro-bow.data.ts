@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import { ITEM, UNRECORDED } from '../item-ids.data';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { ItemKey } from '../item-ids.data';
 import type { RetroBowSetting } from './retro.type';
 

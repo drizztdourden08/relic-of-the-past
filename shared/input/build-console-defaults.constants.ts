@@ -1,6 +1,6 @@
 /* @layer shared-input @kind constants */
-import { SDL_AXIS } from './sdl-buttons';
-import type { SdlAxisName } from './sdl-buttons';
+import { SDL_AXIS } from '@rotp/game-data';
+import type { SdlAxisName } from '@rotp/game-data';
 
 const AXIS_DIRECTIONS = ['-', '+'] as const;
 

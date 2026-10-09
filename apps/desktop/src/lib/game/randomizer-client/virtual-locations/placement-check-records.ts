@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { virtualChecksOf } from './virtual-checks-of';
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 
 const placementCheckRecords = (checkRecords: readonly CheckRecord[], placement: Placement): CheckRecord[] => {

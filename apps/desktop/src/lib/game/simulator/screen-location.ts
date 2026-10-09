@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { SimLocation } from '@shared/game/simulation';
-import { findOne } from '@shared/game/data';
+import { findOne } from '@rotp/game-data';
 import { SYNTHETIC_OW, SYNTHETIC_ROOM } from './screen-location.constants';
 
 const syntheticLocation = (screenId: string): SimLocation | null => {

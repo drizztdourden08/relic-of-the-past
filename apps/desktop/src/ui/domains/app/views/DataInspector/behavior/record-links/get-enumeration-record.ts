@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import type { NamedRecord } from '../../DataInspector.type';
 
 const getEnumerationRecord = (id: string): NamedRecord | undefined => {

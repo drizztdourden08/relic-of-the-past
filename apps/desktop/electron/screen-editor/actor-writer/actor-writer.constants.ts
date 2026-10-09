@@ -1,7 +1,7 @@
 /* @layer electron-main @kind constants */
-import { serializeActorRecord } from '@shared/game/data/record-codegen';
-import { actorRecordFile } from '@shared/game/data/record-file-targets';
-import type { ActorRecord } from '@shared/game/data/types';
+import { serializeActorRecord } from '@rotp/game-data';
+import { actorRecordFile } from '@rotp/game-data';
+import type { ActorRecord } from '@rotp/game-data';
 import type { RecordWriterSpec } from '../dataset-record-writer';
 
 const ACTOR_SPEC: RecordWriterSpec<ActorRecord> = {

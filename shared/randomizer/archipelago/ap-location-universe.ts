@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { buildWorld } from '../world/build-world';
 import { POND_REGION_LOCATIONS } from '../world/pond/pond-region-locations';
 import { isSeedLocation } from '../world/seed-locations';

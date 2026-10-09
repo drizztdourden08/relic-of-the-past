@@ -2,8 +2,8 @@
 import { useMemo, useState } from 'react';
 import { Box, SearchInput } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
-import { POSE_ATLAS, facingsOf, framesOf } from '@shared/game/data/native-tables/player-pose-atlas';
-import { STATE_LABELS, GROUP_LABELS, labelFor } from '@shared/game/data/native-tables/player-state-labels';
+import { POSE_ATLAS, facingsOf, framesOf } from '@rotp/game-data';
+import { STATE_LABELS, GROUP_LABELS, labelFor } from '@rotp/game-data';
 import { GROUP_ORDER, ROW_SHAPE } from './StateList.constants';
 import type { StateListProps } from './StateList.type';
 import './StateList.css';

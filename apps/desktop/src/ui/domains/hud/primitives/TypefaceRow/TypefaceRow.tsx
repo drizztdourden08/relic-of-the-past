@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind component */
-import type { DialogCell } from '@shared/game/dialog/dialog-frame.types';
-import { isPictureGlyph } from '@shared/game/dialog/picture-glyph';
+import type { DialogCell } from '@rotp/game-data';
+import { isPictureGlyph } from '@rotp/game-data';
 import { GlyphRow } from '../GlyphRow';
 import { typefaceTextStyle } from './behavior/typeface-text-style';
 import type { TypefaceRowProps } from './TypefaceRow.type';

@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { createManifestSaves } from '../../save-manifest';
 import { savesDir } from '../../save-paths';
 import type { AutoEntry } from '../saves.type';

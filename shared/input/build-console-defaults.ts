@@ -1,10 +1,10 @@
 /* @layer shared-input @kind logic */
 import { BUTTON_INDEX, buildDisplayContext, resolveAxisConsoleDefault, resolveAxisLabel, resolveButtonIcon, resolveButtonLabel, resolveConsoleDefault } from './family';
 import type { DisplayContext, SdlButtonName, SdlGamepadType } from './family';
-import { SDL_AXIS } from './sdl-buttons';
+import { SDL_AXIS } from '@rotp/game-data';
 import { axisEndLabel } from './axis-end-label';
 import { AXIS_DIRECTIONS, AXIS_POSITIONS } from './build-console-defaults.constants';
-import type { ButtonMapping } from '../types/controls';
+import type { ButtonMapping } from '@rotp/game-data';
 
 const axisMappings = (ctx: DisplayContext): ButtonMapping[] => {
   const mappings: ButtonMapping[] = [];

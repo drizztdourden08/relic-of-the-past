@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { dialogueCharsetOf, extraGlyphSlots } from '@shared/game/dialog/dialogue-charset';
-import type { DialogueCharset } from '@shared/game/dialog/dialogue-charset';
+import { dialogueCharsetOf, extraGlyphSlots } from '@rotp/game-data';
+import type { DialogueCharset } from '@rotp/game-data';
 import type { EmscriptenModule } from '../../types';
 import { loadExtraGlyphs } from './load-extra-glyphs';
 

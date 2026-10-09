@@ -1,7 +1,7 @@
 /* @layer renderer-other @kind logic */
 import { Filesystem } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
-import type { StoragePort, StorageSummary, DomainUsage, DataLocation } from '@shared/platform';
+import type { StoragePort, StorageSummary, DomainUsage, DataLocation } from '@shared/platform/ports/storage.type';
 import { DIR, DOMAINS } from './capacitor.constants';
 
 const dirBytes = async (dir: string): Promise<number> => {

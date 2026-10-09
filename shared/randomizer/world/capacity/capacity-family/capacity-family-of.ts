@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { maxUpgradeJumpOf, upgradeItemName } from '@shared/game/data/capacity-upgrade-item';
-import { progressiveCapacityItemName } from '@shared/game/data/capacity-progressive-item';
+import { maxUpgradeJumpOf, upgradeItemName } from '@rotp/game-data';
+import { progressiveCapacityItemName } from '@rotp/game-data';
 import { VANILLA_RUNG } from '../capacity-ladders.data';
 import { itemKeyOfName } from '../../display-names/item-key-name';
 import type { CapacityFamily, CapacityFamilySpec } from './capacity-family.type';

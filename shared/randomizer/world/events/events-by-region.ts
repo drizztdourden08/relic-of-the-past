@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { getCheck } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
 import { WORLD_EVENT_IDS } from './story-events.data';
-import type { RegionId } from '@shared/game/data/types/ids';
+import type { RegionId } from '@rotp/game-data';
 import type { WorldEvent } from '../region.type';
 
 const eventsByRegion = (): ReadonlyMap<RegionId, readonly WorldEvent[]> => {

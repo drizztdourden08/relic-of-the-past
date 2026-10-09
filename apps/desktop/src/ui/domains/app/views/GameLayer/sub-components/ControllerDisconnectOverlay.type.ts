@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { FunctionMapping } from '@shared/types/controls';
+import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
 
 interface ControllerDisconnectOverlayProps {
   controllerName: string;

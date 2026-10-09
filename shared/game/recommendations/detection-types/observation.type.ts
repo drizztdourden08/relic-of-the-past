@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ItemId, ScreenId } from '../../data/types';
+import type { ItemId, ScreenId } from '@rotp/game-data';
 
 type ObservedDestKind = 'screen' | 'room';
 

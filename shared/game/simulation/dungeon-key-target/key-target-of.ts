@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { DungeonId } from '../../data';
+import type { DungeonId } from '@rotp/game-data';
 import type { KeyTarget } from './dungeon-key-target.type';
 import { ANY_DUNGEON } from './dungeon-key-target.constants';
 

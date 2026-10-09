@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getInputManager, saveState, loadState } from '../../../../../../lib/game';
-import type { FunctionAction } from '@shared/types/controls';
+import type { FunctionAction } from '@shared/types/controls/functions/functions.type';
 import { log } from '../../../../../../lib/log-bus';
 import { TAP_THRESHOLD_MS } from '../SaveStateOverlay.constants';
 import type { SaveSlotShortcutState, SlotHint } from '../SaveStateOverlay.type';

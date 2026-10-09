@@ -10,7 +10,7 @@
  * naming the file.
  *
  * The dataset is loaded the way the app loads it. Vite's SSR module runner imports
- * `shared/game/data/index.ts`, which seeds the registry, so a target reads records
+ * `packages/game-data/src/data/index.ts`, which seeds the registry, so a target reads records
  * through the facade getters and never imports a record file by path.
  *
  * Two output shapes. A TypeScript target owns its whole file, is named `*.generated.ts`
@@ -72,7 +72,7 @@ const loadDataset = async () => {
       },
     },
   });
-  const data = await server.ssrLoadModule('/shared/game/data/index.ts');
+  const data = await server.ssrLoadModule('/packages/game-data/src/data/index.ts');
   return { data, close: () => server.close() };
 };
 
@@ -185,7 +185,7 @@ export { EVENT_BIT, LAST_EVENT_BIT };
  */
 const TAXONOMIES = [
   {
-    base: 'shared/game/data/taxonomy/screen-tags',
+    base: 'packages/game-data/src/data/taxonomy/screen-tags',
     appliesTo: 'screen',
     union: 'ScreenTag',
     namespaceUnion: 'TagNamespace',
@@ -195,7 +195,7 @@ const TAXONOMIES = [
     groups: { env: 'EnvironmentTag', role: 'RoleTag', hazard: 'HazardTag', loot: 'LootTag', traverse: 'TraversalTag' },
   },
   {
-    base: 'shared/game/data/taxonomy/connection-tags',
+    base: 'packages/game-data/src/data/taxonomy/connection-tags',
     appliesTo: 'connection',
     union: 'ConnectionTag',
     namespaceUnion: 'ConnectionTagNamespace',
@@ -205,7 +205,7 @@ const TAXONOMIES = [
     groups: { transit: 'TransitTag', barrier: 'BarrierTag', ctx: 'ContextTag' },
   },
   {
-    base: 'shared/game/data/taxonomy/check-content-tags',
+    base: 'packages/game-data/src/data/taxonomy/check-content-tags',
     appliesTo: 'check',
     union: 'ContentTag',
     metadataType: 'ContentTagMetadata',
@@ -362,7 +362,7 @@ const taxonomyTargets = (spec, data) => {
 };
 
 const targetsFor = (data) => [
-  { path: 'shared/game/data/records/checks/events/event-bits.generated.ts', content: buildEventBits() },
+  { path: 'packages/game-data/src/data/records/checks/events/event-bits.generated.ts', content: buildEventBits() },
   ...TAXONOMIES.flatMap((spec) => taxonomyTargets(spec, data)),
   ...C_TABLES.map((table) => ({
     path: table.file,

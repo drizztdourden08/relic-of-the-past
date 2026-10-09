@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { menuTextFor } from '@app/lib/storage/menu-text-store';
 import { buildGroups } from '@shared/game/language';
 import type { LanguageSet, TextGroupId } from '@shared/game/language';

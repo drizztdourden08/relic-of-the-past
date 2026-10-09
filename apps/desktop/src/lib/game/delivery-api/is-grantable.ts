@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { isGrantableReceiveId } from '@shared/game/data';
+import { isGrantableReceiveId } from '@rotp/game-data';
 import { log } from '../../log-bus';
 
 const isGrantable = (itemId: number): boolean => {

@@ -10,4 +10,4 @@ export { isCategory } from './is-category';
 export { isDoorPassageAttr } from './is-door-passage-attr';
 export { isPassableAttr } from './is-passable-attr';
 export { getHookshotTargetTiles } from './get-hookshot-target-tiles';
-export type { TileReq, TileLabel, TilePass, TileCat, TileAttrDef } from '../../data/types/tile-attrs-types';
+export type { TileReq, TileLabel, TilePass, TileCat, TileAttrDef } from '@rotp/game-data';

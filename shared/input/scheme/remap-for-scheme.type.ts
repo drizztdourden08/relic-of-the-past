@@ -1,7 +1,7 @@
 /* @layer shared-input @kind types */
 import type { FunctionMask } from './function-mask';
 import type { OwnsItem } from './remap-modern.type';
-import type { ModernScheme } from '../../types/controls/scheme';
+import type { ModernScheme } from '@rotp/game-data';
 import type { ControlSchemeId, RemapResult } from './remap.type';
 
 interface RemapRequest {

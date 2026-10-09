@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { isTagKey, registerTag } from '@shared/game/data';
-import type { TagRecord } from '@shared/game/data';
+import { isTagKey, registerTag } from '@rotp/game-data';
+import type { TagRecord } from '@rotp/game-data';
 import { TAG_NOT_CONVENTION } from '../../DataInspector.constants';
 import type { RecordCreator } from '../record-creators.type';
 import { settleCreatedRecord } from '../settle-created-record';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { shopSlotLocationsOf } from './shop-slot-locations-of';
-import type { RegionId } from '@shared/game/data/types/ids';
+import type { RegionId } from '@rotp/game-data';
 import type { LocationKey } from '../../location-key';
 import type { ShopScope } from '../shop-scope.type';
 

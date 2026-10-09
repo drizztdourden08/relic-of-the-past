@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import type { SlotAssignment } from '@shared/types/controls/scheme';
+import type { SlotAssignment } from '@rotp/game-data';
 
 const NO_ASSIGNMENT: SlotAssignment = { kind: 'none' };
 

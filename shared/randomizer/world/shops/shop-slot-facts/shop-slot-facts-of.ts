@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { getScreen } from '@shared/game/data';
-import type { CheckRecord, ShopSlotPosition } from '@shared/game/data';
+import { getScreen } from '@rotp/game-data';
+import type { CheckRecord, ShopSlotPosition } from '@rotp/game-data';
 import type { ShopSlotFacts } from '../shop-slot.type';
 
 const shopNameOf = (name: string, position: ShopSlotPosition): string =>

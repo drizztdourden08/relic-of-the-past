@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { makeId } from '@shared/game/data/types/ids';
+import { makeId } from '@rotp/game-data';
 import { highestUsed } from './highest-used';
 import type { AllocatableKind } from './id-allocator.type';
 import { serializeAllocation } from './serialize-allocation';

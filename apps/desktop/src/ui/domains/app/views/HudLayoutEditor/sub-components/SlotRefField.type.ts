@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ModernSlot } from '@shared/types/controls';
+import type { ModernSlot } from '@rotp/game-data';
 import type { GlyphPack } from '@shared/types/hud';
 
 interface SlotRefFieldProps {

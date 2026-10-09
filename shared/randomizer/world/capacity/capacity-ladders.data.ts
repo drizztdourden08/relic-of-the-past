@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import type { CapacityFamilyId } from '@rotp/game-data';
 
 const EXPLOSIVES_TIERS: readonly number[] = [0, 10, 15, 20, 25, 30, 35, 40, 50];
 

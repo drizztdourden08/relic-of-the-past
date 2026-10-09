@@ -1,5 +1,5 @@
 /* @layer shared-input @kind data */
-import type { DevicePreset } from '../types/controls';
+import type { DevicePreset } from '@shared/types/controls/devices/devices.type';
 
 const KEYBOARD_DEFAULT: DevicePreset = {
   id: 'keyboard-default',

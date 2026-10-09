@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { UIMode } from '@shared/game/types';
+import type { UIMode } from '@rotp/game-data';
 import {
   INTERFACE_SUBMODULE_MODES,
   LOADING_MODULES,

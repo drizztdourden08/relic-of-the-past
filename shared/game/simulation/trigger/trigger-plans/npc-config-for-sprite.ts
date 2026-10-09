@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { CheckRecord } from '../../../data';
-import { find } from '../../../data';
+import type { CheckRecord } from '@rotp/game-data';
+import { find } from '@rotp/game-data';
 import { DARK_WORLD_SCREEN_BASE } from '../../overworld.constants';
 
 const npcConfigForSprite = (spriteType: number, roomId?: number, outdoor?: boolean): CheckRecord | undefined =>

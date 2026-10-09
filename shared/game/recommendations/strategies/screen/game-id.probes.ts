@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { PALACE_NONE } from '../../../logic/queries/dungeon-values';
+import { PALACE_NONE } from '@rotp/game-data';
 import { known, unread } from '../../compare/probe-reading';
 import type { FieldProbe, Probe } from '../../compare/probe.type';
 import { hex2, hex4 } from '../../compare/value-format';

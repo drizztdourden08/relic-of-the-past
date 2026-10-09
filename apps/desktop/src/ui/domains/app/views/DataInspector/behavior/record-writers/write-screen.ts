@@ -1,9 +1,9 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { screenRecordFile } from '@shared/game/data/record-file-targets';
-import { variantBlockers } from '@shared/game/logic/queries/screen-validity';
-import type { ScreenRecord } from '@shared/game/data';
-import type { PendingScreenRecord } from '@shared/game/data/record-codegen';
+import { screenRecordFile } from '@rotp/game-data';
+import { variantBlockers } from '@rotp/game-data';
+import type { ScreenRecord } from '@rotp/game-data';
+import type { PendingScreenRecord } from '@rotp/game-data';
 import type { RecordWriter } from '../../DataInspector.type';
 import { pathOf } from './path-of';
 import { settleWrite } from './settle-write';

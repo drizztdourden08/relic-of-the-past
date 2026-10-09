@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
-import type { TraversalRequirement } from '../../navigation/nav-data.types';
-import type { DungeonId } from '../../data';
+import type { TraversalRequirement } from '@rotp/game-data';
+import type { DungeonId } from '@rotp/game-data';
 import type { KeyTarget } from '../dungeon-key-target';
 
 interface ReachContext {

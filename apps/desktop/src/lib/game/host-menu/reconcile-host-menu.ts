@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { HostMenuState } from '@shared/game/types';
+import type { HostMenuState } from '@rotp/game-data';
 import { wasmHostSetActiveItem } from '../bridge/host-menu';
 import { NO_HUD_ITEM } from './host-menu.constants';
 import { hostMenuState } from './host-menu-state';

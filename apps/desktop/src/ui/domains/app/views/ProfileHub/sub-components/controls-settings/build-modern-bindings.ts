@@ -2,7 +2,7 @@
 import { defaultModernBindings, keyboardModernBindings, renumberSlots } from '@shared/input/scheme';
 import { defaultLayoutIdFor } from '@shared/hud/layouts';
 import type { ResolvedControl } from '@shared/input/family';
-import type { ModernBindings } from '@shared/types/controls';
+import type { ModernBindings } from '@rotp/game-data';
 
 const buildModernBindings = (
   deviceType: 'keyboard' | 'gamepad',

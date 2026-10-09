@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { ShopSlotPosition } from '@shared/game/data';
+import type { ShopSlotPosition } from '@rotp/game-data';
 import type { ShelfSide } from '../location-key';
 
 const SIDE_OF_POSITION: Readonly<Record<ShopSlotPosition, ShelfSide>> = {

@@ -408,7 +408,7 @@ seed edit shows as a diff.
 ### game/data/connection-pairing.keep.test.ts
 
 One record is one point on one screen; `toConnectionId` names its partner (see
-`shared/game/data/connections/derive.ts`). Two invariants do not hold today and stay as
+`packages/game-data/src/data/connections/derive.ts`). Two invariants do not hold today and stay as
 `it.todo` with the violators named.
 
 Same screen pairs: `connection-896` and `connection-1143` both sit on `screen-236`, from the

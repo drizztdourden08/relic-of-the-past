@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import type { ModernBindings } from '@shared/types/controls';
+import type { ModernBindings } from '@rotp/game-data';
 import { useControlSchemeStore } from './useControlSchemeStore';
 import { reapplyControlSettings } from './reapply-control-settings';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-hooks @kind logic */
 import { useState, useCallback, useMemo } from 'react';
-import { OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
-import type { OutfitId, GloveLevel, Wearing } from '@shared/game/data/player-sheet/types';
+import { OUTFIT_IDS } from '@rotp/game-data';
+import type { OutfitId, GloveLevel, Wearing } from '@rotp/game-data';
 import { GLOVE_LABELS, GLOVE_LEVELS, OUTFIT_LABELS } from './useWearing.constants';
 
 const useWearing = () => {

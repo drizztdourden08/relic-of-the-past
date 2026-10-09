@@ -1,5 +1,5 @@
 /* @layer renderer-hooks @kind constants */
-import type { GloveLevel, OutfitId } from '@shared/game/data/player-sheet/types';
+import type { GloveLevel, OutfitId } from '@rotp/game-data';
 
 const OUTFIT_LABELS: Record<OutfitId, string> = {
   green: 'Green',

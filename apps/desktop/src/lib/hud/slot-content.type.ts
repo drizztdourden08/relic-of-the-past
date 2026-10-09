@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind types */
-import type { DeviceFamily } from '@shared/types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 import type { GlyphPack, GlyphSource } from '@shared/types/hud';
 import type { HudGlyphSpec, HudSlotContent } from '@domains/hud/compounds/HudNodeRenderer';
-import type { ModernSlot, SlotAssignment, SlotIndex } from '@shared/types/controls/scheme';
+import type { ModernSlot, SlotAssignment, SlotIndex } from '@rotp/game-data';
 
 interface SlotContentInput {
   slots: readonly ModernSlot[];

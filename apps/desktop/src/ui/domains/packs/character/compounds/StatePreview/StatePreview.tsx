@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Status } from '@drizztdourden08/tessera/primitives';
 import { PoseCanvas } from '../PoseCanvas';
-import { facingsOf, framesOf, FACING_LABELS } from '@shared/game/data/native-tables/player-pose-atlas';
-import { labelFor } from '@shared/game/data/native-tables/player-state-labels';
+import { facingsOf, framesOf, FACING_LABELS } from '@rotp/game-data';
+import { labelFor } from '@rotp/game-data';
 import type { StatePreviewProps } from './StatePreview.type';
 import './StatePreview.css';
 

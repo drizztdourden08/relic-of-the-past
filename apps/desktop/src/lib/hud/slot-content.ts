@@ -1,11 +1,11 @@
 /* @layer renderer-lib @kind logic */
-import { buildItemCells, clampGearTier, gearTierCells, maxGearTier } from '@shared/game/logic/pause';
+import { buildItemCells, clampGearTier, gearTierCells, maxGearTier } from '@rotp/game-data';
 import { resolveGlyph, slotGlyph } from '@shared/input/glyphs';
 import { GROUP_GLYPH_ART } from '@domains/hud/compounds/HudNodeRenderer';
 import type { GlyphSource } from '@shared/types/hud';
 import type { HudGlyphSpec, HudSlotContent } from '@domains/hud/compounds/HudNodeRenderer';
-import type { SlotAssignment, SlotIndex } from '@shared/types/controls/scheme';
-import type { SdlAxisName, SdlButtonName } from '@shared/input/sdl-buttons';
+import type { SlotAssignment, SlotIndex } from '@rotp/game-data';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 import type { SlotContent, SlotContentInput } from './slot-content.type';
 import { NO_ASSIGNMENT } from './slot-content.constants';
 

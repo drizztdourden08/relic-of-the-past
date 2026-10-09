@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind constants */
-import { enumerationFor } from '@shared/game/data';
-import type { EntityKind, ReviewStatus } from '@shared/game/data';
+import { enumerationFor } from '@rotp/game-data';
+import type { EntityKind, ReviewStatus } from '@rotp/game-data';
 import type { Recommendation } from '@shared/game/recommendations';
 import { KIND_NAV_ITEMS } from '@app/ui/domains/app/views/DataInspector/DataInspector.constants';
 import type { LiveRecord, RecommendationFilter } from './LiveDataInspector.type';

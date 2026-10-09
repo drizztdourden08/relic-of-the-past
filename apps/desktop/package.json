@@ -58,6 +58,7 @@
     "@iconify-icons/lucide": "^1.2.135",
     "@iconify-icons/simple-icons": "^1.2.75",
     "@iconify/react": "^6.0.2",
+    "@rotp/game-data": "workspace:*",
     "@tiptap/core": "^3.30.2",
     "@tiptap/extension-document": "^3.30.2",
     "@tiptap/extension-paragraph": "^3.30.2",
@@ -113,11 +114,23 @@
   },
   "portKit": {
     "wasm": {
-      "sourceDirs": ["../../core/zelda3/src", "../../core/zelda3/snes", "../../core/game-hooks", "../../core/wasm-build"],
-      "sourceExtensions": [".c", ".h", ".mjs"],
+      "sourceDirs": [
+        "../../core/zelda3/src",
+        "../../core/zelda3/snes",
+        "../../core/game-hooks",
+        "../../core/wasm-build"
+      ],
+      "sourceExtensions": [
+        ".c",
+        ".h",
+        ".mjs"
+      ],
       "buildScript": "../../scripts/build-wasm-core.mjs",
       "output": "public/wasm",
-      "outputExtensions": [".wasm", ".js"],
+      "outputExtensions": [
+        ".wasm",
+        ".js"
+      ],
       "emsdkDir": "../../third_party/emsdk"
     }
   }

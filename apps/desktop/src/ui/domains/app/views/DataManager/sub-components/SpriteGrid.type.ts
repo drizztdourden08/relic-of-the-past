@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { SpriteCategory } from '@shared/game/data';
+import type { SpriteCategory } from '@rotp/game-data';
 
 interface SpriteGridProps {
   baseUrl: string;

@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { ConfirmVerb, PauseEvent, PauseState } from '@shared/game/logic/pause';
+import type { ConfirmVerb, PauseEvent, PauseState } from '@rotp/game-data';
 
 interface PauseCursorActions {
   confirm: ConfirmVerb | null;

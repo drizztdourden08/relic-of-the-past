@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { DialogCell } from '@shared/game/dialog/dialog-frame.types';
+import type { DialogCell } from '@rotp/game-data';
 
 interface GlyphRowProps {
   cells: DialogCell[];

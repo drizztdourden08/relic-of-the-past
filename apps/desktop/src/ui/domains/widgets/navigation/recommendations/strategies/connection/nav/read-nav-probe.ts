@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import { connectionTagKeysOf, toScreenIdOf } from '@shared/game/data';
-import type { ConnectionRecord } from '@shared/game/data';
+import { connectionTagKeysOf, toScreenIdOf } from '@rotp/game-data';
+import type { ConnectionRecord } from '@rotp/game-data';
 import { buildConnectionNav } from '@shared/game/navigation/analysis/connection-nav-from-flood';
 import { known, unread } from '@shared/game/recommendations/compare';
 import type { ScreenObservations } from '@shared/game/recommendations';

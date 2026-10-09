@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind logic */
-import { tagIdsForKeys } from '@shared/game/data';
-import { screenBlockers } from '@shared/game/logic/queries/screen-validity';
-import type { ScreenGameId, ScreenPosition } from '@shared/game/data';
+import { tagIdsForKeys } from '@rotp/game-data';
+import { screenBlockers } from '@rotp/game-data';
+import type { ScreenGameId, ScreenPosition } from '@rotp/game-data';
 import type { DraftResult, ScreenDraft } from './screen-editor.type';
 
 const gameIdFor = (draft: ScreenDraft): ScreenGameId => {

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { CAPACITY_FAMILY_IDS } from '@shared/game/data';
+import { CAPACITY_FAMILY_IDS } from '@rotp/game-data';
 import type { CapacityBonusSetting } from '@shared/randomizer/world/capacity';
 import { log } from '../../log-bus';
 import { CAPACITY_FAMILY_INDEX } from '../capacity-profile/capacity-profile.constants';

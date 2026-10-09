@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { SdlAxisName, SdlButtonName } from '../../../input/sdl-buttons';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 
 type GlyphSource = { kind: 'built-in'; assetPath: string } | { kind: 'custom'; fileKey: string };
 

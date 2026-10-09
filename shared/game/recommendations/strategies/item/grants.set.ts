@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { find } from '../../../data';
-import type { ItemRecord } from '../../../data';
+import { find } from '@rotp/game-data';
+import type { ItemRecord } from '@rotp/game-data';
 import { unread } from '../../compare/probe-reading';
 import type { Probe, SetProbe } from '../../compare/probe.type';
 import type { ScreenObservations } from '../../detection-types';

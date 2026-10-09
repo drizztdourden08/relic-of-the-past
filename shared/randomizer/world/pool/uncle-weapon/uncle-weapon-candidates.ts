@@ -2,7 +2,7 @@
 import {
   UNCLE_ARSENAL_CANDIDATES, UNCLE_BOMB_CANDIDATE, UNCLE_BOW_CANDIDATES, UNCLE_SWORD_CANDIDATES,
 } from '../standard-escape.data';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { ItemKey } from '../../item-ids.data';
 import type { WeaponFilter } from '../pool.type';
 

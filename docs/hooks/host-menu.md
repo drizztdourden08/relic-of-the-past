@@ -56,7 +56,7 @@ which ammunition is nocked must not do.
 `0` is left alone in both directions: a save holding no launcher is refused (the call returns without
 writing, and without the HUD update the tail would otherwise queue), and no type ever writes a `0`.
 Granting the launcher is a pickup, not a menu row. The host's own ladder has two rungs for the same
-reason (see `shared/game/logic/pause/gear-tiers.ts`).
+reason (see `packages/game-data/src/logic/pause/gear-tiers.ts`).
 
 Ownership is host-side: `lib/game/gear-ownership.ts` keeps a high-water mark per ladder per profile,
 and the arrow row's mark is the highest **type** ever observed, not the raw register, whose other

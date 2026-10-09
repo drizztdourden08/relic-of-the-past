@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { getCheck } from '@shared/game/data';
-import type { CheckId, CheckRecord } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
+import type { CheckId, CheckRecord } from '@rotp/game-data';
 import type { CheckDetection } from './check-detection.type';
 import { detectionOfGameId } from './detection-of-game-id';
 

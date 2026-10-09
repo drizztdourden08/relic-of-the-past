@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { NavObstacle } from '../nav-data.types';
+import type { NavObstacle } from '@rotp/game-data';
 
 const OBSTACLE_ATTR_RANGES: readonly { first: number; last: number; type: NavObstacle['type'] }[] = [
   { first: 0x50, last: 0x57, type: 'light_rock' },

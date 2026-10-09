@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { capacityFamilyOfItemName } from '@shared/game/data/capacity-upgrade-item';
+import { capacityFamilyOfItemName } from '@rotp/game-data';
 import { itemKeyName } from '../display-names/item-key-name';
 import { BOTTLE_SET, FAMILY_OF_CURRENCY } from './shop-self-lock.constants';
 import type { ItemRule } from '../world.type';

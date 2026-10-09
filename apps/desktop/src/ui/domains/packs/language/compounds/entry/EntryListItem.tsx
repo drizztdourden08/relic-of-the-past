@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { memo, useCallback, useMemo } from 'react';
-import { contextFor } from '@shared/game/data/dialogue-context';
+import { contextFor } from '@rotp/game-data';
 import { EntryCardCollapsed } from './EntryCardCollapsed';
 import { EntryPanel } from './EntryPanel';
 import { ReadView } from './ReadView';

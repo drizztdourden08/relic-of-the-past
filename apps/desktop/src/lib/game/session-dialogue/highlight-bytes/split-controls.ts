@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { extraSlotOfToken } from '@shared/game/dialog/dialogue-charset';
+import { extraSlotOfToken } from '@rotp/game-data';
 import { HIGHLIGHT_KIND } from '@shared/randomizer/receipt-text/highlight-markup';
 import { extraGlyphBytes } from './extra-glyph-bytes';
 import { highlightBytes } from './highlight-bytes';

@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind constants */
-import type { UIMode } from '@shared/game/types';
+import type { UIMode } from '@rotp/game-data';
 
 const MAIN_HUD_MODES = new Set<UIMode>(['gameplay', 'text', 'paused_menu']);
 

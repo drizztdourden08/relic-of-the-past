@@ -6,7 +6,7 @@ import { bunnyImpassableRegionIds } from '../world-from-records';
 import {
   allOf, anyOf, canReach, exitRule as registeredExitRule, hasItem,
 } from './combinators';
-import type { CheckId, RegionId } from '@shared/game/data/types/ids';
+import type { CheckId, RegionId } from '@rotp/game-data';
 import type { Exit, Region } from '../region.type';
 import type { World, Rule } from '../world.type';
 

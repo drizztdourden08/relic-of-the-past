@@ -1,9 +1,6 @@
 /* @layer renderer-hud @kind types */
 import type { ReactNode } from 'react';
-import type {
-  DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark,
-  DialogTexture, DialogTextureAnimation, DialogTextureSpeed,
-} from '@shared/game/dialog/box-style';
+import type { DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark, DialogTexture, DialogTextureAnimation, DialogTextureSpeed } from '@rotp/game-data';
 
 interface CssRect {
   x: number;

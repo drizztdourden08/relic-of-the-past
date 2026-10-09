@@ -3,7 +3,7 @@ import { useState, useMemo, useCallback, useRef } from 'react';
 import { Box, Text, ColorSwatch } from '@drizztdourden08/tessera/primitives';
 import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import type { SwatchGroup } from '@drizztdourden08/tessera/color-picker';
-import { COLORS_PER_OUTFIT, GLOVES_INDEX, OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
+import { COLORS_PER_OUTFIT, GLOVES_INDEX, OUTFIT_IDS } from '@rotp/game-data';
 import { bgr555ToHex, hexToBgr555, isExactColor } from '@app/lib/game/snes-color';
 import { flattenPalette } from '@app/lib/game/player-sheet/flatten-palette';
 import { OUTFIT_LABELS } from '@domains/packs/character/behavior/useWearing';

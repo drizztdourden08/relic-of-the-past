@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
 import { sampleSlot } from './sample-slot';
-import type { ModernSlot, SlotAssignment, SlotIndex } from '@shared/types/controls/scheme';
+import type { ModernSlot, SlotAssignment, SlotIndex } from '@rotp/game-data';
 
 const SAMPLE_HEALTH_CAPACITY = 20 * 8;
 const SAMPLE_HEALTH_CURRENT = 14 * 8;

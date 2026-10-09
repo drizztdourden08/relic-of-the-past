@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { getScreenLookup } from '@shared/game/logic/queries/detection';
+import { getScreenLookup } from '@rotp/game-data';
 import type { EntranceType } from './entrance-icons.type';
 
 const destinationIconType = (roomId: number): EntranceType => {

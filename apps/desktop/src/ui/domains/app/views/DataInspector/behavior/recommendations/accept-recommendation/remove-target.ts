@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import { recordDeleterFor } from '../../delete-record';
 import { WRITE_FAILED } from '../recommendations.constants';
 import type { AcceptOutcome } from '../recommendations.type';

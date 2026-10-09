@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind types */
-import type { PoseFrame } from '@shared/game/data/native-tables/player-pose-atlas.type';
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { PoseFrame } from '@rotp/game-data';
+import type { PlayerSheet } from '@rotp/game-data';
 import type { ResolvedRow } from './resolve-palette';
 
 interface ComposeArgs {

@@ -6,7 +6,7 @@ import { emptySnapshot } from '../../../shared/game/simulation/detect/flag-snaps
 import { chestKey } from '../../../shared/game/simulation/engine/discover';
 import { BOMBABLE_ATTR_MIN } from '../../../shared/game/simulation/engine/discover-bombs';
 import { updateDungeonLedger } from '../../../shared/game/simulation/engine/dungeon-ledger-scan';
-import { dungeonGroupOf, dungeonGroupForScreen } from '../../../shared/game/logic/queries/dungeon-group';
+import { dungeonGroupOf, dungeonGroupForScreen } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import { CASTLE_SCREEN, SEWERS_PALACE, SEWERS_ROOM, SEWERS_SCREEN } from './dungeon-ledger.constants';
 import { freshState } from './fresh-state';

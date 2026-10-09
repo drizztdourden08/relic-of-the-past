@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { dungeonGroupForScreen } from '../../../logic/queries/dungeon-group';
+import { dungeonGroupForScreen } from '@rotp/game-data';
 import type { EngineState } from '../state/state.type';
 
 const inCompletedGroup = (state: EngineState, screenId: string): boolean => {

@@ -1,26 +1,24 @@
 /* @layer root-config @kind config */
 import { brockEslint } from '@drizztdourden08/brock-lint-config';
 
-const DATA_PACKAGE = '@shared/game/data';
-
 const COLLECTION_LOADERS = [
   'registry', 'bootstrap', 'items', 'dungeons', 'checks', 'screens', 'connections', 'actors',
   'areas', 'locations', 'regions', 'tags', 'item-groups', 'enumeration',
-].map((loader) => `${DATA_PACKAGE}/${loader}`);
+].map((loader) => `**/data/${loader}`);
 
 const ONE_SOURCE_FACADE = {
-  files: ['**/*.{ts,tsx}'],
-  ignores: ['shared/game/data/**'],
+  files: ['packages/game-data/src/**/*.ts'],
+  ignores: ['packages/game-data/src/data/**'],
   rules: {
     'no-restricted-imports': ['error', {
       patterns: [
         {
-          group: [`${DATA_PACKAGE}/records/*`, '**/game/data/records/*'],
-          message: 'Read records through @shared/game/data (the facade), never a record file.',
+          group: ['**/data/records/*', '**/data/records/**'],
+          message: 'Read records through the facade in src/data, never a record file.',
         },
         {
           group: COLLECTION_LOADERS,
-          message: 'A collection loader is the facade\'s own input. Read it with all(kind), find or a getter from @shared/game/data.',
+          message: "A collection loader is the facade's own input. Read it with all(kind), find or a getter from the facade.",
         },
       ],
     }],

@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import type { ConnectionRecord } from '../../../shared/game/data';
+import type { ConnectionRecord } from '@rotp/game-data';
 import { createEngine } from '../../../shared/game/simulation/engine/engine';
 import { createEngineState } from '../../../shared/game/simulation/engine/state';
 import type { SimTarget } from '../../../shared/game/simulation/engine/state';

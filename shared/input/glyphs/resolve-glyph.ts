@@ -2,7 +2,7 @@
 import { BUILT_IN_GLYPH_PACKS, GENERIC_PACK_ID, findGlyphPack } from './built-in-packs';
 import { AUTO_PACK_ID, FAMILY_PACK_IDS } from './resolve-glyph.constants';
 import type { SdlAxisName, SdlButtonName } from '../family';
-import type { DeviceFamily } from '../../types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 import type { GlyphPack, GlyphSource } from '@shared/types/hud/glyph-pack';
 
 const fromPackChain = (

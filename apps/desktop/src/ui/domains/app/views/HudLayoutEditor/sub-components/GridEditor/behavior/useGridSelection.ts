@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
-import { isPrimaryModifier } from '@shared/platform';
+import { isPrimaryModifier } from '@shared/platform/is-primary-modifier';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import { cellKey, rectCells } from '../../GridLattice';
 import { nextIndexRun } from '../../../behavior/index-selection';

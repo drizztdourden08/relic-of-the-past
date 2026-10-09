@@ -1,8 +1,8 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
 import { changedPaths, linesForPaths } from '@shared/game/recommendations';
-import { serializeConnectionRecord } from '@shared/game/data/record-codegen';
-import type { ConnectionRecord } from '@shared/game/data';
+import { serializeConnectionRecord } from '@rotp/game-data';
+import type { ConnectionRecord } from '@rotp/game-data';
 
 const base = (): ConnectionRecord => ({
   id: 'connection-001',

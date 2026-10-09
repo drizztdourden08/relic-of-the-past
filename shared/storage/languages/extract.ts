@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { setFromPack } from '@shared/game/language';
 import { packFromExtracted, writeLegacyPayload } from './pack';
 import type { ExtractedPack } from './types';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { WALLET_STEP_RUPEES } from './capacity-jump-text.constants';
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import type { CapacityFamilyId } from '@rotp/game-data';
 
 const plural = (count: number, unit: string): string => `${count} ${unit}${count === 1 ? '' : 's'}`;
 

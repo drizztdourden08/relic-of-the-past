@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { primaryModifierLabel } from '@shared/platform';
+import { primaryModifierLabel } from '@shared/platform/primary-modifier-label';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { DragGhost } from './DragGhost';

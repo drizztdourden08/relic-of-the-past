@@ -1,5 +1,5 @@
 /* @layer shared-input @kind types */
-import type { SdlAxisName, SdlButtonName } from '../../sdl-buttons';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 
 type SdlPosition = SdlButtonName | SdlAxisName;
 

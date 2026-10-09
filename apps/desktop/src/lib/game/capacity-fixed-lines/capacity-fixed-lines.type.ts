@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { CapacityFamilyId } from '@shared/game/data';
+import type { CapacityFamilyId } from '@rotp/game-data';
 
 interface CapacityFixedLineArm {
   family: CapacityFamilyId;

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { GameUIState } from '@shared/game/types';
+import type { GameUIState } from '@rotp/game-data';
 import { BOTTLE_NAMES, ITEM_NAMES } from '../DebugWidget.constants';
 import type { StateSectionData } from '../DebugWidget.type';
 

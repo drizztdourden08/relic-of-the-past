@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { describeScreen } from '@shared/game/logic/queries/describe-screen';
-import { screenForRoomIndex } from '@shared/game/logic/queries/room-screen';
-import type { GameScreenId } from '@shared/game/logic/queries/game-id';
+import { describeScreen } from '@rotp/game-data';
+import { screenForRoomIndex } from '@rotp/game-data';
+import type { GameScreenId } from '@rotp/game-data';
 import { resolved } from './resolved';
 import type { ResolvedTarget } from './resolve-target.type';
 

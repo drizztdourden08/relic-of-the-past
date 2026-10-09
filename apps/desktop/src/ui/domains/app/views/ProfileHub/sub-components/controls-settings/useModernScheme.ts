@@ -6,9 +6,7 @@ import {
 } from '@shared/input/scheme';
 import { controlSchemeOf } from '@shared/features/hud-style';
 import { slotDisplay } from './modern-slots';
-import type {
-  CoreBindings, InputBinding, ModernSlot, SlotIndex,
-} from '@shared/types/controls';
+import type { CoreBindings, InputBinding, ModernSlot, SlotIndex } from '@rotp/game-data';
 import type { AbsentAssignment, UseModernSchemeArgs } from './controls-settings.type';
 
 const useModernScheme = (args: UseModernSchemeArgs) => {

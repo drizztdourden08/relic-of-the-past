@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { serializeItemGroupRecord } from '@shared/game/data/record-codegen';
-import type { ItemGroupRecord } from '@shared/game/data/types';
+import { serializeItemGroupRecord } from '@rotp/game-data';
+import type { ItemGroupRecord } from '@rotp/game-data';
 import type { Allocated, AllocateItemGroupArgs, AllocateItemGroupResult } from '@shared/ipc/screen-editor-contract';
 import { withAllocatedIds } from '../id-allocator';
 import { insertBeforeArrayClose } from '../source-writers';

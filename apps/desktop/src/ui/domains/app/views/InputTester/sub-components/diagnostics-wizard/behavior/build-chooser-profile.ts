@@ -2,7 +2,7 @@
 import { buildDeviceProfileFromResolved } from '@shared/input';
 import type { DeviceProfile } from '@shared/input';
 import type { ResolvedDevice } from '@shared/input/family';
-import type { DeviceFamily } from '@shared/types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 import { toHex4 } from './to-hex4';
 
 const buildProfileFromResolved = (resolved: ResolvedDevice, vendorId: number, productId: number): DeviceProfile =>

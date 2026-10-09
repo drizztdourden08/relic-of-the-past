@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { triforcePath } from '@shared/game/dialog/frame-geometry';
+import { triforcePath } from '@rotp/game-data';
 import { TRIFORCE_HEIGHT } from './patterns.constants';
 
 let triforceShape: Path2D | null = null;

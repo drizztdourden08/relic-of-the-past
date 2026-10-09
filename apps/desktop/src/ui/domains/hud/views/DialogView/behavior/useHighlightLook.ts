@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo } from 'react';
 import { snesToRgba } from '@shared/asset-extraction/graphics/palette';
-import { hexToSnes15 } from '@shared/game/dialog/highlight-color';
+import { hexToSnes15 } from '@rotp/game-data';
 import { getGlyphAtlas } from '../../../../../../lib/game/dialog/glyph-atlas';
 import { NO_ATLASES } from '../DialogView.constants';
 import type { HighlightLook, HighlightLookParams } from '../DialogView.type';

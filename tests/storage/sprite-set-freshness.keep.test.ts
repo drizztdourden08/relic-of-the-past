@@ -6,12 +6,10 @@ import { CURRENCY_SYMBOLS_FILE } from '@shared/asset-extraction/item-sprites/cur
 import { FOREIGN_ICONS_FILE } from '@shared/asset-extraction/item-sprites/foreign-icons';
 import { GEAR_ICONS_FILE } from '@shared/asset-extraction/item-sprites/gear-icons';
 import { QUIVER_ICON_FILE } from '@shared/asset-extraction/item-sprites/quiver-icon';
-import { SPRITE_DEFINITIONS } from '@shared/game/data/sprite-manifest/manifest';
-import {
-  getCapacityUpgradeSprite, setSpritesBase, setSpritesRevision,
-} from '@shared/game/logic/queries/item-sprites';
+import { SPRITE_DEFINITIONS } from '@rotp/game-data';
+import { getCapacityUpgradeSprite, setSpritesBase, setSpritesRevision } from '@rotp/game-data';
 import { createMemFileStore } from './mem-file-store';
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 
 const ROM = 'game.sfc';
 const DIR = 'sprites/game';

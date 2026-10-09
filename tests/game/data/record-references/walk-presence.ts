@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { PresenceCondition } from '@shared/game/data/types';
+import type { PresenceCondition } from '@rotp/game-data';
 import type { Sink } from './record-references.type';
 
 const walkPresence = (condition: PresenceCondition, field: string, take: Sink): void => {

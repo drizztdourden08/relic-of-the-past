@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { inventoryToItemSet, parseInventoryBuffer } from '../tracker';
 import { slotBlockOffset } from './sram-slots';
 import { INVENTORY_OFFSETS } from './offline-inventory.constants';

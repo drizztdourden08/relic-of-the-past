@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ItemId } from '../../../data';
+import type { ItemId } from '@rotp/game-data';
 import { SWORD_TIER_IDS } from './enemy-reach-weapons.constants';
 
 const swordTier = (inventory: ReadonlySet<ItemId>): number =>

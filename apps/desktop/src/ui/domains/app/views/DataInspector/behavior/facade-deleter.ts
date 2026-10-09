@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import { unregisterRecord } from '@shared/game/data';
-import type { EntityKind } from '@shared/game/data';
+import { unregisterRecord } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
 import type { DeleteRecordArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
 import type { DeleteResult } from '../DataInspector.type';
 import { unregisterIdRefOption } from './unregister-id-ref-option';

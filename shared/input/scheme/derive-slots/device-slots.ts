@@ -2,7 +2,7 @@
 import { renumberSlots } from '../slot-list';
 import { slotForControl } from './slot-for-control';
 import type { ResolvedControl } from '../../family/family.type';
-import type { ModernSlot } from '../../../types/controls';
+import type { ModernSlot } from '@rotp/game-data';
 
 const deviceSlots = (controls: readonly ResolvedControl[]): ModernSlot[] => {
   const slots: Omit<ModernSlot, 'index'>[] = [];

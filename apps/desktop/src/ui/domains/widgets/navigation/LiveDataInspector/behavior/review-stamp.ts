@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ReviewMark } from '@shared/game/data';
+import type { ReviewMark } from '@rotp/game-data';
 import { REVIEW_NEVER } from '../LiveDataInspector.constants';
 
 const reviewStamp = (mark: ReviewMark | undefined): string =>

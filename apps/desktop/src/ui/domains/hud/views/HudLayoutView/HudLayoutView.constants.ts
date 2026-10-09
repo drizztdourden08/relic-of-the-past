@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind constants */
-import type { DeviceFamily } from '@shared/types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 
 const CLUSTER_FADE = 'opacity 250ms ease-out';
 

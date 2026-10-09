@@ -1,5 +1,5 @@
 /* @layer tests @kind constants */
-import type { CheckId, ItemId } from '../../../shared/game/data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 
 const KAKARIKO_TAVERN_ROOM = 0x103;
 const LINKS_HOUSE_ROOM = 0x104;

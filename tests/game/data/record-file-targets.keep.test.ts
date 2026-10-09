@@ -2,15 +2,13 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { describe, expect, it } from 'vitest';
-import { all, getDungeon } from '@shared/game/data';
-import {
-  actorRecordFile, areaRecordFile, checkRecordFile, dungeonRecordFile, itemRecordFile, locationRecordFile,
-} from '@shared/game/data/record-file-targets';
-import type { ActorKind } from '@shared/game/data';
-import type { ItemCategory } from '@shared/game/data/taxonomy/item-categories';
+import { all, getDungeon } from '@rotp/game-data';
+import { actorRecordFile, areaRecordFile, checkRecordFile, dungeonRecordFile, itemRecordFile, locationRecordFile } from '@rotp/game-data';
+import type { ActorKind } from '@rotp/game-data';
+import type { ItemCategory } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
-const DATA_ROOT = join(__dirname, '..', '..', '..', 'shared', 'game', 'data', 'records');
+const DATA_ROOT = join(__dirname, '..', '..', '..', 'packages', 'game-data', 'src', 'data', 'records');
 const EVENT_CHECK_ID_BASE = 300;
 
 const dataFile = (relativePath: string): string => join(DATA_ROOT, relativePath);

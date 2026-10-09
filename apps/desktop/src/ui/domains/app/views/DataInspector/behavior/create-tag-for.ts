@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { isTagKey, registerTag } from '@shared/game/data';
+import { isTagKey, registerTag } from '@rotp/game-data';
 import type { TagCreateResult } from '@drizztdourden08/tessera/composites';
 import { TAG_NO_SCOPE, TAG_NOT_CONVENTION } from '../DataInspector.constants';
 import { asEntityKind } from './as-entity-kind';

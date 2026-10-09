@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
 import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { currentRun } from '../randomizer-client/run-kind';

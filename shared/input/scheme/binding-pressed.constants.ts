@@ -1,5 +1,5 @@
 /* @layer shared-input @kind constants */
-import { SDL_AXIS } from '../sdl-buttons';
+import { SDL_AXIS } from '@rotp/game-data';
 
 const DEFAULT_AXIS_THRESHOLD = 0.5;
 const DEFAULT_TRIGGER_THRESHOLD = 0.9;

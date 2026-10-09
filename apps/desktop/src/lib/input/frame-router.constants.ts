@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind constants */
 import { emptyFunctionMask } from '@shared/input/scheme';
-import type { ModernSlot, SlotIndex } from '@shared/types/controls';
+import type { ModernSlot, SlotIndex } from '@rotp/game-data';
 
 const NO_FUNCTIONS = emptyFunctionMask();
 const NO_SLOTS: ModernSlot[] = [];

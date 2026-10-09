@@ -2,7 +2,7 @@
 import { useRef, useEffect } from 'react';
 import { Box, Text, Canvas } from '@drizztdourden08/tessera/primitives';
 import { drawSheet, SHEET_PNG_WIDTH, SHEET_PNG_HEIGHT, SHEET_ROWS } from '@app/lib/game/player-sheet/sheet-png';
-import { SHEET_COLS } from '@shared/game/data/player-sheet/types';
+import { SHEET_COLS } from '@rotp/game-data';
 import type { SheetBrowserProps } from './SheetBrowser.type';
 import './SheetBrowser.css';
 

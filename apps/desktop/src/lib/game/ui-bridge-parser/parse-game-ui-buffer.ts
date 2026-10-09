@@ -1,18 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type {
-  CountdownState,
-  DungeonProgressState,
-  EquipmentState,
-  FloorIndicatorState,
-  GameModeState,
-  GameUIState,
-  HostMenuState,
-  HUDState,
-  InventoryState,
-  MapState,
-  SaveMenuState,
-  TextState,
-} from '@shared/game/types';
+import type { CountdownState, DungeonProgressState, EquipmentState, FloorIndicatorState, GameModeState, GameUIState, HostMenuState, HUDState, InventoryState, MapState, SaveMenuState, TextState } from '@rotp/game-data';
 import { deriveUIMode } from './derive-ui-mode';
 import {
   BOTTLE_COUNT,

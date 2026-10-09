@@ -1,5 +1,6 @@
 /* @layer shared-types @kind types */
-import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
+import type { DataLocation, StorageSummary } from '@shared/platform/ports/storage.type';
+import type { FileStat } from '@drizztdourden08/brock-core';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { InvokeResult } from './invoke-result.type';
 

@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
 import { createHash } from 'node:crypto';
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { actTokensOf } from '@shared/randomizer/world/events/event-gates';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { OptionValue } from '@shared/randomizer/world/options.type';

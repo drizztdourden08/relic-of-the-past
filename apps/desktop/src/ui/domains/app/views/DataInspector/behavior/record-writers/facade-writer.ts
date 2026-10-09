@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
-import { replaceRecord } from '@shared/game/data';
-import type { EntityKind } from '@shared/game/data';
-import type { Unnumbered } from '@shared/game/data/record-codegen';
+import { replaceRecord } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
+import type { Unnumbered } from '@rotp/game-data';
 import type { WriteRecordArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
 import type { RecordWriter } from '../../DataInspector.type';
 import { updateIdRefOption } from '../update-id-ref-option';

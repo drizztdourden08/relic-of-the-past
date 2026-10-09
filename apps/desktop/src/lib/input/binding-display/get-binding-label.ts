@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { InputBinding, ButtonIcon } from '@shared/types/controls';
+import type { InputBinding, ButtonIcon } from '@rotp/game-data';
 import { formatKeyBinding } from './format-key-binding';
 
 const getBindingLabel = (binding: InputBinding, icon?: ButtonIcon | null): string => {

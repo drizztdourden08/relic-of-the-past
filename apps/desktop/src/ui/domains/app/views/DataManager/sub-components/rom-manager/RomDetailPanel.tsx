@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import { AssetsRow } from './AssetsRow';
 import { SupplementRow } from './SupplementRow';
 import { IL } from './RomDetailPanel.constants';

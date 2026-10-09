@@ -9,7 +9,7 @@ import { defaultIdRefDisplay } from '@app/ui/domains/app/views/DataInspector/beh
 import { useIdRefNavigation } from '@app/ui/domains/app/views/DataInspector/behavior/useIdRefNavigation';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
-import type { EntityKind, ScreenRecord } from '@shared/game/data';
+import type { EntityKind, ScreenRecord } from '@rotp/game-data';
 import { DEFAULT_KIND, NO_RECORDS_MESSAGE, SPAWNS_PATH } from './LiveDataInspector.constants';
 import type { LiveRecord } from './LiveDataInspector.type';
 import { useComparison } from './behavior/useComparison';

@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { isCatalogItemId } from '@drizztdourden08/brock-catalog/main';
 import type { StoreDuplicateResult } from '@shared/ipc';
-import type { BasedOn } from '@shared/store/based-on';
+import type { BasedOn } from '@rotp/game-data';
 import type { InstalledPack } from '@shared/store/installed-types';
 import { copyRefusal } from '@shared/store/licenses';
 import { selectDuplicate } from '@shared/storage/duplicate/select-duplicate';

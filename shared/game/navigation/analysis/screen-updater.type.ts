@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
-import type { RegionNavData } from '../nav-data.types';
+import type { RegionNavData } from '@rotp/game-data';
 import type { FloodFillResult } from '../types';
-import type { ScreenDefinition } from '../../types';
+import type { ScreenDefinition } from '@rotp/game-data';
 import type { ResolvedEntrance } from './entrance-resolver.type';
 
 interface ScreenNavUpdate {

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
 import type { ListItemShape } from '@drizztdourden08/tessera/composites';
-import type { StateGroup } from '@shared/game/data/native-tables/player-state-labels';
+import type { StateGroup } from '@rotp/game-data';
 
 const GROUP_ORDER: readonly StateGroup[] = ['movement', 'combat', 'carrying', 'water', 'hazard', 'special'];
 

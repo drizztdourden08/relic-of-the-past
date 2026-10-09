@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 import type { CollectionState } from '../../collection-state';
 
 const canReachEvent = (state: CollectionState, key: CheckId): boolean => {

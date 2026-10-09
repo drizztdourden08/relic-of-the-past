@@ -2,7 +2,7 @@
 import { keyboardModernBindings } from '../default-modern-bindings';
 import { defaultSlotList } from '../derive-slots';
 import { renumberSlots } from '../slot-list';
-import type { ModernSlot } from '../../../types/controls';
+import type { ModernSlot } from '@rotp/game-data';
 import type { SlotSource } from './effective-slots.type';
 
 const prefillFor = (source: SlotSource): ModernSlot[] => {

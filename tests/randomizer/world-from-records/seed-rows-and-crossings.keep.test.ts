@@ -1,12 +1,12 @@
 /* @layer tests @kind test */
 import { expect, it } from 'vitest';
-import { all, getCheck } from '@shared/game/data';
+import { all, getCheck } from '@rotp/game-data';
 import { REGION_GRAPH } from '@shared/randomizer/world/rules/tables/region-graph.data';
 import { isSeedLocation } from '@shared/randomizer/world/seed-locations';
 import { CANONICAL_SLOTS } from '@shared/randomizer/world/shops/shop-slot-facts';
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
 import { crossingsByRegion, regionRecords } from '@shared/randomizer/world/world-from-records';
-import type { RegionId } from '@shared/game/data/types';
+import type { RegionId } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import {
   CROSSINGS_NO_PASSAGE_MAKES, DUNGEON_LOCATIONS, PASSAGES_WITH_A_CROSSING, PLACELESS_ROWS_AT_MOST,

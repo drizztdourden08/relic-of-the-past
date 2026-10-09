@@ -4,9 +4,9 @@ import { buildDeviceProfile, buildDeviceProfileFromSdlType } from '@shared/input
 import type { DeviceProfile } from '@shared/input';
 import { buildDisplayContext, resolveBrandLogoKey, resolveDeviceName } from '@shared/input/family';
 import type { SdlGamepadType } from '@shared/input/family';
-import { SDL_GAMEPAD_TYPES } from '@shared/input/sdl-buttons';
+import { SDL_GAMEPAD_TYPES } from '@rotp/game-data';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import type { DeviceFamily } from '@shared/types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import { listInputDevices } from './list-input-devices';
 

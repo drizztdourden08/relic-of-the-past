@@ -1,6 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { isPrimaryModifier, primaryModifierLabel } from '../../shared/platform';
+import { isPrimaryModifier } from '@shared/platform/is-primary-modifier';
+import { primaryModifierLabel } from '@shared/platform/primary-modifier-label';
 
 const held = (ctrl: boolean, meta: boolean) => ({ ctrlKey: ctrl, metaKey: meta });
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { GearLadderKind } from '@shared/game/logic/pause';
+import type { GearLadderKind } from '@rotp/game-data';
 
 const GEAR_KIND_ARG: Record<GearLadderKind, number> = { sword: 0, shield: 1, mail: 2, bow: 3 };
 

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Tabs } from '@drizztdourden08/tessera/primitives';
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import { COLLECTION_TABS } from '../LiveDataInspector.constants';
 import type { CollectionTabsProps } from '../LiveDataInspector.type';
 

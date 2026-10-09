@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind logic */
-import { findOne, pendingPartnerId, tagIdsForKeys } from '@shared/game/data';
-import { toScreenIdOf } from '@shared/game/data';
-import type { ConnectionRecord, ScreenRecord } from '@shared/game/data';
-import type { PendingConnectionRecord } from '@shared/game/data/record-codegen';
+import { findOne, pendingPartnerId, tagIdsForKeys } from '@rotp/game-data';
+import { toScreenIdOf } from '@rotp/game-data';
+import type { ConnectionRecord, ScreenRecord } from '@rotp/game-data';
+import type { PendingConnectionRecord } from '@rotp/game-data';
 import type { ConnectionDraft } from '../navigation.type';
 import { connectionKindFor } from './connection-kind-for';
 import { dungeonIdFor } from './dungeon-id-for';

@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { spriteDir } from './sprite-dir';
 
 const missing = async (files: FileStore, romFile: string, expected: readonly string[]): Promise<string[]> => {

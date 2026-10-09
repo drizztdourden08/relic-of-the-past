@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { all } from '../../../data';
+import { all } from '@rotp/game-data';
 import type { ComparisonStrategy } from '../../compare/probe.type';
 import { combatProbe } from './combat.probes';
 import { actorSpawnsProbe } from './spawns.set';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DeviceFamily } from '@shared/types/controls';
+import type { DeviceFamily } from '@rotp/game-data';
 import type { ControllerBusType, DeviceStatus } from '@drizztdourden08/brock-input';
 
 interface DeviceAssignInfo {

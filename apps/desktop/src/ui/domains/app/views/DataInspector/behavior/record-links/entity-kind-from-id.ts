@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import { PREFIX_TO_KIND } from './record-links.constants';
 
 const entityKindFromId = (id: string): EntityKind | undefined => {

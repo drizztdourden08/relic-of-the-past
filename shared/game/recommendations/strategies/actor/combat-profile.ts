@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ActorCombatProfile } from '../../../data';
+import type { ActorCombatProfile } from '@rotp/game-data';
 import type { SpriteCombatObservation } from '../../detection-types';
 
 const profileFrom = (combat: SpriteCombatObservation): ActorCombatProfile => ({

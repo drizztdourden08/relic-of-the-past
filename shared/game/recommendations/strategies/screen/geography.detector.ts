@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { findOne, getArea, getLocation, PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID } from '../../../data';
-import type { AreaId, AreaRecord, LocationRecord, ScreenRecord } from '../../../data';
-import { areaOfLocation, locationsInArea } from '../../../logic/queries/area-locations';
+import { findOne, getArea, getLocation, PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID } from '@rotp/game-data';
+import type { AreaId, AreaRecord, LocationRecord, ScreenRecord } from '@rotp/game-data';
+import { areaOfLocation, locationsInArea } from '@rotp/game-data';
 import type { DetectionContext, RecommendationDetector } from '../../detection-types';
 import type { DraftRecommendation } from '../../types';
 import { GEOGRAPHY_DETECTOR_ID } from './geography.constants';

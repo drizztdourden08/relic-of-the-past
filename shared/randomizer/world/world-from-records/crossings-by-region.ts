@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { all, getScreen } from '@shared/game/data';
-import type { RegionId } from '@shared/game/data/types/ids';
+import { all, getScreen } from '@rotp/game-data';
+import type { RegionId } from '@rotp/game-data';
 import type { RegionCrossing } from '../region.type';
 
 let crossings: Map<RegionId, readonly RegionCrossing[]> | null = null;

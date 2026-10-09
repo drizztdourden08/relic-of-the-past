@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { CheckRecord } from '@shared/game/data/types';
+import type { CheckRecord } from '@rotp/game-data';
 import type { WriteRecordArgs, WriteRecordResult } from '@shared/ipc/screen-editor-contract';
 import { updateRecord } from '../dataset-record-writer';
 import { CHECK_SPEC } from './check-writer.constants';

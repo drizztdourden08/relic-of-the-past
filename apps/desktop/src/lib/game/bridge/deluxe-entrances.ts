@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { DELUXE_ENTRANCE_TRACKS } from '@shared/game/data/msu-deluxe-remap';
+import { DELUXE_ENTRANCE_TRACKS } from '@rotp/game-data';
 import { voidCall } from './wasm-call';
 import { ENTRANCE_BIT_MASK, ENTRANCE_MASK_WORDS, ENTRANCES_PER_WORD_SHIFT } from './deluxe-entrances.constants';
 

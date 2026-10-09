@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
-import { capacityFamilyOfItemName } from '@shared/game/data';
-import { getCapacityUpgradeSprite, getItemSprite } from '@shared/game/logic/queries/item-sprites';
+import { capacityFamilyOfItemName } from '@rotp/game-data';
+import { getCapacityUpgradeSprite, getItemSprite } from '@rotp/game-data';
 import { itemIdByStandardName } from '../../lib/game/randomizer-client/item-lookup';
 
 const poolItemSpriteOf = (name: string): string | undefined => {

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import { findOne, toScreenIdOrNone } from '@shared/game/data';
-import type { ConnectionRecord } from '@shared/game/data';
+import { findOne, toScreenIdOrNone } from '@rotp/game-data';
+import type { ConnectionRecord } from '@rotp/game-data';
 
 const screenExists = (id: string): boolean => findOne('screen', s => s.id === id) != null;
 

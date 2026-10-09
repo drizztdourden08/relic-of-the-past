@@ -17,8 +17,8 @@ import {
   wasmGetToggleFloorPositions,
   wasmGetIndoorDualLayerGrids,
 } from '@app/lib/game';
-import { resolveCurrentScreenDetailed } from '@shared/game/logic/queries/detection';
-import type { VariantGameState } from '@shared/game/logic/queries/detection';
+import { resolveCurrentScreenDetailed } from '@rotp/game-data';
+import type { VariantGameState } from '@rotp/game-data';
 import type { DumpSlot } from './nav-dump.type';
 import { collectEntranceData } from './collect-entrance-data';
 import { formatStairs } from './format-stairs';

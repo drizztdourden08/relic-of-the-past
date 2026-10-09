@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, getActorByGameId, replaceRecord } from '@shared/game/data';
-import type { ActorRecord } from '@shared/game/data';
+import { all, getActorByGameId, replaceRecord } from '@rotp/game-data';
+import type { ActorRecord } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { actorStrategy } from '@shared/game/recommendations/strategies/actor';

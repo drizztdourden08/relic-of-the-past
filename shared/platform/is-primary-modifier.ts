@@ -1,5 +1,5 @@
 /* @layer shared-platform @kind logic */
-import type { OsKind } from './platform-info.type';
+import type { OsKind } from '@drizztdourden08/brock-core';
 import { USES_META } from './primary-modifier.constants';
 import type { ModifierFlags } from './primary-modifier.type';
 

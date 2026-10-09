@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind constants */
-import type { GameUIState, UIMode } from '@shared/game/types';
+import type { GameUIState, UIMode } from '@rotp/game-data';
 
 const INITIAL_GAME_UI_STATE: GameUIState = {
   mode: 'title' as UIMode,

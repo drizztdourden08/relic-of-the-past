@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { SimEvent, DetectedCheck, RecorderState } from '@shared/game/simulation';
-import { getCheck } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
 import { recordCheck } from '@shared/game/simulation';
 import { locationForScreen } from '../screen-location';
 import type { CheckLog } from './drive.type';

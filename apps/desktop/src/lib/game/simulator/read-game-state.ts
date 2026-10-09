@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { MapState } from '@shared/game/types';
+import type { MapState } from '@rotp/game-data';
 import { wasmGetGameUIState } from '../bridge/ui-state';
 import { parseGameUIBuffer } from '../ui-bridge-parser';
 

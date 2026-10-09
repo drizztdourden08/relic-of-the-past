@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 
 const ITEM = {
   fighterSword: 'item-074', masterSword: 'item-002', temperedSword: 'item-003',

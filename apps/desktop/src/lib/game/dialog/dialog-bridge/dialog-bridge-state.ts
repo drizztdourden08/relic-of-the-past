@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { DialogFrame } from '@shared/game/dialog/dialog-frame.types';
+import type { DialogFrame } from '@rotp/game-data';
 
 const dialogBridgeState: {
   prevFrame: DialogFrame | null;

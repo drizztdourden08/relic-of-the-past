@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { BasedOn } from '@shared/store/based-on';
+import type { BasedOn } from '@rotp/game-data';
 import type { TextOverrides } from '../text/types';
 import type { Variable } from '../variables/types';
 

@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { PlaySession } from '@shared/types/session';
-import { readJson } from '../json';
+import { readJson } from '@drizztdourden08/brock-core';
 import { profileDataPath } from './profile-data-path';
 
 const listSessions = async (files: FileStore, p: string): Promise<PlaySession[]> =>

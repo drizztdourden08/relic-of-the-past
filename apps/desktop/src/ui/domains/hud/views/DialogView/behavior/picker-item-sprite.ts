@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import type { EquipmentState, InventoryState } from '@shared/game/types/game-state';
+import type { EquipmentState, InventoryState } from '@rotp/game-data';
 import { getSlotSprite } from '../../../composites/PauseItemSlot';
 import { EQUIP_SPRITES } from '../../../composites/PauseEquipSlot';
 import {

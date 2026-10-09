@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import { SDL_AXIS } from '@shared/input/sdl-buttons';
+import { SDL_AXIS } from '@rotp/game-data';
 
 const STICK_DIRECTION_PRESS_THRESHOLD = 0.5;
 

@@ -8,7 +8,7 @@ import { validateAnimations, validateTransition } from './validate-motion';
 import { validateStyle } from './validate-style';
 import { buttonSpec } from './validate-button-node';
 import { textSpec } from './validate-text-node';
-import { SDL_AXIS, SDL_BUTTON } from '../../input/sdl-buttons';
+import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import type { HudElement, HudElementSpec, HudGlyphPosition, HudNode } from '../../types/hud/hud-node';
 import type { Issues } from './validate-box';
 

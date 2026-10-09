@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { CheckId } from '@shared/game/data/types/ids';
+import type { CheckId } from '@rotp/game-data';
 
 const BUNNY_ACCESSIBLE_LOCATIONS: ReadonlySet<CheckId> = new Set<CheckId>([
   'check-017',

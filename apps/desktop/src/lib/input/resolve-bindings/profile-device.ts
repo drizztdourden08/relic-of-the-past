@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import type { InputProfile } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 import { padHex } from '../profile-devices';
 
 const deviceKeyOfEntry = (entry: DeviceEntry): string =>

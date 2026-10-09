@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import type { OsKind, HostShell } from '@shared/platform';
+import type { OsKind, HostShell } from '@drizztdourden08/brock-core';
 
 const HOST_LABEL: Record<HostShell, string> = {
   electron: 'Electron',

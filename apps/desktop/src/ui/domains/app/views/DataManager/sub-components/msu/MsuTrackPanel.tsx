@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
 import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { formatBytes } from '@drizztdourden08/brock-core';
 import { MsuPackHeader } from './MsuPackHeader';
 import { TrackDetail } from './TrackDetail';
 import { TrackSection } from './TrackSection';

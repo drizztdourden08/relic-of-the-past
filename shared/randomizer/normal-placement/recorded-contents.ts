@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { find } from '../../game/data';
-import type { CheckId, ItemId } from '../../game/data/types/ids';
+import { find } from '@rotp/game-data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 
 const recordedContents = (): ReadonlyMap<CheckId, ItemId> => {
   const contents = new Map<CheckId, ItemId>();

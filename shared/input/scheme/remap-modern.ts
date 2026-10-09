@@ -1,7 +1,7 @@
 /* @layer shared-input @kind logic */
 import { BIT } from './remap-modern.constants';
 import type { FunctionMask } from './function-mask';
-import type { ModernScheme, SlotAssignment } from '../../types/controls/scheme';
+import type { ModernScheme, SlotAssignment } from '@rotp/game-data';
 import type { OwnsItem } from './remap-modern.type';
 import type { RemapResult } from './remap.type';
 

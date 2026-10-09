@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind constants */
-import { poseCanvasSize } from '@shared/game/data/native-tables/player-pose-atlas';
+import { poseCanvasSize } from '@rotp/game-data';
 
 const { width: POSE_W, height: POSE_H, originX, originY } = poseCanvasSize();
 

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { SimulatorPort, RoomSectionSplit } from '@shared/game/simulation';
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { captureStateBuffer, loadStateFromBuffer, reassertFeatureFlags, deliveryQueue, setSimulatorSupport } from '../';
 import { setAutoSkipDialogOverride, setDeveloperToolsOverride } from '../live-settings-flags';
 import { onItemReceived } from '../tracker';

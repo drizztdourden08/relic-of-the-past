@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { KeyboardBinding } from '@shared/types/controls';
+import type { KeyboardBinding } from '@rotp/game-data';
 import { formatKeyCode } from './format-key-code';
 
 const formatKeyBinding = (b: KeyboardBinding): string => {

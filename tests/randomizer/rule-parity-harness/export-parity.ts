@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 import { actTokensOf } from '@shared/randomizer/world/events/event-gates';
 import { compileRule } from '@shared/randomizer/world/rules/rule-eval';
 import { inlineHelpers, walkRuleNode } from '@shared/randomizer/world/rules/rule-node-walk';

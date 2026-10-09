@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind types */
-import type { Facing } from '@shared/game/data/native-tables/player-pose-atlas';
-import type { PoseState } from '@shared/game/data/native-tables/player-pose-atlas.type';
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
+import type { Facing } from '@rotp/game-data';
+import type { PoseState } from '@rotp/game-data';
+import type { PlayerSheet } from '@rotp/game-data';
 import type { ResolvedRow } from '@app/lib/game/player-sheet/resolve-palette';
 
 interface PauseHeroPortraitProps {

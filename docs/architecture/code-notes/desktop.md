@@ -461,7 +461,7 @@ For all three, an existing record is edited or removed where it already sits, fo
 
 ### screen-editor/connection-pair-writer/
 
-Mints both halves of a brand new crossing atomically. Every `toConnectionId` is required (`shared/game/data/types/connection.ts`), so a crossing with no partner mints two ids on one allocator turn and writes both halves before either id is observable. When both halves land in one file, it is one edit, so a failure mid write cannot leave a dangling partner. The halves usually belong to different screens, so two files: both edits are validated before either file is touched. If the second `writeFile` fails (a full disk), the first half is rolled back best effort, so a dangling `toConnectionId` cannot survive silently; the error says whether the rollback worked.
+Mints both halves of a brand new crossing atomically. Every `toConnectionId` is required (`packages/game-data/src/data/types/connection.ts`), so a crossing with no partner mints two ids on one allocator turn and writes both halves before either id is observable. When both halves land in one file, it is one edit, so a failure mid write cannot leave a dangling partner. The halves usually belong to different screens, so two files: both edits are validated before either file is touched. If the second `writeFile` fails (a full disk), the first half is rolled back best effort, so a dangling `toConnectionId` cannot survive silently; the error says whether the rollback worked.
 
 ### screen-editor/data-files/
 
@@ -483,7 +483,7 @@ Writing an area or a location record. Creating one is its own channel: the calle
 
 ### screen-editor/id-allocator/
 
-The single owner of record numbering. Ids are never supplied by a caller: it reads every id in a kind's source tree and hands out the next free `<kind>-NNN` on one serialized queue, so an id cannot be minted twice. Each task starts only after the previous one finished reading and its caller has written, so a concurrent pair cannot both see the same highest id; `withAllocatedIds` runs the scan and the caller's write on that queue. `KIND_ROOTS` lists where each kind's records live, relative to `shared/game/data/records/`; it is a list because a kind may one day spread over more than one folder.
+The single owner of record numbering. Ids are never supplied by a caller: it reads every id in a kind's source tree and hands out the next free `<kind>-NNN` on one serialized queue, so an id cannot be minted twice. Each task starts only after the previous one finished reading and its caller has written, so a concurrent pair cannot both see the same highest id; `withAllocatedIds` runs the scan and the caller's write on that queue. `KIND_ROOTS` lists where each kind's records live, relative to `packages/game-data/src/data/records/`; it is a list because a kind may one day spread over more than one folder.
 
 The scan matches the quoted id literal wherever it sits, not only after `id:`. `item-groups.ts` also writes it as `Swords: 'ig-001'` in the `ITEM_GROUP_IDS` map, which an `id:` anchored scan would miss. A sibling reference (for example `toConnectionId`) also counts as used, which is the safe direction.
 

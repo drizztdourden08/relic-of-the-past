@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { setDir } from '../paths';
 import { SET_ID_RE } from './set-id.constants';
 import { slugSetId } from './slug-set-id';

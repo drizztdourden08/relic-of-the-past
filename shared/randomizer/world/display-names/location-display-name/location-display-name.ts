@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { getCheck } from '@shared/game/data';
-import { standardNameOfCheck } from '@shared/game/data/check-standard-name';
+import { getCheck } from '@rotp/game-data';
+import { standardNameOfCheck } from '@rotp/game-data';
 import { isSlotKey } from '../../location-key';
 import { shopSlotLocationOf } from '../../shops/shop-slots';
 import { POND_LABEL_BY_ID, POND_RUNG, RESTOCK_ORDINALS } from './location-display-name.constants';

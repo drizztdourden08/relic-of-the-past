@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { CREATE_ONLY_EXCLUDED, IDENTITY_PATH } from '../DataInspector.constants';
 

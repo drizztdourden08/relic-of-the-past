@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { Unnumbered } from '@shared/game/data/record-codegen';
+import type { Unnumbered } from '@rotp/game-data';
 import type { WriteRecordResult } from '@shared/ipc/screen-editor-contract';
 import { replaceById } from '../source-writers';
 import type { RecordWriterSpec } from './dataset-record-writer.type';

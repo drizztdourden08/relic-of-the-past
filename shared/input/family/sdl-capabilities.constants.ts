@@ -1,5 +1,5 @@
 /* @layer shared-input @kind constants */
-import { SDL_AXIS, SDL_BUTTON } from '../sdl-buttons';
+import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import type { SdlAxisName, SdlButtonName } from './family.type';
 import type { OrderedPosition } from './sdl-capabilities.type';
 

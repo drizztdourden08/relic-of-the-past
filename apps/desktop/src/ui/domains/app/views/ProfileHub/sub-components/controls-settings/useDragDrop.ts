@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
-import type { InputProfile, DeviceFamily, ModernBindings } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { DeviceFamily, ModernBindings } from '@rotp/game-data';
 import { KEYBOARD_DEFAULT, buildConsoleDefaultMappings } from '@shared/input';
 import { buildDisplayContext, resolveBrandLogoKey } from '@shared/input/family';
 import type { SdlGamepadType } from '@shared/input/family';

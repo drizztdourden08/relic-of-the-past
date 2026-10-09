@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { PROMPT_START_H, PROMPT_START_Y, PROMPT_STORY_H, PROMPT_STORY_Y, FRAME_W } from '@shared/game/title/title-layout';
+import { PROMPT_START_H, PROMPT_START_Y, PROMPT_STORY_H, PROMPT_STORY_Y, FRAME_W } from '@rotp/game-data';
 import { HudBox } from '../../../../hud/primitives/HudBox';
 import { ButtonPrompt } from '../../../../hud/primitives/ButtonPrompt';
 import { useButtonGlyphs } from '../../../../hud/views/DialogView/behavior/useButtonGlyphs';

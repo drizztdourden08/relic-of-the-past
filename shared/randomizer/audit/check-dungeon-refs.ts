@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ItemRecord } from '../../game/data/types';
+import type { ItemRecord } from '@rotp/game-data';
 import type { InvariantFinding, InvariantInput } from './invariant.type';
 
 const checkDungeonRefs = ({ checks, items, dungeons }: InvariantInput): InvariantFinding[] => {

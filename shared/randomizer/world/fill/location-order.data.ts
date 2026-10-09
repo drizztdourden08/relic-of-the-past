@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { CheckId, RegionId } from '@shared/game/data/types/ids';
+import type { CheckId, RegionId } from '@rotp/game-data';
 
 const REGION_LOCATION_ORDER: Readonly<Partial<Record<RegionId, readonly CheckId[]>>> = {
   'region-167': ['check-132', 'check-133', 'check-134', 'check-130', 'check-131'],

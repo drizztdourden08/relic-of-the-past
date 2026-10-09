@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { RequirementSet, TraversalRequirement } from '../../navigation/nav-data.types';
+import type { RequirementSet, TraversalRequirement } from '@rotp/game-data';
 import type { ReachContext } from './requirements-map.type';
 import { ANY_DUNGEON, keyTargetOf } from '../dungeon-key-target';
 

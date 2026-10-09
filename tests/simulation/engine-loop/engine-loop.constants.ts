@@ -1,5 +1,5 @@
 /* @layer tests @kind constants */
-import type { CheckId, ConnectionId } from '../../../shared/game/data';
+import type { CheckId, ConnectionId } from '@rotp/game-data';
 
 const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
 const KAKARIKO_TAVERN_ROOM = 0x103;

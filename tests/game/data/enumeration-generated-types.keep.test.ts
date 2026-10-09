@@ -2,11 +2,11 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, it, expect } from 'vitest';
-import { ALL_ENUMERATION } from '@shared/game/data';
+import { ALL_ENUMERATION } from '@rotp/game-data';
 import { buildGeneratedTypesSource, CATEGORY_TYPE_NAMES } from '../../../scripts/generate-enum-types.mjs';
 import { describeDataset } from '../../dataset-guard';
 
-const GENERATED_FILE = resolve(__dirname, '../../../shared/game/data/enumeration/enumeration.generated.type.ts');
+const GENERATED_FILE = resolve(__dirname, '../../../packages/game-data/src/data/enumeration/enumeration.generated.type.ts');
 
 const GENERATED_CATEGORIES = new Set(Object.keys(CATEGORY_TYPE_NAMES as Record<string, string>));
 

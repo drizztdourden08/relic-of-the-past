@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { isSlotKey } from '@shared/randomizer/world/location-key';
-import type { CheckId, ItemId } from '@shared/game/data';
+import type { CheckId, ItemId } from '@rotp/game-data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
 import { detectionOf } from '../check-detection';

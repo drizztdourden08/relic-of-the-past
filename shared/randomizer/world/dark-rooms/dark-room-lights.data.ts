@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import { ITEM } from '../item-ids.data';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 import type { DarkRoomLightField, DarkRoomSetting } from './dark-room.type';
 
 const DARK_ROOM_LIGHT_FIELDS: readonly DarkRoomLightField[] = ['lamp', 'fireRod', 'bombos', 'redCane'];

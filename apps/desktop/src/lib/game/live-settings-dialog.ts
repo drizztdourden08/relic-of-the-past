@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import type { GameSettings } from '@shared/types/settings';
-import { toQ4 } from '@shared/game/dialog/pacing';
-import { hexToSnes15 } from '@shared/game/dialog/highlight-color';
-import { isQuietReceipt } from '@shared/game/quiet-receipts';
+import { toQ4 } from '@rotp/game-data';
+import { hexToSnes15 } from '@rotp/game-data';
+import { isQuietReceipt } from '@rotp/game-data';
 import { getModule } from './wasm-bridge';
 import { setQuietReceiptBits } from './gate-word-5';
 

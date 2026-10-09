@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { ConnectionRecord, ScreenId } from '@shared/game/data';
+import type { ConnectionRecord, ScreenId } from '@rotp/game-data';
 import type { ScreenObservations } from '@shared/game/recommendations';
 import { auditableFromHere } from '../screen-endpoint';
 

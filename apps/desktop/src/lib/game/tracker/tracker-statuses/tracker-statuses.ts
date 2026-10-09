@@ -1,11 +1,11 @@
 /* @layer renderer-lib @kind logic */
-import { computeRecordStatuses } from '@shared/game/logic/record-statuses';
+import { computeRecordStatuses } from '@rotp/game-data';
 import { trackerReading } from '../../randomizer-client/tracker-availability';
 import { grantedInventory, recordRowOverrides } from '../record-row-inputs';
 import { rowsWithoutALocation } from './rows-without-a-location';
-import type { CheckId } from '@shared/game/data';
+import type { CheckId } from '@rotp/game-data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { CheckStatus } from '@shared/game/logic';
+import type { CheckStatus } from '@rotp/game-data';
 import type { TrackerStatusParams } from './tracker-statuses.type';
 
 const trackerStatuses = (params: TrackerStatusParams): Map<CheckId, CheckStatus> => {

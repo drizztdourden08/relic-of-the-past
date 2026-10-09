@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameUIState } from '@shared/game/types';
+import type { GameUIState } from '@rotp/game-data';
 
 const uiBridgeState = {
   rafId: null as number | null,

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { isNativeReceiveId } from '@shared/game/data';
+import { isNativeReceiveId } from '@rotp/game-data';
 import { log } from '../../log-bus';
 import { isArmableOverrideId } from '../foreign-item-id';
 

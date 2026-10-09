@@ -1,5 +1,5 @@
 /* @layer test @kind type */
-import type { SNES_BUTTON_BITS } from '@shared/types/controls';
+import type { SNES_BUTTON_BITS } from '@rotp/game-data';
 
 type Button = keyof typeof SNES_BUTTON_BITS;
 

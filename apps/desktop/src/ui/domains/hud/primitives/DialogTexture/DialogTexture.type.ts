@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { DialogTexture as DialogTextureKind, DialogTextureAnimation, DialogTextureSpeed } from '@shared/game/dialog/box-style';
+import type { DialogTexture as DialogTextureKind, DialogTextureAnimation, DialogTextureSpeed } from '@rotp/game-data';
 
 interface DialogTextureProps {
   width: number;

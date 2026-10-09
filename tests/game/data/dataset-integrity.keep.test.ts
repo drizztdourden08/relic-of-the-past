@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID, all, get } from '@shared/game/data';
-import { KIND_ID_PREFIXES } from '@shared/game/data/types/ids';
-import { LAST_EVENT_BIT } from '@shared/game/data';
-import type { EntityKind } from '@shared/game/data/types';
+import { PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID, all, get } from '@rotp/game-data';
+import { KIND_ID_PREFIXES } from '@rotp/game-data';
+import { LAST_EVENT_BIT } from '@rotp/game-data';
+import type { EntityKind } from '@rotp/game-data';
 import { recordReferences } from './record-references';
 import { describeDataset } from '../../dataset-guard';
 

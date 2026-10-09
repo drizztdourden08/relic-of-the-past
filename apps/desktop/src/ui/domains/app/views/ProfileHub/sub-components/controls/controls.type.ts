@@ -2,10 +2,9 @@
 import type { RefObject } from 'react';
 import type { CoreVerb } from '@shared/input/scheme';
 import type { HudLayout } from '@shared/types/hud';
-import type {
-  AssignedDevice, ButtonIcon, CoreBindings, DetectedDevice, FunctionAction, FunctionMapping,
-  InputBinding, InputProfile, ModernSlot, SlotAssignment, SnesButton,
-} from '@shared/types/controls';
+import type { AssignedDevice, DetectedDevice, InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SnesButton } from '@rotp/game-data';
+import type { FunctionAction, FunctionMapping } from '@shared/types/controls/functions/functions.type';
 import type { ControllerDeviceGroup } from '../../../../../../../lib/input/controller-device-groups';
 import type { AbsentAssignment, ControlsTab } from '../controls-settings/controls-settings.type';
 import type { useControlsSettings } from '../controls-settings';

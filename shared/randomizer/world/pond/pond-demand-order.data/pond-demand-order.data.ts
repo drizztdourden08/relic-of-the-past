@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import { ITEM } from '../../item-ids.data';
-import type { ItemId } from '@shared/game/data/types/ids';
+import type { ItemId } from '@rotp/game-data';
 
 const DEMAND_ITEM_ORDER: readonly ItemId[] = [
   ITEM.lamp,

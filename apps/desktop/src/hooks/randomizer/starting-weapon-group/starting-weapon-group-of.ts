@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
+import { getItemSprite } from '@rotp/game-data';
 import { uncleWeaponCandidates } from '@shared/randomizer/world/pool/uncle-weapon';
 import { isUnrecordedItem } from '@shared/randomizer/world/item-ids.data';
 import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';

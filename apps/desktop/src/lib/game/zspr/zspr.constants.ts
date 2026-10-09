@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import { COLORS_PER_OUTFIT, OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
+import { COLORS_PER_OUTFIT, OUTFIT_IDS } from '@rotp/game-data';
 
 const HEADER_BYTES = 29;
 const BYTES_PER_WORD = 2;

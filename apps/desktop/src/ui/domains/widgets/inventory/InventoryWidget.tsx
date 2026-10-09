@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useState, useEffect } from 'react';
 import { onInventoryChanged, getCurrentInventory } from '../../../../lib/game';
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { TrackerInventory } from '@domains/app/compounds/TrackerInventory';
 import { useInventoryViewMode } from './behavior/useInventoryViewMode';
 

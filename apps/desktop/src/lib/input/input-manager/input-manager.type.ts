@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { DetectedDevice, InputProfile } from '@shared/types/controls';
+import type { DetectedDevice, InputProfile } from '@shared/types/controls/devices/devices.type';
 import type { ControllerInputState } from '../controller-input-store';
 
 type DeviceChangeListener = (devices: DetectedDevice[]) => void;

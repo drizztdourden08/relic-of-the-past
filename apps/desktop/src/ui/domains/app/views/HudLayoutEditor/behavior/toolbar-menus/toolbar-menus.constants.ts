@@ -8,7 +8,7 @@ import gamepadIcon from '@iconify-icons/lucide/gamepad-2';
 import squareDotIcon from '@iconify-icons/lucide/square-dot';
 import imageIcon from '@iconify-icons/lucide/image';
 import magnetIcon from '@iconify-icons/lucide/magnet';
-import { SDL_BUTTON } from '@shared/input/sdl-buttons';
+import { SDL_BUTTON } from '@rotp/game-data';
 
 const GLYPH_POSITIONS: readonly string[] = ['DPAD', ...Object.keys(SDL_BUTTON)];
 

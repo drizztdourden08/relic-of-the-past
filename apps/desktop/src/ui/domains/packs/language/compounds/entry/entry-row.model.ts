@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { contextFor } from '@shared/game/data/dialogue-context';
-import type { DialogueChoice } from '@shared/game/data/dialogue-context';
+import { contextFor } from '@rotp/game-data';
+import type { DialogueChoice } from '@rotp/game-data';
 import type { EntryIssue } from '@shared/game/language';
 import { excerptOf } from './excerpt-of';
 import { factsForEntry } from './facts-for-entry';

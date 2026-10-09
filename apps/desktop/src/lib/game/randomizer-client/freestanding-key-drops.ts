@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { getCheck } from '@shared/game/data';
-import type { CheckId } from '@shared/game/data';
+import { getCheck } from '@rotp/game-data';
+import type { CheckId } from '@rotp/game-data';
 import { FREESTANDING_KEY_BY_CHECK } from './freestanding-key-drops.constants';
 import type { FreestandingKeyDrop } from './freestanding-key-drops.type';
 

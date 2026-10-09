@@ -1,8 +1,9 @@
 /* @layer test @kind test */
 
 import { describe, it, expect } from 'vitest';
-import type { InputProfile, ButtonMapping, SnesButton } from '@shared/types/controls';
-import { SNES_BUTTON_BITS } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { ButtonMapping, SnesButton } from '@rotp/game-data';
+import { SNES_BUTTON_BITS } from '@rotp/game-data';
 import { allowedDevices } from '@app/lib/input/profile-devices';
 import { computeBitmask } from '@app/lib/input/polling-engine';
 import { ANY_DEVICE } from '@app/lib/input/device-scoped-map';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { SDL_BUTTON } from '@shared/input/sdl-buttons';
+import { SDL_BUTTON } from '@rotp/game-data';
 import type { ResolvedDevice, SdlButtonName } from '@shared/input/family';
 import type { PositionalTarget } from './positional-capture.type';
 

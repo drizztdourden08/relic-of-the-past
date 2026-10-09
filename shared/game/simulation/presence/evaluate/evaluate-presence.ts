@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { BitState, PresenceCondition } from '../../../data';
+import type { BitState, PresenceCondition } from '@rotp/game-data';
 import type { PresenceGameState } from '../presence.type';
 import { BOSS_DEAD_BIT } from '../presence.constants';
 

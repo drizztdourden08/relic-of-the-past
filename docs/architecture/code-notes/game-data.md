@@ -238,7 +238,7 @@ header and no other comment, so what it comes from is written here.
 - `progress-tier` labels the four values of the save's progress indicator byte, which the engine
   branches on for sprite lists, ambient sound, sign text and world access. The field it labels holds
   a number, and an enumeration value is a string, so the category is left out of the generator's
-  `CATEGORY_TYPE_NAMES`. `shared/game/logic/queries/progress-tier.ts` says what each tier means.
+  `CATEGORY_TYPE_NAMES`. `packages/game-data/src/logic/queries/progress-tier.ts` says what each tier means.
 - `review-status` is the status of a record's own review mark. Every collection carries one and
   nothing gates on it.
 

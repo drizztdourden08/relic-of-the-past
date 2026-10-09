@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import * as saves from '@shared/storage/saves';
 import type { CollectedSaves, SaveInReport } from './bug-report.type';
 import { AUTO_SAVES_IN_REPORT, NORMAL_SAVES_IN_REPORT } from './bug-report.constants';

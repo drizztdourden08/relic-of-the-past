@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
-import type { PauseContext, PauseState } from '@shared/game/logic/pause';
-import { assignTargetAt, confirmVerbAt, firstSectionOf } from '@shared/game/logic/pause';
+import type { PauseContext, PauseState } from '@rotp/game-data';
+import { assignTargetAt, confirmVerbAt, firstSectionOf } from '@rotp/game-data';
 import type { PauseCursorActions } from './pause-menu-store.type';
 
 const cursorActionsAt = (state: PauseState, ctx: PauseContext): PauseCursorActions => ({

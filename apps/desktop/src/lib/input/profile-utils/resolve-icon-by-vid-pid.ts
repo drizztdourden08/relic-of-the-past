@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { FunctionMapping, ButtonIcon } from '@shared/types/controls';
+import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
+import type { ButtonIcon } from '@rotp/game-data';
 import { buildDeviceProfileFromSdlType } from '@shared/input';
 import { resolveStickDirectionIcon, type SdlGamepadType } from '@shared/input/family';
 import { recallControllerSdlType } from '../controller-family-cache';

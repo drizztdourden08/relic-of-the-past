@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFile } from 'fs/promises';
-import { KIND_ID_PREFIXES } from '@shared/game/data/types/ids';
+import { KIND_ID_PREFIXES } from '@rotp/game-data';
 import { collectKindFiles } from '../data-files';
 import { KIND_ROOTS } from './id-allocator.constants';
 import type { AllocatableKind } from './id-allocator.type';

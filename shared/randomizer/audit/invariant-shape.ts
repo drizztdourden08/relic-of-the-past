@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { MAX_CHEST_INDEX, MAX_ROOM_ID, SHAPE_RULE } from './invariant.constants';
-import type { CheckGameId, CheckRecord } from '../../game/data/types';
+import type { CheckGameId, CheckRecord } from '@rotp/game-data';
 import type { InvariantFinding, InvariantInput } from './invariant.type';
 
 const finding = (checkId: string, detail: string): InvariantFinding =>

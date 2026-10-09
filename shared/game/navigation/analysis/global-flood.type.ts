@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { RegionNavData } from '../nav-data.types';
+import type { RegionNavData } from '@rotp/game-data';
 import type { FloodFillResult } from '../types';
 
 type ScreenTileStats = Pick<RegionNavData, 'totalTiles' | 'freeTileCount' | 'maxReachableTileCount'>;

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import { ITEM } from '../../item-ids.data';
-import type { CheckId, ItemId } from '@shared/game/data/types/ids';
+import type { CheckId, ItemId } from '@rotp/game-data';
 
 const UNCLE_LOCATION: CheckId = 'check-017';
 

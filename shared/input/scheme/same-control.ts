@@ -1,5 +1,5 @@
 /* @layer shared-input @kind logic */
-import type { InputBinding } from '../../types/controls';
+import type { InputBinding } from '@rotp/game-data';
 
 const sameControl = (a: InputBinding, b: InputBinding): boolean => {
   if (a.type !== b.type) return false;

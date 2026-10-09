@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { TriggerAction } from '@shared/game/simulation';
-import { itemLabel, resolveDuplicate } from '@shared/game/logic/queries/item-duplicates';
+import { itemLabel, resolveDuplicate } from '@rotp/game-data';
 import { enqueue } from '../delivery-queue';
 import { wasmTriggerOverworldCheck, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop,
   wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimOpenCellLock,

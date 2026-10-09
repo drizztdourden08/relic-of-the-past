@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { PlayerSheet, Wearing } from '@shared/game/data/player-sheet/types';
+import type { PlayerSheet, Wearing } from '@rotp/game-data';
 
 interface SheetBrowserProps {
   sheet: PlayerSheet;

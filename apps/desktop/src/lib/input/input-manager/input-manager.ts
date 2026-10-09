@@ -1,6 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import type { InputProfile, SnesButton, FunctionMapping, FunctionAction } from '@shared/types/controls';
-import type { DetectedDevice } from '@shared/types/controls';
+import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { SnesButton } from '@rotp/game-data';
+import type { FunctionMapping, FunctionAction } from '@shared/types/controls/functions/functions.type';
+import type { DetectedDevice } from '@shared/types/controls/devices/devices.type';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { controllerInputStore } from '../controller-input-store';
 import type { ControllerInputState } from '../controller-input-store';

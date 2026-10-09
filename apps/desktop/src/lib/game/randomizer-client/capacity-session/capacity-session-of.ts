@@ -2,7 +2,7 @@
 import {
   FAMILIES, REFERENCE_CAPACITY_BONUS, WALLET, maxTierOf, planOf, startTierOf,
 } from '@shared/randomizer/world/capacity';
-import { walletJumpTableOf } from '@shared/game/data';
+import { walletJumpTableOf } from '@rotp/game-data';
 import type { CapacityBonusSetting, CapacityProfile } from '@shared/randomizer/world/capacity';
 import type { CapacityFamilyArm } from '../../capacity-profile';
 import type { CapacityLadderArm, CapacitySessionPlan } from './capacity-session.type';

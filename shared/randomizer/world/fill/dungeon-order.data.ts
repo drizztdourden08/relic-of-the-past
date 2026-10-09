@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { DungeonId } from '@shared/game/data/types/ids';
+import type { DungeonId } from '@rotp/game-data';
 
 const DUNGEON_ORDER: readonly DungeonId[] = [
   'dungeon-001', 'dungeon-003', 'dungeon-004', 'dungeon-005', 'dungeon-002', 'dungeon-006',

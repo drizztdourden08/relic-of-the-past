@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind constants */
-import type { ConnectionTag } from '@shared/game/data';
+import type { ConnectionTag } from '@rotp/game-data';
 
 const RETIRED_TRANSIT: ReadonlySet<ConnectionTag> = new Set<ConnectionTag>([
   'transit:door', 'transit:stairs', 'transit:hole', 'transit:warp',

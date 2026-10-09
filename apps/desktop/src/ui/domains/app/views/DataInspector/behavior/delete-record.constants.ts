@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind constants */
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind } from '@rotp/game-data';
 import type { RecordDeleter } from '../DataInspector.type';
 import { deleteItemGroupRecord } from './delete-item-group-record';
 import { deleteTagRecord } from './delete-tag-record';

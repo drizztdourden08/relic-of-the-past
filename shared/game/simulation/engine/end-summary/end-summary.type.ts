@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { DungeonId } from '../../../data';
+import type { DungeonId } from '@rotp/game-data';
 
 interface EndSummary {
   screens: { discovered: number; entered: number; neverEntered: string[] };

@@ -3,14 +3,10 @@ import { useCallback, useMemo } from 'react';
 import { normalPlacement } from '../../lib/game/tracker/normal-placement-ref';
 import { trackerCheckRecords } from '../../lib/game/tracker/tracker-roster';
 import { trackerStatuses } from '../../lib/game/tracker/tracker-statuses';
-import { liveChestItems } from '@shared/game/logic/queries/chest-stand-ins';
-import { find } from '@shared/game/data';
-import {
-  buildGroupTree, filterChecks, smallKeyDoorsOf,
-} from '@shared/game/logic/queries/check-grouping';
-import type {
-  FilterState, GroupDimension, RunContext,
-} from '@shared/game/logic/queries/check-grouping';
+import { liveChestItems } from '@rotp/game-data';
+import { find } from '@rotp/game-data';
+import { buildGroupTree, filterChecks, smallKeyDoorsOf } from '@rotp/game-data';
+import type { FilterState, GroupDimension, RunContext } from '@rotp/game-data';
 import { buildPlacementView, runKindOfSession } from '../../lib/game/randomizer-client';
 import type { PlacementView } from '../../lib/game/randomizer-client';
 import type { ViewMode } from '../../ui/domains/app/compounds/ChecksTracker';

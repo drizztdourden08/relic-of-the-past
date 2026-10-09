@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import { getScreenLookup } from '@shared/game/logic/queries/detection';
+import { getScreenLookup } from '@rotp/game-data';
 
 const getScreenDisplayName = (screenIndex: number): string => {
   const screen = getScreenLookup().byOverworldScreen.get(screenIndex);

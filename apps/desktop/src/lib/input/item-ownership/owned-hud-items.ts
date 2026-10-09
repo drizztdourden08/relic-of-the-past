@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { buildItemCells } from '@shared/game/logic/pause';
+import { buildItemCells } from '@rotp/game-data';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 
 const memo: { items: readonly number[]; bottles: readonly number[]; owned: readonly boolean[] } = {

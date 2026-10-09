@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { all } from '@shared/game/data';
+import { all } from '@rotp/game-data';
 
 const hasDataset = (): boolean => all('screen').length > 0;
 

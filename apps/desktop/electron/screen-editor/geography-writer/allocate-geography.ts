@@ -1,16 +1,16 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { serializeAreaRecord, serializeLocationRecord } from '@shared/game/data/record-codegen';
-import { areaRecordFile, locationRecordFile } from '@shared/game/data/record-file-targets';
-import type { FileTarget } from '@shared/game/data/record-file-targets';
-import type { AreaId, AreaRecord, LocationRecord } from '@shared/game/data/types';
+import { serializeAreaRecord, serializeLocationRecord } from '@rotp/game-data';
+import { areaRecordFile, locationRecordFile } from '@rotp/game-data';
+import type { FileTarget } from '@rotp/game-data';
+import type { AreaId, AreaRecord, LocationRecord } from '@rotp/game-data';
 import type { Allocated, AllocateGeographyArgs, AllocateGeographyResult } from '@shared/ipc/screen-editor-contract';
 import { withAllocatedIds } from '../id-allocator';
 import { insertBeforeArrayClose } from '../source-writers';
 
 const dataFile = (root: string, name: string): string =>
-  join(root, 'shared', 'game', 'data', 'records', name);
+  join(root, 'packages', 'game-data', 'src', 'data', 'records', name);
 
 const fileFor = (target: FileTarget): string => target.relativePath as string;
 

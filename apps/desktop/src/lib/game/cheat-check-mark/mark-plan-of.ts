@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { CheckRecord } from '@shared/game/data';
+import type { CheckRecord } from '@rotp/game-data';
 import { voidCall } from '../bridge/wasm-call';
 import { detectionOf } from '../randomizer-client/check-detection';
 import type { MarkPlan } from './cheat-check-mark.type';

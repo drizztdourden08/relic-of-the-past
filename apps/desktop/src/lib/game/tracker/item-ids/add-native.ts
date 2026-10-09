@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ItemId } from '@shared/game/data';
+import type { ItemId } from '@rotp/game-data';
 import { idOf } from './id-of';
 
 const addNative = (out: Set<ItemId>, receiveItemId: number): void => {

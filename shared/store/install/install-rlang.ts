@@ -1,5 +1,5 @@
 /* @layer shared-store @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import { importRlang } from '@shared/storage/languages/import-rlang';
 import { assertValidSetId } from '@shared/storage/languages/set-id';
 import { remove } from '@shared/storage/languages/write';

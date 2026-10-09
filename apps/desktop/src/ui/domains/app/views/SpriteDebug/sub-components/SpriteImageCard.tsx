@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Image, TextInput } from '@drizztdourden08/tessera/primitives';
-import type { SpriteManifestEntry } from '@shared/game/data';
+import type { SpriteManifestEntry } from '@rotp/game-data';
 import type { ReviewEntry, ReviewStatus } from '../SpriteDebug.type';
 import { S } from '../SpriteDebug.constants';
 import { StatusBtns } from './StatusBtns';

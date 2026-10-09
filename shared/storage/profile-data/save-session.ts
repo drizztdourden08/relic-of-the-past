@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from '@drizztdourden08/brock-core';
 import type { PlaySession } from '@shared/types/session';
-import { readJson, writeJson } from '../json';
+import { readJson, writeJson } from '@drizztdourden08/brock-core';
 import { MAX_SESSIONS } from './profile-data.constants';
 import { profileDataPath } from './profile-data-path';
 

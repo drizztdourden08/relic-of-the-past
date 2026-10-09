@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameUIState } from '@shared/game/types';
+import type { GameUIState } from '@rotp/game-data';
 import { INVENTORY_BOTTLE_SLOTS, INVENTORY_ITEM_SLOTS, INVENTORY_ORDER_SLOTS } from './ui-bridge-diff.constants';
 
 const stateChanged = (a: GameUIState, b: GameUIState): boolean => {

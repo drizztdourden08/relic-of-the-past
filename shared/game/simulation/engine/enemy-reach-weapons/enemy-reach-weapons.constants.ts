@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
-import type { ItemId } from '../../../data';
-import { ITEM_GROUP_IDS, membersOf } from '../../../data';
+import type { ItemId } from '@rotp/game-data';
+import { ITEM_GROUP_IDS, membersOf } from '@rotp/game-data';
 import type { AncillaWeapon } from './enemy-reach-weapons.type';
 
 const CONTACT_RADIUS = 2;

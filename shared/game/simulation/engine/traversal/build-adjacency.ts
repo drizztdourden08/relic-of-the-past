@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { find } from '../../../data';
-import { toScreenIdOf } from '../../../data/connections/derive';
-import type { ConnectionRecord } from '../../../data';
+import { find } from '@rotp/game-data';
+import { toScreenIdOf } from '@rotp/game-data';
+import type { ConnectionRecord } from '@rotp/game-data';
 import type { Adjacency, ScreenEdge } from './traversal.type';
 import { connectionRequirements } from './connection-requirements';
 

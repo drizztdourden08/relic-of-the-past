@@ -1,10 +1,8 @@
 /* @layer renderer-widgets @kind types */
 import type { CompactRecordViewProps } from '@drizztdourden08/tessera/composites';
-import type {
-  ConnectionRecord, EntityKind, EntityRecordMap, ReviewMark, ScreenGameId, ScreenId, ScreenSpawn,
-} from '@shared/game/data';
-import type { PalaceMismatch } from '@shared/game/logic/queries/palace-fallback';
-import type { ScreenMatchResult } from '@shared/game/logic/queries/detection';
+import type { ConnectionRecord, EntityKind, EntityRecordMap, ReviewMark, ScreenGameId, ScreenId, ScreenSpawn } from '@rotp/game-data';
+import type { PalaceMismatch } from '@rotp/game-data';
+import type { ScreenMatchResult } from '@rotp/game-data';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import type {
   Difference, LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveSpriteObservation, LiveWalkBoundary, ObservedCrossing, ObservedTransition,

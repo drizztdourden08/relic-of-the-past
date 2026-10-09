@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
+import { getSpritesBase } from '@rotp/game-data';
 import { EDITOR_GROUNDS } from '../HudLayoutEditor.constants';
 import type { GroundPickerProps } from './GroundPicker.type';
 

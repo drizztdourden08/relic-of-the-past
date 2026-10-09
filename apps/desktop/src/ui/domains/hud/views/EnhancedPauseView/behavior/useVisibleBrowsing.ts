@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useRef } from 'react';
-import type { PauseState } from '@shared/game/logic/pause';
+import type { PauseState } from '@rotp/game-data';
 import { FIRST_CELL } from '../EnhancedPauseView.constants';
 import type { BrowsingView } from '../EnhancedPauseView.type';
 

@@ -1,12 +1,12 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo } from 'react';
-import { GEAR_LADDER_KINDS, arrowTypeOf, gearTierCells } from '@shared/game/logic/pause';
-import { getItem } from '@shared/game/data';
-import { spriteFilename } from '@shared/game/logic/queries/item-sprites';
+import { GEAR_LADDER_KINDS, arrowTypeOf, gearTierCells } from '@rotp/game-data';
+import { getItem } from '@rotp/game-data';
+import { spriteFilename } from '@rotp/game-data';
 import { ownedMax } from '@app/lib/game/gear-ownership';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { GEAR_LABELS, PASSIVE_RECORDS, SECTION_OF } from '../EnhancedPauseView.constants';
-import type { GearLadderKind } from '@shared/game/logic/pause';
+import type { GearLadderKind } from '@rotp/game-data';
 import type { GearModel } from '../EnhancedPauseView.type';
 
 const spriteOf = (recordId: string): string => spriteFilename(getItem(recordId).spriteId) ?? '';
