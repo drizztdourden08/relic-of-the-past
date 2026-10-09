@@ -1327,6 +1327,35 @@ screen. Since §57 `gap` is `{ x, y }` under both engines (x horizontal, y verti
 belongs to any container, so both pass straight through in either direction and flipping back
 restores the grid exactly. The round trip never strands a child outside the new grid.
 
+### hud/hud-keyboard-move
+
+Phase 6 of the HUD drag and drop plan: the keyboard path, last only because it needed the intent
+producers final, and not optional. The fixture is a screen column holding `hud` (a column of
+`hearts`, a row of two pips, then `magic-bar`), `vault` (a row holding `coin`) and `loose`.
+
+- The announcement and the ghost say the same thing: `drop-ghost.ts` is a pure function of the
+  document and one intent, so the `aria-live` region is its lines flattened, and the test asserts
+  against the ghost's own model instead of writing the sentence twice. A refusal names both nodes
+  once.
+- The four keys are the third intent producer, not a fourth code path: each is an intent computed
+  from the tree and handed to the same `applyDrop`. Up and down reorder; out promotes to the
+  grandparent right after the old parent (as in every outliner); in demotes into the previous
+  sibling, appended.
+- Nowhere to go is not a refusal: `null` shakes the row and announces nothing (the list already
+  shows you are at the top), while a refusal announces a sentence; both write nothing. Null cases:
+  already first or last, a parent that is the screen, no previous sibling, a previous sibling that
+  is a leaf, and the root, which has no array to be spliced from.
+- Bare arrows and Ctrl+Shift or Ctrl+Alt arrows are left alone, since a row that swallowed them
+  would eat text selection or another control's keys.
+- The context menu is where the keys are learned: it prints each shortcut, opens from Shift+F10
+  and the ContextMenu key as well as a right click, closes on one Escape through the dismiss stack
+  at `menu`, runs the same operation, and dims items with their precondition named instead of
+  hiding them.
+- In `CellPicker` (moved from `GridEditor` in §50, since co placing is a child's edit) an occupied
+  cell is a destination: hatched, named with its occupant, and placeable, because co placing is
+  legal (§42) and the only way an overlay is authored. The node's own cell is never counted as
+  someone else's.
+
 ### hud/hud-layout-documents.keep.test.ts
 
 A built in and a custom layout are the same document. Every shipped arrangement goes through the
