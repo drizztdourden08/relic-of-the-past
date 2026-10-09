@@ -13,7 +13,8 @@ import { REFERENCE_DARK_ROOM_SETTING } from '../dark-rooms/dark-room-lights.data
 import { itemPowerOf } from '../item-power/item-power-rule';
 import { isSwordless } from '../progressive/progressive-reach';
 import { DEFAULT_DUNGEON_ITEM_SETTING, staysInOwnDungeon } from '../dungeon-items/dungeon-item-modes';
-import { retroShotWalletNeed, retroWalletNeed } from '../retro/retro-bow.data';
+import { retroShotWalletNeed } from '../retro/retro-shot-wallet-need';
+import { retroWalletNeed } from '../retro/retro-wallet-need';
 import { retroQuiverInPool } from '../retro/retro-shops';
 import type { CountGate, StoryGateSetting } from '../story-gates/story-gate.type';
 import type { DarkRoomSetting } from '../dark-rooms/dark-room.type';
