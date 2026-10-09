@@ -1795,6 +1795,35 @@ solve the stage uses (`behavior/grid-solve-lookup.ts`).
 - The editor view store is mocked to a fixed echo selection, because zustand serves
   `getInitialState` as the server snapshot; the selection itself is proved in `hud-grid-editor`.
 
+### hud/hud-grid-settings
+
+The Layout section's sections, driven in jsdom, re-pinning the guarantees §51 and §54 won against
+the §55, §56 and §58 arrangements so none was spent buying the new one.
+
+- The property sections are byte identical in all four selection states (nothing, a cell, a
+  column, a row), reached by real presses; matching HTML, not just the same controls. Since §58
+  there are four sections by concern (a grid has no Flow section; an absent section is fine, a
+  piece appearing inside one is not). The baseline itself asserts that the sections hold the gap,
+  the overlay, the engine and a tile, or the comparison would go vacuous. The settings components
+  cannot read a selection: grepped with comments stripped, because a capability returns with a
+  prop. Nothing is boxed in a `Field` (the labels are the section's own text), and section one
+  leads with the type.
+- The toolbar holds no property and no input in any state, asserted by name; the extent field
+  was the last input and made the strip two rows deep at 232. It leads with a chip naming the
+  selection (column 2, 3 cells) or a hint, and offers only the selection's own actions, never size.
+- Add column and add row are the lattice's own trailing `+`s, through the one document rule with
+  the children remapped (an append changes no address, §50.3). The selected track's header turns
+  its extent label into the four item size menu; unselected it only prints its extent.
+- The gap is an ordinary `ValueField` with its own spinner (§56): `StepNumberInput` and the rule
+  hiding the spinner are gone. The editor step reaches it as a context default, so the case stands
+  in for the View providing 4; decrement clamps at 0 because a gap cannot be negative. A literal
+  writes one axis on change, a formula only on commit (Enter; blur defers to an open completion
+  menu), and a stored expression reads back with its `=` and no spinner.
+- The engine flips from section one. Every alignment tile writes exactly its own value on its own
+  axis in every selection state; the 3x3 pad wrote both axes on every press because a cell is a
+  pair, and a rebuilt option table most often breaks by one entry writing its neighbour's value.
+  The guide colour is a bare swatch opening the picker, with no separate hex box.
+
 ### hud/hud-grid-track-edits.keep.test.ts
 
 §50's document rule: a track edit just happens and the children follow. §48 refused to remove a
