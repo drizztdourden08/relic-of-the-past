@@ -1,23 +1,44 @@
 /* @layer renderer-hud @kind types */
+import type { RefObject } from 'react';
+import type { HudCountdownSource } from '@shared/hud/data';
+import type { PlacedNode } from '@shared/hud/engine';
+import type { Rect, Size } from '@shared/hud/layouts';
+import type { ModernBindings, SlotAssignment, SlotIndex } from '@shared/types/controls/scheme';
+import type { HudCountdownContent, HudVitalsContent } from '../../compounds/HudNodeRenderer';
 
 interface HudLayoutViewProps {
-  /**
-   * Hold the cluster on screen regardless of the layout's `inGameplay` reveal
-   * rule. Used by a host that is showing the HUD instead of playing under it.
-   *
-   * It no longer has anything to say about WHICH chips are drawn: every
-   * assignable button is drawn everywhere now, so a player can always see where
-   * an item could go. That was this flag's other job and it is gone.
-   */
   showAllChips?: boolean;
-  /**
-   * A pause open/close animation, for a host that wants this HUD to slide with it.
-   * The host-drawn pair does NOT: its menu's chrome is measured around the HUD (a top
-   * strip left for the vitals, a legend along the bottom), so the HUD holds its place
-   * and only the button cluster stands down.
-   */
   slideTransform?: string;
   slideTransition?: string;
 }
 
-export type { HudLayoutViewProps };
+interface CountdownContent {
+  countdown: HudCountdownContent;
+  source: HudCountdownSource;
+}
+
+interface HudViewport {
+  containerRef: RefObject<HTMLDivElement | null>;
+  scale: number;
+  view: Size;
+}
+
+interface PlacedLayout {
+  all: readonly PlacedNode[];
+  buttons: readonly PlacedNode[];
+  rest: readonly PlacedNode[];
+  bounds: Rect | null;
+}
+
+interface ControlSchemeSlice {
+  bindings: ModernBindings | null;
+  assignments: Record<SlotIndex, SlotAssignment>;
+}
+
+interface VitalsContent {
+  vitals: HudVitalsContent;
+  hearts: number;
+  spritesBase: string;
+}
+
+export type { ControlSchemeSlice, CountdownContent, HudLayoutViewProps, HudViewport, PlacedLayout, VitalsContent };

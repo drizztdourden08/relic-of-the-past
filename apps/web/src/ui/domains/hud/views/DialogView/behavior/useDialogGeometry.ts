@@ -1,38 +1,9 @@
-/* @layer renderer-hud @kind logic */
-/**
- * The box layout in CSS pixels: the game-pixel layout from box-geometry, placed by the overlay's
- * scale. A box that follows its rows keeps the layout it had once a scroll starts, so the frame
- * never changes size while the rows slide; the next still frame lays it out again.
- */
+/* @layer renderer-hud @kind hook */
 import { useMemo, useRef } from 'react';
 import type { DialogFrame } from '@shared/game/dialog/dialog-frame.types';
 import { layoutBox, TILE_PX } from '@shared/game/dialog/box-geometry';
-import type { BoxLayout, BoxPlacement } from '@shared/game/dialog/box-geometry';
-import type { CssRect } from '../../../compounds/DialogBox';
-import type { DialogScale } from './useDialogScale';
-
-interface DialogGeometry {
-  frame: CssRect;
-  textOrigin: { x: number; y: number };
-  /** Text-area width in game pixels, magnification included. */
-  textWidthPx: number;
-  visibleRows: number;
-  /** CSS pixels per game pixel for the text, magnification included. */
-  unit: number;
-  /** CSS pixels per game pixel for the frame tiles. */
-  tile: number;
-}
-
-interface GeometryOptions {
-  mode: BoxPlacement;
-  fontScale: number;
-  /** Game pixels between the frame's sides and the text, and above and below it. */
-  padX: number;
-  padY: number;
-  /** Game pixels the text layer is scrolled; a native layout moves with it, as the game's text does. */
-  shiftX: number;
-  shiftY: number;
-}
+import type { BoxLayout } from '@shared/game/dialog/box-geometry';
+import type { DialogGeometry, DialogScale, GeometryOptions } from '../DialogView.type';
 
 const useDialogGeometry = (frame: DialogFrame, options: GeometryOptions, metrics: DialogScale): DialogGeometry => {
   const { mode, fontScale, padX, padY, shiftX, shiftY } = options;
@@ -42,7 +13,6 @@ const useDialogGeometry = (frame: DialogFrame, options: GeometryOptions, metrics
   const layout = useMemo(() => {
     const { topleft, rows, scrollStep, messageWidth, messageRows, generation } = frame;
     const key = `${generation}:${topleft}:${mode}:${fontScale}:${padX}:${padY}`;
-    // Mid-scroll, the rows in use change under the box; the layout from before the scroll holds.
     if (mode === 'fit' && scrollStep > 0 && held.current?.key === key) return held.current.layout;
     const next = layoutBox(topleft, rows, { mode, fontScale, padX, padY, messageWidth, messageRows });
     held.current = { key, layout: next };
@@ -68,4 +38,3 @@ const useDialogGeometry = (frame: DialogFrame, options: GeometryOptions, metrics
 };
 
 export { useDialogGeometry };
-export type { DialogGeometry, GeometryOptions };
