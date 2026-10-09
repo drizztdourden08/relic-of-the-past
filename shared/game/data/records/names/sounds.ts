@@ -1,20 +1,5 @@
 /* @layer shared-game @kind data */
-/**
- * Plain-language names for the game's sounds, one record per channel and id.
- *
- * Sourced from the community RAM map of the sound-effect queue registers ($7E012D-$7E012F),
- * cross-checked against the call sites generated from the decompiled source. Where the two
- * disagreed the call sites won. The map also corrected one of ours: sfx1 0x3c reads as an item-use
- * sound from its call sites, but it is the refusal noise those sites play when the use is denied.
- *
- * The ambient list stops at 0x17 because that is where the channel stops: the game raises twelve
- * ids there as literals, and its only other route to that port is a four-bit nibble from the
- * overworld music table, so nothing above 0x17 can ever be asked for.
- */
-// Self-contained on purpose: no type import, no annotation. The loader casts at the consumer
-// (shared/game/data/sound-names.ts), so the shape is checked where it is used.
 const SOUND_NAMES = [
-  // ambient
   { channel: 'ambient', id: 0x01, name: 'Rain / rushing water' },
   { channel: 'ambient', id: 0x03, name: 'Indoor storm / dungeon bed' },
   { channel: 'ambient', id: 0x05, name: 'Silence (clears the bed)' },
@@ -28,7 +13,6 @@ const SOUND_NAMES = [
   { channel: 'ambient', id: 0x13, name: 'Boss rumble' },
   { channel: 'ambient', id: 0x15, name: 'Triforce room door opens' },
   { channel: 'ambient', id: 0x17, name: 'Weather vane / flute boy stump' },
-  // sfx1
   { channel: 'sfx1', id: 0x01, name: 'Sword swing (light) 1' },
   { channel: 'sfx1', id: 0x02, name: 'Sword swing (light) 2' },
   { channel: 'sfx1', id: 0x03, name: 'Sword swing (heavy) 1' },
@@ -92,7 +76,6 @@ const SOUND_NAMES = [
   { channel: 'sfx1', id: 0x3d, name: 'Something large hits water' },
   { channel: 'sfx1', id: 0x3e, name: 'Flute (quiet)' },
   { channel: 'sfx1', id: 0x3f, name: 'Magic powder (variant)' },
-  // sfx2
   { channel: 'sfx2', id: 0x01, name: 'Master Sword beam' },
   { channel: 'sfx2', id: 0x02, name: 'Mothula wing flap' },
   { channel: 'sfx2', id: 0x03, name: 'Heavy impact' },

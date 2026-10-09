@@ -1,10 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * The four capacity-upgrade sprites, one per family. Each is an existing
- * extracted sprite (named by its file, never by tile numbers) or one of our own
- * drawings, with the up-arrow badge stamped bottom-right by the
- * `upgrade-composite` extractor. Filenames follow `upgrade-<family id>`.
- */
 import type { SpriteDefinition } from './manifest';
 
 const UPGRADE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [

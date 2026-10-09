@@ -2,11 +2,6 @@
 
 import type { ItemRecord } from '@shared/game/data/types';
 
-/**
- * The ten dungeon prizes. Each pendant has its own native receive id and the native grant
- * sets a fixed bit for it, so a pendant is an ordinary item wherever it lands. The seven
- * crystals share one native id and the room decides which bit banks, so they carry none.
- */
 const PRIZES_ITEMS: ItemRecord[] = [
   {
     id: 'item-056',

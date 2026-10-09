@@ -58,7 +58,6 @@ const DW_SWAMP_PALACE_FLOOR_B1_SCREENS: ScreenRecord[] = [
     gameId: { roomIndex: 37, palaceIndex: 10 },
     kind: 'dungeon',
     world: 'dark',
-    // name unknown: no check, and its own name went to room 0x16
     name: 'Swamp Palace room 0x25',
     areaId: 'area-007',
     locationId: 'location-027',

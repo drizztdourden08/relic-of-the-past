@@ -1,11 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * Seed NameTable for the pause menu. These are the English display strings
- * currently hardcoded in PauseMenuView, reattached to their ItemRecord ids so
- * a language set can retitle them. Item keys are `<item-record-id>-<tier>`
- * (tier is 1-based; tier 1 = the base pickup). Multi-word values are stored
- * as a single space-joined string; line breaking is derived at render time.
- */
 import type { NameTable } from '@shared/game/language/types';
 
 const defaultPauseNames: NameTable = {

@@ -1,0 +1,20 @@
+/* @layer shared-game @kind barrel */
+export { PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID } from './facade.constants';
+export { all, get } from '../registry';
+export { find } from './find';
+export { findOne } from './find-one';
+export { getActor } from './get-actor';
+export { getActorByGameId } from './get-actor-by-game-id';
+export { getArea } from './get-area';
+export { getCheck } from './get-check';
+export { getCheckByGameId } from './get-check-by-game-id';
+export { getConnection } from './get-connection';
+export { getDungeon } from './get-dungeon';
+export { getDungeonByGameId } from './get-dungeon-by-game-id';
+export { getItem } from './get-item';
+export { getItemByGameId } from './get-item-by-game-id';
+export { getLocation } from './get-location';
+export { getRegion } from './get-region';
+export { getScreen } from './get-screen';
+export { getScreenByGameId } from './get-screen-by-game-id';
+export { getTag } from './get-tag';

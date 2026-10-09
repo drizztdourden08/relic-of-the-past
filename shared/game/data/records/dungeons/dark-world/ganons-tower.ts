@@ -15,9 +15,7 @@ const DW_GANONS_TOWER_DUNGEON: DungeonRecord[] = [
       map: 'item-148',
       compass: 'item-161',
     },
-    // The ledger's "Agahnim 2 beaten" event: the fight grants no item.
     bossCheckId: 'check-349',
-    // The second tower fight is the same actor as the first, so its defeat rule is the same one.
     bossActorId: 'actor-140',
     roomScreenIds: [
                      'screen-318',

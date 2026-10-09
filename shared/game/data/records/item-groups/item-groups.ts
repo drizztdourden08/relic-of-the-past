@@ -1,10 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * The seven named item groups a count-based Requirement leaf
- * (`{ count: { groupId, n } }`) counts against. `memberIds` are carried over
- * verbatim from the old taxonomy table; the group's own name was already
- * label-worthy, so it doubles as `label`.
- */
 import { ITEM_GROUP_IDS } from '@shared/game/data/item-groups/ids';
 import type { ItemGroupRecord } from '@shared/game/data/types/item-group';
 
@@ -19,8 +13,6 @@ const ALL_ITEM_GROUPS: ItemGroupRecord[] = [
     label: 'Bottles',
     memberIds: ['item-023', 'item-044', 'item-045', 'item-046', 'item-062', 'item-061', 'item-073'],
   },
-  // Crystals/Pendants ids are the ones the dungeon 'prize' checks actually
-  // grant (vanillaItemIds), not the orphaned junk-table duplicates.
   {
     id: ITEM_GROUP_IDS.Crystals,
     label: 'Crystals',

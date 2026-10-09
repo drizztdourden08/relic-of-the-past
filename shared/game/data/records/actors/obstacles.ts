@@ -28,8 +28,6 @@ const OBSTACLES_ACTORS: ActorRecord[] = [
     name: 'Fake Pot [U-D]',
   },
   {
-    // In player.c:5562-5588 HandleItemTileAction_Dungeon the peg tile only responds
-    // when `link_item_in_hand` carries the hammer ("only hammers on pegs").
     id: 'actor-019',
     gameId: { objectSubIndex: 150 },
     kind: 'obstacle',
@@ -43,8 +41,6 @@ const OBSTACLES_ACTORS: ActorRecord[] = [
     name: 'Blue Switch Block [L-R]',
   },
   {
-    // Same hammer-peg tile family as actor-019 (dungeon.c draws both via
-    // RoomDraw_HammerPegSingle); player.c:5572-5574 gates the interaction on the hammer.
     id: 'actor-021',
     gameId: { objectSubIndex: 189 },
     kind: 'obstacle',

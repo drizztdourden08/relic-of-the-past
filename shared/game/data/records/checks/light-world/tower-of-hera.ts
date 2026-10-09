@@ -101,7 +101,6 @@ const LW_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-141',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 29 },
     kind: 'prize',
     screenId: 'screen-101',

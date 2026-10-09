@@ -178,7 +178,6 @@ const DW_TURTLE_ROCK_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-232',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 31 },
     kind: 'prize',
     screenId: 'screen-416',

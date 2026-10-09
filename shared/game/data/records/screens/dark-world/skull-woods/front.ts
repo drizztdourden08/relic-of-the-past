@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-/** The half of the floor reached from the four surface entrances. */
 
 import type { ScreenRecord } from '@shared/game/data/types';
 
@@ -71,8 +70,6 @@ const DW_SKULL_WOODS_FRONT_SCREENS: ScreenRecord[] = [
     gameId: { roomIndex: 86, palaceIndex: 16, entranceId: 40 },
     kind: 'dungeon',
     world: 'dark',
-    // Entrance 40 is the door into room 0x56. Hole slots 5 and 6 (entrance 121) drop into the
-    // same room, and connection-673 carries that mouth.
     name: 'Big Chest Room',
     areaId: 'area-015',
     locationId: 'location-024',

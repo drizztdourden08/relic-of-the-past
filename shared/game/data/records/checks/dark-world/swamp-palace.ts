@@ -148,7 +148,6 @@ const DW_SWAMP_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-167',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 24 },
     kind: 'prize',
     screenId: 'screen-319',

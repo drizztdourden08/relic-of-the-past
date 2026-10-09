@@ -1,8 +1,10 @@
 /* @layer shared-game @kind barrel */
-export { contextFor, allContexts } from './context-for';
+export { contextFor } from './context-for';
+export { allContexts } from './all-contexts';
 export { dialogueContexts } from './context';
 export { dialogueChoices } from './choices';
-export { triggerSourceFor, allTriggerSources } from './trigger-source-for';
+export { triggerSourceFor } from './trigger-source-for';
+export { allTriggerSources } from './all-trigger-sources';
 export { triggerSourceRows } from './trigger-source';
 export type {
   DialogueTrigger,
@@ -11,4 +13,4 @@ export type {
   DialogueContext,
   TriggerSource,
   TriggerSourceRow,
-} from './types';
+} from './dialogue-context.type';

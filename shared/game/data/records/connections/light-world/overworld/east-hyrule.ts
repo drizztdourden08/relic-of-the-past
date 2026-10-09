@@ -393,7 +393,6 @@ const LW_OVERWORLD_EAST_HYRULE_CONNECTIONS: ConnectionRecord[] = [
       tiles: [{ x: 12, y: 2 }, { x: 12, y: 3 }, { x: 13, y: 2 }, { x: 13, y: 3 }],
     },
     canExit: true,
-    // The one door into room 0x114: entrance slot 91 sits on overworld screen 0x0F.
     gameId: { entranceId: 92 },
     requirements: { itemId: 'item-031' },
     tags: ['tag-047', 'tag-074', 'tag-068'],

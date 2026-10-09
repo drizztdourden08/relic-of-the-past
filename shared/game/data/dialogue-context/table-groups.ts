@@ -1,13 +1,6 @@
 /* @layer shared-game @kind data */
-/**
- * Entries whose trigger comes from a lookup table instead of an individual
- * call site, so every id in the group shares one piece of evidence.
- *
- * Index convention and the proof behind it: see ./context.ts.
- */
-import type { ContextTableGroup } from './types';
+import type { ContextTableGroup } from './dialogue-context.type';
 
-/** Read from a placed marker; the index comes from the per-area table. */
 const signGroup: ContextTableGroup = {
   trigger: 'sign',
   source: 'overworld.c:299 (kOverworld_SignText)',
@@ -17,7 +10,6 @@ const signGroup: ContextTableGroup = {
   ],
 };
 
-/** Remote speech, triggered by standing on a floor marker; index from the per-room table. */
 const telepathyGroup: ContextTableGroup = {
   trigger: 'telepathy',
   source: 'dungeon.c:2381 (kDungeonRoomTeleMsg)',
@@ -27,7 +19,6 @@ const telepathyGroup: ContextTableGroup = {
   ],
 };
 
-/** Shown while a freshly collected pickup is held overhead. */
 const itemGetGroups: ContextTableGroup[] = [
   {
     trigger: 'item-get',

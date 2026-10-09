@@ -16,8 +16,6 @@ const DW_OVERWORLD_DARK_EAST_CHECKS: CheckRecord[] = [
     visualNote: 'Catfish submerges; spawns bouncing medallion',
     sourceFunc: 'Catfish_BigFish',
   },
-  // The cursed pond: same sprite and grant seam as Waterfall Fairy (check-021/022),
-  // one room over. Left/right share spriteType 114, disambiguated by room.
 ];
 
 export { DW_OVERWORLD_DARK_EAST_CHECKS };

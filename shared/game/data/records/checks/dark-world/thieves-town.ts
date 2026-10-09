@@ -121,7 +121,6 @@ const DW_THIEVES_TOWN_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-181',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 30 },
     kind: 'prize',
     screenId: 'screen-420',

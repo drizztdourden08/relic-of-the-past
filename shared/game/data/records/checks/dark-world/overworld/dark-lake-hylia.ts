@@ -92,9 +92,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CHECKS: CheckRecord[] = [
       at: '2026-08-26T03:06:52.923Z',
     },
   },
-  // The shelf behind the lake door. Four dark-world doors open onto this one shelf room
-  // (0x010F through entrance 0x60), so the overworld area the player walked in from is what
-  // tells them apart; see the seam note on CheckGameId.shopSeam.
   {
     id: 'check-632',
     gameId: { shopSeam: { roomId: 271, entrance: 96, owArea: 117, subtype: 7 } },

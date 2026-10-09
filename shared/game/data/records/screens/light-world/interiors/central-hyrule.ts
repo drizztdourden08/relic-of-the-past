@@ -29,9 +29,6 @@ const LW_INTERIORS_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-002',
     regionId: 'region-064',
     tags: ['tag-002', 'tag-013', 'tag-014'],
-    // The opening scene of room 0x104, the same room screen-204 holds. No door of its own
-    // opens into it, so it carries no entranceId; `variant` is what picks it, and the
-    // variant branch in detection.ts is what reads that.
     variant: { key: 'intro', progressTier: 0, condition: { type: 'progress', max: 0 } },
     spawns: [
       { actorId: 'actor-011', tile: { x: 52, y: 46 } },

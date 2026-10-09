@@ -20,8 +20,6 @@ const DW_INTERIORS_DARK_NORTH_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-471',
-    // The third door into room 0x112, entrance 90, opens on the dark sanctuary's screen.
-    // The other two are the lake and mountain cave shops.
     gameId: { roomIndex: 274, entranceId: 90 },
     kind: 'interior',
     world: 'dark',

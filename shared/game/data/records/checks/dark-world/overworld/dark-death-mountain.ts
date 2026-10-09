@@ -17,7 +17,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
     id: 'check-091',
     gameId: { roomId: 248, chestIndex: 0 },
     kind: 'chest',
-    // Both chests are in the one room the cartridge lists them under, so both sit on its screen.
     screenId: 'screen-457',
     regionId: 'region-156',
     name: 'Superbunny Cave - Top',
@@ -98,7 +97,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
     id: 'check-272',
     gameId: { owScreen: 74, mask: 64 },
     kind: 'standing',
-    // The ledge's own screen, the one the tracker's map reaches through the cave with the Cape.
     screenId: 'screen-230',
     regionId: 'region-045',
     name: 'Bumper Cave Ledge',
@@ -111,9 +109,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
       at: '2026-08-26T03:06:52.923Z',
     },
   },
-  // The cave shelf up here. Its room (0x0112 through entrance 0x58) is shared with the lake
-  // cave's door, so the overworld area the player walked in from tells the two apart; see the
-  // seam note on CheckGameId.shopSeam.
   {
     id: 'check-626',
     gameId: { shopSeam: { roomId: 274, entrance: 88, owArea: 69, subtype: 7 } },

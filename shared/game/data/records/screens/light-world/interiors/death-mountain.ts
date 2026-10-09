@@ -24,8 +24,6 @@ const LW_INTERIORS_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'light',
     interiorKind: 'cave',
-    // The front of Paradox Cave is room 0xFF, the room entrance 30 opens into. screen-213 carries
-    // that door, because the shop shelves stand in the same room.
     name: 'Paradox Cave Front',
     areaId: 'area-008',
     locationId: 'location-009',
@@ -41,7 +39,6 @@ const LW_INTERIORS_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'light',
     interiorKind: 'cave',
-    // Room 0xEF holds the five chests, and screen-459 carries its door (entrance 31).
     name: 'Paradox Cave Chest Area',
     areaId: 'area-008',
     locationId: 'location-009',
@@ -163,7 +160,6 @@ const LW_INTERIORS_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'light',
     interiorKind: 'passage',
-    // Entrance 26 stands on overworld 0x0E and lands in room 0xFD.
     name: 'Fairy Ascension Cave (Bottom)',
     areaId: 'area-008',
     locationId: 'location-009',
@@ -183,8 +179,6 @@ const LW_INTERIORS_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'light',
     interiorKind: 'passage',
-    // Room 0xED's hole drops into 0xFD, so the landing is the room screen-194 holds and this
-    // reading of it carries no door of its own.
     name: 'Fairy Ascension Cave (Drop)',
     areaId: 'area-008',
     locationId: 'location-009',
@@ -204,7 +198,6 @@ const LW_INTERIORS_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'light',
     interiorKind: 'passage',
-    // Entrance 27 stands on overworld 0x06 and lands in room 0xED.
     name: 'Fairy Ascension Cave (Top)',
     areaId: 'area-008',
     locationId: 'location-009',
@@ -426,8 +419,6 @@ const LW_INTERIORS_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'light',
     interiorKind: 'cave',
-    // Entrance 32 stands on overworld 0x06 and lands in room 0xDF, the top of the three rooms
-    // room 0xEF's header staircases link (0xDF, 0xEF, 0xFF).
     name: 'Paradox Cave',
     areaId: 'area-008',
     locationId: 'location-009',
@@ -444,7 +435,6 @@ const LW_INTERIORS_DEATH_MOUNTAIN_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'light',
     interiorKind: 'passage',
-    // Entrance 29 lands in room 0xEE, whose hole drops into 0xFE: the room screen-163 holds.
     name: 'Spiral Cave (Bottom)',
     areaId: 'area-008',
     locationId: 'location-009',

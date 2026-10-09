@@ -81,8 +81,6 @@ const LW_INTERIORS_KAKARIKO_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-488',
-    // The cave is two rooms: the door room 0x119, and the cellar the header's first
-    // staircase travels to. The five chests are all in the cellar.
     gameId: { roomIndex: 285 },
     kind: 'interior',
     world: 'light',
@@ -160,8 +158,6 @@ const LW_INTERIORS_KAKARIKO_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-203',
-    // Two south-facing doors of the building open on this room, entrances 66 and 68. The
-    // record carries the lower slot; the other one reaches the same place.
     gameId: { roomIndex: 259, entranceId: 66 },
     kind: 'interior',
     world: 'light',
@@ -225,8 +221,6 @@ const LW_INTERIORS_KAKARIKO_SCREENS: ScreenRecord[] = [
     kind: 'interior',
     world: 'light',
     interiorKind: 'house',
-    // Room 0x103 has three doors. Entrance 68 is the third of them, and the bush stands in
-    // front of it.
     name: 'Bush Covered House',
     areaId: 'area-012',
     locationId: 'location-017',

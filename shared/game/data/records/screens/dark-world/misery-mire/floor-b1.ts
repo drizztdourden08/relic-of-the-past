@@ -8,7 +8,6 @@ const DW_MISERY_MIRE_FLOOR_B1_SCREENS: ScreenRecord[] = [
     gameId: { roomIndex: 151, palaceIndex: 14 },
     kind: 'dungeon',
     world: 'dark',
-    // name unknown: no check, no reference room
     name: 'Misery Mire room 0x97',
     areaId: 'area-005',
     locationId: 'location-020',

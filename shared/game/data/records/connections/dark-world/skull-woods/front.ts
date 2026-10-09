@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-/** The connections of the floor half reached from the surface. */
 
 import type { ConnectionRecord } from '@shared/game/data/types';
 

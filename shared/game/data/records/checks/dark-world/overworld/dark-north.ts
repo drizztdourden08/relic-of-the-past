@@ -15,7 +15,6 @@ const DW_OVERWORLD_DARK_NORTH_CHECKS: CheckRecord[] = [
     vanillaItemIds: ['item-004'],
     scope: 'npc',
     pond: { pondId: 'cursed', rung: 1 },
-    // The game keeps no flag for this gift: a plain file answers from the item held. A seed's own bit is above.
     sourceFunc: 'Sprite_WishPond3',
     fallback: { itemId: 'item-004' },
     review: {
@@ -37,7 +36,6 @@ const DW_OVERWORLD_DARK_NORTH_CHECKS: CheckRecord[] = [
     vanillaItemIds: ['item-060'],
     scope: 'npc',
     pond: { pondId: 'cursed', rung: 2 },
-    // The game keeps no flag for this gift: a plain file answers from the item held. A seed's own bit is above.
     sourceFunc: 'Sprite_WishPond3',
     fallback: { anyOf: [{ itemId: 'item-060' }, { itemId: 'item-078' }] },
     review: {

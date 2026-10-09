@@ -17,7 +17,6 @@ const DW_TURTLE_ROCK_DUNGEON: DungeonRecord[] = [
     },
     bossCheckId: 'check-231',
     prizeCheckId: 'check-232',
-    // The three-headed boss is three actors; the rock head is the form the fight opens as.
     bossActorId: 'actor-146',
     medallionGate: 'item-018',
     roomScreenIds: [

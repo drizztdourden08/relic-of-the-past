@@ -23,7 +23,6 @@ const LW_OVERWORLD_HYRULE_CASTLE_CHECKS: CheckRecord[] = [
     screenId: 'screen-171',
     regionId: 'region-059',
     name: 'Secret Passage',
-    // The Lamp, which pays its stand-in once one is held (item-019 aliasOf).
     vanillaItemIds: ['item-019'],
     review: {
       status: 'accepted',
@@ -98,10 +97,6 @@ const LW_OVERWORLD_HYRULE_CASTLE_CHECKS: CheckRecord[] = [
     sourceFunc: 'Sprite_Witch',
     requirements: { itemId: 'item-042' },
   },
-  // The three cauldrons in the hut, in the subtype order the handler dispatches them. Their
-  // seller works from its own sprites, not a shelf, so this is a seam of its own; the room
-  // names the shop alone. The powder trade in the same room is a separate check and stays as
-  // it is. Position here is the dispatch order and not a claim about where each pot stands.
   {
     id: 'check-653',
     gameId: { shopSeam: { roomId: 265, entrance: 76, owArea: null, subtype: 2 } },

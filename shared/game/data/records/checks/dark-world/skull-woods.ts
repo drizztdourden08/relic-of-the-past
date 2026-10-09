@@ -123,7 +123,6 @@ const DW_SKULL_WOODS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-192',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 27 },
     kind: 'prize',
     screenId: 'screen-342',

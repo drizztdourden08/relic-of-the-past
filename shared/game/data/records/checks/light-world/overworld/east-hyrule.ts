@@ -41,7 +41,6 @@ const LW_OVERWORLD_EAST_HYRULE_CHECKS: CheckRecord[] = [
     vanillaItemIds: ['item-043'],
     scope: 'npc',
     pond: { pondId: 'wishing', rung: 1 },
-    // The game keeps no flag for this gift: a plain file answers from the item held. A seed's own bit is above.
     sourceFunc: 'Sprite_WishPond3',
     fallback: { itemId: 'item-043' },
     review: {
@@ -63,7 +62,6 @@ const LW_OVERWORLD_EAST_HYRULE_CHECKS: CheckRecord[] = [
     vanillaItemIds: ['item-006'],
     scope: 'npc',
     pond: { pondId: 'wishing', rung: 2 },
-    // The game keeps no flag for this gift: a plain file answers from the shield held, or the one that replaces it. A seed's own bit is above.
     sourceFunc: 'Sprite_WishPond3',
     fallback: { anyOf: [{ itemId: 'item-006' }, { itemId: 'item-007' }] },
     review: {

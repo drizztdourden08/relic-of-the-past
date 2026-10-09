@@ -43,7 +43,6 @@ const JUNK_ITEMS: ItemRecord[] = [
     gameId: { receiveItemId: 14 },
     origin: 'vanilla',
     category: 'junk',
-    // The loose bee, a second native row that fills a bottle the player already carries.
     name: 'Bee',
     spriteId: 'sprite-hud-bottle-bee',
   },
@@ -110,7 +109,6 @@ const JUNK_ITEMS: ItemRecord[] = [
     gameId: { receiveItemId: 46 },
     origin: 'vanilla',
     category: 'junk',
-    // A refill row: it fills a bottle in hand, where item-044 hands over the bottle itself.
     name: 'Red Potion',
     spriteId: 'sprite-hud-bottle-red',
   },
@@ -119,7 +117,6 @@ const JUNK_ITEMS: ItemRecord[] = [
     gameId: { receiveItemId: 47 },
     origin: 'vanilla',
     category: 'junk',
-    // A refill row, as item-047 is.
     name: 'Green Potion',
     spriteId: 'sprite-hud-bottle-green',
   },
@@ -128,7 +125,6 @@ const JUNK_ITEMS: ItemRecord[] = [
     gameId: { receiveItemId: 48 },
     origin: 'vanilla',
     category: 'junk',
-    // A refill row, as item-047 is.
     name: 'Blue Potion',
     spriteId: 'sprite-hud-bottle-blue',
   },
@@ -185,7 +181,6 @@ const JUNK_ITEMS: ItemRecord[] = [
     gameId: { receiveItemId: 58 },
     origin: 'vanilla',
     category: 'junk',
-    // The second native bow row, the one the reference tracks as the alternate.
     name: 'Bow (Alt)',
     spriteId: 'sprite-hud-bow',
   },
@@ -245,12 +240,6 @@ const JUNK_ITEMS: ItemRecord[] = [
     name: 'Rupees (300)',
     spriteId: 'sprite-receipt-rupee-300',
   },
-  // A second native "20 Rupees" receive id (71), distinct from item-055
-  // (receiveItemId 54), which already carries the canonical name
-  // 'Rupees (20)'. Left un-canonicalized instead of renamed to the same string,
-  // because a name collision isn't allowed: it is the join key rando
-  // delivery keys off of. Needs a real AP DataPackage cross-check to learn which
-  // native id (if not both) carries that name.
   {
     id: 'item-072',
     gameId: { receiveItemId: 71 },

@@ -27,9 +27,6 @@ const LW_HYRULE_CASTLE_FLOOR_B1_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-105',
-    // The grave behind the sanctuary drops into room 0x11, which is also the secret room's
-    // own (screen-102): the drop lands on this side of its bombable wall. Room 0x18, which
-    // this screen used to carry, is the north fairy cave.
     gameId: { roomIndex: 17, palaceIndex: 0 },
     kind: 'dungeon',
     world: 'light',

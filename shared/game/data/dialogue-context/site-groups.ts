@@ -1,11 +1,5 @@
 /* @layer shared-game @kind data */
-/**
- * Entries pinned to one call site in the game core, kept as [entry id, line]
- * pairs under the file they were read from.
- *
- * Index convention and the proof behind it: see ./context.ts.
- */
-import type { ContextSiteGroup } from './types';
+import type { ContextSiteGroup } from './dialogue-context.type';
 
 const siteGroups: ContextSiteGroup[] = [
   {

@@ -15,7 +15,6 @@ const LW_CASTLE_TOWER_DUNGEON: DungeonRecord[] = [
       map: null,
       compass: null,
     },
-    // The ledger's "Agahnim 1 beaten" event: the fight grants no item.
     bossCheckId: 'check-329',
     bossActorId: 'actor-140',
     roomScreenIds: ['screen-106', 'screen-110', 'screen-114', 'screen-146', 'screen-150', 'screen-153', 'screen-157'],

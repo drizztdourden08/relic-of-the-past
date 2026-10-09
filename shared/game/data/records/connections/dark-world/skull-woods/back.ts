@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-/** The connections of the floor half behind the burned skull. */
 
 import type { ConnectionRecord } from '@shared/game/data/types';
 

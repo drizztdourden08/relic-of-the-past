@@ -405,7 +405,6 @@ const DW_OVERWORLD_DARK_EAST_CONNECTIONS: ConnectionRecord[] = [
   },
   {
     id: 'connection-606',
-    // Entrance slot 37 is the door into room 0x4A, on overworld screen 0x5F.
     screenId: 'screen-312',
     toConnectionId: 'connection-633',
     kind: 'entrance',

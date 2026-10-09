@@ -100,7 +100,6 @@ const LW_DESERT_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-131',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 22 },
     kind: 'prize',
     screenId: 'screen-113',

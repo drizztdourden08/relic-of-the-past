@@ -124,7 +124,6 @@ const DW_MISERY_MIRE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-216',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 26 },
     kind: 'prize',
     screenId: 'screen-399',

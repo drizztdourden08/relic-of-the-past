@@ -1,114 +1,101 @@
 /* @layer shared-game @kind data */
 import type { Requirement } from '../types';
-import { ITEM_GROUP_IDS } from '../item-groups';
 
-// ─── Sword Checks ───
+const FIGHTER_SWORD = 'item-074';
+const MASTER_SWORD = 'item-002';
+const TEMPERED_SWORD = 'item-003';
+const GOLDEN_SWORD = 'item-004';
+const FIRE_ROD = 'item-008';
+const ICE_ROD = 'item-009';
+const HAMMER = 'item-010';
+const HOOKSHOT = 'item-011';
+const BOW = 'item-012';
+const BLUE_BOOMERANG = 'item-013';
+const BOMBOS = 'item-016';
+const ETHER = 'item-017';
+const QUAKE = 'item-018';
+const LAMP = 'item-019';
+const CANE_OF_SOMARIA = 'item-022';
+const CANE_OF_BYRNA = 'item-025';
+const POWER_GLOVE = 'item-028';
+const TITANS_MITTS = 'item-029';
+const BOOK_OF_MUDORA = 'item-030';
+const BOMB_PICKUP = 'item-041';
+const RED_BOOMERANG = 'item-043';
+const SILVER_BOW = 'item-060';
+const PEGASUS_BOOTS = 'item-076';
 
 const hasSword: Requirement = {
-  anyOf: [{ itemId: 'item-074' }, { itemId: 'item-002' }, { itemId: 'item-003' }, { itemId: 'item-004' }],
+  anyOf: [{ itemId: FIGHTER_SWORD }, { itemId: MASTER_SWORD }, { itemId: TEMPERED_SWORD }, { itemId: GOLDEN_SWORD }],
 };
 
 const hasBeamSword: Requirement = {
-  anyOf: [{ itemId: 'item-002' }, { itemId: 'item-003' }, { itemId: 'item-004' }],
+  anyOf: [{ itemId: MASTER_SWORD }, { itemId: TEMPERED_SWORD }, { itemId: GOLDEN_SWORD }],
 };
-
-// ─── Melee ───
 
 const hasMeleeWeapon: Requirement = {
-  anyOf: [hasSword, { itemId: 'item-010' }], // Hammer
+  anyOf: [hasSword, { itemId: HAMMER }],
 };
-
-// ─── Gloves ───
 
 const canLiftRocks: Requirement = {
-  anyOf: [{ itemId: 'item-028' }, { itemId: 'item-029' }], // Power Glove / Titans Mitts
+  anyOf: [{ itemId: POWER_GLOVE }, { itemId: TITANS_MITTS }],
 };
 
-const canLiftHeavyRocks: Requirement = { itemId: 'item-029' }; // Titans Mitts
-
-// ─── Ranged ───
+const canLiftHeavyRocks: Requirement = { itemId: TITANS_MITTS };
 
 const canShootArrows: Requirement = {
-  anyOf: [{ itemId: 'item-012' }, { itemId: 'item-060' }], // Bow / Silver Bow
+  anyOf: [{ itemId: BOW }, { itemId: SILVER_BOW }],
 };
 
-// ─── Bombs ───
-// No dedicated "own the ability to use bombs" ItemRecord exists in the catalog
-// (only the refill pickups, item-041 and item-050). This uses the initial
-// bomb-bag pickup as the best-available proxy; flagged in the migration report
-// for a real capability item to be added to the catalog.
-const canUseBombs: Requirement = { itemId: 'item-041' };
+const canUseBombs: Requirement = { itemId: BOMB_PICKUP };
 
 const canBombOrBonk: Requirement = {
-  anyOf: [{ itemId: 'item-076' }, canUseBombs], // Pegasus Boots
+  anyOf: [{ itemId: PEGASUS_BOOTS }, canUseBombs],
 };
 
-// ─── Fire / Ice ───
-
-/**
- * An unlit room crossed by sight. The game lets a player walk it blind, so this is a rule of
- * comfort: the tracker's resolver swaps this exact object for the lights the file accepts, or
- * for nothing when dark rooms are not asked to be lit. Read on its own it is the Lamp.
- */
-const canSeeInDarkRooms: Requirement = { allOf: [{ itemId: 'item-019' }] };
+const canSeeInDarkRooms: Requirement = { allOf: [{ itemId: LAMP }] };
 
 const hasFireSource: Requirement = {
-  anyOf: [{ itemId: 'item-008' }, { itemId: 'item-019' }], // Fire Rod / Lamp
+  anyOf: [{ itemId: FIRE_ROD }, { itemId: LAMP }],
 };
 
 const canMeltThings: Requirement = {
-  anyOf: [{ itemId: 'item-008' }, { allOf: [{ itemId: 'item-016' }, hasSword] }], // Fire Rod / (Bombos + sword)
+  anyOf: [{ itemId: FIRE_ROD }, { allOf: [{ itemId: BOMBOS }, hasSword] }],
 };
-
-// ─── Tablets ───
 
 const canRetrieveTablet: Requirement = {
-  allOf: [{ itemId: 'item-030' }, hasBeamSword], // Book of Mudora
+  allOf: [{ itemId: BOOK_OF_MUDORA }, hasBeamSword],
 };
-
-// ─── Crystal Switch ───
 
 const canActivateCrystalSwitch: Requirement = {
   anyOf: [
     hasSword,
-    { itemId: 'item-010' }, // Hammer
+    { itemId: HAMMER },
     canUseBombs,
     canShootArrows,
-    { itemId: 'item-011' }, // Hookshot
-    { itemId: 'item-022' }, // Cane of Somaria
-    { itemId: 'item-025' }, // Cane of Byrna
-    { itemId: 'item-008' }, // Fire Rod
-    { itemId: 'item-009' }, // Ice Rod
-    { itemId: 'item-013' }, // Blue Boomerang
-    { itemId: 'item-043' }, // Red Boomerang
+    { itemId: HOOKSHOT },
+    { itemId: CANE_OF_SOMARIA },
+    { itemId: CANE_OF_BYRNA },
+    { itemId: FIRE_ROD },
+    { itemId: ICE_ROD },
+    { itemId: BLUE_BOOMERANG },
+    { itemId: RED_BOOMERANG },
   ],
 };
-
-// ─── Kill Most Things (non-enemizer) ───
 
 const canKillMostThings: Requirement = {
   anyOf: [
     hasMeleeWeapon,
-    { itemId: 'item-022' }, // Cane of Somaria
-    { itemId: 'item-025' }, // Cane of Byrna
+    { itemId: CANE_OF_SOMARIA },
+    { itemId: CANE_OF_BYRNA },
     canShootArrows,
-    { itemId: 'item-008' }, // Fire Rod
+    { itemId: FIRE_ROD },
     canUseBombs,
   ],
 };
 
-// ─── Medallion Helpers ───
-// In vanilla, Misery Mire requires Ether and Turtle Rock requires Quake.
-// These are the fixed vanilla medallion requirements.
-
-const hasMiseryMireMedallion: Requirement = { itemId: 'item-017' }; // Ether
-const hasTurtleRockMedallion: Requirement = { itemId: 'item-018' }; // Quake
-
-// ─── Crystal Count ───
-
-const hasCrystals = (n: number): Requirement => ({
-  count: { groupId: ITEM_GROUP_IDS.Crystals, n },
-});
+const hasMiseryMireMedallion: Requirement = { itemId: ETHER };
+const hasTurtleRockMedallion: Requirement = { itemId: QUAKE };
 
 export {
   canSeeInDarkRooms,
@@ -122,10 +109,10 @@ export {
   canShootArrows,
   canUseBombs,
   hasBeamSword,
-  hasCrystals,
   hasFireSource,
   hasMeleeWeapon,
   hasMiseryMireMedallion,
   hasSword,
   hasTurtleRockMedallion,
 };
+export { hasCrystals } from './has-crystals';

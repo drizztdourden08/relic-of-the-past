@@ -30,5 +30,4 @@ export type {
   TileReq, TileLabel, TilePass, TileCat, TileAttrDef,
   TileBehavior, TileVisual,
 } from './tile-attrs-types';
-// The sound-name record's shape lives with its loader; the vault dataset imports it from here.
 export type { SoundNameRecord } from '../sound-names';

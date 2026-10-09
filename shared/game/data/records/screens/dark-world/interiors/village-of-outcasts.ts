@@ -66,8 +66,6 @@ const DW_INTERIORS_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-481',
-    // Room 0x11C has two doors: entrance 83 from the bomb shop's screen, and entrance 84
-    // from the village. The chest the table holds in this room is this house's.
     gameId: { roomIndex: 284, entranceId: 84 },
     kind: 'interior',
     world: 'dark',

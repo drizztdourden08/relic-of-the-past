@@ -123,7 +123,6 @@ const DW_ICE_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-203',
-    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 28 },
     kind: 'prize',
     screenId: 'screen-450',
