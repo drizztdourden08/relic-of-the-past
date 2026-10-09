@@ -1,22 +1,10 @@
 /* @layer shared-game @kind logic */
-/**
- * A tree specialized to one world: every setting and seed-table test answered, the branch it
- * picks kept and the other dropped, every derived helper inlined, and every setting or seed
- * argument replaced by its value. What is left names only what this world's rules can really
- * ask, which is how the model knows which items a rule reads (read-items.ts).
- */
-import { expansionOf } from './helper-calls';
+import { expansionOf } from './expansion-of';
+import { RULE_FALSE, RULE_TRUE } from './specialize-node.constants';
 import type { World } from '../../world/world.type';
 import type { Holding } from '../../world/collection-state';
 import type { RuleArg, RuleCount, RuleNode } from '../../world/rules/rule-node.type';
-
-interface Readings {
-  option: (key: string) => string | number | boolean;
-  seed: (key: string) => string | number | boolean;
-}
-
-const TRUE: RuleNode = { op: 'true' };
-const FALSE: RuleNode = { op: 'false' };
+import type { Readings } from './export.type';
 
 const valueOf = (readings: Readings, ref: RuleArg): string | number | boolean => {
   if (typeof ref !== 'object') return ref;
@@ -27,9 +15,9 @@ const countOf = (readings: Readings, count: RuleCount): number => Number(valueOf
 
 const join = (op: 'all' | 'any', parts: readonly RuleNode[]): RuleNode => {
   const absorbing = op === 'all' ? 'false' : 'true';
-  if (parts.some((part) => part.op === absorbing)) return op === 'all' ? FALSE : TRUE;
+  if (parts.some((part) => part.op === absorbing)) return op === 'all' ? RULE_FALSE : RULE_TRUE;
   const kept = parts.filter((part) => part.op !== (op === 'all' ? 'true' : 'false'));
-  if (kept.length === 0) return op === 'all' ? TRUE : FALSE;
+  if (kept.length === 0) return op === 'all' ? RULE_TRUE : RULE_FALSE;
   return kept.length === 1 ? kept[0] : { op, of: kept };
 };
 
@@ -44,8 +32,8 @@ const specializeNode = (node: RuleNode, world: World, readings: Readings): RuleN
       if (cond.op === 'false') return again(node.else);
       return { op: 'if', cond, then: again(node.then), else: again(node.else) };
     }
-    case 'option': return readings.option(node.key) === node.equals ? TRUE : FALSE;
-    case 'seed': return readings.seed(node.key) === node.equals ? TRUE : FALSE;
+    case 'option': return readings.option(node.key) === node.equals ? RULE_TRUE : RULE_FALSE;
+    case 'seed': return readings.seed(node.key) === node.equals ? RULE_TRUE : RULE_FALSE;
     case 'has': return typeof node.item === 'object'
       ? { ...node, item: String(valueOf(readings, node.item)) as Holding }
       : node;
@@ -62,4 +50,3 @@ const specializeNode = (node: RuleNode, world: World, readings: Readings): RuleN
 };
 
 export { specializeNode };
-export type { Readings };

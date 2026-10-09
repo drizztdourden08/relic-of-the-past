@@ -1,19 +1,14 @@
 /* @layer shared-game @kind types */
-/**
- * The JSON the world package is built from. Archipelia builds that package. The rule trees are the engine's own RuleNode trees, unchanged; everything that one
- * profile settles (which locations exist, the pool, the readings, the seed table) travels as a
- * WorldModel, written into the player file under `pre_rolled.world`.
- */
 import type { RuleNode, RuleOptionKey, RuleOptionValue } from '../../world/rules/rule-node.type';
 import type { SeedValue } from '../../world/world.type';
 import type { OptionValue } from '../../world/options.type';
+import type { FillWorld } from '../../world/fill/fill-world.type';
+import type { LocationKey } from '../../world/location-key';
 
-/** When a location exists: always, or only while the profile's world model lists it. */
 type LocationRequires = { always: true } | { present: 'pond' | 'shop' };
 
 interface ExportedLocation {
   key: string;
-  /** Archipelago's numeric id. */
   id: number;
   name: string;
   region: string;
@@ -29,10 +24,6 @@ interface ExportedExit {
   rule: RuleNode;
 }
 
-/**
- * A story event of the world: the loader creates it at generation time as an Archipelago event
- * (a location and an item, both with no id, under the event's own name) in its region.
- */
 interface ExportedEvent {
   key: string;
   name: string;
@@ -53,21 +44,18 @@ interface ExportedItem {
   key: string;
   id: number;
   name: string;
-  /** What the pool itself calls the item under the default options. */
   classification: ItemClass;
 }
 
-interface ExportedHelper {
+interface ExportedHelperCall {
   name: string;
   args: readonly (number | string | boolean)[];
   rule: RuleNode;
 }
 
 interface ExportedRules {
-  /** The helpers the loader implements itself, with their parameter names. */
   primitives: Record<string, readonly string[]>;
-  /** Every derived helper call the trees make, with the tree it stands for. */
-  helpers: ExportedHelper[];
+  helpers: ExportedHelperCall[];
 }
 
 type OptionType = 'toggle' | 'choice' | 'range' | 'text' | 'dict';
@@ -78,7 +66,6 @@ interface ExportedOption {
   displayName: string;
   description: string;
   default: OptionValue | Record<string, never>;
-  /** Choice rows: the app's value, the numeric id Archipelago stores, and whether it is a number. */
   choices?: { value: string; id: number }[];
   numeric?: boolean;
   range?: { min: number; max: number };
@@ -90,7 +77,6 @@ interface CapacityFamilyData {
   ladder: readonly number[];
   vanillaRung: number;
   startTier: number;
-  /** jumpItems[j - 1] is the item that climbs j rungs. */
   jumpItems: readonly string[];
   progressiveItem: string;
   planJumps: readonly number[];
@@ -98,11 +84,9 @@ interface CapacityFamilyData {
 
 interface PrimitiveData {
   families: Record<'explosives' | 'projectiles' | 'meter' | 'wallet', CapacityFamilyData>;
-  /** The capacity fairy's room and price: a vanilla bomb or arrow family tops out there. */
   capacityShop: { region: string; price: number };
   meterHalf: string;
   meterQuarter: string;
-  /** Items every use of which spends the meter: unusable on the meter's empty rung. */
   meterItems: readonly string[];
   bottles: readonly string[];
   bottleLimit: number;
@@ -113,19 +97,13 @@ interface PrimitiveData {
   potionSeller: string;
 }
 
-/** Everything one profile's world settles, keyed by location and item keys. */
 interface WorldModel {
   options: Record<string, OptionValue>;
   present: string[];
   locked: Record<string, string>;
   prizes: { shuffle: boolean; vanilla: Record<string, string>; items: string[] };
   pool: Record<string, number>;
-  /**
-   * Items placed inside the dungeons before the main fill; `dungeon` set pins one to its own.
-   * `rank` orders the placement: the fill takes the highest rank first (fill/dungeon-fill.ts).
-   */
   dungeonItems: { item: string; dungeon: string | null; rank: number }[];
-  /** Every dungeon location, with the dungeon that owns it. */
   locationDungeon: Record<string, string>;
   classes: Record<string, ItemClass>;
   readings: Record<RuleOptionKey, RuleOptionValue>;
@@ -136,7 +114,31 @@ interface WorldModel {
   fillerItem: string;
 }
 
+interface WorldModelInput {
+  fillWorld: FillWorld;
+  options: Record<string, OptionValue>;
+  shufflePrizes: boolean;
+}
+
+type ItemHalf = Pick<WorldModel, 'pool' | 'dungeonItems' | 'classes' | 'forbidden' | 'fillerItem'>;
+
+interface ItemHalfInput {
+  fillWorld: FillWorld;
+  fillable: readonly LocationKey[];
+  fixedProgression: ReadonlySet<string>;
+  read: ReadonlySet<string>;
+  locked: Iterable<string>;
+}
+
+interface Readings {
+  option: (key: string) => string | number | boolean;
+  seed: (key: string) => string | number | boolean;
+}
+
+type HelperNode = Extract<RuleNode, { op: 'helper' }>;
+
 export type {
-  CapacityFamilyData, ExportedEvent, ExportedExit, ExportedHelper, ExportedItem, ExportedLocation, ExportedOption,
-  ExportedRegions, ExportedRules, ItemClass, LocationRequires, OptionType, PrimitiveData, WorldModel,
+  CapacityFamilyData, ExportedEvent, ExportedExit, ExportedHelperCall, ExportedItem, ExportedLocation, ExportedOption,
+  ExportedRegions, ExportedRules, HelperNode, ItemClass, ItemHalf, ItemHalfInput, LocationRequires, OptionType,
+  PrimitiveData, Readings, WorldModel, WorldModelInput,
 };

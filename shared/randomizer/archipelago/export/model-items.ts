@@ -1,18 +1,12 @@
 /* @layer shared-game @kind logic */
-/**
- * The item half of a world model: the pool Archipelago fills, the dungeon items placed before
- * it, each item's class, and the placement predicates (the engine's item rules) written out as
- * the items each fillable location refuses.
- */
 import { USEFUL_ITEMS } from '../../world/pool/item-classes.data';
 import { isProgressionUnder } from '../../world/pool/progression-class';
 import { modeOfDungeonItem, staysInOwnDungeon } from '../../world/dungeon-items/dungeon-item-modes';
+import { PINNED_SORT_BONUS } from './model-items.constants';
 import type { FillWorld } from '../../world/fill/fill-world.type';
 import type { ItemKey } from '../../world/item-ids.data';
 import type { LocationKey } from '../../world/location-key';
-import type { ItemClass, WorldModel } from './export.type';
-
-type ItemHalf = Pick<WorldModel, 'pool' | 'dungeonItems' | 'classes' | 'forbidden' | 'fillerItem'>;
+import type { ItemClass, ItemHalf, ItemHalfInput, WorldModel } from './export.type';
 
 const countsOf = (items: readonly string[]): Record<string, number> => {
   const counts: Record<string, number> = {};
@@ -20,14 +14,11 @@ const countsOf = (items: readonly string[]): Record<string, number> => {
   return counts;
 };
 
-/** The prefill's own order (fill/dungeon-fill.ts): big keys, then small keys, pinned ones first. */
-const SPECIFIC_SORT_BONUS = 5;
-
 const dungeonItemsOf = (fillWorld: FillWorld): WorldModel['dungeonItems'] => {
   const { world, pool, itemDungeon, dungeonItems: setting } = fillWorld;
   const rankOf = (item: ItemKey, pinned: boolean): number => {
     const dungeon = world.dungeons.get(itemDungeon.get(item) ?? '');
-    const bonus = pinned ? SPECIFIC_SORT_BONUS : 0;
+    const bonus = pinned ? PINNED_SORT_BONUS : 0;
     if (dungeon?.bigKey === item) return 3 + bonus;
     return (dungeon?.smallKey === item ? 2 : 1) + bonus;
   };
@@ -37,7 +28,6 @@ const dungeonItemsOf = (fillWorld: FillWorld): WorldModel['dungeonItems'] => {
   });
 };
 
-/** The item the pool carries most copies of among its filler: what an extra slot receives. */
 const commonestFiller = (filler: readonly string[]): string => {
   const counts = Object.entries(countsOf(filler)).sort(([a, left], [b, right]) => right - left || a.localeCompare(b));
   if (counts.length === 0) throw new Error('pool carries no filler');
@@ -55,18 +45,6 @@ const forbiddenOf = (
   }
   return forbidden;
 };
-
-interface ItemHalfInput {
-  fillWorld: FillWorld;
-  /** The locations Archipelago fills: present, not a prize or a locked spot. */
-  fillable: readonly LocationKey[];
-  /** The prizes: advancement whatever the pool says. */
-  fixedProgression: ReadonlySet<string>;
-  /** Items the world's rules read (read-items.ts). */
-  read: ReadonlySet<string>;
-  /** Items locked onto their spots, which still need a class. */
-  locked: Iterable<string>;
-}
 
 const itemHalfOf = (input: ItemHalfInput): ItemHalf => {
   const { fillWorld, fillable, fixedProgression, read, locked } = input;
@@ -93,4 +71,3 @@ const itemHalfOf = (input: ItemHalfInput): ItemHalf => {
 };
 
 export { itemHalfOf };
-export type { ItemHalfInput };
