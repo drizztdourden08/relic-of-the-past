@@ -9,7 +9,7 @@
  */
 import { useMemo } from 'react';
 import { Box, Text, Badge, Button } from '@ds/primitives';
-import { LANGUAGE_NAMES } from '../../language-names';
+import { LANGUAGE_NAMES } from '../../language-names.constants';
 import type { LanguageSet } from '@shared/game/language';
 import './BundleHeader.css';
 

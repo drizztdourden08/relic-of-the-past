@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The music packs: the list with create and import, and the selected pack's studio. A pack
- * installed from the Hookshop is read only: its row carries the lock, its studio opens under
- * the origin bar, and Delete uninstalls it the way the Hookshop tab does.
- */
 import { useCallback, useState } from 'react';
 import { ImportForm } from './ImportForm';
 import { Text } from '../../../../../design-system/primitives/Text';
@@ -29,8 +24,7 @@ const MsuManager = (props: MsuManagerProps) => {
 
   const isInstalled = useCallback((name: string) => packFor(name) !== null, [packFor]);
 
-  // After a duplicate or an update the pack to show may be one the list has not read yet.
-  const select = useCallback((name: string) => {
+  const refreshThenSelect = useCallback((name: string) => {
     void refresh().then(() => setSelected(name));
   }, [refresh, setSelected]);
 
@@ -87,7 +81,7 @@ const MsuManager = (props: MsuManagerProps) => {
   );
 
   const origin = installed === null ? null : (
-    <InstalledOriginBar pack={installed} onDuplicated={select} onUpdated={select} onUninstalled={handleUninstalled} />
+    <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdated={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
 
   const detail = selected === null
@@ -110,4 +104,3 @@ const MsuManager = (props: MsuManagerProps) => {
 };
 
 export { MsuManager };
-export type { MsuManagerProps };

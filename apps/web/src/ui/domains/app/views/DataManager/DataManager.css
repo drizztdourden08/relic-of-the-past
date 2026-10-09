@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind style */
 .data-manager {
-  /* Opts out of the app-wide `user-select: none` (tokens/reset.css): a selection
-     can only be cleared by starting one elsewhere, so with every surface at
-     `none` a stray selection here had no way to be dismissed. */
   user-select: text;
   display: flex;
   flex-direction: column;
@@ -11,7 +8,6 @@
   overflow: hidden;
 }
 
-/* The gap leaves room for the nav's round toggle, which straddles its right edge. */
 .data-manager__body {
   display: flex;
   gap: var(--space-xl);
@@ -28,7 +24,6 @@
   flex-direction: column;
 }
 
-/* Rows are the ListItemRow composite. */
 .data-list {
   display: flex;
   flex-direction: column;

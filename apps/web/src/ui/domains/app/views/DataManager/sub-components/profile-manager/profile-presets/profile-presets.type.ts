@@ -1,5 +1,4 @@
-/* @layer renderer-components @kind logic */
-/** The two starting points the creation form offers before a player customizes anything. */
+/* @layer renderer-components @kind types */
 type ProfilePresetId = 'vanilla' | 'enhanced';
 
 export type { ProfilePresetId };

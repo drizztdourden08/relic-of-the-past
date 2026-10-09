@@ -1,13 +1,10 @@
-/* @layer renderer-components @kind logic */
+/* @layer renderer-components @kind constants */
 import { DEFAULT_TURBO_SPEED, formatTurboSpeed } from '@shared/display/turbo-speed';
 import { formatDialogSpeed } from '@shared/game/dialog/pacing';
+import { capitalizeSetting } from './capitalize-setting';
+import type { SettingsSection } from './settings-sections.type';
 
-const capitalize = (v: unknown, fallback: string): string => {
-  const s = String(v ?? fallback);
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
-
-const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label: string; format?: (v: unknown) => string }> }> = [
+const SETTINGS_SECTIONS: SettingsSection[] = [
   {
     title: 'General',
     keys: [
@@ -85,17 +82,10 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
       { key: 'dialogTypewriter', label: 'Type Letter by Letter' },
       { key: 'autoSkipDialog', label: 'Auto-Skip Dialog' },
       { key: 'disableTelepathy', label: 'Disable Telepathic Messages' },
-      { key: 'dialogBox', label: 'Message Box', format: (v) => capitalize(v, 'original') },
-      { key: 'dialogFont', label: 'Dialog Font', format: (v) => capitalize(v, 'original') },
+      { key: 'dialogBox', label: 'Message Box', format: (v) => capitalizeSetting(v, 'original') },
+      { key: 'dialogFont', label: 'Dialog Font', format: (v) => capitalizeSetting(v, 'original') },
     ],
   },
 ];
 
-const formatSettingValue = (value: unknown, format?: (v: unknown) => string): string => {
-  if (format) return format(value);
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
-  if (value == null) return '-';
-  return String(value);
-};
-
-export { formatSettingValue, SETTINGS_SECTIONS };
+export { SETTINGS_SECTIONS };

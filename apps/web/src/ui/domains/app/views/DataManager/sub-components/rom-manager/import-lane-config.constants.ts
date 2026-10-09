@@ -1,13 +1,6 @@
-/* @layer renderer-components @kind logic */
-/** Per-kind wiring for the ImportForm the active lane renders. */
+/* @layer renderer-components @kind constants */
 import type { RomKind } from '@shared/storage/rom-kinds';
-
-interface ImportLaneConfig {
-  placeholder: string;
-  accept: string[];
-  dropLabel: string;
-  dropHint: string;
-}
+import type { ImportLaneConfig } from './import-lane-config.type';
 
 const IMPORT_LANE_CONFIG: Record<RomKind, ImportLaneConfig> = {
   'snes-alttp': {
@@ -25,4 +18,3 @@ const IMPORT_LANE_CONFIG: Record<RomKind, ImportLaneConfig> = {
 };
 
 export { IMPORT_LANE_CONFIG };
-export type { ImportLaneConfig };

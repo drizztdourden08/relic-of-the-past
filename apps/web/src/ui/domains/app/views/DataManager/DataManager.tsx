@@ -10,13 +10,12 @@ import { PlayerSpriteStudio } from '../PlayerSpriteStudio';
 import { Spinner } from '../../../../design-system/primitives/Spinner';
 import { Box } from '../../../../design-system/primitives/Box';
 import { SectionNav } from '../../../../design-system/composites/SectionNav';
-import { DATA_MANAGER_NAV } from './behavior/data-manager-nav';
+import { DATA_MANAGER_NAV } from './behavior/data-manager-nav.constants';
 import { ListItemRow } from '../../../../design-system/composites/ListItemRow';
 import './DataManager.css';
+import './sub-components/DataManager.forms.css';
 import './sub-components/DataManager.detail.css';
 import type { DataTab, DataManagerProps } from './DataManager.type';
-
-
 
 const DataManager = (props: DataManagerProps) => {
   const {
@@ -36,7 +35,6 @@ const DataManager = (props: DataManagerProps) => {
   } = props;
   const [activeTab, setActiveTab] = useState<DataTab>(initialTab ?? 'home');
 
-  // Sync tab when navigating from TitleBar
   useEffect(() => {
     if (initialTab) setActiveTab(initialTab);
   }, [initialTab]);

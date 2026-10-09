@@ -1,27 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * A tab whose whole subject is still to be built. Whatever rows the catalog
- * already carries for it are shown under the one heading, locked and
- * disabled exactly as the catalog defines them; a tab with no rows yet is
- * that heading on its own, an honest empty page instead of a heading over
- * nothing.
- */
 import { Text } from '@ds/primitives';
 import { LockedRowsSection } from './LockedRowsSection';
-import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
-import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
-
-interface UpcomingTabBodyProps {
-  /** The one line the tab shows, and the heading its rows sit under when there are any. */
-  title: string;
-  /** The catalog rows already filed under this subject; empty is expected. */
-  groups: readonly LockedOptionGroup[];
-  valueOf: (option: OptionDef) => OptionValue;
-  cellOf: (key: string) => ImpactCell;
-  /** Every row shows its value as a tag: the read-only panel. */
-  readout?: boolean;
-}
+import type { UpcomingTabBodyProps } from './UpcomingTabBody.type';
 
 const UpcomingTabBody = (props: UpcomingTabBodyProps) => {
   const { title, groups, valueOf, cellOf, readout } = props;
@@ -40,4 +20,3 @@ const UpcomingTabBody = (props: UpcomingTabBodyProps) => {
 };
 
 export { UpcomingTabBody };
-export type { UpcomingTabBodyProps };

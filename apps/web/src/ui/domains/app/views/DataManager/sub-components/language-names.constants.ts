@@ -1,5 +1,4 @@
-/* @layer renderer-components @kind logic */
-/** Display names for supported dialogue language codes. */
+/* @layer renderer-components @kind constants */
 const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English',
   de: 'German (Deutsch)',
@@ -13,6 +12,4 @@ const LANGUAGE_NAMES: Record<string, string> = {
   redux: 'Redux',
 };
 
-const languageLabel = (code: string): string => LANGUAGE_NAMES[code] ?? code;
-
-export { LANGUAGE_NAMES, languageLabel };
+export { LANGUAGE_NAMES };

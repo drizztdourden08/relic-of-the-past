@@ -1,31 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * The capacity tab: the four families under their master and progressive
- * switches, drawn from the pair the capacity/pond rule allows instead of the
- * raw choices, so an edit on either side re-points the other. Every edit
- * leaves through the rule. A read-only panel passes no edit builder's
- * handlers, and the section draws every value as a tag.
- */
 import { CapacityUpgradesSection } from '@domains/app/views/Randomizer/sub-components/CapacityUpgradesSection';
 import { REFERENCE_CAPACITY_PROFILE } from '@shared/randomizer/world/capacity';
 import { applyRowChange } from '@app/hooks/randomizer/capacity-row-state';
 import { withCapacityPondRule } from '@app/hooks/randomizer/capacity-pond-choices';
-import type { CapacityProfile, WalletFloor } from '@shared/randomizer/world/capacity';
-import type { ReconciledCapacityPond } from '@shared/randomizer/world/capacity-pond';
-import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
-
-interface CapacityTabBodyProps {
-  choices: RandomizerOptionChoices;
-  /** The pair after the capacity/pond rule has settled it. */
-  rule: ReconciledCapacityPond;
-  /** The families with the wallet's final cap already held to the floor. */
-  capacity: CapacityProfile;
-  walletFloor: WalletFloor;
-  notes: readonly string[];
-  fillerHeadroom: number | null;
-  /** Absent draws the tab read-only. */
-  onChange?: (next: RandomizerOptionChoices) => void;
-}
+import type { CapacityTabBodyProps } from './CapacityTabBody.type';
 
 const CapacityTabBody = (props: CapacityTabBodyProps) => {
   const { choices, rule, capacity, walletFloor, notes, fillerHeadroom, onChange } = props;
@@ -62,4 +40,3 @@ const CapacityTabBody = (props: CapacityTabBodyProps) => {
 };
 
 export { CapacityTabBody };
-export type { CapacityTabBodyProps };

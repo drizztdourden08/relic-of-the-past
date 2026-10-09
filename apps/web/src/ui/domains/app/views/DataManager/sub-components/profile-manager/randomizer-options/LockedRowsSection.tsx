@@ -1,26 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * The fixed rows a tab keeps beneath its live ones, merged under one heading
- * of their own. Nothing here unlocks anything: every row renders exactly as
- * the catalog defines it, control disabled, the catalog's own tag saying
- * whether the value is fixed by this version or the feature is absent.
- */
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
-import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
-import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
-
-interface LockedRowsSectionProps {
-  /** The one heading the merged rows sit under. */
-  title: string;
-  /** The tab's fixed groups, as the tab model split them. */
-  groups: readonly LockedOptionGroup[];
-  valueOf: (option: OptionDef) => OptionValue;
-  cellOf: (key: string) => ImpactCell;
-  /** Every row shows its value as a tag: the read-only panel. */
-  readout?: boolean;
-}
+import type { LockedRowsSectionProps } from './LockedRowsSection.type';
 
 const LockedRowsSection = (props: LockedRowsSectionProps) => {
   const { title, groups, valueOf, cellOf, readout } = props;
@@ -44,4 +25,3 @@ const LockedRowsSection = (props: LockedRowsSectionProps) => {
 };
 
 export { LockedRowsSection };
-export type { LockedRowsSectionProps };
