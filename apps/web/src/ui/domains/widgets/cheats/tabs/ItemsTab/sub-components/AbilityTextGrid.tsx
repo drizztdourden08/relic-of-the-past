@@ -1,31 +1,19 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The six ability words of the A box (LIFT.n, READ, TALK, PULL, RUN, SWIM), drawn from the
- * game's letter sprites in the same 3x2 grid as the pause menu. Read-only: the words follow the
- * ability flags, and LIFT's level follows the gloves.
- */
 import { Box, Image } from '@ds/primitives';
 import { useGameUIStore } from '@app/stores/game-ui-store';
-import { ABILITY_PANEL, ABILITY_WORDS } from '../ItemsTab.constants';
+import {
+  ABILITY_FLAG_LIFT, ABILITY_FLAG_PULL, ABILITY_FLAG_READ_TALK, ABILITY_FLAG_RUN, ABILITY_FLAG_SWIM, ABILITY_PANEL, ABILITY_WORDS,
+  BOOK_SLOT_INDEX,
+} from '../ItemsTab.constants';
+import type { PanelProps } from '../ItemsTab.type';
 
-type AbilityTextGridProps = {
-  scale: number;
-  spritesBase: string;
-};
-
-/** Save index of the book, which lights READ and TALK. */
-const BOOK_SLOT = 14;
-
-/**
- * The flags the game would set, when the store's word is still zero: gloves light LIFT, the
- * book lights READ and TALK, PULL is always on, boots light RUN, flippers light SWIM.
- */
 const derivedFlags = (gloves: number, book: number, boots: number, flippers: number): number =>
-  (gloves > 0 ? 0x80 : 0) | (book > 0 ? 0x60 : 0) | 0x08 | (boots > 0 ? 0x04 : 0) | (flippers > 0 ? 0x02 : 0);
+  (gloves > 0 ? ABILITY_FLAG_LIFT : 0) | (book > 0 ? ABILITY_FLAG_READ_TALK : 0) | ABILITY_FLAG_PULL
+  | (boots > 0 ? ABILITY_FLAG_RUN : 0) | (flippers > 0 ? ABILITY_FLAG_SWIM : 0);
 
-const AbilityTextGrid = ({ scale, spritesBase }: AbilityTextGridProps) => {
+const AbilityTextGrid = ({ scale, spritesBase }: PanelProps) => {
   const equipment = useGameUIStore((s) => s.equipment);
-  const book = useGameUIStore((s) => s.inventory.items[BOOK_SLOT] ?? 0);
+  const book = useGameUIStore((s) => s.inventory.items[BOOK_SLOT_INDEX] ?? 0);
   const tile = 8 * scale;
   const flags = equipment.abilityFlags || derivedFlags(equipment.gloves, book, equipment.boots, equipment.flippers);
   const liftLevel = equipment.gloves + 1;
@@ -58,4 +46,3 @@ const AbilityTextGrid = ({ scale, spritesBase }: AbilityTextGridProps) => {
 };
 
 export { AbilityTextGrid };
-export type { AbilityTextGridProps };

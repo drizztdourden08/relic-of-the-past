@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The list a slot opens: one row per choice with its sprite, the current one marked, and an
- * optional "all" control on each row for a rack of identical slots (the four bottles).
- * Portalled and placed under its anchor in viewport coordinates, so the widget's own edges
- * never cut it.
- */
 import { useRef } from 'react';
 import { Box, Button, Image, Portal, Text } from '@ds/primitives';
 import { useAnchoredPlacement } from '../behavior/useAnchoredPlacement';

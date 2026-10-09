@@ -1,32 +1,20 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The Rules tab: state and combat cheats as tiles, drawn from three tables. The tab
- * reads each tile's value from its getter on render and bumps a tick after every write,
- * because the getters are plain module state and never re-render on their own. Tiles
- * belong to different gate categories, so there is no whole-tab overlay: each tile
- * draws inert by itself when its category is off.
- */
 import { useEffect, useReducer } from 'react';
 import { Box, Text } from '@ds/primitives';
 import type { CheatCategory } from '@app/lib/game';
 import { onCheatRulesRestored } from '@app/lib/game/cheat-rules-memory';
-import type { CheatGates } from '../../behavior/useCheatGates';
+import type { CheatTabProps } from '../../CheatsWidget.type';
 import { ACTION_TILES, RULES_HINT, RULE_TILES, RUNG_TILES } from './RulesTab.constants';
 import { RuleTile } from './sub-components/RuleTile';
 import { RungTile } from './sub-components/RungTile';
 import { ActionTile } from './sub-components/ActionTile';
 import './RulesTab.css';
 
-type RulesTabProps = {
-  gates: CheatGates;
-};
-
 const bump = (tick: number): number => tick + 1;
 
-const RulesTab = (props: RulesTabProps) => {
+const RulesTab = (props: CheatTabProps) => {
   const { gates } = props;
   const [, rerender] = useReducer(bump, 0);
-  // The remembered rules land a moment after the game starts; the getters never re-render alone.
   useEffect(() => onCheatRulesRestored(rerender), []);
   const reasonFor = (category: CheatCategory): string | undefined =>
     (gates.allowed[category] ? undefined : gates.reason(category));
@@ -72,4 +60,3 @@ const RulesTab = (props: RulesTabProps) => {
 };
 
 export { RulesTab };
-export type { RulesTabProps };

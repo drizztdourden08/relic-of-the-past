@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The four bottles in a yellow pause frame, each a click away from its contents list. A slot
- * with no bottle draws a dotted ghost with the empty bottle faded inside it. The list a bottle
- * opens carries every content with its sprite, the current one marked, and an "x4" on every
- * row that writes that content to all four slots.
- */
 import { useCallback, useState } from 'react';
 import { Box, Button, Image } from '@ds/primitives';
 import { PauseBorderBox } from '@domains/hud';
@@ -15,21 +9,12 @@ import type { BottleContentsValue } from '@app/lib/game';
 import { ChoicePopover } from '../../../sub-components/ChoicePopover';
 import type { ChoiceOption } from '../../../sub-components/ChoicePopover.type';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
-import { IN_PLAY_REASON, useInPlay } from '../../../behavior/useInPlay';
-import { BOTTLE_HINTS, BOTTLE_ITEM_SLOT, BOTTLE_OPTIONS, BOTTLE_SLOTS } from '../PlayerTab.constants';
-import type { BottleSlot } from '../PlayerTab.constants';
-
-const SNES_TILE = 8;
-/** A bottle is two tiles square, one tile from its neighbour and from the frame. */
-const BOTTLE_TILES = 2;
-const GAP_TILES = 1;
-const INNER_COLS = GAP_TILES + BOTTLE_SLOTS.length * (BOTTLE_TILES + GAP_TILES);
-const INNER_ROWS = BOTTLE_TILES + GAP_TILES * 2;
-
-type BottleRackProps = {
-  scale: number;
-  spritesBase: string;
-};
+import { useInPlay } from '../../../behavior/useInPlay';
+import { IN_PLAY_REASON } from '../../../CheatsWidget.constants';
+import {
+  BOTTLE_GAP_TILES, BOTTLE_HINTS, BOTTLE_INNER_COLS, BOTTLE_INNER_ROWS, BOTTLE_ITEM_SLOT, BOTTLE_OPTIONS, BOTTLE_SLOTS, BOTTLE_TILES, SNES_TILE,
+} from '../PlayerTab.constants';
+import type { BottleSlot, HudPieceProps, OpenBottle } from '../PlayerTab.type';
 
 const spriteUrlOf = (spritesBase: string, value: number): string | null => {
   const file = getSlotSprite(BOTTLE_ITEM_SLOT, value);
@@ -42,9 +27,9 @@ const writeAll = (value: BottleContentsValue): void => {
   for (const slot of BOTTLE_SLOTS) cheatSetBottle(slot, value);
 };
 
-const BottleRack = ({ scale, spritesBase }: BottleRackProps) => {
+const BottleRack = ({ scale, spritesBase }: HudPieceProps) => {
   const bottles = useGameUIStore((s) => s.inventory.bottles);
-  const [open, setOpen] = useState<{ slot: BottleSlot; anchor: HTMLElement } | null>(null);
+  const [open, setOpen] = useState<OpenBottle | null>(null);
   const close = useCallback(() => setOpen(null), []);
   const hint = usePointerHintTarget('Bottles', BOTTLE_HINTS);
   const inPlay = useInPlay();
@@ -65,12 +50,12 @@ const BottleRack = ({ scale, spritesBase }: BottleRackProps) => {
 
   return (
     <Box className="cheats-player__bottles" data-locked={inPlay ? undefined : ''} title={inPlay ? undefined : IN_PLAY_REASON} {...hint}>
-      <PauseBorderBox color="yellow" cols={INNER_COLS} rows={INNER_ROWS} scale={scale} spritesBase={spritesBase}>
+      <PauseBorderBox color="yellow" cols={BOTTLE_INNER_COLS} rows={BOTTLE_INNER_ROWS} scale={scale} spritesBase={spritesBase}>
         {BOTTLE_SLOTS.map((slot) => {
           const value = bottles[slot] ?? BottleContents.None;
           const isGhost = value === BottleContents.None;
           const sprite = spriteUrlOf(spritesBase, isGhost ? BottleContents.Empty : value);
-          const style = { left: tile * (GAP_TILES + slot * (BOTTLE_TILES + GAP_TILES)), top: tile * GAP_TILES, width: size, height: size };
+          const style = { left: tile * (BOTTLE_GAP_TILES + slot * (BOTTLE_TILES + BOTTLE_GAP_TILES)), top: tile * BOTTLE_GAP_TILES, width: size, height: size };
           return (
             <Button
               key={slot}
@@ -102,4 +87,3 @@ const BottleRack = ({ scale, spritesBase }: BottleRackProps) => {
 };
 
 export { BottleRack };
-export type { BottleRackProps };

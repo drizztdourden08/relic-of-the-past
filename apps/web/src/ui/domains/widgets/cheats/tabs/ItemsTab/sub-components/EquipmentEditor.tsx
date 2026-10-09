@@ -1,39 +1,18 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The pause menu's EQUIP box: sword, shield and armor along the top, each opening its tier
- * list, the dotted rule, then the heart-piece counter (cycles on click) outside a dungeon or
- * the dungeon items inside one. Same yellow border and tile positions as the game.
- */
 import type { MouseEvent } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { cheatSetInventorySlot, CheatSlot } from '@app/lib/game';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseBorderBox, PauseEquipSlot, PauseLabel } from '@domains/hud';
-import { EQUIP_COLUMNS, EQUIP_PANEL, HEART_PIECE_COLUMN, HEART_PIECE_MAX } from '../ItemsTab.constants';
+import { EQUIP_PANEL, GEAR, HEART_PIECE_COLUMN, HEART_PIECE_MAX, NOT_IN_DUNGEON } from '../ItemsTab.constants';
 import { isSlotOwned, slotValueOf } from '../behavior/slot-value';
 import { DungeonItemsRow } from './DungeonItemsRow';
 import { SlotCell } from './SlotCell';
-import type { OpenSlot, SlotSpec } from '../ItemsTab.type';
-
-type EquipmentEditorProps = {
-  specs: Map<number, SlotSpec>;
-  scale: number;
-  spritesBase: string;
-  onHover: (slot: number | null) => void;
-  onOpen: (open: OpenSlot) => void;
-};
-
-const GEAR: { slot: number; type: string; col: number }[] = [
-  { slot: CheatSlot.Sword, type: 'sword', col: EQUIP_COLUMNS.sword },
-  { slot: CheatSlot.Shield, type: 'shield', col: EQUIP_COLUMNS.shield },
-  { slot: CheatSlot.Armor, type: 'armor', col: EQUIP_COLUMNS.armor },
-];
-
-const NOT_IN_DUNGEON = 0xff;
+import type { SlotPanelProps, SlotSpec } from '../ItemsTab.type';
 
 const noHover = (): void => undefined;
 
-const EquipmentEditor = ({ specs, scale, spritesBase, onHover, onOpen }: EquipmentEditorProps) => {
+const EquipmentEditor = ({ specs, scale, spritesBase, onHover, onOpen }: SlotPanelProps) => {
   const items = useGameUIStore((s) => s.inventory.items);
   const equipment = useGameUIStore((s) => s.equipment);
   const palaceIndex = useGameUIStore((s) => s.map.palaceIndex);
@@ -100,4 +79,3 @@ const EquipmentEditor = ({ specs, scale, spritesBase, onHover, onOpen }: Equipme
 };
 
 export { EquipmentEditor };
-export type { EquipmentEditorProps };

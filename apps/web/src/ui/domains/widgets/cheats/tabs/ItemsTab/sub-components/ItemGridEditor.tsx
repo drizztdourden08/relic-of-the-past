@@ -1,33 +1,13 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The pause menu's ITEM box with every slot clickable: the same green border, Y label and
- * 5x4 grid of 2x2-tile cells the game draws. An owned cell shows the game's slot with the
- * cursor ring following the pointer; an unowned one shows a ghost of its first tier, and a
- * click gives it. A tiered slot above its first tier wears a small tier mark.
- */
 import { Box, Text } from '@ds/primitives';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseBorderBox, PauseButtonLabel, PauseItemSlot, PauseLabel } from '@domains/hud';
 import { getSlotSprite } from '@domains/hud/composites/PauseItemSlot';
-import { BOTTLE_SLOT_INDEX, ITEM_GRID } from '../ItemsTab.constants';
-import { givableTier, useSlotClick } from '../behavior/useSlotClick';
+import { BOTTLE_SLOT_INDEX, EMPTY_BOTTLE, ITEM_GRID, ITEM_SLOT_COUNT } from '../ItemsTab.constants';
+import { givableTier } from '../behavior/givable-tier';
+import { useSlotClick } from '../behavior/useSlotClick';
 import { SlotCell } from './SlotCell';
-import type { OpenSlot, SlotSpec, SlotWrite } from '../ItemsTab.type';
-
-type ItemGridEditorProps = {
-  specs: Map<number, SlotSpec>;
-  hovered: number | null;
-  scale: number;
-  spritesBase: string;
-  onHover: (slot: number | null) => void;
-  onOpen: (open: OpenSlot) => void;
-  write: (write: SlotWrite) => void;
-};
-
-/** An unowned bottle slot ghosts an empty bottle. */
-const EMPTY_BOTTLE = 2;
-
-const SLOT_COUNT = ITEM_GRID.gridCols * ITEM_GRID.gridRows;
+import type { ItemGridEditorProps, SlotSpec } from '../ItemsTab.type';
 
 const ghostSpriteOf = (spec: SlotSpec): string | null =>
   (spec.kind === 'bottle' ? getSlotSprite(BOTTLE_SLOT_INDEX, EMPTY_BOTTLE) : (givableTier(spec)?.sprite ?? null));
@@ -39,7 +19,7 @@ const ItemGridEditor = (props: ItemGridEditorProps) => {
   const { click, flashKey, isFlashing } = useSlotClick({ onOpen, write });
   const tile = 8 * scale;
 
-  const cells = Array.from({ length: SLOT_COUNT }, (_, slot) => {
+  const cells = Array.from({ length: ITEM_SLOT_COUNT }, (_, slot) => {
     const spec = specs.get(slot);
     if (!spec) return null;
     const value = items[slot] ?? 0;
@@ -100,4 +80,3 @@ const ItemGridEditor = (props: ItemGridEditorProps) => {
 };
 
 export { ItemGridEditor };
-export type { ItemGridEditorProps };

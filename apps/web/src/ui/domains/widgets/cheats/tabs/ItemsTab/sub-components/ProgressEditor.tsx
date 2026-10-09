@@ -1,9 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The pause menu's PENDANTS / CRYSTALS box. The label is the switch between the two views
- * (the default follows the game's progress indicator); every pendant and crystal is a toggle
- * on its SRAM bit, drawn as the game draws it when held and as a ghost when not.
- */
 import { useState } from 'react';
 import { Box, Button } from '@ds/primitives';
 import { cheatSetInventorySlot, CheatSlot } from '@app/lib/game';
@@ -11,17 +6,11 @@ import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseBorderBox, PauseCrystalIcon, PauseLabel, PausePendantIcon } from '@domains/hud';
 import { CRYSTAL_SPOTS, CRYSTALS_FROM_PROGRESS, PENDANT_SPOTS, PROGRESS_PANEL } from '../ItemsTab.constants';
 import { SlotCell } from './SlotCell';
-
-type ProgressEditorProps = {
-  scale: number;
-  spritesBase: string;
-};
-
-type ProgressView = 'pendants' | 'crystals';
+import type { PanelProps, ProgressView } from '../ItemsTab.type';
 
 const noHover = (): void => undefined;
 
-const ProgressEditor = ({ scale, spritesBase }: ProgressEditorProps) => {
+const ProgressEditor = ({ scale, spritesBase }: PanelProps) => {
   const pendants = useGameUIStore((s) => s.dungeonProgress.pendants);
   const crystals = useGameUIStore((s) => s.dungeonProgress.crystals);
   const progressIndicator = useGameUIStore((s) => s.saveMenu.progressIndicator);
@@ -80,4 +69,3 @@ const ProgressEditor = ({ scale, spritesBase }: ProgressEditorProps) => {
 };
 
 export { ProgressEditor };
-export type { ProgressEditorProps };

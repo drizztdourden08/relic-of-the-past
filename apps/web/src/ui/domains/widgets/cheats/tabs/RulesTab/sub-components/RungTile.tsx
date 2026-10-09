@@ -1,25 +1,8 @@
 /* @layer renderer-widgets @kind component */
-/**
- * One ladder as a wide tile: the sprite and its name on the left, the rungs as chips on
- * the right, the current rung lit. The first rung is the game's own value, so the tile
- * lights its edge only once another rung is chosen. A tile whose category the profile
- * turns off draws inert, with the reason as its tooltip.
- *
- * Presentational only: the value arrives read, and every press leaves as a number.
- */
 import { Box, Button, Image, Text } from '@ds/primitives';
 import { spriteUrlOf } from '@shared/game/logic/queries/item-sprites';
-import type { RungTileSpec, TileState } from '../RulesTab.type';
-
-type RungTileProps = {
-  spec: RungTileSpec;
-  value: number;
-  /** The category is off: the tile draws inert and this sentence is its tooltip. */
-  reason?: string;
-  onChange: (value: number) => void;
-};
-
-const PLACEHOLDER = <Box className="cheats-rules__sprite cheats-rules__sprite--placeholder" />;
+import { SpritePlaceholder } from './SpritePlaceholder';
+import type { RungTileProps, TileState } from '../RulesTab.type';
 
 const stateOf = (disabled: boolean, changed: boolean): TileState => {
   if (disabled) return 'disabled';
@@ -35,7 +18,7 @@ const RungTile = (props: RungTileProps) => {
   return (
     <Box className="cheats-rung" data-state={stateOf(disabled, changed)} title={reason ?? label} role="group" aria-label={label}>
       <Box className="cheats-rung__art">
-        <Image className="cheats-rules__sprite" src={spriteUrlOf(sprite)} alt="" draggable={false} fallback={PLACEHOLDER} />
+        <Image className="cheats-rules__sprite" src={spriteUrlOf(sprite)} alt="" draggable={false} fallback={<SpritePlaceholder />} />
         <Text className="cheats-rules__name">{name}</Text>
       </Box>
       <Box className="cheats-rung__chips">
@@ -58,4 +41,3 @@ const RungTile = (props: RungTileProps) => {
 };
 
 export { RungTile };
-export type { RungTileProps };

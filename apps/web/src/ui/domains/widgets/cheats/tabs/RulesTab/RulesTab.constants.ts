@@ -1,9 +1,4 @@
 /* @layer renderer-widgets @kind constants */
-/**
- * The tile tables. One row per tile: the sprite, the gate category, and the getter and
- * setter it is wired to. The getters return module state the setters keep, so a tile
- * reads its value from them on every render.
- */
 import {
   cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatSetIgnoreCollision,
   cheatSetIlluminateDarkRooms, cheatUnblockLink, getDamageMultiplier, getExtraArmorPct,

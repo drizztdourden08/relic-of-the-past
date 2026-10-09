@@ -1,18 +1,13 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The Items tab: the pause menu's five panels, made clickable. The name box follows the slot
- * under the pointer; the ITEM grid, EQUIP, PENDANTS / CRYSTALS and A boxes each edit what they
- * draw. One tier list is open at a time, under the cell that opened it.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Text } from '@ds/primitives';
 import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
-import { useGameUIStore } from '@app/stores/game-ui-store';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import { useConsoleScale } from '../../behavior/useConsoleScale';
-import type { CheatGates } from '../../behavior/useCheatGates';
 import { PointerHintProvider } from '../../sub-components/PointerHintProvider';
-import { IN_PLAY_REASON, useInPlay } from '../../behavior/useInPlay';
+import { useInPlay } from '../../behavior/useInPlay';
+import { IN_PLAY_REASON } from '../../CheatsWidget.constants';
+import type { CheatTabProps } from '../../CheatsWidget.type';
 import { buildSlotSpecs, specBySlot } from './behavior/slot-specs';
 import { useSlotName } from './behavior/useSlotName';
 import { useSlotWrite } from './behavior/useSlotWrite';
@@ -22,18 +17,12 @@ import { EquipmentEditor } from './sub-components/EquipmentEditor';
 import { ProgressEditor } from './sub-components/ProgressEditor';
 import { AbilitiesEditor } from './sub-components/AbilitiesEditor';
 import { TierList } from './sub-components/TierList';
+import { ITEMS_TILES_WIDE } from './ItemsTab.constants';
 import type { OpenSlot } from './ItemsTab.type';
 import './ItemsTab.css';
 
-type ItemsTabProps = {
-  gates: CheatGates;
-};
-
-/** The ITEM box is 19 tiles wide with its border; two more keep it clear of the edge. */
-const TILES_WIDE = 21;
-
-const ItemsTab = ({ gates }: ItemsTabProps) => {
-  const { ref, scale } = useConsoleScale(TILES_WIDE);
+const ItemsTab = ({ gates }: CheatTabProps) => {
+  const { ref, scale } = useConsoleScale(ITEMS_TILES_WIDE);
   const spritesBase = getSpritesBase();
   const specs = useMemo(() => specBySlot(buildSlotSpecs()), []);
   const inPlay = useInPlay();
@@ -42,7 +31,6 @@ const ItemsTab = ({ gates }: ItemsTabProps) => {
   const write = useSlotWrite();
   const nameOf = useSlotName(specs);
 
-  // The name box follows the pointer only; with nothing under it, it waits.
   const name = nameOf(hovered);
   const close = useCallback(() => setOpen(null), []);
 
@@ -87,4 +75,3 @@ const ItemsTab = ({ gates }: ItemsTabProps) => {
 };
 
 export { ItemsTab };
-export type { ItemsTabProps };

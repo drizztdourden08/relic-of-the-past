@@ -1,8 +1,5 @@
 /* @layer renderer-widgets @kind style */
 
-/* The console shell: the tab bar and a scrolling body. Each tab carries its own sheet; what
-   lives here is shared by more than one of them: the section caption, the input glyphs, the
-   legend, the pointer hint, and the two floating boxes (the choice list and the step box). */
 
 .cheats-widget {
   display: flex;
@@ -12,8 +9,6 @@
   color: var(--c-text);
 }
 
-/* A column, so a tab that wants the whole height (the check list) can take it while the
-   others keep their own height. */
 .cheats-widget__content {
   flex: 1;
   min-height: 0;
@@ -32,7 +27,6 @@
   min-height: 0;
 }
 
-/* ─── Shared: a section caption and a one-line hint under a control ─── */
 
 .cheats-section__title {
   font-size: var(--text-xs);
@@ -49,7 +43,6 @@
   margin: var(--space-xs) 0 0;
 }
 
-/* ─── Input glyphs: a mouse with the pressed part filled, or a key cap ─── */
 
 .cheats-glyph--mouse {
   position: relative;
@@ -81,7 +74,6 @@
   flex: 0 0 auto;
 }
 
-/* ─── The legend under a tab: two columns of glyph and meaning ─── */
 
 .cheats-legend {
   display: grid;
@@ -106,7 +98,6 @@
   color: var(--c-text-dim);
 }
 
-/* ─── The hint beside the pointer: the control's name, then its inputs ─── */
 
 .cheats-pointer-hint {
   position: fixed;
@@ -140,10 +131,7 @@
   color: var(--c-text);
 }
 
-/* ─── The floating boxes: the choice list a slot opens, and the step box a right click opens ─── */
 
-/* Portalled: the portal layer keeps its own stacking, and lets no pointer event through
-   by itself, so the box takes them back. Hidden for the one frame before it is placed. */
 .cheats-popover {
   position: fixed;
   pointer-events: auto;
@@ -259,7 +247,6 @@
   gap: var(--space-2xs);
 }
 
-/* Every rung of a ladder: a long one (a wallet) scrolls inside the box instead of hiding rungs. */
 .cheats-setter__rungs {
   max-width: 280px;
   max-height: 180px;

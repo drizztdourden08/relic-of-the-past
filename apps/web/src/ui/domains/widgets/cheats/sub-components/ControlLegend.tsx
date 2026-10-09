@@ -1,15 +1,7 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The legend under a tab: every input the tab answers to, drawn as its glyph with what it does
- * beside it, in two columns.
- */
 import { Box, Text } from '@ds/primitives';
 import { ControlGlyph } from './ControlGlyph';
-import type { ControlHint } from './ControlGlyph.type';
-
-type ControlLegendProps = {
-  items: readonly ControlHint[];
-};
+import type { ControlLegendProps } from './ControlGlyph.type';
 
 const ControlLegend = ({ items }: ControlLegendProps) => (
   <Box className="cheats-legend" role="list" aria-label="Controls">
@@ -23,4 +15,3 @@ const ControlLegend = ({ items }: ControlLegendProps) => (
 );
 
 export { ControlLegend };
-export type { ControlLegendProps };

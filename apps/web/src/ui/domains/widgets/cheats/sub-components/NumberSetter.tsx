@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The box a right click opens on a number: the value, a field to type it, and buttons that move
- * it by a step. A counted value takes plus and minus steps; a value with a ladder (a capacity
- * tier) walks the ladder and shows every rung as a chip. Every press writes at once, so the
- * game answers while the box is open. Portalled, so the widget's edges never cut it.
- */
 import { useCallback, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Box, Button, Portal, Text, TextInput } from '@ds/primitives';
@@ -16,7 +10,6 @@ const clampTo = (min: number, max: number, n: number): number => Math.min(max, M
 
 const digits = (n: number): string => String(n);
 
-/** The rung after `value` on the ladder, or the value itself at the end. */
 const rungStep = (ladder: readonly number[], value: number, dir: 1 | -1): number => {
   const at = ladder.findIndex((rung) => rung >= value);
   const index = at < 0 ? ladder.length - 1 : at;

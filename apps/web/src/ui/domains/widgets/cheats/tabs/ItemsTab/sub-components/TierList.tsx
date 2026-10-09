@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The list an owned slot opens: one row per tier. A tier above the held one that has a receive
- * id is a Give (the receipt plays); every other tier is a Set (the byte is written); the empty
- * tier is the Remove. The bottle slot shows a single notice instead, since bottles are edited
- * on the Player tab.
- */
 import { useMemo } from 'react';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { ChoicePopover } from '../../../sub-components/ChoicePopover';
@@ -12,14 +6,7 @@ import type { ChoiceOption } from '../../../sub-components/ChoicePopover.type';
 import { BOTTLE_NOTICE } from '../ItemsTab.constants';
 import { isRemoval } from '../behavior/slot-specs';
 import { slotValueOf } from '../behavior/slot-value';
-import type { OpenSlot, SlotSpec, SlotWrite, TierOption } from '../ItemsTab.type';
-
-type TierListProps = {
-  open: OpenSlot;
-  spritesBase: string;
-  write: (write: SlotWrite) => void;
-  onClose: () => void;
-};
+import type { SlotSpec, SlotWrite, TierListProps, TierOption } from '../ItemsTab.type';
 
 const hexOf = (id: number): string => `0x${id.toString(16).padStart(2, '0')}`;
 
@@ -65,4 +52,3 @@ const TierList = ({ open, spritesBase, write, onClose }: TierListProps) => {
 };
 
 export { TierList };
-export type { TierListProps };
