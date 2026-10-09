@@ -1,18 +1,8 @@
 /* @layer electron-main @kind logic */
-/**
- * Per-monitor readout. Only the main process can see the whole desktop; the
- * renderer's `window.screen` describes the one display the window sits on, which
- * is exactly the blind spot when a report says "it's wrong on my second monitor".
- */
 import { screen } from 'electron';
 import type { Display } from 'electron';
 import type { DisplayDiagnostics } from '@shared/types/diagnostics';
-
-const TOUCH_LABEL: Record<string, string> = {
-  available: 'touch',
-  unavailable: 'none',
-  unknown: 'unknown',
-};
+import { TOUCH_LABEL } from './collect-displays.constants';
 
 const describeDisplay = (display: Display, primaryId: number): DisplayDiagnostics => ({
   id: display.id,
@@ -27,7 +17,6 @@ const describeDisplay = (display: Display, primaryId: number): DisplayDiagnostic
   workArea: { ...display.workArea },
   scaleFactor: display.scaleFactor,
   rotation: display.rotation,
-  // 0 means "the platform did not report one", not a real 0 Hz.
   refreshHz: display.displayFrequency || null,
   colorDepth: display.colorDepth,
   depthPerComponent: display.depthPerComponent,
@@ -36,13 +25,16 @@ const describeDisplay = (display: Display, primaryId: number): DisplayDiagnostic
   touchSupport: TOUCH_LABEL[display.touchSupport] ?? display.touchSupport,
 });
 
-const collectDisplays = (): DisplayDiagnostics[] => {
-  let primaryId = -1;
+const primaryDisplayId = (): number => {
   try {
-    primaryId = screen.getPrimaryDisplay().id;
+    return screen.getPrimaryDisplay().id;
   } catch {
-    // No display server, as in headless CI. Every entry then reports primary: false.
+    return -1;
   }
+};
+
+const collectDisplays = (): DisplayDiagnostics[] => {
+  const primaryId = primaryDisplayId();
   try {
     return screen.getAllDisplays().map((display) => describeDisplay(display, primaryId));
   } catch {

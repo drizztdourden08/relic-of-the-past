@@ -1,20 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Debug CLI: --dump-layers=N [--hover-tile=col,row]
- *
- * Loads save state slot N, dumps the dual-layer collision grid
- * (the exact same data used by the navigation overlay) to a JSON file,
- * then exits the app.
- *
- * With --hover-tile=col,row: also opens the navigation overlay, hovers
- * the specified tile to trigger the tooltip, and takes a screenshot.
- *
- * Usage:
- *   npx electron dist/electron/main.js --muted --dump-layers=6 --hover-tile=45,31
- *
- * Output: writes to <project>/debug-output/dump-layers.json
- */
-
 import { app } from 'electron';
 import { join } from 'path';
 import { handle } from '../lib/ipc/handle';

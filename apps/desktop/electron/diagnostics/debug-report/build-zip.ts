@@ -1,6 +1,4 @@
 /* @layer electron-main @kind logic */
-/** Assembles one debug-report .zip from the collected files, what the renderer sent, and
- *  every already-finalized capture session sitting on disk. */
 import JSZip from 'jszip';
 import type { DebugReportPackageInput } from '@shared/types/debug-report';
 import type { DebugReportCollectedFiles } from './collect-files';

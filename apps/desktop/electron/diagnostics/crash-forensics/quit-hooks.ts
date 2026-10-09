@@ -1,17 +1,7 @@
 /* @layer electron-main @kind logic */
-/**
- * Records how the app was asked to leave, so a log that ends in a quit can be told
- * apart from one that ends in a death. The origin is whichever fired first:
- * `window-all-closed` (the user closed the window), `app.quit` (an explicit call, such
- * as the updater's), `app.exit` (the immediate form). A quit event that arrives with
- * no origin recorded came from outside our code: the OS ending the session, a signal,
- * or a kill. app.quit / app.exit are wrapped, never replaced: the original runs
- * unchanged after the mark. Written synchronously; `quit` is the last event before exit.
- */
 import { app } from 'electron';
 import { noteSync } from './forensics-log';
-
-type QuitOrigin = 'window-all-closed' | 'app.quit' | 'app.exit' | 'external';
+import type { QuitOrigin } from './quit-hooks.type';
 
 let origin: QuitOrigin | null = null;
 

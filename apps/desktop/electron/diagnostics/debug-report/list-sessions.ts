@@ -1,14 +1,11 @@
 /* @layer electron-main @kind logic */
-/** Renderer-facing session listing for the bug-report picker: every recorded capture session
- *  for a profile, with a small preview and its sent state - unlike collect-capture-sessions.ts,
- *  this never mutates anything and isn't filtered to "eligible" sessions, since the player
- *  picks what ships instead of every session being swept in by default. */
 import { readdir, stat } from 'fs/promises';
 import { join } from 'path';
 import { getUserDataPath } from '../../lib/paths';
 import { readCaptureManifest } from './capture-manifest';
 import { CAPTURES_SUBDIR, PACKAGED_SUBDIR } from './finalize-capture-session';
 import type { DebugCaptureSessionSummary } from '@shared/types/debug-report';
+import type { PreviewInfo } from './list-sessions.type';
 
 const startedAtOf = (sessionKey: string): number => {
   const match = /^session-(\d+)$/.exec(sessionKey);
@@ -20,14 +17,9 @@ const sumFileSizes = async (dir: string, names: string[]): Promise<number> => {
   return sizes.reduce((sum, size) => sum + size, 0);
 };
 
-type PreviewInfo = Pick<DebugCaptureSessionSummary, 'previewUrl' | 'previewFrameUrls' | 'previewKind'>;
-
 const previewFor = (profileId: string, sessionKey: string, hasFullVideo: boolean, packagedNames: string[]): PreviewInfo => {
   const base = `app-debug-capture://captures/${encodeURIComponent(profileId)}/${encodeURIComponent(sessionKey)}`;
   if (hasFullVideo) return { previewUrl: `${base}/video-full.mp4`, previewFrameUrls: [], previewKind: 'video' };
-  // No ffmpeg: packaged/ holds the evenly-spread PNG subset itself (see capture-frame-budget.ts)
-  // instead of a video - every one of those frames goes to the picker so it can cycle through
-  // them as a fake video, not just show the first.
   const frames = packagedNames.filter((n) => n.endsWith('.png')).sort();
   if (frames.length > 0) {
     return {
