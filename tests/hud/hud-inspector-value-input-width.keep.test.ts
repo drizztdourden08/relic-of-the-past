@@ -8,7 +8,7 @@ import { join, resolve } from 'path';
 import { ValueField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
 
 const ROOT = resolve(__dirname, '../..');
-const DS = `${ROOT}/apps/web/src/ui/design-system`;
+const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const ED = `${ROOT}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
@@ -16,7 +16,10 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
+  ...cssIn(`${DS}/theme`),
+  `${ROOT}/apps/web/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
+  ...cssIn(`${DS}/composites`),
   ...cssIn(ED),
 ];
 
@@ -118,14 +121,12 @@ describe('what deleting the mode switch is worth, measured', () => {
   });
 
   it('leaves a half-width formula at half width until it is edited', () => {
-    expect(find(rest, 232, 'w').content).toBe(66.5);
+    expect(find(rest, 232, 'w').content).toBe(63.2);
     expect(find(rest, 232, 'h').left).toBeGreaterThan(find(rest, 232, 'w').left);
   });
 
   it('NEVER MOVES THE SIBLING when a formula is promoted (§58)', () => {
-    expect(find(wide, 289, 'w').content).toBe(233.5);
-    expect(find(wide, 232, 'w').content).toBe(176.5);
-    expect(find(wide, 188, 'w').content).toBe(132.5);
+    expect([289, 232, 188].map((rail) => find(wide, rail, 'w').content)).toEqual([230.2, 173.2, 129.2]);
     for (const rail of RAILS) {
       const before = find(rest, rail, 'h');
       const after = find(wide, rail, 'h');

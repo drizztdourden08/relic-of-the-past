@@ -3,7 +3,8 @@ import { resolve } from 'path';
 import type { GridSelection } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 
 const ROOT_DIR = resolve(__dirname, '../../..');
-const DESIGN_SYSTEM_DIR = `${ROOT_DIR}/apps/web/src/ui/design-system`;
+const DESIGN_SYSTEM_DIR = `${ROOT_DIR}/node_modules/@drizztdourden08/tessera/src`;
+const ROTP_THEME = `${ROOT_DIR}/apps/web/src/theme.css`;
 const EDITOR_DIR = `${ROOT_DIR}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 const GRID_EDITOR_SRC = `${EDITOR_DIR}/GridEditor/GridEditor.tsx`;
 const LAYOUT_SECTION_SRC = `${EDITOR_DIR}/sections/LayoutSection.tsx`;
@@ -20,5 +21,5 @@ const RAILS = [220, 232, 320];
 const ONE_ROW = 26 + 2 * 2;
 
 export {
-  DESIGN_SYSTEM_DIR, EDITOR_DIR, GRID_EDITOR_SRC, LAYOUT_SECTION_SRC, ONE_ROW, RAILS, SELECTIONS,
+  DESIGN_SYSTEM_DIR, EDITOR_DIR, GRID_EDITOR_SRC, LAYOUT_SECTION_SRC, ONE_ROW, RAILS, ROTP_THEME, SELECTIONS,
 };

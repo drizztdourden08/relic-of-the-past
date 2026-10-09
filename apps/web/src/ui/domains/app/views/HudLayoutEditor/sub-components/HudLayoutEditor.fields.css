@@ -13,3 +13,7 @@
   flex: 0 0 auto;
   width: auto;
 }
+
+.hud-edges-field__row > .checkbox {
+  gap: var(--space-xs);
+}

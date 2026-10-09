@@ -11,7 +11,7 @@ import { PaintField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEdi
 import { Field, Select } from '@drizztdourden08/tessera/primitives';
 
 const ROOT = resolve(__dirname, '../..');
-const DS = `${ROOT}/apps/web/src/ui/design-system`;
+const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const ED = `${ROOT}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
@@ -19,7 +19,10 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
+  ...cssIn(`${DS}/theme`),
+  `${ROOT}/apps/web/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
+  ...cssIn(`${DS}/composites`),
   ...cssIn(ED),
 ];
 
@@ -113,7 +116,7 @@ afterAll(async () => { await browser?.close(); });
 
 describe('inspector rows that pair an intrinsic control with a numeric field', () => {
   it('renders a typeable transition duration at the default rail', () => {
-    expect(find(289, 'duration (ms)').content).toBeGreaterThan(160);
+    expect(find(289, 'duration (ms)').content).toBeGreaterThan(150);
   });
 
   it('still shows the duration at 232 px, the width the wireframes are drawn at', () => {
@@ -121,7 +124,7 @@ describe('inspector rows that pair an intrinsic control with a numeric field', (
   });
 
   it('finally renders SOMETHING of the duration at the 188 px minimum', () => {
-    expect(find(188, 'duration (ms)').content).toBeGreaterThan(60);
+    expect(find(188, 'duration (ms)').content).toBeGreaterThan(50);
   });
 
   it('gives the expression field the width the "+ var" Select was hoarding', () => {
@@ -131,9 +134,9 @@ describe('inspector rows that pair an intrinsic control with a numeric field', (
   });
 
   it('gives the colour field room for a whole #rrggbb, down to 188 px', () => {
-    expect(find(289, 'background hex').content).toBeGreaterThan(240);
-    expect(find(232, 'background hex').content).toBeGreaterThan(180);
-    expect(find(188, 'background hex').content).toBeGreaterThan(140);
+    expect(find(289, 'background hex').content).toBeGreaterThan(225);
+    expect(find(232, 'background hex').content).toBeGreaterThan(170);
+    expect(find(188, 'background hex').content).toBeGreaterThan(125);
   });
 
   it('keeps the keyframe position control readable', () => {

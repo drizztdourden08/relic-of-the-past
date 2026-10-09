@@ -10,6 +10,7 @@ import type { EscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { HudNode } from '../../shared/types/hud';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+(window as { CSS?: Pick<typeof CSS, 'supports'> }).CSS ??= { supports: () => false };
 
 const ignore = (): void => {};
 class NoopResizeObserver {
@@ -20,6 +21,19 @@ class NoopResizeObserver {
 (globalThis as { ResizeObserver?: unknown }).ResizeObserver = NoopResizeObserver;
 
 let mounted: { root: Root; host: HTMLElement } | null = null;
+
+const escapeStack = (): EscapeStack => {
+  const found: EscapeStack[] = [];
+  const root = createRoot(document.createElement('div'));
+  const Probe = (): null => { found.push(useEscapeStack()); return null; };
+  act(() => { root.render(createElement(Probe)); });
+  act(() => { root.unmount(); });
+  const stack = found[0];
+  if (!stack) throw new Error('the escape stack probe never rendered');
+  return stack;
+};
+
+const dismissStackDepth = (): number => escapeStack().depth();
 
 const mount = (node: ReactNode): void => {
   const host = document.createElement('div');

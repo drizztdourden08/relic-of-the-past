@@ -60,7 +60,7 @@ const FlexEditor = (props: FlexEditorProps) => {
       event.preventDefault();
       return;
     }
-    const step = cap === '←' || cap === '↑' ? -1 : (cap === '→' || cap === '↓' ? 1 : 0);
+    const step = cap === 'left' || cap === 'up' ? -1 : (cap === 'right' || cap === 'down' ? 1 : 0);
     if (step === 0) return;
     const next = Math.min(Math.max(flex.cursor + step, 0), Math.max(container.children.length - 1, 0));
     flex.setCursor(next);

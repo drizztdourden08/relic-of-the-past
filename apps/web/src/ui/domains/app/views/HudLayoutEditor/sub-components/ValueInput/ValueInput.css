@@ -65,7 +65,7 @@
   border-left: 1px solid var(--c-border);
 }
 
-.hud-value-input__spin > .btn {
+.hud-value-input__spin > .pressable {
   flex: 1;
   display: flex;
   align-items: center;
@@ -74,7 +74,7 @@
   color: var(--c-text-dim);
 }
 
-.hud-value-input__spin > .btn:hover {
+.hud-value-input__spin > .pressable:hover {
   color: var(--c-text);
   background: var(--c-hover);
 }

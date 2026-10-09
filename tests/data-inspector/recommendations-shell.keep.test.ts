@@ -40,7 +40,7 @@ describe('the foldable detail column', () => {
   it('shows the content and the fold-away glyph when open', () => {
     const html = render('Comparison', false);
     expect(html).toContain('the panes');
-    expect(html).toContain('▶');
+    expect(html).toContain('aria-label="Collapse"');
     expect(html).not.toContain('collapsible-detail--collapsed');
   });
 
@@ -48,7 +48,7 @@ describe('the foldable detail column', () => {
     const html = render('Comparison', true);
     expect(html).toContain('collapsible-detail--collapsed');
     expect(html).toContain('Comparison');
-    expect(html).toContain('◀');
+    expect(html).toContain('aria-label="Expand"');
   });
 
   it('keeps the panes mounted while folded', () => {

@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind constants */
-const ARROW_GLYPH: Readonly<Record<string, string>> = {
-  ArrowLeft: '←', ArrowRight: '→', ArrowUp: '↑', ArrowDown: '↓',
+import type { ShortcutKey } from '@drizztdourden08/tessera/primitives';
+
+const ACTION_KEY: Readonly<Record<string, ShortcutKey>> = {
+  ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down', Delete: 'delete', Backspace: 'delete',
 };
 
-export { ARROW_GLYPH };
+export { ACTION_KEY };

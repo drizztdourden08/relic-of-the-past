@@ -10,7 +10,7 @@ import { ValueField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEdi
 import { Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 
 const ROOT = resolve(__dirname, '../..');
-const DS = `${ROOT}/apps/web/src/ui/design-system`;
+const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const EDITOR = `${ROOT}/apps/web/src/ui/domains/app/views/HudLayoutEditor`;
 const ED = `${EDITOR}/sub-components`;
 
@@ -19,7 +19,10 @@ const filesIn = (dir: string, ext: string): string[] => readdirSync(dir, { withF
 
 const SHEETS = [
   ...filesIn(`${DS}/tokens`, '.css').filter((f) => !f.endsWith('index.css')),
+  ...filesIn(`${DS}/theme`, '.css'),
+  `${ROOT}/apps/web/src/theme.css`,
   ...filesIn(`${DS}/primitives`, '.css'),
+  ...filesIn(`${DS}/composites`, '.css'),
   ...filesIn(ED, '.css'),
 ];
 

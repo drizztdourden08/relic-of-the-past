@@ -16,11 +16,11 @@ const strip = (path: string): string =>
 
 describe('the section takes the height its clarity costs, and says how much', () => {
   it('measures a grid container against the four passes before it', () => {
-    expect(RAILS.map((rail) => rig.at(rail, 'sectionGrid').height)).toEqual([455, 455, 413]);
+    expect(RAILS.map((rail) => rig.at(rail, 'sectionGrid').height)).toEqual([473, 473, 473]);
   });
 
   it('records what a flex container COST, because it is taller than before', () => {
-    expect(RAILS.map((rail) => rig.at(rail, 'sectionFlex').height)).toEqual([358, 358, 330]);
+    expect(RAILS.map((rail) => rig.at(rail, 'sectionFlex').height)).toEqual([398, 398, 380]);
   });
 
   it('lets nothing in the section escape the rail, down to the 220px floor', () => {

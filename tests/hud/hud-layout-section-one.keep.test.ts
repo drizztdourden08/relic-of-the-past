@@ -36,7 +36,7 @@ const labels = (markup: string): string[] =>
 
 const barLit = (markup: string): string => markup
   .replace(/aria-pressed="(true|false)"/g, '')
-  .replace(/icon-btn--active/g, '')
+  .replace(/ ?icon-btn--active/g, '')
   .replace(/\s+/g, ' ');
 
 describe('section one holds the three questions every container answers', () => {

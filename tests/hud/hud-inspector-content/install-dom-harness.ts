@@ -5,6 +5,8 @@ import { createRoot, type Root } from 'react-dom/client';
 
 const installDomHarness = () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  const view = window as { CSS?: Pick<typeof CSS, 'supports'> };
+  view.CSS ??= { supports: () => false };
   let mounted: { root: Root; host: HTMLElement } | null = null;
 
   const mount = (node: ReactNode): void => {

@@ -7,13 +7,16 @@ import { EDITOR_DIR, RAILS } from './metrics.constants';
 import { metricsCases } from './metrics-cases';
 import type { Cells, Frozen, Heads, MetricsRig, Read, Scroller } from './metrics.type';
 
-const designSystem = resolve(__dirname, '../../../apps/web/src/ui/design-system');
+const designSystem = resolve(__dirname, '../../../node_modules/@drizztdourden08/tessera/src');
+const rotpTheme = resolve(__dirname, '../../../apps/web/src/theme.css');
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
 
 const sheets = (): string[] => [
   ...cssIn(`${designSystem}/tokens`).filter((f) => !f.endsWith('index.css')),
+  ...cssIn(`${designSystem}/theme`),
+  rotpTheme,
   ...cssIn(`${designSystem}/primitives`),
   ...cssIn(`${designSystem}/composites`),
   ...cssIn(EDITOR_DIR),

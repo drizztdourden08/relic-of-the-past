@@ -74,21 +74,6 @@
   align-items: center;
 }
 
-.hud-toolbar__chip {
-  padding: var(--space-2xs) var(--space-xs);
-  background: var(--c-hover);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  cursor: pointer;
-}
-
-.hud-toolbar__chip.is-selected {
-  border-color: var(--c-primary);
-  color: var(--c-primary-bright);
-}
-
 .hud-ground__swatch {
   width: var(--space-lg);
   height: var(--space-lg);

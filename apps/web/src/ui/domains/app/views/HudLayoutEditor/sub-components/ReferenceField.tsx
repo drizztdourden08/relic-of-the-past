@@ -15,6 +15,7 @@ const ReferenceField = (props: ReferenceFieldProps) => {
       <Button
         ref={anchorRef}
         variant="ghost"
+        size={compact ? 'xs' : 'sm'}
         className={`hud-ref-field${compact ? ' hud-ref-field--compact' : ''}`}
         aria-label={ariaLabel ?? `${label ?? 'Reference'}: ${name}`}
         onClick={onOpen}

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect } from 'react';
-import { Box, IconButton, Slider, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, Slider, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { useMotionPreview } from '../behavior/motion-preview';
 import type { MotionTransportProps } from './MotionTransport.type';
 
@@ -33,7 +33,7 @@ const MotionTransport = (props: MotionTransportProps) => {
         label={preview.playing ? 'Pause the stage' : 'Play on the stage'}
         onClick={() => (preview.playing ? preview.pause() : preview.play())}
       >
-        {preview.playing ? '❚❚' : '▶'}
+<Icon name={preview.playing ? 'pause' : 'play'} size={14} />
       </IconButton>
       <Slider
         value={preview.nowMs ?? 0}

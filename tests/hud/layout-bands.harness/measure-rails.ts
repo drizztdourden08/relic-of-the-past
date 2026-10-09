@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import type { Browser } from 'playwright';
-import { DESIGN_SYSTEM_DIR, EDITOR_DIR, RAILS } from './layout-bands.constants';
+import { DESIGN_SYSTEM_DIR, EDITOR_DIR, RAILS, ROTP_THEME } from './layout-bands.constants';
 import type { Measured, Rig } from './layout-bands.type';
 import { layoutCases } from './layout-cases';
 import { probe } from './probe';
@@ -14,6 +14,8 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 
 const sheets = (): string[] => [
   ...cssIn(`${DESIGN_SYSTEM_DIR}/tokens`).filter((f) => !f.endsWith('index.css')),
+  ...cssIn(`${DESIGN_SYSTEM_DIR}/theme`),
+  ROTP_THEME,
   ...cssIn(`${DESIGN_SYSTEM_DIR}/primitives`),
   ...cssIn(`${DESIGN_SYSTEM_DIR}/composites`),
   ...cssIn(EDITOR_DIR),

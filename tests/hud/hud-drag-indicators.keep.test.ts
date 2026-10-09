@@ -12,7 +12,7 @@ import { ghostPosition } from '../../apps/web/src/ui/domains/app/views/HudLayout
 import type { Platform } from '../../shared/platform';
 
 const ROOT = resolve(__dirname, '../..');
-const DS = `${ROOT}/apps/web/src/ui/design-system`;
+const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const ED = `${ROOT}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
@@ -20,6 +20,8 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
+  ...cssIn(`${DS}/theme`),
+  `${ROOT}/apps/web/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
   ...cssIn(`${DS}/composites`),
   ...cssIn(ED),

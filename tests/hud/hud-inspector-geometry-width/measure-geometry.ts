@@ -7,7 +7,7 @@ import { geometryCases } from './geometry-cases';
 import type { GeometryRig, Measured } from './geometry-width.type';
 
 const root = resolve(__dirname, '../../..');
-const designSystem = `${root}/apps/web/src/ui/design-system`;
+const designSystem = `${root}/node_modules/@drizztdourden08/tessera/src`;
 const editor = `${root}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
@@ -15,6 +15,8 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 
 const sheets = (): string[] => [
   ...cssIn(`${designSystem}/tokens`).filter((f) => !f.endsWith('index.css')),
+  ...cssIn(`${designSystem}/theme`),
+  `${root}/apps/web/src/theme.css`,
   ...cssIn(`${designSystem}/primitives`),
   ...cssIn(`${designSystem}/composites`),
   ...cssIn(editor),

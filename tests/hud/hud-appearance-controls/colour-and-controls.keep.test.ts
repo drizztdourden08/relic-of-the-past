@@ -48,7 +48,7 @@ describe("Appearance's own new controls", () => {
 
   it('costs the paint kind three icons instead of a full-width Select', () => {
     for (const rail of RAILS) {
-      expect(`${rail} kinds ${rig.at(rail, 'hud-icon-choice', 'gradient')[0].width}`).toBe(`${rail} kinds 82`);
+      expect(`${rail} kinds ${rig.at(rail, 'hud-icon-choice', 'gradient')[0].width}`).toBe(`${rail} kinds 88`);
     }
   });
 

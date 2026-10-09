@@ -37,13 +37,13 @@ describe('three sections, flat on the panel, with nothing boxed', () => {
       expect(`${rail} type+overlay share a line ${pieces[0].top === pieces[1].top}`)
         .toBe(`${rail} type+overlay share a line true`);
       expect(`${rail} lines ${linesOf(pieces)}`)
-        .toBe(`${rail} lines ${rail === 320 ? 1 : 2}`);
+        .toBe(`${rail} lines 2`);
     }
     for (const rail of RAILS) {
       const flex = rig.at(rail, 'sectionFlex').pieces;
       expect(`${rail} flex pieces ${flex.length}`).toBe(`${rail} flex pieces 3`);
       expect(`${rail} flex lines ${linesOf(flex)}`)
-        .toBe(`${rail} flex lines ${rail === 320 ? 1 : 2}`);
+        .toBe(`${rail} flex lines 2`);
     }
   });
 

@@ -13,6 +13,8 @@ const ignore = (): void => {};
 
 const installLayoutSectionRig = () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  const view = window as { CSS?: Pick<typeof CSS, 'supports'> };
+  view.CSS ??= { supports: () => false };
   class NoopResizeObserver { observe = ignore; unobserve = ignore; disconnect = ignore; }
   (globalThis as { ResizeObserver?: unknown }).ResizeObserver = NoopResizeObserver;
   let mounted: { root: Root; host: HTMLElement } | null = null;

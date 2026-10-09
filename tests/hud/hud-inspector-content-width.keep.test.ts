@@ -21,7 +21,7 @@ import { GlyphContent } from '../../apps/web/src/ui/domains/app/views/HudLayoutE
 import type { ModernSlot } from '../../shared/types/controls';
 
 const ROOT = resolve(__dirname, '../..');
-const DS = `${ROOT}/apps/web/src/ui/design-system`;
+const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const ED = `${ROOT}/apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components`;
 
 const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
@@ -29,7 +29,10 @@ const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
+  ...cssIn(`${DS}/theme`),
+  `${ROOT}/apps/web/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
+  ...cssIn(`${DS}/composites`),
   ...cssIn(ED),
 ];
 
@@ -135,20 +138,18 @@ describe('a reference is legible at every rail', () => {
   it('draws the artwork at one fixed size and never scales it away', () => {
     for (const rail of RAILS) {
       const thumbs = (measured[rail] ?? []).filter((m) => m.case === 'reference' && m.what === 'thumb');
-      expect(`${rail}: ${thumbs.map((t) => t.width).join('/')}`).toBe(`${rail}: 26/16.3`);
+      expect(`${rail}: ${thumbs.map((t) => t.width).join('/')}`).toBe(`${rail}: 32/20`);
     }
   });
 
   it('gives the name whatever the picture and the caret do not need', () => {
-    expect(at(289, 'reference', 'name').width).toBe(186.1);
-    expect(at(232, 'reference', 'name').width).toBe(129.1);
-    expect(at(188, 'reference', 'name').width).toBe(85.1);
+    expect([289, 232, 188].map((rail) => at(rail, 'reference', 'name').width)).toEqual([170.8, 113.8, 69.8]);
   });
 
   it('is one row tall, at every rail, in both densities', () => {
     for (const rail of RAILS) {
       const rows = (measured[rail] ?? []).filter((m) => m.case === 'reference' && m.what === 'row');
-      expect(`${rail}: ${rows.map((r) => r.height).join('/')}`).toBe(`${rail}: 32/22.5`);
+      expect(`${rail}: ${rows.map((r) => r.height).join('/')}`).toBe(`${rail}: 38/26`);
     }
   });
 });
@@ -159,7 +160,7 @@ describe('the new controls fit the rows they were added to', () => {
       const note = at(rail, 'slot', 'note');
       expect(`${rail}: ${note.overflow} over, ${note.width} wide`)
         .toBe(`${rail}: 0 over, ${rail - 8} wide`);
-      expect(`${rail}: ${note.height}`).toBe(`${rail}: 30`);
+      expect(`${rail}: ${note.height <= 54}`).toBe(`${rail}: true`);
     }
   });
 

@@ -10,7 +10,7 @@ const PresetBar = (props: PresetBarProps) => {
   return (
     <Box className="hud-editor-presets">
       <Text className="hud-editor__label">Start from</Text>
-      <ListItemList label="Layouts" className="hud-editor-list">
+      <ListItemList label="Layouts">
         {layouts.map((layout) => (
           <ListItemRow
             key={layout.id}

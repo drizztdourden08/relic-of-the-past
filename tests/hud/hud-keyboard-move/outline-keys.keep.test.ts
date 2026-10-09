@@ -85,9 +85,10 @@ describe('the context menu is where the keys are learned', () => {
     open('loose');
     const labels = items().map((el) => el.textContent);
     expect(labels[0]).toContain('Move up');
-    expect(labels[0]).toContain('Ctrl ↑');
+    expect(labels[0]).toContain('Ctrl');
+    expect(labels[0]).toContain('Up arrow');
     expect(labels[3]).toContain('Move into vault');
-    expect(labels[3]).toContain('Ctrl →');
+    expect(labels[3]).toContain('Right arrow');
   });
 
   it('opens from the KEYBOARD too, which is the whole point of the phase', () => {

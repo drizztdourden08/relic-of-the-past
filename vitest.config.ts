@@ -14,12 +14,14 @@ export default defineConfig({
     // limits are raised so the number is a real hang, not a busy CPU: a hook that
     // resets modules and imports a view graph cold crosses ten the same way.
     testTimeout: 20000,
-    hookTimeout: 20000,
+    hookTimeout: 60000,
   },
+  esbuild: { jsx: 'automatic' },
   resolve: {
     alias: {
       '@shared': resolve(__dirname, 'shared'),
       '@app': resolve(__dirname, 'apps/web/src'),
+      '@domains': resolve(__dirname, 'apps/web/src/ui/domains'),
     },
   },
 });

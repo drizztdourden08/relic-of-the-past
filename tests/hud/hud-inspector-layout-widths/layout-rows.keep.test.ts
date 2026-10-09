@@ -42,7 +42,7 @@ describe('every Layout row, at 289 / 232 / 188 px', () => {
   it('leaves the picked track typeable beside its four tools, down to 188 px', () => {
     const tools = (rig.measured[188] ?? []).filter((m) => m.case === 'trackEditor' && m.kind === 'icon-btn');
     expect(tools.length).toBe(4);
-    for (const t of tools) expect(t.width).toBe(26);
+    for (const t of tools) expect(t.width).toBe(28);
     const typing = (rig.measured[188] ?? [])
       .filter((m) => m.case === 'trackEditor' && /input/.test(m.kind));
     expect(typing.length).toBeGreaterThan(0);
@@ -58,13 +58,13 @@ describe('every Layout row, at 289 / 232 / 188 px', () => {
 
   it('leaves ColorField room for a whole #rrggbb, down to 188 px', () => {
     const hex = (rail: number): number => rig.at(rail, 'text-input', 'colour')[0].content;
-    expect([hex(289), hex(232), hex(188)]).toEqual([253, 196, 152]);
+    expect([hex(289), hex(232), hex(188)]).toEqual([241, 184, 140]);
   });
 
   it('keeps the two direction icons on one row', () => {
     for (const rail of RAILS) {
       const choice = rig.at(rail, 'hud-icon-choice', 'direction')[0];
-      expect(`${rail} direction ${choice.width}`).toBe(`${rail} direction 54`);
+      expect(`${rail} direction ${choice.width}`).toBe(`${rail} direction 58`);
       expect(choice.lines).toBe(1);
     }
   });

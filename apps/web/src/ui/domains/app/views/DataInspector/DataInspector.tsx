@@ -102,6 +102,8 @@ const DataInspector = () => {
           className={`data-inspector__master-detail${folded ? ' data-inspector__master-detail--folded' : ''}${comparing ? ' data-inspector__master-detail--comparing' : ''}`}
           list={list}
           detail={detail}
+          resizable={false}
+          collapsible={false}
         />
       </Box>
     </Box>
