@@ -1,42 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * A formula inside a `repeat` produces N values, not one. Twenty cells, one per
- * instance, with the reading in a line beneath: at life 112/160 the strip IS
- * the meaning of the formula. It reads fourteen full hearts and six empty, and it is
- * the cheapest possible check that a slice formula is right.
- *
- * NOT A TABLE. Twenty instances with a labelled value each is twenty rows or a
- * twenty-column table; neither fits a 232 px rail. The strip does, and it reads
- * faster: the shape of the run is the answer, not any one number in it.
- *
- * IT CAPS AT `MAX_CELLS` AND SAYS SO. A repeat's count is a `Value` and can
- * resolve to hundreds; drawing them all would push the panel wide and tell
- * nobody anything the first twenty did not.
- */
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { resolveValue } from '@shared/hud/data';
-import type { Scope } from '../../../behavior/formula-scope';
-
-interface InstanceStripProps {
-  expr: string;
-  instances: readonly Scope[];
-  /** Which instance the stage is previewing, outlined in the strip. */
-  previewIndex?: number;
-}
-
-const MAX_CELLS = 20;
-
-/** A gate reads back as 1/0, so "true on 3 of 20" is the honest summary; a
- *  measurement reads back as a spread, so its own two ends are. */
-const summarise = (values: readonly number[]): string => {
-  const booleanish = values.every((v) => v === 0 || v === 1);
-  if (booleanish) return `true on ${values.filter((v) => v === 1).length} of ${values.length}`;
-  const full = values.filter((v) => v >= 1).length;
-  const empty = values.filter((v) => v <= 0).length;
-  if (full + empty === values.length) return `${full} full · ${empty} empty`;
-  return `${Math.min(...values)} ... ${Math.max(...values)}`;
-};
+import { summarise } from '../behavior/summarise';
+import { MAX_CELLS } from './InstanceStrip.constants';
+import type { InstanceStripProps } from './InstanceStrip.type';
 
 const InstanceStrip = (props: InstanceStripProps) => {
   const { expr, instances, previewIndex = 0 } = props;
@@ -65,5 +33,5 @@ const InstanceStrip = (props: InstanceStripProps) => {
   );
 };
 
-export { InstanceStrip, MAX_CELLS };
-export type { InstanceStripProps };
+export { InstanceStrip };
+export type { InstanceStripProps } from './InstanceStrip.type';

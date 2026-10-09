@@ -1,55 +1,9 @@
 /* @layer renderer-components @kind hook */
-/**
- * The seven states of `ValueInput`, as one draft string and two booleans.
- *
- * COMMIT TIMING DIFFERS BETWEEN THE TWO CONTENTS, on purpose. A number commits
- * on CHANGE, so dragging the spinner tracks on the stage. A formula commits on
- * BLUR or ENTER, so a half-typed `life_current /` never reaches the document
- * and never flashes the stage to zero. That is why state 4 withholds its result
- * instead of guessing: a mid-edit formula that showed `→ 0` would be a lie on
- * every keystroke.
- *
- * ESCAPE IS NOT ALWAYS OURS. With the menu open the menu owns it. It sits on
- * the dismiss stack at `popover` (contract §33), which beats the layer behind
- * it, and this handler must NOT consume the key or the menu would never close.
- * With the menu shut the field owns it: the edit is abandoned and
- * `preventDefault()` marks the key handled, which is the contract §33.4 asks of
- * every inline editor so the panel behind does not close too.
- *
- * ARROWS ARE REDIRECTED, NEVER LOST. While the text is a bare numeral they
- * nudge the number; while it is a formula they move the completion selection,
- * which is where a hand in a formula wants them.
- */
 import { useRef, useState } from 'react';
 import { exprOf, isFormulaText, stepsAsNumber, textOf, valueOf, withFormulaMarker } from '../../../behavior/value-text';
-import type { Value } from '@shared/types/hud';
-
-interface UseValueInputParams {
-  value: Value | undefined;
-  onChange: (next: Value) => void;
-  /**
-   * OPTIONAL PROPERTIES ONLY. Given, an emptied field DELETES the key instead
-   * of reverting to what the document held. That is the rule phase 6's `MinMaxField`
-   * needed and §36.9 deferred to it. Omitted, an empty field behaves exactly as
-   * it did: a draft that never commits, with the placeholder saying so.
-   */
-  onClear?: () => void;
-  step: number;
-  min?: number;
-  max?: number;
-}
-
-const clamp = (n: number, min?: number, max?: number): number => {
-  if (min !== undefined && n < min) return min;
-  if (max !== undefined && n > max) return max;
-  return n;
-};
-
-/** The identifier the caret is sitting at the end of, which the completion
- *  filters on. Empty when the caret follows anything else, which is how
- *  "offer nothing but a value directly after a (" falls out for free. */
-const prefixAt = (text: string, caret: number): string =>
-  (/([A-Za-z_]\w*)$/.exec(text.slice(0, caret))?.[1] ?? '');
+import { clampToRange } from './clamp-to-range';
+import { prefixAt } from './prefix-at';
+import type { UseValueInputParams } from './useValueInput.type';
 
 const useValueInput = (params: UseValueInputParams) => {
   const { value, onChange, onClear, step, min, max } = params;
@@ -85,9 +39,6 @@ const useValueInput = (params: UseValueInputParams) => {
 
   const handleChange = (next: string, caret: number): void => {
     setDraft(next);
-    // Emptying is committed on CHANGE, like a number and unlike a formula:
-    // there is nothing half-typed about an empty field, and waiting for blur
-    // would leave the stage showing a limit that has already been rubbed out.
     if (onClear && next.trim() === '') { setDraft(null); setPrefix(''); onClear(); return; }
     const at = prefixAt(next, caret);
     setPrefix(at);
@@ -97,14 +48,11 @@ const useValueInput = (params: UseValueInputParams) => {
 
   const stepBy = (dir: 1 | -1): void => {
     if (!stepsAsNumber(text)) return;
-    const next = clamp(Number((Number(text) + dir * step).toFixed(6)), min, max);
+    const next = clampToRange(Number((Number(text) + dir * step).toFixed(6)), min, max);
     put(String(next));
     onChange(next);
   };
 
-  /** Replace the identifier under the caret, or insert at it. Never appends to
-   *  the end. That was the `+ var` Select's own bug, which was correct only when the
-   *  caret happened to be there. */
   const insert = (snippet: string, select?: string): void => {
     const el = inputRef.current;
     const caret = el?.selectionStart ?? text.length;
@@ -153,7 +101,6 @@ const useValueInput = (params: UseValueInputParams) => {
     inputRef,
     text,
     expr: formula ? exprOf(text) : null,
-    /** An edit that has not reached the document. It is why the result is withheld. */
     dirty: draft !== null,
     focused,
     formula,
@@ -172,5 +119,4 @@ const useValueInput = (params: UseValueInputParams) => {
   };
 };
 
-export { prefixAt, useValueInput };
-export type { UseValueInputParams };
+export { useValueInput };
