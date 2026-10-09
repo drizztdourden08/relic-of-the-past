@@ -1,17 +1,11 @@
 /* @layer renderer-components @kind hook */
-/**
- * Plays one file of a music pack at a time, read from the pack when its button is pressed. The
- * engine underneath already silences the last file; this holds which file is playing, which is
- * loading, and why a file did not play. Leaving the view stops the sound.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { startFileAudition, stopFileAudition } from '../../../music/behavior/file-audition';
 import type { Audition } from '../../../music/behavior/file-audition';
 import { previewBytes } from './preview-bytes';
-import type { MusicPack } from './read-music-pack';
+import type { MusicPack } from '../PackContents.type';
 import type { PackSource } from '../../../pack-source.type';
 
-/** A 30 second cut of a track can declare a repeat point past its end; that one is not shown. */
 const withinPreview = (audition: Audition): Audition => (
   audition.loopSeconds !== null && audition.loopSeconds >= audition.durationSeconds
     ? { ...audition, loopSeconds: null }
@@ -23,11 +17,10 @@ const usePackAudition = (source: PackSource, pack: MusicPack | null) => {
   const [loading, setLoading] = useState<string | null>(null);
   const [audition, setAudition] = useState<Audition | null>(null);
   const [notes, setNotes] = useState<ReadonlyMap<string, string>>(new Map());
-  // Only the newest press may publish what is playing.
-  const latest = useRef(0);
+  const latestPress = useRef(0);
 
   const stop = useCallback(() => {
-    latest.current += 1;
+    latestPress.current += 1;
     stopFileAudition();
     setPlaying(null);
     setAudition(null);
@@ -39,11 +32,11 @@ const usePackAudition = (source: PackSource, pack: MusicPack | null) => {
     const entry = pack?.entries.get(fileName);
     if (!entry) throw new Error('This file is not in the pack.');
     const bytes = await previewBytes(source, entry);
-    if (latest.current !== press) return;
+    if (latestPress.current !== press) return;
     const started = await startFileAudition(fileName, bytes, () => {
-      if (latest.current === press) { setPlaying(null); setAudition(null); }
+      if (latestPress.current === press) { setPlaying(null); setAudition(null); }
     });
-    if (latest.current !== press) { started.stop(); return; }
+    if (latestPress.current !== press) { started.stop(); return; }
     setPlaying(fileName);
     setAudition(withinPreview(started));
   }, [source, pack]);
@@ -51,7 +44,7 @@ const usePackAudition = (source: PackSource, pack: MusicPack | null) => {
   const toggle = useCallback((fileName: string) => {
     if (playing === fileName) { stop(); return; }
     stop();
-    const press = latest.current;
+    const press = latestPress.current;
     setLoading(fileName);
     setNotes((known) => {
       if (!known.has(fileName)) return known;

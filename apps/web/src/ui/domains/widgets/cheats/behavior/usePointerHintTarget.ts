@@ -1,8 +1,4 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * Binds a control to the pointer hint: spread the returned handlers on the element and the
- * hint names the control and lists its inputs while the pointer is over it.
- */
 import { useContext, useMemo } from 'react';
 import type { MouseEvent } from 'react';
 import { PointerHintContext } from './pointer-hint-context';

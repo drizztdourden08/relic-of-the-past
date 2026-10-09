@@ -1,5 +1,4 @@
 /* @layer renderer-hud @kind barrel */
-// Primitives
 export { HudSprite } from './primitives/HudSprite';
 export { HudNumber } from './primitives/HudNumber';
 export { HudHeart } from './primitives/HudHeart';
@@ -9,7 +8,6 @@ export { PauseBorderBox } from './primitives/PauseBorderBox';
 export { PauseLabel } from './primitives/PauseLabel';
 export { HudPie } from './primitives/HudPie';
 
-// Composites
 export { HudCount } from './composites/HudCount';
 export { HudCurrentItem } from './composites/HudCurrentItem';
 export { HudMagicMeter } from './composites/HudMagicMeter';
@@ -22,7 +20,6 @@ export { HudGlyph } from './composites/HudGlyph';
 export { PauseText } from './composites/PauseText';
 export { LocationNotification } from './views/LocationNotification';
 
-// Compounds
 export { HudLife } from './compounds/HudLife';
 export { HudNodeRenderer } from './compounds/HudNodeRenderer';
 export { HudMagicBar } from './compounds/HudMagicBar';
@@ -34,18 +31,15 @@ export { PauseProgressPanel } from './compounds/PauseProgressPanel';
 export { PauseAbilitiesPanel } from './compounds/PauseAbilitiesPanel';
 export { PauseEquipmentPanel } from './compounds/PauseEquipmentPanel';
 
-// Views
 export { HudView } from './views/HudView';
 export { PauseMenuView } from './views/PauseMenuView';
 export { HudLayoutView } from './views/HudLayoutView';
 export { EnhancedPauseView } from './views/EnhancedPauseView';
 
-// Hooks
 export { useHud } from './hooks/useHud';
 export { usePauseMenu } from './hooks/usePauseMenu';
 export { useLocationNotification } from './hooks/useLocationNotification';
 
-// Types
 export type { HudNumberProps } from './primitives/HudNumber';
 export type { HudHeartProps, HeartMode } from './primitives/HudHeart';
 export type { HudMeterProps } from './primitives/HudMeter';
@@ -77,5 +71,4 @@ export type { PauseAbilitiesPanelProps } from './compounds/PauseAbilitiesPanel';
 export type { PauseEquipmentPanelProps } from './compounds/PauseEquipmentPanel';
 export type { HudLayoutViewProps } from './views/HudLayoutView';
 export type { EnhancedPauseViewProps } from './views/EnhancedPauseView';
-export type { HudData, HudConfig } from './hooks/useHud';
-export type { PauseMenuData, PauseMenuConfig } from './hooks/usePauseMenu';
+export type { HudData, HudConfig, PauseMenuData, PauseMenuConfig } from './hooks/hooks.type';

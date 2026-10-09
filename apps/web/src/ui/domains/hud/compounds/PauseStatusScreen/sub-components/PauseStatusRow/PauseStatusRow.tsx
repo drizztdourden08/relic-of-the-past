@@ -1,12 +1,4 @@
 /* @layer renderer-hud @kind component */
-/**
- * PauseStatusRow puts a label on the left, whatever the row is reporting on the
- * right, both on the screen's one shared value column.
- *
- * Six rows share it, which is the point: the status screen is a table, and a
- * table whose rows each computed their own left edge would drift by a pixel
- * per row at the scales this menu is drawn at.
- */
 import { HudBox } from '../../../../primitives/HudBox';
 import { PauseText } from '../../../../composites/PauseText';
 import { LABEL_GLYPH, VALUE_X } from '../../PauseStatusScreen.constants';

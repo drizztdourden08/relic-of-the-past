@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind component */
-/** The set's variables, read only, with the table's own filter and search. */
 import { useMemo, useState } from 'react';
 import { VariablesTable, filterVariables } from '../../../variables';
 import { countVariableUses } from '../../../../behavior/entry-selectors';
-import type { DialogueEntry } from '@shared/game/language';
 import type { VariableFilter } from '../../../variables';
-import type { SetVariables } from '../../../../behavior/useSetVariables';
-
-type VariablesPaneProps = {
-  dialogue: DialogueEntry[];
-  vars: SetVariables;
-};
+import type { VariablesPaneProps } from '../../DialogueBrowser.type';
 
 const VariablesPane = (props: VariablesPaneProps) => {
   const { dialogue, vars } = props;
@@ -33,4 +26,3 @@ const VariablesPane = (props: VariablesPaneProps) => {
 };
 
 export { VariablesPane };
-export type { VariablesPaneProps };

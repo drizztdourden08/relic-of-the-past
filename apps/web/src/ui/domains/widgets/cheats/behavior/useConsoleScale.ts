@@ -1,17 +1,6 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * The HUD scale a tab draws at, from the width it has. The pause components take an
- * integer-ish scale (1 SNES pixel = scale CSS pixels), so the tab says how many tiles wide
- * its widest row is and gets the largest quarter-step scale that fits, the same way
- * PauseMenuView derives its scale from the game view's height.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
-
-/** Quarter steps keep every tile an integer number of pixels at the common widget widths. */
-const SCALE_STEP = 0.25;
-const SCALE_MIN = 0.75;
-const SCALE_MAX = 2.5;
-const SNES_TILE = 8;
+import { SCALE_MAX, SCALE_MIN, SCALE_STEP, SNES_TILE } from '../CheatsWidget.constants';
 
 const scaleFor = (width: number, tilesWide: number): number => {
   const raw = width / (tilesWide * SNES_TILE);
@@ -41,4 +30,4 @@ const useConsoleScale = (tilesWide: number) => {
   return { ref, scale };
 };
 
-export { useConsoleScale, scaleFor };
+export { useConsoleScale };

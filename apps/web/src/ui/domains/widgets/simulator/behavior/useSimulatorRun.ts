@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * THE RUNNER. Owns the simulator loop: snapshots pre-run state (Memento), force-
- * enables auto-skip-dialog, drives the pure engine one step at a time, executes
- * returned triggers through the port, and fans events out to the store / log-bus
- * / JSONL sink. Stops on outcome, the Stop button, or the step safety cap.
- */
 import { useCallback, useRef, useState } from 'react';
 import type { SimulatorPort, SimConfig, EngineState, SimEvent } from '@shared/game/simulation';
 import { createEngine, createEngineState, createRecorder, recordTransition, recordDoorGate, screenLabel } from '@shared/game/simulation';
@@ -15,17 +9,14 @@ import { createLiveGamePort, createSimLogWriter, screenAreaInfo } from '@app/lib
 import type { SimLogWriter } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
 import { useSimulatorStore } from '@app/stores/simulator-store';
-import { buildObservation, fanOutEvents, waitAfterTrigger, screenFloodEvent, exitsEvent, sequenceEvent } from './runner-loop';
-import type { DetectCache } from './runner-loop';
-import { computeProgress, buildRunResults } from './run-results';
+import { buildObservation, waitAfterTrigger } from '../../../../../lib/game/simulator/observe';
+import type { DetectCache } from '../../../../../lib/game/simulator/observe';
+import { fanOutEvents, screenFloodEvent, exitsEvent, sequenceEvent } from './runner-loop';
+import { computeProgress } from './compute-progress';
+import { buildRunResults } from './build-run-results';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
-
-const SAFETY_CAP = 50_000;
-
-interface Control {
-  running: boolean;
-  paused: boolean;
-}
+import { FEATURES_LATCH_WAIT_MS, PAUSED_POLL_MS, SAFETY_CAP, SEQUENCE_PREFIX } from '../SimulatorWidget.constants';
+import type { RunControl } from '../SimulatorWidget.type';
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
@@ -36,7 +27,7 @@ const useSimulatorRun = () => {
   const screenLimitRef = useRef<number | null>(null);
   screenLimitRef.current = screenLimit;
 
-  const control = useRef<Control>({ running: false, paused: false });
+  const control = useRef<RunControl>({ running: false, paused: false });
   const portRef = useRef<SimulatorPort | null>(null);
   const writerRef = useRef<SimLogWriter | null>(null);
   const snapshotRef = useRef<ArrayBuffer | null>(null);
@@ -52,12 +43,11 @@ const useSimulatorRun = () => {
     const detectCache: DetectCache = new Map();
     let sequenceLabel: string | null = null;
 
-    // Config echo + sequence marker, then the starting screen's flood up front.
     const startEvents: SimEvent[] = [];
     const stopLabel = config.stopAtCheckId ? `stop at "${getCheck(config.stopAtCheckId).name}", ` : '';
     startEvents.push({ level: 'narrative', msg: `Run config: ${stopLabel}screen limit ${config.screenLimit ?? 'unlimited'}`, step: state.step });
     const seq = sequenceEvent(sequenceLabel, state.step);
-    if (seq) { startEvents.push(seq); sequenceLabel = seq.msg.slice('Sequence '.length); }
+    if (seq) { startEvents.push(seq); sequenceLabel = seq.msg.slice(SEQUENCE_PREFIX.length); }
     state.area = screenAreaInfo(state.virtual.screenId);
     if (state.area) startEvents.push({ level: 'narrative', msg: `Area ${state.area.label} (${state.area.size} sub-screens)`, step: state.step });
     startEvents.push({ level: 'narrative', msg: `Screen ${screenLabel(state.virtual.screenId)}`, step: state.step });
@@ -69,7 +59,7 @@ const useSimulatorRun = () => {
     fanOutEvents(startEvents, writer, store.pushEvents, recorder);
 
     while (control.current.running && !state.outcome && state.step < SAFETY_CAP) {
-      if (control.current.paused) { await sleep(120); continue; }
+      if (control.current.paused) { await sleep(PAUSED_POLL_MS); continue; }
 
       const previousScreen = state.virtual.screenId;
       const previousEpoch = state.epoch;
@@ -84,17 +74,14 @@ const useSimulatorRun = () => {
       state = nextState;
       const screenChanged = nextState.virtual.screenId !== previousScreen;
       if (screenChanged) recordTransition(recorder, previousScreen, nextState.virtual.screenId);
-      // A check can flip the game's progress phase, so surface it as a Sequence marker.
       const seqChange = sequenceEvent(sequenceLabel, nextState.step);
       if (seqChange) {
-        sequenceLabel = seqChange.msg.slice('Sequence '.length);
+        sequenceLabel = seqChange.msg.slice(SEQUENCE_PREFIX.length);
         fanOutEvents([seqChange], writer, store.pushEvents, recorder);
       }
-      // Re-flood on entering a new screen OR after an unlock re-seeds the frontier
-      // (epoch bump), so the "Reset:" line is followed by the new reachability.
-      // Never after the stop target hit / run end, and never on BACKTRACK
-      // pass-through hops, where the phase stays 'traversing' over explored ground.
-      if ((screenChanged || nextState.epoch > previousEpoch) && nextState.phase !== 'traversing' && !nextState.stopHit && !nextState.outcome) {
+      const frontierReseeded = screenChanged || nextState.epoch > previousEpoch;
+      const backtrackingOrDone = nextState.phase === 'traversing' || nextState.stopHit || nextState.outcome;
+      if (frontierReseeded && !backtrackingOrDone) {
         const followups: SimEvent[] = [];
         const floodEvent = screenFloodEvent(nextState, detectCache);
         if (floodEvent) followups.push(floodEvent);
@@ -126,22 +113,11 @@ const useSimulatorRun = () => {
 
     snapshotRef.current = await port.snapshotState();
     setCanRestore(true);
-    // The run drives real checks; pause SRAM disk sync so no 5s tick persists
-    // half-simulated state to sram.dat mid-run. Resumed in the finally below.
     pauseSramSync();
-    // Arms the WasmSim* mutators (kHostGate_SimulatorSupport) for this run; without it every
-    // door-unlock/kill-drop/cell-lock trigger silently no-ops. Dropped in the finally below.
     port.setSimulatorSupport(true);
     port.setAutoSkipDialog(true);
-    // The combat-table queries that decide which enemies gate a room sit behind the
-    // developer-tools switch. Without it every room reads as ungated, a kill-gated
-    // room's shutters never reopen, and the run is sealed in the first one. The gate
-    // is read-only instrumentation and the run is a developer tool, so it holds the
-    // switch for its own duration (dropped in the finally). Never touches the user's setting.
     port.setDeveloperTools(true);
-    // A features word set here is only WANTED until the core latches it on its next
-    // frame (zelda_rtl.c:989), so give it frames before anything reads the tables.
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, FEATURES_LATCH_WAIT_MS));
     const unsubscribe = port.onItemReceived((id) => { itemRef.current = id; });
     const config: SimConfig = {
       ...(stopAtCheckId ? { stopAtCheckId } : {}),
@@ -173,9 +149,6 @@ const useSimulatorRun = () => {
   const stop = useCallback(() => {
     control.current.running = false;
     control.current.paused = false;
-    // Flip the store immediately: the drive loop may be mid-await (trigger + frame
-    // wait) and would otherwise leave status on 'running' until it next reaches
-    // finishRun an iteration later. finishRun still runs and is idempotent here.
     useSimulatorStore.getState().setStatus('done');
   }, []);
 
@@ -183,7 +156,6 @@ const useSimulatorRun = () => {
     const buffer = snapshotRef.current;
     if (buffer && portRef.current) {
       await portRef.current.restoreState(buffer);
-      // Pre-run state is back in MEMFS; safe to persist again immediately.
       resumeSramSync();
     }
   }, []);

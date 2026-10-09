@@ -2,26 +2,11 @@
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { SegmentedControl } from '@ds/primitives/SegmentedControl';
-import { OUTFIT_LABELS, GLOVE_LABELS, GLOVE_LEVELS } from '../../behavior/useWearing';
-import './WearingBar.css';
 import type { OutfitId, GloveLevel } from '@shared/game/data/player-sheet/types';
-import { OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
+import { GLOVE_OPTIONS, OUTFIT_OPTIONS } from './WearingBar.constants';
+import type { WearingBarProps } from './WearingBar.type';
+import './WearingBar.css';
 
-interface WearingBarProps {
-  outfit: OutfitId;
-  gloves: GloveLevel;
-  onOutfit: (outfit: OutfitId) => void;
-  onGloves: (gloves: GloveLevel) => void;
-}
-
-const OUTFIT_OPTIONS = OUTFIT_IDS.map((id) => ({ value: id, label: OUTFIT_LABELS[id] }));
-const GLOVE_OPTIONS = GLOVE_LEVELS.map((g) => ({ value: String(g), label: GLOVE_LABELS[g] }));
-
-/**
- * Outfit and glove level, the two palette axes the game varies at runtime. They are
- * independent controls because the engine treats them that way: the glove colour is written
- * over one row entry whichever outfit is loaded.
- */
 const WearingBar = (props: WearingBarProps) => {
   const { outfit, gloves, onOutfit, onGloves } = props;
 
@@ -44,4 +29,3 @@ const WearingBar = (props: WearingBarProps) => {
 };
 
 export { WearingBar };
-export type { WearingBarProps };

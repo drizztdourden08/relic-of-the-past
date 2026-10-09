@@ -3,7 +3,6 @@ import { Button } from '../../../../design-system/primitives';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { S } from '../styles';
 
-/** Copies the currently locked pathfinding path to the clipboard. */
 const PathCopyBtn = () => {
   const lockedPath = useNavigationOverlayStore(s => s.lockedPath);
   if (!lockedPath || lockedPath.length === 0) {

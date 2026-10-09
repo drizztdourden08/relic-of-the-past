@@ -1,17 +1,7 @@
 /* @layer renderer-components @kind component */
-/** The view switch, the animation's play, pause and step, its speed, and the zoom. */
 import { Box, Button, RangeInput, SegmentedControl, Text } from '@ds/primitives';
 import { VIEW_OPTIONS, MIN_SCALE, MAX_SCALE } from '../../SpriteSheetViewer.constants';
-import type { AnimationClock } from '../../../../behavior/useAnimationClock';
-import type { SheetView } from '../../SpriteSheetViewer.type';
-
-type ViewerControlsProps = {
-  view: SheetView;
-  clock: AnimationClock;
-  scale: number;
-  onView: (view: SheetView) => void;
-  onScale: (scale: number) => void;
-};
+import type { ViewerControlsProps } from '../../SpriteSheetViewer.type';
 
 const ViewerControls = (props: ViewerControlsProps) => {
   const { view, clock, scale, onView, onScale } = props;
@@ -42,4 +32,3 @@ const ViewerControls = (props: ViewerControlsProps) => {
 };
 
 export { ViewerControls };
-export type { ViewerControlsProps };

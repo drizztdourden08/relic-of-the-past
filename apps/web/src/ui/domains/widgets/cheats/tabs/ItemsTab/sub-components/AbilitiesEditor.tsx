@@ -1,32 +1,14 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The pause menu's A box: the ability words on top, read-only, and the four passives along the
- * bottom row (boots, gloves, flippers, moon pearl), each clickable. Gloves open their tier
- * list; the other three are a held flag: a ghost click gives, the list offers Remove.
- */
 import { Box } from '@ds/primitives';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseBorderBox, PauseButtonLabel, PauseEquipSlot, PauseLabel } from '@domains/hud';
-import { CheatSlot } from '@app/lib/game';
-import { ABILITY_PANEL, ABILITY_SLOT_ORDER } from '../ItemsTab.constants';
+import { ABILITY_EQUIP_TYPE, ABILITY_PANEL, ABILITY_SLOT_ORDER } from '../ItemsTab.constants';
 import { isSlotOwned, slotValueOf } from '../behavior/slot-value';
-import { givableTier, useSlotClick } from '../behavior/useSlotClick';
+import { givableTier } from '../behavior/givable-tier';
+import { useSlotClick } from '../behavior/useSlotClick';
 import { AbilityTextGrid } from './AbilityTextGrid';
 import { SlotCell } from './SlotCell';
-import type { OpenSlot, SlotSpec, SlotWrite } from '../ItemsTab.type';
-
-type AbilitiesEditorProps = {
-  specs: Map<number, SlotSpec>;
-  scale: number;
-  spritesBase: string;
-  onHover: (slot: number | null) => void;
-  onOpen: (open: OpenSlot) => void;
-  write: (write: SlotWrite) => void;
-};
-
-const EQUIP_TYPE: Record<number, string> = {
-  [CheatSlot.Boots]: 'boots', [CheatSlot.Gloves]: 'gloves', [CheatSlot.Flippers]: 'flippers', [CheatSlot.MoonPearl]: 'moonPearl',
-};
+import type { AbilitiesEditorProps } from '../ItemsTab.type';
 
 const AbilitiesEditor = ({ specs, scale, spritesBase, onHover, onOpen, write }: AbilitiesEditorProps) => {
   const items = useGameUIStore((s) => s.inventory.items);
@@ -64,7 +46,7 @@ const AbilitiesEditor = ({ specs, scale, spritesBase, onHover, onOpen, write }: 
                 onOpenList={(e) => onOpen({ spec, anchor: e.currentTarget })}
                 onHover={(active) => onHover(active ? slot : null)}
               >
-                {owned && <PauseEquipSlot type={EQUIP_TYPE[slot]} level={value} scale={scale} spritesBase={spritesBase} />}
+                {owned && <PauseEquipSlot type={ABILITY_EQUIP_TYPE[slot]} level={value} scale={scale} spritesBase={spritesBase} />}
               </SlotCell>
             );
           })}
@@ -78,4 +60,3 @@ const AbilitiesEditor = ({ specs, scale, spritesBase, onHover, onOpen, write }: 
 };
 
 export { AbilitiesEditor };
-export type { AbilitiesEditorProps };

@@ -1,35 +1,11 @@
-/* @layer renderer-hud @kind data */
-/**
- * Displays the player's abilities and equipment.
- *
- * Game layout: tiles (1,21)→(19,29) = 19×9 tiles (inner 17×7)
- * Abilities drawn via link_ability_flags in a 3×2 grid:
- *   Row 1 (y=22): bit7=LIFT, bit6=READ, bit5=TALK
- *   Row 2 (y=24): bit3=PULL, bit2=RUN,  bit1=SWIM
- *   (bit4 is skipped in the original loop)
- *
- * Gloves override: if link_item_gloves > 0, LIFT text shows "LIFT.1" or "LIFT.2"
- *
- * Equipment sprites at bottom row (y=27):
- *   col 4=boots, col 8=gloves, col 12=flippers, col 16=moon pearl
- */
+/* @layer renderer-hud @kind component */
 import { HudBox } from '../../primitives/HudBox';
 import { HudImage } from '../../primitives/HudImage';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseButtonLabel } from '../../composites/PauseButtonLabel';
 import { PauseEquipSlot } from '../../composites/PauseEquipSlot';
 import { PauseLabel } from '../../primitives/PauseLabel';
-
-interface PauseAbilitiesPanelProps {
-  gloves: number;
-  boots: number;
-  flippers: number;
-  moonPearl: number;
-  abilityFlags: number;
-  scale: number;
-  spritesBase: string;
-  style?: React.CSSProperties;
-}
+import type { PauseAbilitiesPanelProps } from './PauseAbilitiesPanel.type';
 
 const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
   const { gloves, boots, flippers, moonPearl, abilityFlags, scale, spritesBase, style } = props;
@@ -37,10 +13,6 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
   const innerCols = 17;
   const innerRows = 7;
 
-  // SNES ability text grid: 3 columns × 2 rows
-  // Row 1 (bits 7,6,5): LIFT, READ, TALK at tile positions (3,1), (8,1), (13,1)
-  // Row 2 (bits 3,2,1): PULL, RUN,  SWIM at tile positions (3,3), (8,3), (13,3)
-  // Note: bit 4 is skipped (outer loop shift in original code)
   const abilityGrid: { label: string; bit: number; col: number; row: number }[] = [
     { label: 'LIFT', bit: 7, col: 3, row: 1 },
     { label: 'READ', bit: 6, col: 8, row: 1 },
@@ -50,22 +22,18 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
     { label: 'SWIM', bit: 1, col: 13, row: 3 },
   ];
 
-  // Gloves level determines the .N suffix on LIFT (0/none=.1, 1=Power Glove=.2, 2=Titan's Mitts=.3)
   const liftLevel = gloves + 1;
 
-  // Both containers align with the item grid above: starts at col 2, width = 14 tiles
   const gridLeft = tile * 2;
   const gridWidth = tile * 14;
 
   return (
     <HudBox style={{ position: 'relative', ...style }}>
     <PauseBorderBox color="red" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
-      {/* A-button indicator */}
       <HudBox style={{ position: 'absolute', top: 0, left: 0 }}>
         <PauseButtonLabel button="a" scale={scale} spritesBase={spritesBase} />
       </HudBox>
 
-      {/* Abilities grid: 3 cols × 2 rows with equal spacing */}
       <HudBox style={{
         position: 'absolute',
         top: tile * 2 / 3,
@@ -103,7 +71,6 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
         ))}
       </HudBox>
 
-      {/* Equipment items: flex with equal spacing, aligned with item grid */}
       <HudBox style={{
         position: 'absolute',
         top: tile * 5,
@@ -118,7 +85,6 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
         <PauseEquipSlot type="moonPearl" level={moonPearl} scale={scale} spritesBase={spritesBase} />
       </HudBox>
     </PauseBorderBox>
-    {/* "DO" label on top border, col 2 */}
     <HudBox style={{ position: 'absolute', top: 0, left: tile * 2, zIndex: 1, background: 'black' }}>
       <PauseLabel name="do" tiles={2} scale={scale} spritesBase={spritesBase} />
     </HudBox>
@@ -127,4 +93,3 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
 };
 
 export { PauseAbilitiesPanel };
-export type { PauseAbilitiesPanelProps };

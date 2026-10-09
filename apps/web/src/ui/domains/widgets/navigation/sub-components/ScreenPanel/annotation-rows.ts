@@ -1,38 +1,7 @@
 /* @layer renderer-widgets @kind logic */
-/**
- * Turns a flat ScreenAnnotations list into the grouped rows the panel renders.
- *
- * Grouping is by the same semantic families the overlay colours by, so the panel
- * and the canvas tell the same story in the same order. `unknown` rides along in
- * "other" instead of being dropped. An unmapped mechanic must stay visible in
- * the list too, not only on the canvas.
- */
-import type { ScreenAnnotation, AnnotationKind } from '@shared/game/simulation';
-
-type GroupId = 'checks' | 'locks' | 'triggers' | 'other';
-
-const GROUP_OF: Partial<Record<AnnotationKind, GroupId>> = {
-  chest: 'checks', 'big-chest': 'checks', 'npc-check': 'checks', 'standing-item': 'checks',
-  'key-door': 'locks', 'big-key-door': 'locks', 'cell-lock': 'locks',
-  shutter: 'locks', bombable: 'locks', 'follower-gate': 'locks',
-  'pull-switch': 'triggers', 'kill-trigger': 'triggers',
-  'key-carrier': 'triggers', 'big-key-carrier': 'triggers',
-};
-
-const GROUP_TITLES: Record<GroupId, string> = {
-  checks: 'Checks',
-  locks: 'Locks & barriers',
-  triggers: 'Triggers',
-  other: 'Unmapped',
-};
-
-const GROUP_ORDER: GroupId[] = ['checks', 'locks', 'triggers', 'other'];
-
-interface AnnotationGroup {
-  id: GroupId;
-  title: string;
-  items: ScreenAnnotation[];
-}
+import type { ScreenAnnotation } from '@shared/game/simulation';
+import { GROUP_OF, GROUP_ORDER, GROUP_TITLES } from './ScreenPanel.constants';
+import type { AnnotationGroup, GroupId } from './ScreenPanel.type';
 
 const groupAnnotations = (items: readonly ScreenAnnotation[]): AnnotationGroup[] => {
   const buckets = new Map<GroupId, ScreenAnnotation[]>();
@@ -48,4 +17,3 @@ const groupAnnotations = (items: readonly ScreenAnnotation[]): AnnotationGroup[]
 };
 
 export { groupAnnotations };
-export type { AnnotationGroup, GroupId };

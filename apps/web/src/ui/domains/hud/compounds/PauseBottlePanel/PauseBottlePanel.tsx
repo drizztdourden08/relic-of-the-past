@@ -1,32 +1,10 @@
-/* @layer renderer-hud @kind data */
-/**
- * Shown when the cursor is on the bottle slot.
- * Replaces the progress + equipment panels on the right side.
- * Yellow-bordered panel displaying all 4 bottle slots vertically.
- */
+/* @layer renderer-hud @kind component */
 import { HudBox } from '../../primitives/HudBox';
 import { HudImage } from '../../primitives/HudImage';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { getCircleDataUrl } from '../../composites/PauseItemSlot';
-
-/** Bottle content value → sprite filename */
-const BOTTLE_SPRITES: Record<number, string> = {
-  2: 'hud-bottle',
-  3: 'hud-bottle-red',
-  4: 'hud-bottle-green',
-  5: 'hud-bottle-blue',
-  6: 'hud-bottle-fairy',
-  7: 'hud-bottle-bee',
-  8: 'hud-bottle-good-bee',
-};
-
-interface PauseBottlePanelProps {
-  bottles: number[];
-  selectedIndex: number;
-  scale: number;
-  spritesBase: string;
-  style?: React.CSSProperties;
-}
+import { BOTTLE_SPRITES } from './PauseBottlePanel.constants';
+import type { PauseBottlePanelProps } from './PauseBottlePanel.type';
 
 const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }: PauseBottlePanelProps) => {
   const tile = 8 * scale;
@@ -37,7 +15,6 @@ const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }:
 
   return (
     <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
-      {/* 4 bottles spaced vertically, centered horizontally */}
       {bottles.map((content, i) => {
         const sprite = BOTTLE_SPRITES[content];
         return (
@@ -49,7 +26,6 @@ const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }:
               left: tile * 3,
             }}
           >
-            {/* Blinking selection circle for active bottle */}
             {i === selectedIndex && (
               <HudImage
                 src={getCircleDataUrl()}
@@ -81,4 +57,3 @@ const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }:
 };
 
 export { PauseBottlePanel };
-export type { PauseBottlePanelProps };

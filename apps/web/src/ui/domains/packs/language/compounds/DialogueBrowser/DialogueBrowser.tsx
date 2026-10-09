@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * A language set, read only: the dialogue with its search and in-game preview, and the
- * variables. The app's editor draws the same entries, reads and previews; this adds no editing.
- */
 import { useMemo, useState } from 'react';
 import { Box, TabBar } from '@ds/primitives';
 import { useSetVariables } from '../../behavior/useSetVariables';

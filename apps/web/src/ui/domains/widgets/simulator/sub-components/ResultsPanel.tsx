@@ -1,59 +1,15 @@
 /* @layer renderer-widgets @kind component */
-/**
- * Shown when a run finishes: the outcome banner, a reveal-log-file button, and the
- * list of dataset suggestions the run produced. Reaching the configured stop
- * check ('stopped-at-check') and completing the goal ('completed') both read as
- * success; only 'not-completable' is a failure (with a softlock summary).
- */
 import { Box, Button, Text } from '@ds/primitives';
-import type { SimOutcome, SoftlockReport, DatasetSuggestion } from '@shared/game/simulation';
-import { getCheck } from '@shared/game/data';
-import type { CheckId } from '@shared/game/data';
 import { SuggestionCard } from './SuggestionCard';
-import type { ApplyResult } from '../behavior/useDatasetSuggestions';
-
-interface ResultsPanelProps {
-  outcome: SimOutcome | null;
-  stopAtCheckId: CheckId | '';
-  softlockReport: SoftlockReport | null;
-  suggestions: DatasetSuggestion[];
-  canApplyCheck: boolean;
-  onOpenLog: () => void;
-  onApply: (suggestion: DatasetSuggestion) => Promise<ApplyResult>;
-}
-
-type BannerTone = 'success' | 'danger';
-
-const resolveStopName = (stopAtCheckId: CheckId | ''): string =>
-  stopAtCheckId ? getCheck(stopAtCheckId).name : 'stop check';
-
-const bannerFor = (outcome: SimOutcome, stopAtCheckId: CheckId | ''): { tone: BannerTone; icon: string; title: string; detail: string } => {
-  switch (outcome) {
-    case 'stopped-at-check':
-      return { tone: 'success', icon: '✓', title: 'Success', detail: `Reached ${resolveStopName(stopAtCheckId)}` };
-    case 'completed':
-      return { tone: 'success', icon: '✓', title: 'Success', detail: 'All checks complete and the goal reached' };
-    case 'not-completable':
-      return { tone: 'danger', icon: '✕', title: 'Not completable', detail: 'The frontier exhausted with checks still blocked' };
-  }
-};
-
-const SoftlockSummary = (props: { report: SoftlockReport }) => {
-  const { report } = props;
-  return (
-    <Box className="simulator__softlock">
-      <Text className="simulator__softlock-line">{report.completed.length} checks completed.</Text>
-      <Text className="simulator__softlock-line">{report.blocked.length} checks left blocked.</Text>
-      <Text className="simulator__softlock-line">{report.unreachedScreens.length} screens never reached.</Text>
-    </Box>
-  );
-};
+import { SoftlockSummary } from './SoftlockSummary';
+import { outcomeBanner } from '../behavior/outcome-banner';
+import type { ResultsPanelProps } from '../SimulatorWidget.type';
 
 const ResultsPanel = (props: ResultsPanelProps) => {
   const { outcome, stopAtCheckId, softlockReport, suggestions, canApplyCheck, onOpenLog, onApply } = props;
   if (!outcome) return null;
 
-  const banner = bannerFor(outcome, stopAtCheckId);
+  const banner = outcomeBanner(outcome, stopAtCheckId);
 
   return (
     <Box className="simulator__results">
@@ -65,7 +21,6 @@ const ResultsPanel = (props: ResultsPanelProps) => {
             <Text className="simulator__banner-detail">{banner.detail}</Text>
           </Box>
         </Box>
-        {/* Reveals the run's JSONL on disk, which is not the in-app log dialog. */}
         <Button size="sm" variant="tertiary" onClick={onOpenLog}>Reveal log file</Button>
       </Box>
 

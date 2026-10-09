@@ -1,15 +1,5 @@
 /* @layer renderer-hud @kind component */
-/**
- * Renders a single 8×8 HUD tile with optional h/v flip.
- * Base primitive for all pause menu sprite rendering.
- */
-
-interface PauseTileProps {
-  src: string;
-  scale: number;
-  flipX?: boolean;
-  flipY?: boolean;
-}
+import type { PauseTileProps } from './PauseTile.type';
 
 const PauseTile = ({ src, scale, flipX = false, flipY = false }: PauseTileProps) => {
   const size = 8 * scale;
@@ -33,4 +23,3 @@ const PauseTile = ({ src, scale, flipX = false, flipY = false }: PauseTileProps)
 };
 
 export { PauseTile };
-export type { PauseTileProps };

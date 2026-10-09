@@ -2,17 +2,23 @@
 import type { ReactNode } from 'react';
 import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
 import type { WearingState } from '../../behavior/useWearing';
+import type { AnimationClock } from '../../behavior/useAnimationClock.type';
 
-/** One state with every facing, every state at once, or the raw tile grid. */
 type SheetView = 'state' | 'contact' | 'sheet';
 
 type SpriteSheetViewerProps = {
   sheet: PlayerSheet;
-  /** Outfit and gloves, when the caller needs them too (the Studio's palette editor does). */
   wearing?: WearingState;
-  /** Shown beside the stage, level with it. */
   aside?: ReactNode;
   className?: string;
 };
 
-export type { SheetView, SpriteSheetViewerProps };
+type ViewerControlsProps = {
+  view: SheetView;
+  clock: AnimationClock;
+  scale: number;
+  onView: (view: SheetView) => void;
+  onScale: (scale: number) => void;
+};
+
+export type { SheetView, SpriteSheetViewerProps, ViewerControlsProps };

@@ -1,0 +1,34 @@
+/* @layer renderer-hud @kind constants */
+const CLOUD_PARALLAX = 0.25;
+
+const REFLECTION_COMPRESSION = 1.08;
+const WAVE_A = { rate: 0.55, rowPhase: 0.16, amplitude: 0.85 } as const;
+const WAVE_B = { rate: 0.83, rowPhase: -0.07, amplitude: 0.45 } as const;
+const ROW_JITTER = 0.45;
+const WAVE_MAX_PX = 1;
+const REFLECTION_TINT = 'rgba(120, 150, 230, 0.35)';
+
+const SKY_FALLBACK_COLOUR = '#8494de';
+
+const WATER_LINE_COLOURS = ['#6363bd', '#424294'] as const;
+
+const OPEN_WATER_FROM = 0.3;
+const WATER_BANDS = 4;
+const BAND_COLOUR = '50, 70, 170';
+const BAND_ALPHA_STEP = 0.045;
+const RIPPLE_EVERY_PX = 6;
+const RIPPLE_WIDTH = { min: 3, max: 10 } as const;
+const RIPPLE_SPEED = { min: 0.5, max: 1.4 } as const;
+const RIPPLE_BREATH_RATE = 0.7;
+const RIPPLE_LIGHT = '235, 243, 255';
+const RIPPLE_DARK = '44, 62, 150';
+const RIPPLE_LIGHT_ALPHA = 0.42;
+const RIPPLE_DARK_ALPHA = 0.3;
+const RIPPLE_PARALLAX = 0.5;
+const RIPPLE_SEED_SALT = 0x5eed;
+
+export {
+  BAND_ALPHA_STEP, BAND_COLOUR, CLOUD_PARALLAX, OPEN_WATER_FROM, REFLECTION_COMPRESSION, REFLECTION_TINT, RIPPLE_BREATH_RATE, RIPPLE_DARK,
+  RIPPLE_DARK_ALPHA, RIPPLE_EVERY_PX, RIPPLE_LIGHT, RIPPLE_LIGHT_ALPHA, RIPPLE_PARALLAX, RIPPLE_SEED_SALT, RIPPLE_SPEED, RIPPLE_WIDTH, ROW_JITTER,
+  SKY_FALLBACK_COLOUR, WATER_BANDS, WATER_LINE_COLOURS, WAVE_A, WAVE_B, WAVE_MAX_PX,
+};

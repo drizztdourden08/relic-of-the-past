@@ -1,23 +1,13 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * What the name panel shows for one slot: the localized name the pause menu would draw for an
- * owned grid slot, the first tier's name for an unowned one, and the tier label for the
- * equipment and ability slots, whose names come from the item records.
- */
 import { useCallback } from 'react';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { getSlotSprite } from '@domains/hud/composites/PauseItemSlot';
 import { useLocalizedNames } from '@domains/hud/views/PauseMenuView/behavior/useLocalizedNames';
 import { itemNameKeyForSlot } from '@domains/hud/views/PauseMenuView/behavior/item-name-key';
 import { wrapName } from '@domains/hud/views/PauseMenuView/behavior/wrap-name';
-import { BOTTLE_SLOT_INDEX } from '../ItemsTab.constants';
+import { BOTTLE_SLOT_INDEX, EMPTY_BOTTLE, EMPTY_NAME } from '../ItemsTab.constants';
 import { isSlotOwned, slotValueOf } from './slot-value';
 import type { SlotName, SlotSpec } from '../ItemsTab.type';
-
-/** The bottle-index slot draws its selected bottle's contents; an unowned one draws an empty bottle. */
-const EMPTY_BOTTLE = 2;
-
-const EMPTY_NAME: SlotName = { lines: [''], sprite: null, owned: false };
 
 const useSlotName = (specs: Map<number, SlotSpec>) => {
   const items = useGameUIStore((s) => s.inventory.items);
@@ -27,7 +17,6 @@ const useSlotName = (specs: Map<number, SlotSpec>) => {
 
   const gridName = useCallback((slot: number): SlotName => {
     const owned = (items[slot] ?? 0) > 0;
-    // An unowned slot is named as if it held its first tier, so the panel still says what it is.
     const probe = owned ? items : items.map((value, i) => (i === slot ? 1 : value));
     const key = itemNameKeyForSlot(slot, probe);
     const keyName = key ? itemName(key.recordId, key.tier) : '';

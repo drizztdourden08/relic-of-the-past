@@ -1,50 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * The text box itself: three rows, always three, at the interior's real width.
- *
- * The height is fixed because the box's is. A preview that shrank to fit one
- * line of text would hide the thing worth seeing, which is that the other two
- * rows are still carrying whatever an earlier box left there.
- *
- * Rows are placed by their own row number, not in list order, so a box
- * that writes only row 2 draws it in the middle with the real gaps above and
- * below it.
- *
- * Two of the box's own behaviours ride along: a blinking wait marker while the
- * box is holding for a press, and, when `scrolled` is set, a brief upward shift
- * of the rows as they arrive, keyed on `scrollKey` so each advance replays it.
- * A choice prompt's selection cursor draws in column 0 of `cursorRow`.
- */
 import { Box } from '@ds/primitives';
 import { ROWS_PER_BOX } from '@shared/game/language';
 import { ChoiceCursor } from './ChoiceCursor';
 import { GlyphRow } from './GlyphRow';
-import type { GlyphMetrics, GlyphSheet } from '@shared/game/language';
-import type { PreviewRow } from './preview-screens';
+import { NO_ROWS } from './preview.constants';
+import type { PreviewBoxProps, PreviewRow } from './preview.type';
 import './PreviewBox.css';
-
-type PreviewBoxProps = {
-  rows: PreviewRow[];
-  sheet: GlyphSheet | null;
-  metrics: GlyphMetrics | null;
-  /** 1-based row the selection cursor sits on; null hides it. */
-  cursorRow?: number | null;
-  /**
-   * Every 1-based option row. The cursor frames repaint column 0 of ALL of
-   * them each frame, drawing the cursor on the selected row and a blank on the
-   * others, so the blank covers whatever cursor glyph the stored text carries.
-   */
-  optionRows?: readonly number[];
-  /** The box is holding for a press, so the wait marker blinks. */
-  waiting?: boolean;
-  /** This box arrived by advancing, so its rows shift up into place. */
-  scrolled?: boolean;
-  /** Changes with every advance, replaying the shift for each new box. */
-  scrollKey?: number;
-};
-
-/** The box's three slots, each holding its row or nothing. */
-const NO_ROWS: readonly number[] = [];
 
 const slotsOf = (rows: PreviewRow[]): (PreviewRow | null)[] => Array.from(
   { length: ROWS_PER_BOX },
@@ -83,4 +44,3 @@ const PreviewBox = (props: PreviewBoxProps) => {
 };
 
 export { PreviewBox };
-export type { PreviewBoxProps };

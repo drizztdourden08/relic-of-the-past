@@ -1,40 +1,14 @@
 /* @layer renderer-widgets @kind component */
-/**
- * One HUD counter as "held / ceiling": the game's icon over two numbers. The held count is
- * always editable. The ceiling walks the capacity ladder the mode offers: the native tiers on a
- * vanilla file, exactly the rungs the seed's upgrades reach on a randomized one, and plain
- * digits where there is a single rung (a vanilla wallet) or no ladder at all (keys). A ceiling
- * redraws the HUD, so it is locked outside normal play, and so is the key count.
- */
 import { Box, Text } from '@ds/primitives';
 import { HudSprite } from '@domains/hud';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useHudSettingsStore } from '@app/stores/hud-settings-store';
-import { cheatSetArrows, cheatSetBombs, cheatSetRupees, cheatSetSmallKeys } from '@app/lib/game';
 import { useCapacityLadder } from '../../../behavior/useCapacityLadder';
-import { IN_PLAY_REASON, useInPlay } from '../../../behavior/useInPlay';
+import { useInPlay } from '../../../behavior/useInPlay';
+import { IN_PLAY_REASON } from '../../../CheatsWidget.constants';
 import { NumberCell } from './NumberCell';
-import { KEYS_MAX } from '../PlayerTab.constants';
-import type { CounterSpec } from '../PlayerTab.constants';
-
-const SNES_TILE = 8;
-/** The bow slot value from which the HUD draws the silver arrow icon. */
-const SILVER_BOW = 3;
-const WIDE_WALLET = 999;
-
-type CounterEditorProps = {
-  spec: CounterSpec;
-  scale: number;
-  spritesBase: string;
-};
-
-const WRITERS = {
-  rupees: cheatSetRupees, bombs: cheatSetBombs, arrows: cheatSetArrows, keys: cheatSetSmallKeys,
-} as const;
-
-const ICONS = {
-  rupees: 'hud-rupee-icon', bombs: 'hud-bomb-icon', arrows: 'hud-arrow-icon', keys: 'hud-key-icon',
-} as const;
+import { COUNTER_ICONS, COUNTER_WRITERS, KEYS_MAX, SILVER_BOW, SNES_TILE, WIDE_WALLET } from '../PlayerTab.constants';
+import type { CounterEditorProps } from '../PlayerTab.type';
 
 const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
   const { kind, label, iconWidth, digits, steps, capacity } = spec;
@@ -48,7 +22,7 @@ const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
   const value = hud[kind];
   const max = maxOf[kind];
   const tile = SNES_TILE * scale;
-  const icon = kind === 'arrows' && hasSilverArrows ? 'hud-silver-arrow-icon' : ICONS[kind];
+  const icon = kind === 'arrows' && hasSilverArrows ? 'hud-silver-arrow-icon' : COUNTER_ICONS[kind];
   const shownDigits = kind === 'rupees' && hud.maxRupees > WIDE_WALLET ? digits + 1 : digits;
 
   const caps = ladder.map((r) => r.cap);
@@ -68,7 +42,7 @@ const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
           max={max}
           digits={shownDigits}
           isMax={showMaxInYellow && value >= max}
-          write={WRITERS[kind]}
+          write={COUNTER_WRITERS[kind]}
           steps={steps}
           lockedReason={heldLock}
           scale={scale}
@@ -93,4 +67,3 @@ const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
 };
 
 export { CounterEditor };
-export type { CounterEditorProps };

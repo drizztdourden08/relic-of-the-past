@@ -1,19 +1,7 @@
 /* @layer renderer-components @kind component */
-/** One titled band of slots (music, or sounds); nothing at all when the pack fills none of them. */
 import { Box, Text } from '@ds/primitives';
 import { SlotRowView } from '../SlotRowView';
-import type { Audition } from '../../../../behavior/file-audition';
-import type { SlotRow } from '../../TrackList.type';
-
-type SlotSectionProps = {
-  title: string;
-  rows: SlotRow[];
-  playing: string | null;
-  loading: string | null;
-  audition: Audition | null;
-  notes: ReadonlyMap<string, string>;
-  onPlay: (fileName: string) => void;
-};
+import type { SlotSectionProps } from '../../TrackList.type';
 
 const SlotSection = (props: SlotSectionProps) => {
   const { title, rows, playing, loading, audition, notes, onPlay } = props;
@@ -38,4 +26,3 @@ const SlotSection = (props: SlotSectionProps) => {
 };
 
 export { SlotSection };
-export type { SlotSectionProps };

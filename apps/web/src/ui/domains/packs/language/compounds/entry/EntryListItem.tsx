@@ -1,55 +1,17 @@
 /* @layer renderer-components @kind component */
-/**
- * One item of the entry list: the closed row, or the open panel and whichever of
- * the three views it is showing.
- *
- * It exists so the list itself stays a list. Choosing between four renderings and
- * assembling the model for each is per-entry work, and doing it here keeps the tab
- * to searching, filtering and iterating.
- *
- * The measurements are taken from the shared layout cache, and only for a row near
- * the viewport: a set is a few hundred entries and measuring one means walking
- * every glyph through the language's width table.
- */
 import { memo, useCallback, useMemo } from 'react';
 import { contextFor } from '@shared/game/data/dialogue-context';
 import { EntryCardCollapsed } from './EntryCardCollapsed';
 import { EntryPanel } from './EntryPanel';
 import { ReadView } from './ReadView';
-import { entryMetaRows, issueWords } from './entry-meta.model';
+import { entryMetaRows } from './entry-meta.model';
+import { issueWords } from './issue-words';
 import { entryRowModel } from './entry-row.model';
 import { proseOf } from './entry-prose';
-import { factsForEntry } from './trigger-facts';
-import type { ReactNode } from 'react';
-import type { DialogueEntry, EntryIssue, VariableIndex } from '@shared/game/language';
-import type { EntryLayout } from '../../behavior/useEntryLayout';
-import type { EntryViewMode } from '../../behavior/useEntryView';
+import { factsForEntry } from './facts-for-entry';
+import type { EntryViewMode } from '../../behavior/language-behavior.type';
+import type { EntryListItemProps } from './entry.type';
 
-type EntryListItemProps = {
-  entry: DialogueEntry;
-  /** Rows, lines and blocks for this entry; empty while it is out of view. */
-  layout: EntryLayout;
-  variables: VariableIndex;
-  issues?: EntryIssue[];
-  open: boolean;
-  mode: EntryViewMode;
-  /** The views the open panel offers; every one when absent. */
-  modes?: readonly EntryViewMode[];
-  /** The editing surface, built by the tab. Absent unless this entry is editing. */
-  editor?: ReactNode;
-  /** The box preview, built by the tab. Absent unless this entry is previewing. */
-  preview?: ReactNode;
-  onOpen: (id: number) => void;
-  onClose: (id: number) => void;
-  onModeChange: (id: number, mode: EntryViewMode) => void;
-};
-
-/*
- * Memoized: the list holds a few hundred of these and re-renders on every mode
- * or draft change. A closed row's props are all stable (models come from the
- * shared layout cache, handlers are identity-fixed), so only the row whose
- * facts changed pays for the change.
- */
 const EntryListItem = memo((props: EntryListItemProps) => {
   const {
     entry, layout, variables, issues, open, mode, modes,
@@ -102,4 +64,3 @@ const EntryListItem = memo((props: EntryListItemProps) => {
 EntryListItem.displayName = 'EntryListItem';
 
 export { EntryListItem };
-export type { EntryListItemProps };

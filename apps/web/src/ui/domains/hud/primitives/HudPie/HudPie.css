@@ -13,7 +13,6 @@
   opacity: var(--opacity-muted);
 }
 
-/* A slice leaves by fading while it slides to its own push offset, away from the centre. */
 .hud-pie__slice {
   fill: var(--c-gold);
   stroke: var(--c-bg);
@@ -24,7 +23,6 @@
     transform var(--duration-slice-exit) var(--ease-standard);
 }
 
-/* The breath keeps running through the exit, so the fill never jumps when the slice starts to leave. */
 .hud-pie__slice--next,
 .hud-pie__slice--gone {
   fill: var(--c-gold-bright);
@@ -41,7 +39,6 @@
   to { fill-opacity: var(--opacity-faint); }
 }
 
-/* Reduced motion keeps the fade and drops the breath and the slide. */
 @media (prefers-reduced-motion: reduce) {
   .hud-pie__slice--next,
   .hud-pie__slice--gone {

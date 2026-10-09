@@ -1,29 +1,16 @@
 /* @layer renderer-widgets @kind component */
-import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ScreenCrossing } from '@shared/game/navigation';
 import { Box, Text } from '../../../../design-system/primitives';
 import { crossingIcon } from '../../../../../lib/entrance-icons';
 import { S } from '../styles';
 import { ReqIcon } from './ReqIcon';
+import { IL } from './CrossingCard.constants';
 
-const IL: Record<string, CSSProperties> = {
-  reqRow: { display: 'flex', gap: 2, marginTop: 2 },
-  blocked: { opacity: 0.55, borderColor: 'var(--c-warning)' },
-  blockedTag: { fontSize: 8, color: 'var(--c-warning)', marginTop: 1 },
-  layerTag: { fontSize: 8, color: 'var(--c-info)', marginTop: 1 },
-};
-
-interface Props {
-  crossing: ScreenCrossing;
-}
-
-/** The floor the crossing sits on, when the record names one. */
 const layerTagFor = (layer: ScreenCrossing['layer']): string | null =>
   layer === undefined ? null : (layer === 0 ? '▲ Upper' : '▼ Lower');
 
-/** One way on or off the screen. A crossing the player cannot take is marked, not hidden. */
-const CrossingCard = ({ crossing }: Props) => {
+const CrossingCard = ({ crossing }: { crossing: ScreenCrossing }) => {
   const { icon, color } = crossingIcon(crossing);
   const layerTag = layerTagFor(crossing.layer);
   return (

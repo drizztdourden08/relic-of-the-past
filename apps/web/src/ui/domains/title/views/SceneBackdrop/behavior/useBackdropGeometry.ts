@@ -1,19 +1,8 @@
 /* @layer renderer-hud @kind hook */
-/**
- * The backdrop's canvas in game pixels for the box it fills: a whole-number scale, the smallest
- * that lets the 224-row frame cover the box's height, so the tiles stay pixel-sharp; the canvas
- * then covers the box at that scale, and the water line sits at a fraction of the height. The
- * 256x224 frame's place follows from the water line, which is what the castle's row is measured
- * from. Re-measured on resize.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FRAME_H, FRAME_W, HORIZON_Y } from '@shared/game/title/title-layout';
 import type { SceneGeometry } from '../../../scene/scene.type';
-
-interface BackdropGeometry {
-  geometry: SceneGeometry;
-  scale: number;
-}
+import type { BackdropGeometry } from '../SceneBackdrop.type';
 
 const sameGeometry = (a: SceneGeometry, b: SceneGeometry): boolean =>
   a.width === b.width && a.height === b.height && a.frameX === b.frameX && a.frameY === b.frameY && a.horizonY === b.horizonY;
@@ -49,4 +38,3 @@ const useBackdropGeometry = (horizon: number, scaleOverride?: number) => {
 };
 
 export { useBackdropGeometry };
-export type { BackdropGeometry };

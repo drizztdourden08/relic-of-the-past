@@ -1,32 +1,21 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The Player tab: the game's HUD pieces made clickable, stacked and centred. Life, then the
- * magic meter, then the four counters, then the bottle rack, then the legend of the inputs.
- * Every value is read from the live store and written through the bridge; nothing here
- * mirrors game state. All of it sits under the stats gate.
- */
 import { Box, Button, Text } from '@ds/primitives';
 import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetHealth } from '@app/lib/game';
 import { useConsoleScale } from '../../behavior/useConsoleScale';
-import type { CheatGates } from '../../behavior/useCheatGates';
+import type { CheatTabProps } from '../../CheatsWidget.type';
 import { PointerHintProvider } from '../../sub-components/PointerHintProvider';
 import { ControlLegend } from '../../sub-components/ControlLegend';
-import { HEART_UNITS } from './behavior/heart-clicks';
 import { LifeEditor } from './sub-components/LifeEditor';
 import { MagicEditor } from './sub-components/MagicEditor';
 import { CounterEditor } from './sub-components/CounterEditor';
 import { BottleRack } from './sub-components/BottleRack';
-import { COUNTERS, KEYS_HIDDEN, LEGEND, PLAYER_TILES_WIDE } from './PlayerTab.constants';
+import { COUNTERS, HEART_UNITS, KEYS_HIDDEN, LEGEND, PLAYER_TILES_WIDE } from './PlayerTab.constants';
 import './PlayerTab.css';
 
-type PlayerTabProps = {
-  gates: CheatGates;
-};
-
-const PlayerTab = ({ gates }: PlayerTabProps) => {
+const PlayerTab = ({ gates }: CheatTabProps) => {
   const { ref, scale } = useConsoleScale(PLAYER_TILES_WIDE);
   const spritesBase = getSpritesBase();
   const healthCurrent = useGameUIStore((s) => s.hud.healthCurrent);
@@ -71,4 +60,3 @@ const PlayerTab = ({ gates }: PlayerTabProps) => {
 };
 
 export { PlayerTab };
-export type { PlayerTabProps };

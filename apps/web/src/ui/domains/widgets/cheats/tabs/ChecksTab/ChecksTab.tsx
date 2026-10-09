@@ -1,13 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The Checks tab: the check list, with a Grant button that hands over what THIS run put at each location. The row
- * names the item it will give, so a randomized file shows the seed's item and never the vanilla
- * one the location used to hold.
- *
- * The rows are the tracker's own roster (tracker/tracker-roster.ts), so the console lists what
- * the tracker lists. It used to build the whole dataset whatever the run, which both hid a
- * seed's shop shelves and offered locations the seed never generated.
- */
 import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Text, TextInput } from '@ds/primitives';
 import { find, getScreen } from '@shared/game/data';
@@ -20,14 +11,9 @@ import { trackerCheckRecords } from '@app/lib/game/tracker/tracker-roster';
 import { getSessionState, subscribeSessionStore } from '@app/lib/game/randomizer-client';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
-import type { CheatGates } from '../../behavior/useCheatGates';
+import type { CheatTabProps } from '../../CheatsWidget.type';
 import './ChecksTab.css';
 
-type ChecksTabProps = {
-  gates: CheatGates;
-};
-
-/** Screen display label for a check. A few pure progress-buffer events carry no screen at all. */
 const screenLabelOf = (check: CheckRecord): string => {
   if (!check.screenId) return '';
   const screen = getScreen(check.screenId);
@@ -37,7 +23,7 @@ const screenLabelOf = (check: CheckRecord): string => {
 const detailOf = (plan: CheckGrantPlan): string =>
   (plan.kind === 'blocked' ? `Cannot grant: ${plan.reason}` : `Gives: ${plan.itemLabel}`);
 
-const ChecksTab = ({ gates }: ChecksTabProps) => {
+const ChecksTab = ({ gates }: CheatTabProps) => {
   const [search, setSearch] = useWidgetPref<string>('cheats', 'itemsSearch', '');
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());
   const [sessionState, setSessionState] = useState(() => getSessionState());
@@ -57,8 +43,6 @@ const ChecksTab = ({ gates }: ChecksTabProps) => {
       || screenLabelOf(c).toLowerCase().includes(q));
   }, [search, allChecks]);
 
-  // Resolving a row's item walks the item records, so the whole visible list is planned once per
-  // session instead of once per render. The session is the only input that changes the answer.
   const plans = useMemo(
     () => new Map(filteredChecks.map((check) => [check.id, planCheckGrant(check)] as const)),
     [filteredChecks, sessionState],
@@ -107,4 +91,3 @@ const ChecksTab = ({ gates }: ChecksTabProps) => {
 };
 
 export { ChecksTab };
-export type { ChecksTabProps };

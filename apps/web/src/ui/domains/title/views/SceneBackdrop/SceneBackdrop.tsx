@@ -1,22 +1,13 @@
 /* @layer renderer-hud @kind component */
-/**
- * The title's lake scene, drawn once and still, as the background of a box: the same tiles and
- * compositor as the reimagined title screen, at a whole-number pixel scale so it stays pixel art.
- * Nothing shows until the tiles have decoded, so the box keeps its own colour underneath.
- */
 import { useEffect, useMemo, useRef } from 'react';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Canvas } from '../../../../design-system/primitives/Canvas';
 import { buildScene } from '../../scene/compose-scene';
-import type { SceneClock } from '../../scene/scene.type';
 import { useBackdropGeometry } from './behavior/useBackdropGeometry';
 import { useSceneAssets } from './behavior/useSceneAssets';
+import { DEFAULT_HORIZON, DEFAULT_SEED, STILL } from './SceneBackdrop.constants';
 import type { SceneBackdropProps } from './SceneBackdrop.type';
 import './SceneBackdrop.css';
-
-const STILL: SceneClock = { t: 0, drift: 0, moving: false };
-const DEFAULT_HORIZON = 0.62;
-const DEFAULT_SEED = 7;
 
 const SceneBackdrop = (props: SceneBackdropProps) => {
   const { horizon = DEFAULT_HORIZON, scale, seed = DEFAULT_SEED, className = '' } = props;

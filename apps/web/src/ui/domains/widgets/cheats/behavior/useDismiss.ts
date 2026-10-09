@@ -1,9 +1,4 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * Closes a floating box on a press outside it and its anchor, or on Escape. The press is
- * caught in the capture phase so a click that lands on another control closes this box
- * before that control opens its own.
- */
 import { useEffect } from 'react';
 import type { RefObject } from 'react';
 

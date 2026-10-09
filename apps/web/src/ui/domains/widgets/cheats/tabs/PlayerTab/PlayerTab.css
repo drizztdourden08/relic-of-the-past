@@ -1,8 +1,5 @@
 /* @layer renderer-widgets @kind style */
 
-/* The Player tab: the HUD pieces stacked down the middle of a black panel, the legend under.
-   Every pixel size that follows the HUD scale is an inline style; what lives here is the
-   layout, the hit zones and their hover and ghost treatments. */
 
 .cheats-player {
   position: relative;
@@ -18,14 +15,12 @@
   padding: var(--space-md) var(--space-sm);
 }
 
-/* A piece the game cannot take a write for right now: dimmed, and its cells stop answering. */
 .cheats-player__life[data-locked] .cheats-player__heart-cell--ghost,
 .cheats-player__bottles[data-locked] {
   opacity: var(--opacity-disabled);
   cursor: not-allowed;
 }
 
-/* One HUD piece with whatever sits beside it, centred as a group. */
 .cheats-player__block {
   display: flex;
   align-items: center;
@@ -33,7 +28,6 @@
   gap: var(--space-md);
 }
 
-/* ─── Life: the heart hit grid over HudLife, ghosts past the capacity ─── */
 
 .cheats-player__life {
   position: relative;
@@ -75,7 +69,6 @@
   text-align: center;
 }
 
-/* ─── Magic: sixteen rows over the meter's interior, a caption under it ─── */
 
 .cheats-player__magic-block {
   position: relative;
@@ -85,8 +78,6 @@
   gap: var(--space-xs);
 }
 
-/* The meter's frame layer sits at a low z-index of its own; the box isolates it so the rows
-   can go above the frame without competing with the popover outside. */
 .cheats-player__magic {
   position: relative;
   flex: 0 0 auto;
@@ -103,8 +94,6 @@
   cursor: pointer;
 }
 
-/* Hovering a row lights it and every row under it, so the level a click would set is read
-   as a fill before it is written. */
 .cheats-player__magic-row:hover,
 .cheats-player__magic-row:hover ~ .cheats-player__magic-row {
   background: color-mix(in srgb, var(--c-gold) 35%, transparent);
@@ -121,14 +110,11 @@
   color: var(--c-gold);
 }
 
-/* The meter and its column of cost levels, side by side, both starting at the frame's top. */
 .cheats-player__magic-row-group {
   display: flex;
   align-items: flex-start;
 }
 
-/* One step per level, bottom first, filled up to the level held, like the hearts; the column is
-   as tall as the meter's inner well and starts where it starts. */
 .cheats-player__levels {
   display: flex;
   flex-direction: column;
@@ -182,7 +168,6 @@
   cursor: not-allowed;
 }
 
-/* ─── Counters: icon over "held / ceiling", each number its own hit zone ─── */
 
 .cheats-player__counters {
   flex-wrap: wrap;
@@ -240,7 +225,6 @@
   text-align: center;
 }
 
-/* ─── Bottles: four slots in the yellow frame, a ghost where there is no bottle ─── */
 
 .cheats-player__bottle {
   position: absolute;

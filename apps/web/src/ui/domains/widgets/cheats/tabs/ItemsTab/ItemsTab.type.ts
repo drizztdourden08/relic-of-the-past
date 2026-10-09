@@ -1,47 +1,108 @@
 /* @layer renderer-widgets @kind types */
+import type { CSSProperties, MouseEvent, ReactNode } from 'react';
+import type { DungeonItemKind } from '@app/lib/game';
 
-/** The four shapes a pause slot takes: held flag, climbing ladder, value pick, or the bottle index. */
 type SlotKind = 'flag' | 'ladder' | 'byValue' | 'bottle';
 
-/** Where a slot sits on the tab: the 5x4 grid, the equipment panel, or the abilities row. */
 type SlotPlace = 'grid' | 'equipment' | 'ability';
 
-/** One choice in a slot's list. `value` is the raw byte the slot holds at that tier. */
 type TierOption = {
   value: number;
   label: string;
-  /** Pause-menu sprite filename without extension, or null when the tier draws nothing. */
   sprite: string | null;
-  /** Native receive id when this tier can be GIVEN with the receipt animation. */
   receiveItemId?: number;
 };
 
 type SlotSpec = {
-  /** 0-19 pause save index; 20-26 the CheatSlot numbers for gloves, boots, flippers, pearl, sword, shield, armor. */
   slot: number;
   kind: SlotKind;
-  /** The tracker table key the tiers came from; doubles as a stable id. */
   nameKey: string;
   place: SlotPlace;
   tiers: TierOption[];
 };
 
-/** What a click resolves to. Give rides the delivery queue; set writes the byte. */
 type SlotWrite =
   | { op: 'give'; receiveItemId: number; label: string }
   | { op: 'set'; slot: number; value: number };
 
-/** A slot the tier list is open for, with the element it hangs under. */
 type OpenSlot = {
   spec: SlotSpec;
   anchor: HTMLElement;
 };
 
-/** What the name panel draws for the slot under the pointer. */
 type SlotName = {
   lines: string[];
   sprite: string | null;
   owned: boolean;
 };
 
-export type { OpenSlot, SlotKind, SlotName, SlotPlace, SlotSpec, SlotWrite, TierOption };
+type SpriteOf = (value: number) => string | null;
+
+type EquipmentBytes = {
+  sword: number; shield: number; armor: number;
+  gloves: number; boots: number; flippers: number; moonPearl: number;
+};
+
+type SlotClickParams = {
+  onOpen: (open: OpenSlot) => void;
+  write: (write: SlotWrite) => void;
+};
+
+type Flash = { slot: number; n: number } | null;
+
+type PanelProps = {
+  scale: number;
+  spritesBase: string;
+};
+
+type SlotPanelProps = PanelProps & {
+  specs: Map<number, SlotSpec>;
+  onHover: (slot: number | null) => void;
+  onOpen: (open: OpenSlot) => void;
+};
+
+type AbilitiesEditorProps = SlotPanelProps & {
+  write: (write: SlotWrite) => void;
+};
+
+type ItemGridEditorProps = AbilitiesEditorProps & {
+  hovered: number | null;
+};
+
+type DungeonItem = { kind: DungeonItemKind; type: string; col: number; label: string };
+
+type GearSlot = { slot: number; type: string; col: number };
+
+type ItemNamePanelProps = PanelProps & {
+  name: SlotName;
+  hovering: boolean;
+};
+
+type ProgressView = 'pendants' | 'crystals';
+
+type SlotCellProps = {
+  size: number;
+  height?: number;
+  owned: boolean;
+  menu: boolean;
+  ghost: string | null;
+  title: string;
+  flash?: boolean;
+  style?: CSSProperties;
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
+  onOpenList?: (e: MouseEvent<HTMLButtonElement>) => void;
+  onHover: (active: boolean) => void;
+  children?: ReactNode;
+};
+
+type TierListProps = {
+  open: OpenSlot;
+  spritesBase: string;
+  write: (write: SlotWrite) => void;
+  onClose: () => void;
+};
+
+export type {
+  AbilitiesEditorProps, DungeonItem, EquipmentBytes, Flash, GearSlot, ItemGridEditorProps, ItemNamePanelProps, OpenSlot, PanelProps, ProgressView,
+  SlotCellProps, SlotClickParams, SlotKind, SlotName, SlotPanelProps, SlotPlace, SlotSpec, SlotWrite, SpriteOf, TierListProps, TierOption,
+};

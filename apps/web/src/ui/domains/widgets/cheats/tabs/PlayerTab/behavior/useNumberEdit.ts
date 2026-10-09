@@ -1,32 +1,11 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * The three ways a HUD number is edited in place. A click opens a field over the digits with
- * the value selected; Enter or blur commits it clamped to min..max, Escape drops it. A wheel
- * tick moves the value by one, or to the next rung when the number lives on a ladder. A right
- * click opens the step box, which the caller draws. The value stays in the game: every commit
- * goes through `write`, and the field is seeded from the live value when it opens.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { useWheel } from '../../../behavior/useWheel';
-
-type NumberEditParams = {
-  value: number;
-  min: number;
-  max: number;
-  write: (next: number) => void;
-  ladder?: readonly number[];
-};
+import { rungFrom } from './rung-from';
+import type { NumberEditParams } from '../PlayerTab.type';
 
 const clampTo = (min: number, max: number, n: number): number => Math.min(max, Math.max(min, Math.round(n)));
-
-/** The neighbouring rung in `dir`; the value itself at either end. */
-const rungFrom = (ladder: readonly number[], value: number, dir: 1 | -1): number => {
-  const at = ladder.findIndex((rung) => rung >= value);
-  const index = at < 0 ? ladder.length - 1 : at;
-  const next = index + (dir === 1 ? (ladder[index] === value ? 1 : 0) : -1);
-  return ladder[Math.min(ladder.length - 1, Math.max(0, next))];
-};
 
 const useNumberEdit = ({ value, min, max, write, ladder }: NumberEditParams) => {
   const [draft, setDraft] = useState<string | null>(null);
@@ -36,16 +15,15 @@ const useNumberEdit = ({ value, min, max, write, ladder }: NumberEditParams) => 
 
   const latest = useRef({ value, min, max, write, ladder, draft });
   latest.current = { value, min, max, write, ladder, draft };
-  // The value a wheel tick last wrote, until the game reports a value of its own.
-  const pending = useRef<number | null>(null);
-  useEffect(() => { pending.current = null; }, [value]);
+  const wheelWriteAwaitingGame = useRef<number | null>(null);
+  useEffect(() => { wheelWriteAwaitingGame.current = null; }, [value]);
 
   const hostRef = useWheel<HTMLDivElement>((dir) => {
     const { value: live, min: lo, max: hi, write: put, ladder: rungs } = latest.current;
-    const current = pending.current ?? live;
+    const current = wheelWriteAwaitingGame.current ?? live;
     const next = rungs && rungs.length > 0 ? rungFrom(rungs, current, dir) : clampTo(lo, hi, current + dir);
     if (next === current) return;
-    pending.current = next;
+    wheelWriteAwaitingGame.current = next;
     put(next);
   });
 
@@ -79,5 +57,4 @@ const useNumberEdit = ({ value, min, max, write, ladder }: NumberEditParams) => 
   };
 };
 
-export { useNumberEdit, rungFrom };
-export type { NumberEditParams };
+export { useNumberEdit };

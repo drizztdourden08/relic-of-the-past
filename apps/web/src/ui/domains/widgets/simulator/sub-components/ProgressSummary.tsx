@@ -1,16 +1,6 @@
 /* @layer renderer-widgets @kind component */
-/**
- * Compact live readout of the run: status, current phase/action, checks done,
- * interactables discovered, epoch count and the virtual screen.
- */
 import { Box, Text } from '@ds/primitives';
-import type { RunStatus, SimProgress } from '@app/stores/simulator-store';
-
-interface ProgressSummaryProps {
-  status: RunStatus;
-  phaseLabel: string;
-  progress: SimProgress;
-}
+import type { ProgressSummaryProps } from '../SimulatorWidget.type';
 
 const ProgressSummary = (props: ProgressSummaryProps) => {
   const { status, phaseLabel, progress } = props;

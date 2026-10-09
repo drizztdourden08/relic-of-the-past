@@ -1,7 +1,5 @@
 /* @layer renderer-widgets @kind style */
 
-/* ─── Trigger ─── */
-
 .stop-picker__trigger {
   display: flex;
   align-items: center;
@@ -26,8 +24,6 @@
   color: var(--c-text-muted);
 }
 
-/* ─── Popover shell ─── */
-
 .stop-picker__backdrop {
   position: fixed;
   inset: 0;
@@ -50,8 +46,6 @@
   pointer-events: auto;
   overflow: hidden;
 }
-
-/* ─── Filters ─── */
 
 .stop-picker__filters {
   display: flex;
@@ -101,8 +95,6 @@
   color: var(--c-text);
   background: var(--c-hover);
 }
-
-/* ─── List ─── */
 
 .stop-picker__list {
   flex: 1;

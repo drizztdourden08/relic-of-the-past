@@ -1,38 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * One entry at rest: a single dense row.
- *
- * A set is a few hundred entries, so the list's job is FINDING one, not reading
- * all of them. Everything on the row narrows a search: the index, who says it,
- * what opens it, where, how much of it there is, whether it fits, and where a
- * prompt's options lead. The words themselves come last, taking whatever room
- * is left.
- *
- * EVERY CELL IS ALWAYS DRAWN, empty when it has nothing to say. The row is a grid
- * and the columns are the whole point of it: a cell dropped for being empty pulls
- * every later cell one track to the left, and one such row is enough to make the
- * column below it unreadable.
- *
- * Closed is the resting state and the WHOLE ROW is the control that opens it, so
- * there is no small target to aim at and no separate affordance to explain. That
- * is also why every child is inline: the row is one button, and a button holding
- * blocks is markup a browser is entitled to reflow.
- *
- * Nothing here is editable, so scanning a set is always safe.
- */
 import { useCallback } from 'react';
 import { Badge, Button, Text } from '@ds/primitives';
-import type { RowFit } from '@shared/game/language';
 import { fitChipOf } from './fit-chip';
-import type { EntryRowModel } from './entry-row.model';
+import type { EntryCardCollapsedProps } from './entry.type';
 import './EntryCardCollapsed.css';
-
-type EntryCardCollapsedProps = {
-  model: EntryRowModel;
-  /** Measured rows for the fit chip; empty while the entry has no text. */
-  rows: RowFit[];
-  onOpen: (id: number) => void;
-};
 
 const EntryCardCollapsed = (props: EntryCardCollapsedProps) => {
   const { model, rows, onOpen } = props;
@@ -84,4 +55,3 @@ const EntryCardCollapsed = (props: EntryCardCollapsedProps) => {
 };
 
 export { EntryCardCollapsed };
-export type { EntryCardCollapsedProps };

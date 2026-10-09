@@ -1,41 +1,4 @@
 /* @layer renderer-hud @kind component */
-/**
- * EnhancedPauseView is the host-owned pause menu: three screens under one
- * chrome, drawn at true SNES scale over the running game.
- *
- * This is the only tier in the feature allowed to touch a store, and it touches
- * four: the pause machine for where the cursor is, the control scheme for what
- * the buttons fire, the layout store for the cluster's shape and glyph pack,
- * and the game-ui store for what the save holds. Everything below it is bare
- * and presentational, which is what lets the same screens be drawn from props
- * alone.
- *
- * The chrome NEVER MOVES. Three screens' content needs about 312 x 264 SNES
- * pixels against the 310 x 160 the menu area actually has, so they take turns:
- * the tabs, the legend and the cluster column stay exactly where they are and
- * only the panel between them changes. The cluster is held on the right with
- * every assignable button drawn, assigned or not, because a player looking for
- * somewhere to put an item has to see the empty buttons, which is the one place
- * this menu deliberately disagrees with the gameplay HUD.
- *
- * Scale comes off the canvas's own height instead of a constant, so the menu
- * stays pixel-aligned with the game underneath it in 240-line mode too.
- *
- * It performs NO writes of its own. A click lands as the same `PauseEvent` a pad
- * press does (focus, then confirm), and the store performs whatever that turns
- * out to mean. The view holding the bridge for a gear tier is what once left a
- * pad player able to move onto a blade and press confirm to no effect at all.
- *
- * THE MENU HAS NO GROUND. The world stays visible between the panels, because the
- * player paused a game, and a menu that paints over it hides the thing they
- * were looking at. Everything that has to stay readable therefore carries its
- * own ground: the panels are opaque, the legend has its plate, and the loose
- * text over the field takes a dark halo (hud.css). The one thing that used to
- * NEED the backdrop (a portrait landing on top of the live character it was a
- * picture of) is gone for a better reason: the portrait IS the live character
- * now, drawn at their own screen position with the game's own sprite
- * suppressed underneath (`PauseHeroLayer`).
- */
 import { useMemo } from 'react';
 import { hudDataScope } from '@shared/hud/data';
 import { AUTO_PACK_ID } from '@shared/input/glyphs';
@@ -84,8 +47,6 @@ const EnhancedPauseView = (props: EnhancedPauseViewProps = {}) => {
   const slots = useSlotContent(packId);
   const { vitals: nodeVitals, hearts, spritesBase: hudSprites } = useVitalsContent(scale);
 
-  // Not `state` directly: `closing` names no screen, and falling back to a
-  // default there makes the menu swap to the item grid on its way out.
   const visible = useVisibleBrowsing(state, canConfirm);
   const { screen, section, cursor } = visible;
   const itemsSection: ItemsSection = section === 'bottles' ? 'bottles' : 'items';
@@ -97,11 +58,6 @@ const EnhancedPauseView = (props: EnhancedPauseViewProps = {}) => {
   const move = usePauseCursor();
   const legend = useLegendEntries(bindings, packId, visible.canConfirm);
 
-  // The SAME document the gameplay HUD draws, solved once. The menu takes only
-  // the part of it that draws numbered slots and pins that to its own column,
-  // wherever the layout itself puts it, so a player who moved their buttons
-  // bottom-right still finds them in the same place in here, and there is no
-  // second copy of the map's geometry to keep in step.
   const slotCount = Object.keys(slots.slots).length;
   const dataScope = useMemo(() => hudDataScope(nodeVitals, slotCount), [nodeVitals, slotCount]);
   const ctx = useMemo(

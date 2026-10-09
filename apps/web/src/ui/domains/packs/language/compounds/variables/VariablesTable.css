@@ -1,15 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/*
- * The one substitution list, and the row shape it shares with nothing else.
- *
- * A grid, so key / kind / value / count / lock line up down the whole list. The
- * lock column especially, since "which of these can I change" is the question the
- * list is scanned for. The lock and remove slots are always present, empty when
- * they have nothing to show, so a locked row and an editable one are the same
- * shape and the columns never shift.
- */
-
 .variables-table {
   display: flex;
   flex-direction: column;
@@ -34,12 +24,12 @@
 .variable-row {
   display: grid;
   grid-template-columns:
-    minmax(0, 16ch)   /* key */
-    auto              /* kind */
-    minmax(0, 1fr)    /* value or note */
-    4ch               /* used */
-    auto              /* lock */
-    auto;             /* remove */
+    [key] minmax(0, 16ch)
+    [kind] auto
+    [value] minmax(0, 1fr)
+    [used] 4ch
+    [lock] auto
+    [remove] auto;
 
   align-items: center;
   gap: var(--space-sm);
@@ -71,10 +61,6 @@
   min-width: 0;
 }
 
-/*
- * Stands where the field would be on an editable row. Italic, so it reads as an
- * explanation of why there is nothing to type, not as a value.
- */
 .variable-row__note {
   overflow: hidden;
   color: var(--c-text-dim);
@@ -91,7 +77,6 @@
   text-align: right;
 }
 
-/* Fixed slot: an unlocked row reserves it, so no column ever shifts. */
 .variable-row__locked {
   min-width: var(--space-2xl);
   white-space: nowrap;

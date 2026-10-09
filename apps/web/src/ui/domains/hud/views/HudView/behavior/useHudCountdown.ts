@@ -1,5 +1,4 @@
 /* @layer renderer-hud @kind hook */
-/** Feeds the game's countdown reading into the countdown store and hands back the tracked result. */
 import { useEffect } from 'react';
 import { useGameUIStore } from '../../../../../../stores/game-ui-store';
 import { useHudCountdownStore } from '../../../../../../stores/hud-countdown-store';

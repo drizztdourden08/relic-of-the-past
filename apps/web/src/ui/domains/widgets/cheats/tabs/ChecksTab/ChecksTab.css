@@ -1,7 +1,5 @@
 /* @layer renderer-widgets @kind style */
 
-/* The check list: a search box, then one row per check with the item the grant hands out.
-   The tab takes the whole height it is given and the list scrolls inside it. */
 
 .cheats-checks {
   display: flex;

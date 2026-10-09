@@ -1,21 +1,11 @@
 /* @layer renderer-hud @kind component */
-/**
- * Y/X button indicator with label text, showing the button letter sprite in
- * its associated color.
- */
 import { HudImage } from '../../primitives/HudImage';
-
-interface PauseButtonLabelProps {
-  button: 'y' | 'x' | 'a';
-  scale: number;
-  spritesBase: string;
-}
+import type { PauseButtonLabelProps } from './PauseButtonLabel.type';
 
 const PauseButtonLabel = ({ button, scale, spritesBase }: PauseButtonLabelProps) => {
   const tile = 8 * scale;
   const src = `${spritesBase}pause-btn-${button}.png`;
 
-  // Button sprites are vertical strips: 8px wide × 16px tall (2 tiles)
   return (
     <HudImage
       src={src}
@@ -27,4 +17,3 @@ const PauseButtonLabel = ({ button, scale, spritesBase }: PauseButtonLabelProps)
 };
 
 export { PauseButtonLabel };
-export type { PauseButtonLabelProps };

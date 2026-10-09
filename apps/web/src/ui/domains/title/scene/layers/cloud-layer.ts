@@ -1,9 +1,7 @@
 /* @layer renderer-hud @kind logic */
-/** Clouds at their many heights, each drifting at its own pace on top of a light parallax. */
 import type { Drifting, SceneGeometry, SceneLayer } from '../scene.type';
-import { wrapX } from './ridge-layer';
-
-const CLOUD_PARALLAX = 0.25;
+import { CLOUD_PARALLAX } from './layers.constants';
+import { wrapX } from './wrap-x';
 
 const cloudLayer = (pieces: readonly HTMLImageElement[], placed: readonly Drifting[], geometry: SceneGeometry): SceneLayer => {
   const { width } = geometry;

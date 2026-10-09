@@ -1,15 +1,6 @@
 /* @layer renderer-hud @kind component */
-/**
- * Renders a single pendant, empty or colored.
- * Pendants are 16×16 (2×2 tiles).
- */
 import { HudImage } from '../../primitives/HudImage';
-
-interface PausePendantIconProps {
-  variant: 'empty' | 'green' | 'blue' | 'red';
-  scale: number;
-  spritesBase: string;
-}
+import type { PausePendantIconProps } from './PausePendantIcon.type';
 
 const PausePendantIcon = ({ variant, scale, spritesBase }: PausePendantIconProps) => {
   const size = 16 * scale;
@@ -26,4 +17,3 @@ const PausePendantIcon = ({ variant, scale, spritesBase }: PausePendantIconProps
 };
 
 export { PausePendantIcon };
-export type { PausePendantIconProps };

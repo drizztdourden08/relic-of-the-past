@@ -1,14 +1,4 @@
 /* @layer renderer-hud @kind component */
-/**
- * The enhanced message box. Reads the core's dialog mirror through the dialog store and the look
- * from the dialog settings store, and draws the frame and rows over the canvas in either HUD mode.
- * Skipped messages never show: with skip-dialog on, only a box that waits on a choice is drawn.
- * Nothing is drawn for a message the core is still drawing itself, which is how a setting changed
- * mid-message lands: that message stays native and the next one is ours (dialog_suppress.c).
- * A save-state load that brought the mirror back shows its message where it was saved. One that did
- * not leaves the store stale until the next message, and nothing is drawn. The box fades in when a
- * message starts and fades out on its last content when it closes.
- */
 import { useMemo, useRef } from 'react';
 import { useDialogStore } from '../../../../../stores/dialog-store';
 import { useDialogSettingsStore } from '../../../../../stores/dialog-settings-store';
@@ -24,13 +14,7 @@ import { promptsFor } from '@shared/game/dialog/dialog-prompts';
 import { TILE_PX } from '@shared/game/dialog/box-geometry';
 import { strokeWidthsOf } from '@shared/game/dialog/box-style';
 import { useDialogScale } from './behavior/useDialogScale';
-
-/** The legend told over the pictures, the story crawl's first part (attract.c loads it by this id). */
-const STORY_LEGEND_MESSAGE = 0x112;
-/** The spawn picker on starting a game or continuing after death, without and with the mountain spawn (misc.c). */
-const SPAWN_PICKER_MESSAGES = new Set([0x184, 0x185]);
-/** Zelda's telepathy in the opening at Link's house, her call while Link is still in bed (the uncle raises it). */
-const INTRO_TELEPATHY_MESSAGES = new Set([0x1f]);
+import { INTRO_TELEPATHY_MESSAGES, SPAWN_PICKER_MESSAGES, STORY_LEGEND_MESSAGE } from './DialogView.constants';
 import { useDialogGeometry } from './behavior/useDialogGeometry';
 import { useFadePresence } from './behavior/useFadePresence';
 import { useButtonGlyphs } from './behavior/useButtonGlyphs';
@@ -54,39 +38,28 @@ const DialogView = () => {
   const show = liveFrame.active && liveFrame.nativeHidden && !stale && (!autoSkipDialog || waitsOnPlayerChoice);
   const fade = useFadePresence(show);
 
-  // A closed box fades out on what it last showed, so the last shown frame is kept while it fades.
   const lastShownRef = useRef(liveFrame);
   if (show) lastShownRef.current = { ...liveFrame, wait: liveWait };
   const frame = lastShownRef.current;
   const openingMessage = useOpeningMessage(frame);
-  // The spawn picker always floats on a faded ground, whatever border the player chose.
   const spawnPicker = frame.kind === 'box' && SPAWN_PICKER_MESSAGES.has(openingMessage);
   const borderKind = spawnPicker ? 'none' : look.border;
 
-  // A drawn border and its corner marks take room the game's one-tile inset never had to give.
   const widths = strokeWidthsOf(look.borderThickness);
   const ring = borderKind === 'single' ? widths.outer : borderKind === 'double' ? widths.outer + widths.inner + widths.gap : 0;
-  // The game's box keeps its one-tile inset. A drawn border needs a little side air past its ring, more
-  // with corner marks so the rows clear them, and only a sliver above and below.
   const drawn = borderKind === 'single' || borderKind === 'double';
   const styled = frame.kind === 'box' && borderKind !== 'original';
   const padX = styled ? ring + (look.cornerMark !== 'none' && drawn ? 11 : 6) : TILE_PX;
   const padY = styled ? ring + 2 : TILE_PX;
-  // Screens the game lays out around their words keep the game's text position and size: the game-over
-  // menu (the fairy points at each row) and the story crawl (placed over its scene, moved by layer scroll).
   const native = frame.kind === 'menu' || frame.kind === 'story';
   const geometry = useDialogGeometry(frame, {
     mode: native ? 'native' : boxFit, fontScale: native ? 1 : fontScale, padX, padY,
     shiftX: native ? frame.layerScrollX : 0, shiftY: native ? frame.layerScrollY : 0,
   }, metrics);
-  // A talk box always has a ground. The legend told over the pictures and the game-over menu never do;
-  // the later story scenes do, always faded at the edges. A borderless message such as telepathy follows
-  // its setting, with the opening telepathy at Link's house on a setting of its own.
   const floatingGround = INTRO_TELEPATHY_MESSAGES.has(openingMessage) ? look.introTelepathyGround : look.floatingGround;
   const sceneGround = frame.kind === 'story' && frame.messageId !== STORY_LEGEND_MESSAGE;
   const grounded = frame.kind === 'box' || sceneGround || (frame.kind === 'floating' && floatingGround);
   const feathered = sceneGround || spawnPicker || look.groundFade;
-  // The atlas is cached per font and palette; asking per message catches a language switch or a [Color] line.
   const atlas = useMemo(() => (frame.active ? getGlyphAtlas() : null), [frame.active, frame.messageId, frame.generation]);
   const alphabet = useMemo(() => (frame.active ? activeAlphabet() : []), [frame.active]);
   const highlight = useHighlightLook({ frame, primary: look.highlightPrimary, secondary: look.highlightSecondary });

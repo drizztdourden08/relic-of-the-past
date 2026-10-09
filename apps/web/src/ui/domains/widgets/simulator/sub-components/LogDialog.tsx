@@ -1,21 +1,11 @@
 /* @layer renderer-widgets @kind component */
-/** Full simulation log in a modal, the only place the log is read. Adapts the
- *  run's events into LogPanel rows and hands the panel the toolbar it needs
- *  (count, copy-all, type filter). Kinds are filtered HERE, before the indents
- *  are computed, so hiding a marker type re-levels the rows under it. */
 import { useCallback, useMemo, useState } from 'react';
-import type { SimEvent } from '@shared/game/simulation';
 import { DialogShell } from '@ds/composites';
 import { LogPanel } from '@ds/composites/LogPanel';
-import { classifyEvent, eventsToText, LOG_KINDS, toLogRows } from './log-event-style';
-import type { LogKind } from './log-event-style';
+import { classifyEvent, eventsToText, toLogRows } from '../behavior/log-events';
+import { LOG_KINDS } from '../SimulatorWidget.constants';
+import type { LogDialogProps, LogKind } from '../SimulatorWidget.type';
 import './SimLog.css';
-
-interface LogDialogProps {
-  open: boolean;
-  onClose: () => void;
-  events: SimEvent[];
-}
 
 const LogDialog = (props: LogDialogProps) => {
   const { open, onClose, events } = props;

@@ -1,42 +1,17 @@
-/* @layer renderer-hud @kind data */
-/**
- * Pendants OR crystals depending on game progress.
- *
- * Game layout: tiles (21,11)→(30,19) = 10×9 tiles
- * - Pendants: 3 icons (green top-center, blue bottom-left, red bottom-right)
- * - Crystals: 7 icons in 2-3-2 rows, the middle row offset half a slot
- *
- * link_which_pendants bits: 0=Power(red), 1=Wisdom(blue), 2=Courage(green)
- * link_has_crystals bits: 0-6 for each crystal
- */
+/* @layer renderer-hud @kind component */
 import { HudBox } from '../../primitives/HudBox';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseLabel } from '../../primitives/PauseLabel';
 import { PausePendantIcon } from '../../composites/PausePendantIcon';
 import { PauseCrystalIcon } from '../../composites/PauseCrystalIcon';
-
-interface PauseProgressPanelProps {
-  pendants: number;
-  crystals: number;
-  showCrystals: boolean;
-  scale: number;
-  spritesBase: string;
-  style?: React.CSSProperties;
-}
+import type { PauseProgressPanelProps } from './PauseProgressPanel.type';
 
 const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBase, style }: PauseProgressPanelProps) => {
   const tile = 8 * scale;
-  // Box: 8 inner cols × 7 inner rows (+ 2 border = 10×9)
   const innerCols = 8;
   const innerRows = 7;
 
   if (showCrystals) {
-    // Crystal slots in tiles from the inner top-left corner. Each crystal is 2
-    // tiles wide and 1 tall; the middle row of 3 is inset one tile (2-3-2):
-    //     . .        cols 2,4
-    //    . . .       cols 1,3,5
-    //     . .        cols 2,4
-    // Index order is the crystal bit order, so slot N shows bit N.
     const crystalPositions = [
       { x: 2, y: 2 }, { x: 4, y: 2 },
       { x: 1, y: 4 }, { x: 3, y: 4 }, { x: 5, y: 4 },
@@ -45,10 +20,8 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
 
     return (
       <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
-        {/* CRYSTALS label */}
         <PauseLabel name="crystals" tiles={5} scale={scale} spritesBase={spritesBase} />
 
-        {/* Crystal icons */}
         {crystalPositions.map((pos, idx) => (
           <HudBox key={idx} style={{
             position: 'absolute',
@@ -66,13 +39,10 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
     );
   }
 
-  // Pendant layout: green (top center), blue (bottom left), red (bottom right)
   return (
     <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
-      {/* PENDANTS label */}
       <PauseLabel name="pendants" tiles={5} scale={scale} spritesBase={spritesBase} />
 
-      {/* Green/Courage pendant at top center (bit 2) */}
       <HudBox style={{ position: 'absolute', left: 3 * tile, top: 2 * tile }}>
         <PausePendantIcon
           variant={(pendants & 4) ? 'green' : 'empty'}
@@ -81,7 +51,6 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
         />
       </HudBox>
 
-      {/* Blue/Wisdom pendant at bottom left (bit 1) */}
       <HudBox style={{ position: 'absolute', left: 1 * tile, top: 5 * tile }}>
         <PausePendantIcon
           variant={(pendants & 2) ? 'blue' : 'empty'}
@@ -90,7 +59,6 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
         />
       </HudBox>
 
-      {/* Red/Power pendant at bottom right (bit 0) */}
       <HudBox style={{ position: 'absolute', left: 5 * tile, top: 5 * tile }}>
         <PausePendantIcon
           variant={(pendants & 1) ? 'red' : 'empty'}
@@ -103,4 +71,3 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
 };
 
 export { PauseProgressPanel };
-export type { PauseProgressPanelProps };

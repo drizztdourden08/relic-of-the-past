@@ -26,7 +26,6 @@
   color: var(--c-text-muted);
 }
 
-/* Number, name and layer count in fixed columns; the files take the rest. */
 .pack-tracks__row {
   display: grid;
   grid-template-columns: 4rem minmax(8rem, 14rem) 5rem minmax(0, 1fr);

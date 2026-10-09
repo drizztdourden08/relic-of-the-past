@@ -1,5 +1,4 @@
 /* @layer renderer-hud @kind component */
-/** The HUD countdown: a pie that loses a slice per share of the time, with the seconds on top. */
 import { HudBox } from '../../primitives/HudBox';
 import { HudNumber } from '../../primitives/HudNumber';
 import { HudPie } from '../../primitives/HudPie';

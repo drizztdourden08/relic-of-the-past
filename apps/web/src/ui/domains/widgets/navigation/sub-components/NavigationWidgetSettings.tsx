@@ -1,9 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The navigation widget's own options: manual or auto flooding. The overlay
- * store is the live value and the widget pref is the copy that survives the app
- * closing, so a change here writes both, the same way useNavigation's setMode does.
- */
 import { SegmentedControl } from '@ds/primitives';
 import { OptionRow } from '@ds/composites/Widget';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';

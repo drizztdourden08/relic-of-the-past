@@ -1,26 +1,7 @@
 /* @layer renderer-widgets @kind component */
-/**
- * Start / Pause / Resume / Stop plus the searchable stop-at-check picker and the
- * Restore pre-run state (Memento) button.
- */
 import { Box, Button, Field, NumberInput } from '@ds/primitives';
-import type { RunStatus } from '@app/stores/simulator-store';
-import type { CheckId } from '@shared/game/data';
 import { StopAtCheckPicker } from './StopAtCheckPicker';
-
-interface RunControlsProps {
-  status: RunStatus;
-  stopAtCheckId: CheckId | '';
-  onStopAtChange: (id: CheckId | '') => void;
-  screenLimit: number | null;
-  onScreenLimitChange: (limit: number | null) => void;
-  canRestore: boolean;
-  onStart: () => void;
-  onPause: () => void;
-  onResume: () => void;
-  onStop: () => void;
-  onRestore: () => void;
-}
+import type { RunControlsProps } from '../SimulatorWidget.type';
 
 const RunControls = (props: RunControlsProps) => {
   const { status, stopAtCheckId, onStopAtChange, screenLimit, onScreenLimitChange, canRestore, onStart, onPause, onResume, onStop, onRestore } = props;

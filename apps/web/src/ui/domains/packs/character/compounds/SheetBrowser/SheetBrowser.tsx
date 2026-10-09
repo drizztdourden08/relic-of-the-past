@@ -3,18 +3,11 @@ import { useRef, useEffect } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { Canvas } from '@ds/primitives/Canvas';
-import type { PlayerSheet, Wearing } from '@shared/game/data/player-sheet/types';
 import { drawSheet, SHEET_PNG_WIDTH, SHEET_PNG_HEIGHT, SHEET_ROWS } from '@app/lib/game/player-sheet/sheet-png';
 import { SHEET_COLS } from '@shared/game/data/player-sheet/types';
+import type { SheetBrowserProps } from './SheetBrowser.type';
 import './SheetBrowser.css';
 
-interface SheetBrowserProps {
-  sheet: PlayerSheet;
-  wearing: Wearing;
-  scale: number;
-}
-
-/** The raw tile grid, for checking a pose against the art it was assembled from. */
 const SheetBrowser = (props: SheetBrowserProps) => {
   const { sheet, wearing, scale } = props;
   const ref = useRef<HTMLCanvasElement>(null);
@@ -41,4 +34,3 @@ const SheetBrowser = (props: SheetBrowserProps) => {
 };
 
 export { SheetBrowser };
-export type { SheetBrowserProps };

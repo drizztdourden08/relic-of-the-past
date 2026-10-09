@@ -1,23 +1,13 @@
 /* @layer renderer-widgets @kind component */
-/**
- * Owns the pointer hint of one tab: the state the controls set and the box that draws it,
- * portalled beside the pointer in viewport coordinates and kept inside the window.
- */
 import { useCallback, useMemo, useRef, useState } from 'react';
-import type { MouseEvent, ReactNode } from 'react';
+import type { MouseEvent } from 'react';
 import { Box, Portal, Text } from '@ds/primitives';
 import { ControlGlyph } from './ControlGlyph';
 import { PointerHintContext } from '../behavior/pointer-hint-context';
-import type { PointerHintApi, PointerHintState } from '../behavior/pointer-hint-context';
+import type { PointerHintApi, PointerHintState } from '../CheatsWidget.type';
 import type { ControlHint } from './ControlGlyph.type';
-
-/** How far from the pointer the box sits, so the cursor never covers it. */
-const OFFSET = 14;
-const EDGE = 6;
-
-type PointerHintProviderProps = {
-  children: ReactNode;
-};
+import { POINTER_OFFSET, VIEWPORT_EDGE } from './PointerHintProvider.constants';
+import type { PointerHintProviderProps } from './PointerHintProvider.type';
 
 const PointerHintProvider = ({ children }: PointerHintProviderProps) => {
   const [state, setState] = useState<PointerHintState | null>(null);
@@ -26,10 +16,10 @@ const PointerHintProvider = ({ children }: PointerHintProviderProps) => {
   const place = useCallback((e: MouseEvent): { x: number; y: number } => {
     const w = boxRef.current?.offsetWidth ?? 0;
     const h = boxRef.current?.offsetHeight ?? 0;
-    let x = e.clientX + OFFSET;
-    let y = e.clientY + OFFSET;
-    if (x + w > window.innerWidth - EDGE) x = Math.max(EDGE, e.clientX - w - OFFSET);
-    if (y + h > window.innerHeight - EDGE) y = Math.max(EDGE, e.clientY - h - OFFSET);
+    let x = e.clientX + POINTER_OFFSET;
+    let y = e.clientY + POINTER_OFFSET;
+    if (x + w > window.innerWidth - VIEWPORT_EDGE) x = Math.max(VIEWPORT_EDGE, e.clientX - w - POINTER_OFFSET);
+    if (y + h > window.innerHeight - VIEWPORT_EDGE) y = Math.max(VIEWPORT_EDGE, e.clientY - h - POINTER_OFFSET);
     return { x, y };
   }, []);
 
@@ -60,4 +50,3 @@ const PointerHintProvider = ({ children }: PointerHintProviderProps) => {
 };
 
 export { PointerHintProvider };
-export type { PointerHintProviderProps };

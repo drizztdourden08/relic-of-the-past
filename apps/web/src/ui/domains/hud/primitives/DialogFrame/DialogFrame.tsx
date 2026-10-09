@@ -1,30 +1,8 @@
 /* @layer renderer-hud @kind component */
-/**
- * A drawn message-box border as one SVG: a single line, or a thin line inside a thicker one, with
- * square, rounded or chamfered corners and an optional mark inside each corner. Every size comes
- * from one game tile, so the frame keeps its weight at any window size. The inner line runs
- * parallel to the outer one, corners included. The four marks are mirror images of the top-left
- * one, so one angle turns them all the same way relative to their own corner; at zero every mark
- * stands upright.
- */
-import type { DialogBorderThickness, DialogCorner, DialogCornerMark } from '@shared/game/dialog/box-style';
+import type { DialogCornerMark } from '@shared/game/dialog/box-style';
 import { strokeWidthsOf } from '@shared/game/dialog/box-style';
 import { cornerAtInset, cornerPlacements, framePath, triforcePath } from '@shared/game/dialog/frame-geometry';
-
-interface DialogFrameProps {
-  /** CSS pixels. */
-  width: number;
-  height: number;
-  /** One game tile in CSS pixels. */
-  tile: number;
-  border: 'single' | 'double';
-  thickness: DialogBorderThickness;
-  color: string;
-  corner: DialogCorner;
-  mark: DialogCornerMark;
-  /** Degrees the top-left mark turns; the others mirror it. */
-  markAngle: number;
-}
+import type { DialogFrameProps } from './DialogFrame.type';
 
 const markShape = (mark: DialogCornerMark, tile: number) => {
   switch (mark) {
@@ -35,7 +13,6 @@ const markShape = (mark: DialogCornerMark, tile: number) => {
   }
 };
 
-/** How far a mark's centre sits from the border ring, in tiles; the wider triforce needs a touch more. */
 const markDistance = (mark: DialogCornerMark): number => (mark === 'triforce' ? 0.6 : 0.5);
 
 const DialogFrame = (props: DialogFrameProps) => {
@@ -68,4 +45,3 @@ const DialogFrame = (props: DialogFrameProps) => {
 };
 
 export { DialogFrame };
-export type { DialogFrameProps };

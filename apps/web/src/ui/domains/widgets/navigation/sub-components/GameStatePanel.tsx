@@ -1,13 +1,10 @@
-/* @layer renderer-widgets @kind data */
+/* @layer renderer-widgets @kind component */
 import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
 import { DescRow } from './DescRow';
-import type { useNavigation } from '../useNavigation';
+import type { GameStatePanelProps } from './GameStatePanel.type';
 
-type Props = Pick<ReturnType<typeof useNavigation>, 'isIndoors' | 'palaceIndex' | 'roomIndex' | 'dungeonMapPos' | 'roomLayoutInfo' | 'whichEntrance' | 'roomStartLayer' | 'overworldScreenIndex' | 'isDarkWorld' | 'progressInfo' | 'displayedVariant' | 'dynamicBlockerCount'>;
-
-/** "Game State" info panel for the Navigation widget. */
-const GameStatePanel = (props: Props) => {
+const GameStatePanel = (props: GameStatePanelProps) => {
   const { isIndoors, palaceIndex, roomIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, overworldScreenIndex, isDarkWorld, progressInfo, displayedVariant, dynamicBlockerCount } = props;
   return (
     <>
@@ -39,7 +36,6 @@ const GameStatePanel = (props: Props) => {
                 </DescRow>
               )}
               {roomLayoutInfo && (() => {
-                // Compute effective viewport size: base shape expanded by fullsize flags
                 const baseW = (roomLayoutInfo.shape === '2x2' || roomLayoutInfo.shape === '2x1') ? 2 : 1;
                 const baseH = (roomLayoutInfo.shape === '2x2' || roomLayoutInfo.shape === '1x2') ? 2 : 1;
                 const effW = Math.max(baseW, roomLayoutInfo.quadrantFullsizeX > 0 ? 2 : baseW);

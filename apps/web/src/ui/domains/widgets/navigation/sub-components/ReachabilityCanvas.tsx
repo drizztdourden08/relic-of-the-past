@@ -1,11 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback } from 'react';
-import type { CSSProperties } from 'react';
 import { Canvas } from '../../../../design-system/primitives';
+import { CANVAS_STYLE } from './ReachabilityCanvas.constants';
 
-const CANVAS_STYLE: CSSProperties = { position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: 'var(--r-sm)', imageRendering: 'pixelated' };
-
-/** Pixel canvas rendering a flood-fill reachability grid (one px per tile). */
 const ReachabilityCanvas = ({ reachable, bounds, tileLayer }: {
   reachable: number[][];
   size: number;

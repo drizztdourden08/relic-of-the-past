@@ -1,9 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The life meter, made clickable: HudLife drawn from the live store, with a grid of twenty
- * transparent cells laid over the hearts on the same tile arithmetic. A cell past the capacity
- * is a dotted ghost, so an unowned container is a visible target.
- */
 import { useCallback } from 'react';
 import type { MouseEvent } from 'react';
 import { Box, Button } from '@ds/primitives';
@@ -12,20 +7,11 @@ import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetHealth, cheatSetMaxHealth } from '@app/lib/game';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
 import { useInPlay } from '../../../behavior/useInPlay';
-import { heartWrite, heartCellTitle, HEART_UNITS } from '../behavior/heart-clicks';
-import type { HeartButton } from '../behavior/heart-clicks';
-import { LIFE_HINTS } from '../PlayerTab.constants';
+import { heartCellTitle, heartWrite } from '../behavior/heart-clicks';
+import { HEART_CELLS, HEART_COLUMNS, HEART_UNITS, LIFE_HINTS, SNES_TILE } from '../PlayerTab.constants';
+import type { HeartButton, HudPieceProps } from '../PlayerTab.type';
 
-const CELLS = 20;
-const COLUMNS = 10;
-const SNES_TILE = 8;
-
-type LifeEditorProps = {
-  scale: number;
-  spritesBase: string;
-};
-
-const LifeEditor = ({ scale, spritesBase }: LifeEditorProps) => {
+const LifeEditor = ({ scale, spritesBase }: HudPieceProps) => {
   const healthCurrent = useGameUIStore((s) => s.hud.healthCurrent);
   const healthCapacity = useGameUIStore((s) => s.hud.healthCapacity);
   const hint = usePointerHintTarget('Life', LIFE_HINTS);
@@ -37,21 +23,21 @@ const LifeEditor = ({ scale, spritesBase }: LifeEditorProps) => {
     e.preventDefault();
     const leftHalf = e.nativeEvent.offsetX < tile / 2;
     const write = heartWrite(cell, leftHalf, button, healthCapacity);
-    // A container change redraws the HUD, so outside play only the health inside the owned hearts moves.
-    if (write.capacity !== undefined && !inPlay) return;
+    const containersChange = write.capacity !== undefined;
+    if (containersChange && !inPlay) return;
     if (write.capacity !== undefined) cheatSetMaxHealth(write.capacity);
     if (write.health !== undefined) cheatSetHealth(write.health);
   }, [tile, healthCapacity, inPlay]);
 
-  // The LIFE label row is one tile plus its one-pixel shadow; the hearts start under it.
+  const labelRowHeight = tile + scale;
   const gridStyle = {
-    top: tile + scale,
-    gridTemplateColumns: `repeat(${COLUMNS}, ${tile}px)`,
+    top: labelRowHeight,
+    gridTemplateColumns: `repeat(${HEART_COLUMNS}, ${tile}px)`,
     gridAutoRows: `${tile}px`,
   };
 
   return (
-    <Box className="cheats-player__life" data-locked={inPlay ? undefined : ''} style={{ width: COLUMNS * tile }} {...hint}>
+    <Box className="cheats-player__life" data-locked={inPlay ? undefined : ''} style={{ width: HEART_COLUMNS * tile }} {...hint}>
       <HudLife
         healthCurrent={healthCurrent}
         healthCapacity={healthCapacity}
@@ -62,7 +48,7 @@ const LifeEditor = ({ scale, spritesBase }: LifeEditorProps) => {
         spritesBase={spritesBase}
       />
       <Box className="cheats-player__heart-grid" style={gridStyle}>
-        {Array.from({ length: CELLS }, (_, cell) => (
+        {Array.from({ length: HEART_CELLS }, (_, cell) => (
           <Button
             key={cell}
             variant="bare"
@@ -78,4 +64,3 @@ const LifeEditor = ({ scale, spritesBase }: LifeEditorProps) => {
 };
 
 export { LifeEditor };
-export type { LifeEditorProps };

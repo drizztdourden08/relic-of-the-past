@@ -1,21 +1,18 @@
 /* @layer renderer-components @kind barrel */
 export { EntryCardCollapsed } from './EntryCardCollapsed';
-export type { EntryCardCollapsedProps } from './EntryCardCollapsed';
 export { EntryListItem } from './EntryListItem';
-export type { EntryListItemProps } from './EntryListItem';
 export { EntryMetaPanel } from './EntryMetaPanel';
-export type { EntryMetaPanelProps } from './EntryMetaPanel';
 export { EntryPanel } from './EntryPanel';
-export type { EntryPanelProps } from './EntryPanel';
 export { ReadView } from './ReadView';
-export type { ReadViewProps } from './ReadView';
 export { ViewModeSwitch } from './ViewModeSwitch';
-export type { ViewModeSwitchProps } from './ViewModeSwitch';
-export { entryMetaRows, issueWords } from './entry-meta.model';
-export type { MetaRow } from './entry-meta.model';
+export { entryMetaRows } from './entry-meta.model';
+export { issueWords } from './issue-words';
 export { entryRowModel } from './entry-row.model';
-export type { EntryRowModel } from './entry-row.model';
-export { excerptOf, proseOf } from './entry-prose';
+export { proseOf } from './entry-prose';
+export { excerptOf } from './excerpt-of';
 export { fitChipOf } from './fit-chip';
-export { factsForEntry } from './trigger-facts';
-export type { TriggerFacts } from './trigger-facts';
+export { factsForEntry } from './facts-for-entry';
+export type {
+  EntryCardCollapsedProps, EntryListItemProps, EntryMetaPanelProps, EntryPanelProps, EntryRowModel, MetaRow, ReadViewProps, TriggerFacts,
+  ViewModeSwitchProps,
+} from './entry.type';

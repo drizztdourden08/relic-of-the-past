@@ -21,7 +21,6 @@
 
 .sprite-viewer__controls .range-input { width: 8rem; }
 
-/* ── body: state list beside the stage ── */
 .sprite-viewer__body {
   display: flex;
   gap: var(--space-md);

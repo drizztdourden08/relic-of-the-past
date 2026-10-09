@@ -1,14 +1,8 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * The two write paths a tier choice resolves to. A give rides the delivery queue, so the
- * hold-up, the message and the counters are the game's own; a set writes the byte directly,
- * which is the remove, downgrade and "exactly this tier" path.
- */
 import { useCallback } from 'react';
 import { cheatSetInventorySlot, deliverItem } from '@app/lib/game';
+import { CHEAT_SOURCE } from '../ItemsTab.constants';
 import type { SlotWrite } from '../ItemsTab.type';
-
-const CHEAT_SOURCE = 'cheat';
 
 const useSlotWrite = () => useCallback((write: SlotWrite): void => {
   if (write.op === 'give') {

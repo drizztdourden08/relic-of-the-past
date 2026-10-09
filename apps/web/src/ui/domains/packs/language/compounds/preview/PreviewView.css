@@ -1,14 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/*
- * The preview: the box as a button, the instruction line under it, and the
- * sample values beside it. The box's own geometry lives in PreviewBox.css.
- *
- * Every line of chrome here is set in `--c-text`, `--c-text-dim` or `--c-gold`,
- * never a muted tone: the caption variant's default is too faint for text a
- * reader is meant to act on.
- */
-
 .preview-view {
   display: flex;
   flex-wrap: wrap;
@@ -23,7 +14,6 @@
   gap: var(--space-xs);
 }
 
-/* The drawn box is the button: pointer on hover, a gold ring when keyboard-focused. */
 .preview-view__advance {
   display: inline-flex;
   border-radius: var(--r-sm);
@@ -54,7 +44,6 @@
   font-style: italic;
 }
 
-/* What moves the preview, in the accent so it cannot be overlooked. */
 .preview-prompt__action {
   color: var(--c-gold);
   font-weight: var(--weight-semi);

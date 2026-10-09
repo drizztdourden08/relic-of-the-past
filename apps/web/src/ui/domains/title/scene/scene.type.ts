@@ -1,6 +1,4 @@
 /* @layer renderer-hud @kind types */
-/** The pieces the title scene is built from, where they go, and the clock they move to. */
-
 interface SceneAssets {
   sky: HTMLImageElement;
   mountains: readonly HTMLImageElement[];
@@ -9,13 +7,19 @@ interface SceneAssets {
   landmark: HTMLImageElement;
 }
 
-/** The canvas in game pixels, with the 256x224 frame's place inside it. */
+interface SceneFiles {
+  sky: string;
+  mountains: string[];
+  trees: string[];
+  clouds: string[];
+  landmark: string;
+}
+
 interface SceneGeometry {
   width: number;
   height: number;
   frameX: number;
   frameY: number;
-  /** The first of the two water-line rows. */
   horizonY: number;
 }
 
@@ -27,7 +31,6 @@ interface Placed {
 }
 
 interface Drifting extends Placed {
-  /** Game pixels per second of its own motion, on top of the parallax. */
   speed: number;
 }
 
@@ -35,15 +38,11 @@ interface SceneLayout {
   mountains: readonly Placed[];
   trees: readonly Placed[];
   clouds: readonly Drifting[];
-  /** Sparse patches of moving water in the lower water rows. */
 }
 
 interface SceneClock {
-  /** Seconds since the scene was built. */
   t: number;
-  /** Parallax travel in game pixels; zero while still. */
   drift: number;
-  /** Whether the water wobbles and the clouds move. */
   moving: boolean;
 }
 
@@ -51,4 +50,34 @@ interface SceneLayer {
   draw: (ctx: CanvasRenderingContext2D, clock: SceneClock) => void;
 }
 
-export type { Drifting, Placed, SceneAssets, SceneClock, SceneGeometry, SceneLayer, SceneLayout };
+interface Scene {
+  geometry: SceneGeometry;
+  draw: (ctx: CanvasRenderingContext2D, clock: SceneClock) => void;
+}
+
+interface RidgeOptions {
+  pieces: readonly HTMLImageElement[];
+  placed: readonly Placed[];
+  parallax: number;
+  rows?: number;
+}
+
+interface Ripple {
+  x: number;
+  y: number;
+  w: number;
+  light: boolean;
+  speed: number;
+  phase: number;
+}
+
+interface SeededRandom {
+  next: () => number;
+  int: (lo: number, hi: number) => number;
+  range: (lo: number, hi: number) => number;
+  chance: (p: number) => boolean;
+}
+
+export type {
+  Drifting, Placed, RidgeOptions, Ripple, Scene, SceneAssets, SceneClock, SceneFiles, SceneGeometry, SceneLayer, SceneLayout, SeededRandom,
+};

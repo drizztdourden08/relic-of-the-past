@@ -1,17 +1,10 @@
 /* @layer renderer-hud @kind component */
+import type { HudNumberProps } from './HudNumber.type';
+
 const digitShadowFilter = (s: number): string => {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg'><filter id='s' color-interpolation-filters='sRGB'><feFlood flood-color='black' result='black'/><feComposite in='black' in2='SourceAlpha' operator='in' result='silhouette'/><feOffset in='silhouette' dx='${s}' dy='0' result='right'/><feOffset in='silhouette' dx='0' dy='${s}' result='down'/><feMerge><feMergeNode in='right'/><feMergeNode in='down'/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}#s")`;
 };
-
-interface HudNumberProps {
-  value: number;
-  digits?: number;
-  /** Renders with the "at max" yellow digit variant instead of white. See the "Indicate Max Resources" setting. */
-  isMax?: boolean;
-  scale: number;
-  spritesBase: string;
-}
 
 const HudNumber = (props: HudNumberProps) => {
   const { value, digits = 3, isMax = false, scale, spritesBase } = props;
@@ -44,4 +37,3 @@ const HudNumber = (props: HudNumberProps) => {
 };
 
 export { HudNumber };
-export type { HudNumberProps };

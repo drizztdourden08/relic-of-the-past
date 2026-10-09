@@ -1,8 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The simulator widget's own options: the screen limit, the same pref the run
- * controls edit, so a change in either place is seen by the other.
- */
 import { NumberInput } from '@ds/primitives';
 import { OptionRow } from '@ds/composites/Widget';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';

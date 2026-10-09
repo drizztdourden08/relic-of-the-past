@@ -1,8 +1,5 @@
 /* @layer renderer-widgets @kind style */
 
-/* The Rules tab: three sections of tiles in a widget about 340px wide. The square
-   tiles share one size, set here from the spacing scale so the sheet holds no
-   magic number: three squares and their gaps fit the widget with room to spare. */
 
 .cheats-rules {
   --cheats-rules-tile: calc(var(--space-2xl) * 3);
@@ -24,7 +21,6 @@
   gap: var(--space-xs);
 }
 
-/* ─── Shared by every tile: the art and the short name under it ─── */
 
 .cheats-rules__sprite {
   width: var(--cheats-rules-sprite);
@@ -47,7 +43,6 @@
   color: var(--c-text-dim);
 }
 
-/* ─── A state tile: sprite over a tick box, three faces on data-state ─── */
 
 .cheats-rule {
   display: flex;
@@ -74,9 +69,6 @@
   background: transparent;
 }
 
-/* The box IS the tile: the label fills the square so the whole thing is one click
-   target. Reversed so the art reads first and its tick sits under it. Written
-   through the tile so it outranks the checkbox's own single-class rules. */
 .cheats-rule .cheats-rule__control {
   flex: 1;
   flex-direction: column-reverse;
@@ -94,7 +86,6 @@
   gap: var(--space-2xs);
 }
 
-/* ─── A ladder tile: full width, art on the left, the rungs wrapping on the right ─── */
 
 .cheats-rung {
   display: flex;
@@ -137,7 +128,6 @@
   padding: var(--space-2xs) var(--space-xs);
 }
 
-/* ─── An action tile: dashed, holds nothing, dips when pressed ─── */
 
 .cheats-action {
   display: flex;

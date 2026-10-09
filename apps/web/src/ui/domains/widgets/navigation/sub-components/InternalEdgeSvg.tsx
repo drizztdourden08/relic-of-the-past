@@ -1,19 +1,16 @@
 /* @layer renderer-widgets @kind component */
-import type { CSSProperties } from 'react';
 import { Svg, SvgLine, SvgRect, SvgText } from '../../../../design-system/primitives';
 import { EDGE_COLORS } from '../navigation.constants';
+import { SVG_STYLE } from './InternalEdgeSvg.constants';
 
-const SVG_STYLE: CSSProperties = { flexShrink: 0 };
-
-/** Two-square connector glyph showing an internal room-edge transition. */
 const InternalEdgeSvg = ({ edge, fromName, toName }: { edge: string; fromName: string; toName: string }) => {
   const fromColor = EDGE_COLORS[edge] ?? 'var(--c-text-muted)';
   const opposites: Record<string, string> = { north: 'south', south: 'north', east: 'west', west: 'east' };
   const toColor = EDGE_COLORS[opposites[edge] ?? 'south'] ?? 'var(--c-text-muted)';
   const isVertical = edge === 'north' || edge === 'south';
 
-  const SQ = 20; // square size
-  const LINE_OVERFLOW = 3; // how much the separator line extends beyond squares
+  const SQ = 20;
+  const LINE_OVERFLOW = 3;
 
   if (isVertical) {
     const W = SQ + 2;

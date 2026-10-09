@@ -1,44 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
-
-/** SNES native resolution. All HUD layout is in SNES pixel units, multiplied by scale. */
-const SNES_WIDTH = 256;
-const SNES_HEIGHT = 224;
-const SNES_TILE = 8;
-/** Original HUD top bar height in SNES pixels (4 tile rows) */
-const HUD_BAR_HEIGHT = 32;
-
-interface HudData {
-  healthCurrent: number;
-  healthCapacity: number;
-  magicPower: number;
-  halfMagic: boolean;
-  rupees: number;
-  bombs: number;
-  arrows: number;
-  keys: number;
-  equippedY: number;
-  /** 20 item slots (inventory.items) used to pick the equipped item's upgrade-tier sprite. */
-  items: number[];
-  /** The max each counter can reach right now, accounting for upgrades and settings. */
-  maxRupees: number;
-  maxBombs: number;
-  maxArrows: number;
-}
-
-interface HudConfig {
-  /** Integer pixel scale (1 SNES px = scale CSS px) */
-  scale: number;
-  /** Base URL for sprite images */
-  spritesBase: string;
-}
-
-interface UseHudResult {
-  data: HudData;
-  config: HudConfig;
-  spriteUrl: (filename: string) => string;
-}
+import type { HudConfig, HudData, UseHudResult } from './hooks.type';
 
 const useHud = (scale: number): UseHudResult => {
   const hud = useGameUIStore((s) => s.hud);
@@ -67,5 +30,4 @@ const useHud = (scale: number): UseHudResult => {
   return { data, config, spriteUrl };
 };
 
-export { useHud, SNES_WIDTH, SNES_HEIGHT, SNES_TILE, HUD_BAR_HEIGHT };
-export type { HudData, HudConfig, UseHudResult };
+export { useHud };

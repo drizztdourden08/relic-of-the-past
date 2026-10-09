@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
-/** What shows while a pack is read, or why it could not be. */
 import { Box, Spinner, Text } from '@ds/primitives';
-
-type ContentsStatusProps = {
-  /** Null while the pack is still being read. */
-  error: string | null;
-};
+import type { ContentsStatusProps } from '../../PackContents.type';
 
 const ContentsStatus = (props: ContentsStatusProps) => {
   const { error } = props;
@@ -26,4 +21,3 @@ const ContentsStatus = (props: ContentsStatusProps) => {
 };
 
 export { ContentsStatus };
-export type { ContentsStatusProps };

@@ -1,26 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { wasmGetViewportInfo, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType } from '../../../../../lib/game';
-
-interface PlayerDebugState {
-  playerX: number;
-  playerY: number;
-  relX: number;
-  relY: number;
-  tileMinCol: number;
-  tileMaxCol: number;
-  tileMinRow: number;
-  tileMaxRow: number;
-  map16Row: number;
-  map16Col: number;
-  liveScreenIndex: number;
-  playerLayer: number | null;
-  collisionType: number | null;
-  staircaseType: number | null;
-  /** Doorway orientation the player occupies, 0 when not in one. Sticky, not per-frame. */
-  inDoorway: number;
-  /** Door open/close animation step, 0 when no door is animating. */
-  doorAnimStep: number;
-}
+import type { PlayerDebugState } from './hooks.type';
 
 const usePlayerDebugState = (_debugTick: number): PlayerDebugState | null => {
   const vpDebug = wasmGetViewportInfo?.();
@@ -67,4 +47,4 @@ const usePlayerDebugState = (_debugTick: number): PlayerDebugState | null => {
 };
 
 export { usePlayerDebugState };
-export type { PlayerDebugState };
+export type { PlayerDebugState } from './hooks.type';

@@ -1,14 +1,11 @@
 /* @layer renderer-widgets @kind component */
-import type { CSSProperties } from 'react';
 import type { ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
 import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
-
-const REQ_ROW: CSSProperties = { display: 'flex', gap: 2, marginTop: 2 };
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import { ReqIcon } from './ReqIcon';
-
-type DiamondPos = 'top' | 'bottom' | 'left' | 'right';
+import { REQ_ROW } from './InternalEdgeDiamond.constants';
+import type { DiamondPos } from './InternalEdgeDiamond.type';
 
 const getEdgeDiamondPos = (conn: ConnectionInfo, bundle: ScreenBundle): DiamondPos => {
   const idx = bundle.screens.indexOf(conn.sourceScreen!);
@@ -20,7 +17,6 @@ const getEdgeDiamondPos = (conn: ConnectionInfo, bundle: ScreenBundle): DiamondP
   return col === 0 ? 'left' : 'right';
 };
 
-/** 4-slot diamond layout of internal-edge connection cards around a room. */
 const InternalEdgeDiamond = ({ connections, screenBundle }: { connections: ConnectionInfo[]; screenBundle: ScreenBundle }) => {
   const slots: Record<DiamondPos, ConnectionInfo | null> = { top: null, bottom: null, left: null, right: null };
   for (const conn of connections) {

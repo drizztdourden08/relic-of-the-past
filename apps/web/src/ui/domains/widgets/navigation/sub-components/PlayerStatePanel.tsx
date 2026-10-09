@@ -1,13 +1,10 @@
-/* @layer renderer-widgets @kind data */
+/* @layer renderer-widgets @kind component */
 import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
 import { DescRow } from './DescRow';
-import type { useNavigation } from '../useNavigation';
+import type { PlayerStatePanelProps } from './PlayerStatePanel.type';
 
-type Props = Pick<ReturnType<typeof useNavigation>, 'playerDebug' | 'isIndoors' | 'playerX' | 'playerY'>;
-
-/** "Player State" info panel for the Navigation widget. */
-const PlayerStatePanel = (props: Props) => {
+const PlayerStatePanel = (props: PlayerStatePanelProps) => {
   const { playerDebug, isIndoors, playerX, playerY } = props;
   if (!playerDebug) return null;
 

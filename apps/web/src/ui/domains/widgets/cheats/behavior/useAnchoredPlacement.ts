@@ -1,16 +1,8 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * Places a portalled box under its anchor in viewport coordinates: flush with the anchor's
- * left edge, pulled back from the window's right edge when it would spill, and flipped above
- * the anchor when there is no room below. Re-measured when the anchor or the content changes.
- */
 import { useLayoutEffect, useState } from 'react';
 import type { RefObject } from 'react';
-
-const GAP = 4;
-const EDGE = 6;
-
-type Placement = { left: number; top: number; placed: boolean };
+import { ANCHOR_GAP, VIEWPORT_EDGE } from '../CheatsWidget.constants';
+import type { Placement } from '../CheatsWidget.type';
 
 const useAnchoredPlacement = (ref: RefObject<HTMLElement | null>, anchor: HTMLElement | null, contentKey: unknown): Placement => {
   const [place, setPlace] = useState<Placement>({ left: 0, top: 0, placed: false });
@@ -22,9 +14,9 @@ const useAnchoredPlacement = (ref: RefObject<HTMLElement | null>, anchor: HTMLEl
     const w = el.offsetWidth;
     const h = el.offsetHeight;
     let left = a.left;
-    let top = a.bottom + GAP;
-    if (left + w > window.innerWidth - EDGE) left = Math.max(EDGE, window.innerWidth - w - EDGE);
-    if (top + h > window.innerHeight - EDGE) top = Math.max(EDGE, a.top - h - GAP);
+    let top = a.bottom + ANCHOR_GAP;
+    if (left + w > window.innerWidth - VIEWPORT_EDGE) left = Math.max(VIEWPORT_EDGE, window.innerWidth - w - VIEWPORT_EDGE);
+    if (top + h > window.innerHeight - VIEWPORT_EDGE) top = Math.max(VIEWPORT_EDGE, a.top - h - ANCHOR_GAP);
     setPlace({ left, top, placed: true });
   }, [ref, anchor, contentKey]);
 
@@ -32,4 +24,3 @@ const useAnchoredPlacement = (ref: RefObject<HTMLElement | null>, anchor: HTMLEl
 };
 
 export { useAnchoredPlacement };
-export type { Placement };

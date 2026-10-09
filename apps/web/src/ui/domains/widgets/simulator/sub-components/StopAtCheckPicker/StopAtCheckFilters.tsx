@@ -1,33 +1,9 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The search box + tag / item / status filter row for the stop-at-check picker.
- * Drives the shared FilterState (consumed by `filterChecks`), mirroring the
- * filters the checks widget offers.
- */
 import { useCallback, useState } from 'react';
 import { Box, Button, TextInput } from '@ds/primitives';
-import type { FilterState, ItemFilter, StatusFilter } from '@shared/game/logic/queries/check-grouping';
 import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
-
-interface StopAtCheckFiltersProps {
-  filter: FilterState;
-  onFilterChange: (filter: FilterState) => void;
-}
-
-const ITEM_FILTERS: { value: ItemFilter; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'rewards', label: 'Rewards' },
-  { value: 'non-rewards', label: 'Junk' },
-];
-
-const STATUS_FILTERS: { value: StatusFilter; label: string; title: string }[] = [
-  { value: 'all', label: 'All', title: 'Any status' },
-  { value: 'reachable', label: '●', title: 'Reachable' },
-  { value: 'completed', label: '✓', title: 'Completed' },
-  { value: 'blocked', label: '○', title: 'Blocked' },
-];
-
-const TAG_CATEGORIES = ['world', 'location', 'area', 'content'] as const;
+import { ITEM_FILTERS, STATUS_FILTERS, TAG_CATEGORIES } from './StopAtCheckPicker.constants';
+import type { StopAtCheckFiltersProps } from './StopAtCheckPicker.type';
 
 const StopAtCheckFilters = (props: StopAtCheckFiltersProps) => {
   const { filter, onFilterChange } = props;

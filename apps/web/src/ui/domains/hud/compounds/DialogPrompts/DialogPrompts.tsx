@@ -1,35 +1,8 @@
 /* @layer renderer-hud @kind component */
-/**
- * The row of button prompts under a message box, right-aligned to the box's right edge. When the box
- * sits too low for the row to fit below it, the row moves above the box instead.
- */
 import { HudBox } from '../../primitives/HudBox';
 import { ButtonPrompt } from '../../primitives/ButtonPrompt';
-import type { PromptGlyph } from '../../primitives/ButtonPrompt';
-import type { CssRect } from '../DialogBox';
-
-interface ResolvedPrompt {
-  glyphs: PromptGlyph[];
-  label: string;
-  hold?: boolean;
-}
-
-interface DialogPromptsProps {
-  prompts: ResolvedPrompt[];
-  /** The message box, in CSS pixels. */
-  box: CssRect;
-  /** Height of the drawable area the row must stay inside, in CSS pixels. */
-  limit: number;
-  /** CSS pixels per game pixel. */
-  scale: number;
-  ink: string;
-  stroke: string;
-}
-
-/** Prompt height, the space between the box and the row, and between prompts, in game pixels. */
-const PROMPT_HEIGHT_PX = 10;
-const GAP_PX = 2;
-const SPACING_PX = 6;
+import { GAP_PX, PROMPT_HEIGHT_PX, SPACING_PX } from './DialogPrompts.constants';
+import type { DialogPromptsProps } from './DialogPrompts.type';
 
 const DialogPrompts = (props: DialogPromptsProps) => {
   const { prompts, box, limit, scale, ink, stroke } = props;
@@ -53,4 +26,3 @@ const DialogPrompts = (props: DialogPromptsProps) => {
 };
 
 export { DialogPrompts };
-export type { DialogPromptsProps, ResolvedPrompt };

@@ -1,25 +1,9 @@
 /* @layer renderer-hud @kind hook */
-/**
- * Display scale and the size of the play field in SNES pixels.
- *
- * Scale comes off the CANVAS's own native height, not off a constant, because
- * the core can be running in 240-line mode. Measuring against a hardcoded 224
- * would leave the whole HUD a few percent oversized exactly when the extra rows
- * are visible. Width is then derived from that same scale, so a wide display
- * reports a wide play field and an anchored element keeps its own corner.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { SNES_HEIGHT, SNES_WIDTH } from '../../../hooks/useHud';
+import { SNES_HEIGHT, SNES_WIDTH } from '../../../hooks/hooks.constants';
 import type { Size } from '@shared/hud/layouts';
-
-const CANVAS_ID = 'canvas';
-
-interface HudViewport {
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  scale: number;
-  /** The container measured in SNES pixels, which placeElement anchors against. */
-  view: Size;
-}
+import { CANVAS_ID } from '../HudLayoutView.constants';
+import type { HudViewport } from '../HudLayoutView.type';
 
 const useHudViewport = (): HudViewport => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -54,4 +38,3 @@ const useHudViewport = (): HudViewport => {
 };
 
 export { useHudViewport };
-export type { HudViewport };

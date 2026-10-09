@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/*
- * Prose, at a readable measure. The cap is on the TEXT, not the panel, so
- * a wide pane gives the metadata its columns while the sentence still breaks
- * where a sentence should.
- */
-
 .read-view {
   display: flex;
   flex-direction: column;

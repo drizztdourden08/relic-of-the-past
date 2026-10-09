@@ -1,43 +1,16 @@
 /* @layer renderer-components @kind logic */
-/**
- * Pure token-stream summary for the read-only entry card: the short "what is in
- * this line" phrases a translator needs before opening it: a name substitution,
- * runtime digits, glossary references, and the stops the player has to press
- * through.
- *
- * Wording comes from the control-code catalog, not from the bracket
- * names in the stream, so the card says "2 waits for button" where the stored
- * text says `[Waitkey]`. Nothing here reads state or measures anything: tokens
- * in, phrases out.
- */
 import { codeInfoFor } from '@shared/game/language';
 import type { Token } from '@shared/game/language';
+import { NAME_CODE, NUMBER_CODE, PAUSE_CODE, WAIT_BUTTON_CODE } from './entry.constants';
+import type { EntryTally } from './entry.type';
 
-/** Catalog names for the codes worth calling out on a card. */
-const NAME_CODE = 'Name';
-const NUMBER_CODE = 'Number';
-const WAIT_BUTTON_CODE = 'Waitkey';
-const PAUSE_CODE = 'Wait';
-
-/** What one entry's stream carries, before any of it is put into words. */
-type EntryTally = {
-  insertsName: boolean;
-  digits: number;
-  terms: string[];
-  waits: number;
-  pauses: number;
-};
-
-/** The catalog's own label, recased to sit mid-sentence, with a written fallback. */
 const wording = (name: string, fallback: string): string => {
   const label = codeInfoFor(name)?.label ?? fallback;
   return label.charAt(0).toLowerCase() + label.slice(1);
 };
 
-/** Head-final label ("number digit" -> "2 number digits"). */
 const countTail = (n: number, label: string): string => `${n} ${label}${n === 1 ? '' : 's'}`;
 
-/** Head-first label ("wait for button" -> "2 waits for button"). */
 const countHead = (n: number, label: string): string => {
   const [head, ...rest] = label.split(' ');
   const plural = `${head}${n === 1 ? '' : 's'}`;
@@ -62,11 +35,6 @@ const tally = (tokens: Token[]): EntryTally => {
   return { insertsName, digits, terms, waits, pauses };
 };
 
-/**
- * The card's "contains" phrases, in reading order. Empty when the stream holds
- * nothing to list, so the caller can drop the line instead of printing a
- * header with nothing after it.
- */
 const summarizeEntry = (tokens: Token[]): string[] => {
   const { insertsName, digits, terms, waits, pauses } = tally(tokens);
   const phrases: string[] = [];
@@ -81,4 +49,3 @@ const summarizeEntry = (tokens: Token[]): string[] => {
 };
 
 export { summarizeEntry };
-export type { EntryTally };

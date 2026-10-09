@@ -27,8 +27,6 @@
   color: var(--c-text-dim);
 }
 
-/* Compact rows: horizontal padding only, tight line-height (no vertical gaps). Selection is by
-   whole line, so a report copies exactly what the widget shows. */
 .logs-widget-content .log-entry {
   display: flex;
   gap: var(--space-sm);

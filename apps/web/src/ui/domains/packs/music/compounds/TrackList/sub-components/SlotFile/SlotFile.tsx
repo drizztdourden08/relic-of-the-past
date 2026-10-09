@@ -1,19 +1,7 @@
 /* @layer renderer-components @kind component */
-/** One file a slot plays: its name and a play button, with the player open under it while it sounds. */
 import { Box, IconButton, Text } from '@ds/primitives';
 import { FilePlayer } from '../../../FilePlayer';
-import type { Audition } from '../../../../behavior/file-audition';
-
-type SlotFileProps = {
-  name: string;
-  playing: boolean;
-  loading: boolean;
-  /** Set only while this file is the one sounding. */
-  audition: Audition | null;
-  /** Why it did not play, if it did not. */
-  note?: string;
-  onPlay: (fileName: string) => void;
-};
+import type { SlotFileProps } from '../../TrackList.type';
 
 const SlotFile = (props: SlotFileProps) => {
   const { name, playing, loading, audition, note, onPlay } = props;
@@ -40,4 +28,3 @@ const SlotFile = (props: SlotFileProps) => {
 };
 
 export { SlotFile };
-export type { SlotFileProps };

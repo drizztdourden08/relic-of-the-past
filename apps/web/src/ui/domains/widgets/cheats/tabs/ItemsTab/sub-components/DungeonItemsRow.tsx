@@ -1,33 +1,17 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The D.ITEMS row of the EQUIP box, shown inside a dungeon: map, compass and big key for the
- * dungeon Link stands in. Each is a toggle; an unowned one draws as a ghost.
- */
 import { Box } from '@ds/primitives';
 import { cheatSetDungeonItem } from '@app/lib/game';
 import type { DungeonItemKind } from '@app/lib/game';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseEquipSlot, PauseLabel } from '@domains/hud';
 import { EQUIP_SPRITES } from '@domains/hud/composites/PauseEquipSlot';
-import { DUNGEON_ITEM_COLUMNS, EQUIP_PANEL } from '../ItemsTab.constants';
+import { DUNGEON_ITEMS, EQUIP_PANEL } from '../ItemsTab.constants';
 import { SlotCell } from './SlotCell';
-
-type DungeonItemsRowProps = {
-  scale: number;
-  spritesBase: string;
-};
-
-type DungeonItem = { kind: DungeonItemKind; type: string; col: number; label: string };
-
-const DUNGEON_ITEMS: DungeonItem[] = [
-  { kind: 'map', type: 'dungeonMap', col: DUNGEON_ITEM_COLUMNS.map, label: 'Map' },
-  { kind: 'compass', type: 'compass', col: DUNGEON_ITEM_COLUMNS.compass, label: 'Compass' },
-  { kind: 'bigKey', type: 'bigKey', col: DUNGEON_ITEM_COLUMNS.bigKey, label: 'Big Key' },
-];
+import type { PanelProps } from '../ItemsTab.type';
 
 const noHover = (): void => undefined;
 
-const DungeonItemsRow = ({ scale, spritesBase }: DungeonItemsRowProps) => {
+const DungeonItemsRow = ({ scale, spritesBase }: PanelProps) => {
   const palaceIndex = useGameUIStore((s) => s.map.palaceIndex);
   const progress = useGameUIStore((s) => s.dungeonProgress);
   const tile = 8 * scale;
@@ -63,4 +47,3 @@ const DungeonItemsRow = ({ scale, spritesBase }: DungeonItemsRowProps) => {
 };
 
 export { DungeonItemsRow };
-export type { DungeonItemsRowProps };

@@ -1,19 +1,7 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The pause menu's name box, fed by the slot under the pointer, with a short status beside it.
- * An unowned slot still names itself, drawn dimmed, so a ghost reads before it is clicked.
- */
 import { Box, Text } from '@ds/primitives';
 import { PauseNamePanel } from '@domains/hud';
-import type { SlotName } from '../ItemsTab.type';
-
-type ItemNamePanelProps = {
-  name: SlotName;
-  /** Whether a slot is under the pointer; otherwise the panel shows the equipped item. */
-  hovering: boolean;
-  scale: number;
-  spritesBase: string;
-};
+import type { ItemNamePanelProps, SlotName } from '../ItemsTab.type';
 
 const statusOf = (name: SlotName, hovering: boolean): string => {
   if (!hovering) return 'Hover a slot';
@@ -35,4 +23,3 @@ const ItemNamePanel = ({ name, hovering, scale, spritesBase }: ItemNamePanelProp
 );
 
 export { ItemNamePanel };
-export type { ItemNamePanelProps };

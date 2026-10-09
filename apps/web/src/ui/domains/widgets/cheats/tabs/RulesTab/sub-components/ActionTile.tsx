@@ -1,21 +1,8 @@
 /* @layer renderer-widgets @kind component */
-/**
- * One action as a tile: a dashed square that runs its action once when pressed and holds
- * no state. The sprite and a short name are the button's face, the full label its
- * tooltip and accessible name. A tile whose category the profile turns off draws inert,
- * with the reason as its tooltip.
- */
-import { Box, Button, Image, Text } from '@ds/primitives';
+import { Button, Image, Text } from '@ds/primitives';
 import { spriteUrlOf } from '@shared/game/logic/queries/item-sprites';
-import type { ActionTileSpec } from '../RulesTab.type';
-
-type ActionTileProps = {
-  spec: ActionTileSpec;
-  /** The category is off: the tile draws inert and this sentence is its tooltip. */
-  reason?: string;
-};
-
-const PLACEHOLDER = <Box className="cheats-rules__sprite cheats-rules__sprite--placeholder" />;
+import { SpritePlaceholder } from './SpritePlaceholder';
+import type { ActionTileProps } from '../RulesTab.type';
 
 const ActionTile = (props: ActionTileProps) => {
   const { spec, reason } = props;
@@ -33,11 +20,10 @@ const ActionTile = (props: ActionTileProps) => {
       disabled={disabled}
       onClick={run}
     >
-      <Image className="cheats-rules__sprite" src={spriteUrlOf(sprite)} alt="" draggable={false} fallback={PLACEHOLDER} />
+      <Image className="cheats-rules__sprite" src={spriteUrlOf(sprite)} alt="" draggable={false} fallback={<SpritePlaceholder />} />
       <Text className="cheats-rules__name">{name}</Text>
     </Button>
   );
 };
 
 export { ActionTile };
-export type { ActionTileProps };

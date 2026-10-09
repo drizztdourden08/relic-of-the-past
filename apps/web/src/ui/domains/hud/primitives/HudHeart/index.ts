@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind barrel */
-export { HEART_TILE, HudHeart } from './HudHeart';
-export { HEART_TINTS, tintFor } from './HudHeart.constants';
-export type { HeartMode, HudHeartProps } from './HudHeart';
-export type { HeartTint } from './HudHeart.constants';
+export { HudHeart } from './HudHeart';
+export { HEART_TILE, HEART_TINTS } from './HudHeart.constants';
+export { tintFor } from './behavior/tint-for';
+export type { HeartMode, HeartTint, HudHeartProps } from './HudHeart.type';

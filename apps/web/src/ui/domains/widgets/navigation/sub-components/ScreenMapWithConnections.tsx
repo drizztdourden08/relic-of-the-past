@@ -4,7 +4,6 @@ import { useGameUIStore } from '../../../../../stores/game-ui-store';
 import { IndoorMinimap } from './IndoorMinimap';
 import { OverworldMinimap } from './OverworldMinimap';
 
-/** Picks the indoor vs overworld minimap based on the current room context. */
 const ScreenMapWithConnections = ({ bundle, connections, renderResults, playerScreenIndex, playerPos }: {
   bundle: ScreenBundle;
   connections: ConnectionInfo[];

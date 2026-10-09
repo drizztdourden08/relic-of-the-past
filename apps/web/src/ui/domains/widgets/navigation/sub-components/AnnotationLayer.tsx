@@ -1,36 +1,11 @@
 /* @layer renderer-widgets @kind component */
-import type { CSSProperties } from 'react';
-import type { ScreenAnnotations } from '@shared/game/simulation';
 import { Box, Text } from '../../../../design-system/primitives';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { ANNOTATION_STYLES } from '../../../app/views/GameLayer/sub-components/navigation-overlay/annotation-style';
+import { IL } from './AnnotationLayer.constants';
+import type { AnnotationLayerProps } from './AnnotationLayer.type';
 
-/** Where the annotated screen's 64x64 tile grid sits on the minimap. */
-interface Props {
-  annotations: ScreenAnnotations | null;
-  cellLeft: number;
-  cellTop: number;
-  cellW: number;
-  cellH: number;
-}
-
-const IL: Record<string, CSSProperties> = {
-  badge: {
-    position: 'absolute', display: 'flex', gap: 3, padding: '0 3px',
-    borderRadius: 'var(--r-sm)', background: 'var(--c-glass)', fontSize: 8,
-    lineHeight: '10px', pointerEvents: 'none',
-  },
-  done: { color: 'var(--c-green-bright)' },
-  avail: { color: 'var(--c-info)' },
-};
-
-/**
- * The minimap half of ScreenAnnotations: a dot per annotated tile plus the check
- * tally for the screen, so the small map shows the same mechanics as the overlay
- * instead of only reachability. Screen-wide kinds (room tags) have no tile and
- * are skipped, since they live in the widget panel.
- */
-const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: Props) => {
+const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: AnnotationLayerProps) => {
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
   if (!annotations) return null;
   const { done, available } = annotations.checks;

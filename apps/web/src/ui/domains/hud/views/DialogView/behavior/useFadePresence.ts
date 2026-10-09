@@ -1,18 +1,7 @@
 /* @layer renderer-hud @kind hook */
-/**
- * Keeps a thing mounted through its fade-out. `shown` says whether it should be on screen; the
- * hook answers with whether to render it at all and the opacity to render it at, so a box that just
- * closed stays for the fade with its last content, and a box that just opened fades in from nothing.
- */
 import { useEffect, useState } from 'react';
-
-const FADE_MS = 140;
-
-interface FadePresence {
-  mounted: boolean;
-  opacity: number;
-  transition: string;
-}
+import { FADE_MS } from '../DialogView.constants';
+import type { FadePresence } from '../DialogView.type';
 
 const useFadePresence = (shown: boolean, fadeMs: number = FADE_MS): FadePresence => {
   const [mounted, setMounted] = useState(shown);
@@ -21,7 +10,6 @@ const useFadePresence = (shown: boolean, fadeMs: number = FADE_MS): FadePresence
   useEffect(() => {
     if (shown) {
       setMounted(true);
-      // Mount at zero first, then raise it on the next frame so the transition has a start value.
       const raf = requestAnimationFrame(() => setOpacity(1));
       return () => cancelAnimationFrame(raf);
     }
@@ -33,5 +21,4 @@ const useFadePresence = (shown: boolean, fadeMs: number = FADE_MS): FadePresence
   return { mounted, opacity, transition: `opacity ${fadeMs}ms ease-out` };
 };
 
-export { useFadePresence, FADE_MS };
-export type { FadePresence };
+export { useFadePresence };

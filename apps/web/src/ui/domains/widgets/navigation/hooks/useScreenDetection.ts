@@ -22,9 +22,6 @@ const useScreenDetection = (debugTick?: number): ScreenMatchResult | null => {
     [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState],
   );
 
-  // A screen resolved by the palace-scan fallback carries a wrong dungeon.palaceIndex.
-  // It still renders correctly, so say so out loud once per room instead of letting a
-  // mislabel sit there costing the exact key.
   const warned = useRef(new Set<string>());
   useEffect(() => {
     const mismatch = match?.palaceMismatch;

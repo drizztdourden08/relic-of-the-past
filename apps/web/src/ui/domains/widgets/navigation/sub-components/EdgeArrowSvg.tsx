@@ -1,11 +1,8 @@
 /* @layer renderer-widgets @kind component */
-import type { CSSProperties } from 'react';
 import { Svg, SvgPath } from '../../../../design-system/primitives';
 import { EDGE_COLORS } from '../navigation.constants';
+import { SVG_STYLE } from './EdgeArrowSvg.constants';
 
-const SVG_STYLE: CSSProperties = { flexShrink: 0 };
-
-/** A small directional arrow glyph colored by edge direction. */
 const EdgeArrowSvg = ({ edge, size }: { edge: string; size: number }) => {
   const color = EDGE_COLORS[edge] ?? 'var(--c-text-muted)';
   const paths: Record<string, string> = {

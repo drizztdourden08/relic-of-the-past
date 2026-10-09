@@ -1,3 +1,4 @@
 /* @layer renderer-hud @kind barrel */
-export { HudMagicBar, MAGIC_MAX } from './HudMagicBar';
-export type { HudMagicBarProps } from './HudMagicBar';
+export { HudMagicBar } from './HudMagicBar';
+export { MAGIC_MAX } from './HudMagicBar.constants';
+export type { HudMagicBarProps } from './HudMagicBar.type';

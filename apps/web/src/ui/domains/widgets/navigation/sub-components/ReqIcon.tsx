@@ -1,11 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import type { CSSProperties } from 'react';
 import { Text } from '../../../../design-system/primitives';
-
-const IL: Record<string, CSSProperties> = {
-  emoji: { fontSize: 12, marginRight: 2 },
-  chip: { fontSize: 10, color: 'var(--c-warning)', marginRight: 4, background: 'var(--c-warning-soft)', padding: '0 3px', borderRadius: 'var(--r-sm)' },
-};
+import { IL } from './ReqIcon.constants';
 
 const REQ_ICONS: Record<string, { icon: string; color: string }> = {
   flippers: { icon: '🏊', color: '#48f' },
@@ -22,7 +17,6 @@ const REQ_ICONS: Record<string, { icon: string; color: string }> = {
   bow: { icon: '🏹', color: '#8c4' },
 };
 
-/** Renders a requirement as an emoji icon (known reqs) or a labeled chip. */
 const ReqIcon = ({ req }: { req: string }) => {
   const info = REQ_ICONS[req];
   if (info) {

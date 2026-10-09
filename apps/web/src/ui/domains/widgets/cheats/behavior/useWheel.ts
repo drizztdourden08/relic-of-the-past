@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * A non-passive wheel listener on whichever element the returned ref lands on. The ref is a
- * callback, so an element that mounts after the first render (a control that becomes editable
- * later) still gets the listener. The handler is read through a ref, so a new closure on every
- * render never re-subscribes.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const useWheel = <T extends HTMLElement>(onStep: (dir: 1 | -1) => void) => {
