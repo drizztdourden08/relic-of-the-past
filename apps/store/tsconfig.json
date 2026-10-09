@@ -6,14 +6,14 @@
   "include": [
     "src/**/*",
     "../site-kit/**/*",
-    "../web/src/ui/domains/packs/**/*",
-    "../web/src/lib/msu/decode/**/*",
-    "../web/src/lib/game/snes-color/**/*",
-    "../web/src/lib/game/player-sheet/resolve-palette.ts",
-    "../web/src/lib/game/player-sheet/compose-frame.ts",
-    "../web/src/lib/game/player-sheet/draw-tiles/**/*",
-    "../web/src/lib/game/player-sheet/flatten-palette/**/*",
-    "../web/src/lib/game/player-sheet/sheet-png/**/*",
+    "../desktop/src/ui/domains/packs/**/*",
+    "../desktop/src/lib/msu/decode/**/*",
+    "../desktop/src/lib/game/snes-color/**/*",
+    "../desktop/src/lib/game/player-sheet/resolve-palette.ts",
+    "../desktop/src/lib/game/player-sheet/compose-frame.ts",
+    "../desktop/src/lib/game/player-sheet/draw-tiles/**/*",
+    "../desktop/src/lib/game/player-sheet/flatten-palette/**/*",
+    "../desktop/src/lib/game/player-sheet/sheet-png/**/*",
     "../../shared/**/*"
   ]
 }

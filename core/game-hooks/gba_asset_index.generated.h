@@ -7,6 +7,7 @@
  */
 #ifndef ZELDA3_GBA_ASSET_INDEX_GENERATED_H_
 #define ZELDA3_GBA_ASSET_INDEX_GENERATED_H_
+// clang-format off
 
 enum {
   kGbaAssetRoomIds = 0,  // kGbaPalaceRoomIds: Native room id per palace room, in room order.
@@ -42,5 +43,6 @@ enum {
   kGbaAssetTorches,  // kGbaPalaceTorches: The dungeon's lightable-torch entries, appended to the engine's torch table: room, positions, terminator.
   kGbaAlttpAssetCount,
 };
+// clang-format on
 
 #endif  // ZELDA3_GBA_ASSET_INDEX_GENERATED_H_

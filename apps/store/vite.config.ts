@@ -11,7 +11,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'path';
 
 const SITE_ROOT = __dirname;
-const WEB_SRC = resolve(SITE_ROOT, '../web/src');
+const WEB_SRC = resolve(SITE_ROOT, '../desktop/src');
 
 export default defineConfig({
   root: SITE_ROOT,

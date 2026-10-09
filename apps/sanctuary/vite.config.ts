@@ -12,7 +12,7 @@ import { portFor } from '../../shared/config/port-for';
 import { readPortSlot } from '../../shared/config/port-slot';
 
 const SITE_ROOT = __dirname;
-const WEB_SRC = resolve(SITE_ROOT, '../web/src');
+const WEB_SRC = resolve(SITE_ROOT, '../desktop/src');
 const PORT_SLOT = readPortSlot(resolve(SITE_ROOT, '../..'));
 
 export default defineConfig({

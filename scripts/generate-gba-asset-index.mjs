@@ -29,7 +29,7 @@
  * location. A caller that already knows the real repo root may
  * pass it in and skip the guess entirely.
  */
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
@@ -47,9 +47,11 @@ const HEADER = `/* @layer core-game-hooks @kind generated */
  */
 #ifndef ZELDA3_GBA_ASSET_INDEX_GENERATED_H_
 #define ZELDA3_GBA_ASSET_INDEX_GENERATED_H_
+// clang-format off
 `;
 
-const FOOTER = `
+const FOOTER = `// clang-format on
+
 #endif  // ZELDA3_GBA_ASSET_INDEX_GENERATED_H_
 `;
 
@@ -103,4 +105,16 @@ const generateGbaAssetIndex = async (root = DEFAULT_ROOT) => {
   return outputPath;
 };
 
-export { buildGeneratedHeaderSource, enumMemberNameFor, generateGbaAssetIndex };
+/**
+ * The check mode: writes nothing and reports whether the committed header matches the
+ * manifest. Line endings are compared normalized, since git may check the header out with CRLF.
+ */
+const checkGbaAssetIndex = async (root = DEFAULT_ROOT) => {
+  const manifest = await loadManifest(manifestSourceFor(root));
+  const expected = buildGeneratedHeaderSource(manifest);
+  const outputPath = outputPathFor(root);
+  const actual = existsSync(outputPath) ? readFileSync(outputPath, 'utf8').replace(/\r\n/g, '\n') : null;
+  return { outputPath, current: actual === expected };
+};
+
+export { buildGeneratedHeaderSource, checkGbaAssetIndex, enumMemberNameFor, generateGbaAssetIndex };
