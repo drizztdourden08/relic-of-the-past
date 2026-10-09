@@ -1,16 +1,7 @@
 /* @layer renderer-components @kind hook */
-/**
- * Uninstalling, after the shell's confirm dialog. The main process sets any profile that
- * used the pack back to the default before it removes the files, so the shell's lists are
- * refreshed afterwards.
- */
 import { useCallback, useState } from 'react';
 import { uninstallMessage, uninstallTitle } from '../../../compounds/InstalledOrigin';
-
-type UninstallParams = {
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  onUninstalled: () => void;
-};
+import type { UninstallParams } from '../Store.type';
 
 const useUninstall = (params: UninstallParams) => {
   const { onDeleteConfirm, onUninstalled } = params;

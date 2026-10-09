@@ -1,35 +1,12 @@
 /* @layer renderer-components @kind component */
-/**
- * Signed out: the Hookshop needs the shared account, so the whole tab says so. The store's
- * highlight and name, what signing in is for (or, when a link from the site is waiting, that
- * its install starts right after), one large Sign in button that opens the confirm page in
- * the browser, and a way to the site. While the browser confirms, the code and Cancel.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import logInIcon from '@iconify-icons/lucide/log-in';
 import { Box, Button, Stack, Text } from '@ds/primitives';
-import type { StoreOpenInstall } from '@shared/ipc';
 import { STORE_SITE_HOST } from '@app/lib/store/store-site';
 import { HookshopHighlight } from '../../../compounds/HookshopHighlight';
 import { HubAccountCard } from '../../../compounds/HubAccountCard';
-import type { HubAccountCopy } from '../../../compounds/HubAccountCard';
-import type { StoreAccount } from '../behavior/useStoreAccount';
-
-const STORE_COPY: HubAccountCopy = {
-  signedOutLead: '',
-  signInLabel: 'Sign in',
-  openSiteLabel: 'Open on the site',
-  siteHost: STORE_SITE_HOST,
-};
-
-const LEAD = 'Browsing and installing packs needs a Relic of the Past account. It is the same account as the Sanctuary; publishing, ratings and your profile are on the site.';
-const WAITING_LINK = 'Sign in to install the pack you picked on the site. The install starts as soon as you are signed in.';
-const HIGHLIGHT_PIXEL = 3;
-
-interface StoreSignInProps {
-  account: StoreAccount;
-  waitingLink: StoreOpenInstall | null;
-}
+import type { StoreSignInProps } from '../Store.type';
+import { HIGHLIGHT_PIXEL, SIGN_IN_LEAD, STORE_COPY, WAITING_LINK } from '../Store.constants';
 
 const StoreSignIn = (props: StoreSignInProps) => {
   const { account, waitingLink } = props;
@@ -41,7 +18,7 @@ const StoreSignIn = (props: StoreSignInProps) => {
       <Text as="h2" className="store-sign-in__title">Hookshop</Text>
       {waitingLink
         ? <Box className="store-sign-in__callout"><Text as="p">{WAITING_LINK}</Text></Box>
-        : <Text as="p" className="store-sign-in__lead">{LEAD}</Text>}
+        : <Text as="p" className="store-sign-in__lead">{SIGN_IN_LEAD}</Text>}
       {waiting ? (
         <HubAccountCard
           state={account.state}

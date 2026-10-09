@@ -1429,4 +1429,139 @@ It reads the same registry as the hub nav, so a new tab is indexed for free.
 The home tab is skipped, since the menu's Home screen entry covers it.
 The hub only renders with an active profile, so without one the source returns nothing.
 
+### views/Store/Store.tsx
+
+The Hookshop tab: browse, install, update and uninstall packs from the community store.
+Publishing, ratings and profiles live on the site.
+It is built like the Data Manager: its side nav, then the page for the selected section.
+
+### views/Store/Store.css
+
+The frame matches the Data Manager: side nav, then a scrolling content column.
+The body gap leaves room for the nav's round toggle, which straddles its right edge.
+Cards fill the pane's width in as many columns as fit.
+Browse uses the master detail layout with its columns swapped, so the card grid takes the width.
+Signed out, the tab is one centred column: the store's art over what signing in is for, then the button.
+A waiting link from the site is said in gold and framed so it is not missed.
+
+### views/Store/Store.type.ts
+
+`StoreSection` is the side nav: Home, Browse, the three kinds, then what is installed.
+`onLibraryChanged` runs when an install or uninstall changed what profiles can select, so the shell's lists refresh.
+`onDeleteConfirm` is the shell's confirm dialog, the one the Data Manager asks with before deleting.
+An `InstallJob` is one running or failed install, keyed by item. Its progress is null until the first report and while the API grants the download.
+An `InstalledRow` is an installed pack beside its catalogue card, when the catalogue still lists it. `hasUpdate` means the live version differs from the installed one.
+`onInstalled` runs after a finished install, so the installed list and the shell's lists refresh.
+On an installed row, updating needs the store while uninstalling works signed out.
+
+### views/Store/Store.constants.ts
+
+`STORE_NAV` is the side nav: Home pinned on top, the catalogue, then what this computer has.
+`HIGHLIGHT_PIXEL` is the size of one mascot pixel beside the welcome.
+
+### views/Store/behavior/filter-items.ts
+
+The kind pages filter by kind. The search field matches the name, the one line summary and the author.
+Search runs here on the whole list, the way the store site does it.
+
+### views/Store/behavior/installed-rows.ts
+
+Every installed pack with its card, newest install first.
+
+### views/Store/behavior/item-facts.ts
+
+The facts the detail panel reads off a full item: its live version here, and its average rating in `average-of.ts`.
+
+### views/Store/behavior/progress-ratio.ts
+
+What a running install shows: how full its bar is, from 0 to 1. A step whose size is not known yet reads as empty.
+`progress-line.ts` gives the one line naming the step it is on.
+
+### views/Store/behavior/useCatalog.ts
+
+The home page and the whole catalogue, loaded together once signed in.
+A refused token reports signed out, so the account refreshes and the tab shows the sign in card.
+
+### views/Store/behavior/useInstall.ts
+
+Installing and updating, one job per item.
+The main process reports each step on `store:installProgress`, and the job keeps the latest one for the bar.
+An update is an install of the live version over the installed one. A cancelled install ends with no error.
+
+### views/Store/behavior/useInstalled.ts
+
+What the Hookshop installed on this computer, from the installed store the editors lock against, so an install or uninstall here shows in every editor at once.
+The tab reads the record fresh each time it opens, and the watch keeps it current after that.
+
+### views/Store/behavior/useItemDetail.ts
+
+The full record of the selected item for the detail panel: its versions for the size and its stats for the stars.
+An answer that arrives after the selection moved on is dropped.
+
+### views/Store/behavior/useOpenInstall.ts
+
+A store install link the browser opened. The browser's own prompt was the approval, so the tab selects the item and starts the install with no further click.
+Signed out, the item is selected and the link waits. The install starts once the sign in completes.
+
+### views/Store/behavior/useStore.ts
+
+The tab's state, composed from one hook per concern: the account, the catalogue, the installed record, install, uninstall, the selected item's detail and a link the browser opened.
+Selecting an item from Home or the installed lists moves to Browse, where its detail panel is.
+
+### views/Store/behavior/useStoreAccount.ts
+
+The shared account as the tab uses it. Signing in from here opens the confirm page on the store's own site.
+The account and the device token are the ones the Sanctuary uses.
+`onSignedOut` runs when the API refused the token, and it reads the session again so the tab shows the sign in card.
+`window.open` on an external URL is routed to the system browser by the main process. The detail panel's site link relies on the same routing.
+
+### views/Store/behavior/useUninstall.ts
+
+Uninstalling runs after the shell's confirm dialog.
+The main process sets any profile that used the pack back to the default before it removes the files, so the shell's lists refresh afterwards.
+
+### views/Store/sub-components/StoreBrowse.tsx
+
+Browse and the three kind pages: a search field over the card grid, and the selected item's detail beside it.
+
+### views/Store/sub-components/StoreDetail.tsx
+
+The selected item beside the grid: its card, name, author, live version and size, its stars, then Install, or Update and Uninstall when the app has it, with the bar while an install runs.
+Everything else about the item opens on the site.
+
+### views/Store/sub-components/StoreDetailPanel.tsx
+
+The detail column: nothing selected, the item loading or failing, or the item itself.
+
+### views/Store/sub-components/StoreGrid.tsx
+
+A grid of item cards, shared by the shelves and Browse.
+
+### views/Store/sub-components/StoreHome.tsx
+
+Home: the welcome with the Hookshop highlight, a line when installed packs have updates, then the featured row and the popular shelf.
+
+### views/Store/sub-components/StoreInstallBar.tsx
+
+A running install: its bar, the step it is on, and Cancel while the download runs.
+
+### views/Store/sub-components/StoreInstalledList.tsx
+
+Installed and Updates: the packs this computer has from the Hookshop, one row each.
+
+### views/Store/sub-components/StoreInstalledRow.tsx
+
+One installed pack: its name, kind and version, Update when a newer one is live, and Uninstall.
+
+### views/Store/sub-components/StoreSectionContent.tsx
+
+The page for the section the nav selected. Everything but Installed needs the store, so signed out those show the sign in card.
+Installed reads the local record and can uninstall without an account.
+
+### views/Store/sub-components/StoreSignIn.tsx
+
+Signed out, the Hookshop needs the shared account, so the whole tab says so.
+It shows the store's highlight and name, what signing in is for (or, when a link from the site is waiting, that its install starts right after), one large Sign in button that opens the confirm page in the browser, and a way to the site.
+While the browser confirms, it shows the code and Cancel.
+
 ENDMARK

@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* The frame matches the Data Manager's: side nav, then a scrolling content column. */
 .store {
   user-select: text;
   display: flex;
@@ -10,7 +9,6 @@
   overflow: hidden;
 }
 
-/* The gap leaves room for the nav's round toggle, which straddles its right edge. */
 .store__body {
   display: flex;
   gap: var(--space-xl);
@@ -74,7 +72,6 @@
   font-size: var(--text-sm);
 }
 
-/* Cards fill the pane's width in as many columns as fit. */
 .store-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--store-card-w-min), 1fr));
@@ -92,7 +89,6 @@
   flex-shrink: 0;
 }
 
-/* The master-detail layout with its columns swapped: the card grid takes the width. */
 .store-browse.master-detail {
   grid-template-columns: 1fr var(--store-detail-w);
 }
@@ -139,7 +135,6 @@
   font-weight: var(--weight-semi);
 }
 
-/* Signed out: one centred column, the store's art over what signing in is for and the button. */
 .store-sign-in {
   max-width: var(--store-sign-in-w);
   margin: 0 auto;
@@ -159,7 +154,6 @@
   color: var(--c-text-dim);
 }
 
-/* A link from the site is waiting on the sign-in: said in gold, framed so it is not missed. */
 .store-sign-in__callout {
   padding: var(--space-sm) var(--space-md);
   border: var(--border-width-thin) solid var(--c-gold);

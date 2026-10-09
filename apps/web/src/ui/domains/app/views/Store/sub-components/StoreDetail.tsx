@@ -1,31 +1,14 @@
 /* @layer renderer-components @kind component */
-/**
- * The selected item beside the grid: its card, name, author, live version and size, its
- * stars, then Install, or Update and Uninstall when the app has it, with the bar while an
- * install runs. Everything else about the item opens on the site.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { Box, Button, Flex, Stack, Text, Thumbnail } from '@ds/primitives';
-import type { ItemResponse } from '@shared/store/api-types';
-import type { InstalledPack } from '@shared/store/installed-types';
 import { formatBytes } from '@app/utils';
 import { storeMediaUrl } from '@app/lib/store/store-site';
 import { KIND_ICONS, KIND_LABELS } from '../../../compounds/StoreItemCard';
 import { Stars } from '../../../compounds/Stars';
-import type { InstallJob } from '../Store.type';
-import { averageOf, liveVersionOf } from '../behavior/item-facts';
+import type { StoreDetailProps } from '../Store.type';
+import { averageOf } from '../behavior/average-of';
+import { liveVersionOf } from '../behavior/item-facts';
 import { StoreInstallBar } from './StoreInstallBar';
-
-interface StoreDetailProps {
-  detail: ItemResponse;
-  pack: InstalledPack | null;
-  job: InstallJob;
-  uninstalling: boolean;
-  onInstall: () => void;
-  onCancel: () => void;
-  onUninstall: () => void;
-  onOpenSite: () => void;
-}
 
 const StoreDetail = (props: StoreDetailProps) => {
   const { detail, pack, job, uninstalling, onInstall, onCancel, onUninstall, onOpenSite } = props;
@@ -65,4 +48,3 @@ const StoreDetail = (props: StoreDetailProps) => {
 };
 
 export { StoreDetail };
-export type { StoreDetailProps };

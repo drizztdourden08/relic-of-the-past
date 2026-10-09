@@ -1,15 +1,9 @@
 /* @layer renderer-components @kind component */
-/** A running install: its bar, the step it is on, and Cancel while the download runs. */
 import { Button, Flex, ProgressBar, Stack, Text } from '@ds/primitives';
-import type { InstallJob } from '../Store.type';
-import { progressLine, progressRatio } from '../behavior/progress-text';
-
-interface StoreInstallBarProps {
-  job: InstallJob;
-  onCancel: () => void;
-}
-
-const BAR_MAX = 1000;
+import type { StoreInstallBarProps } from '../Store.type';
+import { BAR_MAX } from '../Store.constants';
+import { progressLine } from '../behavior/progress-line';
+import { progressRatio } from '../behavior/progress-ratio';
 
 const StoreInstallBar = (props: StoreInstallBarProps) => {
   const { job, onCancel } = props;

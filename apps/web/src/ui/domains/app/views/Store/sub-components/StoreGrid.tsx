@@ -1,17 +1,8 @@
 /* @layer renderer-components @kind component */
-/** A grid of item cards, as wide columns as the pane allows. Shared by the shelves and Browse. */
 import { Box } from '@ds/primitives';
-import type { ItemCardView } from '@shared/store/home-types';
 import { storeMediaUrl } from '@app/lib/store/store-site';
 import { StoreItemCard } from '../../../compounds/StoreItemCard';
-import type { StoreItemStatus } from '../../../compounds/StoreItemCard';
-
-interface StoreGridProps {
-  items: ItemCardView[];
-  statusFor: (item: ItemCardView) => StoreItemStatus;
-  selectedId: string | null;
-  onSelect: (itemId: string) => void;
-}
+import type { StoreGridProps } from '../Store.type';
 
 const StoreGrid = (props: StoreGridProps) => {
   const { items, statusFor, selectedId, onSelect } = props;
@@ -33,4 +24,3 @@ const StoreGrid = (props: StoreGridProps) => {
 };
 
 export { StoreGrid };
-export type { StoreGridProps };

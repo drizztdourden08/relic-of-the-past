@@ -1,32 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * Home: the welcome with the Hookshop highlight, a line when installed packs have updates,
- * then the featured row and the popular shelf. Everything else a player reads about an item
- * is on the site.
- */
 import { Button, Flex, Spinner, Stack, Text } from '@ds/primitives';
-import type { HomeResponse } from '@shared/store/api-types';
-import type { ItemCardView } from '@shared/store/home-types';
 import { HookshopHighlight } from '../../../compounds/HookshopHighlight';
-import type { StoreItemStatus } from '../../../compounds/StoreItemCard';
+import type { StoreHomeProps } from '../Store.type';
+import { HIGHLIGHT_PIXEL } from '../Store.constants';
+import { updatesLine } from '../behavior/updates-line';
 import { StoreGrid } from './StoreGrid';
-
-interface StoreHomeProps {
-  name: string;
-  home: HomeResponse | null;
-  loading: boolean;
-  error: string | null;
-  updateCount: number;
-  statusFor: (item: ItemCardView) => StoreItemStatus;
-  onSelect: (itemId: string) => void;
-  onShowUpdates: () => void;
-}
-
-/** Size of one mascot pixel beside the welcome. */
-const HIGHLIGHT_PIXEL = 3;
-
-const updatesLine = (count: number): string =>
-  count === 1 ? '1 update for a pack you installed' : `${count} updates for packs you installed`;
 
 const StoreHome = (props: StoreHomeProps) => {
   const { name, home, loading, error, updateCount, statusFor, onSelect, onShowUpdates } = props;
