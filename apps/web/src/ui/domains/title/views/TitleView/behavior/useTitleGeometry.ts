@@ -1,14 +1,10 @@
 /* @layer renderer-hud @kind hook */
-/**
- * The overlay's canvas in game pixels: its height is the core's native height (224, 240, or the
- * tall view's), its width follows the container at the same scale, and the 256x224 frame sits
- * centred with the rows a tall view adds above it. Re-measured on resize.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FRAME_H, FRAME_W, HORIZON_Y } from '@shared/game/title/title-layout';
 import { wasmGetViewportInfo } from '@app/lib/game/wasm-bridge';
 import { linesAbovePicture } from '@app/lib/game/bridge/view-origin';
 import type { SceneGeometry } from '../../../scene/scene.type';
+import { GAME_CANVAS_ROWS_PER_LINE } from '../TitleView.constants';
 
 const useTitleGeometry = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,8 +18,7 @@ const useTitleGeometry = () => {
     const w = el.clientWidth;
     if (h <= 0 || w <= 0) return;
     const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
-    // The game canvas buffer is twice the native height: 448 for 224 lines, 480 for the 240-line mode.
-    const height = canvas ? Math.round(canvas.height / 2) : FRAME_H;
+    const height = canvas ? Math.round(canvas.height / GAME_CANVAS_ROWS_PER_LINE) : FRAME_H;
     const scale = h / height;
     setScale(scale);
     const width = Math.max(FRAME_W, Math.round(w / scale));

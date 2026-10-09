@@ -3,7 +3,6 @@
   pointer-events: none;
 }
 
-/* 32 frames on, 32 off at 60fps: the pace of the game's own blinking cursors, doubled. */
 @keyframes title-prompt-flash {
   0%   { opacity: 1; }
   50%  { opacity: 0; }

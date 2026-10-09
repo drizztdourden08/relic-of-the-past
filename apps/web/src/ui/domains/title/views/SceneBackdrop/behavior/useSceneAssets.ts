@@ -1,11 +1,7 @@
 /* @layer renderer-hud @kind hook */
-/**
- * Decodes the bundled scene tiles once for the whole app and hands them to every backdrop. Null
- * until they have decoded; a failed load forgets the attempt so the next mount tries again.
- */
 import { useEffect, useState } from 'react';
-import { LIGHT_SCENE_FILES, type SceneFiles } from '../../../scene/scene-files';
-import type { SceneAssets } from '../../../scene/scene.type';
+import { LIGHT_SCENE_FILES } from '../../../scene/scene-files';
+import type { SceneAssets, SceneFiles } from '../../../scene/scene.type';
 
 const load = (src: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
   const img = new Image();

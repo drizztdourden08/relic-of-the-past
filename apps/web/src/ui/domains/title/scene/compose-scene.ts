@@ -1,27 +1,15 @@
 /* @layer renderer-hud @kind logic */
-/**
- * The scene as one ordered stack of layers over a canvas in game pixels: sky, mountains, clouds,
- * trees, the castle, then the lake taken from everything above, its texture and shore line, and
- * the castle's foot over them.
- * Built once per geometry and seed; drawn every frame with the clock.
- */
-import { TREE_ROWS, buildSceneLayout } from './build-scene-layout';
+import { buildSceneLayout } from './build-scene-layout';
 import { cloudLayer } from './layers/cloud-layer';
-import { landmarkFootLayer, landmarkLayer } from './layers/landmark-layer';
+import { landmarkFootLayer } from './layers/landmark-foot-layer';
+import { landmarkLayer } from './layers/landmark-layer';
 import { reflectionLayer } from './layers/reflection-layer';
 import { ridgeLayer } from './layers/ridge-layer';
 import { skyLayer } from './layers/sky-layer';
 import { waterLineLayer } from './layers/water-line-layer';
 import { waterTextureLayer } from './layers/water-texture-layer';
-import type { SceneAssets, SceneClock, SceneGeometry, SceneLayer } from './scene.type';
-
-const MOUNTAIN_PARALLAX = 0.4;
-const TREE_PARALLAX = 1;
-
-interface Scene {
-  geometry: SceneGeometry;
-  draw: (ctx: CanvasRenderingContext2D, clock: SceneClock) => void;
-}
+import { MOUNTAIN_PARALLAX, TREE_PARALLAX, TREE_ROWS } from './scene.constants';
+import type { Scene, SceneAssets, SceneGeometry, SceneLayer } from './scene.type';
 
 const buildScene = (assets: SceneAssets, geometry: SceneGeometry, seed: number): Scene => {
   const layout = buildSceneLayout(geometry, assets, seed);
@@ -46,4 +34,3 @@ const buildScene = (assets: SceneAssets, geometry: SceneGeometry, seed: number):
 };
 
 export { buildScene };
-export type { Scene };
