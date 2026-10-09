@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { EditorGround, EditorRatio } from '../HudLayoutEditor.constants';
+import type { EditorGround, EditorRatio } from '../HudLayoutEditor.type';
 import type { GlyphPack, HudLayout, HudNode } from '@shared/types/hud';
 
 interface EditorToolbarProps {
