@@ -174,7 +174,7 @@ describe('highlight colour defaults', () => {
     expect(hexToSnes15(DEFAULT_SETTINGS.hudHighlightPrimary)).toBe(0x1e9c);
     expect(hexToSnes15(DEFAULT_SETTINGS.hudHighlightSecondary)).toBe(0x32cf);
     const core = readFileSync(resolve(__dirname, '../../core/game-hooks/dialog_highlight.c'), 'utf8');
-    expect(core).toContain('g_colors[2] = { 0x1e9c, 0x32cf }');
+    expect(core).toContain('g_colors[2] = {0x1e9c, 0x32cf}');
   });
 
   it('snaps each channel to the nearest of its 32 levels, red lowest', () => {
