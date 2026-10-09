@@ -1,11 +1,4 @@
 /* @layer tests @kind test */
-/**
- * `DialogShell` mounts a `Portal` while open, and `Portal` reaches for
- * `document` with no SSR guard, so no open dialog is rendered with
- * `renderToStaticMarkup` here (same reason as `DeleteGuardDialog`'s tests).
- * Pinned instead: `useCreateFormState`'s gating rule, through the actual hook.
- * The Portal-bound chrome is left to the Playwright pass.
- */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';

@@ -1,30 +1,10 @@
 /* @layer tests @kind test */
-/*
- * What `sm` MEANS, in tokens, pinned at the stylesheet.
- *
- * compact-tier-render.keep.test.ts proves the markup does not move. Markup is
- * only half of it: the tier lives in CSS, and the "no rendered pixel moves"
- * claim rests on one property of every rule this phase touched. Each new
- * control-variable read falls back to some F, and F is the exact expression
- * the rule carried before. Those fallbacks ARE the md tier now, so they are
- * asserted here character for character. Change one and this fails, which is
- * what stops md drifting unnoticed under fifteen composites built on top of it.
- *
- * The second half asserts what `sm` resolves to, so the numbers in
- * `.claude/plans/modern-controls-contract.md` §32 stay true of the code.
- *
- * There is no CSSOM here, so the assertions read the stylesheet text. That is
- * deliberate: a computed-style test needs a browser, and what needs pinning is
- * the authored declaration, not one engine's resolution of it.
- */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const DS = resolve(__dirname, '../../apps/web/src/ui/design-system');
 
-/** Assembled, not written out: a bare `--ctl-` in this file reads to
- *  `analyze`'s dead-css-var rule as a reference to a variable of that name. */
 const CTL_PREFIX = `--${'ctl'}-`;
 
 const sheet = (relative: string): string => readFileSync(resolve(DS, relative), 'utf8');
@@ -57,9 +37,6 @@ describe('the four token additions', () => {
   });
 
   it("names '2xs' in the SpaceToken union", () => {
-    // The token existed; the union did not name it, and the inspector's own
-    // stylesheet worked around that omission 21 times. Retiring those is the
-    // next phase's job. Getting the union ready for it is this one's.
     expect(sheet('primitives/Flex/Flex.type.ts'))
       .toContain("type SpaceToken = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';");
   });
@@ -110,8 +87,6 @@ describe('md survives untouched behind every --ctl-* fallback', () => {
   it('ColorSwatch still falls back to 28px, and md sets --swatch-size nowhere', () => {
     expect(SWATCH).toContain('width: var(--swatch-size, 28px);');
     expect(SWATCH).toContain('height: var(--swatch-size, 28px);');
-    // The one rule that may set the variable is the sm modifier. A `--md` rule
-    // here would override ColorPicker's own 16px on every swatch it draws.
     expect(SWATCH.match(/--swatch-size:/g)).toHaveLength(1);
     expect(SWATCH).toContain('.color-swatch--sm {\n  --swatch-size: var(--icon-md);');
   });
@@ -162,8 +137,6 @@ describe('sm resolves to the tier .btn--sm and .select-trigger--sm already draw'
   it('Field sm tightens its gaps only, and beats .field--inline on specificity', () => {
     expect(FIELD).toContain('.field--sm {\n  gap: var(--space-2xs);');
     expect(FIELD).toContain('.field--sm.field--inline {\n  gap: var(--space-xs);');
-    // A wrapper must not set the shared control variables: a compact row would
-    // then silently shrink a control that was explicitly asked for at md.
     expect(FIELD).not.toContain(CTL_PREFIX);
   });
 
@@ -174,10 +147,6 @@ describe('sm resolves to the tier .btn--sm and .select-trigger--sm already draw'
 });
 
 describe('the --ctl-* seam cannot reach a control that did not ask for it', () => {
-  // These variables inherit. That is safe only while the sole writers are the
-  // controls' own --sm classes, none of which take arbitrary children. A
-  // wrapper (Field), a layout primitive or a view setting them would make
-  // `size="md"` unable to opt out of an ancestor's density.
   const WRITERS = [
     ['TextInput', TEXT_INPUT, '.text-input--sm'],
     ['NumberInput', NUMBER_INPUT, '.number-input--sm'],

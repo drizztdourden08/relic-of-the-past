@@ -2,10 +2,6 @@
 import { describe, it, expect } from 'vitest';
 import { getPath, setPath } from '../../apps/web/src/ui/design-system/data/schema/path';
 
-// Every consumer reads a value by dot path, so getPath is on the hot path of
-// filtering, sorting and rendering. Its one hard requirement is that it never
-// throws, whatever shape the row turns out to be.
-
 const ROW = {
   id: 'a',
   nested: { deep: { value: 7 } },

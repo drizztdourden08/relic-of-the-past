@@ -127,6 +127,359 @@ no single target kind and each id resolves by its own prefix.
 The `isTagKey` gate in `create-tag.ts` never runs on a direct edit, so `writeTag` checks that
 `name` reads `namespace:value` and refuses the save before the write channel.
 
+## design-system
+
+Most suites here render with `renderToStaticMarkup` and compare markup strings, because a
+portalled or interactive surface needs a browser; hover, drag and click wiring is left to the
+Playwright pass. A few suites run under jsdom where a real DOM event is the thing pinned.
+The DataTable suites stub `window` before importing the table, because the view state binding
+reaches the storage layer and the log bus, which touches `window` at load.
+
+### design-system/anchor-tracking.keep.test.ts
+
+A portalled panel is placed in viewport coordinates, so it drifts when anything scrolls. The
+suite covers the geometry (where the panel goes, whether the trigger is still visible) and the
+listener wiring; the React glue (`use-anchor-tracking`) needs a DOM. A row scrolled below its
+pane's own edge is still on screen but hidden, so the panel closes. The Select placement uses
+the options `useSelectDropdown` passes (200 room, 4 gap, 180 minimum width).
+
+### design-system/build-schema.keep.test.ts
+
+The schema config is a diff over the derived base, never a replacement. Every case is one
+assertion said several ways: whatever the config does not mention keeps what the data said.
+
+### design-system/code-block-highlight.keep.test.ts
+
+The `highlightedLines` diff is purely additive. Every line div is a sibling with no nested
+divs (tokens render as spans), so splitting the markup on the line class is exact.
+
+### design-system/compact-record-view-identity.keep.test.ts
+
+The identity field is exempt from `resolveIdRefDisplay`. A collection's own `id` infers as an
+`idRef` to its own collection, so with the default resolver the `Id` row would repeat the
+record's name. The row reads the raw id even though the same resolver turns a real reference
+on the same record into readable text, which proves the exemption and not a resolver that
+never ran.
+
+### design-system/compact-record-view-render
+
+The view builds and shows the right text per field kind, and the allow list narrows what
+shows. Hover and clicking an id reference need a browser. An object or union descriptor with
+no `children` does not nest; it renders as the structured kit's one line summary. Only idRef
+fields (top level and nested) ever reach the resolver. When one group survives the allow list
+its label stays off, the same rule as with no filter: a single set never needs a heading. A
+connection's placement is a plain object (form, rect, tiles); its own fields show as rows at
+depth 1, and anything deeper folds into the parent's summary.
+
+### design-system/compact-tier-render.keep.test.ts
+
+Eight components gained a `size?: 'sm' | 'md'` prop defaulting to `md`, and the claim of that
+change is that no rendered pixel moves: a call site that omits `size` emits exactly the markup
+it emitted before the prop existed. The expected markup was captured from the components
+before the change. Trailing spaces in class attributes come from the class templates, so a
+tidy up that removes one is a real change to the emitted bytes. `sm` adds one modifier class
+and nothing else; what `sm` looks like is CSS, pinned by `compact-tier-tokens`. The Toggle
+case passes an explicit id, because without one the input takes a per instance `useId()`
+value. TextInput and NumberInput extend `InputHTMLAttributes`, which carries the native `size`
+(a character count); the tier took the name and `htmlSize` keeps the attribute reachable.
+Neither may leak the other's value.
+
+### design-system/compact-tier-tokens.keep.test.ts
+
+What `sm` means in tokens, pinned at the stylesheet text, since there is no CSSOM and the
+authored declaration is what needs pinning. Every control variable read falls back to the
+exact expression the rule carried before; those fallbacks are the `md` tier, asserted
+character for character, which stops `md` drifting under the composites built on it. The
+second half asserts what `sm` resolves to (the numbers in the modern controls contract plan,
+section 32). The `--ctl-` prefix is assembled in code, because a bare one reads to the
+analyzer's dead CSS variable rule as a reference.
+
+- The `2xs` space token existed but the `SpaceToken` union did not name it, and the
+  inspector's stylesheet worked around that 21 times.
+- Only the swatch's `sm` modifier may set `--swatch-size`; an `md` rule would override
+  ColorPicker's own 16px on every swatch.
+- A wrapper (Field, EmptyState) must not set the shared control variables, or a compact row
+  would shrink a control asked for at `md`.
+- The variables inherit, which is safe only while the sole writers are the controls' own `sm`
+  classes, none of which take arbitrary children.
+
+### design-system/create-record-dialog.keep.test.ts
+
+`DialogShell` mounts a `Portal` while open, and `Portal` reaches for `document` with no SSR
+guard, so no open dialog is rendered here. The suite pins `useCreateFormState`'s gating rule
+through the real hook; the portalled chrome is left to Playwright.
+
+### design-system/data-table-drag-sequence.keep.test.ts
+
+The failure this suite exists for: the first drop landed and every drop after was refused. So
+every case runs a gesture, checks it landed, then runs another against the list the first
+produced; a second gesture that still used the old index would pick up a different column. The
+refusal was geometric: columns step aside to open a gap, and a cursor held still ends up on
+bare grid no cell owns, which the browser cancels (`dragend` fires, `drop` never does). That
+needs a real browser. Pinned here: the surface behind the cells accepts the drag, and a cell's
+own drop is not answered twice. The hook is driven with no DOM, so it never commits state,
+which is the condition the drop handler must survive: with no remembered path it falls back to
+the one the drag carries.
+
+### design-system/data-table-drag
+
+The drag gesture needs a browser. Pinned here: which cells step aside while a column is
+carried over them, and which way, checked against the reorder being previewed. The cursor
+carries a strip of the column, its name over a few real values; which values is a pure choice
+pinned here, and how Chromium draws it is not testable. The drop zone is the whole column,
+header and body: each body cell carries its own position, so the drop works from anywhere down
+the column. A row with selection on draws a select cell ahead of its data cells, and without it
+that slot is an empty child, so the cells are picked out by type. The seam over the gutter
+between columns is crossed by a carried column; with a hole there the header would never hear
+the cursor move on, so the seam answers the drag with its own column's index. The remove
+target used to escape through the shared overlay portal, which needs a document; it is now
+absolutely positioned in the table's own tree, so plain SSR sees it.
+
+### design-system/data-table-field-tree.keep.test.ts
+
+The recursive walk from schema to choosable tree, and the adapter that hands it to a menu.
+Where the entries end up is asserted in `data-table-menus`.
+
+### design-system/data-table-footer.keep.test.ts
+
+The footer: row count, options menu trigger, and the sort and group summary that used to
+repeat in every column's menu and now renders once, on the left of the same strip. The options
+menu is portalled, so only its render with the full action set is checked here.
+
+### design-system/data-table-group-row.keep.test.ts
+
+One group header row: its depth, key, field label and count.
+
+### design-system/data-table-header-cell.keep.test.ts
+
+One column header: its label, sort caret, menu trigger and resize seam. With no live DOM there
+is no drag and drop and no menu opening. The seam is never draggable, because picking up the
+column is the other gesture. The caret uses the small triangles, since a sorted caret is
+permanent and sits on the label. The rank badge and grouping flag were unreadable at header
+size and became one sentence in the footer. The reveal is CSS: both controls are always in the
+markup (focusable, no reflow), and a sorted column marks itself so its caret stays visible.
+Both controls form one absolutely positioned cluster over the name, so the label's track is the
+whole cell; the label renders before the cluster, which puts it underneath. An unsorted caret is
+dimmed and hidden until hover.
+
+### design-system/data-table-measure.keep.test.ts
+
+With no DOM the browser rule is modelled: an element reports the box it is laid out in (`box`),
+one laid out nowhere reports nothing, and `scrollWidth` rises above the box only once the
+content (`content`, the width with nothing holding it in) spills. That last part was the bug: a
+short value in a roomy column has nothing spilling, so its scroll width is the column width,
+and a fit built on it could never bring the column in. The measurement only calls the members
+modelled, so a hand built stand in replaces the element.
+
+### design-system/data-table-render.keep.test.ts
+
+Real collections render and a keyless table is silent. Drag and drop, carets, actions and the
+portalled menus need a live DOM; the header cell, group row, footer and view signature have
+their own suites. The resize seam carries the column boundary line, and its resting colour
+makes the boundary permanent, one per real column. Each header parks one drag ghost holding a
+capped sample. Nothing is laid out on the server, so no column falls back to its content width
+and every column is on the track its own state asks for.
+
+### design-system/data-table-sort-group-summary.keep.test.ts
+
+The header used to carry a rank number and a flag glyph, then every column menu a sentence.
+Now it is one sentence at the bottom left (`TableFooter`), built as a pure function. Titles are
+spelled the way a header spells them. Layered grouping reads "then", not a comma, because the
+levels nest and a flat list reads as peers. The sort half reads first.
+
+### design-system/data-table-view-signature.keep.test.ts
+
+What counts as a layout change, and proof that the table hook and the persisted view snapshot
+start from the same seed. The render suite cannot prove that, since effects never run under
+SSR. The table hook and the snapshot are seeded from the same column list, so the capture
+effect's guard holds on the first pass and the first render never writes.
+
+### design-system/delete-guard-route.keep.test.ts
+
+The delete guard's rule, pulled out of `useDeleteGuard` as a pure function: a referenced
+record stops at confirmation, an unreferenced one deletes at once with no dialog. The Swords
+item group is a real seeded group that no static requirement points at today (pinned by the
+reference index suite), so it exercises the no friction path on real data.
+
+### design-system/dismiss-stack.keep.test.ts
+
+The registry underneath Escape, tested without React. The bug it covers was an ordering bug:
+eight components each bound their own `document` listener, so which one answered a press came
+down to which mounted first. The key cases register the same pair in both orders and demand
+the same answer; passing one order and failing the other reproduces the bug. React runs a
+child's effects before its parent's, so a popover mounted in the same commit as its layer
+registers first, and insertion order cannot be the tie break between levels. Each press
+dismisses one thing and the owner then unregisters, as the effect cleanups do. A listener added
+to `document` after the stack's own is stopped by `stopImmediatePropagation`. The app shell
+binds its Escape shortcut at start up, ahead of any surface, so nothing can silence it; it
+stands down because it checks the stack depth, and the suite registers that guard in the worst
+order on purpose. An inline rename editor handles Escape on its own input and marks it
+consumed; React's handlers run on the root container below `document`, so that always comes
+first and the stack stands down.
+
+### design-system/enum-kit-tiering.keep.test.ts
+
+Which control a closed set is offered as, and that it renders; clicks, drags and keys are not
+covered. Every enum editor is a decorator around its picker (`OpenSetControl`), so the prop
+level assertions reach through that one hop. A value outside the derived option list shows as
+active: the derived set is what has been seen, not what is allowed, and hiding it hid real
+values and escape hatch entries.
+
+### design-system/enum-open-set.keep.test.ts
+
+The escape hatch every enum editor carries. Kind inference derives `options` from the values a
+collection holds, so a non optional field only ever written one way leaves a picker with one
+segment that cannot be changed or cleared. Both states of the entry render directly, with the
+decisions behind them as plain functions. The schema is a tree, and two fields under test are
+nested, so it is flattened first. The premise is asserted: if the sample field ever grows a
+second value, the dead end stops being reproducible (`status` was the other example before
+`ScreenRecord.status` was retired).
+
+### design-system/escape-layered-surfaces.keep.test.ts
+
+The real components, mounted and pressed under jsdom.
+
+- The defect: Escape inside the HUD layout editor closed the whole `FullScreenLayer` instead
+  of the picker in front of it. The layer was closed by the app shell's shortcut, a `document`
+  listener bound at start up, while every popover bound its own and hoped to get there first.
+- `Drawer` bound no key and is always mounted, so a press over an open drawer reached the page
+  behind it. It now registers at the `dialog` level, gated on `open`. The gate is the half that
+  must be tested: a closed drawer that claimed the key would swallow it for a sheet nobody can
+  see. A drag begun with the touch chrome open is a plausible gesture, and Escape must reach the
+  drag. Because the drawer registers at `dialog`, the stack decides ordering, and a popover
+  outranks it whichever mounted first.
+- The ordering trap is why two cases look like duplicates. A fix that leans on registration
+  order passes whichever order it was written against and fails the other. So the same layer
+  and popover pair is built twice: both mounted in one commit (the child's effects run first,
+  so the popover registers before the layer), and with the popover opened later, which is the
+  order an author usually produces. Both must answer the same way.
+- The test popover does exactly what the shipped popovers do.
+
+### design-system/field-kit-render.keep.test.ts
+
+Each control and cell renders for a representative value of its kind; appearance and
+interaction are not covered. An array of references renders each entry resolved, not the
+flattened one line text every other array gets.
+
+### design-system/field-kit-strategies
+
+The kits register themselves when the field kits barrel is imported, so `tester-for.ts`
+imports it for its side effect. Every case goes back through the core registries instead of a
+kit's internals, so a passing case proves both the registration and the semantics.
+
+### design-system/filter-bar-clause-list.keep.test.ts
+
+FilterBar only wires these transitions to handlers; the logic lives in the clause list. Every
+clause is keyed by its own id, never its array index, so the cases build lists out of order and
+interleave removals.
+
+### design-system/filter-bar-persistence-roundtrip.keep.test.ts
+
+The debounced write path end to end: what a rapid add, remove, add sequence leaves on disk once
+the 400ms debounce (`lib/storage/ui-views.ts`) flushes. Nothing mocks `saveViewSnapshot` or
+`loadViewSnapshot`, because the reported bug (filters being added on their own) was live
+persistence; this uses the real repository, like `view-state-load-race` does for the read
+side. The next launch is simulated with a cold module reading back exactly what was written.
+
+### design-system/filter-bar-render
+
+Each composite renders without throwing; dropdowns, the add filter picker and clicks need a
+browser. FilterBar itself is not imported, because its add filter button reuses DataTable's
+FieldPicker, which had not landed when the suite was written; FilterClauseCard and
+OperatorMenu are everything else it assembles. A filter operand only needs the shape of the
+operator's arity, never a particular row's value. The merged strip look and the compact layout
+are CSS, so the suite checks the markup those rules hang off: the classes keyed off the right
+state, built the same way for every control from a text box to a two ended range. The remove
+badge sits inside the strip so the stylesheet can pin it to the corner; being last also puts it
+on top without a stacking order and last in tab order. The operator button is icon only: its
+label lives in the accessible name, so `aria-label` is stripped before asserting the label
+appears nowhere else.
+
+### design-system/filter-case-sensitivity.keep.test.ts
+
+The real string tester is registered by importing the field kit barrel, so the cases go through
+the same registry the app does. Three distinct values would infer as a closed set, so the
+schema forces the text kind. Under case sensitivity only the all lowercase row still holds a
+lowercase "ledge".
+
+### design-system/filter-clause-id-stability.keep.test.ts
+
+The reported bug: a delete that removed the wrong clause, or two, or a filter that changed when
+another was touched. `createClause` handed out ids from a module level counter (`clause-1`,
+`clause-2`) that reset on relaunch, while clause ids persist to disk verbatim (the snapshot's
+`capture`). The first clause of a fresh session collided with a saved one, and FilterBar keys
+add, remove and update off `clause.id`. The fix: `createClause` uses `crypto.randomUUID()`, and
+`restoreDurableSnapshot` heals a file that already has a collision by reassigning repeat ids,
+keeping everything else about the repeated clause. A relaunch is simulated with
+`vi.resetModules()`, where the old counter would have reset. A single row's `name` would infer
+as a one value closed set, which does not offer `eq`, so the kind is forced to text.
+
+### design-system/filter-clause.keep.test.ts
+
+The testers that do the real comparing live in the field kit package, which registers them into
+this registry. The stand ins here are the smallest thing that proves the wiring: resolve the
+field, resolve its kind's tester, and combine them all. `name` holds three distinct values, so
+the kind is forced to text, which keeps the suite about `compile()` and not inference.
+
+### design-system/group-rows.keep.test.ts
+
+Grouping nests: a group's children are either the next level or the rows themselves, so a
+renderer walks the tree and collapsing is a local decision.
+
+### design-system/id-ref-display-default.keep.test.ts
+
+`defaultIdRefDisplay` resolves a kind off the id's own prefix when neither column nor field
+supplies one. The stand in is the Recommendations table's `targetId` column: a mixed column
+where every row's id names a different collection, so `buildSchema` derives no `targetKind`
+and each id resolves on its own. It is wired with no `displayField`, as the real table is. The
+sample pairs an area id with an actor, two collections in one column. DataRow's module graph
+reaches the view state chain, so `window` is stubbed. Navigation already falls back to the id's
+prefix (`resolveIdRef` in `id-ref-target.ts`), and the display fix must not change that. A
+collection's own `id` infers as an `idRef` to itself, so with the default resolver it would
+show the record's name; the `Id` column is exempt.
+
+### design-system/id-ref-display
+
+Asserted over the real collections: a design system table shows a foreign record's field
+without importing one. Opening the portalled column menu and picking a field need a browser.
+The app tier lookup reaches the data barrel, which pulls the view state binding, the storage
+layer and the log bus, so `window` is stubbed before the dynamic imports and the lookup is only
+bound after that. Following a reference reads the attribute, not the text, so a cell shown as
+a name still opens the same record. The header's menu is portalled, so nothing of it is in the
+markup until it opens.
+
+### design-system/id-ref-lookup.keep.test.ts
+
+Which control an id reference is offered as, and that the injected lookup reaches it with real
+rows; opening and typing need a browser. A list of references keeps its row controls (move up
+and down), because order and membership both matter.
+
+### design-system/infer-kind.keep.test.ts
+
+Every downstream decision (operators, control, sort) hangs off inference, so there is one case
+per kind plus the edges between neighbouring kinds. Objects with no shared key are two disjoint
+branches; the same key holding a primitive on one branch and a container on the other is also
+a union. The real dataset cases guard the subset chain fix: a field that is one shape with
+optional keys must not read as a union because some sampled objects carry fewer keys. The
+fixtures assert they exercise both branch sizes. The connection model migration replaced the
+discriminated placement (a real union) with one shape where `side` is an additive optional
+field, so it is an object. The observed range branches (kind; kind and tiles; kind, tiles and
+sourced) form a chain, even though the TS type is written as a discriminated union.
+
+### design-system/keycap-mouse-glyph.keep.test.ts
+
+The two legend primitives exist because a legend that spells a shortcut in prose is read as
+prose and skipped; a key cap and a lit mouse are pictures, and a strip of four is scanned. A
+test cannot see the picture, so it checks that every variant is a different picture and each
+is announced in words, the half a screen reader relies on. `KeyCap` is a `<kbd>` because the
+element already means a key. Each mouse variant has one body and one lit part, with an outline
+that never changes, so they read as states of one object; the drag variant adds the travel.
+
+### design-system/path.keep.test.ts
+
+Every consumer reads values by dot path, so `getPath` is on the hot path of filtering, sorting
+and rendering. Its one hard requirement is that it never throws, whatever shape the row has.
+
 ## e2e
 
 `tests/e2e/README.md` describes what each permanent spec guards. The notes below hold what

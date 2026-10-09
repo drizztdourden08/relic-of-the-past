@@ -10,19 +10,12 @@ import {
   defaultOperatorFor, isOperatorValid, operatorsFor,
 } from '../../apps/web/src/ui/design-system/data/filter/operators';
 
-// The testers that do the real comparing live in the field-kit package, which
-// registers them into this registry. These stand-ins are the smallest thing that
-// proves the wiring: resolve the field, resolve its kind's tester, AND the lot.
-
 const ROWS = [
   { id: 'item-001', name: 'alpha', size: 1, tag: 'red' },
   { id: 'item-002', name: 'beta', size: 5, tag: 'blue' },
   { id: 'item-003', name: 'alphabet', size: 9, tag: 'red' },
 ];
 
-// `name` holds only three distinct values here, so inference would read it as a
-// closed set. Forcing the kind is exactly what the config override is for, and
-// it keeps this test about compile() instead of about inference.
 const CONFIG = { kinds: { name: 'string' } } as const;
 const schema = createSchemaIndex(buildSchema(ROWS, CONFIG));
 

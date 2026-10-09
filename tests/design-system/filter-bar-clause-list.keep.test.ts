@@ -6,10 +6,6 @@ import {
 import { createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 
-// FilterBar only wires these transitions to handlers (FilterBar.tsx); the
-// logic lives here. Every clause is keyed by its own id, never array index,
-// so these build lists out of order and interleave removals.
-
 const clauseOn = (path: string, value: unknown): FilterClause => createClause(path, 'eq', value);
 
 describe('addClause', () => {

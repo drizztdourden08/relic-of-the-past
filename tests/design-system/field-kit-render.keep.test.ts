@@ -10,9 +10,6 @@ import type { CellRenderOptions } from '../../apps/web/src/ui/design-system/comp
 import type { FieldDescriptor, FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests (no jsdom): each control and cell renders for a representative
-// value of its kind. Appearance and interaction are not covered.
-
 const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({
   path: 'sample', label: 'Sample', kind, optional: false, ...extra,
 });
@@ -164,7 +161,6 @@ describeDataset('an array of idRef gives one resolved chip per entry, not a flat
     });
     expect(markup).toContain('Jail Cell (screen-001)');
     expect(markup).toContain('Sanctuary (screen-002)');
-    // Not the flattened one-line text every other array gets.
     expect(markup).not.toContain('screen-001, screen-002');
   });
 

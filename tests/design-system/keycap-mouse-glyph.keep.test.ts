@@ -1,15 +1,5 @@
-// @vitest-environment jsdom
 /* @layer tests @kind test */
-/**
- * §50's two legend primitives. They exist because a legend that spells
- * `Ctrl+click · add` in prose is read as prose and therefore skipped; a cap and
- * a lit mouse are pictures, and a strip of four is scanned instead of parsed.
- *
- * WHAT IS WORTH ASSERTING ABOUT A PICTURE. Nothing here can see how it looks.
- * What it can check is that every variant is a DIFFERENT picture and that each
- * one is announced in words, which is the half a screen reader lives on. `KeyCap`
- * is a `<kbd>` for the same reason: the element already means "a key".
- */
+// @vitest-environment jsdom
 import { afterEach, describe, expect, it } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -70,8 +60,6 @@ describe('MouseGlyph lights the part it is about', () => {
     mount(h('div', null, ...PARTS.map((part) => h(MouseGlyph, { key: part, part }))));
     const glyphs = Array.from(document.querySelectorAll('svg.mouse-glyph'));
     expect(glyphs.length).toBe(4);
-    // One body each, and a lit part each. The outline never changes between
-    // variants, which is what makes them read as states of one object.
     for (const glyph of glyphs) {
       expect(glyph.querySelectorAll('.mouse-glyph__body').length).toBe(1);
       expect(glyph.querySelectorAll('.mouse-glyph__lit').length).toBeGreaterThan(0);
@@ -97,7 +85,6 @@ describe('MouseGlyph lights the part it is about', () => {
     const [left, drag] = Array.from(document.querySelectorAll('svg.mouse-glyph'));
     const ear = (el: Element): string | null => el.querySelector('path.mouse-glyph__lit')?.getAttribute('d') ?? null;
     expect(ear(drag)).toBe(ear(left));
-    // Plus the travel, which is what makes it a drag and not a click.
     expect(drag.querySelectorAll('.mouse-glyph__lit').length).toBe(2);
   });
 });

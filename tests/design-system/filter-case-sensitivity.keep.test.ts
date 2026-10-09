@@ -12,9 +12,6 @@ import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filt
 import type { MenuItem } from '../../apps/web/src/ui/design-system/composites/DropdownMenu';
 import type { FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 
-// The real string tester is registered by importing the field-kit barrel
-// above, so these go through the same registry the app does.
-
 const stringTest = (value: unknown, op: string, operand: unknown, caseSensitive?: boolean): boolean => {
   const tester = getFieldTester('string');
   if (!tester) throw new Error('no string tester registered');
@@ -60,8 +57,6 @@ describe('the flag threads from the clause down to the match', () => {
     { id: 'row-002', name: 'upper ledge' },
     { id: 'row-003', name: 'Lower Ledge' },
   ];
-  // Three distinct values would otherwise infer as a closed set; the override
-  // keeps this about the text kind.
   const schema = buildSchema(ROWS, { kinds: { name: 'string' } } as const);
 
   const matches = (clause: FilterClause): string[] =>
@@ -79,8 +74,8 @@ describe('the flag threads from the clause down to the match', () => {
   it('narrows a contains clause the same way', () => {
     const loose = createClause('name', 'contains', 'ledge');
     expect(matches(loose)).toHaveLength(3);
-    // Only the all-lowercase row still holds a lowercase "ledge".
-    expect(matches({ ...loose, caseSensitive: true })).toEqual(['row-002']);
+    const allLowercaseRow = 'row-002';
+    expect(matches({ ...loose, caseSensitive: true })).toEqual([allLowercaseRow]);
   });
 
   it('survives a view snapshot round-trip', () => {

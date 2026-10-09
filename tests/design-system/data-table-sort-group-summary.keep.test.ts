@@ -5,11 +5,6 @@ import {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/sort-group-summary';
 import type { SortEntry } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// The header used to carry a rank number and a flag glyph, then every ⋯ menu a
-// sentence. Now it is one sentence at the bottom-left (`TableFooter`), built as
-// a pure function so it can be asserted here without a DOM.
-
-/** Titles the way a header spells them, so the sentence reads like the table. */
 const TITLES: Record<string, string | undefined> = {
   kind: 'Kind',
   status: 'Status',
@@ -74,7 +69,6 @@ describe('the grouping sentence', () => {
     expect(summarize([], ['kind']).grouped).toBe('Grouped by: Kind');
   });
 
-  /* "then", not a comma: the levels NEST, and a flat list reads as peers. */
   it('reads layered grouping as a nesting instead of a list', () => {
     expect(summarize([], ['kind', 'status']).grouped).toBe('Grouped by: Kind, then Status');
     expect(summarize([], ['world', 'kind', 'status']).grouped)
@@ -106,7 +100,6 @@ describe('summaryLine builds the one line the footer shows', () => {
     const line = summaryLine(summarize([{ path: 'kind', dir: 'asc' }], ['world']));
     expect(line).toContain('Sorted: Kind (ascending)');
     expect(line).toContain('Grouped by: World');
-    // Order matters: the sort half reads first, same as the old per-column menu.
     expect(line.indexOf('Sorted:')).toBeLessThan(line.indexOf('Grouped by:'));
   });
 });

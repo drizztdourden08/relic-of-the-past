@@ -2,42 +2,14 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import { defaultOperatorFor, findOperator, operatorsFor } from '../../apps/web/src/ui/design-system/data/filter/operators';
-import { FilterClauseCard } from '../../apps/web/src/ui/design-system/composites/FilterBar/sub-components/FilterClauseCard';
-import { OperatorMenu } from '../../apps/web/src/ui/design-system/composites/FilterBar/sub-components/OperatorMenu';
-import type { FieldDescriptor, FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
-import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
+import { createClause } from '../../../apps/web/src/ui/design-system/data/filter/clause';
+import { defaultOperatorFor, findOperator, operatorsFor } from '../../../apps/web/src/ui/design-system/data/filter/operators';
+import { FilterClauseCard } from '../../../apps/web/src/ui/design-system/composites/FilterBar/sub-components/FilterClauseCard';
+import type { FieldDescriptor } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { FilterClause } from '../../../apps/web/src/ui/design-system/data/filter/clause';
+import { DESCRIPTORS, KINDS } from './filter-bar-render.constants';
+import { field } from './field';
 
-// SSR smoke tests (no jsdom in this repo): each composite renders without
-// throwing. Dropdowns, the "+ Add filter" picker and clicks need a browser.
-//
-// FilterBar itself is not imported: its "+ Add filter" button reuses
-// DataTable's FieldPicker, which had not landed when this was written.
-// FilterClauseCard and OperatorMenu are everything else it assembles.
-
-const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({
-  path: 'sample', label: 'Sample', kind, optional: false, ...extra,
-});
-
-const KINDS: readonly FieldKind[] = [
-  'string', 'number', 'boolean', 'enum', 'idRef', 'array', 'object', 'union', 'unknown',
-];
-
-const DESCRIPTORS: Record<FieldKind, FieldDescriptor> = {
-  string: field('string'),
-  number: field('number'),
-  boolean: field('boolean'),
-  enum: field('enum', { options: ['north', 'south'] }),
-  idRef: field('idRef', { targetKind: 'screen' }),
-  array: field('array', { of: field('string', { path: 'sample[]' }) }),
-  object: field('object'),
-  union: field('union'),
-  unknown: field('unknown'),
-};
-
-/** Mirrors field-kit-render.test.ts: a filter operand only ever needs to be
- * shaped for the operator's arity, not for any particular row's value. */
 const operandFor = (arity: 'none' | 'one' | 'many'): unknown => (arity === 'many' ? [] : null);
 
 const renderClause = (descriptor: FieldDescriptor, clause: FilterClause): string =>
@@ -55,11 +27,6 @@ const renderRow = (descriptor: FieldDescriptor, op: string): string => {
   const arity = findOperator(descriptor.kind, op)?.arity ?? 'one';
   return renderClause(descriptor, createClause(descriptor.path, op, operandFor(arity)));
 };
-
-const renderOperatorMenu = (descriptor: FieldDescriptor, op: string, caseSensitive?: boolean): string =>
-  renderToStaticMarkup(createElement(OperatorMenu, {
-    field: descriptor, op, caseSensitive, onChange: () => undefined,
-  }));
 
 describe('FilterClauseCard renders across every field kind', () => {
   for (const kind of KINDS) {
@@ -100,8 +67,6 @@ describe('FilterClauseCard renders across every field kind', () => {
   });
 });
 
-// The merged look is CSS. What is checkable is the markup those rules hang
-// off: the classes, keyed off the right state.
 describe('FilterClauseCard: the hooks the merged-strip styling needs', () => {
   const descriptor = field('string');
 
@@ -139,8 +104,6 @@ describe('FilterClauseCard: the hooks the merged-strip styling needs', () => {
   });
 });
 
-// The layout is CSS. What is checkable is that the structure is built the same
-// way for every kind of control, from a text box to a two-ended range.
 describe('FilterClauseCard: the compact clause layout', () => {
   const CARDS: readonly (readonly [string, FieldDescriptor, string])[] = [
     ['text', field('string'), 'contains'],
@@ -181,8 +144,6 @@ describe('FilterClauseCard: the compact clause layout', () => {
       .toContain('aria-label="Apply the Sample filter"');
   });
 
-  // The badge is inside the strip so the stylesheet can pin it to the corner.
-  // Being last also puts it on top without a stacking order and last in tab order.
   it('puts the remove badge inside the strip, past the control it sits on', () => {
     const markup = renderRow(field('string'), 'contains');
     const strip = markup.slice(markup.indexOf('filter-bar__group'));
@@ -197,52 +158,5 @@ describe('FilterClauseCard: the compact clause layout', () => {
 
   it('draws the badge with the house close glyph instead of a thin ×', () => {
     expect(renderRow(field('string'), 'contains')).toContain('✕');
-  });
-});
-
-describe('OperatorMenu has an icon-only button, with the text in the dropdown', () => {
-  for (const kind of KINDS) {
-    it(`${kind}: renders without throwing`, () => {
-      expect(() => renderOperatorMenu(DESCRIPTORS[kind], defaultOperatorFor(kind))).not.toThrow();
-    });
-  }
-
-  it('shows only the glyph as visible content, so the label lives in aria-label, not as text', () => {
-    const markup = renderOperatorMenu(field('number'), 'gte');
-    // The label is expected in the accessible name (screen-reader only);
-    // the icon-only requirement is about VISIBLE content, so strip that
-    // attribute before asserting the label is nowhere else in the markup.
-    expect(markup).toContain('aria-label="Filter operator: is at least"');
-    const visible = markup.replace(/aria-label="[^"]*"/g, '');
-    expect(visible).not.toContain('is at least');
-    expect(visible).toContain('≥');
-  });
-
-  it('names the current operator in the accessible label', () => {
-    expect(renderOperatorMenu(field('string'), 'startsWith'))
-      .toContain('aria-label="Filter operator: starts with"');
-  });
-
-  it('marks the button with a class and in the label, but only when case matters', () => {
-    const plain = renderOperatorMenu(field('string'), 'contains');
-    expect(plain).not.toContain('filter-bar__operator-button--cased');
-    expect(plain).toContain('aria-label="Filter operator: contains"');
-
-    const cased = renderOperatorMenu(field('string'), 'contains', true);
-    expect(cased).toContain('filter-bar__operator-button--cased');
-    expect(cased).toContain('aria-label="Filter operator: contains, match case"');
-  });
-
-  it('ignores a stale flag on a kind that has no case to match', () => {
-    const stale = renderOperatorMenu(field('number'), 'eq', true);
-    expect(stale).not.toContain('filter-bar__operator-button--cased');
-    expect(stale).toContain('aria-label="Filter operator: is"');
-  });
-
-  it('keeps the button icon-only even with the modifier on', () => {
-    const visible = renderOperatorMenu(field('string'), 'contains', true)
-      .replace(/aria-label="[^"]*"/g, '');
-    expect(visible).not.toContain('match case');
-    expect(visible).toContain('∋');
   });
 });

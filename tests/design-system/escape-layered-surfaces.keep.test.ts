@@ -1,28 +1,5 @@
-// @vitest-environment jsdom
 /* @layer tests @kind test */
-/**
- * The real components, really mounted, really pressed.
- *
- * THE DEFECT. `Escape` inside the HUD layout editor closed the whole
- * `FullScreenLayer` instead of the picker in front of it, because the layer was
- * closed by the app shell's shortcut, which is a `document` listener bound at
- * start-up, while every popover bound one of its own and hoped to get there first.
- *
- * §33.8's OWN LEFTOVER IS CLOSED HERE. `Drawer` bound no key at all and is
- * ALWAYS MOUNTED, so a press over an open drawer reached the page behind it. It
- * now registers at `dialog`, gated on `open`. The gate is the half that has to
- * be tested, because a closed drawer that claimed the key would swallow it on
- * behalf of a sheet nobody can see. §44 crossed it off before phase 4 shipped,
- * since a drag begun with the touch chrome open is a plausible gesture and it
- * must be the DRAG that `Escape` reaches.
- *
- * THE ORDERING TRAP, and why two of these look like duplicates. A fix that
- * leans on registration order passes whichever order it was written against and
- * fails the other. So the same layer-plus-popover pair is built twice: once with
- * both mounted in one commit (React runs the child's effects first, so the
- * popover registers BEFORE the layer) and once with the popover opened later
- * (registering AFTER). Both must answer the same way.
- */
+// @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement, useState, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -73,7 +50,6 @@ afterEach(() => {
   expect(dismissStackDepth()).toBe(0);
 });
 
-/** Stands in for any popover: it does exactly what the shipped ones now do. */
 const TestPopover = (props: { open: boolean; onClose: () => void }) => {
   useDismissable({ active: props.open, level: 'popover', onDismiss: props.onClose });
   return props.open ? createElement('div', { 'data-testid': 'popover' }) : null;
@@ -111,8 +87,6 @@ describe('Escape inside a full-screen layer', () => {
         createElement(TestPopover, { open: popover, onClose: () => setPopover(false) }));
     };
     mount(createElement(Fixture));
-    // The layer is on the stack alone first; the popover joins it afterwards,
-    // which is the order an author actually produces.
     expect(dismissStackDepth()).toBe(1);
     act(() => openPopover());
     expect(popoverIsUp()).toBe(true);
@@ -199,8 +173,6 @@ describe('the drawer, which is always mounted', () => {
   });
 
   it('loses the key to a popover opened inside it, and gets it back after', () => {
-    // It registers at `dialog`, so §33 answers every ordering question, not the
-    // component: a popover outranks it whichever mounted first.
     const closeDrawer = vi.fn();
     mount(createElement(Drawer, { open: true, onClose: closeDrawer, label: 'Touch controls' },
       createElement(TestPopover, { open: true, onClose: () => undefined })));

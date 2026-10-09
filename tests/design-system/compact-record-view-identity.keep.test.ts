@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The identity field is exempt from `resolveIdRefDisplay` (split from
- * `compact-record-view-render.test.ts` for the line cap). A collection's own
- * `id` infers as `idRef` to its own collection; with the default resolver the
- * `Id` row would repeat the record's name. Its one job is showing the id.
- */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -30,11 +24,7 @@ describeDataset('CompactRecordView always shows its own id in the identity field
     const markup = renderToStaticMarkup(createElement(CompactRecordView, {
       record, schema, resolveIdRefDisplay: defaultIdRefDisplay,
     }));
-    // The Id row reads the raw id...
     expect(markup).toContain(`>${record.id}<`);
-    // ...even though the SAME resolver correctly turns a genuine reference like
-    // Randomizer Name into readable text elsewhere on the same record, so
-    // this is the identity exemption, not the resolver failing to run at all.
     expect(markup).toContain(String(record.name));
   });
 

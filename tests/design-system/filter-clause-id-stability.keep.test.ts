@@ -6,20 +6,7 @@ import { capture } from '../../apps/web/src/ui/design-system/data/view-state/sna
 import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 import type { TableState, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 
-// The reported bug: a delete that removes the wrong clause, or two, or a filter
-// that changes when another was touched. `createClause` handed out ids from a
-// module-level counter (`clause-1`, `clause-2`, ...) that reset on relaunch,
-// while clause ids persist to disk verbatim (snapshot.ts's `capture`). The first
-// clause of a fresh session collided with a saved one, and FilterBar keys
-// add/remove/update off `clause.id` (clause-list.ts).
-//
-// The fix: `createClause` uses `crypto.randomUUID()`, and `restoreDurableSnapshot`
-// heals a disk file that already has a collision by reassigning repeat ids.
-
 const ROWS = [{ id: 'item-001', name: 'alpha' }];
-// Forced instead of inferred: a single row's `name` would otherwise read as a
-// one-value closed set (kind 'enum'), which does not offer the 'eq' operator
-// these fixture clauses use. filter-clause.test.ts carries the same override.
 const schema = createSchemaIndex(buildSchema(ROWS, { kinds: { name: 'string' } }));
 const NO_TABLE: TableState = { columns: [], sort: [], groupBy: [] };
 
@@ -31,8 +18,6 @@ describe('createClause ids survive a relaunch', () => {
     const first = await import('../../apps/web/src/ui/design-system/data/filter/clause');
     const persistedAcrossSessions = first.createClause('name', 'contains', 'a');
 
-    // A relaunch re-evaluates every module from scratch, and this stands in for that,
-    // the same way the old per-session counter would have reset to 0 here.
     vi.resetModules();
     const second = await import('../../apps/web/src/ui/design-system/data/filter/clause');
     const freshlyAddedThisSession = second.createClause('size', 'gt', 5);
@@ -62,7 +47,6 @@ describe('dedupeClauseIds heals a disk file from before the fix', () => {
 
     expect(result[0]).toBe(first);
     expect(result[1].id).not.toBe('clause-1');
-    // Everything about the collided clause other than its id survives the heal.
     expect(result[1]).toEqual({ ...collided, id: result[1].id });
   });
 
@@ -92,7 +76,6 @@ describe('restoreDurableSnapshot heals a collided disk snapshot end to end', () 
     const uniqueIds = new Set(restored.filters.map((clause) => clause.id));
     expect(uniqueIds.size).toBe(2);
 
-    // Now that ids are unique, removing one really only removes one.
     const remaining = restored.filters.filter((clause) => clause.id !== restored.filters[0].id);
     expect(remaining).toHaveLength(1);
     expect(remaining[0].value).toBe('beta');

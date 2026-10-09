@@ -12,10 +12,6 @@ import type {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests for one column header: its label, sort caret, ⋯ trigger and
-// resize seam. See data-table-render.test.ts for why these are SSR-only (no
-// live DOM, so no drag/drop and no menu actually opening).
-
 const screens = all('screen') as readonly Record<string, unknown>[];
 
 let HeaderCell: typeof HeaderCellModule.HeaderCell;
@@ -24,8 +20,6 @@ beforeEach(async () => {
   vi.resetModules();
   const load = vi.fn().mockResolvedValue({});
   const save = vi.fn().mockResolvedValue(undefined);
-  // The view-state binding reaches lib/storage -> log-bus, which touches
-  // window at module load, so the stub has to precede the import.
   vi.stubGlobal('window', {
     api: { uiViews: { load, save } },
     addEventListener: () => {},
@@ -83,7 +77,6 @@ describeDataset('HeaderCell label, caret and handles', () => {
     const markup = renderHeaderCell();
     expect(markup).toContain('data-table__resize');
     expect(markup).toContain('aria-label="Resize Kind"');
-    // The seam must never be picked up as the column, because that is the other gesture.
     expect(markup).toContain('draggable="false"');
   });
 
@@ -93,35 +86,26 @@ describeDataset('HeaderCell label, caret and handles', () => {
   });
 
   it('shows the direction it sorts, and nothing about its rank', () => {
-    // The SMALL triangles: a sorted caret is permanent and now sits ON the
-    // label, so its width is label the reader cannot see.
     expect(renderHeaderCell({ sortDir: 'desc' })).toContain('▾');
     expect(renderHeaderCell({ sortDir: 'asc' })).toContain('▴');
     expect(renderHeaderCell()).toContain('↕');
   });
 
-  // The rank badge and grouping flag were unreadable at header size. They are
-  // one sentence in the footer now (data-table-sort-group-summary.test.ts).
   it('carries neither a sort-rank badge nor a grouping flag any more', () => {
     expect(renderHeaderCell({ sortDir: 'asc' })).not.toContain('data-table__sort-rank');
     expect(renderHeaderCell({ grouped: true })).not.toContain('data-table__header-flag');
     expect(renderHeaderCell({ grouped: true })).not.toContain('▦');
   });
 
-  // The reveal is CSS. Pinned: both controls are always in the markup (focusable,
-  // no reflow), and a sorted column marks itself so its caret stays visible.
   it('always renders both controls, so the reveal is opacity instead of presence', () => {
     const markup = renderHeaderCell();
     expect(markup).toContain('data-table__sort');
     expect(markup).toContain('data-table__menu-trigger');
   });
 
-  // Both controls are one absolutely-positioned cluster overlaying the name,
-  // so the label's track is the whole cell and the ellipsis answers to that.
   it('holds both controls in one overlay cluster, outside the label\'s flow', () => {
     const markup = renderHeaderCell();
     expect(markup).toContain('data-table__header-chrome');
-    // The label is rendered BEFORE the cluster, which is what puts it under.
     expect(markup.indexOf('data-table__header-label'))
       .toBeLessThan(markup.indexOf('data-table__header-chrome'));
   });
@@ -134,7 +118,6 @@ describeDataset('HeaderCell label, caret and handles', () => {
 
   it('carries the caret in its own fixed box, which is what caps its width', () => {
     expect(renderHeaderCell({ sortDir: 'asc' })).toContain('data-table__caret');
-    // Unsorted, the glyph is dimmed and hidden until hover.
     expect(renderHeaderCell()).toContain('data-table__caret--off');
   });
 

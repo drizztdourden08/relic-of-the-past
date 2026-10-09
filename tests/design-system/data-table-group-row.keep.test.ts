@@ -9,9 +9,6 @@ import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-sys
 import type * as GroupRowModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/GroupRow';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests for one group-header row: its depth, key, field label and
-// count. See data-table-render.test.ts for why these are SSR-only.
-
 const screens = all('screen') as readonly Record<string, unknown>[];
 
 let GroupRow: typeof GroupRowModule.GroupRow;
@@ -20,8 +17,6 @@ beforeEach(async () => {
   vi.resetModules();
   const load = vi.fn().mockResolvedValue({});
   const save = vi.fn().mockResolvedValue(undefined);
-  // The view-state binding reaches lib/storage -> log-bus, which touches
-  // window at module load, so the stub has to precede the import.
   vi.stubGlobal('window', {
     api: { uiViews: { load, save } },
     addEventListener: () => {},

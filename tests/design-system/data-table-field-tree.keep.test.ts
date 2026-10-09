@@ -12,9 +12,6 @@ import type { MenuItem } from '../../apps/web/src/ui/design-system/composites/Dr
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// The recursive walk from schema to choosable tree, and the adapter that hands
-// it to a menu. Where the entries end up is asserted in data-table-menus.test.ts.
-
 const field = (path: string, kind: FieldDescriptor['kind'], children?: FieldDescriptor[]): FieldDescriptor => {
   const descriptor: FieldDescriptor = { path, label: path, kind, optional: false };
   if (children) descriptor.children = children;

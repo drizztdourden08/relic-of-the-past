@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The escape hatch every enum editor carries. Kind inference derives `options`
- * from the values a collection holds, so a field only ever written one way,
- * that the schema calls non-optional, leaves a picker with one segment that
- * cannot be changed or cleared. These cover the way out.
- *
- * SSR smoke tests (no jsdom): both states of the entry are rendered directly,
- * the decisions behind them as plain functions.
- */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -28,7 +19,6 @@ const kit = () => {
   return resolved;
 };
 
-/** The schema is a tree, and two of the fields under test are nested. */
 const flatten = (fields: readonly FieldDescriptor[]): readonly FieldDescriptor[] =>
   fields.flatMap((entry) => [entry, ...flatten(entry.children ?? [])]);
 
@@ -43,7 +33,6 @@ const renderEditor = (field: FieldDescriptor, value: unknown): string =>
     field, value, onChange: () => undefined,
   }));
 
-/** The decorator's `onSubmit`, which is what the entry writes through when applied. */
 const submitOf = (field: FieldDescriptor, value: unknown, onChange: (next: unknown) => void) =>
   (kit().EditorControl({ field, value, onChange }) as unknown as {
     props: { onSubmit: (next: string) => void };
@@ -103,9 +92,6 @@ describeDataset('the entry renders in both of its states', () => {
 describeDataset('a field the dataset has only ever written one way', () => {
   const screens = all('screen');
 
-  // The premise, asserted: if this ever grows a second value, the dead end this
-  // fix addresses stops being reproducible here. (`status` was the other
-  // example before it was retired with `ScreenRecord.status`.)
   it('is a single-option, non-optional enum today', () => {
     const field = fieldAt(screens, 'variant.key');
     expect(field.kind).toBe('enum');

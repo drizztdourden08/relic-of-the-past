@@ -4,23 +4,13 @@ import {
   CLONE_STYLE, HOST_STYLE, naturalContentWidth, naturalContentWidths,
 } from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/measure-natural-width';
 
-// No DOM, so the browser rule is modelled: an element reports the box it is
-// laid out in, one laid out nowhere reports nothing, and `scrollWidth` rises
-// above the box only once content spills.
-//
-// That last part is the bug: a short value in a roomy column has nothing
-// spilling, so its scroll width IS the column width, and a fit built on it
-// could never bring the column in.
-
 interface FakeDoc {
   body: FakeNode;
   createElement: (tag: string) => FakeNode;
 }
 
 interface FakeNode {
-  /** The width it is laid out at where it currently sits. */
   box: number;
-  /** The width its content would take if nothing were holding it in. */
   content: number;
   styleText: string;
   children: FakeNode[];
@@ -84,11 +74,8 @@ const makeDoc = (): FakeDoc => {
   return doc;
 };
 
-/* The measurement only ever calls the handful of members modelled above, so a
-   hand-built stand-in stands in for the element it would be handed. */
 const asElement = (node: FakeNode): HTMLElement => node as unknown as HTMLElement;
 
-/** A cell of the given content, sitting in a column of the given width. */
 const cellIn = (doc: FakeDoc, box: number, content: number): FakeNode => {
   const cell = makeNode(doc, box, content);
   doc.body.appendChild(cell);

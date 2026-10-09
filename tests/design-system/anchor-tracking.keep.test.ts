@@ -14,11 +14,6 @@ import type {
   EventTargetLike,
 } from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/observe-anchor-movement';
 
-// A portalled panel is placed in viewport coordinates, so it drifts when
-// anything scrolls. Covered here: the geometry (where the panel goes, whether
-// the trigger is still visible) and the listener wiring. The React glue
-// (use-anchor-tracking) needs a DOM this suite has not got.
-
 const rect = (top: number, left: number, height: number, width: number): DOMRect => ({
   top,
   left,
@@ -79,10 +74,9 @@ describe('visible bounds are the viewport narrowed by every clipping ancestor', 
   it('closes a panel whose trigger is inside the viewport but clipped by its scroller', () => {
     vi.stubGlobal('window', { innerWidth: 1000, innerHeight: 800 });
     const scroller = elementAt(bounds(100, 600, 500, 50));
-    // A row scrolled below the pane's own edge: still on screen, but hidden.
-    const trigger = rect(540, 100, 30, 200);
-    expect(overlaps(trigger, viewportBounds())).toBe(true);
-    expect(overlaps(trigger, visibleBoundsOf([scroller]))).toBe(false);
+    const rowBelowPaneEdge = rect(540, 100, 30, 200);
+    expect(overlaps(rowBelowPaneEdge, viewportBounds())).toBe(true);
+    expect(overlaps(rowBelowPaneEdge, visibleBoundsOf([scroller]))).toBe(false);
   });
 
   it('intersects two rectangles by taking the innermost edge of each', () => {
@@ -154,7 +148,6 @@ describe('movement listeners use capture and tear down symmetrically', () => {
 });
 
 describe('drop panel placement run against the Select trigger\'s own numbers', () => {
-  // Mirrors the options useSelectDropdown passes: 200 / 4 / 180.
   const selectPositionFor = (r: DOMRect) =>
     dropPanelPositionFor(r, { roomForDropDown: 200, gap: 4, minPanelWidth: 180 });
 
