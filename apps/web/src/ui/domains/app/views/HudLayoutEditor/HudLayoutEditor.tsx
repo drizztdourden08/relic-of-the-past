@@ -46,7 +46,7 @@ import { useLayoutDraft } from './behavior/useLayoutDraft';
 import { useNodeEdits } from './behavior/useNodeEdits';
 import { useEditorSchemes } from './behavior/useEditorSchemes';
 import { useSampleState } from './behavior/useSampleState';
-import { usePanelResize } from './behavior/use-panel-resize';
+import { usePanelResize } from './behavior/usePanelResize';
 import { SlotSchemeContext } from './behavior/slot-scheme';
 import { nodeById } from './behavior/node-edits';
 import { FlexSlotContext, slotLookup } from './behavior/flex-slots';

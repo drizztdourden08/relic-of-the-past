@@ -33,7 +33,7 @@ import { TextInput } from '@ds/primitives/TextInput';
 import { resolveValue } from '@shared/hud/data';
 import { readExpr } from '../../behavior/check-expr';
 import { useInstanceScopes } from '../../behavior/formula-scope';
-import { useTextValue } from '../../behavior/use-text-value';
+import { useTextValue } from '../../behavior/useTextValue';
 import { FormulaFeedback, FormulaProblem, usePromoteOverlay } from '../ValueInput';
 import type { Value } from '@shared/types/hud';
 

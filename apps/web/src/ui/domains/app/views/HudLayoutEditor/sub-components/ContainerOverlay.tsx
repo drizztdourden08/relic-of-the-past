@@ -27,7 +27,8 @@
 import { useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
-import { stageCellRects, stageSlotRects } from '../behavior/stage-cells';
+import { stageCellRects } from '../behavior/stage-cells';
+import { stageSlotRects } from '../behavior/stage-slot-rects';
 import type { HudContainer } from '@shared/types/hud';
 import type { MeasureContext, PlacedNode } from '@shared/hud/engine';
 import type { Rect } from '@shared/hud/layouts/geometry.type';
