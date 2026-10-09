@@ -1,25 +1,6 @@
 /* @layer electron-main @kind logic */
-/**
- * Resolves the pinned ffmpeg asset name against BtbN's `latest` release right before every
- * install, since that release's bytes (and so its checksum) change whenever BtbN rebuilds it.
- * The GitHub REST API hands back the asset's own published sha256 digest alongside its size
- * and download URL in one call, so nothing here computes or guesses a checksum - it only
- * relays what BtbN itself published for the exact bytes we're about to fetch.
- */
 import type { FfmpegRelease } from '@shared/types/ffmpeg-tool';
-
-interface ResolvedFfmpegAsset {
-  downloadUrl: string;
-  sizeBytes: number;
-  sha256: string;
-}
-
-interface GithubReleaseAsset {
-  name: string;
-  size: number;
-  digest: string | null;
-  browser_download_url: string;
-}
+import type { GithubReleaseAsset, ResolvedFfmpegAsset } from './ffmpeg-release.type';
 
 const releaseApiUrl = (tag: string): string =>
   `https://api.github.com/repos/BtbN/FFmpeg-Builds/releases/tags/${tag}`;

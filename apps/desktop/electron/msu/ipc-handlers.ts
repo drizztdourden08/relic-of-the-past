@@ -11,24 +11,12 @@ import { fail, errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { selectPackFiles } from './import-selection';
 import { refuseInstalledPack } from './pack-fs';
-
-type MsuImportResult = {
-  success: boolean;
-  fileCount?: number;
-  error?: string;
-  /** Alternates and extras the archive kept below the pack's own level, never tracks. */
-  skippedNested?: number;
-  /** Audio dropped because an earlier file already claimed its track number. */
-  skippedDuplicate?: number;
-};
+import type { MsuImportResult } from './ipc-handlers.type';
 
 const getMsuDir = (packName: string): string => getUserDataPath('msu', packName);
 
-// The shared set, so a format the pack can hold is a format the pack is counted by. A private
-// `(pcm|opuz|msu)` here is what made a converted pack list as empty.
 const isMsuFile = (name: string): boolean => isAudioFile(name);
 
-// Resolve a source to its MSU tracks and copy them all into the pack dir.
 const installMsuTracks = async (source: ImportSource, packName: string): Promise<MsuImportResult> => {
   const report = makeImportReporter('msu', packName);
   let resolved;
@@ -45,7 +33,6 @@ const installMsuTracks = async (source: ImportSource, packName: string): Promise
       report('error', undefined, undefined, error);
       return { success: false, error };
     }
-    // Extras in subfolders are not tracks, and two files cannot share a slot (see selectPackFiles).
     const selected = selectPackFiles(resolved.files);
     const msuDir = getMsuDir(packName);
     await mkdir(msuDir, { recursive: true });
@@ -87,7 +74,7 @@ const registerMsuHandlers = (): void => {
         const msuFiles = (await readdir(packDir)).filter(isMsuFile);
         let totalSize = 0;
         for (const f of msuFiles) {
-          try { totalSize += (await stat(join(packDir, f))).size; } catch { /* skip */ }
+          try { totalSize += (await stat(join(packDir, f))).size; } catch { continue; }
         }
         packs.push({ name: entry.name, fileCount: msuFiles.length, totalSize });
       }
@@ -102,7 +89,7 @@ const registerMsuHandlers = (): void => {
       for (const f of (await readdir(packDir)).filter(isMsuFile)) {
         try {
           results.push({ name: f, size: (await stat(join(packDir, f))).size });
-        } catch { /* skip */ }
+        } catch { continue; }
       }
       return results;
     } catch { return []; }
@@ -127,8 +114,6 @@ const registerMsuHandlers = (): void => {
     } catch { return []; }
   });
 
-  // Scoped to the one extension: this reads a path outside the app's own storage, so it
-  // must not become a general-purpose file reader for the renderer.
   handle('msu:readMsulFile', async (_event, filePath: string) => {
     if (!filePath.toLowerCase().endsWith('.msul')) throw new Error('Not a music-pack file');
     return toArrayBuffer(await readFile(filePath));
