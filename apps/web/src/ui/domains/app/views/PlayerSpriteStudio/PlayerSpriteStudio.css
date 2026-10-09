@@ -16,7 +16,6 @@
   color: var(--c-danger);
 }
 
-/* ── library column ── */
 .sprite-library__create {
   display: flex;
   flex-direction: column;
@@ -36,7 +35,6 @@
   image-rendering: pixelated;
 }
 
-/* ── toolbar ── */
 .studio-toolbar {
   display: flex;
   flex-direction: column;
@@ -61,8 +59,6 @@
   max-width: 46ch;
 }
 
-/* ── palette: a right-hand sidebar, level with the stage, so it never scrolls out of
-   view under a tall zoomed-in state or contact sheet ── */
 .palette-editor {
   width: 14rem;
   flex: none;
@@ -80,8 +76,6 @@
   gap: var(--space-sm);
 }
 
-/* Stacked, not inline: the sidebar is too narrow to sit a label and its hint side by
-   side without both wrapping mid-phrase. */
 .palette-editor__title {
   font-size: var(--text-sm);
   color: var(--c-text-dim);

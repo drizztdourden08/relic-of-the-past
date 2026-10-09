@@ -1173,4 +1173,117 @@ and the nav and content line up with the window title. No primitive exists for a
 selected card, so the container demos are styled in DesignGallery.css. The selection controls
 story shows that an active state is always gold.
 
+### views/GameOverlay/GameOverlay.tsx
+
+Sized to the game canvas with `pointer-events: none`, so the canvas keeps the mouse; the host drawn
+pause layer turns pointer events back on for itself while the menu is open, the only moment
+anything in here is meant to be clickable. The pause menu slide takes 29 frames at 60fps, 483ms
+linear, matching vanilla.
+
+The HUD style picks a pair, and only the pair: Original keeps the sprite HUD and the sprite pause
+menu exactly as they were; Enhanced and Modern swap in the placed HUD and the host owned menu.
+Every style reads the extracted sprites for the active ROM, and without them an HTML notice shows
+in their place, which has exactly one cause: no sprites extracted for this ROM. Both pairs take the
+same slide props from different sources, and that difference is the point. Original mirrors the
+native menu, so its slide is read from the native menu's own state machine once per frame, and
+that poll runs for Original only. Enhanced and Modern are the menu: `kFeatures2_HostMenu` parks the
+native machine so the host can draw its own, and polling it would cost a call per frame to learn
+nothing; the slide follows the host's pause store instead. A parked machine's state describes
+something deliberately stopped, and letting it place this layer once left the menu "open" while it
+sat entirely off the top of a frozen game. The host menu is on screen only while `browsing`:
+`closing` slides it away as the core begins its own close scroll, so the two run together, and the
+takeover's `holding` flag is read alongside as ground truth that the core still holds the menu for
+the host. The host drawn transition is unconditional because the layer only moves when that phase
+flips; a transition switched off at rest is one dropped frame away from teleporting the menu into
+place. The main HUD shows only in gameplay and dialogue (`hud-visibility`). The app drawn HUD holds
+its place while the host menu is up, unlike the sprite one: the menu's chrome is measured around it
+(a 48 pixel top strip left for the vitals, a legend along the bottom), so sliding it away would leave
+those bands empty; only the cluster steps aside, and HudLayoutView does that itself because the menu
+pins its own cluster to the same corner. The reimagined title draws over the hidden native one while
+the intro runs, and the enhanced message box draws in either HUD mode while the native one is kept
+off VRAM.
+
+### views/GameOverlay/behavior/useEnhancedAspectWatch.ts
+
+The other half of the host drawn styles' 16:9 rule: the window itself getting narrower. The
+settings screen already drops the style when a setting narrows the ratio, but with
+`aspectRatio: 'auto'` the ratio is measured from the live viewport, so a player who drags the window
+in changed nothing settings can see and would keep a clipped HUD until the next settings change.
+This watches from a component mounted during gameplay and asks for the same drop, with the same
+notice, through the same request. It is debounced because a drag fires continuously and the check
+reads layout; `RESIZE_SETTLE_MS` is long enough to sit out a drag and short enough that a resize
+feels answered. The threshold itself lives only in `enhancedAspectAllowed`.
+
+### views/PlayerSpriteStudio/PlayerSpriteStudio.tsx
+
+The library, and the open sheet with its toolbar and palette. A sprite installed from the Hookshop
+opens under its origin bar, read only: it previews and exports, its palette and names stay as
+published, and Delete uninstalls it. An installed sprite is read only in the main process too, so
+a refused write lands in the status line. After a duplicate or an update the library refreshes
+before opening the result, because the new file may be one it has not read yet. The palette sits in
+a right hand sidebar level with the stage, so it never scrolls out of view under a tall zoomed in
+state or contact sheet; its labels stack over their hints because the sidebar is too narrow to set
+them side by side without both wrapping mid phrase.
+
+### views/PlayerSpriteStudio/behavior/useSpriteDraft.ts
+
+The draft keeps the sheet's two palette layers, not a mutable palette plus a copy of the old one.
+`original` is never written to, so Revert is dropping the override and `dirty` asks whether the
+override holds anything; there is no flag to keep in sync. Saving also pushes the sheet at a running
+game, flattened to ZSPR because that is the only format the core reads. The push lands only when the
+core's override gate is open, so the result is reported back (`applied`: null when not attempted,
+true when the game took it, false when the core refused), never assumed.
+
+### views/PlayerSpriteStudio/behavior/is-live-selection.ts
+
+The core's override gate opens for the active profile having some sprite selected, not for the one
+the studio has open. Pushing on every save would drop an unselected sheet into the running game, and
+the next boot would stage the real selection and silently swap it back. Editing one sprite must not
+repaint the player with a different one, so a save pushes only the profile's own selection.
+
+### views/PlayerSpriteStudio/behavior/useSpriteExport.ts
+
+The container decides the bytes and the platform decides how a file reaches the player: a save
+dialog on desktop, a share sheet on mobile, a download in a browser. A cancelled dialog is a normal
+outcome, reported as such.
+
+### views/PlayerSpriteStudio/behavior/useSpriteLibrary.ts
+
+Thumbnails are rendered once per refresh, not per render, because decoding tiles for every entry is
+the expensive part of showing the list. An entry's file name, extension included, is the key
+everything else uses. Deleting a sprite also puts the selection back to default on any profile that
+pointed at it, so no profile names a sprite that no longer exists.
+
+### views/PlayerSpriteStudio/sub-components/PaletteEditor.tsx
+
+A slot is an outfit index, or `g0` and `g1` for the two glove colours; null means no picker open.
+The quick assign swatches are every colour already in the sheet, grouped by where each comes from,
+because a flat list makes a green outfit shadow impossible to tell from a blue one, which is the
+whole point of offering them for reuse. Index 0 is transparent and has no entry.
+
+### views/SaveStateOverlay/SaveStateOverlay.tsx
+
+A vertical wheel maps to horizontal scroll, so a scroll wheel pages through the slots; the track
+overflows horizontally on small viewports and never grows wider than the viewport. The listener is
+native and non passive so `preventDefault` takes. The highlighted slot (the one whose shortcut was
+hit) is centred in the track with a manual calculation in place of `scrollIntoView`, so the page
+never nudges vertically. The overlay stays open after a save so the fresh thumbnail updates in place;
+a load dismisses it, since the player is resuming the game. The hints sit centred below the row,
+outside the scroll track.
+
+### views/SaveStateOverlay/behavior/useEnhancedSaveSlot.ts
+
+The save slot shortcut flow. The first press of any load or save key opens the overlay and
+highlights that slot. A different slot key while open moves the highlight. The same key a second
+time: a quick tap (under `TAP_THRESHOLD_MS`) loads and closes; holding until the bar fills, then
+releasing, saves and closes; releasing midway cancels the hold and stays on the overlay. Esc or any
+non slot key or button cancels (`useCancelOnOtherInput`). When the feature is off, the load and
+save actions fire at once, the original behaviour. The core cannot save or load while paused, so
+`with-pause-guard.ts` unpauses, runs the action, and pauses again.
+
+### views/SpriteDebug/sub-components
+
+The review panels share one card per row and one status button strip.
+Each button and card lives in its own file. The shared label colours sit in `LABEL_STYLES` beside the view styles.
+
 ENDMARK

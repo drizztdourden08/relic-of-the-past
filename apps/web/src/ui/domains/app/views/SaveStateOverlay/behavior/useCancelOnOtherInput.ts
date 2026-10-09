@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind hook */
-/** While the overlay is open, ESC or any non-slot button cancels it. */
 import { useEffect } from 'react';
 import { getInputManager } from '../../../../../../lib/game';
 

@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* ─── Save State Overlay ─── */
-
 .save-overlay-backdrop {
   position: absolute;
   inset: 0;
@@ -23,7 +21,6 @@
   border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
-/* Horizontally-scrollable row of slots, never wider than the viewport. */
 .save-overlay__track {
   display: flex;
   gap: var(--space-sm);
@@ -64,8 +61,6 @@
   }
 }
 
-/* ─── Slot wrapper (for hints positioning) ─── */
-
 .save-overlay__slot-wrapper {
   position: relative;
   display: flex;
@@ -74,8 +69,6 @@
   flex: 0 0 auto;
   width: 144px;
 }
-
-/* ─── Hold hints (centered below the row; outside the scroll track) ─── */
 
 .save-overlay__hints {
   display: flex;
@@ -102,7 +95,6 @@
   color: var(--c-gold-bright);
 }
 
-/* Icon wrapper that positions the SVG ring around the icon */
 .save-overlay__hint-icon-wrap {
   position: relative;
   display: inline-flex;
@@ -113,14 +105,12 @@
   flex-shrink: 0;
 }
 
-/* Actual key/button icon */
 .save-overlay__hint-icon {
   width: 18px;
   height: 18px;
   object-fit: contain;
 }
 
-/* Text fallback when no icon available */
 .save-overlay__hint-key-text {
   font-size: var(--text-xs);
   font-family: var(--font-mono);
@@ -133,7 +123,6 @@
   line-height: 1.4;
 }
 
-/* Progress-ring placement (circle styling lives in the ProgressRing primitive) */
 .save-overlay__hint-ring {
   position: absolute;
   inset: 0;

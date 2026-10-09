@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The player sprite studio: the library, and the open sheet with its toolbar and palette. A
- * sprite installed from the Hookshop opens under its origin bar, read only: it previews and
- * exports, its palette and names stay as published, and Delete uninstalls it.
- */
 import { useState, useMemo, useCallback } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
@@ -40,7 +35,6 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
   const { confirmUninstall, uninstallError } = useConfirmUninstall(onDeleteConfirm);
   const readOnly = installed !== null;
 
-  // A refused write (an installed sprite is read only in the main process too) lands in the status line.
   const run = useCallback(async (task: () => Promise<unknown>) => {
     setBusy(true);
     setError(null);
@@ -73,7 +67,6 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
     });
   }, [packFor, confirmUninstall, openFile, onDeleteConfirm, draft, library]);
 
-  // The copy, or the updated sprite, may be a file the library has not read yet.
   const openAfter = useCallback((name: string) => {
     void run(async () => { await library.refresh(); await draft.open(name); });
   }, [run, library, draft]);

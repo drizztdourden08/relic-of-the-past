@@ -9,20 +9,7 @@ import { Badge } from '@ds/primitives/Badge';
 import { ListItemRow } from '@ds/composites/ListItemRow';
 import { HookshopChip } from '../../../compounds/HookshopChip';
 import { ImportForm } from '../../DataManager/sub-components/ImportForm';
-import type { LibraryEntry } from '../behavior/useSpriteLibrary';
-
-interface SpriteLibraryListProps {
-  entries: LibraryEntry[];
-  selected: string | null;
-  canCreate: boolean;
-  /** True for a sprite installed from the Hookshop: its row carries the lock, and Delete uninstalls it. */
-  isInstalled: (name: string) => boolean;
-  onSelect: (name: string) => void;
-  onCreate: () => void;
-  onDelete: (name: string) => void;
-  onUrlImport: (url: string) => Promise<{ success: boolean; message: string }>;
-  onFileImport: (files: File[]) => Promise<{ success: boolean; message: string }>;
-}
+import type { SpriteLibraryListProps } from '../PlayerSpriteStudio.type';
 
 const SpriteLibraryList = (props: SpriteLibraryListProps) => {
   const { entries, selected, canCreate, isInstalled, onSelect, onCreate, onDelete, onUrlImport, onFileImport } = props;

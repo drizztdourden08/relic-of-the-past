@@ -4,28 +4,7 @@ import { Text } from '@ds/primitives/Text';
 import { Button } from '@ds/primitives/Button';
 import { Badge } from '@ds/primitives/Badge';
 import { TextInput } from '@ds/primitives/TextInput';
-import type { SheetMeta } from '@shared/game/data/player-sheet/types';
-
-interface StudioToolbarProps {
-  meta: SheetMeta;
-  file: string | null;
-  dirty: boolean;
-  /**
-   * The result of the last live push: null = not attempted, true = the running game took
-   * it, false = the core refused. Reporting what actually happened beats predicting it, because
-   * the gate depends on the running profile's own settings, not on this view's state.
-   */
-  applied: boolean | null;
-  busy: boolean;
-  /** An installed sprite: it exports, and nothing that changes or saves it is on. */
-  readOnly: boolean;
-  onMeta: (meta: SheetMeta) => void;
-  onSave: () => void;
-  onSaveAs: (container: 'zspr' | 'rsp') => void;
-  onExport: (container: 'zspr' | 'rsp') => void;
-  onRevert: () => void;
-  onClose: () => void;
-}
+import type { StudioToolbarProps } from '../PlayerSpriteStudio.type';
 
 const StudioToolbar = (props: StudioToolbarProps) => {
   const { meta, file, dirty, applied, busy, readOnly, onMeta, onSave, onSaveAs, onExport, onRevert, onClose } = props;

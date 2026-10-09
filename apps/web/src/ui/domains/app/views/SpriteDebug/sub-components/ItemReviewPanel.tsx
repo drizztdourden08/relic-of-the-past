@@ -1,19 +1,13 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { find } from '@shared/game/data';
-import { spriteFilename } from '@shared/game/logic/queries/item-sprites';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
 import { Box, Button } from '../../../../../design-system/primitives';
-import { FilterBtns, Stats } from './ReviewControls';
-import { ItemAssocCard } from './ReviewCards';
+import { FilterBtns } from './FilterBtns';
+import { ReviewStats } from './ReviewStats';
+import { ItemAssocCard } from './ItemAssocCard';
+import { ALL_ITEMS } from './ItemReviewPanel.constants';
 import { S } from '../SpriteDebug.constants';
 import { loadSpriteDebug, saveSpriteDebug } from '@app/lib/storage/sprites-store';
-
-const ALL_ITEMS = find('item', () => true).map(item => ({
-  id: item.id,
-  name: item.name,
-  file: spriteFilename(item.spriteId) ?? '',
-}));
 
 const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const [data, setData] = useState<ReviewData>({});
@@ -68,7 +62,7 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   return (
     <>
       <Box style={S.header}>
-        <Stats counts={counts} total={ALL_ITEMS.length} />
+        <ReviewStats counts={counts} total={ALL_ITEMS.length} />
         <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
           <Button variant="bare" onClick={() => { setData({}); saveSpriteDebug({}); }} style={S.resetBtn}>Reset</Button>

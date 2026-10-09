@@ -1,5 +1,23 @@
 /* @layer renderer-components @kind types */
-import type { SlotHint } from './behavior/useEnhancedSaveSlot';
+import type { InputBinding, ButtonIcon } from '@shared/types/controls';
+
+type HintAction = 'tap-load' | 'hold-save' | 'esc-cancel' | 'holding-save';
+
+interface SlotHint {
+  action: HintAction;
+  binding: InputBinding;
+  icon: ButtonIcon | null;
+}
+
+interface SaveSlotShortcutState {
+  open: boolean;
+  highlightedSlot: number | null;
+  holdProgress: number;
+  hints: SlotHint[];
+  close: () => void;
+}
+
+type BindingInfo = { binding: InputBinding; icon: ButtonIcon | null };
 
 interface SlotInfo {
   slot: number;
@@ -18,6 +36,10 @@ interface SaveStateOverlayProps {
 }
 
 export type {
-  SlotInfo,
+  BindingInfo,
+  HintAction,
+  SaveSlotShortcutState,
   SaveStateOverlayProps,
+  SlotHint,
+  SlotInfo,
 };

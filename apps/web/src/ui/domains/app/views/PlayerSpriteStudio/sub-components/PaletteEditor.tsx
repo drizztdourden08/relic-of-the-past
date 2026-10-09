@@ -6,23 +6,10 @@ import { ColorSwatch } from '@ds/primitives/ColorSwatch';
 import { ColorPickerPopover } from '@ds/composites/ColorPickerPopover';
 import type { SwatchGroup } from '@ds/composites/ColorPicker';
 import { COLORS_PER_OUTFIT, GLOVES_INDEX, OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
-import type { OutfitId, PlayerSheet } from '@shared/game/data/player-sheet/types';
 import { bgr555ToHex, hexToBgr555, isExactColor } from '@app/lib/game/snes-color';
 import { flattenPalette } from '@app/lib/game/player-sheet/flatten-palette';
 import { OUTFIT_LABELS } from '@domains/packs/character/behavior/useWearing';
-
-interface PaletteEditorProps {
-  sheet: PlayerSheet;
-  outfit: OutfitId;
-  /** An installed sprite: the colours show, and no swatch opens the picker. */
-  readOnly?: boolean;
-  onColor: (index: number, word: number) => void;
-  onGloveColor: (slot: 0 | 1, word: number) => void;
-  onReset: (index: number) => void;
-}
-
-/** `null` = no slot open; a number = an outfit index; 'g0'/'g1' = a glove colour. */
-type Slot = number | 'g0' | 'g1' | null;
+import type { PaletteEditorProps, Slot } from '../PlayerSpriteStudio.type';
 
 const PaletteEditor = (props: PaletteEditorProps) => {
   const { sheet, outfit, readOnly = false, onColor, onGloveColor, onReset } = props;
@@ -64,9 +51,6 @@ const PaletteEditor = (props: PaletteEditorProps) => {
       ? `${OUTFIT_LABELS[outfit]} · index ${slot + 1}`
       : `Gloves · ${slot === 'g0' ? 'power' : 'titan'}`;
 
-  // Quick-assign: every colour already in this sheet, grouped by exactly where it comes
-  // from. A flat list would make it impossible to tell a green-outfit shadow from a
-  // blue-outfit one at a glance, which is the whole point of offering them for reuse.
   const swatchGroups = useMemo<SwatchGroup[]>(() => {
     if (slot === null) return [];
     const currentHex = bgr555ToHex(wordOf(slot));

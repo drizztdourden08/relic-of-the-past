@@ -1,33 +1,20 @@
 /* @layer renderer-components @kind hook */
-/**
- * State machine for the enhanced save slot shortcut flow.
- *
- *  1. First press of ANY load/save key → opens overlay, highlights that slot.
- *  2. Press a DIFFERENT slot key while open → switches highlight to that slot.
- *  3. Press the SAME slot key a second time:
- *     - Quick tap (< TAP_THRESHOLD) → LOAD, close overlay.
- *     - Hold until bar fills (100%) then release → SAVE, close overlay.
- *     - Release midway (between tap and full hold) → cancel hold, stay on overlay.
- *  4. ESC → close overlay (cancel).
- *  5. If game is paused: unpause → action → re-pause (WASM can't save/load while paused).
- *
- * When disabled, function action callbacks fire immediately (original behavior).
- */
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getInputManager, saveState, loadState } from '../../../../../../lib/game';
 import type { FunctionAction } from '@shared/types/controls';
 import { log } from '../../../../../../lib/log-bus';
-import { TAP_THRESHOLD_MS } from './enhanced-save-slot.types';
-import type { EnhancedSaveSlotState, SlotHint } from './enhanced-save-slot.types';
-import { withPauseGuard, buildIdleHints, buildHoldingHints } from './enhanced-save-slot.helpers';
-import { useCancelOnOtherInput } from './enhanced-save-slot.cancel';
+import { TAP_THRESHOLD_MS } from '../SaveStateOverlay.constants';
+import type { SaveSlotShortcutState, SlotHint } from '../SaveStateOverlay.type';
+import { buildHoldingHints } from './build-holding-hints';
+import { buildIdleHints } from './build-idle-hints';
+import { useCancelOnOtherInput } from './useCancelOnOtherInput';
+import { withPauseGuard } from './with-pause-guard';
 
 const useEnhancedSaveSlot = (
   enabled: boolean,
   holdDurationSec: number,
   gameRunning: boolean,
-): EnhancedSaveSlotState => {
+): SaveSlotShortcutState => {
   const [open, setOpen] = useState(false);
   const [highlightedSlot, setHighlightedSlot] = useState<number | null>(null);
   const [holdProgress, setHoldProgress] = useState(0);
@@ -66,10 +53,8 @@ const useEnhancedSaveSlot = (
     if (!gameRunning) close();
   }, [gameRunning, close]);
 
-  // ESC key handler + any non-slot gamepad button cancels
   useCancelOnOtherInput(open, close);
 
-  // Main subscription: slot actions + key-up handler
   useEffect(() => {
     if (!gameRunning) return;
 
@@ -206,4 +191,4 @@ const useEnhancedSaveSlot = (
 }
 
 export { useEnhancedSaveSlot };
-export type { HintAction, SlotHint } from './enhanced-save-slot.types';
+export type { HintAction, SlotHint } from '../SaveStateOverlay.type';

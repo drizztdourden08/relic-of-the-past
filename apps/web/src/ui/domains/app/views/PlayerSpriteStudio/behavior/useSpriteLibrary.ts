@@ -1,12 +1,4 @@
 /* @layer renderer-hooks @kind logic */
-/**
- * The sprite library: what is on disk, and the operations that change it.
- *
- * Thumbnails are rendered once per refresh, not per render, because decoding tiles
- * for every entry is the expensive part of showing the list. A ROM with compiled assets is
- * needed to create a sprite from scratch, so the hook reports whether one is available
- * instead of leaving the caller to work it out.
- */
 import { useState, useEffect, useCallback } from 'react';
 import { listLinkSprites, importLinkSprite } from '@app/lib/storage/link-sprites-store';
 import { spriteStem } from '@shared/storage/link-sprites/link-sprites';
@@ -14,14 +6,7 @@ import { deleteSprite } from '@app/lib/game/player-sheet/delete-sprite';
 import { loadSheet } from '@app/lib/game/player-sheet/load-sheet';
 import { renderThumbnail } from '@app/lib/game/player-sheet/thumbnail';
 import { isRspName } from '@shared/storage/link-sprites/parse-rsp';
-
-interface LibraryEntry {
-  /** File name including extension. This is the key everything else uses. */
-  name: string;
-  label: string;
-  container: 'zspr' | 'rsp';
-  preview: string | null;
-}
+import type { LibraryEntry } from '../PlayerSpriteStudio.type';
 
 const useSpriteLibrary = () => {
   const [entries, setEntries] = useState<LibraryEntry[]>([]);
@@ -64,8 +49,6 @@ const useSpriteLibrary = () => {
     return { success: true, message: `Imported ${spriteStem(result.name ?? name)}` };
   }, [refresh]);
 
-  // Deleting also puts the selection back to default on any profile that pointed at it,
-  // so no profile is left naming a sprite that no longer exists.
   const remove = useCallback(async (name: string) => {
     await deleteSprite(name);
     await refresh();
