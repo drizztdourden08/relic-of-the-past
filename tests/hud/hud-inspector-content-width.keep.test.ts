@@ -1,33 +1,7 @@
-// @vitest-environment jsdom
 /* @layer tests @kind test */
-/**
- * Phase 9 of `plans/hud-inspector-ux-review.html`, MEASURED. The other half of
- * `hud-inspector-content.keep.test.ts`. Same harness as phases 1, 3, 4 and 7:
- * SSR the real components, load the real stylesheets into headless Chromium,
- * and measure at 289 / 232 / 188 px (the 320 default rail less 32, the width
- * every wireframe on that page is drawn at, and the 220 px minimum less 32).
- *
- * WHAT IS BEING CHECKED IS MOSTLY THE OPPOSITE OF PHASE 4'S. Phase 4 measured
- * typing surface, because the complaint was a field too narrow to type in.
- * Three of the four controls here are READ, not typed into, so what is
- * measured is: the artwork is drawn at a size a person can identify (26 px, and
- * 16.3 px for a reference stacked inside a card, which is 2rem and 1.25rem against the
- * design system's own 13 px root), the name beside it gets exactly what the
- * picture and the caret do not need, and NOTHING overflows the rail at 188 px,
- * including the slot field's out-of-range note, which is new text in a row that
- * was already at the edge. The fourth, the text value, IS typed into, and it is
- * measured the way phase 4 measured its own.
- *
- * THE SHEETS ARE WALKED, NOT LISTED, for §36.8's reason: `ValueInput.css` and
- * now `HudLayoutEditor.content.css` are found by walking the directory, so a
- * new sheet cannot be silently left out of the measurement.
- */
+// @vitest-environment jsdom
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 
-// SSR only needs a DOM to satisfy the app-lib modules `glyph-art` reaches at
-// import time (a log bus that binds `window`, a device store that calls the
-// desktop bridge). The MEASUREMENT still happens in real Chromium below; this
-// jsdom is never rendered into.
 vi.hoisted(() => {
   const global = globalThis as { window?: { api?: unknown } };
   global.window ??= {};
@@ -67,7 +41,6 @@ const SLOTS: readonly ModernSlot[] = [1, 2, 3, 4].map((index) => ({
 } as ModernSlot));
 
 const CASES: Record<string, () => unknown> = {
-  // The four kinds that were slugs, at their two densities.
   reference: () => h('div', null,
     h(ReferenceField, {
       label: 'control', name: 'DPAD', kind: 'generic', onOpen: noop, 'aria-label': 'ref-full',
@@ -75,23 +48,15 @@ const CASES: Record<string, () => unknown> = {
     h(ReferenceField, {
       compact: true, action: 'go', name: 'Silver arrow icon', kind: 'sprite', onOpen: noop, 'aria-label': 'ref-compact',
     })),
-  // A number past the previewed scheme: the note is a whole extra line in a
-  // row that was already at the rail's edge.
   slot: () => h(SlotRefField, {
     label: 'slot', value: 9, onChange: noop, slots: SLOTS, glyphPacks: [], className: 'probe-slot',
   }),
-  // A bounded scalar: the number, and the track under it.
   bounded: () => h(BoundedValueField, {
     label: 'fill', value: 0.5, onChange: noop, scope, min: 0, max: 1, step: 0.05,
   }),
-  // The text value, with the outer mode switch gone. It is the one control here
-  // that IS typed into, so its typing surface is measured like phase 4's.
   text: () => h(TextValueField, {
     value: { from: 'data', expr: 'bomb_current' }, onChange: noop, scope,
   }),
-  // The whole glyph editor as it is actually assembled, because its own
-  // source/`shows` switch carries two full phrases instead of two words and
-  // a `SegmentedControl` that wraps at 188 px would be a new F2.
   glyph: () => h(GlyphContent, {
     spec: { type: 'glyph', position: 'DPAD' }, onChange: noop, glyphPacks: [],
   } as never),
@@ -112,7 +77,6 @@ const document_ = (rail: number): string => {
 
 interface Measured {
   case: string; what: string; width: number; height: number; overflow: number;
-  /** Inside the padding and the border, so it compares with §36.7's own figures. */
   content: number;
 }
 
@@ -169,9 +133,6 @@ afterAll(async () => { await browser?.close(); });
 
 describe('a reference is legible at every rail', () => {
   it('draws the artwork at one fixed size and never scales it away', () => {
-    // 2rem / 1.25rem against the design system's own 13px root, so 26 and 16.3.
-    // `flex-shrink: 0` is the whole claim: a long manifest label eats the NAME,
-    // never the picture, and the picture is the same at 188 px as at 289.
     for (const rail of RAILS) {
       const thumbs = (measured[rail] ?? []).filter((m) => m.case === 'reference' && m.what === 'thumb');
       expect(`${rail}: ${thumbs.map((t) => t.width).join('/')}`).toBe(`${rail}: 26/16.3`);
@@ -179,13 +140,8 @@ describe('a reference is legible at every rail', () => {
   });
 
   it('gives the name whatever the picture and the caret do not need', () => {
-    // The name is the only elastic part of the row, so these ARE the row width
-    // minus the picture, the caret, the kind and three gaps.
     expect(at(289, 'reference', 'name').width).toBe(186.1);
     expect(at(232, 'reference', 'name').width).toBe(129.1);
-    // 85.1 px at the minimum rail holds "Silver arrow icon" to the `i` and
-    // ellipsises the rest, which is the trade `min-width: 0` buys: the caret
-    // stays on screen instead of being pushed off by a long label.
     expect(at(188, 'reference', 'name').width).toBe(85.1);
   });
 
@@ -203,7 +159,6 @@ describe('the new controls fit the rows they were added to', () => {
       const note = at(rail, 'slot', 'note');
       expect(`${rail}: ${note.overflow} over, ${note.width} wide`)
         .toBe(`${rail}: 0 over, ${rail - 8} wide`);
-      // Two lines of `--text-xs`, wrapped, not clipped, at every rail.
       expect(`${rail}: ${note.height}`).toBe(`${rail}: 30`);
     }
   });
@@ -211,19 +166,11 @@ describe('the new controls fit the rows they were added to', () => {
   it('gives the bounded track something to drag at the minimum rail', () => {
     expect(at(289, 'bounded', 'track').width).toBe(277);
     expect(at(232, 'bounded', 'track').width).toBe(220);
-    // 176 px of travel over 20 steps of 0.05 is 8.8 px a step at the narrowest
-    // rail this panel goes to. Coarse, and still a handle instead of a
-    // caption. The number beside it is how 0.35 gets typed exactly.
     expect(at(188, 'bounded', 'track').width).toBe(176);
     expect(at(188, 'bounded', 'typing').content).toBe(141);
   });
 
   it('gives the text value the full row, now that the switch is not on it', () => {
-    // Comparable with §36.7's own content figures. A committed formula in a
-    // full-width numeric row measured 237.5 / 180.5 / 136.5 there; this row is
-    // wider still because it carries no spinner column and no half-width
-    // sibling. It is 263 px at the default rail for `= bomb_current`, which used to
-    // be clipped to `bomb_curre` behind two mode switches.
     expect(at(289, 'text', 'typing').content).toBe(263);
     expect(at(232, 'text', 'typing').content).toBe(206);
     expect(at(188, 'text', 'typing').content).toBe(162);

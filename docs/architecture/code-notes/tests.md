@@ -1579,6 +1579,87 @@ undefined survives a JSON round trip. Columns keep one track; rows empty back to
 with no declared rows still shows the rows its children reach, so those are materialised before
 an insert, which must mean what the eye saw.
 
+### hud/hud-inspector-collapsed-fields.keep.test.ts
+
+Phase 1 of the inspector UX review covers finding F2, flex rows with no `min-width` collapsing
+fields to zero. The claim is about layout, so declarations prove nothing; the rows render in
+headless Chromium against the real stylesheets (`tokens/index.css` is skipped because it only
+lists `@import`s, which `setContent` cannot resolve) and are measured. A control gets the rail
+less 32: 289px at the 320 default, 188px at the 220 minimum. Every threshold was 0 before the fix.
+
+- Transition duration: `.select-trigger` is `width: 100%`, a 100% basis on a flex item, so the
+  easing Select took all 281px. Phase 1 gave 68.3, phase 3's compact tier 104.3, phase 4's
+  removal of the mode switch 172.6 at 289; 11.3, 47.3, 115.6 at 232; 0, 3.3, 71.6 at 188. The
+  easing `Select` sits in its own non extent `Field` so it stays content sized.
+- A committed formula has the whole row now that the "+ var" Select is gone (`FormulaMenu` is a
+  popover on the f chip): 237.5 / 180.5 / 136.5.
+- The paint row (behind background, border, shadow, outline, tint and text colours, the most
+  rendered row in Appearance) was 13.9px at every rail, photographed under F1 as a colour clipped
+  to `#0`; phase 8 made its flat branch a `ColorField` with the kind on its own icon row, reached
+  by the `background hex` label: 253 / 196 / 152 against phase 1's 166.1 / 109.1 / 65.1.
+- The keyframe row carried `at`, the value, an easing `Select` and a delete button on one line;
+  `at` and the `Select` both had 100% bases, so the value's `flex: 1 1 0` had no free space and
+  stayed 0 through phases 1, 3 and 4 (removing the switch let `at` absorb the space instead).
+  Phase 10's `KeyframeTrack` edits one key at a time with three full width rows: the value is
+  242 / 185 / 141 and `at` became a `Slider` with 251 / 194 / 150 of track. A range input has an
+  intrinsic ~129px width acting as a flex minimum and has no `aria-label`, so it is found by its
+  class.
+- Nothing escapes the rail at any width.
+
+### hud/hud-inspector-content-width.keep.test.ts
+
+Phase 9 of the inspector UX review, measured; the behaviour half is `hud-inspector-content`. Most
+of these controls are read, not typed into, so what is measured is that the artwork is drawn at an
+identifiable size (2rem and 1.25rem against the design system's 13px root: 26 and 16.3px, with
+`flex-shrink: 0` so a long label eats the name, never the picture), that the name gets exactly
+what the picture and caret leave (186.1 / 129.1 / 85.1; at the minimum it ellipsises after
+"Silver arrow i", the trade `min-width: 0` buys to keep the caret on screen), that a reference is
+one row (32 and 22.5px) in both densities, and that nothing overflows at 188px, including the
+slot field's out of range note (two wrapped lines, 30px). The bounded track has 277 / 220 / 176px:
+at the minimum, 20 steps of 0.05 are 8.8px each, coarse but still a handle, and the number beside
+it (141px) types an exact value. The text value is typed into: 263 / 206 / 162px for
+`= bomb_current`, which two mode switches once clipped to `bomb_curre`; it is wider than §36.7's
+formula row because it has no spinner and no half width sibling. The glyph editor is rendered
+whole because its source and shows switch carries phrases, and a wrapping `SegmentedControl` would
+be a new F2. A jsdom `window` with an `api` proxy satisfies modules `glyph-art` reaches at import
+(the log bus, a device store); the measurement still runs in real Chromium.
+
+### hud/hud-inspector-property-rows.keep.test.ts
+
+Phase 3 of the inspector UX review covers finding F3: a design system with a `Field`, and a panel
+that never used it. The source half is grep shaped and covers every row; the layout half reuses
+the collapsed fields harness at 289 / 232 / 188 px.
+
+- No file under `HudLayoutEditor/` puts a property label in anything but a `Field`.
+  `.hud-inspect__label` (group headings) and `.hud-inspect__sub` (per property labels) became the
+  `Field` label; two card headings remain (a switch case's number, a button state's name), which
+  title a card instead of naming a control. The duplicate id error and the expression parse error
+  (`.hud-inspect__error`, `.hud-expr__error`) and the loose hint lines go through `Field`'s
+  `error` and `hint` slots.
+- Every control passes `size="sm"` itself, because `Field` deliberately does not write the shared
+  control variables (contract §32.3).
+- The inspector sheet's hand written `--space-2xs` count fell from 21 (contract §32.1) to 10, then
+  9 when a button state's face became a `ReferenceField` (§40); what remains is what a primitive
+  cannot express (paddings, a Button gap, gaps on elements carrying a popover `ref`, which `Flex`
+  does not forward). Down is the direction it should move.
+- Self alignment belongs to the child's own section again (§50): one axis under a flex parent
+  (align down), both under a grid (align self, align across). The box model names each edge, and
+  min and max share one hint.
+- `sm` had never been on screen before phase 3. Every `SegmentedControl` option set fits the
+  188px minimum; the track is `flex-shrink: 0`, so a set that did not fit would push its row wide.
+  The widest is none, loop, ping-pong at 155.1px; then uniform, per corner 129.6; fixed position,
+  slot 124.4; game sprite, font 117.8; glyph, image 97; verb, slot 78.2; flex, grid 76.2; text, fx
+  68.9. The old 123, fx set (66.3) is gone with the mode switch.
+- Every label stays on one line; `bottom` in a 42px edge column is the tightest. Nothing escapes
+  the rail: the min and max row once escaped by 75px because `.field--inline .field__control` had
+  `flex: 1` without `min-width: 0`, fixed in `Field.css`. The four border side checkboxes fit one
+  row at 188.
+- The margin edges (four spinners, 28.3 / 14.0 / 3.0px of typing surface) moved to
+  `BoxModelField`, measured in `hud-inspector-geometry-width`; `EdgesInput` and
+  `MinMaxExtentField` stay deleted.
+- The duration and delay pair, at `md` 138.5px each against 141.3 needed (contract §34.4), at
+  `sm` 31.2px at the default, is now 99.5 / 71 / 49 per field after the mode switch's removal.
+
 ### hud/hud-inspector-value-input-width.keep.test.ts
 
 Phase 4 of the inspector UX review, measured in headless Chromium at 289 / 232 / 188 px (the 320
