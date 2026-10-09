@@ -13,3 +13,4 @@ const LIMITS = {
 } as const;
 
 export { LIMITS };
+export type { Limits } from './limits.type';

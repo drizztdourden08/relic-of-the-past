@@ -42,3 +42,4 @@ const STORE_ROUTES = {
 } as const satisfies Record<string, RouteDef>;
 
 export { STORE_ROUTES };
+export type { StoreRoute } from './api-contract.type';
