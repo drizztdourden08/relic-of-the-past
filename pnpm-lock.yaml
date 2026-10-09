@@ -690,7 +690,7 @@ importers:
         specifier: ^0.28.0
         version: 0.28.0(rollup@4.61.1)(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
 
-  cloud-functions/kill-switch:
+  apps/kill-switch:
     dependencies:
       '@google-cloud/functions-framework':
         specifier: 'catalog:'
@@ -703,7 +703,7 @@ importers:
         specifier: catalog:functions
         version: 5.9.3
 
-  cloud-functions/sanctuary-api:
+  apps/sanctuary-api:
     dependencies:
       '@aws-sdk/client-s3':
         specifier: 'catalog:'
@@ -740,7 +740,7 @@ importers:
         specifier: catalog:functions
         version: 5.9.3
 
-  cloud-functions/store-api:
+  apps/store-api:
     dependencies:
       '@aws-sdk/client-s3':
         specifier: 'catalog:'

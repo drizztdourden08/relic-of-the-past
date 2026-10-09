@@ -55,27 +55,28 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      # The function bundles shared/ from the repo root, and the account routes,
-      # sessions and sign-in from cloud-functions/hub-core. esbuild resolves jose and
-      # arctic from the importing file's folder, so the root, hub-core and the function
-      # all need their own node_modules. One workspace install gives all three.
+      # The function bundles the workspace packages it imports (@rotp/hub-contracts, the
+      # @rotp/hub-server kit and the packages they read), and esbuild resolves their npm
+      # dependencies from each package's own node_modules. One workspace install gives all of them.
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build the function
-        working-directory: cloud-functions/sanctuary-api
+        working-directory: apps/sanctuary-api
         run: |
           pnpm run bundle
           test -f dist/index.js || { echo "::error::dist/index.js missing after build"; exit 1; }
 
       # The cloud build installs the runtime dependencies with npm, which cannot read
-      # catalog: versions. pnpm pack writes the manifest with the catalog ranges filled in.
+      # catalog: versions. pnpm pack writes the manifest with the catalog ranges filled in,
+      # and the workspace packages leave it: they are already inside dist/index.js and no
+      # registry holds them.
       - name: Resolve the function manifest for the cloud build
-        working-directory: cloud-functions/sanctuary-api
+        working-directory: apps/sanctuary-api
         run: |
           pnpm pack --pack-destination "$RUNNER_TEMP"
-          tar -xzf "$RUNNER_TEMP"/sanctuary-api-function-*.tgz -C "$RUNNER_TEMP" package/package.json
-          cp "$RUNNER_TEMP/package/package.json" package.json
+          tar -xzf "$RUNNER_TEMP"/rotp-sanctuary-api-*.tgz -C "$RUNNER_TEMP" package/package.json
+          node -e "const fs = require('fs'); const m = JSON.parse(fs.readFileSync(process.argv[1], 'utf8')); for (const k of ['dependencies', 'devDependencies']) for (const d of Object.keys(m[k] ?? {})) if (d.startsWith('@rotp/')) delete m[k][d]; fs.writeFileSync('package.json', JSON.stringify(m, null, 2));" "$RUNNER_TEMP/package/package.json"
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -94,7 +95,7 @@ jobs:
             --region="$GCP_REGION" \
             --runtime=nodejs24 \
             --entry-point=sanctuaryApi \
-            --source=cloud-functions/sanctuary-api \
+            --source=apps/sanctuary-api \
             --trigger-http \
             --allow-unauthenticated \
             --set-env-vars="^;^SANCTUARY_ORIGIN=${{ vars.SANCTUARY_ORIGIN }};DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }};DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }};DISCORD_CONTRIBUTOR_ROLE_ID=${{ vars.DISCORD_CONTRIBUTOR_ROLE_ID }};GITHUB_CLIENT_ID=${{ vars.SANCTUARY_GH_CLIENT_ID }};GITHUB_REPO=${{ github.repository }};GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }};B2_KEY_ID=${{ vars.B2_KEY_ID }};B2_BUCKET=${{ vars.B2_BUCKET }};B2_ENDPOINT=${{ vars.B2_ENDPOINT }};B2_REGION=${{ vars.B2_REGION }};SANCTUARY_ADMIN_IDS=${{ vars.SANCTUARY_ADMIN_IDS }};SCHEDULER_SA=${{ vars.SCHEDULER_SA }}" \

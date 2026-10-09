@@ -1,7 +1,8 @@
 {
-  "name": "kill-switch-function",
+  "name": "@rotp/kill-switch",
   "version": "1.0.0",
   "private": true,
+  "description": "The billing budget guard on Pub/Sub, a Cloud Functions function.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",

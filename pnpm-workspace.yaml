@@ -1,7 +1,9 @@
 packages:
   - 'apps/desktop'
   - 'packages/*'
-  - 'cloud-functions/*'
+  - 'apps/sanctuary-api'
+  - 'apps/store-api'
+  - 'apps/kill-switch'
 
 catalog:
   '@aws-sdk/client-s3': ^3.1139.0

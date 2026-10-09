@@ -45,7 +45,7 @@
     "preview": "pnpm --filter ./apps/desktop exec electron-vite preview",
     "build:web": "pnpm --filter ./apps/desktop build:web",
     "sanctuary:dev": "vite -c apps/sanctuary/vite.config.ts --configLoader runner",
-    "sanctuary:api": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON cloud-functions/sanctuary-api/dev-server.mjs",
+    "sanctuary:api": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON apps/sanctuary-api/dev-server.mjs",
     "sanctuary:build": "vite build -c apps/sanctuary/vite.config.ts --configLoader runner",
     "store:dev": "vite -c apps/store/vite.config.ts",
     "store:build": "vite build -c apps/store/vite.config.ts",

@@ -1,12 +1,13 @@
 {
-  "name": "store-api-function",
+  "name": "@rotp/sanctuary-api",
   "version": "1.0.0",
   "private": true,
+  "description": "The Sanctuary API, a Cloud Functions function.",
   "main": "dist/index.js",
   "scripts": {
     "bundle": "esbuild src/index.ts --bundle --platform=node --format=cjs --target=node24 --outfile=dist/index.js --external:@google-cloud/* --external:@aws-sdk/* --loader:.svg=text",
     "typecheck": "tsc --noEmit",
-    "start": "functions-framework --target=storeApi --source=dist"
+    "start": "functions-framework --target=sanctuaryApi --source=dist"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "catalog:",
@@ -20,7 +21,6 @@
   "devDependencies": {
     "@rotp/hub-contracts": "workspace:*",
     "@rotp/hub-server": "workspace:*",
-    "@rotp/languages": "workspace:*",
     "esbuild": "catalog:",
     "typescript": "catalog:functions"
   }

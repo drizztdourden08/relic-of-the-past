@@ -793,7 +793,7 @@ Roles:
 
 `ARCHIPELAGO_DEFAULT_PORT` is not part of the block. It belongs to the multiworld protocol.
 
-`portFor` (`config/port-for.ts`) turns a role and a slot into the port. `cloud-functions/sanctuary-api/dev-server.mjs` runs as plain Node, so it loads `port-for.ts` and `port-slot.ts` through tsx's `require` (`tsx/cjs/api`), which resolves their extensionless sibling imports the way the bundler does.
+`portFor` (`config/port-for.ts`) turns a role and a slot into the port. `apps/sanctuary-api/dev-server.mjs` runs as plain Node, so it loads `port-for.ts` and `port-slot.ts` through tsx's `require` (`tsx/cjs/api`), which resolves their extensionless sibling imports the way the bundler does.
 
 ## Credits
 

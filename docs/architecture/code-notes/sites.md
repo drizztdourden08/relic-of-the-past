@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Code notes: sites and cloud functions
 
-Facts about the web sites and their cloud functions that the code cannot say by itself. The sites are apps/site-kit, apps/sanctuary and apps/store. The functions are cloud-functions/hub-core, sanctuary-api, store-api and kill-switch. Each heading names the file the fact belongs to.
+Facts about the web sites and their cloud functions that the code cannot say by itself. The sites are apps/site-kit, apps/sanctuary and apps/store. The functions are packages/hub-server/src, sanctuary-api, store-api and kill-switch. Each heading names the file the fact belongs to.
 
 ## packages/hub-server/src/route.type.ts
 
@@ -338,452 +338,452 @@ Access is decided again, since the removed identity may have been what granted i
 
 The view id is the client's, so a view can be saved before the server has seen it. An id already owned by someone else is refused as absent.
 
-## cloud-functions/kill-switch/src/index.ts
+## apps/kill-switch/src/index.ts
 
 The billing account is unlinked from the project the function runs in, read at runtime, so one build serves every project it is deployed to.
 
-## cloud-functions/sanctuary-api/dev-server.mjs
+## apps/sanctuary-api/dev-server.mjs
 
 Runs the bundled API locally for the Sanctuary dev site, on the port its /api proxy expects. Start it with `npm run sanctuary:api` from the repo root.
 Bundle first with `npm run bundle` in this folder. The deployed function never runs this file.
 
-## cloud-functions/sanctuary-api/src/index.ts
+## apps/sanctuary-api/src/index.ts
 
 The Sanctuary API is one Gen2 HTTP function behind the site's /api rewrite.
 The account routes come from hub-core, bound to the Sanctuary's site config. The files, versions, reports and sweep routes are its own.
 
-## cloud-functions/sanctuary-api/src/route-table.ts
+## apps/sanctuary-api/src/route-table.ts
 
 The account routes are registered before these. Order matters only where two patterns could match the same path, and none do.
 
-## cloud-functions/sanctuary-api/src/site/site.constants.ts
+## apps/sanctuary-api/src/site/site.constants.ts
 
 The Sanctuary is an approval site on its own origin. Its default group, Contributors, holds every Sanctuary right.
 
-## cloud-functions/sanctuary-api/src/env.ts
+## apps/sanctuary-api/src/env.ts
 
 The account settings every site shares are read by hub-core; this file reads only the Sanctuary's own origin, issue token and bucket.
 The read is lazy so a build or typecheck never needs the deploy environment.
 
-## cloud-functions/sanctuary-api/src/db/collections.constants.ts
+## apps/sanctuary-api/src/db/collections.constants.ts
 
 These are the Sanctuary's own collections. The account collections belong to hub-core.
 
-## cloud-functions/sanctuary-api/src/db/files-repo.ts
+## apps/sanctuary-api/src/db/files-repo.ts
 
 Every read goes through upgradeFile, so a record stored before versions existed comes back with its version 1.
 `mutate` reads the latest record inside a transaction and writes the patch the change returns. A change that throws aborts the transaction. It is used wherever the versions list moves.
 `listReady` with `types` null lists every type. One or more types narrow the query, which needs the (status, type, createdAt) index. The cursor is the last row's createdAt.
 
-## cloud-functions/sanctuary-api/src/db/reports-repo.ts
+## apps/sanctuary-api/src/db/reports-repo.ts
 
 `extend` also writes `extendedBy`, an audit field the shared Report type does not carry.
 
-## cloud-functions/sanctuary-api/src/files/upgrade-file.ts
+## apps/sanctuary-api/src/files/upgrade-file.ts
 
 A file stored before versions existed reads as its own version 1, pointing at the object it already has under files/<id>.
 The first write that touches `versions` stores the upgraded shape, so no record ever needs a migration pass.
 Stored versions always win. A file whose first version was written before the currentVersion pointer existed (a version begun on a pre-versions file) points at version 1 until something moves it.
 
-## cloud-functions/sanctuary-api/src/files/file-guards/load-visible-file.ts
+## apps/sanctuary-api/src/files/file-guards/load-visible-file.ts
 
 A file of a type the caller cannot see answers 404, the same as a missing file, so a hidden shelf never shows through an error. Uploading to or moving into such a type is refused the same way.
 
-## cloud-functions/sanctuary-api/src/files/versions/index.ts
+## apps/sanctuary-api/src/files/versions/index.ts
 
 Versions are never renumbered. The top level name, bytes, sha256 and content type of a file mirror its current version.
 
-## cloud-functions/sanctuary-api/src/files/parts-done/index.ts
+## apps/sanctuary-api/src/files/parts-done/index.ts
 
 An upload's progress is kept on its record: the parts the uploader reported with its last batch, and when it asked.
 A first upload carries its upload on the file and on version 1, so both move together. A later version carries its own. A record no longer uploading is left alone.
 
-## cloud-functions/sanctuary-api/src/github/issues.ts
+## apps/sanctuary-api/src/github/issues.ts
 
 The issue token is mounted from Secret Manager. Issues are created for reports and read back by number for the sweep.
 
-## cloud-functions/sanctuary-api/src/reports/create-report.ts
+## apps/sanctuary-api/src/reports/create-report.ts
 
 Every report kind goes through the same steps: the quota for an anonymous caller, the record, the issue, the presigned PUT. Only the body renderer differs by kind.
 
-## cloud-functions/sanctuary-api/src/reports/debug-info-block.ts
+## apps/sanctuary-api/src/reports/debug-info-block.ts
 
 The debug info block carries `debug-report-id: <id>` on its first line so a human reading the issue can find the report on the site.
 Every recorded artefact in an issue body is one collapsed details block of preformatted text, so issues always read the same way.
 
-## cloud-functions/sanctuary-api/src/reports/issue-body-player.ts
+## apps/sanctuary-api/src/reports/issue-body-player.ts
 
 A player report body is the reporter line, the reporter's own words uncollapsed, then the debug info block. No email ever reaches the public body.
 
-## cloud-functions/sanctuary-api/src/reports/issue-body-controller.ts
+## apps/sanctuary-api/src/reports/issue-body-controller.ts
 
 A controller report body is the player shape plus one collapsed block per recorded artefact, in a fixed order, for whatever the wizard captured.
 
-## cloud-functions/sanctuary-api/src/reports/issue-body.type.ts
+## apps/sanctuary-api/src/reports/issue-body.type.ts
 
 A body renderer gets the request as submitted plus the two values only the server knows: the reporter line and the minted report id.
 
-## cloud-functions/sanctuary-api/src/reports/expiry.ts
+## apps/sanctuary-api/src/reports/expiry.ts
 
 A report with a closed issue expires 30 days after the close, or later when a member extended it. A report whose issue never closed expires after a flat 90 days. These are the numbers the old cleanup function applied.
 
-## cloud-functions/sanctuary-api/src/reports/report-id.ts
+## apps/sanctuary-api/src/reports/report-id.ts
 
 The report id is 12 hex characters, the shape the app used to mint itself. It is minted here now so old and new issue bodies carry the same shape.
 
-## cloud-functions/sanctuary-api/src/reports/report-view/index.ts
+## apps/sanctuary-api/src/reports/report-view/index.ts
 
 A member sees everything of a report except the anonymous reporter's email, which only an admin gets back.
 A caller without the reports right finds no report at all (404), so the page never shows through an error.
 
-## cloud-functions/sanctuary-api/src/reports/reporter-line.ts
+## apps/sanctuary-api/src/reports/reporter-line.ts
 
 The reporter line opens every issue body. With a GitHub identity linked the login is mentioned, so GitHub's own notifications carry every later comment to the reporter. Without one the display name stands alone.
 
-## cloud-functions/sanctuary-api/src/reports/sweep.ts
+## apps/sanctuary-api/src/reports/sweep.ts
 
 The daily pass reads every open issue by number and writes its close back, then removes the zip and the record of every report past its expiry. The closed state written here is what the site shows.
 
-## cloud-functions/sanctuary-api/src/storage/keys/index.ts
+## apps/sanctuary-api/src/storage/keys/index.ts
 
 This is the only place a bucket object key is spelled: files/<id> (version 1 of a file stored before versions existed), files/<id>/v<n> and reports/<id>.zip. A user chosen name never becomes a key.
 
-## cloud-functions/sanctuary-api/src/storage/files-bucket.ts
+## apps/sanctuary-api/src/storage/files-bucket.ts
 
 The Sanctuary's bucket has its own scoped key and holds shared files and report zips.
 
-## cloud-functions/sanctuary-api/src/routes/admin-sweep.ts
+## apps/sanctuary-api/src/routes/admin-sweep.ts
 
 POST /admin/sweep is for Cloud Scheduler, behind hub-core's scheduler guard. No browser session can call it.
 
-## cloud-functions/sanctuary-api/src/routes/files-begin.ts
+## apps/sanctuary-api/src/routes/files-begin.ts
 
 POST /files creates the record as uploading, with its version 1, and starts the multipart upload. The browser then asks for part URLs in batches.
 
-## cloud-functions/sanctuary-api/src/routes/files-sign-parts.ts
+## apps/sanctuary-api/src/routes/files-sign-parts.ts
 
 Part URLs are presigned PUTs bound to the upload id, valid one hour each. `partsDone` is how many parts the uploader already has up, and the record keeps it.
 
-## cloud-functions/sanctuary-api/src/routes/files-parts.ts
+## apps/sanctuary-api/src/routes/files-parts.ts
 
 Lists the parts of a first upload already in the bucket, for its owner only, so an upload cut off by a reload sends only what is missing.
 
-## cloud-functions/sanctuary-api/src/routes/files-complete.ts
+## apps/sanctuary-api/src/routes/files-complete.ts
 
 Completes the first multipart upload and HEADs the object against the declared size. A size mismatch drops the object and marks the record deleted.
 
-## cloud-functions/sanctuary-api/src/routes/files-list.ts
+## apps/sanctuary-api/src/routes/files-list.ts
 
 Pages hold 200 files. `type` is optional because the rail counts need every type at once. Search, clauses, sort and grouping run in the browser.
 `typesToList` returns null to ask for every type, and an empty list when there is nothing to show.
 
-## cloud-functions/sanctuary-api/src/routes/files-download.ts
+## apps/sanctuary-api/src/routes/files-download.ts
 
 A download bumps the counter and returns a presigned GET for the current version, valid ten minutes, with the file name in the content disposition.
 
-## cloud-functions/sanctuary-api/src/routes/files-preview.ts
+## apps/sanctuary-api/src/routes/files-preview.ts
 
 A preview is a short lived link that shows the file in the browser (image viewer, video player) without saving it. Viewing is not a download, so the counter stays as it is.
 
-## cloud-functions/sanctuary-api/src/routes/files-delete.ts
+## apps/sanctuary-api/src/routes/files-delete.ts
 
 Deleting a file soft deletes the record and removes the object of every version, aborting the multipart upload of any version that never finished.
 A first upload carries its multipart id on the file and on its version 1.
 
-## cloud-functions/sanctuary-api/src/routes/file-versions-begin.ts
+## apps/sanctuary-api/src/routes/file-versions-begin.ts
 
 A new version opens a multipart upload at files/<id>/v<n>. Two versions started at once cannot share a number: the later one is refused and its upload aborted.
 
-## cloud-functions/sanctuary-api/src/routes/file-versions-complete.ts
+## apps/sanctuary-api/src/routes/file-versions-complete.ts
 
 A good upload becomes the current version and its facts move to the top of the record. A size mismatch drops the object and the version entry.
 
-## cloud-functions/sanctuary-api/src/routes/file-versions-restore.ts
+## apps/sanctuary-api/src/routes/file-versions-restore.ts
 
 Restore points the file back at an older version and mirrors its facts to the top of the record. No bytes move.
 
-## cloud-functions/sanctuary-api/src/routes/file-versions-delete.ts
+## apps/sanctuary-api/src/routes/file-versions-delete.ts
 
 The current version and a file's only version cannot be deleted; restore another one first.
 The uploader may drop their own unfinished version without being owner or admin. That is how a failed upload cleans up.
 
-## cloud-functions/sanctuary-api/src/routes/reports-create.ts
+## apps/sanctuary-api/src/routes/reports-create.ts
 
 A report can come from a device, a session or an anonymous caller. An anonymous caller is rate limited by address and must give a contact email, which stays on the record and never reaches the issue.
 
-## cloud-functions/sanctuary-api/src/routes/reports-complete.ts
+## apps/sanctuary-api/src/routes/reports-complete.ts
 
 Only the caller who created the report can complete it. The zip is HEADed against the declared size before the record's zip block is filled.
 
-## cloud-functions/sanctuary-api/src/routes/reports-extend.ts
+## apps/sanctuary-api/src/routes/reports-extend.ts
 
 An extension pushes the expiry 30 days past its current value, never further than a year after the issue closed. Only a closed issue has a close to count from, so an open one cannot be extended yet.
 
-## cloud-functions/sanctuary-api/src/routes/reports-delete.ts
+## apps/sanctuary-api/src/routes/reports-delete.ts
 
 Admin only. Besides this route, the sweep is the only way a report goes away.
 
-## cloud-functions/store-api/src/index.ts
+## apps/store-api/src/index.ts
 
 storeApi is one Gen2 HTTP function behind the store site's /api rewrite. The account routes come from hub-core, bound to the store's site config; the catalogue, versions, review, ratings, home and daily job routes are the store's own.
 
-## cloud-functions/store-api/src/window-api.d.ts
+## apps/store-api/src/window-api.d.ts
 
 shared/platform reads window.api, the app's preload bridge, to tell its host apart. The store's manifest readers reach that file through a type import only, and this function never runs in a window, so the typecheck gets the bridge as unknown.
 
-## cloud-functions/store-api/src/site.constants.ts
+## apps/store-api/src/site.constants.ts
 
 The store is an open site on its own origin, where signing in makes you a player. Its rights are the store's two permissions. It seeds no default group, since groups are managed on the Sanctuary.
 
-## cloud-functions/store-api/src/env.ts
+## apps/store-api/src/env.ts
 
 The store's bucket has its own key, scoped to that bucket alone. B2_ENDPOINT and B2_REGION are the Backblaze account's, the same values the Sanctuary reads. The account settings every site shares are read by hub-core. The env is read lazily so a build or typecheck never needs the deploy environment.
 
-## cloud-functions/store-api/src/route-table/is-sanctuary-only.constants.ts
+## apps/store-api/src/route-table/is-sanctuary-only.constants.ts
 
 Groups and the admin queue stay on the Sanctuary, where they are managed, so the store leaves those account routes out. No two patterns in the store's table match the same path.
 
-## cloud-functions/store-api/src/auth/player/require-player.ts
+## apps/store-api/src/auth/player/require-player.ts
 
 A player is anyone signed in and not banned from the store. The first call writes their store record.
 
-## cloud-functions/store-api/src/auth/player/require-permission.ts
+## apps/store-api/src/auth/player/require-permission.ts
 
 A permission the caller lacks answers as missing (404), the way an unseen Sanctuary shelf does.
 
-## cloud-functions/store-api/src/db/daily-repo.ts
+## apps/store-api/src/db/daily-repo.ts
 
 Install counters are keyed `<day>_<itemId>` with the day as UTC YYYY-MM-DD. One document per item and day keeps writes to a busy item off a shared counter. The daily job sums the last 30 days into each item's installs30d and drops the older days. increment returns the write for use inside a transaction.
 
-## cloud-functions/store-api/src/db/installs-repo.ts
+## apps/store-api/src/db/installs-repo.ts
 
 Installs are one per player per item, keyed `<itemId>_<userId>` (pairId, also the id of a rating). The download route writes them inside its install transaction. A rating needs one.
 
-## cloud-functions/store-api/src/db/items-repo.ts
+## apps/store-api/src/db/items-repo.ts
 
 Each stored item carries awaitingReview, set on every write from its versions and listing edits, so the review queue is one equality query. The flag stays in Firestore: every read strips it, so no answer ever carries it. newId is a Firestore auto id made of letters and digits, which an install link accepts. mutate reads the latest record inside a transaction and writes the patch its change returns; a throw from the change aborts. It is used wherever versions, edits or status move. listPublished pages by the last row's createdAt.
 
-## cloud-functions/store-api/src/db/quota-repo.ts
+## apps/store-api/src/db/quota-repo.ts
 
 Bytes downloaded per player per UTC day, keyed `<userId>_<day>`. The download count per day goes through hub-core's rate limiter; this holds the byte cap beside it, moved inside a transaction so two downloads cannot both slip under it. spendBytes adds nothing and answers false when the total would pass the max.
 
-## cloud-functions/store-api/src/db/ratings-repo.ts
+## apps/store-api/src/db/ratings-repo.ts
 
 Ratings are one per player per item, keyed `<itemId>_<userId>`. Writes go through the rating transaction, which moves the item's totals with them.
 
-## cloud-functions/store-api/src/db/settings-repo.ts
+## apps/store-api/src/db/settings-repo.ts
 
 The welcome message and the featured order are one document each in store-settings. A fresh project reads an empty welcome and no featured items.
 
-## cloud-functions/store-api/src/home/build-home.ts
+## apps/store-api/src/home/build-home.ts
 
 The home page is built from indexed queries: the welcome, the featured row in the order it was set, Popular this month (installs30d), Top rated (the weighted score) and New and updated. Only published items show. Top rated reads TOP_RATED_READ rows, then drops items with fewer than MIN_RATINGS_FOR_TOP ratings, whatever their score.
 
-## cloud-functions/store-api/src/home/home-cache/cached-home.ts
+## apps/store-api/src/home/home-cache/cached-home.ts
 
 The built home page is held in memory for STORE_LIMITS.homeCacheMs so a burst of visits costs one build. A change on this instance (a decision, the featured row, the welcome) drops the copy at once through invalidateHome; other instances catch up within the window. The signed picture links outlive the window.
 
-## cloud-functions/store-api/src/home/save-featured.ts
+## apps/store-api/src/home/save-featured.ts
 
 The featured order lives in store-settings and is mirrored onto each item's featured field, cleared on the items that left the row. The home page is rebuilt on its next read.
 
-## cloud-functions/store-api/src/items/card-view.ts
+## apps/store-api/src/items/card-view.ts
 
 Nothing on a card is private, so it needs no projection.
 
-## cloud-functions/store-api/src/items/item-guards/load-visible-item.ts
+## apps/store-api/src/items/item-guards/load-visible-item.ts
 
 An item the caller may not see answers as missing.
 
-## cloud-functions/store-api/src/items/item-status/status-after.ts
+## apps/store-api/src/items/item-status/status-after.ts
 
 An item's status follows from its versions: published once a version is approved, waiting while its first version is in the queue, a draft before that. Unlisted is set by a reviewer and outlasts every other change until a relist.
 
-## cloud-functions/store-api/src/items/mark-decided/index.ts
+## apps/store-api/src/items/mark-decided/index.ts
 
 Each decision is a pure change applied inside the item's transaction on the latest record, so two reviewers cannot both decide it. A version is held to the version flow table: approve from waiting, reject from waiting or ready. A listing edit must still be waiting. Approving a version moves liveVersion to the newest approved one and publishes the item on its first approval.
 
-## cloud-functions/store-api/src/items/move-version.ts
+## apps/store-api/src/items/move-version.ts
 
 One step of the version flow, for use inside the item's transaction. The latest record is held to the flow table again, the version takes its new shape, and the live version and the item's status follow from the versions.
 
-## cloud-functions/store-api/src/items/new-item/slug-of.ts
+## apps/store-api/src/items/new-item/slug-of.ts
 
 The slug names the item's storage keys. It follows the name while the item is a draft and stays fixed once it is published. It is lowercase ASCII words joined by dashes, with combining marks stripped after NFKD, and falls back to pack when nothing is left.
 
-## cloud-functions/store-api/src/items/project-item/project-item.ts
+## apps/store-api/src/items/project-item/project-item.ts
 
 This is the one place that decides what a viewer sees of an item. The author, reviewers and admins see the whole record. Everyone else sees a published item only, with its approved versions: no incoming key, no upload, no reviewer, no note and no listing edits. hasRight counts an admin as holding every permission. Viewer is the part of a caller the projection reads; a hub-core Member has it.
 
-## cloud-functions/store-api/src/items/promote-version.ts
+## apps/store-api/src/items/promote-version.ts
 
 Approving a version moves its pack from incoming/ to packs/ inside the bucket: copy, record, then delete the upload. packs/ only ever holds approved packs, so a leaked download link cannot serve anything unreviewed. A copy left behind by a refused record is overwritten by the next approval of the same version. Once recorded, the item's older approved files are pruned to what its kind keeps.
 
-## cloud-functions/store-api/src/items/prune-files.ts
+## apps/store-api/src/items/prune-files.ts
 
 After an approval an item keeps the files of its newest approved versions, as many as STORE_LIMITS.filesKept gives its kind. Older approved versions lose theirs; their rows stay, stamped as pruned. The live version is the newest approved one, so it is always kept.
 
-## cloud-functions/store-api/src/items/record-install.ts
+## apps/store-api/src/items/record-install.ts
 
 One download is recorded as an install in one transaction. The install record is what a rating needs. An item counts a player once in its total and once per day toward Popular, so downloading again the same day moves neither. The author's own downloads count for neither.
 
-## cloud-functions/store-api/src/items/remove-file/remove-file.ts
+## apps/store-api/src/items/remove-file/remove-file.ts
 
 A version's file is the approved copy under packs/ once there is one, the upload under incoming/ before that. Callers stamp the row first and remove the object after, so a failed write never loses a file the row still offers. An object left behind by a failed removal is only storage. stampRemoved keeps an existing removal stamp.
 
-## cloud-functions/store-api/src/items/verify-version.ts
+## apps/store-api/src/items/verify-version.ts
 
 A finished upload passes these checks before it joins the review queue: the stored size is the declared one and within the kind's cap, the first entry is the container's manifest in a shape the app opens, and the bytes hash to the declared sha256. The size check removes a wrong object itself; the caller removes it on any other refusal.
 
-## cloud-functions/store-api/src/items/version-guard.ts
+## apps/store-api/src/items/version-guard.ts
 
 A move the version's state does not allow is a conflict, a move the caller may not take is forbidden, and a move that needs a file the store removed is a conflict that says so.
 
-## cloud-functions/store-api/src/items/versions/index.ts
+## apps/store-api/src/items/versions/index.ts
 
 Versions are never renumbered or reordered. liveVersion names the approved version installs receive: the newest approved one whose file is still in the bucket. loadVersion turns the :n route parameter into a version of the item, or a 404.
 
-## cloud-functions/store-api/src/jobs/daily.ts
+## apps/store-api/src/jobs/daily.ts
 
 The daily job recounts every item's installs over the last 30 days from the per day counters and drops older counters. It ends versions whose upload was started and never finished, since the bucket cancels those uploads after two days (STALE_UPLOAD_MS); their rows stay as deleted. It removes the files of rejected and ready versions past their keep time. It reports versions that have waited so long the bucket will soon clear their upload from incoming/, WAITING_WARNING_DAYS before that happens. The job acts for the store, so JOB_ACTORS lets it take any step either role could.
 
-## cloud-functions/store-api/src/jobs/expire-files.ts
+## apps/store-api/src/jobs/expire-files.ts
 
 A rejected version keeps its file STORE_LIMITS.rejectedKeepDays after the rejection, and a ready version never sent for review keeps it STORE_LIMITS.readyKeepDays after its upload started (fileExpiresAt). Past that the file leaves the bucket and the row stays, stamped with the reason.
 
-## cloud-functions/store-api/src/media/sign-media/sign-ref.ts
+## apps/store-api/src/media/sign-media/sign-ref.ts
 
 The bucket is private, so every picture leaves the API with a signed link. The link is added on the way out and never stored; the key stays the picture's identity.
 
-## cloud-functions/store-api/src/media/sign-media/sign-patch-ref.ts
+## apps/store-api/src/media/sign-media/sign-patch-ref.ts
 
 A patch field left out stays left out. A null field (the picture removed) stays null.
 
-## cloud-functions/store-api/src/media/verify-media.ts
+## apps/store-api/src/media/verify-media.ts
 
 A listing that names a picture is checked against the bucket before it is kept: the key belongs to this item and role, the size is the role's, and the object arrived within the role's byte cap. An oversized object is removed.
 
-## cloud-functions/store-api/src/ratings/rate.ts
+## apps/store-api/src/ratings/rate.ts
 
 The item, the install and the previous rating are read inside one transaction, so the item's totals always match its ratings. A null stars value removes the rating; removing one that is not there changes nothing.
 
-## cloud-functions/store-api/src/ratings/rating-rules.ts
+## apps/store-api/src/ratings/rating-rules.ts
 
 A player may rate an item they installed through the store, never their own, and only while they can see it.
 
-## cloud-functions/store-api/src/ratings/score.ts
+## apps/store-api/src/ratings/score.ts
 
 Top rated sorts by the average pulled toward a prior of 3.8 as if ten players had rated at that. A new item with two 5s does not outrank one with 300 ratings at 4.7, and the pull fades as ratings come in.
 
-## cloud-functions/store-api/src/ratings/stats-after/stats-after.ts
+## apps/store-api/src/ratings/stats-after/stats-after.ts
 
 previous and next are one player's stars before and after the change, null for none. The sum, the count, the histogram and the score always move together.
 
-## cloud-functions/store-api/src/ratings/stats-after/stats-fields.ts
+## apps/store-api/src/ratings/stats-after/stats-fields.ts
 
 The totals are written as Firestore field paths, so a rating never rewrites the install counts.
 
-## cloud-functions/store-api/src/review/queue-of/queue-of.ts
+## apps/store-api/src/review/queue-of/queue-of.ts
 
 The queue holds one entry per waiting version and per waiting listing edit, oldest submission first.
 
-## cloud-functions/store-api/src/review/queue-of/parse-target.ts
+## apps/store-api/src/review/queue-of/parse-target.ts
 
 A review target reads v<n> for a version and the edit's own id for a listing edit. It is the :target segment of the decide route.
 
-## cloud-functions/store-api/src/review/unsubmitted-of.ts
+## apps/store-api/src/review/unsubmitted-of.ts
 
 Ready versions sit outside the approval queue; a reviewer can only reject or delete them. Only versions whose file is still kept are listed, oldest upload first.
 
-## cloud-functions/store-api/src/review/with-links.ts
+## apps/store-api/src/review/with-links.ts
 
 A version entry carries a short lived link to its upload under incoming/, so the reviewer can test it. The review routes are the one place such a link is signed.
 
-## cloud-functions/store-api/src/storage/hash-object.ts
+## apps/store-api/src/storage/hash-object.ts
 
 The object is hashed as a stream so a large pack never sits in memory.
 
-## cloud-functions/store-api/src/storage/store-bucket.ts
+## apps/store-api/src/storage/store-bucket.ts
 
 Uploads live under incoming/, approved packs under packs/, pictures under media/. Keys are spelled by packages/hub-contracts/src/store/keys only.
 
-## cloud-functions/store-api/src/routes/download.ts
+## apps/store-api/src/routes/download.ts
 
 The route holds the player to the daily download count and byte cap, records the install, and answers a presigned GET of the live version or the approved version asked for. Only keys under packs/ are ever signed here, so nothing unreviewed can leave through this route. An approved version whose file was pruned is refused with the reason.
 
-## cloud-functions/store-api/src/routes/items-create.ts
+## apps/store-api/src/routes/items-create.ts
 
 CREATES_PER_DAY is how many new listings one player may start in a day. Nothing is public until the item's first version is approved.
 
-## cloud-functions/store-api/src/routes/items-list.ts
+## apps/store-api/src/routes/items-list.ts
 
 Search, sort and filters run in the browser. The API only pages published items, newest first.
 
-## cloud-functions/store-api/src/routes/items-listing.ts
+## apps/store-api/src/routes/items-listing.ts
 
 An item never published changes at once, and its slug follows a new name. A published one queues the change for review; a newer edit replaces a waiting one, which is marked withdrawn.
 
-## cloud-functions/store-api/src/routes/items-media.ts
+## apps/store-api/src/routes/items-media.ts
 
 The picture key is named by its hash, so a pending edit never replaces the live picture. The signed length binds the upload to the declared size, which the schema holds to the role's cap. The listing route checks the object once it arrived.
 
-## cloud-functions/store-api/src/routes/items-pack.ts
+## apps/store-api/src/routes/items-pack.ts
 
 The inline link lets the item page's Contents tab read the live pack in parts without an install. Only an approved file under packs/ is ever signed here. Each link counts toward the player's daily preview cap, kept apart from the download cap.
 
-## cloud-functions/store-api/src/routes/items-unlist.ts
+## apps/store-api/src/routes/items-unlist.ts
 
 An unlisted item's packs stay in the bucket, so a relist brings it back as it was.
 
-## cloud-functions/store-api/src/routes/jobs-daily.ts
+## apps/store-api/src/routes/jobs-daily.ts
 
 Cloud Scheduler calls this route, behind hub-core's scheduler guard. Nothing a browser session or a device token can call.
 
-## cloud-functions/store-api/src/routes/review-decide.ts
+## apps/store-api/src/routes/review-decide.ts
 
 A rejection keeps the upload for the author to resubmit, and needs a note. Nobody but an admin decides on their own item.
 
-## cloud-functions/store-api/src/routes/review-pack.ts
+## apps/store-api/src/routes/review-pack.ts
 
 The review page reads the pack in parts without downloading it: the file under packs/ once approved, else the upload under incoming/. The link lives as long as a preview link.
 
-## cloud-functions/store-api/src/routes/review-unsubmitted.ts
+## apps/store-api/src/routes/review-unsubmitted.ts
 
 Ready versions carry no stored flag, so the whole catalogue is read, as the daily job does.
 
-## cloud-functions/store-api/src/routes/users-ban.ts
+## apps/store-api/src/routes/users-ban.ts
 
 A ban turns the player's store record revoked, which every store route refuses and every later sign-in keeps. Their Sanctuary access is untouched.
 
-## cloud-functions/store-api/src/routes/versions-abort.ts
+## apps/store-api/src/routes/versions-abort.ts
 
 The aborted row stays as deleted, so the next version can start and the history still shows this one.
 
-## cloud-functions/store-api/src/routes/versions-begin.ts
+## apps/store-api/src/routes/versions-begin.ts
 
 Versions number themselves: the nth one the item ever started is n.0.0, so nobody types a number and each is higher than the last, deleted ones included. One version is in flight at a time (uploading, ready or waiting). A deleted or rejected version leaves room for the next.
 
-## cloud-functions/store-api/src/routes/versions-complete.ts
+## apps/store-api/src/routes/versions-complete.ts
 
 A good upload stays ready until the author sends it for review. Any refusal removes the object and the entry, and says why.
 
-## cloud-functions/store-api/src/routes/versions-delete.ts
+## apps/store-api/src/routes/versions-delete.ts
 
 A deleted version never comes back; the next upload is a new version. Deleting the live version hands installs to the newest approved one left, or unpublishes the item when none is.
 
-## cloud-functions/store-api/src/routes/versions-parts.ts
+## apps/store-api/src/routes/versions-parts.ts
 
 The route lists the parts already in the bucket so an upload cut off by a reload sends only what is missing.
 
-## cloud-functions/store-api/src/routes/versions-sign-parts.ts
+## apps/store-api/src/routes/versions-sign-parts.ts
 
 partsDone is how many parts the uploader already has up. The entry keeps it with the time of the ask, while the version is still uploading.
 
-## cloud-functions/store-api/src/routes/versions-submit.ts
+## apps/store-api/src/routes/versions-submit.ts
 
 A resubmit cannot come back under a newer approved version. A resubmit starts a fresh review, so the last decision and its note are cleared.
 
-## cloud-functions/store-api/src/routes/versions-withdraw.ts
+## apps/store-api/src/routes/versions-withdraw.ts
 
 A withdrawn version goes back to ready and keeps its upload, so the author can send it again.
 
