@@ -1,34 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * SECTION FOUR UNDER A FLEX CONTAINER IS FLEX MANIPULATION (§58).
- *
- * > "the flex should have a manipulation section as well. same principle"
- *
- * THE PRINCIPLE, SPELLED OUT. The grid's manipulation section edits the grid's
- * own STRUCTURE, which is its tracks, and the children follow. A flex container's
- * structure IS the order of its children: each child is its own track, laid end
- * to end along `direction`. So this is the same control one dimension down, and
- * it wears the same three bands:
- *
- * - `SelectionToolbar` holds actions on the SELECTION, and only those. Sticky, one
- *   row, with the same reserved height when nothing is picked. Shared, not
- *   copied: it is literally the component the lattice mounts.
- * - `FlexStrip` is the drawing: one cell per child, sized by the child's REAL
- *   placed size (`behavior/flex-slots.ts`), drawn along the container's own
- *   direction and wrapping the way it wraps.
- * - `SelectionLegend` shows what is selected and what can be pressed right now,
- *   drawn with `KeyCap`/`MouseGlyph` instead of spelled in prose.
- *
- * A PRESS WRITES NOTHING, and that is the lattice's rule kept exactly: clicking,
- * `{mod}`-clicking and `Shift`-clicking all leave the document byte-identical.
- * What they choose is the context the toolbar and the stage echo read.
- *
- * THE ONE WRITE GOES THROUGH THE ONE DOOR. A reorder is a `moveNode`, and
- * `behavior/drop-intent.ts` is the only module in this editor that calls one, and a
- * grep test says so. So this component produces a `DropIntent` and hands it up;
- * it never touches the tree itself, never inserts, never deletes, and never
- * edits a child's properties.
- */
 import { useCallback, useEffect, useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
@@ -36,20 +6,11 @@ import { capOf, runnerFor } from '../../behavior/action-keys';
 import { useFlexSlots } from '../../behavior/flex-slots';
 import { SelectionLegend, SelectionToolbar } from '../SelectionBands';
 import { chipOf, contextualActions, flexActions, statusOf } from './behavior/flex-actions';
-import { useFlexSelection } from './behavior/use-flex-selection';
+import { useFlexSelection } from './behavior/useFlexSelection';
 import { FlexStrip } from './sub-components/FlexStrip';
 import './sub-components/HudLayoutEditor.flex.css';
 import type { KeyboardEvent } from 'react';
-import type { DropIntent } from '../../behavior/drop-intent';
-import type { HudFlexContainer } from '@shared/types/hud';
-import type { FlexActionContext } from './FlexEditor.type';
-
-interface FlexEditorProps {
-  container: HudFlexContainer;
-  /** The editor's single `applyDrop` door. Absent in a harness that mounts the
-   *  section without the View, where the strip is a read-only drawing. */
-  onDrop?: (ids: readonly string[], intent: DropIntent) => void;
-}
+import type { FlexActionContext, FlexEditorProps } from './FlexEditor.type';
 
 const FlexEditor = (props: FlexEditorProps) => {
   const { container, onDrop } = props;
@@ -62,11 +23,6 @@ const FlexEditor = (props: FlexEditorProps) => {
     const id = container.children[from]?.id;
     if (!id) return;
     if (!onDrop) { flex.refuse('This mount cannot reorder because no editor is attached.'); return; }
-    // `moveNode` REMOVES AND THEN INSERTS, so the index it takes is an index
-    // into the list WITHOUT this child in it, which is exactly the destination
-    // slot, in both directions, with no compensation either way. Round 20 shipped
-    // a `+1` for the forward case and "move later" sent the child to the END;
-    // the real-app spec caught it on the first press.
     onDrop([id], { kind: 'flex', parentId: container.id, index: to });
   }, [container, flex, onDrop]);
 
@@ -77,9 +33,6 @@ const FlexEditor = (props: FlexEditorProps) => {
   };
   const actions = flexActions(ctx);
 
-  // THE STAGE ECHOES WHAT IS PICKED, visually and never as an edit. It uses the same
-  // arrangement the lattice publishes on, on the key that suits a flex
-  // container: the ids of the children, because children are all it has.
   const echo = useMemo(() => {
     if (flex.selection.kind !== 'items') return null;
     const ids = flex.selection.indices
@@ -137,4 +90,4 @@ const FlexEditor = (props: FlexEditorProps) => {
 };
 
 export { FlexEditor };
-export type { FlexEditorProps };
+export type { FlexEditorProps } from './FlexEditor.type';

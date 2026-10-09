@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* The child's own cell picker. It shares the lattice sheet and its drawing, and
-   owns only its frame and its two-line legend, which is the whole point: a
-   second copy of the lattice's rules is how the two controls would drift into
-   looking like different grids. */
-
 .hud-cellpick {
   display: flex;
   flex-direction: column;
