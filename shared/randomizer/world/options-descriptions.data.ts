@@ -1,27 +1,12 @@
 /* @layer shared-game @kind data */
-/**
- * The one-line clarifier a catalog row carries when its label alone does not
- * say what changes in play. A row whose label already says it has no entry
- * and renders with no description. Keyed by option key; options.data.ts
- * merges these into the catalog.
- *
- * The locked rows all carry one: their labels are the source project's own
- * field names, so a player has no way to know what "Beemizer" or "Scams" would
- * do. The line says what the setting means, and the row's own tag says why it
- * cannot be changed here.
- */
-
-import { DIFFICULTY_OPTION_DESCRIPTIONS } from './difficulty/difficulty-options.data';
-import { POND_OPTION_DESCRIPTIONS } from './pond/pond-option-descriptions.data';
-import { PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive/progressive-options.data';
-import { PROGRESSIVE_MODE_DESCRIPTIONS } from './progressive/progressive-mode-options.data';
+import { DIFFICULTY_OPTION_DESCRIPTIONS } from './difficulty/difficulty-options.constants';
+import { POND_OPTION_DESCRIPTIONS } from './pond/pond-option-descriptions.constants';
+import { PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive/progressive-options.constants';
+import { PROGRESSIVE_MODE_DESCRIPTIONS } from './progressive/progressive-mode-options.constants';
 import { RETRO_OPTION_DESCRIPTIONS } from './retro/retro-options.data';
 import { SHOP_SLOT_DESCRIPTIONS } from './shops/shop-slot-options.data';
-import type { OptionDescription, OptionDetail } from './option-description.type';
+import type { OptionDescription } from './option-description.type';
 
-const line = (term: string, detail: string): OptionDetail => ({ term, detail });
-
-/** The placement choices, and the two the generator cannot roll (dungeon-items/dungeon-item-modes.ts). */
 const PLACEMENT = 'Own dungeons: any dungeon. Own world and Any world: anywhere. Different world and Start '
   + 'with roll as Original dungeon.';
 
@@ -43,14 +28,14 @@ const OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
     + 'standing on dungeon floors.',
   dungeon_prize_shuffle: 'Pendants and crystals move between dungeons.',
   accessibility: [
-    line('Full', 'every location can be reached.'),
-    line('Items', 'every item can be collected; some locations may stay shut.'),
-    line('Minimal', 'only what finishing needs is guaranteed.'),
+    { term: 'Full', detail: 'every location can be reached.' },
+    { term: 'Items', detail: 'every item can be collected; some locations may stay shut.' },
+    { term: 'Minimal', detail: 'only what finishing needs is guaranteed.' },
   ],
 
   dark_room_light_required: [
-    line('On', 'a dark room counts as passable only with a ticked light.'),
-    line('Off', 'dark rooms count as passable without one.'),
+    { term: 'On', detail: 'a dark room counts as passable only with a ticked light.' },
+    { term: 'Off', detail: 'dark rooms count as passable without one.' },
   ],
 
   big_key_shuffle: PLACEMENT,
@@ -100,14 +85,13 @@ const OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
   capacity_wallet_bonus: BONUS,
   capacity_wallet_bonus_step: BONUS_BASE,
 
-  // ─── Locked rows: what the setting would do ───
   plando_connections: 'Hand-written entrance connections, set before the seed rolls.',
   start_inventory_from_pool: 'Items you begin with are taken out of the pool instead of added to it.',
   goal: 'What ends the seed and what it asks of you first.',
   mode: [
-    line('Standard', 'the seed opens with the rescue.'),
-    line('Open', 'you start free, with the castle already behind you.'),
-    line('Inverted', 'the two worlds swap: you begin in the dark one.'),
+    { term: 'Standard', detail: 'the seed opens with the rescue.' },
+    { term: 'Open', detail: 'you start free, with the castle already behind you.' },
+    { term: 'Inverted', detail: 'the two worlds swap: you begin in the dark one.' },
   ],
   glitches_required: 'How much trick knowledge the seed may expect before it calls something reachable.',
   open_pyramid: 'Whether the hole in the pyramid is open before you earn your way in.',

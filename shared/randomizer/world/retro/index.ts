@@ -1,11 +1,15 @@
-/* @layer shared-game @kind logic */
+/* @layer shared-game @kind barrel */
 export {
   DEFAULT_RETRO_BOW, RETRO_ARROW_PICKUPS, RETRO_BOW_KEY, RETRO_PRICE_CEILING, RETRO_QUIVER_ITEM,
   RETRO_QUIVER_PRICE, RETRO_REPLACEMENT_ITEM, RETRO_SILVER_ARROW_COST, RETRO_SILVER_COST_KEY,
-  RETRO_WOOD_ARROW_COST, RETRO_WOOD_COST_KEY, dearestShotCost, retroShotWalletNeed, retroWalletNeed,
+  RETRO_WOOD_ARROW_COST, RETRO_WOOD_COST_KEY,
 } from './retro-bow.data';
-export { heldRetroBow, retroCostCeilingsOf } from './retro-cost-ceiling';
-export type { RetroCostCeilings } from './retro-cost-ceiling';
+export { dearestShotCost } from './dearest-shot-cost';
+export { retroShotWalletNeed } from './retro-shot-wallet-need';
+export { retroWalletNeed } from './retro-wallet-need';
+export { heldRetroBow } from './held-retro-bow';
+export { retroCostCeilingsOf } from './retro-cost-ceiling';
+export type { RetroCostCeilings } from './retro.type';
 export {
   RETRO_OPTION_DESCRIPTIONS, RETRO_OPTION_KEYS, RETRO_OPTION_SEEDS, isRetroOptionKey,
 } from './retro-options.data';

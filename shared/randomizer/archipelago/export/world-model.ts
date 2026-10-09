@@ -1,11 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * Everything one profile's world settles, as the world package reads it: which locations
- * exist, what is locked where, the pool, the setting readings and the seed table the trees
- * read, the progressive tier ladders, the numbers behind the primitives, and the placement
- * predicates. Built from the same fill world the local generator builds, so the package plays
- * the profile's game and not a second reading of its options.
- */
 import { UNCLE_LOCATION } from '../../world/pool/standard-escape.data';
 import { PRIZE_ITEMS } from '../../world/pool/prize-items.data';
 import { VANILLA_PRIZES } from '../../world/scope-tables';
@@ -17,16 +10,8 @@ import { primitiveDataOf } from './primitive-data';
 import { itemHalfOf } from './model-items';
 import type { FillWorld } from '../../world/fill/fill-world.type';
 import type { LocationKey } from '../../world/location-key';
-import type { OptionValue } from '../../world/options.type';
 import type { RuleNode, RuleOptionKey } from '../../world/rules/rule-node.type';
-import type { WorldModel } from './export.type';
-
-interface WorldModelInput {
-  fillWorld: FillWorld;
-  /** The option values the world was built from, as the profile's snapshot holds them. */
-  options: Record<string, OptionValue>;
-  shufflePrizes: boolean;
-}
+import type { WorldModel, WorldModelInput } from './export.type';
 
 const lockedOf = (fillWorld: FillWorld): Record<string, string> => {
   const locked: Record<string, string> = Object.fromEntries(fillWorld.lockedVanilla);
@@ -34,7 +19,6 @@ const lockedOf = (fillWorld: FillWorld): Record<string, string> => {
   return locked;
 };
 
-/** Every tree of the world with its settings and seed values answered. */
 const specializedTrees = (fillWorld: FillWorld): RuleNode[] => {
   const { world } = fillWorld;
   const readings = ruleOptionsOfWorld(world);
@@ -81,4 +65,3 @@ const worldModelOf = (input: WorldModelInput): WorldModel => {
 };
 
 export { worldModelOf };
-export type { WorldModelInput };

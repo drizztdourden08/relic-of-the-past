@@ -1,16 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * Standard-mode structural checks on a finished placement. The reference
- * guarantees these by construction (ItemPool.py generate_itempool 294-318),
- * so a stored placement violating them was generated under different rules
- * and is unplayable: the escape must be fought with whatever the mentor
- * check grants, before any other check is reachable, and the in-game start
- * carries no bombs, because the reachability sweep's ammo assumptions hold only
- * once that check yields a member of the assurance set, one the capacity
- * profile, when given, leaves usable at the start (uncle-usability.ts).
- * Returns problems; an empty list means the placement honors the
- * standard-mode guarantee.
- */
 import { UNCLE_LOCATION, UNCLE_USABLE_WEAPONS } from '../pool/standard-escape.data';
 import { uncleWeaponUsableAtStart } from '../pool/uncle-usability';
 import type { ItemId } from '@shared/game/data/types/ids';
@@ -19,7 +7,7 @@ import type { LocationKey } from '../location-key';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 
 const verifyStandardEscape = (
-  locations: Readonly<Record<LocationKey, ItemKey>>, capacity?: CapacityProfile, retroBow = false,
+  locations: Readonly<Record<LocationKey, ItemKey>>, capacity?: CapacityProfile, retroShotsBought = false,
 ): string[] => {
   const placed = locations[UNCLE_LOCATION];
   if (placed === undefined) {
@@ -28,7 +16,7 @@ const verifyStandardEscape = (
   if (!UNCLE_USABLE_WEAPONS.has(placed as ItemId)) {
     return [`standard mode requires a usable weapon at ${UNCLE_LOCATION}, found: ${placed}`];
   }
-  if (capacity !== undefined && !uncleWeaponUsableAtStart(capacity, retroBow)(placed)) {
+  if (capacity !== undefined && !uncleWeaponUsableAtStart(capacity, retroShotsBought)(placed)) {
     return [`standard mode requires a weapon usable at the starting rungs at ${UNCLE_LOCATION}, found: ${placed}`];
   }
   return [];

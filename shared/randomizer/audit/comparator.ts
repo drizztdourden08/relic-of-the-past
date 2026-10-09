@@ -1,18 +1,11 @@
 /* @layer shared-game @kind logic */
-/**
- * S3 comparator: pure cross-check of every dataset chest check against the
- * ROM census (S1) and the reference project's location table (S2).
- *
- * Per chest check it can emit up to TWO verdicts (position + vanilla item);
- * 'ok' is emitted only when nothing else was. Key-drop checks are judged for
- * datapackage name coverage only.
- */
-import { chestAddressToTableIndex, joinCrosswalk } from './chest-crosswalk';
+import { chestAddressToTableIndex } from './chest-address-to-table-index';
+import { joinCrosswalk } from './join-crosswalk';
 import { vanillaVerdict } from './comparator-vanilla';
 import type { CheckRecord, ItemRecord } from '../../game/data/types';
-import type { ReferenceLocation } from './reference-source';
-import type { ChestVerdict, ComparatorInput } from './comparator-types';
-import type { RomCensus, RomChest } from './rom-census';
+import type { ReferenceLocation } from './reference-source.type';
+import type { ChestVerdict, ComparatorInput } from './comparator.type';
+import type { RomCensus, RomChest } from './rom-census/rom-census.type';
 
 const chestAt = (
   census: RomCensus,
@@ -23,7 +16,6 @@ const chestAt = (
     ? undefined
     : census.chestsByRoom.get(roomId)?.find((chest) => chest.chestIndex === chestIndex);
 
-/** The reference-side (roomId, chestIndex) for a standard name, when it maps into the chest table. */
 const referencePositionOf = (
   standardName: string,
   referenceByName: ReadonlyMap<string, ReferenceLocation>,
@@ -129,4 +121,3 @@ const compareChestChecks = (input: ComparatorInput): ChestVerdict[] => {
 };
 
 export { compareChestChecks };
-export type { ChestVerdict, ComparatorInput } from './comparator-types';

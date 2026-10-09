@@ -1,8 +1,8 @@
 /* @layer shared-game @kind barrel */
-/** Barrel for the rule binding the hut's cauldrons to the bottle-content prices. */
-export { CAULDRON_CONTENTS, POTION_CAULDRONS, cauldronPriceOf } from './potion-cauldrons.data';
-export type { PotionCauldron } from './potion-cauldrons.data';
-export { blockedContentNote } from './potion-price-notes.data';
+export { CAULDRON_CONTENTS, POTION_CAULDRONS } from './potion-cauldrons.constants';
+export { cauldronPriceOf } from './cauldron-price-of';
+export type { PotionCauldron } from './potion-cauldron.type';
+export { blockedContentNote } from './blocked-content-note';
 export {
   blockedContentsOf, blockedContentsOfValues, potionPriceOverrides, potionPriceStateOfValues,
   reconcilePotionPrices,

@@ -1,40 +1,28 @@
 /* @layer shared-game @kind data */
-/**
- * The value ladders of the four capacity families: mirrors of the core's
- * tier tables and rung convention (core/game-hooks/capacity_tiers.h). Every
- * ladder opens with RUNG 0, the empty tier below the native grid: no
- * explosives or projectiles at all, an unusable meter, a zero wallet. Rung
- * r ≥ 1 is native level r − 1, so the three native grids keep the engine's
- * own arithmetic (+5 six times, then +10; three meter levels) one rung up,
- * and a vanilla file stands on the rung VANILLA_RUNG names. A start or max
- * is always one of these values and a jump is a number of rungs. The wallet
- * cap table is ours, so its ladder is as fine as the curves need: 100-rupee
- * steps ending in 99 like the vanilla 999, from 0 to 9999, 101 values.
- */
 import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
 
-/** Rung 0 = none; rungs 1-8 = the native tier bytes 0-7. */
 const EXPLOSIVES_TIERS: readonly number[] = [0, 10, 15, 20, 25, 30, 35, 40, 50];
 
-/** Rung 0 = none; rungs 1-8 = the native tier bytes 0-7. */
 const PROJECTILES_TIERS: readonly number[] = [0, 30, 35, 40, 45, 50, 55, 60, 70];
 
-/** Rung 0 = no magic; rungs 1-3 = the native cost levels 0-2 (full · half · quarter). */
 const METER_TIERS: readonly number[] = [0, 1, 2, 3];
 
-/**
- * The meter rungs named as the game names them: its cost tiers. The meter is a
- * fixed bar, so a rung is not an amount it holds. It is what one use costs.
- * Rung 0 is the empty tier below the native grid, where nothing can be cast.
- */
 const METER_LEVEL_LABELS: readonly string[] = ['none', 'normal', 'half', 'quarter'];
 
-/** Index 0 ⇒ 0; index i ≥ 1 ⇒ 100 · i − 1, i = 1 ... 100 (rung 10 = 999, rung 100 = 9999). */
 const WALLET_LADDER_LAST = 100;
-const WALLET_LADDER: readonly number[] =
-  Array.from({ length: WALLET_LADDER_LAST + 1 }, (_, index) => (index === 0 ? 0 : 100 * index - 1));
 
-/** The rung a vanilla file stands on: the first native level, the 999 wallet. */
+const WALLET_LADDER: readonly number[] = [
+  0, 99, 199, 299, 399, 499, 599, 699, 799, 899, 999, 1099,
+  1199, 1299, 1399, 1499, 1599, 1699, 1799, 1899, 1999, 2099, 2199, 2299,
+  2399, 2499, 2599, 2699, 2799, 2899, 2999, 3099, 3199, 3299, 3399, 3499,
+  3599, 3699, 3799, 3899, 3999, 4099, 4199, 4299, 4399, 4499, 4599, 4699,
+  4799, 4899, 4999, 5099, 5199, 5299, 5399, 5499, 5599, 5699, 5799, 5899,
+  5999, 6099, 6199, 6299, 6399, 6499, 6599, 6699, 6799, 6899, 6999, 7099,
+  7199, 7299, 7399, 7499, 7599, 7699, 7799, 7899, 7999, 8099, 8199, 8299,
+  8399, 8499, 8599, 8699, 8799, 8899, 8999, 9099, 9199, 9299, 9399, 9499,
+  9599, 9699, 9799, 9899, 9999,
+];
+
 const VANILLA_RUNG: Readonly<Record<CapacityFamilyId, number>> = {
   explosives: 1,
   projectiles: 1,

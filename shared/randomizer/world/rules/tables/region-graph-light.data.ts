@@ -1,18 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * The reachability graph of the first world: one row per passage out of a region.
- *
- * A row is a RULE, not a place. The exit name is the key the rule tables hang their
- * requirement off, and `connectionId` names the crossing the map draws for it when exactly
- * one crossing of the record collection joins the same pair of regions. Where none does, or
- * where several do, the row carries none: a mirror spot, a retry from the menu and a wing
- * boundary inside one room cross no tile at all, and a pair joined by two doors cannot say
- * which of them this passage is.
- *
- * Folded from Archipelago worlds/alttp/Regions.py (create_regions, the exits of each region)
- * and EntranceShuffle.py (mandatory_connections, default_connections,
- * default_dungeon_connections), open mode with entrance shuffle off.
- */
 import type { RegionGraphRow } from '../../region.type';
 
 const LIGHT_REGION_GRAPH: readonly RegionGraphRow[] = [

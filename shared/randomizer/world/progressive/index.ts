@@ -1,7 +1,8 @@
-/* @layer shared-game @kind logic */
+/* @layer shared-game @kind barrel */
 export {
-  DEFAULT_PROGRESSIVE_SETTING, PROGRESSIVE_FAMILIES, PROGRESSIVE_FAMILY_IDS, REPLACEMENT_ITEM, familyOfId,
+  DEFAULT_PROGRESSIVE_SETTING, PROGRESSIVE_FAMILIES, PROGRESSIVE_FAMILY_IDS, REPLACEMENT_ITEM,
 } from './progressive-families.data';
+export { familyOfId } from './family-of-id';
 export {
   progressiveFamilyName, progressiveFamilyNameOf, progressiveTierName, progressiveTierNameOf,
 } from './progressive-display-names';
@@ -27,10 +28,10 @@ export {
   beamSwordReachable, isBeamless, isSwordless, progressiveModesOf, progressiveSettingOf,
   progressiveTierMapOf, swordReachable, tickedCountOf, tickedIndexesOf,
 } from './progressive-reach';
-export { PROGRESSIVE_OPTION_SEEDS, PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive-options.data';
+export { PROGRESSIVE_OPTION_SEEDS, PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive-options.constants';
 export {
   PROGRESSIVE_MODE_DESCRIPTIONS, PROGRESSIVE_MODE_OPTION_SEEDS,
-} from './progressive-mode-options.data';
+} from './progressive-mode-options.constants';
 export { applyProgressiveTicks } from './progressive-pool';
 export { applyProgressiveModes } from './progressive-mode-pool';
 export { ProgressiveTierError, assertRollableTickSet, unrollableTickSetReasons } from './tick-set-check';

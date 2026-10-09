@@ -1,11 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * The numbers the six primitive helpers read, for one world: each capacity family's ladder,
- * the rung a new file stands on, the item for each jump and the planned jumps of its
- * progressive item, plus the items the meter, bottle and heart readings count. The loader's
- * primitives are the arithmetic of state-helpers-capacity.ts, state-helpers.ts and
- * rules/heart-capacity.ts over these tables and nothing else.
- */
 import { ITEM } from '../../world/item-ids.data';
 import { CAPACITY_SHOP } from '../../world/capacity/capacity-shop.data';
 import { REGION } from '../../world/region-ids.data';

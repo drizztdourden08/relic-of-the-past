@@ -1,31 +1,10 @@
 /* @layer shared-game @kind logic */
-/**
- * The receipt lines of a FIXED-JUMP capacity plan (the progressive switch
- * off). A fixed item carries its jump, but the capacity it climbs from is
- * only known in the core at grant time, since the shuffle decides the order the
- * copies are found in, so the session pre-renders one line per (item jump,
- * possible starting rung) and the core selects by the live rung when the
- * grant resolves (capacity_fixed_lines.c). The counted families and the
- * meter can stand on any rung below their top (a locked pond's native step
- * moves them off-plan), so every rung is a candidate start; the wallet has
- * no native step, so only the sums the plan's own jumps can reach are.
- */
 import { FAMILIES } from '../world/capacity/capacity-family';
 import { maxTierOf, planOf, startTierOf } from '../world/capacity/family-plan';
 import { renderCapacityStep } from './capacity-rung-values';
 import type { CapacityFamilyId, CapacityProfile } from '../world/capacity/capacity-profile.type';
-import type { ReceiptLine } from './receipt-line.type';
+import type { CapacityFixedLine } from './capacity-lines.type';
 
-interface CapacityFixedLine {
-  family: CapacityFamilyId;
-  /** The rung the family stands on when the item lands. */
-  fromRung: number;
-  /** The item's jump in rungs; the climb ends at fromRung + jump. */
-  jump: number;
-  line: ReceiptLine;
-}
-
-/** The rungs a fixed pickup can start from, below the plan's top. */
 const startRungsOf = (
   family: CapacityFamilyId, start: number, max: number, jumps: readonly number[],
 ): number[] => {
@@ -37,7 +16,6 @@ const startRungsOf = (
   return [...sums].filter((rung) => rung < max).sort((a, b) => a - b);
 };
 
-/** Every (jump, starting rung) line of the Custom families; [] when no family is Custom. */
 const capacityFixedLinesOf = (profile: CapacityProfile): CapacityFixedLine[] =>
   FAMILIES.flatMap((capacityFamily) => {
     const setting = profile[capacityFamily.id];
@@ -56,4 +34,3 @@ const capacityFixedLinesOf = (profile: CapacityProfile): CapacityFixedLine[] =>
   });
 
 export { capacityFixedLinesOf };
-export type { CapacityFixedLine };

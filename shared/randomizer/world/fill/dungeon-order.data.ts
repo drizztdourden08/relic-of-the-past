@@ -1,12 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * The order the fill walks the dungeons in.
- *
- * Not a fact about any dungeon, which is why it is not on the records: it is the order the
- * prefill pass pushes each dungeon's restricted items in, and the placement depends on it, so
- * it belongs to the fill. Ported from Archipelago worlds/alttp/Dungeons.py create_dungeons
- * (open mode), whose call order this is.
- */
 import type { DungeonId } from '@shared/game/data/types/ids';
 
 const DUNGEON_ORDER: readonly DungeonId[] = [

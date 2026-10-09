@@ -1,16 +1,4 @@
-/* @layer shared-game @kind generated */
-/**
- * GENERATED, then FROZEN. The Archipelago numeric id of every location and item this game
- * can ever put in a multiworld, and the name the server shows for each.
- *
- * APPEND-ONLY. A seed already generated carries these numbers, so an id handed out is never
- * changed, reused or removed. A new key takes the next free id at the end of its table.
- * tests/randomizer/ap-ids.keep.test.ts pins every id in use and fails on any edit to one.
- *
- * Locations count up from AP_ID_BASE, items from AP_ID_BASE + AP_ITEM_ID_OFFSET (ap-game.ts).
- * A story event of the world carries no id: the world package creates it as an Archipelago
- * event, which Archipelago gives none.
- */
+/* @layer shared-game @kind data */
 import type { ItemKey } from '../world/item-ids.data';
 import type { LocationKey } from '../world/location-key';
 

@@ -1,9 +1,9 @@
 /* @layer shared-game @kind barrel */
-/** Barrel for the rule binding the capacity families to the wishing pond. */
 export { CAPACITY_POND_NOTES } from './capacity-pond-notes.data';
-export { POND_FED_FAMILIES, fedFamiliesOf, reconcileCapacityPond } from './capacity-pond-rule';
-export type { PondFedFamily } from './capacity-pond-rule';
+export { POND_FED_FAMILIES } from './capacity-pond.constants';
+export { fedFamiliesOf } from './fed-families-of';
+export { reconcileCapacityPond } from './reconcile-capacity-pond';
 export { pondStatusOf } from './pond-status';
 export type {
-  CapacityPondAuthority, CapacityPondSelection, ReconciledCapacityPond,
+  CapacityPondAuthority, CapacityPondSelection, PondFedFamily, ReconciledCapacityPond,
 } from './capacity-pond-rule.type';

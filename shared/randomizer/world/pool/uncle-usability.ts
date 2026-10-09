@@ -1,44 +1,16 @@
 /* @layer shared-game @kind logic */
-/**
- * Which starting weapons the escape can actually be fought with. A family
- * standing on its empty rung when the file starts makes its weapon dead on
- * arrival: no bombs to hold, no arrows to fire, no meter for the rod and the
- * canes. The assurance scan (uncle-weapon.ts) and the stored-placement check
- * (fill/verify-standard.ts) both filter through this, so a weapon that cannot
- * be used is never the one handed over.
- *
- * Retro takes the bow out on its own terms. There, arrows are not a capacity
- * at all: the bow fires only once the quiver has been bought, and the escape
- * happens before any shop can be reached. So a bow handed over at the start of
- * a retro seed can never be fired, whatever the arrow capacity says, and the
- * file is left at the first guard with nothing that hurts it.
- *
- * Vanilla start rungs with retro off admit every candidate, so the reference
- * scan is unchanged there.
- */
 import { familyById } from '../capacity/capacity-family';
 import { startTierOf } from '../capacity/family-plan';
 import { UNCLE_BOW_CANDIDATES } from './standard-escape.data';
-import { ITEM } from '../item-ids.data';
+import { START_FAMILY_OF_WEAPON } from './uncle-usability.constants';
 import type { ItemId } from '@shared/game/data/types/ids';
 import type { ItemKey } from '../item-ids.data';
-import type { CapacityFamilyId, CapacityProfile } from '../capacity/capacity-profile.type';
+import type { CapacityProfile } from '../capacity/capacity-profile.type';
 
-/** The family a starting weapon draws on; absent means it needs no capacity. */
-const START_FAMILY_OF_WEAPON: ReadonlyMap<ItemKey, CapacityFamilyId> = new Map<ItemKey, CapacityFamilyId>([
-  [ITEM.bombs10, 'explosives'],
-  [ITEM.progressiveBow, 'projectiles'],
-  [ITEM.bow, 'projectiles'],
-  [ITEM.fireRod, 'meter'],
-  [ITEM.caneOfSomaria, 'meter'],
-  [ITEM.caneOfByrna, 'meter'],
-]);
-
-/** |retroBow| is the switch, not the whole setting: only whether shots are bought. */
 const uncleWeaponUsableAtStart = (
-  profile: CapacityProfile, retroBow = false,
+  profile: CapacityProfile, retroShotsBought = false,
 ) => (item: ItemKey): boolean => {
-  if (retroBow && UNCLE_BOW_CANDIDATES.includes(item as ItemId)) return false;
+  if (retroShotsBought && UNCLE_BOW_CANDIDATES.includes(item as ItemId)) return false;
   const family = START_FAMILY_OF_WEAPON.get(item);
   return family === undefined || startTierOf(familyById(family), profile[family]) > 0;
 };
