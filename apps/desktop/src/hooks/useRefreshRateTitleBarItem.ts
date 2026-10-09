@@ -1,10 +1,10 @@
 /* @layer renderer-app @kind hook */
 import { nav } from '@drizztdourden08/brock-react';
 import type { TitleBarItemSpec } from '@drizztdourden08/brock-react';
-import { effectiveHz, isSyncedRate } from '@shared/display/refresh-rate';
+import { effectiveHz, isSyncedRate } from '@drizztdourden08/brock-display';
+import { useRefreshRate } from '@drizztdourden08/brock-display/renderer';
 import { useFpsReadout } from './useFpsReadout';
 import { useOptionalGameSession } from './useOptionalGameSession';
-import { useRefreshRate } from './useRefreshRate';
 import { REFRESH_RATE_HINT } from './useRefreshRateTitleBarItem.constants';
 
 const useRefreshRateTitleBarItem = (): TitleBarItemSpec | null => {

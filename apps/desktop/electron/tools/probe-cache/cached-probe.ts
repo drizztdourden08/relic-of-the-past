@@ -7,7 +7,7 @@ const cachedProbe = async (filePath: string): Promise<ProbedAudio | null> => {
   const [cache, st] = await Promise.all([loadCache(), stat(filePath).catch(() => null)]);
   if (!st) return null;
   const hit = cache.get(filePath);
-  return hit && hit.size === st.size && hit.mtimeMs === st.mtimeMs ? hit.probed : null;
+  return hit?.size === st.size && hit.mtimeMs === st.mtimeMs ? hit.probed : null;
 };
 
 export { cachedProbe };

@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { listControllerDevices } from '../controller-devices-store';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { detectAllDevices } from '../device-detector';
 import { rebuildSchemeBindings } from '../scheme-runtime';
 import type { InputManager } from './input-manager';
@@ -9,7 +10,7 @@ const refreshInputDevices = (m: InputManager): void => {
   m.devices = detectAllDevices(m.hidDeviceCache);
   notifyQuietly(m.deviceListeners, m.devices);
 
-  listControllerDevices()
+  (inputApi()?.list() ?? Promise.resolve<DeviceEntry[]>([]))
     .then(deviceEntries => {
       m.hidDeviceCache = deviceEntries;
       rebuildSchemeBindings(m.activeProfile, deviceEntries);

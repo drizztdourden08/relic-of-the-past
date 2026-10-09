@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind data */
+import { DEFAULT_DISPLAY_SETTINGS } from '@drizztdourden08/brock-display';
 import type { GameSettings } from '@shared/types/settings';
 import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
 import { ONLINE_NOTICE_DEFAULTS } from '@shared/randomizer/archipelago/online-notice-settings';
@@ -13,8 +14,6 @@ const DEFAULT_SETTINGS: GameSettings = {
   displayPerfInTitle: false,
   disableFrameDelay: false,
   vsync: false,
-  syncedRefreshRate: false,
-  syncedRefreshRateHz: 0,
   turboEnabled: false,
   turboSpeed: DEFAULT_TURBO_SPEED,
 
@@ -43,7 +42,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   linkSprite: null,
   outputMethod: 'SDL',
 
-  windowMode: 'windowed',
+  ...DEFAULT_DISPLAY_SETTINGS,
   startFullscreen: false,
   viewportConstraint: 'none',
   pixelPerfect: false,

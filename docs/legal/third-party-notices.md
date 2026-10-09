@@ -48,7 +48,7 @@ freely, subject to the following restrictions:
   libusb's official released source; on Linux and macOS it is the distribution's own build
   of the same pinned version.
 - **Source:** <https://github.com/libusb/libusb> (the exact version this app pins is recorded
-  in the repo at `apps/desktop/electron/input/native/sdl3/package.json`).
+  in the Brock input module's `native/package.json`, `@drizztdourden08/brock-input`).
 - **Your rights under the LGPL:** because the library is dynamically linked, you may replace
   the shipped library with your own build of libusb (for example, one built from a modified
   copy of the libusb source) and the app will load it in place of the bundled one. It sits
@@ -92,7 +92,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 ## Game controller database
 
-- **What it is:** `resources/gamecontrollerdb.txt`, a community-maintained list of controller
+- **What it is:** `gamecontrollerdb.txt`, bundled by the Brock input module, a community-maintained list of controller
   button mappings that SDL3 uses to recognize specific controller models. It ships as a plain
   text file inside the installer, not as code.
 - **License:** zlib.

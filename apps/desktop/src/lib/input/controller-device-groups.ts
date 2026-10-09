@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { ControllerDeviceGroup, ControllerPort } from './controller-device-groups.type';
 
 const portSuffixOf = (deviceKey: string): number | null => {

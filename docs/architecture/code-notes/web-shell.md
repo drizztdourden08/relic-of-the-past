@@ -48,62 +48,7 @@ The plain browser host adapter, for a renderer opened over http with neither Ele
 
 ## platform/hosts/capacitor-factory.ts
 
-The Capacitor host adapter for Android and iOS. Window controls do nothing, since mobile has no window chrome. Files go through the Filesystem plugin. Controllers go through the ControllerSdl3 plugin, which runs the SDL3 gamepad backend inside the app's own WebView process (see `createCapacitorControllerHost`). On iOS, or on an Android build with no matching native library, that plugin is missing and the host reports zero controllers. Any `window.api` call that has no port yet hits the boot-safe shim in `platform/api-shim`.
-
-## platform/hosts/capacitor/controller-host.ts
-
-The Capacitor `ControllerHost`. The ControllerSdl3 plugin (`apps/desktop/mobile/android/.../controllersdl3/ControllerSdl3Plugin.java`) runs the SDL3 gamepad backend inside the app's own WebView process on Android. This host starts the plugin once, decodes its added, removed and state events into a live device map (`controller-sdl3-store.ts`), and answers decoded button and axis state and rumble through the `ControllerHost` port, like the desktop SDL3 addon. The raw HID members of the port (`write`, `onReport`, `onDeviceOpened`, `getOpenKeys`, `onMainPerf`) have no SDL3 equivalent and do nothing, the same as on desktop.
-
-The device snapshot (`controller:list`, `controller:devices`, `controller:removed`) is not part of this port. The device list and calibration screens read those off `window.api`, so creating this host also installs real implementations for those three channels (`install-controller-api.ts`).
-
-When the native library fails to load (wrong ABI, missing `.so`) or SDL fails to start, the plugin's `start()` resolves `{ ok: false }` instead of throwing (see `Sdl3Bridge.java`). The host then never starts listening, so every surface reports zero controllers, like a desktop build with no SDL3 addon.
-
-The `appStateChange` listener mirrors the device port's own `onAppPause` listener: it stops polling for gamepad events while the app is in the background and restarts on return, so the native subsystem does not run while the app is hidden.
-
-## platform/hosts/capacitor/controller-sdl3-device-key
-
-Assigns and frees `vid:pid` device keys for connected Android SDL3 gamepads, keyed by SDL joystick id. Bindings, profiles and calibration are keyed by a `vid:pid` string (4 lowercase hex digits each), and that must keep working for the common case of one device per `vid:pid`. A second device with the same `vid:pid` gets a `#N` suffix, so two physical pads never collide on one key. The slot is freed when its device is removed, so a later connect can reuse it without disturbing a device still connected.
-
-This is a deliberate copy of the same rule in `apps/desktop/electron/input/sdl3-device-key/`. That module lives in the Electron main process zone, not in `shared/`, and the renderer's module graph cannot reach it.
-
-## platform/hosts/capacitor/controller-sdl3-plugin
-
-The Capacitor bridge to the ControllerSdl3 native plugin: start the SDL3 gamepad subsystem, stop it, rumble a device by its SDL joystick id, and listen for the `controllerEvent` notification that each added, removed or state event arrives as.
-
-`start()` resolves `{ ok: false }` instead of throwing when the native library cannot load or `SDL_Init` fails. Callers treat that like a desktop build with no SDL3 addon: report no controllers, never crash.
-
-`onControllerSdl3Event` returns a synchronous unsubscribe. `addListener` itself resolves later, which is the bridge idiom for plugin listeners.
-
-## platform/hosts/capacitor/controller-sdl3.type.ts
-
-The event shapes carried by the plugin's `controllerEvent` notification. They match the `added`, `removed` and `state` members of `Sdl3Event` (`apps/desktop/electron/input/native/sdl3/sdl3.type.ts`) field for field, checked against `controller_sdl3_jni.c`, which writes this exact JSON, so nothing needs reshaping. They are declared here because that desktop type file lives inside the Electron app's own module graph.
-
-Only these three event types exist on Android. The native layer never emits `error`, `raw`, `joystick` or `gamepad-hold`, which back diagnostics wizard features with no Android UI.
-
-- `hasButton` is indexed by the `SDL_GamepadButton` enum, from `SDL_GamepadHasButton`.
-- `hasAxis` is indexed by the `SDL_GamepadAxis` enum, from `SDL_GamepadHasAxis`.
-- `buttonLabels` is indexed like `hasButton`: the label this pad prints on that button, or an empty string when unknown.
-- `LiveDevice.name` is SDL's own name for the device. It is carried in the snapshot because the connect event fires once and a listener that subscribes later misses it.
-
-## platform/hosts/capacitor/controller-sdl3-snapshot.ts
-
-Builds the `DeviceEntry` snapshot (the `controller:list` and `controller:devices` shape, see `shared/ipc/controller-contract.ts`) for the Android SDL3 transport. Every entry is `ready`. Unlike the desktop transport, this plugin has no separate raw HID enumeration that could report a device SDL failed to claim, so there is no `unavailable` half to build: every device in the store is one SDL has open. There is no raw HID product string on this platform either, so `product` repeats SDL's own name, which is what the device list shows.
-
-## platform/hosts/capacitor/controller-sdl3-store.ts
-
-The live SDL3 controller tracker for the Android plugin. It starts and stops the native gamepad subsystem, decodes the added, removed and state events into a map of every open gamepad keyed by device key, and serves that map as decoded button and axis state (`onControllerState`), rumble, and the `DeviceEntry` snapshot that the device list and calibration screens read (see `install-controller-api.ts`).
-
-A device that has connected but that nobody has touched yet still shows up. The map is built only from `added` and `removed` events, never inferred from `state` traffic, so an untouched pad is never mistaken for a disconnected one.
-
-`start()` does nothing, and logs once, when the plugin is not registered or the native library failed. It subscribes to events before it starts the plugin, never after. The native side begins polling the moment `start()` is called and announces pads that are already connected on its very first tick, well before an `await` resolves. A later subscription drops those announcements, and a pad that is already plugged in never announces itself again, so it would stay invisible for the whole session.
-
-`rescan()` broadcasts the current snapshot again. Android has no separate raw HID lister to scan again, so this is the closest honest match for the desktop "look again" action.
-
-## platform/hosts/capacitor/controller-sdl3-vibrate.ts
-
-Turns a timed pattern of `{ durationMs, intensity }` segments into a sequence of rumble calls, one per segment, `gapMs` apart. It is the same sequencing that `apps/desktop/electron/input/haptic-pattern-player.ts` runs in the Electron main process. Android has no separate main process (the plugin runs inside the app's own WebView), so the timing lives in the renderer and runs on plain `setTimeout`. Starting a new pattern on a device cancels whatever was still playing on it, so overlapping haptic events never interleave on one motor.
-
-The opening zero-length rumble only silences whatever the motor was doing. Its result is ignored on purpose: a backend that declines a zero-length rumble would otherwise cancel the whole pattern before a single real segment ran, and the caller that resolves the device id already knows whether the device exists.
+The Capacitor host adapter for Android and iOS. Window controls do nothing, since mobile has no window chrome. Files go through the Filesystem plugin. Controllers come from the Brock input module's `BrockInput` plugin through `inputApi()`, the same API as on desktop. Any `window.api` call that has no port yet hits the boot-safe shim in `platform/api-shim`.
 
 ## platform/hosts/capacitor/device.ts
 
@@ -134,12 +79,6 @@ The Capacitor `FileStore`, backed by app-private storage through the Filesystem 
 ## platform/hosts/capacitor/frame-rate-plugin
 
 The bridge to the Android FrameRate plugin. It asks the platform for a refresh rate that divides evenly into the game's 60 frames a second. Android decides whether to honour it, so nothing here reports the display as definitely changed: only what was requested and what the display says it is doing. `supportedHz` arrives comma separated, because Capacitor bridges float arrays poorly. `parseSupportedHz` drops anything unusable.
-
-## platform/hosts/capacitor/install-controller-api.ts
-
-Replaces the boot-safe `window.api` channels for the controller device list (see `platform/api-shim`) with real implementations backed by the SDL3 store. It covers the three that the device list and calibration screens call directly, outside the `ControllerHost` port: `controller:list`, `controller:devices` and `controller:removed`. `controller:rescan` has no raw HID lister to scan again on this platform, so it emits the current snapshot again. Everything else on `window.api` that concerns controllers (`listHidDevices`, `addControllerMapping`, the raw HID diagnostics wizard) keeps the shim's empty default, because that wizard has no Android UI.
-
-The invoke and event members of `window.api` are typed read-only, a side effect of the homomorphic mapped type over the `as const` channel maps (see `shared/ipc/api.ts`). So the override replaces the whole object instead of assigning into it.
 
 ## platform/hosts/capacitor/storage.ts
 
@@ -438,10 +377,6 @@ The value must survive a JSON round trip; see `widget-prefs.ts` for why that is 
 ## hooks/useSyncedRate.ts
 
 The synced refresh rate status, and the push of the preference down to the host. The host owns applying and restoring the rate, because that has to survive the window closing or the app quitting straight out of fullscreen. The hook only reports what the host can do and forwards the player's choice. `push` forwards the preference and takes back the host's updated view of it; when the host cannot do it, the status already says so. The preference is pushed again whenever the stored value changes, so the host's copy never drifts from the profile. That includes the first mount, which arms it for the session.
-
-## hooks/useFfmpegInstall.ts
-
-The optional media tool: a large download kept under the app's data root, followed by event, not polled. Nothing is fetched until `install` is called. Every feature that needs ffmpeg (MSU audio conversion, debug report video capture) shares it, so there is exactly one download and one install flow. `install` resolves with the final state, so a caller need not wait for a render to learn the outcome.
 
 ## hooks/useIsNarrow.ts
 

@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import * as saves from '@shared/storage/saves';
-import { platformFiles } from '../platform-files';
+import { portSaveStore } from './port-save-store';
 import { saveBytes } from './save-bytes';
 
-const readSram = async (p: string): Promise<ArrayBuffer | null> => saveBytes.toArrayBuffer(await saves.readSram(platformFiles(), p));
+const readSram = async (p: string): Promise<ArrayBuffer | null> => saveBytes.toArrayBuffer(await portSaveStore.store().sram.read(p));
 
 export { readSram };

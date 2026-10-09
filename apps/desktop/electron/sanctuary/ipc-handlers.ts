@@ -1,11 +1,12 @@
 /* @layer electron-main @kind logic */
-import { handle } from '@drizztdourden08/brock-electron/main';
-import { submitReport, uploadPendingZip } from './submit-report';
+import type { MainContext } from '@drizztdourden08/brock-electron/main';
+import { keepReportSnapshot } from './report-snapshot';
+import { submitReport } from './submit-report';
 
-const registerSanctuaryHandlers = (): void => {
-  handle('sanctuary:submitReport', async (_event, input) => submitReport(input));
+const registerSanctuaryHandlers = ({ handle }: Pick<MainContext, 'handle'>): void => {
+  handle('sanctuary:submitReport', (_event, input) => submitReport(input));
 
-  handle('sanctuary:retryUpload', async (_event, { reportId }) => uploadPendingZip(reportId));
+  handle('sanctuary:reportSnapshot', (_event, snapshot) => { keepReportSnapshot(snapshot); });
 };
 
 export { registerSanctuaryHandlers };

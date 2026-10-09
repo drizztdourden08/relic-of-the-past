@@ -1,6 +1,8 @@
 /* @layer electron-main @kind types */
+import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
+
 interface MeasureRequest {
-  ffmpegPath: string;
+  tools: ToolsMain;
   tempDir: string;
   filePath: string;
   fileName: string;

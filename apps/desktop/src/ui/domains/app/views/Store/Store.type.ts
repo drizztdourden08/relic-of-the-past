@@ -1,26 +1,22 @@
 /* @layer renderer-components @kind types */
-import type { InstallProgress } from '@shared/store/install/installer.type';
+import type { CatalogInstallBarProps, CatalogLink } from '@drizztdourden08/brock-catalog/renderer';
 import type { InstalledPack } from '@shared/store/installed-types';
 import type { HomeResponse, ItemResponse } from '@shared/store/api-types';
 import type { ItemCardView } from '@shared/store/home-types';
-import type { StoreOpenInstall } from '@shared/ipc';
 import type { StoreItemStatus } from '../../compounds/StoreItemCard';
-import type { useInstall } from './behavior/useInstall';
 import type { useStore } from './behavior/useStore';
 import type { useStoreAccount } from './behavior/useStoreAccount';
 
 type StoreSection = 'home' | 'browse' | 'music' | 'character' | 'language' | 'installed' | 'updates';
 
+type DeleteConfirm = (title: string, message: string, onConfirm: () => void) => void;
+
+type ConfirmUninstall = (name: string, run: () => Promise<void>) => void;
+
 interface StoreProps {
   onLibraryChanged: () => unknown;
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
+  onDeleteConfirm: DeleteConfirm;
   section?: StoreSection;
-}
-
-interface InstallJob {
-  running: boolean;
-  progress: InstallProgress | null;
-  error: string | null;
 }
 
 interface InstalledRow {
@@ -36,23 +32,19 @@ interface CatalogState {
   error: string | null;
 }
 
-type InstallParams = {
-  onInstalled: () => void;
-  onSignedOut: () => void;
-};
-
 type OpenInstallParams = {
   signedIn: boolean;
   onOpen: (itemId: string) => void;
   install: (itemId: string, version: number | null) => void;
 };
 
-type UninstallParams = {
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  onUninstalled: () => void;
+type InstallBarParams = {
+  itemId: string;
+  name: string;
+  hasUpdate: boolean;
+  onSignedOut: () => void;
+  onConfirmUninstall: ConfirmUninstall;
 };
-
-type StoreInstaller = ReturnType<typeof useInstall>;
 
 type StoreModel = ReturnType<typeof useStore>;
 
@@ -66,11 +58,7 @@ interface StoreBrowseProps {
 interface StoreDetailProps {
   detail: ItemResponse;
   pack: InstalledPack | null;
-  job: InstallJob;
-  uninstalling: boolean;
-  onInstall: () => void;
-  onCancel: () => void;
-  onUninstall: () => void;
+  bar: CatalogInstallBarProps;
   onOpenSite: () => void;
 }
 
@@ -96,11 +84,6 @@ interface StoreHomeProps {
   onShowUpdates: () => void;
 }
 
-interface StoreInstallBarProps {
-  job: InstallJob;
-  onCancel: () => void;
-}
-
 interface StoreInstalledListProps {
   title: string;
   rows: InstalledRow[];
@@ -110,12 +93,9 @@ interface StoreInstalledListProps {
 
 interface StoreInstalledRowProps {
   row: InstalledRow;
-  job: InstallJob;
   canUpdate: boolean;
-  uninstalling: boolean;
-  onUpdate: (itemId: string) => void;
-  onCancel: (itemId: string) => void;
-  onUninstall: (itemId: string, name: string) => void;
+  onSignedOut: () => void;
+  onConfirmUninstall: ConfirmUninstall;
 }
 
 interface StoreSectionContentProps {
@@ -124,13 +104,14 @@ interface StoreSectionContentProps {
 
 interface StoreSignInProps {
   account: StoreAccount;
-  waitingLink: StoreOpenInstall | null;
+  waitingLink: CatalogLink | null;
 }
 
 export type {
   CatalogState,
-  InstallJob,
-  InstallParams,
+  ConfirmUninstall,
+  DeleteConfirm,
+  InstallBarParams,
   InstalledRow,
   OpenInstallParams,
   StoreAccount,
@@ -139,14 +120,11 @@ export type {
   StoreDetailProps,
   StoreGridProps,
   StoreHomeProps,
-  StoreInstallBarProps,
   StoreInstalledListProps,
   StoreInstalledRowProps,
-  StoreInstaller,
   StoreModel,
   StoreProps,
   StoreSection,
   StoreSectionContentProps,
   StoreSignInProps,
-  UninstallParams,
 };

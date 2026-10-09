@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
+import { CatalogInstallBar } from '@drizztdourden08/brock-catalog/renderer';
 import { Box, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils';
 import { storeMediaUrl } from '@app/lib/store/store-site';
@@ -8,13 +9,11 @@ import { Stars } from '../../../compounds/Stars';
 import type { StoreDetailProps } from '../Store.type';
 import { averageOf } from '../behavior/average-of';
 import { liveVersionOf } from '../behavior/item-facts';
-import { StoreInstallBar } from './StoreInstallBar';
 
 const StoreDetail = (props: StoreDetailProps) => {
-  const { detail, pack, job, uninstalling, onInstall, onCancel, onUninstall, onOpenSite } = props;
+  const { detail, pack, bar, onOpenSite } = props;
   const { item } = detail;
   const live = liveVersionOf(item);
-  const hasUpdate = !!pack && !!live && live.semver !== pack.semver;
   const icon = <Text as="span" className="store-detail__icon"><IconifyIcon icon={KIND_ICONS[item.kind]} /></Text>;
 
   return (
@@ -33,14 +32,8 @@ const StoreDetail = (props: StoreDetailProps) => {
         {pack && <Text as="span">{pack.semver}</Text>}
       </Box>
       <Stars average={averageOf(item.stats)} count={item.stats.ratingCount} />
-      {job.running && <StoreInstallBar job={job} onCancel={onCancel} />}
-      {job.error && <Text as="p" className="store__error">{job.error}</Text>}
+      {(pack !== null || live !== null) && <CatalogInstallBar {...bar} />}
       <Flex wrap gap="sm">
-        {!job.running && !pack && live && <Button variant="primary" onClick={onInstall}>Install</Button>}
-        {!job.running && hasUpdate && <Button variant="primary" onClick={onInstall}>Update</Button>}
-        {!job.running && pack && (
-          <Button variant="danger" onClick={onUninstall} disabled={uninstalling}>Uninstall</Button>
-        )}
         <Button variant="secondary" onClick={onOpenSite}>Open on the site</Button>
       </Flex>
     </Stack>

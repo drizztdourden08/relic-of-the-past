@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useState } from 'react';
-import { listControllerDevices } from '@app/lib/input/controller-devices-store';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
+import { listInputDevices } from './list-input-devices';
 import { useNativeCaptures } from '../diagnostics/hooks/useNativeCaptures';
 import type { NativeCaptureStatus } from '../diagnostics/hooks/useNativeCaptures';
 import type { Phase } from '../hid-calibration.type';
@@ -12,7 +12,7 @@ const useWizardRawCapture = (phase: Phase, deviceKey?: string): NativeCaptureSta
   useEffect(() => {
     if (phase !== 'live') { setDeviceEntry(null); return; }
     let cancelled = false;
-    listControllerDevices().then((devices) => {
+    listInputDevices().then((devices) => {
       if (cancelled) return;
       const entry = deviceKey
         ? devices.find((d) => d.deviceKey === deviceKey) ?? null

@@ -1,5 +1,4 @@
 /* @layer shared-types @kind types */
-import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { InvokeResult } from './invoke-result.type';
@@ -25,18 +24,11 @@ interface HostInvokeContract {
   'file:mkdir': (dir: string) => Promise<void>;
   'file:stat': (path: string) => Promise<FileStat | null>;
 
-  'wasm:readBytes': () => Promise<ArrayBuffer>;
-
   'window:isMaximized': () => Promise<boolean>;
   'window:setAlwaysOnTop': (value: boolean) => Promise<boolean>;
   'window:setAudioMuted': (value: boolean) => Promise<boolean>;
   'window:isAudioMuted': () => Promise<boolean>;
   'window:isFullscreen': () => Promise<boolean>;
-
-  'display:getRefreshRate': () => Promise<RefreshRateInfo>;
-  'display:getSyncedRateStatus': () => Promise<SyncedRateStatus>;
-  'display:setSyncedRatePreference': (enabled: boolean, targetHz: number) => Promise<SyncedRateStatus>;
-  'display:applyRefreshRate': (hz: number) => Promise<SyncedRateStatus>;
 
   'dialog:openRom': () => Promise<string | null>;
   'dialog:pickFile': (extensions: string[]) => Promise<{ name: string; data: ArrayBuffer } | null>;

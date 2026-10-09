@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind component */
 import { useCallback } from 'react';
-import { effectiveHz } from '@shared/display/refresh-rate';
-import { useRefreshRate } from '@app/hooks/useRefreshRate';
+import { effectiveHz } from '@drizztdourden08/brock-display';
+import { useRefreshRate } from '@drizztdourden08/brock-display/renderer';
 import { ControlRow } from '../ControlRow';
 import { useSettingItemText } from '../ControlRow/behavior/useSettingItemText';
 import { refreshAdvisory } from './refresh-advisory';

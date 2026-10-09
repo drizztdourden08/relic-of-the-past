@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import { releaseHold, restoreHold } from '@app/lib/input/controller-hold-store';
 import { resolveDeviceFromEntry } from '@app/lib/input/resolve-device';
+import { releaseHold } from './release-hold';
+import { restoreHold } from './restore-hold';
 import type { CapturedLayout, LayoutStage } from '../diagnostics-wizard.type';
 import { awaitClaimedEntry } from './await-claimed-entry';
 

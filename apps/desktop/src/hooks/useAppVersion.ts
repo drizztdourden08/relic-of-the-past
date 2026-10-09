@@ -6,7 +6,7 @@ const useAppVersion = (): string => {
   const [version, setVersion] = useState('');
 
   useEffect(() => {
-    appApi().updater.getVersion().then(setVersion);
+    void appApi().getAppVersion().then(setVersion);
   }, []);
 
   return version;

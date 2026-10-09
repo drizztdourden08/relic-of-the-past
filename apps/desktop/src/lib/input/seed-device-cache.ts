@@ -1,15 +1,16 @@
 /* @layer renderer-lib @kind logic */
-import { appApi } from '@app/ipc/app-api';
-import { listControllerDevices, onControllerDevicesSnapshot } from './controller-devices-store';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import type { DeviceSnapshotFields } from './seed-device-cache.type';
 
 const seedPerDeviceCache = (remember: (fields: DeviceSnapshotFields) => void): (() => void) => {
-  listControllerDevices().then((entries) => entries.forEach(remember)).catch(() => undefined);
-  const unsubSnapshot = onControllerDevicesSnapshot((entries) => entries.forEach(remember));
-  const unsubAdded = appApi()?.onControllerAdded?.(remember) ?? null;
+  const api = inputApi();
+  if (!api) return () => undefined;
+  api.list().then((entries) => entries.forEach(remember)).catch(() => undefined);
+  const unsubSnapshot = api.onDevices((entries) => entries.forEach(remember));
+  const unsubAdded = api.onAdded(remember);
   return () => {
     unsubSnapshot();
-    unsubAdded?.();
+    unsubAdded();
   };
 };
 

@@ -5,7 +5,6 @@ import { createPreloadBridge } from '@drizztdourden08/brock-electron/preload';
 import { preloadNamespaces } from '../.brock/modules.preload';
 import { APP_EVENT_MAP, APP_INVOKE_MAP, APP_SEND_MAP } from '../src/ipc/contract.constants';
 import type { SpritesUrlApi } from '../src/ipc/app-api.type';
-import { updaterNamespace } from './preload-namespaces/updater-namespace';
 import { shadowCastingNamespace } from './preload-namespaces/shadow-casting-namespace';
 import { screenEditorNamespace } from './preload-namespaces/screen-editor-namespace';
 
@@ -19,7 +18,7 @@ createPreloadBridge({
     send: composeMaps(BASE_SEND_MAP, APP_SEND_MAP),
     events: composeMaps(BASE_EVENT_MAP, APP_EVENT_MAP),
   },
-  namespaces: [...preloadNamespaces, updaterNamespace, shadowCastingNamespace, screenEditorNamespace],
+  namespaces: [...preloadNamespaces, shadowCastingNamespace, screenEditorNamespace],
   helpers: { ...helpers },
   debugGlobal: { name: '__relicDebug', values: { forceAspect: process.env.RELIC_FORCE_ASPECT ?? null } },
 });

@@ -4,6 +4,8 @@ interface EncodeRequest {
   sourcePath: string;
   destPath: string;
   seconds?: number;
+  durationSeconds?: number | null;
+  onProgress?: (fraction: number) => void;
 }
 
 export type { EncodeRequest };

@@ -16,7 +16,6 @@ const SKIP_REL = [
   'apps/desktop/public/wasm',
   'apps/desktop/mobile/android',
   '.claude/worktrees',
-  'apps/desktop/electron/input/native/sdl3/prebuilds',
 ];
 // Compiled binaries have no source lines; classified as logic they report nonsense.
 const SKIP_FILE =

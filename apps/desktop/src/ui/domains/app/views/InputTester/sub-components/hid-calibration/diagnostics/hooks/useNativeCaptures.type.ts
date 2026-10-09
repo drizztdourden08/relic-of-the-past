@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { JoystickInfo } from '@shared/ipc';
+import type { JoystickInfo } from '@drizztdourden08/brock-input';
 
 interface NativeCaptureStatus {
   rawAvailable: boolean;

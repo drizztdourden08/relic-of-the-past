@@ -5,7 +5,7 @@ import { recallControllerSdlType } from '@app/lib/input/controller-family-cache'
 import { padHex } from './pad-hex';
 import { ALL_AXES, ALL_BUTTONS } from './controls-settings.constants';
 import type { ResolvedControl, SdlGamepadType } from '@shared/input/family';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DeviceIdentity } from './controls-settings.type';
 
 const toHex4 = (value: number): string => value.toString(16).padStart(4, '0');

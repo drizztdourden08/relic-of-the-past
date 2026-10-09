@@ -1,8 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { appApi } from '@app/ipc/app-api';
 import { useCallback, useEffect, useState } from 'react';
+import { useTool } from '@drizztdourden08/brock-tools/renderer';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@shared/types/msu-optimize';
-import { useFfmpegInstall } from '@app/hooks/useFfmpegInstall';
+import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
 import type { OptimizeParams, OptimizeStep } from './useOptimize.type';
 
 const messageOf = (err: unknown, fallback: string): string =>
@@ -13,7 +14,8 @@ const convertibleNames = (analysis: OptimizeAnalysis | null): string[] =>
 
 const useOptimize = (params: OptimizeParams) => {
   const { pack, open, onRunSettled } = params;
-  const tool = useFfmpegInstall(open);
+  const tool = useTool(FFMPEG_TOOL_ID);
+  const { refresh } = tool;
   const [step, setStep] = useState<OptimizeStep>('checking');
   const [analysis, setAnalysis] = useState<OptimizeAnalysis | null>(null);
   const [progress, setProgress] = useState<OptimizeProgress | null>(null);
@@ -21,13 +23,13 @@ const useOptimize = (params: OptimizeParams) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (open) return;
+    if (open) { void refresh(); return; }
     setStep('checking');
     setAnalysis(null);
     setProgress(null);
     setResult(null);
     setError(null);
-  }, [open]);
+  }, [open, refresh]);
 
   useEffect(() => (open ? appApi().onMsuOptimizeProgress(setProgress) : undefined), [open]);
 

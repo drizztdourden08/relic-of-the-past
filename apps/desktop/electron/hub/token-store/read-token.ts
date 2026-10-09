@@ -1,16 +1,10 @@
 /* @layer electron-main @kind logic */
-import { safeStorage } from 'electron';
-import { readFile } from 'fs/promises';
-import { canStore } from './can-store';
-import { tokenPath } from './token-path';
+import { hubSecrets } from './hub-secrets';
+import { HUB_TOKEN_SECRET } from './token-store.constants';
 
 const readToken = async (): Promise<string | null> => {
-  try {
-    const bytes = await readFile(tokenPath());
-    return canStore() ? safeStorage.decryptString(bytes) : null;
-  } catch {
-    return null;
-  }
+  const secrets = hubSecrets();
+  return secrets ? secrets.get(HUB_TOKEN_SECRET) : null;
 };
 
 export { readToken };

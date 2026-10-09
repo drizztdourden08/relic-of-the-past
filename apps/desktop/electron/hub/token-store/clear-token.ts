@@ -1,9 +1,9 @@
 /* @layer electron-main @kind logic */
-import { rm } from 'fs/promises';
-import { tokenPath } from './token-path';
+import { hubSecrets } from './hub-secrets';
+import { HUB_TOKEN_SECRET } from './token-store.constants';
 
 const clearToken = async (): Promise<void> => {
-  await rm(tokenPath(), { force: true });
+  await hubSecrets()?.delete(HUB_TOKEN_SECRET);
 };
 
 export { clearToken };

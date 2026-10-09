@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 import type { DeviceProfile } from '@shared/input';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { ResolvedDevice } from '@shared/input/family';
 import type { HidControllerMap } from '../../HidCalibrationWizard';
 import type { PositionalCaptureRecord } from '../positional-capture/positional-capture.type';

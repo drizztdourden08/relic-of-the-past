@@ -4,7 +4,7 @@ import type { HubMe } from '@shared/ipc';
 import { callApi, isApiError } from './client';
 import type { HubApi } from './endpoints';
 import { readToken, clearToken } from './token-store';
-import { deviceLabel } from './device-auth';
+import { deviceLabel } from './device';
 import { UNAUTHORIZED } from './identity.constants';
 import type { MeResponse } from './identity.type';
 

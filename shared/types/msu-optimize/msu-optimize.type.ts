@@ -23,6 +23,7 @@ interface OptimizeProgress {
   index: number;
   total: number;
   fileName: string;
+  fileFraction?: number;
 }
 
 interface OptimizeConversion {

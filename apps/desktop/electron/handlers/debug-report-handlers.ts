@@ -4,8 +4,8 @@ import { registerDebugReportHandlers } from '../diagnostics/debug-report/ipc-han
 
 const debugReportHandlers: HandlerGroup = {
   id: 'debug-report',
-  register: () => {
-    registerDebugReportHandlers();
+  register: (ctx) => {
+    registerDebugReportHandlers(ctx);
   },
 };
 

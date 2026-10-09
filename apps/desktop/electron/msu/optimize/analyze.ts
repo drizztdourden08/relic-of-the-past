@@ -9,7 +9,7 @@ import { listPackAudio, pendingConversions } from './pack-audio';
 import type { AnalyzeRequest, ProgressReporter } from './analyze.type';
 
 const analyzePack = async (request: AnalyzeRequest): Promise<OptimizeAnalysis> => {
-  const { pack, ffmpegPath, report } = request;
+  const { pack, tools, report } = request;
   const audio = await listPackAudio(pack);
   const pending = pendingConversions(audio);
   const tempDir = await mkdtemp(join(tmpdir(), 'msu-optimize-'));
@@ -18,7 +18,7 @@ const analyzePack = async (request: AnalyzeRequest): Promise<OptimizeAnalysis> =
     for (const [index, file] of pending.entries()) {
       report({ pack, phase: 'measure', index: index + 1, total: pending.length, fileName: file.name });
       candidates.push(await measureCandidate({
-        ffmpegPath,
+        tools,
         tempDir,
         filePath: packFilePath(pack, file.name),
         fileName: file.name,

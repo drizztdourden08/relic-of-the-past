@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { ResolvedControl } from '@shared/input/family';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { InputProfile } from '@shared/types/controls';
 import { controlsForDevice } from './profile-controls';
 

@@ -1,38 +1,23 @@
 /* @layer electron-main @kind logic */
-import type { SiteId } from '@shared/hub';
-import type { HubSignInResult } from '@shared/ipc';
-import { handle, emit, getMainWindow } from '@drizztdourden08/brock-electron/main';
-import { beginDeviceSignIn, cancelDeviceSignIn } from './device-auth';
+import { SITE_IDS } from '@shared/hub';
+import type { MainContext } from '@drizztdourden08/brock-electron/main';
+import { getSecrets } from '@drizztdourden08/brock-secrets/main';
 import { SANCTUARY_API } from './endpoints';
-import type { HubApi } from './endpoints';
 import { fetchMe } from './identity';
-import { SITE_APIS } from './ipc-handlers.constants';
-import { clearToken, canStore } from './token-store';
+import { hubSignInProvider } from './sign-in/hub-sign-in-provider';
+import { bindHubContext, clearToken } from './token-store';
 
-const apiForSite = (site: SiteId | undefined): HubApi =>
-  site === 'store' ? SITE_APIS.store : SITE_APIS.sanctuary;
+const registerHubHandlers = (ctx: MainContext): void => {
+  bindHubContext(ctx);
+  const secrets = getSecrets(ctx);
+  for (const site of SITE_IDS) secrets.registerSignInProvider(hubSignInProvider(site));
 
-const sendDeviceCode = (userCode: string): void => {
-  const window = getMainWindow();
-  if (window) emit(window, 'hub:deviceCode', userCode);
-};
-
-const registerHubHandlers = (): void => {
-  handle('hub:beginDeviceSignIn', async (_event, site): Promise<HubSignInResult> => {
-    if (!canStore()) {
-      return { ok: false, reason: 'unavailable', message: 'This system cannot keep a sign-in encrypted.' };
-    }
-    return beginDeviceSignIn(apiForSite(site), sendDeviceCode);
-  });
-
-  handle('hub:cancelDeviceSignIn', async () => { cancelDeviceSignIn(); });
-
-  handle('hub:signOut', async () => {
-    cancelDeviceSignIn();
+  ctx.handle('hub:signOut', async () => {
+    for (const site of SITE_IDS) secrets.signIn.cancel(site);
     await clearToken();
   });
 
-  handle('hub:me', async () => fetchMe(SANCTUARY_API));
+  ctx.handle('hub:me', () => fetchMe(SANCTUARY_API));
 };
 
 export { registerHubHandlers };

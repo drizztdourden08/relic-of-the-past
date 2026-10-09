@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { listControllerDevices } from '@app/lib/input/controller-devices-store';
-import type { DeviceEntry } from '@shared/ipc';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { SETTLE_MS, SHUTDOWN_POLL_MS } from '../diagnostics-wizard.constants';
 import { sleep } from './sleep';
 
@@ -10,7 +10,7 @@ const settledReadyDevices = async (isCancelled: () => boolean): Promise<DeviceEn
   let stableFor = 0;
 
   while (Date.now() < deadline && !isCancelled()) {
-    const ready = (await listControllerDevices()).filter((d) => d.status === 'ready');
+    const ready = ((await inputApi()?.list()) ?? []).filter((d) => d.status === 'ready');
     if (ready.length > best.length) {
       best = ready;
       stableFor = 0;

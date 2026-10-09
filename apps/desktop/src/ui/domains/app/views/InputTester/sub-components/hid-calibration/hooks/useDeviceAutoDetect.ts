@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { listControllerDevices } from '../../../../../../../../lib/input/controller-devices-store';
 import { buildDeviceProfile, buildDeviceProfileFromSdlType } from '@shared/input';
 import type { DeviceProfile } from '@shared/input';
 import { buildDisplayContext, resolveBrandLogoKey, resolveDeviceName } from '@shared/input/family';
 import type { SdlGamepadType } from '@shared/input/family';
 import { SDL_GAMEPAD_TYPES } from '@shared/input/sdl-buttons';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DeviceFamily } from '@shared/types/controls';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
+import { listInputDevices } from './list-input-devices';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 
@@ -50,7 +50,7 @@ const useDeviceAutoDetect = (addLog: (msg: string) => void, initialProfileId?: s
       setDetectedProfile(profileFromSdlType(initialProfileId as SdlGamepadType));
       return;
     }
-    listControllerDevices().then((entries) => {
+    listInputDevices().then((entries) => {
       const entry = entries.find((e) => e.deviceKey === deviceKey);
       setDetectedProfile(entry?.hasButton?.length
         ? profileFromEntry(entry)
@@ -60,7 +60,7 @@ const useDeviceAutoDetect = (addLog: (msg: string) => void, initialProfileId?: s
 
   useEffect(() => {
     if (initialProfile || initialProfileId) return;
-    listControllerDevices().then((entries) => {
+    listInputDevices().then((entries) => {
       const entry = entries.find((e) => e.status === 'ready');
       if (!entry) return;
       const vidPid = entry.deviceKey;

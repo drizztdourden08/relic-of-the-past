@@ -1,9 +1,13 @@
 /* @layer renderer-lib @kind logic */
-import * as saves from '@shared/storage/saves';
+import { deleteMsuResume } from '@shared/storage/msu-resume';
 import { platformFiles } from '../platform-files';
+import { portSaveStore } from './port-save-store';
 import { saveBytes } from './save-bytes';
 
-const writeState = async (p: string, slot: number, data: ArrayBuffer): Promise<void> =>
-  saves.writeState(platformFiles(), p, slot, await saveBytes.stamped(data));
+const writeState = async (p: string, slot: number, data: ArrayBuffer, screenshot?: ArrayBuffer): Promise<void> => {
+  const bytes = await saveBytes.stamped(data);
+  await portSaveStore.store().slots.write(p, portSaveStore.quickRef(slot), { bytes, screenshot: saveBytes.optional(screenshot) });
+  await deleteMsuResume(platformFiles(), p, 'quick', slot);
+};
 
 export { writeState };

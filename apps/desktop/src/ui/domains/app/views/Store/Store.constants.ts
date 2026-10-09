@@ -9,7 +9,7 @@ import type { SideNavConfig } from '@drizztdourden08/tessera/composites';
 import { STORE_SITE_HOST } from '@app/lib/store/store-site';
 import { KIND_ICONS } from '../../compounds/StoreItemCard';
 import type { HubAccountCopy } from '../../compounds/HubAccountCard';
-import type { CatalogState, InstallJob, StoreSection } from './Store.type';
+import type { CatalogState, StoreSection } from './Store.type';
 
 const STORE_NAV: SideNavConfig = {
   home: { id: 'home', label: 'Home', icon: createElement(IconifyIcon, { icon: homeIcon }) },
@@ -37,8 +37,6 @@ const STORE_NAV: SideNavConfig = {
 
 const EMPTY_CATALOG: CatalogState = { home: null, items: [], loading: false, error: null };
 
-const IDLE_JOB: InstallJob = { running: false, progress: null, error: null };
-
 const STORE_SECTIONS: readonly StoreSection[] = ['home', 'browse', 'music', 'character', 'language', 'installed', 'updates'];
 
 const GRID_SECTIONS: readonly StoreSection[] = ['browse', 'music', 'character', 'language'];
@@ -52,8 +50,6 @@ const GRID_TITLES: Partial<Record<StoreSection, string>> = {
 
 const HIGHLIGHT_PIXEL = 3;
 
-const BAR_MAX = 1000;
-
 const STORE_COPY: HubAccountCopy = {
   signedOutLead: '',
   signInLabel: 'Sign in',
@@ -65,12 +61,10 @@ const SIGN_IN_LEAD = 'Browsing and installing packs needs a Relic of the Past ac
 const WAITING_LINK = 'Sign in to install the pack you picked on the site. The install starts as soon as you are signed in.';
 
 export {
-  BAR_MAX,
   EMPTY_CATALOG,
   GRID_SECTIONS,
   GRID_TITLES,
   HIGHLIGHT_PIXEL,
-  IDLE_JOB,
   SIGN_IN_LEAD,
   STORE_COPY,
   STORE_NAV,

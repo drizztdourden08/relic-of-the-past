@@ -12,13 +12,13 @@ import type { MeasureRequest } from './measure.type';
 const measureBytes = async (
   request: MeasureRequest, source: AudioSource,
 ): Promise<number | null> => {
-  const { ffmpegPath, tempDir, filePath, index } = request;
+  const { tools, tempDir, filePath, index } = request;
   const duration = source.durationSeconds;
   if (duration === null || duration <= 0) return null;
   const seconds = Math.min(OPTIMIZE_SLICE_SECONDS, duration);
   const destPath = join(tempDir, `slice-${index}.flac`);
   try {
-    await encodeToTarget(ffmpegPath, { inputArgs: source.inputArgs, sourcePath: filePath, destPath, seconds });
+    await encodeToTarget(tools, { inputArgs: source.inputArgs, sourcePath: filePath, destPath, seconds });
     const sliced = (await stat(destPath)).size;
     return duration <= seconds ? sliced : Math.round((sliced / seconds) * duration);
   } catch {
@@ -33,8 +33,8 @@ const excluded = (fileName: string, currentBytes: number): OptimizeCandidate => 
 });
 
 const measureCandidate = async (request: MeasureRequest): Promise<OptimizeCandidate> => {
-  const { filePath, fileName, sizeBytes } = request;
-  const source = await describeSource(filePath, fileName, sizeBytes);
+  const { tools, filePath, fileName, sizeBytes } = request;
+  const source = await describeSource(tools, filePath, fileName, sizeBytes);
   if (source === null) return excluded(fileName, sizeBytes);
   return {
     name: fileName,

@@ -8,9 +8,4 @@ export type { WindowControlsPort, Unsub } from './ports/window-controls.type';
 export type { DataDomain, DataLocation, DomainUsage, StorageSummary, StoragePort } from './ports/storage.type';
 export type { FileStat, FileStore } from './ports/file-store.type';
 export type { PickedFile, SaveFileRequest, SaveFileResult, FilePickerPort } from './ports/file-picker.type';
-export type {
-  ControllerHost, HidDeviceInfo, HidOpenedInfo, HidDisconnectInfo, HidErrorInfo, VibrateStep, VibrateResult,
-} from './ports/controller-host.type';
 export type { DevicePort } from './ports/device.type';
-export type { DisplayPort } from './ports/display.type';
-export { UNSUPPORTED_SYNCED_RATE } from './ports/display.constants';

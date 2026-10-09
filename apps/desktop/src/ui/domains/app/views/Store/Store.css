@@ -123,13 +123,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.store-install-bar {
-  padding: var(--space-sm);
-  background: var(--c-inset);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
-}
-
 .store-installed-row__name {
   color: var(--c-text);
   font-weight: var(--weight-semi);

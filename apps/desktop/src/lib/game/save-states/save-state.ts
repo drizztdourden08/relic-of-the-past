@@ -8,23 +8,22 @@ import { saveMusicPosition } from '../msu-save-glue';
 import { withDialogState } from '../state-dialog';
 import { memfsSavePath } from './memfs-save-path';
 
-const saveScreenshotBestEffort = async (profileId: string, slot: number): Promise<void> => {
+const captureScreenshotBestEffort = async (): Promise<ArrayBuffer | undefined> => {
   try {
     const blob = await captureGameFrameBlob();
-    if (blob) {
-      const screenshotAb = await blob.arrayBuffer();
-      await savesStore.writeScreenshot(profileId, slot, screenshotAb);
-      log.app(`[SaveState] Screenshot saved (${(screenshotAb.byteLength / 1024).toFixed(0)} KB)`);
-    }
+    if (!blob) return undefined;
+    const screenshotAb = await blob.arrayBuffer();
+    log.app(`[SaveState] Screenshot captured (${(screenshotAb.byteLength / 1024).toFixed(0)} KB)`);
+    return screenshotAb;
   } catch {
-    return;
+    return undefined;
   }
 };
 
 const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
   const profileId = getProfileId();
-  log.app(`[SaveState] saveState(${slot}) called with module=${!!mod}, profileId=${profileId}`);
+  log.app(`[SaveState] saveState(${slot}) called with module=${Boolean(mod)}, profileId=${profileId}`);
   if (!isCoreReady() || !mod || !profileId) {
     log.error(`[SaveState] Slot ${slot} not saved: the core is not running yet`);
     return false;
@@ -46,12 +45,12 @@ const saveState = async (slot: number): Promise<boolean> => {
     log.app(`[SaveState] Read ${data.byteLength} bytes from MEMFS`);
 
     const ab = withDialogState(mod, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
-    log.app(`[SaveState] Sending ${ab.byteLength} bytes to main process (profileId=${profileId}, slot=${slot})...`);
-    await savesStore.writeState(profileId, slot, ab);
-    log.app(`[SaveState] Slot ${slot} persisted to disk ✓`);
+    const screenshot = await captureScreenshotBestEffort();
+    log.app(`[SaveState] Writing ${ab.byteLength} bytes (profileId=${profileId}, slot=${slot})...`);
+    await savesStore.writeState(profileId, slot, ab, screenshot);
+    log.app(`[SaveState] Slot ${slot} persisted to disk`);
 
     await saveMusicPosition(profileId, 'quick', slot);
-    await saveScreenshotBestEffort(profileId, slot);
 
     return true;
   } catch (err) {

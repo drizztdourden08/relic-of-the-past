@@ -1,6 +1,4 @@
 /* @layer renderer-lib @kind types */
-import type { StickCalibrationData, DeviceStickCalibration } from './stick-calibration';
-
 interface ControllerInputState {
   deviceKey: string;
   buttons: boolean[];
@@ -28,8 +26,6 @@ export type {
   ControllerDisconnectListener,
   ControllerInputState,
   ControllerStateListener,
-  DeviceStickCalibration,
   HidRawReportEvent,
   HidRawReportListener,
-  StickCalibrationData,
 };

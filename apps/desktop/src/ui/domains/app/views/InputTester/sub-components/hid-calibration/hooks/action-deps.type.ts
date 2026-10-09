@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type React from 'react';
 import type { DeviceProfile } from '@shared/input';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { IdleResult, IdleSampler } from '../stick-center';
 import type {
   AxisSubStep,

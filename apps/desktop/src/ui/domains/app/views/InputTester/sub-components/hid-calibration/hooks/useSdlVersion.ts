@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
 import { useEffect, useState } from 'react';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
 
 const useSdlVersion = (): string | null => {
   const [sdlVersion, setSdlVersion] = useState<string | null>(null);
-  useEffect(() => { appApi().sdlVersion().then(setSdlVersion).catch(() => setSdlVersion(null)); }, []);
+  useEffect(() => {
+    inputApi()?.status().then((status) => setSdlVersion(status.sdlVersion)).catch(() => setSdlVersion(null));
+  }, []);
   return sdlVersion;
 };
 

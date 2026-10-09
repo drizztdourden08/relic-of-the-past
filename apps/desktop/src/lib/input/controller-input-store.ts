@@ -1,8 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { CalibrationStore } from './calibration-store';
 import { processControllerState } from './process-controller-state';
-import type { DeviceStickCalibration, TriggerCalibration } from './stick-calibration';
-import type { ControllerRawReport } from '@shared/ipc';
+import type { ControllerRawReport } from '@drizztdourden08/brock-input';
 import type {
   ControllerDiagListener,
   ControllerDisconnectListener,
@@ -27,30 +25,6 @@ class ControllerInputStore {
 
   private diagLog: string[] = [];
   private disconnectListeners = new Set<ControllerDisconnectListener>();
-  private calibrations = new CalibrationStore();
-
-  setStickCalibration(deviceKey: string, cal: DeviceStickCalibration): void {
-    this.calibrations.setStick(deviceKey, cal);
-    this.log(`Stick calibration loaded for ${deviceKey}`);
-  }
-  getStickCalibration(deviceKey: string): DeviceStickCalibration | undefined {
-    return this.calibrations.getStick(deviceKey);
-  }
-  loadStickCalibrations(store: Record<string, DeviceStickCalibration>): void {
-    const n = this.calibrations.loadSticks(store);
-    if (n > 0) this.log(`Loaded saved stick calibrations (${n} profile(s))`);
-  }
-  setTriggerCalibration(deviceKey: string, axisIndex: number, cal: TriggerCalibration): void {
-    this.calibrations.setTrigger(deviceKey, axisIndex, cal);
-    this.log(`Trigger calibration loaded for ${deviceKey} axis ${axisIndex}`);
-  }
-  getTriggerCalibration(deviceKey: string, axisIndex: number): TriggerCalibration | undefined {
-    return this.calibrations.getTrigger(deviceKey, axisIndex);
-  }
-  loadTriggerCalibrations(store: Record<string, { base: number; max: number; deadzone: number }>): void {
-    const n = this.calibrations.loadTriggers(store);
-    if (n > 0) this.log(`Loaded saved trigger calibrations (${n} entry(s))`);
-  }
 
   log(msg: string): void {
     const entry = `[${new Date().toLocaleTimeString()}] ${msg}`;
@@ -134,4 +108,3 @@ export type {
   HidRawReportEvent,
   HidRawReportListener,
 } from './controller-input-store.type';
-export type { StickCalibrationData, DeviceStickCalibration } from './stick-calibration';

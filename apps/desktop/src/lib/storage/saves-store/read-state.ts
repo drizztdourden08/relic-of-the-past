@@ -1,9 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import * as saves from '@shared/storage/saves';
-import { platformFiles } from '../platform-files';
+import { portSaveStore } from './port-save-store';
 import { saveBytes } from './save-bytes';
 
 const readState = async (p: string, slot: number): Promise<ArrayBuffer | null> =>
-  saveBytes.toArrayBuffer(await saves.readState(platformFiles(), p, slot));
+  saveBytes.toArrayBuffer(await portSaveStore.store().slots.read(p, portSaveStore.quickRef(slot)));
 
 export { readState };

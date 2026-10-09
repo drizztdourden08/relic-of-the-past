@@ -7,10 +7,10 @@ import { registerMsuResumeHandlers } from '../msu/resume-handlers';
 
 const msuHandlers: HandlerGroup = {
   id: 'msu',
-  register: () => {
+  register: (ctx) => {
     registerMsuHandlers();
     registerMsuEditHandlers();
-    registerMsuOptimizeHandlers();
+    registerMsuOptimizeHandlers(ctx);
     registerMsuResumeHandlers();
   },
 };

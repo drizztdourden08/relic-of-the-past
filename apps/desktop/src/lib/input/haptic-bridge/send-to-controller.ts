@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import type { VibrationSegment } from '@shared/input/vibration-segment.type';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import { getInputManager } from '../input-manager';
-import * as controllersStore from '../controllers-store';
 import { hapticState } from './haptic-state';
 import { shapeForDevice } from './shape-for-device';
 
@@ -17,7 +17,7 @@ const sendToController = (pattern: VibrationSegment[], gapMs?: number, minDurati
     const entry = manager.hidDeviceCache.find((d) => d.deviceKey === key);
     if (!entry || entry.status !== 'ready') continue;
     const shaped = shapeForDevice(key, pattern, minDurationExempt);
-    controllersStore.vibratePattern(key, shaped, gap);
+    void inputApi()?.vibratePattern(key, shaped, gap);
   }
 };
 

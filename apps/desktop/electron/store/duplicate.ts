@@ -1,4 +1,5 @@
 /* @layer electron-main @kind logic */
+import { isCatalogItemId } from '@drizztdourden08/brock-catalog/main';
 import type { StoreDuplicateResult } from '@shared/ipc';
 import type { BasedOn } from '@shared/store/based-on';
 import type { InstalledPack } from '@shared/store/installed-types';
@@ -6,9 +7,8 @@ import { copyRefusal } from '@shared/store/licenses';
 import { selectDuplicate } from '@shared/storage/duplicate/select-duplicate';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
 import { logToRenderer } from '../lib/renderer-log';
-import { assertItemId } from './catalog';
-import { isInstalling } from './install-jobs';
-import { installedRegistry, storeFiles } from './store-files';
+import { installedPacks, isInstalling } from './hookshop';
+import { storeFiles } from './store-files';
 
 const basedOnOf = (pack: InstalledPack): BasedOn => {
   const { itemId, semver, origin } = pack;
@@ -16,7 +16,8 @@ const basedOnOf = (pack: InstalledPack): BasedOn => {
 };
 
 const duplicateInstalled = async (itemId: string): Promise<StoreDuplicateResult> => {
-  const pack = await installedRegistry.get(assertItemId(itemId));
+  if (!isCatalogItemId(itemId)) throw new Error('That is not a Hookshop item.');
+  const pack = (await installedPacks()).find((one) => one.itemId === itemId);
   if (!pack) throw new Error('That item is not installed.');
   if (isInstalling(itemId)) throw new Error('Wait for the install to finish first.');
   const refusal = copyRefusal(pack.origin.license);

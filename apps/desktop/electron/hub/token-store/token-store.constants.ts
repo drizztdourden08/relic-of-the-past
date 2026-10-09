@@ -1,4 +1,8 @@
 /* @layer electron-main @kind constants */
-const TOKEN_FILE = 'sanctuary-device.token';
+const HUB_TOKEN_SECRET = 'hub-token';
 
-export { TOKEN_FILE };
+const HUB_TOKEN_LABEL = 'Sanctuary and Hookshop sign-in';
+
+const NO_CONTEXT_ERROR = 'The sign-in store is not ready yet.';
+
+export { HUB_TOKEN_SECRET, HUB_TOKEN_LABEL, NO_CONTEXT_ERROR };

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ControllerJoystickSample } from '@shared/ipc';
+import type { ControllerJoystickSample } from '@drizztdourden08/brock-input';
 import { AXIS_FIRED_THRESHOLD } from '../positional-capture.constants';
 import type { PositionalTarget } from '../positional-capture.type';
 

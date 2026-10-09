@@ -6,7 +6,7 @@ import {
   resolveDeviceName,
 } from '@shared/input/family';
 import type { ResolvedDevice, SdlGamepadType } from '@shared/input/family';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 

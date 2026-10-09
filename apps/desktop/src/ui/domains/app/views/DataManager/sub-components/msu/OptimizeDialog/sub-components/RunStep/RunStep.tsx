@@ -3,18 +3,20 @@ import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import type { RunStepProps } from './RunStep.type';
 
+const convertedSoFar = (progress: RunStepProps['progress']): number =>
+  (progress === null ? 0 : Math.max(0, progress.index - 1) + (progress.fileFraction ?? 0));
+
 const RunStep = (props: RunStepProps) => {
   const { progress, result } = props;
 
   if (result === null) {
-    const done = progress?.index ?? 0;
     const total = progress?.total ?? 0;
     return (
       <Box className="msu-optimize__step">
         <Text className="msu-optimize__note">
-          {progress === null ? 'Starting...' : `Converting ${progress.fileName} (${done} of ${total})`}
+          {progress === null ? 'Starting...' : `Converting ${progress.fileName} (${progress.index} of ${total})`}
         </Text>
-        <ProgressBar value={done} max={Math.max(1, total)} />
+        <ProgressBar value={convertedSoFar(progress)} max={Math.max(1, total)} />
       </Box>
     );
   }

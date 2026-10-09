@@ -14,6 +14,15 @@ type InstalledPack = {
   origin: InstalledOrigin;
 };
 
-type InstalledRegistry = { version: 1; packs: InstalledPack[] };
+type InstalledRecordView = {
+  itemId: string;
+  version: number;
+  label: string;
+  container: string;
+  kind: string | null;
+  installedName: string;
+  installedAt: number;
+  meta: Record<string, unknown>;
+};
 
-export type { InstalledOrigin, InstalledPack, InstalledRegistry };
+export type { InstalledOrigin, InstalledPack, InstalledRecordView };

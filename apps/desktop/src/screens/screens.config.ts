@@ -28,5 +28,5 @@ export default defineScreens({
     { id: 'store', title: 'Hookshop', icon: 'package', menu: 'entry' },
   ],
   home: 'game',
-  settings: { bucket: 'game', page: 'display' },
+  settings: { bucket: 'game', page: 'picture' },
 });

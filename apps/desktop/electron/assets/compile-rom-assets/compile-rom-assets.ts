@@ -3,7 +3,7 @@ import { writeFile, access } from 'fs/promises';
 import { loadRom } from '@shared/asset-extraction/rom/load-rom-file';
 import { compileResources } from '@shared/asset-extraction/compile-resources';
 import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
-import { getAssetFileName } from '../../roms/store';
+import { datName } from '@shared/storage/assets';
 import { logToRenderer } from '../../lib/renderer-log';
 import { loadCompiledLanguages } from '../load-compiled-languages';
 import { errMessage } from '../../lib/result';
@@ -25,7 +25,7 @@ const compileRomAssets = async (romFile: string): Promise<CompileResult> => {
       logToRenderer('app', 'info', `Baking ${extraLanguages.length} language set(s): ${extraLanguages.map((e) => e.code).join(', ')}`);
     }
     const dat = compileResources(rom, { extraLanguages });
-    const assetFile = getAssetFileName(romFile);
+    const assetFile = datName(romFile);
     await writeFile(getUserDataPath('assets', assetFile), dat);
     logToRenderer('app', 'info', `Assets cached as ${assetFile} (${(dat.length / 1024).toFixed(0)} KB)`);
     return { success: true };

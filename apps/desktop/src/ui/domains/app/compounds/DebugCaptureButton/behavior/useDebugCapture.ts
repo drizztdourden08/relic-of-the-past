@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
 import { useCallback, useState } from 'react';
+import { toolsApi } from '@drizztdourden08/brock-tools/renderer';
+import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
 
 const useDebugCapture = (profileId: string) => {
@@ -16,7 +17,7 @@ const useDebugCapture = (profileId: string) => {
       useDebugCaptureStore.getState().stop();
       return;
     }
-    const ffmpeg = await appApi().getFfmpegState().catch(() => null);
+    const ffmpeg = await toolsApi()?.state(FFMPEG_TOOL_ID).catch(() => null);
     if (ffmpeg?.status !== 'ready') {
       setShowFfmpegPrompt(true);
       return;

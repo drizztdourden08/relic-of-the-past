@@ -144,8 +144,10 @@ under their heading and do not sit flush with the heart ceiling below them.
 ### compounds/FfmpegInstallStep/FfmpegInstallStep.tsx
 
 The download size and the destination are stated up front because a player might refuse over
-either. A platform with no published build gets no button: unlike a failure, there is nothing to
-retry. Every feature gated on ffmpeg (MSU audio conversion, debug report video capture) shows
+either. A platform with no published build gets no button and shows the tool's hint: unlike a
+failure, there is nothing to retry. The button installs through the Brock tools module
+(`useTool`), which opens the job dialog where the download and the checksum check show their
+progress. Every feature gated on ffmpeg (MSU audio conversion, debug report video capture) shows
 this same step, so the prompt and the download are the same whichever feature asked.
 
 ### compounds/FfmpegRequiredDialog/FfmpegRequiredDialog.tsx

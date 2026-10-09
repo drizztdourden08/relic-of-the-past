@@ -73,7 +73,6 @@ const useControllerReportForm = (deviceKey: string) => {
             ...(diagnosticsReport && { diagnosticsReport: JSON.stringify(diagnosticsReport, null, 2) }),
           },
         },
-        profileId: null, saves: [], sessionKeys: [],
       });
       if (!('reportId' in result)) {
         setStatus('error');

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ControllerBusType, ControllerConnectionState } from '@shared/ipc';
+import type { ControllerBusType, ControllerConnectionState } from '@drizztdourden08/brock-input';
 
 interface ControllerStatusBarProps {
   busType?: ControllerBusType;

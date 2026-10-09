@@ -41,7 +41,7 @@ const manifestToEdit = async (pack: string, names: string[]): Promise<MsuPackMan
 };
 
 const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {
-  const { pack, ffmpegPath, fileNames, report } = request;
+  const { pack, tools, fileNames, report } = request;
   await refuseInstalledPack(pack);
 
   const audio = await listPackAudio(pack);
@@ -59,9 +59,10 @@ const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {
   const failed: Array<{ name: string; reason: string }> = [];
 
   for (const [index, name] of wanted.entries()) {
-    report({ pack, phase: 'convert', index: index + 1, total: wanted.length, fileName: name });
+    const step = { pack, phase: 'convert' as const, index: index + 1, total: wanted.length, fileName: name };
+    report(step);
     const sourcePath = packFilePath(pack, name);
-    const source = await describeSource(sourcePath, name, sizes.get(name) ?? 0);
+    const source = await describeSource(tools, sourcePath, name, sizes.get(name) ?? 0);
     if (source === null) {
       failed.push({ name, reason: 'No decoder could read this file.' });
       continue;
@@ -69,7 +70,13 @@ const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {
     const outputName = freeTargetName(name, taken);
     const destPath = packFilePath(pack, outputName);
     try {
-      await encodeToTarget(ffmpegPath, { inputArgs: source.inputArgs, sourcePath, destPath });
+      await encodeToTarget(tools, {
+        inputArgs: source.inputArgs,
+        sourcePath,
+        destPath,
+        durationSeconds: source.durationSeconds,
+        onProgress: (fileFraction) => { report({ ...step, fileFraction }); },
+      });
       converted.push({ name, outputName, bytes: (await stat(destPath)).size });
       taken.add(outputName);
       working = withFileRenamed(working, name, outputName);

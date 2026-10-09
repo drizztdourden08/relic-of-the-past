@@ -1,19 +1,19 @@
 /* @layer renderer-appshell @kind hook */
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 import { nav } from '@drizztdourden08/brock-react';
-import { appApi } from '@app/ipc/app-api';
+import { useCatalogLinks } from '@drizztdourden08/brock-catalog/renderer';
+import type { CatalogLink } from '@drizztdourden08/brock-catalog/renderer';
 import { useStoreLinkStore } from '@app/stores/store-link';
 
 const useStoreLinks = (): void => {
   const offer = useStoreLinkStore((s) => s.offer);
 
-  useEffect(() => {
-    const unsubscribe = appApi().onStoreOpenInstall?.((link) => {
-      offer(link);
-      nav.open('store');
-    });
-    return () => { unsubscribe?.(); };
+  const handleLink = useCallback((link: CatalogLink) => {
+    offer(link);
+    nav.open('store');
   }, [offer]);
+
+  useCatalogLinks(handleLink);
 };
 
 export { useStoreLinks };

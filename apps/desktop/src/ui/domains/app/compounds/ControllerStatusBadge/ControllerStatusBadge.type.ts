@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DeviceStatus } from '@shared/ipc';
+import type { DeviceStatus } from '@drizztdourden08/brock-input';
 
 interface ControllerStatusBadgeProps {
   status: DeviceStatus;

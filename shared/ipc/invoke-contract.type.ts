@@ -10,10 +10,9 @@ import type { DevToolsInvokeContract } from './invoke/dev-tools-invoke-contract.
 import type { HostInvokeContract } from './invoke/host-invoke-contract.type';
 import type { ProfileDataInvokeContract } from './invoke/profile-data-invoke-contract.type';
 import type { ScreenEditorInvokeContract } from './invoke/screen-editor-invoke-contract.type';
-import type { UpdaterInvokeContract } from './invoke/updater-invoke-contract.type';
 
 interface InvokeContract extends
-  HostInvokeContract, ProfileDataInvokeContract, DevToolsInvokeContract, ScreenEditorInvokeContract, UpdaterInvokeContract,
+  HostInvokeContract, ProfileDataInvokeContract, DevToolsInvokeContract, ScreenEditorInvokeContract,
   ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract,
   SanctuaryInvokeContract, HubInvokeContract, StoreInvokeContract {}
 

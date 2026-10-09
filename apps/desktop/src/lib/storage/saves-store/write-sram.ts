@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import * as saves from '@shared/storage/saves';
-import { platformFiles } from '../platform-files';
+import { portSaveStore } from './port-save-store';
 import { saveBytes } from './save-bytes';
 
-const writeSram = (p: string, data: ArrayBuffer): Promise<void> => saves.writeSram(platformFiles(), p, saveBytes.u8(data));
+const writeSram = (p: string, data: ArrayBuffer): Promise<void> => portSaveStore.store().sram.write(p, saveBytes.u8(data));
 
 export { writeSram };

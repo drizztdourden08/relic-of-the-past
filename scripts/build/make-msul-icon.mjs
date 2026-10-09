@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Builds the document icon for `.msul` music packs: the app logo with a music-note
- * badge. Generated at build time from the committed logo, like the launcher icons,
- * so a logo change never leaves a stale derived icon. Run: node scripts/build/make-msul-icon.mjs
- */
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,39 +7,27 @@ import pngToIco from 'png-to-ico';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SOURCE = join(root, 'apps', 'desktop', 'public', 'logos', 'logo', 'logo-512.png');
-const OUT_DIR = join(root, 'apps', 'desktop', 'public', 'logos', 'generated');
+const OUT_DIR = join(root, 'apps', 'desktop', 'build');
 
-// Windows .ico wants the whole ladder; the small sizes are what actually show in a file list.
 const ICO_SIZES = [16, 24, 32, 48, 64, 128, 256];
 
-// macOS icon slots (OSType, pixel size). The repeated 256 and 512 are the retina
-// variants of 128 and 256. No 1024 slot (ic10): the source logo is 512 and nothing
-// is upscaled; electron-builder only needs a valid file.
 const ICNS_SLOTS = [
   ['ic11', 32], ['ic12', 64], ['ic07', 128],
   ['ic13', 256], ['ic08', 256], ['ic14', 512], ['ic09', 512],
 ];
 
-// .icns: magic word, total length, then one length-prefixed chunk per slot. Since
-// 10.7 each chunk may hold a PNG verbatim, so no re-encoding and no dependency.
-const buildIcns = (entries) => {
-  const chunks = entries.map(([type, png]) => {
-    const header = Buffer.alloc(8);
-    header.write(type, 0, 4, 'ascii');
-    header.writeUInt32BE(png.length + 8, 4);
-    return Buffer.concat([header, png]);
-  });
-  const body = Buffer.concat(chunks);
-  const header = Buffer.alloc(8);
-  header.write('icns', 0, 4, 'ascii');
-  header.writeUInt32BE(body.length + 8, 4);
-  return Buffer.concat([header, body]);
+const ICNS_HEADER_BYTES = 8;
+
+const chunkOf = (type, data) => {
+  const header = Buffer.alloc(ICNS_HEADER_BYTES);
+  header.write(type, 0, 4, 'ascii');
+  header.writeUInt32BE(data.length + ICNS_HEADER_BYTES, 4);
+  return Buffer.concat([header, data]);
 };
 
-// The badge: a ring holding Lucide's `music` icon (ISC licence, lucide.dev), verbatim.
-// The ring's outer edge stops at 44.5 of 50 so nothing clips; the 24-unit icon is
-// scaled to 54 and centred. Stroke-drawn, so widths scale with the badge.
-const LUCIDE_MUSIC = '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>';
+const buildIcns = (entries) => chunkOf('icns', Buffer.concat(entries.map(([type, png]) => chunkOf(type, png))));
+
+const LUCIDE_MUSIC = '<!-- Lucide music icon, ISC licence, lucide.dev --><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>';
 
 const badgeSvg = (size) =>
   Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
@@ -53,8 +36,7 @@ const badgeSvg = (size) =>
        stroke-linecap="round" stroke-linejoin="round">${LUCIDE_MUSIC}</g>
   </svg>`);
 
-/** Logo scaled into a square canvas with the badge overlaid bottom-right. */
-const compose = async (size) => {
+const composeLogoWithBadge = async (size) => {
   const badge = Math.round(size * 0.52);
   const logo = await sharp(SOURCE)
     .resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
@@ -67,28 +49,25 @@ const compose = async (size) => {
     .toBuffer();
 };
 
-const main = async () => {
-  await mkdir(OUT_DIR, { recursive: true });
-
+const writeIco = async () => {
   const pngs = [];
-  for (const size of ICO_SIZES) {
-    const buffer = await compose(size);
-    pngs.push(buffer);
-    if (size === 256) await writeFile(join(OUT_DIR, 'msul-256.png'), buffer);
-  }
-  await writeFile(join(OUT_DIR, 'msul-512.png'), await compose(512));
+  for (const size of ICO_SIZES) pngs.push(await composeLogoWithBadge(size));
   await writeFile(join(OUT_DIR, 'msul.ico'), await pngToIco(pngs));
+};
 
-  // electron-builder swaps the configured .ico extension per platform, so the macOS
-  // build fails outright without msul.icns beside it.
+const writeIcns = async () => {
   const bySize = new Map();
   for (const [, size] of ICNS_SLOTS) {
-    if (!bySize.has(size)) bySize.set(size, await compose(size));
+    if (!bySize.has(size)) bySize.set(size, await composeLogoWithBadge(size));
   }
-  const icns = buildIcns(ICNS_SLOTS.map(([type, size]) => [type, bySize.get(size)]));
-  await writeFile(join(OUT_DIR, 'msul.icns'), icns);
+  await writeFile(join(OUT_DIR, 'msul.icns'), buildIcns(ICNS_SLOTS.map(([type, size]) => [type, bySize.get(size)])));
+};
 
-  console.log(`[msul-icon] wrote msul.ico, msul.icns, msul-256.png, msul-512.png to ${OUT_DIR}`);
+const main = async () => {
+  await mkdir(OUT_DIR, { recursive: true });
+  await writeIco();
+  await writeIcns();
+  console.log(`[msul-icon] wrote msul.ico and msul.icns to ${OUT_DIR}`);
 };
 
 main().catch((err) => {

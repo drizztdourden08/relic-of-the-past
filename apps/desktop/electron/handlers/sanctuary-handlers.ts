@@ -4,8 +4,8 @@ import { registerSanctuaryHandlers } from '../sanctuary/ipc-handlers';
 
 const sanctuaryHandlers: HandlerGroup = {
   id: 'sanctuary',
-  register: () => {
-    registerSanctuaryHandlers();
+  register: (ctx) => {
+    registerSanctuaryHandlers(ctx);
   },
 };
 

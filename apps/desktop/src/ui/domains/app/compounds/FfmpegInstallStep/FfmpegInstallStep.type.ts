@@ -1,9 +1,10 @@
 /* @layer renderer-components @kind types */
-import type { FfmpegState } from '@shared/types/ffmpeg-tool';
+import type { ToolState } from '@drizztdourden08/brock-tools/renderer';
 
 interface FfmpegInstallStepProps {
-  state: FfmpegState | null;
+  state: ToolState | null;
   installing: boolean;
+  error: string | null;
   onInstall: () => void;
 }
 

@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import type { InputProfile, SnesButton, FunctionMapping, FunctionAction } from '@shared/types/controls';
 import type { DetectedDevice } from '@shared/types/controls';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { controllerInputStore } from '../controller-input-store';
 import type { ControllerInputState } from '../controller-input-store';
 import { wasmSetPaused } from '../../game/wasm-bridge';

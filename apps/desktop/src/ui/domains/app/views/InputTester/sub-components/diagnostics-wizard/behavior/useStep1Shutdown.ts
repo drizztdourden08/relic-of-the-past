@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useState } from 'react';
-import { releaseHold } from '@app/lib/input/controller-hold-store';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
+import { releaseHold } from './release-hold';
 import type { HoldTransitionStatus } from '../diagnostics-wizard.type';
 import { settledReadyDevices } from './settled-ready-devices';
 

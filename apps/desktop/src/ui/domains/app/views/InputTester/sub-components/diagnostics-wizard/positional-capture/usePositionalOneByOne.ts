@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { controllerInputStore } from '@app/lib/input/controller-input-store';
-import type { ControllerJoystickSample } from '@shared/ipc';
+import type { ControllerJoystickSample } from '@drizztdourden08/brock-input';
 import type { InputItem } from '../../hid-calibration/hid-calibration.type';
 import { buildPositionalTargets } from './build-positional-targets';
 import {

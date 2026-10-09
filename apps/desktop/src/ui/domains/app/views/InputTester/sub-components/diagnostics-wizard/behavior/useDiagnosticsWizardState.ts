@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { restoreHold } from '@app/lib/input/controller-hold-store';
 import type { DeviceProfile } from '@shared/input';
 import { resolveDeviceFromEntry } from '@app/lib/input/resolve-device';
 import type { ResolvedDevice } from '@shared/input/family';
@@ -17,6 +16,7 @@ import { useDeviceMapping } from './useDeviceMapping';
 import { useHoldTransition } from './useHoldTransition';
 import { useLayoutCapture } from './useLayoutCapture';
 import { useHidListedDevices } from './useHidListedDevices';
+import { restoreHold } from './restore-hold';
 import { useStep1Shutdown } from './useStep1Shutdown';
 import { buildChooserDevices } from './chooser-devices';
 import { useWizardNavigation } from './useWizardNavigation';

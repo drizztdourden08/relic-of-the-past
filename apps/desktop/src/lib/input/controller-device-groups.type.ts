@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 
 interface ControllerPort {
   deviceKey: string;

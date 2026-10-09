@@ -1,43 +1,22 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@app/utils/formatBytes';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import type { FfmpegInstallStepProps } from './FfmpegInstallStep.type';
 import './FfmpegInstallStep.css';
 
+const installLabel = (installing: boolean, error: string | null): string => {
+  if (installing) return 'Fetching...';
+  return error === null ? 'Get the tool' : 'Try the download again';
+};
+
 const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
-  const { state, installing, onInstall } = props;
+  const { state, installing, error, onInstall } = props;
 
   if (state === null) return <Text className="ffmpeg-install-step__note">Checking for the tool...</Text>;
-
-  if (state.status === 'downloading') {
-    return (
-      <Box className="ffmpeg-install-step">
-        <Text className="ffmpeg-install-step__note">
-          Fetching the tool ({formatBytes(state.receivedBytes)} of {formatBytes(state.totalBytes)})
-        </Text>
-        <ProgressBar value={state.receivedBytes} max={Math.max(1, state.totalBytes)} />
-      </Box>
-    );
-  }
-
-  if (state.status === 'verifying') {
-    return (
-      <Box className="ffmpeg-install-step">
-        <Text className="ffmpeg-install-step__note">Checking the download against its published checksum...</Text>
-        <ProgressBar value={100} max={100} tone="secondary" />
-      </Box>
-    );
-  }
 
   if (state.status === 'unavailable') {
     return (
       <Box className="ffmpeg-install-step">
-        <Text className="ffmpeg-install-step__note">{state.reason}</Text>
-        {state.installPackage !== undefined && (
-          <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--faint">
-            Install the "{state.installPackage}" package, then reopen this dialog.
-          </Text>
-        )}
+        <Text className="ffmpeg-install-step__note">{state.hint}</Text>
       </Box>
     );
   }
@@ -55,11 +34,11 @@ const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
       <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--faint">
         LGPL licensed, and run as a separate program, not built in.
       </Text>
-      {state.status === 'failed' && (
-        <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--bad">{state.reason}</Text>
+      {error !== null && (
+        <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--bad">{error}</Text>
       )}
       <Button variant="primary" disabled={installing} onClick={onInstall}>
-        {installing ? 'Fetching...' : state.status === 'failed' ? 'Try the download again' : 'Get the tool'}
+        {installLabel(installing, error)}
       </Button>
     </Box>
   );

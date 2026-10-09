@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { listControllerDevices } from '@app/lib/input/controller-devices-store';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import { recallControllerName } from '@app/lib/input/controller-name-cache';
 import type { DeviceEnvironment } from './diagnostics.type';
 import type { ChromiumNavigator, ChromiumPerformance } from './probe-device.type';
@@ -16,7 +16,7 @@ const readJsHeap = (): DeviceEnvironment['jsHeap'] => {
 
 const readHidDevices = async (): Promise<string[]> => {
   try {
-    const entries = await listControllerDevices();
+    const entries = (await inputApi()?.list()) ?? [];
     return entries
       .filter((d) => d.status === 'ready')
       .map((d) => {

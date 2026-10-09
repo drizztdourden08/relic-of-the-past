@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ItemCardView } from '@shared/store/home-types';
+import { useInstalledPacks } from '@app/hooks/useInstalledPacks';
 import type { StoreProps, StoreSection } from '../Store.type';
 import { GRID_SECTIONS } from '../Store.constants';
 import { filterItems } from './filter-items';
@@ -8,9 +9,9 @@ import { installedRows } from './installed-rows';
 import { kindOf } from './kind-of';
 import { statusOf } from './status-of';
 import { useCatalog } from './useCatalog';
-import { useInstall } from './useInstall';
-import { useInstalled } from './useInstalled';
 import { useItemDetail } from './useItemDetail';
+import { useLibraryRefresh } from './useLibraryRefresh';
+import { useLinkInstall } from './useLinkInstall';
 import { useOpenInstall } from './useOpenInstall';
 import { useStoreAccount } from './useStoreAccount';
 import { useUninstall } from './useUninstall';
@@ -24,20 +25,17 @@ const useStore = (props: StoreProps) => {
 
   const account = useStoreAccount();
   const catalog = useCatalog(account.signedIn, account.onSignedOut);
-  const { packs, reload: reloadInstalled } = useInstalled();
-  const libraryChanged = useCallback(() => {
-    void reloadInstalled();
-    void onLibraryChanged();
-  }, [reloadInstalled, onLibraryChanged]);
-  const installer = useInstall({ onInstalled: libraryChanged, onSignedOut: account.onSignedOut });
-  const remover = useUninstall({ onDeleteConfirm, onUninstalled: libraryChanged });
+  const packs = useInstalledPacks();
+  const installLink = useLinkInstall(account.onSignedOut);
+  useLibraryRefresh(onLibraryChanged);
+  const { confirmUninstall } = useUninstall(onDeleteConfirm);
   const { detail, detailError } = useItemDetail(selectedId, account.signedIn);
 
   const openItem = useCallback((itemId: string) => {
     setSelectedId(itemId);
     setSection((current) => (GRID_SECTIONS.includes(current) ? current : 'browse'));
   }, []);
-  const { waitingLink } = useOpenInstall({ signedIn: account.signedIn, onOpen: openItem, install: installer.install });
+  const { waitingLink } = useOpenInstall({ signedIn: account.signedIn, onOpen: openItem, install: installLink });
 
   const rows = useMemo(() => installedRows(packs, catalog.items), [packs, catalog.items]);
   const updates = useMemo(() => rows.filter((row) => row.hasUpdate), [rows]);
@@ -61,8 +59,7 @@ const useStore = (props: StoreProps) => {
     selectedPack: packs.find((pack) => pack.itemId === selectedId) ?? null,
     detail,
     detailError,
-    installer,
-    remover,
+    confirmUninstall,
     waitingLink,
   };
 };

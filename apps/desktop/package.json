@@ -41,9 +41,16 @@
     "@capacitor/filesystem": "catalog:",
     "@capacitor/haptics": "catalog:",
     "@capawesome/capacitor-file-picker": "catalog:",
+    "@drizztdourden08/brock-catalog": "^0.36.0",
     "@drizztdourden08/brock-core": "^0.36.0",
+    "@drizztdourden08/brock-display": "^0.36.0",
     "@drizztdourden08/brock-electron": "^0.36.0",
+    "@drizztdourden08/brock-input": "^0.36.0",
+    "@drizztdourden08/brock-port-kit": "^0.36.0",
     "@drizztdourden08/brock-react": "^0.36.0",
+    "@drizztdourden08/brock-secrets": "^0.36.0",
+    "@drizztdourden08/brock-tools": "^0.36.0",
+    "@drizztdourden08/brock-updater": "^0.36.0",
     "@drizztdourden08/tessera": "catalog:",
     "@electron-toolkit/utils": "catalog:",
     "@iconify-icons/game-icons": "^1.2.1",
@@ -103,5 +110,15 @@
   "brock": {
     "version": "0.36.0",
     "tessera": "0.30.2"
+  },
+  "portKit": {
+    "wasm": {
+      "sourceDirs": ["../../core/zelda3/src", "../../core/zelda3/snes", "../../core/game-hooks", "../../core/wasm-build"],
+      "sourceExtensions": [".c", ".h", ".mjs"],
+      "buildScript": "../../scripts/build-wasm-core.mjs",
+      "output": "public/wasm",
+      "outputExtensions": [".wasm", ".js"],
+      "emsdkDir": "../../third_party/emsdk"
+    }
   }
 }

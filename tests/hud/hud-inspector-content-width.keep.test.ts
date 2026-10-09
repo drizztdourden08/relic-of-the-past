@@ -5,7 +5,8 @@ import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 vi.hoisted(() => {
   const global = globalThis as { window?: { api?: unknown } };
   global.window ??= {};
-  global.window.api ??= new Proxy({}, { get: () => async () => [] });
+  const stub = (): unknown => new Proxy(async () => [], { get: (_target, key) => (key === 'then' ? undefined : stub()) });
+  global.window.api ??= stub();
 });
 
 import { chromium, type Browser } from 'playwright';

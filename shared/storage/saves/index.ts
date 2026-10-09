@@ -1,11 +1,4 @@
 /* @layer shared-storage @kind barrel */
-export { writeSram } from './sram/write-sram';
-export { readSram } from './sram/read-sram';
-export { writeState } from './quick/write-state';
-export { readState } from './quick/read-state';
-export { writeScreenshot } from './quick/write-screenshot';
-export { readScreenshot } from './quick/read-screenshot';
-export { listStates } from './quick/list-states';
 export { getSlotInfos } from './quick/get-slot-infos';
 export { createNormalSave } from './normal/create-normal-save';
 export { listNormalSaves } from './normal/list-normal-saves';

@@ -4,8 +4,8 @@ import { registerStoreHandlers } from '../store/ipc-handlers';
 
 const storeHandlers: HandlerGroup = {
   id: 'store',
-  register: () => {
-    registerStoreHandlers();
+  register: (ctx) => {
+    registerStoreHandlers(ctx);
   },
 };
 

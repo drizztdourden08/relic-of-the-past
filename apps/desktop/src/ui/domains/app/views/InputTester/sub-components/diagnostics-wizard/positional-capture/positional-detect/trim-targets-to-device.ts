@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ControllerJoystickSample } from '@shared/ipc';
+import type { ControllerJoystickSample } from '@drizztdourden08/brock-input';
 import type { PositionalTarget } from '../positional-capture.type';
 
 const trimTargetsToDevice = (targets: PositionalTarget[], sample: ControllerJoystickSample): PositionalTarget[] =>

@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { defaultCoreBindings, keyboardModernBindings } from '@shared/input/scheme';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { CoreBindings, InputProfile } from '@shared/types/controls';
 import { resolveDeviceFromEntry } from '../resolve-device';
 import { profileDevice } from './profile-device';

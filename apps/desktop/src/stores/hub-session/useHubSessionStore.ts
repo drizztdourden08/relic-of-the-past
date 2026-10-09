@@ -1,10 +1,13 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
-import { getHubSession } from '../../lib/hub/hub-session';
+import { useSignInStore } from '@drizztdourden08/brock-secrets/renderer';
+import { SITE_IDS } from '@shared/hub/site-types';
+import { fetchHubMe } from './fetch-hub-me';
+import { signOutOfHub } from './sign-out-of-hub';
 import type { HubSessionStore } from './hub-session.type';
-import { FAILURE_TEXT } from './hub-session.constants';
+import { LOOKUP_FAILED } from './hub-session.constants';
 
-let unsubscribeCode: (() => void) | null = null;
+const signIns = () => useSignInStore.getState();
 
 const useHubSessionStore = create<HubSessionStore>((set, get) => ({
   me: null,
@@ -14,34 +17,34 @@ const useHubSessionStore = create<HubSessionStore>((set, get) => ({
 
   refresh: async () => {
     if (get().state === 'waiting') return;
-    const me = await getHubSession().me();
+    const me = await fetchHubMe();
     set({ me, state: me ? 'signed-in' : 'signed-out' });
   },
 
-  signIn: async (site) => {
+  signIn: async (site = 'sanctuary') => {
     if (get().state === 'waiting') return;
-    const session = getHubSession();
     set({ state: 'waiting', userCode: null, lastError: null });
-    unsubscribeCode?.();
-    unsubscribeCode = session.subscribeDeviceCode((userCode) => set({ userCode }));
-    const result = await session.signIn(site);
-    unsubscribeCode?.();
-    unsubscribeCode = null;
-    if (result.ok) {
-      const me = await session.me();
-      set({ me, state: me ? 'signed-in' : 'signed-out', userCode: null, lastError: me ? null : FAILURE_TEXT.error });
+    const stopCodes = useSignInStore.subscribe((s) => {
+      const userCode = s.entries[site]?.userCode ?? null;
+      if (userCode !== get().userCode) set({ userCode });
+    });
+    const result = await signIns().begin(site);
+    stopCodes();
+    if (!result.ok) {
+      set({ state: 'signed-out', userCode: null, lastError: signIns().entries[site]?.lastError ?? null });
       return;
     }
-    const text = result.message ?? FAILURE_TEXT[result.reason];
-    set({ state: 'signed-out', userCode: null, lastError: text.length > 0 ? text : null });
+    const me = await fetchHubMe();
+    set({ me, state: me ? 'signed-in' : 'signed-out', userCode: null, lastError: me ? null : LOOKUP_FAILED });
   },
 
   cancel: async () => {
-    await getHubSession().cancel();
+    await Promise.all(SITE_IDS.map((site) => signIns().cancel(site)));
   },
 
   signOut: async () => {
-    await getHubSession().signOut();
+    await signOutOfHub();
+    for (const site of SITE_IDS) signIns().markSignedOut(site);
     set({ me: null, state: 'signed-out', userCode: null, lastError: null });
   },
 }));

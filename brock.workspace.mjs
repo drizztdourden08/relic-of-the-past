@@ -11,7 +11,12 @@ export default defineWorkspace({
   provision: [brockProfile()],
   plugins: [snesPlugin],
   snes: {
-    wasm: { output: 'apps/desktop/public/wasm' },
+    wasm: {
+      output: 'apps/desktop/public/wasm',
+      sourceDirs: ['core/zelda3/src', 'core/zelda3/snes', 'core/game-hooks', 'core/wasm-build'],
+      sourceExtensions: ['.c', '.h', '.mjs'],
+      buildScript: 'scripts/build-wasm-core.mjs',
+    },
     roms: {
       sha1: {
         '6D4F10A8B10E10DBE624CB23CF03B88BB8252973': 'us',

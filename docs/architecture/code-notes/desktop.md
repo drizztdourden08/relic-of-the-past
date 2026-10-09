@@ -184,77 +184,19 @@ The typed main process IPC primitives. `handle`, `on` and `emit` constrain the c
 
 ## input
 
-### input/calibration-store/
-
-Stick and trigger calibration data, stored per device. Stick calibrations are keyed by "vid:pid". Trigger calibrations are keyed by `deviceKey:axisIndex`.
+SDL3 controllers, hotplug, the mapping database, calibration, rumble and the raw capture channels come from the Brock input module (`@drizztdourden08/brock-input`, channels `input:*`). This folder keeps only what is the game's own.
 
 ### input/profile-store/
 
 Input bindings, stored per game profile in `profiles/<id>/input-profiles.json`.
 
-### input/controller-snapshot.ts
+### input/register-input-handlers.ts
 
-Builds the device snapshot for `controller:list` and `controller:devices`. It holds every device SDL claimed plus anything the device lister sees that SDL has not claimed. It takes the listing as a parameter because `listDevices()` is a synchronous native HID enumeration (about 10 ms), so `sdl3-source.ts` caches it across snapshot builds. A live device keeps SDL's own name in the snapshot because the connect event fires once and is missed by anything that subscribes later or after a release. Its gamecontrollerdb mapping line is resolved once on add: it never changes while connected, so there is no native lookup per snapshot.
+The `inputProfiles:*` channels and `controller:write-debug-capture`, which writes a diagnostics or byte-capture report under `<userData>/debug/`. `sanitizeFileStem` strips anything outside `[A-Za-z0-9_-]`, so a device supplied name can never contain a path separator, `..` or a drive letter.
 
-### input/device-availability.ts
+### input/register-device-permissions.ts
 
-Classifies listed devices as available or not. SDL claims a device by opening it, so any listed device whose vid:pid is not among the ones SDL has open is unavailable: held by another application, or filtered out by SDL's own hidapi rules. It is pure and free of I/O, so it stays easy to unit test.
-
-### input/device-lister.ts
-
-The one place that decides which listers feed the controller device snapshot; nothing else calls a lister directly. SDL's own enumeration (`device-lister-sdl.ts`, backed by the addon's `enumerateHid()`) is the sole source now that the node-hid fallback is gone. That lister tags bus type itself and lists every device SDL cannot claim. When several listers are active, the first to report a vid:pid wins. A listed device is found by enumeration alone, with no opening, reading or writing.
-
-### input/haptic-pattern-player.ts
-
-Turns a timed pattern of `{ durationMs, intensity }` segments into one SDL rumble call per segment, waiting `durationMs + gapMs` between. It runs in the main process so timing never drifts under renderer load. A new pattern on a device cancels whatever was still playing on it. The first call is a silent rumble: it stops the motor and doubles as a check that the device exists and can rumble.
-
-### input/mapping-db/
-
-The mapping database follows the Ship of Harkinian pattern. A bundled `gamecontrollerdb.txt` ships with the app, then an optional user copy at `<userData>/gamecontrollerdb.txt` loads second on top of it, so a line the player adds or edits there wins over the bundled default for that GUID. `loadMappingDatabases` runs once at startup; the applied total is logged by the controller layer, so only what was registered and from where is reported here.
-
-The bundled db ships in the repo at `resources/gamecontrollerdb.txt`. electron-builder's extraResources copies it into `process.resourcesPath` for a packaged build. In dev there is no such copy, so the path falls back to the repo root, found relative to the bundled main file (electron-vite writes main two levels under the repo root in dev and in a production build). It is null when neither exists, for example a source checkout missing the file. This is the same idea as the native addon's own resolution, applied to a data file.
-
-`addUserMapping` registers a mapping for the live session and appends it to the user db so it survives a restart, creating that file on the first write. It writes nothing and returns false when the line does not look like a real mapping.
-
-`isMappingLine` accepts a line with at least a GUID, a name and one real binding (a `key:value` field that is not `platform:`). A blank line or a comment (starting with `#`) is rejected. SDL's GUID is historically 32 hex characters and can run longer on newer revisions, so any hex run of 24 or more is accepted. SDL also uses the literal `xinput` as a pseudo GUID for its built in generic XInput mapping.
-
-### input/sdl3-device-key/
-
-Assigns and frees device keys for connected SDL joysticks. Bindings, profiles and calibration are keyed by "vid:pid" (four lowercase hex digits each, for example "057e:2009"), and that key must keep working for one device per vid:pid. A four port adapter exposes four devices sharing one vid:pid, so the second and later get a "#N" suffix (N = 2, 3, ...). Slots are tracked per vid:pid, not counted, so removing a device in the middle frees exactly its own slot, and a later connect can reuse it without changing the key of any device still connected.
-
-### input/sdl3-source.ts
-
-The SDL3 controller transport: owns the native addon's lifecycle in main and translates its raw events into the `controller:*` IPC contract. It is the sole controller input transport, started from `ipc-handlers.ts`.
-
-The HID listing is cached. `listDevices()` is a synchronous native enumeration (about 10 ms on a two device machine); calling it per `controller:list` stalled the calibration screen, so it runs only on connect, disconnect and rescan. `rescan` refreshes the cache because the OS listing can change with no SDL claim event (a device SDL still cannot claim).
-
-In `start`, the order matters: `listDevices()` bottoms out in SDL's own hidapi, and reaching it before the SDL thread initialises leaves the gamepad backend unable to claim anything through HIDAPI (no rumble, no gyro, no input). So `sdl3.start` runs first, then the cache refresh.
-
-`releaseHold` releases the gamepad subsystem so a raw HID open on the same device can succeed; the snapshot reports no claimed devices while held, since every gamepad closes through the normal `removed` path first. `restoreHold` is enough on its own to bring it back. Raw capture bytes arrive as `controller:raw` and joystick capture samples as `controller:joystick` events, both for the gamepad diagnostics wizard.
-
-### input/ipc-handlers.ts
-
-`sanitizeFileStem` strips anything outside `[A-Za-z0-9_-]`, so a device supplied name can never contain a path separator, `..` or a drive letter. The USB device chooser prefers a Nintendo device (vendor `0x057E`).
-
-### input/native/sdl3/
-
-Loader and typed wrapper for the SDL3 gamepad Node-API addon. The addon is required at runtime on first use, so a missing or unbuilt addon degrades to "this transport is unavailable" and the app still starts. The load result is cached, failure included. Pure transport: no button or axis interpretation happens here.
-
-Addon candidates, in priority order: packaged resources (shipped as extraResources, never packed into asar, see `scripts/build/electron-builder.config.js`; `resourcesPath` is only set once packaged); the source tree prebuilt resolved from the bundled main (the build puts main at `apps/desktop/dist/electron`, two levels below the app folder, so `__dirname` never holds a `prebuilds/` of its own); the same path from `process.cwd()` (`brock dev` runs in the app folder); then a local dev build.
-
-The types describe the raw transport surface only: the fixed SDL button order and axis layout the addon reports. They carry no device specific or SNES mapping meaning.
-
-- `connectionState` is bus agnostic, read from `SDL_GetJoystickConnectionState`. It is never a USB versus Bluetooth answer: SDL does not report bus type for an XInput backed pad, only whether the link itself is wired.
-- `sdlType` is SDL's own family for the device (`SDL_GamepadType`, lowercased and hyphenated). It is never a VID/PID guess.
-- `hasButton` is indexed by the `SDL_GamepadButton` enum (from `SDL_GamepadHasButton`); `hasAxis` by `SDL_GamepadAxis`, length 6 (from `SDL_GamepadHasAxis`). `buttonLabels` is indexed like `hasButton`: the label the pad prints (`SDL_GamepadButtonLabel`: A, B, X, Y, CROSS, CIRCLE, SQUARE, TRIANGLE), or empty when SDL does not know.
-- `SDL_BUTTON_NAMES` and `SDL_AXIS_NAMES` name each index of a `state` event's `buttons` and `axes` arrays, in SDL's fixed order, so a caller never guesses which slot means what.
-- A `joystick` event is emitted only while a joystick capture is active and only when something changed. Its arrays are sized to the device's own button, axis and hat counts, the raw indices a gamecontrollerdb line is written in, not the fixed gamepad layout.
-- `gamepad-hold` follows `releaseGamepads` or `restoreGamepads`, so a caller can tell whether the subsystem is held open for a raw HID capture.
-- `enumerateHid` lists every HID device the OS reports, whether or not SDL could claim it, so "held by another application" can be told apart from "not plugged in". It is filtered to the generic desktop usage page's joystick, gamepad and multi axis usages (HID spec constants, not a device list). `busType` is `unknown` when the OS does not report one.
-- `rescan` tears the gamepad subsystem down and back up so SDL probes again devices it cached as unavailable at startup. It is fire and forget: watch for `removed` and `added` events.
-- `releaseGamepads` closes every open gamepad and joystick and quits the gamepad subsystem, so a raw HID open on the same device can succeed. The SDL thread and `SDL_hid_*` stay alive. `restoreGamepads` brings the subsystem back, replaying every mapping this addon added; it works without a prior release, and SDL synthesizes `added` events again.
-- `startRawCapture` opens a diagnostic raw HID capture, one at a time (a second call closes the first). Its result is never a bare boolean. `unavailable-exclusive` is the expected case for a controller SDL already holds through libusb: the open failing is not a bug, it is what the UI needs to explain. `not-found` means no matching device is enumerable; `error` carries what SDL reported.
-- `listJoysticks` lists every joystick SDL has open, mapped or not. A controller with no mapping appears here but never through the gamepad `added` and `removed` events; this is what makes it visible to a mapping generator at all.
+The WebHID and WebUSB choosers on the main window session. The USB device chooser prefers a Nintendo device (vendor `0x057E`).
 
 ## display
 
@@ -381,7 +323,7 @@ Opening a pack file from the desktop. Windows and Linux pass the path in argv; m
 
 ### msu/optimize-handlers.ts
 
-IPC for normalising a pack to one audio format: measure first, convert second. They are two channels, not one call with a flag: measuring encodes a slice of every candidate, so it wants its own progress and result, and nothing is written until someone has read the numbers and said yes. Both report per file progress on one event. Pack and file names come from the renderer, so they become paths only through `pack-fs/`, which refuses a traversal. Both operations need the encoder, so `requireEncoder` throws when it is missing.
+IPC for normalising a pack to one audio format: measure first, convert second. They are two channels, not one call with a flag: measuring encodes a slice of every candidate, so it wants its own progress and result, and nothing is written until someone has read the numbers and said yes. Both report per file progress on one event. Pack and file names come from the renderer, so they become paths only through `pack-fs/`, which refuses a traversal. Both operations need the encoder, so `requireEncoder` throws unless the tools module reports ffmpeg ready.
 
 ### msu/pack-fs/
 
@@ -403,7 +345,7 @@ How one pack file is handed to the encoder, and how long it is. An MSU-1 `.pcm` 
 
 ### msu/optimize/flac-encode.ts
 
-The encoder invocation lives in one place, so the slice that measures a file and the run that converts it use the same compression level. `-map 0:a:0` takes the first audio stream only, so an mp3 with cover art does not gain a video stream. The sample format is left to the encoder, not pinned to 16 bit: a 24 bit source pinned to 16 would silently stop being lossless. `FLAC_COMPRESSION_LEVEL` is the encoder effort on a 0 to 12 scale; above 5 saves about 2% more for several times the time. An encode uses the encode time budget, not the probe one, since a long track legitimately runs for minutes. A failure throws the encoder's last line, so it names the file's own problem.
+The encoder invocation lives in one place, so the slice that measures a file and the run that converts it use the same compression level. `-map 0:a:0` takes the first audio stream only, so an mp3 with cover art does not gain a video stream. The sample format is left to the encoder, not pinned to 16 bit: a 24 bit source pinned to 16 would silently stop being lossless. `FLAC_COMPRESSION_LEVEL` is the encoder effort on a 0 to 12 scale; above 5 saves about 2% more for several times the time. An encode runs through the tools module with its 10 minute budget, not the probe one, since a long track legitimately runs for minutes. A conversion asks ffmpeg for `-progress` on stdout and turns each `out_time_us` line into the file's own fraction, so the bar moves inside a long track. A failure throws the encoder's last line, so it names the file's own problem.
 
 ### msu/optimize/loop-point.ts
 
@@ -432,37 +374,25 @@ A pack installed from the Hookshop is read only, so it is refused before any ste
 
 ## tools
 
-### tools/ffmpeg-install.ts
+### boot/ffmpeg.task.ts
 
-Installs the optional ffmpeg tool on request: resolve the current release asset, download it, verify it, keep the two binaries. The order is the security property: the checksum is checked while the download is still an inert file in temp. One install runs at a time; a second request joins the running one.
+Declares the optional ffmpeg tool to the Brock tools module at boot. From then on the module finds it, installs it as the `tool:ffmpeg` job (download, checksum, unpack, all shown in the job dialog) and runs it with an argument array. The copy lives in `Data/tools/ffmpeg/<version>/`, under the app's own data root, so an isolated `--user-data` launch gets its own copy.
 
-### tools/ipc-handlers.ts
+### tools/ffmpeg-tool.ts
 
-IPC for the optional ffmpeg tool: query, install, probe. The probe takes a Data root relative POSIX path, not an absolute one, so the renderer never names a path outside the app's own storage. Traversal out of the root is refused the same way the generic file store refuses it.
-
-### tools/ffmpeg-locate/
-
-Finds a usable ffmpeg and ffprobe pair without installing anything: the managed install under the app's data root, then (on a platform with no download) PATH. A PATH folder must hold both binaries; one alone is no use. A system copy is never checksum verified: it is the user's own and the app did not fetch it. `ffmpegState` reports the result as ready, installable, or not served here (on Linux it names the package to install).
-
-### tools/ffmpeg-paths/
-
-Where the optional ffmpeg binaries live, and which platforms the app installs for (Windows only, `canDownload`). The tool folder is `<data>/tools/ffmpeg`, under the app's own data root, so an isolated `--user-data` launch gets its own copy and the real profile is never touched. Only the two binaries are kept; everything else in the archive is discarded. `managedBinaries` returns the two paths a managed install occupies, whether or not they exist yet.
+The ffmpeg tool definition: the `ffmpeg` and `ffprobe` binaries, one version folder, and a download only on Windows. Linux builds ship as `.tar.xz` on a platform that has a package manager, so Linux reads PATH and the hint names the package to install. A copy found on PATH is the user's own and is used as it is, with no checksum.
 
 ### tools/ffmpeg-release.ts
 
-Resolves the pinned ffmpeg asset name against BtbN's `latest` release right before every install, since that release's bytes (and so its checksum) change whenever BtbN rebuilds it. The GitHub REST API returns the asset's own published sha256 digest alongside its size and download URL in one call. Nothing here computes or guesses a checksum: it relays what BtbN published for the exact bytes about to be fetched.
+Resolves the pinned ffmpeg asset name against BtbN's `latest` release right before every install, since that release's bytes (and so its checksum) change whenever BtbN rebuilds it. BtbN prunes its dated releases, so `latest` is the one tag that never returns 404. The GitHub REST API returns the asset's own published sha256 digest alongside its size and download URL in one call, which the tools module checks before anything is unpacked. Nothing here computes or guesses a checksum: it relays what BtbN published for the exact bytes about to be fetched.
 
-### tools/ffmpeg-run/
+### tools/ipc-handlers.ts
 
-Runs the optional ffmpeg tool. Arguments are always an array, never a shell string: paths contain spaces on Windows, and a shell makes every file name an injection site.
+The one RotP ffmpeg channel left: `ffmpeg:probeAudio`. State and install belong to the tools module (`tools:state`, `tools:install`). The probe takes a Data root relative POSIX path, not an absolute one, so the renderer never names a path outside the app's own storage. Traversal out of the root is refused the same way the generic file store refuses it.
 
-- `PROBE_TIMEOUT_MS` (30 s) is long enough for a probe of a large file on a cold disk and short enough not to hang the UI.
-- `ENCODE_TIMEOUT_MS` (10 min) exists because a long track at a real compression level can run for minutes, and killing it mid write leaves a truncated output. The probe timeout once silently turned long encodes into failures.
-- `probeFile` returns what ffprobe says about one media file, or null when the tool is not installed, the file is not media, or the probe failed. Null is a normal answer, not an error. Each file is asked once (see `probe-cache/`).
+### tools/probe-file.ts
 
-### tools/ffmpeg-verify.ts
-
-The checksum gate for a downloaded tool archive. It runs before anything is extracted: an archive that has not been verified must never become an executable that then runs. The expected size and digest come from `ffmpeg-release.ts`, resolved fresh against the current release right before the download, never a build time constant. A download that fails any check is deleted so a bad archive cannot be reused. `sha256File` reads the file as a stream, so a large archive is not buffered.
+What ffprobe says about one media file, or null when the tool is not installed, the file is not media, or the probe failed. Null is a normal answer, not an error. The probe gets 30 seconds, long enough for a large file on a cold disk and short enough not to hang the UI. Each file is asked once (see `probe-cache/`).
 
 ### tools/ffprobe-parse.ts
 

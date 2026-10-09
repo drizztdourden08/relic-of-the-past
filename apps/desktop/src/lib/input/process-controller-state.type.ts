@@ -1,5 +1,4 @@
 /* @layer renderer-lib @kind types */
-import type { TriggerCalibration } from './stick-calibration';
 import type { ControllerInputState } from './controller-input-store.type';
 
 interface ControllerStateHost {
@@ -8,7 +7,6 @@ interface ControllerStateHost {
   connectedDeviceKeys: Set<string>;
   connected: boolean;
   log(msg: string): void;
-  getTriggerCalibration(deviceKey: string, axisIndex: number): TriggerCalibration | undefined;
 }
 
 export type { ControllerStateHost };

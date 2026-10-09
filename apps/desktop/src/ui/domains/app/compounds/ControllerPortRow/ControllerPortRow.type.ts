@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ControllerBusType, DeviceStatus } from '@shared/ipc';
+import type { ControllerBusType, DeviceStatus } from '@drizztdourden08/brock-input';
 
 interface ControllerPortRowProps {
   portNumber: number;

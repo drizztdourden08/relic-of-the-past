@@ -1,19 +1,9 @@
 /* @layer renderer-lib @kind logic */
-import * as controllersStore from '../controllers-store';
-import { controllerInputStore } from '../controller-input-store';
-import type { DeviceStickCalibration } from '../controller-input-store';
+import { useCalibrationStore } from '@drizztdourden08/brock-input/renderer';
 
 const loadCalibrations = (): void => {
-  controllersStore.readStickCalibration()
-    .then((store) => {
-      controllerInputStore.loadStickCalibrations(store as Record<string, DeviceStickCalibration>);
-    })
-    .catch((e: unknown) => console.warn('[input] failed to load stick calibration', e));
-  controllersStore.readTriggerCalibration()
-    .then((store) => {
-      controllerInputStore.loadTriggerCalibrations(store);
-    })
-    .catch((e: unknown) => console.warn('[input] failed to load trigger calibration', e));
+  useCalibrationStore.getState().refresh()
+    .catch((e: unknown) => console.warn('[input] failed to load controller calibration', e));
 };
 
 export { loadCalibrations };

@@ -1,13 +1,13 @@
 /* @layer renderer-lib @kind logic */
-import { appApi } from '@app/ipc/app-api';
-import * as controllersStore from '../controllers-store';
-import { onControllerRaw } from '../native-capture-store';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import { startControllerNameCache } from '../controller-name-cache';
 import { startControllerFamilyCache } from '../controller-family-cache';
 import { controllerInputStore } from '../controller-input-store';
 import type { ControllerInputState } from '../controller-input-store';
 import type { InputManager } from './input-manager';
 import { connectedGamepadKeys } from './connected-gamepad-keys';
+
+const noUnsubscribe = (): void => undefined;
 
 const subscribeControllers = (m: InputManager): void => {
   m.hidUnsubscribe = controllerInputStore.onInput((state: ControllerInputState) => {
@@ -24,15 +24,16 @@ const subscribeControllers = (m: InputManager): void => {
     m.pauseManager.checkControllerDisconnect(m.activeProfile, connectedGamepadKeys(m), m.devices);
     m.refreshDevices();
   });
-  m.ipcControllerStateUnsub = controllersStore.onControllerState((deviceKey, buttons, axes) => {
+  const api = inputApi();
+  m.ipcControllerStateUnsub = api?.onState((deviceKey, buttons, axes) => {
     controllerInputStore.handleControllerState(deviceKey, buttons, axes);
-  });
-  m.controllerRemovedUnsub = appApi().onControllerRemoved((deviceKey) => {
+  }) ?? noUnsubscribe;
+  m.controllerRemovedUnsub = api?.onRemoved((deviceKey) => {
     controllerInputStore.handleControllerRemoved(deviceKey);
-  });
-  m.controllerRawUnsub = onControllerRaw((report) => {
+  }) ?? noUnsubscribe;
+  m.controllerRawUnsub = api?.capture.onRaw((report) => {
     controllerInputStore.handleRawReport(report);
-  });
+  }) ?? noUnsubscribe;
   m.controllerNameCacheUnsub = startControllerNameCache();
   m.controllerFamilyCacheUnsub = startControllerFamilyCache();
 };

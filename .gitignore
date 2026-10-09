@@ -49,15 +49,8 @@ __pycache__/
 # WASM build artifacts
 core/wasm-build/output/
 
-# Downloaded native build dependencies (SDL3, libusb). Fetched by
-# scripts/build/fetch-sdl3.mjs and never committed.
+# Downloaded native build dependencies (the Emscripten SDK, SDL3 sources), never committed.
 third_party/
-
-# SDL3 native controller-input addon build output. build/ is listed on purpose
-# (release/ below only matches Release/ case-insensitively on Windows). prebuilds/
-# is scripts/ensure-sdl3.mjs's downloaded-or-locally-built payload.
-apps/desktop/electron/input/native/sdl3/build/
-apps/desktop/electron/input/native/sdl3/prebuilds/
 
 apps/desktop/public/wasm/
 
@@ -73,11 +66,6 @@ apps/desktop/mobile/android/app/build/
 apps/desktop/mobile/android/app/src/main/assets/public/
 apps/desktop/mobile/android/local.properties
 apps/desktop/mobile/android/capacitor-cordova-android-plugins/
-# SDL's own Java classes are staged into the build dir from the pinned SDL3
-# source (app/build.gradle: stageSdlJava), never copied into this repo. A copy
-# here would drift from the native library it pairs with, so one appearing is a
-# mistake and must not be committed.
-apps/desktop/mobile/android/app/src/main/java/org/
 
 # Assets (user-provided)
 assets/assets.dat
@@ -161,6 +149,3 @@ tests/fixtures/save-states/
 
 # Merge base for the two-sided sync. It is local state and never shared.
 .vault-state.json
-
-# Derived .msul document icon (built by scripts/build/make-msul-icon.mjs)
-apps/desktop/public/logos/generated/

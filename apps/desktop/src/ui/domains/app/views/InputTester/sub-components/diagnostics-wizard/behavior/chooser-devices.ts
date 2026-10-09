@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { DeviceEntry, HidListedDevice } from '@shared/ipc';
+import type { DeviceEntry, HidListedDevice } from '@drizztdourden08/brock-input';
 import type { ChooserDevice } from '../diagnostics-wizard.type';
 import { toHex4 } from './to-hex4';
 

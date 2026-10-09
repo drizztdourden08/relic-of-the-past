@@ -1,10 +1,9 @@
 /* @layer electron-main @kind logic */
 import { isAbsolute, join, normalize, relative } from 'path';
-import type { FfmpegState } from '@shared/types/ffmpeg-tool';
-import { handle, emit, getUserDataPath, getMainWindow } from '@drizztdourden08/brock-electron/main';
-import { ffmpegState } from './ffmpeg-locate';
-import { installFfmpeg } from './ffmpeg-install';
-import { probeFile } from './ffmpeg-run';
+import type { MainContext } from '@drizztdourden08/brock-electron/main';
+import { getUserDataPath, handle } from '@drizztdourden08/brock-electron/main';
+import { getTools } from '@drizztdourden08/brock-tools/main';
+import { probeFile } from './probe-file';
 
 const resolveInDataRoot = (dataPath: string): string => {
   const root = getUserDataPath();
@@ -14,15 +13,8 @@ const resolveInDataRoot = (dataPath: string): string => {
   return full;
 };
 
-const reportState = (state: FfmpegState): void => {
-  const win = getMainWindow();
-  if (win) emit(win, 'ffmpeg:progress', state);
-};
-
-const registerFfmpegHandlers = (): void => {
-  handle('ffmpeg:getState', () => ffmpegState());
-  handle('ffmpeg:install', () => installFfmpeg(reportState));
-  handle('ffmpeg:probeAudio', (_event, dataPath) => probeFile(resolveInDataRoot(dataPath)));
+const registerFfmpegHandlers = (ctx: MainContext): void => {
+  handle('ffmpeg:probeAudio', (_event, dataPath) => probeFile(getTools(ctx), resolveInDataRoot(dataPath)));
 };
 
 export { registerFfmpegHandlers };

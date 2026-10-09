@@ -1,6 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { portKitApi } from '@drizztdourden08/brock-port-kit/renderer';
 import { warmupState } from './warmup-state';
+import { CORE_WASM_FILE } from './wasm-warmup.constants';
+import type { ByteProgress as Progress } from './wasm-warmup.type';
 
 const isHttpRenderer = (): boolean =>
   window.location.protocol === 'http:' || window.location.protocol === 'https:';
@@ -15,25 +17,15 @@ const joinChunks = (chunks: readonly Uint8Array[], received: number): ArrayBuffe
   return out.buffer;
 };
 
-const loadWasmBytes = async (onProgress?: (ratio: number) => void): Promise<ArrayBuffer> => {
-  if (warmupState.cachedBytes) return warmupState.cachedBytes;
+const readBundledCore = async (onProgress?: Progress): Promise<ArrayBuffer> => {
+  const bytes = await portKitApi()?.readCore(CORE_WASM_FILE);
+  if (!bytes) throw new Error(`The core ${CORE_WASM_FILE} is not in the app bundle.`);
+  onProgress?.(1);
+  return bytes;
+};
 
-  if (!isHttpRenderer()) {
-    warmupState.cachedBytes = await appApi().readWasmBytes();
-    onProgress?.(1);
-    return warmupState.cachedBytes;
-  }
-
-  const url = new URL('./wasm/zelda3.wasm', window.location.href).href;
-  const res = await fetch(url);
-  const total = Number(res.headers.get('Content-Length')) || 0;
-  if (!res.body || !total) {
-    warmupState.cachedBytes = await res.arrayBuffer();
-    onProgress?.(1);
-    return warmupState.cachedBytes;
-  }
-
-  const reader = res.body.getReader();
+const streamBody = async (body: ReadableStream<Uint8Array>, total: number, onProgress?: Progress): Promise<ArrayBuffer> => {
+  const reader = body.getReader();
   const chunks: Uint8Array[] = [];
   let received = 0;
   for (;;) {
@@ -43,7 +35,20 @@ const loadWasmBytes = async (onProgress?: (ratio: number) => void): Promise<Arra
     received += value.length;
     onProgress?.(received / total);
   }
-  warmupState.cachedBytes = joinChunks(chunks, received);
+  return joinChunks(chunks, received);
+};
+
+const fetchCore = async (onProgress?: Progress): Promise<ArrayBuffer> => {
+  const res = await fetch(new URL(CORE_WASM_FILE, window.location.href).href);
+  const total = Number(res.headers.get('Content-Length')) || 0;
+  if (res.body && total) return streamBody(res.body, total, onProgress);
+  const bytes = await res.arrayBuffer();
+  onProgress?.(1);
+  return bytes;
+};
+
+const loadWasmBytes = async (onProgress?: Progress): Promise<ArrayBuffer> => {
+  warmupState.cachedBytes ??= await (isHttpRenderer() ? fetchCore(onProgress) : readBundledCore(onProgress));
   return warmupState.cachedBytes;
 };
 

@@ -1,23 +1,23 @@
 /* @layer shared-types @kind types */
-import type { SubmitReportRequest } from '@shared/sanctuary';
-import type { DebugReportSaveEntry } from '@shared/types/debug-report';
+import type { ReportContext, SubmitReportRequest } from '@shared/sanctuary';
 
 type SanctuarySubmitInput = {
   request: Omit<SubmitReportRequest, 'attachment'>;
-  profileId: string | null;
-  saves: DebugReportSaveEntry[];
-  sessionKeys: string[];
 };
 
 type SanctuarySubmitResult =
-  | { reportId: string; issueUrl: string; sanctuaryUrl: string; attached: boolean; uploaded: boolean; error?: string }
+  | { reportId: string; issueUrl: string; sanctuaryUrl: string }
   | { error: string };
 
-type SanctuaryUploadResult = { uploaded: boolean; error?: string };
+type SanctuaryReportSnapshot = {
+  context: ReportContext;
+  profileId: string | null;
+  liveState: ArrayBuffer | null;
+};
 
 interface SanctuaryInvokeContract {
   'sanctuary:submitReport': (input: SanctuarySubmitInput) => Promise<SanctuarySubmitResult>;
-  'sanctuary:retryUpload': (input: { reportId: string }) => Promise<SanctuaryUploadResult>;
+  'sanctuary:reportSnapshot': (snapshot: SanctuaryReportSnapshot) => Promise<void>;
 }
 
-export type { SanctuaryInvokeContract, SanctuarySubmitInput, SanctuarySubmitResult, SanctuaryUploadResult };
+export type { SanctuaryInvokeContract, SanctuarySubmitInput, SanctuarySubmitResult, SanctuaryReportSnapshot };

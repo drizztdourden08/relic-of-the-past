@@ -2,7 +2,6 @@
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { SimRunConfig } from '@shared/game/simulation';
 import type {
-  DebugReportPackageInput, DebugReportBuildResult,
   DebugCaptureFinalizeInput, DebugCaptureFinalizeResult,
   DebugCaptureSessionSummary, DebugCaptureDeleteSessionResult,
 } from '@shared/types/debug-report';
@@ -51,8 +50,6 @@ interface DevToolsInvokeContract {
 
   'debug-capture:finalizeSession': (input: DebugCaptureFinalizeInput) => Promise<DebugCaptureFinalizeResult>;
   'debug-capture:listSessions': (input: { profileId: string }) => Promise<DebugCaptureSessionSummary[]>;
-  'debug-capture:deleteSession': (input: { profileId: string; sessionKey: string }) => Promise<DebugCaptureDeleteSessionResult>;
-  'debug-report:build': (input: DebugReportPackageInput) => Promise<DebugReportBuildResult>;
-}
+  'debug-capture:deleteSession': (input: { profileId: string; sessionKey: string }) => Promise<DebugCaptureDeleteSessionResult>;}
 
 export type { DevToolsInvokeContract };

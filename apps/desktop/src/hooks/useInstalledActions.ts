@@ -1,12 +1,13 @@
 /* @layer renderer-other @kind hook */
 import { appApi } from '@app/ipc/app-api';
 import { useCallback, useState } from 'react';
+import { catalogApi, useCatalogInstalled } from '@drizztdourden08/brock-catalog/renderer';
 import type { InstalledPack } from '@shared/store/installed-types';
-import { useInstalledStore } from '@app/stores/installed-store';
+import { NO_CATALOG } from '@app/lib/store/hookshop-reads';
 import type { InstalledActions } from './use-installed-actions.type';
 
 const useInstalledActions = () => {
-  const reload = useInstalledStore((state) => state.reload);
+  const reload = useCatalogInstalled((state) => state.reload);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +24,7 @@ const useInstalledActions = () => {
 
   const uninstall = useCallback(async (pack: InstalledPack): Promise<boolean> => {
     begin();
-    const result = await appApi().storeUninstall(pack.itemId);
+    const result = (await catalogApi()?.uninstall(pack.itemId)) ?? NO_CATALOG;
     await finish(result.ok ? null : result.error);
     return result.ok;
   }, [begin, finish]);
@@ -37,10 +38,10 @@ const useInstalledActions = () => {
 
   const update = useCallback(async (pack: InstalledPack): Promise<string | null> => {
     begin();
-    const result = await appApi().storeInstall({ itemId: pack.itemId, version: null });
+    const result = (await catalogApi()?.install({ itemId: pack.itemId, version: null })) ?? { ...NO_CATALOG, cancelled: false };
     const wroteNothing = result.ok || result.cancelled;
     await finish(wroteNothing ? null : result.error);
-    return result.ok ? result.pack.installedName : null;
+    return result.ok ? result.record.installedName : null;
   }, [begin, finish]);
 
   return { busy, error, uninstall, duplicate, update };

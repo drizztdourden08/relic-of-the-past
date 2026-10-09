@@ -1,2 +1,5 @@
 /* @layer shared-store @kind barrel */
-export type { InstalledOrigin, InstalledPack, InstalledRegistry } from './installed-types.type';
+export { isInstalledOrigin } from './is-installed-origin';
+export { isStoreKind } from './is-store-kind';
+export { packOfRecord } from './pack-of-record';
+export type { InstalledOrigin, InstalledPack, InstalledRecordView } from './installed-types.type';

@@ -3,38 +3,23 @@ import { useCallback } from 'react';
 import { Spinner, Text } from '@drizztdourden08/tessera/primitives';
 import { storeItemUrl } from '@app/lib/store/store-site';
 import type { StoreDetailPanelProps } from '../Store.type';
+import { useDetailBar } from '../behavior/useDetailBar';
 import { StoreDetail } from './StoreDetail';
 
 const StoreDetailPanel = (props: StoreDetailPanelProps) => {
   const { store } = props;
-  const { selectedId, detail, detailError, selectedPack, installer, remover } = store;
-  const itemId = selectedId ?? '';
-  const name = detail?.item.name ?? selectedPack?.installedName ?? itemId;
+  const { selectedId, detail, detailError, selectedPack } = store;
+  const bar = useDetailBar(store);
 
-  const handleInstall = useCallback(() => { void installer.install(itemId); }, [installer, itemId]);
-  const handleCancel = useCallback(() => installer.cancel(itemId), [installer, itemId]);
-  const handleUninstall = useCallback(() => remover.uninstall(itemId, name), [remover, itemId, name]);
-  const handleOpenSite = useCallback(() => { window.open(storeItemUrl(itemId), '_blank'); }, [itemId]);
+  const handleOpenSite = useCallback(() => {
+    if (selectedId) window.open(storeItemUrl(selectedId), '_blank');
+  }, [selectedId]);
 
   if (!selectedId) return <Text>Select a pack to see it here</Text>;
   if (detailError) return <Text as="p" className="store__error">{detailError}</Text>;
   if (!detail) return <Spinner size="sm" />;
 
-  return (
-    <>
-      <StoreDetail
-        detail={detail}
-        pack={selectedPack}
-        job={installer.jobOf(itemId)}
-        uninstalling={remover.uninstallingId === itemId}
-        onInstall={handleInstall}
-        onCancel={handleCancel}
-        onUninstall={handleUninstall}
-        onOpenSite={handleOpenSite}
-      />
-      {remover.uninstallError && <Text as="p" className="store__error">{remover.uninstallError}</Text>}
-    </>
-  );
+  return <StoreDetail detail={detail} pack={selectedPack} bar={bar} onOpenSite={handleOpenSite} />;
 };
 
 export { StoreDetailPanel };

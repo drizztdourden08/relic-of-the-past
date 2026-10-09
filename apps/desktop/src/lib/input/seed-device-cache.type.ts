@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { ControllerGamepadType } from '@shared/ipc';
+import type { ControllerGamepadType } from '@drizztdourden08/brock-input';
 
 interface DeviceSnapshotFields {
   deviceKey: string;

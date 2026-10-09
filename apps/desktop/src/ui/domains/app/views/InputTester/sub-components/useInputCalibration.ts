@@ -1,12 +1,10 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
-import { useState, useEffect, useMemo, useRef, useReducer } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import { controllerInputStore } from '../../../../../../lib/input/controller-input-store';
-import type { ControllerInputState, DeviceStickCalibration } from '../../../../../../lib/input/controller-input-store';
+import type { ControllerInputState } from '../../../../../../lib/input/controller-input-store';
 import { getInputManager } from '../../../../../../lib/input/input-manager';
 import type { HidControllerMap } from './HidCalibrationWizard';
-import type { TriggerCalibrationData } from './TriggerCalibrationWizard';
-import * as controllersStore from '@app/lib/input/controllers-store';
 import { useControllerDevices } from '../../../../../../lib/input/useControllerDevices';
 import { EVENT_LOG_KEEP } from './useInputCalibration.constants';
 import type { EventEntry } from './useInputCalibration.type';
@@ -22,47 +20,29 @@ const useInputCalibration = () => {
   const [calibrating, setCalibrating] = useState(false);
   const [lastCalibration, setLastCalibration] = useState<HidControllerMap | null>(null);
 
-  const [stickCalibrationStore, setStickCalibrationStore] = useState<Record<string, DeviceStickCalibration>>({});
+  const { entries, isRescanPending, handleRescan } = useControllerDevices();
 
-  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
-
-  const { entries, groups: controllerGroups, isRescanPending, handleRescan, addMapping } = useControllerDevices();
-
-  const readyDeviceKeys = useMemo(
-    () => entries.filter((entry) => entry.status === 'ready').map((entry) => entry.deviceKey),
-    [entries],
-  );
+  const readyCount = useMemo(() => entries.filter((entry) => entry.status === 'ready').length, [entries]);
 
   useEffect(() => {
-    controllersStore.readStickCalibration()
-      .then((store) => setStickCalibrationStore(store as Record<string, DeviceStickCalibration>))
-      .catch((e: unknown) => console.warn('[input] failed to load stick calibration', e));
-  }, []);
-
-  useEffect(() => {
-    const inputMgr = getInputManager();
-    const unsub = inputMgr.onInputState((hidStates, _pressedKeys) => {
+    const unsub = getInputManager().onInputState((hidStates) => {
       setControllerStates(hidStates);
-      setControllerConnected(hidStates.size > 0 || controllerInputStore.isConnected() || readyDeviceKeys.length > 0);
+      setControllerConnected(hidStates.size > 0 || controllerInputStore.isConnected() || readyCount > 0);
     });
     return unsub;
-  }, [readyDeviceKeys]);
+  }, [readyCount]);
 
   useEffect(() => {
-    const unsubConnect = appApi().onControllerAdded((info) => {
-      forceUpdate();
+    const api = inputApi();
+    const unsubConnect = api?.onAdded((info) => {
       setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'connect', id: info.name || info.deviceKey }]);
     });
-    const unsubRemoved = appApi().onControllerRemoved((deviceKey) => {
+    const unsubRemoved = api?.onRemoved((deviceKey) => {
       setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'disconnect', id: deviceKey }]);
     });
-    const unsubDisconnect = controllerInputStore.onDisconnect(() => {
-      forceUpdate();
-    });
     return () => {
-      unsubConnect();
-      unsubRemoved();
-      unsubDisconnect();
+      unsubConnect?.();
+      unsubRemoved?.();
     };
   }, []);
 
@@ -78,20 +58,6 @@ const useInputCalibration = () => {
     setCalibrating(false);
   };
 
-  const handleStickCalibrationComplete = async (cal: DeviceStickCalibration) => {
-    if (readyDeviceKeys.length === 0) return;
-    const key = readyDeviceKeys[0];
-    controllerInputStore.setStickCalibration(key, cal);
-    const updated = { ...stickCalibrationStore, [key]: cal };
-    setStickCalibrationStore(updated);
-    await controllersStore.writeStickCalibration(updated);
-  };
-
-  const handleTriggerCalibrationComplete = async (deviceKey: string, axisIndex: number, cal: TriggerCalibrationData) => {
-    controllerInputStore.setTriggerCalibration(deviceKey, axisIndex, cal);
-    await controllersStore.writeTriggerCalibration(deviceKey, axisIndex, cal);
-  };
-
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [events, controllerDiag]);
@@ -105,15 +71,11 @@ const useInputCalibration = () => {
     calibrating,
     setCalibrating,
     lastCalibration,
-    stickCalibrationStore,
-    controllerGroups,
-    connectedCount: readyDeviceKeys.length,
+    entries,
+    connectedCount: readyCount,
     isRescanPending,
     handleRescan,
-    addMapping,
     handleCalibrationComplete,
-    handleStickCalibrationComplete,
-    handleTriggerCalibrationComplete,
   };
 };
 

@@ -24,8 +24,8 @@ import GameGameplayGameplaySettings, { meta as gameGameplayGameplaySettingsMeta 
 import GameGameplayHudSettings, { meta as gameGameplayHudSettingsMeta } from '../src/screens/game/gameplay/hud.settings';
 import GameHomeHero, { meta as gameHomeHeroMeta } from '../src/screens/game/home.hero';
 import GameVideoCameraSettings, { meta as gameVideoCameraSettingsMeta } from '../src/screens/game/video/camera.settings';
-import GameVideoDisplaySettings, { meta as gameVideoDisplaySettingsMeta } from '../src/screens/game/video/display.settings';
 import GameVideoGraphicsSettings, { meta as gameVideoGraphicsSettingsMeta } from '../src/screens/game/video/graphics.settings';
+import GameVideoPictureSettings, { meta as gameVideoPictureSettingsMeta } from '../src/screens/game/video/picture.settings';
 import GameVideoWindowSettings, { meta as gameVideoWindowSettingsMeta } from '../src/screens/game/video/window.settings';
 import GameViewBase, { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
 import HudLayoutLayer, { meta as hudLayoutLayerMeta } from '../src/screens/hud-layout.layer';
@@ -61,8 +61,8 @@ const screenTree = buildScreenTree(config, [
   { kind: 'settings', bucket: 'game', group: 'gameplay', id: 'hud', sections: GameGameplayHudSettings, meta: gameGameplayHudSettingsMeta },
   { kind: 'hero', bucket: 'game', id: 'home', component: GameHomeHero, meta: gameHomeHeroMeta },
   { kind: 'settings', bucket: 'game', group: 'video', id: 'camera', sections: GameVideoCameraSettings, meta: gameVideoCameraSettingsMeta },
-  { kind: 'settings', bucket: 'game', group: 'video', id: 'display', sections: GameVideoDisplaySettings, meta: gameVideoDisplaySettingsMeta },
   { kind: 'settings', bucket: 'game', group: 'video', id: 'graphics', sections: GameVideoGraphicsSettings, meta: gameVideoGraphicsSettingsMeta },
+  { kind: 'settings', bucket: 'game', group: 'video', id: 'picture', sections: GameVideoPictureSettings, meta: gameVideoPictureSettingsMeta },
   { kind: 'settings', bucket: 'game', group: 'video', id: 'window', sections: GameVideoWindowSettings, meta: gameVideoWindowSettingsMeta },
   { kind: 'base', id: 'game-view', component: GameViewBase, meta: gameViewBaseMeta },
   { kind: 'layer', id: 'hud-layout', component: HudLayoutLayer, meta: hudLayoutLayerMeta },

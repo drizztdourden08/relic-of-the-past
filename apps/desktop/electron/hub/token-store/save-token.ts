@@ -1,12 +1,11 @@
 /* @layer electron-main @kind logic */
-import { safeStorage } from 'electron';
-import { writeFile } from 'fs/promises';
-import { canStore } from './can-store';
-import { tokenPath } from './token-path';
+import { hubSecrets } from './hub-secrets';
+import { HUB_TOKEN_LABEL, HUB_TOKEN_SECRET, NO_CONTEXT_ERROR } from './token-store.constants';
 
 const saveToken = async (token: string): Promise<void> => {
-  if (!canStore()) throw new Error('This system cannot keep the sign-in encrypted, so it was not stored.');
-  await writeFile(tokenPath(), safeStorage.encryptString(token));
+  const secrets = hubSecrets();
+  if (!secrets) throw new Error(NO_CONTEXT_ERROR);
+  await secrets.set(HUB_TOKEN_SECRET, token, HUB_TOKEN_LABEL);
 };
 
 export { saveToken };

@@ -2,13 +2,19 @@
 import { useEffect, useRef } from 'react';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { Button } from '@drizztdourden08/tessera/primitives';
-import { useFfmpegInstall } from '@app/hooks/useFfmpegInstall';
+import { useTool } from '@drizztdourden08/brock-tools/renderer';
+import { FFMPEG_TOOL_ID } from '@shared/types/ffmpeg-tool';
 import { FfmpegInstallStep } from '../FfmpegInstallStep';
 import type { FfmpegRequiredDialogProps } from './FfmpegRequiredDialog.type';
 
 const FfmpegRequiredDialog = ({ open, onClose }: FfmpegRequiredDialogProps) => {
-  const tool = useFfmpegInstall(open);
+  const tool = useTool(FFMPEG_TOOL_ID);
+  const { refresh } = tool;
   const firedRef = useRef(false);
+
+  useEffect(() => {
+    if (open) void refresh();
+  }, [open, refresh]);
 
   useEffect(() => {
     if (!open) { firedRef.current = false; return; }
@@ -25,7 +31,12 @@ const FfmpegRequiredDialog = ({ open, onClose }: FfmpegRequiredDialogProps) => {
       title="Video capture tool"
       actions={<Button variant="tertiary" onClick={onClose}>Skip, send with images instead</Button>}
     >
-      <FfmpegInstallStep state={tool.state} installing={tool.installing} onInstall={() => { void tool.install(); }} />
+      <FfmpegInstallStep
+        state={tool.state}
+        installing={tool.installing}
+        error={tool.error}
+        onInstall={() => { void tool.install(); }}
+      />
     </DialogShell>
   );
 };

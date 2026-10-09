@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import * as controllersStore from '@app/lib/input/controllers-store';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { controllerInputStore } from '../../../../../../lib/input/controller-input-store';
 import { previewHapticPattern } from '../../../../../../lib/input/haptic-bridge';
@@ -8,12 +7,9 @@ import type { RumbleTestButtonProps } from './ControllerCard.type';
 
 const RumbleTestButton = ({ deviceKey, test }: RumbleTestButtonProps) => {
   const run = useCallback(() => {
-    const result = 'hapticPattern' in test
-      ? previewHapticPattern(deviceKey, test.hapticPattern)
-      : controllersStore.vibratePattern(deviceKey, test.steps, test.gapMs);
-    result
-      .then(r => { if (!r.ok) controllerInputStore.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); })
-      .catch(e => controllerInputStore.addDiag(`⚠ Vibrate IPC error: ${e}`));
+    previewHapticPattern(deviceKey, test.hapticPattern)
+      .then(r => { if (!r.ok) controllerInputStore.addDiag(`Vibrate failed (${deviceKey}): ${r.error}`); })
+      .catch(e => controllerInputStore.addDiag(`Vibrate error: ${e}`));
   }, [deviceKey, test]);
 
   return (

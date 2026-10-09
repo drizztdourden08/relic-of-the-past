@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { DeviceProfile } from '@shared/input';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { HidControllerMap } from '../hid-calibration.type';
 
 interface UseHidCalibrationProps {

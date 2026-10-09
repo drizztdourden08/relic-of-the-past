@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useRef } from 'react';
 import type React from 'react';
-import { listControllerDevices } from '@app/lib/input/controller-devices-store';
+import { listInputDevices } from './list-input-devices';
 import { EMPTY_RAW_INFO } from './useDeviceRawInfo.constants';
 import type { RawHidInfo } from './useDeviceRawInfo.type';
 
@@ -9,7 +9,7 @@ const useDeviceRawInfo = (deviceKey?: string): React.MutableRefObject<RawHidInfo
   const rawInfoRef = useRef<RawHidInfo>(EMPTY_RAW_INFO);
 
   useEffect(() => {
-    listControllerDevices().then((devices) => {
+    listInputDevices().then((devices) => {
       const match = deviceKey
         ? devices.find((d) => d.deviceKey === deviceKey)
         : devices.find((d) => d.status === 'ready');

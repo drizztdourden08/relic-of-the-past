@@ -3449,37 +3449,24 @@ ports. Unclaimed listed devices sharing a vid:pid never get a suffix (only SDL c
 go through the assigner), so arrival order is the fallback. A blank product name falls back to
 the first group member that has one.
 
-## input/controller-devices-store
-
-Thin wrappers for the SDL3 device list IPC: the ready and unavailable snapshot, rescan, and
-the user mapping database. They sit beside `controllers-store` (the cross platform
-`ControllerHost` port) because this surface is desktop only and has no port yet.
-`window.api` is always present (the real preload, or a generated no op shim). `listHidDevices`
-is the raw HID enumeration, independent of SDL claim state.
-
 ## input/controller-family-cache
 
 The SDL gamepad type of every controller seen this session, seeded from the snapshot and kept
-live by `controller:devices` and `controller:added` (`seed-device-cache.ts`). Family display
+live by the input module's `onDevices` and `onAdded` (`seed-device-cache.ts`). Family display
 metadata (icons, labels, console defaults) is keyed by this type, so this is the only way to
 resolve it for a saved binding or a drag payload whose device is unplugged. Recording starts
 once at module load and is never torn down; the cache outlives any screen.
 
-## input/controller-hold-store
-
-Drops SDL's exclusive claim so a raw HID open can succeed (the diagnostics byte capture), and
-restores it afterwards so normal joystick input comes back. Desktop only.
-
 ## input/controller-input-store.ts
 
-Holds each pad's button and axis state, calibration and the diagnostic log the InputTester
-reads. Decoding belongs to the SDL3 native transport.
+Holds each pad's button and axis state and the diagnostic log the Controller Diagnostics page
+reads. Decoding and calibration storage belong to the Brock input module.
 
 - `getDevicesThatHaveReported` is not the connected set: SDL emits state only on change, so an
   untouched connected pad never appears. Connection state is the device snapshot
   (`InputManager.hidDeviceCache`, status `ready`).
 - `handleRawReport` takes one HID report while a diagnostic raw capture is open
-  (`native-capture-store.ts`). Only one capture runs at a time, keyed by vendor and product,
+  (the input module's `capture.startRaw`). Only one capture runs at a time, keyed by vendor and product,
   so the `vid:pid` device key is rebuilt here.
 - `rawSticks` are the raw 12 bit stick values `[lx, ly, rx, ry]` before calibration, for the
   calibration UI; `rawBytes` are the report bytes for the debug UI.
@@ -3488,18 +3475,12 @@ reads. Decoding belongs to the SDL3 native transport.
 ## input/controller-name-cache
 
 Names for every controller seen this session, seeded from the snapshot and kept live by
-`controller:added`. An event only listener never learns the name of a device connected before
+the input module's `onAdded`. An event only listener never learns the name of a device connected before
 it subscribed, since that device announces itself once. The OS product string is no
 substitute: devices reached over a raw USB interface report it empty, which is how a pad
 shows as "Unknown Controller". Names are keyed by device key and by vendor and product, since
 a caller with a raw device list has ids but no device key. Blank names are ignored so a later
 real one is not shadowed. Recording starts at module load and only listens.
-
-## input/controllers-store
-
-The facade for haptics and decoded controller state (the `ControllerHost` port) and for
-calibration (FileStore). Raw HID enumerate, read and write have no desktop implementation any
-more, because SDL3 claims every controller.
 
 ## input/device-detector
 
@@ -3636,12 +3617,6 @@ and the profile is dropped from the session, not half loaded, so nothing overwri
 and the assignments can still be recovered. An empty list would look like "never made any",
 which is the silent loss the rule prevents. One unreadable profile does not cost the others.
 
-## input/native-capture-store
-
-Wrappers for the SDL3 diagnostic capture IPC: raw HID bytes and joystick level button, axis
-and hat samples, keyed to whichever capture the gamepad diagnostics wizard has open. Desktop
-only.
-
 ## input/pause-manager.ts
 
 Pause state for a controller disconnect or a manual toggle. It only emits events; audio is
@@ -3660,8 +3635,9 @@ contribute.
 
 SDL3 controller intake. The native addon already decodes and factory calibrates reports into
 normalized values, so the old per device HID parser is bypassed. Trigger calibration applies
-here, on the normalized 0 to 1 range of the trigger axes (from `LEFT_TRIGGER` on); sticks
-arrive normalized to -1 to 1.
+here, on the normalized 0 to 1 range of the trigger axes (from `LEFT_TRIGGER` on), read live
+from the input module's `useCalibrationStore` so a calibration saved on the Controllers screen
+applies at once; sticks arrive normalized to -1 to 1.
 
 ## input/profile-devices
 
@@ -3740,9 +3716,8 @@ they are pushed here.
 
 ## input/seed-device-cache.ts
 
-Seeds a per device cache from the controller snapshot, then keeps it live with
-`controller:devices` and `controller:added`. Three caches once listened to
-`controller:added` alone and never recorded a device connected before they subscribed. Snapshot
+Seeds a per device cache from the controller snapshot, then keeps it live with the input
+module's `onDevices` and `onAdded`. Three caches once listened to the added event alone and never recorded a device connected before they subscribed. Snapshot
 entries and added events both satisfy `DeviceSnapshotFields`; `remember` decides whether an
 entry carries enough to record.
 
@@ -3754,15 +3729,14 @@ screen's rows. An unbound button falls back to the SNES button's own picture.
 
 ## input/useControllerDevices.ts
 
-Device list state for both input diagnostic screens. A rescan stays pending until the next
-snapshot arrives or three seconds pass, so a rescan click never looks like it did nothing.
-There is no loading flag: the main process serves `controller:list` from a cache it keeps
-current (`sdl3-source.ts`), so the first fetch resolves in well under a millisecond.
+Device list state for the Controls page and the Controller Diagnostics page, read from the
+input module's `useControllerDevicesStore`, plus RotP's adapter grouping. The module keeps a
+rescan pending until the next snapshot arrives or three seconds pass.
 
 ## input/vibration
 
-A transport free vibration call. SDL3 batches frame writes through the main process worker for
-every gamepad; the Gamepad API vibration path is gone. Default intensity is 0.7.
+A transport free vibration call through the input module's `vibratePattern`, which sequences
+the segments in main on desktop and in the WebView on Android. Default intensity is 0.7.
 
 ## instance
 

@@ -4,8 +4,8 @@ import { registerHubHandlers } from '../hub/ipc-handlers';
 
 const hubHandlers: HandlerGroup = {
   id: 'hub',
-  register: () => {
-    registerHubHandlers();
+  register: (ctx) => {
+    registerHubHandlers(ctx);
   },
 };
 

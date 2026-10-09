@@ -8,8 +8,6 @@ interface GeneralSettings {
   displayPerfInTitle: boolean;
   disableFrameDelay: boolean;
   vsync: boolean;
-  syncedRefreshRate: boolean;
-  syncedRefreshRateHz: number;
   turboEnabled: boolean;
   turboSpeed: number;
 }

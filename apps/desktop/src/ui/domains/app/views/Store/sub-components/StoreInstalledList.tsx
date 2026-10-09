@@ -1,13 +1,11 @@
 /* @layer renderer-components @kind component */
-import { useCallback } from 'react';
 import { EmptyState, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreInstalledListProps } from '../Store.type';
 import { StoreInstalledRow } from './StoreInstalledRow';
 
 const StoreInstalledList = (props: StoreInstalledListProps) => {
   const { title, rows, emptyText, store } = props;
-  const { installer, remover, account } = store;
-  const handleUpdate = useCallback((itemId: string) => { void installer.install(itemId); }, [installer]);
+  const { account, confirmUninstall } = store;
 
   return (
     <Stack gap="md" className="store-page store-installed">
@@ -17,15 +15,11 @@ const StoreInstalledList = (props: StoreInstalledListProps) => {
         <StoreInstalledRow
           key={row.pack.itemId}
           row={row}
-          job={installer.jobOf(row.pack.itemId)}
           canUpdate={account.signedIn}
-          uninstalling={remover.uninstallingId === row.pack.itemId}
-          onUpdate={handleUpdate}
-          onCancel={installer.cancel}
-          onUninstall={remover.uninstall}
+          onSignedOut={account.onSignedOut}
+          onConfirmUninstall={confirmUninstall}
         />
       ))}
-      {remover.uninstallError && <Text as="p" className="store__error">{remover.uninstallError}</Text>}
       {rows.length > 0 && (
         <Text as="p" className="store__hint">Uninstalling a pack a profile uses sets that profile back to the default first.</Text>
       )}

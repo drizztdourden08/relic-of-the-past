@@ -1,7 +1,8 @@
 /* @layer electron-main @kind logic */
+import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
 import type { ProbedAudio } from '@shared/types/audio-probe';
 import { MSU1_SAMPLE_RATE, msu1FrameCount } from '@shared/types/msu1-format';
-import { probeFile } from '../../tools/ffmpeg-run';
+import { probeFile } from '../../tools/probe-file';
 import { MSU1_EXTENSION, MSU1_INPUT_ARGS } from './audio-source.constants';
 import type { AudioSource } from './audio-source.type';
 import { extensionOf } from './extension-of';
@@ -19,10 +20,10 @@ const probedSource = (probed: ProbedAudio): AudioSource => ({
 });
 
 const describeSource = async (
-  filePath: string, fileName: string, sizeBytes: number,
+  tools: ToolsMain, filePath: string, fileName: string, sizeBytes: number,
 ): Promise<AudioSource | null> => {
   if (extensionOf(fileName) === MSU1_EXTENSION) return msu1Source(sizeBytes);
-  const probed = await probeFile(filePath);
+  const probed = await probeFile(tools, filePath);
   return probed === null ? null : probedSource(probed);
 };
 

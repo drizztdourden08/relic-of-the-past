@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { DetectedDevice, DeviceFamily } from '@shared/types/controls';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { resolveDeviceFromEntry } from '../resolve-device';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');

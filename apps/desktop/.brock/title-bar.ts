@@ -4,14 +4,12 @@ import frameRateItem from '../src/title-bar/frame-rate.action';
 import muteItem from '../src/title-bar/mute.action';
 import refreshRateItem from '../src/title-bar/refresh-rate.action';
 import saveStatesItem from '../src/title-bar/save-states.action';
-import updateItem from '../src/title-bar/update.action';
 
 const appTitleBar = titleBarFromFiles([
   { id: 'frame-rate', source: frameRateItem },
   { id: 'mute', source: muteItem },
   { id: 'refresh-rate', source: refreshRateItem },
   { id: 'save-states', source: saveStatesItem },
-  { id: 'update', source: updateItem },
 ]);
 
 export { appTitleBar };

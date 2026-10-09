@@ -3,7 +3,7 @@
  * Single source of truth for the zelda3 WASM build.
  *
  * Source list + emcc flags live HERE and nowhere else. build.bat (Windows),
- * the Makefile (`emmake make`), scripts/ensure-wasm.mjs, and the CI workflows
+ * the Makefile (`emmake make`), scripts/build-wasm-core.mjs (run by port-kit-ensure-wasm), and the CI workflows
  * all delegate to this script, so the build can never drift between platforms
  * again. Cross-platform: runs anywhere `emcc` is on PATH (Windows via emsdk_env,
  * Linux/macOS CI via emscripten-core/setup-emsdk).

@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { bestSyncedRate, isSyncedRate } from '@shared/display/refresh-rate';
+import { bestSyncedRate, isSyncedRate } from '@drizztdourden08/brock-display';
 
 const refreshAdvisory = (refreshHz: number | null): string => {
   if (refreshHz === null || isSyncedRate(refreshHz)) return '';

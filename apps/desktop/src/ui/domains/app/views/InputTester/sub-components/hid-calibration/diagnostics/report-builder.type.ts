@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DevicePreset } from '@shared/types/controls';
 import type { NativeCaptureStatus } from './hooks/useNativeCaptures.type';
 

@@ -22,10 +22,8 @@ const InputCalibration = () => {
   const [reportDeviceKey, setReportDeviceKey] = useState<string | null>(null);
   const {
     events, logRef, controllerConnected, controllerStates, controllerDiag,
-    calibrating, setCalibrating, lastCalibration, stickCalibrationStore,
-    controllerGroups, connectedCount, isRescanPending, handleRescan, addMapping,
-    handleCalibrationComplete, handleStickCalibrationComplete,
-    handleTriggerCalibrationComplete,
+    calibrating, setCalibrating, lastCalibration,
+    entries, connectedCount, isRescanPending, handleRescan, handleCalibrationComplete,
   } = useInputCalibration();
   const openDiagnostics = useCallback(() => setCalibrating(true), [setCalibrating]);
   const closeDiagnostics = useCallback(() => setCalibrating(false), [setCalibrating]);
@@ -47,7 +45,7 @@ const InputCalibration = () => {
 
       <Box className="input-cal__actions">
         <Text style={S.hint}>
-          A controller is bound from a console default or a pasted mapping, not from this page.
+          Live state, stick and trigger calibration, rumble tests and mapping lines are on the Controllers page.
         </Text>
         <Button
           variant="tertiary"
@@ -90,7 +88,7 @@ const InputCalibration = () => {
       <Box className="input-cal__section">
         <Box className="input-cal__section-title">Controllers</Box>
 
-        {controllerGroups.length === 0 && (
+        {connectedCount === 0 && (
           <Box className="input-cal__empty">
             <Text as="p">No controllers detected.</Text>
           </Box>
@@ -98,12 +96,8 @@ const InputCalibration = () => {
 
         <Box className="input-cal__cards">
           <ControllerDeviceList
-            groups={controllerGroups}
+            entries={entries}
             controllerStates={controllerStates}
-            stickCalibrationStore={stickCalibrationStore}
-            onStickCalibrationComplete={handleStickCalibrationComplete}
-            onTriggerCalibrationComplete={handleTriggerCalibrationComplete}
-            onAddMapping={addMapping}
             onReportDevice={setReportDeviceKey}
           />
         </Box>

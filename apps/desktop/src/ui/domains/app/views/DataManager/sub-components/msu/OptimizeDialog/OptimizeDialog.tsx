@@ -18,7 +18,12 @@ const OptimizeDialog = (props: OptimizeDialogProps) => {
   const body = (
     <>
       {step === 'tool' && (
-        <FfmpegInstallStep state={tool.state} installing={tool.installing} onInstall={() => { void tool.install(); }} />
+        <FfmpegInstallStep
+          state={tool.state}
+          installing={tool.installing}
+          error={tool.error}
+          onInstall={() => { void tool.install(); }}
+        />
       )}
       {step === 'checking' && <Text className="msu-optimize__note">Checking for the audio tool...</Text>}
       {step === 'measuring' && (

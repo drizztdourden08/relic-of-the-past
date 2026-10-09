@@ -1,16 +1,18 @@
 /* @layer renderer-other @kind constants */
 import type { ScreenEditorApi } from '@shared/ipc';
+import { readNativeAppVersion } from './read-native-app-version';
 import { refuseEdit } from './refuse-edit';
 
 const EMPTY_ARRAY_METHODS = new Set<string>([
   'listProfiles', 'listRoms', 'listRomsWithStatus', 'listStates', 'listSessions',
   'listMsuPacks', 'getMsuTrackList', 'listMsuAudioFiles', 'listLanguages', 'listNormalSaves',
-  'listAutoSaves', 'getSlotInfos', 'listControllers', 'listHidDevices',
+  'listAutoSaves', 'getSlotInfos',
 ]);
 
 const STUB_RETURNS: Record<string, () => unknown> = {
   getAppState: () => ({ lastProfileId: null }),
   getTestArgs: () => ({ autoState: null, screenshot: null }),
+  getAppVersion: readNativeAppVersion,
 };
 
 const SCREEN_EDITOR_STUB = {

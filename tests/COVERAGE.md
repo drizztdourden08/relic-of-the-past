@@ -101,13 +101,13 @@ RotP's own copy of the design system is gone. Every primitive, composite, field 
 | screen-editor writers (actor/check/dungeon/item/item-group/tag/enumeration/geography, id-allocator) | tests/game/data/*.keep.test.ts + tests/electron | covered. Includes the review-mark round trip |
 | recommendations file store (write queue) | tests/electron/recommendation-files.keep.test.ts | covered |
 | **saves/profiles/roms, the real Electron store (`electron/{saves,profiles,roms}/store.ts`)** | none. Only the separate `shared/storage/*` web-target abstraction is tested | **none. A coverage illusion: the code path the real desktop app runs is untested; only a parallel, non-shared implementation is** |
-| SDL3 controller hardware layer (sdl3-source, device-lister, haptic-pattern-player, calibration-store) | none | none (hardware-dependent; calibration/profile persistence could still be tested portably and isn't) |
-| Android SDL3 controller plugin (`controller_sdl3_jni.c`, `Sdl3Bridge`, `Sdl3InputRouter`, capacitor `controller-sdl3-*`) | none | none (device-dependent: needs a physical pad on a phone, and the JNI's JSON event shape is the only portable seam. The store's subscribe-before-start ordering is testable without hardware and isn't covered) |
+| Controller input (Brock input module: SDL3, mapping db, calibration, rumble) | Brock's own suite | n/a in RotP |
+| Android controllers (Brock input `BrockInput` plugin) | Brock's own suite | n/a in RotP |
 | Portable input logic (`@shared/input`, pause-manager, profile-devices, polling-engine) | tests/input/*.keep.test.ts (4 files) | covered. Dropped the Gamepad-API dual-bus dispatch case (haptic-dispatch.keep.test.ts) when that transport was removed; vibration-shaping.keep.test.ts now exercises the family layer's shapeVibration instead of BaseController |
 | Modern control scheme + numbered slots (`shared/input/scheme`, `lib/input` per-frame router, `control-scheme-store`) | tests/input/slot-list.keep.test.ts, tests/input/slot-migration.keep.test.ts, tests/features/hud-style-scheme.keep.test.ts, tests/e2e/hud-style-drives-scheme.keep.spec.ts | partial. The slot list's add/remove/renumber and the pre-§19 migration (proved against the real `spc2-test` profile fixture) are covered, and since §59 the SCHEME itself is derived from `hudStyle` instead of stored, which `hud-style-scheme.keep.test.ts` pins and the e2e spec drives end to end; `corePositions`, `defaultSlotList` and `remapModern` still have no test. The `hostMenu`/`modernControls` gate bits are covered by bundle-flags-parity (its scan was widened to word 3) |
 | MSU-1 audio IPC handlers | none directly (business logic tested via shared/storage/msu.ts) | partial. The same coverage-illusion pattern as saves/profiles/roms |
 | Window management (aspect-ratio, create-window, window-state, startup-config, send-to-back, text-interaction) | tests/game/aspect-ratio.keep.test.ts (aspect-ratio only) | partial |
-| Display (mode-switch, refresh-rate) | none | none |
+| Display (now @drizztdourden08/brock-display) | covered in the Brock module | none in RotP |
 | Diagnostics (collect-displays/gpu/host) | none | none |
 | dialogs, github, languages ipc-handlers, sessions, sprites ipc-handlers, storage file-handlers, ui-views ipc-handlers, wasm ipc-handlers, connections, protocol, instance-config/identity, updater | none directly | none/partial |
 | Automation-launch predicate | none here. Brock owns it now (`createAutomationFlags` in brock-core, tested in Brock) | covered in Brock |
@@ -231,7 +231,7 @@ compile path itself, which remains untested.
 | Area | Tests | Verdict |
 |---|---|---|
 | data-view-store | covered (via tests/data-inspector) | covered |
-| boot-progress, delivery-queue, exclusive-insets, game-ui, hud-settings, location-notification, navigation-overlay, refresh-rate, search, shadow-editor, simulator, sprite-availability (13 stores) | none directly | none |
+| boot-progress, delivery-queue, exclusive-insets, game-ui, hud-settings, location-notification, navigation-overlay, search, shadow-editor, simulator, sprite-availability (12 stores) | none directly | none |
 | Sprite-set activation (which ROM the shared base points at, `lib/sprites/sprite-rom.ts`) | tests/randomizer/pool-listing-sprites.keep.test.ts | covered: the no-active-profile fallback the creation form depends on |
 
 ## Not counted as app-feature coverage

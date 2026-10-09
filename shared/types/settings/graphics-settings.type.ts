@@ -10,6 +10,9 @@ interface GraphicsSettings {
   linkSprite: string | null;
   outputMethod: 'SDL' | 'SDL-Software' | 'OpenGL' | 'OpenGL ES';
   windowMode: 'windowed' | 'borderless' | 'fullscreen';
+  displayMonitor: string;
+  syncedRateInFullscreen: boolean;
+  syncedRateTargetHz: number;
   startFullscreen: boolean;
   viewportConstraint: 'none' | 'fit' | 'fill';
   pixelPerfect: boolean;

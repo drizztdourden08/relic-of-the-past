@@ -2,7 +2,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import type { CoreVerb, ControlSchemeId } from '@shared/input/scheme';
 import type { ResolvedControl } from '@shared/input/family';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { HudLayout } from '@shared/types/hud';
 import type {
   ButtonIcon, CoreBindings, DetectedDevice, FunctionAction, InputBinding, InputProfile,

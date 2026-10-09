@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { resolveDeviceFromEntry } from './resolve-device';
-import type { DeviceEntry } from '@shared/ipc';
+import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DeviceFamily } from '@shared/types/controls';
 import type { ControllerCardInfo } from './controller-card-info.type';
 

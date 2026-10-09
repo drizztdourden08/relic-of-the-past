@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ControllerJoystickSample } from '@shared/ipc';
+import type { ControllerJoystickSample } from '@drizztdourden08/brock-input';
 import { REST_EPSILON } from '../positional-capture.constants';
 
 const isAtRest = (baseline: ControllerJoystickSample, current: ControllerJoystickSample): boolean => {

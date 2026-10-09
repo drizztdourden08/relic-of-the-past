@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import * as controllersStore from '../controllers-store';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
 
-const vibratePattern = (target: string, pattern: { durationMs: number; intensity: number }[], gapMs: number = 0): void => {
-  controllersStore.vibratePattern(target, pattern, gapMs);
+const vibratePattern = (target: string, pattern: { durationMs: number; intensity: number }[], gapMs = 0): void => {
+  void inputApi()?.vibratePattern(target, pattern, gapMs);
 };
 
 export { vibratePattern };

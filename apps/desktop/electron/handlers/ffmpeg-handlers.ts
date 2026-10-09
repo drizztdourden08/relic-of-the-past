@@ -4,8 +4,8 @@ import { registerFfmpegHandlers } from '../tools/ipc-handlers';
 
 const ffmpegHandlers: HandlerGroup = {
   id: 'ffmpeg',
-  register: () => {
-    registerFfmpegHandlers();
+  register: (ctx) => {
+    registerFfmpegHandlers(ctx);
   },
 };
 

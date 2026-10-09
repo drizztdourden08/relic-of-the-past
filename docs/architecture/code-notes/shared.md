@@ -1774,29 +1774,7 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 
 ### ipc/controller-contract/
 
-Wire types for the SDL3 controller transport's channels: the added event payload and the device snapshot entry shared by `controller:list` and `controller:devices`. They are produced in `apps/desktop/electron/input/sdl3-source.ts` and `controller-snapshot.ts`.
-
-- `ControllerConnectionState` is a bus agnostic wired or wireless reading from SDL's joystick connection state. Windows does not report USB against Bluetooth for an XInput pad, so this stands in. Never guess a bus type from it, and never show a bus chip and a wired or wireless chip together.
-- `ControllerGamepadType` is SDL's own family for the device, lowercased and hyphenated from `SDL_GamepadType`. It is never a VID and PID guess: SDL answers it about the device it opened, so no lookup table is involved.
-- `hasButton` is indexed by the `SDL_GamepadButton` enum, length `SDL_GAMEPAD_BUTTON_COUNT`, from `SDL_GamepadHasButton`. `hasAxis` is indexed by `SDL_GamepadAxis`, length `SDL_GAMEPAD_AXIS_COUNT` (6), from `SDL_GamepadHasAxis`. `buttonLabels` is indexed like `hasButton` and holds the label the pad prints for that button (`SDL_GamepadButtonLabel`), or an empty string when SDL does not know.
-- `DeviceStatus`: `ready` means SDL has the device open; `unavailable` means the device lister saw it but SDL did not claim it (held elsewhere, or filtered by SDL's hidapi rules). See `device-availability.ts`.
-- `HidListedDevice` is one row of the raw HID enumeration (`controller:list-hid-devices`): every device `SDL_hid_enumerate` sees, claimed by SDL's gamepad backend or not. A controller read through XInput (most Xbox style pads) never appears there, which is how the gamepad diagnostics wizard tells whether a byte level capture can work for a device.
-- `DeviceEntry` is one row of the full controller snapshot. `sdlId`, `guid`, `hasRumble`, `hasGyro`, `hasButton`, `hasAxis` and `buttonLabels` are only present for `ready` devices, since an `unavailable` one was never opened. `name` is SDL's own name, absent for a device only the raw enumeration can see. `mapping` is the mapping line in use, captured here because the mapping table belongs to the gamepad subsystem and cannot be queried once it is released.
-- `RawCaptureFailureReason`: `unavailable-exclusive` is the expected case for a device SDL's own joystick subsystem already holds through libusb, not a bug.
-- `RawCaptureStartResult` is normalised to `ok`, so a caller never branches on which field name the native layer used.
-- `ControllerJoystickSample` is one joystick level state sample: the raw button, axis and hat indices a gamecontrollerdb mapping line is written in, sized to the device's own control counts and not the fixed SDL gamepad layout.
-- `JoystickInfo` is one entry of `controller:list-joysticks`: every joystick SDL has open, with or without a gamepad mapping.
-
-Channels:
-
-- `controller:list-hid-devices` lists every device the raw HID enumeration sees, whatever its SDL claim state, and works while SDL's gamepad backend is released.
-- `controller:vibrate-pattern` plays a timed sequence of rumble segments. `haptic-pattern-player.ts` owns the sequencing, so it runs in the main process and not on a renderer timer.
-- `controller:add-mapping` adds a mapping for the live session and also appends it to the player's mapping db.
-- `controller:write-debug-capture` writes an input calibration debug capture into `userData/Data/debug` and returns the full path.
-- `controller:start-raw-capture` opens a diagnostic raw HID capture on a vendor and product id; bytes arrive as `controller:raw` events. `controller:start-joystick-capture` opens a joystick level capture on an SDL joystick id; samples arrive as `controller:joystick` events.
-- `controller:mapping-for-guid` returns the gamecontrollerdb line SDL already has for a guid, or null when unmapped.
-- `controller:sdl-version` is the SDL3 version the native addon links against. It is recorded in a controller report, since detection behaviour is tied to it.
-- `controller:release-hold` closes every open gamepad and joystick and quits the gamepad subsystem, so a raw HID open on the same device can succeed. It returns whether the request was queued; `controller:hold-changed` reports completion. `controller:restore-hold` brings the subsystem back, replaying every mapping the addon has added.
+The one controller channel that is RotP's own: `controller:write-debug-capture` writes an input calibration debug capture into `userData/Data/debug` and returns the full path. Every other controller channel, and the device, capture and calibration types, come from the Brock input module (`input:*`, types from `@drizztdourden08/brock-input`).
 
 ### ipc/event-contract.type.ts
 
@@ -1804,8 +1782,7 @@ Event channels, main to renderer: `webContents.send` paired with `ipcRenderer.on
 
 `ImportProgress` reports a data import (ROM, MSU, language, sprites). `id` is the correlation key: the pack name, the language code or the ROM stem. `loaded` is bytes downloaded, or the item index while copying or extracting; `total` is the content length or the item count. `message` is a readable label or the error text.
 
-- `ffmpeg:progress` carries every state the optional ffmpeg install passes through, so a progress bar follows the download and the verify without polling. It is the same `FfmpegState` the ffmpeg invoke channels return.
-- `msu:optimize:progress` sends one report per file, for the measuring pass and the converting pass alike.
+- `msu:optimize:progress` sends one report per file, for the measuring pass and the converting pass alike. While a file converts it also carries `fileFraction`, read from the encoder's own progress lines.
 - `msu:openPack` carries a `.msul` pack the app was opened with (file association or open file).
 - `hub:deviceCode` carries the user code to confirm on the site during a device sign in, sent as soon as the API minted it, so the account card can show it while the browser opens.
 - `store:installProgress` reports each step of a running Hookshop install. `store:openInstall` carries a store install link the browser opened, in this process or handed over by the process the link started.
@@ -1813,7 +1790,7 @@ Event channels, main to renderer: `webContents.send` paired with `ipcRenderer.on
 
 ### ipc/ffmpeg-contract.type.ts
 
-The optional ffmpeg channels: query its state, install it on request, and probe one media file. `ffmpeg:install` downloads, verifies and extracts, and resolves with the final state without throwing. `ffmpeg:probeAudio` takes a POSIX path relative to the Data root and is null when the tool is absent or the probe failed. Install progress arrives on the `ffmpeg:progress` event.
+The one RotP ffmpeg channel: probe one media file. State and install come from the Brock tools module (`tools:state`, `tools:install`, with progress in its job dialog). `ffmpeg:probeAudio` takes a POSIX path relative to the Data root and is null when the tool is absent or the probe failed.
 
 ### ipc/hub-contract.type.ts
 
@@ -1966,10 +1943,6 @@ The platform model has two independent axes, the host shell and the OS, plus der
 - `nativeFileDialog`: an OS open dialog, against a document picker.
 - `revealDataFolder`: the host can open the data folder in an OS file manager.
 - `hapticFeedback`: controller rumble or device vibration is available.
-
-### platform/ports/controller-host.type.ts
-
-The native HID surface: enumerate, raw read events, write, rumble. Electron and Capacitor each front an SDL3 gamepad backend (a Node API addon, a JNI plugin) and implement the already decoded parts, `onControllerState` and `vibratePattern`. Electron's device list is a separate IPC surface (`sdl3-source.ts`, `controller-devices-store.ts`), so its `enumerate` does nothing; Capacitor's answers from the SDL3 claimed set. The raw report members (`write`, `onReport`, `onDeviceOpened`, `getOpenKeys`, `onMainPerf`) do nothing on both, since nothing reads raw HID reports today. Plain web does nothing throughout (Gamepad API and touch). `onControllerState` delivers state SDL3 has already decoded, with no raw report parsing (see `apps/desktop/electron/input/sdl3-source.ts`).
 
 ### platform/ports/device.type.ts
 
@@ -2687,15 +2660,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 ### types/ffmpeg-tool/ffmpeg-tool.constants.ts
 
-- ffmpeg is not bundled. It is fetched on request into the app's data root, so a user who never asks never downloads 140 MB.
-- BtbN/FFmpeg-Builds prunes its dated `autobuild-*` releases over time, so pinning one of those tags eventually returns 404 (this happened once). The `latest` tag is the one release that is never deleted: BtbN republishes it in place, under asset names that do not change either.
-- The asset is named after the release branch (`n9.0`), not a moving git-describe commit count. It is the win64 LGPL static build of the 9.0 stable series, not a build off master.
-- Because the bytes behind that name change over time, the checksum cannot be a build time constant. ffmpeg-release.ts fetches the current one from the GitHub release API right before every install.
-- Windows is the only platform the app downloads for. Linux builds ship as `.tar.xz`, which would need an xz decompressor on a platform that has a package manager, so Linux uses PATH and `FFMPEG_LINUX_PACKAGE` names the package to install.
-
-### types/ffmpeg-tool/ffmpeg-tool.type.ts
-
-- In `FfmpegState`, `unavailable` is terminal (the platform is not served). `failed` can be cleared by a retry.
+- `FFMPEG_TOOL_ID` is the id ffmpeg is registered under in the Brock tools module, shared so the main process and the renderer name the same tool. ffmpeg is not bundled: it is fetched on request into the app's data root, so a user who never asks never downloads 140 MB.
 
 ### types/game-event.type.ts
 

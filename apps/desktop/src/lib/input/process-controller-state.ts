@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
+import { applyTriggerCalibration, useCalibrationStore } from '@drizztdourden08/brock-input/renderer';
 import { SDL_AXIS } from '@shared/input/sdl-buttons';
-import { applyTriggerCalibration } from './stick-calibration';
 import type { ControllerInputState } from './controller-input-store.type';
 import type { ControllerStateHost } from './process-controller-state.type';
 
@@ -12,9 +12,10 @@ const markConnected = (host: ControllerStateHost, deviceKey: string): void => {
 };
 
 const processControllerState = (host: ControllerStateHost, deviceKey: string, buttons: boolean[], axes: number[]): void => {
+  const { triggers } = useCalibrationStore.getState();
   const resolvedAxes = [...axes];
   for (let i: number = SDL_AXIS.LEFT_TRIGGER; i < resolvedAxes.length; i++) {
-    const triggerCal = host.getTriggerCalibration(deviceKey, i);
+    const triggerCal = triggers[`${deviceKey}:${i}`];
     if (triggerCal) resolvedAxes[i] = applyTriggerCalibration(resolvedAxes[i], triggerCal);
   }
 

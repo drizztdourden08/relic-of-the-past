@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
 import { useEffect, useState } from 'react';
 import type { ItemResponse } from '@shared/store/api-types';
+import { hookshopReads } from '@app/lib/store/hookshop-reads';
 
 const useItemDetail = (itemId: string | null, signedIn: boolean) => {
   const [detail, setDetail] = useState<ItemResponse | null>(null);
@@ -12,7 +12,7 @@ const useItemDetail = (itemId: string | null, signedIn: boolean) => {
     setError(null);
     if (!itemId || !signedIn) return undefined;
     let current = true;
-    void appApi().storeItem(itemId).then((result) => {
+    void hookshopReads.item(itemId).then((result) => {
       if (!current) return;
       if (result.ok) setDetail(result.data);
       else setError(result.error);

@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
-import { safeStorage } from 'electron';
+import { hubSecrets } from './hub-secrets';
 
-const canStore = (): boolean => safeStorage.isEncryptionAvailable();
+const canStore = (): boolean => hubSecrets()?.canStore() ?? false;
 
 export { canStore };

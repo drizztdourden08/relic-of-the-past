@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { RawCaptureFailureReason } from '@shared/ipc';
+import type { RawCaptureFailureReason } from '@drizztdourden08/brock-input';
 
 const REASON_TEXT: Record<RawCaptureFailureReason, string> = {
   'unavailable-exclusive': 'Another application holds this controller.',

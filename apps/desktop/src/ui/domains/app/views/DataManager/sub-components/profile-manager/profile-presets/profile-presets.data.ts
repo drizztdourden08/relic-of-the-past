@@ -10,7 +10,7 @@ const ENHANCED_CONFIG_OVERRIDES: Partial<GameSettings> = {
   autoSaveEnabled: true,
   displayPerfInTitle: true,
   vsync: true,
-  syncedRefreshRate: true,
+  syncedRateInFullscreen: true,
   extendedRendering: true,
   linearWorldTilemap: true,
   ultrawideRendering: true,

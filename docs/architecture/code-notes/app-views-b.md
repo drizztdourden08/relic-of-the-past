@@ -225,27 +225,19 @@ One tooltip layout for single, dual and locked modes: a header, one or two layer
 
 ## InputTester/sub-components/InputCalibration.tsx
 
-SDL3 is the only controller transport (the browser Gamepad API path is gone), so every card comes from its snapshot.
+The Controller Diagnostics page: the game's own tools on top of the Brock input module. The generic tester (live state, stick and trigger calibration, rumble tests, mapping lines) is the module's Controllers screen. This page keeps the gamepad diagnostics wizard (with the byte-level HID calibration wizard inside it), the controller report dialog, the family view of each pad, the game rumble preview and the diagnostics log.
 
 ## InputTester/sub-components/useInputCalibration.ts
 
-- The state for the InputCalibration page. Every controller is SDL3-claimed, so connect and disconnect events for the log come from the same SDL3 channels as everything else.
-- The definitive "is a controller connected" answer is the same SDL3 snapshot the cards render from, with status `ready`. The input store's own tally counts only devices that have sent at least one input report, so an untouched pad already visible as a card would read as disconnected there.
-- It subscribes to the input manager for all input state, to connect and disconnect events for immediate UI updates and the event log, and to a lightweight HID diagnostics listener with no input polling. The log scrolls itself to the newest entry.
+- The state for the Controller Diagnostics page. Connect and disconnect events for the log come from `inputApi()` (`onAdded`, `onRemoved`).
+- The definitive "is a controller connected" answer is the module's device snapshot with status `ready`. The input store's own tally counts only devices that have sent at least one input report, so an untouched pad already visible as a card would read as disconnected there.
+- It subscribes to the input manager for all input state and to a lightweight HID diagnostics listener with no input polling. The log scrolls itself to the newest entry.
 
 ## InputTester/sub-components/ControllerCard.tsx
 
-- `busType` is reported by SDL3 (`controller:added` or the device snapshot) and is undefined without a snapshot entry.
+- The pad as the game sees it: its family glyphs lit from live state, the game rumble preview, the per-device rumble strength and the raw report bytes.
+- `busType` comes from the module's device snapshot and is undefined without a snapshot entry.
 - `onReportDevice` is raised, not handled in the card: the report releases SDL partway through, which unmounts the card, so the screen mounts the report dialog.
-- The calibration target says what is being calibrated, and null means nothing is open.
-
-## InputTester/sub-components/ControllerAxes.tsx
-
-The axis panels are derived from the device's resolved axis controls (see `resolve-device.ts`), not a preset's axis list. A trigger reported as an axis still gets a grid cell, lit by the same threshold the trigger bar reads (`resolveLiveControlState` is the single source). It is appended so the grid order is untouched.
-
-## InputTester/sub-components/input-cal-visuals
-
-The visual pieces of the Input Calibration page: the controller silhouette icons, `AxisRecordButton`, `TriggerBar` and `StickCircle`. Static style literals live in the constants file and dynamic or animated styles stay inline. `TriggerBar`'s `pressed` mirrors `resolveLiveControlState`'s threshold read for the same trigger. A full press highlights the track exactly like a pressed button cell, so a trigger reads as working both as an axis and as a button with no second cell in the button grid.
 
 ## InputTester/sub-components/hid-calibration/hid-calibration.type.ts
 
@@ -357,17 +349,9 @@ The gamepad diagnostics report: who the device is, what the input layer can say 
 
 ## InputTester/sub-components/ControllerDeviceList.tsx
 
-- SDL3 is the only controller transport, so every device group shows exactly once.
-- `resolvedByKey` is keyed off `groups`, which changes only on a snapshot update, not on every `controllerStates` tick (up to 60 per second).
-- A device with no state yet shows an idle state of 32 released buttons and 6 centred axes.
-
-## InputTester/sub-components/AdapterControllerCard.tsx
-
-One card with a port list for a multi-port adapter. Every port shows, occupied or not: there is no reliable way yet to tell an empty port from a resting controller.
-
-## InputTester/sub-components/UnavailableControllerCard.tsx
-
-A device the lister sees but SDL3 has not claimed. It has no live data, so the card shows only identity, status and remedies.
+- One card per `ready` device. A device SDL has not claimed is shown by the module's Controllers screen.
+- The resolved family view is keyed off `entries`, which changes only on a snapshot update, not on every `controllerStates` tick (up to 60 per second).
+- A device with no state yet shows an idle state of released buttons and centred axes, sized by the module's SDL button and axis names.
 
 ## InputTester/sub-components/ControllerRawBytes.tsx
 
@@ -391,35 +375,6 @@ A per-device rumble multiplier on top of the family strength curve in `shared/in
 - `initialProfileId` skips the profile picker and starts live calibration against that profile. `initialHasGyro` goes with it and is ignored when `initialProfileId` is unset.
 - `HidWizardHandle` is the imperative surface for a `hideOwnActions` host. `copyJson` resolves true on success and false on failure, for example a denied clipboard write.
 
-## InputTester/sub-components/calibration-parts
-
-The step indicator, header, sampling progress bar and deadzone slider that the stick and trigger calibration wizards share.
-
-## InputTester/sub-components/stick-calibration/StickCalibrationWizard.tsx
-
-A 3-step analog stick calibration. It records centre offsets at rest, then the per-axis minimum and maximum from a full rotation, then lets the user adjust deadzones and save. With no `target` it calibrates both sticks. `deviceKey` filters input to one device.
-
-## InputTester/sub-components/stick-calibration/StickCircle.tsx
-
-An SVG analog stick position visualizer.
-
-## InputTester/sub-components/stick-calibration/useStickCalibration.ts
-
-The state machine for the 3-step stick calibration. Raw stick values are 12-bit, centred at 2048 with a maximum of 4095. The range step completes once every calibrated axis has moved more than 500 raw units.
-
-## InputTester/sub-components/trigger-calibration/TriggerCalibrationWizard.tsx
-
-A 2-step analog trigger calibration: record the idle base value, then the fully pressed maximum. It saves a per-axis calibration of base, max and deadzone, then a review step tests the result.
-
-## InputTester/sub-components/trigger-calibration/TriggerBar.tsx
-
-A vertical fill bar showing an analog trigger value. It brightens above 90% and draws the deadzone line on the review step.
-
-## InputTester/sub-components/trigger-calibration/useTriggerCalibration.ts
-
-- The state for the 2-step trigger calibration.
-- `step` and `restDone` are mirrored into refs so the input subscription callback always sees current values.
-- Axes 4 and 5 also show their raw report bytes 61 and 62.
 
 ## InputTester/sub-components/controller-report/ControllerReportDialog.tsx
 
@@ -525,7 +480,7 @@ Resolves the full `DeviceEntry` (sdlId, guid, capability flags) for a device key
 
 ## InputTester/sub-components/diagnostics-wizard/behavior/useDeviceMapping.ts
 
-The gamecontrollerdb mapping line SDL already has loaded for a device's guid, so the choose-a-controller step shows what the real database (loaded into SDL at startup from `resources/gamecontrollerdb.txt`) knows, in place of a static lookup file this project no longer maintains.
+The gamecontrollerdb mapping line SDL already has loaded for a device's guid, so the choose-a-controller step shows what the real database (loaded into SDL at startup by the Brock input module, its bundled `gamecontrollerdb.txt` then `Data/input/gamecontrollerdb.txt`) knows, in place of a static lookup file this project no longer maintains.
 
 ## InputTester/sub-components/diagnostics-wizard/behavior/useHidListedDevices.ts
 
