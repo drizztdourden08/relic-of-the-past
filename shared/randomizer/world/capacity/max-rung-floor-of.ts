@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { FINAL_FIGHT_SILVER_HITS } from '../final-fight.data';
+import { FINAL_FIGHT_SILVER_HITS } from '../final-fight.constants';
 import { NO_WALLET_FLOOR } from './wallet-floor/wallet-floor.constants';
 import type { CapacityFamily } from './capacity-family';
 import type { WalletFloor } from './wallet-floor/wallet-floor.type';

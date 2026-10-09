@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { FINAL_FIGHT_SILVER_HITS } from '../final-fight.data';
+import { FINAL_FIGHT_SILVER_HITS } from '../final-fight.constants';
 import type { RetroBowSetting } from './retro.type';
 
 const retroShotWalletNeed = (setting: RetroBowSetting): number => Math.max(

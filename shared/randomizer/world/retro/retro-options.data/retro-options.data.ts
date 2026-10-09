@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import { FINAL_FIGHT_SILVER_HITS } from '../../final-fight.data';
+import { FINAL_FIGHT_SILVER_HITS } from '../../final-fight.constants';
 import {
   RETRO_PRICE_CEILING, RETRO_SILVER_ARROW_COST, RETRO_SILVER_COST_KEY, RETRO_WOOD_ARROW_COST,
   RETRO_WOOD_COST_KEY,

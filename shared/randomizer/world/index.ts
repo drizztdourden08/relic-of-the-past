@@ -1,9 +1,9 @@
-/* @layer shared-game @kind logic */
-/** Barrel for the ported world model (region graph + collection state). */
+/* @layer shared-game @kind barrel */
 export { buildWorld } from './build-world';
 export { createCollectionState } from './collection-state';
 export type { CollectionState } from './collection-state';
-export { computeReachableRegions, updateReachableRegions } from './graph';
+export { computeReachableRegions } from './compute-reachable-regions';
+export { updateReachableRegions } from './update-reachable-regions';
 export { markWorldZones } from './world-zones';
 export {
   BASELINE,

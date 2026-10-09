@@ -1,0 +1,16 @@
+/* @layer shared-game @kind barrel */
+export { canActivateCrystalSwitch } from './can-activate-crystal-switch';
+export { canBombClip } from './can-bomb-clip';
+export { canBootsClipDw } from './can-boots-clip-dw';
+export { canBootsClipLw } from './can-boots-clip-lw';
+export { canGetGlitchedSpeedDw } from './can-get-glitched-speed-dw';
+export { canGetGoodBee } from './can-get-good-bee';
+export { canKillMostThings } from './can-kill-most-things';
+export { canKillStandardStart } from './can-kill-standard-start';
+export { canRetrieveTablet } from './can-retrieve-tablet';
+export { canUseMedallion } from './can-use-medallion';
+export { hasCrystals } from './has-crystals';
+export { hasMireMedallion } from './has-mire-medallion';
+export { hasTriforcePieces } from './has-triforce-pieces';
+export { hasTurtleRockMedallion } from './has-turtle-rock-medallion';
+export { isNotBunny } from './is-not-bunny';

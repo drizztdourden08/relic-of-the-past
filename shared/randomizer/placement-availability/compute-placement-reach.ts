@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { actTokensOf } from '../world/events/event-gates';
 import { createCollectionState } from '../world/collection-state';
-import { computeReachableRegions } from '../world/graph';
+import { computeReachableRegions } from '../world/compute-reachable-regions';
 import { canCollectLocation } from '../world/rules/collect';
 import { countsOf } from './counts-of';
 import { sweepAutoGrantedSlots } from './sweep-auto-granted-slots';

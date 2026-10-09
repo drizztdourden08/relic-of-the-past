@@ -18,7 +18,7 @@ import {
 import { compileRule } from '../rule-eval';
 import { all, has, option } from '../rule-node-build';
 import { getDungeon } from '@shared/game/data';
-import { FINAL_FIGHT_SILVER_HITS } from '../../final-fight.data';
+import { FINAL_FIGHT_SILVER_HITS } from '../../final-fight.constants';
 import type { ActorId, DungeonId } from '@shared/game/data/types/ids';
 import type { Rule } from '../../world.type';
 
