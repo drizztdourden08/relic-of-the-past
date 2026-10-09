@@ -1,15 +1,6 @@
 /* @layer shared-game @kind data */
-/**
- * Pool item names of the capacity upgrades, one per family and jump size
- * (index = jump − 1). The reference randomizer's own names cover a jump of
- * one tier, two tiers and the whole span for the counted families and the
- * two meter levels; the remaining jump sizes are this app's names, kept in
- * the same shape. The wallet ladder is uniform (100 rupees per step), so its
- * names carry the rupee value of the jump. A progressive plan ships ONE
- * name per family instead: every pickup climbs to the next planned rung,
- * so the name carries no jump at all.
- */
 import type { CapacityFamilyId } from './capacity-family.type';
+import { WALLET_UPGRADE_NAMES } from './wallet-upgrade-names.constants';
 
 const CAPACITY_FAMILY_IDS: readonly CapacityFamilyId[] = ['explosives', 'projectiles', 'meter', 'wallet'];
 
@@ -40,11 +31,6 @@ const METER_UPGRADE_NAMES: readonly string[] = [
   'Magic Upgrade (1/4)',
 ];
 
-/** 100 steps of the 0 ... 9999 ladder: "Wallet Upgrade (+100)" ... "(+10000)" (the first rung is 99). */
-const WALLET_UPGRADE_NAMES: readonly string[] =
-  Array.from({ length: 100 }, (_, index) => `Wallet Upgrade (+${(index + 1) * 100})`);
-
-/** The progressive item of each family: one name, the plan decides the jump per pickup. */
 const CAPACITY_PROGRESSIVE_NAMES: Readonly<Record<CapacityFamilyId, string>> = {
   explosives: 'Progressive Bomb Capacity',
   projectiles: 'Progressive Arrow Capacity',
@@ -59,7 +45,6 @@ const CAPACITY_UPGRADE_NAMES: Readonly<Record<CapacityFamilyId, readonly string[
   wallet: WALLET_UPGRADE_NAMES,
 };
 
-/** What the receipt line calls each family: the container that grew. */
 const CAPACITY_RECEIPT_LABELS: Readonly<Record<CapacityFamilyId, string>> = {
   explosives: 'Bomb bag',
   projectiles: 'Arrows',

@@ -401,6 +401,141 @@ its loader, because the vault dataset imports it from there.
 - An item group is what a count requirement counts against.
 - An inventory slot's `trackerItemIds` are checked in order; the first one held wins.
 
+## Receive ids (the folders named `*-receive-id`, `capacity-*`, `wallet-jump-table`)
+
+These are the TS half of contracts in `core/game-hooks/`. The grant tables of the game hold 76
+entries, so 0x00 to 0x4B are the only native receive ids: the chest path also treats a high bit id
+as its "did not open" sentinel, and the direct grant export refuses anything past 0x4B. Every id a
+resolver hands to an override or a delivery must pass `isNativeReceiveId`, or be one of the virtual
+ranges below, which the core resolves at every substitution and receipt seam.
+
+| Ids | What | Contract |
+| --- | --- | --- |
+| 0x50 to 0x57 | explosives upgrade, jump of 1 to 8 tiers | upgrade_grants.c |
+| 0x58 to 0x5F | projectiles upgrade, jump of 1 to 8 tiers | upgrade_grants.c |
+| 0x60 to 0x61 | magic meter upgrade, jump of 1 or 2 levels | upgrade_grants.c |
+| 0x62 to 0x66 | progressive sword, shield, glove, mail, bow | progressive_grants.c |
+| 0x67 to 0x76 | wallet, slots 0 to 15 of the session's jump table | wallet_grants.c |
+| 0x77 to 0x7A | progressive capacity, one per family | capacity_progressive.c |
+| 0x7B to 0x81 | crystals 1 to 7 | prize_grants.c |
+| 0x82 | progressive ocarina | progressive_grants.c |
+| 0xC0 to 0xFD | dungeon items, targeted at a palace | dungeon_item_ids.h |
+
+- The capacity upgrades have no native id: their vanilla grants are silent counter bumps inside
+  scripted handlers. A virtual id is grantable through every override table and the receipt export,
+  but it is not a native id, so keep the two guards apart where it matters.
+- The step families carry the jump in the id (a jump never exceeds their eight rungs). The wallet's
+  100 rupee ladder needs jumps up to 100, so its sixteen ids are slots into a per session table of
+  jump sizes. The table is the sorted distinct jumps of the pool, so the host, the receipt export
+  and the core always rebuild the same one. A partition of 100 has at most 13 distinct sizes
+  (1 + 2 + ... + 13 = 91), so sixteen slots are enough.
+- The progressive equipment ids exist because the native receive routine sets a tier instead of
+  raising it, so a copy resolved to a fixed native id would set the same tier every time. The core
+  maps the id to the next tier's native id from the live inventory at the last moment; past the top
+  tier it hands over the reference randomizer's replacement, twenty rupees. The ocarina came after
+  0x62 to 0x66 had filled, so it takes 0x82, the first free id above the crystals.
+- A progressive capacity id carries no jump: the core climbs to the next planned rung from the save
+  bytes, and the plan is armed per session (capacity-session.ts). The family order is explosives,
+  projectiles, meter, wallet.
+- Pendants need nothing special: each has its own native id and a fixed bit. All seven crystals
+  share native id 0x20 and the room decides which bit banks, so a crystal placed elsewhere would bank
+  the wrong one. The crystal ids carry the crystal; the core banks it and hands the receive flow
+  0x20. `VANILLA_PRIZE_GRANT_ID_BY_NAME` is the id a boss hands over, which is what a substitution
+  table matches on.
+- Dungeon items: every small key shares one native id (36), as does every big key (50), map (51)
+  and compass (37), and the native grant credits the dungeon the player stands in. So the target
+  travels in the id, the one channel every delivery shares: `0xC0 | kind << 4 | palace`, with kind 0
+  small key, 1 big key, 2 map, 3 compass, and the palace index halved (the dataset stores it doubled,
+  as the core does). The guard is pure arithmetic with no dataset import, because the record facade
+  is built on these id modules; resolving a name needs the records and lives in
+  `dungeon-item-target`.
+- `dungeon-item-target`: a family is whatever carries one of the four native ids, and its target is
+  the dungeon its own `dungeonId` names. No name parsing, so a renamed record still resolves; the
+  universal key has no dungeon and so no target.
+- Capacity names: the reference randomizer names a jump of one tier, two tiers and the whole span,
+  and the two meter levels; the other jump sizes are this app's names in the same shape. Index is
+  jump minus 1. Wallet names carry the rupee value of the jump (100 per step, the first rung is 99).
+  A progressive plan ships one name per family, with no jump in it.
+- The capacity families are explosives and projectiles (an eight tier native grid each), the meter
+  (three levels) and the wallet (a hook owned 100 rupee ladder). Everything is keyed by the family
+  id, never by a game name.
+
+## Sounds and music (ambient-reach, game-sounds, sound-names, msu-*)
+
+- The ambient channel is one byte, but only twelve ids are ever written: exactly 12 appear as
+  literals in `core/zelda3/src` (0x01 to 0x17, odd ids only, counting the two raised through
+  `SpriteSfx_QueueSfx1WithPan`); the only other writer is `overworld_music[...] >> 4`, a four bit
+  nibble; and `Ancilla_Sfx1_Pan` is dead code. A `bed` starts a loop, the one `control` id clears the
+  bed (silence), and a `cue` is a one off stinger.
+- `game-sounds.data.ts` is transcribed from the decompilation and can be regenerated. The id is the
+  low 6 bits of the channel write (bits 6 and 7 carry stereo pan). `triggers` are the functions that
+  raise the sound, busiest first, and `sites` how many call sites do. A pack replaces a sound by
+  claiming its id; anything unclaimed plays from the chip. Channel ports: ambient APUI01, sfx1
+  APUI02, sfx2 APUI03. The names are not derivable, so they live in the sound name records and are
+  merged in on read; a sound with no name shows the function that raises it.
+- `msu-deluxe-remap`: Deluxe packs redirect a vanilla slot reused in many places to a per area or
+  per entrance track (37 and up), so the remap needs the area or entrance as well as the track. Port
+  of the core's `RemapMsuDeluxeTrack`. `TRACK_REMAP_KIND` per slot: 0 keep, 1 by overworld area, 2
+  by entrance. 242 in `ENTRANCE_TRACKS` means no replacement. `DELUXE_TRACKS` is derived from the
+  tables: a number neither table names can never play.
+- `msu-track-repeat`: fanfares and stings play once, music loops. A classic MSU-1 pack has no per
+  track metadata, so this table is the only source; tracks past it (the Deluxe range) loop.
+- `msu-track-names`: only the names are records. The panel counts the vanilla range itself, so a
+  slot with no name still shows, as its number.
+- `palace-names`: the palace labels are a keyed table, not a list of records, so they are picked by
+  name; a palace index with no label answers with the raw index.
+
+## sprite-manifest/
+
+- `definitions.json` pairs each sprite's label with the ROM tile offsets it is cut from, so it is
+  game derived and lives in the private companion repo. Without it there is nothing to extract, the
+  same state as a user with no ROM. The schema beside it describes the shape, so it stays here.
+- Our own definitions (capacity composites, recoloured gems, drawn art, ground tiles) ride on the
+  extracted set: they need it or are only ever extracted with it, so with no definitions the whole
+  list stays empty and a set never appears half there.
+- `SPRITE_BOX_BY_FILE` gives each sprite its real box by default (`intrinsic-size.ts` reads it).
+  `boxForExtract` derives the box from the same recipe the extractor reads: a single tile 8x8, a run
+  of tiles 8px per tile (cropped to `width`), an unpaired dialogue glyph 8x16 (the decoder's own
+  `GLYPH_W` and `GLYPH_H`, kept by hand to keep ROM decoding out of this module). Every other method
+  yields the default 16x16, so it returns nothing.
+- `dialog-sprites.ts`: the message box frame is three tiles (`kText_BorderTiles`, messaging.c): a
+  corner, a horizontal and a vertical edge, on BG3 palette 2 (palette in bits 10 to 12, as every HUD
+  tile). The other corners and edges are flips.
+- `ground-tiles.ts`: surfaces the HUD layout preview tiles under the HUD, because "invisible against
+  its surface" is the defect it exists to catch: turf, indoor floor, sand, shallow and deep water.
+  Each is a real map block cut with `bg-tile`: the eight background sheets its screen loads, the four
+  tilemap words, the palette selection (main mode, then aux 1 to 3), and `upper`, the sheets widened
+  into the upper half of their palette row.
+- `hud-wallet.ts`: the game draws the rupee counter as a bare number, so the wallet picture is our
+  own 16x16 drawing. Its capacity variants belong to the randomizer.
+- `pool-sprites.ts`: each multiworld game's icon is our drawing with the Archipelago badge stamped
+  bottom right (`art-badge`), so the drawings stay usable unbadged. The fallback is the Archipelago
+  mark itself and carries no badge. A Link to the Past has no icon: played here it is our own world,
+  and someone else's copy falls back to the mark.
+- `pool-game-icons`: lookup drops case and punctuation, so spellings like "Link's Awakening DX"
+  match without loose matching. An unknown name falls back to the Archipelago mark, so a mistake
+  here costs a generic icon, never a broken one. Ship of Harkinian and 2 Ship 2 Harkinian are the PC
+  ports of Ocarina of Time and Majora's Mask.
+- `randomizer-sprites.ts`: items this app invented have nothing in the ROM to cut, so they are our
+  drawings; file names match the item's sprite id without the `sprite-` prefix. The price symbols
+  follow the order the in-game binary holds them.
+- `rupee-sprites.ts`: purple, silver and gold gems recoloured from the plain green receipt gem
+  (`palette-swap`), using the pairs the core's coloured gem swap paints (rupee_gem_draw.c): the violet
+  pair of sprite palette row 4, the grey pair of row 1, the gold pair of row 4 (the magic jar's gold).
+- `rupee-gem-files`: the app always shows the numberless gem in its denomination's colour for a rupee
+  reward, since the numbered art is unreadable at icon size. These are app surfaces, so they do not
+  follow the in-game gate (`kFeatures3_ColoredRupees`). 0x34 is 1, 0x35 5, 0x36 and 0x47 20, 0x41 50,
+  0x40 100, 0x46 300. The sprite query reads this table before a record's own sprite.
+- `title-sprites.ts`: the title screen pictures (logo, sword, triforce, background) and the four
+  story legend pictures, each extracted whole from the ROM.
+- `upgrade-sprites.ts`: one capacity upgrade sprite per family, an existing sprite or drawing with the
+  up arrow badge stamped bottom right (`upgrade-composite`).
+- `picture-glyph-sprites`: the dialogue alphabet mixes letters with picture characters written as a
+  bracket run. This maps a base alphabet token to the sprite cut for it, derived from the manifest
+  and the alphabet so the two cannot drift. A sprite holding two halves draws on `first` and skips
+  `second`. A localized alphabet that splits a picture differently resolves to nothing and falls
+  back to text.
+
 ## dialogue-context/
 
 What opens each dialogue entry, and for a prompt, where its options lead.
