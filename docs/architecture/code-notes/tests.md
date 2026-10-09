@@ -853,18 +853,6 @@ The UI buffer is read up to byte 124 and only the main module byte (offset 0) dr
 mode here. Module 20 is the attract demo; modules 0 to 4 are the title and the file select,
 copy, erase and name menus. None of them is gameplay, so the main HUD stays hidden.
 
-## widgets/live-data-inspector-records.keep.test.ts
-
-`recordsFor` returns every record relating to the current screen. It replaced a lookup that
-showed only the first connection, so the cases use real screens with several records,
-including two spawns of the same sprite type.
-
-## widgets/screen-record-draft.keep.test.ts
-
-The screen editor sends this record to `screenEditor:writeScreen`, the one place the
-dataset tooling writes a record into a source file. A dungeon room's file is its floor, so
-an interior without a floor is a separate blocker (see `record-file-targets`).
-
 ## game/recommendations
 
 Several suites build a `contextFor` whose `context.screenId` and `observations.match` name
@@ -1348,7 +1336,7 @@ producers final, and not optional. The fixture is a screen column holding `hud` 
 - Bare arrows and Ctrl+Shift or Ctrl+Alt arrows are left alone, since a row that swallowed them
   would eat text selection or another control's keys.
 - The context menu is where the keys are learned: it prints each shortcut, opens from Shift+F10
-  and the ContextMenu key as well as a right click, closes on one Escape through the dismiss stack
+  and the ContextMenu key and a right click, closes on one Escape through the dismiss stack
   at `menu`, runs the same operation, and dims items with their precondition named instead of
   hiding them.
 - In `CellPicker` (moved from `GridEditor` in §50, since co placing is a child's edit) an occupied
@@ -1551,7 +1539,7 @@ caps, the cell wash, the co place hatch, the band ring), so none of it is assert
 is what the outline draws: a 24px pan band at each end of the scroller (a zero height sticky
 child and a pseudo element, costing no layout, because undrawn auto scroll is the version nobody
 understands), the ghost's offset from the cursor and its corner flip (which keeps it on screen),
-and the cell hatch. A sibling occupied cell is a destination and wears a hatch rather than a fill
+and the cell hatch. A sibling occupied cell is a destination and wears a hatch instead of a fill
 or a dim, since landing there stacks the two; that hatch moved from the stage (§45) into the
 lattice (§48) and into `CellPicker` (§50), the only control that places a child, as its
 `occupied-selected` state. The fixture child spans both columns of row 1, so one cell is shared
@@ -1701,7 +1689,7 @@ Phase 7 of the inspector UX review: what the Layout section's controls write (wi
   main axis is vertical, so its diagrams turn with `direction`; a grid's two axes never move.
 - A track list round trips: add, size, reorder and remove, then through JSON and the real
   validator into placed rectangles (the 30px track moved first, so the second cell starts at 30).
-  A move past either end is refused rather than clamped; rows empty back to implicit; every
+  A move past either end is refused, not clamped; rows empty back to implicit; every
   extent shape prints on a chip.
 - The screen root chooses its engine like any container (§42 lifted §38.4's lock, which existed
   only while the screen was a `stack` pretending not to be a grid). `LayoutSection` has no
@@ -2177,34 +2165,6 @@ and the test detaches before its own cleanup for the same reason. The production
 
 The case that matters is the refusal: uncommitted or unlanded work must never come out as
 claimable or deletable.
-
-## story-events/core-harness
-
-The headless core harness loads a built core in node with no window. It gives RAM reads and
-writes, save state loads, frame exact scripted input and a hash of the game state. Two cores
-load side by side (this build and a master baseline) and run the same script, so "same
-result" is a byte compare. SNES WRAM is 128 KB and the battery block sits inside it at
-0xF000. A frame refused by the developer tools gate throws. `hash` can zero ranges out of
-the digest, such as the event ledger.
-
-## story-events/t1-parity.keep.test.ts
-
-With every story field at zero, this build and a master build produce identical WRAM after
-the same scripted input on every save state fixture: off, nothing observable changed. The
-script idles, walks, acts and idles, enough to cross a transition on most fixtures, and the
-frame counter at 0x1A must move so the script provably ran.
-
-The baseline core is built out of band and the suite skips without it. Point
-`ROTP_BASELINE_WASM_JS` at a master build's `zelda3.js`, or build one into
-`.user-data/baseline-core` with
-`git archive origin/master core scripts/ensure-wasm.mjs package.json | tar -x -C .user-data/baseline-core`
-and then `node scripts/ensure-wasm.mjs` inside that folder, with the emsdk environment active.
-
-## story-events/t6-tracker.keep.test.ts
-
-The tracker's event records resolve from a synthetic heap: ledger bits, vanilla bits, the
-derived pass and the older file fallbacks, with no game. A ledger event answers from its own
-bit alone; a later story beat never stands in for it.
 
 ## platform/primary-modifier.keep.test.ts
 
@@ -2692,20 +2652,6 @@ this suite checks the built catalog at runtime. The title bar menu reads
 `window.api.isDev` while the catalog builds, so the suite stubs `window` in the node
 environment.
 
-## storage/sprite-set-freshness.keep.test.ts
-
-An extraction clears the sprite folder before writing it again under the same names, so
-every image on screen fails meanwhile and the image primitive remembers the failure per
-source. A rewritten set therefore needs new URLs, or its rows stay on placeholders for the
-rest of the session.
-
-## storage/ui-views.keep.test.ts
-
-The ui-views module keeps its cache and timer as private module state, so each test
-imports it fresh after `vi.resetModules()`. That also defers the log bus's
-`window.addEventListener` until `window` is stubbed. Loading another key rides the shared
-in-flight load, which flushes the pending cold start write before it resolves.
-
 ## simulation
 
 ### simulation/active-states.keep.test.ts
@@ -2839,3 +2785,57 @@ A visual snapshot driven by environment variables. The app loads the current pro
 save state slot `SNAPSHOT_SLOT` (default 2), then its auto test hook writes
 `tests/screenshots/<SNAPSHOT_NAME>.png`. `SNAPSHOT_WAIT` is the time given to the app to
 finish (default 20000 ms). Run it with `npx playwright test tests/snapshot.spec.ts`.
+
+## storage/sprite-set-freshness.keep.test.ts
+
+An extraction clears the sprite folder before writing it again under the same names, so
+every image on screen fails meanwhile and the image primitive remembers the failure per
+source. A rewritten set therefore needs new URLs, or its rows stay on placeholders for the
+rest of the session.
+
+## storage/ui-views.keep.test.ts
+
+The ui-views module keeps its cache and timer as private module state, so each test
+imports it fresh after `vi.resetModules()`. That also defers the log bus's
+`window.addEventListener` until `window` is stubbed. Loading another key rides the shared
+in-flight load, which flushes the pending cold start write before it resolves.
+
+## story-events/core-harness
+
+The headless core harness loads a built core in node with no window. It gives RAM reads and
+writes, save state loads, frame exact scripted input and a hash of the game state. Two cores
+load side by side (this build and a master baseline) and run the same script, so "same
+result" is a byte compare. SNES WRAM is 128 KB and the battery block sits inside it at
+0xF000. A frame refused by the developer tools gate throws. `hash` can zero ranges out of
+the digest, such as the event ledger.
+
+## story-events/t1-parity.keep.test.ts
+
+With every story field at zero, this build and a master build produce identical WRAM after
+the same scripted input on every save state fixture: off, nothing observable changed. The
+script idles, walks, acts and idles, enough to cross a transition on most fixtures, and the
+frame counter at 0x1A must move so the script provably ran.
+
+The baseline core is built out of band and the suite skips without it. Point
+`ROTP_BASELINE_WASM_JS` at a master build's `zelda3.js`, or build one into
+`.user-data/baseline-core` with
+`git archive origin/master core scripts/ensure-wasm.mjs package.json | tar -x -C .user-data/baseline-core`
+and then `node scripts/ensure-wasm.mjs` inside that folder, with the emsdk environment active.
+
+## story-events/t6-tracker.keep.test.ts
+
+The tracker's event records resolve from a synthetic heap: ledger bits, vanilla bits, the
+derived pass and the older file fallbacks, with no game. A ledger event answers from its own
+bit alone; a later story beat never stands in for it.
+
+## widgets/live-data-inspector-records.keep.test.ts
+
+`recordsFor` returns every record relating to the current screen. It replaced a lookup that
+showed only the first connection, so the cases use real screens with several records,
+including two spawns of the same sprite type.
+
+## widgets/screen-record-draft.keep.test.ts
+
+The screen editor sends this record to `screenEditor:writeScreen`, the one place the
+dataset tooling writes a record into a source file. A dungeon room's file is its floor, so
+an interior without a floor is a separate blocker (see `record-file-targets`).
