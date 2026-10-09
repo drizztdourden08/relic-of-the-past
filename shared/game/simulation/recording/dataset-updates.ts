@@ -1,23 +1,15 @@
 /* @layer shared-game @kind logic */
-/**
- * Turns recorder output into DatasetSuggestion[], the ready-to-write code blocks
- * for the widget's Apply button. Suggestions arise where what the run observed
- * disagrees with or extends the static screen/connection/check data.
- */
 import type { DatasetSuggestion } from '../types';
 import { find } from '../../data';
 import { toScreenIdOf } from '../../data/connections/derive';
 import type { ConnectionRecord } from '../../data';
 import type { RecorderState, ObservedDoorGate } from './recorder';
+import type { UpdateDeps } from './dataset-updates.type';
 import { DOOR_BARRIER } from '../../data/native-tables';
-
-interface UpdateDeps {
-  connections?: ConnectionRecord[];
-}
+import { RIGHT_ARROW } from '../arrow.constants';
 
 const connectionKey = (from: string, to: string): string => `${from}|${to}`;
 
-/** Every crossing the dataset already covers, in the direction it can actually be walked. */
 const knownConnectionSet = (connections: ConnectionRecord[]): Set<string> => {
   const set = new Set<string>();
   for (const c of connections) {
@@ -28,11 +20,6 @@ const knownConnectionSet = (connections: ConnectionRecord[]): Set<string> => {
 
 const transitionSuggestions = (rec: RecorderState, connections: ConnectionRecord[]): DatasetSuggestion[] => {
   const known = knownConnectionSet(connections);
-  // TODO(Phase 7): `code` still emits an informal shorthand, not a real
-  // point-pair literal (a connection point now always needs a minted
-  // `toConnectionId` partner, which this suggestion cannot allocate); once
-  // connections live in the vault as JSON this needs to emit a JSON fragment
-  // targeting the vault instead of a TS source snippet.
   return rec.transitions
     .filter(t => !known.has(connectionKey(t.from, t.to)))
     .map(t => ({
@@ -51,17 +38,10 @@ const doorSuggestions = (gates: ObservedDoorGate[]): DatasetSuggestion[] =>
       kind: 'connection',
       targetFile: 'connections',
       targetId: null,
-      code: `// room 0x${g.roomId.toString(16)} ${g.direction} door → add tag '${DOOR_BARRIER[g.kind]}'`,
+      code: `// room 0x${g.roomId.toString(16)} ${g.direction} door ${RIGHT_ARROW} add tag '${DOOR_BARRIER[g.kind]}'`,
       reason: `Door 0x${g.roomId.toString(16)} ${g.direction}: ${g.kind} in game, no barrier tag.`,
     }));
 
-/**
- * Every observation the matcher could not account for. "Is this check known" is
- * answered by identity: a null checkId IS the unmatched case. It used to compare
- * the observation's name against the set of every check name, which suppressed
- * real suggestions whenever an unknown thing happened to share a name with some
- * other dungeon's check.
- */
 const checkSuggestions = (rec: RecorderState): DatasetSuggestion[] =>
   rec.checks
     .filter(c => c.checkId === null)
@@ -83,4 +63,4 @@ const buildDatasetSuggestions = (rec: RecorderState, deps: UpdateDeps = {}): Dat
 };
 
 export { buildDatasetSuggestions };
-export type { UpdateDeps };
+export type { UpdateDeps } from './dataset-updates.type';

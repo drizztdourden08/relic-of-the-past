@@ -1,4 +1,5 @@
 /* @layer shared-game @kind barrel */
 export type { QuadrantBounds } from '../strategies/layer-strategy';
-export { floodFillScreen, getConnections } from './orchestrator';
-export type { FloodFillOptions } from './orchestrator';
+export { floodFillScreen } from './orchestrator';
+export { getConnections } from './connections';
+export type { FloodFillOptions } from './flood-options';

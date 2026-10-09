@@ -1,23 +1,18 @@
 /* @layer shared-game @kind logic */
-/**
- * Flood-fill orchestrator. Dispatches to the dual- or single-layer run path.
- * Screen prep, run paths, helpers, and connection derivation live in sibling modules.
- */
 import type { FloodFillResult } from '../types';
-import { runDualLayerFlood, runSingleLayerFlood } from './flood-paths';
 import type { FloodFillOptions } from './flood-options';
+import { runDualLayerFlood } from './run-dual-layer-flood';
+import { runSingleLayerFlood } from './run-single-layer-flood';
+import { LAYER_LOCKED_STAIRCASE } from './flood-fill.constants';
 
 const floodFillScreen = (rawAttrGrid: number[][], screenIndex: number, options: FloodFillOptions): FloodFillResult => {
-  const isIndoors = options.indoors;
-  // staircaseType 2 = layer changes blocked. Force single-layer BFS on the starting layer only.
-  const layerBlocked = options.staircaseType === 2;
-  const useDualLayer = isIndoors && !!options.dualLayerGrids && !layerBlocked;
+  const layerBlocked = options.staircaseType === LAYER_LOCKED_STAIRCASE;
+  const useDualLayer = options.indoors && !!options.dualLayerGrids && !layerBlocked;
 
   return useDualLayer
-    ? runDualLayerFlood(rawAttrGrid, screenIndex, options)
+    ? runDualLayerFlood(screenIndex, options)
     : runSingleLayerFlood(rawAttrGrid, screenIndex, options, layerBlocked);
 };
 
 export { floodFillScreen };
-export { getConnections } from './connections';
 export type { FloodFillOptions } from './flood-options';

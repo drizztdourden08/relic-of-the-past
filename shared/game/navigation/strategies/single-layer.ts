@@ -1,14 +1,13 @@
 /* @layer shared-game @kind logic */
 import type { TilePassability, GridPos, ReachState } from '../types';
+import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
 import { getHookshotTargetTiles } from '../tile-attrs';
 import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types';
-import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
-import { bodyTiles, getNewTiles, canLeaveLedge, evaluateEntry } from './bfs-helpers';
+import { bodyTiles } from './body-tiles';
+import { getNewTiles } from './new-tiles';
+import { canLeaveLedge } from './can-leave-ledge';
+import { enterTiles } from './enter-tiles';
 
-/**
- * Single-layer BFS strategy. No cross-layer transitions.
- * Used for overworld, single-layer indoor rooms, and staircaseType 2 (layer locked).
- */
 class SingleLayerStrategy implements LayerStrategy {
   readonly layerCount = 1 as const;
   private readonly grid: TilePassability[][];
@@ -38,27 +37,13 @@ class SingleLayerStrategy implements LayerStrategy {
 
     if (nr < bounds.minRow || nr + 1 > bounds.maxRow || nc < bounds.minCol || nc + 1 > bounds.maxCol) return [];
 
-    // Ledge exit restriction
     for (const [r, c] of bodyTiles(row, col)) {
       const t = this.grid[r][c];
       if (t.type === 'ledge' && !canLeaveLedge(t.dir, dr, dc)) return [];
     }
 
-    const newTiles = getNewTiles(nr, nc, dr, dc);
-    let canMove = true;
-    let newReqs = requirements;
-    for (const [tr, tc] of newTiles) {
-      const tile = this.grid[tr][tc];
-      const entry = evaluateEntry(tile, dr, dc, requirements, inventory);
-      if (!entry.canEnter) { canMove = false; break; }
-      if (entry.newReqs !== newReqs) {
-        newReqs = newReqs === requirements ? new Set(entry.newReqs) : newReqs;
-        for (const req of entry.newReqs) newReqs.add(req);
-      }
-    }
-    if (!canMove) return [];
-
-    return [{ row: nr, col: nc, layer: 0, requirements: newReqs }];
+    const moved = enterTiles(getNewTiles(nr, nc, dr, dc), this.grid, dr, dc, requirements, inventory);
+    return moved ? [{ row: nr, col: nc, layer: 0, requirements: moved }] : [];
   }
 
   buildTileResult(
@@ -72,7 +57,6 @@ class SingleLayerStrategy implements LayerStrategy {
   } {
     const { minRow, maxRow, minCol, maxCol } = bounds;
 
-    // Convert body positions to per-tile reachability
     const reached: (Set<string> | null)[][] = Array.from(
       { length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null),
     );

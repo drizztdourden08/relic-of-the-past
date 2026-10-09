@@ -1,18 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * Carry the fields the legacy pair has no room for across a rebuild.
- *
- * A set is still edited through its projected glossary and name table, so the
- * variable list is rebuilt from that pair whenever the set is saved. That
- * rebuild regenerates `label` from the value and cannot know about a note the
- * translator attached to a menu name, so both would be lost on every save.
- * Merging the previous list back in keeps them.
- *
- * Values, kinds, lock state and widths deliberately come from the REBUILD, not
- * from the previous list: those follow the text, and the text is what was just
- * edited. Only presentation is carried over, and only for a key that still
- * exists with the same kind.
- */
 import type { Variable } from './types';
 
 const kept = (next: Variable, previous: Variable): Variable => ({

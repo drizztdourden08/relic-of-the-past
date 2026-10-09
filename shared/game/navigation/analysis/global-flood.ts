@@ -1,40 +1,18 @@
 /* @layer shared-game @kind logic */
-/**
- * Orchestrates BFS across all overworld screens.
- *
- * Runs the single-screen flood fill for every screen in the world,
- * collecting reachable tile counts per requirement set.
- *
- * Input: WASM attr grids (via getGrid callback)
- * Output: Per-screen RegionNavData.totalTiles / freeTileCount / maxReachableTileCount
- */
-
-import type { RegionNavData } from '../nav-data.types';
 import type { TileReq } from '../tile-attrs';
 import type { FloodFillResult } from '../types';
+import type { GlobalFloodOptions, GlobalFloodResult, ScreenTileStats } from './global-flood.type';
 import { floodFillScreen } from '../flood-fill/orchestrator';
-import { INVENTORY_PROGRESSION } from './requirement-detector';
-
-interface GlobalFloodOptions {
-  getGrid: (screenIndex: number) => number[][];
-  indoors: boolean;
-  screenIndices: number[];
-}
-
-interface GlobalFloodResult {
-  screens: Map<number, Pick<RegionNavData, 'totalTiles' | 'freeTileCount' | 'maxReachableTileCount'>>;
-  /** Full flood results per screen (no-inventory run), for downstream analysis */
-  floodResults: Map<number, FloodFillResult>;
-}
+import { INVENTORY_PROGRESSION } from './analysis.constants';
 
 const runGlobalFlood = (options: GlobalFloodOptions): GlobalFloodResult => {
   const { getGrid, indoors, screenIndices } = options;
-  const screens = new Map<number, Pick<RegionNavData, 'totalTiles' | 'freeTileCount' | 'maxReachableTileCount'>>();
+  const screens = new Map<number, ScreenTileStats>();
   const floodResults = new Map<number, FloodFillResult>();
 
   const emptyInventory = new Set<TileReq>();
   const fullInventory = new Set<TileReq>(
-    INVENTORY_PROGRESSION[INVENTORY_PROGRESSION.length - 1] as TileReq[]
+    INVENTORY_PROGRESSION[INVENTORY_PROGRESSION.length - 1] as TileReq[],
   );
 
   for (const screenIndex of screenIndices) {
@@ -45,18 +23,9 @@ const runGlobalFlood = (options: GlobalFloodOptions): GlobalFloodResult => {
       continue;
     }
 
-    // BFS with no items, for the free tile count
-    const freeResult = floodFillScreen(grid, screenIndex, {
-      indoors,
-      inventory: emptyInventory,
-    });
+    const freeResult = floodFillScreen(grid, screenIndex, { indoors, inventory: emptyInventory });
     floodResults.set(screenIndex, freeResult);
-
-    // BFS with all items, for the max reachable count
-    const fullResult = floodFillScreen(grid, screenIndex, {
-      indoors,
-      inventory: fullInventory,
-    });
+    const fullResult = floodFillScreen(grid, screenIndex, { indoors, inventory: fullInventory });
 
     screens.set(screenIndex, {
       totalTiles: freeResult.totalTiles,
@@ -69,4 +38,4 @@ const runGlobalFlood = (options: GlobalFloodOptions): GlobalFloodResult => {
 };
 
 export { runGlobalFlood };
-export type { GlobalFloodOptions, GlobalFloodResult };
+export type { GlobalFloodOptions, GlobalFloodResult } from './global-flood.type';

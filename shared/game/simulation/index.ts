@@ -24,7 +24,7 @@ export type {
   SpriteCombatInfo, CombatTables, CombatContext, RoomSectionSplit,
 } from './types';
 
-export type { SimulatorPort } from './port';
+export type { SimulatorPort } from './port.type';
 
 export {
   ITEM_TO_TOKEN,
@@ -36,7 +36,7 @@ export {
 } from './requirements-map';
 export type { ReachContext } from './requirements-map';
 export type { KeyTarget } from './dungeon-key-target';
-export type { TraversalId } from './traversal-id';
+export type { TraversalId } from './traversal-id.type';
 
 export { createEngine } from './engine/engine';
 export type { EngineDeps, StepResult } from './engine/engine';
@@ -67,7 +67,7 @@ export {
 export { buildSoftlockReport } from './engine/softlock-report';
 
 export { planTrigger, planChestTrigger, planSpriteTrigger, npcConfigForSprite, checkForStandingItem } from './trigger/trigger-plans';
-export { arrivalLabel } from './engine/step-helpers';
+export { arrivalLabel } from './engine/hop/arrival-label';
 export { buildEndSummary, formatEndSummary } from './engine/end-summary';
 export type { EndSummary } from './engine/end-summary';
 export { bossTriggerable, isReachable, meetsRequirements, bossRequirement } from './trigger/boss-gate';
@@ -81,9 +81,9 @@ export type { RecorderState, ObservedCheck, ObservedTransition, ObservedDoorGate
 export { buildDatasetSuggestions } from './recording/dataset-updates';
 
 export { buildSimRunReport } from './sim-run/report';
-export type { SimRunConfig, SimRunReport, BoundaryEdge } from './sim-run/types';
+export type { SimRunConfig, SimRunReport, BoundaryEdge } from './sim-run/sim-run.type';
 
 export { evaluatePresence, buildPresenceState, emptyPresenceState, BOSS_DEAD_BIT } from './presence';
 export type { PresenceGameState, PresenceStateInput, PresenceCondition, BitState } from './presence';
-export type { AnnotationKind, AnnotationState, ScreenAnnotation, ScreenAnnotations, ScreenTag } from './annotations';
+export type { AnnotationKind, AnnotationState, ScreenAnnotation, ScreenAnnotations, ScreenTag } from './annotations.type';
 export { roomTagName } from './room-tags';

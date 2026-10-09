@@ -1,16 +1,44 @@
 /* @layer shared-game @kind logic */
-import type { TransitionPoint, GridPos } from '../types';
-import { GRID_SIZE } from '../types';
-import { DIRECTIONS } from '../core';
+import type { TilePassability, TransitionPoint } from '../types';
 import type { LayerStrategy, BFSCell, BFSResult, QuadrantBounds } from '../strategies/layer-strategy';
-import { bodyTiles, findStartBody } from '../strategies/bfs-helpers';
+import type { EntrancePosition } from './bfs-engine.type';
+import { GRID_SIZE } from '../types';
+import { bodyTiles } from '../strategies/body-tiles';
+import { findStartBody } from '../strategies/find-start-body';
+import { DIRECTIONS, ENTRANCE_REACH } from './grid.constants';
 
-const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, entrancePositions: { row: number; col: number; idx: number }[], inventory: Set<string>, bounds: QuadrantBounds, extraSeeds?: { row: number; col: number }[]): BFSResult => {
+const bodyStartRequirements = (row: number, col: number, grid: TilePassability[][], inventory: Set<string>): Set<string> => {
+  const reqs = new Set<string>();
+  for (const [r, c] of bodyTiles(row, col)) {
+    const t = grid[r][c];
+    if (t.type === 'obstacle' && inventory.has(t.req)) reqs.add(t.req);
+    if (t.type === 'water' && inventory.has('flippers')) reqs.add('flippers');
+  }
+  return reqs;
+};
+
+const isNearEntrance = (bodyCenterRow: number, bodyCenterCol: number, ent: EntrancePosition): boolean =>
+  bodyCenterRow >= ent.row - ENTRANCE_REACH.before && bodyCenterRow <= ent.row + ENTRANCE_REACH.after
+  && bodyCenterCol >= ent.col - ENTRANCE_REACH.before && bodyCenterCol <= ent.col + ENTRANCE_REACH.after;
+
+const recordBorderTransition = (row: number, col: number, requirements: Set<string>, foundBorders: Set<string>, transitions: TransitionPoint[], bounds: QuadrantBounds): void => {
+  const { minRow, maxRow, minCol, maxCol } = bounds;
+  const record = (key: string, edge: TransitionPoint['edge']): void => {
+    if (foundBorders.has(key)) return;
+    foundBorders.add(key);
+    transitions.push({ row, col, edge, requirements: [...requirements] });
+  };
+  if (row === minRow) record(`north-${col}`, 'north');
+  if (row === maxRow) record(`south-${col}`, 'south');
+  if (col === minCol) record(`west-${row}`, 'west');
+  if (col === maxCol) record(`east-${row}`, 'east');
+};
+
+const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, entrancePositions: EntrancePosition[], inventory: Set<string>, bounds: QuadrantBounds, extraSeeds?: { row: number; col: number }[]): BFSResult => {
   const { minRow, maxRow, minCol, maxCol } = bounds;
   const startLayer = strategy.findStartLayer();
   const startGrid = strategy.getGrid(startLayer);
 
-  // Body reached state: [layer][row][col]
   const bodyReached: [(Set<string> | null)[][], (Set<string> | null)[][]] = [
     Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null)),
     Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null)),
@@ -20,37 +48,22 @@ const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, ent
   const foundBorders = new Set<string>();
   const deque: BFSCell[] = [];
 
-  // Find starting body position
   const startBody = findStartBody(startRow, startCol, startGrid, inventory, minRow, maxRow, minCol, maxCol);
   if (startBody) {
-    const startReqs = new Set<string>();
-    for (const [r, c] of bodyTiles(startBody.row, startBody.col)) {
-      const t = startGrid[r][c];
-      if (t.type === 'obstacle' && inventory.has(t.req!)) startReqs.add(t.req!);
-      if (t.type === 'water' && inventory.has('flippers')) startReqs.add('flippers');
-    }
+    const startReqs = bodyStartRequirements(startBody.row, startBody.col, startGrid, inventory);
     deque.push({ row: startBody.row, col: startBody.col, layer: startLayer, requirements: startReqs });
     bodyReached[startLayer][startBody.row][startBody.col] = startReqs;
   }
 
-  // Add extra seed positions
-  if (extraSeeds) {
-    for (const seed of extraSeeds) {
-      const seedBody = findStartBody(seed.row, seed.col, startGrid, inventory, minRow, maxRow, minCol, maxCol);
-      if (seedBody && bodyReached[startLayer][seedBody.row][seedBody.col] === null) {
-        const seedReqs = new Set<string>();
-        for (const [r, c] of bodyTiles(seedBody.row, seedBody.col)) {
-          const t = startGrid[r][c];
-          if (t.type === 'obstacle' && inventory.has(t.req!)) seedReqs.add(t.req!);
-          if (t.type === 'water' && inventory.has('flippers')) seedReqs.add('flippers');
-        }
-        deque.push({ row: seedBody.row, col: seedBody.col, layer: startLayer, requirements: seedReqs });
-        bodyReached[startLayer][seedBody.row][seedBody.col] = seedReqs;
-      }
+  for (const seed of extraSeeds ?? []) {
+    const seedBody = findStartBody(seed.row, seed.col, startGrid, inventory, minRow, maxRow, minCol, maxCol);
+    if (seedBody && bodyReached[startLayer][seedBody.row][seedBody.col] === null) {
+      const seedReqs = bodyStartRequirements(seedBody.row, seedBody.col, startGrid, inventory);
+      deque.push({ row: seedBody.row, col: seedBody.col, layer: startLayer, requirements: seedReqs });
+      bodyReached[startLayer][seedBody.row][seedBody.col] = seedReqs;
     }
   }
 
-  // ─── BFS Main Loop ───────────────────────────────────────────────────────────
   while (deque.length > 0) {
     const cell = deque.shift()!;
     const { row, col, layer, requirements } = cell;
@@ -58,27 +71,19 @@ const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, ent
     const existing = bodyReached[layer][row][col]!;
     if (existing.size < requirements.size) continue;
 
-    // Record border transitions for all 4 body tiles at quadrant edges
     for (const [r, c] of bodyTiles(row, col)) {
-      recordBorderTransition(r, c, requirements, foundBorders, transitions, minRow, maxRow, minCol, maxCol);
+      recordBorderTransition(r, c, requirements, foundBorders, transitions, bounds);
     }
 
-    // Record entrance reachability (body center proximity check)
-    const bodyCenterRow = row + 1;
-    const bodyCenterCol = col + 1;
     for (const ent of entrancePositions) {
       const key = `entrance-${ent.idx}`;
       if (foundBorders.has(key)) continue;
-      const nearby =
-        bodyCenterRow >= ent.row - 3 && bodyCenterRow <= ent.row + 5 &&
-        bodyCenterCol >= ent.col - 3 && bodyCenterCol <= ent.col + 5;
-      if (nearby) {
+      if (isNearEntrance(row + 1, col + 1, ent)) {
         foundBorders.add(key);
         transitions.push({ row: ent.row, col: ent.col, edge: 'entrance', requirements: [...requirements], entranceIdx: ent.idx });
       }
     }
 
-    // Expand in 4 directions. The strategy handles layer transitions.
     for (const [dr, dc] of DIRECTIONS) {
       const results = strategy.expand(cell, dr, dc, inventory, bounds);
       for (const result of results) {
@@ -86,16 +91,13 @@ const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, ent
         if (existingReqs !== null && existingReqs.size <= result.requirements.size) continue;
 
         bodyReached[result.layer][result.row][result.col] = result.requirements;
-        if (result.requirements === requirements) {
-          deque.unshift({ row: result.row, col: result.col, layer: result.layer, requirements: result.requirements });
-        } else {
-          deque.push({ row: result.row, col: result.col, layer: result.layer, requirements: result.requirements });
-        }
+        const next = { row: result.row, col: result.col, layer: result.layer, requirements: result.requirements };
+        if (result.requirements === requirements) deque.unshift(next);
+        else deque.push(next);
       }
     }
   }
 
-  // ─── Post-BFS: build result ─────────────────────────────────────────────────
   const tileResult = strategy.buildTileResult(bodyReached, bounds, '');
 
   return {
@@ -108,27 +110,6 @@ const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, ent
     reachableByLayer: tileResult.reachableByLayer,
     ledges: tileResult.ledges,
   };
-};
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const recordBorderTransition = (row: number, col: number, requirements: Set<string>, foundBorders: Set<string>, transitions: TransitionPoint[], minR: number, maxR: number, minC: number, maxC: number): void => {
-  if (row === minR) {
-    const key = `north-${col}`;
-    if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'north', requirements: [...requirements] }); }
-  }
-  if (row === maxR) {
-    const key = `south-${col}`;
-    if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'south', requirements: [...requirements] }); }
-  }
-  if (col === minC) {
-    const key = `west-${row}`;
-    if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'west', requirements: [...requirements] }); }
-  }
-  if (col === maxC) {
-    const key = `east-${row}`;
-    if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'east', requirements: [...requirements] }); }
-  }
 };
 
 export { runBFS };

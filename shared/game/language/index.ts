@@ -4,15 +4,15 @@ export type {
   SetStructure, Token,
 } from './types';
 export { resolveRefs } from './glossary/resolve-refs';
-export { emptyNameTable, setFromPack } from './migrate/set-from-pack';
+export { emptyNameTable } from './migrate/empty-name-table';
+export { setFromPack } from './migrate/set-from-pack';
 export { parseTokens } from './tokens/parse-tokens';
 export { serializeTokens } from './tokens/serialize-tokens';
 export { validateEntry } from './validate/validate-entry';
-export type { EntryIssue } from './validate/validate-entry';
+export type { EntryIssue } from './validate/validate.type';
 export { compileSet } from './compile/compile-set';
-export type { SetFont } from './compile/compile-set';
 export { compileSets } from './compile/compile-sets';
-export type { SetBakeInput } from './compile/compile-sets';
+export type { SetBakeInput, SetFont } from './compile/compile.type';
 export { ROW_WIDTH_PX, ROWS_PER_BOX } from './layout/types';
 export type { GlyphMetrics, GlyphSheet, RowFit, ScreenFit } from './layout/types';
 export {
@@ -32,12 +32,8 @@ export {
   choiceShapeOf, tokensFromChoice, withAddedOption, withOptionTokens, withRemovedOption,
 } from './choices';
 export type { ChoiceCode, ChoiceOption, ChoiceShape } from './choices';
-export { codeInfoFor, encodableParams } from './codes/code-catalog';
-export type { CodeInfo, CodeParamRange, CodeRisk, CodeScope } from './codes/code-catalog.types';
-export { CODE_CATALOG } from './codes/code-catalog.data';
-export { isGlyphName } from './codes/glyph';
-export { structuralEntry, STRUCTURAL_IDS } from './codes/structural-entries';
-export type { StructuralEntry } from './codes/structural-entries';
+export { CODE_CATALOG, codeInfoFor, encodableParams, isGlyphName, structuralEntry, STRUCTURAL_IDS } from './codes';
+export type { CodeInfo, CodeParamRange, CodeRisk, CodeScope, StructuralEntry } from './codes';
 export {
   buildVariableIndex, builtinVariables, findHardcoded, legacyFromVariables, mergeVariableMeta,
   resolve, scanRun, variablesFromLegacy,

@@ -1,11 +1,12 @@
 /* @layer shared-game @kind barrel */
 export { applyEnter } from './apply-enter';
 export { breakLine } from './break-line';
-export type { LineBreak } from './break-line';
-export { continueByScrolling, endBlockAt } from './block-actions';
+export { continueByScrolling } from './continue-by-scrolling';
+export { endBlockAt } from './end-block-at';
 export { locateCaret } from './locate';
-export type { CaretSite } from './locate';
-export { policyFor, STRUCTURE_MODES } from './modes';
-export type { StructureMode, StructurePolicy } from './modes';
+export { policyFor } from './modes';
 export { reflow } from './reflow';
-export type { Caret, StructureContext } from './types';
+export { STRUCTURE_MODES } from './structure.constants';
+export type {
+  Caret, CaretSite, LineBreak, StructureContext, StructureMode, StructurePolicy,
+} from './types';

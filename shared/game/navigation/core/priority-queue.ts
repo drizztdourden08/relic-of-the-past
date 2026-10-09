@@ -1,8 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * Generic binary min-heap priority queue.
- * Used by A* and Dijkstra pathfinding.
- */
 class PriorityQueue<T> {
   private heap: T[] = [];
   private compare: (a: T, b: T) => number;

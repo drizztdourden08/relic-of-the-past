@@ -1,16 +1,5 @@
 /* @layer shared-game @kind data */
-/**
- * Raw catalog: one entry per control code the game's languages can emit,
- * verified against the decompiled engine. Covers every name in every
- * language's `commandNames` (see `shared/asset-extraction/text/data/language-data.ts`).
- *
- * `EndMessage` (EU-only) has no documented behavior of its own here: it is
- * absent from `kCmdInfo` in `dialogue-encoder.ts`, which is consistent with
- * it being an automatic message terminator instead of something a
- * translator places by hand. It is catalogued as `structural` on that
- * basis, not from a confirmed engine fact.
- */
-import type { CodeInfo } from './code-catalog.types';
+import type { CodeInfo } from './code-catalog.type';
 
 const CODE_CATALOG: CodeInfo[] = [
   { name: '1', label: 'Line 1', description: 'start writing at the left of line 1 of the box', risk: 'safe', scope: 'positional', offerInMenu: true },

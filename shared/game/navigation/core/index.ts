@@ -1,5 +1,10 @@
 /* @layer shared-game @kind barrel */
 export { PriorityQueue } from './priority-queue';
 export { unmetRequirements } from './inventory';
-export { DIRECTIONS, inBounds, getNeighbors, manhattan, has2TileClearance, getAdjacentScreen } from './grid-utils';
+export { DIRECTIONS } from './grid.constants';
+export { inBounds } from './in-bounds';
+export { getNeighbors } from './get-neighbors';
+export { manhattan } from './manhattan';
+export { has2TileClearance } from './has-two-tile-clearance';
+export { getAdjacentScreen } from './get-adjacent-screen';
 export { runBFS } from './bfs-engine';

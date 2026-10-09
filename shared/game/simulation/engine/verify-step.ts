@@ -1,66 +1,79 @@
 /* @layer shared-game @kind logic */
-/**
- * The verifying phase: diff the flag snapshots around the trigger, name the
- * check, fold in the item, and route the side-effect cycles for door unlocks,
- * shutter clears and trap slams, each of which re-floods the room in place.
- */
 import type { SimObservation, SimEvent, DetectedCheck } from '../types';
 import { getItem } from '../../data';
-import { diffSnapshots, emptySnapshot } from '../detect/flag-snapshot';
-import { matchDiffs } from '../detect/check-matcher';
-import { UNIDENTIFIED } from '../detect/unidentified';
-import { onCheckVerified } from './explorer';
-import { narrative, debug, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitTrapClosed, emitFollower , emitWallBombed } from './step-helpers';
-import type { EngineState } from './state';
+import type { CheckRecord, ItemId } from '../../data';
+import { diffSnapshots } from '../detect/flag-snapshot/diff-snapshots';
+import { emptySnapshot } from '../detect/flag-snapshot/empty-snapshot';
+import { matchDiffs } from '../detect/check-matcher/match-diffs';
+import { UNIDENTIFIED } from '../detect/unidentified.constants';
+import { onCheckVerified } from './explorer/on-check-verified';
+import { narrative } from './event-log/narrative';
+import { debug } from './event-log/debug';
+import { emitDoorUnlock } from './side-effects/emit-door-unlock';
+import { emitShutterClear } from './side-effects/emit-shutter-clear';
+import { emitSwitchPulled } from './side-effects/emit-switch-pulled';
+import { emitTrapClosed } from './side-effects/emit-trap-closed';
+import { emitFollower } from './side-effects/emit-follower';
+import { emitWallBombed } from './side-effects/emit-wall-bombed';
+import { ROOM_CLEAR_KILL_ITEM } from './engine.constants';
+import type { EngineState, SimTarget } from './state/state.type';
 
-const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): void => {
-  const diffs = diffSnapshots(s.preTrigger ?? emptySnapshot(), obs.flags);
-  const target = s.currentTarget;
+const markFailed = (s: EngineState, events: SimEvent[], target: SimTarget | undefined): void => {
+  if (target) { s.failed.add(target.key); events.push(debug(s, `trigger produced no flag change: ${target.label}`)); }
+  s.currentTarget = undefined;
+  s.preTrigger = undefined;
+  s.phase = 'observing';
+};
 
-  // No flag change → nothing observable; mark failed so this epoch skips it.
-  // A blast changes no game state, so it can never show a diff. Settle it first
-  // or the no-diff branch below would mark the wall permanently failed.
-  if (target?.action.type === 'bombWall') { emitWallBombed(s, events, target.key, target.label); return; }
+const settleSideEffect = (s: EngineState, events: SimEvent[], target: SimTarget | undefined): boolean => {
+  const action = target?.action;
+  if (!target || !action) return false;
+  if (action.type === 'trapShutters') { emitTrapClosed(s, events, action.roomId); return true; }
+  if (action.type === 'pullSwitch') { emitSwitchPulled(s, events, target.key, action.roomId, action.drain); return true; }
+  if (action.type === 'progress' && action.step === 'follower-join') { emitFollower(s, events, target.key); return true; }
+  if (action.type === 'door') { emitDoorUnlock(s, events, target.label, target.key, action.doorKind === 'small-key'); return true; }
+  if (action.type === 'kill' && action.opensShutters && action.itemId === ROOM_CLEAR_KILL_ITEM) { emitShutterClear(s, events, target.label, target.key); return true; }
+  return false;
+};
 
-  if (diffs.length === 0) {
-    if (target) { s.failed.add(target.key); events.push(debug(s, `trigger produced no flag change: ${target.label}`)); }
-    s.currentTarget = undefined;
-    s.preTrigger = undefined;
-    s.phase = 'observing';
-    return;
-  }
-
-  if (target?.action.type === 'trapShutters') { emitTrapClosed(s, events, target.action.roomId); return; }
-  if (target?.action.type === 'pullSwitch') { emitSwitchPulled(s, events, target.key, target.action.roomId, target.action.drain); return; }
-  if (target?.action.type === 'progress' && target.action.step === 'follower-join') { emitFollower(s, events, target.key); return; }
-  if (target?.action.type === 'door') { emitDoorUnlock(s, events, target.label, target.key, target.action.doorKind === 'small-key'); return; }
-  if (target?.action.type === 'kill' && target.action.opensShutters && target.action.itemId === 0xff) { emitShutterClear(s, events, target.label, target.key); return; }
-  const matched = matchDiffs(diffs);
-  const itemReceived = obs.itemReceived;
-  const epochBefore = s.epoch;
-  const detected: DetectedCheck = { evidence: diffs, matched, checkId: matched?.id, itemReceived, at: s.virtual };
-
-  if (target) s.done.add(target.key);
-  onCheckVerified(s, detected, events);
-
-  if (s.config.stopAtCheckId && matched?.id === s.config.stopAtCheckId) s.stopHit = true;
-
-  // Names are resolved HERE, for a human reading the log, and stored nowhere.
+const narrateVerified = (s: EngineState, events: SimEvent[], detected: DetectedCheck, target: SimTarget | undefined): void => {
+  const { matched, itemReceived } = detected;
   const shown = matched ? matched.name : target?.label ?? UNIDENTIFIED;
   if (itemReceived) {
     const itemName = getItem(itemReceived).name;
     events.push(narrative(s, matched || target ? `Got "${itemName}" (${shown})` : `Got "${itemName}"`));
   }
   events.push({ ...narrative(s, `Verified ${shown}`), data: { detected } });
-  // A drop-kill that satisfied the room's kill tag (last living killable)
-  // reopens the trap shutters the game closed behind the player.
-  if (target?.action.type === 'kill' && target.action.opensShutters && target.action.itemId !== 0xff) {
+};
+
+const isDropKillThatReopens = (target: SimTarget | undefined): boolean =>
+  target?.action.type === 'kill' && target.action.opensShutters && target.action.itemId !== ROOM_CLEAR_KILL_ITEM;
+
+const detectedCheckOf = (s: EngineState, evidence: DetectedCheck['evidence'], matched: CheckRecord | undefined, itemReceived: ItemId | undefined): DetectedCheck =>
+  ({ evidence, matched, checkId: matched?.id, itemReceived, at: s.virtual });
+
+const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): void => {
+  const diffs = diffSnapshots(s.preTrigger ?? emptySnapshot(), obs.flags);
+  const target = s.currentTarget;
+
+  if (target?.action.type === 'bombWall') { emitWallBombed(s, events, target.key, target.label); return; }
+  if (diffs.length === 0) { markFailed(s, events, target); return; }
+  if (settleSideEffect(s, events, target)) return;
+
+  const matched = matchDiffs(diffs);
+  const epochBefore = s.epoch;
+  const detected = detectedCheckOf(s, diffs, matched, obs.itemReceived);
+
+  if (target) s.done.add(target.key);
+  onCheckVerified(s, detected, events);
+
+  if (s.config.stopAtCheckId && matched?.id === s.config.stopAtCheckId) s.stopHit = true;
+
+  narrateVerified(s, events, detected, target);
+  if (target && isDropKillThatReopens(target)) {
     s.trapClosed.delete(target.screenId);
     events.push(narrative(s, `Defeated ${target.label} and the shutter doors reopened`));
   }
-  // A traversal-affecting unlock re-seeds the frontier; the runner re-floods after
-  // this. When this check IS the stop target, skip straight to planning, because the run
-  // must end on the verification, with no reset/re-flood/discovery after it.
   if (s.epoch > epochBefore && !s.stopHit) events.push(narrative(s, 'Reset: restarting from current position with new state'));
 
   s.currentTarget = undefined;

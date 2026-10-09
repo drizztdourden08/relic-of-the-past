@@ -1,50 +1,8 @@
 /* @layer shared-game @kind logic */
-/**
- * Where a set spells a name out instead of referencing it.
- *
- * A variable only earns its keep once the lines that say it point at it: a
- * reference follows a later rename, literal text does not. This is the pure
- * half of that job. It reports every run that could become a reference and
- * says which variable it should be, and changes nothing. Applying a report is a
- * separate, deliberate step.
- *
- * Only `text` runs are searched, so a phrase broken by a control code, a line
- * break or an existing reference is not a match, by the same rule the editor's
- * term linking has always followed. Case policy and its near-miss reporting
- * live in `./scan-run`.
- *
- * Widest match wins inside one run: once a span is claimed, a shorter phrase
- * overlapping it is not reported, so a line is never offered two readings of
- * the same characters.
- */
 import type { DialogueEntry } from '../types';
-import type { Candidate } from './hardcoded-candidates';
 import { hardcodedCandidates } from './hardcoded-candidates';
 import { scanRun } from './scan-run';
-import type { Variable } from './types';
-
-/** One run of literal text that should reference a variable. */
-type Occurrence = {
-  /** Dialogue entry the run sits in. */
-  entryId: number;
-  /** Position of the text token inside that entry's stream. */
-  tokenIndex: number;
-  /** Offset of the match inside that token's text. */
-  at: number;
-  /** The characters actually present in the line. */
-  text: string;
-  /** Variable the run should reference. */
-  variableKey: string;
-  /** False when that variable does not exist in the set yet. */
-  exists: boolean;
-  /**
-   * `exact` is safe to swap. `case` matched only with case ignored and is
-   * reported for a translator to judge, never rewritten.
-   */
-  match: 'exact' | 'case';
-};
-
-type Span = { from: number; to: number };
+import type { Candidate, Occurrence, Span, Variable } from './types';
 
 const overlaps = (claimed: Span[], from: number, to: number): boolean =>
   claimed.some((span) => from < span.to && span.from < to);
@@ -62,7 +20,6 @@ const occurrenceAt = (
   match,
 });
 
-/** Every reportable match in one text run, widest phrase claiming first. */
 const scanTextToken = (
   entryId: number, tokenIndex: number, text: string, candidates: Candidate[],
 ): Occurrence[] => {
@@ -87,11 +44,6 @@ const scanTextToken = (
   return found.sort((a, b) => a.at - b.at);
 };
 
-/**
- * Every occurrence across a set, in reading order. `variables` supplies both
- * the answers (its own terms and menu names) and what the catalog still has to
- * propose.
- */
 const findHardcoded = (entries: DialogueEntry[], variables: Variable[]): Occurrence[] => {
   const candidates = hardcodedCandidates(variables);
   const found: Occurrence[] = [];
@@ -107,4 +59,3 @@ const findHardcoded = (entries: DialogueEntry[], variables: Variable[]): Occurre
 };
 
 export { findHardcoded };
-export type { Occurrence };

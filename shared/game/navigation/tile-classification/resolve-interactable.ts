@@ -1,27 +1,12 @@
 /* @layer shared-game @kind logic */
-/**
- * Three attribute ranges pack a room-local slot index into their low nibble
- * (or, for chests, `attr - 0x58`); the tile's real identity lives in a live
- * side-table the caller supplies, never in the attribute byte itself. When a
- * family matches but the table has no record for that slot, the tile stays
- * honestly unresolved. Asserting a guess is exactly the bug this module
- * exists to avoid.
- */
-import { MANIPULABLE_NAMES } from '../../data/native-tables';
 import type { TileBehavior } from '../../data/types';
 import type { SimDoor } from '../../simulation';
-import type { TileInteractable } from './types';
-
-interface ResolveInteractableParams {
-  attr: number;
-  behavior: TileBehavior;
-  replacementTileState: readonly number[];
-  chestLocations: readonly number[];
-  doors: readonly SimDoor[];
-}
+import type { ResolveInteractableParams, TileInteractable } from './tile-classification.type';
+import { MANIPULABLE_NAMES } from '../../data/native-tables';
+import { CHEST_ATTR_BASE, CHEST_SHUT_FLAG, MANIPULABLE_KIND_MASK, SLOT_MASK } from './tile-classification.constants';
 
 const resolveDoor = (attr: number, doors: readonly SimDoor[]): TileInteractable | undefined => {
-  const slot = attr & 0x0f;
+  const slot = attr & SLOT_MASK;
   const door = doors.find(d => d.index === slot);
   if (!door) return undefined;
 
@@ -29,20 +14,20 @@ const resolveDoor = (attr: number, doors: readonly SimDoor[]): TileInteractable 
 };
 
 const resolveManipulable = (attr: number, replacementTileState: readonly number[]): TileInteractable | undefined => {
-  const slot = attr & 0x0f;
+  const slot = attr & SLOT_MASK;
   if (slot >= replacementTileState.length) return undefined;
 
-  const kind = MANIPULABLE_NAMES[replacementTileState[slot] & 0xf0f0];
+  const kind = MANIPULABLE_NAMES[replacementTileState[slot] & MANIPULABLE_KIND_MASK];
   if (!kind) return undefined;
 
   return { family: 'manipulable', source: 'replacement-tile-state', slot, kind, state: 'unknown' };
 };
 
 const resolveChest = (attr: number, behavior: TileBehavior, chestLocations: readonly number[]): TileInteractable | undefined => {
-  const slot = attr - 0x58;
+  const slot = attr - CHEST_ATTR_BASE;
   if (slot < 0 || slot >= chestLocations.length) return undefined;
 
-  const shut = chestLocations[slot] >= 0x8000;
+  const shut = chestLocations[slot] >= CHEST_SHUT_FLAG;
   return { family: 'chest', source: 'chest-locations', slot, kind: behavior, state: shut ? 'shut' : 'open' };
 };
 
@@ -56,4 +41,4 @@ const resolveInteractable = (params: ResolveInteractableParams): TileInteractabl
 };
 
 export { resolveInteractable };
-export type { ResolveInteractableParams };
+export type { ResolveInteractableParams } from './tile-classification.type';

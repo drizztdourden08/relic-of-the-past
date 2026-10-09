@@ -1,5 +1,4 @@
 /* @layer shared-game @kind logic */
-/** Public surface of the pause-menu logic: cells, ladders, screens, reducer. */
 export {
   BOTTLE_COUNT,
   FIRST_BOTTLE_HUD_ITEM,
@@ -7,46 +6,33 @@ export {
   ITEM_CELL_COUNT,
   ITEM_SLOT_COUNT,
   TOOL_HUD_ITEM,
-  buildItemCells,
-  hudItemAt,
-} from './item-cells';
-export type { ItemCell, PauseNameKey } from './item-cells';
+} from './item-cells.constants';
+export { buildItemCells } from './build-item-cells';
+export { hudItemAt } from './hud-item-at';
 
-export {
-  ARROW_LADDER,
-  GEAR_KINDS,
-  GEAR_LADDER_KINDS,
-  NO_ARROW_TYPE,
-  arrowTypeOf,
-  clampGearTier,
-  gearTierCells,
-  gearTierCount,
-  isGearTierSelectable,
-  maxGearTier,
-} from './gear-tiers';
-export type { GearKind, GearLadderKind, GearTierCell } from './gear-tiers';
+export { ARROW_LADDER, GEAR_KINDS, GEAR_LADDER_KINDS, NO_ARROW_TYPE } from './gear-tiers.constants';
+export { arrowTypeOf } from './arrow-type-of';
+export { clampGearTier } from './clamp-gear-tier';
+export { gearTierCells } from './gear-tier-cells';
+export { gearTierCount } from './gear-tier-count';
+export { isGearTierSelectable } from './is-gear-tier-selectable';
+export { maxGearTier } from './max-gear-tier';
 
-export {
-  ACTION_COUNT,
-  ITEM_COLUMNS,
-  PASSIVE_COUNT,
-  SCREEN_ORDER,
-  SCREEN_SECTIONS,
-  clampCursor,
-  firstSectionOf,
-  moveCursor,
-  sectionsOf,
-  stepScreen,
-} from './screens';
-export type { CursorPos, RowSegment } from './screens';
+export { ACTION_COUNT, ITEM_COLUMNS, PASSIVE_COUNT, SCREEN_ORDER, SCREEN_SECTIONS } from './screens.constants';
+export { clampCursor } from './clamp-cursor';
+export { firstSectionOf } from './first-section-of';
+export { moveCursor } from './move-cursor';
+export { sectionsOf } from './sections-of';
+export { stepScreen } from './step-screen';
 
-export { planAssignment } from './assign-rule';
-export type { AssignPlan } from './assign-rule';
+export { planAssignment } from './plan-assignment';
+export { confirmTargetAt } from './confirm-target-at';
+export { confirmVerbAt } from './confirm-verb-at';
+export { planConfirm } from './plan-confirm';
+export { assignTargetAt } from './assign-target-at';
+export { reducePause } from './pause-machine';
 
-export { confirmTargetAt, confirmVerbAt, planConfirm } from './confirm-rule';
-export type { ConfirmPlan, ConfirmTarget, ConfirmVerb } from './confirm-rule';
-
-export { assignTargetAt, reducePause } from './pause-machine';
 export type {
-  AssignTarget, PauseContext, PauseEvent, PauseScreen, PauseSection, PauseState,
-} from './pause-machine';
+  AssignPlan, AssignTarget, ConfirmPlan, ConfirmTarget, ConfirmVerb, CursorPos, GearKind, GearLadderKind, GearTierCell,
+  ItemCell, PauseContext, PauseEvent, PauseNameKey, PauseScreen, PauseSection, PauseState, RowSegment,
+} from './pause.type';

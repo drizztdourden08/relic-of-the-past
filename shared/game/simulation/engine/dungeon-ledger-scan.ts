@@ -1,40 +1,29 @@
 /* @layer shared-game @kind logic */
-/**
- * Fills a dungeon group's ledger from one observed room: every chest and
- * key-drop guard becomes an owed entry (reachable or not), and anything else
- * the engine turned into a target (a standing item, an NPC check) is recorded
- * the first time it is seen. Gates (doors, cracked walls, switches) are never
- * owed; they only explain why something else is blocked. Which of the two a
- * target is comes off `SimTarget.role`, never off its log noun.
- */
 import type { SimObservation } from '../types';
 import type { DungeonId } from '../../data';
-import { keyAvailable } from './explorer';
-import { chestKey, spriteKey } from './discover';
-import { BOMBABLE_ATTR_MIN, BOMBABLE_ATTR_MAX } from './discover-bombs';
+import { keyAvailable } from './explorer/key-available';
+import { chestKey } from './discover/chest-key';
+import { spriteKey } from './discover/sprite-key';
+import { attrGridsOf } from './discover-bombs/attr-grids-of';
+import { isBombableAttr } from './discover-bombs/is-bombable-attr';
 import { dungeonGroupForScreen, dungeonForScreen } from '../../logic/queries/dungeon-group';
-import { ensureLedger, upsertOwed, pruneDoneChecks } from './dungeon-ledger';
-import type { EngineState, SimTarget } from './state';
+import { ensureLedger } from './dungeon-ledger/ensure-ledger';
+import { upsertOwed } from './dungeon-ledger/upsert-owed';
+import { pruneDoneChecks } from './dungeon-ledger/prune-done-checks';
+import type { EngineState, SimTarget } from './state/state.type';
 
-/** Any bombable-attribute tile still standing, ignoring reach. A wall the
- *  flood already treats as impassable never shows up as a target without bombs. */
 const hasUnblastedWall = (obs: SimObservation): boolean => {
   const bundle = obs.grids;
   if (!bundle) return false;
-  const grids = [bundle.rawAttrGrid, ...(bundle.dualLayerGrids ? [bundle.dualLayerGrids.layer0, bundle.dualLayerGrids.layer1] : [])];
-  return grids.some(g => g.some(row => row.some(a => a >= BOMBABLE_ATTR_MIN && a <= BOMBABLE_ATTR_MAX)));
+  return attrGridsOf(bundle).some(g => g.some(row => row.some(isBombableAttr)));
 };
 
-/** Best-effort reason a present-but-blocked check is blocked, from the same
- *  gates discoverTargets already checks for doors/walls/kills. */
 const guessBlocker = (state: EngineState, obs: SimObservation, dungeon: DungeonId | null): string | undefined => {
   const inter = obs.interactables;
   if (!state.reachTokens.has('bombs')
     && (hasUnblastedWall(obs) || (inter?.doors.some(d => d.kind === 'bombable' && !d.opened) ?? false))) {
     return 'bombs';
   }
-  // Outside a dungeon there is no key bucket to be short of, so a locked door
-  // there explains nothing and no token is owed.
   if (!dungeon) return undefined;
   if (inter?.doors.some(d => d.kind === 'small-key' && !d.opened) && !keyAvailable(state, dungeon)) {
     return `smallkey:${dungeon}`;
@@ -45,11 +34,6 @@ const guessBlocker = (state: EngineState, obs: SimObservation, dungeon: DungeonI
   return undefined;
 };
 
-/**
- * Record what the current room owes into its dungeon group's ledger. `targets`
- * is the SAME list `discoverTargets` produced this step, so what counts as
- * reachable here never disagrees with what the engine is about to trigger.
- */
 const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: SimTarget[]): void => {
   const group = dungeonGroupForScreen(state.virtual.screenId);
   if (group == null) return;
@@ -60,20 +44,19 @@ const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: S
   const inter = obs.interactables;
   if (!inter) return;
 
-  // A chest's `opened` bit is the live ground truth, independent of `done`, so
-  // strike it even if this run did not open it itself (a pre-opened save).
   const openedChests = new Set(inter.chests.filter(c => c.opened).map(chestKey));
   ledger.owed = ledger.owed.filter(o => !openedChests.has(o.checkId));
 
   const dungeon = dungeonForScreen(state.virtual.screenId);
   const actionable = new Set(targets.map(t => t.key));
   const handled = new Set<string>();
+  const blockerFor = (key: string): string | undefined => (actionable.has(key) ? undefined : guessBlocker(state, obs, dungeon));
 
   for (const chest of inter.chests) {
     const key = chestKey(chest);
     handled.add(key);
     if (chest.opened || state.done.has(key)) continue;
-    upsertOwed(ledger, key, chest.roomId, actionable.has(key) ? undefined : guessBlocker(state, obs, dungeon));
+    upsertOwed(ledger, key, chest.roomId, blockerFor(key));
   }
 
   for (const sprite of inter.sprites) {
@@ -81,7 +64,7 @@ const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: S
     const key = spriteKey(sprite);
     handled.add(key);
     if (state.done.has(key)) continue;
-    upsertOwed(ledger, key, sprite.roomId, actionable.has(key) ? undefined : guessBlocker(state, obs, dungeon));
+    upsertOwed(ledger, key, sprite.roomId, blockerFor(key));
   }
 
   for (const target of targets) {
