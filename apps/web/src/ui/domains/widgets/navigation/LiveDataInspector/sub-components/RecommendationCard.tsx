@@ -1,23 +1,9 @@
 /* @layer renderer-widgets @kind component */
-/**
- * One open finding on this screen: what kind it is, how sure the detector
- * was, and the one-line reason. Clicking it opens the Data Inspector's own
- * comparison view at this exact finding. The card never shows a diff
- * itself, so there is only ever one place a finding's current/proposed pair
- * is rendered.
- */
 import { Badge, Button, Text } from '@ds/primitives';
 import { useDataViewStore } from '@app/stores/data-view-store';
-import type { Recommendation } from '@shared/game/recommendations';
+import { ACTION_LABEL } from '../LiveDataInspector.constants';
+import type { RecommendationCardProps } from '../LiveDataInspector.type';
 import './RecommendationCard.css';
-
-const ACTION_LABEL: Record<Recommendation['action'], string> = {
-  create: 'Add', update: 'Change', delete: 'Remove',
-};
-
-interface RecommendationCardProps {
-  entry: Recommendation;
-}
 
 const RecommendationCard = (props: RecommendationCardProps) => {
   const { entry } = props;
@@ -37,4 +23,3 @@ const RecommendationCard = (props: RecommendationCardProps) => {
 };
 
 export { RecommendationCard };
-export type { RecommendationCardProps };

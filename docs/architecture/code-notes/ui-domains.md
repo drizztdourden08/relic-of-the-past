@@ -636,3 +636,326 @@ Without a writer the number is plain digits, for a ceiling the console does not 
 ### widgets/cheats/tabs/PlayerTab/PlayerTab.css
 
 Every pixel size that follows the HUD scale is inline; the sheet holds the layout, the hit zones and their hover and ghost treatments. The meter's frame layer sits at a low z index of its own, so the meter box isolates it and the rows can rise above the frame without competing with the popover outside. Hovering a magic row lights it and every row under it, so the level a click would set reads as a fill first.
+
+### widgets/navigation/useNavigation.ts
+
+All of the navigation widget's state, data reads and flood orchestration. Flood output is read from the overlay store, never mirrored into component state: the widget unmounts whenever the hub opens, and a local copy used to leave with it, which is how the minimap once vanished while the overlay stayed.
+Manual or auto mode is remembered by the profile. The overlay store stays the live value because auto mode has to survive the widget unmounting mid run; the pref is the copy that survives the app closing. The saved mode is restored once per app run and only after the profile's prefs land, since before that the pref reads as the `manual` fallback and would overwrite a real `auto`. The `--auto-flood` flag is applied once per app run, held at module level: a ref resets when the hub unmounts the widget and would force auto back on after the user chose manual.
+The room's starting layer is captured when a room loads. A lightweight 200 ms tick re renders so live debug values follow the player. The overlay and the bundle drop when the active screen changes, and a bundle that no longer covers the player is dropped.
+An indoor run bails early while the room's tile data is not there yet (a transition in progress); the transition settled event only fires once the core considers the room settled, so this guards the manual button, the CLI flag and the inventory trigger. Fall hole entrance ids are left out of the regular markers; overworld door ids mark physical doors. The outdoor bundle is set before the early return so it persists with no reachable screens. The annotations derive from the same reads the run gates on, so the overlay and the run never describe a screen differently.
+The indoor half of the auto reflood listens for the native transition settled event, which the core only fires when the developer tools feature bit is set (`core/game-hooks/transition_events.c`). That bit is off for a normal player, so auto mode holds the developer tools override while it is on; the gate only unlocks read only instrumentation. A change in sword, gloves, boots, flippers, hookshot or hammer re floods, since it changes reachability. Switching to auto floods at once so the overlay matches the mode just picked.
+
+### widgets/navigation/hooks/useFloodOnTransition.ts
+
+Re floods in auto mode when the player's surroundings change. It replaced a polling loop that guessed whether a transition had finished from latched game state flags and got it wrong three times running.
+Indoor transitions (room, quadrant, door, stairs) are pure event subscription: the core fires `window.__onTransitionSettled` on the frame it considers the room settled, so nothing is polled. Walking across an overworld screen boundary is the one real exception: overworld travel is continuous scrolling with no discrete transition (`overworld_screen_index` in WRAM only changes on special cased area exits, never on a plain screen crossing), so there is no event. That case is derived from the player's live world position, which the per frame UI bridge already keeps current; reacting to it adds no timer.
+
+### widgets/navigation/nav-flood/live-overworld-screen.ts
+
+The overworld screen under the player: each screen is 512 world pixels, so bits 9 to 11 of the X and Y position give the column and the row of the 8 by 8 grid.
+
+### widgets/navigation/hooks/useScreenDetection.ts
+
+A screen resolved by the palace scan fallback carries a wrong `dungeon.palaceIndex`. It still renders correctly, so the mismatch is logged once per room so the mislabel gets fixed.
+
+### widgets/navigation/hooks/usePlayerDebugState.ts
+
+`inDoorway` is the doorway orientation the player occupies, 0 when not in one, and it is sticky, not per frame. `doorAnimStep` is the door open or close animation step, 0 when no door animates.
+
+### widgets/navigation/useRealTransitions.ts
+
+A memo over the observation facade's real transition enumeration (`@app/lib/game/observations`), where the native table reads and their indoor and outdoor split live.
+
+### widgets/navigation/nav-flood/annotate-flooded.ts
+
+Every screen the flood covered is annotated, not just the player's: on a multi screen area that would hide three quarters of the mechanics. Indoors the flood covers one room, so the detected screen's own id is the only correct id. Outdoors a sub screen's id comes from the screen data through its game id, never formatted from the index by hand.
+
+### widgets/navigation/nav-flood/collect-screen-crossings.ts
+
+One crossing record per flooded screen, off the same flood and border bundles the overlay draws, so the panel, the minimap and the overlay agree on a screen's ways out. A response's `screenIndex` is the room index indoors and the overworld screen index outdoors.
+
+### widgets/navigation/nav-flood/finalize/annotate-layer-toggles.ts
+
+Stamps the border bundles the overlay and the internal edge lists read. The crossing facade answers the same question for its own edge records off the same predicate, so both views of a boundary agree.
+
+### widgets/navigation/nav-flood/finalize/build-indoor-screen-bundle.ts
+
+A multi screen room expands into virtual quadrant cells; its shape gives the grid. Whether a room is multi screen comes from the layout info directly, not from flood transitions, since the flood now covers the whole grid without quadrant bounds. The effective layout from the dungeon map data wins when there is one.
+
+### widgets/navigation/nav-flood/indoor-entrances.ts
+
+Merges the canonical indoor entrance list (`roomEntrances`, shared with the simulator) into the widget's seed array and reports the respawn points: real entrances that are neither a fall hole landing nor an overworld door. The overworld pass may already hold an id with outdoor grid coordinates, so it is replaced. Overworld screen ids overlap indoor room ids (OW 0x51 and room 0x51), so an unrelated overworld entrance can leak in and is dropped; fall holes (id 200 and up) and synthetic stair and boundary ids are exempt.
+
+### widgets/navigation/nav-flood/prepare/build-inventory.ts
+
+`lift.1` is bushes and pots (no glove), `lift.2` the Power Glove (light rocks), `lift.3` the Titan's Mitt (dark rocks). Inventory slot 2 is the hookshot, 3 the bombs, 11 the hammer.
+
+### widgets/navigation/nav-flood/prepare/compute-start-context.ts
+
+The overworld blockers used to be built here from the live sprite list, which only describes the screen the game occupies. They now come from the addressable spawn table inside the shared flood (`lib/game/flood/blockers.ts`), so the widget and the simulator agree about every screen.
+
+### widgets/navigation/nav-flood/propagate.ts
+
+An adapter: the flood lives in `lib/game/flood/flood-area.ts` and the simulator runs the same code. The widget used to assemble the options by hand and read solid sprite blockers from the live sprite list, which made its numbers diverge from the simulator's on every screen the game was not on. `dynamicBlockers` is kept for the widget's blocker tally.
+
+### widgets/navigation/nav-flood/useNavConnections.ts
+
+Splits connections into internal and external. Indoors that is the `isIntraRoom` flag (quadrant boundaries); outdoors it is bundle membership (the screens of a 2 by 2 big screen group). Internal borders are deduplicated: A to B east and B to A west are the same border, and east or south is kept for spatial correctness. Intra room edges are all kept, since south and north are two sides of the same boundary. The crossings get the same split, so the panel lists the borders the minimap draws arrows for.
+
+### widgets/navigation/build-connection-record/build-connection-record.ts
+
+Editor state to a `ConnectionRecord` minus its id. `kind` and `dungeonId` are derived the way the dataset's own split derived them, so an edge written here matches the files, and `transit:*` tags that became a kind are retired from the tags. Both endpoints must resolve to real screens or nothing is written.
+A connection point always needs a real `toConnectionId` partner (`data/connections/derive.ts`). When the destination already has a point aimed back, it links to it; otherwise it links to `pendingPartnerId(to.id)`, because minting a real id needs the allocator round trip only the write path (`record-creators.ts`, over IPC) can do. `createConnection` checks every accepted proposal for that sentinel and mints both halves as a pair (`connection-pair-writer.ts` on the main side). A proposal always describes a point the player was just seen leaving, so it can exit; overall direction is whatever the partner's `canExit` says. The draft carries tag terms, the record carries references to them.
+
+### widgets/navigation/build-connection-record/connection-kind-for.ts
+
+The kind follows a priority order: a fall through is a hole wherever it leads; a warp or portal is a teleport; an overworld to non overworld crossing is an entrance (the `ctx:entrance`, `ctx:exit` and `ctx:dungeon-enter` tags say the same); otherwise the physical mechanism names it (stairs, door); everything left is a scroll across a boundary. Approach tags (grave, bomb, bonk, rock, push, hookshot, ledge, waterfall) never name a kind.
+
+### widgets/navigation/build-connection-record/rewrite-connection-record.ts
+
+The record an existing dataset connection would be rewritten as. Fields the editor does not own are carried across untouched.
+
+### widgets/navigation/connection-issues/connection-issues.ts
+
+Per connection warnings, so a reviewer sees what a connection is missing instead of an editor that renders nothing. `tileDesc` is the already resolved crossing description (persisted nav, else the live flood). The messages are named constants because the shape detector matches on them and turns the fixable ones into record edits. Direction is not a tag to check: it is `canExit`, a required field the types already guarantee.
+
+### widgets/navigation/connection-tile-display/describe-connection-tiles.ts
+
+Where a connection crosses: the persisted `nav` first (overlap tiles or entry point), then the live flood's matching crossing, else nothing. The flood always runs from the current screen, so only edges leaving it can be backed by a live crossing. A flood crossing backs a connection when its target index resolves to the connection's `to` id; the index is an overworld screen outdoors and a room indoors, so both resolutions are tried.
+
+### widgets/navigation/detect-connections/detect-connections.ts
+
+Every detection carries the screen id it resolves to, so no consumer recovers identity from the label; the old "Exit" label prefix is now the `isExit` flag. The label is display text only. Entrances lead into this room from an overworld screen, stairs lead to their destination room, the exit screen is where this room exits back onto, and each fall hole on an overworld screen drops into a room.
+
+### widgets/navigation/screen-data-status.ts
+
+Screen data completeness as a plain function of the detection, so the recommendation detector can read exactly the same verdict outside React and both agree on what "incomplete" means. Each correction is one field the live game can settle that the record gets wrong or leaves blank.
+
+### widgets/navigation/hooks/useConnectionStatus.ts
+
+A detection is matched when a stored pair already links this screen and the resolved target, whichever side the stored point sits on: the question `pairLinksScreens` answers for the connection audit, so the badge and the audit cannot disagree. Which side of a pair can be taken is `canExit`, a separate fact.
+
+### widgets/navigation/screen-editor/allocate-geography/allocate-area.ts
+
+The renderer's only source of a new area or location id. Nothing here derives an id: the request carries a display name and the main process answers with an `Allocated<...>` record it numbered itself. The brand is nominal, so a record assembled locally (from a slugified name, a hex index or anything else) is not assignable where these are expected.
+
+### widgets/navigation/screen-editor/build-screen-record.ts
+
+Form state to a `ScreenRecord` minus its id. The return type is the record shape itself, so a field a migration adds is either filled here or fails to compile. Fields the form does not edit (`nav`, `triggerIds`, `spawns`, `review`) are carried across from the record being edited. Anything missing comes back as a blocker, never a fabricated value. Only the two rules a form alone can break are judged here (a name, and a grid position under a floor); whether the screen is real belongs to `screenBlockers`, so the editor cannot accept a screen a query then fails to resolve. The form picks tag terms and the record stores references to them.
+
+### widgets/navigation/screen-editor/dungeon-geography.ts
+
+`DungeonRecord` carries no area or location of its own, so a dungeon's geography comes from the rooms it lists: every room of a dungeon shares one `areaId`, one `locationId` and one world. This replaced a name keyed table whose lookup silently returned nothing once a dungeon was renamed.
+
+### widgets/navigation/recommendations/strategies/connection/connection.strategy.ts
+
+The `connection` comparison strategy. The tile data (`nav`) fix is a field probe. Direction is derived from `canExit` (`data/connections/derive.ts`), so no `dir:` tag backfill remains. The crossing probe covers entrance, stair, hole and travel crossings and the indoor edge probe covers indoor scroll edges; each says below why they are two probes. Unresolvable differences route through `wire-detector.ts`, not through this strategy's own `detectorFromStrategy` call. Importing the folder's `index.ts` installs the strategy.
+
+### widgets/navigation/recommendations/strategies/connection/wire-detector.ts
+
+Registers the connection detector with its `onUnresolvable` mapper, apart from the generic pass in `strategy-detectors.ts`, which calls `detectorFromStrategy(strategy)` with no second argument and would drop every unresolved crossing if this registration lost the race. `detectorFromStrategy` always mints the id `strategy:${kind}` and `registerDetector` keys on id, so the last write wins: this import must run after `@shared/game/recommendations/strategy-detectors` (see the import order in `useDetectionPass`), while `index.ts` must run before it so the strategy is registered when the generic pass reads `allStrategies()`.
+
+### widgets/navigation/recommendations/strategies/connection/indoor-edge.set.ts
+
+An outdoor scroll edge is flood only: the flood proves presence, never absence, so it is never proposed for removal. Indoors the room's walk boundary table enumerates every wall the room scrolls through, so an indoor edge is provable both ways once that table is read. The probe is gated on `walkBoundaries` and `doorBoundaries` both being present, not merely `realAvailable`; `doorBoundaries` carries no destination and only proves the room's exits were queried. A batch accept is gated on `certain`, so a wrong gate here would make it unsafe. The `realTransitions` entries with `source: 'walk'` come from the same native call but say nothing about the door table, which is why this probe reads `walkBoundaries` directly; the crossing probe leaves `walk` sources to this one.
+
+### widgets/navigation/recommendations/strategies/connection/points.set.ts
+
+Every non edge crossing leaving the current screen, as one `SetProbe`: the missing, unresolvable and unbacked split falls out of `compareSet`'s own join. The live set is `realTransitions`, not the pre filtered unmatched crossings, so the join decides what is missing. Only enumerable sources count (exit, stair, travel, hole, entrance, doorway): a flood source proves presence only and can never back a removal, and `walk` belongs to the indoor edge probe. Live entries are deduplicated by resolved key, since two sources can name the same destination (a stair and a travel byte landing in one room) and `compareSet` does not dedupe its input.
+Removal needs the backing table to have been read: indoors no source enumerates fall holes, so a missing hole or drop proves nothing. Such a record is still matched by the far side pair check, which keeps the live crossing from being proposed twice.
+
+### widgets/navigation/recommendations/strategies/connection/points/infer-tags.ts
+
+A doorway object through an outer wall joins two rooms of the same interior. An exit (the overworld screen this room exits to) and an entrance (an overworld door leading into a room) are both door crossings.
+
+### widgets/navigation/recommendations/strategies/connection/screen-endpoint/auditable-from-here.ts
+
+A record backs a crossing leaving the screen only when it sits on that screen and can be exited. A record sits on exactly one screen; the arriving side is its own record on the other screen.
+
+### widgets/navigation/recommendations/strategies/connection/screen-endpoint/transition-key.ts
+
+The resolved destination screen id, or a sentinel unique to the raw kind and index when it resolves to no screen. A dataset key is always a real screen id, so an unresolvable item can never read as already covered. A pair with no far side yet keys on the record's own id for the same reason.
+
+### widgets/navigation/recommendations/strategies/connection/screen-endpoint/stored-on-far-side.ts
+
+A stored pair already links this screen to the destination, but no exitable point on this screen carries it: the pair covers the crossing from the far side, so proposing it again would duplicate the dataset. The accepted cost is that a near side `canExit: false` error stays invisible.
+
+### widgets/navigation/recommendations/strategies/connection/nav.probe.ts
+
+The tile data fix: where the crossing physically sits, from the live flood crossing. Flood evidence proves presence only, so it grades `likely`. A record that already has `nav` is complete, and an endpoint that does not resolve to a real screen gets no fix; inventing one is what the connection path refuses to do.
+
+### widgets/navigation/recommendations/strategies/connection/tiles.probe.ts
+
+Fills `placement.tiles`. The migration codemod left about 700 points with an empty tile list because a static rewrite cannot read room geometry. Indoors `wasmGetRoomWalkBoundaries` enumerates every walk boundary tile with the room it leads to, so the tiles sharing this point's destination room are its footprint; the table covers the whole wall, so an empty result is proof and this grades `certain`. It is gated on both boundary tables like the indoor edge probe, and only applies to a point on the currently loaded room. The screen is looked up with `get`, not `getScreen`, because a record being edited can name a screen nothing holds yet.
+
+### widgets/navigation/recommendations/strategies/connection/unresolvable-screen.ts
+
+A crossing whose destination resolves to no screen used to vanish silently. It is the most informative finding the connection probes can make (the game goes somewhere the dataset never catalogued), so the `onUnresolvable` hook turns it into a `screen` create proposal built with `strategies/screen/screen-draft.ts`, matching a screen minted by the presence probe. An overworld destination names one real screen and grades `certain`. A room number alone can be a castle room or an unrelated cave and a crossing carries no palace index, so that proposal stays palace less (`interior`) and grades `likely`. Room 0 is every table's empty slot, not a destination. The difference's `item` is `unknown` because the engine erases a set probe's item type; the cast holds because this mapper is registered only for the connection strategy, whose set probes both use `ObservedTransition`.
+
+### widgets/navigation/LiveDataInspector/LiveDataInspector.tsx
+
+The Live Data Inspector widget (id `dataset`). Detectors run against the live game (`useDetectionPass`) and surface what they find as cards a reviewer can act on from the widget; only the comparison itself opens in the Data Inspector. A collection tab shows every record this screen relates to, each in its own `RecordCard`. Clicking a reference in a card, or its edit button, jumps to the Data Inspector at that record through `openRecord`, the same handoff `openRecommendation` uses for a finding. `useComparison` feeds each card its own record's live differences, keyed by id, so a wrong field shows inline where it lives.
+A screen's `spawns` field renders through `SpawnsSection`, supplied as a per path field renderer. The generic array cell shows an object element as an unreadable `{...}` (see `summarizeList` in `array-kit.tsx`), so this one field gets its own view and keeps the place the schema gives it, inside the Contents group. Every real collection's rows carry a plain string `id` (see `getId` in `collection-sources.ts`).
+
+### widgets/navigation/LiveDataInspector/LiveDataInspector.constants.ts
+
+The tab strip reuses the Data Inspector's own `KIND_NAV_ITEMS` (same icons, same order) so a reviewer recognises the collections at a glance. There is no curated field allow list: the widget shows a record's full set of fields, like the full Data Inspector. `DEFAULT_KIND` is `screen` because every screen has a screen record and nothing else is guaranteed. `JOINABLE_KINDS` lists the kinds `useCurrentRecords` can resolve live records for. `FILTER_ORDER` is also the filter strip's left to right order.
+
+### widgets/navigation/LiveDataInspector/behavior/context-signature.ts
+
+The content signature the detection pass debounce gates on, shared so `useComparison` memoises its own undebounced diff on the same key. `context` is a fresh object every render, so this turns it into a string that only changes when something a detector or a comparison could act on does.
+The four `liveGameId` values are included on purpose. Without them, walking from an unmapped room into a different unmapped room (or crossing a recorded palace mismatch, or entering through another entrance) changes nothing else here, so the finding from `presence.set.ts` would never move to the new room; `screenId` is null both before and after the move. `dataRevision()` covers the write side: an accepted finding changes the dataset, not the game, so without the counter a fix's siblings stay on screen until the player walks into another room.
+
+### widgets/navigation/LiveDataInspector/behavior/useContextSignature.ts
+
+The signature folds `dataRevision()` in, but a module counter only reaches a component that happens to be rendering. Subscribing here is what makes an accepted finding or a hand edited record run detection again at once, and not only once a game frame or another store renders the widget, which with the emulator paused may never happen.
+
+### widgets/navigation/LiveDataInspector/behavior/useDetectionPass.ts
+
+Runs every registered detector against the live context and folds the result into the shared recommendation store. Nothing else calls `runDetectionSweep` from the running game. Detection is gated on the content signature, not on `context` identity, so it only runs when the resolved screen, a count that moves on a real game event (a new crossing, sprite type or grant), or the dataset changes. A 600 ms debounce coalesces the burst of renders one room transition produces into a single pass.
+Importing the strategy barrels installs the full detector set; they must come before `strategy-detectors`, which reads `allStrategies()` once at import time. The connection `wire-detector` import must come after it, because it registers the connection detector again with its `onUnresolvable` mapper over the one the generic pass installed.
+There is one store write per collection the sweep touched, keyed by the kind each draft names: a finding is decided under its own kind's file, so it is persisted there or accepting it could never close it. The pass runs even when `screenId` is null (an unmapped room), which lets `strategies/screen/presence.set.ts` report a room with no screen record. Every detector tolerates a null `screenId`, and `applyPass` in `store.ts` scopes reconciliation with `scopedToPass(detectorIds, context.screenId)`, so a null screen pass can only resolve a null screen finding.
+
+### widgets/navigation/LiveDataInspector/behavior/useComparison.ts
+
+Per record live field differences for the inline diff display (`260 [0x0104]` in place of `260`). It is not folded into the detection pass effect: that one gates a persisted, async side effect, while this is a pure synchronous read over one screen's records, memoised on the same content signature with no second timer. `runComparison` therefore runs once more here than inside `detectorFromStrategy.detect()`. Sharing that call would force every detector's `detect` to expose the intermediate `Difference[]`, and the duplication is cheaper than that contract change.
+
+### widgets/navigation/LiveDataInspector/behavior/use-current-records
+
+Every record in the selected collection that relates to the current screen. A screen commonly owns several `connection` and `check` records, and `actor` and `item` can repeat too. Only kinds with a direct live link are handled; a collection without one (area, tag) shows nothing. `connection` reuses `observations.existingConnections` as is: it is already every point touching this screen, the same list the recommendation filtering trusts. Distinct spawns or grants of the same type resolve to one record, so there is one card per record, not one per spawn. `LiveRecord` is the element type every card renders.
+
+### widgets/navigation/LiveDataInspector/behavior/useChestObservations.ts
+
+`wasmGetRoomChests` already reports the `ChestObservation` shape per chest, so the rows pass straight through. Outdoors there is no chest table, so this returns `undefined`, not an empty array: absent means not read, and an empty array would tell a detector the game had proved there is nothing here. The query's own `null` on a closed developer mode gate collapses into the same `undefined`.
+
+### widgets/navigation/LiveDataInspector/behavior/granted-items-store
+
+Every raw item id the native receive path has granted this session, kept as a module set and not component state, because the tracker bridge listeners (`onItemReceived`, `onUnknownItem`) fire whether or not a widget is mounted. Both report ids in the same raw index space `GrantedItemObservation.itemId` wants, so both feed the one set. A granted id with no dataset record is the case the `create` draft of `item-grants` exists for. The snapshot `useSyncExternalStore` compares by reference is rebuilt only when the set changes, never per read: a fresh array on every call reads as changed every render and runs the subscriber into React's update depth limit. The listeners are wired once, however many hooks subscribe.
+
+### widgets/navigation/LiveDataInspector/behavior/useGrantedItems.ts
+
+Each granted id is resolved against the live receive tally and the tracker's current owned set. `fromInventoryDelta` is always false: every id came off the direct receive callback, never a guessed inventory diff, so the evidence is native and `item-grants` may grade it `certain`.
+
+### widgets/navigation/LiveDataInspector/behavior/useLiveContext.ts
+
+Assembles the live `DetectionContext` for the current screen, the one piece the recommendation engine does not build for itself, since a detector only receives observations and never reads the game. `origin` is always `live`; the simulator's recording path (`shared/game/simulation/recording/`) is a separate producer of the same shape.
+
+### widgets/navigation/LiveDataInspector/behavior/useRecommendationFilter.ts
+
+Classifies open findings by what accepting them would do to the dataset (change a property, add a missing record, drop an extra one), which is the axis a reviewer triages on; confidence is already a badge on each card. The active filter is derived: if the screen changes and the selected tab's count drops to zero, the next render already reports `all` with no effect needed. `buildFilterTabs` hides a tab that could never show anything and always keeps `all`, so there is never zero tabs.
+
+### widgets/navigation/LiveDataInspector/behavior/useScreenObservations.ts
+
+The screen and connection half of a live `ScreenObservations`: everything the old Dataset widget read for its status badges and connection audit, so a detection pass reads the same ground truth. The entrance room table is static (entrance id to room index) and read once per room change; absent (module not loaded yet) means not read. Fall hole rooms are read off the transitions and not the table a second time, because the facade already resolved every hole on this area to its destination room and holds the head group rule for what is on this area. Room header tags and the room's exit tables are meaningless outdoors, so they are absent there, not empty. The dungeon map position follows the same rule; a `found: false` for a house or cave is a resolved negative and still reported. The entrance spawn table is static and entrance indexed like the entrance room table, so it is read unconditionally.
+
+### widgets/navigation/LiveDataInspector/behavior/useSpriteObservations.ts
+
+The room addressable simulator queries (`wasmGetRoomSpriteSpawns`, `wasmGetOverworldSpriteSpawns`) already report the `LiveSpriteObservation` shape per spawn, so the rows pass straight through. `spriteCombat` reads one native row per distinct sprite type, never per spawn, so the wasm call count is bounded by kinds of actor, not copies.
+
+### widgets/navigation/LiveDataInspector/behavior/spawn-diff
+
+`SPAWNS_PROBE` (`shared/game/recommendations/strategies/screen/spawns.set.ts`) reports the union of the record's own spawns and every live spawn resolved this pass as `diff.liveValue`, so it is always a superset of the record's list; a reviewer only acts on the entries the record does not carry yet. A spawn's identity is its actor and tile, the same key the probe uses. `diff.liveValue` carries a `ScreenSpawn[]` by the probe's contract even though the comparison engine types a difference's payload `unknown`.
+
+### widgets/navigation/LiveDataInspector/behavior/accept-all-certain-here.ts
+
+A thin wrapper: `acceptAllCertain` (the Data Inspector's batch runner) is already generic over entries and an `accept` callback, so this supplies the callback with `entry.proposed` unedited, since the widget's cards never open a draft the way the comparison view's `ProposalForm` does.
+
+### widgets/navigation/LiveDataInspector/sub-components
+
+`CollectionTabs` is icon only: eleven full labels do not fit a docked widget, and the iconography is the one a reviewer already knows from the full inspector, so the label stays as the hover tooltip. `RecommendationCard` shows one open finding (kind, confidence, one line reason); clicking it opens the Data Inspector's comparison view at that finding, so a finding's current and proposed pair is only ever rendered in one place.
+`RecommendationList` has a collapsible count header, the filter strip, one card per open finding in the selected tab (certain first, oldest first, the review's pass order) and a batch accept button that only appears once there is something safe to batch. The batch acts on the filtered list, so a hidden tab can never let a reviewer accept a finding they cannot see, and it sits outside the scrolling list because a button that scrolls away with the cards it acts on is unreachable when it is most useful. A batch that writes nothing says so through `batchOutcomeMessage`.
+`RecordCard` gives each record its own bordered card, since a tab can hold several records for one screen. Its edit button is `IconButton` with a `title` beside its `label` for a tooltip. `ReviewControls` sits on each card because reviewing means reviewing one real record; the mark goes into the record's own file through the same record writers an edit uses, so it travels with the data. The status is written at once, the note on blur, because every write rewrites a source file. The heading matches the card's field group headings, and the id and date sit under it as metadata.
+`SpawnsSection` resolves each spawn to its actor's name and tile. A spawn the live game reports that the record does not catalogue yet is appended below the recorded list and marked in the same red accent `DiffBracket` uses for a live value that disagrees with the dataset.
+
+### widgets/navigation/LiveDataInspector styles
+
+The inspector shell normally never scrolls, since the recommendation list and the record region each own a `ScrollArea`; `overflow-y: auto` is the escape hatch when the widget shrinks so far that two tab strips and the list header exceed the body. The record region has a real floor of `6rem` (one card header plus a line or two of fields) so a long recommendation list can never shrink it away; no size token covers a content area floor yet. The collection tab bar scrolls sideways because eleven tabs never fit the docked width. The recommendation list is capped at 45% of the body and can still shrink; the batch button and outcome line are pinned outside the scrolling list. The review label restates the uppercase accent of `compact-record-view__group-label`, and the record id is monospaced and clipped so a long id cannot widen the card. The spawn section carries the same reserved accent gutter as `compact-record-view__row`, and its colours follow that composite's label and empty conventions; a live only row uses the danger accent of `compact-record-view__row--differs`.
+
+### widgets/navigation/sub-components/ActiveStates.tsx
+
+The States chips: everything the game holds true at once, like a follower, story beats or keys in hand. It renders whatever the registry reports, so a new state needs no change here. A state that affects traversal reads brighter (`chipGating`), because it changes what is reachable.
+
+### widgets/navigation/sub-components/AnnotationLayer.tsx
+
+The minimap half of `ScreenAnnotations`: a dot per annotated tile plus the check tally for the screen, so the small map shows the same mechanics as the overlay and not only reachability. The cell props place the annotated screen's 64 by 64 tile grid on the minimap. Screen wide kinds (room tags) have no tile and are skipped, since they live in the widget panel.
+
+### widgets/navigation/sub-components/ConnectionsPanel.tsx
+
+The Connections panel, in order: entrances, edges, internal edges and fall hole landings.
+
+### widgets/navigation/sub-components/CrossingCard.tsx
+
+One way on or off the screen. A crossing the player cannot take is marked, not hidden. The layer tag shows the floor the crossing sits on when the record names one.
+
+### widgets/navigation/sub-components/DescRow.tsx
+
+A clickable info row label that expands an inline description. The open state is keyed by label so each row remembers itself, not the last one opened.
+
+### widgets/navigation/sub-components/EdgeArrowSvg.tsx
+
+A small directional arrow glyph coloured by edge direction.
+
+### widgets/navigation/sub-components/EdgeCard.tsx
+
+One boundary scroll off the flooded area. `playerLayer` is the floor the player stands on, which a toggling border flips. The span badge lists the tiles the scroll runs across, on the axis its side runs along; the tile badge counts the walkable tiles of the run, with the gated ones behind a plus.
+
+### widgets/navigation/sub-components/FunctionsPanel.tsx
+
+`MODE_OPTIONS` sits at module level so the array identity is stable across renders. The flood and clear buttons only show in manual mode: flooding by hand is the point of manual mode, and in auto the widget owns the timing.
+
+### widgets/navigation/sub-components/GameStatePanel.tsx
+
+The Game State info panel. The viewport size is the base room shape expanded by the quadrant fullsize flags.
+
+### widgets/navigation/sub-components/PlayerStatePanel.tsx
+
+The Player State info panel.
+
+### widgets/navigation/sub-components/IndoorMinimap.tsx
+
+The indoor and dungeon minimap: a single full size rectangle.
+
+### widgets/navigation/sub-components/OverworldMinimap.tsx
+
+The overworld minimap: a grid with one cell per 512 by 512 screen. Every annotated screen draws in its own cell, because a multi screen area has mechanics on sub screens the player is not standing on.
+
+### widgets/navigation/sub-components/InternalEdgeDiamond.tsx
+
+A four slot diamond layout of internal edge connection cards around a room.
+
+### widgets/navigation/sub-components/InternalEdgeSvg.tsx
+
+A two square connector glyph showing an internal room edge transition. `SQ` is the square size and `LINE_OVERFLOW` is how far the separator line runs past the squares.
+
+### widgets/navigation/sub-components/InternalEdgesSection.tsx
+
+Intra room boundary pairs plus inter screen internals. Intra room connections are grouped into boundary pairs (south with north, east with west): each contiguous run on one side matches the run on the opposite side that starts at the same position, and south and east are the side a card is drawn from. Overworld inter screen internals are kept as they are and shown unpaired.
+
+### widgets/navigation/sub-components/NavigationWidgetSettings.tsx
+
+The widget's own options: manual or auto flooding. The overlay store holds the live value and the widget pref is the copy that survives the app closing, so a change here writes both, the same way `setMode` in `useNavigation` does.
+
+### widgets/navigation/sub-components/PathCopyBtn.tsx
+
+Copies the currently locked pathfinding path to the clipboard.
+
+### widgets/navigation/sub-components/ReachabilityCanvas.tsx
+
+A pixel canvas drawing a flood fill reachability grid, one pixel per tile.
+
+### widgets/navigation/sub-components/ReqIcon.tsx
+
+Renders a requirement as an emoji icon (known requirements) or a labelled chip. `REQ_ICONS` stays in this file: it is a categorical palette, and the lint exemption for raw colours names this file by path.
+
+### widgets/navigation/sub-components/ScreenMapWithConnections.tsx
+
+Picks the indoor or overworld minimap from the current room context.
+
+### widgets/navigation/sub-components/TileRecorderBtn.tsx
+
+A debug aid that records the attribute value of each tile the player walks over.
+
+### widgets/navigation/sub-components/ScreenPanel
+
+The On this screen panel: every annotation the simulator derived, grouped the way the overlay colours them, plus the decoded room tags. It is the list side of the same `ScreenAnnotations` the canvas draws, so a mechanic can never appear in one and be missing from the other. Ways on and off the screen belong to the Connections panel, which reads crossings. A multi screen area annotates every sub screen; the panel is one list, so the items merge and the tallies sum. Clicking a row toggles its kind on the overlay; the legend is display only.
+`groupAnnotations` groups by the same families the overlay colours by, so the panel and the canvas tell the same story in the same order. `unknown` rides along in the Unmapped group and is never dropped: an unmapped mechanic must stay visible in the list too, not only on the canvas.

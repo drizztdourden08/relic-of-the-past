@@ -1,46 +1,8 @@
 /* @layer renderer-widgets @kind logic */
-/**
- * Form state → a `ScreenRecord` minus its id.
- *
- * The return type is the record shape itself, so the editor cannot emit a stale
- * one: a field the migration added is either filled in here or fails to compile.
- * Fields the form does not edit (`nav`, `triggerIds`, `spawns`, `review`) are
- * carried across from the record being edited.
- *
- * Anything missing comes back as a blocker instead of a fabricated value: no
- * placeholder ids, no zeroed grid positions.
- */
-import type { PendingScreenRecord } from '@shared/game/data/record-codegen';
 import { tagIdsForKeys } from '@shared/game/data';
 import { screenBlockers } from '@shared/game/logic/queries/screen-validity';
-import type { ScreenGameId, ScreenPosition, ScreenRecord, ScreenTag } from '@shared/game/data';
-
-interface ScreenDraft {
-  kind: ScreenRecord['kind'];
-  world: ScreenRecord['world'];
-  interiorKind: ScreenRecord['interiorKind'];
-  name: string;
-  areaId: ScreenRecord['areaId'] | '';
-  locationId: ScreenRecord['locationId'] | '';
-  /** The form picks TERMS; `buildScreenRecord` resolves them to tag ids. */
-  tags: readonly ScreenTag[];
-  variant: ScreenRecord['variant'];
-  /** Native indices, already numeric. */
-  roomIndex: number;
-  overworldIndex: number;
-  palaceIndex: number | undefined;
-  entranceId: number | undefined;
-  gridX: number | undefined;
-  gridY: number | undefined;
-  floor: number | undefined;
-  /** The record being edited, for the fields this form does not own. */
-  existing: ScreenRecord | null;
-}
-
-interface DraftResult {
-  record: PendingScreenRecord | null;
-  blockers: string[];
-}
+import type { ScreenGameId, ScreenPosition } from '@shared/game/data';
+import type { DraftResult, ScreenDraft } from './screen-editor.type';
 
 const gameIdFor = (draft: ScreenDraft): ScreenGameId => {
   if (draft.kind === 'overworld') return { overworldIndex: draft.overworldIndex };
@@ -60,9 +22,6 @@ const positionFor = (draft: ScreenDraft, blockers: string[]): ScreenPosition | u
 const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
   const { areaId, locationId } = draft;
   const gameId = gameIdFor(draft);
-  // Only the two rules a form alone can break are judged here; everything about
-  // whether the screen itself is real belongs to `screenBlockers`, so the editor
-  // cannot accept a screen a query then fails to resolve.
   const blockers: string[] = [];
   if (!draft.name.trim()) blockers.push('a name');
   const position = positionFor(draft, blockers);
@@ -77,8 +36,6 @@ const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
     position,
     variant: draft.variant,
   }));
-  // The emptiness test is what proves the geography ids are real ones; the
-  // blockers above already report either as missing.
   if (blockers.length > 0 || !areaId || !locationId) return { record: null, blockers };
 
   return {
@@ -91,7 +48,6 @@ const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
       areaId,
       locationId,
       position,
-      // The form works in terms; the record stores references to them.
       tags: tagIdsForKeys(draft.tags),
       variant: draft.variant,
       nav: draft.existing?.nav,
@@ -104,4 +60,4 @@ const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
 };
 
 export { buildScreenRecord };
-export type { DraftResult, ScreenDraft };
+export type { DraftResult, ScreenDraft } from './screen-editor.type';

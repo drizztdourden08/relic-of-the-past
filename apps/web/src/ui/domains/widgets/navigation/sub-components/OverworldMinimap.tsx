@@ -1,14 +1,7 @@
 /* @layer renderer-widgets @kind component */
-import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import { markerCrossings } from '@app/lib/crossing-sections';
-
-const IL: Record<string, CSSProperties> = {
-  cellName: { fontWeight: 700, fontSize: 11, position: 'relative' },
-  cellHex: { color: 'var(--c-text-muted)', fontSize: 9, position: 'relative' },
-  cellCount: { fontSize: 9, color: 'var(--c-text-dim)', position: 'relative' },
-};
 import { Box, Text } from '../../../../design-system/primitives';
 import { crossingIcon } from '../../../../../lib/entrance-icons';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
@@ -16,9 +9,9 @@ import { EDGE_COLORS } from '../navigation.constants';
 import { getScreenDisplayName } from '../widget-helpers';
 import { ReachabilityCanvas } from './ReachabilityCanvas';
 import { AnnotationLayer } from './AnnotationLayer';
-import type { MinimapProps } from './IndoorMinimap';
+import { IL } from './OverworldMinimap.constants';
+import type { MinimapProps } from './IndoorMinimap.type';
 
-/** Overworld minimap: a multi-cell grid (one cell per 512×512 screen). */
 const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenIndex, playerPos }: MinimapProps) => {
   const EDGE_PAD = 18;
   const GAP = 2;
@@ -129,8 +122,6 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         return <Box style={{ position: 'absolute', left: cellLeft + x - 3, top: cellTop + y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-green)', boxShadow: '0 0 3px var(--c-green)', pointerEvents: 'none' }} />;
       })()}
 
-      {/* Every annotated screen draws in its OWN cell, because a multi-screen area has
-          mechanics on sub-screens the player is not standing on. */}
       {annotations.map((set) => {
         const scrIdx = bundle.screens.indexOf(set.screenIndex);
         if (scrIdx < 0) return null;

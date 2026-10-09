@@ -1,8 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useMemo } from 'react';
-import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
-import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game/navigation';
+import type { ConnectionInfo } from '@shared/game/navigation';
 import { landingCrossings, markerCrossings } from '@app/lib/crossing-sections';
 import { Box, Text } from '../../../../design-system/primitives';
 import { crossingIcon } from '../../../../../lib/entrance-icons';
@@ -12,19 +11,9 @@ import { EDGE_COLORS } from '../navigation.constants';
 import { getScreenDisplayName } from '../widget-helpers';
 import { ReachabilityCanvas } from './ReachabilityCanvas';
 import { AnnotationLayer } from './AnnotationLayer';
+import { COUNT_LABEL } from './IndoorMinimap.constants';
+import type { MinimapProps } from './IndoorMinimap.type';
 
-interface MinimapProps {
-  bundle: ScreenBundle;
-  connections: ConnectionInfo[];
-  renderResults: FloodFillResult[];
-  playerScreenIndex: number | null;
-  playerPos: { screen: number; row: number; col: number } | null;
-  roomIndex: number;
-}
-
-const COUNT_LABEL: CSSProperties = { position: 'absolute', bottom: 2, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--c-text-dim)', pointerEvents: 'none' };
-
-/** Indoor/dungeon minimap: a single full-size rectangle. */
 const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomIndex }: MinimapProps) => {
   const EDGE_PAD = 18;
   const AVAIL = 224;
@@ -164,4 +153,3 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
 };
 
 export { IndoorMinimap };
-export type { MinimapProps };

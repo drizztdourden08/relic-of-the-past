@@ -1,34 +1,20 @@
 /* @layer renderer-widgets @kind component */
-import type { CSSProperties } from 'react';
 import { landingCrossings, listedCrossings } from '@app/lib/crossing-sections';
 import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
 import { CrossingCard } from './CrossingCard';
 import { EdgeCard } from './EdgeCard';
 import { InternalEdgesSection } from './InternalEdgesSection';
-import type { useNavigation } from '../useNavigation';
+import { IL } from './ConnectionsPanel.constants';
+import type { ConnectionsPanelProps } from './ConnectionsPanel.type';
 
-const IL: Record<string, CSSProperties> = {
-  wrapRow: { display: 'flex', flexWrap: 'wrap', gap: 6 },
-  bigEmoji: { fontSize: 18 },
-  subTitle: { fontSize: 10, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 8, textTransform: 'uppercase', letterSpacing: 1 },
-  firstSubTitle: { fontSize: 10, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 2, textTransform: 'uppercase', letterSpacing: 1 },
-  none: { fontSize: 10, color: 'var(--c-text-muted)' },
-  screenLabel: { fontSize: 10, color: 'var(--c-info)', marginTop: 2 },
-  holeGraphic: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: 48, flexShrink: 0, background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', borderRadius: 'var(--r-sm)' },
-};
-
-type Props = Pick<ReturnType<typeof useNavigation>, 'entranceSum' | 'crossings' | 'screenBundle' | 'isIndoors' | 'externalEdges' | 'internalConnections' | 'playerDebug'>;
-
-/** "Connections" panel: entrances, edges, internal edges, fall holes. */
-const ConnectionsPanel = (props: Props) => {
+const ConnectionsPanel = (props: ConnectionsPanelProps) => {
   const { entranceSum, crossings, screenBundle, isIndoors, externalEdges, internalConnections, playerDebug } = props;
   const landings = crossings.flatMap(screen => landingCrossings(screen, isIndoors));
   return (
     <Box style={S.section}>
       <Box style={S.sectionTitle}>Connections</Box>
 
-      {/* ─── Entrances sub-section ─── */}
       <Box style={IL.firstSubTitle}>Entrances ({entranceSum})</Box>
       {entranceSum === 0 && <Box style={IL.none}>None</Box>}
       {crossings.map(screen => {
@@ -49,7 +35,6 @@ const ConnectionsPanel = (props: Props) => {
         );
       })}
 
-      {/* ─── Edges sub-section ─── */}
       <Box style={IL.subTitle}>Edges ({externalEdges.length})</Box>
       {externalEdges.length > 0 ? (
         externalEdges.map(row => (
@@ -65,10 +50,8 @@ const ConnectionsPanel = (props: Props) => {
         <Box style={IL.none}>None</Box>
       )}
 
-      {/* ─── Internal Edges ─── */}
       <InternalEdgesSection internalConnections={internalConnections} screenBundle={screenBundle} />
 
-      {/* ─── Fall Hole Landings ─── */}
       {landings.length > 0 && (
         <>
           <Box style={IL.subTitle}>Fall Holes ({landings.length})</Box>

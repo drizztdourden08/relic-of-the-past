@@ -3,15 +3,9 @@ import type { ReactNode, CSSProperties } from 'react';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
+import { IL } from './DescRow.constants';
 
-const IL: Record<string, CSSProperties> = {
-  valueRow: { display: 'flex', alignItems: 'center', gap: 4 },
-  body: { fontSize: 9, color: 'var(--c-text-dim)', lineHeight: '12px', padding: '2px 0 4px 0', borderBottom: '1px solid var(--c-hover)' },
-};
-
-/** A clickable info-row label that expands an inline description. */
 const DescRow = ({ label, desc, children }: { label: string; desc: string; children: ReactNode }) => {
-  // Keyed by label so each row remembers itself, not the last one opened.
   const [open, setOpen] = useWidgetPref<boolean>('navigation', `desc:${label}`, false);
   return (
     <Box>

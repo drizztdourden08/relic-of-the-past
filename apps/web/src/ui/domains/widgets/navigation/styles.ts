@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind data */
 import type { CSSProperties } from 'react';
 
-/** Shared inline-style map for the Navigation widget + its sub-components. */
 const S: Record<string, CSSProperties> = {
   root: {
     background: 'var(--c-glass)',

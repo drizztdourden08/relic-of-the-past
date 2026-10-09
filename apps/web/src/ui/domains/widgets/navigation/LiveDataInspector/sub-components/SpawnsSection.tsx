@@ -1,50 +1,10 @@
 /* @layer renderer-widgets @kind component */
-/**
- * A screen's static actor spawns, each resolved to its actor's own name and
- * tile. This is the one array field whose element is a plain object, so the
- * generic array cell (`{...}` per entry, see `array-kit.tsx`'s `summarizeList`)
- * tells a reviewer nothing about it. `LiveDataInspector.tsx` hands this to the
- * record's own compact view as the `spawns` path's field renderer, so the field
- * shows here once, in the schema position it already has.
- *
- * A spawn the live game reports that the record does not yet catalogue is
- * appended below the recorded list and marked apart, in the same red accent
- * `DiffBracket` uses for a live value that disagrees with the dataset, because
- * this is that same finding over a list instead of one field.
- */
 import { Box, Flex, Text } from '@ds/primitives';
-import { resolveRecordLabel } from '@app/ui/domains/app/views/DataInspector/behavior/record-links';
 import { liveOnlySpawns } from '../behavior/spawn-diff';
-import type { ScreenSpawn } from '@shared/game/data';
-import type { Difference } from '@shared/game/recommendations';
+import { SPAWNS_NONE, SPAWNS_TITLE } from '../LiveDataInspector.constants';
+import type { SpawnsSectionProps } from '../LiveDataInspector.type';
+import { SpawnRow } from './SpawnRow';
 import './SpawnsSection.css';
-
-const TITLE = 'Spawns';
-const NONE = 'No spawns recorded.';
-const LIVE_ONLY_TITLE = 'Reported by the live game, not yet in this record.';
-
-interface SpawnsSectionProps {
-  spawns: readonly ScreenSpawn[] | undefined;
-  diff?: Difference;
-}
-
-interface SpawnRowProps {
-  spawn: ScreenSpawn;
-  liveOnly?: boolean;
-}
-
-const tileLabel = (tile: ScreenSpawn['tile']): string => `r${tile.y} c${tile.x}`;
-
-const SpawnRow = (props: SpawnRowProps) => {
-  const { spawn, liveOnly } = props;
-  const rowClass = `spawns-section__row${liveOnly ? ' spawns-section__row--live-only' : ''}`;
-  return (
-    <Flex className={rowClass} align="center" gap="xs" title={liveOnly ? LIVE_ONLY_TITLE : undefined}>
-      <Text as="span" className="spawns-section__name">{resolveRecordLabel(spawn.actorId)}</Text>
-      <Text as="span" className="spawns-section__tile">{tileLabel(spawn.tile)}</Text>
-    </Flex>
-  );
-};
 
 const SpawnsSection = (props: SpawnsSectionProps) => {
   const { spawns, diff } = props;
@@ -53,9 +13,9 @@ const SpawnsSection = (props: SpawnsSectionProps) => {
 
   return (
     <Box className="spawns-section">
-      <Text as="span" className="spawns-section__label">{TITLE}</Text>
+      <Text as="span" className="spawns-section__label">{SPAWNS_TITLE}</Text>
       {recorded.length === 0 && extra.length === 0 ? (
-        <Text className="spawns-section__empty">{NONE}</Text>
+        <Text className="spawns-section__empty">{SPAWNS_NONE}</Text>
       ) : (
         <Flex direction="column" gap="xs" className="spawns-section__list">
           {recorded.map((spawn, index) => (
@@ -71,4 +31,3 @@ const SpawnsSection = (props: SpawnsSectionProps) => {
 };
 
 export { SpawnsSection };
-export type { SpawnsSectionProps };

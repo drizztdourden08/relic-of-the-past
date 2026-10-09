@@ -21,42 +21,32 @@ import { collectIndoorEntrances } from './nav-flood/indoor-entrances';
 import { propagateScreens } from './nav-flood/propagate';
 import { collectScreenCrossings } from './nav-flood/collect-screen-crossings';
 import { annotateLayerToggles, buildIndoorScreenBundle, computeFallHoleLandings } from './nav-flood/finalize';
-import { useNavConnections } from './nav-flood/use-nav-connections';
+import { useNavConnections } from './nav-flood/useNavConnections';
+import { liveOverworldScreenOf } from './nav-flood/live-overworld-screen';
 
-/** Set once per app run, so remounting the widget cannot re-apply the --auto-flood flag. */
 let didApplyAutoFloodFlag = false;
 
-/** Same reasoning for the saved mode: it is restored the first time the widget mounts in
- *  this run, and after that the overlay store is the live value the pref follows. */
 let didRestoreSavedMode = false;
 
-/** All Navigation-widget state, data acquisition, and flood-fill orchestration. */
 const useNavigation = () => {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkX: playerX, linkY: playerY } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
   const overlayStore = useNavigationOverlayStore();
-  // Flood output is READ from the store, never mirrored into component state. The widget
-  // unmounts whenever the hub opens, and a local copy would leave with it, which is how
-  // the minimap used to disappear while the overlay survived.
   const { result, connections, screenBundle, respawnEntIds, crossings, mode, setScreenBundle } = overlayStore;
   const autoRun = mode === 'auto';
 
-  // Manual/auto is remembered by the profile. The overlay store stays the live value,
-  // because auto mode has to survive the widget unmounting mid-run; the pref is the copy
-  // that survives the app closing.
   const [savedMode, setSavedMode] = useWidgetPref<NavMode>('navigation', 'mode', 'manual');
   const prefsHydrated = useWidgetUiStore(s => s.hydrated);
 
   const [running, setRunning] = useState(false);
   const [variant, setVariant] = useState<OverworldVariantInfo | null>(null);
   const [dynamicBlockerCount, setDynamicBlockerCount] = useState(0);
-  const [visibleScreenIndices, setVisibleScreenIndices] = useState<number[]>([]);
+  const [, setVisibleScreenIndices] = useState<number[]>([]);
   const [debugTick, setDebugTick] = useState(0);
   const handleRunRef = useRef<(() => Promise<void>) | null>(null);
   const prevInventoryKeyRef = useRef<string | null>(null);
 
-  // Capture the player's layer at the moment a room loads (the "starting layer" for this room visit)
   const [roomStartLayer, setRoomStartLayer] = useState<number | null>(null);
   const prevRoomForLayerRef = useRef<number | null>(null);
   useEffect(() => {
@@ -68,7 +58,6 @@ const useNavigation = () => {
     }
   }, [isIndoors, roomIndex, debugTick]);
 
-  // Dungeon map position and room layout (refreshed on room/tick changes)
   const dungeonMapPos = useMemo(() => {
     if (!isIndoors || palaceIndex === 0xFF) return null;
     return wasmGetDungeonMapPosition();
@@ -79,17 +68,14 @@ const useNavigation = () => {
     return wasmGetRoomLayoutInfo();
   }, [isIndoors, roomIndex, debugTick]);
 
-  // Use room index indoors; overworld screen index outside.
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
 
-  // Poll variant info on screen changes
   useEffect(() => {
     if (isIndoors) { setVariant(null); return; }
     const v = wasmGetOverworldVariant(overworldScreenIndex);
     setVariant(v);
   }, [overworldScreenIndex, isIndoors]);
 
-  // ─── Screen detection: single source of truth ───
   const detectionResult = useScreenDetection(debugTick);
   const progressInfo = wasmGetProgressIndicator();
   const gameStates = liveGameStates();
@@ -105,33 +91,25 @@ const useNavigation = () => {
   const totalTilesSum = renderResults.reduce((sum, r) => sum + r.totalTiles, 0);
   const entranceSum = crossings.reduce((sum, screen) => sum + listedCrossings(screen, isIndoors).length, 0);
 
-  // Force a lightweight periodic rerender so live debug values update while moving.
   useEffect(() => {
     const id = setInterval(() => setDebugTick(t => (t + 1) & 1023), 200);
     return () => clearInterval(id);
   }, []);
   const playerDebug = usePlayerDebugState(debugTick);
 
-  // Clear overlay and screen bundle when screen changes
   useEffect(() => {
     if (result && result.screenIndex !== activeScreenIndex) {
       overlayStore.clear();
-      return; // clear() already dropped the bundle
+      return;
     }
-    // Drop a screen bundle that no longer covers where the player is.
     if (screenBundle && !screenBundle.screens.includes(activeScreenIndex) && screenBundle.head !== activeScreenIndex) {
       setScreenBundle(null);
     }
   }, [activeScreenIndex]);
 
-  // Runs the flood fill by orchestrating the nav-flood/* helpers.
   const handleRun = useCallback(async () => {
     if (running) return;
 
-    // For indoor rooms, bail early if tile data isn't available yet (transition in progress).
-    // The transition-settled event only fires once the game itself considers the room
-    // settled, so this should be unreachable from that path; it still guards the manual
-    // button, the CLI auto-flood flag, and the inventory-change trigger.
     if (isIndoors) {
       const layer0 = wasmGetIndoorLayer0Grid();
       if (!layer0) return;
@@ -140,19 +118,15 @@ const useNavigation = () => {
     setRunning(true);
     try {
       const vp = wasmGetViewportInfo?.();
-      const liveOverworldScreenIndex = vp
-        ? ((((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7))
-        : overworldScreenIndex;
+      const liveOverworldScreenIndex = vp ? liveOverworldScreenOf(vp.linkX, vp.linkY) : overworldScreenIndex;
       const primaryScreenIndex = isIndoors ? activeScreenIndex : liveOverworldScreenIndex;
 
       const items = buildInventory(equipment, inventoryItems);
       const { startPos } = computeStartContext({ vp, primaryScreenIndex, isIndoors });
 
-      // Get entrance data + exit map from WASM (cached per run)
       const allEntrances = enrichEntrances();
       const exitScreenByRoom = wasmGetExitScreenMap();
 
-      // Fall-hole entrance IDs (excluded from regular markers) + overworld door IDs (physical doors).
       const fallHoleEntIds = new Set<number>();
       { const holes = wasmGetFallHoles(); for (const h of holes) fallHoleEntIds.add(h.entranceId); }
       const overworldDoorEntIds = new Set<number>();
@@ -162,14 +136,12 @@ const useNavigation = () => {
         ? collectIndoorEntrances({ primaryScreenIndex, allEntrances, exitScreenByRoom, fallHoleEntIds, overworldDoorEntIds })
         : new Set<number>();
 
-      // Get room layout info for intra-room edge detection (indoor only)
       const roomLayout = isIndoors ? wasmGetRoomLayoutInfo() : null;
       const intraEdges = roomLayout?.intraEdges ?? [];
 
       const { responses, overworldBundle } = propagateScreens({
         isIndoors, primaryScreenIndex, startPos, items, allEntrances, intraEdges,
       });
-      // Outdoors: set bundle before the early-return so it persists even with no reachable screens.
       if (overworldBundle) setScreenBundle(overworldBundle);
       if (responses.length === 0) return;
 
@@ -187,7 +159,6 @@ const useNavigation = () => {
 
       annotateLayerToggles(allConnections, isIndoors);
 
-      // Build indoor screen bundle now that we know which edges were found
       if (isIndoors) {
         setScreenBundle(buildIndoorScreenBundle({ screenName, primaryScreenIndex, allConnections, roomLayout, intraEdges }));
       }
@@ -198,8 +169,6 @@ const useNavigation = () => {
       overlayStore.setData(primaryResult, allConnections, fillResults, fallHoleSpawns, currentRespawnIds);
       overlayStore.setCrossings(collectScreenCrossings({ isIndoors, responses, items: items as TileReq[] }));
 
-      // Derived from the same reads the run gates on, so the overlay and the run
-      // can never describe a screen differently.
       overlayStore.setAnnotations(annotateFlooded({ fillResults, isIndoors, primaryScreenIndex, primaryScreenId: detectedScreen?.id ?? null }));
     } catch (e) { console.error(e); }
     finally {
@@ -209,17 +178,12 @@ const useNavigation = () => {
 
   handleRunRef.current = handleRun;
 
-  // Restore the saved mode once, and only after the profile's prefs have landed: before
-  // that the pref reads as the 'manual' fallback, which would overwrite a real 'auto'.
   useEffect(() => {
     if (!prefsHydrated || didRestoreSavedMode) return;
     didRestoreSavedMode = true;
     if (savedMode !== mode) overlayStore.setMode(savedMode);
   }, [prefsHydrated, savedMode, mode]);
 
-  // Auto-flood CLI flag: put the widget in auto mode and take the first flood once the
-  // active screen is known. The guard is module-level, not a ref: a ref resets when the
-  // hub unmounts the widget, which would force auto back on after the user chose manual.
   useEffect(() => {
     if (!window.api.autoFlood || didApplyAutoFloodFlag) return;
     if (activeScreenIndex === null || running) return;
@@ -228,12 +192,6 @@ const useNavigation = () => {
     handleRunRef.current?.();
   }, [activeScreenIndex, running]);
 
-  // The indoor half of useFloodOnTransition listens for the native transition-settled
-  // event, which the core only fires when the developer-tools feature bit is set
-  // (core/game-hooks/transition_events.c). That bit defaults off for a normal player, so
-  // without this override indoor auto-reflood silently never fires while overworld reflood
-  // (driven off live position) keeps working. The gate only unlocks read-only
-  // instrumentation, so it's safe to hold while auto mode is on and must drop once it isn't.
   useEffect(() => {
     if (!autoRun) return;
     setDeveloperToolsOverride(true);
@@ -244,9 +202,6 @@ const useNavigation = () => {
     };
   }, [autoRun]);
 
-  // Auto-trigger: re-flood on transition-settled events (indoor) and live position
-  // (overworld screen crossing). See useFloodOnTransition for why the split is real, not
-  // a leftover of the old polling design.
   useFloodOnTransition({
     enabled: autoRun,
     isIndoors,
@@ -255,7 +210,6 @@ const useNavigation = () => {
     onTrigger: useCallback(() => { handleRunRef.current?.(); }, []),
   });
 
-  // Auto-run flood fill when inventory/equipment changes (affects reachability)
   useEffect(() => {
     if (!autoRun || running) return;
     const key = `${equipment.sword},${equipment.gloves},${equipment.boots ? 1 : 0},${equipment.flippers ? 1 : 0},${inventoryItems[2]},${inventoryItems[11]}`;
@@ -265,17 +219,14 @@ const useNavigation = () => {
     prevInventoryKeyRef.current = key;
   }, [autoRun, running, equipment, inventoryItems]);
 
-  /** Drop the flood: overlay, minimap group, annotations and stats all go at once. */
   const handleClear = useCallback(() => { overlayStore.clear(); }, []);
 
-  /** Switching to auto floods straight away, so the overlay matches the mode you just picked. */
   const setMode = useCallback((next: NavMode) => {
     overlayStore.setMode(next);
     setSavedMode(next);
     if (next === 'auto' && !running) handleRunRef.current?.();
   }, [running, setSavedMode]);
 
-  // Derived: classify connections as internal vs external (with dedup).
   const { externalConnections, internalConnections, externalEdges } = useNavConnections(connections, screenBundle, isIndoors, crossings);
 
   return {

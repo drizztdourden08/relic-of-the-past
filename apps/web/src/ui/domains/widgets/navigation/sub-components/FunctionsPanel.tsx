@@ -18,7 +18,6 @@ const FunctionsPanel = (props: FunctionsPanelProps) => {
 
       <SegmentedControl value={mode} options={MODE_OPTIONS} onChange={setMode} />
 
-      {/* Flooding by hand is the point of manual mode; in auto the widget owns the timing. */}
       {mode === 'manual' && (
         <Box style={S.fnRowTop}>
           <Button variant="bare" data-testid="nav-flood-btn" style={{ ...S.btn, ...(running ? S.btnDisabled : {}) }} onClick={handleRun} disabled={running}>

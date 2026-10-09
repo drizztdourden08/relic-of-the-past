@@ -1,30 +1,16 @@
 /* @layer renderer-widgets @kind component */
 import { useMemo } from 'react';
-import type { ScreenAnnotations } from '@shared/game/simulation';
 import { Box, Text } from '../../../../../design-system/primitives';
 import { useNavigationOverlayStore } from '../../../../../../stores/navigation-overlay-store';
 import { ANNOTATION_STYLES } from '../../../../app/views/GameLayer/sub-components/navigation-overlay/annotation-style';
 import { S } from '../../styles';
 import { PS } from './styles';
 import { groupAnnotations } from './annotation-rows';
+import type { ScreenPanelProps } from './ScreenPanel.type';
 
-interface Props {
-  annotations: readonly ScreenAnnotations[];
-}
-
-/**
- * "On this screen": every annotation the simulator derived, grouped the way the
- * overlay colours them, plus the decoded room tags.
- *
- * This is the list side of the same ScreenAnnotations the canvas draws, so a
- * mechanic can never appear in one and be missing from the other. Ways on and off
- * the screen belong to the Connections panel, which reads crossings.
- */
-const ScreenPanel = ({ annotations }: Props) => {
+const ScreenPanel = ({ annotations }: ScreenPanelProps) => {
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
   const toggleKind = useNavigationOverlayStore((s) => s.toggleKind);
-  // A multi-screen area annotates every sub-screen; the panel is one list, so the
-  // items merge and the tallies sum.
   const items = useMemo(() => annotations.flatMap((s) => s.items), [annotations]);
   const groups = useMemo(() => groupAnnotations(items), [items]);
   const tags = useMemo(() => annotations.flatMap((s) => s.tags ?? []), [annotations]);
@@ -94,4 +80,3 @@ const ScreenPanel = ({ annotations }: Props) => {
 };
 
 export { ScreenPanel };
-export type { Props as ScreenPanelProps };

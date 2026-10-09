@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind data */
 import type { CSSProperties } from 'react';
 
-/** Inline-style map for the "On this screen" panel. */
 const PS: Record<string, CSSProperties> = {
   summary: { display: 'flex', gap: 8, fontSize: 11, marginTop: 2 },
   doneCount: { color: 'var(--c-green-bright)' },
@@ -22,7 +21,6 @@ const PS: Record<string, CSSProperties> = {
   groupTitle: { fontSize: 10, color: 'var(--c-text-muted)', letterSpacing: 0.5 },
 
   row: { display: 'flex', alignItems: 'baseline', gap: 5, fontSize: 11 },
-  /** Clicking a row toggles its kind on the overlay. The legend is display-only. */
   rowToggle: { cursor: 'pointer' },
   rowOff: { opacity: 0.4 },
   glyph: { width: 12, textAlign: 'center', flexShrink: 0 },

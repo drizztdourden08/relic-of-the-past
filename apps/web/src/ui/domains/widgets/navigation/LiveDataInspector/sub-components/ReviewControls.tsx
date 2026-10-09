@@ -1,42 +1,13 @@
 /* @layer renderer-widgets @kind component */
-/**
- * Review controls for the record currently shown below the collection tabs.
- * A static section heading leads, matching the heading treatment the card's own
- * field groups carry, so this block reads as the card's last section and not as
- * a stray label. Under it sit the record id and the date of the last look: a
- * reviewer needs to know WHAT this is and WHEN it was last touched before
- * reading a status pill, but neither is the heading, so both are styled as the
- * subordinate metadata they are.
- *
- * The mark goes INTO the record's own file, through the same record writers an
- * edit uses, so it travels with the data. The status lands on its own; the note
- * lands on blur, because every write rewrites a source file.
- */
 import { useState } from 'react';
 import { Box, Select, Text, Textarea } from '@ds/primitives';
-import { enumerationFor } from '@shared/game/data';
 import { RECORD_WRITERS } from '@app/ui/domains/app/views/DataInspector/behavior/record-writers';
-import type { EntityKind, ReviewMark, ReviewStatus } from '@shared/game/data';
+import type { ReviewMark, ReviewStatus } from '@shared/game/data';
 import type { InspectorRow } from '@app/ui/domains/app/views/DataInspector/DataInspector.type';
+import { reviewStamp } from '../behavior/review-stamp';
+import { REVIEW_STATUS_OPTIONS, REVIEW_TITLE, REVIEW_UNTOUCHED } from '../LiveDataInspector.constants';
+import type { ReviewControlsProps } from '../LiveDataInspector.type';
 import './ReviewControls.css';
-
-const TITLE = 'Review';
-const NEVER = 'never';
-const UNTOUCHED: ReviewStatus = 'untouched';
-
-const STATUS_OPTIONS = enumerationFor('review-status').map(entry => ({ value: entry.value, label: entry.label }));
-
-/** A record the control can read a mark off and hand back with a new one. */
-type Reviewable = { review?: ReviewMark };
-
-interface ReviewControlsProps {
-  kind: EntityKind;
-  recordId: string;
-  record: Reviewable;
-}
-
-const stamp = (mark: ReviewMark | undefined): string =>
-  (mark === undefined ? NEVER : new Date(mark.at).toLocaleDateString());
 
 const ReviewControls = (props: ReviewControlsProps) => {
   const { kind, recordId, record } = props;
@@ -59,7 +30,7 @@ const ReviewControls = (props: ReviewControlsProps) => {
   };
 
   const marked = (fields: Partial<ReviewMark>): ReviewMark => ({
-    status: mark?.status ?? UNTOUCHED,
+    status: mark?.status ?? REVIEW_UNTOUCHED,
     ...(note.trim() ? { note: note.trim() } : {}),
     ...fields,
     source: 'person',
@@ -68,15 +39,15 @@ const ReviewControls = (props: ReviewControlsProps) => {
 
   return (
     <Box className="live-review">
-      <Text as="span" className="live-review__label">{TITLE}</Text>
+      <Text as="span" className="live-review__label">{REVIEW_TITLE}</Text>
       <Box className="live-review__meta">
         <Text as="span" className="live-review__id" title={recordId}>{recordId}</Text>
-        <Text className="live-review__stamp">{`Reviewed ${stamp(mark)}`}</Text>
+        <Text className="live-review__stamp">{`Reviewed ${reviewStamp(mark)}`}</Text>
       </Box>
       <Select
-        value={mark?.status ?? UNTOUCHED}
+        value={mark?.status ?? REVIEW_UNTOUCHED}
         onChange={(value) => void write(marked({ status: value as ReviewStatus }))}
-        options={STATUS_OPTIONS}
+        options={REVIEW_STATUS_OPTIONS}
         size="sm"
       />
       <Textarea
@@ -94,4 +65,3 @@ const ReviewControls = (props: ReviewControlsProps) => {
 };
 
 export { ReviewControls };
-export type { ReviewControlsProps };
