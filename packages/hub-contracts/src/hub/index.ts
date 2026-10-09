@@ -18,7 +18,7 @@ export { runMultipart, keptParts } from './upload/run-multipart';
 export type { SignedParts, BegunMultipart, Sliceable, PutPart, RunMultipartParams } from './upload/run-multipart';
 export { withRetry } from './upload/with-retry';
 export type { UploadedPart, UploadedParts } from './upload/uploaded-part.type';
-export { tagsSchema, noteSchema, versionSchema, idSchema, MAX_TAGS } from './schemas/common';
+export { tagsSchema, noteSchema, versionSchema, idSchema, MAX_TAGS } from './schemas/field-schemas';
 export {
   viewSurfaceSchema,
   putViewSchema,

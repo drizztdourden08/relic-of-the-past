@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import type { SyntheticEvent } from 'react';
 import { Box, Button, Image } from '@drizztdourden08/tessera/primitives';
-import { usePixelArt } from '../MediaPreview/usePixelArt';
+import { usePixelArt } from '../MediaPreview/behavior/usePixelArt';
 import { DialogShell, Video } from '@drizztdourden08/tessera/composites';
 import type { MediaViewerProps } from './MediaViewer.type';
 import './MediaViewer.css';

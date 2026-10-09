@@ -4,7 +4,7 @@ export { DetailPane } from './compounds/DetailPane/DetailPane';
 export type { DetailField } from './compounds/DetailPane/DetailPane';
 export { Gate } from './compounds/Gate/Gate';
 export { MediaPreview } from './compounds/MediaPreview/MediaPreview';
-export { usePixelArt } from './compounds/MediaPreview/usePixelArt';
+export { usePixelArt } from './compounds/MediaPreview/behavior/usePixelArt';
 export { MediaViewer } from './compounds/MediaViewer/MediaViewer';
 export { ProviderButton } from './compounds/ProviderButton/ProviderButton';
 export { RouteGuard } from './compounds/RouteGuard/RouteGuard';

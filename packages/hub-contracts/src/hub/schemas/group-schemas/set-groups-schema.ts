@@ -1,6 +1,6 @@
 /* @layer shared-hub @kind logic */
 import { z } from 'zod';
-import { idSchema } from '../common';
+import { idSchema } from '../field-schemas';
 import { MAX_GROUPS_PER_PERSON } from './group-schemas.constants';
 
 const setGroupsSchema = z.object({

@@ -3,4 +3,4 @@ export { tagsSchema } from './tags-schema';
 export { noteSchema } from './note-schema';
 export { versionSchema } from './version-schema';
 export { idSchema } from './id-schema';
-export { MAX_TAGS } from './common.constants';
+export { MAX_TAGS } from './field-schemas.constants';

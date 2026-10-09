@@ -1,6 +1,6 @@
 /* @layer shared-store @kind logic */
 import { z } from 'zod';
-import { idSchema } from '../../hub/schemas/common';
+import { idSchema } from '../../hub/schemas/field-schemas';
 import { STORE_LIMITS } from '../limits';
 
 const featuredSchema = z.object({

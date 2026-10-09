@@ -1,6 +1,6 @@
 /* @layer shared-sanctuary @kind logic */
 import { z } from 'zod';
-import { noteSchema, tagsSchema, versionSchema } from '../../../hub/schemas/common';
+import { noteSchema, tagsSchema, versionSchema } from '../../../hub/schemas/field-schemas';
 import { fileTypeSchema } from './file-type-schema';
 
 const patchFileSchema = z

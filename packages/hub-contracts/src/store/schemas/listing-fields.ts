@@ -1,6 +1,6 @@
 /* @layer shared-store @kind logic */
 import { z } from 'zod';
-import { tagsSchema } from '../../hub/schemas/common';
+import { tagsSchema } from '../../hub/schemas/field-schemas';
 import { ITEM_COLOR_PATTERN } from '../item-color';
 import { MAX_DESCRIPTION_CHARS, MAX_LICENSE_CHARS, MAX_NAME_CHARS, MAX_SUMMARY_CHARS } from './schemas.constants';
 

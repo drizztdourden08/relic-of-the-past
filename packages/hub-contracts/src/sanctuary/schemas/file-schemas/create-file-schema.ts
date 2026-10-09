@@ -1,6 +1,6 @@
 /* @layer shared-sanctuary @kind logic */
 import { z } from 'zod';
-import { noteSchema, tagsSchema, versionSchema } from '../../../hub/schemas/common';
+import { noteSchema, tagsSchema, versionSchema } from '../../../hub/schemas/field-schemas';
 import { LIMITS } from '../../limits';
 import { MAX_CONTENT_TYPE_CHARS, MAX_NAME_CHARS, SHA256_PATTERN } from './file-schemas.constants';
 import { fileTypeSchema } from './file-type-schema';

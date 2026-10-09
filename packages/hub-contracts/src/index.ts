@@ -18,9 +18,9 @@ export { deviceBeginSchema } from './hub/schemas/account-schemas/device-begin-sc
 export { deviceConfirmSchema } from './hub/schemas/account-schemas/device-confirm-schema';
 export { devicePollSchema } from './hub/schemas/account-schemas/device-poll-schema';
 export { putViewSchema } from './hub/schemas/account-schemas/put-view-schema';
-export { MAX_TAGS } from './hub/schemas/common/common.constants';
-export { idSchema } from './hub/schemas/common/id-schema';
-export { tagsSchema } from './hub/schemas/common/tags-schema';
+export { MAX_TAGS } from './hub/schemas/field-schemas/field-schemas.constants';
+export { idSchema } from './hub/schemas/field-schemas/id-schema';
+export { tagsSchema } from './hub/schemas/field-schemas/tags-schema';
 export { createGroupSchema } from './hub/schemas/group-schemas/create-group-schema';
 export type { CreateGroupBody, PatchGroupBody } from './hub/schemas/group-schemas/group-schemas.type';
 export { patchGroupSchema } from './hub/schemas/group-schemas/patch-group-schema';

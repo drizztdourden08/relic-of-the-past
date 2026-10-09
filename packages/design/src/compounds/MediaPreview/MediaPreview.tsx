@@ -4,7 +4,7 @@ import { Icon as IconifyIcon } from '@iconify/react/offline';
 import maximizeIcon from '@iconify-icons/lucide/maximize-2';
 import { Box, Button, Flex, Image, Pressable, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { Video } from '@drizztdourden08/tessera/composites';
-import { usePixelArt } from './usePixelArt';
+import { usePixelArt } from './behavior/usePixelArt';
 import type { MediaPreviewProps } from './MediaPreview.type';
 import './MediaPreview.css';
 
