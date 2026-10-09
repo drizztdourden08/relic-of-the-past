@@ -1661,6 +1661,40 @@ pixels takes the session step, and anything else (a count, an angle, a duration,
 amount) passes its own. The lists are the review, kept as code so the next field must join one.
 `StepNumberInput` stays deleted and the CSS rule that hid the spinner went with it.
 
+### hud/hud-layout-section-controls
+
+Phase 7 of the inspector UX review: what the Layout section's controls write (widths are
+`hud-inspector-layout-widths`). Each claim was a stated hole in the review.
+
+- One tile per value the engine has (§56). The 3x3 pad crossed two positions, so `between` and
+  `stretch` rode beside it as lone toggles. The set is exactly the engine's: four per grid axis,
+  six on a flex main axis, three on its cross axis, and no flex `stretch` (`hud-node.ts` never
+  stretches under the flow engine and `place-flow.ts` reads a stray `stretch` as `start`, so a
+  tile would do nothing). Flex rows are named main and cross, not by arrows, because a column's
+  main axis is vertical, so its diagrams turn with `direction`; a grid's two axes never move.
+- A track list round trips: add, size, reorder and remove, then through JSON and the real
+  validator into placed rectangles (the 30px track moved first, so the second cell starts at 30).
+  A move past either end is refused rather than clamped; rows empty back to implicit; every
+  extent shape prints on a chip.
+- The screen root chooses its engine like any container (§42 lifted §38.4's lock, which existed
+  only while the screen was a `stack` pretending not to be a grid). `LayoutSection` has no
+  `isScreen`; Size and Box keeps its lock (§29, §37). The engine switch goes through the real
+  conversion, `engineSwitchPatch` (§53), because building a container by hand for a merging
+  `onPatch` left a grid's keys on a flex node; the no op case is in `hud-engine-switch`.
+- The guide colour reaches the overlay, pinned end to end because an earlier pass read the wrong
+  property. Grid lines come from the solved cells, so an empty column still gets its boundary
+  (three lines for two columns, at 0, 40 and 80 display pixels). Since §57 a flex container's
+  overlay draws each child's placed slot, so the gap shows as daylight; since §58 slots are inset
+  a pixel and dashed (§57.8 photographed the first slot under the gold selection outline, reading
+  as one box). Nothing on the overlay is a click target, the stage being select only (§47).
+- The toolbar offers Row, Column, Overlay and Grid, and no Stack; the Overlay preset is a 1x1
+  grid that hugs (start, start).
+- The editor view store is mocked because zustand serves `getInitialState` as the server
+  snapshot, so a `setState` before `renderToStaticMarkup` is not seen; what is tested is the
+  colour, not the toggle. The guide colour lives in a constant because the raw colour lint rule
+  flags a hex on a `color` property, and this is a document value. A grid mounts `GridEditor`,
+  whose selection hook asks the platform for the modifier key's name.
+
 ### hud/hud-layout-section-one.keep.test.ts
 
 Section one is byte for byte the same section under both engines, except which Type button is
