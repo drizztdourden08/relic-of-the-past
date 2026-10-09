@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
 import { sidecarName } from '../assets';
-import { ROM_KINDS } from '../rom-kinds';
+import { ROM_KINDS } from '../kinds';
 import { listEntries } from './list-entries';
 import { listRoms } from './list-roms';
 import type { SupplementStatus } from './roms.type';

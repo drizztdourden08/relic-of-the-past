@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind types */
-import type { RomKind } from '../rom-kinds';
+import type { RomKind } from '../kinds';
 
 type RomImportResult = { success: boolean; romFile: string; error?: string; alreadyExists?: boolean };
 type ImportPhase = (phase: 'extract' | 'copy', loaded?: number, total?: number) => void;

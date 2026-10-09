@@ -3,7 +3,7 @@ import { createProfileStore } from '@drizztdourden08/brock-core';
 import type { FileStore } from '@drizztdourden08/brock-core';
 import { SUPPLEMENT_IDS } from '@rotp/asset-extraction';
 import { datName, sidecarName } from '../assets';
-import { ROM_KINDS, isBaseRom, kindOfFile } from '../rom-kinds';
+import { ROM_KINDS, isBaseRom, kindOfFile } from '../kinds';
 import { listRoms } from './list-roms';
 
 const deleteRom = async (files: FileStore, romFile: string): Promise<void> => {

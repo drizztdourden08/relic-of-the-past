@@ -1,0 +1,17 @@
+{
+  "name": "@rotp/roms",
+  "version": "0.0.0",
+  "private": true,
+  "description": "ROM library, ROM kinds and the asset files built from them.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@drizztdourden08/brock-core": "^0.36.0",
+    "@rotp/asset-extraction": "workspace:*",
+    "jszip": "^3.10.1"
+  }
+}

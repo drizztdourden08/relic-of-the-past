@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Status, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
-import { ROM_KINDS } from '@shared/storage/rom-kinds';
+import { ROM_KINDS } from '@rotp/roms';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import type { RomListProps } from './RomList.type';
 

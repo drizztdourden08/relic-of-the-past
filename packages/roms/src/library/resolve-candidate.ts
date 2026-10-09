@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
 import { isZip, unzip } from '../archive';
-import { ROM_KINDS } from '../rom-kinds';
-import type { RomKind } from '../rom-kinds';
+import { ROM_KINDS } from '../kinds';
+import type { RomKind } from '../kinds';
 import type { ImportPhase, RomCandidate } from './roms.type';
 
 const resolveCandidate = async (

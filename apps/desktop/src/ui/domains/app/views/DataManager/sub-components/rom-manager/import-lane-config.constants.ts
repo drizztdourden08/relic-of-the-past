@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { RomKind } from '@shared/storage/rom-kinds';
+import type { RomKind } from '@rotp/roms';
 import type { ImportLaneConfig } from './import-lane-config.type';
 
 const IMPORT_LANE_CONFIG: Record<RomKind, ImportLaneConfig> = {

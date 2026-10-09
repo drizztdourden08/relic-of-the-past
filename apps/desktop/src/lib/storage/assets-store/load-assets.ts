@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import * as assets from '@shared/storage/assets';
+import { assets } from '@rotp/roms';
 import { platformFiles } from '../platform-files';
 
 const loadAssets = async (romFile: string): Promise<ArrayBuffer | null> => {

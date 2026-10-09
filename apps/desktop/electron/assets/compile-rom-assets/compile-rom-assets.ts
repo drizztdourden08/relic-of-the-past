@@ -3,7 +3,7 @@ import { writeFile, access } from 'fs/promises';
 import { loadRom } from '@rotp/asset-extraction/node';
 import { compileResources } from '@rotp/asset-extraction';
 import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
-import { datName } from '@shared/storage/assets';
+import { datName } from '@rotp/roms';
 import { logToRenderer } from '../../lib/renderer-log';
 import { loadCompiledLanguages } from '../load-compiled-languages';
 import { errMessage } from '../../lib/result';

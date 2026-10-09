@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { RomKind } from '@shared/storage/rom-kinds';
+import type { RomKind } from '@rotp/roms';
 
 interface RomKindTabsProps {
   value: RomKind;

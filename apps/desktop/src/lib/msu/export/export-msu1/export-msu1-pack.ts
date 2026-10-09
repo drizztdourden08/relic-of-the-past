@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import type { MsuTrackDef } from '@rotp/game-data';
-import { zipEntries } from '@shared/storage/archive-write';
-import type { ZipEntry } from '@shared/storage/archive-write';
+import { zipEntries } from '@rotp/roms';
+import type { ZipEntry } from '@rotp/roms';
 import { flattenTrack } from '../flatten-track';
 import { writeMsu1Pcm } from '../write-pcm';
 import type { ExportMsu1Params } from './export-msu1.type';

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { isZip, unzip } from '@shared/storage/archive';
+import { isZip, unzip } from '@rotp/roms';
 import { ROM_FILE_PATTERN } from './languages-store.constants';
 
 const resolveRomBytes = async (bytes: Uint8Array): Promise<Uint8Array> => {

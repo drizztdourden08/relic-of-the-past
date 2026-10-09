@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { SupplementStatus } from '@shared/storage/roms';
+import type { SupplementStatus } from '@rotp/roms';
 
 interface RomListProps {
   romStatuses: RomDisplayInfo[];

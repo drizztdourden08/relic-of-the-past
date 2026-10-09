@@ -1,8 +1,8 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
 import { sha256Hex } from '@drizztdourden08/brock-core';
-import { ROM_KINDS } from '../rom-kinds';
-import type { RomKind } from '../rom-kinds';
+import { ROM_KINDS } from '../kinds';
+import type { RomKind } from '../kinds';
 import { resolveCandidate } from './resolve-candidate';
 import type { ImportPhase, RomImportResult } from './roms.type';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { isZip, unzip } from '@shared/storage/archive';
+import { isZip, unzip } from '@rotp/roms';
 import type { MsuResult } from '@shared/ipc/msu-contract';
 import { platformFiles } from '../platform-files';
 import { errorMessage } from '../error-message';

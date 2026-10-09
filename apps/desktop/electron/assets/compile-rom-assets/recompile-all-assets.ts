@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { listWithStatus } from '@shared/storage/roms';
+import { listWithStatus } from '@rotp/roms';
 import { createNodeFileStore } from '../../lib/node-file-store';
 import { compileRomAssets } from './compile-rom-assets';
 

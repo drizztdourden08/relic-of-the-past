@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import type { MsuPackManifest } from '@rotp/game-data';
 import { MSUL_MANIFEST_NAME } from '@rotp/hub-contracts';
-import { zipEntries } from '@shared/storage/archive-write';
-import type { ZipEntry } from '@shared/storage/archive-write';
+import { zipEntries } from '@rotp/roms';
+import type { ZipEntry } from '@rotp/roms';
 import { dedupeByContent } from '../dedupe-files';
 import { referencedFiles, remapManifestFiles } from '../remap-manifest';
 import type { ExportMsulParams } from './export-msul.type';

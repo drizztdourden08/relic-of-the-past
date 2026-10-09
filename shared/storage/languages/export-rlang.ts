@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import { zipEntries } from '../archive-write';
-import type { ZipEntry } from '../archive-write';
+import { zipEntries } from '@rotp/roms';
+import type { ZipEntry } from '@rotp/roms';
 import { formatOf } from './format-2';
 import { migrateLegacySet } from './migrate';
 import { setFilePath, setMetaPath } from './paths';

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { RomImportResult } from '@shared/storage/roms';
+import type { RomImportResult } from '@rotp/roms';
 import { emitRomProgress } from './emit-rom-progress';
 
 const finalizeRomImport = (result: RomImportResult): RomImportResult => {

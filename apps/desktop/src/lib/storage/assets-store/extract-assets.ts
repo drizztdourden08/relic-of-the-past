@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import * as assets from '@shared/storage/assets';
+import { assets } from '@rotp/roms';
 import type { SetBakeInput } from '@shared/game/language';
+import { readLanguageSets } from '@shared/storage/assets/read-language-sets';
 import type { AssetSourceId } from '@rotp/asset-extraction';
 import { markAssetsBaked } from '@app/stores/game-assets-store';
 import { runOnWorker } from '../extraction-client';
@@ -30,7 +31,7 @@ const extractAssets = async (romFile: string): Promise<ExtractResult> => {
     const romBytes = await assets.readRomBytes(platformFiles(), romFile);
     if (!romBytes) return { success: false, error: `ROM file not found: ${romFile}` };
 
-    const languages = await assets.readLanguageSets(platformFiles());
+    const languages = await readLanguageSets(platformFiles());
     const supplementRoms = await assets.readSupplementRoms(platformFiles());
     const result = await runExtraction(romBytes, supplementRoms, languages);
 

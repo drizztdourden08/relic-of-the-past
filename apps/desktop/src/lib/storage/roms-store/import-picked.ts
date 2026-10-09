@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import type { RomImportResult } from '@shared/storage/roms';
-import type { RomKind } from '@shared/storage/rom-kinds';
-import * as roms from '@shared/storage/roms';
+import type { RomImportResult } from '@rotp/roms';
+import type { RomKind } from '@rotp/roms';
+import { roms } from '@rotp/roms';
 import { getPlatform } from '@drizztdourden08/brock-react';
 import { platformFiles } from '../platform-files';
 import { emitRomProgress } from './emit-rom-progress';

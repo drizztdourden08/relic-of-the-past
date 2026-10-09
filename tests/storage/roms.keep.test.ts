@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
 import JSZip from 'jszip';
-import * as roms from '@shared/storage/roms';
+import { roms } from '@rotp/roms';
 import * as profiles from '@shared/storage/profiles';
 import { createMemFileStore } from './mem-file-store';
 

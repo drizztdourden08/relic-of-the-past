@@ -310,6 +310,9 @@ importers:
       '@rotp/input-mapping':
         specifier: workspace:*
         version: link:packages/input-mapping
+      '@rotp/roms':
+        specifier: workspace:*
+        version: link:packages/roms
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -508,6 +511,9 @@ importers:
       '@rotp/input-mapping':
         specifier: workspace:*
         version: link:../../packages/input-mapping
+      '@rotp/roms':
+        specifier: workspace:*
+        version: link:../../packages/roms
       '@tiptap/core':
         specifier: ^3.30.2
         version: 3.30.2(@tiptap/pm@3.30.2)
@@ -831,6 +837,18 @@ importers:
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../game-data
+
+  packages/roms:
+    dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.36.0
+        version: 0.36.0
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:../asset-extraction
+      jszip:
+        specifier: ^3.10.1
+        version: 3.10.1
 
 packages:
 

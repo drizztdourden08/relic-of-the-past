@@ -523,7 +523,7 @@ The main process keeps no save store. The renderer writes saves over the FileSto
 
 ## roms
 
-The main process has no ROM channel. The Brock port kit creates the roms and assets folders, and the renderer imports ROMs over the FileStore (`lib/storage/roms-store`, on `shared/storage/roms`).
+The main process has no ROM channel. The Brock port kit creates the roms and assets folders, and the renderer imports ROMs over the FileStore (`lib/storage/roms-store`, on `packages/roms/src/library`).
 
 ## storage
 
