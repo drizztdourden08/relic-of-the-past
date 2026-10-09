@@ -12,7 +12,6 @@
   overflow: hidden;
 }
 
-/* One line: icon, title, then the section anchors after a divider. */
 .settings-page__head {
   position: relative;
   isolation: isolate;
@@ -34,7 +33,6 @@
   pointer-events: none;
 }
 
-/* Fades the scene out behind the title so the text always reads. */
 .settings-page__head::before {
   content: '';
   position: absolute;
@@ -62,14 +60,12 @@
   transition: font-size var(--transition-fast);
 }
 
-/* The header tabs sit after a divider; their pills are HeaderTabs' own. */
 .settings-page__tabs {
   margin-left: var(--space-sm);
   padding-left: var(--space-lg);
   border-left: 1px solid var(--c-border-strong);
 }
 
-/* Host controls at the far end of the line; they ride the header as it compacts. */
 .settings-page__actions {
   display: flex;
   align-items: center;

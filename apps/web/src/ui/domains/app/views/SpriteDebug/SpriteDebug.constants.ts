@@ -1,4 +1,4 @@
-/* @layer renderer-components @kind style */
+/* @layer renderer-components @kind constants */
 import type React from 'react';
 
 const S: Record<string, React.CSSProperties> = {
@@ -166,4 +166,20 @@ const S: Record<string, React.CSSProperties> = {
   },
 };
 
-export { S };
+const MODES = [
+  { id: 'sprites', label: 'Sprite Review' },
+  { id: 'items', label: 'Item Association' },
+];
+
+const LABEL_STYLES: Record<string, React.CSSProperties> = {
+  good: { color: 'var(--c-green-bright)' },
+  warn: { color: 'var(--c-warning)' },
+  dim: { color: 'var(--c-text-dim)' },
+  danger: { color: 'var(--c-danger)' },
+  muted: { color: 'var(--c-text-muted)' },
+  count: { opacity: 0.5, fontSize: 10 },
+};
+
+const NONE_LABEL: React.CSSProperties = { fontSize: 9, color: 'var(--c-text-muted)' };
+
+export { LABEL_STYLES, MODES, NONE_LABEL, S };

@@ -4,24 +4,11 @@ import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { Button } from '../../../../design-system/primitives/Button';
+import { copyText } from './behavior/copy-text';
 import { useAboutInfo } from './behavior/useAboutInfo';
 import { useDebugText } from '@app/lib/diagnostics';
 import './About.css';
 
-const copyText = async (text: string): Promise<void> => {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); } catch { /* best effort */ }
-    document.body.removeChild(ta);
-  }
-};
-
-/** About page content (rendered inside a FullScreenLayer by the PageRouter). */
 const About = () => {
   const { rows, buildDebugText } = useAboutInfo();
   const { debugText } = useDebugText(buildDebugText);

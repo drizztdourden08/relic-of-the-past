@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Rows share one grid so every bar, percent and count lines up. */
 .hero-progress {
   display: grid;
   grid-template-columns: auto 1fr auto auto;

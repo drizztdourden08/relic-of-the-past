@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* A wrapping row of value chips joined by their jump labels. */
-
 .ladder-preview {
   display: flex;
   flex-wrap: wrap;
@@ -36,8 +34,6 @@
   white-space: nowrap;
 }
 
-/* The currency the chip's value is asked in, at its source pixels so the
-   drawing stays the one the game shows. */
 .ladder-preview__icon {
   width: var(--price-symbol-d);
   height: var(--price-symbol-d);

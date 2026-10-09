@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * The full record of the selected item, for the detail panel: its versions for the size and
- * its stats for the stars. An answer that arrives after the selection moved on is dropped.
- */
 import { useEffect, useState } from 'react';
 import type { ItemResponse } from '@shared/store/api-types';
 

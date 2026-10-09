@@ -1,12 +1,6 @@
 /* @layer renderer-components @kind hook */
-/** Drag state for the floating capture/report button stack. Position is stored as an offset
- *  from the top-right corner (its default spot) so it stays sensible across window resizes,
- *  and persists per-viewer in localStorage: a placement convenience, not data anyone else
- *  needs to see. Both buttons share one position - grabbing either drags the whole stack. */
 import { useCallback, useEffect, useRef, useState } from 'react';
-
-const STORAGE_KEY = 'debugFloatingControls.offset';
-const DEFAULT_OFFSET = { top: 96, right: 24 };
+import { DEFAULT_OFFSET, STORAGE_KEY } from './useDraggablePosition.constants';
 
 const readStoredOffset = (): { top: number; right: number } => {
   try {
@@ -15,7 +9,7 @@ const readStoredOffset = (): { top: number; right: number } => {
     const parsed = JSON.parse(raw);
     if (typeof parsed?.top === 'number' && typeof parsed?.right === 'number') return parsed;
   } catch {
-    // Fall through to the default.
+    return DEFAULT_OFFSET;
   }
   return DEFAULT_OFFSET;
 };
@@ -44,7 +38,11 @@ const useDraggablePosition = () => {
   }, []);
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(offset)); } catch { /* best-effort */ }
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(offset));
+    } catch {
+      return;
+    }
   }, [offset]);
 
   return { offset, dragging, onPointerDown, onPointerMove, onPointerUp };

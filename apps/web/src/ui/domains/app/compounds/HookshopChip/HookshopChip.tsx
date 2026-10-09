@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The gold lock mark of an item installed from the Hookshop: "Hookshop" on a list row, "From
- * the Hookshop" at the top of an editor. Only the words change, so every editor marks an
- * installed item the same way.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import lockIcon from '@iconify-icons/lucide/lock';
 import { Badge } from '@ds/primitives';

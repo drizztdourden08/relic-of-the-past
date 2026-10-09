@@ -1,40 +1,16 @@
 /* @layer renderer-components @kind component */
-/**
- * One capacity family in the options panel, read top to bottom as a list of
- * named lines. The head sits on the same label | control | impact grid as
- * every plain option row: the family, with what its modes do under it in the
- * words of its own catalog row, the mode dropdown, the In Pool cell. Under
- * the head, one line per fact: the Custom lines (range, items, jumps) only
- * while the mode is Custom; the pickup bonus whenever the family hands out
- * upgrade items (Custom or in pool); the ladder, in every mode, as the thing
- * that says what the player actually gets. Bare: the model arrives derived,
- * edits leave as a row state or a family bonus.
- *
- * A row a sibling setting has taken out of the player's hands (`forced`)
- * renders inert with the reason in red under its head: the controls grey out,
- * the sentence does not, the same way a forced plain option row reads.
- * A `readout` row, the read-only Options page, draws every control as its
- * value in a tag.
- */
 import { Box, Select, Text } from '@ds/primitives';
 import { LadderPreview } from '../LadderPreview';
 import { OptionDescription } from '../OptionDescription';
 import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { PoolImpactCell } from '../PoolImpactCell';
 import { BonusLine } from './sub-components/BonusLine';
-import { CustomControls } from './sub-components/CustomControls';
+import { LadderControls } from './sub-components/LadderControls';
 import { RowLine } from './sub-components/RowLine';
+import { MODE_OPTIONS, WALLET_MODE_OPTIONS } from './CapacityFamilyRow.constants';
 import type { CapacityFamilyRowProps, CapacityRowState } from './CapacityFamilyRow.type';
 import type { SelectOption } from '@ds/primitives';
 import './CapacityFamilyRow.css';
-
-const MODE_OPTIONS: readonly SelectOption[] = [
-  { value: 'vanilla', label: 'Vanilla' },
-  { value: 'vanilla-in-pool', label: 'Vanilla in pool' },
-  { value: 'custom', label: 'Custom' },
-];
-
-const WALLET_MODE_OPTIONS: readonly SelectOption[] = MODE_OPTIONS.filter((option) => option.value !== 'vanilla-in-pool');
 
 const CapacityFamilyRow = (props: CapacityFamilyRowProps) => {
   const { model, readOnly = false, readout = false, onChange, onBonusChange } = props;
@@ -65,7 +41,7 @@ const CapacityFamilyRow = (props: CapacityFamilyRowProps) => {
       </Box>
       {forced !== undefined && <Text className="capacity-row__forced">{forced}</Text>}
       <Box className="capacity-row__lines">
-        {state.mode === 'custom' && <CustomControls model={model} readOnly={inert} readout={readout} onChange={patch} />}
+        {state.mode === 'custom' && <LadderControls model={model} readOnly={inert} readout={readout} onChange={patch} />}
         {bonus !== undefined && (
           <BonusLine
             bonus={bonus}

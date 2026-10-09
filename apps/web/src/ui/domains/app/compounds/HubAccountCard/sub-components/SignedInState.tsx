@@ -1,16 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Badge, Button, Flex, Image, Stack, Text } from '@ds/primitives';
 import { PROVIDER_LABELS } from '@shared/hub';
-import type { AccessState } from '@shared/hub';
-import type { BadgeVariant } from '@ds/primitives/Badge/Badge.type';
 import type { SignedInStateProps } from '../HubAccountCard.type';
-
-const ACCESS_VARIANT: Record<AccessState, BadgeVariant> = {
-  admin: 'success',
-  member: 'success',
-  pending: 'warning',
-  revoked: 'danger',
-};
+import { ACCESS_VARIANT } from './SignedInState.constants';
 
 const SignedInState = (props: SignedInStateProps) => {
   const { me, openSiteLabel, onOpenSite, onSignOut } = props;

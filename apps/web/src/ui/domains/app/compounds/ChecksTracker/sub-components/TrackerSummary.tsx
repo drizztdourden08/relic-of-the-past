@@ -1,24 +1,9 @@
 /* @layer renderer-components @kind component */
 import { Box, ProgressBar, Text } from '@ds/primitives';
-import { CheckStatusIcon, STATUS_LABELS } from './CheckStatusIcon';
-import type { StatusKey } from './CheckStatusIcon';
+import { STATUS_LABELS, SUMMARY_STATS } from '../ChecksTracker.constants';
+import type { StatusKey, TrackerSummaryProps } from '../ChecksTracker.type';
+import { CheckStatusIcon } from './CheckStatusIcon';
 import '../ChecksTracker.css';
-
-interface TrackerSummaryProps {
-  completed: number;
-  reachable: number;
-  blocked: number;
-  total: number;
-}
-
-// Wording is the reader's, not the model's: a check is one you have taken, one
-// you can go and take now, or one still out of reach.
-const STATS: { key: StatusKey; label: string }[] = [
-  { key: 'completed', label: 'taken' },
-  { key: 'reachable', label: 'available' },
-  { key: 'blocked', label: 'left' },
-  { key: 'total', label: 'total' },
-];
 
 const TrackerSummary = (props: TrackerSummaryProps) => {
   const { completed, reachable, blocked, total } = props;
@@ -36,7 +21,7 @@ const TrackerSummary = (props: TrackerSummaryProps) => {
         readout={<Text title="Percent complete">{pct}%</Text>}
       />
       <Box className="tracker-summary__stats">
-        {STATS.map(({ key, label }) => (
+        {SUMMARY_STATS.map(({ key, label }) => (
           <Box key={key} className={`tracker-summary__stat tracker-summary__stat--${key}`} title={STATUS_LABELS[key]}>
             <CheckStatusIcon status={key} />
             <Text className="tracker-summary__stat-value">{counts[key]}</Text>

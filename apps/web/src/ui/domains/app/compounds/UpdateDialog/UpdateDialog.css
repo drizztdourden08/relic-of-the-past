@@ -3,9 +3,6 @@
   max-width: 600px;
 }
 
-/* Every direct child is spaced by this one gap, so the layout does not change shape
-   depending on which blocks a given state happens to render. Individual blocks must
-   not add their own vertical margins. */
 .update-dialog__body {
   display: flex;
   flex-direction: column;
@@ -42,7 +39,6 @@
   gap: var(--space-md);
 }
 
-/* Yellow, not red: a pre-release is a choice with a caveat, not an error. */
 .update-dialog__warning {
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--c-gold);
@@ -52,8 +48,6 @@
   color: var(--c-text-dim);
 }
 
-/* Red is kept for a break we have actually confirmed. Not being able to check is a
-   weaker claim and stays on the gold above. */
 .update-dialog__warning--breaking {
   border-color: var(--c-danger);
   background: var(--c-danger-soft);
@@ -84,121 +78,11 @@
   color: var(--c-text-muted);
 }
 
-.update-dialog__notes {
-  border: 1px solid var(--c-gold);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.update-dialog__notes h4 {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semi);
-  color: var(--c-gold);
-  padding: var(--space-sm) var(--space-md);
-  margin: 0;
-  background: var(--c-gold-soft);
-  border-bottom: 1px solid var(--c-gold);
-}
-
-.update-dialog__notes-content {
-  max-height: 350px;
-  overflow-y: auto;
-  font-size: var(--text-sm);
-  color: var(--c-text-dim);
-  background: var(--c-sunken);
-  padding: var(--space-md);
-  line-height: 1.6;
-  user-select: none;
-}
-
-.update-dialog__notes-content h1,
-.update-dialog__notes-content h2,
-.update-dialog__notes-content h3,
-.update-dialog__notes-content h4 {
-  color: var(--c-text);
-  font-weight: var(--weight-semi);
-  margin: 0.8em 0 0.4em;
-}
-
-.update-dialog__notes-content h1 { font-size: var(--text-lg); }
-.update-dialog__notes-content h2 { font-size: var(--text-base); }
-.update-dialog__notes-content h3 { font-size: var(--text-base); }
-
-.update-dialog__notes-content p {
-  margin: 0.4em 0;
-}
-
-.update-dialog__notes-content ul,
-.update-dialog__notes-content ol {
-  padding-left: 1.4em;
-  margin: 0.3em 0;
-}
-
-.update-dialog__notes-content li {
-  margin: 0.2em 0;
-}
-
-.update-dialog__notes-content strong {
-  color: var(--c-text);
-  font-weight: var(--weight-semi);
-}
-
-.update-dialog__notes-content em {
-  font-style: italic;
-}
-
-.update-dialog__notes-content code {
-  background: var(--c-hover);
-  padding: 0.1em 0.3em;
-  border-radius: var(--r-sm);
-  font-size: var(--text-sm);
-}
-
-.update-dialog__notes-content hr {
-  border: none;
-  border-top: 1px solid var(--c-border);
-  margin: 0.8em 0;
-}
-
-.update-dialog__notes-content a {
-  color: var(--c-text-dim);
-  text-decoration: none;
-  pointer-events: none;
-  cursor: default;
-}
-
-.update-dialog__notes-content blockquote {
-  border-left: 3px solid var(--c-gold);
-  padding-left: var(--space-sm);
-  margin: 0.5em 0;
-  color: var(--c-text-muted);
-}
-
-.update-dialog__notes-content table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 0.5em 0;
-  font-size: var(--text-sm);
-}
-
-.update-dialog__notes-content th,
-.update-dialog__notes-content td {
-  border: 1px solid var(--c-border);
-  padding: 0.3em 0.6em;
-  text-align: left;
-}
-
-.update-dialog__notes-content th {
-  background: var(--c-hover);
-  font-weight: var(--weight-semi);
-}
-
 .update-dialog__progress {
   display: flex;
   flex-direction: column;
 }
 
-/* Bar chrome comes from the ProgressBar primitive. */
 .update-dialog__progress-text {
   display: block;
   margin-top: var(--space-xs);
@@ -216,4 +100,3 @@
   font-size: var(--text-sm);
   color: var(--c-danger);
 }
-

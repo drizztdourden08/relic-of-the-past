@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* ─── Slot action, one half of the card's Load | Save bar ───
-   No colour, filter or mask reaches the glyph: the emoji keeps its own
-   palette, and only the half behind it tints on hover, focus and arming. */
 .slot-action {
   flex: 1;
   display: flex;
@@ -40,8 +37,6 @@
   cursor: not-allowed;
 }
 
-/* Glyph anchor: its own stacking context, so the glow sits behind the emoji
-   yet above the button's tinted background. */
 .slot-action__glyph {
   position: relative;
   display: inline-flex;
@@ -49,8 +44,6 @@
   line-height: 1;
 }
 
-/* ─── Armed: the first click landed, the next one confirms ───
-   The emoji bobs while a green-and-gold halo wanders behind it. */
 .slot-action--armed,
 .slot-action--armed:hover:not(:disabled) {
   background: var(--c-gold-soft);

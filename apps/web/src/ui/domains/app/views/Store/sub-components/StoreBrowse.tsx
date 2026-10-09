@@ -1,21 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * Browse and the three kind pages: a search field over the card grid, and the selected item's
- * detail beside it, in the master-detail layout the Data Manager uses with its columns
- * swapped, so the grid gets the width.
- */
 import { EmptyState, Spinner, Stack, Text, TextInput } from '@ds/primitives';
 import { MasterDetailLayout } from '@ds/composites/MasterDetailLayout';
-import type { StoreModel } from '../behavior/useStore';
+import type { StoreBrowseProps } from '../Store.type';
+import { countLine } from '../behavior/count-line';
 import { StoreDetailPanel } from './StoreDetailPanel';
 import { StoreGrid } from './StoreGrid';
-
-interface StoreBrowseProps {
-  title: string;
-  store: StoreModel;
-}
-
-const countLine = (shown: number): string => (shown === 1 ? '1 pack' : `${shown} packs`);
 
 const StoreBrowse = (props: StoreBrowseProps) => {
   const { title, store } = props;

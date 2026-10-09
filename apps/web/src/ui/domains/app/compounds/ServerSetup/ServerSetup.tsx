@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * An Archipelago server setup: host and port, password, slot name, and a Test connection
- * button with what it found. Bare: the fields, the probe's result and any error arrive as
- * props, and every edit leaves through a callback. The profile-creation form and the
- * Randomizer page's Network tab both draw it.
- */
 import { useState } from 'react';
 import { Box, Button, Field, Flex, Spinner, Stack, Text, TextInput } from '@ds/primitives';
 import type { ServerSetupProps } from './ServerSetup.type';

@@ -1,13 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * The Hookshop tab: browse, install, update and uninstall packs from the community store.
- * Publishing, ratings and profiles live on the site. Built like the Data Manager: its side
- * nav, then the page for the selected section.
- */
 import { useCallback } from 'react';
 import { Box } from '@ds/primitives';
 import { SectionNav } from '@ds/composites/SectionNav';
-import { STORE_NAV } from './behavior/store-nav';
+import { STORE_NAV } from './Store.constants';
 import { useStore } from './behavior/useStore';
 import { StoreSectionContent } from './sub-components/StoreSectionContent';
 import type { StoreProps, StoreSection } from './Store.type';

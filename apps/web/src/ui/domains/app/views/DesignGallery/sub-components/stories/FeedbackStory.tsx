@@ -2,7 +2,6 @@
 import { Box, Button, ProgressBar, Spinner, Tooltip, EmptyState, Divider } from '../../../../../../design-system/primitives';
 import { Specimen } from '../Specimen';
 
-/** Components › feedback & status. */
 const FeedbackStory = () => (
   <Box className="dg-stack">
     <Specimen label="ProgressBar" hint="gold / green (with secondary) / danger">

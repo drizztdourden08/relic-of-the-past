@@ -5,13 +5,8 @@ import { FullScreenLayer } from '../../../../design-system/composites/FullScreen
 import type { SpriteDebugProps, ReviewMode } from './SpriteDebug.type';
 import { SpriteReviewPanel } from './sub-components/SpriteReviewPanel';
 import { ItemReviewPanel } from './sub-components/ItemReviewPanel';
-import { S } from './SpriteDebug.constants';
+import { MODES, S } from './SpriteDebug.constants';
 import { getSpritesBaseUrl } from '@app/lib/storage/sprites-store';
-
-const MODES = [
-  { id: 'sprites', label: 'Sprite Review' },
-  { id: 'items', label: 'Item Association' },
-];
 
 const SpriteDebug = (props: SpriteDebugProps) => {
   const { onClose, romFile } = props;

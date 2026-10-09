@@ -1,20 +1,9 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
-import type { SearchEntry } from '../SearchPalette.type';
+import type { SearchResultListProps } from '../SearchPalette.type';
+import { IDLE_SCREEN_LIMIT } from '../SearchPalette.constants';
 import { SearchResultRow } from './SearchResultRow';
-
-interface SearchResultListProps {
-  catalog: SearchEntry[];
-  results: SearchEntry[];
-  query: string;
-  activeIndex: number;
-  setActiveIndex: (i: number) => void;
-  onSelect: (entry: SearchEntry) => void;
-  onToggle: (entry: SearchEntry) => void;
-}
-
-const IDLE_SCREEN_LIMIT = 8;
 
 const SearchResultList = (props: SearchResultListProps) => {
   const { catalog, results, query, activeIndex, setActiveIndex, onSelect, onToggle } = props;

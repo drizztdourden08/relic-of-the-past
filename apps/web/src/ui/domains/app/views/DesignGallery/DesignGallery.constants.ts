@@ -1,18 +1,5 @@
 /* @layer renderer-app @kind constants */
-
-/** A single token chip: display name, CSS var, literal value, optional note. */
-interface TokenSpec {
-  name: string;
-  cssVar: string;
-  value: string;
-  note?: string;
-}
-
-interface TokenGroup {
-  title: string;
-  description?: string;
-  tokens: TokenSpec[];
-}
+import type { TokenGroup, TokenSpec } from './DesignGallery.type';
 
 const SURFACES: TokenGroup = {
   title: 'Surfaces (one background family)',

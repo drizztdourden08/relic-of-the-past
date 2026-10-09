@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind data */
-import type { ComponentType } from 'react';
+import type { StoryMeta } from '../DesignGallery.type';
 import { ColorStory } from '../sub-components/stories/ColorStory';
 import { ScaleStory } from '../sub-components/stories/ScaleStory';
 import { ButtonStory } from '../sub-components/stories/ButtonStory';
@@ -10,13 +10,6 @@ import { ContainerStory } from '../sub-components/stories/ContainerStory';
 import { LayoutStory } from '../sub-components/stories/LayoutStory';
 import { DataStory } from '../sub-components/stories/DataStory';
 import { CompositeStory } from '../sub-components/stories/CompositeStory';
-
-interface StoryMeta {
-  id: string;
-  label: string;
-  group: string;
-  Component: ComponentType;
-}
 
 const STORIES: StoryMeta[] = [
   { id: 'color', label: 'Color & surfaces', group: 'Foundations', Component: ColorStory },

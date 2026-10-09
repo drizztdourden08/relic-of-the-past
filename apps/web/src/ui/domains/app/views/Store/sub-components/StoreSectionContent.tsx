@@ -1,27 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * The page for the section the nav selected. Everything but Installed needs the store, so
- * signed out those show the sign-in card; Installed reads the local record and can
- * uninstall without an account.
- */
 import { useCallback } from 'react';
-import type { StoreSection } from '../Store.type';
-import type { StoreModel } from '../behavior/useStore';
+import type { StoreSectionContentProps } from '../Store.type';
+import { GRID_TITLES } from '../Store.constants';
 import { StoreBrowse } from './StoreBrowse';
 import { StoreHome } from './StoreHome';
 import { StoreInstalledList } from './StoreInstalledList';
 import { StoreSignIn } from './StoreSignIn';
-
-const GRID_TITLES: Partial<Record<StoreSection, string>> = {
-  browse: 'Browse',
-  music: 'Music packs',
-  character: 'Characters',
-  language: 'Languages',
-};
-
-interface StoreSectionContentProps {
-  store: StoreModel;
-}
 
 const StoreSectionContent = (props: StoreSectionContentProps) => {
   const { store } = props;

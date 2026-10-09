@@ -1,9 +1,10 @@
-/* @layer renderer-components @kind data */
+/* @layer renderer-components @kind component */
 import { Button } from '../../../../design-system/primitives/Button';
 import { Badge } from '../../../../design-system/primitives/Badge';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
-import { formatDate, formatRomName } from './behavior/formatters';
+import { formatRomName } from '../../../../../utils/formatRomName';
+import { formatDate } from './behavior/format-date';
 import './ProfilePage.css';
 import type { ProfilePageProps } from './ProfilePage.type';
 

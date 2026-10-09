@@ -1,15 +1,4 @@
 /* @layer renderer-hooks @kind logic */
-/**
- * The working sheet: what is open, what has been changed, and how it gets written back.
- *
- * The draft keeps the sheet's two palette layers, not a mutable palette plus a copy
- * of the old one. `original` is never written to, so Revert is dropping the override and
- * `dirty` is asking whether the override holds anything, so there is no flag to keep in sync.
- *
- * Saving also pushes the sheet at a running game. That only lands when the core's override
- * gate is open, which the renderer opens for the active profile's own selection, so the
- * result is reported back, not assumed.
- */
 import { useState, useCallback, useMemo } from 'react';
 import type { OutfitId, PlayerSheet, SheetPalette } from '@shared/game/data/player-sheet/types';
 import { loadSheet, saveSheet } from '@app/lib/game/player-sheet/load-sheet';
@@ -17,31 +6,9 @@ import { withColor, withGloveColor, isEmptyOverride } from '@app/lib/game/player
 import { loadStockSheet } from '@app/lib/game/stock-player-sheet';
 import { toZsprBytes } from '@app/lib/game/zspr-write';
 import { applyPlayerSprite } from '@app/lib/game/player-sprite';
-import { getActiveProfileId } from '@app/lib/game';
-import { readConfig } from '@app/lib/storage/profile-store';
 import { safeFileName } from '@shared/storage/link-sprites/link-sprites';
-
-interface OpenDraft {
-  /** File name on disk, or null for a sheet created but never saved. */
-  file: string | null;
-  sheet: PlayerSheet;
-}
-
-/**
- * Whether this file is the sheet the running game is actually wearing.
- *
- * The core's override gate opens for the active profile having SOME selection, not for
- * the one the studio happens to have open, so pushing on every save would drop an
- * unselected sheet into the running game, and the next boot would stage the real
- * selection and silently swap it back. Editing one sprite must not repaint the player
- * with a different one.
- */
-const isLiveSelection = async (name: string): Promise<boolean> => {
-  const id = getActiveProfileId();
-  if (!id) return false;
-  const config = await readConfig(id);
-  return config?.linkSprite === name;
-};
+import type { OpenDraft } from '../PlayerSpriteStudio.type';
+import { isLiveSelection } from './is-live-selection';
 
 const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => {
   const [draft, setDraft] = useState<OpenDraft | null>(null);
@@ -88,7 +55,6 @@ const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => 
     if (!draft) return null;
     const name = safeFileName(as ?? draft.file ?? `${draft.sheet.meta.name || 'sprite'}.rsp`);
     await saveSheet(name, draft.sheet);
-    // The core only speaks ZSPR, so a live push always flattens regardless of container.
     const live = await isLiveSelection(name) && applyPlayerSprite(toZsprBytes(draft.sheet));
     setApplied(live);
     setDraft({ file: name, sheet: draft.sheet });

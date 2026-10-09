@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Fixed track, right-aligned, tabular digits: the text may change width,
-   the cell may not. Anything wider than the track ellipsizes. */
-
 .pool-impact-cell {
   min-width: 0;
   text-align: right;

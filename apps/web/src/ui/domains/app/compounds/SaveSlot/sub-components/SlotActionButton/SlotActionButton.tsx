@@ -6,7 +6,6 @@ import { EmojiIcon } from '../../../../../../design-system/primitives/EmojiIcon'
 import './SlotActionButton.css';
 import type { SlotActionButtonProps } from './SlotActionButton.type';
 
-/** One half of a slot's action bar. Reads as armed after the first click. */
 const SlotActionButton = (props: SlotActionButtonProps) => {
   const { action, glyph, label, shortcutHint, disabled, armed, onPress, onDisarm } = props;
 

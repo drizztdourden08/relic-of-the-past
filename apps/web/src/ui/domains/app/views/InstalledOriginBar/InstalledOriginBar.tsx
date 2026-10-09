@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The origin bar, wired: the install record, the store's live version, and Duplicate, Update,
- * Open on the site and Uninstall run through the store IPC. Every editor that shows an
- * installed item puts this at its top and is told what to select after each action.
- */
 import { useCallback } from 'react';
 import { copyRefusal } from '@shared/store/licenses';
 import { storeItemUrl } from '@app/lib/store/store-site';

@@ -1,9 +1,5 @@
 /* @layer renderer-app @kind style */
 
-/* ─── The foldable detail column ───
-   Same mechanism as the Controls page's Profiles column (ControlsSettings.css):
-   the panel shrinks to fit, its content is hidden, and the title turns on its
-   side so the folded strip still names what is behind it. */
 .collapsible-detail {
   display: flex;
   flex-direction: column;

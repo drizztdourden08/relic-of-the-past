@@ -1,11 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The origin bar at the top of an editor showing an item installed from the Hookshop: where it
- * came from, who made it, its version and licence, and what can be done with it. Duplicate
- * makes an editable copy when the licence allows one, and says why not when it does not.
- * Uninstall asks first, in the bar's own dialog. Bare: the host passes the origin and runs the
- * actions.
- */
 import { useCallback, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import copyIcon from '@iconify-icons/lucide/copy';

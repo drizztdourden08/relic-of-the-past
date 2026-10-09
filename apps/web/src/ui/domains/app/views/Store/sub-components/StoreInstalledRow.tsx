@@ -1,21 +1,9 @@
 /* @layer renderer-components @kind component */
-/** One installed pack: its name, kind and version, Update when a newer one is live, and Uninstall. */
 import { useCallback } from 'react';
 import { Button, Card, Flex, Stack, Text } from '@ds/primitives';
 import { KIND_LABELS } from '../../../compounds/StoreItemCard';
-import type { InstallJob, InstalledRow } from '../Store.type';
+import type { StoreInstalledRowProps } from '../Store.type';
 import { StoreInstallBar } from './StoreInstallBar';
-
-interface StoreInstalledRowProps {
-  row: InstalledRow;
-  job: InstallJob;
-  /** Updating needs the store; uninstalling works signed out. */
-  canUpdate: boolean;
-  uninstalling: boolean;
-  onUpdate: (itemId: string) => void;
-  onCancel: (itemId: string) => void;
-  onUninstall: (itemId: string, name: string) => void;
-}
 
 const StoreInstalledRow = (props: StoreInstalledRowProps) => {
   const { row, job, canUpdate, uninstalling, onUpdate, onCancel, onUninstall } = props;

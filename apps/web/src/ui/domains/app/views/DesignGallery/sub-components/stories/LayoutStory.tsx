@@ -2,7 +2,6 @@
 import { Box, Text, Flex, Grid, Stack, Center, Spacer, Divider } from '../../../../../../design-system/primitives';
 import { Specimen } from '../Specimen';
 
-/** Components › layout primitives. */
 const LayoutStory = () => (
   <Box className="dg-stack">
     <Specimen label="Flex" hint="direction / gap / align / justify">

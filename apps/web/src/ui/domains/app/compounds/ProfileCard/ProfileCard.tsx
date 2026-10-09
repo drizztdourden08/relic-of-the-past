@@ -3,7 +3,8 @@ import { Button } from '../../../../design-system/primitives/Button';
 import { Flex } from '../../../../design-system/primitives/Flex';
 import { Text } from '../../../../design-system/primitives/Text';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
-import { formatDate, formatRomName } from './behavior/formatters';
+import { formatRomName } from '../../../../../utils/formatRomName';
+import { formatDate } from './behavior/format-date';
 import './ProfileCard.css';
 import { type ProfileCardProps } from './ProfileCard.type';
 

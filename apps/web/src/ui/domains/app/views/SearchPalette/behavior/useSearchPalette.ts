@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * Drives the SearchPalette shell. The palette is always mounted (a zero-size seed at
- * top-center, like Jex's CommandSurface pill) and just toggles an `is-open` class. The
- * CSS transition runs on the persisting DOM node with no mount/unmount timing to manage.
- * Also owns keyboard navigation and running/toggling the active result.
- */
 import { useState, useRef, useEffect, useCallback, type KeyboardEvent } from 'react';
 import { useDismissable } from '@ds/primitives/Portal';
 import { usePlatform } from '@app/platform';
@@ -12,9 +6,9 @@ import { useSearchStore } from '@app/stores/search-store';
 import { isPrimaryModifier } from '@shared/platform';
 import type { GameSettings } from '@shared/types/settings';
 import type { TitleBarProps } from '../../TitleBar/TitleBar.type';
-import type { SearchEntry } from '../SearchPalette.type';
+import type { RunTargetDeps, SearchEntry } from '../SearchPalette.type';
 import { useSearchResults } from './useSearchResults';
-import { useRunTarget, type RunTargetDeps } from './run-target';
+import { useRunTarget } from './useRunTarget';
 
 const useSearchPalette = (navProps: TitleBarProps, navDeps: RunTargetDeps) => {
   const os = usePlatform().info.os;
@@ -34,12 +28,6 @@ const useSearchPalette = (navProps: TitleBarProps, navDeps: RunTargetDeps) => {
   useEffect(() => { if (open) inputRef.current?.focus(); }, [open]);
   useEffect(() => { setActiveIndex(0); }, [results]);
 
-  // The palette floats over whatever page is open, so it has to be dismissed
-  // before that page is. The app shell's global shortcut used to special-case it
-  // by name; it now asks the dismiss stack instead, and this is how the palette
-  // gets an answer into it. The input's own Escape below still handles the
-  // common case (focus is in the box) and marks the key consumed; this covers
-  // the press that arrives with focus anywhere else in the panel.
   useDismissable({ active: open, level: 'dialog', onDismiss: closePalette });
 
   const toggleEntry = useCallback((entry: SearchEntry) => {

@@ -1,14 +1,9 @@
 /* @layer renderer-components @kind component */
-/** The detail column: nothing selected, the item loading or failing, or the item itself. */
 import { useCallback } from 'react';
 import { Spinner, Text } from '@ds/primitives';
 import { storeItemUrl } from '@app/lib/store/store-site';
-import type { StoreModel } from '../behavior/useStore';
+import type { StoreDetailPanelProps } from '../Store.type';
 import { StoreDetail } from './StoreDetail';
-
-interface StoreDetailPanelProps {
-  store: StoreModel;
-}
 
 const StoreDetailPanel = (props: StoreDetailPanelProps) => {
   const { store } = props;
@@ -19,7 +14,6 @@ const StoreDetailPanel = (props: StoreDetailPanelProps) => {
   const handleInstall = useCallback(() => { void installer.install(itemId); }, [installer, itemId]);
   const handleCancel = useCallback(() => installer.cancel(itemId), [installer, itemId]);
   const handleUninstall = useCallback(() => remover.uninstall(itemId, name), [remover, itemId, name]);
-  // window.open on an external URL is routed to the system browser by the main process.
   const handleOpenSite = useCallback(() => { window.open(storeItemUrl(itemId), '_blank'); }, [itemId]);
 
   if (!selectedId) return <Text>Select a pack to see it here</Text>;

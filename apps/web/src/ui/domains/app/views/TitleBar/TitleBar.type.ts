@@ -14,7 +14,6 @@ interface TitleBarProps {
   onToggleCheats: () => void;
   onShowDataManager: (tab?: string) => void;
   onShowInputTester: () => void;
-  /** The HUD Layout Editor studio, listed beside the others under Advanced. */
   onShowHudLayout: () => void;
   onShowCredits: () => void;
   onShowDesignGallery: () => void;
@@ -30,21 +29,33 @@ interface TitleBarProps {
   onShowBugReport: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
-  /** Visibility of each toggleable widget, keyed by widget id, for menu checkmarks. */
   widgetVisibility?: Record<string, boolean>;
-  /** Master gate for developer-only menu entries (devOnly widgets + Advanced dev tools). */
   developerToolsEnabled?: boolean;
   windowMode?: GameSettings['windowMode'];
   isMuted?: boolean;
   onToggleMute?: () => void;
   showFps?: boolean;
-  /** Opens the Display settings, used by the incompatible-refresh-rate tag. */
   onShowDisplaySettings?: () => void;
   updateAvailable?: boolean;
   onUpdateClick?: () => void;
   onCheckForUpdates?: () => void;
 }
 
+interface InstanceBadgeProps {
+  name: string;
+}
+
+interface RefreshRateTagProps {
+  onClick: () => void;
+}
+
+interface WindowControlsProps {
+  isMaximized: boolean;
+}
+
 export type {
+  InstanceBadgeProps,
+  RefreshRateTagProps,
   TitleBarProps,
+  WindowControlsProps,
 };

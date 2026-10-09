@@ -1,29 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * The leaves of the check tree, in the three view modes.
- *
- * A check with several vanilla items expands to one entry per item in the
- * modes that show the item, but only WITHOUT a run: once a seed has placed
- * something there, the check holds exactly one thing, so it collapses back to
- * a single row showing that.
- */
 import { Box } from '@ds/primitives';
-import type { CheckRecord } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
 import { shownItemsOf } from '@shared/game/logic/queries/check-contents';
-import type { RunContext } from '@shared/game/logic/queries/check-grouping';
 import { CheckCard } from './CheckCard';
 import { TrackerCheckRow } from './TrackerCheckRow';
-import type { ViewMode } from '../ChecksTracker.type';
+import type { CheckListProps } from '../ChecksTracker.type';
 import '../ChecksTracker.css';
-
-interface CheckListProps {
-  checks: CheckRecord[];
-  statuses: Map<string, CheckStatus>;
-  eventStatus?: ReadonlyMap<string, boolean>;
-  viewMode: ViewMode;
-  run?: RunContext;
-}
 
 const CheckList = (props: CheckListProps) => {
   const { checks, statuses, eventStatus, viewMode, run } = props;

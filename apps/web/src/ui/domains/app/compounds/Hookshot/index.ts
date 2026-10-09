@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind barrel */
 export { Hookshot } from './Hookshot';
-export { layoutHookshot, hookshotCurve } from './behavior/hookshot-layout';
+export { layoutHookshot } from './behavior/hookshot-layout';
+export { hookshotCurve } from './behavior/hookshot-curve';
 export type { HookshotCurve, HookshotProps } from './Hookshot.type';

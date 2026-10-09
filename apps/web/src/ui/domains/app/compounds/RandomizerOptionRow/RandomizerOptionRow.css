@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* One catalog option on the panel's fixed grid: the text block takes what is
-   left, the control and the In Pool cell sit in their own tracks so nothing
-   moves when a value changes width. Used both interactively (profile
-   creation) and read-only (the randomizer page). */
-
 .rand-opt-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--option-control-w) var(--option-impact-w);
@@ -18,9 +13,6 @@
   opacity: var(--opacity-muted);
 }
 
-/* A row a sibling setting overruled keeps its full contrast: its control is
-   still drawn disabled by the control itself, but the sentence saying why must
-   not be dimmed along with it. */
 .rand-opt-row--forced {
   opacity: 1;
 }
@@ -74,7 +66,6 @@
   min-width: 0;
 }
 
-/* The In Pool cell sits on the title's baseline, not the description's. */
 .rand-opt-row > .pool-impact-cell {
   padding-top: var(--space-xs);
 }

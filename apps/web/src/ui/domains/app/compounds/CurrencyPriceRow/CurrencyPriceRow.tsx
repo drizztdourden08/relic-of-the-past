@@ -1,41 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * One row of a currency-price section: the checkbox that opts a currency in,
- * and beside it the two-thumb range a rolled price is drawn from, disabled
- * until the currency is ticked. A row may also pass checkboxes in as children:
- * on its own they take the range's place, and under a range they fall to a
- * line of their own across the row, so the tick and its range stay together on
- * the first line whatever the row carries below.
- *
- * A row a rule elsewhere on the panel has taken away is BLOCKED: its tick is
- * inert and off, and the one line saying why takes the range's place,
- * so the greying reads as a consequence of another setting instead of as
- * this row's own choice.
- *
- * A `readout` row draws the tick as a True or False tag and the range as its
- * two ends in words: the face of a panel shown read-only.
- */
 import { Box, Checkbox, RangeSlider, Text } from '@ds/primitives';
 import { OptionValueTag, rangeLabelOf } from '../OptionValueTag';
+import type { CurrencyPriceRowProps } from './CurrencyPriceRow.type';
 import './CurrencyPriceRow.css';
-
-interface CurrencyPriceRowProps {
-  label: string;
-  enabled: boolean;
-  onEnabledChange?: (enabled: boolean) => void;
-  /** A rule elsewhere holds this currency off: the tick cannot be changed. */
-  blocked?: boolean;
-  /** Why the row is blocked; shown in the control's place while it is. */
-  note?: string;
-  /** The discrete amounts both thumbs sit on; omitted for the bottle row. */
-  stops?: readonly string[];
-  /** [low, high] indexes into `stops`. */
-  range?: readonly [number, number];
-  onRangeChange?: (next: [number, number]) => void;
-  /** Show the tick and the range as tags in place of their controls: the read-only panel. */
-  readout?: boolean;
-  children?: React.ReactNode;
-}
 
 const CurrencyPriceRow = (props: CurrencyPriceRowProps) => {
   const {

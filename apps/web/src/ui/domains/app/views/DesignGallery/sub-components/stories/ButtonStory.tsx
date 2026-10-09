@@ -2,7 +2,6 @@
 import { Box, Button, IconButton, Badge, StatusBadge } from '../../../../../../design-system/primitives';
 import { Specimen } from '../Specimen';
 
-/** Components: buttons, icon buttons, badges. */
 const ButtonStory = () => (
   <Box className="dg-stack">
     <Specimen label="Button tiers" hint="gold primary · green secondary · grey tertiary · ghost · danger. Primary & secondary sit next to each other">

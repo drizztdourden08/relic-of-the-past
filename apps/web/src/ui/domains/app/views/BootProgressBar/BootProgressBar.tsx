@@ -1,16 +1,9 @@
 /* @layer renderer-app @kind component */
-/**
- * The label flips from white to black over the gold fill via a clipped duplicate
- * label (see BootProgressBar.css). The minimum on-screen time is cosmetic only and
- * never gates readiness.
- */
 import { useEffect, useState } from 'react';
 import { Box } from '@ds/primitives';
 import { useBootProgressStore } from '@app/stores/boot-progress-store';
+import { FADE_MS, MIN_VISIBLE_MS } from './BootProgressBar.constants';
 import './BootProgressBar.css';
-
-const MIN_VISIBLE_MS = 1000;
-const FADE_MS = 450;
 
 const BootProgressBar = () => {
   const phase = useBootProgressStore((s) => s.phase);

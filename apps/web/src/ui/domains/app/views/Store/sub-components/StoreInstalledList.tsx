@@ -1,17 +1,8 @@
 /* @layer renderer-components @kind component */
-/** Installed and Updates: the packs this computer has from the Hookshop, one row each. */
 import { useCallback } from 'react';
 import { EmptyState, Stack, Text } from '@ds/primitives';
-import type { InstalledRow } from '../Store.type';
-import type { StoreModel } from '../behavior/useStore';
+import type { StoreInstalledListProps } from '../Store.type';
 import { StoreInstalledRow } from './StoreInstalledRow';
-
-interface StoreInstalledListProps {
-  title: string;
-  rows: InstalledRow[];
-  emptyText: string;
-  store: StoreModel;
-}
 
 const StoreInstalledList = (props: StoreInstalledListProps) => {
   const { title, rows, emptyText, store } = props;

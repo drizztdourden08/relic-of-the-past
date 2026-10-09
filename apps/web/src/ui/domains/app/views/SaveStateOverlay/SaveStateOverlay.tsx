@@ -8,7 +8,6 @@ import { ProgressRing } from '../../../../design-system/primitives/ProgressRing'
 import { InputGlyph } from '../../compounds/InputGlyph';
 import { log } from '../../../../../lib/log-bus';
 import * as savesStore from '@app/lib/storage/saves-store';
-import type { SlotHint } from './behavior/useEnhancedSaveSlot';
 import './SaveStateOverlay.css';
 import type { SaveStateOverlayProps, SlotInfo } from './SaveStateOverlay.type';
 import { SLOT_COUNT, SHORTCUT_KEYS, ANIM_MS } from './SaveStateOverlay.constants';
@@ -40,7 +39,9 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
           if (b64) {
             screenshotUrl = 'data:image/png;base64,' + b64;
           }
-        } catch { /* best effort */ }
+        } catch {
+          screenshotUrl = null;
+        }
       }
       slotData.push({
         slot: i,
@@ -53,7 +54,6 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
     setSlots(slotData);
   }, []);
 
-  // Open/close with animation
   useEffect(() => {
     clearTimeout(timeoutRef.current);
     if (open) {
@@ -72,9 +72,6 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
     return () => clearTimeout(timeoutRef.current);
   }, [open, loadSlots]);
 
-  // Map vertical wheel to horizontal scroll so a scroll wheel pages through slots
-  // (the track overflows horizontally on small viewports). Native non-passive
-  // listener so preventDefault actually takes.
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return undefined;
@@ -87,9 +84,6 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
     return () => el.removeEventListener('wheel', onWheel);
   }, [visible]);
 
-  // Center the highlighted slot (the one whose shortcut was hit) in the track,
-  // scrolling only as far as needed. Manual calc instead of scrollIntoView so it
-  // never nudges the page vertically and always centers within the track.
   useEffect(() => {
     const track = trackRef.current;
     const el = highlightedRef.current;
@@ -100,8 +94,6 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
     track.scrollTo({ left: track.scrollLeft + delta, behavior: 'smooth' });
   }, [highlightedSlot, visible]);
 
-  // Stay open after saving so the freshly-captured thumbnail updates in place
-  // immediately (loading dismisses instead, since you're resuming the game).
   const handleSave = useCallback(async (slot: number) => {
     setBusy(slot);
     log.app(`[UI] Save to slot ${slot}`);

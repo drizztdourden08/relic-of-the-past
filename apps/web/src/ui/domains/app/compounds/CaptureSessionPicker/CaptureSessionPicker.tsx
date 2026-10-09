@@ -10,10 +10,6 @@ import { CaptureSessionRow } from './sub-components/CaptureSessionRow';
 import type { CaptureSessionPickerProps } from './CaptureSessionPicker.type';
 import './CaptureSessionPicker.css';
 
-/** The bug-report dialog's right-hand pane: every recorded capture session, checkable and
- *  deletable. Bare tier - listing/selection/deletion all happen a level up (useCaptureSessions,
- *  a view-level hook), this only renders what it's handed and arms a delete confirmation
- *  before calling back. */
 const CaptureSessionPicker = (props: CaptureSessionPickerProps) => {
   const { sessions, loading, selected, showSent, deleteError, onToggleSession, onToggleShowSent, onDeleteSession } = props;
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);

@@ -67,8 +67,6 @@
   user-select: none;
 }
 
-/* Named-instance marker for an automated launch running beside the user's own app.
-   Informational, not a warning: the name itself is what identifies the window. */
 .titlebar__instance {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -82,13 +80,11 @@
   border-radius: var(--r-sm);
 }
 
-/* Search: the SearchSpark mark (gold glow, twinkling star), brighter on hover. */
 .titlebar__search:hover .search-spark {
   color: var(--c-gold-bright);
   filter: drop-shadow(0 0 6px var(--c-gold-soft));
 }
 
-/* Report a bug, same treatment as Search (plain icon, no button box) but red instead of gold. */
 .titlebar__fps {
   font-size: var(--text-xs);
   font-family: var(--font-mono);
@@ -128,7 +124,6 @@
   -webkit-app-region: no-drag;
 }
 
-/* ─── Window control buttons ─── */
 .titlebar__control {
   display: flex;
   align-items: center;

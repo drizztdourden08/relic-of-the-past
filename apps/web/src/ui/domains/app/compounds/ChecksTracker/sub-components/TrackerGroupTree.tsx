@@ -1,42 +1,14 @@
 /* @layer renderer-components @kind component */
-/**
- * Adapts the check group tree onto the shared GroupTree composite: the tree
- * owns nesting and expansion, this file owns what a check group counts in its
- * header and what a check row looks like.
- */
 import { useCallback, useMemo } from 'react';
-import { Box, Text } from '@ds/primitives';
+import { Box } from '@ds/primitives';
 import { GroupTree } from '@ds/composites/GroupTree';
 import type { TreeNode } from '@ds/composites/GroupTree';
 import type { CheckRecord } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
-import type { GroupNode, RunContext } from '@shared/game/logic/queries/check-grouping';
-import type { ViewMode } from '../ChecksTracker.type';
+import type { GroupNode } from '@shared/game/logic/queries/check-grouping';
+import type { TrackerGroupTreeProps } from '../ChecksTracker.type';
 import { CheckList } from './CheckList';
+import { GroupCounts } from './GroupCounts';
 import '../ChecksTracker.css';
-
-interface TrackerGroupTreeProps {
-  node: GroupNode;
-  statuses: Map<string, CheckStatus>;
-  eventStatus?: ReadonlyMap<string, boolean>;
-  viewMode: ViewMode;
-  run?: RunContext;
-  /** Controlled expansion, passed straight through to GroupTree. */
-  expandedGroups?: readonly string[];
-  onToggleGroup?: (key: string) => void;
-}
-
-/** taken / available / still to find: the same three the summary bar counts. */
-const GroupCounts = ({ stats }: { stats: GroupNode['stats'] }) => (
-  <Box as="span" className="tracker-group__counts" title="taken / available / left">
-    <Text className="tracker-group__count--completed">{stats.completed}</Text>
-    <Text className="tracker-group__count-sep"> taken · </Text>
-    <Text className="tracker-group__count--reachable">{stats.reachable}</Text>
-    <Text className="tracker-group__count-sep"> open · </Text>
-    <Text className="tracker-group__count--blocked">{stats.blocked}</Text>
-    <Text className="tracker-group__count-sep"> left</Text>
-  </Box>
-);
 
 const toTreeNode = (node: GroupNode): TreeNode<CheckRecord> => ({
   key: node.key,

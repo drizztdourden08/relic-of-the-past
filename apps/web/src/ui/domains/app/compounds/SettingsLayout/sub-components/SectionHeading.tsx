@@ -1,22 +1,10 @@
 /* @layer renderer-components @kind component */
-/** A section title with the reset-to-defaults action sitting beside it. */
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Icon } from '../../../../../design-system/primitives/Icon';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { ConfirmIconButton } from '../../../../../design-system/composites/ConfirmIconButton';
-
-/** Counter-clockwise arrow: the arc, then the corner that heads it. */
-const RESET_PATHS = ['M0.67 2.67V6.67H4.67', 'M2.34 10a6 6 0 1 0 1.42-6.24L0.67 6.67'];
-
-const RESET_LABEL = 'Reset section to defaults';
-const AT_DEFAULTS_LABEL = 'Section is already at its defaults';
-
-interface SectionHeadingProps {
-  title: string;
-  /** How many settings in this section differ from their default. Zero rests the action. */
-  changedCount: number;
-  onReset: () => void;
-}
+import type { SectionHeadingProps } from '../SettingsLayout.type';
+import { AT_DEFAULTS_LABEL, RESET_LABEL, RESET_PATHS } from './SectionHeading.constants';
 
 const SectionHeading = (props: SectionHeadingProps) => {
   const { title, changedCount, onReset } = props;

@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Settings content. The page chrome (header, anchors, scroll) is the SettingsPage
-   compound; these styles only cover the section / subsection / option-group content. */
-
 .settings-layout__sections {
   display: flex;
   flex-direction: column;
@@ -16,16 +13,12 @@
   text-align: center;
 }
 
-/* ─── Section ─── */
-
 .settings-layout__section {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
 }
 
-/* Title and its reset action share the section's underline, so the action reads as belonging
-   to the heading and not to the first row beneath it. */
 .settings-layout__section-heading {
   display: flex;
   align-items: center;
@@ -40,10 +33,8 @@
   border-bottom: none;
 }
 
-/* The action sits back until the heading is hovered or it holds focus, so a panel of
-   sections is not a column of competing buttons. It stays visible either way. */
 .settings-layout__section-reset {
-  justify-content: flex-end; /* the glyph hugs the section's right edge; the armed pair grows leftward */
+  justify-content: flex-end;
   opacity: 0.55;
   transition: opacity var(--transition-fast);
 }
@@ -61,8 +52,6 @@
   padding-bottom: var(--space-xs);
   border-bottom: 1px solid var(--c-border);
 }
-
-/* ─── Subsection ─── */
 
 .settings-layout__subsection {
   display: flex;
@@ -88,8 +77,6 @@
   overflow: hidden;
 }
 
-/* Every direct slot in the group (a plain row, or a run of locked rows wrapped in one
-   DisabledOverlay) gets the same divider rhythm. */
 .settings-layout__group > * + * {
   border-top: 1px solid var(--c-border);
 }
@@ -98,13 +85,10 @@
   padding: var(--space-md) var(--space-lg);
 }
 
-/* Dividers between rows stacked *inside* a locked run (same class, deeper nesting). The
-   `> * + *` rule above only sees the run's own wrapper as one top-level slot. */
 .settings-layout__row + .settings-layout__row {
   border-top: 1px solid var(--c-border);
 }
 
-/* Search-palette deep-link landing pulses gold briefly on the row it jumped to. */
 .is-search-hit {
   animation: settings-search-hit 1.2s ease-out;
 }

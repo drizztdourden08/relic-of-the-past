@@ -10,14 +10,11 @@ import { useBugReportForm } from './behavior/useBugReportForm';
 import { useCaptureSessions } from './behavior/useCaptureSessions';
 import { DebugInfoPreview } from './sub-components/DebugInfoPreview';
 import { ReportFiledPanel } from './sub-components/ReportFiledPanel';
-import type { BugReportDialogProps } from './types';
+import type { BugReportDialogProps } from './BugReportDialog.type';
 import './BugReportDialog.css';
 
 const BugReportDialog = (props: BugReportDialogProps) => {
   const { open, onClose, profileId } = props;
-  // Attaching a debug report only makes sense while logging is on for this profile. The
-  // dialog can be reached from several places (the floating button, "Report a bug" in the
-  // menu, the updater), and this is the one gate all of them share.
   const allowDebugLogging = useAllowDebugLogging();
   const attachProfileId = allowDebugLogging ? profileId : null;
 
@@ -31,7 +28,6 @@ const BugReportDialog = (props: BugReportDialogProps) => {
     form.reset();
   };
 
-  // window.open on an external URL is routed to the system browser by the main process.
   const openAndClose = (url: string) => {
     window.open(url, '_blank');
     closeForm();

@@ -1,23 +1,10 @@
 /* @layer renderer-components @kind hook */
-/**
- * The home page and the whole catalogue, loaded together once signed in. A refused token
- * reports signed out so the account refreshes and the tab shows the sign-in card.
- */
 import { useCallback, useEffect, useState } from 'react';
-import type { HomeResponse } from '@shared/store/api-types';
-import type { ItemCardView } from '@shared/store/home-types';
-
-interface CatalogState {
-  home: HomeResponse | null;
-  items: ItemCardView[];
-  loading: boolean;
-  error: string | null;
-}
-
-const EMPTY: CatalogState = { home: null, items: [], loading: false, error: null };
+import type { CatalogState } from '../Store.type';
+import { EMPTY_CATALOG } from '../Store.constants';
 
 const useCatalog = (signedIn: boolean, onSignedOut: () => void) => {
-  const [state, setState] = useState<CatalogState>(EMPTY);
+  const [state, setState] = useState<CatalogState>(EMPTY_CATALOG);
 
   const reload = useCallback(async () => {
     setState((current) => ({ ...current, loading: true, error: null }));
@@ -34,7 +21,7 @@ const useCatalog = (signedIn: boolean, onSignedOut: () => void) => {
 
   useEffect(() => {
     if (signedIn) void reload();
-    else setState(EMPTY);
+    else setState(EMPTY_CATALOG);
   }, [signedIn, reload]);
 
   return { ...state, reload };

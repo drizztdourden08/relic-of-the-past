@@ -1,15 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Button, Text } from '@ds/primitives';
-import type { UploadStatus } from '../behavior/useBugReportForm';
+import type { ReportFiledPanelProps } from '../BugReportDialog.type';
 
-interface ReportFiledPanelProps {
-  issueUrl: string;
-  uploadStatus: UploadStatus;
-  uploadError: string | null;
-  onRetryUpload: () => void;
-}
-
-/** The body of the "Report filed" dialog: the issue link and the state of the attachment. */
 const ReportFiledPanel = (props: ReportFiledPanelProps) => {
   const { issueUrl, uploadStatus, uploadError, onRetryUpload } = props;
 

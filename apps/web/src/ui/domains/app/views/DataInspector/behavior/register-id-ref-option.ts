@@ -1,0 +1,15 @@
+/* @layer renderer-app @kind logic */
+import type { EntityKind } from '@shared/game/data';
+import type { IdRefOption } from '@ds/composites/RecordEditor';
+import { dropNarrowed } from './drop-narrowed';
+import { optionCache } from './option-cache';
+import { optionsFor } from './options-for';
+
+const registerIdRefOption = (kind: EntityKind, option: IdRefOption): void => {
+  const held = optionsFor(kind);
+  if (held.some(entry => entry.value === option.value)) return;
+  optionCache.set(kind, [...held, option]);
+  dropNarrowed(kind);
+};
+
+export { registerIdRefOption };

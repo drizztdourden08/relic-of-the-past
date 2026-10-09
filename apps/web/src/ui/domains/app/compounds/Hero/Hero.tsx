@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * A scene with details floating over it: the backdrop the host hands in fills the hero, a
- * shade darkens its left and bottom so text reads on any scene, the intro sits bottom-left
- * with an optional side panel beside it, and an optional strip runs along the bottom. The
- * profile's Home tab and the store's item page both draw their header through it.
- */
 import { Box } from '../../../../design-system/primitives/Box';
 import type { HeroProps } from './Hero.type';
 import './Hero.css';

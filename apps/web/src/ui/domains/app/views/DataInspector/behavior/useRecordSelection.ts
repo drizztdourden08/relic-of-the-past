@@ -1,21 +1,8 @@
-/* @layer renderer-app @kind logic */
-/**
- * Which record is open, per collection, for the session only: switching
- * collections and back lands where you were, but yesterday's selection is not
- * worth restoring. Written through the store, not `useViewState`, because
- * following an id reference must select a record in a collection that is not
- * active yet; a hook bound to the current key would need a render in between.
- */
+/* @layer renderer-app @kind hook */
 import { useCallback } from 'react';
 import { DEFAULT_SESSION_VIEW, useDataViewStore } from '@app/stores/data-view-store';
-import { queryViewKey } from '../DataInspector.constants';
-import type { InspectorKind } from '../DataInspector.type';
-
-interface RecordSelection {
-  selectedId: string | null;
-  /** Selects a record in ANY collection, active or not. */
-  selectIn: (kind: InspectorKind, id: string | null) => void;
-}
+import type { InspectorKind, RecordSelection } from '../DataInspector.type';
+import { queryViewKey } from './query-view-key';
 
 const useRecordSelection = (kind: InspectorKind): RecordSelection => {
   const selectedId = useDataViewStore(
@@ -33,4 +20,3 @@ const useRecordSelection = (kind: InspectorKind): RecordSelection => {
 };
 
 export { useRecordSelection };
-export type { RecordSelection };

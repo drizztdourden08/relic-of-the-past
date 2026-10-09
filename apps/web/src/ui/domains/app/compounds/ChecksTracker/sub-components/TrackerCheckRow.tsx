@@ -1,23 +1,10 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@ds/primitives';
-import type { CheckRecord, ItemId } from '@shared/game/data';
 import { getItem } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
 import { CheckStatusIcon } from './CheckStatusIcon';
 import { SwapBadge } from './SwapBadge';
+import type { TrackerCheckRowProps } from '../ChecksTracker.type';
 import '../ChecksTracker.css';
-
-interface TrackerCheckRowProps {
-  check: CheckRecord;
-  status: CheckStatus;
-  detailed?: boolean;
-  /** The item this row shows, already resolved by the caller (check-contents.ts). */
-  item?: ItemId;
-  /** The name of another player's item placed here (online), shown in place of |item|. */
-  foreignItem?: string;
-  /** A reversible event's live side: true while it holds. Undefined for every other record. */
-  now?: boolean;
-}
 
 const TrackerCheckRow = (props: TrackerCheckRowProps) => {
   const { check, status, detailed, item, foreignItem, now } = props;

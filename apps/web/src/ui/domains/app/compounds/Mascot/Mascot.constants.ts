@@ -1,9 +1,4 @@
-/* @layer renderer-components @kind generated */
-/**
- * Sizes and places of the mascot's pieces in assets/mascot, in mascot pixels. `at` is the
- * piece's top-left corner on the body (the eye has one per eye), and a pod's `pivot` is
- * the point it turns around, in its own pixels. A redrawn piece changes its numbers here.
- */
+/* @layer renderer-components @kind data */
 const MASCOT_PARTS = {
   body: { w: 35, h: 23, at: [0, 0] },
   visor: { w: 15, h: 7, at: [10, 11] },

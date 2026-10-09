@@ -1,14 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Text, Image } from '@ds/primitives';
-import type { DrawerMenuItem } from '../MobileChrome.type';
-
-interface OptionsDrawerProps {
-  items: DrawerMenuItem[];
-  fps: number;
-  showFps: boolean;
-  isMuted: boolean;
-  onToggleMute?: () => void;
-}
+import type { DrawerMenuItem, OptionsDrawerProps } from '../MobileChrome.type';
 
 const renderItem = (item: DrawerMenuItem) => {
   if (item.children?.length) {

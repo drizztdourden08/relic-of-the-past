@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind hook */
-/** Owns the capture button's click behavior: starting a recording checks for ffmpeg first
- *  (now that finalizing encodes a video the moment a recording stops, not at package time)
- *  and asks the caller to show the install prompt if it isn't ready, falling back to raw
- *  frames either way. Stopping never needs ffmpeg - it's just handing the session off. */
 import { useCallback, useState } from 'react';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
 

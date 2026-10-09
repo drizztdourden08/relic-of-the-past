@@ -1,29 +1,4 @@
 /* @layer renderer-components @kind logic */
-/**
- * Splits the option catalog by lock state so every consumer shows the same
- * shape: the unlocked options first, as the player's own choices, flat in
- * catalog order, and also grouped by section so a panel can put a newly
- * supported option under its real heading instead of in one undifferentiated
- * block; then the locked remainder grouped in catalog group order with empty
- * groups dropped. Driven entirely by each entry's `locked` flag, so unlocking
- * an option in the catalog moves it into the choices block on its own. The
- * capacity rows are the exception: the panels render them as one family row
- * each (CapacityUpgradesBlock), with the master switch, the progressive
- * switch and the pickup-bonus rows in that same block, so they are left out of the plain list. The shop rows follow the same
- * rule: the slot ticks, the shuffle mode and the two counted rows are one
- * block, and the price rows another; the pond's value rows likewise, though
- * the pond's MODE row stays in the list, under its section, because that is
- * the choice being offered there. The progressive tier ticks are one block per
- * family (ProgressiveTiersBlock) and follow the shop rule exactly. The five
- * dark-room rows are one block too (DarkRoomsSection): the requirement is the
- * switch at its head and the four lights are the sprite tiles under it, so
- * none of the five is listed again as a plain row. The tier block owns the
- * per-family ORDER rows on the same terms as the ticks they qualify, and the
- * retro switch owns its two arrow prices, so neither is listed twice either.
- * The difficulty block owns the five copy multiples and the heart ceiling
- * (difficulty/) on exactly those terms.
- */
-import { OPTION_GROUPS, optionCatalog } from '@shared/randomizer/world/options.data';
 import {
   CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, familyOfOptionKey, isCapacityBonusKey,
 } from '@shared/randomizer/world/capacity';
@@ -37,20 +12,7 @@ import { isProgressiveModeKey } from '@shared/randomizer/world/progressive/progr
 import { RETRO_BOW_KEY } from '@shared/randomizer/world/retro/retro-bow.data';
 import { isRetroOptionKey } from '@shared/randomizer/world/retro/retro-options.data';
 import type { OptionDef, OptionGroup } from '@shared/randomizer/world/options.type';
-
-interface LockedOptionGroup {
-  group: OptionGroup;
-  options: OptionDef[];
-}
-
-interface CatalogByLock {
-  /** Options the player may change at creation time, in catalog order, the capacity rows excepted. */
-  unlocked: OptionDef[];
-  /** The same options, grouped by section in catalog group order; empty groups dropped. */
-  unlockedGroups: LockedOptionGroup[];
-  /** Everything fixed by this app, grouped; groups with no locked option are omitted. */
-  lockedGroups: LockedOptionGroup[];
-}
+import type { CatalogByLock, LockedOptionGroup } from '../RandomizerOptionRow.type';
 
 const partitionCatalogByLock = (
   catalog: readonly OptionDef[],
@@ -71,8 +33,5 @@ const partitionCatalogByLock = (
   return { unlocked, unlockedGroups: byGroup(unlocked), lockedGroups };
 };
 
-/** The shipped catalog, partitioned once, since the catalog is static module data. */
-const catalogByLock: CatalogByLock = partitionCatalogByLock(optionCatalog, OPTION_GROUPS);
-
-export { catalogByLock, partitionCatalogByLock };
+export { partitionCatalogByLock };
 export type { CatalogByLock, LockedOptionGroup };

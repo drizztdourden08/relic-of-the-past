@@ -3,7 +3,6 @@ import { Box } from '../../../../design-system/primitives/Box';
 import './SaveCard.css';
 import type { SaveCardProps } from './SaveCard.type';
 
-/** Shared save-entry shell: thumbnail + info + actions, in row or feature form. */
 const SaveCard = (props: SaveCardProps) => {
   const { variant = 'row', busy = false, thumb, actions, className = '', children, ...rest } = props;
 

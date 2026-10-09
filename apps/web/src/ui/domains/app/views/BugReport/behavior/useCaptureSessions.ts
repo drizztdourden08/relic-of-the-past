@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind hook */
-/** Lists a profile's recorded capture sessions for the picker, owns which ones are checked,
- *  and deletes one on request. Every load re-defaults selection: unsent sessions start
- *  checked, already-sent ones don't - "new" always means unsent, never "since I last looked".
- *  Deletion goes straight to disk (the picker itself gets the user's confirmation first, since
- *  that's presentational). `profileId === null` (debug logging off, or no active profile)
- *  means there's nothing to attach: the list stays empty and nothing here calls window.api. */
 import { useCallback, useEffect, useState } from 'react';
 import type { DebugCaptureSessionSummary } from '@shared/types/debug-report';
 

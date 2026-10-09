@@ -1,30 +1,14 @@
 /* @layer renderer-app @kind component */
-/**
- * The editor tab. `RecordEditor` renders read-only with no save function; the
- * note says why, since a form that silently refuses to save looks broken.
- * The dataset lookups are injected here, each bound to the collection once
- * so the form's binding is not rebuilt on every render.
- */
 import { Box, Text } from '@ds/primitives';
 import { DeleteGuardDialog, RecordEditor } from '@ds/composites';
+import { READ_ONLY_NOTE } from '../DataInspector.constants';
+import type { RecordEditorPanelProps } from '../DataInspector.type';
 import { resolveIdRefOptionsFor } from '../behavior/id-ref-options';
-import { tagSuggestionsResolverFor } from '../behavior/tag-suggestions';
-import { tagCreatorFor } from '../behavior/create-tag';
 import { numberBoundsResolverFor } from '../behavior/number-bounds';
 import { resolveRecordLabel } from '../behavior/record-links';
+import { tagCreatorFor } from '../behavior/tag-creator-for';
+import { tagSuggestionsResolverFor } from '../behavior/tag-suggestions';
 import { useDeleteGuard } from '../behavior/useDeleteGuard';
-import type { FieldDescriptor } from '@ds/data';
-import type { InspectorRow, InspectorSource } from '../DataInspector.type';
-
-const READ_ONLY_NOTE = 'No write path is wired for this collection yet. This form reads the record, it cannot save it.';
-
-interface RecordEditorPanelProps {
-  source: InspectorSource;
-  schema: readonly FieldDescriptor[];
-  record: InspectorRow;
-  /** Called when the record open here is deleted and nothing is left to show. */
-  onDeleted: () => void;
-}
 
 const RecordEditorPanel = (props: RecordEditorPanelProps) => {
   const { source, schema, record, onDeleted } = props;
@@ -63,4 +47,3 @@ const RecordEditorPanel = (props: RecordEditorPanelProps) => {
 };
 
 export { RecordEditorPanel };
-export type { RecordEditorPanelProps };

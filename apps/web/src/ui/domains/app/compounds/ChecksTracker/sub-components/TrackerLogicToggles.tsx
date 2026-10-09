@@ -1,24 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * The drawer's on/off switches over what the list holds and how its logic reads: small key
- * doors, Big Key doors, unlit rooms, and on the plain game the shop shelves. A seed's roster
- * already carries only the shelves its shop scope opened, so that switch shows on the plain
- * game only. Small keys default off on the plain game and on for a seed (smallKeyDoorsOf).
- */
 import { smallKeyDoorsOf } from '@shared/game/logic/queries/check-grouping';
-import type { FilterState, RunContext } from '@shared/game/logic/queries/check-grouping';
 import { Button } from '@ds/primitives';
-
-interface TrackerLogicTogglesProps {
-  filter: FilterState;
-  onFilterChange: (filter: FilterState) => void;
-  run?: RunContext;
-}
-
-/** How many of the switches are away from their default, for the drawer's badge. */
-const activeLogicToggles = (filter: FilterState, run?: RunContext): number =>
-  ((filter.bigKeyDoors ?? true) ? 0 : 1) + ((filter.darkRoomsNeedLight ?? true) ? 0 : 1) + ((filter.shopShelves ?? false) ? 1 : 0)
-  + (smallKeyDoorsOf(filter, run) === smallKeyDoorsOf({ ...filter, smallKeyDoors: undefined }, run) ? 0 : 1);
+import type { TrackerLogicTogglesProps } from '../ChecksTracker.type';
 
 const TrackerLogicToggles = ({ filter, onFilterChange, run }: TrackerLogicTogglesProps) => {
   const bigKeyDoors = filter.bigKeyDoors ?? true;
@@ -70,5 +53,5 @@ const TrackerLogicToggles = ({ filter, onFilterChange, run }: TrackerLogicToggle
   );
 };
 
-export { activeLogicToggles, TrackerLogicToggles };
+export { TrackerLogicToggles };
 export type { TrackerLogicTogglesProps };

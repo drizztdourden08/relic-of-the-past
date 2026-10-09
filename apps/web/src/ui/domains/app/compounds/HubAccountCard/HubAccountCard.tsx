@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The shared-account row: one of three states. Signed out with a sign-in button, waiting
- * with the code to confirm in the browser, signed in with who and from which device. Bare:
- * the host passes the session, the site's words and the handlers.
- */
 import { SignedOutState } from './sub-components/SignedOutState';
 import { WaitingState } from './sub-components/WaitingState';
 import { SignedInState } from './sub-components/SignedInState';

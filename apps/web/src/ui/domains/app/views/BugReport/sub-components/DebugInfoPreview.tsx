@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@ds/primitives';
+import type { DebugInfoPreviewProps } from '../BugReportDialog.type';
 
-interface DebugInfoPreviewProps {
-  text: string | null;
-}
-
-/** Debug info is always attached; this only lets the player see what is being sent. */
 const DebugInfoPreview = (props: DebugInfoPreviewProps) => {
   const { text } = props;
 

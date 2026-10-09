@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* A fixed header over its own scroll region; rows are one compact line each:
-   sprite, name, count. */
-
 .pool-listing {
   display: flex;
   flex-direction: column;

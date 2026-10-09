@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* A titled section: the gold title, brighter when the section is live. */
-
 .rand-opt-group {
   display: flex;
   flex-direction: column;

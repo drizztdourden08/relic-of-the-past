@@ -1,25 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * One content a shelf may demand a bottle of: its tick and, when the potion
- * rule has taken that content out of the game, the short line saying so
- * right beside it. Two different reasons grey a tick here and they must not
- * read alike: the whole bottle row being off is a setting the player can undo
- * on the spot, while a blocked content is a consequence of the shop scope
- * above. Only the second carries a note.
- */
 import { Box, Checkbox, Text } from '@ds/primitives';
 import { OptionValueTag } from '../../OptionValueTag';
-import type { BottleContentRowModel } from '../CurrencyPriceRow.type';
+import type { BottleContentRowProps } from '../CurrencyPriceRow.type';
 import './BottleContentRow.css';
-
-interface BottleContentRowProps {
-  row: BottleContentRowModel;
-  /** The bottle row itself is not ticked, or the whole section is frozen. */
-  disabled: boolean;
-  /** Show the tick as a True or False tag: the read-only panel. */
-  readout?: boolean;
-  onChange?: (checked: boolean) => void;
-}
 
 const BottleContentRow = (props: BottleContentRowProps) => {
   const { row, disabled, readout = false, onChange } = props;

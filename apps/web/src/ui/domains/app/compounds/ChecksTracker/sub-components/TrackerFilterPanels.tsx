@@ -1,42 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * The two drawers behind the filter bar: facet tags, and the grouping stack.
- * Both are design-system controls, so a tag chip here is the same chip as a tag
- * chip anywhere else in the app.
- */
 import { useCallback, useMemo } from 'react';
-import type { GroupDimension, GroupDimensionDef, FilterState } from '@shared/game/logic/queries/check-grouping';
-import { CHECK_FACET_DEFS, GROUP_DIMENSIONS } from '@shared/game/logic/queries/check-grouping';
+import type { GroupDimension } from '@shared/game/logic/queries/check-grouping';
+import { GROUP_DIMENSIONS } from '@shared/game/logic/queries/check-grouping';
 import { Box, Button, Card, Icon, IconButton, SegmentedControl, Text, TagPicker } from '@ds/primitives';
-import type { SegmentOption, TagPickerGroup } from '@ds/primitives';
-import { CLOSE_PATHS } from '../ChecksTracker.constants';
-
-interface TrackerFilterPanelsProps {
-  filter: FilterState;
-  onFilterChange: (filter: FilterState) => void;
-  grouping: GroupDimension[];
-  onGroupingChange: (dims: GroupDimension[]) => void;
-  showTagFilter: boolean;
-  showGroupConfig: boolean;
-  /** Grouping axes to offer. Defaults to the base catalog. */
-  dimensions?: readonly GroupDimensionDef[];
-}
-
-const TAG_CATEGORIES = ['world', 'location', 'area', 'content'] as const;
-
-const TAG_GROUPS: TagPickerGroup[] = TAG_CATEGORIES.map((category) => ({
-  id: category,
-  label: category,
-  options: CHECK_FACET_DEFS.filter(t => t.category === category).map(t => ({ value: t.id, label: t.label })),
-}));
-
-const TAG_MODE_OPTIONS: SegmentOption<'any' | 'all'>[] = [
-  { value: 'any', label: 'Any', title: 'Match any active tag' },
-  { value: 'all', label: 'All', title: 'Match every active tag' },
-];
-
-/** Five axes is the tree's depth limit, past which a group holds one check. */
-const MAX_DIMENSIONS = 5;
+import { CLOSE_PATHS, MAX_DIMENSIONS, TAG_GROUPS, TAG_MODE_OPTIONS } from '../ChecksTracker.constants';
+import type { TrackerFilterPanelsProps } from '../ChecksTracker.type';
 
 const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
   const {

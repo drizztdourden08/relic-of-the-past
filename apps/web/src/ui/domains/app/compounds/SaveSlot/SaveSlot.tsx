@@ -1,4 +1,4 @@
-/* @layer renderer-components @kind data */
+/* @layer renderer-components @kind component */
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
@@ -45,8 +45,6 @@ const SaveSlot = (props: SaveSlotProps) => {
         {screenshotUrl && (
           <Image src={screenshotUrl} alt={`Slot ${slotNumber}`} className="save-slot__img" />
         )}
-        {/* Only a slot that HOLDS a save but has no screenshot gets the placeholder. A slot with
-            nothing in it stays bare. */}
         {!screenshotUrl && !isEmpty && (
           <Box className="save-slot__empty">
             <Box className="save-slot__empty-badge">
@@ -71,22 +69,14 @@ const SaveSlot = (props: SaveSlotProps) => {
                 strokeLinejoin="round"
               />
             </Box>
-            {/* Relative src: the renderer is served from file:// in the packaged app,
-                where a leading slash resolves to the filesystem root. Same form the
-                title bar and the About view use for these logos. */}
             <Image src="./logos/sentri/sentri-trimmed.png" alt="" className="save-slot__empty-mascot" />
           </Box>
         )}
-        {/* Hold-to-save fill overlay */}
         {holdProgress != null && holdProgress > 0 && (
           <Box className="save-slot__fill" style={{ height: `${holdProgress * 100}%` }} />
         )}
         <Text className="save-slot__num">{slotNumber}</Text>
         {shortcutKey && <Text className="save-slot__key">{shortcutKey}</Text>}
-        {/* Split action bar, bottom slice of the card, always visible over the shot.
-            Load sits on the left and Save on the right, in DOM order too, so the
-            tab sequence matches what is drawn. Each takes one click to arm and a
-            second click to confirm. */}
         <Box className="save-slot__actions">
           <SlotActionButton
             action="load"
@@ -109,7 +99,6 @@ const SaveSlot = (props: SaveSlotProps) => {
             onDisarm={disarm}
           />
         </Box>
-        {/* Busy spinner: feedback while saving/loading (screenshot capture + reload). */}
         {busy && (
           <Box className="save-slot__spinner">
             <Spinner />

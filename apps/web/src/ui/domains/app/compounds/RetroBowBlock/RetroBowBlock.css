@@ -8,8 +8,6 @@
   padding-top: var(--space-md);
 }
 
-/* Indented under the switch they answer to, so the pair reads as its
-   consequence instead of as two more settings beside it. */
 .retro-bow-block__caption {
   color: var(--c-text-dim);
   font-size: var(--text-xs);
@@ -24,7 +22,6 @@
   border-left: var(--border-width-thin) solid var(--c-border);
 }
 
-/* Where the two tops come from, said once under both sliders. */
 .retro-bow-block__ceiling {
   color: var(--c-text-dim);
   font-size: var(--text-xs);

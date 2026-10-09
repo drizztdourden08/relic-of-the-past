@@ -1,41 +1,23 @@
 /* @layer renderer-app @kind component */
-/**
- * The comparison view: current on the left, proposed on the right, the same
- * tabs on both, scrolled together. Both panes read the recommendation's own
- * collection (looked up by `entry.kind`), not the pseudo-collection the list
- * shows. The diff is computed once and resolved to line numbers per side and
- * per tab (see comparison-lines.ts).
- */
 import { useCallback, useMemo } from 'react';
 import { changedPaths } from '@shared/game/recommendations';
 import { buildSchema } from '@ds/data';
 import { Box } from '@ds/primitives';
 import { COLLECTION_SOURCES } from '../../behavior/collection-sources';
+import { certainOnly } from '../../behavior/recommendations/accept-all-certain';
 import { highlightedLinesFor } from '../../behavior/recommendations/comparison-lines';
 import { useComparisonScroll } from '../../behavior/recommendations/use-comparison-scroll';
 import { useRecommendationReview } from '../../behavior/recommendations/useRecommendationReview';
-import { certainOnly } from '../../behavior/recommendations/accept-all-certain';
+import type { InspectorRow } from '../../DataInspector.type';
 import { ComparisonPane } from './ComparisonPane';
 import { ProposalForm } from './ProposalForm';
 import { RecommendationActions } from './RecommendationActions';
+import {
+  CURRENT_TITLE, NO_CURRENT, NO_PROPOSAL, NOTHING_OPEN, PROPOSED_TITLE,
+} from './RecommendationDetail.constants';
+import type { RecommendationDetailProps } from './RecommendationDetail.type';
 import { RecommendationSummary } from './RecommendationSummary';
-import type { DetailTab } from '@ds/data';
-import type { Recommendation } from '@shared/game/recommendations';
-import type { InspectorRow } from '../../DataInspector.type';
-
-const CURRENT = 'Current';
-const PROPOSED = 'Proposed';
-const NO_CURRENT = 'This record does not exist yet. The finding proposes adding it.';
-const NO_PROPOSAL = 'This finding carries no proposal.';
-const NOTHING_OPEN = 'Select a finding to compare it against the dataset.';
-
-interface RecommendationDetailProps {
-  entries: readonly Recommendation[];
-  selectedId: string | null;
-  onSelect: (id: string | null) => void;
-  tab: DetailTab;
-  onTabChange: (tab: DetailTab) => void;
-}
+import './RecommendationDetail.css';
 
 const RecommendationDetail = (props: RecommendationDetailProps) => {
   const { entries, selectedId, onSelect, tab, onTabChange } = props;
@@ -74,7 +56,7 @@ const RecommendationDetail = (props: RecommendationDetailProps) => {
       />
       <Box className="rec-detail__panes">
         <ComparisonPane
-          title={CURRENT}
+          title={CURRENT_TITLE}
           source={source}
           schema={schema}
           record={current}
@@ -94,7 +76,7 @@ const RecommendationDetail = (props: RecommendationDetailProps) => {
           scroll={scroll.current}
         />
         <ComparisonPane
-          title={PROPOSED}
+          title={PROPOSED_TITLE}
           source={source}
           schema={schema}
           record={proposed}
@@ -120,4 +102,3 @@ const RecommendationDetail = (props: RecommendationDetailProps) => {
 };
 
 export { RecommendationDetail };
-export type { RecommendationDetailProps };

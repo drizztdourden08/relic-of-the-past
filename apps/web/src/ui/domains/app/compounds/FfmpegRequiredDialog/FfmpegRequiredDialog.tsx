@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/** One-shot gate in front of any ffmpeg-dependent action that has a fallback: shows the same
- *  install prompt MSU's audio conversion uses, then continues either way. Never blocks the
- *  caller on installing - skipping is always offered, because the caller degrades instead of
- *  failing outright (see debug-capture recording, which falls back to plain screenshots). */
 import { useEffect, useRef } from 'react';
 import { DialogShell } from '@ds/composites/DialogShell';
 import { Button } from '@ds/primitives/Button';

@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import type { HeroFact } from '../HeroFacts';
 import type { ProfileModeId } from '../ModeBadge';
 
-/** The save the hero offers to resume. */
 interface HeroLastSave {
   name: string;
   timestamp: number;
@@ -12,10 +11,8 @@ interface HeroLastSave {
   onLoad: () => void;
 }
 
-/** Checks progress of one battery-save file (shown as File slot + 1). */
 interface HeroProgressFile {
   slot: number;
-  /** The name typed on the file-select screen; null falls back to "File N". */
   name: string | null;
   taken: number;
   available: number;
@@ -25,15 +22,11 @@ interface HeroProgressFile {
 
 interface ProfileHeroProps {
   mode: ProfileModeId;
-  /** Fills the hero behind everything; the host picks the scene. */
   backdrop?: ReactNode;
   facts: HeroFact[];
-  /** Seed/connection/session row; null on an unrandomized profile. */
   runFacts: HeroFact[] | null;
-  /** One row per save file holding a game; null hides the panel. */
   progress: HeroProgressFile[] | null;
   lastSave: HeroLastSave | null;
-  /** The game controls under the mode: Play, or Pause / Stop / Reset while a game runs. */
   actions?: ReactNode;
   canRevealFolder: boolean;
   onOpenFolder: () => void;

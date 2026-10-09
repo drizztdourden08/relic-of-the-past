@@ -25,7 +25,6 @@ const TABS = [
   { id: 'log', label: 'Log' },
 ];
 
-/** Components: selection controls. Active state is always gold. */
 const FormControlStory = () => {
   const [on, setOn] = useState(true);
   const [checked, setChecked] = useState(true);

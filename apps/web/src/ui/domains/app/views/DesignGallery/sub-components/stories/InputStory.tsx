@@ -14,7 +14,6 @@ const TAG_GROUPS = [
   { id: 'ctx', label: 'Context', options: [{ value: 'dark', label: 'dark' }, { value: 'water', label: 'water' }] },
 ];
 
-/** Components: text / number / select / slider inputs. */
 const InputStory = () => {
   const [text, setText] = useState('Player');
   const [num, setNum] = useState(3);

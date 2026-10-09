@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { useRef, useMemo } from 'react';
-import { marked } from 'marked';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Button } from '../../../../design-system/primitives/Button';
@@ -11,21 +10,12 @@ import { DialogShell } from '../../../../design-system/composites/DialogShell';
 import { describeTargetCompat } from '@shared/game/save-state';
 import type { TargetCompat } from '@shared/game/save-state';
 import { BugReportButton } from '../BugReportButton';
+import { renderNotes } from './behavior/render-notes';
 import { useVersionChoice } from './behavior/useVersionChoice';
+import { ReleaseNotes } from './sub-components/ReleaseNotes';
 import './UpdateDialog.css';
 import { type UpdateDialogProps } from './UpdateDialog.type';
 
-const renderNotes = (md: string): string => {
-  const html = marked.parse(md, { async: false }) as string;
-  // Strip <a> tags to plain text so links aren't clickable
-  return html.replace(/<a[^>]*>(.*?)<\/a>/g, '$1');
-};
-
-/**
- * A confirmed break and "could not check" are different claims, so they get different
- * headings and different colours. Saying the second one in red would teach people to
- * ignore the red.
- */
 const saveStateTitle = (compat: TargetCompat): string =>
   (compat.kind === 'incompatible'
     ? 'Your save states will not load'
@@ -48,8 +38,6 @@ const UpdateDialog = (props: UpdateDialogProps) => {
   const notesHtml = useMemo(() => (notes ? renderNotes(notes) : ''), [notes]);
   const busy = status === 'downloading' || status === 'ready';
 
-  // Follows the picker, not the offered update, so switching rows re-answers it.
-  // Reinstalling the running version is the one case with nothing to say.
   const saveStates = chosen?.saveStates ?? info?.saveStates ?? null;
   const saveStateNote = saveStates && !chosen?.installed
     ? describeTargetCompat(saveStates, currentVersion)
@@ -87,8 +75,6 @@ const UpdateDialog = (props: UpdateDialogProps) => {
       actions={actions}
       initialFocusRef={confirmRef}
     >
-      {/* One column with one gap, so every combination of the blocks below is spaced
-          the same and nothing depends on which of them happen to be visible. */}
       <Box className="update-dialog__body">
         {status === 'checking' && <Text as="p" className="update-dialog__status">Checking for newer version...</Text>}
 
@@ -129,7 +115,6 @@ const UpdateDialog = (props: UpdateDialogProps) => {
           </Box>
         )}
 
-        {/* Above the notes on purpose: it decides whether the notes are worth reading. */}
         {saveStates && saveStateNote && (
           <Box
             className={`update-dialog__warning${saveStates.kind === 'incompatible' ? ' update-dialog__warning--breaking' : ''}`}
@@ -140,12 +125,7 @@ const UpdateDialog = (props: UpdateDialogProps) => {
           </Box>
         )}
 
-        {notesHtml && (
-          <Box className="update-dialog__notes">
-            <Text as="h4">Release Notes</Text>
-            <Box className="update-dialog__notes-content" dangerouslySetInnerHTML={{ __html: notesHtml }} />
-          </Box>
-        )}
+        {notesHtml && <ReleaseNotes html={notesHtml} />}
 
         {status === 'downloading' && (
           <Box className="update-dialog__progress">
@@ -170,7 +150,6 @@ const UpdateDialog = (props: UpdateDialogProps) => {
           <Text as="p" className="update-dialog__error">Update failed: {state.error}</Text>
         )}
 
-        {/* Last, because it is the way out when an update made things worse. */}
         <Box className="update-dialog__footnote">
           <Text as="p" className="update-dialog__footnote-text">
             Any earlier version can be picked above if something stops working. Please report it

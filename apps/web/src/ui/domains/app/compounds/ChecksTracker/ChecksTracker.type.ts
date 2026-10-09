@@ -1,12 +1,11 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
+import type { CheckRecord, ItemId } from '@shared/game/data';
 import type { CheckStatus } from '@shared/game/logic';
 import type {
   FilterState, GroupDimension, GroupDimensionDef, GroupNode, RunContext,
 } from '@shared/game/logic/queries/check-grouping';
-import type { TrackerPanels } from './sub-components/TrackerFilters';
 
-/** How a check leaf is drawn: a bare row, a row with its item, or an item card. */
 type ViewMode = 'compact' | 'detailed' | 'visual';
 
 interface TrackerStats {
@@ -16,8 +15,13 @@ interface TrackerStats {
   total: number;
 }
 
+interface TrackerPanels {
+  filters: boolean;
+  groupConfig: boolean;
+  tags: boolean;
+}
+
 interface ChecksTrackerProps {
-  /** Whole-dataset counts, shown in the summary bar. */
   stats: TrackerStats;
   filter: FilterState;
   onFilterChange: (filter: FilterState) => void;
@@ -27,28 +31,103 @@ interface ChecksTrackerProps {
   onViewModeChange: (mode: ViewMode) => void;
   groupTree: GroupNode;
   statuses: Map<string, CheckStatus>;
-  /** The live side of the reversible events: true while the state holds. Absent hides the pill. */
   eventStatus?: ReadonlyMap<string, boolean>;
-  /** Randomized run: what each check actually holds, and its sweep sphere. */
   run?: RunContext;
-  /** Grouping axes the config panel offers. Defaults to the base catalog. */
   dimensions?: readonly GroupDimensionDef[];
-  /** Controlled disclosure + expansion. A surface that has somewhere to keep them
-   *  passes them in, so they outlive this tree being unmounted; one that does not
-   *  omits them and each piece keeps its own state. */
   panels?: TrackerPanels;
   onPanelsChange?: (next: TrackerPanels) => void;
   expandedGroups?: readonly string[];
   onToggleGroup?: (key: string) => void;
-  /** Rendered between the filters and the tree: a caveat, a count, a warning. */
   notice?: ReactNode;
-  /**
-   * Pins the summary and filters, leaving the check list as the only thing that
-   * scrolls. Off, the whole tracker scrolls as one and the header goes with it,
-   * which is what a short widget wants when the list is the point.
-   */
   stickyHeader?: boolean;
   className?: string;
 }
 
-export type { ChecksTrackerProps, TrackerStats, ViewMode };
+interface TrackerFiltersProps {
+  filter: FilterState;
+  onFilterChange: (filter: FilterState) => void;
+  grouping: GroupDimension[];
+  onGroupingChange: (dims: GroupDimension[]) => void;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+  dimensions?: readonly GroupDimensionDef[];
+  panels?: TrackerPanels;
+  onPanelsChange?: (next: TrackerPanels) => void;
+  run?: RunContext;
+}
+
+interface TrackerFilterPanelsProps {
+  filter: FilterState;
+  onFilterChange: (filter: FilterState) => void;
+  grouping: GroupDimension[];
+  onGroupingChange: (dims: GroupDimension[]) => void;
+  showTagFilter: boolean;
+  showGroupConfig: boolean;
+  dimensions?: readonly GroupDimensionDef[];
+}
+
+interface TrackerLogicTogglesProps {
+  filter: FilterState;
+  onFilterChange: (filter: FilterState) => void;
+  run?: RunContext;
+}
+
+interface CheckCardProps {
+  check: CheckRecord;
+  status: CheckStatus;
+  item?: ItemId;
+  foreignItem?: string;
+  now?: boolean;
+}
+
+interface CheckListProps {
+  checks: CheckRecord[];
+  statuses: Map<string, CheckStatus>;
+  eventStatus?: ReadonlyMap<string, boolean>;
+  viewMode: ViewMode;
+  run?: RunContext;
+}
+
+type StatusKey = CheckStatus | 'total';
+
+interface CheckStatusIconProps {
+  status: StatusKey;
+  size?: number;
+}
+
+interface SwapBadgeProps {
+  check: CheckRecord;
+  shown?: ItemId;
+}
+
+interface TrackerCheckRowProps {
+  check: CheckRecord;
+  status: CheckStatus;
+  detailed?: boolean;
+  item?: ItemId;
+  foreignItem?: string;
+  now?: boolean;
+}
+
+interface TrackerGroupTreeProps {
+  node: GroupNode;
+  statuses: Map<string, CheckStatus>;
+  eventStatus?: ReadonlyMap<string, boolean>;
+  viewMode: ViewMode;
+  run?: RunContext;
+  expandedGroups?: readonly string[];
+  onToggleGroup?: (key: string) => void;
+}
+
+interface TrackerSummaryProps {
+  completed: number;
+  reachable: number;
+  blocked: number;
+  total: number;
+}
+
+export type {
+  CheckCardProps, CheckListProps, CheckStatusIconProps, ChecksTrackerProps, StatusKey, SwapBadgeProps,
+  TrackerCheckRowProps, TrackerFilterPanelsProps, TrackerFiltersProps, TrackerGroupTreeProps,
+  TrackerLogicTogglesProps, TrackerPanels, TrackerStats, TrackerSummaryProps, ViewMode,
+};

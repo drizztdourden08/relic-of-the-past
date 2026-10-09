@@ -1,23 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * The difficulty block: how many copies of each tiered family the seed
- * carries, and how high the hearts climb. It stands directly under the tier
- * cards because it is the second half of the same question: the cards say
- * WHICH rungs a family has, these say how many times over the seed carries
- * them.
- *
- * Each row is a name, the catalog's short line when it has one, and a slider.
- * A family whose rungs were all unticked above carries no copy at all, so its
- * control is shown inert with the reason on it instead of live and
- * pointless, the same rule the retro costs follow under their own switch.
- *
- * Presentational only: the setting comes in as a prop and every edit leaves as
- * a whole new setting. An absent handler renders the block as a read-out,
- * each value as a tag, which is the read-only Options page's face.
- */
 import { Box, Text } from '@ds/primitives';
 import {
-  COPY_MULTIPLIERS, COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier,
+  COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier,
 } from '@shared/randomizer/world/difficulty/difficulty.data';
 import { HEART_CAP_KEY, difficultyCopiesKeyOf } from '@shared/randomizer/world/difficulty/difficulty-option-keys';
 import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
@@ -27,13 +11,11 @@ import { optionByKey } from '@shared/randomizer/world/options.data';
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import {
-  DIFFICULTY_CAPTION, DIFFICULTY_COPIES_HEADING, DIFFICULTY_HEARTS_HEADING, DIFFICULTY_TITLE, NO_RUNGS_NOTE,
+  DIFFICULTY_CAPTION, DIFFICULTY_COPIES_HEADING, DIFFICULTY_HEARTS_HEADING, DIFFICULTY_TITLE, FIRST_STEP, LAST_STEP,
+  NO_RUNGS_NOTE,
 } from './DifficultyBlock.constants';
 import type { DifficultyBlockProps } from './DifficultyBlock.type';
 import './DifficultyBlock.css';
-
-const FIRST_STEP = COPY_MULTIPLIERS[0];
-const LAST_STEP = COPY_MULTIPLIERS[COPY_MULTIPLIERS.length - 1];
 
 const descriptionOf = (key: string) => optionByKey.get(key)?.description ?? '';
 const multipleLabel = (value: number): string => COPY_MULTIPLIER_LABELS[asCopyMultiplier(value)];

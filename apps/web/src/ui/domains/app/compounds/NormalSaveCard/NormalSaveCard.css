@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Row/thumb chrome comes from SaveCard + Thumbnail; only specifics remain. */
 .normal-save-card__thumb {
   width: 64px;
   height: 44px;

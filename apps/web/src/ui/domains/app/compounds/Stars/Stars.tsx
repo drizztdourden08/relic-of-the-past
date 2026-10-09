@@ -1,14 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * An item's average rating as five stars, read only: rating happens on the Hookshop site.
- * The average is rounded to whole stars for the row and shown to one decimal beside it.
- */
 import { Flex, Text } from '@ds/primitives';
+import { STAR_GLYPH, STAR_NUMBERS } from './Stars.constants';
 import type { StarsProps } from './Stars.type';
 import './Stars.css';
-
-const STAR_NUMBERS = [1, 2, 3, 4, 5];
-const STAR_GLYPH = '★';
 
 const labelOf = (average: number | null, count: number | undefined): string => {
   if (average === null) return 'No ratings yet';

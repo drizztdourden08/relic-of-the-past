@@ -1,36 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * One setting asked as a slider: its name on the left, its short line under
- * the name when it has one, the slider in the catalog's own control track on
- * the right. Sitting the text on the same track the option rows use puts a
- * slider section and a catalog section on the same grid down the panel.
- *
- * Presentational only: the value comes in as a prop and every drag leaves as a
- * number. An absent handler renders the row frozen, which is both the
- * read-only face and how a row a sibling setting has emptied is shown. A
- * `readout` row draws the formatted value as a tag in the slider's place.
- */
 import { Box, Slider, Text } from '@ds/primitives';
 import { OptionDescription } from '../OptionDescription';
 import { OptionValueTag } from '../OptionValueTag';
-import type { OptionDescription as OptionDescriptionText } from '@shared/randomizer/world/option-description.type';
+import type { OptionSliderRowProps } from './OptionSliderRow.type';
 import './OptionSliderRow.css';
-
-interface OptionSliderRowProps {
-  label: string;
-  /** The row's own short line; absent or empty leaves the name standing alone. */
-  description?: OptionDescriptionText;
-  value: number;
-  min: number;
-  max: number;
-  step?: number;
-  /** Frozen for a reason of its own, beside the one an absent handler gives. */
-  disabled?: boolean;
-  formatValue: (value: number) => string;
-  onChange?: (value: number) => void;
-  /** Show the value as a tag in place of the slider: the read-only panel. */
-  readout?: boolean;
-}
 
 const OptionSliderRow = (props: OptionSliderRowProps) => {
   const {

@@ -1,27 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * The pickup-bonus line of a capacity family: the percentage a capacity
- * upgrade hands over beside the ceiling it raises, and the switch saying
- * what that percentage is of. The catalog's own clarifier sits under the
- * two, because "of what" is exactly what a percentage cannot say by itself.
- * A `readout` line shows both as tags: the read-only Options page.
- */
 import { Box, Slider, Toggle } from '@ds/primitives';
 import { CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP } from '@shared/randomizer/world/capacity';
 import { OptionValueTag } from '../../OptionValueTag';
+import { STEP_BASE_LABEL } from '../CapacityFamilyRow.constants';
+import type { BonusLineProps } from '../CapacityFamilyRow.type';
 import { RowLine } from './RowLine';
-import type { FamilyBonus } from '@shared/randomizer/world/capacity';
-
-interface BonusLineProps {
-  bonus: FamilyBonus;
-  caption?: string;
-  readOnly: boolean;
-  /** Both values as tags in place of their controls. */
-  readout?: boolean;
-  onChange?: (next: FamilyBonus) => void;
-}
-
-const STEP_BASE_LABEL = 'of the gain';
 
 const percentLabel = (percent: number): string => `${percent}%`;
 

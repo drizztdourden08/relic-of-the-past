@@ -1,31 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * Presentational badge for a single input: the icon (keyboard key or controller
- * button) with an optional text label. Accepts either a full InputBinding
- * (resolved via the shared binding-display helpers) or a raw button-icon id.
- * No data or stores.
- */
-
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
-import type { InputBinding, ButtonIcon } from '@shared/types/controls';
 import { getBindingLabel, getBindingIconUrl } from '@app/lib/input/binding-display';
 import { getButtonIconUrl } from '@app/lib/input/button-icons';
+import type { InputGlyphProps } from './InputGlyph.type';
 import './InputGlyph.css';
-
-interface InputGlyphProps {
-  binding?: InputBinding;
-  iconId?: string | null;
-  label?: string;
-  icon?: ButtonIcon | null;
-  showLabel?: boolean;
-  size?: 'sm' | 'md';
-  /** Fallback rendering when there's no icon: a keycap ('key') or plain text ('plain'). */
-  fallbackVariant?: 'key' | 'plain';
-  fallbackClassName?: string;
-  className?: string;
-}
 
 const resolve = (props: InputGlyphProps): { iconUrl: string | null; label: string } => {
   if (props.binding) {

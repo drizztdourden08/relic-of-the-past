@@ -8,10 +8,7 @@ import {
   FULLSCREEN_EXIT_PATHS, FULLSCREEN_ENTER_PATHS, MINIMIZE_PATHS,
   RESTORE_PATHS, MAXIMIZE_PATHS, CLOSE_PATHS,
 } from './WindowControls.constants';
-
-interface WindowControlsProps {
-  isMaximized: boolean;
-}
+import type { WindowControlsProps } from '../TitleBar.type';
 
 const WindowControls = (props: WindowControlsProps) => {
   const { isMaximized } = props;

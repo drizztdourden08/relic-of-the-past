@@ -13,14 +13,6 @@
   padding-top: var(--space-md);
 }
 
-/* The cards pack across the panel and wrap, each drawn at the width of the
-   rungs it holds instead of stretched to a track: the families do not all
-   have the same number of rungs, so a shared track width made every card as
-   wide as the widest one and left the two-rung families mostly empty.
-
-   Wrapping keeps it responsive without a media query: the panel lives in a
-   split pane, so a card that no longer fits beside its neighbour moves to the
-   next line whatever the window is doing. */
 .progressive-tiers-block__cards {
   display: flex;
   flex-wrap: wrap;
@@ -28,9 +20,6 @@
   padding: var(--space-xs) var(--space-sm) var(--space-sm) 0;
 }
 
-/* What the ticks have done to the world, one line per rule they moved. Sized
-   and coloured here, because the list inherits both from this class; the gold
-   term of each line is the only colour it brings with it. */
 .progressive-tiers-block__caption {
   color: var(--c-text-dim);
   font-size: var(--text-xs);
@@ -42,8 +31,6 @@
   font-size: var(--text-xs);
 }
 
-/* A refusal, not a warning: the seed will not roll, so it carries the
-   blocking colour instead of the advisory one. */
 .progressive-tiers-block__blocked {
   display: flex;
   flex-direction: column;

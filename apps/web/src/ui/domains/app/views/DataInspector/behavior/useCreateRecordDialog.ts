@@ -1,16 +1,11 @@
 /* @layer renderer-app @kind hook */
-/**
- * State for one collection's "New record" flow: the dialog's open flag, the
- * trimmed schema and blank draft it starts from, and the required-path list
- * that gates its Create button.
- */
 import { useCallback, useMemo, useState } from 'react';
+import type { EntityKind } from '@shared/game/data';
+import type { FieldDescriptor } from '@ds/data';
 import { blankRecordFor } from './blank-record';
 import { createSchemaFor } from './create-schema';
 import { RECORD_CREATORS } from './record-creators';
 import { requiredPaths } from './required-fields';
-import type { EntityKind } from '@shared/game/data';
-import type { FieldDescriptor } from '@ds/data';
 
 const useCreateRecordDialog = (
   kind: EntityKind,
@@ -39,7 +34,6 @@ const useCreateRecordDialog = (
     createSchema,
     initialRecord,
     requiredPaths: paths,
-    /** Undefined when this collection has no create write path, so the button is omitted. */
     onCreate: RECORD_CREATORS[kind],
   };
 };

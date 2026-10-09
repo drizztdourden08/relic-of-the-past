@@ -1,26 +1,14 @@
 /* @layer renderer-components @kind hook */
-/**
- * Installing and updating, one job per item. The main process reports each step on
- * `store:installProgress`; the job keeps the latest one for the bar. An update is an install
- * of the live version over the installed one. A cancelled install ends with no error.
- */
 import { useCallback, useEffect, useState } from 'react';
-import type { InstallJob } from '../Store.type';
-
-type InstallParams = {
-  /** Runs after a finished install, so the installed list and the shell's lists refresh. */
-  onInstalled: () => void;
-  onSignedOut: () => void;
-};
-
-const IDLE: InstallJob = { running: false, progress: null, error: null };
+import type { InstallJob, InstallParams } from '../Store.type';
+import { IDLE_JOB } from '../Store.constants';
 
 const useInstall = (params: InstallParams) => {
   const { onInstalled, onSignedOut } = params;
   const [jobs, setJobs] = useState<Record<string, InstallJob>>({});
 
   const patch = useCallback((itemId: string, change: Partial<InstallJob>) => {
-    setJobs((current) => ({ ...current, [itemId]: { ...(current[itemId] ?? IDLE), ...change } }));
+    setJobs((current) => ({ ...current, [itemId]: { ...(current[itemId] ?? IDLE_JOB), ...change } }));
   }, []);
 
   useEffect(() => {
@@ -32,7 +20,7 @@ const useInstall = (params: InstallParams) => {
     patch(itemId, { running: true, progress: null, error: null });
     const result = await window.api.storeInstall({ itemId, version });
     if (result.ok) {
-      patch(itemId, IDLE);
+      patch(itemId, IDLE_JOB);
       onInstalled();
       return;
     }
@@ -42,12 +30,9 @@ const useInstall = (params: InstallParams) => {
 
   const cancel = useCallback((itemId: string) => { void window.api.storeCancel(itemId); }, []);
 
-  const jobOf = useCallback((itemId: string): InstallJob => jobs[itemId] ?? IDLE, [jobs]);
+  const jobOf = useCallback((itemId: string): InstallJob => jobs[itemId] ?? IDLE_JOB, [jobs]);
 
   return { jobOf, install, cancel };
 };
 
-type StoreInstaller = ReturnType<typeof useInstall>;
-
 export { useInstall };
-export type { StoreInstaller };

@@ -1,27 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * The hookshot: handle, chain links and head, each its own pixel-art sprite, laid along a
- * curve. The links follow the curve pin to pin, so any path works without redrawing the
- * art. It fills its positioned parent and sizes itself from the parent's --px, the size
- * of one mascot pixel.
- */
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import handleSrc from '@app/assets/hookshop/hookshot-handle.svg';
-import linkFaceSrc from '@app/assets/hookshop/hookshot-link-face.svg';
-import linkEdgeSrc from '@app/assets/hookshop/hookshot-link-edge.svg';
-import headSrc from '@app/assets/hookshop/hookshot-head.svg';
 import { Box, Image } from '@ds/primitives';
 import { layoutHookshot } from './behavior/hookshot-layout';
-import type { HookshotProps, PlacedSprite, SpriteName } from './Hookshot.type';
+import { SOURCES } from './behavior/sprite-sources.constants';
+import type { HookshotProps, PlacedSprite } from './Hookshot.type';
 import './Hookshot.css';
-
-const SOURCES: Record<SpriteName, string> = {
-  handle: handleSrc,
-  linkFace: linkFaceSrc,
-  linkEdge: linkEdgeSrc,
-  head: headSrc,
-};
 
 const spriteStyle = (p: PlacedSprite): CSSProperties => ({
   '--part-x': p.left,

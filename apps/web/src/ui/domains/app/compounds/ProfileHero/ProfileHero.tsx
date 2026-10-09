@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Home tab hero: the scene the host hands in as a full-bleed backdrop, the
- * mode's piece (sword, shield) beside the intro, and the profile's details floating
- * over it: mode + Play on the left, the last save on the right, facts and
- * per-file progress along the bottom. Drawn through the shared Hero.
- */
 import { Box } from '../../../../design-system/primitives/Box';
 import { Button } from '../../../../design-system/primitives/Button';
 import { Image } from '../../../../design-system/primitives/Image';
@@ -12,7 +6,7 @@ import { Text } from '../../../../design-system/primitives/Text';
 import { Hero } from '../Hero';
 import { HeroFacts } from '../HeroFacts';
 import { MODE_BADGE_LABELS } from '../ModeBadge';
-import { heroArtSrc } from './ProfileHero.constants';
+import { heroArtSrc } from './behavior/hero-art-src';
 import { HeroLastSaveTile } from './sub-components/HeroLastSaveTile';
 import { HeroProgress } from './sub-components/HeroProgress';
 import type { ProfileHeroProps } from './ProfileHero.type';

@@ -1,14 +1,7 @@
 /* @layer renderer-components @kind style */
 
-/* Pull in the split-out sections so any importer of this stylesheet gets the
-   whole tracker. Class sets are disjoint, so cascade order is unaffected. */
-@import url('./sub-components/ChecksTracker.filters.css');
-@import url('./sub-components/ChecksTracker.checks.css');
-
-/* ─── Shell: a header band over a list ───
-   Sticky pins the header and hands the list the height that is left, so only
-   the list moves. Unpinned, the tracker is one column at its natural height and
-   whatever holds it (a widget body, a page pane) does the scrolling. */
+@import url('./sub-components/TrackerFilters.css');
+@import url('./sub-components/CheckList.css');
 
 .checks-tracker {
   display: flex;
@@ -20,9 +13,6 @@
   height: 100%;
 }
 
-/* Header and list are siblings, not layers: the pinned header holds its place by
-   giving the list the remaining height, so it needs no ground of its own to sit
-   on and a widget floating over the game stays translucent through it. */
 .checks-tracker__header {
   display: flex;
   flex-direction: column;
@@ -42,8 +32,6 @@
   overflow-y: auto;
 }
 
-/* ─── Subtotal line, shown only while something narrows the set ─── */
-
 .checks-tracker__subtotal {
   padding: var(--space-xs) var(--space-md);
   font-size: var(--text-xs);
@@ -51,8 +39,6 @@
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
-
-/* ─── Status marks, one shape per state everywhere in the tracker ─── */
 
 .tracker-status-icon {
   flex-shrink: 0;

@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* The Home hero on the shared Hero: its mode's art beside the intro, and the last-save tile.
-   The frame, shade, rows, title and glass are in Hero.css. */
-
-/* The mode's piece stands in the open space right of the intro column, behind the details,
-   at twice its pixels so it stays pixel art. */
 .profile-hero .profile-hero__art {
   left: var(--profile-hero-art-left);
   bottom: var(--space-lg);

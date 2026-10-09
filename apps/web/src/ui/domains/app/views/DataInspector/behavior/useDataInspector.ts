@@ -1,41 +1,25 @@
-/* @layer renderer-app @kind logic */
-/**
- * All of the screen's state, so the component stays a layout. Rows are
- * filtered by a compiled clause list (data, so the filter survives a restart).
- * The durable half lives under the query key only (see the key builders). The
- * recommendations pseudo-collection has no `COLLECTION_SOURCES` entry, so the
- * source is chosen, not looked up.
- */
+/* @layer renderer-app @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { buildSchema, capture, compile, compileTextSearch, useViewState } from '@ds/data';
 import { useDataViewStore } from '@app/stores/data-view-store';
+import type { EntityKind } from '@shared/game/data';
+import type { DetailTab, FilterClause } from '@ds/data';
+import {
+  DEFAULT_KIND, DEFAULT_TAB, NO_COLUMNS, NO_TABLE, RECOMMENDATIONS_KIND,
+} from '../DataInspector.constants';
+import type { IdRefTarget, InspectorKind } from '../DataInspector.type';
 import { COLLECTION_SOURCES } from './collection-sources';
-import { RECOMMENDATIONS_KIND, isEntityKind, queryViewKey } from '../DataInspector.constants';
+import { isEntityKind } from './is-entity-kind';
+import { queryViewKey } from './query-view-key';
 import { recommendationSource } from './recommendations/recommendation-source';
 import { useRecommendations } from './recommendations/use-recommendations';
 import { useRecordSelection } from './useRecordSelection';
-import type { EntityKind } from '@shared/game/data';
-import type {
-  DetailTab, FilterClause, TableColumn, TableState,
-} from '@ds/data';
-import type { IdRefTarget, InspectorKind } from '../DataInspector.type';
-
-const DEFAULT_KIND: EntityKind = 'screen';
-const DEFAULT_TAB: DetailTab = 'json';
-const NO_COLUMNS: readonly TableColumn[] = [];
-
-/** This key stores clauses and the open tab; its table half is deliberately empty. */
-const NO_TABLE: TableState = { columns: [], sort: [], groupBy: [] };
 
 const useDataInspector = () => {
   const [kind, setKind] = useState<InspectorKind>(DEFAULT_KIND);
-  // The record `openRecord` last asked for; forces the editor tab open for it
-  // (see `tab`) and stops applying once `kind`/`selectedId` move on.
   const [editIntent, setEditIntent] = useState<{ kind: EntityKind; id: string } | null>(null);
 
   const entries = useRecommendations();
-  // A real collection's source is stable until the kind changes; the
-  // pseudo-collection's is rebuilt whenever a pass or a verdict lands.
   const source = useMemo(
     () => (isEntityKind(kind) ? COLLECTION_SOURCES[kind] : recommendationSource(entries)),
     [kind, entries],
@@ -46,16 +30,11 @@ const useDataInspector = () => {
   const { selectedId, selectIn } = useRecordSelection(kind);
 
   const clauses = snapshot.filters;
-  // `openRecord` wants its record open in the editor, so a matching
-  // `editIntent` wins over the remembered tab for that record only.
   const tab = (editIntent && isEntityKind(kind) && editIntent.kind === kind && editIntent.id === selectedId)
     ? 'editor'
     : snapshot.tab ?? DEFAULT_TAB;
   const detailCollapsed = snapshot.collapsed ?? false;
 
-  // The free-text query stays transient where the clauses are durable: a
-  // search is a moment's question, and reopening the screen to old query text
-  // silently hiding rows would read as data loss.
   const [search, setSearch] = useState('');
   const rows = useMemo(() => {
     const matched = source.rows.filter(compile(clauses, schema));
@@ -63,8 +42,6 @@ const useDataInspector = () => {
     return test ? matched.filter(test) : matched;
   }, [source, clauses, schema, search]);
 
-  // Looked up in the whole collection, not in `rows`: following a reference
-  // must open the record it points at even when the active filter hides it.
   const record = useMemo(
     () => (selectedId ? source.rows.find(row => source.getId(row) === selectedId) : undefined),
     [source, selectedId],
@@ -75,8 +52,6 @@ const useDataInspector = () => {
   }, [setSnapshot, snapshot.tab, snapshot.collapsed]);
 
   const setTab = useCallback((next: DetailTab) => {
-    // A hand-picked tab retires a pending edit intent; otherwise the override
-    // above would force the editor tab straight back open.
     setEditIntent(null);
     setSnapshot(capture(NO_TABLE, snapshot.filters, next, snapshot.collapsed));
   }, [setSnapshot, snapshot.filters, snapshot.collapsed]);
@@ -85,7 +60,6 @@ const useDataInspector = () => {
 
   const clearSelection = useCallback(() => selectIn(kind, null), [selectIn, kind]);
 
-  /** Always keyed to the pseudo-collection, so a verdict can advance the pass. */
   const selectRecommendation = useCallback(
     (id: string | null) => selectIn(RECOMMENDATIONS_KIND, id),
     [selectIn],
@@ -98,13 +72,10 @@ const useDataInspector = () => {
     setKind(target.kind);
   }, [selectIn]);
 
-  // Persisted per collection like the clauses and the tab, so the fold survives a restart.
   const toggleDetail = useCallback(() => {
     setSnapshot(capture(NO_TABLE, snapshot.filters, snapshot.tab, !detailCollapsed));
   }, [setSnapshot, snapshot.filters, snapshot.tab, detailCollapsed]);
 
-  // A finding requested elsewhere (data-view-store's `openRecommendation`).
-  // Consumed on arrival, so coming back does not re-open what was reviewed.
   const pending = useDataViewStore(state => state.pendingRecommendation);
   const clearPending = useDataViewStore(state => state.clearPendingRecommendation);
   useEffect(() => {
@@ -114,8 +85,6 @@ const useDataInspector = () => {
     clearPending();
   }, [pending, selectIn, clearPending]);
 
-  // Same handoff for a plain record (data-view-store's `openRecord`). This one
-  // also wants the editor tab, hence `editIntent`.
   const pendingRecord = useDataViewStore(state => state.pendingRecord);
   const clearPendingRecord = useDataViewStore(state => state.clearPendingRecord);
   useEffect(() => {

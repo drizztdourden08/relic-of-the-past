@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind types */
-/** Flattened menu item the Options drawer renders (a subset of the dropdown shape). */
+import type { PageId } from '@app/App/types';
+import type { TitleBarProps } from '../TitleBar/TitleBar.type';
+
 interface DrawerMenuItem {
   key: string;
   icon?: string;
@@ -10,4 +12,24 @@ interface DrawerMenuItem {
   children?: DrawerMenuItem[];
 }
 
-export type { DrawerMenuItem };
+interface MobileChromeProps extends TitleBarProps {
+  activePage: PageId;
+  onClosePage: () => void;
+}
+
+interface BackDeps {
+  gameRunning: boolean;
+  activePage: PageId;
+  onClosePage: () => void;
+  onHome: () => void;
+}
+
+interface OptionsDrawerProps {
+  items: DrawerMenuItem[];
+  fps: number;
+  showFps: boolean;
+  isMuted: boolean;
+  onToggleMute?: () => void;
+}
+
+export type { BackDeps, DrawerMenuItem, MobileChromeProps, OptionsDrawerProps };
