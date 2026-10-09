@@ -2,13 +2,13 @@
 import { getLocation } from '../../../data';
 import type { ScreenRecord } from '../../../data';
 import { QUAD_POSITIONS } from './bundles.constants';
-import type { ScreenBundle } from './bundles.type';
+import type { ScreenBundleGrid } from './bundles.type';
 import { screenByIndex } from './screen-by-index';
 
 const label = (screen: ScreenRecord): string => screen.name;
 const locationName = (screen: ScreenRecord): string => getLocation(screen.locationId).name;
 
-const buildScreenBundle = (group: number[]): ScreenBundle => {
+const buildScreenBundle = (group: number[]): ScreenBundleGrid => {
   const byIndex = screenByIndex();
 
   if (group.length === 1) {

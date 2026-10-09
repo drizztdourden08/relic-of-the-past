@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo, useCallback } from 'react';
-import type { ConnectionInfo, ScreenBundle, ScreenCrossing, ScreenCrossings } from '@shared/game/navigation';
+import type { ConnectionInfo, ScreenBundleGrid, ScreenCrossing, ScreenCrossings } from '@shared/game/navigation';
 import { EDGE_ORDER } from './nav-flood.constants';
 import type { EdgeRow } from './nav-flood.type';
 
@@ -12,7 +12,7 @@ const nativeIndex = (crossing: ScreenCrossing): number => {
 
 const useNavConnections = (
   connections: ConnectionInfo[],
-  screenBundle: ScreenBundle | null,
+  screenBundle: ScreenBundleGrid | null,
   isIndoors: boolean,
   crossings: readonly ScreenCrossings[],
 ) => {

@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { FloodFillResult, ConnectionInfo, ScreenBundle, ScreenCrossings } from '@shared/game/navigation';
+import type { FloodFillResult, ConnectionInfo, ScreenBundleGrid, ScreenCrossings } from '@shared/game/navigation';
 import type { ScreenAnnotations } from '@shared/game/simulation';
 
 interface PathTile { row: number; col: number; attr: number; }
@@ -9,7 +9,7 @@ type NavMode = 'manual' | 'auto';
 interface NavigationOverlayState {
   visible: boolean;
   mode: NavMode;
-  screenBundle: ScreenBundle | null;
+  screenBundle: ScreenBundleGrid | null;
   result: FloodFillResult | null;
   results: FloodFillResult[];
   connections: ConnectionInfo[];
@@ -22,7 +22,7 @@ interface NavigationOverlayState {
   lockedPath: PathTile[] | null;
   setVisible: (visible: boolean) => void;
   setMode: (mode: NavMode) => void;
-  setScreenBundle: (bundle: ScreenBundle | null) => void;
+  setScreenBundle: (bundle: ScreenBundleGrid | null) => void;
   setData: (result: FloodFillResult, connections: ConnectionInfo[], results?: FloodFillResult[], fallHoleSpawns?: FallHoleSpawn[], respawnEntIds?: Set<number>) => void;
   setAnnotations: (annotations: ScreenAnnotations[]) => void;
   setCrossings: (crossings: ScreenCrossings[]) => void;

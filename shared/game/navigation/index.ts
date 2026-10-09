@@ -33,7 +33,7 @@ export type { TileReq, TileLabel, TilePass, TileCat, TileAttrDef } from './tile-
 export { unmetRequirements } from './core/inventory';
 export { PriorityQueue } from './core/priority-queue';
 export { buildScreenBundle } from './screen-bundles';
-export type { ScreenBundle } from './screen-bundles';
+export type { ScreenBundleGrid } from './screen-bundles';
 export type {
   TraversalRequirement, RequirementSet, ConnectionTransitType,
   RegionNavData, ConnectionNavData, ConnectionPointData,

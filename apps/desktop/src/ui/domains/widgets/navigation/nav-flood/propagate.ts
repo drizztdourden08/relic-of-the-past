@@ -1,12 +1,12 @@
 /* @layer renderer-widgets @kind logic */
 import { buildScreenBundle } from '@shared/game/navigation';
-import type { ScreenBundle } from '@shared/game/navigation';
+import type { ScreenBundleGrid } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import { computeBigScreenGroup } from '../widget-helpers';
 import { propagateArea } from '../../../../../lib/game/flood';
 import type { PropagateCtx, ScreenResponse } from './nav-flood.type';
 
-const propagateScreens = (ctx: PropagateCtx): { responses: ScreenResponse[]; overworldBundle: ScreenBundle | null } => {
+const propagateScreens = (ctx: PropagateCtx): { responses: ScreenResponse[]; overworldBundle: ScreenBundleGrid | null } => {
   const { isIndoors, primaryScreenIndex, startPos, items, allEntrances, intraEdges } = ctx;
   const overworldBundle = isIndoors ? null : buildScreenBundle(computeBigScreenGroup(primaryScreenIndex));
   const screens = propagateArea({

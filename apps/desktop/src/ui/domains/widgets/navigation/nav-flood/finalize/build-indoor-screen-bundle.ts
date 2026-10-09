@@ -1,9 +1,9 @@
 /* @layer renderer-widgets @kind logic */
 import { wasmGetDungeonMapPosition } from '../../../../../../lib/game';
-import type { ScreenBundle } from '@shared/game/navigation';
+import type { ScreenBundleGrid } from '@shared/game/navigation';
 import type { IndoorBundleArgs } from '../nav-flood.type';
 
-const buildIndoorScreenBundle = (args: IndoorBundleArgs): ScreenBundle => {
+const buildIndoorScreenBundle = (args: IndoorBundleArgs): ScreenBundleGrid => {
   const { screenName, primaryScreenIndex, allConnections, roomLayout, intraEdges } = args;
   const connectedRooms = new Set<number>([primaryScreenIndex]);
   for (const c of allConnections) {

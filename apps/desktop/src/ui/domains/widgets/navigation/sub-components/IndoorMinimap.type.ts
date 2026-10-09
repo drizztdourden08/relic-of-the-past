@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind types */
-import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game/navigation';
+import type { ConnectionInfo, ScreenBundleGrid, FloodFillResult } from '@shared/game/navigation';
 
 interface MinimapProps {
-  bundle: ScreenBundle;
+  bundle: ScreenBundleGrid;
   connections: ConnectionInfo[];
   renderResults: FloodFillResult[];
   playerScreenIndex: number | null;

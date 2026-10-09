@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import type { ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
+import type { ConnectionInfo, ScreenBundleGrid } from '@shared/game/navigation';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
@@ -7,7 +7,7 @@ import { ReqIcon } from './ReqIcon';
 import { REQ_ROW } from './InternalEdgeDiamond.constants';
 import type { DiamondPos } from './InternalEdgeDiamond.type';
 
-const getEdgeDiamondPos = (conn: ConnectionInfo, bundle: ScreenBundle): DiamondPos => {
+const getEdgeDiamondPos = (conn: ConnectionInfo, bundle: ScreenBundleGrid): DiamondPos => {
   const idx = bundle.screens.indexOf(conn.sourceScreen!);
   const col = idx % bundle.cols;
   const row = Math.floor(idx / bundle.cols);
@@ -17,7 +17,7 @@ const getEdgeDiamondPos = (conn: ConnectionInfo, bundle: ScreenBundle): DiamondP
   return col === 0 ? 'left' : 'right';
 };
 
-const InternalEdgeDiamond = ({ connections, screenBundle }: { connections: ConnectionInfo[]; screenBundle: ScreenBundle }) => {
+const InternalEdgeDiamond = ({ connections, screenBundle }: { connections: ConnectionInfo[]; screenBundle: ScreenBundleGrid }) => {
   const slots: Record<DiamondPos, ConnectionInfo | null> = { top: null, bottom: null, left: null, right: null };
   for (const conn of connections) {
     slots[getEdgeDiamondPos(conn, screenBundle)] = conn;

@@ -1,11 +1,11 @@
 /* @layer renderer-widgets @kind component */
-import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game/navigation';
+import type { ConnectionInfo, ScreenBundleGrid, FloodFillResult } from '@shared/game/navigation';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';
 import { IndoorMinimap } from './IndoorMinimap';
 import { OverworldMinimap } from './OverworldMinimap';
 
 const ScreenMapWithConnections = ({ bundle, connections, renderResults, playerScreenIndex, playerPos }: {
-  bundle: ScreenBundle;
+  bundle: ScreenBundleGrid;
   connections: ConnectionInfo[];
   renderResults: FloodFillResult[];
   playerScreenIndex: number | null;

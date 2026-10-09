@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-interface ScreenBundle {
+interface ScreenBundleGrid {
   name: string;
   screens: number[];
   cols: number;
@@ -13,4 +13,4 @@ interface ScreenBundle {
   effectiveLayout?: { width: number; height: number };
 }
 
-export type { ScreenBundle };
+export type { ScreenBundleGrid };
