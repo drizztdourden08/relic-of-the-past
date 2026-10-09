@@ -30,7 +30,7 @@
 import { OPTION_DESCRIPTIONS } from './options-descriptions.data';
 import { detailsOf, plainTextOf } from './option-description';
 import { CAPACITY_OPTION_SEEDS } from './options-capacity.data';
-import { CAPACITY_BONUS_OPTION_SEEDS } from './capacity/bonus/capacity-bonus-options.data';
+import { CAPACITY_BONUS_OPTION_SEEDS } from './capacity/bonus/capacity-bonus-options.constants';
 import { DARK_ROOM_OPTION_SEEDS } from './dark-rooms/dark-room-options.constants';
 import { DIFFICULTY_OPTION_SEEDS } from './difficulty/difficulty-options.constants';
 import { ITEM_POWER_OPTION_SEEDS } from './item-power/item-power-options.data';

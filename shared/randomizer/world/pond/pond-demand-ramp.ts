@@ -19,7 +19,7 @@
  * there is nothing to read a position off. The curve's own weights say where
  * each throw stands instead, which is the same shape at full resolution.
  */
-import { CURVES } from '../capacity/curves/curves.data';
+import { CURVES } from '../capacity/curves/curves.constants';
 import { rungOf } from './pond-plan';
 import type { CurveShape } from '../capacity/capacity-profile.type';
 import type { PondPlan } from './pond-profile.type';
