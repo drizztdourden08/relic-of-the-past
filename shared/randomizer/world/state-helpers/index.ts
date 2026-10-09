@@ -1,5 +1,5 @@
 /* @layer shared-game @kind barrel */
-export { BASELINE } from './state-helpers.constants';
+export { BASELINE, MAX_BOMBS_ASKED } from './state-helpers.constants';
 export { bottleCount } from './bottle-count';
 export { canBombOrBonk } from './can-bomb-or-bonk';
 export { canBuy } from './can-buy';

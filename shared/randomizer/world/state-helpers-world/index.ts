@@ -1,4 +1,5 @@
 /* @layer shared-game @kind barrel */
+export { BOMBS_PER_ENEMY, BYRNA_ENEMY_LIMIT } from './state-helpers-world.constants';
 export { canActivateCrystalSwitch } from './can-activate-crystal-switch';
 export { canBombClip } from './can-bomb-clip';
 export { canBootsClipDw } from './can-boots-clip-dw';
