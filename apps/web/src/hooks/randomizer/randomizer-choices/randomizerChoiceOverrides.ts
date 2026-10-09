@@ -1,0 +1,47 @@
+/* @layer renderer-lib @kind logic */
+import {
+  CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, DEFAULT_CAPACITY_BONUS, capacityBonusValuesOf, capacityValuesOf,
+} from '@shared/randomizer/world/capacity';
+import { reconcileCapacityPond } from '@shared/randomizer/world/capacity-pond';
+import { difficultyValuesOf } from '@shared/randomizer/world/difficulty/difficulty-from-snapshot';
+import { itemPowerValuesOf } from '@shared/randomizer/world/item-power/item-power-from-snapshot';
+import { storyGateValuesOf } from '@shared/randomizer/world/story-gates/story-gate-from-snapshot';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
+import { potionPriceOverrides } from '@shared/randomizer/world/potion-price';
+import { progressiveValuesOf } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
+import { progressiveModeValuesOf } from '@shared/randomizer/world/progressive/progressive-mode-from-snapshot';
+import { retroBowValuesOf } from '@shared/randomizer/world/retro/retro-from-snapshot';
+import { pondProfileValuesOf } from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
+import { shopScopeValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { RandomizerOptionChoices } from './randomizer-choices.type';
+import { PLAIN_FIELD_BY_KEY } from './randomizer-choices.constants';
+import { capacityPondOf } from './capacityPondOf';
+
+const plainOverrides = (choices: RandomizerOptionChoices): Record<string, OptionValue> =>
+  Object.fromEntries(Object.entries(PLAIN_FIELD_BY_KEY).map(([key, field]) => [key, choices[field]]));
+
+const randomizerChoiceOverrides = (
+  choices: RandomizerOptionChoices,
+): Readonly<Record<string, OptionValue>> => {
+  const { enabled, capacity, pond } = reconcileCapacityPond(capacityPondOf(choices));
+  return {
+    ...plainOverrides(choices),
+    ...shopScopeValues(choices.shops),
+    ...choices.shopPrices,
+    ...potionPriceOverrides(choices.shops),
+    [CAPACITY_ENABLED_KEY]: enabled,
+    ...capacityValuesOf(capacity),
+    [CAPACITY_PROGRESSIVE_KEY]: choices.capacityProgressive,
+    ...capacityBonusValuesOf(choices.capacityBonus ?? DEFAULT_CAPACITY_BONUS),
+    ...pondProfileValuesOf({ ...choices.ponds, capacity: pond }, choices.pondShare === true),
+    ...progressiveValuesOf(choices.progressiveTiers),
+    ...progressiveModeValuesOf(choices.progressiveModes),
+    ...retroBowValuesOf(choices.retroBow),
+    ...itemPowerValuesOf(choices.itemPower),
+    ...difficultyValuesOf(choices.difficulty),
+    ...storyGateValuesOf(choices.storyGates ?? DEFAULT_STORY_GATES),
+  };
+};
+
+export { randomizerChoiceOverrides };

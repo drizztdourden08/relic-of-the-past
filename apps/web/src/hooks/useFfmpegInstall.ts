@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * The optional media tool: a large download kept under the app's data root, followed by event,
- * not polled. Nothing is fetched until `install` is called. Shared by every feature that needs
- * ffmpeg (MSU audio conversion, debug-report video capture) so there is exactly one download
- * and one install flow to reason about.
- */
 import { useCallback, useEffect, useState } from 'react';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
 
@@ -23,7 +17,6 @@ const useFfmpegInstall = (active: boolean) => {
 
   useEffect(() => (active ? window.api.onFfmpegProgress(setState) : undefined), [active]);
 
-  // Resolves with the final state so a caller need not wait for a re-render to learn the outcome.
   const install = useCallback(async (): Promise<FfmpegState> => {
     setInstalling(true);
     try {

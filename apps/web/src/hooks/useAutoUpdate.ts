@@ -1,29 +1,8 @@
 /* @layer renderer-other @kind hook */
 import { useState, useEffect, useCallback } from 'react';
-import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from '@shared/ipc/updater-contract';
-
-interface UpdateState {
-  status: 'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'error';
-  info: UpdateInfo | null;
-  /** Percent of the package downloaded, while status is 'downloading'. */
-  percent: number;
-  error: string | null;
-  /** Every installable release, newest first. Empty until the picker is opened. */
-  versions: VersionOption[];
-  prefs: UpdaterPrefs;
-  /** What is running, so the dialog can name it and label the action correctly. */
-  currentVersion: string;
-}
-
-const INITIAL: UpdateState = {
-  status: 'idle',
-  info: null,
-  percent: 0,
-  error: null,
-  versions: [],
-  prefs: { allowPrerelease: false },
-  currentVersion: '',
-};
+import type { UpdaterCapabilities, UpdaterPrefs } from '@shared/ipc/updater-contract';
+import type { UpdateState } from './useAutoUpdate.type';
+import { INITIAL } from './useAutoUpdate.constants';
 
 const useAutoUpdate = () => {
   const [state, setState] = useState<UpdateState>(INITIAL);
@@ -59,7 +38,6 @@ const useAutoUpdate = () => {
       setState((s) => ({ ...s, status: 'error', error }));
     }));
 
-    // An update may have been found before this mounted.
     window.api.updater.getAvailable().then((info) => {
       if (info) setState((s) => ({ ...s, status: 'available', info, error: null }));
     });
@@ -77,7 +55,6 @@ const useAutoUpdate = () => {
     }
   }, []);
 
-  /** Fills the picker. Kept separate from the check so opening the dialog is cheap. */
   const loadVersions = useCallback(async () => {
     const versions = await window.api.updater.listVersions();
     setState((s) => ({ ...s, versions }));
@@ -90,13 +67,11 @@ const useAutoUpdate = () => {
     setState((s) => ({ ...s, versions }));
   }, []);
 
-  /** `null` takes the newest release; a version string takes that exact build. */
   const apply = useCallback(async (version: string | null) => {
     setState((s) => ({ ...s, status: 'downloading', percent: 0, error: null }));
     await window.api.updater.apply(version);
   }, []);
 
-  /** The way out where the app can see an update but not install it. */
   const openReleasePage = useCallback(async (version: string | null) => {
     await window.api.updater.openReleasePage(version);
   }, []);
