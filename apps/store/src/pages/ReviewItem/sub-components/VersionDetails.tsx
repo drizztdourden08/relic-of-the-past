@@ -2,8 +2,8 @@
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { StatRow } from '@drizztdourden08/tessera/primitives';
 import type { KindFacts } from '@rotp/hub-contracts';
-import { formatBytes } from '@site-kit/lib/format-bytes';
-import { formatDateTime } from '@site-kit/lib/format-date';
+import { formatBytes } from '@rotp/hub-client';
+import { formatDateTime } from '@rotp/hub-client';
 import { ReviewChip } from '../../../components/ReviewChip/ReviewChip';
 import type { FactRow, VersionDetailsProps } from './VersionDetails.type';
 

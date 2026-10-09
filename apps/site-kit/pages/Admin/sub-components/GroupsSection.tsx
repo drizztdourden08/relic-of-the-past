@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button, Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { Dialog, ListItemList, SettingsSection } from '@drizztdourden08/tessera/composites';
-import type { GroupView } from '../../../api/hub-responses.type';
+import type { GroupView } from '@rotp/hub-client';
 import { groupSummary } from '../behavior/group-summary';
 import { GroupEditor } from './GroupEditor';
 import { GroupRow } from './GroupRow';

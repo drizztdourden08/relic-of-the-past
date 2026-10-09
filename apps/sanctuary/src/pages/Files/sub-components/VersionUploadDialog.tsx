@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { LIMITS } from '@rotp/hub-contracts';
 import { Button, Field, Stack, StatRow, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { nextVersionNumber, versionLabel } from '../../../files/file-versions';
 import { NOTE_ID } from './VersionUploadDialog.constants';
 import type { VersionUploadDialogProps } from './VersionUploadDialog.type';

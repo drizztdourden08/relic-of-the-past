@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
-import { fileSteps, stepOf } from '@site-kit/upload/upload-steps';
-import type { UploadStep } from '@site-kit/upload/upload-job.type';
+import { fileSteps, stepOf } from '@rotp/hub-client';
+import type { UploadStep } from '@rotp/hub-client';
 import type { PublishTarget } from '../publish-target.type';
 import { PACK_LABELS, STORE_STEP } from './publish-steps.constants';
 import { hasListingPatch } from './has-listing-patch';

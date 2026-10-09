@@ -1,6 +1,6 @@
 /* @layer site-kit @kind types */
 import type { AccessState } from '@rotp/hub-contracts';
-import type { AdminUser } from '../../../api/hub-responses.type';
+import type { AdminUser } from '@rotp/hub-client';
 
 type Grouped = Record<AccessState, AdminUser[]>;
 

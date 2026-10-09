@@ -2,7 +2,7 @@
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import logInIcon from '@iconify-icons/lucide/log-in';
 import { Box, Button, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { STORE_SITE_HOST } from '@app/lib/store/store-site';
+import { STORE_SITE_HOST } from '@rotp/hub-client';
 import { HookshopHighlight } from '../../../compounds/HookshopHighlight';
 import { HubAccountCard } from '../../../compounds/HubAccountCard';
 import type { StoreSignInProps } from '../Store.type';

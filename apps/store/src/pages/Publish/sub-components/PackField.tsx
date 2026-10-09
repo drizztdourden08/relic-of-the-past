@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { DropZone, Field } from '@drizztdourden08/tessera/primitives';
 import type { DropZoneStatus } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { KIND_LABELS } from '../../../lib/kinds';
 import { PACK_ACCEPT } from '../Publish.constants';
 import type { PackState } from '../behavior/usePack.type';

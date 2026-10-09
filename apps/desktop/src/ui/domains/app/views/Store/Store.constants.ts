@@ -6,7 +6,7 @@ import gridIcon from '@iconify-icons/lucide/layout-grid';
 import packageCheckIcon from '@iconify-icons/lucide/package-check';
 import updateIcon from '@iconify-icons/lucide/refresh-cw';
 import type { SideNavConfig } from '@drizztdourden08/tessera/composites';
-import { STORE_SITE_HOST } from '@app/lib/store/store-site';
+import { STORE_SITE_HOST } from '@rotp/hub-client';
 import { KIND_ICONS } from '../../compounds/StoreItemCard';
 import type { HubAccountCopy } from '../../compounds/HubAccountCard';
 import type { CatalogState, StoreSection } from './Store.type';

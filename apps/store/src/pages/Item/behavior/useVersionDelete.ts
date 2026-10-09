@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useState } from 'react';
 import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { deleteVersion } from '../../../api/publish-endpoints';
 
 const useVersionDelete = (itemId: string, onItem: (item: StoreItem) => void) => {

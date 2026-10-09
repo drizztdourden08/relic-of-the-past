@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { MediaKind } from '../../lib/media-kind';
+import type { MediaKind } from '@rotp/hub-client';
 
 type MediaViewerProps = {
   kind: MediaKind;

@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { getHome } from '../../../api/catalog-endpoints';
 import { putFeatured, putWelcome } from '../../../api/review-endpoints';
 import type { Move } from './useHomeSettings.type';

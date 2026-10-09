@@ -1,7 +1,7 @@
 /* @layer site-kit @kind hook */
 import { useEffect, useMemo, useState } from 'react';
 import type { DiscordRole } from '@rotp/hub-contracts';
-import { listDiscordRoles } from '../../../api/groups-endpoints';
+import { listDiscordRoles } from '@rotp/hub-client';
 import type { DiscordRolesState } from './useDiscordRoles.type';
 
 const useDiscordRoles = (): DiscordRolesState => {

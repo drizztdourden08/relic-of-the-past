@@ -1,5 +1,5 @@
 /* @layer site-kit @kind logic */
-import { matchRoute } from './match-route';
+import { matchRoute } from '@rotp/hub-client';
 import type { ResolvedRoute, RouteEntry } from './route-table.type';
 
 const resolveRoute = (routes: readonly RouteEntry[], path: string): ResolvedRoute | null => {

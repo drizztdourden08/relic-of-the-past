@@ -1,8 +1,8 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useState } from 'react';
 import type { Provider } from '@rotp/hub-contracts';
-import { recheckAccess, unlinkProvider } from '../../../api/hub-endpoints';
-import { errorMessage } from '../../../api/api-error';
+import { recheckAccess, unlinkProvider } from '@rotp/hub-client';
+import { errorMessage } from '@rotp/hub-client';
 import { useSessionContext } from '../../../session/session-context';
 
 const useAccountActions = () => {

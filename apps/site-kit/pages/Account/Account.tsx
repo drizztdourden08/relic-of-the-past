@@ -7,7 +7,7 @@ import { AccessChip } from '../../components/AccessChip/AccessChip';
 import { GroupChips } from '../../components/GroupChips/GroupChips';
 import { IdentityRow } from '../../components/IdentityRow/IdentityRow';
 import { useSessionContext } from '../../session/session-context';
-import { formatDay } from '../../lib/format-date';
+import { formatDay } from '@rotp/hub-client';
 import { useAccountActions } from './behavior/useAccountActions';
 import { DevicesSection } from './sub-components/DevicesSection';
 import { ANCHORS, SOURCE_LABELS } from './Account.constants';

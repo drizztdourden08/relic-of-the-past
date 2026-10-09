@@ -1,5 +1,5 @@
 /* @layer site-kit @kind constants */
-import type { UploadPhase } from '../upload-job.type';
+import type { UploadPhase } from '@rotp/hub-client';
 
 const MOVING: ReadonlySet<UploadPhase> = new Set(['queued', 'hashing', 'uploading', 'verifying']);
 

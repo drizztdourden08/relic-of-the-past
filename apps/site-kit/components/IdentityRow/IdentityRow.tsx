@@ -3,7 +3,7 @@ import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { ProviderButton } from '../ProviderButton/ProviderButton';
-import { formatDay } from '../../lib/format-date';
+import { formatDay } from '@rotp/hub-client';
 import type { IdentityRowProps } from './IdentityRow.type';
 
 const IdentityRow = (props: IdentityRowProps) => {

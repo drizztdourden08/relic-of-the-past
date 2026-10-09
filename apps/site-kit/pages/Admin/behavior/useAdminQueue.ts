@@ -1,8 +1,8 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { AdminUser } from '../../../api/hub-responses.type';
-import { listAdminQueue, setUserGroups, revokeAccess } from '../../../api/hub-endpoints';
-import { errorMessage } from '../../../api/api-error';
+import type { AdminUser } from '@rotp/hub-client';
+import { listAdminQueue, setUserGroups, revokeAccess } from '@rotp/hub-client';
+import { errorMessage } from '@rotp/hub-client';
 import type { Grouped } from './useAdminQueue.type';
 
 const emptyGroups = (): Grouped => ({ admin: [], member: [], pending: [], revoked: [] });

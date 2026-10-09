@@ -1,7 +1,7 @@
 /* @layer site-kit @kind logic */
 import { isViewSnapshot } from '@drizztdourden08/tessera/data';
 import type { ViewKey, ViewSnapshot, ViewStorage } from '@drizztdourden08/tessera/data';
-import { listViews, putView } from '../api/views-endpoints';
+import { listViews, putView } from '@rotp/hub-client';
 import { CURRENT_NAME, DEBOUNCE_MS } from './create-view-storage.constants';
 import type { ViewHalf, ViewKeys } from './create-view-keys.type';
 

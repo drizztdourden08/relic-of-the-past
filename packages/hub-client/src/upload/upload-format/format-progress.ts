@@ -1,5 +1,5 @@
 /* @layer site-kit @kind logic */
-import { formatBytes } from '../../lib/format-bytes';
+import { formatBytes } from '../../format/format-bytes';
 
 const formatProgress = (sent: number, total: number): string => {
   const done = formatBytes(sent);

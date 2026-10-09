@@ -2,7 +2,7 @@
 import { Button, Flex, Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { nextVersionNumber, versionLabel } from '../../../files/file-versions';
 import type { SameNameDialogProps } from './SameNameDialog.type';
 

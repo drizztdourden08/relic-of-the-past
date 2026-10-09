@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import type { ItemResponse } from '@rotp/hub-contracts';
 import type { Stars } from '@rotp/hub-contracts';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { rateItem, unrateItem } from '../../../api/catalog-endpoints';
 import type { UseRatingParams } from './useRating.type';
 

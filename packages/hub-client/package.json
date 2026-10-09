@@ -1,0 +1,15 @@
+{
+  "name": "@rotp/hub-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The browser client of the hub: the API client, the upload engine, route matching and the site links of the desktop app.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@rotp/hub-contracts": "workspace:*"
+  }
+}

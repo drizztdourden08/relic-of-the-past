@@ -1,6 +1,6 @@
 /* @layer site-kit @kind component */
 import { Flex, ProgressBar, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { formatRate, formatTimeLeft } from '../../../upload/upload-format';
+import { formatRate, formatTimeLeft } from '@rotp/hub-client';
 import type { UploadMeterProps } from './UploadMeter.type';
 
 const UploadMeter = (props: UploadMeterProps) => {

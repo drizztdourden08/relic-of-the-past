@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind logic */
 import type { ReportView } from '../../api/api-responses.type';
-import { formatBytes } from '@site-kit/lib/format-bytes';
-import { formatDateTime } from '@site-kit/lib/format-date';
+import { formatBytes } from '@rotp/hub-client';
+import { formatDateTime } from '@rotp/hub-client';
 import { ANONYMOUS } from './report-row.constants';
 import { contentsLine } from './contents-line';
 import type { ReportRow } from './report-row.type';

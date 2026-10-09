@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { resizeToWebp } from '../../../lib/resize-image';
 import type { Picture, PictureSpec } from '../../../lib/resize-image';
 import type { CropRect } from '../../../lib/picture-crop';

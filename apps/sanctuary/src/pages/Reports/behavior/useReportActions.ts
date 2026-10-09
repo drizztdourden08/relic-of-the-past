@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
 import { deleteReport, downloadReport, extendReport } from '../../../api/reports-endpoints';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import type { UseReportActionsParams } from './useReportActions.type';
 
 const useReportActions = (params: UseReportActionsParams) => {

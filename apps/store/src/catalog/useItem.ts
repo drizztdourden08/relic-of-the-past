@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import type { ItemResponse } from '@rotp/hub-contracts';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { getItem } from '../api/catalog-endpoints';
 
 const useItem = (id: string | null) => {

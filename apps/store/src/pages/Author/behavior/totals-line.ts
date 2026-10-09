@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { AuthorResponse } from '@rotp/hub-contracts';
-import { formatDay } from '@site-kit/lib/format-date';
+import { formatDay } from '@rotp/hub-client';
 import { formatAverage, formatCount, plural } from '../../../lib/format-count';
 
 const totalsLine = (data: AuthorResponse): string => {

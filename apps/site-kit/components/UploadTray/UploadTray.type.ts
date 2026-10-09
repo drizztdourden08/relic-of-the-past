@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { UploadQueueControls } from '../../upload/upload-queue.type';
+import type { UploadQueueControls } from '@rotp/hub-client';
 
 type UploadTrayProps = { queue: UploadQueueControls };
 

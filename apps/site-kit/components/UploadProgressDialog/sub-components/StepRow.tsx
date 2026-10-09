@@ -1,7 +1,7 @@
 /* @layer site-kit @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { Box, Flex, Spinner, Text } from '@drizztdourden08/tessera/primitives';
-import type { StepState } from '../../../upload/upload-job.type';
+import type { StepState } from '@rotp/hub-client';
 import { ICONS } from './StepRow.constants';
 import type { StepRowProps } from './StepRow.type';
 

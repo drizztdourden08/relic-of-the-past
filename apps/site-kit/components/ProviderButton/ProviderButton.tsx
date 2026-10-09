@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { Button } from '@drizztdourden08/tessera/primitives';
-import { authStartHref } from '../../api/hub-endpoints';
+import { authStartHref } from '@rotp/hub-client';
 import { PROVIDER_MARKS } from './provider-marks';
 import { VERB } from './ProviderButton.constants';
 import type { ProviderButtonProps } from './ProviderButton.type';

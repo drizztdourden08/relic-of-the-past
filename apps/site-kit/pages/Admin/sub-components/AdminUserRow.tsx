@@ -2,7 +2,7 @@
 import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { GroupChips } from '../../../components/GroupChips/GroupChips';
-import { formatDay } from '../../../lib/format-date';
+import { formatDay } from '@rotp/hub-client';
 import type { AdminUserRowProps } from './AdminUserRow.type';
 
 const AdminUserRow = (props: AdminUserRowProps) => {

@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { listReports } from '../api/reports-endpoints';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import type { ReportView } from '../api/api-responses.type';
 import { NO_REPORTS } from './useReports.constants';
 

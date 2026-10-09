@@ -9,7 +9,7 @@ import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
 import { UploadDialog } from '../../components/UploadDialog/UploadDialog';
 import { fileRowId } from '../../files/file-row';
 import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema.constants';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { useFilesPage } from './behavior/useFilesPage';
 import { FileDetail } from './sub-components/FileDetail';
 import { SameNameDialog } from './sub-components/SameNameDialog';

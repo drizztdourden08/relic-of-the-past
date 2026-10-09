@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind hook */
 import { useEffect, useState } from 'react';
 import { previewFile } from '../api/files-endpoints';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import type { PreviewResult } from './useFilePreview.type';
 
 const useFilePreview = (fileId: string, currentVersion: number) => {

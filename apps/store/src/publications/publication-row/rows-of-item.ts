@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { ListingEdit, StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import { formatDateTime } from '@site-kit/lib/format-date';
+import { formatDateTime } from '@rotp/hub-client';
 import { formatCount } from '../../lib/format-count/format-count';
 import { chipStateOf } from '../version-file/chip-state-of';
 import { fileLineOf } from '../version-file/file-line-of';

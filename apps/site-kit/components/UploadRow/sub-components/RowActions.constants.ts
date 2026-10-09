@@ -1,5 +1,5 @@
 /* @layer site-kit @kind constants */
-import type { UploadPhase } from '../../../upload/upload-job.type';
+import type { UploadPhase } from '@rotp/hub-client';
 
 const CANCELLABLE: ReadonlySet<UploadPhase> = new Set(['queued', 'hashing', 'uploading', 'needs-file']);
 

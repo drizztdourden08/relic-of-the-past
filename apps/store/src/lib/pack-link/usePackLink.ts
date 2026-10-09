@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useEffect, useMemo, useState } from 'react';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { rangePackSource } from './range-pack-source/range-pack-source';
 import type { RenewLink } from './range-pack-source/range-pack-source.type';
 import type { LinkResult, PackLink } from './usePackLink.type';

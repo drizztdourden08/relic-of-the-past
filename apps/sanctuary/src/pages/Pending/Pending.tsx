@@ -6,8 +6,8 @@ import { SiteFrame } from '@site-kit/layout/SiteFrame/SiteFrame';
 import { Gate } from '@site-kit/components/Gate/Gate';
 import { ProviderButton } from '@site-kit/components/ProviderButton/ProviderButton';
 import { useSessionContext } from '@site-kit/session/session-context';
-import { recheckAccess } from '@site-kit/api/hub-endpoints';
-import { errorMessage } from '@site-kit/api/api-error';
+import { recheckAccess } from '@rotp/hub-client';
+import { errorMessage } from '@rotp/hub-client';
 import './Pending.css';
 
 const Pending = () => {

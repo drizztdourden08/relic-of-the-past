@@ -1,7 +1,7 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useState } from 'react';
-import { isFinished } from '../../../upload/upload-queue';
-import type { UploadJob } from '../../../upload/upload-job.type';
+import { isFinished } from '@rotp/hub-client';
+import type { UploadJob } from '@rotp/hub-client';
 
 const useTrayState = (jobs: readonly UploadJob[]) => {
   const newest = jobs[0]?.id ?? null;

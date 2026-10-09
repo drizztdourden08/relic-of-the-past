@@ -5,7 +5,7 @@ import cropIcon from '@iconify-icons/lucide/crop';
 import imageIcon from '@iconify-icons/lucide/image';
 import { Box, Button, DropZone, Field, Flex, Image } from '@drizztdourden08/tessera/primitives';
 import type { DropZoneStatus } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { CropDialog } from '../../../components/CropDialog';
 import { ItemPicture } from '../../../components/ItemPicture/ItemPicture';
 import type { CropRect } from '../../../lib/picture-crop';

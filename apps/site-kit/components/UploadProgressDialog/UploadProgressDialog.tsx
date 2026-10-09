@@ -1,7 +1,7 @@
 /* @layer site-kit @kind component */
 import { Box, Button, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
-import { FILE_STEP } from '../../upload/upload-steps';
+import { FILE_STEP } from '@rotp/hub-client';
 import { useDialogJob } from './behavior/useDialogJob';
 import { KeptCopyBanner } from './sub-components/KeptCopyBanner';
 import { StepRow } from './sub-components/StepRow';

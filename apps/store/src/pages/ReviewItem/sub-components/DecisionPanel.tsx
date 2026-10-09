@@ -7,7 +7,7 @@ import type { ReviewEntry } from '@rotp/hub-contracts';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { AppLink } from '@site-kit/router/AppLink';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { authorPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { formatCount } from '../../../lib/format-count';

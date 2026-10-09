@@ -2,8 +2,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { SavedView } from '@rotp/hub-contracts';
 import { emptySnapshot, isViewSnapshot } from '@drizztdourden08/tessera/data';
-import { listViews, putView, deleteView } from '../api/views-endpoints';
-import { errorMessage } from '../api/api-error';
+import { listViews, putView, deleteView } from '@rotp/hub-client';
+import { errorMessage } from '@rotp/hub-client';
 import type { UseSavedViewsParams } from './useSavedViews.type';
 
 const useSavedViews = (params: UseSavedViewsParams) => {

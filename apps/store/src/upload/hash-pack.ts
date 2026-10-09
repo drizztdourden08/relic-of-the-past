@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import { HASH_MAX_BYTES } from '@site-kit/upload/hash-file';
+import { HASH_MAX_BYTES } from '@rotp/hub-client';
 import { createSha256 } from './sha256';
 import { SLICE_BYTES } from './hash-pack.constants';
 

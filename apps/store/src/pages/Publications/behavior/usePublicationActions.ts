@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useState } from 'react';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { abortVersion, deleteVersion, submitVersion, withdrawVersion } from '../../../api/publish-endpoints';
 import { useStoreData } from '../../../data/store-data-context';
 import { startDownload } from '../../../lib/start-download';

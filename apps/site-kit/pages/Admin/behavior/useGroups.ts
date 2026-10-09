@@ -1,9 +1,9 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import type { CreateGroupBody } from '@rotp/hub-contracts';
-import { createGroup, deleteGroup, listGroups, patchGroup } from '../../../api/groups-endpoints';
-import { errorMessage } from '../../../api/api-error';
-import type { GroupView } from '../../../api/hub-responses.type';
+import { createGroup, deleteGroup, listGroups, patchGroup } from '@rotp/hub-client';
+import { errorMessage } from '@rotp/hub-client';
+import type { GroupView } from '@rotp/hub-client';
 
 const useGroups = () => {
   const [groups, setGroups] = useState<GroupView[] | null>(null);

@@ -304,6 +304,9 @@ importers:
       '@rotp/game-data':
         specifier: workspace:*
         version: link:packages/game-data
+      '@rotp/hub-client':
+        specifier: workspace:*
+        version: link:packages/hub-client
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:packages/hub-contracts
@@ -523,6 +526,9 @@ importers:
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../../packages/game-data
+      '@rotp/hub-client':
+        specifier: workspace:*
+        version: link:../../packages/hub-client
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:../../packages/hub-contracts
@@ -824,6 +830,12 @@ importers:
       '@rotp/asset-extraction':
         specifier: workspace:*
         version: link:../asset-extraction
+
+  packages/hub-client:
+    dependencies:
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../hub-contracts
 
   packages/hub-contracts:
     dependencies:

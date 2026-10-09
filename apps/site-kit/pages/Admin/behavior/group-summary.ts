@@ -1,7 +1,7 @@
 /* @layer site-kit @kind logic */
 import type { DiscordRole } from '@rotp/hub-contracts';
 import type { RightsModel } from '@rotp/hub-contracts';
-import type { GroupView } from '../../../api/hub-responses.type';
+import type { GroupView } from '@rotp/hub-client';
 
 const roleText = (group: GroupView, roles: ReadonlyMap<string, DiscordRole>) => {
   if (!group.discordRoleId) return 'no Discord role';

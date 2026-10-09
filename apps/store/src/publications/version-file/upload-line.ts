@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { StoreVersion } from '@rotp/hub-contracts';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { PERCENT } from './version-file.constants';
 
 const uploadLine = ({ upload, bytes }: StoreVersion): string => {

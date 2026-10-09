@@ -5,7 +5,7 @@ import type { FileType } from '@rotp/hub-contracts';
 import { LIMITS } from '@rotp/hub-contracts';
 import { Button, Stack, Field, Select, TextInput, Textarea, Text } from '@drizztdourden08/tessera/primitives';
 import { DialogShell, TagInput } from '@drizztdourden08/tessera/composites';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { validateTag } from '../../files/validate-tag';
 import type { UploadDialogProps } from './UploadDialog.type';
 import './UploadDialog.css';

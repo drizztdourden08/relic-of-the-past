@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Spinner, Text } from '@drizztdourden08/tessera/primitives';
-import { storeItemUrl } from '@app/lib/store/store-site';
+import { storeItemUrl } from '@rotp/hub-client';
 import type { StoreDetailPanelProps } from '../Store.type';
 import { useDetailBar } from '../behavior/useDetailBar';
 import { StoreDetail } from './StoreDetail';

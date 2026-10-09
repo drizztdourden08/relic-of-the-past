@@ -1,6 +1,6 @@
 /* @layer site-kit @kind hook */
 import { useEffect } from 'react';
-import type { UploadJob } from '../upload-job.type';
+import type { UploadJob } from '@rotp/hub-client';
 import { isMoving } from './is-moving';
 
 const useLeaveGuard = (jobs: readonly UploadJob[]) => {

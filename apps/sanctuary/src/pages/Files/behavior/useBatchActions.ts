@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
 import { deleteFile, patchFile } from '../../../api/files-endpoints';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { fileLink } from './file-link';
 import {
   EMPTY_TALLY, addTagsPatch, batchReport, removeTagsPatch, splitByRight, typePatch,

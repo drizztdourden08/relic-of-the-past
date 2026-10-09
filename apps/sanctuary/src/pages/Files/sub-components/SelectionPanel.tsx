@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react';
 import { Button, Card, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { Dialog, WindowHeader } from '@drizztdourden08/tessera/composites';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import { splitByRight } from '../behavior/batch-edits';
 import { totalBytes } from '../behavior/batch-size';
 import { BatchDownloadBlock } from './BatchDownloadBlock';

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect } from 'react';
 import { useHubSessionStore } from '@app/stores/hub-session';
-import { SANCTUARY_SITE_URL } from '@app/lib/sanctuary/sanctuary-site';
+import { SANCTUARY_SITE_URL } from '@rotp/hub-client';
 import { HubAccountCard } from '@domains/app/compounds/HubAccountCard';
 import { SANCTUARY_COPY } from './SanctuaryAccount.constants';
 

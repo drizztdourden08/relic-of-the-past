@@ -1,6 +1,6 @@
 /* @layer site-kit @kind types */
 import type { ReactNode } from 'react';
-import type { RouteParams } from './match-route.type';
+import type { RouteParams } from '@rotp/hub-client';
 
 type RouteAccess = 'public' | 'member' | 'admin';
 

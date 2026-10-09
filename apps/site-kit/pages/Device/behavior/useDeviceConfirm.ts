@@ -1,7 +1,7 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useState } from 'react';
-import { confirmDevice } from '../../../api/hub-endpoints';
-import { errorMessage } from '../../../api/api-error';
+import { confirmDevice } from '@rotp/hub-client';
+import { errorMessage } from '@rotp/hub-client';
 import type { ConfirmedDevice } from './useDeviceConfirm.type';
 
 const useDeviceConfirm = (initialCode: string) => {

@@ -1,7 +1,7 @@
 /* @layer store-site @kind constants */
 import type { StoreItem } from '@rotp/hub-contracts';
 import { STORE_LIMITS } from '@rotp/hub-contracts';
-import type { UploadRunner } from '@site-kit/upload/upload-runner.type';
+import type { UploadRunner } from '@rotp/hub-client';
 import { abortVersion } from '../../api/publish-endpoints/abort-version';
 import { beginVersion } from '../../api/publish-endpoints/begin-version';
 import { completeVersion } from '../../api/publish-endpoints/complete-version';

@@ -1,6 +1,6 @@
 /* @layer site-kit @kind logic */
 import { errorMessage } from '../../api/api-error';
-import { formatBytes } from '../../lib/format-bytes';
+import { formatBytes } from '../../format/format-bytes';
 import { withJobLock } from '../job-lock';
 import { isSameFile, jobOf, recordOf } from '../job-of';
 import { createQueueState } from '../queue-state';

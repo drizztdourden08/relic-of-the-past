@@ -1,7 +1,7 @@
 /* @layer store-site @kind logic */
 import type { ReviewEntry } from '@rotp/hub-contracts';
-import { formatBytes } from '@site-kit/lib/format-bytes';
-import { formatDateTime } from '@site-kit/lib/format-date';
+import { formatBytes } from '@rotp/hub-client';
+import { formatDateTime } from '@rotp/hub-client';
 import type { ReviewRow } from './review-row.type';
 import { entryId } from './entry-id';
 import { versionOfEntry } from './version-of-entry';

@@ -794,11 +794,11 @@ A non 2xx answer becomes an ApiError carrying the server's `{ error }` message, 
 Each site builds one client per route table it calls.
 routeHref is the URL of a GET route the browser must visit itself, such as the OAuth start.
 
-## apps/site-kit/api/hub-endpoints/auth-start-href.ts
+## packages/hub-client/src/api/hub-endpoints/auth-start-href.ts
 
 `returnTo` is the site path the browser lands on once the OAuth round trip ends.
 
-## apps/site-kit/api/hub-endpoints/set-user-groups.ts
+## packages/hub-client/src/api/hub-endpoints/set-user-groups.ts
 
 Replaces the person's manual groups only. Their Discord groups are not the admin's to set.
 
@@ -810,7 +810,7 @@ GroupView.manualCount counts the members an admin added by hand.
 DiscordRolesResponse.available is false when the API has no bot.
 AdminQueueResponse lists everyone holding a record on this site.
 
-## apps/site-kit/lib/format-date/format-date-time.ts
+## packages/hub-client/src/format/format-date/format-date-time.ts
 
 The `2026-09-23 14:02` shape sorts as text in the order it reads, so a table column can hold it.
 
@@ -849,11 +849,11 @@ A signed out caller on a non public route gets the sign in page with the current
 
 The link is a real anchor so middle click and copy link keep working; only a plain left click goes through the history router.
 
-## apps/site-kit/upload/hash-file/hash-file.ts
+## packages/hub-client/src/upload/hash-file/hash-file.ts
 
 WebCrypto digests a whole buffer, so a file is hashed only while it fits one part (HASH_MAX_BYTES). A larger file records null and the size check at complete stays the guard.
 
-## apps/site-kit/upload/job-lock/with-job-lock.ts
+## packages/hub-client/src/upload/job-lock/with-job-lock.ts
 
 One tab runs a job at a time: a running job holds a Web Lock named after it, so a second tab of the same site restoring its records leaves that job to the tab already sending it. A browser without Web Locks runs the job unguarded.
 
@@ -880,7 +880,7 @@ IndexedDB runs writes to one store in the order they began, so a later save neve
 
 One store of job records and one of kept files, both keyed by job id, opened once per page and lazily. A browser without IndexedDB, or one that refuses it, answers null and the queue runs without resume.
 
-## apps/site-kit/upload/upload-queue/create-upload-queue.ts
+## packages/hub-client/src/upload/upload-queue/create-upload-queue.ts
 
 One job with a file runs at a time and the others wait as queued; a job made only of the site's own steps runs at once.
 A failed or cancelled job closes its server record and drops its browser record. A job that failed while completing is left open on the server: the server may have finished it, and the daily job clears an upload that never did.
@@ -890,7 +890,7 @@ A failed or cancelled job closes its server record and drops its browser record.
 
 The rate is an exponential average over about SMOOTH_MS: each sample moves it towards the speed since the last sample by a share that grows with the gap. Samples closer than MIN_GAP_MS fold into the next one.
 
-## apps/site-kit/upload/upload-records/keep-file.ts
+## packages/hub-client/src/upload/upload-records/keep-file.ts
 
 The browser keeps its own copy of the file only while the origin's free quota exceeds the file size times KEEP_MARGIN. Every records call swallows storage errors: a browser that cannot keep them loses the resume and nothing else.
 

@@ -136,6 +136,7 @@
     "@rotp/features": "workspace:*",
     "@rotp/game-core": "workspace:*",
     "@rotp/game-data": "workspace:*",
+    "@rotp/hub-client": "workspace:*",
     "@rotp/hub-contracts": "workspace:*",
     "@rotp/hud": "workspace:*",
     "@rotp/input-mapping": "workspace:*",

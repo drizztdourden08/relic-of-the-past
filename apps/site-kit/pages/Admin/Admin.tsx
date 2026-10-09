@@ -1,7 +1,7 @@
 /* @layer site-kit @kind component */
 import { useCallback } from 'react';
 import type { ReactNode } from 'react';
-import type { AdminUser } from '../../api/hub-responses.type';
+import type { AdminUser } from '@rotp/hub-client';
 import { Stack, Box, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SitePage } from '../../layout/SitePage/SitePage';

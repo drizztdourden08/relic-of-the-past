@@ -1,9 +1,9 @@
 /* @layer sanctuary-site @kind constants */
 import { LIMITS } from '@rotp/hub-contracts';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { hashFile } from '@site-kit/upload/hash-file';
-import { fileSteps } from '@site-kit/upload/upload-steps';
-import type { UploadRunner } from '@site-kit/upload/upload-runner.type';
+import { hashFile } from '@rotp/hub-client';
+import { fileSteps } from '@rotp/hub-client';
+import type { UploadRunner } from '@rotp/hub-client';
 import { versionLabel } from '../files/file-versions';
 import { beginUpload } from './begin-upload';
 import { bindUpload } from './bind-upload';

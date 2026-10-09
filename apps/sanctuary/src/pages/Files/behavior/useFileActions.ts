@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import type { PatchFileBody } from '@rotp/hub-contracts';
 import { deleteFile, downloadFile, patchFile } from '../../../api/files-endpoints';
 import { deleteVersion, downloadVersion, restoreVersion } from '../../../api/versions-endpoints';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { versionLabel } from '../../../files/file-versions';
 import { fileLink } from './file-link';
 import { COPIED_MS } from './useFileActions.constants';

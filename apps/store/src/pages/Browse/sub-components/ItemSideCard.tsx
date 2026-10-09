@@ -6,7 +6,7 @@ import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { AppLink } from '@site-kit/router/AppLink';
-import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatBytes } from '@rotp/hub-client';
 import type { ItemResponse } from '@rotp/hub-contracts';
 import { InstallButton } from '../../../components/InstallButton/InstallButton';
 import { ItemPicture } from '../../../components/ItemPicture/ItemPicture';

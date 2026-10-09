@@ -1,7 +1,7 @@
 /* @layer site-kit @kind logic */
-import { formatBytes } from '../../../lib/format-bytes';
-import { formatTimeLeft, formatTransfer } from '../../../upload/upload-format';
-import type { UploadJob } from '../../../upload/upload-job.type';
+import { formatBytes } from '@rotp/hub-client';
+import { formatTimeLeft, formatTransfer } from '@rotp/hub-client';
+import type { UploadJob } from '@rotp/hub-client';
 import type { RowLines } from './row-lines.type';
 
 const noteOf = (job: UploadJob): string | null => {

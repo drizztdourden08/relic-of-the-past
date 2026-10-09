@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ItemCardView } from '@rotp/hub-contracts';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { listItems } from '../api/catalog-endpoints';
 import { NO_ITEMS } from './useCatalog.constants';
 

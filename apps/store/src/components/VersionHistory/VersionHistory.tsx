@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Box, Button, Status, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@site-kit/lib/format-bytes';
-import { formatDay } from '@site-kit/lib/format-date';
+import { formatBytes } from '@rotp/hub-client';
+import { formatDay } from '@rotp/hub-client';
 import { approvedAtOf } from '../../catalog/approved-versions/approved-at-of';
 import type { VersionHistoryProps } from './VersionHistory.type';
 import './VersionHistory.css';

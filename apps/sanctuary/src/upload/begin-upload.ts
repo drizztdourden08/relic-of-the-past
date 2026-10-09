@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { UploadResume } from '@site-kit/upload/upload-job.type';
+import type { UploadResume } from '@rotp/hub-client';
 import { beginFile } from '../api/files-endpoints';
 import { beginVersion } from '../api/versions-endpoints';
 import type { UploadTarget } from './upload-target.type';

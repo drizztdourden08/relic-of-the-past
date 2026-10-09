@@ -1,6 +1,6 @@
 /* @layer site-kit @kind types */
 import type { Provider } from '@rotp/hub-contracts';
-import type { AuthIntent } from '../../api/hub-endpoints';
+import type { AuthIntent } from '@rotp/hub-client';
 
 type ProviderButtonProps = {
   provider: Provider;

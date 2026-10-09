@@ -1,7 +1,7 @@
 /* @layer store-site @kind logic */
 import type { FactsPanelFact } from '@drizztdourden08/tessera/composites';
 import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import { formatDay } from '@site-kit/lib/format-date';
+import { formatDay } from '@rotp/hub-client';
 import { factsLine } from '../../../catalog/facts-line';
 import { formatAverage, formatCount } from '../../../lib/format-count';
 

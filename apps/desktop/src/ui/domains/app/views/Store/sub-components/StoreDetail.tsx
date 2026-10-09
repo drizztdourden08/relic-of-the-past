@@ -3,7 +3,7 @@ import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { CatalogInstallBar } from '@drizztdourden08/brock-catalog/renderer';
 import { Box, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
-import { storeMediaUrl } from '@app/lib/store/store-site';
+import { storeMediaUrl } from '@rotp/hub-client';
 import { KIND_ICONS, KIND_LABELS } from '../../../compounds/StoreItemCard';
 import { Stars } from '../../../compounds/Stars';
 import type { StoreDetailProps } from '../Store.type';

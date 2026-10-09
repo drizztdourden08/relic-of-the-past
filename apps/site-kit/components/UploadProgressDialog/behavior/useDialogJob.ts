@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { useUploadQueue } from '../../../upload/useUploadQueue';
 import { isMoving } from '../../../upload/useLeaveGuard';
-import type { UploadQueueControls } from '../../../upload/upload-queue.type';
+import type { UploadQueueControls } from '@rotp/hub-client';
 
 const useDialogJob = (queue: UploadQueueControls) => {
   const { jobs, openId } = useUploadQueue(queue);

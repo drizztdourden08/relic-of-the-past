@@ -2,7 +2,7 @@
 import type { FileVersion } from '@rotp/hub-contracts';
 import { Button, Flex, Status, Tag, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
-import { formatAgo } from '@site-kit/lib/format-date';
+import { formatAgo } from '@rotp/hub-client';
 import { versionLabel } from '../../../files/file-versions';
 import type { VersionRowProps } from './VersionRow.type';
 

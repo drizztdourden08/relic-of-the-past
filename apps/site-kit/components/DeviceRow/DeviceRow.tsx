@@ -1,7 +1,7 @@
 /* @layer site-kit @kind component */
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
-import { formatDay, formatAgo } from '../../lib/format-date';
+import { formatDay, formatAgo } from '@rotp/hub-client';
 import { PLATFORM_LABELS } from './DeviceRow.constants';
 import type { DeviceRowProps } from './DeviceRow.type';
 

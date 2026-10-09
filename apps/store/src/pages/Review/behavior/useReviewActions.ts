@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import type { ReviewEntry } from '@rotp/hub-contracts';
 import type { ReviewDecision } from '@rotp/hub-contracts';
-import { errorMessage } from '@site-kit/api/api-error';
+import { errorMessage } from '@rotp/hub-client';
 import { deleteVersion } from '../../../api/publish-endpoints';
 import { decideReview, unlistItem } from '../../../api/review-endpoints';
 import { DONE } from './useReviewActions.constants';

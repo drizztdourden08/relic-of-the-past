@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect } from 'react';
 import { useHubSessionStore } from '@app/stores/hub-session';
-import { STORE_SITE_URL } from '@app/lib/store/store-site';
+import { STORE_SITE_URL } from '@rotp/hub-client';
 
 const useStoreAccount = () => {
   const me = useHubSessionStore((s) => s.me);
