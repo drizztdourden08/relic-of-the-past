@@ -1,13 +1,4 @@
 /* @layer test @kind test */
-/**
- * The slot list is a LIST: appended to, removed from, and always numbered 1..N.
- *
- * The one thing that can go silently wrong here is the renumber. Numbers are
- * contiguous, so removing slot 2 makes the old slot 3 the new slot 2, and the
- * assignment table is keyed by number, so an item that does not move with it
- * lands one button up without anybody being told. That is what `remapAssignments`
- * exists for and what most of this file checks.
- */
 import { describe, expect, it } from 'vitest';
 import { addSlot, remapAssignments, removeSlot, renumberSlots, setSlotBinding } from '@shared/input/scheme';
 import type { ModernSlot, SlotAssignment } from '@shared/types/controls';
@@ -36,7 +27,7 @@ describe('the numbered slot list', () => {
     expect(slots.map((s) => s.index)).toEqual([1, 2, 3]);
     expect(renumber.get(3)).toBe(2);
     expect(renumber.get(4)).toBe(3);
-    expect(renumber.has(2)).toBe(false);   // the one that went
+    expect(renumber.has(2)).toBe(false);
   });
 
   it('moves the assignments with the numbering, and drops only the removed one', () => {
@@ -59,7 +50,6 @@ describe('the numbered slot list', () => {
     const after = setSlotBinding(before, 2, { type: 'keyboard', code: 'KeyX' });
     expect(after.map((s) => s.index)).toEqual([1, 2, 3]);
     expect(after[1].binding).toMatchObject({ type: 'keyboard', code: 'KeyX' });
-    // Nothing else moved, so nothing keyed by a number moved either.
     expect(after[0]).toBe(before[0]);
     expect(after[2]).toBe(before[2]);
   });

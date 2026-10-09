@@ -2,17 +2,16 @@
 import { describe, it, expect } from 'vitest';
 import { resolveAreaSprite } from '@app/lib/game/simulator/overworld-area';
 
-// A 2x2 overworld area shares one sprite table across its four screens, every
-// spawn relative to the HEAD (top-left) screen. Screens lay out 8 per row, so
-// head 24 has area-mates 25 (east), 32 (south) and 33 (south-east).
 const HEAD = 24;
+const SCREENS_PER_ROW = 8;
+const SOUTH_SCREEN = HEAD + SCREENS_PER_ROW;
 const heads = (() => {
   const table = new Uint8Array(64);
-  for (let i = 0; i < 64; i++) table[i] = i; // every other screen is its own (small) area
-  table[24] = HEAD;
-  table[25] = HEAD;
-  table[32] = HEAD;
-  table[33] = HEAD;
+  for (let screen = 0; screen < 64; screen++) table[screen] = screen;
+  table[HEAD] = HEAD;
+  table[HEAD + 1] = HEAD;
+  table[SOUTH_SCREEN] = HEAD;
+  table[SOUTH_SCREEN + 1] = HEAD;
   return table;
 })();
 
@@ -46,9 +45,7 @@ describe('resolveAreaSprite', () => {
   });
 
   it('resolves the same way whichever of the area\'s screens the table was queried through', () => {
-    // Querying via the south-west sub-screen (32) returns the same area-relative
-    // table as querying via the head, so the result must land on the same screen.
-    expect(resolveAreaSprite(32, { row: 84, col: 12 }, heads)).toEqual({
+    expect(resolveAreaSprite(SOUTH_SCREEN,{ row: 84, col: 12 }, heads)).toEqual({
       screenIndex: HEAD + 8,
       tile: { row: 20, col: 12 },
     });

@@ -1,9 +1,4 @@
 /* @layer test @kind test */
-/**
- * Runtime coverage checks for the search catalog. The compile-time guard is
- * `PROFILE_HUB_TABS: Record<ProfileHubTab, ...>` in ProfileHub.constants.ts;
- * these verify the built catalog is internally consistent.
- */
 import { describe, it, expect } from 'vitest';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { buildCatalog } from '@app/ui/domains/app/views/SearchPalette/behavior/catalog/build-catalog';
@@ -13,9 +8,6 @@ import type { TitleBarProps } from '@app/ui/domains/app/views/TitleBar/TitleBar.
 import type { WindowControlsPort } from '@shared/platform';
 import type { SearchContext } from '@app/ui/domains/app/views/SearchPalette/SearchPalette.type';
 
-// buildTitleBarMenuItems (via menuSource) reads window.api.isDev only when actually
-// invoked (inside buildCatalog calls below), and it is real only in the renderer. vitest's default
-// environment is plain Node with no window global, so the calls below need this stub.
 (globalThis as unknown as { window: unknown }).window = { api: { isDev: false } };
 
 const NOOP = () => {};
@@ -28,7 +20,7 @@ const navProps = {
   activeProfile: null, gameRunning: false, widgetVisibility: {},
 } as unknown as TitleBarProps;
 
-const win = {} as WindowControlsPort; // only called from onClick handlers, never during build
+const win = {} as WindowControlsPort;
 
 const ctx: SearchContext = {
   navProps, win, settings: DEFAULT_SETTINGS, isMobile: false, closePalette: NOOP,

@@ -36,14 +36,11 @@ describe('GBA to SNES native translation', () => {
 });
 
 const romPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba');
-// The base-game fixture is discovered, not named: the ROM's own filename carries the
-// trademark, and code stays clean of those. The USA image is the one the extractor validates.
 const snesFixture = existsSync('test-roms')
   ? readdirSync('test-roms').find(name => name.endsWith('(USA).sfc'))
   : undefined;
 const snesPath = snesFixture ? resolve('test-roms', snesFixture) : '';
 
-/** The engine build, for solving the room streams the compile now requires. */
 const integration = existsSync(romPath) && snesPath !== '' ? it : it.skip;
 
 integration('extracts and compiles every Palace room from the validated ROM', async () => {
@@ -87,8 +84,6 @@ const savePath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past
 const saveIntegration = existsSync(savePath) ? it : it.skip;
 
 saveIntegration('decodes the GBA-exclusive sword powers from SRAM', () => {
-  // The fixture is a live save file the reference emulator writes during real play, so its
-  // slots hold whatever the tester last did. Assert the decode's shape, not the story state.
   const slots = decodeGbaAlttpSaveProgression(readFileSync(savePath));
   expect(slots).toHaveLength(3);
   expect(slots.every(slot => typeof slot.type === 'string' && slot.type.length > 0)).toBe(true);

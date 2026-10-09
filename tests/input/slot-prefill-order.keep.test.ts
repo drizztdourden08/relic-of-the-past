@@ -1,15 +1,4 @@
 /* @layer test @kind test */
-/**
- * The prefill order is a JOIN, not a cosmetic choice.
- *
- * A HUD layout and a control scheme are tied together by the slot NUMBER and by
- * nothing else, and the built-in HUD documents put slot 1 on the north face
- * button through to slot 8 on d-pad right. SDL reports its buttons starting at
- * SOUTH, so taking the device's own order would make slot 1 the bottom face
- * button and every shipped layout would draw the right shape with the wrong
- * controls in it. That failure looks like a HUD bug and lives in the input
- * layer. This file is what stops that.
- */
 import { describe, expect, it } from 'vitest';
 import { defaultSlotList } from '@shared/input/scheme';
 import type { ResolvedControl } from '@shared/input/family/family.type';
@@ -18,7 +7,6 @@ import type { CoreBindings } from '@shared/types/controls';
 const button = (position: string): ResolvedControl =>
   ({ position, kind: 'button', category: 'face', label: position, icon: null } as ResolvedControl);
 
-/** SDL's own order: SOUTH first, d-pad before the face cross is finished. */
 const SDL_REPORT_ORDER = ['SOUTH', 'EAST', 'WEST', 'NORTH', 'DPAD_UP', 'DPAD_DOWN', 'DPAD_LEFT', 'DPAD_RIGHT'];
 
 const NO_CORE = { up: { type: 'none' }, down: { type: 'none' }, left: { type: 'none' },

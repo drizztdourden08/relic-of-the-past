@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The successor to resolver.keep.test.ts, which guarded a second reachability graph and a second
- * table of location rules. Both are gone: the generator answers where a row is reachable, and what
- * is left on this side is the join from its regions to dataset screens, plus the two inputs the
- * file's own settings hand the rows read from the records.
- *
- * Each case below is the claim the retired test made, restated against the surface that now
- * carries it, so nothing it caught can slip through unseen.
- */
 import { describe, expect, it } from 'vitest';
 import { all, getDungeon, ITEM_GROUP_IDS } from '@shared/game/data';
 import { standardNameOfCheck } from '@shared/game/data/check-standard-name';
@@ -20,9 +11,11 @@ import { describeDataset } from '../dataset-guard';
 const LAMP: ItemId = 'item-019';
 const FIRE_ROD: ItemId = 'item-008';
 const EASTERN_BIG_KEY: ItemId = 'item-094';
-/** Light World, and the screen the graph used to reach it by. */
+const ETHER: ItemId = 'item-017';
+const QUAKE: ItemId = 'item-018';
+const MIRE_MEDALLION_CHECK = 'check-344';
+const TURTLE_ROCK_MEDALLION_CHECK = 'check-345';
 const LIGHT_WORLD = 'screen-026';
-/** The region records the claims below read off, by id, as the engine now answers. */
 const LIGHT_WORLD_REGION = 'region-002';
 const EASTERN_PALACE_REGION = 'region-168';
 const MENU_REGION = 'region-001';
@@ -62,7 +55,6 @@ describeDataset('what the settings hand the record-read rows', () => {
     const open = grantedInventory({ placement, inventory: new Set(), darkRoomsNeedLight: true, bigKeyDoors: false });
     expect(shut.has(EASTERN_BIG_KEY)).toBe(false);
     expect(open.has(EASTERN_BIG_KEY)).toBe(true);
-    // Only the keys: the switch hands over nothing else.
     expect(open.has(LAMP)).toBe(false);
   });
 
@@ -72,7 +64,6 @@ describeDataset('what the settings hand the record-read rows', () => {
     expect(blind.has(LAMP)).toBe(false);
     const switchedOff = grantedInventory({ placement, inventory: new Set(), darkRoomsNeedLight: false, bigKeyDoors: true });
     expect(switchedOff.has(LAMP)).toBe(true);
-    // Normal counts the lamp alone, so another light is not a light here.
     const withFireRod = grantedInventory({
       placement, inventory: new Set([FIRE_ROD]), darkRoomsNeedLight: true, bigKeyDoors: true,
     });
@@ -81,8 +72,8 @@ describeDataset('what the settings hand the record-read rows', () => {
 
   it('asks each medallion entrance for the medallion the placement recorded', () => {
     const overrides = recordRowOverrides(normal());
-    expect(JSON.stringify(overrides['check-344'])).toContain('item-017'); // Ether, the mire
-    expect(JSON.stringify(overrides['check-345'])).toContain('item-018'); // Quake, Turtle Rock
+    expect(JSON.stringify(overrides[MIRE_MEDALLION_CHECK])).toContain(ETHER);
+    expect(JSON.stringify(overrides[TURTLE_ROCK_MEDALLION_CHECK])).toContain(QUAKE);
   });
 
   it('asks the pedestal for the three pendants the unmodified game asks for', () => {

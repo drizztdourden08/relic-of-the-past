@@ -4,13 +4,8 @@ import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '../../apps/web/src/lib/game/live-settings-flags';
 
-// With every enhancement off (the default), the bridge must send all-zero
-// feature words so the engine runs the verbatim vanilla path. The C-side
-// off-paths were verified against 7fea15de by the parity, split, and full reviews.
-
 const allOff = {
   aspectRatio: '4:3',
-  // The Original HUD style, which is the default: a host-drawn style arms the host-menu gate bits.
   hudStyle: 'vanilla',
   extendedRendering: false,
   widescreenSprites: true,
@@ -47,9 +42,6 @@ describe('all-off == vanilla (bridge boundary)', () => {
   });
 
   it('does not request the 240-line render budget unless extended rendering is on', () => {
-    // The init-time texture height tracks the INI extend_y (gated behind extendedRendering). The live
-    // Height240 flag (bit 4) must agree, or the draw loop overruns the buffer. extendY defaults true, so
-    // this guards the common case: vanilla profile with extendedRendering off renders the stock 224 lines.
     const HEIGHT240 = 4;
     expect(buildPpuFlags({ ...allOff, extendY: true, extendedRendering: false } as GameSettings) & HEIGHT240).toBe(0);
     expect(buildPpuFlags({ ...allOff, extendY: true, extendedRendering: true } as GameSettings) & HEIGHT240).toBe(HEIGHT240);
@@ -72,6 +64,6 @@ describe('all-off == vanilla (bridge boundary)', () => {
     const first = BUNDLE_FIXES.find((f) => f.bundleOrigin === 'MiscBugFixes' && f.word === 1)!;
     const s = { ...allOff, miscBugFixes: true, bugFixToggles: { [first.id]: false } } as GameSettings;
     const { features1 } = buildFeatureWords(s);
-    expect(features1 & first.bit!).toBe(0); // explicitly-off fix stays off despite the master being on
+    expect(features1 & first.bit!).toBe(0);
   });
 });

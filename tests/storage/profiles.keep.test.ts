@@ -6,7 +6,6 @@ import {
   deleteProfile, setLastProfile, readConfig, writeConfig,
 } from '@shared/storage/profiles';
 
-// In-memory FileStore mirroring the contract (text-only is enough for this domain).
 const memFiles = (): FileStore => {
   const store = new Map<string, string>();
   return {

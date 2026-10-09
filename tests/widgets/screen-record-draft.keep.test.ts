@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The payload the screen editor sends to `screenEditor:writeScreen`. This is
- * the one piece of real persistence the dataset tooling has (it writes a
- * record into a source file), so the record `handleWrite` passes is pinned.
- */
 import { describe, it, expect } from 'vitest';
 import { tagIdsForKeys } from '@shared/game/data';
 import { buildScreenRecord } from '../../apps/web/src/ui/domains/widgets/navigation/screen-editor/build-screen-record';
@@ -54,8 +49,6 @@ describe('buildScreenRecord and the native id the record carries', () => {
 describe('buildScreenRecord position and defaults', () => {
   it('carries a floor only alongside a grid position', () => {
     expect(buildScreenRecord(draft({})).record?.position).toEqual({ gridX: 1, gridY: 2, floor: 0 });
-    // An interior for the floor-less half: a dungeon room's file IS its floor,
-    // so leaving the floor out of one is its own blocker (record-file-targets).
     expect(buildScreenRecord(draft({ kind: 'interior', floor: undefined })).record?.position)
       .toEqual({ gridX: 1, gridY: 2 });
   });
@@ -71,7 +64,6 @@ describe('buildScreenRecord position and defaults', () => {
     expect(record?.name).toBe('Spaced');
     expect(record?.tags).toEqual(tagIdsForKeys(tags));
     expect(record?.tags).not.toBe(tags);
-    // A reference, not the term the form worked in.
     for (const id of record?.tags ?? []) expect(id).toMatch(/^tag-\d+$/);
   });
 

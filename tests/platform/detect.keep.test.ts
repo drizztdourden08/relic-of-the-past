@@ -17,7 +17,6 @@ describe('osFromProcess', () => {
 
 describe('detectHost', () => {
   it('returns web when neither Capacitor nor window.api is present', () => {
-    // vitest runs in the node environment, so there is no window global.
     expect(detectHost()).toBe('web');
   });
 });

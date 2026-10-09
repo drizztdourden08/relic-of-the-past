@@ -1,22 +1,8 @@
 /* @layer tests @kind test */
-/**
- * THE HUD STYLE IS THE ONE CHOICE, and the control scheme follows from it.
- *
- * Three things are worth pinning down here, because none is visible at the type
- * level: the derivation itself (`controlSchemeOf` / `hostDrawnHud`), the
- * one-way migration that retires the old `controlScheme` key, and the VALUE
- * rename that made `hudStyle` spell the word the settings screen shows (§59.7).
- *
- * The two migrations share one condition and run on every profile read, so they
- * have to be idempotent AND exact. The worst outcome is not an error: it is a
- * profile that silently loses the modern scheme it was saved with, or one that
- * lands on Enhanced when the player had picked Modern.
- */
 import { describe, it, expect } from 'vitest';
 import { controlSchemeOf, hostDrawnHud } from '../../shared/features/hud-style';
 import { mergeSettings } from '../../apps/web/src/lib/game/settings';
 
-/** A stored profile as it exists on disk before §59: the two old keys, loose. */
 const storedProfile = (controlScheme: string, hudStyle: string): Record<string, unknown> => ({
   hudStyle,
   controlScheme,
@@ -92,8 +78,6 @@ describe('mergeSettings retires the controlScheme key', () => {
   });
 
   it('does NOT promote a post-rename Enhanced profile, because only the old spelling carried a scheme', () => {
-    // A profile written after §59 has no `controlScheme` at all; one that somehow
-    // carries both is already past the collapse and must not be moved again.
     expect(merge(storedProfile('modern', 'enhanced')).hudStyle).toBe('enhanced');
   });
 

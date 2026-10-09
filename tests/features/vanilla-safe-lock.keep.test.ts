@@ -3,10 +3,6 @@ import { describe, it, expect } from 'vitest';
 import { resolveGates } from '../../shared/features/resolve-gates';
 import { FEATURES, FEATURES_BY_ID } from '../../shared/features/feature-registry';
 
-// The invariant Vanilla Safe guarantees: whatever was requested, turning it on
-// leaves nothing enabled that diverges from stock cartridge behavior. Asked of
-// the registry, not a hand-maintained list, so new features are covered.
-
 describe('Vanilla Safe makes resolveGates lock out every parity-affecting feature', () => {
   it('requesting every registered feature id with vanillaSafe leaves none of them parity-affecting', () => {
     const allFeatureIds = FEATURES.map((f) => f.id);
@@ -23,21 +19,11 @@ describe('Vanilla Safe makes resolveGates lock out every parity-affecting featur
   });
 
   it('cascades through a multi-level requires chain, so killing the root kills every descendant', () => {
-    // extendedRendering → linearWorldTilemap → {ultrawideRendering, tallRendering}; both parents are
-    // stripped directly (both affectsVanillaParity: true), but the fixpoint is what actually matters here:
-    // it's what protects a FUTURE feature that depends on one of these without itself being parity-flagged.
     const requested = ['extendedRendering', 'linearWorldTilemap', 'ultrawideRendering', 'tallRendering'];
     const { effective } = resolveGates(requested, { vanillaSafe: true });
     expect(effective.size).toBe(0);
   });
 
-  // Both only observe, but both have GameHook_* call sites compiled into
-  // vendored sources (haptics across ancilla.c/player.c/sprite.c/overworld.c,
-  // developer tools at misc.c's GameHook_ModuleFrameEnd), and touching that
-  // code is the line under Vanilla Safe. This used to exempt
-  // developerToolsEnabled as "purely host-side"; applied consistently that
-  // exempts every observational feature, which is how tracker notifications
-  // ended up wrongly exempt too.
   it('locks every feature with a call site in vendored game code, observational or not', () => {
     const { effective } = resolveGates(['haptics', 'developerToolsEnabled'], { vanillaSafe: true });
     expect(effective.has('haptics')).toBe(false);

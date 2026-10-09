@@ -3,11 +3,6 @@ import { describe, it, expect } from 'vitest';
 import { formatDialogueText } from '@shared/asset-extraction/text/dialogue-decoder';
 import { parseDialogueText, dialogueTexts } from '@shared/asset-extraction/text/parse-dialogue-text';
 
-/**
- * Extra language packs are re-compressed from the stored dialogue.txt, so parsing
- * must be the exact inverse of formatDialogueText, down to the control string the
- * formatter injects when a ROM yields 396 strings.
- */
 describe('dialogue text round-trip', () => {
   const asDecoded = (texts: string[]) => texts.map((text) => ({ text, srcData: [] }));
 
@@ -34,8 +29,8 @@ describe('dialogue text round-trip', () => {
     const parsed = parseDialogueText(dump);
 
     expect(parsed).toHaveLength(397);
-    // Formatter inserts the extra control string at index 4 (1-based id 5).
-    expect(parsed[4].content).toContain('[Number 00]');
+    const injectedControlIndex = 4;
+    expect(parsed[injectedControlIndex].content).toContain('[Number 00]');
     expect(parsed[0].content).toBe('line 0');
   });
 

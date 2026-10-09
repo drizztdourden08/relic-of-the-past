@@ -12,9 +12,6 @@ const gbaPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past 
 const integration = existsSync(snesPath) && existsSync(gbaPath) ? it : it.skip;
 
 describe('multi-source asset aggregation', () => {
-  // Full compile options on purpose. The cheap variant (skipDialogue/skipMusic) proved
-  // byte-identity only for a blob the app never actually ships. That left the real
-  // question unanswered: does adding a second source perturb the base at all?
   integration('leaves the base byte-identical whether or not a supplement is present', async () => {
     const snes = loadRomFromBuffer(readFileSync(snesPath));
     const gba = loadGbaAlttpRomFromBuffer(readFileSync(gbaPath));
@@ -43,9 +40,9 @@ describe('multi-source asset aggregation', () => {
 
   integration('reports an unreadable supplement as data and leaves the base alone', async () => {
     const snes = loadRomFromBuffer(readFileSync(snesPath));
-    // Everything past the cartridge header wiped: it loads, and every table it points at is gone.
     const wiped = Buffer.from(readFileSync(gbaPath));
-    wiped.fill(0, 0x200);
+    const pastCartridgeHeader = 0x200;
+    wiped.fill(0, pastCartridgeHeader);
     const gba = loadGbaAlttpRomFromBuffer(wiped, { allowUnknownHash: true });
 
     const baseOnly = await compileAlttpAssetSet({ snes }, { skipDialogue: true, skipMusic: true });

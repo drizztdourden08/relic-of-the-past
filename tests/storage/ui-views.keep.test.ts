@@ -5,13 +5,6 @@ import {
 import { emptySnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 import type { ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 
-// The repo is the single boundary to window.api.uiViews. Covered: debounced +
-// coalesced, whole-file, and never throwing back into a caller.
-//
-// The module keeps cache/timer as private top-level state, so each test gets a
-// fresh dynamic import via `vi.resetModules()`. That also defers log-bus's
-// window.addEventListener until AFTER `window` is stubbed.
-
 let load: ReturnType<typeof vi.fn>;
 let save: ReturnType<typeof vi.fn>;
 let loadViewSnapshot: (key: ViewKey) => Promise<ViewSnapshot | undefined>;
@@ -67,7 +60,7 @@ describe('saveViewSnapshot debounces and coalesces', () => {
   it('collapses many rapid calls, same or different keys, into one whole-map write', async () => {
     const renamed: ViewSnapshot = { ...emptySnapshot(), tab: 'json' };
     saveViewSnapshot('a:b' as ViewKey, emptySnapshot());
-    saveViewSnapshot('a:b' as ViewKey, renamed); // supersedes the first for this key
+    saveViewSnapshot('a:b' as ViewKey, renamed);
     saveViewSnapshot('c:d' as ViewKey, emptySnapshot());
     await Promise.resolve();
     await Promise.resolve();
@@ -81,8 +74,6 @@ describe('saveViewSnapshot debounces and coalesces', () => {
   it('merges onto the existing disk map from a cold cache, instead of clobbering it', async () => {
     load.mockResolvedValue({ 'existing:collection': emptySnapshot() });
     saveViewSnapshot('new:collection' as ViewKey, emptySnapshot());
-    // Awaiting a load for another key rides the same shared in-flight promise,
-    // which flushes the pending cold-start mutation before this resolves.
     await loadViewSnapshot('existing:collection' as ViewKey);
 
     await vi.advanceTimersByTimeAsync(400);
@@ -108,7 +99,6 @@ describe('saveViewSnapshot debounces and coalesces', () => {
     save.mockRejectedValue(new Error('disk full'));
     saveViewSnapshot('a:b' as ViewKey, emptySnapshot());
     await Promise.resolve();
-    // Reaching this line without an unhandled rejection IS the assertion.
     await vi.advanceTimersByTimeAsync(400);
     expect(save).toHaveBeenCalledTimes(1);
   });
