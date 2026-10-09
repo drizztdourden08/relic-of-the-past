@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import { createStorage } from '../../../hub-core/storage/create-storage';
+import { createStorage } from '@rotp/hub-server';
 import { readStoreEnv } from '../env';
 
 const storeBucket = createStorage(() => {

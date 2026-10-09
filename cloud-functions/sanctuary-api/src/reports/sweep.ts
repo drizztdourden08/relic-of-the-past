@@ -1,7 +1,7 @@
 /* @layer root-config @kind logic */
 import type { Report } from '@rotp/hub-contracts';
 import { reportsRepo } from '../db/reports-repo';
-import { now } from '../../../hub-core/db/firestore';
+import { now } from '@rotp/hub-server';
 import { github } from '../github/issues';
 import { filesBucket } from '../storage/files-bucket';
 import { reportKey } from '../storage/keys';

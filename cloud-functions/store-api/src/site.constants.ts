@@ -1,6 +1,6 @@
 /* @layer store-api @kind constants */
 import { STORE_RIGHTS } from '@rotp/hub-contracts';
-import type { SiteConfig } from '../../hub-core/site-config.type';
+import type { SiteConfig } from '@rotp/hub-server';
 import { readStoreEnv } from './env';
 
 const STORE_VIEW_SURFACES = ['browse', 'publications', 'review'] as const;

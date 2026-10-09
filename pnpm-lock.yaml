@@ -690,37 +690,6 @@ importers:
         specifier: ^0.28.0
         version: 0.28.0(rollup@4.61.1)(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
 
-  cloud-functions/hub-core:
-    dependencies:
-      '@aws-sdk/client-s3':
-        specifier: 'catalog:'
-        version: 3.1148.0
-      '@aws-sdk/s3-request-presigner':
-        specifier: 'catalog:'
-        version: 3.1148.0
-      '@google-cloud/firestore':
-        specifier: 'catalog:'
-        version: 7.11.6
-      '@google-cloud/functions-framework':
-        specifier: 'catalog:'
-        version: 3.5.1
-      arctic:
-        specifier: 'catalog:'
-        version: 3.7.0
-      jose:
-        specifier: 'catalog:'
-        version: 6.2.12
-      zod:
-        specifier: 'catalog:'
-        version: 3.25.76
-    devDependencies:
-      '@rotp/hub-contracts':
-        specifier: workspace:*
-        version: link:../../packages/hub-contracts
-      typescript:
-        specifier: catalog:functions
-        version: 5.9.3
-
   cloud-functions/kill-switch:
     dependencies:
       '@google-cloud/functions-framework':
@@ -761,6 +730,9 @@ importers:
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:../../packages/hub-contracts
+      '@rotp/hub-server':
+        specifier: workspace:*
+        version: link:../../packages/hub-server
       esbuild:
         specifier: 'catalog:'
         version: 0.25.12
@@ -795,6 +767,9 @@ importers:
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:../../packages/hub-contracts
+      '@rotp/hub-server':
+        specifier: workspace:*
+        version: link:../../packages/hub-server
       '@rotp/languages':
         specifier: workspace:*
         version: link:../../packages/languages
@@ -858,6 +833,33 @@ importers:
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../game-data
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+
+  packages/hub-server:
+    dependencies:
+      '@aws-sdk/client-s3':
+        specifier: 'catalog:'
+        version: 3.1148.0
+      '@aws-sdk/s3-request-presigner':
+        specifier: 'catalog:'
+        version: 3.1148.0
+      '@google-cloud/firestore':
+        specifier: 'catalog:'
+        version: 7.11.6
+      '@google-cloud/functions-framework':
+        specifier: 'catalog:'
+        version: 3.5.1
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../hub-contracts
+      arctic:
+        specifier: 'catalog:'
+        version: 3.7.0
+      jose:
+        specifier: 'catalog:'
+        version: 6.2.12
       zod:
         specifier: 'catalog:'
         version: 3.25.76

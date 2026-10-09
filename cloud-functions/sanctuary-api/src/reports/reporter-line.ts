@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
 import type { ReportReporter } from '@rotp/hub-contracts';
-import { identitiesRepo } from '../../../hub-core/db/identities-repo';
+import { identitiesRepo } from '@rotp/hub-server';
 
 const reporterLine = async (reporter: ReportReporter | null): Promise<string> => {
   if (!reporter) return 'Reporter: anonymous';

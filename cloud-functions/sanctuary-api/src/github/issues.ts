@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
-import { readHubEnv } from '../../../hub-core/env';
-import { badGateway } from '../../../hub-core/http/http-error';
+import { readHubEnv } from '@rotp/hub-server';
+import { badGateway } from '@rotp/hub-server';
 import { readSanctuaryEnv } from '../env';
 import { GITHUB_API } from './issues.constants';
 import type { CreatedIssue, IssueDraft, IssueState } from './issues.type';

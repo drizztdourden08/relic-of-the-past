@@ -2,7 +2,7 @@
 import type { DailyJobResponse, VersionRef } from '@rotp/hub-contracts';
 import { STORE_LIMITS } from '@rotp/hub-contracts';
 import type { StoreItem } from '@rotp/hub-contracts';
-import { now } from '../../../hub-core/db/firestore';
+import { now } from '@rotp/hub-server';
 import { itemsRepo } from '../db/items-repo';
 import { dailyRepo } from '../db/daily-repo';
 import { DAY_MS } from '../db/daily-repo.constants';

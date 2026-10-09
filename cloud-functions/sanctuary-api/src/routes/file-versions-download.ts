@@ -1,12 +1,12 @@
 /* @layer root-config @kind logic */
 import { LIMITS, SANCTUARY_ROUTES } from '@rotp/hub-contracts';
-import { conflict } from '../../../hub-core/http/http-error';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { conflict } from '@rotp/hub-server';
+import { requireMember } from '@rotp/hub-server';
 import { loadVisibleFile } from '../files/file-guards';
 import { loadVersion } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
 import { filesBucket } from '../storage/files-bucket';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 
 const fileVersionsDownload: Route = {

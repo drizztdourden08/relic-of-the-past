@@ -7,13 +7,13 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": [
+      "node",
+      "vite/client"
+    ]
   },
   "include": [
-    "src",
-    "../hub-core"
-  ],
-  "exclude": [
-    "../hub-core/node_modules"
+    "src"
   ]
 }

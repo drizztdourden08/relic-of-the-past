@@ -1,8 +1,8 @@
 /* @layer root-config @kind logic */
 import { canSeeReports } from '@rotp/hub-contracts';
 import type { Report } from '@rotp/hub-contracts';
-import { notFound } from '../../../../hub-core/http/http-error';
-import type { Member } from '../../../../hub-core/auth/require-member';
+import { notFound } from '@rotp/hub-server';
+import type { Member } from '@rotp/hub-server';
 import { loadReport } from './load-report';
 
 const loadVisibleReport = async (id: string, { rights }: Member): Promise<Report> => {

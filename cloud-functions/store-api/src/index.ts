@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
 import { http } from '@google-cloud/functions-framework';
-import { createRouter } from '../../hub-core/router';
+import { createRouter } from '@rotp/hub-server';
 import { STORE_SITE } from './site.constants';
 import { ROUTES } from './route-table';
 

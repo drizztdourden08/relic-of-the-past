@@ -1,10 +1,10 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES, submitReportSchema } from '@rotp/hub-contracts';
-import { clientIp } from '../../../hub-core/http/client-ip';
-import { parseBody } from '../../../hub-core/http/parse-body';
-import { readCaller } from '../../../hub-core/auth/require-caller';
+import { clientIp } from '@rotp/hub-server';
+import { parseBody } from '@rotp/hub-server';
+import { readCaller } from '@rotp/hub-server';
 import { createReport } from '../reports/create-report';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 
 const reportsCreate: Route = {
   ...SANCTUARY_ROUTES.reportsCreate,

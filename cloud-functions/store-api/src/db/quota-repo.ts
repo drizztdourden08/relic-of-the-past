@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import { db } from '../../../hub-core/db/firestore';
+import { db } from '@rotp/hub-server';
 import { storeCollection } from './collections';
 import { dailyRepo } from './daily-repo';
 import type { ByteQuota } from './quota-repo.type';

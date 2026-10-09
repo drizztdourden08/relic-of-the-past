@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
 import type { StoreItem } from '@rotp/hub-contracts';
-import { forbidden } from '../../../../hub-core/http/http-error';
+import { forbidden } from '@rotp/hub-server';
 import { isAuthor } from '../project-item';
 import type { Viewer } from '../project-item';
 import { loadVisibleItem } from './load-visible-item';

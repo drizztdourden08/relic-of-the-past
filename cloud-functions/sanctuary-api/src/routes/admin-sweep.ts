@@ -1,7 +1,7 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
-import { requireScheduler } from '../../../hub-core/scheduler/scheduler-guard';
-import type { Route } from '../../../hub-core/route.type';
+import { requireScheduler } from '@rotp/hub-server';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 import { sweepReports } from '../reports/sweep';
 

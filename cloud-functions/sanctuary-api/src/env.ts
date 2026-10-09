@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { readRequired } from '../../hub-core/env';
+import { readRequired } from '@rotp/hub-server';
 import { REQUIRED_SANCTUARY_ENV } from './env.constants';
 import type { SanctuaryEnv } from './env.type';
 

@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@rotp/hub-contracts": "workspace:*",
+    "@rotp/hub-server": "workspace:*",
     "esbuild": "catalog:",
     "typescript": "catalog:functions"
   }

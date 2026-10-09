@@ -1,6 +1,6 @@
 /* @layer root-config @kind constants */
 import { SANCTUARY_RIGHTS, SANCTUARY_VIEW_SURFACES } from '@rotp/hub-contracts';
-import type { SiteConfig } from '../../../hub-core/site-config.type';
+import type { SiteConfig } from '@rotp/hub-server';
 import { readSanctuaryEnv } from '../env';
 
 const SANCTUARY_SITE: SiteConfig = {

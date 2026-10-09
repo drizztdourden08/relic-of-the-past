@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
 import { STORE_ROUTES } from '@rotp/hub-contracts';
 import type { PublicationsResponse } from '@rotp/hub-contracts';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
 import { signItems } from '../media/sign-media';

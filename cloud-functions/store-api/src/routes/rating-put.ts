@@ -2,8 +2,8 @@
 import { STORE_ROUTES } from '@rotp/hub-contracts';
 import type { RatingResponse } from '@rotp/hub-contracts';
 import { ratingSchema } from '@rotp/hub-contracts';
-import { parseBody } from '../../../hub-core/http/parse-body';
-import type { Route } from '../../../hub-core/route.type';
+import { parseBody } from '@rotp/hub-server';
+import type { Route } from '@rotp/hub-server';
 import { requirePlayer } from '../auth/player';
 import { rate } from '../ratings/rate';
 

@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
 import { STORE_ROUTES } from '@rotp/hub-contracts';
 import type { ItemChangeResponse } from '@rotp/hub-contracts';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { personOf, requirePermission } from '../auth/player';
 import { settingsRepo } from '../db/settings-repo';
 import { saveFeatured } from '../home/save-featured';

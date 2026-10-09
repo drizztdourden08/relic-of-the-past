@@ -3,7 +3,7 @@ import type { ListingPatchBody } from '@rotp/hub-contracts';
 import type { MediaRole } from '@rotp/hub-contracts';
 import { STORE_LIMITS } from '@rotp/hub-contracts';
 import type { MediaRef } from '@rotp/hub-contracts';
-import { badRequest } from '../../../hub-core/http/http-error';
+import { badRequest } from '@rotp/hub-server';
 import { storeBucket } from '../storage/store-bucket';
 
 const verifyMedia = async (itemId: string, role: MediaRole, ref: MediaRef): Promise<void> => {

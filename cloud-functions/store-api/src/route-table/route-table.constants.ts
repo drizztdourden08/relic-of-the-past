@@ -1,6 +1,6 @@
 /* @layer store-api @kind constants */
-import { accountRoutes } from '../../../hub-core/routes/account-routes';
-import type { Route } from '../../../hub-core/route.type';
+import { accountRoutes } from '@rotp/hub-server';
+import type { Route } from '@rotp/hub-server';
 import { STORE_SITE } from '../site.constants';
 import { home } from '../routes/home';
 import { itemsList } from '../routes/items-list';

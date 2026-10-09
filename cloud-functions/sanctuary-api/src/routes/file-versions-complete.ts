@@ -1,14 +1,14 @@
 /* @layer root-config @kind logic */
 import { LIMITS, SANCTUARY_ROUTES, completeFileSchema } from '@rotp/hub-contracts';
-import { badRequest, conflict, notFound } from '../../../hub-core/http/http-error';
-import { parseBody } from '../../../hub-core/http/parse-body';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { badRequest, conflict, notFound } from '@rotp/hub-server';
+import { parseBody } from '@rotp/hub-server';
+import { requireMember } from '@rotp/hub-server';
 import { loadVisibleFile } from '../files/file-guards';
 import { assertUploader, loadVersion, mirrorOf, replaceVersion, versionOf } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
 import { filesBucket } from '../storage/files-bucket';
-import { verifyUpload } from '../../../hub-core/storage/verify-upload';
-import type { Route } from '../../../hub-core/route.type';
+import { verifyUpload } from '@rotp/hub-server';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 
 const fileVersionsComplete: Route = {

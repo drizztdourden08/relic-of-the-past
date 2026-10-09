@@ -1,8 +1,8 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { requireMember } from '@rotp/hub-server';
 import { loadVisibleReport, viewReport } from '../reports/report-view';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 
 const reportsGet: Route = {

@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
 import type { Person } from '@rotp/hub-contracts';
-import { now } from '../../../hub-core/db/firestore';
+import { now } from '@rotp/hub-server';
 import { itemsRepo } from '../db/items-repo';
 import { settingsRepo } from '../db/settings-repo';
 import { invalidateHome } from './home-cache';

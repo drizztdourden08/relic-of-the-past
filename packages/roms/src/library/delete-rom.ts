@@ -23,7 +23,7 @@ const deleteRom = async (files: FileStore, romFile: string): Promise<void> => {
   for (const id of SUPPLEMENT_IDS) await files.remove(`assets/${sidecarName(romFile, id)}`);
   const profiles = createProfileStore(files);
   for (const profile of await profiles.list()) {
-    if (profile.romFile === romFile) await profiles.remove(profile.id);
+    if (Reflect.get(profile, 'romFile') === romFile) await profiles.remove(profile.id);
   }
 };
 

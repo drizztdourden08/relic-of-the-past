@@ -2,7 +2,7 @@
 import type { Request } from '@google-cloud/functions-framework';
 import { hasRight } from '@rotp/hub-contracts';
 import type { StorePermission } from '@rotp/hub-contracts';
-import { notFound } from '../../../../hub-core/http/http-error';
+import { notFound } from '@rotp/hub-server';
 import type { Player } from './player.type';
 import { requirePlayer } from './require-player';
 

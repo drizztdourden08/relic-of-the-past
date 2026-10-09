@@ -1,9 +1,9 @@
 /* @layer store-api @kind logic */
 import { STORE_ROUTES } from '@rotp/hub-contracts';
 import type { AuthorResponse } from '@rotp/hub-contracts';
-import { notFound } from '../../../hub-core/http/http-error';
-import { usersRepo } from '../../../hub-core/db/users-repo';
-import type { Route } from '../../../hub-core/route.type';
+import { notFound } from '@rotp/hub-server';
+import { usersRepo } from '@rotp/hub-server';
+import type { Route } from '@rotp/hub-server';
 import { requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
 import { toCardView } from '../items/card-view';

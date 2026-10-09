@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { createStorage } from '../../../hub-core/storage/create-storage';
+import { createStorage } from '@rotp/hub-server';
 import { readSanctuaryEnv } from '../env';
 
 const filesBucket = createStorage(() => {

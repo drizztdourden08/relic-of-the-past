@@ -1,5 +1,5 @@
 /* @layer store-api @kind types */
-import type { Member } from '../../../../hub-core/auth/require-member';
+import type { Member } from '@rotp/hub-server';
 
 type Player = Member;
 

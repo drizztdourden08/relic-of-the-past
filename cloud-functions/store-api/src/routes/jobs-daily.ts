@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
 import { STORE_ROUTES } from '@rotp/hub-contracts';
-import { requireScheduler } from '../../../hub-core/scheduler/scheduler-guard';
-import type { Route } from '../../../hub-core/route.type';
+import { requireScheduler } from '@rotp/hub-server';
+import type { Route } from '@rotp/hub-server';
 import { STORE_SITE } from '../site.constants';
 import { runDaily } from '../jobs/daily';
 

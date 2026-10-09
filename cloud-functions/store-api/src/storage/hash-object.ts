@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
 import { createHash } from 'node:crypto';
-import type { Storage } from '../../../hub-core/storage/create-storage';
+import type { Storage } from '@rotp/hub-server';
 
 const hashObject = async (storage: Storage, key: string): Promise<string> => {
   const reader = (await storage.readStream(key)).getReader();

@@ -1,11 +1,11 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
-import { requireAdmin } from '../../../hub-core/auth/require-admin';
+import { requireAdmin } from '@rotp/hub-server';
 import { reportsRepo } from '../db/reports-repo';
 import { loadReport } from '../reports/report-view';
 import { filesBucket } from '../storage/files-bucket';
 import { reportKey } from '../storage/keys';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 
 const reportsDelete: Route = {

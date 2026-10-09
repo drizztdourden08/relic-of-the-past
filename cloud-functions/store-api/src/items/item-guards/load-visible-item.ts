@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
 import type { StoreItem } from '@rotp/hub-contracts';
-import { notFound } from '../../../../hub-core/http/http-error';
+import { notFound } from '@rotp/hub-server';
 import { canView } from '../project-item';
 import type { Viewer } from '../project-item';
 import { loadItem } from './load-item';

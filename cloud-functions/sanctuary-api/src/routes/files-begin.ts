@@ -1,15 +1,15 @@
 /* @layer root-config @kind logic */
 import { LIMITS, SANCTUARY_ROUTES, createFileSchema } from '@rotp/hub-contracts';
 import type { FileOwner, SanctuaryFile } from '@rotp/hub-contracts';
-import { parseBody } from '../../../hub-core/http/parse-body';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { parseBody } from '@rotp/hub-server';
+import { requireMember } from '@rotp/hub-server';
 import { assertVisibleType } from '../files/file-guards';
 import { filesRepo } from '../db/files-repo';
-import { now } from '../../../hub-core/db/firestore';
+import { now } from '@rotp/hub-server';
 import { sanctuaryCollection } from '../db/collections';
 import { filesBucket } from '../storage/files-bucket';
 import { versionKey } from '../storage/keys';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 import { FIRST_VERSION } from './files-begin.constants';
 

@@ -1,11 +1,11 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
-import { conflict, notFound } from '../../../hub-core/http/http-error';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { conflict, notFound } from '@rotp/hub-server';
+import { requireMember } from '@rotp/hub-server';
 import { assertOwnerOrAdmin, loadVisibleFile } from '../files/file-guards';
 import { loadVersion, mirrorOf, versionOf } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 
 const fileVersionsRestore: Route = {

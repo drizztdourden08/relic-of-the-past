@@ -1,16 +1,16 @@
 /* @layer root-config @kind logic */
 import { LIMITS, SANCTUARY_ROUTES, beginVersionSchema } from '@rotp/hub-contracts';
 import type { FileVersion } from '@rotp/hub-contracts';
-import { conflict } from '../../../hub-core/http/http-error';
-import { parseBody } from '../../../hub-core/http/parse-body';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { conflict } from '@rotp/hub-server';
+import { parseBody } from '@rotp/hub-server';
+import { requireMember } from '@rotp/hub-server';
 import { loadVisibleFile } from '../files/file-guards';
 import { lastVersionNumber } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
-import { now } from '../../../hub-core/db/firestore';
+import { now } from '@rotp/hub-server';
 import { filesBucket } from '../storage/files-bucket';
 import { versionKey } from '../storage/keys';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 
 const fileVersionsBegin: Route = {

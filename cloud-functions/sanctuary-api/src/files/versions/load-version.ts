@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
 import type { FileVersion, SanctuaryFile } from '@rotp/hub-contracts';
-import { notFound } from '../../../../hub-core/http/http-error';
+import { notFound } from '@rotp/hub-server';
 import { versionOf } from './version-of';
 
 const loadVersion = (file: SanctuaryFile, routeParam: string): FileVersion => {

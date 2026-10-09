@@ -1,5 +1,5 @@
 /* @layer root-config @kind data */
-import type { Route } from '../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { filesList } from './routes/files-list';
 import { filesBegin } from './routes/files-begin';
 import { filesSignParts } from './routes/files-sign-parts';

@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { notFound } from '../../../../hub-core/http/http-error';
+import { notFound } from '@rotp/hub-server';
 import { filesRepo } from '../../db/files-repo';
 
 const loadFile = async (id: string): Promise<SanctuaryFile> => {

@@ -1,14 +1,14 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
 import type { FileVersion, SanctuaryFile } from '@rotp/hub-contracts';
-import { conflict } from '../../../hub-core/http/http-error';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { conflict } from '@rotp/hub-server';
+import { requireMember } from '@rotp/hub-server';
 import { assertOwnerOrAdmin, loadVisibleFile } from '../files/file-guards';
 import { loadVersion } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
 import { filesBucket } from '../storage/files-bucket';
-import type { Member } from '../../../hub-core/auth/require-member';
-import type { Route } from '../../../hub-core/route.type';
+import type { Member } from '@rotp/hub-server';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 
 const assertDeletable = (file: SanctuaryFile, n: number): void => {

@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import { readRequired } from '../../hub-core/env';
+import { readRequired } from '@rotp/hub-server';
 import { REQUIRED_STORE_ENV } from './env.constants';
 import type { StoreEnv } from './env.type';
 

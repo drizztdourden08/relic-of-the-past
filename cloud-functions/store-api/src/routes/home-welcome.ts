@@ -2,9 +2,9 @@
 import { STORE_ROUTES } from '@rotp/hub-contracts';
 import type { WelcomeResponse } from '@rotp/hub-contracts';
 import { welcomeSchema } from '@rotp/hub-contracts';
-import { parseBody } from '../../../hub-core/http/parse-body';
-import { now } from '../../../hub-core/db/firestore';
-import type { Route } from '../../../hub-core/route.type';
+import { parseBody } from '@rotp/hub-server';
+import { now } from '@rotp/hub-server';
+import type { Route } from '@rotp/hub-server';
 import { personOf, requirePermission } from '../auth/player';
 import { settingsRepo } from '../db/settings-repo';
 import { invalidateHome } from '../home/home-cache';

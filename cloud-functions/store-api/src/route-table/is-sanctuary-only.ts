@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_ONLY } from './is-sanctuary-only.constants';
 
 const isSanctuaryOnly = (route: Route): boolean =>

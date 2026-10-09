@@ -1,0 +1,22 @@
+{
+  "name": "@rotp/hub-server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The server kit the site APIs bundle: router, sessions, sign-in, access and storage.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "catalog:",
+    "@aws-sdk/s3-request-presigner": "catalog:",
+    "@google-cloud/firestore": "catalog:",
+    "@google-cloud/functions-framework": "catalog:",
+    "@rotp/hub-contracts": "workspace:*",
+    "arctic": "catalog:",
+    "jose": "catalog:",
+    "zod": "catalog:"
+  }
+}

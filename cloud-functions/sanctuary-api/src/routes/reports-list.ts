@@ -1,11 +1,11 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES, canSeeReports } from '@rotp/hub-contracts';
-import { badRequest } from '../../../hub-core/http/http-error';
-import { queryFlag, queryParam } from '../../../hub-core/http/query';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { badRequest } from '@rotp/hub-server';
+import { queryFlag, queryParam } from '@rotp/hub-server';
+import { requireMember } from '@rotp/hub-server';
 import { reportsRepo } from '../db/reports-repo';
 import { viewReport } from '../reports/report-view';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 import { PAGE_SIZE } from './reports-list.constants';
 

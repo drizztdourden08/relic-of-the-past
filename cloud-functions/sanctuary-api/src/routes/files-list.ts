@@ -2,11 +2,11 @@
 import { FILE_TYPES, SANCTUARY_ROUTES, canSeeType, fileTypeSchema } from '@rotp/hub-contracts';
 import type { FileType } from '@rotp/hub-contracts';
 import type { Rights } from '@rotp/hub-contracts';
-import { badRequest } from '../../../hub-core/http/http-error';
-import { queryParam } from '../../../hub-core/http/query';
-import { requireMember } from '../../../hub-core/auth/require-member';
+import { badRequest } from '@rotp/hub-server';
+import { queryParam } from '@rotp/hub-server';
+import { requireMember } from '@rotp/hub-server';
 import { filesRepo } from '../db/files-repo';
-import type { Route } from '../../../hub-core/route.type';
+import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';
 import { PAGE_SIZE } from './files-list.constants';
 

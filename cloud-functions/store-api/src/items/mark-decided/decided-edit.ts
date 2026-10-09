@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
 import type { ListingEditState, Review } from '@rotp/hub-contracts';
-import { conflict } from '../../../../hub-core/http/http-error';
+import { conflict } from '@rotp/hub-server';
 import type { Decided } from './mark-decided.type';
 
 const decidedEdit = (review: Review<ListingEditState>, state: 'approved' | 'rejected', { by, note, at }: Decided): Review<ListingEditState> => {

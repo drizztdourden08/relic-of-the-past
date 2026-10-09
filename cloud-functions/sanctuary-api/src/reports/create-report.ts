@@ -1,12 +1,12 @@
 /* @layer root-config @kind logic */
 import { LIMITS } from '@rotp/hub-contracts';
 import type { Report, SubmitReportRequest, SubmitReportResult } from '@rotp/hub-contracts';
-import { badRequest, tooMany } from '../../../hub-core/http/http-error';
-import type { Caller } from '../../../hub-core/auth/require-caller';
-import { usersRepo } from '../../../hub-core/db/users-repo';
+import { badRequest, tooMany } from '@rotp/hub-server';
+import type { Caller } from '@rotp/hub-server';
+import { usersRepo } from '@rotp/hub-server';
 import { reportsRepo } from '../db/reports-repo';
-import { rateLimitRepo } from '../../../hub-core/db/rate-limit-repo';
-import { now } from '../../../hub-core/db/firestore';
+import { rateLimitRepo } from '@rotp/hub-server';
+import { now } from '@rotp/hub-server';
 import { github } from '../github/issues';
 import { filesBucket } from '../storage/files-bucket';
 import { reportKey } from '../storage/keys';
