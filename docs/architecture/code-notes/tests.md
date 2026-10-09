@@ -289,6 +289,205 @@ memory, and `screen:geography`, which checks the record against the rest of the 
 screen. The indirect entrance case points entrance 0x2B at another room, which is how a
 stale entrance id looks after walking in from another indoor room.
 
+## game/data
+
+The writer suites (`dataset-record-writers`, `enumeration-writer`, `item-group-writer`) run in
+a throwaway workspace shaped like `shared/game/data/...`, because the id allocator scans that
+shape and the path resolver refuses to leave it.
+
+### game/data/check-content-tags.keep.test.ts
+
+The check content tags (key, big key, map and compass, boss item) are a seeded
+`CheckRecord.tags` array, no longer computed on read. A few known checks are pinned so a
+seed edit shows as a diff.
+
+### game/data/connection-pairing.keep.test.ts
+
+One record is one point on one screen; `toConnectionId` names its partner (see
+`shared/game/data/connections/derive.ts`). Two invariants do not hold today and stay as
+`it.todo` with the violators named.
+
+Same screen pairs: `connection-896` and `connection-1143` both sit on `screen-236`, from the
+data before the migration, and neither carries `ctx:internal`. The check to restore:
+
+```ts
+const violators = ALL_CONNECTIONS.filter(c => {
+  const partner = getConnection(c.toConnectionId);
+  if (c.screenId !== partner.screenId) return false;
+  return !hasTagKey(c.tags, 'ctx:internal') && !hasTagKey(partner.tags, 'ctx:internal');
+});
+expect(violators.map(c => c.id)).toEqual([]);
+```
+
+Tile footprints: 8 pairs (16 records) share tiles on one screen, a door and the stair or
+entrance beneath it on different layers. `ConnectionPlacement.layer` exists for this, but
+the migration had no data to fill it. The pairs: 324/325 (`screen-051`), 212/243
+(`screen-103`), 228/244 (`screen-122`), 230/245 (`screen-123`), 232/246 (`screen-124`),
+002/366 (`screen-204`), 382/383 (`screen-190`), 404/405 (`screen-031`). The check to
+restore:
+
+```ts
+const byScreen = new Map<string, Map<string, string>>();
+const collisions: string[] = [];
+for (const c of ALL_CONNECTIONS) {
+  const sig = tileSig(c);
+  if (!sig) continue;
+  const seen = byScreen.get(c.screenId) ?? new Map<string, string>();
+  byScreen.set(c.screenId, seen);
+  if (seen.has(sig)) collisions.push(`${seen.get(sig)} vs ${c.id} on ${c.screenId}`);
+  else seen.set(sig, c.id);
+}
+expect(collisions).toEqual([]);
+```
+
+### game/data/dataset-integrity.keep.test.ts
+
+The dataset held against itself, exhaustively: every reference resolves to a record of the
+right kind, ids are unique and prefixed, a screen agrees with its area, location and region
+about its world, and every event row owns a ledger bit. It replaced a sampling suite, because
+a dangling id hides in the one row nobody sampled. Every failure names the record and field.
+
+The menu and save and quit pseudo screen is nowhere in the world, so it carries the two
+placeholder ids (`area-000`, `location-000`) and nothing answers for them; a second entry
+would mean a record lost its place. The reference walk only grows (11765 references when
+written); the four named fields are the easiest to lose to a type change. An area that spans
+both worlds agrees with a screen in either. The floodgate's twin rows were merged into one
+event. A location and an event row may share a bit (a dungeon reward pickup and its "reward
+taken" row), but never two locations on one bit or a location on a bit no event owns.
+
+### game/data/dataset-record-writers
+
+The fixture parks one record in a file its own resolver would not name (a vanilla junk item
+with the randomizer items, an enemy with the bosses). `tree-layout` forbids that in the real
+tree; here it proves an update or delete finds a record by id wherever it sits. `recordsIn`
+reads a written file back by evaluating its array literal, since the emitter writes plain
+data.
+
+### game/data/enumeration-generated-types.keep.test.ts
+
+`generated-types.ts` is committed, so an edit to `ALL_ENUMERATION` without
+`npm run generate:enum-types` would go unnoticed; the suite regenerates it in memory and
+compares byte for byte. A category earns a union only when the field it labels stores a
+string; the progress tier labels a numeric field, so it is left out of the code generation.
+
+### game/data/enumeration-writer.keep.test.ts
+
+The writers also regenerate `generated-types.ts` from the real repo's `ALL_ENUMERATION`
+(`generate-enum-types.mjs` reads a fixed path). That is harmless here because the real
+`enumeration.ts` never changes, so the run is a no op.
+
+### game/data/generate-enum-types-root.keep.test.ts
+
+`generateEnumTypes` takes an explicit `root`. Its default guess is relative to the script's
+own file, which is wrong from the bundled `dist/electron/main.js`, so every production launch
+once hit `ERR_MODULE_NOT_FOUND`. The fixture seeds one row per category, which
+`buildGeneratedTypesSource` needs; every other real category is absent on purpose, proving
+the read came from the temp root. The seed is read from the record tree and the union is
+written beside the lookup that consumes it.
+
+### game/data/generated-mirrors.keep.test.ts
+
+`scripts/generate-from-records.mjs --check` rebuilds each generated file in memory and
+compares it to disk, so a hand edit fails and is named. The generator is the only writer of
+those files, which keeps the records the one source for tables restated in TypeScript or C.
+The check runs as a child process through vite's SSR runner, the same path as the CLI. It
+needs the dataset, since three targets are built from records.
+
+### game/data/item-group-writer.keep.test.ts
+
+The seven group ceiling is gone, so an eighth group mints a real `ig-NNN` id.
+
+### game/data/record-file-targets.keep.test.ts
+
+Every check record must resolve to the file it is committed in, exactly; nothing is split by
+size, so there are no sibling files to fall back on. Items, actors, dungeons, areas and
+locations are filed one file per category, kind, dungeon or world. An event record is written
+as a numbered spec, so its file holds `n: <id minus 300>`. A few story rows name neither a
+dungeon nor a screen, and event groups spanning two files are refused by design.
+
+### game/data/record-references
+
+Every id one record holds for another, collected off the live registry, each carrying the
+record and field it came from. Requirement and presence trees are walked to their leaves,
+because a dangling id inside nested `allOf` and `anyOf` hides from the eye.
+
+### game/data/reference-index.keep.test.ts
+
+`referencesTo` backs the delete guard. `check-072` requires three pendants and `check-041`
+one bottle, in their own data. No record bakes a Swords group leaf into its static
+requirements today, so Swords has no references.
+
+### game/data/regions.keep.test.ts
+
+A region says what a player can walk without asking for anything, so the claims are about a
+screen agreeing with its region, never about geography. The region count (239) is one row per
+region of the reference generator's four taxonomies. 11 regions carry the boxes of
+`kAreaBoxEvents` and 15 the heads of `kAreaHeadEvents`.
+
+The two exception lists are work left undone; shortening them is progress, lengthening one
+means a record got worse. The screens with no region outside a dungeon are second readings of
+a place held once (the rain, the light world side of the pyramid ledge, the spot the desert
+palace east door stands on) or the graph's root. The dungeon rooms no wing owns are rooms two
+wings both reach, because the boundary is inside a room the dataset holds whole, or rooms
+whose only record is a staircase no room header carries. Wings with no screen are split out
+of a room held whole, or corridor wings with no locations. A cave is one place behind one set
+of doors, so a cave region's screens share one area; overworld regions are exempt.
+
+### game/data/rom-facts
+
+Every native id on a record, held against a US ROM; without one the suites skip. Nothing here
+transcribes a number.
+
+- `CHEST_ROW_EXCEPTIONS` (`check-270`): the chest game's chests are room objects, not rows of
+  the native chest table. `OpenMiniGameChest` (dungeon.c:5834) spends a credit, then picks a
+  prize by random index. Rooms 0x00 and 0x18 read a rupee table by the room's low byte; every
+  other minigame room draws 0 to 7 from `kDungeon_MinigameChestPrizes1`, refuses the index it
+  gave last, and treats index 7 as a one time keepsake guarded by bit 0x4000 of
+  `dung_savegame_state_bits`. The truthful key is the room plus that mask. The row's screen
+  carries room 0x106, which the four chest game doors and the brewery share.
+- `SCRIPTED_ENTRANCES` (0): the opening room is entered from the intro script, never a
+  doorway, so no slot of the 129 carries it.
+- `MOUTHS_NO_SCREEN_CARRIES` (118, 121): fall hole mouths whose landing room a door already
+  reaches. Entrance 118 drops into room 0x58 (door entrance 42); 121 into room 0x56 (door
+  entrance 40).
+- Every room a door opens into is held by a screen. The East Death Mountain caves were the
+  last: Paradox Cave holds 0xDF, 0xEF and 0xFF, Spiral Cave 0xEE and 0xFE, Fairy Ascension
+  Cave 0xED and 0xFD, and Bumper Cave 0xEB and 0xFB.
+- `MOUTH_AREA_EXCEPTIONS` is empty; a new entry means an area is wrong.
+- `KEY_GATED_CROSSINGS` counts sides, not doorways: `Dungeon_ProcessTorchesAndDoors`
+  (dungeon.c:5069 to 5094) reads the door type of the room the player stands in, so one
+  doorway can ask for a key one way and the big key the other.
+- `BOSS_TAGS` are the room header tags 37 ("kill enemy to clear level") and 56 (Agahnim).
+- A screen with no entrance id is a variant of a room, never a claim on a door. An overworld
+  screen with no native index cannot hold a mouth. A room the dungeon map leaves out is an off
+  map room.
+
+### game/data/rom-fixture
+
+The ROM is never committed, so `describeRom` replaces the suite body the way
+`describeDataset` does. Candidate folders are the ones a checkout keeps a ROM in, plus
+`ROTP_ROM`. A file counts only when its SHA1 (after the 0x200 SMC header strip that
+`loadRomFromBuffer` does) is `ZELDA3_SHA1_US`.
+
+### game/data/tag-migration.keep.test.ts and tag-records.keep.test.ts
+
+Every tag a record holds resolves to a term its collection may carry, with no raw term left.
+The tag seed is complete and lossless: every taxonomy term has exactly one record under the
+same label. A missing tag id throws and names the id.
+
+### game/data/tag-writer-convention.keep.test.ts
+
+The writer is what stands between a bad key and the file. Every refusal returns before a file
+is read or an id allocated, so a rejected term never burns a number; the root does not exist,
+so touching the filesystem would throw.
+
+### game/data/tree-layout.keep.test.ts
+
+One convention: `<collection>/<world>-world/<overworld|interiors|dungeon>/<area-or-floor>.ts`.
+Nothing is split by size; a trailing number is a floor, which only a dungeon folder's files
+carry. One dungeon is filed in halves (`SPLIT_BY_HALF`), so its rooms resolve to no single
+file and must sit in one of the two it declares.
+
 ## game/navigation/cliff-preprocessing.keep.test.ts
 
 Room 0x71: lone 0x28 jump triggers beside a staircase produced 1 wide up arrows that Link's

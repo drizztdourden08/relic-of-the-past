@@ -1,56 +1,17 @@
 /* @layer tests @kind test */
-/**
- * The region collection, and the pointer every screen carries up at it.
- *
- * Neither tree-layout nor rom-facts can hold these: the first only asks where a record file
- * sits, and the second only holds a `gameId` number against the cartridge. What is left is the
- * third partition itself. A region says what a player can walk without asking for anything, so
- * the claims here are about agreement between a screen and the region it points at, never about
- * geography.
- *
- * The two lists of exceptions are the work step 7 left undone, named one by one. Shortening
- * them is progress; lengthening one means a record got worse.
- */
 import { describe, expect, it } from 'vitest';
 import { all, getRegion, getScreen } from '@shared/game/data';
 import type { RegionId, ScreenId } from '@shared/game/data/types';
 import { describeDataset } from '../../dataset-guard';
 
-/** One row per region of the reference generator's four taxonomies, in their own order. */
 const REGION_COUNT = 239;
-/** The 11 boxes of `kAreaBoxEvents`, and the 15 heads of `kAreaHeadEvents` a region stands for. */
-const BOUNDED = 11;
-const HEADED = 15;
+const AREA_BOX_EVENT_COUNT = 11;
+const AREA_HEAD_EVENT_COUNT = 15;
 
-/**
- * The screens no region owns, outside a dungeon.
- *
- * Each is a screen the dataset holds and the reference has no region for: a second reading of a
- * place it holds once (the rain, the light-world side of the pyramid ledge, the spot the desert
- * palace east door stands on), or the graph's own root, which is a place in the rules and nowhere
- * in the game.
- */
 const NO_REGION_OUTSIDE_A_DUNGEON: readonly ScreenId[] = [
   'screen-012', 'screen-027', 'screen-038', 'screen-039',
 ];
 
-/**
- * The wings no screen points at yet.
- *
- * Every one is a wing the reference splits out of a room the dataset holds whole, or a corridor
- * wing whose own locations are empty, so no check names a room for it and the dungeon connection
- * records carry no gate to divide it by. These are the rows the inspector pass settles by hand.
- */
-/**
- * The dungeon rooms no wing owns, after the door table had its say.
- *
- * A wing of the reference ends at a locked door, a bombable wall, a curtain or a one-way drop,
- * and `rom-room-doors.ts` reads every one of those out of the cartridge, so a flood from the
- * rooms a wing's own checks name settles most of them. What is left is a room two wings both
- * reach because the boundary between them is inside a room the dataset holds whole, or a room
- * whose only record is a staircase neither room header carries. Shortening this list is
- * progress; lengthening it means a room lost a region it had.
- */
 const ROOMS_NO_WING_OWNS: readonly ScreenId[] = [
   'screen-108', 'screen-318', 'screen-322', 'screen-323', 'screen-332', 'screen-335',
   'screen-337', 'screen-339', 'screen-340', 'screen-353', 'screen-354', 'screen-361',
@@ -76,8 +37,8 @@ describe('the region collection', () => {
 
   it('carries the area table\'s heads and boxes, and nothing else', () => {
     const regions = all('region');
-    expect(regions.filter((region) => region.headScreenId !== undefined)).toHaveLength(HEADED);
-    expect(regions.filter((region) => region.bounds !== undefined)).toHaveLength(BOUNDED);
+    expect(regions.filter((region) => region.headScreenId !== undefined)).toHaveLength(AREA_HEAD_EVENT_COUNT);
+    expect(regions.filter((region) => region.bounds !== undefined)).toHaveLength(AREA_BOX_EVENT_COUNT);
     const wrong = regions
       .flatMap((region) => [region.headScreenId, region.bounds?.screenId])
       .filter((id): id is ScreenId => id !== undefined)
@@ -110,12 +71,6 @@ describeDataset('every screen points up at a region of its own world', () => {
     expect(wrong).toEqual([]);
   });
 
-  /**
-   * A cave is one place behind one set of doors, so the screens of a cave region cannot disagree
-   * about which area they stand in. The three screens the world claim above used to except (189,
-   * 198 and 254) were this same fault from the other side: one cave's readings in two worlds.
-   * An overworld region is not held to it, because the light world is one region of 129 screens.
-   */
   it('gives every cave region screens of one area', () => {
     const seen = new Map<string, { areaId: string; id: ScreenId }>();
     const wrong: string[] = [];

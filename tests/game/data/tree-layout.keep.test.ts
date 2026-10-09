@@ -1,12 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The record tree's shape, against the records themselves.
- *
- * One convention: `<collection>/<world>-world/<overworld|interiors|dungeon>/<area-or-floor>.ts`.
- * A record's world, its area or dungeon, and a dungeon room's floor decide the path, so a file
- * can be found by walking the tree the way the game is walked. Nothing is split by size, so no
- * file is named `-1` or `-2`.
- */
 import { readdirSync, readFileSync, statSync } from 'fs';
 import { join, relative } from 'path';
 import { describe, expect, it } from 'vitest';
@@ -20,14 +12,12 @@ import { describeDataset } from '../../dataset-guard';
 
 const ROOT = join(__dirname, '..', '..', '..', 'shared', 'game', 'data', 'records');
 
-/** The collections the tree holds, and nothing else. */
 const COLLECTIONS = [
   'actors', 'areas', 'checks', 'connections', 'dungeons', 'enumeration',
   'item-groups', 'items', 'locations', 'names', 'native-tables', 'regions', 'screens',
   'sprite-manifest', 'tags',
 ];
 
-/** The files under `checks/events/` that hold no record of their own. */
 const EVENT_SUPPORT = ['event-bits.ts', 'event-record.ts', 'event-screens.data.ts'];
 
 const walk = (dir: string): string[] => readdirSync(dir).flatMap((name) => {
@@ -38,13 +28,11 @@ const walk = (dir: string): string[] => readdirSync(dir).flatMap((name) => {
 const FILES = walk(ROOT);
 const SOURCES = new Map(FILES.filter(f => f.endsWith('.ts')).map(f => [f, readFileSync(join(ROOT, f), 'utf-8')]));
 
-/** The file a record id is written in, or null when the tree holds it nowhere. */
 const fileHolding = (id: string): string | null => {
   for (const [file, source] of SOURCES) if (source.includes(`id: '${id}'`)) return file;
   return null;
 };
 
-/** Every record of a kind, with the file its resolver names and the file it sits in. */
 const filings = <T extends { id: string }>(records: readonly T[], target: (record: T) => string | null) =>
   records.map(record => ({ id: record.id, wanted: target(record), found: fileHolding(record.id) }));
 
@@ -59,7 +47,6 @@ describe('the record tree', () => {
   });
 
   it('names no file by a size split', () => {
-    // A trailing number is a FLOOR, which only a dungeon folder's files carry.
     const numbered = FILES
       .filter(file => /-\d+\.ts$/.test(file))
       .filter(file => !/\/floor-[\db-]+\.ts$/.test(file));
@@ -110,8 +97,6 @@ describeDataset('every record sits where its own fields put it', () => {
   it('files a screen by its world, its area or its dungeon and floor', () => {
     const entries = filings(all('screen'), screen => screenRecordFile(screen).relativePath);
     expect(mismatched(entries)).toEqual([]);
-    // The one dungeon filed in halves: its rooms are refused a single destination, so the
-    // claim is that they sit in one of the two files it declares.
     const halves = Object.entries(SPLIT_BY_HALF)
       .flatMap(([stem, names]) => names.map(name => `screens/dark-world/${stem}/${name}.ts`));
     const unresolved = entries.filter(entry => entry.wanted === null);

@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The check content tag family (key/big key/map-compass/boss item) moved from
- * a value recomputed on every read (computeCheckTags) to a real
- * `CheckRecord.tags` array, seeded once. A few known checks are pinned so a
- * seed edit shows as a diff.
- */
 import { describe, it, expect } from 'vitest';
 import { getCheck, hasTagKey } from '@shared/game/data';
 import { describeDataset } from '../../dataset-guard';

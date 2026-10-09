@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The item-group writer's create path: the seven-group ceiling is gone, so an
- * eighth group mints a real `ig-NNN` id through the allocator. Run in a
- * throwaway workspace shaped like the real one.
- */
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
 import { dirname, join } from 'path';

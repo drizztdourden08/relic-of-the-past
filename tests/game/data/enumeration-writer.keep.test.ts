@@ -1,13 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The enumeration writer's create/update/delete round trip in a throwaway
- * workspace shaped like the real tree (as `item-group-writer.test.ts` and
- * `dataset-record-writers.test.ts` do).
- *
- * The writers also regenerate `enumeration/generated-types.ts` from the REAL
- * repo's `ALL_ENUMERATION` (`generate-enum-types.mjs` reads a hardcoded path).
- * Harmless here: this never touches the real `enumeration.ts`, so it is a no-op.
- */
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
 import { dirname, join } from 'path';
