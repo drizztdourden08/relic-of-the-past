@@ -879,6 +879,158 @@ All four blade copies are vanilla items of character checks, so with those check
 shuffle the pool never carries one and a tick has nothing to take. Only with both scope tables
 shuffled can the blade ticks reach anything.
 
+### randomizer/pond-core-probe
+
+A headless probe of the rupee pond's seams. The built wasm loads in node with the user's
+asset blob, a save state fixture puts the game in a room, and every seam runs with the pond
+gate on and then off. Each file loads its own core, since every case arms its own gate and
+plan. Skips without the wasm, the asset blob or the vault fixture, so a clone without them
+stays green.
+
+- Price, amount taken, bank income and purchase wait are the plan's values with the gate on
+  and the vendored expression's values with it off. An empty plan under the gate leaves the
+  pond native.
+- The plan every case reads has three throws: a prize, a capacity sale, a throw that wins
+  nothing. Host lines are left unarmed (`-1`), so a seam that shows a message shows the
+  vanilla one from the baked dialogue blob; the line seams are pinned through the read only
+  probes. The purchase seam restores the module bytes its message moves.
+- Throws resolve in order and the save counter climbs once per throw, so a prize is handed
+  over once. An exhausted pond names a price no wallet holds (`0x7fff`), so the handler
+  closes it. A taken prize reports its ordinal in the high half of the result.
+- A capacity sale climbs the tier. At the ceiling it hands back nothing, since the vanilla
+  hundred rupee refund would make a cheap pond a money press. A throw that wins nothing hands
+  back its refund, which is below its price, so it cannot be farmed either.
+- The gems a throw shows decompose the amount paid: 427 is one gold, one silver, then red,
+  blue and two greens, three decoded sheets, so the toss waits 240 frames. One volley carries
+  every denomination sharing its decoded sheet, each under its own receipt: 75 is a violet
+  alone (it needs its own sheet), then red and blue together; 27 is red, blue and two greens
+  in one volley. The pond's ten flying gem slots (`variables.h`) fill from the top down.
+- The vanilla cost prompt quotes the plan's price in the BCD its number commands read (75 is
+  `0x75`, not the native `0x50`). The baked line holds two digits, so a price past 99 leaves
+  them as vanilla wrote them and the composed prompt states it. Exhausted, or with the gate
+  down, the digits stand untouched.
+- The award line says whether the water still holds a prize. A throw that sells a capacity
+  level keeps the vanilla question, because the choice is real. With nothing composed the
+  vanilla question stands for every throw.
+- The purchase holds the player still through its closing palette fade. The prize goes out
+  through the receipt ceremony, whose cleanup frees the player, and walking out of the fade
+  leaves the room's colours in the player's palette row for good. An exhausted pond still
+  holds the player, because the plan still owns the pond.
+- A losing throw carries its own consolation, because the vanilla line promises a flat
+  hundred back and this one hands back half. The plan's lines replace vanilla wording only
+  where one was composed. Only an exhausted pond takes the closing line; a wallet too light
+  for the current price keeps the vanilla "not enough rupees yet" refusal (`0x14c`).
+- WRAM addresses come from `variables.h` and the hook owned registry in
+  `core/game-hooks/save_bytes.h`.
+
+### randomizer/pond-generation
+
+Generation with the pond in the shuffle. Every slot is a real location named for its pond and
+its number, every mode is beatable over many seeds, the prize slots carry pool items, and the
+wallet rule gates them. A placement that comes back at all is beatable, because the sweep
+inside the generator already proved full access and the goal.
+
+- A wish pond's own pair is rungs 1 and 2 of her ladder, so a check record answers to those
+  two names, and her candidates are her ladder and nothing else. The capacity pond answers in
+  two named family ladders instead, so none of its plain rungs may be a record's name, or a
+  tier and a rung would share one. The vanilla grant flag cannot move which slots exist under
+  Custom, since that is the pond's own ladder.
+- At Vanilla grants exactly the produced items leave the pool; what she takes in trade stays
+  findable.
+- The beatable sweep uses a wide price range so the curve really has eight throws to cut.
+- A dear pond under the lowest wallet a seed can roll with has its range pulled down to what
+  that wallet holds. The wallet asks for 0 and reads 599, the floor a fixed 500 rupee purchase
+  in the price table sets, so a 900 to 999 range is held at 500. The wallet starts empty and
+  climbs on its one upgrade, so the prizes are out of reach until it is collected. The pinned
+  property is that the pond never asks for more than the wallet can ever hold.
+- The shared switch makes the generator build the wish ponds' rungs from the capacity pond's
+  ladder. The rows each pond holds are untouched, so the switch is reversible.
+- The Brewery lock takes the pool's only Red Boomerang, so her second red displaces a filler,
+  never the blue one she needs.
+- Pond demands are drawn from the seed, so what the options panel previews before generation
+  is byte for byte what the placement carries, retries included. The panel calls the same
+  function with the same probe sets. A seed that needed a second attempt is the case the roll
+  used to get wrong; pick fresh seeds if the fill ever stops retrying on these. An attempt
+  seed (`#retry1`) would move every rung if it reached the roll. The mixed ask profile ticks
+  every ask row and keeps both wish ponds out, so every rolled rung belongs to that ladder.
+
+### randomizer/pond-model
+
+The pond model: the rupee decomposition, the modes' schedules, the snapshot adapter, the
+wallet reading of a prize, the pond's own receipt lines and the item demand.
+
+- 999 is three gold, one violet, then two red, one blue and four green; the small values
+  share a decoded sheet, so it flies in three volleys. A volley never holds more than the
+  pond's ten slots.
+- A snapshot with no pond row reads as the baseline pond, and a mode the model no longer
+  offers reads as the legacy pond with a note.
+- The receipt lines (the price of a toss, a prize award, an emptied pond) quote the plan's
+  real amounts, because every vanilla line they replace names an amount no plan charges or
+  asks a question no plan puts. Vanilla cost charges the same hundred fourteen times and never
+  pays back, so it needs one price line. The composer keeps the fullest candidate that fits
+  three rows and falls back down the list, so the last candidate must fit at every amount the
+  ladder can reach: 63 characters, measured at 164px.
+- The fixed schedule tops out at a hundred, and no reachable wallet sits below 599
+  (`capacity/wallet-floor.ts`), so it is never held to the wallet; a 299 wallet reaches it
+  too, so no ceiling is written.
+- The item demand names only items the player holds and the core can test, ranks the pool
+  early to late, and with nothing eligible falls back to another ticked kind, then to a free
+  rung. The pool the roll reads is keyed by id, so a fallback test pool is built from ids; a
+  name in it would name no record.
+- Each demand kind has one ramp: it reaches its own two ends at the same two rungs, is
+  monotone, and always stops on a stop of that kind's own ladder.
+
+### randomizer/potion-price-rule
+
+Guard: no shelf is ever priced in something the file cannot buy back. The hut's three
+cauldrons are the only repeatable source of potions, and a bottle price consumes its content,
+so a restocked shelf asks again. A cauldron handed to the shuffle takes its potion out of the
+game, and any shelf priced in that potion would be unpayable. The suite walks every reachable
+pairing of the shop scope and the price rows (with every price row ticked, the choice that
+exercises the mask hardest) and proves the hole is closed three times: the rule masks the
+row, the frozen snapshot carries the mask, and the roll refuses the content even when a hand
+edited snapshot claims otherwise. The guard asserts that something was rolled and something
+was blocked, since it is worthless otherwise.
+
+- The mask is not an overwrite: the choices never lose the tick, so dropping the cauldron
+  restores the row. Price rows follow the price list's order, not the cauldron list's, so
+  blocked rows are compared as sets.
+- The bottle rule reads the wallet ladder off collected upgrades; a file with no upgrade
+  stands on the native rung, which holds any cauldron price. The bottle count is the group
+  count, as the real state answers it, so holding a bottle at all means a count of one.
+- A pond rung may ask for up to four bottles at once, handed over together, so three bottles
+  cannot pay a demand of four. No amount means one bottle, which is what a shelf asks and
+  what every placement frozen before the count means.
+
+### randomizer/world-from-records
+
+What the records already answer for in the engine's world, and what they still cannot. The
+region collection is the engine's region list (239 regions, the whole graph the engine
+walks), a check says which region it sits in, a dungeon says which wings it spans, and the
+passages between regions are one rules table. Order matters as much as the set: the prefill
+and the normal placement both walk the region map and each dungeon's wings, so the
+collection's id order must be the order of the reference's four taxonomies, and a dungeon's
+array order must be its create order.
+
+- Which rows a seed fills is a record question. One rule over kind and scope
+  (`world/seed-locations.ts`) picks 261 spots out of the 594 rows. Nothing states the set
+  twice, so the suite pins it by count: the whole world (255 with key drops on, which is those
+  rows minus the pond pairs; 222 with key drops off, since that option invents 33 spots), 8
+  story events each in its own record's region, each dungeon in create order, the shelves the
+  shop scope opens and the ladders a pond sells. A number moving means a record moved.
+- Three places the reference holds as regions of the world and not of the dungeon stay out
+  of the dungeon lists: a secret room under the first castle and the two bomb walls in the
+  last cave. A dungeon's list decides which items its prefill restricts.
+- The records flag the regions impassable while transformed, by the names the reference uses.
+- One thing is still stated beside the engine, because no record can answer for it yet: which
+  crossing a passage is. A connection record is a physical crossing; a reference exit is a
+  logical one with its own rule and name. 205 of the 392 passages join a pair of regions that
+  exactly one crossing joins, so those carry its id. The rest cannot: a mirror spot, a retry
+  from the menu and a wing boundary inside one room cross no tile, and a pair joined by two
+  doors cannot say which door a passage is. The gap numbers (439 crossings no passage makes,
+  at most 23 placeless rows, at most 16 regions no screen carries) are what the tree measured.
+  Lowering a gap is progress and still passes; raising it means a record got worse.
+
 ### randomizer/progressive-tier-probe.keep.test.ts
 
 The built wasm is loaded in node the way the capacity probe loads it, a family's mask is armed
