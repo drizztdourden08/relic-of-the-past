@@ -1,18 +1,4 @@
 /* @layer test @kind test */
-/**
- * The connection strategy's REMOVE side against the real dataset, through the
- * same `CONNECTION_CROSSING_PROBE`/`INDOOR_EDGE_PROBE` pair the ADD test uses
- * (`connection-audit-core.ts`'s `buildBadFindings` is deleted).
- *
- * An OUTDOOR `kind: 'edge'` connection is never proposed for removal: the
- * flood proves presence, never absence. An INDOOR edge CAN be, once
- * `walkBoundaries`/`doorBoundaries` are both read (F3). A one-way record is
- * judged only from the screen that can observe it (F4); `canExit` on the
- * record says this directly (see `screen-endpoint.ts`).
- *
- * A `ConnectionRecord` needs a resolvable `toConnectionId` partner, so every
- * fixture mints a real pair through `registerRecord`/`unregisterRecord`.
- */
 import { describe, it, expect, afterEach } from 'vitest';
 import { all, getConnection, registerRecord, unregisterRecord } from '@shared/game/data';
 import type { ConnectionId, ConnectionRecord, ScreenId } from '@shared/game/data';
@@ -50,11 +36,6 @@ afterEach(() => {
   for (const id of registered.splice(0)) unregisterRecord('connection', id);
 });
 
-/**
- * A fixture point on `screenId` plus a registered partner on `toScreenId`.
- * `canExit` defaults `true`; `partnerCanExit` defaults to the same (two-way),
- * overridable for the one-way (F4) case.
- */
 const fixtureConn = (overrides: Partial<ConnectionRecord> & {
   toScreenId?: ScreenId; partnerCanExit?: boolean;
 } = {}): ConnectionRecord => {
@@ -93,12 +74,10 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
     const conn = fixtureConn({ kind: 'stairs' });
     const context = contextFor('screen-a' as ScreenId, {
       existingConnections: [conn],
-      realTransitions: [{ source: 'stair', kind: 'room', index: 0x999 }], // resolves to nothing, backs nothing
+      realTransitions: [{ source: 'stair', kind: 'room', index: 0x999 }],
     });
     const drafts = detector.detect(context).filter(d => d.action === 'delete');
     expect(drafts.some(d => d.targetId === conn.id)).toBe(true);
-    // A delete is a proof of absence, so both crossing probes grade removals
-    // by their `removalConfidence`, never `certain`, never batch-writable.
     expect(drafts.find(d => d.targetId === conn.id)?.confidence).toBe('likely');
   });
 
@@ -113,7 +92,6 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
     const conn = fixtureConn({ kind: 'edge' });
     const partiallyRead = contextFor('screen-a' as ScreenId, {
       isIndoors: true, existingConnections: [conn], walkBoundaries: [],
-      // doorBoundaries absent, so the table half of F3's gate is missing.
     });
     expect(detector.detect(partiallyRead).some(d => d.targetId === conn.id)).toBe(false);
   });
@@ -128,8 +106,6 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
   });
 
   it('judges a one-way record only from the screen that can observe it (F4)', () => {
-    // One-way stairs: screen-a can exit, screen-b cannot leave back. screen-b's
-    // audit must not remove it; `canExit: false` already says so.
     const conn = fixtureConn({ kind: 'stairs', canExit: true, toScreenId: 'screen-b' as ScreenId, partnerCanExit: false });
     const partner = getConnection(conn.toConnectionId);
     const fromTargetSide = contextFor('screen-b' as ScreenId, { existingConnections: [partner] });

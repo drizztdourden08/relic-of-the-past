@@ -1,10 +1,4 @@
 /* @layer test @kind test */
-/**
- * The `actor` strategy's combat field probe: an ActorRecord whose stored combat
- * profile disagrees with (or is absent from) the native table's row for its
- * sprite type. `strategy:actor` is shared with the spawns finding
- * (`actor-spawns.keep.test.ts`): one strategy, one detector, per kind.
- */
 import { describe, it, expect } from 'vitest';
 import { all, getActorByGameId, replaceRecord } from '@shared/game/data';
 import type { ActorRecord } from '@shared/game/data';

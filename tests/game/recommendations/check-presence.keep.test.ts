@@ -1,16 +1,4 @@
 /* @layer test @kind test */
-/**
- * The `check` strategy (`strategy:check`), driven by the room-addressable
- * chest table.
- *
- * The screen-correction probe reads its live value off
- * `observations.match?.screen.id` (see `corrections.probes.ts`), so
- * `contextFor` builds a matching `ScreenMatchResult`, as production does in
- * `use-screen-observations.ts`.
- *
- * The fixture is the real starting interior, whose single chest is the earliest
- * check in the game. The dataset is restored after each case.
- */
 import { describe, it, expect, afterEach } from 'vitest';
 import {
   all, getCheck, getItem, getScreen, registerRecord, replaceRecord, unregisterRecord,
@@ -21,17 +9,14 @@ import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { checkStrategy } from '@shared/game/recommendations/strategies/check';
 import { describeDataset } from '../../dataset-guard';
 
-/** The interior a fresh save opens in, and the check catalogued for its chest. */
 const ROOM = 260;
 const SCREEN: ScreenId = 'screen-204';
 const CHECK_ID = 'check-026';
 
 const ORIGINAL: CheckRecord = getCheck(CHECK_ID);
 
-/** The raw contents byte the chest table reports, which is the catalogued reward's own receive id. */
 const CONTENTS = getItem(ORIGINAL.vanillaItemIds[0]).gameId?.receiveItemId as number;
 
-/** What `wasmGetRoomChests(260)` reports: one small chest in draw slot 0. */
 const roomChest = (overrides: Partial<ChestObservation> = {}): ChestObservation => ({
   chestIndex: 0,
   isBig: false,
@@ -57,8 +42,6 @@ const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObserv
   ...overrides,
 });
 
-/** Mirrors `use-screen-observations.ts`: `context.screenId` and
- *  `observations.match?.screen.id` always agree in production. */
 const contextFor = (o: Partial<ScreenObservations>, screenId: ScreenId | null = SCREEN): DetectionContext => {
   const match = screenId ? { screen: getScreen(screenId), method: 'exact' as const } : null;
   return { origin: 'live', screenId, observations: observations({ match, ...o }) };
@@ -94,7 +77,6 @@ describeDataset('check strategy on create', () => {
     expect(proposed.kind).toBe('chest');
     expect(proposed.gameId).toEqual({ roomId: ROOM, chestIndex: 0 });
     expect(proposed.screenId).toBe(SCREEN);
-    // The contents byte is a raw receive id, so it resolves to the real reward.
     expect(proposed.vanillaItemIds).toEqual(ORIGINAL.vanillaItemIds);
   });
 

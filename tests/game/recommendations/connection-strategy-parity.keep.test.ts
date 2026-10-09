@@ -1,9 +1,4 @@
 /* @layer test @kind test */
-/**
- * The `connection` strategy's nav probe (`connection-shape.ts` is deleted).
- * The direction-tag detector is gone with the `dir:*` namespace; direction
- * derives from `canExit` (see `data/connections/derive.ts`).
- */
 import { describe, it, expect } from 'vitest';
 import { all, connectionTagKeysOf, find } from '@shared/game/data';
 import { toScreenIdOf, toScreenIdOrNone } from '@shared/game/data';
@@ -37,11 +32,8 @@ const contextFor = (
   return { origin: 'live', screenId, observations };
 };
 
-/** The original mechanism, driven exactly as the widget drives it. */
 const issuesFor = (conn: ConnectionRecord, flood: readonly ConnectionInfo[], screenId: ScreenId): string[] => {
   const tags = connectionTagKeysOf(conn.tags);
-  // A partner no record carries has no screen at all, so its own id stands where a screen id
-  // would, which is what the editor reads as an unknown screen.
   const to = toScreenIdOrNone(conn) ?? conn.toConnectionId;
   const view = { from: conn.screenId, to, tags, nav: conn.nav };
   return connectionIssues({ from: view.from, to: view.to, tags }, describeConnectionTiles(view, [...flood], screenId));
@@ -108,7 +100,6 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
     const navDrafts = backed.filter(d => d.key === 'nav');
     expect(navDrafts.length).toBeGreaterThan(0);
     for (const d of navDrafts) {
-      // Flood evidence proves presence only, so it can never be graded certain.
       expect(d.confidence).toBe('likely');
       expect(d.action).toBe('update');
       expect((d.proposed as ConnectionRecord).nav).toBeDefined();
@@ -129,8 +120,6 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
   it('proposes no NAV fix for an unresolvable endpoint instead of inventing one', () => {
     const broken: ConnectionRecord = { ...connections[0], toConnectionId: 'connection-999999' as ConnectionRecord['toConnectionId'] };
     expect(issuesFor(broken, [], screen.id).some(i => i.includes('unknown screen'))).toBe(true);
-    // Filtered to the nav probe's own findings: the crossing `SetProbe`s are
-    // right to flag a record pointing at a nonexistent screen, a different finding.
     expect(navDetector.detect(contextFor(screen.id, [broken])).filter(d => d.key === 'nav')).toEqual([]);
   });
 });

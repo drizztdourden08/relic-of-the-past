@@ -1,12 +1,4 @@
 /* @layer test @kind test */
-/**
- * The connection strategy's ADD side against the real dataset:
- * `CONNECTION_CROSSING_PROBE` (`points.set.ts`) through `detectorFromStrategy`
- * (`connection-audit-core.ts`'s `buildAddFindings` is deleted). Pins: a create
- * proposal names the right destination, mints no id, grades a native crossing
- * `certain`; a resolved destination is judged by the join, not a pre-filtered
- * list; an UNRESOLVABLE destination proposes a screen instead of vanishing (F2).
- */
 import { describe, it, expect } from 'vitest';
 import { all, findOne, registerRecord, unregisterRecord } from '@shared/game/data';
 import { toScreenIdOf } from '@shared/game/data';
@@ -23,14 +15,9 @@ const detector = detectorFromStrategy(connectionStrategy, onUnresolvableConnecti
 const connected = (a: ScreenId, b: ScreenId): boolean =>
   findOne('connection', c => (c.screenId === a && toScreenIdOf(c) === b) || (c.screenId === b && toScreenIdOf(c) === a)) != null;
 
-// A bare room index can be ambiguous (a castle room and a cave can share one).
-// The destination must resolve UNAMBIGUOUSLY via the same `resolveRealDestId`
-// the probe uses, or the assertions pin whichever screen the lookup prefers.
 const resolvesToItself = (screen: ScreenRecord): boolean =>
   screen.gameId.roomIndex != null && resolveRealDestId('room', screen.gameId.roomIndex) === screen.id;
 
-/** Two real screens with no edge between them. A stair the dataset does not
- *  map is exactly the finding the add side exists for. */
 const unmappedPair = (): { from: ScreenRecord; to: ScreenRecord } => {
   const rooms = all('screen').filter(s => s.gameId.roomIndex != null && resolvesToItself(s));
   for (const from of rooms) {
@@ -73,9 +60,6 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
     expect(drafts[0].targetId).toBeNull();
     expect(drafts[0].current).toBeNull();
     expect(drafts[0].proposed).not.toHaveProperty('id');
-    // The destination is in the finding's key, not on the proposed record: a
-    // brand-new crossing has no partner yet, so `proposed.toConnectionId` is a
-    // placeholder (see `build-connection-record.ts`).
     expect(drafts[0].key).toContain(to.id);
   });
 
@@ -84,9 +68,6 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
   });
 
   it('proposes nothing once a covering record exists', () => {
-    // The dataset key resolves through `toConnectionId` to the PARTNER's own
-    // screen (see `data/connections/derive.ts`), so the fixture's partner has
-    // to be a real, registered record for the join to see it as covering `to`.
     const partnerId = 'connection-fixture-partner' as ConnectionId;
     registerRecord('connection', {
       id: partnerId, kind: 'stairs', screenId: to.id, toConnectionId: 'connection-fixture' as ConnectionId,
@@ -114,13 +95,13 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
   });
 
   it('proposes a screen create for an unresolvable destination (F2) instead of dropping it', () => {
-    const unresolvedRoom = 0xfffe; // no screen catalogues this room index
+    const unresolvedRoom = 0xfffe;
     const found = detector.detect(contextFor(from.id, {
       realTransitions: [{ source: 'stair', kind: 'room', index: unresolvedRoom }],
     }));
     const screenCreate = found.find(d => d.kind === 'screen');
     expect(screenCreate).toBeDefined();
     expect(screenCreate?.action).toBe('create');
-    expect(screenCreate?.confidence).toBe('likely'); // room destination, palace unknown
+    expect(screenCreate?.confidence).toBe('likely');
   });
 });

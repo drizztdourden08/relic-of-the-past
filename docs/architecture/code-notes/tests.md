@@ -219,6 +219,76 @@ The screen editor sends this record to `screenEditor:writeScreen`, the one place
 dataset tooling writes a record into a source file. A dungeon room's file is its floor, so
 an interior without a floor is a separate blocker (see `record-file-targets`).
 
+## game/recommendations
+
+Several suites build a `contextFor` whose `context.screenId` and `observations.match` name
+the same screen, mirroring `use-screen-observations.ts`, where the two always agree. Probes
+that read "the screen we are on" read it off `observations.match?.screen.id`.
+
+### game/recommendations/actor-combat.keep.test.ts and actor-spawns.keep.test.ts
+
+One `strategy:actor` detector covers both findings. The spawn finding's key is
+`spawn:<n>`, the set probe's noun plus live key. With no native combat row supplied, a new
+actor is classified `object`, never a guessed enemy, npc or boss.
+
+### game/recommendations/check-presence.keep.test.ts
+
+The fixture is the interior a fresh save opens in (room 260), whose single chest is the
+earliest check in the game. The chest table's contents byte is a raw receive id, so it
+resolves to the catalogued reward. The dataset is restored after each case.
+
+### game/recommendations/connection-add-parity.keep.test.ts
+
+A bare room index can be ambiguous (a castle room and a cave can share one), so the fixture
+only uses rooms that `resolveRealDestId` resolves back to themselves. A new crossing has no
+partner yet, so the destination lives in the finding's key and `proposed.toConnectionId` is
+a placeholder. A covering record is found through its partner's screen, so the fixture's
+partner must be a real registered record. An unresolvable room proposes a screen create
+graded `likely`, because the palace is unknown.
+
+### game/recommendations/connection-remove-parity.keep.test.ts
+
+An outdoor edge is never proposed for removal: the flood proves presence, never absence. An
+indoor edge can be, once both `walkBoundaries` and `doorBoundaries` were read. A one way
+record is judged only from the screen that can observe it, which `canExit` states. A delete
+proves an absence, so removals are graded `likely`, never batch writable. Every fixture
+registers a real partner record, because a connection needs a resolvable `toConnectionId`.
+
+### game/recommendations/connection-strategy-parity.keep.test.ts
+
+Direction derives from `canExit`. A partner no record carries has no screen, so its own id
+stands in for the screen id, which the editor reads as an unknown screen. Flood evidence
+proves presence only, so a nav proposal is never `certain`. The unresolvable endpoint case
+filters to the nav probe's own findings; the crossing probes flag that record separately.
+
+### game/recommendations/diff.keep.test.ts
+
+The diff covers the shapes real records have: an array (tags), a union (requirements), a
+nested object and a deeply nested one. A union variant that appears or vanishes reports its
+leaves, so a comparison view has a path for every line it marks.
+
+### game/recommendations/item-grants.keep.test.ts
+
+The create side is three set probes (chest contents, native receive count, tracker inventory
+delta) because confidence and evidence source are fixed per probe; the alias side is two
+field probes. All five share one detector id, so the tie break (chest beats grant) comes
+from `runDetection`'s dedup and the registration order. That dedup is in `runDetection`, so
+the suite drives the strategy through `registerDetector` and `runDetection`, as `runPass`
+does. The enumerable native table outranks a single observed grant.
+
+### game/recommendations/registry-store.keep.test.ts
+
+A pass scopes reconciliation to what ran; without that, a pass on one screen resolves every
+finding about every other screen. `wire-detector` must be imported after
+`strategy-detectors`. A screen carries two detectors: the comparison strategy against live
+memory, and `screen:geography`, which checks the record against the rest of the dataset.
+
+### game/recommendations/screen-strategy-parity
+
+`WRONG_PALACE` is a palace index no record uses, so the disagreement is real for every
+screen. The indirect entrance case points entrance 0x2B at another room, which is how a
+stale entrance id looks after walking in from another indoor room.
+
 ## game/navigation/cliff-preprocessing.keep.test.ts
 
 Room 0x71: lone 0x28 jump triggers beside a staircase produced 1 wide up arrows that Link's

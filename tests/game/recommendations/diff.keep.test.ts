@@ -1,9 +1,4 @@
 /* @layer test @kind test */
-/**
- * Structural diff + line mapping, over the shapes real records have: an array
- * field (tags), a union (requirements), a nested object (placement.rect), and
- * a deeply nested one (nav.fromPoint.position).
- */
 import { describe, it, expect } from 'vitest';
 import { changedPaths, linesForPaths } from '@shared/game/recommendations';
 import { serializeConnectionRecord } from '@shared/game/data/record-codegen';
@@ -57,8 +52,6 @@ describe('changedPaths', () => {
     const withItem = { itemId: 'item-032' as const };
     const withAllOf = { allOf: [{ itemId: 'item-032' as const }, { itemId: 'item-075' as const }] };
     const paths = changedPaths({ ...base(), requirements: withItem }, { ...base(), requirements: withAllOf });
-    // The variant that appeared and the one that vanished both report LEAVES,
-    // so a comparison view has a path for every line it needs to mark.
     expect(paths).toContain('requirements.allOf[0].itemId');
     expect(paths).toContain('requirements.itemId');
   });
