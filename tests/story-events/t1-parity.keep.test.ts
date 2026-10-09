@@ -1,14 +1,4 @@
 /* @layer test @kind spec */
-/**
- * Byte parity with the master core: with every story field at zero, the core in this checkout
- * and a baseline core built from master produce identical WRAM after the same scripted input,
- * on every save-state fixture. The claim behind every gate: off, nothing observable changed.
- *
- * The baseline core is built out of band and skipped when absent: point ROTP_BASELINE_WASM_JS
- * at a master build's zelda3.js, or build one into .user-data/baseline-core with
- *   git archive origin/master core scripts/ensure-wasm.mjs package.json | tar -x -C .user-data/baseline-core
- *   node scripts/ensure-wasm.mjs   (run inside that folder, with the emsdk environment active)
- */
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -18,7 +8,9 @@ import type { Step } from './core-harness';
 const NEW_JS = resolve(ROOT, 'apps/web/public/wasm/zelda3.js');
 const BASE_JS = process.env.ROTP_BASELINE_WASM_JS ?? resolve(ROOT, '.user-data/baseline-core/apps/web/public/wasm/zelda3.js');
 
-/** Idle, walk, act, idle: enough to cross a transition on most fixtures. */
+const FRAME_COUNTER = 0x1a;
+const STORY_GATE_WORD = 5;
+
 const SCRIPT: readonly Step[] = [
   { hold: [], frames: 120 },
   { hold: ['Up'], frames: 90 },
@@ -45,11 +37,11 @@ describeCore('T1: gate off matches the master core byte for byte', () => {
     it(`fixture ${name}`, () => {
       for (const core of [fresh, base]) {
         core.loadFixture(name);
-        core.setGateWord(5, 0);
+        core.setGateWord(STORY_GATE_WORD, 0);
       }
       expect(fresh.hash()).toBe(base.hash());
       const loaded = fresh.hash();
-      const frameBefore = fresh.get8(0x1a);
+      const frameBefore = fresh.get8(FRAME_COUNTER);
       for (const step of SCRIPT) {
         fresh.play([step]);
         base.play([step]);
@@ -59,8 +51,7 @@ describeCore('T1: gate off matches the master core byte for byte', () => {
         }
       }
       expect(fresh.sramHash()).toBe(base.sramHash());
-      // The script must have run: the frame counter moved and the world is not the loaded state.
-      expect(fresh.get8(0x1a)).not.toBe(frameBefore);
+      expect(fresh.get8(FRAME_COUNTER)).not.toBe(frameBefore);
       expect(fresh.hash()).not.toBe(loaded);
     });
   }

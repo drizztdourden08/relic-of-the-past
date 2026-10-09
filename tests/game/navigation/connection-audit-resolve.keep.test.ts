@@ -1,11 +1,4 @@
 /* @layer tests @kind test */
-/**
- * Tag inference for a real crossing the dataset does not map. Used to test
- * `connection-audit-resolve.ts`'s `inferTagsForDetected` (removed in phase 4,
- * part 2); its replacement, `points.set.ts`'s `inferTags`, does the same job
- * over an `ObservedTransition`'s `source`. Updated, not deleted, since the
- * behaviour is unchanged.
- */
 import { describe, it, expect } from 'vitest';
 import type { ObservedTransition } from '@shared/game/recommendations';
 import { inferTags } from '../../../apps/web/src/ui/domains/widgets/navigation/recommendations/strategies/connection/points.set';
@@ -30,9 +23,6 @@ describe('inferTags on a detected-but-unmapped transition', () => {
   });
 
   it('tags a travel destination as an internal warp', () => {
-    // A travel transition is a warp-room door destination (header slots 3/4,
-    // emitted only when the room has a warp-type door), so the walk tag would
-    // be wrong on any record minted from it.
     expect(inferTags(transitionOf('travel'))).toEqual(['transit:warp', 'ctx:internal']);
   });
 });

@@ -219,6 +219,64 @@ The screen editor sends this record to `screenEditor:writeScreen`, the one place
 dataset tooling writes a record into a source file. A dungeon room's file is its floor, so
 an interior without a floor is a separate blocker (see `record-file-targets`).
 
+## game/navigation/cliff-preprocessing.keep.test.ts
+
+Room 0x71: lone 0x28 jump triggers beside a staircase produced 1 wide up arrows that Link's
+2x2 body can never use. Indoors, a trigger is a real jump only when a perpendicular
+neighbour trigger infers the same direction. In the staircase model, row 22 holds triggers
+at columns 12 and 13; column 12 is walled three deep on both sides (ambiguous, so it falls
+back to south) and column 13 has a wall to the north only, so it infers north with no
+matching neighbour and yields no ledge. The fan case is room 0x72's north jump.
+
+## game/navigation/connection-audit-resolve.keep.test.ts
+
+Tag inference for a real crossing the dataset does not map, now done by `inferTags` in
+`points.set.ts`. A travel transition is a warp room door destination (header slots 3 and 4,
+emitted only when the room has a warp type door), so a walk tag would be wrong on any record
+minted from it.
+
+## game/navigation/connection-issues.keep.test.ts
+
+`screen-028` and `screen-043` are `lw-00` and `lw-01`, looked up in
+`scripts/generate-ids/output/id-manifest.json`.
+
+## game/navigation/connection-nav-from-flood.keep.test.ts
+
+`ROUND_TRIP` is a compile time guard: the shape the serializer emits must be a valid
+`ConnectionRecord.nav`, so a drift in `ConnectionNavData` fails the type check.
+
+## game/navigation/constrain-void-tiles.keep.test.ts
+
+Room 0x72: the lower floor on layer 1 reaches the grid edge through an open south passage, a
+bare 0x00 corridor flanked by walls. The void flood used to seed from every boundary 0x00,
+walk up that corridor and wall the whole floor (309 tiles). Narrow, wall flanked boundary
+gaps are exits and must not seed the void; wide spans must. The model is a void everywhere,
+a walled floor in the south half and a 4 wide exit corridor to the south edge.
+
+## game/navigation/dual-layer-ledge.keep.test.ts
+
+Tagging ledge tiles as traversal once made `expandLedgeCross` return no landing cell, so a
+ledge drop drew its arrow but never flooded the layer 1 area below (room 0x72). The north
+jump case is room 0x72's west walkway: a 1 deep trigger line, where the old check wanted the
+whole 2x2 body on ledge tiles; now the leading edge must be fully on ledges.
+
+## game/navigation/palace-index-dungeon-name.keep.test.ts
+
+Pins `cur_palace_index_x2` to dungeon record to destination file stem. The values are the
+game's own, doubled (its tables index by `cur_palace_index_x2 >> 1`). Ground truth is the
+ROM's dungeon map floor layout table at SNES `$8AF605` (14 entries), corroborated by
+`kDungeonCrystalPendantBit`. The editor picks the destination file from `fileStem`, so a
+shifted table writes screens into the wrong file; it once shifted by one dungeon from 0x08
+up. The first castle has one dungeon record and two palace values (0x00 and 0x02).
+
+## game/navigation/screen-detection-palace.keep.test.ts
+
+A dungeon screen is keyed by `palaceIndex:roomIndex`. On a mismatch the detector still finds
+it through the room only palace scan fallback, so a wrong label costs only the exact key.
+The three blessed nav baselines (`.claude/nav-baselines/<state>/dump-nav.json`) are pinned to
+an exact match. `screen-133`, `screen-119` and `screen-061` are `hc-0x80`, `hc-0x51` and
+`lw-13`. Room 0x80 belongs to palace 0x02; the mismatch case reports palace 0x00.
+
 ## input/haptic-gates.keep.test.ts
 
 Two gate layers must both pass for an in game event to rumble. The C master gate is
@@ -288,11 +346,90 @@ and the test detaches before its own cleanup for the same reason. The production
 The case that matters is the refusal: uncommitted or unlanded work must never come out as
 claimable or deletable.
 
+## story-events/core-harness
+
+The headless core harness loads a built core in node with no window. It gives RAM reads and
+writes, save state loads, frame exact scripted input and a hash of the game state. Two cores
+load side by side (this build and a master baseline) and run the same script, so "same
+result" is a byte compare. SNES WRAM is 128 KB and the battery block sits inside it at
+0xF000. A frame refused by the developer tools gate throws. `hash` can zero ranges out of
+the digest, such as the event ledger.
+
+## story-events/t1-parity.keep.test.ts
+
+With every story field at zero, this build and a master build produce identical WRAM after
+the same scripted input on every save state fixture: off, nothing observable changed. The
+script idles, walks, acts and idles, enough to cross a transition on most fixtures, and the
+frame counter at 0x1A must move so the script provably ran.
+
+The baseline core is built out of band and the suite skips without it. Point
+`ROTP_BASELINE_WASM_JS` at a master build's `zelda3.js`, or build one into
+`.user-data/baseline-core` with
+`git archive origin/master core scripts/ensure-wasm.mjs package.json | tar -x -C .user-data/baseline-core`
+and then `node scripts/ensure-wasm.mjs` inside that folder, with the emsdk environment active.
+
+## story-events/t6-tracker.keep.test.ts
+
+The tracker's event records resolve from a synthetic heap: ledger bits, vanilla bits, the
+derived pass and the older file fallbacks, with no game. A ledger event answers from its own
+bit alone; a later story beat never stands in for it.
+
 ## platform/primary-modifier.keep.test.ts
 
 On macOS and iOS the primary modifier is Cmd alone; a bare Ctrl means something else there.
 An unknown OS accepts either key, because the web host reports `os: 'unknown'` and guessing
 Ctrl would break Safari on a Mac.
+
+## regression
+
+The regression net. `run-snapshot` records what every save in the corpus reports into
+`.user-data/net/<ROTP_NET_LABEL>.json`; `run-compare` holds the current snapshot to the
+baseline, allowing exactly the rows `expected-changes.data.ts` declares. Take the baseline
+with `ROTP_NET_LABEL=baseline` before a change and `ROTP_NET_LABEL=current` after, then run
+the compare with `ROTP_NET_BASE` set. Without a label the snapshot writes nothing, and without
+`ROTP_NET_BASE` the compare skips, so a bare `vitest run` never compares two stray files.
+Both only read saves.
+
+Everything is keyed by id, never by name, so a rename cannot hide a behaviour change; the
+`names` map is the one name column and is compared on its own. A placement is compared by
+id for the same reason.
+
+### regression/corpus
+
+The save states and seeds the net runs over are discovered, never listed: every quick and
+manual save of every profile under `.user-data`, and every save state fixture. The four npc
+and four world item spots in the key drop seed are the ones the net proves deliverable, and
+every pond's own pair is proven deliverable so no pond is held back. Seeds are append only:
+removing or editing one makes every stored baseline unreadable for that seed.
+
+### regression/expected-changes.data.ts
+
+The rows the current step may move and the names it may change. A refactor step leaves
+every list empty and must move nothing. A behaviour step writes its rows here before it
+runs, so the change is reviewed next to the code. A difference is never accepted by
+regenerating the baseline; the baseline would learn whatever the bug did. `save: '*'` covers
+every save, and `because` is read in review, not by the test.
+
+The current baseline is `story-events-floor`, captured on 2026-09-27 after the Archipelago
+merge. The story events stopped being locations of the world, so their rows read the
+dataset's own record like every other event row (`lib/game/tracker/tracker-statuses.ts`).
+`check-335` (Frog found) now asks for the Titan's Mitt, where the seed engine asked for heavy
+lifting from what the seed's completed locations handed over; seeds only. `check-329`
+(Agahnim 1 beaten) asks for a sword and sight inside the tower, where the engine also asked
+for the tower's four small keys.
+
+Dropped locations are taken out of the baseline's locations and spheres (an emptied sphere
+goes too) and out of the stats counts. New checks are dropped from the completed list so a
+new record that steals an existing row's bit is still caught. The `reachableScreens` column
+may move wholesale only for a step that changes how it is derived. Declared screen additions
+are allowed; a screen leaving the column is a loss and is never declarable.
+
+### regression/run-snapshot.keep.test.ts
+
+The core is armed as the app arms it: gate word 3 gets the tracker query export (1024) and
+gate word 5 the default story word. Normal reads through the same engine as a seed, over the
+placement where nothing moved. The event ledger is handed to availability, as every app path
+does; without it an act reads as done the moment its means are in reach.
 
 ## search/catalog.coverage.keep.test.ts
 
