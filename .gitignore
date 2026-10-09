@@ -96,7 +96,7 @@ Thumbs.db
 Desktop.ini
 
 # Test ROMs (user-provided, never committed)
-test-roms/
+/test-roms/
 
 # Environment
 .env
@@ -135,13 +135,11 @@ tests/**/*.test.ts
 temp-scripts/
 
 # Saves (user data)
-saves/
-!apps/desktop/electron/saves/
+/saves/
 # Local ROM-derived WASM harness assets and imported save states.
 core/wasm-build/assets/
-seeds/
-config/
-!shared/config/
+/seeds/
+/config/
 scripts/analyze/report.json
 
 # Per-worktree port slots (shared/config/port-slot.ts, and the Brock thread CLI's)
