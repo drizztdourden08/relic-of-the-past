@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { inputApi } from '@drizztdourden08/brock-input/renderer';
-import { startControllerNameCache } from '../controller-name-cache';
-import { startControllerFamilyCache } from '../controller-family-cache';
+import { startControllerNameCache } from '@app/lib/input/controller-name-cache/start-controller-name-cache';
+import { startControllerFamilyCache } from '@app/lib/input/controller-family-cache/start-controller-family-cache';
 import { controllerInputStore } from '../controller-input-store';
 import type { ControllerInputState } from '../controller-input-store';
 import type { InputManager } from './input-manager';

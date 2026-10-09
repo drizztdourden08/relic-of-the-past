@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind types */
 import type { GameSettings } from '@rotp/features';
-import type { ControlSchemeId } from '@shared/input/scheme';
+import type { ControlSchemeId } from '@rotp/features';
 import type { ModernBindings, SlotAssignment, SlotIndex } from '@rotp/game-data';
 
 type Assignments = Record<SlotIndex, SlotAssignment>;

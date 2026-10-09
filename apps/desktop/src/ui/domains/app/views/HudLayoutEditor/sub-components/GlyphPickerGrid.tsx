@@ -2,7 +2,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { Anchored, Box, Image, Pressable, Tabs, Text } from '@drizztdourden08/tessera/primitives';
 import { usePickerDismiss } from '@domains/app/compounds/SpritePicker';
-import { AUTO_PACK_ID, GENERIC_PACK_ID, findGlyphPack } from '@shared/input/glyphs';
+import { AUTO_PACK_ID, GENERIC_PACK_ID, findGlyphPack } from '@rotp/input-mapping';
 import { GLYPH_POSITIONS } from '../behavior/toolbar-menus';
 import { glyphSourceFor, glyphUrlOf } from '../behavior/glyph-art';
 import type { HudGlyphPosition } from '@shared/types/hud';

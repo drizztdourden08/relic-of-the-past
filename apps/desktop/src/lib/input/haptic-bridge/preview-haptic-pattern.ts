@@ -1,11 +1,11 @@
 /* @layer renderer-lib @kind logic */
 import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import type { VibrateResult } from '@drizztdourden08/brock-input';
-import { getHapticIntensityScale } from '@shared/input/haptics';
-import { HAPTIC_PATTERNS } from '@shared/input/data/haptics';
-import type { HapticPatternId } from '@shared/input/data/haptics';
-import { shapeForDevice } from './shape-for-device';
-import { INPUT_UNAVAILABLE } from './haptic-bridge.constants';
+import { getHapticIntensityScale } from '@rotp/input-mapping';
+import { HAPTIC_PATTERNS } from '@rotp/input-mapping';
+import type { HapticPatternId } from '@rotp/input-mapping';
+import { shapeForDevice } from '@rotp/input-mapping';
+import { INPUT_UNAVAILABLE } from '@rotp/input-mapping';
 
 const previewHapticPattern = (deviceKey: string, patternId: HapticPatternId): Promise<VibrateResult> => {
   const entry = HAPTIC_PATTERNS[patternId];

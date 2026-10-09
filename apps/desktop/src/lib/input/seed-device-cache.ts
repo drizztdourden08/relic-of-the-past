@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { inputApi } from '@drizztdourden08/brock-input/renderer';
-import type { DeviceSnapshotFields } from './seed-device-cache.type';
+import type { DeviceSnapshotFields } from '@rotp/input-mapping';
 
 const seedPerDeviceCache = (remember: (fields: DeviceSnapshotFields) => void): (() => void) => {
   const api = inputApi();

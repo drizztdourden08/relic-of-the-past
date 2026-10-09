@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind component */
 import { useMemo } from 'react';
 import { hudDataScope } from '@shared/hud/data';
-import { AUTO_PACK_ID } from '@shared/input/glyphs';
+import { AUTO_PACK_ID } from '@rotp/input-mapping';
 import { useControlSchemeStore } from '@app/stores/control-scheme-store';
 import { useHudLayoutStore } from '@app/stores/hud-layout-store';
 import { useHudSettingsStore } from '@app/stores/hud-settings-store';

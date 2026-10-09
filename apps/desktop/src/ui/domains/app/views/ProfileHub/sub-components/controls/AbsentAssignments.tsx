@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { assignmentLabel } from './assignment-label';
-import { slotName } from '@shared/input/scheme';
+import { slotName } from '@rotp/input-mapping';
 import type { AbsentAssignmentsProps } from './controls.type';
 
 const AbsentAssignments = ({ entries }: AbsentAssignmentsProps) => {

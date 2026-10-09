@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState, useRef, useEffect } from 'react';
-import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { InputProfile } from '@rotp/input-mapping';
 import { Button, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { InputProfileItem } from './InputProfileItem';
 import type { InputProfileListProps } from './controls.type';

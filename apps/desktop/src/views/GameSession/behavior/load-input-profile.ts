@@ -1,10 +1,10 @@
 /* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@rotp/features';
-import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { InputProfile } from '@rotp/input-mapping';
 import { getInputManager } from '@app/lib/game';
 import { log } from '@app/lib/log-bus';
 import { readInputProfiles } from '@app/lib/storage/profile-data-store';
-import { migrateProfilesLoudly } from '@app/lib/input/migrate-profiles';
+import { migrateProfilesLoudly } from '@rotp/input-mapping';
 import { updateActiveInputProfileId } from '@app/lib/storage/profile-store';
 
 const loadInputProfile = async (profileId: string, settings: GameSettings) => {

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { BUILT_IN_GLYPH_PACKS } from '@shared/input/glyphs';
+import { BUILT_IN_GLYPH_PACKS } from '@rotp/input-mapping';
 import type { GlyphPack } from '@shared/types/hud';
 import { readCustomPacks } from './read-custom-packs';
 

@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { InputManager } from './input-manager';
-import { notifyQuietly } from './notify-quietly';
+import { notifyQuietly } from '@rotp/input-mapping';
 
 const cycleActiveProfile = (m: InputManager, direction: 1 | -1): void => {
   if (m.profiles.length < 2) return;

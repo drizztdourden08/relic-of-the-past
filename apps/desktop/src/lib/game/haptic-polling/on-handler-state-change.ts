@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { EnvironmentalEvent, handleEnvironmental, handleSpinAttack } from '@shared/input/haptics';
+import { EnvironmentalEvent, handleEnvironmental, handleSpinAttack } from '@rotp/input-mapping';
 import { LEDGE_JUMP_STATES, PLAYER_STATE } from './haptic-polling.constants';
 
 const onHandlerStateChange = (handlerState: number, prevHandlerState: number): void => {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { findGlyphPack, GENERIC_PACK_ID } from '@shared/input/glyphs';
+import { findGlyphPack, GENERIC_PACK_ID } from '@rotp/input-mapping';
 import { glyphSourceFor } from './glyph-source-for';
 import { glyphUrlOf } from './glyph-url-of';
 import type { GlyphPack, HudGlyphPosition } from '@shared/types/hud';

@@ -12,7 +12,6 @@ export type {
   KeyboardBinding,
   NoneBinding,
 } from './bindings';
-
 export type {
   CoreBindings,
   ModernBindings,
@@ -21,5 +20,3 @@ export type {
   SlotAssignment,
   SlotIndex,
 } from './scheme';
-
-

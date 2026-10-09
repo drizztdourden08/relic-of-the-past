@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { seedPerDeviceCache } from '../seed-device-cache';
-import { rememberControllerName } from './remember-controller-name';
+import { rememberControllerName } from '@rotp/input-mapping';
 
 const recording: { unsubscribe: (() => void) | null } = { unsubscribe: null };
 

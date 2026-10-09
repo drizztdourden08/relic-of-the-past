@@ -12,7 +12,7 @@ For the player-facing description of the same screens, see
 
 > **Where the code lives.** The model and all its maths are portable and React-free:
 > types in `shared/types/hud/`, geometry in `shared/hud/layouts/`, glyph resolution in
-> `shared/input/glyphs/`. The renderer half is `HudLayoutView` (live HUD) and
+> `packages/input-mapping/src/glyphs/`. The renderer half is `HudLayoutView` (live HUD) and
 > `HudLayoutEditor` (the editor), with per-profile storage in `apps/desktop/src/lib/hud/`.
 
 ## The layout model
@@ -198,7 +198,7 @@ binding.
 
 Built-in packs: `switch`, `xbox`, `playstation`, `gc`, `snes`, `generic`, `keyboard`.
 None of them re-state which glyph a position gets. They are built from the family
-tables in `shared/input/family/`, so a family gaining a position shows up for free and
+tables in `packages/input-mapping/src/family/`, so a family gaining a position shows up for free and
 cannot drift.
 
 ### Custom packs

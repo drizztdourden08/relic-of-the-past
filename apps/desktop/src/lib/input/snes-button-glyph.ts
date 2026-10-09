@@ -1,11 +1,12 @@
 /* @layer renderer-lib @kind logic */
-import type { DetectedDevice, InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { DetectedDevice, InputProfile } from '@rotp/input-mapping';
 import type { SnesButton } from '@rotp/game-data';
-import { getBindingIconUrl, getBindingLabel } from './binding-display';
-import { getSnesIconUrl } from './button-icons';
-import { padHex } from './profile-devices';
-import { resolveIconByVidPid } from './profile-utils';
-import type { ButtonGlyph } from './snes-button-glyph.type';
+import { getBindingIconUrl } from '@app/lib/input/binding-display/get-binding-icon-url';
+import { getBindingLabel } from '@rotp/input-mapping';
+import { getSnesIconUrl } from '@app/lib/input/button-icons/get-snes-icon-url';
+import { padHex } from '@rotp/input-mapping';
+import { resolveIconByVidPid } from '@rotp/input-mapping';
+import type { ButtonGlyph } from '@rotp/input-mapping';
 
 const liveSdlType = (vid: string, pid: string, devices: DetectedDevice[]): string | null =>
   devices.find((d) => d.type === 'gamepad' && d.connected && d.vendorId && d.productId

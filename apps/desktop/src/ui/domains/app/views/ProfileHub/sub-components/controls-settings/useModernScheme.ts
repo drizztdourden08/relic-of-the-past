@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo } from 'react';
-import {
-  addSlot, defaultCoreBindings, effectiveSlots, keyboardModernBindings, migrateScheme,
-  remapAssignments, removeSlot, setSlotBinding,
-} from '@shared/input/scheme';
+import { addSlot, defaultCoreBindings, effectiveSlots, keyboardModernBindings, migrateScheme, remapAssignments, removeSlot, setSlotBinding } from '@rotp/input-mapping';
 import { controlSchemeOf } from '@rotp/features';
 import { slotDisplay } from './modern-slots';
 import type { CoreBindings, InputBinding, ModernSlot, SlotIndex } from '@rotp/game-data';

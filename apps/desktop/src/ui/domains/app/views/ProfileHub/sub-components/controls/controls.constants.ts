@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { CoreVerb } from '@shared/input/scheme';
+import type { CoreVerb } from '@rotp/input-mapping';
 import { publicAsset } from '@app/lib/assets/public-asset';
 import type { CoreVerbGroup } from './controls.type';
 

@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { controllerInputStore } from '../../../../../../lib/input/controller-input-store';
-import { previewHapticPattern } from '../../../../../../lib/input/haptic-bridge';
+import { previewHapticPattern } from '@app/lib/input/haptic-bridge/preview-haptic-pattern';
 import type { RumbleTestButtonProps } from './ControllerCard.type';
 
 const RumbleTestButton = ({ deviceKey, test }: RumbleTestButtonProps) => {

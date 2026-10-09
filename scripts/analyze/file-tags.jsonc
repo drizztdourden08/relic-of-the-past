@@ -48,7 +48,7 @@
   "tests/e2e/*.md": { "kind": "doc" },
 
   "shared/game/data/**":      { "kind": "data" },
-  "shared/input/data/**":     { "kind": "data" },
+  "packages/input-mapping/src/data/**":     { "kind": "data" },
   "shared/asset-extraction/**/data/**": { "kind": "data" },
   "**/*.data.ts":             { "kind": "data" },
 

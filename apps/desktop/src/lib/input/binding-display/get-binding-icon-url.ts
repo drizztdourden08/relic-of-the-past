@@ -1,7 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import type { InputBinding, ButtonIcon } from '@rotp/game-data';
-import { getButtonIconUrl, keyCodeToIconId } from '../button-icons';
-import { AXIS_FALLBACK } from './binding-display.constants';
+import { getButtonIconUrl } from '@app/lib/input/button-icons/get-button-icon-url';
+import { keyCodeToIconId } from '@rotp/input-mapping';
+import { AXIS_FALLBACK } from '@rotp/input-mapping';
 
 const fallbackIconId = (binding: InputBinding): string | null => {
   if (binding.type === 'keyboard') return 'kb-any';

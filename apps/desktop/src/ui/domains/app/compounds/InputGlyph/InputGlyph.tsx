@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Image } from '@drizztdourden08/tessera/primitives';
-import { getBindingLabel, getBindingIconUrl } from '@app/lib/input/binding-display';
-import { getButtonIconUrl } from '@app/lib/input/button-icons';
+import { getBindingLabel } from '@rotp/input-mapping';
+import { getBindingIconUrl } from '@app/lib/input/binding-display/get-binding-icon-url';
+import { getButtonIconUrl } from '@app/lib/input/button-icons/get-button-icon-url';
 import type { InputGlyphProps } from './InputGlyph.type';
 import './InputGlyph.css';
 

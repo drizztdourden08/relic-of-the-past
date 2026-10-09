@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { migrateScheme } from '@shared/input/scheme';
+import { migrateScheme } from '@rotp/input-mapping';
 import type { Assignments } from './control-scheme-store.type';
 import { useControlSchemeStore } from './useControlSchemeStore';
 

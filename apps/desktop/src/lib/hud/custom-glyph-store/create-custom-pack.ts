@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { newId } from '@drizztdourden08/brock-core';
-import { GENERIC_PACK_ID } from '@shared/input/glyphs';
+import { GENERIC_PACK_ID } from '@rotp/input-mapping';
 import type { GlyphPack } from '@shared/types/hud';
 import { upsertPack } from './upsert-pack';
 

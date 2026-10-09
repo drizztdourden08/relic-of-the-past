@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { buildItemCells, clampGearTier, gearTierCells, maxGearTier } from '@rotp/game-data';
-import { resolveGlyph, slotGlyph } from '@shared/input/glyphs';
+import { resolveGlyph, slotGlyph } from '@rotp/input-mapping';
 import { GROUP_GLYPH_ART } from '@domains/hud/compounds/HudNodeRenderer';
 import type { GlyphSource } from '@shared/types/hud';
 import type { HudGlyphSpec, HudSlotContent } from '@domains/hud/compounds/HudNodeRenderer';

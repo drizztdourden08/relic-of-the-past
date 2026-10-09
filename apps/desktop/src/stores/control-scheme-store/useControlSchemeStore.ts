@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
-import { setSchemeAssignments } from '@app/lib/input/scheme-runtime';
+import { setSchemeAssignments } from '@rotp/input-mapping';
 import type { Assignments, ControlSchemeStore } from './control-scheme-store.type';
 import { persistAssignments } from './persist-assignments';
 

@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { Box, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { BindingRow } from './BindingRow';
 import { assignmentLabel } from './assignment-label';
-import { slotName } from '@shared/input/scheme';
+import { slotName } from '@rotp/input-mapping';
 import type { SlotRowProps } from './controls.type';
 import './SlotRow.css';
 

@@ -359,7 +359,7 @@ A collapsible raw report byte grid for a controller card.
 
 ## InputTester/sub-components/RumbleStrengthControl.tsx
 
-A per-device rumble multiplier on top of the family strength curve in `shared/input/family/vibration-shaping.ts`. It is neutral at 1 and persisted per device key.
+A per-device rumble multiplier on top of the family strength curve in `packages/input-mapping/src/family/vibration-shaping.ts`. It is neutral at 1 and persisted per device key.
 
 ## InputTester/sub-components/HidCalibrationWizard.tsx
 

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { defaultModernBindings, keyboardModernBindings, renumberSlots } from '@shared/input/scheme';
+import { defaultModernBindings, keyboardModernBindings, renumberSlots } from '@rotp/input-mapping';
 import { defaultLayoutIdFor } from '@shared/hud/layouts';
-import type { ResolvedControl } from '@shared/input/family';
+import type { ResolvedControl } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 
 const buildModernBindings = (

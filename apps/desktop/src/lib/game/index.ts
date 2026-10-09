@@ -41,7 +41,8 @@ export {
 } from './host-menu';
 export { initGearOwnership, observeGear, ownedMax } from './gear-ownership';
 export type { GearTiers } from './gear-ownership';
-export { getInputManager, resolveFunctionMappingIcon } from '../input/input-manager';
+export { getInputManager } from '@app/lib/input/input-manager/get-input-manager';
+export { resolveFunctionMappingIcon } from '@rotp/input-mapping';
 export type { UnknownItemEntry } from './tracker';
 export {
   initTrackerBridge, destroyTrackerBridge,

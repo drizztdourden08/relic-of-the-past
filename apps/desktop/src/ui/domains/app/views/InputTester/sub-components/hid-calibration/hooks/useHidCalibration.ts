@@ -3,7 +3,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react
 import { usePlatform } from '@drizztdourden08/brock-react';
 import { useAppVersion } from '@app/hooks/useAppVersion';
 import type { ControllerInputState } from '../../../../../../../../lib/input/controller-input-store';
-import type { DeviceProfile } from '@shared/input';
+import type { DeviceProfile } from '@rotp/input-mapping';
 import type {
   AxisSubStep, ByteColorResult, ByteStatus, CaptureState, GyroState,
   IdleState, InputItem, Phase,

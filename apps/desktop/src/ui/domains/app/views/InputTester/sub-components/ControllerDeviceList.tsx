@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { SDL_AXIS_NAMES, SDL_BUTTON_NAMES } from '@drizztdourden08/brock-input';
 import type { ControllerInputState } from '../../../../../../lib/input/controller-input-store';
-import { resolveDeviceFromEntry } from '../../../../../../lib/input/resolve-device';
+import { resolveDeviceFromEntry } from '@rotp/input-mapping';
 import { ControllerCard } from './ControllerCard';
 import type { ControllerDeviceListProps } from './ControllerDeviceList.type';
 

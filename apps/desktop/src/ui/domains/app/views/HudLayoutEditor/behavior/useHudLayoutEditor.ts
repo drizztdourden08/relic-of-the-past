@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { AUTO_PACK_ID } from '@shared/input/glyphs';
+import { AUTO_PACK_ID } from '@rotp/input-mapping';
 import { DEFAULT_LAYOUT, validateLayout } from '@shared/hud/layouts';
 import { usePlacedLayout } from '@domains/hud/views/HudLayoutView';
 import { useHudLayoutStore } from '@app/stores/hud-layout-store';

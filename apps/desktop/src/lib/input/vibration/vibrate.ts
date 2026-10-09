@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { VibrateOptions } from './vibration.type';
-import { DEFAULT_INTENSITY } from './vibration.constants';
+import type { VibrateOptions } from '@rotp/input-mapping';
+import { DEFAULT_INTENSITY } from '@rotp/input-mapping';
 import { vibratePattern } from './vibrate-pattern';
 
 const vibrate = (target: string, durationMs: number, opts?: VibrateOptions): void => {

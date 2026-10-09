@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { isPrimaryModifier } from '@shared/platform/is-primary-modifier';
+import { isPrimaryModifier } from '@rotp/input-mapping';
 import { rectCells } from '../../../GridLattice';
 import { ARROWS } from './grid-keys.constants';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';

@@ -114,7 +114,7 @@ const copyQuickSave = (sourceId, name, slot) => {
 };
 
 const keyboardInputProfile = async (now) => {
-  const { KEYBOARD_DEFAULT } = await importStrippedTs('../../shared/input/keyboard-default.ts');
+  const { KEYBOARD_DEFAULT } = await importStrippedTs('../../packages/input-mapping/src/keyboard-default.ts');
   return {
     id: KEYBOARD_DEFAULT.id,
     name: KEYBOARD_DEFAULT.name,

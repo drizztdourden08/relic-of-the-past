@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind types */
 import type { GameSettings } from '@rotp/features';
-import type { CoreVerb, ControlSchemeId } from '@shared/input/scheme';
-import type { ResolvedControl } from '@shared/input/family';
+import type { CoreVerb } from '@rotp/input-mapping';
+import type { ControlSchemeId } from '@rotp/features';
+import type { ResolvedControl } from '@rotp/input-mapping';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { HudLayout } from '@shared/types/hud';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SlotIndex, SnesButton } from '@rotp/game-data';
-import type { DetectedDevice, InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { DetectedDevice, InputProfile } from '@rotp/input-mapping';
 import type { FunctionAction } from '@rotp/features';
 
 type SettingsChange = (patch: Partial<GameSettings>) => void;

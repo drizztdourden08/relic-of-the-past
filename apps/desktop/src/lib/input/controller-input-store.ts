@@ -1,15 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { processControllerState } from './process-controller-state';
 import type { ControllerRawReport } from '@drizztdourden08/brock-input';
-import type {
-  ControllerDiagListener,
-  ControllerDisconnectListener,
-  ControllerInputState,
-  ControllerStateListener,
-  HidRawReportEvent,
-  HidRawReportListener,
-} from './controller-input-store.type';
-import { DIAG_LOG_MAX } from './controller-input-store.constants';
+import type { ControllerDiagListener, ControllerDisconnectListener, ControllerInputState, ControllerStateListener, HidRawReportEvent, HidRawReportListener } from '@rotp/input-mapping';
+import { DIAG_LOG_MAX } from '@rotp/input-mapping';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 
@@ -100,11 +93,4 @@ if (typeof window !== 'undefined') {
 }
 
 export { controllerInputStore };
-export type {
-  ControllerDiagListener,
-  ControllerDisconnectListener,
-  ControllerInputState,
-  ControllerStateListener,
-  HidRawReportEvent,
-  HidRawReportListener,
-} from './controller-input-store.type';
+export type { ControllerDiagListener, ControllerDisconnectListener, ControllerInputState, ControllerStateListener, HidRawReportEvent, HidRawReportListener } from '@rotp/input-mapping';

@@ -3403,7 +3403,7 @@ editor (which runs with no game) all need the same answer; an earlier editor cop
 The single place where a raw axis reading becomes pressed, shared by live play (the SNES
 bitmask, function hotkeys) and by binding capture (the raw input dispatcher). A trigger axis
 (SDL's fixed `LEFT_TRIGGER` and `RIGHT_TRIGGER` indices) uses the family overridable
-threshold the calibration screen shows (`shared/input/family/live-control-state.ts`,
+threshold the calibration screen shows (`packages/input-mapping/src/family/live-control-state.ts`,
 `resolveTriggerPressThreshold`), never a second number. Any other axis, such as a stick
 standing in for a direction, uses a plain deflection of 0.5. Device keys are `vid:pid` in
 hex; a device whose SDL type was not recorded this session uses the generic threshold.

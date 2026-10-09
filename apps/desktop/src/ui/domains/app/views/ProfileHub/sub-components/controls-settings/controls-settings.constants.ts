@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { BUTTON_INDEX } from '@shared/input/family';
+import { BUTTON_INDEX } from '@rotp/input-mapping';
 import { publicAsset } from '@app/lib/assets/public-asset';
 
 const FAMILY_ICON_MAP: Record<string, string> = {

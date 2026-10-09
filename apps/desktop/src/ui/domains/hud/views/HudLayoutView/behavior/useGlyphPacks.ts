@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useState } from 'react';
-import { BUILT_IN_GLYPH_PACKS } from '@shared/input/glyphs';
+import { BUILT_IN_GLYPH_PACKS } from '@rotp/input-mapping';
 import { allGlyphPacks, primeGlyphUrls } from '@app/lib/hud/custom-glyph-store';
 import type { GlyphPack } from '@shared/types/hud';
 

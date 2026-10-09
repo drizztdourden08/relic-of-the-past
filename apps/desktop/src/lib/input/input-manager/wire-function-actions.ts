@@ -8,7 +8,7 @@ import { liveSettingsNow } from '@app/lib/game/live-settings';
 import { getProfileId } from '@app/lib/game/wasm-bridge';
 import { setTurboHeld } from '@app/lib/game/turbo';
 import type { InputManager } from './input-manager';
-import { FULL_HEALTH } from './input-manager.constants';
+import { FULL_HEALTH } from '@rotp/input-mapping';
 import { cycleActiveProfile } from './cycle-active-profile';
 
 const wireProfileActions = (m: InputManager): void => {

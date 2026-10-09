@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
 import { SNES_BUTTONS } from '@rotp/game-data';
-import { allowedDevices } from '@app/lib/input/profile-devices';
-import { recallControllerName } from '@app/lib/input/controller-name-cache';
-import { resolveIconByVidPid } from '@app/lib/input/profile-utils';
+import { allowedDevices } from '@rotp/input-mapping';
+import { recallControllerName } from '@rotp/input-mapping';
+import { resolveIconByVidPid } from '@rotp/input-mapping';
 import { resolveLiveFamilyIcon } from './family-icon-map';
 import { FAMILY_ICON_MAP } from './controls-settings.constants';
 import { findLiveDevice } from './live-device';

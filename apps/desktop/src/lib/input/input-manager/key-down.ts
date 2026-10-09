@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { InputManager } from './input-manager';
-import { isTextInput } from './is-text-input';
+import { isTextInput } from '@rotp/input-mapping';
 
 const isShortcutChord = (e: KeyboardEvent): boolean =>
   (e.ctrlKey || e.metaKey) && !e.code.startsWith('Control') && !e.code.startsWith('Meta');

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { handleDashPulse, handleDeath, resetDashState } from '@shared/input/haptics';
+import { handleDashPulse, handleDeath, resetDashState } from '@rotp/input-mapping';
 import { DASH_CHARGED_BELOW, DASH_CHARGED_FROM, GAME_OVER_MODULE, UI_STATE_OFFSET } from './haptic-polling.constants';
 import { onHandlerStateChange } from './on-handler-state-change';
 import { pollingState } from './polling-state';

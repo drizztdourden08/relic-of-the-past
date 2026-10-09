@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { FunctionMapping } from '@rotp/features';
-import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { InputProfile } from '@rotp/input-mapping';
 
 interface ProfileSwitcherOverlayProps {
   open: boolean;

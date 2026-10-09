@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { BUILT_IN_GLYPH_PACKS } from '@shared/input/glyphs';
+import { BUILT_IN_GLYPH_PACKS } from '@rotp/input-mapping';
 import {
   createCustomPack, deleteCustomPack, importGlyphImage, primeGlyphUrls, readCustomPacks, removeGlyphImage,
 } from '@app/lib/hud/custom-glyph-store';

@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo } from 'react';
-import { AUTO_PACK_ID } from '@shared/input/glyphs';
+import { AUTO_PACK_ID } from '@rotp/input-mapping';
 import { buildSlotContent } from '@app/lib/hud/slot-content';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useControlSchemeStore } from '@app/stores/control-scheme-store';

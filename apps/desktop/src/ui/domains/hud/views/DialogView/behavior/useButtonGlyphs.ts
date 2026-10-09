@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import type { PromptButton } from '@rotp/game-data';
-import { getInputManager } from '../../../../../../lib/input';
+import { getInputManager } from '@app/lib/input/input-manager/get-input-manager';
 import { snesButtonGlyph } from '../../../../../../lib/input/snes-button-glyph';
 import type { ButtonGlyph } from '../../../../../../lib/input/snes-button-glyph';
 import { SNES_OF } from '../DialogView.constants';

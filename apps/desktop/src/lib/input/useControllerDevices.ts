@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback, useEffect, useMemo } from 'react';
 import { useControllerDevicesStore } from '@drizztdourden08/brock-input/renderer';
-import { groupControllerDevices } from './controller-device-groups';
+import { groupControllerDevices } from '@rotp/input-mapping';
 
 const useControllerDevices = () => {
   const { entries, rescanPending, refresh, rescan, addMapping } = useControllerDevicesStore();

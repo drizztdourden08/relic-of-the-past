@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { defaultSlotList } from '@shared/input/scheme';
-import type { ResolvedControl } from '@shared/input/family/family.type';
+import { defaultSlotList } from '@rotp/input-mapping';
+import type { ResolvedControl } from '@rotp/input-mapping';
 import type { CoreBindings } from '@rotp/game-data';
 
 const button = (position: string): ResolvedControl =>

@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { addSlot, remapAssignments, removeSlot, renumberSlots, setSlotBinding } from '@shared/input/scheme';
+import { addSlot, remapAssignments, removeSlot, renumberSlots, setSlotBinding } from '@rotp/input-mapping';
 import type { ModernSlot, SlotAssignment } from '@rotp/game-data';
 
 const slot = (index: number, label = `Slot ${index}`): ModernSlot =>

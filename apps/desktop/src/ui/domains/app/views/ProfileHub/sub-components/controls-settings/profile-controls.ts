@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind logic */
-import { resolveDeviceControls } from '@shared/input/family';
-import { resolveDeviceFromEntry } from '@app/lib/input/resolve-device';
-import { recallControllerSdlType } from '@app/lib/input/controller-family-cache';
+import { resolveDeviceControls } from '@rotp/input-mapping';
+import { resolveDeviceFromEntry } from '@rotp/input-mapping';
+import { recallControllerSdlType } from '@rotp/input-mapping';
 import { padHex } from './pad-hex';
 import { ALL_AXES, ALL_BUTTONS } from './controls-settings.constants';
-import type { ResolvedControl, SdlGamepadType } from '@shared/input/family';
+import type { ResolvedControl, SdlGamepadType } from '@rotp/input-mapping';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DeviceIdentity } from './controls-settings.type';
 

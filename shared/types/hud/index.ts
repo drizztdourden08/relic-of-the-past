@@ -9,7 +9,7 @@ export type {
   HudBorder, HudBorderSides, HudBorderStyle, HudBoxStyle, HudOutline, HudRadius, HudShadow, HudTint, HudTintMode,
 } from './hud-style';
 export type { GradientStop, Paint, Value } from './hud-value';
-export type { GlyphPack, GlyphSource } from './glyph-pack';
+export type { GlyphPack, GlyphSource } from '@rotp/input-mapping';
 export type {
   HudFontFamily, HudTextAlign, HudTextFace, HudTextFormat, HudTextPad, HudTextSpec, HudTextSpriteSet, HudTextStroke,
 } from './hud-text';

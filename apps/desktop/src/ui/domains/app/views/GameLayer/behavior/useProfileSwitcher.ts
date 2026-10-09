@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useRef } from 'react';
 import { getInputManager } from '../../../../../../lib/game';
-import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { InputProfile } from '@rotp/input-mapping';
 import { findFunctionMapping } from './find-function-mapping';
 import { AUTO_HIDE_MS } from './useProfileSwitcher.constants';
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { resetDashState } from '@shared/input/haptics';
+import { resetDashState } from '@rotp/input-mapping';
 import { pollingState } from './polling-state';
 
 const resetHapticPolling = (): void => {

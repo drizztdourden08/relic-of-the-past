@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { DeviceProfile } from '@shared/input';
-import { resolveDeviceFromEntry } from '@app/lib/input/resolve-device';
-import type { ResolvedDevice } from '@shared/input/family';
+import type { DeviceProfile } from '@rotp/input-mapping';
+import { resolveDeviceFromEntry } from '@rotp/input-mapping';
+import type { ResolvedDevice } from '@rotp/input-mapping';
 import type { HidControllerMap } from '../../HidCalibrationWizard';
 import type { PositionalCaptureRecord } from '../positional-capture/positional-capture.type';
 import type {

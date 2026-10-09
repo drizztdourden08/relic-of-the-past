@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import { KEYBOARD_DEFAULT } from '@shared/input';
-import { profileFromPreset } from '../profile-utils';
+import { KEYBOARD_DEFAULT } from '@rotp/input-mapping';
+import { profileFromPreset } from '@rotp/input-mapping';
 import type { InputManager } from './input-manager';
-import { DEVICE_POLL_MS } from './input-manager.constants';
+import { DEVICE_POLL_MS } from '@rotp/input-mapping';
 import { loadCalibrations } from './load-calibrations';
 import { subscribeControllers } from './subscribe-controllers';
 

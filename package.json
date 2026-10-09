@@ -136,6 +136,7 @@
     "@rotp/features": "workspace:*",
     "@rotp/game-data": "workspace:*",
     "@rotp/hub-contracts": "workspace:*",
+    "@rotp/input-mapping": "workspace:*",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "catalog:",
     "@types/pngjs": "^6.0.5",

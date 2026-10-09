@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { RescanButton } from '../../../../compounds/RescanButton';
-import { controllerCardInfo } from '../../../../../../../lib/input/controller-card-info';
+import { controllerCardInfo } from '@rotp/input-mapping';
 import { DeviceCard } from './DeviceCard';
 import { AdapterDeviceCard } from './AdapterDeviceCard';
 import type { DeviceAssignInfo } from './DeviceCard.type';

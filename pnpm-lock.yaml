@@ -304,6 +304,9 @@ importers:
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:packages/hub-contracts
+      '@rotp/input-mapping':
+        specifier: workspace:*
+        version: link:packages/input-mapping
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -496,6 +499,9 @@ importers:
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:../../packages/hub-contracts
+      '@rotp/input-mapping':
+        specifier: workspace:*
+        version: link:../../packages/input-mapping
       '@tiptap/core':
         specifier: ^3.30.2
         version: 3.30.2(@tiptap/pm@3.30.2)
@@ -783,6 +789,21 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.25.76
+
+  packages/input-mapping:
+    dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.36.0
+        version: 0.36.0
+      '@drizztdourden08/brock-input':
+        specifier: ^0.36.0
+        version: 0.36.0(@drizztdourden08/tessera@0.30.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@rotp/features':
+        specifier: workspace:*
+        version: link:../features
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
 
 packages:
 

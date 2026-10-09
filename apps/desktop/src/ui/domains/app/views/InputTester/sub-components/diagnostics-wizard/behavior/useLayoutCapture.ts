@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import { resolveDeviceFromEntry } from '@app/lib/input/resolve-device';
+import { resolveDeviceFromEntry } from '@rotp/input-mapping';
 import { releaseHold } from './release-hold';
 import { restoreHold } from './restore-hold';
 import type { CapturedLayout, LayoutStage } from '../diagnostics-wizard.type';

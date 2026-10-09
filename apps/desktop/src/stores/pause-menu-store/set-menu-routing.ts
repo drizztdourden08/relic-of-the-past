@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import { setMenuSinkOpen, setMenuSinkPush } from '@app/lib/input/scheme-runtime';
+import { setMenuSinkOpen, setMenuSinkPush } from '@rotp/input-mapping';
 import { usePauseMenuStore } from './usePauseMenuStore';
 
 let sinkWired = false;

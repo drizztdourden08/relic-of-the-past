@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
-import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { InputProfile } from '@rotp/input-mapping';
 import type { DeviceFamily, ModernBindings } from '@rotp/game-data';
-import { KEYBOARD_DEFAULT, buildConsoleDefaultMappings } from '@shared/input';
-import { buildDisplayContext, resolveBrandLogoKey } from '@shared/input/family';
-import type { SdlGamepadType } from '@shared/input/family';
+import { KEYBOARD_DEFAULT, buildConsoleDefaultMappings } from '@rotp/input-mapping';
+import { buildDisplayContext, resolveBrandLogoKey } from '@rotp/input-mapping';
+import type { SdlGamepadType } from '@rotp/input-mapping';
 import { buildModernBindings } from './build-modern-bindings';
 import { controlsForDevice } from './profile-controls';
 import { padHex } from './pad-hex';

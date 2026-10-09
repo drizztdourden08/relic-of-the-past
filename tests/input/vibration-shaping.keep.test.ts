@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { buildDisplayContext, resolveShapeVibration } from '@shared/input/family';
+import { buildDisplayContext, resolveShapeVibration } from '@rotp/input-mapping';
 
 describe('per-family vibration shaping', () => {
   it('Xbox boosts low/mid magnitudes onto a floor and clamps at 1', () => {

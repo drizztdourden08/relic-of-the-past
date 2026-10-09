@@ -1,14 +1,14 @@
 /* @layer renderer-lib @kind logic */
-import { computeBitmask } from './polling-engine';
-import { buildInputSample, edgeBaseline, schemeRuntime } from './scheme-runtime';
-import { menuEdges, menuShadowedSlots, readFunctionMask, remapForScheme } from '@shared/input/scheme';
+import { computeBitmask } from '@rotp/input-mapping';
+import { buildInputSample, edgeBaseline, schemeRuntime } from '@rotp/input-mapping';
+import { menuEdges, menuShadowedSlots, readFunctionMask, remapForScheme } from '@rotp/input-mapping';
 import { ownsHudItem } from './item-ownership';
 import { setActiveItem } from '../game/host-menu';
-import type { SchemeRuntime } from './scheme-runtime';
-import type { InputSample } from '@shared/input/scheme';
+import type { SchemeRuntime } from '@rotp/input-mapping';
+import type { InputSample } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
-import type { InputManager } from './input-manager';
-import { KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from './frame-router.constants';
+import type { InputManager } from '@app/lib/input/input-manager/input-manager';
+import { KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from '@rotp/input-mapping';
 
 const classicMask = (m: InputManager): number =>
   computeBitmask(m.keyStates, m.keyboardMap, m.gamepadButtonMap, m.gamepadAxisMap, m.hidStates, m.allowed);

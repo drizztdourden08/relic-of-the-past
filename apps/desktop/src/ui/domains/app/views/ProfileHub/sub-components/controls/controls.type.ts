@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
-import type { CoreVerb } from '@shared/input/scheme';
+import type { CoreVerb } from '@rotp/input-mapping';
 import type { HudLayout } from '@shared/types/hud';
-import type { AssignedDevice, DetectedDevice, InputProfile } from '@shared/types/controls/devices/devices.type';
+import type { AssignedDevice, DetectedDevice, InputProfile } from '@rotp/input-mapping';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SnesButton } from '@rotp/game-data';
 import type { FunctionAction, FunctionMapping } from '@rotp/features';
-import type { ControllerDeviceGroup } from '../../../../../../../lib/input/controller-device-groups';
+import type { ControllerDeviceGroup } from '@rotp/input-mapping';
 import type { AbsentAssignment, ControlsTab } from '../controls-settings/controls-settings.type';
 import type { useControlsSettings } from '../controls-settings';
 import type { DeviceAssignInfo } from './DeviceCard.type';

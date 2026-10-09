@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DeviceProfile } from '@shared/input';
+import type { DeviceProfile } from '@rotp/input-mapping';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { HidControllerMap } from '../hid-calibration.type';
 

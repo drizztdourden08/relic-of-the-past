@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { isPrimaryModifier } from '@shared/platform/is-primary-modifier';
+import { isPrimaryModifier } from '@rotp/input-mapping';
 import { runBetween } from './run-between';
 import type { OsKind } from '@drizztdourden08/brock-core';
 import type { IndexRun, PressModifiers } from './index-selection.type';

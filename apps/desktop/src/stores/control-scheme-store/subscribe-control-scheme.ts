@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import { onSchemeBindings } from '@app/lib/input/scheme-runtime';
+import { onSchemeBindings } from '@rotp/input-mapping';
 import { useGameUIStore } from '../game-ui-store';
 import { useSpriteAvailabilityStore } from '../sprite-availability-store';
 import { refreshControlSettings } from './refresh-control-settings';

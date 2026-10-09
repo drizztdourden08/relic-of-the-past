@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo } from 'react';
-import { positionOfBinding } from '@shared/input/scheme';
-import { keyboardGlyphPath, resolveGlyph } from '@shared/input/glyphs';
+import { positionOfBinding } from '@rotp/input-mapping';
+import { keyboardGlyphPath, resolveGlyph } from '@rotp/input-mapping';
 import { declaredDeviceFamily } from '../../HudLayoutView/behavior/declared-family';
 import { deviceFamilyOf } from '../../HudLayoutView/behavior/device-family';
 import { useGlyphPacks } from '../../HudLayoutView/behavior/useGlyphPacks';
@@ -9,7 +9,7 @@ import { usePauseMenuStore } from '@app/stores/pause-menu-store';
 import { ANY_BUTTON, CONFIRM_VERBS, LEGEND_VERBS, STICK_OF_AXIS } from '../EnhancedPauseView.constants';
 import type { NavLegendEntry } from '../../../compounds/PauseNavLegend';
 import type { PauseCursorActions } from '@app/stores/pause-menu-store';
-import type { SdlPosition } from '@shared/input/scheme';
+import type { SdlPosition } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 import type { DeviceFamily, InputBinding } from '@rotp/game-data';
 import type { GlyphPack, GlyphSource } from '@shared/types/hud';

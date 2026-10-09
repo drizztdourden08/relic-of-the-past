@@ -2,7 +2,8 @@
 import { useCallback } from 'react';
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { Box, Icon, IconButton, Text, Image } from '@drizztdourden08/tessera/primitives';
-import { getBindingLabel, getBindingIconUrl } from '@app/lib/input/binding-display';
+import { getBindingLabel } from '@rotp/input-mapping';
+import { getBindingIconUrl } from '@app/lib/input/binding-display/get-binding-icon-url';
 import type { BindingRowProps } from './controls.type';
 import './BindingRow.css';
 

@@ -5,7 +5,7 @@ import { OUTFIT_IDS } from '@rotp/game-data';
 import type { GearLadderKind, PauseScreen, PauseSection } from '@rotp/game-data';
 import type { HeroPose } from '@rotp/game-data';
 import type { OutfitId } from '@rotp/game-data';
-import type { SdlPosition } from '@shared/input/scheme';
+import type { SdlPosition } from '@rotp/input-mapping';
 import type { GearSection } from '../../compounds/PauseGearScreen';
 import type { BrowsingView } from './EnhancedPauseView.type';
 

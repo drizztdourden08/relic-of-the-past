@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { getInputManager } from '../../input/input-manager';
-import { initHapticBridge } from '../../input/haptic-bridge';
+import { getInputManager } from '@app/lib/input/input-manager/get-input-manager';
+import { initHapticBridge } from '@app/lib/input/haptic-bridge/init-haptic-bridge';
 import { getPlatform } from '@drizztdourden08/brock-react';
 import { useDialogStore } from '../../../stores/dialog-store';
 import { useGameUIStore } from '../../../stores/game-ui-store';

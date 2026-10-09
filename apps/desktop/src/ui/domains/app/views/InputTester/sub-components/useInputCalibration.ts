@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import { controllerInputStore } from '../../../../../../lib/input/controller-input-store';
 import type { ControllerInputState } from '../../../../../../lib/input/controller-input-store';
-import { getInputManager } from '../../../../../../lib/input/input-manager';
+import { getInputManager } from '@app/lib/input/input-manager/get-input-manager';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { useControllerDevices } from '../../../../../../lib/input/useControllerDevices';
 import { EVENT_LOG_KEEP } from './useInputCalibration.constants';

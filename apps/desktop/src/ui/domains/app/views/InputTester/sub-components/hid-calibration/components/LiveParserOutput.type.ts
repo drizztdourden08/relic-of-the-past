@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DeviceProfile } from '@shared/input';
+import type { DeviceProfile } from '@rotp/input-mapping';
 import type { ControllerInputState } from '../../../../../../../../lib/input/controller-input-store';
 
 interface LiveParserOutputProps {

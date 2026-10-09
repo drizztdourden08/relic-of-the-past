@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useState } from 'react';
 import { Box, Button, DropZone, IconButton, SegmentedControl, Select, Text } from '@drizztdourden08/tessera/primitives';
-import { AUTO_PACK_ID } from '@shared/input/glyphs';
+import { AUTO_PACK_ID } from '@rotp/input-mapping';
 import { GLYPH_IMAGE_TYPES } from '../HudLayoutEditor.constants';
 import type { GlyphPosition } from '@app/lib/hud/custom-glyph-store';
 import type { GlyphPackPickerProps } from './GlyphPackPicker.type';

@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { applyTriggerCalibration, useCalibrationStore } from '@drizztdourden08/brock-input/renderer';
 import { SDL_AXIS } from '@rotp/game-data';
-import type { ControllerInputState } from './controller-input-store.type';
-import type { ControllerStateHost } from './process-controller-state.type';
+import type { ControllerInputState } from '@rotp/input-mapping';
+import type { ControllerStateHost } from '@rotp/input-mapping';
 
 const markConnected = (host: ControllerStateHost, deviceKey: string): void => {
   if (host.connectedDeviceKeys.has(deviceKey)) return;

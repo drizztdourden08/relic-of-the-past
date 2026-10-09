@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import { resolveIconByVidPid } from '@app/lib/input/profile-utils';
+import { resolveIconByVidPid } from '@rotp/input-mapping';
 import { findLiveDevice } from './live-device';
 import { padHex } from './pad-hex';
-import type { CoreVerb } from '@shared/input/scheme';
+import type { CoreVerb } from '@rotp/input-mapping';
 import type { CoreBindings } from '@rotp/game-data';
 import type { CoreIcons, UseCoreIconsArgs } from './controls-settings.type';
 

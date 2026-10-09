@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { Box, Pressable, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { ControllerPortRow } from '../../../../compounds/ControllerPortRow';
 import { UnavailableControllerNotice } from '../../../../compounds/UnavailableControllerNotice';
-import { controllerCardInfo } from '../../../../../../../lib/input/controller-card-info';
+import { controllerCardInfo } from '@rotp/input-mapping';
 import { setDeviceDragData } from './device-drag-data';
 import { ADAPTER_FAMILY_ICON } from './controls.constants';
 import type { AdapterDeviceCardProps } from './controls.type';

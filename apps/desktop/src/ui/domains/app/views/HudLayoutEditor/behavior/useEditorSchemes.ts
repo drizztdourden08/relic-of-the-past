@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import { effectiveSlots, migrateSlotList } from '@shared/input/scheme';
+import { effectiveSlots, migrateSlotList } from '@rotp/input-mapping';
 import { DEFAULT_LAYOUT } from '@shared/hud/layouts';
 import { readInputProfiles, writeInputProfiles } from '@app/lib/storage/profile-data-store';
 import { activeProfileId } from '@app/lib/hud/active-profile';
-import { getInputManager } from '@app/lib/input/input-manager';
+import { getInputManager } from '@app/lib/input/input-manager/get-input-manager';
 import { liveSettingsNow } from '@app/lib/game/live-settings';
 import { readConfig } from '@app/lib/storage/profile-store';
-import { migrateProfilesLoudly } from '@app/lib/input/migrate-profiles';
-import type { InputProfile } from '@shared/types/controls/devices/devices.type';
+import { migrateProfilesLoudly } from '@rotp/input-mapping';
+import type { InputProfile } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 import type { EditorScheme, EditorSchemes } from './useEditorSchemes.type';
 

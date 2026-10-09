@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { rebuildSchemeBindings } from '../scheme-runtime';
-import { allowedDevices } from '../profile-devices';
-import { deviceKeyFor, setScoped } from '../device-scoped-map';
+import { rebuildSchemeBindings } from '@rotp/input-mapping';
+import { allowedDevices } from '@rotp/input-mapping';
+import { deviceKeyFor, setScoped } from '@rotp/input-mapping';
 import type { InputManager } from './input-manager';
 
 const rebuildMaps = (m: InputManager): void => {

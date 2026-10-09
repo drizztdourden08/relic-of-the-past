@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ResolvedDevice } from '@shared/input/family';
+import type { ResolvedDevice } from '@rotp/input-mapping';
 
 interface PositionalTarget {
   id: string;

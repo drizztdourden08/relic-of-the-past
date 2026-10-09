@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect } from 'react';
-import type { DetectedDevice } from '@shared/types/controls/devices/devices.type';
-import { getInputManager } from '../../../../../../../lib/input/input-manager';
+import type { DetectedDevice } from '@rotp/input-mapping';
+import { getInputManager } from '@app/lib/input/input-manager/get-input-manager';
 import { useControllerDevices } from '../../../../../../../lib/input/useControllerDevices';
 
 const useDeviceSync = () => {

@@ -158,7 +158,7 @@ compiles the file to CommonJS and a static import of an `.mjs` with `import.meta
 `withState` boots the built app on a named manual save with the navigation widget open,
 waits 16 s for the core to report live memory, hands the body a reader and always closes. A
 missing build or fixture skips. The keyboard codes per SNES button follow
-`shared/input/keyboard-default.ts`. Input is gated on the active profile's device map, so
+`packages/input-mapping/src/keyboard-default.ts`. Input is gated on the active profile's device map, so
 `enableKeyboard` binds the default layout in the live input manager, in memory only. A press
 must outlast one input poll.
 

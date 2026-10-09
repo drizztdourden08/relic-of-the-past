@@ -2,7 +2,7 @@
 import { routeInputFrame } from '../frame-router';
 import { isAutomationLaunch } from '@drizztdourden08/brock-react';
 import type { InputManager } from './input-manager';
-import { notifyQuietly } from './notify-quietly';
+import { notifyQuietly } from '@rotp/input-mapping';
 
 const inputEligible = (): boolean => document.hasFocus() || isAutomationLaunch();
 

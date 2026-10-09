@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 import { DEFAULT_LAYOUT } from '@shared/hud/layouts';
 import { resolveStoredLayout } from '@app/lib/hud/layout-document-io';
-import { onSchemeBindings } from '@app/lib/input/scheme-runtime';
+import { onSchemeBindings } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 import { useHudLayoutStore } from './useHudLayoutStore';
 
