@@ -1,6 +1,8 @@
 /* @layer renderer-app @kind logic */
 import type { ExclusiveInsets } from '@app/stores/exclusive-insets-store';
-import { NO_INSETS } from './insets-of.constants';
+import { DOCK_STAGE_GAP, NO_INSETS } from './insets-of.constants';
+
+const edge = (room: number): number => (room <= DOCK_STAGE_GAP + 1 ? 0 : room);
 
 const insetsOf = (
   rect: { x: number; y: number; width: number; height: number } | null,
@@ -9,10 +11,10 @@ const insetsOf = (
 ): ExclusiveInsets => {
   if (!rect) return NO_INSETS;
   return {
-    left: Math.max(0, rect.x),
-    top: Math.max(0, rect.y),
-    right: Math.max(0, width - rect.x - rect.width),
-    bottom: Math.max(0, height - rect.y - rect.height),
+    left: edge(rect.x),
+    top: edge(rect.y),
+    right: edge(width - rect.x - rect.width),
+    bottom: edge(height - rect.y - rect.height),
   };
 };
 

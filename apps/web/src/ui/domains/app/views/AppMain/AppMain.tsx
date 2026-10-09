@@ -151,6 +151,7 @@ const AppMain = () => {
           onOpenSettings={onOpenWidgetSettings}
           onMainRect={onMainRect}
           makeRoomHint={WIDGET_MAKE_ROOM_HINT}
+          mainGrip="dragging"
         >
           {WIDGET_CONTENT}
         </WidgetManager>
