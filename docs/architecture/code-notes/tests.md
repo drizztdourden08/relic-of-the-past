@@ -1624,6 +1624,21 @@ whole because its source and shows switch carries phrases, and a wrapping `Segme
 be a new F2. A jsdom `window` with an `api` proxy satisfies modules `glyph-art` reaches at import
 (the log bus, a device store); the measurement still runs in real Chromium.
 
+### hud/hud-inspector-geometry-width
+
+Phases 5 and 6 of the inspector UX review, measured at 289 / 232 / 188 px with the stylesheets
+walked (§36.9). The one to prove is the box model at 188: §35.6 measured the four margin edges as
+four spinners in a row at 3.0px of typing surface each and concluded no arrangement of four
+spinners fits, naming `BoxModelField` as the answer. Nested rings with no spinner column give
+every edge over 18px at the minimum (two digits and a minus sign), growing with the rail; a padding
+edge never measures wider than its margin edge, or the rings would have collapsed into a row. The
+whole Size and Box section, which the plan estimated at about 850px before (a node with a size, a
+margin and four paddings), is 398px and does not change with the rail because nothing wraps. The
+other controls are checked for what killed their predecessors: no overflow, no wrapped label. The
+offset pair (the section's top row, two numbers in `PositionInput`'s shell) stays typeable, the
+limits keep one row per axis, and the lattice's six cells clear 24px on both axes (§48: they were
+57.3 x 12, failing WCAG 2.2 SC 2.5.8 on the short axis).
+
 ### hud/hud-inspector-property-rows.keep.test.ts
 
 Phase 3 of the inspector UX review covers finding F3: a design system with a `Field`, and a panel
