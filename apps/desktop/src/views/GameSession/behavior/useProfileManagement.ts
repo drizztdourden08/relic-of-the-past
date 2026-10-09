@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind hook */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useProfiles, useProfilesStore } from '@drizztdourden08/brock-react';
 import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
 import { runCreateProfileFlow } from './create-profile-flow';
@@ -26,6 +26,8 @@ const useProfileManagement = (params: ProfileManagementParams) => {
     setRomStatuses(romStatusList);
     return { profiles: profileList, romStatuses: romStatusList };
   }, [refresh]);
+
+  useEffect(() => { void refreshProfilesAndRoms(); }, [refreshProfilesAndRoms, activeProfile?.id]);
 
   const setActiveProfile = useCallback((profile: Profile | null) => {
     if (profile) void select(profile);

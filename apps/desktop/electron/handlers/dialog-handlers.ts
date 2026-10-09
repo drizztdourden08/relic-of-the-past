@@ -17,7 +17,7 @@ const openRom = async (): Promise<string | null> => {
 };
 
 const dialogHandlers: HandlerGroup = {
-  id: 'dialog',
+  id: 'rom-dialog',
   register: () => {
     handle('dialog:openRom', openRom);
   },

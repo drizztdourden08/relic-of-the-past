@@ -15,7 +15,10 @@ beforeEach(async () => {
   load = vi.fn().mockResolvedValue({});
   save = vi.fn().mockResolvedValue(undefined);
   vi.stubGlobal('window', {
-    api: { uiViews: { load, save } },
+    api: {
+      fileReadText: async (path: string) => (path === 'config/data-views.json' ? JSON.stringify(await load()) : null),
+      fileWriteText: (path: string, text: string) => (path === 'config/data-views.json' ? save(JSON.parse(text)) : Promise.resolve()),
+    },
     addEventListener: () => {},
     removeEventListener: () => {},
   });

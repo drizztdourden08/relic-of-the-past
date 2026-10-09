@@ -42,7 +42,7 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
 
       if (args.screenshot) {
         log.app(`[AutoTest] Taking screenshot "${args.screenshot}"...`);
-        const path = await appApi().takeScreenshot(args.screenshot);
+        const path = await appApi().finishAutomation(args.screenshot);
         log.app(`[AutoTest] Screenshot saved: ${path}`);
       }
     })();

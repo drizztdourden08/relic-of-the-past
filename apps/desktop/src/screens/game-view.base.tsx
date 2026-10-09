@@ -2,7 +2,7 @@
 import type { ScreenMeta } from '@drizztdourden08/brock-react';
 import { GameView } from '@app/views/GameView';
 
-const meta: ScreenMeta = { title: 'Game', icon: 'gamepad-2', requiresProfile: false };
+const meta: ScreenMeta = { title: 'Game view', icon: 'gamepad-2', requiresProfile: false, menu: false };
 
 const GameViewBase = () => <GameView />;
 
