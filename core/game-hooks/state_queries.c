@@ -61,16 +61,16 @@ int WasmGetInventoryState(void) {
     memset(g_inventory_buf, 0, sizeof(g_inventory_buf));
     return (int)g_inventory_buf;
   }
-  g_inventory_buf[0]  = link_item_bow;
-  g_inventory_buf[1]  = link_item_boomerang;
-  g_inventory_buf[2]  = link_item_hookshot;
-  g_inventory_buf[3]  = link_item_bombs;
-  g_inventory_buf[4]  = link_item_mushroom;
-  g_inventory_buf[5]  = link_item_fire_rod;
-  g_inventory_buf[6]  = link_item_ice_rod;
-  g_inventory_buf[7]  = link_item_bombos_medallion;
-  g_inventory_buf[8]  = link_item_ether_medallion;
-  g_inventory_buf[9]  = link_item_quake_medallion;
+  g_inventory_buf[0] = link_item_bow;
+  g_inventory_buf[1] = link_item_boomerang;
+  g_inventory_buf[2] = link_item_hookshot;
+  g_inventory_buf[3] = link_item_bombs;
+  g_inventory_buf[4] = link_item_mushroom;
+  g_inventory_buf[5] = link_item_fire_rod;
+  g_inventory_buf[6] = link_item_ice_rod;
+  g_inventory_buf[7] = link_item_bombos_medallion;
+  g_inventory_buf[8] = link_item_ether_medallion;
+  g_inventory_buf[9] = link_item_quake_medallion;
   g_inventory_buf[10] = link_item_torch;
   g_inventory_buf[11] = link_item_hammer;
   g_inventory_buf[12] = link_item_flute;
@@ -172,8 +172,7 @@ int WasmGetViewportInfo(void) {
   // saved_module_for_menu is 0 while in the menu module, this is a real menu
   // screen (file select etc), not a gameplay overlay, so report the actual module.
   uint8 mod = main_module_index;
-  if ((mod == MODULE_MENU || mod == MODULE_SPOTLIGHT_CLOSE || mod == MODULE_SPOTLIGHT_OPEN) &&
-      saved_module_for_menu != 0) {
+  if ((mod == MODULE_MENU || mod == MODULE_SPOTLIGHT_CLOSE || mod == MODULE_SPOTLIGHT_OPEN) && saved_module_for_menu != 0) {
     mod = saved_module_for_menu;
   }
   // MODULE_OVERWORLD_SPECIAL_AREA is normal outdoor gameplay, so report it as such so

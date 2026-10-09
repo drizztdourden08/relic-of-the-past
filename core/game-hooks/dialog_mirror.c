@@ -14,10 +14,12 @@
 // (dialog_hook_state.c). A load without them leaves the rows stale until the next message clears
 // them; the host knows when it loaded one and holds its box back until the next clear (dialog-store.ts).
 
-enum { kDialogRows = 3, kDialogCells = 40 };
+enum { kDialogRows = 3,
+       kDialogCells = 40 };
 // The text area is 21 tiles wide; a pen past it is a row the engine itself would not show.
 enum { kTextAreaWidthPx = 168 };
-enum { kCellWidthMask = 0x0f, kCellHighlightShift = 4 };
+enum { kCellWidthMask = 0x0f,
+       kCellHighlightShift = 4 };
 
 typedef struct DialogCell {
   uint8 glyph, x, w;
@@ -42,8 +44,16 @@ static bool g_stale;
 // The engine's own kTextCmd_* values (messaging.c). Duplicated here because the enum is local to the
 // vendored file; the pump reports them unchanged through GameHook_DialogCommand.
 enum {
-  kCmd_Choose = 1, kCmd_Item = 2, kCmd_Selchg = 8, kCmd_Choose3 = 10, kCmd_Choose2 = 11,
-  kCmd_Scroll = 12, kCmd_Line1 = 13, kCmd_Line3 = 15, kCmd_Waitkey = 23, kCmd_EndMessage = 24,
+  kCmd_Choose = 1,
+  kCmd_Item = 2,
+  kCmd_Selchg = 8,
+  kCmd_Choose3 = 10,
+  kCmd_Choose2 = 11,
+  kCmd_Scroll = 12,
+  kCmd_Line1 = 13,
+  kCmd_Line3 = 15,
+  kCmd_Waitkey = 23,
+  kCmd_EndMessage = 24,
   kCmd_IsLetter = 25,
 };
 
@@ -54,7 +64,8 @@ static uint8 ParamOf(uint32 packed) { return (uint8)(packed >> 6); }
 static uint8 MultibyteOf(uint32 packed) { return packed & 1; }
 
 // Where RenderText_DrawSelectedYItem blits the 16 px item the picker shows, on the last row.
-enum { kItemPickX = 104, kItemPickW = 16 };
+enum { kItemPickX = 104,
+       kItemPickW = 16 };
 // The loaded buffer is at most this long (Text_Initialize_initModuleStateLoop clears 0x7e0 bytes).
 enum { kTextBufferBytes = 0x7e0 };
 
@@ -73,11 +84,16 @@ uint8 DialogMirror_LastCommand(void) {
 
 bool DialogMirror_IsKeyWaitCommand(uint8 cmd) {
   switch (cmd) {
-  case kCmd_Choose: case kCmd_Item: case kCmd_Selchg: case kCmd_Choose3: case kCmd_Choose2:
-  case kCmd_Waitkey: case kCmd_EndMessage:
-    return true;
-  default:
-    return false;
+    case kCmd_Choose:
+    case kCmd_Item:
+    case kCmd_Selchg:
+    case kCmd_Choose3:
+    case kCmd_Choose2:
+    case kCmd_Waitkey:
+    case kCmd_EndMessage:
+      return true;
+    default:
+      return false;
   }
 }
 
@@ -99,7 +115,7 @@ void GameHook_DialogGlyph(uint8 c, uint8 line, uint8 x, uint8 w) {
   EvictOverlap(line, x, w);
   if (g_mirror.count[line] >= kDialogCells) return;
   uint8 marked = (uint8)(w | DialogHighlight_Kind() << kCellHighlightShift);
-  g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){ c, x, marked };
+  g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){c, x, marked};
 }
 
 void GameHook_DialogScrolled(void) {
@@ -124,7 +140,7 @@ void GameHook_DialogMeasure(void) {
   const uint8 *widths = FindIndexInMemblk(g_zenv.dialogue_font_blk, 1).ptr;
   const uint8 *buf = messaging_text_buffer;
   int pos = 0, line = 0, rows = 1, widest = 0;
-  int pen[kDialogRows] = { 0, 0, 0 };
+  int pen[kDialogRows] = {0, 0, 0};
   while (pos < kTextBufferBytes) {
     uint32 packed = Text_DecodeCmd(buf[pos], &buf[pos + 1]);
     uint8 cmd = CmdOf(packed);

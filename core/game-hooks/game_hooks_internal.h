@@ -126,9 +126,7 @@ static inline bool TriggerGrantAllowed(void) {
 // refuse any side effect unless at least one of those seams is open, so a stray call with every gate
 // down leaves the save bytes untouched.
 static inline bool GrantSeamOpen(void) {
-  return (enhanced_features3 & (kFeatures3_ItemOverrides | kFeatures3_NpcOverrides |
-                                kFeatures3_DropOverrides | kFeatures3_StandingOverrides |
-                                kFeatures3_ReceiptExport | kFeatures3_ScriptedGrants)) != 0;
+  return (enhanced_features3 & (kFeatures3_ItemOverrides | kFeatures3_NpcOverrides | kFeatures3_DropOverrides | kFeatures3_StandingOverrides | kFeatures3_ReceiptExport | kFeatures3_ScriptedGrants)) != 0;
 }
 
 // ─── Host-data gates ───

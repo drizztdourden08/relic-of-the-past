@@ -15,7 +15,7 @@
 
 // select_file.c NameFile_DoTheNaming stores a cell's table byte t as (t & 0xf0) * 2 + (t & 0xf).
 // Table bytes 0x0b, 0x60, 0x27, 0x24 are L, i, n, k; 0x59 is the blank cell, stored as 0xa9.
-static const uint16 kPrefillName[6] = { 0x000b, 0x00c0, 0x0047, 0x0044, 0x00a9, 0x00a9 };
+static const uint16 kPrefillName[6] = {0x000b, 0x00c0, 0x0047, 0x0044, 0x00a9, 0x00a9};
 enum { kBlankNameWord = 0xa9 };
 
 // select_file.c kNamePlayer_Tab3[2 + 3 * 0x20] is the End cell of the uppercase section.
@@ -38,7 +38,7 @@ void GameHook_ArmFileNamePrefill(void) {
 /** Both tile rows of one name box, appended to the stripe list at |dst|. */
 static uint16 *AppendNameTile(uint16 *dst, int box, uint16 chr) {
   // select_file.c NameFile_DrawSelectedCharacter: the same two stripes it writes for a typed letter.
-  static const uint16 kBoxVram[6] = { 0x84, 0x86, 0x88, 0x8a, 0x8c, 0x8e };
+  static const uint16 kBoxVram[6] = {0x84, 0x86, 0x88, 0x8a, 0x8c, 0x8e};
   uint16 addr = kBoxVram[box] | 0x6100;
   dst[0] = swap16(addr);
   dst[1] = 0x100;

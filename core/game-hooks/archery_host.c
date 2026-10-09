@@ -53,8 +53,7 @@ static bool HostObjects(void) {
   // The shot seam's own refusal (retro_bow.c GameHook_BowShotSpend), asked one purchase
   // before it would bite: under retro the counter IS the quiver, and no bow means no
   // shot either way.
-  return GameHook_RetroBowActive() &&
-         (link_item_bow == ARCHERY_NO_BOW || link_num_arrows == 0);
+  return GameHook_RetroBowActive() && (link_item_bow == ARCHERY_NO_BOW || link_num_arrows == 0);
 }
 
 // The line the host says when the guard is what refused. A blob baked before the line

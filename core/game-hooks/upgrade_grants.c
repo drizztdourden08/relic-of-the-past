@@ -98,7 +98,10 @@ uint8 GameHook_GrantPresentationOf(uint8 item) {
 // maximum, and a step past the reachable bound pays the pond's 100-rupee consolation
 // instead. Returns true for the consolation.
 bool GameHook_CapacityStep(int kind) {
-  if (!GameHook_CapacityClimb(kind)) { link_rupees_goal += 100; return true; }
+  if (!GameHook_CapacityClimb(kind)) {
+    link_rupees_goal += 100;
+    return true;
+  }
   if (kind == 0)
     dialogue_number[0] = link_bomb_filler = kCapacityTiersBombsHex[link_bomb_upgrades];
   else

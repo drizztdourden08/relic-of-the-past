@@ -44,10 +44,10 @@ int PondDemandBottles(const PondDemand *demand) {
 // The bundles a counted demand is thrown as, or NULL for a kind that is not counted.
 static const Bundle *BundlesOf(uint8 kind, int *count) {
   switch (kind) {
-  case kPondDemand_Bombs: *count = 3; return kBombBundles;
-  case kPondDemand_Arrows: *count = 2; return kArrowBundles;
-  case kPondDemand_Hearts: *count = 1; return kHeartBundles;
-  default: *count = 0; return NULL;
+    case kPondDemand_Bombs: *count = 3; return kBombBundles;
+    case kPondDemand_Arrows: *count = 2; return kArrowBundles;
+    case kPondDemand_Hearts: *count = 1; return kHeartBundles;
+    default: *count = 0; return NULL;
   }
 }
 

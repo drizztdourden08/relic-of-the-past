@@ -47,7 +47,7 @@ typedef struct {
 // capacity or progressive grant that merely presents as a rupee receipt keeps its own
 // icon and palette. With kFeatures3_ColoredRupees down, nothing is swapped.
 static ReceiptArt ReceiptArtOf(int grant, int item) {
-  ReceiptArt art = { (uint8)item, 0xff, false };
+  ReceiptArt art = {(uint8)item, 0xff, false};
   uint8 icon_row = grant >= 0 ? GameHook_ReceiptPaletteFor((uint8)grant, 0xff) : 0xff;
   if (icon_row != 0xff) {
     art.item = ICON_CARRIER_RECEIPT;

@@ -132,9 +132,7 @@ bool PlayerSprite_Apply(const uint8 *data, size_t len, bool push_live) {
   }
   uint32 px_off = ReadDword(data + 9), px_len = ReadWord(data + 13);
   uint32 pal_off = ReadDword(data + 15), pal_len = ReadWord(data + 19);
-  if (px_len != kSheetBytes ||
-      (uint64)px_off + px_len > len ||
-      (uint64)pal_off + pal_len > len) {
+  if (px_len != kSheetBytes || (uint64)px_off + px_len > len || (uint64)pal_off + pal_len > len) {
     printf("[PlayerSprite] Malformed ZSPR header (px=%u+%u pal=%u+%u len=%u)\n",
            px_off, px_len, pal_off, pal_len, (unsigned)len);
     return false;
@@ -197,4 +195,3 @@ void WasmRefreshPlayerPalette(void) {
   if (g_has_custom)
     PlayerSprite_RefreshPalette();
 }
-

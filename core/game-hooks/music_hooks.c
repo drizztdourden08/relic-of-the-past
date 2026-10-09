@@ -34,8 +34,7 @@ void GameHook_MusicCtrl(uint8 music_ctrl) {
     EM_ASM({
       if (typeof window !== 'undefined' && window.__onMusicTrace) {
         window.__onMusicTrace($0, $1, $2);
-      }
-    }, music_ctrl, main_module_index, GameHook_MusicExternal() ? 1 : 0);
+      } }, music_ctrl, main_module_index, GameHook_MusicExternal() ? 1 : 0);
   }
 
   // Off by default: makes zero host-calls until the host claims music.
@@ -45,8 +44,7 @@ void GameHook_MusicCtrl(uint8 music_ctrl) {
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onMusicCtrl) {
       window.__onMusicCtrl($0, $1, $2, $3);
-    }
-  }, music_ctrl, main_module_index, EffectiveEntrance(), BYTE(overworld_area_index));
+    } }, music_ctrl, main_module_index, EffectiveEntrance(), BYTE(overworld_area_index));
 }
 
 bool GameHook_MusicExternal(void) {
@@ -164,8 +162,7 @@ int GameHook_MusicIsPlayingRemapped(uint8 track) {
     if (typeof window !== 'undefined' && window.__msuIsPlaying) {
       return window.__msuIsPlaying($0, $1, $2, $3) ? 1 : 0;
     }
-    return -1;
-  }, track, main_module_index, EffectiveEntrance(), BYTE(overworld_area_index));
+    return -1; }, track, main_module_index, EffectiveEntrance(), BYTE(overworld_area_index));
 }
 
 uint8 GameHook_EntranceMusic(int entrance, uint8 vanilla) {
@@ -206,8 +203,7 @@ void GameHook_AmbientAfterLoad(uint8 last_ambient) {
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onGameSound) {
       window.__onGameSound($0, $1, $2);
-    }
-  }, kSoundChannel_Ambient, id, last_ambient & 0xc0);
+    } }, kSoundChannel_Ambient, id, last_ambient & 0xc0);
   // A claimed bed is the host's to produce, so the chip's restored copy stops when the game is
   // asked to raise the clear, since the snapshot restored the chip mid-note. An unclaimed one is
   // the chip's, and the report above already stopped the host's.

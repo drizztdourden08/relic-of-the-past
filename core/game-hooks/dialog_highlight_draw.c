@@ -8,9 +8,12 @@
 // game's own palette uploads and a message without highlights all see the picture as the game made it.
 
 // The BG3 palette a secondary tile borrows; the HUD's text layer uses 0-3, 6 and 7, never 4 or 5.
-enum { kSparePalette = 5, kSparePaletteAlt = 4 };
+enum { kSparePalette = 5,
+       kSparePaletteAlt = 4 };
 // The text area's first tile sits one row and one column inside the box's top-left word.
-enum { kTextAreaOffset = 0x21, kTilemapRowWords = 0x20, kTextFirstChar = 0x180 };
+enum { kTextAreaOffset = 0x21,
+       kTilemapRowWords = 0x20,
+       kTextFirstChar = 0x180 };
 enum { kTileCount = kHighlightTileRows * kHighlightTileCols };
 
 static struct {

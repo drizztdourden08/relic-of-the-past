@@ -53,14 +53,21 @@ static bool DungeonCleared(int palace) {
   return BossKilled(palace) && GameHook_PrizeTaken(palace);
 }
 
-static int PopCount(uint32 v) { int n = 0; while (v) { n += v & 1; v >>= 1; } return n; }
+static int PopCount(uint32 v) {
+  int n = 0;
+  while (v) {
+    n += v & 1;
+    v >>= 1;
+  }
+  return n;
+}
 static int PendantsHeld(void) { return PopCount(link_which_pendants & 7); }
 static int CrystalsHeld(void) { return PopCount(link_has_crystals & 0x7f); }
 static int LightWorldCleared(void) {
   return DungeonCleared(PALACE_EASTERN) + DungeonCleared(PALACE_DESERT) + DungeonCleared(PALACE_HERA);
 }
 static int DarkWorldCleared(void) {
-  static const uint8 kDark[7] = { 5, 6, 7, 8, 9, 11, 12 };
+  static const uint8 kDark[7] = {5, 6, 7, 8, 9, 11, 12};
   int n = 0;
   for (int i = 0; i < 7; i++) n += DungeonCleared(kDark[i]);
   return n;
@@ -117,7 +124,8 @@ bool GameHook_StoryGate(StoryGate gate, bool vanilla) {
       return vanilla;
     }
     case kGate_Tower: return Field(kFeatures5_TowerCountMask, kFeatures5_TowerCountShift) || Bit(kFeatures5_TowerCountKind)
-      ? TowerCountMet() : vanilla;
+                             ? TowerCountMet()
+                             : vanilla;
     case kGate_Ganon: {
       uint32 count = Field(kFeatures5_GanonCountMask, kFeatures5_GanonCountShift);
       bool kind = Bit(kFeatures5_GanonCountKind);

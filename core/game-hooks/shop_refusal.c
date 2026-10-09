@@ -38,13 +38,13 @@ enum {
 // The position of |currency|'s line, or -1 for rupees and for a value no line covers.
 static int RefusalPosition(uint8 currency, uint16 amount) {
   switch (currency) {
-  case kShopCurrency_Arrows: return kShopRefusal_Arrows;
-  case kShopCurrency_Bombs: return kShopRefusal_Bombs;
-  case kShopCurrency_Hearts: return kShopRefusal_Hearts;
-  case kShopCurrency_Bottle:
-    if (amount < SHOP_BOTTLE_RED_POTION || amount > SHOP_BOTTLE_BEE) return -1;
-    return kShopRefusal_Bottled + (amount - SHOP_BOTTLE_RED_POTION);
-  default: return -1;
+    case kShopCurrency_Arrows: return kShopRefusal_Arrows;
+    case kShopCurrency_Bombs: return kShopRefusal_Bombs;
+    case kShopCurrency_Hearts: return kShopRefusal_Hearts;
+    case kShopCurrency_Bottle:
+      if (amount < SHOP_BOTTLE_RED_POTION || amount > SHOP_BOTTLE_BEE) return -1;
+      return kShopRefusal_Bottled + (amount - SHOP_BOTTLE_RED_POTION);
+    default: return -1;
   }
 }
 

@@ -25,8 +25,7 @@ uint8 GameHook_StumpyFluteSlot(void) {
 // ignores the played-song bit while the gift is still owed, so a file where the flute
 // was played to the stump before this gate existed still gets its gift.
 bool GameHook_StumpyFinished(void) {
-  if (GameHook_GiftOverrideArmed(STUMPY_VANILLA_ITEM) &&
-      !GameHook_SubstitutedGiftTaken(STUMPY_VANILLA_ITEM))
+  if (GameHook_GiftOverrideArmed(STUMPY_VANILLA_ITEM) && !GameHook_SubstitutedGiftTaken(STUMPY_VANILLA_ITEM))
     return false;
   // The flute half is a story gate too (story_events.c kGate_Vane): under it the stump reads
   // the weathervane scene instead of the slot; with that field zero it is the slot, verbatim.

@@ -9,8 +9,7 @@
 #include "cheat_inventory.h"
 
 bool CheatConsole_InPlay(void) {
-  bool module = main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD ||
-                GameHook_IsOverworldSpecialArea();
+  bool module = main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD || GameHook_IsOverworldSpecialArea();
   return module && submodule_index == 0;
 }
 
@@ -45,8 +44,12 @@ static int WalletCeiling(void) {
 static void TrimToCeiling(int kind) {
   int cap = GameHook_CapacityRungCap(kind, GameHook_CapacityRungNow(kind));
   switch (kind) {
-    case 0: if (cap >= 0 && link_item_bombs > cap) link_item_bombs = (uint8)cap; break;
-    case 1: if (cap >= 0 && link_num_arrows > cap) link_num_arrows = (uint8)cap; break;
+    case 0:
+      if (cap >= 0 && link_item_bombs > cap) link_item_bombs = (uint8)cap;
+      break;
+    case 1:
+      if (cap >= 0 && link_num_arrows > cap) link_num_arrows = (uint8)cap;
+      break;
     case 2: {
       uint8 meter = GameHook_MagicCapacity();
       if (link_magic_power > meter) link_magic_power = meter;

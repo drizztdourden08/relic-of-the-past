@@ -49,7 +49,9 @@ bool GbaAlttp_ApplyDungeonTileAttr(void) {
  * byte offset (0x2c00 - 0x2000) * 2 within it.
  */
 void GbaAlttp_PatchTransAuxStaging(void) {
-  enum { kStaging = 0x10000, kAuxByteOffset = (0x2c00 - 0x2000) * 2, kAuxBytes = 4 * 0x800 };
+  enum { kStaging = 0x10000,
+         kAuxByteOffset = (0x2c00 - 0x2000) * 2,
+         kAuxBytes = 4 * 0x800 };
   if (!GbaAlttp_IsPalaceActive())
     return;
   if (g_gba_alttp_asset_sizes[kGbaAssetBgGfxSnes4bpp] != 512 * 32)
@@ -68,7 +70,9 @@ void GbaAlttp_PatchTransAuxStaging(void) {
  * mechanism, cycling included, back to the engine.
  */
 void GbaAlttp_ApplyAnimatedTiles(void) {
-  enum { kFrameBase = 0xa680, kFrameBytes = 0x400, kFrames = 3 };
+  enum { kFrameBase = 0xa680,
+         kFrameBytes = 0x400,
+         kFrames = 3 };
   if (!GbaAlttp_IsPalaceActive())
     return;
   MemBlk frames = GbaAlttpAsset(kGbaAssetAnimatedTiles);
@@ -96,7 +100,7 @@ void GbaAlttp_ApplyDungeonPalette(void) {
   memcpy(aux_palette_buffer + 32, palette.ptr, palette.size);
   /* The fixtures' sprite rows, captured from the cartridge alongside the background rows. */
   MemBlk objs = GbaAlttp_RoomHasFixtures() ? GbaAlttpAsset(kGbaAssetObjPalettes)
-                                           : (MemBlk){ 0, 0 };
+                                           : (MemBlk){0, 0};
   for (size_t at = 0; at + 33 <= objs.size; at += 33) {
     int row = 8 + (objs.ptr[at] & 7);
     memcpy(main_palette_buffer + row * 16, objs.ptr + at + 1, 32);
@@ -122,7 +126,8 @@ void GbaAlttp_ApplyDungeonPalette(void) {
  * numbers baked into the sprite code that assume the base game's sheet in each slot.
  */
 void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2, uint8 *slot3) {
-  enum { kSlots = 4, kUnchanged = 0xff };
+  enum { kSlots = 4,
+         kUnchanged = 0xff };
   if (!GbaAlttp_IsPalaceActive())
     return;
   const uint8 *header = GbaAlttp_GetRoomHeader(dungeon_room_index);
@@ -143,7 +148,7 @@ void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2
   MemBlk wanted = FindIndexInMemblk(GbaAlttpAsset(kGbaAssetSpriteTilesets), (size_t)tileset);
   if (wanted.size < kSlots)
     return;
-  uint8 *slots[kSlots] = { slot0, slot1, slot2, slot3 };
+  uint8 *slots[kSlots] = {slot0, slot1, slot2, slot3};
   for (int i = 0; i < kSlots; i++) {
     if (wanted.ptr[i] != kUnchanged)
       *slots[i] = wanted.ptr[i];

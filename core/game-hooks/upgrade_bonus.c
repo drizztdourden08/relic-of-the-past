@@ -32,7 +32,10 @@
 #define RUPEE_CEILING 999
 #define RUPEE_CEILING_EXTENDED 9999
 
-enum { kFamily_Explosives, kFamily_Projectiles, kFamily_Meter, kFamily_Wallet };
+enum { kFamily_Explosives,
+       kFamily_Projectiles,
+       kFamily_Meter,
+       kFamily_Wallet };
 
 static struct {
   uint8 armed;
@@ -125,7 +128,7 @@ void WasmSetCapacityBonus(int family, int percent, int step_base) {
   if (family < 0 || family >= BONUS_FAMILY_COUNT) return;
   g_bonus.armed = 1;
   g_bonus.percent[family] = (uint8)clampi(percent, 0, BONUS_PERCENT_MAX);
-  g_bonus.step_base[family] = (uint8)!!step_base;
+  g_bonus.step_base[family] = (uint8) !!step_base;
   printf("[Randomizer] Capacity bonus: family %d %d%% of %s\n", family, g_bonus.percent[family],
          g_bonus.step_base[family] ? "the step" : "the ceiling");
 }

@@ -20,8 +20,7 @@ void GameHook_NotifyItemReceived(uint8 item_id, uint8 method) {
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onItemReceived) {
       window.__onItemReceived($0, $1);
-    }
-  }, item_id, method);
+    } }, item_id, method);
 }
 
 // A physical override entry substituted its grant, so by definition the check it stands
@@ -35,6 +34,5 @@ void GameHook_NotifyOverrideFired(int fire_id) {
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onOverrideFired) {
       window.__onOverrideFired($0);
-    }
-  }, fire_id);
+    } }, fire_id);
 }

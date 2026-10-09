@@ -78,7 +78,9 @@ static bool RoomDrawsEmptySurround(void) {
   switch (GetRoomHeaderPtr((int)room)[2]) {
     case 3:   // the village and lake houses, and the shops
     case 6:   // the caves
-    case 17: case 18: case 20:  // the smaller house and cave sets
+    case 17:
+    case 18:
+    case 20:  // the smaller house and cave sets
       return true;
     default:
       return false;

@@ -26,8 +26,7 @@ static inline uint8 *DecodeSlotTile(int x, int y) {
 static inline uint8 DecodeSlotGet(int x, int y) {
   const uint8 *tile = DecodeSlotTile(x, y);
   int r = (y & 7) * 2, bit = 7 - (x & 7);
-  return (uint8)(((tile[r] >> bit) & 1) | (((tile[r + 1] >> bit) & 1) << 1) |
-                 (((tile[16 + r] >> bit) & 1) << 2) | (((tile[17 + r] >> bit) & 1) << 3));
+  return (uint8)(((tile[r] >> bit) & 1) | (((tile[r + 1] >> bit) & 1) << 1) | (((tile[16 + r] >> bit) & 1) << 2) | (((tile[17 + r] >> bit) & 1) << 3));
 }
 
 // Write palette index |index| (0-15) at pixel (|x|, |y|).

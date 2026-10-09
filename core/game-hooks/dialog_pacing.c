@@ -44,7 +44,8 @@ enum { kInstantStepsPerFrame = 240 };
 // A/B/X/Y in the two filtered joypad bytes (zelda_rtl.h): A and X live in the L byte's top bits, B and
 // Y in the H byte's. The engine advances a key wait on any of the four.
 enum { kJoypadFaceMask = 0xC0 };
-enum { kJoypadA_L = 0x80, kJoypadB_H = 0x80 };
+enum { kJoypadA_L = 0x80,
+       kJoypadB_H = 0x80 };
 
 // The pump's state index while it types (kText_Render[3], RenderText_Draw_MessageCharacters).
 enum { kTextRenderState_Characters = 3 };
@@ -102,7 +103,8 @@ static bool BoxClosed(uint8 module_at_entry) {
 // same message again from its first page, which clears the mirror and the stale mark with it.
 // Only the text module's render stage, only while the host box is the one drawing.
 static void RestartMessageTheMirrorMissed(void) {
-  enum { kModule_Text = 14, kMessagingModule_Render = 1 };
+  enum { kModule_Text = 14,
+         kMessagingModule_Render = 1 };
   if (!DialogMirror_Stale() || !HudOverride_DialogHidden()) return;
   if (main_module_index != kModule_Text || messaging_module != kMessagingModule_Render) return;
   messaging_module = 0;

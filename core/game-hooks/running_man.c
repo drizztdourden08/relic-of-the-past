@@ -26,7 +26,7 @@
 enum {
   kRunningManAccelInterval = 8,   // frames between each acceleration step
   kRunningManAccelStepsMax = 32,  // caps the speed multiplier at (16+32)/16 = 3x
-  kRunningManMaxRunFrames  = 600, // hard distance cap (~10s @ 60fps), clears any supported aspect ratio
+  kRunningManMaxRunFrames = 600, // hard distance cap (~10s @ 60fps), clears any supported aspect ratio
 };
 
 static uint16 s_runFrames[16];  // per sprite-slot; mirrors g_sprite_in_band's sizing

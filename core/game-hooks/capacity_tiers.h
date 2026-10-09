@@ -21,9 +21,9 @@
 // Rung 8 = native level 7, the eighth pond level.
 #define CAPACITY_LAST_RUNG CAPACITY_TIER_COUNT
 static const uint8 kCapacityTiersBombsHex[CAPACITY_TIER_COUNT] = {0x10, 0x15, 0x20, 0x25,
-                                                                   0x30, 0x35, 0x40, 0x50};
+                                                                  0x30, 0x35, 0x40, 0x50};
 static const uint8 kCapacityTiersArrowsHex[CAPACITY_TIER_COUNT] = {0x30, 0x35, 0x40, 0x45,
-                                                                    0x50, 0x55, 0x60, 0x70};
+                                                                   0x50, 0x55, 0x60, 0x70};
 
 // The meter's three native cost levels (full, half, quarter); rung 3 = quarter.
 #define METER_LEVEL_COUNT 3
@@ -36,7 +36,8 @@ static const uint8 kCapacityTiersArrowsHex[CAPACITY_TIER_COUNT] = {0x30, 0x35, 0
 #define WALLET_STEP_RUPEES 100
 
 static inline int WalletLadderIndexClamp(int i) {
-  return i < 0 ? 0 : i > WALLET_LADDER_LAST ? WALLET_LADDER_LAST : i;
+  return i < 0 ? 0 : i > WALLET_LADDER_LAST ? WALLET_LADDER_LAST
+                                            : i;
 }
 
 static inline uint16 WalletCapOfIndex(int i) {

@@ -23,10 +23,11 @@
 // also wants the bit in the word the host is asking for now, so a profile that has since turned the
 // override off loads the way it always has.
 
-enum { kBlobVersion = 1, kBlobHeader = 3 };
+enum { kBlobVersion = 1,
+       kBlobHeader = 3 };
 enum {
   kBlobBytes = kBlobHeader + kDialogMirrorPackBytes + kDialogPresencePackBytes + kDialogPacingPackBytes
-      + kDialogSuppressPackBytes,
+    + kDialogSuppressPackBytes,
   kOwnerAt = kBlobBytes - kDialogSuppressPackBytes,
 };
 

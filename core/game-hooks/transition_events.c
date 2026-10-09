@@ -87,8 +87,6 @@ void GameHook_ModuleFrameEnd(void) {
     EM_ASM({
       if (typeof window !== 'undefined' && window.__onTransitionSettled) {
         window.__onTransitionSettled($0, $1, $2, $3, $4);
-      }
-    }, mod, entered ? 0 : prev_submodule,
-       player_is_indoors ? 1 : 0, dungeon_room_index, overworld_screen_index);
+      } }, mod, entered ? 0 : prev_submodule, player_is_indoors ? 1 : 0, dungeon_room_index, overworld_screen_index);
   }
 }

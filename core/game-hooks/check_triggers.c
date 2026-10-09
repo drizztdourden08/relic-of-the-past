@@ -23,7 +23,7 @@ static int SimGiveHeartPiece(void) {
   return 1;
 }
 
-static const uint16 kChestOpenMasksHook[] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000, 0x4000 };
+static const uint16 kChestOpenMasksHook[] = {0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000, 0x4000};
 #define kChestOpenMasksHook_COUNT 7
 
 // Try to visually open the chest tiles if the player is in the matching room.
@@ -50,28 +50,28 @@ static void TryVisualChestOpen(uint16 room_id, uint8 chest_index, bool console) 
         uint16 pos = (loc & 0x7fff) >> 1;
         const uint16 *ptr = SrcPtr(0x14A4);
 
-        overworld_tileattr[pos + 0]  = ptr[0];
+        overworld_tileattr[pos + 0] = ptr[0];
         overworld_tileattr[pos + 64] = ptr[1];
-        overworld_tileattr[pos + 1]  = ptr[2];
+        overworld_tileattr[pos + 1] = ptr[2];
         overworld_tileattr[pos + 65] = ptr[3];
 
-        dung_bg2_attr_table[pos + 0]  = 0x27;
+        dung_bg2_attr_table[pos + 0] = 0x27;
         dung_bg2_attr_table[pos + 64] = 0x27;
-        dung_bg2_attr_table[pos + 1]  = 0x27;
+        dung_bg2_attr_table[pos + 1] = 0x27;
         dung_bg2_attr_table[pos + 65] = 0x27;
 
         uint16 *dst = &vram_upload_data[vram_upload_offset >> 1];
-        dst[0]  = Dungeon_MapVramAddr(pos + 0);
-        dst[3]  = Dungeon_MapVramAddr(pos + 64);
-        dst[6]  = Dungeon_MapVramAddr(pos + 1);
-        dst[9]  = Dungeon_MapVramAddr(pos + 65);
-        dst[2]  = ptr[0];
-        dst[5]  = ptr[1];
-        dst[8]  = ptr[2];
+        dst[0] = Dungeon_MapVramAddr(pos + 0);
+        dst[3] = Dungeon_MapVramAddr(pos + 64);
+        dst[6] = Dungeon_MapVramAddr(pos + 1);
+        dst[9] = Dungeon_MapVramAddr(pos + 65);
+        dst[2] = ptr[0];
+        dst[5] = ptr[1];
+        dst[8] = ptr[2];
         dst[11] = ptr[3];
-        dst[1]  = 0x100;
-        dst[4]  = 0x100;
-        dst[7]  = 0x100;
+        dst[1] = 0x100;
+        dst[4] = 0x100;
+        dst[7] = 0x100;
         dst[10] = 0x100;
         dst[12] = 0xffff;
         vram_upload_offset += 24;
@@ -95,11 +95,82 @@ static void TryVisualChestOpen(uint16 room_id, uint8 chest_index, bool console) 
 // an item with an alternate swaps to it when the primary is already owned, so
 // e.g. a second Lamp (0x12) becomes 5 Rupees (0x35, the Secret Passage chest).
 static const uint8 kSimReceiveItemAlternates[76] = {
-  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  68, 255, 255, 255,
-  255, 255,  53, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-  255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  70, 255, 255, 255, 255, 255,
-  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  68,
+  255,
+  255,
+  255,
+  255,
+  255,
+  53,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  70,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
+  255,
 };
 
 // |console| is set by the cheat console's export alone. Clear, this is the delivery trigger as it
@@ -119,8 +190,8 @@ static void TriggerCheckImpl(uint16 room_id, uint8 chest_index, uint8 item_id, b
   uint16 mask = kChestOpenMasksHook[chest_index];
   bool here = dungeon_room_index == room_id && (!console || player_is_indoors);
   uint16 already = here
-      ? (uint16)(dung_savegame_state_bits & mask)
-      : (uint16)((*SaveDungInfoFor(room_id)) & (mask >> 4));
+                   ? (uint16)(dung_savegame_state_bits & mask)
+                   : (uint16)((*SaveDungInfoFor(room_id)) & (mask >> 4));
   if (already) {
     printf("[GameHook] TriggerCheck: room=0x%03x chest=%d already collected, no re-grant\n",
            room_id, chest_index);
@@ -150,7 +221,10 @@ static void TriggerCheckImpl(uint16 room_id, uint8 chest_index, uint8 item_id, b
   }
 
   SimCountReceive(0, item_id);
-  if (item_id == 0x17) { SimGiveHeartPiece(); return; }
+  if (item_id == 0x17) {
+    SimGiveHeartPiece();
+    return;
+  }
   item_receipt_method = 1;
   Link_ReceiveItem(item_id, 0);
 }
@@ -184,7 +258,8 @@ static void TriggerNpcCheckImpl(uint8 flag_type, uint8 flag_mask, uint8 item_id,
   // flag that is already set must not hand the item over a second time.
   uint8 *flags = flag_type == 0 ? &sram_progress_flags
                : flag_type == 1 ? &sram_progress_indicator
-               : flag_type == 2 ? &sram_progress_indicator_3 : NULL;
+               : flag_type == 2 ? &sram_progress_indicator_3
+                                : NULL;
   if (flags == NULL) {
     printf("[GameHook] TriggerNpcCheck: invalid flag_type %d\n", flag_type);
     return;
@@ -269,7 +344,10 @@ void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id) {
   item_receipt_method = 0;
   if (item_id != 0xFF) {
     SimCountReceive(2, item_id);
-    if (item_id == 0x17) { SimGiveHeartPiece(); return; }
+    if (item_id == 0x17) {
+      SimGiveHeartPiece();
+      return;
+    }
     Link_ReceiveItem(item_id, 0);
   }
 }

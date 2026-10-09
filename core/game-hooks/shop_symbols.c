@@ -62,14 +62,14 @@ static ShopSymbolShape g_shape[SYMBOL_COUNT];
 
 int ShopSymbolOf(uint8 currency, uint16 amount) {
   switch (currency) {
-  case kShopCurrency_Rupees: return kSymbol_Rupee;
-  case kShopCurrency_Arrows: return kSymbol_Arrow;
-  case kShopCurrency_Bombs: return kSymbol_Bomb;
-  case kShopCurrency_Hearts: return kSymbol_Heart;
-  case kShopCurrency_Bottle:
-    if (amount < SHOP_BOTTLE_RED_POTION || amount > SHOP_BOTTLE_BEE) return SHOP_SYMBOL_NONE;
-    return kSymbol_Bottled + (amount - SHOP_BOTTLE_RED_POTION);
-  default: return SHOP_SYMBOL_NONE;
+    case kShopCurrency_Rupees: return kSymbol_Rupee;
+    case kShopCurrency_Arrows: return kSymbol_Arrow;
+    case kShopCurrency_Bombs: return kSymbol_Bomb;
+    case kShopCurrency_Hearts: return kSymbol_Heart;
+    case kShopCurrency_Bottle:
+      if (amount < SHOP_BOTTLE_RED_POTION || amount > SHOP_BOTTLE_BEE) return SHOP_SYMBOL_NONE;
+      return kSymbol_Bottled + (amount - SHOP_BOTTLE_RED_POTION);
+    default: return SHOP_SYMBOL_NONE;
   }
 }
 

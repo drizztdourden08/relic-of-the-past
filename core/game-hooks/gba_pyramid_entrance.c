@@ -18,10 +18,10 @@ enum { kBaseMap16Count = 3752 };
 
 /** Each course of this wall paired with the twin of itself that draws in front of the player. */
 static const uint16 kWallPriorityTwin[][2] = {
-  { 0x0a03, 0x0a1c },
-  { 0x0a04, 0x0a1d },
-  { 0x0a14, kBaseMap16Count + 0 },
-  { 0x0a0c, kBaseMap16Count + 1 },
+  {0x0a03, 0x0a1c},
+  {0x0a04, 0x0a1d},
+  {0x0a14, kBaseMap16Count + 0},
+  {0x0a0c, kBaseMap16Count + 1},
 };
 
 static uint16 PriorityTwinOf(uint16 cell) {
@@ -48,8 +48,7 @@ bool GbaAlttp_IsExtraEntranceTilePair(uint16 lower_left, uint16 lower_right) {
 
 void GbaAlttp_ApplyPyramidEntrance() {
   // Data present AND the player opted in. Otherwise the overworld stays untouched.
-  if (!GbaAlttp_IsAvailable() || !GbaAlttp_IsExtraDungeonEnabled() ||
-      BYTE(overworld_screen_index) != 0x5b)
+  if (!GbaAlttp_IsAvailable() || !GbaAlttp_IsExtraDungeonEnabled() || BYTE(overworld_screen_index) != 0x5b)
     return;
 
   // Only the recess itself is borrowed from the base game's own opening. It is the one row
@@ -58,9 +57,9 @@ void GbaAlttp_ApplyPyramidEntrance() {
   // drawn exactly as they are with the option off while still passing in front of the player.
   // Two of them, because the walk-in animation lifts the player high enough to clear one.
   enum { kRecessRow = 28 };
-  static const uint16 kWallRows[] = { 26, 27 };
-  static const uint16 kSourceColumns[] = { 14, 15 };
-  static const uint16 kDestinationColumns[] = { 43, 44 };
+  static const uint16 kWallRows[] = {26, 27};
+  static const uint16 kSourceColumns[] = {14, 15};
+  static const uint16 kDestinationColumns[] = {43, 44};
 
   for (int i = 0; i < countof(kDestinationColumns); i++) {
     for (int r = 0; r < countof(kWallRows); r++) {

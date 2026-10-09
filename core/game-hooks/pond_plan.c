@@ -73,7 +73,12 @@ static struct {
   PondThrow entry[POND_MAX_THROWS];
 } g_pond = {.closed_msg = -1, .award_more = -1, .award_last = -1};
 
-typedef struct { uint8 armed; uint8 new_item; int16 msg; int16 fire_id; } PondPrize;
+typedef struct {
+  uint8 armed;
+  uint8 new_item;
+  int16 msg;
+  int16 fire_id;
+} PondPrize;
 
 static PondPrize g_pond_prize[POND_MAX_PRIZES];
 
@@ -288,7 +293,7 @@ EMSCRIPTEN_KEEPALIVE
 void WasmSetPondThrow(int index, int price, int prize, int refund, int prompt, int consolation) {
   if (index < 0 || index >= POND_MAX_THROWS) return;
   g_pond.entry[index] =
-      (PondThrow){(int16)price, (int8)prize, (int16)refund, (int16)prompt, (int16)consolation};
+    (PondThrow){(int16)price, (int8)prize, (int16)refund, (int16)prompt, (int16)consolation};
   if (index >= g_pond.count) g_pond.count = (uint8)(index + 1);
   g_pond.armed = 1;
   printf("[Randomizer] Pond throw %d: %d rupees, prize %d, refund %d\n", index, price, prize, refund);

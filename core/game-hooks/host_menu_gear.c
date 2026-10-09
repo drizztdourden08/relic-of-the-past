@@ -56,23 +56,23 @@ void WasmHostSetGear(int kind, int tier) {
   if (!HostMenuGate())
     return;
   switch (kind) {
-  case kGearKind_Sword:
-    link_sword_type = (uint8)clampi(tier, 0, kMaxSwordTier);
-    break;
-  case kGearKind_Shield:
-    link_shield_type = (uint8)clampi(tier, 0, kMaxShieldTier);
-    break;
-  case kGearKind_Mail:
-    link_armor = (uint8)clampi(tier, 0, kMaxMailTier);
-    break;
-  case kGearKind_Arrows:
-    // Nothing held: no write, and no repaint either, because the tail below would cost an NMI update for a
-    // frame in which nothing changed.
-    if (!SetArrowType(tier))
+    case kGearKind_Sword:
+      link_sword_type = (uint8)clampi(tier, 0, kMaxSwordTier);
+      break;
+    case kGearKind_Shield:
+      link_shield_type = (uint8)clampi(tier, 0, kMaxShieldTier);
+      break;
+    case kGearKind_Mail:
+      link_armor = (uint8)clampi(tier, 0, kMaxMailTier);
+      break;
+    case kGearKind_Arrows:
+      // Nothing held: no write, and no repaint either, because the tail below would cost an NMI update for a
+      // frame in which nothing changed.
+      if (!SetArrowType(tier))
+        return;
+      break;
+    default:
       return;
-    break;
-  default:
-    return;
   }
   // Reloading the gear palettes with unchanged arguments is what an arrow write wants too: it is a
   // no-op for the colors and keeps one exit path, while the HUD flag below is the half that matters

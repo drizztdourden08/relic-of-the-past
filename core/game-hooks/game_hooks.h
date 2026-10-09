@@ -581,12 +581,12 @@ bool GameHook_DrawDugUpItemOverride(int k, int x, int y);
 // a new line is only ever APPENDED, since every id already baked into a player's asset blob is fixed.
 // The first five are the receipt classes; the rest belong to whichever seam names them.
 enum {
-  kReceiptMsgBase         = 397,
-  kReceiptMsg_Generic     = kReceiptMsgBase + 0,
+  kReceiptMsgBase = 397,
+  kReceiptMsg_Generic = kReceiptMsgBase + 0,
   kReceiptMsg_Progressive = kReceiptMsgBase + 1,
   kReceiptMsg_DungeonItem = kReceiptMsgBase + 2,
-  kReceiptMsg_Delivered   = kReceiptMsgBase + 3,
-  kReceiptMsg_Online      = kReceiptMsgBase + 4,
+  kReceiptMsg_Delivered = kReceiptMsgBase + 3,
+  kReceiptMsg_Online = kReceiptMsgBase + 4,
   // Position 5 is the archery host's refusal, named where it is shown (archery_host.c).
 };
 // The line a placed quiet rupee, bomb or arrow is armed with: no dialogue line has this id, and the

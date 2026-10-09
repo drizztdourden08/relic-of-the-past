@@ -24,8 +24,12 @@ typedef struct TitleFrame {
 static TitleFrame g_title;
 
 // The sword's counters live in low WRAM under names local to ending.c; the same bytes, read here.
-enum { kSwordY = 0xc8, kSwordSparkleIndex = 0xcb, kSwordSparklePhase = 0xcc, kSwordSparkleRun = 0xcd };
-enum { kPolyBitmap = 0xe800, kPolyPaletteRow = 0xd0 };
+enum { kSwordY = 0xc8,
+       kSwordSparkleIndex = 0xcb,
+       kSwordSparklePhase = 0xcc,
+       kSwordSparkleRun = 0xcd };
+enum { kPolyBitmap = 0xe800,
+       kPolyPaletteRow = 0xd0 };
 
 void GameHook_TitleNoteFrame(void) {
   g_title.module = main_module_index;

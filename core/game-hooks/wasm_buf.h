@@ -32,7 +32,7 @@ typedef struct {
 } BufW;
 
 static inline BufW BufW_Init(uint8 *buf) {
-  BufW b = { buf, 0 };
+  BufW b = {buf, 0};
   return b;
 }
 

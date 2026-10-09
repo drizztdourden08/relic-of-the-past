@@ -64,9 +64,13 @@ static bool g_match_anywhere_once = false;
 // whose script has no vanilla receive id at all (the upgrade pond's two purchases, the
 // cave bat); they can never collide with a real id at the receive seam and are written
 // via GameHook_MarkSubstitutionKey.
-#define srm_substitution_taken(byte_index) (*(uint8*)(g_ram + SRM_SUBSTITUTION_TAKEN + (byte_index)))
+#define srm_substitution_taken(byte_index) (*(uint8 *)(g_ram + SRM_SUBSTITUTION_TAKEN + (byte_index)))
 
-typedef struct { uint8 vanilla_item; uint8 byte_index; uint8 mask; } SubstitutionBit;
+typedef struct {
+  uint8 vanilla_item;
+  uint8 byte_index;
+  uint8 mask;
+} SubstitutionBit;
 static const SubstitutionBit kSubstitutionBits[] = {
   {0x1e, 0, 0x01},  // the river king's swim gear
   {0x4b, 0, 0x02},  // the first sage's running gear

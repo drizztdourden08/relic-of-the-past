@@ -21,7 +21,8 @@
 // with the gate on: a door crossing, a room's own fade-in, the death sequence, the desert prayer, and the
 // water window a drained or flooding room draws, all of which build their lines here.
 
-enum { kIrisTableLines = 240, kIrisScreenLines = 224 };
+enum { kIrisTableLines = 240,
+       kIrisScreenLines = 224 };
 
 typedef struct IrisLine {
   uint16 word;   // the clamped left | right << 8 the game wrote for this line
@@ -49,7 +50,7 @@ static uint8 s_shape_frame = 0xff;
 // Read the circle out of the lines recorded for the table as it stands. Cheap enough once a frame, which
 // is all it runs: every row of that frame then asks the result.
 static void MeasureShape(void) {
-  IrisShape shape = { 0 };
+  IrisShape shape = {0};
   int first = -1, last = -1, widest = -1, widest_line = 0;
   for (int line = 0; line < kIrisScreenLines; line++) {
     const IrisLine *l = &s_lines[line];
@@ -58,7 +59,9 @@ static void MeasureShape(void) {
     int half = (l->right - l->left) / 2;
     if (first < 0) first = line;
     last = line;
-    if (half > widest) { widest = half, widest_line = line; }
+    if (half > widest) {
+      widest = half, widest_line = line;
+    }
   }
   if (first >= 0 && widest > 0) {
     shape.known = true;

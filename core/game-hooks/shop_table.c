@@ -65,9 +65,19 @@ void WasmSetShopSlotOverride(int slot_index, int room_id, int entrance, int ow_a
     return;
   }
   g_shop_overrides[g_shop_override_count++] = (ShopSlotOverride){
-    1, (uint8)slot_index, (uint16)room_id, (int16)entrance, (int16)ow_area, (uint8)subtype,
-    (uint8)depth_index, (uint8)depth, (uint8)currency, (uint16)amount,
-    (uint8)new_item, (int16)msg, (int16)fire_id,
+    1,
+    (uint8)slot_index,
+    (uint16)room_id,
+    (int16)entrance,
+    (int16)ow_area,
+    (uint8)subtype,
+    (uint8)depth_index,
+    (uint8)depth,
+    (uint8)currency,
+    (uint16)amount,
+    (uint8)new_item,
+    (int16)msg,
+    (int16)fire_id,
   };
   printf("[Randomizer] Armed shop slot override: room=0x%03x ent=%d area=%d sub=%d step=%d/%d -> 0x%02x\n",
          room_id, entrance, ow_area, subtype, depth_index + 1, depth, new_item);

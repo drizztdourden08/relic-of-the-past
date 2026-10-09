@@ -40,7 +40,9 @@ enum {
 };
 // Where the US encoding's commands start (messaging.c kTextCommandStart_US), and the EU
 // encoding's scroll and key-wait bytes (messaging.c kTextCmd_EU_*).
-enum { kUsCommandStart = 0x67, kEuScrollByte = 0x80, kEuWaitkeyByte = 0x81 };
+enum { kUsCommandStart = 0x67,
+       kEuScrollByte = 0x80,
+       kEuWaitkeyByte = 0x81 };
 // Rows the box shows at once: a page scrolls this many rows in before it stops.
 enum { kVisibleRows = 3 };
 

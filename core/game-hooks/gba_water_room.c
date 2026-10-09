@@ -51,7 +51,8 @@ void GbaAlttp_MirrorWaterRoomCollision(void) {
  * game's own torch-driven tags read.
  */
 bool GbaAlttp_RoomTorchLit(void) {
-  enum { kObjectSlots = 16, kLitBit = 0x8000 };
+  enum { kObjectSlots = 16,
+         kLitBit = 0x8000 };
   for (int slot = 0; slot < kObjectSlots; slot++) {
     if (dung_object_tilemap_pos[slot] & kLitBit)
       return true;
@@ -77,8 +78,10 @@ bool GbaAlttp_RoomTorchLit(void) {
  * stops on exactly the cells its collision would have been asked about.
  */
 bool GbaAlttp_WaterCurrentCarries(void) {
-  enum { kPlayerSwimming = 4, kDeepWater = 0x08, kAhead = 24 };
-  static const uint8 kProbeX[] = { 0, 8, 15 };
+  enum { kPlayerSwimming = 4,
+         kDeepWater = 0x08,
+         kAhead = 24 };
+  static const uint8 kProbeX[] = {0, 8, 15};
   if (!g_water_room || !GbaAlttp_IsBakedRoomActive() || GbaAlttp_RoomTorchLit())
     return false;
   if (link_player_handler_state != kPlayerSwimming || link_auxiliary_state != 0)

@@ -62,7 +62,7 @@ void WasmSimCloseDoor(int room_id, int door_index) {
 // Layout: status(1) then [count(1), pad(1)] then count records of 4 bytes:
 //   [slot(1), row(1), col(1), opened(1)]
 // Leading status byte: see WasmGetRoomChests in sim_queries.c (1 = gate open and room in range).
-static const uint16 kSimChestOpenMasks[6] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000 };
+static const uint16 kSimChestOpenMasks[6] = {0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000};
 static uint8 g_sim_locks_buf[1 + 2 + 6 * 4];
 
 // Walk one object layer, tracking the draw-order counters, and record every

@@ -10,15 +10,13 @@
 // The same gameplay conditions WasmCanReceiveItem (cheats.c) reports, minus its
 // DeliveryQueries gate: these exports answer to their own bit instead.
 static bool CanRunReceiptNow(void) {
-  bool in_gameplay = main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD ||
-                     GameHook_IsOverworldSpecialArea();
+  bool in_gameplay = main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD || GameHook_IsOverworldSpecialArea();
   // link_position_mode nonzero means an item-use handler (rod/cane/net/...) is mid-windup:
   // link_item_in_hand is still 0 and the handler state is still Ground, so without this a
   // grant fires on top of the live handler and parks an un-advanceable item-get message
   // over it (the apparent soft-lock in the barrier/cane report). Mirror of the guard in
   // WasmCanReceiveItem (cheats.c) that paces the queue.
-  return in_gameplay && submodule_index == 0 && !flag_is_link_immobilized &&
-         !link_item_in_hand && !link_position_mode;
+  return in_gameplay && submodule_index == 0 && !flag_is_link_immobilized && !link_item_in_hand && !link_position_mode;
 }
 
 // Give item |item_id| through the native receipt flow: the standing hold-up animation,
@@ -68,13 +66,17 @@ int WasmGrantItemWithReceipt(int item_id) {
 // What a native rupee, bomb or arrow receipt pays: the rupees of ancilla.c Ancilla_AddRupees, the
 // bombs and arrows of misc.c AncillaAdd_ItemReceipt. |gate| is the quiet bit of its kind, 0 for an
 // id that is none of the three.
-typedef struct QuietPay { uint32 gate; int rupees, bombs, arrows; } QuietPay;
+typedef struct QuietPay {
+  uint32 gate;
+  int rupees, bombs, arrows;
+} QuietPay;
 
 static QuietPay QuietPayOf(int item_id) {
   switch (item_id) {
     case 0x34: return (QuietPay){kFeatures5_QuietRupees, 1, 0, 0};
     case 0x35: return (QuietPay){kFeatures5_QuietRupees, 5, 0, 0};
-    case 0x36: case 0x47: return (QuietPay){kFeatures5_QuietRupees, 20, 0, 0};
+    case 0x36:
+    case 0x47: return (QuietPay){kFeatures5_QuietRupees, 20, 0, 0};
     case 0x41: return (QuietPay){kFeatures5_QuietRupees, 50, 0, 0};
     case 0x40: return (QuietPay){kFeatures5_QuietRupees, 100, 0, 0};
     case 0x46: return (QuietPay){kFeatures5_QuietRupees, 300, 0, 0};

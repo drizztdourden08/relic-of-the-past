@@ -12,7 +12,7 @@ uint32 g_gba_alttp_asset_sizes[kGbaAlttpAssetCount];
 
 // Opt-in, so a build that never pushes the setting behaves exactly like the base game.
 static bool g_extra_dungeon_enabled;
-static const uint16 kNoDoors[] = { 0xffff };
+static const uint16 kNoDoors[] = {0xffff};
 
 void GbaAlttp_SetExtraDungeonEnabled(bool enabled) {
   g_extra_dungeon_enabled = enabled;
@@ -37,7 +37,7 @@ int WasmGetExtraDungeonAvailable(void) {
 }
 
 MemBlk GbaAlttpAsset(int index) {
-  return (MemBlk) { g_gba_alttp_asset_ptrs[index], g_gba_alttp_asset_sizes[index] };
+  return (MemBlk){g_gba_alttp_asset_ptrs[index], g_gba_alttp_asset_sizes[index]};
 }
 
 int GbaAlttpFindRoom(uint16 room) {
@@ -77,7 +77,8 @@ bool GbaAlttp_IsPalaceActive(void) {
  * included.
  */
 bool GbaAlttp_IsBankRoom(uint16 room) {
-  enum { kBankFirstRoom = 0x200, kBankEndRoom = 0x300 };
+  enum { kBankFirstRoom = 0x200,
+         kBankEndRoom = 0x300 };
   return GbaAlttp_IsAvailable() && g_extra_dungeon_enabled && room >= kBankFirstRoom && room < kBankEndRoom;
 }
 
@@ -118,8 +119,8 @@ const uint16 *GbaAlttp_GetRoomDoors(uint16 room) {
  * terminator), so this is a pointer swap, not a conversion. NULL for any other room, which is
  * what makes the caller fall through to the base table.
  */
-static const uint8 kNoSprites[] = { 0x00, 0xff };
-static const uint8 kNoSecrets[] = { 0xff, 0xff };
+static const uint8 kNoSprites[] = {0x00, 0xff};
+static const uint8 kNoSecrets[] = {0xff, 0xff};
 
 const uint8 *GbaAlttp_GetRoomSprites(uint16 room) {
   if (!GbaAlttp_IsBankRoom(room))

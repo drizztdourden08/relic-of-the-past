@@ -19,7 +19,8 @@
 // place nearest the camera, and the offset gets the whole blocks between that place and the camera's
 // block for the line about to be drawn.
 
-enum { kScrollBlock = 1024, kScrollMask = kScrollBlock - 1 };
+enum { kScrollBlock = 1024,
+       kScrollMask = kScrollBlock - 1 };
 
 static int s_carry_x, s_carry_y;
 

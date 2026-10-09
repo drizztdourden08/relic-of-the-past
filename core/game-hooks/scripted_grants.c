@@ -31,7 +31,13 @@ typedef struct {
 // [0] = pond capacity kind 0 (explosives), [1] = kind 1 (projectiles), [2] = the bat.
 static ScriptedGrantSlot g_scripted_slots[3];
 // The minigame prize entry (one room is enough today; keyed anyway for safety).
-static struct { uint8 armed; uint16 room_id; uint8 new_item; int16 msg; int16 fire_id; } g_minigame;
+static struct {
+  uint8 armed;
+  uint16 room_id;
+  uint8 new_item;
+  int16 msg;
+  int16 fire_id;
+} g_minigame;
 
 // Synthetic substitution-bit keys (npc_overrides.c owns the allocation; these can
 // never collide with a real receive id at any seam).
@@ -68,7 +74,8 @@ static void GrantScriptedSlot(const ScriptedGrantSlot *slot, uint8 subst_key) {
 static bool ClimbPondUnderProfile(int kind) {
   if (!GameHook_CapacityFamilyCustom(kind)) return false;
   bool maxed = GameHook_CapacityStep(kind);
-  Sprite_ShowMessageUnconditional(maxed ? 0x98 : kind == 0 ? 0x96 : 0x97);
+  Sprite_ShowMessageUnconditional(maxed ? 0x98 : kind == 0 ? 0x96
+                                                           : 0x97);
   printf("[Randomizer] Pond kind %d climbed under the profile%s\n", kind, maxed ? " (cap: consolation paid)" : "");
   return true;
 }
@@ -131,8 +138,7 @@ bool GameHook_OverrideCapacityGrant(int kind) {
   if (kind != 0 && kind != 1) return false;
   if (PondYieldUnderPlan(kind)) return true;
   uint8 key = kind == 0 ? SUBST_KEY_POND_BOMBS : SUBST_KEY_POND_ARROWS;
-  if ((enhanced_features3 & kFeatures3_ScriptedGrants) && g_scripted_slots[kind].armed &&
-      !GameHook_SubstitutedGiftTaken(key)) {
+  if ((enhanced_features3 & kFeatures3_ScriptedGrants) && g_scripted_slots[kind].armed && !GameHook_SubstitutedGiftTaken(key)) {
     GrantScriptedSlot(&g_scripted_slots[kind], key);
     printf("[Randomizer] Scripted grant: pond kind %d -> 0x%02x\n", kind, g_scripted_slots[kind].new_item);
     return true;

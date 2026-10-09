@@ -28,7 +28,7 @@ static const char kSessionDialoguePath[] = "session_dialogue.bin";
 
 // The adopted copy (owned here) and the baked blob it replaced.
 static uint8 *g_session_dialogue = NULL;
-static MemBlk g_baked_dialogue = { NULL, 0 };
+static MemBlk g_baked_dialogue = {NULL, 0};
 
 // Line count of a packed dialogue blob, for the adoption log line.
 static int DialogueLineCount(MemBlk blob) {
@@ -49,7 +49,7 @@ int WasmLoadSessionDialogue(void) {
     printf("[Randomizer] Session dialogue: no %s to load\n", kSessionDialoguePath);
     return 0;
   }
-  MemBlk blob = { data, length };
+  MemBlk blob = {data, length};
   if (FindIndexInMemblk(blob, 1).ptr == NULL) {
     printf("[Randomizer] Session dialogue: malformed blob (%d bytes), keeping the baked dialogue\n",
            (int)length);

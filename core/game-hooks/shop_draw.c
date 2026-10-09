@@ -54,7 +54,16 @@
 // charnum per digit, 0-9, in the shop room's own spriteset. SHOP_DIGIT_UNKNOWN marks a
 // glyph the host has blanked; nothing ships that way.
 static uint8 g_digit_tile[10] = {
-  0x30, 0x31, 0x02, 0x03, 0x12, 0x13, 0x22, 0x23, 0x32, 0x33,
+  0x30,
+  0x31,
+  0x02,
+  0x03,
+  0x12,
+  0x13,
+  0x22,
+  0x23,
+  0x32,
+  0x33,
 };
 
 // Splits |amount| into digits, most significant first. Returns the count, or 0 when any

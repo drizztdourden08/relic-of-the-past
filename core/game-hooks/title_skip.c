@@ -11,8 +11,8 @@
 // Module00_Intro keeps its own skip.
 
 // Where the three triangle pieces stop (kIntroSprite0_XLimit / YLimit).
-static const uint8 kPieceRestX[3] = { 75, 95, 117 };
-static const uint8 kPieceRestY[3] = { 88, 48, 88 };
+static const uint8 kPieceRestX[3] = {75, 95, 117};
+static const uint8 kPieceRestY[3] = {88, 48, 88};
 // The zoom step starts the music at this distance.
 enum { kMusicAtDistance = 113 };
 // The sequence can be left for the finished picture once the poly thread and the pieces exist.

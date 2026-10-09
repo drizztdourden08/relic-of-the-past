@@ -28,7 +28,11 @@
 
 // The six denominations, largest first, with the receipt id carrying each one's art and
 // the key that says which of them can share a decoded sheet.
-typedef struct { int16 value; uint8 receipt; uint8 decode_key; } RupeeGem;
+typedef struct {
+  int16 value;
+  uint8 receipt;
+  uint8 decode_key;
+} RupeeGem;
 static const RupeeGem kRupeeGems[] = {
   {300, 0x46, 3},  // gold
   {100, 0x40, 2},  // silver

@@ -59,7 +59,5 @@ bool GameHook_DrawWorldItemOverride(int k, uint8 vanilla_item) {
 bool GameHook_DrawPedestalItemOverride(int k) {
   // Vanilla grant id at this pedestal is 1 (the receive-path id its script passes).
   int grant = DrawGrantOf(1);
-  return Finish(k, grant, GameHook_DrawSpriteAsReceiptItem(k, grant,
-                                                           BLADE_AXIS_DX - RECEIPT_ART_SIDE / 2,
-                                                           BLADE_ART_Y + (BLADE_ART_HEIGHT - RECEIPT_ART_SIDE) / 2));
+  return Finish(k, grant, GameHook_DrawSpriteAsReceiptItem(k, grant, BLADE_AXIS_DX - RECEIPT_ART_SIDE / 2, BLADE_ART_Y + (BLADE_ART_HEIGHT - RECEIPT_ART_SIDE) / 2));
 }

@@ -68,7 +68,11 @@
 
 // Which picture and which row each denomination reads in. |column| is the tile offset from the
 // draw's own 0x24/0x34: 0 the decoded gem, 1 the remapped copy beside it.
-typedef struct { uint8 receipt; uint8 row; uint8 column; } PondGem;
+typedef struct {
+  uint8 receipt;
+  uint8 row;
+  uint8 column;
+} PondGem;
 static const PondGem kPondGems[] = {
   {0x34, 4, 0},  // 1: green
   {0x35, 2, 0},  // 5: blue

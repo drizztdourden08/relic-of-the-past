@@ -108,8 +108,14 @@ int WasmDevPpuLayers(void) {
   for (int l = 0; l < 4; l++) {
     const BgLayer *bg = &g_zenv.ppu->bgLayer[l];
     uint16 *o = &g_ppu_state_buf[l * 8];
-    o[0] = bg->hScroll; o[1] = bg->vScroll; o[2] = bg->tilemapAdr; o[3] = bg->tileAdr;
-    o[4] = bg->tilemapWider; o[5] = bg->tilemapHigher; o[6] = 0; o[7] = 0;
+    o[0] = bg->hScroll;
+    o[1] = bg->vScroll;
+    o[2] = bg->tilemapAdr;
+    o[3] = bg->tileAdr;
+    o[4] = bg->tilemapWider;
+    o[5] = bg->tilemapHigher;
+    o[6] = 0;
+    o[7] = 0;
   }
   return (int)(uintptr_t)g_ppu_state_buf;
 }

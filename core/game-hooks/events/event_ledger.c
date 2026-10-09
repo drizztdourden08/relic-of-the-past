@@ -14,7 +14,7 @@
 #include "../save_bytes.h"
 #include "event_ids.h"
 
-#define srm_event_byte(i) (*(uint8*)(g_ram + SRM_EVENT_LEDGER + (i)))
+#define srm_event_byte(i) (*(uint8 *)(g_ram + SRM_EVENT_LEDGER + (i)))
 
 static bool LedgerOn(void) {
   return (enhanced_features5 & kFeatures5_EventLedger) != 0;

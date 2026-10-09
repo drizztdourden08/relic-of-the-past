@@ -14,7 +14,8 @@
 // module runs and their message is the one loaded.
 
 // The main modules the game-over sequence and the story crawl run under (kMainRouting, misc.c).
-enum { kModule_GameOver = 18, kModule_Attract = 20 };
+enum { kModule_GameOver = 18,
+       kModule_Attract = 20 };
 
 static bool g_rendered_now;
 static bool g_rendered_last;

@@ -64,8 +64,7 @@ static bool HostMenu_InPauseModule(void) {
 // scroll but are unreachable while the hold is in force (call-site 2 refuses the sub-menu), so
 // excluding them costs nothing and keeps this to the states the host can actually be looking at.
 static bool HostMenu_OpenScrollFinished(void) {
-  return HostMenu_InPauseModule() && overworld_map_state >= 3 && overworld_map_state <= 5 &&
-         BG3VOFS_copy2 == kHudMenuScrolledDown;
+  return HostMenu_InPauseModule() && overworld_map_state >= 3 && overworld_map_state <= 5 && BG3VOFS_copy2 == kHudMenuScrolledDown;
 }
 
 // Call-site 1 is the first statement of Hud_NormalMenu (browse state 4). Returning true parks the

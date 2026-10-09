@@ -23,7 +23,8 @@
 // saved.
 #include "game_hooks_internal.h"
 
-enum { kDeathCause_Game = 0, kDeathCause_Remote = 1 };
+enum { kDeathCause_Game = 0,
+       kDeathCause_Remote = 1 };
 // The hit the kill queues. Taken from zero health it wraps far past the 0xA8 bound the damage
 // branch reads as a death.
 #define KILL_HIT 8

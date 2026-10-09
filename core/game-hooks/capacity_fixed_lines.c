@@ -42,8 +42,7 @@ int GameHook_CapacityFixedLine(int family, int from_rung, int jump) {
 // Record-only setter, the shared contract: a repeated (family, rung, jump) updates in place.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetCapacityFixedLine(int family, int from_rung, int jump, int msg) {
-  if (family < 0 || family >= FIXED_LINE_FAMILIES || from_rung < 0 || from_rung > WALLET_LADDER_LAST ||
-      jump < 1 || jump > WALLET_LADDER_LAST || msg < 0)
+  if (family < 0 || family >= FIXED_LINE_FAMILIES || from_rung < 0 || from_rung > WALLET_LADDER_LAST || jump < 1 || jump > WALLET_LADDER_LAST || msg < 0)
     return;
   for (int i = 0; i < g_fixed_line_count; i++) {
     CapacityFixedLine *line = &g_fixed_lines[i];

@@ -39,8 +39,11 @@ bool GameHook_DialogSuppressDraw(bool wanted);
 // ─── Highlight spans (dialog_highlight.c, dialog_highlight_draw.c) ───
 // The pseudo-command a highlight byte decodes to, one past the engine's own kTextCmd_* values.
 enum { kDialogCmd_Highlight = 27 };
-enum { kHighlightEnd = 0, kHighlightPrimary = 1, kHighlightSecondary = 2 };
-enum { kHighlightTileRows = 6, kHighlightTileCols = 21 };
+enum { kHighlightEnd = 0,
+       kHighlightPrimary = 1,
+       kHighlightSecondary = 2 };
+enum { kHighlightTileRows = 6,
+       kHighlightTileCols = 21 };
 // Text_DecodeCmd asks this first: the packed command for a highlight byte at |a|, or 0 for any other
 // byte and whenever the gate is down.
 uint32 GameHook_DialogHighlightDecode(uint8 a, const uint8 *src);

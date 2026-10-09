@@ -51,7 +51,9 @@
 // Top-left charnum of each block, in the two rows the per-frame DMA never fills.
 static const uint8 kArtSlotChar[ART_SLOT_COUNT] = {0x26, 0x28, 0x2a, 0x2c, 0x2e};
 
-enum { kArtRow_Free = 0, kArtRow_Block, kArtRow_Strip };
+enum { kArtRow_Free = 0,
+       kArtRow_Block,
+       kArtRow_Strip };
 
 typedef struct {
   uint8 use;      // kArtRow_*: what took this row this frame

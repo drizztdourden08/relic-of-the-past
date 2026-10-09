@@ -131,7 +131,8 @@ uint8 GameHook_ReceiptPalette(uint8 item, uint8 native) {
 uint8 GameHook_ReceiptPaletteFor(uint8 grant_id, uint8 native) {
   int family = GameHook_UpgradeFamilyOf(grant_id);
   return IconShown(family, GameHook_GrantPresentationOf(grant_id))
-    ? ICON_PALETTE_ROW : GameHook_ForeignIconPaletteFor(grant_id, native);
+         ? ICON_PALETTE_ROW
+         : GameHook_ForeignIconPaletteFor(grant_id, native);
 }
 
 // The hold-up seam's OAM size read: a wide receipt's while the live receipt shows an icon,
@@ -144,7 +145,8 @@ uint8 GameHook_ReceiptShape(uint8 item, uint8 native) {
 uint8 GameHook_ReceiptShapeFor(uint8 grant_id, uint8 native) {
   int family = GameHook_UpgradeFamilyOf(grant_id);
   return IconShown(family, GameHook_GrantPresentationOf(grant_id))
-    ? ICON_OAM_SIZE : GameHook_ForeignIconShapeFor(grant_id, native);
+         ? ICON_OAM_SIZE
+         : GameHook_ForeignIconShapeFor(grant_id, native);
 }
 
 // The hold-up spawn of |item| computed a narrow receipt's spot: moved to a wide one's while

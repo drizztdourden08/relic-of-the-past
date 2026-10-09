@@ -31,7 +31,10 @@
 #define WALLET_STEP_ITEM 0x41
 #define WALLET_SURPLUS_ITEM 0x36
 
-enum { kFamily_Explosives, kFamily_Projectiles, kFamily_Meter, kFamily_Wallet };
+enum { kFamily_Explosives,
+       kFamily_Projectiles,
+       kFamily_Meter,
+       kFamily_Wallet };
 
 // The receipt item each family presents as (upgrade_icon.c binds its icon to the same).
 static const uint8 kFamilyPresentation[PLAN_FAMILY_COUNT] = {0x31, 0x44, 0x45, WALLET_STEP_ITEM};
@@ -63,7 +66,10 @@ static int NextPickup(int family, int *target) {
   int cum = start;
   for (int k = 0; k < count; k++) {
     cum += g_plan[family].jumps[k];
-    if (cum > rung) { *target = cum; return k; }
+    if (cum > rung) {
+      *target = cum;
+      return k;
+    }
   }
   return count;
 }

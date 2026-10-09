@@ -8,14 +8,14 @@
 // |room_id| is the room the player currently occupies, otherwise the SRAM room word.
 
 // Live chest-open masks (bits 8-13); SRAM form is these >> 4 (bits 4-9).
-static const uint16 kSimChestMasks[6] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000 };
+static const uint16 kSimChestMasks[6] = {0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000};
 
 // Door boundary tilemap byte offsets per position slot (0-11), mirrored from the
 // dungeon room loader. Index 6-11 target the room's lower page.
-static const uint16 kSimDoorOffs_Up[12]    = { 0x21c, 0x23c, 0x25c, 0x39c, 0x3bc, 0x3dc, 0x121c, 0x123c, 0x125c, 0x139c, 0x13bc, 0x13dc };
-static const uint16 kSimDoorOffs_Down[12]  = { 0xd1c, 0xd3c, 0xd5c, 0xb9c, 0xbbc, 0xbdc, 0x1d1c, 0x1d3c, 0x1d5c, 0x1b9c, 0x1bbc, 0x1bdc };
-static const uint16 kSimDoorOffs_Left[12]  = { 0x784, 0xf84, 0x1784, 0x78a, 0xf8a, 0x178a, 0x7c4, 0xfc4, 0x17c4, 0x7ca, 0xfca, 0x17ca };
-static const uint16 kSimDoorOffs_Right[12] = { 0x7b4, 0xfb4, 0x17b4, 0x7ae, 0xfae, 0x17ae, 0x7f4, 0xff4, 0x17f4, 0x7ee, 0xfee, 0x17ee };
+static const uint16 kSimDoorOffs_Up[12] = {0x21c, 0x23c, 0x25c, 0x39c, 0x3bc, 0x3dc, 0x121c, 0x123c, 0x125c, 0x139c, 0x13bc, 0x13dc};
+static const uint16 kSimDoorOffs_Down[12] = {0xd1c, 0xd3c, 0xd5c, 0xb9c, 0xbbc, 0xbdc, 0x1d1c, 0x1d3c, 0x1d5c, 0x1b9c, 0x1bbc, 0x1bdc};
+static const uint16 kSimDoorOffs_Left[12] = {0x784, 0xf84, 0x1784, 0x78a, 0xf8a, 0x178a, 0x7c4, 0xfc4, 0x17c4, 0x7ca, 0xfca, 0x17ca};
+static const uint16 kSimDoorOffs_Right[12] = {0x7b4, 0xfb4, 0x17b4, 0x7ae, 0xfae, 0x17ae, 0x7f4, 0xff4, 0x17f4, 0x7ee, 0xfee, 0x17ee};
 
 static int SimRoomCount(void) { return (int)(kDungeonRoomOffs_SIZE / 2); }
 
@@ -120,8 +120,8 @@ int WasmGetRoomChests(int room_id) {
   // For the loaded room dung_num_chests_x2>>1 is that count directly; remote rooms
   // (the live counter only describes the loaded room) parse the static object data
   // room-addressably so the cap and the 0x55 suppression both hold off-screen too.
-  uint8 scan_cols[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-  uint8 scan_rows[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+  uint8 scan_cols[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+  uint8 scan_rows[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
   int drawn = current ? (int)(dung_num_chests_x2 >> 1)
                       : SimRoomScanChests(room_id, scan_cols, scan_rows);
   uint16 sram = (*SaveDungInfoFor(room_id));
@@ -214,12 +214,22 @@ int WasmGetRoomSpriteSpawns(int room_id) {
 // derivable from the door word alone (floor-switch links live in room objects).
 static uint8 SimDoorKind(uint8 t) {
   switch (t) {
-    case 0x1c: case 0x20: case 0x22: case 0x24: case 0x26: return 1;
-    case 0x1e:                                             return 2;
-    case 0x28: case 0x30:                                  return 3;
-    case 0x18: case 0x32: case 0x36: case 0x38: case 0x44: return 4;
-    case 0x48: case 0x4a:                                  return 6;
-    default:                                               return 0;
+    case 0x1c:
+    case 0x20:
+    case 0x22:
+    case 0x24:
+    case 0x26: return 1;
+    case 0x1e: return 2;
+    case 0x28:
+    case 0x30: return 3;
+    case 0x18:
+    case 0x32:
+    case 0x36:
+    case 0x38:
+    case 0x44: return 4;
+    case 0x48:
+    case 0x4a: return 6;
+    default: return 0;
   }
 }
 
@@ -255,11 +265,13 @@ int WasmGetRoomDoorInfo(int room_id) {
     uint8 type = (uint8)(a >> 8);
 
     const uint16 *tab = (dir == 0) ? kSimDoorOffs_Up : (dir == 1) ? kSimDoorOffs_Down
-                      : (dir == 2) ? kSimDoorOffs_Left : kSimDoorOffs_Right;
+                                                   : (dir == 2)   ? kSimDoorOffs_Left
+                                                                  : kSimDoorOffs_Right;
     uint16 addr = tab[pos] & 0x1fff;
 
-    uint8 is_open = (type == 0 || type == 2) ? 1
-                  : (count < 4 && (open_bits & (0x8000 >> count))) ? 1 : 0;
+    uint8 is_open = (type == 0 || type == 2)                       ? 1
+                  : (count < 4 && (open_bits & (0x8000 >> count))) ? 1
+                                                                   : 0;
 
     int o = 3 + count * 7;
     g_sim_doors_buf[o + 0] = dir;

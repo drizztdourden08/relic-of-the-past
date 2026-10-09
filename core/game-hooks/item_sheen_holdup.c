@@ -44,7 +44,7 @@ static int LiveHoldUp(void) {
 static uint8 HoldUpRow(int k) {
   uint8 item = ancilla_item_to_link[k];
   uint8 row = GameHook_QuiverPalette(item, GameHook_ReceiptPalette(item,
-      GameHook_RupeeGemPalette(item, kWishPond2_OamFlags[item])));
+                                                                   GameHook_RupeeGemPalette(item, kWishPond2_OamFlags[item])));
   // The animated ids answer 0xff and draw with the ancilla's own row (the receipt's
   // fallback, 5); the OAM flags byte keeps three bits of it.
   if (sign8(row)) row = ancilla_arr4[k] & 7;

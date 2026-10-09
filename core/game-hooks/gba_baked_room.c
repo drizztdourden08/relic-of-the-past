@@ -23,8 +23,12 @@
 #include "src/zelda_rtl.h"
 #include "src/dungeon.h"
 
-enum { kCellsPerLayer = 4096, kLayerBytes = 0x2000, kAttrBytes = 0x1000, kLayersPerRoom = 3 };
-enum { kAttrSolid = 0x01, kPriority = 0x2000 };
+enum { kCellsPerLayer = 4096,
+       kLayerBytes = 0x2000,
+       kAttrBytes = 0x1000,
+       kLayersPerRoom = 3 };
+enum { kAttrSolid = 0x01,
+       kPriority = 0x2000 };
 bool GbaAlttp_IsBakedRoomActive(void) {
   return player_is_indoors && GbaAlttp_IsBankRoom(dungeon_room_index);
 }
@@ -87,9 +91,12 @@ void GbaAlttp_ApplyBakedAttrOverlay(void) {
  * the player.
  */
 enum {
-  kTeleportEnterRight = 2, kTeleportEnterLeft = 3,
-  kTeleportWestMouthX = 3 * 8, kTeleportWestStop = 0x14,
-  kTeleportEastMouthX = 61 * 8, kTeleportEastStop = 0xdc,
+  kTeleportEnterRight = 2,
+  kTeleportEnterLeft = 3,
+  kTeleportWestMouthX = 3 * 8,
+  kTeleportWestStop = 0x14,
+  kTeleportEastMouthX = 61 * 8,
+  kTeleportEastStop = 0xdc,
 };
 static uint8 g_teleport_arrival;
 
@@ -171,12 +178,19 @@ bool GbaAlttp_RoomHasFixtures(void) {
  * priority-promoted upper layer.
  */
 enum {
-  kOamPaletteMask = 0x0e, kOamPaletteShift = 1,
-  kOamPriorityMask = 0x30, kOamPriorityShift = 4,
+  kOamPaletteMask = 0x0e,
+  kOamPaletteShift = 1,
+  kOamPriorityMask = 0x30,
+  kOamPriorityShift = 4,
   kPriorityInFront = 3,  /* every fixture: measured at one depth on the cartridge, all in front */
-  kCannonCharClosed = 0x2e, kCannonCharOpen = 0x0e, kBallChar = 0x24,
-  kRollerCharFirst = 0x88, kRollerCharLast = 0x9e,
-  kCannonPalette = 6, kBallPalette = 4, kRollerPalette = 6,
+  kCannonCharClosed = 0x2e,
+  kCannonCharOpen = 0x0e,
+  kBallChar = 0x24,
+  kRollerCharFirst = 0x88,
+  kRollerCharLast = 0x9e,
+  kCannonPalette = 6,
+  kBallPalette = 4,
+  kRollerPalette = 6,
   kNoPalette = 0xff,
 };
 

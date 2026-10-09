@@ -122,8 +122,14 @@ void WasmSetRetroShelf(int room_id, int entrance, int ow_area, int subtype, int 
     return;
   }
   g_retro_shelves[g_retro_shelf_count++] = (RetroShelf){
-    1, (uint16)room_id, (int16)entrance, (int16)ow_area, (uint8)subtype,
-    (uint16)quiver_price, (uint8)refill_item, (uint16)refill_price,
+    1,
+    (uint16)room_id,
+    (int16)entrance,
+    (int16)ow_area,
+    (uint8)subtype,
+    (uint16)quiver_price,
+    (uint8)refill_item,
+    (uint16)refill_price,
   };
   printf("[Randomizer] Armed retro shelf: room=0x%03x ent=%d area=%d sub=%d quiver=%d refill=0x%02x at %d\n",
          room_id, entrance, ow_area, subtype, quiver_price, refill_item, refill_price);

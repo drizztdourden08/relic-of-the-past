@@ -20,19 +20,27 @@
 // palette with the secondary in that entry. The highlight is undone after the draw, so the game's own
 // palette and tilemap never see it.
 
-enum { kUsHighlightByte = 0x80, kEuPrefix = 0x87, kEuSubHigh = 0x50 };
+enum { kUsHighlightByte = 0x80,
+       kEuPrefix = 0x87,
+       kEuSubHigh = 0x50 };
 // messaging_buf: three text rows of 0x2a0 bytes, each a top and a bottom half of 21 tiles of 16 bytes.
-enum { kRowBytes = 0x2a0, kHalfBytes = 0x150, kTileBytes = 16, kBufferBytes = 0x7e0 };
+enum { kRowBytes = 0x2a0,
+       kHalfBytes = 0x150,
+       kTileBytes = 16,
+       kBufferBytes = 0x7e0 };
 
 // Pushed by the host as SNES 15-bit words; these are the app's defaults snapped the same way.
-static uint16 g_colors[2] = { 0x1e9c, 0x32cf };
+static uint16 g_colors[2] = {0x1e9c, 0x32cf};
 // The span the pen is in, and whether this message opened any span at all.
 static uint8 g_kind;
 static bool g_used;
 // Text-area tiles, 6 rows of 21, that hold a secondary letter.
 static uint8 g_secondary[kHighlightTileRows][kHighlightTileCols];
 // The glyph the engine is drawing, recoloured once it is down (GameHook_DialogGlyphDrawn).
-static struct { bool pending; uint8 line, x, w; } g_glyph;
+static struct {
+  bool pending;
+  uint8 line, x, w;
+} g_glyph;
 
 static bool HighlightGate(void) {
   return (enhanced_features3 & kFeatures3_ReceiptMessages) != 0;

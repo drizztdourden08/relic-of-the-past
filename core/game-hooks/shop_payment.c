@@ -55,14 +55,14 @@ void ShopTakeBottles(uint16 wanted, int count) {
 // refusal leaves the file exactly as the vendored shelves leave a failed purchase.
 bool ShopCanPay(uint8 currency, uint16 amount) {
   switch (currency) {
-  case kShopCurrency_Rupees: return amount <= link_rupees_goal;
-  case kShopCurrency_Arrows: return amount <= link_num_arrows;
-  case kShopCurrency_Bombs: return amount <= link_item_bombs;
-  // Paying must leave the player standing: a price can never take the last unit
-  // of health, and the vendored damage path (the only other writer) is never entered.
-  case kShopCurrency_Hearts: return link_health_current > amount * SHOP_UNITS_PER_HEART;
-  case kShopCurrency_Bottle: return ShopBottlesHeld(amount) >= 1;
-  default: return false;
+    case kShopCurrency_Rupees: return amount <= link_rupees_goal;
+    case kShopCurrency_Arrows: return amount <= link_num_arrows;
+    case kShopCurrency_Bombs: return amount <= link_item_bombs;
+    // Paying must leave the player standing: a price can never take the last unit
+    // of health, and the vendored damage path (the only other writer) is never entered.
+    case kShopCurrency_Hearts: return link_health_current > amount * SHOP_UNITS_PER_HEART;
+    case kShopCurrency_Bottle: return ShopBottlesHeld(amount) >= 1;
+    default: return false;
   }
 }
 
@@ -72,27 +72,26 @@ bool ShopCanPay(uint8 currency, uint16 amount) {
 // straight back a frame later (Hud_RefillLogic).
 void ShopTakePayment(uint8 currency, uint16 amount) {
   switch (currency) {
-  case kShopCurrency_Rupees:
-    link_rupees_goal -= amount;
-    break;
-  case kShopCurrency_Arrows:
-    link_num_arrows -= (uint8)amount;
-    link_arrow_filler = 0;
-    break;
-  case kShopCurrency_Bombs:
-    link_item_bombs -= (uint8)amount;
-    link_bomb_filler = 0;
-    break;
-  case kShopCurrency_Hearts:
-    link_health_current -= (uint8)(amount * SHOP_UNITS_PER_HEART);
-    link_hearts_filler = 0;
-    break;
-  case kShopCurrency_Bottle:
-    // One bottle: a shelf never charges more, and the rebuild rides along in the take.
-    ShopTakeBottles(amount, 1);
-    break;
-  default:
-    break;
+    case kShopCurrency_Rupees:
+      link_rupees_goal -= amount;
+      break;
+    case kShopCurrency_Arrows:
+      link_num_arrows -= (uint8)amount;
+      link_arrow_filler = 0;
+      break;
+    case kShopCurrency_Bombs:
+      link_item_bombs -= (uint8)amount;
+      link_bomb_filler = 0;
+      break;
+    case kShopCurrency_Hearts:
+      link_health_current -= (uint8)(amount * SHOP_UNITS_PER_HEART);
+      link_hearts_filler = 0;
+      break;
+    case kShopCurrency_Bottle:
+      // One bottle: a shelf never charges more, and the rebuild rides along in the take.
+      ShopTakeBottles(amount, 1);
+      break;
+    default:
+      break;
   }
 }
-

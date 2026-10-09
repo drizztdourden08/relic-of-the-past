@@ -63,8 +63,7 @@ void GameHook_TraceSound(int channel, uint8 id, uint8 pan, bool claimed) {
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onSoundTrace) {
       window.__onSoundTrace($0, $1, $2, $3);
-    }
-  }, channel, id, pan, claimed ? 1 : 0);
+    } }, channel, id, pan, claimed ? 1 : 0);
 }
 
 bool GameHook_Sound(int channel, uint8 raw) {
@@ -106,8 +105,7 @@ bool GameHook_Sound(int channel, uint8 raw) {
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onGameSound) {
       window.__onGameSound($0, $1, $2);
-    }
-  }, channel, id, raw & 0xc0);
+    } }, channel, id, raw & 0xc0);
 
   return claimed;
 }

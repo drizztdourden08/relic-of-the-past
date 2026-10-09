@@ -40,14 +40,14 @@ static bool SwordlessBit(uint32 bit) {
 static int g_pull_anchor = -1;
 
 // player.c kGrabWallDirs: the direction that pulls AWAY from the wall being faced.
-static const uint8 kPullAwayDirs[4] = { 4, 8, 1, 2 };
+static const uint8 kPullAwayDirs[4] = {4, 8, 1, 2};
 
 // dungeon.c Dungeon_ProcessTorchesAndDoors: the tile the player is pressed against, and the
 // second half of the same doorway. The key-door probe at the top of that function reads exactly
 // these two, so a door it would find is a door this finds.
-static const int16 kFacedTileX[4] = { 0, 0, -1, 17 };
-static const int16 kFacedTileY[4] = { 7, 24, 8, 8 };
-static const uint16 kFacedTileStep[4] = { 0x2, 0x2, 0x80, 0x80 };
+static const int16 kFacedTileX[4] = {0, 0, -1, 17};
+static const int16 kFacedTileY[4] = {7, 24, 8, 8};
+static const uint16 kFacedTileStep[4] = {0x2, 0x2, 0x80, 0x80};
 
 /** True when |pos| carries the attribute of a cut-open door that faces |dir|. */
 static bool CurtainDoorAt(int pos, int dir) {

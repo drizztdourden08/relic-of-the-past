@@ -57,7 +57,11 @@
 // The full meter every vendored reader spelled as 128 / 0x80.
 #define MAGIC_METER_FULL 0x80
 
-enum { kFamily_Explosives, kFamily_Projectiles, kFamily_Meter, kFamily_Wallet, kFamilyCount };
+enum { kFamily_Explosives,
+       kFamily_Projectiles,
+       kFamily_Meter,
+       kFamily_Wallet,
+       kFamilyCount };
 
 static const uint8 kFamilyLastRung[kFamilyCount] = {CAPACITY_LAST_RUNG, CAPACITY_LAST_RUNG,
                                                     METER_LAST_RUNG, WALLET_LADDER_LAST};
@@ -110,7 +114,7 @@ void WasmSetCapacityProfile(int family, int custom, int start_tier, int max_tier
   int last = kFamilyLastRung[family];
   int start = clampi(start_tier, 0, last);
   g_capacity.armed = 1;
-  g_capacity.custom[family] = (uint8)!!custom;
+  g_capacity.custom[family] = (uint8) !!custom;
   g_capacity.start_rung[family] = (uint8)start;
   g_capacity.max_rung[family] = (uint8)clampi(max_tier, start, last);
   printf("[Randomizer] Capacity profile: family %d custom=%d rungs %d..%d\n", family, !!custom,

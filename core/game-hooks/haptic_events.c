@@ -16,8 +16,7 @@ static void EmitHaptic(int type, int arg) {
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onHapticEvent) {
       window.__onHapticEvent($0, $1);
-    }
-  }, type, arg);
+    } }, type, arg);
 }
 
 void GameHook_NotifySwordSwing(int swing_type) {

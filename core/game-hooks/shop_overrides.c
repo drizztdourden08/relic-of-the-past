@@ -39,7 +39,8 @@
 
 // Which refusal sound the spot makes: the only thing that differs between the three
 // families once the player has pressed A and cannot pay.
-enum { kShopBeep_Shop = 0, kShopBeep_Cauldron = 1 };
+enum { kShopBeep_Shop = 0,
+       kShopBeep_Cauldron = 1 };
 
 static void ShopBeep(int k, uint8 beep) {
   if (beep == kShopBeep_Cauldron) PotionCauldron_GoBeep(k);
@@ -79,7 +80,7 @@ static void ShopBuyPressed(int k, const ShopSlotOverride *entry, uint8 beep) {
     // The game's own refusal gesture, the line naming what the shelf wants: the vendored
     // "not enough" line for rupees, the currency's own template line for anything else.
     Sprite_ShowMessageUnconditional(
-        (uint16)ShopRefusalMessage(entry->currency, entry->amount, SHOP_MSG_TOO_POOR));
+      (uint16)ShopRefusalMessage(entry->currency, entry->amount, SHOP_MSG_TOO_POOR));
     ShopBeep(k, beep);
     return;
   }

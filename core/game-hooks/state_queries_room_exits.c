@@ -191,7 +191,7 @@ EMSCRIPTEN_KEEPALIVE
 int WasmGetStaircaseType(void) {
   if (!NavQueryGate()) return 0;
   if (!player_is_indoors) return -1;
-  return *(uint16*)(g_ram + 0x44A);
+  return *(uint16 *)(g_ram + 0x44A);
 }
 
 // ─── Room Walk Boundaries (palace toggle doors + open edges) ───

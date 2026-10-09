@@ -60,7 +60,11 @@ static const uint8 kBowTierIds[2] = {0x0b, 0x3b};
 static const uint8 kOcarinaTierIds[2] = {0x14, 0x4a};
 
 static const ProgressiveFamily kFamilies[6] = {
-  {kBladeTierIds, 4}, {kShieldTierIds, 3}, {kGloveTierIds, 2}, {kArmorTierIds, 2}, {kBowTierIds, 2},
+  {kBladeTierIds, 4},
+  {kShieldTierIds, 3},
+  {kGloveTierIds, 2},
+  {kArmorTierIds, 2},
+  {kBowTierIds, 2},
   {kOcarinaTierIds, 2},
 };
 
@@ -98,7 +102,8 @@ static int CurrentTier(int family) {
     case 3: return link_armor;
     case 4: return (link_item_bow + 1) >> 1;
     // The byte shares its slot with the shovel (1); 2 is the flute, 3 the woken flute.
-    default: return link_item_flute >= 3 ? 2 : link_item_flute == 2 ? 1 : 0;
+    default: return link_item_flute >= 3 ? 2 : link_item_flute == 2 ? 1
+                                                                    : 0;
   }
 }
 

@@ -68,7 +68,7 @@ static void WriteIcon(int icon) {
 
 bool ForeignIcon_SlotHoldsPicture(void) {
   return IconReady(g_written_icon)
-    && memcmp(g_ram + FOREIGN_ICON_DECODE_SLOT, g_icons + g_written_icon * FOREIGN_ICON_BYTES, FOREIGN_ICON_BYTES) == 0;
+      && memcmp(g_ram + FOREIGN_ICON_DECODE_SLOT, g_icons + g_written_icon * FOREIGN_ICON_BYTES, FOREIGN_ICON_BYTES) == 0;
 }
 
 // True when the hold-up draw of |item| shows the bound picture.

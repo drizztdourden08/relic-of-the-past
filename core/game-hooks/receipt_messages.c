@@ -28,9 +28,7 @@ static bool g_receipt_msg_claimed = false;
 // unresolved progressive virtual id (a seam that arms its class line before resolving).
 // Derivable from the receipt id alone.
 static bool IsProgressiveItem(uint8 item_id) {
-  return item_id <= 0x06 || item_id == 0x1b || item_id == 0x1c ||
-         item_id == 0x22 || item_id == 0x23 || item_id == 0x49 ||
-         GameHook_IsProgressiveVirtualId(item_id);
+  return item_id <= 0x06 || item_id == 0x1b || item_id == 0x1c || item_id == 0x22 || item_id == 0x23 || item_id == 0x49 || GameHook_IsProgressiveVirtualId(item_id);
 }
 
 // Per-palace items: small key 0x24, the palace-bitmask trio 0x25/0x32/0x33.

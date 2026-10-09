@@ -53,14 +53,70 @@ int WasmGetFallHoles(void) {
 // Area heads: fixed 64-byte array (kOverworldAreaHeads).
 // Duplicated here because it's static const in overworld.c.
 static const uint8 g_area_heads[64] = {
-  0,  0,  2,  3,  3,  5,  5,  7,
-  0,  0, 10,  3,  3,  5,  5, 15,
-  16, 17, 18, 19, 20, 21, 22, 23,
-  24, 24, 26, 27, 27, 29, 30, 30,
-  24, 24, 34, 27, 27, 37, 30, 30,
-  40, 41, 42, 43, 44, 45, 46, 47,
-  48, 48, 50, 51, 52, 53, 53, 55,
-  48, 48, 58, 59, 60, 53, 53, 63,
+  0,
+  0,
+  2,
+  3,
+  3,
+  5,
+  5,
+  7,
+  0,
+  0,
+  10,
+  3,
+  3,
+  5,
+  5,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  24,
+  26,
+  27,
+  27,
+  29,
+  30,
+  30,
+  24,
+  24,
+  34,
+  27,
+  27,
+  37,
+  30,
+  30,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47,
+  48,
+  48,
+  50,
+  51,
+  52,
+  53,
+  53,
+  55,
+  48,
+  48,
+  58,
+  59,
+  60,
+  53,
+  53,
+  63,
 };
 
 // Exit screen map: roomId(u16) + screenIndex(u8) per entry, count prefix.
@@ -79,12 +135,15 @@ int WasmGetExitScreenMap(void) {
   BufW_U16(&b, count);
   for (uint16 i = 0; i < count; i++) {
     uint16 room = kExitDataRooms[i];
-    uint8  scr  = kExitData_ScreenIndex[i];
+    uint8 scr = kExitData_ScreenIndex[i];
     // For big screens, resolve area head to correct sub-screen using exit coordinates
     if (scr < 64 && g_area_heads[scr] == scr) {
       int is_big = 0;
       for (int j = 0; j < 64; j++) {
-        if (g_area_heads[j] == scr && j != scr) { is_big = 1; break; }
+        if (g_area_heads[j] == scr && j != scr) {
+          is_big = 1;
+          break;
+        }
       }
       if (is_big) {
         uint16 exit_x = kExitData_XCoord[i];

@@ -69,10 +69,19 @@ void DialogSuppress_Unpack(const uint8 *in) {
 // The tiles and the fill are kText_BorderTiles (messaging.c), copied here because that table is file
 // private to the vendored decompilation. Corners and edges only; the table's middle entry IS the fill.
 static const uint16 kBoxBorderTiles[8] = {
-  0x28f3, 0x28f4, 0x68f3, 0x28c8, 0x68c8, 0xa8f3, 0xa8f4, 0xe8f3,
+  0x28f3,
+  0x28f4,
+  0x68f3,
+  0x28c8,
+  0x68c8,
+  0xa8f3,
+  0xa8f4,
+  0xe8f3,
 };
 // The fill and the span of RenderText_Draw_Finish's own tear-down stripe (0x2E42 words of 0x387F).
-enum { kBoxBlankTile = 0x387f, kBoxWords = 280, kVramWords = 0x8000 };
+enum { kBoxBlankTile = 0x387f,
+       kBoxWords = 280,
+       kVramWords = 0x8000 };
 
 static bool IsBoxBorderTile(uint16 tile) {
   for (int i = 0; i < 8; i++)

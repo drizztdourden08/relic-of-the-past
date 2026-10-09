@@ -66,7 +66,7 @@ static void SyncFont(void) {
     return;
   }
   if (ExtraGlyphGate() && current != g_patched)
-    g_zenv.dialogue_font_blk = (MemBlk){ g_patched, kBlobBytes };
+    g_zenv.dialogue_font_blk = (MemBlk){g_patched, kBlobBytes};
   else if (!ExtraGlyphGate() && current == g_patched)
     g_zenv.dialogue_font_blk = g_baked;
 }
