@@ -1,8 +1,4 @@
-/* @layer shared-game @kind logic */
-/**
- * Shared shapes for the mechanical-invariant audit. Each rule module receives
- * the full dataset input and returns findings, and never throws.
- */
+/* @layer shared-game @kind types */
 import type { CheckRecord, DungeonRecord, ItemRecord, ScreenRecord } from '../../game/data/types';
 
 interface InvariantFinding {
@@ -17,7 +13,6 @@ interface InvariantInput {
   items: ItemRecord[];
   dungeons: DungeonRecord[];
   screens: ScreenRecord[];
-  /** Text of the core sprite source file; the source-function rule only runs when provided. */
   spriteMainText?: string;
 }
 

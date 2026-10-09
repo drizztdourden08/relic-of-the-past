@@ -1,0 +1,23 @@
+/* @layer shared-game @kind constants */
+const ROOM_COUNT = 320;
+const LAYER_SECTIONS = 3;
+const ROOM_POINTERS = 0x1f8000;
+const ROOM_STREAM_HEADER_BYTES = 2;
+const OBJECTS_END = 0xffff;
+const DOORS_FOLLOW = 0xfff0;
+const HALF_SLOTS = 6;
+const WALL_SLOTS = 3;
+
+const SMALL_KEY_DOOR = 0x1c;
+const BIG_KEY_DOOR = 0x1e;
+const LOCKED_STAIR_FIRST = 0x20;
+const LOCKED_STAIR_LAST = 0x26;
+const THRONE_DOOR = 0x14;
+const CURTAIN_DOOR = 0x32;
+const BOMBABLE: readonly number[] = [0x28, 0x2a, 0x2e, 0x30];
+const SHUTTERS: readonly number[] = [0x18, 0x36, 0x38, 0x44, 0x48, 0x4a];
+
+export {
+  BIG_KEY_DOOR, BOMBABLE, CURTAIN_DOOR, DOORS_FOLLOW, HALF_SLOTS, LAYER_SECTIONS, LOCKED_STAIR_FIRST, LOCKED_STAIR_LAST,
+  OBJECTS_END, ROOM_COUNT, ROOM_POINTERS, ROOM_STREAM_HEADER_BYTES, SHUTTERS, SMALL_KEY_DOOR, THRONE_DOOR, WALL_SLOTS,
+};

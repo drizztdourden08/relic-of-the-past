@@ -1,30 +1,17 @@
 /* @layer shared-game @kind logic */
-/**
- * A1-shape: every check's gameId must carry the physical keys its kind
- * demands, and nothing contradictory. A check with no physical identity at
- * all is flagged unless its kind legitimately has none.
- */
+import { MAX_CHEST_INDEX, MAX_ROOM_ID, SHAPE_RULE } from './invariant.constants';
 import type { CheckGameId, CheckRecord } from '../../game/data/types';
-import type { InvariantFinding, InvariantInput } from './invariant-types';
-
-const RULE = 'A1-shape';
-const MAX_ROOM_ID = 0x13f;
-const MAX_CHEST_INDEX = 5;
+import type { InvariantFinding, InvariantInput } from './invariant.type';
 
 const finding = (checkId: string, detail: string): InvariantFinding =>
-  ({ rule: RULE, checkId, field: 'gameId', detail });
+  ({ rule: SHAPE_RULE, checkId, field: 'gameId', detail });
 
 const hasRoomBit = (g: CheckGameId): boolean =>
   g.roomId !== undefined && (g.chestIndex !== undefined || g.mask !== undefined);
 
 const hasOwBit = (g: CheckGameId): boolean => g.owScreen !== undefined && g.mask !== undefined;
 
-/**
- * A progress-buffer bit: the detection of the receive-crossing standing
- * grants (the two tablets) whose only persisted completion fact is their
- * substitution-completion bit exposed through the progress buffer.
- */
-const hasProgressBit = (g: CheckGameId): boolean =>
+const hasProgressBufferBit = (g: CheckGameId): boolean =>
   g.owScreen === undefined && g.roomId === undefined
   && g.bufferIndex !== undefined && g.mask !== undefined;
 
@@ -49,7 +36,7 @@ const shapeErrors = (check: CheckRecord): string[] => {
     case 'standing':
     case 'dig':
     case 'bonk':
-      if (!hasRoomBit(g) && !hasOwBit(g) && !hasProgressBit(g)) {
+      if (!hasRoomBit(g) && !hasOwBit(g) && !hasProgressBufferBit(g)) {
         errors.push(`${check.kind} needs roomId+chestIndex, roomId+mask, owScreen+mask, or bufferIndex+mask`);
       }
       break;

@@ -1,11 +1,7 @@
 /* @layer shared-game @kind types */
-/**
- * Verdict and input shapes for the S3 comparator stage of the
- * data-certification pipeline.
- */
 import type { CheckRecord, ItemRecord } from '../../game/data/types';
-import type { ReferenceLocation } from './reference-source';
-import type { RomCensus } from './rom-census';
+import type { ReferenceLocation } from './reference-source.type';
+import type { RomCensus } from './rom-census/rom-census.type';
 
 type ChestVerdictKind =
   | 'ok'
@@ -34,13 +30,32 @@ interface ComparatorInput {
   checks: readonly CheckRecord[];
   items: readonly ItemRecord[];
   census: RomCensus;
-  /** The native chest table in table order: room ids drive the per-room ordinal join. */
   flatTable: readonly { roomId: number }[];
   referenceLocations: readonly ReferenceLocation[];
-  /** Datapackage location-name → id map: keydrop coverage is judged against it. */
   referenceLocationIds: Record<string, number>;
-  /** Builds the reference project's standard name for a dataset check. */
   nameOf: (check: CheckRecord) => string;
 }
 
-export type { ChestPosition, ChestVerdict, ChestVerdictKind, ComparatorInput };
+interface VanillaResolution {
+  itemId: string | null;
+  receiveItemId: number | null;
+}
+
+interface VanillaVerdictInput {
+  checkId: string;
+  standardName: string;
+  censusByte: number;
+  vanillaItemIds: readonly string[];
+  items: readonly ItemRecord[];
+  itemById: ReadonlyMap<string, ItemRecord>;
+}
+
+interface AnchorCheck {
+  checkId: string;
+  roomId: number;
+  chestIndex: number;
+}
+
+export type {
+  AnchorCheck, ChestPosition, ChestVerdict, ChestVerdictKind, ComparatorInput, VanillaResolution, VanillaVerdictInput,
+};
