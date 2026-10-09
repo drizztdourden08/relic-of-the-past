@@ -2,8 +2,9 @@
 import type { ReactNode } from 'react';
 
 type GateProps = {
-  title?: ReactNode;
+  title?: string;
   lead?: ReactNode;
+  art?: ReactNode;
   children?: ReactNode;
   footnote?: ReactNode;
 };

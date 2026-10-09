@@ -16,30 +16,26 @@ const RouteGuard = (props: RouteGuardProps) => {
 
   if (loading) {
     return (
-      <Frame bare>
+      <Gate>
         <Center className="guard__loading"><Spinner size="lg" /></Center>
-      </Frame>
+      </Gate>
     );
   }
 
   if (error) {
     return (
-      <Frame bare>
-        <Gate title={`${siteName} is unreachable`} lead={error}>
-          <Button variant="primary" onClick={() => void refresh()}>Try again</Button>
-        </Gate>
-      </Frame>
+      <Gate title={`${siteName} is unreachable`} lead={error}>
+        <Button variant="primary" onClick={() => void refresh()}>Try again</Button>
+      </Gate>
     );
   }
 
   const match = resolveRoute(routes, path);
   if (!match) {
     return (
-      <Frame bare>
-        <Gate title="Not found" lead={`There is no page at ${path}.`}>
-          <Button variant="tertiary" onClick={() => window.history.back()}>Go back</Button>
-        </Gate>
-      </Frame>
+      <Gate title="Not found" lead={`There is no page at ${path}.`}>
+        <Button variant="tertiary" onClick={() => window.history.back()}>Go back</Button>
+      </Gate>
     );
   }
 

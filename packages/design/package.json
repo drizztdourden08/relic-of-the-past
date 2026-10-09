@@ -11,6 +11,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./packs": "./src/packs.ts",
+    "./game-text.css": "./game-text/index.css",
     "./package.json": "./package.json"
   },
   "dependencies": {

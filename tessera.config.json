@@ -11,18 +11,36 @@
   "apps": {
     "apps/desktop": {
       "parts": {
-        "compounds": ["apps/desktop/src/compounds", "packages/design/src/compounds"],
-        "views": ["apps/desktop/src/views", "packages/design/src/views"]
+        "compounds": [
+          "apps/desktop/src/compounds",
+          "packages/design/src/compounds"
+        ],
+        "views": [
+          "apps/desktop/src/views",
+          "packages/design/src/views"
+        ]
       }
     },
     "apps/sanctuary": {
       "parts": {
-        "views": ["apps/sanctuary/src/views", "packages/design/src/views"]
+        "views": [
+          "apps/sanctuary/src/views",
+          "packages/design/src/views"
+        ]
+      },
+      "theme": {
+        "css": "apps/sanctuary/src/theme.css"
       }
     },
     "apps/store": {
       "parts": {
-        "views": ["apps/store/src/views", "packages/design/src/views"]
+        "views": [
+          "apps/store/src/views",
+          "packages/design/src/views"
+        ]
+      },
+      "theme": {
+        "css": "apps/store/src/theme.css"
       }
     }
   }

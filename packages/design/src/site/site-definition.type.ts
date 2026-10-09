@@ -1,6 +1,7 @@
 /* @layer site-kit @kind types */
 import type { ComponentType, ReactNode } from 'react';
 import type { IconifyIcon } from '@iconify/react/offline';
+import type { SiteLink } from '@drizztdourden08/tessera/composites';
 import type { RightsModel, SiteId } from '@rotp/hub-contracts';
 import type { ViewKeys } from '../saved-views/create-view-keys';
 
@@ -17,8 +18,12 @@ type SiteNavGroup = { id: string; label: string; sections: string[] };
 
 type SiteBrand = {
   wordmark: string;
-  logo: string;
   homeLabel: string;
+};
+
+type SiteFooter = {
+  note: string;
+  links: readonly SiteLink[];
 };
 
 type SiteSearch = {
@@ -40,6 +45,7 @@ type SiteDefinition = {
   id: SiteId;
   name: string;
   brand: SiteBrand;
+  footer: SiteFooter;
   signIn: { lead: string };
   sections: Record<string, SiteSection>;
   home: string;
@@ -55,6 +61,7 @@ export type {
   SiteSection,
   SiteNavGroup,
   SiteBrand,
+  SiteFooter,
   SiteSearch,
   RightsEditorProps,
   RightsEditorSlot,
