@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { USEFUL_ITEMS } from '../../world/pool/item-classes.data';
+import { USEFUL_ITEMS } from '../../world/pool/item-classes.constants';
 import { isProgressionUnder } from '../../world/pool/progression-class';
 import { modeOfDungeonItem, staysInOwnDungeon } from '../../world/dungeon-items/dungeon-item-modes';
 import { PINNED_SORT_BONUS } from './model-items.constants';

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { upgradeItemOfName } from '@shared/game/data/capacity-upgrade-item';
 import { progressiveCapacityFamilyOf } from '@shared/game/data/capacity-progressive-item';
-import { PROGRESSION_ITEMS, USEFUL_ITEMS } from '../world/pool/item-classes.data';
+import { PROGRESSION_ITEMS, USEFUL_ITEMS } from '../world/pool/item-classes.constants';
 import { itemKeyOfName } from '../world/display-names/item-key-name';
 import { DUNGEON_ITEM_RE, PROGRESSIVE_PREFIX } from './receipt-text.constants';
 import { PIECE_BY_BASE } from './receipt-item-class.constants';

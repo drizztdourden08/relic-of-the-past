@@ -18,7 +18,7 @@ import type { World } from '../world.type';
 import type { ItemPool } from '../pool/item-pool.type';
 import type { BottlePicker } from '../pool/build-item-pool';
 import type { WeaponPicker } from '../pool/uncle-weapon';
-import type { FillerPicker } from '../pool/balance-filler';
+import type { FillerPicker } from '../pool/pool.type';
 import type { CapacityPoolCounts, CapacityProfile } from '../capacity/capacity-profile.type';
 import type { CapacityBonusSetting } from '../capacity/bonus/capacity-bonus.type';
 import type { DarkRoomSetting } from '../dark-rooms/dark-room.type';
