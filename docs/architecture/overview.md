@@ -16,50 +16,60 @@ flowchart TD
     subgraph CORE["C / WASM core (core/)"]
         Z["zelda3/ vendored · game-hooks/ Wasm*/GameHook* · wasm-build/<br/>Touch only to add bridge fns / cheats / queries"]
     end
-    subgraph BRIDGE["Bridge (apps/desktop/src/lib/game/)"]
-        B["The ONLY TS that talks to the WASM module. A Facade over Wasm* calls.<br/>Renderer reaches the game through here, never raw ccall elsewhere"]
+    subgraph PKG["Domain packages (packages/, @rotp/*)"]
+        P["game-data · asset-extraction · features · input-mapping · game-core (the WASM bridge)<br/>roms · languages · msu · packs · randomizer · navigation · hud<br/>hub-contracts · hub-client · hub-server · No React, no Electron"]
     end
-    subgraph SHARED["Shared domain (shared/, used by BOTH renderer & electron)"]
-        S["game/ pure domain: navigation, checks, items, data, logic, seed<br/>asset-extraction/ ROM→.dat · input/ presets · types/<br/>No React/DOM/Node/Electron/window in shared/game/"]
+    subgraph DSG["Shared React (packages/design, @rotp/design)"]
+        D["site frame, sign-in, account, admin and device views<br/>pack viewers and the Hookshop highlight on @rotp/design/packs"]
     end
-    subgraph EL["Electron main / preload"]
-        E["Node/OS/fs/native HID/USB · windows · protocols<br/>profiles · saves · ROMs · dialogs · ipc-handlers → register*()"]
+    subgraph EL["Electron main / preload (apps/desktop/electron/)"]
+        E["Node/OS/fs · windows · protocols<br/>profiles · saves · ROMs · dialogs · handlers/<subject>-handlers.ts"]
     end
     subgraph REN["Renderer (apps/desktop/src/)"]
-        R["Tessera parts + theme.css · ui/domains compounds and views<br/>primitive / composite / compound / view + widgets<br/>stores/ · lib/ · hooks/ · hud/"]
+        R["screens/ · widgets/ · views/ · compounds/ · composites/ · primitives/<br/>stores/ · hooks/ · renderer logic by subject (game/, storage/, input/, hud/ ...)"]
     end
-    CORE -->|"ccall / HEAPU8 / EM_ASM"| BRIDGE
-    BRIDGE --> SHARED
-    SHARED -->|"@shared/*"| EL
-    SHARED -->|"@shared/*"| REN
+    subgraph WEB["Sites and APIs"]
+        W["apps/sanctuary · apps/store · apps/sanctuary-api · apps/store-api · apps/kill-switch"]
+    end
+    CORE -->|"ccall / HEAPU8 / EM_ASM"| PKG
+    PKG --> EL
+    PKG --> REN
+    PKG --> DSG
+    DSG --> REN
+    DSG --> WEB
+    PKG --> WEB
     EL <-->|"IPC"| REN
 ```
 
-Aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`.
+Packages are imported by name, through their barrel (`@rotp/<subject>`) or one of the
+few subpaths a package exports (`@rotp/asset-extraction/node`, `@rotp/hub-contracts/node`,
+`@rotp/design/packs`). Inside the desktop app, `@app/*` points at `apps/desktop/src/`.
 
 ## Dependency invariants
 
-1. `shared/*` is the leaf. It imports only other `shared/*` plus stdlib, never
-   `@app/*` and never `electron`.
-2. `shared/game/*` is pure: no React, no DOM, no Node, no Electron, no `window`.
-   It must run in a plain test process.
-3. The renderer (`@app/*`) may import `@shared/*`, design tokens, and `window.api`.
-   It cannot import from `apps/desktop/electron/*`; cross that boundary only
-   through IPC.
-4. Electron (`apps/desktop/electron/*`) may import `@shared/*`. It cannot import
-   renderer code (`@app/*`) or React.
-5. The WASM module is reached only through `lib/game/`, the bridge Facade. No raw
-   `ccall`/`HEAPU8` lives outside it.
-6. Bare UI tiers (primitive/composite/compound) cannot import stores,
-   `window.api`, `lib/game`, or navigation. Data flows in via props, and Views do
-   the wiring. See @docs/contributing/design-system.md.
-7. The native SDL3 controller addon lives in electron main only.
+1. Apps depend on packages, packages on lower packages, and nothing depends on an app.
+   The package order is asset-extraction, game-data, hub-contracts, features,
+   input-mapping, game-core, roms, languages, msu, packs, randomizer, navigation, hud,
+   hub-server, hub-client, design.
+2. Domain packages hold no React and no Electron. React that two apps share lives in
+   `packages/design`; React that one app uses stays in that app.
+3. Code that only runs in Node sits behind a package's `./node` subpath, so a renderer
+   or a site never loads it through the barrel.
+4. The renderer (`@app/*`) may import packages, Tessera and `window.api`. It cannot import
+   from `apps/desktop/electron/*`; cross that boundary only through IPC.
+5. Electron (`apps/desktop/electron/*`) may import packages. It cannot import renderer
+   code (`@app/*`) or React.
+6. The WASM module is reached only through `@rotp/game-core`, the bridge Facade, and the
+   renderer glue in `apps/desktop/src/game/`. No raw `ccall`/`HEAPU8` lives outside them.
+7. Bare UI tiers (primitive/composite/compound) cannot import stores, `window.api`, the
+   game bridge, or navigation. Data flows in via props, and Views do the wiring. See
+   @docs/contributing/design-system.md.
 8. `core/` C is edited only per the bridge rules (`add-wasm-function`).
-9. The dataset has one door: `shared/game/data`'s facade (`all`, `find`, `get*`),
-   re-exported by its barrel. No code outside `shared/game/data/` imports a record
-   file, a collection loader or the registry; an ESLint `no-restricted-imports`
-   rule refuses it. The randomizer engine, the tracker, the electron writers and
-   the tests all read a record through the same queries.
+9. The dataset has one door: the facade in `packages/game-data/src/data` (`all`, `find`,
+   `get*`), re-exported by `@rotp/game-data`. No code outside `packages/game-data/src/data/`
+   imports a record file, a collection loader or the registry; an ESLint
+   `no-restricted-imports` rule refuses it inside the package and the package boundary
+   refuses it everywhere else.
 
 If a change would break an invariant, the code is in the wrong zone. Re-place it.
 
@@ -67,19 +77,22 @@ If a change would break an invariant, the code is in the wrong zone. Re-place it
 
 | The new code | Goes in | Notes |
 |----------------|---------|-------|
-| Needs Node/OS/fs/native, windows, ROM/profile/save IO | `apps/desktop/electron/<domain>/` behind a `domain:action` IPC handler | Add the channel to the `apps/desktop/src/ipc/` contract + join map (`window.api` type derives). Use the `electron` skill. |
-| Talks to the running game / WASM | `apps/desktop/src/lib/game/` | New C function → `add-wasm-function` (C + bridge; `EMSCRIPTEN_KEEPALIVE` auto-exports, so there is no export list). |
-| Pure game rule/algorithm/data, no React/Node | `shared/game/` (navigation / checks / items / data / logic / seed) | Must stay pure & testable. |
-| Parses a ROM / builds assets | `packages/asset-extraction/src/` | One `compile-*` per domain. |
-| Type shared by renderer + electron | `shared/types/` | Otherwise a local `types.ts`. |
+| Needs Node/OS/fs/native, windows, ROM/profile/save IO | `apps/desktop/electron/<subject>/` behind a handler in `electron/handlers/` | Add the channel to the `apps/desktop/src/ipc/` contract. Use the `electron` skill. |
+| Talks to the running game / WASM | `packages/game-core/src/` | A new C function follows `add-wasm-function` (C + bridge; `EMSCRIPTEN_KEEPALIVE` auto-exports, so there is no export list). Glue that reads a renderer store stays in `apps/desktop/src/game/`. |
+| Pure game rule, algorithm or record | `packages/game-data/` (data, logic, events, seed) | Must stay pure and testable. |
+| Pathfinding, flood, simulator, tracker | `packages/navigation/` | |
+| Randomizer world or the room client | `packages/randomizer/` | |
+| Parses a ROM / builds assets | `packages/asset-extraction/src/` | One `compile-*` per domain; Node readers on `./node`. |
+| Contract read by the desktop app, a site and an API | `packages/hub-contracts/` | Types, schemas, rights, routes. |
 | Generic UI atom (Button, Select) | Tessera `@drizztdourden08/tessera/primitives` | use the part; a missing one is a Tessera proposal |
 | Generic structural combo (Card, Dialog, Overlay) | Tessera `@drizztdourden08/tessera/composites` | use the part; a missing one is a Tessera proposal |
-| Domain-specific presentational card/form (ProfileCard, SaveSlot) | `ui/domains/app/compounds/` | takes a domain prop, fetches nothing |
-| Feature/page with logic + data | `ui/domains/app/views/` or `ui/domains/widgets/` | owns stores/IPC/game; logic in `behavior/` |
-| A view that draws game state the way the game draws it | compose `ui/domains/hud/` compounds from the view or widget | the HUD compounds are presentational, so a widget may lay hit zones over them (the cheat console does) |
+| Domain-specific presentational card/form (ProfileCard, SaveSlot) | `apps/desktop/src/compounds/` | takes a domain prop, fetches nothing |
+| Feature/page with logic + data | `apps/desktop/src/views/` | owns stores/IPC/game; logic in `behavior/` |
+| A part a site and the desktop app both draw | `packages/design/src/` | compounds and views, the packs viewers under `packs/` |
+| A view that draws game state the way the game draws it | compose the HUD compounds (`compounds/Hud*`, `compounds/Pause*`, `compounds/Dialog*`) | the HUD compounds are presentational, so a widget may lay hit zones over them (the cheat console does) |
 | Renderer UI state | `apps/desktop/src/stores/` | Zustand |
 | Shared renderer hook | `apps/desktop/src/hooks/` | non-feature-specific |
-| Pure renderer helper | `apps/desktop/src/utils/` | no side effects |
+| Renderer logic with no React | `apps/desktop/src/<subject>/` | named for its subject, never `lib` or `utils` |
 
 ## The rule: analyze before building
 
