@@ -36,7 +36,7 @@ import { REGION } from '../region-ids.data';
 import { BASELINE } from '../state-helpers';
 import { BOTTLE_ITEMS } from '../item-groups';
 import { itemKeyOfName } from '../display-names/item-key-name';
-import { cauldronPriceOf } from '../potion-price/potion-cauldrons.data';
+import { cauldronPriceOf } from '../potion-price/cauldron-price-of';
 import { compileRule } from './rule-eval';
 import {
   FALSE, all, any, countGroup, has, helper, region,

@@ -1,42 +1,55 @@
 /* @layer shared-game @kind data */
-/**
- * The seven item-power rows of the option catalog: synthetic, unlocked, group
- * 'items'. They replace the reference's single four-step Item Functionality
- * choice, which stays in the catalog, locked, as the transcription of its
- * dataclass. Every baseline is the normal step, so a fresh profile plays the
- * unmodified game.
- */
 import { DEFAULT_ITEM_POWER, ITEM_POWER_KEY } from './item-power.data';
-import type { OptionDef } from '../options.type';
+import type { ItemPowerOptionSeed } from './item-power.type';
 
-type Seed = Omit<OptionDef, 'description'>;
-
-const base = {
+const ITEM_POWER_TOGGLE = {
   group: 'items' as const,
   implementation: 'active' as const,
   locked: false,
   synthetic: true,
 };
 
-const toggle = (key: string, displayName: string, baseline: boolean): Seed =>
-  ({ ...base, key, displayName, kind: 'toggle', sourceDefault: baseline, baseline });
-
-const ITEM_POWER_OPTION_SEEDS: readonly Seed[] = [
-  toggle(ITEM_POWER_KEY.catchFairies, 'Net catches fairies', DEFAULT_ITEM_POWER.catchFairies),
-  toggle(ITEM_POWER_KEY.byrnaInvulnerable, 'Blue barrier protects you', DEFAULT_ITEM_POWER.byrnaInvulnerable),
-  toggle(ITEM_POWER_KEY.capeDoubleMagic, 'Cape drains magic twice as fast', DEFAULT_ITEM_POWER.capeDoubleMagic),
-  toggle(ITEM_POWER_KEY.silverArrowsAnywhere, 'Silver arrows bite everywhere',
-    DEFAULT_ITEM_POWER.silverArrowsAnywhere),
-  toggle(ITEM_POWER_KEY.powderFairy, 'Powder makes a fairy', DEFAULT_ITEM_POWER.powderFairy),
-  toggle(ITEM_POWER_KEY.hammerTablets, 'Hammer wakes the tablets', DEFAULT_ITEM_POWER.hammerTablets),
-  toggle(ITEM_POWER_KEY.swordlessMedallions, 'Medallion doors need no sword',
-    DEFAULT_ITEM_POWER.swordlessMedallions),
-  toggle(ITEM_POWER_KEY.pullableCurtains, 'Hanging cloth doors can be pulled down',
-    DEFAULT_ITEM_POWER.pullableCurtains),
-  toggle(ITEM_POWER_KEY.hammerLastFight, 'Hammer hurts the last fight',
-    DEFAULT_ITEM_POWER.hammerLastFight),
-  toggle(ITEM_POWER_KEY.hammerTowerSeal, 'Hammer breaks the tower seal',
-    DEFAULT_ITEM_POWER.hammerTowerSeal),
+const ITEM_POWER_OPTION_SEEDS: readonly ItemPowerOptionSeed[] = [
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.catchFairies, displayName: 'Net catches fairies', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.catchFairies, baseline: DEFAULT_ITEM_POWER.catchFairies,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.byrnaInvulnerable, displayName: 'Blue barrier protects you', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.byrnaInvulnerable, baseline: DEFAULT_ITEM_POWER.byrnaInvulnerable,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.capeDoubleMagic, displayName: 'Cape drains magic twice as fast', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.capeDoubleMagic, baseline: DEFAULT_ITEM_POWER.capeDoubleMagic,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.silverArrowsAnywhere, displayName: 'Silver arrows bite everywhere', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.silverArrowsAnywhere, baseline: DEFAULT_ITEM_POWER.silverArrowsAnywhere,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.powderFairy, displayName: 'Powder makes a fairy', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.powderFairy, baseline: DEFAULT_ITEM_POWER.powderFairy,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.hammerTablets, displayName: 'Hammer wakes the tablets', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.hammerTablets, baseline: DEFAULT_ITEM_POWER.hammerTablets,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.swordlessMedallions, displayName: 'Medallion doors need no sword', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.swordlessMedallions, baseline: DEFAULT_ITEM_POWER.swordlessMedallions,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.pullableCurtains, displayName: 'Hanging cloth doors can be pulled down', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.pullableCurtains, baseline: DEFAULT_ITEM_POWER.pullableCurtains,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.hammerLastFight, displayName: 'Hammer hurts the last fight', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.hammerLastFight, baseline: DEFAULT_ITEM_POWER.hammerLastFight,
+  },
+  {
+    ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.hammerTowerSeal, displayName: 'Hammer breaks the tower seal', kind: 'toggle',
+    sourceDefault: DEFAULT_ITEM_POWER.hammerTowerSeal, baseline: DEFAULT_ITEM_POWER.hammerTowerSeal,
+  },
 ];
 
 export { ITEM_POWER_OPTION_SEEDS };

@@ -11,7 +11,7 @@
  */
 import { REGION } from '../region-ids.data';
 import { BOTTLE_ITEMS } from '../item-groups';
-import { POTION_CAULDRONS } from '../potion-price/potion-cauldrons.data';
+import { POTION_CAULDRONS } from '../potion-price/potion-cauldrons.constants';
 import {
   FALSE, TRUE, all, any, countGroup, has, helper, region, seedIs, seedRef, when,
 } from './rule-node-build';

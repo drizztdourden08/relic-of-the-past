@@ -37,7 +37,7 @@
  * make the number smaller, never larger, so counting it errs on the side where
  * every price stays payable.
  */
-import { POTION_CAULDRONS } from '../potion-price/potion-cauldrons.data';
+import { POTION_CAULDRONS } from '../potion-price/potion-cauldrons.constants';
 import { PRICED_ENTRIES } from '../rules/priced-entries';
 import { retroWalletNeed } from '../retro/retro-bow.data';
 import { storedRetroBowOf } from '../retro/retro-from-snapshot';
