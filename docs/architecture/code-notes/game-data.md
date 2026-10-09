@@ -261,6 +261,225 @@ under `shared/game/data/`. The records hold the data; this page holds the why.
   route to that port is a four bit nibble from the overworld music table.
 - The file has no type import: the loader (`sound-names.ts`) casts it where it is read.
 
+## types/
+
+Each record shape lives in `types/<name>/<name>.type.ts`, re-exported by the folder's `index.ts`
+and by `types/index.ts`. `types/index.ts` also re-exports `SoundNameRecord`, whose shape lives with
+its loader, because the vault dataset imports it from there.
+
+### types/ids
+
+- `SpriteId` names an extracted picture, never an entity; anything that acts in the world is an
+  actor. `ItemGroupId` (`ig-NNN`) is the leaf of a count requirement. `EnumerationId` is `enum-NNN`.
+- `ID_PAD_WIDTH` is 3 and stays 3: every id is already written that way, and a fourth digit would
+  give a second spelling of the same number. The connections passed 999 records, so `makeId` lets a
+  longer number through unpadded (`padStart` never truncates). Count records with a query, never a
+  table of counts.
+- `KIND_ID_PREFIXES`: each kind mints under its own name, except `item-group` (`ig`) and
+  `enumeration` (`enum`). Read it instead of assuming the kind name.
+
+### types/actor and types/combat
+
+- One record kind for every living or interactive entity: enemies, bosses, NPCs, objects,
+  obstacles, triggers. "Sprite" is kept for graphics.
+- `gameId.spriteType` is the native sprite type byte; `objectSubIndex` the dungeon room object sub
+  index (0x18 is the cell lock); `roomTag` the room header tag byte. `clearedBy` is what removes an
+  obstacle or opens a lock, the mechanism side of a connection's `gatedBy`.
+- Combat facts are read from the game's own tables (sprite.c, ancilla.c): `kSpriteInit_Health`,
+  `Flags4`, `enemy_damage_data`, and `kAncilla_Damage[ancillaType]` for a weapon (0x09 is the
+  arrow). An `estimated` range, or a `contact` range with `sourced: false`, is flagged, not measured.
+
+### types/check
+
+- `gameId`: a chest reads `save_dung_info[roomId]` with the chest's open mask; a room mask check
+  reads `save_dung_info[roomId] & mask`; an overworld check reads `save_ow_event_info[owScreen] &
+  mask`; `bufferIndex` indexes the progress flags buffer. `flagType`, `flagMask`, `itemId` (the
+  native receive index), `spriteType` and `postGfx` describe an NPC's trigger and how it looks once
+  done. `room` and `owWorld` tell apart an NPC sprite type that spawns in several places. `roomFlag`
+  is an NPC whose completion is a chest open bit. `eventBit` indexes the event ledger
+  (core/game-hooks/events/event_ids.h), for events the game never records itself.
+- `shopSeam` is where the port arms a shop substitution, never a completion flag: the game records
+  nothing for a bought shelf item. Four dark world doors share entrance 0x60 into one shelf room and
+  two cave doors share 0x58 into another, so the seam is (room, entrance, overworld area, subtype),
+  using `overworld_area_index_exit`, which the game keeps for the whole indoor visit. `null` matches
+  anything for a field the earlier ones already decide (core/game-hooks/shop_table.h).
+- `CheckShop.slot` is the slot's index across every shop: the index of its sold counter in the save
+  block (`SRM_SHOP_SOLD`) and the order the sequential mode opens slots. It is append only, so a
+  stored placement keeps naming the same slots. `position` is also the order the game spawns the
+  sprites. Each `seam` kind has its own sprites, purchase gesture and call site.
+- `CheckPond.ladder`: the capacity pond sells one ladder per answer (bombs and arrows climb seven
+  purchases each), so its slot is rung 1 of that ladder; other ponds sell plain prizes.
+- `Requirement` is the one requirement type. Leaves are ids, never names: an item, a check (events
+  are checks), or a count of an item group. `impossible` is a gate that can never open (an unmapped
+  save and quit spawn).
+- `PresenceCondition` decides whether an NPC is there at the current progress. The story status
+  leaves come from `WasmGetStoryStatusBytes` (core/game-hooks/story_status.c) and read false when
+  the snapshot has none.
+- `regionId` cannot be derived from `screenId`: the partition splits some rooms into wings, and
+  sixteen regions have no screen of their own. A row that stands for no place carries none.
+- `subArea`: the part of a dungeon a row is named after ("Sewers"); an empty string means no
+  prefix (the sanctuary, a boss fight); absent means the dungeon's name.
+- `scope` says which switch makes a row a location of the seed. With the switch off, the row is
+  locked with its vanilla item. `key-drop` rows exist only under that option, `capacity` rows only
+  while their family is not vanilla, and `fixed` is a real pickup no seed ever fills. A row without
+  a scope is decided by its kind (randomizer/world/seed-locations.ts).
+- `isGuaranteedReward` marks a virtual location with no vanilla item that still hands over a real
+  one, so an empty `vanillaItemIds` is not read as "no reward".
+- `derived` is a combined event, evaluated after the native sweep in record order, so it may only
+  name earlier records. `fallback` is what a plain file answers from when the game keeps no flag.
+  `now` is the live side of a reversible event, shown as a status and never unticking the row.
+  `statusOnly` rows have no "ever" fact. `derivedDungeon` completes when every record of a dungeon
+  of the listed kinds, or with the tag, is complete. `visualNote` and `sourceFunc` are
+  documentation only.
+
+### types/connection
+
+- `holeIndex` is which of the cartridge's 19 `kFallHole_*` slots a hole or landing is. A hole two
+  tiles tall fills two slots sharing one entrance id; the record carries the lowest.
+- Every feature is stamped by a map16 room object, so a rect is at least one 16px block (`w` and
+  `h` of 2 or more base tiles). `rect` is the bounding box of `tiles`, kept for cheap hit testing.
+  `tiles` lists every base tile of the point, contiguous: a cliff that splits a border into two
+  gaps makes two points. `layer` is BG1 or BG2; indoors a door and the stair under it can share
+  tiles.
+- One record sits on one screen. `toConnectionId` is always present: every crossing registers both
+  ends, even one way ones, and a landing is a `drop` naming its `hole`. `canExit` is false for a
+  receive only point; a crossing is two way when both ends can exit.
+- `gatedBy` is the mechanism actor; what the player needs goes in `requirements`. `gameId` is absent
+  on connections derived from the flood. Tags carry no direction; it comes from `canExit`.
+
+### types/dungeon
+
+- `smallKeyCount` is the number of small keys with every key drop shuffled; with drops off, one key
+  per drop location stays out of the pool. A missing big key, map or compass is `null`.
+- `fileStem` names the folder of the dungeon's screen and connection records, so a destination
+  path comes from the id and a rename never moves a file.
+- The first castle has no boss; the two tower dungeons have no prize. `bossActorId` is what a
+  defeat rule is looked up by (rules/tables/bosses.data.ts).
+- The order of `regionIds` matters: it is the order the reference creates the regions in, and the
+  fill's prefill pushes the dungeon's restricted items in that order, so reordering moves items.
+
+### types/enumeration and types/review
+
+- An enumeration category labels a closed set of values that stay plain literals on their records.
+  `progress-tier` never becomes a generated union, because the field it labels holds a number.
+- A review mark records what a person looked at and how, on the record itself. It gates nothing.
+  A record with no mark reads as untouched, so an `untouched` mark is never written. `source` is who
+  looked: a person in the inspector, the cartridge check, or the running game.
+
+### types/item
+
+- `receiveItemId` is the native `Link_ReceiveItem` index; synthetic items (pendants, crystals,
+  events) have none. `tier` is the progression level of swords, shields, gloves and mail.
+- `poolClass` absent reads as filler, which is what the reference means by listing only the first
+  two.
+- `spendsMeter`: every use costs magic, so on the empty meter rung owning it grants nothing (the
+  collection state reports it absent). A meter upgrade never carries it.
+- `aliasOf` is what a chest pays instead of an item already held (`kReceiveItemAlternates`): the
+  lamp pays 5 rupees, the blue boomerang 10 arrows, the red boomerang 300 rupees. Only chests swap.
+  `sharesSlotWith` lists items in the same inventory slot, which count as held for the swap, and
+  `usualChestId` is the chest a normal file takes the item from first.
+
+### types/region, types/screen, types/tag, types/item-group, types/inventory
+
+- An area is a broad zone, a location one structure or landmark inside one area, and a region what
+  a player can walk without asking for anything (one level of a mountain, one side of a ledge, one
+  wing of a dungeon). Regions are transcribed from the reference generator's four taxonomies, in
+  its order and with its names.
+- Membership is not on the region: a screen points up with `regionId`. `headScreenId` is the area
+  head the game records the region's area events on. `bounds` is a pixel box on one overworld
+  screen. `bunnyImpassable` marks a multi entrance interior the bunny cannot cross.
+- A screen sits in one world; `both` exists only for areas. `gameId.entranceId` (RAM $010E) tells
+  apart rooms that share an index; `palaceIndex` comes from `cur_palace_index_x2`.
+- A screen's `regionId` is absent for a variant of another screen and for the places the reference
+  splits differently (tests/game/data/regions.keep.test.ts lists them).
+- `variant.progressTier` (one tier or an inclusive range) must agree with a `progress` condition;
+  `screenBlockers` refuses a screen where they disagree.
+- `triggerIds` are the room header's tag mechanics, joined to trigger actors by `roomTag`. `spawns`
+  come from the per room sprite table.
+- A tag reads `namespace:value`. `name` repeats the two joined because it is the string the app
+  matches on and it keeps the collection searchable on disk; a test keeps the three in step.
+- An item group is what a count requirement counts against.
+- An inventory slot's `trackerItemIds` are checked in order; the first one held wins.
+
+## dialogue-context/
+
+What opens each dialogue entry, and for a prompt, where its options lead.
+
+### Index convention
+
+- Ids are 1 based over the normalized 397 entry array, the `DialogueLine.id` the editor shows. The
+  core's own counter (`dialogue_message_index`) is 0 based over the same array: id equals that index
+  plus 1.
+- A ROM that decodes to 396 strings is missing one that is really there; the pipeline puts it back
+  at array position 4 (`normalizeTexts`) before packing the blob the core reads. So the core always
+  indexes the 397 entry array, and every number here was read off it.
+- Proven against an independently decoded 397 string ROM: position 4 (id 5) is the very string the
+  pipeline injects; misc.c 586 picks 0x184, or 0x185 once an upgrade is held, which are ids 389 and
+  390, the two and three option forms of the start location prompt; messaging.c 2648, 2720, 2742 and
+  2762 swap in the caret only overlays at ids 2 to 3, 7 to 9, 10 to 11 and 12 to 13. Spot checks:
+  index 3 is the post death save menu (id 4), 0x7A the locked door notice (id 123), 123 the out of
+  power notice (id 124).
+- Ids 1 (the empty leading string), 5 (the control string no call site names), 39 and 40 (call
+  path not found) have no context; `contextFor` returns null for them.
+
+### Triggers and choices
+
+- `DialogueTrigger`: `talk` (a character, on contact or when spoken to), `sign` (a placed marker),
+  `telepathy` (remote speech from a floor marker), `item-get` (while a pickup is held overhead),
+  `menu`, `cutscene`, `system` (a game rule), `choice-cursor`, `unknown` (no evidence, left
+  unlabelled on purpose).
+- `choice-cursor` entries are not prose: they are caret only overlays the prompt renderer swaps in
+  to redraw the selection. They are never shown alone, and their layout must survive translation.
+- The renderer's arithmetic (`dialogue_message_index = t + 1` and the like) only swaps in a cursor
+  overlay. The real outcome is decided by the caller, which reads `choice_in_multiselect_box` and
+  opens its own message; `choices.ts` records those branches. `outcomes` is sparse: an option whose
+  branch opens nothing is absent, and an option that opens different messages by game state has one
+  row per branch, each with its `when`. `option` counts from 0, top to bottom.
+- `table-groups.ts` holds entries whose trigger comes from a lookup table (the per area sign table
+  `kOverworld_SignText`, the per room telepathy table `kDungeonRoomTeleMsg`, the receipt message
+  tables); `site-groups.ts` pins entries to single lines of the core, as entry id and line pairs.
+
+### Trigger sources (trigger-source.ts)
+
+- Which concrete key opens each entry, so an editor can show who says it. `kSpriteActiveRoutines`
+  and `kSpritePrep_Main` (sprite_main.c 466 and 714) are function pointer arrays indexed by the
+  sprite type byte, so they are the type to handler join. Every write to the message index was
+  collected (direct writes and the five helpers in sprite.c), each expression resolved to its
+  constants, and each site attributed to the types whose handler reaches it.
+- Two rules narrow a shared handler: a handler that passes one type straight to another routine
+  and returns is not that type's source, and a routine gated by a single type test belongs to that
+  type alone.
+- The other rows come from lookup tables: the receipt tables (ancilla.c), the per area marker and
+  per room telepathy tables (in the extracted asset blob), and the follower tables (tagalong.c).
+- Precedence: nine entries have two true sources because the game reuses one string in two
+  mechanisms. A row keeps one, in this order: cursor overlay, item, place, room, follower, actor,
+  engine. Table keyed sources come first because their key is exact.
+- `areaId`, `roomId` and `itemId` name the lowest area, room or receipt index carrying the entry.
+- For an `actor` row, `alsoTypes` lists other types that can open the same entry, and `actorId` is
+  the dataset record for `spriteType`, or null when none covers that type yet.
+- Ids 1 and 5 have no row.
+
+## player-sheet/
+
+- A player sheet is 0x7000 bytes of 4bpp tiles (16 columns by 56 rows, 896 tiles) holding every
+  pose, plus a palette in two layers: `original` (as imported, or the stock colours) and `override`
+  (a sparse diff of edits). Reverting drops the diff, so an edit never destroys what it replaced.
+- `PlayerSprite_Apply` (core/game-hooks/player_sprite.c) reads four outfits of 15 colours (pixel
+  indices 1 to 15; 0 is transparent) and then two glove colours. The stock asset's fifth outfit is
+  the flash palette used while zapped; no sheet format carries it.
+- `bunny` is its own art; the other three outfits are recolours. A glove level of 1 or 2 picks one
+  of the two glove colours, and the glove colour lands on row entry 13 (CGRAM 0xFD in the core).
+- `authorShort` is a third string in the file, the short ASCII credit; `basedOn` credits the
+  Hookshop original of an installed copy.
+- `STOCK_GLOVES` is the literal `kGlovesColor` (load_gfx.c), not an extracted asset. A sheet with no
+  glove words falls back to it, as `PlayerSprite_Apply` does.
+
+## pause-names/default-names.ts
+
+- The seed name table for the pause menu: the English strings, keyed to item records so a language
+  set can retitle them. Item keys are `<item record id>-<tier>`, tier counting from 1 (the base
+  pickup). Multi word names are one space joined string; line breaks are decided at render time.
+
 ## records/native-tables and native-tables/
 
 The native tile tables transcribe the original engine. `native-tables/index.ts` reads every export
