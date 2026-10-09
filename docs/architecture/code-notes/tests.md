@@ -1765,6 +1765,36 @@ key's name, hence the platform stub. Behaviour is `hud-grid-settings`, geometry 
 - Escape clears the selection and leaves the editor up, through a real `FullScreenLayer` (the
   lattice sits on the dismiss stack at `popover`).
 
+### hud/hud-grid-editor-metrics
+
+§50's lattice measured in headless Chromium at 188 / 232 / 320 px. The maintainer's claim: cells
+must match their row and column in size, or it does not look like a grid. §48 drew every address
+as a uniform square, so the screen's `[auto, fill, auto]` root (narrow, wide, narrow) drew as three
+equal squares. Now cells carry the engine's solved proportions on both axes, read from the same
+solve the stage uses (`behavior/grid-solve-lookup.ts`).
+
+- Against a 398x224 view the screen root solves to columns 16, 382, 0 and rows 16, 192, 16: the
+  third column holds no child, so its `auto` measures 0. That empty track is drawn at the 24px
+  floor and its header is marked, because drawing 0px at 24px silently would lie about its size.
+- Every cell of a row shares a height and every cell of a column a width, and each header sits
+  exactly over or beside what it labels; one CSS grid holds both, so this is a property, asserted so
+  the two cannot drift.
+- Proportion never squashes a track below WCAG 2.2 SC 2.5.8's 24px target. Twelve columns by ten
+  rows (twelve 24px floors alone do not fit 320px) scroll instead of shrinking, the lattice caps its
+  own height (at most 220px) instead of pushing the legend away, and both header strips stay pinned
+  (sticky, moving at most the lattice's 2px padding over 120px of travel), because the strips are
+  what identify a cell; frozen panes, as in a spreadsheet.
+- The four cell states (empty, occupied, selected, selected on occupied) are four computed paints;
+  the crossed one is §45.7's hatch, since landing on a sibling is a destination (§42.3). The
+  `CellPicker` fixture is the one control with a selected state under SSR: one cell shared with a
+  sibling, one the child's own, one a sibling's, one empty.
+- The stage echo is `gridCellRects`' own answer to the pixel, solved in game pixels with the host's
+  unit of 1 and only then scaled for display; this test once passed the display scale as the unit,
+  agreeing with the echo's own mistake (§52). An echo nearly right would teach the wrong cell. It
+  never takes the pointer, since §46 removed the clickable surface it replaces.
+- The editor view store is mocked to a fixed echo selection, because zustand serves
+  `getInitialState` as the server snapshot; the selection itself is proved in `hud-grid-editor`.
+
 ### hud/hud-grid-track-edits.keep.test.ts
 
 §50's document rule: a track edit just happens and the children follow. §48 refused to remove a
