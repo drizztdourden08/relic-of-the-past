@@ -1,20 +1,7 @@
 /* @layer renderer-app @kind component */
-/** The claim, the confidence, and the evidence, above the two panes. Evidence is
- *  shown in full: it is what lets a reviewer disagree for a reason. */
 import { Badge, Box, Text } from '@ds/primitives';
-import type { Recommendation } from '@shared/game/recommendations';
-
-const ACTION_LABEL: Record<Recommendation['action'], string> = {
-  create: 'Add',
-  update: 'Change',
-  delete: 'Remove',
-};
-
-const NOWHERE = 'no screen';
-
-interface RecommendationSummaryProps {
-  entry: Recommendation;
-}
+import { ACTION_LABEL, NOWHERE } from './RecommendationDetail.constants';
+import type { RecommendationSummaryProps } from './RecommendationDetail.type';
 
 const RecommendationSummary = (props: RecommendationSummaryProps) => {
   const { entry } = props;
@@ -48,4 +35,3 @@ const RecommendationSummary = (props: RecommendationSummaryProps) => {
 };
 
 export { RecommendationSummary };
-export type { RecommendationSummaryProps };

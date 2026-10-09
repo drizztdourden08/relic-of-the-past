@@ -1,6 +1,4 @@
 /* @layer renderer-app @kind data */
-/** Leads with the hierarchy (namespace, then term) because that is how the
- *  vocabulary is browsed; the groups separate the levels from their labels. */
 import type { SchemaConfig } from '@ds/data';
 
 const TAG_CONFIG: SchemaConfig = {

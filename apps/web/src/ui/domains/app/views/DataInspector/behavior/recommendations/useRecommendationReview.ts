@@ -1,44 +1,13 @@
-/* @layer renderer-app @kind logic */
-/**
- * The comparison view's state: which finding is open, its edited proposal, and
- * the three verdicts. The edited proposal lives only here until an accept
- * succeeds, so Revert drops a local value and the store never sees a
- * half-reviewed proposal. Every decision advances to the next open finding
- * instead of closing the panel.
- */
+/* @layer renderer-app @kind hook */
 import { useCallback, useMemo, useState } from 'react';
+import type { InspectorRow } from '../../DataInspector.type';
 import { acceptAllCertain } from './accept-all-certain';
 import { acceptRecommendation, dismissRecommendation } from './accept-recommendation';
+import { batchMessage } from './batch-message';
+import { neighbourOf } from './neighbour-of';
 import { NO_DRAFT, editedDraft, isAmended, proposalOf, revertedDraft } from './proposal-draft';
+import type { ProposalDraft, ReviewParams } from './recommendations.type';
 import { openInPassOrder } from './use-recommendations';
-import type { BatchResult } from './accept-all-certain';
-import type { Recommendation } from '@shared/game/recommendations';
-import type { ProposalDraft } from './proposal-draft';
-import type { InspectorRow } from '../../DataInspector.type';
-
-interface ReviewParams {
-  entries: readonly Recommendation[];
-  selectedId: string | null;
-  onSelect: (id: string | null) => void;
-}
-
-const plural = (count: number): string => `${count} finding${count === 1 ? '' : 's'}`;
-
-/** A batch reports its two leftovers separately: what refused to be written,
- *  and what nobody attempted because the proposal is still incomplete. */
-const batchMessage = (result: BatchResult): string | null => {
-  const parts: string[] = [];
-  if (result.failures.length > 0) parts.push(`${plural(result.failures.length)} could not be written`);
-  if (result.skipped.length > 0) parts.push(`${plural(result.skipped.length)} need more detail first`);
-  return parts.length > 0 ? `${parts.join(', and ')}. They are still open.` : null;
-};
-
-/** The one after it in pass order, or the one before when it was last. */
-const neighbourOf = (order: readonly Recommendation[], id: string): string | null => {
-  const at = order.findIndex(entry => entry.id === id);
-  if (at === -1) return null;
-  return order[at + 1]?.id ?? order[at - 1]?.id ?? null;
-};
 
 const useRecommendationReview = (params: ReviewParams) => {
   const { entries, selectedId, onSelect } = params;
@@ -59,7 +28,6 @@ const useRecommendationReview = (params: ReviewParams) => {
     setDraft(editedDraft(selected, next));
   }, [selected]);
 
-  /** Discards the reviewer's amendments, restoring the detector's own draft. */
   const revert = useCallback(() => {
     setDraft(revertedDraft());
     setError(null);
@@ -79,8 +47,6 @@ const useRecommendationReview = (params: ReviewParams) => {
     setError(null);
     const outcome = await acceptRecommendation(selected, proposed);
     setBusy(false);
-    // Both refusals hold position: the entry stays selected, so the editor pane
-    // beside this message is already where an incomplete proposal is finished.
     if (!outcome.success) { setError(outcome.error); return; }
     settle(next);
   }, [selected, proposed, order, settle]);
@@ -95,7 +61,6 @@ const useRecommendationReview = (params: ReviewParams) => {
     settle(next);
   }, [selected, order, settle]);
 
-  /** Every certain finding currently listed, one at a time (see accept-all-certain.ts). */
   const acceptAll = useCallback(async () => {
     setBusy(true);
     setError(null);
@@ -105,13 +70,10 @@ const useRecommendationReview = (params: ReviewParams) => {
     );
     setBusy(false);
     setError(batchMessage(result));
-    // Lands on the first thing the batch did not write, the only part of the run
-    // still needing a person.
     settle(result.failures[0]?.id ?? result.skipped[0]?.id ?? null);
   }, [order, settle]);
 
   return { order, selected, proposed, setProposed, isEdited, revert, accept, dismiss, acceptAll, busy, error };
 };
 
-export { neighbourOf, useRecommendationReview };
-export type { ReviewParams };
+export { useRecommendationReview };

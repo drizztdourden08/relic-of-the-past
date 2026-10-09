@@ -1,27 +1,105 @@
 /* @layer renderer-app @kind types */
+import type { ReactNode } from 'react';
 import type { EntityKind } from '@shared/game/data';
-import type { CollectionSource } from '@ds/data';
+import type { CollectionSource, DetailTab, FieldDescriptor } from '@ds/data';
+import type { NumberBounds, ReferencedByHit } from '@ds/composites/RecordEditor';
+import type { ScrollPosition } from '@ds/primitives';
 
-/** Composites read by dot path off untyped rows; concrete record types are only
- *  needed where a serializer or writer is chosen (collection-sources.ts). */
 type InspectorRow = Record<string, unknown>;
 
 type InspectorSource = CollectionSource<InspectorRow>;
 
-/**
- * One of the eleven real collections, or the recommendations pseudo-collection
- * (findings about the dataset, not records in it). Not a twelfth `EntityKind`:
- * it has no record, no id prefix, and no `COLLECTION_SOURCES` entry (asking
- * for one would throw).
- */
 type InspectorKind = EntityKind | 'recommendations';
 
-/** What a clicked id reference resolved to, ready to select. */
 interface IdRefTarget {
   kind: EntityKind;
   id: string;
-  /** The referenced record's display name, for a status line or a title. */
   label: string;
 }
 
-export type { IdRefTarget, InspectorKind, InspectorRow, InspectorSource };
+interface NamedRecord {
+  name?: string;
+}
+
+type Serializer = (row: InspectorRow) => string;
+
+type RecordWriter = (row: InspectorRow) => Promise<void>;
+
+interface DeleteResult {
+  success: boolean;
+  error?: string;
+}
+
+type RecordDeleter = (id: string) => Promise<DeleteResult>;
+
+type BoundsRule = (path: string, record: unknown) => NumberBounds | undefined;
+
+interface RecordSelection {
+  selectedId: string | null;
+  selectIn: (kind: InspectorKind, id: string | null) => void;
+}
+
+interface DeleteGuardDialogState {
+  open: boolean;
+  hits: readonly ReferencedByHit[];
+  error?: string;
+}
+
+type DeleteRoute =
+  | { kind: 'immediate' }
+  | { kind: 'confirm'; hits: readonly ReferencedByHit[] };
+
+interface CollapsibleDetailProps {
+  title: string;
+  collapsed: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}
+
+interface CreateRecordButtonProps {
+  kind: EntityKind;
+  label: string;
+  schema: readonly FieldDescriptor[];
+  onCreated: (id: string) => void;
+}
+
+interface DetailTabsProps {
+  source: InspectorSource;
+  schema: readonly FieldDescriptor[];
+  record?: InspectorRow;
+  tab: DetailTab;
+  onTabChange: (tab: DetailTab) => void;
+  onDeleted?: () => void;
+  emptyMessage?: string;
+  highlightedLines?: readonly number[];
+  editorSlot?: ReactNode;
+  onScroll?: (position: ScrollPosition) => void;
+  scrollTo?: Partial<ScrollPosition>;
+}
+
+interface RecordEditorPanelProps {
+  source: InspectorSource;
+  schema: readonly FieldDescriptor[];
+  record: InspectorRow;
+  onDeleted: () => void;
+}
+
+export type {
+  BoundsRule,
+  CollapsibleDetailProps,
+  CreateRecordButtonProps,
+  DeleteGuardDialogState,
+  DeleteResult,
+  DeleteRoute,
+  DetailTabsProps,
+  IdRefTarget,
+  InspectorKind,
+  InspectorRow,
+  InspectorSource,
+  NamedRecord,
+  RecordDeleter,
+  RecordEditorPanelProps,
+  RecordSelection,
+  RecordWriter,
+  Serializer,
+};

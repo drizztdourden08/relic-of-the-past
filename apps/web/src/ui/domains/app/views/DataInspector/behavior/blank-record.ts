@@ -1,9 +1,4 @@
 /* @layer renderer-app @kind logic */
-/**
- * Blank record for the create dialog: required fields seeded, optional ones
- * absent. Wraps the top-level fields as one object so `blankValue`
- * (`RecordEditor/behavior/array-elements.ts`) builds the whole record.
- */
 import { blankValue } from '@ds/composites/RecordEditor';
 import type { FieldDescriptor } from '@ds/data';
 
