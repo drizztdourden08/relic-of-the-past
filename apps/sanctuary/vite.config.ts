@@ -8,7 +8,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { portFor } from '../../shared/config/ports.constants';
+import { portFor } from '../../shared/config/port-for';
 import { readPortSlot } from '../../shared/config/port-slot';
 
 const SITE_ROOT = __dirname;

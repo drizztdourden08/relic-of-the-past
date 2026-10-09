@@ -4,8 +4,10 @@ import { existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { portFor } from '../../shared/config/ports.constants.ts';
-import { readPortSlot } from '../../shared/config/port-slot.ts';
+import { require as tsxRequire } from 'tsx/cjs/api';
+
+const { portFor } = tsxRequire('../../shared/config/port-for.ts', import.meta.url);
+const { readPortSlot } = tsxRequire('../../shared/config/port-slot.ts', import.meta.url);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '../..');

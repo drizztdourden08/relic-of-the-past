@@ -1644,8 +1644,8 @@ about the build that wrote it, and the verdicts drawn from comparing them.
 
 ### save-state/current-format.generated.ts
 
-Written by `core/wasm-build/layout-probe.mjs`; never edit it by hand, and its comment and
-constant stay as the generator writes them. It holds the save state layout this build produces:
+Written by `core/wasm-build/layout-probe.mjs` during the wasm build; never edit it by hand.
+It carries only the `@kind data` header, so this note is where its purpose lives. It holds the save state layout this build produces:
 the ordered snapshot region lengths and the id derived from them. It is committed on purpose. It
 lets typecheck and the release gate see the layout without building wasm, and a layout change
 shows up as a diff to review.

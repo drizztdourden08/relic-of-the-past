@@ -3,7 +3,7 @@ import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'path';
-import { portFor } from './shared/config/ports.constants';
+import { portFor } from './shared/config/port-for';
 import { readPortSlot } from './shared/config/port-slot';
 
 const nodeAlias = {

@@ -29,7 +29,7 @@ const dir = arg('dir', join('release', 'win'));
 const tag = arg('tag');
 // --base pointed at a local static server exercises the download-and-install path before
 // anything is published. Serve it on the static port, portFor('static') in
-// shared/config/ports.constants.ts.
+// shared/config/port-for.ts.
 const base = arg('base');
 if (!tag && !base) throw new Error('--tag is required, e.g. --tag v0.16.0');
 

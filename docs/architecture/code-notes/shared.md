@@ -776,7 +776,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 
 ### config/port-slot.ts
 
-Which port slot a checkout runs in. Node only: the dev server configs and scripts read it, the renderer never does. `ROTP_PORT_SLOT` wins when set; otherwise the `.rotp-port-slot` file at the checkout root, written once when a worktree is created; otherwise slot 0, the main checkout. Its two constants stay in the file for the Node reason given under `ports.constants.ts`.
+Which port slot a checkout runs in. Node only: the dev server configs and scripts read it, the renderer never does. `ROTP_PORT_SLOT` wins when set; otherwise the `.rotp-port-slot` file at the checkout root, written once when a worktree is created; otherwise slot 0, the main checkout. The env name and the file name are in `port-slot.constants.ts`.
 
 ### config/ports.constants.ts
 
@@ -793,7 +793,7 @@ Roles:
 
 `ARCHIPELAGO_DEFAULT_PORT` is not part of the block. It belongs to the multiworld protocol.
 
-`cloud-functions/sanctuary-api/dev-server.mjs` imports this file and `port-slot.ts` straight from Node with their `.ts` extension, under Node type stripping. Neither file may import a sibling at runtime (a type only import is fine, Node erases it), so `portFor` stays in this file.
+`portFor` (`config/port-for.ts`) turns a role and a slot into the port. `cloud-functions/sanctuary-api/dev-server.mjs` runs as plain Node, so it loads `port-for.ts` and `port-slot.ts` through tsx's `require` (`tsx/cjs/api`), which resolves their extensionless sibling imports the way the bundler does.
 
 ## Credits
 
