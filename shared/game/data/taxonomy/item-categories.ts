@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-/** Item category taxonomy. Our own grouping, not a game secret. */
 import type { ItemCategory } from '../enumeration/generated-types';
 
 const ITEM_CATEGORY_LABELS: Record<ItemCategory, string> = {

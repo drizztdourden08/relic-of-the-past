@@ -261,6 +261,118 @@ under `shared/game/data/`. The records hold the data; this page holds the why.
   route to that port is a four bit nibble from the overworld music table.
 - The file has no type import: the loader (`sound-names.ts`) casts it where it is read.
 
+## The dataset core (registry, bootstrap, facade, indexes, session-records)
+
+- `bootstrap.ts` is the only seeding path. Every kind is filled the moment it is first imported:
+  synchronous, no network, no second source. The records are typed `.ts` files compiled into the
+  bundle, so every consumer gets real data with no await. `index.ts` imports it first.
+- `recordsIn` is what each loader calls on its own `import.meta.glob`: the record tree is hundreds
+  of files deep, so a glob loads them and this flattens every exported array of every module, since
+  each record file names its array after its own place in the tree. Vite sorts glob keys by path, so
+  the order is stable; where order matters a loader sorts by id (the checks loader does).
+- The facade is the only door into the dataset: nothing outside it imports a data file, and an
+  ESLint rule enforces that outside the zone.
+- Getters take a plain `string`, because most callers hold a runtime string (live game state, a set,
+  a map key) with no brand. The branded id types stay on the records, where the id is made.
+- A getter that misses throws. The records are in the repository and seeded before any getter runs,
+  so a miss is a bug in the caller or a dangling reference, which the integrity and ROM facts tests
+  catch first. A caller that may hold an id the dataset never had (the simulator keys places on the
+  game's numbers, `room:80`) asks with `get`, which answers `undefined`.
+- `PLACEHOLDER_AREA_ID` (`area-000`) and `PLACEHOLDER_LOCATION_ID` (`location-000`) are the area and
+  location of the one screen that sits nowhere: the menu and save and quit pseudo screen. They mean
+  "no place assigned", and the integrity test names them as its one exemption.
+- The indexes are reverse lookups from the game's own values (room, chest index, sprite type) to
+  records, rebuilt once by `rebuild()`, so there is no scan per call. Native code only knows native
+  values, never the app's ids.
+  - A sprite type byte is not unique: the game reuses one entity type for actors the dataset keeps
+    apart. The single value maps keep the first registered record; `actorsByGameSpriteType` answers
+    every record for the byte, for a join that cannot pick one.
+  - `checkByGameId` tries the most specific fact first: chest index, progress buffer bit, event
+    threshold, bare room mask, overworld mask, sprite type. Two records can share a fact (a boss kill
+    and its prize flip the same room mask bit); `disambiguate` narrows by sprite type, room and world,
+    then returns the first registered. A boss and prize pair is named reliably by the dungeon's
+    `bossCheckId` and `prizeCheckId`.
+- `session-records` folds a write back into the live session for every kind whose only store is the
+  registry. Tags, item groups and enumeration keep their own lookup maps, so each owns its fold back.
+  These run after the write has landed on disk, and the indexes are rebuilt each time, so a record
+  whose native values moved stops answering from the old table. Records are taken as `{ id }`, since
+  the editor holds a row, not a typed record.
+- `check-standard-name.ts` is the one place a location's name is derived: `<dungeon> - <check>`, or
+  the sub area instead of the dungeon, or the bare name when the sub area is empty. The generator,
+  the tracker's rules and a stored seed all key by this string.
+
+## Loaders, lookups and relationships
+
+- Each collection folder (`areas`, `actors`, `items`, `screens`, `connections`, `dungeons`,
+  `locations`, `regions`, `tags`, `item-groups`, `enumeration`) globs its own records into one
+  constant list. Tags, item groups and enumeration also keep lookup maps, built off that list (not
+  the registry, so seeding order does not matter), and their register, replace and unregister
+  functions update the list, the maps and the registry together after a write has landed.
+- Tags: records store tag ids, but every rule is written against the key (`barrier:small-key`), so
+  the conversion lives in `tags/`. An id or key with no record is dropped, never replaced by a stand
+  in. The `*TagKeysOf` readers narrow to the taxonomy unions without proof, on purpose: the taxonomy
+  tables seed the vocabulary but do not bound it, and a test pins the seeded terms.
+- `item-groups/ids.ts`: the seven group ids, keyed by name so a call site reads
+  `ITEM_GROUP_IDS.Crystals`. They are resolved at compile time, so they live in code even if the
+  group records were ever absent.
+- `connections/derive`: a connection is one point on one screen. `toScreenIdOf`, `directionOf` and
+  `isReachable` derive what the old two ended record carried, through `toConnectionId`, which always
+  resolves for stored pairs. `toScreenIdOrNone` serves the recommendation probes, which read a pair
+  the inspector is still editing and must ask without throwing. A crossing is two way only when
+  both ends can exit.
+- `connections/pair-join.ts`: whether a stored crossing links two screens, asked once for the audit
+  and the completeness badge. Either point of a pair proves the link, so the answer depends neither
+  on which side is held nor on `canExit`.
+- `connections/pending-partner`: a proposed connection needs its partner's id, and a brand new
+  crossing has none until the write path allocates the pair. The sentinel `connection-pending:<screen>`
+  is shaped like a connection id so it fits `toConnectionId`, but it never reaches disk: the create
+  writer checks for it and mints both ends.
+- `relationships/`: reverse references for the delete guard, read off the registry so they stay
+  correct as data changes. Every field a record carries today is walked, including requirement trees
+  and presence conditions, which is where a dangling id would hide. Tags and item groups are
+  answered in `reference-index`, the six other deletable kinds in `dataset-references`; a kind that
+  gains a delete path adds a row to `REVERSE_INDEX`. A `tags` field is read defensively, since it is
+  optional on some kinds.
+
+## record-file-targets/
+
+- One tree convention for screens, connections and checks:
+  `<collection>/<world>-world/<overworld|interiors|dungeon>/<area or floor>.ts`. A record's world,
+  area or dungeon, and floor pick the path, so the files for one place sit at the same relative path
+  in each collection. Every table is keyed by a frozen id or a dungeon's file stem, never a display
+  name, so a rename never moves a file.
+- `AREA_FOLDERS` is the one table the convention still needs: an area record has no folder name of
+  its own, and a folder made from its display name would move on a rename.
+- `DUNGEON_FLOORS`: a tower whose floors are single rooms keeps them in one `floors.ts`; other
+  dungeons get a file per floor, or per pair where the game pairs them. `SPLIT_BY_HALF`: Skull Woods
+  files one floor in two halves by which way a room is reached, and nothing on a room says which, so
+  a new room there is refused.
+- A screen with no real area, or a `special` interior, files under `interiors/special`. A connection
+  point files with its own screen, so the connections tree mirrors the screens tree.
+- `dungeonForPalaceIndex` matches the dungeon's own palace index first, then the palace index its
+  rooms carry, which resolves the two palace values the first castle reports.
+- Items: a dungeon's own map, compass and keys file with the dungeon. An item with no native receive
+  id and no vanilla counterpart is seed only and files in `randomizer.ts`; everything else files by
+  category. The mountain area spans both worlds and files with the light side.
+- A region files by world: a dungeon wing with its dungeon, a cave or house with the interiors,
+  anything else with the overworld.
+- Events file by the number block their number falls in; a dungeon's stage events file with the
+  dungeon. A new event with no number yet goes to `story.ts` when it is a story or status event, and
+  is refused when its group spans two files.
+- `recordArrayName`: a new file's array is named from its path (world, place, collection), so the
+  loader's glob picks it up. Event files are named after the events instead.
+
+## record-codegen/
+
+- Turns a record into TypeScript source for the dev editor's write path. The input is a real record,
+  so an emitted literal cannot carry a stale shape. Each kind's field order list is checked against
+  `keyof` at compile time, so a field added to a record shape is a build error until the order lists
+  it, and an unknown key throws instead of being dropped.
+- Output matches the committed files: one field per line, nested values on one line while they fit
+  the 118 column width the files were written at. `review` is always last, a footer under the facts.
+- A pending record has no id yet; the allocator adds it. Tags and item groups are only ever replaced
+  in place, never minted by this path.
+
 ## types/
 
 Each record shape lives in `types/<name>/<name>.type.ts`, re-exported by the folder's `index.ts`
@@ -474,7 +586,7 @@ ranges below, which the core resolves at every substitution and receipt seam.
   APUI02, sfx2 APUI03. The names are not derivable, so they live in the sound name records and are
   merged in on read; a sound with no name shows the function that raises it.
 - `msu-deluxe-remap`: Deluxe packs redirect a vanilla slot reused in many places to a per area or
-  per entrance track (37 and up), so the remap needs the area or entrance as well as the track. Port
+  per entrance track (37 and up), so the remap needs the track and the area or entrance. Port
   of the core's `RemapMsuDeluxeTrack`. `TRACK_REMAP_KIND` per slot: 0 keep, 1 by overworld area, 2
   by entrance. 242 in `ENTRANCE_TRACKS` means no replacement. `DELUXE_TRACKS` is derived from the
   tables: a number neither table names can never play.
