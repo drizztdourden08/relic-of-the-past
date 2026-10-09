@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Text } from '@ds/primitives';
-import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import { useConsoleScale } from '../../behavior/useConsoleScale';
 import { PointerHintProvider } from '../../sub-components/PointerHintProvider';

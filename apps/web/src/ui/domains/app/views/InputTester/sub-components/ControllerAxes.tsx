@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { groupAxisControls } from '@app/lib/input/resolved-axis-groups';
 import { StickAxisPanel } from './StickAxisPanel';
 import { TriggerAxisPanel } from './TriggerAxisPanel';

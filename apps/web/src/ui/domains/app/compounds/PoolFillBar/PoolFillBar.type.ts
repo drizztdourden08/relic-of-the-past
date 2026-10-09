@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LegendEntry, LegendVariant } from '@ds/composites';
+import type { LegendEntry, LegendVariant } from '@drizztdourden08/tessera/composites';
 
 interface PoolFillTotals {
   items: number;

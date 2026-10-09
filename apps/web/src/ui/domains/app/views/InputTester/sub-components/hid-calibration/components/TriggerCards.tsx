@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { TRIGGER_IDS } from '../hid-calibration.constants';
 import { STICK_SIDES } from './StickCards.constants';
 import { TriggerCard } from './TriggerCard';

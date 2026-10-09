@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
 import { PROGRESSIVE_MODES, PROGRESSIVE_MODE_LABELS } from '@shared/randomizer/world/progressive/progressive-modes.data';
 import type { ProgressiveFamilyMode } from '@shared/randomizer/world/progressive/progressive.type';
-import type { SegmentOption } from '@ds/primitives';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 
 const MODE_OPTIONS: SegmentOption<ProgressiveFamilyMode>[] = PROGRESSIVE_MODES.map((mode) => ({
   value: mode,

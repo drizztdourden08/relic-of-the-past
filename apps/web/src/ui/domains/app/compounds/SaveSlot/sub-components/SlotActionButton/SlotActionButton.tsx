@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { KeyboardEvent } from 'react';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { EmojiIcon } from '../../../../../../design-system/primitives/EmojiIcon';
+import { Button, Text, EmojiIcon } from '@drizztdourden08/tessera/primitives';
 import './SlotActionButton.css';
 import type { SlotActionButtonProps } from './SlotActionButton.type';
 

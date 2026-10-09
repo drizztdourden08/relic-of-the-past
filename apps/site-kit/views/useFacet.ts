@@ -1,6 +1,6 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { FilterFacet } from '@ds/composites/FilterBar';
+import type { FilterFacet } from '@drizztdourden08/tessera/composites';
 import type { UseFacetParams } from './useFacet.type';
 
 const useFacet = <T>(params: UseFacetParams<T>) => {

@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { ReferencedBy } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
-import type { ReferencedByHit } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
+import { ReferencedBy } from '@drizztdourden08/tessera/composites';
+import type { ReferencedByHit } from '@drizztdourden08/tessera/composites';
 
 const EMPTY_TEXT = 'Not referenced anywhere.';
 

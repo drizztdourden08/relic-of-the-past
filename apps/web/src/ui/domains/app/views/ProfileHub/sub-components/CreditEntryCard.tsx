@@ -2,8 +2,7 @@
 import { useCallback } from 'react';
 import type { MouseEvent } from 'react';
 import { getUsageLabel } from '@shared/credits';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { CreditEntryCardProps } from './CreditsTab.type';
 
 const CreditEntryCard = ({ entry }: CreditEntryCardProps) => {

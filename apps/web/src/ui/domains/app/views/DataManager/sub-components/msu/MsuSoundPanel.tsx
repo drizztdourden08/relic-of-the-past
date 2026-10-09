@@ -1,13 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { Field } from '@ds/primitives/Field';
-import { SectionHeader } from '@ds/primitives/SectionHeader';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
-import { Toggle } from '@ds/primitives/Toggle';
+import { Box, Button, EmptyState, Field, SectionHeader, Text, TextInput, Toggle } from '@drizztdourden08/tessera/primitives';
 import { SoundListItem } from './SoundListItem';
 import { soundPanelSubtitle } from './behavior/sound-subtitle';
 import { useSoundPanel } from './behavior/useSoundPanel';

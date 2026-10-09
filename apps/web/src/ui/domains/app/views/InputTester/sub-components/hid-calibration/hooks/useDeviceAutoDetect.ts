@@ -8,7 +8,7 @@ import type { SdlGamepadType } from '@shared/input/family';
 import { SDL_GAMEPAD_TYPES } from '@shared/input/sdl-buttons';
 import type { DeviceEntry } from '@shared/ipc';
 import type { DeviceFamily } from '@shared/types/controls';
-import type { SelectOption } from '../../../../../../../design-system/primitives';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 

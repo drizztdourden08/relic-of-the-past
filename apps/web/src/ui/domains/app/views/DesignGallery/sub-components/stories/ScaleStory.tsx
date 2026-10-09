@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, Text } from '../../../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { TYPE_SCALE, SPACE_SCALE, RADIUS_SCALE, SHADOW_SCALE } from '../../DesignGallery.constants';
 import { Swatch } from '../Swatch';
 import { Specimen } from '../Specimen';

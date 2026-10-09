@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
-import { Toggle } from '@ds/primitives/Toggle';
+import { Status, Box, Field, Flex, NumberInput, SegmentedControl, Toggle } from '@drizztdourden08/tessera/primitives';
 import { DEFAULT_MODES } from '../../behavior/layer-ops';
 import type { PlayModeKind } from '../../behavior/layer-ops';
 import { CrossfadeField } from '../CrossfadeField';
@@ -66,7 +60,7 @@ const PlayModeFields = (props: PlayModeFieldsProps) => {
               />
             </Field>
             {mode.minDelaySeconds > mode.maxDelaySeconds && (
-              <Badge variant="danger">Shortest is longer than longest</Badge>
+              <Status tone="danger">Shortest is longer than longest</Status>
             )}
           </Flex>
           <Box className="layer-card__switch">

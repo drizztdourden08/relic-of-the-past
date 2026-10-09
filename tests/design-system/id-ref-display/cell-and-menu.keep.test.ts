@@ -3,14 +3,9 @@ import { it, expect, vi, beforeAll } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import {
-  cellContent, groupKeyContent,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/cell-content';
-import {
-  buildColumnMenuItems,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/column-menu-items';
+import { cellContent, groupKeyContent, buildColumnMenuItems } from '@drizztdourden08/tessera/composites';
 import type * as DisplayModule from '../../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-display';
-import type { MenuItem } from '../../../apps/web/src/ui/design-system/composites/DropdownMenu';
+import type { MenuItem } from '@drizztdourden08/tessera/composites';
 import { describeDataset } from '../../dataset-guard';
 import { AREA_PATH, NAME_PATH } from './id-ref-display.constants';
 import { fieldAt } from './field-at';

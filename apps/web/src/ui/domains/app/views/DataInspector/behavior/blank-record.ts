@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import { blankValue } from '@ds/composites/RecordEditor';
-import type { FieldDescriptor } from '@ds/data';
+import { blankValue } from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 
 const blankRecordFor = (schema: readonly FieldDescriptor[]): Record<string, unknown> => {
   const root: FieldDescriptor = {

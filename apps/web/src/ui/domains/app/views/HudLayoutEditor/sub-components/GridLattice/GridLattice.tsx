@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { trackText } from '../../behavior/track-extents';
 import { AddTrackButton } from './sub-components/AddTrackButton';
 import { TrackHead } from './sub-components/TrackHead';

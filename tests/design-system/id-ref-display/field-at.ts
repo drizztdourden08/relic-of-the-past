@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
-import { buildSchema } from '../../../apps/web/src/ui/design-system/data/schema/build-schema';
-import type { FieldDescriptor } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 
 const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   const field = buildSchema(rows).find((entry) => entry.path === path);

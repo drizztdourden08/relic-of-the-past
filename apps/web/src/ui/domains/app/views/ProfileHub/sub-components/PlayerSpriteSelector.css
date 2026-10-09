@@ -34,7 +34,7 @@
 }
 
 .sprite-choice--selected {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
   background: var(--c-selected);
 }
 

@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Card } from '../../../../design-system/primitives/Card';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Flex } from '../../../../design-system/primitives/Flex';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Badge } from '../../../../design-system/primitives/Badge';
-import { Button } from '../../../../design-system/primitives/Button';
-import { IconButton } from '../../../../design-system/primitives/IconButton';
+import { Card, Box, Flex, Text, Status, Button, IconButton } from '@drizztdourden08/tessera/primitives';
 import { formatRomName } from '../../../../../utils/formatRomName';
 import { formatSize } from './behavior/format-size';
 import './RomCard.css';
@@ -24,19 +18,19 @@ const RomCard = (props: RomCardProps) => {
 
       <Box className="rom-card__status">
         {rom.extractionStatus === 'ready' && (
-          <Badge variant="success">
+          <Status tone="success">
             ✓ Ready
             {rom.assetSize != null && (
               <Text className="rom-card__size">{formatSize(rom.assetSize)}</Text>
             )}
-          </Badge>
+          </Status>
         )}
         {rom.extractionStatus === 'extracting' && (
-          <Badge variant="warning">⟳ Extracting...</Badge>
+          <Status tone="warning">⟳ Extracting...</Status>
         )}
         {rom.extractionStatus === 'failed' && (
           <Flex direction="column" align="end" gap="xs" className="rom-card__failed-group">
-            <Badge variant="danger">✗ Incompatible ROM</Badge>
+            <Status tone="danger">✗ Incompatible ROM</Status>
             <Button variant="danger" size="sm" onClick={() => onExtract(rom.romFile)}>
               Retry Extract
             </Button>

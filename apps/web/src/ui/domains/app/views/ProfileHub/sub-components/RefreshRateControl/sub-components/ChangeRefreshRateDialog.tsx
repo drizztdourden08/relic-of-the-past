@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Dialog } from '../../../../../../../design-system/composites/Dialog';
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../../design-system/primitives/Text';
+import { Dialog } from '@drizztdourden08/tessera/composites';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { ChangeRefreshRateDialogProps } from '../RefreshRateControl.type';
 
 const ChangeRefreshRateDialog = (props: ChangeRefreshRateDialogProps) => {

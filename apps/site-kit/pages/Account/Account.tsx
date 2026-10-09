@@ -1,11 +1,7 @@
 /* @layer site-kit @kind component */
 import { PROVIDERS } from '@shared/hub/providers';
-import { Box } from '@ds/primitives/Box';
-import { Stack } from '@ds/primitives/Stack';
-import { Flex } from '@ds/primitives/Flex';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { SettingsSection } from '@ds/composites/SettingsSection';
+import { Box, Stack, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SitePage } from '../../layout/SitePage/SitePage';
 import { Row } from '../../components/Row/Row';
 import { AccessChip } from '../../components/AccessChip/AccessChip';

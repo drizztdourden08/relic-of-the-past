@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { AlertBanner } from '@domains/app/compounds/AlertBanner';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';

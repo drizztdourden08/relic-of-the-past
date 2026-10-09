@@ -3,8 +3,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { FullScreenLayer } from '../../apps/web/src/ui/design-system/composites/FullScreenLayer';
-import { dismissStackDepth } from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/dismiss-stack';
+import { ScreenWindow } from '@drizztdourden08/tessera/composites';
+import { dismissStackDepth } from '@drizztdourden08/tessera/primitives';
 import { MotionTransport } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/MotionTransport';
 import {
   MotionPreviewContext, useMotionPreviewState,
@@ -51,7 +51,7 @@ const click = (el: Element): void => {
   act(() => { el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })); });
 };
 
-const layerIsUp = (): boolean => document.querySelector('.fullscreen-layer') !== null;
+const layerIsUp = (): boolean => document.querySelector('.screen-layer') !== null;
 const playButton = (): HTMLButtonElement => {
   const found = [...document.querySelectorAll('button')]
     .find((b) => (b.getAttribute('aria-label') ?? '').includes('the stage'));
@@ -67,7 +67,7 @@ const scrub = (): HTMLInputElement => {
 const Harness = (props: { onClose: () => void; spanMs?: number }) => {
   const preview = useMotionPreviewState(useReducedMotion());
   return h(MotionPreviewContext.Provider, { value: preview },
-    h(FullScreenLayer, { onClose: props.onClose, title: 'HUD Layout Editor' },
+    h(ScreenWindow, { onClose: props.onClose, title: 'HUD Layout Editor' },
       h('div', { 'data-testid': 'stage', 'data-now': String(preview.nowMs) }),
       h(MotionTransport, { spanMs: props.spanMs ?? 800 })));
 };

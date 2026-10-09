@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useRef } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { DropdownMenu } from '@ds/composites/DropdownMenu';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import type { ToolbarMenuProps } from './ToolbarMenu.type';
 
 const ToolbarMenu = (props: ToolbarMenuProps) => {

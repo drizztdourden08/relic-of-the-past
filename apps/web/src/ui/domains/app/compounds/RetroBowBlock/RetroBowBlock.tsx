@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Toggle } from '@ds/primitives';
+import { Box, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag } from '../OptionValueTag';
 import { FINAL_FIGHT_SILVER_HITS } from '@shared/randomizer/world/final-fight.data';
 import { tickedIndexesOf } from '@shared/randomizer/world/progressive/progressive-reach';

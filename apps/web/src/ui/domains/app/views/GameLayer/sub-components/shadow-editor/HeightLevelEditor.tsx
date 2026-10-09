@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { TextInput } from '../../../../../../design-system/primitives/TextInput';
-import { NumberInput } from '../../../../../../design-system/primitives/NumberInput';
+import { Box, Button, TextInput, NumberInput } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import './HeightLevelEditor.css';
 

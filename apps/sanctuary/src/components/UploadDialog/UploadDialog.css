@@ -10,7 +10,7 @@
   max-height: var(--upload-list-maxh);
   overflow-y: auto;
   border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   background: var(--c-sunken);
 }
 

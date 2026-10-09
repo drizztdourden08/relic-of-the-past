@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { NumberInput } from '@ds/primitives/NumberInput';
+import { Status, Box, Field, Flex, NumberInput } from '@drizztdourden08/tessera/primitives';
 import { MSU1_SAMPLE_RATE } from '@app/lib/msu/decode/parse-msu1';
 import { MAX_LOOP_SECONDS } from './LoopPointField.constants';
 import type { LoopPointFieldProps } from './LoopPointField.type';
@@ -51,7 +47,7 @@ const LoopPointField = (props: LoopPointFieldProps) => {
             disabled={disabled}
             onChange={(seconds) => onChange(toSamples(seconds))}
           />
-          <Badge variant="neutral">{stateOf(effective, fromFile)}</Badge>
+          <Status tone="neutral">{stateOf(effective, fromFile)}</Status>
         </Flex>
       </Field>
     </Box>

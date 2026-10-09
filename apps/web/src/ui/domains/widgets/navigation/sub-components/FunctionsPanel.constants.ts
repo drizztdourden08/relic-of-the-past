@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind data */
-import type { SegmentOption } from '../../../../design-system/primitives/SegmentedControl/SegmentedControl.type';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import type { NavMode } from '../../../../../stores/navigation-overlay-store';
 
 const MODE_OPTIONS: SegmentOption<NavMode>[] = [

@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
-import { Text } from '@ds/primitives/Text';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { CollapsiblePanel } from './CollapsiblePanel';
 
 const S: Record<string, CSSProperties> = {
   dim: { color: 'var(--c-text-dim)' },
-  gold: { color: 'var(--c-gold)' },
+  gold: { color: 'var(--c-primary)' },
 };
 
 const PathControlsLegend = () => {

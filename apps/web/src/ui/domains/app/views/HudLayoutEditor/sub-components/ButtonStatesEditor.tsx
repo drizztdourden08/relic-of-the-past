@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
-import { Select } from '@ds/primitives/Select';
+import { Box, Field, Flex, SegmentedControl, Select } from '@drizztdourden08/tessera/primitives';
 import { useSlotScheme } from '../behavior/slot-scheme';
 import { ButtonStateRow } from './ButtonStateRow';
 import { SlotRefField } from './SlotRefField';

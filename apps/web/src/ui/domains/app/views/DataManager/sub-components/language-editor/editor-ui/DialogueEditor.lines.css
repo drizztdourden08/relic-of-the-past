@@ -34,7 +34,7 @@
 .dialogue-editor__surface .ProseMirror .line-gutter__meter {
   position: relative;
   height: var(--space-2xs);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   background: var(--c-hover);
   overflow: hidden;
 }
@@ -43,8 +43,8 @@
   position: absolute;
   inset: 0 auto 0 0;
   width: 0%;
-  border-radius: var(--r-pill);
-  background: var(--c-green);
+  border-radius: var(--radius-pill);
+  background: var(--c-secondary);
 }
 
 .dialogue-editor__surface .ProseMirror .line-gutter--tight .line-gutter__fill {
@@ -84,9 +84,9 @@
 }
 
 .dialogue-editor__surface .ProseMirror p.line--option .line-content {
-  background: var(--c-gold-soft);
-  border: var(--border-width-thin) solid var(--c-gold-dim);
-  border-radius: var(--r-sm);
+  background: var(--c-primary-soft);
+  border: var(--border-width-thin) solid var(--c-primary-dim);
+  border-radius: var(--radius-sm);
   padding: 0 var(--space-2xs);
 }
 
@@ -94,9 +94,9 @@
   display: inline-block;
   margin-right: var(--space-xs);
   padding: 0 var(--space-2xs);
-  border-radius: var(--r-sm);
-  background: var(--c-gold-dim);
-  color: var(--c-gold);
+  border-radius: var(--radius-sm);
+  background: var(--c-primary-dim);
+  color: var(--c-primary);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
@@ -112,13 +112,13 @@
 
 .dialogue-editor__surface .ProseMirror p[data-ends-box='true'] {
   margin-bottom: var(--space-sm);
-  border-bottom-left-radius: var(--r-md);
-  border-left-color: var(--c-gold);
+  border-bottom-left-radius: var(--radius-md);
+  border-left-color: var(--c-primary);
 }
 
 .dialogue-editor__surface .ProseMirror p:first-child,
 .dialogue-editor__surface .ProseMirror p[data-ends-box='true'] + p {
-  border-top-left-radius: var(--r-md);
+  border-top-left-radius: var(--radius-md);
 }
 
 .dialogue-editor__surface .ProseMirror .line-end {
@@ -129,7 +129,7 @@
   width: var(--space-md);
   height: var(--space-md);
   margin-left: var(--space-2xs);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   vertical-align: middle;
   -webkit-text-stroke: 0;
   text-shadow: none;
@@ -147,11 +147,11 @@
 }
 
 .dialogue-editor__surface .ProseMirror .line-end--off {
-  color: var(--c-gold);
+  color: var(--c-primary);
   opacity: 0.5;
 }
 
 .dialogue-editor__surface .ProseMirror .line-end--off:hover {
-  color: var(--c-gold);
+  color: var(--c-primary);
   opacity: 1;
 }

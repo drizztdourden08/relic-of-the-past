@@ -1,6 +1,6 @@
 /* @layer site-kit @kind component */
 import type { MouseEvent } from 'react';
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { navigate } from './useLocation';
 import type { LinkProps } from './Link.type';
 

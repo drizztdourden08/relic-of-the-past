@@ -1,6 +1,5 @@
 /* @layer site-kit @kind logic */
-import { compile } from '@ds/data/filter/clause';
-import { compileTextSearch } from '@ds/data/filter/text-search';
+import { compile, compileTextSearch } from '@drizztdourden08/tessera/data';
 import type { FilterRowsParams } from './filter-rows.type';
 
 const filterRows = <T>(params: FilterRowsParams<T>): readonly T[] => {

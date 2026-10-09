@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
-import type { ToastItem, ToastVariant } from '@ds/primitives/Toast';
+import type { ToastItem, ToastVariant } from '@drizztdourden08/tessera/composites';
 import { TOAST_DURATION_MS } from './home-tab.constants';
 
 const useHomeTabToasts = () => {

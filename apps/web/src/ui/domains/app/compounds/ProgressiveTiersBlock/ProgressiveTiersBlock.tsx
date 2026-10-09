@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { progressiveTickConsequences } from '@shared/randomizer/world/progressive/tick-consequences';
 import { unrollableTickSetReasons } from '@shared/randomizer/world/progressive/tick-set-check';
 import { OptionDescription } from '../OptionDescription';

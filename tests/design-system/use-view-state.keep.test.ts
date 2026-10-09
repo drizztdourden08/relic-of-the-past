@@ -4,13 +4,9 @@ import {
 } from 'vitest';
 import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { restoreDurableSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/durable-load';
-import { emptySnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import type { ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import type { UseViewStateResult } from '../../apps/web/src/ui/design-system/data/view-state/use-view-state';
+import { buildSchema, createSchemaIndex, restoreDurableSnapshot, emptySnapshot } from '@drizztdourden08/tessera/data';
+import type { ViewSnapshot, UseViewStateResult, TableColumn } from '@drizztdourden08/tessera/data';
 import type * as UseViewStateModule from '../../apps/web/src/ui/design-system/data/view-state/use-view-state';
-import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
 const ROWS = [
   { id: 'item-001', name: 'alpha' },

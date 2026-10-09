@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { getPath } from '@ds/data';
+import { getPath } from '@drizztdourden08/tessera/data';
 import { asEntityKind } from '../as-entity-kind';
 import { asDisplayText } from './as-display-text';
 import { rowsFor } from './rows-for';

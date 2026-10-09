@@ -4,14 +4,8 @@ import { FILE_TYPES, FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
 import { LIMITS } from '@shared/sanctuary/limits';
 import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Select } from '@ds/primitives/Select';
-import { Stack } from '@ds/primitives/Stack';
-import { TagInput } from '@ds/primitives/TagInput';
-import { TextInput } from '@ds/primitives/TextInput';
-import { Textarea } from '@ds/primitives/Textarea';
+import { Button, Field, Flex, Select, Stack, TextInput, Textarea } from '@drizztdourden08/tessera/primitives';
+import { TagInput } from '@drizztdourden08/tessera/composites';
 import { validateTag } from '../../../files/validate-tag';
 import type { FileEditFormProps } from './FileEditForm.type';
 

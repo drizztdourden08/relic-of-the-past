@@ -1,10 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo } from 'react';
-import { useViewState } from '@ds/data/view-state/use-view-state';
-import { capture } from '@ds/data/view-state/snapshot';
-import type { SchemaLike } from '@ds/data/schema/build-schema';
-import type { ViewKey } from '@ds/data/view-state/snapshot';
-import type { ViewStorage } from '@ds/data/view-state/use-view-state';
+import { useViewState, capture } from '@drizztdourden08/tessera/data';
+import type { SchemaLike, ViewKey, ViewStorage } from '@drizztdourden08/tessera/data';
 import { ITEM_SORTS } from '../../../catalog/item-schema';
 import type { ItemRow } from '../../../catalog/item-row';
 import { DEFAULT_SORT, NO_COLUMNS } from './useGridSort.constants';

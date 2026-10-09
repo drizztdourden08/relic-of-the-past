@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MenuEntry, MenuIconSource } from '@ds/composites/DropdownMenu';
+import type { MenuEntry, MenuIconSource } from '@drizztdourden08/tessera/composites';
 import type { HudNode } from '@shared/types/hud';
 
 interface MenuDeps {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, ProgressBar, Text } from '@ds/primitives';
+import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import { STATUS_LABELS, SUMMARY_STATS } from '../ChecksTracker.constants';
 import type { StatusKey, TrackerSummaryProps } from '../ChecksTracker.type';
 import { CheckStatusIcon } from './CheckStatusIcon';
@@ -15,8 +15,8 @@ const TrackerSummary = (props: TrackerSummaryProps) => {
       <ProgressBar
         value={completed}
         secondaryValue={completed + reachable}
-        secondaryVariant="gold"
-        variant="green"
+        secondaryTone="primary"
+        tone="secondary"
         max={Math.max(total, 1)}
         readout={<Text title="Percent complete">{pct}%</Text>}
       />

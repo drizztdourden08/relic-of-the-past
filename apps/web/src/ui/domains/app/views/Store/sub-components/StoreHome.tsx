@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button, Flex, Spinner, Stack, Text } from '@ds/primitives';
+import { Button, Flex, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { HookshopHighlight } from '../../../compounds/HookshopHighlight';
 import type { StoreHomeProps } from '../Store.type';
 import { HIGHLIGHT_PIXEL } from '../Store.constants';

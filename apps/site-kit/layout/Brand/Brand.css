@@ -5,7 +5,7 @@
   align-items: center;
   gap: var(--space-sm);
   min-width: 0;
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .brand__logo {
@@ -20,7 +20,7 @@
   font-size: var(--game-cell-h);
   line-height: 1;
   letter-spacing: 0;
-  color: var(--c-gold);
+  color: var(--c-primary);
   -webkit-text-stroke: var(--border-width-thick) var(--c-bg);
   paint-order: stroke fill;
   -webkit-font-smoothing: none;

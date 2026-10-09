@@ -41,7 +41,7 @@
   padding: var(--space-sm);
   background: var(--c-surface);
   border: 1px solid var(--c-hairline);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-2);
   pointer-events: auto;
   overflow: hidden;
@@ -85,13 +85,13 @@
 .stop-picker__chip {
   padding: var(--space-xs) var(--space-xs);
   border: 1px solid var(--c-hairline);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   color: var(--c-text-dim);
   font-size: var(--text-xs);
 }
 
 .stop-picker__chip--active {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
   color: var(--c-text);
   background: var(--c-hover);
 }
@@ -111,7 +111,7 @@
   width: 100%;
   padding: var(--space-xs) var(--space-xs);
   text-align: left;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .stop-picker__row:hover {
@@ -120,7 +120,7 @@
 
 .stop-picker__row--selected {
   background: var(--c-hover);
-  outline: 1px solid var(--c-gold);
+  outline: 1px solid var(--c-primary);
 }
 
 .stop-picker__row-icon {

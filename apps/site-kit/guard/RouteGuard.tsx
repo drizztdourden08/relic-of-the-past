@@ -1,7 +1,5 @@
 /* @layer site-kit @kind component */
-import { Spinner } from '@ds/primitives/Spinner';
-import { Center } from '@ds/primitives/Center';
-import { Button } from '@ds/primitives/Button';
+import { Spinner, Center, Button } from '@drizztdourden08/tessera/primitives';
 import { hasRight } from '@shared/hub/rights';
 import { useLocation } from '../router/useLocation';
 import { Redirect } from '../router/Redirect';

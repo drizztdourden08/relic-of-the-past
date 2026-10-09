@@ -35,7 +35,7 @@
 }
 
 .debug-capture-glow--active {
-  background: linear-gradient(var(--c-green), var(--c-gold-bright), var(--c-green-bright));
+  background: linear-gradient(var(--c-secondary), var(--c-primary-bright), var(--c-secondary-bright));
   animation: debug-capture-glow-rotate 2.2s ease-in-out infinite alternate;
 }
 

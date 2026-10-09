@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { IconifyIcon } from '@iconify/types';
-import type { MousePart } from '@ds/primitives/MouseGlyph';
+import type { MousePart } from '@drizztdourden08/tessera/primitives';
 
 interface EditorShortcut {
   keys?: readonly string[];

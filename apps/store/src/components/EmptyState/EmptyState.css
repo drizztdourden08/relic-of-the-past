@@ -34,7 +34,7 @@
 
 .empty-state .empty-state__message {
   margin: 0;
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-family: var(--font-game);
   font-size: var(--text-2xl);
 }

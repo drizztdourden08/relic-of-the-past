@@ -1,17 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Badge } from '../../../../../design-system/primitives/Badge';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { IconButton } from '../../../../../design-system/primitives/IconButton';
-import { Select } from '../../../../../design-system/primitives/Select';
-import { TextInput } from '../../../../../design-system/primitives/TextInput';
-import { Field } from '../../../../../design-system/primitives/Field';
-import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
-import { ButtonRow } from '../../../../../design-system/primitives/ButtonRow';
-import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
-import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
+import { Box, Text, Status, Button, IconButton, Select, TextInput, Field, EmptyState, ButtonRow, SegmentedControl } from '@drizztdourden08/tessera/primitives';
+import { ListDetailLayout, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatRelativeTime } from '../../../../../../utils';
 import { useProfileManager } from './profile-manager/useProfileManager';
 import { ProfileDetailPanel } from './profile-manager/ProfileDetailPanel';
@@ -112,7 +101,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
             name={
               <>
                 {profile.name}
-                {profile.automation && <Badge variant="neutral">Agent</Badge>}
+                {profile.automation && <Status tone="neutral">Agent</Status>}
               </>
             }
             meta={`${profile.romFile.replace(/\.(sfc|smc)$/i, '')} · ${formatRelativeTime(profile.lastPlayed)}`}
@@ -154,7 +143,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
   );
 
   return (
-    <MasterDetailLayout
+    <ListDetailLayout
       className={showOptionsPane ? 'master-detail--rand-options' : ''}
       list={list}
       detail={detail}

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Button } from '../../../../design-system/primitives';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { S } from '../styles';
 

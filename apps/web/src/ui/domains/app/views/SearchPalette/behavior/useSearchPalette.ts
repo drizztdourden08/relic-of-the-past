@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useRef, useEffect, useCallback, type KeyboardEvent } from 'react';
-import { useDismissable } from '@ds/primitives/Portal';
+import { useDismissable } from '@drizztdourden08/tessera/primitives';
 import { usePlatform } from '@app/platform';
 import { useSearchStore } from '@app/stores/search-store';
 import { isPrimaryModifier } from '@shared/platform';

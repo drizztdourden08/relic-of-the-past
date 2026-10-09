@@ -1,8 +1,6 @@
 /* @layer store-site @kind component */
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { DataTable } from '@ds/composites/DataTable';
-import { FilterBar } from '@ds/composites/FilterBar';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { DataTable, FilterBar } from '@drizztdourden08/tessera/composites';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { Workbench } from '@site-kit/layout/Workbench/Workbench';
 import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';

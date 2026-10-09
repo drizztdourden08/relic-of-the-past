@@ -1,6 +1,5 @@
 /* @layer store-site @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { formatCount } from '../../../lib/format-count/format-count';
 import type { RatingHistogramProps } from './RatingHistogram.type';
 import { STAR_ROWS } from './RatingHistogram.constants';

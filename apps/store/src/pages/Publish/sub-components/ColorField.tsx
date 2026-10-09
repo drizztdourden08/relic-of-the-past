@@ -1,8 +1,7 @@
 /* @layer store-site @kind component */
 import { useRef, useState } from 'react';
-import { ColorPickerPopover } from '@ds/composites/ColorPickerPopover';
-import { ColorSwatch } from '@ds/primitives/ColorSwatch';
-import { Field } from '@ds/primitives/Field';
+import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
+import { ColorSwatch, Field } from '@drizztdourden08/tessera/primitives';
 import { DEFAULT_ITEM_COLOR } from '@shared/store/item-color';
 import { FIELD_LABELS } from '../Publish.constants';
 import type { ColorFieldProps } from './ColorField.type';

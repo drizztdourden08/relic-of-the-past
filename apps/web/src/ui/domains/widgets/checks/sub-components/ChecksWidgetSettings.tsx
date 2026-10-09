@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import { SegmentedControl, Toggle } from '@ds/primitives';
-import { OptionRow } from '@ds/composites/Widget';
+import { SegmentedControl, Toggle } from '@drizztdourden08/tessera/primitives';
+import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import type { ViewMode } from '@domains/app/compounds/ChecksTracker';
 import { useStickyHeader } from '../behavior/useStickyHeader';
@@ -16,18 +16,18 @@ const ChecksWidgetSettings = () => {
 
   return (
     <>
-      <OptionRow label="View">
+      <ControlMenuRow label="View">
         <SegmentedControl<ViewMode> value={viewMode} options={VIEW_OPTIONS} onChange={setViewMode} />
-      </OptionRow>
-      <OptionRow label="Pin header" hint="Keep the summary and filters in place">
+      </ControlMenuRow>
+      <ControlMenuRow label="Pin header" hint="Keep the summary and filters in place">
         <Toggle checked={sticky} onChange={setSticky} />
-      </OptionRow>
-      <OptionRow label="Notifications" hint="A card over the game for each check or event you complete">
+      </ControlMenuRow>
+      <ControlMenuRow label="Notifications" hint="A card over the game for each check or event you complete">
         <Toggle checked={notify} onChange={setNotify} />
-      </OptionRow>
-      <OptionRow label="While closed" hint="Keep notifying while this tracker is closed">
+      </ControlMenuRow>
+      <ControlMenuRow label="While closed" hint="Keep notifying while this tracker is closed">
         <Toggle checked={notifyWhenClosed} onChange={setNotifyWhenClosed} disabled={!notify} />
-      </OptionRow>
+      </ControlMenuRow>
     </>
   );
 };

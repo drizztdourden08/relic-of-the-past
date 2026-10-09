@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 
 const PS: Record<string, CSSProperties> = {
   summary: { display: 'flex', gap: 8, fontSize: 11, marginTop: 2 },
-  doneCount: { color: 'var(--c-green-bright)' },
+  doneCount: { color: 'var(--c-secondary-bright)' },
   availCount: { color: 'var(--c-info)' },
   blockedCount: { color: 'var(--c-danger)' },
 
@@ -11,7 +11,7 @@ const PS: Record<string, CSSProperties> = {
   tag: {
     fontSize: 10,
     padding: '1px 5px',
-    borderRadius: 'var(--r-sm)',
+    borderRadius: 'var(--radius-sm)',
     background: 'var(--c-hover)',
     border: '1px solid var(--c-border)',
     color: 'var(--c-text-muted)',

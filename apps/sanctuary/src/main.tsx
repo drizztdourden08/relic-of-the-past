@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import '@ds/tokens/index.css';
+import '@drizztdourden08/tessera/tokens.css';
 import './site.css';
 import { App } from './App';
 

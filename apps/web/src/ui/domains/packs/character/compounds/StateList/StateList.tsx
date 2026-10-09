@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
-import { Button } from '@ds/primitives/Button';
+import { Box, Text, TextInput, Button } from '@drizztdourden08/tessera/primitives';
 import { POSE_ATLAS, facingsOf, framesOf } from '@shared/game/data/native-tables/player-pose-atlas';
 import { STATE_LABELS, GROUP_LABELS, labelFor } from '@shared/game/data/native-tables/player-state-labels';
 import { GROUP_ORDER } from './StateList.constants';

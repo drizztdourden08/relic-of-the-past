@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button, Flex, ProgressBar, Stack, Text } from '@ds/primitives';
+import { Button, Flex, ProgressBar, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreInstallBarProps } from '../Store.type';
 import { BAR_MAX } from '../Store.constants';
 import { progressLine } from '../behavior/progress-line';

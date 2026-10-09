@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, EmptyState, SectionHeader, TextInput } from '@ds/primitives';
+import { Box, EmptyState, SectionHeader, TextInput } from '@drizztdourden08/tessera/primitives';
 import { EntryListItem } from '../../../entry';
 import { PreviewView } from '../../../preview';
 import { useEntryLayout } from '../../../../behavior/useEntryLayout';

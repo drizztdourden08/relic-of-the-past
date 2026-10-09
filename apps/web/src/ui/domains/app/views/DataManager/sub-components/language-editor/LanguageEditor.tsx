@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, TabBar, EmptyState, Spinner } from '@ds/primitives';
+import { Box, Tabs, EmptyState, Spinner } from '@drizztdourden08/tessera/primitives';
 import { buildVariableIndex } from '@shared/game/language';
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
 import { useLanguageEditor } from './behavior/useLanguageEditor';
@@ -21,7 +21,7 @@ import { useTextGroups } from './behavior/useTextGroups';
 import { FindHardcodedDialog } from './sub-components/variables';
 import { selectEntries } from './behavior/select-entries';
 import type { EntryFilter } from './sub-components/DialogueTab.type';
-import type { TabItem } from '@ds/primitives';
+import type { TabItem } from '@drizztdourden08/tessera/primitives';
 import { LOCKED, NO_ENTRIES, TEXT_SUMMARY, VARIABLES_SUMMARY } from './LanguageEditor.constants';
 import type { LanguageEditorProps } from './LanguageEditor.type';
 import './LanguageEditor.css';
@@ -97,7 +97,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
         exportStatus={exportStatus}
       />
 
-      <TabBar tabs={tabs} activeTab={tab} onTabChange={setTab} />
+      <Tabs tabs={tabs} activeTab={tab} onTabChange={setTab} />
 
       {tab === 'dialogue' && (
         <DialogueTab

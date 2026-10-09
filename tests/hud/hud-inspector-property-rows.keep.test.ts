@@ -7,8 +7,7 @@ import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
 import { EdgesField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/EdgesField';
 import { ValueField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
-import { Field } from '../../apps/web/src/ui/design-system/primitives/Field';
-import { SegmentedControl } from '../../apps/web/src/ui/design-system/primitives/SegmentedControl';
+import { Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/apps/web/src/ui/design-system`;

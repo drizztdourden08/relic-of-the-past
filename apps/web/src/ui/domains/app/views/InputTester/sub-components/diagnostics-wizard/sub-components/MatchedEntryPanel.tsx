@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge, Card, Text } from '@ds/primitives';
+import { Status, Card, Text } from '@drizztdourden08/tessera/primitives';
 import type { MatchedEntryPanelProps } from './diagnostics-steps.type';
 
 const MatchedEntryPanel = (props: MatchedEntryPanelProps) => {
@@ -14,7 +14,7 @@ const MatchedEntryPanel = (props: MatchedEntryPanelProps) => {
       </Text>
       <Text as="p">
         Calibration profile: <Text as="strong">{profile?.name ?? 'none resolved'}</Text>
-        {isGeneric && <Badge variant="warning">generic layout</Badge>}
+        {isGeneric && <Status tone="warning">generic layout</Status>}
       </Text>
       {!entry.hasByteCapability && (
         <Text as="p" className="diagnostics-wizard__pos-warning">

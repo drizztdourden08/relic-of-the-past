@@ -2,11 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   buildPickerNodes,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/field-picker-nodes';
-import type {
-  buildColumnMenuItems,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/column-menu-items';
-import type { MenuItem } from '../../../apps/web/src/ui/design-system/composites/DropdownMenu';
+} from '@drizztdourden08/tessera/composites';
+import type { buildColumnMenuItems, MenuItem } from '@drizztdourden08/tessera/composites';
 import { NESTED } from './data-table-menus.constants';
 import { columnMenu as menu } from './column-menu';
 

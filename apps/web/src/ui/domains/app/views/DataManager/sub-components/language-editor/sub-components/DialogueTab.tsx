@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Text, TextInput, EmptyState, SectionHeader, SegmentedControl } from '@ds/primitives';
+import { Box, Text, TextInput, EmptyState, SectionHeader, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { structuralEntry } from '@shared/game/language';
 import { EntryEditor } from './EntryEditor';
 import { LockedEntryCard } from './LockedEntryCard';

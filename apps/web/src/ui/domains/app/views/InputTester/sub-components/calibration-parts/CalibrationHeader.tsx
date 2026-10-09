@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button } from '../../../../../../design-system/primitives';
+import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { CALIBRATION_STYLE } from './calibration-parts.constants';
 import type { CalibrationHeaderProps } from './calibration-parts.type';
 

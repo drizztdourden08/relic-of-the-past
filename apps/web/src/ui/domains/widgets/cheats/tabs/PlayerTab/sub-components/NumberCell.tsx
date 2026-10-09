@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, TextInput } from '@ds/primitives';
+import { Box, Button, TextInput } from '@drizztdourden08/tessera/primitives';
 import { HudNumber } from '@domains/hud';
 import { useNumberEdit } from '../behavior/useNumberEdit';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';

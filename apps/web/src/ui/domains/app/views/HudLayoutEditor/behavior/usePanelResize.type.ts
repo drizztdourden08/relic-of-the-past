@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
-import type { ResizeBinding } from '@ds/primitives/ResizeHandle';
+import type { ResizeBinding } from '@drizztdourden08/tessera/primitives';
 
 interface PanelResize {
   outlineWidth: number;

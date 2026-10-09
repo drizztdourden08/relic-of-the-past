@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { DropZone } from '@ds/primitives/DropZone';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Select } from '@ds/primitives/Select';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, DropZone, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
 import { AUTO_PACK_ID } from '@shared/input/glyphs';
 import { GLYPH_IMAGE_TYPES } from '../HudLayoutEditor.constants';
 import type { GlyphPosition } from '@app/lib/hud/custom-glyph-store';

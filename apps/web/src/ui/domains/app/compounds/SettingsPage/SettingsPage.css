@@ -12,28 +12,28 @@
   overflow: hidden;
 }
 
-.settings-page__head {
+.content-header {
   position: relative;
   isolation: isolate;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  min-height: var(--settings-page-head-h);
+  min-height: var(--content-header-h);
   padding: var(--space-md) var(--space-xl);
   border-bottom: 1px solid var(--c-border);
   overflow: hidden;
   transition: min-height var(--transition-fast), padding var(--transition-fast);
 }
 
-.settings-page__backdrop {
+.content-header__backdrop {
   position: absolute;
   inset: 0;
   z-index: -2;
   pointer-events: none;
 }
 
-.settings-page__head::before {
+.content-header::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -41,17 +41,17 @@
   background: linear-gradient(90deg, var(--c-layer) 18%, color-mix(in srgb, var(--c-layer) 60%, transparent) 55%, color-mix(in srgb, var(--c-layer) 30%, transparent));
 }
 
-.settings-page__icon {
+.content-header__icon {
   display: grid;
   place-items: center;
   flex-shrink: 0;
   font-size: var(--text-2xl);
-  color: var(--c-gold-bright);
-  filter: drop-shadow(0 0 var(--blur-glow) var(--c-gold));
+  color: var(--c-primary-bright);
+  filter: drop-shadow(0 0 var(--blur-glow) var(--c-primary));
   transition: font-size var(--transition-fast);
 }
 
-.settings-page__title {
+.content-header__title {
   margin: 0;
   font-size: var(--text-2xl);
   font-weight: var(--weight-bold);
@@ -66,43 +66,43 @@
   border-left: 1px solid var(--c-border-strong);
 }
 
-.settings-page__actions {
+.content-header__actions {
   display: flex;
   align-items: center;
   flex-shrink: 0;
   margin-left: auto;
 }
 
-.settings-page--compact .settings-page__head {
-  min-height: var(--settings-page-head-h-compact);
+.content-header--compact .content-header {
+  min-height: var(--content-header-h-compact);
   padding-block: var(--space-xs);
 }
 
-.settings-page--compact .settings-page__icon {
+.content-header--compact .content-header__icon {
   font-size: var(--text-xl);
 }
 
-.settings-page--compact .settings-page__title {
+.content-header--compact .content-header__title {
   font-size: var(--text-lg);
 }
 
-.settings-page__body {
+.screen-page__body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   padding: var(--pad-page);
 }
 
-.settings-page__body--fixed {
+.screen-page__body--fixed {
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .settings-page__head,
-  .settings-page__icon,
-  .settings-page__title {
+  .content-header,
+  .content-header__icon,
+  .content-header__title {
     transition: none;
   }
 }

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { Box, Button, Portal, Text } from '@ds/primitives';
+import { Box, Button, Portal, Text } from '@drizztdourden08/tessera/primitives';
 import { getCheck } from '@shared/game/data';
 import type { CheckId } from '@shared/game/data';
 import { useStopAtChecks } from '../../behavior/useStopAtChecks';

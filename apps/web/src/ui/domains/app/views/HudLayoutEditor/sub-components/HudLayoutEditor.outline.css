@@ -29,11 +29,11 @@
 }
 
 .hud-outline__row:hover {
-  background: var(--color-surface-hover);
+  background: var(--c-hover);
 }
 
 .hud-outline__row.is-selected {
-  background: var(--color-surface-selected);
+  background: var(--c-selected);
 }
 
 .hud-outline__row.is-screen {
@@ -42,7 +42,7 @@
 }
 
 .hud-outline__row.is-screen .hud-outline__text {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   font-weight: var(--weight-semi);
 }
 
@@ -67,7 +67,7 @@
 }
 
 .hud-outline__caret:hover {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .hud-outline__caret-mark {
@@ -83,16 +83,16 @@
 }
 
 .hud-outline__row.is-drop-before {
-  border-top-color: var(--c-gold-bright);
+  border-top-color: var(--c-primary-bright);
 }
 
 .hud-outline__row.is-drop-after {
-  border-bottom-color: var(--c-gold-bright);
+  border-bottom-color: var(--c-primary-bright);
 }
 
 .hud-outline__row.is-drop-inside {
-  background: var(--color-surface-selected);
-  outline: var(--border-width-thin) dashed var(--c-gold-bright);
+  background: var(--c-selected);
+  outline: var(--border-width-thin) dashed var(--c-primary-bright);
   outline-offset: calc(-1 * var(--border-width-thick));
 }
 

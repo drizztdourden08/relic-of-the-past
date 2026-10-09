@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind data */
-import type { SchemaConfig } from '@ds/data';
+import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 
 const TAG_CONFIG: SchemaConfig = {
   defaultColumns: ['id', 'namespace', 'value', 'label', 'appliesTo'],

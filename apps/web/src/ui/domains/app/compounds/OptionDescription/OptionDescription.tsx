@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text, TermList } from '@ds/primitives';
+import { Text, TermList } from '@drizztdourden08/tessera/primitives';
 import { detailsOf, plainTextOf } from '@shared/randomizer/world/option-description';
 import type { OptionDescriptionProps } from './OptionDescription.type';
 

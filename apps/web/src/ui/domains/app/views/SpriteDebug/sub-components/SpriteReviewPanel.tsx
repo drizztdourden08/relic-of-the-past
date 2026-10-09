@@ -7,7 +7,7 @@ import {
 } from '@shared/game/data';
 import type { SpriteCategory } from '@shared/game/data';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
-import { Box, Button } from '../../../../../design-system/primitives';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { CategoryButton } from './CategoryButton';
 import { FilterBtns } from './FilterBtns';
 import { ReviewStats } from './ReviewStats';

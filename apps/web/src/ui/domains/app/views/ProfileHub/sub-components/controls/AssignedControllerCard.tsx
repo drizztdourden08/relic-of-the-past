@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { FAMILY_EMOJI } from './controls.constants';
 import type { AssignedDeviceCardProps } from './controls.type';
 import './AssignedControllerCard.css';

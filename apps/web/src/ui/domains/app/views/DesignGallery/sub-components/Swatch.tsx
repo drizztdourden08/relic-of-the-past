@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, Text } from '../../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { TokenSpec } from '../DesignGallery.constants';
 import './Swatch.css';
 

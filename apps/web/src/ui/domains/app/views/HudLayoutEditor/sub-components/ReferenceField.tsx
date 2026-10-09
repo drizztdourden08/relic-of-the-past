@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import './HudLayoutEditor.content.css';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Text } from '@ds/primitives/Text';
-import { Thumbnail } from '@ds/primitives/Thumbnail';
+import { Button, Field, Text, Thumbnail } from '@drizztdourden08/tessera/primitives';
 import { CARET } from './ReferenceField.constants';
 import type { ReferenceFieldProps } from './ReferenceField.type';
 

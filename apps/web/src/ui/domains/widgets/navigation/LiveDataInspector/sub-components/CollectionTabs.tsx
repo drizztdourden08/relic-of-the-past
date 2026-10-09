@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { TabBar } from '@ds/primitives';
+import { Tabs } from '@drizztdourden08/tessera/primitives';
 import type { EntityKind } from '@shared/game/data';
 import { COLLECTION_TABS } from '../LiveDataInspector.constants';
 import type { CollectionTabsProps } from '../LiveDataInspector.type';
@@ -7,7 +7,7 @@ import type { CollectionTabsProps } from '../LiveDataInspector.type';
 const CollectionTabs = (props: CollectionTabsProps) => {
   const { selected, onSelect } = props;
   return (
-    <TabBar
+    <Tabs
       tabs={COLLECTION_TABS}
       activeTab={selected}
       onTabChange={(id) => onSelect(id as EntityKind)}

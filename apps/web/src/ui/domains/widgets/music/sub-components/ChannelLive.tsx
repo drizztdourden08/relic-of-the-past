@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Badge, Box, StatRow } from '@ds/primitives';
+import { Status, Box, StatRow } from '@drizztdourden08/tessera/primitives';
 import { PreviewReadout } from '@domains/app/views/DataManager/sub-components/msu/PreviewReadout';
 import { usePreviewReport } from '@domains/app/views/DataManager/sub-components/msu/behavior/usePreviewReport';
 import type { LiveChannel } from '../music.type';
@@ -11,7 +11,7 @@ const ChannelLive = (props: { channel: LiveChannel }) => {
   if (report === null) {
     return (
       <Box className="music-widget__rows">
-        <StatRow label={channel.title} value={<Badge variant="neutral">silent</Badge>} />
+        <StatRow label={channel.title} value={<Status tone="neutral">silent</Status>} />
       </Box>
     );
   }

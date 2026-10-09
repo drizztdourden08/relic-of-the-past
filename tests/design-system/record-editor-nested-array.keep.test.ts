@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { RecordEditor } from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 
 const REQUIREMENT_STRING: FieldDescriptor = {
   path: 'requirements[][]', label: 'Requirements item item', kind: 'string', optional: false,

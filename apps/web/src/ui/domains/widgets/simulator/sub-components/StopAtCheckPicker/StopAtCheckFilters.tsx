@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useState } from 'react';
-import { Box, Button, TextInput } from '@ds/primitives';
+import { Box, Button, TextInput } from '@drizztdourden08/tessera/primitives';
 import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
 import { ITEM_FILTERS, STATUS_FILTERS, TAG_CATEGORIES } from './StopAtCheckPicker.constants';
 import type { StopAtCheckFiltersProps } from './StopAtCheckPicker.type';

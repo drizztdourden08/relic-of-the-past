@@ -41,7 +41,7 @@
 }
 
 .aspect-ratio-control__recommended {
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
 }

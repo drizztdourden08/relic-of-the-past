@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState, useEffect } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
-import { ToastContainer } from '../../../../design-system/primitives/Toast';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { ToastContainer } from '@drizztdourden08/tessera/composites';
 import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import { useSearchStore } from '@app/stores/search-store';
 import { useProfileSettings } from './behavior/useProfileSettings';

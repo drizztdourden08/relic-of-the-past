@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { PERCENT } from '../calibration-parts';
 import { FULL_PRESS_HIGHLIGHT, TRIGGER_WIZARD_STYLE } from './trigger-calibration.constants';
 import type { TriggerBarProps } from './trigger-calibration.type';
@@ -19,7 +18,7 @@ const TriggerBar = (props: TriggerBarProps) => {
   const fillStyle = useMemo(() => ({
     position: 'absolute' as const, bottom: 0, left: 0, right: 0,
     height: `${fill * PERCENT}%`,
-    background: fill > FULL_PRESS_HIGHLIGHT ? 'var(--c-gold-bright)' : 'var(--c-gold)',
+    background: fill > FULL_PRESS_HIGHLIGHT ? 'var(--c-primary-bright)' : 'var(--c-primary)',
     transition: 'height 0.05s',
     borderRadius: '0 0 3px 3px',
   }), [fill]);

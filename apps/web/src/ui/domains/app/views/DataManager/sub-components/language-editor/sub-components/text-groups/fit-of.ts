@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
-import type { ProgressVariant } from '@ds/primitives';
+import type { ProgressTone } from '@drizztdourden08/tessera/primitives';
 import type { TextLimit } from '@shared/game/language';
 import type { SlotFit } from './text-groups.type';
 
-const variantFor = (used: number, max: number): ProgressVariant => {
+const variantFor = (used: number, max: number): ProgressTone => {
   if (used > max) return 'danger';
   if (used >= max) return 'gold';
   return 'green';

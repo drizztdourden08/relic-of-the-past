@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Slider, Text } from '@ds/primitives';
+import { Box, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag } from '../../OptionValueTag';
 import type { ShopPriceModifierRowProps } from './ShopPriceModifierRow.type';
 import './ShopPriceModifierRow.css';

@@ -1,7 +1,5 @@
 /* @layer store-site @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { Chip } from '@site-kit/components/Chip/Chip';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDay } from '@site-kit/lib/format-date';

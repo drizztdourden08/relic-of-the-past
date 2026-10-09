@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useEffect, useReducer } from 'react';
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { CheatCategory } from '@app/lib/game';
 import { onCheatRulesRestored } from '@app/lib/game/cheat-rules-memory';
 import type { CheatTabProps } from '../../CheatsWidget.type';

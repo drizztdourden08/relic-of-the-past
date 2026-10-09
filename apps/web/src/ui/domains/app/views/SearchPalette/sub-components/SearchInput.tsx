@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { TextInput } from '@ds/primitives/TextInput';
-import { Icon } from '@ds/primitives/Icon';
-import { SEARCH_ICON_PATHS } from '@ds/composites/SearchSpark';
+import { Box, TextInput, Icon } from '@drizztdourden08/tessera/primitives';
+import { SEARCH_ICON_PATHS } from '@drizztdourden08/tessera/composites';
 import type { SearchInputProps } from '../SearchPalette.type';
 
 const SearchInput = (props: SearchInputProps) => {

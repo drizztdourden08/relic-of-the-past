@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { ANNOTATION_STYLES } from '../../../app/views/GameLayer/sub-components/navigation-overlay/annotation-style';
 import { IL } from './AnnotationLayer.constants';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 .update-dialog__notes {
-  border: 1px solid var(--c-gold);
+  border: 1px solid var(--c-primary);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
@@ -8,11 +8,11 @@
 .update-dialog__notes h4 {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
-  color: var(--c-gold);
+  color: var(--c-primary);
   padding: var(--space-sm) var(--space-md);
   margin: 0;
-  background: var(--c-gold-soft);
-  border-bottom: 1px solid var(--c-gold);
+  background: var(--c-primary-soft);
+  border-bottom: 1px solid var(--c-primary);
 }
 
 .update-dialog__notes-content {
@@ -65,7 +65,7 @@
 .update-dialog__notes-content code {
   background: var(--c-hover);
   padding: 0.1em 0.3em;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   font-size: var(--text-sm);
 }
 
@@ -83,7 +83,7 @@
 }
 
 .update-dialog__notes-content blockquote {
-  border-left: 3px solid var(--c-gold);
+  border-left: 3px solid var(--c-primary);
   padding-left: var(--space-sm);
   margin: 0.5em 0;
   color: var(--c-text-muted);

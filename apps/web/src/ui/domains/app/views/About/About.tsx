@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Image } from '../../../../design-system/primitives/Image';
-import { Button } from '../../../../design-system/primitives/Button';
+import { Box, Text, Image, Button } from '@drizztdourden08/tessera/primitives';
 import { copyText } from './behavior/copy-text';
 import { useAboutInfo } from './behavior/useAboutInfo';
 import { useDebugText } from '@app/lib/diagnostics';

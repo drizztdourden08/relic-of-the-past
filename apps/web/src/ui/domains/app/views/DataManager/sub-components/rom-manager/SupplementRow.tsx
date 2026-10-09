@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '@ds/primitives/Text';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import { IL } from './RomDetailPanel.constants';
 import type { SupplementRowProps } from './RomDetailPanel.type';

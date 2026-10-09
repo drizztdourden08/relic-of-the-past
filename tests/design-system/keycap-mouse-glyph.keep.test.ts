@@ -3,9 +3,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { KeyCap } from '../../apps/web/src/ui/design-system/primitives/KeyCap';
-import { MouseGlyph } from '../../apps/web/src/ui/design-system/primitives/MouseGlyph';
-import type { MousePart } from '../../apps/web/src/ui/design-system/primitives/MouseGlyph';
+import { KeyCap, MouseGlyph } from '@drizztdourden08/tessera/primitives';
+import type { MousePart } from '@drizztdourden08/tessera/primitives';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

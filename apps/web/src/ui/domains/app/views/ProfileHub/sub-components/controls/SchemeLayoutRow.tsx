@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Field } from '../../../../../../design-system/primitives/Field';
-import { Select } from '../../../../../../design-system/primitives/Select';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Box, Field, Select, Text } from '@drizztdourden08/tessera/primitives';
 import type { SchemeLayoutRowProps } from './controls.type';
 
 const SchemeLayoutRow = (props: SchemeLayoutRowProps) => {

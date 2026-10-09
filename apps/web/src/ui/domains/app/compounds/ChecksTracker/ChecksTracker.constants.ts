@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
 import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
 import type { ItemFilter, ShowMode } from '@shared/game/logic/queries/check-grouping';
-import type { IconProps, SegmentOption, TagPickerGroup } from '@ds/primitives';
+import type { IconProps, SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
 import type { StatusKey, TrackerPanels } from './ChecksTracker.type';
 
 const CHECK_PATHS = [

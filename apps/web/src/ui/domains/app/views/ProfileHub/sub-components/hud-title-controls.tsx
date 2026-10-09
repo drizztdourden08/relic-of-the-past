@@ -2,10 +2,7 @@
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { nextTitleSword, titleSwordLabel } from '@shared/game/title/title-swords';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { Field } from '../../../../../design-system/primitives/Field';
-import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { Toggle } from '../../../../../design-system/primitives/Toggle';
+import { Button, Field, SegmentedControl, Toggle } from '@drizztdourden08/tessera/primitives';
 import { MOTION_OPTIONS, SCREEN_OPTIONS } from './hud-settings.constants';
 import { isTitleDisabled } from './hud-title-disabled';
 

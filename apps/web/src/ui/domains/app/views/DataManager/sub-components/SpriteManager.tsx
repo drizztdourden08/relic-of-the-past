@@ -1,15 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Select } from '../../../../../design-system/primitives/Select';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { Field } from '../../../../../design-system/primitives/Field';
-import { ButtonRow } from '../../../../../design-system/primitives/ButtonRow';
-import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
-import { IconButton } from '../../../../../design-system/primitives/IconButton';
-import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
-import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
+import { Box, Text, Select, Button, Field, ButtonRow, EmptyState, IconButton } from '@drizztdourden08/tessera/primitives';
+import { ListDetailLayout, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { SpriteGrid } from './SpriteGrid';
 import { ImportProgress } from './ImportProgress';
 import { useImportProgress } from '@app/hooks/useImportProgress';
@@ -144,7 +136,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
     ? <SpriteGrid baseUrl={spriteBaseUrl} />
     : <Text>Select an imported ROM to view its sprites</Text>;
 
-  return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selectedRom} />;
+  return <ListDetailLayout list={list} detail={detail} detailEmpty={!selectedRom} />;
 };
 
 export { SpriteManager };

@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
-import { Portal, usePickerPopover } from '@ds/primitives/Portal';
+import { Box, Button, Text, TextInput, Portal, usePickerPopover } from '@drizztdourden08/tessera/primitives';
 import { formulaGroups } from '../../../behavior/formula-catalog';
 import { formulaStarters } from '../../../behavior/formula-starters';
 import type { FormulaMenuProps } from './FormulaMenu.type';

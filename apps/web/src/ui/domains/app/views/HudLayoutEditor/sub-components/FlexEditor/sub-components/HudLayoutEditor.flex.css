@@ -15,7 +15,7 @@
 }
 
 .hud-flex-strip:focus-visible {
-  outline: var(--border-width-thin) solid var(--c-gold);
+  outline: var(--border-width-thin) solid var(--c-primary);
   outline-offset: 2px;
 }
 
@@ -42,7 +42,7 @@
   cursor: pointer;
   background: var(--c-hover);
   border: var(--border-width-thin) dashed var(--c-border-strong);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .hud-flex-strip[data-flow='column'] > .hud-flex-strip__cell {
@@ -51,9 +51,9 @@
 }
 
 .hud-flex-strip__cell[data-state='selected'] {
-  background: var(--c-gold-dim);
+  background: var(--c-primary-dim);
   border-style: solid;
-  border-color: var(--c-gold-bright);
+  border-color: var(--c-primary-bright);
 }
 
 .hud-flex-strip:focus-visible .hud-flex-strip__cell[data-cursor='true'] {
@@ -75,7 +75,7 @@
 }
 
 .hud-flex-strip__cell[data-state='selected'] > .hud-flex-strip__label {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .hud-flex-strip__empty {

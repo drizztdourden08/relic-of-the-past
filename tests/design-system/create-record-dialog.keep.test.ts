@@ -2,8 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { CreateRecordDialog } from '../../apps/web/src/ui/design-system/composites/CreateRecordDialog';
-import { useCreateFormState } from '../../apps/web/src/ui/design-system/composites/CreateRecordDialog/behavior/use-create-form-state';
+import { CreateRecordDialog, useCreateFormState } from '@drizztdourden08/tessera/composites';
 
 describe('CreateRecordDialog renders nothing at all while closed', () => {
   it('never reaches the Portal-bound chrome when closed', () => {

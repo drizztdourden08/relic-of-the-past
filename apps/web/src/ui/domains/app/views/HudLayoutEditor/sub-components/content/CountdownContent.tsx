@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
-import { Text } from '@ds/primitives/Text';
+import { Box, Field, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
 import { PIE_OPTIONS } from './CountdownContent.constants';
 import type { HudCountdownVariantChoice } from '@shared/types/hud';
 import type { CountdownContentProps } from './CountdownContent.type';

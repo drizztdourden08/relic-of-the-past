@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { ResizeHandle } from '@ds/primitives/ResizeHandle';
-import { FullScreenLayer } from '@ds/composites/FullScreenLayer';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { ScreenWindow, ResizeHandle } from '@drizztdourden08/tessera/composites';
 import { useReducedMotion } from '@domains/hud/compounds/HudNodeRenderer';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { MotionPreviewContext, useMotionPreviewState } from './behavior/motion-preview';
@@ -44,7 +42,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
   return (
     <MotionPreviewContext.Provider value={motionPreview}>
     <Box className="hud-editor-portal">
-      <FullScreenLayer onClose={onClose} title="HUD Layout Editor">
+      <ScreenWindow onClose={onClose} title="HUD Layout Editor">
         <Box className="hud-editor">
           <EditorToolbar
             insert={edits.insert}
@@ -142,7 +140,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
             </Box>
           </Box>
         </Box>
-      </FullScreenLayer>
+      </ScreenWindow>
     </Box>
     </MotionPreviewContext.Provider>
   );

@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useCallback } from 'react';
-import { DropZone } from '../../../../../design-system/primitives/DropZone';
-import { TextInput } from '../../../../../design-system/primitives/TextInput';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
+import { DropZone, TextInput, Box, Button } from '@drizztdourden08/tessera/primitives';
 import { ImportProgress } from './ImportProgress';
 import { useImportProgress } from '@app/hooks/useImportProgress';
 import type { ImportFormProps } from './ImportForm.type';

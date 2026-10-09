@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Card } from '@ds/primitives/Card';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Slider } from '@ds/primitives/Slider';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Card, Flex, IconButton, Slider, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { LayerEffectsField } from '../LayerEffectsField';
 import { LayerFileList } from '../LayerFileList';
 import { LoopPointField } from '../LoopPointField';

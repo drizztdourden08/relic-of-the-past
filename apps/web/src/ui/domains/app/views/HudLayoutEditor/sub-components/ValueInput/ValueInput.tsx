@@ -2,11 +2,7 @@
 import './ValueInput.css';
 import './sub-components/InstanceStrip.css';
 import './sub-components/FormulaMenu.css';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Icon } from '@ds/primitives/Icon';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Button, Field, Icon, TextInput } from '@drizztdourden08/tessera/primitives';
 import { resolveValue } from '@shared/hud/data';
 import { readExpr } from '../../behavior/check-expr';
 import { useInstanceScopes } from '../../behavior/formula-scope';

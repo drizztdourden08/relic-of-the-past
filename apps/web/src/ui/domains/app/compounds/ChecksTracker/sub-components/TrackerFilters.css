@@ -30,7 +30,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-.tracker-summary__stat--completed .tracker-summary__stat-value { color: var(--c-green); }
+.tracker-summary__stat--completed .tracker-summary__stat-value { color: var(--c-secondary); }
 .tracker-summary__stat--reachable .tracker-summary__stat-value { color: var(--c-warning); }
 
 @container (max-width: 320px) {
@@ -129,17 +129,17 @@
   align-items: center;
   gap: var(--space-2xs);
   padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-sm);
-  background: var(--c-gold-soft);
-  border: 1px solid var(--c-gold);
+  background: var(--c-primary-soft);
+  border: 1px solid var(--c-primary);
   border-radius: var(--radius-sm);
   font-size: var(--text-xs);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .tracker-filters__group-remove {
   width: 16px;
   height: 16px;
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .tracker-filters__group-add {

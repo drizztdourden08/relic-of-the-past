@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
 import userIcon from '@iconify-icons/lucide/user';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { ItemGrid } from '../../components/ItemGrid/ItemGrid';
 import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { itemPath } from '../../catalog/item-paths';

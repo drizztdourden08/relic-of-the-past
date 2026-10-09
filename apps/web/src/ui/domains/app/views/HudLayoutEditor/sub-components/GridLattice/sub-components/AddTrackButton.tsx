@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import plusIcon from '@iconify-icons/lucide/plus';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Button } from '@ds/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { WORD } from './AddTrackButton.constants';
 import type { AddTrackButtonProps } from './AddTrackButton.type';
 

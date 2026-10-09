@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Text } from '@ds/primitives';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { SuggestionCard } from './SuggestionCard';
 import { SoftlockSummary } from './SoftlockSummary';
 import { outcomeBanner } from '../behavior/outcome-banner';

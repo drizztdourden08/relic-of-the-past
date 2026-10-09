@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, Select, Slider, Text, TextInput, Toggle } from '@ds/primitives';
+import { Box, Select, Slider, Text, TextInput, Toggle } from '@drizztdourden08/tessera/primitives';
 import { OptionDescription } from '../OptionDescription';
 import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { PoolImpactCell } from '../PoolImpactCell';

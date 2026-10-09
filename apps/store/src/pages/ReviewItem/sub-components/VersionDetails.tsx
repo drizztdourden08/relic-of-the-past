@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
-import { SettingsSection } from '@ds/composites/SettingsSection';
-import { StatRow } from '@ds/primitives/StatRow';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
+import { StatRow } from '@drizztdourden08/tessera/primitives';
 import type { KindFacts } from '@shared/store/types';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDateTime } from '@site-kit/lib/format-date';

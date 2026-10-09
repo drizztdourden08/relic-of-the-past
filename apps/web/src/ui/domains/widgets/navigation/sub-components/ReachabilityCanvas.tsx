@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback } from 'react';
-import { Canvas } from '../../../../design-system/primitives';
+import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { CANVAS_STYLE } from './ReachabilityCanvas.constants';
 
 const ReachabilityCanvas = ({ reachable, bounds, tileLayer }: {

@@ -26,8 +26,8 @@
 }
 
 .controls-tabs__tab--active {
-  color: var(--c-gold-bright);
-  border-bottom-color: var(--c-gold);
+  color: var(--c-primary-bright);
+  border-bottom-color: var(--c-primary);
 }
 
 .controls-tabs__tab:disabled {

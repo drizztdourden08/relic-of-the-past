@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '@ds/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { BottleContentRow, CurrencyPriceRow } from '../../CurrencyPriceRow';
 import { askWithBottleTick } from '../behavior/ask-with-bottle-tick';
 import { askWithContent } from '../behavior/ask-with-content';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Badge, Box, IconButton, Text, TextInput } from '@ds/primitives';
+import { Status, Box, IconButton, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { KIND_WORDS } from './variables.constants';
 import type { ChangeEvent } from 'react';
 import type { VariableRowProps } from './variables.type';
@@ -17,7 +17,7 @@ const VariableRow = (props: VariableRowProps) => {
   return (
     <Box className="variable-row">
       <Text as="span" className="variable-row__key">{variable.key}</Text>
-      <Badge variant="neutral" className="variable-row__kind">{KIND_WORDS[variable.kind]}</Badge>
+      <Status tone="neutral" className="variable-row__kind">{KIND_WORDS[variable.kind]}</Status>
 
       {variable.locked ? (
         <Text as="span" className="variable-row__note">
@@ -38,7 +38,7 @@ const VariableRow = (props: VariableRowProps) => {
       </Text>
 
       {variable.locked ? (
-        <Badge variant="warning" className="variable-row__locked">locked</Badge>
+        <Status tone="warning" className="variable-row__locked">locked</Status>
       ) : (
         <Box className="variable-row__locked" />
       )}

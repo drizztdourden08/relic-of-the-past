@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useRef, useState } from 'react';
-import { Box, ScrollArea, TabBar, Text } from '@ds/primitives';
-import type { TabItem } from '@ds/primitives';
-import { SplitPane } from '@ds/composites/SplitPane';
+import { Box, ScrollArea, Tabs, Text } from '@drizztdourden08/tessera/primitives';
+import type { TabItem } from '@drizztdourden08/tessera/primitives';
+import { SplitPane } from '@drizztdourden08/tessera/composites';
 import { catalogByLock } from '@domains/app/compounds/RandomizerOptionRow';
 import { PoolListing } from '@domains/app/compounds/PoolListing';
 import { PoolTotals } from '@domains/app/compounds/PoolTotals';
@@ -83,7 +83,7 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
         <Text className="randomizer-options__title">randomizer options</Text>
         <Text variant="caption">{onChange === undefined ? FROZEN_CAPTION : CAPTION}</Text>
       </Box>
-      <TabBar tabs={tabs} activeTab={tab} onTabChange={(id) => setTab(id as PanelTab)} />
+      <Tabs tabs={tabs} activeTab={tab} onTabChange={(id) => setTab(id as PanelTab)} />
       {body}
       <PoolTotals totals={totals} error={error} />
     </Box>

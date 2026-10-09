@@ -8,6 +8,6 @@
   --hud-pixel-pie-backing: var(--c-layer);
   --hud-pixel-pie-deep: var(--c-gold-deep);
   --hud-pixel-pie-shade: var(--c-gold-shade);
-  --hud-pixel-pie-lit: var(--c-gold);
-  --hud-pixel-pie-bright: var(--c-gold-bright);
+  --hud-pixel-pie-lit: var(--c-primary);
+  --hud-pixel-pie-bright: var(--c-primary-bright);
 }

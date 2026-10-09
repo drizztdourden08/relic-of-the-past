@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { CompactRecordViewProps } from '@ds/composites/CompactRecordView';
+import type { CompactRecordViewProps } from '@drizztdourden08/tessera/composites';
 import type {
   ConnectionRecord, EntityKind, EntityRecordMap, ReviewMark, ScreenGameId, ScreenId, ScreenSpawn,
 } from '@shared/game/data';

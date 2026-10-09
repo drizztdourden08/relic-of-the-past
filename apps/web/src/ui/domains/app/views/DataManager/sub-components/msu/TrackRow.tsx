@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Select } from '@ds/primitives/Select';
-import { Text } from '@ds/primitives/Text';
+import { Status, Box, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import type { TrackRowProps } from './msu.type';
 
@@ -46,7 +42,7 @@ const TrackRow = (props: TrackRowProps) => {
         </>
       )}
 
-      {layerCount > 1 && <Badge variant="success">{layerCount} layers</Badge>}
+      {layerCount > 1 && <Status tone="success">{layerCount} layers</Status>}
 
       <Box className="msu-track-row__actions">
         {hasAudio && (

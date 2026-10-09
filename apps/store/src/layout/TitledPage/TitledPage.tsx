@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Icon } from '@iconify/react/offline';
-import { Flex } from '@ds/primitives/Flex';
+import { Flex } from '@drizztdourden08/tessera/primitives';
 import { SettingsPage } from '@domains/app/compounds/SettingsPage';
 import type { TitledPageProps } from './TitledPage.type';
 import '@site-kit/layout/SitePage/SitePage.css';

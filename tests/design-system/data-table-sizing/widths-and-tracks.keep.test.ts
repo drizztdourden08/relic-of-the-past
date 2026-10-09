@@ -1,17 +1,10 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  MAX_COLUMN_WIDTH, MIN_COLUMN_WIDTH,
-  clampWidth, fitColumnWidth, widthFromDrag,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/column-width-math';
-import {
-  AUTO_TRACK, GROW_TRACK, TRAILING_MIN_TRACK, TRAILING_TRACK,
-  growFitTrack, trackFor, trackList, trackListWith,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/DataTable.constants';
+import { MAX_COLUMN_WIDTH, MIN_COLUMN_WIDTH, clampWidth, fitColumnWidth, widthFromDrag, AUTO_TRACK, GROW_TRACK, TRAILING_MIN_TRACK, TRAILING_TRACK, growFitTrack, trackFor, trackList, trackListWith } from '@drizztdourden08/tessera/composites';
 import type {
   GrowFallback,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/overflow-probe';
-import type { TableColumn } from '../../../apps/web/src/ui/design-system/data/table/types';
+} from '@drizztdourden08/tessera/composites';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 
 describe('dragging the seam turns a delta into a width', () => {
   const drag = (startWidth: number, delta: number): number =>

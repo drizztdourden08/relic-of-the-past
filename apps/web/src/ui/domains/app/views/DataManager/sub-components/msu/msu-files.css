@@ -105,6 +105,6 @@
 }
 
 .msu-file-entry--playing {
-  border-color: var(--c-gold);
-  box-shadow: inset 2px 0 0 var(--c-gold);
+  border-color: var(--c-primary);
+  box-shadow: inset 2px 0 0 var(--c-primary);
 }

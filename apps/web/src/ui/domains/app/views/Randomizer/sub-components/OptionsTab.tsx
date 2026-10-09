@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, EmptyState } from '@ds/primitives';
+import { Box, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import { choicesOfSnapshot } from '@app/hooks/randomizer/choices-of-snapshot';
 import { RandomizerOptionsPanel } from '../../DataManager/sub-components/profile-manager/RandomizerOptionsPanel';

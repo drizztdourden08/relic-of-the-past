@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import '../HudLayoutEditor.motion.css';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Slider } from '@ds/primitives/Slider';
+import { Box, Button, Field, Flex, Slider } from '@drizztdourden08/tessera/primitives';
 import { addKeyAt, canRemoveKey, moveKey, removeKey } from '../../behavior/keyframe-track';
 import { EasingPicker } from '../EasingPicker';
 import { ValueInput } from '../ValueInput';

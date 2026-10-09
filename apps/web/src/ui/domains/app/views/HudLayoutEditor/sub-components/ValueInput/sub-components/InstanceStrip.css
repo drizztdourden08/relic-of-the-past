@@ -23,7 +23,7 @@
 }
 
 .hud-instance-strip__cell.is-preview {
-  outline: 1px solid var(--c-gold);
+  outline: 1px solid var(--c-primary);
 }
 
 .hud-instance-strip__read {

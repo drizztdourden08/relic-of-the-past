@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { usePlatform } from '@app/platform';
-import type { ToastItem } from '../../../../../design-system/primitives/Toast';
+import type { ToastItem } from '@drizztdourden08/tessera/composites';
 import { DEFAULT_SETTINGS, mergeSettings } from '../../../../../../lib/game/settings';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../../../../lib/game';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';

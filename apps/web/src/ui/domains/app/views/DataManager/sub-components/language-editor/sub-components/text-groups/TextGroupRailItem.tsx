@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Button, Text } from '@ds/primitives';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import type { TextGroupRailItemProps } from './TextGroupRailItem.type';
 
 const TextGroupRailItem = (props: TextGroupRailItemProps) => {

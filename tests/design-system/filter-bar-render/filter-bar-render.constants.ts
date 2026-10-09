@@ -1,5 +1,5 @@
 /* @layer tests @kind constants */
-import type { FieldDescriptor, FieldKind } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { FieldDescriptor, FieldKind } from '@drizztdourden08/tessera/data';
 import { field } from './field';
 
 const KINDS: readonly FieldKind[] = [

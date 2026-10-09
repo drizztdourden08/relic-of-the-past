@@ -4,7 +4,7 @@ import listEndIcon from '@iconify-icons/lucide/list-end';
 import redoIcon from '@iconify-icons/lucide/redo-2';
 import settingsIcon from '@iconify-icons/lucide/sliders-horizontal';
 import undoIcon from '@iconify-icons/lucide/undo-2';
-import { Box, Divider } from '@ds/primitives';
+import { Box, Divider } from '@drizztdourden08/tessera/primitives';
 import { ToolbarButton } from './ToolbarButton';
 import { ToolbarInserts } from './ToolbarInserts';
 import { hasOpenDropdown, SettingsPopover } from './popovers';

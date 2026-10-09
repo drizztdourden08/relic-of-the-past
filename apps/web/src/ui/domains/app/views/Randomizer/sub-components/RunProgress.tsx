@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
-import { ProgressBar, Text } from '@ds/primitives';
-import { DashboardPanel, StatTileGrid } from '@ds/composites';
-import type { StatTileProps } from '@ds/primitives';
+import { ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
+import { DashboardPanel, StatTileGrid } from '@drizztdourden08/tessera/composites';
+import type { StatTileProps } from '@drizztdourden08/tessera/composites';
 import { useTrackerData } from '../../../../../../hooks/useTrackerData';
 import { checkCountsOf } from '../behavior/run-progress';
 import { percentOf } from '../behavior/checks-percent';
@@ -35,8 +35,8 @@ const RunProgress = ({ placement, room }: RunProgressProps) => {
         <ProgressBar
           value={counts.taken}
           secondaryValue={counts.available === null ? undefined : counts.taken + counts.available}
-          secondaryVariant="gold"
-          variant="green"
+          secondaryTone="primary"
+          tone="secondary"
           max={Math.max(counts.total, 1)}
           readout={`${percentOf(counts)}%`}
         />

@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button } from '@ds/primitives/Button';
-import { Svg, SvgPath } from '@ds/primitives/Svg';
+import { Button, Svg, SvgPath } from '@drizztdourden08/tessera/primitives';
 import { CURVE_BOX, curvePath } from '../behavior/easing-curves';
 import type { EasingCurveTileProps } from './EasingPicker.type';
 

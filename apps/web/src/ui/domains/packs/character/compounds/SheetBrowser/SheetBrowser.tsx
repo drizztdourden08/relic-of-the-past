@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { Canvas } from '@ds/primitives/Canvas';
+import { Box, Text, Canvas } from '@drizztdourden08/tessera/primitives';
 import { drawSheet, SHEET_PNG_WIDTH, SHEET_PNG_HEIGHT, SHEET_ROWS } from '@app/lib/game/player-sheet/sheet-png';
 import { SHEET_COLS } from '@shared/game/data/player-sheet/types';
 import type { SheetBrowserProps } from './SheetBrowser.type';

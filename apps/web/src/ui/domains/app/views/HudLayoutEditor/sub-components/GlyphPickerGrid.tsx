@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useState } from 'react';
-import { Portal, usePickerPopover } from '@ds/primitives/Portal';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { TabBar } from '@ds/primitives/TabBar';
-import { Thumbnail } from '@ds/primitives/Thumbnail';
+import { Portal, usePickerPopover, Box, Button, Text, Tabs, Thumbnail } from '@drizztdourden08/tessera/primitives';
 import { AUTO_PACK_ID, GENERIC_PACK_ID, findGlyphPack } from '@shared/input/glyphs';
 import { GLYPH_POSITIONS } from '../behavior/toolbar-menus';
 import { glyphSourceFor, glyphUrlOf } from '../behavior/glyph-art';
@@ -35,7 +30,7 @@ const GlyphPickerGrid = (props: GlyphPickerGridProps) => {
         style={position ? { top: position.top, left: position.left } : undefined}
       >
         <Box className="hud-picker-grid__tabs">
-          <TabBar
+          <Tabs
             tabs={[{ id: AUTO_PACK_ID, label: 'Auto' }, ...packs.map((pack) => ({ id: pack.id, label: pack.name }))]}
             activeTab={packId}
             onTabChange={setPackId}

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { LogRow } from '@ds/composites/LogPanel';
+import type { LogRow } from '@drizztdourden08/tessera/composites';
 import type { LogEntry } from '../../../../../../lib/log-bus';
 import type { RoomMessage } from '../../../../../../lib/game/randomizer-client';
 import { buildActivityRows } from './activity-feed';

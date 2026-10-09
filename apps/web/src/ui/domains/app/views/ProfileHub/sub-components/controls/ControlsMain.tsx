@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { ControlsTabs } from './ControlsTabs';
 import { SchemeBanner } from './SchemeBanner';
 import { GameControlsTab } from './GameControlsTab';

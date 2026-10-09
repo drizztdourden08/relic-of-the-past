@@ -1,8 +1,6 @@
 /* @layer store-site @kind component */
 import { useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Box, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { FeaturedHero } from '../../../components/FeaturedHero/FeaturedHero';
 import { ItemCard } from '../../../components/ItemCard/ItemCard';
 import { ItemHero } from '../../../components/ItemHero';

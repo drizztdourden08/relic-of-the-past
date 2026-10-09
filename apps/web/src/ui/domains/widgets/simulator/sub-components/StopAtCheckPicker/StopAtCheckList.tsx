@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Text } from '@ds/primitives';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { checkTypeIcon } from './behavior/check-type-icon';
 import type { StopAtCheckListProps } from './StopAtCheckPicker.type';
 

@@ -2,14 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import {
-  ghostRowSample,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/ghost-row-sample';
-import { groupUid } from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/group-uid';
-import {
-  ColumnDragGhost,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/sub-components/ColumnDragGhost';
-import type { GroupedRow } from '../../../apps/web/src/ui/design-system/data/table/types';
+import { ghostRowSample, groupUid, ColumnDragGhost } from '@drizztdourden08/tessera/composites';
+import type { GroupedRow } from '@drizztdourden08/tessera/data';
 import { ALWAYS } from './data-table-drag.constants';
 
 interface Sample { id: string }

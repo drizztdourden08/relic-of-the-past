@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { EmptyState, Spinner, Stack, Text, TextInput } from '@ds/primitives';
-import { MasterDetailLayout } from '@ds/composites/MasterDetailLayout';
+import { EmptyState, Spinner, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import type { StoreBrowseProps } from '../Store.type';
 import { countLine } from '../behavior/count-line';
 import { StoreDetailPanel } from './StoreDetailPanel';
@@ -28,7 +28,7 @@ const StoreBrowse = (props: StoreBrowseProps) => {
   );
 
   return (
-    <MasterDetailLayout
+    <ListDetailLayout
       className="store-browse"
       list={list}
       detail={<StoreDetailPanel store={store} />}

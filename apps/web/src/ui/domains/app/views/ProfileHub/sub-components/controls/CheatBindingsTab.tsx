@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { CHEAT_ACTIONS } from '@shared/types/controls';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { DisabledOverlay, DISABLED_SETTING_MESSAGES } from '../../../../../../design-system/composites/DisabledOverlay';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { DisabledOverlay, DISABLED_SETTING_MESSAGES } from '@drizztdourden08/tessera/composites';
 import { FunctionBindingRow } from './FunctionBindingRow';
 import { BindingListHeader } from './BindingListHeader';
 import type { CheatBindingsTabProps } from './controls.type';

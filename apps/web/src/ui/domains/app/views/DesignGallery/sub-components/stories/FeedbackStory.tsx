@@ -1,14 +1,14 @@
 /* @layer renderer-app @kind component */
-import { Box, Button, ProgressBar, Spinner, Tooltip, EmptyState, Divider } from '../../../../../../design-system/primitives';
+import { Box, Button, ProgressBar, Spinner, Tooltip, EmptyState, Divider } from '@drizztdourden08/tessera/primitives';
 import { Specimen } from '../Specimen';
 
 const FeedbackStory = () => (
   <Box className="dg-stack">
     <Specimen label="ProgressBar" hint="gold / green (with secondary) / danger">
       <Box className="dg-stack-sm">
-        <ProgressBar value={70} variant="gold" />
-        <ProgressBar value={45} secondaryValue={70} variant="green" />
-        <ProgressBar value={20} variant="danger" />
+        <ProgressBar value={70} tone="primary" />
+        <ProgressBar value={45} secondaryValue={70} tone="secondary" />
+        <ProgressBar value={20} tone="danger" />
       </Box>
     </Specimen>
 

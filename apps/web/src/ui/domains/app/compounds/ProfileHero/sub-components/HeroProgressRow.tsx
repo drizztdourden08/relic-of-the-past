@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { HeroProgressFile } from '../ProfileHero.type';
 
 const share = (count: number, total: number): number => (total > 0 ? (count / total) * 100 : 0);

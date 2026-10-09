@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { CSSProperties } from 'react';
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../../design-system/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import type { CalibrationLogProps } from './CalibrationLog.type';
 
 const S: Record<string, CSSProperties> = {

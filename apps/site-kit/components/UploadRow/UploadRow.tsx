@@ -1,9 +1,5 @@
 /* @layer site-kit @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { ProgressBar } from '@ds/primitives/ProgressBar';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Flex, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import { Chip } from '../Chip/Chip';
 import { percentOf } from './behavior/percent-of';
 import { rowLines } from './behavior/row-lines';
@@ -22,7 +18,7 @@ const UploadRow = (props: UploadRowProps) => {
         <Button variant="bare" className="upload-row__label" title={job.label}>{job.label}</Button>
         <Chip tone={chip.tone}>{chip.label}</Chip>
       </Flex>
-      {job.bytes > 0 && <ProgressBar value={percentOf(job)} variant={BAR_VARIANTS[job.phase] ?? 'gold'} live />}
+      {job.bytes > 0 && <ProgressBar value={percentOf(job)} tone={BAR_VARIANTS[job.phase] ?? 'primary'} live />}
       {(transfer || timeLeft) && (
         <Flex align="baseline" gap="sm" justify="between">
           <Text as="span" className="upload-row__value">{transfer}</Text>

@@ -1,8 +1,6 @@
 /* @layer store-site @kind component */
-import { SettingsSection } from '@ds/composites/SettingsSection';
-import { Stack } from '@ds/primitives/Stack';
-import { StatRow } from '@ds/primitives/StatRow';
-import { Text } from '@ds/primitives/Text';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
+import { Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreItem } from '@shared/store/types';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { formatDay } from '@site-kit/lib/format-date';

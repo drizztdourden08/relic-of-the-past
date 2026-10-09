@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { StickCard } from './StickCard';
 import { STICK_SIDES } from './StickCards.constants';
 import type { StickCardsProps } from './StickCards.type';

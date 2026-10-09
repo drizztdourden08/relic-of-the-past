@@ -1,6 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box } from '../../../../design-system/primitives/Box';
-import { Button } from '../../../../design-system/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import type { LogsToolbarProps } from '../logs.type';
 
 const LogsToolbar = ({ selectionCount, onCopyAll, onCopySelection, onCopyErrors }: LogsToolbarProps) => (

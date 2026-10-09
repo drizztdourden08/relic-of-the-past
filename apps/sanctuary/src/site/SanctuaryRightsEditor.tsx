@@ -2,10 +2,7 @@
 import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
 import { REPORTS_PERMISSION, SANCTUARY_RIGHTS, filePermission } from '@shared/sanctuary/sanctuary-rights';
-import { Checkbox } from '@ds/primitives/Checkbox';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Toggle } from '@ds/primitives/Toggle';
+import { Checkbox, Field, Flex, Toggle } from '@drizztdourden08/tessera/primitives';
 import type { RightsEditorProps } from '@site-kit/site/site-definition.type';
 
 const withPermission = (value: readonly string[], permission: string, on: boolean): string[] =>

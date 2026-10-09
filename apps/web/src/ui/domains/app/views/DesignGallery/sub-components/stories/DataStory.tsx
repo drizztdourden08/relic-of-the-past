@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, Button, SectionHeader, StatRow, ButtonRow, Thumbnail, ProgressRing, Icon } from '../../../../../../design-system/primitives';
+import { Box, Button, SectionHeader, StatRow, ButtonRow, Thumbnail, ProgressRing, Icon } from '@drizztdourden08/tessera/primitives';
 import { Specimen } from '../Specimen';
 
 const CHECK_PATH = ['M3.5 8.5 l3 3 l6 -7'];

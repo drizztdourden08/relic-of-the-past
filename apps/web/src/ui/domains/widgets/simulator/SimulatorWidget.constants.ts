@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind constants */
-import type { LogKindDef } from '@ds/composites/LogPanel';
+import type { LogKindDef } from '@drizztdourden08/tessera/composites';
 import type { FilterState } from '@shared/game/logic/queries/check-grouping';
 import type { LogKind } from './SimulatorWidget.type';
 

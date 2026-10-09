@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useRef, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { HudNodeRenderer } from '@domains/hud/compounds/HudNodeRenderer';
 import { ContainerOverlay } from './ContainerOverlay';
 import { StageFlexEcho } from './StageFlexEcho';

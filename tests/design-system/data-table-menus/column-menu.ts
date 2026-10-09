@@ -2,11 +2,8 @@
 import { vi } from 'vitest';
 import {
   buildColumnMenuItems,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/column-menu-items';
-import type { MenuItem } from '../../../apps/web/src/ui/design-system/composites/DropdownMenu';
-import type {
-  ColumnActions,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
+} from '@drizztdourden08/tessera/composites';
+import type { MenuItem, ColumnActions } from '@drizztdourden08/tessera/composites';
 import { entryLookup } from './entry-lookup';
 
 const columnMenu = (overrides: Partial<Parameters<typeof buildColumnMenuItems>[0]> = {}) => {

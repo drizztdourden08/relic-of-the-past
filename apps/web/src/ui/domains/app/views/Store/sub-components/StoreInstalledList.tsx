@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { EmptyState, Stack, Text } from '@ds/primitives';
+import { EmptyState, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreInstalledListProps } from '../Store.type';
 import { StoreInstalledRow } from './StoreInstalledRow';
 

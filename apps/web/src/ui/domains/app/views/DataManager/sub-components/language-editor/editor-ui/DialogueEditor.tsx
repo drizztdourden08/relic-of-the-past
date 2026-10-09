@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useMemo, useRef } from 'react';
 import { EditorContent } from '@tiptap/react';
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { EditorToolbar } from './EditorToolbar';
 import { dialogueExtensions } from './editor-contract';
 import { glyphNamesOf } from './glyph-names';

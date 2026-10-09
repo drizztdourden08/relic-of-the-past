@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: var(--space-sm);
   padding: var(--space-sm);
-  border-left: var(--border-width-thick) solid var(--c-gold);
+  border-left: var(--border-width-thick) solid var(--c-primary);
 }
 
 .entry-panel__head {
@@ -20,7 +20,7 @@
 }
 
 .entry-panel__id {
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }

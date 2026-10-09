@@ -1,11 +1,6 @@
 /* @layer store-site @kind component */
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Select } from '@ds/primitives/Select';
-import { TagInput } from '@ds/primitives/TagInput';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
-import { Textarea } from '@ds/primitives/Textarea';
+import { Field, Flex, Select, Text, TextInput, Textarea } from '@drizztdourden08/tessera/primitives';
+import { TagInput } from '@drizztdourden08/tessera/composites';
 import { tagsSchema } from '@shared/hub/schemas/common';
 import { FIELD_LABELS, FIELD_MESSAGES, LICENSE_OPTIONS } from '../Publish.constants';
 import { LISTING_CAPS } from '../behavior/listing-errors.constants';

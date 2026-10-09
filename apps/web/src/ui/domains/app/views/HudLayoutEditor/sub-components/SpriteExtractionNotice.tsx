@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import * as spritesStore from '@app/lib/storage/sprites-store';
 

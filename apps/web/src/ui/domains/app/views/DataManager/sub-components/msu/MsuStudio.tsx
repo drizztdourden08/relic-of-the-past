@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { TabBar } from '@ds/primitives/TabBar';
+import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
 import { MsuEffectsPanel } from './MsuEffectsPanel';
 import { MsuFilePanel } from './MsuFilePanel';
 import { MsuSoundPanel } from './MsuSoundPanel';
@@ -38,7 +37,7 @@ const MsuStudio = (props: MsuStudioProps) => {
   return (
     <Box className="msu-studio">
       {origin}
-      <TabBar tabs={STUDIO_TABS} activeTab={tab} onTabChange={(id) => onTabChange(id as StudioTab)} />
+      <Tabs tabs={STUDIO_TABS} activeTab={tab} onTabChange={(id) => onTabChange(id as StudioTab)} />
       {tab === 'ambient' && <MsuSoundPanel channel="ambient" {...soundProps} />}
       {tab === 'effects' && <MsuEffectsPanel {...soundProps} />}
       {tab === 'files' && (

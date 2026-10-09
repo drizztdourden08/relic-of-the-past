@@ -10,7 +10,7 @@
   min-width: 0;
 }
 
-.site-page .settings-page__actions {
+.site-page .content-header__actions {
   flex-shrink: 1;
   align-self: stretch;
   align-items: stretch;

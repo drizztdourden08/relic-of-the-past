@@ -34,7 +34,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  border: var(--border-width-thin) solid var(--c-gold);
+  border: var(--border-width-thin) solid var(--c-primary);
   box-shadow: 0 0 0 100vmax var(--c-scrim);
   pointer-events: none;
 }

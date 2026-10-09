@@ -1,16 +1,12 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { compile, createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import { getFieldTester } from '../../apps/web/src/ui/design-system/data/filter/tester-registry';
-import { capture, restore } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
+import { buildSchema, compile, createClause, getFieldTester, capture, restore } from '@drizztdourden08/tessera/data';
 import {
   MATCH_CASE_KEY, operatorMenuItems, supportsCaseModifier,
-} from '../../apps/web/src/ui/design-system/composites/FilterBar/behavior/operator-menu-items';
+} from '@drizztdourden08/tessera/composites';
 import '../../apps/web/src/ui/design-system/composites/field-kits';
-import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import type { MenuItem } from '../../apps/web/src/ui/design-system/composites/DropdownMenu';
-import type { FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { FilterClause, FieldKind } from '@drizztdourden08/tessera/data';
+import type { MenuItem } from '@drizztdourden08/tessera/composites';
 
 const stringTest = (value: unknown, op: string, operand: unknown, caseSensitive?: boolean): boolean => {
   const tester = getFieldTester('string');

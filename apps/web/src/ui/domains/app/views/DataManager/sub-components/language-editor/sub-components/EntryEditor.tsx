@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button } from '@ds/primitives';
+import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { DialogueEditor } from '../editor-ui';
 import { overflowReason } from './overflow-reason';
 import type { EntryEditorProps } from './EntryEditor.type';

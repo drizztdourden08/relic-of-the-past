@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { Badge } from '@ds/primitives/Badge';
+import { Box, Text, Status } from '@drizztdourden08/tessera/primitives';
 import { PoseCanvas } from '../PoseCanvas';
 import { facingsOf, framesOf, FACING_LABELS } from '@shared/game/data/native-tables/player-pose-atlas';
 import { labelFor } from '@shared/game/data/native-tables/player-state-labels';
@@ -17,8 +15,8 @@ const StatePreview = (props: StatePreviewProps) => {
     <Box className="state-preview">
       <Box className="state-preview__head">
         <Text className="state-preview__title">{meta.label}</Text>
-        <Badge variant="neutral">action 0x{state.action.toString(16).padStart(2, '0')}</Badge>
-        {!state.perFacing && <Badge variant="neutral">no facing variation</Badge>}
+        <Status tone="neutral">action 0x{state.action.toString(16).padStart(2, '0')}</Status>
+        {!state.perFacing && <Status tone="neutral">no facing variation</Status>}
         <Text className="state-preview__from">{meta.from}</Text>
       </Box>
       <Box className="state-preview__row">

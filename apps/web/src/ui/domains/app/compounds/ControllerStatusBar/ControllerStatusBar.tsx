@@ -2,8 +2,7 @@
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import vibrateIcon from '@iconify-icons/lucide/vibrate';
 import gyroIcon from '@iconify-icons/lucide/rotate-3d';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { BUS_ICON, BUS_LABEL, CONNECTION_ICON, CONNECTION_LABEL } from './ControllerStatusBar.constants';
 import type { ControllerStatusBarProps } from './ControllerStatusBar.type';
 import './ControllerStatusBar.css';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, SegmentedControl } from '@ds/primitives';
+import { Box, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { VIEW_MODE_OPTIONS } from './entry.constants';
 import type { ViewModeSwitchProps } from './entry.type';
 import './ViewModeSwitch.css';

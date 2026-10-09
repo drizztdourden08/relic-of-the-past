@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, ProgressBar, Text, TextInput } from '@ds/primitives';
+import { Box, ProgressBar, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { fitOf } from './fit-of';
 import { offAlphabet } from './off-alphabet';
 import { ALPHABET_CAUTION } from './TextSlotRow.constants';
@@ -37,7 +37,7 @@ const TextSlotRow = (props: TextSlotRowProps) => {
               className="text-slot-row__meter"
               value={fit.used}
               max={fit.max}
-              variant={fit.variant}
+              tone={fit.variant}
             />
           </>
         )}

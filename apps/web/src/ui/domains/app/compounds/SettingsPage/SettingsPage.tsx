@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
-import { HeaderTabs } from '../../../../design-system/composites/HeaderTabs';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { HeaderAnchorNav } from '@drizztdourden08/tessera/composites';
 import { useScrollSpy } from './behavior/useScrollSpy';
 import { NO_ANCHORS, TABS_CLASS } from './SettingsPage.constants';
 import type { SettingsPageProps } from './SettingsPage.type';
@@ -14,21 +13,21 @@ const SettingsPage = (props: SettingsPageProps) => {
   const { bodyRef, activeId, compact, jumpTo } = useScrollSpy(ids);
 
   const strip = tabs
-    ? <HeaderTabs className={TABS_CLASS} items={tabs.items} activeId={tabs.activeId} onSelect={tabs.onSelect} ariaLabel={`${title} views`} />
+    ? <HeaderAnchorNav className={TABS_CLASS} items={tabs.items} activeId={tabs.activeId} onSelect={tabs.onSelect} ariaLabel={`${title} views`} />
     : anchors.length > 1 && (
-      <HeaderTabs className={TABS_CLASS} items={anchors} activeId={activeId} onSelect={jumpTo} ariaLabel={`${title} sections`} />
+      <HeaderAnchorNav className={TABS_CLASS} items={anchors} activeId={activeId} onSelect={jumpTo} ariaLabel={`${title} sections`} />
     );
 
   return (
-    <Box as="section" className={`settings-page${compact ? ' settings-page--compact' : ''}`} aria-label={title}>
-      <Box as="header" className="settings-page__head">
-        <Box className="settings-page__backdrop">{backdrop}</Box>
-        <Box as="span" className="settings-page__icon" aria-hidden="true">{icon}</Box>
-        <Text as="h2" className="settings-page__title">{title}</Text>
+    <Box as="section" className={`settings-page${compact ? ' content-header--compact' : ''}`} aria-label={title}>
+      <Box as="header" className="content-header">
+        <Box className="content-header__backdrop">{backdrop}</Box>
+        <Box as="span" className="content-header__icon" aria-hidden="true">{icon}</Box>
+        <Text as="h2" className="content-header__title">{title}</Text>
         {strip}
-        {actions && <Box className="settings-page__actions">{actions}</Box>}
+        {actions && <Box className="content-header__actions">{actions}</Box>}
       </Box>
-      <Box ref={bodyRef} className={`settings-page__body${scroll ? '' : ' settings-page__body--fixed'}`}>
+      <Box ref={bodyRef} className={`settings-page__body${scroll ? '' : ' screen-page__body--fixed'}`}>
         {children}
       </Box>
     </Box>

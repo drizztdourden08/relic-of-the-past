@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Button, EmptyState, SectionHeader, SegmentedControl, TextInput } from '@ds/primitives';
+import { Box, Button, EmptyState, SectionHeader, SegmentedControl, TextInput } from '@drizztdourden08/tessera/primitives';
 import { VariableRow } from './VariableRow';
 import { countByFilter } from './variable-groups/count-by-filter';
 import { FILTER_ORDER, FILTER_WORDS } from './variables.constants';
 import type { ChangeEvent } from 'react';
-import type { SegmentOption } from '@ds/primitives';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import type { VariableFilter, VariablesTableProps } from './variables.type';
 import './VariablesTable.css';
 

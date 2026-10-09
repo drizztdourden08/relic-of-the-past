@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Slider, Toggle } from '@ds/primitives';
+import { Box, Slider, Toggle } from '@drizztdourden08/tessera/primitives';
 import { CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP } from '@shared/randomizer/world/capacity';
 import { OptionValueTag } from '../../OptionValueTag';
 import { STEP_BASE_LABEL } from '../CapacityFamilyRow.constants';

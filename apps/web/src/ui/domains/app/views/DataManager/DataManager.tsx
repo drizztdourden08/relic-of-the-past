@@ -7,11 +7,9 @@ import { LanguageManager } from './sub-components/LanguageManager';
 import { MsuManager } from './sub-components/MsuManager';
 import { SpriteManager } from './sub-components/SpriteManager';
 import { PlayerSpriteStudio } from '../PlayerSpriteStudio';
-import { Spinner } from '../../../../design-system/primitives/Spinner';
-import { Box } from '../../../../design-system/primitives/Box';
-import { SectionNav } from '../../../../design-system/composites/SectionNav';
+import { Spinner, Box } from '@drizztdourden08/tessera/primitives';
+import { SideNav, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { DATA_MANAGER_NAV } from './behavior/data-manager-nav.constants';
-import { ListItemRow } from '../../../../design-system/composites/ListItemRow';
 import './DataManager.css';
 import './sub-components/DataManager.forms.css';
 import './sub-components/DataManager.detail.css';
@@ -50,7 +48,7 @@ const DataManager = (props: DataManagerProps) => {
       )}
 
       <Box className="data-manager__body">
-        <SectionNav
+        <SideNav
           config={DATA_MANAGER_NAV}
           activeId={activeTab}
           onSelect={(id) => setActiveTab(id as DataTab)}

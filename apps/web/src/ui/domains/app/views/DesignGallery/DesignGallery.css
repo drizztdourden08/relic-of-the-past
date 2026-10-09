@@ -7,7 +7,7 @@
 .dg-brand {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -58,7 +58,7 @@
   padding: var(--space-sm) var(--space-md);
   background: var(--c-surface);
   border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   color: var(--c-text-dim);
 }
@@ -71,7 +71,7 @@
   display: flex;
   height: 220px;
   border: 1px solid var(--c-border);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -106,8 +106,8 @@
 }
 
 .dg-scale__bar {
-  background: var(--c-gold);
-  border-radius: var(--r-sm);
+  background: var(--c-primary);
+  border-radius: var(--radius-sm);
   min-width: 4px;
   min-height: 4px;
 }
@@ -131,13 +131,13 @@
   padding: var(--space-md);
   background: var(--c-bg);
   border: 1px solid var(--c-border);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-1);
 }
 
 .dg-card--selected {
-  border-color: var(--c-gold);
-  background: var(--c-gold-soft);
+  border-color: var(--c-primary);
+  background: var(--c-primary-soft);
 }
 
 .dg-card__title {
@@ -159,6 +159,6 @@
   background: var(--c-glass);
   backdrop-filter: blur(var(--blur));
   border: 1px solid var(--c-border);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-2);
 }

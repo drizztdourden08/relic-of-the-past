@@ -6,9 +6,7 @@ import {
   DEFAULT_RUMBLE_STRENGTH, MAX_RUMBLE_STRENGTH, MIN_RUMBLE_STRENGTH,
   getCachedRumbleStrength, setCachedRumbleStrength,
 } from '@shared/input/haptics-rumble-strength';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { NumberInput } from '../../../../../design-system/primitives/NumberInput';
+import { Box, Text, NumberInput } from '@drizztdourden08/tessera/primitives';
 import type { RumbleStrengthControlProps } from './RumbleStrengthControl.type';
 
 const RumbleStrengthControl = ({ deviceKey }: RumbleStrengthControlProps) => {

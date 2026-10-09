@@ -1,8 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import uploadIcon from '@iconify-icons/lucide/upload';
-import { DropZone } from '@ds/primitives/DropZone';
-import { Flex } from '@ds/primitives/Flex';
+import { DropZone, Flex } from '@drizztdourden08/tessera/primitives';
 import { DROP_HINT } from './UploadActions.constants';
 import type { UploadActionsProps } from './UploadActions.type';
 

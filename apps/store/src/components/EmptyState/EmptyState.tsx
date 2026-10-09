@@ -1,6 +1,5 @@
 /* @layer store-site @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import type { EmptyStateProps } from './EmptyState.type';
 import './EmptyState.css';
 

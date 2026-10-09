@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { PROVIDER_LABELS } from '@shared/hub/providers';
-import { Button } from '@ds/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { authStartHref } from '../../api/hub-endpoints';
 import { PROVIDER_MARKS } from './provider-marks';
 import { VERB } from './ProviderButton.constants';

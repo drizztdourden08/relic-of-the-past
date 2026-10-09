@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Button, Image, Text } from '@ds/primitives';
+import { Button, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { spriteUrlOf } from '@shared/game/logic/queries/item-sprites';
 import { SpritePlaceholder } from './SpritePlaceholder';
 import type { ActionTileProps } from '../RulesTab.type';

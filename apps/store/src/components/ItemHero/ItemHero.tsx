@@ -1,9 +1,7 @@
 /* @layer store-site @kind component */
 import { Hero } from '@domains/app/compounds/Hero';
 import { HeroFacts } from '@domains/app/compounds/HeroFacts';
-import { Box } from '@ds/primitives/Box';
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Box, Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { Link } from '@site-kit/router/Link';
 import { authorPath } from '../../catalog/item-paths/author-path';
 import { KIND_PLURALS } from '../../lib/kinds/kinds.constants';

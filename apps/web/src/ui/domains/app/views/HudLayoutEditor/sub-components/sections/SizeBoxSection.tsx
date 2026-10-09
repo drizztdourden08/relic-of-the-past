@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { BoxModelField } from '../BoxModelField';
 import { DisabledReason } from '../DisabledReason';
 import { ExtentField } from '../ExtentField';

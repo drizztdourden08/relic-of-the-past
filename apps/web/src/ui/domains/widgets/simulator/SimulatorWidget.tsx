@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useSimulatorStore } from '@app/stores/simulator-store';
 import { useSimulatorRun } from './behavior/useSimulatorRun';
 import { useDatasetSuggestions } from './behavior/useDatasetSuggestions';

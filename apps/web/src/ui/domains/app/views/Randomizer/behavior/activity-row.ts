@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { LogEntry } from '../../../../../../lib/log-bus';
-import type { LogRow } from '@ds/composites/LogPanel';
+import type { LogRow } from '@drizztdourden08/tessera/composites';
 import { classifyEntry } from './classify-entry';
 import { formatTime } from './format-time';
 import { SESSION_PREFIX } from './randomizer-log-style.constants';

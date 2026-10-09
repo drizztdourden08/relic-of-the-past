@@ -21,7 +21,7 @@
 .height-level-editor__swatch {
   width: 10px;
   height: 10px;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   background: var(--c-text);
   flex-shrink: 0;
 }
@@ -33,7 +33,7 @@
   color: var(--c-text);
   background: var(--c-inset);
   border: 1px solid var(--c-border-strong);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-xs);
 }
 
@@ -43,7 +43,7 @@
   color: var(--c-text);
   background: var(--c-inset);
   border: 1px solid var(--c-border-strong);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-xs);
   text-align: center;
 }
@@ -56,7 +56,7 @@
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   background: var(--c-hover);
   color: var(--c-text-muted);
   font-size: var(--text-sm);
@@ -71,5 +71,5 @@
 
 .height-level-editor__add-btn:hover {
   background: var(--c-info-soft);
-  color: var(--c-gold);
+  color: var(--c-primary);
 }

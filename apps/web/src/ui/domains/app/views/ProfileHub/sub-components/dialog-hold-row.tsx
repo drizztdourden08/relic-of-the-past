@@ -2,8 +2,7 @@
 import { useCallback } from 'react';
 import { DIALOG_HOLD_STOPS } from '@shared/game/dialog/pacing';
 import type { DialogHoldStop } from '@shared/game/dialog/pacing';
-import { Flex } from '../../../../../design-system/primitives/Flex';
-import { Toggle } from '../../../../../design-system/primitives/Toggle';
+import { Flex, Toggle } from '@drizztdourden08/tessera/primitives';
 import { DialogStopSlider } from './dialog-stop-slider';
 import type { DialogHoldRowProps } from './settings-controls.type';
 import './dialog-hold-row.css';

@@ -17,18 +17,18 @@ const CALIBRATION_STYLE: Record<string, CSSProperties> = {
 };
 
 const PROGRESS_FILL: CSSProperties = {
-  height: '100%', background: 'var(--c-gold)', borderRadius: 3, transition: 'width 0.1s',
+  height: '100%', background: 'var(--c-primary)', borderRadius: 3, transition: 'width 0.1s',
 };
 
 const STEP_BAR: CSSProperties = { display: 'flex', gap: 8, margin: '8px 0 12px', fontSize: 12, fontWeight: 600 };
 
-const STEP_ITEM_ACTIVE: CSSProperties = { display: 'flex', alignItems: 'center', gap: 4, color: 'var(--c-gold-bright)' };
+const STEP_ITEM_ACTIVE: CSSProperties = { display: 'flex', alignItems: 'center', gap: 4, color: 'var(--c-primary-bright)' };
 const STEP_ITEM_IDLE: CSSProperties = { display: 'flex', alignItems: 'center', gap: 4, color: 'var(--c-text-muted)' };
 
 const STEP_NUMBER_ACTIVE: CSSProperties = {
   width: 20, height: 20, borderRadius: '50%', display: 'flex',
   alignItems: 'center', justifyContent: 'center',
-  background: 'var(--c-gold)', color: 'var(--c-bg)', fontSize: 11,
+  background: 'var(--c-primary)', color: 'var(--c-bg)', fontSize: 11,
 };
 const STEP_NUMBER_IDLE: CSSProperties = {
   width: 20, height: 20, borderRadius: '50%', display: 'flex',

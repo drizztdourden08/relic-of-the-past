@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
-import { Box } from '@ds/primitives';
-import { GroupTree } from '@ds/composites/GroupTree';
-import type { TreeNode } from '@ds/composites/GroupTree';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { GroupTree } from '@drizztdourden08/tessera/composites';
+import type { TreeNode } from '@drizztdourden08/tessera/composites';
 import type { CheckRecord } from '@shared/game/data';
 import type { GroupNode } from '@shared/game/logic/queries/check-grouping';
 import type { TrackerGroupTreeProps } from '../ChecksTracker.type';

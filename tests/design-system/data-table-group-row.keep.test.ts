@@ -5,7 +5,7 @@ import {
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import type * as GroupRowModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/GroupRow';
 import { describeDataset } from '../dataset-guard';
 

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useRef } from 'react';
-import { Box, Button, Image, Portal, Text } from '@ds/primitives';
+import { Box, Button, Image, Portal, Text } from '@drizztdourden08/tessera/primitives';
 import { useAnchoredPlacement } from '../behavior/useAnchoredPlacement';
 import { useDismiss } from '../behavior/useDismiss';
 import type { ChoiceOption, ChoicePopoverProps } from './ChoicePopover.type';

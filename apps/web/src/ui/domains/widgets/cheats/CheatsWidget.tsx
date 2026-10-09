@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
-import { Box } from '@ds/primitives';
-import { TabBar } from '@ds/primitives/TabBar';
+import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
 import { PlayerTab } from './tabs/PlayerTab';
 import { ItemsTab } from './tabs/ItemsTab';
 import { RulesTab } from './tabs/RulesTab';
@@ -18,7 +17,7 @@ const CheatsWidgetContent = () => {
 
   return (
     <Box className="cheats-widget">
-      <TabBar tabs={TABS} activeTab={tab} onTabChange={(id) => setTab(id as CheatTab)} />
+      <Tabs tabs={TABS} activeTab={tab} onTabChange={(id) => setTab(id as CheatTab)} />
       <Box className="cheats-widget__content">
         {tab === 'player' && <PlayerTab gates={gates} />}
         {tab === 'items' && <ItemsTab gates={gates} />}

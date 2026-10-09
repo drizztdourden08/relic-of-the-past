@@ -1,14 +1,13 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
 import type { CSSProperties } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { CollapsiblePanelProps } from './CollapsiblePanel.type';
 
 const S: Record<string, CSSProperties> = {
   panel: {
     background: 'var(--c-glass)', border: '1px solid var(--c-hairline)',
-    borderRadius: 'var(--r-sm)', padding: '3px 6px',
+    borderRadius: 'var(--radius-sm)', padding: '3px 6px',
     boxShadow: 'var(--shadow-1)',
     fontFamily: 'monospace', fontSize: 10, lineHeight: '14px',
     display: 'flex', flexDirection: 'column', gap: 1,
@@ -19,11 +18,11 @@ const S: Record<string, CSSProperties> = {
     gap: 8, cursor: 'pointer', userSelect: 'none',
   },
   title: {
-    color: 'var(--c-gold-bright)', fontWeight: 700,
+    color: 'var(--c-primary-bright)', fontWeight: 700,
     textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: 9,
   },
   chevron: {
-    color: 'var(--c-gold-bright)', fontSize: 16, lineHeight: '16px',
+    color: 'var(--c-primary-bright)', fontSize: 16, lineHeight: '16px',
     fontWeight: 700, padding: '0 2px',
   },
   body: { display: 'flex', flexDirection: 'column', gap: 1, marginTop: 2 },

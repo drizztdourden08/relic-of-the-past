@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { TextInput } from '../../../../../../design-system/primitives/TextInput';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Button, TextInput, Text } from '@drizztdourden08/tessera/primitives';
 import type { InputProfileItemProps } from './controls.type';
 
 const stopPropagation = (e: MouseEvent) => e.stopPropagation();

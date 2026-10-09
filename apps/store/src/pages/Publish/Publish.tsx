@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import uploadIcon from '@iconify-icons/lucide/upload';
-import { Text } from '@ds/primitives/Text';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { useStoreData } from '../../data/store-data-context';
 import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { PAGE_TITLES } from './Publish.constants';

@@ -1,8 +1,5 @@
 /* @layer store-site @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Box, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { Link } from '@site-kit/router/Link';
 import { EmptyState } from '../EmptyState/EmptyState';
 import { ItemCard } from '../ItemCard/ItemCard';

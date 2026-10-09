@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { Slider } from '@ds/primitives/Slider';
+import { Status, Box, Field, Flex, NumberInput, Slider } from '@drizztdourden08/tessera/primitives';
 import { MAX_CROSSFADE_SECONDS } from '@shared/types/msu-manifest';
 import { CROSSFADE_HINT, CROSSFADE_LABEL } from '../PlayModeFields/PlayModeFields.constants';
 import type { CrossfadeFieldProps } from './CrossfadeField.type';
@@ -45,7 +40,7 @@ const CrossfadeField = (props: CrossfadeFieldProps) => {
             aria-label={`${CROSSFADE_LABEL}, in seconds`}
             onChange={(value) => onChange(clamp(value))}
           />
-          <Badge variant={seconds > 0 ? 'success' : 'neutral'}>{stateOf(seconds)}</Badge>
+          <Status tone={seconds > 0 ? 'success' : 'neutral'}>{stateOf(seconds)}</Status>
         </Flex>
       </Field>
     </Box>

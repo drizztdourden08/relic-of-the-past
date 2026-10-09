@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
-import { Box, Text, Button } from '@ds/primitives';
+import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { LogDialog } from './LogDialog';
 import type { EventLogProps } from '../SimulatorWidget.type';
 

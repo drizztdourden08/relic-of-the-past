@@ -1,9 +1,7 @@
 /* @layer renderer-app @kind component */
 import { useState } from 'react';
-import { Box, Text, Button } from '../../../../../../design-system/primitives';
-import { Dialog } from '../../../../../../design-system/composites/Dialog';
-import { ListItemRow } from '../../../../../../design-system/composites/ListItemRow';
-import { SideNav } from '../../../../../../design-system/composites/SideNav';
+import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
+import { Dialog, ListItemRow, SideNav } from '@drizztdourden08/tessera/composites';
 import { Specimen } from '../Specimen';
 
 const NAV_GROUPS = [

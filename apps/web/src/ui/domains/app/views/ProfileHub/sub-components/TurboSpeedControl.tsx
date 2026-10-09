@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { TURBO_SPEEDS, formatTurboSpeed, turboSpeedAt, turboSpeedIndex } from '@shared/display/turbo-speed';
-import { Slider } from '../../../../../design-system/primitives/Slider';
+import { Slider } from '@drizztdourden08/tessera/primitives';
 import type { TurboSpeedControlProps } from './settings-controls.type';
 
 const formatRung = (index: number) => formatTurboSpeed(turboSpeedAt(index));

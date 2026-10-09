@@ -1,9 +1,6 @@
 /* @layer site-kit @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { DialogShell } from '@ds/composites/DialogShell';
+import { Box, Button, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { FILE_STEP } from '../../upload/upload-steps';
 import { useDialogJob } from './behavior/useDialogJob';
 import { KeptCopyBanner } from './sub-components/KeptCopyBanner';

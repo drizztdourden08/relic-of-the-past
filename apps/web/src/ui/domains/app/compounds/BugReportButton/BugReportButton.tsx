@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import bugIcon from '@iconify-icons/lucide/bug';
-import { IconButton } from '@ds/primitives/IconButton';
+import { IconButton } from '@drizztdourden08/tessera/primitives';
 import type { BugReportButtonProps } from './BugReportButton.type';
 import './BugReportButton.css';
 

@@ -1,9 +1,9 @@
 /* @layer renderer-app @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { buildSchema, capture, compile, compileTextSearch, useViewState } from '@ds/data';
+import { buildSchema, capture, compile, compileTextSearch, useViewState } from '@drizztdourden08/tessera/data';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import type { EntityKind } from '@shared/game/data';
-import type { DetailTab, FilterClause } from '@ds/data';
+import type { DetailTab, FilterClause } from '@drizztdourden08/tessera/data';
 import {
   DEFAULT_KIND, DEFAULT_TAB, NO_COLUMNS, NO_TABLE, RECOMMENDATIONS_KIND,
 } from '../DataInspector.constants';

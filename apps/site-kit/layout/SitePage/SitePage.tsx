@@ -1,6 +1,6 @@
 /* @layer site-kit @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Flex } from '@ds/primitives/Flex';
+import { Flex } from '@drizztdourden08/tessera/primitives';
 import { SettingsPage } from '@domains/app/compounds/SettingsPage';
 import { useSiteDefinition } from '../../site/site-context';
 import type { SitePageProps } from './SitePage.type';

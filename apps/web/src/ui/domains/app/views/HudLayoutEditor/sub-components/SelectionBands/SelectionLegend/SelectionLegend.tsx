@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { KeyCap } from '@ds/primitives/KeyCap';
-import { MouseGlyph } from '@ds/primitives/MouseGlyph';
-import { Text } from '@ds/primitives/Text';
+import { Box, KeyCap, MouseGlyph, Text } from '@drizztdourden08/tessera/primitives';
 import { capLabel } from '../behavior/cap-label';
 import { legendEntries } from '../behavior/legend-entries';
 import '../HudLayoutEditor.bands.css';

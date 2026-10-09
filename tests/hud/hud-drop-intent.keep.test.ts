@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { pushDismissable, topDismissLevel } from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/dismiss-stack';
+import { pushDismissable, topDismissLevel } from '@drizztdourden08/tessera/primitives';
 import {
   applyDrop, outlineIntent, refusalFor, refusalText, zoneIn,
 } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';

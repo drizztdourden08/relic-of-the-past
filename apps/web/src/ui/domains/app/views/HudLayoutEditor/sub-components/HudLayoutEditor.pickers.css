@@ -58,7 +58,7 @@
 
 .hud-picker-grid__tiles .hud-picker-grid__tile:hover,
 .hud-picker-grid__tiles .hud-picker-grid__tile:focus-visible {
-  background: var(--color-surface-hover);
+  background: var(--c-hover);
   border-color: var(--c-border);
   outline: none;
 }
@@ -109,7 +109,7 @@
 }
 
 .hud-slot-picker__row:hover {
-  background: var(--color-surface-hover);
+  background: var(--c-hover);
 }
 
 .hud-slot-picker__label {

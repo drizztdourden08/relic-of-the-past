@@ -1,6 +1,5 @@
 /* @layer site-kit @kind component */
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { GateProps } from './Gate.type';
 import './Gate.css';
 

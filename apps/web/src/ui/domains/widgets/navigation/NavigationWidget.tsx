@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from './styles';
 import { ScreenMapWithConnections } from './sub-components';
 import { FunctionsPanel } from './sub-components/FunctionsPanel';

@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { DropZone } from '@ds/primitives/DropZone';
-import { Text } from '@ds/primitives/Text';
+import { Box, DropZone, Text } from '@drizztdourden08/tessera/primitives';
 import { LayerEditor } from './LayerEditor';
 import { SoundGroupField } from './SoundGroupField';
 import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';

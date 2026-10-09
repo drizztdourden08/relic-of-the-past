@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Field, Text } from '@drizztdourden08/tessera/primitives';
 import { NumberCell } from './NumberCell';
 import { compactEdges } from '../behavior/offset';
 import { OFFSET_SIDES, SIDES } from './BoxModelField.constants';

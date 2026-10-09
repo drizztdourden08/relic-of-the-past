@@ -11,7 +11,7 @@
 }
 
 .dark-room-light[data-state='on'] {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .dark-room-light[data-state='off'] {

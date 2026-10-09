@@ -1,11 +1,8 @@
 /* @layer site-kit @kind component */
 import { useState } from 'react';
 import { DEFAULT_GROUP_ID } from '@shared/hub/group-types';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
-import { Dialog } from '@ds/composites/Dialog';
-import { SettingsSection } from '@ds/composites/SettingsSection';
+import { Button, Flex, Text } from '@drizztdourden08/tessera/primitives';
+import { Dialog, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { Row } from '../../../components/Row/Row';
 import { Chip } from '../../../components/Chip/Chip';
 import type { GroupView } from '../../../api/hub-responses.type';

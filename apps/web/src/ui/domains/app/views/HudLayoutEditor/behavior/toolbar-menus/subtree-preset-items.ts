@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { HUD_PRESETS, instantiatePreset } from '@shared/hud/presets';
-import type { MenuEntry } from '@ds/composites/DropdownMenu';
+import type { MenuEntry } from '@drizztdourden08/tessera/composites';
 import type { MenuDeps } from './toolbar-menus.type';
 
 const subtreePresetItems = (deps: MenuDeps): MenuEntry[] =>

@@ -8,8 +8,7 @@ import { join, resolve } from 'path';
 import { ValueField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
 import { KeyframeTrack } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/KeyframeTrack';
 import { PaintField } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/PaintField';
-import { Field } from '../../apps/web/src/ui/design-system/primitives/Field';
-import { Select } from '../../apps/web/src/ui/design-system/primitives/Select';
+import { Field, Select } from '@drizztdourden08/tessera/primitives';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/apps/web/src/ui/design-system`;

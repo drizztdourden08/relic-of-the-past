@@ -3,14 +3,13 @@ import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all, CONNECTION_TAG_METADATA, tagKeysOf, TAG_METADATA } from '@shared/game/data';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
-import { isTagsField } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import { RecordEditor, isTagsField } from '@drizztdourden08/tessera/composites';
 import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
 import {
   resolveTagSuggestionsFor, tagSuggestionsResolverFor,
 } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/tag-suggestions';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const TAG_ENTRY = 'class="tag-input';

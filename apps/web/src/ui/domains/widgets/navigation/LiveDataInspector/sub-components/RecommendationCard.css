@@ -8,7 +8,7 @@
   width: 100%;
   padding: var(--space-sm);
   text-align: left;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--c-border);
   background: var(--c-hover);
 }

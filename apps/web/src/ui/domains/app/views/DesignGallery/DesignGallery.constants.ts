@@ -36,12 +36,12 @@ const GOLD: TokenGroup = {
   title: 'Gold (PRIMARY accent)',
   description: 'Selection · active · focus · the primary action · highlights. The default "this matters".',
   tokens: [
-    { name: 'gold', cssVar: '--c-gold', value: '#c8a84e' },
-    { name: 'gold-bright', cssVar: '--c-gold-bright', value: '#e4c65a' },
-    { name: 'gold-dim', cssVar: '--c-gold-dim', value: '#2a2418', note: 'dim fill bg' },
+    { name: 'gold', cssVar: '--c-primary', value: '#c8a84e' },
+    { name: 'gold-bright', cssVar: '--c-primary-bright', value: '#e4c65a' },
+    { name: 'gold-dim', cssVar: '--c-primary-dim', value: '#2a2418', note: 'dim fill bg' },
     { name: 'gold-shade', cssVar: '--c-gold-shade', value: '#8c6a2a', note: 'pixel art shade' },
     { name: 'gold-deep', cssVar: '--c-gold-deep', value: '#50431f', note: 'pixel art deep fill' },
-    { name: 'gold-soft', cssVar: '--c-gold-soft', value: 'gold 14%', note: 'glow / selected' },
+    { name: 'gold-soft', cssVar: '--c-primary-soft', value: 'gold 14%', note: 'glow / selected' },
   ],
 };
 
@@ -49,10 +49,10 @@ const GREEN: TokenGroup = {
   title: 'Green (SECONDARY accent, contextual)',
   description: 'Positive / success / go ONLY: success, complete/obtained, live/connected, safe actions (Start, Resume, Connect). Never plain "selected".',
   tokens: [
-    { name: 'green', cssVar: '--c-green', value: '#4a9966' },
-    { name: 'green-bright', cssVar: '--c-green-bright', value: '#5cb87a' },
-    { name: 'green-dim', cssVar: '--c-green-dim', value: '#1a2a1e' },
-    { name: 'green-soft', cssVar: '--c-green-soft', value: 'green 14%' },
+    { name: 'green', cssVar: '--c-secondary', value: '#4a9966' },
+    { name: 'green-bright', cssVar: '--c-secondary-bright', value: '#5cb87a' },
+    { name: 'green-dim', cssVar: '--c-secondary-dim', value: '#1a2a1e' },
+    { name: 'green-soft', cssVar: '--c-secondary-soft', value: 'green 14%' },
   ],
 };
 
@@ -87,10 +87,10 @@ const SPACE_SCALE: TokenSpec[] = [
 ];
 
 const RADIUS_SCALE: TokenSpec[] = [
-  { name: 'sm', cssVar: '--r-sm', value: '4px' },
-  { name: 'md', cssVar: '--r-md', value: '6px' },
-  { name: 'lg', cssVar: '--r-lg', value: '8px' },
-  { name: 'pill', cssVar: '--r-pill', value: '999px' },
+  { name: 'sm', cssVar: '--radius-sm', value: '4px' },
+  { name: 'md', cssVar: '--radius-md', value: '6px' },
+  { name: 'lg', cssVar: '--radius-lg', value: '8px' },
+  { name: 'pill', cssVar: '--radius-pill', value: '999px' },
 ];
 
 const SHADOW_SCALE: TokenSpec[] = [

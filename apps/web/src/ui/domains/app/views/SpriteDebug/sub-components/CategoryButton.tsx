@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button, Text } from '../../../../../design-system/primitives';
+import { Button, Text } from '@drizztdourden08/tessera/primitives';
 import { LABEL_STYLES, S } from '../SpriteDebug.constants';
 
 const CategoryButton = ({ label, value, current, onClick, count }: {

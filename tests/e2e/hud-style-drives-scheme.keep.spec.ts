@@ -35,13 +35,13 @@ const openProfile = async (instance: string, profile: string): Promise<Hub> => {
   const cdp = await app.context().newCDPSession(page);
   await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1500, height: 1200, deviceScaleFactor: 1, mobile: false });
   await page.waitForTimeout(1200);
-  await page.locator('.list-item-row__name', { hasText: profile }).first().click();
+  await page.locator('.list-item-row__primary', { hasText: profile }).first().click();
   await page.waitForTimeout(500);
   await page.getByText('Open Profile', { exact: true }).first().click();
   await page.waitForTimeout(2500);
 
   const tab = async (name: string): Promise<void> => {
-    await page.locator(`.section-nav__item[aria-label="${name}"]`).first().click();
+    await page.locator(`.side-nav__item[aria-label="${name}"]`).first().click();
     await page.waitForTimeout(900);
   };
   const shoot = async (name: string, selector: string): Promise<void> => {

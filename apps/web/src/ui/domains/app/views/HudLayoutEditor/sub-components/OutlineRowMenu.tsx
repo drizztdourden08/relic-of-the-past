@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
-import { DropdownMenu } from '@ds/composites/DropdownMenu';
+import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import { primaryModifierLabel } from '@shared/platform';
 import { usePlatform } from '@app/platform';
 import { ARROW, stepOptions } from '../behavior/step-intent';
-import type { MenuEntry } from '@ds/composites/DropdownMenu';
+import type { MenuEntry } from '@drizztdourden08/tessera/composites';
 import type { OutlineRowMenuProps } from './OutlineRowMenu.type';
 
 const OutlineRowMenu = (props: OutlineRowMenuProps) => {

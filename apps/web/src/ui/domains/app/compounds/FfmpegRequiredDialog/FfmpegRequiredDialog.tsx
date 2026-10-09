@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useRef } from 'react';
-import { DialogShell } from '@ds/composites/DialogShell';
-import { Button } from '@ds/primitives/Button';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { useFfmpegInstall } from '@app/hooks/useFfmpegInstall';
 import { FfmpegInstallStep } from '../FfmpegInstallStep';
 import type { FfmpegRequiredDialogProps } from './FfmpegRequiredDialog.type';

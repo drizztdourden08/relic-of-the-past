@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box } from '../../../../../../design-system/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { COLOR_GROUPS } from '../../DesignGallery.constants';
 import { Swatch } from '../Swatch';
 import { Specimen } from '../Specimen';

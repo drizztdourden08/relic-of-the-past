@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Badge } from '@ds/primitives/Badge';
-import { IconButton } from '@ds/primitives/IconButton';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { ListItemRow } from '@ds/composites/ListItemRow';
+import { Box, Status, IconButton, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@app/utils/formatBytes';
 import { HookshopChip } from '@domains/app/compounds/HookshopChip';
 import type { MsuPackListProps } from './MsuPackList.type';
@@ -35,9 +32,9 @@ const MsuPackList = (props: MsuPackListProps) => {
           meta={
             <>
               {`${pack.fileCount} file${pack.fileCount !== 1 ? 's' : ''} · ${formatBytes(pack.totalSize)} · `}
-              <Badge variant={pack.format === 'layered' ? 'success' : 'neutral'}>
+              <Status tone={pack.format === 'layered' ? 'success' : 'neutral'}>
                 {pack.format === 'layered' ? 'Layered' : 'Classic'}
-              </Badge>
+              </Status>
             </>
           }
           badge={isInstalled(pack.name) ? <HookshopChip /> : undefined}

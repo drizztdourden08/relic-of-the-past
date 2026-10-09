@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, Button, Text } from '@ds/primitives';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { COLLAPSE_LABEL, EXPAND_LABEL } from '../DataInspector.constants';
 import type { CollapsibleDetailProps } from '../DataInspector.type';
 import './CollapsibleDetail.css';

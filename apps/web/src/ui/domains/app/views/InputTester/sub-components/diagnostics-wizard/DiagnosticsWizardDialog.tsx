@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useRef, useState } from 'react';
-import { DialogShell } from '@ds/composites/DialogShell';
-import { Button } from '@ds/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import type { HidWizardHandle } from '../HidCalibrationWizard';
 import { StepIndicator } from '../controller-report/sub-components/StepIndicator';
 import { useDiagnosticsWizardState } from './behavior/useDiagnosticsWizardState';

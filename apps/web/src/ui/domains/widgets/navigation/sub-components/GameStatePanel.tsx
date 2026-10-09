@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { DescRow } from './DescRow';
 import type { GameStatePanelProps } from './GameStatePanel.type';
@@ -12,12 +12,12 @@ const GameStatePanel = (props: GameStatePanelProps) => {
         <Box style={S.sectionTitle}>Game State</Box>
         <Box style={S.infoBox}>
           <DescRow label="Mode" desc="Whether the player is currently indoors (dungeon/cave/house) or outdoors on the overworld.">
-            <Text style={{ color: isIndoors ? 'var(--c-warning)' : 'var(--c-green)' }}>{isIndoors ? 'Indoor' : 'Outdoor'}</Text>
+            <Text style={{ color: isIndoors ? 'var(--c-warning)' : 'var(--c-secondary)' }}>{isIndoors ? 'Indoor' : 'Outdoor'}</Text>
           </DescRow>
           {isIndoors ? (
             <>
               <DescRow label="Type" desc="The type of interior: Dungeon (palace index 0-13, has maps/keys/bosses), or Cave/House (palace 0xFF, standalone interiors with no dungeon logic).">
-                <Text style={{ color: palaceIndex === 0xFF ? 'var(--c-green)' : 'var(--c-info)' }}>{palaceIndex === 0xFF ? 'Cave / House' : 'Dungeon'}</Text>
+                <Text style={{ color: palaceIndex === 0xFF ? 'var(--c-secondary)' : 'var(--c-info)' }}>{palaceIndex === 0xFF ? 'Cave / House' : 'Dungeon'}</Text>
               </DescRow>
               <DescRow label="Room" desc="The current room ID in the indoor tilemap (0x0000-0x0127). Each indoor room is a 512×512 pixel area.">
                 <Text>0x{roomIndex.toString(16).toUpperCase().padStart(4, '0')}</Text>
@@ -45,7 +45,7 @@ const GameStatePanel = (props: GameStatePanelProps) => {
                 return (
                   <DescRow label="Viewport" desc="Camera viewport of this room (width × height in screens). Based on the room's quadrant allocation + fullsize flags. 'open' = no internal camera scroll boundaries. 'scroll' = camera scrolls between quadrants.">
                     <Text style={S.valInfo}>{effectiveShape}</Text>
-                    <Text style={{ color: hasScrollBoundaries ? '#f84' : 'var(--c-green)', marginLeft: 4, fontSize: 10 }}>{hasScrollBoundaries ? 'scroll' : 'open'}</Text>
+                    <Text style={{ color: hasScrollBoundaries ? '#f84' : 'var(--c-secondary)', marginLeft: 4, fontSize: 10 }}>{hasScrollBoundaries ? 'scroll' : 'open'}</Text>
                     <Text style={S.valBadge}>raw={roomLayoutInfo.shape} idx={roomLayoutInfo.layout}</Text>
                   </DescRow>
                 );
@@ -77,7 +77,7 @@ const GameStatePanel = (props: GameStatePanelProps) => {
                 <Text>0x{overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')} (R{(overworldScreenIndex >> 3) & 7} C{overworldScreenIndex & 7})</Text>
               </DescRow>
               <DescRow label="World" desc="Light World or Dark World. The two 8×8 overworld grids occupy the same coordinate space but are separate maps.">
-                <Text style={{ color: isDarkWorld ? '#c8a' : 'var(--c-green)' }}>{isDarkWorld ? 'Dark World' : 'Light World'}</Text>
+                <Text style={{ color: isDarkWorld ? '#c8a' : 'var(--c-secondary)' }}>{isDarkWorld ? 'Dark World' : 'Light World'}</Text>
               </DescRow>
             </>
           )}

@@ -6,7 +6,7 @@
 }
 
 .settings-popover__row-label {
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .settings-popover__row-pick {
@@ -14,6 +14,6 @@
 }
 
 .settings-popover__note {
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   line-height: var(--leading-normal);
 }

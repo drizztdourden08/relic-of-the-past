@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { LogRow } from '@ds/composites/LogPanel';
+import type { LogRow } from '@drizztdourden08/tessera/composites';
 import { TAG_ARROW } from './randomizer-log-style.constants';
 
 const rowsToText = (rows: readonly LogRow[]): string =>

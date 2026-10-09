@@ -1,9 +1,7 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useState } from 'react';
-import { useViewState } from '@ds/data/view-state/use-view-state';
-import { capture } from '@ds/data/view-state/snapshot';
-import type { SchemaLike } from '@ds/data/schema/build-schema';
-import type { FilterClause } from '@ds/data/filter/clause';
+import { useViewState, capture } from '@drizztdourden08/tessera/data';
+import type { SchemaLike, FilterClause } from '@drizztdourden08/tessera/data';
 import type { SiteViews } from './create-view-storage.type';
 import { useSavedViews } from './useSavedViews';
 import { NO_COLUMNS, QUERY_HALF_TABLE } from './useSurfaceView.constants';

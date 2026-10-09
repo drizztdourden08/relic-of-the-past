@@ -32,8 +32,8 @@
 }
 
 .randomizer-options .tab-bar__badge {
-  background: var(--c-gold-soft);
-  color: var(--c-gold-bright);
+  background: var(--c-primary-soft);
+  color: var(--c-primary-bright);
   font-variant-numeric: tabular-nums;
 }
 

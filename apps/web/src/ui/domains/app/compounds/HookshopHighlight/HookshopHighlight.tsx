@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import { Box, Image } from '@ds/primitives';
+import { Box, Image } from '@drizztdourden08/tessera/primitives';
 import { Hookshot } from '../Hookshot';
 import { Mascot } from '../Mascot';
 import { BEHIND_BAG, EFFECTS, LAYOUT, STYLES } from './behavior/scene.constants';

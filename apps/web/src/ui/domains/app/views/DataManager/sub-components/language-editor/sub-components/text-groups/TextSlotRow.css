@@ -5,7 +5,7 @@
   align-items: center;
   gap: var(--space-xs) var(--space-sm);
   padding: var(--space-2xs) var(--space-xs);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .text-slot-row:hover {
@@ -58,7 +58,7 @@
 }
 
 .text-slot-row__count[data-level='gold'] {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .text-slot-row__count[data-level='danger'] {
@@ -72,7 +72,7 @@
 
 .text-slot-row__caution {
   grid-column: 1 / -1;
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-size: var(--text-sm);
 }
 

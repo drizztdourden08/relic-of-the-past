@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode, RefObject } from 'react';
 import type { IconifyIcon as IconifyIconData } from '@iconify/types';
-import type { MenuEntry } from '@ds/composites/DropdownMenu';
+import type { MenuEntry } from '@drizztdourden08/tessera/composites';
 
 interface ToolbarMenuProps {
   icon: IconifyIconData;

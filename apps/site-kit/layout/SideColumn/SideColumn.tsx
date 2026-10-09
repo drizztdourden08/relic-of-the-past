@@ -1,5 +1,5 @@
 /* @layer site-kit @kind component */
-import { Flex } from '@ds/primitives/Flex';
+import { Flex } from '@drizztdourden08/tessera/primitives';
 import type { SideColumnProps } from './SideColumn.type';
 import './SideColumn.css';
 

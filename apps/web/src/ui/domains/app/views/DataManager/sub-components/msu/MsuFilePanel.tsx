@@ -1,13 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Checkbox } from '@ds/primitives/Checkbox';
-import { DropZone } from '@ds/primitives/DropZone';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { Field } from '@ds/primitives/Field';
-import { SectionHeader } from '@ds/primitives/SectionHeader';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Checkbox, DropZone, EmptyState, Field, SectionHeader, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import { FileRow } from './FileRow';
 import { PackSummary } from './PackSummary';

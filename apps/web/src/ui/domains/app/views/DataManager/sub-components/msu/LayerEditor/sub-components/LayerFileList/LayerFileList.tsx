@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Select } from '@ds/primitives/Select';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Flex, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
 import { moveItem } from '../../behavior/layer-ops';
 import { ONE_FILE_NOTE } from './LayerFileList.constants';
 import type { LayerFileListProps } from './LayerFileList.type';

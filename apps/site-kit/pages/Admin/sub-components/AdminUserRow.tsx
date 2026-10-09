@@ -1,7 +1,6 @@
 /* @layer site-kit @kind component */
 import { PROVIDER_LABELS } from '@shared/hub/providers';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { Row } from '../../../components/Row/Row';
 import { GroupChips } from '../../../components/GroupChips/GroupChips';
 import { formatDay } from '../../../lib/format-date';

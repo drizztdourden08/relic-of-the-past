@@ -1,11 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { buildSchema, createSchemaIndex } from '../../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { buildSchema, createSchemaIndex, deriveRows, clearFieldStrategies, getComparator, registerComparator } from '@drizztdourden08/tessera/data';
 import * as sortOps from '../../../apps/web/src/ui/design-system/data/table/sort-ops';
-import { deriveRows } from '../../../apps/web/src/ui/design-system/data/table/derive-rows';
-import {
-  clearFieldStrategies, getComparator, registerComparator,
-} from '../../../apps/web/src/ui/design-system/data/table/strategy-registry';
 import { ROWS } from './table-state.constants';
 
 const index = createSchemaIndex(buildSchema(ROWS));

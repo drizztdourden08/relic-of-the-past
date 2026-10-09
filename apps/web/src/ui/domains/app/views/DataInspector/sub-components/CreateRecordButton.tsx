@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
-import { Button } from '@ds/primitives';
-import { CreateRecordDialog } from '@ds/composites';
+import { Button } from '@drizztdourden08/tessera/primitives';
+import { CreateRecordDialog } from '@drizztdourden08/tessera/composites';
 import type { CreateRecordButtonProps } from '../DataInspector.type';
 import { resolveIdRefOptionsFor } from '../behavior/id-ref-options';
 import { numberBoundsResolverFor } from '../behavior/number-bounds';

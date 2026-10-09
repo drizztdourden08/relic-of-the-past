@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import {
   COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier,
 } from '@shared/randomizer/world/difficulty/difficulty.data';

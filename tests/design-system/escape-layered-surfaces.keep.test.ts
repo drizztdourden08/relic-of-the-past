@@ -3,16 +3,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement, useState, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { FullScreenLayer } from '../../apps/web/src/ui/design-system/composites/FullScreenLayer';
-import { DialogShell } from '../../apps/web/src/ui/design-system/composites/DialogShell';
-import { Drawer } from '../../apps/web/src/ui/design-system/composites/Drawer';
-import { Select } from '../../apps/web/src/ui/design-system/primitives/Select';
-import {
-  dismissStackDepth,
-} from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/dismiss-stack';
-import {
-  useDismissable,
-} from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/use-dismissable';
+import { ScreenWindow, DialogShell, Drawer } from '@drizztdourden08/tessera/composites';
+import { Select, dismissStackDepth, useDismissable } from '@drizztdourden08/tessera/primitives';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -37,7 +29,7 @@ const click = (el: Element): void => {
   act(() => { el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })); });
 };
 
-const layerIsUp = (): boolean => document.querySelector('.fullscreen-layer') !== null;
+const layerIsUp = (): boolean => document.querySelector('.screen-layer') !== null;
 
 afterEach(() => {
   if (mounted) {
@@ -62,7 +54,7 @@ describe('Escape inside a full-screen layer', () => {
     const onClose = vi.fn();
     const Fixture = () => {
       const [popover, setPopover] = useState(true);
-      return createElement(FullScreenLayer, { onClose, title: 'Editor' },
+      return createElement(ScreenWindow, { onClose, title: 'Editor' },
         createElement(TestPopover, { open: popover, onClose: () => setPopover(false) }));
     };
     mount(createElement(Fixture));
@@ -83,7 +75,7 @@ describe('Escape inside a full-screen layer', () => {
     const Fixture = () => {
       const [popover, setPopover] = useState(false);
       openPopover = () => setPopover(true);
-      return createElement(FullScreenLayer, { onClose, title: 'Editor' },
+      return createElement(ScreenWindow, { onClose, title: 'Editor' },
         createElement(TestPopover, { open: popover, onClose: () => setPopover(false) }));
     };
     mount(createElement(Fixture));
@@ -102,7 +94,7 @@ describe('Escape inside a full-screen layer', () => {
 
   it('closes an open Select, not the layer around it', () => {
     const onClose = vi.fn();
-    mount(createElement(FullScreenLayer, { onClose, title: 'Editor' },
+    mount(createElement(ScreenWindow, { onClose, title: 'Editor' },
       createElement(Select, {
         value: 'a', onChange: () => undefined,
         options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }],
@@ -123,7 +115,7 @@ describe('Escape inside a full-screen layer', () => {
   it('closes a dialog, not the layer under it', () => {
     const closeLayer = vi.fn();
     const closeDialog = vi.fn();
-    mount(createElement(FullScreenLayer, { onClose: closeLayer, title: 'Editor' },
+    mount(createElement(ScreenWindow, { onClose: closeLayer, title: 'Editor' },
       createElement(DialogShell, { open: true, onClose: closeDialog, title: 'Confirm' }, null)));
 
     pressEscape();
@@ -134,7 +126,7 @@ describe('Escape inside a full-screen layer', () => {
   it('lets a non-dismissable dialog swallow the key instead of passing it down', () => {
     const closeLayer = vi.fn();
     const closeDialog = vi.fn();
-    mount(createElement(FullScreenLayer, { onClose: closeLayer, title: 'Editor' },
+    mount(createElement(ScreenWindow, { onClose: closeLayer, title: 'Editor' },
       createElement(DialogShell, {
         open: true, onClose: closeDialog, title: 'Working', dismissable: false,
       }, null)));
@@ -147,7 +139,7 @@ describe('Escape inside a full-screen layer', () => {
 
   it('registers nothing while the layer is hidden', () => {
     const onClose = vi.fn();
-    mount(createElement(FullScreenLayer, { onClose, hidden: true, title: 'Home' }, null));
+    mount(createElement(ScreenWindow, { onClose, hidden: true, title: 'Home' }, null));
 
     expect(dismissStackDepth()).toBe(0);
     pressEscape();

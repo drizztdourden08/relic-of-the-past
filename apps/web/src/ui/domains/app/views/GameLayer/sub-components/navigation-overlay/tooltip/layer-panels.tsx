@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { LayerBlockProps } from './tooltip.type';
 import { S } from './styles';
 import { ClassificationRows } from './classification-rows';

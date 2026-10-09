@@ -117,7 +117,7 @@
   font-weight: var(--weight-semi);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .cheats-pointer-hint__row {
@@ -141,7 +141,7 @@
   min-width: 160px;
   padding: var(--space-xs);
   background: var(--c-surface);
-  border: var(--border-width-thin) solid var(--c-gold);
+  border: var(--border-width-thin) solid var(--c-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-dropdown);
 }
@@ -177,11 +177,11 @@
 }
 
 .cheats-popover__row[data-current] {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .cheats-popover__row--give {
-  color: var(--c-green-bright);
+  color: var(--c-secondary-bright);
 }
 
 .cheats-popover__row--remove {
@@ -222,8 +222,8 @@
 }
 
 .cheats-popover__all:hover {
-  color: var(--c-gold);
-  border-color: var(--c-gold);
+  color: var(--c-primary);
+  border-color: var(--c-primary);
 }
 
 .cheats-setter__row {
@@ -267,6 +267,6 @@
 }
 
 .cheats-setter__end:hover {
-  color: var(--c-gold);
+  color: var(--c-primary);
   background: var(--c-hover);
 }

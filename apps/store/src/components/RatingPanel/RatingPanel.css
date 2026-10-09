@@ -4,7 +4,7 @@
 }
 
 .rating-panel__average {
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-family: var(--font-mono);
   font-size: var(--text-2xl);
   font-weight: var(--weight-bold);
@@ -42,12 +42,12 @@
 .rating-histogram__track {
   height: var(--histogram-bar-h);
   overflow: hidden;
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   background: var(--c-sunken);
 }
 
 .rating-histogram__bar {
   height: 100%;
-  border-radius: var(--r-pill);
-  background: var(--c-gold);
+  border-radius: var(--radius-pill);
+  background: var(--c-primary);
 }

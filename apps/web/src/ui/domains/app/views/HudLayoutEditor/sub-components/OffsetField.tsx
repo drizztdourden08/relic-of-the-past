@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Field } from '@ds/primitives/Field';
-import { PositionInput } from '@ds/primitives/PositionInput';
+import { Field, PositionInput } from '@drizztdourden08/tessera/primitives';
 import { offsetOf, withOffset } from '../behavior/offset';
 import { AXES } from './OffsetField.constants';
 import type { OffsetFieldProps } from './OffsetField.type';

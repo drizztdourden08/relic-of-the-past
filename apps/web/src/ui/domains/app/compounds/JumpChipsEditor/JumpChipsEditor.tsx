@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, IconButton, NumberInput, Text } from '@ds/primitives';
+import { Box, Button, IconButton, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
 import type { JumpChipsEditorProps } from './JumpChipsEditor.type';
 import './JumpChipsEditor.css';
 

@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { CodeBlock } from '../../apps/web/src/ui/design-system/composites/CodeBlock';
+import { CodeBlock } from '@drizztdourden08/tessera/composites';
 
 const CODE = 'const a = 1;\nconst b = 2;\nconst c = 3;';
 

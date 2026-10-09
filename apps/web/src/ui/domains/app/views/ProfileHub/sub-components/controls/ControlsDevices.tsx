@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { RescanButton } from '../../../../compounds/RescanButton';
 import { controllerCardInfo } from '../../../../../../../lib/input/controller-card-info';
 import { DeviceCard } from './DeviceCard';

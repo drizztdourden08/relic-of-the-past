@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
 import type { MouseEvent } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { EmptyState } from '@ds/primitives/EmptyState';
+import { Box, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ItemCard } from '../ItemCard/ItemCard';
 import type { ItemGridProps } from './ItemGrid.type';
 import { CARD_SELECTOR } from './ItemGrid.constants';

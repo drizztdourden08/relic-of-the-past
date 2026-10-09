@@ -14,7 +14,7 @@ import timerIcon from '@iconify-icons/lucide/timer';
 import {
   newButton, newContainer, newCountdown, newElement, newGrid, newOverlap, newRepeat, newSwitch, newText,
 } from '../new-node';
-import type { MenuEntry } from '@ds/composites/DropdownMenu';
+import type { MenuEntry } from '@drizztdourden08/tessera/composites';
 import type { MenuDeps, ToolbarGroup } from './toolbar-menus.type';
 
 const containerItems = (deps: MenuDeps): MenuEntry[] => ([

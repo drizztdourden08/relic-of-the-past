@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import type { LegendSwatchProps } from './LegendSwatch.type';
 
 const LegendSwatch = ({ color, ring, halo }: LegendSwatchProps) => {

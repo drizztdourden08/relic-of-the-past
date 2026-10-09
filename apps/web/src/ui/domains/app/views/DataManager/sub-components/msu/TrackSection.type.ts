@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { SelectOption } from '@ds/primitives/Select';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import type { PreviewReportStore } from './behavior/preview-report-store.type';
 import type { MatchedTrack, MsuFile } from './msu.type';
 

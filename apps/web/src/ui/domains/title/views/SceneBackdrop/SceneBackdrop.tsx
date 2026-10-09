@@ -1,7 +1,6 @@
 /* @layer renderer-hud @kind component */
 import { useEffect, useMemo, useRef } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Canvas } from '../../../../design-system/primitives/Canvas';
+import { Box, Canvas } from '@drizztdourden08/tessera/primitives';
 import { buildScene } from '../../scene/compose-scene';
 import { useBackdropGeometry } from './behavior/useBackdropGeometry';
 import { useSceneAssets } from './behavior/useSceneAssets';

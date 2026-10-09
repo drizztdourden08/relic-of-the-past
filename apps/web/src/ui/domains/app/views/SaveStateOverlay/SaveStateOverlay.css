@@ -87,12 +87,12 @@
   color: var(--c-text);
   background: var(--c-scrim);
   padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xs);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   backdrop-filter: blur(4px);
 }
 
 .save-overlay__hint--holding-save {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .save-overlay__hint-icon-wrap {
@@ -118,7 +118,7 @@
   color: var(--c-text);
   background: var(--c-border-strong);
   border: 1px solid var(--c-border-strong);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-xs);
   line-height: 1.4;
 }

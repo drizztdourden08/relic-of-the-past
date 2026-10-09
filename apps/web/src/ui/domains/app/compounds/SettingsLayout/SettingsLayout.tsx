@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useContext, useMemo } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { SettingsPage } from '../SettingsPage';
 import { resolveSections } from './behavior/resolve-sections';
 import { useLockCause } from './behavior/useLockCause';

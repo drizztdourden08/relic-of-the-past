@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
+import { Status, Box, Button, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { soundChannelPort, soundChannelTag, triggerSummary } from './sound-labels';
 import { AMBIENT_ROLE_HINTS, AMBIENT_ROLE_LABELS } from './msu.constants';
 import type { SoundRowProps } from './msu.type';
@@ -38,17 +34,17 @@ const SoundRow = (props: SoundRowProps) => {
       </Box>
 
       {role !== null && (
-        <Badge variant="neutral" title={AMBIENT_ROLE_HINTS[role]}>{AMBIENT_ROLE_LABELS[role]}</Badge>
+        <Status tone="neutral" title={AMBIENT_ROLE_HINTS[role]}>{AMBIENT_ROLE_LABELS[role]}</Status>
       )}
       {unreachable && (
-        <Badge variant="warning" title="Nothing in the game writes this id, so a sound put here never plays">
+        <Status tone="warning" title="Nothing in the game writes this id, so a sound put here never plays">
           Never raised
-        </Badge>
+        </Status>
       )}
 
-      <Badge variant={replaced ? 'success' : 'neutral'}>{replaced ? 'Replaced' : 'Native'}</Badge>
-      {layerCount > 1 && <Badge variant="neutral">{layerCount} layers</Badge>}
-      {chipAudible === false && !replaced && <Badge variant="neutral">Silent</Badge>}
+      <Status tone={replaced ? 'success' : 'neutral'}>{replaced ? 'Replaced' : 'Native'}</Status>
+      {layerCount > 1 && <Status tone="neutral">{layerCount} layers</Status>}
+      {chipAudible === false && !replaced && <Status tone="neutral">Silent</Status>}
 
       <Box className="msu-track-row__actions">
         {replaced && (

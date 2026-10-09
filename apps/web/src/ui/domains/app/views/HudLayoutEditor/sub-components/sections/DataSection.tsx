@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind component */
 import { resolveValue } from '@shared/hud/data';
-import { Box } from '@ds/primitives/Box';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Box, EmptyState, Field, Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { collectBoundValues } from '../../behavior/bound-values';
 import type { DataSectionProps } from './DataSection.type';
 

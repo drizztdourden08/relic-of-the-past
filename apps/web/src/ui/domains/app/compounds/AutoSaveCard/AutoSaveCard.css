@@ -13,7 +13,7 @@
 .auto-save-card__badge {
   font-size: var(--text-xs);
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   font-weight: var(--weight-medium);
   text-transform: uppercase;
   letter-spacing: 0.3px;

@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Thumbnail } from '../../../../design-system/primitives/Thumbnail';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Button } from '../../../../design-system/primitives/Button';
+import { Thumbnail, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { SaveCard } from '../SaveCard';
 import type { HeroSaveCardProps } from './HeroSaveCard.type';
 import './HeroSaveCard.css';

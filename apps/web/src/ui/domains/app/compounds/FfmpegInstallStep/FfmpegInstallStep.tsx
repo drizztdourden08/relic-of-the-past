@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { ProgressBar } from '@ds/primitives/ProgressBar';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import type { FfmpegInstallStepProps } from './FfmpegInstallStep.type';
 import './FfmpegInstallStep.css';
@@ -27,7 +24,7 @@ const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
     return (
       <Box className="ffmpeg-install-step">
         <Text className="ffmpeg-install-step__note">Checking the download against its published checksum...</Text>
-        <ProgressBar value={100} max={100} variant="green" />
+        <ProgressBar value={100} max={100} tone="secondary" />
       </Box>
     );
   }

@@ -1,6 +1,5 @@
 /* @layer store-site @kind component */
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { PackContents } from '@domains/packs/views/PackContents';
 import type { PackContentsPanelProps } from './PackContentsPanel.type';
 

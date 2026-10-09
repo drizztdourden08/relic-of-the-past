@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useMemo, useCallback } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { MasterDetailLayout } from '@ds/composites/MasterDetailLayout';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { useWearing } from '@domains/packs/character/behavior/useWearing';
 import { SpriteSheetViewer } from '@domains/packs/character/compounds/SpriteSheetViewer';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
@@ -136,7 +135,7 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
     </Box>
   );
 
-  return <MasterDetailLayout className="sprite-studio-layout" list={list} detail={detail} detailEmpty={!sheet} />;
+  return <ListDetailLayout className="sprite-studio-layout" list={list} detail={detail} detailEmpty={!sheet} />;
 };
 
 export { PlayerSpriteStudio };

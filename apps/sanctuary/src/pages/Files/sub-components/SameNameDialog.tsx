@@ -1,9 +1,6 @@
 /* @layer sanctuary-site @kind component */
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { DialogShell } from '@ds/composites/DialogShell';
+import { Button, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { Row } from '@site-kit/components/Row/Row';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';
 import { formatBytes } from '@site-kit/lib/format-bytes';

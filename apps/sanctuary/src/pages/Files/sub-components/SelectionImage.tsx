@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import imageIcon from '@iconify-icons/lucide/image';
-import { Image } from '@ds/primitives/Image';
+import { Image } from '@drizztdourden08/tessera/primitives';
 import { usePixelArt } from '@site-kit/components/MediaPreview/usePixelArt';
 import { useFilePreview } from '../../../files/useFilePreview';
 import type { SelectionImageProps } from './SelectionImage.type';

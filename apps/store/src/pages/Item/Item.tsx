@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
 import storeIcon from '@iconify-icons/lucide/store';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { ItemHero } from '../../components/ItemHero';
 import { PackContentsPanel } from '../../components/PackContentsPanel/PackContentsPanel';
 import { RatingPanel } from '../../components/RatingPanel/RatingPanel';

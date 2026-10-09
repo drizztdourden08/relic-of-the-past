@@ -112,7 +112,7 @@
 .capacity-row__readout {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  color: var(--c-gold);
+  color: var(--c-primary);
   white-space: nowrap;
 }
 

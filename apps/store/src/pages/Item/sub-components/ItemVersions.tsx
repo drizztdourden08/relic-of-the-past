@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { Dialog } from '@ds/composites/Dialog';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Dialog } from '@drizztdourden08/tessera/composites';
 import { VersionHistory } from '../../../components/VersionHistory/VersionHistory';
 import { useVersionDelete } from '../behavior/useVersionDelete';
 import type { ItemVersionsProps } from './ItemVersions.type';

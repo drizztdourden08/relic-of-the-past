@@ -41,9 +41,9 @@
 
 .update-dialog__warning {
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--c-gold);
+  border: 1px solid var(--c-primary);
   border-radius: var(--radius-md);
-  background: var(--c-gold-soft);
+  background: var(--c-primary-soft);
   font-size: var(--text-sm);
   color: var(--c-text-dim);
 }
@@ -93,7 +93,7 @@
 
 .update-dialog__ready {
   font-size: var(--text-sm);
-  color: var(--c-green);
+  color: var(--c-secondary);
 }
 
 .update-dialog__error {

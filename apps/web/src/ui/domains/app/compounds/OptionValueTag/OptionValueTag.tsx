@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, Chip, Text } from '@ds/primitives';
-import type { ChipTone } from '@ds/primitives';
+import { Box, Chip, Text } from '@drizztdourden08/tessera/primitives';
+import type { ChipTone } from '@drizztdourden08/tessera/primitives';
 import type { OptionValueTagProps } from './OptionValueTag.type';
 import './OptionValueTag.css';
 

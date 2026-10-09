@@ -6,7 +6,7 @@
   align-items: center;
   flex-wrap: wrap;
   padding: var(--space-2xs) var(--space-xs);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-sm);
 }
@@ -27,17 +27,17 @@
 }
 
 .hud-toolbar__button:hover:not(:disabled) {
-  background: var(--color-surface-hover);
+  background: var(--c-hover);
   border-color: var(--c-border);
 }
 
 .hud-toolbar__button.is-open {
-  background: var(--color-surface-selected);
-  border-color: var(--c-gold);
+  background: var(--c-selected);
+  border-color: var(--c-primary);
 }
 
 .hud-toolbar__button:focus-visible {
-  outline: var(--border-width-thick) solid var(--c-gold);
+  outline: var(--border-width-thick) solid var(--c-primary);
   outline-offset: var(--space-2xs);
 }
 
@@ -76,7 +76,7 @@
 
 .hud-toolbar__chip {
   padding: var(--space-2xs) var(--space-xs);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
@@ -85,8 +85,8 @@
 }
 
 .hud-toolbar__chip.is-selected {
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
+  border-color: var(--c-primary);
+  color: var(--c-primary-bright);
 }
 
 .hud-ground__swatch {
@@ -102,7 +102,7 @@
 }
 
 .hud-ground__swatch.is-selected {
-  border-color: var(--c-gold-bright);
+  border-color: var(--c-primary-bright);
   border-width: var(--border-width-thick);
 }
 
@@ -120,7 +120,7 @@
 
 .hud-inspect__name {
   font-size: var(--text-sm);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .hud-inspect__id,
@@ -163,7 +163,7 @@
 }
 
 .hud-stage__pick.is-selected {
-  border-color: var(--c-gold-bright);
+  border-color: var(--c-primary-bright);
 }
 
 .hud-editor-stage__ground {
@@ -178,7 +178,7 @@
   right: var(--space-2xs);
   bottom: var(--space-2xs);
   padding: 0 var(--space-2xs);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   color: var(--c-text-muted);

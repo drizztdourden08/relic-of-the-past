@@ -2,12 +2,12 @@
 import { it, expect, beforeAll } from 'vitest';
 import { all } from '@shared/game/data';
 import * as columnOps from '../../../apps/web/src/ui/design-system/data/table/column-ops';
-import { capture, isViewSnapshot, restore } from '../../../apps/web/src/ui/design-system/data/view-state/snapshot';
+import { capture, isViewSnapshot, restore } from '@drizztdourden08/tessera/data';
 import {
   substituteDisplay,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/display-substitution';
+} from '@drizztdourden08/tessera/composites';
 import type * as DisplayModule from '../../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-display';
-import type { TableColumn } from '../../../apps/web/src/ui/design-system/data/table/types';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../../dataset-guard';
 import { AREA_PATH, NAME_PATH } from './id-ref-display.constants';
 import { fieldAt } from './field-at';

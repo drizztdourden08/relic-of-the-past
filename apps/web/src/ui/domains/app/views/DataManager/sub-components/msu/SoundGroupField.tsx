@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Field, TextInput } from '@drizztdourden08/tessera/primitives';
 import { writeMsuManifest } from '@app/lib/storage/msu-store';
 import { withSoundGroup } from './behavior/sound-manifest';
 import { HINT } from './SoundGroupField.constants';

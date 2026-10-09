@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { CURVE_IDS, CURVE_LABELS } from '@shared/randomizer/world/capacity';
 import type { CapacityFamily } from '@shared/randomizer/world/capacity';
-import type { SelectGroup } from '@ds/primitives';
+import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
 import { offeredPresetsOf } from '../capacity-row-state';
 
 const curveOptionsOf = (capacityFamily: CapacityFamily): readonly SelectGroup[] => [

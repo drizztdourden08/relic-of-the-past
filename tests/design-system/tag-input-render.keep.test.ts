@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { TagInput } from '../../apps/web/src/ui/design-system/primitives/TagInput';
-import type { TagInputProps } from '../../apps/web/src/ui/design-system/primitives/TagInput';
+import { TagInput } from '@drizztdourden08/tessera/composites';
+import type { TagInputProps } from '@drizztdourden08/tessera/composites';
 
 const VOCABULARY = ['env:outdoor', 'role:boss', 'hazard:pits'];
 

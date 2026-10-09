@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDismissable } from '@ds/primitives/Portal';
+import { useDismissable } from '@drizztdourden08/tessera/primitives';
 import { SLOP } from './useDragGesture.constants';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { Armed, DragGesture, DragGestureInput } from './useDragGesture.type';

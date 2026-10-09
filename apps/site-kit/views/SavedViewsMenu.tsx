@@ -1,11 +1,8 @@
 /* @layer site-kit @kind component */
 import { useMemo, useState } from 'react';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { Dialog } from '@ds/composites/Dialog';
-import { DropdownMenu } from '@ds/composites/DropdownMenu';
-import type { MenuEntry } from '@ds/composites/DropdownMenu';
-import { useAnchorMenu } from '@ds/composites/FilterBar/behavior/use-anchor-menu';
+import { Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Dialog, DropdownMenu, useAnchorMenu } from '@drizztdourden08/tessera/composites';
+import type { MenuEntry } from '@drizztdourden08/tessera/composites';
 import { NameDialog } from './NameDialog';
 import { PORTALLED_MENU_SELECTOR } from './SavedViewsMenu.constants';
 import type { Prompt, SavedViewsMenuProps } from './SavedViewsMenu.type';

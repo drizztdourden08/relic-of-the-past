@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDismissable } from '@ds/primitives/Portal';
+import { useDismissable } from '@drizztdourden08/tessera/primitives';
 import { isPrimaryModifier } from '@shared/platform';
 import { usePlatform } from '@app/platform';
 import { cellKey, rectCells } from '../../GridLattice';

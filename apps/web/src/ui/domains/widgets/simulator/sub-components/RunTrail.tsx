@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { getScreen } from '@shared/game/data';
 import type { ScreenId } from '@shared/game/data';
 import { haulAt } from './trail-haul';

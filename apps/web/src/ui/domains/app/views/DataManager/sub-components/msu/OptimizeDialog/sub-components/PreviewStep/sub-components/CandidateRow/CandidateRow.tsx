@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { OptimizeCandidate } from '@shared/types/msu-optimize';
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import { UNKNOWN } from './CandidateRow.constants';
 import type { CandidateRowProps } from './CandidateRow.type';
@@ -24,7 +22,7 @@ const CandidateRow = (props: CandidateRowProps) => {
       <Text className="msu-optimize__row-name" title={row.name}>{row.name}</Text>
 
       {row.carryLoopSample !== null && (
-        <Badge variant="neutral" title="Its repeat point is written into the manifest first">↻</Badge>
+        <Status tone="neutral" title="Its repeat point is written into the manifest first">↻</Status>
       )}
 
       <Text className="msu-optimize__cell">{formatBytes(row.currentBytes)}</Text>
@@ -41,7 +39,7 @@ const CandidateRow = (props: CandidateRowProps) => {
         </>
       ) : (
         <>
-          <Badge variant="warning">unreadable</Badge>
+          <Status tone="warning">unreadable</Status>
           <Text className="msu-optimize__cell msu-optimize__cell--faint">left as it is</Text>
         </>
       )}

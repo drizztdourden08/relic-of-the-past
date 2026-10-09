@@ -2,13 +2,8 @@
 import { useRef } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import maximizeIcon from '@iconify-icons/lucide/maximize-2';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { Image } from '@ds/primitives/Image';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { Video } from '@ds/primitives/Video';
+import { Box, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Video } from '@drizztdourden08/tessera/composites';
 import { usePixelArt } from './usePixelArt';
 import type { MediaPreviewProps } from './MediaPreview.type';
 import './MediaPreview.css';

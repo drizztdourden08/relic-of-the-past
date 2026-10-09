@@ -1,11 +1,9 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { setPath } from '../../apps/web/src/ui/design-system/data/schema/path';
-import { changedPaths, hasPathChanged } from '../../apps/web/src/ui/design-system/composites/RecordEditor/behavior/dirty-paths';
-import { layoutGroups } from '../../apps/web/src/ui/design-system/composites/RecordEditor/behavior/layout-groups';
-import type { FieldDescriptor, SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { buildSchema, setPath } from '@drizztdourden08/tessera/data';
+import { changedPaths, hasPathChanged, layoutGroups } from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor, SchemaConfig } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const connections = all('connection');

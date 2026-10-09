@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind constants */
 import { progressTierOptions } from '@shared/game/logic/queries/progress-tier';
-import type { SchemaConfig } from '@ds/data';
+import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 
 const SCREEN_CONFIG: SchemaConfig = {
   defaultColumns: ['id', 'name', 'kind', 'world', 'areaId', 'locationId'],

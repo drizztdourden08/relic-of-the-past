@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Select } from '@ds/primitives/Select';
+import { Box, Button, Field, Flex, Select } from '@drizztdourden08/tessera/primitives';
 import type { LayerEffect } from '@shared/types/msu-manifest';
 import { EffectRow } from './sub-components/EffectRow';
 import { DEFAULT_EFFECT, EFFECTS_HINT, EFFECTS_LABEL, PRESETS, PRESET_OPTIONS } from './LayerEffectsField.constants';

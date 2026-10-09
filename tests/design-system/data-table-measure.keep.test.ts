@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   CLONE_STYLE, HOST_STYLE, naturalContentWidth, naturalContentWidths,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/measure-natural-width';
+} from '@drizztdourden08/tessera/composites';
 
 interface FakeDoc {
   body: FakeNode;

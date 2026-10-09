@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { useGridSolve } from '../../behavior/grid-solve';
 import { GridLattice, occupantsOf, rowCountFor } from '../GridLattice';

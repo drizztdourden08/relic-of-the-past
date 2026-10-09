@@ -173,7 +173,8 @@
     "vitest": "catalog:"
   },
   "brock": {
-    "version": "0.36.0"
+    "version": "0.36.0",
+    "tessera": "0.30.2"
   },
   "bin": {
     "rotp": "./bin/rotp.mjs"

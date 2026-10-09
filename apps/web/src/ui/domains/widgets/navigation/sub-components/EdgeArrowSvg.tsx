@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Svg, SvgPath } from '../../../../design-system/primitives';
+import { Svg, SvgPath } from '@drizztdourden08/tessera/primitives';
 import { EDGE_COLORS } from '../navigation.constants';
 import { SVG_STYLE } from './EdgeArrowSvg.constants';
 

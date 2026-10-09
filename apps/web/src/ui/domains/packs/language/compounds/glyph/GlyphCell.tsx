@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Canvas } from '@ds/primitives';
+import { Box, Canvas } from '@drizztdourden08/tessera/primitives';
 import { widthOf } from '@shared/game/language';
 import { CELL_W } from './glyph.constants';
 import { useGlyphCanvas } from './behavior/useGlyphCanvas';

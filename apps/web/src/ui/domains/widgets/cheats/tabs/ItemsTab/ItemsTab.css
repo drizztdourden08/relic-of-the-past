@@ -107,7 +107,7 @@
 }
 
 .cheats-items__cell:focus-visible {
-  outline: var(--border-width-thin) solid var(--c-gold);
+  outline: var(--border-width-thin) solid var(--c-primary);
 }
 
 .cheats-items__cell--menu::after {
@@ -117,7 +117,7 @@
   bottom: 0;
   border-style: solid;
   border-width: 0 0 var(--space-xs) var(--space-xs);
-  border-color: transparent transparent var(--c-gold);
+  border-color: transparent transparent var(--c-primary);
   pointer-events: none;
 }
 
@@ -148,7 +148,7 @@
   font-size: var(--text-xs);
   line-height: 1;
   padding: 0 var(--space-2xs);
-  color: var(--c-gold);
+  color: var(--c-primary);
   background: var(--c-bg);
   pointer-events: none;
 }
@@ -159,7 +159,7 @@
 
 @keyframes cheats-items-flash {
   from {
-    box-shadow: 0 0 0 var(--space-2xs) var(--c-gold);
+    box-shadow: 0 0 0 var(--space-2xs) var(--c-primary);
     filter: brightness(2);
   }
 

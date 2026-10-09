@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { assignmentLabel } from './assignment-label';
 import { slotName } from '@shared/input/scheme';
 import type { AbsentAssignmentsProps } from './controls.type';

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
-import { Box, Button, Portal, Text, TextInput } from '@ds/primitives';
+import { Box, Button, Portal, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { useAnchoredPlacement } from '../behavior/useAnchoredPlacement';
 import { useDismiss } from '../behavior/useDismiss';
 import type { NumberSetterProps } from './NumberSetter.type';

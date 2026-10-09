@@ -1,13 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { Text } from '@ds/primitives/Text';
+import { Status, Box, Button, Field, Flex, IconButton, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
 import type { IntervalTimesProps } from './IntervalTimes.type';
 
 const IntervalTimes = (props: IntervalTimesProps) => {
@@ -26,7 +19,7 @@ const IntervalTimes = (props: IntervalTimesProps) => {
         {atSeconds.length === 0 && <Text variant="caption">No times yet. Add one below.</Text>}
         {atSeconds.map((seconds) => (
           <Flex key={seconds} gap="xs" align="center" className="layer-card__interval">
-            <Badge variant="neutral">{seconds}s</Badge>
+            <Status tone="neutral">{seconds}s</Status>
             <IconButton
               variant="ghost"
               size="sm"

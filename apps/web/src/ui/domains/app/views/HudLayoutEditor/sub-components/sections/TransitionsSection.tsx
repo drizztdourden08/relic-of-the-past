@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Checkbox } from '@ds/primitives/Checkbox';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { Text } from '@ds/primitives/Text';
+import { Box, Checkbox, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { drivenProperties, mergeTransition, TRANSITION_PROPERTIES } from '../../behavior/transition-edits';
 import { EasingPicker } from '../EasingPicker';
 import { ValueField } from '../ValueField';

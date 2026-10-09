@@ -1,8 +1,7 @@
 /* @layer store-site @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import downloadIcon from '@iconify-icons/lucide/download';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
+import { Button, Flex } from '@drizztdourden08/tessera/primitives';
 import { useDownload } from './behavior/useDownload';
 import { useOpenInApp } from './behavior/useOpenInApp';
 import type { InstallButtonProps } from './InstallButton.type';

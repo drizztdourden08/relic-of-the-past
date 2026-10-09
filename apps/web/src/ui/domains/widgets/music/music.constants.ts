@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind constants */
 import type { MsuChannelName } from '@app/lib/msu/engine';
-import type { BadgeVariant } from '@ds/primitives/Badge/Badge.type';
+import type { StatusTone } from '@drizztdourden08/tessera/primitives';
 import type { MusicDebugOwner } from '@app/lib/game/music-debug';
 
 const CHANNELS: readonly MsuChannelName[] = ['music', 'ambient', 'sfx1', 'sfx2'];
@@ -10,7 +10,7 @@ const CHANNEL_TITLES: Record<MsuChannelName, string> = {
 };
 
 const OWNER_LABELS: Record<MusicDebugOwner, string> = { pack: 'MSU', chip: 'CHIP', skipped: 'SKIP' };
-const OWNER_VARIANTS: Record<MusicDebugOwner, BadgeVariant> = {
+const OWNER_VARIANTS: Record<MusicDebugOwner, StatusTone> = {
   pack: 'success', chip: 'warning', skipped: 'neutral',
 };
 

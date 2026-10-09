@@ -8,7 +8,7 @@
   z-index: var(--z-panel);
   background: var(--c-surface);
   border: 1px solid var(--c-border);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   backdrop-filter: blur(8px);
@@ -74,7 +74,7 @@
 
 .shadow-editor-panel__body::-webkit-scrollbar-thumb {
   background: var(--c-border-strong);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .shadow-editor-panel__field-row {
@@ -112,5 +112,5 @@
 
 .icon-btn--active {
   background: var(--c-info-soft) !important;
-  color: var(--c-gold) !important;
+  color: var(--c-primary) !important;
 }

@@ -1,8 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import playIcon from '@iconify-icons/lucide/play';
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { FILE_TYPE_ICONS } from '../../../files/file-type-icon.constants';
 import { mediaKindOf } from '@site-kit/lib/media-kind';
 import { SelectionImage } from './SelectionImage';

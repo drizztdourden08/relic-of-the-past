@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Badge, Box, Button, Icon, IconButton, SegmentedControl, TextInput } from '@ds/primitives';
+import { Status, Box, Button, Icon, IconButton, SegmentedControl, TextInput } from '@drizztdourden08/tessera/primitives';
 import {
   CLOSED_PANELS, FUNNEL_PATHS, ITEM_FILTER_OPTIONS, NESTED_PATHS, SEARCH_PATHS, SHOW_MODE_OPTIONS, TAG_PATHS,
 } from '../ChecksTracker.constants';
@@ -50,7 +50,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             <Icon paths={FUNNEL_PATHS} size={13} />
           </IconButton>
           {activeCount > 0 && (
-            <Badge className="tracker-filters__count" variant="warning">{activeCount}</Badge>
+            <Status className="tracker-filters__count" tone="warning">{activeCount}</Status>
           )}
         </Box>
       </Box>

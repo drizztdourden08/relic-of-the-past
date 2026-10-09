@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Slider, Text } from '@ds/primitives';
+import { Box, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionDescription } from '../OptionDescription';
 import { OptionValueTag } from '../OptionValueTag';
 import type { OptionSliderRowProps } from './OptionSliderRow.type';

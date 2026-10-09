@@ -5,7 +5,7 @@ import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '../../../apps/web/src/ui/d
 import { ColorField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ColorField';
 import { DirectionControl } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/DirectionControl';
 import { ExtentField } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/ExtentField';
-import { IconButton } from '../../../apps/web/src/ui/design-system/primitives/IconButton';
+import { IconButton } from '@drizztdourden08/tessera/primitives';
 import { GridEditor } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
 import { PlatformContext } from '../../../apps/web/src/platform/PlatformProvider';
 import type { Platform } from '../../../shared/platform';

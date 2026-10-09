@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { detectUnionBranch } from '../../apps/web/src/ui/design-system/composites/RecordEditor/behavior/union-branch';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
+import { detectUnionBranch } from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const connections = all('connection');

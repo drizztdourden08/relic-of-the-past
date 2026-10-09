@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useMemo, useState } from 'react';
-import type { SelectGroup } from '@ds/primitives/Select';
+import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
 import { ACTION_LABELS } from './useVersionChoice.constants';
 import type { Params, UpdateAction, VersionFacts } from './useVersionChoice.type';
 

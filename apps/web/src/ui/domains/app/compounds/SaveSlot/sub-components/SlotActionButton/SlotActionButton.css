@@ -24,8 +24,8 @@
 
 .slot-action--save:hover:not(:disabled),
 .slot-action--save:focus-visible {
-  background: var(--c-green-soft);
-  color: var(--c-green-bright);
+  background: var(--c-secondary-soft);
+  color: var(--c-secondary-bright);
 }
 
 .slot-action:focus-visible {
@@ -46,7 +46,7 @@
 
 .slot-action--armed,
 .slot-action--armed:hover:not(:disabled) {
-  background: var(--c-gold-soft);
+  background: var(--c-primary-soft);
 }
 
 .slot-action--armed .slot-action__emoji {
@@ -61,8 +61,8 @@
   border-radius: 50%;
   background: radial-gradient(
     circle at 40% 40%,
-    var(--c-green-bright) 0%,
-    var(--c-gold-bright) 55%,
+    var(--c-secondary-bright) 0%,
+    var(--c-primary-bright) 55%,
     transparent 75%
   );
   opacity: var(--opacity-glow);

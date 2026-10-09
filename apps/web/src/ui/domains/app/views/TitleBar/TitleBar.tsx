@@ -1,15 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
 import { usePlatform } from '@app/platform';
-import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
-import { SearchSpark } from '../../../../design-system/composites/SearchSpark';
-import { IconButton } from '../../../../design-system/primitives/IconButton';
+import { DropdownMenu, SearchSpark } from '@drizztdourden08/tessera/composites';
+import { IconButton, Box, Button, Text, Image, Icon } from '@drizztdourden08/tessera/primitives';
 import { BugReportButton } from '../../compounds/BugReportButton';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Button } from '../../../../design-system/primitives/Button';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Image } from '../../../../design-system/primitives/Image';
-import { Icon } from '../../../../design-system/primitives/Icon';
 import { useTitleBar } from './behavior/useTitleBar';
 import { useTitleBarPeek } from './behavior/useTitleBarPeek';
 import { useFpsReadout } from './behavior/useFpsReadout';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { StatTileProps } from '@ds/primitives';
+import type { StatTileProps } from '@drizztdourden08/tessera/composites';
 import { tallyTile } from './tally-tile';
 import type { OptionsSummary } from './options-summary.type';
 

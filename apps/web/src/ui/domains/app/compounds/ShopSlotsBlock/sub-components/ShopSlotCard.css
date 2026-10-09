@@ -53,7 +53,7 @@
   font-size: var(--text-xs);
   background: var(--c-hover);
   border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
 }
 
 .shop-slot-card__stock {

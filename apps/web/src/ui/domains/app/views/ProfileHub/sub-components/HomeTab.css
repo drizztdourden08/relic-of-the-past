@@ -140,7 +140,7 @@
 }
 
 .home-tab__save-name-input:focus {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .home-tab__sessions {

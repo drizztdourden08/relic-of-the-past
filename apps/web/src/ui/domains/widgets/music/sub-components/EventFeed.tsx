@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useEffect, useRef } from 'react';
-import { Badge, Box, EmptyState, ScrollArea, Text } from '@ds/primitives';
+import { Status, Box, EmptyState, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
 import type { MusicDebugEvent } from '@app/lib/game/music-debug';
 import { OWNER_LABELS, OWNER_VARIANTS } from '../music.constants';
 
@@ -25,7 +25,7 @@ const EventFeed = (props: { events: MusicDebugEvent[] }) => {
       {events.map((event) => (
         <Box key={event.id} className="music-event">
           <Text className="music-event__time">{timeOf(event.at)}</Text>
-          <Badge variant={OWNER_VARIANTS[event.owner]}>{OWNER_LABELS[event.owner]}</Badge>
+          <Status tone={OWNER_VARIANTS[event.owner]}>{OWNER_LABELS[event.owner]}</Status>
           <Text className="music-event__channel">{event.channel}</Text>
           <Text className="music-event__detail">{event.detail}</Text>
         </Box>

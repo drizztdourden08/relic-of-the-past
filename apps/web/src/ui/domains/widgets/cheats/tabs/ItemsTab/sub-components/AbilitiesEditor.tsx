@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseBorderBox, PauseButtonLabel, PauseEquipSlot, PauseLabel } from '@domains/hud';
 import { ABILITY_EQUIP_TYPE, ABILITY_PANEL, ABILITY_SLOT_ORDER } from '../ItemsTab.constants';

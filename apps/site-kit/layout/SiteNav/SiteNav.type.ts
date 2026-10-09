@@ -1,8 +1,8 @@
 /* @layer site-kit @kind types */
-import type { SectionNavSearch } from '@ds/composites/SectionNav';
+import type { SideNavSearch } from '@drizztdourden08/tessera/composites';
 
 type SiteNavProps = {
-  search: SectionNavSearch;
+  search: SideNavSearch;
   searching: boolean;
   onNavigate: () => void;
 };

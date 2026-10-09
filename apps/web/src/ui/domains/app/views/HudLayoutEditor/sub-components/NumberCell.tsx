@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { TextInput } from '@ds/primitives/TextInput';
+import { TextInput } from '@drizztdourden08/tessera/primitives';
 import { useEditorStep } from '../behavior/editor-step';
 import { NUMERAL } from './NumberCell.constants';
 import type { KeyboardEvent } from 'react';

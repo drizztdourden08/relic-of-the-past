@@ -14,7 +14,7 @@
 }
 
 .stars__star--on {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .stars__value {

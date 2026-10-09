@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Badge, Button, Text } from '@ds/primitives';
+import { Status, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { fitChipOf } from './fit-chip';
 import type { EntryCardCollapsedProps } from './entry.type';
 import './EntryCardCollapsed.css';
@@ -28,7 +28,7 @@ const EntryCardCollapsed = (props: EntryCardCollapsedProps) => {
 
       <Text as="span" className="entry-row__slot">
         {model.trigger ? (
-          <Badge className="entry-row__trigger" variant="neutral">{model.trigger}</Badge>
+          <Status className="entry-row__trigger" tone="neutral">{model.trigger}</Status>
         ) : null}
       </Text>
 
@@ -39,15 +39,15 @@ const EntryCardCollapsed = (props: EntryCardCollapsedProps) => {
 
       <Text as="span" className="entry-row__slot">
         {model.issues.map((issue) => (
-          <Badge key={issue} variant="danger" className="entry-row__issue">{issue}</Badge>
+          <Status key={issue} tone="danger" className="entry-row__issue">{issue}</Status>
         ))}
       </Text>
 
       <Text as="span" className="entry-row__slot">
         {fit.label ? (
-          <Badge className="entry-row__fit" variant={fit.variant} title={fit.detail}>
+          <Status className="entry-row__fit" tone={fit.variant} title={fit.detail}>
             {fit.label}
-          </Badge>
+          </Status>
         ) : null}
       </Text>
     </Button>

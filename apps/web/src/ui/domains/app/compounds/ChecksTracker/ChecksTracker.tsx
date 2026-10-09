@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { TrackerSummary } from './sub-components/TrackerSummary';
 import { TrackerFilters } from './sub-components/TrackerFilters';
 import { TrackerGroupTree } from './sub-components/TrackerGroupTree';

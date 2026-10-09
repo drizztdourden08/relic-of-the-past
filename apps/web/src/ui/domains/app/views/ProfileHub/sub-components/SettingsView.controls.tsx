@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
+import { SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { AspectRatioControl } from './AspectRatioControl';
 import { RefreshRateControl } from './RefreshRateControl';
 import {

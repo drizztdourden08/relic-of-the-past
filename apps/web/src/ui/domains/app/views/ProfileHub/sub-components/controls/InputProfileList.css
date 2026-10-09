@@ -52,8 +52,8 @@
 }
 
 .input-profile-list__item--active {
-  background: var(--c-gold-soft);
-  border-left: 2px solid var(--c-gold);
+  background: var(--c-primary-soft);
+  border-left: 2px solid var(--c-primary);
 }
 
 .input-profile-list__item-icon {
@@ -78,18 +78,18 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--r-sm);
-  background: var(--c-gold-soft);
-  color: var(--c-gold);
-  border: 1px solid var(--c-gold);
+  border-radius: var(--radius-sm);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  border: 1px solid var(--c-primary);
 }
 
 .input-profile-list__item-input {
   flex: 1;
   min-width: 0;
   background: var(--c-bg);
-  border: 1px solid var(--c-gold);
-  border-radius: var(--r-sm);
+  border: 1px solid var(--c-primary);
+  border-radius: var(--radius-sm);
   color: var(--c-text);
   font-size: var(--text-base);
   padding: var(--space-xs) var(--space-sm);
@@ -100,7 +100,7 @@
   font-size: var(--text-sm);
   color: var(--c-text-muted);
   padding: var(--space-xs) var(--space-xs);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   opacity: 0;
   cursor: pointer;
   transition: opacity 0.12s, color 0.12s;
@@ -111,14 +111,14 @@
 }
 
 .input-profile-list__item-edit:hover {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .input-profile-list__item-delete {
   font-size: var(--text-sm);
   color: var(--c-text-muted);
   padding: var(--space-xs) var(--space-xs);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   opacity: 0;
   transition: opacity 0.12s, color 0.12s;
 }

@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { resolveLiveControlState } from '@shared/input/family';
 import { AxisRecordButton, StickCircle } from './input-cal-visuals';
 import type { StickAxisPanelProps } from './ControllerAxes.type';

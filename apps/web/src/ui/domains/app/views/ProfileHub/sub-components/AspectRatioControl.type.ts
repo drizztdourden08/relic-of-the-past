@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { GameSettings } from '@shared/types/settings';
-import type { SegmentOption } from '../../../../../design-system/primitives/SegmentedControl';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 
 interface AspectRatioControlProps {
   label: string;

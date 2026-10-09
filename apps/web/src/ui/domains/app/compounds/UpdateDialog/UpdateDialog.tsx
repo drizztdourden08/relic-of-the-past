@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useMemo } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Button } from '../../../../design-system/primitives/Button';
-import { Select } from '../../../../design-system/primitives/Select';
-import { Toggle } from '../../../../design-system/primitives/Toggle';
-import { ProgressBar } from '../../../../design-system/primitives/ProgressBar';
-import { DialogShell } from '../../../../design-system/composites/DialogShell';
+import { Box, Text, Button, Select, Toggle, ProgressBar } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { describeTargetCompat } from '@shared/game/save-state';
 import type { TargetCompat } from '@shared/game/save-state';
 import { BugReportButton } from '../BugReportButton';

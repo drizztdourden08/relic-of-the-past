@@ -1,10 +1,6 @@
 /* @layer site-kit @kind component */
-import { Card } from '@ds/primitives/Card';
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { StatRow } from '@ds/primitives/StatRow';
-import { Text } from '@ds/primitives/Text';
-import { WindowHeader } from '@ds/composites/WindowHeader';
+import { Card, Flex, Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
+import { WindowHeader } from '@drizztdourden08/tessera/composites';
 import type { DetailPaneProps } from './DetailPane.type';
 import './DetailPane.css';
 

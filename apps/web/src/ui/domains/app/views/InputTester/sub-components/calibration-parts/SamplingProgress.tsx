@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { CALIBRATION_STYLE, PERCENT, PROGRESS_FILL } from './calibration-parts.constants';
 import type { SamplingProgressProps } from './calibration-parts.type';
 

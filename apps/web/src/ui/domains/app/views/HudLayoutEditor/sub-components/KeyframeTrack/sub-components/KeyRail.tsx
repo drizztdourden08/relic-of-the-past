@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { atFromPointer } from '../../../behavior/keyframe-track';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { NUDGE, NUDGE_COARSE } from './KeyRail.constants';

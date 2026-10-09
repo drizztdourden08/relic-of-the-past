@@ -1,12 +1,6 @@
 /* @layer renderer-components @kind component */
 import './HudLayoutEditor.content.css';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { Select } from '@ds/primitives/Select';
-import { Slider } from '@ds/primitives/Slider';
-import { Text } from '@ds/primitives/Text';
+import { Box, Field, Flex, NumberInput, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { FAMILIES, FONT_VARS, GAME_DESIGN_SIZE } from './FontPicker.constants';
 import type { HudFontFamily } from '@shared/types/hud';
 import type { FontPickerProps } from './FontPicker.type';

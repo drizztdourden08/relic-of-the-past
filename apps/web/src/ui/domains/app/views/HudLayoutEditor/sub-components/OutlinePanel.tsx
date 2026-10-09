@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { primaryModifierLabel } from '@shared/platform';
 import { usePlatform } from '@app/platform';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';

@@ -14,14 +14,14 @@
   padding: var(--space-xs) var(--space-sm);
   background: var(--c-surface);
   border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   color: var(--c-text);
   font-size: var(--text-sm);
 }
 
 .cheats-checks__search:focus {
   outline: none;
-  border-color: var(--c-green);
+  border-color: var(--c-secondary);
 }
 
 .cheats-checks__list {
@@ -72,9 +72,9 @@
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--text-xs);
   background: var(--c-surface);
-  border: var(--border-width-thin) solid var(--c-green);
-  border-radius: var(--r-sm);
-  color: var(--c-green);
+  border: var(--border-width-thin) solid var(--c-secondary);
+  border-radius: var(--radius-sm);
+  color: var(--c-secondary);
   cursor: pointer;
 }
 

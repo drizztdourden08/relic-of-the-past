@@ -1,8 +1,7 @@
 /* @layer site-kit @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import alertIcon from '@iconify-icons/lucide/alert-triangle';
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { DIALOG_TEXT } from '../UploadProgressDialog.constants';
 
 const KeptCopyBanner = () => (

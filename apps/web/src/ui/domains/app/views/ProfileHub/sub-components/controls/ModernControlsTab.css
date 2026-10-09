@@ -12,7 +12,7 @@
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .modern-tab__slots-hint,
@@ -65,7 +65,7 @@
   padding: var(--space-2xs) var(--space-sm);
   background: transparent;
   border: 1px dashed var(--c-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   color: var(--c-text-dim);
   font-size: var(--text-sm);
   cursor: pointer;
@@ -73,6 +73,6 @@
 }
 
 .modern-tab__add-button:hover {
-  color: var(--c-gold-bright);
-  border-color: var(--c-gold);
+  color: var(--c-primary-bright);
+  border-color: var(--c-primary);
 }

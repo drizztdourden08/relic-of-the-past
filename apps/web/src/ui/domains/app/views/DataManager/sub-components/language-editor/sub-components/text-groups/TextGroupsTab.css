@@ -41,6 +41,6 @@
 .text-groups-tab__note {
   margin: 0;
   padding: var(--space-2xs) var(--space-xs);
-  border-left: var(--border-width-thick) solid var(--c-gold);
+  border-left: var(--border-width-thick) solid var(--c-primary);
   color: var(--c-text);
 }

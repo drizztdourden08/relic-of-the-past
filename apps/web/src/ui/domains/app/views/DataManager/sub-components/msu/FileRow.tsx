@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Status, Box, IconButton, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { MsuFileMetadata } from '@shared/storage/msu';
 import { formatBytes } from '@app/utils/formatBytes';
 import { FilePlayer } from '@domains/packs/music/compounds/FilePlayer';
@@ -71,7 +67,7 @@ const FileRow = (props: FileRowProps) => {
           </Text>
         )}
 
-        <Box className="msu-file-row__cell"><Badge variant="neutral">{file.ext}</Badge></Box>
+        <Box className="msu-file-row__cell"><Status tone="neutral">{file.ext}</Status></Box>
         <Text className="msu-file-row__spec">{formatBytes(file.size)}</Text>
         <Text
           className="msu-file-row__spec"
@@ -89,7 +85,7 @@ const FileRow = (props: FileRowProps) => {
 
         <Box className="msu-file-row__cell">
           {usedBy.length === 0 ? (
-            <Badge variant="warning">unused</Badge>
+            <Status tone="warning">unused</Status>
           ) : (
             <Text className="msu-file-row__used" title={usedBy.join(', ')}>{listSummary(usedBy)}</Text>
           )}

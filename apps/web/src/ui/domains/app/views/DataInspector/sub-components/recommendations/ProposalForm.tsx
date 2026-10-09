@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { RecordEditor } from '@ds/composites';
+import { RecordEditor } from '@drizztdourden08/tessera/composites';
 import { resolveIdRefOptionsFor } from '../../behavior/id-ref-options';
 import { numberBoundsResolverFor } from '../../behavior/number-bounds';
 import { tagSuggestionsResolverFor } from '../../behavior/tag-suggestions';

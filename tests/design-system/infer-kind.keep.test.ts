@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
 import {
   ENUM_MAX, enumOptions, idTargetKind, inferKind,
-} from '../../apps/web/src/ui/design-system/data/schema/infer-kind';
+} from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const distinct = (count: number): string[] =>

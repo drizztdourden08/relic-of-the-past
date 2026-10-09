@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
+import { Box, Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { glyphArtUrl } from '../../behavior/glyph-art';
 import { useSlotScheme } from '../../behavior/slot-scheme';
 import { GlyphPickerGrid } from '../GlyphPickerGrid';

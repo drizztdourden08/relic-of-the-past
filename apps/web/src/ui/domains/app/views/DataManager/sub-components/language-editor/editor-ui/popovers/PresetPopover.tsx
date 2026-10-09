@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { PopoverShell } from './PopoverShell';
 import { PresetChoice } from './PresetChoice';
 import type { PresetPopoverProps } from './PresetPopover.type';

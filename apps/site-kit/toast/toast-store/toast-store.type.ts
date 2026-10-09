@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { ToastItem } from '@ds/primitives/Toast';
+import type { ToastItem } from '@drizztdourden08/tessera/composites';
 
 type ToastInput = Omit<ToastItem, 'id'>;
 

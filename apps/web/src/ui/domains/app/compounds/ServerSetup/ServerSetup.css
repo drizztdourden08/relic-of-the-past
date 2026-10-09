@@ -15,7 +15,7 @@
   color: var(--c-text-muted);
 }
 
-.server-setup__result[data-tone='ok'] { color: var(--c-green-bright); }
+.server-setup__result[data-tone='ok'] { color: var(--c-secondary-bright); }
 .server-setup__result[data-tone='failed'] { color: var(--c-danger); }
 
 .server-setup__actions {

@@ -18,7 +18,7 @@
 
 .pool-listing__title {
   font-size: var(--text-xs);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }

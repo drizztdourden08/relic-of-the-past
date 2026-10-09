@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { ButtonRow } from '@ds/primitives/ButtonRow';
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Button, ButtonRow, Flex, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import type { MsuPackHeaderProps } from './MsuPackHeader.type';
 

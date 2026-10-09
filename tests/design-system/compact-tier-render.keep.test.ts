@@ -2,14 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { createElement, type ComponentType } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { TextInput } from '../../apps/web/src/ui/design-system/primitives/TextInput/TextInput';
-import { NumberInput } from '../../apps/web/src/ui/design-system/primitives/NumberInput/NumberInput';
-import { SegmentedControl } from '../../apps/web/src/ui/design-system/primitives/SegmentedControl/SegmentedControl';
-import { Toggle } from '../../apps/web/src/ui/design-system/primitives/Toggle/Toggle';
-import { Checkbox } from '../../apps/web/src/ui/design-system/primitives/Checkbox/Checkbox';
-import { ColorSwatch } from '../../apps/web/src/ui/design-system/primitives/ColorSwatch/ColorSwatch';
-import { Field } from '../../apps/web/src/ui/design-system/primitives/Field/Field';
-import { EmptyState } from '../../apps/web/src/ui/design-system/primitives/EmptyState/EmptyState';
+import { TextInput, NumberInput, SegmentedControl, Toggle, Checkbox, ColorSwatch, Field, EmptyState } from '@drizztdourden08/tessera/primitives';
 
 type Props = Record<string, unknown>;
 
@@ -81,8 +74,8 @@ const CASES: Case[] = [
   {
     name: 'ColorSwatch',
     component: ColorSwatch,
-    props: { color: 'var(--c-gold)' },
-    markup: '<button type="button" class="color-swatch" style="background:var(--c-gold)"></button>',
+    props: { color: 'var(--c-primary)' },
+    markup: '<button type="button" class="color-swatch" style="background:var(--c-primary)"></button>',
     smClass: 'color-swatch color-swatch--sm',
   },
   {

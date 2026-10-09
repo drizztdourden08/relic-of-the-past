@@ -60,7 +60,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   line-height: 1;
   white-space: nowrap;
   text-shadow: 0 1px 2px var(--c-bg), 0 0 4px var(--c-bg);

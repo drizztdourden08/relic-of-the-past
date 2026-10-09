@@ -4,8 +4,8 @@
   position: fixed;
   inset: auto 0 0;
   height: calc(var(--text-base) + var(--space-md));
-  background: var(--color-bg-raised);
-  border-top: var(--border-width-thin) solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border-top: var(--border-width-thin) solid var(--c-border);
   overflow: hidden;
   z-index: var(--z-toast);
   pointer-events: none;
@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: center;
   font-size: var(--text-base);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   white-space: nowrap;
 }
 
@@ -32,14 +32,14 @@
   position: absolute;
   inset: 0 auto 0 0;
   width: 0;
-  background: var(--color-gold-base);
+  background: var(--c-primary);
   overflow: hidden;
   transition: width var(--transition-normal);
 }
 
 .boot-bar__label--over {
   width: 100vw;
-  color: var(--color-bg-deep);
+  color: var(--c-bg);
 }
 
 .boot-bar--indeterminate .boot-bar__fill {

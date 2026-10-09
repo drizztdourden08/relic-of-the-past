@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../design-system/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { BindingRow } from './BindingRow';
 import { assignmentLabel } from './assignment-label';
 import { slotName } from '@shared/input/scheme';

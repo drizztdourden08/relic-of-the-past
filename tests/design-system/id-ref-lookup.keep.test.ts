@@ -3,12 +3,12 @@ import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { resolveFieldKit } from '../../apps/web/src/ui/design-system/composites/field-kits';
-import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import { resolveFieldKit } from '@drizztdourden08/tessera/field-kits';
+import { RecordEditor } from '@drizztdourden08/tessera/composites';
 import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
-import type { IdRefOption, IdRefOptionResolver } from '../../apps/web/src/ui/design-system/composites/field-kits';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { IdRefOption, IdRefOptionResolver } from '@drizztdourden08/tessera/field-kits';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const INPUT = '<input';

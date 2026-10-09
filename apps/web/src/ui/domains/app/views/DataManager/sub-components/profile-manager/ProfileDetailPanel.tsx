@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Badge } from '../../../../../../design-system/primitives/Badge';
-import { Select } from '../../../../../../design-system/primitives/Select';
-import { Button } from '../../../../../../design-system/primitives/Button';
+import { Box, Text, Status, Select, Button } from '@drizztdourden08/tessera/primitives';
 import { formatRelativeTime } from '../../../../../../../utils';
 import { updateProfile } from '../../../../../../../lib/storage/profile-store';
 import { reloadMsuForProfile } from '@app/lib/game/msu-pack-loader';
@@ -20,7 +16,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
     <Box style={IL.col}>
       <Text as="h3" className="detail-panel__title">
         {profile.name}
-        {profile.automation && <Badge variant="neutral">Agent</Badge>}
+        {profile.automation && <Status tone="neutral">Agent</Status>}
       </Text>
 
       <Box className="profile-form" style={IL.mbMd}>

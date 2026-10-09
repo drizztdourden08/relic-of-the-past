@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Grid } from '@ds/primitives/Grid';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
-import { Select } from '@ds/primitives/Select';
-import { Toggle } from '@ds/primitives/Toggle';
+import { Box, Field, Grid, SegmentedControl, Select, Toggle } from '@drizztdourden08/tessera/primitives';
 import { DisabledReason } from '../DisabledReason';
 import { PaintField } from '../PaintField';
 import { ShadowListEditor } from '../ShadowListEditor';

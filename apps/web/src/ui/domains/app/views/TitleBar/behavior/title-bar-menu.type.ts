@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { WindowControlsPort } from '@shared/platform';
-import type { DropdownMenu } from '../../../../../design-system/composites/DropdownMenu';
+import type { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import type { TitleBarProps } from '../TitleBar.type';
 
 type MenuItems = Parameters<typeof DropdownMenu>[0]['items'];

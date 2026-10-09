@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '@ds/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { NetworkSection } from './NetworkSection';
 import { PlayersTable } from './PlayersTable';
 import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';

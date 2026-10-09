@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind types */
 import type { ReactNode } from 'react';
 import type { EntityKind } from '@shared/game/data';
-import type { DetailTab, FieldDescriptor, SchemaConfig } from '@ds/data';
+import type { DetailTab, FieldDescriptor, SchemaConfig } from '@drizztdourden08/tessera/data';
 import type { Recommendation } from '@shared/game/recommendations';
 import type { InspectorRow, InspectorSource } from '../../DataInspector.type';
 import type { PaneScroll } from '../../behavior/recommendations/recommendations.type';

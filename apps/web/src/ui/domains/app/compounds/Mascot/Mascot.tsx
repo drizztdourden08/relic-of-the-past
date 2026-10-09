@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import { Box, Image } from '@ds/primitives';
+import { Box, Image } from '@drizztdourden08/tessera/primitives';
 import { layoutMascot } from './behavior/mascot-layout';
 import { SOURCES } from './behavior/piece-sources.constants';
 import type { MascotProps, PlacedPiece } from './Mascot.type';

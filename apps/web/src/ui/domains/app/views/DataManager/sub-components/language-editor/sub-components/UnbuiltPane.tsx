@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
-import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import { SCRIM, TITLE } from './UnbuiltPane.constants';
 import type { UnbuiltPaneProps } from './UnbuiltPane.type';
 import './UnbuiltPane.css';

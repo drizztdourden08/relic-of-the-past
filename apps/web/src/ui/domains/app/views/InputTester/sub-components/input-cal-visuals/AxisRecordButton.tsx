@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { Svg, SvgCircle } from '../../../../../../design-system/primitives/Svg';
+import { Button, Svg, SvgCircle } from '@drizztdourden08/tessera/primitives';
 import { RECORD_DONE_FLASH_MS } from './input-cal-visuals.constants';
 import type { AxisRecordButtonProps } from './input-cal-visuals.type';
 
@@ -35,7 +34,7 @@ const AxisRecordButton = ({ getValues, label }: AxisRecordButtonProps) => {
     setTimeout(() => setDone(false), RECORD_DONE_FLASH_MS);
   }, [label]);
 
-  const color = done ? 'var(--c-green-bright)' : recording ? 'var(--c-danger)' : 'var(--c-text-muted)';
+  const color = done ? 'var(--c-secondary-bright)' : recording ? 'var(--c-danger)' : 'var(--c-text-muted)';
   const buttonStyle = useMemo(() => ({
     width: 18, height: 18, padding: 0, border: 'none', borderRadius: 4,
     background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',

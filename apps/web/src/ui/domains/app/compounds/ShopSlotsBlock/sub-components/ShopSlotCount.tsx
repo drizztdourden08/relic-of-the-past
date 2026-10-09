@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Slider, StatRow, Text } from '@ds/primitives';
+import { Box, Slider, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import { shopCountControlOf } from '../behavior/shop-count-control';
 import { SLOT_COUNT_LABEL } from '../ShopSlotsBlock.constants';
 import type { ShopSlotCountProps } from '../ShopSlotsBlock.type';

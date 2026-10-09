@@ -39,7 +39,7 @@
 
 .state-list__item--active {
   background: var(--c-selected);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .state-list__count {

@@ -73,7 +73,7 @@
   flex-direction: column;
   background: var(--c-inset);
   border: 1px solid var(--c-hairline);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -95,8 +95,8 @@
 
 @keyframes settings-search-hit {
   0% {
-    box-shadow: inset 0 0 0 2px var(--c-gold-bright), 0 0 16px var(--c-gold-soft);
-    background: var(--c-gold-soft);
+    box-shadow: inset 0 0 0 2px var(--c-primary-bright), 0 0 16px var(--c-primary-soft);
+    background: var(--c-primary-soft);
   }
 
   100% {
@@ -108,6 +108,6 @@
 @media (prefers-reduced-motion: reduce) {
   .is-search-hit {
     animation: none;
-    box-shadow: inset 0 0 0 2px var(--c-gold-bright);
+    box-shadow: inset 0 0 0 2px var(--c-primary-bright);
   }
 }

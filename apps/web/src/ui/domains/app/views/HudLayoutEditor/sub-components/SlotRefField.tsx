@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import './HudLayoutEditor.content.css';
 import { useRef, useState } from 'react';
-import { Text } from '@ds/primitives/Text';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { glyphArtUrl } from '../behavior/glyph-art';
 import { slotInScheme, slotPositionOf } from '../behavior/slot-scheme';
 import { ReferenceField } from './ReferenceField';

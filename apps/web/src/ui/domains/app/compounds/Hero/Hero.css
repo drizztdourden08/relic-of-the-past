@@ -80,7 +80,7 @@
 
 .hero__eyebrow {
   font-size: var(--text-xs);
-  color: var(--c-gold);
+  color: var(--c-primary);
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-weight: var(--weight-semi);

@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { DialogShell } from '@ds/composites/DialogShell';
-import { Button, Field, Text, TextInput, Textarea } from '@ds/primitives';
+import { Box, Button, Field, Text, TextInput, Textarea } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { useAllowDebugLogging } from '@app/lib/diagnostics/useAllowDebugLogging';
 import { githubHandleOf } from '@app/lib/sanctuary/github-handle';
 import { CaptureSessionPicker } from '../../compounds/CaptureSessionPicker';

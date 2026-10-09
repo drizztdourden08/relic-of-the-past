@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import type { InstanceBadgeProps } from '../TitleBar.type';
 
 const InstanceBadge = ({ name }: InstanceBadgeProps) => {

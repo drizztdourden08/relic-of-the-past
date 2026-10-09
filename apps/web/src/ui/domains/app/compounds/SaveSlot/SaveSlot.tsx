@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Image } from '../../../../design-system/primitives/Image';
-import { Icon } from '../../../../design-system/primitives/Icon';
-import { Spinner } from '../../../../design-system/primitives/Spinner';
+import { Box, Text, Image, Icon, Spinner } from '@drizztdourden08/tessera/primitives';
 import './SaveSlot.css';
 import {
   LOAD_GLYPH, SAVE_GLYPH, ARM_TIMEOUT_MS,

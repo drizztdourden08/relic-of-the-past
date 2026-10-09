@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DialogShell } from '@ds/composites/DialogShell';
-import { Box, Button, Checkbox, Text } from '@ds/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
+import { Box, Button, Checkbox, Text } from '@drizztdourden08/tessera/primitives';
 import type { FlakyByteWarningDialogProps } from './FlakyByteWarningDialog.type';
 import './FlakyByteWarningDialog.css';
 

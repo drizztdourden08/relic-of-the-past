@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useRef } from 'react';
-import { useResize } from '@ds/primitives/ResizeHandle';
+import { useResize } from '@drizztdourden08/tessera/primitives';
 import { PANEL_MAX_WIDTH, PANEL_MIN_WIDTH, useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import type { PanelResize } from './usePanelResize.type';
 

@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDismissable } from '@ds/primitives/Portal';
-import { Box } from '@ds/primitives/Box';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
-import { SpritePicker } from '@ds/composites/SpritePicker';
+import { useDismissable, Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { SpritePicker } from '@drizztdourden08/tessera/composites';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@shared/game/data/sprite-manifest/manifest';
 import { ToolbarMenu } from './ToolbarMenu';

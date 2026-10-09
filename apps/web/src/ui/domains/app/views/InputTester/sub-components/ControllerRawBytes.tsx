@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import type { ControllerInputState } from '../../../../../../lib/input/controller-input-store';
 
 const S: Record<string, CSSProperties> = {

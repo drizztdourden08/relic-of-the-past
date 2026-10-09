@@ -1,7 +1,7 @@
 /* @layer site-kit @kind component */
 import { useCallback } from 'react';
-import { Stack } from '@ds/primitives/Stack';
-import { SectionNav } from '@ds/composites/SectionNav';
+import { Stack } from '@drizztdourden08/tessera/primitives';
+import { SideNav } from '@drizztdourden08/tessera/composites';
 import { useSiteNav } from './behavior/useSiteNav';
 import type { SiteNavProps } from './SiteNav.type';
 import './SiteNav.css';
@@ -15,7 +15,7 @@ const SiteNav = (props: SiteNavProps) => {
   }, [onNavigate, select]);
   return (
     <Stack gap="sm" align="stretch" className="site-nav">
-      <SectionNav
+      <SideNav
         className="site-nav__sections"
         config={config}
         activeId={searching ? '' : activeId}

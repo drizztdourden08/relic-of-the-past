@@ -22,12 +22,12 @@
 
 .shelf__all {
   margin-left: auto;
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-size: var(--text-sm);
 }
 
 .shelf__all:hover {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .shelf__row {

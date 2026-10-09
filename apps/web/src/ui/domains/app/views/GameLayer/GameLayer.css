@@ -42,7 +42,7 @@
 }
 
 .game-layer__status-text--loading {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .game-layer__status-text--error {
@@ -107,6 +107,6 @@
 .game-layer__pause-bar {
   width: 36px;
   height: 120px;
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   background: var(--c-border-strong);
 }

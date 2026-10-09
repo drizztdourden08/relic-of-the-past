@@ -1,6 +1,5 @@
 /* @layer site-kit @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { Chip } from '../Chip/Chip';
 import type { GroupChipsProps } from './GroupChips.type';
 

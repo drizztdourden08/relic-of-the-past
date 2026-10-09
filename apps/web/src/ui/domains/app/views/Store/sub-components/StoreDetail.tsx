@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box, Button, Flex, Stack, Text, Thumbnail } from '@ds/primitives';
+import { Box, Button, Flex, Stack, Text, Thumbnail } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils';
 import { storeMediaUrl } from '@app/lib/store/store-site';
 import { KIND_ICONS, KIND_LABELS } from '../../../compounds/StoreItemCard';

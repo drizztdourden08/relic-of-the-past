@@ -1,9 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { useCallback, useState } from 'react';
 import { PROVIDER_LABELS } from '@shared/hub/providers';
-import { Stack } from '@ds/primitives/Stack';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
+import { Stack, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { SiteFrame } from '@site-kit/layout/SiteFrame/SiteFrame';
 import { Gate } from '@site-kit/components/Gate/Gate';
 import { ProviderButton } from '@site-kit/components/ProviderButton/ProviderButton';

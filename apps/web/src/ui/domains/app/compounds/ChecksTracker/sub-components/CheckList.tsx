@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { shownItemsOf } from '@shared/game/logic/queries/check-contents';
 import { CheckCard } from './CheckCard';
 import { TrackerCheckRow } from './TrackerCheckRow';

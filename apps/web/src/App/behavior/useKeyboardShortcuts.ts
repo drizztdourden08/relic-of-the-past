@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { usePlatform } from '@app/platform';
 import { useSearchStore } from '@app/stores/search-store';
 import { isPrimaryModifier } from '@shared/platform';
-import { dismissStackDepth } from '@ds/primitives/Portal';
+import { dismissStackDepth } from '@drizztdourden08/tessera/primitives';
 import type { PageId, ConfirmDialog } from '../App.type';
 
 const useKeyboardShortcuts = (

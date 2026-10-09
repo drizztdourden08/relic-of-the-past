@@ -1,10 +1,5 @@
 /* @layer store-site @kind component */
-import { Button } from '@ds/primitives/Button';
-import { Checkbox } from '@ds/primitives/Checkbox';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Button, Checkbox, Field, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { navigate } from '@site-kit/router/useLocation';
 import { SUBMIT_LABELS } from '../Publish.constants';
 import { usePublishForm } from '../behavior/usePublishForm';

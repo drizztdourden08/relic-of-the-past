@@ -23,7 +23,7 @@
 .jump-chips__sum {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--c-green);
+  color: var(--c-secondary);
 }
 
 .jump-chips__sum--invalid {

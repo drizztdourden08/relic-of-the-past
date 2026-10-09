@@ -1,9 +1,8 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { Dialog } from '@ds/composites/Dialog';
+import { Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Dialog } from '@drizztdourden08/tessera/composites';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';

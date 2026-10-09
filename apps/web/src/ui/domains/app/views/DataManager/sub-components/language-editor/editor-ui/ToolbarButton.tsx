@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Icon as SymbolIcon } from '@iconify/react/offline';
-import { Box, IconButton, Tooltip } from '@ds/primitives';
+import { Box, IconButton, Tooltip } from '@drizztdourden08/tessera/primitives';
 import type { MouseEvent } from 'react';
 import { ICON_PX } from './ToolbarButton.constants';
 import type { ToolbarButtonProps } from './ToolbarButton.type';

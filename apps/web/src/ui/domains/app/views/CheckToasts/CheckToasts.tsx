@@ -1,8 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
-import { Box, ToastContainer } from '@ds/primitives';
-import type { ToastItem } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { ToastContainer } from '@drizztdourden08/tessera/composites';
+import type { ToastItem } from '@drizztdourden08/tessera/composites';
 import { shownItemOf } from '@shared/game/logic/queries/check-contents';
 import type { RunContext } from '@shared/game/logic/queries/check-grouping';
 import {

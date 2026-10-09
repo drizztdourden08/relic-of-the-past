@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, StatRow, Text } from '@ds/primitives';
-import { DashboardPanel } from '@ds/composites/DashboardGrid';
+import { Box, StatRow, Text } from '@drizztdourden08/tessera/primitives';
+import { DashboardPanel } from '@drizztdourden08/tessera/composites';
 import { StateChip } from './StateChip';
 import type { NetworkSectionProps } from './NetworkSection.type';
 

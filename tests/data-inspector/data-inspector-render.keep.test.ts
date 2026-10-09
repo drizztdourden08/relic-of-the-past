@@ -8,7 +8,7 @@ import type * as InspectorModule from '../../apps/web/src/ui/domains/app/views/D
 import type * as DetailTabsModule from '../../apps/web/src/ui/domains/app/views/DataInspector/sub-components/DetailTabs';
 import type * as SourcesModule from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
 import type * as SchemaModule from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import type { DetailTab } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
+import type { DetailTab } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const KINDS = ['screen', 'connection', 'check', 'item', 'dungeon', 'area', 'location', 'actor'] as const;

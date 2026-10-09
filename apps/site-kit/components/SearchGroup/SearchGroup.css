@@ -6,16 +6,16 @@
   gap: var(--space-xs);
   padding: var(--space-xs) var(--space-md);
   border: 1px solid var(--c-border);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   background: none;
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-size: var(--text-sm);
   cursor: pointer;
 }
 
 .search-pill:hover {
-  border-color: var(--c-gold);
-  background: var(--c-gold-soft);
+  border-color: var(--c-primary);
+  background: var(--c-primary-soft);
 }
 
 .search-group {
@@ -34,8 +34,8 @@
   display: grid;
   place-items: center;
   font-size: var(--text-xl);
-  color: var(--c-gold-bright);
-  filter: drop-shadow(0 0 var(--blur-glow) var(--c-gold));
+  color: var(--c-primary-bright);
+  filter: drop-shadow(0 0 var(--blur-glow) var(--c-primary));
 }
 
 .search-group__title {
@@ -47,9 +47,9 @@
 
 .search-group__count {
   padding: 0 var(--space-sm);
-  border-radius: var(--r-pill);
-  background: var(--c-gold-soft);
-  color: var(--c-gold-bright);
+  border-radius: var(--radius-pill);
+  background: var(--c-primary-soft);
+  color: var(--c-primary-bright);
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
   font-variant-numeric: tabular-nums;

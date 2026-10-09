@@ -2,9 +2,9 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { defaultOperatorFor } from '../../../apps/web/src/ui/design-system/data/filter/operators';
-import { OperatorMenu } from '../../../apps/web/src/ui/design-system/composites/FilterBar/sub-components/OperatorMenu';
-import type { FieldDescriptor } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { defaultOperatorFor } from '@drizztdourden08/tessera/data';
+import { OperatorMenu } from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { DESCRIPTORS, KINDS } from './filter-bar-render.constants';
 import { field } from './field';
 

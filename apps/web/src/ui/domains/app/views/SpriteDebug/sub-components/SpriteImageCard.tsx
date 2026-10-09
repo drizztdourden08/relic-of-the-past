@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Image, TextInput } from '../../../../../design-system/primitives';
+import { Box, Text, Image, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { SpriteManifestEntry } from '@shared/game/data';
 import type { ReviewEntry, ReviewStatus } from '../SpriteDebug.type';
 import { S } from '../SpriteDebug.constants';
@@ -9,8 +9,8 @@ const SpriteImageCard = ({ sprite, entry, baseUrl, onSetStatus, onSetComment }: 
   sprite: SpriteManifestEntry; entry: ReviewEntry; baseUrl: string;
   onSetStatus: (s: ReviewStatus) => void; onSetComment: (c: string) => void;
 }) => {
-  const border = entry.status === 'good' ? 'var(--c-green-bright)' : entry.status === 'bad' ? 'var(--c-danger)' : entry.status === 'yellow' ? 'var(--c-warning)' : 'var(--c-border)';
-  const bg = entry.status === 'good' ? 'var(--c-green-soft)' : entry.status === 'bad' ? 'var(--c-danger-soft)' : entry.status === 'yellow' ? 'var(--c-warning-soft)' : 'var(--c-hover)';
+  const border = entry.status === 'good' ? 'var(--c-secondary-bright)' : entry.status === 'bad' ? 'var(--c-danger)' : entry.status === 'yellow' ? 'var(--c-warning)' : 'var(--c-border)';
+  const bg = entry.status === 'good' ? 'var(--c-secondary-soft)' : entry.status === 'bad' ? 'var(--c-danger-soft)' : entry.status === 'yellow' ? 'var(--c-warning-soft)' : 'var(--c-hover)';
   const catColor = sprite.category === 'hud' || sprite.category === 'hud-pause' || sprite.category === 'hud-item' ? '#8bb4e0' : sprite.category === 'fonts' ? '#b89de0' : sprite.category === 'receipt' ? '#c4a862' : '#82c487';
 
   return (

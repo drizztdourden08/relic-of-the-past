@@ -24,9 +24,9 @@
 
 .hud-grid__bar-chip {
   padding: 0 var(--space-xs);
-  background: var(--c-gold-dim);
-  border-radius: var(--r-sm);
-  color: var(--c-gold-bright);
+  background: var(--c-primary-dim);
+  border-radius: var(--radius-sm);
+  color: var(--c-primary-bright);
   text-transform: uppercase;
 }
 

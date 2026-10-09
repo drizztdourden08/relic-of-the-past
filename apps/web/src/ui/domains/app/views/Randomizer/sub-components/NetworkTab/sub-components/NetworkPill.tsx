@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button, Text } from '@ds/primitives';
+import { Button, Text } from '@drizztdourden08/tessera/primitives';
 import { StateChip } from './StateChip';
 import { useNetworkStatus } from '../behavior/useNetworkStatus';
 import { formatMs } from '../behavior/network-format';

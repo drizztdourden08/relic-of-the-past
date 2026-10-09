@@ -75,7 +75,7 @@
 .hud-editor-stage {
   position: relative;
   width: 100%;
-  background: var(--color-bg-deep);
+  background: var(--c-bg);
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -103,7 +103,7 @@
   align-items: baseline;
   width: 100%;
   padding: var(--space-2xs) var(--space-xs);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border: var(--border-width-thin) solid transparent;
   border-radius: var(--radius-sm);
   text-align: left;
@@ -111,17 +111,17 @@
 }
 
 .hud-editor-list__row:hover {
-  background: var(--color-surface-hover);
+  background: var(--c-hover);
 }
 
 .hud-editor-list__row:focus-visible {
-  outline: var(--border-width-thick) solid var(--c-gold);
+  outline: var(--border-width-thick) solid var(--c-primary);
   outline-offset: var(--space-2xs);
 }
 
 .hud-editor-list__row.is-selected {
-  border-color: var(--c-gold);
-  background: var(--color-surface-selected);
+  border-color: var(--c-primary);
+  background: var(--c-selected);
 }
 
 .hud-editor-list__name {
@@ -157,7 +157,7 @@
 
 .hud-editor-packs__chip {
   padding: var(--space-2xs) var(--space-xs);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-sm);
   font-size: var(--text-xs);
@@ -165,13 +165,13 @@
 }
 
 .hud-editor-packs__chip:focus-visible {
-  outline: var(--border-width-thick) solid var(--c-gold);
+  outline: var(--border-width-thick) solid var(--c-primary);
   outline-offset: var(--space-2xs);
 }
 
 .hud-editor-packs__chip.is-selected {
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
+  border-color: var(--c-primary);
+  color: var(--c-primary-bright);
 }
 
 .hud-editor-packs__chip.is-custom {
@@ -183,7 +183,7 @@
   gap: var(--space-2xs);
   align-items: center;
   padding-left: var(--space-xs);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: var(--text-xs);

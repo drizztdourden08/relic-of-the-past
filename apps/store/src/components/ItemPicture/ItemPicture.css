@@ -1,7 +1,7 @@
 /* @layer store-site @kind style */
 
 .item-picture {
-  --picture-color: var(--item-color, var(--c-gold));
+  --picture-color: var(--item-color, var(--c-primary));
 
   display: flex;
   align-items: center;

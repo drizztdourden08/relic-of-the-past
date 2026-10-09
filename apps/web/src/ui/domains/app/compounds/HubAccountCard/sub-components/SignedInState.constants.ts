@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind constants */
 import type { AccessState } from '@shared/hub';
-import type { BadgeVariant } from '@ds/primitives/Badge/Badge.type';
+import type { StatusTone } from '@drizztdourden08/tessera/primitives';
 
-const ACCESS_VARIANT: Record<AccessState, BadgeVariant> = {
+const ACCESS_VARIANT: Record<AccessState, StatusTone> = {
   admin: 'success',
   member: 'success',
   pending: 'warning',

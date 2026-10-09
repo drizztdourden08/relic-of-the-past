@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useRef, useState } from 'react';
-import { Box, Button, Text } from '@ds/primitives';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { useCapacityLadder } from '../../../behavior/useCapacityLadder';
 import { useInPlay } from '../../../behavior/useInPlay';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';

@@ -1,7 +1,7 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import type { SectionNavConfig, SectionNavItem } from '@ds/composites/SectionNav';
+import type { SideNavConfig, SideNavItem } from '@drizztdourden08/tessera/composites';
 import { hasRight } from '@shared/hub/rights';
 import type { Rights } from '@shared/hub/group-types';
 import { useSessionContext } from '../../../session/session-context';
@@ -12,7 +12,7 @@ import { NavAvatar } from '../sub-components/NavAvatar';
 import { ACCOUNT_SECTION, ROOT } from './useSiteNav.constants';
 import type { NavPerson } from './useSiteNav.type';
 
-const navItem = (section: SiteSection, person: NavPerson): SectionNavItem => {
+const navItem = (section: SiteSection, person: NavPerson): SideNavItem => {
   const { id, label, icon } = section;
   if (id === ACCOUNT_SECTION && person) {
     return { id, label: person.displayName, icon: <NavAvatar src={person.avatarUrl} fallback={icon} /> };
@@ -33,7 +33,7 @@ const useSiteNav = () => {
     [me],
   );
 
-  const config = useMemo<SectionNavConfig>(() => ({
+  const config = useMemo<SideNavConfig>(() => ({
     home: navItem(sections[home], person),
     groups: navGroups.map((group) => ({
       id: group.id,

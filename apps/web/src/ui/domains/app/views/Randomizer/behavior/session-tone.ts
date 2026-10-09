@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ChipTone } from '@ds/primitives';
+import type { ChipTone } from '@drizztdourden08/tessera/primitives';
 import type { ActiveSession } from '@app/lib/game/randomizer-client';
 import { SESSION_TONE } from './session-tone.constants';
 

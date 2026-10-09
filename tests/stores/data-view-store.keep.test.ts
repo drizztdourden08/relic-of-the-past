@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { DEFAULT_SESSION_VIEW, useDataViewStore } from '../../apps/web/src/stores/data-view-store';
-import type { ViewKey } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
+import type { ViewKey } from '@drizztdourden08/tessera/data';
 
 const SCREEN = 'data-inspector:screen' as ViewKey;
 const ITEM = 'data-inspector:item' as ViewKey;

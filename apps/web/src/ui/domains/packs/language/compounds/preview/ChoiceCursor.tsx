@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { glyphIndexOf } from '@shared/game/language';
 import { GlyphCell } from '../glyph';
 import type { GlyphMetrics } from '@shared/game/language';

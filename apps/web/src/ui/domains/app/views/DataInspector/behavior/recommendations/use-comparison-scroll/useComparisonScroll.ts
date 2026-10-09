@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind hook */
 import { useCallback, useState } from 'react';
-import type { ScrollPosition } from '@ds/primitives';
+import type { ScrollPosition } from '@drizztdourden08/tessera/primitives';
 import type { ComparisonScroll, Lead } from '../recommendations.type';
 import { followerScrollTo } from './follower-scroll-to';
 

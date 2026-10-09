@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { Fragment } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import type { ReactNode } from 'react';
 import type { EditorAction } from '../selection-bands.type';
 

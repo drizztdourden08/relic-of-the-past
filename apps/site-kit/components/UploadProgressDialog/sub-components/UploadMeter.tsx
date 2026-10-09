@@ -1,8 +1,5 @@
 /* @layer site-kit @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { ProgressBar } from '@ds/primitives/ProgressBar';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Flex, ProgressBar, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { formatRate, formatTimeLeft } from '../../../upload/upload-format';
 import type { UploadMeterProps } from './UploadMeter.type';
 

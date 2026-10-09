@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Flex, Text } from '@ds/primitives';
+import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { STAR_GLYPH, STAR_NUMBERS } from './Stars.constants';
 import type { StarsProps } from './Stars.type';
 import './Stars.css';

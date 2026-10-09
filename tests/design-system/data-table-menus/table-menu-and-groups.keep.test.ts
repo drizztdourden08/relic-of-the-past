@@ -1,19 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect, vi } from 'vitest';
-import {
-  buildPickerNodes,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/field-picker-nodes';
-import {
-  buildTableMenuItems,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/table-menu-items';
-import {
-  collectGroupUids, groupUid,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/group-uid';
-import type { MenuItem } from '../../../apps/web/src/ui/design-system/composites/DropdownMenu';
-import type { GroupedRow } from '../../../apps/web/src/ui/design-system/data/table/types';
-import type {
-  TableActions,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
+import { buildPickerNodes, buildTableMenuItems, collectGroupUids, groupUid } from '@drizztdourden08/tessera/composites';
+import type { MenuItem, TableActions } from '@drizztdourden08/tessera/composites';
+import type { GroupedRow } from '@drizztdourden08/tessera/data';
 import { NESTED } from './data-table-menus.constants';
 import { entryLookup } from './entry-lookup';
 

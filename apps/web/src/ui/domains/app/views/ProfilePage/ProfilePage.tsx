@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button } from '../../../../design-system/primitives/Button';
-import { Badge } from '../../../../design-system/primitives/Badge';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
+import { Button, Status, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { formatRomName } from '../../../../../utils/formatRomName';
 import { formatDate } from './behavior/format-date';
 import './ProfilePage.css';
@@ -25,7 +22,7 @@ const ProfilePage = (props: ProfilePageProps) => {
       <Box className="profile-page__header">
         <Text as="h2" className="profile-page__name">
           {profile.name}
-          {profile.automation && <Badge variant="neutral">Agent</Badge>}
+          {profile.automation && <Status tone="neutral">Agent</Status>}
         </Text>
         <Text className="profile-page__rom">{formatRomName(profile.romFile)}</Text>
       </Box>
@@ -47,9 +44,9 @@ const ProfilePage = (props: ProfilePageProps) => {
           <Text className="profile-page__label">Assets</Text>
           <Text className="profile-page__value">
             {assetsReady ? (
-              <Badge variant="success">✓ Ready</Badge>
+              <Status tone="success">✓ Ready</Status>
             ) : (
-              <Badge variant="danger">✗ Not extracted</Badge>
+              <Status tone="danger">✗ Not extracted</Status>
             )}
           </Text>
         </Box>

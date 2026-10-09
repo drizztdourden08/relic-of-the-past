@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge, Box, Checkbox, Text } from '@ds/primitives';
+import { Status, Box, Checkbox, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag } from '../../OptionValueTag';
 import { OFF_BY_DEFAULT_LABEL } from '../ShopSlotsBlock.constants';
 import type { ShopSlotCardProps } from '../ShopSlotsBlock.type';
@@ -23,7 +23,7 @@ const ShopSlotCard = (props: ShopSlotCardProps) => {
       <Box className="shop-slot-card__head">
         <Text className="shop-slot-card__title">{name}</Text>
         {offByDefault && (
-          <Badge className="shop-slot-card__badge">{OFF_BY_DEFAULT_LABEL}</Badge>
+          <Status className="shop-slot-card__badge">{OFF_BY_DEFAULT_LABEL}</Status>
         )}
       </Box>
       <Text className="shop-slot-card__stock">{stock}</Text>

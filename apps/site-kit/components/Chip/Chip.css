@@ -2,7 +2,7 @@
 .chip {
   display: inline-block;
   padding: 0 var(--space-sm);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   border: var(--border-width-thin) solid var(--c-border);
   background: var(--c-hover);
   color: var(--c-text-dim);
@@ -13,15 +13,15 @@
 }
 
 .chip[data-tone='gold'] {
-  background: var(--c-gold-dim);
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
+  background: var(--c-primary-dim);
+  border-color: var(--c-primary);
+  color: var(--c-primary-bright);
 }
 
 .chip[data-tone='green'] {
-  background: var(--c-green-dim);
-  border-color: var(--c-green);
-  color: var(--c-green);
+  background: var(--c-secondary-dim);
+  border-color: var(--c-secondary);
+  color: var(--c-secondary);
 }
 
 .chip[data-tone='info'] {

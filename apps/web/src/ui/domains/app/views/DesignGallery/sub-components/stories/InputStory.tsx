@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useState } from 'react';
-import { Box, Field, TextInput, NumberInput, Select, Slider, RangeInput, TagPicker } from '../../../../../../design-system/primitives';
+import { Box, Field, TextInput, NumberInput, Select, Slider, RangeInput, TagPicker } from '@drizztdourden08/tessera/primitives';
 import { Specimen } from '../Specimen';
 
 const BOTTLE_OPTIONS = [

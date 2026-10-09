@@ -1,7 +1,5 @@
 /* @layer store-site @kind component */
-import { Stack } from '@ds/primitives/Stack';
-import { StatRow } from '@ds/primitives/StatRow';
-import { Text } from '@ds/primitives/Text';
+import { Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { ItemPicture } from '../../../components/ItemPicture/ItemPicture';
 import type { ListingEditPreviewProps } from './ListingEditPreview.type';

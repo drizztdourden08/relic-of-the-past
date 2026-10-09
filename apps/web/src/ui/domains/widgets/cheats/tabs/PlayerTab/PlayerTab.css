@@ -45,7 +45,7 @@
 }
 
 .cheats-player__heart-cell:hover {
-  outline: var(--border-width-thin) solid var(--c-gold);
+  outline: var(--border-width-thin) solid var(--c-primary);
   outline-offset: calc(-1 * var(--border-width-thin));
 }
 
@@ -96,7 +96,7 @@
 
 .cheats-player__magic-row:hover,
 .cheats-player__magic-row:hover ~ .cheats-player__magic-row {
-  background: color-mix(in srgb, var(--c-gold) 35%, transparent);
+  background: color-mix(in srgb, var(--c-primary) 35%, transparent);
 }
 
 .cheats-player__caption {
@@ -107,7 +107,7 @@
 }
 
 .cheats-player__caption[data-preview] {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .cheats-player__magic-row-group {
@@ -140,7 +140,7 @@
 }
 
 .cheats-player__level[data-held] .cheats-player__level-label {
-  color: var(--c-green-bright);
+  color: var(--c-secondary-bright);
 }
 
 .cheats-player__level-step {
@@ -150,17 +150,17 @@
 }
 
 .cheats-player__level[data-filled] .cheats-player__level-step {
-  background: var(--c-green-bright);
-  border-color: var(--c-green-bright);
+  background: var(--c-secondary-bright);
+  border-color: var(--c-secondary-bright);
 }
 
 .cheats-player__levels:not([data-locked]) .cheats-player__level[data-preview] .cheats-player__level-step {
-  border-color: var(--c-gold);
-  box-shadow: inset 0 0 0 var(--border-width-thin) var(--c-gold);
+  border-color: var(--c-primary);
+  box-shadow: inset 0 0 0 var(--border-width-thin) var(--c-primary);
 }
 
 .cheats-player__levels:not([data-locked]) .cheats-player__level:hover .cheats-player__level-label {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .cheats-player__levels[data-locked] .cheats-player__level {
@@ -210,7 +210,7 @@
 }
 
 .cheats-player__number-hit:hover {
-  outline: var(--border-width-thin) dotted var(--c-gold);
+  outline: var(--border-width-thin) dotted var(--c-primary);
 }
 
 .cheats-player__number-input {

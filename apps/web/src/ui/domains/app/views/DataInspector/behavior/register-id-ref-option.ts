@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import type { EntityKind } from '@shared/game/data';
-import type { IdRefOption } from '@ds/composites/RecordEditor';
+import type { IdRefOption } from '@drizztdourden08/tessera/composites';
 import { dropNarrowed } from './drop-narrowed';
 import { optionCache } from './option-cache';
 import { optionsFor } from './options-for';

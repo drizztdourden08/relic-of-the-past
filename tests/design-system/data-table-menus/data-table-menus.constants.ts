@@ -1,5 +1,5 @@
 /* @layer tests @kind constants */
-import type { FieldDescriptor } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 
 const field = (path: string, kind: FieldDescriptor['kind'], children?: FieldDescriptor[]): FieldDescriptor => {
   const descriptor: FieldDescriptor = { path, label: path, kind, optional: false };

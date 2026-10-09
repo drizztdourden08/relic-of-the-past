@@ -48,7 +48,7 @@
 }
 
 .hid-cal__prereq-card--done {
-  border-color: var(--c-green-dim);
+  border-color: var(--c-secondary-dim);
 }
 
 .hid-cal__prereq-title {
@@ -63,7 +63,7 @@
 
 .hid-cal__prereq-badge {
   font-size: var(--text-xs);
-  color: var(--c-green);
+  color: var(--c-secondary);
   font-family: var(--font-mono);
 }
 
@@ -136,9 +136,9 @@
 }
 
 .hid-cal__live-parser-chip--on {
-  border-color: var(--c-green-bright);
-  color: var(--c-green-bright);
-  background: var(--c-green-dim);
+  border-color: var(--c-secondary-bright);
+  color: var(--c-secondary-bright);
+  background: var(--c-secondary-dim);
 }
 
 .hid-cal__live-parser-chip--unmapped {
@@ -212,8 +212,8 @@
 }
 
 .hid-cal__input-item--captured {
-  background: var(--c-green-dim);
-  color: var(--c-green-bright);
+  background: var(--c-secondary-dim);
+  color: var(--c-secondary-bright);
 }
 
 .hid-cal__input-item--skipped {
@@ -252,7 +252,7 @@
   font-size: var(--text-base);
   line-height: 1;
   cursor: pointer;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   padding: 0;
   margin-left: var(--space-xs);
 }
@@ -338,7 +338,7 @@
   display: inline-block;
   width: 10px;
   height: 10px;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   margin-right: var(--space-xs);
   vertical-align: middle;
 }

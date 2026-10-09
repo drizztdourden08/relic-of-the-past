@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { SegmentedControl, Button, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useSpriteAvailabilityStore } from '../../../../../../stores/sprite-availability-store';
 import { enhancedAspectAllowed } from '@app/lib/game/settings';
 import * as spritesStore from '@app/lib/storage/sprites-store';

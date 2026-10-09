@@ -3,12 +3,9 @@ import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { resolveFieldKit } from '../../apps/web/src/ui/design-system/composites/field-kits';
-import { committedValue, withCurrentValue } from '../../apps/web/src/ui/design-system/composites/field-kits/open-set';
-import { OpenSetControl } from '../../apps/web/src/ui/design-system/composites/field-kits/sub-components/OpenSetControl';
-import { OpenSetEntry } from '../../apps/web/src/ui/design-system/composites/field-kits/sub-components/OpenSetEntry';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import { resolveFieldKit, committedValue, withCurrentValue, OpenSetControl, OpenSetEntry } from '@drizztdourden08/tessera/field-kits';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const TOGGLE = '+ Other';

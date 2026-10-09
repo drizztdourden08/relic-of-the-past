@@ -6,7 +6,7 @@
   padding: var(--space-xs) var(--space-sm);
   border: var(--border-width-thin) solid var(--c-warning);
   border-left-width: var(--border-width-thick);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   background: var(--c-warning-dim);
 }
 

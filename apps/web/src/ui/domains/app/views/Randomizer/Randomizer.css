@@ -72,10 +72,10 @@
   --log-tag-w: 8ch;
 }
 
-.randomizer-log .log-panel__tag--session { color: var(--c-gold-bright); }
+.randomizer-log .log-panel__tag--session { color: var(--c-primary-bright); }
 
 .randomizer-log .log-panel__msg--session {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   font-weight: var(--weight-semi);
 }
 
@@ -83,15 +83,15 @@
 .randomizer-log .log-panel__msg--plan     { color: var(--c-info); }
 .randomizer-log .log-panel__tag--override { color: var(--c-text-muted); }
 .randomizer-log .log-panel__msg--override { color: var(--c-text-dim); }
-.randomizer-log .log-panel__tag--deliver  { color: var(--c-gold-bright); }
-.randomizer-log .log-panel__msg--deliver  { color: var(--c-gold); }
-.randomizer-log .log-panel__tag--check    { color: var(--c-green); }
+.randomizer-log .log-panel__tag--deliver  { color: var(--c-primary-bright); }
+.randomizer-log .log-panel__msg--deliver  { color: var(--c-primary); }
+.randomizer-log .log-panel__tag--check    { color: var(--c-secondary); }
 .randomizer-log .log-panel__msg--check    { color: var(--c-text); }
 .randomizer-log .log-panel__tag--receipt  { color: var(--c-text-faint); }
 .randomizer-log .log-panel__msg--receipt  { color: var(--c-text-dim); }
 .randomizer-log .log-panel__tag--online   { color: var(--c-info); }
 .randomizer-log .log-panel__msg--online   { color: var(--c-text); }
-.randomizer-log .log-panel__tag--ap       { color: var(--c-gold); }
+.randomizer-log .log-panel__tag--ap       { color: var(--c-primary); }
 .randomizer-log .log-panel__msg--ap       { color: var(--c-text); }
 .randomizer-log .log-panel__tag--info     { color: var(--c-text-muted); }
 .randomizer-log .log-panel__msg--info     { color: var(--c-text); }

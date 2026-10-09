@@ -17,7 +17,7 @@
 }
 
 .stars__star[data-on] {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .stars--picker .stars__star {

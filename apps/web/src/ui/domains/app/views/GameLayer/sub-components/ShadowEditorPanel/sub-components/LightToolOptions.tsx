@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useShadowEditorStore } from '../../../../../../../../stores/shadow-editor-store';
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Slider } from '../../../../../../../design-system/primitives/Slider';
+import { Box, Slider } from '@drizztdourden08/tessera/primitives';
 
 const LightToolOptions = () => {
   const { defaultLightIntensity, setDefaultLightIntensity, defaultLightRadius, setDefaultLightRadius } = useShadowEditorStore();

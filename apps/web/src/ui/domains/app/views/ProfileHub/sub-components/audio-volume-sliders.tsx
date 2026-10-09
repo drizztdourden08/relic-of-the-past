@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import { Slider } from '../../../../../design-system/primitives/Slider';
+import { Slider } from '@drizztdourden08/tessera/primitives';
 
 const renderVolumeSlider = (
   key: string,

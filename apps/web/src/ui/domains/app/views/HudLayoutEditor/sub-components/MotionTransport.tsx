@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Slider } from '@ds/primitives/Slider';
-import { Text } from '@ds/primitives/Text';
-import { useDismissable } from '@ds/primitives/Portal';
+import { Box, IconButton, Slider, Text, useDismissable } from '@drizztdourden08/tessera/primitives';
 import { useMotionPreview } from '../behavior/motion-preview';
 import type { MotionTransportProps } from './MotionTransport.type';
 

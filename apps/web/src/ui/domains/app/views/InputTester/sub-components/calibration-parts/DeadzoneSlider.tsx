@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { ChangeEvent } from 'react';
-import { RangeInput, Text } from '../../../../../../design-system/primitives';
+import { RangeInput, Text } from '@drizztdourden08/tessera/primitives';
 import { CALIBRATION_STYLE, PERCENT } from './calibration-parts.constants';
 import type { DeadzoneSliderProps } from './calibration-parts.type';
 

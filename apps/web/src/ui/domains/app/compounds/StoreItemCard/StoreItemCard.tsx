@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Badge, Card, Flex, Stack, Text, Thumbnail } from '@ds/primitives';
+import { Status, Card, Flex, Stack, Text, Thumbnail } from '@drizztdourden08/tessera/primitives';
 import { Stars } from '../Stars';
 import { KIND_ICONS, KIND_LABELS } from './StoreItemCard.constants';
 import type { StoreItemCardProps } from './StoreItemCard.type';
@@ -40,8 +40,8 @@ const StoreItemCard = (props: StoreItemCardProps) => {
         <Text as="span" className="store-item-card__byline">{byline}</Text>
         <Flex align="center" justify="between" gap="sm">
           <Stars average={item.ratingAverage} />
-          {status === 'installed' && <Badge variant="success">installed</Badge>}
-          {status === 'update' && <Badge variant="warning">update</Badge>}
+          {status === 'installed' && <Status tone="success">installed</Status>}
+          {status === 'update' && <Status tone="warning">update</Status>}
         </Flex>
       </Stack>
     </Card>

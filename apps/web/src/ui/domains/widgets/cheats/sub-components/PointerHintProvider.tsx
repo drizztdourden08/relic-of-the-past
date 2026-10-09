@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useMemo, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
-import { Box, Portal, Text } from '@ds/primitives';
+import { Box, Portal, Text } from '@drizztdourden08/tessera/primitives';
 import { ControlGlyph } from './ControlGlyph';
 import { PointerHintContext } from '../behavior/pointer-hint-context';
 import type { PointerHintApi, PointerHintState } from '../CheatsWidget.type';

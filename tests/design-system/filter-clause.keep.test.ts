@@ -1,14 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { compile, createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import {
-  clearFieldTesters, getFieldTester, registerFieldTester,
-} from '../../apps/web/src/ui/design-system/data/filter/tester-registry';
-import {
-  defaultOperatorFor, isOperatorValid, operatorsFor,
-} from '../../apps/web/src/ui/design-system/data/filter/operators';
+import { buildSchema, createSchemaIndex, compile, createClause, clearFieldTesters, getFieldTester, registerFieldTester, defaultOperatorFor, isOperatorValid, operatorsFor } from '@drizztdourden08/tessera/data';
+import type { FilterClause } from '@drizztdourden08/tessera/data';
 
 const ROWS = [
   { id: 'item-001', name: 'alpha', size: 1, tag: 'red' },

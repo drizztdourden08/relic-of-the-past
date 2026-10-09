@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { DetailTabs } from '../DetailTabs';
 import type { ComparisonPaneProps } from './RecommendationDetail.type';
 

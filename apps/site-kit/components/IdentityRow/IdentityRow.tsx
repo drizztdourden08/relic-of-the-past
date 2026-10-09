@@ -1,6 +1,6 @@
 /* @layer site-kit @kind component */
 import { PROVIDER_LABELS } from '@shared/hub/providers';
-import { Button } from '@ds/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { Row } from '../Row/Row';
 import { ProviderButton } from '../ProviderButton/ProviderButton';
 import { formatDay } from '../../lib/format-date';

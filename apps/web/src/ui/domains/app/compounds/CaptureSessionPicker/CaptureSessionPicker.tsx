@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { Toggle } from '@ds/primitives/Toggle';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { ScrollArea } from '@ds/primitives/ScrollArea';
-import { Dialog } from '@ds/composites/Dialog';
+import { Box, Text, Toggle, EmptyState, ScrollArea } from '@drizztdourden08/tessera/primitives';
+import { Dialog } from '@drizztdourden08/tessera/composites';
 import { CaptureSessionRow } from './sub-components/CaptureSessionRow';
 import type { CaptureSessionPickerProps } from './CaptureSessionPicker.type';
 import './CaptureSessionPicker.css';

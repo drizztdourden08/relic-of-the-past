@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Checkbox, RangeSlider, Text } from '@ds/primitives';
+import { Box, Checkbox, RangeSlider, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag, rangeLabelOf } from '../OptionValueTag';
 import type { CurrencyPriceRowProps } from './CurrencyPriceRow.type';
 import './CurrencyPriceRow.css';

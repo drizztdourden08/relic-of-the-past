@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { ReferencedByHit } from '@ds/composites/RecordEditor';
+import type { ReferencedByHit } from '@drizztdourden08/tessera/composites';
 import type { DeleteRoute } from '../../DataInspector.type';
 
 const routeDelete = (hits: readonly ReferencedByHit[]): DeleteRoute =>

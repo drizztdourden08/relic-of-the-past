@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { DetailTab } from '@ds/data';
+import type { DetailTab } from '@drizztdourden08/tessera/data';
 import type { InspectorRow, InspectorSource } from '../../DataInspector.type';
 import { jsonSourceOf } from '../json-source-of';
 import { tsSourceOf } from '../ts-source-of';

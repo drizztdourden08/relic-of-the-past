@@ -44,7 +44,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   font-size: var(--text-lg);
   opacity: 0.6;
   transition: opacity 0.15s, background 0.15s;
@@ -57,7 +57,7 @@
 
 .controls-settings__sidebar-icon-btn--active {
   opacity: 1;
-  background: var(--c-gold-soft);
+  background: var(--c-primary-soft);
 }
 
 .controls-settings__col-header {
@@ -105,7 +105,7 @@
   justify-content: center;
   font-size: var(--text-xs);
   color: var(--c-text-muted);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
 
@@ -238,8 +238,8 @@
 }
 
 .controls-settings__bindings--drag-over {
-  border-color: var(--c-gold);
-  box-shadow: 0 0 12px var(--c-gold-soft), inset 0 0 12px var(--c-gold-soft);
+  border-color: var(--c-primary);
+  box-shadow: 0 0 12px var(--c-primary-soft), inset 0 0 12px var(--c-primary-soft);
 }
 
 .controls-settings__binding-list {
@@ -285,8 +285,8 @@
 }
 
 .controls-settings__used-input-dot--active {
-  background: var(--c-green-bright);
-  box-shadow: 0 0 4px var(--c-green);
+  background: var(--c-secondary-bright);
+  box-shadow: 0 0 4px var(--c-secondary);
 }
 
 .controls-settings__used-input-dot--disconnected {

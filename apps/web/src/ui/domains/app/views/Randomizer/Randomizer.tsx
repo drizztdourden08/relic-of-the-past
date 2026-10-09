@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '@ds/primitives';
-import { SectionNav, type SectionNavConfig } from '@ds/composites/SectionNav';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { SideNav, type SideNavConfig } from '@drizztdourden08/tessera/composites';
 import { useRandomizerSession } from './behavior/useRandomizerSession';
 import { useRoomMessages } from './behavior/useRoomMessages';
 import { useProfileConnection } from '@app/hooks/randomizer/useProfileConnection';
@@ -17,7 +17,7 @@ const navItem = (tab: RandomizerTab) => ({
   icon: <IconifyIcon icon={RANDOMIZER_TABS[tab].navIcon} />,
 });
 
-const navConfigFor = (archipelago: boolean): SectionNavConfig => ({
+const navConfigFor = (archipelago: boolean): SideNavConfig => ({
   groups: RANDOMIZER_NAV_GROUPS
     .map((group) => ({ ...group, tabs: group.tabs.filter((tab) => archipelago || !RANDOMIZER_TABS[tab].archipelagoOnly) }))
     .filter((group) => group.tabs.length > 0)
@@ -56,7 +56,7 @@ const Randomizer = ({ activeProfile }: RandomizerProps) => {
 
   return (
     <Box className="randomizer-page">
-      <SectionNav config={navConfig} activeId={tab} onSelect={selectTab} />
+      <SideNav config={navConfig} activeId={tab} onSelect={selectTab} />
       <Box className="randomizer-page__content">
         <RandomizerPageContent
           tab={tab}

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState, useEffect, useRef } from 'react';
-import { Button } from '../../../../design-system/primitives';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { wasmGetViewportInfo } from '../../../../../lib/game';
 import { S } from '../styles';
 

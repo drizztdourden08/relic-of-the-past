@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect } from 'react';
-import { Canvas } from '@ds/primitives/Canvas';
+import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { poseCanvasSize, framesOf } from '@shared/game/data/native-tables/player-pose-atlas';
 import { composeFrame } from '@app/lib/game/player-sheet/compose-frame';
 import type { PoseCanvasProps } from './PoseCanvas.type';

@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, Text, Flex, Grid, Stack, Center, Spacer, Divider } from '../../../../../../design-system/primitives';
+import { Box, Text, Flex, Grid, Stack, Center, Spacer, Divider } from '@drizztdourden08/tessera/primitives';
 import { Specimen } from '../Specimen';
 
 const LayoutStory = () => (

@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { SectionNav, type SectionNavConfig } from '../../../../../design-system/composites/SectionNav';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { SideNav, type SideNavConfig } from '@drizztdourden08/tessera/composites';
 import { RandomizerLockContext, SettingsPageContext } from '../../../compounds/SettingsLayout';
 import { SceneBackdrop } from '../../../../title';
 import { usePlatform } from '@app/platform';
@@ -36,7 +36,7 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
     })),
     [info.formFactor, isOnline],
   );
-  const navConfig = useMemo<SectionNavConfig>(() => ({
+  const navConfig = useMemo<SideNavConfig>(() => ({
     home: navItem('home'),
     groups: groups.map((group) => ({ id: group.id, label: group.label, items: group.tabs.map(navItem) })),
   }), [groups]);
@@ -67,7 +67,7 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
   return (
     <RandomizerLockContext.Provider value={randomizerFrozenKeys}>
       <Box className="profile-hub__body">
-        <SectionNav
+        <SideNav
           config={navConfig}
           activeId={searching ? '' : activeTab}
           onSelect={handleSelect}

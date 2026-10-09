@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useRef } from 'react';
-import { Canvas } from '../../../../../../design-system/primitives/Canvas';
+import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import type { GizmoPart } from '../shadow-editor/gizmos';
 import type { Vp, Point } from './behavior/overlay.type';

@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { KeyboardEvent, MouseEvent } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Image } from '../../../../../../design-system/primitives/Image';
+import { Box, Button, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { getBindingLabel, getBindingIconUrl } from '@app/lib/input/binding-display';
 import type { BindingRowProps } from './controls.type';
 import './BindingRow.css';

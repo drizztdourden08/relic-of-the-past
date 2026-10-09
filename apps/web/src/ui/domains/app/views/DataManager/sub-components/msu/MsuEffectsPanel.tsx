@@ -1,13 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import type { SoundChannel } from '@shared/types/msu-manifest';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { Field } from '@ds/primitives/Field';
-import { SectionHeader } from '@ds/primitives/SectionHeader';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Button, EmptyState, Field, SectionHeader, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { SoundListItem } from './SoundListItem';
 import { parseEffectQuery } from './behavior/effect-query';
 import { useSoundPanel } from './behavior/useSoundPanel';

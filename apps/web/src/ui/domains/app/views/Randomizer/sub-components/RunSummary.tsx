@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Chip, Text } from '@ds/primitives';
-import { DashboardPanel, StatTileGrid } from '@ds/composites';
+import { Chip, Text } from '@drizztdourden08/tessera/primitives';
+import { DashboardPanel, StatTileGrid } from '@drizztdourden08/tessera/composites';
 import { summaryTilesOf } from '../behavior/run-summary-tiles';
 import { counterTilesOf } from '../behavior/counter-tiles';
 import { sessionToneOf } from '../behavior/session-tone';

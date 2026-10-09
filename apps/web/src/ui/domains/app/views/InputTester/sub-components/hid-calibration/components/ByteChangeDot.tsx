@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
-import { Box } from '../../../../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { rampColor } from './ramp-color';
 import { DEFAULT_CHANGE_SPAN } from './ramp-color.constants';
 import type { ByteChangeDotProps } from './ByteChangeDot.type';

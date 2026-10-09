@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
+import { Box, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { EDITOR_STEPS } from '@app/stores/hud-editor-view-store';
 import { STEP_HINT } from './EditorStepStrip.constants';
 import type { EditorStepStripProps } from './EditorStepStrip.type';

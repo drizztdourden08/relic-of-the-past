@@ -23,7 +23,7 @@
 
 .options-drawer__title {
   flex: 1;
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .options-drawer__fps {
@@ -77,5 +77,5 @@
 }
 
 .options-drawer__check {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }

@@ -1,8 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { createScrollGuard } from '../../apps/web/src/ui/design-system/primitives/ScrollArea/behavior/create-scroll-guard';
-import { createScrollSyncController } from '../../apps/web/src/ui/design-system/primitives/ScrollArea/behavior/create-scroll-sync-controller';
-import { setNodeOnRef } from '../../apps/web/src/ui/design-system/primitives/ScrollArea/behavior/set-node-on-ref';
+import { createScrollGuard, createScrollSyncController, setNodeOnRef } from '@drizztdourden08/tessera/primitives';
 
 interface Position { top: number; left: number; }
 

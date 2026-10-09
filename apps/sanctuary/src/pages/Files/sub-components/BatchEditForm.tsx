@@ -2,12 +2,8 @@
 import { useState } from 'react';
 import { FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Select } from '@ds/primitives/Select';
-import { Stack } from '@ds/primitives/Stack';
-import { TagInput } from '@ds/primitives/TagInput';
+import { Button, Field, Flex, Select, Stack } from '@drizztdourden08/tessera/primitives';
+import { TagInput } from '@drizztdourden08/tessera/composites';
 import { validateTag } from '../../../files/validate-tag';
 import { NO_TAGS } from './BatchEditForm.constants';
 import type { BatchEditFormProps } from './BatchEditForm.type';

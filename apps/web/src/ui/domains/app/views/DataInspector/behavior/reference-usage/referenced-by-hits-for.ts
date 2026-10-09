@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { referencesTo } from '@shared/game/data/relationships/reference-index';
-import type { ReferencedByHit } from '@ds/composites/RecordEditor';
+import type { ReferencedByHit } from '@drizztdourden08/tessera/composites';
 import { resolveRecordLabel } from '../record-links';
 import { isReferenceGuarded } from './is-reference-guarded';
 

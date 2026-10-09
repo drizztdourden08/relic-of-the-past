@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind component */
-import { Box, Button } from '../../../../../design-system/primitives';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import type { ReviewStatus } from '../SpriteDebug.type';
 import { S } from '../SpriteDebug.constants';
 
 const StatusBtns = ({ current, onClick }: { current: ReviewStatus; onClick: (s: ReviewStatus) => void }) => {
   return (
     <Box style={S.statusBtns}>
-      {([['✓', 'good', 'var(--c-green-bright)'], ['●', 'yellow', 'var(--c-warning)'], ['-', 'neutral', 'var(--c-text-muted)'], ['✗', 'bad', 'var(--c-danger)']] as const).map(([icon, st, color]) => {
+      {([['✓', 'good', 'var(--c-secondary-bright)'], ['●', 'yellow', 'var(--c-warning)'], ['-', 'neutral', 'var(--c-text-muted)'], ['✗', 'bad', 'var(--c-danger)']] as const).map(([icon, st, color]) => {
         const active = current === st;
         return (
           <Button variant="bare" key={st} onClick={() => onClick(st)} style={{

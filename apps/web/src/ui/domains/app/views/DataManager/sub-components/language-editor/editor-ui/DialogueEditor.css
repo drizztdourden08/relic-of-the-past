@@ -3,13 +3,13 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border: var(--border-width-thin) solid var(--color-border-default);
-  border-radius: var(--r-md);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-md);
   background: var(--c-surface);
 }
 
 .dialogue-editor:focus-within {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .dialogue-editor--read-only {
@@ -44,8 +44,8 @@
   background-image: linear-gradient(
     to right,
     transparent calc(var(--game-row-width) + var(--line-text-x)),
-    var(--c-gold-dim) calc(var(--game-row-width) + var(--line-text-x)),
-    var(--c-gold-dim) calc(var(--game-row-width) + var(--line-text-x) + 1px),
+    var(--c-primary-dim) calc(var(--game-row-width) + var(--line-text-x)),
+    var(--c-primary-dim) calc(var(--game-row-width) + var(--line-text-x) + 1px),
     transparent calc(var(--game-row-width) + var(--line-text-x) + 1px)
   );
   background-repeat: no-repeat;
@@ -54,7 +54,7 @@
 .dialogue-editor__surface .ProseMirror p.is-editor-empty::before {
   height: 0;
   float: left;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   content: attr(data-placeholder);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
@@ -83,7 +83,7 @@
   height: var(--line-row-h);
   line-height: var(--line-row-h);
   margin: 0;
-  border-left: var(--border-width-thin) solid var(--c-gold-dim);
+  border-left: var(--border-width-thin) solid var(--c-primary-dim);
   padding-left: var(--line-text-x);
   white-space-collapse: preserve;
   text-wrap-mode: nowrap;

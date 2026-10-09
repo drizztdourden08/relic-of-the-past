@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Select } from '@ds/primitives/Select';
+import { Box, Field, Select } from '@drizztdourden08/tessera/primitives';
 import { CellPicker } from '../CellPicker';
 import { DisabledReason } from '../DisabledReason';
 import { OffsetField } from '../OffsetField';

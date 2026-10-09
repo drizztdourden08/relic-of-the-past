@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Toggle } from '@ds/primitives';
+import { Toggle } from '@drizztdourden08/tessera/primitives';
 import { ServerSetup } from '@domains/app/compounds/ServerSetup';
 import { absorbPort, withHost } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { useServerProbe } from '@app/hooks/randomizer/server-setup/useServerProbe';

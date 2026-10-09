@@ -11,11 +11,11 @@
 
 .binding-listener {
   background: var(--c-surface);
-  border: 1px solid var(--c-gold);
+  border: 1px solid var(--c-primary);
   border-radius: var(--radius-lg);
   padding: var(--space-2xl) var(--space-2xl);
   text-align: center;
-  box-shadow: 0 0 30px var(--c-gold-soft);
+  box-shadow: 0 0 30px var(--c-primary-soft);
   animation: binding-listener-pulse 1.5s ease-in-out infinite;
 }
 
@@ -28,7 +28,7 @@
 .binding-listener__label {
   font-size: var(--text-2xl);
   font-weight: var(--weight-semi);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   margin-bottom: var(--space-lg);
 }
 
@@ -38,6 +38,6 @@
 }
 
 @keyframes binding-listener-pulse {
-  0%, 100% { border-color: var(--c-gold); }
-  50% { border-color: var(--c-gold-dim); }
+  0%, 100% { border-color: var(--c-primary); }
+  50% { border-color: var(--c-primary-dim); }
 }

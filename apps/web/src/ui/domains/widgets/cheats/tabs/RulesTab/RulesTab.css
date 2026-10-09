@@ -54,7 +54,7 @@
 }
 
 .cheats-rule[data-state='on'] {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .cheats-rule[data-state='off'] {
@@ -98,7 +98,7 @@
 }
 
 .cheats-rung[data-state='on'] {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .cheats-rung[data-state='disabled'] {

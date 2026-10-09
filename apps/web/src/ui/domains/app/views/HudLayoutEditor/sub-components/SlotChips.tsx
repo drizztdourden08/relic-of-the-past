@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { Text } from '@ds/primitives/Text';
+import { Box, Field, Flex, IconButton, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
 import './HudLayoutEditor.appearance.css';
 import type { SlotChipsProps } from './SlotChips.type';
 

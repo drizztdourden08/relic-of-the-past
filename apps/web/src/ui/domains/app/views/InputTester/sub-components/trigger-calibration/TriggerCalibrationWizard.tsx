@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { CalibrationHeader, CalibrationStepIndicator } from '../calibration-parts';
 import { useTriggerCalibration } from './useTriggerCalibration';
 import { TRIGGER_STEPS, TRIGGER_WIZARD_STYLE } from './trigger-calibration.constants';

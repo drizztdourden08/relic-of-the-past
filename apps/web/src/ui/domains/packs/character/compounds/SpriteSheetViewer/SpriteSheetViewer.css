@@ -19,7 +19,7 @@
   white-space: nowrap;
 }
 
-.sprite-viewer__controls .range-input { width: 8rem; }
+.sprite-viewer__controls .slider__input { width: 8rem; }
 
 .sprite-viewer__body {
   display: flex;

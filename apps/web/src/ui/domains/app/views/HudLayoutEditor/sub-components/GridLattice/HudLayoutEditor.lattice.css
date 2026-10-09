@@ -16,7 +16,7 @@
 }
 
 .hud-lattice__body:focus-visible {
-  outline: var(--border-width-thin) solid var(--c-gold);
+  outline: var(--border-width-thin) solid var(--c-primary);
   outline-offset: calc(-1 * var(--border-width-thin));
 }
 
@@ -40,7 +40,7 @@
   cursor: pointer;
   background: var(--c-surface);
   border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .hud-lattice__corner {
@@ -49,7 +49,7 @@
   z-index: calc(var(--z-sticky) + 1);
   grid-row: 1;
   grid-column: 1;
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .hud-lattice__head {
@@ -67,9 +67,9 @@
 }
 
 .hud-lattice__head[data-on='true'] {
-  color: var(--c-gold-bright);
-  background: var(--c-gold-dim);
-  border-color: var(--c-gold);
+  color: var(--c-primary-bright);
+  background: var(--c-primary-dim);
+  border-color: var(--c-primary);
 }
 
 .hud-lattice__head[data-empty='true'] {
@@ -91,7 +91,7 @@
   overflow: hidden;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
@@ -107,12 +107,12 @@
   cursor: pointer;
   background: var(--c-surface);
   border: var(--border-width-thin) dashed var(--c-border-strong);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .hud-lattice__add:hover {
-  color: var(--c-gold-bright);
-  border-color: var(--c-gold);
+  color: var(--c-primary-bright);
+  border-color: var(--c-primary);
 }
 
 .hud-lattice__add--columns {
@@ -130,31 +130,31 @@
   cursor: pointer;
   background: var(--c-hover);
   border: var(--border-width-thin) dashed var(--c-border-strong);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .hud-lattice__cell[data-state='occupied'] {
-  background: var(--c-gold-soft);
+  background: var(--c-primary-soft);
   border-style: solid;
-  border-color: var(--c-gold-dim);
+  border-color: var(--c-primary-dim);
 }
 
 .hud-lattice__cell[data-state='selected'] {
-  background: var(--c-gold);
+  background: var(--c-primary);
   border-style: solid;
-  border-color: var(--c-gold-bright);
+  border-color: var(--c-primary-bright);
 }
 
 .hud-lattice__cell[data-state='occupied-selected'] {
-  background-color: var(--c-gold-dim);
+  background-color: var(--c-primary-dim);
   background-image: repeating-linear-gradient(
     45deg,
-    var(--c-gold-soft) 0 3px,
+    var(--c-primary-soft) 0 3px,
     transparent 3px 6px
   );
   border-style: solid;
-  border-color: var(--c-gold);
-  box-shadow: inset 0 0 0 2px var(--c-gold-soft);
+  border-color: var(--c-primary);
+  box-shadow: inset 0 0 0 2px var(--c-primary-soft);
 }
 
 .hud-lattice__body:focus-visible .hud-lattice__cell[data-cursor='true']::after {
@@ -183,6 +183,6 @@
 }
 
 .hud-lattice__occupant[data-active='true'] {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   opacity: 1;
 }

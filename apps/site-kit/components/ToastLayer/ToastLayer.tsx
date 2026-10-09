@@ -1,6 +1,6 @@
 /* @layer site-kit @kind component */
 import { useSyncExternalStore } from 'react';
-import { ToastContainer } from '@ds/primitives/Toast';
+import { ToastContainer } from '@drizztdourden08/tessera/composites';
 import { dismissToast, subscribeToasts, toastsSnapshot } from '../../toast/toast-store';
 import { NO_TOASTS } from './ToastLayer.constants';
 

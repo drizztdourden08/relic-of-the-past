@@ -4,7 +4,7 @@ import { RomKindTabs } from './RomKindTabs';
 import { RomList } from './rom-manager/RomList';
 import { RomDetailPanel } from './rom-manager/RomDetailPanel';
 import { useRomManager } from './rom-manager/useRomManager';
-import { MasterDetailLayout } from '@ds/composites/MasterDetailLayout';
+import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { IMPORT_LANE_CONFIG } from './rom-manager/import-lane-config.constants';
 import type { RomManagerProps } from './RomManager.type';
 
@@ -56,7 +56,7 @@ const RomManager = (props: RomManagerProps) => {
     />
   );
 
-  return <MasterDetailLayout list={list} detail={detailContent} detailEmpty={!selected} />;
+  return <ListDetailLayout list={list} detail={detailContent} detailEmpty={!selected} />;
 };
 
 export { RomManager };

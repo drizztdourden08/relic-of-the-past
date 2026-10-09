@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind types */
-import type { ProgressVariant } from '@ds/primitives';
+import type { ProgressTone } from '@drizztdourden08/tessera/primitives';
 
 type SlotFit = {
   used: number;
   max: number;
-  variant: ProgressVariant;
+  variant: ProgressTone;
   readout: string;
   detail: string;
 };

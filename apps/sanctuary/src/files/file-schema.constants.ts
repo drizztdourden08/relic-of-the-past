@@ -1,7 +1,6 @@
 /* @layer sanctuary-site @kind constants */
 import { FILE_TYPES } from '@shared/sanctuary/file-types';
-import type { SchemaConfig } from '@ds/data/schema/field-descriptor';
-import type { TableColumn } from '@ds/data/table/types';
+import type { SchemaConfig, TableColumn } from '@drizztdourden08/tessera/data';
 import type { FileRow } from './file-row';
 
 const SAMPLE_ROWS: readonly FileRow[] = FILE_TYPES.map((type, index) => ({

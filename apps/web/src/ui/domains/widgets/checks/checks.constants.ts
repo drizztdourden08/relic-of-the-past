@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind constants */
-import type { SegmentOption } from '@ds/primitives';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import type { ViewMode } from '@domains/app/compounds/ChecksTracker';
 
 const CHECKS_PREF_KEY = 'checks';

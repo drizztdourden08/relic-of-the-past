@@ -25,8 +25,8 @@
 }
 
 .input-cal__status--connected {
-  color: var(--c-green-bright);
-  border-color: var(--c-green-dim);
+  color: var(--c-secondary-bright);
+  border-color: var(--c-secondary-dim);
 }
 
 .input-cal__status--disconnected {
@@ -73,13 +73,13 @@
 }
 
 .input-cal__btn--primary {
-  background: var(--c-gold-dim);
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
+  background: var(--c-primary-dim);
+  border-color: var(--c-primary);
+  color: var(--c-primary-bright);
 }
 
 .input-cal__btn--primary:hover {
-  background: var(--c-gold);
+  background: var(--c-primary);
   color: var(--c-bg);
 }
 
@@ -160,8 +160,8 @@
   font-size: var(--text-xs);
   padding: var(--space-xs) var(--space-xs);
   border-radius: var(--radius-sm);
-  background: var(--c-gold-dim);
-  color: var(--c-gold);
+  background: var(--c-primary-dim);
+  color: var(--c-primary);
   font-weight: var(--weight-medium);
   text-transform: uppercase;
 }
@@ -192,9 +192,9 @@
 }
 
 .input-cal__btn-cell--pressed {
-  background: var(--c-green-dim);
-  border-color: var(--c-green);
-  box-shadow: 0 0 8px var(--c-green-soft);
+  background: var(--c-secondary-dim);
+  border-color: var(--c-secondary);
+  box-shadow: 0 0 8px var(--c-secondary-soft);
 }
 
 .input-cal__btn-cell img {
@@ -217,7 +217,7 @@
 }
 
 .input-cal__btn-cell--pressed .input-cal__btn-cell-label {
-  color: var(--c-green-bright);
+  color: var(--c-secondary-bright);
 }
 
 .input-cal__rumble-strength {

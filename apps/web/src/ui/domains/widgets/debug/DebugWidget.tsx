@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button } from '../../../design-system/primitives';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useHudSettingsStore } from '../../../../stores/hud-settings-store';
 import { getFps } from '../../../../lib/game';

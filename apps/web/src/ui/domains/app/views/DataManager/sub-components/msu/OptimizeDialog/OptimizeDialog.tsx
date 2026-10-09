@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { DialogShell } from '@ds/composites/DialogShell';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { FfmpegInstallStep } from '@domains/app/compounds/FfmpegInstallStep';
 import { useOptimize } from '../behavior/useOptimize';
 import { PreviewStep } from './sub-components/PreviewStep';

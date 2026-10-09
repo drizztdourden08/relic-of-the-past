@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ChecksTracker } from '@domains/app/compounds/ChecksTracker';
 import { useTrackerData } from '../../../../../../hooks/useTrackerData';
 import { SPOILER_DIMENSIONS } from './SpoilerPanel.constants';

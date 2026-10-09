@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { ChangeEvent } from 'react';
-import { Field, Text, TextInput, Textarea } from '@ds/primitives';
+import { Field, Text, TextInput, Textarea } from '@drizztdourden08/tessera/primitives';
 import { githubHandleOf } from '@app/lib/sanctuary/github-handle';
 import { ReportingAsLine } from '../../../../../compounds/ReportingAsLine';
 import type { UserInfoStepProps } from '../controller-report-form.type';

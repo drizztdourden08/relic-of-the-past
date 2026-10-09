@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import refreshIcon from '@iconify-icons/lucide/refresh-cw';
-import { IconButton } from '../../../../design-system/primitives/IconButton';
+import { IconButton } from '@drizztdourden08/tessera/primitives';
 import { RESCAN_LABEL } from './RescanButton.constants';
 import type { RescanButtonProps } from './RescanButton.type';
 import './RescanButton.css';

@@ -1,15 +1,10 @@
 /* @layer tests @kind test */
 import { describe, it, expect, vi } from 'vitest';
 import { all } from '@shared/game/data';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import {
-  buildPickerNodes, pickableLeafPaths,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/field-picker-nodes';
-import {
-  buildFieldMenuItems,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/field-menu-items';
-import type { MenuItem } from '../../apps/web/src/ui/design-system/composites/DropdownMenu';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import { buildPickerNodes, pickableLeafPaths, buildFieldMenuItems } from '@drizztdourden08/tessera/composites';
+import type { MenuItem } from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const field = (path: string, kind: FieldDescriptor['kind'], children?: FieldDescriptor[]): FieldDescriptor => {

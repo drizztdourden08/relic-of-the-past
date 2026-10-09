@@ -1,11 +1,6 @@
 /* @layer store-site @kind component */
-import { DialogShell } from '@ds/composites/DialogShell';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Image } from '@ds/primitives/Image';
-import { Slider } from '@ds/primitives/Slider';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
+import { Box, Button, Image, Slider, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { MAX_ZOOM } from '../../lib/picture-crop/picture-crop.constants';
 import { useCropEditor } from './behavior/useCropEditor';
 import { pictureStyle } from './behavior/picture-style';

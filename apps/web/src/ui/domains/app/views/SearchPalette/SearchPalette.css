@@ -33,7 +33,7 @@
   background: var(--c-glass);
   backdrop-filter: blur(var(--blur));
   border: 1px solid transparent;
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   opacity: 0;
   pointer-events: none;
   -webkit-app-region: no-drag;
@@ -50,7 +50,7 @@
   height: min(70vh, 560px);
   opacity: 1;
   pointer-events: auto;
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   border-color: var(--c-border);
   box-shadow: var(--shadow-3);
 }
@@ -61,7 +61,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--c-gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--c-primary), transparent);
   opacity: 0;
   transition: opacity var(--duration-normal);
 }

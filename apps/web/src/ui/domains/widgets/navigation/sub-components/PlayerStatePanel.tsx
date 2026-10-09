@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { DescRow } from './DescRow';
 import type { PlayerStatePanelProps } from './PlayerStatePanel.type';
@@ -58,7 +58,7 @@ const PlayerStatePanel = (props: PlayerStatePanelProps) => {
         )}
         {playerDebug.staircaseType !== null && playerDebug.staircaseType >= 0 && (
           <DescRow label="Staircase" desc="Controls layer-change behavior (kind_of_in_room_staircase). 0=intra-room stairs (layer+room shift), 1=layer stairs (changes allowed), 2=pseudo/water stairs (ALL layer changes BLOCKED).">
-            <Text style={{ color: playerDebug.staircaseType === 2 ? 'var(--c-danger)' : 'var(--c-green-bright)' }}>
+            <Text style={{ color: playerDebug.staircaseType === 2 ? 'var(--c-danger)' : 'var(--c-secondary-bright)' }}>
               {playerDebug.staircaseType} ({['IntraRoom', 'Layer', 'Blocked'][playerDebug.staircaseType] ?? '?'})
             </Text>
           </DescRow>

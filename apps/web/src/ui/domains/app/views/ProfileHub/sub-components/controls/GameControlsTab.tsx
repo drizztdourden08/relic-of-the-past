@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Image } from '../../../../../../design-system/primitives/Image';
+import { Box, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { SnesBindingRow } from './SnesBindingRow';
 import { BindingListHeader } from './BindingListHeader';
 import { CoreBindingsGroup } from './CoreBindingsGroup';

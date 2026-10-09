@@ -34,7 +34,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-2xs) var(--space-xs);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .variable-row:hover {

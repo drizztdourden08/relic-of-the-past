@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { EmptyState } from '@ds/primitives';
-import { DashboardGrid, DashboardPanel } from '@ds/composites';
+import { EmptyState } from '@drizztdourden08/tessera/primitives';
+import { DashboardGrid, DashboardPanel } from '@drizztdourden08/tessera/composites';
 import { RunSummary } from './RunSummary';
 import { RunProgress } from './RunProgress';
 import { RunPlayers } from './RunPlayers';

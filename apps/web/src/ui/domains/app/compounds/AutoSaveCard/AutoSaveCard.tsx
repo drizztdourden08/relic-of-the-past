@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Thumbnail } from '../../../../design-system/primitives/Thumbnail';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Flex } from '../../../../design-system/primitives/Flex';
-import { Button } from '../../../../design-system/primitives/Button';
-import { IconButton } from '../../../../design-system/primitives/IconButton';
+import { Thumbnail, Text, Flex, Button, IconButton } from '@drizztdourden08/tessera/primitives';
 import { SaveCard } from '../SaveCard';
 import type { AutoSaveCardProps } from './AutoSaveCard.type';
 import './AutoSaveCard.css';

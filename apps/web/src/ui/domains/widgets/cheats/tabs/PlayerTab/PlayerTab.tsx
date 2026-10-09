@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Text } from '@ds/primitives';
-import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetHealth } from '@app/lib/game';

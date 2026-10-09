@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '@ds/primitives/Text';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { ButtonContent } from '../content/ButtonContent';
 import { CountdownContent } from '../content/CountdownContent';
 import { GlyphContent } from '../content/GlyphContent';

@@ -3,11 +3,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { FullScreenLayer } from '../../apps/web/src/ui/design-system/composites/FullScreenLayer';
+import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { AppearanceSection } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/AppearanceSection';
 import {
   dismissStackDepth,
-} from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/dismiss-stack';
+} from '@drizztdourden08/tessera/primitives';
 import type { HudNode } from '../../shared/types/hud';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -42,7 +42,7 @@ const click = (el: Element | null | undefined): void => {
   act(() => { el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })); });
 };
 
-const layerIsUp = (): boolean => document.querySelector('.fullscreen-layer') !== null;
+const layerIsUp = (): boolean => document.querySelector('.screen-layer') !== null;
 const pickerIsUp = (): boolean => document.querySelector('.color-picker-popover') !== null;
 
 const groupTrigger = (title: string): Element | undefined =>
@@ -58,7 +58,7 @@ const NODE: HudNode = {
 };
 
 const editor = (onClose: () => void): ReactNode => createElement(
-  FullScreenLayer,
+  ScreenWindow,
   { onClose, title: 'HUD layout' },
   createElement(AppearanceSection, { node: NODE, onPatch: () => {}, scope: {} }),
 );

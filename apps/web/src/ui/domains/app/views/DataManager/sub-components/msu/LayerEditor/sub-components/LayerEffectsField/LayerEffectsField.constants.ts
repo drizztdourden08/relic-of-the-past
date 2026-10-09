@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
 import type { LayerEffect } from '@shared/types/msu-manifest';
-import type { SelectOption } from '@ds/primitives/Select';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import type { EffectPreset } from './LayerEffectsField.type';
 
 const PRESETS: EffectPreset[] = [

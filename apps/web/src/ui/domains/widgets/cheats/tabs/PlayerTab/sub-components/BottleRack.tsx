@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useState } from 'react';
-import { Box, Button, Image } from '@ds/primitives';
+import { Box, Button, Image } from '@drizztdourden08/tessera/primitives';
 import { PauseBorderBox } from '@domains/hud';
 import { getSlotSprite } from '@domains/hud/composites/PauseItemSlot';
 import { useGameUIStore } from '@app/stores/game-ui-store';

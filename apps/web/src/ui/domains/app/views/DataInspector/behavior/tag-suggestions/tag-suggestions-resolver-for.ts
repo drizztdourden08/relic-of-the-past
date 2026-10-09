@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { TagSuggestionResolver } from '@ds/composites/RecordEditor';
+import type { TagSuggestionResolver } from '@drizztdourden08/tessera/composites';
 import { resolveTagSuggestionsFor } from './resolve-tag-suggestions-for';
 import { suggestionResolvers } from './suggestion-resolvers';
 

@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { TITLE_ROW } from './DiagnosticsLog.constants';
 import type { DiagnosticsLogProps } from './DiagnosticsLog.type';
 

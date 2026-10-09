@@ -1,10 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect, vi } from 'vitest';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { dedupeClauseIds, restoreDurableSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/durable-load';
-import { capture } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import type { TableState, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
+import { buildSchema, createSchemaIndex, dedupeClauseIds, restoreDurableSnapshot, capture } from '@drizztdourden08/tessera/data';
+import type { FilterClause, TableState, ViewSnapshot } from '@drizztdourden08/tessera/data';
 
 const ROWS = [{ id: 'item-001', name: 'alpha' }];
 const schema = createSchemaIndex(buildSchema(ROWS, { kinds: { name: 'string' } }));

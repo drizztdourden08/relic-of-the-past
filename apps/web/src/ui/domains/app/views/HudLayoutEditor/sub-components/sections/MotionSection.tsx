@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import '../HudLayoutEditor.motion.css';
 import { SubsectionGroup } from '../SubsectionGroup';
 import { EnterExitEditor } from '../EnterExitEditor';

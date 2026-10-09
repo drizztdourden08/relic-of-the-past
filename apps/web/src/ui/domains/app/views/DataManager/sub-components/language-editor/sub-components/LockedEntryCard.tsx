@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge, Box, Text } from '@ds/primitives';
+import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { LockedEntryCardProps } from './LockedEntryCard.type';
 import '@domains/packs/language/compounds/entry/EntryCardCollapsed.css';
 
@@ -12,7 +12,7 @@ const LockedEntryCard = (props: LockedEntryCardProps) => {
       <Text as="span" className="entry-row__id">{`#${String(id).padStart(3, '0')}`}</Text>
       <Text as="span" className="entry-row__who entry-row__who--unknown">engine scaffolding</Text>
       <Text as="span" className="entry-row__slot">
-        <Badge variant="warning" className="entry-row__trigger">locked</Badge>
+        <Status tone="warning" className="entry-row__trigger">locked</Status>
       </Text>
       <Text as="span" className="entry-row__size" />
       <Text as="span" className="entry-row__choice" />

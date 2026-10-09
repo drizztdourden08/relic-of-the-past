@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Checkbox, SegmentedControl, Text } from '@ds/primitives';
+import { Box, Checkbox, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
 import { PROGRESSIVE_MODE_LABELS } from '@shared/randomizer/world/progressive/progressive-modes.data';
 import type { ProgressiveFamilyMode } from '@shared/randomizer/world/progressive/progressive.type';
 import { OptionValueTag } from '../../OptionValueTag';

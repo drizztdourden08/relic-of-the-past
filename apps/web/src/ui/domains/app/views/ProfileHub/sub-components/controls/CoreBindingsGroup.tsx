@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { BindingListHeader } from './BindingListHeader';
 import { CoreVerbRow } from './CoreVerbRow';
 import { CORE_VERB_GROUPS } from './controls.constants';

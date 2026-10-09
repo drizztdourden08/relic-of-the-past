@@ -2,9 +2,9 @@
 import { describe, it, expect } from 'vitest';
 import {
   addClause, removeClause, updateClauseById,
-} from '../../apps/web/src/ui/design-system/composites/FilterBar/behavior/clause-list';
-import { createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
+} from '@drizztdourden08/tessera/composites';
+import { createClause } from '@drizztdourden08/tessera/data';
+import type { FilterClause } from '@drizztdourden08/tessera/data';
 
 const clauseOn = (path: string, value: unknown): FilterClause => createClause(path, 'eq', value);
 

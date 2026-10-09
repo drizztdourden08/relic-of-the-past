@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { BottleContentRow, CurrencyPriceRow, currencyRowsOf } from '../CurrencyPriceRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { ShopPriceModifierRow } from './sub-components/ShopPriceModifierRow';

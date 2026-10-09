@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Image } from '@ds/primitives';
+import { Box, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { resolveItemSprite, getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import type { InventorySlotProps } from '../TrackerInventory.type';
 

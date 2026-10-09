@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { Select } from '@ds/primitives/Select';
-import { Text } from '@ds/primitives/Text';
+import { Box, Flex, IconButton, NumberInput, Select, Text } from '@drizztdourden08/tessera/primitives';
 import type { LayerEffect } from '@shared/types/msu-manifest';
 import { DEFAULT_EFFECT, EFFECT_KIND_OPTIONS, MAX_DB, MAX_HZ, MIN_HZ } from '../LayerEffectsField.constants';
 import type { EffectRowProps } from '../LayerEffectsField.type';

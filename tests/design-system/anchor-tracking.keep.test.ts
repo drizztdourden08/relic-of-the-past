@@ -1,18 +1,7 @@
 /* @layer tests @kind test */
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  clippingAncestorsOf, intersect, overlaps, viewportBounds, visibleBoundsOf,
-} from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/anchor-position';
-import {
-  observeAnchorMovement,
-} from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/observe-anchor-movement';
-import {
-  dropPanelPositionFor,
-} from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/drop-panel-position';
-import type { Bounds } from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/anchor-position';
-import type {
-  EventTargetLike,
-} from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/observe-anchor-movement';
+import { clippingAncestorsOf, intersect, overlaps, viewportBounds, visibleBoundsOf, observeAnchorMovement, dropPanelPositionFor } from '@drizztdourden08/tessera/primitives';
+import type { Bounds, EventTargetLike } from '@drizztdourden08/tessera/primitives';
 
 const rect = (top: number, left: number, height: number, width: number): DOMRect => ({
   top,

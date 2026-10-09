@@ -10,7 +10,7 @@
 }
 
 .publications__public {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   font-size: var(--text-sm);
 }
 
@@ -22,7 +22,7 @@
   margin: 0;
   padding: var(--space-sm) var(--space-md);
   border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   background: var(--c-sunken);
   color: var(--c-text);
   white-space: pre-wrap;
@@ -30,5 +30,5 @@
 }
 
 .publication-detail__note {
-  border-left: var(--border-width-thick) solid var(--c-gold);
+  border-left: var(--border-width-thick) solid var(--c-primary);
 }

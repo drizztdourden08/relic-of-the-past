@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Spinner, Text } from '@ds/primitives';
+import { Box, Spinner, Text } from '@drizztdourden08/tessera/primitives';
 import type { HoldStatusLineProps } from './diagnostics-steps.type';
 
 const HoldStatusLine = (props: HoldStatusLineProps) => {

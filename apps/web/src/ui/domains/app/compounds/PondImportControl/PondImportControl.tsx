@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Select, Text } from '@ds/primitives';
-import type { SelectOption } from '@ds/primitives';
+import { Box, Button, Select, Text } from '@drizztdourden08/tessera/primitives';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import { PLACEHOLDER } from './PondImportControl.constants';
 import type { PondImportControlProps } from './PondImportControl.type';
 import './PondImportControl.css';

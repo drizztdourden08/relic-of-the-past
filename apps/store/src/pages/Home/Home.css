@@ -18,7 +18,7 @@
 
 .welcome .welcome__title {
   margin: 0 0 var(--space-xs);
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-family: var(--font-game);
   font-size: var(--welcome-title-size);
   font-weight: var(--weight-normal);

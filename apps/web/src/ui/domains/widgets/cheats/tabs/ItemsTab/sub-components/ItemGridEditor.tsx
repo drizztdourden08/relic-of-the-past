@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseBorderBox, PauseButtonLabel, PauseItemSlot, PauseLabel } from '@domains/hud';
 import { getSlotSprite } from '@domains/hud/composites/PauseItemSlot';

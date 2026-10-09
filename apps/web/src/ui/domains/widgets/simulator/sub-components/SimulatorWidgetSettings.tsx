@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import { NumberInput } from '@ds/primitives';
-import { OptionRow } from '@ds/composites/Widget';
+import { NumberInput } from '@drizztdourden08/tessera/primitives';
+import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
 
 const SimulatorWidgetSettings = () => {
@@ -11,9 +11,9 @@ const SimulatorWidgetSettings = () => {
   };
 
   return (
-    <OptionRow label="Screen limit" hint="Blank runs without a limit">
+    <ControlMenuRow label="Screen limit" hint="Blank runs without a limit">
       <NumberInput min={1} placeholder="unlimited" value={screenLimit ?? ''} onChange={handleChange} />
-    </OptionRow>
+    </ControlMenuRow>
   );
 };
 

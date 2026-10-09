@@ -1,16 +1,10 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  isOverflowing, naturalWidth, sameFallback,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/overflow-probe';
-import {
-  AUTO_TRACK, GROW_TRACK, TRACK_FLOOR, TRAILING_MIN_TRACK,
-  growFitTrack, trackFor, trackList, trackListWith,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/DataTable.constants';
+import { isOverflowing, naturalWidth, sameFallback, AUTO_TRACK, GROW_TRACK, TRACK_FLOOR, TRAILING_MIN_TRACK, growFitTrack, trackFor, trackList, trackListWith } from '@drizztdourden08/tessera/composites';
 import type {
   GrowFallback, OverflowProbe,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/overflow-probe';
-import type { TableColumn } from '../../../apps/web/src/ui/design-system/data/table/types';
+} from '@drizztdourden08/tessera/composites';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 
 describe('is there any space left over', () => {
   const probe = (over: Partial<OverflowProbe> = {}): OverflowProbe => ({

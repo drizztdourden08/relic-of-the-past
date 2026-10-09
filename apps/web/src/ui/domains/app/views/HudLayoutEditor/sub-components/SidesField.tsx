@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
+import { Box, Button, Field } from '@drizztdourden08/tessera/primitives';
 import { SIDES } from './EdgesField.constants';
 import './HudLayoutEditor.appearance.css';
 import type { HudBorderSides } from '@shared/types/hud';

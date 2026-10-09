@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
+import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import type { DisabledReasonProps } from './DisabledReason.type';
 
 const DisabledReason = (props: DisabledReasonProps) => {

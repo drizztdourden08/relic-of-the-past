@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { MusicContents } from './sub-components/MusicContents';
 import { CharacterContents } from './sub-components/CharacterContents';
 import { LanguageContents } from './sub-components/LanguageContents';

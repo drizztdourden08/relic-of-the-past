@@ -46,7 +46,7 @@
 .credits-tab__entry {
   background: var(--c-surface);
   border: 1px solid var(--c-border);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   padding: var(--space-md) var(--space-lg);
 }
 
@@ -70,7 +70,7 @@
 }
 
 .credits-tab__link {
-  color: var(--c-gold);
+  color: var(--c-primary);
   text-decoration: none;
   cursor: pointer;
 }
@@ -82,7 +82,7 @@
 .credits-tab__entry-license {
   font-size: var(--text-base);
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   background: var(--c-surface);
   color: var(--c-text-dim);
   font-weight: var(--weight-medium);
@@ -106,20 +106,20 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   white-space: nowrap;
 }
 
 .credits-tab__usage-badge[data-level="original-work"] {
-  background: var(--c-gold-dim);
-  color: var(--c-gold-bright);
+  background: var(--c-primary-dim);
+  color: var(--c-primary-bright);
 }
 
 .credits-tab__usage-badge[data-level="core-dependency"] {
-  background: var(--c-green-dim);
-  color: var(--c-green-bright);
+  background: var(--c-secondary-dim);
+  color: var(--c-secondary-bright);
 }
 
 .credits-tab__usage-badge[data-level="data-direct"],
@@ -130,7 +130,7 @@
 
 .credits-tab__usage-badge[data-level="assets-modified"] {
   background: var(--c-surface);
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .credits-tab__usage-badge[data-level="logic-reference"],

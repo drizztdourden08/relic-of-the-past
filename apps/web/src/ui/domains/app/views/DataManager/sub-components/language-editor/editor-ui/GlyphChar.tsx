@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Canvas, Text } from '@ds/primitives';
+import { Box, Canvas, Text } from '@drizztdourden08/tessera/primitives';
 import { widthOf } from '@shared/game/language';
 import { isMergedSecond, mergedSecondOf } from '../editor/merged-glyph';
 import { pictureGlyphIndex } from './glyph-index';

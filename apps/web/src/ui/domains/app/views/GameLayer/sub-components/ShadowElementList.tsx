@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import { wasmGetViewportInfo } from '../../../../../../lib/game';
 import { overworldScreenIdOf } from '../behavior/overworld-screen-id';

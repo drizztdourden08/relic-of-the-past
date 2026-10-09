@@ -11,11 +11,8 @@ import * as languagesStore from '@app/lib/storage/languages-store';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@domains/app/views/InstalledOriginBar';
 import { LanguageSetList } from './LanguageSetList';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Select } from '../../../../../design-system/primitives/Select';
-import { Field } from '../../../../../design-system/primitives/Field';
-import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
+import { Text, Box, Select, Field } from '@drizztdourden08/tessera/primitives';
+import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 
 const LanguageManager = (props: LanguageManagerProps) => {
   const { onDeleteConfirm } = props;
@@ -161,7 +158,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   );
   const detail = <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} />;
 
-  return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
+  return <ListDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
 };
 
 export { LanguageManager };

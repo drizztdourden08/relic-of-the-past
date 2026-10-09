@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, TabBar, Text, Toggle } from '@ds/primitives';
-import { ErrorBoundary } from '@ds/composites';
+import { Box, Tabs, Text, Toggle } from '@drizztdourden08/tessera/primitives';
+import { ErrorBoundary } from '@drizztdourden08/tessera/composites';
 import { OptionValueTag } from '@domains/app/compounds/OptionValueTag';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
@@ -43,7 +43,7 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
               onChange={handleShareChange}
             />
           )}
-          <TabBar tabs={POND_TABS} activeTab={pondId} onTabChange={handleTabChange} />
+          <Tabs tabs={POND_TABS} activeTab={pondId} onTabChange={handleTabChange} />
         </Box>
         <PondInstanceRow
           key={pondId}

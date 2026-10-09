@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { ProgressBar } from '@ds/primitives';
+import { ProgressBar } from '@drizztdourden08/tessera/primitives';
 import { NetworkSection } from './NetworkSection';
 import { formatYesNo } from '../behavior/network-format';
 import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
@@ -25,7 +25,7 @@ const ProgressSection = ({ placement, view }: ProgressSectionProps) => {
       empty={NOT_CONNECTED_HINT}
     >
       {progress !== null && progress.total > 0 && (
-        <ProgressBar value={progress.checked} max={progress.total} variant="green" readout={`${Math.round((progress.checked / progress.total) * 100)}%`} />
+        <ProgressBar value={progress.checked} max={progress.total} tone="secondary" readout={`${Math.round((progress.checked / progress.total) * 100)}%`} />
       )}
     </NetworkSection>
   );

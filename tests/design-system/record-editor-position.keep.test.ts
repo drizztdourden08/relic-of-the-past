@@ -3,12 +3,12 @@ import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { RecordEditor, positionPairOf } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import { RecordEditor, positionPairOf } from '@drizztdourden08/tessera/composites';
 import {
   numberBoundsResolverFor, resolveNumberBoundsFor, withoutIndices,
 } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/number-bounds';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const PAIR_CONTROL = 'class="position-input';

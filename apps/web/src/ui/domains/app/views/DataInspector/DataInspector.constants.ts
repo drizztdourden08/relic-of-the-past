@@ -13,10 +13,9 @@ import boxesIcon from '@iconify-icons/lucide/boxes';
 import typeIcon from '@iconify-icons/lucide/type';
 import alertIcon from '@iconify-icons/lucide/alert-triangle';
 import type { ConnectionPlacement, EntityKind } from '@shared/game/data';
-import type { DetailTab, FieldDescriptor, TableColumn, TableState } from '@ds/data';
-import type { IdRefTargetField } from '@ds/composites/DataTable';
-import type { IdRefOption, NumberBounds } from '@ds/composites/RecordEditor';
-import type { TabItem } from '@ds/primitives';
+import type { DetailTab, FieldDescriptor, TableColumn, TableState } from '@drizztdourden08/tessera/data';
+import type { IdRefTargetField, IdRefOption, NumberBounds } from '@drizztdourden08/tessera/composites';
+import type { TabItem } from '@drizztdourden08/tessera/primitives';
 import type { DeleteGuardDialogState } from './DataInspector.type';
 
 const ENTITY_KINDS: readonly EntityKind[] = [

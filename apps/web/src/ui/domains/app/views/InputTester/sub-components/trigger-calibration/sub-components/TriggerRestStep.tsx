@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button } from '../../../../../../../design-system/primitives';
+import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { CALIBRATION_STYLE, SamplingProgress } from '../../calibration-parts';
 import { TRIGGER_WIZARD_STYLE } from '../trigger-calibration.constants';
 import type { TriggerRestStepProps } from '../trigger-calibration.type';

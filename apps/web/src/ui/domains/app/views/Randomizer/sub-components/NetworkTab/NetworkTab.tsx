@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Text } from '@ds/primitives';
-import { DashboardGrid, DashboardPanel } from '@ds/composites';
+import { Text } from '@drizztdourden08/tessera/primitives';
+import { DashboardGrid, DashboardPanel } from '@drizztdourden08/tessera/composites';
 import { useNetworkStatus } from './behavior/useNetworkStatus';
 import { networkViewOf } from './behavior/network-view';
 import { ConnectionEditor } from './sub-components/ConnectionEditor';

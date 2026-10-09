@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { NumberBounds } from '@ds/composites/RecordEditor';
+import type { NumberBounds } from '@drizztdourden08/tessera/composites';
 import { OVERWORLD_GRID, ROOM_GRID, SCREEN_FLOOR, SCREEN_TILE } from '../../DataInspector.constants';
 import { isOverworld } from './is-overworld';
 

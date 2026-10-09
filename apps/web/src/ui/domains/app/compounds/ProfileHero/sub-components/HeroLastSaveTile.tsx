@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Thumbnail } from '../../../../../design-system/primitives/Thumbnail';
+import { Box, Button, Text, Thumbnail } from '@drizztdourden08/tessera/primitives';
 import type { HeroLastSave } from '../ProfileHero.type';
 
 const formatSaveTime = (timestamp: number): string => new Date(timestamp).toLocaleString(undefined, {

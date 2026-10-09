@@ -1,6 +1,5 @@
 /* @layer store-site @kind component */
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { ItemCardView } from '@shared/store/home-types';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { useSessionContext } from '@site-kit/session/session-context';

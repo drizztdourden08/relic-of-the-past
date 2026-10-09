@@ -27,7 +27,7 @@
   position: relative;
   height: var(--space-lg);
   margin: 0 var(--space-sm);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border-radius: var(--radius-sm);
   cursor: copy;
   touch-action: none;
@@ -57,17 +57,17 @@
 }
 
 .hud-kftrack__key:hover {
-  background: var(--c-gold);
+  background: var(--c-primary);
 }
 
 .hud-kftrack__key.is-selected {
-  background: var(--c-gold-bright);
-  border-color: var(--c-gold-bright);
+  background: var(--c-primary-bright);
+  border-color: var(--c-primary-bright);
   transform: translate(-50%, -50%) rotate(45deg) scale(1.25);
 }
 
 .hud-kftrack__key:focus-visible {
-  outline: 2px solid var(--c-gold);
+  outline: 2px solid var(--c-primary);
   outline-offset: 2px;
 }
 
@@ -76,7 +76,7 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: var(--c-gold-bright);
+  background: var(--c-primary-bright);
   pointer-events: none;
 }
 
@@ -94,7 +94,7 @@
   height: 26px;
   padding: var(--space-2xs);
   color: var(--c-text-dim);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -102,12 +102,12 @@
 
 .hud-easing__tile:hover {
   color: var(--c-text);
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .hud-easing__tile.is-on {
-  color: var(--c-gold-bright);
-  border-color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
+  border-color: var(--c-primary-bright);
 }
 
 .hud-easing__tile--word {

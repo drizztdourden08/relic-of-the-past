@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { DropdownMenu } from '@ds/composites/DropdownMenu';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import { EXTENT_MODES, extentFor, modeOf } from '../../../behavior/track-extents';
 import type { TrackHeadProps } from './TrackHead.type';
 

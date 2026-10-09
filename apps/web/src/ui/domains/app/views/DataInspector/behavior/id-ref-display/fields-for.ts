@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
-import { buildSchema } from '@ds/data';
+import { buildSchema } from '@drizztdourden08/tessera/data';
 import type { EntityKind } from '@shared/game/data';
-import type { IdRefTargetField } from '@ds/composites/DataTable';
+import type { IdRefTargetField } from '@drizztdourden08/tessera/composites';
 import { COLLECTION_SOURCES } from '../collection-sources';
 import { collectLeaves } from './collect-leaves';
 import { fieldCache } from './field-cache';

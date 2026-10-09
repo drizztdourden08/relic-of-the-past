@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Button, Flex, Text } from '@ds/primitives';
+import { Button, Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { ACCEPT_ALL_LABEL, ACCEPT_LABEL, REJECT_LABEL, REVERT_LABEL } from './RecommendationDetail.constants';
 import type { RecommendationActionsProps } from './RecommendationDetail.type';
 

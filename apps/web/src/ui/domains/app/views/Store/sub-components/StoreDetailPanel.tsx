@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Spinner, Text } from '@ds/primitives';
+import { Spinner, Text } from '@drizztdourden08/tessera/primitives';
 import { storeItemUrl } from '@app/lib/store/store-site';
 import type { StoreDetailPanelProps } from '../Store.type';
 import { StoreDetail } from './StoreDetail';

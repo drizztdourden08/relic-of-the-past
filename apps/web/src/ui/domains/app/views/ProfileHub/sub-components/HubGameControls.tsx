@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useState } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { Spinner } from '../../../../../design-system/primitives/Spinner';
+import { Box, Button, Spinner } from '@drizztdourden08/tessera/primitives';
 import { useGamePause } from '../behavior/useGamePause';
 import type { HubGameControlsProps } from './HubGameControls.type';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback } from 'react';
 import type { MouseEvent } from 'react';
-import { Box, Button } from '@ds/primitives';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { HudLife } from '@domains/hud';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetHealth, cheatSetMaxHealth } from '@app/lib/game';

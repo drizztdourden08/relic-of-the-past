@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { MODE_LABELS } from './MsuDetectedSummary.constants';
 import { packDetail } from './pack-detail';
 import type { MsuDetectedSummaryProps } from './MsuDetectedSummary.type';

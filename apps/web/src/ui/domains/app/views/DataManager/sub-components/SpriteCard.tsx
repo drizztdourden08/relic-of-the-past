@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Image } from '../../../../../design-system/primitives/Image';
+import { Box, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { CATEGORY_LABELS } from '@shared/game/data';
 import type { SpriteCardProps } from './SpriteGrid.type';
 

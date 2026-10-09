@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, EmptyState, StatRow } from '@ds/primitives';
+import { Box, EmptyState, StatRow } from '@drizztdourden08/tessera/primitives';
 import type { MusicDebugCounter } from '@app/lib/game/music-debug';
 
 const splitOf = (row: MusicDebugCounter): string => {

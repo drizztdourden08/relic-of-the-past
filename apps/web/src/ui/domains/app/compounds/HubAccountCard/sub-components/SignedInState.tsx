@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge, Button, Flex, Image, Stack, Text } from '@ds/primitives';
+import { Status, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { PROVIDER_LABELS } from '@shared/hub';
 import type { SignedInStateProps } from '../HubAccountCard.type';
 import { ACCESS_VARIANT } from './SignedInState.constants';
@@ -20,7 +20,7 @@ const SignedInState = (props: SignedInStateProps) => {
         <Stack gap="xs">
           <Flex align="center" gap="sm">
             <Text as="span" className="hub-account__name">{user.displayName}</Text>
-            {user.access && <Badge variant={ACCESS_VARIANT[user.access.state]}>{user.access.state}</Badge>}
+            {user.access && <Status tone={ACCESS_VARIANT[user.access.state]}>{user.access.state}</Status>}
           </Flex>
           <Text as="p" className="hub-account__detail">
             {linked ? `${linked} linked` : 'No sign-in method linked'} · this device: {deviceLabel}

@@ -1,7 +1,5 @@
 /* @layer sanctuary-site @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Grid } from '@ds/primitives/Grid';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Grid, Text } from '@drizztdourden08/tessera/primitives';
 import { SELECTION_TILE_MAX } from '../Files.constants';
 import { SelectionTile } from './SelectionTile';
 import { GRID_COLUMNS } from './SelectionGrid.constants';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { IconButton } from '@ds/primitives';
+import { IconButton } from '@drizztdourden08/tessera/primitives';
 import { GlyphChar } from '../GlyphChar';
 import type { GlyphChoiceProps } from './GlyphChoice.type';
 

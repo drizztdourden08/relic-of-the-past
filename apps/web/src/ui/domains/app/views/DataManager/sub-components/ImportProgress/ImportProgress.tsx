@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Spinner } from '../../../../../../design-system/primitives/Spinner';
-import { ProgressBar } from '../../../../../../design-system/primitives/ProgressBar';
+import { Box, Text, Spinner, ProgressBar } from '@drizztdourden08/tessera/primitives';
 import type { ImportProgressProps } from './ImportProgress.type';
 import './ImportProgress.css';
 

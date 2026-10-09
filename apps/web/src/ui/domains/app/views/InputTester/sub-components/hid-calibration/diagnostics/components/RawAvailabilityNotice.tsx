@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import type { RawCaptureFailureReason } from '@shared/ipc';
 import { REASON_TEXT } from './RawAvailabilityNotice.constants';
 import type { RawAvailabilityNoticeProps } from './RawAvailabilityNotice.type';

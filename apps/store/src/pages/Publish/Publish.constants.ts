@@ -1,5 +1,5 @@
 /* @layer store-site @kind constants */
-import type { SelectOption } from '@ds/primitives/Select';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import { CONTAINERS } from '@shared/store/containers';
 import { LICENSES } from '@shared/store/licenses';
 import type { PublishMode } from './Publish.type';

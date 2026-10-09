@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { ColorSwatch } from '@ds/primitives/ColorSwatch';
-import { IconButton } from '@ds/primitives/IconButton';
+import { Box, ColorSwatch, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Text } from '@ds/primitives/Text';
-import { ColorPickerPopover } from '@ds/composites/ColorPickerPopover';
+import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import { EngineToggle } from './EngineToggle';
 import { LayoutSettingsPiece } from './LayoutSettingsPiece';
 import { SubSection } from './SubSection';

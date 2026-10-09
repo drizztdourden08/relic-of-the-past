@@ -19,7 +19,7 @@
   color: var(--c-text);
   background: var(--c-inset);
   border: 1px solid var(--c-border-strong);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-sm);
   cursor: ew-resize;
   user-select: none;
@@ -36,8 +36,8 @@
   font-size: var(--text-sm);
   color: var(--c-text);
   background: var(--c-inset);
-  border: 1px solid var(--c-gold);
-  border-radius: var(--r-sm);
+  border: 1px solid var(--c-primary);
+  border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-sm);
   min-width: 40px;
   width: 100%;

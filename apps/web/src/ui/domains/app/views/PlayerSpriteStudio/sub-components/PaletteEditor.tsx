@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState, useMemo, useCallback, useRef } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { ColorSwatch } from '@ds/primitives/ColorSwatch';
-import { ColorPickerPopover } from '@ds/composites/ColorPickerPopover';
-import type { SwatchGroup } from '@ds/composites/ColorPicker';
+import { Box, Text, ColorSwatch } from '@drizztdourden08/tessera/primitives';
+import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
+import type { SwatchGroup } from '@drizztdourden08/tessera/color-picker';
 import { COLORS_PER_OUTFIT, GLOVES_INDEX, OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
 import { bgr555ToHex, hexToBgr555, isExactColor } from '@app/lib/game/snes-color';
 import { flattenPalette } from '@app/lib/game/player-sheet/flatten-palette';

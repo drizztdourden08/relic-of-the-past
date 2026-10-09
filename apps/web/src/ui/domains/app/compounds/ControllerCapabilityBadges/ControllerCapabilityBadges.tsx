@@ -2,7 +2,7 @@
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import vibrateIcon from '@iconify-icons/lucide/vibrate';
 import gyroIcon from '@iconify-icons/lucide/rotate-3d';
-import { Badge } from '../../../../design-system/primitives/Badge';
+import { Status } from '@drizztdourden08/tessera/primitives';
 import { BUS_ICON, BUS_LABEL } from '../ControllerStatusBar/ControllerStatusBar.constants';
 import type { ControllerCapabilityBadgesProps } from './ControllerCapabilityBadges.type';
 
@@ -14,19 +14,19 @@ const ControllerCapabilityBadges = (props: ControllerCapabilityBadgesProps) => {
   return (
     <>
       {busIcon && busLabel && (
-        <Badge variant="neutral" title={busLabel}>
+        <Status tone="neutral" title={busLabel}>
           <IconifyIcon icon={busIcon} width={12} height={12} />
-        </Badge>
+        </Status>
       )}
       {hasRumble && (
-        <Badge variant="neutral" title="Rumble">
+        <Status tone="neutral" title="Rumble">
           <IconifyIcon icon={vibrateIcon} width={12} height={12} />
-        </Badge>
+        </Status>
       )}
       {hasGyro && (
-        <Badge variant="neutral" title="Gyro">
+        <Status tone="neutral" title="Gyro">
           <IconifyIcon icon={gyroIcon} width={12} height={12} />
-        </Badge>
+        </Status>
       )}
     </>
   );

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Button } from '../../../../../../design-system/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { PROFILE_HUB_TABS } from '../../ProfileHub.constants';
 import type { HubSearchTabChipProps } from './hub-search.type';
 

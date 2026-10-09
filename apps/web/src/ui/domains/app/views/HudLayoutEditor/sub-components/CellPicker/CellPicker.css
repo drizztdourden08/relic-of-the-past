@@ -8,7 +8,7 @@
   padding: var(--space-2xs);
   background: var(--c-surface);
   border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .hud-cellpick__legend {

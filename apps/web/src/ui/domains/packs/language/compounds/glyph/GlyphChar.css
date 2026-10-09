@@ -22,7 +22,7 @@
 }
 
 .glyph-char__name {
-  border-radius: var(--r-sm);
-  background: var(--c-gold-soft);
+  border-radius: var(--radius-sm);
+  background: var(--c-primary-soft);
   font-size: var(--text-sm);
 }

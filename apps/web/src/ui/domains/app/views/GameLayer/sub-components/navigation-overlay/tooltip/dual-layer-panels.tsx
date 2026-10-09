@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import type { DualLayerPanelsProps } from './tooltip.type';
 import { S } from './styles';
 import { LayerBlock } from './layer-panels';
@@ -11,7 +11,7 @@ const DualLayerPanels = ({ ground, above }: DualLayerPanelsProps) => (
       <LayerBlock name={GROUND_HEADING} nameColor="var(--c-info)" data={ground} />
     </Box>
     <Box style={S.dualColRight}>
-      <LayerBlock name={ABOVE_HEADING} nameColor="var(--c-gold)" data={above} />
+      <LayerBlock name={ABOVE_HEADING} nameColor="var(--c-primary)" data={above} />
     </Box>
   </Box>
 );

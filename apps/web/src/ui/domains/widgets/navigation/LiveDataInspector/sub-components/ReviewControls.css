@@ -7,7 +7,7 @@
 }
 
 .live-review__label {
-  color: var(--c-green-bright);
+  color: var(--c-secondary-bright);
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
   letter-spacing: 0.5px;

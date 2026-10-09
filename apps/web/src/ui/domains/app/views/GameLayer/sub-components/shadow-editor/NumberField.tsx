@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useRef, useState, useEffect } from 'react';
 import type React from 'react';
-import { TextInput } from '../../../../../../design-system/primitives/TextInput';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { TextInput, Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { NumberFieldProps } from './NumberField.type';
 import './NumberField.css';
 

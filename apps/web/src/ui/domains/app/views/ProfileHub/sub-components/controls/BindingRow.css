@@ -8,7 +8,7 @@
   transition: background 0.12s;
   cursor: pointer;
   user-select: none;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
 }
 
 .binding-row--header {
@@ -40,7 +40,7 @@
 }
 
 .binding-row:focus-visible {
-  outline: 2px solid var(--c-gold);
+  outline: 2px solid var(--c-primary);
   outline-offset: -2px;
 }
 
@@ -115,7 +115,7 @@
   flex-shrink: 0;
   background: transparent;
   border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   color: var(--c-text-muted);
   font-size: var(--text-sm);
   cursor: pointer;

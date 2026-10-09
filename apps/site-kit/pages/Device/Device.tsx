@@ -1,10 +1,7 @@
 /* @layer site-kit @kind component */
 import { useCallback } from 'react';
 import type { ChangeEvent } from 'react';
-import { Stack } from '@ds/primitives/Stack';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Stack, Button, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { SiteFrame } from '../../layout/SiteFrame/SiteFrame';
 import { Gate } from '../../components/Gate/Gate';
 import { useDeviceConfirm } from './behavior/useDeviceConfirm';

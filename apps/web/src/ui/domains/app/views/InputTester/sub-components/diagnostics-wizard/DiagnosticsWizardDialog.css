@@ -78,7 +78,7 @@
 }
 
 .diagnostics-wizard__hold-status-text--done {
-  color: var(--c-green-bright);
+  color: var(--c-secondary-bright);
 }
 
 .diagnostics-wizard__hold-status-text--error {
@@ -118,9 +118,9 @@
 }
 
 .diagnostics-wizard__pos-chip--on {
-  border-color: var(--c-green-bright);
-  color: var(--c-green-bright);
-  background: var(--c-green-dim);
+  border-color: var(--c-secondary-bright);
+  color: var(--c-secondary-bright);
+  background: var(--c-secondary-dim);
 }
 
 .diagnostics-wizard__summary {

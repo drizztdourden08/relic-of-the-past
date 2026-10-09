@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge } from '../../../../../design-system/primitives/Badge';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Status, Text } from '@drizztdourden08/tessera/primitives';
 import type { RefreshRateTagProps } from '../TitleBar.type';
 import './RefreshRateTag.css';
 
@@ -15,7 +14,7 @@ const RefreshRateTag = (props: RefreshRateTagProps) => {
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); }}
     >
-      <Badge variant="danger">⚠ incompatible refresh rate ⚠</Badge>
+      <Status tone="danger">⚠ incompatible refresh rate ⚠</Status>
     </Text>
   );
 };

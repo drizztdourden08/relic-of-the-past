@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button } from '../../../../../../../design-system/primitives';
+import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { CALIBRATION_STYLE, SamplingProgress } from '../../calibration-parts';
 import { CENTER_GRID_PAIR, CENTER_GRID_SINGLE, STICK_RAW_CENTER, STICK_WIZARD_STYLE } from '../stick-calibration.constants';
 import type { StickStepProps } from '../stick-calibration.type';

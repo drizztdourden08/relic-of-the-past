@@ -4,7 +4,7 @@
   display: grid;
   grid-template-columns: 1.6fr 1fr;
   overflow: hidden;
-  border: var(--border-width-thin) solid color-mix(in srgb, var(--item-color, var(--c-gold)) 55%, transparent);
+  border: var(--border-width-thin) solid color-mix(in srgb, var(--item-color, var(--c-primary)) 55%, transparent);
   border-radius: var(--radius-xl);
   background: var(--c-panel);
 }
@@ -48,12 +48,12 @@
   width: var(--hero-dot-d);
   height: var(--hero-dot-d);
   padding: 0;
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   background: var(--c-text-faint);
 }
 
 .featured-hero .featured-hero__dot[data-on] {
-  background: var(--c-gold);
+  background: var(--c-primary);
 }
 
 @media (width <= 820px) {

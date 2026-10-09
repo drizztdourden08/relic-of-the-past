@@ -1,6 +1,5 @@
 /* @layer store-site @kind component */
-import { Field } from '@ds/primitives/Field';
-import { Textarea } from '@ds/primitives/Textarea';
+import { Field, Textarea } from '@drizztdourden08/tessera/primitives';
 import type { ChangesFieldProps } from './ChangesField.type';
 
 const ChangesField = (props: ChangesFieldProps) => {

@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Checkbox } from '@ds/primitives/Checkbox';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Checkbox, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import './HudLayoutEditor.appearance.css';
 import type { SubsectionGroupProps } from './SubsectionGroup.type';
 

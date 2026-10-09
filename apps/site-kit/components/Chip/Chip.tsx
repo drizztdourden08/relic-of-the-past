@@ -1,5 +1,5 @@
 /* @layer site-kit @kind component */
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { NEW_TAB } from './Chip.constants';
 import type { ChipProps } from './Chip.type';
 import './Chip.css';

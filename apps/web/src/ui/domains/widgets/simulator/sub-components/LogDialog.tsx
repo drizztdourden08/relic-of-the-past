@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { DialogShell } from '@ds/composites';
-import { LogPanel } from '@ds/composites/LogPanel';
+import { DialogShell, LogPanel } from '@drizztdourden08/tessera/composites';
 import { classifyEvent, eventsToText, toLogRows } from '../behavior/log-events';
 import { LOG_KINDS } from '../SimulatorWidget.constants';
 import type { LogDialogProps, LogKind } from '../SimulatorWidget.type';

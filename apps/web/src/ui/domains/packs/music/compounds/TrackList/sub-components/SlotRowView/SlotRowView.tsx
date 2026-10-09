@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge, Box, Text } from '@ds/primitives';
+import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { SlotFile } from '../SlotFile';
 import type { SlotRowViewProps } from '../../TrackList.type';
 
@@ -10,7 +10,7 @@ const SlotRowView = (props: SlotRowViewProps) => {
     <Box className="pack-tracks__row">
       <Text as="span" className="pack-tracks__num">{row.number}</Text>
       <Text as="span" className="pack-tracks__title">{row.title}</Text>
-      {row.layerCount > 1 ? <Badge variant="success">{row.layerCount} layers</Badge> : <Box />}
+      {row.layerCount > 1 ? <Status tone="success">{row.layerCount} layers</Status> : <Box />}
       <Box className="pack-tracks__files">
         {row.files.length === 0 ? <Text as="span" variant="caption">No file</Text> : null}
         {row.files.map((name) => (

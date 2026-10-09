@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { ColorSwatch } from '@ds/primitives/ColorSwatch';
-import { Field } from '@ds/primitives/Field';
-import { TextInput } from '@ds/primitives/TextInput';
-import { ColorPickerPopover } from '@ds/composites/ColorPickerPopover';
+import { Box, ColorSwatch, Field, TextInput } from '@drizztdourden08/tessera/primitives';
+import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import './HudLayoutEditor.layout.css';
 import './HudLayoutEditor.layout-set.css';
 import type { ColorFieldProps } from './ColorField.type';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { storeMediaUrl } from '@app/lib/store/store-site';
 import { StoreItemCard } from '../../../compounds/StoreItemCard';
 import type { StoreGridProps } from '../Store.type';

@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import type { GameSettings } from '@shared/types/settings';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Toggle } from '../../../../../design-system/primitives/Toggle';
-import { DisabledOverlay } from '../../../../../design-system/composites/DisabledOverlay';
-import { DISABLED_SETTING_MESSAGES } from '../../../../../design-system/composites/DisabledOverlay/DisabledOverlay.constants';
+import { Box, Text, Toggle } from '@drizztdourden08/tessera/primitives';
+import { DisabledOverlay, DISABLED_SETTING_MESSAGES } from '@drizztdourden08/tessera/composites';
 import { changedKeys } from '../behavior/changed-keys';
 import { defaultsPatch } from '../behavior/defaults-patch';
 import { partitionByLockState } from '../behavior/partition-by-lock-state';

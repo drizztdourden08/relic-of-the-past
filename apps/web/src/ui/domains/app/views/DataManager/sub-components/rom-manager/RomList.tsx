@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Badge } from '@ds/primitives/Badge';
-import { Box } from '@ds/primitives/Box';
-import { IconButton } from '@ds/primitives/IconButton';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { ListItemRow } from '@ds/composites/ListItemRow';
+import { Status, Box, IconButton, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { ROM_KINDS } from '@shared/storage/rom-kinds';
 import { formatBytes } from '@app/utils/formatBytes';
 import type { RomListProps } from './RomList.type';
@@ -19,7 +16,7 @@ const RomList = (props: RomListProps) => {
         <ListItemRow
           key={rom.romFile}
           icon="🎮"
-          name={<>{rom.romFile} <Badge variant="neutral">{ROM_KINDS['snes-alttp'].label}</Badge></>}
+          name={<>{rom.romFile} <Status tone="neutral">{ROM_KINDS['snes-alttp'].label}</Status></>}
           selected={selected === rom.romFile}
           onClick={() => onSelect(rom.romFile)}
           meta={
@@ -42,14 +39,14 @@ const RomList = (props: RomListProps) => {
         <ListItemRow
           key={supplement.romFile}
           icon="🧩"
-          name={<>{supplement.romFile} <Badge variant="neutral">{ROM_KINDS[supplement.kind].label}</Badge></>}
+          name={<>{supplement.romFile} <Status tone="neutral">{ROM_KINDS[supplement.kind].label}</Status></>}
           selected={selected === supplement.romFile}
           onClick={() => onSelect(supplement.romFile)}
           meta={
             <>
               {supplement.attachedTo.length > 0
-                ? <Badge variant="success">{`Attached to ${supplement.attachedTo.length}`}</Badge>
-                : <Badge variant="warning">Not attached</Badge>}
+                ? <Status tone="success">{`Attached to ${supplement.attachedTo.length}`}</Status>
+                : <Status tone="warning">Not attached</Status>}
               {supplement.bytes ? ` · ${formatBytes(supplement.bytes)}` : ''}
             </>
           }

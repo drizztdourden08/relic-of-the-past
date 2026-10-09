@@ -61,7 +61,7 @@
 }
 
 .network-tab__player--self .network-tab__cell {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .network-tab__pill {

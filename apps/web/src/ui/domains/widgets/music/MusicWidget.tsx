@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, EmptyState, SectionHeader } from '@ds/primitives';
+import { Box, Button, EmptyState, SectionHeader } from '@drizztdourden08/tessera/primitives';
 import { useLiveChannels } from './behavior/useLiveChannels';
 import { useMusicDebugData } from './behavior/useMusicDebugData';
 import { ChannelLive } from './sub-components/ChannelLive';

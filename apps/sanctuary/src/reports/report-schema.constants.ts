@@ -1,6 +1,5 @@
 /* @layer sanctuary-site @kind constants */
-import type { SchemaConfig } from '@ds/data/schema/field-descriptor';
-import type { TableColumn } from '@ds/data/table/types';
+import type { SchemaConfig, TableColumn } from '@drizztdourden08/tessera/data';
 import type { ReportRow } from './report-row';
 
 const SAMPLE_ROWS: readonly ReportRow[] = [

@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { ToggleGroup } from '../../../../../design-system/primitives/ToggleGroup';
+import { SegmentedControl, ToggleGroup } from '@drizztdourden08/tessera/primitives';
 import { HudStyleControl } from './HudStyleControl';
 import { AspectRatioControl } from './AspectRatioControl';
 import { renderDialogControl } from './hud-dialog-controls';

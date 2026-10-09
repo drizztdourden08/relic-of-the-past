@@ -1,7 +1,6 @@
 /* @layer site-kit @kind component */
 import type { CSSProperties } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { RoleNameProps } from './RoleName.type';
 import './RoleName.css';
 

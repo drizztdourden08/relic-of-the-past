@@ -1,8 +1,8 @@
 /* @layer renderer-app @kind component */
 import { useEffect, useMemo } from 'react';
 import { subscribeGameState } from '@app/lib/game/wasm-bridge';
-import { Box, Image } from '@ds/primitives';
-import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
+import { Box, Image } from '@drizztdourden08/tessera/primitives';
+import { WidgetManager, useWidgetLayout } from '@drizztdourden08/tessera/composites';
 import { WIDGET_CONTENT, WIDGET_SETTINGS_CONTENT } from '@domains/widgets';
 import { widgetLayoutIO } from '@app/lib/storage/widget-state';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
@@ -146,7 +146,7 @@ const AppMain = () => {
 
         <WidgetManager
           layout={widgets.layout}
-          gameRunning={game.isRunning}
+          contextActive={game.isRunning}
           pageOpen={nav.activePage !== 'none'}
           onUpdate={widgets.update}
           onClose={widgets.close}

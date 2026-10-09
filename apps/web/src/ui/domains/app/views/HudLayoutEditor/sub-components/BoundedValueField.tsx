@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import './HudLayoutEditor.content.css';
-import { Box } from '@ds/primitives/Box';
-import { Slider } from '@ds/primitives/Slider';
+import { Box, Slider } from '@drizztdourden08/tessera/primitives';
 import { ValueField } from './ValueField';
 import type { BoundedValueFieldProps } from './BoundedValueField.type';
 

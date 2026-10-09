@@ -2,7 +2,7 @@
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import starIcon from '@iconify-icons/lucide/star';
 import starOffIcon from '@iconify-icons/lucide/star-off';
-import { Button } from '@ds/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { NOT_PUBLISHED } from './FeatureButton.constants';
 import type { FeatureButtonProps } from './FeatureButton.type';
 

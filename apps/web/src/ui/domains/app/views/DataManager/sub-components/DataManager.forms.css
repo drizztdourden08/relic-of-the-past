@@ -28,7 +28,7 @@
 }
 
 .import-form__url-input:focus {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .import-form__url-input::placeholder {
@@ -37,7 +37,7 @@
 
 .import-form__download-btn {
   padding: var(--space-xs) var(--space-md);
-  background: var(--c-gold);
+  background: var(--c-primary);
   border: none;
   border-radius: var(--radius-sm);
   color: var(--c-bg);
@@ -49,7 +49,7 @@
 }
 
 .import-form__download-btn:hover:not(:disabled) {
-  background: var(--c-gold-bright);
+  background: var(--c-primary-bright);
 }
 
 .import-form__download-btn:disabled {
@@ -73,8 +73,8 @@
 }
 
 .import-form__status--success {
-  color: var(--c-green);
-  background: var(--c-green-soft);
+  color: var(--c-secondary);
+  background: var(--c-secondary-soft);
 }
 
 .import-form__status--error {
@@ -117,7 +117,7 @@
 }
 
 .profile-form__input:focus {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .profile-form__select {
@@ -133,7 +133,7 @@
 }
 
 .profile-form__select:focus {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .profile-form__actions {

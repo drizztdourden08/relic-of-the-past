@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { renderMarkdown } from '../../lib/render-markdown';
 import type { MarkdownProps } from './Markdown.type';
 import './Markdown.css';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Image, Text } from '@ds/primitives';
+import { Box, Image, Text } from '@drizztdourden08/tessera/primitives';
 import type { PoolListingRow } from '../PoolListing.type';
 import { SpritePlaceholder } from './SpritePlaceholder';
 

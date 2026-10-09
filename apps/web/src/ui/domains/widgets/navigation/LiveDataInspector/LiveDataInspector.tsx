@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import { useMemo } from 'react';
-import { Box, EmptyState, ScrollArea } from '@ds/primitives';
-import { buildSchema } from '@ds/data';
-import type { CompactFieldRenderer } from '@ds/composites/CompactRecordView';
+import { Box, EmptyState, ScrollArea } from '@drizztdourden08/tessera/primitives';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import type { CompactFieldRenderer } from '@drizztdourden08/tessera/composites';
 import { COLLECTION_SOURCES } from '@app/ui/domains/app/views/DataInspector/behavior/collection-sources';
 import { openInPassOrder, useRecommendations } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-recommendations';
 import { defaultIdRefDisplay } from '@app/ui/domains/app/views/DataInspector/behavior/record-links';

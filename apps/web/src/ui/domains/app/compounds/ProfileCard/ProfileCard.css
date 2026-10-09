@@ -17,7 +17,7 @@
 
 .profile-card:hover {
   background: var(--c-surface);
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .profile-card__main {

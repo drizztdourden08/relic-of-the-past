@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Button } from '../../../../../design-system/primitives/Button';
+import { Text, Button } from '@drizztdourden08/tessera/primitives';
 import type { CatButtonProps } from './SpriteGrid.type';
 
 const CatButton = (props: CatButtonProps) => {

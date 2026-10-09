@@ -7,7 +7,7 @@
 
 .tag-list__tag {
   padding: 0 var(--space-xs);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   background: var(--c-inset);
   border: var(--border-width-thin) solid var(--c-border);
   color: var(--c-text-dim);

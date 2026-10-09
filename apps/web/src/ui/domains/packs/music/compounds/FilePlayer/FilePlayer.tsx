@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useRef, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { ProgressBar } from '@ds/primitives/ProgressBar';
-import { Text } from '@ds/primitives/Text';
+import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import { clock } from '../../behavior/clock';
 import type { FilePlayerProps } from './FilePlayer.type';
 import './FilePlayer.css';

@@ -1,13 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  addTag,
-  resolveCommit,
-} from '../../apps/web/src/ui/design-system/primitives/TagInput/behavior/tag-values';
-import {
-  adviseTag,
-  followsConvention,
-} from '../../apps/web/src/ui/design-system/primitives/TagInput/behavior/tag-convention';
+import { addTag, resolveCommit, adviseTag, followsConvention } from '@drizztdourden08/tessera/primitives';
 import { VOCABULARY } from './tag-input.constants';
 
 describe('the convention check is advisory, never blocking', () => {

@@ -6,7 +6,7 @@
 .upload-dialog__banner {
   padding: var(--space-sm) var(--space-md);
   border-left: var(--border-width-thick) solid var(--c-warning);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   background: var(--c-warning-soft);
   color: var(--c-text);
 }
@@ -40,7 +40,7 @@
 }
 
 .upload-dialog__step[data-state='done'] .upload-dialog__mark {
-  color: var(--c-green);
+  color: var(--c-secondary);
 }
 
 .upload-dialog__step[data-state='failed'] .upload-dialog__mark {

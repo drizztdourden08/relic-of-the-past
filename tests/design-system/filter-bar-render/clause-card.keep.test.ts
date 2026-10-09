@@ -2,11 +2,9 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { createClause } from '../../../apps/web/src/ui/design-system/data/filter/clause';
-import { defaultOperatorFor, findOperator, operatorsFor } from '../../../apps/web/src/ui/design-system/data/filter/operators';
-import { FilterClauseCard } from '../../../apps/web/src/ui/design-system/composites/FilterBar/sub-components/FilterClauseCard';
-import type { FieldDescriptor } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
-import type { FilterClause } from '../../../apps/web/src/ui/design-system/data/filter/clause';
+import { createClause, defaultOperatorFor, findOperator, operatorsFor } from '@drizztdourden08/tessera/data';
+import { FilterClauseCard } from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor, FilterClause } from '@drizztdourden08/tessera/data';
 import { DESCRIPTORS, KINDS } from './filter-bar-render.constants';
 import { field } from './field';
 

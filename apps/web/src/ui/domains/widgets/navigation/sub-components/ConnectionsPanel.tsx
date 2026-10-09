@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { landingCrossings, listedCrossings } from '@app/lib/crossing-sections';
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { CrossingCard } from './CrossingCard';
 import { EdgeCard } from './EdgeCard';

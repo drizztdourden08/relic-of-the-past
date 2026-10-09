@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Button, Text } from '@ds/primitives';
-import { DashboardPanel, LogLines } from '@ds/composites';
+import { Button, Text } from '@drizztdourden08/tessera/primitives';
+import { DashboardPanel, LogLines } from '@drizztdourden08/tessera/composites';
 import { recentActivityOf } from '../behavior/recent-activity';
 import type { RecentActivityProps } from './RecentActivity.type';
 

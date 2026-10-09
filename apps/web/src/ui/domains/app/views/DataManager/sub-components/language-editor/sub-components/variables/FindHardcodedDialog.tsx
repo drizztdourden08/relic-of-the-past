@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Button, EmptyState, Text } from '@ds/primitives';
-import { DialogShell } from '@ds/composites';
+import { Box, Button, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { HardcodedGroupRow } from './HardcodedGroupRow';
 import { NOTHING_FOUND } from './FindHardcodedDialog.constants';
 import type { FindHardcodedDialogProps } from './FindHardcodedDialog.type';

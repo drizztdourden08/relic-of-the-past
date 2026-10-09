@@ -1,7 +1,5 @@
 /* @layer store-site @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { ItemCardView } from '@shared/store/home-types';
 import { Link } from '@site-kit/router/Link';
 import { formatAverage } from '../../lib/format-count/format-average';

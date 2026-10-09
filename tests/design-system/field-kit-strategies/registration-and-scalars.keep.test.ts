@@ -1,10 +1,8 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import { getFieldTester } from '../../../apps/web/src/ui/design-system/data/filter/tester-registry';
-import { operatorsFor } from '../../../apps/web/src/ui/design-system/data/filter/operators';
-import { getComparator } from '../../../apps/web/src/ui/design-system/data/table/strategy-registry';
-import { registeredKitKinds, resolveFieldKit } from '../../../apps/web/src/ui/design-system/composites/field-kits';
-import type { FieldKind } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { getFieldTester, operatorsFor, getComparator } from '@drizztdourden08/tessera/data';
+import { registeredKitKinds, resolveFieldKit } from '@drizztdourden08/tessera/field-kits';
+import type { FieldKind } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../../dataset-guard';
 import { testerFor } from './tester-for';
 

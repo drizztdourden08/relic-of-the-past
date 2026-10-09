@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { SelectGroup } from '@ds/primitives';
+import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
 import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus } from '@shared/randomizer/world/capacity';
 import type { CurvePresetId } from '@shared/randomizer/world/capacity';
 import type { OptionDescription } from '@shared/randomizer/world/option-description.type';

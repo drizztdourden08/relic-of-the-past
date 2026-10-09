@@ -1,8 +1,8 @@
 /* @layer renderer-app @kind component */
 import { useCallback, useMemo } from 'react';
 import { changedPaths } from '@shared/game/recommendations';
-import { buildSchema } from '@ds/data';
-import { Box } from '@ds/primitives';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { COLLECTION_SOURCES } from '../../behavior/collection-sources';
 import { certainOnly } from '../../behavior/recommendations/accept-all-certain';
 import { highlightedLinesFor } from '../../behavior/recommendations/comparison-lines';

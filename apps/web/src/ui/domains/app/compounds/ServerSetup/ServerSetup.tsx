@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, Button, Field, Flex, Spinner, Stack, Text, TextInput } from '@ds/primitives';
+import { Box, Button, Field, Flex, Spinner, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { ServerSetupProps } from './ServerSetup.type';
 import './ServerSetup.css';
 

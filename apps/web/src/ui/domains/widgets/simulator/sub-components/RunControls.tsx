@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Field, NumberInput } from '@ds/primitives';
+import { Box, Button, Field, NumberInput } from '@drizztdourden08/tessera/primitives';
 import { StopAtCheckPicker } from './StopAtCheckPicker';
 import type { RunControlsProps } from '../SimulatorWidget.type';
 

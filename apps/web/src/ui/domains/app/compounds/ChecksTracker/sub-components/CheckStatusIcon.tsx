@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Icon } from '@ds/primitives';
+import { Icon } from '@drizztdourden08/tessera/primitives';
 import { STATUS_LABELS, STATUS_SHAPES } from '../ChecksTracker.constants';
 import type { CheckStatusIconProps, StatusKey } from '../ChecksTracker.type';
 

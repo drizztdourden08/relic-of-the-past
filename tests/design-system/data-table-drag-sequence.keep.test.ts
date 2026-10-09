@@ -2,18 +2,13 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import {
-  columnDragShift, dropEdgeAt,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/column-drag-shift';
-import {
-  useColumnDrag,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/use-column-drag';
-import { reorderColumn } from '../../apps/web/src/ui/design-system/data/table/column-ops';
+import { columnDragShift, dropEdgeAt, useColumnDrag } from '@drizztdourden08/tessera/composites';
+import { reorderColumn } from '@drizztdourden08/tessera/data';
 import type { DragEvent } from 'react';
 import type {
   ColumnDragBinding,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
-import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
+} from '@drizztdourden08/tessera/composites';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 
 const PATHS = ['a', 'b', 'c', 'd', 'e'] as const;
 const COLUMNS: readonly TableColumn[] = PATHS.map((path) => ({ path }));

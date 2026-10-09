@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import type { DiagnosticsFlowBodyProps } from './diagnostics-wizard.type';
 import { IntroStep } from './sub-components/IntroStep';
 import { ChooseControllerStep } from './sub-components/ChooseControllerStep';

@@ -1,6 +1,5 @@
 /* @layer store-site @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import type { ItemCardView } from '@shared/store/home-types';
 import { KIND_CONTAINER } from '@shared/store/containers';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';

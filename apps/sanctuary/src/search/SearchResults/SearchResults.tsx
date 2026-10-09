@@ -1,11 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { SearchSpark } from '@ds/composites/SearchSpark';
-import { DataTable } from '@ds/composites/DataTable';
+import { Box, Button, Text, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { SearchSpark, DataTable } from '@drizztdourden08/tessera/composites';
 import { fileRowId } from '../../files/file-row';
 import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema.constants';
 import { reportRowId } from '../../reports/report-row';

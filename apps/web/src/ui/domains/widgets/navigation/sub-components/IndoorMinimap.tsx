@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import { landingCrossings, markerCrossings } from '@app/lib/crossing-sections';
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { crossingIcon } from '../../../../../lib/entrance-icons';
 import { wasmGetRoomLayoutInfo } from '../../../../../lib/game';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
@@ -81,7 +81,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
     const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * mapW);
     const midX = mapLeft + ((p0 + p1 + 1) / 2 / 64) * mapW;
     return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: Math.round(midX - spanW / 2), width: spanW, height: 14, borderRadius: 'var(--r-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: Math.round(midX - spanW / 2), width: spanW, height: 14, borderRadius: 'var(--radius-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
         <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
       </Box>
@@ -93,7 +93,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
     const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * mapH);
     const midY = mapTop + ((p0 + p1 + 1) / 2 / 64) * mapH;
     return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: Math.round(midY - spanH / 2) - 1, width: 14, height: spanH, borderRadius: 'var(--r-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: Math.round(midY - spanH / 2) - 1, width: 14, height: spanH, borderRadius: 'var(--radius-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
         <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
       </Box>
@@ -102,7 +102,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
 
   return (
     <Box style={{ position: 'relative', width: '100%', maxWidth: totalW, height: totalH, marginTop: 4, marginLeft: 'auto', marginRight: 'auto' }}>
-      <Box style={{ position: 'absolute', left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, borderRadius: 'var(--r-sm)', background: 'var(--c-green-soft)', border: `${borderW}px solid var(--c-green-soft)`, overflow: 'hidden' }}>
+      <Box style={{ position: 'absolute', left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, borderRadius: 'var(--radius-sm)', background: 'var(--c-secondary-soft)', border: `${borderW}px solid var(--c-secondary-soft)`, overflow: 'hidden' }}>
         {primaryResult && <ReachabilityCanvas reachable={primaryResult.reachable} size={mapW} tileLayer={primaryResult.tileLayer} bounds={{ minRow: 0, maxRow: 63, minCol: 0, maxCol: 63 }} />}
         {primaryResult && (
           <Box style={COUNT_LABEL}>
@@ -128,14 +128,14 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
         const y = mapTop + ((crossing.tile.row + 0.5) / 64) * mapH;
         const sz = Math.max(6, mapW * 4 / 64);
         return (
-          <Box key={`fh-${screen.screenIndex}-${crossing.id}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, border: '1.5px solid var(--c-gold)', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
+          <Box key={`fh-${screen.screenIndex}-${crossing.id}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, border: '1.5px solid var(--c-primary)', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, var(--c-primary) 0px, var(--c-primary) 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
         );
       }))}
 
       {playerPos && bundle.screens.includes(playerPos.screen) && (() => {
         const x = mapLeft + ((playerPos.col + 0.5) / 64) * mapW;
         const y = mapTop + ((playerPos.row + 0.5) / 64) * mapH;
-        return <Box style={{ position: 'absolute', left: x - 3, top: y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-green)', boxShadow: '0 0 3px var(--c-green)', pointerEvents: 'none' }} />;
+        return <Box style={{ position: 'absolute', left: x - 3, top: y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-secondary)', boxShadow: '0 0 3px var(--c-secondary)', pointerEvents: 'none' }} />;
       })()}
 
       <AnnotationLayer annotations={annotations.find(a => a.screenIndex === roomIndex) ?? null} cellLeft={mapLeft} cellTop={mapTop} cellW={mapW} cellH={mapH} />

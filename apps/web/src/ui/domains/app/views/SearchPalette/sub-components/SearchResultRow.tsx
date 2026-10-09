@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { Toggle } from '@ds/primitives/Toggle';
+import { Box, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import type { SearchResultRowProps } from '../SearchPalette.type';
 import './SearchResultRow.css';
 

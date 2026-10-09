@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
-import { Box, Badge, Button, Text, Tooltip } from '@ds/primitives';
+import { Box, Status, Button, Text, Tooltip } from '@drizztdourden08/tessera/primitives';
 import { CHECK_DISABLED_HINT } from '../SimulatorWidget.constants';
 import type { ApplyState, SuggestionCardProps } from '../SimulatorWidget.type';
 
@@ -33,7 +33,7 @@ const SuggestionCard = (props: SuggestionCardProps) => {
   return (
     <Box className="simulator__suggestion">
       <Box className="simulator__suggestion-head">
-        <Badge variant={suggestion.kind === 'check' ? 'warning' : 'neutral'}>{suggestion.kind}</Badge>
+        <Status tone={suggestion.kind === 'check' ? 'warning' : 'neutral'}>{suggestion.kind}</Status>
         <Text className="simulator__suggestion-file">{suggestion.targetFile}</Text>
       </Box>
       <Text className="simulator__suggestion-reason">{suggestion.reason}</Text>

@@ -1,14 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Toggle } from '../../../../../../design-system/primitives/Toggle';
-import { Field } from '../../../../../../design-system/primitives/Field';
-import { TextInput } from '../../../../../../design-system/primitives/TextInput';
-import { SegmentedControl } from '../../../../../../design-system/primitives/SegmentedControl';
-import { SettingsSection } from '../../../../../../design-system/composites/SettingsSection';
-import { EmptyState } from '../../../../../../design-system/primitives/EmptyState';
+import { Box, Text, Toggle, Field, TextInput, SegmentedControl, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { GbaDifferenceRow } from './GbaDifferenceRow';
 import { useGbaAvailability } from './behavior/useGbaAvailability';
 import { groupFilteredDifferences } from './group-differences';

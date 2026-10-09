@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { CapacityFamilyRow } from '../CapacityFamilyRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { RandomizerOptionRow } from '../RandomizerOptionRow';

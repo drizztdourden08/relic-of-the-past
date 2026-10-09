@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { MenuItem } from '../../../apps/web/src/ui/design-system/composites/DropdownMenu';
+import type { MenuItem } from '@drizztdourden08/tessera/composites';
 
 const entryLookup = (entries: MenuItem[]) => (key: string): MenuItem => {
   const found = entries.find((entry) => entry.key === key);

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { LogPanel } from '@ds/composites/LogPanel';
+import { LogPanel } from '@drizztdourden08/tessera/composites';
 import { ACTIVITY_KINDS } from '../behavior/randomizer-log-style.constants';
 import { rowsToText } from '../behavior/rows-to-text';
 import { buildActivityRows } from '../behavior/activity-feed';

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Svg, SvgLine, SvgRect, SvgText } from '../../../../design-system/primitives';
+import { Svg, SvgLine, SvgRect, SvgText } from '@drizztdourden08/tessera/primitives';
 import { EDGE_COLORS } from '../navigation.constants';
 import { SVG_STYLE } from './InternalEdgeSvg.constants';
 

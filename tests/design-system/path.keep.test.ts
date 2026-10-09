@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { getPath, setPath } from '../../apps/web/src/ui/design-system/data/schema/path';
+import { getPath, setPath } from '@drizztdourden08/tessera/data';
 
 const ROW = {
   id: 'a',

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { getWidgetDefinition } from '@ds/composites/Widget';
+import { getWidgetDefinition } from '@drizztdourden08/tessera/composites';
 import type { MenuBuilderDeps, MenuItems } from './title-bar-menu.type';
 
 const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {

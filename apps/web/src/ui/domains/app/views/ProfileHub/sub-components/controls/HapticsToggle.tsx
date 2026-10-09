@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Toggle } from '../../../../../../design-system/primitives/Toggle';
+import { Box, Toggle } from '@drizztdourden08/tessera/primitives';
 import type { HapticsToggleProps } from './controls.type';
 import './HapticsToggle.css';
 

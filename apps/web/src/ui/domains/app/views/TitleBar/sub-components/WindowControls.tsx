@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect } from 'react';
 import { usePlatform } from '@app/platform';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { Icon } from '../../../../../design-system/primitives/Icon';
+import { Box, Button, Icon } from '@drizztdourden08/tessera/primitives';
 import {
   FULLSCREEN_EXIT_PATHS, FULLSCREEN_ENTER_PATHS, MINIMIZE_PATHS,
   RESTORE_PATHS, MAXIMIZE_PATHS, CLOSE_PATHS,

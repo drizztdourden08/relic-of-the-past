@@ -2,30 +2,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createElement, isValidElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { buildSchema, createSchemaIndex } from '../../../apps/web/src/ui/design-system/data/schema/build-schema';
-import {
-  ColumnDropTrash,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/sub-components/ColumnDropTrash';
-import {
-  ColumnResizeHandle,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/sub-components/ColumnResizeHandle';
-import {
-  DataCell,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/sub-components/DataCell';
-import {
-  DataRow,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/sub-components/DataRow';
+import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
+import { ColumnDropTrash, ColumnResizeHandle, DataCell, DataRow } from '@drizztdourden08/tessera/composites';
 import type { DragEvent, ReactElement } from 'react';
-import type {
-  ColumnResizeHandleProps,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/sub-components/ColumnResizeHandle';
-import type {
-  DataCellProps,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/sub-components/DataCell';
-import type {
-  ColumnResizeBinding, RowRenderContext,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
-import type { TableColumn } from '../../../apps/web/src/ui/design-system/data/table/types';
+import type { ColumnResizeHandleProps, DataCellProps, ColumnResizeBinding, RowRenderContext } from '@drizztdourden08/tessera/composites';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 import { ALWAYS } from './data-table-drag.constants';
 
 interface Record3 { id: string; name: string; size: number }

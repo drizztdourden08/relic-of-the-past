@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Text, Button } from '../../../../../../../design-system/primitives';
+import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { CALIBRATION_STYLE, DeadzoneSlider } from '../../calibration-parts';
 import { STICK_WIZARD_STYLE } from '../stick-calibration.constants';
 import type { StickReviewStepProps } from '../stick-calibration.type';

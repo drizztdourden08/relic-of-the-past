@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Checkbox, Text } from '@ds/primitives';
+import { Box, Checkbox, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag } from '../../OptionValueTag';
 import type { BottleContentRowProps } from '../CurrencyPriceRow.type';
 import './BottleContentRow.css';

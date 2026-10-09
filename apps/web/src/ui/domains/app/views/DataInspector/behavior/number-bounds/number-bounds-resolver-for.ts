@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { NumberBoundsResolver } from '@ds/composites/RecordEditor';
+import type { NumberBoundsResolver } from '@drizztdourden08/tessera/composites';
 import { boundResolvers } from './bound-resolvers';
 import { resolveNumberBoundsFor } from './resolve-number-bounds-for';
 

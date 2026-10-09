@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { IdRefTargetField } from '@ds/composites/DataTable';
+import type { IdRefTargetField } from '@drizztdourden08/tessera/composites';
 import { NO_TARGET_FIELDS } from '../../DataInspector.constants';
 import { asEntityKind } from '../as-entity-kind';
 import { fieldsFor } from './fields-for';

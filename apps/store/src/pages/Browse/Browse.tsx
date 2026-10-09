@@ -1,9 +1,6 @@
 /* @layer store-site @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Select } from '@ds/primitives/Select';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { FilterBar } from '@ds/composites/FilterBar';
+import { Flex, Select, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { FilterBar } from '@drizztdourden08/tessera/composites';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
 import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';

@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Slider } from '../../../../../../design-system/primitives/Slider';
-import { Toggle } from '../../../../../../design-system/primitives/Toggle';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { SettingsSection } from '../../../../../../design-system/composites/SettingsSection';
+import { Slider, Toggle, Button, Box } from '@drizztdourden08/tessera/primitives';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { NumberField } from './NumberField';
 import type { ShadowLightInspectorProps } from './ShadowLightInspector.type';
 

@@ -64,8 +64,8 @@
   top: 50%;
   left: 50%;
   width: 2px;
-  background: var(--c-gold);
-  border-radius: var(--r-sm);
+  background: var(--c-primary);
+  border-radius: var(--radius-sm);
   transform-origin: top center;
   transition: none;
 }
@@ -75,8 +75,8 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--c-gold-bright);
-  box-shadow: 0 0 6px var(--c-gold-soft);
+  background: var(--c-primary-bright);
+  box-shadow: 0 0 6px var(--c-primary-soft);
   transform: translate(-50%, -50%);
   transition: none;
 }
@@ -110,7 +110,7 @@
 }
 
 .input-cal__log-entry--connect {
-  color: var(--c-green);
+  color: var(--c-secondary);
 }
 
 .input-cal__log-entry--disconnect {
@@ -119,7 +119,7 @@
 
 .input-cal__result {
   background: var(--c-surface);
-  border: 1px solid var(--c-green-dim);
+  border: 1px solid var(--c-secondary-dim);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
 }
@@ -134,7 +134,7 @@
 .input-cal__result-title {
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
-  color: var(--c-green-bright);
+  color: var(--c-secondary-bright);
 }
 
 .input-cal__result pre {

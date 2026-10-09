@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind data */
-import type { SchemaConfig } from '@ds/data';
+import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 import type { Confidence, Recommendation } from '@shared/game/recommendations';
 import type { ProposalDraft } from './recommendations.type';
 

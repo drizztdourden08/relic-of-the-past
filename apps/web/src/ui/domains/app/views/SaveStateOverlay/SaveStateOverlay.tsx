@@ -2,9 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { saveState, loadState, getActiveProfileId } from '../../../../../lib/game';
 import { SaveSlot } from '../../compounds/SaveSlot';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
-import { ProgressRing } from '../../../../design-system/primitives/ProgressRing';
+import { Box, Text, ProgressRing } from '@drizztdourden08/tessera/primitives';
 import { InputGlyph } from '../../compounds/InputGlyph';
 import { log } from '../../../../../lib/log-bus';
 import * as savesStore from '@app/lib/storage/saves-store';

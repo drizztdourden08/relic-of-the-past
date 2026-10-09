@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../design-system/primitives/Box';
-import { Button } from '../../../../design-system/primitives/Button';
-import { Image } from '../../../../design-system/primitives/Image';
-import { Text } from '../../../../design-system/primitives/Text';
+import { Box, Button, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { Hero } from '../Hero';
 import { HeroFacts } from '../HeroFacts';
 import { MODE_BADGE_LABELS } from '../ModeBadge';

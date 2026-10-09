@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useEffect, useState } from 'react';
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useBootProgressStore } from '@app/stores/boot-progress-store';
 import { FADE_MS, MIN_VISIBLE_MS } from './BootProgressBar.constants';
 import './BootProgressBar.css';

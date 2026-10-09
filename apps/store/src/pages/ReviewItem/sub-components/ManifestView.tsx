@@ -1,9 +1,7 @@
 /* @layer store-site @kind component */
 import { useMemo } from 'react';
-import { CodeBlock } from '@ds/composites/CodeBlock';
-import { SettingsSection } from '@ds/composites/SettingsSection';
-import { StatRow } from '@ds/primitives/StatRow';
-import { Text } from '@ds/primitives/Text';
+import { CodeBlock, SettingsSection } from '@drizztdourden08/tessera/composites';
+import { StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import { useManifest } from '../behavior/useManifest';
 import type { ManifestViewProps } from './ManifestView.type';
 

@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
+import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { CSS_POSITION } from '../behavior/align-options';
 import { BARS, FOLD_ABOVE } from './AlignmentTiles.constants';
 import './HudLayoutEditor.layout.css';

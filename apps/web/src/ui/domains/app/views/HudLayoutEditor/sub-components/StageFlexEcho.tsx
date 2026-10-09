@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { DEFAULT_GUIDE } from './StageGridEcho/StageGridEcho.constants';
 import './GridEditor/HudLayoutEditor.grid.css';

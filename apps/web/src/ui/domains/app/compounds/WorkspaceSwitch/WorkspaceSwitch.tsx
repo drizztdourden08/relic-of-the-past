@@ -4,7 +4,7 @@ import gamepadIcon from '@iconify-icons/lucide/gamepad-2';
 import shuffleIcon from '@iconify-icons/lucide/shuffle';
 import databaseIcon from '@iconify-icons/lucide/database';
 import storeIcon from '@iconify-icons/lucide/store';
-import { FloatingSwitch } from '../../../../design-system/composites/FloatingSwitch';
+import { FloatingSwitch } from '@drizztdourden08/tessera/composites';
 import type { Workspace, WorkspaceSwitchProps } from './WorkspaceSwitch.type';
 
 const WorkspaceSwitch = (props: WorkspaceSwitchProps) => {

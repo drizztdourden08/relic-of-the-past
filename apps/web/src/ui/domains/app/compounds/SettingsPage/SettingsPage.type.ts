@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { HeaderTabItem } from '../../../../design-system/composites/HeaderTabs';
+import type { HeaderAnchorNavItem } from '@drizztdourden08/tessera/composites';
 
 interface SettingsPageAnchor {
   id: string;
@@ -8,7 +8,7 @@ interface SettingsPageAnchor {
 }
 
 interface SettingsPageTabs {
-  items: HeaderTabItem[];
+  items: HeaderAnchorNavItem[];
   activeId: string;
   onSelect: (id: string) => void;
 }

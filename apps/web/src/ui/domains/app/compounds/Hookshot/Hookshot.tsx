@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import { Box, Image } from '@ds/primitives';
+import { Box, Image } from '@drizztdourden08/tessera/primitives';
 import { layoutHookshot } from './behavior/hookshot-layout';
 import { SOURCES } from './behavior/sprite-sources.constants';
 import type { HookshotProps, PlacedSprite } from './Hookshot.type';

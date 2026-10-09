@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Toggle } from '../../../../../../design-system/primitives/Toggle';
-import { Select } from '../../../../../../design-system/primitives/Select';
-import { TextInput } from '../../../../../../design-system/primitives/TextInput';
-import { Field } from '../../../../../../design-system/primitives/Field';
+import { Text, Toggle, Select, TextInput, Field } from '@drizztdourden08/tessera/primitives';
 import { ArchipelagoFields } from './ArchipelagoFields';
 import { MODE_OPTIONS } from './RandomizerFields.constants';
 import type { RandomizerFormState } from './build-randomizer-config';

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Icon, Text } from '@ds/primitives';
+import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { ICON_SIZE, MOUSE_FILL, MOUSE_OUTLINE } from './ControlGlyph.constants';
 import type { ControlGlyphProps } from './ControlGlyph.type';
 

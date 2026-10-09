@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { renderRows } from '../behavior/render-rows';
 import '../HudLayoutEditor.bands.css';
 import { NO_SELECTION } from './SelectionToolbar.constants';

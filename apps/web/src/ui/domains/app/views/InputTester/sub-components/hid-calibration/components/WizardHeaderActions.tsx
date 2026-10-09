@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../../design-system/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import type { WizardHeaderActionsProps } from './WizardHeaderActions.type';
 
 const WizardHeaderActions = (props: WizardHeaderActionsProps) => {

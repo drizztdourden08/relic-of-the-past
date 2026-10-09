@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { ProgressBar } from '@ds/primitives/ProgressBar';
-import { Text } from '@ds/primitives/Text';
+import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import type { RunStepProps } from './RunStep.type';
 

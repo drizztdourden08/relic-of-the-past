@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Checkbox, EmptyState, ScrollArea, SectionHeader, Text, TextInput } from '@ds/primitives';
+import { Box, Checkbox, EmptyState, ScrollArea, SectionHeader, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { TextGroupRail } from './TextGroupRail';
 import { TextSlotRow } from './TextSlotRow';
 import { selectSlots } from './select-slots';

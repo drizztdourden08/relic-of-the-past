@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { TabBar } from '@ds/primitives';
+import { Tabs } from '@drizztdourden08/tessera/primitives';
 import type { RecommendationFilter, RecommendationTabsProps } from '../LiveDataInspector.type';
 
 const RecommendationTabs = (props: RecommendationTabsProps) => {
@@ -7,7 +7,7 @@ const RecommendationTabs = (props: RecommendationTabsProps) => {
   const items = tabs.map(tab => ({ id: tab.id, label: tab.label, badge: tab.count }));
 
   return (
-    <TabBar
+    <Tabs
       tabs={items}
       activeTab={selected}
       onTabChange={(id) => onSelect(id as RecommendationFilter)}

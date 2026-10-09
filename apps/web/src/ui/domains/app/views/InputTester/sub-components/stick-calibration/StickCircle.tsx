@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Svg, SvgLine, SvgCircle } from '../../../../../../design-system/primitives/Svg';
+import { Box, Text, Svg, SvgLine, SvgCircle } from '@drizztdourden08/tessera/primitives';
 import { STICK_WIZARD_STYLE } from './stick-calibration.constants';
 import type { StickCircleProps } from './stick-calibration.type';
 
@@ -32,11 +30,11 @@ const StickCircle = (props: StickCircleProps) => {
           )}
           {showDeadzones && (
             <SvgCircle cx={cx} cy={cy} r={r * outerDeadzone} fill="none"
-              stroke="var(--c-gold)" strokeWidth="1" strokeDasharray="3 3" opacity={0.5} />
+              stroke="var(--c-primary)" strokeWidth="1" strokeDasharray="3 3" opacity={0.5} />
           )}
           <SvgLine x1={cx} y1={cy} x2={dotX} y2={dotY}
-            stroke="var(--c-gold)" strokeWidth="2" strokeLinecap="round" />
-          <SvgCircle cx={dotX} cy={dotY} r={5} fill="var(--c-gold-bright)" />
+            stroke="var(--c-primary)" strokeWidth="2" strokeLinecap="round" />
+          <SvgCircle cx={dotX} cy={dotY} r={5} fill="var(--c-primary-bright)" />
         </Svg>
       </Box>
       <Text style={STICK_WIZARD_STYLE.circleValues}>

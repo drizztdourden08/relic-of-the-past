@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../../design-system/primitives/Text';
-import { Spinner } from '../../../../../../../design-system/primitives/Spinner';
+import { Box, Text, Spinner } from '@drizztdourden08/tessera/primitives';
 import type { LayoutStage } from '../diagnostics-wizard.type';
 import type { LayoutCaptureOverlayProps } from './diagnostics-steps.type';
 

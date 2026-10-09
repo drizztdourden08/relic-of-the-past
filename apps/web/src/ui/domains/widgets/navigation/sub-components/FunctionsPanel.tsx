@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text, Button, SegmentedControl } from '../../../../design-system/primitives';
+import { Box, Text, Button, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { TileRecorderBtn } from './TileRecorderBtn';
 import { PathCopyBtn } from './PathCopyBtn';

@@ -7,10 +7,10 @@
 .sprite-manager__extract-btn {
   flex: 1;
   padding: var(--space-sm) var(--space-lg);
-  border: 1px solid var(--c-gold-dim);
+  border: 1px solid var(--c-primary-dim);
   border-radius: var(--radius-md);
-  background: var(--c-gold-soft);
-  color: var(--c-gold-bright);
+  background: var(--c-primary-soft);
+  color: var(--c-primary-bright);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
@@ -18,8 +18,8 @@
 }
 
 .sprite-manager__extract-btn:hover:not(:disabled) {
-  background: var(--c-gold-dim);
-  border-color: var(--c-gold);
+  background: var(--c-primary-dim);
+  border-color: var(--c-primary);
 }
 
 .sprite-manager__extract-btn:disabled {
@@ -56,8 +56,8 @@
 }
 
 .sprite-manager__message--success {
-  color: var(--c-green);
-  background: var(--c-green-soft);
+  color: var(--c-secondary);
+  background: var(--c-secondary-soft);
 }
 
 .sprite-manager__message--error {
@@ -97,9 +97,9 @@
 }
 
 .sprite-manager__cat-btn--active {
-  border-color: var(--c-gold);
-  background: var(--c-gold-soft);
-  color: var(--c-gold-bright);
+  border-color: var(--c-primary);
+  background: var(--c-primary-soft);
+  color: var(--c-primary-bright);
 }
 
 .sprite-manager__cat-count {

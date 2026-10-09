@@ -21,7 +21,7 @@
   padding: 0;
 }
 
-.data-inspector__master-detail > .master-detail__list {
+.data-inspector__master-detail > .list-detail-layout__list {
   overflow: hidden;
 }
 
@@ -29,7 +29,7 @@
   grid-template-columns: 1fr max-content;
 }
 
-.data-inspector__master-detail > .master-detail__detail {
+.data-inspector__master-detail > .list-detail-layout__detail {
   overflow: hidden;
   padding: 0;
 }
@@ -41,7 +41,7 @@
   height: 100%;
 }
 
-.data-inspector__detail > .tab-bar {
+.data-inspector__detail > .tabs {
   flex: none;
   padding: 0 var(--space-lg);
 }

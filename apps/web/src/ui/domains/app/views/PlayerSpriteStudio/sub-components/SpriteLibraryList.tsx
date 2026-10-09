@@ -1,12 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { Button } from '@ds/primitives/Button';
-import { Image } from '@ds/primitives/Image';
-import { IconButton } from '@ds/primitives/IconButton';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { Badge } from '@ds/primitives/Badge';
-import { ListItemRow } from '@ds/composites/ListItemRow';
+import { Box, Text, Button, Image, IconButton, EmptyState, Status } from '@drizztdourden08/tessera/primitives';
+import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { HookshopChip } from '../../../compounds/HookshopChip';
 import { ImportForm } from '../../DataManager/sub-components/ImportForm';
 import type { SpriteLibraryListProps } from '../PlayerSpriteStudio.type';
@@ -44,7 +38,7 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
               ? <Image className="sprite-library__thumb" src={entry.preview} alt={entry.label} draggable={false} />
               : '🧝'}
             name={entry.label}
-            meta={<Badge variant="neutral">{entry.container}</Badge>}
+            meta={<Status tone="neutral">{entry.container}</Status>}
             badge={isInstalled(entry.name) ? <HookshopChip /> : undefined}
             selected={selected === entry.name}
             onClick={() => onSelect(entry.name)}

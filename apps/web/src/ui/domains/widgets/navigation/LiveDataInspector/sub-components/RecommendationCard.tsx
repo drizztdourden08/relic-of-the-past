@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Badge, Button, Text } from '@ds/primitives';
+import { Status, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import { ACTION_LABEL } from '../LiveDataInspector.constants';
 import type { RecommendationCardProps } from '../LiveDataInspector.type';
@@ -15,7 +15,7 @@ const RecommendationCard = (props: RecommendationCardProps) => {
       className="live-rec-card"
       onClick={() => openRecommendation(entry)}
     >
-      <Badge variant={entry.confidence === 'certain' ? 'success' : 'warning'}>{entry.confidence}</Badge>
+      <Status tone={entry.confidence === 'certain' ? 'success' : 'warning'}>{entry.confidence}</Status>
       <Text className="live-rec-card__claim">{`${ACTION_LABEL[entry.action]} ${entry.kind}`}</Text>
       <Text className="live-rec-card__reason">{entry.reason}</Text>
     </Button>

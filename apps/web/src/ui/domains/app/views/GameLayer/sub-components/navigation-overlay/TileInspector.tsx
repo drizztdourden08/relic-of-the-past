@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import type React from 'react';
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
 import { TileTooltipContent, type TooltipData } from './tooltip';
@@ -148,8 +148,8 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
     position: 'absolute' as const,
     left: selectionRect.x, top: selectionRect.y,
     width: selectionRect.w, height: selectionRect.h,
-    border: '2px solid var(--c-gold)',
-    background: 'var(--c-gold-soft)',
+    border: '2px solid var(--c-primary)',
+    background: 'var(--c-primary-soft)',
     pointerEvents: 'none' as const, zIndex: 7,
   } : undefined), [selectionRect]);
 

@@ -2,8 +2,7 @@
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
-import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { Slider } from '../../../../../design-system/primitives/Slider';
+import { SegmentedControl, Slider } from '@drizztdourden08/tessera/primitives';
 import { DialogColorControl } from './dialog-color-control';
 import { BORDER_OPTIONS, CORNER_OPTIONS, MARK_OPTIONS, THICKNESS_OPTIONS } from './hud-settings.constants';
 

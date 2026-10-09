@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Card } from '../../../../../design-system/primitives/Card';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Card, Text } from '@drizztdourden08/tessera/primitives';
 import type { MsuMismatchCalloutProps } from './MsuDetectedSummary.type';
 
 const MsuMismatchCallout = (props: MsuMismatchCalloutProps) => {

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useEffect, useMemo, useState } from 'react';
-import { Box, Button, Text, TextInput } from '@ds/primitives';
+import { Box, Button, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { find, getScreen } from '@shared/game/data';
 import type { CheckId, CheckRecord } from '@shared/game/data';
 import {
@@ -10,7 +10,7 @@ import type { CheckGrantPlan } from '@app/lib/game';
 import { trackerCheckRecords } from '@app/lib/game/tracker/tracker-roster';
 import { getSessionState, subscribeSessionStore } from '@app/lib/game/randomizer-client';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
-import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
+import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import type { CheatTabProps } from '../../CheatsWidget.type';
 import './ChecksTab.css';
 

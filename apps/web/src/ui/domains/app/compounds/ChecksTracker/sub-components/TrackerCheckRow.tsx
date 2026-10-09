@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { getItem } from '@shared/game/data';
 import { CheckStatusIcon } from './CheckStatusIcon';
 import { SwapBadge } from './SwapBadge';

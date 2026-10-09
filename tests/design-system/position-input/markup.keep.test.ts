@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { PositionInput } from '../../../apps/web/src/ui/design-system/primitives/PositionInput';
-import type { PositionInputProps } from '../../../apps/web/src/ui/design-system/primitives/PositionInput';
+import { PositionInput } from '@drizztdourden08/tessera/primitives';
+import type { PositionInputProps } from '@drizztdourden08/tessera/primitives';
 import { GRID, SIGNED } from './position-input.constants';
 
 const render = (props: Partial<PositionInputProps> = {}): string =>

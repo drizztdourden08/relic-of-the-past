@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Button, Field, TextInput } from '@drizztdourden08/tessera/primitives';
 import { resolveValue } from '@shared/hud/data';
 import { readExpr } from '../../behavior/check-expr';
 import { useInstanceScopes } from '../../behavior/formula-scope';

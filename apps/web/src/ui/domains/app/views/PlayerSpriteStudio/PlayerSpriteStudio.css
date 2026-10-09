@@ -9,7 +9,7 @@
 
 .sprite-studio__status {
   font-size: var(--text-sm);
-  color: var(--c-green-bright);
+  color: var(--c-secondary-bright);
 }
 
 .sprite-studio__status--error {

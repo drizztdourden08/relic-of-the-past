@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { FieldDescriptor } from '@ds/data';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { NO_TAG_SUGGESTIONS } from '../../DataInspector.constants';
 import { asEntityKind } from '../as-entity-kind';
 import { suggestionsFor } from './suggestions-for';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { SelectOption } from '@ds/primitives';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 
 const MODE_OPTIONS: readonly SelectOption[] = [
   { value: 'vanilla', label: 'Vanilla' },

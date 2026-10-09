@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { LogKindDef } from '@ds/composites/LogPanel';
+import type { LogKindDef } from '@drizztdourden08/tessera/composites';
 import type { ActivityKind } from './randomizer-log-style.type';
 
 const ACTIVITY_RULES: readonly [RegExp, ActivityKind, string][] = [

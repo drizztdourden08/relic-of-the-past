@@ -1,11 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { useMemo, useState } from 'react';
-import { Button } from '@ds/primitives/Button';
-import { Card } from '@ds/primitives/Card';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { Dialog } from '@ds/composites/Dialog';
-import { WindowHeader } from '@ds/composites/WindowHeader';
+import { Button, Card, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Dialog, WindowHeader } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { splitByRight } from '../behavior/batch-edits';
 import { totalBytes } from '../behavior/batch-size';

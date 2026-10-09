@@ -40,7 +40,7 @@
   background: var(--c-text-faint);
 }
 
-.hero-progress__key--taken::before { background: var(--c-green); }
+.hero-progress__key--taken::before { background: var(--c-secondary); }
 .hero-progress__key--available::before { background: var(--c-warning); }
 
 .hero-progress__file {
@@ -59,7 +59,7 @@
 }
 
 .hero-progress__seg--taken {
-  background: var(--c-green);
+  background: var(--c-secondary);
 }
 
 .hero-progress__seg--available {
@@ -69,7 +69,7 @@
 .hero-progress__pct {
   font-size: var(--text-base);
   font-weight: var(--weight-bold);
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-variant-numeric: tabular-nums;
   text-align: right;
 }

@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import { isSyncedRate } from '@shared/display/refresh-rate';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { SegmentedControl } from '../../../../../../design-system/primitives/SegmentedControl';
+import { Box, Text, Button, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { ChangeRefreshRateDialog } from './sub-components/ChangeRefreshRateDialog';
 import { useApplyRefreshRate } from './behavior/useApplyRefreshRate';
 import type { RefreshRateControlProps } from './RefreshRateControl.type';

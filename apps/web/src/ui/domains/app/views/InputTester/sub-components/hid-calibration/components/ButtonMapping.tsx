@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../../design-system/primitives/Text';
-import { Button } from '../../../../../../../design-system/primitives/Button';
+import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { ITEM_STYLE, MANUAL_HINT } from './ButtonMapping.constants';
 import type { ButtonMappingProps } from './ButtonMapping.type';

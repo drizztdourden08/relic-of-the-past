@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { FieldDescriptor, TableColumn } from '@ds/data';
+import type { FieldDescriptor, TableColumn } from '@drizztdourden08/tessera/data';
 import { displayFieldFor } from './display-field-for';
 
 const buildDefaultColumns = (

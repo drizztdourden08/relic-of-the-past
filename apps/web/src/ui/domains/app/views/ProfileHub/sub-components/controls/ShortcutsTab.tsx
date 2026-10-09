@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { SHORTCUT_ACTIONS } from '@shared/types/controls';
 import { getButtonIconUrl } from '@app/lib/input/button-icons';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Image } from '../../../../../../design-system/primitives/Image';
+import { Box, Text, Image } from '@drizztdourden08/tessera/primitives';
 import { FunctionBindingRow } from './FunctionBindingRow';
 import { BindingListHeader } from './BindingListHeader';
 import type { CtrlProps } from './controls.type';

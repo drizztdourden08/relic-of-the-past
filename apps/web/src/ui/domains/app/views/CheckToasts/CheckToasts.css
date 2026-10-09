@@ -37,11 +37,11 @@
 }
 
 .online-notice-toast__item {
-  color: var(--notice-item, var(--c-gold-bright));
+  color: var(--notice-item, var(--c-primary-bright));
   font-weight: var(--weight-semi);
 }
 
 .online-notice-toast__player {
-  color: var(--notice-player, var(--c-green-bright));
+  color: var(--notice-player, var(--c-secondary-bright));
   font-weight: var(--weight-semi);
 }

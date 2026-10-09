@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { NumberInput } from '@ds/primitives/NumberInput';
+import { Box, Button, Field, Flex, IconButton, NumberInput } from '@drizztdourden08/tessera/primitives';
 import { ColorField } from './ColorField';
 import { swatchOf } from '../behavior/appearance-summary';
 import './HudLayoutEditor.appearance.css';

@@ -1,5 +1,5 @@
 /* @layer store-site @kind constants */
-import type { TableColumn } from '@ds/data/table/types';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 import { ITEM_SORTS } from '../../../catalog/item-schema';
 
 const NO_COLUMNS: readonly TableColumn[] = [];

@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, Button, IconButton, Badge, StatusBadge } from '../../../../../../design-system/primitives';
+import { Box, Button, IconButton, Status, StatusBadge } from '@drizztdourden08/tessera/primitives';
 import { Specimen } from '../Specimen';
 
 const ButtonStory = () => (
@@ -35,10 +35,10 @@ const ButtonStory = () => (
 
     <Specimen label="Badge" hint="success / warning / danger / neutral">
       <Box className="dg-row">
-        <Badge variant="success">success</Badge>
-        <Badge variant="warning">warning</Badge>
-        <Badge variant="danger">danger</Badge>
-        <Badge variant="neutral">neutral</Badge>
+        <Status tone="success">success</Status>
+        <Status tone="warning">warning</Status>
+        <Status tone="danger">danger</Status>
+        <Status tone="neutral">neutral</Status>
       </Box>
     </Specimen>
 

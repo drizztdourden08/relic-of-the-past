@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { IconButton } from '@ds/primitives/IconButton';
+import { Box, Field, IconButton } from '@drizztdourden08/tessera/primitives';
 import { DIRECTIONS } from './DirectionControl.constants';
 import './HudLayoutEditor.layout.css';
 import './HudLayoutEditor.layout-set.css';

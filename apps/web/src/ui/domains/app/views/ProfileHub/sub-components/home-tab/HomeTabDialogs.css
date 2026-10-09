@@ -12,9 +12,9 @@
 }
 
 .home-tab-dialogs__callout--ok {
-  background: var(--c-green-dim);
-  border: 1px solid var(--c-green);
-  color: var(--c-green-bright);
+  background: var(--c-secondary-dim);
+  border: 1px solid var(--c-secondary);
+  color: var(--c-secondary-bright);
 }
 
 .home-tab-dialogs__callout--bad {
@@ -45,8 +45,8 @@
 
 .home-tab-dialogs__confirm-word {
   font-family: var(--font-mono);
-  background: var(--c-gold-dim);
-  color: var(--c-gold-bright);
+  background: var(--c-primary-dim);
+  color: var(--c-primary-bright);
   padding: 0.1em 0.5em;
   border-radius: var(--radius-sm);
   font-weight: var(--weight-medium);

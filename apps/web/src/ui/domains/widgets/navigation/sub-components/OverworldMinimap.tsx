@@ -2,7 +2,7 @@
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import { markerCrossings } from '@app/lib/crossing-sections';
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { crossingIcon } from '../../../../../lib/entrance-icons';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { EDGE_COLORS } from '../navigation.constants';
@@ -46,7 +46,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
     const x0 = (p0 / 64) * cellW;
     const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * cellW);
     return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: colStart + x0, width: spanW, height: 14, borderRadius: 'var(--r-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: colStart + x0, width: spanW, height: 14, borderRadius: 'var(--radius-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
         <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
       </Box>
@@ -61,7 +61,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
     const y0 = (p0 / 64) * cellH;
     const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * cellH);
     return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: rowStart + y0, width: 14, height: spanH, borderRadius: 'var(--r-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: rowStart + y0, width: 14, height: spanH, borderRadius: 'var(--radius-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
         <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
       </Box>
@@ -79,11 +79,11 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         return (
           <Box key={scr} style={{
             position: 'absolute', left: EDGE_PAD + col * (cellW + GAP), top: EDGE_PAD + row * (cellH + GAP),
-            width: cellW, height: cellH, borderRadius: 'var(--r-sm)', fontSize: 10, textAlign: 'center',
+            width: cellW, height: cellH, borderRadius: 'var(--radius-sm)', fontSize: 10, textAlign: 'center',
             display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-            background: isActive ? 'var(--c-green-soft)' : analyzed ? 'var(--c-info-soft)' : 'var(--c-hover)',
-            border: `1px solid ${isActive ? 'var(--c-green-soft)' : analyzed ? 'var(--c-info-soft)' : 'var(--c-border)'}`,
-            color: isActive ? 'var(--c-green-bright)' : analyzed ? 'var(--c-info)' : 'var(--c-text-muted)', overflow: 'hidden',
+            background: isActive ? 'var(--c-secondary-soft)' : analyzed ? 'var(--c-info-soft)' : 'var(--c-hover)',
+            border: `1px solid ${isActive ? 'var(--c-secondary-soft)' : analyzed ? 'var(--c-info-soft)' : 'var(--c-border)'}`,
+            color: isActive ? 'var(--c-secondary-bright)' : analyzed ? 'var(--c-info)' : 'var(--c-text-muted)', overflow: 'hidden',
           }}>
             {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} tileLayer={scrResult.tileLayer} />}
             <Box style={IL.cellName}>{bundle.subNames[scr] || bundle.screenNames[scr]}</Box>
@@ -119,7 +119,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         const cellTop = EDGE_PAD + row * (cellH + GAP);
         const x = (playerPos.col / 64) * cellW;
         const y = (playerPos.row / 64) * cellH;
-        return <Box style={{ position: 'absolute', left: cellLeft + x - 3, top: cellTop + y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-green)', boxShadow: '0 0 3px var(--c-green)', pointerEvents: 'none' }} />;
+        return <Box style={{ position: 'absolute', left: cellLeft + x - 3, top: cellTop + y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-secondary)', boxShadow: '0 0 3px var(--c-secondary)', pointerEvents: 'none' }} />;
       })()}
 
       {annotations.map((set) => {

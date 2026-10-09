@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { SettingsPageContext } from '../../../../compounds/SettingsLayout';
 import { PROFILE_HUB_TABS } from '../../ProfileHub.constants';
 import { ProfileHubTabContent } from '../ProfileHubTabContent';

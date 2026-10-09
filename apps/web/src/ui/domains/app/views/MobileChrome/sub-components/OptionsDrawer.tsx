@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text, Image } from '@ds/primitives';
+import { Box, Button, Text, Image } from '@drizztdourden08/tessera/primitives';
 import type { DrawerMenuItem, OptionsDrawerProps } from '../MobileChrome.type';
 
 const renderItem = (item: DrawerMenuItem) => {

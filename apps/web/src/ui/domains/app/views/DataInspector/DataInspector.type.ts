@@ -1,9 +1,9 @@
 /* @layer renderer-app @kind types */
 import type { ReactNode } from 'react';
 import type { EntityKind } from '@shared/game/data';
-import type { CollectionSource, DetailTab, FieldDescriptor } from '@ds/data';
-import type { NumberBounds, ReferencedByHit } from '@ds/composites/RecordEditor';
-import type { ScrollPosition } from '@ds/primitives';
+import type { CollectionSource, DetailTab, FieldDescriptor } from '@drizztdourden08/tessera/data';
+import type { NumberBounds, ReferencedByHit } from '@drizztdourden08/tessera/composites';
+import type { ScrollPosition } from '@drizztdourden08/tessera/primitives';
 
 type InspectorRow = Record<string, unknown>;
 

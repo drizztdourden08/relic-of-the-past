@@ -1,5 +1,5 @@
 /* @layer store-site @kind component */
-import { Stack } from '@ds/primitives/Stack';
+import { Stack } from '@drizztdourden08/tessera/primitives';
 import { ListingDetails } from './ListingDetails';
 import { ManifestView } from './ManifestView';
 import type { PackDetailsProps } from './PackDetails.type';

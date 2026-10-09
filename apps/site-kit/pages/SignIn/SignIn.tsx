@@ -1,7 +1,6 @@
 /* @layer site-kit @kind component */
 import { PROVIDERS } from '@shared/hub/providers';
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
+import { Flex, Stack } from '@drizztdourden08/tessera/primitives';
 import { SiteFrame } from '../../layout/SiteFrame/SiteFrame';
 import { Gate } from '../../components/Gate/Gate';
 import { ProviderButton } from '../../components/ProviderButton/ProviderButton';

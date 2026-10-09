@@ -9,7 +9,7 @@ import { deliverItem, deliverNpcCheck } from './lib/game/delivery-api';
 import { deliveryQueue } from './lib/game/delivery-queue';
 import { cheatTriggerNpcCheck } from './lib/game/cheats';
 import { installSessionLogTap } from './lib/diagnostics/session-log';
-import './ui/design-system/tokens/index.css';
+import '@drizztdourden08/tessera/tokens.css';
 import type { LiveTestWindow } from './main.type';
 
 installSessionLogTap();

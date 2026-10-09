@@ -18,7 +18,7 @@
   width: 100%;
   padding: var(--space-sm);
   border: var(--border-width-thin) solid transparent;
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
 }
 
 .text-group-rail__item:hover {
@@ -28,7 +28,7 @@
 .text-group-rail__item--selected,
 .text-group-rail__item--selected:hover {
   background: var(--c-selected);
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .text-group-rail__body {
@@ -54,5 +54,5 @@
 }
 
 .text-group-rail__tally[data-done='true'] {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }

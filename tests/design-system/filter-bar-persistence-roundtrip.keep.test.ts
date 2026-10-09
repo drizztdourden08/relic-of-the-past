@@ -2,12 +2,9 @@
 import {
   describe, it, expect, vi, beforeEach, afterEach,
 } from 'vitest';
-import { addClause, removeClause } from '../../apps/web/src/ui/design-system/composites/FilterBar/behavior/clause-list';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import { capture } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import type { TableState, ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
+import { addClause, removeClause } from '@drizztdourden08/tessera/composites';
+import { buildSchema, createSchemaIndex, createClause, capture } from '@drizztdourden08/tessera/data';
+import type { FilterClause, TableState, ViewKey, ViewSnapshot } from '@drizztdourden08/tessera/data';
 
 const KEY = 'data-inspector-query:screen' as ViewKey;
 const ROWS = [{ id: 'item-001', name: 'alpha' }];

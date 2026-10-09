@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
-import { Box, SegmentedBar, Text } from '@ds/primitives';
-import { Legend } from '@ds/composites';
-import type { LegendEntry, LegendTotal } from '@ds/composites';
+import { Box, SegmentedBar, Text } from '@drizztdourden08/tessera/primitives';
+import { Legend } from '@drizztdourden08/tessera/composites';
+import type { LegendEntry, LegendTotal } from '@drizztdourden08/tessera/composites';
 import { SEGMENTS, TOTAL_TITLE } from './PoolFillBar.constants';
 import type { PoolFillBarProps, PoolFillTotals } from './PoolFillBar.type';
 import './PoolFillBar.css';

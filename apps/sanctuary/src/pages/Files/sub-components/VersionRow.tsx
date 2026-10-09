@@ -1,8 +1,6 @@
 /* @layer sanctuary-site @kind component */
 import type { FileVersion } from '@shared/sanctuary/file-types';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Button, Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { Row } from '@site-kit/components/Row/Row';
 import { Chip } from '@site-kit/components/Chip/Chip';
 import { formatAgo } from '@site-kit/lib/format-date';

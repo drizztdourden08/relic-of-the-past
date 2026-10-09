@@ -8,12 +8,12 @@
 }
 
 .store-item-card:focus-visible {
-  outline: 2px solid var(--c-gold);
+  outline: 2px solid var(--c-primary);
   outline-offset: 2px;
 }
 
 .store-item-card--selected {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
   background: var(--c-selected);
 }
 
@@ -24,7 +24,7 @@
 
 .store-item-card__icon {
   display: inline-flex;
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-size: var(--text-2xl);
 }
 

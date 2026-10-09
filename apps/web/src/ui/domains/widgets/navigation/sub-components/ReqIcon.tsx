@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Text } from '../../../../design-system/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { IL } from './ReqIcon.constants';
 
 const REQ_ICONS: Record<string, { icon: string; color: string }> = {

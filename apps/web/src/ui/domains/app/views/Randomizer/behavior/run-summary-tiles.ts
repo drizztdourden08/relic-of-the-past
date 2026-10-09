@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { StatTileProps } from '@ds/primitives';
+import type { StatTileProps } from '@drizztdourden08/tessera/composites';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
 import type { SessionSource } from '@app/lib/game/randomizer-client';
 

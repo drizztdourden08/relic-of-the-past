@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useCallback } from 'react';
-import { DropZone } from '../../../../../design-system/primitives/DropZone';
-import { TextInput } from '../../../../../design-system/primitives/TextInput';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
+import { DropZone, TextInput, Box, Button } from '@drizztdourden08/tessera/primitives';
 import * as msuStore from '@app/lib/storage/msu-store';
 import type { MsuImportProps, MsuImportStatus } from './MsuDetectedSummary.type';
 import { MSU_ARCHIVE_TYPES } from './MsuDetectedSummary.constants';

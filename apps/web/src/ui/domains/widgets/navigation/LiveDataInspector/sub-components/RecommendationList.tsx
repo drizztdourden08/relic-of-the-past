@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
-import { Box, Button, ScrollArea, Text } from '@ds/primitives';
+import { Box, Button, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
 import { certainOnly } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/accept-all-certain';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import { acceptAllCertainHere } from '../behavior/accept-all-certain-here';

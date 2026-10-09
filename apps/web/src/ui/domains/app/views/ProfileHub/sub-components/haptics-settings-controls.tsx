@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import { Toggle } from '../../../../../design-system/primitives/Toggle';
-import { Slider } from '../../../../../design-system/primitives/Slider';
+import { Toggle, Slider } from '@drizztdourden08/tessera/primitives';
 import { isHapticsSettingDisabled } from './haptics-settings-disabled';
 import { hapticPatch } from './haptic-patch';
 

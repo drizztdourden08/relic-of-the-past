@@ -18,7 +18,7 @@
 }
 
 .mapping-paste-box__status--success {
-  color: var(--c-green-bright);
+  color: var(--c-secondary-bright);
 }
 
 .mapping-paste-box__status--error {

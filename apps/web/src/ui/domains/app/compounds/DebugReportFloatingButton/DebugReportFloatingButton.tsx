@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import send from '@iconify-icons/lucide/send';
-import { Button } from '@ds/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import type { DebugReportFloatingButtonProps } from './DebugReportFloatingButton.type';
 import './DebugReportFloatingButton.css';
 

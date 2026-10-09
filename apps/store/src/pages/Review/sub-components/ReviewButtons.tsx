@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { useState } from 'react';
-import { Button } from '@ds/primitives/Button';
-import { Dialog } from '@ds/composites/Dialog';
+import { Button } from '@drizztdourden08/tessera/primitives';
+import { Dialog } from '@drizztdourden08/tessera/composites';
 import { actionsFor } from '@shared/store/version-flow';
 import { EDIT_ACTIONS, REVIEWER } from './ReviewButtons.constants';
 import type { ReviewButtonsProps } from './ReviewButtons.type';

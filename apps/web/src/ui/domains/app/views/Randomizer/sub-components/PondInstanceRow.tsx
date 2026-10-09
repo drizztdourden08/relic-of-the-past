@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Text } from '@ds/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { PondImportControl } from '@domains/app/compounds/PondImportControl';
 import { WishingPondRow } from '@domains/app/compounds/WishingPondRow';
 import { holdPondToWallet } from '@shared/randomizer/world/pond/pond-wallet-top';

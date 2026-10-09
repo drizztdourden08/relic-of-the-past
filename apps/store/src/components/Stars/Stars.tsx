@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
 import { useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import type { StarsProps } from './Stars.type';
 import { COUNTS, STAR } from './Stars.constants';
 import './Stars.css';

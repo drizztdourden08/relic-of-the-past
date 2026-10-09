@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { LayerEditor } from './LayerEditor';
 import type { TrackDetailProps } from './TrackDetail.type';
 

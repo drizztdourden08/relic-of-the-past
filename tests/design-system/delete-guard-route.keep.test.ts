@@ -5,7 +5,7 @@ import { referencesTo } from '../../shared/game/data/relationships/reference-ind
 import { routeDelete } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/useDeleteGuard';
 import { recordDeleterFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/delete-record';
 import { isReferenceGuarded, referencedByHitsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/reference-usage';
-import type { ReferencedByHit } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
+import type { ReferencedByHit } from '@drizztdourden08/tessera/composites';
 import { describeDataset } from '../dataset-guard';
 
 describeDataset('routeDelete carries the guard\'s whole rule', () => {

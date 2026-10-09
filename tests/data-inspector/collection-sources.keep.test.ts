@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { COLLECTION_SOURCES } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
 import { ENTITY_KINDS } from '../../apps/web/src/ui/domains/app/views/DataInspector/DataInspector.constants';
 import { resolveIdRef } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-target';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 describeDataset('collection sources', () => {

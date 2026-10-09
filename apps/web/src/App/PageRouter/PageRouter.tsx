@@ -8,7 +8,7 @@ import { Store } from '../../ui/domains/app/views/Store';
 import { HudLayoutEditor } from '../../ui/domains/app/views/HudLayoutEditor';
 import { SpriteDebug } from '../../ui/domains/app/views/SpriteDebug';
 import { Randomizer } from '../../ui/domains/app/views/Randomizer';
-import { FullScreenLayer } from '../../ui/design-system/composites/FullScreenLayer';
+import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { WorkspaceSwitch, type Workspace } from '../../ui/domains/app/compounds/WorkspaceSwitch';
 import type { CreateProfileOptions } from '@shared/types/profile';
 import type { PageRouterProps } from './PageRouter.type';
@@ -40,7 +40,7 @@ const PageRouter = (props: PageRouterProps) => {
 
   if (nav.activePage === 'data') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Data Manager" floating={switchTo('data')}>
+      <ScreenWindow onClose={nav.closePage} title="Data Manager" floating={switchTo('data')}>
         <DataManager
           profiles={profileMgmt.profiles}
           romStatuses={profileMgmt.romDisplayInfos}
@@ -60,30 +60,30 @@ const PageRouter = (props: PageRouterProps) => {
           initialTab={dataTab as DataTab}
           isGameRunning={game.isRunning}
         />
-      </FullScreenLayer>
+      </ScreenWindow>
     );
   } else if (nav.activePage === 'store') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Hookshop" floating={switchTo('store')}>
+      <ScreenWindow onClose={nav.closePage} title="Hookshop" floating={switchTo('store')}>
         <Store onLibraryChanged={profileMgmt.refreshProfilesAndRoms} onDeleteConfirm={handleDeleteConfirm} />
-      </FullScreenLayer>
+      </ScreenWindow>
     );
   } else if (nav.activePage === 'hud-layout') {
     otherPage = <HudLayoutEditor onClose={nav.closePage} />;
   } else if (titledPage) {
     const { title, View } = titledPage;
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title={title}>
+      <ScreenWindow onClose={nav.closePage} title={title}>
         <View />
-      </FullScreenLayer>
+      </ScreenWindow>
     );
   } else if (nav.activePage === 'sprite-debug') {
     otherPage = <SpriteDebug onClose={nav.closePage} romFile={profileMgmt.activeProfile?.romFile ?? ''} />;
   } else if (nav.activePage === 'randomizer') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Randomizer" floating={switchTo('randomizer')}>
+      <ScreenWindow onClose={nav.closePage} title="Randomizer" floating={switchTo('randomizer')}>
         <Randomizer activeProfile={profileMgmt.activeProfile} />
-      </FullScreenLayer>
+      </ScreenWindow>
     );
   }
 
@@ -93,7 +93,7 @@ const PageRouter = (props: PageRouterProps) => {
     <>
       {otherPage}
       {profileMgmt.activeProfile && (
-        <FullScreenLayer
+        <ScreenWindow
           onClose={nav.closePage}
           hidden={!profileHubVisible}
           title="Home"
@@ -127,7 +127,7 @@ const PageRouter = (props: PageRouterProps) => {
             activeTab={profileHubTab}
             onTabChange={onProfileHubTabChange}
           />
-        </FullScreenLayer>
+        </ScreenWindow>
       )}
     </>
   );

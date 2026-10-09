@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, ScrollArea, Text } from '@ds/primitives';
+import { Box, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
 import { PoolFillBar } from '../PoolFillBar';
 import { PoolListingItem } from './sub-components/PoolListingItem';
 import type { PoolListingProps } from './PoolListing.type';

@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useSpriteLibrary } from '../../PlayerSpriteStudio/behavior/useSpriteLibrary';
 import { SpriteChoiceCard } from './SpriteChoiceCard';
 import type { PlayerSpriteSelectorProps, SpriteChoice } from './PlayerSpriteSelector.type';

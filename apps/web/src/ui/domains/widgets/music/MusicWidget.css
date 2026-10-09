@@ -25,7 +25,7 @@
   flex-direction: column;
   background: var(--c-inset);
   border: 1px solid var(--c-hairline);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 

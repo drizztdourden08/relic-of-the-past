@@ -2,8 +2,8 @@
 import {
   describe, it, expect, vi, beforeEach, afterEach,
 } from 'vitest';
-import { emptySnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import type { ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
+import { emptySnapshot } from '@drizztdourden08/tessera/data';
+import type { ViewKey, ViewSnapshot } from '@drizztdourden08/tessera/data';
 
 let load: ReturnType<typeof vi.fn>;
 let save: ReturnType<typeof vi.fn>;

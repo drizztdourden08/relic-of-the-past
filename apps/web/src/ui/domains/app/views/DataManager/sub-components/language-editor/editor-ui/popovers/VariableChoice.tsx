@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { Icon as SymbolIcon } from '@iconify/react/offline';
 import lockIcon from '@iconify-icons/lucide/lock';
-import { Button, Text } from '@ds/primitives';
+import { Button, Text } from '@drizztdourden08/tessera/primitives';
 import { LOCK_PX } from './VariableChoice.constants';
 import type { VariableChoiceProps } from './VariableChoice.type';
 

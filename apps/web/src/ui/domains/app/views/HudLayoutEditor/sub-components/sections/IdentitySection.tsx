@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useState } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Field, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { KeyboardEvent } from 'react';
 import type { IdentitySectionProps } from './IdentitySection.type';
 

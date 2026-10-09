@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Toggle } from '@ds/primitives';
+import { Toggle } from '@drizztdourden08/tessera/primitives';
 import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { useProfileConnection } from '@app/hooks/randomizer/useProfileConnection';

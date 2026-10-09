@@ -1,12 +1,6 @@
 /* @layer store-site @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { Textarea } from '@ds/primitives/Textarea';
-import { SettingsSection } from '@ds/composites/SettingsSection';
+import { Box, Button, Field, Flex, Stack, Text, Textarea } from '@drizztdourden08/tessera/primitives';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { Markdown } from '../../../components/Markdown/Markdown';
 import { useStoreData } from '../../../data/store-data-context';
 import { useHomeSettings } from '../behavior/useHomeSettings';

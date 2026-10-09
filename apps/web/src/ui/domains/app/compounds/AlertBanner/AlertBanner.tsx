@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import type { AlertBannerProps } from './AlertBanner.type';
 import './AlertBanner.css';
 

@@ -1,12 +1,8 @@
 /* @layer sanctuary-site @kind component */
 import { useEffect, useRef, useState } from 'react';
 import { LIMITS } from '@shared/sanctuary/limits';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
-import { DialogShell } from '@ds/composites/DialogShell';
+import { Button, Field, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { Row } from '@site-kit/components/Row/Row';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { nextVersionNumber, versionLabel } from '../../../files/file-versions';

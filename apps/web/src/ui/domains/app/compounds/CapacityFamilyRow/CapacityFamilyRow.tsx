@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Select, Text } from '@ds/primitives';
+import { Box, Select, Text } from '@drizztdourden08/tessera/primitives';
 import { LadderPreview } from '../LadderPreview';
 import { OptionDescription } from '../OptionDescription';
 import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
@@ -9,7 +9,7 @@ import { LadderControls } from './sub-components/LadderControls';
 import { RowLine } from './sub-components/RowLine';
 import { MODE_OPTIONS, WALLET_MODE_OPTIONS } from './CapacityFamilyRow.constants';
 import type { CapacityFamilyRowProps, CapacityRowState } from './CapacityFamilyRow.type';
-import type { SelectOption } from '@ds/primitives';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import './CapacityFamilyRow.css';
 
 const CapacityFamilyRow = (props: CapacityFamilyRowProps) => {

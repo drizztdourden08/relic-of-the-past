@@ -3,10 +3,10 @@ import { it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { buildSchema } from '../../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { CompactRecordView } from '../../../apps/web/src/ui/design-system/composites/CompactRecordView';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import { CompactRecordView } from '@drizztdourden08/tessera/composites';
 import { defaultIdRefDisplay } from '../../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-links';
-import type { FieldDescriptor } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../../dataset-guard';
 import { field } from './field';
 

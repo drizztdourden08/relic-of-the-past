@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { cheatSetDungeonItem } from '@app/lib/game';
 import type { DungeonItemKind } from '@app/lib/game';
 import { useGameUIStore } from '@app/stores/game-ui-store';

@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from './hid-calibration/hid-calibration.type';
 import { useHidCalibration } from './hid-calibration/hooks';
 import { useFlashStatus } from './hid-calibration/hooks/useFlashStatus';

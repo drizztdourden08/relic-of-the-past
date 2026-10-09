@@ -1,9 +1,7 @@
 /* @layer store-site @kind component */
 import { useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { Text } from '@ds/primitives/Text';
-import { SearchSpark } from '@ds/composites/SearchSpark';
+import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
+import { SearchSpark } from '@drizztdourden08/tessera/composites';
 import { useStoreData } from '../../data/store-data-context/useStoreData';
 import { matchItems } from '../../catalog/match-items';
 import { itemPath } from '../../catalog/item-paths/item-path';

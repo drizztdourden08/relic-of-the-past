@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
+import { Box, Field } from '@drizztdourden08/tessera/primitives';
 import { ExpressionInput } from '../ExpressionInput';
 import { ReferenceField } from '../ReferenceField';
 import { ValueField } from '../ValueField';

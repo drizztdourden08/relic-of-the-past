@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Slider } from '../../../../../../design-system/primitives/Slider';
-import { Toggle } from '../../../../../../design-system/primitives/Toggle';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { SettingsSection } from '../../../../../../design-system/composites/SettingsSection';
+import { Slider, Toggle, Box } from '@drizztdourden08/tessera/primitives';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { NumberField } from './NumberField';
 import { HeightLevelEditor } from './HeightLevelEditor';
 import type { ShadowGlobalSettingsProps } from './ShadowGlobalSettings.type';

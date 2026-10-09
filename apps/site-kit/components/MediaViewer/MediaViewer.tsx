@@ -1,12 +1,9 @@
 /* @layer site-kit @kind component */
 import { useState } from 'react';
 import type { SyntheticEvent } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Image } from '@ds/primitives/Image';
-import { Video } from '@ds/primitives/Video';
+import { Box, Button, Image } from '@drizztdourden08/tessera/primitives';
 import { usePixelArt } from '../MediaPreview/usePixelArt';
-import { DialogShell } from '@ds/composites/DialogShell';
+import { DialogShell, Video } from '@drizztdourden08/tessera/composites';
 import type { MediaViewerProps } from './MediaViewer.type';
 import './MediaViewer.css';
 

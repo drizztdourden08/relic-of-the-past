@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback } from 'react';
 import type React from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import type { Props, MouseState } from './navigation-overlay.type';

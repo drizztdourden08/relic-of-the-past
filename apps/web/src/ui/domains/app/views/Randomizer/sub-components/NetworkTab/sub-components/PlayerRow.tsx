@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ChecksCell } from './ChecksCell';
 import { StateChip } from './StateChip';
 import { DASH } from '../behavior/network-format';

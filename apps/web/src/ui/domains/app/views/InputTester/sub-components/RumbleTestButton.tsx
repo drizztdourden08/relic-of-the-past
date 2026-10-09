@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import * as controllersStore from '@app/lib/input/controllers-store';
-import { Button } from '../../../../../design-system/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { controllerInputStore } from '../../../../../../lib/input/controller-input-store';
 import { previewHapticPattern } from '../../../../../../lib/input/haptic-bridge';
 import type { RumbleTestButtonProps } from './ControllerCard.type';

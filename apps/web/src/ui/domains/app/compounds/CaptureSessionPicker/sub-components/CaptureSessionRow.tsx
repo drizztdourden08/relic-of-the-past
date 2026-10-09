@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import trash2 from '@iconify-icons/lucide/trash-2';
-import { Box } from '@ds/primitives/Box';
-import { Checkbox } from '@ds/primitives/Checkbox';
-import { Text } from '@ds/primitives/Text';
-import { Button } from '@ds/primitives/Button';
-import { Image } from '@ds/primitives/Image';
-import { Video } from '@ds/primitives/Video';
+import { Box, Checkbox, Text, Button, Image } from '@drizztdourden08/tessera/primitives';
+import { Video } from '@drizztdourden08/tessera/composites';
 import { useCyclingFrame } from '../behavior/useCyclingFrame';
 import type { CaptureSessionRowProps } from '../CaptureSessionPicker.type';
 import { NO_PREVIEW_FRAMES } from './CaptureSessionRow.constants';

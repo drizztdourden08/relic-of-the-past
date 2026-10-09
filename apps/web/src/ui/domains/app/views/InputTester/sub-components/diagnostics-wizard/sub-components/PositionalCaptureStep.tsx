@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect } from 'react';
-import { Text } from '@ds/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { ButtonMapping } from '../../hid-calibration/components';
 import { usePositionalOneByOne } from '../positional-capture/usePositionalOneByOne';
 import type { PositionalCaptureStepProps } from './diagnostics-steps.type';

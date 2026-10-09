@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Text } from '@ds/primitives/Text';
+import { Box, Field, Text } from '@drizztdourden08/tessera/primitives';
 import { useEditorStep } from '../behavior/editor-step';
 import { ValueInput } from './ValueInput';
 import { AXES } from './MinMaxField.constants';

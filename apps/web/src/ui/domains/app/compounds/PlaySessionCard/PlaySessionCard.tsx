@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { formatSessionDate } from './behavior/format-session-date';
 import { formatDuration } from './behavior/format-duration';
 import './PlaySessionCard.css';

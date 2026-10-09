@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useRef } from 'react';
-import { Thumbnail } from '../../../../design-system/primitives/Thumbnail';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Button } from '../../../../design-system/primitives/Button';
-import { IconButton } from '../../../../design-system/primitives/IconButton';
-import { TextInput } from '../../../../design-system/primitives/TextInput';
+import { Thumbnail, Text, Button, IconButton, TextInput } from '@drizztdourden08/tessera/primitives';
 import { SaveCard } from '../SaveCard';
 import type { NormalSaveCardProps } from './NormalSaveCard.type';
 import './NormalSaveCard.css';

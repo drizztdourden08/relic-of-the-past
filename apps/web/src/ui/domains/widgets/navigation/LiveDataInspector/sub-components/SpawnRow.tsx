@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Flex, Text } from '@ds/primitives';
+import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { resolveRecordLabel } from '@app/ui/domains/app/views/DataInspector/behavior/record-links';
 import type { ScreenSpawn } from '@shared/game/data';
 import { SPAWN_LIVE_ONLY_TITLE } from '../LiveDataInspector.constants';

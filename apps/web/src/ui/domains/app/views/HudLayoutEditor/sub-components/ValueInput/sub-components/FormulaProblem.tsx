@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
+import { Button, Text } from '@drizztdourden08/tessera/primitives';
 import type { FormulaProblemProps } from './FormulaProblem.type';
 
 const FormulaProblem = (props: FormulaProblemProps) => {

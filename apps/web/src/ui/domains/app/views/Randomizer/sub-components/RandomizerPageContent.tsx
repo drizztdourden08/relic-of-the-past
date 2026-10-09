@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import type { ReactNode } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Text } from '@ds/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { SceneBackdrop } from '@domains/title';
 import { SettingsPage } from '../../../compounds/SettingsPage';
 import type { SettingsPageAnchor } from '../../../compounds/SettingsPage';

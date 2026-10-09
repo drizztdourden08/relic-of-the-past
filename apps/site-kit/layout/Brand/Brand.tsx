@@ -1,6 +1,5 @@
 /* @layer site-kit @kind component */
-import { Image } from '@ds/primitives/Image';
-import { Text } from '@ds/primitives/Text';
+import { Image, Text } from '@drizztdourden08/tessera/primitives';
 import { Link } from '../../router/Link';
 import { useSiteDefinition } from '../../site/site-context';
 import type { BrandProps } from './Brand.type';

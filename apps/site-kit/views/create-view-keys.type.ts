@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { ViewKey } from '@ds/data/view-state/snapshot';
+import type { ViewKey } from '@drizztdourden08/tessera/data';
 
 type ViewHalf = 'table' | 'query';
 

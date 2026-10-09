@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { TagCreator } from '@ds/composites/RecordEditor';
+import type { TagCreator } from '@drizztdourden08/tessera/composites';
 import { createTagFor } from './create-tag-for';
 import { tagCreators } from './tag-creators';
 

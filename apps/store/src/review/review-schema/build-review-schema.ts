@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
-import { buildSchema } from '@ds/data/schema/build-schema';
-import type { FieldDescriptor } from '@ds/data/schema/field-descriptor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import type { ReviewRow } from '../review-row/review-row.type';
 import { REVIEW_SCHEMA_CONFIG, SAMPLE_ROWS } from './review-schema.constants';
 

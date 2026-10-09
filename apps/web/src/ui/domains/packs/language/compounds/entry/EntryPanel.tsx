@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Card, IconButton, Text } from '@ds/primitives';
+import { Box, Card, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { EntryMetaPanel } from './EntryMetaPanel';
 import { ViewModeSwitch } from './ViewModeSwitch';
 import type { EntryPanelProps } from './entry.type';

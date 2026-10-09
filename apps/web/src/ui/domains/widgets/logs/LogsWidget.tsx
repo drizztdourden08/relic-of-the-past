@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Box } from '../../../design-system/primitives/Box';
-import { Text } from '../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { subscribe, getEntries, CHANNEL_COLORS, type LogEntry } from '../../../../lib/log-bus';
 import { MAX_ENTRIES } from './logs.constants';
 import { formatTime } from './behavior/formatTime';

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
 import type { CSSProperties } from 'react';
 
-const COPIED_TOAST: CSSProperties = { position: 'absolute', left: '50%', top: 8, transform: 'translateX(-50%)', background: 'var(--c-green)', color: 'var(--c-text)', padding: '4px 12px', borderRadius: 'var(--r-sm)', fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold', pointerEvents: 'none', zIndex: 8 };
+const COPIED_TOAST: CSSProperties = { position: 'absolute', left: '50%', top: 8, transform: 'translateX(-50%)', background: 'var(--c-secondary)', color: 'var(--c-text)', padding: '4px 12px', borderRadius: 'var(--radius-sm)', fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold', pointerEvents: 'none', zIndex: 8 };
 
 const SCREEN_TILES = 64;
 const TILE_PX = 8;

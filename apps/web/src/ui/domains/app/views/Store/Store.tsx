@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '@ds/primitives';
-import { SectionNav } from '@ds/composites/SectionNav';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { SideNav } from '@drizztdourden08/tessera/composites';
 import { STORE_NAV } from './Store.constants';
 import { useStore } from './behavior/useStore';
 import { StoreSectionContent } from './sub-components/StoreSectionContent';
@@ -16,7 +16,7 @@ const Store = (props: StoreProps) => {
   return (
     <Box className="store">
       <Box className="store__body">
-        <SectionNav config={STORE_NAV} activeId={section} onSelect={handleSelect} />
+        <SideNav config={STORE_NAV} activeId={section} onSelect={handleSelect} />
         <Box className="store__content">
           <StoreSectionContent store={store} />
         </Box>

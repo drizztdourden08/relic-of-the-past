@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Image, Text } from '@ds/primitives';
+import { Box, Button, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { spriteUrlOf } from '@shared/game/logic/queries/item-sprites';
 import { SpritePlaceholder } from './SpritePlaceholder';
 import type { RungTileProps, TileState } from '../RulesTab.type';

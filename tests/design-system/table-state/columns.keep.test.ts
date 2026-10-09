@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { buildSchema } from '../../../apps/web/src/ui/design-system/data/schema/build-schema';
-import type { TableColumn, TableState } from '../../../apps/web/src/ui/design-system/data/table/types';
+import { buildSchema, initialState } from '@drizztdourden08/tessera/data';
+import type { TableColumn, TableState } from '@drizztdourden08/tessera/data';
 import * as columnOps from '../../../apps/web/src/ui/design-system/data/table/column-ops';
-import { initialState } from '../../../apps/web/src/ui/design-system/data/table/use-data-table';
 import { ROWS } from './table-state.constants';
 
 const schema = buildSchema(ROWS);

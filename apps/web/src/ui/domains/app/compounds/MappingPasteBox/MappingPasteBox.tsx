@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Button } from '../../../../design-system/primitives/Button';
-import { TextInput } from '../../../../design-system/primitives/TextInput';
-import { Field } from '../../../../design-system/primitives/Field';
+import { Box, Text, Button, TextInput, Field } from '@drizztdourden08/tessera/primitives';
 import { HINT, STATUS_TEXT } from './MappingPasteBox.constants';
 import type { MappingPasteBoxProps, SubmitStatus } from './MappingPasteBox.type';
 import './MappingPasteBox.css';

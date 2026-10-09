@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Checkbox, Text } from '@ds/primitives';
+import { Box, Checkbox, Text } from '@drizztdourden08/tessera/primitives';
 import { caseMissNote } from '../../behavior/hardcoded-report';
 import type { HardcodedGroupRowProps } from './HardcodedGroupRow.type';
 

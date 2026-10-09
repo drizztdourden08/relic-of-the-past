@@ -15,7 +15,7 @@
 .dg-swatch__chip {
   width: 40px;
   height: 40px;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--c-border);
   flex-shrink: 0;
 }
@@ -34,7 +34,7 @@
 .dg-swatch__var {
   font-size: var(--text-xs);
   font-family: var(--font-mono);
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .dg-swatch__value {

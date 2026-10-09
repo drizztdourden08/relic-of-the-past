@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useRef, useState } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { EnhancedPauseView, HudLayoutView, HudView, PauseMenuView } from '../../../hud';
 import { LocationNotification } from '../../../hud/views/LocationNotification';
 import { DeliveryQueueIndicator } from '../../../hud/views/DeliveryQueueIndicator';

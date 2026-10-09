@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { TextGroupRailItem } from './TextGroupRailItem';
 import { tallyOf } from './tally-of';
 import type { TextGroupRailProps } from './TextGroupRail.type';

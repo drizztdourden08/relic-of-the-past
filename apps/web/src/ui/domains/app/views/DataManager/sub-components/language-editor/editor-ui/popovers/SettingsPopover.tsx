@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
-import { Divider, SegmentedControl, Text } from '@ds/primitives';
+import { Divider, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
 import { PopoverShell } from './PopoverShell';
 import { SettingRow } from './SettingRow';
 import { settingFieldsFor } from './settings-fields';

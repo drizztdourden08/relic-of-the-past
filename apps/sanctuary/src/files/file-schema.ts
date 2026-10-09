@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind logic */
-import { buildSchema } from '@ds/data/schema/build-schema';
-import type { FieldDescriptor } from '@ds/data/schema/field-descriptor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import type { FileRow } from './file-row';
 import { FILE_SCHEMA_CONFIG, SAMPLE_ROWS } from './file-schema.constants';
 

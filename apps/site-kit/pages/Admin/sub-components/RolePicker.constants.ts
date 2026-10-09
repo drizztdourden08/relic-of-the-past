@@ -1,5 +1,5 @@
 /* @layer site-kit @kind constants */
-import type { SelectOption } from '@ds/primitives/Select';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 
 const NO_ROLE: SelectOption = { value: '', label: 'No Discord role' };
 

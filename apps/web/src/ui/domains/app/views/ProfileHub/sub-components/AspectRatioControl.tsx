@@ -4,10 +4,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { validateCustomRatio, detectScreenRatio, screenReadout, viewportReadout, niceRatio, effectiveCustomRatio } from '@app/lib/game/aspect-ratio';
 import type { RatioReadout } from '@app/lib/game/aspect-ratio';
 import { useSafeAreaInsets } from '@app/hooks/useSafeAreaInsets';
-import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { Stepper } from '../../../../../design-system/primitives/Stepper';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { SegmentedControl, NumberInput, Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { AspectRatioControlProps } from './AspectRatioControl.type';
 import './AspectRatioControl.css';
 
@@ -113,9 +110,9 @@ const AspectRatioControl = (props: AspectRatioControlProps) => {
       {value === 'custom' && (
         <Box className="aspect-ratio-control__custom">
           <Box className="aspect-ratio-control__fields">
-            <Stepper ariaLabel="Ratio width" min={1} step={1} value={w} onChange={handleWidth} />
+            <NumberInput buttons="sides" aria-label="Ratio width" min={1} step={1} value={w} onChange={handleWidth} />
             <Text className="aspect-ratio-control__sep">:</Text>
-            <Stepper ariaLabel="Ratio height" min={1} step={1} value={h} onChange={handleHeight} />
+            <NumberInput buttons="sides" aria-label="Ratio height" min={1} step={1} value={h} onChange={handleHeight} />
           </Box>
           {!check.valid && <Text className="aspect-ratio-control__error">{check.error}</Text>}
         </Box>

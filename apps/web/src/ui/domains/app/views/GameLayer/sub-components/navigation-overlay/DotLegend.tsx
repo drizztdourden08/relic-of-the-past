@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
-import { Text } from '@ds/primitives/Text';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { CollapsiblePanel } from './CollapsiblePanel';
 import { LegendSwatch } from './sub-components/LegendSwatch';
 import { LegendRow } from './sub-components/LegendRow';
@@ -19,7 +19,7 @@ const DotLegend = () => {
     <CollapsiblePanel title="dots">
       <Text style={S.head}>ring shows the layer</Text>
       <LegendRow><LegendSwatch color="var(--c-info)" ring /><Text style={S.dim}>ground</Text></LegendRow>
-      <LegendRow><LegendSwatch color="var(--c-gold)" ring /><Text style={S.dim}>above</Text></LegendRow>
+      <LegendRow><LegendSwatch color="var(--c-primary)" ring /><Text style={S.dim}>above</Text></LegendRow>
       <LegendRow><LegendSwatch color="#000" ring /><Text style={S.dim}>both layers</Text></LegendRow>
 
       <Text style={S.head}>fill shows the flood result</Text>

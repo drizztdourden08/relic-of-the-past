@@ -1,13 +1,6 @@
 /* @layer renderer-components @kind component */
 import '../HudLayoutEditor.content.css';
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
-import { Select } from '@ds/primitives/Select';
-import { Text } from '@ds/primitives/Text';
-import { Toggle } from '@ds/primitives/Toggle';
+import { Box, Field, Flex, NumberInput, SegmentedControl, Select, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import { FontPicker } from '../FontPicker';
 import { PaintField } from '../PaintField';
 import { ValueField } from '../ValueField';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { SegmentOption } from '@ds/primitives/SegmentedControl';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import { MODE_LABELS } from '../../behavior/layer-ops';
 import type { PlayModeKind } from '../../behavior/layer-ops';
 import type { LoopOrder } from './PlayModeFields.type';

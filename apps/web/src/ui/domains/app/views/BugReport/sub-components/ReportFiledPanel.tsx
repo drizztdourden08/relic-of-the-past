@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button, Text } from '@ds/primitives';
+import { Button, Text } from '@drizztdourden08/tessera/primitives';
 import type { ReportFiledPanelProps } from '../BugReportDialog.type';
 
 const ReportFiledPanel = (props: ReportFiledPanelProps) => {

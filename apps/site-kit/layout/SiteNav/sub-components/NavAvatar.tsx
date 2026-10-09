@@ -1,6 +1,6 @@
 /* @layer site-kit @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Image } from '@ds/primitives/Image';
+import { Image } from '@drizztdourden08/tessera/primitives';
 import type { NavAvatarProps } from './NavAvatar.type';
 import './NavAvatar.css';
 

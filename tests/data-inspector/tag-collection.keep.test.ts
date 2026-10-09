@@ -7,8 +7,8 @@ import {
 } from '../../apps/web/src/ui/domains/app/views/DataInspector/DataInspector.constants';
 import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
 import { resolveIdRef } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-target';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {

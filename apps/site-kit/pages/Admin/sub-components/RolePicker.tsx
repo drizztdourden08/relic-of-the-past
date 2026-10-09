@@ -1,7 +1,7 @@
 /* @layer site-kit @kind component */
 import { useCallback, useMemo } from 'react';
-import { Select } from '@ds/primitives/Select';
-import type { SelectOption } from '@ds/primitives/Select';
+import { Select } from '@drizztdourden08/tessera/primitives';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import { RoleName } from '../../../components/RoleName/RoleName';
 import { NO_ROLE } from './RolePicker.constants';
 import type { RolePickerProps } from './RolePicker.type';

@@ -1,7 +1,5 @@
 /* @layer site-kit @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { TagListProps } from './TagList.type';
 import './TagList.css';
 

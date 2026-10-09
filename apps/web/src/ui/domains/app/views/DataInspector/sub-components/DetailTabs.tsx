@@ -1,8 +1,8 @@
 /* @layer renderer-app @kind component */
 import { useCallback, useMemo } from 'react';
-import { Box, ScrollArea, TabBar, Text } from '@ds/primitives';
-import { CodeBlock } from '@ds/composites/CodeBlock';
-import type { DetailTab } from '@ds/data';
+import { Box, ScrollArea, Tabs, Text } from '@drizztdourden08/tessera/primitives';
+import { CodeBlock } from '@drizztdourden08/tessera/composites';
+import type { DetailTab } from '@drizztdourden08/tessera/data';
 import { DETAIL_TABS, NOTHING_SELECTED } from '../DataInspector.constants';
 import type { DetailTabsProps } from '../DataInspector.type';
 import { doNothing } from '../behavior/do-nothing';
@@ -27,7 +27,7 @@ const DetailTabs = (props: DetailTabsProps) => {
 
   return (
     <Box className="data-inspector__detail">
-      <TabBar tabs={DETAIL_TABS} activeTab={tab} onTabChange={handleTabChange} />
+      <Tabs tabs={DETAIL_TABS} activeTab={tab} onTabChange={handleTabChange} />
       <ScrollArea className="data-inspector__detail-content" onScroll={onScroll} scrollTo={scrollTo}>
         {tab === 'editor'
           ? (editorSlot ?? (

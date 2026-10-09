@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { Text } from '@ds/primitives/Text';
+import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import { previewTotals } from './behavior/preview-totals';
 import { CandidateRow } from './sub-components/CandidateRow';

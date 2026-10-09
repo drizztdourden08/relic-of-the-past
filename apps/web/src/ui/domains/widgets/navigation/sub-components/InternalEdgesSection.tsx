@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { ConnectionInfo } from '@shared/game/navigation';
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import { IL } from './InternalEdgesSection.constants';
@@ -43,7 +43,7 @@ const InternalEdgesSection = (props: InternalEdgesSectionProps) => {
                 <Box style={S.cardGraphic}>
                   <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
                 </Box>
-                <Text style={{ fontSize: 8, color: conn.layerToggle ? 'var(--c-info)' : 'var(--c-green)', marginTop: 2 }}>
+                <Text style={{ fontSize: 8, color: conn.layerToggle ? 'var(--c-info)' : 'var(--c-secondary)', marginTop: 2 }}>
                   {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
                 </Text>
               </Box>

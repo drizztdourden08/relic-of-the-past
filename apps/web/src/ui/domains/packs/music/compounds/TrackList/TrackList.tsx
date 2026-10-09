@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, EmptyState, Text } from '@ds/primitives';
+import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { SlotSection } from './sub-components/SlotSection';
 import { packSummary, soundRows, summaryText, trackRows } from './behavior/track-list-model';
 import type { TrackListProps } from './TrackList.type';

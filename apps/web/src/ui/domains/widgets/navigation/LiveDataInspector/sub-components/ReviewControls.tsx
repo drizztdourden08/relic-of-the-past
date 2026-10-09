@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
-import { Box, Select, Text, Textarea } from '@ds/primitives';
+import { Box, Select, Text, Textarea } from '@drizztdourden08/tessera/primitives';
 import { RECORD_WRITERS } from '@app/ui/domains/app/views/DataInspector/behavior/record-writers';
 import type { ReviewMark, ReviewStatus } from '@shared/game/data';
 import type { InspectorRow } from '@app/ui/domains/app/views/DataInspector/DataInspector.type';

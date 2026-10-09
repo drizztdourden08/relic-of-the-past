@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { ButtonRow } from '@ds/primitives/ButtonRow';
-import { EmptyState } from '@ds/primitives/EmptyState';
-import { SectionHeader } from '@ds/primitives/SectionHeader';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, ButtonRow, EmptyState, SectionHeader, Text } from '@drizztdourden08/tessera/primitives';
 import { useLayerEditor } from './behavior/useLayerEditor';
 import { LayerCard } from './sub-components/LayerCard';
 import { useFileLoopSamples } from './behavior/useFileLoopSamples';

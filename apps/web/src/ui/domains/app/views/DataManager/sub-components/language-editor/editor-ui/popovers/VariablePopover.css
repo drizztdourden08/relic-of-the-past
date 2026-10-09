@@ -28,5 +28,5 @@
 
 .variable-popover__row-lock {
   flex: none;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }

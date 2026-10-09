@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { resolveClick } from '../../apps/web/src/ui/design-system/primitives/SegmentedControl/behavior/resolve-click';
+import { resolveClick } from '@drizztdourden08/tessera/primitives';
 
 describe('what resolveClick makes of re-clicking a segment', () => {
   it('deselects only when the active segment is clicked again and a handler was wired', () => {

@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { TileTooltipContentProps } from './tooltip.type';
 import { S } from './styles';
 import { LayerBlock } from './layer-panels';
@@ -25,7 +24,7 @@ const TileTooltipContent = ({ tooltip }: TileTooltipContentProps) => {
       {layers.mode === 'locked' && (
         <LayerBlock
           name={layers.lockedLayer === 0 ? ABOVE_HEADING : GROUND_HEADING}
-          nameColor={layers.lockedLayer === 0 ? 'var(--c-gold)' : 'var(--c-info)'}
+          nameColor={layers.lockedLayer === 0 ? 'var(--c-primary)' : 'var(--c-info)'}
           data={layers.primary}
           locked
         />

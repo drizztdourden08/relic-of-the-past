@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '@ds/primitives/Box';
-import { Image } from '@ds/primitives/Image';
+import { Box, Image } from '@drizztdourden08/tessera/primitives';
 import { mediaUrl } from '../../api/media-url';
 import { itemColorStyle } from '../../lib/item-color-style';
 import { KIND_ICONS } from '../../lib/kinds/kinds.constants';

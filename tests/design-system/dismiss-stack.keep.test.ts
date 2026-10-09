@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   dismissStackDepth, pushDismissable, topDismissLevel,
-} from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/dismiss-stack';
+} from '@drizztdourden08/tessera/primitives';
 
 const remove: (() => void)[] = [];
 

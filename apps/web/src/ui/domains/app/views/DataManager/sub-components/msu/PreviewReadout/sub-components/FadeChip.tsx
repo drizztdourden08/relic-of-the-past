@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { ProgressBar } from '@ds/primitives/ProgressBar';
-import { Text } from '@ds/primitives/Text';
+import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import type { FadeChipProps } from '../PreviewReadout.type';
 
 const FadeChip = (props: FadeChipProps) => {
@@ -15,7 +13,7 @@ const FadeChip = (props: FadeChipProps) => {
         value={fade.fill}
         max={1}
         live
-        variant={fade.kind === 'in' ? 'green' : 'gold'}
+        tone={fade.kind === 'in' ? 'secondary' : 'primary'}
       />
     </Box>
   );

@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
-import { Box, RangeSlider, Select, Slider, Text } from '@ds/primitives';
+import { Box, RangeSlider, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { JumpChipsEditor } from '../../JumpChipsEditor';
 import { LadderReadout } from './LadderReadout';
 import { RowLine } from './RowLine';
 import { itemsLabel } from '../behavior/items-label';
-import type { SelectGroup } from '@ds/primitives';
+import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
 import type { CapacityRowState, LadderControlsProps } from '../CapacityFamilyRow.type';
 
 const LadderControls = (props: LadderControlsProps) => {

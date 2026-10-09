@@ -16,13 +16,13 @@
 
 .preview-view__advance {
   display: inline-flex;
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   user-select: none;
 }
 
 .preview-view__advance:focus-visible {
-  outline: var(--border-width-thick) solid var(--c-gold);
+  outline: var(--border-width-thick) solid var(--c-primary);
   outline-offset: var(--space-2xs);
 }
 
@@ -45,7 +45,7 @@
 }
 
 .preview-prompt__action {
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-weight: var(--weight-semi);
 }
 

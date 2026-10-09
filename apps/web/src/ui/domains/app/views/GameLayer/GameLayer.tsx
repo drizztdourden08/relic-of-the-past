@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useMemo, useState } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Canvas } from '../../../../design-system/primitives/Canvas';
+import { Box, Text, Canvas } from '@drizztdourden08/tessera/primitives';
 import { useGameState } from './behavior/useGameState';
 import type { EdgeGlowRenderer } from '../../../../../lib/game/edge-glow';
 import type { ShadowRenderer } from '../../../../../lib/game/shadow-casting';

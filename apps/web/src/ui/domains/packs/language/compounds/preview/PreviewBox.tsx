@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { ROWS_PER_BOX } from '@shared/game/language';
 import { ChoiceCursor } from './ChoiceCursor';
 import { GlyphRow } from './GlyphRow';

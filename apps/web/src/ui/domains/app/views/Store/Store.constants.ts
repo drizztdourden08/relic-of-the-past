@@ -5,13 +5,13 @@ import homeIcon from '@iconify-icons/lucide/home';
 import gridIcon from '@iconify-icons/lucide/layout-grid';
 import packageCheckIcon from '@iconify-icons/lucide/package-check';
 import updateIcon from '@iconify-icons/lucide/refresh-cw';
-import type { SectionNavConfig } from '@ds/composites/SectionNav';
+import type { SideNavConfig } from '@drizztdourden08/tessera/composites';
 import { STORE_SITE_HOST } from '@app/lib/store/store-site';
 import { KIND_ICONS } from '../../compounds/StoreItemCard';
 import type { HubAccountCopy } from '../../compounds/HubAccountCard';
 import type { CatalogState, InstallJob, StoreSection } from './Store.type';
 
-const STORE_NAV: SectionNavConfig = {
+const STORE_NAV: SideNavConfig = {
   home: { id: 'home', label: 'Home', icon: createElement(IconifyIcon, { icon: homeIcon }) },
   groups: [
     {

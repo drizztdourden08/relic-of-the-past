@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, RangeInput, SegmentedControl, Text } from '@ds/primitives';
+import { Box, Button, RangeInput, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
 import { VIEW_OPTIONS, MIN_SCALE, MAX_SCALE } from '../../SpriteSheetViewer.constants';
 import type { ViewerControlsProps } from '../../SpriteSheetViewer.type';
 

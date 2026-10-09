@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useMemo } from 'react';
-import { Canvas } from '../../../../../../design-system/primitives/Canvas';
+import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';

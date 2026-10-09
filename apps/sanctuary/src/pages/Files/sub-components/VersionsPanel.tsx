@@ -1,9 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
-import { DropZone } from '@ds/primitives/DropZone';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { Dialog } from '@ds/composites/Dialog';
+import { DropZone, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Dialog } from '@drizztdourden08/tessera/composites';
 import { nextVersionNumber, versionLabel, versionsNewestFirst } from '../../../files/file-versions';
 import { VersionRow } from './VersionRow';
 import type { VersionsPanelProps } from './VersionsPanel.type';

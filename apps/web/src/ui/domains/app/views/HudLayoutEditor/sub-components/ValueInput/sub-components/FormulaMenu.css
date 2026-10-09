@@ -30,7 +30,7 @@
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .hud-formula-menu__row {

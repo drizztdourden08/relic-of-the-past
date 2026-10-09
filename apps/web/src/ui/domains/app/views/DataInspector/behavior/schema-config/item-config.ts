@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind data */
-import type { SchemaConfig } from '@ds/data';
+import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 
 const ITEM_CONFIG: SchemaConfig = {
   defaultColumns: ['id', 'name', 'category', 'origin', 'tier'],

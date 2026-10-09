@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { EmptyState } from '../../../../../../design-system/primitives/EmptyState';
-import { SearchSpark } from '../../../../../../design-system/composites/SearchSpark';
+import { Box, Text, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { SearchSpark } from '@drizztdourden08/tessera/composites';
 import { matchTabs } from './match-tabs';
 import { HubSearchTabChip } from './HubSearchTabChip';
 import { HubSearchGroup } from './HubSearchGroup';

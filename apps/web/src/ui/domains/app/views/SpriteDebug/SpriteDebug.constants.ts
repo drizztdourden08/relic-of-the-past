@@ -35,7 +35,7 @@ const S: Record<string, React.CSSProperties> = {
   },
   catTabActive: {
     background: 'var(--c-selected)',
-    color: 'var(--c-gold-bright)',
+    color: 'var(--c-primary-bright)',
   },
   stats: {
     display: 'flex',
@@ -59,8 +59,8 @@ const S: Record<string, React.CSSProperties> = {
   },
   filterBtnActive: {
     background: 'var(--c-selected)',
-    borderColor: 'var(--c-gold)',
-    color: 'var(--c-gold-bright)',
+    borderColor: 'var(--c-primary)',
+    color: 'var(--c-primary-bright)',
   },
   resetBtn: {
     padding: '3px 10px',
@@ -172,7 +172,7 @@ const MODES = [
 ];
 
 const LABEL_STYLES: Record<string, React.CSSProperties> = {
-  good: { color: 'var(--c-green-bright)' },
+  good: { color: 'var(--c-secondary-bright)' },
   warn: { color: 'var(--c-warning)' },
   dim: { color: 'var(--c-text-dim)' },
   danger: { color: 'var(--c-danger)' },

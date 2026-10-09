@@ -1,7 +1,5 @@
 /* @layer store-site @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { HookshopHighlight } from '@domains/app/compounds/HookshopHighlight';
 import { Markdown } from '../../../components/Markdown/Markdown';
 import { HIGHLIGHT_PIXEL } from './Welcome.constants';

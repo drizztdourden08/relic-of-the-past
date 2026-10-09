@@ -3,9 +3,9 @@ import {
   describe, it, expect, vi, beforeEach, afterEach,
 } from 'vitest';
 import { all } from '@shared/game/data';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { buildSchema } from '@drizztdourden08/tessera/data';
 import type * as TableViewModule from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/use-table-view';
-import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 
 const screens = all('screen') as readonly Record<string, unknown>[];
 

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Flex, IconButton } from '@ds/primitives';
-import { CompactRecordView } from '@ds/composites/CompactRecordView';
+import { Box, Flex, IconButton } from '@drizztdourden08/tessera/primitives';
+import { CompactRecordView } from '@drizztdourden08/tessera/composites';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import type { ReviewMark } from '@shared/game/data';
 import { EDIT_LABEL } from '../LiveDataInspector.constants';

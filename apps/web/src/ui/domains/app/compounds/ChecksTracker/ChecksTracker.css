@@ -44,7 +44,7 @@
   flex-shrink: 0;
 }
 
-.tracker-status-icon--completed { color: var(--c-green); }
+.tracker-status-icon--completed { color: var(--c-secondary); }
 .tracker-status-icon--reachable { color: var(--c-warning); }
 .tracker-status-icon--blocked   { color: var(--c-text-muted); }
 .tracker-status-icon--total     { color: var(--c-text-dim); }

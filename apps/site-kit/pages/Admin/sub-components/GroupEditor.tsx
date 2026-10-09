@@ -2,12 +2,7 @@
 import { Fragment, useState } from 'react';
 import type { GroupRights } from '@shared/hub/group-types';
 import { createGroupSchema } from '@shared/hub/schemas/group-schemas';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Button, Field, Flex, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { RightsEditorSlot } from '../../../site/site-definition.type';
 import { RolePicker } from './RolePicker';
 import { GROUP_NAME_MAX_CHARS, ROLE_HINT } from './GroupEditor.constants';

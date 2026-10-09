@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, IconButton, Text } from '@ds/primitives';
+import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { FilePlayer } from '../../../FilePlayer';
 import type { SlotFileProps } from '../../TrackList.type';
 

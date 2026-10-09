@@ -1,7 +1,7 @@
 /* @layer tests @kind helper */
 import '../../../apps/web/src/ui/design-system/composites/field-kits';
-import { getFieldTester } from '../../../apps/web/src/ui/design-system/data/filter/tester-registry';
-import type { FieldKind } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { getFieldTester } from '@drizztdourden08/tessera/data';
+import type { FieldKind } from '@drizztdourden08/tessera/data';
 
 const testerFor = (kind: FieldKind) => {
   const tester = getFieldTester(kind);

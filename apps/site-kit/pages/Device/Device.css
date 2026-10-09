@@ -4,6 +4,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xl);
   letter-spacing: var(--code-tracking);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   text-transform: uppercase;
 }

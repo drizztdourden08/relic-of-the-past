@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Flex } from '@ds/primitives/Flex';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
-import { Text } from '@ds/primitives/Text';
-import { Toggle } from '@ds/primitives/Toggle';
-import { SpritePicker } from '@ds/composites/SpritePicker';
+import { Flex, SegmentedControl, Text, Toggle } from '@drizztdourden08/tessera/primitives';
+import { SpritePicker } from '@drizztdourden08/tessera/composites';
 import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@shared/game/data/sprite-manifest/manifest';
 import { glyphArtUrl } from '../behavior/glyph-art';
 import { spriteLabel, spriteUrl } from '../behavior/node-art';

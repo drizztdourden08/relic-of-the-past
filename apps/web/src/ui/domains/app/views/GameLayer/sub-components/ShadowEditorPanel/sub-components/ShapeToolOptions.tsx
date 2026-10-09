@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../../../../../stores/shadow-editor-store';
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../../design-system/primitives/Text';
-import { SegmentedControl } from '../../../../../../../design-system/primitives/SegmentedControl';
-import { Slider } from '../../../../../../../design-system/primitives/Slider';
+import { Box, Text, SegmentedControl, Slider } from '@drizztdourden08/tessera/primitives';
 import { HeightLevelPicker } from '../../shadow-editor/HeightLevelPicker';
 import { POLYGON_OPTIONS } from '../ShadowEditorPanel.constants';
 

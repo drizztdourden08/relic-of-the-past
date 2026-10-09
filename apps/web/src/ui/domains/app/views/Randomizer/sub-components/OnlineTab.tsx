@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useSearchStore } from '@app/stores/search-store';
 import { OnlineSettings } from '../../ProfileHub/sub-components';
 import type { OnlineTabProps } from './OnlineTab.type';

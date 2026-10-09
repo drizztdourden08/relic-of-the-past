@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind data */
-import type { SchemaConfig } from '@ds/data';
+import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 
 const ACTOR_CONFIG: SchemaConfig = {
   defaultColumns: ['id', 'name', 'kind', 'effect'],

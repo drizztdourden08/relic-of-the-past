@@ -1,9 +1,5 @@
 /* @layer store-site @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { KIND_CONTAINER } from '@shared/store/containers';
 import { Chip } from '@site-kit/components/Chip/Chip';
 import { Link } from '@site-kit/router/Link';

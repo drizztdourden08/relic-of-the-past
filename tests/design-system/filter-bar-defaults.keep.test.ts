@@ -1,10 +1,10 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { defaultOperatorFor, findOperator, operatorsFor } from '../../apps/web/src/ui/design-system/data/filter/operators';
+import { defaultOperatorFor, findOperator, operatorsFor } from '@drizztdourden08/tessera/data';
 import {
   createClauseForField, defaultValueForArity, valueForOperatorChange,
-} from '../../apps/web/src/ui/design-system/composites/FilterBar/behavior/filter-clause-defaults';
-import type { FieldDescriptor, FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+} from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor, FieldKind } from '@drizztdourden08/tessera/data';
 
 const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({
   path: 'sample.path', label: 'Sample', kind, optional: false, ...extra,

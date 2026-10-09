@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Select, Slider, Text } from '@ds/primitives';
+import { Box, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { ShopSlotCount } from './sub-components/ShopSlotCount';

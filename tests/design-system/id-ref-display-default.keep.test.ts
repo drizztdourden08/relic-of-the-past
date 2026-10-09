@@ -3,13 +3,13 @@ import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import {
   substituteDisplay,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/display-substitution';
+} from '@drizztdourden08/tessera/composites';
 import { defaultIdRefDisplay, entityKindFromId } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-links';
 import type * as DataRowModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/DataRow';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 type InspectorLikeRow = Record<string, unknown>;

@@ -26,7 +26,7 @@
 }
 
 .msu-import__url-input:focus {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .msu-import__url-input::placeholder {
@@ -51,8 +51,8 @@
 }
 
 .msu-import__download-btn:hover:not(:disabled) {
-  background: var(--c-gold-dim);
-  border-color: var(--c-gold);
+  background: var(--c-primary-dim);
+  border-color: var(--c-primary);
 }
 
 .msu-import__download-btn:disabled {
@@ -71,7 +71,7 @@
 }
 
 .msu-import__status--success {
-  color: var(--c-green);
+  color: var(--c-secondary);
 }
 
 .msu-import__divider {

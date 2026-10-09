@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { Dialog } from '../../../../../../design-system/composites/Dialog';
-import { TextInput } from '../../../../../../design-system/primitives/TextInput';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Box } from '../../../../../../design-system/primitives/Box';
+import { Dialog } from '@drizztdourden08/tessera/composites';
+import { TextInput, Text, Box } from '@drizztdourden08/tessera/primitives';
 import { IMPORT_CONFIRM_WORD, SAVE_NAME_MAX_LENGTH } from './home-tab.constants';
 import type { HomeTabDialogsProps } from './home-tab.type';
 import './HomeTabDialogs.css';

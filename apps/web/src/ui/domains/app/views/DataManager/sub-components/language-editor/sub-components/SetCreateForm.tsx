@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Button, ButtonRow, Field, Select, TextInput } from '@ds/primitives';
+import { Box, Button, ButtonRow, Field, Select, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { SetCreateFormProps } from './SetCreateForm.type';
 import './SetCreateForm.css';
 

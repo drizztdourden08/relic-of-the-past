@@ -33,7 +33,7 @@
 }
 
 .store__title {
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-size: var(--text-xl);
   font-weight: var(--weight-semi);
 }
@@ -89,7 +89,7 @@
   flex-shrink: 0;
 }
 
-.store-browse.master-detail {
+.store-browse.list-detail-layout {
   grid-template-columns: 1fr var(--store-detail-w);
 }
 
@@ -104,12 +104,12 @@
 
 .store-detail__icon {
   display: inline-flex;
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-size: var(--text-display);
 }
 
 .store-detail__name {
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-size: var(--text-lg);
   font-weight: var(--weight-semi);
 }
@@ -144,7 +144,7 @@
 
 .store-sign-in .store-sign-in__title {
   margin: 0;
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-family: var(--font-game);
   font-size: var(--text-2xl);
   font-weight: var(--weight-normal);
@@ -156,9 +156,9 @@
 
 .store-sign-in__callout {
   padding: var(--space-sm) var(--space-md);
-  border: var(--border-width-thin) solid var(--c-gold);
+  border: var(--border-width-thin) solid var(--c-primary);
   border-radius: var(--radius-md);
-  background: var(--c-gold-soft);
+  background: var(--c-primary-soft);
   color: var(--c-text);
 }
 

@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
-import { Select } from '@ds/primitives/Select';
-import { Text } from '@ds/primitives/Text';
-import { Toggle } from '@ds/primitives/Toggle';
+import { Box, Button, Field, SegmentedControl, Select, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import { cyclePosition } from '@shared/hud/engine';
 import { resolveValue } from '@shared/hud/data';
 import { useMotionPreview } from '../../behavior/motion-preview';

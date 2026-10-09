@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useMemo, useState } from 'react';
-import { Box } from '@ds/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { stateFor } from '@shared/game/data/native-tables/player-pose-atlas';
 import { resolvePalette } from '@app/lib/game/player-sheet/resolve-palette';
 import { useWearing } from '../../behavior/useWearing';

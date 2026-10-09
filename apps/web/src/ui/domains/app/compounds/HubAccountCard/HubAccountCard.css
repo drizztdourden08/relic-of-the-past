@@ -17,14 +17,14 @@
   font-family: var(--font-mono);
   font-size: var(--text-2xl);
   letter-spacing: 0.05em;
-  color: var(--c-gold);
+  color: var(--c-primary);
   user-select: text;
 }
 
 .hub-account__avatar {
   width: var(--avatar-d);
   height: var(--avatar-d);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -33,7 +33,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--c-gold-dim);
+  background: var(--c-primary-dim);
   color: var(--c-text);
   font-weight: var(--weight-semi);
 }

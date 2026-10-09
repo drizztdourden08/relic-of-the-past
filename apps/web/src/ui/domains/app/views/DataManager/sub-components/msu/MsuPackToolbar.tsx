@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Button, Field, Flex, TextInput } from '@drizztdourden08/tessera/primitives';
 import { HINT, INSTALLED_HINT } from './MsuPackToolbar.constants';
 import type { MsuPackToolbarProps } from './MsuPackToolbar.type';
 

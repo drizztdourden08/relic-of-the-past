@@ -5,7 +5,7 @@
   padding: var(--space-sm) 0;
   background: var(--c-inset);
   border: 1px solid var(--c-hairline);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   line-height: 1.6;
@@ -108,10 +108,10 @@
   overflow-wrap: anywhere;
 }
 
-.sim-log__tag--seq      { color: var(--c-gold-bright); }
+.sim-log__tag--seq      { color: var(--c-primary-bright); }
 
 .sim-log__msg--seq {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
 }
@@ -136,18 +136,18 @@
 
 .sim-log__tag--flood    { color: var(--c-info); }
 .sim-log__msg--flood    { color: var(--c-info); }
-.sim-log__tag--reset    { color: var(--c-gold-bright); }
-.sim-log__msg--reset    { color: var(--c-gold); }
-.sim-log__tag--check    { color: var(--c-green); }
-.sim-log__msg--check    { color: var(--c-green-dim); }
-.sim-log__tag--item     { color: var(--c-gold-bright); }
-.sim-log__msg--item     { color: var(--c-gold); }
+.sim-log__tag--reset    { color: var(--c-primary-bright); }
+.sim-log__msg--reset    { color: var(--c-primary); }
+.sim-log__tag--check    { color: var(--c-secondary); }
+.sim-log__msg--check    { color: var(--c-secondary-dim); }
+.sim-log__tag--item     { color: var(--c-primary-bright); }
+.sim-log__msg--item     { color: var(--c-primary); }
 .sim-log__tag--move     { color: var(--c-text-muted); }
 .sim-log__msg--move     { color: var(--c-text-dim); }
-.sim-log__tag--unlock   { color: var(--c-gold-bright); }
-.sim-log__msg--unlock   { color: var(--c-gold-bright); }
-.sim-log__tag--outcome  { color: var(--c-green-bright); }
-.sim-log__msg--outcome  { color: var(--c-green-bright); }
+.sim-log__tag--unlock   { color: var(--c-primary-bright); }
+.sim-log__msg--unlock   { color: var(--c-primary-bright); }
+.sim-log__tag--outcome  { color: var(--c-secondary-bright); }
+.sim-log__msg--outcome  { color: var(--c-secondary-bright); }
 .sim-log__tag--discover { color: var(--c-info-dim); }
 .sim-log__msg--discover { color: var(--c-text); }
 .sim-log__tag--info     { color: var(--c-text-muted); }

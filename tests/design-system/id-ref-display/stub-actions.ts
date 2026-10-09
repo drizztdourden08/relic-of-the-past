@@ -2,7 +2,7 @@
 import { vi } from 'vitest';
 import type {
   ColumnActions,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
+} from '@drizztdourden08/tessera/composites';
 
 const stubActions = (): ColumnActions => ({
   onToggleSort: vi.fn(), onSortDir: vi.fn(), onRemoveSort: vi.fn(), onAddColumnAt: vi.fn(),

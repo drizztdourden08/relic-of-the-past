@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { ViewSnapshot } from '@ds/data';
+import type { ViewSnapshot } from '@drizztdourden08/tessera/data';
 
 const viewCache: {
   map: Record<string, ViewSnapshot> | null;

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text } from '@ds/primitives';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { useAssetsOutOfDate, useGameAssetsStore } from '@app/stores/game-assets-store';
 import './StaleGameNotice.css';
 

@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { hex } from '../hid-analysis';
 import { ByteChangeDot } from './ByteChangeDot';
 import { rampColor } from './ramp-color';

@@ -2,17 +2,8 @@
 import {
   describe, it, expect, vi, beforeEach, afterEach,
 } from 'vitest';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import { defaultOperatorFor } from '../../apps/web/src/ui/design-system/data/filter/operators';
-import {
-  beginDurableLoad, createLoadGuard,
-} from '../../apps/web/src/ui/design-system/data/view-state/durable-load';
-import { capture } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import type { LoadGuard } from '../../apps/web/src/ui/design-system/data/view-state/durable-load';
-import type { TableState, ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
+import { buildSchema, createSchemaIndex, createClause, defaultOperatorFor, beginDurableLoad, createLoadGuard, capture } from '@drizztdourden08/tessera/data';
+import type { FilterClause, LoadGuard, TableState, ViewKey, ViewSnapshot, TableColumn } from '@drizztdourden08/tessera/data';
 
 const KEY = 'data-inspector-query:screen' as ViewKey;
 const OTHER_KEY = 'data-inspector-query:check' as ViewKey;

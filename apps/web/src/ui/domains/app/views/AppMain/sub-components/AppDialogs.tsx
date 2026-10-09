@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Dialog } from '@ds/composites/Dialog';
+import { Dialog } from '@drizztdourden08/tessera/composites';
 import { BootProgressBar } from '../../BootProgressBar';
 import { UpdateDialog } from '../../../compounds/UpdateDialog';
 import { BugReportDialog } from '../../BugReport';

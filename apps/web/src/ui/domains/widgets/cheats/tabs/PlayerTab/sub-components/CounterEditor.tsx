@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '@ds/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { HudSprite } from '@domains/hud';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useHudSettingsStore } from '@app/stores/hud-settings-store';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '@ds/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { LockedRowsSection } from './LockedRowsSection';
 import type { UpcomingTabBodyProps } from './UpcomingTabBody.type';
 

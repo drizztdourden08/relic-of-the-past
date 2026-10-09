@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '@ds/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag, choiceLabelOf, rangeLabelOf, stepsLabelOf } from '../../OptionValueTag';
 import { RowLine } from './RowLine';
 import { itemsLabel } from '../behavior/items-label';

@@ -6,7 +6,7 @@ const S: Record<string, CSSProperties> = {
     position: 'absolute',
     background: 'var(--c-glass)',
     border: '1px solid var(--c-border-strong)',
-    borderRadius: 'var(--r-sm)',
+    borderRadius: 'var(--radius-sm)',
     padding: '5px 8px',
     boxShadow: 'var(--shadow-2)',
     pointerEvents: 'none',
@@ -34,7 +34,7 @@ const S: Record<string, CSSProperties> = {
   dim: { color: 'var(--c-text-dim)' },
   text: { color: 'var(--c-text)' },
   warning: { color: 'var(--c-warning)' },
-  gold: { color: 'var(--c-gold)' },
+  gold: { color: 'var(--c-primary)' },
   danger: { color: 'var(--c-danger)' },
 };
 

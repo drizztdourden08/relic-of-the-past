@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Button } from '@ds/primitives';
-import { DashboardPanel, StatTileGrid } from '@ds/composites';
+import { Button } from '@drizztdourden08/tessera/primitives';
+import { DashboardPanel, StatTileGrid } from '@drizztdourden08/tessera/composites';
 import { settingTilesOf } from '../behavior/setting-tiles';
 import type { SettingsSummaryProps } from './SettingsSummary.type';
 

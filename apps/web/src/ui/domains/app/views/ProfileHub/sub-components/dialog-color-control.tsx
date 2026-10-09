@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
-import { Flex } from '../../../../../design-system/primitives/Flex';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { ColorSwatch } from '../../../../../design-system/primitives/ColorSwatch';
-import { ColorPickerPopover } from '../../../../../design-system/composites/ColorPickerPopover';
+import { Flex, Text, ColorSwatch } from '@drizztdourden08/tessera/primitives';
+import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import type { DialogColorControlProps } from './settings-controls.type';
 import './dialog-color-control.css';
 

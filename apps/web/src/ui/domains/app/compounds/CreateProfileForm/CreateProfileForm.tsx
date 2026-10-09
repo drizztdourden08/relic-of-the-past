@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '../../../../design-system/primitives/Box';
-import { Flex } from '../../../../design-system/primitives/Flex';
-import { Button } from '../../../../design-system/primitives/Button';
-import { TextInput } from '../../../../design-system/primitives/TextInput';
-import { Select } from '../../../../design-system/primitives/Select';
+import { Box, Flex, Button, TextInput, Select } from '@drizztdourden08/tessera/primitives';
 import './CreateProfileForm.css';
 import { type CreateProfileFormProps } from './CreateProfileForm.type';
 

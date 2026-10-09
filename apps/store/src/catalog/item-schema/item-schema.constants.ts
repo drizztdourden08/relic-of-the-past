@@ -1,5 +1,5 @@
 /* @layer store-site @kind constants */
-import type { SchemaConfig } from '@ds/data/schema/field-descriptor';
+import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 import type { ItemRow } from '../item-row.type';
 import type { ItemSort } from './item-schema.type';
 import { sampleRow } from './sample-row';

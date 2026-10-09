@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { HookshopChip } from '@domains/app/compounds/HookshopChip';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { IconButton } from '../../../../../design-system/primitives/IconButton';
-import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
-import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
+import { Box, IconButton, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { LanguageSetListProps } from './LanguageSetList.type';
 
 const LanguageSetList = (props: LanguageSetListProps) => {

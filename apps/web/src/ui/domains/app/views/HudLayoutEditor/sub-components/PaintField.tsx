@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Select } from '@ds/primitives/Select';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Field, Flex, IconButton, Select, TextInput } from '@drizztdourden08/tessera/primitives';
 import { ColorField } from './ColorField';
 import { GradientRamp } from './GradientRamp';
 import { ValueField } from './ValueField';

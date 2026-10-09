@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
 import reviewIcon from '@iconify-icons/lucide/clipboard-check';
-import { Flex } from '@ds/primitives/Flex';
-import { Text } from '@ds/primitives/Text';
+import { Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
 import { Link } from '@site-kit/router/Link';
 import { PackContentsPanel } from '../../components/PackContentsPanel/PackContentsPanel';

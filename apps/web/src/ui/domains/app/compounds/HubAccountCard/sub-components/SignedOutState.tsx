@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button, Flex, Stack, Text } from '@ds/primitives';
+import { Button, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { SignedOutStateProps } from '../HubAccountCard.type';
 
 const SignedOutState = (props: SignedOutStateProps) => {

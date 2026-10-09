@@ -4,7 +4,7 @@ import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { VANILLA_TRACK_COUNT } from '@shared/types/msu-manifest';
 import { DELUXE_TRACKS } from '@shared/game/data/msu-deluxe-remap';
 import { detectMsuPackProfile } from '@shared/features/msu-auto-config';
-import type { SelectOption } from '@ds/primitives/Select';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import { msuTrackName } from '@shared/game/data/msu-track-names';
 import { extensionOf } from './track-file-name';

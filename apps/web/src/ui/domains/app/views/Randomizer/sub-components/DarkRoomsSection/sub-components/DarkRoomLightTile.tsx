@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Checkbox, Image } from '@ds/primitives';
+import { Box, Checkbox, Image } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag } from '@domains/app/compounds/OptionValueTag';
 import type { DarkRoomLightTileProps } from './DarkRoomLightTile.type';
 import './DarkRoomLightTile.css';

@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { ProgressBar } from '@ds/primitives/ProgressBar';
-import { Text } from '@ds/primitives/Text';
+import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import { FadeChip } from './FadeChip';
 import type { MeterRowProps } from '../PreviewReadout.type';
 
@@ -18,7 +16,7 @@ const MeterRow = (props: MeterRowProps) => {
           secondaryValue={row.introFill ?? undefined}
           max={1}
           live
-          variant={row.kind === 'next' ? 'gold' : 'green'}
+          tone={row.kind === 'next' ? 'primary' : 'secondary'}
         />
       )}
       <Text className="layer-meter__label">{row.label}</Text>

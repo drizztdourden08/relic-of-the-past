@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
 import { STRUCTURE_MODES } from '@shared/game/language';
 import type { StructureMode } from '@shared/game/language';
-import type { SegmentOption } from '@ds/primitives';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 
 const STRUCTURE_WORDS: Record<StructureMode, string> = {
   continuous: 'Continuous',

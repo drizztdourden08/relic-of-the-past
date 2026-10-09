@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind component */
 import './HudLayoutEditor.motion.css';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Field, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
 import {
   DEFAULT_STEPS, MIN_STEPS, NAMED_EASINGS, stepsCountOf, stepsName,
 } from '../behavior/easing-curves';

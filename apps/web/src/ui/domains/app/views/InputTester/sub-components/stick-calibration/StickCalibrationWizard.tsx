@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { CalibrationHeader, CalibrationStepIndicator } from '../calibration-parts';
 import { STICK_STEPS, STICK_WIZARD_STYLE } from './stick-calibration.constants';
 import type { StickCalibrationWizardProps } from './stick-calibration.type';

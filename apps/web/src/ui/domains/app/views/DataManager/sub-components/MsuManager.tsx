@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
 import { ImportForm } from './ImportForm';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
+import { Text } from '@drizztdourden08/tessera/primitives';
+import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { canTrashMsuPack, deleteMsuPack } from '@app/lib/storage/msu-store';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@domains/app/views/InstalledOriginBar';
@@ -100,7 +100,7 @@ const MsuManager = (props: MsuManagerProps) => {
         />
       );
 
-  return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
+  return <ListDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
 };
 
 export { MsuManager };

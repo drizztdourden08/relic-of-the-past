@@ -2,9 +2,9 @@
 import { describe, it, expect } from 'vitest';
 import {
   columnDragShift, dropEdgeAt,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/column-drag-shift';
-import { reorderColumn } from '../../../apps/web/src/ui/design-system/data/table/column-ops';
-import type { TableColumn } from '../../../apps/web/src/ui/design-system/data/table/types';
+} from '@drizztdourden08/tessera/composites';
+import { reorderColumn } from '@drizztdourden08/tessera/data';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 
 const COLUMNS: readonly TableColumn[] = ['a', 'b', 'c', 'd', 'e'].map((path) => ({ path }));
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Text } from '@ds/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import type { IntroStepProps } from './diagnostics-steps.type';
 import { HoldStatusLine } from './HoldStatusLine';
 

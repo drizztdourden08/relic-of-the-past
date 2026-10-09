@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { ScrollArea, Text, TextInput } from '@ds/primitives';
+import { ScrollArea, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { PopoverShell } from './PopoverShell';
 import { VariableChoice } from './VariableChoice';
 import { filterVariables } from '@domains/packs/language/compounds/variables/variable-groups';

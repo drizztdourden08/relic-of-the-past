@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Button } from '../../../../../../design-system/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import type { SidebarProfileButtonProps } from './controls.type';
 
 const SidebarProfileButton = ({ profile, active, onSelect }: SidebarProfileButtonProps) => {

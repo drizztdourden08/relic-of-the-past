@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { EmptyState, RadioGroup, Text } from '@ds/primitives';
-import type { RadioOption } from '@ds/primitives';
+import { EmptyState, RadioGroup, Text } from '@drizztdourden08/tessera/primitives';
+import type { RadioOption } from '@drizztdourden08/tessera/primitives';
 import { toHex4 } from '../behavior/to-hex4';
 import type { ChooseControllerStepProps } from './diagnostics-steps.type';
 import { MatchedEntryPanel } from './MatchedEntryPanel';

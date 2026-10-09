@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button } from '../../../../../design-system/primitives';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import type { ReviewStatus } from '../SpriteDebug.type';
 import { S } from '../SpriteDebug.constants';
 

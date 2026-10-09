@@ -1,10 +1,7 @@
 /* @layer renderer-app @kind component */
 import { useMemo } from 'react';
-import { Box } from '@ds/primitives';
-import { DataTable } from '@ds/composites/DataTable';
-import { FilterBar } from '@ds/composites/FilterBar';
-import { MasterDetailLayout } from '@ds/composites/MasterDetailLayout';
-import { SectionNav } from '@ds/composites/SectionNav';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { DataTable, FilterBar, ListDetailLayout, SideNav } from '@drizztdourden08/tessera/composites';
 import { COMPARISON_TITLE, NO_FINDINGS, NOTHING_MATCHES } from './DataInspector.constants';
 import { DATA_INSPECTOR_NAV } from './behavior/data-inspector-nav.constants';
 import { buildDefaultColumns } from './behavior/default-table-columns';
@@ -99,9 +96,9 @@ const DataInspector = () => {
 
   return (
     <Box className="data-inspector">
-      <SectionNav config={DATA_INSPECTOR_NAV} activeId={kind} onSelect={showKind} />
+      <SideNav config={DATA_INSPECTOR_NAV} activeId={kind} onSelect={showKind} />
       <Box className="data-inspector__panes" onClickCapture={handleIdRefClickCapture}>
-        <MasterDetailLayout
+        <ListDetailLayout
           className={`data-inspector__master-detail${folded ? ' data-inspector__master-detail--folded' : ''}${comparing ? ' data-inspector__master-detail--comparing' : ''}`}
           list={list}
           detail={detail}

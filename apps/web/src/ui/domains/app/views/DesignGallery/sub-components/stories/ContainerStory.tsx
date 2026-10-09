@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, Text, Card } from '../../../../../../design-system/primitives';
+import { Box, Text, Card } from '@drizztdourden08/tessera/primitives';
 import { Specimen } from '../Specimen';
 
 const ContainerStory = () => (

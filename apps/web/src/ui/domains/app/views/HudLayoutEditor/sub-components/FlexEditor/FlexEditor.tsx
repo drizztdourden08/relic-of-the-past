@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo } from 'react';
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { capOf, runnerFor } from '../../behavior/action-keys';
 import { useFlexSlots } from '../../behavior/flex-slots';

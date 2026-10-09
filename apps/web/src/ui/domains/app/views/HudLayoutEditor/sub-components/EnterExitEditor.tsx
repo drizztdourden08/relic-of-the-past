@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Field } from '@ds/primitives/Field';
-import { Text } from '@ds/primitives/Text';
-import { ToggleGroup } from '@ds/primitives/ToggleGroup';
+import { Box, Field, Text, ToggleGroup } from '@drizztdourden08/tessera/primitives';
 import { mergeTransition } from '../behavior/transition-edits';
 import { EasingPicker } from './EasingPicker';
 import { ValueField } from './ValueField';

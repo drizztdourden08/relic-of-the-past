@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { Icon } from '@iconify/react/offline';
 import type { ScreenCrossing } from '@shared/game/navigation';
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { crossingIcon } from '../../../../../lib/entrance-icons';
 import { S } from '../styles';
 import { ReqIcon } from './ReqIcon';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { SegmentedControl } from '@ds/primitives/SegmentedControl';
+import { SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { KIND_OPTIONS } from './RomKindTabs.constants';
 import type { RomKindTabsProps } from './RomKindTabs.type';
 

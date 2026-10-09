@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, EmptyState, Text, TextInput } from '@ds/primitives';
+import { Box, EmptyState, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { MAX_NAME_GLYPHS } from '@shared/game/language';
 import { ENGINE_SAMPLES, NUMBER_KEY, PLAYER_NAME_KEY } from '@shared/game/language/variables';
 import { PreviewBox } from './PreviewBox';

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import type { InventoryViewMode } from '@shared/game/data';
-import { SegmentedControl } from '@ds/primitives';
-import { OptionRow } from '@ds/composites/Widget';
+import { SegmentedControl } from '@drizztdourden08/tessera/primitives';
+import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
 import { useInventoryViewMode } from '../behavior/useInventoryViewMode';
 import { VIEW_OPTIONS } from '../inventory.constants';
 
@@ -9,9 +9,9 @@ const InventoryWidgetSettings = () => {
   const [viewMode, setViewMode] = useInventoryViewMode();
 
   return (
-    <OptionRow label="View">
+    <ControlMenuRow label="View">
       <SegmentedControl<InventoryViewMode> value={viewMode} options={VIEW_OPTIONS} onChange={setViewMode} />
-    </OptionRow>
+    </ControlMenuRow>
   );
 };
 

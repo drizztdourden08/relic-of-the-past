@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, SectionHeader, StatRow } from '../../../../design-system/primitives';
+import { Box, SectionHeader, StatRow } from '@drizztdourden08/tessera/primitives';
 import type { StateSectionData } from '../DebugWidget.type';
 
 const StateSection = (props: StateSectionData) => {

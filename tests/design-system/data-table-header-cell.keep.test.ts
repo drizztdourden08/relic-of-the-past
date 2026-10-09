@@ -5,11 +5,11 @@ import {
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import type * as HeaderCellModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/HeaderCell';
 import type {
   ColumnActions, ColumnDragBinding,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
+} from '@drizztdourden08/tessera/composites';
 import { describeDataset } from '../dataset-guard';
 
 const screens = all('screen') as readonly Record<string, unknown>[];

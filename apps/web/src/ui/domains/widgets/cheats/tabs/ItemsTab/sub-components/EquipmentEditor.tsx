@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { MouseEvent } from 'react';
-import { Box, Image } from '@ds/primitives';
+import { Box, Image } from '@drizztdourden08/tessera/primitives';
 import { cheatSetInventorySlot, CheatSlot } from '@app/lib/game';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { PauseBorderBox, PauseEquipSlot, PauseLabel } from '@domains/hud';

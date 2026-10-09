@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { ExclusiveInsets } from '@ds/composites/Widget';
+import type { ExclusiveInsets } from '@drizztdourden08/tessera/composites';
 
 interface ExclusiveInsetsState {
   insets: ExclusiveInsets;

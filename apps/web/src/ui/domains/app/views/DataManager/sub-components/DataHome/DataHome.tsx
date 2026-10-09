@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import { usePlatform } from '@app/platform';
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { Button } from '@ds/primitives/Button';
-import { Spinner } from '@ds/primitives/Spinner';
+import { Box, Text, Button, Spinner } from '@drizztdourden08/tessera/primitives';
 import { useStorageSummary } from './behavior/useStorageSummary';
 import { formatBytes } from './behavior/formatBytes';
 import { DOMAIN_ICONS } from './DataHome.constants';

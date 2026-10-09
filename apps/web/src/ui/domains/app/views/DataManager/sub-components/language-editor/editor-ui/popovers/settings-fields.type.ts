@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { SelectOption } from '@ds/primitives';
+import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 
 type SettingField = {
   name: string;

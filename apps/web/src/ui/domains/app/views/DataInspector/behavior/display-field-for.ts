@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { FieldDescriptor } from '@ds/data';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { NAME_FIELD_BY_KIND } from '../DataInspector.constants';
 import { asEntityKind } from './as-entity-kind';
 

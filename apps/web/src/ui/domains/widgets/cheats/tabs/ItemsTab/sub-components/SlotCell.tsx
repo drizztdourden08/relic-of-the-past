@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Image } from '@ds/primitives';
+import { Box, Button, Image } from '@drizztdourden08/tessera/primitives';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
 import type { ControlHint } from '../../../sub-components/ControlGlyph.type';
 import { GIVE_HINT, TIERS_HINT, TOGGLE_HINT } from '../ItemsTab.constants';

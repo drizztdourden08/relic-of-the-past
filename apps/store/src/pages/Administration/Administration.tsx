@@ -1,5 +1,5 @@
 /* @layer store-site @kind component */
-import { Stack } from '@ds/primitives/Stack';
+import { Stack } from '@drizztdourden08/tessera/primitives';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { ANCHORS } from './Administration.constants';
 import { HomePageSection } from './sub-components/HomePageSection';

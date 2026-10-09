@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useMemo } from 'react';
-import { Box, Text } from '../../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../../../stores/navigation-overlay-store';
 import { ANNOTATION_STYLES } from '../../../../app/views/GameLayer/sub-components/navigation-overlay/annotation-style';
 import { S } from '../../styles';

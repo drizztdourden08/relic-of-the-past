@@ -22,7 +22,7 @@
 }
 
 .device-card:not(.device-card--disconnected):hover {
-  border-color: var(--c-gold);
+  border-color: var(--c-primary);
 }
 
 .device-card--disconnected {
@@ -51,7 +51,7 @@
   width: 36px;
   height: 36px;
   padding: var(--space-xs);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   border: none;
   background: transparent;
   cursor: pointer;
@@ -64,7 +64,7 @@
 }
 
 .device-card__icon-btn--active .device-card__icon {
-  filter: drop-shadow(0 0 6px var(--c-green)) drop-shadow(0 0 12px var(--c-green));
+  filter: drop-shadow(0 0 6px var(--c-secondary)) drop-shadow(0 0 12px var(--c-secondary));
 }
 
 .device-card__icon-btn--disconnected .device-card__icon {

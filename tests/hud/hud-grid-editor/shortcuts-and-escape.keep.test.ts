@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { act, createElement as h } from 'react';
 import { layoutHud, placedById } from '@shared/hud/engine';
 import { validateLayout } from '@shared/hud/layouts';
-import { FullScreenLayer } from '../../../apps/web/src/ui/design-system/composites/FullScreenLayer';
+import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { GridEditor } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
 import { patchNode } from '../../../apps/web/src/ui/domains/app/views/HudLayoutEditor/behavior/node-edits';
 import type { HudGridContainer, HudLayout, HudNode } from '../../../shared/types/hud';
@@ -70,7 +70,7 @@ describe('every shortcut does what the legend draws', () => {
 
 describe('Escape clears the selection and leaves the editor standing', () => {
   it('answers with the lattice, not with the layer behind it (§33)', () => {
-    mount(h(FullScreenLayer, { onClose: ignore, title: 'HUD Layout Editor' },
+    mount(h(ScreenWindow, { onClose: ignore, title: 'HUD Layout Editor' },
       h(GridEditor, { container: screenRoot(), scope: {}, onPatchContainer: ignore })));
     down(cell(2, 2));
     expect(document.querySelectorAll('.hud-lattice__cell[aria-selected="true"]').length).toBe(1);
@@ -78,7 +78,7 @@ describe('Escape clears the selection and leaves the editor standing', () => {
       document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
     });
     expect(document.querySelectorAll('.hud-lattice__cell[aria-selected="true"]').length).toBe(0);
-    expect(document.querySelector('.fullscreen-layer')).not.toBeNull();
+    expect(document.querySelector('.screen-layer')).not.toBeNull();
   });
 });
 

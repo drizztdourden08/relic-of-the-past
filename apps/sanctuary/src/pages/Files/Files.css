@@ -46,7 +46,7 @@
   margin: 0;
   padding: var(--space-sm) var(--space-md);
   border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   background: var(--c-sunken);
   color: var(--c-text);
   white-space: pre-wrap;
@@ -75,7 +75,7 @@
 
 .selection-panel__skip {
   padding: var(--space-xs) var(--space-sm);
-  border-left: var(--border-width-thick) solid var(--c-gold);
+  border-left: var(--border-width-thick) solid var(--c-primary);
   color: var(--c-text-dim);
 }
 

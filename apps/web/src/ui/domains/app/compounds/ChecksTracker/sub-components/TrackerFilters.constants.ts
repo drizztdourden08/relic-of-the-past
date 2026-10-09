@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind constants */
 import { createElement } from 'react';
 import type { StatusFilter } from '@shared/game/logic/queries/check-grouping';
-import { Icon } from '@ds/primitives';
-import type { SegmentOption } from '@ds/primitives';
+import { Icon } from '@drizztdourden08/tessera/primitives';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import { GRID_PATHS, LIST_DETAIL_PATHS, LIST_PATHS } from '../ChecksTracker.constants';
 import type { ViewMode } from '../ChecksTracker.type';
 import { CheckStatusIcon } from './CheckStatusIcon';

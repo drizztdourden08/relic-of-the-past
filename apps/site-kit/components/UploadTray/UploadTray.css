@@ -10,7 +10,7 @@
   width: min(var(--upload-tray-w), calc(100vw - 2 * var(--space-lg)));
   padding: var(--space-sm) var(--space-md) var(--space-md);
   border: var(--border-width-thin) solid var(--c-border-strong);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   background: var(--c-surface);
   box-shadow: var(--shadow-2);
   pointer-events: auto;
@@ -21,7 +21,7 @@
 }
 
 .upload-tray__title {
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .upload-tray__count {

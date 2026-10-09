@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type React from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import type { ToastItem } from '../../../../../design-system/primitives/Toast';
+import type { ToastItem } from '@drizztdourden08/tessera/composites';
 import type { ProfileHubProps } from '../ProfileHub.type';
 
 type ParentCallbacks = Pick<ProfileHubProps,

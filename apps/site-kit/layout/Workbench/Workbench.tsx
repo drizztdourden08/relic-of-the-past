@@ -1,6 +1,5 @@
 /* @layer site-kit @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Flex } from '@ds/primitives/Flex';
+import { Box, Flex } from '@drizztdourden08/tessera/primitives';
 import type { WorkbenchProps } from './Workbench.type';
 import './Workbench.css';
 

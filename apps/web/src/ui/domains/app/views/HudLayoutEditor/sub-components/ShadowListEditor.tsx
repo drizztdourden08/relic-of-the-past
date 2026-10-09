@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { Grid } from '@ds/primitives/Grid';
-import { Toggle } from '@ds/primitives/Toggle';
+import { Button, Flex, Grid, Toggle } from '@drizztdourden08/tessera/primitives';
 import { PaintField } from './PaintField';
 import { SubsectionGroup } from './SubsectionGroup';
 import { ValueField } from './ValueField';

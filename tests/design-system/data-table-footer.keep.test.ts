@@ -6,7 +6,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import type * as OptionsMenuModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/TableOptionsMenu';
 import type * as TableFooterModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/TableFooter';
-import type { TableActions } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
+import type { TableActions } from '@drizztdourden08/tessera/composites';
 
 let TableOptionsMenu: typeof OptionsMenuModule.TableOptionsMenu;
 let TableFooter: typeof TableFooterModule.TableFooter;

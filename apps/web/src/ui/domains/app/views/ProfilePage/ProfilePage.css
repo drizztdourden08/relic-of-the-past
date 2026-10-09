@@ -14,7 +14,7 @@
 .profile-page__name {
   font-size: var(--text-xl);
   font-weight: var(--weight-semi);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   margin-bottom: var(--space-xs);
 }
 

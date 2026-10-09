@@ -1,6 +1,5 @@
 /* @layer site-kit @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Box } from '@ds/primitives/Box';
+import { Flex, Box } from '@drizztdourden08/tessera/primitives';
 import { Brand } from '../Brand/Brand';
 import { ToastLayer } from '../../components/ToastLayer';
 import { useSiteDefinition } from '../../site/site-context';

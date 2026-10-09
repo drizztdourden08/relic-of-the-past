@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../../../../../stores/shadow-editor-store';
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../../design-system/primitives/Text';
-import { Button } from '../../../../../../../design-system/primitives/Button';
-import { IconButton } from '../../../../../../../design-system/primitives/IconButton';
+import { Box, Text, Button, IconButton } from '@drizztdourden08/tessera/primitives';
 import type { ShadowEditorHeaderProps } from './ShadowEditorHeader.type';
 
 const ShadowEditorHeader = ({ screenId, dirty }: ShadowEditorHeaderProps) => {

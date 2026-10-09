@@ -9,8 +9,8 @@
   flex-direction: column;
   gap: var(--space-xs);
   padding: var(--space-xs);
-  border: var(--border-width-thin) solid var(--color-border-strong);
-  border-radius: var(--r-md);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-radius: var(--radius-md);
   background: var(--c-surface);
   box-shadow: var(--shadow-dropdown);
 }
@@ -25,5 +25,5 @@
 
 .popover-shell__empty {
   padding: var(--space-2xs);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }

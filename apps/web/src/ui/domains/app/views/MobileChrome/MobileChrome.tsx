@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { usePlatform } from '@app/platform';
-import { Drawer } from '@ds/composites/Drawer';
+import { Drawer } from '@drizztdourden08/tessera/composites';
 import { buildTitleBarMenuItems } from '../TitleBar/behavior/title-bar-menu';
 import { OptionsDrawer } from './sub-components/OptionsDrawer';
 import { useMobileChrome } from './behavior/useMobileChrome';

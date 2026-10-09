@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { CREDITS } from '@shared/credits';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { CreditEntryCard } from './CreditEntryCard';
 import './CreditsTab.css';
 

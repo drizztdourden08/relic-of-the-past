@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Button } from '@ds/primitives';
-import { ErrorBoundary } from '@ds/composites';
+import { Button } from '@drizztdourden08/tessera/primitives';
+import { ErrorBoundary } from '@drizztdourden08/tessera/composites';
 import { CapacityUpgradesRows } from './sub-components/CapacityUpgradesRows';
 import { NOTICE } from './CapacityUpgradesSection.constants';
 import type { CapacityUpgradesSectionProps } from './CapacityUpgradesSection.type';

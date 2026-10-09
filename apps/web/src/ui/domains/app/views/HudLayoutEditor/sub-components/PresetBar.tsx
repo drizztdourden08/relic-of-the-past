@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Button, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { PresetBarProps } from './PresetBar.type';
 
 const PresetBar = (props: PresetBarProps) => {

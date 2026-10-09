@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
-import { Button } from '@ds/primitives/Button';
-import { Badge } from '@ds/primitives/Badge';
-import { TextInput } from '@ds/primitives/TextInput';
+import { Box, Text, Button, Status, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { StudioToolbarProps } from '../PlayerSpriteStudio.type';
 
 const StudioToolbar = (props: StudioToolbarProps) => {
@@ -27,8 +23,8 @@ const StudioToolbar = (props: StudioToolbarProps) => {
           disabled={readOnly}
           onChange={(e) => onMeta({ ...meta, author: e.target.value, authorShort: e.target.value })}
         />
-        {file ? <Badge variant="neutral">{file}</Badge> : <Badge variant="warning">unsaved</Badge>}
-        {dirty && <Badge variant="warning">edited</Badge>}
+        {file ? <Status tone="neutral">{file}</Status> : <Status tone="warning">unsaved</Status>}
+        {dirty && <Status tone="warning">edited</Status>}
       </Box>
 
       <Box className="studio-toolbar__row">
@@ -43,9 +39,9 @@ const StudioToolbar = (props: StudioToolbarProps) => {
 
       {!readOnly && (
         <Box className="studio-toolbar__row">
-          {applied === true && <Badge variant="success">applied to the running game</Badge>}
-          {applied === false && <Badge variant="warning">saved, applies on next boot</Badge>}
-          {applied === null && <Badge variant="neutral">not saved yet</Badge>}
+          {applied === true && <Status tone="success">applied to the running game</Status>}
+          {applied === false && <Status tone="warning">saved, applies on next boot</Status>}
+          {applied === null && <Status tone="neutral">not saved yet</Status>}
           <Text className="studio-toolbar__hint">
             {applied === false
               ? 'The running game did not take it: a live apply needs the active profile to have this sprite selected, with Vanilla Safe off.'

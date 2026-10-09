@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import type { SchemaConfig } from '@drizztdourden08/tessera/data';
+import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 
 const ROWS = [
   { id: 'screen-001', name: 'first', size: 3, nested: { deep: { flag: true } }, only: 'here' },

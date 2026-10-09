@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Checkbox } from '@ds/primitives/Checkbox';
-import { Field } from '@ds/primitives/Field';
-import { Flex } from '@ds/primitives/Flex';
+import { Checkbox, Field, Flex } from '@drizztdourden08/tessera/primitives';
 import { SIDES } from './EdgesField.constants';
 import type { HudBorderSides } from '@shared/types/hud';
 import type { BorderSide, EdgesFieldProps } from './EdgesField.type';

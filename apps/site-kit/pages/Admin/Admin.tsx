@@ -2,12 +2,8 @@
 import { useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { AdminUser } from '../../api/hub-responses.type';
-import { Stack } from '@ds/primitives/Stack';
-import { Box } from '@ds/primitives/Box';
-import { Flex } from '@ds/primitives/Flex';
-import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { SettingsSection } from '@ds/composites/SettingsSection';
+import { Stack, Box, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SitePage } from '../../layout/SitePage/SitePage';
 import { AdminUserRow } from './sub-components/AdminUserRow';
 import { GroupsSection } from './sub-components/GroupsSection';

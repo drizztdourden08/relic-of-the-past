@@ -1,9 +1,7 @@
 /* @layer site-kit @kind component */
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@ds/primitives/Button';
-import { Field } from '@ds/primitives/Field';
-import { TextInput } from '@ds/primitives/TextInput';
-import { DialogShell } from '@ds/composites/DialogShell';
+import { Button, Field, TextInput } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import type { NameDialogProps } from './NameDialog.type';
 
 const NameDialog = (props: NameDialogProps) => {

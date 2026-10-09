@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { IconifyIcon } from '@iconify/react/offline';
-import type { DashboardPanelProps } from '@ds/composites/DashboardGrid';
+import type { DashboardPanelProps } from '@drizztdourden08/tessera/composites';
 
 type RandomizerTab = 'run' | 'options' | 'network' | 'online' | 'logs' | 'spoiler';
 

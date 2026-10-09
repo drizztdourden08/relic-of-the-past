@@ -2,8 +2,7 @@
 import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import type { EditorTool } from '../../../../../../../stores/shadow-editor-store';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { SegmentedControl } from '../../../../../../design-system/primitives/SegmentedControl';
+import { Box, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { ShadowShapeInspector } from '../shadow-editor/ShadowShapeInspector';
 import { ShadowLightInspector } from '../shadow-editor/ShadowLightInspector';
 import { ShadowGlobalSettings } from '../shadow-editor/ShadowGlobalSettings';

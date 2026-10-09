@@ -6,7 +6,7 @@ import {
 import {
   RECOMMENDATION_GROUP_BY, RECOMMENDATION_SCHEMA, recommendationSource,
 } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-source';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import type { Recommendation } from '@shared/game/recommendations';
 
 const entry = (over: Partial<Recommendation> = {}): Recommendation => ({

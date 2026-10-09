@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Button } from '@ds/primitives';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import type { DiagnosticsStepActionsProps } from './diagnostics-steps.type';
 
 const DiagnosticsStepActions = (props: DiagnosticsStepActionsProps) => {

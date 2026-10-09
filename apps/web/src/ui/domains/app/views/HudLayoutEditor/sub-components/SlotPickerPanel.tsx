@@ -1,12 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Portal, usePickerPopover } from '@ds/primitives/Portal';
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { IconButton } from '@ds/primitives/IconButton';
-import { NumberInput } from '@ds/primitives/NumberInput';
-import { Text } from '@ds/primitives/Text';
-import { EmptyState } from '@ds/primitives/EmptyState';
+import { Portal, usePickerPopover, Box, Button, IconButton, NumberInput, Text, EmptyState } from '@drizztdourden08/tessera/primitives';
 import type { SlotPickerPanelProps } from './SlotPickerPanel.type';
 
 const SlotPickerPanel = (props: SlotPickerPanelProps) => {

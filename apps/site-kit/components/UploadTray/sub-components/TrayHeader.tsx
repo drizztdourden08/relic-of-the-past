@@ -3,9 +3,7 @@ import { Icon as IconifyIcon } from '@iconify/react/offline';
 import chevronDownIcon from '@iconify-icons/lucide/chevron-down';
 import chevronUpIcon from '@iconify-icons/lucide/chevron-up';
 import xIcon from '@iconify-icons/lucide/x';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
+import { Flex, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import type { TrayHeaderProps } from './TrayHeader.type';
 
 const TrayHeader = (props: TrayHeaderProps) => {

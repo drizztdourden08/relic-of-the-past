@@ -1,9 +1,6 @@
 /* @layer store-site @kind component */
-import { SettingsSection } from '@ds/composites/SettingsSection';
-import { Box } from '@ds/primitives/Box';
-import { Flex } from '@ds/primitives/Flex';
-import { StatRow } from '@ds/primitives/StatRow';
-import { Text } from '@ds/primitives/Text';
+import { SettingsSection } from '@drizztdourden08/tessera/composites';
+import { Box, Flex, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import type { MediaRef } from '@shared/store/types';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { itemColorStyle } from '../../../lib/item-color-style';

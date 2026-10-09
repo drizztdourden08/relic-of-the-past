@@ -21,7 +21,7 @@
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
   white-space: nowrap;
 }
 

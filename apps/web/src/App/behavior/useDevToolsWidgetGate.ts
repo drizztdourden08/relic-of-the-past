@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
-import { getDevOnlyWidgetIds } from '@ds/composites/Widget';
-import type { WidgetLayout } from '@ds/composites/Widget';
+import { getDevOnlyWidgetIds } from '@drizztdourden08/tessera/composites';
+import type { WidgetLayout } from '@drizztdourden08/tessera/composites';
 import { useSearchStore } from '@app/stores/search-store';
 
 const useDevToolsWidgetGate = (layout: WidgetLayout, close: (id: string) => void, forcedIds: string[] = []): boolean => {

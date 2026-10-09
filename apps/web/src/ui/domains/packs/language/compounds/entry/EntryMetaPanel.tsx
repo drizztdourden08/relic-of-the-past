@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Badge, Box, Text } from '@ds/primitives';
+import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { EntryMetaPanelProps, MetaRow } from './entry.type';
 import './EntryMetaPanel.css';
 
@@ -26,7 +26,7 @@ const EntryMetaPanel = (props: EntryMetaPanelProps) => {
       {issues.length > 0 ? (
         <Box className="entry-meta__issues">
           {issues.map((issue) => (
-            <Badge key={issue} variant="danger">{issue}</Badge>
+            <Status key={issue} tone="danger">{issue}</Status>
           ))}
         </Box>
       ) : null}

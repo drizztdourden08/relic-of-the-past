@@ -1,9 +1,6 @@
 /* @layer site-kit @kind component */
 import type { MouseEvent } from 'react';
-import { Button } from '@ds/primitives/Button';
-import { DropZone } from '@ds/primitives/DropZone';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
+import { Button, DropZone, Flex, IconButton } from '@drizztdourden08/tessera/primitives';
 import { CANCELLABLE } from './RowActions.constants';
 import type { RowActionsProps } from './RowActions.type';
 

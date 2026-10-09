@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { all, tagKey } from '@shared/game/data';
-import { getPath } from '@ds/data/schema/path';
+import { getPath } from '@drizztdourden08/tessera/data';
 import type { EntityKind } from '@shared/game/data';
 
 const valuesInUse = (kind: EntityKind, path: string): readonly string[] => {

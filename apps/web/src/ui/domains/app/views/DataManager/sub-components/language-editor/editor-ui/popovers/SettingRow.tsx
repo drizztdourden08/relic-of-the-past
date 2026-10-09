@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Select, Text } from '@ds/primitives';
+import { Box, Select, Text } from '@drizztdourden08/tessera/primitives';
 import type { SettingRowProps } from './SettingRow.type';
 
 const SettingRow = (props: SettingRowProps) => {

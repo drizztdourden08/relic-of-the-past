@@ -1,8 +1,6 @@
 /* @layer store-site @kind component */
 import { useCallback, useState } from 'react';
-import { Button } from '@ds/primitives/Button';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Button, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { SiteFrame } from '@site-kit/layout/SiteFrame/SiteFrame';
 import { Gate } from '@site-kit/components/Gate/Gate';
 import { useSessionContext } from '@site-kit/session/session-context';

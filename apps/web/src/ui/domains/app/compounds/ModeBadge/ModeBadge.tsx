@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../design-system/primitives/Box';
-import { Image } from '../../../../design-system/primitives/Image';
-import { Text } from '../../../../design-system/primitives/Text';
+import { Box, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { modeBadgeSrc } from './behavior/mode-badge-src';
 import { MODE_BADGE_LABELS, MODE_BADGE_MONOGRAMS } from './ModeBadge.constants';
 import type { ModeBadgeProps } from './ModeBadge.type';

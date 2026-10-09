@@ -64,8 +64,8 @@
 }
 
 .controller-report__step--done .controller-report__step-num {
-  border-color: var(--c-green-bright);
-  color: var(--c-green-bright);
+  border-color: var(--c-secondary-bright);
+  color: var(--c-secondary-bright);
 }
 
 .controller-report__section {

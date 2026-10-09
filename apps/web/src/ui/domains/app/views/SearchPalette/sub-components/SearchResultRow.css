@@ -5,7 +5,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   cursor: pointer;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .search-row__check.is-on {
-  background: var(--c-gold);
+  background: var(--c-primary);
 }
 
 .search-row__toggle {

@@ -1,17 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  clampAxis,
-  clampPosition,
-  isValidForAxis,
-  isWithinAxis,
-} from '../../../apps/web/src/ui/design-system/primitives/PositionInput/behavior/clamp-axis';
-import {
-  SETTLED,
-  displayValue,
-  resolveTyped,
-  settleDraft,
-} from '../../../apps/web/src/ui/design-system/primitives/PositionInput/behavior/draft-rules';
+import { clampAxis, clampPosition, isValidForAxis, isWithinAxis, SETTLED, displayValue, resolveTyped, settleDraft } from '@drizztdourden08/tessera/primitives';
 import { GRID, OPEN, SIGNED } from './position-input.constants';
 
 describe('bounds clamp each end of an axis', () => {

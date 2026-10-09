@@ -6,9 +6,9 @@
   gap: var(--space-xs);
   min-width: 0;
   padding: var(--space-sm) var(--space-md);
-  border-left: var(--border-width-thick) solid var(--c-gold);
+  border-left: var(--border-width-thick) solid var(--c-primary);
   border-radius: var(--radius-sm);
-  background: var(--c-gold-soft);
+  background: var(--c-primary-soft);
 }
 
 .pond-status__title {

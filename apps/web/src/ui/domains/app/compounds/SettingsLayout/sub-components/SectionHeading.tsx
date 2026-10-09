@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Icon } from '../../../../../design-system/primitives/Icon';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { ConfirmIconButton } from '../../../../../design-system/composites/ConfirmIconButton';
+import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
+import { ConfirmIconButton } from '@drizztdourden08/tessera/composites';
 import type { SectionHeadingProps } from '../SettingsLayout.type';
 import { AT_DEFAULTS_LABEL, RESET_LABEL, RESET_PATHS } from './SectionHeading.constants';
 

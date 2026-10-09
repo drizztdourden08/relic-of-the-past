@@ -1,6 +1,5 @@
 /* @layer store-site @kind component */
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
+import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import { Link } from '@site-kit/router/Link';

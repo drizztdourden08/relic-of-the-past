@@ -1,6 +1,5 @@
 /* @layer site-kit @kind types */
-import type { FilterClause } from '@ds/data/filter/clause';
-import type { SchemaLike } from '@ds/data/schema/build-schema';
+import type { FilterClause, SchemaLike } from '@drizztdourden08/tessera/data';
 
 type FilterRowsParams<T> = {
   rows: readonly T[];

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Grid } from '@ds/primitives';
+import { Grid } from '@drizztdourden08/tessera/primitives';
 import { RandomizerOptionGroup } from '../../RandomizerOptionGroup';
 import { ShopSlotCard } from './ShopSlotCard';
 import type { ShopSlotSectionProps } from '../ShopSlotsBlock.type';

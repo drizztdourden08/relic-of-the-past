@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import type { FieldDescriptor } from '@ds/data';
-import type { IdRefTargetField } from '@ds/composites/DataTable';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
+import type { IdRefTargetField } from '@drizztdourden08/tessera/composites';
 import { CONTAINER_KINDS } from '../../DataInspector.constants';
 
 const collectLeaves = (

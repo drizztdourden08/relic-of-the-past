@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
-import { Box } from '@ds/primitives/Box';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
+import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@app/utils/formatBytes';
 import { MsuPackHeader } from './MsuPackHeader';
 import { TrackDetail } from './TrackDetail';

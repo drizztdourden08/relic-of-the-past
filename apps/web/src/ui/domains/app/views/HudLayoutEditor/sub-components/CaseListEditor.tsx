@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind component */
 import './HudLayoutEditor.content.css';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
+import { Button, Flex, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { ExpressionInput } from './ExpressionInput';
 import { ReferenceField } from './ReferenceField';
 import { caseMatches, matchLabel } from '../behavior/case-match';

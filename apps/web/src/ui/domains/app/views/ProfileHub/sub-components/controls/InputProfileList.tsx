@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import type { InputProfile } from '@shared/types/controls';
-import { Button } from '../../../../../../design-system/primitives/Button';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
+import { Button, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { InputProfileItem } from './InputProfileItem';
 import type { InputProfileListProps } from './controls.type';
 import './InputProfileList.css';

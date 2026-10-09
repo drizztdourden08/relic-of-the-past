@@ -15,7 +15,7 @@
 
 .state-preview__title {
   font-size: var(--text-base);
-  color: var(--c-gold);
+  color: var(--c-primary);
 }
 
 .state-preview__from {

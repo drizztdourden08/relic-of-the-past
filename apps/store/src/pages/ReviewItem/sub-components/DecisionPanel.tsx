@@ -2,10 +2,7 @@
 import { useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import downloadIcon from '@iconify-icons/lucide/download';
-import { Field } from '@ds/primitives/Field';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { Textarea } from '@ds/primitives/Textarea';
+import { Field, Stack, Text, Textarea } from '@drizztdourden08/tessera/primitives';
 import type { ReviewEntry } from '@shared/store/api-types';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';

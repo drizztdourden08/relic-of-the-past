@@ -1,10 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { flattenGroups, groupRows } from '../../apps/web/src/ui/design-system/data/table/group-rows';
-import type { GroupedRow } from '../../apps/web/src/ui/design-system/data/table/types';
-import { deriveRows } from '../../apps/web/src/ui/design-system/data/table/derive-rows';
-import { getPath } from '../../apps/web/src/ui/design-system/data/schema/path';
+import { buildSchema, createSchemaIndex, flattenGroups, groupRows, deriveRows, getPath } from '@drizztdourden08/tessera/data';
+import type { GroupedRow } from '@drizztdourden08/tessera/data';
 
 interface Row { world: string; kind: string; id: string }
 

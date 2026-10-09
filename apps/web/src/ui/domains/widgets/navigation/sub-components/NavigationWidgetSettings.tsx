@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import { SegmentedControl } from '@ds/primitives';
-import { OptionRow } from '@ds/composites/Widget';
+import { SegmentedControl } from '@drizztdourden08/tessera/primitives';
+import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import { useNavigationOverlayStore } from '@app/stores/navigation-overlay-store';
 import type { NavMode } from '@app/stores/navigation-overlay-store';
@@ -17,9 +17,9 @@ const NavigationWidgetSettings = () => {
   };
 
   return (
-    <OptionRow label="Mode" hint="Auto floods on every screen change">
+    <ControlMenuRow label="Mode" hint="Auto floods on every screen change">
       <SegmentedControl<NavMode> value={mode} options={MODE_OPTIONS} onChange={handleChange} />
-    </OptionRow>
+    </ControlMenuRow>
   );
 };
 

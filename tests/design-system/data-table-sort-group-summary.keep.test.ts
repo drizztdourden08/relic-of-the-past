@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   summarizeSortGroup, summaryLine,
-} from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/sort-group-summary';
-import type { SortEntry } from '../../apps/web/src/ui/design-system/data/table/types';
+} from '@drizztdourden08/tessera/composites';
+import type { SortEntry } from '@drizztdourden08/tessera/data';
 
 const TITLES: Record<string, string | undefined> = {
   kind: 'Kind',

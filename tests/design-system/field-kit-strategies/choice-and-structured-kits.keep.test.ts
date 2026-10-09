@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import { all } from '@shared/game/data';
-import { getComparator, getGroupKey } from '../../../apps/web/src/ui/design-system/data/table/strategy-registry';
-import type { FieldKind } from '../../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { getComparator, getGroupKey } from '@drizztdourden08/tessera/data';
+import type { FieldKind } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../../dataset-guard';
 import { testerFor } from './tester-for';
 

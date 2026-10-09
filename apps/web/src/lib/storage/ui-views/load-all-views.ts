@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { ViewSnapshot } from '@ds/data';
-import { isViewSnapshot } from '@ds/data';
+import type { ViewSnapshot } from '@drizztdourden08/tessera/data';
+import { isViewSnapshot } from '@drizztdourden08/tessera/data';
 import { log } from '../../log-bus';
 import { viewCache } from './view-cache';
 

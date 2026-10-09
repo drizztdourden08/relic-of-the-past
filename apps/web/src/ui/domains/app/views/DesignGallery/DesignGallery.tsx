@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind component */
 import { useState, useMemo } from 'react';
-import { Box, Text } from '../../../../design-system/primitives';
-import { SettingsShell } from '../../../../design-system/composites/SettingsShell';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { SettingsShell } from '@drizztdourden08/tessera/composites';
 import { STORIES } from './behavior/gallery-stories';
 import './DesignGallery.css';
 

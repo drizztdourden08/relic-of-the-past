@@ -42,7 +42,7 @@
 .pack-tracks__num {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  color: var(--c-gold);
+  color: var(--c-primary);
   font-variant-numeric: tabular-nums;
 }
 
@@ -69,8 +69,8 @@
 }
 
 .pack-tracks__file--playing {
-  border-color: var(--c-gold);
-  box-shadow: inset 2px 0 0 var(--c-gold);
+  border-color: var(--c-primary);
+  box-shadow: inset 2px 0 0 var(--c-primary);
 }
 
 .pack-tracks__file-line {

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Image } from '@ds/primitives';
+import { Box, Image } from '@drizztdourden08/tessera/primitives';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import {
   ABILITY_FLAG_LIFT, ABILITY_FLAG_PULL, ABILITY_FLAG_READ_TALK, ABILITY_FLAG_RUN, ABILITY_FLAG_SWIM, ABILITY_PANEL, ABILITY_WORDS,

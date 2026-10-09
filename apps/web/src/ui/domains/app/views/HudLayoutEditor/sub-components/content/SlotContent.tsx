@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useSlotScheme } from '../../behavior/slot-scheme';
 import { SlotRefField } from '../SlotRefField';
 import type { SlotContentProps } from './SlotContent.type';

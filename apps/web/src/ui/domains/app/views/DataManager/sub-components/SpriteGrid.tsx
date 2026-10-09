@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useMemo } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { SPRITE_MANIFEST, CATEGORY_LABELS, CATEGORY_ORDER } from '@shared/game/data';
 import { CatButton } from './CatButton';
 import { SpriteCard } from './SpriteCard';

@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind data */
 import type { EntityKind } from '@shared/game/data';
-import type { SchemaConfig } from '@ds/data';
+import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 import { ACTOR_CONFIG } from './actor-config';
 import { CHECK_CONFIG } from './check-config';
 import { CONNECTION_CONFIG } from './connection-config';

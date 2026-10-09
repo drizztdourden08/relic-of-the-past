@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { ScreenCrossing } from '@shared/game/navigation';
-import { Box, Text } from '../../../../design-system/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { ReqIcon } from './ReqIcon';
 import { EdgeArrowSvg } from './EdgeArrowSvg';
@@ -33,7 +33,7 @@ const EdgeCard = ({ row, screenBundle, isIndoors, playerLayer }: EdgeCardProps) 
         {tiles && <Text style={S.dimBadge}>{tiles}</Text>}
       </Box>
       {isIndoors && (
-        <Box style={{ ...IL.layerRow, color: toggles ? 'var(--c-info)' : 'var(--c-green)' }}>
+        <Box style={{ ...IL.layerRow, color: toggles ? 'var(--c-info)' : 'var(--c-secondary)' }}>
           {toggles
             ? <>▲▼ Layer Toggle {targetLayer && <Text style={IL.layerTarget}>{targetLayer}</Text>}</>
             : <>═ No Layer Change</>}

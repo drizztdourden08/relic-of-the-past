@@ -1,13 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  MIN_COLUMN_WIDTH, fitAllWidths, fitColumnWidth,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/behavior/column-width-math';
-import {
-  AUTO_TRACK, TRAILING_TRACK, trackList, trackListWith,
-} from '../../../apps/web/src/ui/design-system/composites/DataTable/DataTable.constants';
-import { fitColumn, growColumn, resizeColumn } from '../../../apps/web/src/ui/design-system/data/table/column-ops';
-import type { TableColumn } from '../../../apps/web/src/ui/design-system/data/table/types';
+import { MIN_COLUMN_WIDTH, fitAllWidths, fitColumnWidth, AUTO_TRACK, TRAILING_TRACK, trackList, trackListWith } from '@drizztdourden08/tessera/composites';
+import { fitColumn, growColumn, resizeColumn } from '@drizztdourden08/tessera/data';
+import type { TableColumn } from '@drizztdourden08/tessera/data';
 
 describe('fit all to content runs the same fit once per column', () => {
   const widths: Record<string, number[]> = { id: [90, 120], kind: [300], note: [8] };

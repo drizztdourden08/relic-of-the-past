@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { resolveLiveControlState } from '@shared/input/family';
 import type { SdlAxisName } from '@shared/input/family';
 import { SDL_AXIS } from '@shared/input/sdl-buttons';

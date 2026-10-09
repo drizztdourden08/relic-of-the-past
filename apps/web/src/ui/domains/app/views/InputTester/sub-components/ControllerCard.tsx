@@ -3,10 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import bugIcon from '@iconify-icons/lucide/bug';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Image } from '../../../../../design-system/primitives/Image';
-import { IconButton } from '../../../../../design-system/primitives/IconButton';
+import { Box, Text, Image, IconButton } from '@drizztdourden08/tessera/primitives';
 import type { DeviceStickCalibration } from '../../../../../../lib/input/controller-input-store';
 import { getButtonIconUrl } from '@app/lib/input/button-icons';
 import { resolveLiveControlState } from '@shared/input/family';
@@ -24,7 +21,7 @@ import { ControllerStatusBar } from '../../../compounds/ControllerStatusBar';
 
 const S: Record<string, CSSProperties> = {
   icon: { width: 28, height: 28, opacity: 0.7, flexShrink: 0 },
-  calBadge: { fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--c-green-dim)', color: 'var(--c-green-bright)', fontWeight: 600 },
+  calBadge: { fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--c-secondary-dim)', color: 'var(--c-secondary-bright)', fontWeight: 600 },
   btnFallback: { fontSize: 10, color: 'var(--c-text-dim)' },
   actions: { marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' },
   debugState: { fontSize: 10, color: 'var(--c-text-muted)', fontFamily: 'monospace' },

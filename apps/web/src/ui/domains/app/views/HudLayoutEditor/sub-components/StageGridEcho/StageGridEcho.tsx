@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { stageCellRects } from '../../behavior/stage-cells';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { hull } from './behavior/hull';

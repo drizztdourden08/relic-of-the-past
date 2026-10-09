@@ -1,13 +1,10 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  adviseTag, blocksCreate,
-} from '../../apps/web/src/ui/design-system/primitives/TagInput/behavior/tag-convention';
-import { isNewValue } from '../../apps/web/src/ui/design-system/primitives/TagInput/behavior/tag-values';
+import { adviseTag, blocksCreate, isNewValue } from '@drizztdourden08/tessera/primitives';
 import {
   isReferencedTagList, isTagsField,
-} from '../../apps/web/src/ui/design-system/composites/RecordEditor';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+} from '@drizztdourden08/tessera/composites';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 
 const VOCABULARY = ['env:outdoor', 'role:boss', 'legacy-untagged'] as const;
 

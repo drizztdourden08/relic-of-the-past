@@ -3,11 +3,10 @@ import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { defaultOperatorFor, operatorsFor } from '../../apps/web/src/ui/design-system/data/filter/operators';
-import { resolveFieldKit } from '../../apps/web/src/ui/design-system/composites/field-kits';
-import { formatIdRefDisplay } from '../../apps/web/src/ui/design-system/composites/field-kits/id-ref-format';
-import type { CellRenderOptions } from '../../apps/web/src/ui/design-system/composites/field-kits/registry';
-import type { FieldDescriptor, FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { defaultOperatorFor, operatorsFor } from '@drizztdourden08/tessera/data';
+import { resolveFieldKit, formatIdRefDisplay } from '@drizztdourden08/tessera/field-kits';
+import type { CellRenderOptions } from '@drizztdourden08/tessera/field-kits';
+import type { FieldDescriptor, FieldKind } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 
 const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({

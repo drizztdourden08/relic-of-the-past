@@ -26,7 +26,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-sm) var(--space-lg);
-  min-height: var(--settings-page-head-h-compact);
+  min-height: var(--content-header-h-compact);
   padding: var(--space-sm) var(--space-xl);
   border-bottom: 1px solid var(--c-border);
 }

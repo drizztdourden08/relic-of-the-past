@@ -9,7 +9,7 @@
   max-width: 22rem;
   padding: var(--space-2xs) var(--space-xs);
   background: var(--c-surface);
-  border: var(--border-width-thin) solid var(--c-gold);
+  border: var(--border-width-thin) solid var(--c-primary);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-overlay);
   font-family: var(--font-mono);
@@ -34,7 +34,7 @@
 
 .hud-ghost__kind {
   font-size: var(--text-xs);
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }
 
 .hud-ghost__l2 {
@@ -101,12 +101,12 @@
 
 .hud-outline__rows.is-panning .hud-outline__pan.is-up::before {
   top: 0;
-  background: linear-gradient(var(--c-gold-soft), transparent);
+  background: linear-gradient(var(--c-primary-soft), transparent);
 }
 
 .hud-outline__rows.is-panning .hud-outline__pan.is-down::before {
   bottom: 0;
-  background: linear-gradient(transparent, var(--c-gold-soft));
+  background: linear-gradient(transparent, var(--c-primary-soft));
 }
 
 .hud-outline__caret.is-springing .hud-outline__caret-mark {

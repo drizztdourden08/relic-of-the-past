@@ -5,7 +5,7 @@ import {
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
-import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { buildSchema } from '@drizztdourden08/tessera/data';
 import type * as DataTableModule from '../../apps/web/src/ui/design-system/composites/DataTable';
 import { describeDataset } from '../dataset-guard';
 

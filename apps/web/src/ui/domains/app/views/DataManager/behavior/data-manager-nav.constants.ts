@@ -8,9 +8,9 @@ import imageIcon from '@iconify-icons/lucide/image';
 import personIcon from '@iconify-icons/lucide/person-standing';
 import languagesIcon from '@iconify-icons/lucide/languages';
 import musicIcon from '@iconify-icons/lucide/music';
-import type { SectionNavConfig } from '@ds/composites/SectionNav';
+import type { SideNavConfig } from '@drizztdourden08/tessera/composites';
 
-const DATA_MANAGER_NAV: SectionNavConfig = {
+const DATA_MANAGER_NAV: SideNavConfig = {
   home: { id: 'home', label: 'Home', icon: createElement(IconifyIcon, { icon: homeIcon }) },
   groups: [
     {

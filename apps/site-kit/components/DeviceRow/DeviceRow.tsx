@@ -1,5 +1,5 @@
 /* @layer site-kit @kind component */
-import { Button } from '@ds/primitives/Button';
+import { Button } from '@drizztdourden08/tessera/primitives';
 import { Row } from '../Row/Row';
 import { formatDay, formatAgo } from '../../lib/format-date';
 import { PLATFORM_LABELS } from './DeviceRow.constants';

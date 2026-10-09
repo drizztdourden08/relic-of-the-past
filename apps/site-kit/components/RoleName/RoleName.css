@@ -10,7 +10,7 @@
   flex: 0 0 auto;
   width: var(--space-sm);
   height: var(--space-sm);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   background: var(--role-color, var(--c-text-dim));
 }
 

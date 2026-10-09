@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Text } from '@ds/primitives';
-import { DashboardPanel } from '@ds/composites';
+import { Text } from '@drizztdourden08/tessera/primitives';
+import { DashboardPanel } from '@drizztdourden08/tessera/composites';
 import { PlayersTable } from './NetworkTab';
 import { playersSummaryOf } from '../behavior/players-summary';
 import { EMPTY, WAITING } from './RunPlayers.constants';

@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { requiredPaths } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/required-fields';
 import { blankRecordFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/blank-record';
-import { getPath } from '../../apps/web/src/ui/design-system/data/schema/path';
-import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { getPath } from '@drizztdourden08/tessera/data';
+import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 
 const field = (path: string, kind: FieldDescriptor['kind'], overrides: Partial<FieldDescriptor> = {}): FieldDescriptor =>
   ({ path, label: path, kind, optional: false, ...overrides });

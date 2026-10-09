@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 
-.hud-offset .position-input {
+.hud-offset .dynamic-input {
   width: 100%;
 }
 
@@ -79,7 +79,7 @@
 
 .hud-box-model__ring--padding {
   grid-area: mid;
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   border: var(--border-width-thin) solid var(--c-border);
 }
 
@@ -126,5 +126,5 @@
 }
 
 .hud-box-model__ring .hud-box-model__link.is-on {
-  color: var(--c-gold-bright);
+  color: var(--c-primary-bright);
 }

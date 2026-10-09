@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
-import { Box, Button } from '../../../../../design-system/primitives';
+import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { FilterBtns } from './FilterBtns';
 import { ReviewStats } from './ReviewStats';
 import { ItemAssocCard } from './ItemAssocCard';

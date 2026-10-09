@@ -1,6 +1,5 @@
 /* @layer site-kit @kind component */
-import { Flex } from '@ds/primitives/Flex';
-import { Box } from '@ds/primitives/Box';
+import { Flex, Box } from '@drizztdourden08/tessera/primitives';
 import { SiteNav } from '../../SiteNav/SiteNav';
 import { Brand } from '../../Brand/Brand';
 import { useSiteDefinition } from '../../../site/site-context';

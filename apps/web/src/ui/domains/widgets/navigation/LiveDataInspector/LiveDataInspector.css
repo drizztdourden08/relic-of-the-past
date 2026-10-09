@@ -17,7 +17,7 @@
   min-height: 6rem;
 }
 
-.live-data-inspector .tab-bar {
+.live-data-inspector .tabs {
   overflow-x: auto;
   flex-shrink: 0;
 }

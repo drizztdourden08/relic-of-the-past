@@ -9,7 +9,7 @@
   width: var(--game-row-width);
   padding: var(--space-sm);
   border: var(--border-width-thick) solid var(--game-stroke);
-  border-radius: var(--r-sm);
+  border-radius: var(--radius-sm);
   background: var(--game-ground);
 }
 

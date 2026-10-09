@@ -8,7 +8,7 @@ import {
   removeAt,
   removeLast,
   resolveCommit,
-} from '../../apps/web/src/ui/design-system/primitives/TagInput/behavior/tag-values';
+} from '@drizztdourden08/tessera/primitives';
 import { VOCABULARY } from './tag-input.constants';
 
 const filter = (query: string, selected: readonly string[] = [], limit?: number) =>

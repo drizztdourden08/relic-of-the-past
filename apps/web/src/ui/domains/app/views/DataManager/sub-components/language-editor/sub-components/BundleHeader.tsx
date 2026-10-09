@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, Text, Badge, Button } from '@ds/primitives';
+import { Box, Text, Status, Button } from '@drizztdourden08/tessera/primitives';
 import { LANGUAGE_NAMES } from '../../language-names.constants';
 import type { BundleHeaderProps } from './BundleHeader.type';
 import './BundleHeader.css';
@@ -24,9 +24,9 @@ const BundleHeader = (props: BundleHeaderProps) => {
     <Box className="bundle-header">
       <Box className="bundle-header__title">
         <Text variant="title">{set.name}</Text>
-        <Badge variant="neutral">{set.origin === 'rom' ? 'from ROM' : 'custom'}</Badge>
+        <Status tone="neutral">{set.origin === 'rom' ? 'from ROM' : 'custom'}</Status>
         {warnings > 0 && (
-          <Badge variant="warning">{`${warnings} ${warnings === 1 ? 'line needs' : 'lines need'} attention`}</Badge>
+          <Status tone="warning">{`${warnings} ${warnings === 1 ? 'line needs' : 'lines need'} attention`}</Status>
         )}
       </Box>
 
@@ -35,11 +35,11 @@ const BundleHeader = (props: BundleHeaderProps) => {
       </Box>
 
       <Box className="bundle-header__state">
-        {saveError && <Badge variant="danger">{saveError}</Badge>}
-        {!saveError && readOnly && <Badge variant="neutral">Read only</Badge>}
-        {!saveError && !readOnly && saving && <Badge variant="neutral">Saving...</Badge>}
-        {!saveError && !readOnly && !saving && dirty && <Badge variant="warning">Not saved yet</Badge>}
-        {!saveError && !readOnly && !saving && !dirty && <Badge variant="success">Saved</Badge>}
+        {saveError && <Status tone="danger">{saveError}</Status>}
+        {!saveError && readOnly && <Status tone="neutral">Read only</Status>}
+        {!saveError && !readOnly && saving && <Status tone="neutral">Saving...</Status>}
+        {!saveError && !readOnly && !saving && dirty && <Status tone="warning">Not saved yet</Status>}
+        {!saveError && !readOnly && !saving && !dirty && <Status tone="success">Saved</Status>}
         {onSaveNow && !readOnly && (
           <Button variant="ghost" size="sm" disabled={!dirty || saving} onClick={onSaveNow}>Save now</Button>
         )}

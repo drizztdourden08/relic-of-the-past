@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { HeroProgressFile } from '../ProfileHero.type';
 import { HeroProgressRow } from './HeroProgressRow';
 import './HeroProgress.css';

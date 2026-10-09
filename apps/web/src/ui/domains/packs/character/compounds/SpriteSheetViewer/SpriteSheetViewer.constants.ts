@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind data */
-import type { SegmentOption } from '@ds/primitives';
+import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import type { SheetView } from './SpriteSheetViewer.type';
 
 const VIEW_OPTIONS: SegmentOption<SheetView>[] = [

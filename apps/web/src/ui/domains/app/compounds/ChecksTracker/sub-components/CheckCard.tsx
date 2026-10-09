@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Image, Text } from '@ds/primitives';
+import { Box, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { getItem } from '@shared/game/data';
 import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
 import { EVENT_MARK } from '../ChecksTracker.constants';

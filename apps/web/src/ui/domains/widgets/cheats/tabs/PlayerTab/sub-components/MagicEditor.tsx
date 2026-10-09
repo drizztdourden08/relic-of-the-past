@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
-import { Box, Button, Text } from '@ds/primitives';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { HudMagicMeter } from '@domains/hud';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetMagic } from '@app/lib/game';

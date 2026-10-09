@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
-import { Box, Text } from '@ds/primitives';
-import { DeleteGuardDialog, RecordEditor } from '@ds/composites';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { DeleteGuardDialog, RecordEditor } from '@drizztdourden08/tessera/composites';
 import { READ_ONLY_NOTE } from '../DataInspector.constants';
 import type { RecordEditorPanelProps } from '../DataInspector.type';
 import { resolveIdRefOptionsFor } from '../behavior/id-ref-options';

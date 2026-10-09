@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MenuEntry } from '@ds/composites/DropdownMenu';
+import type { MenuEntry } from '@drizztdourden08/tessera/composites';
 import { buildTitleBarMenuItems } from '../../../TitleBar/behavior/title-bar-menu';
 import type { SearchContext, SearchEntry, SearchSource } from '../../SearchPalette.type';
 

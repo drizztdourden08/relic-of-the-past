@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import { Badge } from '../../../../../../design-system/primitives/Badge';
+import { Box, Text, Status } from '@drizztdourden08/tessera/primitives';
 import type { GbaDifferenceRowProps } from './gba-settings.type';
 import './GbaDifferenceRow.css';
 
@@ -14,12 +12,12 @@ const GbaDifferenceRow = (props: GbaDifferenceRowProps) => {
         <Text as="span" className="gba-difference-row__label">{difference.label}</Text>
         <Text as="p" className="gba-difference-row__detail">{difference.detail}</Text>
       </Box>
-      <Badge
-        variant={difference.evidence === 'extracted' ? 'success' : 'neutral'}
+      <Status
+        tone={difference.evidence === 'extracted' ? 'success' : 'neutral'}
         className="gba-difference-row__badge"
       >
         {difference.evidence}
-      </Badge>
+      </Status>
     </Box>
   );
 };

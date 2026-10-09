@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
 import { STORE_RIGHTS } from '@shared/store/store-rights';
-import { Checkbox } from '@ds/primitives/Checkbox';
-import { Stack } from '@ds/primitives/Stack';
+import { Checkbox, Stack } from '@drizztdourden08/tessera/primitives';
 import type { RightsEditorProps } from '@site-kit/site/site-definition.type';
 
 const withPermission = (value: readonly string[], permission: string, on: boolean): string[] =>

@@ -1,13 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
-import { createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
-import type { TableState } from '../../apps/web/src/ui/design-system/data/table/types';
-import {
-  capture, emptySnapshot, isViewSnapshot, restore,
-} from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import type { ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
-import { prune } from '../../apps/web/src/ui/design-system/data/view-state/prune';
+import { buildSchema, createSchemaIndex, createClause, capture, emptySnapshot, isViewSnapshot, restore, prune } from '@drizztdourden08/tessera/data';
+import type { TableState, ViewSnapshot } from '@drizztdourden08/tessera/data';
 
 const ROWS = [
   { id: 'item-001', name: 'alpha', size: 1, tag: 'red' },

@@ -44,14 +44,14 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   border-left: 2px solid transparent;
   color: var(--c-text-dim);
 }
 
 .profile-switcher__item--active {
-  background: var(--c-gold-soft);
-  border-left-color: var(--c-gold);
+  background: var(--c-primary-soft);
+  border-left-color: var(--c-primary);
   color: var(--c-text);
 }
 

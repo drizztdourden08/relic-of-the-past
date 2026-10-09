@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Text } from '@ds/primitives/Text';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { TONE_CLASS } from '../DragGhost.constants';
 import type { GhostCardProps } from '../DragGhost.type';
 

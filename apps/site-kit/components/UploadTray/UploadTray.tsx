@@ -1,9 +1,5 @@
 /* @layer site-kit @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Flex } from '@ds/primitives/Flex';
-import { Portal } from '@ds/primitives/Portal';
-import { Stack } from '@ds/primitives/Stack';
+import { Box, Button, Flex, Portal, Stack } from '@drizztdourden08/tessera/primitives';
 import { UploadRow } from '../UploadRow';
 import { useUploadQueue } from '../../upload/useUploadQueue';
 import { useTrayState } from './behavior/useTrayState';

@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@ds/primitives/Box';
-import { Button } from '@ds/primitives/Button';
-import { Icon } from '@ds/primitives/Icon';
-import { IconButton } from '@ds/primitives/IconButton';
-import { Text } from '@ds/primitives/Text';
+import { Box, Button, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { CARET_PATH, DROP_CLASS } from './OutlineRow.constants';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { OutlineRowProps } from './OutlineRow.type';
