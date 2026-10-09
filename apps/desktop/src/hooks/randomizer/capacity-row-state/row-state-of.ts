@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { capacityFieldsOf, presetMatching } from '@shared/randomizer/world/capacity';
-import type { CapacityFamily, CustomFamilySetting, FamilySetting } from '@shared/randomizer/world/capacity';
+import { capacityFieldsOf, presetMatching } from '@rotp/randomizer';
+import type { CapacityFamily, CustomFamilySetting, FamilySetting } from '@rotp/randomizer';
 import type { CapacityRowState, CurveChoice } from '@domains/app/compounds/CapacityFamilyRow';
 import { hiddenPresetsOf } from './hidden-presets-of';
 import { customDefaultOf } from './custom-default-of';

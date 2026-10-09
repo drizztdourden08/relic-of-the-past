@@ -4,7 +4,7 @@ import { Box, Select, Slider, Tag, Text, TextInput, Toggle } from '@drizztdourde
 import { OptionDescription } from '../OptionDescription';
 import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { PoolImpactCell } from '../PoolImpactCell';
-import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionDef, OptionValue } from '@rotp/randomizer';
 import { EMPTY_CHOICES } from './RandomizerOptionRow.constants';
 import type { RandomizerOptionRowProps } from './RandomizerOptionRow.type';
 import './RandomizerOptionRow.css';

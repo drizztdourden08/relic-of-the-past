@@ -1,13 +1,13 @@
 /* @layer bridge-wasm @kind logic */
-import { clear } from './clear';
-import { enqueue } from './enqueue';
-import { getState } from './get-state';
-import { peek } from './peek';
-import { remove } from './remove';
-import { size } from './size';
+import { clear } from '@rotp/randomizer';
+import { enqueue } from '@rotp/randomizer';
+import { getState } from '@rotp/randomizer';
+import { peek } from '@rotp/randomizer';
+import { remove } from '@rotp/randomizer';
+import { size } from '@rotp/randomizer';
 import { startProcessing } from './start-processing';
-import { stopProcessing } from './stop-processing';
-import { subscribe } from './subscribe';
+import { stopProcessing } from '@rotp/randomizer';
+import { subscribe } from '@rotp/randomizer';
 
 const deliveryQueue = {
   enqueue,

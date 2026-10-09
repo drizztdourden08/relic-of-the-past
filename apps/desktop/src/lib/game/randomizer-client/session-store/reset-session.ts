@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { clearPendingBoot } from './clear-pending-boot';
 import { notifySessionStore } from './notify-session-store';
-import { NO_OWNERS } from './session-store.constants';
+import { NO_OWNERS } from '@rotp/randomizer';
 import { stopActive } from './stop-active';
 import { storeSlots } from './store-slots';
 

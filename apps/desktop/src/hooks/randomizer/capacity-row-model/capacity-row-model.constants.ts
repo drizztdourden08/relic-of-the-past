@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import type { CapacityFamilyId } from '@shared/randomizer/world/capacity';
+import type { CapacityFamilyId } from '@rotp/randomizer';
 import { pluralStep } from './plural-step';
 
 const FAMILY_LABEL: Readonly<Record<CapacityFamilyId, string>> = {

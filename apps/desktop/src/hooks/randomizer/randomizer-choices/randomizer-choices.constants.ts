@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind constants */
-import { ACCESSIBILITY_KEY } from '@shared/randomizer/world/accessibility/accessibility-from-snapshot';
-import { darkRoomLightKeyOf, DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
-import { DUNGEON_ITEM_OPTION_KEYS } from '@shared/randomizer/world/dungeon-items/dungeon-item-modes';
-import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@shared/randomizer/world/scope-option-keys';
+import { ACCESSIBILITY_KEY } from '@rotp/randomizer';
+import { darkRoomLightKeyOf, DARK_ROOM_REQUIRED_KEY } from '@rotp/randomizer';
+import { DUNGEON_ITEM_OPTION_KEYS } from '@rotp/randomizer';
+import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@rotp/randomizer';
 import type { ChoiceField } from './randomizer-choices.type';
 
 const PLAIN_FIELD_BY_KEY: Readonly<Record<string, ChoiceField>> = {

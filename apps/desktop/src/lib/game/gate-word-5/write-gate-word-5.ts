@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
-import { GATE_WORD } from './gate-word-5.constants';
-import { gateWord5Now } from './gate-word-5-now';
+import { GATE_WORD } from '@rotp/randomizer';
+import { gateWord5Now } from '@rotp/randomizer';
 
 const writeGateWord5 = (): void => {
   const mod = getModule();

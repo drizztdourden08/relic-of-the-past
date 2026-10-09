@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { CURVE_PRESETS } from '@shared/randomizer/world/capacity';
-import type { CurvePreset, CurvePresetId } from '@shared/randomizer/world/capacity';
+import { CURVE_PRESETS } from '@rotp/randomizer';
+import type { CurvePreset, CurvePresetId } from '@rotp/randomizer';
 
 const presetOfChoice = (choice: `preset:${CurvePresetId}`): CurvePreset => {
   const id = choice.slice('preset:'.length) as CurvePresetId;

@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { trackerReading } from '../../randomizer-client/tracker-availability';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { trackerReading } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
 import type { TrackerStatusParams } from './tracker-statuses.type';
 
 const trackerReachableScreens = (params: TrackerStatusParams): Set<string> => {

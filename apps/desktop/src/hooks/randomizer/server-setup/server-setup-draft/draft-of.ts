@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { DEFAULT_SLOT_NAME } from '@app/lib/game/randomizer-client/online-config-of-profile';
-import { splitServerAddress } from '@app/lib/game/randomizer-client/server-address';
+import { splitServerAddress } from '@rotp/randomizer';
 import type { ConnectionFields, ServerSetupDraft } from './server-setup-draft.type';
 
 const draftOf = (config: ConnectionFields): ServerSetupDraft => ({

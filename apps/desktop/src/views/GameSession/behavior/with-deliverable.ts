@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
 import type { CreateProfileOptions } from '@shared/types/profile';
-import { deliverableListsOf } from '@shared/randomizer/world/fill/deliverable-lists';
+import { deliverableListsOf } from '@rotp/randomizer';
 import {
   probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
 } from '@app/lib/game/randomizer-client';

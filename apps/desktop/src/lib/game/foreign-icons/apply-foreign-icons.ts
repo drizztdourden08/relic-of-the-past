@@ -4,7 +4,7 @@ import * as spritesStore from '../../storage/sprites-store';
 import { activeRomFile } from '../active-rom-file';
 import { getModule } from '@rotp/game-core';
 import { hasCoreExport } from '@rotp/game-core';
-import { FOREIGN_ICONS_MEMFS_PATH } from './foreign-icons.constants';
+import { FOREIGN_ICONS_MEMFS_PATH } from '@rotp/randomizer';
 
 const applyForeignIcons = async (tag: string): Promise<boolean> => {
   const mod = getModule();

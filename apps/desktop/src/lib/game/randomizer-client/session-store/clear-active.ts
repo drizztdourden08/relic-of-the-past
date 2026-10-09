@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { rememberNetworkStatus } from '../last-network-status';
+import { rememberNetworkStatus } from '@rotp/randomizer';
 import { dropOnlinePlacement } from './drop-online-placement';
 import { storeSlots } from './store-slots';
 import type { OnlineSession } from '../online-session';

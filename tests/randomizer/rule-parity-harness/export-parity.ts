@@ -1,12 +1,12 @@
 /* @layer tests @kind helper */
 import { all } from '@rotp/game-data';
-import { actTokensOf } from '@shared/randomizer/world/events/event-gates';
-import { compileRule } from '@shared/randomizer/world/rules/rule-eval';
-import { inlineHelpers, walkRuleNode } from '@shared/randomizer/world/rules/rule-node-walk';
-import { ruleNodesOfWorld } from '@shared/randomizer/world/rules/world-rules-view';
-import type { Rule } from '@shared/randomizer/world/world.type';
-import type { RuleNode } from '@shared/randomizer/world/rules/rule-node.type';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import { actTokensOf } from '@rotp/randomizer';
+import { compileRule } from '@rotp/randomizer';
+import { inlineHelpers, walkRuleNode } from '@rotp/randomizer';
+import { ruleNodesOfWorld } from '@rotp/randomizer';
+import type { Rule } from '@rotp/randomizer';
+import type { RuleNode } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
 import type { ExportParity } from './rule-parity-harness.type';
 import { prepareState } from './prepare-state';
 import { seededRandom } from './seeded-random';

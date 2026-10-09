@@ -1,19 +1,19 @@
 /* @layer renderer-components @kind logic */
-import { optionCatalog } from '@shared/randomizer/world/options.data';
-import { darkRoomSettingOfValues } from '@shared/randomizer/world/dark-rooms/dark-room-from-snapshot';
-import { DARK_ROOM_LIGHT_FIELDS } from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
-import { dungeonItemSettingFromSnapshot } from '@shared/randomizer/world/dungeon-items/dungeon-item-from-snapshot';
-import { parsePondProfiles } from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
-import { POND_IDS } from '@shared/randomizer/world/pond/pond-instances';
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
-import { progressiveSettingOfValues } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
-import { tickedCountOf } from '@shared/randomizer/world/progressive/progressive-reach';
-import { storyGateValuesOf, storyGatesOfValues } from '@shared/randomizer/world/story-gates/story-gate-from-snapshot';
-import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
+import { optionCatalog } from '@rotp/randomizer';
+import { darkRoomSettingOfValues } from '@rotp/randomizer';
+import { DARK_ROOM_LIGHT_FIELDS } from '@rotp/randomizer';
+import { dungeonItemSettingFromSnapshot } from '@rotp/randomizer';
+import { parsePondProfiles } from '@rotp/randomizer';
+import { POND_IDS } from '@rotp/randomizer';
+import { PROGRESSIVE_FAMILIES } from '@rotp/randomizer';
+import { progressiveSettingOfValues } from '@rotp/randomizer';
+import { tickedCountOf } from '@rotp/randomizer';
+import { storyGateValuesOf, storyGatesOfValues } from '@rotp/randomizer';
+import { DEFAULT_STORY_GATES } from '@rotp/randomizer';
 import { isChanged } from '@app/hooks/randomizer/option-tab-model';
 import { scopeFlagsOf } from './scope-flags';
 import { LEGACY_POND_MODE } from './options-summary.constants';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
+import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { OptionsSummary, SnapshotValues, Tally } from './options-summary.type';
 
 const tallyOf = (flags: readonly boolean[]): Tally =>

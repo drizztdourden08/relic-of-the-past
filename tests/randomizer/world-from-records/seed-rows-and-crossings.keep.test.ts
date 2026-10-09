@@ -1,11 +1,11 @@
 /* @layer tests @kind test */
 import { expect, it } from 'vitest';
 import { all, getCheck } from '@rotp/game-data';
-import { REGION_GRAPH } from '@shared/randomizer/world/rules/tables/region-graph.data';
-import { isSeedLocation } from '@shared/randomizer/world/seed-locations';
-import { CANONICAL_SLOTS } from '@shared/randomizer/world/shops/shop-slot-facts';
-import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
-import { crossingsByRegion, regionRecords } from '@shared/randomizer/world/world-from-records';
+import { REGION_GRAPH } from '@rotp/randomizer';
+import { isSeedLocation } from '@rotp/randomizer';
+import { CANONICAL_SLOTS } from '@rotp/randomizer';
+import { POND_INSTANCES } from '@rotp/randomizer';
+import { crossingsByRegion, regionRecords } from '@rotp/randomizer';
 import type { RegionId } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import {

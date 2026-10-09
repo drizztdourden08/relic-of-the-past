@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind types */
 import type { ItemId } from '@rotp/game-data';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { Placement } from '@rotp/randomizer';
 
 interface GrantParams {
   placement: Placement;

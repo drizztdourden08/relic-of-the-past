@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import type { PondPrizeArm } from './pond-plan.type';
+import type { PondPrizeArm } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import { isArmableOverrideId } from '../foreign-item-id';
+import { isArmableOverrideId } from '@rotp/randomizer';
 import { getModule } from '@rotp/game-core';
 
 const setPondPrize = (arm: PondPrizeArm): void => {

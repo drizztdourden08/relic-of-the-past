@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { PondId } from '@shared/randomizer/world/pond/pond-instance.type';
+import type { PondId } from '@rotp/randomizer';
 
 const FROZEN_PONDS: readonly PondId[] = ['capacity'];
 

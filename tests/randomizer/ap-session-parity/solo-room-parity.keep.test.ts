@@ -1,13 +1,13 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { buildOptionsSnapshot, normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
-import { generateFromSnapshot } from '@shared/randomizer/generate';
-import { deliverableSetsOf } from '@shared/randomizer/world/fill/deliverable-lists';
-import { RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data';
-import { isShopSlotLocation } from '@shared/randomizer/world/shops/shop-slots';
+import { buildOptionsSnapshot, normalizeRandomizerOptions } from '@rotp/randomizer';
+import { generateFromSnapshot } from '@rotp/randomizer';
+import { deliverableSetsOf } from '@rotp/randomizer';
+import { RETRO_QUIVER_ITEM } from '@rotp/randomizer';
+import { isShopSlotLocation } from '@rotp/randomizer';
 import { stripHighlight } from '@rotp/game-core';
-import type { DeliverableLists } from '@shared/randomizer/world/fill/deliverable-lists';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
+import type { DeliverableLists } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
 import { installFakeModule } from '../ap-fake-module';
 import { createFakeServer } from '../ap-fake-server';
 import { soloRoomOf } from '../ap-solo-room';
@@ -60,8 +60,8 @@ const { defaultOnlineCore } = await import('@app/lib/game/randomizer-client/onli
 const { AP_ONLINE_BIT, AP_DEATH_LINK_BIT } = await import('@app/lib/game/gate-word-5');
 const {
   probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
-} = await import('@app/lib/game/randomizer-client/npc-capability');
-const { resolveLocalItemId } = await import('@app/lib/game/randomizer-client/item-lookup');
+} = await import('../../../packages/randomizer/src/client/npc-capability');
+const { resolveLocalItemId } = await import('../../../packages/randomizer/src/client/item-lookup');
 
 const AP_BITS = AP_ONLINE_BIT | AP_DEATH_LINK_BIT;
 const SETTLE_TICKS = 400;

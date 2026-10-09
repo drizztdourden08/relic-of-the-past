@@ -1,17 +1,15 @@
 /* @layer renderer-components @kind logic */
-import {
-  CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, familyOfOptionKey, isCapacityBonusKey,
-} from '@shared/randomizer/world/capacity';
-import { isShopPriceOptionKey } from '@shared/randomizer/world/shops/shop-price-options.data';
-import { isShopScopeOptionKey } from '@shared/randomizer/world/shops/shop-slot-options.data';
-import { isDarkRoomOptionKey } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
-import { isDifficultyOptionKey } from '@shared/randomizer/world/difficulty/difficulty-option-keys';
-import { isPondValueKey } from '@shared/randomizer/world/pond/pond-option-keys';
-import { isProgressiveTierKey } from '@shared/randomizer/world/progressive/progressive-option-keys';
-import { isProgressiveModeKey } from '@shared/randomizer/world/progressive/progressive-mode-keys';
-import { RETRO_BOW_KEY } from '@shared/randomizer/world/retro/retro-bow.data';
-import { isRetroOptionKey } from '@shared/randomizer/world/retro/retro-options.data';
-import type { OptionDef, OptionGroup } from '@shared/randomizer/world/options.type';
+import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, familyOfOptionKey, isCapacityBonusKey } from '@rotp/randomizer';
+import { isShopPriceOptionKey } from '@rotp/randomizer';
+import { isShopScopeOptionKey } from '@rotp/randomizer';
+import { isDarkRoomOptionKey } from '@rotp/randomizer';
+import { isDifficultyOptionKey } from '@rotp/randomizer';
+import { isPondValueKey } from '@rotp/randomizer';
+import { isProgressiveTierKey } from '@rotp/randomizer';
+import { isProgressiveModeKey } from '@rotp/randomizer';
+import { RETRO_BOW_KEY } from '@rotp/randomizer';
+import { isRetroOptionKey } from '@rotp/randomizer';
+import type { OptionDef, OptionGroup } from '@rotp/randomizer';
 import type { CatalogByLock, LockedOptionGroup } from '../RandomizerOptionRow.type';
 
 const partitionCatalogByLock = (

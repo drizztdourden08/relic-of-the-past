@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { all } from '@rotp/game-data';
 import type { RunKind } from '@rotp/game-data';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { Placement } from '@rotp/randomizer';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { loadRandomizerPlacement } from '@app/lib/randomizer-placement-io';
 import { offlineCompletedChecks } from '@app/lib/game/save-file/offline-progress';

@@ -2,12 +2,12 @@
 import { openCapacityGate } from '../../capacity-profile';
 import { setCapacityBonus } from '../../capacity-bonus';
 import { applyUpgradeIcons } from '../../upgrade-icons';
-import { setActiveCapacity } from '../active-capacity-profile';
-import { NO_CAPACITY_LINES } from '../capacity-rung-messages.constants';
+import { setActiveCapacity } from '@rotp/randomizer';
+import { NO_CAPACITY_LINES } from '@rotp/randomizer';
 import type { CapacityLineMessages } from '../capacity-rung-messages';
 import { armCapacityProfile } from './arm-capacity-profile';
-import type { CapacitySessionPlan } from './capacity-session.type';
-import { primeCapacitySession } from './prime-capacity-session';
+import type { CapacitySessionPlan } from '@rotp/randomizer';
+import { primeCapacitySession } from '@rotp/randomizer';
 
 const armCapacitySession = async (
   plan: CapacitySessionPlan, tag: string, lines: CapacityLineMessages = NO_CAPACITY_LINES,

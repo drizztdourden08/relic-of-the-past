@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
-import { storyGateValuesOf, storyGatesOfValues } from '@shared/randomizer/world/story-gates/story-gate-from-snapshot';
+import { storyGateValuesOf, storyGatesOfValues } from '@rotp/randomizer';
 import { STORY_GATE_OPTIONS, STORY_GATES_TITLE } from './StoryGatesSection.constants';
 import type { StoryGatesSectionProps } from './StoryGatesSection.type';
 

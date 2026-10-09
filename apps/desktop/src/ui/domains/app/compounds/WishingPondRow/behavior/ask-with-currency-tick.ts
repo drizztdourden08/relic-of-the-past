@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { PondAskCurrency, PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondAskCurrency, PondAskSetting } from '@rotp/randomizer';
 
 const askWithCurrencyTick = (
   ask: PondAskSetting, currency: PondAskCurrency, enabled: boolean,

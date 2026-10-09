@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { createTrackerLink } from './tracker-link';
 import type { TrackerLink } from './tracker-link';
-import type { TrackerLinks, TrackerLinksDeps } from './tracker-links.type';
+import type { TrackerLinks, TrackerLinksDeps } from '@rotp/randomizer';
 
 const createTrackerLinks = (deps: TrackerLinksDeps): TrackerLinks => {
   const { config, room, createSocket, url, uuid, onChange } = deps;
@@ -31,4 +31,4 @@ const createTrackerLinks = (deps: TrackerLinksDeps): TrackerLinks => {
 };
 
 export { createTrackerLinks };
-export type { TrackerLinks, TrackerLinksDeps } from './tracker-links.type';
+export type { TrackerLinks, TrackerLinksDeps } from '@rotp/randomizer';

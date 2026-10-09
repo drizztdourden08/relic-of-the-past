@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { OptionTabId } from '@app/hooks/randomizer/option-tab-model';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
+import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 import type { POOL_TAB } from './RandomizerOptionsPanel.constants';
 

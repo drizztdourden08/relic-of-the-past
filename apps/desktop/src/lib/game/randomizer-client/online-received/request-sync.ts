@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import type { OnlineContext } from '../online-context.type';
+import type { OnlineContext } from '@rotp/randomizer';
 
 const requestSync = (ctx: OnlineContext, reason: string): void => {
   if (ctx.room.syncPending) return;

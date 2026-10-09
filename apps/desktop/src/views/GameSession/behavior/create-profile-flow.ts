@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
 import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { Placement } from '@rotp/randomizer';
 import { log } from '@app/lib/log-bus';
 import * as profileStore from '@app/lib/storage/profile-store';
 import { saveRandomizerPlacement } from '@app/lib/randomizer-placement-io';

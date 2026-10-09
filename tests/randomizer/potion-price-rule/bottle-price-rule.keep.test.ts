@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { POTION_CAULDRONS } from '@shared/randomizer/world/potion-price';
-import { ruleForPrice } from '@shared/randomizer/world/rules/shop-prices';
-import { REGION } from '@shared/randomizer/world/region-ids.data';
-import type { CollectionState } from '@shared/randomizer/world/collection-state';
+import { POTION_CAULDRONS } from '@rotp/randomizer';
+import { ruleForPrice } from '@rotp/randomizer';
+import { REGION } from '@rotp/randomizer';
+import type { CollectionState } from '@rotp/randomizer';
 import { CAULDRON } from './potion-price-rule.constants';
 
 describe('paying a bottle price needs a source to buy the content back from', () => {

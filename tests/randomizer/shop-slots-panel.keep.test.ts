@@ -5,15 +5,15 @@ import { shopTotalTextOf } from '@app/ui/domains/app/compounds/ShopSlotsBlock/be
 import { shopSectionsOf } from '@app/ui/domains/app/compounds/ShopSlotsBlock/behavior/shop-sections';
 import { shopCountControlOf } from '@app/ui/domains/app/compounds/ShopSlotsBlock/behavior/shop-count-control';
 import { VANILLA_TOTAL } from '@app/ui/domains/app/compounds/ShopSlotsBlock/ShopSlotsBlock.constants';
-import { defaultShopScope } from '@shared/randomizer/world/shops/shop-scope-from-values';
-import { SHOP_IDS, STANDARD_SHOP_SLOT_COUNT } from '@shared/randomizer/world/shops/shop-slot-facts';
-import { DEFAULT_OFF_SHOPS } from '@shared/randomizer/world/shops/shop-slot-options.data';
-import { SHOP_SLOT_ROWS } from '@shared/randomizer/world/shops/shop-slot-options.data';
+import { defaultShopScope } from '@rotp/randomizer';
+import { SHOP_IDS, STANDARD_SHOP_SLOT_COUNT } from '@rotp/randomizer';
+import { DEFAULT_OFF_SHOPS } from '@rotp/randomizer';
+import { SHOP_SLOT_ROWS } from '@rotp/randomizer';
 import { EMPTY_RANDOMIZER_FORM } from '@app/ui/domains/app/views/DataManager/sub-components/profile-manager/build-randomizer-config';
 import { snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
-import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
-import { shopScopeOfValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
-import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import { normalizeRandomizerOptions } from '@rotp/randomizer';
+import { shopScopeOfValues } from '@rotp/randomizer';
+import type { ShopScope } from '@rotp/randomizer';
 
 const STALE_COUNT = 12;
 

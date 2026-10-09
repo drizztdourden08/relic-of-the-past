@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { armNpcOverrideGate } from './arm-npc-override-gate';
-import { CLASS_TEMPLATE_MESSAGE, NPC_NO_FIRE_ID, ROOM_ANY } from './npc-grant-overrides.constants';
+import { CLASS_TEMPLATE_MESSAGE, NPC_NO_FIRE_ID, ROOM_ANY } from '@rotp/randomizer';
 import { refuseNpcOverride } from './refuse-npc-override';
 
 const setNpcGrantOverride = (

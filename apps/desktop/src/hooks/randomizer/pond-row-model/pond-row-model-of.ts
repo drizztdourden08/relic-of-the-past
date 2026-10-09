@@ -1,16 +1,16 @@
 /* @layer renderer-hooks @kind logic */
-import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import { CAPACITY_POND } from '@shared/randomizer/world/pond/pond-instances';
-import { POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER } from '@shared/randomizer/world/pond/pond-ladder.data';
-import { VANILLA_POND_CEILINGS } from '@shared/randomizer/world/pond/pond-ceilings';
-import { pondCeilingRungOf } from '@shared/randomizer/world/pond/pond-wallet-top';
-import { NO_POND_DEMANDS } from '@shared/randomizer/world/pond/pond-demand-seed';
+import { pondPlanOf } from '@rotp/randomizer';
+import { CAPACITY_POND } from '@rotp/randomizer';
+import { POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER } from '@rotp/randomizer';
+import { VANILLA_POND_CEILINGS } from '@rotp/randomizer';
+import { pondCeilingRungOf } from '@rotp/randomizer';
+import { NO_POND_DEMANDS } from '@rotp/randomizer';
 import { pondAskModelOf } from '../pond-ask-rows';
 import { pondChargesOf, pondPreviewOf, pondWalletNoteOf } from '../pond-preview';
-import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
-import type { PondCeilings } from '@shared/randomizer/world/pond/pond-ceilings';
-import type { PondInstance } from '@shared/randomizer/world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { PondDemandView } from '@rotp/randomizer';
+import type { PondCeilings } from '@rotp/randomizer';
+import type { PondInstance } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 import type { PondRowModel } from '@domains/app/compounds/WishingPondRow';
 import { CURVE_OPTIONS, MODE_LABELS, PRICE_STOPS } from './pond-row-model.constants';
 import { stateOfSetting } from './state-of-setting';

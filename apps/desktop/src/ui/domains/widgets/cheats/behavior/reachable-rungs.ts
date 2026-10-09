@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind logic */
-import { familyById, planOf } from '@shared/randomizer/world/capacity';
-import type { CapacityFamily, FamilySetting } from '@shared/randomizer/world/capacity';
-import type { ActiveCapacity } from '@app/lib/game/randomizer-client/active-capacity-profile';
+import { familyById, planOf } from '@rotp/randomizer';
+import type { CapacityFamily, FamilySetting } from '@rotp/randomizer';
+import type { ActiveCapacity } from '@rotp/randomizer';
 import type { CapacityKind } from '@app/lib/game';
 import { FAMILY_OF_KIND, VANILLA_METER_RUNGS } from '../CheatsWidget.constants';
 

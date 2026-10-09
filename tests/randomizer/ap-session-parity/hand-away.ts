@@ -1,8 +1,8 @@
 /* @layer tests @kind helper */
-import { FOREIGN_ITEM_KEY } from '@shared/randomizer/archipelago/foreign-item';
-import { AP_LOCATION_IDS } from '@shared/randomizer/archipelago/ap-ids.data';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import { FOREIGN_ITEM_KEY } from '@rotp/randomizer';
+import { AP_LOCATION_IDS } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
+import type { Placement } from '@rotp/randomizer';
 import type { FakeRoom } from '../ap-fake-server';
 import { OTHER_SLOT } from './parity-cases.data';
 

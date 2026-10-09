@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionValue } from '@rotp/randomizer';
 
 type SnapshotValues = Readonly<Record<string, OptionValue>>;
 

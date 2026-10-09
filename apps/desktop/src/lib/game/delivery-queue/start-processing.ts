@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { queueState } from './queue-state';
+import { queueState } from '@rotp/randomizer';
 import { tick } from './tick';
 
 const startProcessing = (): void => {

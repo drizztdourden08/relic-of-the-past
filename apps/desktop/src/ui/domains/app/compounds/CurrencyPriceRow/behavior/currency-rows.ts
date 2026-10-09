@@ -1,13 +1,11 @@
 /* @layer renderer-components @kind logic */
 import { stopsFor } from './price-stops';
-import { priceCeilingsOf } from '@shared/randomizer/world/shops/shop-price-ceilings';
-import {
-  blockedCurrencyKeysOfValues, blockedCurrencyNote,
-} from '@shared/randomizer/world/shops/shop-price-currency-rule';
-import { shopPricePlanOf } from '@shared/randomizer/world/shops/shop-price-plan';
+import { priceCeilingsOf } from '@rotp/randomizer';
+import { blockedCurrencyKeysOfValues, blockedCurrencyNote } from '@rotp/randomizer';
+import { shopPricePlanOf } from '@rotp/randomizer';
 import type { CurrencyCatalogKeys, CurrencyRowModel, Values } from '../CurrencyPriceRow.type';
-import type { CapacityProfile } from '@shared/randomizer/world/capacity';
-import type { CurrencyRow } from '@shared/randomizer/world/shops/shop-price-options.data';
+import type { CapacityProfile } from '@rotp/randomizer';
+import type { CurrencyRow } from '@rotp/randomizer';
 
 const numberAt = (values: Values, key: string, fallback: number): number =>
   (typeof values[key] === 'number' ? values[key] : fallback);

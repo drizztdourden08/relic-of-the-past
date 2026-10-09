@@ -1,10 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
-import { PING_INTERVAL_MS, PING_TAG } from '@app/lib/game/randomizer-client/network-ping';
-import { AP_WORLD_VERSION } from '@shared/randomizer/archipelago/ap-game';
+import { PING_INTERVAL_MS, PING_TAG } from '@rotp/randomizer';
+import { AP_WORLD_VERSION } from '@rotp/randomizer';
 import { stateChip } from '@app/ui/domains/app/views/Randomizer/sub-components/NetworkTab/behavior/network-tone';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
+import type { LocationKey } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeServer } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';

@@ -2,11 +2,11 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID, FOREIGN_ITEM_ID } from '@app/lib/game/foreign-item-sentinel';
+import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID, FOREIGN_ITEM_ID } from '@rotp/randomizer';
 import { FOREIGN_ICON_FILES } from '@rotp/asset-extraction';
-import { buildOptionsSnapshot, normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
-import { generateFromSnapshot } from '@shared/randomizer/generate';
-import { AP_LOCATION_IDS } from '@shared/randomizer/archipelago/ap-ids.data';
+import { buildOptionsSnapshot, normalizeRandomizerOptions } from '@rotp/randomizer';
+import { generateFromSnapshot } from '@rotp/randomizer';
+import { AP_LOCATION_IDS } from '@rotp/randomizer';
 import { stripHighlight } from '@rotp/game-core';
 import { installFakeModule } from './ap-fake-module';
 import { createFakeServer } from './ap-fake-server';
@@ -45,10 +45,10 @@ const { createOnlineClient } = await import('@app/lib/game/randomizer-client/onl
 const { AP_DEATH_LINK_BIT, AP_ONLINE_BIT, gateWord5Now } = await import('@app/lib/game/gate-word-5');
 const {
   probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
-} = await import('@app/lib/game/randomizer-client/npc-capability');
-const { executeEntry } = await import('@app/lib/game/delivery-execute');
+} = await import('../../packages/randomizer/src/client/npc-capability');
+const { executeEntry } = await import('../../packages/randomizer/src/delivery-execute');
 const { withCollectedChecks } = await import('@app/lib/game/tracker/collected-checks');
-const { rebaselineEntries } = await import('@app/lib/game/randomizer-client/poll-rebaseline');
+const { rebaselineEntries } = await import('../../packages/randomizer/src/client/poll-rebaseline');
 
 const settle = async (): Promise<void> => {
   for (let i = 0; i < 400; i += 1) await Promise.resolve();

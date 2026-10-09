@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
-import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
-import type { PondId } from '@shared/randomizer/world/pond/pond-instance.type';
+import { POND_INSTANCES } from '@rotp/randomizer';
+import type { PondId } from '@rotp/randomizer';
 
 const NOTICE = 'The fairy ponds could not be planned from these settings.';
 

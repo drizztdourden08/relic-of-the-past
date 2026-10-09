@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
-import type { ApSocket, CreateSocket } from '@app/lib/game/randomizer-client/ap-socket.type';
-import type { ApClientPacket, ApServerPacket } from '@app/lib/game/randomizer-client/ap-protocol.type';
+import type { ApSocket, CreateSocket } from '@rotp/randomizer';
+import type { ApClientPacket, ApServerPacket } from '@rotp/randomizer';
 import { VERSION } from './ap-fake-server.constants';
 import type { FakeRoom, FakeServer } from './ap-fake-server.type';
 import { answerStorage } from './answer-storage';

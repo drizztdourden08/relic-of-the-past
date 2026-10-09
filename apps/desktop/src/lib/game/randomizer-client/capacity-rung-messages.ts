@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-import { capacityRungLinesOf } from '@shared/randomizer/receipt-text/capacity-rung-lines';
-import { capacityFixedLinesOf } from '@shared/randomizer/receipt-text/capacity-fixed-lines';
+import { capacityRungLinesOf } from '@rotp/randomizer';
+import { capacityFixedLinesOf } from '@rotp/randomizer';
 import { setSessionReceiptMessages } from '../session-dialogue';
-import type { CapacityFamilyId, CapacityProfile } from '@shared/randomizer/world/capacity';
+import type { CapacityFamilyId, CapacityProfile } from '@rotp/randomizer';
 import type { CapacityFixedLineArm } from '../capacity-fixed-lines';
-import { NO_RUNG_LINES } from './capacity-rung-messages.constants';
-import type { CapacityLineMessages, RungMessageIdOf } from './capacity-rung-messages.type';
+import { NO_RUNG_LINES } from '@rotp/randomizer';
+import type { CapacityLineMessages, RungMessageIdOf } from '@rotp/randomizer';
 
 const composeRungMessages = (profile: CapacityProfile): RungMessageIdOf => {
   const families = capacityRungLinesOf(profile);
@@ -33,4 +33,4 @@ const composeCapacityLineMessages = (profile: CapacityProfile, progressive: bool
     : { rungMessageIdOf: NO_RUNG_LINES, fixedLineMessages: composeFixedMessages(profile) });
 
 export { composeCapacityLineMessages };
-export type { CapacityLineMessages, RungMessageIdOf } from './capacity-rung-messages.type';
+export type { CapacityLineMessages, RungMessageIdOf } from '@rotp/randomizer';

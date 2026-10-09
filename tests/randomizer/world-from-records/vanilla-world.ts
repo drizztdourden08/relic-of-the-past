@@ -1,7 +1,7 @@
 /* @layer tests @kind helper */
-import { buildWorld } from '@shared/randomizer/world/build-world';
-import { VANILLA_MEDALLIONS } from '@shared/randomizer/world/item-groups';
-import type { World } from '@shared/randomizer/world/world.type';
+import { buildWorld } from '@rotp/randomizer';
+import { VANILLA_MEDALLIONS } from '@rotp/randomizer';
+import type { World } from '@rotp/randomizer';
 
 const vanillaWorld = (keyDropShuffle = true): World => buildWorld({
   keyDropShuffle,

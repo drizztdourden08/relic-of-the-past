@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
-import { describeRupees } from '@shared/randomizer/world/pond/rupee-gems';
-import type { PondPlan } from '@shared/randomizer/world/pond/pond-profile.type';
+import { describeRupees } from '@rotp/randomizer';
+import type { PondPlan } from '@rotp/randomizer';
 import type { PondCharge } from './pond-preview.type';
 
 const pondWalletNoteOf = (

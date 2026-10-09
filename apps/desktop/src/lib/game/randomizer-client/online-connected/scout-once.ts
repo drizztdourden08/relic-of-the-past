@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import type { OnlineContext } from '../online-context.type';
-import { withGoal } from './with-goal';
+import type { OnlineContext } from '@rotp/randomizer';
+import { withGoal } from '@rotp/randomizer';
 
 const sendScout = (ctx: OnlineContext): void => {
   ctx.send({ cmd: 'LocationScouts', locations: ctx.room.scoutIds, create_as_hint: 0 });

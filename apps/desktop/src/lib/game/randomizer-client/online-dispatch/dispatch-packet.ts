@@ -4,11 +4,11 @@ import { handleConnected } from '../online-connected';
 import { handleReceivedItems } from '../online-received';
 import { handleLocationInfo } from '../online-scouted';
 import { handlePrintJson, handleRoomUpdate } from '../online-messages';
-import { refusalText } from '../refusal-text';
-import type { ApServerPacket } from '../ap-protocol.type';
-import type { OnlineContext } from '../online-context.type';
+import { refusalText } from '@rotp/randomizer';
+import type { ApServerPacket } from '@rotp/randomizer';
+import type { OnlineContext } from '@rotp/randomizer';
 import { handleInvalid } from './handle-invalid';
-import type { BouncedHandler } from './online-dispatch.type';
+import type { BouncedHandler } from '@rotp/randomizer';
 
 const dispatchPacket = (ctx: OnlineContext, packet: ApServerPacket, onBounced: BouncedHandler): void => {
   switch (packet.cmd) {

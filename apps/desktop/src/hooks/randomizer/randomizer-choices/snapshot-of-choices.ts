@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
+import { buildOptionsSnapshot } from '@rotp/randomizer';
+import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from './randomizer-choices.type';
 import { randomizerChoiceOverrides } from './randomizer-choice-overrides';
 

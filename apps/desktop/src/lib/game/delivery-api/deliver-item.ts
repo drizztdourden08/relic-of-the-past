@@ -3,9 +3,9 @@ import { enqueue } from '../delivery-queue';
 import type { DeliveryAction } from '../delivery-queue';
 import { isCoreReady } from '@rotp/game-core';
 import { armReceiptGates } from '../receipt-grants';
-import { isQuietReceiptItem } from '../quiet-receipts';
+import { isQuietReceiptItem } from '@rotp/randomizer';
 import { isGrantable } from './is-grantable';
-import { itemLabel } from './item-label';
+import { itemLabel } from '@rotp/randomizer';
 
 const deliverItem = (
   itemId: number, message?: string, source = 'randomizer', messageId?: number | (() => number),

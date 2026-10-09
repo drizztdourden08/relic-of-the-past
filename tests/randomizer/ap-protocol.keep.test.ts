@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
-import { serverUrlCandidates } from '@app/lib/game/randomizer-client/server-url';
+import { serverUrlCandidates } from '@rotp/randomizer';
 import { createFakeServer, VERSION } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import { boot, installClientHarness, item, makeRoom, OWN, settle } from './ap-protocol-harness';

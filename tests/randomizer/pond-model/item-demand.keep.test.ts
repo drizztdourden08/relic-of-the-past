@@ -1,18 +1,18 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
-import { itemKeyOfName } from '@shared/randomizer/world/display-names/item-key-name';
-import { ITEM } from '@shared/randomizer/world/item-ids.data';
-import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import { isDemandableItem } from '@shared/randomizer/world/pond/pond-demand-eligibility';
-import { DEMAND_ITEM_ORDER } from '@shared/randomizer/world/pond/pond-demand-order.data';
-import { demandCandidatesOf } from '@shared/randomizer/world/pond/pond-demand-item';
-import { rollPondDemands } from '@shared/randomizer/world/pond/pond-demand-roll';
-import { pondRupeesOnlyAsk } from '@shared/randomizer/world/pond/pond-ask.data';
-import { POND_INSTANCE_BY_ID } from '@shared/randomizer/world/pond/pond-instances';
-import { REFERENCE_CAPACITY_PROFILE } from '@shared/randomizer/world/capacity/capacity-profile-defaults';
+import type { ItemKey } from '@rotp/randomizer';
+import { itemKeyOfName } from '@rotp/randomizer';
+import { ITEM } from '@rotp/randomizer';
+import { pondPlanOf } from '@rotp/randomizer';
+import { isDemandableItem } from '@rotp/randomizer';
+import { DEMAND_ITEM_ORDER } from '@rotp/randomizer';
+import { demandCandidatesOf } from '@rotp/randomizer';
+import { rollPondDemands } from '@rotp/randomizer';
+import { pondRupeesOnlyAsk } from '@rotp/randomizer';
+import { POND_INSTANCE_BY_ID } from '@rotp/randomizer';
+import { REFERENCE_CAPACITY_PROFILE } from '@rotp/randomizer';
 import { all } from '@rotp/game-data';
-import { createRng } from '@shared/randomizer/rng';
+import { createRng } from '@rotp/randomizer';
 import { CUSTOM } from './pond-model.constants';
 
 describe('pond item demand', () => {

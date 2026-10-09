@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import { POLL_INTERVAL_MS } from './location-poller.constants';
-import type { PollEntry, ReportingSession } from './location-poller.type';
+import type { LocationKey } from '@rotp/randomizer';
+import { POLL_INTERVAL_MS } from '@rotp/randomizer';
+import type { PollEntry, ReportingSession } from '@rotp/randomizer';
 import { pauseLocationPolling } from './pause-location-polling';
 import { pollOnce } from './poll-once';
-import { pollerState } from './poller-state';
+import { pollerState } from '@rotp/randomizer';
 
 const startLocationPolling = (
   session: ReportingSession, entries: readonly PollEntry[], knownReported?: (key: LocationKey) => boolean,

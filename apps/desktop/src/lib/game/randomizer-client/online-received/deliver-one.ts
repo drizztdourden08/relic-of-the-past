@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { settlePosition } from '../received-cursor';
-import { adoptRoom } from '../online-room-identity';
-import { isFromServer } from './is-from-server';
-import { senderNameOf } from './sender-name-of';
-import type { ApNetworkItem } from '../ap-protocol.type';
-import type { DeliveryOutcome } from '../online-core.type';
-import type { OnlineContext } from '../online-context.type';
+import { settlePosition } from '@rotp/randomizer';
+import { adoptRoom } from '@rotp/randomizer';
+import { isFromServer } from '@rotp/randomizer';
+import { senderNameOf } from '@rotp/randomizer';
+import type { ApNetworkItem } from '@rotp/randomizer';
+import type { DeliveryOutcome } from '@rotp/randomizer';
+import type { OnlineContext } from '@rotp/randomizer';
 
 const isOwnPickupEcho = (ctx: OnlineContext, item: ApNetworkItem): boolean =>
   !isFromServer(item) && item.player === ctx.room.slot && ctx.maps.overriddenLocationIds.has(item.location);

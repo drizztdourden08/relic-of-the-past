@@ -1,7 +1,7 @@
 /* @layer renderer-hooks @kind constants */
-import { POND_PRICE_LADDER } from '@shared/randomizer/world/pond/pond-ladder.data';
-import { CURVE_LABELS } from '@shared/randomizer/world/capacity';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import { POND_PRICE_LADDER } from '@rotp/randomizer';
+import { CURVE_LABELS } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 
 const MODE_LABELS: Readonly<Record<PondSetting['mode'], string>> = {
   capacity: 'Vanilla grants',

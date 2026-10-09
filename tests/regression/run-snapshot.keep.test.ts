@@ -4,8 +4,8 @@ import { resolve } from 'node:path';
 import { expect, it } from 'vitest';
 import { find } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
-import { computePlacementAvailability } from '@shared/randomizer/placement-availability';
-import { buildNormalPlacement } from '@shared/randomizer/normal-placement';
+import { computePlacementAvailability } from '@rotp/randomizer';
+import { buildNormalPlacement } from '@rotp/randomizer';
 import { computeCompletedChecks } from '@app/lib/game/tracker/completed-checks-core';
 import { PROGRESS_OFFSETS } from '@rotp/game-core';
 import { SRM_EVENT_LEDGER } from '@rotp/game-core';
@@ -15,7 +15,7 @@ import { CORPUS_SEEDS, ROOT, corpusSaves } from './corpus';
 
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };
 const { trackerReachableScreens, trackerStatuses } = await import('@app/lib/game/tracker/tracker-statuses');
-const { standardCheckName } = await import('@app/lib/game/randomizer-client/check-names');
+const { standardCheckName } = await import('../../packages/randomizer/src/client/check-names');
 
 const LABEL = process.env.ROTP_NET_LABEL ?? '';
 const JS = resolve(ROOT, 'apps/desktop/public/wasm/zelda3.js');

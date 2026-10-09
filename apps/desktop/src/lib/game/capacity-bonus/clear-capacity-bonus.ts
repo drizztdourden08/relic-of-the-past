@@ -2,7 +2,7 @@
 import { log } from '../../log-bus';
 import { setCapacityHalf } from '../gate-word-5';
 import { getModule } from '@rotp/game-core';
-import { CAPACITY_BONUS_CLEARED } from './capacity-bonus.constants';
+import { CAPACITY_BONUS_CLEARED } from '@rotp/randomizer';
 
 const clearCapacityBonus = (): void => {
   const mod = getModule();

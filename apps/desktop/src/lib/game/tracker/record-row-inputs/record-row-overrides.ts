@@ -1,9 +1,9 @@
 /* @layer renderer-lib @kind logic */
-import type { MedallionId } from '@shared/randomizer/world/item-groups';
+import type { MedallionId } from '@rotp/randomizer';
 import { hasSword } from '@rotp/game-data';
 import { ITEM_GROUP_IDS } from '@rotp/game-data';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import type { PedestalGate } from '@shared/randomizer/world/story-gates/story-gate.type';
+import type { Placement } from '@rotp/randomizer';
+import type { PedestalGate } from '@rotp/randomizer';
 import type { CheckId, Requirement } from '@rotp/game-data';
 import { ALWAYS, LIGHT_WORLD_CLEARED, MOON_PEARL } from './record-row-inputs.constants';
 

@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { getItemSprite } from '@rotp/game-data';
-import {
-  DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS,
-} from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
+import { DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS } from '@rotp/randomizer';
 import { getItem } from '@rotp/game-data';
 import type { DarkRoomLightField, DarkRoomLights } from '@rotp/game-core';
 import { NO_FORCED } from './dark-room-light-tiles.constants';

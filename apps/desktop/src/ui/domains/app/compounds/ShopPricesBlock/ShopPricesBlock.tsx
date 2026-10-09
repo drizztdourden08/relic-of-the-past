@@ -4,10 +4,7 @@ import { BottleContentRow, CurrencyPriceRow, currencyRowsOf } from '../CurrencyP
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { ShopPriceModifierRow } from './sub-components/ShopPriceModifierRow';
 import { bottleContentRowsOf } from './behavior/bottle-content-rows';
-import {
-  BOTTLE_KEY, CURRENCY_ROWS, SHOP_PRICE_MODIFIER_DEFAULT, SHOP_PRICE_MODIFIER_KEY,
-  SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_MIN,
-} from '@shared/randomizer/world/shops/shop-price-options.data';
+import { BOTTLE_KEY, CURRENCY_ROWS, SHOP_PRICE_MODIFIER_DEFAULT, SHOP_PRICE_MODIFIER_KEY, SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_MIN } from '@rotp/randomizer';
 import { SHOP_CURRENCY_KEYS } from './ShopPricesBlock.constants';
 import type { ShopPricesBlockProps } from './ShopPricesBlock.type';
 import './ShopPricesBlock.css';

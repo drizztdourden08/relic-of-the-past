@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind types */
 import type { LocalSession } from '../local-session';
 import type { OnlineSession } from '../online-session';
-import type { ForeignOwners } from '../foreign-item-line';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { ForeignOwners } from '@rotp/randomizer';
+import type { Placement } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
 
 type ActiveSession = LocalSession | OnlineSession;

@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { setWishPondLines, setWishPondRungs } from '../wish-pond-plan';
-import type { WishPondSessionPlan, WishPondWaterPlan } from './wish-pond-rungs';
+import type { WishPondSessionPlan, WishPondWaterPlan } from '@rotp/randomizer';
 
 const hex = (id: number): string => `0x${id.toString(16).padStart(2, '0')}`;
 

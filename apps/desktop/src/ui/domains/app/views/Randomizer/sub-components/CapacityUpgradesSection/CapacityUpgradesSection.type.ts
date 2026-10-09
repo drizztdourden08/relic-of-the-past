@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind types */
-import type {
-  CapacityBonusSetting, CapacityFamilyId, CapacityProfile, FamilyBonus, WalletFloor,
-} from '@shared/randomizer/world/capacity';
+import type { CapacityBonusSetting, CapacityFamilyId, CapacityProfile, FamilyBonus, WalletFloor } from '@rotp/randomizer';
 import type { CapacityRowState } from '@domains/app/compounds/CapacityFamilyRow';
 
 interface CapacityUpgradesSectionProps {

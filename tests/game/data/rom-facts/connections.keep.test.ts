@@ -2,7 +2,7 @@
 import { expect, it } from 'vitest';
 import { all, getScreen } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
-import { readRomRoomDoors } from '@shared/randomizer/audit/rom-room-doors';
+import { readRomRoomDoors } from '@rotp/randomizer';
 import { describeRom, usRom } from '../rom-fixture';
 import { KEY_GATED_CROSSINGS } from './rom-facts.constants';
 import { readRomFacts } from './read-rom-facts';

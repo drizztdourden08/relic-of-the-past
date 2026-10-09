@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { DARK_ROOM_LIGHT_FIELDS } from '@shared/randomizer/world/dark-rooms';
+import { DARK_ROOM_LIGHT_FIELDS } from '@rotp/randomizer';
 import type { ItemId } from '@rotp/game-data';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { Placement } from '@rotp/randomizer';
 import { LIGHT_ITEM } from './record-row-inputs.constants';
 
 const seesInTheDark = (

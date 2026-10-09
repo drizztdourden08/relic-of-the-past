@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind barrel */
 export { applyOverrides } from './apply-overrides';
-export { clearArmedShopEntries } from './clear-armed-shop-entries';
+export { clearArmedShopEntries } from '@rotp/randomizer';
 export { pollEntriesOf } from './poll-entries-of';
-export { rescanShopCatchUp } from './rescan-shop-catch-up';
-export type { MessageIdOf } from './apply-overrides.type';
+export { rescanShopCatchUp } from '@rotp/randomizer';
+export type { MessageIdOf } from '@rotp/randomizer';

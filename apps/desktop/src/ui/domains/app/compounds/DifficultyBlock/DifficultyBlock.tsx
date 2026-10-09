@@ -1,13 +1,11 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import {
-  COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier,
-} from '@shared/randomizer/world/difficulty/difficulty.data';
-import { HEART_CAP_KEY, difficultyCopiesKeyOf } from '@shared/randomizer/world/difficulty/difficulty-option-keys';
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
-import { progressiveFamilyName } from '@shared/randomizer/world/progressive/progressive-display-names';
-import { tickedCountOf } from '@shared/randomizer/world/progressive/progressive-reach';
-import { optionByKey } from '@shared/randomizer/world/options.data';
+import { COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier } from '@rotp/randomizer';
+import { HEART_CAP_KEY, difficultyCopiesKeyOf } from '@rotp/randomizer';
+import { PROGRESSIVE_FAMILIES } from '@rotp/randomizer';
+import { progressiveFamilyName } from '@rotp/randomizer';
+import { tickedCountOf } from '@rotp/randomizer';
+import { optionByKey } from '@rotp/randomizer';
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import {

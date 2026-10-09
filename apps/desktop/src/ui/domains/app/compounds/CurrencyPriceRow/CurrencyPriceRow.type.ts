@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
-import type { ShopBottleContent, ShopCountedCurrency } from '@shared/randomizer/world/shops/shop-price.type';
+import type { OptionValue } from '@rotp/randomizer';
+import type { ShopBottleContent, ShopCountedCurrency } from '@rotp/randomizer';
 
 interface CurrencyCatalogKeys {
   keyOf: (currency: ShopCountedCurrency) => string;

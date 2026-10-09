@@ -1,10 +1,10 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
-import { backoffDelay } from '@app/lib/game/randomizer-client/reconnect';
-import { refusalText } from '@app/lib/game/randomizer-client/refusal-text';
-import { roomHashOf } from '@app/lib/game/randomizer-client/room-hash';
-import { ROOM_MISMATCH } from '@app/lib/game/randomizer-client/online-room-identity';
+import { backoffDelay } from '@rotp/randomizer';
+import { refusalText } from '@rotp/randomizer';
+import { roomHashOf } from '@rotp/randomizer';
+import { ROOM_MISMATCH } from '@rotp/randomizer';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import type { FakeRoom } from './ap-fake-server';

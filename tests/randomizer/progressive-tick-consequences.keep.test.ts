@@ -1,16 +1,12 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
-import { derivedItemPower } from '@shared/randomizer/world/item-power/item-power-rule';
-import {
-  TICK_CONSEQUENCES, progressiveTickConsequences,
-} from '@shared/randomizer/world/progressive/tick-consequences';
-import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
-import {
-  beamSwordReachable, swordReachable,
-} from '@shared/randomizer/world/progressive/progressive-reach';
+import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';
+import { derivedItemPower } from '@rotp/randomizer';
+import { TICK_CONSEQUENCES, progressiveTickConsequences } from '@rotp/randomizer';
+import { defaultProgressiveSetting } from '@rotp/randomizer';
+import { beamSwordReachable, swordReachable } from '@rotp/randomizer';
 import type { ItemPowerSetting } from '@rotp/game-core';
-import type { ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
+import type { ProgressiveSetting } from '@rotp/randomizer';
 
 const withSwordTicks = (ticks: readonly boolean[]): ProgressiveSetting => ({
   ...defaultProgressiveSetting(), sword: ticks,

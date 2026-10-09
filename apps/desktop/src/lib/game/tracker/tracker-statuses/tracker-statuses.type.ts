@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind types */
 import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { LocationKey } from '@rotp/randomizer';
+import type { Placement } from '@rotp/randomizer';
 
 interface TrackerStatusParams {
   placement: Placement;

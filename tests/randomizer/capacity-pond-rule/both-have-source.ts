@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
-import type { CapacityProfile, FamilySetting } from '@shared/randomizer/world/capacity';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { CapacityProfile, FamilySetting } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 
 const hasSource = (setting: FamilySetting, pond: PondSetting): boolean =>
   (setting.mode === 'vanilla' ? pond.mode === 'capacity' : true);

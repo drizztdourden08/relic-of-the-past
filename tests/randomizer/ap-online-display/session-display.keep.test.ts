@@ -1,18 +1,18 @@
 /* @layer tests @kind test */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME } from '@shared/randomizer/archipelago/foreign-item';
-import { ITEM } from '@shared/randomizer/world/item-ids.data';
-import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
-import { buildPlacementView } from '@app/lib/game/randomizer-client/placement-view';
+import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME } from '@rotp/randomizer';
+import { ITEM } from '@rotp/randomizer';
+import { itemKeyName } from '@rotp/randomizer';
+import { buildPlacementView } from '@rotp/randomizer';
 import { currentRun } from '@app/lib/game/randomizer-client/run-kind';
-import { virtualCheckIdOf } from '@app/lib/game/randomizer-client/virtual-locations';
+import { virtualCheckIdOf } from '@rotp/randomizer';
 import {
   getSessionState, resetSession, startOnline, stopActive,
 } from '@app/lib/game/randomizer-client/session-store';
-import type { ForeignOwners } from '@app/lib/game/randomizer-client/foreign-item-line';
+import type { ForeignOwners } from '@rotp/randomizer';
 import type { OnlineSession } from '@app/lib/game/randomizer-client/online-session';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { LocationKey } from '@rotp/randomizer';
+import type { Placement } from '@rotp/randomizer';
 
 type Status = OnlineSession['status'];
 

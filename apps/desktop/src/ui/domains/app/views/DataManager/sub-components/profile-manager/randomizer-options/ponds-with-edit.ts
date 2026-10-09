@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
-import { CAPACITY_POND } from '@shared/randomizer/world/pond/pond-instances';
-import type { PondId } from '@shared/randomizer/world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
-import type { PondProfiles } from '@shared/randomizer/world/pond/pond-profiles.type';
+import { CAPACITY_POND } from '@rotp/randomizer';
+import type { PondId } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
+import type { PondProfiles } from '@rotp/randomizer';
 
 const pondsWithEdit = (
   profiles: PondProfiles, id: PondId, next: PondSetting, share: boolean,

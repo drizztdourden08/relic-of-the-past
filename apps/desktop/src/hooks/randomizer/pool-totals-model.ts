@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { PoolAccounting } from '@shared/randomizer/world/pool/pool-accounting';
+import type { PoolAccounting } from '@rotp/randomizer';
 import type { PoolFillTotals } from '@domains/app/compounds/PoolFillBar';
 
 const poolTotalsOf = (accounting: PoolAccounting): PoolFillTotals => {

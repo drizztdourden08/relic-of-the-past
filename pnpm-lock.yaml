@@ -319,6 +319,9 @@ importers:
       '@rotp/packs':
         specifier: workspace:*
         version: link:packages/packs
+      '@rotp/randomizer':
+        specifier: workspace:*
+        version: link:packages/randomizer
       '@rotp/roms':
         specifier: workspace:*
         version: link:packages/roms
@@ -529,6 +532,9 @@ importers:
       '@rotp/packs':
         specifier: workspace:*
         version: link:../../packages/packs
+      '@rotp/randomizer':
+        specifier: workspace:*
+        version: link:../../packages/randomizer
       '@rotp/roms':
         specifier: workspace:*
         version: link:../../packages/roms
@@ -927,6 +933,21 @@ importers:
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
+
+  packages/randomizer:
+    dependencies:
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:../asset-extraction
+      '@rotp/features':
+        specifier: workspace:*
+        version: link:../features
+      '@rotp/game-core':
+        specifier: workspace:*
+        version: link:../game-core
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
 
   packages/roms:
     dependencies:

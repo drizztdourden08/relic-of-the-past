@@ -1,14 +1,12 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import {
-  blockedContentsOf, potionPriceStateOfValues, reconcilePotionPrices,
-} from '@shared/randomizer/world/potion-price';
-import { bottleContentKeyOf } from '@shared/randomizer/world/shops/shop-price-options.data';
-import { rollShopPrices, shopPricePlanOf } from '@shared/randomizer/world/shops/shop-price-plan';
-import { shopSlotLocationsOf } from '@shared/randomizer/world/shops/shop-slots';
-import { shopScopeOfValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
-import { createRng } from '@shared/randomizer/rng';
-import type { ShopBottleContent } from '@shared/randomizer/world/shops/shop-price.type';
+import { blockedContentsOf, potionPriceStateOfValues, reconcilePotionPrices } from '@rotp/randomizer';
+import { bottleContentKeyOf } from '@rotp/randomizer';
+import { rollShopPrices, shopPricePlanOf } from '@rotp/randomizer';
+import { shopSlotLocationsOf } from '@rotp/randomizer';
+import { shopScopeOfValues } from '@rotp/randomizer';
+import { createRng } from '@rotp/randomizer';
+import type { ShopBottleContent } from '@rotp/randomizer';
 import { ALL_PRICES, BLOCKED_SCOPE, CAULDRON } from './potion-price-rule.constants';
 import { cauldronSubsets } from './cauldron-subsets';
 import { combinations } from './combinations';

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { serverAddressError } from '@app/lib/game/randomizer-client/server-address';
+import { serverAddressError } from '@rotp/randomizer';
 import type { ServerSetupDraft } from './server-setup-draft.type';
 
 const draftError = (draft: ServerSetupDraft): string | null =>

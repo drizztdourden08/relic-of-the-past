@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind barrel */
-export { armNextReceiptMessage } from './arm-next-receipt-message';
-export { armReceiptGates } from './arm-receipt-gates';
-export { disarmReceiptGates } from './disarm-receipt-gates';
+export { armNextReceiptMessage } from '@rotp/randomizer';
+export { armReceiptGates } from '@rotp/randomizer';
+export { disarmReceiptGates } from '@rotp/randomizer';
 export { grantCapacityUpgrade } from './grant-capacity-upgrade';

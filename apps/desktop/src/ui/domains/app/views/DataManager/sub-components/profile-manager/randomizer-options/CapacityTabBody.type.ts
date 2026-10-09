@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { CapacityProfile, WalletFloor } from '@shared/randomizer/world/capacity';
-import type { ReconciledCapacityPond } from '@shared/randomizer/world/capacity-pond';
+import type { CapacityProfile, WalletFloor } from '@rotp/randomizer';
+import type { ReconciledCapacityPond } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 interface CapacityTabBodyProps {

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { splitServerAddress } from '@app/lib/game/randomizer-client/server-address';
+import { splitServerAddress } from '@rotp/randomizer';
 import type { ServerSetupDraft } from './server-setup-draft.type';
 
 const absorbPort = (draft: ServerSetupDraft): ServerSetupDraft => {

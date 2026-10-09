@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { pollerState } from './poller-state';
+import { pollerState } from '@rotp/randomizer';
 
 const pauseLocationPolling = (): void => {
   if (pollerState.intervalId !== null) {

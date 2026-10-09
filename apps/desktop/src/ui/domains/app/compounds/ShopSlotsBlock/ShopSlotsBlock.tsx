@@ -9,8 +9,8 @@ import { shopTotalTextOf } from './behavior/shop-total-text';
 import { retroShopNoteOf } from './behavior/retro-shop-note';
 import { summaryOf, withDepth, withMode, withSlotCount, withSlotTicked } from './behavior/shop-scope-edits';
 import { DEPTH_LABEL, MODE_OPTIONS, MODE_TITLE, SLOTS_TITLE } from './ShopSlotsBlock.constants';
-import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '@shared/randomizer/world/shops/shop-slots';
-import type { ShopShuffleMode } from '@shared/randomizer/world/shops/shop-scope.type';
+import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '@rotp/randomizer';
+import type { ShopShuffleMode } from '@rotp/randomizer';
 import type { ShopSlotsBlockProps } from './ShopSlotsBlock.type';
 import './ShopSlotsBlock.css';
 

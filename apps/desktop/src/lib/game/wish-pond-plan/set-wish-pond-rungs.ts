@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import type { WishPondRungArm } from './wish-pond-plan.type';
+import type { WishPondRungArm } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import { isArmableOverrideId } from '../foreign-item-id';
+import { isArmableOverrideId } from '@rotp/randomizer';
 import { getModule } from '@rotp/game-core';
 import { setWishPondPlanActive } from '../item-power';
 

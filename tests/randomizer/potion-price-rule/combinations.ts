@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { SHOP_SHUFFLE_MODES } from '@shared/randomizer/world/shops/shop-scope';
+import { SHOP_SHUFFLE_MODES } from '@rotp/randomizer';
 import { ALL_PRICES, NO_CONTENTS } from './potion-price-rule.constants';
 import type { Combination } from './potion-price-rule.type';
 import { cauldronSubsets } from './cauldron-subsets';

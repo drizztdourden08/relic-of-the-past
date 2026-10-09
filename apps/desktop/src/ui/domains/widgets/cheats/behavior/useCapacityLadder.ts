@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { cheatCapacityLadder, cheatCapacityRung, cheatSetCapacityRung } from '@app/lib/game';
 import type { CapacityKind, CapacityRung } from '@app/lib/game';
-import { getActiveCapacity, subscribeActiveCapacity } from '@app/lib/game/randomizer-client/active-capacity-profile';
+import { getActiveCapacity, subscribeActiveCapacity } from '@rotp/randomizer';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { reachableRungsOf } from './reachable-rungs';
 import { CAPACITY_RECHECK_MS } from '../CheatsWidget.constants';

@@ -1,13 +1,13 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { generatePlacement } from '@shared/randomizer/world/fill/generate';
-import { buildFillWorld } from '@shared/randomizer/world/fill/fill-world';
-import { fillOptionsFromSnapshot } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
-import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/world/pond/pond-rungs';
-import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import { createCollectionState } from '@shared/randomizer/world/collection-state';
-import { WALLET } from '@shared/randomizer/world/capacity/capacity-family';
-import { reachableTopOf } from '@shared/randomizer/world/capacity/reachable-top';
+import { generatePlacement } from '@rotp/randomizer';
+import { buildFillWorld } from '@rotp/randomizer';
+import { fillOptionsFromSnapshot } from '@rotp/randomizer';
+import { POND_PRIZE_LOCATIONS } from '@rotp/randomizer';
+import { pondPlanOf } from '@rotp/randomizer';
+import { createCollectionState } from '@rotp/randomizer';
+import { WALLET } from '@rotp/randomizer';
+import { reachableTopOf } from '@rotp/randomizer';
 import { DELIVERABLE, EMPTY, MODES, SEEDS } from './pond-generation.constants';
 import { snapshotOf } from './snapshot-of';
 

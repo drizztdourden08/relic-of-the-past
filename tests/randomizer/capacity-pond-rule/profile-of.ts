@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { CapacityProfile } from '@shared/randomizer/world/capacity';
+import type { CapacityProfile } from '@rotp/randomizer';
 import type { FamilyMode } from './capacity-pond-rule.type';
 import { settingFor } from './setting-for';
 

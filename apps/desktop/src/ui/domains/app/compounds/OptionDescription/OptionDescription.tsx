@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
-import { detailsOf, plainTextOf } from '@shared/randomizer/world/option-description';
+import { detailsOf, plainTextOf } from '@rotp/randomizer';
 import type { OptionDescriptionProps } from './OptionDescription.type';
 
 const OptionDescription = (props: OptionDescriptionProps) => {

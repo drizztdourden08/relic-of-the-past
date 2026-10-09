@@ -1,9 +1,9 @@
 /* @layer tests @kind constants */
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
-import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
-import { defaultShopScope } from '@shared/randomizer/world/shops/shop-scope-from-values';
-import type { CapacityPondAuthority } from '@shared/randomizer/world/capacity-pond';
-import type { PondMode } from '@shared/randomizer/world/pond/pond-profile.type';
+import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';
+import { defaultProgressiveSetting } from '@rotp/randomizer';
+import { defaultShopScope } from '@rotp/randomizer';
+import type { CapacityPondAuthority } from '@rotp/randomizer';
+import type { PondMode } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 const POND_MODES: readonly PondMode[] = ['capacity', 'vanilla-cost', 'custom'];

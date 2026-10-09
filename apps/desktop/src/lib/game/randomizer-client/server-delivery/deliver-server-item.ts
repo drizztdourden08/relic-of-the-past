@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import { RANDOMIZER_RECEIPT_MSG } from '@rotp/asset-extraction';
-import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
+import { renderFromServer, renderOnline } from '@rotp/randomizer';
 import { deliverItem } from '../../delivery-api';
 import { appendSessionReceiptMessage, releaseSessionReceiptMessage } from '../../session-dialogue';
-import { resolveServerItemLocalId } from '../online-items';
-import { waitingDeliveries } from './waiting-deliveries';
-import type { DeliveryOutcome } from '../online-core.type';
+import { resolveServerItemLocalId } from '@rotp/randomizer';
+import { waitingDeliveries } from '@rotp/randomizer';
+import type { DeliveryOutcome } from '@rotp/randomizer';
 
 const arrivalLine = (itemName: string, senderName: string | null): string =>
   (senderName === null ? renderFromServer(itemName) : renderOnline(senderName, itemName));

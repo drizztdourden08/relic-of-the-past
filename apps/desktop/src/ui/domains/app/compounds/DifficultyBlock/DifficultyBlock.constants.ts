@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { COPY_MULTIPLIERS } from '@shared/randomizer/world/difficulty/difficulty.data';
+import { COPY_MULTIPLIERS } from '@rotp/randomizer';
 
 const DIFFICULTY_TITLE = 'Difficulty';
 

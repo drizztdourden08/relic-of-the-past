@@ -6,7 +6,7 @@ import { SplitPane } from '@drizztdourden08/tessera/composites';
 import { catalogByLock } from '@domains/app/compounds/RandomizerOptionRow';
 import { PoolListing } from '@domains/app/compounds/PoolListing';
 import { PoolTotals } from '@domains/app/compounds/PoolTotals';
-import { parseCapacityProfile } from '@shared/randomizer/world/capacity';
+import { parseCapacityProfile } from '@rotp/randomizer';
 import { useIsNarrow } from '@app/hooks/useIsNarrow';
 import { changedCountsOf, splitLockedGroups, splitUnlockedGroups } from '@app/hooks/randomizer/option-tab-model';
 import { snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
@@ -20,7 +20,7 @@ import { OptionTabBody } from './randomizer-options/OptionTabBody';
 import { choicesAfterRow } from './randomizer-options/choices-after-row';
 import { valueFor } from './randomizer-options/value-for';
 import { CAPTION, FROZEN_CAPTION, OPTIONS_SHARE, POOL_TAB, SPLIT_MIN_REM } from './RandomizerOptionsPanel.constants';
-import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionDef, OptionValue } from '@rotp/randomizer';
 import type { PanelTab, RandomizerOptionsPanelProps } from './RandomizerOptionsPanel.type';
 import './RandomizerOptionsPanel.css';
 

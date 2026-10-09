@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
+import type { RetroBowSetting } from '@rotp/randomizer';
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
 import { setRetroBowActive } from '@rotp/game-core';

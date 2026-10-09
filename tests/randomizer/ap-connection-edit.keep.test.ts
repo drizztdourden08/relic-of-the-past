@@ -6,17 +6,15 @@ import { createOnlineClient } from '@app/lib/game/randomizer-client/online-clien
 import { getSessionState, startOnline, stopActive } from '@app/lib/game/randomizer-client/session-store';
 import { onlineConfigOfProfile } from '@app/lib/game/randomizer-client/online-config-of-profile';
 import { reconnectProfileSession } from '@app/lib/game/randomizer-client/profile-reconnect';
-import {
-  joinServerAddress, serverAddressError, splitServerAddress,
-} from '@app/lib/game/randomizer-client/server-address';
+import { joinServerAddress, serverAddressError, splitServerAddress } from '@rotp/randomizer';
 import { absorbPort, draftError, draftOf, patchOf } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { createMemFileStore } from '../storage/mem-file-store';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import type { FakeServer } from './ap-fake-server';
-import type { OnlineSessionConfig } from '@app/lib/game/randomizer-client/online-session-config.type';
+import type { OnlineSessionConfig } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
+import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 
 const fake = vi.hoisted(() => ({ server: null as FakeServer | null }));
 

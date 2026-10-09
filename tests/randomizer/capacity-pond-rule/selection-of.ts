@@ -1,8 +1,8 @@
 /* @layer tests @kind helper */
-import { pondSettingForMode } from '@shared/randomizer/world/pond/pond-mode-switch';
-import { LEGACY_POND_SETTING } from '@shared/randomizer/world/pond/pond-profile-defaults';
-import type { CapacityPondSelection } from '@shared/randomizer/world/capacity-pond';
-import type { PondMode } from '@shared/randomizer/world/pond/pond-profile.type';
+import { pondSettingForMode } from '@rotp/randomizer';
+import { LEGACY_POND_SETTING } from '@rotp/randomizer';
+import type { CapacityPondSelection } from '@rotp/randomizer';
+import type { PondMode } from '@rotp/randomizer';
 import type { FamilyMode } from './capacity-pond-rule.type';
 import { profileOf } from './profile-of';
 

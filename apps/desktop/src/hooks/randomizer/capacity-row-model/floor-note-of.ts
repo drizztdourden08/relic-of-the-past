@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { maxFloorReasonOf, maxRungFloorOf } from '@shared/randomizer/world/capacity';
-import type { CapacityFamily, FamilySetting, WalletFloor } from '@shared/randomizer/world/capacity';
+import { maxFloorReasonOf, maxRungFloorOf } from '@rotp/randomizer';
+import type { CapacityFamily, FamilySetting, WalletFloor } from '@rotp/randomizer';
 
 const floorNoteOf = (
   capacityFamily: CapacityFamily, setting: FamilySetting, walletFloor: WalletFloor,

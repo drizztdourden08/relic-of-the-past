@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
-import type { StoryGateSetting } from '@shared/randomizer/world/story-gates/story-gate.type';
-import { storyWordOf } from '@shared/randomizer/world/story-gates/story-gate-word';
+import type { StoryGateSetting } from '@rotp/randomizer';
+import { storyWordOf } from '@rotp/randomizer';
 import { setStoryHalf } from '../gate-word-5';
-import { storyGatesState } from './story-gates-state';
-import { storyWordNow } from './story-word-now';
+import { storyGatesState } from '@rotp/randomizer';
+import { storyWordNow } from '@rotp/randomizer';
 
 const setSessionStoryGates = (setting: StoryGateSetting | null): void => {
   storyGatesState.sessionWord = setting === null ? null : storyWordOf(setting);

@@ -1,14 +1,12 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
-import { onOnlineNotice } from '@app/lib/game/randomizer-client/online-notices';
-import {
-  deathLinkToastLine, deathLinkToastText, MAX_CAUSE_LENGTH,
-} from '@app/lib/game/randomizer-client/death-link-toast-text';
+import { onOnlineNotice } from '@rotp/randomizer';
+import { deathLinkToastLine, deathLinkToastText, MAX_CAUSE_LENGTH } from '@rotp/randomizer';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import type { FakeRoom } from './ap-fake-server';
-import type { DeathLinkNotice, OnlineNotice } from '@app/lib/game/randomizer-client/online-notices';
+import type { DeathLinkNotice, OnlineNotice } from '@rotp/randomizer';
 
 vi.mock('@app/lib/log-bus', () => {
   const quiet = (): void => undefined;

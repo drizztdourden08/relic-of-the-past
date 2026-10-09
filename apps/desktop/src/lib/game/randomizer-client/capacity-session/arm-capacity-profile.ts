@@ -4,7 +4,7 @@ import { setCapacityProfileFamily, setWalletJumpTable } from '../../capacity-pro
 import { setCapacityPlanJumps } from '../../capacity-plan';
 import { setCapacityFixedLines } from '../../capacity-fixed-lines';
 import type { CapacityLineMessages } from '../capacity-rung-messages';
-import type { CapacitySessionPlan } from './capacity-session.type';
+import type { CapacitySessionPlan } from '@rotp/randomizer';
 
 const armCapacityProfile = (plan: CapacitySessionPlan, tag: string, lines: CapacityLineMessages): void => {
   if (!plan.armed) {

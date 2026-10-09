@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { NO_OWNERS } from './session-store.constants';
+import { NO_OWNERS } from '@rotp/randomizer';
 import type { SessionStoreSlots } from './session-store.type';
 
 const storeSlots: SessionStoreSlots = {

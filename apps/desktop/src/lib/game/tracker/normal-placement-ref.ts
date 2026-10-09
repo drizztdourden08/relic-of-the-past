@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { buildNormalPlacement } from '@shared/randomizer/normal-placement';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import { buildNormalPlacement } from '@rotp/randomizer';
+import type { Placement } from '@rotp/randomizer';
 
 let built: Placement | null = null;
 

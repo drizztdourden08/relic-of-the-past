@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
-import { SHOP_MODE_LABELS } from '@shared/randomizer/world/shops/shop-slot-options.data';
-import { SHOP_SHUFFLE_MODES } from '@shared/randomizer/world/shops/shop-scope';
-import type { ShopWorld } from '@shared/randomizer/world/shops/shop-slot-facts';
+import { SHOP_MODE_LABELS } from '@rotp/randomizer';
+import { SHOP_SHUFFLE_MODES } from '@rotp/randomizer';
+import type { ShopWorld } from '@rotp/randomizer';
 
 const MODE_OPTIONS = SHOP_SHUFFLE_MODES.map((mode) => ({ value: mode, label: SHOP_MODE_LABELS[mode] }));
 

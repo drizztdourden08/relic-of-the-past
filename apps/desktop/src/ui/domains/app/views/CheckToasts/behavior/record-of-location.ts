@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
 import { get } from '@rotp/game-data';
 import type { CheckRecord } from '@rotp/game-data';
-import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import { virtualCheckIdOf } from '@app/lib/game/randomizer-client/virtual-locations';
+import { checkIdOfLocation } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
+import { virtualCheckIdOf } from '@rotp/randomizer';
 import { getSessionState, virtualChecksOf } from '@app/lib/game/randomizer-client';
 
 const recordOfLocation = (location: LocationKey): CheckRecord | undefined => {

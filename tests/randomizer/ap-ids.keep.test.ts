@@ -1,23 +1,19 @@
 /* @layer tests @kind test */
 import { createHash } from 'crypto';
 import { describe, expect, it } from 'vitest';
-import { optionByKey } from '@shared/randomizer/world/options.data';
-import { AP_ID_BASE, AP_ITEM_ID_OFFSET } from '@shared/randomizer/archipelago/ap-game';
-import {
-  AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES,
-} from '@shared/randomizer/archipelago/ap-ids.data';
-import {
-  apItemIdOf, apLocationIdOf, itemKeyOfApId, locationKeyOfApId,
-} from '@shared/randomizer/archipelago/ap-id-lookup';
-import { apItemUniverse } from '@shared/randomizer/archipelago/ap-item-universe';
-import { apLocationUniverse } from '@shared/randomizer/archipelago/ap-location-universe';
-import { FAMILIES } from '@shared/randomizer/world/capacity/capacity-family';
-import { ITEM } from '@shared/randomizer/world/item-ids.data';
-import { POND_EXTRA_LOCATIONS } from '@shared/randomizer/world/pond/pond-rungs';
-import { PRIZE_ITEMS } from '@shared/randomizer/world/pool/prize-items.data';
-import { WORLD_EVENT_IDS } from '@shared/randomizer/world/events/story-events.data';
-import { RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data';
-import { ALL_SHOP_SLOT_LOCATIONS } from '@shared/randomizer/world/shops/shop-slots';
+import { optionByKey } from '@rotp/randomizer';
+import { AP_ID_BASE, AP_ITEM_ID_OFFSET } from '@rotp/randomizer';
+import { AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES } from '@rotp/randomizer';
+import { apItemIdOf, apLocationIdOf, itemKeyOfApId, locationKeyOfApId } from '@rotp/randomizer';
+import { apItemUniverse } from '@rotp/randomizer';
+import { apLocationUniverse } from '@rotp/randomizer';
+import { FAMILIES } from '@rotp/randomizer';
+import { ITEM } from '@rotp/randomizer';
+import { POND_EXTRA_LOCATIONS } from '@rotp/randomizer';
+import { PRIZE_ITEMS } from '@rotp/randomizer';
+import { WORLD_EVENT_IDS } from '@rotp/randomizer';
+import { RETRO_QUIVER_ITEM } from '@rotp/randomizer';
+import { ALL_SHOP_SLOT_LOCATIONS } from '@rotp/randomizer';
 import { describeDataset } from '../dataset-guard';
 
 const FROZEN_LOCATIONS = 472;

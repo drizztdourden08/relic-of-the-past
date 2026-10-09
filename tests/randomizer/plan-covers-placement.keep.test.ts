@@ -1,16 +1,16 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { generatePlacement } from '@shared/randomizer/world/fill/generate';
-import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import { PRIZE_LOCATIONS, VANILLA_PRIZES } from '@shared/randomizer/world/scope-tables';
-import { isShopSlotLocation } from '@shared/randomizer/world/shops/shop-slots';
-import { STANDARD_SHOP_SLOT_COUNT } from '@shared/randomizer/world/shops/shop-slot-facts';
-import { SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@shared/randomizer/world/shops/shop-slot-options.data';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { generatePlacement } from '@rotp/randomizer';
+import { buildOptionsSnapshot } from '@rotp/randomizer';
+import { PRIZE_LOCATIONS, VANILLA_PRIZES } from '@rotp/randomizer';
+import { isShopSlotLocation } from '@rotp/randomizer';
+import { STANDARD_SHOP_SLOT_COUNT } from '@rotp/randomizer';
+import { SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
 
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };
-const { buildPhysicalPlan } = await import('@app/lib/game/randomizer-client/placement-bridge');
+const { buildPhysicalPlan } = await import('../../packages/randomizer/src/client/placement-bridge');
 
 const DELIVERABLE_NPC: ReadonlySet<LocationKey> = new Set<LocationKey>([
   'check-019', 'check-033', 'check-060', 'check-121',

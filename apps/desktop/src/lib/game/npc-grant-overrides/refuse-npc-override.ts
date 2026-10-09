@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { isNativeReceiveId } from '@rotp/game-data';
 import { log } from '../../log-bus';
-import { isArmableOverrideId } from '../foreign-item-id';
+import { isArmableOverrideId } from '@rotp/randomizer';
 
 const refuseNpcOverride = (vanillaItem: number, newItem: number, where: string): boolean => {
   if (isNativeReceiveId(vanillaItem) && isArmableOverrideId(newItem)) return false;

@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind logic */
-import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX } from '@shared/randomizer/world/retro/retro-shops';
-import { RETRO_QUIVER_PRICE } from '@shared/randomizer/world/retro/retro-bow.data';
-import { RETRO_REFILL_ITEM } from '@shared/randomizer/world/retro/retro-shelf.data';
-import { CANONICAL_SLOTS } from '@shared/randomizer/world/shops/shop-slot-facts';
-import type { ShopSlotFacts } from '@shared/randomizer/world/shops/shop-slot-facts';
-import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
-import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX } from '@rotp/randomizer';
+import { RETRO_QUIVER_PRICE } from '@rotp/randomizer';
+import { RETRO_REFILL_ITEM } from '@rotp/randomizer';
+import { CANONICAL_SLOTS } from '@rotp/randomizer';
+import type { ShopSlotFacts } from '@rotp/randomizer';
+import type { RetroBowSetting } from '@rotp/randomizer';
+import type { ShopScope } from '@rotp/randomizer';
 import { retroShuffledNote } from './retro-shuffled-note';
 import { retroVanillaNote } from './retro-vanilla-note';
 

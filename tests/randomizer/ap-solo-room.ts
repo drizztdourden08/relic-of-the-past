@@ -1,12 +1,12 @@
 /* @layer tests @kind helper */
-import { AP_GAME } from '@shared/randomizer/archipelago/ap-game';
-import { AP_ITEM_IDS, AP_LOCATION_IDS } from '@shared/randomizer/archipelago/ap-ids.data';
-import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
-import type { DeliverableLists } from '@shared/randomizer/world/fill/deliverable-lists';
-import type { ApNetworkItem } from '@app/lib/game/randomizer-client/ap-protocol.type';
+import { AP_GAME } from '@rotp/randomizer';
+import { AP_ITEM_IDS, AP_LOCATION_IDS } from '@rotp/randomizer';
+import type { ItemKey } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
+import type { Placement } from '@rotp/randomizer';
+import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
+import type { DeliverableLists } from '@rotp/randomizer';
+import type { ApNetworkItem } from '@rotp/randomizer';
 import type { FakeRoom } from './ap-fake-server';
 
 const SLOT = 1;

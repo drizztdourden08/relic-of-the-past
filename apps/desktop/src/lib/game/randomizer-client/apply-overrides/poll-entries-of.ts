@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { isReportableCheck } from '../check-detection';
-import { FIRE_REPORTED_CLASSES } from '../fire-reported-classes';
-import type { PhysicalPlan } from '../physical-plan.type';
+import { isReportableCheck } from '@rotp/randomizer';
+import { FIRE_REPORTED_CLASSES } from '@rotp/randomizer';
+import type { PhysicalPlan } from '@rotp/randomizer';
 import type { PollEntry } from '../location-poller';
 
 const pollEntriesOf = (plan: PhysicalPlan, tag: string): PollEntry[] => {

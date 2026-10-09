@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
 import { currencySpriteOf, priceSpriteOf } from '../currency-sprites';
-import type { PondPlan, PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { PondPlan, PondSetting } from '@rotp/randomizer';
 import type { LadderPreviewProps } from '@domains/app/compounds/LadderPreview';
 import type { PondCharge } from './pond-preview.type';
 import { pondPreviewNote } from './pond-preview-note';

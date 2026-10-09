@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { PondAskAmountKind, PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondAskAmountKind, PondAskSetting } from '@rotp/randomizer';
 
 const askWithRange = (
   ask: PondAskSetting, kind: PondAskAmountKind, stops: readonly string[], range: readonly [number, number],

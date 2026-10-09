@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { queueState } from './queue-state';
+import { queueState } from '@rotp/randomizer';
 import { tickFrontEntry } from './tick-front-entry';
 import { tickInFlight } from './tick-in-flight';
 

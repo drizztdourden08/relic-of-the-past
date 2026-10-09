@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ProgressiveFamilyMode } from '@shared/randomizer/world/progressive/progressive.type';
+import type { ProgressiveFamilyMode } from '@rotp/randomizer';
 import type { ProgressiveCardModel } from '../ProgressiveTiersBlock.type';
 
 interface ProgressiveTierCardProps {

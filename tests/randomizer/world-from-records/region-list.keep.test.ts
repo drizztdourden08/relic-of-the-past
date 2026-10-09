@@ -1,11 +1,11 @@
 /* @layer tests @kind test */
 import { expect, it } from 'vitest';
 import { getRegion } from '@rotp/game-data';
-import { REGION_GRAPH } from '@shared/randomizer/world/rules/tables/region-graph.data';
-import { DUNGEON_ORDER } from '@shared/randomizer/world/fill/dungeon-order.data';
-import { REGION } from '@shared/randomizer/world/region-ids.data';
-import { VANILLA_MEDALLIONS } from '@shared/randomizer/world/item-groups';
-import { bunnyImpassableRegionIds, regionRecords } from '@shared/randomizer/world/world-from-records';
+import { REGION_GRAPH } from '@rotp/randomizer';
+import { DUNGEON_ORDER } from '@rotp/randomizer';
+import { REGION } from '@rotp/randomizer';
+import { VANILLA_MEDALLIONS } from '@rotp/randomizer';
+import { bunnyImpassableRegionIds, regionRecords } from '@rotp/randomizer';
 import { describeDataset } from '../../dataset-guard';
 import { BUNNY_IMPASSABLE, REGION_COUNT } from './world-from-records.constants';
 import { vanillaWorld } from './vanilla-world';

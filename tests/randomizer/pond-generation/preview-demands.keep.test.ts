@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { generatePlacement } from '@shared/randomizer/world/fill/generate';
-import { pondDemandsOfSnapshot } from '@shared/randomizer/world/fill/pond-demands-of-snapshot';
-import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/world/pond/pond-rungs';
+import { generatePlacement } from '@rotp/randomizer';
+import { pondDemandsOfSnapshot } from '@rotp/randomizer';
+import { POND_PRIZE_LOCATIONS } from '@rotp/randomizer';
 import { DELIVERABLE, EMPTY, MIXED_ASK, SEEDS } from './pond-generation.constants';
 import { snapshotOf } from './snapshot-of';
 

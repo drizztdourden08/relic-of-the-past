@@ -1,17 +1,17 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { baselineValues } from '@shared/randomizer/world/options.data';
-import { parsePondSetting } from '@shared/randomizer/world/pond/pond-from-snapshot';
-import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import { rollPondDemands } from '@shared/randomizer/world/pond/pond-demand-roll';
-import { POND_ASK_ROW_BY_KIND, pondRupeesOnlyAsk } from '@shared/randomizer/world/pond/pond-ask.data';
-import { curvePositionsOf } from '@shared/randomizer/world/pond/pond-demand-ramp';
-import { POND_INSTANCE_BY_ID } from '@shared/randomizer/world/pond/pond-instances';
-import { REFERENCE_CAPACITY_PROFILE } from '@shared/randomizer/world/capacity/capacity-profile-defaults';
-import { createRng } from '@shared/randomizer/rng';
-import type { CurveId } from '@shared/randomizer/world/capacity/capacity-profile.type';
-import type { PondAskAmountKind, PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import { baselineValues } from '@rotp/randomizer';
+import { parsePondSetting } from '@rotp/randomizer';
+import { pondPlanOf } from '@rotp/randomizer';
+import { rollPondDemands } from '@rotp/randomizer';
+import { POND_ASK_ROW_BY_KIND, pondRupeesOnlyAsk } from '@rotp/randomizer';
+import { curvePositionsOf } from '@rotp/randomizer';
+import { POND_INSTANCE_BY_ID } from '@rotp/randomizer';
+import { REFERENCE_CAPACITY_PROFILE } from '@rotp/randomizer';
+import { createRng } from '@rotp/randomizer';
+import type { CurveId } from '@rotp/randomizer';
+import type { PondAskAmountKind, PondAskSetting } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 import { CURVES } from './pond-model.constants';
 
 describe('one ramp per demand', () => {

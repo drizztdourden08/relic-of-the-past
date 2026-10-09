@@ -1,14 +1,14 @@
 /* @layer bridge-wasm @kind logic */
 import type { CheckRecord } from '@rotp/game-data';
-import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
-import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
+import { itemKeyName } from '@rotp/randomizer';
+import { locationKeyOfCheck } from '@rotp/randomizer';
 import { currentRun } from '../randomizer-client/run-kind';
-import { standardCheckName } from '../randomizer-client/check-names';
-import { resolveLocalItemId } from '../randomizer-client/item-lookup';
-import { isWritable, markPlanOf } from '../cheat-check-mark';
-import type { CheckGrantPlan } from './cheat-check-grant.type';
-import { canGrantVanilla } from './can-grant-vanilla';
-import { vanillaItemLabelOf } from './vanilla-item-label-of';
+import { standardCheckName } from '@rotp/randomizer';
+import { resolveLocalItemId } from '@rotp/randomizer';
+import { isWritable, markPlanOf } from '@rotp/randomizer';
+import type { CheckGrantPlan } from '@rotp/randomizer';
+import { canGrantVanilla } from '@rotp/randomizer';
+import { vanillaItemLabelOf } from '@rotp/randomizer';
 
 const planCheckGrant = (check: CheckRecord): CheckGrantPlan => {
   const run = currentRun();

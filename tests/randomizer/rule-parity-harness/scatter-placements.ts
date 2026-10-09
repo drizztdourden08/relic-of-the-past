@@ -1,7 +1,7 @@
 /* @layer tests @kind helper */
-import type { Holding } from '@shared/randomizer/world/collection-state';
-import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
-import type { World } from '@shared/randomizer/world/world.type';
+import type { Holding } from '@rotp/randomizer';
+import type { ItemKey } from '@rotp/randomizer';
+import type { World } from '@rotp/randomizer';
 
 const scatterPlacements = (world: World, items: readonly Holding[], random: () => number): void => {
   world.placedItems.clear();

@@ -1,5 +1,5 @@
 /* @layer tests @kind type */
-import type { CheckReporter, OnlineCore } from '@app/lib/game/randomizer-client/online-core.type';
+import type { CheckReporter, OnlineCore } from '@rotp/randomizer';
 
 interface Delivery { itemName: string; sender: string | null }
 

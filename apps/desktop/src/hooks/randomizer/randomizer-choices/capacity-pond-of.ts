@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { CapacityPondSelection } from '@shared/randomizer/world/capacity-pond';
+import type { CapacityPondSelection } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from './randomizer-choices.type';
 
 const capacityPondOf = (choices: RandomizerOptionChoices): CapacityPondSelection => ({

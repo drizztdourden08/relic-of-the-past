@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
-import { armReceiptGates } from './arm-receipt-gates';
+import { armReceiptGates } from '@rotp/randomizer';
 
 const grantCapacityUpgrade = (kind: 0 | 1, amount: number): void => {
   const mod = getModule();

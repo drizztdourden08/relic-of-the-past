@@ -1,6 +1,6 @@
 /* @layer tests @kind constants */
-import type { CurveId } from '@shared/randomizer/world/capacity/capacity-profile.type';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { CurveId } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 
 const CUSTOM: Extract<PondSetting, { mode: 'custom' }> = {
   mode: 'custom', start: 100, max: 300, throws: 5, items: 3, shape: { curve: 'equal' },

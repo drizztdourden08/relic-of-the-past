@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ImpactCell } from '../PoolImpactCell';
-import type { OptionDef, OptionGroup, OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionDef, OptionGroup, OptionValue } from '@rotp/randomizer';
 
 interface RandomizerOptionRowProps {
   option: OptionDef;

@@ -3,9 +3,9 @@ import { pollRoomFlags } from '../tracker';
 import { addCollectedChecks } from '../tracker/collected-checks';
 import { suppressLocationReport } from './location-poller';
 import { markLocationFired } from './override-fire-registry';
-import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
+import { checkIdOfLocation } from '@rotp/randomizer';
 import type { CheckId } from '@rotp/game-data';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
+import type { LocationKey } from '@rotp/randomizer';
 
 const markCollected = (keys: readonly LocationKey[]): void => {
   const checkIds: CheckId[] = [];

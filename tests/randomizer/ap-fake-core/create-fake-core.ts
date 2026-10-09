@@ -1,8 +1,8 @@
 /* @layer tests @kind helper */
-import { rebaselineEntries } from '@app/lib/game/randomizer-client/poll-rebaseline';
-import { deathOf } from '@app/lib/game/randomizer-client/ap-link-died';
-import type { LinkDiedListener } from '@app/lib/game/randomizer-client/ap-link-died';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { rebaselineEntries } from '@rotp/randomizer';
+import { deathOf } from '@rotp/randomizer';
+import type { LinkDiedListener } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
 import type { FakeCore } from './ap-fake-core.type';
 
 const createFakeCore = (): FakeCore => {

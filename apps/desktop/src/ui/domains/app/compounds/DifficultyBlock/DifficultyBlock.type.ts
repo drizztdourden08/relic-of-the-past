@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { DifficultySetting } from '@shared/randomizer/world/difficulty/difficulty.type';
-import type { ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
+import type { DifficultySetting } from '@rotp/randomizer';
+import type { ProgressiveSetting } from '@rotp/randomizer';
 
 interface DifficultyBlockProps {
   setting: DifficultySetting;

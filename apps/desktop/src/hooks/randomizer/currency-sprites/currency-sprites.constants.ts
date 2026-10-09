@@ -1,7 +1,5 @@
 /* @layer renderer-hooks @kind constants */
-import type {
-  ShopBottleContent, ShopCountedCurrency,
-} from '@shared/randomizer/world/shops/shop-price.type';
+import type { ShopBottleContent, ShopCountedCurrency } from '@rotp/randomizer';
 
 const CURRENCY_SPRITE_FILES: Readonly<Record<ShopCountedCurrency, string>> = {
   rupees: 'currency-rupee',

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
-import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
-import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
-import type { ShopWorld } from '@shared/randomizer/world/shops/shop-slot-facts';
+import type { RetroBowSetting } from '@rotp/randomizer';
+import type { ShopScope } from '@rotp/randomizer';
+import type { ShopWorld } from '@rotp/randomizer';
 
 interface ShopSlotsBlockProps {
   scope: ShopScope;

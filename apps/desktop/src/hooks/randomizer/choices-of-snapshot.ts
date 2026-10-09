@@ -1,20 +1,18 @@
 /* @layer renderer-lib @kind logic */
-import {
-  capacityBonusOfValues, capacityEnabledOf, capacityProgressiveOf, parseCapacityProfile,
-} from '@shared/randomizer/world/capacity';
-import { darkRoomSettingOfValues } from '@shared/randomizer/world/dark-rooms/dark-room-from-snapshot';
-import { difficultyOfValues } from '@shared/randomizer/world/difficulty/difficulty-from-snapshot';
-import { itemPowerOfValues } from '@shared/randomizer/world/item-power/item-power-from-snapshot';
-import { parsePondProfiles } from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
-import { progressiveSettingOfValues } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
-import { progressiveModesOfValues } from '@shared/randomizer/world/progressive/progressive-mode-from-snapshot';
-import { retroBowOfValues } from '@shared/randomizer/world/retro/retro-from-snapshot';
-import { shopScopeOfValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
-import { storyGatesOfValues } from '@shared/randomizer/world/story-gates/story-gate-from-snapshot';
+import { capacityBonusOfValues, capacityEnabledOf, capacityProgressiveOf, parseCapacityProfile } from '@rotp/randomizer';
+import { darkRoomSettingOfValues } from '@rotp/randomizer';
+import { difficultyOfValues } from '@rotp/randomizer';
+import { itemPowerOfValues } from '@rotp/randomizer';
+import { parsePondProfiles } from '@rotp/randomizer';
+import { progressiveSettingOfValues } from '@rotp/randomizer';
+import { progressiveModesOfValues } from '@rotp/randomizer';
+import { retroBowOfValues } from '@rotp/randomizer';
+import { shopScopeOfValues } from '@rotp/randomizer';
+import { storyGatesOfValues } from '@rotp/randomizer';
 import { withDarkRoomSetting } from './dark-room-choices';
 import { PLAIN_FIELD_BY_KEY } from './randomizer-choices';
 import type { ChoiceField, RandomizerOptionChoices } from './randomizer-choices';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
+import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 
 const plainChoicesOf = (values: RandomizerOptionsSnapshot['values']): Pick<RandomizerOptionChoices, ChoiceField> =>
   Object.fromEntries(Object.entries(PLAIN_FIELD_BY_KEY).map(([key, field]) => [field, values[key]])) as

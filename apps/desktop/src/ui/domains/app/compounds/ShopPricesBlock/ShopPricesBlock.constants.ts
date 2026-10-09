@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind constants */
-import {
-  currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf,
-} from '@shared/randomizer/world/shops/shop-price-options.data';
+import { currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf } from '@rotp/randomizer';
 import type { CurrencyCatalogKeys } from '../CurrencyPriceRow';
 
 const SHOP_CURRENCY_KEYS: CurrencyCatalogKeys = {

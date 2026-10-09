@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind hook */
 import { useMemo } from 'react';
-import { FAMILIES, NO_WALLET_FLOOR } from '@shared/randomizer/world/capacity';
+import { FAMILIES, NO_WALLET_FLOOR } from '@rotp/randomizer';
 import { capacityRowModelOf } from './capacity-row-model';
 import type { CapacityRowModel } from '@domains/app/compounds/CapacityFamilyRow';
 import type { CapacityRowsInput } from './use-capacity-rows.type';

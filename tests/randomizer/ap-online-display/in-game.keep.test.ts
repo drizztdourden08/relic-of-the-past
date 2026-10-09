@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { foreignItemLine } from '@app/lib/game/randomizer-client/foreign-item-line';
-import { foreignIconIdOfGame } from '@app/lib/game/randomizer-client/foreign-icon-of-game';
-import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID } from '@app/lib/game/foreign-item-sentinel';
+import { foreignItemLine } from '@rotp/randomizer';
+import { foreignIconIdOfGame } from '@rotp/randomizer';
+import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID } from '@rotp/randomizer';
 import { fitReceiptLine } from '@rotp/game-core';
 import { toDialogueText } from '@rotp/game-core';
 import { dialogueCharsetOf, extraGlyphSlots, readableText } from '@rotp/game-data';

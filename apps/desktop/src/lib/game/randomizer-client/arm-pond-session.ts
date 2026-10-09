@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { setPondAwardMessage, setPondClosedMessage, setPondThrows } from '../pond-plan';
-import type { PondSessionPlan } from './pond-session.type';
+import type { PondSessionPlan } from '@rotp/randomizer';
 
 const armPondSession = (plan: PondSessionPlan, tag: string): void => {
   if (!plan.armed) {

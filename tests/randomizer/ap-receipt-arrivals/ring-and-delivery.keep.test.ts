@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { packPackedBytes } from '@rotp/asset-extraction';
 import { RANDOMIZER_MSG_BASE } from '@rotp/asset-extraction';
-import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
+import { renderFromServer, renderOnline } from '@rotp/randomizer';
 import {
   appendSessionReceiptMessage, clearSessionDialogue, releaseSessionReceiptMessage, setSessionReceiptMessages,
 } from '@app/lib/game/session-dialogue/session-dialogue';
@@ -25,7 +25,7 @@ vi.mock('@app/lib/log-bus', () => {
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
 vi.mock('../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
-vi.mock('@app/lib/game/randomizer-client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
+vi.mock('../../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
 vi.mock('@app/lib/game/delivery-api', () => ({
   deliverItem: (
     _id: number, _label: string, _source: string, messageId?: number | (() => number), onComplete?: () => void,
@@ -38,7 +38,7 @@ vi.mock('@app/lib/game/delivery-api', () => ({
     return id;
   },
 }));
-vi.mock('@app/lib/game/delivery-queue', () => ({
+vi.mock('../../../packages/randomizer/src/delivery-queue/remove', () => ({
   remove: (id: string) => {
     queue.removed.push(id);
     return true;

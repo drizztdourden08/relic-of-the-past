@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind types */
-import type { CapacityProfile } from '@shared/randomizer/world/capacity/capacity-profile.type';
-import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
-import type { PondId } from '@shared/randomizer/world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
-import type { PondProfiles } from '@shared/randomizer/world/pond/pond-profiles.type';
+import type { CapacityProfile } from '@rotp/randomizer';
+import type { PondDemandView } from '@rotp/randomizer';
+import type { PondId } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
+import type { PondProfiles } from '@rotp/randomizer';
 
 interface WishingPondSectionProps {
   profiles: PondProfiles;

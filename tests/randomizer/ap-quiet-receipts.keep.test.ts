@@ -1,11 +1,11 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
+import { renderFromServer, renderOnline } from '@rotp/randomizer';
 import { deliverItem } from '@app/lib/game/delivery-api';
 import { clear, deliveryQueue, startProcessing, stopProcessing } from '@app/lib/game/delivery-queue';
 import { setQuietReceiptBits } from '@app/lib/game/gate-word-5';
 import { setSessionGate } from '@rotp/game-core';
-import { QUIET_RECEIPT_MSG, quietMessageFor } from '@app/lib/game/quiet-receipts';
+import { QUIET_RECEIPT_MSG, quietMessageFor } from '@rotp/randomizer';
 import { cancelServerDeliveries, deliverServerItem } from '@app/lib/game/randomizer-client/server-delivery';
 
 const RUPEES_20 = 0x36;
@@ -40,7 +40,7 @@ vi.mock('../../packages/game-core/src/wasm-bridge', () => ({
   }),
 }));
 vi.mock('@app/lib/game/receipt-grants', () => ({ armReceiptGates: () => undefined }));
-vi.mock('@app/lib/game/randomizer-client/online-items', () => ({
+vi.mock('../../packages/randomizer/src/client/online-items', () => ({
   resolveServerItemLocalId: (name: string) => LOCAL_ID[name] ?? BOW,
 }));
 vi.mock('@app/lib/game/session-dialogue', () => ({

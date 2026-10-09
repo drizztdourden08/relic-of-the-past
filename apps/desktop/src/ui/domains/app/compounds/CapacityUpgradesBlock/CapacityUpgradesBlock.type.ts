@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { CapacityRowModel, CapacityRowState } from '../CapacityFamilyRow';
-import type { CapacityFamilyId, FamilyBonus } from '@shared/randomizer/world/capacity';
-import type { OptionDef } from '@shared/randomizer/world/options.type';
+import type { CapacityFamilyId, FamilyBonus } from '@rotp/randomizer';
+import type { OptionDef } from '@rotp/randomizer';
 
 interface CapacityUpgradesBlockProps {
   rows: readonly CapacityRowModel[];

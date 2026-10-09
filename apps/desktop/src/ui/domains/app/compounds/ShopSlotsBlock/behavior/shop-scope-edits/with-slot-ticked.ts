@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import type { ShopScope } from '@rotp/randomizer';
 import { reclamped } from './reclamped';
 
 const withSlotTicked = (scope: ShopScope, canonicalIndex: number, ticked: boolean): ShopScope => {

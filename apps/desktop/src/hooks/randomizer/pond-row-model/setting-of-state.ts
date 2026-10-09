@@ -1,8 +1,8 @@
 /* @layer renderer-hooks @kind logic */
-import { POND_PRICE_LADDER } from '@shared/randomizer/world/pond/pond-ladder.data';
-import { asksOnlyRupees } from '@shared/randomizer/world/pond/pond-ask.data';
-import type { CurveId } from '@shared/randomizer/world/capacity';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import { POND_PRICE_LADDER } from '@rotp/randomizer';
+import { asksOnlyRupees } from '@rotp/randomizer';
+import type { CurveId } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 import type { PondRowState } from '@domains/app/compounds/WishingPondRow';
 
 const askPart = (state: PondRowState, start: number, max: number) => {

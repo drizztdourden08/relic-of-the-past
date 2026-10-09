@@ -1,4 +1,4 @@
 /* @layer bridge-wasm @kind barrel */
-export { clearCapacityFixedLines } from './clear-capacity-fixed-lines';
+export { clearCapacityFixedLines } from '@rotp/randomizer';
 export { setCapacityFixedLines } from './set-capacity-fixed-lines';
-export type { CapacityFixedLineArm } from './capacity-fixed-lines.type';
+export type { CapacityFixedLineArm } from '@rotp/randomizer';

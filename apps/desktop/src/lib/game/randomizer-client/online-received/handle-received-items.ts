@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { markHanded, nextToQueue, wasHanded } from '../received-cursor';
-import { receivedBatchOrder } from '../received-batch-order';
-import { acceptsRoom } from '../online-room-identity';
+import { markHanded, nextToQueue, wasHanded } from '@rotp/randomizer';
+import { receivedBatchOrder } from '@rotp/randomizer';
+import { acceptsRoom } from '@rotp/randomizer';
 import { deliverOne } from './deliver-one';
 import { requestSync } from './request-sync';
-import type { ApReceivedItemsPacket } from '../ap-protocol.type';
-import type { OnlineContext } from '../online-context.type';
+import type { ApReceivedItemsPacket } from '@rotp/randomizer';
+import type { OnlineContext } from '@rotp/randomizer';
 
 const resyncWhenReady = (ctx: OnlineContext): void => {
   const { room, core } = ctx;

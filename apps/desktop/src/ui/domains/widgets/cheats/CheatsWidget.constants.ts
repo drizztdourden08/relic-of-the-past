@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind constants */
-import type { CapacityFamilyId } from '@shared/randomizer/world/capacity';
+import type { CapacityFamilyId } from '@rotp/randomizer';
 import type { CapacityKind, CheatCategory } from '@app/lib/game';
 
 const TABS = [

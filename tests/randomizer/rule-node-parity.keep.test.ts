@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { generateFromSnapshot } from '@shared/randomizer/generate';
-import { primitiveHelperNames } from '@shared/randomizer/world/rules/helpers-registry';
+import { generateFromSnapshot } from '@rotp/randomizer';
+import { primitiveHelperNames } from '@rotp/randomizer';
 import { exportParity, placementDigest, ruleDigest, snapshotOf } from './rule-parity-harness';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionValue } from '@rotp/randomizer';
 
 const STATES = 5000;
 

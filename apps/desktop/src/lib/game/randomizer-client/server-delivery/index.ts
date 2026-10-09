@@ -1,3 +1,3 @@
 /* @layer bridge-wasm @kind barrel */
-export { cancelServerDeliveries } from './cancel-server-deliveries';
+export { cancelServerDeliveries } from '@rotp/randomizer';
 export { deliverServerItem } from './deliver-server-item';

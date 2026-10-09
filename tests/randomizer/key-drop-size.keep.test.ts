@@ -1,13 +1,13 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import { getCheck, getDungeon } from '@rotp/game-data';
-import { generatePlacement } from '@shared/randomizer/world/fill/generate';
-import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import { KEY_DROP_LOCATIONS } from '@shared/randomizer/world/scope-tables';
+import { generatePlacement } from '@rotp/randomizer';
+import { buildOptionsSnapshot } from '@rotp/randomizer';
+import { KEY_DROP_LOCATIONS } from '@rotp/randomizer';
 import type { CheckId } from '@rotp/game-data';
 
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };
-const { buildPhysicalPlan } = await import('@app/lib/game/randomizer-client/placement-bridge');
+const { buildPhysicalPlan } = await import('../../packages/randomizer/src/client/placement-bridge');
 
 const vanillaIsBigKey = (checkId: CheckId): boolean => {
   const { dungeonId, vanillaItemIds } = getCheck(checkId);

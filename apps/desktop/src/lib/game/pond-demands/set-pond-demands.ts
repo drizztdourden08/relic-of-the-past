@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { PondDemandArm } from './pond-demands.type';
+import type { PondDemandArm } from '@rotp/randomizer';
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
 

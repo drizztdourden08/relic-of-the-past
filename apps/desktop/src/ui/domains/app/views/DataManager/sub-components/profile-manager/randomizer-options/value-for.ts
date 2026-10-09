@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
-import { CAPACITY_ENABLED_KEY } from '@shared/randomizer/world/capacity';
-import { pondIdOfModeKey } from '@shared/randomizer/world/pond/pond-option-keys';
+import { CAPACITY_ENABLED_KEY } from '@rotp/randomizer';
+import { pondIdOfModeKey } from '@rotp/randomizer';
 import { PLAIN_FIELD_BY_KEY } from '@app/hooks/randomizer/randomizer-choices';
-import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionDef, OptionValue } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 const valueFor = (

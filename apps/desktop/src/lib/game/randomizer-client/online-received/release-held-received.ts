@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { handleReceivedItems } from './handle-received-items';
-import type { OnlineContext } from '../online-context.type';
+import type { OnlineContext } from '@rotp/randomizer';
 
 const releaseHeldReceived = (ctx: OnlineContext): void => {
   ctx.room.scouted = true;

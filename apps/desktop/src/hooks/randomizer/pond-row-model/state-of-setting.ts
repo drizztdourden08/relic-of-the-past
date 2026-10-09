@@ -1,7 +1,7 @@
 /* @layer renderer-hooks @kind logic */
-import { POND_PRICE_LADDER } from '@shared/randomizer/world/pond/pond-ladder.data';
-import { askOfSetting } from '@shared/randomizer/world/pond/pond-ask-from-snapshot';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import { POND_PRICE_LADDER } from '@rotp/randomizer';
+import { askOfSetting } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 import type { PondRowState } from '@domains/app/compounds/WishingPondRow';
 
 const stateOfSetting = (setting: PondSetting): PondRowState => {

@@ -1,19 +1,17 @@
 /* @layer renderer-lib @kind logic */
-import {
-  CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, DEFAULT_CAPACITY_BONUS, capacityBonusValuesOf, capacityValuesOf,
-} from '@shared/randomizer/world/capacity';
-import { reconcileCapacityPond } from '@shared/randomizer/world/capacity-pond';
-import { difficultyValuesOf } from '@shared/randomizer/world/difficulty/difficulty-from-snapshot';
-import { itemPowerValuesOf } from '@shared/randomizer/world/item-power/item-power-from-snapshot';
-import { storyGateValuesOf } from '@shared/randomizer/world/story-gates/story-gate-from-snapshot';
-import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
-import { potionPriceOverrides } from '@shared/randomizer/world/potion-price';
-import { progressiveValuesOf } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
-import { progressiveModeValuesOf } from '@shared/randomizer/world/progressive/progressive-mode-from-snapshot';
-import { retroBowValuesOf } from '@shared/randomizer/world/retro/retro-from-snapshot';
-import { pondProfileValuesOf } from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
-import { shopScopeValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, DEFAULT_CAPACITY_BONUS, capacityBonusValuesOf, capacityValuesOf } from '@rotp/randomizer';
+import { reconcileCapacityPond } from '@rotp/randomizer';
+import { difficultyValuesOf } from '@rotp/randomizer';
+import { itemPowerValuesOf } from '@rotp/randomizer';
+import { storyGateValuesOf } from '@rotp/randomizer';
+import { DEFAULT_STORY_GATES } from '@rotp/randomizer';
+import { potionPriceOverrides } from '@rotp/randomizer';
+import { progressiveValuesOf } from '@rotp/randomizer';
+import { progressiveModeValuesOf } from '@rotp/randomizer';
+import { retroBowValuesOf } from '@rotp/randomizer';
+import { pondProfileValuesOf } from '@rotp/randomizer';
+import { shopScopeValues } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from './randomizer-choices.type';
 import { PLAIN_FIELD_BY_KEY } from './randomizer-choices.constants';
 import { capacityPondOf } from './capacity-pond-of';

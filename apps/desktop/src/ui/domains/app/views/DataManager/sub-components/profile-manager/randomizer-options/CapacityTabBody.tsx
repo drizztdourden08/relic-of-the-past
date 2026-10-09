@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { CapacityUpgradesSection } from '@domains/app/views/Randomizer/sub-components/CapacityUpgradesSection';
-import { REFERENCE_CAPACITY_PROFILE } from '@shared/randomizer/world/capacity';
+import { REFERENCE_CAPACITY_PROFILE } from '@rotp/randomizer';
 import { applyRowChange } from '@app/hooks/randomizer/capacity-row-state';
 import { withCapacityPondRule } from '@app/hooks/randomizer/capacity-pond-choices';
 import type { CapacityTabBodyProps } from './CapacityTabBody.type';

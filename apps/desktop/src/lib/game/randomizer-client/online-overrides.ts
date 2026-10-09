@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
-import { locationKeyOfApId } from '@shared/randomizer/archipelago/ap-id-lookup';
+import { locationKeyOfApId } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { ApGameData } from './ap-protocol.type';
-import type { ScoutMaps, ScoutPlan } from './online-overrides.type';
+import type { LocationKey } from '@rotp/randomizer';
+import type { ApGameData } from '@rotp/randomizer';
+import type { ScoutMaps, ScoutPlan } from '@rotp/randomizer';
 
 const keyOfLocationId = (id: number): LocationKey | undefined => {
   try {
@@ -30,4 +30,4 @@ const buildScoutPlan = (gameData: ApGameData, maps: ScoutMaps): ScoutPlan => {
 };
 
 export { buildScoutPlan };
-export type { ScoutMaps, ScoutPlan } from './online-overrides.type';
+export type { ScoutMaps, ScoutPlan } from '@rotp/randomizer';

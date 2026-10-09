@@ -3,11 +3,11 @@ import { getModule } from '@rotp/game-core';
 import { log } from '../../../log-bus';
 import { getCompletedChecks } from '../../tracker';
 import { rescanShopCatchUp } from '../apply-overrides';
-import { buildHeapReads } from '../poll-heap-reads';
+import { buildHeapReads } from '@rotp/randomizer';
 import { applyRebaseline } from './apply-rebaseline';
-import { isEntryComplete } from './is-entry-complete';
-import type { PollEntry, ReportingSession } from './location-poller.type';
-import { pollerState } from './poller-state';
+import { isEntryComplete } from '@rotp/randomizer';
+import type { PollEntry, ReportingSession } from '@rotp/randomizer';
+import { pollerState } from '@rotp/randomizer';
 
 const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): void => {
   const mod = getModule();

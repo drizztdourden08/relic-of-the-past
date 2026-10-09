@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { PoolAccounting } from '@shared/randomizer/world/pool/pool-accounting';
+import type { PoolAccounting } from '@rotp/randomizer';
 import { tallyTile } from './tally-tile';
 import type { RunTile } from './run-tile.type';
 

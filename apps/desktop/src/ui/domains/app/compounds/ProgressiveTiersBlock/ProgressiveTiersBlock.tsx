@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { progressiveTickConsequences } from '@shared/randomizer/world/progressive/tick-consequences';
-import { unrollableTickSetReasons } from '@shared/randomizer/world/progressive/tick-set-check';
+import { progressiveTickConsequences } from '@rotp/randomizer';
+import { unrollableTickSetReasons } from '@rotp/randomizer';
 import { OptionDescription } from '../OptionDescription';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { progressiveCardsOf } from './behavior/progressive-cards';

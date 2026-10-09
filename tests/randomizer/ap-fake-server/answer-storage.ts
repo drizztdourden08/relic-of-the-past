@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { ApClientPacket, ApServerPacket } from '@app/lib/game/randomizer-client/ap-protocol.type';
+import type { ApClientPacket, ApServerPacket } from '@rotp/randomizer';
 import { STATUS_KEY } from './ap-fake-server.constants';
 import type { FakeStorageRoom } from './ap-fake-server.type';
 

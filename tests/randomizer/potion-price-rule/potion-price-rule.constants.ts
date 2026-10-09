@@ -1,12 +1,10 @@
 /* @layer tests @kind constants */
-import { POTION_CAULDRONS } from '@shared/randomizer/world/potion-price';
-import {
-  BOTTLE_CONTENTS, BOTTLE_KEY, bottleContentKeyOf,
-} from '@shared/randomizer/world/shops/shop-price-options.data';
-import { customSetting } from '@shared/randomizer/world/capacity';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
-import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
-import { LEGACY_POND_PROFILES } from '@shared/randomizer/world/pond/pond-profile-defaults';
+import { POTION_CAULDRONS } from '@rotp/randomizer';
+import { BOTTLE_CONTENTS, BOTTLE_KEY, bottleContentKeyOf } from '@rotp/randomizer';
+import { customSetting } from '@rotp/randomizer';
+import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';
+import { defaultProgressiveSetting } from '@rotp/randomizer';
+import { LEGACY_POND_PROFILES } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 import type { Values } from './potion-price-rule.type';
 import { scopeWith } from './scope-with';

@@ -1,5 +1,5 @@
 /* @layer renderer-hooks @kind types */
-import type { ShopPrice } from '@shared/randomizer/world/shops/shop-price.type';
+import type { ShopPrice } from '@rotp/randomizer';
 
 interface PondCharge {
   demand?: ShopPrice;

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import type { CapacityFamilyId } from '@shared/randomizer/world/capacity';
+import type { CapacityFamilyId } from '@rotp/randomizer';
 
 const NO_FORCED: ReadonlyMap<CapacityFamilyId, string> = new Map();
 

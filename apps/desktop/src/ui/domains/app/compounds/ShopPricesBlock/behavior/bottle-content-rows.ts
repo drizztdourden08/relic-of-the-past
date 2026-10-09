@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind logic */
-import {
-  BOTTLE_CONTENTS, bottleContentKeyOf,
-} from '@shared/randomizer/world/shops/shop-price-options.data';
-import { blockedContentNote, potionPriceStateOfValues } from '@shared/randomizer/world/potion-price';
+import { BOTTLE_CONTENTS, bottleContentKeyOf } from '@rotp/randomizer';
+import { blockedContentNote, potionPriceStateOfValues } from '@rotp/randomizer';
 import type { BottleContentRowModel } from '../../CurrencyPriceRow';
 import type { Values } from './bottle-content-rows.type';
 

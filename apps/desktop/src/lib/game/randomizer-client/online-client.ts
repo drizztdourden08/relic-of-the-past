@@ -1,30 +1,30 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { AP_GAME } from '@shared/randomizer/archipelago/ap-game';
-import { createNameTables } from './ap-names';
-import { createListenerSet } from './listener-set';
-import { createMessageLog } from './message-log';
+import { AP_GAME } from '@rotp/randomizer';
+import { createNameTables } from '@rotp/randomizer';
+import { createListenerSet } from '@rotp/randomizer';
+import { createMessageLog } from '@rotp/randomizer';
 import { createOnlineNetwork } from './online-network';
 import { createCheckReporter } from './online-check-reporter';
-import { createGoalReporter } from './online-goal';
-import { createOnlineRoom, resetConnection } from './online-room';
-import { createReconnector } from './reconnect';
+import { createGoalReporter } from '@rotp/randomizer';
+import { createOnlineRoom, resetConnection } from '@rotp/randomizer';
+import { createReconnector } from '@rotp/randomizer';
 import { createDeathLinkSwitch } from './death-link-switch';
 import { dispatchMessage } from './online-dispatch';
 import { handleSaveSwap } from './online-save-swap';
-import { openSocketLink } from './online-socket';
+import { openSocketLink } from '@rotp/randomizer';
 import { senderNameOf } from './online-received';
-import { serverUrlCandidates } from './server-url';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import type { ApClientPacket } from './ap-protocol.type';
-import type { ForeignOwners } from './foreign-item-line';
-import type { OnlineContext } from './online-context.type';
+import { serverUrlCandidates } from '@rotp/randomizer';
+import type { Placement } from '@rotp/randomizer';
+import type { ApClientPacket } from '@rotp/randomizer';
+import type { ForeignOwners } from '@rotp/randomizer';
+import type { OnlineContext } from '@rotp/randomizer';
 import type { ScoutMaps } from './online-overrides';
-import type { OnlineSession } from './online-session.type';
-import type { OnlineSessionConfig } from './online-session-config.type';
-import type { SocketLink } from './online-socket';
-import type { RandomizerSession } from './session.type';
-import type { OnlineDeps } from './online-client.type';
+import type { OnlineSession } from '@rotp/randomizer';
+import type { OnlineSessionConfig } from '@rotp/randomizer';
+import type { SocketLink } from '@rotp/randomizer';
+import type { RandomizerSession } from '@rotp/randomizer';
+import type { OnlineDeps } from '@rotp/randomizer';
 
 const createOnlineClient = (config: OnlineSessionConfig, deps: OnlineDeps): OnlineSession => {
   const { url, slotName, game = AP_GAME, deathLink = false } = config;
@@ -181,4 +181,4 @@ const createOnlineClient = (config: OnlineSessionConfig, deps: OnlineDeps): Onli
 };
 
 export { createOnlineClient };
-export type { OnlineDeps } from './online-client.type';
+export type { OnlineDeps } from '@rotp/randomizer';

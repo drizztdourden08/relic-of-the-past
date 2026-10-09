@@ -1,10 +1,8 @@
 /* @layer renderer-hooks @kind logic */
-import { reconcileCapacityPond } from '@shared/randomizer/world/capacity-pond';
+import { reconcileCapacityPond } from '@rotp/randomizer';
 import { capacityPondOf } from '../randomizer-choices';
-import type { CapacityProfile } from '@shared/randomizer/world/capacity';
-import type {
-  CapacityPondAuthority, ReconciledCapacityPond,
-} from '@shared/randomizer/world/capacity-pond';
+import type { CapacityProfile } from '@rotp/randomizer';
+import type { CapacityPondAuthority, ReconciledCapacityPond } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '../randomizer-choices';
 
 const keepingPinned = (settled: ReconciledCapacityPond, stored: CapacityProfile): CapacityProfile => {

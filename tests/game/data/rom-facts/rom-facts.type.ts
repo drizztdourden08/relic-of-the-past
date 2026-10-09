@@ -1,6 +1,6 @@
 /* @layer tests @kind type */
 import type { ConnectionRecord, ScreenRecord } from '@rotp/game-data';
-import type { readRomNativeTables } from '@shared/randomizer/audit/rom-native-tables';
+import type { readRomNativeTables } from '@rotp/randomizer';
 
 type RomTables = ReturnType<typeof readRomNativeTables>;
 

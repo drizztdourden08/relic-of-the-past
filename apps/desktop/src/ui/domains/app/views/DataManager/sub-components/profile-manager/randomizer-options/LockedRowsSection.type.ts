@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionDef, OptionValue } from '@rotp/randomizer';
 
 interface LockedRowsSectionProps {
   title: string;

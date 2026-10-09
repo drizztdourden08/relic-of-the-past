@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { POTION_CAULDRONS, potionPriceStateOfValues } from '@shared/randomizer/world/potion-price';
-import { bottleContentKeyOf } from '@shared/randomizer/world/shops/shop-price-options.data';
+import { POTION_CAULDRONS, potionPriceStateOfValues } from '@rotp/randomizer';
+import { bottleContentKeyOf } from '@rotp/randomizer';
 import { bottleContentRowsOf } from '@app/ui/domains/app/compounds/ShopPricesBlock/behavior/bottle-content-rows';
 import { ALL_PRICES } from './potion-price-rule.constants';
 import { scopeWith } from './scope-with';

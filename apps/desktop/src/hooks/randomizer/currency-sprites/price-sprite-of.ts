@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
 import { spriteUrlOf } from '@rotp/game-data';
-import type { ShopPrice } from '@shared/randomizer/world/shops/shop-price.type';
+import type { ShopPrice } from '@rotp/randomizer';
 import { poolItemSpriteOf } from '../pool-item-sprite';
 import { BOTTLE_SPRITE_FILES } from './currency-sprites.constants';
 import { currencySpriteOf } from './currency-sprite-of';

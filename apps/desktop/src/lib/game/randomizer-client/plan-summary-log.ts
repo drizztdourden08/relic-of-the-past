@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import type { PhysicalPlan } from './physical-plan.type';
+import type { PhysicalPlan } from '@rotp/randomizer';
 
 const logPlanSummary = (plan: PhysicalPlan, tag: string): void => {
   const { counts, errors } = plan;

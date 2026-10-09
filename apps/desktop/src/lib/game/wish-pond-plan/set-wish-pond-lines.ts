@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { WishPondLinesArm } from './wish-pond-plan.type';
+import type { WishPondLinesArm } from '@rotp/randomizer';
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
 

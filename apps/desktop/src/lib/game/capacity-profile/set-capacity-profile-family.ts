@@ -2,9 +2,9 @@
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
 import type { CapacityFamilyId } from '@rotp/game-data';
-import type { CapacityFamilyArm } from './capacity-profile.type';
-import { CAPACITY_FAMILY_INDEX, CAPACITY_FAMILY_LAST_TIER } from './capacity-profile.constants';
-import { openCapacityGate } from './open-capacity-gate';
+import type { CapacityFamilyArm } from '@rotp/randomizer';
+import { CAPACITY_FAMILY_INDEX, CAPACITY_FAMILY_LAST_TIER } from '@rotp/randomizer';
+import { openCapacityGate } from '@rotp/randomizer';
 
 const tierInRange = (family: CapacityFamilyId, tier: number): boolean =>
   Number.isInteger(tier) && tier >= 0 && tier <= CAPACITY_FAMILY_LAST_TIER[family];

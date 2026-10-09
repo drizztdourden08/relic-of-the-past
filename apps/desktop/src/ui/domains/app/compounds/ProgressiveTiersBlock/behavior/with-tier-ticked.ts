@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ProgressiveFamilyId, ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
+import type { ProgressiveFamilyId, ProgressiveSetting } from '@rotp/randomizer';
 
 const withTierTicked = (
   setting: ProgressiveSetting, family: ProgressiveFamilyId, index: number, checked: boolean,

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { PRIZE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
+import { PRIZE_LOCATIONS } from '@rotp/randomizer';
 import { log } from '../../../log-bus';
 import { setChestSlotOverride } from '../../randomizer';
 import { setNpcGrantOverride, setNpcGrantSpriteOverride } from '../../npc-grant-overrides';
@@ -8,11 +8,11 @@ import { setScriptedGrantOverride } from '../../scripted-grant-overrides';
 import { setStandingOverride } from '../../standing-overrides';
 import { setShopSlotOverride } from '../../shop-overrides';
 import { armPrizeShuffle } from '../../prize-shuffle';
-import { quietMessageFor } from '../../quiet-receipts';
+import { quietMessageFor } from '@rotp/randomizer';
 import { allocateFireId } from '../override-fire-registry';
-import type { PhysicalPlan } from '../physical-plan.type';
-import type { MessageIdOf } from './apply-overrides.type';
-import { armedShopState } from './armed-shop-state';
+import type { PhysicalPlan } from '@rotp/randomizer';
+import type { MessageIdOf } from '@rotp/randomizer';
+import { armedShopState } from '@rotp/randomizer';
 
 const applyOverrides = (plan: PhysicalPlan, messageIdOf: MessageIdOf, tag: string): void => {
   const receiptLineOf = (location: string, localId: number): number => quietMessageFor(localId, messageIdOf(location));

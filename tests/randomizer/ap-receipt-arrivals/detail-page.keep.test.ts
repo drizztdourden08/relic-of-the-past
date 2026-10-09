@@ -5,10 +5,10 @@ import { RANDOMIZER_MSG_BASE } from '@rotp/asset-extraction';
 import { kLanguages } from '@rotp/asset-extraction';
 import { dialogueCharsetOf } from '@rotp/game-data';
 import { progressiveCapacityItemName } from '@rotp/game-data';
-import { renderCapacityStep } from '@shared/randomizer/receipt-text/capacity-rung-values';
+import { renderCapacityStep } from '@rotp/randomizer';
 import { stripHighlight } from '@rotp/game-core';
-import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
-import { renderReceiptMessage } from '@shared/randomizer/receipt-text/render-receipt-message';
+import { renderFromServer, renderOnline } from '@rotp/randomizer';
+import { renderReceiptMessage } from '@rotp/randomizer';
 import {
   clearSessionDialogue, prepareLine, setSessionReceiptMessages,
 } from '@app/lib/game/session-dialogue/session-dialogue';
@@ -31,7 +31,7 @@ vi.mock('@app/lib/log-bus', () => {
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
 vi.mock('../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
-vi.mock('@app/lib/game/randomizer-client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
+vi.mock('../../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
 vi.mock('@app/lib/game/delivery-api', () => ({
   deliverItem: (
     _id: number, _label: string, _source: string, messageId?: number | (() => number), onComplete?: () => void,

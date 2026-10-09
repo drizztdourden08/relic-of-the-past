@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-import { clientUuid } from './client-uuid';
-import { createConnectionNotices } from './connection-notices';
-import { createNetworkMonitor } from './network-monitor';
+import { clientUuid } from '@rotp/randomizer';
+import { createConnectionNotices } from '@rotp/randomizer';
+import { createNetworkMonitor } from '@rotp/randomizer';
 import { createTrackerLinks } from './tracker-links';
-import type { NetworkMonitor } from './network-monitor';
-import type { OnlineNetworkDeps } from './online-network.type';
+import type { NetworkMonitor } from '@rotp/randomizer';
+import type { OnlineNetworkDeps } from '@rotp/randomizer';
 
 const createOnlineNetwork = (deps: OnlineNetworkDeps): NetworkMonitor => {
   const { createSocket, url, ...monitorDeps } = deps;
@@ -18,4 +18,4 @@ const createOnlineNetwork = (deps: OnlineNetworkDeps): NetworkMonitor => {
 };
 
 export { createOnlineNetwork };
-export type { OnlineNetworkDeps } from './online-network.type';
+export type { OnlineNetworkDeps } from '@rotp/randomizer';

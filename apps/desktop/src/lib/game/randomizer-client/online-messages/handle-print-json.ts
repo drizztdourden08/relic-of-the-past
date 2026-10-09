@@ -1,13 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { renderPrintJson } from '../print-json';
-import { PLAYERS_COMMAND } from '../network-roster';
-import { isPlayersReply } from '../players-reply';
-import { noticeOfPrint } from '../notice-of-print';
-import { emitOnlineNotice } from '../online-notices';
-import type { ApPrintJsonPacket } from '../ap-protocol.type';
-import type { OnlineContext } from '../online-context.type';
-import { kindOfPrint } from './kind-of-print';
+import { renderPrintJson } from '@rotp/randomizer';
+import { PLAYERS_COMMAND } from '@rotp/randomizer';
+import { isPlayersReply } from '@rotp/randomizer';
+import { noticeOfPrint } from '@rotp/randomizer';
+import { emitOnlineNotice } from '@rotp/randomizer';
+import type { ApPrintJsonPacket } from '@rotp/randomizer';
+import type { OnlineContext } from '@rotp/randomizer';
+import { kindOfPrint } from '@rotp/randomizer';
 
 const isOwnPlayersEcho = (ctx: OnlineContext, packet: ApPrintJsonPacket): boolean =>
   packet.type === 'Chat' && packet.slot === ctx.room.slot && packet.message === PLAYERS_COMMAND;

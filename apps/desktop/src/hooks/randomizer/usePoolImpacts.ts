@@ -1,11 +1,11 @@
 /* @layer renderer-lib @kind hook */
 import { useMemo } from 'react';
-import { accountingOf } from '@shared/randomizer/world/pool/pool-accounting';
-import { poolImpactOf } from '@shared/randomizer/world/pool/pool-impact';
+import { accountingOf } from '@rotp/randomizer';
+import { poolImpactOf } from '@rotp/randomizer';
 import { deliverableSets } from './deliverable-sets';
 import { poolImpactCell } from './impact-cell';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
-import type { PoolImpact } from '@shared/randomizer/world/pool/pool-impact';
+import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
+import type { PoolImpact } from '@rotp/randomizer';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
 import type { PoolImpacts } from './use-pool-impacts.type';
 import { UNAVAILABLE } from './use-pool-impacts.constants';

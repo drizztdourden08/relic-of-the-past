@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
 import { armOverrideFiredEvents } from '@rotp/game-core';
-import { fireRegistryState } from './fire-registry-state';
-import type { FireReportingSession } from './override-fire-registry.type';
+import { fireRegistryState } from '@rotp/randomizer';
+import type { FireReportingSession } from '@rotp/randomizer';
 
 const armFireReporting = (session: FireReportingSession): void => {
   const { locationByFireId, fired, firedLocationKeys, firedListeners } = fireRegistryState;

@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { reconcileCapacityPond } from '@shared/randomizer/world/capacity-pond';
-import { pondSettingForMode } from '@shared/randomizer/world/pond/pond-mode-switch';
-import { LEGACY_POND_SETTING } from '@shared/randomizer/world/pond/pond-profile-defaults';
-import type { FamilySetting } from '@shared/randomizer/world/capacity';
+import { reconcileCapacityPond } from '@rotp/randomizer';
+import { pondSettingForMode } from '@rotp/randomizer';
+import { LEGACY_POND_SETTING } from '@rotp/randomizer';
+import type { FamilySetting } from '@rotp/randomizer';
 import { profileOf } from './profile-of';
 import { selectionOf } from './selection-of';
 import { settingFor } from './setting-for';

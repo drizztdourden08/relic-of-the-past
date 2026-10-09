@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
-import { CAPACITY_FAMILY_INDEX } from '../capacity-profile/capacity-profile.constants';
-import type { CapacityFixedLineArm } from './capacity-fixed-lines.type';
+import { CAPACITY_FAMILY_INDEX } from '@rotp/randomizer';
+import type { CapacityFixedLineArm } from '@rotp/randomizer';
 
 const setCapacityFixedLines = (lines: readonly CapacityFixedLineArm[]): void => {
   if (lines.length === 0) return;

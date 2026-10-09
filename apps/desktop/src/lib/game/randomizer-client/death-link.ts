@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { DEATH_LINK_TAG } from './online-handshake';
-import { emitOnlineNotice } from './online-notices';
-import { deathLinkOnlineNotice } from './death-link-toast-text';
-import type { DeathLinkNotice } from './online-notices';
-import { DEATH_LINK_GUARD_MS, KILL_LOG_NOTE, MS_PER_SECOND } from './death-link.constants';
-import type { DeathLink, DeathLinkDeps } from './death-link.type';
+import { DEATH_LINK_TAG } from '@rotp/randomizer';
+import { emitOnlineNotice } from '@rotp/randomizer';
+import { deathLinkOnlineNotice } from '@rotp/randomizer';
+import type { DeathLinkNotice } from '@rotp/randomizer';
+import { DEATH_LINK_GUARD_MS, KILL_LOG_NOTE, MS_PER_SECOND } from '@rotp/randomizer';
+import type { DeathLink, DeathLinkDeps } from '@rotp/randomizer';
 
 const emitDeathLinkNotice = (notice: DeathLinkNotice): void => emitOnlineNotice(deathLinkOnlineNotice(notice));
 
@@ -45,4 +45,4 @@ const createDeathLink = (deps: DeathLinkDeps): DeathLink => {
 };
 
 export { createDeathLink };
-export type { DeathLink, DeathLinkDeps } from './death-link.type';
+export type { DeathLink, DeathLinkDeps } from '@rotp/randomizer';

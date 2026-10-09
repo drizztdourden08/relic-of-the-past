@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { SHOP_WORLD_LABELS } from '@shared/randomizer/world/shops/shop-slot-facts';
-import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import { SHOP_WORLD_LABELS } from '@rotp/randomizer';
+import type { ShopScope } from '@rotp/randomizer';
 import { SECTION_ORDER } from '../ShopSlotsBlock.constants';
 import type { ShopSectionModel } from '../ShopSlotsBlock.type';
 import { shopCardsOf } from './shop-cards';

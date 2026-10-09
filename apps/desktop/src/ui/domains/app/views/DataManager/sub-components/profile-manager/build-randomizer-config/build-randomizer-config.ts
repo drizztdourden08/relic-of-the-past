@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
-import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
+import { buildOptionsSnapshot } from '@rotp/randomizer';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { absorbPort, serverUrlOf } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { randomSeed } from './random-seed';

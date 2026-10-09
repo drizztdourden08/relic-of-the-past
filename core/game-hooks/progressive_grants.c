@@ -16,7 +16,7 @@
 // The ocarina came after 0x66's neighbours were taken, so its id sits in the free span above the
 // prize crystals (dungeon_item_ids.h) and FamilyOfVirtualId maps it to the sixth family.
 // A session may also leave RUNGS OUT of a family. The pool then carries one copy per rung that
-// is still there (the option catalog's tier ticks, shared/randomizer/world/progressive/), and
+// is still there (the option catalog's tier ticks, packages/randomizer/src/world/progressive/), and
 // a pickup climbs to the next rung that is still there instead of to the next native tier, so
 // unticking a middle rung shortens the ladder instead of leaving a hole in it. The mask is
 // armed per family at session start (WasmSetProgressiveTiers); an unarmed family, which is every
@@ -201,7 +201,7 @@ void WasmClearProgressiveTiers(void) {
 // ─── Families whose rungs arrive as themselves ───
 //
 // A session may put a family's rungs in the pool AS THE RUNGS instead of as nameless
-// copies (the per-family order setting, shared/randomizer/world/progressive/). Those
+// copies (the per-family order setting, packages/randomizer/src/world/progressive/). Those
 // pickups carry the tier's own native id, so they never reach the resolver above and the
 // ladder mask never touches them: finding the top rung first really does hand over the
 // top rung, which is the whole point of the setting.

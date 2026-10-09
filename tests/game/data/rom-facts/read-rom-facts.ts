@@ -1,7 +1,7 @@
 /* @layer tests @kind helper */
 import { all } from '@rotp/game-data';
 import type { ConnectionRecord, ScreenRecord } from '@rotp/game-data';
-import { readRomNativeTables } from '@shared/randomizer/audit/rom-native-tables';
+import { readRomNativeTables } from '@rotp/randomizer';
 import { usRom } from '../rom-fixture';
 import type { RomFacts } from './rom-facts.type';
 

@@ -1,8 +1,8 @@
 /* @layer renderer-appshell @kind logic */
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { Placement } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
-import { generateFromSnapshot } from '@shared/randomizer/generate';
-import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
+import { generateFromSnapshot } from '@rotp/randomizer';
+import { normalizeRandomizerOptions } from '@rotp/randomizer';
 import {
   probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
 } from '@app/lib/game/randomizer-client';

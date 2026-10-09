@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Checkbox, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
-import { PROGRESSIVE_MODE_LABELS } from '@shared/randomizer/world/progressive/progressive-modes.data';
-import type { ProgressiveFamilyMode } from '@shared/randomizer/world/progressive/progressive.type';
+import { PROGRESSIVE_MODE_LABELS } from '@rotp/randomizer';
+import type { ProgressiveFamilyMode } from '@rotp/randomizer';
 import { OptionValueTag } from '../../OptionValueTag';
 import { MODE_OPTIONS } from './ProgressiveTierCard.constants';
 import type { ProgressiveTierCardProps } from './ProgressiveTierCard.type';

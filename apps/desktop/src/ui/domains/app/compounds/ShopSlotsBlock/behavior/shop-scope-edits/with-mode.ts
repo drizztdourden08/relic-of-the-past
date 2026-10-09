@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ShopScope, ShopShuffleMode } from '@shared/randomizer/world/shops/shop-scope.type';
+import type { ShopScope, ShopShuffleMode } from '@rotp/randomizer';
 import { reclamped } from './reclamped';
 
 const withMode = (scope: ShopScope, mode: ShopShuffleMode): ShopScope =>

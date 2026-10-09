@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import type { StandingOverrideTarget } from './standing-overrides.type';
+import type { StandingOverrideTarget } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import { isArmableOverrideId } from '../foreign-item-id';
+import { isArmableOverrideId } from '@rotp/randomizer';
 import { getModule } from '@rotp/game-core';
 import { setStandingOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';

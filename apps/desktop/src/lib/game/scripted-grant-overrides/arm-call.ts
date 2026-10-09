@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { LiveModule, SingleArmSurface } from './scripted-grant-overrides.type';
+import type { LiveModule, SingleArmSurface } from '@rotp/randomizer';
 import { setPondPrize } from '../pond-plan';
 
 const armCall = (mod: LiveModule, target: SingleArmSurface,

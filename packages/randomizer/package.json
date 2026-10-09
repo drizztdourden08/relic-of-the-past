@@ -1,0 +1,18 @@
+{
+  "name": "@rotp/randomizer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The local randomizer and the Archipelago room client.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@rotp/asset-extraction": "workspace:*",
+    "@rotp/features": "workspace:*",
+    "@rotp/game-core": "workspace:*",
+    "@rotp/game-data": "workspace:*"
+  }
+}

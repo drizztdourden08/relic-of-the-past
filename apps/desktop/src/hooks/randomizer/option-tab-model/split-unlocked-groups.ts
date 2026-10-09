@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
-import type { OptionDef } from '@shared/randomizer/world/options.type';
+import type { OptionDef } from '@rotp/randomizer';
 import { LIST_TABS } from './option-tab-model.constants';
 import type { ListTabId, OptionTabId, UnlockedGroupsByTab } from './option-tab-model.type';
 import { tabOfOption } from './tab-of-option';

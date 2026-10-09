@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { BURST_LIMIT, BURST_WINDOW_MS, queueNotice } from '@app/lib/game/randomizer-client/notice-burst';
+import { BURST_LIMIT, BURST_WINDOW_MS, queueNotice } from '@rotp/randomizer';
 import { ONLINE_NOTICE_DEFAULTS } from '@rotp/game-core';
-import type { OnlineNotice } from '@app/lib/game/randomizer-client/online-notices';
-import type { NoticeEntry } from '@app/lib/game/randomizer-client/notice-burst';
+import type { OnlineNotice } from '@rotp/randomizer';
+import type { NoticeEntry } from '@rotp/randomizer';
 import { installClientHarness } from '../ap-protocol-harness';
 
 vi.mock('@app/lib/log-bus', () => {

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { pauseLocationPolling } from './pause-location-polling';
-import { pollerState } from './poller-state';
+import { pollerState } from '@rotp/randomizer';
 
 const stopLocationPolling = (): void => {
   pauseLocationPolling();

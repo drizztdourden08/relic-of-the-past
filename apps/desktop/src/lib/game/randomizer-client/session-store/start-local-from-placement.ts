@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import { createLocalSession } from '../local-session';
 import { adoptSession } from './adopt-session';
-import { NO_OWNERS } from './session-store.constants';
+import { NO_OWNERS } from '@rotp/randomizer';
 import { storeSlots } from './store-slots';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { Placement } from '@rotp/randomizer';
 import type { SessionSource } from './session-store.type';
 
 const startLocalFromPlacement = async (nextPlacement: Placement, nextSource: SessionSource): Promise<void> => {

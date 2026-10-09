@@ -2,4 +2,4 @@
 export { deliverItem } from './deliver-item';
 export { deliverCheck } from './deliver-check';
 export { deliverNpcCheck } from './deliver-npc-check';
-export { deliverCustom } from './deliver-custom';
+export { deliverCustom } from '@rotp/randomizer';

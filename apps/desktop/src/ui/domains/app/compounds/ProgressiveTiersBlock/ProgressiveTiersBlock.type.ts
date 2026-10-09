@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind types */
-import type {
-  ProgressiveFamilyId, ProgressiveFamilyMode, ProgressiveModeSetting, ProgressiveSetting,
-} from '@shared/randomizer/world/progressive/progressive.type';
+import type { ProgressiveFamilyId, ProgressiveFamilyMode, ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
 
 interface ProgressiveTiersBlockProps {
   setting: ProgressiveSetting;

@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { setPondDemands } from '../pond-demands';
-import type { PondDemandSessionPlan } from './pond-demand-rows';
+import type { PondDemandSessionPlan } from '@rotp/randomizer';
 
 const hex = (id: number): string => `0x${id.toString(16).padStart(2, '0')}`;
 

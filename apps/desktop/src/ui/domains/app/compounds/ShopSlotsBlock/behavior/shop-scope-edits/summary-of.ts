@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { maxSlotCountOf, openedSlotIndicesOf, usesSlotCount } from '@shared/randomizer/world/shops/shop-scope';
-import { clampDepth } from '@shared/randomizer/world/shops/shop-slots';
-import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import { maxSlotCountOf, openedSlotIndicesOf, usesSlotCount } from '@rotp/randomizer';
+import { clampDepth } from '@rotp/randomizer';
+import type { ShopScope } from '@rotp/randomizer';
 import type { ShopScopeSummary } from '../../ShopSlotsBlock.type';
 
 const summaryOf = (scope: ShopScope): ShopScopeSummary => {

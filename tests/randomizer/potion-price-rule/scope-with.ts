@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
-import { defaultShopScope } from '@shared/randomizer/world/shops/shop-scope-from-values';
-import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import { defaultShopScope } from '@rotp/randomizer';
+import type { ShopScope } from '@rotp/randomizer';
 
 const scopeWith = (ticked: readonly number[], mode: ShopScope['mode']): ShopScope => {
   const base = defaultShopScope();

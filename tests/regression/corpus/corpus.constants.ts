@@ -1,13 +1,13 @@
 /* @layer test @kind constants */
 import { resolve } from 'node:path';
-import { generatePlacement } from '@shared/randomizer/world/fill/generate';
-import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
-import { pondCertifiedSpotsOf } from '@shared/randomizer/world/pond/pond-spots';
-import { SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@shared/randomizer/world/shops/shop-slot-options.data';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { generatePlacement } from '@rotp/randomizer';
+import { buildOptionsSnapshot } from '@rotp/randomizer';
+import { POND_INSTANCES } from '@rotp/randomizer';
+import { pondCertifiedSpotsOf } from '@rotp/randomizer';
+import { SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@rotp/randomizer';
+import type { Placement } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
 
 const ROOT = resolve(__dirname, '../../..');
 const NONE: ReadonlySet<LocationKey> = new Set();

@@ -1,9 +1,9 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback, useRef, useState } from 'react';
-import { normalizeServerUrl, probeOnlineServer, PROBE_TIMEOUT_MS } from '@app/lib/game/randomizer-client/online-probe';
-import { serverAddressError } from '@app/lib/game/randomizer-client/server-address';
+import { normalizeServerUrl, probeOnlineServer, PROBE_TIMEOUT_MS } from '@rotp/randomizer';
+import { serverAddressError } from '@rotp/randomizer';
 import { serverUrlOf } from './server-setup-draft';
-import type { ProbeResult } from '@app/lib/game/randomizer-client/online-probe';
+import type { ProbeResult } from '@rotp/randomizer';
 import type { ServerSetupDraft } from './server-setup-draft';
 import type { ServerProbe, ServerProbeState } from './use-server-probe.type';
 import { IDLE } from './use-server-probe.constants';

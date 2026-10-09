@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { POTION_CAULDRONS } from '@shared/randomizer/world/potion-price';
+import { POTION_CAULDRONS } from '@rotp/randomizer';
 
 const cauldronSubsets = (): number[][] => {
   const all: number[][] = [];

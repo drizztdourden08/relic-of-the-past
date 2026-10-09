@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { Box, Callout, Text } from '@drizztdourden08/tessera/primitives';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionValue } from '@rotp/randomizer';
 import type { DarkRoomLightField } from '@rotp/game-core';
 import { useDarkRoomLightTiles } from './behavior/useDarkRoomLightTiles';
 import { DarkRoomLightTile } from './sub-components/DarkRoomLightTile';

@@ -3,7 +3,7 @@ import { all } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
 import { isEventFactMet, isOutOfBedFallbackMet, isOverworldFactMet, isProgressFactMet, isRoomFactMet } from './check-facts';
 import { resolveDerivedChecks } from './derived-checks';
-import { completionBitOf } from '../randomizer-client/randomizer-completion-bits';
+import { completionBitOf } from '@rotp/randomizer';
 import type { ProgressReaders } from './completed-checks-core.type';
 
 const computeCompletedChecks = (

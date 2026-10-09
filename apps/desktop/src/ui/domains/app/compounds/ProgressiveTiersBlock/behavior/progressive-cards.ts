@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
-import { progressiveFamilyName, progressiveTierName } from '@shared/randomizer/world/progressive/progressive-display-names';
-import { progressiveTierKeyOf } from '@shared/randomizer/world/progressive/progressive-option-keys';
-import type { ProgressiveModeSetting, ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
+import { PROGRESSIVE_FAMILIES } from '@rotp/randomizer';
+import { progressiveFamilyName, progressiveTierName } from '@rotp/randomizer';
+import { progressiveTierKeyOf } from '@rotp/randomizer';
+import type { ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
 import type { ProgressiveCardModel, ProgressiveTierToggleModel } from '../ProgressiveTiersBlock.type';
 
 const countTextOf = (ticked: number, total: number): string =>

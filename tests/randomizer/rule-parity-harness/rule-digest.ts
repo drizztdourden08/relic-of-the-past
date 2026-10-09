@@ -1,9 +1,9 @@
 /* @layer tests @kind helper */
 import { createHash } from 'node:crypto';
 import { all } from '@rotp/game-data';
-import { actTokensOf } from '@shared/randomizer/world/events/event-gates';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import { actTokensOf } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
 import { DIGEST_LENGTH } from './rule-parity-harness.constants';
 import type { ParityDigest } from './rule-parity-harness.type';
 import { prepareState } from './prepare-state';

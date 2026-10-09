@@ -1,0 +1,12 @@
+/* @layer bridge-wasm @kind logic */
+import { VIRTUAL_PREFIX } from './virtual-locations.constants';
+import type { CheckId } from '@rotp/game-data';
+import type { LocationKey } from '../../world/location-key';
+
+const slugKeepingUnderscores = (name: string): string =>
+  name.toLowerCase().replace(/[^a-z0-9_]+/g, '-').replace(/(^-|-$)/g, '');
+
+const virtualCheckIdOf = (location: LocationKey): CheckId =>
+  `${VIRTUAL_PREFIX}${slugKeepingUnderscores(location)}` as CheckId;
+
+export { virtualCheckIdOf };

@@ -1,15 +1,15 @@
 /* @layer tests @kind test */
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import { generateFromSnapshot } from '@shared/randomizer/generate';
-import { AP_ITEM_IDS, AP_LOCATION_IDS } from '@shared/randomizer/archipelago/ap-ids.data';
-import { locationKeyOfApId } from '@shared/randomizer/archipelago/ap-id-lookup';
+import { buildOptionsSnapshot } from '@rotp/randomizer';
+import { generateFromSnapshot } from '@rotp/randomizer';
+import { AP_ITEM_IDS, AP_LOCATION_IDS } from '@rotp/randomizer';
+import { locationKeyOfApId } from '@rotp/randomizer';
 import { find } from '@rotp/game-data';
-import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
-import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
+import type { ItemKey } from '@rotp/randomizer';
+import { checkIdOfLocation } from '@rotp/randomizer';
 import type { CheckId } from '@rotp/game-data';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { LocationKey } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
 import type * as FireRegistry from '@app/lib/game/randomizer-client/override-fire-registry';
 
 const errors = vi.hoisted(() => [] as string[]);
@@ -60,11 +60,11 @@ const { isCountedCheck } = await import('@app/lib/game/tracker/tracker-count');
 const { trackerStatuses } = await import('@app/lib/game/tracker/tracker-statuses');
 const { clearCollectedChecks, withCollectedChecks } = await import('@app/lib/game/tracker/collected-checks');
 const { markCollected } = await import('@app/lib/game/randomizer-client/online-collected');
-const { virtualCheckIdOf } = await import('@app/lib/game/randomizer-client/virtual-locations');
-const { parseSlotData } = await import('@shared/randomizer/archipelago/parse-slot-data');
+const { virtualCheckIdOf } = await import('../../packages/randomizer/src/client/virtual-locations');
+const { parseSlotData } = await import('../../packages/randomizer/src/archipelago/parse-slot-data');
 const {
   probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
-} = await import('@app/lib/game/randomizer-client/npc-capability');
+} = await import('../../packages/randomizer/src/client/npc-capability');
 
 const SLOT = 1;
 const OTHER_SLOT = 2;

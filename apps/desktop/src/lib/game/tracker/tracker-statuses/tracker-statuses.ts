@@ -1,10 +1,10 @@
 /* @layer renderer-lib @kind logic */
 import { computeRecordStatuses } from '@rotp/game-data';
-import { trackerReading } from '../../randomizer-client/tracker-availability';
+import { trackerReading } from '@rotp/randomizer';
 import { grantedInventory, recordRowOverrides } from '../record-row-inputs';
 import { rowsWithoutALocation } from './rows-without-a-location';
 import type { CheckId } from '@rotp/game-data';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
+import type { LocationKey } from '@rotp/randomizer';
 import type { CheckStatus } from '@rotp/game-data';
 import type { TrackerStatusParams } from './tracker-statuses.type';
 

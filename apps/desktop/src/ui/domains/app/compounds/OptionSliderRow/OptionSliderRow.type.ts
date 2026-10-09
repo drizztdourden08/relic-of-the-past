@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { OptionDescription as OptionDescriptionText } from '@shared/randomizer/world/option-description.type';
+import type { OptionDescription as OptionDescriptionText } from '@rotp/randomizer';
 
 interface OptionSliderRowProps {
   label: string;

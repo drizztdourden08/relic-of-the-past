@@ -3,7 +3,7 @@ import { enqueue } from '../delivery-queue';
 import type { DeliveryAction } from '../delivery-queue';
 import { isCoreReady } from '@rotp/game-core';
 import { isGrantable } from './is-grantable';
-import { itemLabel } from './item-label';
+import { itemLabel } from '@rotp/randomizer';
 
 const deliverNpcCheck = (flagType: number, flagMask: number, itemId: number, spriteType: number, postGfx: number, message?: string, source = 'randomizer', messageId?: number): string | null => {
   if (!isGrantable(itemId) || !isCoreReady()) return null;

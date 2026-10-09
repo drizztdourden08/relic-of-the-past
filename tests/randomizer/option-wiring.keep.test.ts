@@ -2,27 +2,25 @@
 import { describe, expect, it } from 'vitest';
 import { randomizerChoiceOverrides, snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import { partitionCatalogByLock } from '@app/ui/domains/app/compounds/RandomizerOptionRow/behavior/partitionCatalogByLock';
-import { OPTION_GROUPS, optionCatalog } from '@shared/randomizer/world/options.data';
-import { DEFAULT_CAPACITY_BONUS, customSetting } from '@shared/randomizer/world/capacity';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
-import { DEFAULT_DARK_ROOM_SETTING } from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
-import { DEFAULT_ACCESSIBILITY } from '@shared/randomizer/world/accessibility/accessibility-from-snapshot';
-import { DEFAULT_DUNGEON_ITEM_SETTING } from '@shared/randomizer/world/dungeon-items/dungeon-item-modes';
-import { DARK_ROOM_OPTION_KEYS } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
-import { DIFFICULTY_OPTION_KEYS } from '@shared/randomizer/world/difficulty/difficulty-option-keys';
-import { defaultDifficulty } from '@shared/randomizer/world/difficulty/difficulty-from-snapshot';
-import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
-import { defaultProgressiveModes } from '@shared/randomizer/world/progressive/progressive-modes.data';
-import { defaultRetroBow } from '@shared/randomizer/world/retro/retro-from-snapshot';
-import { LEGACY_POND_PROFILES } from '@shared/randomizer/world/pond/pond-profile-defaults';
-import {
-  SHOP_PRICE_BLOCK_KEYS, SHOP_PRICE_OPTION_KEYS,
-} from '@shared/randomizer/world/shops/shop-price-options.data';
-import { SHOP_SCOPE_OPTION_KEYS } from '@shared/randomizer/world/shops/shop-slot-options.data';
-import { defaultShopScope } from '@shared/randomizer/world/shops/shop-scope-from-values';
-import { CANONICAL_SLOTS } from '@shared/randomizer/world/shops/shop-slot-facts';
-import { accountingOf } from '@shared/randomizer/world/pool/pool-accounting';
-import { fillFlagsOf } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
+import { OPTION_GROUPS, optionCatalog } from '@rotp/randomizer';
+import { DEFAULT_CAPACITY_BONUS, customSetting } from '@rotp/randomizer';
+import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';
+import { DEFAULT_DARK_ROOM_SETTING } from '@rotp/randomizer';
+import { DEFAULT_ACCESSIBILITY } from '@rotp/randomizer';
+import { DEFAULT_DUNGEON_ITEM_SETTING } from '@rotp/randomizer';
+import { DARK_ROOM_OPTION_KEYS } from '@rotp/randomizer';
+import { DIFFICULTY_OPTION_KEYS } from '@rotp/randomizer';
+import { defaultDifficulty } from '@rotp/randomizer';
+import { defaultProgressiveSetting } from '@rotp/randomizer';
+import { defaultProgressiveModes } from '@rotp/randomizer';
+import { defaultRetroBow } from '@rotp/randomizer';
+import { LEGACY_POND_PROFILES } from '@rotp/randomizer';
+import { SHOP_PRICE_BLOCK_KEYS, SHOP_PRICE_OPTION_KEYS } from '@rotp/randomizer';
+import { SHOP_SCOPE_OPTION_KEYS } from '@rotp/randomizer';
+import { defaultShopScope } from '@rotp/randomizer';
+import { CANONICAL_SLOTS } from '@rotp/randomizer';
+import { accountingOf } from '@rotp/randomizer';
+import { fillFlagsOf } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 const BASE: RandomizerOptionChoices = {

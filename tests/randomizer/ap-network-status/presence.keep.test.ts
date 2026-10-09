@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { SETTLE_AFTER_MS } from '@app/lib/game/randomizer-client/network-roster';
+import { SETTLE_AFTER_MS } from '@rotp/randomizer';
 import type { FakeRoom, FakeServer } from '../ap-fake-server';
 import { boot, settle } from '../ap-protocol-harness';
 import { installNetworkHarness } from './install-network-harness';

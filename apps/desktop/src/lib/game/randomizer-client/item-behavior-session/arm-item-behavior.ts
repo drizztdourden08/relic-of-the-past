@@ -5,7 +5,7 @@ import { setProgressiveTiers } from '../../progressive-tiers';
 import { setRetroBow } from '../../retro-bow';
 import { setRetroShelves } from '../../retro-shelf';
 import { setSessionStoryGates } from '../../story-gates';
-import type { ItemBehaviorPlan } from './item-behavior-session.type';
+import type { ItemBehaviorPlan } from '@rotp/randomizer';
 
 const armItemBehavior = (plan: ItemBehaviorPlan, tag: string): void => {
   setSessionStoryGates(plan.storyGates);

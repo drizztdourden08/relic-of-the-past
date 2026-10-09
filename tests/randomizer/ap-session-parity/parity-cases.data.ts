@@ -1,5 +1,5 @@
 /* @layer tests @kind data */
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionValue } from '@rotp/randomizer';
 
 interface ParityCase {
   name: string;

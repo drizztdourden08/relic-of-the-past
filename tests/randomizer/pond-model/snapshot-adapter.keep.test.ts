@@ -1,10 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { baselineValues } from '@shared/randomizer/world/options.data';
-import { parsePondSetting, pondValuesOf } from '@shared/randomizer/world/pond/pond-from-snapshot';
-import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import { DEFAULT_POND_SETTING, LEGACY_POND_SETTING } from '@shared/randomizer/world/pond/pond-profile-defaults';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import { baselineValues } from '@rotp/randomizer';
+import { parsePondSetting, pondValuesOf } from '@rotp/randomizer';
+import { pondPlanOf } from '@rotp/randomizer';
+import { DEFAULT_POND_SETTING, LEGACY_POND_SETTING } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 import { CUSTOM } from './pond-model.constants';
 
 describe('pond snapshot adapter', () => {

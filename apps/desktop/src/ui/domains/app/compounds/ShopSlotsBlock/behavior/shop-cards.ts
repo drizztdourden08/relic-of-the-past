@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind logic */
-import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
-import { SHOP_IDS } from '@shared/randomizer/world/shops/shop-slot-facts';
-import { shortShopNameOf } from '@shared/randomizer/world/shops/shop-list-name';
-import { DEFAULT_OFF_SHOPS, SHOP_SLOT_ROWS } from '@shared/randomizer/world/shops/shop-slot-options.data';
-import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
-import type { ShopSlotRow } from '@shared/randomizer/world/shops/shop-slot-options.data';
+import { itemKeyName } from '@rotp/randomizer';
+import { SHOP_IDS } from '@rotp/randomizer';
+import { shortShopNameOf } from '@rotp/randomizer';
+import { DEFAULT_OFF_SHOPS, SHOP_SLOT_ROWS } from '@rotp/randomizer';
+import type { ShopScope } from '@rotp/randomizer';
+import type { ShopSlotRow } from '@rotp/randomizer';
 import { STOCK_SEPARATOR } from '../ShopSlotsBlock.constants';
 import type { ShopCardModel, ShopSlotToggleModel } from '../ShopSlotsBlock.type';
 

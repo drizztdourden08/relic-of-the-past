@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
+import { normalizeRandomizerOptions } from '@rotp/randomizer';
 import { usePoolImpacts } from '@app/hooks/randomizer/usePoolImpacts';
 import { usePoolTotals } from '@app/hooks/randomizer/usePoolTotals';
 import { optionsSummaryOf } from '../behavior/options-summary';

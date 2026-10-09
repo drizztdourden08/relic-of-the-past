@@ -1,17 +1,17 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { deliverItem, deliverNpcCheck } from '../delivery-api';
-import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
+import { itemKeyName } from '@rotp/randomizer';
 import { armSessionFromPlacement } from './session-start';
 import { disarmSession } from './session-stop';
 import { startLocationPolling } from './location-poller';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { Placement } from '@rotp/randomizer';
 import type { MessageIdOf } from './apply-overrides';
-import type { PlanCounts, PlanEntry } from './physical-plan.type';
+import type { PlanCounts, PlanEntry } from '@rotp/randomizer';
 import type { SessionReceiptTexts } from './receipt-text-refresh';
-import type { RandomizerSession, SessionStatusListener } from './session.type';
-import { CLASS_DEFAULT_MESSAGE, COMPLETION_NOTE } from './local-session.constants';
-import type { LocalSession } from './local-session.type';
+import type { RandomizerSession, SessionStatusListener } from '@rotp/randomizer';
+import { CLASS_DEFAULT_MESSAGE, COMPLETION_NOTE } from '@rotp/randomizer';
+import type { LocalSession } from '@rotp/randomizer';
 
 const emptyCounts = (): PlanCounts =>
   ({ override: 0, overrideNpc: 0, overrideDrop: 0, overrideStanding: 0, overrideScripted: 0, overrideShop: 0, deliver: 0, vanillaLocked: 0, pollBlind: 0, errors: 0 });
@@ -114,4 +114,4 @@ const createLocalSession = (placement: Placement): LocalSession => {
 };
 
 export { createLocalSession };
-export type { LocalSession } from './local-session.type';
+export type { LocalSession } from '@rotp/randomizer';

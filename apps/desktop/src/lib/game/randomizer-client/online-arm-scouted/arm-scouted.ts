@@ -1,19 +1,19 @@
 /* @layer bridge-wasm @kind logic */
-import { itemKeyOfApId } from '@shared/randomizer/archipelago/ap-id-lookup';
+import { itemKeyOfApId } from '@rotp/randomizer';
 import { armSessionFromPlacement } from '../session-start';
-import { scoutsToPlacement } from '../scouts-to-placement';
-import { baselineEntriesOf } from '../baseline-entries';
+import { scoutsToPlacement } from '@rotp/randomizer';
+import { baselineEntriesOf } from '@rotp/randomizer';
 import { applyForeignIcons } from '../../foreign-icons';
-import { foreignIconIdOfGame } from '../foreign-icon-of-game';
-import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
-import type { ForeignItem } from '../foreign-item-line';
-import type { OnlineCore, ScoutedInput } from '../online-core.type';
-import type { PhysicalPlan } from '../physical-plan.type';
-import { foreignItemsOf } from './foreign-items-of';
-import { TAG } from './online-arm-scouted.constants';
-import { scoutedTextsState } from './scouted-texts-state';
-import { stopScoutedTexts } from './stop-scouted-texts';
+import { foreignIconIdOfGame } from '@rotp/randomizer';
+import type { ItemKey } from '@rotp/randomizer';
+import type { LocationKey } from '@rotp/randomizer';
+import type { ForeignItem } from '@rotp/randomizer';
+import type { OnlineCore, ScoutedInput } from '@rotp/randomizer';
+import type { PhysicalPlan } from '@rotp/randomizer';
+import { foreignItemsOf } from '@rotp/randomizer';
+import { TAG } from '@rotp/randomizer';
+import { scoutedTextsState } from '@rotp/randomizer';
+import { stopScoutedTexts } from '@rotp/randomizer';
 
 const itemKeyOfId = (id: number): ItemKey | undefined => {
   try {

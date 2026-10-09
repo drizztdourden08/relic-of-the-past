@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
-import { optionCatalog } from '@shared/randomizer/world/options.data';
-import { DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
-import type { OptionDef } from '@shared/randomizer/world/options.type';
+import { optionCatalog } from '@rotp/randomizer';
+import { DARK_ROOM_REQUIRED_KEY } from '@rotp/randomizer';
+import type { OptionDef } from '@rotp/randomizer';
 
 const DARK_ROOMS_TITLE = 'Dark rooms';
 

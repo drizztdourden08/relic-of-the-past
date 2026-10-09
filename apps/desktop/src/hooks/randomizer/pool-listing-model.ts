@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
+import { itemKeyName } from '@rotp/randomizer';
 import { poolItemSpriteOfKey } from './pool-item-sprite-of-key';
-import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
-import type { ItemPool } from '@shared/randomizer/world/pool/item-pool.type';
+import type { ItemKey } from '@rotp/randomizer';
+import type { ItemPool } from '@rotp/randomizer';
 import type { PoolListingGroup, PoolListingRow } from '@domains/app/compounds/PoolListing';
 
 const rowsOf = (items: readonly ItemKey[], spritesAvailable: boolean): PoolListingRow[] => {

@@ -2,7 +2,7 @@
 import {
   probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
 } from '../../lib/game/randomizer-client';
-import type { DeliverableSets } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
+import type { DeliverableSets } from '@rotp/randomizer';
 
 const deliverableSets = (): DeliverableSets => ({
   npc: probeDeliverableNpcLocations(),

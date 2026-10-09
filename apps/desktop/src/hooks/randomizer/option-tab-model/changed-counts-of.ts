@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
-import { optionCatalog } from '@shared/randomizer/world/options.data';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import { optionCatalog } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
 import { EMPTY_COUNTS } from './option-tab-model.constants';
 import type { ChangedCounts } from './option-tab-model.type';
 import { tabOfOption } from './tab-of-option';

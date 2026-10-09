@@ -1,5 +1,5 @@
 /* @layer renderer-hooks @kind types */
-import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
+import type { OptionDef, OptionValue } from '@rotp/randomizer';
 
 interface ForcedItemPowerRows {
   keys: ReadonlySet<string>;

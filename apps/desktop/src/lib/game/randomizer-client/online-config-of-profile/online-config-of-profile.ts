@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import { normalizeServerUrl } from '../server-url';
-import type { OnlineSessionConfig } from '../online-session-config.type';
+import { normalizeServerUrl } from '@rotp/randomizer';
+import type { OnlineSessionConfig } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
-import { DEFAULT_SLOT_NAME } from './online-config-of-profile.constants';
+import { DEFAULT_SLOT_NAME } from '@rotp/randomizer';
 
 const onlineConfigOfProfile = (config: ProfileRandomizerConfig): OnlineSessionConfig => ({
   url: normalizeServerUrl(config.serverUrl ?? ''),

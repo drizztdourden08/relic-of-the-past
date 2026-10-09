@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { CURVE_IDS, CURVE_LABELS } from '@shared/randomizer/world/capacity';
-import type { CapacityFamily } from '@shared/randomizer/world/capacity';
+import { CURVE_IDS, CURVE_LABELS } from '@rotp/randomizer';
+import type { CapacityFamily } from '@rotp/randomizer';
 import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
 import { offeredPresetsOf } from '../capacity-row-state';
 

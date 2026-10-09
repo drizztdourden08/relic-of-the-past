@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
-import { familyOfOptionKey } from '@shared/randomizer/world/capacity';
-import type { OptionDef } from '@shared/randomizer/world/options.type';
+import { familyOfOptionKey } from '@rotp/randomizer';
+import type { OptionDef } from '@rotp/randomizer';
 import {
   CAPACITY_BLOCK_KEYS, ENTRANCE_KEYS, ENVIRONMENT_KEYS, GLITCH_KEYS, ITEM_KEYS, MEDALLION_KEYS,
   POND_KEYS, SHOP_KEYS, TRAP_KEYS,

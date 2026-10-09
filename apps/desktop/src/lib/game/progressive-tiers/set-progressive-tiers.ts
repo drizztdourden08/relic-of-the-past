@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-import type { ProgressiveModeSetting, ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
+import type { ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
-import { DEFAULT_PROGRESSIVE_MODES, isRandomOrder } from '@shared/randomizer/world/progressive/progressive-modes.data';
-import { CORE_FAMILY_INDEX } from './progressive-tiers.constants';
+import { PROGRESSIVE_FAMILIES } from '@rotp/randomizer';
+import { DEFAULT_PROGRESSIVE_MODES, isRandomOrder } from '@rotp/randomizer';
+import { CORE_FAMILY_INDEX } from '@rotp/randomizer';
 
 const maskOf = (ticks: readonly boolean[]): number =>
   ticks.reduce((mask, ticked, index) => (ticked ? mask | (1 << index) : mask), 0);

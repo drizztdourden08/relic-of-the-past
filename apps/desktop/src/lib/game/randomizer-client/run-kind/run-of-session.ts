@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { SessionStoreState } from '../session-store';
-import type { ActiveRun } from './run-kind.type';
+import type { ActiveRun } from '@rotp/randomizer';
 
 const isEndedOnline = (session: SessionStoreState['session']): boolean =>
   session?.kind === 'online' && (session.status === 'idle' || session.status === 'error');

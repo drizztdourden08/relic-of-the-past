@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import { decomposeRupees, describeRupees, rupeeVolleysOf } from '@shared/randomizer/world/pond/rupee-gems';
-import { LEGACY_POND_SETTING } from '@shared/randomizer/world/pond/pond-profile-defaults';
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import { pondPlanOf } from '@rotp/randomizer';
+import { decomposeRupees, describeRupees, rupeeVolleysOf } from '@rotp/randomizer';
+import { LEGACY_POND_SETTING } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 import { CUSTOM } from './pond-model.constants';
 
 describe('rupee decomposition', () => {

@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { parseSlotData } from '@shared/randomizer/archipelago/parse-slot-data';
-import { AP_WORLD_VERSION } from '@shared/randomizer/archipelago/ap-game';
+import { parseSlotData } from '@rotp/randomizer';
+import { AP_WORLD_VERSION } from '@rotp/randomizer';
 import { boot, installClientHarness, makeRoom, settle } from './ap-protocol-harness';
 import type { FakeRoom, FakeServer } from './ap-fake-server';
 

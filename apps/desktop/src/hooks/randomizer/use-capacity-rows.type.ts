@@ -1,7 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type {
-  CapacityBonusSetting, CapacityFamilyId, CapacityProfile, WalletFloor,
-} from '@shared/randomizer/world/capacity';
+import type { CapacityBonusSetting, CapacityFamilyId, CapacityProfile, WalletFloor } from '@rotp/randomizer';
 
 interface CapacityRowsInput {
   profile: CapacityProfile;

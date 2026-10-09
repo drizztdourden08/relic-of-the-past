@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { CurveId } from '@shared/randomizer/world/capacity';
-import type { PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
-import type { PondAskCurrency } from '@shared/randomizer/world/pond/pond-ask.type';
-import type { ShopBottleContent } from '@shared/randomizer/world/shops/shop-price.type';
-import type { OptionDescription } from '@shared/randomizer/world/option-description.type';
-import type { PondMode } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { CurveId } from '@rotp/randomizer';
+import type { PondAskSetting } from '@rotp/randomizer';
+import type { PondAskCurrency } from '@rotp/randomizer';
+import type { ShopBottleContent } from '@rotp/randomizer';
+import type { OptionDescription } from '@rotp/randomizer';
+import type { PondMode } from '@rotp/randomizer';
 import type { LadderPreviewProps } from '../LadderPreview';
 
 interface PondRowState {

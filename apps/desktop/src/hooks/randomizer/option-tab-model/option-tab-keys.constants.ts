@@ -1,9 +1,7 @@
 /* @layer renderer-hooks @kind constants */
-import {
-  CAPACITY_BONUS_KEYS, CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY,
-} from '@shared/randomizer/world/capacity';
-import { POND_OPTION_KEYS } from '@shared/randomizer/world/pond/pond-option-keys';
-import { MEDALLION_OPTION_KEYS } from '@shared/randomizer/world/options.data';
+import { CAPACITY_BONUS_KEYS, CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY } from '@rotp/randomizer';
+import { POND_OPTION_KEYS } from '@rotp/randomizer';
+import { MEDALLION_OPTION_KEYS } from '@rotp/randomizer';
 
 const POND_KEYS: ReadonlySet<string> = new Set(POND_OPTION_KEYS);
 

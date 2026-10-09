@@ -1,17 +1,15 @@
 /* @layer tests @kind test */
-import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
-import { ITEM } from '@shared/randomizer/world/item-ids.data';
+import type { ItemKey } from '@rotp/randomizer';
+import { ITEM } from '@rotp/randomizer';
 import { describe, expect, it } from 'vitest';
-import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import { generatePlacement } from '@shared/randomizer/world/fill/generate';
-import { buildFillWorld } from '@shared/randomizer/world/fill/fill-world';
-import { fillOptionsFromSnapshot } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
-import { ProgressiveTierError } from '@shared/randomizer/world/progressive/tick-set-check';
-import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
-import {
-  defaultProgressiveSetting, progressiveValuesOf,
-} from '@shared/randomizer/world/progressive/progressive-from-snapshot';
-import type { ProgressiveFamilyId, ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
+import { buildOptionsSnapshot } from '@rotp/randomizer';
+import { generatePlacement } from '@rotp/randomizer';
+import { buildFillWorld } from '@rotp/randomizer';
+import { fillOptionsFromSnapshot } from '@rotp/randomizer';
+import { ProgressiveTierError } from '@rotp/randomizer';
+import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@rotp/randomizer';
+import { defaultProgressiveSetting, progressiveValuesOf } from '@rotp/randomizer';
+import type { ProgressiveFamilyId, ProgressiveSetting } from '@rotp/randomizer';
 
 const SEEDS = 30;
 

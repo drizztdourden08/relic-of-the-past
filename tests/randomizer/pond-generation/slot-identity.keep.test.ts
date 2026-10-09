@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { locationDisplayName } from '@shared/randomizer/world/display-names/location-display-name';
-import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
-import { POND_RUNGS_BY_ID } from '@shared/randomizer/world/pond/pond-rungs';
-import { POND_REGION_LOCATIONS } from '@shared/randomizer/world/pond/pond-region-locations';
+import { locationDisplayName } from '@rotp/randomizer';
+import { POND_INSTANCES } from '@rotp/randomizer';
+import { POND_RUNGS_BY_ID } from '@rotp/randomizer';
+import { POND_REGION_LOCATIONS } from '@rotp/randomizer';
 import { find } from '@rotp/game-data';
 
 describe('pond slot identity', () => {

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { all, getDungeon, ITEM_GROUP_IDS } from '@rotp/game-data';
 import { standardNameOfCheck } from '@rotp/game-data';
 import { screensOfRegions } from '@rotp/game-data';
-import { buildNormalPlacement } from '@shared/randomizer/normal-placement';
+import { buildNormalPlacement } from '@rotp/randomizer';
 import { grantedInventory, recordRowOverrides } from '@app/lib/game/tracker/record-row-inputs';
 import type { ItemId } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';

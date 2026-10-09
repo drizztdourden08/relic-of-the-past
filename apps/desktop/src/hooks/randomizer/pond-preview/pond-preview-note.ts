@@ -1,5 +1,5 @@
 /* @layer renderer-hooks @kind logic */
-import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { PondSetting } from '@rotp/randomizer';
 import type { PondCharge } from './pond-preview.type';
 
 const itemsText = (count: number): string => `${count} pool item${count === 1 ? '' : 's'}`;

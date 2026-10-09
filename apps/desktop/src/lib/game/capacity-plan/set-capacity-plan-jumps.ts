@@ -2,8 +2,8 @@
 import type { CapacityFamilyId } from '@rotp/game-data';
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
-import { CAPACITY_FAMILY_INDEX, CAPACITY_FAMILY_LAST_TIER } from '../capacity-profile/capacity-profile.constants';
-import { MIN_JUMP, NO_MESSAGE } from './capacity-plan.constants';
+import { CAPACITY_FAMILY_INDEX, CAPACITY_FAMILY_LAST_TIER } from '@rotp/randomizer';
+import { MIN_JUMP, NO_MESSAGE } from '@rotp/randomizer';
 
 const setCapacityPlanJumps = (
   family: CapacityFamilyId, jumps: readonly number[], messageIds: readonly number[] = [],

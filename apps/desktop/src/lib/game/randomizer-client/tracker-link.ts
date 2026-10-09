@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { parseServerPackets, versionOf } from './online-handshake';
-import { openSocketLink } from './online-socket';
-import { createReconnector } from './reconnect';
-import { NO_ITEMS_HANDLING, TRACKER_TAGS } from './tracker-link.constants';
-import type { ApConnectPacket, ApServerPacket } from './ap-protocol.type';
-import type { SocketLink } from './online-socket';
-import type { TrackerLink, TrackerLinkConfig } from './tracker-link.type';
+import { parseServerPackets, versionOf } from '@rotp/randomizer';
+import { openSocketLink } from '@rotp/randomizer';
+import { createReconnector } from '@rotp/randomizer';
+import { NO_ITEMS_HANDLING, TRACKER_TAGS } from '@rotp/randomizer';
+import type { ApConnectPacket, ApServerPacket } from '@rotp/randomizer';
+import type { SocketLink } from '@rotp/randomizer';
+import type { TrackerLink, TrackerLinkConfig } from '@rotp/randomizer';
 
 const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
   const { url, slot, name, password, uuid, createSocket, onChange } = config;
@@ -72,4 +72,4 @@ const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
 };
 
 export { createTrackerLink };
-export type { TrackerLink, TrackerLinkConfig, TrackerProgress } from './tracker-link.type';
+export type { TrackerLink, TrackerLinkConfig, TrackerProgress } from '@rotp/randomizer';

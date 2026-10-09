@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
-import { WALLET_JUMP_SLOTS, WALLET_LADDER_LAST } from './capacity-profile.constants';
+import { WALLET_JUMP_SLOTS, WALLET_LADDER_LAST } from '@rotp/randomizer';
 
 const setWalletJumpTable = (rungsBySlot: readonly number[]): void => {
   if (rungsBySlot.length > WALLET_JUMP_SLOTS) {

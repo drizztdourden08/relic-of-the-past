@@ -1,9 +1,7 @@
 /* @layer renderer-hooks @kind logic */
-import {
-  POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_BOTTLE_ROW,
-} from '@shared/randomizer/world/pond/pond-ask.data';
-import type { PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
-import type { PondCeilings } from '@shared/randomizer/world/pond/pond-ceilings';
+import { POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_BOTTLE_ROW } from '@rotp/randomizer';
+import type { PondAskSetting } from '@rotp/randomizer';
+import type { PondCeilings } from '@rotp/randomizer';
 import type { PondAskModel, PondAskRowModel } from '@domains/app/compounds/WishingPondRow';
 
 const nearestStop = (stops: readonly number[], amount: number): number =>

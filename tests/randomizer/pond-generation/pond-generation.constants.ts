@@ -1,8 +1,8 @@
 /* @layer tests @kind constants */
-import { POND_CERTIFIED_SPOTS } from '@shared/randomizer/world/pond/pond-spots';
-import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
-import { NPC_SCOPE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
-import type { OptionValue } from '@shared/randomizer/world/options.type';
+import { POND_CERTIFIED_SPOTS } from '@rotp/randomizer';
+import { POND_INSTANCES } from '@rotp/randomizer';
+import { NPC_SCOPE_LOCATIONS } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
 
 const DELIVERABLE = new Set(POND_CERTIFIED_SPOTS);
 const EMPTY: ReadonlySet<string> = new Set();

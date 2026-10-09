@@ -1,7 +1,5 @@
 /* @layer tests @kind helper */
-import type {
-  ApConnectPacket, ApNetworkPlayer, ApServerPacket,
-} from '@app/lib/game/randomizer-client/ap-protocol.type';
+import type { ApConnectPacket, ApNetworkPlayer, ApServerPacket } from '@rotp/randomizer';
 import type { FakeTrackedSlot } from './ap-fake-server.type';
 
 const answerTracker = (

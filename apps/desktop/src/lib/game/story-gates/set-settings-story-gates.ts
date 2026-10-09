@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import { DEFAULT_STORY_WORD } from '@shared/randomizer/world/story-gates/story-gate-word';
+import { DEFAULT_STORY_WORD } from '@rotp/randomizer';
 import { setStoryHalf } from '../gate-word-5';
-import { storyGatesState } from './story-gates-state';
-import { storyWordNow } from './story-word-now';
+import { storyGatesState } from '@rotp/randomizer';
+import { storyWordNow } from '@rotp/randomizer';
 
 const setSettingsStoryGates = (vanillaSafe: boolean): void => {
   storyGatesState.settingsWord = vanillaSafe ? 0 : DEFAULT_STORY_WORD;
