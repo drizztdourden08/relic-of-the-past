@@ -1,0 +1,18 @@
+/* @layer renderer-stores @kind types */
+import type { SiteId } from '@shared/hub';
+import type { HubMe } from '@shared/ipc';
+
+type HubSessionState = 'signed-out' | 'waiting' | 'signed-in';
+
+interface HubSessionStore {
+  me: HubMe | null;
+  state: HubSessionState;
+  userCode: string | null;
+  lastError: string | null;
+  refresh: () => Promise<void>;
+  signIn: (site?: SiteId) => Promise<void>;
+  cancel: () => Promise<void>;
+  signOut: () => Promise<void>;
+}
+
+export type { HubSessionState, HubSessionStore };
