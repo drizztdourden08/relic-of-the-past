@@ -1120,7 +1120,7 @@ The saved input profiles, with the active one highlighted, and create, delete, s
 
 ## ProfileHub/sub-components/RefreshRateControl/sub-components/ChangeRefreshRateDialog.tsx
 
-Confirms changing the display's refresh rate for good. It is worth a dialog because it reaches outside the game and changes a system setting. The wording covers what a player needs before saying yes: it lasts, how to undo it, and that a temporary alternative exists.
+Confirms changing the display's refresh rate for good. It gets a dialog because it reaches outside the game and changes a system setting. The wording covers what a player needs before saying yes: it lasts, how to undo it, and that a temporary alternative exists.
 
 ## ProfileHub/sub-components/RefreshRateControl/behavior/useApplyRefreshRate.ts
 
@@ -1198,3 +1198,14 @@ The Home tab's two columns: quick saves and play sessions on the left, normal an
 ## ProfileHub/sub-components/home-tab/HomeTabDialogs.tsx
 
 The create, overwrite, delete and SRAM import confirmation dialogs for the Home tab.
+
+## ProfileHub stylesheets
+
+- `ProfileHub.css`: the gap between the nav and the content leaves room for the nav's round toggle, which straddles its right edge. The `.settings-tab` rules are the generic settings tab layout used by the Audio, Gameplay and Controls tabs, and `.hub-game-controls` is the game controls group rendered in the window title bar.
+- `BindingListener.css`: the backdrop opts back into pointer events, because the Portal layer is click-through.
+- `SchemeBanner.css`: the banner keeps the box the old scheme notice used. One row, the text taking the slack and the button pinned to the end. It sits directly in the controls column above the tab strip, not as a container inside a container.
+- `ControlsSettings.css`: collapsed columns show only the device icon strip (profiles) or the card icons (devices) and turn the column title vertical. On a short viewport (landscape phones) the bottom Required Inputs summary and the Button Mappings header are dropped to reclaim vertical space. The heading and the haptics toggle share one row, with the toggle at the far end.
+- `dialog-hold-row.css`: the toggle and its speed slider each take half the row, and the slider never collapses.
+- `HomeTab.css`: the hero sits flush with the top of the nav. The folder button sits in the info card row and matches the cards' height, not its own. The columns collapse to one when there is no room for two.
+- `HubSearchResults.css`: the search pane uses the same card as a settings page, so switching between a tab and its search feels like one surface. With nothing typed the empty state fills the card, centred.
+- `RefreshRateControl.css`: detection and the action share a row so the block stays short, and the warning wraps below.

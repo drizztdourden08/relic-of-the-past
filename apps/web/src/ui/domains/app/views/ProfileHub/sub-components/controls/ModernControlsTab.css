@@ -28,7 +28,6 @@
   font-style: italic;
 }
 
-/* ─── Inert assignments for absent slots ─── */
 .modern-tab__absent {
   display: flex;
   flex-direction: column;
@@ -57,7 +56,6 @@
   color: var(--c-text-muted);
 }
 
-/* ─── Add slot ─── */
 .modern-tab__add {
   display: flex;
   padding: var(--space-sm) var(--space-md);

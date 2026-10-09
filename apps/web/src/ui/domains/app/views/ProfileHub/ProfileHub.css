@@ -7,17 +7,12 @@
   overflow: hidden;
 }
 
-/* ─── Game controls (rendered in the window title bar) ─── */
-
 .hub-game-controls {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
 }
 
-/* ─── Tab cards ─── */
-
-/* The gap leaves room for the nav's round toggle, which straddles its right edge. */
 .profile-hub__body {
   display: flex;
   gap: var(--space-xl);
@@ -34,7 +29,6 @@
   flex-direction: column;
 }
 
-/* ─── Generic settings tab (used by Audio, Gameplay, Controls tabs) ─── */
 .settings-tab {
   display: flex;
   flex-direction: column;
