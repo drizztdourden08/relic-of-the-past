@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { stateFor } from '@rotp/game-data';
-import { resolvePalette } from '@app/lib/game/player-sheet/resolve-palette';
+import { resolvePalette } from '@rotp/packs';
 import { useWearing } from '../../behavior/useWearing';
 import { useAnimationClock } from '../../behavior/useAnimationClock';
 import { WearingBar } from '../WearingBar';

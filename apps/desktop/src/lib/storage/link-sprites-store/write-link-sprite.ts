@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import * as library from '@shared/storage/link-sprites/link-sprites';
+import { library } from '@rotp/packs';
 import { platformFiles } from '../platform-files';
 
 const writeLinkSprite = (name: string, bytes: Uint8Array): Promise<void> =>

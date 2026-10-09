@@ -1,7 +1,8 @@
 /* @layer shared-storage @kind logic */
 import JSZip from 'jszip';
 import { freeSpriteName, readLinkSprite, spriteStem, writeLinkSprite } from '../link-sprites/link-sprites';
-import { isRspManifest, isRspName } from '../link-sprites/parse-rsp';
+import { isRspManifest } from '@rotp/hub-contracts';
+import { isRspName } from '../link-sprites/parse-rsp/is-rsp-name';
 import { MANIFEST_ENTRY } from '@rotp/hub-contracts';
 import type { DuplicateInstalled } from './duplicate.type';
 

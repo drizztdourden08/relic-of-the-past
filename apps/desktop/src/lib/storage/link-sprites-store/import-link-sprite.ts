@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { isZspr } from '@app/lib/game/zspr';
-import { parseRsp, isRspName } from '@shared/storage/link-sprites/parse-rsp';
-import * as library from '@shared/storage/link-sprites/link-sprites';
+import { isZspr } from '@rotp/packs';
+import { parseRsp, isRspName } from '@rotp/packs';
+import { library } from '@rotp/packs';
 import { platformFiles } from '../platform-files';
 import type { ImportResult } from './link-sprites-store.type';
 

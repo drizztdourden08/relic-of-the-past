@@ -5,7 +5,7 @@ import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popove
 import type { SwatchGroup } from '@drizztdourden08/tessera/color-picker';
 import { COLORS_PER_OUTFIT, GLOVES_INDEX, OUTFIT_IDS } from '@rotp/game-data';
 import { bgr555ToHex, hexToBgr555, isExactColor } from '@rotp/game-core';
-import { flattenPalette } from '@app/lib/game/player-sheet/flatten-palette';
+import { flattenPalette } from '@rotp/packs';
 import { OUTFIT_LABELS } from '@domains/packs/character/behavior/useWearing';
 import type { PaletteEditorProps, Slot } from '../PlayerSpriteStudio.type';
 

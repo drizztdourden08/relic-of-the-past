@@ -2,8 +2,8 @@
 import type { SheetPalette, PlayerSheet } from '@rotp/game-data';
 import type { ZsprOptions } from './zspr-write.type';
 import { SHEET_BYTES, COLORS_PER_OUTFIT, OUTFIT_IDS } from '@rotp/game-data';
-import { HEADER_BYTES, OUTFIT_BLOCK, GLOVE_BLOCK, ZSPR_MAGIC, ZSPR_HEADER } from './zspr';
-import { flattenPalette } from './player-sheet/flatten-palette';
+import { HEADER_BYTES, OUTFIT_BLOCK, GLOVE_BLOCK, ZSPR_MAGIC, ZSPR_HEADER } from '../zspr';
+import { flattenPalette } from '../player-sheet/flatten-palette';
 import { CHECKSUM_SEED, SPRITE_TYPE_PLAYER, ZSPR_VERSION } from './zspr-write.constants';
 
 const utf16z = (text: string): Uint8Array => {

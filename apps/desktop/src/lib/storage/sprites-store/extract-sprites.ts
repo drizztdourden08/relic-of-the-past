@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import * as sprites from '@shared/storage/sprites';
+import { sprites } from '@rotp/packs';
 import type { SpriteBuffer } from '@rotp/asset-extraction';
 import { runOnWorker } from '../extraction-client';
 import { publishImportProgress } from '../import-progress-bus';

@@ -316,6 +316,9 @@ importers:
       '@rotp/msu':
         specifier: workspace:*
         version: link:packages/msu
+      '@rotp/packs':
+        specifier: workspace:*
+        version: link:packages/packs
       '@rotp/roms':
         specifier: workspace:*
         version: link:packages/roms
@@ -523,6 +526,9 @@ importers:
       '@rotp/msu':
         specifier: workspace:*
         version: link:../../packages/msu
+      '@rotp/packs':
+        specifier: workspace:*
+        version: link:../../packages/packs
       '@rotp/roms':
         specifier: workspace:*
         version: link:../../packages/roms
@@ -894,6 +900,33 @@ importers:
       '@rotp/roms':
         specifier: workspace:*
         version: link:../roms
+
+  packages/packs:
+    dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.36.0
+        version: 0.36.0
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:../asset-extraction
+      '@rotp/game-core':
+        specifier: workspace:*
+        version: link:../game-core
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../hub-contracts
+      '@rotp/languages':
+        specifier: workspace:*
+        version: link:../languages
+      '@rotp/msu':
+        specifier: workspace:*
+        version: link:../msu
+      jszip:
+        specifier: ^3.10.1
+        version: 3.10.1
 
   packages/roms:
     dependencies:

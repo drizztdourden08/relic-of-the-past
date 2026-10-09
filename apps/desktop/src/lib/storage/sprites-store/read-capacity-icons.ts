@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import * as sprites from '@shared/storage/sprites';
+import { sprites } from '@rotp/packs';
 import { platformFiles } from '../platform-files';
 
 const readCapacityIcons = (romFile: string): Promise<Uint8Array | null> => sprites.readCapacityIcons(platformFiles(), romFile);

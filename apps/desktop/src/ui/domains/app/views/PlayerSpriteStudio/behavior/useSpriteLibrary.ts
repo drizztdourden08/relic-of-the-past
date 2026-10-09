@@ -1,11 +1,11 @@
 /* @layer renderer-hooks @kind logic */
 import { useState, useEffect, useCallback } from 'react';
 import { listLinkSprites, importLinkSprite } from '@app/lib/storage/link-sprites-store';
-import { spriteStem } from '@shared/storage/link-sprites/link-sprites';
+import { spriteStem } from '@rotp/packs';
 import { deleteSprite } from '@app/lib/game/player-sheet/delete-sprite';
 import { loadSheet } from '@app/lib/game/player-sheet/load-sheet';
-import { renderThumbnail } from '@app/lib/game/player-sheet/thumbnail';
-import { isRspName } from '@shared/storage/link-sprites/parse-rsp';
+import { renderThumbnail } from '@rotp/packs';
+import { isRspName } from '@rotp/packs';
 import type { LibraryEntry } from '../PlayerSpriteStudio.type';
 
 const useSpriteLibrary = () => {

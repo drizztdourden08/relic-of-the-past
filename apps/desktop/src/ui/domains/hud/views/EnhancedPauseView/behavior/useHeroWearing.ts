@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useMemo, useState } from 'react';
-import { resolvePalette } from '@app/lib/game/player-sheet/resolve-palette';
+import { resolvePalette } from '@rotp/packs';
 import { loadSheet } from '@app/lib/game/player-sheet/load-sheet';
 import { loadStockSheet } from '@app/lib/game/stock-player-sheet';
 import { liveSettingsNow } from '@app/lib/game/live-settings';

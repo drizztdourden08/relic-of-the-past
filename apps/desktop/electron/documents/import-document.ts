@@ -2,7 +2,7 @@
 import { readFile, stat } from 'fs/promises';
 import { basename } from 'path';
 import { CONTAINER_KIND } from '@rotp/hub-contracts';
-import { selectInstaller } from '@shared/store/install/select-installer';
+import { selectInstaller } from '@rotp/packs';
 import { STORE_LIMITS } from '@rotp/hub-contracts';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
 import { createNodeFileStore } from '../lib/node-file-store';

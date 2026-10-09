@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
-import * as sprites from '@shared/storage/sprites';
+import { sprites } from '@rotp/packs';
 import { EXTRACTION_STAMP_FILE, extractionVersionOf } from '@rotp/asset-extraction';
 import { CURRENCY_SYMBOLS_FILE } from '@rotp/asset-extraction';
 import { FOREIGN_ICONS_FILE } from '@rotp/asset-extraction';

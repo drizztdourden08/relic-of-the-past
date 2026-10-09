@@ -2,7 +2,7 @@
 import type { CoreBindings, SlotIndex } from '@rotp/game-data';
 import type { ItemCell, PauseScreen, PauseSection } from '@rotp/game-data';
 import type { PlayerSheet, Wearing } from '@rotp/game-data';
-import type { ResolvedRow } from '@app/lib/game/player-sheet/resolve-palette';
+import type { ResolvedRow } from '@rotp/packs';
 import type { GearLadder, GearRowCell } from '../../compounds/PauseGearScreen';
 
 interface EnhancedPauseViewProps {

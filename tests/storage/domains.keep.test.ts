@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
 import { msu } from '@rotp/msu';
-import * as sprites from '@shared/storage/sprites';
+import { sprites } from '@rotp/packs';
 import { languages } from '@rotp/languages';
 import { createMemFileStore } from './mem-file-store';
 

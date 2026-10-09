@@ -1,0 +1,22 @@
+{
+  "name": "@rotp/packs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Character packs and sprites: sheets, rsp and zspr files.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@drizztdourden08/brock-core": "^0.36.0",
+    "@rotp/asset-extraction": "workspace:*",
+    "@rotp/game-core": "workspace:*",
+    "@rotp/game-data": "workspace:*",
+    "@rotp/hub-contracts": "workspace:*",
+    "@rotp/languages": "workspace:*",
+    "@rotp/msu": "workspace:*",
+    "jszip": "^3.10.1"
+  }
+}

@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readJsonFile } from '@drizztdourden08/brock-electron/main';
-import { expectedSpriteFiles, spriteManifestDigest } from '@shared/storage/sprite-manifest-digest';
+import { expectedSpriteFiles, spriteManifestDigest } from '@rotp/packs';
 import type { ExtractionReceipt, ExtractionStatus } from './extraction-state.type';
 import { pngsIn } from './pngs-in';
 import { receiptPath } from './receipt-path';

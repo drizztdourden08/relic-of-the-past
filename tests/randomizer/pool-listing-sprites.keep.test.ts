@@ -2,9 +2,9 @@
 import { describe, expect, it } from 'vitest';
 import { CAPACITY_FAMILY_IDS, all } from '@rotp/game-data';
 import { getCapacityUpgradeSprite, getItemSprite, setSpritesBase } from '@rotp/game-data';
-import { extractedFileNames } from '@shared/storage/sprites';
+import { extractedFileNames } from '@rotp/packs';
 import { SPRITE_DEFINITIONS } from '@rotp/game-data';
-import { spriteRomOf } from '@app/lib/sprites/sprite-rom';
+import { spriteRomOf } from '@rotp/packs';
 import { describeDataset } from '../dataset-guard';
 import type { ItemRecord } from '@rotp/game-data';
 

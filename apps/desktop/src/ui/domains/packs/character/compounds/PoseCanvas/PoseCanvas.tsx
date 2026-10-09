@@ -2,7 +2,7 @@
 import { useRef, useEffect } from 'react';
 import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { poseCanvasSize, framesOf } from '@rotp/game-data';
-import { composeFrame } from '@app/lib/game/player-sheet/compose-frame';
+import { composeFrame } from '@rotp/packs';
 import type { PoseCanvasProps } from './PoseCanvas.type';
 import './PoseCanvas.css';
 

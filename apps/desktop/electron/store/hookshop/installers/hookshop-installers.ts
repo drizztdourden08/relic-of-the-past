@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { CatalogInstaller } from '@drizztdourden08/brock-catalog/main';
-import { INSTALLERS } from '@shared/store/install/select-installer.constants';
+import { INSTALLERS } from '@rotp/packs';
 import { catalogInstallerOf } from './catalog-installer-of';
 
 const hookshopInstallers = (): Record<string, CatalogInstaller> =>

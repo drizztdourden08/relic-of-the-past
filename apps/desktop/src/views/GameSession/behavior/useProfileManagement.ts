@@ -4,7 +4,7 @@ import { useProfiles, useProfilesStore } from '@drizztdourden08/brock-react';
 import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
 import { runCreateProfileFlow } from './create-profile-flow';
 import { log } from '@app/lib/log-bus';
-import { spriteRomOf } from '@app/lib/sprites/sprite-rom';
+import { spriteRomOf } from '@rotp/packs';
 import { useActivateRomSprites } from '@app/lib/sprites/useActivateRomSprites';
 import * as romsStore from '@app/lib/storage/roms-store';
 import { useReloadTarget } from './useReloadTarget';
