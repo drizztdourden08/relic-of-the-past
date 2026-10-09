@@ -1,7 +1,6 @@
 /* @layer shared-game @kind types */
 /**
- * The JSON the world package is built from (integrations/archipelago/README.md describes each
- * file). The rule trees are the engine's own RuleNode trees, unchanged; everything that one
+ * The JSON the world package is built from. Archipelia builds that package. The rule trees are the engine's own RuleNode trees, unchanged; everything that one
  * profile settles (which locations exist, the pool, the readings, the seed table) travels as a
  * WorldModel, written into the player file under `pre_rolled.world`.
  */

@@ -56,18 +56,11 @@
   color: var(--c-text);
 }
 
-.randomizer-page__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
 .randomizer-page__hint {
   font-size: var(--text-sm);
   color: var(--c-text-muted);
 }
 
-.randomizer-page__hint--ok { color: var(--c-green-bright); }
 .randomizer-page__hint--error { color: var(--c-danger); }
 
 /* ── Options tab ──

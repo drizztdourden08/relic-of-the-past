@@ -59,7 +59,6 @@ const RunTab = (props: RunTabProps) => {
     <DashboardGrid>
       <RunSummary
         placement={RUN_PANELS.summary}
-        profileId={profileId}
         profileName={profileName}
         config={config}
         session={session}
