@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import type { GlyphPack } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
 import { activeProfileId } from '../active-profile';
-import type { GlyphPosition } from './custom-glyph-store.type';
+import type { GlyphPosition } from '@rotp/hud';
 import { glyphFiles } from './glyph-files';
 import { glyphUrlCache } from './glyph-url-cache';
 import { readCustomPacks } from './read-custom-packs';

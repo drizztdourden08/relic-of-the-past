@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
-import { DEFAULT_LAYOUT } from '@shared/hud/layouts';
+import { DEFAULT_LAYOUT } from '@rotp/hud';
 import type { HudLayoutStore } from './hud-layout-store.type';
 import { resolveLayout } from './resolve-layout';
 

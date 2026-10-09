@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { compileExpr, isHudScopeExtra, isHudVariableName, suggestVariableName } from '@shared/hud/data';
+import { compileExpr, isHudScopeExtra, isHudVariableName, suggestVariableName } from '@rotp/hud';
 import { explainExprError, explainUnknownName } from './expr-errors';
 import type { ExprContext, ExprReading } from './check-expr.type';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Select } from '@drizztdourden08/tessera/primitives';
 import { BoundedValueField } from '../BoundedValueField';
-import type { HudShapeKind } from '@shared/types/hud';
+import type { HudShapeKind } from '@rotp/hud';
 import type { ShapeContentProps } from './ShapeContent.type';
 
 const ShapeContent = (props: ShapeContentProps) => {

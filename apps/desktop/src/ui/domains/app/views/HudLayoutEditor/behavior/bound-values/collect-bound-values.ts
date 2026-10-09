@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { NESTED_NODE_KEYS } from './bound-values.constants';
-import type { HudNode } from '@shared/types/hud';
+import type { HudNode } from '@rotp/hud';
 import type { BoundValue } from './bound-values.type';
 
 const isBoundValue = (value: unknown): value is { from: 'data'; expr: string } =>

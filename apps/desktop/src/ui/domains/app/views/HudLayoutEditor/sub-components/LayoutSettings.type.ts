@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { Value } from '@shared/types/hud';
+import type { Value } from '@rotp/hud';
 
 type GapAxis = 'x' | 'y';
 

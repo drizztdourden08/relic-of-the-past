@@ -8,7 +8,7 @@ import { OffsetField } from '../../../apps/desktop/src/ui/domains/app/views/HudL
 import { SizeBoxSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/SizeBoxSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
-import type { HudGridContainer, HudNode } from '../../../shared/types/hud';
+import type { HudGridContainer, HudNode } from '@rotp/hud';
 
 const noop = (): void => {};
 const scope = { life_current: 8 };

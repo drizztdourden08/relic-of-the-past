@@ -1,9 +1,9 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import defaultJson from '@shared/hud/layouts/built-in/default.json';
-import { BUILT_IN_LAYOUTS, layoutById, loadLayout, tryLoadLayout } from '@shared/hud/layouts';
-import { layoutHud } from '@shared/hud/engine';
-import type { HudLayout } from '@shared/types/hud';
+import defaultJson from '../../packages/hud/src/layouts/built-in/default.json';
+import { BUILT_IN_LAYOUTS, layoutById, loadLayout, tryLoadLayout } from '@rotp/hud';
+import { layoutHud } from '@rotp/hud';
+import type { HudLayout } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };
 

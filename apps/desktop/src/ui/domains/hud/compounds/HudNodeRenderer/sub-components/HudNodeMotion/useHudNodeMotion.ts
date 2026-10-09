@@ -5,7 +5,7 @@ import { useMotionClock } from './useMotionClock';
 import { useNodeTransitionCss } from './useNodeTransitionCss';
 import { useReducedMotion } from './useReducedMotion';
 import type { CSSProperties } from 'react';
-import type { PlacedNode } from '@shared/hud/engine';
+import type { PlacedNode } from '@rotp/hud';
 import type { HudNodeMotionResult, MotionScope } from './HudNodeMotion.type';
 
 const useHudNodeMotion = (

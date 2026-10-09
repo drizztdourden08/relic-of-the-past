@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { MIME_BY_EXT } from './custom-glyph-store.constants';
+import { MIME_BY_EXT } from '@rotp/hud';
 import { glyphFiles } from './glyph-files';
 
 const urlCache = new Map<string, string>();

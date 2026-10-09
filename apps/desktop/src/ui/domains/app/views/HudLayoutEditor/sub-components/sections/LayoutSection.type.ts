@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { DropIntent } from '../../behavior/drop-intent';
-import type { HudContainer } from '@shared/types/hud';
+import type { HudContainer } from '@rotp/hud';
 
 interface LayoutSectionProps {
   node: HudContainer;

@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 
 interface HudLayoutStore {
   layout: HudLayout;

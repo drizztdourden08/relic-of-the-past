@@ -9,10 +9,10 @@ import {
 import {
   drivenProperties, mergeTransition, TRANSITION_PROPERTIES,
 } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/transition-edits';
-import { validateTransition, validateAnimations } from '../../shared/hud/layouts/validate-motion';
-import { collectReflowWarnings } from '../../shared/hud/layouts/validate-motion-warnings';
-import { easingFn, sampleKeyframes } from '../../shared/hud/engine';
-import type { HudAnimationKeyframe, HudNode } from '../../shared/types/hud';
+import { validateTransition, validateAnimations } from '@rotp/hud';
+import { collectReflowWarnings } from '@rotp/hud';
+import { easingFn, sampleKeyframes } from '@rotp/hud';
+import type { HudAnimationKeyframe, HudNode } from '@rotp/hud';
 
 const SCOPE = { life_current: 8 };
 const TWO: HudAnimationKeyframe[] = [{ at: 0, value: 1 }, { at: 1, value: 1.1 }];

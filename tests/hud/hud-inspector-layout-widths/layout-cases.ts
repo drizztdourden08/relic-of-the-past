@@ -10,7 +10,7 @@ import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLa
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import type { AlignRowSpec } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/AlignmentTiles';
-import type { HudGridContainer } from '../../../shared/types/hud';
+import type { HudGridContainer } from '@rotp/hud';
 
 const noop = (): void => {};
 const guide = '#c064c0';

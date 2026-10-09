@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind types */
 import type { DeviceFamily } from '@rotp/game-data';
-import type { GlyphPack, GlyphSource } from '@shared/types/hud';
+import type { GlyphPack, GlyphSource } from '@rotp/input-mapping';
 import type { HudGlyphSpec, HudSlotContent } from '@domains/hud/compounds/HudNodeRenderer';
 import type { ModernSlot, SlotAssignment, SlotIndex } from '@rotp/game-data';
 

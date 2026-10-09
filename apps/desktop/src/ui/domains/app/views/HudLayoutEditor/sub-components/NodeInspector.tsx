@@ -17,7 +17,7 @@ import { SizeBoxSection } from './sections/SizeBoxSection';
 import { SectionAccordion } from './SectionAccordion';
 import { MAX_OPEN } from './NodeInspector.constants';
 import type { ReactNode } from 'react';
-import type { HudElement, HudNode } from '@shared/types/hud';
+import type { HudElement, HudNode } from '@rotp/hud';
 import type { InspectorSectionKey as SectionKey, NodeInspectorProps } from './NodeInspector.type';
 
 const NodeInspector = (props: NodeInspectorProps) => {

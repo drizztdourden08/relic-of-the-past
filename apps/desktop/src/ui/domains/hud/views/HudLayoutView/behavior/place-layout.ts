@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind logic */
-import { layoutHudBands } from '@shared/hud/engine';
-import type { HudLayout } from '@shared/types/hud';
-import type { MeasureContext, PlacedNode } from '@shared/hud/engine';
-import type { Rect, Size } from '@shared/hud/layouts';
+import { layoutHudBands } from '@rotp/hud';
+import type { HudLayout } from '@rotp/hud';
+import type { MeasureContext, PlacedNode } from '@rotp/hud';
+import type { Rect, Size } from '@rotp/hud';
 import type { PlacedLayout } from '../HudLayoutView.type';
 
 const drawsASlot = (nodes: readonly PlacedNode[]): boolean =>

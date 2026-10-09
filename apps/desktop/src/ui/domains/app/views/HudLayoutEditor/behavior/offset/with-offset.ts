@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { compactEdges } from './compact-edges';
-import type { Edges } from '@shared/types/hud';
+import type { Edges } from '@rotp/hud';
 import type { Offset } from './offset.type';
 
 const withOffset = (margin: Edges | undefined, next: Offset): Edges | undefined => {

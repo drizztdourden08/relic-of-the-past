@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { MAX_EXPANDED_NODES, worstCaseNodeCount } from '@shared/hud/layouts';
+import { MAX_EXPANDED_NODES, worstCaseNodeCount } from '@rotp/hud';
 import { moveNode, patchNode, siteOf, walkNodes } from './node-edits';
-import type { HudContainer, HudLayout, HudNode, HudPlace } from '@shared/types/hud';
+import type { HudContainer, HudLayout, HudNode, HudPlace } from '@rotp/hud';
 import type { DropIntent, DropZone, Refusal } from './drop-intent.type';
 
 const zoneIn = (at: number, opts: { isContainer: boolean; hasSiblings: boolean }): DropZone => {

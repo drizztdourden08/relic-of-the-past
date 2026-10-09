@@ -7,7 +7,7 @@ import { caseMatches, matchLabel } from '../behavior/case-match';
 import { useInstanceScopes } from '../behavior/formula-scope';
 import { nodeArtOf } from '../behavior/node-art';
 import { placeholderChild } from '../behavior/new-node';
-import type { HudNode, HudSwitchCase } from '@shared/types/hud';
+import type { HudNode, HudSwitchCase } from '@rotp/hud';
 import type { CaseListEditorProps } from './CaseListEditor.type';
 
 const move = <T,>(list: readonly T[], from: number, to: number): T[] => {

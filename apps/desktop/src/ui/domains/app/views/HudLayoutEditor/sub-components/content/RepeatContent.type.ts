@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { GlyphPack, HudRepeatSpec } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudRepeatSpec } from '@rotp/hud';
 
 interface RepeatContentProps {
   spec: HudRepeatSpec;

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
-import { sampleKeyframes } from '@shared/hud/engine';
+import { sampleKeyframes } from '@rotp/hud';
 import { clamp01 } from './clamp01';
 import { MIN_GAP } from './keyframe-track.constants';
 import { round2 } from './round2';
-import type { HudAnimationKeyframe, HudEasing } from '@shared/types/hud';
+import type { HudAnimationKeyframe, HudEasing } from '@rotp/hud';
 import type { Scope } from './keyframe-track.type';
 
 const addKeyAt = (

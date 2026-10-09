@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind constants */
 import type { CSSProperties } from 'react';
-import type { HudTransitionProperty } from '@shared/types/hud';
+import type { HudTransitionProperty } from '@rotp/hud';
 
 const CSS_PROPERTIES: Record<HudTransitionProperty, readonly string[]> = {
   size: ['width', 'height'],

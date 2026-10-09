@@ -3,7 +3,7 @@ import './ValueInput.css';
 import './sub-components/InstanceStrip.css';
 import './sub-components/FormulaMenu.css';
 import { Box, Field, Icon, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
-import { resolveValue } from '@shared/hud/data';
+import { resolveValue } from '@rotp/hud';
 import { readExpr } from '../../behavior/check-expr';
 import { useInstanceScopes } from '../../behavior/formula-scope';
 import { rangeNote } from './behavior/range-note';

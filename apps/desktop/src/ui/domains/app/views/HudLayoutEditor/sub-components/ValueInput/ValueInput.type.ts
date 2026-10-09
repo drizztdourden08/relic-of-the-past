@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 import type { StarterRole } from '../../behavior/formula-starters';
-import type { Value } from '@shared/types/hud';
+import type { Value } from '@rotp/hud';
 
 interface ValueInputProps {
   label?: string;

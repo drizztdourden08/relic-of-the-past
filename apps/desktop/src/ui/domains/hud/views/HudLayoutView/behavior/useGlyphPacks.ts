@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { BUILT_IN_GLYPH_PACKS } from '@rotp/input-mapping';
 import { allGlyphPacks, primeGlyphUrls } from '@app/lib/hud/custom-glyph-store';
-import type { GlyphPack } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
 
 const useGlyphPacks = (): readonly GlyphPack[] => {
   const [packs, setPacks] = useState<readonly GlyphPack[]>(BUILT_IN_GLYPH_PACKS);

@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { DEFAULT_LAYOUT, layoutById } from '@shared/hud/layouts';
-import type { HudLayout } from '@shared/types/hud';
+import { DEFAULT_LAYOUT, layoutById } from '@rotp/hud';
+import type { HudLayout } from '@rotp/hud';
 import { readCustomLayouts } from './read-custom-layouts';
 
 const resolveStoredLayout = async (id: string): Promise<HudLayout> => {

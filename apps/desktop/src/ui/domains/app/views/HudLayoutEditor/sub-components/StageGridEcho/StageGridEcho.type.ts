@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { EditorSampleState } from '../../behavior/useSampleState.type';
-import type { PlacedNode } from '@shared/hud/engine';
+import type { PlacedNode } from '@rotp/hud';
 
 interface StageGridEchoProps {
   placed: readonly PlacedNode[];

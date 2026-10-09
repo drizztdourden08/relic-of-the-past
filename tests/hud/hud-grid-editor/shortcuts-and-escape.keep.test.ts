@@ -2,12 +2,12 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { act, createElement as h } from 'react';
-import { layoutHud, placedById } from '@shared/hud/engine';
-import { validateLayout } from '@shared/hud/layouts';
+import { layoutHud, placedById } from '@rotp/hud';
+import { validateLayout } from '@rotp/hud';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
 import { patchNode } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/node-edits';
-import type { HudGridContainer, HudLayout, HudNode } from '../../../shared/types/hud';
+import type { HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
 import { VIEW } from './grid-editor.constants';
 import { installGridRig } from './install-grid-rig';
 import { screenRoot } from './screen-root';

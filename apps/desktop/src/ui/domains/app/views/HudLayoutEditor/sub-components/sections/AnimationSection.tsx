@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Field, SegmentedControl, Select, Text, Toggle } from '@drizztdourden08/tessera/primitives';
-import { cyclePosition } from '@shared/hud/engine';
-import { resolveValue } from '@shared/hud/data';
+import { cyclePosition } from '@rotp/hud';
+import { resolveValue } from '@rotp/hud';
 import { useMotionPreview } from '../../behavior/motion-preview';
 import { EasingPicker } from '../EasingPicker';
 import { ExpressionInput } from '../ExpressionInput';
@@ -9,7 +9,7 @@ import { KeyframeTrack } from '../KeyframeTrack';
 import { MotionTransport } from '../MotionTransport';
 import { SubsectionGroup } from '../SubsectionGroup';
 import { ValueField } from '../ValueField';
-import type { HudAnimatableProperty, HudAnimation, HudAnimationLoop } from '@shared/types/hud';
+import type { HudAnimatableProperty, HudAnimation, HudAnimationLoop } from '@rotp/hud';
 import { MS_STEP } from '../../HudLayoutEditor.constants';
 import { BLANK, LOOPS, PROPERTIES, REFLOW } from './AnimationSection.constants';
 import type { AnimationSectionProps } from './AnimationSection.type';

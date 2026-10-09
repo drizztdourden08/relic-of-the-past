@@ -9,7 +9,7 @@ import { SlotContent } from '../content/SlotContent';
 import { SpriteContent } from '../content/SpriteContent';
 import { SwitchContent } from '../content/SwitchContent';
 import { TextContent } from '../content/TextContent';
-import type { HudElementSpec } from '@shared/types/hud';
+import type { HudElementSpec } from '@rotp/hud';
 import type { ContentSectionProps } from './ContentSection.type';
 
 const ContentSection = (props: ContentSectionProps) => {

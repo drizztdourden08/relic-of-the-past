@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudGridContainer, HudPlace } from '@shared/types/hud';
+import type { HudGridContainer, HudPlace } from '@rotp/hud';
 
 interface CellPickerProps {
   container: HudGridContainer;

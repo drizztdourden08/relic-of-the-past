@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { GlyphPack, HudSwitchSpec } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudSwitchSpec } from '@rotp/hud';
 
 interface CaseListEditorProps {
   spec: HudSwitchSpec;

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { easingFn } from '@shared/hud/engine';
+import { easingFn } from '@rotp/hud';
 import { CURVE_BOX, CURVE_SAMPLES } from './easing-curves.constants';
 
 const curvePath = (name: string | undefined): string => {

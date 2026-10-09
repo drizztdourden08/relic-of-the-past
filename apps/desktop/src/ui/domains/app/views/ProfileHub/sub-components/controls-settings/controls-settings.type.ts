@@ -4,7 +4,7 @@ import type { CoreVerb } from '@rotp/input-mapping';
 import type { ControlSchemeId } from '@rotp/features';
 import type { ResolvedControl } from '@rotp/input-mapping';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SlotIndex, SnesButton } from '@rotp/game-data';
 import type { DetectedDevice, InputProfile } from '@rotp/input-mapping';
 import type { FunctionAction } from '@rotp/features';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { tracksOf } from './tracks-of';
-import type { Extent, HudGridContainer } from '@shared/types/hud';
+import type { Extent, HudGridContainer } from '@rotp/hud';
 import type { TrackAxis } from '../../GridEditor.type';
 
 const trackExtentOf = (

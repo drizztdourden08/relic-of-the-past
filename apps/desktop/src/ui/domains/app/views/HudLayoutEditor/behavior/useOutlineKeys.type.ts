@@ -2,7 +2,7 @@
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { DropIntent } from './drop-intent';
 import type { StepDirection } from './step-intent';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 
 interface OutlineKeysInput {
   doc: HudLayout;

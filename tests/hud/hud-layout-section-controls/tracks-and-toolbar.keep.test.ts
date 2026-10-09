@@ -1,12 +1,12 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { layoutHud, placedById } from '@shared/hud/engine';
-import { validateLayout } from '@shared/hud/layouts';
+import { layoutHud, placedById } from '@rotp/hud';
+import { validateLayout } from '@rotp/hud';
 import { insertTrack, moveTrack, removeTrack, setTrack, trackText } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/track-extents';
 import { newGrid } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/new-node';
 import { buildToolbarGroups } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/toolbar-menus';
 import type { MenuItem, MenuNode } from '@drizztdourden08/tessera/composites';
-import type { Extent, HudGridContainer, HudLayout, HudNode } from '@shared/types/hud';
+import type { Extent, HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
 import { VIEW } from './section-controls.constants';
 import { boxCell as cell } from './box-cell';
 import { docOf } from './doc-of';

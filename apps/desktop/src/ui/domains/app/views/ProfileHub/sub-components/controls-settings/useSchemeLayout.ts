@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import { DEFAULT_LAYOUT } from '@shared/hud/layouts';
+import { DEFAULT_LAYOUT } from '@rotp/hud';
 import { listLayouts } from '@app/lib/hud/layout-document-io';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import type { SchemeLayout, UseSchemeLayoutArgs } from './controls-settings.type';
 
 const useSchemeLayout = (args: UseSchemeLayoutArgs): SchemeLayout => {

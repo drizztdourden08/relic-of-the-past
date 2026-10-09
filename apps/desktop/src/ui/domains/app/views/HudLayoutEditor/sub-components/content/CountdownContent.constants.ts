@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { HudCountdownVariantChoice } from '@shared/types/hud';
+import type { HudCountdownVariantChoice } from '@rotp/hud';
 
 const PIE_OPTIONS: { value: HudCountdownVariantChoice; label: string; title: string }[] = [
   { value: 'setting', label: 'profile', title: 'Follow the Countdown Timer setting' },

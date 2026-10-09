@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useRef } from 'react';
 import { transitionCssValue } from './resolve-node-transition';
-import type { PlacedNode } from '@shared/hud/engine';
+import type { PlacedNode } from '@rotp/hud';
 import type { MotionScope, NodeSnapshot } from './HudNodeMotion.type';
 
 const snapshotOf = (placed: PlacedNode): NodeSnapshot => ({

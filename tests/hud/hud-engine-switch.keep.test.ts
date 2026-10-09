@@ -1,13 +1,13 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { layoutHud } from '../../shared/hud/engine';
-import { validateLayout } from '../../shared/hud/layouts';
-import { BUILT_IN_LAYOUTS } from '../../shared/hud/layouts/built-in-layouts';
-import { engineSwitchPatch } from '../../shared/hud/layouts/convert-engine';
-import { resolveValue } from '../../shared/hud/data/resolve-value';
+import { layoutHud } from '@rotp/hud';
+import { validateLayout } from '@rotp/hud';
+import { BUILT_IN_LAYOUTS } from '@rotp/hud';
+import { engineSwitchPatch } from '@rotp/hud';
+import { resolveValue } from '@rotp/hud';
 import { nodeById, patchNode } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/node-edits';
-import type { HudContainer, HudLayout } from '../../shared/types/hud';
-import type { Value } from '../../shared/types/hud/hud-value';
+import type { HudContainer, HudLayout } from '@rotp/hud';
+import type { Value } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };
 const base = BUILT_IN_LAYOUTS[0];

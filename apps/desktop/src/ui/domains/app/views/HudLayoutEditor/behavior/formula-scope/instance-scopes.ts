@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { resolveValue } from '@shared/hud/data';
-import type { Value } from '@shared/types/hud';
+import { resolveValue } from '@rotp/hud';
+import type { Value } from '@rotp/hud';
 import type { Scope } from './formula-scope.type';
 
 const instanceScopes = (

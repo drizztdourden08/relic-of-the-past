@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { OTHERWISE } from './case-match.constants';
 import { winnerIn } from './winner-in';
-import type { HudSwitchCase } from '@shared/types/hud';
+import type { HudSwitchCase } from '@rotp/hud';
 import type { CaseMatches, Scope } from './case-match.type';
 
 const caseMatches = (cases: readonly HudSwitchCase[], scopes: readonly Scope[]): CaseMatches => {

@@ -12,7 +12,7 @@ import type { PauseCursorActions } from '@app/stores/pause-menu-store';
 import type { SdlPosition } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 import type { DeviceFamily, InputBinding } from '@rotp/game-data';
-import type { GlyphPack, GlyphSource } from '@shared/types/hud';
+import type { GlyphPack, GlyphSource } from '@rotp/input-mapping';
 import type { LegendRow } from '../EnhancedPauseView.type';
 
 const rowsFor = (actions: PauseCursorActions): LegendRow[] => [

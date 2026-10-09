@@ -2,12 +2,12 @@
 import { buildItemCells, clampGearTier, gearTierCells, maxGearTier } from '@rotp/game-data';
 import { resolveGlyph, slotGlyph } from '@rotp/input-mapping';
 import { GROUP_GLYPH_ART } from '@domains/hud/compounds/HudNodeRenderer';
-import type { GlyphSource } from '@shared/types/hud';
+import type { GlyphSource } from '@rotp/input-mapping';
 import type { HudGlyphSpec, HudSlotContent } from '@domains/hud/compounds/HudNodeRenderer';
 import type { SlotAssignment, SlotIndex } from '@rotp/game-data';
 import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 import type { SlotContent, SlotContentInput } from './slot-content.type';
-import { NO_ASSIGNMENT } from './slot-content.constants';
+import { NO_ASSIGNMENT } from '@rotp/hud';
 
 const assignmentToken = (a: SlotAssignment | undefined): string =>
   (a?.kind === 'item' ? `item:${a.hudItem}` : a?.kind ?? 'none');

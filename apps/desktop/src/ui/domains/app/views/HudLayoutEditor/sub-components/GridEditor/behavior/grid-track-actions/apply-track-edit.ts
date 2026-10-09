@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { editGridTracks } from '@shared/hud/layouts';
-import type { HudGridContainer } from '@shared/types/hud';
-import type { TrackEdit } from '@shared/hud/layouts';
+import { editGridTracks } from '@rotp/hud';
+import type { HudGridContainer } from '@rotp/hud';
+import type { TrackEdit } from '@rotp/hud';
 import type { PatchGrid } from '../../GridEditor.type';
 
 const applyTrackEdit = (container: HudGridContainer, patch: PatchGrid, edit: TrackEdit): void => {

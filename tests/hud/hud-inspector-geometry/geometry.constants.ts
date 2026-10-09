@@ -1,7 +1,7 @@
 /* @layer tests @kind constants */
 import { resolve } from 'path';
 import type { Platform } from '@drizztdourden08/brock-core';
-import type { HudContainer } from '../../../shared/types/hud';
+import type { HudContainer } from '@rotp/hud';
 
 const EDITOR = resolve(__dirname, '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
 

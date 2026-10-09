@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 
 interface LayoutDraft {
   draft: HudLayout | null;

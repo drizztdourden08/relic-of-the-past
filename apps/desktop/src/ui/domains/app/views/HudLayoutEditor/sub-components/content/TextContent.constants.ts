@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { HudTextAlign, HudTextPad } from '@shared/types/hud';
+import type { HudTextAlign, HudTextPad } from '@rotp/hud';
 import type { SpriteSetOption } from './TextContent.type';
 
 const ALIGNS: readonly HudTextAlign[] = ['start', 'center', 'end'];

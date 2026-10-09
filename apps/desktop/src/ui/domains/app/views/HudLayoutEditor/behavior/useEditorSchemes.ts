@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import { effectiveSlots, migrateSlotList } from '@rotp/input-mapping';
-import { DEFAULT_LAYOUT } from '@shared/hud/layouts';
+import { DEFAULT_LAYOUT } from '@rotp/hud';
 import { readInputProfiles, writeInputProfiles } from '@app/lib/storage/profile-data-store';
 import { activeProfileId } from '@app/lib/hud/active-profile';
 import { getInputManager } from '@app/lib/input/input-manager/get-input-manager';

@@ -3,7 +3,7 @@ import { refusalFor } from '../drop-intent';
 import { siteOf } from '../node-edits';
 import { previousContainer } from './previous-container';
 import type { DropIntent } from '../drop-intent';
-import type { HudContainer, HudLayout } from '@shared/types/hud';
+import type { HudContainer, HudLayout } from '@rotp/hud';
 import type { StepDirection } from './step-intent.type';
 
 const grandparentOf = (doc: HudLayout, parent: HudContainer): { node: HudContainer; index: number } | null => {

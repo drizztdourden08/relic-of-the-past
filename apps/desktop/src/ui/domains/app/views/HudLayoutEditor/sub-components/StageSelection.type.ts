@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { PlacedNode } from '@shared/hud/engine';
+import type { PlacedNode } from '@rotp/hud';
 
 interface StageSelectionProps {
   nodes: readonly PlacedNode[];

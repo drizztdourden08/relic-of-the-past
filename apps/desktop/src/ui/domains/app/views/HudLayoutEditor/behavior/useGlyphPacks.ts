@@ -5,7 +5,7 @@ import {
   createCustomPack, deleteCustomPack, importGlyphImage, primeGlyphUrls, readCustomPacks, removeGlyphImage,
 } from '@app/lib/hud/custom-glyph-store';
 import type { GlyphPosition } from '@app/lib/hud/custom-glyph-store';
-import type { GlyphPack } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
 import type { GlyphPacks } from './useGlyphPacks.type';
 
 const useGlyphPacks = (): GlyphPacks => {

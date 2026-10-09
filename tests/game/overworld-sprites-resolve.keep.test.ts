@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('@rotp/game-core', async (importOriginal) => ({
+vi.mock('../../packages/game-core/src', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   wasmGetOverworldSpriteSpawns: vi.fn(),
   wasmGetAreaHeads: vi.fn(),

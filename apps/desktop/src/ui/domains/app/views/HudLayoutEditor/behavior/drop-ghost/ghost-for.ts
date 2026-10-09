@@ -5,7 +5,7 @@ import { enclosingRepeatOf } from '../tree-context';
 import { containerKind } from './container-kind';
 import { pathTo } from './path-to';
 import type { DropIntent } from '../drop-intent';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import type { GhostModel } from './drop-ghost.type';
 
 const repeatWarning = (doc: HudLayout, id: string): string | null => {

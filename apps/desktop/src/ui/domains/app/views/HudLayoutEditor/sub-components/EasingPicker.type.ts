@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudEasing } from '@shared/types/hud';
+import type { HudEasing } from '@rotp/hud';
 
 interface EasingPickerProps {
   label: string;

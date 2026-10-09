@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind logic */
-import { sampleAnimation } from '@shared/hud/engine';
+import { sampleAnimation } from '@rotp/hud';
 import { tintFilter } from '../HudNodeStyle/tint-filter';
-import type { HudAnimation, HudBoxStyle, Paint } from '@shared/types/hud';
+import type { HudAnimation, HudBoxStyle, Paint } from '@rotp/hud';
 import type { MotionScope, NodeAnimationResult, SampledProperties } from './HudNodeMotion.type';
 
 const flatColor = (paint: Paint | undefined): string => (typeof paint === 'string' ? paint : '#fff');

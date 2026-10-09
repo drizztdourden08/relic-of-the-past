@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { resolveValue } from '@shared/hud/data';
+import { resolveValue } from '@rotp/hud';
 import { HudHeart } from '../../primitives/HudHeart';
 import { HudMeter } from '../../primitives/HudMeter';
 import {

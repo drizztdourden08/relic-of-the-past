@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HudNode } from '@shared/types/hud';
+import type { HudNode } from '@rotp/hud';
 
 const slotsOf = (node: HudNode): number[] => {
   if (node.kind !== 'element') return [];

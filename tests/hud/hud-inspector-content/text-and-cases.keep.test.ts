@@ -16,12 +16,12 @@ vi.hoisted(() => {
 });
 
 import { act, createElement as h } from 'react';
-import { expand } from '../../../shared/hud/engine';
+import { expand } from '@rotp/hud';
 import { caseMatches, matchLabel, winnerIn } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/case-match';
 import { textOfTextValue, textValueOf } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/value-text';
 import { CaseListEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CaseListEditor';
 import { TextContent } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/content/TextContent';
-import type { HudNode, HudSwitchSpec } from '../../../shared/types/hud';
+import type { HudNode, HudSwitchSpec } from '@rotp/hud';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
 

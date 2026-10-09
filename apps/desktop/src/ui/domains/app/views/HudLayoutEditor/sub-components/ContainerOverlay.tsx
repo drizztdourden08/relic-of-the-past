@@ -7,7 +7,7 @@ import { stageSlotRects } from '../behavior/stage-slot-rects';
 import { DEFAULT_GUIDE } from './ContainerOverlay.constants';
 import { OverlayFlexSlots } from './OverlayFlexSlots';
 import { OverlayGridLines } from './OverlayGridLines';
-import type { Rect } from '@shared/hud/layouts/geometry.type';
+import type { Rect } from '@rotp/hud';
 import type { ContainerOverlayProps, Drawing, Lattice } from './ContainerOverlay.type';
 
 const sortedUnique = (values: number[]): number[] => [...new Set(values)].sort((a, b) => a - b);

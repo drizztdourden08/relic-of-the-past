@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { HudShapeSpec } from '@shared/types/hud';
+import type { HudShapeSpec } from '@rotp/hud';
 import type { HeartMode } from '../../primitives/HudHeart';
 
 interface HudShapeProps {

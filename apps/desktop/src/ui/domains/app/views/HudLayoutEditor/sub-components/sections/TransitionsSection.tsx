@@ -3,7 +3,7 @@ import { Box, Checkbox, EmptyState, Text } from '@drizztdourden08/tessera/primit
 import { drivenProperties, mergeTransition, TRANSITION_PROPERTIES } from '../../behavior/transition-edits';
 import { EasingPicker } from '../EasingPicker';
 import { ValueField } from '../ValueField';
-import type { HudTransitionProperty } from '@shared/types/hud';
+import type { HudTransitionProperty } from '@rotp/hud';
 import { MS_STEP } from '../../HudLayoutEditor.constants';
 import type { TransitionsSectionProps } from './TransitionsSection.type';
 

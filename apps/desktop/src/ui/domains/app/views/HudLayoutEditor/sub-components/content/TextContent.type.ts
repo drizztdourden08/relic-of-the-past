@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudElementSpec, HudTextSpriteSet } from '@shared/types/hud';
+import type { HudElementSpec, HudTextSpriteSet } from '@rotp/hud';
 
 type TextSpec = Extract<HudElementSpec, { type: 'text' }>;
 

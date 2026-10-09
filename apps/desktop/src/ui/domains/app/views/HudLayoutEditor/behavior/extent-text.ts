@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 
 const extentText = (extent: Extent | undefined): string => {
   if (extent === undefined || extent === 'auto') return 'auto';

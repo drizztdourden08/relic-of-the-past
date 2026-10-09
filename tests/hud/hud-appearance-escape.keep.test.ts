@@ -7,7 +7,7 @@ import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { AppearanceSection } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/AppearanceSection';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { EscapeStack } from '@drizztdourden08/tessera/primitives';
-import type { HudNode } from '../../shared/types/hud';
+import type { HudNode } from '@rotp/hud';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 (window as { CSS?: Pick<typeof CSS, 'supports'> }).CSS ??= { supports: () => false };

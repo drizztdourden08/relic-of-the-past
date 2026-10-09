@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { HudCountdownSpec } from '@shared/types/hud';
+import type { HudCountdownSpec } from '@rotp/hud';
 import type { HudCountdownContent } from '../../HudNodeRenderer.type';
 
 interface HudNodeCountdownProps {

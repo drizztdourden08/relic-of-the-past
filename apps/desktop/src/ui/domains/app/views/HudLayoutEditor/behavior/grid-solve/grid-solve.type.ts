@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudGridContainer } from '@shared/types/hud';
+import type { HudGridContainer } from '@rotp/hud';
 
 interface GridSolve {
   columns: readonly number[];

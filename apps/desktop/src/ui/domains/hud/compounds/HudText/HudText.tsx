@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind component */
-import { resolveTextContent, textIntrinsicSize } from '@shared/hud/engine';
-import type { HudTextSpec } from '@shared/types/hud';
+import { resolveTextContent, textIntrinsicSize } from '@rotp/hud';
+import type { HudTextSpec } from '@rotp/hud';
 import { HudBox } from '../../primitives/HudBox';
 import type { HudTextProps } from './HudText.type';
 import { FontText } from './sub-components/FontText';

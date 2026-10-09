@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { PointerEvent } from 'react';
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 import type { TrackAxis } from '../GridLattice.type';
 
 interface TrackHeadProps {

@@ -5,7 +5,7 @@ import { SubsectionGroup } from './SubsectionGroup';
 import { ValueField } from './ValueField';
 import { shadowSummary, swatchOf } from '../behavior/appearance-summary';
 import { BLANK_SHADOW } from './ShadowListEditor.constants';
-import type { HudShadow } from '@shared/types/hud';
+import type { HudShadow } from '@rotp/hud';
 import type { ShadowListEditorProps } from './ShadowListEditor.type';
 
 const ShadowListEditor = (props: ShadowListEditorProps) => {

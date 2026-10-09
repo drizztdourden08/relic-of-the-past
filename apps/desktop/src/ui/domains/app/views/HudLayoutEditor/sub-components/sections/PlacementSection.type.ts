@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudContainer, HudNode } from '@shared/types/hud';
+import type { HudContainer, HudNode } from '@rotp/hud';
 
 interface PlacementSectionProps {
   node: HudNode;

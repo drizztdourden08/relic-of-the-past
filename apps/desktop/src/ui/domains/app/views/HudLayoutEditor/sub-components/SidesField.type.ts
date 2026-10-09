@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudBorderSides } from '@shared/types/hud';
+import type { HudBorderSides } from '@rotp/hud';
 
 interface SidesFieldProps {
   label: string;

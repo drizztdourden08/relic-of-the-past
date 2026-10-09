@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudFontFamily } from '@shared/types/hud';
+import type { HudFontFamily } from '@rotp/hud';
 
 interface FontPickerProps {
   family: HudFontFamily;

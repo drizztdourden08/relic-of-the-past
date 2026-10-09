@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Rect } from '@shared/hud/layouts/geometry.type';
+import type { Rect } from '@rotp/hud';
 
 const hull = (rects: readonly Rect[]): Rect => {
   const x = Math.min(...rects.map((r) => r.x));

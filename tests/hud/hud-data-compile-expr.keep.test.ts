@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import expressions from '../fixtures/hud-expressions.json';
-import { MAX_EXPR_LENGTH, compileExpr, compileExprCacheSize } from '@shared/hud/data';
+import { MAX_EXPR_LENGTH, compileExpr, compileExprCacheSize } from '@rotp/hud';
 
 describe('compileExpr - the worked examples, corrected dialect and all', () => {
   it('compiles every valid fixture and names its free variables', () => {

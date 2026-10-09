@@ -5,7 +5,7 @@ import { usePickerDismiss } from '@domains/app/compounds/SpritePicker';
 import { AUTO_PACK_ID, GENERIC_PACK_ID, findGlyphPack } from '@rotp/input-mapping';
 import { GLYPH_POSITIONS } from '../behavior/toolbar-menus';
 import { glyphSourceFor, glyphUrlOf } from '../behavior/glyph-art';
-import type { HudGlyphPosition } from '@shared/types/hud';
+import type { HudGlyphPosition } from '@rotp/hud';
 import type { GlyphPickerGridProps } from './GlyphPickerGrid.type';
 
 const GlyphPickerGrid = (props: GlyphPickerGridProps) => {

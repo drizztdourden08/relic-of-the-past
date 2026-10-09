@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { GradientStop } from '@shared/types/hud';
+import type { GradientStop } from '@rotp/hud';
 
 interface GradientRampProps {
   stops: readonly GradientStop[];

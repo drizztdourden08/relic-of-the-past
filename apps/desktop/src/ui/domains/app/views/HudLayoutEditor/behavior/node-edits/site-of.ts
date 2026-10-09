@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { walkNodes } from './walk-nodes';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import type { NodeSite } from './node-edits.type';
 
 const siteOf = (doc: HudLayout, id: string): NodeSite | null =>

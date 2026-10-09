@@ -3,7 +3,7 @@ import { clamp01 } from './clamp01';
 import { MIN_GAP } from './keyframe-track.constants';
 import { round2 } from './round2';
 import { trackOrder } from './track-order';
-import type { HudAnimationKeyframe } from '@shared/types/hud';
+import type { HudAnimationKeyframe } from '@rotp/hud';
 
 const clampAt = (keyframes: readonly HudAnimationKeyframe[], index: number, at: number): number => {
   const order = trackOrder(keyframes);

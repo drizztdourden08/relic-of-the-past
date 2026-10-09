@@ -3,7 +3,7 @@ import { Box, Field, Text, ToggleGroup } from '@drizztdourden08/tessera/primitiv
 import { mergeTransition } from '../behavior/transition-edits';
 import { EasingPicker } from './EasingPicker';
 import { ValueField } from './ValueField';
-import type { HudEnterExitProperty, HudEnterExitTransition } from '@shared/types/hud';
+import type { HudEnterExitProperty, HudEnterExitTransition } from '@rotp/hud';
 import { MS_STEP } from '../HudLayoutEditor.constants';
 import { DEFAULT_MS, OPTIONS } from './EnterExitEditor.constants';
 import type { EnterExitEditorProps } from './EnterExitEditor.type';

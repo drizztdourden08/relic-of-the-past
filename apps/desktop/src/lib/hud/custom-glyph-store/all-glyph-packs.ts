@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { BUILT_IN_GLYPH_PACKS } from '@rotp/input-mapping';
-import type { GlyphPack } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
 import { readCustomPacks } from './read-custom-packs';
 
 const allGlyphPacks = async (): Promise<GlyphPack[]> => [...BUILT_IN_GLYPH_PACKS, ...(await readCustomPacks())];

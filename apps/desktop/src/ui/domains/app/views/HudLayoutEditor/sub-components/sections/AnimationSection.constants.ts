@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { HudAnimatableProperty, HudAnimation } from '@shared/types/hud';
+import type { HudAnimatableProperty, HudAnimation } from '@rotp/hud';
 import type { LoopOption } from './AnimationSection.type';
 
 const PROPERTIES: readonly HudAnimatableProperty[] = ['scale', 'opacity', 'x', 'y', 'rotate', 'tint', 'width', 'height'];

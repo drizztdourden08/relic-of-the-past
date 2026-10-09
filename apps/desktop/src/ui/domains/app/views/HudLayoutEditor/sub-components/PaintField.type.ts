@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Paint } from '@shared/types/hud';
+import type { Paint } from '@rotp/hud';
 
 type PaintMode = 'color' | 'gradient' | 'image';
 

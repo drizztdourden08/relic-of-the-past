@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind types */
 import type { CSSProperties } from 'react';
-import type { PlacedNode } from '@shared/hud/engine';
+import type { PlacedNode } from '@rotp/hud';
 
 type MotionScope = Readonly<Record<string, number>>;
 

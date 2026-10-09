@@ -4,7 +4,7 @@ import { nodeById } from './node-by-id';
 import { removeNode } from './remove-node';
 import { siteOf } from './site-of';
 import { walkNodes } from './walk-nodes';
-import type { HudContainer, HudLayout } from '@shared/types/hud';
+import type { HudContainer, HudLayout } from '@rotp/hud';
 
 const moveNode = (doc: HudLayout, id: string, parentId: string, at: number): HudLayout => {
   const site = siteOf(doc, id);

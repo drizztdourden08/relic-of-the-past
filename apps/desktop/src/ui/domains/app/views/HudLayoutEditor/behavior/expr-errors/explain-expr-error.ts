@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { MAX_EXPR_LENGTH } from '@shared/hud/data';
+import { MAX_EXPR_LENGTH } from '@rotp/hud';
 import { DISABLED, TRAILING_VERB } from './expr-errors.constants';
 import type { ExprProblem } from './expr-errors.type';
 

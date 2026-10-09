@@ -11,7 +11,7 @@ import { LayoutSection } from '../../../apps/desktop/src/ui/domains/app/views/Hu
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { ReactNode } from 'react';
 import type { Platform } from '@drizztdourden08/brock-core';
-import type { HudContainer, HudGridContainer, HudNode } from '../../../shared/types/hud';
+import type { HudContainer, HudGridContainer, HudNode } from '@rotp/hud';
 import type { GridActionContext, GridSelection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 import { SELECTIONS } from './layout-bands.constants';
 

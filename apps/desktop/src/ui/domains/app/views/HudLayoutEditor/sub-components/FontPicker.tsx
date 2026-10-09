@@ -2,7 +2,7 @@
 import './HudLayoutEditor.content.css';
 import { Box, Field, Flex, NumberInput, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { FAMILIES, FONT_VARS, GAME_DESIGN_SIZE } from './FontPicker.constants';
-import type { HudFontFamily } from '@shared/types/hud';
+import type { HudFontFamily } from '@rotp/hud';
 import type { FontPickerProps } from './FontPicker.type';
 
 const snap = (size: number, family: HudFontFamily): number =>

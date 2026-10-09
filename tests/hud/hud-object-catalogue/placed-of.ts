@@ -1,6 +1,6 @@
 /* @layer test @kind helper */
-import { layoutHud } from '@shared/hud/engine';
-import type { HudContainer, HudLayout, HudNode } from '@shared/types/hud';
+import { layoutHud } from '@rotp/hud';
+import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
 import { row } from './row';
 
 const view = { w: 400, h: 200 };

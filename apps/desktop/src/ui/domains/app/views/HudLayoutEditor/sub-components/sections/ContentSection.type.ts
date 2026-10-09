@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { GlyphPack, HudElement } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudElement } from '@rotp/hud';
 
 interface ContentSectionProps {
   node: HudElement;

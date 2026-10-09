@@ -1,10 +1,10 @@
 /* @layer renderer-hud @kind logic */
-import { resolveValue } from '@shared/hud/data';
+import { resolveValue } from '@rotp/hud';
 import { outlineFilter } from './outline-filter';
 import { styleToCss } from './style-to-css';
 import { tintFilter } from './tint-filter';
 import type { CSSProperties } from 'react';
-import type { HudBoxStyle, Paint } from '@shared/types/hud';
+import type { HudBoxStyle, Paint } from '@rotp/hud';
 import type { StyleScope } from './HudNodeStyle.type';
 
 const flatColor = (paint: Paint): string => (typeof paint === 'string' ? paint : '#000');

@@ -1,6 +1,6 @@
 /* @layer tests @kind constants */
 import { resolve } from 'path';
-import type { GlyphPack } from '../../../shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
 import type { ModernSlot } from '@rotp/game-data';
 
 const EDITOR = resolve(__dirname, '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');

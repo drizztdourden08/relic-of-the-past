@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import defaultJson from '@shared/hud/layouts/built-in/default.json';
-import { tryLoadLayout } from '@shared/hud/layouts';
+import defaultJson from '../../packages/hud/src/layouts/built-in/default.json';
+import { tryLoadLayout } from '@rotp/hud';
 import { OUTLINE_MAX_WIDTH, resolveNodeStyle } from '@app/ui/domains/hud/compounds/HudNodeRenderer/sub-components/HudNodeStyle';
 
 const edited = (change: (doc: Record<string, unknown>) => void): unknown => {

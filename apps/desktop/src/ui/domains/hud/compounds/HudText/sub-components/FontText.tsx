@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { snapGameFontSize } from '@shared/hud/engine';
+import { snapGameFontSize } from '@rotp/hud';
 import { HudBox } from '../../../primitives/HudBox';
 import { DEFAULT_GAME_STROKE, FONT_VARS } from '../HudText.constants';
 import type { FontTextProps } from '../HudText.type';

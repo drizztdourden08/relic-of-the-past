@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { rootsOf } from './roots-of';
-import type { HudLayout, HudNode } from '@shared/types/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 const isInsideRepeat = (doc: HudLayout, id: string): boolean => {
   let result = false;

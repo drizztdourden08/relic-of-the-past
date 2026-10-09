@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { nodeId } from './node-id';
-import type { HudElement, HudElementSpec } from '@shared/types/hud';
+import type { HudElement, HudElementSpec } from '@rotp/hud';
 
 const newElement = (spec: HudElementSpec): HudElement => ({
   kind: 'element',

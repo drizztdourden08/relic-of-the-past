@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudElementSpec } from '@shared/types/hud';
+import type { HudElementSpec } from '@rotp/hud';
 
 type ShapeSpec = Extract<HudElementSpec, { type: 'shape' }>;
 

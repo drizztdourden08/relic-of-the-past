@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { compileExpr } from '@shared/hud/data';
+import { compileExpr } from '@rotp/hud';
 import { readExpr } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/check-expr';
 import { formulaGroups } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/formula-catalog';
 import { formulaStarters } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/formula-starters';

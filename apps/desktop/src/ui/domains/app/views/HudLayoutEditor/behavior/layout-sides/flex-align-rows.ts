@@ -2,7 +2,7 @@
 import { FLEX_ALIGN, FLEX_JUSTIFY } from '../align-options';
 import type { AlignPos, AlignValue } from '../align-options';
 import type { AlignRowSpec } from '../../sub-components/AlignmentTiles';
-import type { HudFlexContainer } from '@shared/types/hud';
+import type { HudFlexContainer } from '@rotp/hud';
 import type { PatchFlex } from './layout-sides.type';
 
 const flexAlignRows = (node: HudFlexContainer, onPatch: PatchFlex): AlignRowSpec[] => [

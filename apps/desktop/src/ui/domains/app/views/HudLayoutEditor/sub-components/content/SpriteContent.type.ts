@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudElementSpec } from '@shared/types/hud';
+import type { HudElementSpec } from '@rotp/hud';
 
 interface SpriteContentProps {
   spec: Extract<HudElementSpec, { type: 'sprite' }>;

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
 import type { CoreVerb } from '@rotp/input-mapping';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import type { AssignedDevice, DetectedDevice, InputProfile } from '@rotp/input-mapping';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SnesButton } from '@rotp/game-data';
 import type { FunctionAction, FunctionMapping } from '@rotp/features';

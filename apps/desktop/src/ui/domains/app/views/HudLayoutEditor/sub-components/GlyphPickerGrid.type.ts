@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
-import type { GlyphPack, HudGlyphPosition } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudGlyphPosition } from '@rotp/hud';
 
 interface GlyphPickerGridProps {
   open: boolean;

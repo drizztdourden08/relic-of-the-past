@@ -11,7 +11,7 @@ For the player-facing description of the same screens, see
 [HUD settings](../user-guide/hud.md).
 
 > **Where the code lives.** The model and all its maths are portable and React-free:
-> types in `shared/types/hud/`, geometry in `shared/hud/layouts/`, glyph resolution in
+> types in `shared/types/hud/`, geometry in `packages/hud/src/layouts/`, glyph resolution in
 > `packages/input-mapping/src/glyphs/`. The renderer half is `HudLayoutView` (live HUD) and
 > `HudLayoutEditor` (the editor), with per-profile storage in `apps/desktop/src/lib/hud/`.
 
@@ -49,7 +49,7 @@ which is the whole reason the model stores distances instead of coordinates.
 A centred axis has no edge to measure from, so it **ignores the offset on that axis**
 instead of drifting by it. `center` ignores both.
 
-All of this is `placeElement` in `shared/hud/layouts/place-element.ts`. It is pure and
+All of this is `placeElement` in `packages/hud/src/layouts/place-element.ts`. It is pure and
 total: no clamping, no rounding, no reads of anything but its three arguments. Pixel
 snapping is the renderer's call, not this layer's.
 
@@ -251,10 +251,10 @@ The two exhaustive `switch`es make the compiler most of your checklist: add the 
 first and `tsc` will point at every site that has to answer for it.
 
 1. **`shared/types/hud/hud-layout.ts`**: add the id to `HudElementId`.
-2. **`shared/hud/layouts/element-sizes.ts`**: add its natural size constant and a
+2. **`packages/hud/src/layouts/element-sizes.ts`**: add its natural size constant and a
    `case` in `naturalSize`. If the size depends on live state, add a field to
    `NaturalSizeContext` instead of reading a store from this layer.
-3. **`shared/hud/layouts/default-layout.ts`**: add a `hudPlacement(...)` line to
+3. **`packages/hud/src/layouts/default-layout.ts`**: add a `hudPlacement(...)` line to
    `DEFAULT_HUD_LAYOUT.placements`. The other presets map over the default's
    placements, so they pick the element up for free.
 4. **Build the element itself** as a HUD compound under
@@ -308,7 +308,7 @@ blocks it.
 ## Checklist
 
 - [ ] New sizes and offsets are in SNES pixels, and offsets are measured inward.
-- [ ] Nothing added to `shared/hud/layouts/` reads a store, a DOM node or React.
+- [ ] Nothing added to `packages/hud/src/layouts/` reads a store, a DOM node or React.
 - [ ] The cluster is 72 wide with the face cross alone, 148 with the d-pad free, and no wider for any pad you can find.
 - [ ] Glyphs are keyed by SDL position, never by a printed letter.
 - [ ] A custom-pack change still resolves through the fallback chain, not around it.

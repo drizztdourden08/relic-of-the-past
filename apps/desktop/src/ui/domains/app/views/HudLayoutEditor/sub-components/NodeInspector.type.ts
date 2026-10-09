@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { DropIntent } from '../behavior/drop-intent';
-import type { GlyphPack, HudLayout, HudNode } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 interface NodeInspectorProps {
   node: HudNode | null;

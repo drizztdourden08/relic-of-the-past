@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { HudGridContainer, HudNode } from '../../../shared/types/hud';
+import type { HudGridContainer, HudNode } from '@rotp/hud';
 
 const leaf = (id: string, place: Record<string, number>): HudNode =>
   ({ id, kind: 'element', element: { type: 'spacer' }, size: { w: { px: 16 }, h: { px: 16 } }, place }) as unknown as HudNode;

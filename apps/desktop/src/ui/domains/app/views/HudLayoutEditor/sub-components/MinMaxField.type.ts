@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Value } from '@shared/types/hud';
+import type { Value } from '@rotp/hud';
 
 type Limits = { w?: Value; h?: Value } | undefined;
 

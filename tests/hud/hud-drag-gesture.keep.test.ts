@@ -6,7 +6,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { OutlinePanel } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
-import type { HudLayout, HudNode } from '../../shared/types/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

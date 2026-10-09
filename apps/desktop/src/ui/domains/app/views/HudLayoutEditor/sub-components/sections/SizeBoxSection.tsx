@@ -6,7 +6,7 @@ import { ExtentField } from '../ExtentField';
 import { MinMaxField } from '../MinMaxField';
 import { ValueInput } from '../ValueInput';
 import { extentText } from '../../behavior/extent-text';
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 import { SCREEN_REASON } from './SizeBoxSection.constants';
 import type { SizeBoxSectionProps } from './SizeBoxSection.type';
 

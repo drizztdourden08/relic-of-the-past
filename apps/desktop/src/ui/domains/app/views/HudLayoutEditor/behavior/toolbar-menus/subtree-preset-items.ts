@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { HUD_PRESETS, instantiatePreset } from '@shared/hud/presets';
+import { HUD_PRESETS, instantiatePreset } from '@rotp/hud';
 import { menuIcon } from './menu-icon';
 import type { MenuNode } from '@drizztdourden08/tessera/composites';
 import type { MenuDeps } from './toolbar-menus.type';

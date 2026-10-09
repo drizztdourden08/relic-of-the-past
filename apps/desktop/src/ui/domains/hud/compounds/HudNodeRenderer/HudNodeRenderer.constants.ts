@@ -1,5 +1,6 @@
 /* @layer renderer-hud @kind constants */
-import type { GlyphSource, HudGlyphPosition } from '@shared/types/hud';
+import type { GlyphSource } from '@rotp/input-mapping';
+import type { HudGlyphPosition } from '@rotp/hud';
 
 const DIMMED_GLYPH_OPACITY = 0.7;
 

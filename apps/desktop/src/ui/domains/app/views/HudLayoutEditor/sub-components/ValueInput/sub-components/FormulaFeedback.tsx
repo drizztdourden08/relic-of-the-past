@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { MAX_SAFE_RESULT } from '@shared/hud/data';
+import { MAX_SAFE_RESULT } from '@rotp/hud';
 import { InstanceStrip } from './InstanceStrip';
 import { CEILING } from './FormulaFeedback.constants';
 import type { FormulaFeedbackProps } from './FormulaFeedback.type';

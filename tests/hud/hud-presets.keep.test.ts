@@ -1,10 +1,10 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { quantiseHeartFill } from '@app/ui/domains/hud/compounds/HudShape';
-import { aspectOf, intrinsicSize, layoutHud } from '@shared/hud/engine';
-import { HUD_PRESETS, instantiatePreset } from '@shared/hud/presets';
-import { tryLoadLayout } from '@shared/hud/layouts';
-import type { HudLayout, HudNode } from '@shared/types/hud';
+import { aspectOf, intrinsicSize, layoutHud } from '@rotp/hud';
+import { HUD_PRESETS, instantiatePreset } from '@rotp/hud';
+import { tryLoadLayout } from '@rotp/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };
 

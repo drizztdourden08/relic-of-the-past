@@ -11,7 +11,7 @@ import { ValueField } from '../ValueField';
 import {
   borderSummary, outlineSummary, paintText, shadowListSummary, swatchOf, tintSummary,
 } from '../../behavior/appearance-summary';
-import type { HudBorder, HudBorderStyle, HudRadius, HudTintMode, Value } from '@shared/types/hud';
+import type { HudBorder, HudBorderStyle, HudRadius, HudTintMode, Value } from '@rotp/hud';
 import { BORDER_STYLES, CORNERS, MAX_OUTLINE_PX } from './AppearanceSection.constants';
 import type { AppearanceSectionProps } from './AppearanceSection.type';
 

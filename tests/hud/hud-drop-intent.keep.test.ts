@@ -11,7 +11,7 @@ import {
   applyDrop, outlineIntent, refusalFor, refusalText, zoneIn,
 } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
 import { siteOf } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/node-edits';
-import type { HudLayout, HudNode } from '../../shared/types/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 const EDITOR = resolve(__dirname, '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudPlace } from '@shared/types/hud';
+import type { HudPlace } from '@rotp/hud';
 
 type Refusal =
   | 'self'

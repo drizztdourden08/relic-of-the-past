@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { rootsOf } from './roots-of';
-import type { HudLayout, HudNode, Value } from '@shared/types/hud';
+import type { HudLayout, HudNode, Value } from '@rotp/hud';
 
 const enclosingRepeatOf = (doc: HudLayout, id: string): { count: Value; item?: string } | null => {
   let found: { count: Value; item?: string } | null = null;

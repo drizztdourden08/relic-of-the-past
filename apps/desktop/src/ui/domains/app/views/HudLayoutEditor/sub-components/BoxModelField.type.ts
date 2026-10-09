@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Edges } from '@shared/types/hud';
+import type { Edges } from '@rotp/hud';
 
 type Side = keyof Edges;
 

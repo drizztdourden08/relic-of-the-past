@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
 import { PIE_OPTIONS } from './CountdownContent.constants';
-import type { HudCountdownVariantChoice } from '@shared/types/hud';
+import type { HudCountdownVariantChoice } from '@rotp/hud';
 import type { CountdownContentProps } from './CountdownContent.type';
 
 const CountdownContent = (props: CountdownContentProps) => {

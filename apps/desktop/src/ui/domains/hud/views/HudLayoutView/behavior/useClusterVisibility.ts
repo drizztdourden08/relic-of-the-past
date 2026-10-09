@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useRef, useState } from 'react';
-import type { HudClusterReveal } from '@shared/types/hud';
+import type { HudClusterReveal } from '@rotp/hud';
 import { REVEAL_MS } from '../HudLayoutView.constants';
 
 const useClusterVisibility = (

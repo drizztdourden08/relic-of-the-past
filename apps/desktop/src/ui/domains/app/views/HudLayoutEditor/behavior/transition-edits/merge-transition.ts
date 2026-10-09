@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { DEFAULT_DURATION } from './transition-edits.constants';
-import type { HudTransition } from '@shared/types/hud';
+import type { HudTransition } from '@rotp/hud';
 
 const mergeTransition = (
   transition: HudTransition | undefined, patch: Partial<HudTransition>,

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { siteOf } from './node-edits';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 
 const insertSite = (doc: HudLayout, selectedId: string | null): { parentId: string; at?: number } => {
   const fallback = { parentId: doc.screen.id };

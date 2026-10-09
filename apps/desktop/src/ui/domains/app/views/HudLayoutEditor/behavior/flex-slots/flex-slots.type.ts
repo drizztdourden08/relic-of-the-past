@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudContainer } from '@shared/types/hud';
+import type { HudContainer } from '@rotp/hud';
 
 interface FlexSlot {
   id: string;

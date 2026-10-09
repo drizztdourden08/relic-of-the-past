@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import { readCustomLayouts } from './read-custom-layouts';
 import { writeCustomLayouts } from './write-custom-layouts';
 

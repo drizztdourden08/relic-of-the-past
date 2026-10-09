@@ -7,4 +7,4 @@ export { importGlyphImage } from './import-glyph-image';
 export { primeGlyphUrls } from './prime-glyph-urls';
 export { readCustomPacks } from './read-custom-packs';
 export { removeGlyphImage } from './remove-glyph-image';
-export type { GlyphPosition } from './custom-glyph-store.type';
+export type { GlyphPosition } from '@rotp/hud';

@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind constants */
-import { PAUSE_LEGEND_HEIGHT, PAUSE_LEGEND_LEFT_RESERVE } from '@shared/hud/layouts';
+import { PAUSE_LEGEND_HEIGHT, PAUSE_LEGEND_LEFT_RESERVE } from '@rotp/hud';
 
 const LEGEND_HEIGHT = PAUSE_LEGEND_HEIGHT;
 const LEGEND_LEFT_RESERVE = PAUSE_LEGEND_LEFT_RESERVE;

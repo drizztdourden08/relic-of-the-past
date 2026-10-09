@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 
 interface UseOutlineScrollInput {
   doc: HudLayout;

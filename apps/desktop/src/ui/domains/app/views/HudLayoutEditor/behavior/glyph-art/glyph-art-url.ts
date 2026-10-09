@@ -2,7 +2,8 @@
 import { findGlyphPack, GENERIC_PACK_ID } from '@rotp/input-mapping';
 import { glyphSourceFor } from './glyph-source-for';
 import { glyphUrlOf } from './glyph-url-of';
-import type { GlyphPack, HudGlyphPosition } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudGlyphPosition } from '@rotp/hud';
 
 const glyphArtUrl = (
   packs: readonly GlyphPack[], packId: string | undefined, position: string,

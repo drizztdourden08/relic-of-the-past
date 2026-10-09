@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { LayoutSection } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
-import type { HudContainer, HudGridContainer } from '../../shared/types/hud';
+import type { HudContainer, HudGridContainer } from '@rotp/hud';
 
 interface ViewSnapshot { gridOverlayEnabled: boolean; toggleGridOverlay: () => void }
 vi.mock('@app/stores/hud-editor-view-store', () => ({

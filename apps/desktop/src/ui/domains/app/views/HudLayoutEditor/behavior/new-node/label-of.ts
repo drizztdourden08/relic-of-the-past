@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HudNode } from '@shared/types/hud';
+import type { HudNode } from '@rotp/hud';
 
 const labelOf = (node: HudNode): string => {
   if (node.kind === 'container') return node.layout === 'grid' ? 'grid' : node.direction;

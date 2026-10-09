@@ -1,8 +1,8 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import expressions from '../fixtures/hud-expressions.json';
-import { validateValue } from '@shared/hud/layouts';
-import type { Issues } from '@shared/hud/layouts/validate-box';
+import { validateValue } from '@rotp/hud';
+import type { Issues } from '@rotp/hud';
 
 const check = (value: unknown, context?: { insideRepeat?: boolean }) => {
   const issues: Issues = [];

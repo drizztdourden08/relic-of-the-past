@@ -4,7 +4,7 @@ import { useHudLayoutStore } from '@app/stores/hud-layout-store';
 import {
   forkLayout, listLayouts, resolveStoredLayout, saveCustomLayout,
 } from '@app/lib/hud/layout-document-io';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import type { LayoutDraft } from './useLayoutDraft.type';
 
 const sameLayout = (a: HudLayout | null, b: HudLayout | null): boolean =>

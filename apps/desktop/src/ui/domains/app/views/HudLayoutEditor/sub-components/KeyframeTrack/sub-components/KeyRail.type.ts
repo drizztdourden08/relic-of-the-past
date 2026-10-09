@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudAnimationKeyframe } from '@shared/types/hud';
+import type { HudAnimationKeyframe } from '@rotp/hud';
 
 interface KeyRailProps {
   keyframes: readonly HudAnimationKeyframe[];

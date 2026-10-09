@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudCountdownSpec } from '@shared/types/hud';
+import type { HudCountdownSpec } from '@rotp/hud';
 
 interface CountdownContentProps {
   spec: HudCountdownSpec;

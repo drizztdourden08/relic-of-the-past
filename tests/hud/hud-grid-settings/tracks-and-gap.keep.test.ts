@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createElement as h } from 'react';
 import { EditorStepContext } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/editor-step';
 import { LayoutSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
-import type { HudContainer, HudNode, Value } from '../../../shared/types/hud';
+import type { HudContainer, HudNode, Value } from '@rotp/hud';
 import { installLayoutSectionRig } from './install-layout-section-rig';
 import { screenRoot } from './screen-root';
 

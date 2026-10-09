@@ -4,7 +4,7 @@ import { Box, Field, Icon, Pressable, Text } from '@drizztdourden08/tessera/prim
 import { NumberCell } from './NumberCell';
 import { compactEdges } from '../behavior/offset';
 import { OFFSET_SIDES, SIDES } from './BoxModelField.constants';
-import type { Edges } from '@shared/types/hud';
+import type { Edges } from '@rotp/hud';
 import type { BoxModelFieldProps, Side } from './BoxModelField.type';
 
 const edgeWith = (edges: Edges | undefined, side: Side, next: number | undefined): Edges | undefined => {

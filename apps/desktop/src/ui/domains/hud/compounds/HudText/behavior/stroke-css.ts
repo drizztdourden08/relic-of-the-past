@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind logic */
-import { resolveValue } from '@shared/hud/data';
-import type { HudTextStroke } from '@shared/types/hud';
+import { resolveValue } from '@rotp/hud';
+import type { HudTextStroke } from '@rotp/hud';
 import { flatColor } from './flat-color';
 
 const strokeCss = (stroke: HudTextStroke, scope: Readonly<Record<string, number>>, scale: number) => {

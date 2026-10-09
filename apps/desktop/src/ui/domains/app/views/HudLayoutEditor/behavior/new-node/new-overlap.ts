@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { nodeId } from './node-id';
-import type { HudGridContainer } from '@shared/types/hud';
+import type { HudGridContainer } from '@rotp/hud';
 
 const newOverlap = (): HudGridContainer => ({
   kind: 'container',

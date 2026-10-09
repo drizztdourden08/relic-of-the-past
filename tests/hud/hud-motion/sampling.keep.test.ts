@@ -1,9 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import {
-  cyclePosition, easingFn, expand, sampleAnimation, sampleKeyframes,
-} from '@shared/hud/engine';
-import type { HudAnimation, HudNode } from '@shared/types/hud';
+import { cyclePosition, easingFn, expand, sampleAnimation, sampleKeyframes } from '@rotp/hud';
+import type { HudAnimation, HudNode } from '@rotp/hud';
 
 describe('easing curves', () => {
   it('every named curve starts at 0 and ends at 1', () => {

@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { getActiveProfileId } from '@app/lib/game';
 import { getAppState } from '@app/lib/storage/profile-store';
-import { toldProfile } from './told-profile';
+import { toldProfile } from '@rotp/hud';
 import { pinnedProfileId } from './pinned-profile-id';
 
 const activeProfileId = async (): Promise<string | null> => {

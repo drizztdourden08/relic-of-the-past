@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { embeddedOf } from './embedded-of';
-import type { HudContainer, HudLayout, HudNode } from '@shared/types/hud';
+import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
 import type { NodeSite } from './node-edits.type';
 
 const childrenOf = (node: HudNode): readonly HudNode[] =>

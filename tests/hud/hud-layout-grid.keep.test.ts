@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { gridCellRects, layoutHud, placedById } from '@shared/hud/engine';
-import type { HudGridContainer, HudLayout, HudNode } from '@shared/types/hud';
+import { gridCellRects, layoutHud, placedById } from '@rotp/hud';
+import type { HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
 
 const VIEW = { w: 400, h: 200 };
 const ROWS = [{ px: 20 }, { px: 20 }, { px: 20 }, { px: 20 }];

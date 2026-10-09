@@ -6,7 +6,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { StageSelection } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/StageSelection';
-import type { PlacedNode } from '../../shared/hud/engine';
+import type { PlacedNode } from '@rotp/hud';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

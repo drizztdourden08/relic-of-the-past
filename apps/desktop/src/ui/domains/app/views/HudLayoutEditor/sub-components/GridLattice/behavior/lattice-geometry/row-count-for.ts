@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HudGridContainer } from '@shared/types/hud';
+import type { HudGridContainer } from '@rotp/hud';
 import type { Occupant } from './lattice-geometry.type';
 
 const rowCountFor = (container: HudGridContainer, occupants: readonly Occupant[]): number =>

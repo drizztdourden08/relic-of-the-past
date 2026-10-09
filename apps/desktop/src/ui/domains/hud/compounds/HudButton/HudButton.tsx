@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { TILE } from '@shared/hud/engine';
+import { TILE } from '@rotp/hud';
 import { HudGlyph } from '../../composites/HudGlyph';
 import { HudSprite } from '../../primitives/HudSprite';
 import { faceFor, stateFor } from './behavior/hud-button-state';

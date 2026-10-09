@@ -6,7 +6,7 @@ import { useHudNodeMotion } from './sub-components/HudNodeMotion';
 import { resolveNodeStyle } from './sub-components/HudNodeStyle';
 import { EMPTY_SCOPE, ORIGIN } from './HudNodeRenderer.constants';
 import type { HudNodeRendererProps } from './HudNodeRenderer.type';
-import type { HudNode } from '@shared/types/hud';
+import type { HudNode } from '@rotp/hud';
 import type { SlotIndex } from '@rotp/game-data';
 
 const slotOf = (node: HudNode): SlotIndex | null => {

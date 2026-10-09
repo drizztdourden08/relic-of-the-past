@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HudLayout, HudNode } from '@shared/types/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 import type { OutlineRowModel } from '../sub-components/OutlinePanel.type';
 
 const hasSubtree = (node: HudNode): boolean => {

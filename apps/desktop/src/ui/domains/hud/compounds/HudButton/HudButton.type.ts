@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { HudButtonSpec } from '@shared/types/hud';
+import type { HudButtonSpec } from '@rotp/hud';
 import type { HudNodeContent } from '../HudNodeRenderer/HudNodeRenderer.type';
 
 interface HudButtonProps {

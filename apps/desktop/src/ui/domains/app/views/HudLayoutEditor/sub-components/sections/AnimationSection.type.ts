@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudAnimationLoop, HudNode } from '@shared/types/hud';
+import type { HudAnimationLoop, HudNode } from '@rotp/hud';
 
 interface AnimationSectionProps {
   node: HudNode;

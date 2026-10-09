@@ -3368,7 +3368,7 @@ the key.
 ## hud/layout-document-io
 
 Player layouts use the same document format and the same loader (`loadLayout`) as the
-built-ins in `shared/hud/layouts/built-in/`. They differ only by the `builtIn` flag. A
+built-ins in `packages/hud/src/layouts/built-in/`. They differ only by the `builtIn` flag. A
 stored document that does not validate is refused, never repaired: it is dropped from the
 list and its reasons are kept in `problems`, so a screen can say which layout is broken.
 Layouts are validated on the way out too, because the editor's draft is not a document until

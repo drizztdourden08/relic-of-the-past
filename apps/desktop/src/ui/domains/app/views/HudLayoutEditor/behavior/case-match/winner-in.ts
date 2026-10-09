@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { gateTruthy } from '@shared/hud/engine';
+import { gateTruthy } from '@rotp/hud';
 import { OTHERWISE } from './case-match.constants';
-import type { HudSwitchCase } from '@shared/types/hud';
+import type { HudSwitchCase } from '@rotp/hud';
 import type { Scope } from './case-match.type';
 
 const winnerIn = (cases: readonly HudSwitchCase[], scope: Scope): number => {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { HUD_VARIABLES } from '@shared/hud/data';
+import { HUD_VARIABLES } from '@rotp/hud';
 import type { FormulaStarter } from './formula-starters.type';
 
 const pairedNames = (): readonly string[] => HUD_VARIABLES

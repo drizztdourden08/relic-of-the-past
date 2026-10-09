@@ -1,10 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import {
-  HUD_SCOPE_EXTRAS, HUD_VARIABLES, hudDataScope, hudVariableNamesFor, isHudScopeExtra, isHudVariableName,
-  suggestVariableName,
-} from '@shared/hud/data';
-import type { HudVitalsSource } from '@shared/hud/data';
+import { HUD_SCOPE_EXTRAS, HUD_VARIABLES, hudDataScope, hudVariableNamesFor, isHudScopeExtra, isHudVariableName, suggestVariableName } from '@rotp/hud';
+import type { HudVitalsSource } from '@rotp/hud';
 
 const PLAN_VARIABLES = [
   'life_current', 'life_max', 'magic_current', 'magic_max', 'half_magic', 'armor',

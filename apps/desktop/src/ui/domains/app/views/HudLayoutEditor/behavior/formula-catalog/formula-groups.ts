@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { HUD_SCOPE_EXTRAS, HUD_VARIABLES } from '@shared/hud/data';
+import { HUD_SCOPE_EXTRAS, HUD_VARIABLES } from '@rotp/hud';
 import {
   CONSTANTS, DELTA_NOTE, FUNCTIONS, NOT_A_TRANSITION, OPERATORS, OUTSIDE_REPEAT, SCOPE_NOTES,
 } from './formula-catalog.constants';

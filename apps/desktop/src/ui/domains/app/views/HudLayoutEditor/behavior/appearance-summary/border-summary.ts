@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { summaryNumber } from './summary-number';
-import type { HudBorder } from '@shared/types/hud';
+import type { HudBorder } from '@rotp/hud';
 
 const borderSummary = (border: HudBorder | undefined): string => {
   if (!border) return 'off';

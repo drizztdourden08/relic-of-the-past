@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { columnsForSpriteChar, stemForSpriteChar } from '@shared/hud/engine';
+import { columnsForSpriteChar, stemForSpriteChar } from '@rotp/hud';
 import { HudBox } from '../../../primitives/HudBox';
 import { HudImage } from '../../../primitives/HudImage';
 import type { SpriteGlyphsProps } from '../HudText.type';

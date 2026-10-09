@@ -3,7 +3,8 @@ import { glyphArtUrl } from '../glyph-art';
 import { PLACEHOLDERS } from './node-art.constants';
 import { spriteLabel } from './sprite-label';
 import { spriteUrl } from './sprite-url';
-import type { GlyphPack, HudElementSpec, HudNode } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudElementSpec, HudNode } from '@rotp/hud';
 import type { NodeArt } from './node-art.type';
 
 const specArt = (spec: HudElementSpec, packs: readonly GlyphPack[]): NodeArt => {

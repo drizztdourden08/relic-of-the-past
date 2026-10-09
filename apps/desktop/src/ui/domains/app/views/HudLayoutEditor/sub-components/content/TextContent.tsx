@@ -6,7 +6,7 @@ import { PaintField } from '../PaintField';
 import { ValueField } from '../ValueField';
 import { TextValueField } from './TextValueField';
 import { ALIGNS, PADS, SPRITE_SETS } from './TextContent.constants';
-import type { HudTextAlign, HudTextPad, HudTextSpriteSet } from '@shared/types/hud';
+import type { HudTextAlign, HudTextPad, HudTextSpriteSet } from '@rotp/hud';
 import type { TextContentProps, TextSpec } from './TextContent.type';
 
 const TextContent = (props: TextContentProps) => {

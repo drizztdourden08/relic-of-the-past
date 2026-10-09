@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { DPAD_ART } from './glyph-art.constants';
-import type { GlyphPack, GlyphSource, HudGlyphPosition } from '@shared/types/hud';
+import type { GlyphPack, GlyphSource } from '@rotp/input-mapping';
+import type { HudGlyphPosition } from '@rotp/hud';
 
 const glyphSourceFor = (
   pack: GlyphPack | null, generic: GlyphPack | null, position: HudGlyphPosition,

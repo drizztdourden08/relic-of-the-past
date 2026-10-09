@@ -3,7 +3,7 @@ import { labelOf } from '../new-node';
 import { embeddedOf } from '../node-edits';
 import { childrenOf } from './children-of';
 import { rootsOf } from './roots-of';
-import type { HudLayout, HudNode } from '@shared/types/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 const breadcrumbOf = (doc: HudLayout, id: string): string[] => {
   const path: string[] = [];

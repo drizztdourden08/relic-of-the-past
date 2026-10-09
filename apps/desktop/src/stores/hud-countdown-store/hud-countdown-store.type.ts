@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { CountdownReading, CountdownTrack } from '../../lib/game/hud-countdown-track';
+import type { CountdownReading, CountdownTrack } from '@rotp/hud';
 
 interface HudCountdownStore {
   track: CountdownTrack;

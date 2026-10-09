@@ -5,8 +5,8 @@ import { CellPicker } from '../../../apps/desktop/src/ui/domains/app/views/HudLa
 import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
 import { StageGridEcho } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/StageGridEcho';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import type { HudGridContainer } from '../../../shared/types/hud';
-import type { PlacedNode } from '../../../shared/hud/engine';
+import type { HudGridContainer } from '@rotp/hud';
+import type { PlacedNode } from '@rotp/hud';
 import type { EditorSampleState } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/useSampleState.type';
 import { CTX, ECHO_BOX, ECHO_GRID, ECHO_SCALE, PLATFORM, STATES, THREE, TWELVE } from './metrics.constants';
 import { solveOf } from './solve-of';

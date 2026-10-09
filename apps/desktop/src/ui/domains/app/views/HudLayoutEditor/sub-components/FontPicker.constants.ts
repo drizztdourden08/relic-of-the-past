@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { HudFontFamily } from '@shared/types/hud';
+import type { HudFontFamily } from '@rotp/hud';
 
 const GAME_DESIGN_SIZE = 16;
 

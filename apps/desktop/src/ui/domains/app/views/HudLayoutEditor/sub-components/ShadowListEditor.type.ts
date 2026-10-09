@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudShadow } from '@shared/types/hud';
+import type { HudShadow } from '@rotp/hud';
 
 interface ShadowListEditorProps {
   value: HudShadow[] | undefined;

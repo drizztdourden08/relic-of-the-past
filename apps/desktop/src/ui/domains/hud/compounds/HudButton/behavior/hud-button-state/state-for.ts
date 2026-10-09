@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import type { HudButtonState } from '@shared/types/hud';
+import type { HudButtonState } from '@rotp/hud';
 import type { ButtonInputs } from '../../HudButton.type';
 
 const stateFor = (inputs: ButtonInputs): HudButtonState => {

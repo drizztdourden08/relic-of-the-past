@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { numberOf } from './number-of';
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 import type { ExtentMode } from './track-extents.type';
 
 const extentFor = (mode: ExtentMode, from: Extent | undefined): Extent => {

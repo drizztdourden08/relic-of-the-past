@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudNode } from '@shared/types/hud';
+import type { HudNode } from '@rotp/hud';
 
 interface DataSectionProps {
   node: HudNode;

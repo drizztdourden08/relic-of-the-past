@@ -7,7 +7,7 @@ import { SidesField } from '../../../apps/desktop/src/ui/domains/app/views/HudLa
 import { SlotChips } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SlotChips';
 import { SubsectionGroup } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SubsectionGroup';
 import { ValueField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
-import type { HudNode } from '../../../shared/types/hud';
+import type { HudNode } from '@rotp/hud';
 
 const noop = (): void => {};
 const scope = { life_current: 8 };

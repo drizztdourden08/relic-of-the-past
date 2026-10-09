@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HudPlace } from '@shared/types/hud';
+import type { HudPlace } from '@rotp/hud';
 import type { CellRef } from '../../GridLattice';
 
 const spanPlace = (a: CellRef, b: CellRef): HudPlace => {

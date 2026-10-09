@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 
 interface ExtentFieldProps {
   label: string;

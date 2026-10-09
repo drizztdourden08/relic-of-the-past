@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HudNode } from '@shared/types/hud';
+import type { HudNode } from '@rotp/hud';
 
 const embeddedOf = (node: HudNode): readonly HudNode[] => {
   if (node.kind !== 'element') return [];

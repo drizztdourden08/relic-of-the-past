@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind constants */
-import { HUD_EDGE_INSET, VITALS_RESERVE } from '@shared/hud/layouts';
+import { HUD_EDGE_INSET, VITALS_RESERVE } from '@rotp/hud';
 import { SDL_AXIS } from '@rotp/game-data';
 import { OUTFIT_IDS } from '@rotp/game-data';
 import type { GearLadderKind, PauseScreen, PauseSection } from '@rotp/game-data';

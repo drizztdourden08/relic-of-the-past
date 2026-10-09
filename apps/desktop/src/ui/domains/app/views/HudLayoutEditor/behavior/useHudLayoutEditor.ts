@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { AUTO_PACK_ID } from '@rotp/input-mapping';
-import { DEFAULT_LAYOUT, validateLayout } from '@shared/hud/layouts';
+import { DEFAULT_LAYOUT, validateLayout } from '@rotp/hud';
 import { usePlacedLayout } from '@domains/hud/views/HudLayoutView';
 import { useHudLayoutStore } from '@app/stores/hud-layout-store';
 import { useGlyphPacks } from './useGlyphPacks';
@@ -14,7 +14,7 @@ import { slotLookup } from './flex-slots';
 import { solveLookup } from './grid-solve-lookup';
 import { EDITOR_GROUNDS, EDITOR_RATIOS } from '../HudLayoutEditor.constants';
 import type { GlyphPosition } from '@app/lib/hud/custom-glyph-store';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import type { HudLayoutEditorProps } from '../HudLayoutEditor.type';
 
 const useHudLayoutEditor = (props: HudLayoutEditorProps) => {

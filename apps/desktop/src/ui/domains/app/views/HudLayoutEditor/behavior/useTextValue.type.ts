@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Value } from '@shared/types/hud';
+import type { Value } from '@rotp/hud';
 
 interface UseTextValueParams {
   value: Value | string;

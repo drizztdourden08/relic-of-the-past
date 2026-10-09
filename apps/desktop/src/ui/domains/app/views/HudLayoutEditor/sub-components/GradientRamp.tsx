@@ -5,7 +5,7 @@ import { ColorField } from './ColorField';
 import { swatchOf } from '../behavior/appearance-summary';
 import './HudLayoutEditor.appearance.css';
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
-import type { GradientStop } from '@shared/types/hud';
+import type { GradientStop } from '@rotp/hud';
 import type { GradientRampProps } from './GradientRamp.type';
 
 const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));

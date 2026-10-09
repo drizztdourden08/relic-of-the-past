@@ -2,11 +2,11 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
-import { gridCellRects } from '../../shared/hud/engine/place-grid';
+import { gridCellRects } from '@rotp/hud';
 import { stageCellRects } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/stage-cells';
-import type { PlacedNode } from '../../shared/hud/engine';
-import type { HudGridContainer } from '../../shared/types/hud';
-import type { Rect } from '../../shared/hud/layouts/geometry.type';
+import type { PlacedNode } from '@rotp/hud';
+import type { HudGridContainer } from '@rotp/hud';
+import type { Rect } from '@rotp/hud';
 
 const EDITOR = resolve(__dirname, '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor');
 

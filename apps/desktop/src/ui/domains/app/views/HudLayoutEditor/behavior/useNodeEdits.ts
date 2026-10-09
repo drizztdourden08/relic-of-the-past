@@ -4,7 +4,7 @@ import { insertNode, patchNode, removeNode } from './node-edits';
 import { applyDrop } from './drop-intent';
 import { insertSite } from './insert-site';
 import type { DropIntent } from './drop-intent';
-import type { HudLayout, HudNode } from '@shared/types/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 import type { NodeEdits } from './useNodeEdits.type';
 
 const useNodeEdits = (apply: (change: (doc: HudLayout) => HudLayout) => void): NodeEdits => {

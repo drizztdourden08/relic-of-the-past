@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
-import { solveGrid } from '@shared/hud/engine/place-grid';
-import type { MeasureContext } from '@shared/hud/engine/engine.type';
-import type { PlacedNode } from '@shared/hud/engine';
-import type { HudGridContainer } from '@shared/types/hud';
+import { solveGrid } from '@rotp/hud';
+import type { MeasureContext } from '@rotp/hud';
+import type { PlacedNode } from '@rotp/hud';
+import type { HudGridContainer } from '@rotp/hud';
 import type { GridSolve, GridSolveLookup } from './grid-solve';
 
 const isGrid = (placed: PlacedNode): boolean =>

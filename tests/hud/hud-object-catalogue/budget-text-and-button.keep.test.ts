@@ -1,9 +1,9 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { faceFor, stateFor } from '@app/ui/domains/hud/compounds/HudButton/behavior/hud-button-state';
-import { resolveTextContent, snapGameFontSize, textIntrinsicSize } from '@shared/hud/engine';
-import { tryLoadLayout } from '@shared/hud/layouts';
-import type { HudNode } from '@shared/types/hud';
+import { resolveTextContent, snapGameFontSize, textIntrinsicSize } from '@rotp/hud';
+import { tryLoadLayout } from '@rotp/hud';
+import type { HudNode } from '@rotp/hud';
 import { leaf } from './leaf';
 import { row } from './row';
 

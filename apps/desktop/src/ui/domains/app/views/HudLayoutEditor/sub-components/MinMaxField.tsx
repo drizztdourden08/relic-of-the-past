@@ -3,7 +3,7 @@ import { Box, Field, Text } from '@drizztdourden08/tessera/primitives';
 import { useEditorStep } from '../behavior/editor-step';
 import { ValueInput } from './ValueInput';
 import { AXES } from './MinMaxField.constants';
-import type { Value } from '@shared/types/hud';
+import type { Value } from '@rotp/hud';
 import type { Limits, MinMaxFieldProps } from './MinMaxField.type';
 
 const compact = (next: { w?: Value; h?: Value }): Limits => {

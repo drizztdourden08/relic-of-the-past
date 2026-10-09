@@ -4,7 +4,7 @@ import { ColorField } from './ColorField';
 import { GradientRamp } from './GradientRamp';
 import { ValueField } from './ValueField';
 import './HudLayoutEditor.appearance.css';
-import type { Paint, Value } from '@shared/types/hud';
+import type { Paint, Value } from '@rotp/hud';
 import { ANGLE_STEP } from '../HudLayoutEditor.constants';
 import { HEX_RE, KINDS } from './PaintField.constants';
 import type { PaintFieldProps, PaintMode } from './PaintField.type';

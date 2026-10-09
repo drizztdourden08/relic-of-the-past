@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 import type { ExtentMode } from './track-extents.type';
 
 const modeOf = (value: Extent | undefined): ExtentMode => {

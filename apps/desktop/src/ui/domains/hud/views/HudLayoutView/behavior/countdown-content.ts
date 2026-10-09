@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import type { CountdownTrack } from '@app/lib/game/hud-countdown-track';
+import type { CountdownTrack } from '@rotp/hud';
 import type { HudCountdownVariant } from '../../../compounds/HudCountdown';
 import type { CountdownContent } from '../HudLayoutView.type';
 

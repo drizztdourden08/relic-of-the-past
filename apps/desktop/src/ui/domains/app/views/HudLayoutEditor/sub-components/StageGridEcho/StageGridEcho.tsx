@@ -5,8 +5,8 @@ import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { hull } from './behavior/hull';
 import { DEFAULT_GUIDE } from './StageGridEcho.constants';
 import '../GridEditor/HudLayoutEditor.grid.css';
-import type { HudGridContainer } from '@shared/types/hud';
-import type { PlacedNode } from '@shared/hud/engine';
+import type { HudGridContainer } from '@rotp/hud';
+import type { PlacedNode } from '@rotp/hud';
 import type { StageGridEchoProps } from './StageGridEcho.type';
 
 const isGrid = (placed: PlacedNode): placed is PlacedNode & { node: HudGridContainer } =>

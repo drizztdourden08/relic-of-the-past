@@ -2942,7 +2942,7 @@ What a selected column or row can have done to it, which is all this editor does
 There is no "a child is in the way" refusal: children are kept valid automatically and `editGridTracks` moves them with the edit. The one refusal left is that `columns` may never be empty, `validate-container.ts`'s floor.
 Every row is an action on the selected track, so all live in the sticky strip and none survives a clear.
 Size is not a row: the selected header's label is the menu (`TrackHead`).
-Every track edit goes through `shared/hud/layouts/grid-track-edits.ts`, which returns the container with the new track list and the children's remapped `place` together, so the panel never writes one without the other.
+Every track edit goes through `packages/hud/src/layouts/grid-track-edits.ts`, which returns the container with the new track list and the children's remapped `place` together, so the panel never writes one without the other.
 `applyTrackEdit` takes a container, not a selection, so callers that never see a selection can use it. `applyEdit` is the same route reached through a `GridActionContext`.
 `trackExtentOf` returns the declared extent, so an implicit row's size menu opens on `auto` instead of the solved size.
 `removeRun` removes the range back to front, so the indices still name the same tracks after the first goes.

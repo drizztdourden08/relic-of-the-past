@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { readJson } from '@drizztdourden08/brock-core';
-import type { GlyphPack } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
 import { activeProfileId } from '../active-profile';
 import { glyphFiles } from './glyph-files';
 

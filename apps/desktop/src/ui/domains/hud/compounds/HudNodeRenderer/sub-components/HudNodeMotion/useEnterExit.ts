@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useRef, useState } from 'react';
-import type { PlacedNode } from '@shared/hud/engine';
+import type { PlacedNode } from '@rotp/hud';
 import { POST_EXIT, PRE_ENTER } from './HudNodeMotion.constants';
 import type { EnterExitResult, Ghost } from './HudNodeMotion.type';
 

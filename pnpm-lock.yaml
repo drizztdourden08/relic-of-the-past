@@ -307,6 +307,9 @@ importers:
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:packages/hub-contracts
+      '@rotp/hud':
+        specifier: workspace:*
+        version: link:packages/hud
       '@rotp/input-mapping':
         specifier: workspace:*
         version: link:packages/input-mapping
@@ -523,6 +526,9 @@ importers:
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:../../packages/hub-contracts
+      '@rotp/hud':
+        specifier: workspace:*
+        version: link:../../packages/hud
       '@rotp/input-mapping':
         specifier: workspace:*
         version: link:../../packages/input-mapping
@@ -855,6 +861,24 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.25.76
+
+  packages/hud:
+    dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.36.0
+        version: 0.36.0
+      '@rotp/features':
+        specifier: workspace:*
+        version: link:../features
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
+      '@rotp/input-mapping':
+        specifier: workspace:*
+        version: link:../input-mapping
+      expr-eval:
+        specifier: 2.0.2
+        version: 2.0.2
 
   packages/input-mapping:
     dependencies:

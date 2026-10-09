@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { HudBorderStyle } from '@shared/types/hud';
+import type { HudBorderStyle } from '@rotp/hud';
 
 const BORDER_STYLES: readonly HudBorderStyle[] = ['solid', 'dashed', 'dotted'];
 const MAX_OUTLINE_PX = 2;

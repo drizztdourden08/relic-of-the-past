@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { placedById } from '@shared/hud/engine';
-import type { HudNode } from '@shared/types/hud';
+import { placedById } from '@rotp/hud';
+import type { HudNode } from '@rotp/hud';
 import { leaf } from './leaf';
 import { placedOf } from './placed-of';
 

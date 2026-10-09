@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { HudGridContainer, HudLayout } from '@shared/types/hud';
+import type { HudGridContainer, HudLayout } from '@rotp/hud';
 
 const docOf = (root: HudGridContainer): HudLayout => ({
   id: 'phase7',

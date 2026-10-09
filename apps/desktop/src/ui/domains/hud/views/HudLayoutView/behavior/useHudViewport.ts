@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SNES_HEIGHT, SNES_WIDTH } from '../../../hooks/hooks.constants';
-import type { Size } from '@shared/hud/layouts';
+import type { Size } from '@rotp/hud';
 import { CANVAS_ID } from '../HudLayoutView.constants';
 import type { HudViewport } from '../HudLayoutView.type';
 

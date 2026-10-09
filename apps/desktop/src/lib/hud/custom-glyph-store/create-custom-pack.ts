@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { newId } from '@drizztdourden08/brock-core';
 import { GENERIC_PACK_ID } from '@rotp/input-mapping';
-import type { GlyphPack } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
 import { upsertPack } from './upsert-pack';
 
 const createCustomPack = async (name: string, fallbackPack = GENERIC_PACK_ID): Promise<GlyphPack> =>

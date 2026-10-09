@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { assignCells, rowCountOf } from '@shared/hud/engine';
-import { isOverlay } from '@shared/hud/layouts';
-import type { HudGridContainer, HudNode } from '@shared/types/hud';
+import { assignCells, rowCountOf } from '@rotp/hud';
+import { isOverlay } from '@rotp/hud';
+import type { HudGridContainer, HudNode } from '@rotp/hud';
 
 const gridSize = (node: HudGridContainer): string =>
   `grid ${node.columns.length}×${Math.max(1, rowCountOf(assignCells(node.children, Math.max(1, node.columns.length)).values()))}`;

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { PlacedNode } from '@shared/hud/engine';
-import type { HudContainer } from '@shared/types/hud';
+import type { PlacedNode } from '@rotp/hud';
+import type { HudContainer } from '@rotp/hud';
 import type { FlexSlot, FlexSlotLookup } from './flex-slots.type';
 
 const slotLookup = (placed: readonly PlacedNode[]): FlexSlotLookup => {

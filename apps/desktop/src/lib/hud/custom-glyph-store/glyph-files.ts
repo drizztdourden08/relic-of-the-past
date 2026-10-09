@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { getPlatform } from '@drizztdourden08/brock-react';
-import type { GlyphPosition } from './custom-glyph-store.type';
-import { MIME_BY_EXT } from './custom-glyph-store.constants';
+import type { GlyphPosition } from '@rotp/hud';
+import { MIME_BY_EXT } from '@rotp/hud';
 
 const extensionOf = (name: string): string => {
   const ext = name.split('.').pop()?.toLowerCase() ?? '';

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
-import type { HudContainer } from '@shared/types/hud';
-import type { MeasureContext, PlacedNode } from '@shared/hud/engine';
-import type { Rect } from '@shared/hud/layouts/geometry.type';
+import type { HudContainer } from '@rotp/hud';
+import type { MeasureContext, PlacedNode } from '@rotp/hud';
+import type { Rect } from '@rotp/hud';
 
 interface ContainerOverlayProps {
   container: HudContainer;

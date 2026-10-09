@@ -2,7 +2,7 @@
 import { GRID_ITEMS } from '../align-options';
 import type { AlignValue } from '../align-options';
 import type { AlignRowSpec } from '../../sub-components/AlignmentTiles';
-import type { HudGridContainer, HudGridJustifyItems } from '@shared/types/hud';
+import type { HudGridContainer, HudGridJustifyItems } from '@rotp/hud';
 import type { PatchGrid } from './layout-sides.type';
 
 const gridAlignRows = (container: HudGridContainer, onPatch: PatchGrid): AlignRowSpec[] => [

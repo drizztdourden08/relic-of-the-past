@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Paint } from '@shared/types/hud';
+import type { Paint } from '@rotp/hud';
 
 const swatchOf = (paint: Paint | undefined): string | undefined => {
   if (paint === undefined) return undefined;

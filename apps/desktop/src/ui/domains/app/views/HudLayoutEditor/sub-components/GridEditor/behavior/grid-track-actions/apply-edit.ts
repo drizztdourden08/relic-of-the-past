@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { applyTrackEdit } from './apply-track-edit';
-import type { TrackEdit } from '@shared/hud/layouts';
+import type { TrackEdit } from '@rotp/hud';
 import type { GridActionContext } from '../../GridEditor.type';
 
 const applyEdit = (ctx: GridActionContext, edit: TrackEdit): void =>

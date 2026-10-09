@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { collectReflowWarnings, validateLayout } from '@shared/hud/layouts';
-import type { HudAnimation, HudLayout } from '@shared/types/hud';
+import { collectReflowWarnings, validateLayout } from '@rotp/hud';
+import type { HudAnimation, HudLayout } from '@rotp/hud';
 
 describe('reflow warnings - structured data, not just a comment', () => {
   const engineOf = (engine: 'row' | 'overlay') => (engine === 'row'

@@ -1,8 +1,8 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { aspectOf, containRect, intrinsicSize, layoutHud, measureBox, placedById } from '@shared/hud/engine';
-import { validateLayout } from '@shared/hud/layouts';
-import type { HudContainer, HudLayout, HudNode } from '@shared/types/hud';
+import { aspectOf, containRect, intrinsicSize, layoutHud, measureBox, placedById } from '@rotp/hud';
+import { validateLayout } from '@rotp/hud';
+import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
 
 const VIEW = { w: 400, h: 200 };
 

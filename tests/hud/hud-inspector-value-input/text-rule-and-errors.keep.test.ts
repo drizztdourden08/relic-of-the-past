@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { compileExpr } from '@shared/hud/data';
-import { validateValue } from '@shared/hud/layouts';
+import { compileExpr } from '@rotp/hud';
+import { validateValue } from '@rotp/hud';
 import { explainExprError, explainUnknownName } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/expr-errors';
 import { readExpr } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/check-expr';
 import { isFormulaText, stepsAsNumber, textOf, valueOf } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/value-text';

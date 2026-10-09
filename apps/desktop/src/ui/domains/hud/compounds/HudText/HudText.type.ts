@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { HudTextFace, HudTextSpec } from '@shared/types/hud';
+import type { HudTextFace, HudTextSpec } from '@rotp/hud';
 
 interface HudTextProps {
   spec: HudTextSpec;

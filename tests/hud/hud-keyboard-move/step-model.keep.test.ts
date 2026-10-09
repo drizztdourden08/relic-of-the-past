@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { stepIntent, stepOptions } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/step-intent';
 import { announcementFor, ghostFor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
-import type { HudLayout } from '../../../shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import { DOC } from './keyboard-move.constants';
 
 describe('four directions, computed from the tree', () => {

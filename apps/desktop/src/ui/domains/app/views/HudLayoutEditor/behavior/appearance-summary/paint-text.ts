@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Paint } from '@shared/types/hud';
+import type { Paint } from '@rotp/hud';
 
 const paintText = (paint: Paint | undefined): string => {
   if (paint === undefined) return 'none';

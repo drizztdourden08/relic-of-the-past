@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { readFileSync } from 'fs';
-import { gridCellRects } from '../../../shared/hud/engine/place-grid';
+import { gridCellRects } from '@rotp/hud';
 import { hull } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/StageGridEcho';
 import { CTX, ECHO, ECHO_BOX, ECHO_GRID, ECHO_SCALE, EDITOR_DIR, RAILS } from './metrics.constants';
 import { measureMetrics } from './measure-metrics';

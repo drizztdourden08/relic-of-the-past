@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { useHudEditorViewStore } from '../../../apps/desktop/src/stores/hud-editor-view-store';
 import { LayoutSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import type { HudContainer, HudGridContainer } from '../../../shared/types/hud';
+import type { HudContainer, HudGridContainer } from '@rotp/hud';
 import { PLATFORM } from './grid-settings.constants';
 import { screenRoot } from './screen-root';
 

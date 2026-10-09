@@ -2,7 +2,7 @@
 import { zoneIn } from './drop-intent';
 import { siteOf } from './node-edits';
 import type { DropZone } from './drop-intent';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 
 const rowUnder = (doc: HudLayout, x: number, y: number): { rowId: string; zone: DropZone } | null => {
   const under = document.elementFromPoint(x, y);

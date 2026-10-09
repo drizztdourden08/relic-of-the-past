@@ -2,7 +2,7 @@
 import type { EditorAction, EditorShortcut } from '../SelectionBands';
 import type { IndexRun } from '../../behavior/index-selection';
 import type { DropIntent } from '../../behavior/drop-intent';
-import type { HudFlexContainer } from '@shared/types/hud';
+import type { HudFlexContainer } from '@rotp/hud';
 
 type FlexSelection = { kind: 'none' } | ({ kind: 'items' } & IndexRun);
 

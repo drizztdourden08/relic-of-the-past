@@ -2,7 +2,7 @@
 import { embeddedOf } from '../node-edits';
 import { childrenOf } from './children-of';
 import { rootsOf } from './roots-of';
-import type { HudContainer, HudLayout, HudNode } from '@shared/types/hud';
+import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
 
 const realParentOf = (doc: HudLayout, id: string): HudContainer | null => {
   let found: HudContainer | null = null;

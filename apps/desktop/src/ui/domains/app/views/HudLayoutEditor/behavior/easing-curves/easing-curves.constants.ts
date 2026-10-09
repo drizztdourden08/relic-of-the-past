@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { HudNamedEasing } from '@shared/types/hud';
+import type { HudNamedEasing } from '@rotp/hud';
 
 const NAMED_EASINGS: readonly HudNamedEasing[] = ['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out'];
 

@@ -3,7 +3,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { act, createElement as h } from 'react';
 import { CellPicker } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
-import type { HudGridContainer, HudNode } from '../../../shared/types/hud';
+import type { HudGridContainer, HudNode } from '@rotp/hud';
 import { installPanelHarness } from './install-panel-harness';
 
 const { mount } = installPanelHarness();

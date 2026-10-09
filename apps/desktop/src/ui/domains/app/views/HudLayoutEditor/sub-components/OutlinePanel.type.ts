@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { DropIntent, DropZone } from '../behavior/drop-intent';
-import type { HudLayout, HudNode } from '@shared/types/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 interface OutlineRowModel {
   node: HudNode;

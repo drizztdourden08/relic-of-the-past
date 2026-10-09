@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 
 const trackText = (extent: Extent): string => {
   if (extent === 'auto' || extent === 'fill') return extent;

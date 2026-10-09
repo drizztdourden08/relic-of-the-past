@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
-import { advanceCountdown, IDLE_TRACK } from '../../lib/game/hud-countdown-track';
+import { advanceCountdown, IDLE_TRACK } from '@rotp/hud';
 import type { HudCountdownStore } from './hud-countdown-store.type';
 
 const useHudCountdownStore = create<HudCountdownStore>()((set, get) => ({

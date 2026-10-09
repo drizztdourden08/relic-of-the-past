@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { GlyphPack, GlyphSource } from '@shared/types/hud';
+import type { GlyphPack, GlyphSource } from '@rotp/input-mapping';
 import { activeProfileId } from '../active-profile';
 import { glyphUrlCache } from './glyph-url-cache';
 

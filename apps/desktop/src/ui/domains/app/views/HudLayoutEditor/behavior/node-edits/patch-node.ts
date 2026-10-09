@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { mapTree } from './map-tree';
-import type { HudLayout, HudNode } from '@shared/types/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 const patchNode = (doc: HudLayout, id: string, patch: Partial<HudNode>): HudLayout =>
   mapTree(doc, (node) => {

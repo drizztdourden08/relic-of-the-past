@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { GlyphPack, HudElementSpec } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudElementSpec } from '@rotp/hud';
 
 type GlyphSpec = Extract<HudElementSpec, { type: 'glyph' }>;
 

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { GlyphPack, HudButtonSpec } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudButtonSpec } from '@rotp/hud';
 
 interface ButtonStatesEditorProps {
   spec: HudButtonSpec;

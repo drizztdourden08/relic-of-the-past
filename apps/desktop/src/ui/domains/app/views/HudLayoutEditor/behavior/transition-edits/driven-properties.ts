@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { collectBoundValues } from '../bound-values';
-import type { HudNode, HudTransitionProperty } from '@shared/types/hud';
+import type { HudNode, HudTransitionProperty } from '@rotp/hud';
 
 const drivenProperties = (node: HudNode, insideRepeat: boolean): ReadonlySet<HudTransitionProperty> => {
   const bound = collectBoundValues(node).map((b) => b.path);

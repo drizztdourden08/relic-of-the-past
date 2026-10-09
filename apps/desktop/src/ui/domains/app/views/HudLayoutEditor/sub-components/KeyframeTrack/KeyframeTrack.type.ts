@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudAnimationKeyframe, HudEasing } from '@shared/types/hud';
+import type { HudAnimationKeyframe, HudEasing } from '@rotp/hud';
 
 interface KeyframeTrackProps {
   keyframes: readonly HudAnimationKeyframe[];

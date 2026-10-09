@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { MAX_SAFE_RESULT, clampFinite, resolveValue } from '@shared/hud/data';
-import type { Value } from '@shared/types/hud';
+import { MAX_SAFE_RESULT, clampFinite, resolveValue } from '@rotp/hud';
+import type { Value } from '@rotp/hud';
 
 describe('clampFinite - the documented bound', () => {
   it('passes an ordinary number through unchanged', () => {

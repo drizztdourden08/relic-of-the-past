@@ -2,7 +2,7 @@
 import { siteOf } from '../node-edits';
 import { previousContainer } from './previous-container';
 import { stepIntent } from './step-intent';
-import type { HudLayout } from '@shared/types/hud';
+import type { HudLayout } from '@rotp/hud';
 import type { StepDirection, StepOption } from './step-intent.type';
 
 const stepOptions = (doc: HudLayout, id: string): StepOption[] => {

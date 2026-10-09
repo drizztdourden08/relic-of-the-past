@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind component */
-import { TILE } from '@shared/hud/engine';
+import { TILE } from '@rotp/hud';
 import { HudBox } from '../../../../../primitives/HudBox';
 import { HudGlyph } from '../../../../../composites/HudGlyph';
 import { DIMMED_GLYPH_OPACITY } from '../../../HudNodeRenderer.constants';

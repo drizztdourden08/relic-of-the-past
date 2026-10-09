@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { resolveValue } from '@shared/hud/data';
+import { resolveValue } from '@rotp/hud';
 import { summarise } from '../behavior/summarise';
 import { MAX_CELLS } from './InstanceStrip.constants';
 import type { InstanceStripProps } from './InstanceStrip.type';

@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind types */
 import type { HudNodeContent } from '@domains/hud/compounds/HudNodeRenderer';
 import type { ModernSlot } from '@rotp/game-data';
-import type { GlyphPack } from '@shared/types/hud';
-import type { Size } from '@shared/hud/layouts';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { Size } from '@rotp/hud';
 
 interface EditorSampleState {
   live: boolean;

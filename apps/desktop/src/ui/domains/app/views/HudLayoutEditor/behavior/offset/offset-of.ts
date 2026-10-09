@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Edges } from '@shared/types/hud';
+import type { Edges } from '@rotp/hud';
 import type { Offset } from './offset.type';
 
 const offsetOf = (margin: Edges | undefined): Offset => ({

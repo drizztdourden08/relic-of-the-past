@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { editGridTracks, validateLayout } from '../../shared/hud/layouts';
-import type { TrackEdit } from '../../shared/hud/layouts';
-import type { HudGridContainer, HudLayout, HudNode, HudPlace } from '../../shared/types/hud';
+import { editGridTracks, validateLayout } from '@rotp/hud';
+import type { TrackEdit } from '@rotp/hud';
+import type { HudGridContainer, HudLayout, HudNode, HudPlace } from '@rotp/hud';
 
 const leaf = (id: string, place?: HudPlace): HudNode =>
   ({ id, kind: 'element', element: { type: 'spacer' }, ...(place ? { place } : {}) }) as unknown as HudNode;

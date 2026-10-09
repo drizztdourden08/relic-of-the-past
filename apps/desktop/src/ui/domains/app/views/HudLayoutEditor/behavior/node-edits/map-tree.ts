@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HudElementSpec, HudLayout, HudNode, HudSwitchCase } from '@shared/types/hud';
+import type { HudElementSpec, HudLayout, HudNode, HudSwitchCase } from '@rotp/hud';
 
 const visitElementSpec = (spec: HudElementSpec, visit: (node: HudNode) => HudNode | null): HudElementSpec => {
   if (spec.type === 'repeat') {

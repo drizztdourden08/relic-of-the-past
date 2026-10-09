@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
-import { validateLayout } from '../../../shared/hud/layouts';
-import type { HudLayout, HudNode } from '../../../shared/types/hud';
+import { validateLayout } from '@rotp/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 const documentWith = (node: HudNode): HudLayout => ({
   id: 'doc', name: 'doc', builtIn: false,

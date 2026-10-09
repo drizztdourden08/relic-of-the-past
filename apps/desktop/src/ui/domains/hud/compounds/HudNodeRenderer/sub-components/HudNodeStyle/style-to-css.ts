@@ -1,10 +1,8 @@
 /* @layer renderer-hud @kind logic */
-import { resolveValue } from '@shared/hud/data';
+import { resolveValue } from '@rotp/hud';
 import type { CSSProperties } from 'react';
-import type {
-  HudBorder, HudBoxStyle, HudRadius, HudShadow,
-} from '@shared/types/hud';
-import type { Paint } from '@shared/types/hud';
+import type { HudBorder, HudBoxStyle, HudRadius, HudShadow } from '@rotp/hud';
+import type { Paint } from '@rotp/hud';
 import { BORDER_SIDES } from './HudNodeStyle.constants';
 import type { StyleScope } from './HudNodeStyle.type';
 

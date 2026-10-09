@@ -1,0 +1,24 @@
+/* @layer package @kind barrel */
+export { HUD_SCOPE_EXTRAS, HUD_VARIABLES, MAX_EXPR_LENGTH, MAX_SAFE_RESULT, clampFinite, compileExpr, compileExprCacheSize, hudDataScope, hudVariableNamesFor, isHudScopeExtra, isHudVariableName, resolveValue, suggestVariableName } from './data';
+export type { HudCountdownSource, HudVitalsSource } from './data';
+export { TILE, aspectOf, assignCells, columnsForSpriteChar, containRect, cyclePosition, easingFn, expand, gateTruthy, gridCellRects, intrinsicSize, layoutHud, layoutHudBands, measureBox, placedById, resolveTextContent, rowCountOf, sampleAnimation, sampleKeyframes, snapGameFontSize, stemForSpriteChar, textIntrinsicSize } from './engine';
+export type { MeasureContext, PlacedNode } from './engine';
+export { solveGrid } from './engine/place-grid';
+export type { GridCellRect } from './engine/place-grid';
+export { IDLE_TRACK, advanceCountdown } from './hud-countdown-track';
+export type { CountdownReading, CountdownTrack } from './hud-countdown-track';
+export { engineSwitchPatch } from './layouts/convert-engine';
+export { BUILT_IN_LAYOUTS, COUNTDOWN_SIZE, DEFAULT_LAYOUT, HUD_EDGE_INSET, MAX_EXPANDED_NODES, PAUSE_LEGEND_HEIGHT, PAUSE_LEGEND_LEFT_RESERVE, VITALS_RESERVE, collectReflowWarnings, defaultLayoutIdFor, editGridTracks, isOverlay, layoutById, loadLayout, tryLoadLayout, validateLayout, validateValue, worstCaseNodeCount } from './layouts';
+export type { Rect, Size, TrackEdit } from './layouts';
+export type { Issues } from './layouts/validate-box';
+export { validateAnimations, validateTransition } from './layouts/validate-motion';
+export { HUD_PRESETS, instantiatePreset } from './presets';
+export { setHudProfileId } from './runtime/active-profile/set-hud-profile-id';
+export { toldProfile } from './runtime/active-profile/told-profile';
+export { MIME_BY_EXT } from './runtime/custom-glyph-store/custom-glyph-store.constants';
+export type { GlyphPosition } from './runtime/custom-glyph-store/custom-glyph-store.type';
+export { forkLayout } from './runtime/layout-document-io/fork-layout';
+export { NO_STORED_LAYOUTS } from './runtime/layout-document-io/layout-document-io.constants';
+export type { StoredLayouts } from './runtime/layout-document-io/layout-document-io.type';
+export { NO_ASSIGNMENT } from './runtime/slot-content.constants';
+export type { Edges, Extent, GradientStop, HudAlignSelf, HudAnimatableProperty, HudAnimation, HudAnimationKeyframe, HudAnimationLoop, HudBorder, HudBorderSides, HudBorderStyle, HudBoxStyle, HudButtonBind, HudButtonFace, HudButtonSpec, HudButtonState, HudButtonVerb, HudClusterReveal, HudContainer, HudCountdownSpec, HudCountdownVariantChoice, HudEasing, HudElement, HudElementSpec, HudEnterExitProperty, HudEnterExitTransition, HudFlexContainer, HudFontFamily, HudGlyphPosition, HudGridContainer, HudGridJustifyItems, HudLayout, HudNamedEasing, HudNode, HudOutline, HudPlace, HudRadius, HudRepeatSpec, HudShadow, HudShapeKind, HudShapeSpec, HudSwitchCase, HudSwitchSpec, HudTextAlign, HudTextFace, HudTextPad, HudTextSpec, HudTextSpriteSet, HudTextStroke, HudTint, HudTintMode, HudTransition, HudTransitionProperty, Paint, Value } from './types';

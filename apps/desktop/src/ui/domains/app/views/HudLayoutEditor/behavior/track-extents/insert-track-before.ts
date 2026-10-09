@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 
 const insertTrackBefore = (tracks: readonly Extent[], index: number): Extent[] => {
   const next = [...tracks];

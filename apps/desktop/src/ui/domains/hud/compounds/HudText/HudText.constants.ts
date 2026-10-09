@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind constants */
-import type { HudFontFamily, HudTextStroke } from '@shared/types/hud';
+import type { HudFontFamily, HudTextStroke } from '@rotp/hud';
 
 const FONT_VARS: Record<HudFontFamily, string> = {
   game: 'var(--font-game)', sans: 'var(--font-sans)', mono: 'var(--font-mono)',

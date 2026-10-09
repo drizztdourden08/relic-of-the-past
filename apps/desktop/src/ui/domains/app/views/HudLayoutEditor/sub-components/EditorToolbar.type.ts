@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { EditorGround, EditorRatio } from '../HudLayoutEditor.type';
-import type { GlyphPack, HudLayout, HudNode } from '@shared/types/hud';
+import type { GlyphPack } from '@rotp/input-mapping';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 interface EditorToolbarProps {
   insert: (node: HudNode) => void;

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Extent } from '@shared/types/hud';
+import type { Extent } from '@rotp/hud';
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(Math.max(value, min), max);

@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind logic */
-import { resolveValue } from '@shared/hud/data';
-import { gateTruthy } from '@shared/hud/engine';
-import type { HudTransition } from '@shared/types/hud';
+import { resolveValue } from '@rotp/hud';
+import { gateTruthy } from '@rotp/hud';
+import type { HudTransition } from '@rotp/hud';
 import { CSS_PROPERTIES } from './HudNodeMotion.constants';
 import type { MotionScope } from './HudNodeMotion.type';
 

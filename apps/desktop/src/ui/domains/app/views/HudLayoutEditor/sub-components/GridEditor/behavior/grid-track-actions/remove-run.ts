@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { editGridTracks } from '@shared/hud/layouts';
+import { editGridTracks } from '@rotp/hud';
 import type { GridActionContext, TrackAxis } from '../../GridEditor.type';
 
 const removeRun = (ctx: GridActionContext, axis: TrackAxis, indices: readonly number[]) => (): void => {

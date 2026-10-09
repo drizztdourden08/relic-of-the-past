@@ -3,7 +3,7 @@ import { Box, Field, Select } from '@drizztdourden08/tessera/primitives';
 import { CellPicker } from '../CellPicker';
 import { DisabledReason } from '../DisabledReason';
 import { OffsetField } from '../OffsetField';
-import type { HudAlignSelf, HudContainer, HudGridContainer } from '@shared/types/hud';
+import type { HudAlignSelf, HudContainer, HudGridContainer } from '@rotp/hud';
 import { FLEX_STANDIN, OPTIONS } from './PlacementSection.constants';
 import type { PlacementSectionProps } from './PlacementSection.type';
 

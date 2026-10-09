@@ -7,7 +7,7 @@ import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
 import { EditorStepContext } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/editor-step';
 import { ValueField } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ValueField';
-import type { Value } from '../../shared/types/hud';
+import type { Value } from '@rotp/hud';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

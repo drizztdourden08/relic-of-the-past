@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { PlacedNode } from '@shared/hud/engine';
+import type { PlacedNode } from '@rotp/hud';
 import type { HudGlyphSpec, HudNodeContent } from '../../HudNodeRenderer.type';
 
 interface HudNodeArtProps {

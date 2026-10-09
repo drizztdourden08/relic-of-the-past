@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { HudAlignSelf, HudGridContainer } from '@shared/types/hud';
+import type { HudAlignSelf, HudGridContainer } from '@rotp/hud';
 
 const ALIGN_SELF: readonly HudAlignSelf[] = ['start', 'center', 'end', 'stretch'];
 const OPTIONS = ALIGN_SELF.map((v) => ({ value: v, label: v }));
