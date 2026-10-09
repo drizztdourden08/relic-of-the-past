@@ -11,7 +11,7 @@
  * cannot be changed here.
  */
 
-import { DIFFICULTY_OPTION_DESCRIPTIONS } from './difficulty/difficulty-options.data';
+import { DIFFICULTY_OPTION_DESCRIPTIONS } from './difficulty/difficulty-options.constants';
 import { POND_OPTION_DESCRIPTIONS } from './pond/pond-option-descriptions.data';
 import { PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive/progressive-options.data';
 import { PROGRESSIVE_MODE_DESCRIPTIONS } from './progressive/progressive-mode-options.data';

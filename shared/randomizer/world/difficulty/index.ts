@@ -10,11 +10,12 @@ export {
 } from './difficulty-option-keys';
 export {
   DIFFICULTY_OPTION_DESCRIPTIONS, DIFFICULTY_OPTION_SEEDS,
-} from './difficulty-options.data';
+} from './difficulty-options.constants';
 export {
   copiesOfValues, defaultDifficulty, difficultyFromSnapshot, difficultyOfValues,
   difficultyValuesOf, heartCapOfValues,
 } from './difficulty-from-snapshot';
 export { applyCopyMultipliers } from './difficulty-copies-pool';
-export { applyHeartCap, heartGrowthOf } from './difficulty-hearts-pool';
+export { applyHeartCap } from './difficulty-hearts-pool';
+export { heartGrowthOf } from './heart-growth-of';
 export type { CopyMultiplier, CopyMultiplierSetting, DifficultySetting } from './difficulty.type';
