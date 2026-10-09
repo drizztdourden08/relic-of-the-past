@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { TilePassability } from '@shared/game/navigation/types';
+import type { TilePassability } from '@rotp/game-core';
 
 const collisionColor = (collision: TilePassability, canPass: boolean | null): string | undefined => {
   if (collision.type !== 'obstacle' || canPass === null) return undefined;

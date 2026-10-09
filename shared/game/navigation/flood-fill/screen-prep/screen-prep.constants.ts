@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { GRID_SIZE } from '../../types';
+import { GRID_SIZE } from '../../types/grid.constants';
 
 const DOORWAY_MAX_WIDTH = 6;
 

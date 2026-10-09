@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { FloodFillResult, OverworldEntrance } from '../types';
+import type { FloodFillResult, OverworldEntrance } from '@rotp/game-core';
 import type { TileReq } from '../tile-attrs';
 import { usableEntranceTransition } from './usable-entrance-transition';
 

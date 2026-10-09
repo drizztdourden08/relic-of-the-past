@@ -1,6 +1,6 @@
 /* @layer shared-store @kind logic */
 import { DELUXE_TRACK_THRESHOLD } from '../../../manifest';
-import type { MsuPackManifest } from '../../../manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { parseManifest } from '../../../edit/parse-manifest';
 import type { KindFacts } from '../../types';
 import type { FirstEntry } from '../read-first-entry';

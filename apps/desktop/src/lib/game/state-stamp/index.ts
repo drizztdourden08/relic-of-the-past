@@ -1,3 +1,3 @@
 /* @layer renderer-lib @kind barrel */
-export { stampAtCapture } from './stamp-at-capture';
+export { stampAtCapture } from '@rotp/game-core';
 export { stampStateBuffer } from './stamp-state-buffer';

@@ -4,7 +4,7 @@ import type { CapacityBonusSetting } from '@shared/randomizer/world/capacity';
 import { log } from '../../log-bus';
 import { CAPACITY_FAMILY_INDEX } from '../capacity-profile/capacity-profile.constants';
 import { setCapacityHalf } from '../gate-word-5';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { CAPACITY_BONUS_BIT } from './capacity-bonus.constants';
 
 const setCapacityBonus = (setting: CapacityBonusSetting): void => {

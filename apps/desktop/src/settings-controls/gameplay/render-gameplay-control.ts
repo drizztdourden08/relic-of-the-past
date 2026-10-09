@@ -3,7 +3,7 @@ import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { DIALOG_SPEED_STOPS, formatDialogSpeed } from '@rotp/game-data';
 import type { DialogSpeedStop } from '@rotp/game-data';
-import { TURBO_SPEEDS, formatTurboSpeed, turboSpeedAt, turboSpeedIndex } from '@shared/display/turbo-speed';
+import { TURBO_SPEEDS, formatTurboSpeed, turboSpeedAt, turboSpeedIndex } from '@rotp/game-core';
 import { IndexSliderRow, stopSliderRow } from '../IndexSliderRow';
 import { DialogHoldRow } from './DialogHoldRow';
 import type { ControlContext } from '../settings-controls.type';

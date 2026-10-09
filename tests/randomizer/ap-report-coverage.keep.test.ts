@@ -50,8 +50,8 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 (globalThis as { window?: unknown }).window ??= {
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
-await import('@app/lib/game/cheats');
-const { setModule } = await import('@app/lib/game/wasm-bridge');
+await import('../../packages/game-core/src/cheats');
+const { setModule } = await import('../../packages/game-core/src/wasm-bridge');
 const { installFakeModule } = await import('./ap-fake-module');
 const { armScouted } = await import('@app/lib/game/randomizer-client/online-arm-scouted');
 const { disarmFireReporting, firedLocations } = await import('@app/lib/game/randomizer-client/override-fire-registry');

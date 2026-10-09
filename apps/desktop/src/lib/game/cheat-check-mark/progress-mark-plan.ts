@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import type { CheckRecord } from '@rotp/game-data';
-import { voidCall } from '../bridge/wasm-call';
+import { voidCall } from '@rotp/game-core';
 import type { MarkPlan } from './cheat-check-mark.type';
 import { BUFFER_INDEX_OF_FLAG_TYPE, NO_ITEM_SENTINEL, SUBSTITUTION_BUFFER_INDEXES } from './cheat-check-mark.constants';
-import { numArgs } from '../num-args';
+import { numArgs } from '@rotp/game-core';
 
 const markSubstitutionTaken = (vanillaItemId: number): void =>
   voidCall('WasmCheatMarkSubstitutionTaken', numArgs(vanillaItemId));

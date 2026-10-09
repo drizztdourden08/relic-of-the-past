@@ -2,7 +2,7 @@
 import type { ScreenCrossing } from '@shared/game/navigation';
 import { doorwayLandingOpen, exitDoorAt } from '../../../simulator/room-doorways';
 import { regionQualifier } from '../../../simulator/screen-resolve';
-import { isFollowerActive } from '../../../follower-state';
+import { isFollowerActive } from '@rotp/game-core';
 import { entryFromEdge } from '../../../simulator/exit-order';
 import { doorCrossingTile } from '../../place-tile';
 import { roomTarget } from '../../resolve-target';

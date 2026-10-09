@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { ConnectionPointData } from '@rotp/game-data';
-import type { OverworldEntrance } from '../types';
+import type { OverworldEntrance } from '@rotp/game-core';
 
 interface EntranceResolverInput {
   entrances: OverworldEntrance[];

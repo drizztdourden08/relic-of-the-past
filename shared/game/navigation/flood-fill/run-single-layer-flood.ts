@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { FloodFillResult } from '../types';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { TileReq } from '../tile-attrs';
 import type { FloodFillOptions } from './flood-options';
 import { runBFS } from '../core/bfs-engine';

@@ -5,7 +5,7 @@ import { wasmGetSpriteCombat, wasmGetCombatTables, wasmGetRoomLayoutInfo, roomSe
 import { getCurrentInventory } from '../tracker';
 import { getRoomSprites } from './interactables';
 import { getScreenGrids } from '../flood';
-import { readMapState } from './read-game-state';
+import { readMapState } from '@rotp/game-core';
 import type { RoomFloodRun } from './flood-room';
 import type { RoomThreatProbe } from './probe-room-threat.type';
 

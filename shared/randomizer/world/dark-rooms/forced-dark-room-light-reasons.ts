@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { LIGHTS_BEHIND_WORLD_SHUFFLE, WORLD_SHUFFLE_REASON } from './dark-room-forced.constants';
-import type { DarkRoomLightField } from './dark-room.type';
+import type { DarkRoomLightField } from '@rotp/game-core';
 
 const forcedDarkRoomLightReasons = (
   includeWorldItems: boolean,

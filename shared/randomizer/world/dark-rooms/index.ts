@@ -13,4 +13,4 @@ export {
   isDarkRoomOptionKey,
 } from './dark-room-option-keys';
 export { DARK_ROOM_OPTION_SEEDS } from './dark-room-options.constants';
-export type { DarkRoomLightField, DarkRoomLights, DarkRoomSetting } from './dark-room.type';
+export type { DarkRoomLightField, DarkRoomLights, DarkRoomSetting } from '@rotp/game-core';

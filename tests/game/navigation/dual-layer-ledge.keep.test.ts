@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { DualLayerStrategy } from '../../../shared/game/navigation/strategies/dual-layer';
 import type { QuadrantBounds, BFSCell } from '../../../shared/game/navigation/strategies/layer-strategy';
-import type { TilePassability } from '../../../shared/game/navigation/types';
-import { GRID_SIZE } from '../../../shared/game/navigation/types';
+import type { TilePassability } from '@rotp/game-core';
+import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
 
 const fill = (tile: TilePassability): TilePassability[][] =>
   Array.from({ length: GRID_SIZE }, () => new Array<TilePassability>(GRID_SIZE).fill(tile));

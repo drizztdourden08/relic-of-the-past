@@ -3,7 +3,7 @@ import { computeBitmask } from '@rotp/input-mapping';
 import { buildInputSample, edgeBaseline, schemeRuntime } from '@rotp/input-mapping';
 import { menuEdges, menuShadowedSlots, readFunctionMask, remapForScheme } from '@rotp/input-mapping';
 import { ownsHudItem } from './item-ownership';
-import { setActiveItem } from '../game/host-menu';
+import { setActiveItem } from '@rotp/game-core';
 import type { SchemeRuntime } from '@rotp/input-mapping';
 import type { InputSample } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';

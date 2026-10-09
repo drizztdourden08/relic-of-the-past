@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
 import type { RandomizerOptionChoices } from '../randomizer-choices';
-import type { DarkRoomSetting } from '@shared/randomizer/world/dark-rooms/dark-room.type';
+import type { DarkRoomSetting } from '@rotp/game-core';
 
 const darkRoomSettingOfChoices = (choices: RandomizerOptionChoices): DarkRoomSetting => ({
   requireLight: choices.darkRoomLightRequired,

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { ReceiptLine } from '../receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 
 const POND_AWARD_MORE_LINE: ReceiptLine = [
   'I will make your wish come true. The water still holds more for you.',

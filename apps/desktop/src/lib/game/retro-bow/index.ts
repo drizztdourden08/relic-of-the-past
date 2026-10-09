@@ -1,3 +1,3 @@
 /* @layer bridge-wasm @kind barrel */
-export { clearRetroBow } from './clear-retro-bow';
+export { clearRetroBow } from '@rotp/game-core';
 export { setRetroBow } from './set-retro-bow';

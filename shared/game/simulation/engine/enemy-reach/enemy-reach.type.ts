@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { ItemId } from '@rotp/game-data';
 import type { SimSprite, ScreenGridBundle, CombatContext, RoomSectionSplit } from '../../types';
 

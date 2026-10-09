@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import type { RefObject } from 'react';
 import type { DialogTextureAnimation } from '@rotp/game-data';
-import { paintTexture } from '../../../../../../lib/dialog-texture/paint-texture';
+import { paintTexture } from '@rotp/game-core';
 import type { DialogTextureProps } from '../DialogTexture.type';
 
 const reducedMotion = (): boolean =>

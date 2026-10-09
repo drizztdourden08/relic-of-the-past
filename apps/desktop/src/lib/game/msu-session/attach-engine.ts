@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 import { createMsuEngine } from '../../msu/engine';
 import { log } from '../../log-bus';
-import { getMasterAudioTarget } from '../audio-volume';
-import { announceCoreMusic } from '../bridge/announce-music';
-import { setDeluxeEntrances } from '../bridge/deluxe-entrances';
-import { setExternalMusic } from '../bridge/host-gates';
+import { getMasterAudioTarget } from '@rotp/game-core';
+import { announceCoreMusic } from '@rotp/game-core';
+import { setDeluxeEntrances } from '@rotp/game-core';
+import { setExternalMusic } from '@rotp/game-core';
 import { publishSoundClaims } from '../msu-sound-claims';
 import { msuSessionState } from './msu-session-state';
 import type { MsuSessionOptions } from './msu-session.type';

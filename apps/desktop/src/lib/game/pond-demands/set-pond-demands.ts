@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { PondDemandArm } from './pond-demands.type';
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 
 const setPondDemands = (demands: readonly PondDemandArm[]): void => {
   const mod = getModule();

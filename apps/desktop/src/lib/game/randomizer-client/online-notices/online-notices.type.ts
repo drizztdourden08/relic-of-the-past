@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { OnlineNoticeKind } from '@shared/randomizer/archipelago/online-notice-settings';
+import type { OnlineNoticeKind } from '@rotp/features';
 
 type NoticeTone = 'item' | 'player';
 

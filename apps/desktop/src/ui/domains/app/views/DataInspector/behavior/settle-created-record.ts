@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { bumpDataRevision } from '@app/lib/game/data-revision';
+import { bumpDataRevision } from '@rotp/game-core';
 import type { EntityKind } from '@rotp/game-data';
 import { refreshCollectionSource } from './collection-sources';
 import { registerIdRefOption } from './register-id-ref-option';

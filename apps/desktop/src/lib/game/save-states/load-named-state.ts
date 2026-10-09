@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import * as savesStore from '../../storage/saves-store';
-import { getProfileId } from '../wasm-bridge';
-import { whenCoreReady } from '../core-ready';
+import { getProfileId } from '@rotp/game-core';
+import { whenCoreReady } from '@rotp/game-core';
 import { loadStateFromBuffer } from '../state-buffers';
 
 const loadNamedState = async (name: string): Promise<boolean> => {

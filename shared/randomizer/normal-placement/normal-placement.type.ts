@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { DarkRoomSetting } from '../world/dark-rooms/dark-room.type';
+import type { DarkRoomSetting } from '@rotp/game-core';
 import type { StoryGateSetting } from '../world/story-gates/story-gate.type';
 import type { WorldOptions } from '../world/world.type';
 

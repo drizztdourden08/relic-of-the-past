@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { PreviewTarget } from '../bridge/sound-preview';
+import type { PreviewTarget } from '@rotp/game-core';
 
 const PREVIEW_SECONDS: Record<PreviewTarget, number> = {
   music: 60,

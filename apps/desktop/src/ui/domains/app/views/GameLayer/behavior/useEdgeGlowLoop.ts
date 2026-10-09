@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useRef } from 'react';
 import { wasmGetViewportInfo, wasmRenderCleanFrame, fulfillFrameCapture } from '../../../../../../lib/game';
-import { createEdgeGlowRenderer } from '../../../../../../lib/game/edge-glow';
-import type { EdgeGlowRenderer } from '../../../../../../lib/game/edge-glow';
+import { createEdgeGlowRenderer } from '@rotp/game-core';
+import type { EdgeGlowRenderer } from '@rotp/game-core';
 import { useCanvasOverlayLoop } from './useCanvasOverlayLoop';
 import { edgeGlowFade } from './edge-glow-fade';
 import { OVERWORLD_MODULE } from '../GameLayer.constants';

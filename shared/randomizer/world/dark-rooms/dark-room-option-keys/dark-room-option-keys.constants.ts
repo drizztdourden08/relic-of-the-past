@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { DarkRoomLightField } from '../dark-room.type';
+import type { DarkRoomLightField } from '@rotp/game-core';
 
 const DARK_ROOM_REQUIRED_KEY = 'dark_room_light_required';
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 
 const WISH_POND_AWARD_LINE: ReceiptLine = [
   'You have no need to throw anything in. The water has kept its gifts for you.',

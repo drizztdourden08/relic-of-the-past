@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { getModule } from '../wasm-bridge';
-import type { EmscriptenModule } from '../types';
+import { getModule } from '@rotp/game-core';
+import type { EmscriptenModule } from '@rotp/game-core';
 import type { DeliveryAction } from '../delivery-queue/delivery-queue.type';
 import type { ExecuteOutcome, GiveItemAction, TriggerNpcCheckAction } from './delivery-execute.type';
 import {

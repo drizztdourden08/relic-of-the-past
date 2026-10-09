@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { setCapacityHalf } from '../gate-word-5';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { CAPACITY_BONUS_CLEARED } from './capacity-bonus.constants';
 
 const clearCapacityBonus = (): void => {

@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { handle } from '@drizztdourden08/brock-electron/main';
 import { is } from '@electron-toolkit/utils';
-import type { ShadowCastingProject } from '@shared/types/shadow-casting';
+import type { ShadowCastingProject } from '@rotp/game-core';
 import { loadShadowProject, saveShadowProject, getScreenData } from './store';
 
 const registerShadowCastingHandlers = (): void => {

@@ -6,9 +6,9 @@ import {
   beamSwordReachable, swordReachable,
 } from '@shared/randomizer/world/progressive/progressive-reach';
 import { isFullLadder } from '../../progressive-tiers';
-import { darkRoomLightWordOf } from '../../dark-room-lights';
+import { darkRoomLightWordOf } from '@rotp/game-core';
 import type { PlacementStats } from '@shared/randomizer/world/fill/placement.type';
-import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 import type { ItemBehaviorPlan } from './item-behavior-session.type';
 
 const itemBehaviorOf = (stats: PlacementStats): ItemBehaviorPlan => {

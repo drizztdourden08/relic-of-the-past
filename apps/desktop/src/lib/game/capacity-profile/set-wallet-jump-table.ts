@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { WALLET_JUMP_SLOTS, WALLET_LADDER_LAST } from './capacity-profile.constants';
 
 const setWalletJumpTable = (rungsBySlot: readonly number[]): void => {

@@ -4,22 +4,22 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { compressStrings } from '@rotp/asset-extraction';
 import { kLanguages } from '@rotp/asset-extraction';
-import {
-  HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, primary, secondary, stripHighlight,
-} from '@shared/randomizer/receipt-text/highlight-markup';
+import { HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, stripHighlight } from '@rotp/game-core';
+import { primary } from '@shared/randomizer/receipt-text/highlight-markup/primary';
+import { secondary } from '@shared/randomizer/receipt-text/highlight-markup/secondary';
 import { renderReceiptMessage } from '@shared/randomizer/receipt-text/render-receipt-message';
 import { renderFromServer, renderJunk, renderOnline, renderProgressive } from '@shared/randomizer/receipt-text/receipt-templates';
-import { receiptLineCandidates } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { receiptLineCandidates } from '@rotp/game-core';
 import { pondDemandLinesOf } from '@shared/randomizer/receipt-text/pond-demand-lines';
 import { renderCapacityStep } from '@shared/randomizer/receipt-text/capacity-rung-values';
 import { hexToSnes15 } from '@rotp/game-data';
 import { foreignItemLine } from '@app/lib/game/randomizer-client/foreign-item-line';
-import { compressMarkedStrings } from '@app/lib/game/session-dialogue/highlight-bytes';
-import { wrapMessageText, wrapRows } from '@app/lib/game/session-dialogue/wrap-message';
-import { toDialogueText } from '@app/lib/game/session-dialogue/dialogue-text';
+import { compressMarkedStrings } from '@rotp/game-core';
+import { wrapMessageText, wrapRows } from '@rotp/game-core';
+import { toDialogueText } from '@rotp/game-core';
 import { dialogueCharsetOf } from '@rotp/game-data';
-import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { DEFAULT_SETTINGS } from '@rotp/game-core';
+import type { ReceiptLine } from '@rotp/game-core';
 
 const US = kLanguages.us;
 const WIDTHS = new Uint8Array(US.alphabet.length).fill(6);

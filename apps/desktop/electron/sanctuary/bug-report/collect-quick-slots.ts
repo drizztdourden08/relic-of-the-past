@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import { quickDir } from '@shared/storage/save-paths';
+import { quickDir } from '@rotp/game-core';
 import type { QuickSlot } from './bug-report.type';
 import { QUICK_SLOT_FILE } from './bug-report.constants';
 

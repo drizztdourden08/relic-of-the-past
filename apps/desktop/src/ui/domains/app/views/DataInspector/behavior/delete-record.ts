@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import type { EntityKind } from '@rotp/game-data';
-import { bumpDataRevision } from '@app/lib/game/data-revision';
+import { bumpDataRevision } from '@rotp/game-core';
 import type { RecordDeleter } from '../DataInspector.type';
 import { DELETERS } from './delete-record.constants';
 

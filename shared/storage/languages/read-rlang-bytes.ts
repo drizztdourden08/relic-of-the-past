@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import { createMemFileStore } from '@shared/platform/mem-file-store';
+import { createMemFileStore } from '@rotp/game-core';
 import { importRlang } from './import-rlang';
 import { getSet, getSetFont } from './read';
 import type { RlangContents } from './read-rlang-bytes.type';

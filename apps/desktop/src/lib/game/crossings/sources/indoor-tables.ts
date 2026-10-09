@@ -4,8 +4,8 @@ import {
   wasmGetRoomDoorInfo, wasmGetRoomStairInfo, wasmGetRoomStairInfoFor,
   wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor,
 } from '../../';
-import { readMapState } from '../../simulator/read-game-state';
-import { isFollowerActive } from '../../follower-state';
+import { readMapState } from '@rotp/game-core';
+import { isFollowerActive } from '@rotp/game-core';
 import { BOUNDARY_ID_BASE, STAIR_ID_BASE } from '../../flood/room-entrances';
 import { roomTarget } from '../resolve-target';
 import { makeCrossing } from '../make-crossing';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 
 const tileText = (tile: GridPos): string => `${tile.col},${tile.row}`;
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { PlaySession } from '@shared/types/session';
+import type { PlaySession } from '@rotp/game-core';
 import { listSessions as listSessionsStore } from '../../storage/profile-data-store';
 
 const listSessions = async (profileId: string): Promise<PlaySession[]> => {

@@ -5,7 +5,7 @@ import { getSessionState } from '../randomizer-client/session-store';
 import { suppressLocationReport } from '../randomizer-client/location-poller';
 import { deliverItem } from '../delivery-api';
 import { markCheckCollected } from '../cheat-check-mark';
-import { cheatItemGrantAllowed } from '../cheats';
+import { cheatItemGrantAllowed } from '@rotp/game-core';
 import type { CheckGrantPlan } from './cheat-check-grant.type';
 import { grantVanilla } from './grant-vanilla';
 import { planCheckGrant } from './plan-check-grant';

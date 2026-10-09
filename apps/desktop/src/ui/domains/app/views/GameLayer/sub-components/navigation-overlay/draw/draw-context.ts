@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import { overworldOrigin, roomOrigin, screenOriginFor } from '@app/lib/game/flood';
-import { viewOrigin } from '@app/lib/game/bridge/view-origin';
+import { viewOrigin } from '@rotp/game-core';
 import { MIN_DOT_RADIUS, TILE_PX } from './draw.constants';
 import type { DrawContext, ViewportInfo } from './draw.type';
 

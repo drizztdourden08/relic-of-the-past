@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability, LedgeTraversal } from '../../types';
-import { GRID_SIZE } from '../../types';
+import type { TilePassability, LedgeTraversal } from '@rotp/game-core';
+import { GRID_SIZE } from '../../types/grid.constants';
 import { bodyFits } from './body-fits';
 import { findDiagonalLanding } from './find-diagonal-landing';
 import { isLandable } from './is-landable';

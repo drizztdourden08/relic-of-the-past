@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability } from '../types';
+import type { TilePassability } from '@rotp/game-core';
 import { tileAttrsFor } from '../tile-attrs';
 
 const classifyTileAttr = (attr: number, indoors = false): TilePassability => {

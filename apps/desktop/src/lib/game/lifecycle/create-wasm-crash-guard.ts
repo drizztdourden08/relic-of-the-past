@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { reportWasmCrash } from '../report-wasm-crash';
-import { setState } from '../wasm-bridge';
-import type { WasmCrashGuard } from './lifecycle.type';
+import { setState } from '@rotp/game-core';
+import type { WasmCrashGuard } from '@rotp/game-core';
 
 const createWasmCrashGuard = (): WasmCrashGuard => {
   let armed = false;

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ItemPowerSetting } from '../item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 
 const derivedItemPower = (
   requested: ItemPowerSetting, sword: boolean, beamSword: boolean,

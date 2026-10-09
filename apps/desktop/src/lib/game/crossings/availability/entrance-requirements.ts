@@ -2,7 +2,7 @@
 import { getAttrReq } from '@shared/game/navigation/tile-attrs';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { FloodFillResult } from '@shared/game/navigation';
-import type { TransitionPoint } from '@shared/game/navigation/types';
+import type { TransitionPoint } from '@rotp/game-core';
 import { unmetCount } from './unmet-count';
 
 const approachRequirements = (result: FloodFillResult, t: TransitionPoint): string[] => {

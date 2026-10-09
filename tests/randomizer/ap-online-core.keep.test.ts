@@ -7,7 +7,7 @@ import { FOREIGN_ICON_FILES } from '@rotp/asset-extraction';
 import { buildOptionsSnapshot, normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import { generateFromSnapshot } from '@shared/randomizer/generate';
 import { AP_LOCATION_IDS } from '@shared/randomizer/archipelago/ap-ids.data';
-import { stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup';
+import { stripHighlight } from '@rotp/game-core';
 import { installFakeModule } from './ap-fake-module';
 import { createFakeServer } from './ap-fake-server';
 import { soloRoomOf } from './ap-solo-room';
@@ -38,8 +38,8 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 (globalThis as { window?: unknown }).window ??= {
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
-await import('@app/lib/game/cheats');
-const { setModule } = await import('@app/lib/game/wasm-bridge');
+await import('../../packages/game-core/src/cheats');
+const { setModule } = await import('../../packages/game-core/src/wasm-bridge');
 const { defaultOnlineCore } = await import('@app/lib/game/randomizer-client/online-core');
 const { createOnlineClient } = await import('@app/lib/game/randomizer-client/online-client');
 const { AP_DEATH_LINK_BIT, AP_ONLINE_BIT, gateWord5Now } = await import('@app/lib/game/gate-word-5');

@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import { getPlatform } from '@drizztdourden08/brock-react';
 import { readJson } from '@drizztdourden08/brock-core';
-import type { SlotRecord } from './gear-ownership.type';
-import { gearOwnershipState } from './gear-ownership-state';
-import { gearOwnershipPath } from './gear-ownership-path';
+import type { SlotRecord } from '@rotp/game-core';
+import { gearOwnershipState } from '@rotp/game-core';
+import { gearOwnershipPath } from '@rotp/game-core';
 import { applyTiers } from './apply-tiers';
 
 const initGearOwnership = (id: string | null): void => {

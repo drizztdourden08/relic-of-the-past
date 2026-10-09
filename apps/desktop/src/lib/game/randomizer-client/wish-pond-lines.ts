@@ -2,7 +2,7 @@
 import { WISH_POND_WATERS } from './wish-pond-rung-keys.constants';
 import { WISH_POND_AWARD_LINE, WISH_POND_CLOSED_LINE } from './wish-pond-lines.constants';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 
 const anyWishPondPlanned = (placement: Placement): boolean => {
   const profiles = placement.stats.ponds;

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 
 const MAX_SEARCH_STEPS = 64;
 

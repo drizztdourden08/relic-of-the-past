@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { getModule } from '../wasm-bridge';
-import { hasCoreExport } from '../has-core-export';
+import { getModule } from '@rotp/game-core';
+import { hasCoreExport } from '@rotp/game-core';
 import { SET_EXPORT } from './ap-received-index.constants';
 
 const setApReceivedIndex = (index: number): boolean => {

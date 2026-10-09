@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { endSession } from './end-session';
-import { sessionTrackerState } from './session-tracker-state';
+import { sessionTrackerState } from '@rotp/game-core';
 
 const generateId = (): string => {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);

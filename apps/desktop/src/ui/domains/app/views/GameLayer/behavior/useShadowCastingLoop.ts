@@ -2,12 +2,12 @@
 import { appApi } from '@app/ipc/app-api';
 import { useRef } from 'react';
 import { wasmGetViewportInfo } from '../../../../../../lib/game';
-import { createShadowRenderer } from '../../../../../../lib/game/shadow-casting';
-import type { ShadowRenderer } from '../../../../../../lib/game/shadow-casting';
+import { createShadowRenderer } from '@rotp/game-core';
+import type { ShadowRenderer } from '@rotp/game-core';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import { useCanvasOverlayLoop } from './useCanvasOverlayLoop';
 import { overworldScreenIdOf } from './overworld-screen-id';
-import { viewOrigin } from '@app/lib/game/bridge/view-origin';
+import { viewOrigin } from '@rotp/game-core';
 import { OVERWORLD_MODULE } from '../GameLayer.constants';
 import type { ShadowLoopParams } from './useShadowCastingLoop.type';
 

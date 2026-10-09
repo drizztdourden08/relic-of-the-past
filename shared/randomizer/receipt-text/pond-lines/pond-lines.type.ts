@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ReceiptLine } from '../receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 
 interface PondLineSet {
   prices: readonly number[];

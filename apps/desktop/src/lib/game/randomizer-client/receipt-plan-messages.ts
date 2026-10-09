@@ -16,7 +16,7 @@ import { NO_POND_LINES } from './receipt-plan-messages.constants';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { CapacityFamilyId } from '@shared/randomizer/world/capacity';
 import type { ReceiptCountOf } from '@shared/randomizer/receipt-text/receipt-counts';
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
 import type { ForeignItemOf } from './foreign-item-line';
 import type { PlanFixedLine, PlanPondLines, PlanReceiptTexts } from './receipt-plan-messages.type';

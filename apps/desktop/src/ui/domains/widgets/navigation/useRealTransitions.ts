@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
-import { collectRealTransitions } from '@app/lib/game/observations';
+import { collectRealTransitions } from '@app/lib/game/observations/real-transitions';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import type { ObservedTransition } from '@shared/game/recommendations';
 

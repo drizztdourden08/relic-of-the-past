@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SCREEN_H, SCREEN_W } from '@rotp/game-data';
-import { wasmGetViewportInfo } from '../../../../../../lib/game/wasm-bridge';
-import { linesAbovePicture } from '@app/lib/game/bridge/view-origin';
+import { wasmGetViewportInfo } from '@rotp/game-core';
+import { linesAbovePicture } from '@rotp/game-core';
 import { INITIAL_DIALOG_SCALE, SCANLINE_LEAD } from '../DialogView.constants';
 import type { DialogScale } from '../DialogView.type';
 

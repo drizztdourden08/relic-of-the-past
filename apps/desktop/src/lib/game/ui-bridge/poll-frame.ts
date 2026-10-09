@@ -1,13 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 import type { GameUIState } from '@rotp/game-data';
-import { wasmGetGameUIState } from '../wasm-bridge';
-import { pollHapticState } from '../haptic-polling';
-import { parseGameUIBuffer } from '../ui-bridge-parser';
-import { stateChanged } from '../ui-bridge-diff';
-import { pollDialogFrame } from '../dialog/dialog-bridge';
+import { wasmGetGameUIState } from '@rotp/game-core';
+import { pollHapticState } from '@rotp/game-core';
+import { parseGameUIBuffer } from '@rotp/game-core';
+import { stateChanged } from '@rotp/game-core';
+import { pollDialogFrame } from '@rotp/game-core';
 import { observeGear } from '../gear-ownership';
-import { reassertAfterSaveLoad } from '../host-menu';
-import { uiBridgeState } from './ui-bridge-state';
+import { reassertAfterSaveLoad } from '@rotp/game-core';
+import { uiBridgeState } from '@rotp/game-core';
 
 const repairAfterSaveFileLoad = (prev: GameUIState | null, next: GameUIState): void => {
   const leftTitle = prev?.mode === 'title' && next.mode !== 'title';

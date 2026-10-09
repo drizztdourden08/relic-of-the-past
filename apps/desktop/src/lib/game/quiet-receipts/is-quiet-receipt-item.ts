@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { gateWord5Now, QUIET_RECEIPT_BITS } from '../gate-word-5';
-import { sessionGateArmed } from '../session-gate-flags';
+import { sessionGateArmed } from '@rotp/game-core';
 import { RECEIPT_KIND } from './quiet-receipts.constants';
 
 const isQuietReceiptItem = (itemId: number): boolean => {

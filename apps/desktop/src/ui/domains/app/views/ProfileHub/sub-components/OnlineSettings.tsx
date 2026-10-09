@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
 import { SettingsLayout } from '@drizztdourden08/brock-react';
-import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
+import { DEFAULT_SETTINGS } from '@rotp/game-core';
 import onlineSections from '@app/screens/game/extras/online.settings';
 import { isSettingDisabled } from '@app/settings-controls/is-setting-disabled';
 import { lockCauseOf } from '@app/settings-controls/lock-cause-of';

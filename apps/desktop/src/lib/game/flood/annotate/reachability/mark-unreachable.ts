@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { ScreenAnnotation } from '@shared/game/simulation';
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import { PHYSICAL, SCREEN_WIDE } from './reachability.constants';
 import { reachableNear } from './reachable-near';
 

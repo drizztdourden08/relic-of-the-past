@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { FloodFillResult } from '@shared/game/navigation';
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import type { TooltipLayers } from './tooltip/tooltip.type';
 
 interface BuildTooltipLayersParams {

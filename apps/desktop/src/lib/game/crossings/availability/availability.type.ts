@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind types */
 import type { GridPos } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 
 interface AvailabilityArgs {
   tile: GridPos;

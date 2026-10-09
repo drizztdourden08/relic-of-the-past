@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 
 type LayerIndex = 0 | 1;
 type LayerGrids = [ReachState[][], ReachState[][]];

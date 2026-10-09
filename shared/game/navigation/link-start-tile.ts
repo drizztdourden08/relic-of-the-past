@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from './types';
+import type { GridPos } from '@rotp/game-core';
 import type { LinkStartTileArgs } from './link-start-tile.type';
-import { GRID_SIZE } from './types';
+import { GRID_SIZE } from './types/grid.constants';
 import { HITBOX_SIZE_PX, HITBOX_TOP_OFFSET_PX, TILE_PX } from './link-start-tile.constants';
 
 const clampToGrid = (v: number): number => Math.max(0, Math.min(GRID_SIZE - 1, v));

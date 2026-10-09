@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { PlaySession } from '@shared/types/session';
-import * as store from '@shared/storage/profile-data';
+import type { PlaySession } from '@rotp/game-core';
+import { store } from '@rotp/game-core';
 import { platformFiles } from '../platform-files';
 
 const listSessions = (p: string): Promise<PlaySession[]> => store.listSessions(platformFiles(), p);

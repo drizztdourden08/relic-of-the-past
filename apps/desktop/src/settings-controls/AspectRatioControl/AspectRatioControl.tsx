@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { validateCustomRatio, detectScreenRatio, screenReadout, viewportReadout, niceRatio, effectiveCustomRatio } from '@app/lib/game/aspect-ratio';
-import type { RatioReadout } from '@app/lib/game/aspect-ratio';
+import { validateCustomRatio, detectScreenRatio, screenReadout, viewportReadout, niceRatio, effectiveCustomRatio } from '@rotp/game-core';
+import type { RatioReadout } from '@rotp/game-core';
 import { useSafeAreaInsets } from '@drizztdourden08/brock-react';
 import { SegmentedControl, NumberInput, Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { AspectRatioControlProps } from './AspectRatioControl.type';

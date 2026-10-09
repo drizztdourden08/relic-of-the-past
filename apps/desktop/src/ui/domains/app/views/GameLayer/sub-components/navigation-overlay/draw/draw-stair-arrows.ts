@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
-import { GRID_SIZE, STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types';
+import { GRID_SIZE, STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types/grid.constants';
 import type { DrawContext } from './draw.type';
 import { ARROW_HEAD_SPREAD, STAIR_ARROW_COLOR } from './draw.constants';
 

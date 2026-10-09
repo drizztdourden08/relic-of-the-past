@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
-import type { StateStamp } from '@shared/game/save-state';
-import type { EmscriptenModule } from '../types';
+import type { StateStamp } from '@rotp/game-core';
+import type { EmscriptenModule } from '@rotp/game-core';
 import { useDialogStore } from '../../../stores/dialog-store';
-import { wasmRestoreDialogHookState } from '../bridge/dialog';
-import { resyncDialogFrames } from '../dialog/dialog-bridge';
+import { wasmRestoreDialogHookState } from '@rotp/game-core';
+import { resyncDialogFrames } from '@rotp/game-core';
 
 const fromBase64 = (text: string): Uint8Array | null => {
   try {

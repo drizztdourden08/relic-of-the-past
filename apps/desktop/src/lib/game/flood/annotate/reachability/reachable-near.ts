@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import { TOUCH } from './reachability.constants';
 
 const reachableNear = (reachable: readonly ReachState[][], row: number, col: number): boolean => {

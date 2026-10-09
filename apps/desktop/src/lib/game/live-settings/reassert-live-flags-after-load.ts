@@ -1,17 +1,17 @@
 /* @layer bridge-wasm @kind logic */
-import { restoreCheatRules } from '../cheat-rules-memory';
+import { restoreCheatRules } from '@rotp/game-core';
 import { pushDialogLive } from '../live-settings-dialog';
-import { DEFAULT_SETTINGS } from '../settings';
-import { pushTurboSpeed } from '../turbo';
-import { liveSettingsState } from './live-settings-state';
-import { reassertExtraDungeon } from './reassert-extra-dungeon';
+import { DEFAULT_SETTINGS } from '@rotp/game-core';
+import { pushTurboSpeed } from '@rotp/game-core';
+import { liveSettingsState } from '@rotp/game-core';
+import { reassertExtraDungeon } from '@rotp/game-core';
 import { reassertFeatureWords } from './reassert-feature-words';
-import { reassertGateWord3 } from './reassert-gate-word-3';
-import { reassertHideSpaceBeyondWalls } from './reassert-hide-space-beyond-walls';
-import { reassertHudHidden } from './reassert-hud-hidden';
-import { reassertPauseHidden } from './reassert-pause-hidden';
-import { reassertVolumes } from './reassert-volumes';
-import { reassertVsync } from './reassert-vsync';
+import { reassertGateWord3 } from '@rotp/game-core';
+import { reassertHideSpaceBeyondWalls } from '@rotp/game-core';
+import { reassertHudHidden } from '@rotp/game-core';
+import { reassertPauseHidden } from '@rotp/game-core';
+import { reassertVolumes } from '@rotp/game-core';
+import { reassertVsync } from '@rotp/game-core';
 
 const reassertLiveFlagsAfterLoad = (): void => {
   reassertFeatureWords();

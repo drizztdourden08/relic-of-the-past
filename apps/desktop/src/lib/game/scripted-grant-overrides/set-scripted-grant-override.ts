@@ -2,8 +2,8 @@
 import type { ScriptedGrantSurface } from './scripted-grant-overrides.type';
 import { log } from '../../log-bus';
 import { isArmableOverrideId } from '../foreign-item-id';
-import { getModule } from '../wasm-bridge';
-import { setScriptedGrantsActive } from '../live-settings-flags';
+import { getModule } from '@rotp/game-core';
+import { setScriptedGrantsActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 import { armCall } from './arm-call';
 

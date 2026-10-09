@@ -1,6 +1,6 @@
 /* @layer tests @kind constants */
 import { resolve } from 'node:path';
-import { SRM_POND_THROWS } from '@app/lib/game/save-file/hook-save-bytes';
+import { SRM_POND_THROWS } from '@rotp/game-core';
 
 const ROOT = resolve(__dirname, '../../..');
 const WASM_JS = resolve(ROOT, 'apps/desktop/public/wasm/zelda3.js');

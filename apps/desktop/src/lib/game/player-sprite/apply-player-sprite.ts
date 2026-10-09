@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { isZspr } from '../zspr';
 import { PLAYER_SPRITE_MEMFS_PATH } from './player-sprite.constants';
 

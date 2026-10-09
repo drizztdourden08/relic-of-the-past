@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { GridPos } from '../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 
 const ROOM_CLEAR_KILL_ITEM = 0xff;
 

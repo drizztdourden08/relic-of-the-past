@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import type { PlaySession } from '@shared/types/session';
+import type { PlaySession } from '@rotp/game-core';
 import { log } from '../../log-bus';
 import { saveSession } from '../../storage/profile-data-store';
-import { sessionTrackerState } from './session-tracker-state';
+import { sessionTrackerState } from '@rotp/game-core';
 
 const endSession = async (): Promise<PlaySession | null> => {
   const { activeSession } = sessionTrackerState;

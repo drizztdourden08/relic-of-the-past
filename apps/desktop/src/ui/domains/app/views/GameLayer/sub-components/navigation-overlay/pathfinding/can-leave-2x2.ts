@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import { isTraversalDirCompatible } from './is-traversal-dir-compatible';
 import { LEDGE_STATE_MAX, LEDGE_STATE_MIN, REACH_BLOCKED } from './pathfinding.constants';
 

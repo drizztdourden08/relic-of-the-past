@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { ControlSchemeId } from '../../scheme';
+import type { ControlSchemeId } from '@rotp/features';
 import { reseedEdges } from './reseed-edges';
 import { schemeRuntime } from './scheme-runtime-state';
 

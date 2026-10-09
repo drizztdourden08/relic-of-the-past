@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { LedgeStep } from './indoor-ledge-dirs.type';
-import { GRID_SIZE } from '../types';
+import { GRID_SIZE } from '../types/grid.constants';
 import {
   HORIZ_LEDGE_ATTRS, STEP_EAST, STEP_NORTH, STEP_SOUTH, STEP_WEST, VERT_LEDGE_ATTRS, WALL_SEARCH_RANGE,
 } from './indoor-ledge-dirs.constants';

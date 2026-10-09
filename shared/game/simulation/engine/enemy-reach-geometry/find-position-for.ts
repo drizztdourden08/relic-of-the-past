@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { ScreenGridBundle } from '../../types';
 import type { Weapon } from '../enemy-reach/enemy-reach.type';
 import { findContactPosition } from './find-contact-position';

@@ -2,7 +2,7 @@
 import { DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS } from './dark-room-lights.data';
 import { compileRule } from '../rules/rule-eval';
 import { all, any, countGroup, option } from '../rules/rule-node-build';
-import type { DarkRoomLightField } from './dark-room.type';
+import type { DarkRoomLightField } from '@rotp/game-core';
 import type { Rule } from '../world.type';
 import type { RuleNode, RuleOptionKey } from '../rules/rule-node.type';
 

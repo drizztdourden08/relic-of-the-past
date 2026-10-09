@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import type { GameSettings } from '@rotp/features';
 import { log } from '@app/lib/log-bus';
 import { resetGame, setAutoSaveConfig } from '@app/lib/game';
-import { serializeToIni, mergeSettings } from '@app/lib/game/settings';
+import { serializeToIni, mergeSettings } from '@rotp/game-core';
 import * as profileStore from '@app/lib/storage/profile-store';
 import { loadMsuPack } from '@app/lib/game/msu-pack-loader';
 import { resetSession } from '@app/lib/game/randomizer-client';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { DarkRoomLightField } from '@shared/randomizer/world/dark-rooms/dark-room.type';
+import type { DarkRoomLightField } from '@rotp/game-core';
 
 const NO_FORCED: ReadonlyMap<DarkRoomLightField, string> = new Map();
 

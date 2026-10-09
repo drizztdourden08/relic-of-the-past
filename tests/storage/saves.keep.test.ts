@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import * as saves from '@shared/storage/saves';
+import { saves } from '@rotp/game-core';
 import { createSaveStore } from '../../apps/desktop/node_modules/@drizztdourden08/brock-port-kit/src/index';
 import { createMemFileStore } from './mem-file-store';
 

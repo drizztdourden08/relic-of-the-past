@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ChoiceReceiptLine, ReceiptLine } from '../receipt-line.type';
+import type { ChoiceReceiptLine, ReceiptLine } from '@rotp/game-core';
 
 type PondDemandPlace = 'wish' | 'more' | 'last';
 

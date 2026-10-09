@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { BorderEdge } from '../types';
+import type { BorderEdge } from '@rotp/game-core';
 import { ROOM_GRID } from './flood-fill.constants';
 
 const getAdjacentRoom = (roomIdx: number, edge: BorderEdge): number | null => {

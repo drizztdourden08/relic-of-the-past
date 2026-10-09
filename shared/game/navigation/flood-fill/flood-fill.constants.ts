@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { BorderEdge } from '../types';
+import type { BorderEdge } from '@rotp/game-core';
 
 const LAYER_LOCKED_STAIRCASE = 2;
 

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { FloodFillResult } from '../../types';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { BorderDir, WalkConnection } from './border-bundles.type';
 import { computeOverlap } from './compute-overlap';
 import { findBorderBundles } from './find-border-bundles';

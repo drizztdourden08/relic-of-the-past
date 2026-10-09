@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { getModule } from '../wasm-bridge';
+import type { getModule } from '@rotp/game-core';
 
 type ScriptedGrantSurface =
   | { surface: 'capacity'; kind: 0 | 1 }

@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import type { MsuDebugEvent } from '../../msu/debug-bus';
 import { SOUND_CHANNELS } from '../../msu/sound-claim';
-import { setSoundTrace } from '../bridge/host-gates';
-import type { GameState } from '../types';
+import { setSoundTrace } from '@rotp/game-core';
+import type { GameState } from '@rotp/game-core';
 import { MUSIC_CODES } from './music-debug.constants';
 import { musicDebugState } from './music-debug-state';
 import type { MusicDebugEvent, MusicDebugOwner } from './music-debug.type';

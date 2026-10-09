@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { Route, RouteStep } from '../../../navigation/types';
+import type { Route, RouteStep } from '../../../navigation/types/route.type';
 import { gameNumberOf } from './game-number-of';
 
 const toRoute = (path: string[]): Route => {

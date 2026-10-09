@@ -2,13 +2,13 @@
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
 import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import { pondDemandLinesOf } from '@shared/randomizer/receipt-text/pond-demand-lines';
-import { receiptLineKey } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { receiptLineKey } from '@shared/randomizer/receipt-text/receipt-line.type/receipt-line-key';
 import { POND_DEMAND_KEY } from './pond-demand-rows.constants';
 import { pondDemandLineKey } from './pond-demand-line-key';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { PondPlan } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { PondDemandPlace } from '@shared/randomizer/receipt-text/pond-demand-lines';
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 import type { PlanPondDemandLines, PondDemandLineIndex } from './pond-demand-messages.type';
 
 const placeAtCapacity = (plan: PondPlan, prize: number): PondDemandPlace => {

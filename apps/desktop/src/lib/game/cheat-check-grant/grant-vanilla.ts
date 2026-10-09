@@ -1,7 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { getItem } from '@rotp/game-data';
 import type { CheckRecord } from '@rotp/game-data';
-import { cheatTriggerCheck, cheatTriggerNpcCheck } from '../cheats';
+import { cheatTriggerCheck } from '@app/lib/game/cheats/grants/cheat-trigger-check';
+import { cheatTriggerNpcCheck } from '@app/lib/game/cheats/grants/cheat-trigger-npc-check';
 import { FALLBACK_VANILLA_ID } from './cheat-check-grant.constants';
 
 const vanillaReceiveIdOf = (check: CheckRecord): number => {

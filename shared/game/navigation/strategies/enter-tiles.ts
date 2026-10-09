@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability } from '../types';
+import type { TilePassability } from '@rotp/game-core';
 import { evaluateEntry } from './evaluate-entry';
 
 const enterTiles = (tiles: [number, number][], grid: TilePassability[][], dr: number, dc: number, requirements: Set<string>, inventory: Set<string>): Set<string> | null => {

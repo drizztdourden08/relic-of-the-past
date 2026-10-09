@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 import type { PauseState } from '@rotp/game-data';
-import { closeHostMenu, saveAndQuitHostMenu } from '@app/lib/game/host-menu';
-import { wasmGetMenuState } from '@app/lib/game/wasm-bridge';
+import { closeHostMenu, saveAndQuitHostMenu } from '@rotp/game-core';
+import { wasmGetMenuState } from '@rotp/game-core';
 import { NATIVE_MENU_OPEN } from './pause-menu-store.constants';
 
 const coreWillExit = (): boolean => wasmGetMenuState() === NATIVE_MENU_OPEN;

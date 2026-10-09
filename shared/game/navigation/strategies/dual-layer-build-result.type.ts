@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { TilePassability, GridPos, ReachState, LedgeTraversal } from '../types';
+import type { TilePassability, GridPos, ReachState, LedgeTraversal } from '@rotp/game-core';
 import type { QuadrantBounds } from './layer-strategy';
 
 type ReachedLayer = (Set<string> | null)[][];

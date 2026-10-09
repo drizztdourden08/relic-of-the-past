@@ -2,8 +2,8 @@
 import type { ObservedTransition } from '@shared/game/recommendations';
 import { collectCrossings } from '../crossings';
 import { usableCrossings } from '../usable-crossings';
-import { transitionsFromCrossings } from './crossing-transitions';
-import type { TransitionScope } from './real-transitions.type';
+import { transitionsFromCrossings } from '@rotp/game-core';
+import type { TransitionScope } from '@rotp/game-core';
 
 const collectRealTransitions = (scope: TransitionScope): ObservedTransition[] => {
   const { isIndoors, roomIndex, overworldScreenIndex, floodConnections } = scope;

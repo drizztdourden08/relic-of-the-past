@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import * as saves from '@shared/storage/saves';
+import { saves } from '@rotp/game-core';
 import type { CollectedSaves, SaveInReport } from './bug-report.type';
 import { AUTO_SAVES_IN_REPORT, NORMAL_SAVES_IN_REPORT } from './bug-report.constants';
 import { collectQuickSlots } from './collect-quick-slots';

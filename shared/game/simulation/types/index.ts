@@ -6,4 +6,4 @@ export type { SpriteCombatInfo, CombatTables, CombatContext } from './combat.typ
 export type { SimChest, SimSprite, SimDoor } from './interactable.type';
 export type { TriggerAction } from './trigger-action.type';
 export type { FlagBufferKind, FlagDiff, DetectedCheck } from './flag-diff.type';
-export type { RoomSectionSplit } from './room-section.type';
+export type { RoomSectionSplit } from '@rotp/game-core';

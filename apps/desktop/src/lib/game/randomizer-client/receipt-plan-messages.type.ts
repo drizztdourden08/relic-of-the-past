@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type { CapacityFamilyId } from '@shared/randomizer/world/capacity';
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 import type { PlanPondDemandLines } from './pond-demand-messages';
 
 interface PlanFixedLine {

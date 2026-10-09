@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { GridPos, OverworldEntrance, ScreenVariant } from '../../types';
+import type { GridPos, OverworldEntrance, ScreenVariant } from '@rotp/game-core';
 import type { TileReq } from '../../tile-attrs';
 import type { QuadrantBounds } from '../../strategies/layer-strategy';
 

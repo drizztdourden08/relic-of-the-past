@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
 import { BURST_LIMIT, BURST_WINDOW_MS, queueNotice } from '@app/lib/game/randomizer-client/notice-burst';
-import { ONLINE_NOTICE_DEFAULTS } from '@shared/randomizer/archipelago/online-notice-settings';
+import { ONLINE_NOTICE_DEFAULTS } from '@rotp/game-core';
 import type { OnlineNotice } from '@app/lib/game/randomizer-client/online-notices';
 import type { NoticeEntry } from '@app/lib/game/randomizer-client/notice-burst';
 import { installClientHarness } from '../ap-protocol-harness';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { OverworldEntrance } from '../types';
+import type { OverworldEntrance } from '@rotp/game-core';
 import type { EntrancePosition } from '../core/bfs-engine.type';
 
 const findEntrancePositions = (entrances: OverworldEntrance[], screenIndex: number): { screenEntrances: OverworldEntrance[]; entrancePositions: EntrancePosition[] } => {

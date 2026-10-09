@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
-import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
+import { DEFAULT_SETTINGS } from '@rotp/game-core';
 import { KeyedControlRow } from '../KeyedControlRow';
 import type { ControlContext } from '../settings-controls.type';
 import type { ColorKey } from './hud.type';

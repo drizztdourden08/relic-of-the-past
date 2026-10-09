@@ -6,9 +6,11 @@ import { kFontTypes } from '@rotp/asset-extraction';
 import { GLYPH_SLOTS, alphabetChars, dialogueCharsetOf, displayAlphabetOf, extraGlyphSlots, extraSlotOfToken, readableText } from '@rotp/game-data';
 import { EXTRA_GLYPHS } from '@rotp/game-data';
 import { extraGlyphTiles } from '@rotp/game-data';
-import { primary, secondary, stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup';
-import { toDialogueText } from '@app/lib/game/session-dialogue/dialogue-text';
-import { compressMarkedStrings } from '@app/lib/game/session-dialogue/highlight-bytes';
+import { primary } from '@shared/randomizer/receipt-text/highlight-markup/primary';
+import { secondary } from '@shared/randomizer/receipt-text/highlight-markup/secondary';
+import { stripHighlight } from '@rotp/game-core';
+import { toDialogueText } from '@rotp/game-core';
+import { compressMarkedStrings } from '@rotp/game-core';
 import type { DialogueCharset } from '@rotp/game-data';
 
 const REQUIRED = "_-.,'()!?&+/:#%*\";=<>[]~@^`";

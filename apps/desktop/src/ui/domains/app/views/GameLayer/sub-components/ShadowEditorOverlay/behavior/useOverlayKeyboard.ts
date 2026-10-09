@@ -2,7 +2,7 @@
 import { appApi } from '@app/ipc/app-api';
 import { useEffect } from 'react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
-import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
+import { EMPTY_SHADOW_PROJECT } from '@rotp/game-core';
 import { screenIdFromVp } from './screen-id-from-vp';
 import type { OverlayKeyboardArgs } from './overlay.type';
 

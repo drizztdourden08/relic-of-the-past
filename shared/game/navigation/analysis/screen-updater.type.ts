@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { RegionNavData } from '@rotp/game-data';
-import type { FloodFillResult } from '../types';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { ScreenDefinition } from '@rotp/game-data';
 import type { ResolvedEntrance } from './entrance-resolver.type';
 

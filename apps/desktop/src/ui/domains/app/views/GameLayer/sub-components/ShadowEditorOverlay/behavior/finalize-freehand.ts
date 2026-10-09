@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ShapeDefinition } from '@shared/types/shadow-casting';
+import type { ShapeDefinition } from '@rotp/game-core';
 import { genId } from './gen-id';
 import type { FinalizeFreehandArgs } from './overlay.type';
 

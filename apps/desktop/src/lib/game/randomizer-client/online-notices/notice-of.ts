@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { OnlineNoticeKind } from '@shared/randomizer/archipelago/online-notice-settings';
+import type { OnlineNoticeKind } from '@rotp/features';
 import type { NoticePart, OnlineNotice } from './online-notices.type';
 
 const noticeOf = (kind: OnlineNoticeKind, parts: readonly NoticePart[], counterpart?: string): OnlineNotice => ({

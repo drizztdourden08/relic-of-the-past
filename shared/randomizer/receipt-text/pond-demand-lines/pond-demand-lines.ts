@@ -1,11 +1,12 @@
 /* @layer shared-game @kind logic */
-import { capitalizeMarked, primary } from '../highlight-markup';
+import { capitalizeMarked } from '../highlight-markup/capitalize-marked';
+import { primary } from '../highlight-markup/primary';
 import { CLOSING } from './pond-demand-lines.constants';
 import { demandCountOf } from './demand-count-of';
 import { demandItemNameOf } from './demand-item-name-of';
 import { demandLabelOf } from './demand-label-of';
 import type { ShopPrice } from '../../world/shops/shop-price.type';
-import type { ChoiceReceiptLine, ReceiptLine } from '../receipt-line.type';
+import type { ChoiceReceiptLine, ReceiptLine } from '@rotp/game-core';
 import type { PondDemandLineSet, PondDemandPlace } from './pond-demand-lines.type';
 
 const pronounOf = (demand: ShopPrice): string => (demandCountOf(demand) === 1 ? 'it' : 'them');

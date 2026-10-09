@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { armReceiptGates } from './arm-receipt-gates';
 
 const grantCapacityUpgrade = (kind: 0 | 1, amount: number): void => {

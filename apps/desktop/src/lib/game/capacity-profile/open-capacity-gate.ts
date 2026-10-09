@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { setCapacityProfileActive } from '../live-settings-flags';
+import { setCapacityProfileActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const openCapacityGate = (): void => {

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability } from '../types';
+import type { TilePassability } from '@rotp/game-core';
 import { canLeaveLedge } from './can-leave-ledge';
 
 const withRequirement = (requirements: Set<string>, req: string): Set<string> => {

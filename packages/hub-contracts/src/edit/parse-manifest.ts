@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { MsuPackManifest } from '../manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { isManifest } from './is-manifest';
 
 const parseManifest = (text: string | null): MsuPackManifest | null => {

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { itemPowerState } from './item-power-state';
+import { itemPowerState } from '@rotp/game-core';
 import { pushItemPowerWord } from './push-item-power-word';
 
 const setWishPondPlanActive = (on: boolean): void => {

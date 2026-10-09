@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { enqueue } from '../delivery-queue';
-import { isCoreReady } from '../core-ready';
+import { isCoreReady } from '@rotp/game-core';
 import { isGrantable } from './is-grantable';
 import { itemLabel } from './item-label';
 

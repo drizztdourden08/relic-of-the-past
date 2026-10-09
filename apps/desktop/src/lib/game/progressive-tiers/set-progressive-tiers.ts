@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { ProgressiveModeSetting, ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
 import { DEFAULT_PROGRESSIVE_MODES, isRandomOrder } from '@shared/randomizer/world/progressive/progressive-modes.data';
 import { CORE_FAMILY_INDEX } from './progressive-tiers.constants';

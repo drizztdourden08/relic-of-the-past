@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { armOverrideFiredEvents } from '../../override-fired';
+import { armOverrideFiredEvents } from '@rotp/game-core';
 import { fireRegistryState } from './fire-registry-state';
 import type { FireReportingSession } from './override-fire-registry.type';
 

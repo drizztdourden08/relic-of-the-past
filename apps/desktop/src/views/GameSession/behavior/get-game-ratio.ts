@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { parseRatioString, detectScreenRatio, detectViewportRatio } from '@app/lib/game/aspect-ratio';
+import { parseRatioString, detectScreenRatio, detectViewportRatio } from '@rotp/game-core';
 
 const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;

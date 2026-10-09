@@ -1,12 +1,6 @@
 /* @layer renderer-stores @kind types */
 import type { StoreApi } from 'zustand';
-import type {
-  ShadowCastingProject,
-  ScreenShadowData,
-  HeightmapElement,
-  LightSource,
-  ScreenLightingConfig,
-} from '@shared/types/shadow-casting';
+import type { ShadowCastingProject, ScreenShadowData, HeightmapElement, LightSource, ScreenLightingConfig } from '@rotp/game-core';
 
 type EditorTool = 'select' | 'polygon' | 'freehand' | 'point-light' | 'shape-light';
 type HeightPreset = '0.25' | '0.5' | '0.75' | '1.0' | 'custom';

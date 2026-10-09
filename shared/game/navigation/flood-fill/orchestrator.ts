@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { FloodFillResult } from '../types';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { FloodFillOptions } from './flood-options';
 import { runDualLayerFlood } from './run-dual-layer-flood';
 import { runSingleLayerFlood } from './run-single-layer-flood';

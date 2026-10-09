@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { GridPos, TilePassability } from '../types';
-import { GRID_SIZE } from '../types';
+import type { GridPos, TilePassability } from '@rotp/game-core';
+import { GRID_SIZE } from '../types/grid.constants';
 import { isBodyPassable } from './is-body-passable';
 
 const findStartBody = (row: number, col: number, grid: TilePassability[][], inventory: Set<string>, minR: number, maxR: number, minC: number, maxC: number): GridPos | null => {

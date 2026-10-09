@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 import type { GameSettings } from '@rotp/features';
 import { controlSchemeOf } from '@rotp/features';
-import { setTakeover } from '@app/lib/game/host-menu';
+import { setTakeover } from '@rotp/game-core';
 import { setControlScheme, setSchemeAssignments } from '@rotp/input-mapping';
 import { useControlSchemeStore } from './useControlSchemeStore';
 import { migratedAssignments } from './migrated-assignments';

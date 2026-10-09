@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HeightmapElement } from '@shared/types/shadow-casting';
+import type { HeightmapElement } from '@rotp/game-core';
 import { FREEHAND_EDGE_HIT_DISTANCE, LIGHT_HIT_RADIUS, SHAPE_HIT_PADDING } from './overlay.constants';
 import type { Hit, Point, ScreenData } from './overlay.type';
 

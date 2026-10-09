@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind types */
-import type { ControlSchemeId, FunctionMask } from '../../scheme';
+import type { ControlSchemeId } from '@rotp/features';
+import type { FunctionMask } from '../../scheme/function-mask/function-mask.type';
 import type { PauseEvent } from '@rotp/game-data';
 import type { CoreBindings, ModernBindings, ModernScheme } from '@rotp/game-data';
 

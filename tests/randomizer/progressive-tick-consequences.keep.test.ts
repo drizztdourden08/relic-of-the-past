@@ -9,7 +9,7 @@ import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/
 import {
   beamSwordReachable, swordReachable,
 } from '@shared/randomizer/world/progressive/progressive-reach';
-import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 import type { ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
 
 const withSwordTicks = (ticks: readonly boolean[]): ProgressiveSetting => ({

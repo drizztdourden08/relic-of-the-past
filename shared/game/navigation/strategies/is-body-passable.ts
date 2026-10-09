@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability } from '../types';
+import type { TilePassability } from '@rotp/game-core';
 import { bodyTiles } from './body-tiles';
 
 const isBodyPassable = (r: number, c: number, grid: TilePassability[][], inventory: Set<string>): boolean => {

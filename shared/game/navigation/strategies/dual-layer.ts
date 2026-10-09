@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability } from '../types';
+import type { TilePassability } from '@rotp/game-core';
 import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
 import type { DualLayerTileResult, TraversedStairTile, TraversedTile } from './dual-layer-build-result.type';
-import { GRID_SIZE } from '../types';
+import { GRID_SIZE } from '../types/grid.constants';
 import { isDoorPassageAttr } from '../tile-attrs';
 import { bodyTiles } from './body-tiles';
 import { getNewTiles } from './new-tiles';

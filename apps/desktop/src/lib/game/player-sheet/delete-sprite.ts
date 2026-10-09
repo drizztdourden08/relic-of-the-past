@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { deleteLinkSprite } from '@app/lib/storage/link-sprites-store';
 import { listProfiles, readConfig, writeConfig } from '@app/lib/storage/profile-store';
-import { getProfileId } from '../wasm-bridge';
+import { getProfileId } from '@rotp/game-core';
 import { setLinkSpriteData } from '../lifecycle';
 import { clearPlayerSprite } from '../player-sprite';
 

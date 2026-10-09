@@ -2,11 +2,11 @@
 import { log } from '../../log-bus';
 import * as savesStore from '../../storage/saves-store';
 import { saveMusicPosition } from '../msu-save-glue';
-import { getModule, getProfileId } from '../wasm-bridge';
-import { captureGameFrameBlob } from '../capture-frame';
+import { getModule, getProfileId } from '@rotp/game-core';
+import { captureGameFrameBlob } from '@rotp/game-core';
 import { withDialogState } from '../state-dialog';
-import type { AutoSaveTrigger } from './auto-save.type';
-import { AUTO_SAVE_SLOT } from './auto-save.constants';
+import type { AutoSaveTrigger } from '@rotp/game-core';
+import { AUTO_SAVE_SLOT } from '@rotp/game-core';
 
 const captureScreenshot = async (): Promise<ArrayBuffer | undefined> => {
   const blob = await captureGameFrameBlob();

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { aspectRatioValue, parseRatioString } from '@app/lib/game/aspect-ratio';
+import { aspectRatioValue, parseRatioString } from '@rotp/game-core';
 import { ASPECT_OPTIONS } from './hud-controls.constants';
 
 const hudRatioOptions = (settings: GameSettings) => {

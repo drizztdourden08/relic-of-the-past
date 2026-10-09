@@ -14,14 +14,14 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..', '..');
-const generatedPath = join(root, 'shared', 'game', 'save-state', 'current-format.generated.ts');
-const formatsPath = join(root, 'shared', 'game', 'save-state', 'formats.ts');
+const generatedPath = join(root, 'packages', 'game-core', 'src', 'save-state', 'current-format.generated.ts');
+const formatsPath = join(root, 'packages', 'game-core', 'src', 'save-state', 'formats.ts');
 const pkgPath = join(root, 'package.json');
 
 // Read as text, not imported: this runs as plain node with no TypeScript loader.
 const readGenerated = () => {
   if (!existsSync(generatedPath)) {
-    fail('shared/game/save-state/current-format.generated.ts is missing. Run the wasm build (it runs the layout probe).');
+    fail('packages/game-core/src/save-state/current-format.generated.ts is missing. Run the wasm build (it runs the layout probe).');
   }
   const src = readFileSync(generatedPath, 'utf8');
   const id = src.match(/id:\s*'([0-9a-f]+)'/)?.[1];
@@ -49,7 +49,7 @@ const run = () => {
       `The save state layout changed.\n\n`
       + `  computed id : ${id} (${totalBytes} bytes)\n`
       + `  registered  : ${known.join(', ') || '(none)'}\n\n`
-      + `Add a KNOWN_FORMATS row in shared/game/save-state/formats.ts saying what moved,\n`
+      + `Add a KNOWN_FORMATS row in packages/game-core/src/save-state/formats.ts saying what moved,\n`
       + `then release again. Publishing without one would leave every older build unable to\n`
       + `explain the break to the people it happens to.`,
     );

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HeightmapElement } from '@shared/types/shadow-casting';
+import type { HeightmapElement } from '@rotp/game-core';
 import { MIN_SHAPE_SIZE, UNIFORM_SCALE_DRAG_PX } from './overlay.constants';
 import type { HeightmapGizmoArgs, Point } from './overlay.type';
 

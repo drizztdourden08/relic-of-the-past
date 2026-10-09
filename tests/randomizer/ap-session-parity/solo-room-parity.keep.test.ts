@@ -5,7 +5,7 @@ import { generateFromSnapshot } from '@shared/randomizer/generate';
 import { deliverableSetsOf } from '@shared/randomizer/world/fill/deliverable-lists';
 import { RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data';
 import { isShopSlotLocation } from '@shared/randomizer/world/shops/shop-slots';
-import { stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup';
+import { stripHighlight } from '@rotp/game-core';
 import type { DeliverableLists } from '@shared/randomizer/world/fill/deliverable-lists';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { installFakeModule } from '../ap-fake-module';
@@ -52,8 +52,8 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 (globalThis as { window?: unknown }).window ??= {
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
-await import('@app/lib/game/cheats');
-const { setModule } = await import('@app/lib/game/wasm-bridge');
+await import('../../../packages/game-core/src/cheats');
+const { setModule } = await import('../../../packages/game-core/src/wasm-bridge');
 const { createLocalSession } = await import('@app/lib/game/randomizer-client/local-session');
 const { createOnlineClient } = await import('@app/lib/game/randomizer-client/online-client');
 const { defaultOnlineCore } = await import('@app/lib/game/randomizer-client/online-core');

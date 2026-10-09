@@ -3,7 +3,7 @@ import { classifyReceiptItem } from './receipt-item-class';
 import { flavourKeyOf } from './receipt-flavour';
 import { numberedItemLabel } from './numbered-item-label';
 import { renderDelivered, renderFoundItem, renderJunk, renderProgressive } from './receipt-templates';
-import type { ReceiptLine } from './receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 import type { ReceiptMessageParams } from './render-receipt-message.type';
 
 const renderReceiptMessage = (params: ReceiptMessageParams): ReceiptLine => {

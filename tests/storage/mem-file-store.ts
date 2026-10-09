@@ -1,2 +1,2 @@
 /* @layer test @kind barrel */
-export { createMemFileStore } from '@shared/platform/mem-file-store';
+export { createMemFileStore } from '@rotp/game-core';

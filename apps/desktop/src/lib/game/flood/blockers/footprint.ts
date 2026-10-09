@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { GridPos } from '@shared/game/navigation';
-import { GRID_SIZE } from '@shared/game/navigation/types';
+import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
 
 const footprint = (row: number, col: number): GridPos[] => {
   const cells: GridPos[] = [];

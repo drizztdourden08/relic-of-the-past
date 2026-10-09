@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { setDeluxeEntrances } from '../bridge/deluxe-entrances';
-import { setExternalMusic } from '../bridge/host-gates';
-import { restoreCoreMusic } from '../bridge/restore-music';
+import { setDeluxeEntrances } from '@rotp/game-core';
+import { setExternalMusic } from '@rotp/game-core';
+import { restoreCoreMusic } from '@rotp/game-core';
 import { withdrawSoundClaims } from '../msu-sound-claims';
 import { clearPoll } from './clear-poll';
 import { msuSessionState } from './msu-session-state';

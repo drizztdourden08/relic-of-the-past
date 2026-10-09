@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { SimSprite, TriggerAction } from '../../types';
 import { drainEffectForSwitchRoom } from '../discover-switches/drain-effect-for-switch-room';
 import { owEventSet } from '../discover-switches/ow-event-set';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { TileReq } from '../tile-attrs';
-import type { FloodFillResult } from '../types';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { GlobalFloodOptions, GlobalFloodResult, ScreenTileStats } from './global-flood.type';
 import { floodFillScreen } from '../flood-fill/orchestrator';
 import { INVENTORY_PROGRESSION } from './analysis.constants';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { CapacityFamilyId } from '../world/capacity/capacity-profile.type';
-import type { ReceiptLine } from './receipt-line.type';
+import type { ReceiptLine } from '@rotp/game-core';
 
 interface CapacityFixedLine {
   family: CapacityFamilyId;

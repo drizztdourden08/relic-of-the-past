@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getGameState, getModule, subscribeGameState } from '../wasm-bridge';
+import { getGameState, getModule, subscribeGameState } from '@rotp/game-core';
 import { size as queueSize, subscribe as subscribeQueue } from '../delivery-queue';
 
 const onDeliveryReady = (listener: () => void): (() => void) => {

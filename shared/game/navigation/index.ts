@@ -2,18 +2,9 @@
 export { floodFillScreen, getConnections } from './flood-fill';
 export type { FloodFillOptions, QuadrantBounds } from './flood-fill';
 export { getConnectionDestinationName } from './connection-names';
-export type {
-  TilePassability, LedgeDir, GridPos, WorldPos,
-  CollisionGrid, Map32Tables, OverworldEntrance,
-  TransitionPoint, LedgeTraversal, BorderSummary,
-  FloodFillResult, ConnectionInfo,
-  ScreenCoverage, WorldFloodResult,
-  ScreenPath, TilePath, RouteStep, Route,
-  NavigationStep, NavigationResult, PathfindingOptions,
-} from './types';
-export type {
-  CrossingClass, CrossingOrigin, CrossingSpan, CrossingTarget, ScreenCrossing, ScreenCrossings,
-} from './crossing.type';
+export type { TilePassability, LedgeDir, GridPos, WorldPos, CollisionGrid, Map32Tables, OverworldEntrance, TransitionPoint, LedgeTraversal, BorderSummary, FloodFillResult, ConnectionInfo } from '@rotp/game-core';
+export type { ScreenCoverage, WorldFloodResult, ScreenPath, TilePath, RouteStep, Route, NavigationStep, NavigationResult, PathfindingOptions } from './types/route.type';
+export type { CrossingClass, CrossingOrigin, CrossingSpan, CrossingTarget, ScreenCrossing, ScreenCrossings } from '@rotp/game-core';
 export { classifyTileAttr } from './tile-classification';
 export {
   TILE_ATTRS,

@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind logic */
 import type React from 'react';
-import { GRID_SIZE } from '@shared/game/navigation/types';
+import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo } from '../../../../../../../lib/game';
 import type { GridPos } from './navigation-overlay.type';
 import { screenOriginFor } from '@app/lib/game/flood';
-import { viewOrigin } from '@app/lib/game/bridge/view-origin';
+import { viewOrigin } from '@rotp/game-core';
 import { TILE_PX } from './pathfinding/pathfinding.constants';
 
 const mouseEventToTile = (

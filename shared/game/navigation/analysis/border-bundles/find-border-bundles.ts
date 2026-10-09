@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import type { FloodFillResult, ReachState } from '../../types';
+import type { FloodFillResult, ReachState } from '@rotp/game-core';
 import type { BorderBundle, BorderDir } from './border-bundles.type';
-import { GRID_SIZE } from '../../types';
+import { GRID_SIZE } from '../../types/grid.constants';
 import { BORDER_DIRS } from './border-bundles.constants';
 
 const borderCell = (grid: ReachState[][], direction: BorderDir, i: number): ReachState | undefined => {

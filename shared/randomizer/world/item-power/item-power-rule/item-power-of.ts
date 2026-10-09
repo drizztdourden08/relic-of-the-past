@@ -3,7 +3,7 @@ import { beamSwordReachable, progressiveSettingOf, swordReachable } from '../../
 import { derivedItemPower } from './derived-item-power';
 import { requestedItemPowerOf } from './requested-item-power-of';
 import type { World } from '../../world.type';
-import type { ItemPowerSetting } from '../item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 
 const itemPowerOf = (world: World): ItemPowerSetting => {
   const tiers = progressiveSettingOf(world);

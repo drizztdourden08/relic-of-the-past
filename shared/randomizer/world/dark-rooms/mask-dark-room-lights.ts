@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { DARK_ROOM_LIGHT_FIELDS } from './dark-room-lights.data';
 import { forcedDarkRoomLightReasons } from './forced-dark-room-light-reasons';
-import type { DarkRoomLights } from './dark-room.type';
+import type { DarkRoomLights } from '@rotp/game-core';
 
 const maskDarkRoomLights = (lights: DarkRoomLights, includeWorldItems: boolean): DarkRoomLights => {
   const forced = forcedDarkRoomLightReasons(includeWorldItems);

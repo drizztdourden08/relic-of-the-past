@@ -4,7 +4,7 @@ import { Box, Callout, Text } from '@drizztdourden08/tessera/primitives';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
 import type { OptionValue } from '@shared/randomizer/world/options.type';
-import type { DarkRoomLightField } from '@shared/randomizer/world/dark-rooms/dark-room.type';
+import type { DarkRoomLightField } from '@rotp/game-core';
 import { useDarkRoomLightTiles } from './behavior/useDarkRoomLightTiles';
 import { DarkRoomLightTile } from './sub-components/DarkRoomLightTile';
 import { BLIND_NOTE, DARK_ROOMS_TITLE, DARK_ROOM_REQUIRED_OPTION, LIGHTS_LABEL } from './DarkRoomsSection.constants';

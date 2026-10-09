@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { getModule } from '../../wasm-bridge';
+import type { getModule } from '@rotp/game-core';
 import type { HeapReads } from './poll-heap-reads.type';
 
 const buildHeapReads = (mod: NonNullable<ReturnType<typeof getModule>>): HeapReads | null => {

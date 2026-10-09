@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import type { CapacityFamilyId } from '@rotp/game-data';
 import type { CapacityFamilyArm } from './capacity-profile.type';
 import { CAPACITY_FAMILY_INDEX, CAPACITY_FAMILY_LAST_TIER } from './capacity-profile.constants';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { TilePassability } from '@shared/game/navigation/types';
+import type { TilePassability } from '@rotp/game-core';
 
 const collisionText = (collision: TilePassability): string => {
   if (collision.type === 'obstacle') return `obstacle · req ${collision.req}`;

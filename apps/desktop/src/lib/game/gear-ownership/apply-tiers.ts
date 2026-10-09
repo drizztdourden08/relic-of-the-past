@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import { getPlatform } from '@drizztdourden08/brock-react';
 import { writeJson } from '@drizztdourden08/brock-core';
-import type { GearTiers, SlotRecord } from './gear-ownership.type';
-import { NO_GEAR, PINNED_SLOT_KEY } from './gear-ownership.constants';
-import { gearOwnershipState } from './gear-ownership-state';
-import { gearOwnershipPath } from './gear-ownership-path';
-import { raiseTiers } from './raise-tiers';
+import type { GearTiers, SlotRecord } from '@rotp/game-core';
+import { NO_GEAR, PINNED_SLOT_KEY } from '@rotp/game-core';
+import { gearOwnershipState } from '@rotp/game-core';
+import { gearOwnershipPath } from '@rotp/game-core';
+import { raiseTiers } from '@rotp/game-core';
 
 const sameTiers = (a: GearTiers, b: GearTiers): boolean =>
   a.sword === b.sword && a.shield === b.shield && a.mail === b.mail && a.bow === b.bow;

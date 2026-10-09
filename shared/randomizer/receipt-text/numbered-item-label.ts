@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { itemKeyOfName } from '../world/display-names/item-key-name';
-import { primary } from './highlight-markup';
+import { primary } from './highlight-markup/primary';
 import { countClassOf } from './receipt-counts';
 import { DUNGEON_ITEM_RE, PIECES_PER_HEART, PROGRESSIVE_PREFIX } from './receipt-text.constants';
 import type { ReceiptCount } from './receipt-counts';

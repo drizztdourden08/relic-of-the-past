@@ -5,7 +5,7 @@ import { DARK_ROOM_LIGHT_FIELDS, DEFAULT_DARK_ROOM_SETTING } from '../dark-room-
 import { maskDarkRoomLights } from '../mask-dark-room-lights';
 import { darkRoomLightKeyOf, DARK_ROOM_REQUIRED_KEY } from '../dark-room-option-keys';
 import type { OptionValues } from '../../options.type';
-import type { DarkRoomLights, DarkRoomSetting } from '../dark-room.type';
+import type { DarkRoomLights, DarkRoomSetting } from '@rotp/game-core';
 
 const darkRoomSettingOfValues = (values: OptionValues): DarkRoomSetting => {
   const stored = Object.fromEntries(DARK_ROOM_LIGHT_FIELDS.map((field) =>

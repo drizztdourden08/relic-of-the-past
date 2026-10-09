@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ScreenPath } from '../../../navigation/types';
+import type { ScreenPath } from '../../../navigation/types/route.type';
 import { gameNumberOf } from './game-number-of';
 
 const toScreenPath = (path: string[]): ScreenPath => ({

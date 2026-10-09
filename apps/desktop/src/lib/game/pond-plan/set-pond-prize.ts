@@ -2,7 +2,7 @@
 import type { PondPrizeArm } from './pond-plan.type';
 import { log } from '../../log-bus';
 import { isArmableOverrideId } from '../foreign-item-id';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 
 const setPondPrize = (arm: PondPrizeArm): void => {
   const { prize, newItem, messageId, fireId } = arm;

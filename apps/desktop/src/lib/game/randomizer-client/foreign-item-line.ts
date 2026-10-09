@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { primary, secondary } from '@shared/randomizer/receipt-text/highlight-markup';
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { primary } from '@shared/randomizer/receipt-text/highlight-markup/primary';
+import { secondary } from '@shared/randomizer/receipt-text/highlight-markup/secondary';
+import type { ReceiptLine } from '@rotp/game-core';
 import { CHARACTER_CUTS, ELLIPSIS, UNKNOWN_OWNER } from './foreign-item-line.constants';
 import type { ForeignItem } from './foreign-item-line.type';
 

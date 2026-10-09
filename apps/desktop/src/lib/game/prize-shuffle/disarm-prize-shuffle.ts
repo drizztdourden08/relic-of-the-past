@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { setPrizeShuffleActive } from '../live-settings-flags';
+import { setPrizeShuffleActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const disarmPrizeShuffle = (): void => {

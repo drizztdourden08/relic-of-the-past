@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getModule } from '../../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { log } from '../../../log-bus';
 import { readCompletedChecks } from '../flag-polling';
 import { setsEqual } from '../inventory';

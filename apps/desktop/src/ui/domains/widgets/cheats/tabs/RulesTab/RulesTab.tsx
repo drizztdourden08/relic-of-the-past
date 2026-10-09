@@ -2,7 +2,7 @@
 import { useEffect, useReducer } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { CheatCategory } from '@app/lib/game';
-import { onCheatRulesRestored } from '@app/lib/game/cheat-rules-memory';
+import { onCheatRulesRestored } from '@rotp/game-core';
 import type { CheatTabProps } from '../../CheatsWidget.type';
 import { ACTION_TILES, RULES_HINT, RULE_TILES, RUNG_TILES } from './RulesTab.constants';
 import { RuleTile } from './sub-components/RuleTile';

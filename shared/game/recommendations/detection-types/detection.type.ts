@@ -2,12 +2,9 @@
 import type { EntityKind, ConnectionRecord, ScreenGameId, ScreenId } from '@rotp/game-data';
 import type { ScreenMatchResult } from '@rotp/game-data';
 import type { PalaceMismatch } from '@rotp/game-data';
-import type { ConnectionInfo } from '../../navigation/types';
+import type { ConnectionInfo } from '@rotp/game-core';
 import type { DraftRecommendation, RecommendationOrigin } from '../types';
-import type {
-  ChestObservation, GrantedItemObservation, LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveSpriteObservation,
-  LiveWalkBoundary, ObservedCrossing, ObservedTransition, SpriteCombatObservation,
-} from './observation.type';
+import type { ChestObservation, GrantedItemObservation, LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveSpriteObservation, LiveWalkBoundary, ObservedCrossing, ObservedTransition, SpriteCombatObservation } from '@rotp/game-core';
 
 interface ScreenObservations {
   match: ScreenMatchResult | null;

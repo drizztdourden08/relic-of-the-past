@@ -4,7 +4,7 @@ import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import {
   POND_AWARD_LAST_LINE, POND_AWARD_MORE_LINE, POND_CLOSED_LINE, pondLinesOf,
 } from '@shared/randomizer/receipt-text/pond-lines';
-import { receiptLineCandidates } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { receiptLineCandidates } from '@rotp/game-core';
 import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
 import { CUSTOM, LONGEST_FITTING_LINE } from './pond-model.constants';
 

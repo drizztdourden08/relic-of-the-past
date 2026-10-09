@@ -5,7 +5,7 @@
  * Compiles state-layout-probe.c against the same headers and the same compiler the real
  * build uses, so the region sizes it reports carry the real wasm32 ABI and not the
  * host's. Runs it, hashes the region sequence, and writes
- * shared/game/save-state/current-format.generated.ts.
+ * packages/game-core/src/save-state/current-format.generated.ts.
  *
  * That generated file is COMMITTED. `npm run ci` does not build wasm, so a gitignored
  * module would break typecheck on a fresh clone. Committing it also means a change to the
@@ -25,7 +25,7 @@ const here = import.meta.dirname;
 const zelda3 = resolve(here, '..', 'zelda3');
 const hooks = resolve(here, '..', 'game-hooks');
 const generatedPath = resolve(
-  here, '..', '..', 'shared', 'game', 'save-state', 'current-format.generated.ts',
+  here, '..', '..', 'packages', 'game-core', 'src', 'save-state', 'current-format.generated.ts',
 );
 
 /** Only the translation units that own a region walk. The rest of the core is irrelevant. */

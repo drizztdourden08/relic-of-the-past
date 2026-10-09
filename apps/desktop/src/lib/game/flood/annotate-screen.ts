@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import type { ScreenAnnotation, ScreenAnnotations, ScreenTag } from '@shared/game/simulation';
 import type { SimLocation } from '@shared/game/simulation';
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import { roomTagName } from '@shared/game/simulation';
 import { getRoomChests, getRoomDoors, getRoomSprites, getOverworldSprites } from '../simulator/interactables';
 import { wasmGetRoomTagsFor } from '../';
-import { isFollowerActive } from '../follower-state';
+import { isFollowerActive } from '@rotp/game-core';
 import { getCompletedChecks, getCurrentInventory } from '../tracker';
 import type { CheckId, ItemId } from '@rotp/game-data';
 import { doorAnnotation } from './annotate/doors';

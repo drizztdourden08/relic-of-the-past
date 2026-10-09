@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getModule, wasmGetGameUIState } from '../wasm-bridge';
+import { getModule, wasmGetGameUIState } from '@rotp/game-core';
 import { KILL_EXPORT, MODULE_GAME_OVER } from './ap-kill-link.constants';
 import type { KillOutcome } from './ap-kill-link.type';
 

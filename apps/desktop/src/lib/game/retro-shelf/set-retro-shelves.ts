@@ -3,8 +3,8 @@ import type { RetroShelfStock } from '@shared/randomizer/world/retro/retro-shops
 import { resolveLocalItemId } from '../randomizer-client/item-lookup';
 import { RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data';
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
-import { ENTRANCE_ANY, OW_AREA_ANY, RETRO_SHELF_ARG_COUNT } from './retro-shelf.constants';
+import { getModule } from '@rotp/game-core';
+import { ENTRANCE_ANY, OW_AREA_ANY, RETRO_SHELF_ARG_COUNT } from '@rotp/game-core';
 
 const setRetroShelves = (shelves: readonly RetroShelfStock[]): void => {
   if (shelves.length === 0) return;

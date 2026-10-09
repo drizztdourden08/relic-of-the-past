@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { NormalSaveInfo } from '@shared/types/saves';
-import * as saves from '@shared/storage/saves';
+import type { NormalSaveInfo } from '@rotp/game-core';
+import { saves } from '@rotp/game-core';
 import { platformFiles } from '../platform-files';
 
 const renameNormalSave = (p: string, id: string, newName: string): Promise<NormalSaveInfo | null> =>

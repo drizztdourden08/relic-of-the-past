@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { Reached } from './discover-reach.type';
 import { SPRITE_TALK_RADIUS } from './discover-reach.constants';
 

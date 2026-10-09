@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability } from '../../types';
+import type { TilePassability } from '@rotp/game-core';
 import { inBounds } from '../../core/in-bounds';
 import { LEDGE_TRIGGER_RANGE } from './cliff-preprocessing.constants';
 

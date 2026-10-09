@@ -2,8 +2,8 @@
 import { dirname } from 'path';
 import { readFile, writeFile, rm, mkdir } from 'fs/promises';
 import type { MsuResumeState } from '@rotp/game-data';
-import type { SaveKind } from '@shared/storage/save-paths';
-import { MSU_SIDECAR_SUFFIX, saveStem } from '@shared/storage/save-paths';
+import type { SaveKind } from '@rotp/game-core';
+import { MSU_SIDECAR_SUFFIX, saveStem } from '@rotp/game-core';
 import { handle, getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { SAVE_KINDS } from './resume-handlers.constants';
 

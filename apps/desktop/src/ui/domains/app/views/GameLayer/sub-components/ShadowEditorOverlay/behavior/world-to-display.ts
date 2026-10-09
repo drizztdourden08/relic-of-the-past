@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { viewOrigin } from '@app/lib/game/bridge/view-origin';
+import { viewOrigin } from '@rotp/game-core';
 import type { Point, Vp } from './overlay.type';
 
 const worldToDisplay = (vp: Vp, width: number, height: number, worldX: number, worldY: number): Point => {

@@ -1,5 +1,5 @@
 /* @layer electron-main @kind constants */
-import type { SaveKind } from '@shared/storage/save-paths';
+import type { SaveKind } from '@rotp/game-core';
 
 const SAVE_KINDS: readonly SaveKind[] = ['quick', 'normal', 'auto'];
 

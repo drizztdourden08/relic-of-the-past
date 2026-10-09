@@ -272,7 +272,7 @@ A pack's name is its folder; the name inside its settings follows it on read and
 
 ### msu/resume-handlers.ts
 
-Per save music resume sidecars over Node fs. Each `{save}.msu.json` is written beside the save it belongs to. Quick slots carry no manifest, so a sidecar is the one mechanism that fits all three save kinds. The naming comes from `shared/storage/save-paths`, so the renderer's FileStore path and this one address the same file.
+Per save music resume sidecars over Node fs. Each `{save}.msu.json` is written beside the save it belongs to. Quick slots carry no manifest, so a sidecar is the one mechanism that fits all three save kinds. The naming comes from `packages/game-core/src/save-paths`, so the renderer's FileStore path and this one address the same file.
 
 ### msu/optimize/analyze.ts
 
@@ -513,7 +513,7 @@ Locates the repo root the editor writes into by walking up to the ancestor that 
 
 ## saves
 
-The main process keeps no save store. The renderer writes saves over the FileStore: SRAM and quick slots through the Brock port kit (`@drizztdourden08/brock-port-kit`), named and auto saves through `shared/storage/saves`.
+The main process keeps no save store. The renderer writes saves over the FileStore: SRAM and quick slots through the Brock port kit (`@drizztdourden08/brock-port-kit`), named and auto saves through `packages/game-core/src/saves`.
 
 ## profiles
 

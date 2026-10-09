@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 import { appApi } from '@app/ipc/app-api';
 import { create } from 'zustand';
-import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
+import { EMPTY_SHADOW_PROJECT } from '@rotp/game-core';
 import type { ShadowEditorStore } from './shadow-editor-store.type';
 import { ensureScreenData } from './ensure-screen-data';
 import { screenEditActions } from './screen-edit-actions';

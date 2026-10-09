@@ -9,4 +9,4 @@ export {
   FORCED_ON_REASON, FORCED_WITHOUT_BEAM, FORCED_WITHOUT_BLADE,
 } from './item-power-forced.constants';
 export { ITEM_POWER_OPTION_SEEDS } from './item-power-options.data';
-export type { ItemPowerSetting } from './item-power.type';
+export type { ItemPowerSetting } from '@rotp/game-core';

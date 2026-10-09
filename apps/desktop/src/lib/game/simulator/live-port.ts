@@ -2,7 +2,7 @@
 import type { SimulatorPort, RoomSectionSplit } from '@shared/game/simulation';
 import type { ItemId } from '@rotp/game-data';
 import { captureStateBuffer, loadStateFromBuffer, reassertFeatureFlags, deliveryQueue, setSimulatorSupport } from '../';
-import { setAutoSkipDialogOverride, setDeveloperToolsOverride } from '../live-settings-flags';
+import { setAutoSkipDialogOverride, setDeveloperToolsOverride } from '@rotp/game-core';
 import { onItemReceived } from '../tracker';
 import { observe } from './observe';
 import { getScreenGrids } from '../flood';

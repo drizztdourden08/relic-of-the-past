@@ -2,7 +2,7 @@
 import type { WishPondRungArm } from './wish-pond-plan.type';
 import { log } from '../../log-bus';
 import { isArmableOverrideId } from '../foreign-item-id';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { setWishPondPlanActive } from '../item-power';
 
 const setWishPondRungs = (rungs: readonly WishPondRungArm[]): void => {

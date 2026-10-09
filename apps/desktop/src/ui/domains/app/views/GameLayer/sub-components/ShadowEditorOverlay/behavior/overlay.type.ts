@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { MutableRefObject, RefObject } from 'react';
 import type { ViewportInfo } from '@app/lib/game';
-import type { HeightmapElement, LightSource, ShadowCastingProject } from '@shared/types/shadow-casting';
+import type { HeightmapElement, LightSource, ShadowCastingProject } from '@rotp/game-core';
 import type { GizmoPart } from '../../shadow-editor/gizmos';
 import type { GizmoStart } from '../ShadowEditorOverlay.type';
 

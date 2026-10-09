@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { ITEM_POWER_KEY } from '../item-power.data';
 import type { OptionValue } from '../../options.type';
-import type { ItemPowerSetting } from '../item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 
 const itemPowerValuesOf = (setting: ItemPowerSetting): Record<string, OptionValue> => ({
   [ITEM_POWER_KEY.catchFairies]: setting.catchFairies,

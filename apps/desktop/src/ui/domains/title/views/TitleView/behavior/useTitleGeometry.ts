@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FRAME_H, FRAME_W, HORIZON_Y } from '@rotp/game-data';
-import { wasmGetViewportInfo } from '@app/lib/game/wasm-bridge';
-import { linesAbovePicture } from '@app/lib/game/bridge/view-origin';
+import { wasmGetViewportInfo } from '@rotp/game-core';
+import { linesAbovePicture } from '@rotp/game-core';
 import type { SceneGeometry } from '../../../scene/scene.type';
 import { GAME_CANVAS_ROWS_PER_LINE } from '../TitleView.constants';
 

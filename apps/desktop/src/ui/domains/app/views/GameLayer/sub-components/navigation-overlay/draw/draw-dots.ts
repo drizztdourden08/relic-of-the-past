@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
-import type { ReachState } from '@shared/game/navigation/types';
-import { GRID_SIZE, STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
+import { GRID_SIZE, STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types/grid.constants';
 import { DRAW_DOTS_LEDGE_ATTRS } from '@rotp/game-data';
 import type { DrawContext } from './draw.type';
 import {

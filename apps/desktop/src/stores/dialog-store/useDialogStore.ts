@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
-import { INACTIVE_FRAME } from '../../lib/game/dialog/parse-dialog-state';
-import { wasmDialogMarkStale } from '../../lib/game/bridge/dialog';
+import { INACTIVE_FRAME } from '@rotp/game-core';
+import { wasmDialogMarkStale } from '@rotp/game-core';
 import type { DialogStore } from './dialog-store.type';
 
 const useDialogStore = create<DialogStore>()((set, get) => ({

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ReachState, TilePassability } from '@shared/game/navigation/types';
+import type { ReachState, TilePassability } from '@rotp/game-core';
 import type { ReachStatus } from './tooltip.type';
 
 const reachStatusFor = (reach: ReachState, collision: TilePassability, isAboveLayer: boolean): ReachStatus => {

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { LedgeTraversal } from '../types';
+import type { LedgeTraversal } from '@rotp/game-core';
 import type { CrossingRecorder } from './ledge-crossings.type';
 
 const createCrossingRecorder = (): CrossingRecorder => {

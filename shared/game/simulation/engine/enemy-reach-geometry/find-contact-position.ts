@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import { isStandable } from './is-standable';
 
 const findContactPosition = (target: GridPos, reached: boolean[][] | undefined, radius: number): GridPos | undefined => {

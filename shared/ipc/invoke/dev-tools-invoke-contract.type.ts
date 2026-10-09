@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
+import type { ShadowCastingProject, ScreenShadowData } from '@rotp/game-core';
 import type { SimRunConfig } from '@shared/game/simulation';
 import type {
   DebugCaptureFinalizeInput, DebugCaptureFinalizeResult,

@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { MsuPackManifest } from '../manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 
 const isManifest = (value: unknown): value is MsuPackManifest => {
   const m = value as MsuPackManifest | null;

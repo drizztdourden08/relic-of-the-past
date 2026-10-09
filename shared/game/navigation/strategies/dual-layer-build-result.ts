@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import type { GridPos, ReachState } from '../types';
+import type { GridPos, ReachState } from '@rotp/game-core';
 import type { BuildDualLayerArgs, DualLayerTileResult, ReachedLayer } from './dual-layer-build-result.type';
 import { getHookshotTargetTiles } from '../tile-attrs';
-import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types';
+import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types/grid.constants';
 import { bodyTiles } from './body-tiles';
 import { SWAP_STAIR_ATTRS } from './dual-layer.constants';
 

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos, TilePassability } from '../../types';
+import type { GridPos, TilePassability } from '@rotp/game-core';
 import { inBounds } from '../../core/in-bounds';
 import { isLandable } from './is-landable';
 import { HOP_DY_PX, MAX_HOP_STEPS, NEED_EAST, NEED_WEST, SAMPLE_DX, SAMPLE_DY, TILE_PX } from './cliff-preprocessing.constants';

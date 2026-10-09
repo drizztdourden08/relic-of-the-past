@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { PreviewTarget } from '../bridge/sound-preview';
+import type { PreviewTarget } from '@rotp/game-core';
 import type { PlayOutcome } from './original-sound.type';
 import { ensurePreviewModule } from '../preview-core';
 import { audioContext } from './audio-context';

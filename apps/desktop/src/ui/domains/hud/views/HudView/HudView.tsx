@@ -9,7 +9,7 @@ import { HudCount } from '../../composites/HudCount';
 import { HudLife } from '../../compounds/HudLife';
 import { HudCountdownSlot } from './sub-components/HudCountdownSlot';
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { aspectRatioValue } from '@app/lib/game/aspect-ratio';
+import { aspectRatioValue } from '@rotp/game-core';
 
 const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) => {
   const { heartMode, magicMode, countLayout, countdownStyle, ratio: hudRatio, customW, customH, showMaxInYellow } = useHudSettingsStore();

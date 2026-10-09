@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability, CollisionGrid } from '../types';
+import type { TilePassability, CollisionGrid } from '@rotp/game-core';
 import { classifyTileAttr } from '../tile-classification';
 
 const buildCollisionGridFromRawAttr = (rawAttr: number[][], indoors = false): CollisionGrid => {

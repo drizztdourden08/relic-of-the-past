@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { GridPos } from '../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { TraversalId } from '../traversal-id.type';
 
 interface SimArea {

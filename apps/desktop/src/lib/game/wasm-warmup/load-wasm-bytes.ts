@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { portKitApi } from '@drizztdourden08/brock-port-kit/renderer';
-import { warmupState } from './warmup-state';
-import { CORE_WASM_FILE } from './wasm-warmup.constants';
-import type { ByteProgress as Progress } from './wasm-warmup.type';
+import { warmupState } from '@rotp/game-core';
+import { CORE_WASM_FILE } from '@rotp/game-core';
+import type { ByteProgress as Progress } from '@rotp/game-core';
 
 const isHttpRenderer = (): boolean =>
   window.location.protocol === 'http:' || window.location.protocol === 'https:';

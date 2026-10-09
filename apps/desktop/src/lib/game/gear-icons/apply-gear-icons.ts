@@ -2,10 +2,10 @@
 import { log } from '../../log-bus';
 import * as spritesStore from '../../storage/sprites-store';
 import { activeRomFile } from '../active-rom-file';
-import { setGearArtActive } from '../live-settings-flags';
+import { setGearArtActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
-import { getModule } from '../wasm-bridge';
-import { GEAR_ICONS_MEMFS_PATH } from './gear-icons.constants';
+import { getModule } from '@rotp/game-core';
+import { GEAR_ICONS_MEMFS_PATH } from '@rotp/game-core';
 
 const applyGearIcons = async (tag: string): Promise<boolean> => {
   const mod = getModule();

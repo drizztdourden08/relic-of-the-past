@@ -1,12 +1,9 @@
 /* @layer renderer-lib @kind logic */
-import {
-  cheatSetHealth, cheatSetMaxHealth, cheatKillAllEnemies, cheatRefillMagic,
-  cheatSetIgnoreCollision, getIgnoreCollisionEnabled,
-} from '../../game/cheats';
+import { cheatSetHealth, cheatSetMaxHealth, cheatKillAllEnemies, cheatRefillMagic, cheatSetIgnoreCollision, getIgnoreCollisionEnabled } from '@rotp/game-core';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
 import { liveSettingsNow } from '@app/lib/game/live-settings';
-import { getProfileId } from '@app/lib/game/wasm-bridge';
-import { setTurboHeld } from '@app/lib/game/turbo';
+import { getProfileId } from '@rotp/game-core';
+import { setTurboHeld } from '@rotp/game-core';
 import type { InputManager } from './input-manager';
 import { FULL_HEALTH } from '@rotp/input-mapping';
 import { cycleActiveProfile } from './cycle-active-profile';

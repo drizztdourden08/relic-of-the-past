@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
 import type { TileBehavior, TileVisual } from '@rotp/game-data';
 import type { SimDoor } from '../../simulation';
-import type { TilePassability } from '../types';
+import type { TilePassability } from '@rotp/game-core';
 
 interface RoomContext {
   indoors: boolean;

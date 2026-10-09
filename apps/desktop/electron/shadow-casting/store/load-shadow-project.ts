@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
-import type { ShadowCastingProject } from '@shared/types/shadow-casting';
-import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
+import type { ShadowCastingProject } from '@rotp/game-core';
+import { EMPTY_SHADOW_PROJECT } from '@rotp/game-core';
 import { readJsonFile } from '@drizztdourden08/brock-electron/main';
 import { getDataPath } from './get-data-path';
 import { shadowProjectState } from './shadow-project-state';

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { ConnectionPointData } from '@rotp/game-data';
 import type { EntranceResolverInput, ResolvedEntrance } from './entrance-resolver.type';
-import { GRID_SIZE } from '../types';
+import { GRID_SIZE } from '../types/grid.constants';
 import { DARK_WORLD_FLAG } from './analysis.constants';
 
 const resolveEntrances = (input: EntranceResolverInput): ResolvedEntrance[] => {

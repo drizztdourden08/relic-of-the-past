@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
+import type { ShadowCastingProject, ScreenShadowData } from '@rotp/game-core';
 
 const ensureScreenData = (project: ShadowCastingProject, screenId: number): ScreenShadowData => {
   if (project.screens[screenId]) return project.screens[screenId];

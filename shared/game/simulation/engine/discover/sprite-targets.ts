@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { SimSprite } from '../../types';
 import type { PresenceGameState } from '../../presence/presence.type';
 import { evaluatePresence } from '../../presence/evaluate/evaluate-presence';

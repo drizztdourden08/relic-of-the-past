@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { getModule } from '../wasm-bridge';
-import { hasCoreExport } from '../has-core-export';
+import { getModule } from '@rotp/game-core';
+import { hasCoreExport } from '@rotp/game-core';
 import { GET_EXPORT, NO_ROOM } from './ap-room-hash.constants';
 
 const getApRoomHash = (): number => {

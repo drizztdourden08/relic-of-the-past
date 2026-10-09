@@ -2,7 +2,7 @@
 import { DARK_ROOM_LIGHT_FIELDS } from '../dark-room-lights.data';
 import { darkRoomLightKeyOf, DARK_ROOM_REQUIRED_KEY } from '../dark-room-option-keys';
 import type { OptionValue } from '../../options.type';
-import type { DarkRoomSetting } from '../dark-room.type';
+import type { DarkRoomSetting } from '@rotp/game-core';
 
 const darkRoomValuesOf = (setting: DarkRoomSetting): Record<string, OptionValue> => ({
   [DARK_ROOM_REQUIRED_KEY]: setting.requireLight,

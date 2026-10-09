@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { PreviewTarget } from '../bridge/sound-preview';
+import type { PreviewTarget } from '@rotp/game-core';
 
 const soundKeyOf = (target: PreviewTarget, soundId: number): string => `${target}:${soundId}`;
 

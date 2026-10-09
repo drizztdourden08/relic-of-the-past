@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability, LedgeTraversal } from '../../types';
+import type { TilePassability, LedgeTraversal } from '@rotp/game-core';
 import type { LedgeStep } from '../indoor-ledge-dirs.type';
-import { GRID_SIZE } from '../../types';
+import { GRID_SIZE } from '../../types/grid.constants';
 import { inBounds } from '../../core/in-bounds';
 import { computeIndoorLedgeDirs } from '../indoor-ledge-dirs';
 import { HORIZ_LEDGE_ATTRS, VERT_LEDGE_ATTRS } from '../indoor-ledge-dirs.constants';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { primary } from '../highlight-markup';
+import { primary } from '../highlight-markup/primary';
 
 const renderFromServer = (item: string): string => `The server sent you ${primary(item)}!`;
 

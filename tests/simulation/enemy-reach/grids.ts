@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { GridPos } from '../../../shared/game/navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { ScreenGridBundle } from '../../../shared/game/simulation/types';
 import { GRID_SIZE } from './enemy-reach.constants';
 

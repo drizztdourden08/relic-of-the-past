@@ -1,6 +1,6 @@
 /* @layer shared-types @kind types */
 import type { Profile, AppState, CreateProfileOptions } from '@shared/types/profile';
-import type { PlaySession } from '@shared/types/session';
+import type { PlaySession } from '@rotp/game-core';
 import type { InvokeResult } from './invoke-result.type';
 
 interface ProfileDataInvokeContract {

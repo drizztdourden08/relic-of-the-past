@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
-import { setRetroBowActive } from '../live-settings-flags';
+import { getModule } from '@rotp/game-core';
+import { setRetroBowActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const setRetroBow = (setting: RetroBowSetting): void => {

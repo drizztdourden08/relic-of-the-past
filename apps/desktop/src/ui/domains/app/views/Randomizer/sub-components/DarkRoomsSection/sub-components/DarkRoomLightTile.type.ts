@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DarkRoomLightField } from '@shared/randomizer/world/dark-rooms/dark-room.type';
+import type { DarkRoomLightField } from '@rotp/game-core';
 import type { DarkRoomLightTileModel } from '../behavior/dark-room-light-tiles.type';
 
 interface DarkRoomLightTileProps {

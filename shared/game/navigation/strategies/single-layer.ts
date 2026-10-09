@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability, GridPos, ReachState } from '../types';
+import type { TilePassability, GridPos, ReachState } from '@rotp/game-core';
 import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
 import { getHookshotTargetTiles } from '../tile-attrs';
-import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types';
+import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types/grid.constants';
 import { bodyTiles } from './body-tiles';
 import { getNewTiles } from './new-tiles';
 import { canLeaveLedge } from './can-leave-ledge';

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getModule } from '../../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { log } from '../../../log-bus';
 import { getCompletedChecks } from '../../tracker';
 import { rescanShopCatchUp } from '../apply-overrides';

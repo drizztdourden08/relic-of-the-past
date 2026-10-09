@@ -2,14 +2,14 @@
 import { kLanguages } from '@rotp/asset-extraction';
 import { packPackedBytes } from '@rotp/asset-extraction';
 import { log } from '../../../log-bus';
-import { getModule } from '../../wasm-bridge';
-import { readActiveDialogue } from '../active-dialogue';
-import { sessionCharset } from '../extra-glyphs';
-import { baseChunksOf } from './base-chunks-of';
-import { encodeLines } from './encode-lines';
-import { prepareLine } from './prepare-line';
-import { SESSION_FILE } from './session-dialogue.constants';
-import { sessionPool } from './session-pool';
+import { getModule } from '@rotp/game-core';
+import { readActiveDialogue } from '@rotp/game-core';
+import { sessionCharset } from '@rotp/game-core';
+import { baseChunksOf } from '@rotp/game-core';
+import { encodeLines } from '@rotp/game-core';
+import { prepareLine } from '@rotp/game-core';
+import { SESSION_FILE } from '@rotp/game-core';
+import { sessionPool } from '@rotp/game-core';
 
 const compose = (): boolean => {
   const mod = getModule();

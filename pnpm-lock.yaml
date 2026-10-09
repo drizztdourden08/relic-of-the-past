@@ -298,6 +298,9 @@ importers:
       '@rotp/features':
         specifier: workspace:*
         version: link:packages/features
+      '@rotp/game-core':
+        specifier: workspace:*
+        version: link:packages/game-core
       '@rotp/game-data':
         specifier: workspace:*
         version: link:packages/game-data
@@ -493,6 +496,9 @@ importers:
       '@rotp/features':
         specifier: workspace:*
         version: link:../../packages/features
+      '@rotp/game-core':
+        specifier: workspace:*
+        version: link:../../packages/game-core
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../../packages/game-data
@@ -771,6 +777,27 @@ importers:
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:../hub-contracts
+
+  packages/game-core:
+    dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.36.0
+        version: 0.36.0
+      '@drizztdourden08/brock-display':
+        specifier: ^0.36.0
+        version: 0.36.0(@drizztdourden08/tessera@0.30.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(koffi@3.1.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:../asset-extraction
+      '@rotp/features':
+        specifier: workspace:*
+        version: link:../features
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
+      '@rotp/input-mapping':
+        specifier: workspace:*
+        version: link:../input-mapping
 
   packages/game-data:
     dependencies:

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { SimObservation } from '../../types';
 import { hasReachableNeighbor } from '../discover-reach/has-reachable-neighbor';
 import { DOOR_REACH_RADIUS } from '../discover-reach/discover-reach.constants';

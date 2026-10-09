@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 
 const pondThrowsTaken = (): number => {
   const mod = getModule();

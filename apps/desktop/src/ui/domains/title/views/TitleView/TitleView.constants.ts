@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind constants */
-import { slotBlockOffset, validSramSlots } from '@app/lib/game/save-file/sram-slots';
+import { slotBlockOffset, validSramSlots } from '@rotp/game-core';
 import openingMark from '../../../../../assets/title-scene/opening-mark.png';
 
 const FULL = { position: 'absolute', inset: 0, pointerEvents: 'none' } as const;

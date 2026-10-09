@@ -1,12 +1,12 @@
 /* @layer shared-game @kind types */
-import type { GridPos, ScreenVariant } from '../../navigation/types';
+import type { GridPos, ScreenVariant } from '@rotp/game-core';
 import type { ItemId } from '@rotp/game-data';
 import type { TraversalId } from '../traversal-id.type';
 import type { PresenceGameState } from '../presence/presence.type';
 import type { CombatContext } from './combat.type';
 import type { SimExit } from './exit.type';
 import type { SimChest, SimDoor, SimSprite } from './interactable.type';
-import type { RoomSectionSplit } from './room-section.type';
+import type { RoomSectionSplit } from '@rotp/game-core';
 
 interface VirtualPlayer {
   screenId: TraversalId;

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { GRID_SIZE } from '../types';
+import { GRID_SIZE } from '../types/grid.constants';
 
 const has2TileClearance = (row: number, col: number, dr: number, dc: number, isPassable: (r: number, c: number) => boolean): boolean => {
   if (dr !== 0) {

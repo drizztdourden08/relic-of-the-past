@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { ItemPowerSetting } from './item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 
 const ITEM_POWER_KEY = {
   catchFairies: 'item_power_catch_fairies',

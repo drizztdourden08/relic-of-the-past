@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { RequirementSet } from '@rotp/game-data';
-import type { GridPos } from '../types';
+import type { GridPos } from '@rotp/game-core';
 
 interface RequirementDetectorInput {
   screenIndex: number;

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { LedgeDir } from './grid.type';
+import type { LedgeDir } from '@rotp/game-core';
 
 const GRID_SIZE = 64;
 const TOTAL_TILES = GRID_SIZE * GRID_SIZE;

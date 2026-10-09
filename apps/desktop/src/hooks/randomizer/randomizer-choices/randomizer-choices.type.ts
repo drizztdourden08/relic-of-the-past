@@ -3,7 +3,7 @@ import type { AccessibilityMode } from '@shared/randomizer/world/accessibility/a
 import type { CapacityBonusSetting, CapacityProfile } from '@shared/randomizer/world/capacity';
 import type { DifficultySetting } from '@shared/randomizer/world/difficulty/difficulty.type';
 import type { DungeonItemMode } from '@shared/randomizer/world/dungeon-items/dungeon-item.type';
-import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 import type { ProgressiveModeSetting, ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
 import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
 import type { OptionValue } from '@shared/randomizer/world/options.type';

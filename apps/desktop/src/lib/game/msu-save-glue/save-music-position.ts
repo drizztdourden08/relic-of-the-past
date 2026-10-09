@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { SaveKind } from '@shared/storage/save-paths';
+import type { SaveKind } from '@rotp/game-core';
 import * as msuStore from '../../storage/msu-store';
 import { msuSnapshot } from '../msu-session';
 import { log } from '../../log-bus';

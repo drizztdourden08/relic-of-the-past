@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { CheckRecord } from '@rotp/game-data';
-import { cheatItemGrantAllowed } from '../cheats';
+import { cheatItemGrantAllowed } from '@rotp/game-core';
 import { isWritable } from './is-writable';
 import { markPlanOf } from './mark-plan-of';
 

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { setPrizeShuffleActive } from '../live-settings-flags';
+import { setPrizeShuffleActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const armPrizeShuffle = (): void => {

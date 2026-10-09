@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { classifyTile, resolveRoomContext, roomTypeLabel } from '@shared/game/navigation/tile-classification';
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import type { SimDoor } from '@shared/game/simulation';
 import { getRoomDoors } from '@app/lib/game/simulator/interactables';
 import { wasmGetReplacementTileState, wasmGetChestLocations } from '@app/lib/game';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { SimDoor, SimEvent, SimObservation } from '../../types';
 import { isClearRoomTag } from '../../is-clear-room-tag';
 import { narrative } from '../event-log/narrative';

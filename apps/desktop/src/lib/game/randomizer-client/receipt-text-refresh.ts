@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { receiptCountsOf } from '@shared/randomizer/receipt-text/receipt-counts';
-import { receiptLineKey } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { receiptLineKey } from '@shared/randomizer/receipt-text/receipt-line.type/receipt-line-key';
 import { isForeignItem } from '@shared/randomizer/archipelago/foreign-item';
 import { log } from '../../log-bus';
 import { setSessionReceiptMessages } from '../session-dialogue';

@@ -4213,7 +4213,7 @@ Every save state leaves through one of the four writers (quick state, normal sav
 overwrite, auto save), so the version and format stamp is applied there and not at each call
 site. SRAM is excluded: it is the game's own save file and has nothing to do with snapshot
 layout. Screenshots come back as base64 strings. SRAM and quick slots go through the Brock port
-kit's save store (`port-save-store.ts`); named and auto saves through `shared/storage/saves`.
+kit's save store (`port-save-store.ts`); named and auto saves through `packages/game-core/src/saves`.
 
 ## storage/sprites-store
 

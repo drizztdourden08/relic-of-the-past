@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { validateCustomRatio, detectScreenRatio, MAX_ASPECT } from '../../apps/desktop/src/lib/game/aspect-ratio';
+import { validateCustomRatio, detectScreenRatio, MAX_ASPECT } from '@rotp/game-core';
 
 describe('validateCustomRatio', () => {
   it('accepts ratios from 4:3 up to the wide ceiling', () => {

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { OnlineNoticeKind } from '@shared/randomizer/archipelago/online-notice-settings';
+import type { OnlineNoticeKind } from '@rotp/features';
 
 const BURST_LIMIT = 3;
 const BURST_WINDOW_MS = 2000;

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { BorderEdge } from '../types';
+import type { BorderEdge } from '@rotp/game-core';
 
 const getAdjacentScreen = (screenIdx: number, edge: BorderEdge): number | null => {
   const col = screenIdx & 7;

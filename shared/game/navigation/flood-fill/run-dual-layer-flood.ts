@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import type { FloodFillResult } from '../types';
+import type { FloodFillResult } from '@rotp/game-core';
 import type { TileReq } from '../tile-attrs';
 import type { FloodFillOptions } from './flood-options';
-import { GRID_SIZE } from '../types';
+import { GRID_SIZE } from '../types/grid.constants';
 import { runBFS } from '../core/bfs-engine';
 import { DualLayerStrategy } from '../strategies/dual-layer';
 import { prepareScreen, constrainVoidTiles, findStartPosition } from './screen-prep';

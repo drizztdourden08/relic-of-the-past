@@ -2,7 +2,7 @@
 import type { SoundChannel } from '@rotp/game-data';
 import { SOUND_CHANNELS } from '@app/lib/msu/sound-claim';
 import type { SoundClaim } from '@app/lib/msu/sound-claim';
-import { voidCall } from '../wasm-call';
+import { voidCall } from '@rotp/game-core';
 
 const setSoundClaim = (channel: SoundChannel, claim: SoundClaim): void => {
   voidCall('WasmSetSoundClaim', {

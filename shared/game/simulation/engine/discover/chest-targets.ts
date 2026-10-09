@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { SimChest } from '../../types';
 import { planTrigger } from '../../trigger/trigger-plans/plan-trigger';
 import type { Reached } from '../discover-reach/discover-reach.type';

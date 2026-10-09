@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ScreenShadowData, ScreenLightingConfig } from '@shared/types/shadow-casting';
+import type { ScreenShadowData, ScreenLightingConfig } from '@rotp/game-core';
 
 interface ShadowGlobalSettingsProps {
   screenId: number;

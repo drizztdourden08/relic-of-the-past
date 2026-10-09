@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { NormalSaveInfo } from '@shared/types/saves';
+import type { NormalSaveInfo } from '@rotp/game-core';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { loadScreenshots } from './load-screenshots';
 import type { NormalSavesData } from './home-tab.type';

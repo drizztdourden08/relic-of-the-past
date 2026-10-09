@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type { effectivePackManifest } from '@shared/storage/msu-classic-manifest';
-import type { mergeSettings } from '../settings';
+import type { mergeSettings } from '@rotp/game-core';
 
 type Settings = ReturnType<typeof mergeSettings>;
 

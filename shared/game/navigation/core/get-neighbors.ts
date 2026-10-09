@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../types';
+import type { GridPos } from '@rotp/game-core';
 import { DIRECTIONS } from './grid.constants';
 import { inBounds } from './in-bounds';
 

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { isHighlightMarker } from './is-highlight-marker';
+import { isHighlightMarker } from '@rotp/game-core';
 
 const capitalizeMarked = (text: string): string => {
   const at = [...text].findIndex((ch) => !isHighlightMarker(ch));

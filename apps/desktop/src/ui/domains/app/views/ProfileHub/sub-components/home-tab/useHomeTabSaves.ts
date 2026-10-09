@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback } from 'react';
 import { usePlatform } from '@drizztdourden08/brock-react';
-import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
-import type { PlaySession } from '@shared/types/session';
+import type { NormalSaveInfo, AutoSaveInfo } from '@rotp/game-core';
+import type { PlaySession } from '@rotp/game-core';
 import { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from '../../../../../../../lib/game';
 import { onAutoSavesChanged } from '../../../../../../../lib/game/auto-save';
 import { saveMusicPosition, restoreMusicPosition } from '../../../../../../../lib/game/msu-save-glue';

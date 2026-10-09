@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { enqueue } from '../delivery-queue';
 import type { DeliveryAction } from '../delivery-queue';
-import { isCoreReady } from '../core-ready';
+import { isCoreReady } from '@rotp/game-core';
 import { armReceiptGates } from '../receipt-grants';
 import { isQuietReceiptItem } from '../quiet-receipts';
 import { isGrantable } from './is-grantable';

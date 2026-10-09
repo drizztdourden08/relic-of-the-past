@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
-import type { EmscriptenModule } from '../types';
+import type { EmscriptenModule } from '@rotp/game-core';
 import { log } from '../../log-bus';
 import * as assetsStore from '../../storage/assets-store';
 import { activeRomFile } from '../active-rom-file';
 import { writeBootFiles } from '../boot-files';
 import { createInstantiateWasm } from '../instantiate-wasm';
 import { loadGlueScript } from '../wasm-warmup';
-import { previewCoreState } from './preview-core-state';
+import { previewCoreState } from '@rotp/game-core';
 
 declare const Zelda3: (config: Record<string, unknown>) => Promise<EmscriptenModule>;
 

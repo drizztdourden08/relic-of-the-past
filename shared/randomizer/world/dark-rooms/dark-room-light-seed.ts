@@ -4,7 +4,7 @@ import { DARK_ROOM_LIGHT_ITEMS, DEFAULT_DARK_ROOM_SETTING } from './dark-room-li
 import { darkRoomLightKeyOf } from './dark-room-option-keys';
 import { DARK_ROOM_TOGGLE } from './dark-room-toggle.constants';
 import type { OptionSeed } from '../options.type';
-import type { DarkRoomLightField } from './dark-room.type';
+import type { DarkRoomLightField } from '@rotp/game-core';
 
 const darkRoomLightSeed = (field: DarkRoomLightField): OptionSeed => ({
   ...DARK_ROOM_TOGGLE,

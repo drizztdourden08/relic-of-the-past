@@ -2,7 +2,7 @@
 import type { ConnectionInfo, ScreenCrossing } from '@shared/game/navigation';
 import type { BlockedSpot, CrossingFilterScope } from './usable-crossings.type';
 import type { EdgeName } from '../simulator/exit-order';
-import { wasmGetExitScreenMap } from '../wasm-bridge';
+import { wasmGetExitScreenMap } from '@rotp/game-core';
 import { doorwayLandingOpen, exitDoorAt, ROOM_EDGE_ADJ } from '../simulator/room-doorways';
 import { usesCachedEntrance } from '../simulator/screen-resolve';
 import { midOf } from './mid-of';

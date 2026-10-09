@@ -2,8 +2,8 @@
 import type { GameSettings } from '@rotp/features';
 import { toast } from '@drizztdourden08/tessera/composites';
 import { pushLiveSettings, LIVE_SETTINGS } from '@app/lib/game';
-import { enhancedAspectAllowed } from '@app/lib/game/settings';
-import { requestEnhancedFallback } from '@app/lib/game/enhanced-fallback';
+import { enhancedAspectAllowed } from '@rotp/game-core';
+import { requestEnhancedFallback } from '@rotp/game-core';
 import { hostDrawnHud } from '@rotp/features';
 import { syncControlSettings } from '@app/stores/control-scheme-store';
 import { syncDialogStore } from './sync-dialog-store';

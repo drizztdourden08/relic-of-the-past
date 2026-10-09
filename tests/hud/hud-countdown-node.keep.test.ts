@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { hudDataScope } from '@shared/hud/data';
 import { intrinsicSize, layoutHud, placedById } from '@shared/hud/engine';
 import { COUNTDOWN_SIZE, layoutById, validateLayout } from '@shared/hud/layouts';
-import { parseGameUIBuffer } from '../../apps/desktop/src/lib/game/ui-bridge-parser';
+import { parseGameUIBuffer } from '@rotp/game-core';
 import { advanceCountdown, IDLE_TRACK } from '../../apps/desktop/src/lib/game/hud-countdown-track';
 import { countdownBox } from '../../apps/desktop/src/ui/domains/hud/compounds/HudCountdown';
 import { HudNodeCountdown } from '../../apps/desktop/src/ui/domains/hud/compounds/HudNodeRenderer/sub-components/HudNodeCountdown';

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { OverworldEntrance } from '@shared/game/navigation';
-import { readMapState } from '../../simulator/read-game-state';
+import { readMapState } from '@rotp/game-core';
 import { spawnEntrances } from './spawn-entrances';
 import { tableEntrances } from './table-entrances';
 

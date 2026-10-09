@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import { ARRIVAL_SLOTS } from '../arrival-ring';
+import { ARRIVAL_SLOTS } from '@rotp/game-core';
 import { compose } from './compose';
-import { sessionPool } from './session-pool';
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { sessionPool } from '@rotp/game-core';
+import type { ReceiptLine } from '@rotp/game-core';
 
 const setSessionReceiptMessages = (lines: readonly ReceiptLine[]): number[] | null => {
   const previous = sessionPool.plannedLines;

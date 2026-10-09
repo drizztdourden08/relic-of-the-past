@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import type { ActiveState } from '../../../../../lib/game/active-states';
+import type { ActiveState } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { S } from '../styles';
 import { IL } from './ActiveStates.constants';

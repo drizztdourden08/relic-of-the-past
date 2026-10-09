@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import * as mirror from '@app/lib/game/save-file/hook-save-bytes';
+import { mirror } from '@rotp/game-core';
 
 const HEADER = resolve(__dirname, '../../core/game-hooks/save_bytes.h');
 

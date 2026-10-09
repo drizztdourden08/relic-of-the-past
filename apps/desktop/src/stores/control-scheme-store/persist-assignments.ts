@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import { getProfileId } from '@app/lib/game/wasm-bridge';
+import { getProfileId } from '@rotp/game-core';
 import { readConfig, writeConfig } from '@app/lib/storage/profile-store';
 import type { Assignments } from './control-scheme-store.type';
 

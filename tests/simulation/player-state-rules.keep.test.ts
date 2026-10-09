@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { playerStates, PlayerState } from '../../apps/desktop/src/lib/game/player-state-rules';
-import type { PlayerStateInfo } from '../../apps/desktop/src/lib/game/bridge/player-state';
+import { playerStates, PlayerState } from '@rotp/game-core';
+import type { PlayerStateInfo } from '@rotp/game-core';
 
 const info = (over: Partial<PlayerStateInfo> = {}): PlayerStateInfo => ({
   handlerState: PlayerState.ground,

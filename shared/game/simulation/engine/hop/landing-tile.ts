@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import { getConnection } from '@rotp/game-data';
 import type { SimExit } from '../../types';
 import type { ScreenEdge } from '../traversal/traversal.type';

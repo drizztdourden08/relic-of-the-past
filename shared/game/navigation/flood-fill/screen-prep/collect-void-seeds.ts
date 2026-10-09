@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { GRID_SIZE } from '../../types';
+import { GRID_SIZE } from '../../types/grid.constants';
 import { DOORWAY_MAX_WIDTH, GRID_EDGES, OPEN_ATTR } from './screen-prep.constants';
 
 const collectVoidSeeds = (layer: number[][]): Array<[number, number]> => {

@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import type { EmscriptenModule } from '../types';
-import { getModule } from '../wasm-bridge';
+import type { EmscriptenModule } from '@rotp/game-core';
+import { getModule } from '@rotp/game-core';
 import { bootStandalone } from './boot-standalone';
-import { previewCoreState } from './preview-core-state';
+import { previewCoreState } from '@rotp/game-core';
 
 const ensurePreviewModule = async (): Promise<EmscriptenModule | null> => {
   const game = getModule();

@@ -2,7 +2,7 @@
 import { it, expect } from 'vitest';
 import type { CheckRecord } from '@rotp/game-data';
 import type { SimChest, DetectedCheck } from '../../../shared/game/simulation/types';
-import type { FloodFillResult } from '../../../shared/game/navigation/types';
+import type { FloodFillResult } from '@rotp/game-core';
 import { createEngineState } from '../../../shared/game/simulation/engine/state';
 import { onCheckVerified } from '../../../shared/game/simulation/engine/explorer';
 import { discoverTargets } from '../../../shared/game/simulation/engine/discover';

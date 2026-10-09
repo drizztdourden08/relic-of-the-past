@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { GameSettings } from '@rotp/features';
 import { BUNDLE_FIXES } from '@rotp/features';
-import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '../../apps/desktop/src/lib/game/live-settings-flags';
+import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '@rotp/game-core';
 
 const allOff = {
   aspectRatio: '4:3',

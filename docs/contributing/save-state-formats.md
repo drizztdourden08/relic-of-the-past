@@ -21,7 +21,7 @@ would not.
 
 `core/wasm-build/layout-probe.mjs` computes it. It compiles `state-layout-probe.c` with the
 same compiler and headers the real build uses, runs it, and writes
-`shared/game/save-state/current-format.generated.ts`.
+`packages/game-core/src/save-state/current-format.generated.ts`.
 
 The probe records region lengths through a callback that never reads the data pointer, so it
 works against zeroed structs: no ROM, no assets, no booted game. That is what lets it run on
@@ -38,7 +38,7 @@ one-line diff in review instead of a surprise during a release.
 
 You will find out on your own: the next build regenerates the id, and the diff appears.
 
-1. **Add a row** to `KNOWN_FORMATS` in `shared/game/save-state/formats.ts` with the new id,
+1. **Add a row** to `KNOWN_FORMATS` in `packages/game-core/src/save-state/formats.ts` with the new id,
    the version about to ship, and one sentence saying what moved.
 2. That is all. The release publishes the id as an asset, and every older build in the field
    picks it up on its next update check.

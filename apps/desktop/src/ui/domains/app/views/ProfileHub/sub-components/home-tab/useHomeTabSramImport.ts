@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { log } from '../../../../../../../lib/log-bus';
-import { validSramSlots } from '@app/lib/game/save-file/sram-slots';
+import { validSramSlots } from '@rotp/game-core';
 import { toast } from '@drizztdourden08/tessera/composites';
 import { SRAM_BYTES, SRAM_EXTENSIONS, TOAST_DURATION_MS } from './home-tab.constants';
 import type { UseHomeTabSramImportParams } from './home-tab.type';

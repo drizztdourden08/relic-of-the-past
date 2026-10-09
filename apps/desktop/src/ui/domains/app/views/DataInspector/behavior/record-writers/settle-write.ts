@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { bumpDataRevision } from '@app/lib/game/data-revision';
+import { bumpDataRevision } from '@rotp/game-core';
 import type { WriteRecordResult } from '@shared/ipc/screen-editor-contract';
 
 const settleWrite = (result: WriteRecordResult): void => {

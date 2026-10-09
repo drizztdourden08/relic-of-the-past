@@ -3,7 +3,7 @@ import { wasmGetRoomLayoutInfo } from '../../';
 import { floodOneScreen, roomEntrances } from '../../flood';
 import type { GridPos } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import { readMapState } from '../read-game-state';
+import { readMapState } from '@rotp/game-core';
 import type { RoomFloodRun } from './flood-room.type';
 
 const liveIntraEdges = (roomId: number) => {

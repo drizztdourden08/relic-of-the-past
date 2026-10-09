@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import type { CollisionGrid, GridPos, LedgeTraversal } from '../../types';
+import type { CollisionGrid, GridPos, LedgeTraversal } from '@rotp/game-core';
 import type { PreparedScreen } from './screen-prep.type';
-import { GRID_SIZE } from '../../types';
+import { GRID_SIZE } from '../../types/grid.constants';
 import { inBounds } from '../../core/in-bounds';
 import { buildCollisionGridFromRawAttr } from '../../screen-data/collision-grid';
 import { processStraightCliffs, processDiagonalCliffs, processSouthCliffs } from '../../screen-data/cliff-preprocessing';

@@ -2,7 +2,7 @@
 import type { PauseContext } from '@rotp/game-data';
 import { arrowTypeOf, buildItemCells } from '@rotp/game-data';
 import { ownedMax } from '@app/lib/game/gear-ownership';
-import { wantedActiveItem } from '@app/lib/game/host-menu';
+import { wantedActiveItem } from '@rotp/game-core';
 import { useGameUIStore } from '../game-ui-store';
 
 const pauseContext = (): PauseContext => {

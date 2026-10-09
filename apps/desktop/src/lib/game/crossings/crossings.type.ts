@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type { ConnectionInfo, FloodFillResult, GridPos } from '@shared/game/navigation';
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { ConnectionKind, ConnectionSide } from '@rotp/game-data';
 import type { CrossingClass, CrossingOrigin, CrossingSpan } from '@shared/game/navigation';

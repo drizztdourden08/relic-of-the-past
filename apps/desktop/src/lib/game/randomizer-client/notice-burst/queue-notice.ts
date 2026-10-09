@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { isNoticeKindShown } from '@shared/randomizer/archipelago/online-notice-settings';
-import type { OnlineNoticeSettings } from '@shared/randomizer/archipelago/online-notice-settings';
+import { isNoticeKindShown } from '@shared/randomizer/archipelago/online-notice-settings/is-notice-kind-shown';
+import type { OnlineNoticeSettings } from '@rotp/features';
 import type { OnlineNotice } from '../online-notices';
 import { admitNotice } from './admit-notice';
 import type { NoticeEntry } from './notice-burst.type';

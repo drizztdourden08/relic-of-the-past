@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 import { appApi } from '@app/ipc/app-api';
 import { create } from 'zustand';
-import { captureGameFrameBlob } from '@app/lib/game/capture-frame';
+import { captureGameFrameBlob } from '@rotp/game-core';
 import type { DebugCaptureStore } from './debug-capture-store.type';
 import { MAX_RECORDING_MS, MAX_SNAPSHOTS, SAMPLE_INTERVAL_MS } from './debug-capture-store.constants';
 import { takeSnapshot } from './take-snapshot';

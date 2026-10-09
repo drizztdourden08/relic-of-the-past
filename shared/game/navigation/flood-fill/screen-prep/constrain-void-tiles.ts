@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { GRID_SIZE } from '../../types';
+import { GRID_SIZE } from '../../types/grid.constants';
 import { DIRECTIONS } from '../../core/grid.constants';
 import { inBounds } from '../../core/in-bounds';
 import { collectVoidSeeds } from './collect-void-seeds';

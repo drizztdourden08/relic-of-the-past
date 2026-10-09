@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { WishPondLinesArm } from './wish-pond-plan.type';
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 
 const setWishPondLines = (arm: WishPondLinesArm): void => {
   const { pond, awardMessageId, closedMessageId } = arm;

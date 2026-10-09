@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability, TransitionPoint } from '../types';
+import type { TilePassability, TransitionPoint } from '@rotp/game-core';
 import type { LayerStrategy, BFSCell, BFSResult, QuadrantBounds } from '../strategies/layer-strategy';
 import type { EntrancePosition } from './bfs-engine.type';
-import { GRID_SIZE } from '../types';
+import { GRID_SIZE } from '../types/grid.constants';
 import { bodyTiles } from '../strategies/body-tiles';
 import { findStartBody } from '../strategies/find-start-body';
 import { DIRECTIONS, ENTRANCE_REACH } from './grid.constants';

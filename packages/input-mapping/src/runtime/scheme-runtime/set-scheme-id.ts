@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { ControlSchemeId } from '../../scheme';
+import type { ControlSchemeId } from '@rotp/features';
 import { setControlScheme } from './set-control-scheme';
 import { schemeRuntime } from './scheme-runtime-state';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { STAIRS_TRAVERSAL_STATE, TRAVERSAL_DIR_OFFSET } from '@shared/game/navigation/types';
+import { STAIRS_TRAVERSAL_STATE, TRAVERSAL_DIR_OFFSET } from '@shared/game/navigation/types/grid.constants';
 
 const isTraversalDirCompatible = (state: number, dr: number, dc: number): boolean => {
   switch (state) {

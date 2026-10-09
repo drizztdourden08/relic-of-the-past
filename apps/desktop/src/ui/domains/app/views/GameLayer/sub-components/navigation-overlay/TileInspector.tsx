@@ -10,7 +10,7 @@ import { useRectSelection } from './behavior/useRectSelection';
 import { buildSpriteInfo } from './tile-inspector-tooltip/build-sprite-info';
 import { computePathTooltipPosition } from './tile-inspector-tooltip/compute-path-tooltip-position';
 import { buildTooltipLayers } from './tile-inspector-classification';
-import { viewOrigin } from '@app/lib/game/bridge/view-origin';
+import { viewOrigin } from '@rotp/game-core';
 import {
   COPIED_TOAST, DEBUG_TOOLTIP_TOP, SCREEN_GRID_MASK, SCREEN_PX, SCREEN_TILES, TILE_PX, TOOLTIP_OFFSET_X, TOOLTIP_OFFSET_Y,
 } from './TileInspector.constants';

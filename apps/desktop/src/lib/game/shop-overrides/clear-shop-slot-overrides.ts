@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
-import { setShopOverridesActive } from '../live-settings-flags';
+import { getModule } from '@rotp/game-core';
+import { setShopOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const clearShopSlotOverrides = (): void => {

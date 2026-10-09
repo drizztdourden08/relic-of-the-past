@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useMemo, useRef } from 'react';
-import { wasmGetTitleFrame, wasmGetTitleHidden, wasmGetTitlePalette, wasmGetTitlePoly, wasmSetTitleHidden } from '@app/lib/game/wasm-bridge';
+import { wasmGetTitleFrame, wasmGetTitleHidden, wasmGetTitlePalette, wasmGetTitlePoly, wasmSetTitleHidden } from '@rotp/game-core';
 import { phaseOf } from '@rotp/game-data';
 import { buildScene } from '../../../scene/compose-scene';
 import { createTriforcePicture } from '../../../choreography/create-triforce-picture';

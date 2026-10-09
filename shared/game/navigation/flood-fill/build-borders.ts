@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ReachState, TransitionPoint, FloodFillResult } from '../types';
+import type { ReachState, TransitionPoint, FloodFillResult } from '@rotp/game-core';
 import type { TileReq } from '../tile-attrs';
 import { unmetRequirements } from '../core/inventory';
 

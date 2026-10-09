@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useCallback, useEffect, useMemo } from 'react';
 import { nav, useNavigationStore, widgets } from '@drizztdourden08/brock-react';
-import { subscribeGameState } from '@app/lib/game/wasm-bridge';
+import { subscribeGameState } from '@rotp/game-core';
 import type { GameSessionValue } from '../GameSession.type';
 import { applyLoadedProfile } from './apply-loaded-profile';
 import { useAppMainEffects } from './useAppMainEffects';

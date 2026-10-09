@@ -2,7 +2,7 @@
 import { optionFlagOf } from '../../option-flag-of';
 import { DEFAULT_ITEM_POWER, ITEM_POWER_KEY } from '../item-power.data';
 import type { OptionValues } from '../../options.type';
-import type { ItemPowerSetting } from '../item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 
 const itemPowerOfValues = (values: OptionValues): ItemPowerSetting => ({
   catchFairies: optionFlagOf(values, ITEM_POWER_KEY.catchFairies, DEFAULT_ITEM_POWER.catchFairies),

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { itemPowerState } from './item-power-state';
+import { itemPowerState } from '@rotp/game-core';
 import { writeItemPowerWord } from './write-item-power-word';
 
 const clearItemPower = (): void => {

@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { snesToRgba } from '@rotp/asset-extraction';
 import { hexToSnes15 } from '@rotp/game-data';
-import { getGlyphAtlas } from '../../../../../../lib/game/dialog/glyph-atlas';
+import { getGlyphAtlas } from '@rotp/game-core';
 import { NO_ATLASES } from '../DialogView.constants';
 import type { HighlightLook, HighlightLookParams } from '../DialogView.type';
 

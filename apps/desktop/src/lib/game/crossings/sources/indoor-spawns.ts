@@ -5,7 +5,7 @@ import {
 } from '../../';
 import { enrichEntrances, FALL_HOLE_ID_BASE } from '../../flood/overworld-entrances';
 import { roomOrigin } from '../../flood/world-origin';
-import { readMapState } from '../../simulator/read-game-state';
+import { readMapState } from '@rotp/game-core';
 import { doorCrossingTile, matchDoorsToSpawns, spawnCrossingTile } from '../place-tile';
 import type { DoorRecord } from '../place-tile';
 import { noTarget, overworldTarget, roomTarget } from '../resolve-target';

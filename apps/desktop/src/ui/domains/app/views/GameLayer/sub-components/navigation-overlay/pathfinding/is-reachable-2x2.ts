@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { GRID_SIZE } from '@shared/game/navigation/types';
-import type { ReachState } from '@shared/game/navigation/types';
+import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
+import type { ReachState } from '@rotp/game-core';
 import { REACH_BLOCKED } from './pathfinding.constants';
 
 const isReachable2x2 = (row: number, col: number, reachable: ReachState[][]): boolean => {

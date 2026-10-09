@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { getModule } from '../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { GATE_WORD } from './gate-word-5.constants';
 import { gateWord5Now } from './gate-word-5-now';
 

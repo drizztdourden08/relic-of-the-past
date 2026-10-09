@@ -1,0 +1,26 @@
+{
+  "name": "@rotp/game-core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The WASM bridge, the game lifecycle glue, save states and live settings.",
+  "type": "module",
+  "sideEffects": [
+    "./src/cheat-rules-memory/restore-cheat-rules.ts",
+    "./src/cheats/rules/cheat-set-damage-multiplier.ts",
+    "./src/cheats/rules/cheat-set-extra-armor-pct.ts",
+    "./src/cheats/rules/cheat-set-ignore-collision.ts",
+    "./src/cheats/rules/cheat-set-illuminate-dark-rooms.ts"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@drizztdourden08/brock-core": "^0.36.0",
+    "@drizztdourden08/brock-display": "^0.36.0",
+    "@rotp/asset-extraction": "workspace:*",
+    "@rotp/features": "workspace:*",
+    "@rotp/game-data": "workspace:*",
+    "@rotp/input-mapping": "workspace:*"
+  }
+}

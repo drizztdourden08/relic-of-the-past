@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { BorderEdge, ConnectionInfo, FloodFillResult } from '../types';
-import { GRID_SIZE } from '../types';
+import type { BorderEdge, ConnectionInfo, FloodFillResult } from '@rotp/game-core';
+import { GRID_SIZE } from '../types/grid.constants';
 import { getAdjacentScreen } from '../core/get-adjacent-screen';
 import { contiguousRuns } from './contiguous-runs';
 import { getAdjacentRoom } from './get-adjacent-room';

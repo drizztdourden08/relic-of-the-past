@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LightSource } from '@shared/types/shadow-casting';
+import type { LightSource } from '@rotp/game-core';
 
 interface ShadowLightInspectorProps {
   screenId: number;

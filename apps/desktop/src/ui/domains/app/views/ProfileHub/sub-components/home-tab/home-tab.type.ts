@@ -2,7 +2,7 @@
 import type { HeroSlots } from '@drizztdourden08/brock-react';
 import type { Profile } from '@drizztdourden08/brock-core';
 import type { FilePickerPort } from '@drizztdourden08/brock-core';
-import type { AutoSaveInfo, NormalSaveInfo } from '@shared/types/saves';
+import type { AutoSaveInfo, NormalSaveInfo } from '@rotp/game-core';
 import type { useHomeTabSaves } from './useHomeTabSaves';
 
 interface HomeHeroContentProps {

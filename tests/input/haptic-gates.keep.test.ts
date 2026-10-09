@@ -2,8 +2,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { HapticSettings } from '@rotp/features';
 import { HapticEventType, EnvironmentalEvent, updateHapticSettings, setVibrateFunction, handleHapticEvent, handleDashPulse, handleDeath, handleSpinAttack, handleEnvironmental, resetDashState } from '@rotp/input-mapping';
-import { DEFAULT_SETTINGS, serializeToIni } from '../../apps/desktop/src/lib/game/settings';
-import { buildFeatureFlags } from '../../apps/desktop/src/lib/game/live-settings-flags';
+import { DEFAULT_SETTINGS, serializeToIni } from '@rotp/game-core';
+import { buildFeatureFlags } from '@rotp/game-core';
 
 const HAPTICS_BIT = 1048576;
 const BOMBS_ITEM = 1;

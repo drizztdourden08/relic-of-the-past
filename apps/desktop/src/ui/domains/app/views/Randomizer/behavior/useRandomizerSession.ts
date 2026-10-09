@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getSessionState, subscribeSessionStore } from '../../../../../../lib/game/randomizer-client';
 import type { SessionStoreState } from '../../../../../../lib/game/randomizer-client';
-import { getGameState, subscribeGameState } from '../../../../../../lib/game/wasm-bridge';
+import { getGameState, subscribeGameState } from '@rotp/game-core';
 import { getEntries, subscribe as subscribeLog } from '../../../../../../lib/log-bus';
 import type { LogEntry } from '../../../../../../lib/log-bus';
 import { MAX_LOG_ENTRIES } from './useRandomizerSession.constants';

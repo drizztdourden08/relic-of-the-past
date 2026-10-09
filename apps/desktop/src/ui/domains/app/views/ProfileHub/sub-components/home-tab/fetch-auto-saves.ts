@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { AutoSaveInfo } from '@shared/types/saves';
+import type { AutoSaveInfo } from '@rotp/game-core';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { loadScreenshots } from './load-screenshots';
 import type { AutoSavesData } from './home-tab.type';

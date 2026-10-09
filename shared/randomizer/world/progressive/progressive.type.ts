@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { ItemId } from '@rotp/game-data';
-import type { ItemPowerSetting } from '../item-power/item-power.type';
+import type { ItemPowerSetting } from '@rotp/game-core';
 import type { OptionDetail } from '../option-description.type';
 
 type ProgressiveFamilyId = 'sword' | 'shield' | 'mail' | 'glove' | 'bow' | 'ocarina';

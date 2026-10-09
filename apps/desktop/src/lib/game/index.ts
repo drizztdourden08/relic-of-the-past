@@ -1,44 +1,33 @@
 /* @layer bridge-wasm @kind logic */
-export type { EmscriptenFS, EmscriptenModule, GameStatus, GameState } from './types';
-export { getGameState, getModule, subscribeGameState } from './wasm-bridge';
-export { getProfileId as getActiveProfileId } from './wasm-bridge';
-export { wasmSetPaused, wasmGetViewportInfo, wasmRenderCleanFrame, wasmGetMenuState, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmBuildRoomDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmBuildRoomAttrGrid, wasmGetToggleFloorPositions, wasmGetReplacementTileState, wasmGetChestLocations, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, roomSectionSplitFrom, wasmGetDungeonMapPosition, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor, wasmGetRoomTravelDestinations, wasmGetRoomTravelDestinationsFor, wasmGetRoomTagsFor, wasmGetGameUIState, wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimPushMantle, wasmSimMarkMapIcons, wasmGetReceiveCount, wasmGetReceiveSite, wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot, wasmGetPlayerStateInfo, wasmGetSpriteCombat, wasmGetCombatTables, setSimulatorSupport } from './wasm-bridge';
-export type { PlayerStateInfo } from './wasm-bridge';
-export type { DoorBoundaryTile, DungeonMapPosition, FallHole, LiveSpriteInfo, OverworldVariantInfo, RoomExitDoor, RoomLayoutInfo, RoomStairInfo, RoomWalkBoundary, ViewportInfo } from './wasm-bridge';
-export type { SimChestRaw, SimSpriteRaw, SimDoorRaw, SimDoorDirection, SimFlagSnapshot } from './wasm-bridge';
-export type { SpriteCombatInfo, CombatTables } from './wasm-bridge';
+export type { EmscriptenFS, EmscriptenModule, GameStatus, GameState } from '@rotp/game-core';
+export { getGameState, getModule, subscribeGameState } from '@rotp/game-core';
+export { getProfileId as getActiveProfileId } from '@rotp/game-core';
+export { wasmSetPaused, wasmGetViewportInfo, wasmRenderCleanFrame, wasmGetMenuState, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmBuildRoomDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmBuildRoomAttrGrid, wasmGetToggleFloorPositions, wasmGetReplacementTileState, wasmGetChestLocations, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, roomSectionSplitFrom, wasmGetDungeonMapPosition, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor, wasmGetRoomTravelDestinations, wasmGetRoomTravelDestinationsFor, wasmGetRoomTagsFor, wasmGetGameUIState, wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimPushMantle, wasmSimMarkMapIcons, wasmGetReceiveCount, wasmGetReceiveSite, wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot, wasmGetPlayerStateInfo, wasmGetSpriteCombat, wasmGetCombatTables, setSimulatorSupport } from '@rotp/game-core';
+export type { PlayerStateInfo } from '@rotp/game-core';
+export type { DoorBoundaryTile, DungeonMapPosition, FallHole, LiveSpriteInfo, OverworldVariantInfo, RoomExitDoor, RoomLayoutInfo, RoomStairInfo, RoomWalkBoundary, ViewportInfo } from '@rotp/game-core';
+export type { SimChestRaw, SimSpriteRaw, SimDoorRaw, SimDoorDirection, SimFlagSnapshot } from '@rotp/game-core';
+export type { SpriteCombatInfo, CombatTables } from '@rotp/game-core';
 export { startGame, resetGame } from './lifecycle';
 export { setAutoSaveConfig, setLinkSpriteData } from './lifecycle';
 export { applyPlayerSprite, clearPlayerSprite } from './player-sprite';
 export type { AutoSaveConfig } from './lifecycle';
-export { markStateLoaded, wasStateJustLoaded } from './state-load-signal';
+export { markStateLoaded, wasStateJustLoaded } from '@rotp/game-core';
 export { saveState, loadState, loadNamedState, loadStateRef } from './save-states';
 export { captureStateBuffer, loadStateFromBuffer } from './state-buffers';
-export { isCoreReady, whenCoreReady } from './core-ready';
-export { captureGameFrameBlob, fulfillFrameCapture } from './capture-frame';
+export { isCoreReady, whenCoreReady } from '@rotp/game-core';
+export { captureGameFrameBlob, fulfillFrameCapture } from '@rotp/game-core';
 export { setChestSlotOverride, clearItemOverrides } from './randomizer';
 export { pushLiveSettings, reassertHideSpaceBeyondWalls, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
-export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';
-export { getFps } from './fps';
-export {
-  cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck,
-  cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows,
-  cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMaxWallet, cheatSetMagic, cheatRefillMagic,
-  cheatSetBottle, cheatSetInventorySlot, cheatSetSmallKeys, cheatSetDungeonItem, CheatSlot,
-  cheatCapacityLadder, cheatCapacityRung, cheatSetCapacityRung,
-  cheatCategoryAllowed, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatUnblockLink,
-  cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled,
-  cheatKillAllEnemies, cheatSetDamageMultiplier, getDamageMultiplier, cheatSetExtraArmorPct, getExtraArmorPct,
-  cheatStartTrace,
-  BottleContents,
-} from './cheats';
-export type { BottleContentsValue, CapacityKind, CapacityRung, CheatCategory, DungeonItemKind } from './cheats';
+export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from '@rotp/game-core';
+export { getFps } from '@rotp/game-core';
+export { cheatGiveItem } from '@app/lib/game/cheats/grants/cheat-give-item';
+export { cheatTriggerCheck } from '@app/lib/game/cheats/grants/cheat-trigger-check';
+export { cheatTriggerNpcCheck } from '@app/lib/game/cheats/grants/cheat-trigger-npc-check';
+export { cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMaxWallet, cheatSetMagic, cheatRefillMagic, cheatSetBottle, cheatSetInventorySlot, cheatSetSmallKeys, cheatSetDungeonItem, CheatSlot, cheatCapacityLadder, cheatCapacityRung, cheatSetCapacityRung, cheatCategoryAllowed, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatUnblockLink, cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled, cheatKillAllEnemies, cheatSetDamageMultiplier, getDamageMultiplier, cheatSetExtraArmorPct, getExtraArmorPct, cheatStartTrace, BottleContents } from '@rotp/game-core';
+export type { BottleContentsValue, CapacityKind, CapacityRung, CheatCategory, DungeonItemKind } from '@rotp/game-core';
 export { grantFromCheck, planCheckGrant } from './cheat-check-grant';
 export type { CheckGrantPlan } from './cheat-check-grant';
-export {
-  closeHostMenu, initHostMenu, reassertActiveItem, reassertAfterSaveLoad, reassertHostMenu,
-  reconcileHostMenu, saveAndQuitHostMenu, setActiveItem, setGear, setTakeover, wantedActiveItem,
-} from './host-menu';
+export { closeHostMenu, initHostMenu, reassertActiveItem, reassertAfterSaveLoad, reassertHostMenu, reconcileHostMenu, saveAndQuitHostMenu, setActiveItem, setGear, setTakeover, wantedActiveItem } from '@rotp/game-core';
 export { initGearOwnership, observeGear, ownedMax } from './gear-ownership';
 export type { GearTiers } from './gear-ownership';
 export { getInputManager } from '@app/lib/input/input-manager/get-input-manager';
@@ -54,5 +43,5 @@ export { deliveryQueue } from './delivery-queue';
 export type { DeliveryEntry, DeliveryAction, DeliveryQueueState } from './delivery-queue';
 export { deliverItem, deliverCheck, deliverNpcCheck, deliverCustom } from './delivery-api';
 export { armNextReceiptMessage, grantCapacityUpgrade } from './receipt-grants';
-export type { TransitionKind, TransitionSettled, TransitionListener } from './events';
-export { subscribeTransitionSettled } from './events';
+export type { TransitionKind, TransitionSettled, TransitionListener } from '@rotp/game-core';
+export { subscribeTransitionSettled } from '@rotp/game-core';

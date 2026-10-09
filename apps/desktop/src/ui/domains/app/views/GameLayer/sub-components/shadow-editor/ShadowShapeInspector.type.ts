@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HeightmapElement } from '@shared/types/shadow-casting';
+import type { HeightmapElement } from '@rotp/game-core';
 
 interface ShadowShapeInspectorProps {
   screenId: number;

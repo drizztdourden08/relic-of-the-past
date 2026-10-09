@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { GRID_SIZE } from '@shared/game/navigation/types';
+import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
 
 const toGrid64 = (flat: Uint8Array): number[][] => {
   const grid: number[][] = [];

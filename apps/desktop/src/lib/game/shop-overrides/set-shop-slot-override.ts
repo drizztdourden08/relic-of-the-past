@@ -2,8 +2,8 @@
 import type { ShopSlotTarget } from './shop-overrides.type';
 import { log } from '../../log-bus';
 import { isArmableOverrideId } from '../foreign-item-id';
-import { getModule } from '../wasm-bridge';
-import { setShopOverridesActive } from '../live-settings-flags';
+import { getModule } from '@rotp/game-core';
+import { setShopOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 import { SHOP_SLOT_ARG_COUNT } from './shop-overrides.constants';
 

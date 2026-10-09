@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { SimSprite } from '../../types';
 import { BIG_KEY_RECEIVE_ID, SMALL_KEY_RECEIVE_ID } from '../../key-items';
 import type { SimTarget } from '../state/state.type';

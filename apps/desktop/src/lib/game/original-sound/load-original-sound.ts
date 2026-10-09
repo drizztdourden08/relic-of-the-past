@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import type { PreviewTarget } from '../bridge/sound-preview';
+import type { PreviewTarget } from '@rotp/game-core';
 import type { OriginalSound } from './original-sound.type';
-import { renderOriginalSound } from '../bridge/sound-preview';
+import { renderOriginalSound } from '@rotp/game-core';
 import { audibleLength } from './audible-length';
 import { audioContext } from './audio-context';
 import { originalSoundState } from './original-sound-state';

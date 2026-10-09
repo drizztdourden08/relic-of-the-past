@@ -2,8 +2,8 @@
 import type { StandingOverrideTarget } from './standing-overrides.type';
 import { log } from '../../log-bus';
 import { isArmableOverrideId } from '../foreign-item-id';
-import { getModule } from '../wasm-bridge';
-import { setStandingOverridesActive } from '../live-settings-flags';
+import { getModule } from '@rotp/game-core';
+import { setStandingOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const setStandingOverride = (target: StandingOverrideTarget, newItem: number, messageId = -1, fireId = -1): void => {

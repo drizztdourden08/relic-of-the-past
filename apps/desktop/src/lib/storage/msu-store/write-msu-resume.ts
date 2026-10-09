@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { MsuResumeState } from '@rotp/game-data';
-import type { SaveKind } from '@shared/storage/save-paths';
+import type { SaveKind } from '@rotp/game-core';
 import * as resume from '@shared/storage/msu-resume';
 import { platformFiles } from '../platform-files';
 

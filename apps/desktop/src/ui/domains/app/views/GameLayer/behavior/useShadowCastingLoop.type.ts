@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type React from 'react';
-import type { ShadowRenderer } from '../../../../../../lib/game/shadow-casting';
-import type { ShadowCastingProject } from '@shared/types/shadow-casting';
+import type { ShadowRenderer } from '@rotp/game-core';
+import type { ShadowCastingProject } from '@rotp/game-core';
 
 interface ShadowLoopParams {
   status: string;

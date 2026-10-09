@@ -6,7 +6,7 @@ import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/
 import {
   appendSessionReceiptMessage, clearSessionDialogue, releaseSessionReceiptMessage, setSessionReceiptMessages,
 } from '@app/lib/game/session-dialogue/session-dialogue';
-import { ARRIVAL_SLOTS } from '@app/lib/game/session-dialogue/arrival-ring';
+import { ARRIVAL_SLOTS } from '@rotp/game-core';
 import { cancelServerDeliveries, deliverServerItem } from '@app/lib/game/randomizer-client/server-delivery';
 import { installFakeModule } from '../ap-fake-module';
 import type { FakeModule } from '../ap-fake-module';
@@ -24,7 +24,7 @@ vi.mock('@app/lib/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
-vi.mock('@app/lib/game/wasm-bridge', () => ({ getModule: () => bridge.mod }));
+vi.mock('../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
 vi.mock('@app/lib/game/randomizer-client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
 vi.mock('@app/lib/game/delivery-api', () => ({
   deliverItem: (
@@ -44,7 +44,7 @@ vi.mock('@app/lib/game/delivery-queue', () => ({
     return true;
   },
 }));
-vi.mock('@app/lib/game/session-dialogue/active-dialogue', () => ({
+vi.mock('../../../packages/game-core/src/session-dialogue/active-dialogue', () => ({
   readActiveDialogue: () => ({
     code: 'us',
     dictPacked: packPackedBytes([new Uint8Array([1])]),

@@ -3,7 +3,7 @@ import type { SimObservation, FlagSnapshot } from '@shared/game/simulation';
 import { emptySnapshot, buildPresenceState, emptyPresenceState } from '@shared/game/simulation';
 import { wasmReadFlagSnapshot } from '../../';
 import { getCurrentInventory, pollInventoryState } from '../../tracker';
-import { readMapState } from '../read-game-state';
+import { readMapState } from '@rotp/game-core';
 import { IDLE_VIRTUAL } from './observe.constants';
 import { virtualFrom } from './virtual-from';
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { disarmOverrideFiredEvents } from '../../override-fired';
+import { disarmOverrideFiredEvents } from '@rotp/game-core';
 import { fireRegistryState } from './fire-registry-state';
 
 const disarmFireReporting = (): void => {

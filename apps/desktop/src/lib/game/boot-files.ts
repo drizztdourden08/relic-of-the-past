@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../log-bus';
-import type { EmscriptenModule } from './types';
-import type { BootFiles } from './boot-files.type';
-import { DEFAULT_ZELDA3_INI } from './config.constants';
+import type { EmscriptenModule } from '@rotp/game-core';
+import type { BootFiles } from '@rotp/game-core';
+import { DEFAULT_ZELDA3_INI } from '@rotp/game-core';
 
 const debugForcedAspect = (): string | null | undefined =>
   (window as unknown as { __relicDebug?: { forceAspect?: string | null } }).__relicDebug?.forceAspect;
@@ -28,4 +28,4 @@ const writeBootFiles = (mod: EmscriptenModule, f: BootFiles): void => {
 };
 
 export { writeBootFiles };
-export type { BootFiles } from './boot-files.type';
+export type { BootFiles } from '@rotp/game-core';

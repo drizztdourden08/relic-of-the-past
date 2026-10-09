@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import { getItem } from '@rotp/game-data';
-import { getModule } from '../../wasm-bridge';
+import { getModule } from '@rotp/game-core';
 import { log } from '../../../log-bus';
 import { inventoryToItemSet, parseInventoryBuffer, setsEqual } from '../inventory';
 import { pollRoomFlags } from './poll-room-flags';
 import { trackerState } from './tracker-state';
-import type { EmscriptenModule } from '../../types';
+import type { EmscriptenModule } from '@rotp/game-core';
 
 const readInventory = (heap: Uint8Array, ptr: number, force: boolean): void => {
   const newInventory = inventoryToItemSet(parseInventoryBuffer(heap, ptr));

@@ -2,7 +2,7 @@
 import type React from 'react';
 import { useState, useCallback } from 'react';
 import { screenOriginFor } from '@app/lib/game/flood';
-import { viewOrigin } from '@app/lib/game/bridge/view-origin';
+import { viewOrigin } from '@rotp/game-core';
 import { tileBlockText } from './tile-block-text';
 import { TILE_PX } from '../pathfinding/pathfinding.constants';
 import type { RectSelection, RectSelectionParams } from './useRectSelection.type';

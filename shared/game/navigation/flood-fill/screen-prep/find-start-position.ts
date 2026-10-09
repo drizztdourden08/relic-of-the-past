@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { CollisionGrid, GridPos } from '../../types';
-import { GRID_SIZE } from '../../types';
+import type { CollisionGrid, GridPos } from '@rotp/game-core';
+import { GRID_SIZE } from '../../types/grid.constants';
 import { inBounds } from '../../core/in-bounds';
 
 const nearestFreeTile = (grid: CollisionGrid, centerRow: number, centerCol: number): GridPos | null => {

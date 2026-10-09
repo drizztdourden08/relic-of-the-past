@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import { dataRevision } from '@app/lib/game/data-revision';
+import { dataRevision } from '@rotp/game-core';
 import type { DetectionContext } from '@shared/game/recommendations';
 
 const signatureOf = (context: DetectionContext): string => {

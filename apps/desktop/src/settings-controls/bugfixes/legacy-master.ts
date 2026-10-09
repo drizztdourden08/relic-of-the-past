@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { rendersExtended } from '@app/lib/game/ratio-capability';
+import { rendersExtended } from '@rotp/game-core';
 
 const legacyMaster = (origin: string | undefined, s: GameSettings): boolean => {
   if (origin === 'GameChangingBugFixes') return s.gameChangingBugFixes;

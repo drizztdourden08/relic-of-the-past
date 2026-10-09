@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
-import { GRID_SIZE } from '@shared/game/navigation/types';
+import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
 import type { DrawContext } from './draw.type';
 import { PIT_ATTR, PIT_STRIPE_COLOR } from './draw.constants';
 

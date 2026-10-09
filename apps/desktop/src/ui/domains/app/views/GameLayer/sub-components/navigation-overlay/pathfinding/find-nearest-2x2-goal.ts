@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import type { GridPos } from '../navigation-overlay.type';
 import { isValid2x2 } from './is-valid-2x2';
 import { GOAL_SEARCH_RADIUS } from './pathfinding.constants';

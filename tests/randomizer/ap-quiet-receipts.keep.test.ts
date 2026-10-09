@@ -4,7 +4,7 @@ import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/
 import { deliverItem } from '@app/lib/game/delivery-api';
 import { clear, deliveryQueue, startProcessing, stopProcessing } from '@app/lib/game/delivery-queue';
 import { setQuietReceiptBits } from '@app/lib/game/gate-word-5';
-import { setSessionGate } from '@app/lib/game/session-gate-flags';
+import { setSessionGate } from '@rotp/game-core';
 import { QUIET_RECEIPT_MSG, quietMessageFor } from '@app/lib/game/quiet-receipts';
 import { cancelServerDeliveries, deliverServerItem } from '@app/lib/game/randomizer-client/server-delivery';
 
@@ -29,7 +29,8 @@ vi.mock('@app/lib/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
-vi.mock('@app/lib/game/wasm-bridge', () => ({
+vi.mock('../../packages/game-core/src/wasm-bridge', () => ({
+  subscribeGameState: () => () => undefined,
   getGameState: () => ({ status: 'running' }),
   getModule: () => ({
     ccall: (name: string, _ret: unknown, _types: unknown, args: number[] = []) => {

@@ -2889,7 +2889,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `autoSaveIntervalSeconds` ranges 60 to 1800, default 300. `autoSaveMaxEntries` ranges 1 to 20, default 5.
 - `disableFrameDelay` is legacy: only the native SDL main loop reads it (not the WASM build). It is kept so existing profiles and the INI round trip unchanged. `vsync` supersedes it.
 - `vsync` drives the core's frame loop from the display's vertical blank (requestAnimationFrame) and gates the game step on a 60.0988 Hz accumulator, so the speed stays right on any refresh rate. Off is the timer pacing the app always used. It can be toggled live.
-- `turboEnabled` runs the game faster than real time while the Turbo shortcut is held. Off means the core never leaves real time. It can be toggled live. `turboSpeed` is the multiplier, one of the rungs in shared/display/turbo-speed.ts.
+- `turboEnabled` runs the game faster than real time while the Turbo shortcut is held. Off means the core never leaves real time. It can be toggled live. `turboSpeed` is the multiplier, one of the rungs in packages/game-core/src/turbo-speed.ts.
 
 ### types/settings/graphics-settings.type.ts
 

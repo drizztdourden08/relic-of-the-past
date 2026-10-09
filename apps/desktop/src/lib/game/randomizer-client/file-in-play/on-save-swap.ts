@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { useGameUIStore } from '../../../../stores/game-ui-store';
-import { onStateLoaded } from '../../state-load-signal';
+import { onStateLoaded } from '@rotp/game-core';
 import { isFileInPlay } from './is-file-in-play';
 
 const onSaveSwap = (listener: () => void): (() => void) => {

@@ -4,9 +4,7 @@ import { useSpriteAvailability } from '@app/lib/sprites/useSpriteAvailability';
 import { useSpriteRevision } from '@app/lib/sprites/useSpriteRevision';
 import { darkRoomLightTilesOf } from './dark-room-light-tiles';
 import type { DarkRoomLightTileModel } from './dark-room-light-tiles.type';
-import type {
-  DarkRoomLightField, DarkRoomLights,
-} from '@shared/randomizer/world/dark-rooms/dark-room.type';
+import type { DarkRoomLightField, DarkRoomLights } from '@rotp/game-core';
 
 const useDarkRoomLightTiles = (
   lights: DarkRoomLights, forced?: ReadonlyMap<DarkRoomLightField, string>,

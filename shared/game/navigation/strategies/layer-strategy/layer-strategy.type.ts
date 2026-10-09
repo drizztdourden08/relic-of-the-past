@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { TilePassability, TransitionPoint, GridPos, ReachState, LedgeTraversal } from '../../types';
+import type { TilePassability, TransitionPoint, GridPos, ReachState, LedgeTraversal } from '@rotp/game-core';
 
 interface BFSCell {
   row: number;

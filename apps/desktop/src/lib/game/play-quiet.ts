@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { isFileInPlay, onSaveSwap } from './randomizer-client/file-in-play';
-import { wasStateJustLoaded } from './state-load-signal';
+import { wasStateJustLoaded } from '@rotp/game-core';
 
 let lastSwapAt = 0;
 onSaveSwap(() => { lastSwapAt = Date.now(); });

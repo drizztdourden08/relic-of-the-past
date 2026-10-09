@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { TileClassification } from '@shared/game/navigation/tile-classification';
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 
 interface LayerTileData {
   classification: TileClassification;

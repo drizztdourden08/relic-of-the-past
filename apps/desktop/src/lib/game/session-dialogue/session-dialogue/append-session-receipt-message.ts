@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { releaseSlot, takeSlot } from '../arrival-ring';
+import { releaseSlot, takeSlot } from '@rotp/game-core';
 import { compose } from './compose';
-import { sessionPool } from './session-pool';
-import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { sessionPool } from '@rotp/game-core';
+import type { ReceiptLine } from '@rotp/game-core';
 
 const appendSessionReceiptMessage = (line: ReceiptLine): number | null => {
   const { arrivals } = sessionPool;

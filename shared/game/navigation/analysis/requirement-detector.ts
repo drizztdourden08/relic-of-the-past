@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 import type { RequirementSet } from '@rotp/game-data';
 import type { TileReq } from '../tile-attrs';
-import type { GridPos } from '../types';
+import type { GridPos } from '@rotp/game-core';
 import type { DetectedRequirement, RequirementDetectorInput } from './requirement-detector.type';
-import { GRID_SIZE } from '../types';
+import { GRID_SIZE } from '../types/grid.constants';
 import { floodFillScreen } from '../flood-fill/orchestrator';
 import { INVENTORY_PROGRESSION } from './analysis.constants';
 

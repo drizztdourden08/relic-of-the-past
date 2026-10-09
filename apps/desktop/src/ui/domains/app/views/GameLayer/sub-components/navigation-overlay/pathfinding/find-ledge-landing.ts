@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { GRID_SIZE } from '@shared/game/navigation/types';
-import type { ReachState } from '@shared/game/navigation/types';
+import { GRID_SIZE } from '@shared/game/navigation/types/grid.constants';
+import type { ReachState } from '@rotp/game-core';
 import type { GridPos } from '../navigation-overlay.type';
 import { isReachable2x2 } from './is-reachable-2x2';
 import { LEDGE_STATE_MAX, LEDGE_STATE_MIN } from './pathfinding.constants';

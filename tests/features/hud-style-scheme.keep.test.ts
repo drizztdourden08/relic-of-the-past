@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { controlSchemeOf, hostDrawnHud } from '@rotp/features';
-import { mergeSettings } from '../../apps/desktop/src/lib/game/settings';
+import { mergeSettings } from '@rotp/game-core';
 
 const storedProfile = (controlScheme: string, hudStyle: string): Record<string, unknown> => ({
   hudStyle,

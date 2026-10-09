@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { RegionReachMap } from './regions.type';
 import { LANDING_SCAN_WINDOW, REGION_GRID_SIZE } from './regions.constants';
 

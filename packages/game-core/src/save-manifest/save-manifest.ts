@@ -1,0 +1,60 @@
+/* @layer shared-storage @kind logic */
+import type { FileStore } from '@drizztdourden08/brock-core';
+import type { ManifestEntry, ValidManifestEntry } from './save-manifest.type';
+import { msuSidecarPath } from '../save-paths';
+
+const createManifestSaves = <T extends ManifestEntry>(files: FileStore, dir: string) => {
+  const sav = (id: string): string => `${dir}/${id}.sav`;
+  const png = (id: string): string => `${dir}/${id}.png`;
+  const msu = (id: string): string => msuSidecarPath(dir, id);
+  const manifestPath = `${dir}/manifest.json`;
+
+  const readManifest = async (): Promise<T[]> => {
+    const text = await files.readText(manifestPath);
+    if (!text) return [];
+    try { return JSON.parse(text) as T[]; } catch { return []; }
+  };
+
+  const writeManifest = (entries: T[]): Promise<void> =>
+    files.writeText(manifestPath, JSON.stringify(entries, null, 2));
+
+  const writePair = async (id: string, data: Uint8Array, screenshot?: Uint8Array): Promise<void> => {
+    await files.writeBytes(sav(id), data);
+    if (screenshot) await files.writeBytes(png(id), screenshot);
+    await files.remove(msu(id));
+  };
+
+  const append = async (entry: T, data: Uint8Array, screenshot?: Uint8Array): Promise<void> => {
+    await writePair(entry.id, data, screenshot);
+    const manifest = await readManifest();
+    manifest.push(entry);
+    await writeManifest(manifest);
+  };
+
+  const valid = async (): Promise<ValidManifestEntry<T>[]> => {
+    const out: ValidManifestEntry<T>[] = [];
+    for (const entry of await readManifest()) {
+      const stat = await files.stat(sav(entry.id));
+      if (!stat) continue;
+      out.push({ entry, bytes: stat.bytes, hasScreenshot: await files.exists(png(entry.id)) });
+    }
+    out.sort((a, b) => b.entry.timestamp - a.entry.timestamp);
+    return out;
+  };
+
+  const load = (id: string): Promise<Uint8Array | null> => files.readBytes(sav(id));
+  const loadScreenshot = (id: string): Promise<Uint8Array | null> => files.readBytes(png(id));
+
+  const remove = async (id: string): Promise<void> => {
+    const manifest = await readManifest();
+    await writeManifest(manifest.filter((e) => e.id !== id));
+    await files.remove(sav(id));
+    await files.remove(png(id));
+    await files.remove(msu(id));
+  };
+
+  return { sav, png, msu, readManifest, writeManifest, writePair, append, valid, load, loadScreenshot, remove };
+};
+
+export { createManifestSaves };
+export type { ManifestEntry };

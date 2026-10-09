@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { FloodFillResult, TransitionPoint } from '../types';
+import type { FloodFillResult, TransitionPoint } from '@rotp/game-core';
 import type { TileReq } from '../tile-attrs';
 import { getAttrReq } from '../tile-attrs';
 

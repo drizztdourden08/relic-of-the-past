@@ -4,7 +4,7 @@ import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
-import type { ReachState } from '@shared/game/navigation/types';
+import type { ReachState } from '@rotp/game-core';
 import { buildDrawContext } from './draw/draw-context';
 import { drawReachableDots } from './draw/draw-dots';
 import { drawPathPreview } from './draw/draw-path';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '../../../navigation/types';
+import type { GridPos } from '@rotp/game-core';
 import type { Reached } from '../discover-reach/discover-reach.type';
 import { CHEST_OPEN_ROW_OFFSET } from './discover.constants';
 

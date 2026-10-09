@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type React from 'react';
-import type { EdgeGlowRenderer } from '../../../../../../lib/game/edge-glow';
+import type { EdgeGlowRenderer } from '@rotp/game-core';
 import type { BufferSize } from '../GameLayer.type';
 
 interface EdgeGlowLoopParams {
