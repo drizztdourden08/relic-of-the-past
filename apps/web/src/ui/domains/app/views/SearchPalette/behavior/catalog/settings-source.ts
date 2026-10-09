@@ -1,17 +1,10 @@
 /* @layer renderer-components @kind logic */
-/**
- * Flattens every ProfileHub settings tab's Section[] (built from PROFILE_HUB_TABS, the
- * same registry the hub nav renders from) into one setting per search entry. The
- * breadcrumb and keywords come straight from data the settings screens already carry, so
- * new settings become searchable with no catalog change.
- */
 import type { GameSettings } from '@shared/types/settings';
 import { isHubTabShown, PROFILE_HUB_TABS } from '../../../ProfileHub/ProfileHub.constants';
 import type { ProfileHubTab } from '../../../ProfileHub/ProfileHub.type';
-import type { SearchContext, SearchEntry, SearchSource } from '../../SearchPalette.type';
+import type { BooleanSettingInfo, SearchContext, SearchEntry, SearchSource } from '../../SearchPalette.type';
 
-/** Only top-level, non-dotted boolean keys get an inline Toggle (haptics.* is nested). */
-const booleanSettingInfo = (settings: GameSettings, key: string): { settingKey?: keyof GameSettings; toggleValue?: boolean } => {
+const booleanSettingInfo = (settings: GameSettings, key: string): BooleanSettingInfo => {
   if (key.includes('.')) return {};
   const value = (settings as unknown as Record<string, unknown>)[key];
   if (typeof value !== 'boolean') return {};
@@ -27,7 +20,6 @@ const build = (ctx: SearchContext): SearchEntry[] => {
     .flatMap(([tab, spec]) => {
       if (!spec.sections) return [];
       return spec.sections(settings).flatMap((section) => {
-        // A flat section has no second heading, so its trail stops at the section.
         const groups = section.subsections
           ? section.subsections.map((sub) => ({ trail: [section.title, sub.title], items: sub.items }))
           : [{ trail: [section.title], items: section.items ?? [] }];

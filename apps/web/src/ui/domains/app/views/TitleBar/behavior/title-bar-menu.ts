@@ -1,19 +1,6 @@
 /* @layer renderer-components @kind logic */
-/** Builds the TitleBar dropdown menu item tree from props + closeMenu. */
-import type { WindowControlsPort } from '@shared/platform';
-import type { DropdownMenu } from '../../../../../design-system/composites/DropdownMenu';
 import { getWidgetDefinition } from '@ds/composites/Widget';
-import type { TitleBarProps } from '../TitleBar.type';
-
-type MenuItems = Parameters<typeof DropdownMenu>[0]['items'];
-
-type MenuBuilderDeps = Pick<TitleBarProps,
-  'activeProfile' | 'gameRunning' | 'onShowProfile' | 'onToggleSaveStates' | 'onShowDataManager'
-  | 'onToggleInventory' | 'onToggleChecks' | 'onToggleCheats' | 'onShowLogs' | 'onToggleDebug'
-  | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onToggleMusic' | 'onShowInputTester' | 'onShowHudLayout' | 'onShowSpriteDebug' | 'onShowDataInspector'
-  | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout' | 'onShowRandomizer'
-  | 'widgetVisibility' | 'developerToolsEnabled'
-> & { closeMenu: () => void; win: WindowControlsPort };
+import type { MenuBuilderDeps, MenuItems } from './title-bar-menu.type';
 
 const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
   const {
@@ -83,8 +70,6 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       icon: '⚙️',
       label: 'Advanced',
       children: [
-        // Input Calibration and Data Inspector are real user options, so they are always available.
-        // The rest are developer tools, shown only when developerToolsEnabled is on.
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
         { key: 'hud-layout', icon: '🧩', label: 'HUD Layout Editor', onClick: () => { closeMenu(); onShowHudLayout(); } },
         { key: 'data-inspector', icon: '🔍', label: 'Data Inspector', onClick: () => { closeMenu(); onShowDataInspector(); } },

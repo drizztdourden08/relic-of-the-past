@@ -1286,4 +1286,147 @@ save actions fire at once, the original behaviour. The core cannot save or load 
 The review panels share one card per row and one status button strip.
 Each button and card lives in its own file. The shared label colours sit in `LABEL_STYLES` beside the view styles.
 
+### views/TitleBar/TitleBar.tsx
+
+The refresh rate sits beside the FPS so the two can be compared at a glance.
+The game runs at 60, and a refresh rate that is not a whole multiple of 60 makes scrolling look uneven.
+An automated launch shows the Sentri logo so a screenshot identifies itself.
+
+### views/TitleBar/behavior/useTitleBarPeek.ts
+
+Fullscreen state is tracked apart from the window mode.
+In borderless or fullscreen mode the bar hides, and it peeks back when the mouse enters the top zone.
+`TITLEBAR_PEEK_ZONE_PX` matches `--titlebar-height`.
+The bar stays shown while the mouse is over the bar itself, and hides when the mouse leaves the bar.
+
+### views/TitleBar/behavior/useTitleBar.ts
+
+The menu closes on a click outside it.
+A click inside the trigger area or inside the portal rendered dropdown keeps it open.
+
+### views/TitleBar/behavior/title-bar-menu.ts
+
+Builds the dropdown menu tree from the bar's props and `closeMenu`.
+Under Advanced, Input Calibration, the HUD Layout Editor and the Data Inspector are real user options, so they are always listed.
+The rest are developer tools, listed only when developer tools are on.
+
+### views/TitleBar/TitleBar.type.ts
+
+`widgetVisibility` holds each toggleable widget's visibility by widget id, for the menu checkmarks.
+`developerToolsEnabled` is the master gate for developer only menu entries.
+`onShowDisplaySettings` opens the Display settings, and the refresh rate tag uses it.
+
+### views/TitleBar/sub-components/InstanceBadge.tsx
+
+Marks the window as a named instance: an automated launch running beside the user's own app.
+It is informational, not a warning. The name is the identifier, so it is shown in full.
+
+### views/TitleBar/sub-components/RefreshRateTag.tsx
+
+Flags a display refresh rate the game cannot show evenly.
+It sits next to the FPS readout because that is where someone looks when motion feels wrong.
+A click goes straight to the setting that fixes it.
+
+### views/TitleBar/TitleBar.constants.ts
+
+The icons are the overflow menu dots, the pin, the muted speaker, the speaker with waves and the floppy disk for save states.
+The window control icons use a 12 unit viewBox, except the fullscreen pair, which uses 16.
+
+### views/SearchPalette/SearchPalette.tsx
+
+The palette is a single fixed element that morphs from a pill into a panel, after Jex's CommandSurface technique.
+It is always mounted as a zero size seed at top center.
+Adding `.is-open` makes it transition its own width, height and radius, so the palette grows out of the title bar icon's summon point.
+It opens from the title bar search icon or Ctrl+K, and closes on Escape or the scrim.
+
+### views/SearchPalette/SearchPalette.css
+
+The scrim takes `-webkit-app-region: no-drag`, or the title bar's drag region eats the click through it.
+While collapsed, the input row and body stay hidden, so only opacity animates on the shell.
+
+### views/SearchPalette/SearchPalette.type.ts
+
+A `SearchTarget` is a declarative destination, resolved by `useRunTarget` against the app's own nav setters.
+Its `anchor` is a `[data-setting-key]` or `[data-section]` to scroll to and flash once the tab shows.
+A `SearchEntry` id is stable and unique across all sources, such as `setting:hudMode`, `menu:data-roms` or `tab:graphics`.
+The breadcrumb is the path shown under the label, such as Home, Graphics, Appearance.
+`settingKey` is set when the entry's value is a top level boolean settings key, and it enables the row's inline Toggle. Dotted paths such as `haptics.*` are left out on purpose.
+`toggleValue` is the setting's boolean value read when the catalog is built, so the row can draw the switch without live settings.
+`checked` mirrors a menu item's checked flag for widgets. It shows as a small indicator and cannot be edited.
+`target` is declarative navigation for settings and tab entries.
+`run` is an imperative command for menu entries, and it calls the exact callback the title bar menu would call.
+A `SearchContext` carries everything a catalog source needs for the current app state.
+Its `navProps` is the same prop bag the title bar and mobile chrome use, so menu entries call the real navigation callbacks.
+`settings` is null when no profile is active, and then the settings entries are empty.
+`isOnline` marks an online (Archipelago) profile, so its Online tab is listed.
+`closePalette` is wired as `closeMenu` when the title bar menu builder is reused, so a menu result dismisses the palette like the real menu.
+A `SearchSource` is a Strategy: one per source, all merged by `build-catalog.ts`.
+
+### views/SearchPalette/behavior/useSearchPalette.ts
+
+Drives the palette shell. The palette is always mounted and only toggles an `is-open` class, so the CSS transition runs on a persisting node.
+It also owns keyboard navigation and running or toggling the active result.
+The palette floats over whatever page is open, so it must be dismissed before that page.
+The app shell's global shortcut asks the dismiss stack, and `useDismissable` is how the palette answers it.
+The input's own Escape handles the common case where focus is in the box. The dismiss stack covers a press with focus anywhere else in the panel.
+
+### views/SearchPalette/behavior/useSearchResults.ts
+
+Builds the search context for the current app state, memoizes the catalog and ranks it against the live query.
+
+### views/SearchPalette/behavior/useRunTarget.ts
+
+A Facade that turns an entry, either an imperative `run` or a declarative `target`, into the app's existing navigation calls.
+The palette never implements navigation itself.
+
+### views/SearchPalette/behavior/match.ts
+
+A ranked substring matcher with no dependencies.
+Every query token must match somewhere in an entry. Token scores add up across fields, the label weighs the most, and ties go to the shorter label.
+It is tuned so "sprite" brings up the Graphics setting, the Data Manager tab and the Add a ROM action together, ranked by relevance.
+`scoreEntry` returns null when the entry does not match every token, so the caller drops it.
+
+### views/SearchPalette/SearchPalette.constants.ts
+
+`KIND_BOOST` lifts screens and tabs, since they are destinations in their own right.
+A query like "data" should show the Data Manager above a setting that only mentions data in its description.
+
+### views/SearchPalette/behavior/scroll-to-anchor.ts
+
+Scrolls to a settings row after the palette navigates there and flashes it briefly.
+The settings layout has no prop to open already scrolled, and threading one through every settings tab would touch 9 components across 5 levels.
+So this reaches into the DOM, through the same `[data-section]` hook the settings layout's own scroll uses, plus a `[data-setting-key]` per row.
+A bounded animation frame retry covers the gap between the tab switch and its content mounting.
+
+### views/SearchPalette/behavior/catalog/build-catalog.ts
+
+Merges every source into one flat catalog. A new searchable domain, such as game checks or items, means one new source file. The engine never changes.
+
+### views/SearchPalette/behavior/catalog/action-source.ts
+
+The one hand kept source: in screen actions with a real callback that the title bar menu cannot reach, since the menu only opens a tab.
+Most in screen buttons, such as adding a sprite pack, an MSU pack or a language, have no callback lifted above their own Data Manager tab, so there is nothing correct to wire yet.
+Add an entry only when a real callback exists.
+
+### views/SearchPalette/behavior/catalog/menu-source.ts
+
+Flattens the title bar menu into entries: screens and the developer commands under Advanced.
+The menu is already the app's nav manifest on every platform, and the mobile drawer reuses it as is.
+Every item carries its own live click handler, so a new menu item is searchable with no upkeep.
+A search row prints its icon as a character. A Lucide icon has no character, so that row goes without one.
+
+### views/SearchPalette/behavior/catalog/settings-source.ts
+
+Flattens every settings tab's sections, built from `PROFILE_HUB_TABS`, the registry the hub nav renders from, into one entry per setting.
+The breadcrumb and keywords come from data the settings screens already carry, so a new setting is searchable with no catalog change.
+Only top level boolean keys with no dot get an inline Toggle.
+A flat section has no second heading, so its trail stops at the section.
+
+### views/SearchPalette/behavior/catalog/tab-source.ts
+
+One entry per settings tab, so searching "haptics" or "controls" jumps straight to the tab, even one with no settings of its own.
+It reads the same registry as the hub nav, so a new tab is indexed for free.
+The home tab is skipped, since the menu's Home screen entry covers it.
+The hub only renders with an active profile, so without one the source returns nothing.
+
 ENDMARK

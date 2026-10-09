@@ -1,17 +1,9 @@
 /* @layer renderer-components @kind component */
-import type { KeyboardEvent, RefObject } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { TextInput } from '@ds/primitives/TextInput';
 import { Icon } from '@ds/primitives/Icon';
 import { SEARCH_ICON_PATHS } from '@ds/composites/SearchSpark';
-
-interface SearchInputProps {
-  inputRef: RefObject<HTMLInputElement | null>;
-  value: string;
-  onChange: (value: string) => void;
-  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
-  resultCount: number;
-}
+import type { SearchInputProps } from '../SearchPalette.type';
 
 const SearchInput = (props: SearchInputProps) => {
   const { inputRef, value, onChange, onKeyDown, resultCount } = props;

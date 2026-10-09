@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useRef, useState, useEffect, useCallback } from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import { useRef, useState } from 'react';
 import { usePlatform } from '@app/platform';
 import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
 import { SearchSpark } from '../../../../design-system/composites/SearchSpark';
@@ -11,13 +10,13 @@ import { Button } from '../../../../design-system/primitives/Button';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { Icon } from '../../../../design-system/primitives/Icon';
-import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { useTitleBar } from './behavior/useTitleBar';
+import { useTitleBarPeek } from './behavior/useTitleBarPeek';
+import { useFpsReadout } from './behavior/useFpsReadout';
 import { buildTitleBarMenuItems } from './behavior/title-bar-menu';
 import { WindowControls } from './sub-components/WindowControls';
 import { InstanceBadge } from './sub-components/InstanceBadge';
 import { instanceName } from '../../../../../lib/instance';
-import { getFps } from '../../../../../lib/game';
 import { useSearchStore } from '../../../../../stores/search-store';
 import { useRefreshRate } from '../../../../../hooks/useRefreshRate';
 import { effectiveHz, isSyncedRate } from '@shared/display/refresh-rate';
@@ -72,51 +71,10 @@ const TitleBar = (props: TitleBarProps) => {
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
   const openSearch = useSearchStore((s) => s.openPalette);
   const [pinned, setPinned] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [fps, setFps] = useState(0);
-  // Shown beside the FPS so the two can be compared at a glance. The game runs at 60, and a
-  // refresh rate that is not a whole multiple of that is what makes scrolling look uneven.
   const refreshHz = effectiveHz(useRefreshRate());
   const titlebarRef = useRef<HTMLDivElement>(null);
-
-  // Track fullscreen state independently of windowMode
-  useEffect(() => {
-    win.isFullscreen().then(setIsFullscreen);
-    return win.onFullscreenChange(setIsFullscreen);
-  }, [win]);
-
-  const hidden = windowMode === 'borderless' || isFullscreen;
-
-  // For borderless/fullscreen: show titlebar when mouse enters the top zone, hide when it leaves
-  useEffect(() => {
-    if (!hidden) return;
-
-    const ZONE_HEIGHT = 38; // matches --titlebar-height
-    const onMove = (e: MouseEvent) => {
-      // If the mouse is over the titlebar element itself, keep it shown
-      if (titlebarRef.current?.contains(e.target as Node)) return;
-      setHovered(e.clientY <= ZONE_HEIGHT);
-    };
-    window.addEventListener('mousemove', onMove);
-    return () => window.removeEventListener('mousemove', onMove);
-  }, [hidden]);
-
-  // Hide when mouse leaves the titlebar element (not just the zone)
-  const handleMouseLeave = () => {
-    if (hidden) setHovered(false);
-  };
-
-  useEffect(() => {
-    if (!showFps || !gameRunning) {
-      setFps(0);
-      return;
-    }
-    const id = setInterval(() => {
-      setFps(getFps());
-    }, 500);
-    return () => clearInterval(id);
-  }, [showFps, gameRunning]);
+  const { hidden, hovered, handleMouseLeave } = useTitleBarPeek(win, windowMode, titlebarRef);
+  const { fps } = useFpsReadout(showFps, gameRunning);
 
   const togglePin = async () => {
     const result = await win.setAlwaysOnTop(!pinned);
@@ -127,7 +85,6 @@ const TitleBar = (props: TitleBarProps) => {
     onToggleMute?.();
   };
 
-
   const menuItems = buildTitleBarMenuItems({
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
@@ -136,9 +93,6 @@ const TitleBar = (props: TitleBarProps) => {
     widgetVisibility, developerToolsEnabled,
   });
 
-
-
-  // An automated launch wears Sentri so a screenshot identifies itself.
   const instance = instanceName();
   const logoSrc = instance ? './logos/sentri/sentri-128.png' : './logos/logo/logo-128.png';
 

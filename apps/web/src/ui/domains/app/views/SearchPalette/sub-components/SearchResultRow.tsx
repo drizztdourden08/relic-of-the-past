@@ -2,15 +2,8 @@
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { Toggle } from '@ds/primitives/Toggle';
-import type { SearchEntry } from '../SearchPalette.type';
-
-interface SearchResultRowProps {
-  entry: SearchEntry;
-  active: boolean;
-  onSelect: () => void;
-  onToggle: () => void;
-  onHover: () => void;
-}
+import type { SearchResultRowProps } from '../SearchPalette.type';
+import './SearchResultRow.css';
 
 const SearchResultRow = (props: SearchResultRowProps) => {
   const { entry, active, onSelect, onToggle, onHover } = props;

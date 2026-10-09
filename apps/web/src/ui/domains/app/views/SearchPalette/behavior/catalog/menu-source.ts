@@ -1,11 +1,4 @@
 /* @layer renderer-components @kind logic */
-/**
- * Flattens the title-bar dropdown menu into search entries: screens (Home, Data Manager's
- * tabs, widgets, Credits/About/Quit) and dev-only advanced commands. This is already the
- * app's cross-platform nav manifest (the mobile drawer reuses it verbatim), and every item
- * carries its own live onClick, so this source needs no upkeep as the menu grows: a new
- * menu item is automatically searchable.
- */
 import type { MenuEntry } from '@ds/composites/DropdownMenu';
 import { buildTitleBarMenuItems } from '../../../TitleBar/behavior/title-bar-menu';
 import type { SearchContext, SearchEntry, SearchSource } from '../../SearchPalette.type';
@@ -19,8 +12,6 @@ const walk = (items: MenuEntry[], trail: string[]): SearchEntry[] =>
       id: `menu:${item.key}`,
       kind: trail.length ? 'action' : 'screen',
       label: item.label,
-      // A search row's icon is a character it prints; a Lucide row has no
-      // character to print, so it goes without one, not with a stub.
       icon: typeof item.icon === 'string' ? item.icon : undefined,
       breadcrumb: trail,
       keywords: breadcrumb.join(' '),

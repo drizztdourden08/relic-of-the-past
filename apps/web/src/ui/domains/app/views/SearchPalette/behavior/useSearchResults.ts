@@ -1,6 +1,4 @@
 /* @layer renderer-components @kind hook */
-/** Builds the SearchContext for the current app state, memoizes the derived catalog, and
- *  ranks it against the live query. */
 import { useMemo } from 'react';
 import { usePlatform } from '@app/platform';
 import { useSearchStore } from '@app/stores/search-store';

@@ -12,14 +12,11 @@ const useTitleBar = (menuRef: RefObject<HTMLDivElement | null>) => {
     return win.onMaximizedChange(setIsMaximized);
   }, [win]);
 
-  // Close on outside click
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
-      // Don't close if clicking inside the menu trigger area
       if (menuRef.current && menuRef.current.contains(target)) return;
-      // Don't close if clicking inside the portal-rendered dropdown
       if ((target as Element).closest?.('.dropdown-menu')) return;
       setMenuOpen(false);
     };
@@ -33,6 +30,6 @@ const useTitleBar = (menuRef: RefObject<HTMLDivElement | null>) => {
     toggleMenu: () => setMenuOpen((v) => !v),
     closeMenu: () => setMenuOpen(false),
   };
-}
+};
 
 export { useTitleBar };
