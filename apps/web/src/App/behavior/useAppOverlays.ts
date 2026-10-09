@@ -1,14 +1,7 @@
 /* @layer renderer-appshell @kind hook */
-/** App-level overlay/dialog UI state: update dialog, about, shadow editor.
- *  (Sprite Debug is a nav page, handled in PageRouter / useKeyboardShortcuts.) */
 import { useState, useCallback } from 'react';
 import { useShadowEditorStore } from '../../stores/shadow-editor-store';
-import type { ConfirmDialog } from '../types';
-
-interface AppOverlaysParams {
-  showDialog: (config: ConfirmDialog) => void;
-  dismissDialog: () => void;
-}
+import type { AppOverlaysParams } from './useAppOverlays.type';
 
 const useAppOverlays = ({ showDialog, dismissDialog }: AppOverlaysParams) => {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);

@@ -1,35 +1,10 @@
 /* @layer renderer-other @kind hook */
-/**
- * Subscribes to the main-process `import:progress` event and reduces the stream
- * for one import `kind` (rom / msu / language / sprite) to a simple state the
- * spinner / progress bar can render. Determinate (`percent`) when loaded+total
- * are present, indeterminate otherwise.
- */
 import { useEffect, useState } from 'react';
 import type { ImportProgress } from '@shared/ipc';
 import { formatBytes } from '@app/utils/formatBytes';
 import { subscribeImportProgress } from '@app/lib/storage/import-progress-bus';
-
-type ImportKind = ImportProgress['kind'];
-type ImportPhase = ImportProgress['phase'];
-
-interface ImportProgressState {
-  active: boolean;
-  phase: ImportPhase | null;
-  percent: number | null;
-  label: string;
-}
-
-const IDLE: ImportProgressState = { active: false, phase: null, percent: null, label: '' };
-
-const PHASE_VERB: Record<ImportPhase, string> = {
-  download: 'Downloading',
-  extract: 'Extracting',
-  copy: 'Copying',
-  decode: 'Processing',
-  done: 'Done',
-  error: 'Error',
-};
+import type { ImportKind, ImportProgressState } from './use-import-progress.type';
+import { IDLE, PHASE_VERB } from './use-import-progress.constants';
 
 const buildLabel = (progress: ImportProgress, percent: number | null): string => {
   const { phase, loaded, total, message } = progress;

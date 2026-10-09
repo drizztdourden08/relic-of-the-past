@@ -1,13 +1,7 @@
 /* @layer renderer-other @kind logic */
-/**
- * Electron host adapter. Fulfills the platform ports by delegating to the
- * preload-injected window.api.
- */
 import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort, ControllerHost, DevicePort, DisplayPort } from '@shared/platform';
 import { osFromProcess } from '@shared/platform';
 
-// Desktop handles screen-stay-awake and save-on-close through its own window
-// lifecycle; the device port stays inert here. Controllers carry desktop haptics.
 const createDevice = (): DevicePort => ({
   keepAwake: () => {},
   allowSleep: () => {},
@@ -36,8 +30,6 @@ const createWindowControls = (): WindowControlsPort => ({
   onFullscreenChange: (cb) => window.api.onFullscreenChange(cb),
 });
 
-// The OS knows the rate for the display the window sits on; the renderer's measurement
-// refines it. Modes stay empty because Electron cannot enumerate them.
 const createDisplay = (): DisplayPort => ({
   getRefreshRate: () => window.api.getRefreshRate(),
   getSyncedRateStatus: () => window.api.getSyncedRateStatus(),
@@ -78,11 +70,6 @@ const createFilePicker = (): FilePickerPort => ({
     window.api.saveFile(name, toArrayBuffer(bytes), extensions ?? []),
 });
 
-// Raw HID enumeration/read/write went away with node-hid. SDL3 claims every
-// controller directly and reports already-decoded state (onControllerState).
-// This host keeps the port's full shape (Capacitor's Android USB-OTG plugin
-// still fulfills it) but degrades those methods to the plain-browser no-ops;
-// only vibratePattern and onControllerState are real on desktop now.
 const createControllerHost = (): ControllerHost => ({
   enumerate: async () => [],
   getOpenKeys: async () => [],

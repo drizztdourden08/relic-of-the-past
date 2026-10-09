@@ -1,49 +1,22 @@
 /* @layer renderer-other @kind hook */
-import { useState, useCallback, useEffect, type RefObject } from 'react';
-
-interface FitSize {
-  width: number;
-  height: number;
-}
-
-interface CanvasFitParams {
-  containerRef: RefObject<HTMLElement | null>;
-  /** Canvas backing-store size. Twice the source resolution, because the core presents at 2x. */
-  bufW: number;
-  bufH: number;
-  /** Fill the container outright, ignoring the source proportions. */
-  stretch?: boolean;
-  /** Snap to a whole number of source pixels so none of them come out a different size. */
-  pixelPerfect?: boolean;
-}
-
-/** The backing store is 2x the source resolution, so a source pixel is this many buffer pixels. */
-const BUFFER_OVERSAMPLE = 2;
+import { useState, useCallback, useEffect } from 'react';
+import type { CanvasFitParams, FitSize } from './use-canvas-fit.type';
+import { BUFFER_OVERSAMPLE } from './use-canvas-fit.constants';
 
 const getPixelRatio = (): number => {
   return window.devicePixelRatio || 1;
 };
 
-/**
- * Largest whole-source-pixel size that still fits.
- *
- * Measured in device pixels, not CSS pixels: at 125% or 150% display scaling a size that looks
- * like a clean multiple in CSS units lands on a fractional number of real pixels, and the uneven
- * pixel sizes this is meant to remove come straight back. Returns a CSS size for layout.
- */
 const fitWholePixels = (containerW: number, containerH: number, bufW: number, bufH: number): FitSize => {
   const dpr = getPixelRatio();
   const sourceW = bufW / BUFFER_OVERSAMPLE;
   const sourceH = bufH / BUFFER_OVERSAMPLE;
 
-  // Whole device pixels per source pixel. Never below 1, so a container too small for even 1:1
-  // gets the smallest honest size and overflows instead of collapsing to nothing.
   const scale = Math.max(1, Math.floor(Math.min((containerW * dpr) / sourceW, (containerH * dpr) / sourceH)));
 
   return { width: (sourceW * scale) / dpr, height: (sourceH * scale) / dpr };
 };
 
-/** Largest size preserving the source proportions, filling one axis exactly. */
 const fitProportional = (containerW: number, containerH: number, bufW: number, bufH: number): FitSize => {
   const scale = Math.min(containerW / bufW, containerH / bufH);
   return { width: Math.floor(bufW * scale), height: Math.floor(bufH * scale) };
@@ -83,10 +56,6 @@ const useCanvasFit = (params: CanvasFitParams): FitSize => {
     return () => ro.disconnect();
   }, [compute]);
 
-  // Moving the window to a monitor with different display scaling changes the device pixel ratio
-  // without changing the container's CSS size, so the resize observer never fires; this media
-  // query does. Re-armed on each change, because a query only matches the ratio it was built
-  // with. Only pixel-perfect mode depends on the ratio, so nothing else pays for the listener.
   useEffect(() => {
     if (!pixelPerfect) return;
     const query = window.matchMedia(`(resolution: ${pixelRatio}dppx)`);

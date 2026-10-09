@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useState, useCallback } from 'react';
-import type { ConfirmDialog } from '../types';
+import type { ConfirmDialog } from '../App.type';
 
 const useConfirmDialog = () => {
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);

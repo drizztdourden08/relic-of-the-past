@@ -29,16 +29,6 @@ const useAudioSettings = () => {
     }
   }, [masterVolume]);
 
-  /**
-   * A launch flag is applied by USING the mute control, not by working around it.
-   *
-   * The settings push that runs when the game starts re-applies the profile's
-   * volume, so anything set before that is undone. So this waits for the game to
-   * be running, then presses the mute button once. Nothing new gates the audio.
-   *
-   * Both flags are honoured, so the result never depends on the volume the profile
-   * happens to hold: --muted presses it only if sound is on, --sound only if it is off.
-   */
   useEffect(() => {
     const startup = window.api?.startup;
     if (!startup?.muted && !startup?.sound) return;
@@ -47,9 +37,9 @@ const useAudioSettings = () => {
       if (fired || state.status !== 'running') return;
       fired = true;
       const wantMute = startup.muted === true;
-      // Read through the setter to avoid depending on a stale render's value.
       setMasterVolumeState((current) => {
-        if (wantMute === (current === 0)) return current; // already as asked
+        const alreadyAsAsked = wantMute === (current === 0);
+        if (alreadyAsAsked) return current;
         const v = ++muteVersionRef.current;
         const next = wantMute ? 0 : (prevVolumeRef.current || 100);
         if (!wantMute) prevVolumeRef.current = next;
@@ -62,13 +52,6 @@ const useAudioSettings = () => {
     return unsub;
   }, []);
 
-  /**
-   * Takes the volume as loaded. A `--muted` launch is already zero here, because the
-   * flag is applied once in mergeSettings where the setting is born. Two earlier
-   * attempts set the engine volume (and the muteOverride) from here instead, and
-   * both lost: pushLiveSettings re-applies settings.masterVolume to the gain node
-   * AND the WASM mixer when the game starts.
-   */
   const initFromSettings = useCallback((volume: number) => {
     setMasterVolumeState(volume);
     if (volume > 0) prevVolumeRef.current = volume;

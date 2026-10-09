@@ -1,13 +1,7 @@
 /* @layer renderer-other @kind logic */
-/**
- * Capacitor FileStore, backed by app-private storage via the Filesystem plugin
- * (Directory.Data). Paths are the same logical paths used on Electron (relative
- * to the data root); binary crosses the bridge as base64.
- */
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Filesystem, Encoding } from '@capacitor/filesystem';
 import type { FileStore, FileStat } from '@shared/platform';
-
-const DIR = Directory.Data;
+import { DIR } from './capacitor.constants';
 
 const bytesToBase64 = (bytes: Uint8Array): string => {
   let binary = '';
@@ -49,13 +43,13 @@ const createCapacitorFileStore = (): FileStore => ({
       const s = await Filesystem.stat({ path, directory: DIR });
       if (s.type === 'directory') await Filesystem.rmdir({ path, directory: DIR, recursive: true });
       else await Filesystem.deleteFile({ path, directory: DIR });
-    } catch { /* missing → no-op */ }
+    } catch { return; }
   },
   exists: async (path) => {
     try { await Filesystem.stat({ path, directory: DIR }); return true; } catch { return false; }
   },
   mkdir: async (dir) => {
-    try { await Filesystem.mkdir({ path: dir, directory: DIR, recursive: true }); } catch { /* already exists */ }
+    try { await Filesystem.mkdir({ path: dir, directory: DIR, recursive: true }); } catch { return; }
   },
   stat: async (path): Promise<FileStat | null> => {
     try {

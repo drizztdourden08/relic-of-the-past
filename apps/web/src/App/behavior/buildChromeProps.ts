@@ -1,30 +1,6 @@
 /* @layer renderer-appshell @kind logic */
-/**
- * Builds the prop bag shared by the desktop TitleBar and the touch MobileChrome. Same actions,
- * two views. Pure wiring, extracted from AppMain so that component stays about composition.
- */
 import type { TitleBarProps } from '../../ui/domains/app/views/TitleBar/TitleBar.type';
-import type { ProfileHubTab } from '../../ui/domains/app/views/ProfileHub/ProfileHub.type';
-import type { PageId } from '../types';
-
-interface ChromePropsDeps {
-  profileMgmt: { handleImportRom: () => void; activeProfile: TitleBarProps['activeProfile'] };
-  widgets: { toggle: (id: string) => void };
-  saveOverlay: { toggle: () => void };
-  nav: { setActivePage: (page: PageId) => void };
-  game: { isRunning: boolean };
-  display: { windowMode: TitleBarProps['windowMode']; showFps: boolean };
-  audio: { isMuted: boolean; handleToggleMute: () => void };
-  widgetVisibility: Record<string, boolean>;
-  developerToolsEnabled: boolean;
-  handleShowProfile: (tab?: ProfileHubTab) => void | Promise<void>;
-  handleShowDataManager: (tab?: string) => void | Promise<void>;
-  handleShowShadowEditor: () => void;
-  canUpdate: boolean;
-  update: { supported: boolean; status: string; check: () => void };
-  setShowUpdateDialog: (open: boolean) => void;
-  setShowBugReportDialog: (open: boolean) => void;
-}
+import type { ChromePropsDeps } from './build-chrome-props.type';
 
 const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
   const {
@@ -37,8 +13,6 @@ const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
     onImportRom: profileMgmt.handleImportRom,
     onSwitchProfile: () => { void handleShowDataManager('profiles'); },
     onShowProfile: () => { void handleShowProfile(); },
-    // Deep-links the Display tab, so the incompatible-refresh-rate tag lands on the setting
-    // that explains it instead of the hub's front page.
     onShowDisplaySettings: () => { void handleShowProfile('settings'); },
     onShowLogs: () => widgets.toggle('logs'),
     onToggleSaveStates: saveOverlay.toggle,

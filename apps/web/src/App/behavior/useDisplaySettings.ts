@@ -2,7 +2,8 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { usePlatform } from '@app/platform';
-import { syncAspectRatioLock } from './syncAspectRatioLock';
+import { syncAspectRatioLock } from './sync-aspect-ratio-lock';
+import { CANVAS_POLL_ATTEMPTS, CANVAS_POLL_MS } from './useDisplaySettings.constants';
 
 const useDisplaySettings = (params: { isGameRunning: boolean }) => {
   const { isGameRunning } = params;
@@ -42,19 +43,16 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
     setPixelPerfect(enabled);
   }, []);
 
-  // Track fullscreen state for aspect ratio lock
   useEffect(() => {
     win.isFullscreen().then(setIsFullscreen);
     return win.onFullscreenChange(setIsFullscreen);
   }, [win]);
 
-  // Sync aspect ratio lock when settings change
   useEffect(() => {
     if (!isGameRunning) return;
     syncAspectRatioLock(win, viewportConstraint, aspectRatio, windowMode, isFullscreen);
   }, [win, isGameRunning, viewportConstraint, aspectRatio, windowMode, isFullscreen]);
 
-  // Re-sync when game starts (canvas buffer dimensions become available)
   const vcRef = useRef(viewportConstraint);
   const arRef = useRef(aspectRatio);
   const wmRef = useRef(windowMode);
@@ -76,11 +74,11 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
     const poll = setInterval(() => {
       attempts++;
       const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
-      if ((canvas && canvas.width > 0 && canvas.height > 0) || attempts >= 30) {
+      if ((canvas && canvas.width > 0 && canvas.height > 0) || attempts >= CANVAS_POLL_ATTEMPTS) {
         clearInterval(poll);
         syncAspectRatioLock(win, vcRef.current, arRef.current, wmRef.current, fsRef.current);
       }
-    }, 100);
+    }, CANVAS_POLL_MS);
     return () => clearInterval(poll);
   }, [win, isGameRunning]);
 

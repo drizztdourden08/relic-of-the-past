@@ -1,17 +1,6 @@
 /* @layer renderer-lib @kind logic */
-/**
- * The pool builder's own partition as list groups: the global pool by its
- * classification (progression, useful, filler), the assured starting
- * weapon, the per-dungeon restricted sets and the prizes, each a name → count
- * multiset, largest count first. The categories are
- * read off the built pool, never re-derived here. Art comes from the
- * extracted sprite set through the one lookup every surface shares
- * (pool-item-sprite.ts). While the set is not extracted yet,
- * no row carries a sprite at all, so the listing shows placeholders instead of
- * asking for files that are not on disk.
- */
 import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
-import { poolItemSpriteOfKey } from './pool-item-sprite';
+import { poolItemSpriteOfKey } from './pool-item-sprite-of-key';
 import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
 import type { ItemPool } from '@shared/randomizer/world/pool/item-pool.type';
 import type { PoolListingGroup, PoolListingRow } from '@domains/app/compounds/PoolListing';

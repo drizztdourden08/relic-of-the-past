@@ -7,16 +7,12 @@
       content="default-src 'none'; style-src 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'"
     />
     <title>Relic of the Past</title>
-    <!-- The boot splash, in its own window. No bundle, no preload, no imports: every
-         byte here paints on the first frame, which is the whole point of the window. -->
     <style>
       html, body {
         margin: 0;
         height: 100%;
         overflow: hidden;
         background: #000;
-        /* No -webkit-app-region:drag anywhere on this page. A frameless window with no
-           drag region cannot be moved, which is what a splash should be. */
         user-select: none;
         cursor: default;
       }
@@ -42,17 +38,11 @@
         animation: splash-rotate 0.7s linear infinite;
       }
       .splash__status {
-        /* Out of flow on purpose: the logo + spinner column stays centred exactly where
-           the installer's splash GIF puts it, whatever the status line says. Being
-           bottom-anchored it grows UPWARDS, so nowrap keeps it to one line and the
-           ellipsis absorbs the rest, keeping the gap below fixed. */
         position: fixed;
         left: 0;
         right: 0;
         bottom: 14px;
         margin: 0;
-        /* Symmetric, so the text stays centred, and wide enough that the longest
-           message can never reach the version stamp in the bottom right. */
         padding: 0 80px;
         white-space: nowrap;
         overflow: hidden;
@@ -84,9 +74,6 @@
     <p class="splash__status" id="splash-status">Starting...</p>
     <span class="splash__version" id="splash-version"></span>
     <script>
-      // The main process drives the status line through this one global (see
-      // window/boot/splash-window.ts). Kept trivial so a failed call costs a message,
-      // never the splash itself.
       window.__splashStatus = (message) => {
         document.getElementById('splash-status').textContent = message;
       };

@@ -1,10 +1,5 @@
 /* @layer renderer-other @kind logic */
-interface FormatBytesOptions {
-  /** Returned when bytes is null/undefined (default '0 B'). */
-  nullText?: string;
-  /** Decimal places for the KB tier (default 1). */
-  kbDecimals?: number;
-}
+import type { FormatBytesOptions } from './format-bytes.type';
 
 const formatBytes = (bytes: number | null | undefined, options: FormatBytesOptions = {}): string => {
   const { nullText = '0 B', kbDecimals = 1 } = options;

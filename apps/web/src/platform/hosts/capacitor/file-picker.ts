@@ -1,11 +1,4 @@
 /* @layer renderer-other @kind logic */
-/**
- * Capacitor file picker via @capawesome/capacitor-file-picker (reads bytes as base64).
- *
- * Saving goes to the device's Documents directory, not through a share sheet. This
- * project does not depend on @capacitor/share, and a file written where the user's own file
- * manager can reach it needs no extra plugin.
- */
 import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import type { FilePickerPort } from '@shared/platform';
@@ -23,8 +16,6 @@ const base64ToBytes = (b64: string): Uint8Array => {
   return out;
 };
 
-// Map picker extensions to MIME types Android's document picker accepts
-// (.sfc/.smc have no registered type, so they resolve to application/octet-stream).
 const extToMime = (ext: string): string => (ext === 'zip' ? 'application/zip' : 'application/octet-stream');
 
 const createCapacitorFilePicker = (): FilePickerPort => ({

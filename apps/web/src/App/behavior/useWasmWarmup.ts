@@ -1,10 +1,4 @@
 /* @layer renderer-appshell @kind hook */
-/**
- * Kicks the background game-core warmup once the React shell has mounted, piping
- * its progress into the boot-progress store (which the BootProgressBar observes).
- * warmWasmCore is single-flight, so React StrictMode's double-invoke in dev is
- * harmless.
- */
 import { useEffect } from 'react';
 import { warmWasmCore } from '../../lib/game/wasm-warmup';
 import { useBootProgressStore } from '../../stores/boot-progress-store';

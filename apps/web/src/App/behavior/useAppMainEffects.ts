@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { getInputManager } from '@app/lib/game';
 import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
-import type { PageId } from '../types';
+import type { PageId } from '../App.type';
 
 const useAppMainEffects = (params: {
   isGameRunning: boolean;
@@ -11,15 +11,12 @@ const useAppMainEffects = (params: {
 }) => {
   const { isGameRunning, activePage, openNavWidget } = params;
 
-  // Default notch mode until a profile loads (keeps startup windows clear of a cutout).
   useEffect(() => { applyNotchMode(true); }, []);
 
-  // Auto-open navigation widget when --auto-flood CLI flag is set (once, on mount).
   useEffect(() => {
     if (window.api.autoFlood) openNavWidget();
   }, []);
 
-  // Input suppression: disable game input when menus/overlays are open.
   useEffect(() => {
     const gameActive = isGameRunning && activePage === 'none';
     getInputManager().setInputSuppressed(!gameActive);

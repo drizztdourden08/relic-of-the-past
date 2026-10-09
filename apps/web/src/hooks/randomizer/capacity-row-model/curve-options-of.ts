@@ -1,0 +1,18 @@
+/* @layer renderer-lib @kind logic */
+import { CURVE_IDS, CURVE_LABELS } from '@shared/randomizer/world/capacity';
+import type { CapacityFamily } from '@shared/randomizer/world/capacity';
+import type { SelectGroup } from '@ds/primitives';
+import { offeredPresetsOf } from '../capacity-row-state';
+
+const curveOptionsOf = (capacityFamily: CapacityFamily): readonly SelectGroup[] => [
+  {
+    label: 'Curves',
+    options: [...CURVE_IDS, 'free' as const].map((curve) => ({ value: curve, label: CURVE_LABELS[curve] })),
+  },
+  {
+    label: 'Presets',
+    options: offeredPresetsOf(capacityFamily).map((preset) => ({ value: `preset:${preset.id}`, label: `Preset · ${preset.label}` })),
+  },
+];
+
+export { curveOptionsOf };

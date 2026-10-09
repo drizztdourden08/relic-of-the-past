@@ -1,10 +1,4 @@
 /* @layer renderer-other @kind hook */
-/**
- * The installed items of one kind, for an editor that locks them: `pack` is the install record
- * of the selected item, or null for the player's own, and `packFor` answers the same for any
- * row of the list. Starts the installed store's watch, so the first editor opened loads the
- * record.
- */
 import { useCallback, useEffect, useMemo } from 'react';
 import type { InstalledPack } from '@shared/store/installed-types';
 import type { StoreKind } from '@shared/store/types';

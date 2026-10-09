@@ -1,11 +1,4 @@
 /* @layer renderer-appshell @kind hook */
-/**
- * Imports a music pack the app was opened with, from the desktop file association.
- *
- * The main process reports the path (msu:openPack); reading it needs a trip back through IPC
- * because the renderer cannot open an arbitrary path itself. The import is the same one the
- * Data Manager performs, so an opened pack and a dropped pack land identically.
- */
 import { useEffect } from 'react';
 import { installMsulFile } from '@app/lib/storage/msu-store';
 import { log } from '../../lib/log-bus';
