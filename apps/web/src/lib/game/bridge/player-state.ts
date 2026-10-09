@@ -1,14 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Live player-state bytes for the widget's state chips (WasmGetPlayerStateInfo).
- *
- * Separate from the flag snapshot on purpose: the simulator DIFFS that buffer to
- * detect checks, and these values change every frame, so folding them in there
- * would fabricate check events.
- */
 import { callWhenRunning } from './wasm-call';
+import type { PlayerStateInfo } from './player-state.type';
 
-/** Byte layout, mirroring state_queries.c. */
 const enum Byte {
   handlerState = 0,
   sleepStep = 1,
@@ -18,22 +11,6 @@ const enum Byte {
   grabbingWall = 5,
   progressFlags = 6,
   incapacitated = 7,
-}
-
-interface PlayerStateInfo {
-  /** kPlayerState_* says what the player handler is doing right now. */
-  handlerState: number;
-  /** Step INSIDE the sleeping handler (0 while actually asleep). */
-  sleepStep: number;
-  /** Dashing with the Pegasus boots. */
-  isRunning: boolean;
-  isBunny: boolean;
-  inDeepWater: boolean;
-  grabbingWall: boolean;
-  /** sram_progress_flags holds the named story bits. */
-  progressFlags: number;
-  /** Nonzero while stunned or recoiling. */
-  incapacitated: boolean;
 }
 
 const wasmGetPlayerStateInfo = (): PlayerStateInfo | null =>
@@ -54,4 +31,4 @@ const wasmGetPlayerStateInfo = (): PlayerStateInfo | null =>
   });
 
 export { wasmGetPlayerStateInfo };
-export type { PlayerStateInfo };
+export type { PlayerStateInfo } from './player-state.type';

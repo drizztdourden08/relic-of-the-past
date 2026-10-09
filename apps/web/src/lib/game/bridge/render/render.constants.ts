@@ -1,0 +1,8 @@
+/* @layer bridge-wasm @kind constants */
+const DUNGEON_MODULE = 7;
+const OVERWORLD_MODULE = 9;
+const EXTEND_Y_HEIGHT = 240;
+const EXTEND_Y_BOTTOM_LINES = 16;
+const RGBA_BYTES = 4;
+
+export { DUNGEON_MODULE, OVERWORLD_MODULE, EXTEND_Y_HEIGHT, EXTEND_Y_BOTTOM_LINES, RGBA_BYTES };

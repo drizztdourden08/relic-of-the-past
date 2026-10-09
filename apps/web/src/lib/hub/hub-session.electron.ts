@@ -1,5 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/** The Electron adapter of the session port: every call is one IPC channel. */
 import type { HubSession } from './hub-session.type';
 
 const electronHubSession: HubSession = {

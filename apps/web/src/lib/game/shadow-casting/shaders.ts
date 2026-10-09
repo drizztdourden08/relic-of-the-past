@@ -1,9 +1,5 @@
-/* @layer bridge-wasm @kind logic */
-// Shadow-casting passes: heightmap (single-channel texture) -> shadow (ray-march from sun/lights)
-// -> blur (shadowSoftness) -> composite (multiply over the game frame).
-
-/** Fullscreen quad vertex shader (shared across all passes) */
-const FULLSCREEN_VERT = /* glsl */ `
+/* @layer bridge-wasm @kind data */
+const FULLSCREEN_VERT = `
 attribute vec2 a_position;
 varying vec2 v_uv;
 void main() {
@@ -13,8 +9,7 @@ void main() {
 }
 `;
 
-/** Shadow fragment shader: occlusion from the heightmap for the sun and point/shape lights. */
-const SHADOW_FRAG = /* glsl */ `
+const SHADOW_FRAG = `
 precision mediump float;
 varying vec2 v_uv;
 
@@ -177,9 +172,7 @@ void main() {
 }
 `;
 
-/** Shadow blur pass: height-aware Gaussian blur for soft shadow edges.
- *  Skips samples inside shapes (height > 0) so shadow stays tight at shape edges. */
-const BLUR_FRAG = /* glsl */ `
+const BLUR_FRAG = `
 precision mediump float;
 varying vec2 v_uv;
 uniform sampler2D u_texture;
@@ -220,8 +213,7 @@ void main() {
 }
 `;
 
-/** Composite pass that outputs the light map only (CSS mix-blend-mode: multiply combines with game) */
-const COMPOSITE_FRAG = /* glsl */ `
+const COMPOSITE_FRAG = `
 precision mediump float;
 varying vec2 v_uv;
 uniform sampler2D u_gameTexture;

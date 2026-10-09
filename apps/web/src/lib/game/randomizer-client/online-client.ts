@@ -1,15 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The online session's state machine, with the game and the socket passed in (online-core,
- * a socket factory), so it runs unchanged in node against a fake server. The app builds it
- * through online-session.ts with the real ones.
- *
- * Lifecycle: start arms the core and dials; RoomInfo, DataPackage, Connect, Connected (see
- * online-dispatch.ts for each packet). A server that cannot be reached, at the first connect
- * or after a drop, is redialed on the backoff of reconnect.ts with the overrides left armed; a
- * stop or a refusal ends the session and disarms everything. A save swap asks again (online-save-swap.ts).
- * Every packet both ways passes the network monitor, which owns the tracker links (online-network.ts).
- */
 import { log } from '../../log-bus';
 import { AP_GAME } from '@shared/randomizer/archipelago/ap-game';
 import { createNameTables } from './ap-names';
@@ -28,17 +17,14 @@ import { senderNameOf } from './online-received';
 import { serverUrlCandidates } from './server-url';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { ApClientPacket } from './ap-protocol.type';
-import type { CreateSocket } from './ap-socket.type';
 import type { ForeignOwners } from './foreign-item-line';
 import type { OnlineContext } from './online-context.type';
-import type { OnlineCore } from './online-core.type';
 import type { ScoutMaps } from './online-overrides';
 import type { OnlineSession } from './online-session.type';
 import type { OnlineSessionConfig } from './online-session-config.type';
 import type { SocketLink } from './online-socket';
 import type { RandomizerSession } from './session.type';
-
-type OnlineDeps = { core: OnlineCore; createSocket: CreateSocket };
+import type { OnlineDeps } from './online-client.type';
 
 const createOnlineClient = (config: OnlineSessionConfig, deps: OnlineDeps): OnlineSession => {
   const { url, slotName, game = AP_GAME, deathLink = false } = config;
@@ -101,7 +87,6 @@ const createOnlineClient = (config: OnlineSessionConfig, deps: OnlineDeps): Onli
     endSession();
   };
 
-  // A server down or restarting is retried; the try is scheduled before the status says reconnecting.
   const handleClose = (opened: boolean): void => {
     link = null;
     resetConnection(room);
@@ -196,4 +181,4 @@ const createOnlineClient = (config: OnlineSessionConfig, deps: OnlineDeps): Onli
 };
 
 export { createOnlineClient };
-export type { OnlineDeps };
+export type { OnlineDeps } from './online-client.type';

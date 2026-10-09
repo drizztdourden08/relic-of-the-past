@@ -1,5 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/** The physical plan's one-line summary and every plan error, logged under the session's tag. */
 import { log } from '../../log-bus';
 import type { PhysicalPlan } from './physical-plan.type';
 

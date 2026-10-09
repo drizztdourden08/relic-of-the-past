@@ -1,44 +1,9 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Paint one frame of a message-box texture into a canvas. Cells are addressed by their index in an
- * endless grid and placed at index times pitch plus the animation's slide, so a sliding field never
- * wraps: a cell keeps its seat, its scatter and its twinkle phase however far the field has moved.
- * Density sets the pitch, scale the cell size, and scatter nudges every cell off its seat by a
- * seeded amount and varies its size, so at full scatter the grid is gone and the field reads as
- * strewn. The canvas is sized to the device pixels of its box and scaled to game pixels.
- */
-import type { DialogTexture, DialogTextureAnimation, DialogTextureSpeed } from '@shared/game/dialog/box-style';
 import { animationState } from './animate';
 import { patternOf } from './patterns';
-
-interface TextureFrame {
-  texture: DialogTexture;
-  color: string;
-  opacity: number;
-  animation: DialogTextureAnimation;
-  speed: DialogTextureSpeed;
-  /** Cell size multiplier. */
-  scale: number;
-  /** 0..100: how close the cells sit; 100 is the pattern's natural pitch. */
-  density: number;
-  /** 0..100: how far off its seat a cell may sit, and how much its size varies. */
-  scatter: number;
-  /** Time in seconds since the texture appeared. */
-  t: number;
-  /** Area in game pixels. */
-  widthPx: number;
-  heightPx: number;
-  /** Device pixels per game pixel. */
-  devicePx: number;
-}
-
-/** Pitch multiplier at density 0: cells sit this many pitches apart. */
-const SPARSEST = 2.5;
-
-const pseudo = (seed: number, salt: number): number => {
-  const v = Math.sin(seed * 127.1 + salt * 311.7) * 43758.5453;
-  return v - Math.floor(v);
-};
+import { seededNoise } from './seeded-noise';
+import type { TextureFrame } from './paint-texture.type';
+import { SPARSEST_PITCH_FACTOR } from './paint-texture.constants';
 
 const paintTexture = (canvas: HTMLCanvasElement, frame: TextureFrame): void => {
   const { texture, color, opacity, animation, speed, scale, density, scatter, t, widthPx, heightPx, devicePx } = frame;
@@ -59,7 +24,7 @@ const paintTexture = (canvas: HTMLCanvasElement, frame: TextureFrame): void => {
   ctx.fillStyle = color;
   ctx.lineJoin = 'round';
 
-  const spacing = 1 + (1 - Math.min(100, Math.max(0, density)) / 100) * (SPARSEST - 1);
+  const spacing = 1 + (1 - Math.min(100, Math.max(0, density)) / 100) * (SPARSEST_PITCH_FACTOR - 1);
   const loose = Math.min(100, Math.max(0, scatter)) / 100;
   const { brick, rows, draw } = pattern;
   const pitchX = pattern.pitchX * scale * spacing;
@@ -75,9 +40,9 @@ const paintTexture = (canvas: HTMLCanvasElement, frame: TextureFrame): void => {
       const alpha = opacity * fieldAlpha * cellAlpha(r, c);
       if (alpha <= 0.005) continue;
       const seed = r * 7919 + c * 104729;
-      const jx = rows ? 0 : (pseudo(seed, 1) - 0.5) * loose * pitchX * 1.2;
-      const jy = (pseudo(seed, 2) - 0.5) * loose * pitchY * 1.2;
-      const size = scale * (1 + (pseudo(seed, 3) - 0.5) * 0.6 * loose);
+      const jx = rows ? 0 : (seededNoise(seed, 1) - 0.5) * loose * pitchX * 1.2;
+      const jy = (seededNoise(seed, 2) - 0.5) * loose * pitchY * 1.2;
+      const size = scale * (1 + (seededNoise(seed, 3) - 0.5) * 0.6 * loose);
       ctx.save();
       ctx.globalAlpha = Math.min(1, alpha);
       ctx.translate(rows ? widthPx / 2 : c * pitchX + shift + offsetX + jx, r * pitchY + offsetY + jy);

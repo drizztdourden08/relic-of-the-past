@@ -1,26 +1,7 @@
 /* @layer renderer-lib @kind logic */
-/**
- * How much audio a single Opus packet holds, from its TOC byte: coding mode and bandwidth in
- * the top five bits, frame count in the bottom two (the multi-frame code puts the count in the
- * next byte). Tables are in 48 kHz samples, the unit Ogg granule positions use.
- */
-
-/** The four frame sizes the speech modes offer, 10 / 20 / 40 / 60 ms. */
-const SPEECH_FRAME_SAMPLES = [480, 960, 1920, 2880];
-/** The mixed speech-plus-music modes, 10 / 20 ms. */
-const HYBRID_FRAME_SAMPLES = [480, 960];
-/** The music-only modes a music pack uses, 2.5 / 5 / 10 / 20 ms. */
-const MUSIC_FRAME_SAMPLES = [120, 240, 480, 960];
-
-const SPEECH_CONFIGS = 12;
-const HYBRID_CONFIGS = 16;
-const FRAME_COUNT_MASK = 0x3f;
-
-interface OpusPacket {
-  data: Uint8Array;
-  /** Decoded length in samples per channel at 48 kHz. */
-  samples: number;
-}
+import {
+  FRAME_COUNT_MASK, HYBRID_CONFIGS, HYBRID_FRAME_SAMPLES, MUSIC_FRAME_SAMPLES, SPEECH_CONFIGS, SPEECH_FRAME_SAMPLES,
+} from './opus-packets.constants';
 
 const frameSamples = (config: number): number => {
   if (config < SPEECH_CONFIGS) return SPEECH_FRAME_SAMPLES[config & 3];
@@ -39,4 +20,4 @@ const opusPacketSamples = (data: Uint8Array): number =>
   data.length === 0 ? 0 : frameSamples(data[0] >> 3) * frameCount(data);
 
 export { opusPacketSamples };
-export type { OpusPacket };
+export type { OpusPacket } from './opus-packets.type';

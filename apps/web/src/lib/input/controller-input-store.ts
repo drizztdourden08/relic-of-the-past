@@ -1,11 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Button/axis state and diagnostics for every
- * connected pad. Input decoding itself is owned entirely by the SDL3 native
- * transport (see handleControllerState); this module holds the resulting
- * state, calibration, and the diagnostic log the InputTester UI reads.
- */
-
 import { CalibrationStore } from './calibration-store';
 import { processControllerState } from './process-controller-state';
 import type { DeviceStickCalibration, TriggerCalibration } from './stick-calibration';
@@ -17,7 +10,8 @@ import type {
   ControllerStateListener,
   HidRawReportEvent,
   HidRawReportListener,
-} from './controller-input-store-types';
+} from './controller-input-store.type';
+import { DIAG_LOG_MAX } from './controller-input-store.constants';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 
@@ -61,7 +55,7 @@ class ControllerInputStore {
   log(msg: string): void {
     const entry = `[${new Date().toLocaleTimeString()}] ${msg}`;
     this.diagLog.push(entry);
-    if (this.diagLog.length > 100) this.diagLog.shift();
+    if (this.diagLog.length > DIAG_LOG_MAX) this.diagLog.shift();
     for (const cb of this.diagListeners) cb(entry);
   }
   pushRawLog(entry: string): void {
@@ -73,10 +67,6 @@ class ControllerInputStore {
   getStates(): Map<string, ControllerInputState> { return this.states; }
   isConnected(): boolean { return this.connected; }
   getRawReportLog(): string[] { return [...this.rawReportLog]; }
-  /** Devices that have sent at least one input report this session. NOT the same as
-   *  "connected". SDL emits state on change only, so an untouched-but-connected pad
-   *  never appears here. For actual connection state, use the device snapshot
-   *  (InputManager.hidDeviceCache, status 'ready') instead. */
   getDevicesThatHaveReported(): string[] { return [...this.connectedDeviceKeys]; }
 
   onInput(listener: ControllerStateListener): () => void {
@@ -105,15 +95,10 @@ class ControllerInputStore {
     for (const cb of this.listeners) cb(state);
   }
 
-  // SDL3 controller state, already decoded, bypassing any report parser.
   handleControllerState(deviceKey: string, buttons: boolean[], axes: number[]): void {
     processControllerState(this, deviceKey, buttons, axes);
   }
 
-  /** One HID input report read while a diagnostic raw capture is open (see
-   *  native-capture-store.ts). Only one such capture runs at a time, keyed to
-   *  vendorId/productId, not a deviceKey, so it is rebuilt here to
-   *  match the "vid:pid" form the rest of this store already uses. */
   handleRawReport(report: ControllerRawReport): void {
     const deviceKey = `${toHex4(report.vendorId)}:${toHex4(report.productId)}`;
     const bytes = new Uint8Array(report.bytes);
@@ -129,16 +114,15 @@ class ControllerInputStore {
     this.log(`Device disconnected: ${deviceKey}`);
     this.addDiag(`Device disconnected: ${deviceKey}`);
     for (const cb of this.disconnectListeners) {
-      try { cb(deviceKey, deviceKey); } catch { /* ignore */ }
+      try { cb(deviceKey, deviceKey); } catch { continue; }
     }
   }
 }
 
-/** Singleton instance */
 const controllerInputStore = new ControllerInputStore();
 
 if (typeof window !== 'undefined') {
-  (window as any).__controllerInputStore = controllerInputStore;
+  Object.assign(window, { __controllerInputStore: controllerInputStore });
 }
 
 export { controllerInputStore };
@@ -149,5 +133,5 @@ export type {
   ControllerStateListener,
   HidRawReportEvent,
   HidRawReportListener,
-} from './controller-input-store-types';
+} from './controller-input-store.type';
 export type { StickCalibrationData, DeviceStickCalibration } from './stick-calibration';

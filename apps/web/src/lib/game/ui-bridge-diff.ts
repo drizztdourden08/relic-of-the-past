@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/** Shallow change detection between two GameUIState snapshots (every frame). */
 import type { GameUIState } from '@shared/game/types';
+import { INVENTORY_BOTTLE_SLOTS, INVENTORY_ITEM_SLOTS, INVENTORY_ORDER_SLOTS } from './ui-bridge-diff.constants';
 
 const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
   if (a.mode !== b.mode) return true;
@@ -52,19 +52,16 @@ const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
   const as_ = a.saveMenu, bs = b.saveMenu;
   if (as_.cursorPosition !== bs.cursorPosition || as_.sourceModule !== bs.sourceModule) return true;
 
-  // The host menu gates the pause takeover, so a frame where only these moved still has to
-  // reach the store: the open/close edge and the clobbered-item detection both ride on it.
   const ahm = a.hostMenu, bhm = b.hostMenu;
   if (ahm.holding !== bhm.holding || ahm.activeItem !== bhm.activeItem) return true;
 
-  // Check array equality for inventory items
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < INVENTORY_ITEM_SLOTS; i++) {
     if (a.inventory.items[i] !== b.inventory.items[i]) return true;
   }
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < INVENTORY_BOTTLE_SLOTS; i++) {
     if (a.inventory.bottles[i] !== b.inventory.bottles[i]) return true;
   }
-  for (let i = 0; i < 24; i++) {
+  for (let i = 0; i < INVENTORY_ORDER_SLOTS; i++) {
     if (a.inventory.order[i] !== b.inventory.order[i]) return true;
   }
 

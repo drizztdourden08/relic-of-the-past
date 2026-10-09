@@ -1,10 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * A profile's connection changed: the session follows at once. A profile session that is
- * running, retrying or stopped by a refusal is replaced by a fresh one on the new values; a
- * boot still waiting for the game takes them with it. Nothing else runs, so a profile whose
- * game is not up connects at its next boot, as always.
- */
 import { log } from '../../log-bus';
 import { onlineConfigOfProfile } from './online-config-of-profile';
 import { getPendingBoot, getSessionState, setPendingBoot, startOnline } from './session-store';

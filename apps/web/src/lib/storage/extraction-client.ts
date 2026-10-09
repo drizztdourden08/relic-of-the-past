@@ -1,5 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/** Posts a job to the extraction Web Worker and resolves its result (one worker per job). */
 import ExtractWorker from '@app/lib/game/extract-assets.worker?worker';
 
 const runOnWorker = <T>(message: unknown): Promise<T> =>

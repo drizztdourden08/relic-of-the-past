@@ -1,25 +1,10 @@
 /* @layer bridge-wasm @kind types */
-/**
- * Multiworld protocol types: the typed subset of the Archipelago network
- * protocol the online session speaks: JSON arrays of packets over a WebSocket,
- * each packet discriminated on `cmd`. This file holds the shared shapes; the
- * packets themselves live in ap-server-packets.type.ts and
- * ap-client-packets.type.ts and are re-exported here.
- */
-
-/** Per-game name to id tables from the server's data package. */
 interface ApGameData {
   item_name_to_id: Record<string, number>;
   location_name_to_id: Record<string, number>;
-  /** Present on every current server; the cache key for a game's tables. */
   checksum?: string;
 }
 
-/**
- * One placed item as the server describes it (network ids, not names). In
- * ReceivedItems `player` is the slot whose world held the item (the sender);
- * in LocationInfo it is the slot that receives it.
- */
 interface ApNetworkItem {
   item: number;
   location: number;
@@ -48,7 +33,6 @@ interface ApNetworkSlot {
   group_members: number[];
 }
 
-/** One piece of a PrintJSON message. */
 interface ApJsonMessagePart {
   type?: string;
   text?: string;

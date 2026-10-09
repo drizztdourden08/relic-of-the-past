@@ -1,27 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The notice a PrintJSON message raises, or null. Items are told from this player's side:
- * received from someone, sent to someone, found for ourselves, or passed between two other
- * players. A hint keeps the server's own line, its names drawn apart. Joins and parts of
- * trackers and text clients (this app's own tracker links among them) raise nothing, and
- * neither does anything this client said or did itself, except its own goal.
- */
 import { isNonGameClient } from './network-presence';
 import { itemPart, noticeOf, playerPart } from './online-notices';
 import type { ApJsonMessagePart, ApPrintJsonPacket } from './ap-protocol.type';
 import type { NameTables } from './ap-names';
 import type { NoticePart, OnlineNotice } from './online-notices';
-
-interface PrintSide {
-  names: NameTables;
-  /** This client's slot; null before Connected. */
-  slot: number | null;
-  team: number | null;
-}
-
-const TONE_OF_PART: Readonly<Record<string, NoticePart['tone']>> = {
-  player_id: 'player', player_name: 'player', item_id: 'item', item_name: 'item',
-};
+import { TONE_OF_PART } from './notice-of-print.constants';
+import type { PrintSide } from './notice-of-print.type';
 
 const partOf = (part: ApJsonMessagePart, names: NameTables): NoticePart => {
   const text = part.text ?? '';
@@ -99,4 +83,4 @@ const noticeOfPrint = (packet: ApPrintJsonPacket, side: PrintSide): OnlineNotice
 };
 
 export { noticeOfPrint };
-export type { PrintSide };
+export type { PrintSide } from './notice-of-print.type';

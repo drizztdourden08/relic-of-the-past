@@ -1,7 +1,5 @@
-/* @layer bridge-wasm @kind logic */
-/** Composite pass fragment shader: blend sharp reflection → blurred with Voronoi
- *  noise animation, pixelation mask, and edge fade. Split from shaders.ts for size. */
-const COMPOSITE_FRAG = /* glsl */ `
+/* @layer bridge-wasm @kind data */
+const COMPOSITE_FRAG = `
 precision mediump float;
 varying vec2 v_uv;
 uniform sampler2D u_gameTexture;

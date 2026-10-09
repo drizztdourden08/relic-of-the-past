@@ -1,10 +1,5 @@
 /* @layer renderer-lib @kind logic */
-/**
- * The display the window is currently on, as the renderer sees it. Scale factor and
- * colour capability decide how the pixel-art scaler behaves, so they matter for any
- * report about blurry or mis-sized output.
- */
-import type { DisplayEnvironment } from './types';
+import type { DisplayEnvironment } from './diagnostics.type';
 
 const matches = (query: string): boolean => {
   try {

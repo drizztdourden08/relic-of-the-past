@@ -6,34 +6,13 @@ import { computeBigScreenGroup } from '@domains/widgets/navigation/widget-helper
 import { collectCrossings } from '../crossings';
 import { connectionCrossingId, midOf, takeableCrossing, usableCrossings } from '../usable-crossings';
 import { floodOneOverworld, summarizeRun } from './flood-screen';
-import type { ScreenFlood } from './flood-screen';
 import { owScreenId, interiorScreenId, spawnTile, screenAreaInfo } from './screen-resolve';
 import { stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, reachedGrid, AREA_EXIT_BIAS } from './exit-order';
-import { detectRoom, dedupe } from './room-exits';
+import { detectRoom } from './room-exits';
+import { dedupe } from './dedupe';
 import { locationForScreen } from './screen-location';
-
-interface DetectedScreen {
-  flood: ScreenFlood;
-  exits: SimExit[];
-  /** Flood-reached tiles: the engine's region memory for re-visits. */
-  reached: boolean[][];
-}
-
-/** Ordering score for an exit whose tile the walk never reached. */
-const UNREACHED = 0xffff;
-
-interface OverworldExitPass {
-  fromKey: string;
-  bundles: Map<string, ConnectionInfo>;
-  /** Sub-screens of the big area being visited; a group of one is a plain screen. */
-  group: Set<number>;
-}
-
-/** An exit plus whether taking it leaves the big area currently being explored. */
-interface OrderedExit {
-  exit: SimExit;
-  leavesArea: boolean;
-}
+import { UNREACHED } from './screen-exits.constants';
+import type { DetectedScreen, OrderedExit, OverworldExitPass } from './screen-exits.type';
 
 const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
 
@@ -62,11 +41,6 @@ const borderExit = (crossing: ScreenCrossing, pass: OverworldExitPass): OrderedE
   };
 };
 
-/**
- * A door or a pit into a room. A pit is one-way, because the player drops in and
- * must find another way out, while a doorway can always be walked back through.
- * That is what `twoWay` tells the graph.
- */
 const entranceExit = (crossing: ScreenCrossing, pass: OverworldExitPass): OrderedExit | null => {
   const destRoom = roomOf(crossing);
   if (destRoom === null) return null;
@@ -93,12 +67,6 @@ const overworldExitFor = (crossing: ScreenCrossing, pass: OverworldExitPass): Or
   return null;
 };
 
-/**
- * Flood ONE overworld sub-screen exactly like any other screen. Sub-screens of a
- * big area (castle-style groups) are separate visits: borders into sibling
- * sub-screens are ordinary exits, ordered before out-of-area ones so the whole
- * big screen gets explored before moving on.
- */
 const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: GridPos, fromKey = `ow:${screenIndex}`): DetectedScreen | null => {
   const run = floodOneOverworld(screenIndex, items, entryTile);
   if (!run) return null;
@@ -126,20 +94,8 @@ const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: Grid
   return { flood: summarizeRun(run, items), exits: dedupe(sortExitsByDistance(exits, scores)), reached: reachedGrid(run.result.reachable) };
 };
 
-/**
- * A screen's flood numbers plus the game-driven exits the run traverses on. This
- * is the ONLY exit source the simulator has, with no static connection data
- * behind it.
- *
- * A synthetic id the dataset does not define still names a real room, so it is
- * detected from its number: a room with real geometry and a coarse name beats a
- * hole in the graph.
- */
 const detectScreenExits = (screenId: string, opts?: { entryTile?: GridPos; items?: TileReq[] }): DetectedScreen | null => {
   const items = opts?.items ?? ['lift.1'];
-  // ONE resolution for both vocabularies. A second copy reading the overworld
-  // index out of `roomIndex`, which an overworld record does not carry, sends
-  // every dataset-id overworld detection to screen 0.
   const loc = locationForScreen(screenId);
   if (!loc) return null;
   return loc.isIndoors
@@ -148,4 +104,4 @@ const detectScreenExits = (screenId: string, opts?: { entryTile?: GridPos; items
 };
 
 export { detectScreenExits };
-export type { DetectedScreen };
+export type { DetectedScreen } from './screen-exits.type';

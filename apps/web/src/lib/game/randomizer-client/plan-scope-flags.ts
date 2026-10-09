@@ -1,19 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The scope flags of a persisted placement: what generation locked, derived
- * again from the same stats so the bridge and the fill always name the same
- * rows. Option toggles lock whole scope tables; a toggle on locks the
- * capability probe's undeliverable remainder. The capacity spots follow the
- * profile the placement was generated with: a present fairy slot not proven
- * deliverable stays vanilla, and a vanilla
- * meter locks the bat explicitly, exactly as fill-world.ts does. A Custom
- * family with a locked spot also hands the poller its starting rung (0 is
- * the empty tier), so the pond's "purchased" compare keeps meaning "advanced
- * by one purchase". A wish pond at Vanilla grants locks her own two slots to
- * what her upgrade produces, so no override is armed there and the real
- * upgrade runs; only a placement that recorded the rule does.
- */
-
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { familyById, startTierOf } from '@shared/randomizer/world/capacity';
 import {
@@ -29,9 +14,6 @@ import { pondVanillaSlotsOf } from '@shared/randomizer/world/pond/pond-vanilla-s
 import { wishPondRungKeysOf } from './wish-pond-rung-keys';
 import type { ScopeFlags } from './scope-lock';
 
-
-
-/** The capacity spots this profile keeps vanilla: undeliverable fairy slots, plus the bat of a vanilla meter. */
 const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<LocationKey> => {
   const locked = new Set(lockedCapacitySpotsOf(profile, probeDeliverablePondLocations()));
   const meterSpot = spotOfFamily('meter');
@@ -39,7 +21,6 @@ const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<LocationKe
   return locked;
 };
 
-/** location → starting rung, for the locked spots of a Custom family (rung 0 included; other modes omitted). */
 const capacityStartTiersOf = (
   profile: CapacityProfile, locked: ReadonlySet<LocationKey>,
 ): ReadonlyMap<string, number> => {
@@ -55,9 +36,6 @@ const capacityStartTiersOf = (
 
 const scopeFlagsOfStats = (stats: PlacementStats): ScopeFlags => {
   const { includeWorldItems, capacity: profile, ponds } = stats;
-  // A non-legacy pond owns its prize slots outright: they are proven deliverable
-  // at generation or they are not locations at all, so nothing of the pond is
-  // ever capability-locked here.
   const pondOwnsSlots = ponds.capacity.mode !== 'capacity';
   const wishPondRungs = wishPondRungKeysOf(ponds);
   const pondSlots = pondVanillaSlotsOf(ponds, probeDeliverablePondLocations(), stats.pondSlotsFollowMode);
@@ -68,26 +46,19 @@ const scopeFlagsOfStats = (stats: PlacementStats): ScopeFlags => {
     includeNpcChecks: stats.includeNpcChecks,
     includeWorldItems,
     shufflePrizes: stats.shufflePrizes,
-    // A toggle on: generation locked the undeliverable scope remainder;
-    // classify with the same probe so both sides always name the same rows.
     ...(stats.includeNpcChecks ? { npcLockedLocations: undeliverableNpcLocations() } : {}),
     ...(includeWorldItems ? { worldLockedLocations: undeliverableWorldLocations() } : {}),
     capacityLockedLocations,
     ...(pondLocked.size > 0 ? { pondLockedItems: pondLocked } : {}),
-    // A slot sold as a prize rung is out of the npc and world scopes, as the fill left it.
     ...(pondSlots.pairAsPrizes.length > 0 ? { pondPrizeSlots: new Set(pondSlots.pairAsPrizes) } : {}),
     capacityStartTiers: capacityStartTiersOf(profile, capacityLockedLocations),
     shops: stats.shops,
-    // The rolled prices live on the placement, not its stats; the plan builder merges them in.
     shopPrices: {},
-    // A placement that kept the legacy pond carries no prize slots at all: its two
-    // pond names stay the capacity families' spots.
     ...(pondOwnsSlots
       ? { pondPrizeLocations: POND_PRIZE_LOCATIONS.slice(0, stats.pondPrizeCount) }
       : {}),
-    // Each wish pond's numbered rungs are that pond's own, apart from the capacity pond's.
     ...(wishPondRungs.size > 0 ? { wishPondRungs } : {}),
   };
 };
 
-export { capacityLockedSpotsOf, scopeFlagsOfStats };
+export { scopeFlagsOfStats };

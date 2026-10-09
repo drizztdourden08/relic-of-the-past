@@ -1,15 +1,8 @@
 /* @layer renderer-lib @kind logic */
-/** Gathers every save state a debug report packages: all quick slots, the 5 newest normal
- *  saves, the 2 newest auto-saves, plus one fresh 'live' capture of whatever is on screen
- *  right now. The live capture never touches the profile's own save stores (captureStateBuffer
- *  writes to a scratch WASM slot and unlinks it immediately), so packaging a report never
- *  creates a save the player didn't ask for. */
 import type { DebugReportSaveEntry } from '@shared/types/debug-report';
 import { captureStateBuffer } from '@app/lib/game/state-buffers';
 import * as savesStore from '../storage/saves-store';
-
-const NORMAL_LIMIT = 5;
-const AUTO_LIMIT = 2;
+import { AUTO_SAVES_IN_REPORT, NORMAL_SAVES_IN_REPORT } from './collect-save-states.constants';
 
 const byNewest = <T extends { timestamp: number }>(a: T, b: T): number => b.timestamp - a.timestamp;
 
@@ -19,8 +12,8 @@ const collectSaveStates = async (profileId: string): Promise<DebugReportSaveEntr
     savesStore.listNormalSaves(profileId),
     savesStore.listAutoSaves(profileId),
   ]);
-  const normalRecent = [...normalSaves].sort(byNewest).slice(0, NORMAL_LIMIT);
-  const autoRecent = [...autoSaves].sort(byNewest).slice(0, AUTO_LIMIT);
+  const normalRecent = [...normalSaves].sort(byNewest).slice(0, NORMAL_SAVES_IN_REPORT);
+  const autoRecent = [...autoSaves].sort(byNewest).slice(0, AUTO_SAVES_IN_REPORT);
 
   const entries: DebugReportSaveEntry[] = [];
 

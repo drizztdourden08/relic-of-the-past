@@ -10,11 +10,7 @@ import { BOUNDARY_ID_BASE, STAIR_ID_BASE } from '../../flood/room-entrances';
 import { roomTarget } from '../resolve-target';
 import { makeCrossing } from '../make-crossing';
 import type { CrossingPass } from '../crossings.type';
-
-/** kDoorType_ThroneRoom, whose walk-through boundary needs the follower in tow. */
-const THRONE_DOOR = 0x14;
-/** The token an ungated crossing never carries, so the gate reads as a need. */
-const FOLLOWER_REQ = 'follower';
+import { FOLLOWER_REQ, THRONE_DOOR } from './indoor-tables.constants';
 
 const isLoaded = (roomIndex: number): boolean => {
   const live = readMapState();
@@ -43,7 +39,6 @@ const stairCrossings = (pass: CrossingPass): ScreenCrossing[] => {
   return out;
 };
 
-/** True when this room's door table carries a push wall the follower opens. */
 const followerGated = (roomIndex: number): boolean =>
   (wasmGetRoomDoorInfo(roomIndex) ?? []).some((door) => door.nativeType === THRONE_DOOR) && !isFollowerActive();
 

@@ -1,18 +1,8 @@
 /* @layer renderer-lib @kind logic */
-// Machine-level facts reachable without a main process, plus the controllers SDL3 reads
-// directly. Device ids carry the vendor/product pair a controller-mapping report needs.
 import { listControllerDevices } from '@app/lib/input/controller-devices-store';
 import { recallControllerName } from '@app/lib/input/controller-name-cache';
-import type { DeviceEnvironment } from './types';
-
-// Both are non-standard Chromium extensions with no lib.dom typings.
-interface ChromiumNavigator extends Navigator {
-  deviceMemory?: number;
-}
-
-interface ChromiumPerformance extends Performance {
-  memory?: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number };
-}
+import type { DeviceEnvironment } from './diagnostics.type';
+import type { ChromiumNavigator, ChromiumPerformance } from './probe-device.type';
 
 const readJsHeap = (): DeviceEnvironment['jsHeap'] => {
   const memory = (performance as ChromiumPerformance).memory;
@@ -24,14 +14,6 @@ const readJsHeap = (): DeviceEnvironment['jsHeap'] => {
   };
 };
 
-/**
- * SDL3 claims every controller directly (the Gamepad API path is gone). Reads the device
- * snapshot, not the reported-input set: SDL only emits state on change, so an untouched pad
- * would be missing from a dump meant to list every device. Names come from the session's
- * controller:added cache (controller-name-cache.ts), falling back to the snapshot's fields.
- */
-/** Asks the controller layer directly, not the input manager's cache, which only exists once
- *  the manager has started and refreshed; earlier diagnostics reported no controllers. */
 const readHidDevices = async (): Promise<string[]> => {
   try {
     const entries = await listControllerDevices();

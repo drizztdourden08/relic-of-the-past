@@ -1,47 +1,12 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * One NetworkStatus snapshot, built from the session's status, the packet facts
- * (network-facts.ts), the room state, the ping, the presence counts, the tracker links'
- * progress and two reads of the game (the received index and whether a file is in play).
- */
 import { AP_WORLD_VERSION } from '@shared/randomizer/archipelago/ap-game';
 import { buildNetworkPlayers } from './network-players';
-import type { NameTables } from './ap-names';
 import type { NetworkFacts } from './network-facts';
-import type { Pinger } from './network-ping';
-import type { Presence } from './network-presence';
-import type {
-  NetworkChecksum, NetworkPermissions, NetworkState, NetworkStatus, PermissionMode,
-} from './network-status.type';
-import type { OnlineCore } from './online-core.type';
 import type { OnlineRoom } from './online-room';
-import type { OnlineSessionConfig } from './online-session-config.type';
-import type { RandomizerSession } from './session.type';
-import type { TrackerLinks } from './tracker-links';
-
-interface NetworkStatusInput {
-  sessionStatus: RandomizerSession['status'];
-  config: OnlineSessionConfig;
-  facts: NetworkFacts;
-  room: OnlineRoom;
-  names: NameTables;
-  core: Pick<OnlineCore, 'readReceivedIndex' | 'isFileInPlay'>;
-  ping: Pick<Pinger, 'lastMs' | 'meanMs' | 'samples'>;
-  presence: Pick<Presence, 'onlineOf' | 'statusOf'>;
-  trackers: Pick<TrackerLinks, 'progressOf'>;
-}
-
-const STATE_OF_STATUS: Readonly<Record<RandomizerSession['status'], NetworkState>> = {
-  idle: 'idle',
-  starting: 'connecting',
-  active: 'connected',
-  reconnecting: 'reconnecting',
-  error: 'error',
-};
-
-const PERMISSION_MODES: Readonly<Record<number, PermissionMode>> = {
-  0: 'disabled', 1: 'enabled', 2: 'goal', 6: 'auto', 7: 'auto-enabled',
-};
+import type {
+  NetworkChecksum, NetworkPermissions, NetworkStatus, NetworkStatusInput, PermissionMode,
+} from './network-status.type';
+import { MIN_PAID_HINT_COST, PERCENT, PERMISSION_MODES, STATE_OF_STATUS } from './network-status.constants';
 
 const modeOf = (value: number | undefined): PermissionMode =>
   (value === undefined ? 'unknown' : PERMISSION_MODES[value] ?? 'unknown');
@@ -49,13 +14,11 @@ const modeOf = (value: number | undefined): PermissionMode =>
 const permissionsOf = (raw: Record<string, number> | null): NetworkPermissions | null =>
   (raw === null ? null : { release: modeOf(raw.release), collect: modeOf(raw.collect), remaining: modeOf(raw.remaining) });
 
-/** The server's own formula: a percentage of the slot's locations, never under one point. */
 const hintCostPoints = (percent: number | null, total: number): number | null => {
   if (percent === null || total === 0) return null;
-  return percent > 0 ? Math.max(1, Math.floor(percent * 0.01 * total)) : 0;
+  return percent > 0 ? Math.max(MIN_PAID_HINT_COST, Math.floor(percent * PERCENT * total)) : 0;
 };
 
-/** A game the client did not ask for was served from the cache under the room's checksum. */
 const checksumsOf = (facts: NetworkFacts): NetworkChecksum[] =>
   Object.entries(facts.roomChecksums).map(([game, checksum]) => ({
     game,
@@ -70,6 +33,9 @@ const sentToOthers = (facts: NetworkFacts, slot: number | null): number => {
   }
   return count;
 };
+
+const itemsHandedNotGranted = (room: OnlineRoom, receivedIndex: number): number =>
+  Math.max(0, room.cursor.queued - receivedIndex + room.cursor.handed.size - room.cursor.settled.size);
 
 const buildNetworkStatus = (input: NetworkStatusInput): NetworkStatus => {
   const { sessionStatus, config, facts, room, names, core, ping, presence, trackers } = input;
@@ -105,9 +71,7 @@ const buildNetworkStatus = (input: NetworkStatusInput): NetworkStatus => {
       pingMeanMs: ping.meanMs,
       pingSamples: ping.samples,
       heldItems: room.heldReceived.reduce((sum, packet) => sum + (packet.items?.length ?? 0), 0),
-      // Handed on and not granted yet: the run in a row, the positions handed ahead of it, less
-      // the ones among them the game already granted.
-      queuedItems: Math.max(0, room.cursor.queued - receivedIndex + room.cursor.handed.size - room.cursor.settled.size),
+      queuedItems: itemsHandedNotGranted(room, receivedIndex),
       receivedIndex,
       fileInPlay: core.isFileInPlay(),
     },
@@ -133,4 +97,4 @@ const buildNetworkStatus = (input: NetworkStatusInput): NetworkStatus => {
 };
 
 export { buildNetworkStatus };
-export type { NetworkStatusInput };
+export type { NetworkStatusInput } from './network-status.type';

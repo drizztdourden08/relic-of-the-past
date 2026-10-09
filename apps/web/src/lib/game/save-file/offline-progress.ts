@@ -1,24 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Offline completed-check read for one battery-save file: adapts a valid
- * slot block to the same three readers the live poller feeds the shared
- * sweep, so both paths agree byte-for-byte on what "done" means. The live
- * folding of the currently loaded room and the live-WRAM sleep byte have no
- * offline counterpart, because a save on disk has no loaded room, and the sleep
- * check resolves through the progress-indicator fallback instead.
- */
 import { computeCompletedChecks } from '../tracker/completed-checks-core';
 import { slotBlockOffset } from './sram-slots';
 import { OW_EVENT_BASE, PROGRESS_OFFSETS, ROOM_FLAGS_BASE } from './progress-offsets';
-import { SRM_EVENT_LEDGER, blockOffsetOf } from './hook-save-bytes';
+import { SRM_EVENT_LEDGER } from './hook-save-bytes';
+import { blockOffsetOf } from './block-offset-of';
 import type { CheckId } from '@shared/game/data';
 
-/**
- * The completed checks recorded in one battery-save slot, or null when the
- * slot holds no valid game (empty or corrupt). `isArmed` carries the
- * substitution routing: true for a check the placement physically arms, so
- * its completion reads the real taken-bit instead of a possession proxy.
- */
 const offlineCompletedChecks = (
   sram: Uint8Array,
   slot: number,
@@ -33,7 +20,6 @@ const offlineCompletedChecks = (
     const offset = PROGRESS_OFFSETS[bufferIndex];
     return offset === null || offset === undefined ? 0 : sram[base + offset];
   };
-  // The event ledger sits inside the same block, so a save on disk answers it too.
   const readEventByte = (byteIndex: number): number => sram[base + blockOffsetOf(SRM_EVENT_LEDGER) + byteIndex];
   return computeCompletedChecks({ readRoomWord, readOwByte, readProgByte, readEventByte }, isArmed);
 };

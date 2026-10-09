@@ -1,12 +1,7 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Graphics section. Host adapter facts and the renderer's WebGL view are merged
- * here because they answer the same question from two sides, and on the web build
- * only the WebGL half exists.
- */
 import type { GpuDevice, GpuDiagnostics } from '@shared/types/diagnostics';
-import type { WebglDiagnostics } from '../types';
-import type { DebugSection } from './section';
+import type { WebglDiagnostics } from '../diagnostics.type';
+import type { DebugSection } from './section.type';
 import { section } from './section';
 import { hex, orDash, yesNo } from './units';
 
@@ -17,8 +12,6 @@ const adapterLine = (device: GpuDevice): string => {
   return `Adapter: ${name} ${ids}${driver}${device.active ? ' (active)' : ''}`;
 };
 
-// Chromium reports several shades of on ('enabled', 'enabled_on', 'enabled_readback')
-// and of off; only the off ones matter to a rendering report.
 const disabledFeatures = (features: Record<string, string>): string[] =>
   Object.entries(features)
     .filter(([, status]) => !status.startsWith('enabled'))

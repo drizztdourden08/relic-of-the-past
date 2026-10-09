@@ -1,20 +1,14 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * WebGL post-processing pipeline for the edge glow.
- *
- * Strategy: Mirror-reflection + progressive blur + Voronoi noise animation.
- *
- * Architecture:
- *   1. Mirror pass: Reflect game pixels into black bar regions
- *   2. Blur passes: Progressive Gaussian blur on the mirrored texture
- *   3. Composite: Blend sharp reflection (near edge) → blurred (far from edge)
- *      with animated Voronoi noise modulating blur, saturation, and opacity
- */
-
-import type { EdgeGlowRenderer, EdgeGlowOptions } from './types';
-import { createTexture, createFBO, destroyFBO, drawQuad } from '../webgl/gl-helpers';
-import { compilePrograms, getUniformLocations } from './edge-glow-programs';
+import type { EdgeGlowRenderer, EdgeGlowOptions } from './edge-glow.type';
+import { createTexture, createFBO, destroyFBO } from '../webgl/gl-helpers';
+import { compilePrograms } from './compile-programs';
+import { getUniformLocations } from './get-uniform-locations';
 import { create2DFallbackRenderer } from './create-2d-fallback';
+import type { CleanFrame, EdgeGlowPipeline, EdgeGlowState } from './edge-glow-programs.type';
+import { QUAD_TRIANGLES, QUAD_TRIANGLE_VERTICES } from './renderer.constants';
+import { renderPassthrough } from './render-passthrough';
+import { renderMirrorBlur } from './render-mirror-blur';
+import { renderComposite } from './render-composite';
 
 const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOptions = {}): EdgeGlowRenderer | null => {
   const glOrNull = glCanvas.getContext('webgl', {
@@ -30,228 +24,111 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
   }
 
   const gl = glOrNull;
-
-  const {
-    blurRadius = 16.0,
-    glowIntensity = 1.0,
-    noiseSpeed = 0.8,
-    noiseScale = 6.0,
-    blurPasses = 3,
-  } = options;
-
+  const { blurRadius = 16.0, glowIntensity = 1.0, noiseSpeed = 0.8, noiseScale = 6.0, blurPasses = 3 } = options;
 
   const progs = compilePrograms(gl);
   if (!progs) {
     console.error('[EdgeGlow] Failed to compile shader programs');
     return null;
   }
-  const { mirror: mirrorProg, blurH: blurHProg, blurV: blurVProg, composite: compositeProg } = progs;
-
-
-  const { mirror: mirrorUniforms, blurH: blurHUniforms, blurV: blurVUniforms, composite: compositeUniforms } = getUniformLocations(gl, progs);
-
+  const uniforms = getUniformLocations(gl, progs);
 
   const quadBuffer = gl.createBuffer()!;
   gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-    -1, -1, 1, -1, -1, 1,
-    -1, 1, 1, -1, 1, 1,
-  ]), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(QUAD_TRIANGLES), gl.STATIC_DRAW);
 
-
-  let width = glCanvas.width;
-  let height = glCanvas.height;
-  let enabled = true;
-  let blackLeft = 0;
-  let blackRight = 0;
-  let blackBottom = 0;
-  let blackTop = 0;
-  let maxLeft = 0;
-  let maxRight = 0;
-  let maxBottom = 0;
-  let maxTop = 0;
-  let effectOpacity = 1.0;
-  let pixelSizeMultiplier = 10.0;
-  let pixelDivisor = 60.0;
-  let pixelExponent = 1.45;
-
+  const width = glCanvas.width;
+  const height = glCanvas.height;
   const gameTexture = createTexture(gl, gl.NEAREST);
   const cleanTexture = createTexture(gl, gl.NEAREST);
-  let fboMirror = createFBO(gl, width, height, gl.NEAREST);
-  let fboA = createFBO(gl, width, height);
-  let fboB = createFBO(gl, width, height);
+  const state: EdgeGlowState = {
+    width,
+    height,
+    enabled: true,
+    black: { left: 0, right: 0, bottom: 0, top: 0 },
+    max: { left: 0, right: 0, bottom: 0, top: 0 },
+    effectOpacity: 1.0,
+    pixelSizeMultiplier: 10.0,
+    pixelDivisor: 60.0,
+    pixelExponent: 1.45,
+    fboMirror: createFBO(gl, width, height, gl.NEAREST),
+    fboA: createFBO(gl, width, height),
+    fboB: createFBO(gl, width, height),
+  };
 
-  // Edge-glow draws fullscreen quads as two triangles (6 verts).
-  const EDGE_DRAW = { mode: gl.TRIANGLES, count: 6 };
-
-
-  const render = (gameCanvas: HTMLCanvasElement, time: number, cleanFrame?: { data: Uint8Array; width: number; height: number } | null): void => {
-        if (gl.isContextLost()) return;
-        if (gameCanvas.width !== width || gameCanvas.height !== height) {
-          resize(gameCanvas.width, gameCanvas.height);
-        }
-
-        gl.bindTexture(gl.TEXTURE_2D, gameTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gameCanvas);
-
-        const mirrorSrcTexture = cleanFrame ? cleanTexture : gameTexture;
-        if (cleanFrame) {
-          gl.bindTexture(gl.TEXTURE_2D, cleanTexture);
-          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, cleanFrame.width, cleanFrame.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, cleanFrame.data);
-        }
-
-        if (!enabled) {
-          gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-          gl.viewport(0, 0, width, height);
-          gl.useProgram(blurHProg);
-          gl.uniform1i(blurHUniforms.texture, 0);
-          gl.uniform2f(blurHUniforms.resolution, width, height);
-          gl.uniform1f(blurHUniforms.radius, 0.0);
-          gl.activeTexture(gl.TEXTURE0);
-          gl.bindTexture(gl.TEXTURE_2D, gameTexture);
-          drawQuad(gl, blurHProg, quadBuffer, EDGE_DRAW);
-          return;
-        }
-
-        const timeSeconds = time / 1000.0;
-
-        // Pass 1: Mirror reflection
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fboMirror.framebuffer);
-        gl.viewport(0, 0, width, height);
-        gl.useProgram(mirrorProg);
-        gl.uniform1i(mirrorUniforms.gameTexture, 0);
-        gl.uniform2f(mirrorUniforms.resolution, width, height);
-        gl.uniform1f(mirrorUniforms.blackLeft, blackLeft);
-        gl.uniform1f(mirrorUniforms.blackRight, blackRight);
-        gl.uniform1f(mirrorUniforms.blackBottom, blackBottom);
-        gl.uniform1f(mirrorUniforms.blackTop, blackTop);
-        gl.uniform1f(mirrorUniforms.swizzleBR, cleanFrame ? 1.0 : 0.0);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, mirrorSrcTexture);
-        drawQuad(gl, mirrorProg, quadBuffer, EDGE_DRAW);
-
-        // Pass 2-N: Progressive blur
-        let readTex = fboMirror.texture;
-
-        for (let pass = 0; pass < blurPasses; pass++) {
-          const radius = blurRadius * (pass + 1);
-
-          gl.bindFramebuffer(gl.FRAMEBUFFER, fboA.framebuffer);
-          gl.viewport(0, 0, width, height);
-          gl.useProgram(blurHProg);
-          gl.uniform1i(blurHUniforms.texture, 0);
-          gl.uniform2f(blurHUniforms.resolution, width, height);
-          gl.uniform1f(blurHUniforms.radius, radius);
-          gl.activeTexture(gl.TEXTURE0);
-          gl.bindTexture(gl.TEXTURE_2D, readTex);
-          drawQuad(gl, blurHProg, quadBuffer, EDGE_DRAW);
-
-          gl.bindFramebuffer(gl.FRAMEBUFFER, fboB.framebuffer);
-          gl.viewport(0, 0, width, height);
-          gl.useProgram(blurVProg);
-          gl.uniform1i(blurVUniforms.texture, 0);
-          gl.uniform2f(blurVUniforms.resolution, width, height);
-          gl.uniform1f(blurVUniforms.radius, radius);
-          gl.activeTexture(gl.TEXTURE0);
-          gl.bindTexture(gl.TEXTURE_2D, fboA.texture);
-          drawQuad(gl, blurVProg, quadBuffer, EDGE_DRAW);
-
-          readTex = fboB.texture;
-        }
-
-        // Final composite → screen
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, width, height);
-        gl.useProgram(compositeProg);
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, gameTexture);
-        gl.uniform1i(compositeUniforms.gameTexture, 0);
-
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, fboMirror.texture);
-        gl.uniform1i(compositeUniforms.mirrorTexture, 1);
-
-        gl.activeTexture(gl.TEXTURE2);
-        gl.bindTexture(gl.TEXTURE_2D, fboB.texture);
-        gl.uniform1i(compositeUniforms.blurTexture, 2);
-
-        gl.uniform1f(compositeUniforms.time, timeSeconds);
-        gl.uniform2f(compositeUniforms.resolution, width, height);
-        gl.uniform1f(compositeUniforms.glowIntensity, glowIntensity);
-        gl.uniform1f(compositeUniforms.noiseSpeed, noiseSpeed);
-        gl.uniform1f(compositeUniforms.noiseScale, noiseScale);
-        gl.uniform1f(compositeUniforms.blackLeft, maxLeft);
-        gl.uniform1f(compositeUniforms.blackRight, maxRight);
-        gl.uniform1f(compositeUniforms.blackBottom, maxBottom);
-        gl.uniform1f(compositeUniforms.blackTop, maxTop);
-        gl.uniform1f(compositeUniforms.dynLeft, blackLeft);
-        gl.uniform1f(compositeUniforms.dynRight, blackRight);
-        gl.uniform1f(compositeUniforms.dynBottom, blackBottom);
-        gl.uniform1f(compositeUniforms.dynTop, blackTop);
-        gl.uniform1f(compositeUniforms.effectOpacity, effectOpacity);
-        const pixelSize = glCanvas.clientWidth > 0 ? (glCanvas.clientWidth / width) * pixelSizeMultiplier : pixelSizeMultiplier;
-        gl.uniform1f(compositeUniforms.pixelSize, pixelSize);
-        gl.uniform1f(compositeUniforms.pixelDivisor, pixelDivisor);
-        gl.uniform1f(compositeUniforms.pixelExponent, pixelExponent);
-
-        drawQuad(gl, compositeProg, quadBuffer, EDGE_DRAW);
-      };
+  const pipe: EdgeGlowPipeline = {
+    gl, glCanvas, progs, uniforms, quadBuffer, gameTexture, cleanTexture,
+    draw: { mode: gl.TRIANGLES, count: QUAD_TRIANGLE_VERTICES },
+    settings: { blurRadius, glowIntensity, noiseSpeed, noiseScale, blurPasses },
+  };
 
   const resize = (w: number, h: number): void => {
-        width = w;
-        height = h;
-        glCanvas.width = w;
-        glCanvas.height = h;
+    state.width = w;
+    state.height = h;
+    glCanvas.width = w;
+    glCanvas.height = h;
 
-        destroyFBO(gl, fboMirror);
-        destroyFBO(gl, fboA);
-        destroyFBO(gl, fboB);
-        fboMirror = createFBO(gl, width, height, gl.NEAREST);
-        fboA = createFBO(gl, width, height);
-        fboB = createFBO(gl, width, height);
-      };
+    destroyFBO(gl, state.fboMirror);
+    destroyFBO(gl, state.fboA);
+    destroyFBO(gl, state.fboB);
+    state.fboMirror = createFBO(gl, w, h, gl.NEAREST);
+    state.fboA = createFBO(gl, w, h);
+    state.fboB = createFBO(gl, w, h);
+  };
 
-  const setEnabled = (val: boolean): void => {
-        enabled = val;
-      };
+  const uploadFrames = (gameCanvas: HTMLCanvasElement, cleanFrame?: CleanFrame | null): WebGLTexture => {
+    gl.bindTexture(gl.TEXTURE_2D, gameTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gameCanvas);
+    if (!cleanFrame) return gameTexture;
+    gl.bindTexture(gl.TEXTURE_2D, cleanTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, cleanFrame.width, cleanFrame.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, cleanFrame.data);
+    return cleanTexture;
+  };
+
+  const render = (gameCanvas: HTMLCanvasElement, time: number, cleanFrame?: CleanFrame | null): void => {
+    if (gl.isContextLost()) return;
+    if (gameCanvas.width !== state.width || gameCanvas.height !== state.height) {
+      resize(gameCanvas.width, gameCanvas.height);
+    }
+    const mirrorSrcTexture = uploadFrames(gameCanvas, cleanFrame);
+    if (!state.enabled) {
+      renderPassthrough(pipe, state);
+      return;
+    }
+    renderMirrorBlur(pipe, state, mirrorSrcTexture, !!cleanFrame);
+    renderComposite(pipe, state, time / 1000.0);
+  };
+
+  const setEnabled = (val: boolean): void => { state.enabled = val; };
 
   const setBlackBounds = (left: number, right: number, bottom: number, top: number): void => {
-        blackLeft = left;
-        blackRight = right;
-        blackBottom = bottom;
-        blackTop = top;
-      };
+    state.black = { left, right, bottom, top };
+  };
 
   const setMaxBounds = (left: number, right: number, bottom: number, top: number): void => {
-        maxLeft = left;
-        maxRight = right;
-        maxBottom = bottom;
-        maxTop = top;
-      };
+    state.max = { left, right, bottom, top };
+  };
 
-  const setEffectOpacity = (opacity: number): void => {
-        effectOpacity = opacity;
-      };
+  const setEffectOpacity = (opacity: number): void => { state.effectOpacity = opacity; };
 
   const setPixelateParams = (size: number, divisor: number, exponent: number): void => {
-        pixelSizeMultiplier = size;
-        pixelDivisor = divisor;
-        pixelExponent = exponent;
-      };
+    state.pixelSizeMultiplier = size;
+    state.pixelDivisor = divisor;
+    state.pixelExponent = exponent;
+  };
 
   const dispose = (): void => {
-        gl.deleteProgram(mirrorProg);
-        gl.deleteProgram(blurHProg);
-        gl.deleteProgram(blurVProg);
-        gl.deleteProgram(compositeProg);
-        gl.deleteBuffer(quadBuffer);
-        gl.deleteTexture(gameTexture);
-        gl.deleteTexture(cleanTexture);
-        destroyFBO(gl, fboMirror);
-        destroyFBO(gl, fboA);
-        destroyFBO(gl, fboB);
-      };
+    gl.deleteProgram(progs.mirror);
+    gl.deleteProgram(progs.blurH);
+    gl.deleteProgram(progs.blurV);
+    gl.deleteProgram(progs.composite);
+    gl.deleteBuffer(quadBuffer);
+    gl.deleteTexture(gameTexture);
+    gl.deleteTexture(cleanTexture);
+    destroyFBO(gl, state.fboMirror);
+    destroyFBO(gl, state.fboA);
+    destroyFBO(gl, state.fboB);
+  };
 
   return { render, resize, setEnabled, setBlackBounds, setMaxBounds, setEffectOpacity, setPixelateParams, dispose };
 };

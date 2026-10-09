@@ -1,16 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Adapter: a server's scout answers and slot data, turned into the Placement a local seed
- * with the same options would have produced, so an online session arms through the exact
- * start sequence a local one does (session-start.ts).
- *
- * The fill world is built from the slot's options the way the generator builds it, with no
- * fill run: the scouts say what every location holds. Generation-locked rows keep what the
- * fill world pre-places. This slot's own items map through the frozen id
- * table; another player's item, or an id this game does not know, is the foreign item.
- * The stats come from the generator's own function over that world, and the sweep gives the
- * spheres the Spoiler tab groups by.
- */
 import { FOREIGN_ITEM_KEY } from '@shared/randomizer/archipelago/foreign-item';
 import { buildFillWorld } from '@shared/randomizer/world/fill/fill-world';
 import { fillOptionsFromSnapshot, shufflePrizesFromSnapshot } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
@@ -29,19 +17,7 @@ import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { RotpSlotData } from '@shared/randomizer/archipelago/slot-data.type';
 import type { ApNetworkItem } from './ap-protocol.type';
-
-interface ScoutsToPlacementInput {
-  scouts: readonly ApNetworkItem[];
-  /** This client's slot: an item for any other player is foreign here. */
-  slot: number;
-  slotData: RotpSlotData;
-  idToLocationKey: (id: number) => LocationKey | undefined;
-  idToItemKey: (id: number) => ItemKey | undefined;
-  /** The seed when the slot data names none (the room's seed name). */
-  fallbackSeed?: string;
-  /** The locations proven deliverable; the slot data's sets, then the app's probes, when absent. */
-  deliverable?: DeliverableSets;
-}
+import type { ScoutsToPlacementInput } from './scouts-to-placement.type';
 
 const probedDeliverable = (): Required<DeliverableSets> => ({
   npc: probeDeliverableNpcLocations(),
@@ -49,10 +25,6 @@ const probedDeliverable = (): Required<DeliverableSets> => ({
   world: probeDeliverableWorldLocations(),
 });
 
-/**
- * The caller's sets, else the ones the slot's world was built with, else the app's probes
- * (a room from before slot data carried them).
- */
 const withDefaults = (
   deliverable: DeliverableSets | undefined, slotData: RotpSlotData,
 ): Required<DeliverableSets> => {
@@ -108,4 +80,4 @@ const scoutsToPlacement = (input: ScoutsToPlacementInput): Placement => {
 };
 
 export { scoutsToPlacement };
-export type { ScoutsToPlacementInput };
+export type { ScoutsToPlacementInput } from './scouts-to-placement.type';

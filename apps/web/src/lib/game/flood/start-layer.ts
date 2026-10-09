@@ -1,34 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Which background layer a flood starts on. This was derived two different ways:
- * the widget/dumper trusted the live `wasmGetLinkLayer()`, the simulator ran a
- * stair/door/floor heuristic, and the engine's own flood derived it not at all,
- * silently falling back to layer 0. In a split-level room that made the flood
- * gating every chest/door/NPC target start on the wrong layer while the exit
- * flood started on the right one.
- *
- * One rule, most-authoritative signal first:
- *   1. the live layer bit, when the flood starts where the player actually stands
- *   2. arrival ON an inter-room stair, which deposits the player on their own layer
- *   3. arrival through a door, where position slots 6-11 are the lower page, and the
- *      game keeps the player's level bit across a door transition
- *   4. only layer 1 has floor near the landing (a BG1 border strip)
- */
 import type { GridPos } from '@shared/game/navigation';
 import { isPassableAttr } from '@shared/game/navigation/tile-attrs';
 import { wasmGetLinkLayer, wasmGetRoomDoorInfo, wasmGetRoomStairInfo, wasmGetRoomStairInfoFor } from '../';
-import { isLoadedRoom } from './screen-grids';
-
-/** How far from the start tile a door still counts as "the one the player came through". */
-const DOOR_NEAR = 8;
-
-interface StartLayerArgs {
-  roomId: number;
-  startPos?: GridPos;
-  dualLayerGrids?: { layer0: number[][]; layer1: number[][] };
-  /** True when the flood starts from the player's real position in the loaded room. */
-  atPlayer?: boolean;
-}
+import { isLoadedRoom } from './is-loaded-room';
+import { DOOR_NEAR } from './start-layer.constants';
+import type { StartLayerArgs } from './start-layer.type';
 
 const nearestDoorLayer = (roomId: number, startPos: GridPos): 0 | 1 | undefined => {
   const dist = (d: { row: number; col: number }): number =>
@@ -68,4 +44,4 @@ const deriveStartLayer = (args: StartLayerArgs): 0 | 1 | undefined => {
 };
 
 export { deriveStartLayer };
-export type { StartLayerArgs };
+export type { StartLayerArgs } from './start-layer.type';

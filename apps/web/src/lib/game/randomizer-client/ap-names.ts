@@ -1,35 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Name tables for a multiworld room: slot to player, and per game the item and location
- * names behind the network ids. An id means nothing without its game, so every lookup is
- * made through the slot that owns it (slot_info tells which game a slot plays).
- */
-import type { ApGameData, ApNetworkPlayer, ApNetworkSlot } from './ap-protocol.type';
-
-interface GameNames {
-  items: Map<number, string>;
-  locations: Map<number, string>;
-}
-
-interface PlayerEntry {
-  name: string;
-  alias: string;
-  game?: string;
-}
-
-interface NameTables {
-  addGames(games: Record<string, ApGameData>): void;
-  setPlayers(players: readonly ApNetworkPlayer[], team: number): void;
-  setSlotInfo(slotInfo: Record<string, ApNetworkSlot>): void;
-  playerName(slot: number): string;
-  gameOf(slot: number): string | undefined;
-  itemName(itemId: number, ownerSlot: number): string;
-  locationName(locationId: number, finderSlot: number): string;
-  itemNameInGame(game: string, itemId: number): string | undefined;
-}
-
-/** Slot 0 is the server itself (commands, starting inventory). */
-const SERVER_NAME = 'Server';
+import { SERVER_NAME, SERVER_SLOT } from './ap-names.constants';
+import type { GameNames, NameTables, PlayerEntry } from './ap-names.type';
 
 const invert = (table: Record<string, number>): Map<number, string> =>
   new Map(Object.entries(table).map(([name, id]) => [id, name]));
@@ -64,7 +35,7 @@ const createNameTables = (): NameTables => {
       }
     },
     playerName(slot) {
-      if (slot === 0) return SERVER_NAME;
+      if (slot === SERVER_SLOT) return SERVER_NAME;
       const entry = players.get(slot);
       return entry ? (entry.alias || entry.name) : `Player ${slot}`;
     },
@@ -83,5 +54,5 @@ const createNameTables = (): NameTables => {
   };
 };
 
-export { createNameTables, SERVER_NAME };
-export type { NameTables };
+export { createNameTables };
+export type { NameTables } from './ap-names.type';

@@ -1,17 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Detailed JSONL sink for a simulator run. `append` is fire-and-forget: each
- * entry is stringified and pushed to the electron log handler, but writes are
- * serialized through a single promise chain so bursts never interleave lines.
- * `write` is the SimEvent-typed alias the runner drives.
- */
 import type { SimEvent } from '@shared/game/simulation';
-
-interface SimLogWriter {
-  append: (entry: object) => void;
-  write: (event: SimEvent) => void;
-  openLog: () => Promise<void>;
-}
+import type { SimLogWriter } from './sim-log-writer.type';
 
 const createSimLogWriter = (runId: string): SimLogWriter => {
   let chain: Promise<unknown> = Promise.resolve();
@@ -29,4 +18,4 @@ const createSimLogWriter = (runId: string): SimLogWriter => {
 };
 
 export { createSimLogWriter };
-export type { SimLogWriter };
+export type { SimLogWriter } from './sim-log-writer.type';

@@ -1,9 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * One-shot: calls back once the game can take a server item again, meaning the game is
- * running and the delivery queue has drained. The online client asks for the full received
- * list at that moment, since the list stopped where the game last could not take an item.
- */
 import { getGameState, getModule, subscribeGameState } from '../wasm-bridge';
 import { size as queueSize, subscribe as subscribeQueue } from '../delivery-queue';
 

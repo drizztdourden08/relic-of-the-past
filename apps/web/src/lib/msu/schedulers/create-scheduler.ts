@@ -1,5 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/** Picks the scheduler strategy for a layer's play mode. The one place modes map to behavior. */
 import type { LayerPlayMode } from '@shared/types/msu-manifest';
 import type { LayerContext, LayerScheduler } from './scheduler.type';
 import { createOnceScheduler } from './once-scheduler';

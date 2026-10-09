@@ -1,0 +1,62 @@
+/* @layer renderer-lib @kind types */
+interface WebglDiagnostics {
+  version: 1 | 2;
+  vendor: string;
+  renderer: string;
+  glVersion: string;
+  shadingLanguage: string;
+  maxTextureSize: number;
+  maxViewport: string;
+  maxRenderBufferSize: number;
+  antialias: boolean;
+  failIfMajorPerformanceCaveat: boolean;
+}
+
+interface AudioDiagnostics {
+  sampleRate: number;
+  baseLatencyMs: number | null;
+  outputLatencyMs: number | null;
+  maxChannels: number;
+  state: string;
+}
+
+interface DisplayEnvironment {
+  screen: { width: number; height: number; availWidth: number; availHeight: number };
+  nativeScreen: { width: number; height: number };
+  viewport: { width: number; height: number };
+  colorDepth: number;
+  pixelDepth: number;
+  devicePixelRatio: number;
+  orientation: string | null;
+  colorScheme: string;
+  colorGamut: string;
+  hdr: boolean;
+  reducedMotion: boolean;
+  refreshHz: number | null;
+}
+
+interface DeviceEnvironment {
+  logicalCores: number | null;
+  deviceMemoryGb: number | null;
+  jsHeap: { usedBytes: number; totalBytes: number; limitBytes: number } | null;
+  maxTouchPoints: number;
+  languages: string[];
+  timeZone: string;
+  online: boolean;
+  hidDevices: string[];
+}
+
+interface RendererDiagnostics {
+  webgl: WebglDiagnostics | null;
+  audio: AudioDiagnostics | null;
+  display: DisplayEnvironment;
+  device: DeviceEnvironment;
+}
+
+export type {
+  WebglDiagnostics,
+  AudioDiagnostics,
+  DisplayEnvironment,
+  DeviceEnvironment,
+  RendererDiagnostics,
+};

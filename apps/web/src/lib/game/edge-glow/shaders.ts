@@ -1,16 +1,7 @@
-/* @layer bridge-wasm @kind logic */
-/**
- * GLSL shader sources for the edge-glow post-processing pipeline.
- *
- * Passes:
- *   1. Mirror: reflect game pixels into black bar regions
- *   2. Blur H/V: progressive Gaussian blur on mirrored texture
- *   3. Composite: blend sharp reflection → blurred with Voronoi noise animation
- *      (lives in composite-frag.ts, the largest source, re-exported below)
- */
+/* @layer bridge-wasm @kind data */
 import { COMPOSITE_FRAG } from './composite-frag';
 
-const FULLSCREEN_VERT = /* glsl */ `
+const FULLSCREEN_VERT = `
 attribute vec2 a_position;
 varying vec2 v_uv;
 void main() {
@@ -19,7 +10,7 @@ void main() {
 }
 `;
 
-const MIRROR_FRAG = /* glsl */ `
+const MIRROR_FRAG = `
 precision mediump float;
 varying vec2 v_uv;
 uniform sampler2D u_gameTexture;
@@ -76,7 +67,7 @@ void main() {
 }
 `;
 
-const BLUR_H_FRAG = /* glsl */ `
+const BLUR_H_FRAG = `
 precision mediump float;
 varying vec2 v_uv;
 uniform sampler2D u_texture;
@@ -99,7 +90,7 @@ void main() {
 }
 `;
 
-const BLUR_V_FRAG = /* glsl */ `
+const BLUR_V_FRAG = `
 precision mediump float;
 varying vec2 v_uv;
 uniform sampler2D u_texture;

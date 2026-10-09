@@ -1,9 +1,6 @@
 /* @layer renderer-lib @kind logic */
-// Graphics-stack probe. Prefers WebGL2 so the limits match the game canvas, and unmasks the real
-// adapter string through the debug-renderer extension.
-import type { WebglDiagnostics } from './types';
-
-type AnyGl = WebGLRenderingContext | WebGL2RenderingContext;
+import type { WebglDiagnostics } from './diagnostics.type';
+import type { AnyGl } from './probe-webgl.type';
 
 const createContext = (): { gl: AnyGl; version: 1 | 2 } | null => {
   const canvas = document.createElement('canvas');
@@ -17,6 +14,10 @@ const unmasked = (gl: AnyGl, masked: number, unmaskedName: 'UNMASKED_VENDOR_WEBG
   const ext = gl.getExtension('WEBGL_debug_renderer_info');
   const value = ext ? gl.getParameter(ext[unmaskedName]) : null;
   return String(value ?? gl.getParameter(masked) ?? '-');
+};
+
+const releaseProbeContext = (gl: AnyGl): void => {
+  gl.getExtension('WEBGL_lose_context')?.loseContext();
 };
 
 const probeWebgl = (): WebglDiagnostics | null => {
@@ -38,8 +39,7 @@ const probeWebgl = (): WebglDiagnostics | null => {
       antialias: attributes?.antialias === true,
       failIfMajorPerformanceCaveat: attributes?.failIfMajorPerformanceCaveat === true,
     };
-    // Browsers cap live WebGL contexts and the game canvas needs one, so release the probe now.
-    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    releaseProbeContext(gl);
     return info;
   } catch {
     return null;

@@ -1,28 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The room's chat and item messages as a ring buffer (the last 200), with change
- * listeners so a panel can follow along.
- */
-
-const MESSAGE_LIMIT = 200;
-
-type RoomMessageKind = 'item' | 'hint' | 'chat' | 'server' | 'join';
-
-interface RoomMessage {
-  id: number;
-  at: number;
-  kind: RoomMessageKind;
-  text: string;
-}
-
-type MessageListener = (messages: readonly RoomMessage[]) => void;
-
-interface MessageLog {
-  readonly messages: readonly RoomMessage[];
-  push(kind: RoomMessageKind, text: string): void;
-  clear(): void;
-  onChange(listener: MessageListener): () => void;
-}
+import { MESSAGE_LIMIT } from './message-log.constants';
+import type { MessageListener, MessageLog, RoomMessage } from './message-log.type';
 
 const createMessageLog = (): MessageLog => {
   let messages: RoomMessage[] = [];
@@ -31,7 +9,7 @@ const createMessageLog = (): MessageLog => {
 
   const notify = (): void => {
     for (const listener of listeners) {
-      try { listener(messages); } catch { /* a bad listener never breaks the log */ }
+      try { listener(messages); } catch { continue; }
     }
   };
 
@@ -53,5 +31,5 @@ const createMessageLog = (): MessageLog => {
   };
 };
 
-export { createMessageLog, MESSAGE_LIMIT };
-export type { MessageListener, MessageLog, RoomMessage, RoomMessageKind };
+export { createMessageLog };
+export type { MessageListener, MessageLog, RoomMessage, RoomMessageKind } from './message-log.type';

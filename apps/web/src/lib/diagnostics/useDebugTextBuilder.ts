@@ -5,32 +5,14 @@ import { useAppVersion } from '@app/hooks/useAppVersion';
 import { buildDebugText } from './format/debug-text';
 import { collectRendererDiagnostics } from './collect-renderer';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
-import type { OsKind, HostShell } from '@shared/platform';
+import type { DebugTextBuilder } from './useDebugTextBuilder.type';
+import { HOST_LABEL, OS_LABEL } from './useDebugTextBuilder.constants';
 
-// Injected at build time (apps/web/vite.config.ts) for the Capacitor build; absent
-// elsewhere, so always read via typeof.
 declare const __CAP_VERSION__: string | undefined;
-
-const HOST_LABEL: Record<HostShell, string> = {
-  electron: 'Electron',
-  capacitor: 'Capacitor',
-  web: 'Web',
-};
-
-const OS_LABEL: Record<OsKind, string> = {
-  windows: 'Windows',
-  macos: 'macOS',
-  linux: 'Linux',
-  android: 'Android',
-  ios: 'iOS',
-  unknown: 'Unknown',
-};
 
 const capacitorVersion = (): string | null =>
   typeof __CAP_VERSION__ === 'string' && __CAP_VERSION__ ? __CAP_VERSION__ : null;
 
-// Host hardware only exists behind a main process; the web and mobile builds report
-// what the renderer can see on its own.
 const fetchSystem = async (): Promise<SystemDiagnostics | null> => {
   try {
     return (await window.api?.getSystemDiagnostics?.()) ?? null;
@@ -39,16 +21,6 @@ const fetchSystem = async (): Promise<SystemDiagnostics | null> => {
   }
 };
 
-interface DebugTextBuilder {
-  buildDebugText: () => Promise<string>;
-  version: string;
-  runtime: string;
-  engine: string;
-  osLabel: string;
-}
-
-/** One builder backs the About page's "Copy debug info" button and the bug-report form's
- *  auto-attached debug block, sourced from the platform facade, not the user agent. */
 const useDebugTextBuilder = (): DebugTextBuilder => {
   const { info } = usePlatform();
   const version = useAppVersion();

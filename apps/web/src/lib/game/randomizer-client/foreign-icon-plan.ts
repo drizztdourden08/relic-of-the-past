@@ -1,22 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The plan with each foreign item armed as its icon id instead of the plain sentinel, so the
- * hold-up shows the icon of the game the item belongs to (core/game-hooks/foreign_icon.c).
- * The plan is classified once, with the sentinel, like any placement; this swaps only the
- * target id of the foreign rows, whatever table they arm in. With no resolver (a local seed,
- * or pictures the core did not take) the plan is returned as it came.
- */
 import { isForeignItem } from '@shared/randomizer/archipelago/foreign-item';
-import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
-
-/** location → the icon id its foreign item is armed as; undefined keeps the sentinel. */
-type ForeignIconIdOf = (location: LocationKey) => number | undefined;
-
-/** The entry fields that carry a target id, one per substitution table. */
-const TARGET_FIELDS = [
-  'target', 'npcOverride', 'dropOverride', 'standingOverride', 'scriptedOverride', 'shopOverride',
-] as const;
+import { TARGET_FIELDS } from './foreign-icon-plan.constants';
+import type { ForeignIconIdOf } from './foreign-icon-plan.type';
 
 const withTargetId = (entry: PlanEntry, id: number): PlanEntry => {
   const next: PlanEntry = entry.targetLocalId === undefined ? { ...entry } : { ...entry, targetLocalId: id };
@@ -37,4 +23,4 @@ const withForeignIcons = (plan: PhysicalPlan, iconIdOf: ForeignIconIdOf | undefi
 };
 
 export { withForeignIcons };
-export type { ForeignIconIdOf };
+export type { ForeignIconIdOf } from './foreign-icon-plan.type';

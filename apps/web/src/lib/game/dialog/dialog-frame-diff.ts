@@ -1,5 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/** Cheap frame comparison so the store only updates when the box actually changed. */
 import type { DialogCell, DialogFrame } from '@shared/game/dialog/dialog-frame.types';
 
 const rowChanged = (a: DialogCell[], b: DialogCell[]): boolean => {

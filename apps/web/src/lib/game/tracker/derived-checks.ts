@@ -1,16 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The derived pass of the completion sweep: the records that are true because of other
- * records. A combined event names the records it is made of (`derived`), a dungeon-wide
- * event names a dungeon and the kinds it sums (`derivedDungeon`), and a check the game keeps
- * no flag for answers from a vanilla `fallback`. Records are visited in dataset
- * order, so a combined event only names records that come before it; one pass suffices.
- */
 import { all, hasTagKey } from '@shared/game/data';
 import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
 import { evaluateRequirement } from '@shared/game/logic';
-
-const EMPTY_INVENTORY: ReadonlySet<ItemId> = new Set();
+import { EMPTY_INVENTORY } from './derived-checks.constants';
 
 const dungeonMembers = (record: CheckRecord, checks: readonly CheckRecord[]): CheckRecord[] => {
   const rule = record.derivedDungeon;
@@ -23,7 +15,6 @@ const resolveDerivedChecks = (
   completed: Set<CheckId>,
   inventory: ReadonlySet<ItemId> | null,
   checks: readonly CheckRecord[] = all('check'),
-  /** Rows a seed has armed: their own taken-bit is the only answer, never a fallback. */
   armed: ReadonlySet<CheckId> = new Set(),
 ): Set<CheckId> => {
   const items = inventory ?? EMPTY_INVENTORY;

@@ -8,11 +8,6 @@ import { overworldTarget } from '../resolve-target';
 import { makeCrossing } from '../make-crossing';
 import type { CrossingPass } from '../crossings.type';
 
-/**
- * Distinct PHYSICAL doors back outside that the flood actually TOUCHED. Several
- * entrance ids can share one door, and an id whose transition never fired, or
- * never passed the item gate, is not a way out the room has demonstrated.
- */
 const touchedDoorSpots = (pass: CrossingPass): number => {
   const flood = pass.scope.flood;
   if (!flood) return 0;
@@ -27,15 +22,6 @@ const touchedDoorSpots = (pass: CrossingPass): number => {
   return spots.size;
 };
 
-/**
- * The exit table's own answer: every room it lists HAS a way back outside, even
- * when the flood never touched a door. Room 0xe2's spawn sits at row 59 and its
- * floor ends at row 55, so nothing else emits its way out and it reads as a dead
- * end.
- *
- * The table names the destination without saying where the door is, so the
- * crossing carries a placeholder tile and is exempt from the reach test.
- */
 const exitTableCrossing = (pass: CrossingPass): ScreenCrossing[] => {
   if (touchedDoorSpots(pass) > 0) return [];
   const roomIndex = pass.scope.roomIndex;

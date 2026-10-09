@@ -1,21 +1,12 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Native grant ids: what the game's own script passes to the plain receive
- * seam when a check's vanilla grant fires, per check kind. The npc-kind id
- * comes from the record itself; the boss prize always grants the ceremonial
- * heart (decomp: the arena pickup's receive call); world items resolve their
- * vanilla item record's receive id; a dungeon reward carries the id its own
- * boss script hands over (prize-receive-id.ts).
- */
-
 import { getItem, vanillaPrizeGrantIdOfName } from '@shared/game/data';
 import type { CheckRecord } from '@shared/game/data';
+import { BOSS_PRIZE_GRANT_ID, MAX_NATIVE_GRANT_ID } from './native-grant-id.constants';
 
-/** The native grant tables hold 76 entries; 0xFF marks "no item" in the records. */
-const MAX_NATIVE_GRANT_ID = 75;
-
-/** The ceremonial heart the boss arena pickup grants (decomp-audited receive id). */
-const BOSS_PRIZE_GRANT_ID = 62;
+const dungeonRewardGrantIdOf = (vanillaItem: string): number | undefined => {
+  const record = getItem(vanillaItem);
+  return record.gameId?.receiveItemId ?? vanillaPrizeGrantIdOfName(record.name);
+};
 
 const nativeGrantIdOf = (check: CheckRecord): number | undefined => {
   const { kind, gameId, vanillaItemIds } = check;
@@ -25,14 +16,10 @@ const nativeGrantIdOf = (check: CheckRecord): number | undefined => {
     return itemId <= MAX_NATIVE_GRANT_ID ? itemId : undefined;
   }
   if (kind === 'boss') return BOSS_PRIZE_GRANT_ID;
-  // A dungeon reward: the falling ancilla carries the id the boss's own script grants.
-  // A pendant's record says which id that is. The seven crystals share one id no record
-  // holds, so those alone come from the prize table.
   if (kind === 'prize') {
     const vanillaItem = vanillaItemIds[0];
     if (vanillaItem === undefined) return undefined;
-    const record = getItem(vanillaItem);
-    return record.gameId?.receiveItemId ?? vanillaPrizeGrantIdOfName(record.name);
+    return dungeonRewardGrantIdOf(vanillaItem);
   }
   if (kind === 'standing' || kind === 'dig' || kind === 'bonk') {
     const vanillaItem = vanillaItemIds[0];

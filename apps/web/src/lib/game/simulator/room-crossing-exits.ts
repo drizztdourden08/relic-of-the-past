@@ -1,7 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type {
-  ConnectionInfo, GridPos, OverworldEntrance, ScreenCrossing, ScreenCrossings,
-} from '@shared/game/navigation';
+import type { ConnectionInfo, GridPos, ScreenCrossing, ScreenCrossings } from '@shared/game/navigation';
 import type { SimExit } from '@shared/game/simulation';
 import { wasmGetRoomDoorInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundariesFor } from '../';
 import { enrichEntrances } from '../flood/overworld-entrances';
@@ -10,26 +8,8 @@ import { entryFromEdge } from './exit-order';
 import type { EdgeName } from './exit-order';
 import { OPPOSITE } from './room-doorways';
 import { interiorScreenId, owScreenId, screenAreaInfo } from './screen-resolve';
-
-/** kDoorType_WarpRoomDoor, where only a west or east one resolves a travel slot. */
-const WARP_DOOR = 0x46;
-const WARP_SIDES: readonly string[] = ['west', 'east'];
-/** How far inside the room a door's outdoor landing tile sits. */
-const OUTDOOR_LANDING_DEPTH = 2;
-const LAST_ROW = 63;
-
-interface RoomExitContext {
-  roomIndex: number;
-  /** The `^ow:N` qualifier the node being detected was reached by, or ''. */
-  cached: string;
-  connections: readonly ConnectionInfo[];
-}
-
-/** Everything derived once for a whole room, not per crossing. */
-interface RoomExitPass extends RoomExitContext {
-  owSide: readonly OverworldEntrance[];
-  bundles: Map<string, ConnectionInfo>;
-}
+import { LAST_ROW, OUTDOOR_LANDING_DEPTH, WARP_DOOR, WARP_SIDES } from './room-crossing-exits.constants';
+import type { RoomExitContext, RoomExitPass } from './room-crossing-exits.type';
 
 const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
 const lastNumber = (id: string): number => Number(id.slice(id.lastIndexOf(':') + 1));
@@ -40,8 +20,6 @@ const roomOf = (crossing: ScreenCrossing): number | null =>
 const screenOf = (crossing: ScreenCrossing): number | null =>
   crossing.target.native?.kind === 'overworld' ? crossing.target.native.screen : null;
 
-/** The DESTINATION room's stair or walk-boundary leading back here, which is the
- *  tile the player appears on after taking this crossing. */
 const stairLandingTile = (destRoom: number, fromRoom: number): GridPos | undefined => {
   const back = wasmGetRoomStairInfoFor(destRoom).find((s) => s.destRoom === fromRoom)
     ?? wasmGetRoomWalkBoundariesFor(destRoom).find((b) => b.destRoom === fromRoom);
@@ -62,14 +40,6 @@ const stairExit = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | null
   };
 };
 
-/**
- * The way back outside, anchored on the OUTDOOR side of the same door.
- *
- * A room reached through a cached entrance leaves by the door it came in by:
- * several overworld doors share one such interior, and the game remembers which,
- * so the node carries it and the exit must honour it instead of picking the first
- * table row with that entrance id.
- */
 const doorExit = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | null => {
   const id = tailNumber(crossing.id);
   const ow = pass.cached
@@ -88,7 +58,6 @@ const doorExit = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | null 
   };
 };
 
-/** The exit table's own answer for a room whose door the flood never touched. */
 const exitTableExit = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | null => {
   const exitScreen = screenOf(crossing);
   const owBack = pass.owSide.find((e) => e.roomId === pass.roomIndex);
@@ -152,11 +121,6 @@ const borderExit = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | nul
   };
 };
 
-/**
- * One crossing as the traversal graph sees it, or null when it leads nowhere the
- * run can go. Respawn points and the holes that drop INTO this room are arrivals,
- * not ways out, so neither becomes an exit.
- */
 const roomExitFor = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | null => {
   if (crossing.class === 'edge') return borderExit(crossing, pass);
   switch (crossing.origin) {
@@ -170,7 +134,6 @@ const roomExitFor = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | nu
   }
 };
 
-/** Every crossing of one room turned into the traversal exits the engine walks. */
 const roomCrossingExits = (crossings: ScreenCrossings, context: RoomExitContext): SimExit[] => {
   const bundles = new Map<string, ConnectionInfo>();
   for (const connection of context.connections) bundles.set(connectionCrossingId(connection), connection);
@@ -185,4 +148,4 @@ const roomCrossingExits = (crossings: ScreenCrossings, context: RoomExitContext)
 };
 
 export { roomCrossingExits };
-export type { RoomExitContext };
+export type { RoomExitContext } from './room-crossing-exits.type';

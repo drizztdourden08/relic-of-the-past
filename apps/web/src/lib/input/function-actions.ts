@@ -1,17 +1,12 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Manages shortcut/cheat key bindings and fires callbacks
- * on rising-edge detection from keyboard, gamepad, and HID sources.
- */
-
 import type { FunctionMapping, FunctionAction } from '@shared/types/controls';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
 import type { AllowedDevices } from './profile-devices';
 import { deviceKeyFor, scopedEntries, setScoped } from './device-scoped-map';
 import type { DeviceScopedMap } from './device-scoped-map';
+import type { FunctionKeyUpListener } from './function-actions.type';
 
-/** Merge saved mappings with defaults so newly-added actions always have a binding. */
 const mergeWithDefaults = (mappings: FunctionMapping[]): FunctionMapping[] => {
   if (mappings.length === 0) return DEFAULT_FUNCTION_MAPPINGS;
   const present = new Set(mappings.map(m => m.action));
@@ -22,26 +17,20 @@ const mergeWithDefaults = (mappings: FunctionMapping[]): FunctionMapping[] => {
   return merged;
 };
 
-type FunctionKeyUpListener = (action: FunctionAction) => void;
+const functionKeyId = (code: string, modifiers?: { shift?: boolean; ctrl?: boolean; alt?: boolean }): string =>
+  `${code}:${modifiers?.shift ? 1 : 0}:${modifiers?.ctrl ? 1 : 0}:${modifiers?.alt ? 1 : 0}`;
 
 class FunctionActionEngine {
   private functionMappings: FunctionMapping[] = DEFAULT_FUNCTION_MAPPINGS;
-  private functionKeyMap = new Map<string, FunctionAction>(); // "code:s:c:a" → action
-  // Scoped by owning device (see device-scoped-map.ts) so a shortcut/cheat bound
-  // on one pad never fires from another pad sharing the same button index.
+  private functionKeyMap = new Map<string, FunctionAction>();
   private functionGamepadButtonMap: DeviceScopedMap<number, FunctionAction> = new Map();
-  private functionGamepadAxisMap: DeviceScopedMap<string, FunctionAction> = new Map(); // "axisIndex:direction" → action
+  private functionGamepadAxisMap: DeviceScopedMap<string, FunctionAction> = new Map();
   private functionActionCallbacks = new Map<FunctionAction, () => void>();
   private functionKeyUpListeners = new Set<FunctionKeyUpListener>();
-  // Reverse lookup: code → funcKeyIds (for keyup matching without modifiers)
   private functionCodeToKeyIds = new Map<string, string[]>();
-  // Track which function-mapped gamepad buttons are currently held (for key-up detection)
-  private heldFunctionGamepadButtons = new Set<string>(); // "deviceKey:index" or "deviceKey:axis:idx:dir"
-  // Actions currently held from any source, so clearHeld() can let go of a hold-style action
-  // (turbo) whose release would otherwise be lost when input is suppressed mid-hold.
+  private heldFunctionGamepadButtons = new Set<string>();
   private heldActions = new Set<FunctionAction>();
 
-  // External callback for pause toggle (wired by InputManager)
   onPauseToggle: (() => void) | null = null;
 
   constructor() {
@@ -71,7 +60,6 @@ class FunctionActionEngine {
     return () => this.functionKeyUpListeners.delete(listener);
   }
 
-  /** Forget every held button and release every held action, firing their key-up listeners. */
   clearHeld(): void {
     this.heldFunctionGamepadButtons.clear();
     const held = [...this.heldActions];
@@ -79,13 +67,8 @@ class FunctionActionEngine {
     for (const action of held) this.fireKeyUp(action);
   }
 
-  /**
-   * Check a keyboard keydown event for function action matches.
-   * Returns true if matched (caller should preventDefault).
-   */
   handleKeyDown(code: string, shiftKey: boolean, ctrlKey: boolean, altKey: boolean): boolean {
-    const funcKeyId = this.makeFunctionKeyId(code, { shift: shiftKey, ctrl: ctrlKey, alt: altKey });
-    const funcAction = this.functionKeyMap.get(funcKeyId);
+    const funcAction = this.functionKeyMap.get(functionKeyId(code, { shift: shiftKey, ctrl: ctrlKey, alt: altKey }));
     if (funcAction) {
       this.fireAction(funcAction);
       return true;
@@ -93,9 +76,6 @@ class FunctionActionEngine {
     return false;
   }
 
-  /**
-   * Fire key-up listeners for a given keyboard code.
-   */
   handleKeyUp(code: string): void {
     const funcKeyIds = this.functionCodeToKeyIds.get(code);
     if (!funcKeyIds) return;
@@ -105,11 +85,6 @@ class FunctionActionEngine {
     }
   }
 
-  /**
-   * Check HID buttons against function mappings each frame (SDL3 covers every
-   * gamepad, the browser Gamepad API path having been removed).
-   * Fires callbacks on rising edge, fires keyUp listeners on falling edge.
-   */
   checkGamepads(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>, allowed: AllowedDevices): void {
     for (const [deviceKey, state] of hidStates) {
       if (!allowed.gamepadKeys.has(deviceKey)) continue;
@@ -117,8 +92,6 @@ class FunctionActionEngine {
     }
   }
 
-
-  /** Run rising/falling-edge detection over one device's buttons + axes. */
   private processDeviceState(deviceKey: string, buttons: readonly boolean[], axes: readonly number[]): void {
     for (const [btnIndex, action] of scopedEntries(this.functionGamepadButtonMap, deviceKey)) {
       if (btnIndex >= buttons.length) continue;
@@ -135,7 +108,6 @@ class FunctionActionEngine {
     }
   }
 
-  /** Fire the action on a rising edge, the key-up listeners on a falling edge. */
   private edge(active: boolean, holdKey: string, action: FunctionAction): void {
     if (active && !this.heldFunctionGamepadButtons.has(holdKey)) {
       this.heldFunctionGamepadButtons.add(holdKey);
@@ -153,7 +125,7 @@ class FunctionActionEngine {
     this.functionGamepadAxisMap.clear();
     for (const m of this.functionMappings) {
       if (m.binding.type === 'keyboard') {
-        const key = this.makeFunctionKeyId(m.binding.code, m.binding.modifiers);
+        const key = functionKeyId(m.binding.code, m.binding.modifiers);
         this.functionKeyMap.set(key, m.action);
         const list = this.functionCodeToKeyIds.get(m.binding.code) ?? [];
         list.push(key);
@@ -164,10 +136,6 @@ class FunctionActionEngine {
         setScoped(this.functionGamepadAxisMap, deviceKeyFor(m.sourceVid, m.sourcePid), `${m.binding.axisIndex}:${m.binding.direction}`, m.action);
       }
     }
-  }
-
-  private makeFunctionKeyId(code: string, modifiers?: { shift?: boolean; ctrl?: boolean; alt?: boolean }): string {
-    return `${code}:${modifiers?.shift ? 1 : 0}:${modifiers?.ctrl ? 1 : 0}:${modifiers?.alt ? 1 : 0}`;
   }
 
   private fireAction(action: FunctionAction): void {
@@ -183,7 +151,7 @@ class FunctionActionEngine {
   private fireKeyUp(action: FunctionAction): void {
     this.heldActions.delete(action);
     for (const fn of this.functionKeyUpListeners) {
-      try { fn(action); } catch { /* ignore */ }
+      try { fn(action); } catch { continue; }
     }
   }
 }

@@ -1,5 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/** The session port on a host with no main process (web, mobile): always signed out. */
 import type { HubSession } from './hub-session.type';
 
 const noHubSession: HubSession = {

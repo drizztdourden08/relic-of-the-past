@@ -1,96 +1,23 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Reader for the OAM snapshot query. Returns the sprite table as the PPU will read it, including the
- * wide/tall side channels that hold the coordinate bits the stock 9-bit X and 8-bit Y cannot. A sprite
- * whose game-side position is right can still reach the PPU wrong when those disagree, which a
- * screenshot cannot distinguish; this read can.
- *
- * Needs the developer-tools setting on, matching the C gate. Returns null when it is off.
- */
+import type { OamSnapshot, OamSlot, SpriteSlot } from './oam-snapshot.type';
 import { getModule, getGameState } from './wasm-bridge';
-
-const HEADER = 44;
-const STRIDE = 8;
-
-interface OamSlot {
-  slot: number;
-  xLow: number;
-  y: number;
-  charnum: number;
-  flags: number;
-  ext: number;
-  xHigh: number; // signed: X bits above the 9th
-  /** Tall Y marker: 0 = not tall-encoded, 1 = 9th bit clear, 2 = 9th bit set. */
-  yHigh: number;
-  isPlayer: boolean;
-  /** The X the PPU resolves: low byte + ext bit 8 + signed xHigh pages. */
-  resolvedX: number;
-  /** Y the PPU resolves in tall mode: 9-bit value, folded, then shifted. */
-  resolvedY: number;
-  hidden: boolean;
-}
-
-interface OamSnapshot {
-  playerBase: number;
-  playerScreenX: number;
-  playerScreenY: number;
-  wideBudget: number;
-  tallBudget: number;
-  cameraLockShiftX: number;
-  visibilityStatus: number;
-  blinkCountdown: number;
-  /** Which terms of the player-hide condition were true, and which branch ran. */
-  hide: {
-    ran: boolean;
-    offscreenYBranch: boolean;
-    stockExtBranch: boolean;
-    submodule: number;
-    blinkAsSeen: number;
-    inDoorway: boolean;
-    capeMode: number;
-    shadowOamPos: number | null;
-  };
-  slots: OamSlot[];
-  mainModule: number;
-  submodule: number;
-  overworldMapState: number;
-  savedModuleForMenu: number;
-  renderExtraLeft: number;
-  renderExtraRight: number;
-  bandLoX: number;
-  bandHiX: number;
-  renderExtraTop: number;
-  renderExtraBottom: number;
-  tallBudgetConfigured: number;
-  cameraLockShiftY: number;
-  /** Per-sprite-slot AI gating state, 16 entries. */
-  sprites: SpriteSlot[];
-}
-
-interface SpriteSlot {
-  slot: number;
-  state: number;
-  pause: number;
-  inBand: boolean;
-  type: number;
-  screenX: number;
-  screenY: number;
-}
+import {
+  HEADER,
+  STRIDE,
+  OAM_SLOTS,
+  SPRITE_SLOTS,
+  SPRITE_STRIDE,
+  HIDDEN_Y,
+  NO_SHADOW_OAM_POS,
+  Y_HIGH_NINTH_BIT_SET,
+} from './oam-snapshot.constants';
 
 const s16 = (v: number): number => (v >= 0x8000 ? v - 0x10000 : v);
 const s8 = (v: number): number => (v >= 0x80 ? v - 0x100 : v);
 
-const readOamSnapshot = (): OamSnapshot | null => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return null;
-  const ptr = mod.ccall('WasmGetOamSnapshot', 'number', [], []) as number;
-  if (!ptr) return null; // developer tools off
-
-  const heap = mod.HEAPU8;
-  const u16 = (at: number): number => heap[ptr + at] | (heap[ptr + at + 1] << 8);
+const readSlots = (heap: Uint8Array, ptr: number, u16: (at: number) => number): OamSlot[] => {
   const count = u16(0);
   const slots: OamSlot[] = [];
-
   for (let i = 0; i < count; i++) {
     const at = ptr + HEADER + i * STRIDE;
     const xLow = heap[at + 0];
@@ -112,13 +39,40 @@ const readOamSnapshot = (): OamSnapshot | null => {
         const tall = u16(40);
         const marker = heap[at + 6];
         if (!tall || marker === 0) return y;
-        let yy = y + (marker === 2 ? 256 : 0);
+        let yy = y + (marker === Y_HIGH_NINTH_BIT_SET ? 256 : 0);
         if (yy >= 256 + tall) yy -= 512;
         return yy + s16(u16(42));
       })(),
-      hidden: y === 0xf0,
+      hidden: y === HIDDEN_Y,
     });
   }
+  return slots;
+};
+
+const readSprites = (heap: Uint8Array, ptr: number): SpriteSlot[] =>
+  Array.from({ length: SPRITE_SLOTS }, (_v, i) => {
+    const at = ptr + HEADER + OAM_SLOTS * STRIDE + i * SPRITE_STRIDE;
+    return {
+      slot: i,
+      state: heap[at + 0],
+      pause: heap[at + 1],
+      inBand: heap[at + 2] === 1,
+      type: heap[at + 3],
+      screenX: s16(heap[at + 4] | (heap[at + 5] << 8)),
+      screenY: s16(heap[at + 6] | (heap[at + 7] << 8)),
+    };
+  });
+
+const readOamSnapshot = (): OamSnapshot | null => {
+  const mod = getModule();
+  if (!mod || getGameState().status !== 'running') return null;
+  const ptr = mod.ccall('WasmGetOamSnapshot', 'number', [], []) as number;
+  const developerToolsOn = ptr !== 0;
+  if (!developerToolsOn) return null;
+
+  const heap = mod.HEAPU8;
+  const u16 = (at: number): number => heap[ptr + at] | (heap[ptr + at + 1] << 8);
+  const slots = readSlots(heap, ptr, u16);
 
   return {
     playerBase: u16(2),
@@ -137,7 +91,7 @@ const readOamSnapshot = (): OamSnapshot | null => {
       blinkAsSeen: heap[ptr + 18],
       inDoorway: heap[ptr + 19] === 1,
       capeMode: heap[ptr + 20],
-      shadowOamPos: heap[ptr + 21] === 0xff ? null : s8(heap[ptr + 21]),
+      shadowOamPos: heap[ptr + 21] === NO_SHADOW_OAM_POS ? null : s8(heap[ptr + 21]),
     },
     mainModule: heap[ptr + 22],
     submodule: heap[ptr + 23],
@@ -152,20 +106,9 @@ const readOamSnapshot = (): OamSnapshot | null => {
     tallBudgetConfigured: u16(40),
     cameraLockShiftY: s16(u16(42)),
     slots,
-    sprites: Array.from({ length: 16 }, (_v, i) => {
-      const at = ptr + HEADER + 128 * STRIDE + i * 8;
-      return {
-        slot: i,
-        state: heap[at + 0],
-        pause: heap[at + 1],
-        inBand: heap[at + 2] === 1,
-        type: heap[at + 3],
-        screenX: s16(heap[at + 4] | (heap[at + 5] << 8)),
-        screenY: s16(heap[at + 6] | (heap[at + 7] << 8)),
-      };
-    }),
+    sprites: readSprites(heap, ptr),
   };
 };
 
 export { readOamSnapshot };
-export type { OamSnapshot, OamSlot, SpriteSlot };
+export type { OamSnapshot, OamSlot, SpriteSlot } from './oam-snapshot.type';

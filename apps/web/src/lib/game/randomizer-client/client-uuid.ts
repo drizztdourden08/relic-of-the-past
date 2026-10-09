@@ -1,13 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * The install's client id for Connect. Generated once and kept in localStorage, so a
- * server sees the same client across sessions. When storage is unavailable the id lives
- * for this page only.
- */
+import { UUID_KEY } from './client-uuid.constants';
+import type { PageOnlyUuidState } from './client-uuid.type';
 
-const UUID_KEY = 'rotp.ap.uuid';
-
-let memoryUuid: string | null = null;
+const pageOnlyUuid: PageOnlyUuidState = { uuid: null };
 
 const freshUuid = (): string => {
   const cryptoApi = (globalThis as { crypto?: Crypto }).crypto;
@@ -23,9 +18,9 @@ const clientUuid = (): string => {
     localStorage.setItem(UUID_KEY, next);
     return next;
   } catch {
-    memoryUuid ??= freshUuid();
-    return memoryUuid;
+    pageOnlyUuid.uuid ??= freshUuid();
+    return pageOnlyUuid.uuid;
   }
 };
 
-export { clientUuid, UUID_KEY };
+export { clientUuid };

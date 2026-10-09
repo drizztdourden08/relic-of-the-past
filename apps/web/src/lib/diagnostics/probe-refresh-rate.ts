@@ -1,18 +1,5 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Measures the compositor's actual frame cadence by timing animation frames. This
- * is the rate the emulator is being paced against, which can differ from the mode
- * the monitor reports. It may be a 144 Hz panel driven at 60, or a variable-refresh panel
- * settling somewhere in between. Uses the median so one hitch cannot skew it.
- */
-
-const SAMPLE_FRAMES = 12;
-// Generous, because a background or occluded window has its frames throttled hard
-// and the probe should give up instead of holding the copy button hostage.
-const TIMEOUT_MS = 2500;
-// A gap this large means the tab was throttled or the compositor stalled, so the
-// sample says nothing about the display's cadence.
-const MAX_PLAUSIBLE_GAP_MS = 100;
+import { GIVE_UP_AFTER_MS, MAX_PLAUSIBLE_GAP_MS, SAMPLE_FRAMES } from './probe-refresh-rate.constants';
 
 const median = (values: number[]): number => {
   const sorted = [...values].sort((a, b) => a - b);
@@ -32,7 +19,7 @@ const probeRefreshRate = (): Promise<number | null> =>
       resolve(value);
     };
 
-    const timeout = setTimeout(() => finish(null), TIMEOUT_MS);
+    const timeout = setTimeout(() => finish(null), GIVE_UP_AFTER_MS);
 
     const onFrame = (time: number): void => {
       if (previous) gaps.push(time - previous);

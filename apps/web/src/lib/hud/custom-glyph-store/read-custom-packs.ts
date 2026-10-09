@@ -1,0 +1,14 @@
+/* @layer renderer-lib @kind logic */
+import { readJson } from '@shared/storage/json';
+import type { GlyphPack } from '@shared/types/hud';
+import { activeProfileId } from '../active-profile';
+import { glyphFiles } from './glyph-files';
+
+const readCustomPacks = async (): Promise<GlyphPack[]> => {
+  const profileId = await activeProfileId();
+  if (!profileId) return [];
+  const stored = await readJson<GlyphPack[]>(glyphFiles.store(), glyphFiles.packsPath(profileId), []);
+  return Array.isArray(stored) ? stored.filter((p) => !!p && typeof p.id === 'string') : [];
+};
+
+export { readCustomPacks };

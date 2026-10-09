@@ -1,0 +1,12 @@
+/* @layer bridge-wasm @kind barrel */
+export { wasmGetIndoorDualLayerGrids } from './wasm-get-indoor-dual-layer-grids';
+export { wasmBuildRoomDualLayerGrids } from './wasm-build-room-dual-layer-grids';
+export { wasmGetIndoorLayer0Grid } from './wasm-get-indoor-layer0-grid';
+export { wasmGetLinkLayer } from './wasm-get-link-layer';
+export { wasmGetRoomCollisionType } from './wasm-get-room-collision-type';
+export { wasmGetStaircaseType } from './wasm-get-staircase-type';
+export { wasmBuildOverworldAttrGrid } from './wasm-build-overworld-attr-grid';
+export { wasmBuildRoomAttrGrid } from './wasm-build-room-attr-grid';
+export { wasmGetToggleFloorPositions } from './wasm-get-toggle-floor-positions';
+export { wasmGetReplacementTileState } from './wasm-get-replacement-tile-state';
+export { wasmGetChestLocations } from './wasm-get-chest-locations';

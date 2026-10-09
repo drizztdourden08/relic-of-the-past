@@ -6,8 +6,6 @@ import { entranceRequirements } from '../availability';
 import { makeCrossing } from '../make-crossing';
 import type { CrossingPass } from '../crossings.type';
 
-/** The doors into interiors and the pits that drop into a room, both off the
- *  same enriched table the flood seeds itself with. */
 const outdoorEntranceCrossings = (pass: CrossingPass): ScreenCrossing[] => {
   const screenIndex = pass.scope.owScreenIndex;
   const out: ScreenCrossing[] = [];
