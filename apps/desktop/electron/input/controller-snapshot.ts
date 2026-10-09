@@ -1,38 +1,9 @@
 /* @layer electron-main @kind logic */
-/**
- * Builds the controller device snapshot for `controller:list` and
- * `controller:devices`. It holds every SDL-claimed device plus anything the
- * device lister sees that SDL hasn't claimed (see device-availability.ts).
- *
- * Takes `listed` as a parameter because `listDevices()` is a synchronous native
- * HID enumeration (~10ms), so sdl3-source.ts caches it across snapshot builds.
- */
 import { classifyDevices } from './device-availability';
 import { toVidPid } from './sdl3-device-key';
 import type { ListedDevice } from './device-lister.type';
-import type { ControllerConnectionState, ControllerGamepadType, DeviceEntry } from '@shared/ipc/controller-contract';
-
-/** The live-device fields sdl3-source.ts tracks per connected joystick. */
-interface LiveDevice {
-  deviceKey: string;
-  /** SDL's own name. In the snapshot because the connect event fires once and
-   *  is missed by anything that subscribes later or after a release. */
-  name: string;
-  sdlId: number;
-  vendorId: number;
-  productId: number;
-  guid: string;
-  /** The gamecontrollerdb mapping line for `guid`, resolved once on add: it
-   *  never changes while connected, so no native lookup per snapshot. */
-  mapping: string | null;
-  hasRumble: boolean;
-  hasGyro: boolean;
-  connectionState: ControllerConnectionState;
-  sdlType: ControllerGamepadType;
-  hasButton: boolean[];
-  hasAxis: boolean[];
-  buttonLabels: string[];
-}
+import type { DeviceEntry } from '@shared/ipc/controller-contract';
+import type { LiveDevice } from './controller-snapshot.type';
 
 const findListed = (listed: readonly ListedDevice[], vendorId: number, productId: number): ListedDevice | undefined =>
   listed.find((d) => d.vendorId === vendorId && d.productId === productId);
@@ -69,7 +40,6 @@ const unavailableEntry = (device: ListedDevice): DeviceEntry => ({
   status: 'unavailable',
 });
 
-/** `live`: every SDL-claimed device by deviceKey. `listed`: the caller's cached HID listing. */
 const buildDeviceSnapshot = (live: ReadonlyMap<string, LiveDevice>, listed: readonly ListedDevice[]): DeviceEntry[] => {
   const claimedVidPids = new Set(Array.from(live.values()).map((d) => toVidPid(d.vendorId, d.productId)));
   const classified = classifyDevices(listed, claimedVidPids);

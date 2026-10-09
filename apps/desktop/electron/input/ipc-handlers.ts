@@ -1,8 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Registers the input IPC handlers on the main process.
- */
-
 import type { BrowserWindow } from 'electron';
 import { handle } from '../lib/ipc/handle';
 import { getUserDataPath } from '../lib/paths';
@@ -20,14 +16,11 @@ import * as sdl3 from './native/sdl3';
 import { listDevices } from './device-lister';
 import { hapticPatternPlayer } from './haptic-pattern-player';
 import { loadMappingDatabases, addUserMapping } from './mapping-db';
+import { NINTENDO_VENDOR_ID } from './ipc-handlers.constants';
 
-// Strips anything outside [A-Za-z0-9_-] so a device-supplied name can never
-// contain a path separator, '..', or a drive letter.
 const sanitizeFileStem = (name: string): string => name.replace(/[^A-Za-z0-9_-]/g, '_');
 
-const registerInputHandlers = (mainWindow: BrowserWindow): void => {
-  // ── Device permission handlers ──
-
+const registerDevicePermissions = (mainWindow: BrowserWindow): void => {
   mainWindow.webContents.session.on('select-hid-device', (event, details, callback) => {
     event.preventDefault();
     if (details.deviceList.length > 0) {
@@ -40,7 +33,7 @@ const registerInputHandlers = (mainWindow: BrowserWindow): void => {
   mainWindow.webContents.session.on('select-usb-device', (event, details, callback) => {
     event.preventDefault();
     const device = details.deviceList.find(
-      (d) => d.vendorId === 0x057E
+      (d) => d.vendorId === NINTENDO_VENDOR_ID
     );
     if (device) {
       callback(device.deviceId);
@@ -54,15 +47,13 @@ const registerInputHandlers = (mainWindow: BrowserWindow): void => {
   mainWindow.webContents.session.setDevicePermissionHandler((_details) => {
     return true;
   });
+};
 
-  // ── Input profile handlers ──
-
+const registerProfileAndCalibrationHandlers = (): void => {
   handle('inputProfiles:read', (_event, profileId: string) => readInputProfiles(profileId));
 
   handle('inputProfiles:write', (_event, profileId: string, profiles: unknown[]) =>
     writeInputProfiles(profileId, profiles));
-
-  // ── Calibration handlers ──
 
   handle('stickCalibration:read', () => readStickCalibration());
 
@@ -73,9 +64,9 @@ const registerInputHandlers = (mainWindow: BrowserWindow): void => {
 
   handle('triggerCalibration:write', (_event, deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }) =>
     writeTriggerCalibration(deviceKey, axisIndex, cal));
+};
 
-  // ── Controller (SDL3 native transport) handlers ──
-
+const registerControllerHandlers = (): void => {
   handle('controller:list', () => sdl3Source.listSnapshot());
 
   handle('controller:list-hid-devices', () => listDevices());
@@ -122,15 +113,14 @@ const registerInputHandlers = (mainWindow: BrowserWindow): void => {
   handle('controller:release-hold', () => sdl3Source.releaseHold());
 
   handle('controller:restore-hold', () => sdl3Source.restoreHold());
+};
 
-  // ── Start SDL3 transport + mapping db ──
-
+const registerInputHandlers = (mainWindow: BrowserWindow): void => {
+  registerDevicePermissions(mainWindow);
+  registerProfileAndCalibrationHandlers();
+  registerControllerHandlers();
   loadMappingDatabases();
   sdl3Source.start(mainWindow);
 };
 
-const stopInputHandlers = (): void => {
-  sdl3Source.stop();
-};
-
-export { registerInputHandlers, stopInputHandlers };
+export { registerInputHandlers };

@@ -16,13 +16,11 @@ import type { NewSetParams } from '@shared/storage/languages';
 import type { LanguageSet } from '@shared/game/language';
 import { setDir } from '@shared/storage/languages/paths';
 import { refuseInstalled } from '../storage/installed-guard';
+import type { ExtractResult } from './ipc-handlers.type';
 
 const files = createNodeFileStore();
 
-/** A set installed from the Hookshop is read only: every write into its folder is refused. */
 const refuseInstalledSet = (id: string): Promise<void> => refuseInstalled(setDir(id));
-
-type ExtractResult = { success: boolean; error?: string };
 
 const extractDialogueFromRom = async (romAbsPath: string, langCode: string): Promise<ExtractResult> => {
   const report = makeImportReporter('language', langCode);
@@ -31,8 +29,8 @@ const extractDialogueFromRom = async (romAbsPath: string, langCode: string): Pro
     await refuseInstalledSet(langCode);
     report('decode', undefined, undefined, 'Decoding dialogue...');
     const rom = loadRom(romAbsPath, true);
-    // The picked code must match the ROM's region, or the font/encoder configs won't line up.
-    if (rom.language !== langCode) {
+    const romMatchesPickedLanguage = rom.language === langCode;
+    if (!romMatchesPickedLanguage) {
       throw new Error(`Selected '${langCode}' but this ROM is '${rom.language}' (${rom.description}). Pick the matching language.`);
     }
     const meta = await extractLanguagePack(rom, rom.language);
@@ -49,7 +47,6 @@ const extractDialogueFromRom = async (romAbsPath: string, langCode: string): Pro
   }
 };
 
-// Resolve a source to exactly one ROM, extract its dialogue, then clean up temps.
 const extractFromSource = async (source: ImportSource, langCode: string): Promise<ExtractResult> => {
   const report = makeImportReporter('language', langCode);
   let resolved;

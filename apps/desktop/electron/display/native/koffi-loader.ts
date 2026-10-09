@@ -1,19 +1,5 @@
 /* @layer electron-main @kind logic */
-/**
- * Lazy, cached koffi load.
- *
- * Required at runtime instead of imported statically, so that a missing or
- * unloadable binding degrades to "this setting is unavailable" instead of taking the whole
- * app down at startup. koffi is Node-API based, so it loads under Electron's ABI without a
- * rebuild (verified against Electron 42 / Node 24).
- *
- * Only ever reached from the main process. This is native code and has no business in
- * the renderer or in the mobile bundle.
- */
-
-// Untyped on purpose: we use a narrow slice of koffi's dynamic FFI surface, where the shapes
-// are decided at runtime by the struct and function declarations we hand it.
-type Koffi = any;
+import type { Koffi } from './koffi-loader.type';
 
 let cached: Koffi | null = null;
 let attempted = false;
@@ -22,7 +8,7 @@ const loadKoffi = (): Koffi | null => {
   if (attempted) return cached;
   attempted = true;
   try {
-    cached = require('koffi');
+    cached = require('koffi') as Koffi;
   } catch {
     cached = null;
   }

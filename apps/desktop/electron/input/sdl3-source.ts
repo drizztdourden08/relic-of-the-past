@@ -1,20 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * SDL3 controller transport: owns the native addon's lifecycle in main and
- * translates its raw events into the `controller:*` IPC contract. The sole
- * controller input transport (started from ipc-handlers.ts).
- *
- * deviceKey rule: bindings/profiles/calibration are keyed by "vid:pid"
- * (4-hex-digit lowercase, e.g. "057e:2009"), which MUST keep working for one
- * device per vid:pid. A four-port adapter exposes four devices sharing one
- * vid:pid, so the second and later get a "#N" suffix (N = 2, 3, ...). A freed
- * discriminator can be reused by a later connect without changing the key of
- * any device still connected. See sdl3-device-key.ts.
- *
- * Listed-device cache: `listDevices()` is a synchronous native HID enumeration
- * (~10ms on a 2-device machine). Calling it per `controller:list` stalled the
- * calibration screen, so it runs only on connect, disconnect and rescan.
- */
 import type { BrowserWindow } from 'electron';
 import * as sdl3 from './native/sdl3';
 import type { Sdl3Event } from './native/sdl3';
@@ -36,16 +20,12 @@ class Sdl3Source {
   private live = new Map<string, LiveDevice>();
   private listedCache: ListedDevice[] = [];
 
-  /** Starts polling. No-op (logs once) when the native addon isn't available. */
   start(win: BrowserWindow): void {
     this.window = win;
     if (!sdl3.isAvailable()) {
       console.log('[controllers] not started: native addon unavailable');
       return;
     }
-    // Order matters: listDevices() bottoms out in SDL's own hidapi, and reaching
-    // it before the SDL thread initialises leaves the gamepad backend unable to
-    // claim anything through HIDAPI (no rumble, no gyro, no input).
     sdl3.start((event) => this.handleEvent(event));
     this.refreshListedCache();
     console.log('[controllers] started');
@@ -56,8 +36,6 @@ class Sdl3Source {
     this.live.clear();
   }
 
-  /** User-initiated "look again". The OS-level listing can change without any
-   *  SDL claim event (a device SDL still can't claim), hence the cache refresh. */
   rescan(): void {
     sdl3.rescan();
     this.refreshListedCache();
@@ -78,8 +56,6 @@ class Sdl3Source {
     this.listedCache = listDevices();
   }
 
-  /** Opens a diagnostic raw HID capture for the gamepad diagnostics wizard.
-   *  Bytes arrive as `controller:raw` events on whichever window called this. */
   startRawCapture(vendorId: number, productId: number): RawCaptureStartResult {
     const result = sdl3.startRawCapture(vendorId, productId);
     return result.success ? { ok: true } : { ok: false, reason: result.reason, message: result.message };
@@ -89,8 +65,6 @@ class Sdl3Source {
     sdl3.stopRawCapture();
   }
 
-  /** Opens a joystick-level capture for the gamepad diagnostics wizard.
-   *  Samples arrive as `controller:joystick` events. */
   startJoystickCapture(joystickId: number): boolean {
     return sdl3.startJoystickCapture(joystickId);
   }
@@ -107,14 +81,10 @@ class Sdl3Source {
     return sdl3.mappingForGuid(guid);
   }
 
-  /** Releases the gamepad subsystem so a raw HID open on the same device can
-   *  succeed. `listSnapshot()` naturally reports no claimed devices while held,
-   *  since every gamepad closes through the normal `removed` path first. */
   releaseHold(): boolean {
     return sdl3.releaseGamepads();
   }
 
-  /** Restores the gamepad subsystem after `releaseHold`. Sufficient on its own. */
   restoreHold(): boolean {
     return sdl3.restoreGamepads();
   }
@@ -194,4 +164,4 @@ class Sdl3Source {
 
 const sdl3Source = new Sdl3Source();
 
-export { Sdl3Source, sdl3Source };
+export { sdl3Source };

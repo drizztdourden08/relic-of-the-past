@@ -1,25 +1,7 @@
 /* @layer electron-main @kind logic */
-/**
- * Linux refresh-rate driver, via the xrandr CLI.
- *
- * No FFI on purpose: xrandr ships with every X11 desktop, and libXrandr's soname varies
- * by distribution.
- *
- * Wayland is the limitation: xrandr either reports nothing or only sees XWayland, so an
- * empty rate list is returned and the setting reports itself unavailable. Per-compositor
- * tools (wlr-randr, kscreen-doctor) would each need their own driver.
- *
- * NOT VERIFIED ON HARDWARE. Needs a pass in the Linux VM.
- */
 import { execFileSync } from 'node:child_process';
-import type { DisplayModeDriver } from './types';
-
-interface XrandrState {
-  output: string;
-  resolution: string;
-  rates: number[];
-  currentRate: number | null;
-}
+import type { DisplayModeDriver } from './display-mode-driver.type';
+import type { XrandrState } from './linux.type';
 
 const runXrandr = (args: string[]): string | null => {
   try {
@@ -29,14 +11,6 @@ const runXrandr = (args: string[]): string | null => {
   }
 };
 
-/**
- * Parse `xrandr` for the connected output's current mode and its available rates.
- *
- * The format lists an output line, then indented mode lines whose rates carry markers:
- *   DP-1 connected primary 2560x1440+0+0 ...
- *      2560x1440    143.97*+ 120.00   99.95    59.95
- * `*` marks the active rate and `+` the preferred one, so both are stripped before parsing.
- */
 const readState = (): XrandrState | null => {
   const out = runXrandr([]);
   if (!out) return null;
@@ -51,15 +25,14 @@ const readState = (): XrandrState | null => {
   for (const line of lines) {
     const connected = /^(\S+)\s+connected\s+(?:primary\s+)?(\d+x\d+)/.exec(line);
     if (connected) {
-      // Stop at the first connected output that has a geometry, which is the one in use.
       if (output) break;
       output = connected[1];
       resolution = connected[2];
       inActiveOutput = true;
       continue;
     }
-    if (/^\S/.test(line)) {
-      // A new unindented line ends the mode block for the output we were reading.
+    const isUnindented = /^\S/.test(line);
+    if (isUnindented) {
       if (inActiveOutput && output) inActiveOutput = false;
       continue;
     }
@@ -89,12 +62,11 @@ const setRate = (hz: number): boolean => {
   if (!state) return false;
   const result = runXrandr(['--output', state.output, '--mode', state.resolution, '--rate', String(hz)]);
   if (result === null) return false;
-  // xrandr exits 0 even when a rate is silently rounded, so confirm by reading back.
-  return currentRate() === hz;
+  const rateReadBack = currentRate();
+  return rateReadBack === hz;
 };
 
 const createLinuxDriver = (): DisplayModeDriver => {
-  // Probing once at construction also tells us whether we are on a session xrandr can see.
   const probe = readState();
   const ready = probe !== null && probe.rates.length > 0;
   return {
