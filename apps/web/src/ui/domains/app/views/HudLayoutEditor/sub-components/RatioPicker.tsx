@@ -1,24 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * Which display the layout is being judged on.
- *
- * The stage re-runs the SAME layout pass at the chosen aspect, with nothing
- * scaled or letterboxed to fake it, so a group that only clears the vitals at
- * 21:9, or a wallet that falls off the bottom at 4:3, is visible while it is
- * being authored instead of after a resize in play.
- *
- * A row of chips, not a select, because the whole point is to flick
- * between them and watch what moves.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
 import { EDITOR_RATIOS } from '../HudLayoutEditor.constants';
-
-interface RatioPickerProps {
-  value: string;
-  onChange: (id: string) => void;
-}
+import type { RatioPickerProps } from './RatioPicker.type';
 
 const RatioPicker = (props: RatioPickerProps) => {
   const { value, onChange } = props;
@@ -45,4 +30,4 @@ const RatioPicker = (props: RatioPickerProps) => {
 };
 
 export { RatioPicker };
-export type { RatioPickerProps };
+export type { RatioPickerProps } from './RatioPicker.type';

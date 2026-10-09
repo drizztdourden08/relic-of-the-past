@@ -1,22 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The selected node's properties, in EIGHT collapsible sections, in order:
- * Identity, Placement, Layout, Size & Box, Appearance, Content, Data,
- * Motion (`plans/hud-data-binding.html`, "The property panel"). Only what
- * applies to the selected node renders at all (Layout only for a container,
- * Content only for an element), and each collapsed header carries a `● n`
- * bound-count badge so the panel stays scannable without opening anything.
- *
- * NINE BECAME EIGHT IN PHASE 10: Animation and Transitions were "two sections
- * for one idea", and Motion is the one section, with three subsections of its
- * own. Its badge is the two old counts added together, so a node that was
- * showing `● 1` under each still reads `● 2` here instead of losing one.
- *
- * ONLY A FEW SECTIONS OPEN AT ONCE: opening a new one closes the oldest past
- * `MAX_OPEN`, which is the whole reason eight sections fit in 232px. Selecting
- * a different node resets to a sensible default pair instead of carrying
- * over whatever was open for the last one.
- */
 import { useEffect, useState } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
@@ -31,36 +13,13 @@ import { ContentSection } from './sections/ContentSection';
 import { DataSection } from './sections/DataSection';
 import { IdentitySection } from './sections/IdentitySection';
 import { LayoutSection } from './sections/LayoutSection';
-import type { DropIntent } from '../behavior/drop-intent';
 import { PlacementSection } from './sections/PlacementSection';
 import { SizeBoxSection } from './sections/SizeBoxSection';
 import { SectionAccordion } from './SectionAccordion';
+import { MAX_OPEN } from './NodeInspector.constants';
 import type { ReactNode } from 'react';
-import type { GlyphPack, HudElement, HudLayout, HudNode } from '@shared/types/hud';
-
-interface NodeInspectorProps {
-  node: HudNode | null;
-  doc: HudLayout | null;
-  onPatch: (patch: Partial<HudNode>) => void;
-  scope: Readonly<Record<string, number>>;
-  glyphPacks: readonly GlyphPack[];
-  selectedId: string | null;
-  onSelectNode: (id: string) => void;
-  /** THE EDITOR'S ONE REORDER DOOR (§58). Layout's flex manipulation strip moves
-   *  a child among its siblings, and `applyDrop` is the only module in this
-   *  editor allowed to call `moveNode`, so the intent travels up instead of
-   *  the tree being written down here. */
-  onDrop: (ids: readonly string[], intent: DropIntent) => void;
-  /** `validate-motion-warnings.ts`'s own reflow warnings for the WHOLE
-   *  document, filtered here to the ones naming this node. */
-  reflowWarnings: readonly string[];
-  /** A region's anchor is not a property of any node, so it cannot travel
-   *  through `onPatch`. Placement edits it through this instead (phase 5). */
-}
-
-type SectionKey = 'identity' | 'placement' | 'layout' | 'sizeBox' | 'appearance' | 'content' | 'data' | 'motion';
-
-const MAX_OPEN = 3;
+import type { HudElement, HudNode } from '@shared/types/hud';
+import type { InspectorSectionKey as SectionKey, NodeInspectorProps } from './NodeInspector.type';
 
 const NodeInspector = (props: NodeInspectorProps) => {
   const {
@@ -90,17 +49,10 @@ const NodeInspector = (props: NodeInspectorProps) => {
     return next.length > MAX_OPEN ? next.slice(next.length - MAX_OPEN) : next;
   });
 
-  // The screen answers a different set of questions to every other node: it has
-  // no parent to be placed in and no size to argue about.
   const isScreen = doc.screen !== undefined && doc.screen.id === node.id;
-  // Every id but this node's own: what the id field measures a duplicate against,
-  // so the rule is enforced under the field instead of described beside it.
   const otherIds = walkNodes(doc).map((site) => site.node.id).filter((id) => id !== node.id);
   const parent = realParentOf(doc, node.id);
   const insideRepeat = isInsideRepeat(doc, node.id);
-  // A formula in a repeat's subtree produces `count` values, not one. Answered
-  // once here, where the document is in hand, instead of threaded through
-  // every field as a prop none of them would use (`behavior/formula-scope.ts`).
   const instances = instanceScopes(enclosingRepeatOf(doc, node.id), scope);
   const counts = boundCountsBySection(node);
   const warnings = reflowWarnings.filter((w) => w.startsWith(`${node.id}:`));
@@ -168,4 +120,4 @@ const NodeInspector = (props: NodeInspectorProps) => {
 };
 
 export { NodeInspector };
-export type { NodeInspectorProps };
+export type { NodeInspectorProps } from './NodeInspector.type';

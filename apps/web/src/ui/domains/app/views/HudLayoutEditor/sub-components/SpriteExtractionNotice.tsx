@@ -1,16 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * "Sprites aren't (fully) extracted for this ROM". This is the one place every
- * sprite picker in the editor surfaces that, with a one-click fix, instead of
- * silently blanking every tile. `SpritePicker` itself owns no store (it is a
- * design-system composite), so this View-tier component is what actually
- * reads `sprite-availability-store` and calls the extraction pipeline; call
- * sites just render `<SpriteExtractionNotice />` as the picker's `notice` prop
- * and get nothing back once sprites are available, no ternary required.
- *
- * Mirrors `HudStyleControl`'s own notice+extract pattern (same store, same
- * `extractSprites` call). This is the popover-sized version of it.
- */
 import { useState } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';

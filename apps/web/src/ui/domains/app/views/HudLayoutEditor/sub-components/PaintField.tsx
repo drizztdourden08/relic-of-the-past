@@ -1,27 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * A `Paint`, which is a flat colour, a gradient, or a tiled/stretched image.
- *
- * WHAT THIS FILE IS AFTER PHASE 8. It used to be a row that spent 75% of its
- * width on a `color | gradient | image` `Select` and left the hex field 13.9px
- * of typing surface (measured, at every rail), which is why the review
- * photographs six colour rows in one section all clipped to `#f(`. The colour
- * half is now `ColorField` (swatch + hex + popover, one row, 253/196/152px),
- * and what survives here is only the KIND SWITCH, as three icons instead of a
- * dropdown that ate the row.
- *
- * THE KIND SWITCH IS OPT-IN, and that is a correctness decision, not a
- * density one. A border, an outline, a tint and a shadow are flat colours in
- * every shipped document, so offering them a gradient spends a row on a
- * question nobody asks; `kinds` is passed only by the background. But the TYPE
- * still says `Paint`, so a document that already holds a gradient border (hand
- * authored, and legal) gets the switch back automatically instead of having
- * its value silently flattened by a field that can only write strings.
- *
- * SO EVERY FLAT COLOUR IN APPEARANCE IS LITERALLY ONE `ColorField`: background,
- * border, outline, tint, every shadow, and every gradient stop through
- * `GradientRamp`. One component, one row shape, one popover.
- */
 import { Box } from '@ds/primitives/Box';
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
@@ -34,31 +11,13 @@ import { ValueField } from './ValueField';
 import './HudLayoutEditor.appearance.css';
 import type { Paint, Value } from '@shared/types/hud';
 import { ANGLE_STEP } from '../HudLayoutEditor.constants';
-
-type PaintMode = 'color' | 'gradient' | 'image';
-
-const KINDS: readonly { value: PaintMode; icon: string; label: string }[] = [
-  { value: 'color', icon: '■', label: 'colour (one flat fill)' },
-  { value: 'gradient', icon: '◪', label: 'gradient (a ramp between stops)' },
-  { value: 'image', icon: '▨', label: 'image (a file, tiled or stretched)' },
-];
+import { HEX_RE, KINDS } from './PaintField.constants';
+import type { PaintFieldProps, PaintMode } from './PaintField.type';
 
 const modeOf = (paint: Paint): PaintMode => {
   if (typeof paint === 'string') return 'color';
   return 'gradient' in paint ? 'gradient' : 'image';
 };
-
-const HEX_RE = /^#[0-9a-fA-F]{3,8}$/;
-
-interface PaintFieldProps {
-  label?: string;
-  value: Paint;
-  onChange: (next: Paint) => void;
-  scope: Readonly<Record<string, number>>;
-  insideRepeat?: boolean;
-  /** Offer gradient and image. The background does; nothing else needs to. */
-  kinds?: boolean;
-}
 
 const PaintField = (props: PaintFieldProps) => {
   const { label, value, onChange, scope, insideRepeat, kinds } = props;
@@ -117,4 +76,4 @@ const PaintField = (props: PaintFieldProps) => {
 };
 
 export { PaintField };
-export type { PaintFieldProps };
+export type { PaintFieldProps } from './PaintField.type';
