@@ -1,22 +1,12 @@
 /* @layer renderer-components @kind logic */
-/**
- * The activity feed as one time-ordered list: the app's own log entries and
- * the Archipelago room's messages (chat, item sends, joins), each room line
- * tagged AP. Both inputs arrive oldest first, so a single merge pass keeps the
- * order; on a tie the app's own entry goes first.
- */
 import type { LogRow } from '@ds/composites/LogPanel';
 import type { LogEntry } from '../../../../../../lib/log-bus';
-import { activityRowOf, formatTime } from './randomizer-log-style';
+import { activityRowOf } from './activity-row';
+import { formatTime } from './format-time';
+import { isRoomEcho } from './is-room-echo';
+import { AP_KIND, AP_TAG, NOTHING_HIDDEN } from './activity-feed.constants';
 import type { RoomMessage } from '../../../../../../lib/game/randomizer-client';
-
-const AP_KIND = 'ap';
-const AP_TAG = 'AP';
-
-interface ActivityItem {
-  at: number;
-  row: LogRow;
-}
+import type { ActivityItem } from './activity-feed.type';
 
 const roomRowOf = (line: RoomMessage): LogRow => ({
   id: `ap-${line.id}`,
@@ -36,15 +26,6 @@ const mergeByTime = (first: ActivityItem[], second: ActivityItem[]): ActivityIte
   return merged.concat(first.slice(i), second.slice(j));
 };
 
-/** The session logs each room message to the bus as well (online-messages.ts); the room row stands for it. */
-const ROOM_ECHO_PREFIX = '[AP] ';
-
-const isRoomEcho = (entry: LogEntry, lines: readonly RoomMessage[]): boolean =>
-  lines.length > 0 && entry.message.startsWith(ROOM_ECHO_PREFIX);
-
-const NOTHING_HIDDEN: ReadonlySet<string> = new Set();
-
-/** Every row of the feed, oldest first, minus the kinds the viewer has hidden (none by default). */
 const buildActivityRows = (
   entries: readonly LogEntry[], lines: readonly RoomMessage[], hidden: ReadonlySet<string> = NOTHING_HIDDEN,
 ): LogRow[] => {
@@ -56,4 +37,4 @@ const buildActivityRows = (
   return hidden.size > 0 ? rows.filter((row) => !hidden.has(row.kind)) : rows;
 };
 
-export { buildActivityRows, isRoomEcho };
+export { buildActivityRows };

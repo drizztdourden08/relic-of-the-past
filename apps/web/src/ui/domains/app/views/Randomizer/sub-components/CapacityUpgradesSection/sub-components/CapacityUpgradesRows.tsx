@@ -1,20 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * The derived half of the section: the four row models of the profile,
- * rendered through CapacityUpgradesBlock. Kept apart from the section so the
- * derivation runs inside its fence, so a throw here reaches the boundary, not
- * the page.
- */
 import { CapacityUpgradesBlock } from '@domains/app/compounds/CapacityUpgradesBlock';
-import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY } from '@shared/randomizer/world/capacity';
-import { optionByKey } from '@shared/randomizer/world/options.data';
-import { useCapacityRows } from '../../../../../../../hooks/randomizer/useCapacityRows';
-import type { CapacityUpgradesSectionProps } from './CapacityUpgradesSection.type';
-
-type CapacityUpgradesRowsProps = Omit<CapacityUpgradesSectionProps, 'onReset'>;
-
-const ENABLED_OPTION = optionByKey.get(CAPACITY_ENABLED_KEY);
-const PROGRESSIVE_OPTION = optionByKey.get(CAPACITY_PROGRESSIVE_KEY);
+import { useCapacityRows } from '../../../../../../../../hooks/randomizer/useCapacityRows';
+import { ENABLED_OPTION, PROGRESSIVE_OPTION } from './CapacityUpgradesRows.constants';
+import type { CapacityUpgradesRowsProps } from './CapacityUpgradesRows.type';
 
 const CapacityUpgradesRows = (props: CapacityUpgradesRowsProps) => {
   const {

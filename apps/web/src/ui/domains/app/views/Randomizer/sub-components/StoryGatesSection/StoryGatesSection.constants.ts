@@ -1,8 +1,4 @@
-/* @layer renderer-components @kind data */
-/**
- * The catalog entries this section renders, read off the shipped catalog once at module
- * load, in the order the seeds list them, so the section and the list say the same thing.
- */
+/* @layer renderer-components @kind constants */
 import { optionCatalog } from '@shared/randomizer/world/options.data';
 import { STORY_GATE_OPTION_SEEDS } from '@shared/randomizer/world/story-gates/story-gate-options.data';
 import type { OptionDef } from '@shared/randomizer/world/options.type';

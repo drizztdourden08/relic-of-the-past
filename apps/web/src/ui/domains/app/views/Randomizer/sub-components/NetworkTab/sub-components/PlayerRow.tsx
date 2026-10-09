@@ -1,20 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * One player of the players table: slot, name, game, the online chip, the slot's client
- * status and checks done. This slot is marked "(you)". A compact row keeps name, game,
- * online and checks: the Run tab's short list.
- */
 import { Box, Text } from '@ds/primitives';
 import { ChecksCell } from './ChecksCell';
 import { StateChip } from './StateChip';
 import { DASH } from '../behavior/network-format';
 import { onlineChip } from '../behavior/network-tone';
-import type { NetworkPlayer } from '@app/lib/game/randomizer-client';
-
-interface PlayerRowProps {
-  player: NetworkPlayer;
-  compact?: boolean;
-}
+import type { PlayerRowProps } from './PlayerRow.type';
 
 const PlayerRow = ({ player, compact = false }: PlayerRowProps) => {
   const { slot, alias, game, online, status, self, checked, total } = player;

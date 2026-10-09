@@ -6,14 +6,8 @@ import type {
 
 interface DarkRoomsSectionProps {
   setting: DarkRoomSetting;
-  /** The In Pool cell of the requirement row; omitted where there is no accounting. */
   impact?: ImpactCell;
-  /**
-   * The lights a sibling setting holds off, each with its reason; shown off
-   * and inert with the sentence under the row, the stored answer kept.
-   */
   forced?: ReadonlyMap<DarkRoomLightField, string>;
-  /** Absent renders the whole section as a read-out: the read-only Options page. */
   onChange?: (next: DarkRoomSetting) => void;
 }
 

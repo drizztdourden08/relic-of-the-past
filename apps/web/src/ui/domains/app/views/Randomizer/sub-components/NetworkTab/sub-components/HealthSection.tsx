@@ -1,19 +1,11 @@
 /* @layer renderer-components @kind component */
-/** Whether the room still answers: the last packet, the traffic, the ping and the item queue. */
 import { NetworkSection } from './NetworkSection';
 import { formatAge, formatMs, formatYesNo } from '../behavior/network-format';
 import { healthChip } from '../behavior/network-tone';
-import { NOT_CONNECTED_HINT } from '../behavior/network-view';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
 import type { NetworkStatus } from '@app/lib/game/randomizer-client';
-import type { NetworkRow } from './NetworkSection';
-import type { NetworkView } from '../behavior/network-view';
-import type { PanelPlacement } from '../../../Randomizer.constants';
-
-interface HealthSectionProps {
-  placement: PanelPlacement;
-  view: NetworkView;
-  now: number;
-}
+import type { NetworkRow } from './NetworkSection.type';
+import type { HealthSectionProps } from './HealthSection.type';
 
 const healthRows = (status: NetworkStatus, now: number): NetworkRow[] => {
   const { health } = status;

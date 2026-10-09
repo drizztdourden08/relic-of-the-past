@@ -1,26 +1,19 @@
 /* @layer renderer-components @kind component */
-/**
- * The profile's server setup, always open, with Test connection; Save and Revert show once
- * it is edited. Saving reconnects at once. Below it, why the session stopped, when it did.
- */
+import { useCallback } from 'react';
 import { Button, Text } from '@ds/primitives';
 import { ServerSetup } from '@domains/app/compounds/ServerSetup';
 import { useConnectionForm } from '../behavior/useConnectionForm';
-import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
-
-interface ConnectionEditorProps {
-  config: ProfileRandomizerConfig;
-  /** Why the session stopped or cannot reach the server; null while it is fine. */
-  sessionError: string | null;
-  onSave: (patch: RandomizerConnectionPatch) => Promise<void>;
-}
+import type { ConnectionEditorProps } from './ConnectionEditor.type';
 
 const ConnectionEditor = ({ config, sessionError, onSave }: ConnectionEditorProps) => {
   const form = useConnectionForm({ config, onSave });
+  const { save, probe } = form;
+  const handleSave = useCallback(() => void save(), [save]);
+  const handleTest = useCallback(() => void probe.test(), [probe]);
   const actions = form.dirty && (
     <>
       <Button variant="ghost" size="sm" onClick={form.revert} disabled={form.saving}>Revert</Button>
-      <Button variant="primary" size="sm" onClick={() => void form.save()} disabled={form.saving}>Save</Button>
+      <Button variant="primary" size="sm" onClick={handleSave} disabled={form.saving}>Save</Button>
     </>
   );
 
@@ -32,7 +25,7 @@ const ConnectionEditor = ({ config, sessionError, onSave }: ConnectionEditorProp
         onHostChange={form.changeHost}
         onHostBlur={form.settleHost}
         probe={form.probe.state}
-        onTest={() => void form.probe.test()}
+        onTest={handleTest}
         error={form.error}
         actions={actions || undefined}
         disabled={form.saving}

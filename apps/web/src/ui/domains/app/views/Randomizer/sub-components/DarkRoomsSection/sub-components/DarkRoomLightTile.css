@@ -1,19 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* One light tile. Square and fixed, the same treatment the shop slot boxes
-   wear (flat ground, hairline edge, small radius) so a row of lights reads
-   as another set of slot boxes instead of as a device of its own.
-
-   Three faces, carried on data-state so the tile never needs a class list
-   built in the component:
-     on:       the setting accepts this light: gold edge, full contrast.
-     off:      it does not: dimmed, so the row reads at a glance as the set
-                that counts.
-     forced   a sibling setting holds it off: the blocking edge, full
-                contrast, so the reason under the row is read against it.
-     disabled: no light is asked for, or the run view: flattened onto the
-                page background. No dim here, because the box inside already carries
-                the disabled opacity. */
 
 .dark-room-light {
   display: flex;
@@ -40,11 +26,6 @@
   background: transparent;
 }
 
-/* The box IS the tile: the label fills the square, so the whole thing is one
-   click target and the tick never sits in a corner of dead space. Reversed so
-   the sprite reads first and its tick sits under it. Written through the tile
-   so it outranks the checkbox's own single-class rules whatever order the two
-   sheets land in. */
 .dark-room-light .dark-room-light__control {
   flex: 1;
   flex-direction: column-reverse;
@@ -55,7 +36,6 @@
   padding: var(--space-2xs);
 }
 
-/* The read-only face: the sprite over its True or False tag. */
 .dark-room-light .dark-room-light__readout {
   flex: 1;
   flex-direction: column;

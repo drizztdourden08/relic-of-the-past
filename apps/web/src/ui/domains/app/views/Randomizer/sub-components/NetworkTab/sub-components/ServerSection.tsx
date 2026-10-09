@@ -1,17 +1,10 @@
 /* @layer renderer-components @kind component */
-/** The room's rules: release, collect and remaining, hints, its games and the data package check. */
 import { NetworkSection } from './NetworkSection';
 import { DASH, formatValue, formatYesNo } from '../behavior/network-format';
-import { NOT_CONNECTED_HINT } from '../behavior/network-view';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
 import type { NetworkServer } from '@app/lib/game/randomizer-client';
-import type { NetworkRow } from './NetworkSection';
-import type { NetworkView } from '../behavior/network-view';
-import type { PanelPlacement } from '../../../Randomizer.constants';
-
-interface ServerSectionProps {
-  placement: PanelPlacement;
-  view: NetworkView;
-}
+import type { NetworkRow } from './NetworkSection.type';
+import type { ServerSectionProps } from './ServerSection.type';
 
 const hintCostText = (server: NetworkServer): string => {
   const { hintCostPoints, hintCostPercent } = server;

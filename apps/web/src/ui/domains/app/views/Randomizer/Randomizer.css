@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* The profile hub's body layout: the section nav, then the active tab's page filling the rest. */
 .randomizer-page {
   display: flex;
   gap: var(--space-xl);
@@ -17,14 +16,12 @@
   flex-direction: column;
 }
 
-/* A tab's column of panels. The page body around it does the scrolling. */
 .randomizer-page__scroll {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
 }
 
-/* The Spoiler page's location count, at the right end of its header. */
 .randomizer-page__count {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
@@ -63,8 +60,6 @@
 
 .randomizer-page__hint--error { color: var(--c-danger); }
 
-/* ── Options tab ──
-   The creation panel, read-only. It scrolls its own tab body, so it fills the page. */
 .randomizer-page__options {
   flex: 1;
   min-height: 0;
@@ -72,9 +67,6 @@
   flex-direction: column;
 }
 
-/* ── Activity log palette ──
-   Kinds come from behavior/randomizer-log-style.ts; the panel owns everything
-   structural. A clock gutter needs more room than a line number. */
 .randomizer-log {
   --log-gutter-w: 8ch;
   --log-tag-w: 8ch;
@@ -108,9 +100,6 @@
 .randomizer-log .log-panel__tag--error    { color: var(--c-danger); }
 .randomizer-log .log-panel__msg--error    { color: var(--c-danger); }
 
-/* ── Spoiler tab ──
-   The tracker compound, given the room the widget never has: its own scroller,
-   and a check list that grows into the pane instead of a fixed-height box. */
 .spoiler-tracker {
   flex: 1;
   min-height: 0;
@@ -125,8 +114,6 @@
   background: var(--c-sunken);
 }
 
-/* ── Online tab ──
-   The settings screen's own layout, which scrolls itself. */
 .randomizer-online {
   flex: 1;
   min-height: 0;

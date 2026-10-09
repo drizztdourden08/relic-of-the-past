@@ -1,18 +1,11 @@
 /* @layer renderer-components @kind component */
-/** This slot's side of the run: its locations, the items in and out, and the goal. */
 import { ProgressBar } from '@ds/primitives';
 import { NetworkSection } from './NetworkSection';
 import { formatYesNo } from '../behavior/network-format';
-import { NOT_CONNECTED_HINT } from '../behavior/network-view';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
 import type { NetworkProgress } from '@app/lib/game/randomizer-client';
-import type { NetworkRow } from './NetworkSection';
-import type { NetworkView } from '../behavior/network-view';
-import type { PanelPlacement } from '../../../Randomizer.constants';
-
-interface ProgressSectionProps {
-  placement: PanelPlacement;
-  view: NetworkView;
-}
+import type { NetworkRow } from './NetworkSection.type';
+import type { ProgressSectionProps } from './ProgressSection.type';
 
 const progressRows = (progress: NetworkProgress): NetworkRow[] => [
   { label: 'locations', value: `${progress.checked} / ${progress.total}` },
