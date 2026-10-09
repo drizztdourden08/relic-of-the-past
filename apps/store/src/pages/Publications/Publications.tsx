@@ -1,12 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * My publications: the scope tabs in the header with Publish at its end, the totals line
- * with the link to the public page, then the FilterBar and the table of every version and
- * listing edit grouped by item, with the picked row's review record in the side column
- * under any uploads in flight. Everything stateful lives in usePublicationsPage.
- */
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import plusIcon from '@iconify-icons/lucide/plus';
 import { Flex } from '@ds/primitives/Flex';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
@@ -23,20 +15,10 @@ import { publicationRowId } from '../../publications/publication-row';
 import { PUBLICATION_DEFAULT_COLUMNS, PUBLICATION_DEFAULT_GROUP_BY } from '../../publications/publication-schema';
 import { usePublicationsPage } from './behavior/usePublicationsPage';
 import { PublicationDetail } from './sub-components/PublicationDetail';
+import { PublishAction } from './sub-components/PublishAction';
+import { COUNT_LABEL } from './Publications.constants';
+import type { PublicationsProps } from './Publications.type';
 import './Publications.css';
-
-type PublicationsProps = {
-  /** From the `/publications/:rowId` route; picks that row. */
-  selectedId?: string;
-};
-
-const COUNT_LABEL = ['entry', 'entries'] as const;
-
-const PUBLISH = (
-  <Link to="/publications/new" className="btn btn--primary btn--sm publications__publish">
-    <IconifyIcon icon={plusIcon} aria-hidden="true" /> Publish
-  </Link>
-);
 
 const Publications = (props: PublicationsProps) => {
   const { selectedId = null } = props;
@@ -82,7 +64,7 @@ const Publications = (props: PublicationsProps) => {
   );
 
   return (
-    <SitePage section="publications" tabs={page.tabs} scroll={false} actions={PUBLISH} aside={aside}>
+    <SitePage section="publications" tabs={page.tabs} scroll={false} actions={<PublishAction />} aside={aside}>
       <Stack gap="md" align="stretch" className="publications">
         <Flex align="baseline" gap="sm" wrap>
           <Text as="span" variant="caption" className="publications__totals">{page.totals}</Text>
@@ -96,4 +78,4 @@ const Publications = (props: PublicationsProps) => {
 };
 
 export { Publications };
-export type { PublicationsProps };
+export type { PublicationsProps } from './Publications.type';

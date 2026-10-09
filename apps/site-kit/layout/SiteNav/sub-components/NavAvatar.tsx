@@ -1,17 +1,8 @@
 /* @layer site-kit @kind component */
-/**
- * The account entry's icon: the signed-in person's avatar, drawn at the nav's icon
- * size. Without an avatar, or when it fails to load, the section's own icon stands in.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import type { IconifyIcon as IconData } from '@iconify/react/offline';
 import { Image } from '@ds/primitives/Image';
+import type { NavAvatarProps } from './NavAvatar.type';
 import './NavAvatar.css';
-
-type NavAvatarProps = {
-  src: string | null;
-  fallback: IconData;
-};
 
 const NavAvatar = (props: NavAvatarProps) => {
   const { src, fallback } = props;
@@ -21,4 +12,3 @@ const NavAvatar = (props: NavAvatarProps) => {
 };
 
 export { NavAvatar };
-export type { NavAvatarProps };

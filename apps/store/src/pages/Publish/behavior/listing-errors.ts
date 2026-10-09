@@ -1,25 +1,10 @@
 /* @layer store-site @kind logic */
-/**
- * What is wrong with each listing field, in words that say how to fix it. The caps are read
- * from the schemas store-api parses a new item with, so the form and the API agree.
- */
-import { MAX_TAGS, tagsSchema } from '@shared/hub/schemas/common';
-import { itemCreateSchema } from '@shared/store/schemas';
+import { MAX_TAGS } from '@shared/hub/schemas/common';
 import { FIELD_LABELS, FIELD_MESSAGES } from '../Publish.constants';
 import type { FieldErrors } from '../Publish.type';
 import { compactErrors } from './compact-errors';
-import type { ListingText } from './useListingFields';
-
-const { shape } = itemCreateSchema;
-const TAG_SCHEMA = tagsSchema.innerType().element;
-
-const LISTING_CAPS = {
-  name: shape.name.maxLength ?? 0,
-  summary: shape.summary.maxLength ?? 0,
-  description: shape.description.removeDefault().maxLength ?? 0,
-  license: shape.license.maxLength ?? 0,
-  tag: TAG_SCHEMA.maxLength ?? 0,
-};
+import { LISTING_CAPS, TAG_SCHEMA } from './listing-errors.constants';
+import type { ListingText } from './useListingFields.type';
 
 const tooLong = (label: string, value: string, cap: number) => {
   const length = value.trim().length;
@@ -45,4 +30,4 @@ const listingErrors = (text: ListingText): FieldErrors => compactErrors({
   license: required(text.license, FIELD_MESSAGES.licenseMissing, FIELD_LABELS.license, LISTING_CAPS.license),
 });
 
-export { listingErrors, LISTING_CAPS };
+export { listingErrors };

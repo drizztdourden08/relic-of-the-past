@@ -1,23 +1,13 @@
 /* @layer store-site @kind hook */
-/**
- * The crop being edited in the crop dialog. The picture is shown behind a frame of the
- * target's shape: dragging moves the picture under the frame, the zoom slider or the mouse
- * wheel changes how much of it the frame holds. The crop starts from the one in use, or the
- * centred, largest one while none was chosen.
- */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PointerEvent, SyntheticEvent } from 'react';
-import { cropAt, moveCrop, zoomCrop, zoomOf } from '../../../lib/picture-crop';
-import type { CropRect, Size } from '../../../lib/picture-crop';
-
-/** How much one wheel step changes the zoom. */
-const WHEEL_ZOOM = 0.0015;
-
-type CropEditorParams = {
-  source: File;
-  ratio: number;
-  initial: CropRect | null;
-};
+import { cropAt } from '../../../lib/picture-crop/crop-at';
+import { moveCrop } from '../../../lib/picture-crop/move-crop';
+import { zoomCrop } from '../../../lib/picture-crop/zoom-crop';
+import { zoomOf } from '../../../lib/picture-crop/zoom-of';
+import type { CropRect, Size } from '../../../lib/picture-crop/picture-crop.type';
+import type { CropEditorParams } from './useCropEditor.type';
+import { ZOOM_PER_WHEEL_DELTA } from './useCropEditor.constants';
 
 const useCropEditor = (params: CropEditorParams) => {
   const { source, ratio, initial } = params;
@@ -40,8 +30,7 @@ const useCropEditor = (params: CropEditorParams) => {
     setCrop(initial ?? cropAt(picture, ratio));
   }, [initial, ratio]);
 
-  /** Screen pixels to picture pixels, from the frame's width on screen. */
-  const pictureScale = useCallback((current: CropRect) => current.width / (frameRef.current?.clientWidth || 1), []);
+  const picturePixelsPerScreenPixel = useCallback((current: CropRect) => current.width / (frameRef.current?.clientWidth || 1), []);
 
   const onPointerDown = useCallback((event: PointerEvent<HTMLElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -51,10 +40,10 @@ const useCropEditor = (params: CropEditorParams) => {
   const onPointerMove = useCallback((event: PointerEvent<HTMLElement>) => {
     const from = dragFrom.current;
     if (!from || !crop || !size) return;
-    const scale = pictureScale(crop);
+    const scale = picturePixelsPerScreenPixel(crop);
     setCrop(moveCrop(crop, (from[0] - event.clientX) * scale, (from[1] - event.clientY) * scale, size));
     dragFrom.current = [event.clientX, event.clientY];
-  }, [crop, size, pictureScale]);
+  }, [crop, size, picturePixelsPerScreenPixel]);
 
   const onPointerUp = useCallback(() => {
     dragFrom.current = null;
@@ -66,13 +55,12 @@ const useCropEditor = (params: CropEditorParams) => {
     if (crop && size) setCrop(zoomCrop(crop, next, size, ratio));
   }, [crop, size, ratio]);
 
-  // a native listener, since React's wheel listener is passive and cannot stop the page scrolling
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return undefined;
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault();
-      setZoom(zoom * (1 - event.deltaY * WHEEL_ZOOM));
+      setZoom(zoom * (1 - event.deltaY * ZOOM_PER_WHEEL_DELTA));
     };
     stage.addEventListener('wheel', handleWheel, { passive: false });
     return () => stage.removeEventListener('wheel', handleWheel);

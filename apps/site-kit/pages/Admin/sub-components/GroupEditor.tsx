@@ -1,14 +1,7 @@
 /* @layer site-kit @kind component */
-/**
- * The form for one group: its name, the Discord role that fills it, and one rights section
- * per site, each drawn by that site's own editor. A single site's section stands without a
- * heading. The body is checked against the shared schema, so what Save sends is what the
- * API accepts; the rights of a site with no editor here are kept as they were.
- */
 import { Fragment, useState } from 'react';
-import type { DiscordRole, Group, GroupRights } from '@shared/hub/group-types';
+import type { GroupRights } from '@shared/hub/group-types';
 import { createGroupSchema } from '@shared/hub/schemas/group-schemas';
-import type { CreateGroupBody } from '@shared/hub/schemas/group-schemas';
 import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
@@ -17,25 +10,9 @@ import { Text } from '@ds/primitives/Text';
 import { TextInput } from '@ds/primitives/TextInput';
 import type { RightsEditorSlot } from '../../../site/site-definition.type';
 import { RolePicker } from './RolePicker';
+import { GROUP_NAME_MAX_CHARS, ROLE_HINT } from './GroupEditor.constants';
+import type { GroupEditorProps } from './GroupEditor.type';
 
-type GroupEditorProps = {
-  /** The server's roles; empty with `rolesAvailable` false falls back to typing an id. */
-  roles: readonly DiscordRole[];
-  rolesAvailable: boolean;
-  /** One section per site whose rights this page sets. */
-  rightsEditors: readonly RightsEditorSlot[];
-  /** The group being edited, or null for a new one. */
-  group: Group | null;
-  busy: boolean;
-  onSave: (body: CreateGroupBody) => void;
-  onCancel: () => void;
-};
-
-const ROLE_HINT = 'Right-click the role in Discord, Copy Role ID';
-/** The shared schema's cap on a group name. */
-const NAME_MAX_CHARS = 40;
-
-/** A new group starts with an empty list on every site this page edits. */
 const emptyRights = (editors: readonly RightsEditorSlot[]): GroupRights =>
   Object.fromEntries(editors.map(({ model }) => [model.site, []]));
 
@@ -61,7 +38,7 @@ const GroupEditor = (props: GroupEditorProps) => {
         {group ? `editing · ${group.name}` : 'new group'}
       </Text>
       <Field label="Name">
-        <TextInput value={name} maxLength={NAME_MAX_CHARS} onChange={(event) => setName(event.target.value)} placeholder="Artists" />
+        <TextInput value={name} maxLength={GROUP_NAME_MAX_CHARS} onChange={(event) => setName(event.target.value)} placeholder="Artists" />
       </Field>
       {rolesAvailable
         ? (
@@ -93,4 +70,3 @@ const GroupEditor = (props: GroupEditorProps) => {
 };
 
 export { GroupEditor };
-export type { GroupEditorProps };

@@ -1,18 +1,11 @@
 /* @layer store-site @kind component */
-/**
- * Every field of a version: its file (name, size, checksum, container), its dates, where it
- * stands in review, and what its manifest said when the upload completed.
- */
 import { SettingsSection } from '@ds/composites/SettingsSection';
 import { StatRow } from '@ds/primitives/StatRow';
-import type { KindFacts, StoreVersion } from '@shared/store/types';
+import type { KindFacts } from '@shared/store/types';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDateTime } from '@site-kit/lib/format-date';
 import { ReviewChip } from '../../../components/ReviewChip/ReviewChip';
-
-type VersionDetailsProps = { version: StoreVersion };
-
-type FactRow = { label: string; value: string };
+import type { FactRow, VersionDetailsProps } from './VersionDetails.type';
 
 const yesNo = (value: boolean) => (value ? 'yes' : 'no');
 
@@ -62,4 +55,3 @@ const VersionDetails = (props: VersionDetailsProps) => {
 };
 
 export { VersionDetails };
-export type { VersionDetailsProps };

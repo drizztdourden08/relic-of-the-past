@@ -1,28 +1,13 @@
 /* @layer site-kit @kind component */
-/**
- * One sign-in or link button per identity provider, in that provider's own button
- * style and mark. It sends the browser to the API's start route, which redirects to
- * the provider; there is nothing to fetch.
- */
 import { useCallback } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import type { Provider } from '@shared/hub/providers';
 import { PROVIDER_LABELS } from '@shared/hub/providers';
 import { Button } from '@ds/primitives/Button';
 import { authStartHref } from '../../api/hub-endpoints';
-import type { AuthIntent } from '../../api/hub-endpoints';
 import { PROVIDER_MARKS } from './provider-marks';
+import { VERB } from './ProviderButton.constants';
+import type { ProviderButtonProps } from './ProviderButton.type';
 import './ProviderButton.css';
-
-type ProviderButtonProps = {
-  provider: Provider;
-  intent: AuthIntent;
-  /** Site path to land on after the round trip; defaults to the API's own choice. */
-  returnTo?: string;
-  fullWidth?: boolean;
-};
-
-const VERB: Record<AuthIntent, string> = { signin: 'Continue with', link: 'Link' };
 
 const ProviderButton = (props: ProviderButtonProps) => {
   const { provider, intent, returnTo, fullWidth = false } = props;
@@ -42,4 +27,4 @@ const ProviderButton = (props: ProviderButtonProps) => {
 };
 
 export { ProviderButton };
-export type { ProviderButtonProps };
+export type { ProviderButtonProps } from './ProviderButton.type';

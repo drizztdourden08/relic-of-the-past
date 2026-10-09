@@ -1,26 +1,10 @@
 /* @layer site-kit @kind hook */
-/**
- * Loads GET /me once on mount and keeps the answer. A 401 is a signed-out visitor, not an
- * error; anything else is kept as the error message so the page can say the API is down.
- */
 import { useCallback, useEffect, useState } from 'react';
-import type { Identity } from '@shared/hub/types';
-import type { SiteUser } from '@shared/hub/site-types';
-import type { Group, Rights } from '@shared/hub/group-types';
 import { getMe, signOut as signOutRequest } from '../api/hub-endpoints';
 import { ApiError, errorMessage } from '../api/api-error';
 import type { Session } from './session-context';
-
-type SessionState = {
-  me: SiteUser | null;
-  identities: Identity[];
-  groups: Group[];
-  rights: Rights | null;
-  loading: boolean;
-  error: string | null;
-};
-
-const SIGNED_OUT: SessionState = { me: null, identities: [], groups: [], rights: null, loading: false, error: null };
+import { SIGNED_OUT } from './useSession.constants';
+import type { SessionState } from './useSession.type';
 
 const useSession = (): Session => {
   const [state, setState] = useState<SessionState>({ ...SIGNED_OUT, loading: true });

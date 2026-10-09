@@ -1,26 +1,12 @@
 /* @layer sanctuary-site @kind component */
-/**
- * A file's version history in its detail pane, newest first with the current one marked,
- * and a drop zone under it: a file dropped there opens the new version dialog. Anyone who
- * sees the file may add a version; deleting one asks once.
- */
 import { useState } from 'react';
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { DropZone } from '@ds/primitives/DropZone';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { Dialog } from '@ds/composites/Dialog';
 import { nextVersionNumber, versionLabel, versionsNewestFirst } from '../../../files/file-versions';
-import type { FileActions } from '../behavior/useFileActions';
 import { VersionRow } from './VersionRow';
-
-type VersionsPanelProps = {
-  file: SanctuaryFile;
-  canManage: boolean;
-  busy: boolean;
-  actions: FileActions['versions'];
-  onDropVersion: (dropped: File) => void;
-};
+import type { VersionsPanelProps } from './VersionsPanel.type';
 
 const VersionsPanel = (props: VersionsPanelProps) => {
   const { file, canManage, busy, actions, onDropVersion } = props;
@@ -58,4 +44,3 @@ const VersionsPanel = (props: VersionsPanelProps) => {
 };
 
 export { VersionsPanel };
-export type { VersionsPanelProps };

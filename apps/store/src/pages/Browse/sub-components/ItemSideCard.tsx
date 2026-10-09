@@ -1,9 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * The picked item in the side column: its card, kind, author, live version with its size
- * and manifest line, installs, license, tags and rating, then Install, Download and Open.
- * The card shows what the catalogue already holds while the full item loads.
- */
 import { Flex } from '@ds/primitives/Flex';
 import { Text } from '@ds/primitives/Text';
 import type { ItemCardView } from '@shared/store/home-types';
@@ -23,13 +18,7 @@ import { authorPath, itemPath } from '../../../catalog/item-paths';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { formatAverage, formatCount, plural } from '../../../lib/format-count';
-
-type ItemSideCardProps = {
-  item: ItemCardView;
-  /** The full item; null while it loads. */
-  detail: ItemResponse | null;
-  onClose: () => void;
-};
+import type { ItemSideCardProps } from './ItemSideCard.type';
 
 const versionLine = (card: ItemCardView, detail: ItemResponse | null): string => {
   const live = detail ? liveVersionOf(detail.item) : null;
@@ -78,4 +67,3 @@ const ItemSideCard = (props: ItemSideCardProps) => {
 };
 
 export { ItemSideCard };
-export type { ItemSideCardProps };

@@ -1,22 +1,9 @@
 /* @layer site-kit @kind logic */
-/**
- * Brings back the jobs a reload cut off, from their IndexedDB records. A job with its file
- * copy kept is queued and continues by itself; one without waits for the author to pick
- * the file again. A job another tab is running now stays with that tab.
- */
 import { isJobLocked } from './job-lock';
 import { jobOf } from './job-of';
 import { readKeptFile, readRecords } from './upload-records';
 import { restoreSteps } from './upload-steps';
-import type { LiveJob } from './live-job.type';
-import type { QueueState } from './queue-state';
-import type { UploadRunner } from './upload-runner.type';
-
-type RestoreParams<T, R> = {
-  runner: UploadRunner<T, R>;
-  state: QueueState;
-  lives: Map<string, LiveJob<T>>;
-};
+import type { RestoreParams } from './restore-jobs.type';
 
 const restoreJobs = async <T, R>(params: RestoreParams<T, R>): Promise<void> => {
   const { runner, state, lives } = params;

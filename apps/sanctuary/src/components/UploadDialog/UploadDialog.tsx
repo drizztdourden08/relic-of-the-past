@@ -1,14 +1,8 @@
 /* @layer sanctuary-site @kind component */
-/**
- * What is asked before an upload starts: type (preset from the rail, limited to the types
- * the caller may see), tags, app version and note, one answer for every file of the drop. The tag rule is the shared schema's, so a
- * tag refused here would have been refused by the API.
- */
 import { useEffect, useMemo, useState } from 'react';
 import { FILE_TYPES, FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
 import { LIMITS } from '@shared/sanctuary/limits';
-import { tagsSchema } from '@shared/hub/schemas/common';
 import { Button } from '@ds/primitives/Button';
 import { Stack } from '@ds/primitives/Stack';
 import { Field } from '@ds/primitives/Field';
@@ -19,23 +13,9 @@ import { Textarea } from '@ds/primitives/Textarea';
 import { Text } from '@ds/primitives/Text';
 import { DialogShell } from '@ds/composites/DialogShell';
 import { formatBytes } from '@site-kit/lib/format-bytes';
-import type { UploadMeta } from '../../upload/upload-target.type';
+import { validateTag } from '../../files/validate-tag';
+import type { UploadDialogProps } from './UploadDialog.type';
 import './UploadDialog.css';
-
-type UploadDialogProps = {
-  files: File[];
-  /** The types the caller may upload to; the only choices offered. */
-  types: readonly FileType[];
-  defaultType: FileType;
-  /** Tags already in use, offered as suggestions. */
-  knownTags: readonly string[];
-  onConfirm: (meta: UploadMeta) => void;
-  onCancel: () => void;
-};
-
-const TAG_HINT = 'lowercase letters, digits, dots, dashes';
-
-const validateTag = (raw: string) => tagsSchema.safeParse([raw]).success || TAG_HINT;
 
 const UploadDialog = (props: UploadDialogProps) => {
   const { files, types, defaultType, knownTags, onConfirm, onCancel } = props;
@@ -115,4 +95,3 @@ const UploadDialog = (props: UploadDialogProps) => {
 };
 
 export { UploadDialog };
-export type { UploadDialogProps };

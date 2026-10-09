@@ -1,33 +1,15 @@
 /* @layer store-site @kind component */
-/**
- * The picked row: a version or a listing edit with its whole review record (state,
- * submitted, who reviewed it, when, and their note), the file and what became of it, what
- * changed, then what the author can do: the version's own buttons from the flow table,
- * start the next version, edit the listing, open the item.
- */
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import { Link } from '@site-kit/router/Link';
-import type { PublicationTarget } from '../../../publications/publication-row';
 import { itemPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
-import type { PublicationActions } from '../behavior/usePublicationActions';
 import { detailFieldsOf, detailTitleOf, entryOf } from '../behavior/publication-detail';
+import { STATE_NOTES } from './PublicationDetail.constants';
+import type { PublicationDetailProps } from './PublicationDetail.type';
 import { VersionActions } from './VersionActions';
-
-type PublicationDetailProps = {
-  item: StoreItem;
-  target: PublicationTarget;
-  actions: PublicationActions;
-  onClose: () => void;
-};
-
-const STATE_NOTES: Partial<Record<StoreVersion['review']['state'], string>> = {
-  ready: 'Uploaded and checked. Send it for review when you are ready.',
-  rejected: 'Read the note, then resubmit this file or upload a new version.',
-};
 
 const noteFor = (item: StoreItem, version: StoreVersion | null): string | null => {
   if (!version || version.removed) return null;
@@ -76,4 +58,3 @@ const PublicationDetail = (props: PublicationDetailProps) => {
 };
 
 export { PublicationDetail };
-export type { PublicationDetailProps };

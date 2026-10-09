@@ -1,9 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * What a signed-in person sees when the store has no player record for them: barred from the
- * Hookshop by an admin, or signed in before the store knew them. The store is open, so
- * there is no queue to wait in; a re-check covers the second case.
- */
 import { useCallback, useState } from 'react';
 import { Button } from '@ds/primitives/Button';
 import { Stack } from '@ds/primitives/Stack';

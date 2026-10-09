@@ -1,10 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * The review page's side column: the author, what is live now and the size, what changed
- * (the changelog, or the fields a listing edit sets), the note to the author (required to
- * reject), the reviewer's buttons from the version flow table, and a link to download the
- * upload and test it.
- */
 import { useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import downloadIcon from '@iconify-icons/lucide/download';
@@ -22,14 +16,9 @@ import { authorPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { formatCount } from '../../../lib/format-count';
 import { editOfEntry, versionOfEntry } from '../../../review/review-row';
-import type { ReviewActions } from '../../Review/behavior/useReviewActions';
 import { ReviewButtons } from '../../Review/sub-components/ReviewButtons';
+import type { DecisionPanelProps } from './DecisionPanel.type';
 import { ListingEditPreview } from './ListingEditPreview';
-
-type DecisionPanelProps = {
-  entry: ReviewEntry;
-  actions: ReviewActions;
-};
 
 const fieldsOf = (entry: ReviewEntry): DetailField[] => {
   const { item } = entry;
@@ -76,4 +65,3 @@ const DecisionPanel = (props: DecisionPanelProps) => {
 };
 
 export { DecisionPanel };
-export type { DecisionPanelProps };

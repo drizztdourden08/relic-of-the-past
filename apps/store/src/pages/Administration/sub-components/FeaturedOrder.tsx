@@ -1,8 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * The featured row, first to last: one row per item with up, down and remove, and Save. The
- * first one shows first on the home page. Items join the row from their own page (Feature).
- */
 import { useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import upIcon from '@iconify-icons/lucide/arrow-up';
@@ -13,15 +9,9 @@ import { Flex } from '@ds/primitives/Flex';
 import { IconButton } from '@ds/primitives/IconButton';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import type { ItemCardView } from '@shared/store/home-types';
 import { Row } from '@site-kit/components/Row/Row';
 import { KindChip } from '../../../components/KindChip/KindChip';
-import type { HomeSettingsState } from '../behavior/useHomeSettings';
-
-type FeaturedOrderProps = {
-  settings: HomeSettingsState;
-  catalog: readonly ItemCardView[];
-};
+import type { FeaturedOrderProps } from './FeaturedOrder.type';
 
 const FeaturedOrder = (props: FeaturedOrderProps) => {
   const { settings, catalog } = props;
@@ -57,4 +47,3 @@ const FeaturedOrder = (props: FeaturedOrderProps) => {
 };
 
 export { FeaturedOrder };
-export type { FeaturedOrderProps };

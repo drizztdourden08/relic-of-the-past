@@ -17,7 +17,6 @@
   border-top: var(--border-width-thin) solid var(--c-border);
 }
 
-/* Star count, bar, count: three columns so every bar starts and ends on the same line. */
 .rating-histogram {
   display: grid;
   flex: 1 1 auto;

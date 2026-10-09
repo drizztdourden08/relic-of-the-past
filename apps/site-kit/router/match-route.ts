@@ -1,10 +1,5 @@
 /* @layer site-kit @kind logic */
-/**
- * Matches one path against a pattern such as `/device/:code`. A `:name` segment binds
- * a parameter; every other segment must match exactly. Returns the bound parameters,
- * or null when the path is not this pattern.
- */
-type RouteParams = Record<string, string>;
+import type { RouteParams } from './match-route.type';
 
 const splitPath = (path: string) => path.split('/').filter(Boolean);
 
@@ -25,4 +20,4 @@ const matchRoute = (pattern: string, path: string): RouteParams | null => {
 };
 
 export { matchRoute };
-export type { RouteParams };
+export type { RouteParams } from './match-route.type';

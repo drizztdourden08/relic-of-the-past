@@ -1,11 +1,5 @@
 /* @layer store-site @kind style */
 
-/*
- * Site-level tokens and the two reset overrides a web page needs. The design-system
- * reset locks scrolling and text selection for the game shell; a document site scrolls
- * and lets text be copied. The kit's pieces read the first block, the same values the
- * Sanctuary sets; the second block sizes the store's own cards, shelves and pictures.
- */
 :root {
   --gate-w: 360px;
   --page-maxw: 640px;
@@ -27,13 +21,11 @@
   --topbar-h: 44px;
   --brand-hero-logo-h: 112px;
 
-  /* A card picture is 512 by 288 and a banner 1280 by 400; both keep that shape on screen. */
   --item-card-ratio: 16 / 9;
   --item-banner-ratio: 3 / 1;
   --item-grid-min: 180px;
   --item-kind-icon: 40px;
 
-  /* The home page at the plan mockup's sizes. */
   --welcome-title-size: 22px;
   --hero-min-h: 190px;
   --hero-pad-y: 18px;
@@ -46,7 +38,6 @@
   --card-body-pad-top: 10px;
   --card-body-gap: 5px;
 
-  /* An empty part keeps the height its content would take: a row of cards, or the hero. */
   --shelf-empty-h: 190px;
   --empty-stripe: 8px;
   --empty-fade: 56px;
@@ -60,7 +51,6 @@
   --item-hero-h: 280px;
   --crop-dialog-w: 760px;
 
-  /* The review page: one card at a shelf's width, and the colour swatch in its details. */
   --review-card-w: 220px;
   --review-swatch-size: 14px;
 }

@@ -1,13 +1,9 @@
 /* @layer store-site @kind component */
-/** The spread of ratings: one bar per star count, five at the top, each as long as its share. */
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
-import type { ItemStats } from '@shared/store/types';
-import { formatCount } from '../../../lib/format-count';
-
-type RatingHistogramProps = { hist: ItemStats['ratingHist'] };
-
-const STAR_ROWS = [5, 4, 3, 2, 1] as const;
+import { formatCount } from '../../../lib/format-count/format-count';
+import type { RatingHistogramProps } from './RatingHistogram.type';
+import { STAR_ROWS } from './RatingHistogram.constants';
 
 const RatingHistogram = (props: RatingHistogramProps) => {
   const { hist } = props;
@@ -31,4 +27,4 @@ const RatingHistogram = (props: RatingHistogramProps) => {
 };
 
 export { RatingHistogram };
-export type { RatingHistogramProps };
+export type { RatingHistogramProps } from './RatingHistogram.type';

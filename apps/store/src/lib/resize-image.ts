@@ -1,19 +1,8 @@
 /* @layer store-site @kind logic */
-/**
- * A picture the author picked, made into the exact webp the store keeps: the chosen crop
- * (the centred, largest one by default) scaled to the target size, then encoded at the best
- * quality that fits the byte cap. Everything runs in the browser, so the bucket only ever
- * sees the finished file.
- */
-import { cropAt } from './picture-crop';
-import type { CropRect } from './picture-crop';
-
-type PictureSpec = { width: number; height: number; bytes: number };
-
-type Picture = { blob: Blob; width: number; height: number };
-
-/** Tried in order until the file fits the cap. */
-const QUALITIES = [0.9, 0.82, 0.74, 0.66, 0.58, 0.5];
+import { cropAt } from './picture-crop/crop-at';
+import type { CropRect } from './picture-crop/picture-crop.type';
+import type { Picture, PictureSpec } from './resize-image.type';
+import { QUALITIES_BEST_FIRST } from './resize-image.constants';
 
 const loadBitmap = (file: Blob): Promise<ImageBitmap> =>
   createImageBitmap(file).catch(() => {
@@ -43,7 +32,7 @@ const resizeToWebp = async (file: Blob, spec: PictureSpec, crop?: CropRect): Pro
   const bitmap = await loadBitmap(file);
   try {
     const canvas = drawCrop(bitmap, spec, crop ?? cropAt(bitmap, spec.width / spec.height));
-    for (const quality of QUALITIES) {
+    for (const quality of QUALITIES_BEST_FIRST) {
       const blob = await encode(canvas, quality);
       if (blob.size <= spec.bytes) return { blob, width: spec.width, height: spec.height };
     }
@@ -54,4 +43,4 @@ const resizeToWebp = async (file: Blob, spec: PictureSpec, crop?: CropRect): Pro
 };
 
 export { resizeToWebp };
-export type { PictureSpec, Picture };
+export type { PictureSpec, Picture } from './resize-image.type';

@@ -1,14 +1,9 @@
 /* @layer store-site @kind component */
-/**
- * The item's first tab, under its hero: when it was published and last updated, the
- * description, then the details of the live version, or of the version the host passes
- * (the review page shows the one under review).
- */
 import { SettingsSection } from '@ds/composites/SettingsSection';
 import { Stack } from '@ds/primitives/Stack';
 import { StatRow } from '@ds/primitives/StatRow';
 import { Text } from '@ds/primitives/Text';
-import type { StoreItem, StoreVersion } from '@shared/store/types';
+import type { StoreItem } from '@shared/store/types';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { formatDay } from '@site-kit/lib/format-date';
 import { KindChip } from '../../../components/KindChip/KindChip';
@@ -16,14 +11,8 @@ import { Markdown } from '../../../components/Markdown/Markdown';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { formatCount } from '../../../lib/format-count';
-
-type ItemOverviewProps = {
-  item: StoreItem;
-  /** The version to show; the live one when absent. */
-  version?: StoreVersion | null;
-};
-
-const SHA_EDGE = 4;
+import { SHA_EDGE } from './ItemOverview.constants';
+import type { ItemOverviewProps } from './ItemOverview.type';
 
 const shortHash = (sha: string | null) => (sha ? `${sha.slice(0, SHA_EDGE)}...${sha.slice(-SHA_EDGE)}` : '-');
 
@@ -53,4 +42,3 @@ const ItemOverview = (props: ItemOverviewProps) => {
 };
 
 export { ItemOverview };
-export type { ItemOverviewProps };

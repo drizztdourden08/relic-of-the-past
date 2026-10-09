@@ -1,18 +1,8 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * What the detail pane can do to one report: download its zip, extend it by
- * LIMITS.extendDays, delete it. Each call reports back through `notice`; extend hands
- * the API's record to the list, delete drops the row and closes the pane.
- */
 import { useCallback, useState } from 'react';
 import { deleteReport, downloadReport, extendReport } from '../../../api/reports-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';
-import type { ReportView } from '../../../api/types';
-
-type UseReportActionsParams = {
-  onExtended: (report: ReportView) => void;
-  onDeleted: (id: string) => void;
-};
+import type { UseReportActionsParams } from './useReportActions.type';
 
 const useReportActions = (params: UseReportActionsParams) => {
   const { onExtended, onDeleted } = params;
@@ -52,7 +42,4 @@ const useReportActions = (params: UseReportActionsParams) => {
   return { busy, notice, download, extend, remove };
 };
 
-type ReportActions = ReturnType<typeof useReportActions>;
-
 export { useReportActions };
-export type { ReportActions, UseReportActionsParams };

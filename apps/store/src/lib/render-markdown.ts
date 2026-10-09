@@ -1,12 +1,6 @@
 /* @layer store-site @kind logic */
-/**
- * Markdown to HTML for the welcome message and item descriptions. Raw HTML in the source is
- * dropped, and a link keeps its target only when it is http, https or mailto, so a message
- * cannot run script on the page. Links open in a new tab.
- */
 import { Marked } from 'marked';
-
-const SAFE_HREF = /^(https?:|mailto:)/i;
+import { SAFE_HREF } from './render-markdown.constants';
 
 const escapeAttr = (value: string) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 

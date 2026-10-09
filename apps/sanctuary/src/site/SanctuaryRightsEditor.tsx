@@ -1,8 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The Sanctuary's section of the group editor: the file types a group sees and uploads to,
- * and the reports switch. It edits the group's Sanctuary permission list.
- */
 import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
 import { REPORTS_PERMISSION, SANCTUARY_RIGHTS, filePermission } from '@shared/sanctuary/sanctuary-rights';
@@ -12,7 +8,6 @@ import { Flex } from '@ds/primitives/Flex';
 import { Toggle } from '@ds/primitives/Toggle';
 import type { RightsEditorProps } from '@site-kit/site/site-definition.type';
 
-/** The list with one permission set on or off, in the model's order. */
 const withPermission = (value: readonly string[], permission: string, on: boolean): string[] =>
   SANCTUARY_RIGHTS.all.filter((entry) => (entry === permission ? on : value.includes(entry)));
 

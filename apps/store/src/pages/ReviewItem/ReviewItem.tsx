@@ -1,10 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * One entry of the Reviewer Hub as a full page: the item's name in the header with its
- * review state, the Store page, Contents and Details tabs, and the decision in the side
- * column. A row of the list opens it at `/review/:rowId`. Everything stateful lives in
- * useReviewItemPage.
- */
 import reviewIcon from '@iconify-icons/lucide/clipboard-check';
 import { Flex } from '@ds/primitives/Flex';
 import { Text } from '@ds/primitives/Text';
@@ -19,12 +13,8 @@ import { useReviewItemPage } from './behavior/useReviewItemPage';
 import { DecisionPanel } from './sub-components/DecisionPanel';
 import { PackDetails } from './sub-components/PackDetails';
 import { StorePagePreview } from './sub-components/StorePagePreview';
+import type { ReviewItemProps } from './ReviewItem.type';
 import './ReviewItem.css';
-
-type ReviewItemProps = {
-  /** From the `/review/:rowId` route: `<itemId>~v<n>` or `<itemId>~<editId>`. */
-  rowId: string;
-};
 
 const ReviewItem = (props: ReviewItemProps) => {
   const { rowId } = props;
@@ -74,4 +64,4 @@ const ReviewItem = (props: ReviewItemProps) => {
 };
 
 export { ReviewItem };
-export type { ReviewItemProps };
+export type { ReviewItemProps } from './ReviewItem.type';

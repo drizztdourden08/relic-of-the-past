@@ -1,6 +1,5 @@
 /* @layer sanctuary-site @kind style */
 
-/* Same card as a section page, so switching between a page and the search reads as one surface. */
 .site-search {
   flex: 1;
   min-height: 0;
@@ -13,7 +12,6 @@
   overflow: hidden;
 }
 
-/* Nothing typed yet: the empty state fills the card, centred. */
 .site-search--idle {
   justify-content: center;
 }

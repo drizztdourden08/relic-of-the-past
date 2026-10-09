@@ -1,20 +1,13 @@
 /* @layer store-site @kind hook */
-/**
- * The card grid's order, kept in the table half of the browse view so a saved view brings
- * its sort back with its filters. The grid has no columns, so only the sort is written.
- */
 import { useCallback, useMemo } from 'react';
 import { useViewState } from '@ds/data/view-state/use-view-state';
 import { capture } from '@ds/data/view-state/snapshot';
 import type { SchemaLike } from '@ds/data/schema/build-schema';
-import type { TableColumn } from '@ds/data/table/types';
 import type { ViewKey } from '@ds/data/view-state/snapshot';
 import type { ViewStorage } from '@ds/data/view-state/use-view-state';
 import { ITEM_SORTS } from '../../../catalog/item-schema';
 import type { ItemRow } from '../../../catalog/item-row';
-
-const NO_COLUMNS: readonly TableColumn[] = [];
-const DEFAULT_SORT = ITEM_SORTS[0];
+import { DEFAULT_SORT, NO_COLUMNS } from './useGridSort.constants';
 
 const compareRows = (path: keyof ItemRow, dir: 'asc' | 'desc') => (a: ItemRow, b: ItemRow): number => {
   const left = a[path];

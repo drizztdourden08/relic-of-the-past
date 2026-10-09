@@ -3,7 +3,6 @@
   max-width: var(--store-form-maxw);
 }
 
-/* Two classes, so the text primitive's own size never wins on load order. */
 .administration .administration__heading {
   margin: 0;
   color: var(--c-text);

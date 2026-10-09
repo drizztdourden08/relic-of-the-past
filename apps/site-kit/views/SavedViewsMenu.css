@@ -1,6 +1,5 @@
 /* @layer site-kit @kind style */
 
-/* No caption of its own, so it sits on the bottom edge of the bar like the add button. */
 .saved-views__trigger.btn {
   align-self: flex-end;
   height: var(--control-h-sm);

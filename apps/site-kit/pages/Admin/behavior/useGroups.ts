@@ -1,9 +1,4 @@
 /* @layer site-kit @kind hook */
-/**
- * The admin's groups: loaded on mount with their member counts, then create, patch and
- * delete. A write reloads the list, since the counts are the API's to compute. `save`
- * resolves true on success so the editor knows to close.
- */
 import { useCallback, useEffect, useState } from 'react';
 import type { CreateGroupBody } from '@shared/hub/schemas/group-schemas';
 import { createGroup, deleteGroup, listGroups, patchGroup } from '../../../api/groups-endpoints';
@@ -45,7 +40,6 @@ const useGroups = () => {
     }
   }, [load]);
 
-  /** A new group when `id` is null, otherwise the whole body as a patch of that one. */
   const save = useCallback((id: string | null, body: CreateGroupBody) =>
     run(() => (id === null ? createGroup(body) : patchGroup(id, body))), [run]);
 
@@ -54,7 +48,4 @@ const useGroups = () => {
   return { groups: groups ?? [], loading: groups === null, busy, error, save, remove, reload: load };
 };
 
-type GroupsState = ReturnType<typeof useGroups>;
-
 export { useGroups };
-export type { GroupsState };

@@ -1,9 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * An image or a video shown in place, fitted to the panel width under a height cap, with
- * an Expand button. Clicking the image expands it too. A video is paused on expand and
- * hands its current time over, so the viewer carries on from the same frame.
- */
 import { useRef } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import maximizeIcon from '@iconify-icons/lucide/maximize-2';
@@ -15,19 +10,8 @@ import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { Video } from '@ds/primitives/Video';
 import { usePixelArt } from './usePixelArt';
-import type { MediaKind } from '../../lib/media-kind';
+import type { MediaPreviewProps } from './MediaPreview.type';
 import './MediaPreview.css';
-
-type MediaPreviewProps = {
-  kind: MediaKind;
-  /** The inline link; null while it loads or when it failed. */
-  src: string | null;
-  /** The file name, for the image's alt text and the expand label. */
-  name: string;
-  error: string | null;
-  /** Opens the viewer; a video passes the second it stood at. */
-  onExpand: (startAt: number) => void;
-};
 
 const MediaPreview = (props: MediaPreviewProps) => {
   const { kind, src, name, error, onExpand } = props;
@@ -65,4 +49,4 @@ const MediaPreview = (props: MediaPreviewProps) => {
 };
 
 export { MediaPreview };
-export type { MediaPreviewProps };
+export type { MediaPreviewProps } from './MediaPreview.type';

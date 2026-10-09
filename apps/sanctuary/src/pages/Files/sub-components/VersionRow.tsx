@@ -1,9 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * One version in a file's history: its number, who uploaded it, when and what changed,
- * then Download, and for the owner or an admin Restore and Delete on a version that is
- * not the current one.
- */
 import type { FileVersion } from '@shared/sanctuary/file-types';
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
@@ -12,17 +7,7 @@ import { Row } from '@site-kit/components/Row/Row';
 import { Chip } from '@site-kit/components/Chip/Chip';
 import { formatAgo } from '@site-kit/lib/format-date';
 import { versionLabel } from '../../../files/file-versions';
-
-type VersionRowProps = {
-  version: FileVersion;
-  current: boolean;
-  /** Owner or admin: Restore and Delete are offered. */
-  canManage: boolean;
-  busy: boolean;
-  onDownload: (n: number) => void;
-  onRestore: (n: number) => void;
-  onDelete: (n: number) => void;
-};
+import type { VersionRowProps } from './VersionRow.type';
 
 const detailOf = (version: FileVersion) => {
   const parts = [version.by.displayName, formatAgo(version.createdAt)];
@@ -55,4 +40,3 @@ const VersionRow = (props: VersionRowProps) => {
 };
 
 export { VersionRow };
-export type { VersionRowProps };

@@ -1,6 +1,5 @@
 /* @layer store-site @kind style */
 
-/* The grid scrolls inside the page body. */
 .author {
   flex: 1 1 auto;
   min-height: 0;

@@ -1,6 +1,5 @@
 /* @layer store-site @kind style */
 
-/* Gold stars for the rating, dim ones for the rest, one line that never wraps. */
 .stars {
   display: inline-flex;
   gap: var(--space-2xs);

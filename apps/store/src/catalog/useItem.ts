@@ -1,9 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * One item as the API shows this player: the item (projected to what they may see), their
- * own stars and whether they installed it. Fetched when the id changes; a rating or a
- * review action hands back what changed, which is merged in without a reload.
- */
 import { useCallback, useEffect, useState } from 'react';
 import type { ItemResponse } from '@shared/store/api-types';
 import { errorMessage } from '@site-kit/api/api-error';
@@ -32,7 +27,5 @@ const useItem = (id: string | null) => {
   return { data, loading: Boolean(id) && data === null && error === null, error, merge };
 };
 
-type ItemState = ReturnType<typeof useItem>;
-
 export { useItem };
-export type { ItemState };
+export type { ItemState } from './useItem.type';

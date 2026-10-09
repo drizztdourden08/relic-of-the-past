@@ -1,18 +1,12 @@
 /* @layer store-site @kind logic */
-/**
- * The store's steps before the pack, in the order store-api needs them: the draft (a new
- * item), then its pictures, then the listing that names them (the API refuses a version
- * before the item has a card). Each step saves the target without what it sent, so a
- * reload goes on from the next one. Every item the API answers with reaches the lists.
- */
-import type { StoreItem } from '@shared/store/types';
-import type { PrepareContext } from '@site-kit/upload/upload-runner.type';
-import { createItem, submitListing } from '../api/publish-endpoints';
-import { hasListingPatch, hasPictures, STORE_STEP } from './publish-steps';
+import { createItem } from '../api/publish-endpoints/create-item';
+import { submitListing } from '../api/publish-endpoints/submit-listing';
+import { STORE_STEP } from './publish-steps/publish-steps.constants';
+import { hasListingPatch } from './publish-steps/has-listing-patch';
+import { hasPictures } from './publish-steps/has-pictures';
 import { uploadPicture } from './upload-picture';
 import type { PublishTarget } from './publish-target.type';
-
-type StoreContext = PrepareContext<PublishTarget, StoreItem>;
+import type { StoreContext } from './prepare-listing.type';
 
 const createDraft = async (context: StoreContext, target: PublishTarget): Promise<PublishTarget> => {
   const { save, step, emit } = context;
@@ -40,7 +34,6 @@ const sendPictures = async (context: StoreContext, target: PublishTarget, itemId
   return next;
 };
 
-/** A new item's pictures belong to its pictures step; an edit's changes to its listing step. */
 const sendListing = async (context: StoreContext, target: PublishTarget, itemId: string): Promise<PublishTarget> => {
   const { save, step, emit } = context;
   if (!hasListingPatch(target)) return target;

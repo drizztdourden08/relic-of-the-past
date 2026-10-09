@@ -1,17 +1,11 @@
 /* @layer sanctuary-site @kind component */
-/** The picked files as tiles, three to a row; past the cap, one last tile counts the rest. */
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { Flex } from '@ds/primitives/Flex';
 import { Grid } from '@ds/primitives/Grid';
 import { Text } from '@ds/primitives/Text';
 import { SELECTION_TILE_MAX } from '../Files.constants';
 import { SelectionTile } from './SelectionTile';
-
-type SelectionGridProps = {
-  files: readonly SanctuaryFile[];
-};
-
-const GRID_COLUMNS = 3;
+import { GRID_COLUMNS } from './SelectionGrid.constants';
+import type { SelectionGridProps } from './SelectionGrid.type';
 
 const SelectionGrid = (props: SelectionGridProps) => {
   const { files } = props;
@@ -32,4 +26,3 @@ const SelectionGrid = (props: SelectionGridProps) => {
 };
 
 export { SelectionGrid };
-export type { SelectionGridProps };

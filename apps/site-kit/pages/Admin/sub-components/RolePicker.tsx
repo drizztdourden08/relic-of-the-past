@@ -1,23 +1,10 @@
 /* @layer site-kit @kind component */
-/**
- * Picks the Discord role a group follows, by name, in the role's colour. The first entry
- * unlinks the group. A linked role the server no longer has stays listed, marked, so an
- * edit never drops it without the admin choosing to.
- */
 import { useCallback, useMemo } from 'react';
-import type { DiscordRole } from '@shared/hub/group-types';
 import { Select } from '@ds/primitives/Select';
 import type { SelectOption } from '@ds/primitives/Select';
 import { RoleName } from '../../../components/RoleName/RoleName';
-
-type RolePickerProps = {
-  roles: readonly DiscordRole[];
-  /** '' for no role. */
-  value: string;
-  onChange: (roleId: string) => void;
-};
-
-const NO_ROLE: SelectOption = { value: '', label: 'No Discord role' };
+import { NO_ROLE } from './RolePicker.constants';
+import type { RolePickerProps } from './RolePicker.type';
 
 const RolePicker = (props: RolePickerProps) => {
   const { roles, value, onChange } = props;
@@ -38,4 +25,3 @@ const RolePicker = (props: RolePickerProps) => {
 };
 
 export { RolePicker };
-export type { RolePickerProps };

@@ -1,9 +1,7 @@
 /* @layer site-kit @kind component */
-import type { ReactNode } from 'react';
 import { SessionContext } from './session-context';
 import { useSession } from './useSession';
-
-type SessionProviderProps = { children: ReactNode };
+import type { SessionProviderProps } from './SessionProvider.type';
 
 const SessionProvider = (props: SessionProviderProps) => {
   const { children } = props;

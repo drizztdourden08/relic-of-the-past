@@ -1,18 +1,7 @@
 /* @layer site-kit @kind hook */
-/**
- * One FilterBar facet: a closed set of values read off the rows, a hidden set toggled from
- * the bar, and the predicate that applies it. Transient, like the search: the clause
- * list is the durable filter.
- */
 import { useCallback, useMemo, useState } from 'react';
 import type { FilterFacet } from '@ds/composites/FilterBar';
-
-type UseFacetParams<T> = {
-  id: string;
-  label: string;
-  rows: readonly T[];
-  valueOf: (row: T) => string;
-};
+import type { UseFacetParams } from './useFacet.type';
 
 const useFacet = <T>(params: UseFacetParams<T>) => {
   const { id, label, rows, valueOf } = params;
@@ -41,4 +30,4 @@ const useFacet = <T>(params: UseFacetParams<T>) => {
 };
 
 export { useFacet };
-export type { UseFacetParams };
+export type { UseFacetParams } from './useFacet.type';

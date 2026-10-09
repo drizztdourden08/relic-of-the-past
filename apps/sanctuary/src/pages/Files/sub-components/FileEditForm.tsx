@@ -1,8 +1,7 @@
 /* @layer sanctuary-site @kind component */
-/** The inline edit of a file's type, tags, app version and note; Save sends only what changed. */
 import { useState } from 'react';
 import { FILE_TYPES, FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
-import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { FileType } from '@shared/sanctuary/file-types';
 import { LIMITS } from '@shared/sanctuary/limits';
 import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
 import { Button } from '@ds/primitives/Button';
@@ -14,18 +13,8 @@ import { TagInput } from '@ds/primitives/TagInput';
 import { TextInput } from '@ds/primitives/TextInput';
 import { Textarea } from '@ds/primitives/Textarea';
 import { validateTag } from '../../../files/validate-tag';
+import type { FileEditFormProps } from './FileEditForm.type';
 
-type FileEditFormProps = {
-  file: SanctuaryFile;
-  knownTags: readonly string[];
-  /** The types the caller may see; a file moved elsewhere would vanish from their list. */
-  types: readonly FileType[];
-  busy: boolean;
-  onSave: (patch: PatchFileBody) => void;
-  onCancel: () => void;
-};
-
-/** The caller's types, plus the file's own so the select never shows a blank. */
 const typeOptions = (types: readonly FileType[], own: FileType) =>
   FILE_TYPES.filter((type) => type === own || types.includes(type)).map((type) => ({ value: type, label: FILE_TYPE_LABELS[type] }));
 
@@ -67,4 +56,3 @@ const FileEditForm = (props: FileEditFormProps) => {
 };
 
 export { FileEditForm };
-export type { FileEditFormProps };

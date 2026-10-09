@@ -1,21 +1,8 @@
 /* @layer site-kit @kind component */
-/**
- * The working area of a list page: the FilterBar row over the table on the left, the
- * detail pane on the right when a row is selected. The table scrolls inside its own
- * column; the page does not grow with it.
- */
-import type { ReactNode } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Flex } from '@ds/primitives/Flex';
+import type { WorkbenchProps } from './Workbench.type';
 import './Workbench.css';
-
-type WorkbenchProps = {
-  /** The FilterBar and whatever sits on its row (the View picker). */
-  toolbar: ReactNode;
-  table: ReactNode;
-  /** Null folds the column away. */
-  detail: ReactNode | null;
-};
 
 const Workbench = (props: WorkbenchProps) => {
   const { toolbar, table, detail } = props;
@@ -31,4 +18,4 @@ const Workbench = (props: WorkbenchProps) => {
 };
 
 export { Workbench };
-export type { WorkbenchProps };
+export type { WorkbenchProps } from './Workbench.type';

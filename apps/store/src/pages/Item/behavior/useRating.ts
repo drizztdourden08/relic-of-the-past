@@ -1,20 +1,10 @@
 /* @layer store-site @kind hook */
-/**
- * The player's stars on one item: whether they may rate it (installed it, and not their
- * own), and setting or removing their stars. The API answers with the new stats, which are
- * merged into the item without a reload.
- */
 import { useCallback, useState } from 'react';
 import type { ItemResponse } from '@shared/store/api-types';
 import type { Stars } from '@shared/store/rating-types';
 import { errorMessage } from '@site-kit/api/api-error';
 import { rateItem, unrateItem } from '../../../api/catalog-endpoints';
-
-type UseRatingParams = {
-  data: ItemResponse | null;
-  meId: string;
-  merge: (patch: Partial<ItemResponse>) => void;
-};
+import type { UseRatingParams } from './useRating.type';
 
 const blockedReasonOf = (data: ItemResponse | null, meId: string): string | null => {
   if (!data) return 'Loading...';

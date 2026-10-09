@@ -1,10 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * One picture field: the file the author picked, made into the store's webp at once, so
- * the preview shows exactly what will be sent and a picture that cannot fit is refused
- * before anything is submitted. The picked file is kept, so the author can change the crop
- * and the webp is made again from the original. The preview link is released when replaced.
- */
 import { useCallback, useEffect, useState } from 'react';
 import { errorMessage } from '@site-kit/api/api-error';
 import { resizeToWebp } from '../../../lib/resize-image';
@@ -60,7 +54,4 @@ const usePicture = (spec: PictureSpec) => {
   return { spec, source, crop, picture, preview, busy, error, choose, recrop, clear };
 };
 
-type PictureState = ReturnType<typeof usePicture>;
-
 export { usePicture };
-export type { PictureState };

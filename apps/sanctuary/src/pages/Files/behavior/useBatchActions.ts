@@ -1,27 +1,14 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * What the selection panel can do to several files at once, besides downloading them:
- * copy their links, set their type, add or remove tags, delete them. A write goes to
- * each file the caller may change, one after another, and skips the rest; `notice`
- * then says how many were changed, skipped or failed.
- */
 import { useCallback, useState } from 'react';
 import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
 import { deleteFile, patchFile } from '../../../api/files-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';
-import { fileLink } from './useFileActions';
+import { fileLink } from './file-link';
 import {
   EMPTY_TALLY, addTagsPatch, batchReport, removeTagsPatch, splitByRight, typePatch,
 } from './batch-edits';
 import type { BatchTally, PatchOf } from './batch-edits';
-
-type UseBatchActionsParams = {
-  canEdit: (file: SanctuaryFile) => boolean;
-  onPatched: (file: SanctuaryFile) => void;
-  onDeleted: (id: string) => void;
-};
-
-type FileWrite = (file: SanctuaryFile) => Promise<'changed' | 'same'>;
+import type { FileWrite, UseBatchActionsParams } from './useBatchActions.type';
 
 const useBatchActions = (params: UseBatchActionsParams) => {
   const { canEdit, onPatched, onDeleted } = params;
@@ -40,7 +27,6 @@ const useBatchActions = (params: UseBatchActionsParams) => {
     }
   }, []);
 
-  /** One write per file the caller may change, in order; a failure is counted, never thrown. */
   const eachMine = useCallback(async (files: readonly SanctuaryFile[], write: FileWrite): Promise<BatchTally> => {
     const { mine, others } = splitByRight(files, canEdit);
     const tally = { ...EMPTY_TALLY, skipped: others.length };
@@ -91,13 +77,9 @@ const useBatchActions = (params: UseBatchActionsParams) => {
     return files.length === 1 ? '1 link copied.' : `${files.length} links copied.`;
   }), [run]);
 
-  /** A report belongs to the pick it was made on; a new pick drops it. */
   const dismiss = useCallback(() => setNotice(null), []);
 
   return { busy, notice, dismiss, setType, addTags, removeTags, remove, copyLinks };
 };
 
-type BatchActions = ReturnType<typeof useBatchActions>;
-
 export { useBatchActions };
-export type { BatchActions, UseBatchActionsParams };

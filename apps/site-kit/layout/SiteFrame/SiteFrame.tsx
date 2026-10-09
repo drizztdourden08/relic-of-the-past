@@ -1,24 +1,12 @@
 /* @layer site-kit @kind component */
-/**
- * The page frame. The router mounts one around every signed-in member page: the section
- * nav, the site's one search and the data the site's member pages share. A bare frame (sign-in,
- * waiting, device, the guard's own states) shows the brand alone above the content,
- * since those pages have no sections to move between. Both carry the site's toasts.
- */
-import type { ReactNode } from 'react';
 import { Flex } from '@ds/primitives/Flex';
 import { Box } from '@ds/primitives/Box';
 import { Brand } from '../Brand/Brand';
 import { ToastLayer } from '../../components/ToastLayer';
 import { useSiteDefinition } from '../../site/site-context';
 import { MemberFrame } from './sub-components/MemberFrame';
+import type { SiteFrameProps } from './SiteFrame.type';
 import './SiteFrame.css';
-
-type SiteFrameProps = {
-  /** No section nav: the brand alone heads the page. */
-  bare?: boolean;
-  children: ReactNode;
-};
 
 const SiteFrame = (props: SiteFrameProps) => {
   const { bare = false, children } = props;
@@ -41,4 +29,4 @@ const SiteFrame = (props: SiteFrameProps) => {
 };
 
 export { SiteFrame };
-export type { SiteFrameProps };
+export type { SiteFrameProps } from './SiteFrame.type';

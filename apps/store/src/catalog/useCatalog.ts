@@ -1,15 +1,9 @@
 /* @layer store-site @kind hook */
-/**
- * Every published item, loaded once by the signed-in frame, page after page until the API
- * has no next cursor. Browse, the kind pages, the search and the home page's kind shelves
- * all read this one list, so moving between them never fetches again.
- */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ItemCardView } from '@shared/store/home-types';
 import { errorMessage } from '@site-kit/api/api-error';
 import { listItems } from '../api/catalog-endpoints';
-
-const NO_ITEMS: ItemCardView[] = [];
+import { NO_ITEMS } from './useCatalog.constants';
 
 const byName = (a: ItemCardView, b: ItemCardView) => a.name.localeCompare(b.name);
 
@@ -48,7 +42,4 @@ const useCatalog = () => {
   );
 };
 
-type Catalog = ReturnType<typeof useCatalog>;
-
 export { useCatalog };
-export type { Catalog };

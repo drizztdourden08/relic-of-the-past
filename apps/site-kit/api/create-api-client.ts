@@ -1,37 +1,18 @@
 /* @layer site-kit @kind logic */
-/**
- * Typed fetch over one route table. Every call is same-origin under /api with the session
- * cookie attached. A non-2xx answer becomes an ApiError carrying the server's `{ error }`
- * message, so a page can show it as is. Each site builds one client per table it calls.
- */
 import { formatPath } from '@shared/hub/api-contract';
-import type { PathParams, RouteDef } from '@shared/hub/api-contract';
+import type { RouteDef } from '@shared/hub/api-contract';
 import { ApiError } from './api-error';
-
-const API_BASE = '/api';
-
-type QueryParams = Record<string, string | number | boolean | undefined>;
-
-type RequestOptions = {
-  params?: PathParams;
-  query?: QueryParams;
-  body?: unknown;
-};
+import { API_BASE } from './create-api-client.constants';
+import type { RequestOptions, RouteName } from './create-api-client.type';
 
 const readError = async (response: Response) => {
-  try {
-    const data = (await response.json()) as { error?: unknown };
-    if (typeof data.error === 'string' && data.error) return data.error;
-  } catch {
-    // Not JSON; fall through to the status text.
-  }
+  const data = (await response.json().catch(() => null)) as { error?: unknown } | null;
+  if (typeof data?.error === 'string' && data.error) return data.error;
   return response.statusText || `Request failed (${response.status})`;
 };
 
 const createApiClient = <Routes extends Record<string, RouteDef>>(routes: Routes) => {
-  type Name = keyof Routes & string;
-
-  const buildUrl = (route: Name, options: RequestOptions) => {
+  const buildUrl = (route: RouteName<Routes>, options: RequestOptions) => {
     const { params, query } = options;
     const url = API_BASE + formatPath(routes[route].path, params);
     if (!query) return url;
@@ -43,7 +24,7 @@ const createApiClient = <Routes extends Record<string, RouteDef>>(routes: Routes
     return text ? `${url}?${text}` : url;
   };
 
-  const request = async <T>(route: Name, options: RequestOptions = {}): Promise<T> => {
+  const request = async <T>(route: RouteName<Routes>, options: RequestOptions = {}): Promise<T> => {
     const { body } = options;
     const { method } = routes[route];
     const response = await fetch(buildUrl(route, options), {
@@ -57,13 +38,10 @@ const createApiClient = <Routes extends Record<string, RouteDef>>(routes: Routes
     return (await response.json()) as T;
   };
 
-  /** The absolute URL of a GET route the browser must visit itself (OAuth start). */
-  const routeHref = (route: Name, options: RequestOptions = {}) => buildUrl(route, options);
+  const routeHref = (route: RouteName<Routes>, options: RequestOptions = {}) => buildUrl(route, options);
 
   return { request, routeHref };
 };
 
-type ApiClient<Routes extends Record<string, RouteDef>> = ReturnType<typeof createApiClient<Routes>>;
-
 export { createApiClient };
-export type { ApiClient, RequestOptions, QueryParams };
+export type { ApiClient, RequestOptions, QueryParams } from './create-api-client.type';

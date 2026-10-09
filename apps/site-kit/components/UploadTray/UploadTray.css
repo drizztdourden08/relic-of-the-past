@@ -1,6 +1,5 @@
 /* @layer site-kit @kind style */
 
-/* The Portal layer is click-through; the tray opts back in. */
 .upload-tray {
   position: absolute;
   right: var(--space-lg);

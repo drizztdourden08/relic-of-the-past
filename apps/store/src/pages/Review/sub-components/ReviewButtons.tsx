@@ -1,28 +1,10 @@
 /* @layer store-site @kind component */
-/**
- * A reviewer's buttons on the picked entry. For a version they come from the version flow
- * table: Approve on a waiting one, Reject on a waiting or ready one (a note first), and
- * Delete, which asks first. A listing edit is approved or rejected. Unlist item stays on
- * every entry of a published item.
- */
 import { useState } from 'react';
 import { Button } from '@ds/primitives/Button';
 import { Dialog } from '@ds/composites/Dialog';
-import type { ReviewEntry } from '@shared/store/api-types';
-import type { StoreVersion } from '@shared/store/types';
 import { actionsFor } from '@shared/store/version-flow';
-import type { Actor, VersionAction } from '@shared/store/version-flow';
-import type { ReviewActions } from '../behavior/useReviewActions';
-
-type ReviewButtonsProps = {
-  entry: ReviewEntry;
-  version: StoreVersion | null;
-  note: string;
-  actions: ReviewActions;
-};
-
-const REVIEWER: readonly Actor[] = ['reviewer'];
-const EDIT_ACTIONS: readonly VersionAction[] = ['approve', 'reject'];
+import { EDIT_ACTIONS, REVIEWER } from './ReviewButtons.constants';
+import type { ReviewButtonsProps } from './ReviewButtons.type';
 
 const ReviewButtons = (props: ReviewButtonsProps) => {
   const { entry, version, note, actions } = props;
@@ -59,4 +41,3 @@ const ReviewButtons = (props: ReviewButtonsProps) => {
 };
 
 export { ReviewButtons };
-export type { ReviewButtonsProps };

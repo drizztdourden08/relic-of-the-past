@@ -1,20 +1,12 @@
 /* @layer sanctuary-site @kind component */
-/**
- * One picked file in the selection panel's grid: an image shows itself, a video shows a
- * play icon, anything else its type's icon, each over the file name.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import playIcon from '@iconify-icons/lucide/play';
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { Flex } from '@ds/primitives/Flex';
 import { Text } from '@ds/primitives/Text';
-import { FILE_TYPE_ICONS } from '../../../files/file-type-icon';
+import { FILE_TYPE_ICONS } from '../../../files/file-type-icon.constants';
 import { mediaKindOf } from '@site-kit/lib/media-kind';
 import { SelectionImage } from './SelectionImage';
-
-type SelectionTileProps = {
-  file: SanctuaryFile;
-};
+import type { SelectionTileProps } from './SelectionTile.type';
 
 const SelectionTile = (props: SelectionTileProps) => {
   const { file } = props;
@@ -34,4 +26,3 @@ const SelectionTile = (props: SelectionTileProps) => {
 };
 
 export { SelectionTile };
-export type { SelectionTileProps };

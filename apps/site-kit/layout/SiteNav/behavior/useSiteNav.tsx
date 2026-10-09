@@ -1,9 +1,4 @@
 /* @layer site-kit @kind hook */
-/**
- * What the section nav shows and does: the config built from the site's sections and the
- * session (an admin-only section for admins only, a section needing a permission for its
- * holders only), the active section read from the location, and a select that navigates.
- */
 import { useCallback, useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import type { SectionNavConfig, SectionNavItem } from '@ds/composites/SectionNav';
@@ -14,14 +9,9 @@ import { useLocation } from '../../../router/useLocation';
 import { useSiteDefinition } from '../../../site/site-context';
 import type { SiteSection } from '../../../site/site-definition.type';
 import { NavAvatar } from '../sub-components/NavAvatar';
+import { ACCOUNT_SECTION, ROOT } from './useSiteNav.constants';
+import type { NavPerson } from './useSiteNav.type';
 
-const ROOT = '/';
-/** The kit's Account page: the nav draws it as the signed-in person. */
-const ACCOUNT_SECTION = 'account';
-
-type NavPerson = { displayName: string; avatarUrl: string | null } | null;
-
-/** The account entry is the person: their avatar and name in place of the section's icon and label. */
 const navItem = (section: SiteSection, person: NavPerson): SectionNavItem => {
   const { id, label, icon } = section;
   if (id === ACCOUNT_SECTION && person) {
@@ -54,7 +44,6 @@ const useSiteNav = () => {
     })).filter((group) => group.items.length > 0),
   }), [sections, home, navGroups, isAdmin, rights, person]);
 
-  /** The root serves the home section, so it counts as that section. */
   const activeId = useMemo(() => {
     if (path === ROOT) return home;
     return Object.values(sections).find((section) => path.startsWith(section.path))?.id ?? home;

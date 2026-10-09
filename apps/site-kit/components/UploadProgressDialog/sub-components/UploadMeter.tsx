@@ -1,13 +1,10 @@
 /* @layer site-kit @kind component */
-/** Under the running upload step: the bar, then the speed and the time left once known. */
 import { Flex } from '@ds/primitives/Flex';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { formatRate, formatTimeLeft } from '../../../upload/upload-format';
-import type { UploadJob } from '../../../upload/upload-job.type';
-
-type UploadMeterProps = { job: UploadJob };
+import type { UploadMeterProps } from './UploadMeter.type';
 
 const UploadMeter = (props: UploadMeterProps) => {
   const { job } = props;
@@ -25,4 +22,3 @@ const UploadMeter = (props: UploadMeterProps) => {
 };
 
 export { UploadMeter };
-export type { UploadMeterProps };

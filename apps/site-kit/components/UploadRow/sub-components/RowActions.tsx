@@ -1,20 +1,11 @@
 /* @layer site-kit @kind component */
-/**
- * A tray row's buttons: Cancel while the job can still stop, the file picker for a job a
- * reload left without its file, and Dismiss once it is over. A click here stays here and
- * does not open the dialog.
- */
 import type { MouseEvent } from 'react';
 import { Button } from '@ds/primitives/Button';
 import { DropZone } from '@ds/primitives/DropZone';
 import { Flex } from '@ds/primitives/Flex';
 import { IconButton } from '@ds/primitives/IconButton';
-import type { UploadJob, UploadPhase } from '../../../upload/upload-job.type';
-import type { UploadRowProps } from '../UploadRow.type';
-
-type RowActionsProps = Pick<UploadRowProps, 'onCancel' | 'onDismiss' | 'onPickFile'> & { job: UploadJob };
-
-const CANCELLABLE: ReadonlySet<UploadPhase> = new Set(['queued', 'hashing', 'uploading', 'needs-file']);
+import { CANCELLABLE } from './RowActions.constants';
+import type { RowActionsProps } from './RowActions.type';
 
 const stay = (event: MouseEvent) => event.stopPropagation();
 
@@ -41,4 +32,3 @@ const RowActions = (props: RowActionsProps) => {
 };
 
 export { RowActions };
-export type { RowActionsProps };

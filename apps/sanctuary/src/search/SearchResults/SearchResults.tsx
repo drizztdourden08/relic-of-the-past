@@ -1,10 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The site's search pane, shown in place of the page while the nav's search is in use:
- * an empty state until something is typed, then every matching file and report from
- * every list, grouped by category and drawn with the list pages' own table. Opening a
- * category or a row ends the search.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -13,22 +7,14 @@ import { EmptyState } from '@ds/primitives/EmptyState';
 import { SearchSpark } from '@ds/composites/SearchSpark';
 import { DataTable } from '@ds/composites/DataTable';
 import { fileRowId } from '../../files/file-row';
-import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema';
+import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema.constants';
 import { reportRowId } from '../../reports/report-row';
-import { REPORT_DEFAULT_COLUMNS, REPORT_DEFAULT_GROUP_BY } from '../../reports/report-schema';
+import { REPORT_DEFAULT_COLUMNS, REPORT_DEFAULT_GROUP_BY } from '../../reports/report-schema.constants';
 import { useSearchResults } from './behavior/useSearchResults';
 import { SearchGroup } from '@site-kit/components/SearchGroup/SearchGroup';
+import { FILE_COUNT, IDLE_MARK_SIZE, REPORT_COUNT } from './SearchResults.constants';
+import type { SearchResultsProps } from './SearchResults.type';
 import './SearchResults.css';
-
-type SearchResultsProps = {
-  query: string;
-  /** Ends the search; called after a category or a row is opened. */
-  onDone: () => void;
-};
-
-const IDLE_MARK_SIZE = 40;
-const FILE_COUNT = ['file', 'files'] as const;
-const REPORT_COUNT = ['report', 'reports'] as const;
 
 const summaryOf = (total: number, shown: string): string => {
   if (total === 0) return `No result matches "${shown}"`;
@@ -103,4 +89,3 @@ const SearchResults = (props: SearchResultsProps) => {
 };
 
 export { SearchResults };
-export type { SearchResultsProps };

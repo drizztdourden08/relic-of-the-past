@@ -1,23 +1,12 @@
 /* @layer store-site @kind component */
-/**
- * Publish: a new item, the next version of one, or an edit to its listing. A version or an
- * edit is for one of the player's own items, found in their publications; the form waits
- * for that list. Uploads in flight show in the site's tray.
- */
 import uploadIcon from '@iconify-icons/lucide/upload';
 import { Text } from '@ds/primitives/Text';
 import { useStoreData } from '../../data/store-data-context';
 import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { PAGE_TITLES } from './Publish.constants';
-import type { PublishMode } from './Publish.constants';
+import type { PublishProps } from './Publish.type';
 import { PublishForm } from './sub-components/PublishForm';
 import './Publish.css';
-
-type PublishProps = {
-  mode: PublishMode;
-  /** The item a version or an edit is for. */
-  itemId?: string;
-};
 
 const Publish = (props: PublishProps) => {
   const { mode, itemId } = props;
@@ -35,4 +24,4 @@ const Publish = (props: PublishProps) => {
 };
 
 export { Publish };
-export type { PublishProps };
+export type { PublishProps } from './Publish.type';

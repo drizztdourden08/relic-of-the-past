@@ -1,33 +1,18 @@
 /* @layer store-site @kind component */
-/**
- * The top of an item's page, drawn like the app's Home hero: the item's banner (its card,
- * or its coloured placeholder, when it has none) fills the scene, the kind, name, short
- * description, author and stars float bottom-left with the host's actions, and the facts
- * of the version on show run along the bottom in glass.
- */
-import type { ReactNode } from 'react';
 import { Hero } from '@domains/app/compounds/Hero';
 import { HeroFacts } from '@domains/app/compounds/HeroFacts';
 import { Box } from '@ds/primitives/Box';
 import { Flex } from '@ds/primitives/Flex';
 import { Text } from '@ds/primitives/Text';
-import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { Link } from '@site-kit/router/Link';
-import { authorPath } from '../../catalog/item-paths';
-import { KIND_PLURALS } from '../../lib/kinds';
-import { averageOf } from '../../lib/format-count';
+import { authorPath } from '../../catalog/item-paths/author-path';
+import { KIND_PLURALS } from '../../lib/kinds/kinds.constants';
+import { averageOf } from '../../lib/format-count/average-of';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { Stars } from '../Stars/Stars';
 import { itemHeroFacts } from './behavior/item-hero-facts';
+import type { ItemHeroProps } from './ItemHero.type';
 import './ItemHero.css';
-
-type ItemHeroProps = {
-  item: StoreItem;
-  /** The version whose facts are shown: the live one on the item page, the one under review in a review. */
-  version: StoreVersion | null;
-  /** Install and the moderation buttons, under the title. */
-  actions?: ReactNode;
-};
 
 const ItemHero = (props: ItemHeroProps) => {
   const { item, version, actions } = props;
@@ -58,4 +43,4 @@ const ItemHero = (props: ItemHeroProps) => {
 };
 
 export { ItemHero };
-export type { ItemHeroProps };
+export type { ItemHeroProps } from './ItemHero.type';

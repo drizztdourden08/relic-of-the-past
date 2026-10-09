@@ -1,18 +1,10 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The picture of an image file in a selection tile, read through the preview route. A
- * small image (a sprite) is drawn with hard pixel edges, as in the file's own preview.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import imageIcon from '@iconify-icons/lucide/image';
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { Image } from '@ds/primitives/Image';
 import { usePixelArt } from '@site-kit/components/MediaPreview/usePixelArt';
 import { useFilePreview } from '../../../files/useFilePreview';
-
-type SelectionImageProps = {
-  file: SanctuaryFile;
-};
+import type { SelectionImageProps } from './SelectionImage.type';
 
 const SelectionImage = (props: SelectionImageProps) => {
   const { file } = props;
@@ -35,4 +27,3 @@ const SelectionImage = (props: SelectionImageProps) => {
 };
 
 export { SelectionImage };
-export type { SelectionImageProps };

@@ -1,13 +1,11 @@
 /* @layer store-site @kind style */
 
-/* The intro takes the width it needs up to two thirds; there is no side panel. */
 .hero.item-hero {
   --hero-h: var(--item-hero-h);
   --hero-intro-w: minmax(0, 2fr);
   --hero-side-w: 0px;
 }
 
-/* The picture fills the whole scene, whatever its own shape. */
 .item-hero .item-hero__picture {
   width: 100%;
   height: 100%;
@@ -15,7 +13,6 @@
   border-radius: 0;
 }
 
-/* Two classes, so the text primitive's own colour and size never win on load order. */
 .item-hero .item-hero__summary {
   margin: 0;
   max-width: 60ch;

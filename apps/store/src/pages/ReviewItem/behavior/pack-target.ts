@@ -1,21 +1,8 @@
 /* @layer store-site @kind logic */
-/**
- * Which pack the review page reads. A version reads its own file, unless the file was
- * removed or is still uploading. A listing edit carries no pack, so it reads the live
- * version's, when there is one.
- */
 import type { ReviewEntry } from '@shared/store/api-types';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { versionOfEntry } from '../../../review/review-row';
-
-type PackTarget = {
-  /** The version whose pack is read; null when there is none to read. */
-  n: number | null;
-  /** Why nothing is read. */
-  noPack: string | null;
-  /** A line over the contents when they are not the entry's own. */
-  note: string | null;
-};
+import type { PackTarget } from './pack-target.type';
 
 const packTargetOf = (entry: ReviewEntry): PackTarget => {
   const version = versionOfEntry(entry);
@@ -30,4 +17,3 @@ const packTargetOf = (entry: ReviewEntry): PackTarget => {
 };
 
 export { packTargetOf };
-export type { PackTarget };

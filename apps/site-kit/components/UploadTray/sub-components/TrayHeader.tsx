@@ -1,5 +1,4 @@
 /* @layer site-kit @kind component */
-/** The tray's header: "Uploads", how many and how many run, then fold and close. */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import chevronDownIcon from '@iconify-icons/lucide/chevron-down';
 import chevronUpIcon from '@iconify-icons/lucide/chevron-up';
@@ -7,9 +6,7 @@ import xIcon from '@iconify-icons/lucide/x';
 import { Flex } from '@ds/primitives/Flex';
 import { IconButton } from '@ds/primitives/IconButton';
 import { Text } from '@ds/primitives/Text';
-import type { TrayState } from '../behavior/useTrayState';
-
-type TrayHeaderProps = { tray: TrayState };
+import type { TrayHeaderProps } from './TrayHeader.type';
 
 const TrayHeader = (props: TrayHeaderProps) => {
   const { tray } = props;
@@ -29,4 +26,3 @@ const TrayHeader = (props: TrayHeaderProps) => {
 };
 
 export { TrayHeader };
-export type { TrayHeaderProps };

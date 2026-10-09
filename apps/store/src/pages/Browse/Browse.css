@@ -1,6 +1,5 @@
 /* @layer store-site @kind style */
 
-/* The content fills the page body, so the grid scrolls, not the page. */
 .browse {
   flex: 1 1 auto;
   min-height: 0;

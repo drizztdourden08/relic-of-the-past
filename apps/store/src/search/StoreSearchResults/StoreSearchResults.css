@@ -1,6 +1,5 @@
 /* @layer store-site @kind style */
 
-/* The same panel as a page card, the results scrolling inside it. */
 .store-search {
   display: flex;
   flex: 1 1 auto;

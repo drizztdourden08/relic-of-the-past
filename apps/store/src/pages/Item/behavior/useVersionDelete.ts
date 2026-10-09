@@ -1,9 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * A reviewer's delete of one approved version from the item page, asked once first. The file
- * leaves the store and the row stays in the author's history; deleting the live version hands
- * installs to the newest approved one left. The API answers with the item.
- */
 import { useCallback, useState } from 'react';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { errorMessage } from '@site-kit/api/api-error';

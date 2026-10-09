@@ -1,12 +1,6 @@
 /* @layer sanctuary-site @kind component */
-/** The issue pill: `#253` in green while open, dimmed once closed; a link when a url is given. */
-import type { ReportIssue } from '@shared/sanctuary/report-types';
 import { Chip } from '@site-kit/components/Chip/Chip';
-
-type IssueStateChipProps = {
-  issue: Pick<ReportIssue, 'number' | 'state'> & { url?: string };
-  className?: string;
-};
+import type { IssueStateChipProps } from './IssueStateChip.type';
 
 const IssueStateChip = (props: IssueStateChipProps) => {
   const { issue, className } = props;
@@ -20,4 +14,3 @@ const IssueStateChip = (props: IssueStateChipProps) => {
 };
 
 export { IssueStateChip };
-export type { IssueStateChipProps };

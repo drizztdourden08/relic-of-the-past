@@ -1,17 +1,8 @@
 /* @layer store-site @kind component */
-/** An item's kind as the kit's pill: music, character or language, with an optional detail after it. */
-import type { StoreKind } from '@shared/store/types';
 import { Chip } from '@site-kit/components/Chip/Chip';
-import type { ChipTone } from '@site-kit/components/Chip/Chip';
-import { KIND_LABELS } from '../../lib/kinds';
-
-type KindChipProps = {
-  kind: StoreKind;
-  /** Shown after the kind, as in "music · 61 tracks". */
-  detail?: string;
-};
-
-const KIND_TONES: Record<StoreKind, ChipTone> = { music: 'gold', character: 'green', language: 'info' };
+import { KIND_LABELS } from '../../lib/kinds/kinds.constants';
+import type { KindChipProps } from './KindChip.type';
+import { KIND_TONES } from './KindChip.constants';
 
 const KindChip = (props: KindChipProps) => {
   const { kind, detail } = props;
@@ -19,4 +10,4 @@ const KindChip = (props: KindChipProps) => {
 };
 
 export { KindChip };
-export type { KindChipProps };
+export type { KindChipProps } from './KindChip.type';

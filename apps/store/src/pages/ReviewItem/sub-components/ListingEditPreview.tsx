@@ -1,16 +1,10 @@
 /* @layer store-site @kind component */
-/** What a listing edit would change: each field it sets, with the new text or picture beside the current one. */
 import { Stack } from '@ds/primitives/Stack';
 import { StatRow } from '@ds/primitives/StatRow';
 import { Text } from '@ds/primitives/Text';
-import type { ListingEdit, StoreItem } from '@shared/store/types';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { ItemPicture } from '../../../components/ItemPicture/ItemPicture';
-
-type ListingEditPreviewProps = {
-  item: StoreItem;
-  edit: ListingEdit;
-};
+import type { ListingEditPreviewProps } from './ListingEditPreview.type';
 
 const ListingEditPreview = (props: ListingEditPreviewProps) => {
   const { item, edit } = props;
@@ -41,4 +35,3 @@ const ListingEditPreview = (props: ListingEditPreviewProps) => {
 };
 
 export { ListingEditPreview };
-export type { ListingEditPreviewProps };

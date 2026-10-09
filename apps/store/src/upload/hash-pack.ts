@@ -1,13 +1,7 @@
 /* @layer store-site @kind logic */
-/**
- * The sha256 of a pack or a picture, as lowercase hex; store-api requires one for each. A
- * file that fits one part goes through WebCrypto in one call; a larger one is read in
- * slices and fed to the incremental hasher, so memory stays at one slice whatever the size.
- */
 import { HASH_MAX_BYTES } from '@site-kit/upload/hash-file';
 import { createSha256 } from './sha256';
-
-const SLICE_BYTES = 8 * 1024 * 1024;
+import { SLICE_BYTES } from './hash-pack.constants';
 
 const toHex = (digest: ArrayBuffer) =>
   Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');

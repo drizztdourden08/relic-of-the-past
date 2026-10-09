@@ -1,15 +1,9 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * Every ready file, loaded once by the signed-in frame, then kept in step with what the
- * pages do to it: an upload adds a record, a patch replaces one, a delete drops one. No
- * reload after a write; the API's answer is the record.
- */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { listFiles } from '../api/files-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';
-
-const NO_FILES: SanctuaryFile[] = [];
+import { NO_FILES } from './useFiles.constants';
 
 const byNewest = (a: SanctuaryFile, b: SanctuaryFile) => b.createdAt - a.createdAt;
 

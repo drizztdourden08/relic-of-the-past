@@ -1,10 +1,8 @@
 /* @layer site-kit @kind hook */
-/** The device page's one call: confirm a user code, keep the label the API answers with. */
 import { useCallback, useState } from 'react';
 import { confirmDevice } from '../../../api/hub-endpoints';
 import { errorMessage } from '../../../api/api-error';
-
-type ConfirmedDevice = { label: string; platform: string };
+import type { ConfirmedDevice } from './useDeviceConfirm.type';
 
 const useDeviceConfirm = (initialCode: string) => {
   const [code, setCode] = useState(initialCode);
@@ -29,4 +27,3 @@ const useDeviceConfirm = (initialCode: string) => {
 };
 
 export { useDeviceConfirm };
-export type { ConfirmedDevice };

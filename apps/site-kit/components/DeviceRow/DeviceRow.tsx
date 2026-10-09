@@ -1,22 +1,9 @@
 /* @layer site-kit @kind component */
-/** One signed-in app instance on the Account page: platform, label, dates and Revoke. */
-import type { Device, DevicePlatform } from '@shared/hub/device-types';
 import { Button } from '@ds/primitives/Button';
 import { Row } from '../Row/Row';
 import { formatDay, formatAgo } from '../../lib/format-date';
-
-type DeviceRowProps = {
-  device: Device;
-  busy: boolean;
-  onRevoke: (id: string) => void;
-};
-
-const PLATFORM_LABELS: Record<DevicePlatform, string> = {
-  windows: 'Windows',
-  linux: 'Linux',
-  mac: 'Mac',
-  android: 'Android',
-};
+import { PLATFORM_LABELS } from './DeviceRow.constants';
+import type { DeviceRowProps } from './DeviceRow.type';
 
 const DeviceRow = (props: DeviceRowProps) => {
   const { device, busy, onRevoke } = props;
@@ -30,4 +17,3 @@ const DeviceRow = (props: DeviceRowProps) => {
 };
 
 export { DeviceRow };
-export type { DeviceRowProps };

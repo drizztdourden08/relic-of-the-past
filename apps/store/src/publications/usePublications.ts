@@ -1,17 +1,11 @@
 /* @layer store-site @kind hook */
-/**
- * Everything the signed-in player published, with every version and its full review
- * record, loaded once by the frame. A create, an upload, a withdraw or a listing edit
- * answers with the item, which replaces its entry; no reload after a write.
- */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { StoreItem } from '@shared/store/types';
 import { errorMessage } from '@site-kit/api/api-error';
-import { listPublications } from '../api/publish-endpoints';
+import { listPublications } from '../api/publish-endpoints/list-publications';
+import { NO_ITEMS } from './usePublications.constants';
 
-const NO_ITEMS: StoreItem[] = [];
-
-const byUpdated = (a: StoreItem, b: StoreItem) => b.updatedAt - a.updatedAt;
+const latestUpdateFirst = (a: StoreItem, b: StoreItem) => b.updatedAt - a.updatedAt;
 
 const usePublications = () => {
   const [items, setItems] = useState<StoreItem[] | null>(null);
@@ -20,7 +14,7 @@ const usePublications = () => {
   const load = useCallback(async () => {
     try {
       const { items: rows } = await listPublications();
-      setItems([...rows].sort(byUpdated));
+      setItems([...rows].sort(latestUpdateFirst));
       setError(null);
     } catch (cause) {
       setError(errorMessage(cause));
@@ -33,7 +27,7 @@ const usePublications = () => {
   }, [load]);
 
   const upsert = useCallback((item: StoreItem) => {
-    setItems((rows) => [item, ...(rows ?? []).filter((row) => row.id !== item.id)].sort(byUpdated));
+    setItems((rows) => [item, ...(rows ?? []).filter((row) => row.id !== item.id)].sort(latestUpdateFirst));
   }, []);
 
   return useMemo(
@@ -42,7 +36,4 @@ const usePublications = () => {
   );
 };
 
-type Publications = ReturnType<typeof usePublications>;
-
 export { usePublications };
-export type { Publications };

@@ -1,6 +1,5 @@
 /* @layer site-kit @kind style */
 
-/* Each provider's own sign-in button, coloured from the brand tokens (tokens/brand.css). */
 .provider-btn {
   --provider-bg: var(--c-surface);
   --provider-bg-hover: var(--c-hover);

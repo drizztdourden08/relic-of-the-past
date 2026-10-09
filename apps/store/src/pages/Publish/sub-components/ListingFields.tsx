@@ -1,9 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * The listing's words and look: name, the short description cards show with its count, the
- * description (markdown) that copies it until it is edited, colour, licence and tags. Each
- * field shows the error it is handed, outlined in red.
- */
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
 import { Select } from '@ds/primitives/Select';
@@ -13,21 +8,10 @@ import { TextInput } from '@ds/primitives/TextInput';
 import { Textarea } from '@ds/primitives/Textarea';
 import { tagsSchema } from '@shared/hub/schemas/common';
 import { FIELD_LABELS, FIELD_MESSAGES, LICENSE_OPTIONS } from '../Publish.constants';
-import type { FieldErrors, FieldKey } from '../Publish.type';
-import { LISTING_CAPS } from '../behavior/listing-errors';
-import type { ListingFieldsState } from '../behavior/useListingFields';
+import { LISTING_CAPS } from '../behavior/listing-errors.constants';
 import { ColorField } from './ColorField';
-
-type ListingFieldsProps = {
-  listing: ListingFieldsState;
-  /** The errors to show now, by field. */
-  errors: FieldErrors;
-  /** Called when the player leaves a field, so its error may show. */
-  onLeave: (field: FieldKey) => void;
-};
-
-const TAG_HINT = 'lowercase letters, digits, dots, dashes';
-const FOLLOWING_HINT = <Text as="span" className="publish__following">{FIELD_MESSAGES.following}</Text>;
+import { TAG_HINT } from './ListingFields.constants';
+import type { ListingFieldsProps } from './ListingFields.type';
 
 const validateTag = (raw: string) => tagsSchema.safeParse([raw]).success || TAG_HINT;
 
@@ -56,7 +40,7 @@ const ListingFields = (props: ListingFieldsProps) => {
           placeholder="Every track rescored for strings and brass"
         />
       </Field>
-      <Field label={FIELD_LABELS.description} htmlFor="publish-description" error={errors.description} hint={following ? FOLLOWING_HINT : undefined}>
+      <Field label={FIELD_LABELS.description} htmlFor="publish-description" error={errors.description} hint={following ? <Text as="span" className="publish__following">{FIELD_MESSAGES.following}</Text> : undefined}>
         <Textarea
           id="publish-description"
           rows={6}
@@ -97,4 +81,3 @@ const ListingFields = (props: ListingFieldsProps) => {
 };
 
 export { ListingFields };
-export type { ListingFieldsProps };

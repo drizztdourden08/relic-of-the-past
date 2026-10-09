@@ -1,7 +1,5 @@
 /* @layer site-kit @kind logic */
-/** Which files the site can show in place: images and videos, told apart by content type. */
-
-type MediaKind = 'image' | 'video';
+import type { MediaKind } from './media-kind.type';
 
 const mediaKindOf = (contentType: string): MediaKind | null => {
   const type = contentType.toLowerCase();
@@ -11,4 +9,4 @@ const mediaKindOf = (contentType: string): MediaKind | null => {
 };
 
 export { mediaKindOf };
-export type { MediaKind };
+export type { MediaKind } from './media-kind.type';

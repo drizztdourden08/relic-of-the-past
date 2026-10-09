@@ -1,9 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * The View picker of a FilterBar row: the user's named views, "Save current as", and,
- * once a view is active, update, rename and delete. Names are asked in a dialog; the
- * delete asks once.
- */
 import { useMemo, useState } from 'react';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
@@ -12,22 +7,14 @@ import { DropdownMenu } from '@ds/composites/DropdownMenu';
 import type { MenuEntry } from '@ds/composites/DropdownMenu';
 import { useAnchorMenu } from '@ds/composites/FilterBar/behavior/use-anchor-menu';
 import { NameDialog } from './NameDialog';
-import type { SavedViewsState } from './useSavedViews';
+import { PORTALLED_MENU_SELECTOR } from './SavedViewsMenu.constants';
+import type { Prompt, SavedViewsMenuProps } from './SavedViewsMenu.type';
 import './SavedViewsMenu.css';
-
-type SavedViewsMenuProps = {
-  state: SavedViewsState;
-};
-
-type Prompt = 'save' | 'rename' | 'delete' | null;
-
-/** The portalled menu, so a click inside it does not count as an outside click. */
-const MENU_SELECTOR = '.dropdown-menu';
 
 const SavedViewsMenu = (props: SavedViewsMenuProps) => {
   const { state } = props;
   const { views, active, busy, error } = state;
-  const menu = useAnchorMenu<HTMLButtonElement>(MENU_SELECTOR);
+  const menu = useAnchorMenu<HTMLButtonElement>(PORTALLED_MENU_SELECTOR);
   const [prompt, setPrompt] = useState<Prompt>(null);
 
   const items = useMemo<MenuEntry[]>(() => {
@@ -88,4 +75,4 @@ const SavedViewsMenu = (props: SavedViewsMenuProps) => {
 };
 
 export { SavedViewsMenu };
-export type { SavedViewsMenuProps };
+export type { SavedViewsMenuProps } from './SavedViewsMenu.type';

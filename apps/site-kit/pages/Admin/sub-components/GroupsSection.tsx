@@ -1,9 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * The Groups section of the admin page: one row per group (the default one marked and
- * never deletable), New group, and the editor under the list for the group being made
- * or changed. Deleting a group asks once.
- */
 import { useState } from 'react';
 import { DEFAULT_GROUP_ID } from '@shared/hub/group-types';
 import { Button } from '@ds/primitives/Button';
@@ -14,18 +9,11 @@ import { SettingsSection } from '@ds/composites/SettingsSection';
 import { Row } from '../../../components/Row/Row';
 import { Chip } from '../../../components/Chip/Chip';
 import type { GroupView } from '../../../api/hub-responses.type';
-import type { GroupsState } from '../behavior/useGroups';
 import { groupSummary } from '../behavior/group-summary';
 import { GroupEditor } from './GroupEditor';
 import { useDiscordRoles } from '../behavior/useDiscordRoles';
 import { useSiteDefinition } from '../../../site/site-context';
-
-type GroupsSectionProps = {
-  state: GroupsState;
-};
-
-/** Which group the editor holds: a new one, an existing one, or none. */
-type Editing = { kind: 'new' } | { kind: 'edit'; group: GroupView } | null;
+import type { Editing, GroupsSectionProps } from './GroupsSection.type';
 
 const GroupsSection = (props: GroupsSectionProps) => {
   const { state } = props;
@@ -90,4 +78,3 @@ const GroupsSection = (props: GroupsSectionProps) => {
 };
 
 export { GroupsSection };
-export type { GroupsSectionProps };

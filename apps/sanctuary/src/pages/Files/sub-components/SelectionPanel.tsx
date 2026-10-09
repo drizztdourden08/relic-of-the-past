@@ -1,12 +1,5 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The side column's panel while two files or more are picked, in place of one file's
- * details: how many and how big, their tiles, and what can be done to all of them at
- * once. Download and Copy links take every file; the edits and Delete take only the
- * caller's own, and say beforehand which are skipped. Delete asks once.
- */
 import { useMemo, useState } from 'react';
-import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
 import { Button } from '@ds/primitives/Button';
 import { Card } from '@ds/primitives/Card';
 import { Stack } from '@ds/primitives/Stack';
@@ -16,23 +9,11 @@ import { WindowHeader } from '@ds/composites/WindowHeader';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { splitByRight } from '../behavior/batch-edits';
 import { totalBytes } from '../behavior/batch-size';
-import type { BatchActions } from '../behavior/useBatchActions';
-import type { BatchDownload } from '../behavior/useBatchDownload';
 import { BatchDownloadBlock } from './BatchDownloadBlock';
 import { BatchEditForm } from './BatchEditForm';
 import { SelectionGrid } from './SelectionGrid';
 import { SkipNote } from './SkipNote';
-
-type SelectionPanelProps = {
-  files: readonly SanctuaryFile[];
-  /** The types the caller may move a file to. */
-  types: readonly FileType[];
-  knownTags: readonly string[];
-  canEdit: (file: SanctuaryFile) => boolean;
-  batch: BatchActions;
-  download: BatchDownload;
-  onClear: () => void;
-};
+import type { SelectionPanelProps } from './SelectionPanel.type';
 
 const deleteMessage = (count: number, skipped: number) => {
   const what = count === 1 ? '1 file' : `${count} files`;
@@ -91,4 +72,3 @@ const SelectionPanel = (props: SelectionPanelProps) => {
 };
 
 export { SelectionPanel };
-export type { SelectionPanelProps };

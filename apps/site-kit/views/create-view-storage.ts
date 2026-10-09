@@ -1,19 +1,10 @@
 /* @layer site-kit @kind logic */
-/**
- * A site's ViewStorage: the durable half of a view key over GET/PUT /me/views. One
- * record per surface, the reserved `current-<surface>` view, holds the whole snapshot;
- * the table half and the query half of a key each merge their part into it. A cache per
- * surface answers a reload at once, which is what lets an applied saved view land in the
- * table without a round trip.
- */
 import { isViewSnapshot } from '@ds/data/view-state/snapshot';
 import type { ViewKey, ViewSnapshot } from '@ds/data/view-state/snapshot';
 import type { ViewStorage } from '@ds/data/view-state/use-view-state';
 import { listViews, putView } from '../api/views-endpoints';
-import type { ViewHalf, ViewKeys } from './create-view-keys';
-
-const CURRENT_NAME = 'current';
-const DEBOUNCE_MS = 400;
+import { CURRENT_NAME, DEBOUNCE_MS } from './create-view-storage.constants';
+import type { ViewHalf, ViewKeys } from './create-view-keys.type';
 
 const mergeHalf = (base: ViewSnapshot, half: ViewHalf, next: ViewSnapshot): ViewSnapshot =>
   half === 'table'
@@ -47,6 +38,10 @@ const createViewStorage = (keys: ViewKeys) => {
     }, DEBOUNCE_MS));
   };
 
+  const fillIfEmpty = (surface: string, loaded: ViewSnapshot | undefined) => {
+    if (loaded && !cache.has(surface)) cache.set(surface, loaded);
+  };
+
   const load = (key: ViewKey): Promise<ViewSnapshot | undefined> => {
     const parsed = keys.parse(key);
     if (!parsed) return Promise.resolve(undefined);
@@ -59,8 +54,7 @@ const createViewStorage = (keys: ViewKeys) => {
         .catch(() => undefined)
         .then((loaded) => {
           loading.delete(surface);
-          // A local write during the read wins; the read only fills an empty cache.
-          if (loaded && !cache.has(surface)) cache.set(surface, loaded);
+          fillIfEmpty(surface, loaded);
           return cache.get(surface);
         });
       loading.set(surface, inFlight);
@@ -76,10 +70,8 @@ const createViewStorage = (keys: ViewKeys) => {
     scheduleSave(surface);
   };
 
-  /** The surface's live arrangement as last seen, or undefined before its first load or write. */
   const current = (surface: string): ViewSnapshot | undefined => cache.get(surface);
 
-  /** Makes a saved view the live arrangement, at once in the cache and on the server. */
   const applyView = (surface: string, snapshot: ViewSnapshot): Promise<void> => {
     const timer = timers.get(surface);
     if (timer !== undefined) clearTimeout(timer);
@@ -92,8 +84,5 @@ const createViewStorage = (keys: ViewKeys) => {
   return { keys, storage, current, applyView };
 };
 
-/** One site's views: its keys, its storage and the live-arrangement helpers the hooks use. */
-type SiteViews = ReturnType<typeof createViewStorage>;
-
 export { createViewStorage };
-export type { SiteViews };
+export type { SiteViews } from './create-view-storage.type';

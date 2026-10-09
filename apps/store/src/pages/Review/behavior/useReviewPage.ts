@@ -1,9 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * All of the Reviewer Hub list's state: the queue and the versions not submitted yet, the
- * tab (versions, listing edits, not submitted), and the rows with their schema and view.
- * Picking a row opens its review page, `/review/:rowId`.
- */
 import { useCallback, useMemo, useState } from 'react';
 import type { ReviewEntry } from '@shared/store/api-types';
 import { navigate } from '@site-kit/router/useLocation';
@@ -14,20 +9,11 @@ import { STORE_VIEWS } from '../../../views/store-views';
 import { toReviewRow } from '../../../review/review-row';
 import { buildReviewSchema } from '../../../review/review-schema';
 import { useReviewQueue } from '../../../review/useReviewQueue';
-
-const REVIEW_PATH = '/review';
-
-type ReviewScope = 'versions' | 'listings' | 'unsubmitted';
-
-const SCOPES: readonly { id: ReviewScope; label: string }[] = [
-  { id: 'versions', label: 'Versions' },
-  { id: 'listings', label: 'Listing edits' },
-  { id: 'unsubmitted', label: 'Not submitted' },
-];
+import { REVIEW_PATH, SCOPES } from './useReviewPage.constants';
+import type { ReviewScope } from './useReviewPage.type';
 
 const isListing = (entry: ReviewEntry) => entry.target.kind === 'listing';
 
-/** The tab last picked, so coming back from a review page lands on the same tab. */
 let lastScope: ReviewScope = 'versions';
 
 const useReviewPage = () => {
@@ -70,4 +56,3 @@ const useReviewPage = () => {
 };
 
 export { useReviewPage };
-export type { ReviewScope };

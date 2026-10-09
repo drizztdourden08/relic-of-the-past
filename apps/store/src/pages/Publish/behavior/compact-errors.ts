@@ -1,8 +1,6 @@
 /* @layer store-site @kind logic */
-/** A field-error map with the fields that have no message left out. */
 import type { FieldErrors, FieldKey } from '../Publish.type';
-
-type MaybeErrors = Partial<Record<FieldKey, string | null | undefined>>;
+import type { MaybeErrors } from './compact-errors.type';
 
 const compactErrors = (errors: MaybeErrors): FieldErrors => {
   const kept: FieldErrors = {};
@@ -14,4 +12,3 @@ const compactErrors = (errors: MaybeErrors): FieldErrors => {
 };
 
 export { compactErrors };
-export type { MaybeErrors };

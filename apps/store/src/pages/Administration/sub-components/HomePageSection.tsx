@@ -1,8 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * The Home page section of Administration: the welcome message with a live preview, and
- * the featured row's order. Each saves on its own.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';
