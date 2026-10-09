@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { summarizeEntry } from './entry-summary';
-import type { BlockDoc, Token, VariableIndex } from '@shared/game/language';
+import type { BlockDoc, Token, VariableIndex } from '@rotp/languages';
 import { BLOCK_END_WORDS } from './entry.constants';
 import type { MetaParams, MetaRow, TriggerFacts } from './entry.type';
 

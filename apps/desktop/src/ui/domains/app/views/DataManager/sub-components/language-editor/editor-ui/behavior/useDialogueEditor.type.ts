@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { Extensions } from '@tiptap/core';
-import type { GlossaryTerm, GlyphMetrics, Token } from '@shared/game/language';
+import type { GlossaryTerm, GlyphMetrics, Token } from '@rotp/languages';
 
 type UseDialogueEditorParams = {
   tokens: Token[];

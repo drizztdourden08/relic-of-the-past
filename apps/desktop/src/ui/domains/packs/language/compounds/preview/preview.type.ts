@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Block, BlockDoc, GlossaryTerm, GlyphMetrics, GlyphSheet, LayoutOptions, RowFit } from '@shared/game/language';
+import type { Block, BlockDoc, GlossaryTerm, GlyphMetrics, GlyphSheet, LayoutOptions, RowFit } from '@rotp/languages';
 
 type ChoiceKind = 'Choose' | 'Choose2' | 'Choose3';
 

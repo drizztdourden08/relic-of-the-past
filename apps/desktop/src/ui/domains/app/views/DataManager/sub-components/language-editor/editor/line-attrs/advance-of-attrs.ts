@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { LineAdvance } from '@shared/game/language';
+import type { LineAdvance } from '@rotp/languages';
 
 const rowOf = (value: unknown): 1 | 2 | 3 => {
   const row = typeof value === 'string' ? Number(value) : value;

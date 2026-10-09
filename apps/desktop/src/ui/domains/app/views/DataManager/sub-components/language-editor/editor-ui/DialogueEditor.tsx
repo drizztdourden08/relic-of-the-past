@@ -10,7 +10,7 @@ import { LineEndMarkers } from './line-end-markers';
 import { withTokenNodeView } from './token-node-view';
 import { useDialogueEditor } from './behavior/useDialogueEditor';
 import { updateEditorRuntime } from '../editor/editor-runtime';
-import type { DialogueLineView } from '@shared/game/language';
+import type { DialogueLineView } from '@rotp/languages';
 import type { GlyphFont } from './editor-ui.type';
 import { EMPTY_METRICS, PLACEHOLDER } from './DialogueEditor.constants';
 import type { DialogueEditorProps } from './DialogueEditor.type';

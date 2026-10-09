@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { LanguageSet } from '@shared/game/language';
+import type { LanguageSet } from '@rotp/languages';
 import { saveLanguageSet } from '@app/lib/storage/languages-store';
 import { SAVE_DEBOUNCE_MS } from './useSetPersistence.constants';
 

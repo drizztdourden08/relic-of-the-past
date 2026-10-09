@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { glyphIndexOf } from '@shared/game/language';
+import { glyphIndexOf } from '@rotp/languages';
 import { GlyphCell } from '../glyph';
-import type { GlyphMetrics } from '@shared/game/language';
+import type { GlyphMetrics } from '@rotp/languages';
 import { CURSOR_CHAR } from './preview.constants';
 import type { ChoiceCursorProps } from './preview.type';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { GlyphMetrics } from '@shared/game/language';
+import type { GlyphMetrics } from '@rotp/languages';
 
 const PLACEHOLDER = 'Type the line\u2026';
 

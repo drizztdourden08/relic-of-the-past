@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { PauseLabelKey } from '@shared/game/language';
+import type { PauseLabelKey } from '@rotp/languages';
 import type { NameEdit } from '../../language-editor.type';
 import { bottleContentOf } from './bottle-content-of';
 import { LABEL_PREFIX } from './variable-edits.constants';

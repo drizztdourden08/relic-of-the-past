@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { GlyphMetrics, GlyphSheet } from '@shared/game/language/layout/types';
+import type { GlyphMetrics, GlyphSheet } from '@rotp/languages';
 
 type SetFontState = {
   sheet: GlyphSheet | null;

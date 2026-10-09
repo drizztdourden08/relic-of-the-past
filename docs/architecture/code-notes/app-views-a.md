@@ -1059,7 +1059,7 @@ The refusal message is a whole sentence on purpose, because `too long` alone sou
 ### DataManager/sub-components/language-editor/sub-components/LockedEntryCard.tsx
 
 The stand in for an entry a translator must never edit, such as a choice prompt cursor frame or the extraction padding string.
-`structuralEntry` in `shared/game/language/codes/structural-entries.ts` lists them.
+`structuralEntry` in `packages/languages/src/messages/codes/structural-entries.ts` lists them.
 It uses the same row shape as a closed entry, dashed and dimmed, so the locked rows are not the loudest rows in the list.
 The reason is stated in full as the row's title, calmly, as a fact about what the entry is for.
 

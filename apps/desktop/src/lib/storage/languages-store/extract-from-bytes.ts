@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import * as languages from '@shared/storage/languages';
-import type { ExtractedPack } from '@shared/storage/languages';
+import { languages } from '@rotp/languages';
+import type { ExtractedPack } from '@rotp/languages';
 import { runOnWorker } from '../extraction-client';
 import { recompileAll } from '../assets-store';
 import { platformFiles } from '../platform-files';

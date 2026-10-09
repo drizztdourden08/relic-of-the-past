@@ -2,8 +2,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { all } from '@rotp/game-data';
 import { menuTextFor } from '@app/lib/storage/menu-text-store';
-import { buildGroups } from '@shared/game/language';
-import type { LanguageSet, TextGroupId } from '@shared/game/language';
+import { buildGroups } from '@rotp/languages';
+import type { LanguageSet, TextGroupId } from '@rotp/languages';
 import type { DecodedText } from '@app/lib/storage/menu-text-store';
 import { FIRST_GROUP, NO_LINES, NO_VALUES } from './useTextGroups.constants';
 import type { TextGroupsState } from './useTextGroups.type';

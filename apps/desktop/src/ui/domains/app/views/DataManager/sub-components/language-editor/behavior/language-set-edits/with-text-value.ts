@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { LanguageSet, TextGroupId } from '@shared/game/language';
+import type { LanguageSet, TextGroupId } from '@rotp/languages';
 
 const withTextValue = (
   set: LanguageSet,

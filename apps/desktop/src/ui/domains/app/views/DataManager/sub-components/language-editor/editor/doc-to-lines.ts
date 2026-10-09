@@ -3,7 +3,7 @@ import { advanceOfAttrs, DIALOGUE_LINE_TYPE, endsBoxOfAttrs } from './line-attrs
 import { inlineTokensOf } from './attrs-to-token';
 import { viewOfShape } from './line-shape';
 import type { JSONContent } from '@tiptap/core';
-import type { DialogueLineView, GlossaryTerm, GlyphMetrics } from '@shared/game/language';
+import type { DialogueLineView, GlossaryTerm, GlyphMetrics } from '@rotp/languages';
 
 const blocksOf = (doc: JSONContent): JSONContent[] => {
   if (doc.type === DIALOGUE_LINE_TYPE) return [doc];

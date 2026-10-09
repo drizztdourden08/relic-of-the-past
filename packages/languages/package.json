@@ -1,0 +1,20 @@
+{
+  "name": "@rotp/languages",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Language sets: the message model, compiling and the set files.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@drizztdourden08/brock-core": "^0.36.0",
+    "@rotp/asset-extraction": "workspace:*",
+    "@rotp/game-core": "workspace:*",
+    "@rotp/game-data": "workspace:*",
+    "@rotp/hub-contracts": "workspace:*",
+    "@rotp/roms": "workspace:*"
+  }
+}

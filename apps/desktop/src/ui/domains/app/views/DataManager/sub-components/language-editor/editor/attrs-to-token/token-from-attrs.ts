@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 import { stringOf } from './string-of';
 
 const numberOf = (value: unknown): number | undefined => {

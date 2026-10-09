@@ -5,7 +5,7 @@ import { Decoration, DecorationSet } from '@tiptap/pm/view';
 import { advanceOfAttrs, DIALOGUE_LINE_TYPE, endsBoxOfAttrs, toggleWaitAt } from './editor-contract';
 import { iconForCodeName } from './icon-for-token';
 import { svgForIcon } from './icon-svg';
-import type { LineAdvance } from '@shared/game/language';
+import type { LineAdvance } from '@rotp/languages';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import type { EditorState } from '@tiptap/pm/state';
 import type { EditorView } from '@tiptap/pm/view';

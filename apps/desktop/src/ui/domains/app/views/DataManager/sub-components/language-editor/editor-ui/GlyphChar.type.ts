@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { GlyphMetrics, GlyphSheet } from '@shared/game/language';
+import type { GlyphMetrics, GlyphSheet } from '@rotp/languages';
 
 type GlyphCharProps = {
   name: string;

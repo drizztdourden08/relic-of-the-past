@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import * as languages from '@shared/storage/languages';
+import { languages } from '@rotp/languages';
 import { recompileAll } from '../assets-store';
 import { platformFiles } from '../platform-files';
 

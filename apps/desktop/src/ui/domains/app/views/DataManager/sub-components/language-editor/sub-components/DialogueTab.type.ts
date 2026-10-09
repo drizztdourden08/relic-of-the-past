@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind types */
-import type {
-  DialogueEntry, GlossaryTerm, SetStructure, Variable, VariableIndex,
-} from '@shared/game/language';
+import type { DialogueEntry, GlossaryTerm, SetStructure, Variable, VariableIndex } from '@rotp/languages';
 import type { LanguageConfig } from '@rotp/asset-extraction';
-import type { GlyphMetrics, GlyphSheet } from '@shared/game/language/layout/types';
+import type { GlyphMetrics, GlyphSheet } from '@rotp/languages';
 import type { EntryIssueMap } from '../language-editor.type';
 import type { EntryDraftState } from '../behavior/useEntryDraft.type';
 import type { LayoutLookup } from '@domains/packs/language/behavior/useEntryLayout';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { advanceForNewLine } from '@shared/game/language';
-import type { LineAdvance } from '@shared/game/language';
+import { advanceForNewLine } from '@rotp/languages';
+import type { LineAdvance } from '@rotp/languages';
 import { rowOfAdvance } from './row-of-advance';
 import type { LineShape } from './line-shape.type';
 

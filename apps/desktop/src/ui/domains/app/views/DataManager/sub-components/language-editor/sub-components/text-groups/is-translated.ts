@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { TextSlot } from '@shared/game/language';
+import type { TextSlot } from '@rotp/languages';
 
 const isTranslated = (slot: TextSlot, values: Record<string, string>): boolean => {
   const own = values[slot.key];

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { lineMetrics, ROW_WIDTH_PX } from '@shared/game/language';
-import { breakLine } from '@shared/game/language/structure';
-import type { Token } from '@shared/game/language';
+import { lineMetrics, ROW_WIDTH_PX } from '@rotp/languages';
+import { breakLine } from '@rotp/languages';
+import type { Token } from '@rotp/languages';
 import type { Node as PmNode } from '@tiptap/pm/model';
 import type { Transaction } from '@tiptap/pm/state';
 import { editorRuntime } from '../editor-runtime';

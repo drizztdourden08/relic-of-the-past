@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { GlossaryTerm, Variable, VariableKind } from '@shared/game/language';
+import type { GlossaryTerm, Variable, VariableKind } from '@rotp/languages';
 
 type VariableFilter = 'all' | VariableKind;
 

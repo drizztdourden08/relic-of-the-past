@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { resolveInherited } from '@shared/game/language';
+import { resolveInherited } from '@rotp/languages';
 import { choiceOf } from './choice-of';
-import type { Block, BlockDoc, RowFit } from '@shared/game/language';
+import type { Block, BlockDoc, RowFit } from '@rotp/languages';
 import type { PreviewScreen, ScreenParams } from './preview.type';
 
 const emptySentinelBlock = (index: number): Block => ({

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { EntryIssue } from '@shared/game/language';
+import type { EntryIssue } from '@rotp/languages';
 
 const issueWords = (issue: EntryIssue): string => (
   issue.kind === 'char-not-in-alphabet'

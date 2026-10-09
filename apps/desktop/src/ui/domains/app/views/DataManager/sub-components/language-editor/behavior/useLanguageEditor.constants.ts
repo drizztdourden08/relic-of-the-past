@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { GlossaryTerm, Variable } from '@shared/game/language';
+import type { GlossaryTerm, Variable } from '@rotp/languages';
 
 const NO_VARIABLES: Variable[] = [];
 const NO_TERMS: GlossaryTerm[] = [];

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import type { LanguageSetSummary } from '@shared/storage/languages';
+import type { LanguageSetSummary } from '@rotp/languages';
 import { ImportForm } from './ImportForm';
 import { LANGUAGE_NAMES } from './language-names.constants';
 import { IL } from './LanguageManager.constants';

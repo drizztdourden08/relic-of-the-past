@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { isTranslated } from './is-translated';
-import type { TextGroup } from '@shared/game/language';
+import type { TextGroup } from '@rotp/languages';
 import type { GroupTally } from './text-groups.type';
 
 const tallyOf = (

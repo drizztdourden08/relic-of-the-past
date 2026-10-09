@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Token, Variable } from '@shared/game/language';
+import type { Token, Variable } from '@rotp/languages';
 import type { LanguageConfig } from '@rotp/asset-extraction';
 import type { GlyphFont } from './editor-ui.type';
 

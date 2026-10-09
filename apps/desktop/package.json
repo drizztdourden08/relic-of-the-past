@@ -64,6 +64,7 @@
     "@rotp/game-data": "workspace:*",
     "@rotp/hub-contracts": "workspace:*",
     "@rotp/input-mapping": "workspace:*",
+    "@rotp/languages": "workspace:*",
     "@rotp/roms": "workspace:*",
     "@tiptap/core": "^3.30.2",
     "@tiptap/extension-document": "^3.30.2",

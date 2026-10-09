@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { SetBakeInput } from '@shared/game/language';
+import type { SetBakeInput } from '@rotp/languages';
 import type { SpriteDef } from '@rotp/asset-extraction';
 import type { AssetSourceId } from '@rotp/asset-extraction';
 

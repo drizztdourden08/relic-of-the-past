@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { assets } from '@rotp/roms';
-import type { SetBakeInput } from '@shared/game/language';
-import { readLanguageSets } from '@shared/storage/assets/read-language-sets';
+import type { SetBakeInput } from '@rotp/languages';
+import { readLanguageSets } from '@rotp/languages';
 import type { AssetSourceId } from '@rotp/asset-extraction';
 import { markAssetsBaked } from '@app/stores/game-assets-store';
 import { runOnWorker } from '../extraction-client';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DialogueEntry, Token } from '@shared/game/language';
+import type { DialogueEntry, Token } from '@rotp/languages';
 
 type Draft = { tokens: Token[]; original: Token[] };
 

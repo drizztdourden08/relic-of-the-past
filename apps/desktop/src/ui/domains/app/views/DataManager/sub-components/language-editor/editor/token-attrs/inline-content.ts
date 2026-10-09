@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { JSONContent } from '@tiptap/core';
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 import { tokenToNode } from './token-to-node';
 
 const appendText = (content: JSONContent[], value: string): void => {

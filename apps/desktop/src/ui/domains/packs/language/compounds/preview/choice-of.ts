@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Block } from '@shared/game/language';
+import type { Block } from '@rotp/languages';
 import { OPTION_ROWS } from './preview.constants';
 import type { ChoiceKind, PreviewChoice } from './preview.type';
 

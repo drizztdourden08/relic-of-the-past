@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { JSONContent } from '@tiptap/core';
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 import { DIALOGUE_TOKEN_TYPE } from '../token-attrs';
 import { stringOf } from './string-of';
 import { tokenFromAttrs } from './token-from-attrs';

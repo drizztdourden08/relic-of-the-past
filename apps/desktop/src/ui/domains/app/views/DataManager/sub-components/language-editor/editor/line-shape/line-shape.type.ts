@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LineAdvance, Token } from '@shared/game/language';
+import type { LineAdvance, Token } from '@rotp/languages';
 
 type LineShape = {
   advance: LineAdvance;

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { VariableFilter } from '@domains/packs/language/compounds/variables/variable-groups';
-import type { DialogueEntry, Token, Variable } from '@shared/game/language';
+import type { DialogueEntry, Token, Variable } from '@rotp/languages';
 import type { HardcodedGroup } from './hardcoded-report';
 
 type UseVariablesTabParams = {

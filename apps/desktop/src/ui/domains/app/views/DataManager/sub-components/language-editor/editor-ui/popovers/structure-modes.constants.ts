@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
-import { STRUCTURE_MODES } from '@shared/game/language';
-import type { StructureMode } from '@shared/game/language';
+import { STRUCTURE_MODES } from '@rotp/languages';
+import type { StructureMode } from '@rotp/languages';
 import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 
 const STRUCTURE_WORDS: Record<StructureMode, string> = {

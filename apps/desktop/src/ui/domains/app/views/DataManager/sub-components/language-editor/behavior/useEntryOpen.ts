@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { useEntryDraft } from './useEntryDraft';
 import { useEntryView } from '@domains/packs/language/behavior/useEntryView';
-import type { DialogueEntry, Token } from '@shared/game/language';
+import type { DialogueEntry, Token } from '@rotp/languages';
 import type { EntryDraftState } from './useEntryDraft.type';
 import type { EntryViewMode } from '@domains/packs/language/behavior/useEntryView';
 import type { EntryOpenState } from './useEntryOpen.type';

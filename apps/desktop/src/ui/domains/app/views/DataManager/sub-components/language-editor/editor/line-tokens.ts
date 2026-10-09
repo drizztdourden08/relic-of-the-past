@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 import type { Node as PmNode } from '@tiptap/pm/model';
 import { tokenFromAttrs } from './attrs-to-token';
 

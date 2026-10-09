@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import type { NameTable } from '@shared/game/language';
+import type { NameTable } from '@rotp/languages';
 import { listProfiles } from '@app/lib/storage/profile-store';
 import { getLanguageSet } from '@app/lib/storage/languages-store';
 

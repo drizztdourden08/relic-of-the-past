@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { LanguageSet, Token } from '@shared/game/language';
+import type { LanguageSet, Token } from '@rotp/languages';
 
 const withManyEntryTokens = (
   set: LanguageSet,

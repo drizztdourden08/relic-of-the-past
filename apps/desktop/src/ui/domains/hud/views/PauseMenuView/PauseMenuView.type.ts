@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { PauseLabelKey } from '@shared/game/language';
+import type { PauseLabelKey } from '@rotp/languages';
 
 type ItemNameKey = { recordId: string; tier: number };
 

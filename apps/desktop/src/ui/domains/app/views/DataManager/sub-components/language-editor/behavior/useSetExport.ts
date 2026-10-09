@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import { RLANG_EXTENSION } from '@shared/storage/languages';
+import { RLANG_EXTENSION } from '@rotp/languages';
 import { exportLanguageSet } from '@app/lib/storage/languages-store';
 import { getPlatform } from '@drizztdourden08/brock-react';
 import type { SetExportParams } from './useSetExport.type';

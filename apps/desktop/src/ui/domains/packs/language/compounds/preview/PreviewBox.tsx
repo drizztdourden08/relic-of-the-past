@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { ROWS_PER_BOX } from '@shared/game/language';
+import { ROWS_PER_BOX } from '@rotp/languages';
 import { ChoiceCursor } from './ChoiceCursor';
 import { GlyphRow } from './GlyphRow';
 import { NO_ROWS } from './preview.constants';

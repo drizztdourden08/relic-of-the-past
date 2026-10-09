@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { TextGroup, TextGroupId } from '@shared/game/language';
+import type { TextGroup, TextGroupId } from '@rotp/languages';
 
 type TextGroupRailProps = {
   groups: TextGroup[];

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { IconifyIcon } from '@iconify/types';
-import type { GlyphMetrics, GlyphSheet, Token } from '@shared/game/language';
+import type { GlyphMetrics, GlyphSheet, Token } from '@rotp/languages';
 import type { InsertChoice } from '../sub-components/insert-menu.type';
 
 type GlyphFont = {

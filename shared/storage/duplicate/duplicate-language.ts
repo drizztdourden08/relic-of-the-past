@@ -1,8 +1,8 @@
 /* @layer shared-storage @kind logic */
-import { getSet } from '../languages/read';
-import { duplicateSet } from '../languages/create';
-import { assertValidSetId, pickFreeSetId } from '../languages/set-id';
-import { saveSet } from '../languages/write';
+import { getSet } from '@rotp/languages';
+import { duplicateSet } from '@rotp/languages';
+import { assertValidSetId, pickFreeSetId } from '@rotp/languages';
+import { saveSet } from '@rotp/languages';
 import type { DuplicateInstalled } from './duplicate.type';
 
 const duplicateLanguage: DuplicateInstalled = async (files, installedName, basedOn) => {

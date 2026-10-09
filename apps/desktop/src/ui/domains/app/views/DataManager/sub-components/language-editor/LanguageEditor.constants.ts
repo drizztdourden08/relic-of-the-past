@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { DialogueEntry } from '@shared/game/language';
+import type { DialogueEntry } from '@rotp/languages';
 
 const NO_ENTRIES: DialogueEntry[] = [];
 

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useMemo, useState } from 'react';
-import type { LanguageSet } from '@shared/game/language';
+import type { LanguageSet } from '@rotp/languages';
 import type { TranslationSearchState } from './translation-search.type';
 import { findTranslationHits } from './find-translation-hits';
 import { NO_HITS, SEARCH_DEBOUNCE_MS } from './language-behavior.constants';

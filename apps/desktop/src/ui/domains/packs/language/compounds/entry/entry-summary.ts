@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { codeInfoFor } from '@shared/game/language';
-import type { Token } from '@shared/game/language';
+import { codeInfoFor } from '@rotp/languages';
+import type { Token } from '@rotp/languages';
 import { NAME_CODE, NUMBER_CODE, PAUSE_CODE, WAIT_BUTTON_CODE } from './entry.constants';
 import type { EntryTally } from './entry.type';
 

@@ -2,7 +2,7 @@
 import { attrsForLine } from './line-attrs';
 import { inlineContent } from './token-attrs';
 import type { JSONContent } from '@tiptap/core';
-import type { DialogueLineView } from '@shared/game/language';
+import type { DialogueLineView } from '@rotp/languages';
 import { EMPTY_LINE } from './lines-to-doc.constants';
 
 const paragraphOf = (line: DialogueLineView): JSONContent => {

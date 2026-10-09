@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { codeInfoFor, isGlyphName } from '@shared/game/language';
-import type { GlossaryTerm, Token } from '@shared/game/language';
+import { codeInfoFor, isGlyphName } from '@rotp/languages';
+import type { GlossaryTerm, Token } from '@rotp/languages';
 import type { LanguageConfig } from '@rotp/asset-extraction';
 import { paramValuesFor } from './code-params';
 import { BRACKETED, CODE_ORDER, SECTION_OF_CODE } from './insert-menu.constants';

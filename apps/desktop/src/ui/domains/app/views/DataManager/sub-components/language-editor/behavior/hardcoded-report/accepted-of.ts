@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Occurrence } from '@shared/game/language';
+import type { Occurrence } from '@rotp/languages';
 import type { HardcodedGroup } from './hardcoded-report.type';
 
 const acceptedOf = (groups: HardcodedGroup[], chosen: ReadonlySet<string>): Occurrence[] =>

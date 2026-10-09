@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import { buildVariableIndex } from '@shared/game/language';
-import type { LanguageSet } from '@shared/game/language';
+import { buildVariableIndex } from '@rotp/languages';
+import type { LanguageSet } from '@rotp/languages';
 import { literalTermsOf, variablesOf } from './set-variables';
 import type { SetVariables } from './language-behavior.type';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import type { NameTable, PauseLabelKey } from '@shared/game/language';
-import { defaultPauseNames } from '@shared/game/data/pause-names';
+import type { NameTable, PauseLabelKey } from '@rotp/languages';
+import { defaultPauseNames } from '@rotp/languages';
 import { getActiveProfileId } from '@app/lib/game';
 import { loadNameTable } from './load-name-table';
 import type { LocalizedNames } from '../PauseMenuView.type';

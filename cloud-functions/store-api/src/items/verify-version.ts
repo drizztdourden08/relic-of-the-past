@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
 import { readFirstEntry } from '@rotp/hub-contracts';
-import { factsFor } from '../../../../shared/store/manifest/facts-for';
+import { factsFor } from '@rotp/languages';
 import { CONTAINER_MANIFEST } from '@rotp/hub-contracts';
 import { STORE_LIMITS } from '@rotp/hub-contracts';
 import type { KindFacts, StoreItem, StoreVersion } from '@rotp/hub-contracts';

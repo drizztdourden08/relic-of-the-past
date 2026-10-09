@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { ROW_WIDTH_PX } from '@shared/game/language';
-import type { RowFit } from '@shared/game/language';
+import { ROW_WIDTH_PX } from '@rotp/languages';
+import type { RowFit } from '@rotp/languages';
 import { NEAR_LIMIT_RATIO, NOT_MEASURED } from './entry.constants';
 import type { FitChip } from './entry.type';
 

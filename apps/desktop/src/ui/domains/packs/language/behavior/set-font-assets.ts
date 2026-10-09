@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { kLanguages } from '@rotp/asset-extraction';
-import type { SetFontBytes } from '@shared/storage/languages/types';
+import type { SetFontBytes } from '@rotp/languages';
 import type { SetFontAssets } from './language-behavior.type';
 
 const setFontAssets = (font: SetFontBytes, base: string | null): SetFontAssets | null => {

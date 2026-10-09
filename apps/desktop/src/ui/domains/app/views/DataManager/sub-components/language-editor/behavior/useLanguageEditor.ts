@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type {
-  GlossaryTerm, LanguageSet, SetStructure, TextGroupId, Token, Variable,
-} from '@shared/game/language';
+import type { GlossaryTerm, LanguageSet, SetStructure, TextGroupId, Token, Variable } from '@rotp/languages';
 import { getLanguageSet } from '@app/lib/storage/languages-store';
 import { literalTermsOf, variablesOf } from '@domains/packs/language/behavior/set-variables';
 import type { LanguageEditorState, NameEdit } from '../language-editor.type';

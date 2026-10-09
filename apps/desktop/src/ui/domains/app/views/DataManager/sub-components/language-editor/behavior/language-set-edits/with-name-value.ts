@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { LanguageSet } from '@shared/game/language';
+import type { LanguageSet } from '@rotp/languages';
 import type { NameEdit } from '../../language-editor.type';
 
 const withNameValue = (set: LanguageSet, edit: NameEdit): LanguageSet => {

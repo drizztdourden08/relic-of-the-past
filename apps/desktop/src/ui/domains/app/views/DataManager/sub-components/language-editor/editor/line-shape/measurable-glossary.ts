@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GlossaryTerm, Token } from '@shared/game/language';
+import type { GlossaryTerm, Token } from '@rotp/languages';
 
 const measurableGlossary = (tokens: Token[], glossary: GlossaryTerm[]): GlossaryTerm[] => {
   const known = new Set(glossary.map((term) => term.key));

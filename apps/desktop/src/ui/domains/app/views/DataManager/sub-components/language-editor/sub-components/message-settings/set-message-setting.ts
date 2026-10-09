@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { isSetting } from './is-setting';
 import { lastIndexOfSetting } from './last-index-of-setting';
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 
 const setMessageSetting = (tokens: Token[], name: string, param: number): Token[] => {
   const last = lastIndexOfSetting(tokens, name);

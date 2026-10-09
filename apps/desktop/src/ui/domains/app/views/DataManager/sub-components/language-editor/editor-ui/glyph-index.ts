@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { glyphIndexOf } from '@shared/game/language';
-import type { GlyphMetrics } from '@shared/game/language';
+import { glyphIndexOf } from '@rotp/languages';
+import type { GlyphMetrics } from '@rotp/languages';
 
 const pictureGlyphIndex = (name: string, metrics: GlyphMetrics | null): number | null => {
   if (metrics === null) return null;

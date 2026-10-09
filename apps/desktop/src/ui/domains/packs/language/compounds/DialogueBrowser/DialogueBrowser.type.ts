@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DialogueEntry, LanguageSet } from '@shared/game/language';
+import type { DialogueEntry, LanguageSet } from '@rotp/languages';
 import type { SetFontAssets, SetVariables } from '../../behavior/language-behavior.type';
 
 type BrowserTab = 'dialogue' | 'variables';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { layoutPlan, widthOf } from '@shared/game/language';
-import type { GlyphMetrics } from '@shared/game/language';
+import { layoutPlan, widthOf } from '@rotp/languages';
+import type { GlyphMetrics } from '@rotp/languages';
 import type { SubstitutionCells } from './substitution-cells.type';
 
 const kNameStandIn = 'PLAYER';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Token, Variable } from '@shared/game/language';
+import type { Token, Variable } from '@rotp/languages';
 
 type VariablePopoverProps = {
   label: string;

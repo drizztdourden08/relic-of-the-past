@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import * as msu from '@shared/storage/msu';
 import * as sprites from '@shared/storage/sprites';
-import * as languages from '@shared/storage/languages';
+import { languages } from '@rotp/languages';
 import { createMemFileStore } from './mem-file-store';
 
 const bytes = (n: number): Uint8Array => new Uint8Array(n).fill(1);

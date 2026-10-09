@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { isTranslated } from './is-translated';
-import type { TextGroup, TextSlot } from '@shared/game/language';
+import type { TextGroup, TextSlot } from '@rotp/languages';
 import type { SlotFilter } from './text-groups.type';
 
 const matchesQuery = (slot: TextSlot, needle: string): boolean =>

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Variable } from '@shared/game/language';
+import type { Variable } from '@rotp/languages';
 
 type VariableChoiceProps = {
   variable: Variable;

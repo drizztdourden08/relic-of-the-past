@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Occurrence, Variable } from '@shared/game/language';
+import type { Occurrence, Variable } from '@rotp/languages';
 import type { HardcodedGroup } from './hardcoded-report.type';
 
 const emptyGroup = (occurrence: Occurrence): HardcodedGroup => ({

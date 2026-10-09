@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { ProgressTone } from '@drizztdourden08/tessera/primitives';
-import type { TextLimit } from '@shared/game/language';
+import type { TextLimit } from '@rotp/languages';
 import type { SlotFit } from './text-groups.type';
 
 const variantFor = (used: number, max: number): ProgressTone => {

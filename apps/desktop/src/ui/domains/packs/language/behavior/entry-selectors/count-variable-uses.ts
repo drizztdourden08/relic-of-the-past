@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { DialogueEntry } from '@shared/game/language';
+import type { DialogueEntry } from '@rotp/languages';
 
 const countVariableUses = (entries: DialogueEntry[]): Record<string, number> => {
   const counts: Record<string, number> = {};

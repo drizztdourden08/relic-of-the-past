@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { ROW_WIDTH_PX } from '@shared/game/language/layout/types';
-import type { RowFit } from '@shared/game/language/layout/types';
+import { ROW_WIDTH_PX } from '@rotp/languages';
+import type { RowFit } from '@rotp/languages';
 
 const overflowReason = (rows: RowFit[]): string => {
   const over = rows.filter((row) => row.overflow).map((row) => row.row);

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { glyphIndexOf, widthOf } from '@shared/game/language';
-import type { GlyphMetrics } from '@shared/game/language';
+import { glyphIndexOf, widthOf } from '@rotp/languages';
+import type { GlyphMetrics } from '@rotp/languages';
 import type { CharCell } from './char-cells.type';
 
 const charCells = (text: string, metrics: GlyphMetrics | null): CharCell[] => {

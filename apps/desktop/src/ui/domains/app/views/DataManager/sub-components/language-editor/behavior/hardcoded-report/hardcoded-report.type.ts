@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Occurrence } from '@shared/game/language';
+import type { Occurrence } from '@rotp/languages';
 
 type HardcodedGroup = {
   variableKey: string;

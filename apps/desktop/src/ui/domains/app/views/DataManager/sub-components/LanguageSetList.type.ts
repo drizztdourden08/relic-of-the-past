@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LanguageSetSummary } from '@shared/storage/languages';
+import type { LanguageSetSummary } from '@rotp/languages';
 
 interface LanguageSetListProps {
   sets: LanguageSetSummary[];

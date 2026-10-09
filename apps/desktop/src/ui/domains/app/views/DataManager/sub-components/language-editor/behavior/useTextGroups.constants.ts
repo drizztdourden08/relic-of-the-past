@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { DecodedLine, TextGroupId } from '@shared/game/language';
+import type { DecodedLine, TextGroupId } from '@rotp/languages';
 
 const NO_LINES: DecodedLine[] = [];
 const NO_VALUES: Record<string, string> = {};

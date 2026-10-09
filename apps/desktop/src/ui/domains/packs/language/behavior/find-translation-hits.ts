@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { DialogueEntry, LanguageSet, Token } from '@shared/game/language';
+import type { DialogueEntry, LanguageSet, Token } from '@rotp/languages';
 import type { SearchHit } from './translation-search.type';
 import { PREVIEW_SPAN } from './language-behavior.constants';
 

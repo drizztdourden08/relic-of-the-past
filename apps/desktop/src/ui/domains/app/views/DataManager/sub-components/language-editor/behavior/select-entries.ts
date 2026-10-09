@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { contextFor } from '@rotp/game-data';
-import type { DialogueEntry } from '@shared/game/language';
+import type { DialogueEntry } from '@rotp/languages';
 import type { SelectParams } from './select-entries.type';
 
 const selectEntries = (params: SelectParams): DialogueEntry[] => {

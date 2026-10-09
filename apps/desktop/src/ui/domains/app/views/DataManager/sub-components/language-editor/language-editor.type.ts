@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind types */
-import type {
-  EntryIssue, GlossaryTerm, LanguageSet, PauseLabelKey, SetStructure, TextGroupId, Token, Variable,
-} from '@shared/game/language';
+import type { EntryIssue, GlossaryTerm, LanguageSet, PauseLabelKey, SetStructure, TextGroupId, Token, Variable } from '@rotp/languages';
 
 type EntryIssueMap = Record<number, EntryIssue[]>;
 

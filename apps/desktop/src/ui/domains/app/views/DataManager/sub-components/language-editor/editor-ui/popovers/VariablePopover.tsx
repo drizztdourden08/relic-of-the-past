@@ -6,7 +6,7 @@ import { VariableChoice } from './VariableChoice';
 import { filterVariables } from '@domains/packs/language/compounds/variables/variable-groups';
 import { tokenForVariable } from '../../sub-components/variables/variable-token';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import type { Variable } from '@shared/game/language';
+import type { Variable } from '@rotp/languages';
 import type { VariablePopoverProps } from './VariablePopover.type';
 import './VariablePopover.css';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DialogueEntry } from '@shared/game/language';
+import type { DialogueEntry } from '@rotp/languages';
 import type { EntryIssueMap } from '../language-editor.type';
 
 type SelectParams = {

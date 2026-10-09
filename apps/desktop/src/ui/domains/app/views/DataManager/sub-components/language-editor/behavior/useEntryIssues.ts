@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useMemo, useRef } from 'react';
-import type { GlossaryTerm, LanguageSet } from '@shared/game/language';
-import { validateEntry } from '@shared/game/language';
+import type { GlossaryTerm, LanguageSet } from '@rotp/languages';
+import { validateEntry } from '@rotp/languages';
 import { kLanguages } from '@rotp/asset-extraction';
 import { NO_ISSUES } from './useEntryIssues.constants';
 import type { EntryIssueMap } from '../language-editor.type';

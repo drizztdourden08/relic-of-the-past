@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { IconifyIcon } from '@iconify/types';
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 import { FALLBACK_ICON, GLOSSARY_ICON } from './icon-for-token.constants';
 import { iconForCodeName } from './icon-for-code-name';
 

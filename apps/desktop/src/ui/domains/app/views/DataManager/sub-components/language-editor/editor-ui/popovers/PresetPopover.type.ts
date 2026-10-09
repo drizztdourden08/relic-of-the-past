@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 import type { Preset } from './presets.type';
 
 type PresetPopoverProps = {

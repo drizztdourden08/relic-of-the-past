@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { VariableKind } from '@shared/game/language';
+import type { VariableKind } from '@rotp/languages';
 import type { VariableFilter } from './variables.type';
 
 const KIND_WORDS: Record<VariableKind, string> = {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GlossaryTerm, LanguageSet } from '@shared/game/language';
+import type { GlossaryTerm, LanguageSet } from '@rotp/languages';
 
 const withGlossaryTerm = (set: LanguageSet, term: GlossaryTerm): LanguageSet => {
   const at = set.glossary.findIndex((entry) => entry.key === term.key);

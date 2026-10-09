@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { mergeVariableMeta, variablesFromNameTables } from '@shared/game/language';
-import type { LanguageSet, Variable } from '@shared/game/language';
+import { mergeVariableMeta, variablesFromNameTables } from '@rotp/languages';
+import type { LanguageSet, Variable } from '@rotp/languages';
 
 const variablesOf = (
   glossary: LanguageSet['glossary'], names: LanguageSet['names'], stored: LanguageSet['variables'],

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { DialogueEntry } from '@shared/game/language';
+import type { DialogueEntry } from '@rotp/languages';
 import type { SearchHit } from '../translation-search.type';
 
 const filterEntriesByHits = (

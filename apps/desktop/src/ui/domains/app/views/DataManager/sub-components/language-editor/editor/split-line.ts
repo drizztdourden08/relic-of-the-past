@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { ROWS_PER_BOX } from '@shared/game/language';
+import { ROWS_PER_BOX } from '@rotp/languages';
 import { editorRuntime } from './editor-runtime';
 import { advanceAfterLine } from './line-shape';
 import { attrsForLine, DIALOGUE_LINE_TYPE, advanceOfAttrs, endsBoxOfAttrs } from './line-attrs';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { lineMetrics, ROW_WIDTH_PX } from '@shared/game/language';
+import { lineMetrics, ROW_WIDTH_PX } from '@rotp/languages';
 import type { Node as PmNode } from '@tiptap/pm/model';
 import { editorRuntime } from '../editor-runtime';
 import { measurableGlossary } from '../line-shape';

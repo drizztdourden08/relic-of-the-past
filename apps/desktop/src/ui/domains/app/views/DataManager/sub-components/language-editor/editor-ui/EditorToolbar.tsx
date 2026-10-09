@@ -10,7 +10,7 @@ import { ToolbarInserts } from './ToolbarInserts';
 import { hasOpenDropdown, SettingsPopover } from './popovers';
 import { useDismissOnOutside } from './behavior/useDismissOnOutside';
 import type { KeyboardEvent } from 'react';
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 import { END_BOX, REDO, SETTINGS, SETTINGS_LABEL, UNDO } from './EditorToolbar.constants';
 import type { EditorToolbarProps } from './EditorToolbar.type';
 import './EditorToolbar.css';

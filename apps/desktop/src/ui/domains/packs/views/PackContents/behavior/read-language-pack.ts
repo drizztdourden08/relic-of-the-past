@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { readRlangBytes } from '@shared/storage/languages/read-rlang-bytes';
+import { readRlangBytes } from '@rotp/languages';
 import { setFontAssets } from '../../../language/behavior/set-font-assets';
 import type { PackSource } from '../../../pack-source.type';
 import type { LanguagePack } from '../PackContents.type';

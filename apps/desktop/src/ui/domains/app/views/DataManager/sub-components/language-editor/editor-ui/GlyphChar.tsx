@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 import { Box, Canvas, Text } from '@drizztdourden08/tessera/primitives';
-import { widthOf } from '@shared/game/language';
+import { widthOf } from '@rotp/languages';
 import { isMergedSecond, mergedSecondOf } from '../editor/merged-glyph';
 import { pictureGlyphIndex } from './glyph-index';
 import { CELL_W, useGlyphCanvas } from '@domains/packs/language/compounds/glyph';
 import type { CSSProperties } from 'react';
-import type { GlyphMetrics } from '@shared/game/language';
+import type { GlyphMetrics } from '@rotp/languages';
 import type { GlyphCharProps } from './GlyphChar.type';
 import '@domains/packs/language/compounds/glyph/GlyphChar.css';
 

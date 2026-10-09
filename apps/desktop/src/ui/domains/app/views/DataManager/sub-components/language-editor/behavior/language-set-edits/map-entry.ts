@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { DialogueEntry, LanguageSet } from '@shared/game/language';
+import type { DialogueEntry, LanguageSet } from '@rotp/languages';
 
 const mapEntry = (
   set: LanguageSet,

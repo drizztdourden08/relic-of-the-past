@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
 import { Box, Canvas } from '@drizztdourden08/tessera/primitives';
-import { widthOf } from '@shared/game/language';
+import { widthOf } from '@rotp/languages';
 import { CELL_W } from './glyph.constants';
 import { useGlyphCanvas } from './behavior/useGlyphCanvas';
 import type { CSSProperties } from 'react';
-import type { GlyphMetrics } from '@shared/game/language';
+import type { GlyphMetrics } from '@rotp/languages';
 import type { GlyphCellProps } from './glyph.type';
 import './GlyphChar.css';
 

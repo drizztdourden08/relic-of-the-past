@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { encodableParams } from '@shared/game/language';
+import { encodableParams } from '@rotp/languages';
 import type { LanguageConfig } from '@rotp/asset-extraction';
 import type { Preset } from './presets.type';
 

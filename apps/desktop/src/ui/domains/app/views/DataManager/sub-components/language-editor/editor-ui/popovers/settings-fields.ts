@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { codeInfoFor } from '@shared/game/language';
+import { codeInfoFor } from '@rotp/languages';
 import { MESSAGE_SETTING_NAMES } from '../../sub-components/message-settings';
 import { paramValuesFor } from '../../sub-components/code-params';
 import { AUTO_OPTION } from './settings-fields.constants';

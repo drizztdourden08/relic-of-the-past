@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import { redo, redoDepth, undo, undoDepth } from '@tiptap/pm/history';
-import { joinLines } from '@shared/game/language';
+import { joinLines } from '@rotp/languages';
 import { updateEditorRuntime } from '../../editor/editor-runtime';
 import { toggleWaitHere } from '../../editor/toggle-wait';
 import { docToLines, linesOfTokens, linesToDoc, tokenToNode } from '../editor-contract';
@@ -10,7 +10,7 @@ import { signatureOf } from '../tokens-signature';
 import { useTokenSync } from './useTokenSync';
 import type { Editor } from '@tiptap/core';
 import type { JSONContent } from '@tiptap/core';
-import type { DialogueLineView, Token } from '@shared/game/language';
+import type { DialogueLineView, Token } from '@rotp/languages';
 import type { UseDialogueEditorParams } from './useDialogueEditor.type';
 
 const useDialogueEditor = (params: UseDialogueEditorParams) => {

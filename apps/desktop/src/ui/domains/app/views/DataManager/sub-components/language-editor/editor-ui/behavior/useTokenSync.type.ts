@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { MutableRefObject } from 'react';
 import type { Editor } from '@tiptap/core';
-import type { DialogueLineView, GlossaryTerm, GlyphMetrics, Token } from '@shared/game/language';
+import type { DialogueLineView, GlossaryTerm, GlyphMetrics, Token } from '@rotp/languages';
 
 type UseTokenSyncParams = {
   editor: Editor | null;

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { DialogueEntry, Token } from '@shared/game/language';
+import type { DialogueEntry, Token } from '@rotp/languages';
 import type { Draft, EntryDraftState } from './useEntryDraft.type';
 
 const useEntryDraft = (onCommit: (id: number, tokens: Token[]) => void): EntryDraftState => {

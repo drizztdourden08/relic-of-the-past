@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { contextFor } from '@rotp/game-data';
 import type { DialogueChoice } from '@rotp/game-data';
-import type { EntryIssue } from '@shared/game/language';
+import type { EntryIssue } from '@rotp/languages';
 import { excerptOf } from './excerpt-of';
 import { factsForEntry } from './facts-for-entry';
 import { EXCERPT_LIMIT, TRIGGER_WORDS } from './entry.constants';

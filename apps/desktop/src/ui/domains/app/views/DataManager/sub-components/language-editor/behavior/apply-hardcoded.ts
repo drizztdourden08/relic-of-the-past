@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { DialogueEntry, Occurrence, Token } from '@shared/game/language';
+import type { DialogueEntry, Occurrence, Token } from '@rotp/languages';
 import type { EntryRewrite } from './apply-hardcoded.type';
 
 const isApplicable = (occurrence: Occurrence): boolean => occurrence.match === 'exact';

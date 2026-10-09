@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { codeInfoFor, resolve } from '@shared/game/language';
-import type { Token, VariableIndex } from '@shared/game/language';
+import { codeInfoFor, resolve } from '@rotp/languages';
+import type { Token, VariableIndex } from '@rotp/languages';
 
 const unresolvedReference = (key: string): string => `{${key}}`;
 

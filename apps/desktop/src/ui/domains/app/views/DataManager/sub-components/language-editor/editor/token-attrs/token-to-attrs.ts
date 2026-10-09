@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Token } from '@shared/game/language';
+import type { Token } from '@rotp/languages';
 import { BLANK_ATTRS } from './token-attrs.constants';
 import type { DialogueTokenAttrs } from './token-attrs.type';
 

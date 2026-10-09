@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { BlockDoc } from '@shared/game/language';
+import type { BlockDoc } from '@rotp/languages';
 import type { EntryLayout, EntryViewMode } from './language-behavior.type';
 import type { TranslationSearchState } from './translation-search.type';
 

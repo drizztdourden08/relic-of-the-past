@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { Token, VariableIndex } from '@shared/game/language';
+import type { Token, VariableIndex } from '@rotp/languages';
 import { proseOf } from './entry-prose';
 
 const excerptOf = (tokens: Token[], index: VariableIndex, limit: number): string => {

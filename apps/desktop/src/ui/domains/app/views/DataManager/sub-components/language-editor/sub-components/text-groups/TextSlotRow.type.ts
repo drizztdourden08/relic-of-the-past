@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { TextSlot } from '@shared/game/language';
+import type { TextSlot } from '@rotp/languages';
 
 type TextSlotRowProps = {
   slot: TextSlot;

@@ -138,6 +138,7 @@
     "@rotp/game-data": "workspace:*",
     "@rotp/hub-contracts": "workspace:*",
     "@rotp/input-mapping": "workspace:*",
+    "@rotp/languages": "workspace:*",
     "@rotp/roms": "workspace:*",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "catalog:",

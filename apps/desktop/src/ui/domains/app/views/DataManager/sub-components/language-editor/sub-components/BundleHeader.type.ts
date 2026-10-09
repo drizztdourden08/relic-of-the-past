@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LanguageSet } from '@shared/game/language';
+import type { LanguageSet } from '@rotp/languages';
 
 type BundleHeaderProps = {
   set: LanguageSet;

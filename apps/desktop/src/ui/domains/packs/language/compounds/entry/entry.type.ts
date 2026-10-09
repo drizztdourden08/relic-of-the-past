@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { BlockDoc, DialogueEntry, EntryIssue, RowFit, Token, VariableIndex } from '@shared/game/language';
+import type { BlockDoc, DialogueEntry, EntryIssue, RowFit, Token, VariableIndex } from '@rotp/languages';
 import type { DialogueContext, TriggerSourceRow } from '@rotp/game-data';
 import type { EntryLayout, EntryViewMode } from '../../behavior/language-behavior.type';
 

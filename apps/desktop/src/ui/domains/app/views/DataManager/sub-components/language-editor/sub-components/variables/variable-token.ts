@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { NUMBER_KEY, PLAYER_NAME_KEY } from '@shared/game/language/variables';
-import type { Token, Variable } from '@shared/game/language';
+import { NUMBER_KEY, PLAYER_NAME_KEY } from '@rotp/languages';
+import type { Token, Variable } from '@rotp/languages';
 
 const tokenForVariable = (variable: Variable): Token | null => {
   if (variable.kind !== 'engine') return { t: 'ref', key: variable.key };

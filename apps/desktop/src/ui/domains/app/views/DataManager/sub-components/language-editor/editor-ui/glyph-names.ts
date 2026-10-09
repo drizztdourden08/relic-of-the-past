@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { isGlyphName } from '@shared/game/language';
+import { isGlyphName } from '@rotp/languages';
 import type { LanguageConfig } from '@rotp/asset-extraction';
 import { BRACKETED } from './glyph-names.constants';
 

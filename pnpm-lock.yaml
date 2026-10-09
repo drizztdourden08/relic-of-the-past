@@ -310,6 +310,9 @@ importers:
       '@rotp/input-mapping':
         specifier: workspace:*
         version: link:packages/input-mapping
+      '@rotp/languages':
+        specifier: workspace:*
+        version: link:packages/languages
       '@rotp/roms':
         specifier: workspace:*
         version: link:packages/roms
@@ -511,6 +514,9 @@ importers:
       '@rotp/input-mapping':
         specifier: workspace:*
         version: link:../../packages/input-mapping
+      '@rotp/languages':
+        specifier: workspace:*
+        version: link:../../packages/languages
       '@rotp/roms':
         specifier: workspace:*
         version: link:../../packages/roms
@@ -759,6 +765,9 @@ importers:
       '@rotp/hub-contracts':
         specifier: workspace:*
         version: link:../../packages/hub-contracts
+      '@rotp/languages':
+        specifier: workspace:*
+        version: link:../../packages/languages
       esbuild:
         specifier: 'catalog:'
         version: 0.25.12
@@ -837,6 +846,27 @@ importers:
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../game-data
+
+  packages/languages:
+    dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.36.0
+        version: 0.36.0
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:../asset-extraction
+      '@rotp/game-core':
+        specifier: workspace:*
+        version: link:../game-core
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../hub-contracts
+      '@rotp/roms':
+        specifier: workspace:*
+        version: link:../roms
 
   packages/roms:
     dependencies:

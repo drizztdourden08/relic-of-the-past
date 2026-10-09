@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { lineMetrics } from '@shared/game/language';
-import type { DialogueLineView, GlossaryTerm, GlyphMetrics } from '@shared/game/language';
+import { lineMetrics } from '@rotp/languages';
+import type { DialogueLineView, GlossaryTerm, GlyphMetrics } from '@rotp/languages';
 import { rowOfAdvance } from './row-of-advance';
 import { measurableGlossary } from './measurable-glossary';
 import type { LineShape } from './line-shape.type';

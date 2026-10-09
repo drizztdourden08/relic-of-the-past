@@ -2,7 +2,7 @@
 import { NodeViewWrapper } from '@tiptap/react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { codeInfoFor } from '@shared/game/language';
+import { codeInfoFor } from '@rotp/languages';
 import { GlyphChar } from './GlyphChar';
 import { iconForCodeName, GLOSSARY_ICON } from './icon-for-token';
 import { substitutionCells } from './substitution-cells';

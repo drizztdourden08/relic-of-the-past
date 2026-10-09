@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { splitLines } from '@shared/game/language';
-import type { DialogueLineView, GlossaryTerm, GlyphMetrics, Token } from '@shared/game/language';
+import { splitLines } from '@rotp/languages';
+import type { DialogueLineView, GlossaryTerm, GlyphMetrics, Token } from '@rotp/languages';
 import { measurableGlossary } from './line-shape';
 
 const linesOfTokens = (

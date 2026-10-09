@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { findHardcoded } from '@shared/game/language';
+import { findHardcoded } from '@rotp/languages';
 import { countVariableUses } from '@domains/packs/language/behavior/entry-selectors';
 import { filterVariables } from '@domains/packs/language/compounds/variables/variable-groups';
 import type { VariableFilter } from '@domains/packs/language/compounds/variables/variable-groups';
