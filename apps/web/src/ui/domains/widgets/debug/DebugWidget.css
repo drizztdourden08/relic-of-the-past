@@ -30,7 +30,6 @@
   overflow: hidden;
 }
 
-/* Zebra rows for scan-ability; tight but breathing. */
 .game-state__rows .stat-row {
   padding: var(--space-xs) var(--space-sm);
 }

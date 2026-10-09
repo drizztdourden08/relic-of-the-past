@@ -1,7 +1,5 @@
 /* @layer renderer-widgets @kind style */
 
-/* Code-editor-style log: line-number gutter + coloured tag + message, in a
-   bordered panel with its own background. */
 .sim-log {
   overflow: auto;
   padding: var(--space-sm) 0;
@@ -12,18 +10,13 @@
   font-size: var(--text-xs);
   line-height: 1.6;
   color: var(--c-text);
-
-  /* Global styles disable selection; the log must be hand-selectable + copyable. */
   user-select: text;
 }
 
-/* Force selection on every descendant too. Ancestor user-select: none rules
-   (body reset, widget frame) otherwise re-resolve `auto` children to none. */
 .sim-log * {
   user-select: text;
 }
 
-/* Higher specificity than `.sim-log *`: line numbers stay out of hand-copies. */
 .sim-log .sim-log__ln {
   user-select: none;
 }
@@ -33,7 +26,6 @@
   color: var(--c-text-faint);
 }
 
-/* Positioning context for the floating "newest" button over the scroller. */
 .sim-log-scroll {
   position: relative;
   flex: 1;
@@ -50,7 +42,6 @@
   opacity: 0.85;
 }
 
-/* Header row of the window: loads the previous slice of history. */
 .sim-log__older {
   display: flex;
   align-items: center;
@@ -63,7 +54,6 @@
   color: var(--c-text-faint);
 }
 
-/* A fixed line-number gutter, then the (indentable) content block. */
 .sim-log__row {
   display: grid;
   grid-template-columns: 4ch 1fr;
@@ -80,10 +70,9 @@
 .sim-log__ln {
   text-align: right;
   color: var(--c-text-faint);
-  user-select: none; /* keep line numbers out of hand-copied text */
+  user-select: none;
 }
 
-/* Content = tag column + message. Screen markers sit here at the base level. */
 .sim-log__content {
   display: grid;
   grid-template-columns: 10ch 1fr;
@@ -92,9 +81,6 @@
   min-width: 0;
 }
 
-/* Indent levels: Sequence at the base, big-screen Areas one in, Screen markers
-   under their area (or the sequence), and everything inside a screen one deeper
-   with a vertical guide line (stacked rows share the border). */
 .sim-log__content--lvl1 {
   margin-left: var(--space-lg);
 }
@@ -122,7 +108,6 @@
   overflow-wrap: anywhere;
 }
 
-/* ── Colour by event kind (tag strong, message tinted) ── */
 .sim-log__tag--seq      { color: var(--c-gold-bright); }
 
 .sim-log__msg--seq {
@@ -170,9 +155,7 @@
 .sim-log__tag--debug    { color: var(--c-text-faint); }
 .sim-log__msg--debug    { color: var(--c-text-faint); }
 
-/* ── Pop-out dialog ── */
 .sim-log-dialog {
-  /* Override the base .dialog max-width of 400px, because the log needs room. */
   width: min(1100px, 95vw);
   max-width: 95vw;
   height: min(82vh, 900px);
@@ -207,7 +190,6 @@
   min-height: 0;
 }
 
-/* ── Type filter dropdown ── */
 .log-filter {
   position: relative;
 }

@@ -356,3 +356,122 @@ The engine underneath already silences the last file; this hook holds which file
 ### packs/views/PackContents/behavior/usePackRead.ts
 
 A new source starts the read over, and a read that finishes after its source was replaced is dropped.
+
+## widgets
+
+### widgets/widgets.constants.ts
+
+Every widget's content by id (the ids of `WIDGET_DEFINITIONS`), for whichever shell draws it: the dock in the main window or a widget's own window. Each widget's own option rows sit beside it, keyed the same way, so the host renders them inside the standard options panel. A widget with no settings entry gets the built in rows only.
+
+### widgets/checks/ChecksWidget.tsx
+
+The shared checks tracker wired to the live tracker data. With a randomizer session loaded it shows each check's actual contents, the same as the randomizer page's spoiler tab. The tracker counts as open for as long as the widget is mounted, and the check toasts follow that.
+
+### widgets/checks/checks.constants.ts
+
+Every checks pref is keyed under the widget id `checks`, the same key the tracker data uses. The notify prefs turn the toasts for completed checks on, and keep them on while the tracker is closed. The view mode pref is the same key `useTrackerData` writes.
+
+### widgets/checks/behavior/useStickyHeader.ts
+
+The pinned header is a per profile widget pref, so the settings panel and the tracker read the same value with no event plumbing, and it survives the widget unmounting and the app closing.
+
+### widgets/debug/DebugWidget.tsx
+
+A live view of every state value the game hooks sync (mode, HUD, equipment, inventory, dungeon progress, text, map). The two toolbar buttons flip the main HUD and the pause screen between the enhanced and the original drawing, through the `hudEnhancedParts` setting.
+
+### widgets/inventory/behavior/useInventoryViewMode.ts
+
+The view mode is a per profile widget pref read by both the widget and its settings popover. It used to be one localStorage key, which made every profile share one mode and left each reader blind to the other's writes without a hand dispatched StorageEvent.
+
+### widgets/logs/behavior/useLogSelection.ts
+
+Selection works on whole lines: click selects one, ctrl or cmd click toggles, shift click extends from the last anchor. The rows are flex components that browser text selection cannot cross, so this replaces it, and a copied report holds exactly what the widget shows.
+
+### widgets/music/MusicWidget.tsx
+
+The music debugger. The live section is the pack engine's own state per session channel, with the studio's meters. Counts turns the feed into rates, so authored odds and measured odds sit on one line. Events is the feed of raises and rolls, each tagged MSU, CHIP or SKIP, so a stray sound names its exact id and owner. Mounting the widget arms the core side traces and closing it disarms them; the traces only observe.
+
+### widgets/music/behavior/useLiveChannels.ts
+
+The same store per readout arrangement as the studio's preview: the poll runs on animation frames, each store deduplicates to the precision its meters draw, and only a changed readout redraws. Stores are keyed by channel name, not the sounding id, so a readout stays subscribed across track changes. The session comes and goes with the profile and the pack, usually after the widget mounted, so it is polled with the channels.
+
+### widgets/music/behavior/useMusicDebugData.ts
+
+The traces are armed exactly while a debugger watches, because each one costs a host call per sound. Events and counters are read through `useSyncExternalStore`, so a burst of events is one render.
+
+### widgets/music/sub-components/ChannelLive.tsx
+
+A silent channel still gets a named row: a debugger asks why a channel is not playing as often as what it plays.
+
+### widgets/music/sub-components/CounterTable.tsx
+
+Running totals per sound and per roll, most recent first. A chance layer reads as tried against played, so 10 percent authored odds landing at 3 of 31 shows as exactly that. A roll row reads played over raised; a sound row reads MSU against chip.
+
+### widgets/music/sub-components/EventFeed.tsx
+
+Every raise the core reported and every roll the engine decided, newest at the bottom, each tagged with its owner. A CHIP line during a storm names the exact id to claim.
+
+### widgets/simulator/behavior/useSimulatorRun.ts
+
+The runner owns the simulator loop: it snapshots the pre run state (a Memento the Restore button returns to), forces auto skip dialog on, drives the pure engine one step at a time, runs the returned triggers through the port, and fans events out to the store, the log bus and the JSONL sink. It stops on an outcome, the Stop button, or a cap of 50000 steps.
+The run drives real checks, so SRAM disk sync is paused for its whole length; otherwise a 5 second tick could persist half simulated state to `sram.dat`. Restoring the snapshot makes it safe to sync again at once.
+The run arms the `WasmSim*` mutators (`kHostGate_SimulatorSupport`); without them every door unlock, kill drop and cell lock trigger silently does nothing. It also holds the developer tools switch for its own duration: the combat table queries that decide which enemies gate a room sit behind it, and without them every room reads as ungated and a kill gated room's shutters never reopen. The gate is read only instrumentation and the user's own setting is never touched. All three are dropped in the `finally`.
+A features word set from here is only wanted until the core latches it on its next frame (`zelda_rtl.c:989`), so the run waits 500 ms before anything reads the tables.
+A check can flip the game's progress phase, so a change is surfaced as a Sequence marker. The flood and exits lines are re emitted on entering a new screen or after an unlock reseeds the frontier (an epoch bump), so a "Reset:" line is followed by the new reachability; never after the stop target or the run's end, and never on backtrack pass through hops, where the phase stays `traversing` over explored ground.
+Stop flips the store to done at once: the loop may be mid await (a trigger and a frame wait) and would leave the status on running until its next pass. `finishRun` still runs and is idempotent.
+
+### widgets/simulator/behavior/runner-loop/fan-out-events.ts
+
+Narrative events go to the store and the log bus; every event goes to the JSONL sink. A detected check carried on an event is fed into the recorder, so unmatched checks surface as dataset suggestions: an unidentified diff records a null check id, which is what the suggestion builder looks for.
+
+### widgets/simulator/behavior/runner-loop/exits-event.ts
+
+The exits line lists detected exits with their walk step distances, the closest first evidence. `steps` and `stepsNote` are already decoded from the ordering score (`exit-order.decodeScore`); the bias must not be derived again here.
+
+### widgets/simulator/behavior/useDatasetSuggestions.ts
+
+Only check suggestions can be applied. The screen and connection channels take a typed record and allocate the id in the main process, while a suggestion carries a pre rendered code block, the very shape those channels keep out of the dataset. Until the recorder emits records, those two kinds say so plainly.
+
+### widgets/simulator/behavior/useStopAtChecks.ts
+
+The stop at check picker runs the checks widget's own snapshot pipeline (`tracker-statuses`, over the placement where nothing moved) and the shared `filterChecks`, so it offers the same search, tag, item and status filters as the checks widget.
+
+### widgets/simulator/behavior/log-events/classify-event.ts
+
+The order of the tests matters: specific prefixes come before the broad flood match, so "Unlock! re-flooding" is an unlock, not a flood line.
+
+### widgets/simulator/behavior/log-events/compute-indents.ts
+
+Sequence markers and the final outcome sit at the base; an "Area" marker (a big multi sub screen group) opens one level in until "Leaving area"; screen markers sit one under their area (or the sequence outside areas); everything inside a screen goes one deeper.
+
+### widgets/simulator/behavior/log-events/to-log-rows.ts
+
+Line numbers are the event's position in the run (1 to N), never the engine step, which repeats. Position rows drop the START or END prefix because the tag already says it.
+
+### widgets/simulator/sub-components/LogDialog.tsx
+
+The modal is the only place the log is read: the widget column is too narrow, so the widget itself shows only a button with the live event count. Kinds are filtered before the indents are computed, so hiding a marker type re levels the rows under it.
+
+### widgets/simulator/sub-components/ResultsPanel.tsx
+
+Reaching the configured stop check and completing the goal both read as success; only `not-completable` is a failure, with a softlock summary. "Reveal log file" opens the run's JSONL on disk, which is not the in app log dialog.
+
+### widgets/simulator/sub-components/RunTrail.tsx
+
+The route the run walked, in order, with the checks each stop earned: the event log says what happened, the trail says where the run went. Stops come from the engine's own current screen, so the trail cannot disagree with the run.
+
+### widgets/simulator/sub-components/trail-haul.ts
+
+A trail stop records the check tally on arrival, so the checks it earned are the next stop's arrival tally minus its own. The last stop has no successor and is closed against the live tally.
+
+### widgets/simulator/sub-components/SimulatorWidgetSettings.tsx
+
+The screen limit here is the same widget pref the run controls edit, so a change in either place shows in the other.
+
+### widgets/simulator/sub-components/SimLog.css
+
+Global styles turn text selection off, and ancestor `user-select: none` rules (the body reset, the widget frame) make `auto` children resolve to none, so selection is forced on for the log and every descendant. Line numbers stay unselectable so they never land in a hand copy. The dialog overrides the base dialog's 400px max width because the log needs room.
+
+### widgets/simulator/sub-components/StopAtCheckPicker/StopAtCheckPicker.constants.ts
+
+No shared per kind icon set exists elsewhere, so the check kind glyphs live here. Their keys follow the `CheckKind` union in `shared/game/data`.

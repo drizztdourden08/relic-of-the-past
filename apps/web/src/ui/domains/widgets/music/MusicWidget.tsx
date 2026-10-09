@@ -1,15 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The music debugger: everything the game's audio is doing, live, in one place.
- *
- * LIVE is the engine's own state: every session channel with the studio's meters, progress,
- * loops, waits and fades. COUNTS turns the feed into rates, so authored odds and measured odds
- * sit on one line. EVENTS is the feed of raises and rolls, each tagged MSU / CHIP / SKIP, so a
- * stray sound names the exact id and owner.
- *
- * Mounting the widget arms the core-side traces; closing it disarms them. The traces are
- * observational only; nothing about what plays changes.
- */
 import { Box, Button, EmptyState, SectionHeader } from '@ds/primitives';
 import { useLiveChannels } from './behavior/useLiveChannels';
 import { useMusicDebugData } from './behavior/useMusicDebugData';

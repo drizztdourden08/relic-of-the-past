@@ -1,18 +1,8 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The rolling feed: every raise the core reported and every roll the engine decided, newest at
- * the bottom, each line tagged with who produced it. This is the ground truth for "what just
- * made that sound". A CHIP line during a storm names the exact id to claim.
- */
 import { useEffect, useRef } from 'react';
 import { Badge, Box, EmptyState, ScrollArea, Text } from '@ds/primitives';
-import type { BadgeVariant } from '@ds/primitives/Badge/Badge.type';
-import type { MusicDebugEvent, MusicDebugOwner } from '@app/lib/game/music-debug';
-
-const OWNER_LABELS: Record<MusicDebugOwner, string> = { pack: 'MSU', chip: 'CHIP', skipped: 'SKIP' };
-const OWNER_VARIANTS: Record<MusicDebugOwner, BadgeVariant> = {
-  pack: 'success', chip: 'warning', skipped: 'neutral',
-};
+import type { MusicDebugEvent } from '@app/lib/game/music-debug';
+import { OWNER_LABELS, OWNER_VARIANTS } from '../music.constants';
 
 const timeOf = (at: number): string => {
   const date = new Date(at);

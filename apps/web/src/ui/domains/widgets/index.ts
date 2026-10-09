@@ -7,5 +7,4 @@ export { NavigationWidgetContent, NavigationWidgetSettings, LiveDataInspectorCon
 export { CheatsWidgetContent } from './cheats';
 export { SimulatorWidgetContent, SimulatorWidgetSettings } from './simulator';
 export { MusicWidgetContent } from './music';
-export { WIDGET_SETTINGS_CONTENT } from './widget-settings-content';
-export { WIDGET_CONTENT } from './widget-content';
+export { WIDGET_CONTENT, WIDGET_SETTINGS_CONTENT } from './widgets.constants';

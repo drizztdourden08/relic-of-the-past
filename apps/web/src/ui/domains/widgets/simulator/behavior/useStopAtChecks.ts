@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind hook */
-/**
- * Data + filter state for the stop-at-check picker. Runs the checks widget's own snapshot
- * pipeline (tracker/tracker-statuses.ts, over the placement where nothing moved) and reuses the
- * shared `filterChecks` helper + `FilterState` so the picker offers the same search / tag / item
- * / status filtering the checks widget does.
- */
 import { useState, useEffect, useMemo } from 'react';
 import type { CheckStatus } from '@shared/game/logic';
 import { normalPlacement } from '@app/lib/game/tracker/normal-placement-ref';
@@ -17,14 +11,7 @@ import {
   onInventoryChanged, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks,
 } from '@app/lib/game';
-
-const EMPTY_FILTER: FilterState = {
-  searchQuery: '',
-  activeFacets: [],
-  tagMode: 'any',
-  itemFilter: 'all',
-  statusFilter: 'all',
-};
+import { EMPTY_FILTER } from '../SimulatorWidget.constants';
 
 const useStopAtChecks = () => {
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);

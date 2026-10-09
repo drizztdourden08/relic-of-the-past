@@ -1,17 +1,8 @@
 /* @layer renderer-widgets @kind component */
-/**
- * Log entry point. The widget container is far too narrow to read a log in, so
- * there is no inline preview: just a button (with the live event count) that
- * opens the full log dialog.
- */
 import { useState } from 'react';
 import { Box, Text, Button } from '@ds/primitives';
-import type { SimEvent } from '@shared/game/simulation';
 import { LogDialog } from './LogDialog';
-
-interface EventLogProps {
-  events: SimEvent[];
-}
+import type { EventLogProps } from '../SimulatorWidget.type';
 
 const EventLog = (props: EventLogProps) => {
   const { events } = props;

@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * Content for the Logs widget.
- * Adapts the existing log-bus subscription into widget content form. Rows keep their
- * component structure; selection works on whole lines (click, ctrl-click, shift-click)
- * and the toolbar copies everything, the selection, or the error lines.
- */
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box } from '../../../design-system/primitives/Box';
 import { Text } from '../../../design-system/primitives/Text';
@@ -30,7 +24,6 @@ const LogsWidgetContent = () => {
     });
   }, []);
 
-  // Auto-scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [entries]);

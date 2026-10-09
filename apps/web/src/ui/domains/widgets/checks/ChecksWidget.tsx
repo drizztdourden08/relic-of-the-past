@@ -1,10 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * ChecksWidget: the Checks widget's content. The shared ChecksTracker
- * compound, wired to the live tracker data. With a randomizer session loaded
- * the same component shows each check's ACTUAL contents, which is what the
- * randomizer page's spoiler tab shows too.
- */
 import { useEffect } from 'react';
 import { ChecksTracker } from '@domains/app/compounds/ChecksTracker';
 import { useTrackerPresenceStore } from '@app/stores/tracker-presence-store';
@@ -19,7 +13,6 @@ const ChecksWidgetContent = () => {
   } = useTrackerData({ prefKey: 'checks' });
   const [stickyHeader] = useStickyHeader();
   const setOpen = useTrackerPresenceStore((s) => s.setOpen);
-  // On screen for as long as this is mounted: the check toasts follow it.
   useEffect(() => {
     setOpen(true);
     return () => setOpen(false);

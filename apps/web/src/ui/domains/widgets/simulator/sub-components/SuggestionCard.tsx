@@ -1,22 +1,8 @@
 /* @layer renderer-widgets @kind component */
-/**
- * One dataset suggestion: kind badge, the observed reason, a code block ready to
- * write, and an Apply button that routes through the screen-editor writer IPC.
- */
 import { useState } from 'react';
 import { Box, Badge, Button, Text, Tooltip } from '@ds/primitives';
-import type { DatasetSuggestion } from '@shared/game/simulation';
-import type { ApplyResult } from '../behavior/useDatasetSuggestions';
-
-interface SuggestionCardProps {
-  suggestion: DatasetSuggestion;
-  canApplyCheck: boolean;
-  onApply: (suggestion: DatasetSuggestion) => Promise<ApplyResult>;
-}
-
-type ApplyState = 'idle' | 'applying' | 'applied' | 'error';
-
-const CHECK_DISABLED_HINT = 'Check writing is not available in this build.';
+import { CHECK_DISABLED_HINT } from '../SimulatorWidget.constants';
+import type { ApplyState, SuggestionCardProps } from '../SimulatorWidget.type';
 
 const SuggestionCard = (props: SuggestionCardProps) => {
   const { suggestion, canApplyCheck, onApply } = props;

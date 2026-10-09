@@ -1,5 +1,4 @@
 /* @layer renderer-widgets @kind logic */
-/** The clipboard form of log entries, line for line as the widget shows them. */
 import { formatTime } from './formatTime';
 import type { LogEntry } from '../../../../../lib/log-bus';
 

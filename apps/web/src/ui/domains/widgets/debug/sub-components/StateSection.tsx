@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Box, SectionHeader, StatRow } from '../../../../design-system/primitives';
-import type { StateSectionData } from '../behavior/build-state-sections';
+import type { StateSectionData } from '../DebugWidget.type';
 
 const StateSection = (props: StateSectionData) => {
   const { title, rows } = props;

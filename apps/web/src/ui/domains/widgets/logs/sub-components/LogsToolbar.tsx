@@ -1,14 +1,7 @@
 /* @layer renderer-widgets @kind component */
-/** Copy actions for the logs widget: everything, the current line selection, or errors only. */
 import { Box } from '../../../../design-system/primitives/Box';
 import { Button } from '../../../../design-system/primitives/Button';
-
-interface LogsToolbarProps {
-  selectionCount: number;
-  onCopyAll: () => void;
-  onCopySelection: () => void;
-  onCopyErrors: () => void;
-}
+import type { LogsToolbarProps } from '../logs.type';
 
 const LogsToolbar = ({ selectionCount, onCopyAll, onCopySelection, onCopyErrors }: LogsToolbarProps) => (
   <Box className="logs-widget__toolbar">

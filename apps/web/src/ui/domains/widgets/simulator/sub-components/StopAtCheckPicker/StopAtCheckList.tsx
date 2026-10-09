@@ -1,20 +1,7 @@
 /* @layer renderer-widgets @kind component */
-/**
- * The scrollable, filtered list of checks in the stop-at-check picker. Each row
- * shows the check's type icon, name and id; a leading "No stop" row clears the
- * selection back to a full run.
- */
 import { Box, Button, Text } from '@ds/primitives';
-import type { CheckId, CheckRecord } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic';
-import { checkTypeIcon } from './check-type-icons';
-
-interface StopAtCheckListProps {
-  checks: CheckRecord[];
-  selectedId: CheckId | '';
-  statuses: Map<string, CheckStatus>;
-  onSelect: (id: CheckId | '') => void;
-}
+import { checkTypeIcon } from './behavior/check-type-icon';
+import type { StopAtCheckListProps } from './StopAtCheckPicker.type';
 
 const StopAtCheckList = (props: StopAtCheckListProps) => {
   const { checks, selectedId, statuses, onSelect } = props;

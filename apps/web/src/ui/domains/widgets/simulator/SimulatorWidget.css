@@ -11,8 +11,6 @@
   color: var(--c-text);
 }
 
-/* ─── Controls ─── */
-
 .simulator__controls {
   display: flex;
   flex-direction: column;
@@ -24,8 +22,6 @@
   flex-wrap: wrap;
   gap: var(--space-sm);
 }
-
-/* ─── Progress ─── */
 
 .simulator__progress {
   display: flex;
@@ -56,8 +52,6 @@
   color: var(--c-text);
   overflow-wrap: anywhere;
 }
-
-/* ─── Run trail ─── */
 
 .simulator__trail {
   display: flex;
@@ -108,10 +102,6 @@
   color: var(--c-text-muted);
 }
 
-/* ─── Log entry point ───
-   No inline feed: the widget column is too narrow to read a log in, so this is
-   just the button that opens the dialog, with the live event count as a pill. */
-
 .simulator__log {
   display: flex;
   flex-direction: column;
@@ -138,8 +128,6 @@
   color: var(--c-text-muted);
   padding: var(--space-sm);
 }
-
-/* ─── Results ─── */
 
 .simulator__results {
   display: flex;
@@ -218,8 +206,6 @@
   font-weight: var(--weight-semi);
   color: var(--c-text);
 }
-
-/* ─── Suggestion card ─── */
 
 .simulator__suggestion {
   display: flex;

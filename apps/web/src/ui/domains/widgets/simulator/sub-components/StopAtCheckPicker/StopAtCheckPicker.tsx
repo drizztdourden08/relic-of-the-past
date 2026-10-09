@@ -1,11 +1,4 @@
 /* @layer renderer-widgets @kind component */
-/**
- * Stop-at-check picker. A checks-widget-style popover over the "Stop at check"
- * control. A trigger button shows the current selection (type icon + name);
- * clicking it opens an anchored panel with the shared search / tag / item /
- * status filters and a scrollable, icon-tagged list of checks. Selecting a row
- * (or the "No stop (full run)" row) calls onStopAtChange and closes the panel.
- */
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { Box, Button, Portal, Text } from '@ds/primitives';
 import { getCheck } from '@shared/game/data';
@@ -13,20 +6,9 @@ import type { CheckId } from '@shared/game/data';
 import { useStopAtChecks } from '../../behavior/useStopAtChecks';
 import { StopAtCheckFilters } from './StopAtCheckFilters';
 import { StopAtCheckList } from './StopAtCheckList';
-import { checkTypeIcon } from './check-type-icons';
+import { checkTypeIcon } from './behavior/check-type-icon';
+import type { PanelPos, StopAtCheckPickerProps } from './StopAtCheckPicker.type';
 import './StopAtCheckPicker.css';
-
-interface StopAtCheckPickerProps {
-  stopAtCheckId: CheckId | '';
-  onStopAtChange: (id: CheckId | '') => void;
-  disabled: boolean;
-}
-
-interface PanelPos {
-  top: number;
-  left: number;
-  width: number;
-}
 
 const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
   const { stopAtCheckId, onStopAtChange, disabled } = props;
