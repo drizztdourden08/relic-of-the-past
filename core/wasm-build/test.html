@@ -150,7 +150,7 @@
         onRuntimeInitialized: () => {
           window.wasmDebugCall = (name, ...args) =>
             wasmModule.ccall(name, 'number', args.map(() => 'number'), args);
-          status.textContent = 'Running!';
+          status.textContent = 'Running.';
           if (stateData) {
             const resetTestState = () => {
               wasmModule.ccall('WasmLoadState', null, ['number'], [99]);

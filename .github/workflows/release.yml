@@ -50,7 +50,7 @@ jobs:
         id: resolve
         run: |
           RAW="${{ inputs.version }}"
-          TAG="v${RAW#v}"            # accept 0.9.0 or v0.9.0 → v0.9.0
+          TAG="v${RAW#v}"            # accept 0.9.0 or v0.9.0, both become v0.9.0
           if [ ! -f "release-notes/$TAG.md" ]; then
             echo "::error::Missing release-notes/$TAG.md on ${{ github.ref_name }}. Commit the notes first, since the release body comes from them."
             exit 1
@@ -308,7 +308,7 @@ jobs:
           if [ "${{ inputs.full_installer }}" = "true" ]; then FULL="--full"; fi
           node scripts/build/pack-velopack.mjs --pack-dir release/win/win-unpacked --out release/win $FULL
 
-      # The download people actually run: ~600 KB, fetches the payload above and
+      # The download people run: ~600 KB, fetches the payload above and
       # installs it. Built every release, full or not, so the permanent
       # releases/latest/download link always resolves to the current stub. It needs
       # MSVC, which windows-latest already has.
