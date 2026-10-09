@@ -1681,6 +1681,38 @@ whole because its source and shows switch carries phrases, and a wrapping `Segme
 be a new F2. A jsdom `window` with an `api` proxy satisfies modules `glyph-art` reaches at import
 (the log bus, a device store); the measurement still runs in real Chromium.
 
+### hud/hud-inspector-geometry
+
+The behaviour half of phases 5 and 6 of the inspector UX review: what each geometry control
+writes and refuses to write. Typing drives a real `input` event through React's own value setter,
+the only way past the controlled value cache, because an emptied field deleting a key is a claim
+about an event handler. Placement mounts the parent's `GridEditor` (§48), whose modifiers ask the
+platform for the primary modifier, so the platform provider is part of the chain.
+
+- A node's position is `margin.left` and `margin.top`, and one function (`behavior/offset.ts`)
+  writes it. Zero means wherever the parent put it, so it deletes instead of writing 0, and a
+  round trip back to the origin leaves the document as found. §37 had the stage's nudge and the
+  field compose to the same write; §44 moved the stage writer into a gesture hook, §46 back into
+  `StageSelection`, and §47 removed the drag, so the field is the only writer and a grep stops a
+  second appearing.
+- `order` is gone from Placement because the outline is the ordering control; its prose still
+  says why. A band moves by writing its cell (`place`), the same patch as any grid child (§42
+  retired the nine anchor `Select`); §50 put that gesture on the child's own `CellPicker`. Under
+  a flex parent the cell group stays visible under a scrim stating the reason and offering the
+  parent's Layout, because a property that vanishes when a switch flips stops being trusted.
+  Self alignment is two axes under a grid (`alignSelf` speaks for both alone; `justifySelf` takes
+  the inline one back for a corner cell) and one under flex; the labels are shorter than §42.4's
+  (align down, align across) because the child's name is in the heading and the old label wrapped
+  at 220px.
+- A limit is cleared by emptying its field, which deletes the key (a present undefined key
+  survives JSON as a key, and `min.w = 0` is a different document); the last axis drops the
+  group. §36.9 deferred this here.
+- In the box model, margin left and top are read only because Placement owns them; the other
+  edges are ordinary. A lone `-` does not commit, or a negative margin could never be typed.
+- The screen root cannot be given a size by any path: size and limits sit under one inert scrim
+  saying it is always exactly the view, all four margins and the scale are locked, and padding
+  stays live.
+
 ### hud/hud-inspector-geometry-width
 
 Phases 5 and 6 of the inspector UX review, measured at 289 / 232 / 188 px with the stylesheets
