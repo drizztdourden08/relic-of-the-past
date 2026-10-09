@@ -2,10 +2,9 @@
 import { CAPACITY_FAMILY_IDS } from '@rotp/game-data';
 import type { CapacityBonusSetting } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import { CAPACITY_FAMILY_INDEX } from '@rotp/randomizer';
+import { CAPACITY_FAMILY_INDEX, CAPACITY_BONUS_BIT } from '@rotp/randomizer';
 import { setCapacityHalf } from '../gate-word-5';
 import { getModule } from '@rotp/game-core';
-import { CAPACITY_BONUS_BIT } from '@rotp/randomizer';
 
 const setCapacityBonus = (setting: CapacityBonusSetting): void => {
   const mod = getModule();

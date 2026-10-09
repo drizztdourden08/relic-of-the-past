@@ -1,8 +1,7 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import type { Device } from '@rotp/hub-contracts';
-import { listDevices, revokeDevice } from '@rotp/hub-client';
-import { errorMessage } from '@rotp/hub-client';
+import { listDevices, revokeDevice, errorMessage } from '@rotp/hub-client';
 
 const useDevices = () => {
   const [devices, setDevices] = useState<Device[] | null>(null);

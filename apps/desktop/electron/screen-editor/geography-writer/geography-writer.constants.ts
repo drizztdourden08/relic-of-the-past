@@ -1,6 +1,5 @@
 /* @layer electron-main @kind constants */
-import { serializeAreaRecord, serializeLocationRecord } from '@rotp/game-data';
-import { areaRecordFile, locationRecordFile } from '@rotp/game-data';
+import { serializeAreaRecord, serializeLocationRecord, areaRecordFile, locationRecordFile } from '@rotp/game-data';
 import type { AreaRecord, LocationRecord } from '@rotp/game-data';
 import type { RecordWriterSpec } from '../dataset-record-writer';
 

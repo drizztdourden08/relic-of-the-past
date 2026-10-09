@@ -1,9 +1,7 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import type { SimSprite, SimObservation } from '@rotp/navigation';
-import { createEngineState } from '@rotp/navigation';
-import { discoverTargets } from '@rotp/navigation';
-import { emptySnapshot } from '@rotp/navigation';
+import { createEngineState, discoverTargets, emptySnapshot } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { HEAD_SCREEN, SOUTH_SCREEN } from './discover.constants';
 import { allReachable } from './all-reachable';

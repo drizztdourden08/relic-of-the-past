@@ -2,14 +2,12 @@
 import type { SimulatorPort } from '@rotp/navigation';
 import type { RoomSectionSplit } from '@rotp/game-core';
 import type { ItemId } from '@rotp/game-data';
-import { captureStateBuffer, loadStateFromBuffer, reassertFeatureFlags, deliveryQueue, setSimulatorSupport } from '..';
+import { captureStateBuffer, loadStateFromBuffer, reassertFeatureFlags, deliveryQueue, setSimulatorSupport, wasmGetRoomTagsFor, wasmGetSpriteCombat, wasmGetCombatTables, wasmGetRoomLayoutInfo, roomSectionSplitFrom } from '..';
 import { setAutoSkipDialogOverride, setDeveloperToolsOverride } from '@rotp/game-core';
 import { onItemReceived } from '../tracker';
 import { observe } from './observe';
 import { getScreenGrids } from '../flood';
-import { getRoomChests, getRoomSprites, getOverworldSprites, getRoomDoors } from '@rotp/navigation';
-import { wasmGetRoomTagsFor, wasmGetSpriteCombat, wasmGetCombatTables, wasmGetRoomLayoutInfo, roomSectionSplitFrom } from '..';
-import { trigger } from '@rotp/navigation';
+import { getRoomChests, getRoomSprites, getOverworldSprites, getRoomDoors, trigger } from '@rotp/navigation';
 
 const setAutoSkipDialog = (on: boolean | null): void => {
   setAutoSkipDialogOverride(on);

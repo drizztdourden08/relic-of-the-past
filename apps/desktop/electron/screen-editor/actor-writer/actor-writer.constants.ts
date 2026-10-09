@@ -1,6 +1,5 @@
 /* @layer electron-main @kind constants */
-import { serializeActorRecord } from '@rotp/game-data';
-import { actorRecordFile } from '@rotp/game-data';
+import { serializeActorRecord, actorRecordFile } from '@rotp/game-data';
 import type { ActorRecord } from '@rotp/game-data';
 import type { RecordWriterSpec } from '../dataset-record-writer';
 

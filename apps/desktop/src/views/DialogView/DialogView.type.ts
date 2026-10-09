@@ -1,6 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { BoxPlacement } from '@rotp/game-data';
-import type { DialogFrame } from '@rotp/game-data';
+import type { BoxPlacement, DialogFrame } from '@rotp/game-data';
 import type { CssRect } from '../../compounds/DialogBox';
 
 interface DialogGeometry {

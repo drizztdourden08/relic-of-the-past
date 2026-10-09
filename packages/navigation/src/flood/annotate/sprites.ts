@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ScreenAnnotation } from '../../simulation';
-import type { SimSprite } from '../../simulation';
+import type { ScreenAnnotation, SimSprite } from '../../simulation';
 import { checkForStandingItem } from '../../simulation';
 import { npcCheckFor } from './npc-checks';
 import { standingItemId } from '../../simulator/sprite-kinds';

@@ -1,8 +1,6 @@
 /* @layer tests @kind helper */
-import { pondSettingForMode } from '@rotp/randomizer';
-import { LEGACY_POND_SETTING } from '@rotp/randomizer';
-import type { CapacityPondSelection } from '@rotp/randomizer';
-import type { PondMode } from '@rotp/randomizer';
+import { pondSettingForMode, LEGACY_POND_SETTING } from '@rotp/randomizer';
+import type { CapacityPondSelection, PondMode } from '@rotp/randomizer';
 import type { FamilyMode } from './capacity-pond-rule.type';
 import { profileOf } from './profile-of';
 

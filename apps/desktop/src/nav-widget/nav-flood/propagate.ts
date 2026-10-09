@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import { buildScreenBundle } from '@rotp/game-data';
-import type { ScreenBundleGrid } from '@rotp/game-data';
-import type { TileReq } from '@rotp/game-data';
+import type { ScreenBundleGrid, TileReq } from '@rotp/game-data';
 import { computeBigScreenGroup } from '../widget-helpers';
 import { propagateArea } from '../../game/flood';
 import type { PropagateCtx, ScreenResponse } from './nav-flood.type';

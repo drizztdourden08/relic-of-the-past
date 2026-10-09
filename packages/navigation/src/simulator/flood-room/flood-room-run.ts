@@ -1,10 +1,9 @@
 /* @layer bridge-wasm @kind logic */
-import { wasmGetRoomLayoutInfo } from '@rotp/game-core';
+import { wasmGetRoomLayoutInfo, readMapState } from '@rotp/game-core';
 import { floodOneScreen } from '../../flood/flood-area/flood-one-screen';
 import { roomEntrances } from '../../flood/room-entrances/room-entrances';
 import type { GridPos } from '@rotp/game-core';
 import type { TileReq } from '@rotp/game-data';
-import { readMapState } from '@rotp/game-core';
 import type { RoomFloodRun } from './flood-room.type';
 
 const liveIntraEdges = (roomId: number) => {

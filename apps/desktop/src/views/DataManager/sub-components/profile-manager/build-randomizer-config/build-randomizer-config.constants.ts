@@ -1,17 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE } from '@rotp/randomizer';
-import { DEFAULT_POND_PROFILES } from '@rotp/randomizer';
-import { defaultShopScope } from '@rotp/randomizer';
-import { DEFAULT_DARK_ROOM_SETTING } from '@rotp/randomizer';
-import { defaultDifficulty } from '@rotp/randomizer';
-import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';
-import { defaultProgressiveSetting } from '@rotp/randomizer';
-import { defaultProgressiveModes } from '@rotp/randomizer';
-import { defaultRetroBow } from '@rotp/randomizer';
-import { DEFAULT_ACCESSIBILITY } from '@rotp/randomizer';
-import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@rotp/randomizer';
-import { DEFAULT_DUNGEON_ITEM_SETTING } from '@rotp/randomizer';
-import { DEFAULT_STORY_GATES } from '@rotp/randomizer';
+import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE, DEFAULT_POND_PROFILES, defaultShopScope, DEFAULT_DARK_ROOM_SETTING, defaultDifficulty, DEFAULT_ITEM_POWER, defaultProgressiveSetting, defaultProgressiveModes, defaultRetroBow, DEFAULT_ACCESSIBILITY, INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY, DEFAULT_DUNGEON_ITEM_SETTING, DEFAULT_STORY_GATES } from '@rotp/randomizer';
 import { EMPTY_SERVER_SETUP } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { baselineSwitch } from './baseline-switch';
 import type { RandomizerFormState } from './build-randomizer-config.type';

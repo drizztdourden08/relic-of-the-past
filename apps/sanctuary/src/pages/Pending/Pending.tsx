@@ -2,12 +2,8 @@
 import { useCallback, useState } from 'react';
 import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { Stack, Button, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import { SiteFrame } from '@rotp/design';
-import { Gate } from '@rotp/design';
-import { ProviderButton } from '@rotp/design';
-import { useSessionContext } from '@rotp/design';
-import { recheckAccess } from '@rotp/hub-client';
-import { errorMessage } from '@rotp/hub-client';
+import { SiteFrame, Gate, ProviderButton, useSessionContext } from '@rotp/design';
+import { recheckAccess, errorMessage } from '@rotp/hub-client';
 import './Pending.css';
 
 const Pending = () => {

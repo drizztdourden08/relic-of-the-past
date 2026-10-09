@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { GOAL_CHECK } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
-import type { CheckReporterDeps } from '@rotp/randomizer';
+import type { LocationKey, CheckReporterDeps } from '@rotp/randomizer';
 
 const createCheckReporter = (deps: CheckReporterDeps) => {
   const { room, maps, goal, send } = deps;

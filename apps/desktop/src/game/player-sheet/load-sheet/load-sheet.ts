@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import type { PlayerSheet, SheetPalette } from '@rotp/game-data';
 import { readLinkSprite } from '@app/storage/link-sprites-store';
-import { parseRsp, isRspName } from '@rotp/packs';
-import { parseZspr } from '@rotp/packs';
+import { parseRsp, isRspName, parseZspr } from '@rotp/packs';
 
 const loadSheet = async (name: string, stockPalette?: SheetPalette): Promise<PlayerSheet | null> => {
   const bytes = await readLinkSprite(name);

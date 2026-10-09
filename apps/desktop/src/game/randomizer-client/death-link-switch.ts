@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { createDeathLink } from './death-link';
-import type { DeathLink } from '@rotp/randomizer';
-import type { DeathLinkSwitch, DeathLinkSwitchDeps } from '@rotp/randomizer';
+import type { DeathLink, DeathLinkSwitch, DeathLinkSwitchDeps } from '@rotp/randomizer';
 
 const createDeathLinkSwitch = (deps: DeathLinkSwitchDeps): DeathLinkSwitch => {
   const { core } = deps;

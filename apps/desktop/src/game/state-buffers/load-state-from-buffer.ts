@@ -1,16 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-import { checkLoadable, stripStamp } from '@rotp/game-core';
+import { checkLoadable, stripStamp, getModule, isCoreReady, reassertAfterSaveLoad, markStateLoaded, unlinkScratchFile, SCRATCH_SLOT } from '@rotp/game-core';
 import { log } from '../../log-bus';
-import { getModule } from '@rotp/game-core';
-import { isCoreReady } from '@rotp/game-core';
 import { pollInventoryState } from '../tracker';
 import { reassertLiveFlagsAfterLoad } from '../live-settings';
 import { requestLocationRebaseline } from '../randomizer-client/location-poller';
-import { reassertAfterSaveLoad } from '@rotp/game-core';
-import { markStateLoaded } from '@rotp/game-core';
 import { resumeDialogAfterLoad } from '../state-dialog';
-import { unlinkScratchFile } from '@rotp/game-core';
-import { SCRATCH_SLOT } from '@rotp/game-core';
 
 const loadStateFromBuffer = (buffer: ArrayBuffer, slot = SCRATCH_SLOT): boolean => {
   if (!isCoreReady()) {

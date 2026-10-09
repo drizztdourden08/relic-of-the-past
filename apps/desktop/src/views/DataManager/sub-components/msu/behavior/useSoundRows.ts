@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
 import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
-import { soundsOfChannel, soundName } from '@rotp/game-data';
-import { ambientRole, isAmbientReachable } from '@rotp/game-data';
+import { soundsOfChannel, soundName, ambientRole, isAmbientReachable } from '@rotp/game-data';
 import { SOUND_ID_COUNT } from '@rotp/hub-contracts';
 import { soundDefsOfChannel } from './sound-manifest';
 import { soundHexId } from '../sound-labels';

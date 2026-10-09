@@ -2,8 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import { onOnlineNotice } from '@rotp/randomizer';
-import type { ApServerPacket } from '@rotp/randomizer';
-import type { OnlineNotice } from '@rotp/randomizer';
+import type { ApServerPacket, OnlineNotice } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeRoom } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';

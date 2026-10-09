@@ -1,11 +1,7 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import type { SimObservation, FlagSnapshot } from '@rotp/navigation';
-import type { SimTarget } from '@rotp/navigation';
-import { emptySnapshot } from '@rotp/navigation';
-import { chestKey } from '@rotp/navigation';
-import { BOMBABLE_ATTR_MIN } from '@rotp/navigation';
-import { updateDungeonLedger } from '@rotp/navigation';
+import type { SimObservation, FlagSnapshot, SimTarget } from '@rotp/navigation';
+import { emptySnapshot, chestKey, BOMBABLE_ATTR_MIN, updateDungeonLedger } from '@rotp/navigation';
 import { dungeonGroupOf, dungeonGroupForScreen } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import { CASTLE_SCREEN, SEWERS_PALACE, SEWERS_ROOM, SEWERS_SCREEN } from './dungeon-ledger.constants';

@@ -1,13 +1,7 @@
 /* @layer test @kind constants */
 import { resolve } from 'node:path';
-import { generatePlacement } from '@rotp/randomizer';
-import { buildOptionsSnapshot } from '@rotp/randomizer';
-import { POND_INSTANCES } from '@rotp/randomizer';
-import { pondCertifiedSpotsOf } from '@rotp/randomizer';
-import { SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@rotp/randomizer';
-import type { Placement } from '@rotp/randomizer';
-import type { OptionValue } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
+import { generatePlacement, buildOptionsSnapshot, POND_INSTANCES, pondCertifiedSpotsOf, SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@rotp/randomizer';
+import type { Placement, OptionValue, LocationKey } from '@rotp/randomizer';
 
 const ROOT = resolve(__dirname, '../../..');
 const NONE: ReadonlySet<LocationKey> = new Set();

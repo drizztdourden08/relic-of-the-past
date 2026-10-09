@@ -1,9 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { cheatSetHealth, cheatSetMaxHealth, cheatKillAllEnemies, cheatRefillMagic, cheatSetIgnoreCollision, getIgnoreCollisionEnabled } from '@rotp/game-core';
+import { cheatSetHealth, cheatSetMaxHealth, cheatKillAllEnemies, cheatRefillMagic, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, getProfileId, setTurboHeld } from '@rotp/game-core';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
 import { liveSettingsNow } from '@app/game/live-settings';
-import { getProfileId } from '@rotp/game-core';
-import { setTurboHeld } from '@rotp/game-core';
 import type { InputManager } from './input-manager';
 import { FULL_HEALTH } from '@rotp/input-mapping';
 import { cycleActiveProfile } from './cycle-active-profile';

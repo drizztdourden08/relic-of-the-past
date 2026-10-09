@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { optionCatalog } from '@rotp/randomizer';
-import { STORY_GATE_OPTION_SEEDS } from '@rotp/randomizer';
+import { optionCatalog, STORY_GATE_OPTION_SEEDS } from '@rotp/randomizer';
 import type { OptionDef } from '@rotp/randomizer';
 
 const STORY_GATES_TITLE = 'Story gates';

@@ -2,8 +2,7 @@
 import { getPlatform } from '@drizztdourden08/brock-react';
 import { readJson } from '@drizztdourden08/brock-core';
 import type { SlotRecord } from '@rotp/game-core';
-import { gearOwnershipState } from '@rotp/game-core';
-import { gearOwnershipPath } from '@rotp/game-core';
+import { gearOwnershipState, gearOwnershipPath } from '@rotp/game-core';
 import { applyTiers } from './apply-tiers';
 
 const initGearOwnership = (id: string | null): void => {

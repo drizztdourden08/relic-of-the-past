@@ -1,8 +1,6 @@
 /* @layer renderer-hooks @kind logic */
-import { POND_PRICE_LADDER } from '@rotp/randomizer';
-import { asksOnlyRupees } from '@rotp/randomizer';
-import type { CurveId } from '@rotp/randomizer';
-import type { PondSetting } from '@rotp/randomizer';
+import { POND_PRICE_LADDER, asksOnlyRupees } from '@rotp/randomizer';
+import type { CurveId, PondSetting } from '@rotp/randomizer';
 import type { PondRowState } from '@app/compounds/WishingPondRow';
 
 const askPart = (state: PondRowState, start: number, max: number) => {

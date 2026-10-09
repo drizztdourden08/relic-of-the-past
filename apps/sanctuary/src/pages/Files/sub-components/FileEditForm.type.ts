@@ -1,6 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
-import type { PatchFileBody } from '@rotp/hub-contracts';
+import type { FileType, SanctuaryFile, PatchFileBody } from '@rotp/hub-contracts';
 
 type FileEditFormProps = {
   file: SanctuaryFile;

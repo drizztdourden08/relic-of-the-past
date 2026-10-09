@@ -1,6 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import { brightness, flashOn, logoAlpha, phaseOf, sceneAlpha, swordShown, triforceShown } from '@rotp/game-data';
-import { SWORD_REST_BASE } from '@rotp/game-data';
+import { brightness, flashOn, logoAlpha, phaseOf, sceneAlpha, swordShown, triforceShown, SWORD_REST_BASE } from '@rotp/game-data';
 import type { TitleFrameInput } from './choreography.type';
 import { drawSword } from './draw-sword';
 import { drawTriforce } from './draw-triforce';

@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useRef } from 'react';
 import { measureRows, splitBlocks, splitLines, splitScreens } from '@rotp/languages';
-import type { DialogueEntry, GlossaryTerm, Token } from '@rotp/languages';
-import type { GlyphMetrics } from '@rotp/languages';
+import type { DialogueEntry, GlossaryTerm, Token, GlyphMetrics } from '@rotp/languages';
 import { EMPTY_LAYOUT } from './language-behavior.constants';
 import type { EntryLayout, LayoutLookup } from './language-behavior.type';
 

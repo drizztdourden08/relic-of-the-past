@@ -1,6 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { ConnectionRecord, ConnectionTag, ScreenId, ScreenRecord } from '@rotp/game-data';
-import type { ConnectionNavData } from '@rotp/game-data';
+import type { ConnectionRecord, ConnectionTag, ScreenId, ScreenRecord, ConnectionNavData } from '@rotp/game-data';
 import type { RoomStairInfo } from '../../game';
 
 interface ConnectionDraft {

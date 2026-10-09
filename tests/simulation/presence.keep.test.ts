@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { PresenceCondition } from '@rotp/game-data';
+import type { PresenceCondition, ItemId } from '@rotp/game-data';
 import type { PresenceGameState } from '@rotp/navigation';
 import { evaluatePresence, BOSS_DEAD_BIT } from '@rotp/navigation';
-import type { ItemId } from '@rotp/game-data';
 
 const baseState = (partial: Partial<PresenceGameState> = {}): PresenceGameState => ({
   progressFlags: 0,

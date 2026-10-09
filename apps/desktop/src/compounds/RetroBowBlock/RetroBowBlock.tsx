@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import { OptionValueTag } from '../OptionValueTag';
-import { FINAL_FIGHT_SILVER_HITS } from '@rotp/randomizer';
-import { tickedIndexesOf } from '@rotp/randomizer';
-import { RETRO_BOW_KEY, RETRO_SILVER_COST_KEY, RETRO_WOOD_COST_KEY } from '@rotp/randomizer';
-import { retroCostCeilingsOf } from '@rotp/randomizer';
-import { optionByKey } from '@rotp/randomizer';
+import { FINAL_FIGHT_SILVER_HITS, tickedIndexesOf, RETRO_BOW_KEY, RETRO_SILVER_COST_KEY, RETRO_WOOD_COST_KEY, retroCostCeilingsOf, optionByKey } from '@rotp/randomizer';
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { ceilingNote } from './behavior/ceiling-note';

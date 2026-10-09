@@ -9,7 +9,7 @@ export { retroShotWalletNeed } from './retro-shot-wallet-need';
 export { retroWalletNeed } from './retro-wallet-need';
 export { heldRetroBow } from './held-retro-bow';
 export { retroCostCeilingsOf } from './retro-cost-ceiling';
-export type { RetroCostCeilings } from './retro.type';
+export type { RetroCostCeilings, RetroBowSetting } from './retro.type';
 export {
   RETRO_OPTION_DESCRIPTIONS, RETRO_OPTION_KEYS, RETRO_OPTION_SEEDS, isRetroOptionKey,
 } from './retro-options.data';
@@ -26,4 +26,3 @@ export {
   canAffordQuiverAndShots, canAffordShots, canBuyQuiver, canHoldQuiver, canReachQuiverShelf,
 } from './retro-logic';
 export type { RetroShelfStock } from './retro-shops';
-export type { RetroBowSetting } from './retro.type';

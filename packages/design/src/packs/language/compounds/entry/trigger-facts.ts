@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { find, getItemByGameId } from '@rotp/game-data';
-import { gameIdLabel } from '@rotp/game-data';
+import { find, getItemByGameId, gameIdLabel } from '@rotp/game-data';
 import type { TriggerSourceRow } from '@rotp/game-data';
 import { NO_FACTS } from './entry.constants';
 import type { TriggerFacts } from './entry.type';

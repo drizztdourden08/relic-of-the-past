@@ -1,9 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import * as msuStore from '@app/storage/msu-store';
-import { effectivePackManifest } from '@rotp/msu';
+import { effectivePackManifest, groupVolume } from '@rotp/msu';
 import { liveSettingsNow } from '../live-settings';
 import { startMsuSession } from '../msu-session';
-import { groupVolume } from '@rotp/msu';
 import type { PackSessionInput, Settings } from '@rotp/msu';
 
 const readTrackBytes = async (packName: string, fileName: string): Promise<Uint8Array | null> => {

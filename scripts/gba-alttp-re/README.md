@@ -3,7 +3,7 @@
 This directory is an isolated research toolchain for the **A Link to the Past** half of
 `The Legend of Zelda: A Link to the Past & Four Swords`. It does not cover the Four
 Swords multiplayer game and is deliberately separate from the production SNES asset
-extractor in `shared/asset-extraction`.
+extractor in `packages/asset-extraction/src`.
 
 The intended output is semantic room, entity, text, item, and graphics data that can
 eventually be translated into the existing zelda3-derived structures. ROM bytes,
@@ -46,10 +46,10 @@ the port:
 
 | Semantic concept | Current implementation |
 | --- | --- |
-| Room header and three object layers | `shared/asset-extraction/extraction/room-extractor.ts` |
-| Object and door decoding | `shared/asset-extraction/extraction/room-object-decoder.ts` |
-| Sprite spawn lists | `shared/asset-extraction/compile-dungeons.ts` |
-| Secrets, chests, pits, entrances | `shared/asset-extraction/extraction/` |
+| Room header and three object layers | `packages/asset-extraction/src/extraction/room-extractor.ts` |
+| Object and door decoding | `packages/asset-extraction/src/extraction/room-object-decoder.ts` |
+| Sprite spawn lists | `packages/asset-extraction/src/compile-dungeons.ts` |
+| Secrets, chests, pits, entrances | `packages/asset-extraction/src/extraction/` |
 | Runtime room consumption | `core/zelda3/src/dungeon.c` and `core/zelda3/src/sprite.c` |
 
 The GBA extractor should initially emit a neutral JSON record with equivalent fields.

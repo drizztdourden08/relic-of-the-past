@@ -1,9 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { pendingPartnerId, pendingPartnerScreenId, registerRecord } from '@rotp/game-data';
-import { connectionRecordFile } from '@rotp/game-data';
-import type { ConnectionKind, ConnectionRecord, ScreenId } from '@rotp/game-data';
-import type { PendingConnectionRecord } from '@rotp/game-data';
+import { pendingPartnerId, pendingPartnerScreenId, registerRecord, connectionRecordFile } from '@rotp/game-data';
+import type { ConnectionKind, ConnectionRecord, ScreenId, PendingConnectionRecord } from '@rotp/game-data';
 import { EMPTY_PLACEMENT, NO_SOURCE_FILE } from '../DataInspector.constants';
 import { registerIdRefOption } from './register-id-ref-option';
 import { resolveRecordLabel } from './record-links';

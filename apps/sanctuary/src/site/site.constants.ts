@@ -1,6 +1,5 @@
 /* @layer sanctuary-site @kind constants */
-import { SANCTUARY_RIGHTS } from '@rotp/hub-contracts';
-import { STORE_RIGHTS } from '@rotp/hub-contracts';
+import { SANCTUARY_RIGHTS, STORE_RIGHTS } from '@rotp/hub-contracts';
 import type { SiteDefinition } from '@rotp/design';
 import { SiteDataProvider } from '../data/SiteDataProvider';
 import { SearchResults } from '../search/SearchResults/SearchResults';

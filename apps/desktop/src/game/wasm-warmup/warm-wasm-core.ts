@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { loadGlueScript } from '@rotp/game-core';
+import { loadGlueScript, warmupState } from '@rotp/game-core';
 import { loadWasmBytes } from './load-wasm-bytes';
-import { warmupState } from '@rotp/game-core';
 import type { WarmReport } from '@rotp/game-core';
 
 const warmWasmCore = (report: WarmReport): Promise<void> => {

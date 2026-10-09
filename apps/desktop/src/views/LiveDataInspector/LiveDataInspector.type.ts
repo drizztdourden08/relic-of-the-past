@@ -1,11 +1,8 @@
 /* @layer renderer-widgets @kind types */
 import type { CompactRecordViewProps } from '@drizztdourden08/tessera/composites';
-import type { ConnectionRecord, EntityKind, EntityRecordMap, ReviewMark, ScreenGameId, ScreenId, ScreenSpawn } from '@rotp/game-data';
-import type { PalaceMismatch } from '@rotp/game-data';
-import type { ScreenMatchResult } from '@rotp/game-data';
-import type { ConnectionInfo } from '@rotp/game-core';
+import type { ConnectionRecord, EntityKind, EntityRecordMap, ReviewMark, ScreenGameId, ScreenId, ScreenSpawn, PalaceMismatch, ScreenMatchResult } from '@rotp/game-data';
+import type { ConnectionInfo, LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveSpriteObservation, LiveWalkBoundary, ObservedCrossing, ObservedTransition, SpriteCombatObservation } from '@rotp/game-core';
 import type { Difference, Recommendation, RecommendationAction } from '@rotp/navigation';
-import type { LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveSpriteObservation, LiveWalkBoundary, ObservedCrossing, ObservedTransition, SpriteCombatObservation } from '@rotp/game-core';
 
 type LiveRecord = EntityRecordMap[EntityKind];
 

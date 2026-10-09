@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import { upgradeItemOfName } from '@rotp/game-data';
-import { progressiveCapacityFamilyOf } from '@rotp/game-data';
+import { upgradeItemOfName, progressiveCapacityFamilyOf } from '@rotp/game-data';
 import { PROGRESSION_ITEMS, USEFUL_ITEMS } from '../world/pool/item-classes.constants';
 import { itemKeyOfName } from '../world/display-names/item-key-name';
 import { DUNGEON_ITEM_RE, PROGRESSIVE_PREFIX } from './receipt-text.constants';

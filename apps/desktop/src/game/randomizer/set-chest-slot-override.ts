@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { isArmableOverrideId } from '@rotp/randomizer';
-import { getModule } from '@rotp/game-core';
-import { setItemOverridesActive } from '@rotp/game-core';
+import { getModule, setItemOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const setChestSlotOverride = (roomId: number, slot: number, newItem: number, messageId = -1): void => {

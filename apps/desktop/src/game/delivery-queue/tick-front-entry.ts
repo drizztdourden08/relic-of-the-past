@@ -1,11 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { executeEntry } from '@rotp/randomizer';
-import { DELIVERY_COOLDOWN, REFUSAL_RETRY_COOLDOWN, REFUSAL_WARN_EVERY } from '@rotp/randomizer';
-import { canReceive } from '@rotp/randomizer';
-import { fireComplete } from '@rotp/randomizer';
-import { notify } from '@rotp/randomizer';
-import { queueState } from '@rotp/randomizer';
+import { executeEntry, DELIVERY_COOLDOWN, REFUSAL_RETRY_COOLDOWN, REFUSAL_WARN_EVERY, canReceive, fireComplete, notify, queueState } from '@rotp/randomizer';
 
 const tickFrontEntry = (): void => {
   if (queueState.queue.length === 0) return;

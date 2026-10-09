@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
 import { parseSlotData } from '@rotp/randomizer';
-import type { ApConnectedPacket } from '@rotp/randomizer';
-import type { OnlineContext } from '@rotp/randomizer';
+import type { ApConnectedPacket, OnlineContext } from '@rotp/randomizer';
 
 const storeSlot = (ctx: OnlineContext, packet: ApConnectedPacket): string | null => {
   const { room, names } = ctx;

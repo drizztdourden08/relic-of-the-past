@@ -1,6 +1,5 @@
 /* @layer renderer-hooks @kind logic */
-import type { PondDemandView } from '@rotp/randomizer';
-import type { PondPlan } from '@rotp/randomizer';
+import type { PondDemandView, PondPlan } from '@rotp/randomizer';
 import type { PondCharge } from './pond-preview.type';
 
 const pondChargesOf = (plan: PondPlan, demands: PondDemandView): readonly PondCharge[] =>

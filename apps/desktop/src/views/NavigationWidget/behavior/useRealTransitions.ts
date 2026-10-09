@@ -1,8 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
 import { collectRealTransitions } from '@rotp/navigation';
-import type { ConnectionInfo } from '@rotp/game-core';
-import type { ObservedTransition } from '@rotp/game-core';
+import type { ConnectionInfo, ObservedTransition } from '@rotp/game-core';
 
 const useRealTransitions = (
   isIndoors: boolean,

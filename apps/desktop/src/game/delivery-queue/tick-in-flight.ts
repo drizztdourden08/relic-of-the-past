@@ -1,12 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { isReceiptGrant } from '@rotp/randomizer';
+import { isReceiptGrant, DELIVERY_TIMEOUT_FRAMES, canReceive, fireComplete, queueState, releaseInFlight } from '@rotp/randomizer';
 import type { DeliveryEntry } from '@rotp/randomizer';
-import { DELIVERY_TIMEOUT_FRAMES } from '@rotp/randomizer';
-import { canReceive } from '@rotp/randomizer';
-import { fireComplete } from '@rotp/randomizer';
-import { queueState } from '@rotp/randomizer';
-import { releaseInFlight } from '@rotp/randomizer';
 
 const tickInFlight = (delivering: DeliveryEntry): void => {
   queueState.deliveringFrames++;

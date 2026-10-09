@@ -1,9 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { CURRENT_STATE_FORMAT, appendStamp, readSnapshotBytes, readStamp } from '@rotp/game-core';
+import { CURRENT_STATE_FORMAT, appendStamp, readSnapshotBytes, readStamp, stateStampState, STAMP_VERSION, UNKNOWN_APP_VERSION } from '@rotp/game-core';
 import { log } from '../../log-bus';
-import { stateStampState } from '@rotp/game-core';
-import { STAMP_VERSION, UNKNOWN_APP_VERSION } from '@rotp/game-core';
 
 const appVersion = async (): Promise<string> => {
   if (stateStampState.cachedVersion === null) {

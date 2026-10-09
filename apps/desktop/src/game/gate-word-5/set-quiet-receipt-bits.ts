@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { QUIET_RECEIPT_KINDS } from '@rotp/game-data';
 import type { QuietReceiptKind } from '@rotp/game-data';
-import { QUIET_RECEIPT_BITS } from '@rotp/randomizer';
-import { gateWord5State } from '@rotp/randomizer';
+import { QUIET_RECEIPT_BITS, gateWord5State } from '@rotp/randomizer';
 import { writeGateWord5 } from './write-gate-word-5';
 
 const setQuietReceiptBits = (on: Readonly<Record<QuietReceiptKind, boolean>>): void => {

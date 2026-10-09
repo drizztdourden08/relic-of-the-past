@@ -4,12 +4,9 @@ import { resolve } from 'node:path';
 import { expect, it } from 'vitest';
 import { find } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
-import { computePlacementAvailability } from '@rotp/randomizer';
-import { buildNormalPlacement } from '@rotp/randomizer';
-import { computeCompletedChecks } from '@rotp/navigation';
-import { PROGRESS_OFFSETS } from '@rotp/game-core';
-import { SRM_EVENT_LEDGER } from '@rotp/game-core';
-import { inventoryToItemSet, parseInventoryBuffer } from '@rotp/navigation';
+import { computePlacementAvailability, buildNormalPlacement } from '@rotp/randomizer';
+import { computeCompletedChecks, inventoryToItemSet, parseInventoryBuffer } from '@rotp/navigation';
+import { PROGRESS_OFFSETS, SRM_EVENT_LEDGER } from '@rotp/game-core';
 import { Core } from '../story-events/core-harness';
 import { CORPUS_SEEDS, ROOT, corpusSaves } from './corpus';
 

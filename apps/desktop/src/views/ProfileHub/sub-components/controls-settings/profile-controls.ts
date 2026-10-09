@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { resolveDeviceControls } from '@rotp/input-mapping';
-import { resolveDeviceFromEntry } from '@rotp/input-mapping';
-import { recallControllerSdlType } from '@rotp/input-mapping';
+import { resolveDeviceControls, resolveDeviceFromEntry, recallControllerSdlType } from '@rotp/input-mapping';
 import { padHex } from './pad-hex';
 import { ALL_AXES, ALL_BUTTONS } from './controls-settings.constants';
 import type { ResolvedControl, SdlGamepadType } from '@rotp/input-mapping';

@@ -1,9 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { screenRecordFile } from '@rotp/game-data';
-import { variantBlockers } from '@rotp/game-data';
-import type { ScreenRecord } from '@rotp/game-data';
-import type { PendingScreenRecord } from '@rotp/game-data';
+import { screenRecordFile, variantBlockers } from '@rotp/game-data';
+import type { ScreenRecord, PendingScreenRecord } from '@rotp/game-data';
 import type { RecordWriter } from '../../DataInspector.type';
 import { pathOf } from './path-of';
 import { settleWrite } from './settle-write';

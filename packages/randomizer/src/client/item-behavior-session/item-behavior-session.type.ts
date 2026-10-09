@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type { StoryGateSetting } from '../../world/story-gates/story-gate.type';
-import type { DarkRoomSetting } from '@rotp/game-core';
-import type { ItemPowerSetting } from '@rotp/game-core';
+import type { DarkRoomSetting, ItemPowerSetting } from '@rotp/game-core';
 import type { RetroBowSetting } from '../../world/retro/retro.type';
 import type { RetroShelfStock } from '../../world/retro/retro-shops';
 import type {

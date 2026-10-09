@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier } from '@rotp/randomizer';
-import { HEART_CAP_KEY, difficultyCopiesKeyOf } from '@rotp/randomizer';
-import { PROGRESSIVE_FAMILIES } from '@rotp/randomizer';
-import { progressiveFamilyName } from '@rotp/randomizer';
-import { tickedCountOf } from '@rotp/randomizer';
-import { optionByKey } from '@rotp/randomizer';
+import { COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier, HEART_CAP_KEY, difficultyCopiesKeyOf, PROGRESSIVE_FAMILIES, progressiveFamilyName, tickedCountOf, optionByKey } from '@rotp/randomizer';
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import {

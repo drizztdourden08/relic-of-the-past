@@ -9,8 +9,7 @@ import { StageSelection } from './StageSelection';
 import { useMotionPreview } from '../behavior/motion-preview';
 import { GROUND_TILE } from '../HudLayoutEditor.constants';
 import { TILE } from './EditorStage.constants';
-import type { HudContainer } from '@rotp/hud';
-import type { PlacedNode } from '@rotp/hud';
+import type { HudContainer, PlacedNode } from '@rotp/hud';
 import type { EditorStageProps } from './EditorStage.type';
 
 const isContainer = (node: PlacedNode['node'] | undefined): node is HudContainer =>

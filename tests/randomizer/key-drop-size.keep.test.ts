@@ -1,9 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import { getCheck, getDungeon } from '@rotp/game-data';
-import { generatePlacement } from '@rotp/randomizer';
-import { buildOptionsSnapshot } from '@rotp/randomizer';
-import { KEY_DROP_LOCATIONS } from '@rotp/randomizer';
+import { generatePlacement, buildOptionsSnapshot, KEY_DROP_LOCATIONS } from '@rotp/randomizer';
 import type { CheckId } from '@rotp/game-data';
 
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };

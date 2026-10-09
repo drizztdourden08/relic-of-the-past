@@ -1,21 +1,12 @@
 /* @layer renderer-lib @kind logic */
-import type { InputProfile } from '@rotp/input-mapping';
+import type { InputProfile, DetectedDevice, PauseListener, RawInputListener, AllowedDevices, DeviceScopedMap, ActiveProfileListener, DeviceChangeListener, InputStateListener } from '@rotp/input-mapping';
 import type { SnesButton } from '@rotp/game-data';
 import type { FunctionMapping, FunctionAction } from '@rotp/features';
-import type { DetectedDevice } from '@rotp/input-mapping';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { controllerInputStore } from '../controller-input-store';
 import type { ControllerInputState } from '../controller-input-store';
-import { wasmSetPaused } from '@rotp/game-core';
-import { suspendAudio, resumeAudio } from '@rotp/game-core';
-import { PauseManager } from '@rotp/input-mapping';
-import type { PauseListener } from '@rotp/input-mapping';
-import { FunctionActionEngine } from '@rotp/input-mapping';
-import { RawInputDispatcher } from '@rotp/input-mapping';
-import type { RawInputListener } from '@rotp/input-mapping';
-import type { AllowedDevices } from '@rotp/input-mapping';
-import type { DeviceScopedMap } from '@rotp/input-mapping';
-import type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from '@rotp/input-mapping';
+import { wasmSetPaused, suspendAudio, resumeAudio } from '@rotp/game-core';
+import { PauseManager, FunctionActionEngine, RawInputDispatcher } from '@rotp/input-mapping';
 import { startInput } from './start-input';
 import { stopInput } from './stop-input';
 import { refreshInputDevices } from './refresh-input-devices';

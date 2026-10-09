@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { EXTRA_GLYPHS } from '@rotp/game-data';
-import { extraGlyphTiles } from '@rotp/game-data';
+import { EXTRA_GLYPHS, extraGlyphTiles } from '@rotp/game-data';
 import type { ExtraGlyphSlot } from '@rotp/game-data';
 import { ENTRY_BYTES, TILE_OFFSET } from './extra-glyphs.constants';
 

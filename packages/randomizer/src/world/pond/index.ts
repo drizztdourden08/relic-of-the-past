@@ -20,7 +20,7 @@ export {
   POND_ASK_ROW_BY_KIND, POND_BOMB_STOPS, POND_BOTTLE_ROW, POND_BOTTLE_STOPS, asksOnlyRupees,
   pondRupeesOnlyAsk,
 } from './pond-ask.data';
-export type { PondAskRow, PondCurrencyRow } from './pond.type';
+export type { PondAskRow, PondCurrencyRow, PondAskRange, PondField, ParsedPondSetting, ParsedPondProfiles, RupeeDenomination, HeldPondSetting, PondCeilings } from './pond.type';
 export type {
   PondAskAmountKind, PondAskCurrency, PondAskSetting, PondBottleAsk, PondDemandView,
 } from './pond-ask.type';
@@ -35,31 +35,24 @@ export { HOLDABLE_CATEGORIES, UNHELD_ITEMS } from './holdable-items.constants';
 export { DEMAND_ITEM_ORDER, DEMAND_ITEM_RANK } from './pond-demand-order.data';
 export { rollPondDemands } from './pond-demand-roll';
 export { amountAt, curvePositionsOf, stopIndexOf } from './pond-demand-ramp';
-export type { PondAskRange } from './pond.type';
 export { POND_SHARE_KEY, effectivePondProfiles, readsPondShare } from './pond-share';
 export {
   POND_FIELDS, POND_MODE_KEYS, POND_OPTION_KEYS, isPondValueKey, pondIdOfModeKey, pondKeyOf, pondModeKeyOf,
 } from './pond-option-keys';
-export type { PondField } from './pond.type';
 export { customPricesOf, pondPlanOf, rungOf } from './pond-plan';
 export { parsePondSetting, pondSettingFromSnapshot, pondValuesOf } from './pond-from-snapshot';
-export type { ParsedPondSetting } from './pond.type';
 export {
   parsePondProfiles, pondProfileValuesOf, pondProfilesFromSnapshot,
 } from './pond-profiles-from-snapshot';
-export type { ParsedPondProfiles } from './pond.type';
 export type { PondProfiles } from './pond-profiles.type';
 export {
   POND_CERTIFIED_SPOTS, isPondDeliverable, isPondExtraLocation, pondCertifiedSpotsOf, pondPrizeLocations,
   presentPondSlots,
 } from './pond-spots';
 export { POND_GEM_SLOTS, RUPEE_DENOMINATIONS } from './rupee-gems.data';
-export type { RupeeDenomination } from './pond.type';
 export { decomposeRupees, describeRupees, rupeeVolleysOf } from './rupee-gems';
 export { holdPondToWallet, pondCeilingRungOf, pondWalletTopOf } from './pond-wallet-top';
-export type { HeldPondSetting } from './pond.type';
 export { VANILLA_POND_CEILINGS, pondCeilingsOf } from './pond-ceilings';
-export type { PondCeilings } from './pond.type';
 export type {
   PondCustomSetting, PondFixedSetting, PondMode, PondPlan, PondSetting, PondThrow,
 } from './pond-profile.type';

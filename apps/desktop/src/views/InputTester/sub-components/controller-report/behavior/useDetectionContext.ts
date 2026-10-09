@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import { recallControllerSdlType } from '@rotp/input-mapping';
-import { recallControllerName } from '@rotp/input-mapping';
+import { recallControllerSdlType, recallControllerName } from '@rotp/input-mapping';
 import { controllerInputStore } from '@app/input/controller-input-store';
 import { RAW_LOG_TAIL } from '../controller-report.constants';
 import type { DetectionContext } from '../controller-report.type';

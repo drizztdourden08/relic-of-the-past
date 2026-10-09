@@ -1,10 +1,7 @@
 /* @layer test @kind test */
 import { it, expect, beforeEach } from 'vitest';
-import { findOne } from '@rotp/game-data';
-import type { ScreenRecord } from '@rotp/game-data';
-import type { ScreenMatchResult } from '@rotp/game-data';
-import { getScreenLookup } from '@rotp/game-data';
-import { clearPalaceMismatches, getPalaceMismatches, scanForRoom } from '@rotp/game-data';
+import { findOne, getScreenLookup, clearPalaceMismatches, getPalaceMismatches, scanForRoom } from '@rotp/game-data';
+import type { ScreenRecord, ScreenMatchResult } from '@rotp/game-data';
 import { describeDataset } from '../../../dataset-guard';
 import { WRONG_PALACE } from './screen-strategy-parity.constants';
 import { contextFor } from './context-for';

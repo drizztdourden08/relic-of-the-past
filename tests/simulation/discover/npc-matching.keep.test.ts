@@ -1,9 +1,7 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import type { SimSprite, SimObservation } from '@rotp/navigation';
-import type { PresenceGameState } from '@rotp/navigation';
-import { discoverTargets } from '@rotp/navigation';
-import { emptySnapshot } from '@rotp/navigation';
+import type { SimSprite, SimObservation, PresenceGameState } from '@rotp/navigation';
+import { discoverTargets, emptySnapshot } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { HOUSE_ROOM, PASSAGE_ROOM } from './discover.constants';
 import { baseObs } from './base-obs';

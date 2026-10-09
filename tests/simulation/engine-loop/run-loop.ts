@@ -1,8 +1,6 @@
 /* @layer tests @kind helper */
 import type { ConnectionRecord, CheckId } from '@rotp/game-data';
-import { createEngine } from '@rotp/navigation';
-import { createEngineState } from '@rotp/navigation';
-import { buildAdjacency } from '@rotp/navigation';
+import { createEngine, createEngineState, buildAdjacency } from '@rotp/navigation';
 import { STEP_LIMIT } from './engine-loop.constants';
 import type { FakeWorld } from './fake-world';
 

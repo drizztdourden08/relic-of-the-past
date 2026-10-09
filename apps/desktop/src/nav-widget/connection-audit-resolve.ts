@@ -1,6 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import { getScreenLookup } from '@rotp/game-data';
-import { screenForRoomIndex } from '@rotp/game-data';
+import { getScreenLookup, screenForRoomIndex } from '@rotp/game-data';
 import type { ScreenId } from '@rotp/game-data';
 import type { ObservedDestKind } from '@rotp/game-core';
 

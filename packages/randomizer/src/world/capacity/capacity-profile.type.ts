@@ -1,6 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CapacityFamilyId } from '@rotp/game-data';
-import type { RegionId } from '@rotp/game-data';
+import type { CapacityFamilyId, RegionId } from '@rotp/game-data';
 import type { ItemKey } from '../item-ids.data';
 
 type CapacityMode = 'vanilla' | 'vanilla-in-pool' | 'custom';

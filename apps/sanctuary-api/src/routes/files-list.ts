@@ -1,10 +1,7 @@
 /* @layer root-config @kind logic */
 import { FILE_TYPES, SANCTUARY_ROUTES, canSeeType, fileTypeSchema } from '@rotp/hub-contracts';
-import type { FileType } from '@rotp/hub-contracts';
-import type { Rights } from '@rotp/hub-contracts';
-import { badRequest } from '@rotp/hub-server';
-import { queryParam } from '@rotp/hub-server';
-import { requireMember } from '@rotp/hub-server';
+import type { FileType, Rights } from '@rotp/hub-contracts';
+import { badRequest, queryParam, requireMember } from '@rotp/hub-server';
 import { filesRepo } from '../db/files-repo';
 import type { Route } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from '../site';

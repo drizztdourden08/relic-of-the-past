@@ -1,10 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { rebaselineEntries } from '@rotp/randomizer';
-import { baselineEntriesOf } from '@rotp/randomizer';
-import type { CreateSocket } from '@rotp/randomizer';
-import type { PhysicalPlan } from '@rotp/randomizer';
+import { rebaselineEntries, baselineEntriesOf } from '@rotp/randomizer';
+import type { CreateSocket, PhysicalPlan } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';
 import { item, settle } from '../ap-protocol-harness';

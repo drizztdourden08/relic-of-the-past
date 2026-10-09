@@ -1,6 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { SanctuaryFile } from '@rotp/hub-contracts';
-import type { PatchFileBody } from '@rotp/hub-contracts';
+import type { SanctuaryFile, PatchFileBody } from '@rotp/hub-contracts';
 
 type RightSplit = {
   mine: SanctuaryFile[];

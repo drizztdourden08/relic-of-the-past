@@ -1,7 +1,6 @@
 /* @layer renderer-other @kind hook */
 import { useCallback, useMemo } from 'react';
-import type { InstalledPack } from '@rotp/hub-contracts';
-import type { StoreKind } from '@rotp/hub-contracts';
+import type { InstalledPack, StoreKind } from '@rotp/hub-contracts';
 import { useInstalledPacks } from './useInstalledPacks';
 
 const useInstalledKind = (kind: StoreKind, selected: string | null) => {

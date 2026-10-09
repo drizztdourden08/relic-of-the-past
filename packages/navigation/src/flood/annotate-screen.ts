@@ -1,11 +1,9 @@
 /* @layer bridge-wasm @kind logic */
-import type { ScreenAnnotation, ScreenAnnotations, ScreenTag } from '../simulation';
-import type { SimLocation } from '../simulation';
+import type { ScreenAnnotation, ScreenAnnotations, ScreenTag, SimLocation } from '../simulation';
 import type { ReachState } from '@rotp/game-core';
 import { roomTagName } from '../simulation';
 import { getRoomChests, getRoomDoors, getRoomSprites, getOverworldSprites } from '../simulator/interactables';
-import { wasmGetRoomTagsFor } from '@rotp/game-core';
-import { isFollowerActive } from '@rotp/game-core';
+import { wasmGetRoomTagsFor, isFollowerActive } from '@rotp/game-core';
 import { getCompletedChecks } from '../tracker/bridge/get-completed-checks';
 import { getCurrentInventory } from '../tracker/bridge/get-current-inventory';
 import type { CheckId, ItemId } from '@rotp/game-data';

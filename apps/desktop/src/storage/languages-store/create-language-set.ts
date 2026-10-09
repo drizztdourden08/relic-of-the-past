@@ -1,7 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { LanguageSet } from '@rotp/languages';
+import type { LanguageSet, CreateSetParams } from '@rotp/languages';
 import { languages } from '@rotp/languages';
-import type { CreateSetParams } from '@rotp/languages';
 import { recompileAll } from '../assets-store';
 import { platformFiles } from '../platform-files';
 

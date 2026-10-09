@@ -1,8 +1,6 @@
 /* @layer renderer-hooks @kind logic */
-import { forcedItemPowerReasons } from '@rotp/randomizer';
-import { beamSwordReachable, swordReachable } from '@rotp/randomizer';
-import type { OptionDef, OptionValue } from '@rotp/randomizer';
-import type { ProgressiveSetting } from '@rotp/randomizer';
+import { forcedItemPowerReasons, beamSwordReachable, swordReachable } from '@rotp/randomizer';
+import type { OptionDef, OptionValue, ProgressiveSetting } from '@rotp/randomizer';
 import type { ForcedItemPowerRows } from './item-power-rows.type';
 import { NO_FORCED_KEYS } from './item-power-rows.constants';
 

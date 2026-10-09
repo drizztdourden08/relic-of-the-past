@@ -184,7 +184,7 @@ RotP's own copy of the design system is gone. Every primitive, composite, field 
 | Fairy-pond generation: the six native slots each a location the graph declares, each named for its pond and its number, a wish pond's pair asserted to BE rungs 1 and 2 of her ladder while no plain prize rung is any record's name, every mode beatable over many seeds, prize slots really carrying pool items, the wallet rule gating them, the shared switch giving all three ponds the capacity pond settings without rewriting their own rows, and the demands a mixed ask rolls reading back identical to what the options panel previews from the same seed, on seeds that needed a retry too | tests/randomizer/pond-generation.keep.test.ts | covered |
 | Wishing-pond core seams (pond_plan.c, pond_toss_draw.c) in the built wasm, gate on and gate off: price/amount/bank/wait, the throw counter's once-each anti-farm property, the refund of a throw that wins nothing, the gem decomposition and the mixed volley each gem is drawn in, the price the vanilla cost prompt quotes, the hold that keeps the player inside the closing palette fade, and the host lines replacing the vanilla wording, the award line's reading of what the water has left included | tests/randomizer/pond-core-probe.keep.test.ts | covered. Skips without the wasm, asset blob or vault fixture |
 
-## Asset extraction (`shared/asset-extraction/`) is the largest raw gap by file count
+## Asset extraction (`packages/asset-extraction/src/`) is the largest raw gap by file count
 
 | Area | Tests | Verdict |
 |---|---|---|

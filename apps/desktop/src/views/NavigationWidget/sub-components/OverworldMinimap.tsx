@@ -1,9 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@rotp/game-core';
-import { markerCrossings } from '@rotp/navigation';
+import { markerCrossings, crossingIcon } from '@rotp/navigation';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { crossingIcon } from '@rotp/navigation';
 import { useNavigationOverlayStore } from '../../../stores/navigation-overlay-store';
 import { EDGE_COLORS } from '../NavigationWidget.constants';
 import { getScreenDisplayName } from '../../../nav-widget/widget-helpers';

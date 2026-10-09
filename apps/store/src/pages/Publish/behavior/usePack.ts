@@ -1,7 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { CONTAINER_KIND, isContainer } from '@rotp/hub-contracts';
-import { STORE_LIMITS } from '@rotp/hub-contracts';
+import { CONTAINER_KIND, isContainer, STORE_LIMITS } from '@rotp/hub-contracts';
 import type { StoreKind } from '@rotp/hub-contracts';
 import { formatBytes } from '@rotp/hub-client';
 import { KIND_LABELS } from '../../../lib/kinds';

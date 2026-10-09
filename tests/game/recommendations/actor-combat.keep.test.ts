@@ -3,8 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { all, getActorByGameId, replaceRecord } from '@rotp/game-data';
 import type { ActorRecord } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
-import { detectorFromStrategy } from '@rotp/navigation';
-import { actorStrategy } from '@rotp/navigation';
+import { detectorFromStrategy, actorStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({

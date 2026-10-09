@@ -1,7 +1,5 @@
 /* @layer tests @kind constants */
-import { POND_CERTIFIED_SPOTS } from '@rotp/randomizer';
-import { POND_INSTANCES } from '@rotp/randomizer';
-import { NPC_SCOPE_LOCATIONS } from '@rotp/randomizer';
+import { POND_CERTIFIED_SPOTS, POND_INSTANCES, NPC_SCOPE_LOCATIONS } from '@rotp/randomizer';
 import type { OptionValue } from '@rotp/randomizer';
 
 const DELIVERABLE = new Set(POND_CERTIFIED_SPOTS);

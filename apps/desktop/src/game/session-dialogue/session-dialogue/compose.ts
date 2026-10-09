@@ -1,15 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { kLanguages } from '@rotp/asset-extraction';
-import { packPackedBytes } from '@rotp/asset-extraction';
+import { kLanguages, packPackedBytes } from '@rotp/asset-extraction';
 import { log } from '../../../log-bus';
-import { getModule } from '@rotp/game-core';
-import { readActiveDialogue } from '@rotp/game-core';
-import { sessionCharset } from '@rotp/game-core';
-import { baseChunksOf } from '@rotp/game-core';
-import { encodeLines } from '@rotp/game-core';
-import { prepareLine } from '@rotp/game-core';
-import { SESSION_FILE } from '@rotp/game-core';
-import { sessionPool } from '@rotp/game-core';
+import { getModule, readActiveDialogue, sessionCharset, baseChunksOf, encodeLines, prepareLine, SESSION_FILE, sessionPool } from '@rotp/game-core';
 
 const compose = (): boolean => {
   const mod = getModule();

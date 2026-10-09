@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { getModule } from '@rotp/game-core';
-import { isZspr } from '@rotp/packs';
-import { PLAYER_SPRITE_MEMFS_PATH } from '@rotp/packs';
+import { isZspr, PLAYER_SPRITE_MEMFS_PATH } from '@rotp/packs';
 
 const applyPlayerSprite = (bytes: Uint8Array): boolean => {
   const mod = getModule();

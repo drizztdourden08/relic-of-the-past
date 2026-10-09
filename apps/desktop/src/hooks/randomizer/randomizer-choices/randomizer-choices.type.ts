@@ -1,15 +1,6 @@
 /* @layer renderer-lib @kind types */
-import type { AccessibilityMode } from '@rotp/randomizer';
-import type { CapacityBonusSetting, CapacityProfile } from '@rotp/randomizer';
-import type { DifficultySetting } from '@rotp/randomizer';
-import type { DungeonItemMode } from '@rotp/randomizer';
+import type { AccessibilityMode, CapacityBonusSetting, CapacityProfile, DifficultySetting, DungeonItemMode, ProgressiveModeSetting, ProgressiveSetting, RetroBowSetting, OptionValue, PondProfiles, ShopScope, StoryGateSetting } from '@rotp/randomizer';
 import type { ItemPowerSetting } from '@rotp/game-core';
-import type { ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
-import type { RetroBowSetting } from '@rotp/randomizer';
-import type { OptionValue } from '@rotp/randomizer';
-import type { PondProfiles } from '@rotp/randomizer';
-import type { ShopScope } from '@rotp/randomizer';
-import type { StoryGateSetting } from '@rotp/randomizer';
 
 interface RandomizerOptionChoices {
   keyDropShuffle: boolean;

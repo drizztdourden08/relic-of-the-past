@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { releaseSlot, takeSlot } from '@rotp/game-core';
+import { releaseSlot, takeSlot, sessionPool } from '@rotp/game-core';
 import { compose } from './compose';
-import { sessionPool } from '@rotp/game-core';
 import type { ReceiptLine } from '@rotp/game-core';
 
 const appendSessionReceiptMessage = (line: ReceiptLine): number | null => {

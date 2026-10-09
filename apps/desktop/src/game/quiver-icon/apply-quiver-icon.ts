@@ -2,8 +2,7 @@
 import { log } from '../../log-bus';
 import * as spritesStore from '../../storage/sprites-store';
 import { activeRomFile } from '../active-rom-file';
-import { getModule } from '@rotp/game-core';
-import { QUIVER_ICON_MEMFS_PATH } from '@rotp/game-core';
+import { getModule, QUIVER_ICON_MEMFS_PATH } from '@rotp/game-core';
 
 const applyQuiverIcon = async (tag: string): Promise<boolean> => {
   const mod = getModule();

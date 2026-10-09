@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { CapacityProfile } from '@rotp/randomizer';
-import type { OptionValue } from '@rotp/randomizer';
+import type { CapacityProfile, OptionValue } from '@rotp/randomizer';
 
 interface ShopPricesBlockProps {
   values: Readonly<Record<string, OptionValue>>;

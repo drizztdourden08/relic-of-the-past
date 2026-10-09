@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
-import type { AmbientRole } from '@rotp/game-data';
+import type { MsuPackManifest, SoundChannel, AmbientRole } from '@rotp/game-data';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import type { useSoundPanel } from './behavior/useSoundPanel';
 

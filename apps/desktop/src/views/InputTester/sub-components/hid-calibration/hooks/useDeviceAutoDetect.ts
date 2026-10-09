@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { buildDeviceProfile, buildDeviceProfileFromSdlType } from '@rotp/input-mapping';
-import type { DeviceProfile } from '@rotp/input-mapping';
-import { buildDisplayContext, resolveBrandLogoKey, resolveDeviceName } from '@rotp/input-mapping';
-import type { SdlGamepadType } from '@rotp/input-mapping';
+import { buildDeviceProfile, buildDeviceProfileFromSdlType, buildDisplayContext, resolveBrandLogoKey, resolveDeviceName } from '@rotp/input-mapping';
+import type { DeviceProfile, SdlGamepadType } from '@rotp/input-mapping';
 import { SDL_GAMEPAD_TYPES } from '@rotp/game-data';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DeviceFamily } from '@rotp/game-data';

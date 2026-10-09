@@ -1,8 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { getItemSprite } from '@rotp/game-data';
-import { uncleWeaponCandidates } from '@rotp/randomizer';
-import { isUnrecordedItem } from '@rotp/randomizer';
-import { itemKeyName } from '@rotp/randomizer';
+import { uncleWeaponCandidates, isUnrecordedItem, itemKeyName } from '@rotp/randomizer';
 import type { ItemKey } from '@rotp/randomizer';
 import type { PoolListingGroup, PoolListingRow } from '@app/compounds/PoolListing';
 import { REFERENCE_ORDER, STARTING_WEAPON_GROUP_ID } from './starting-weapon-group.constants';

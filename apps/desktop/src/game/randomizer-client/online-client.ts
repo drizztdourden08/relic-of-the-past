@@ -1,30 +1,14 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { AP_GAME } from '@rotp/randomizer';
-import { createNameTables } from '@rotp/randomizer';
-import { createListenerSet } from '@rotp/randomizer';
-import { createMessageLog } from '@rotp/randomizer';
+import { AP_GAME, createNameTables, createListenerSet, createMessageLog, createGoalReporter, createOnlineRoom, resetConnection, createReconnector, openSocketLink, serverUrlCandidates } from '@rotp/randomizer';
 import { createOnlineNetwork } from './online-network';
 import { createCheckReporter } from './online-check-reporter';
-import { createGoalReporter } from '@rotp/randomizer';
-import { createOnlineRoom, resetConnection } from '@rotp/randomizer';
-import { createReconnector } from '@rotp/randomizer';
 import { createDeathLinkSwitch } from './death-link-switch';
 import { dispatchMessage } from './online-dispatch';
 import { handleSaveSwap } from './online-save-swap';
-import { openSocketLink } from '@rotp/randomizer';
 import { senderNameOf } from './online-received';
-import { serverUrlCandidates } from '@rotp/randomizer';
-import type { Placement } from '@rotp/randomizer';
-import type { ApClientPacket } from '@rotp/randomizer';
-import type { ForeignOwners } from '@rotp/randomizer';
-import type { OnlineContext } from '@rotp/randomizer';
+import type { Placement, ApClientPacket, ForeignOwners, OnlineContext, OnlineSession, OnlineSessionConfig, SocketLink, RandomizerSession, OnlineDeps } from '@rotp/randomizer';
 import type { ScoutMaps } from './online-overrides';
-import type { OnlineSession } from '@rotp/randomizer';
-import type { OnlineSessionConfig } from '@rotp/randomizer';
-import type { SocketLink } from '@rotp/randomizer';
-import type { RandomizerSession } from '@rotp/randomizer';
-import type { OnlineDeps } from '@rotp/randomizer';
 
 const createOnlineClient = (config: OnlineSessionConfig, deps: OnlineDeps): OnlineSession => {
   const { url, slotName, game = AP_GAME, deathLink = false } = config;

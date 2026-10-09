@@ -2,8 +2,7 @@
 import { readdirSync, readFileSync, statSync } from 'fs';
 import { join, relative } from 'path';
 import { describe, expect, it } from 'vitest';
-import { all } from '@rotp/game-data';
-import { actorRecordFile, areaRecordFile, checkRecordFile, connectionRecordFile, dungeonRecordFile, DUNGEON_FLOORS, itemRecordFile, locationRecordFile, recordArrayName, regionRecordFile, screenRecordFile, SPLIT_BY_HALF } from '@rotp/game-data';
+import { all, actorRecordFile, areaRecordFile, checkRecordFile, connectionRecordFile, dungeonRecordFile, DUNGEON_FLOORS, itemRecordFile, locationRecordFile, recordArrayName, regionRecordFile, screenRecordFile, SPLIT_BY_HALF } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 const ROOT = join(__dirname, '..', '..', '..', 'packages', 'game-data', 'src', 'data', 'records');

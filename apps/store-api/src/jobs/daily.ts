@@ -1,7 +1,6 @@
 /* @layer store-api @kind logic */
-import type { DailyJobResponse, VersionRef } from '@rotp/hub-contracts';
+import type { DailyJobResponse, VersionRef, StoreItem } from '@rotp/hub-contracts';
 import { STORE_LIMITS } from '@rotp/hub-contracts';
-import type { StoreItem } from '@rotp/hub-contracts';
 import { now } from '@rotp/hub-server';
 import { itemsRepo } from '../db/items-repo';
 import { dailyRepo } from '../db/daily-repo';

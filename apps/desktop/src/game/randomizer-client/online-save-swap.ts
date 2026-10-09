@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { resetCursor } from '@rotp/randomizer';
+import { resetCursor, bindSaveToRoom } from '@rotp/randomizer';
 import { requestSync } from './online-received';
-import { bindSaveToRoom } from '@rotp/randomizer';
 import type { OnlineContext } from '@rotp/randomizer';
 
 const handleSaveSwap = (ctx: OnlineContext): void => {

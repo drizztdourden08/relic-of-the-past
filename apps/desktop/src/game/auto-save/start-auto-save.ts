@@ -1,12 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import * as savesStore from '../../storage/saves-store';
-import { getProfileId } from '@rotp/game-core';
-import { MAX_INTERVAL_SECONDS, MIN_INTERVAL_SECONDS } from '@rotp/game-core';
-import { autoSaveState } from '@rotp/game-core';
-import { notifyAutoSavesChanged } from '@rotp/game-core';
+import { getProfileId, MAX_INTERVAL_SECONDS, MIN_INTERVAL_SECONDS, autoSaveState, notifyAutoSavesChanged, stopAutoSave } from '@rotp/game-core';
 import { performAutoSave } from './perform-auto-save';
-import { stopAutoSave } from '@rotp/game-core';
 
 const pruneIfNeeded = async (maxEntries: number): Promise<void> => {
   const profileId = getProfileId();

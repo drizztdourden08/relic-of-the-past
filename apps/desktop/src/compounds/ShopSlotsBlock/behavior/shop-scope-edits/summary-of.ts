@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { maxSlotCountOf, openedSlotIndicesOf, usesSlotCount } from '@rotp/randomizer';
-import { clampDepth } from '@rotp/randomizer';
+import { maxSlotCountOf, openedSlotIndicesOf, usesSlotCount, clampDepth } from '@rotp/randomizer';
 import type { ShopScope } from '@rotp/randomizer';
 import type { ShopScopeSummary } from '../../ShopSlotsBlock.type';
 

@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import { isChoiceLine } from '@rotp/game-core';
-import { receiptLineCandidates } from '@rotp/game-core';
+import { isChoiceLine, receiptLineCandidates } from '@rotp/game-core';
 import type { ReceiptLine } from '@rotp/game-core';
 
 const receiptLineKey = (line: ReceiptLine): string => {

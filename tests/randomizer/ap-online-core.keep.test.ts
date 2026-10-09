@@ -2,11 +2,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID, FOREIGN_ITEM_ID } from '@rotp/randomizer';
+import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID, FOREIGN_ITEM_ID, buildOptionsSnapshot, normalizeRandomizerOptions, generateFromSnapshot, AP_LOCATION_IDS } from '@rotp/randomizer';
 import { FOREIGN_ICON_FILES } from '@rotp/asset-extraction';
-import { buildOptionsSnapshot, normalizeRandomizerOptions } from '@rotp/randomizer';
-import { generateFromSnapshot } from '@rotp/randomizer';
-import { AP_LOCATION_IDS } from '@rotp/randomizer';
 import { stripHighlight } from '@rotp/game-core';
 import { installFakeModule } from './ap-fake-module';
 import { createFakeServer } from './ap-fake-server';

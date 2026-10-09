@@ -1,7 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { referencesTo } from '@rotp/game-data';
-import { all, ITEM_GROUP_IDS } from '@rotp/game-data';
+import { referencesTo, all, ITEM_GROUP_IDS } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 const CHECK_NEEDING_THREE_PENDANTS = 'check-072';

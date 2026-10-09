@@ -1,7 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { screenBlockers } from '@rotp/game-data';
-import type { EntityKind } from '@rotp/game-data';
-import type { ScreenCandidate } from '@rotp/game-data';
+import type { EntityKind, ScreenCandidate } from '@rotp/game-data';
 import type { InspectorRow } from '../../DataInspector.type';
 
 const createBlockers = (kind: EntityKind, proposed: InspectorRow): readonly string[] =>

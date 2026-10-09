@@ -1,10 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import { detectAllDevices } from '@rotp/input-mapping';
-import { rebuildSchemeBindings } from '@rotp/input-mapping';
+import { detectAllDevices, rebuildSchemeBindings, notifyQuietly } from '@rotp/input-mapping';
 import type { InputManager } from './input-manager';
-import { notifyQuietly } from '@rotp/input-mapping';
 
 const refreshInputDevices = (m: InputManager): void => {
   m.devices = detectAllDevices(m.hidDeviceCache);

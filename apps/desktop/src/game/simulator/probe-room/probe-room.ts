@@ -3,18 +3,7 @@ import { wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetFallHoles, wasmGetRo
 import { roomEntrances } from '../../flood';
 import type { TileReq } from '@rotp/game-data';
 import { detectRoom } from '../room-exits';
-import { getRoomSprites, getRoomDoors } from '@rotp/navigation';
-import { floodRoomRun } from '@rotp/navigation';
-import { probeRoomThreat } from '@rotp/navigation';
-import { floodAnchorReport, edgeOpenCount } from '@rotp/navigation';
-import { entranceRows } from '@rotp/navigation';
-import { gridBuilt } from '@rotp/navigation';
-import { chestProbes } from '@rotp/navigation';
-import { attrRows } from '@rotp/navigation';
-import { roomMap } from '@rotp/navigation';
-import { neighbourEntrances } from '@rotp/navigation';
-import { reachBbox } from '@rotp/navigation';
-import { transitionProbes } from '@rotp/navigation';
+import { getRoomSprites, getRoomDoors, floodRoomRun, probeRoomThreat, floodAnchorReport, edgeOpenCount, entranceRows, gridBuilt, chestProbes, attrRows, roomMap, neighbourEntrances, reachBbox, transitionProbes } from '@rotp/navigation';
 import type { RoomProbe } from '@rotp/navigation';
 
 const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, items: TileReq[] = ['lift.1']): RoomProbe => {

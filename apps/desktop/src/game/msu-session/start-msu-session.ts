@@ -1,10 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { attachEngine } from './attach-engine';
-import { clearPoll } from '@rotp/msu';
-import { AUDIO_CONTEXT_POLL_MS } from '@rotp/msu';
-import { msuSessionState } from '@rotp/msu';
+import { clearPoll, AUDIO_CONTEXT_POLL_MS, msuSessionState, stopMsuSession } from '@rotp/msu';
 import type { MsuSessionOptions } from '@rotp/msu';
-import { stopMsuSession } from '@rotp/msu';
 
 const retryPendingAttach = (): void => {
   const { pending } = msuSessionState;

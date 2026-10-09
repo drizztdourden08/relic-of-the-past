@@ -1,7 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { pondPlanOf } from '@rotp/randomizer';
-import { POND_AWARD_LAST_LINE, POND_AWARD_MORE_LINE, POND_CLOSED_LINE, pondLinesOf } from '@rotp/randomizer';
+import { pondPlanOf, POND_AWARD_LAST_LINE, POND_AWARD_MORE_LINE, POND_CLOSED_LINE, pondLinesOf } from '@rotp/randomizer';
 import { receiptLineCandidates } from '@rotp/game-core';
 import type { PondSetting } from '@rotp/randomizer';
 import { CUSTOM, LONGEST_FITTING_LINE } from './pond-model.constants';

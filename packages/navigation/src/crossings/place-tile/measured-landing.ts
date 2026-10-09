@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GridPos } from '@rotp/game-core';
-import type { ReachState } from '@rotp/game-core';
+import type { GridPos, ReachState } from '@rotp/game-core';
 import { DOOR_REACH_RADIUS, INWARD } from './place-tile.constants';
 import { inGrid } from './in-grid';
 import { isReached } from './is-reached';

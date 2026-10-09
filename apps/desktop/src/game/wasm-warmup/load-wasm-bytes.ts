@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { portKitApi } from '@drizztdourden08/brock-port-kit/renderer';
-import { warmupState } from '@rotp/game-core';
-import { CORE_WASM_FILE } from '@rotp/game-core';
+import { warmupState, CORE_WASM_FILE } from '@rotp/game-core';
 import type { ByteProgress as Progress } from '@rotp/game-core';
 
 const isHttpRenderer = (): boolean =>

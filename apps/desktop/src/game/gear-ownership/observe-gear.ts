@@ -1,12 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 import { arrowTypeOf } from '@rotp/game-data';
 import type { GameUIState } from '@rotp/game-data';
-import { getProfileId } from '@rotp/game-core';
+import { getProfileId, gearOwnershipState, raiseTiers } from '@rotp/game-core';
 import type { GearTiers } from '@rotp/game-core';
-import { gearOwnershipState } from '@rotp/game-core';
 import { applyTiers } from './apply-tiers';
 import { initGearOwnership } from './init-gear-ownership';
-import { raiseTiers } from '@rotp/game-core';
 
 const tiersFrom = (state: GameUIState): GearTiers => ({
   sword: state.equipment.sword,

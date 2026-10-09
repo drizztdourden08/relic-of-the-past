@@ -1,8 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { pondPlanOf } from '@rotp/randomizer';
-import { decomposeRupees, describeRupees, rupeeVolleysOf } from '@rotp/randomizer';
-import { LEGACY_POND_SETTING } from '@rotp/randomizer';
+import { pondPlanOf, decomposeRupees, describeRupees, rupeeVolleysOf, LEGACY_POND_SETTING } from '@rotp/randomizer';
 import type { PondSetting } from '@rotp/randomizer';
 import { CUSTOM } from './pond-model.constants';
 

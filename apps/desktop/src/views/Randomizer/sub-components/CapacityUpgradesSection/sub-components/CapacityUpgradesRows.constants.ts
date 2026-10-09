@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY } from '@rotp/randomizer';
-import { optionByKey } from '@rotp/randomizer';
+import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, optionByKey } from '@rotp/randomizer';
 
 const ENABLED_OPTION = optionByKey.get(CAPACITY_ENABLED_KEY);
 const PROGRESSIVE_OPTION = optionByKey.get(CAPACITY_PROGRESSIVE_KEY);

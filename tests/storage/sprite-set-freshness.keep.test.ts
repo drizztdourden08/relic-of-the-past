@@ -1,13 +1,8 @@
 /* @layer test @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { sprites } from '@rotp/packs';
-import { EXTRACTION_STAMP_FILE, extractionVersionOf } from '@rotp/asset-extraction';
-import { CURRENCY_SYMBOLS_FILE } from '@rotp/asset-extraction';
-import { FOREIGN_ICONS_FILE } from '@rotp/asset-extraction';
-import { GEAR_ICONS_FILE } from '@rotp/asset-extraction';
-import { QUIVER_ICON_FILE } from '@rotp/asset-extraction';
-import { SPRITE_DEFINITIONS } from '@rotp/game-data';
-import { getCapacityUpgradeSprite, setSpritesBase, setSpritesRevision } from '@rotp/game-data';
+import { EXTRACTION_STAMP_FILE, extractionVersionOf, CURRENCY_SYMBOLS_FILE, FOREIGN_ICONS_FILE, GEAR_ICONS_FILE, QUIVER_ICON_FILE } from '@rotp/asset-extraction';
+import { SPRITE_DEFINITIONS, getCapacityUpgradeSprite, setSpritesBase, setSpritesRevision } from '@rotp/game-data';
 import { createMemFileStore } from './mem-file-store';
 import type { FileStore } from '@drizztdourden08/brock-core';
 

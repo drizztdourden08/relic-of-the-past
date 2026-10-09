@@ -1,12 +1,11 @@
 /* @layer renderer-components @kind hook */
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   startGame,
   getGameState,
   subscribeGameState,
   type GameStatus,
 } from '../../../game';
-import { useEffect } from 'react';
 
 const useGameState = () => {
   const [status, setStatus] = useState<GameStatus>(() => getGameState().status);

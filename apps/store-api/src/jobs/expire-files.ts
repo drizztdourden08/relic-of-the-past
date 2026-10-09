@@ -1,6 +1,5 @@
 /* @layer store-api @kind logic */
-import type { VersionRef } from '@rotp/hub-contracts';
-import type { RemovalReason, StoreItem, StoreVersion } from '@rotp/hub-contracts';
+import type { VersionRef, RemovalReason, StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { fileExpiresAt } from '@rotp/hub-contracts';
 import { itemsRepo } from '../db/items-repo';
 import { removeFile, stampRemoved } from '../items/remove-file';

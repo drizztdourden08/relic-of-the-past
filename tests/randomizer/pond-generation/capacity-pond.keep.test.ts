@@ -1,13 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { generatePlacement } from '@rotp/randomizer';
-import { buildFillWorld } from '@rotp/randomizer';
-import { fillOptionsFromSnapshot } from '@rotp/randomizer';
-import { POND_PRIZE_LOCATIONS } from '@rotp/randomizer';
-import { pondPlanOf } from '@rotp/randomizer';
-import { createCollectionState } from '@rotp/randomizer';
-import { WALLET } from '@rotp/randomizer';
-import { reachableTopOf } from '@rotp/randomizer';
+import { generatePlacement, buildFillWorld, fillOptionsFromSnapshot, POND_PRIZE_LOCATIONS, pondPlanOf, createCollectionState, WALLET, reachableTopOf } from '@rotp/randomizer';
 import { DELIVERABLE, EMPTY, MODES, SEEDS } from './pond-generation.constants';
 import { snapshotOf } from './snapshot-of';
 

@@ -1,10 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { clientUuid } from '@rotp/randomizer';
-import { createConnectionNotices } from '@rotp/randomizer';
-import { createNetworkMonitor } from '@rotp/randomizer';
+import { clientUuid, createConnectionNotices, createNetworkMonitor } from '@rotp/randomizer';
 import { createTrackerLinks } from './tracker-links';
-import type { NetworkMonitor } from '@rotp/randomizer';
-import type { OnlineNetworkDeps } from '@rotp/randomizer';
+import type { NetworkMonitor, OnlineNetworkDeps } from '@rotp/randomizer';
 
 const createOnlineNetwork = (deps: OnlineNetworkDeps): NetworkMonitor => {
   const { createSocket, url, ...monitorDeps } = deps;

@@ -2,8 +2,7 @@
 import { log } from '../../log-bus';
 import * as spritesStore from '../../storage/sprites-store';
 import { activeRomFile } from '../active-rom-file';
-import { getModule } from '@rotp/game-core';
-import { CURRENCY_SYMBOLS_MEMFS_PATH } from '@rotp/game-core';
+import { getModule, CURRENCY_SYMBOLS_MEMFS_PATH } from '@rotp/game-core';
 
 const applyCurrencySymbols = async (tag: string): Promise<boolean> => {
   const mod = getModule();

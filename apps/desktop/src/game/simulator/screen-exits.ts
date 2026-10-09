@@ -1,18 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import type { ConnectionInfo, GridPos, ScreenCrossing } from '@rotp/game-core';
 import type { TileReq } from '@rotp/game-data';
-import type { SimExit } from '@rotp/navigation';
+import type { SimExit, DetectedScreen, OrderedExit, OverworldExitPass } from '@rotp/navigation';
 import { computeBigScreenGroup } from '@app/nav-widget/widget-helpers';
-import { collectCrossings } from '@rotp/navigation';
-import { connectionCrossingId, midOf, takeableCrossing, usableCrossings } from '@rotp/navigation';
-import { floodOneOverworld, summarizeRun } from '@rotp/navigation';
+import { collectCrossings, connectionCrossingId, midOf, takeableCrossing, usableCrossings, floodOneOverworld, summarizeRun, stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, reachedGrid, AREA_EXIT_BIAS, dedupe, locationForScreen, SCREEN_EXIT_UNREACHED } from '@rotp/navigation';
 import { owScreenId, interiorScreenId, spawnTile, screenAreaInfo } from './screen-resolve';
-import { stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, reachedGrid, AREA_EXIT_BIAS } from '@rotp/navigation';
 import { detectRoom } from './room-exits';
-import { dedupe } from '@rotp/navigation';
-import { locationForScreen } from '@rotp/navigation';
-import { SCREEN_EXIT_UNREACHED } from '@rotp/navigation';
-import type { DetectedScreen, OrderedExit, OverworldExitPass } from '@rotp/navigation';
 
 const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
 

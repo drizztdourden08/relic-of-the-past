@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ConnectionTransitType } from '@rotp/game-data';
-import type { ConnectionTag } from '@rotp/game-data';
+import type { ConnectionTransitType, ConnectionTag } from '@rotp/game-data';
 import { TRANSIT_BY_TAG, TRANSIT_TAG_PREFIX } from './connection-updater.constants';
 
 const transitTypeFromTags = (tags: readonly ConnectionTag[]): ConnectionTransitType => {

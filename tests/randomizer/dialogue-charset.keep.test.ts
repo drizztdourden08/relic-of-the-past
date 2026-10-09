@@ -1,16 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { compressStrings } from '@rotp/asset-extraction';
-import { kLanguages } from '@rotp/asset-extraction';
-import { kFontTypes } from '@rotp/asset-extraction';
-import { GLYPH_SLOTS, alphabetChars, dialogueCharsetOf, displayAlphabetOf, extraGlyphSlots, extraSlotOfToken, readableText } from '@rotp/game-data';
-import { EXTRA_GLYPHS } from '@rotp/game-data';
-import { extraGlyphTiles } from '@rotp/game-data';
-import { primary } from '@rotp/randomizer';
-import { secondary } from '@rotp/randomizer';
-import { stripHighlight } from '@rotp/game-core';
-import { toDialogueText } from '@rotp/game-core';
-import { compressMarkedStrings } from '@rotp/game-core';
+import { compressStrings, kLanguages, kFontTypes } from '@rotp/asset-extraction';
+import { GLYPH_SLOTS, alphabetChars, dialogueCharsetOf, displayAlphabetOf, extraGlyphSlots, extraSlotOfToken, readableText, EXTRA_GLYPHS, extraGlyphTiles } from '@rotp/game-data';
+import { primary, secondary } from '@rotp/randomizer';
+import { stripHighlight, toDialogueText, compressMarkedStrings } from '@rotp/game-core';
 import type { DialogueCharset } from '@rotp/game-data';
 
 const REQUIRED = "_-.,'()!?&+/:#%*\";=<>[]~@^`";

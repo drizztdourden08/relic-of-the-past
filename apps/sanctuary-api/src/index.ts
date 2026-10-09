@@ -1,7 +1,6 @@
 /* @layer root-config @kind logic */
 import { http } from '@google-cloud/functions-framework';
-import { createRouter } from '@rotp/hub-server';
-import { accountRoutes } from '@rotp/hub-server';
+import { createRouter, accountRoutes } from '@rotp/hub-server';
 import { SANCTUARY_SITE } from './site';
 import { ROUTES } from './route-table';
 

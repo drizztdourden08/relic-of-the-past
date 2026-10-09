@@ -1,8 +1,7 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useMemo } from 'react';
-import { navigate } from '@rotp/design';
+import { navigate, useSessionContext } from '@rotp/design';
 import { useSiteData } from '../../../data/useSiteData';
-import { useSessionContext } from '@rotp/design';
 import { canSeeReports, visibleFileTypes } from '@rotp/hub-contracts';
 import { toFileRow } from '../../../files/file-row';
 import { buildFileSchema } from '../../../files/file-schema';

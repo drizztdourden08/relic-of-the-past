@@ -1,8 +1,6 @@
 /* @layer tests @kind helper */
-import { FOREIGN_ITEM_KEY } from '@rotp/randomizer';
-import { AP_LOCATION_IDS } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
-import type { Placement } from '@rotp/randomizer';
+import { FOREIGN_ITEM_KEY, AP_LOCATION_IDS } from '@rotp/randomizer';
+import type { LocationKey, Placement } from '@rotp/randomizer';
 import type { FakeRoom } from '../ap-fake-server';
 import { OTHER_SLOT } from './parity-cases.data';
 

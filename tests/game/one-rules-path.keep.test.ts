@@ -1,8 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { all, getDungeon, ITEM_GROUP_IDS } from '@rotp/game-data';
-import { standardNameOfCheck } from '@rotp/game-data';
-import { screensOfRegions } from '@rotp/game-data';
+import { all, getDungeon, ITEM_GROUP_IDS, standardNameOfCheck, screensOfRegions } from '@rotp/game-data';
 import { buildNormalPlacement } from '@rotp/randomizer';
 import { grantedInventory, recordRowOverrides } from '@rotp/navigation';
 import type { ItemId } from '@rotp/game-data';

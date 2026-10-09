@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ConnectionNavData, RequirementSet, ConnectionPointData, TraversalRequirement } from '@rotp/game-data';
-import type { ConnectionTag } from '@rotp/game-data';
+import type { ConnectionNavData, RequirementSet, ConnectionPointData, TraversalRequirement, ConnectionTag } from '@rotp/game-data';
 import type { BorderBundle } from './border-bundles';
 import type { ConnectionNavUpdate, ConnectionUpdaterInput } from './connection-updater.type';
 import { transitTypeFromTags } from './transit-type-from-tags';

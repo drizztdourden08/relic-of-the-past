@@ -1,8 +1,6 @@
 /* @layer shared-game @kind logic */
-import { PALACE_NONE } from '@rotp/game-data';
-import { gameIdLabel } from '@rotp/game-data';
-import type { GameScreenId } from '@rotp/game-data';
-import type { ScreenGameId, ScreenRecord } from '@rotp/game-data';
+import { PALACE_NONE, gameIdLabel } from '@rotp/game-data';
+import type { GameScreenId, ScreenGameId, ScreenRecord } from '@rotp/game-data';
 import { unread } from '../../compare/probe-reading';
 import type { Probe, SetProbe } from '../../compare/probe.type';
 import type { ScreenObservations } from '../../detection-types';

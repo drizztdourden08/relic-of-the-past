@@ -1,8 +1,6 @@
 /* @layer tests @kind helper */
-import { rebaselineEntries } from '@rotp/randomizer';
-import { deathOf } from '@rotp/randomizer';
-import type { LinkDiedListener } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
+import { rebaselineEntries, deathOf } from '@rotp/randomizer';
+import type { LinkDiedListener, LocationKey } from '@rotp/randomizer';
 import type { FakeCore } from './ap-fake-core.type';
 
 const createFakeCore = (): FakeCore => {

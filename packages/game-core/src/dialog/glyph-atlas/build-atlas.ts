@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { decode2bppTile } from '@rotp/asset-extraction';
-import { snesToRgba } from '@rotp/asset-extraction';
+import { decode2bppTile, snesToRgba } from '@rotp/asset-extraction';
 import type { GlyphAtlas } from './glyph-atlas.type';
 import {
   BOTTOM_TILE_STEP, CELL_H, CELL_W, COLUMNS, GLYPHS, TILE_BYTES, TILES_PER_GLYPH_ROW,

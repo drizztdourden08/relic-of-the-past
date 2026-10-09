@@ -3,8 +3,7 @@ import type { PlayerSheet } from '@rotp/game-data';
 import { readDatEntry } from '@rotp/asset-extraction';
 import { SHEET_BYTES } from '@rotp/game-data';
 import { loadAssets } from '@app/storage/assets-store';
-import { stockPaletteFrom } from '@rotp/packs';
-import { TILES_KEY } from '@rotp/packs';
+import { stockPaletteFrom, TILES_KEY } from '@rotp/packs';
 
 const loadStockSheet = async (romFile: string): Promise<PlayerSheet | null> => {
   const buffer = await loadAssets(romFile);

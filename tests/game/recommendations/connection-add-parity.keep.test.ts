@@ -1,7 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, findOne, registerRecord, unregisterRecord } from '@rotp/game-data';
-import { toScreenIdOf } from '@rotp/game-data';
+import { all, findOne, registerRecord, unregisterRecord, toScreenIdOf } from '@rotp/game-data';
 import type { ConnectionId, ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy } from '@rotp/navigation';

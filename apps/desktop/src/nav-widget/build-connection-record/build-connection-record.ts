@@ -1,8 +1,6 @@
 /* @layer renderer-widgets @kind logic */
-import { findOne, pendingPartnerId, tagIdsForKeys } from '@rotp/game-data';
-import { toScreenIdOf } from '@rotp/game-data';
-import type { ConnectionRecord, ScreenRecord } from '@rotp/game-data';
-import type { PendingConnectionRecord } from '@rotp/game-data';
+import { findOne, pendingPartnerId, tagIdsForKeys, toScreenIdOf } from '@rotp/game-data';
+import type { ConnectionRecord, ScreenRecord, PendingConnectionRecord } from '@rotp/game-data';
 import type { ConnectionDraft } from '../../views/NavigationWidget/NavigationWidget.type';
 import { connectionKindFor } from './connection-kind-for';
 import { dungeonIdFor } from './dungeon-id-for';

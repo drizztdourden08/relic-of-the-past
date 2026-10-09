@@ -2,11 +2,9 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { OutfitId, PlayerSheet, SheetPalette } from '@rotp/game-data';
 import { loadSheet, saveSheet } from '@app/game/player-sheet/load-sheet';
-import { withColor, withGloveColor, isEmptyOverride } from '@rotp/packs';
+import { withColor, withGloveColor, isEmptyOverride, toZsprBytes, safeFileName } from '@rotp/packs';
 import { loadStockSheet } from '@app/game/stock-player-sheet';
-import { toZsprBytes } from '@rotp/packs';
 import { applyPlayerSprite } from '@app/game/player-sprite';
-import { safeFileName } from '@rotp/packs';
 import type { OpenDraft } from '../PlayerSpriteStudio.type';
 import { isLiveSelection } from './is-live-selection';
 

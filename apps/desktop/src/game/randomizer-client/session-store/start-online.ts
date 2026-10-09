@@ -1,9 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { createOnlineSession } from '../online-session';
-import { rememberNetworkStatus } from '@rotp/randomizer';
+import { rememberNetworkStatus, NO_OWNERS } from '@rotp/randomizer';
 import { adoptSession } from './adopt-session';
 import { notifySessionStore } from './notify-session-store';
-import { NO_OWNERS } from '@rotp/randomizer';
 import { storeSlots } from './store-slots';
 import type { OnlineSessionConfig } from '../online-session';
 import type { SessionSource } from './session-store.type';

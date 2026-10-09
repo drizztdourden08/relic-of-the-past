@@ -1,8 +1,7 @@
 /* @layer tests @kind constants */
 import { resolve } from 'path';
 import type { Platform } from '@drizztdourden08/brock-core';
-import type { Extent, HudGridContainer, HudNode } from '@rotp/hud';
-import type { MeasureContext } from '@rotp/hud';
+import type { Extent, HudGridContainer, HudNode, MeasureContext } from '@rotp/hud';
 
 const leaf = (id: string, place?: Record<string, number>): HudNode =>
   ({ id, kind: 'element', element: { type: 'spacer' }, size: { w: { px: 16 }, h: { px: 16 } }, ...(place ? { place } : {}) }) as unknown as HudNode;

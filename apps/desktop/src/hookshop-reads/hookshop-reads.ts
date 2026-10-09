@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { catalogApi } from '@drizztdourden08/brock-catalog/renderer';
 import type { CatalogResult } from '@drizztdourden08/brock-catalog/renderer';
-import type { HomeResponse, ItemResponse } from '@rotp/hub-contracts';
-import type { ItemCardView } from '@rotp/hub-contracts';
+import type { HomeResponse, ItemResponse, ItemCardView } from '@rotp/hub-contracts';
 import { NO_CATALOG } from './hookshop-reads.constants';
 
 const hookshopReads = {

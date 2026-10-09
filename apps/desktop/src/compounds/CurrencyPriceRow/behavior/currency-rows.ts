@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind logic */
 import { stopsFor } from './price-stops';
-import { priceCeilingsOf } from '@rotp/randomizer';
-import { blockedCurrencyKeysOfValues, blockedCurrencyNote } from '@rotp/randomizer';
-import { shopPricePlanOf } from '@rotp/randomizer';
+import { priceCeilingsOf, blockedCurrencyKeysOfValues, blockedCurrencyNote, shopPricePlanOf } from '@rotp/randomizer';
 import type { CurrencyCatalogKeys, CurrencyRowModel, Values } from '../CurrencyPriceRow.type';
-import type { CapacityProfile } from '@rotp/randomizer';
-import type { CurrencyRow } from '@rotp/randomizer';
+import type { CapacityProfile, CurrencyRow } from '@rotp/randomizer';
 
 const numberAt = (values: Values, key: string, fallback: number): number =>
   (typeof values[key] === 'number' ? values[key] : fallback);

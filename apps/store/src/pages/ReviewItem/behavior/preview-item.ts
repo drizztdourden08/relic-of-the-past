@@ -1,7 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ReviewEntry } from '@rotp/hub-contracts';
-import type { ItemCardView } from '@rotp/hub-contracts';
-import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
+import type { ReviewEntry, ItemCardView, StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { editOfEntry, versionOfEntry } from '../../../review/review-row';
 import type { ItemPreview } from './preview-item.type';

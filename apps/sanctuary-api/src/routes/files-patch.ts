@@ -1,7 +1,6 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES, patchFileSchema } from '@rotp/hub-contracts';
-import { parseBody } from '@rotp/hub-server';
-import { requireMember } from '@rotp/hub-server';
+import { parseBody, requireMember } from '@rotp/hub-server';
 import { assertOwnerOrAdmin, assertVisibleType, loadVisibleFile } from '../files/file-guards';
 import { filesRepo } from '../db/files-repo';
 import type { Route } from '@rotp/hub-server';

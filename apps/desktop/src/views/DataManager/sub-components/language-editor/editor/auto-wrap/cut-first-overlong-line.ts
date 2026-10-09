@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { lineMetrics, ROW_WIDTH_PX } from '@rotp/languages';
-import { breakLine } from '@rotp/languages';
+import { lineMetrics, ROW_WIDTH_PX, breakLine } from '@rotp/languages';
 import type { Token } from '@rotp/languages';
 import type { Node as PmNode } from '@tiptap/pm/model';
 import type { Transaction } from '@tiptap/pm/state';

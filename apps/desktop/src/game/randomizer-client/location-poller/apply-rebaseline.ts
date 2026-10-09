@@ -1,10 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { rebaselineEntries } from '@rotp/randomizer';
-import type { HeapReads } from '@rotp/randomizer';
-import { isEntryComplete } from '@rotp/randomizer';
-import type { PollEntry, ReportingSession } from '@rotp/randomizer';
-import { pollerState } from '@rotp/randomizer';
+import { rebaselineEntries, isEntryComplete, pollerState } from '@rotp/randomizer';
+import type { HeapReads, PollEntry, ReportingSession } from '@rotp/randomizer';
 
 const applyRebaseline = (
   session: ReportingSession, entries: readonly PollEntry[], reads: HeapReads, completed: ReadonlySet<string>,

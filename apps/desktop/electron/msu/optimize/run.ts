@@ -2,11 +2,8 @@
 import { rm, stat } from 'fs/promises';
 import type { OptimizeConversion, OptimizeRunResult } from '@rotp/msu';
 import type { MsuPackManifest } from '@rotp/game-data';
-import { withFileRenamed, withLoopSampleCarried } from '@rotp/msu';
-import { withSupersededRepointed } from '@rotp/msu';
+import { withFileRenamed, withLoopSampleCarried, withSupersededRepointed, synthesizeClassicManifest, trackNumberOf } from '@rotp/msu';
 import { errMessage } from '../../lib/result';
-import { synthesizeClassicManifest } from '@rotp/msu';
-import { trackNumberOf } from '@rotp/msu';
 import { packFilePath, readPackManifest, refuseInstalledPack, writePackManifest } from '../pack-fs';
 import { describeSource } from './audio-source';
 import { encodeToTarget } from './flac-encode';

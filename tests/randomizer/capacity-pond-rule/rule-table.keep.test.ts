@@ -1,8 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { reconcileCapacityPond } from '@rotp/randomizer';
-import { pondSettingForMode } from '@rotp/randomizer';
-import { LEGACY_POND_SETTING } from '@rotp/randomizer';
+import { reconcileCapacityPond, pondSettingForMode, LEGACY_POND_SETTING } from '@rotp/randomizer';
 import type { FamilySetting } from '@rotp/randomizer';
 import { profileOf } from './profile-of';
 import { selectionOf } from './selection-of';

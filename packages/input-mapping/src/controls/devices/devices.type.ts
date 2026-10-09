@@ -1,6 +1,5 @@
 /* @layer shared-types @kind types */
-import type { ButtonIcon, ButtonMapping, DeviceFamily, InputApi } from '@rotp/game-data';
-import type { CoreBindings, ModernBindings } from '@rotp/game-data';
+import type { ButtonIcon, ButtonMapping, DeviceFamily, InputApi, CoreBindings, ModernBindings } from '@rotp/game-data';
 
 interface InputProfile {
   id: string;

@@ -1,9 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { locationKeyOfApId } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import type { LocationKey } from '@rotp/randomizer';
-import type { ApGameData } from '@rotp/randomizer';
-import type { ScoutMaps, ScoutPlan } from '@rotp/randomizer';
+import type { LocationKey, ApGameData, ScoutMaps, ScoutPlan } from '@rotp/randomizer';
 
 const keyOfLocationId = (id: number): LocationKey | undefined => {
   try {

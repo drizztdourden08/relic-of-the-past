@@ -1,19 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import { itemKeyOfApId } from '@rotp/randomizer';
+import { itemKeyOfApId, scoutsToPlacement, baselineEntriesOf, foreignIconIdOfGame, foreignItemsOf, TAG, scoutedTextsState, stopScoutedTexts } from '@rotp/randomizer';
 import { armSessionFromPlacement } from '../session-start';
-import { scoutsToPlacement } from '@rotp/randomizer';
-import { baselineEntriesOf } from '@rotp/randomizer';
 import { applyForeignIcons } from '../../foreign-icons';
-import { foreignIconIdOfGame } from '@rotp/randomizer';
-import type { ItemKey } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
-import type { ForeignItem } from '@rotp/randomizer';
-import type { OnlineCore, ScoutedInput } from '@rotp/randomizer';
-import type { PhysicalPlan } from '@rotp/randomizer';
-import { foreignItemsOf } from '@rotp/randomizer';
-import { TAG } from '@rotp/randomizer';
-import { scoutedTextsState } from '@rotp/randomizer';
-import { stopScoutedTexts } from '@rotp/randomizer';
+import type { ItemKey, LocationKey, ForeignItem, OnlineCore, ScoutedInput, PhysicalPlan } from '@rotp/randomizer';
 
 const itemKeyOfId = (id: number): ItemKey | undefined => {
   try {

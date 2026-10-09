@@ -1,9 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { createEngineState } from '@rotp/navigation';
-import { addKey, spendKey, keyAvailable, buildReachContext, applyItem, syncReachTokens, onCheckVerified } from '@rotp/navigation';
-import { requirementsMet } from '@rotp/navigation';
-import { evaluateOutcome } from '@rotp/navigation';
+import { createEngineState, addKey, spendKey, keyAvailable, buildReachContext, applyItem, syncReachTokens, onCheckVerified, requirementsMet, evaluateOutcome } from '@rotp/navigation';
 import type { DetectedCheck } from '@rotp/navigation';
 import { describeDataset } from '../dataset-guard';
 

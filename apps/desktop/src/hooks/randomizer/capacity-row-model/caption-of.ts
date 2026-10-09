@@ -1,8 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { capacityBonusBaseKeyOf, capacityKeyOf } from '@rotp/randomizer';
-import type { CapacityFamilyId } from '@rotp/randomizer';
-import { optionByKey } from '@rotp/randomizer';
-import type { OptionDescription } from '@rotp/randomizer';
+import { capacityBonusBaseKeyOf, capacityKeyOf, optionByKey } from '@rotp/randomizer';
+import type { CapacityFamilyId, OptionDescription } from '@rotp/randomizer';
 
 const modeCaptionOf = (id: CapacityFamilyId): OptionDescription | undefined => {
   const option = optionByKey.get(capacityKeyOf(id, 'mode'));

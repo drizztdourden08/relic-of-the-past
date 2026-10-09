@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { getModule } from '@rotp/game-core';
-import { hasCoreExport } from '@rotp/game-core';
+import { getModule, hasCoreExport } from '@rotp/game-core';
 import { GET_EXPORT } from './ap-received-index.constants';
 
 const getApReceivedIndex = (): number | null => {

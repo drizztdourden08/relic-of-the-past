@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import { find, getScreen } from '@rotp/game-data';
-import { toScreenIdOf } from '@rotp/game-data';
+import { find, getScreen, toScreenIdOf } from '@rotp/game-data';
 
 const destinationsByScreen = new Map<string, string[]>();
 for (const conn of find('connection', () => true)) {

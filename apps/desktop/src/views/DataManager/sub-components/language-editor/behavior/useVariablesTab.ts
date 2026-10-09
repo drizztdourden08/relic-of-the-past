@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
 import { findHardcoded } from '@rotp/languages';
-import { countVariableUses } from '@rotp/design/packs';
-import { filterVariables } from '@rotp/design/packs';
+import { countVariableUses, filterVariables } from '@rotp/design/packs';
 import type { VariableFilter } from '@rotp/design/packs';
 import { acceptedOf, groupHardcoded } from './hardcoded-report';
 import { applyHardcoded } from './apply-hardcoded';

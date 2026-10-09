@@ -1,8 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo } from 'react';
-import { GEAR_LADDER_KINDS, arrowTypeOf, gearTierCells } from '@rotp/game-data';
-import { getItem } from '@rotp/game-data';
-import { spriteFilename } from '@rotp/game-data';
+import { GEAR_LADDER_KINDS, arrowTypeOf, gearTierCells, getItem, spriteFilename } from '@rotp/game-data';
 import { ownedMax } from '@app/game/gear-ownership';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { GEAR_LABELS, PASSIVE_RECORDS, SECTION_OF } from '../EnhancedPauseView.constants';

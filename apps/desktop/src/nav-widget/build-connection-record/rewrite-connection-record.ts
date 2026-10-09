@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import { toScreenIdOf } from '@rotp/game-data';
-import type { ConnectionRecord, ConnectionTag } from '@rotp/game-data';
-import type { PendingConnectionRecord } from '@rotp/game-data';
+import type { ConnectionRecord, ConnectionTag, PendingConnectionRecord } from '@rotp/game-data';
 import { buildConnectionRecord } from './build-connection-record';
 
 const rewriteConnectionRecord = (record: ConnectionRecord, tags: readonly ConnectionTag[]): PendingConnectionRecord | null => {

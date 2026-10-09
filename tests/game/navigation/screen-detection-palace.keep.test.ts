@@ -1,7 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { resolveCurrentScreenDetailed } from '@rotp/game-data';
-import { clearPalaceMismatches, getPalaceMismatches } from '@rotp/game-data';
+import { resolveCurrentScreenDetailed, clearPalaceMismatches, getPalaceMismatches } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 const BASELINES = {

@@ -1,7 +1,6 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
-import { MediaPreview } from '@rotp/design';
-import { MediaViewer } from '@rotp/design';
+import { MediaPreview, MediaViewer } from '@rotp/design';
 import { useFilePreview } from '../../../files/useFilePreview';
 import type { FileMediaProps } from './FileMedia.type';
 

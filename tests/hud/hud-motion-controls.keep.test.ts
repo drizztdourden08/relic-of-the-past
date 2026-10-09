@@ -9,9 +9,7 @@ import {
 import {
   drivenProperties, mergeTransition, TRANSITION_PROPERTIES,
 } from '@app/views/HudLayoutEditor/behavior/transition-edits';
-import { validateTransition, validateAnimations } from '@rotp/hud';
-import { collectReflowWarnings } from '@rotp/hud';
-import { easingFn, sampleKeyframes } from '@rotp/hud';
+import { validateTransition, validateAnimations, collectReflowWarnings, easingFn, sampleKeyframes } from '@rotp/hud';
 import type { HudAnimationKeyframe, HudNode } from '@rotp/hud';
 
 const SCOPE = { life_current: 8 };

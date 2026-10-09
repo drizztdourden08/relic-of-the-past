@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { assignCells, rowCountOf } from '@rotp/hud';
-import { isOverlay } from '@rotp/hud';
+import { assignCells, rowCountOf, isOverlay } from '@rotp/hud';
 import type { HudGridContainer, HudNode } from '@rotp/hud';
 
 const gridSize = (node: HudGridContainer): string =>

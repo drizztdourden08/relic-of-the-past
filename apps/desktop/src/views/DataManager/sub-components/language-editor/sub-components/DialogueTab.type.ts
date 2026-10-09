@@ -1,11 +1,9 @@
 /* @layer renderer-components @kind types */
-import type { DialogueEntry, GlossaryTerm, SetStructure, Variable, VariableIndex } from '@rotp/languages';
+import type { DialogueEntry, GlossaryTerm, SetStructure, Variable, VariableIndex, GlyphMetrics, GlyphSheet } from '@rotp/languages';
 import type { LanguageConfig } from '@rotp/asset-extraction';
-import type { GlyphMetrics, GlyphSheet } from '@rotp/languages';
 import type { EntryIssueMap } from '../language-editor.type';
 import type { EntryDraftState } from '../behavior/useEntryDraft.type';
-import type { LayoutLookup } from '@rotp/design/packs';
-import type { EntryViewMode, EntryViewState } from '@rotp/design/packs';
+import type { LayoutLookup, EntryViewMode, EntryViewState } from '@rotp/design/packs';
 
 type EntryFilter = 'all' | 'warnings' | 'choices';
 

@@ -1,8 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { CatalogConfig, CatalogGrant } from '@drizztdourden08/brock-catalog/main';
-import { INSTALL_SCHEME } from '@rotp/hub-contracts';
-import { isStoreKind } from '@rotp/hub-contracts';
-import { STORE_LIMITS } from '@rotp/hub-contracts';
+import { INSTALL_SCHEME, isStoreKind, STORE_LIMITS } from '@rotp/hub-contracts';
 import { HOOKSHOP_ENDPOINT } from './endpoint/hookshop-endpoint.constants';
 import { HOOKSHOP_LABEL } from './hookshop.constants';
 import { packInstalled } from './hooks/pack-installed';

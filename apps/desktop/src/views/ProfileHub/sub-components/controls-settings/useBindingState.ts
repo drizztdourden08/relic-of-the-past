@@ -1,12 +1,10 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback, useMemo } from 'react';
-import type { CoreVerb } from '@rotp/input-mapping';
-import type { InputProfile } from '@rotp/input-mapping';
+import type { CoreVerb, InputProfile } from '@rotp/input-mapping';
 import type { InputBinding, ModernSlot, SnesButton } from '@rotp/game-data';
 import type { FunctionAction, FunctionMapping } from '@rotp/features';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@rotp/features';
-import { resolveFunctionMappingIcon } from '@rotp/input-mapping';
-import { allowedDevices } from '@rotp/input-mapping';
+import { resolveFunctionMappingIcon, allowedDevices } from '@rotp/input-mapping';
 import { resolveLiveFamilyIcon } from './family-icon-map';
 import { findLiveDevice } from './live-device';
 import { padHex } from './pad-hex';

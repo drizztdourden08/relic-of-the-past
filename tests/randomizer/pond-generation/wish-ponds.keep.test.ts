@@ -1,12 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { ITEM } from '@rotp/randomizer';
-import { generatePlacement } from '@rotp/randomizer';
-import { buildFillWorld } from '@rotp/randomizer';
-import { fillOptionsFromSnapshot } from '@rotp/randomizer';
-import { parsePondProfiles } from '@rotp/randomizer';
-import { POND_INSTANCES } from '@rotp/randomizer';
-import { POND_RUNGS_BY_ID } from '@rotp/randomizer';
+import { ITEM, generatePlacement, buildFillWorld, fillOptionsFromSnapshot, parsePondProfiles, POND_INSTANCES, POND_RUNGS_BY_ID } from '@rotp/randomizer';
 import { ALL_NPC, ALL_POND_SLOTS, DELIVERABLE, EMPTY } from './pond-generation.constants';
 import { snapshotOf } from './snapshot-of';
 

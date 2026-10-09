@@ -1,7 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { constrainVoidTiles } from '@rotp/navigation';
-import { GRID_SIZE } from '@rotp/navigation';
+import { constrainVoidTiles, GRID_SIZE } from '@rotp/navigation';
 
 const grid = (fill: number): number[][] =>
   Array.from({ length: GRID_SIZE }, () => new Array<number>(GRID_SIZE).fill(fill));

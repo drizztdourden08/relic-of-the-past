@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, EmptyState, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import { MAX_NAME_GLYPHS } from '@rotp/languages';
-import { ENGINE_SAMPLES, NUMBER_KEY, PLAYER_NAME_KEY } from '@rotp/languages';
+import { MAX_NAME_GLYPHS, ENGINE_SAMPLES, NUMBER_KEY, PLAYER_NAME_KEY } from '@rotp/languages';
 import { PreviewBox } from './PreviewBox';
 import { PreviewPrompt } from './PreviewPrompt';
 import { previewScreens } from './preview-screens';

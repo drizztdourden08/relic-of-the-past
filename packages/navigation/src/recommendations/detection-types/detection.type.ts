@@ -1,10 +1,7 @@
 /* @layer shared-game @kind types */
-import type { EntityKind, ConnectionRecord, ScreenGameId, ScreenId } from '@rotp/game-data';
-import type { ScreenMatchResult } from '@rotp/game-data';
-import type { PalaceMismatch } from '@rotp/game-data';
-import type { ConnectionInfo } from '@rotp/game-core';
+import type { EntityKind, ConnectionRecord, ScreenGameId, ScreenId, ScreenMatchResult, PalaceMismatch } from '@rotp/game-data';
+import type { ConnectionInfo, ChestObservation, GrantedItemObservation, LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveSpriteObservation, LiveWalkBoundary, ObservedCrossing, ObservedTransition, SpriteCombatObservation } from '@rotp/game-core';
 import type { DraftRecommendation, RecommendationOrigin } from '../types';
-import type { ChestObservation, GrantedItemObservation, LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveSpriteObservation, LiveWalkBoundary, ObservedCrossing, ObservedTransition, SpriteCombatObservation } from '@rotp/game-core';
 
 interface ScreenObservations {
   match: ScreenMatchResult | null;

@@ -1,9 +1,7 @@
 /* @layer shared-store @kind constants */
-import type { Container, KindFacts } from '@rotp/hub-contracts';
-import type { FirstEntry } from '@rotp/hub-contracts';
-import { characterFacts } from '@rotp/hub-contracts';
+import type { Container, KindFacts, FirstEntry } from '@rotp/hub-contracts';
+import { characterFacts, musicFacts } from '@rotp/hub-contracts';
 import { languageFacts } from './language-facts';
-import { musicFacts } from '@rotp/hub-contracts';
 
 const FACTS: Record<Container, (entry: FirstEntry) => KindFacts | null> = {
   msul: musicFacts,

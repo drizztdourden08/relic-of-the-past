@@ -2,11 +2,9 @@
 import { describe, it, expect } from 'vitest';
 import { all, getItem, getItemByGameId } from '@rotp/game-data';
 import type { ItemId, ItemRecord } from '@rotp/game-data';
-import { registerDetector, runDetection } from '@rotp/navigation';
+import { registerDetector, runDetection, detectorFromStrategy, itemStrategy } from '@rotp/navigation';
 import type { ChestObservation } from '@rotp/game-core';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
-import { detectorFromStrategy } from '@rotp/navigation';
-import { itemStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({

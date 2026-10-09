@@ -4,10 +4,9 @@ import { log } from '../../log-bus';
 import { getSessionState } from '../randomizer-client/session-store';
 import { suppressLocationReport } from '../randomizer-client/location-poller';
 import { deliverItem } from '../delivery-api';
-import { markCheckCollected } from '@rotp/randomizer';
+import { markCheckCollected, grantVanilla } from '@rotp/randomizer';
 import { cheatItemGrantAllowed } from '@rotp/game-core';
 import type { CheckGrantPlan } from '@rotp/randomizer';
-import { grantVanilla } from '@rotp/randomizer';
 import { planCheckGrant } from './plan-check-grant';
 
 const grantFromCheck = (check: CheckRecord): CheckGrantPlan => {

@@ -1,7 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { isPrimaryModifier } from '@rotp/input-mapping';
-import { primaryModifierLabel } from '@rotp/input-mapping';
+import { isPrimaryModifier, primaryModifierLabel } from '@rotp/input-mapping';
 
 const held = (ctrl: boolean, meta: boolean) => ({ ctrlKey: ctrl, metaKey: meta });
 

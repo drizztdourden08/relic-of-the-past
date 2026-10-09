@@ -1,7 +1,6 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import { getMe, signOut as signOutRequest } from '@rotp/hub-client';
-import { ApiError, errorMessage } from '@rotp/hub-client';
+import { getMe, signOut as signOutRequest, ApiError, errorMessage } from '@rotp/hub-client';
 import type { Session } from '../../session/session-context';
 import { SIGNED_OUT } from './useSession.constants';
 import type { SessionState } from './useSession.type';

@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { CheckRecord, ItemId } from '@rotp/game-data';
-import type { CheckStatus } from '@rotp/game-data';
-import type { FilterState, GroupDimension, GroupDimensionDef, GroupNode, RunContext } from '@rotp/game-data';
+import type { CheckRecord, ItemId, CheckStatus, FilterState, GroupDimension, GroupDimensionDef, GroupNode, RunContext } from '@rotp/game-data';
 
 type ViewMode = 'compact' | 'detailed' | 'visual';
 

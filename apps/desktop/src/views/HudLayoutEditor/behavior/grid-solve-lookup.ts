@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { solveGrid } from '@rotp/hud';
-import type { MeasureContext } from '@rotp/hud';
-import type { PlacedNode } from '@rotp/hud';
-import type { HudGridContainer } from '@rotp/hud';
+import type { MeasureContext, PlacedNode, HudGridContainer } from '@rotp/hud';
 import type { GridSolve, GridSolveLookup } from './grid-solve';
 
 const isGrid = (placed: PlacedNode): boolean =>

@@ -1,8 +1,7 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { onOnlineNotice } from '@rotp/randomizer';
-import { deathLinkToastLine, deathLinkToastText, MAX_CAUSE_LENGTH } from '@rotp/randomizer';
+import { onOnlineNotice, deathLinkToastLine, deathLinkToastText, MAX_CAUSE_LENGTH } from '@rotp/randomizer';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import type { FakeRoom } from './ap-fake-server';

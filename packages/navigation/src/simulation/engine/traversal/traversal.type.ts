@@ -1,6 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ConnectionRecord } from '@rotp/game-data';
-import type { RequirementSet } from '@rotp/game-data';
+import type { ConnectionRecord, RequirementSet } from '@rotp/game-data';
 
 interface ScreenEdge {
   to: string;

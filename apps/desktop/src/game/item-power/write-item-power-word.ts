@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { getModule } from '@rotp/game-core';
-import { ITEM_POWER_GATE_WORD } from '@rotp/game-core';
+import { getModule, ITEM_POWER_GATE_WORD } from '@rotp/game-core';
 
 const writeItemPowerWord = (word: number): void => {
   const mod = getModule();

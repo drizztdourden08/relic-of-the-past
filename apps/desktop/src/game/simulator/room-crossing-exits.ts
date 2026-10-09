@@ -1,15 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import type { ConnectionInfo, GridPos, ScreenCrossing, ScreenCrossings } from '@rotp/game-core';
-import type { SimExit } from '@rotp/navigation';
+import type { SimExit, EdgeName, RoomExitContext, RoomExitPass } from '@rotp/navigation';
 import { wasmGetRoomDoorInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundariesFor } from '..';
-import { enrichEntrances } from '@rotp/navigation';
-import { connectionCrossingId, midOf, takeableCrossing } from '@rotp/navigation';
-import { entryFromEdge } from '@rotp/navigation';
-import type { EdgeName } from '@rotp/navigation';
-import { OPPOSITE } from '@rotp/navigation';
+import { enrichEntrances, connectionCrossingId, midOf, takeableCrossing, entryFromEdge, OPPOSITE, LAST_ROW, OUTDOOR_LANDING_DEPTH, WARP_DOOR, WARP_SIDES } from '@rotp/navigation';
 import { interiorScreenId, owScreenId, screenAreaInfo } from './screen-resolve';
-import { LAST_ROW, OUTDOOR_LANDING_DEPTH, WARP_DOOR, WARP_SIDES } from '@rotp/navigation';
-import type { RoomExitContext, RoomExitPass } from '@rotp/navigation';
 
 const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
 const lastNumber = (id: string): number => Number(id.slice(id.lastIndexOf(':') + 1));

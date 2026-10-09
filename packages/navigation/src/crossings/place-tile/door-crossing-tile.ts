@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GridPos } from '@rotp/game-core';
-import type { ReachState } from '@rotp/game-core';
+import type { GridPos, ReachState } from '@rotp/game-core';
 import { ASSUMED_DEPTH, INWARD } from './place-tile.constants';
 import { clampToGrid } from './clamp-to-grid';
 import { isReached } from './is-reached';

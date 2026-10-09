@@ -1,9 +1,6 @@
 /* @layer bridge-wasm @kind types */
-import type { ConnectionInfo, FloodFillResult, GridPos } from '@rotp/game-core';
-import type { ReachState } from '@rotp/game-core';
-import type { TileReq } from '@rotp/game-data';
-import type { ConnectionKind, ConnectionSide } from '@rotp/game-data';
-import type { CrossingClass, CrossingOrigin, CrossingSpan } from '@rotp/game-core';
+import type { ConnectionInfo, FloodFillResult, GridPos, ReachState, CrossingClass, CrossingOrigin, CrossingSpan } from '@rotp/game-core';
+import type { TileReq, ConnectionKind, ConnectionSide } from '@rotp/game-data';
 import type { ResolvedTarget } from './resolve-target';
 
 interface CrossingScope {

@@ -1,8 +1,7 @@
 /* @layer renderer-hooks @kind logic */
 import { POND_MODE_KEYS } from '@rotp/randomizer';
 import type { LockedOptionGroup } from '@app/compounds/RandomizerOptionRow';
-import type { OptionDef } from '@rotp/randomizer';
-import type { PondMode } from '@rotp/randomizer';
+import type { OptionDef, PondMode } from '@rotp/randomizer';
 
 const narrowed = (option: OptionDef, modes: readonly PondMode[]): OptionDef =>
   (option.key === POND_MODE_KEYS.capacity

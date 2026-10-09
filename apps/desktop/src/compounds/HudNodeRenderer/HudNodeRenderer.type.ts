@@ -1,10 +1,9 @@
 /* @layer renderer-hud @kind types */
 import type { HeartMode } from '../../primitives/HudHeart';
 import type { HudCountdownVariant } from '../HudCountdown';
-import type { PlacedNode } from '@rotp/hud';
+import type { PlacedNode, HudElementSpec } from '@rotp/hud';
 import type { SlotIndex } from '@rotp/game-data';
 import type { GlyphSource } from '@rotp/input-mapping';
-import type { HudElementSpec } from '@rotp/hud';
 
 type HudGlyphSpec = Extract<HudElementSpec, { type: 'glyph' }>;
 

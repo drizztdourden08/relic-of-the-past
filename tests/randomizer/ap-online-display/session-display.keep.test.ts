@@ -1,18 +1,12 @@
 /* @layer tests @kind test */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME } from '@rotp/randomizer';
-import { ITEM } from '@rotp/randomizer';
-import { itemKeyName } from '@rotp/randomizer';
-import { buildPlacementView } from '@rotp/randomizer';
+import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME, ITEM, itemKeyName, buildPlacementView, virtualCheckIdOf } from '@rotp/randomizer';
 import { currentRun } from '@app/game/randomizer-client/run-kind';
-import { virtualCheckIdOf } from '@rotp/randomizer';
 import {
   getSessionState, resetSession, startOnline, stopActive,
 } from '@app/game/randomizer-client/session-store';
-import type { ForeignOwners } from '@rotp/randomizer';
+import type { ForeignOwners, LocationKey, Placement } from '@rotp/randomizer';
 import type { OnlineSession } from '@app/game/randomizer-client/online-session';
-import type { LocationKey } from '@rotp/randomizer';
-import type { Placement } from '@rotp/randomizer';
 
 type Status = OnlineSession['status'];
 

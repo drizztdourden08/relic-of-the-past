@@ -1,7 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { resolveFeatures, requirementClosure, suggestionsFor } from '@rotp/features';
-import { FEATURES_BY_ID } from '@rotp/features';
+import { resolveFeatures, requirementClosure, suggestionsFor, FEATURES_BY_ID } from '@rotp/features';
 
 describe('resolveFeatures prunes requirements', () => {
   it('drops a child whose requirement is missing', () => {

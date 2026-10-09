@@ -4,8 +4,7 @@ import { Box, Text, TextInput, EmptyState, SectionHeader, SegmentedControl } fro
 import { structuralEntry } from '@rotp/languages';
 import { EntryEditor } from './EntryEditor';
 import { LockedEntryCard } from './LockedEntryCard';
-import { EntryListItem } from '@rotp/design/packs';
-import { PreviewView } from '@rotp/design/packs';
+import { EntryListItem, PreviewView } from '@rotp/design/packs';
 import { FILTER_OPTIONS } from './DialogueTab.constants';
 import type { ChangeEvent } from 'react';
 import type { DialogueTabProps, EntryFilter } from './DialogueTab.type';

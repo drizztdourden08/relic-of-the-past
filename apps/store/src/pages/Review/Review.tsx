@@ -1,9 +1,7 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { DataTable, FilterBar } from '@drizztdourden08/tessera/composites';
-import { SitePage } from '@rotp/design';
-import { Workbench } from '@rotp/design';
-import { SavedViewsMenu } from '@rotp/design';
+import { SitePage, Workbench, SavedViewsMenu } from '@rotp/design';
 import { reviewRowId } from '../../review/review-row';
 import { REVIEW_DEFAULT_COLUMNS } from '../../review/review-schema';
 import { useReviewPage } from './behavior/useReviewPage';

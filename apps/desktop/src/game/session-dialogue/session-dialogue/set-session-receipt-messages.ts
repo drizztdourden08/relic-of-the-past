@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { ARRIVAL_SLOTS } from '@rotp/game-core';
+import { ARRIVAL_SLOTS, sessionPool } from '@rotp/game-core';
 import { compose } from './compose';
-import { sessionPool } from '@rotp/game-core';
 import type { ReceiptLine } from '@rotp/game-core';
 
 const setSessionReceiptMessages = (lines: readonly ReceiptLine[]): number[] | null => {

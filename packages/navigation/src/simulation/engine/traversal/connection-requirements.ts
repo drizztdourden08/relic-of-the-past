@@ -1,8 +1,6 @@
 /* @layer shared-game @kind logic */
-import { connectionTagKeysOf, get, hasTagKey } from '@rotp/game-data';
-import { toScreenIdOrNone } from '@rotp/game-data';
-import type { ConnectionRecord } from '@rotp/game-data';
-import type { RequirementSet } from '@rotp/game-data';
+import { connectionTagKeysOf, get, hasTagKey, toScreenIdOrNone } from '@rotp/game-data';
+import type { ConnectionRecord, RequirementSet } from '@rotp/game-data';
 import { barrierTagsToRequirements } from '../../requirements-map/barrier-tags-to-requirements';
 
 const isCrossWorld = (conn: ConnectionRecord): boolean => {

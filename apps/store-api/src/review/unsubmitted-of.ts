@@ -1,6 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ReviewEntry } from '@rotp/hub-contracts';
-import type { StoreItem } from '@rotp/hub-contracts';
+import type { ReviewEntry, StoreItem } from '@rotp/hub-contracts';
 
 const readyEntries = (item: StoreItem): ReviewEntry[] =>
   item.versions

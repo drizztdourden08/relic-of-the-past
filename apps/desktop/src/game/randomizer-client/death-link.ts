@@ -1,11 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { DEATH_LINK_TAG } from '@rotp/randomizer';
-import { emitOnlineNotice } from '@rotp/randomizer';
-import { deathLinkOnlineNotice } from '@rotp/randomizer';
-import type { DeathLinkNotice } from '@rotp/randomizer';
-import { DEATH_LINK_GUARD_MS, KILL_LOG_NOTE, MS_PER_SECOND } from '@rotp/randomizer';
-import type { DeathLink, DeathLinkDeps } from '@rotp/randomizer';
+import { DEATH_LINK_TAG, emitOnlineNotice, deathLinkOnlineNotice, DEATH_LINK_GUARD_MS, KILL_LOG_NOTE, MS_PER_SECOND } from '@rotp/randomizer';
+import type { DeathLinkNotice, DeathLink, DeathLinkDeps } from '@rotp/randomizer';
 
 const emitDeathLinkNotice = (notice: DeathLinkNotice): void => emitOnlineNotice(deathLinkOnlineNotice(notice));
 

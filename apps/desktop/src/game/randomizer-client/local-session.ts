@@ -1,17 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { deliverItem, deliverNpcCheck } from '../delivery-api';
-import { itemKeyName } from '@rotp/randomizer';
+import { itemKeyName, CLASS_DEFAULT_MESSAGE, COMPLETION_NOTE } from '@rotp/randomizer';
 import { armSessionFromPlacement } from './session-start';
 import { disarmSession } from './session-stop';
 import { startLocationPolling } from './location-poller';
-import type { Placement } from '@rotp/randomizer';
+import type { Placement, PlanCounts, PlanEntry, RandomizerSession, SessionStatusListener, LocalSession } from '@rotp/randomizer';
 import type { MessageIdOf } from './apply-overrides';
-import type { PlanCounts, PlanEntry } from '@rotp/randomizer';
 import type { SessionReceiptTexts } from './receipt-text-refresh';
-import type { RandomizerSession, SessionStatusListener } from '@rotp/randomizer';
-import { CLASS_DEFAULT_MESSAGE, COMPLETION_NOTE } from '@rotp/randomizer';
-import type { LocalSession } from '@rotp/randomizer';
 
 const emptyCounts = (): PlanCounts =>
   ({ override: 0, overrideNpc: 0, overrideDrop: 0, overrideStanding: 0, overrideScripted: 0, overrideShop: 0, deliver: 0, vanillaLocked: 0, pollBlind: 0, errors: 0 });

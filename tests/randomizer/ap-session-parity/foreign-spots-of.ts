@@ -1,7 +1,6 @@
 /* @layer tests @kind helper */
 import { isShopSlotLocation } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
-import type { Placement } from '@rotp/randomizer';
+import type { LocationKey, Placement } from '@rotp/randomizer';
 
 const foreignSpotsOf = (placement: Placement): LocationKey[] => {
   const keys = Object.keys(placement.locations) as LocationKey[];

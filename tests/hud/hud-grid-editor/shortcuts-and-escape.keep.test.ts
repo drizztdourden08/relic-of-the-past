@@ -2,8 +2,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { act, createElement as h } from 'react';
-import { layoutHud, placedById } from '@rotp/hud';
-import { validateLayout } from '@rotp/hud';
+import { layoutHud, placedById, validateLayout } from '@rotp/hud';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { GridEditor } from '@app/views/HudLayoutEditor/sub-components/GridEditor';
 import { patchNode } from '@app/views/HudLayoutEditor/behavior/node-edits';

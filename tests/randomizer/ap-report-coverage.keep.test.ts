@@ -1,15 +1,9 @@
 /* @layer tests @kind test */
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildOptionsSnapshot } from '@rotp/randomizer';
-import { generateFromSnapshot } from '@rotp/randomizer';
-import { AP_ITEM_IDS, AP_LOCATION_IDS } from '@rotp/randomizer';
-import { locationKeyOfApId } from '@rotp/randomizer';
+import { buildOptionsSnapshot, generateFromSnapshot, AP_ITEM_IDS, AP_LOCATION_IDS, locationKeyOfApId, checkIdOfLocation } from '@rotp/randomizer';
 import { find } from '@rotp/game-data';
-import type { ItemKey } from '@rotp/randomizer';
-import { checkIdOfLocation } from '@rotp/randomizer';
+import type { ItemKey, LocationKey, OptionValue } from '@rotp/randomizer';
 import type { CheckId } from '@rotp/game-data';
-import type { LocationKey } from '@rotp/randomizer';
-import type { OptionValue } from '@rotp/randomizer';
 import type * as FireRegistry from '@app/game/randomizer-client/override-fire-registry';
 
 const errors = vi.hoisted(() => [] as string[]);

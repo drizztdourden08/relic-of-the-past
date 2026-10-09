@@ -1,6 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { RomImportResult } from '@rotp/roms';
-import type { RomKind } from '@rotp/roms';
+import type { RomImportResult, RomKind } from '@rotp/roms';
 import { roms } from '@rotp/roms';
 import { platformFiles } from '../platform-files';
 import { emitRomProgress } from './emit-rom-progress';

@@ -1,6 +1,5 @@
 /* @layer renderer-hooks @kind constants */
-import { POND_PRICE_LADDER } from '@rotp/randomizer';
-import { CURVE_LABELS } from '@rotp/randomizer';
+import { POND_PRICE_LADDER, CURVE_LABELS } from '@rotp/randomizer';
 import type { PondSetting } from '@rotp/randomizer';
 
 const MODE_LABELS: Readonly<Record<PondSetting['mode'], string>> = {

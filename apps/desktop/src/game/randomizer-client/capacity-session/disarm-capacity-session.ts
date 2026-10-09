@@ -4,8 +4,7 @@ import { clearCapacityBonus } from '../../capacity-bonus';
 import { clearCapacityPlan } from '../../capacity-plan';
 import { clearCapacityFixedLines } from '../../capacity-fixed-lines';
 import { clearUpgradeIcons } from '../../upgrade-icons';
-import { clearSessionWalletTable } from '@rotp/randomizer';
-import { setActiveCapacity } from '@rotp/randomizer';
+import { clearSessionWalletTable, setActiveCapacity } from '@rotp/randomizer';
 
 const disarmCapacitySession = (): void => {
   setActiveCapacity(null);

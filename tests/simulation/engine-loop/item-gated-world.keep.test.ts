@@ -1,9 +1,7 @@
 /* @layer tests @kind test */
 import { it, expect, afterAll } from 'vitest';
 import type { SimEvent, DetectedCheck } from '@rotp/navigation';
-import { createEngine } from '@rotp/navigation';
-import { createEngineState } from '@rotp/navigation';
-import { buildAdjacency } from '@rotp/navigation';
+import { createEngine, createEngineState, buildAdjacency } from '@rotp/navigation';
 import { unregisterRecord } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import {

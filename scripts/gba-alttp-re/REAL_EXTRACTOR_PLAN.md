@@ -31,7 +31,7 @@ contract embeds LoROM addressing and bank-boundary behavior. Share a lower-level
 binary reader and expose source-specific readers above it.
 
 ```text
-shared/asset-extraction/
+packages/asset-extraction/src/
   rom/
     binary-reader.ts              # endian reads, slices, hashes
     snes-rom.ts                   # LoROM mapping and SNES validation

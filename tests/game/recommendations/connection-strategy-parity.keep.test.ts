@@ -1,7 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { all, connectionTagKeysOf, find } from '@rotp/game-data';
-import { toScreenIdOf, toScreenIdOrNone } from '@rotp/game-data';
+import { all, connectionTagKeysOf, find, toScreenIdOf, toScreenIdOrNone } from '@rotp/game-data';
 import type { ConnectionRecord, ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { ConnectionInfo } from '@rotp/game-core';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';

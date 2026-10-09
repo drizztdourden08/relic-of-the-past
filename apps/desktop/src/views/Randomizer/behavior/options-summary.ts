@@ -1,15 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { optionCatalog } from '@rotp/randomizer';
-import { darkRoomSettingOfValues } from '@rotp/randomizer';
-import { DARK_ROOM_LIGHT_FIELDS } from '@rotp/randomizer';
-import { dungeonItemSettingFromSnapshot } from '@rotp/randomizer';
-import { parsePondProfiles } from '@rotp/randomizer';
-import { POND_IDS } from '@rotp/randomizer';
-import { PROGRESSIVE_FAMILIES } from '@rotp/randomizer';
-import { progressiveSettingOfValues } from '@rotp/randomizer';
-import { tickedCountOf } from '@rotp/randomizer';
-import { storyGateValuesOf, storyGatesOfValues } from '@rotp/randomizer';
-import { DEFAULT_STORY_GATES } from '@rotp/randomizer';
+import { optionCatalog, darkRoomSettingOfValues, DARK_ROOM_LIGHT_FIELDS, dungeonItemSettingFromSnapshot, parsePondProfiles, POND_IDS, PROGRESSIVE_FAMILIES, progressiveSettingOfValues, tickedCountOf, storyGateValuesOf, storyGatesOfValues, DEFAULT_STORY_GATES } from '@rotp/randomizer';
 import { isChanged } from '@app/hooks/randomizer/option-tab-model';
 import { scopeFlagsOf } from './scope-flags';
 import { LEGACY_POND_MODE } from './options-summary.constants';

@@ -1,6 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ItemCardView } from '@rotp/hub-contracts';
-import type { StoreItem } from '@rotp/hub-contracts';
+import type { ItemCardView, StoreItem } from '@rotp/hub-contracts';
 import { liveVersionOf } from './versions';
 
 const ratingAverage = ({ ratingSum, ratingCount }: StoreItem['stats']): number | null =>

@@ -1,6 +1,5 @@
 /* @layer tests @kind helper */
-import type { Holding } from '@rotp/randomizer';
-import type { World } from '@rotp/randomizer';
+import type { Holding, World } from '@rotp/randomizer';
 import { randomState } from './random-state';
 import { scatterPlacements } from './scatter-placements';
 

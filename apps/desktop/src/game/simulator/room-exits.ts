@@ -1,17 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 import type { GridPos } from '@rotp/game-core';
 import type { TileReq } from '@rotp/game-data';
-import type { SimExit } from '@rotp/navigation';
-import { collectCrossings } from '@rotp/navigation';
-import { usableCrossings } from '@rotp/navigation';
-import { summarizeRun } from '@rotp/navigation';
-import { floodRoomRun } from '@rotp/navigation';
+import type { SimExit, DetectedScreen } from '@rotp/navigation';
+import { collectCrossings, usableCrossings, summarizeRun, floodRoomRun, stepDistances, distanceAt, sortExitsByDistance, reachedGrid, dedupe, OUTSIDE_ORIGINS, ROOM_EXIT_UNREACHED } from '@rotp/navigation';
 import { cachedEntranceOf } from './screen-resolve';
-import { stepDistances, distanceAt, sortExitsByDistance, reachedGrid } from '@rotp/navigation';
 import { roomCrossingExits } from './room-crossing-exits';
-import { dedupe } from '@rotp/navigation';
-import { OUTSIDE_ORIGINS, ROOM_EXIT_UNREACHED } from '@rotp/navigation';
-import type { DetectedScreen } from '@rotp/navigation';
 
 const roomCounts = (exits: readonly SimExit[]): { entranceCount: number; edgeCount: number } => {
   const outside = exits.filter((e) => OUTSIDE_ORIGINS.has(e.origin ?? ''));

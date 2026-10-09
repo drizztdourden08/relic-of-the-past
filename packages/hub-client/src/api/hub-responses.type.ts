@@ -1,8 +1,5 @@
 /* @layer site-kit @kind types */
-import type { Identity, SavedView } from '@rotp/hub-contracts';
-import type { SiteAccess, SiteUser } from '@rotp/hub-contracts';
-import type { Device } from '@rotp/hub-contracts';
-import type { DiscordRole, Group, Rights } from '@rotp/hub-contracts';
+import type { Identity, SavedView, SiteAccess, SiteUser, Device, DiscordRole, Group, Rights } from '@rotp/hub-contracts';
 
 type MeResponse = {
   user: SiteUser;

@@ -3,9 +3,8 @@ import { computeRecordStatuses } from '@rotp/game-data';
 import { trackerReading } from '@rotp/randomizer';
 import { grantedInventory, recordRowOverrides } from '../record-row-inputs';
 import { rowsWithoutALocation } from './rows-without-a-location';
-import type { CheckId } from '@rotp/game-data';
+import type { CheckId, CheckStatus } from '@rotp/game-data';
 import type { LocationKey } from '@rotp/randomizer';
-import type { CheckStatus } from '@rotp/game-data';
 import type { TrackerStatusParams } from './tracker-statuses.type';
 
 const trackerStatuses = (params: TrackerStatusParams): Map<CheckId, CheckStatus> => {

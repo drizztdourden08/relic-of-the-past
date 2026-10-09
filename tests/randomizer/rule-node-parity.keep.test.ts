@@ -1,7 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { generateFromSnapshot } from '@rotp/randomizer';
-import { primitiveHelperNames } from '@rotp/randomizer';
+import { generateFromSnapshot, primitiveHelperNames } from '@rotp/randomizer';
 import { exportParity, placementDigest, ruleDigest, snapshotOf } from './rule-parity-harness';
 import type { OptionValue } from '@rotp/randomizer';
 

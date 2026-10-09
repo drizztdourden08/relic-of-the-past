@@ -1,7 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { PackedLangEntry } from '@rotp/asset-extraction';
-import { compileSets } from '@rotp/languages';
-import { readLanguageSets } from '@rotp/languages';
+import { compileSets, readLanguageSets } from '@rotp/languages';
 import { createNodeFileStore } from '../lib/node-file-store';
 import { logToRenderer } from '../lib/renderer-log';
 

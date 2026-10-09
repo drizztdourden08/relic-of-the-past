@@ -1,14 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, familyOfOptionKey, isCapacityBonusKey } from '@rotp/randomizer';
-import { isShopPriceOptionKey } from '@rotp/randomizer';
-import { isShopScopeOptionKey } from '@rotp/randomizer';
-import { isDarkRoomOptionKey } from '@rotp/randomizer';
-import { isDifficultyOptionKey } from '@rotp/randomizer';
-import { isPondValueKey } from '@rotp/randomizer';
-import { isProgressiveTierKey } from '@rotp/randomizer';
-import { isProgressiveModeKey } from '@rotp/randomizer';
-import { RETRO_BOW_KEY } from '@rotp/randomizer';
-import { isRetroOptionKey } from '@rotp/randomizer';
+import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, familyOfOptionKey, isCapacityBonusKey, isShopPriceOptionKey, isShopScopeOptionKey, isDarkRoomOptionKey, isDifficultyOptionKey, isPondValueKey, isProgressiveTierKey, isProgressiveModeKey, RETRO_BOW_KEY, isRetroOptionKey } from '@rotp/randomizer';
 import type { OptionDef, OptionGroup } from '@rotp/randomizer';
 import type { CatalogByLock, LockedOptionGroup } from '../RandomizerOptionRow.type';
 

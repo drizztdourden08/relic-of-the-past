@@ -1,8 +1,5 @@
 /* @layer store-site @kind component */
-import { SiteKit } from '@rotp/design';
-import { RouteGuard } from '@rotp/design';
-import { SiteFrame } from '@rotp/design';
-import { SignIn } from '@rotp/design';
+import { SiteKit, RouteGuard, SiteFrame, SignIn } from '@rotp/design';
 import { STORE_SITE_UI } from './site/site.constants';
 import { HOME_PATH } from './routes.constants';
 import { routes } from './routes';

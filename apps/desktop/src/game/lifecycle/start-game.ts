@@ -1,13 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { reassertHostGates } from '@rotp/game-core';
-import { getGameState, setModule, setProfileId, setState } from '@rotp/game-core';
+import { reassertHostGates, getGameState, setModule, setProfileId, setState, detachCrashHandler, exposeDebugHandles, CRASH_GUARD_ARM_DELAY_MS, lifecycleState } from '@rotp/game-core';
 import { bootCoreModule } from './boot-core-module';
 import { createWasmCrashGuard } from './create-wasm-crash-guard';
-import { detachCrashHandler } from '@rotp/game-core';
-import { exposeDebugHandles } from '@rotp/game-core';
-import { CRASH_GUARD_ARM_DELAY_MS } from '@rotp/game-core';
-import { lifecycleState } from '@rotp/game-core';
 import { readProfileSram } from './read-profile-sram';
 import { startSessionServices } from './start-session-services';
 

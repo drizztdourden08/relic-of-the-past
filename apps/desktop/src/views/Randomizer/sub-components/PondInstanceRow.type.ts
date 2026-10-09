@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { PondDemandView } from '@rotp/randomizer';
-import type { PondCeilings } from '@rotp/randomizer';
+import type { PondDemandView, PondCeilings, PondInstance, PondSetting } from '@rotp/randomizer';
 import type { PondImportSource } from '@app/compounds/PondImportControl';
-import type { PondInstance } from '@rotp/randomizer';
-import type { PondSetting } from '@rotp/randomizer';
 
 interface PondInstanceRowProps {
   pond: PondInstance;

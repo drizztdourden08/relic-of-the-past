@@ -1,7 +1,6 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { packPackedBytes } from '@rotp/asset-extraction';
-import { RANDOMIZER_MSG_BASE } from '@rotp/asset-extraction';
+import { packPackedBytes, RANDOMIZER_MSG_BASE } from '@rotp/asset-extraction';
 import { renderFromServer, renderOnline } from '@rotp/randomizer';
 import {
   appendSessionReceiptMessage, clearSessionDialogue, releaseSessionReceiptMessage, setSessionReceiptMessages,

@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import { getItem } from '@rotp/game-data';
-import { isProgressiveCapacityItemName } from '@rotp/game-data';
+import { getItem, isProgressiveCapacityItemName } from '@rotp/game-data';
 import { familyOfDungeonItem } from '../../world/dungeon-items/dungeon-item-modes';
 import { itemKeyName } from '../../world/display-names/item-key-name';
 import { ITEM } from '../../world/item-ids.data';

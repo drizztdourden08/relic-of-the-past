@@ -2,8 +2,7 @@
 import { standardNameOfCheck } from '@rotp/game-data';
 import { scopedChecks } from './scoped-checks';
 import { scopeRowsOf } from './scope-rows-of';
-import type { ItemId } from '@rotp/game-data';
-import type { CheckRecord } from '@rotp/game-data';
+import type { ItemId, CheckRecord } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
 import type { CheckScope } from './scope-tables.type';
 

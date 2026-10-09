@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { OutfitId, OutfitPalette, SheetPalette, PlayerSheet } from '@rotp/game-data';
 import type { ReadString } from './zspr.type';
-import { SHEET_BYTES, COLORS_PER_OUTFIT, OUTFIT_IDS } from '@rotp/game-data';
-import { STOCK_GLOVES } from '@rotp/game-data';
+import { SHEET_BYTES, COLORS_PER_OUTFIT, OUTFIT_IDS, STOCK_GLOVES } from '@rotp/game-data';
 import { isZspr } from './is-zspr';
 import { BYTES_PER_WORD, GLOVE_BLOCK, HEADER_BYTES, OUTFIT_BLOCK, ZSPR_HEADER } from './zspr.constants';
 

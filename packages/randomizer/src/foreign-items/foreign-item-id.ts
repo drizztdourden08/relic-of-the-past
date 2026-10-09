@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { isGrantableReceiveId } from '@rotp/game-data';
-import { getModule } from '@rotp/game-core';
-import { hasCoreExport } from '@rotp/game-core';
+import { getModule, hasCoreExport } from '@rotp/game-core';
 import { FOREIGN_ITEM_ID } from './foreign-item-sentinel';
 import { isForeignIconId } from './is-foreign-icon-id';
 

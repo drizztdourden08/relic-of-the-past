@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import { noticeSettingKey } from '@rotp/game-core';
-import { ONLINE_NOTICE_DEFAULTS } from '@rotp/game-core';
+import { noticeSettingKey, ONLINE_NOTICE_DEFAULTS } from '@rotp/game-core';
 import type { OnlineNoticeKind, OnlineNoticeSettings } from '@rotp/features';
 
 const isNoticeKindShown = (settings: Partial<OnlineNoticeSettings> | null, kind: OnlineNoticeKind): boolean => {

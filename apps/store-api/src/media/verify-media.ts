@@ -1,8 +1,6 @@
 /* @layer store-api @kind logic */
-import type { ListingPatchBody } from '@rotp/hub-contracts';
-import type { MediaRole } from '@rotp/hub-contracts';
+import type { ListingPatchBody, MediaRole, MediaRef } from '@rotp/hub-contracts';
 import { STORE_LIMITS } from '@rotp/hub-contracts';
-import type { MediaRef } from '@rotp/hub-contracts';
 import { badRequest } from '@rotp/hub-server';
 import { storeBucket } from '../storage/store-bucket';
 

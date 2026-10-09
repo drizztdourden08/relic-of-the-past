@@ -1,20 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-import type { LocationKey } from '@rotp/randomizer';
-import { receiptCountsOf } from '@rotp/randomizer';
-import { receiptLineKey } from '@rotp/randomizer';
-import { isForeignItem } from '@rotp/randomizer';
+import type { LocationKey, Placement, PhysicalPlan, ForeignItemOf, SessionReceiptTexts } from '@rotp/randomizer';
+import { receiptCountsOf, receiptLineKey, isForeignItem, completedLocationKeys, buildPlanReceiptTexts, pondDemandLineKey } from '@rotp/randomizer';
 import { log } from '../../log-bus';
 import { setSessionReceiptMessages } from '../session-dialogue';
 import { getCompletedChecks, onCompletedChecksChanged } from '../tracker';
-import { completedLocationKeys } from '@rotp/randomizer';
 import { firedLocations, onFiredLocation } from './override-fire-registry';
-import { buildPlanReceiptTexts } from '@rotp/randomizer';
-import { pondDemandLineKey } from '@rotp/randomizer';
-import type { Placement } from '@rotp/randomizer';
 import type { CheckId } from '@rotp/game-data';
-import type { PhysicalPlan } from '@rotp/randomizer';
-import type { ForeignItemOf } from '@rotp/randomizer';
-import type { SessionReceiptTexts } from '@rotp/randomizer';
 
 const completedKeysOf = (checks: ReadonlySet<CheckId>): Set<LocationKey> =>
   completedLocationKeys(checks, firedLocations());

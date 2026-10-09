@@ -1,14 +1,5 @@
 /* @layer bridge-wasm @kind barrel */
-export { LIVE_SETTINGS } from '@rotp/game-core';
-export { liveSettingsNow } from '@rotp/game-core';
-export { primeLiveSettings } from '@rotp/game-core';
+export { LIVE_SETTINGS, liveSettingsNow, primeLiveSettings, reassertFeatureFlags, reassertGateWord3, reassertHideSpaceBeyondWalls, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertVsync } from '@rotp/game-core';
 export { pushLiveSettings } from './push-live-settings';
-export { reassertFeatureFlags } from '@rotp/game-core';
 export { reassertFeatureWords } from './reassert-feature-words';
-export { reassertGateWord3 } from '@rotp/game-core';
-export { reassertHideSpaceBeyondWalls } from '@rotp/game-core';
-export { reassertHudHidden } from '@rotp/game-core';
 export { reassertLiveFlagsAfterLoad } from './reassert-live-flags-after-load';
-export { reassertPauseHidden } from '@rotp/game-core';
-export { reassertVolumes } from '@rotp/game-core';
-export { reassertVsync } from '@rotp/game-core';

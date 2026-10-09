@@ -1,8 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { roomHashOf } from '@rotp/randomizer';
-import { ROOM_MISMATCH } from '@rotp/randomizer';
+import { roomHashOf, ROOM_MISMATCH } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeRoom } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';

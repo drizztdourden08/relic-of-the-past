@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { reassertGateWord3 } from '../live-settings';
-import { setNpcOverridesActive } from '@rotp/game-core';
-import { getModule } from '@rotp/game-core';
+import { setNpcOverridesActive, getModule } from '@rotp/game-core';
 
 const armNpcOverrideGate = (): ReturnType<typeof getModule> => {
   const mod = getModule();

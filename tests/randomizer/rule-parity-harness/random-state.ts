@@ -1,7 +1,6 @@
 /* @layer tests @kind helper */
 import { createCollectionState } from '@rotp/randomizer';
-import type { Holding } from '@rotp/randomizer';
-import type { World } from '@rotp/randomizer';
+import type { Holding, World } from '@rotp/randomizer';
 
 const randomState = (world: World, items: readonly Holding[], random: () => number) => {
   const state = createCollectionState(world);

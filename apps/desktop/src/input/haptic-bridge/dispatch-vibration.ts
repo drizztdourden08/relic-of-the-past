@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import type { VibrationSegment } from '@rotp/input-mapping';
 import { getPlatform } from '@drizztdourden08/brock-react';
-import { HID_WORKER_OVERHEAD_MS } from '@rotp/input-mapping';
-import { hapticState } from '@rotp/input-mapping';
+import { HID_WORKER_OVERHEAD_MS, hapticState } from '@rotp/input-mapping';
 import { sendToController } from './send-to-controller';
 
 const scheduleDecay = (ms: number): void => {

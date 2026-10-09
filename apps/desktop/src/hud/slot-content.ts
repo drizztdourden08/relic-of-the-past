@@ -4,8 +4,7 @@ import { resolveGlyph, slotGlyph } from '@rotp/input-mapping';
 import { GROUP_GLYPH_ART } from '@app/compounds/HudNodeRenderer';
 import type { GlyphSource } from '@rotp/input-mapping';
 import type { HudGlyphSpec, HudSlotContent } from '@app/compounds/HudNodeRenderer';
-import type { SlotAssignment, SlotIndex } from '@rotp/game-data';
-import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
+import type { SlotAssignment, SlotIndex, SdlAxisName, SdlButtonName } from '@rotp/game-data';
 import type { SlotContent, SlotContentInput } from './slot-content.type';
 import { NO_ASSIGNMENT } from '@rotp/hud';
 

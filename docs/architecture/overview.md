@@ -70,7 +70,7 @@ If a change would break an invariant, the code is in the wrong zone. Re-place it
 | Needs Node/OS/fs/native, windows, ROM/profile/save IO | `apps/desktop/electron/<domain>/` behind a `domain:action` IPC handler | Add the channel to the `apps/desktop/src/ipc/` contract + join map (`window.api` type derives). Use the `electron` skill. |
 | Talks to the running game / WASM | `apps/desktop/src/lib/game/` | New C function → `add-wasm-function` (C + bridge; `EMSCRIPTEN_KEEPALIVE` auto-exports, so there is no export list). |
 | Pure game rule/algorithm/data, no React/Node | `shared/game/` (navigation / checks / items / data / logic / seed) | Must stay pure & testable. |
-| Parses a ROM / builds assets | `shared/asset-extraction/` | One `compile-*` per domain. |
+| Parses a ROM / builds assets | `packages/asset-extraction/src/` | One `compile-*` per domain. |
 | Type shared by renderer + electron | `shared/types/` | Otherwise a local `types.ts`. |
 | Generic UI atom (Button, Select) | Tessera `@drizztdourden08/tessera/primitives` | use the part; a missing one is a Tessera proposal |
 | Generic structural combo (Card, Dialog, Overlay) | Tessera `@drizztdourden08/tessera/composites` | use the part; a missing one is a Tessera proposal |

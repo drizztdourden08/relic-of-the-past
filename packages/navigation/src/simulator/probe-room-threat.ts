@@ -2,11 +2,10 @@
 import type { CombatContext } from '../simulation/types/combat.type';
 import type { RoomSectionSplit } from '@rotp/game-core';
 import { evaluateRoomThreat } from '../simulation/engine/enemy-reach';
-import { wasmGetSpriteCombat, wasmGetCombatTables, wasmGetRoomLayoutInfo, roomSectionSplitFrom } from '@rotp/game-core';
+import { wasmGetSpriteCombat, wasmGetCombatTables, wasmGetRoomLayoutInfo, roomSectionSplitFrom, readMapState } from '@rotp/game-core';
 import { getCurrentInventory } from '../tracker/bridge/get-current-inventory';
 import { getRoomSprites } from './interactables';
 import { getScreenGrids } from '../flood/screen-grids';
-import { readMapState } from '@rotp/game-core';
 import type { RoomFloodRun } from './flood-room';
 import type { RoomThreatProbe } from './probe-room-threat.type';
 

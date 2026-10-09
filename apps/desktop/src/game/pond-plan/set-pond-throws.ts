@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { PondThrowArm } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import { getModule } from '@rotp/game-core';
-import { setPondPlanActive } from '@rotp/game-core';
+import { getModule, setPondPlanActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const setPondThrows = (throws: readonly PondThrowArm[]): void => {

@@ -1,8 +1,6 @@
 /* @layer renderer-lib @kind hook */
 import { useMemo } from 'react';
-import { buildFillWorld } from '@rotp/randomizer';
-import { fillOptionsFromSnapshot } from '@rotp/randomizer';
-import { UNCLE_LOCATION } from '@rotp/randomizer';
+import { buildFillWorld, fillOptionsFromSnapshot, UNCLE_LOCATION } from '@rotp/randomizer';
 import { useSpriteAvailability } from '../useSpriteAvailability';
 import { useSpriteRevision } from '../useSpriteRevision';
 import { deliverableSets } from './deliverable-sets';

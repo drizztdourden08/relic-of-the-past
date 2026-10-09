@@ -1,11 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import { capacityRungLinesOf } from '@rotp/randomizer';
-import { capacityFixedLinesOf } from '@rotp/randomizer';
+import { capacityRungLinesOf, capacityFixedLinesOf, NO_RUNG_LINES } from '@rotp/randomizer';
 import { setSessionReceiptMessages } from '../session-dialogue';
-import type { CapacityFamilyId, CapacityProfile } from '@rotp/randomizer';
+import type { CapacityFamilyId, CapacityProfile, CapacityLineMessages, RungMessageIdOf } from '@rotp/randomizer';
 import type { CapacityFixedLineArm } from '../capacity-fixed-lines';
-import { NO_RUNG_LINES } from '@rotp/randomizer';
-import type { CapacityLineMessages, RungMessageIdOf } from '@rotp/randomizer';
 
 const composeRungMessages = (profile: CapacityProfile): RungMessageIdOf => {
   const families = capacityRungLinesOf(profile);

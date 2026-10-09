@@ -1,11 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import type { ShopSlotTarget } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import { isArmableOverrideId } from '@rotp/randomizer';
-import { getModule } from '@rotp/game-core';
-import { setShopOverridesActive } from '@rotp/game-core';
+import { isArmableOverrideId, SHOP_SLOT_ARG_COUNT } from '@rotp/randomizer';
+import { getModule, setShopOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
-import { SHOP_SLOT_ARG_COUNT } from '@rotp/randomizer';
 
 const setShopSlotOverride = (
   target: ShopSlotTarget, newItem: number, messageId = -1, fireId = -1,

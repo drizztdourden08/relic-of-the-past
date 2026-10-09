@@ -1,6 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { PoseFrame } from '@rotp/game-data';
-import type { PlayerSheet } from '@rotp/game-data';
+import type { PoseFrame, PlayerSheet } from '@rotp/game-data';
 import type { ResolvedRow } from './resolve-palette';
 
 interface ComposeArgs {

@@ -1,15 +1,7 @@
 /* @layer tests @kind test */
-import type { ItemKey } from '@rotp/randomizer';
-import { ITEM } from '@rotp/randomizer';
+import type { ItemKey, ProgressiveFamilyId, ProgressiveSetting } from '@rotp/randomizer';
+import { ITEM, buildOptionsSnapshot, generatePlacement, buildFillWorld, fillOptionsFromSnapshot, ProgressiveTierError, NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS, defaultProgressiveSetting, progressiveValuesOf } from '@rotp/randomizer';
 import { describe, expect, it } from 'vitest';
-import { buildOptionsSnapshot } from '@rotp/randomizer';
-import { generatePlacement } from '@rotp/randomizer';
-import { buildFillWorld } from '@rotp/randomizer';
-import { fillOptionsFromSnapshot } from '@rotp/randomizer';
-import { ProgressiveTierError } from '@rotp/randomizer';
-import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@rotp/randomizer';
-import { defaultProgressiveSetting, progressiveValuesOf } from '@rotp/randomizer';
-import type { ProgressiveFamilyId, ProgressiveSetting } from '@rotp/randomizer';
 
 const SEEDS = 30;
 

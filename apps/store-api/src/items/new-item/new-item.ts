@@ -1,6 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ItemCreateBody } from '@rotp/hub-contracts';
-import type { Person, StoreItem } from '@rotp/hub-contracts';
+import type { ItemCreateBody, Person, StoreItem } from '@rotp/hub-contracts';
 import { EMPTY_STATS } from './new-item.constants';
 import { slugOf } from './slug-of';
 

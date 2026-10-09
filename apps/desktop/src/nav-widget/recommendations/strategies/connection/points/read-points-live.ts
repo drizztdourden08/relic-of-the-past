@@ -1,9 +1,8 @@
 /* @layer renderer-widgets @kind logic */
 import type { ScreenId } from '@rotp/game-data';
 import { unread } from '@rotp/navigation';
-import type { Probe } from '@rotp/navigation';
+import type { Probe, ScreenObservations } from '@rotp/navigation';
 import type { ObservedTransition } from '@rotp/game-core';
-import type { ScreenObservations } from '@rotp/navigation';
 import { storedOnFarSide, transitionKey } from '../screen-endpoint';
 import { ENUMERABLE_SOURCES } from '../connection.constants';
 import { readPointsDataset } from './read-points-dataset';

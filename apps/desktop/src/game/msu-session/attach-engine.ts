@@ -1,12 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { createMsuEngine } from '@rotp/msu';
+import { createMsuEngine, publishSoundClaims, msuSessionState } from '@rotp/msu';
 import { log } from '../../log-bus';
-import { getMasterAudioTarget } from '@rotp/game-core';
-import { announceCoreMusic } from '@rotp/game-core';
-import { setDeluxeEntrances } from '@rotp/game-core';
-import { setExternalMusic } from '@rotp/game-core';
-import { publishSoundClaims } from '@rotp/msu';
-import { msuSessionState } from '@rotp/msu';
+import { getMasterAudioTarget, announceCoreMusic, setDeluxeEntrances, setExternalMusic } from '@rotp/game-core';
 import type { MsuSessionOptions } from '@rotp/msu';
 
 const createEngine = (ctx: AudioContext, destination: AudioNode, options: MsuSessionOptions) => createMsuEngine({

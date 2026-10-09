@@ -1,11 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { InputProfile } from '@rotp/input-mapping';
-import { KEYBOARD_DEFAULT } from '@rotp/input-mapping';
+import { KEYBOARD_DEFAULT, profileFromPreset, migrateProfilesLoudly } from '@rotp/input-mapping';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
-import { profileFromPreset } from '@rotp/input-mapping';
 import { readInputProfiles, writeInputProfiles } from '@app/storage/profile-data-store';
-import { migrateProfilesLoudly } from '@rotp/input-mapping';
 import type { UseProfileActionsArgs } from './controls-settings.type';
 
 const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsArgs) => {

@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { scaledRect } from './scaled-rect';
-import type { PlacedNode } from '@rotp/hud';
-import type { HudContainer } from '@rotp/hud';
-import type { Rect } from '@rotp/hud';
+import type { PlacedNode, HudContainer, Rect } from '@rotp/hud';
 
 const stageSlotRects = (
   container: HudContainer, placed: readonly PlacedNode[], displayScale: number,

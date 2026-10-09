@@ -10,10 +10,8 @@ import { makeImportReporter } from '../lib/import-progress';
 import { extractLanguagePack, listLanguageSummaries, readLanguagePack } from './language-pack';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
 import { createNodeFileStore } from '../lib/node-file-store';
-import { createSet, duplicateSet, getSet, list, saveSet } from '@rotp/languages';
-import type { CreateSetParams } from '@rotp/languages';
-import type { LanguageSet } from '@rotp/languages';
-import { setDir } from '@rotp/languages';
+import { createSet, duplicateSet, getSet, list, saveSet, setDir } from '@rotp/languages';
+import type { CreateSetParams, LanguageSet } from '@rotp/languages';
 import { refuseInstalled } from '../storage/installed-guard';
 import type { ExtractResult } from './ipc-handlers.type';
 

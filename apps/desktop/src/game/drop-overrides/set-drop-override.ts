@@ -1,10 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { isArmableOverrideId } from '@rotp/randomizer';
-import { getModule } from '@rotp/game-core';
-import { setDropOverridesActive } from '@rotp/game-core';
+import { isArmableOverrideId, DROP_NO_FIRE_ID, TEMPLATE_MESSAGE } from '@rotp/randomizer';
+import { getModule, setDropOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
-import { DROP_NO_FIRE_ID, TEMPLATE_MESSAGE } from '@rotp/randomizer';
 
 const setDropOverride = (
   roomId: number, big: boolean, newItem: number, messageId = TEMPLATE_MESSAGE, fireId = DROP_NO_FIRE_ID,

@@ -1,14 +1,9 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { packPackedBytes } from '@rotp/asset-extraction';
-import { RANDOMIZER_MSG_BASE } from '@rotp/asset-extraction';
-import { kLanguages } from '@rotp/asset-extraction';
-import { dialogueCharsetOf } from '@rotp/game-data';
-import { progressiveCapacityItemName } from '@rotp/game-data';
-import { renderCapacityStep } from '@rotp/randomizer';
+import { packPackedBytes, RANDOMIZER_MSG_BASE, kLanguages } from '@rotp/asset-extraction';
+import { dialogueCharsetOf, progressiveCapacityItemName } from '@rotp/game-data';
+import { renderCapacityStep, renderFromServer, renderOnline, renderReceiptMessage } from '@rotp/randomizer';
 import { stripHighlight } from '@rotp/game-core';
-import { renderFromServer, renderOnline } from '@rotp/randomizer';
-import { renderReceiptMessage } from '@rotp/randomizer';
 import {
   clearSessionDialogue, prepareLine, setSessionReceiptMessages,
 } from '@app/game/session-dialogue/session-dialogue';

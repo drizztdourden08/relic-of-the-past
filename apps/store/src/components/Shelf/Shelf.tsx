@@ -1,7 +1,6 @@
 /* @layer store-site @kind component */
 import { Box, EmptyState, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { AppLink } from '@rotp/design';
-import { routeAnchorClick } from '@rotp/design';
+import { AppLink, routeAnchorClick } from '@rotp/design';
 import { ItemCard } from '../ItemCard/ItemCard';
 import type { ShelfProps } from './Shelf.type';
 import { CARDS_PER_WIDEST_ROW } from './Shelf.constants';

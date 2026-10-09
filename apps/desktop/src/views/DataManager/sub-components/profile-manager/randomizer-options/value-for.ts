@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { CAPACITY_ENABLED_KEY } from '@rotp/randomizer';
-import { pondIdOfModeKey } from '@rotp/randomizer';
+import { CAPACITY_ENABLED_KEY, pondIdOfModeKey } from '@rotp/randomizer';
 import { PLAIN_FIELD_BY_KEY } from '@app/hooks/randomizer/randomizer-choices';
 import type { OptionDef, OptionValue } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';

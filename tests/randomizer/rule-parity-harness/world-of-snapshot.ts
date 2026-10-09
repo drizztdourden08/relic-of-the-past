@@ -1,15 +1,7 @@
 /* @layer tests @kind helper */
 import { all } from '@rotp/game-data';
-import { createRng } from '@rotp/randomizer';
-import { ITEM, UNRECORDED } from '@rotp/randomizer';
-import { buildFillWorld } from '@rotp/randomizer';
-import { fillOptionsFromSnapshot } from '@rotp/randomizer';
-import { rollPrices } from '@rotp/randomizer';
-import { pondDemandsOfSnapshot } from '@rotp/randomizer';
-import { actTokensOf } from '@rotp/randomizer';
-import type { Holding } from '@rotp/randomizer';
-import type { World } from '@rotp/randomizer';
-import type { OptionValue } from '@rotp/randomizer';
+import { createRng, ITEM, UNRECORDED, buildFillWorld, fillOptionsFromSnapshot, rollPrices, pondDemandsOfSnapshot, actTokensOf } from '@rotp/randomizer';
+import type { Holding, World, OptionValue } from '@rotp/randomizer';
 import { SEED } from './rule-parity-harness.constants';
 import { snapshotOf } from './snapshot-of';
 

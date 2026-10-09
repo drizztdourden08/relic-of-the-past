@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useEffect } from 'react';
 import { liveSettingsNow } from '@app/game/live-settings';
-import { enhancedAspectAllowed } from '@rotp/game-core';
-import { requestEnhancedFallback } from '@rotp/game-core';
+import { enhancedAspectAllowed, requestEnhancedFallback } from '@rotp/game-core';
 import { hostDrawnHud } from '@rotp/features';
 import { RESIZE_SETTLE_MS } from '../GameOverlay.constants';
 

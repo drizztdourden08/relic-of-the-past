@@ -1,7 +1,5 @@
 /* @layer store-api @kind types */
-import type { ReviewState } from '@rotp/hub-contracts';
-import type { StoreVersion } from '@rotp/hub-contracts';
-import type { Actor, VersionAction } from '@rotp/hub-contracts';
+import type { ReviewState, StoreVersion, Actor, VersionAction } from '@rotp/hub-contracts';
 
 type Reshape = (version: StoreVersion, to: ReviewState) => StoreVersion;
 

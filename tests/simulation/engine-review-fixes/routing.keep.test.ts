@@ -1,13 +1,8 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import type { ConnectionRecord } from '@rotp/game-data';
-import { createEngine } from '@rotp/navigation';
-import { createEngineState } from '@rotp/navigation';
+import { createEngine, createEngineState, buildAdjacency, resetFrontier, discoverTargets, emptySnapshot } from '@rotp/navigation';
 import type { SimTarget } from '@rotp/navigation';
-import { buildAdjacency } from '@rotp/navigation';
-import { resetFrontier } from '@rotp/navigation';
-import { discoverTargets } from '@rotp/navigation';
-import { emptySnapshot } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { FakeWorld } from '../engine-loop/fake-world';
 import {

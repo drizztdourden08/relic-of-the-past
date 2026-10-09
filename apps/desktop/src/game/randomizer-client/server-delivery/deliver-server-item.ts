@@ -1,10 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { RANDOMIZER_RECEIPT_MSG } from '@rotp/asset-extraction';
-import { renderFromServer, renderOnline } from '@rotp/randomizer';
+import { renderFromServer, renderOnline, resolveServerItemLocalId, waitingDeliveries } from '@rotp/randomizer';
 import { deliverItem } from '../../delivery-api';
 import { appendSessionReceiptMessage, releaseSessionReceiptMessage } from '../../session-dialogue';
-import { resolveServerItemLocalId } from '@rotp/randomizer';
-import { waitingDeliveries } from '@rotp/randomizer';
 import type { DeliveryOutcome } from '@rotp/randomizer';
 
 const arrivalLine = (itemName: string, senderName: string | null): string =>

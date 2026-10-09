@@ -1,12 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import * as savesStore from '../../storage/saves-store';
-import { getModule, getProfileId } from '@rotp/game-core';
-import { isCoreReady } from '@rotp/game-core';
-import { captureGameFrameBlob } from '@rotp/game-core';
+import { getModule, getProfileId, isCoreReady, captureGameFrameBlob, memfsSavePath } from '@rotp/game-core';
 import { saveMusicPosition } from '../msu-save-glue';
 import { withDialogState } from '../state-dialog';
-import { memfsSavePath } from '@rotp/game-core';
 
 const captureScreenshotBestEffort = async (): Promise<ArrayBuffer | undefined> => {
   try {

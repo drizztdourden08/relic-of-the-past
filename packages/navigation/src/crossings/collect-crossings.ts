@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { getConnections } from '../pathfinding';
-import type { ScreenCrossing, ScreenCrossings } from '@rotp/game-core';
-import type { ConnectionInfo } from '@rotp/game-core';
+import type { ScreenCrossing, ScreenCrossings, ConnectionInfo } from '@rotp/game-core';
 import { stepDistances } from '../simulator/exit-order';
 import { overworldTarget, roomTarget } from './resolve-target';
 import { indoorSpawnCrossings } from './sources/indoor-spawns';

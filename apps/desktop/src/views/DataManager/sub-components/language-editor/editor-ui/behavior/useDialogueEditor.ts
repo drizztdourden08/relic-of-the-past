@@ -8,8 +8,7 @@ import { toggleWaitHere } from '../../editor/toggle-wait';
 import { docToLines, linesOfTokens, linesToDoc, tokenToNode } from '../editor-contract';
 import { signatureOf } from '../tokens-signature';
 import { useTokenSync } from './useTokenSync';
-import type { Editor } from '@tiptap/core';
-import type { JSONContent } from '@tiptap/core';
+import type { Editor, JSONContent } from '@tiptap/core';
 import type { DialogueLineView, Token } from '@rotp/languages';
 import type { UseDialogueEditorParams } from './useDialogueEditor.type';
 

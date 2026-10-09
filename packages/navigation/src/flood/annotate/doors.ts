@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ScreenAnnotation } from '../../simulation';
-import type { SimDoor } from '../../simulation';
+import type { ScreenAnnotation, SimDoor } from '../../simulation';
 import { DOOR_KIND, REQUIRES, THRONE_DOOR } from './doors.constants';
 import type { DoorContext } from './doors.type';
 

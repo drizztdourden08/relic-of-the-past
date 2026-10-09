@@ -1,9 +1,7 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '@rotp/hub-contracts';
+import { STORE_ROUTES, versionCompleteSchema } from '@rotp/hub-contracts';
 import type { VersionCompleteResponse } from '@rotp/hub-contracts';
-import { versionCompleteSchema } from '@rotp/hub-contracts';
-import { badRequest, conflict } from '@rotp/hub-server';
-import { parseBody } from '@rotp/hub-server';
+import { badRequest, conflict, parseBody } from '@rotp/hub-server';
 import type { Route } from '@rotp/hub-server';
 import { requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';

@@ -1,10 +1,7 @@
 /* @layer renderer-hud @kind constants */
 import { HUD_EDGE_INSET, VITALS_RESERVE } from '@rotp/hud';
-import { SDL_AXIS } from '@rotp/game-data';
-import { OUTFIT_IDS } from '@rotp/game-data';
-import type { GearLadderKind, PauseScreen, PauseSection } from '@rotp/game-data';
-import type { HeroPose } from '@rotp/game-data';
-import type { OutfitId } from '@rotp/game-data';
+import { SDL_AXIS, OUTFIT_IDS } from '@rotp/game-data';
+import type { GearLadderKind, PauseScreen, PauseSection, HeroPose, OutfitId } from '@rotp/game-data';
 import type { SdlPosition } from '@rotp/input-mapping';
 import type { GearSection } from '../../compounds/PauseGearScreen';
 import type { BrowsingView } from './EnhancedPauseView.type';

@@ -1,7 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { Placement } from '@rotp/randomizer';
+import type { Placement, StoredPlacement } from '@rotp/randomizer';
 import { saveRandomizerState } from '../storage/profile-data-store';
-import type { StoredPlacement } from '@rotp/randomizer';
 import { PLACEMENT_SCHEMA } from '@rotp/randomizer';
 
 const saveRandomizerPlacement = async (profileId: string, placement: Placement): Promise<void> => {

@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { ITEM_POWER_BIT } from '@rotp/game-core';
-import { itemPowerState } from '@rotp/game-core';
+import { ITEM_POWER_BIT, itemPowerState } from '@rotp/game-core';
 import { writeItemPowerWord } from './write-item-power-word';
 
 const pushItemPowerWord = (): void => {

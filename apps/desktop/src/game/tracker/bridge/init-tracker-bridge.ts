@@ -1,10 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { POLL_INTERVAL_MS } from '@rotp/navigation';
+import { POLL_INTERVAL_MS, notifyUnknownItems, trackerState } from '@rotp/navigation';
 import { handleItemReceived } from './handle-item-received';
-import { notifyUnknownItems } from '@rotp/navigation';
 import { pollInventoryState } from './poll-inventory-state';
-import { trackerState } from '@rotp/navigation';
 
 const initTrackerBridge = (): void => {
   log.app('Initializing tracker bridge');

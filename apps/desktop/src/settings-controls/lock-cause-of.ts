@@ -1,8 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { useProfilesStore } from '@drizztdourden08/brock-react';
 import type { SettingLockCause } from '@drizztdourden08/brock-react';
-import { FEATURES_BY_ID } from '@rotp/features';
-import { isVanillaSafeLockedSetting } from '@rotp/features';
+import { FEATURES_BY_ID, isVanillaSafeLockedSetting } from '@rotp/features';
 import type { GameSettings } from '@rotp/features';
 
 const frozenKeys = (): string[] => Object.keys(useProfilesStore.getState().active?.randomizer?.frozenSettings ?? {});

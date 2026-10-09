@@ -1,8 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 import { useCallback, useRef, useState } from 'react';
-import type { SimulatorPort, SimConfig, EngineState, SimEvent } from '@rotp/navigation';
+import type { SimulatorPort, SimConfig, EngineState, SimEvent, RecorderState } from '@rotp/navigation';
 import { createEngine, createEngineState, createRecorder, recordTransition, recordDoorGate, screenLabel } from '@rotp/navigation';
-import type { RecorderState } from '@rotp/navigation';
 import type { CheckId, ItemId } from '@rotp/game-data';
 import { getCheck } from '@rotp/game-data';
 import { createLiveGamePort, createSimLogWriter, screenAreaInfo } from '@app/game/simulator';

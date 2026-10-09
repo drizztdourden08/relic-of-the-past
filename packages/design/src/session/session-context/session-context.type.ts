@@ -1,7 +1,5 @@
 /* @layer site-kit @kind types */
-import type { Identity } from '@rotp/hub-contracts';
-import type { SiteAccess, SiteUser } from '@rotp/hub-contracts';
-import type { Group, Rights } from '@rotp/hub-contracts';
+import type { Identity, SiteAccess, SiteUser, Group, Rights } from '@rotp/hub-contracts';
 
 type Session = {
   me: SiteUser | null;

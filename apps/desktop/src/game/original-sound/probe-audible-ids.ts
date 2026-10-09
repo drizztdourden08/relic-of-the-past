@@ -2,10 +2,7 @@
 import type { PreviewTarget } from '@rotp/game-core';
 import { renderOriginalSound } from '@rotp/game-core';
 import { ensurePreviewModule } from '../preview-core';
-import { audibleLength } from '@rotp/msu';
-import { originalSoundState } from '@rotp/msu';
-import { soundKeyOf } from '@rotp/msu';
-import { PROBE_SECONDS } from '@rotp/msu';
+import { audibleLength, originalSoundState, soundKeyOf, PROBE_SECONDS } from '@rotp/msu';
 
 const probeAudibleIds = async (target: PreviewTarget, ids: number[]): Promise<Set<number>> => {
   const audible = new Set<number>();

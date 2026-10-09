@@ -1,6 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { getScreenByGameId } from '@rotp/game-data';
-import { screenForRoomIndex } from '@rotp/game-data';
+import { getScreenByGameId, screenForRoomIndex } from '@rotp/game-data';
 import type { ScreenGameId, ScreenRecord } from '@rotp/game-data';
 
 const coveringScreen = (gameId: ScreenGameId | undefined): ScreenRecord | undefined => {

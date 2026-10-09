@@ -1,9 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import * as savesStore from '../../storage/saves-store';
-import { getModule, getProfileId } from '@rotp/game-core';
-import { sramSyncState } from '@rotp/game-core';
-import { SRAM_PATH } from '@rotp/game-core';
+import { getModule, getProfileId, sramSyncState, SRAM_PATH } from '@rotp/game-core';
 
 const simpleHash = (data: Uint8Array): string => {
   let h = 0;

@@ -1,17 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { baselineValues } from '@rotp/randomizer';
-import { parsePondSetting } from '@rotp/randomizer';
-import { pondPlanOf } from '@rotp/randomizer';
-import { rollPondDemands } from '@rotp/randomizer';
-import { POND_ASK_ROW_BY_KIND, pondRupeesOnlyAsk } from '@rotp/randomizer';
-import { curvePositionsOf } from '@rotp/randomizer';
-import { POND_INSTANCE_BY_ID } from '@rotp/randomizer';
-import { REFERENCE_CAPACITY_PROFILE } from '@rotp/randomizer';
-import { createRng } from '@rotp/randomizer';
-import type { CurveId } from '@rotp/randomizer';
-import type { PondAskAmountKind, PondAskSetting } from '@rotp/randomizer';
-import type { PondSetting } from '@rotp/randomizer';
+import { baselineValues, parsePondSetting, pondPlanOf, rollPondDemands, POND_ASK_ROW_BY_KIND, pondRupeesOnlyAsk, curvePositionsOf, POND_INSTANCE_BY_ID, REFERENCE_CAPACITY_PROFILE, createRng } from '@rotp/randomizer';
+import type { CurveId, PondAskAmountKind, PondAskSetting, PondSetting } from '@rotp/randomizer';
 import { CURVES } from './pond-model.constants';
 
 describe('one ramp per demand', () => {

@@ -4,9 +4,7 @@ import { describe, it, expect } from 'vitest';
 import type { InputProfile } from '@rotp/input-mapping';
 import type { ButtonMapping, SnesButton } from '@rotp/game-data';
 import { SNES_BUTTON_BITS } from '@rotp/game-data';
-import { allowedDevices } from '@rotp/input-mapping';
-import { computeBitmask } from '@rotp/input-mapping';
-import { ANY_DEVICE } from '@rotp/input-mapping';
+import { allowedDevices, computeBitmask, ANY_DEVICE } from '@rotp/input-mapping';
 
 const gamepadBinding = (snes: SnesButton, index: number, vid: string, pid: string): ButtonMapping => ({
   snesButton: snes,

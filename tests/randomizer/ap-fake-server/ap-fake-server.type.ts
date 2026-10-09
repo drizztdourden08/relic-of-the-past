@@ -1,6 +1,5 @@
 /* @layer tests @kind type */
-import type { CreateSocket } from '@rotp/randomizer';
-import type { ApClientPacket, ApGameData, ApNetworkItem, ApNetworkPlayer, ApServerPacket } from '@rotp/randomizer';
+import type { CreateSocket, ApClientPacket, ApGameData, ApNetworkItem, ApNetworkPlayer, ApServerPacket } from '@rotp/randomizer';
 
 interface FakeTrackedSlot {
   checked: number[];

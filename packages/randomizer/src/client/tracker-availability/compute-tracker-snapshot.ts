@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { trackerReading } from './tracker-reading';
-import type { CheckId } from '@rotp/game-data';
-import type { CheckStatus } from '@rotp/game-data';
+import type { CheckId, CheckStatus } from '@rotp/game-data';
 
 const computeTrackerSnapshot = (
   ...args: Parameters<typeof trackerReading>

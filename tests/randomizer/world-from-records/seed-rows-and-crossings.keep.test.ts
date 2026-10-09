@@ -1,11 +1,7 @@
 /* @layer tests @kind test */
 import { expect, it } from 'vitest';
 import { all, getCheck } from '@rotp/game-data';
-import { REGION_GRAPH } from '@rotp/randomizer';
-import { isSeedLocation } from '@rotp/randomizer';
-import { CANONICAL_SLOTS } from '@rotp/randomizer';
-import { POND_INSTANCES } from '@rotp/randomizer';
-import { crossingsByRegion, regionRecords } from '@rotp/randomizer';
+import { REGION_GRAPH, isSeedLocation, CANONICAL_SLOTS, POND_INSTANCES, crossingsByRegion, regionRecords } from '@rotp/randomizer';
 import type { RegionId } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import {

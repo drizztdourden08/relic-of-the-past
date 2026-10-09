@@ -1,8 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { toQ4 } from '@rotp/game-data';
-import { hexToSnes15 } from '@rotp/game-data';
-import { isQuietReceipt } from '@rotp/game-data';
+import { toQ4, hexToSnes15, isQuietReceipt } from '@rotp/game-data';
 import { getModule } from '@rotp/game-core';
 import { setQuietReceiptBits } from './gate-word-5';
 

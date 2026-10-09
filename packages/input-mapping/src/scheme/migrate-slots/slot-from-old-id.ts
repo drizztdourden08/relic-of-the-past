@@ -1,8 +1,7 @@
 /* @layer shared-input @kind logic */
 import { KEYBOARD_PREFIX, SLOT_PREFIX } from './migrate-slots.constants';
 import { SlotMigrationError } from './slot-migration-error';
-import type { InputBinding } from '@rotp/game-data';
-import type { ModernSlot, SlotIndex } from '@rotp/game-data';
+import type { InputBinding, ModernSlot, SlotIndex } from '@rotp/game-data';
 
 const slotFromOldId = (id: string, index: SlotIndex): ModernSlot => {
   if (id.startsWith(KEYBOARD_PREFIX)) {

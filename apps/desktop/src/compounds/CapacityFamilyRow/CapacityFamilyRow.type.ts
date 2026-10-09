@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
-import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus } from '@rotp/randomizer';
-import type { CurvePresetId } from '@rotp/randomizer';
-import type { OptionDescription } from '@rotp/randomizer';
+import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus, CurvePresetId, OptionDescription } from '@rotp/randomizer';
 import type { LadderPreviewProps } from '../LadderPreview';
 import type { ImpactCell } from '../PoolImpactCell';
 

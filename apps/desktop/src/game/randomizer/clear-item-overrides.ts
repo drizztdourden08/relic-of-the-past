@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { getModule } from '@rotp/game-core';
-import { setItemOverridesActive } from '@rotp/game-core';
+import { getModule, setItemOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const clearItemOverrides = (): void => {

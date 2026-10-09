@@ -1,7 +1,6 @@
 /* @layer sanctuary-site @kind component */
-import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@rotp/hub-contracts';
+import { FILE_TYPES, FILE_TYPE_SHELF_LABELS, REPORTS_PERMISSION, SANCTUARY_RIGHTS, filePermission } from '@rotp/hub-contracts';
 import type { FileType } from '@rotp/hub-contracts';
-import { REPORTS_PERMISSION, SANCTUARY_RIGHTS, filePermission } from '@rotp/hub-contracts';
 import { Checkbox, Field, Flex, Toggle } from '@drizztdourden08/tessera/primitives';
 import type { RightsEditorProps } from '@rotp/design';
 

@@ -1,6 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { ResolvedAudioConfig } from '@rotp/features';
-import type { GameSettings } from '@rotp/features';
+import type { ResolvedAudioConfig, GameSettings } from '@rotp/features';
 import { BUFFER_STEPS, CHANNEL_OPTIONS, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_STEP, DEVICE_DESCRIPTIONS, FREQ_OPTIONS } from './audio-controls.constants';
 import type { SettingsPatch } from '../settings-controls.type';
 import type { DeviceKey, DeviceRowLook } from './audio.type';

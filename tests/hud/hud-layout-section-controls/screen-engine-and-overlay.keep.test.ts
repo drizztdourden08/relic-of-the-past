@@ -6,8 +6,7 @@ import { readFileSync } from 'fs';
 import { ContainerOverlay } from '@app/views/HudLayoutEditor/sub-components/ContainerOverlay';
 import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import type { HudFlexContainer, HudGridContainer } from '@rotp/hud';
-import type { PlacedNode } from '@rotp/hud';
+import type { HudFlexContainer, HudGridContainer, PlacedNode } from '@rotp/hud';
 import { ED, GUIDE, PLATFORM } from './section-controls.constants';
 import { boxCell as cell } from './box-cell';
 

@@ -1,11 +1,8 @@
 /* @layer store-api @kind logic */
-import { readFirstEntry } from '@rotp/hub-contracts';
+import { readFirstEntry, CONTAINER_MANIFEST, STORE_LIMITS } from '@rotp/hub-contracts';
 import { factsFor } from '@rotp/languages';
-import { CONTAINER_MANIFEST } from '@rotp/hub-contracts';
-import { STORE_LIMITS } from '@rotp/hub-contracts';
 import type { KindFacts, StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import { badRequest } from '@rotp/hub-server';
-import { verifyUpload } from '@rotp/hub-server';
+import { badRequest, verifyUpload } from '@rotp/hub-server';
 import { storeBucket } from '../storage/store-bucket';
 import { hashObject } from '../storage/hash-object';
 import { FIRST_ENTRY_REFUSALS } from './verify-version.constants';

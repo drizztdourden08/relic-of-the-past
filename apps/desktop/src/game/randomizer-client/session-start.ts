@@ -5,27 +5,20 @@ import { armDungeonItemGrants } from '../dungeon-item-grants';
 import { applyGearIcons } from '../gear-icons';
 import { applyQuiverIcon } from '../quiver-icon';
 import { applyCurrencySymbols } from '../currency-symbols';
-import { buildPhysicalPlan } from '@rotp/randomizer';
-import { withForeignIcons } from '@rotp/randomizer';
+import { buildPhysicalPlan, withForeignIcons, pondSessionOf, resolveLocalItemId, pondDemandSessionOf, wishPondSessionOf } from '@rotp/randomizer';
 import { logPlanSummary } from './plan-summary-log';
 import { startSessionReceiptTexts } from './receipt-text-refresh';
 import { applyOverrides, pollEntriesOf } from './apply-overrides';
 import {
   armCapacitySession, capacitySessionOf, disarmCapacitySession, primeCapacitySession,
 } from './capacity-session';
-import { pondSessionOf } from '@rotp/randomizer';
 import { armPondSession } from './arm-pond-session';
 import { disarmPondSession } from './disarm-pond-session';
 import { armItemBehavior, disarmItemBehavior, itemBehaviorOf } from './item-behavior-session';
 import { allocateFireId, armFireReporting } from './override-fire-registry';
 import { armWishPondSession } from './wish-pond-session';
-import { resolveLocalItemId } from '@rotp/randomizer';
 import { armPondDemandSession } from './pond-demand-session';
-import { pondDemandSessionOf } from '@rotp/randomizer';
-import { wishPondSessionOf } from '@rotp/randomizer';
-import type { Placement } from '@rotp/randomizer';
-import type { PhysicalPlan } from '@rotp/randomizer';
-import type { SessionArmResult, SessionStartHooks } from '@rotp/randomizer';
+import type { Placement, PhysicalPlan, SessionArmResult, SessionStartHooks } from '@rotp/randomizer';
 
 const refuseSession = (plan: PhysicalPlan, tag: string): SessionArmResult => {
   log.randomizer(`${tag} Session refused: ${plan.errors.length} plan errors (see above)`, 'error');

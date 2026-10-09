@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GridPos, LedgeTraversal } from '@rotp/game-core';
-import type { ReachState } from '@rotp/game-core';
+import type { GridPos, LedgeTraversal, ReachState } from '@rotp/game-core';
 import {
   AREA_EXIT_BIAS, GRID, HOP_STEPS, LEDGE_COST, START_RING, STEP_DIRECTIONS, UNREACHED,
 } from './exit-order.constants';

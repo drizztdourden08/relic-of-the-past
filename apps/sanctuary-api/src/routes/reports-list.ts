@@ -1,8 +1,6 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES, canSeeReports } from '@rotp/hub-contracts';
-import { badRequest } from '@rotp/hub-server';
-import { queryFlag, queryParam } from '@rotp/hub-server';
-import { requireMember } from '@rotp/hub-server';
+import { badRequest, queryFlag, queryParam, requireMember } from '@rotp/hub-server';
 import { reportsRepo } from '../db/reports-repo';
 import { viewReport } from '../reports/report-view';
 import type { Route } from '@rotp/hub-server';

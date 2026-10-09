@@ -1,12 +1,9 @@
 /* @layer test @kind spec */
 import { describe, expect, it } from 'vitest';
-import { all } from '@rotp/game-data';
+import { all, EVENT_BIT, LAST_EVENT_BIT } from '@rotp/game-data';
 import type { CheckRecord, ItemId } from '@rotp/game-data';
-import { computeCompletedChecks } from '@rotp/navigation';
+import { computeCompletedChecks, computeEventStatus, buildPresenceState } from '@rotp/navigation';
 import type { ProgressReaders } from '@rotp/navigation';
-import { EVENT_BIT, LAST_EVENT_BIT } from '@rotp/game-data';
-import { computeEventStatus } from '@rotp/navigation';
-import { buildPresenceState } from '@rotp/navigation';
 
 const events = (): CheckRecord[] => all('check').filter((c) => c.kind === 'event');
 const byName = (name: string): CheckRecord => {

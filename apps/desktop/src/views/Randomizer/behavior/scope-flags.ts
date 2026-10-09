@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { capacityEnabledOf } from '@rotp/randomizer';
-import { includeNpcChecksOf, includeWorldItemsOf } from '@rotp/randomizer';
-import { shopScopeOfValues } from '@rotp/randomizer';
+import { capacityEnabledOf, includeNpcChecksOf, includeWorldItemsOf, shopScopeOfValues } from '@rotp/randomizer';
 import type { ScopeFlag, SnapshotValues } from './options-summary.type';
 
 const scopeFlagsOf = (values: SnapshotValues, seed: string): readonly ScopeFlag[] => [

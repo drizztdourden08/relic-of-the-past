@@ -1,7 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { CheckId, CheckRecord } from '@rotp/game-data';
-import type { CheckStatus } from '@rotp/game-data';
-import type { FilterState } from '@rotp/game-data';
+import type { CheckId, CheckRecord, CheckStatus, FilterState } from '@rotp/game-data';
 
 interface StopAtCheckPickerProps {
   stopAtCheckId: CheckId | '';

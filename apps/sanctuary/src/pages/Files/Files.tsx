@@ -2,10 +2,7 @@
 import { useMemo } from 'react';
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { DataTable, FilterBar } from '@drizztdourden08/tessera/composites';
-import { SitePage } from '@rotp/design';
-import { SideColumn } from '@rotp/design';
-import { Workbench } from '@rotp/design';
-import { SavedViewsMenu } from '@rotp/design';
+import { SitePage, SideColumn, Workbench, SavedViewsMenu } from '@rotp/design';
 import { UploadDialog } from '../../components/UploadDialog/UploadDialog';
 import { fileRowId } from '../../files/file-row';
 import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema.constants';

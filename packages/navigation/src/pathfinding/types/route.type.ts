@@ -1,6 +1,5 @@
 /* @layer shared-game @kind types */
-import type { BorderEdge } from '@rotp/game-core';
-import type { GridPos, ReachState } from '@rotp/game-core';
+import type { BorderEdge, GridPos, ReachState } from '@rotp/game-core';
 
 interface ScreenCoverage {
   screenIndex: number;

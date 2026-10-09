@@ -2,9 +2,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Box, Text, Canvas } from '@drizztdourden08/tessera/primitives';
 import { useGameState } from './behavior/useGameState';
-import type { EdgeGlowRenderer } from '@rotp/game-core';
-import type { ShadowRenderer } from '@rotp/game-core';
-import type { ShadowCastingProject } from '@rotp/game-core';
+import type { EdgeGlowRenderer, ShadowRenderer, ShadowCastingProject } from '@rotp/game-core';
 import { useCanvasFit } from '../../hooks/useCanvasFit';
 import { useShadowEditorStore } from '../../stores/shadow-editor-store';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';

@@ -1,11 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { applySlotDeathLink } from '@rotp/randomizer';
-import { bindSaveToRoom } from '@rotp/randomizer';
-import type { ApConnectedPacket } from '@rotp/randomizer';
-import type { OnlineContext } from '@rotp/randomizer';
-import { isKnownReported } from '@rotp/randomizer';
-import { markRoomChecked } from '@rotp/randomizer';
+import { applySlotDeathLink, bindSaveToRoom, isKnownReported, markRoomChecked } from '@rotp/randomizer';
+import type { ApConnectedPacket, OnlineContext } from '@rotp/randomizer';
 import { scoutOnce } from './scout-once';
 import { storeSlot } from './store-slot';
 

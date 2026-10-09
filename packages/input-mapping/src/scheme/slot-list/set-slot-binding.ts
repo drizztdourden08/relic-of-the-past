@@ -1,6 +1,5 @@
 /* @layer shared-input @kind logic */
-import type { InputBinding } from '@rotp/game-data';
-import type { ModernSlot, SlotIndex } from '@rotp/game-data';
+import type { InputBinding, ModernSlot, SlotIndex } from '@rotp/game-data';
 import type { SlotSeed } from './slot-list.type';
 
 const setSlotBinding = (

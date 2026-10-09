@@ -1,9 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { computeCompletedChecks } from '../tracker/completed-checks-core';
-import { slotBlockOffset } from '@rotp/game-core';
-import { OW_EVENT_BASE, PROGRESS_OFFSETS, ROOM_FLAGS_BASE } from '@rotp/game-core';
-import { SRM_EVENT_LEDGER } from '@rotp/game-core';
-import { blockOffsetOf } from '@rotp/game-core';
+import { slotBlockOffset, OW_EVENT_BASE, PROGRESS_OFFSETS, ROOM_FLAGS_BASE, SRM_EVENT_LEDGER, blockOffsetOf } from '@rotp/game-core';
 import type { CheckId } from '@rotp/game-data';
 
 const offlineCompletedChecks = (

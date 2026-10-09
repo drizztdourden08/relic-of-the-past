@@ -1,6 +1,5 @@
 /* @layer site-kit @kind logic */
-import { formatBytes } from '@rotp/hub-client';
-import { formatTimeLeft, formatTransfer } from '@rotp/hub-client';
+import { formatBytes, formatTimeLeft, formatTransfer } from '@rotp/hub-client';
 import type { UploadJob } from '@rotp/hub-client';
 import type { RowLines } from './row-lines.type';
 

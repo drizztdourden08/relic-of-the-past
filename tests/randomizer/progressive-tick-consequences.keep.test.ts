@@ -1,10 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';
-import { derivedItemPower } from '@rotp/randomizer';
-import { TICK_CONSEQUENCES, progressiveTickConsequences } from '@rotp/randomizer';
-import { defaultProgressiveSetting } from '@rotp/randomizer';
-import { beamSwordReachable, swordReachable } from '@rotp/randomizer';
+import { DEFAULT_ITEM_POWER, derivedItemPower, TICK_CONSEQUENCES, progressiveTickConsequences, defaultProgressiveSetting, beamSwordReachable, swordReachable } from '@rotp/randomizer';
 import type { ItemPowerSetting } from '@rotp/game-core';
 import type { ProgressiveSetting } from '@rotp/randomizer';
 

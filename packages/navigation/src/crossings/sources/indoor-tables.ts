@@ -1,8 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { ScreenCrossing } from '@rotp/game-core';
-import { wasmGetRoomDoorInfo, wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor } from '@rotp/game-core';
-import { readMapState } from '@rotp/game-core';
-import { isFollowerActive } from '@rotp/game-core';
+import { wasmGetRoomDoorInfo, wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor, readMapState, isFollowerActive } from '@rotp/game-core';
 import { BOUNDARY_ID_BASE, STAIR_ID_BASE } from '../../flood/room-entrances';
 import { roomTarget } from '../resolve-target';
 import { makeCrossing } from '../make-crossing';

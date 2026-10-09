@@ -1,10 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import type { RetroShelfStock } from '@rotp/randomizer';
-import { resolveLocalItemId } from '@rotp/randomizer';
-import { RETRO_QUIVER_ITEM } from '@rotp/randomizer';
+import { resolveLocalItemId, RETRO_QUIVER_ITEM } from '@rotp/randomizer';
 import { log } from '../../log-bus';
-import { getModule } from '@rotp/game-core';
-import { ENTRANCE_ANY, OW_AREA_ANY, RETRO_SHELF_ARG_COUNT } from '@rotp/game-core';
+import { getModule, ENTRANCE_ANY, OW_AREA_ANY, RETRO_SHELF_ARG_COUNT } from '@rotp/game-core';
 
 const setRetroShelves = (shelves: readonly RetroShelfStock[]): void => {
   if (shelves.length === 0) return;

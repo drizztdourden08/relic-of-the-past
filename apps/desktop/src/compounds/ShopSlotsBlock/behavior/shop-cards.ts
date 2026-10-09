@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { itemKeyName } from '@rotp/randomizer';
-import { SHOP_IDS } from '@rotp/randomizer';
-import { shortShopNameOf } from '@rotp/randomizer';
-import { DEFAULT_OFF_SHOPS, SHOP_SLOT_ROWS } from '@rotp/randomizer';
-import type { ShopScope } from '@rotp/randomizer';
-import type { ShopSlotRow } from '@rotp/randomizer';
+import { itemKeyName, SHOP_IDS, shortShopNameOf, DEFAULT_OFF_SHOPS, SHOP_SLOT_ROWS } from '@rotp/randomizer';
+import type { ShopScope, ShopSlotRow } from '@rotp/randomizer';
 import { STOCK_SEPARATOR } from '../ShopSlotsBlock.constants';
 import type { ShopCardModel, ShopSlotToggleModel } from '../ShopSlotsBlock.type';
 

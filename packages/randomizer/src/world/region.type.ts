@@ -1,7 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckId, ConnectionId, DungeonId, ItemId, RegionId } from '@rotp/game-data';
-import type { ConnectionKind } from '@rotp/game-data';
-import type { RegionType } from '@rotp/game-data';
+import type { CheckId, ConnectionId, DungeonId, ItemId, RegionId, ConnectionKind, RegionType } from '@rotp/game-data';
 import type { LocationKey } from './location-key.type';
 
 interface RegionGraphRow {

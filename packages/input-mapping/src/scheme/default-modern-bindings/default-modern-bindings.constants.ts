@@ -1,6 +1,5 @@
 /* @layer shared-input @kind constants */
-import type { SnesButton } from '@rotp/game-data';
-import type { InputBinding } from '@rotp/game-data';
+import type { SnesButton, InputBinding } from '@rotp/game-data';
 import type { CorePosition, CoreVerb } from './default-modern-bindings.type';
 
 const UNBOUND: InputBinding = { type: 'none' };

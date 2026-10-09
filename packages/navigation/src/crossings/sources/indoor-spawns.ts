@@ -1,9 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import type { ScreenCrossing } from '@rotp/game-core';
-import { wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetExitScreenMap, wasmGetRoomExitDoors } from '@rotp/game-core';
+import { wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetExitScreenMap, wasmGetRoomExitDoors, readMapState } from '@rotp/game-core';
 import { enrichEntrances, FALL_HOLE_ID_BASE } from '../../flood/overworld-entrances';
 import { roomOrigin } from '../../flood/world-origin';
-import { readMapState } from '@rotp/game-core';
 import { doorCrossingTile, matchDoorsToSpawns, spawnCrossingTile } from '../place-tile';
 import type { DoorRecord } from '../place-tile';
 import { noTarget, overworldTarget, roomTarget } from '../resolve-target';

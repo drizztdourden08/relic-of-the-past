@@ -1,8 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { POTION_CAULDRONS } from '@rotp/randomizer';
-import { ruleForPrice } from '@rotp/randomizer';
-import { REGION } from '@rotp/randomizer';
+import { POTION_CAULDRONS, ruleForPrice, REGION } from '@rotp/randomizer';
 import type { CollectionState } from '@rotp/randomizer';
 import { CAULDRON } from './potion-price-rule.constants';
 

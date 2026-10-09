@@ -1,7 +1,6 @@
 /* @layer sanctuary-site @kind logic */
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { formatBytes } from '@rotp/hub-client';
-import { formatDateTime } from '@rotp/hub-client';
+import { formatBytes, formatDateTime } from '@rotp/hub-client';
 import { versionLabel } from '../file-versions';
 import type { FileRow } from './file-row.type';
 

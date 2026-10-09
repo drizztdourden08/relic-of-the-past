@@ -1,6 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { SanctuaryFile } from '@rotp/hub-contracts';
-import type { BegunMultipart } from '@rotp/hub-contracts';
+import type { SanctuaryFile, BegunMultipart } from '@rotp/hub-contracts';
 import type { UploadResume } from '@rotp/hub-client';
 import { completeFile, deleteFile, fileParts, signParts } from '../api/files-endpoints';
 import { completeVersion, deleteVersion, signVersionParts, versionParts } from '../api/versions-endpoints';

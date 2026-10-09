@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { SHOP_MODE_LABELS } from '@rotp/randomizer';
-import { SHOP_SHUFFLE_MODES } from '@rotp/randomizer';
+import { SHOP_MODE_LABELS, SHOP_SHUFFLE_MODES } from '@rotp/randomizer';
 import type { ShopWorld } from '@rotp/randomizer';
 
 const MODE_OPTIONS = SHOP_SHUFFLE_MODES.map((mode) => ({ value: mode, label: SHOP_MODE_LABELS[mode] }));

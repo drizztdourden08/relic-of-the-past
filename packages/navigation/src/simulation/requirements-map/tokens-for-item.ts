@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TraversalRequirement } from '@rotp/game-data';
-import type { ItemId } from '@rotp/game-data';
+import type { TraversalRequirement, ItemId } from '@rotp/game-data';
 import { ITEM_TO_TOKEN, IMPLIED_TOKENS } from '@rotp/game-data';
 
 const tokensForItem = (itemId: ItemId): TraversalRequirement[] => {

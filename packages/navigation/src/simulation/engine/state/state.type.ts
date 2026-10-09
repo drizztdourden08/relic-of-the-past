@@ -1,7 +1,6 @@
 /* @layer shared-game @kind types */
-import type { TraversalRequirement } from '@rotp/game-data';
+import type { TraversalRequirement, CheckId, DungeonId, ItemId } from '@rotp/game-data';
 import type { GridPos } from '@rotp/game-core';
-import type { CheckId, DungeonId, ItemId } from '@rotp/game-data';
 import type { SimConfig, SimOutcome, SimPhase, VirtualPlayer, FlagSnapshot, TriggerAction, SimExit, SimArea } from '../../types';
 import type { TraversalId } from '../../traversal-id.type';
 import type { RegionJob } from '../regions/regions.type';

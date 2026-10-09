@@ -2,8 +2,7 @@
 import type { ItemId } from '@rotp/game-data';
 import { inventoryToItemSet } from '../tracker/inventory/inventory-to-item-set';
 import { parseInventoryBuffer } from '../tracker/inventory/parse-inventory-buffer';
-import { slotBlockOffset } from '@rotp/game-core';
-import { INVENTORY_OFFSETS } from '@rotp/game-core';
+import { slotBlockOffset, INVENTORY_OFFSETS } from '@rotp/game-core';
 
 const offlineInventory = (sram: Uint8Array, slot: number): Set<ItemId> | null => {
   const base = slotBlockOffset(sram, slot);

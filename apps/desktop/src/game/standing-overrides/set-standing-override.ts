@@ -2,8 +2,7 @@
 import type { StandingOverrideTarget } from '@rotp/randomizer';
 import { log } from '../../log-bus';
 import { isArmableOverrideId } from '@rotp/randomizer';
-import { getModule } from '@rotp/game-core';
-import { setStandingOverridesActive } from '@rotp/game-core';
+import { getModule, setStandingOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
 
 const setStandingOverride = (target: StandingOverrideTarget, newItem: number, messageId = -1, fireId = -1): void => {

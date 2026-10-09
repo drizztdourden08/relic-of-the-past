@@ -9,8 +9,7 @@ import { VIRTUAL_PREFIX, virtualLocationOf } from '../virtual-locations';
 import type { ItemKey } from '../../world/item-ids.data';
 import type { LocationKey } from '../../world/location-key';
 import type { Placement } from '../../world/fill/placement.type';
-import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
-import type { CheckStatus } from '@rotp/game-data';
+import type { CheckId, CheckRecord, ItemId, CheckStatus } from '@rotp/game-data';
 import type { TrackerReading } from './tracker-availability.type';
 
 const trackerReading = (

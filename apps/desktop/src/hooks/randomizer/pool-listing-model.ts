@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { itemKeyName } from '@rotp/randomizer';
 import { poolItemSpriteOfKey } from './pool-item-sprite-of-key';
-import type { ItemKey } from '@rotp/randomizer';
-import type { ItemPool } from '@rotp/randomizer';
+import type { ItemKey, ItemPool } from '@rotp/randomizer';
 import type { PoolListingGroup, PoolListingRow } from '@app/compounds/PoolListing';
 
 const rowsOf = (items: readonly ItemKey[], spritesAvailable: boolean): PoolListingRow[] => {

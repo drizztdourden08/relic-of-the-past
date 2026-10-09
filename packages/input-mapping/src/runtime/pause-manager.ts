@@ -1,6 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { DetectedDevice } from '../controls/devices/devices.type';
-import type { InputProfile } from '../controls/devices/devices.type';
+import type { DetectedDevice, InputProfile } from '../controls/devices/devices.type';
 import { allowedDevices } from './profile-devices';
 import type { PauseListener } from './pause-manager.type';
 import { MANUAL_PAUSE } from './pause-manager.constants';

@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import { all } from '@rotp/game-data';
-import { CAPACITY_FAMILY_IDS, CAPACITY_PROGRESSIVE_NAMES, CAPACITY_UPGRADE_NAMES } from '@rotp/game-data';
+import { all, CAPACITY_FAMILY_IDS, CAPACITY_PROGRESSIVE_NAMES, CAPACITY_UPGRADE_NAMES } from '@rotp/game-data';
 import { itemKeyOfName } from '../world/display-names';
 import { UNRECORDED } from '../world/item-ids.data';
 import { compareApKeys } from './ap-key-order';

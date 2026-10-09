@@ -1,8 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { processStraightCliffs } from '@rotp/navigation';
+import { processStraightCliffs, GRID_SIZE } from '@rotp/navigation';
 import type { TilePassability, LedgeTraversal } from '@rotp/game-core';
-import { GRID_SIZE } from '@rotp/navigation';
 
 const JUMP_TRIGGER = 0x28;
 

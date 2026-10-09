@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { readZipDirectory, entryData } from '@rotp/hub-contracts';
-import { STORE_LIMITS } from '@rotp/hub-contracts';
-import { MSUL_MANIFEST_NAME } from '@rotp/hub-contracts';
-import { parseManifest } from '@rotp/hub-contracts';
+import { readZipDirectory, entryData, STORE_LIMITS, MSUL_MANIFEST_NAME, parseManifest } from '@rotp/hub-contracts';
 import type { PackSource } from '../../../packs/pack-source.type';
 import type { MusicPack } from '../PackContents.type';
 

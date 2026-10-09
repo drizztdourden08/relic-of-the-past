@@ -1,6 +1,5 @@
 /* @layer store-site @kind types */
-import type { ReviewEntry } from '@rotp/hub-contracts';
-import type { StoreVersion } from '@rotp/hub-contracts';
+import type { ReviewEntry, StoreVersion } from '@rotp/hub-contracts';
 import type { ReviewActions } from '../behavior/useReviewActions.type';
 
 type ReviewButtonsProps = {

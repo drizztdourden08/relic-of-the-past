@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { isReportableCheck } from '@rotp/randomizer';
-import { FIRE_REPORTED_CLASSES } from '@rotp/randomizer';
+import { isReportableCheck, FIRE_REPORTED_CLASSES } from '@rotp/randomizer';
 import type { PhysicalPlan } from '@rotp/randomizer';
 import type { PollEntry } from '../location-poller';
 

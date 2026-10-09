@@ -1,9 +1,7 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '@rotp/hub-contracts';
+import { STORE_ROUTES, welcomeSchema } from '@rotp/hub-contracts';
 import type { WelcomeResponse } from '@rotp/hub-contracts';
-import { welcomeSchema } from '@rotp/hub-contracts';
-import { parseBody } from '@rotp/hub-server';
-import { now } from '@rotp/hub-server';
+import { parseBody, now } from '@rotp/hub-server';
 import type { Route } from '@rotp/hub-server';
 import { personOf, requirePermission } from '../auth/player';
 import { settingsRepo } from '../db/settings-repo';

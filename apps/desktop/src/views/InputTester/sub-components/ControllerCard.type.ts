@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ControllerBusType } from '@drizztdourden08/brock-input';
-import type { HapticPatternId } from '@rotp/input-mapping';
-import type { ResolvedDevice } from '@rotp/input-mapping';
+import type { HapticPatternId, ResolvedDevice } from '@rotp/input-mapping';
 import type { ControllerInputState } from '../../../input/controller-input-store';
 
 interface ControllerCardProps {

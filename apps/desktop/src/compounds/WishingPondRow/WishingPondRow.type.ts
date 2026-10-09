@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { CurveId } from '@rotp/randomizer';
-import type { PondAskSetting } from '@rotp/randomizer';
-import type { PondAskCurrency } from '@rotp/randomizer';
-import type { ShopBottleContent } from '@rotp/randomizer';
-import type { OptionDescription } from '@rotp/randomizer';
-import type { PondMode } from '@rotp/randomizer';
+import type { CurveId, PondAskSetting, PondAskCurrency, ShopBottleContent, OptionDescription, PondMode } from '@rotp/randomizer';
 import type { LadderPreviewProps } from '../LadderPreview';
 
 interface PondRowState {

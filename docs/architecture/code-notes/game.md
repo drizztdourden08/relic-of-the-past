@@ -306,7 +306,7 @@ broken out for editing before a bake step compiles them back into the ROM.
   labels. An `items` key is the item record id plus tier, for example `bow-2`.
 - `LanguageSetMeta.id` is a code like `de`, or a custom one like `us-canon`. It becomes the INI
   `Language` value. `base` is the language code the set inherits its alphabet, dictionary, encoder
-  and font from: a key of `kLanguages` in `shared/asset-extraction/text/data/language-data.ts`.
+  and font from: a key of `kLanguages` in `packages/asset-extraction/src/text/data/language-data.ts`.
   `basedOn` is set on a copy of a set installed from the Hookshop and names the original it
   credits.
 - `SetStructure`: `continuous` treats an entry as flowing text and derives the box breaks, `block`
@@ -464,7 +464,7 @@ The plain language control code catalog: the layer that turns a bracketed engine
 
 One entry per control code the game's languages can emit, checked against the decompiled engine.
 It covers every name in every language's `commandNames`
-(`shared/asset-extraction/text/data/language-data.ts`). `EndMessage` (EU only) has no documented
+(`packages/asset-extraction/src/text/data/language-data.ts`). `EndMessage` (EU only) has no documented
 behaviour of its own: it is absent from `kCmdInfo` in `dialogue-encoder.ts`, which fits it being
 an automatic message terminator and not something a translator places by hand. It is catalogued
 as `structural` on that basis, not from a confirmed engine fact.
@@ -497,14 +497,14 @@ own positional index). Ids 2 and 3, 7 to 9, 10 and 11, and 12 and 13 are the two
 choice cursor frames: each holds only control codes, spaces and a `>` cursor, and every choice
 prompt in the game reuses them. Id 5 is `EXTRA_STRING`, the synthetic control string the
 extraction pipeline injects at index 4 to pad a 396 string ROM dump up to the canonical 397
-(`shared/asset-extraction/text/build-language-entry.ts`). It never existed as translatable prose.
+(`packages/asset-extraction/src/text/build-language-entry.ts`). It never existed as translatable prose.
 
 ### language/compile/compile-set.ts
 
 The bake step. It turns an editable `LanguageSet` into the packed entry the asset blob builder
 takes: it resolves every variable reference, serializes the token streams back to the bracket
 string format the compression path expects, and hands the packing to `buildPackedEntry` in
-`shared/asset-extraction`, which runs the same dictionary and compression logic a ROM extracted
+`packages/asset-extraction/src`, which runs the same dictionary and compression logic a ROM extracted
 language goes through. It is a pure function with no file or ROM I/O.
 
 The compiled entry's language code is the set's id, not its base. `id` is what `kDialogueMap`
@@ -577,7 +577,7 @@ The measurement primitives every layout step builds on: a language's per glyph a
 greedy matcher that turns authored text into glyph indices, and the advance lookup.
 
 Matching is greedy longest match over the alphabet, because that is what the encoder does
-(`encodeGreedyFromDict` in `shared/asset-extraction/text/dialogue-encoder.ts` checks the whole
+(`encodeGreedyFromDict` in `packages/asset-extraction/src/text/dialogue-encoder.ts` checks the whole
 bracketed run against its alphabet map before it falls through to a single character). Several
 alphabets carry entries of more than one character, such as bracketed picture glyph names for an
 icon or a button face, and the ellipsis run. Each of those is one glyph with one advance. Matching
@@ -1057,7 +1057,7 @@ of their own.
 ### language/tokens/parse-tokens.ts
 
 Bracket string to token stream: the import half of the adapter between the stored dialogue dump
-format (written by `formatDialogueText` in `shared/asset-extraction/text/dialogue-decoder.ts`) and
+format (written by `formatDialogueText` in `packages/asset-extraction/src/text/dialogue-decoder.ts`) and
 the editable language set model. Classification is purely syntactic. No language config is read,
 so one parse serves every entry of `kLanguages`.
 

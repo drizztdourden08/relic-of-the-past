@@ -1,6 +1,5 @@
 /* @layer site-kit @kind logic */
-import type { DiscordRole } from '@rotp/hub-contracts';
-import type { RightsModel } from '@rotp/hub-contracts';
+import type { DiscordRole, RightsModel } from '@rotp/hub-contracts';
 import type { GroupView } from '@rotp/hub-client';
 
 const roleText = (group: GroupView, roles: ReadonlyMap<string, DiscordRole>) => {

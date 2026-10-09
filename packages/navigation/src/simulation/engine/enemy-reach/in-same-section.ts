@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { GridPos } from '@rotp/game-core';
-import type { RoomSectionSplit } from '@rotp/game-core';
+import type { GridPos, RoomSectionSplit } from '@rotp/game-core';
 import { SECTION_SPLIT_LINE } from './enemy-reach.constants';
 
 const inSameSection = (tile: GridPos, split: RoomSectionSplit | undefined): boolean => {

@@ -1,6 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import { tagIdsForKeys } from '@rotp/game-data';
-import { screenBlockers } from '@rotp/game-data';
+import { tagIdsForKeys, screenBlockers } from '@rotp/game-data';
 import type { ScreenGameId, ScreenPosition } from '@rotp/game-data';
 import type { DraftResult, ScreenDraft } from './screen-editor.type';
 

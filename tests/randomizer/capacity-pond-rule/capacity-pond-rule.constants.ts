@@ -1,9 +1,6 @@
 /* @layer tests @kind constants */
-import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';
-import { defaultProgressiveSetting } from '@rotp/randomizer';
-import { defaultShopScope } from '@rotp/randomizer';
-import type { CapacityPondAuthority } from '@rotp/randomizer';
-import type { PondMode } from '@rotp/randomizer';
+import { DEFAULT_ITEM_POWER, defaultProgressiveSetting, defaultShopScope } from '@rotp/randomizer';
+import type { CapacityPondAuthority, PondMode } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 const POND_MODES: readonly PondMode[] = ['capacity', 'vanilla-cost', 'custom'];

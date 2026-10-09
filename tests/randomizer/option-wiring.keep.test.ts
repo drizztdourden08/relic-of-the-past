@@ -2,25 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { randomizerChoiceOverrides, snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import { partitionCatalogByLock } from '@app/compounds/RandomizerOptionRow/behavior/partitionCatalogByLock';
-import { OPTION_GROUPS, optionCatalog } from '@rotp/randomizer';
-import { DEFAULT_CAPACITY_BONUS, customSetting } from '@rotp/randomizer';
-import { DEFAULT_ITEM_POWER } from '@rotp/randomizer';
-import { DEFAULT_DARK_ROOM_SETTING } from '@rotp/randomizer';
-import { DEFAULT_ACCESSIBILITY } from '@rotp/randomizer';
-import { DEFAULT_DUNGEON_ITEM_SETTING } from '@rotp/randomizer';
-import { DARK_ROOM_OPTION_KEYS } from '@rotp/randomizer';
-import { DIFFICULTY_OPTION_KEYS } from '@rotp/randomizer';
-import { defaultDifficulty } from '@rotp/randomizer';
-import { defaultProgressiveSetting } from '@rotp/randomizer';
-import { defaultProgressiveModes } from '@rotp/randomizer';
-import { defaultRetroBow } from '@rotp/randomizer';
-import { LEGACY_POND_PROFILES } from '@rotp/randomizer';
-import { SHOP_PRICE_BLOCK_KEYS, SHOP_PRICE_OPTION_KEYS } from '@rotp/randomizer';
-import { SHOP_SCOPE_OPTION_KEYS } from '@rotp/randomizer';
-import { defaultShopScope } from '@rotp/randomizer';
-import { CANONICAL_SLOTS } from '@rotp/randomizer';
-import { accountingOf } from '@rotp/randomizer';
-import { fillFlagsOf } from '@rotp/randomizer';
+import { OPTION_GROUPS, optionCatalog, DEFAULT_CAPACITY_BONUS, customSetting, DEFAULT_ITEM_POWER, DEFAULT_DARK_ROOM_SETTING, DEFAULT_ACCESSIBILITY, DEFAULT_DUNGEON_ITEM_SETTING, DARK_ROOM_OPTION_KEYS, DIFFICULTY_OPTION_KEYS, defaultDifficulty, defaultProgressiveSetting, defaultProgressiveModes, defaultRetroBow, LEGACY_POND_PROFILES, SHOP_PRICE_BLOCK_KEYS, SHOP_PRICE_OPTION_KEYS, SHOP_SCOPE_OPTION_KEYS, defaultShopScope, CANONICAL_SLOTS, accountingOf, fillFlagsOf } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 const BASE: RandomizerOptionChoices = {

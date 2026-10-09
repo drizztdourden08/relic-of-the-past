@@ -1,9 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { locationDisplayName } from '@rotp/randomizer';
-import { POND_INSTANCES } from '@rotp/randomizer';
-import { POND_RUNGS_BY_ID } from '@rotp/randomizer';
-import { POND_REGION_LOCATIONS } from '@rotp/randomizer';
+import { locationDisplayName, POND_INSTANCES, POND_RUNGS_BY_ID, POND_REGION_LOCATIONS } from '@rotp/randomizer';
 import { find } from '@rotp/game-data';
 
 describe('pond slot identity', () => {

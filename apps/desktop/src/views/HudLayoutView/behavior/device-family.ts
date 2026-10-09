@@ -1,6 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import type { ModernSlot } from '@rotp/game-data';
-import type { DeviceFamily } from '@rotp/game-data';
+import type { ModernSlot, DeviceFamily } from '@rotp/game-data';
 import { FAMILY_PREFIXES } from '../HudLayoutView.constants';
 
 const familyOfIcon = (key: string | undefined): DeviceFamily | null => {

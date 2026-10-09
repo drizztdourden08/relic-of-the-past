@@ -1,6 +1,5 @@
 /* @layer test @kind helper */
-import type { ScreenRecord } from '@rotp/game-data';
-import type { ScreenMatchResult } from '@rotp/game-data';
+import type { ScreenRecord, ScreenMatchResult } from '@rotp/game-data';
 import { WRONG_PALACE } from './screen-strategy-parity.constants';
 
 const palaceScanMatch = (screen: ScreenRecord): ScreenMatchResult => ({

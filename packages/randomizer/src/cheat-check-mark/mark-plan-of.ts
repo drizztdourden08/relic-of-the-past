@@ -1,10 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import type { CheckRecord } from '@rotp/game-data';
-import { voidCall } from '@rotp/game-core';
+import { voidCall, numArgs } from '@rotp/game-core';
 import { detectionOf } from '../client/check-detection';
 import type { MarkPlan } from './cheat-check-mark.type';
 import { NO_ITEM_SENTINEL } from './cheat-check-mark.constants';
-import { numArgs } from '@rotp/game-core';
 import { progressMarkPlan } from './progress-mark-plan';
 
 const markChestCollected = (roomId: number, chestIndex: number): void =>

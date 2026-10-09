@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getCheck } from '@rotp/game-data';
+import { getCheck, chestSwapOf } from '@rotp/game-data';
 import type { CheckId, CheckRecord, ItemId } from '@rotp/game-data';
 import type { LocationKey } from '@rotp/randomizer';
-import { chestSwapOf } from '@rotp/game-data';
 import { getCompletedChecks, onCompletedChecksChanged, onItemReceived } from '@app/game';
 import { isToastQuiet } from '@app/game/play-quiet';
 import { firedLocations, onFiredLocation } from '@app/game/randomizer-client';

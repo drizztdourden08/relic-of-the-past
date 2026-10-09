@@ -2,17 +2,10 @@
 import type { GameSettings } from '@rotp/features';
 import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '@rotp/input-mapping';
 import { log } from '../../log-bus';
-import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords } from '@rotp/game-core';
+import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords, buildPpuFlags, DEFAULT_SETTINGS, getModule, callIfExported, FEATURES3_GATE_WORD, liveSettingsState, pushDisplaySwitches } from '@rotp/game-core';
 import { pushDialogLive } from '../live-settings-dialog';
-import { buildPpuFlags } from '@rotp/game-core';
-import { DEFAULT_SETTINGS } from '@rotp/game-core';
 import { setSettingsStoryGates } from '../story-gates';
 import type { EmscriptenModule } from '@rotp/game-core';
-import { getModule } from '@rotp/game-core';
-import { callIfExported } from '@rotp/game-core';
-import { FEATURES3_GATE_WORD } from '@rotp/game-core';
-import { liveSettingsState } from '@rotp/game-core';
-import { pushDisplaySwitches } from '@rotp/game-core';
 import { pushVolumes } from '@rotp/msu';
 
 const pushFeatureWords = (mod: EmscriptenModule, settings: GameSettings): number => {

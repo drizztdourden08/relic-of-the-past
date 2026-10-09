@@ -1,12 +1,7 @@
 /* @layer store-site @kind component */
 import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { DataTable, FilterBar } from '@drizztdourden08/tessera/composites';
-import { SideColumn } from '@rotp/design';
-import { SitePage } from '@rotp/design';
-import { Workbench } from '@rotp/design';
-import { SavedViewsMenu } from '@rotp/design';
-import { AppLink } from '@rotp/design';
-import { useSessionContext } from '@rotp/design';
+import { SideColumn, SitePage, Workbench, SavedViewsMenu, AppLink, useSessionContext } from '@rotp/design';
 import { authorPath } from '../../catalog/item-paths';
 import { publicationRowId } from '../../publications/publication-row';
 import { PUBLICATION_DEFAULT_COLUMNS, PUBLICATION_DEFAULT_GROUP_BY } from '../../publications/publication-schema';

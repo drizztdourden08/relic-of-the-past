@@ -3,11 +3,8 @@
 import { describe, expect, it } from 'vitest';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { hudDataScope } from '@rotp/hud';
-import { intrinsicSize, layoutHud, placedById } from '@rotp/hud';
-import { COUNTDOWN_SIZE, layoutById, validateLayout } from '@rotp/hud';
+import { hudDataScope, intrinsicSize, layoutHud, placedById, COUNTDOWN_SIZE, layoutById, validateLayout, advanceCountdown, IDLE_TRACK } from '@rotp/hud';
 import { parseGameUIBuffer } from '@rotp/game-core';
-import { advanceCountdown, IDLE_TRACK } from '@rotp/hud';
 import { countdownBox } from '@app/compounds/HudCountdown';
 import { HudNodeCountdown } from '@app/compounds/HudNodeRenderer/sub-components/HudNodeCountdown';
 import { drawOrigin } from '@app/compounds/HudNodeRenderer/behavior/draw-origin';
@@ -16,8 +13,7 @@ import {
 } from '@app/compounds/HudNodeRenderer/behavior/countdown-art';
 import { countdownContentOf } from '@app/views/HudLayoutView/behavior/countdown-content';
 import { occupantsOf } from '@app/views/HudLayoutEditor/sub-components/GridLattice';
-import type { PlacedNode } from '@rotp/hud';
-import type { HudLayout, HudNode } from '@rotp/hud';
+import type { PlacedNode, HudLayout, HudNode } from '@rotp/hud';
 
 const ACTIVE = { countdown_active: 1, countdown_seconds: 18, countdown_frames: 40 };
 const leaf = (id: string): HudNode => ({ kind: 'element', id, element: { type: 'sprite', file: 'x', box: { w: 16, h: 16 } } });

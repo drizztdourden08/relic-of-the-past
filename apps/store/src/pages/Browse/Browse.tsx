@@ -1,9 +1,7 @@
 /* @layer store-site @kind component */
 import { Flex, Select, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { FilterBar } from '@drizztdourden08/tessera/composites';
-import { SitePage } from '@rotp/design';
-import { SideColumn } from '@rotp/design';
-import { SavedViewsMenu } from '@rotp/design';
+import { SitePage, SideColumn, SavedViewsMenu } from '@rotp/design';
 import { ItemGrid } from '../../components/ItemGrid/ItemGrid';
 import { KIND_SECTIONS } from '../../lib/kinds';
 import { plural } from '../../lib/format-count';

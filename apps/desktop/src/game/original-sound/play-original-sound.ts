@@ -2,11 +2,7 @@
 import type { PreviewTarget } from '@rotp/game-core';
 import type { PlayOutcome } from '@rotp/msu';
 import { ensurePreviewModule } from '../preview-core';
-import { audioContext } from '@rotp/msu';
-import { loadOriginalSound } from '@rotp/msu';
-import { originalSoundState } from '@rotp/msu';
-import { stopOriginalSound } from '@rotp/msu';
-import { CONTINUOUS } from '@rotp/msu';
+import { audioContext, loadOriginalSound, originalSoundState, stopOriginalSound, CONTINUOUS } from '@rotp/msu';
 
 const playOriginalSound = async (
   target: PreviewTarget,

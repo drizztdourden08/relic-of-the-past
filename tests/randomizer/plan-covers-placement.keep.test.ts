@@ -1,13 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { generatePlacement } from '@rotp/randomizer';
-import { buildOptionsSnapshot } from '@rotp/randomizer';
-import { PRIZE_LOCATIONS, VANILLA_PRIZES } from '@rotp/randomizer';
-import { isShopSlotLocation } from '@rotp/randomizer';
-import { STANDARD_SHOP_SLOT_COUNT } from '@rotp/randomizer';
-import { SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@rotp/randomizer';
-import type { OptionValue } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
+import { generatePlacement, buildOptionsSnapshot, PRIZE_LOCATIONS, VANILLA_PRIZES, isShopSlotLocation, STANDARD_SHOP_SLOT_COUNT, SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@rotp/randomizer';
+import type { OptionValue, LocationKey } from '@rotp/randomizer';
 
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };
 const { buildPhysicalPlan } = await import('../../packages/randomizer/src/client/placement-bridge');

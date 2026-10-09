@@ -1,11 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { reconcileCapacityPond } from '@rotp/randomizer';
-import { capacityEnabledOf, capacityProfileFromSnapshot } from '@rotp/randomizer';
-import { pondSettingForMode } from '@rotp/randomizer';
-import { defaultRetroBow } from '@rotp/randomizer';
-import { LEGACY_POND_PROFILES, LEGACY_POND_SETTING } from '@rotp/randomizer';
-import { buildOptionsSnapshot } from '@rotp/randomizer';
+import { reconcileCapacityPond, capacityEnabledOf, capacityProfileFromSnapshot, pondSettingForMode, defaultRetroBow, LEGACY_POND_PROFILES, LEGACY_POND_SETTING, buildOptionsSnapshot } from '@rotp/randomizer';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { BASE_CHOICES, FAMILY_MODES } from './capacity-pond-rule.constants';
 import { selectionOf } from './selection-of';

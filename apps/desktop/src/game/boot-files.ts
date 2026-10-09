@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../log-bus';
-import type { EmscriptenModule } from '@rotp/game-core';
-import type { BootFiles } from '@rotp/game-core';
+import type { EmscriptenModule, BootFiles } from '@rotp/game-core';
 import { DEFAULT_ZELDA3_INI } from '@rotp/game-core';
 
 const debugForcedAspect = (): string | null | undefined =>

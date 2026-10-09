@@ -1,9 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { quantiseHeartFill } from '@app/compounds/HudShape';
-import { aspectOf, intrinsicSize, layoutHud } from '@rotp/hud';
-import { HUD_PRESETS, instantiatePreset } from '@rotp/hud';
-import { tryLoadLayout } from '@rotp/hud';
+import { aspectOf, intrinsicSize, layoutHud, HUD_PRESETS, instantiatePreset, tryLoadLayout } from '@rotp/hud';
 import type { HudLayout, HudNode } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };

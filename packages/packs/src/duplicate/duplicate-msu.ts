@@ -1,9 +1,7 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
 import type { MsuPackManifest } from '@rotp/game-data';
-import { synthesizeClassicManifest } from '@rotp/msu';
-import { getTrackList, listPackEntries, readManifest, readTrackFile, writeManifest, writeTrackFile } from '@rotp/msu';
-import { assertSafeName, packDir } from '@rotp/msu';
+import { synthesizeClassicManifest, getTrackList, listPackEntries, readManifest, readTrackFile, writeManifest, writeTrackFile, assertSafeName, packDir } from '@rotp/msu';
 import type { DuplicateInstalled } from './duplicate.type';
 
 const freeCopyName = async (files: FileStore, pack: string): Promise<string> => {

@@ -1,8 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { PING_INTERVAL_MS, PING_TAG } from '@rotp/randomizer';
-import { AP_WORLD_VERSION } from '@rotp/randomizer';
+import { PING_INTERVAL_MS, PING_TAG, AP_WORLD_VERSION } from '@rotp/randomizer';
 import { stateChip } from '@app/views/Randomizer/sub-components/NetworkTab/behavior/network-tone';
 import type { LocationKey } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';

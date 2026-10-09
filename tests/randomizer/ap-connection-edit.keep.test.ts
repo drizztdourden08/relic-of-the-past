@@ -12,9 +12,8 @@ import { createMemFileStore } from '../storage/mem-file-store';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import type { FakeServer } from './ap-fake-server';
-import type { OnlineSessionConfig } from '@rotp/randomizer';
+import type { OnlineSessionConfig, RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
-import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 
 const fake = vi.hoisted(() => ({ server: null as FakeServer | null }));
 

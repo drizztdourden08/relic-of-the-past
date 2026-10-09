@@ -2,23 +2,10 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { compressStrings } from '@rotp/asset-extraction';
-import { kLanguages } from '@rotp/asset-extraction';
-import { HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, stripHighlight } from '@rotp/game-core';
-import { primary } from '@rotp/randomizer';
-import { secondary } from '@rotp/randomizer';
-import { renderReceiptMessage } from '@rotp/randomizer';
-import { renderFromServer, renderJunk, renderOnline, renderProgressive } from '@rotp/randomizer';
-import { receiptLineCandidates } from '@rotp/game-core';
-import { pondDemandLinesOf } from '@rotp/randomizer';
-import { renderCapacityStep } from '@rotp/randomizer';
-import { hexToSnes15 } from '@rotp/game-data';
-import { foreignItemLine } from '@rotp/randomizer';
-import { compressMarkedStrings } from '@rotp/game-core';
-import { wrapMessageText, wrapRows } from '@rotp/game-core';
-import { toDialogueText } from '@rotp/game-core';
-import { dialogueCharsetOf } from '@rotp/game-data';
-import { DEFAULT_SETTINGS } from '@rotp/game-core';
+import { compressStrings, kLanguages } from '@rotp/asset-extraction';
+import { HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, stripHighlight, receiptLineCandidates, compressMarkedStrings, wrapMessageText, wrapRows, toDialogueText, DEFAULT_SETTINGS } from '@rotp/game-core';
+import { primary, secondary, renderReceiptMessage, renderFromServer, renderJunk, renderOnline, renderProgressive, pondDemandLinesOf, renderCapacityStep, foreignItemLine } from '@rotp/randomizer';
+import { hexToSnes15, dialogueCharsetOf } from '@rotp/game-data';
 import type { ReceiptLine } from '@rotp/game-core';
 
 const US = kLanguages.us;

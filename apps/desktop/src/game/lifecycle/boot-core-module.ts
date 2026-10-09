@@ -1,11 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { writeBootFiles } from '../boot-files';
-import { restoreLostContext } from '@rotp/game-core';
+import { restoreLostContext, lifecycleState } from '@rotp/game-core';
 import { createInstantiateWasm } from '../instantiate-wasm';
 import type { EmscriptenModule } from '@rotp/game-core';
 import { loadGlueScript } from '../wasm-warmup';
-import { lifecycleState } from '@rotp/game-core';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 

@@ -1,8 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { useEffect, useMemo, useState } from 'react';
-import { FILE_TYPES, FILE_TYPE_LABELS } from '@rotp/hub-contracts';
+import { FILE_TYPES, FILE_TYPE_LABELS, LIMITS } from '@rotp/hub-contracts';
 import type { FileType } from '@rotp/hub-contracts';
-import { LIMITS } from '@rotp/hub-contracts';
 import { Button, Stack, Field, Select, TextInput, Textarea, Text } from '@drizztdourden08/tessera/primitives';
 import { DialogShell, TagInput } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@rotp/hub-client';

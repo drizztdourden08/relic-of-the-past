@@ -1,17 +1,12 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback, useMemo } from 'react';
-import { normalPlacement } from '@rotp/navigation';
-import { trackerCheckRecords } from '@rotp/navigation';
-import { trackerStatuses } from '@rotp/navigation';
-import { liveChestItems } from '@rotp/game-data';
-import { find } from '@rotp/game-data';
-import { buildGroupTree, filterChecks, smallKeyDoorsOf } from '@rotp/game-data';
+import { normalPlacement, trackerCheckRecords, trackerStatuses } from '@rotp/navigation';
+import { liveChestItems, find, buildGroupTree, filterChecks, smallKeyDoorsOf } from '@rotp/game-data';
 import type { FilterState, GroupDimension, RunContext } from '@rotp/game-data';
 import { buildPlacementView, runKindOfSession } from '../../game/randomizer-client';
 import type { PlacementView } from '../../game/randomizer-client';
-import type { ViewMode } from '../../compounds/ChecksTracker';
+import type { ViewMode, TrackerPanels } from '../../compounds/ChecksTracker';
 import { CLOSED_PANELS } from '../../compounds/ChecksTracker';
-import type { TrackerPanels } from '../../compounds/ChecksTracker';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import type { TrackerDataOptions } from './use-tracker-data.type';
 import { DEFAULT_GROUPING, EMPTY_FILTER, NO_GROUPS } from './use-tracker-data.constants';

@@ -1,10 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { serializeAreaRecord, serializeLocationRecord } from '@rotp/game-data';
-import { areaRecordFile, locationRecordFile } from '@rotp/game-data';
-import type { FileTarget } from '@rotp/game-data';
-import type { AreaId, AreaRecord, LocationRecord } from '@rotp/game-data';
+import { serializeAreaRecord, serializeLocationRecord, areaRecordFile, locationRecordFile } from '@rotp/game-data';
+import type { FileTarget, AreaId, AreaRecord, LocationRecord } from '@rotp/game-data';
 import type { Allocated, AllocateGeographyArgs, AllocateGeographyResult } from '@app/ipc/screen-editor-contract';
 import { withAllocatedIds } from '../id-allocator';
 import { insertBeforeArrayClose } from '../source-writers';

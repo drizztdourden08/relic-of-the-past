@@ -1,8 +1,7 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
 import type { CreateProfileOptions, Profile } from '@app/profiles/types';
-import { newId } from '@drizztdourden08/brock-core';
-import { writeJson } from '@drizztdourden08/brock-core';
+import { newId, writeJson } from '@drizztdourden08/brock-core';
 import { configFile } from './config-file';
 import { profileFile } from './profile-file';
 

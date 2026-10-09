@@ -1,11 +1,9 @@
 /* @layer shared-game @kind logic */
 import type { DatasetSuggestion } from '../types';
-import { find } from '@rotp/game-data';
-import { toScreenIdOf } from '@rotp/game-data';
+import { find, toScreenIdOf, DOOR_BARRIER } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
 import type { RecorderState, ObservedDoorGate } from './recorder';
 import type { UpdateDeps } from './dataset-updates.type';
-import { DOOR_BARRIER } from '@rotp/game-data';
 import { RIGHT_ARROW } from '../arrow.constants';
 
 const connectionKey = (from: string, to: string): string => `${from}|${to}`;

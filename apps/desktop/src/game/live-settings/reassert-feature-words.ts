@@ -1,9 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { reassertGateWord5 } from '../gate-word-5';
-import { buildFeatureFlags, buildFeatureWords } from '@rotp/game-core';
-import { getModule } from '@rotp/game-core';
-import { liveSettingsState } from '@rotp/game-core';
-import { tryVoidCcall } from '@rotp/game-core';
+import { buildFeatureFlags, buildFeatureWords, getModule, liveSettingsState, tryVoidCcall } from '@rotp/game-core';
 
 const reassertFeatureWords = (): void => {
   const { settings } = liveSettingsState;

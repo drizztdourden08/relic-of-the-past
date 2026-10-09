@@ -1,6 +1,5 @@
 /* @layer renderer-hooks @kind logic */
-import { POND_PRICE_LADDER } from '@rotp/randomizer';
-import { askOfSetting } from '@rotp/randomizer';
+import { POND_PRICE_LADDER, askOfSetting } from '@rotp/randomizer';
 import type { PondSetting } from '@rotp/randomizer';
 import type { PondRowState } from '@app/compounds/WishingPondRow';
 

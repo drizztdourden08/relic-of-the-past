@@ -1,6 +1,5 @@
 /* @layer tests @kind constants */
-import type { CurveId } from '@rotp/randomizer';
-import type { PondSetting } from '@rotp/randomizer';
+import type { CurveId, PondSetting } from '@rotp/randomizer';
 
 const CUSTOM: Extract<PondSetting, { mode: 'custom' }> = {
   mode: 'custom', start: 100, max: 300, throws: 5, items: 3, shape: { curve: 'equal' },

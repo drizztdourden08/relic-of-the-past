@@ -5,14 +5,9 @@ import { shopTotalTextOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-tot
 import { shopSectionsOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-sections';
 import { shopCountControlOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-count-control';
 import { VANILLA_TOTAL } from '@app/compounds/ShopSlotsBlock/ShopSlotsBlock.constants';
-import { defaultShopScope } from '@rotp/randomizer';
-import { SHOP_IDS, STANDARD_SHOP_SLOT_COUNT } from '@rotp/randomizer';
-import { DEFAULT_OFF_SHOPS } from '@rotp/randomizer';
-import { SHOP_SLOT_ROWS } from '@rotp/randomizer';
+import { defaultShopScope, SHOP_IDS, STANDARD_SHOP_SLOT_COUNT, DEFAULT_OFF_SHOPS, SHOP_SLOT_ROWS, normalizeRandomizerOptions, shopScopeOfValues } from '@rotp/randomizer';
 import { EMPTY_RANDOMIZER_FORM } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config';
 import { snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
-import { normalizeRandomizerOptions } from '@rotp/randomizer';
-import { shopScopeOfValues } from '@rotp/randomizer';
 import type { ShopScope } from '@rotp/randomizer';
 
 const STALE_COUNT = 12;

@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX } from '@rotp/randomizer';
-import { RETRO_QUIVER_PRICE } from '@rotp/randomizer';
-import { RETRO_REFILL_ITEM } from '@rotp/randomizer';
-import { CANONICAL_SLOTS } from '@rotp/randomizer';
-import type { ShopSlotFacts } from '@rotp/randomizer';
-import type { RetroBowSetting } from '@rotp/randomizer';
-import type { ShopScope } from '@rotp/randomizer';
+import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX, RETRO_QUIVER_PRICE, RETRO_REFILL_ITEM, CANONICAL_SLOTS } from '@rotp/randomizer';
+import type { ShopSlotFacts, RetroBowSetting, ShopScope } from '@rotp/randomizer';
 import { retroShuffledNote } from './retro-shuffled-note';
 import { retroVanillaNote } from './retro-vanilla-note';
 

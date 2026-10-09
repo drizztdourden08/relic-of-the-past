@@ -1,8 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 import { useEffect, useMemo, useRef } from 'react';
 import { useGameUIStore } from '../../../stores/game-ui-store';
-import { describePalaceMismatch } from '@rotp/game-data';
-import { resolveCurrentScreenDetailed } from '@rotp/game-data';
+import { describePalaceMismatch, resolveCurrentScreenDetailed } from '@rotp/game-data';
 import type { ScreenMatchResult, VariantGameState } from '@rotp/game-data';
 import { wasmGetProgressIndicator } from '../../../game';
 import { getCompletedChecks } from '../../../game/tracker';

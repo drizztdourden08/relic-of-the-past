@@ -1,8 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { getPalaceName, isDungeonPalace } from '@rotp/game-data';
-import { dungeonForPalaceIndex } from '@rotp/game-data';
-import { all } from '@rotp/game-data';
+import { getPalaceName, isDungeonPalace, dungeonForPalaceIndex, all } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 const EXPECTED: ReadonlyArray<readonly [number, string]> = [

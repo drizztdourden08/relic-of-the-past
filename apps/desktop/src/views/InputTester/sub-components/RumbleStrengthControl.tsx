@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useState } from 'react';
 import { getPlatform } from '@drizztdourden08/brock-react';
-import { readRumbleStrength, writeRumbleStrength } from '@rotp/input-mapping';
-import { DEFAULT_RUMBLE_STRENGTH, MAX_RUMBLE_STRENGTH, MIN_RUMBLE_STRENGTH, getCachedRumbleStrength, setCachedRumbleStrength } from '@rotp/input-mapping';
+import { readRumbleStrength, writeRumbleStrength, DEFAULT_RUMBLE_STRENGTH, MAX_RUMBLE_STRENGTH, MIN_RUMBLE_STRENGTH, getCachedRumbleStrength, setCachedRumbleStrength } from '@rotp/input-mapping';
 import { Box, Text, NumberInput } from '@drizztdourden08/tessera/primitives';
 import type { RumbleStrengthControlProps } from './RumbleStrengthControl.type';
 

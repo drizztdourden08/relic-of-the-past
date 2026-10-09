@@ -1,6 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ItemChangeResponse, ReviewTarget } from '@rotp/hub-contracts';
-import type { ReviewDecideBody } from '@rotp/hub-contracts';
+import type { ItemChangeResponse, ReviewTarget, ReviewDecideBody } from '@rotp/hub-contracts';
 import { storeApi } from '../store-client';
 import { reviewTargetParam } from './review-target-param';
 

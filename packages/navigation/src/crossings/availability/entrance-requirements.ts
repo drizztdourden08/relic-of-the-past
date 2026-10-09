@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { getAttrReq } from '../../pathfinding/tile-attrs';
 import type { TileReq } from '@rotp/game-data';
-import type { FloodFillResult } from '@rotp/game-core';
-import type { TransitionPoint } from '@rotp/game-core';
+import type { FloodFillResult, TransitionPoint } from '@rotp/game-core';
 import { unmetCount } from './unmet-count';
 
 const approachRequirements = (result: FloodFillResult, t: TransitionPoint): string[] => {

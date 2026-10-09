@@ -1,6 +1,5 @@
 /* @layer tests @kind type */
-import type { OptionValue } from '@rotp/randomizer';
-import type { ShopScope } from '@rotp/randomizer';
+import type { OptionValue, ShopScope } from '@rotp/randomizer';
 
 type Values = Readonly<Record<string, OptionValue>>;
 

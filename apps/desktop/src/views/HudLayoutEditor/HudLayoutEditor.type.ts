@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudLayout } from '@rotp/hud';
-import type { Size } from '@rotp/hud';
+import type { HudLayout, Size } from '@rotp/hud';
 
 interface HudLayoutEditorProps {
   layoutId?: string;

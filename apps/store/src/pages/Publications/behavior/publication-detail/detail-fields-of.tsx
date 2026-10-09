@@ -1,10 +1,8 @@
 /* @layer store-site @kind logic */
 import type { ReactNode } from 'react';
-import type { Review } from '@rotp/hub-contracts';
-import type { ListingEdit, StoreItem, StoreVersion } from '@rotp/hub-contracts';
+import type { Review, ListingEdit, StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import type { DetailField } from '@rotp/design';
-import { formatBytes } from '@rotp/hub-client';
-import { formatDateTime } from '@rotp/hub-client';
+import { formatBytes, formatDateTime } from '@rotp/hub-client';
 import { Status, Tag } from '@drizztdourden08/tessera/primitives';
 import { ReviewChip } from '../../../../components/ReviewChip/ReviewChip';
 import type { ReviewChipState } from '../../../../components/ReviewChip/ReviewChip';

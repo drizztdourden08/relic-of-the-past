@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { PROGRESSIVE_FAMILIES } from '@rotp/randomizer';
-import { progressiveFamilyName, progressiveTierName } from '@rotp/randomizer';
-import { progressiveTierKeyOf } from '@rotp/randomizer';
+import { PROGRESSIVE_FAMILIES, progressiveFamilyName, progressiveTierName, progressiveTierKeyOf } from '@rotp/randomizer';
 import type { ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
 import type { ProgressiveCardModel, ProgressiveTierToggleModel } from '../ProgressiveTiersBlock.type';
 

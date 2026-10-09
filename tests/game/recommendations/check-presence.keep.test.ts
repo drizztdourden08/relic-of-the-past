@@ -4,8 +4,7 @@ import { all, getCheck, getItem, getScreen, registerRecord, replaceRecord, unreg
 import type { CheckRecord, ScreenId } from '@rotp/game-data';
 import type { ChestObservation } from '@rotp/game-core';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
-import { detectorFromStrategy } from '@rotp/navigation';
-import { checkStrategy } from '@rotp/navigation';
+import { detectorFromStrategy, checkStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 
 const ROOM = 260;

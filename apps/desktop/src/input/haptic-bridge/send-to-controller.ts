@@ -2,8 +2,7 @@
 import type { VibrationSegment } from '@rotp/input-mapping';
 import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
-import { hapticState } from '@rotp/input-mapping';
-import { shapeForDevice } from '@rotp/input-mapping';
+import { hapticState, shapeForDevice } from '@rotp/input-mapping';
 
 const deviceHapticsEnabled = (deviceKey: string): boolean =>
   hapticState.profileEnabled && getInputManager().allowed.gamepadKeys.has(deviceKey);

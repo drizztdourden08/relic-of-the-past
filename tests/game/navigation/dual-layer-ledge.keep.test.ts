@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { DualLayerStrategy } from '@rotp/navigation';
+import { DualLayerStrategy, GRID_SIZE } from '@rotp/navigation';
 import type { QuadrantBounds, BFSCell } from '@rotp/navigation';
 import type { TilePassability } from '@rotp/game-core';
-import { GRID_SIZE } from '@rotp/navigation';
 
 const fill = (tile: TilePassability): TilePassability[][] =>
   Array.from({ length: GRID_SIZE }, () => new Array<TilePassability>(GRID_SIZE).fill(tile));

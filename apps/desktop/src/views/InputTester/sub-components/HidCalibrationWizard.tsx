@@ -130,9 +130,4 @@ HidCalibrationWizard.displayName = 'HidCalibrationWizard';
 
 export { HidCalibrationWizard };
 export type { HidWizardHandle } from './HidCalibrationWizard.type';
-export type {
-  HidAxisMapping,
-  HidButtonMapping,
-  HidControllerMap,
-} from './hid-calibration/hid-calibration.type';
-export type { IdleByteAnalysis, IdleRecordResult } from './hid-calibration/hid-calibration.type';
+export type { HidAxisMapping, HidButtonMapping, HidControllerMap, IdleByteAnalysis, IdleRecordResult } from './hid-calibration/hid-calibration.type';

@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { OverworldEntrance } from '@rotp/game-core';
-import { wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor, wasmGetRoomDoorInfo } from '@rotp/game-core';
-import { isFollowerActive } from '@rotp/game-core';
+import { wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor, wasmGetRoomDoorInfo, isFollowerActive } from '@rotp/game-core';
 import { BOUNDARY_ID_BASE, STAIR_ID_BASE, THRONE_DOOR } from './room-entrances.constants';
 
 const stairEntrances = (roomId: number, isLive: boolean): OverworldEntrance[] => {

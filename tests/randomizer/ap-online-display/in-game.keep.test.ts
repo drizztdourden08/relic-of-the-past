@@ -1,23 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { foreignItemLine } from '@rotp/randomizer';
-import { foreignIconIdOfGame } from '@rotp/randomizer';
-import { FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID } from '@rotp/randomizer';
-import { fitReceiptLine } from '@rotp/game-core';
-import { toDialogueText } from '@rotp/game-core';
-import { dialogueCharsetOf, extraGlyphSlots, readableText } from '@rotp/game-data';
-import { stripHighlight } from '@rotp/game-core';
-import { kLanguages } from '@rotp/asset-extraction';
-import { buildForeignIconsFile, FOREIGN_ICON_FILES, FOREIGN_ICON_PALETTE_BYTES } from '@rotp/asset-extraction';
-import { chromaOf, toOklab } from '@rotp/asset-extraction';
-import { snesToRgba } from '@rotp/asset-extraction';
-import { NEUTRAL_CHROMA } from '@rotp/asset-extraction';
-import { extractArtBadge } from '@rotp/asset-extraction';
-import { artImage } from '@rotp/asset-extraction';
-import { quantizeIconPerceptual } from '@rotp/asset-extraction';
-import { POOL_SPRITE_DEFINITIONS } from '@rotp/game-data';
-import type { ImageBuffer } from '@rotp/asset-extraction';
-import type { RGBA } from '@rotp/asset-extraction';
+import { foreignItemLine, foreignIconIdOfGame, FOREIGN_ICON_FIRST_ID, FOREIGN_ICON_LAST_ID } from '@rotp/randomizer';
+import { fitReceiptLine, toDialogueText, stripHighlight } from '@rotp/game-core';
+import { dialogueCharsetOf, extraGlyphSlots, readableText, POOL_SPRITE_DEFINITIONS } from '@rotp/game-data';
+import { kLanguages, buildForeignIconsFile, FOREIGN_ICON_FILES, FOREIGN_ICON_PALETTE_BYTES, chromaOf, toOklab, snesToRgba, NEUTRAL_CHROMA, extractArtBadge, artImage, quantizeIconPerceptual } from '@rotp/asset-extraction';
+import type { ImageBuffer, RGBA } from '@rotp/asset-extraction';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;

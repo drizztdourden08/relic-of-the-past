@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { wasmGetGameUIState, wasmGetReceiveCount, wasmGetReceiveSite } from '@rotp/game-core';
-import { parseGameUIBuffer } from '@rotp/game-core';
+import { wasmGetGameUIState, wasmGetReceiveCount, wasmGetReceiveSite, parseGameUIBuffer } from '@rotp/game-core';
 import { dungeonGroupName, dungeonGroupOf } from '@rotp/game-data';
 import {
   DUNGEON_BIT_TOP, DUNGEON_SLOTS, ITEM_ID_COUNT, PER_HEART, RECEIVE_SITES,

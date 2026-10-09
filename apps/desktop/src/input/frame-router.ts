@@ -1,14 +1,10 @@
 /* @layer renderer-lib @kind logic */
-import { computeBitmask } from '@rotp/input-mapping';
-import { buildInputSample, edgeBaseline, schemeRuntime } from '@rotp/input-mapping';
-import { menuEdges, menuShadowedSlots, readFunctionMask, remapForScheme } from '@rotp/input-mapping';
+import { computeBitmask, buildInputSample, edgeBaseline, schemeRuntime, menuEdges, menuShadowedSlots, readFunctionMask, remapForScheme, KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from '@rotp/input-mapping';
 import { ownsHudItem } from './item-ownership';
 import { setActiveItem } from '@rotp/game-core';
-import type { SchemeRuntime } from '@rotp/input-mapping';
-import type { InputSample } from '@rotp/input-mapping';
+import type { SchemeRuntime, InputSample } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 import type { InputManager } from '@app/input/input-manager/input-manager';
-import { KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from '@rotp/input-mapping';
 
 const classicMask = (m: InputManager): number =>
   computeBitmask(m.keyStates, m.keyboardMap, m.gamepadButtonMap, m.gamepadAxisMap, m.hidStates, m.allowed);

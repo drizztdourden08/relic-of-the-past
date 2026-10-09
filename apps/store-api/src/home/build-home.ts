@@ -1,6 +1,5 @@
 /* @layer store-api @kind logic */
-import type { HomeView, ItemCardView } from '@rotp/hub-contracts';
-import type { StoreItem } from '@rotp/hub-contracts';
+import type { HomeView, ItemCardView, StoreItem } from '@rotp/hub-contracts';
 import { itemsRepo } from '../db/items-repo';
 import { settingsRepo } from '../db/settings-repo';
 import { toCardView } from '../items/card-view';

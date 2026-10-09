@@ -1,19 +1,7 @@
 /* @layer tests @kind test */
 import { createHash } from 'crypto';
 import { describe, expect, it } from 'vitest';
-import { optionByKey } from '@rotp/randomizer';
-import { AP_ID_BASE, AP_ITEM_ID_OFFSET } from '@rotp/randomizer';
-import { AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES } from '@rotp/randomizer';
-import { apItemIdOf, apLocationIdOf, itemKeyOfApId, locationKeyOfApId } from '@rotp/randomizer';
-import { apItemUniverse } from '@rotp/randomizer';
-import { apLocationUniverse } from '@rotp/randomizer';
-import { FAMILIES } from '@rotp/randomizer';
-import { ITEM } from '@rotp/randomizer';
-import { POND_EXTRA_LOCATIONS } from '@rotp/randomizer';
-import { PRIZE_ITEMS } from '@rotp/randomizer';
-import { WORLD_EVENT_IDS } from '@rotp/randomizer';
-import { RETRO_QUIVER_ITEM } from '@rotp/randomizer';
-import { ALL_SHOP_SLOT_LOCATIONS } from '@rotp/randomizer';
+import { optionByKey, AP_ID_BASE, AP_ITEM_ID_OFFSET, AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES, apItemIdOf, apLocationIdOf, itemKeyOfApId, locationKeyOfApId, apItemUniverse, apLocationUniverse, FAMILIES, ITEM, POND_EXTRA_LOCATIONS, PRIZE_ITEMS, WORLD_EVENT_IDS, RETRO_QUIVER_ITEM, ALL_SHOP_SLOT_LOCATIONS } from '@rotp/randomizer';
 import { describeDataset } from '../dataset-guard';
 
 const FROZEN_LOCATIONS = 472;

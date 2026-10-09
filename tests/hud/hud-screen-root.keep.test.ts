@@ -1,7 +1,6 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { layoutHud } from '@rotp/hud';
-import { tryLoadLayout, validateLayout } from '@rotp/hud';
+import { layoutHud, tryLoadLayout, validateLayout } from '@rotp/hud';
 import type { HudContainer, HudLayout } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };

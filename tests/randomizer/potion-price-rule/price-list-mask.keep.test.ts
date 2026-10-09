@@ -1,11 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { blockedContentsOf, potionPriceStateOfValues, reconcilePotionPrices } from '@rotp/randomizer';
-import { bottleContentKeyOf } from '@rotp/randomizer';
-import { rollShopPrices, shopPricePlanOf } from '@rotp/randomizer';
-import { shopSlotLocationsOf } from '@rotp/randomizer';
-import { shopScopeOfValues } from '@rotp/randomizer';
-import { createRng } from '@rotp/randomizer';
+import { blockedContentsOf, potionPriceStateOfValues, reconcilePotionPrices, bottleContentKeyOf, rollShopPrices, shopPricePlanOf, shopSlotLocationsOf, shopScopeOfValues, createRng } from '@rotp/randomizer';
 import type { ShopBottleContent } from '@rotp/randomizer';
 import { ALL_PRICES, BLOCKED_SCOPE, CAULDRON } from './potion-price-rule.constants';
 import { cauldronSubsets } from './cauldron-subsets';

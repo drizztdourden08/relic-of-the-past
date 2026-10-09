@@ -1,7 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { all, find } from '@rotp/game-data';
-import { toScreenIdOf } from '@rotp/game-data';
+import { all, find, toScreenIdOf } from '@rotp/game-data';
 import type { ConnectionRecord, ScreenId } from '@rotp/game-data';
 import { createRecommendationStore, detectorsFor, memoryStorage, recommendationFile, runDetection } from '@rotp/navigation';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';

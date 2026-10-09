@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Field, SegmentedControl, Select, Text, Toggle } from '@drizztdourden08/tessera/primitives';
-import { cyclePosition } from '@rotp/hud';
-import { resolveValue } from '@rotp/hud';
+import { cyclePosition, resolveValue } from '@rotp/hud';
 import { useMotionPreview } from '../../behavior/motion-preview';
 import { EasingPicker } from '../EasingPicker';
 import { ExpressionInput } from '../ExpressionInput';

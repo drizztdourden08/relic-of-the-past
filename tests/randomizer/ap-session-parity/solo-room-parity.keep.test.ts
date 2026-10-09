@@ -1,13 +1,8 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { buildOptionsSnapshot, normalizeRandomizerOptions } from '@rotp/randomizer';
-import { generateFromSnapshot } from '@rotp/randomizer';
-import { deliverableSetsOf } from '@rotp/randomizer';
-import { RETRO_QUIVER_ITEM } from '@rotp/randomizer';
-import { isShopSlotLocation } from '@rotp/randomizer';
+import { buildOptionsSnapshot, normalizeRandomizerOptions, generateFromSnapshot, deliverableSetsOf, RETRO_QUIVER_ITEM, isShopSlotLocation } from '@rotp/randomizer';
 import { stripHighlight } from '@rotp/game-core';
-import type { DeliverableLists } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
+import type { DeliverableLists, LocationKey } from '@rotp/randomizer';
 import { installFakeModule } from '../ap-fake-module';
 import { createFakeServer } from '../ap-fake-server';
 import { soloRoomOf } from '../ap-solo-room';

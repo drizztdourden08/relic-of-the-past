@@ -1,7 +1,6 @@
 /* @layer sanctuary-site @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSessionContext } from '@rotp/design';
-import { UploadLayer } from '@rotp/design';
+import { useSessionContext, UploadLayer } from '@rotp/design';
 import { canSeeReports } from '@rotp/hub-contracts';
 import { useFiles } from '../files/useFiles';
 import { useReports } from '../reports/useReports';

@@ -1,6 +1,5 @@
 /* @layer shared-types @kind types */
-import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
-import type { DeliverableLists } from '@rotp/randomizer';
+import type { RandomizerOptionsSnapshot, DeliverableLists } from '@rotp/randomizer';
 import type { GameSettings } from '@rotp/features';
 
 interface ProfileRandomizerConfig {

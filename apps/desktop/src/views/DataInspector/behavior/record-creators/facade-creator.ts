@@ -1,7 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { registerRecord } from '@rotp/game-data';
-import type { EntityKind } from '@rotp/game-data';
-import type { Unnumbered } from '@rotp/game-data';
+import type { EntityKind, Unnumbered } from '@rotp/game-data';
 import type { AllocateRecordArgs, AllocateRecordResult } from '@app/ipc/screen-editor-contract';
 import type { RecordCreator } from '../record-creators.type';
 import { settleCreatedRecord } from '../settle-created-record';

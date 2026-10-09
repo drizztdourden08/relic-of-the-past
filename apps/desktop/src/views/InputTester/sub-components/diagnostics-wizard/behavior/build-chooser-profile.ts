@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { buildDeviceProfileFromResolved } from '@rotp/input-mapping';
-import type { DeviceProfile } from '@rotp/input-mapping';
-import type { ResolvedDevice } from '@rotp/input-mapping';
+import type { DeviceProfile, ResolvedDevice } from '@rotp/input-mapping';
 import type { DeviceFamily } from '@rotp/game-data';
 import { toHex4 } from './to-hex4';
 

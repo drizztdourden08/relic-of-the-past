@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
-import { find } from '@rotp/game-data';
-import { pairLinksScreens, toScreenIdOf } from '@rotp/game-data';
+import { find, pairLinksScreens, toScreenIdOf } from '@rotp/game-data';
 import type { ScreenId } from '@rotp/game-data';
 import type { RoomStairInfo } from '../../../game';
 import { detectConnections, detectionTargetId } from '../../../nav-widget/detect-connections';

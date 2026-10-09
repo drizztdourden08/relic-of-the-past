@@ -2,10 +2,8 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { describe, expect, it } from 'vitest';
-import { all, getDungeon } from '@rotp/game-data';
-import { actorRecordFile, areaRecordFile, checkRecordFile, dungeonRecordFile, itemRecordFile, locationRecordFile } from '@rotp/game-data';
-import type { ActorKind } from '@rotp/game-data';
-import type { ItemCategory } from '@rotp/game-data';
+import { all, getDungeon, actorRecordFile, areaRecordFile, checkRecordFile, dungeonRecordFile, itemRecordFile, locationRecordFile } from '@rotp/game-data';
+import type { ActorKind, ItemCategory } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
 const DATA_ROOT = join(__dirname, '..', '..', '..', 'packages', 'game-data', 'src', 'data', 'records');

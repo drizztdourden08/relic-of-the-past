@@ -1,17 +1,12 @@
 /* @layer bridge-wasm @kind logic */
-import { checkLoadable, stripStamp } from '@rotp/game-core';
+import { checkLoadable, stripStamp, getModule, getProfileId, whenCoreReady, markStateLoaded, reassertAfterSaveLoad, memfsSavePath } from '@rotp/game-core';
 import { log } from '../../log-bus';
 import * as savesStore from '../../storage/saves-store';
-import { getModule, getProfileId } from '@rotp/game-core';
-import { whenCoreReady } from '@rotp/game-core';
-import { markStateLoaded } from '@rotp/game-core';
 import { pollInventoryState } from '../tracker';
 import { reassertLiveFlagsAfterLoad } from '../live-settings';
 import { requestLocationRebaseline } from '../randomizer-client/location-poller';
-import { reassertAfterSaveLoad } from '@rotp/game-core';
 import { restoreMusicPosition } from '../msu-save-glue';
 import { resumeDialogAfterLoad } from '../state-dialog';
-import { memfsSavePath } from '@rotp/game-core';
 
 const loadState = async (slot: number): Promise<boolean> => {
   log.app(`[LoadState] loadState(${slot}) called`);

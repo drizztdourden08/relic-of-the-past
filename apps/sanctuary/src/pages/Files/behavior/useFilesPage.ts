@@ -1,14 +1,12 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useMemo } from 'react';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { useSessionContext } from '@rotp/design';
+import { useSessionContext, useSurfaceView, filterRows } from '@rotp/design';
 import { visibleFileTypes } from '@rotp/hub-contracts';
 import { useSiteData } from '../../../data/useSiteData';
 import { toFileRow } from '../../../files/file-row';
 import { buildFileSchema } from '../../../files/file-schema';
-import { useSurfaceView } from '@rotp/design';
 import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views.constants';
-import { filterRows } from '@rotp/design';
 import { DEFAULT_UPLOAD_TYPE } from '../Files.constants';
 import { isFileType } from './is-file-type';
 import { fileScopeTabs, scopePredicate, shownScopeId } from './file-scopes';

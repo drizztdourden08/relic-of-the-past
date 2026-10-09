@@ -1,8 +1,7 @@
 /* @layer store-site @kind hook */
 import { useEffect, useState } from 'react';
 import type { PackSource } from '@rotp/design/packs';
-import { STORE_LIMITS } from '@rotp/hub-contracts';
-import { readFirstEntry } from '@rotp/hub-contracts';
+import { STORE_LIMITS, readFirstEntry } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
 import { FAILURES } from './useManifest.constants';
 import type { ManifestResult, ManifestState } from './useManifest.type';

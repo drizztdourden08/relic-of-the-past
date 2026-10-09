@@ -1,14 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { capacityBonusOfValues, capacityEnabledOf, capacityProgressiveOf, parseCapacityProfile } from '@rotp/randomizer';
-import { darkRoomSettingOfValues } from '@rotp/randomizer';
-import { difficultyOfValues } from '@rotp/randomizer';
-import { itemPowerOfValues } from '@rotp/randomizer';
-import { parsePondProfiles } from '@rotp/randomizer';
-import { progressiveSettingOfValues } from '@rotp/randomizer';
-import { progressiveModesOfValues } from '@rotp/randomizer';
-import { retroBowOfValues } from '@rotp/randomizer';
-import { shopScopeOfValues } from '@rotp/randomizer';
-import { storyGatesOfValues } from '@rotp/randomizer';
+import { capacityBonusOfValues, capacityEnabledOf, capacityProgressiveOf, parseCapacityProfile, darkRoomSettingOfValues, difficultyOfValues, itemPowerOfValues, parsePondProfiles, progressiveSettingOfValues, progressiveModesOfValues, retroBowOfValues, shopScopeOfValues, storyGatesOfValues } from '@rotp/randomizer';
 import { withDarkRoomSetting } from './dark-room-choices';
 import { PLAIN_FIELD_BY_KEY } from './randomizer-choices';
 import type { ChoiceField, RandomizerOptionChoices } from './randomizer-choices';

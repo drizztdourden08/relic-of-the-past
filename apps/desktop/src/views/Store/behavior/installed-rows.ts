@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { InstalledPack } from '@rotp/hub-contracts';
-import type { ItemCardView } from '@rotp/hub-contracts';
+import type { InstalledPack, ItemCardView } from '@rotp/hub-contracts';
 import type { InstalledRow } from '../Store.type';
 import { hasUpdate } from './has-update';
 

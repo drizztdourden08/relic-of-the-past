@@ -8,7 +8,7 @@
 // selling another player's item adds the line saying where it went as the thanks' next page.
 //
 // The lines are randomizer template lines, positions 6-14 of the list the language bake
-// appends after the canonical vanilla dialogue (shared/asset-extraction/text/data/
+// appends after the canonical vanilla dialogue (packages/asset-extraction/src/text/data/
 // randomizer-templates/randomizer-templates.data.ts). Same frozen contract kReceiptMsg_* and the archery refusal
 // answer to: the order here MUST match that list. A blob baked before these lines existed
 // stops short of them, and an index past its end would open an empty box, so a fallback

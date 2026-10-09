@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { isKnownReported, withGoal } from './online-connected';
 import { releaseHeldReceived } from './online-received';
-import type { ApLocationInfoPacket } from '@rotp/randomizer';
-import type { OnlineContext } from '@rotp/randomizer';
+import type { ApLocationInfoPacket, OnlineContext } from '@rotp/randomizer';
 
 const handleLocationInfo = async (ctx: OnlineContext, packet: ApLocationInfoPacket): Promise<void> => {
   const { room, core, maps, names, reporter } = ctx;

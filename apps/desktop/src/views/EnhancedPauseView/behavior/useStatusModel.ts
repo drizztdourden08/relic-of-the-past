@@ -1,7 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useMemo } from 'react';
-import { getItem } from '@rotp/game-data';
-import { spriteFilename } from '@rotp/game-data';
+import { getItem, spriteFilename } from '@rotp/game-data';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import type { DungeonItemCell } from '../../../compounds/PauseStatusScreen';
 import { DUNGEON_RECORDS, NO_PALACE, TOP_BIT } from '../EnhancedPauseView.constants';

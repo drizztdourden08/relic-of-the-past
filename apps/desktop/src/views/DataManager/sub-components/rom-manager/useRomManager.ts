@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback } from 'react';
-import type { RomKind } from '@rotp/roms';
+import type { RomKind, SupplementStatus } from '@rotp/roms';
 import { ROM_KINDS } from '@rotp/roms';
-import type { SupplementStatus } from '@rotp/roms';
 import * as romsStore from '@app/storage/roms-store';
 import type { RomDetail } from './rom-detail.type';
 import type { UseRomManagerParams } from './useRomManager.type';

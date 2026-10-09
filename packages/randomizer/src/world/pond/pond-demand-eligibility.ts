@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
-import { prizeReceiveIdOfName } from '@rotp/game-data';
-import { progressiveReceiveIdOfName } from '@rotp/game-data';
+import { prizeReceiveIdOfName, progressiveReceiveIdOfName } from '@rotp/game-data';
 import { UNHELD_ITEMS } from './holdable-items.constants';
 import { FAMILY_TIER_ITEMS, HOLDABLE_RECORD_NAMES } from './pond-demand-eligibility.constants';
 import { itemKeyName } from '../display-names/item-key-name';

@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { BlockDoc, DialogueEntry, DialogueLineView, GlossaryTerm, Token, Variable, VariableIndex } from '@rotp/languages';
-import type { GlyphMetrics, GlyphSheet, RowFit, ScreenFit } from '@rotp/languages';
+import type { BlockDoc, DialogueEntry, DialogueLineView, GlossaryTerm, Token, Variable, VariableIndex, GlyphMetrics, GlyphSheet, RowFit, ScreenFit } from '@rotp/languages';
 
 type SetFontAssets = {
   sheet: GlyphSheet;

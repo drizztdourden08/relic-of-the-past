@@ -1,10 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { getModule } from '@rotp/game-core';
 import { log } from '../../../log-bus';
-import { readCompletedChecks } from '@rotp/navigation';
-import { setsEqual } from '@rotp/navigation';
-import { pollEventStatus } from '@rotp/navigation';
-import { trackerState } from '@rotp/navigation';
+import { readCompletedChecks, setsEqual, pollEventStatus, trackerState } from '@rotp/navigation';
 
 const pollRoomFlags = (force = false): void => {
   const mod = getModule();

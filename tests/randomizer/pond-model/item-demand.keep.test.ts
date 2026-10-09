@@ -1,18 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import type { ItemKey } from '@rotp/randomizer';
-import { itemKeyOfName } from '@rotp/randomizer';
-import { ITEM } from '@rotp/randomizer';
-import { pondPlanOf } from '@rotp/randomizer';
-import { isDemandableItem } from '@rotp/randomizer';
-import { DEMAND_ITEM_ORDER } from '@rotp/randomizer';
-import { demandCandidatesOf } from '@rotp/randomizer';
-import { rollPondDemands } from '@rotp/randomizer';
-import { pondRupeesOnlyAsk } from '@rotp/randomizer';
-import { POND_INSTANCE_BY_ID } from '@rotp/randomizer';
-import { REFERENCE_CAPACITY_PROFILE } from '@rotp/randomizer';
+import { itemKeyOfName, ITEM, pondPlanOf, isDemandableItem, DEMAND_ITEM_ORDER, demandCandidatesOf, rollPondDemands, pondRupeesOnlyAsk, POND_INSTANCE_BY_ID, REFERENCE_CAPACITY_PROFILE, createRng } from '@rotp/randomizer';
 import { all } from '@rotp/game-data';
-import { createRng } from '@rotp/randomizer';
 import { CUSTOM } from './pond-model.constants';
 
 describe('pond item demand', () => {

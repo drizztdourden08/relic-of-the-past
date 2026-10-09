@@ -1,8 +1,6 @@
 /* @layer renderer-hud @kind types */
 import type { RefObject } from 'react';
-import type { HudCountdownSource } from '@rotp/hud';
-import type { PlacedNode } from '@rotp/hud';
-import type { Rect, Size } from '@rotp/hud';
+import type { HudCountdownSource, PlacedNode, Rect, Size } from '@rotp/hud';
 import type { ModernBindings, SlotAssignment, SlotIndex } from '@rotp/game-data';
 import type { HudCountdownContent, HudVitalsContent } from '../../compounds/HudNodeRenderer';
 

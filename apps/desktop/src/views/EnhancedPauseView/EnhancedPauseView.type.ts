@@ -1,7 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { CoreBindings, SlotIndex } from '@rotp/game-data';
-import type { ItemCell, PauseScreen, PauseSection } from '@rotp/game-data';
-import type { PlayerSheet, Wearing } from '@rotp/game-data';
+import type { CoreBindings, SlotIndex, ItemCell, PauseScreen, PauseSection, PlayerSheet, Wearing } from '@rotp/game-data';
 import type { ResolvedRow } from '@rotp/packs';
 import type { GearLadder, GearRowCell } from '../../compounds/PauseGearScreen';
 

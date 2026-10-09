@@ -1,7 +1,6 @@
 /* @layer store-api @kind logic */
-import type { StoreVersion } from '@rotp/hub-contracts';
+import type { StoreVersion, Actor, FlowStep, VersionAction } from '@rotp/hub-contracts';
 import { refusalOf, stepOf } from '@rotp/hub-contracts';
-import type { Actor, FlowStep, VersionAction } from '@rotp/hub-contracts';
 import { conflict, forbidden } from '@rotp/hub-server';
 import { DONE, WHO } from './version-guard.constants';
 

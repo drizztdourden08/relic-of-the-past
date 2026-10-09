@@ -1,7 +1,6 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback, useRef, useState } from 'react';
-import { normalizeServerUrl, probeOnlineServer, PROBE_TIMEOUT_MS } from '@rotp/randomizer';
-import { serverAddressError } from '@rotp/randomizer';
+import { normalizeServerUrl, probeOnlineServer, PROBE_TIMEOUT_MS, serverAddressError } from '@rotp/randomizer';
 import { serverUrlOf } from './server-setup-draft';
 import type { ProbeResult } from '@rotp/randomizer';
 import type { ServerSetupDraft } from './server-setup-draft';

@@ -1,8 +1,7 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import type { SimChest } from '@rotp/navigation';
-import { discoverTargets, hasReachableOpenTile } from '@rotp/navigation';
-import { emptySnapshot } from '@rotp/navigation';
+import { discoverTargets, hasReachableOpenTile, emptySnapshot } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { CHEST_ROOM } from './discover.constants';
 import { baseObs } from './base-obs';

@@ -1,9 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import type { ObservedTransition } from '@rotp/game-core';
+import type { ObservedTransition, TransitionScope } from '@rotp/game-core';
 import { collectCrossings } from '../crossings';
 import { usableCrossings } from '../usable-crossings';
 import { transitionsFromCrossings } from '@rotp/game-core';
-import type { TransitionScope } from '@rotp/game-core';
 
 const collectRealTransitions = (scope: TransitionScope): ObservedTransition[] => {
   const { isIndoors, roomIndex, overworldScreenIndex, floodConnections } = scope;

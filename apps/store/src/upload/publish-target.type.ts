@@ -1,6 +1,5 @@
 /* @layer store-site @kind types */
-import type { ItemCreateBody, ListingPatchBody } from '@rotp/hub-contracts';
-import type { Container } from '@rotp/hub-contracts';
+import type { ItemCreateBody, ListingPatchBody, Container } from '@rotp/hub-contracts';
 import type { Picture } from '../lib/resize-image.type';
 
 type PublishTarget = {

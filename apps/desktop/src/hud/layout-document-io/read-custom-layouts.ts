@@ -1,9 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { readJson } from '@drizztdourden08/brock-core';
-import { tryLoadLayout } from '@rotp/hud';
+import { tryLoadLayout, NO_STORED_LAYOUTS } from '@rotp/hud';
 import { activeProfileId } from '../active-profile';
 import type { StoredLayouts } from '@rotp/hud';
-import { NO_STORED_LAYOUTS } from '@rotp/hud';
 import { layoutFiles } from './layout-files';
 
 const nameOf = (value: unknown, index: number): string => {

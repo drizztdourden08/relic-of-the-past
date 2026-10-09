@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { optionCatalog } from '@rotp/randomizer';
-import { DARK_ROOM_REQUIRED_KEY } from '@rotp/randomizer';
+import { optionCatalog, DARK_ROOM_REQUIRED_KEY } from '@rotp/randomizer';
 import type { OptionDef } from '@rotp/randomizer';
 
 const DARK_ROOMS_TITLE = 'Dark rooms';

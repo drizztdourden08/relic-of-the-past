@@ -1,6 +1,5 @@
 /* @layer electron-main @kind types */
-import type { FileTarget } from '@rotp/game-data';
-import type { Unnumbered } from '@rotp/game-data';
+import type { FileTarget, Unnumbered } from '@rotp/game-data';
 import type { AllocatableKind } from '../id-allocator';
 
 interface RecordWriterSpec<T extends { id: string }> {

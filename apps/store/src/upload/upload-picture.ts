@@ -1,6 +1,5 @@
 /* @layer store-site @kind logic */
-import type { MediaRole } from '@rotp/hub-contracts';
-import type { MediaRef } from '@rotp/hub-contracts';
+import type { MediaRole, MediaRef } from '@rotp/hub-contracts';
 import { beginMedia } from '../api/publish-endpoints/begin-media';
 import type { Picture } from '../lib/resize-image.type';
 import { hashPack } from './hash-pack';

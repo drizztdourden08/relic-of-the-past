@@ -1,12 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { appApi } from '@app/ipc/app-api';
-import { handleHapticEvent, setVibrateFunction, updateHapticSettings } from '@rotp/input-mapping';
+import { handleHapticEvent, setVibrateFunction, updateHapticSettings, loadRumbleStrengthCache, readRumbleStrength, hapticState, startDebugLog } from '@rotp/input-mapping';
 import type { HapticSettings } from '@rotp/features';
-import { loadRumbleStrengthCache } from '@rotp/input-mapping';
-import { readRumbleStrength } from '@rotp/input-mapping';
 import { getPlatform } from '@drizztdourden08/brock-react';
-import { hapticState } from '@rotp/input-mapping';
-import { startDebugLog } from '@rotp/input-mapping';
 import { dispatchVibration } from './dispatch-vibration';
 
 const onHapticEvent = (eventType: number, param: number): void => {

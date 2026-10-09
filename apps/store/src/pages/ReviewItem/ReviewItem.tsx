@@ -1,8 +1,7 @@
 /* @layer store-site @kind component */
 import reviewIcon from '@iconify-icons/lucide/clipboard-check';
 import { Flex, Text } from '@drizztdourden08/tessera/primitives';
-import { SideColumn } from '@rotp/design';
-import { AppLink } from '@rotp/design';
+import { SideColumn, AppLink } from '@rotp/design';
 import { PackContentsPanel } from '../../components/PackContentsPanel/PackContentsPanel';
 import { ReviewChip } from '../../components/ReviewChip/ReviewChip';
 import { TitledPage } from '../../layout/TitledPage/TitledPage';

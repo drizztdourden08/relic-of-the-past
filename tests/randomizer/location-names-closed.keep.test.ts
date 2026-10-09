@@ -1,37 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { buildNormalPlacement, normalWorldOptions } from '@rotp/randomizer';
-import { buildWorld } from '@rotp/randomizer';
-import { CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS } from '@rotp/randomizer';
-import { WORLD_EVENT_IDS } from '@rotp/randomizer';
-import { isShopSlotLocation } from '@rotp/randomizer';
-import { capacityPondSpots, capacitySpots } from '@rotp/randomizer';
-import { POND_INSTANCES } from '@rotp/randomizer';
-import { POND_LOCATION_SET } from '@rotp/randomizer';
-import { ESCAPE_DARK_LOCATIONS, LAMP_LOCATIONS } from '@rotp/randomizer';
-import { BUNNY_ACCESSIBLE_LOCATIONS } from '@rotp/randomizer';
-import { FULL_ACCESS_ALWAYS_ALLOW } from '@rotp/randomizer';
-import { PRICED_ENTRIES } from '@rotp/randomizer';
-import { GLOBAL_MISC_RULES } from '@rotp/randomizer';
-import { DEFAULT_OVERWORLD_RULES } from '@rotp/randomizer';
-import { STANDARD_RULES } from '@rotp/randomizer';
-import { LAMP_RULES } from '@rotp/randomizer';
-import { COMPLETION_RULES } from '@rotp/randomizer';
-import { FIRST_CASTLE_RULES } from '@rotp/randomizer';
-import { CASTLE_TOWER_RULES } from '@rotp/randomizer';
-import { EAST_PALACE_RULES } from '@rotp/randomizer';
-import { DESERT_PALACE_RULES } from '@rotp/randomizer';
-import { MOUNTAIN_TOWER_RULES } from '@rotp/randomizer';
-import { DARK_PALACE_RULES } from '@rotp/randomizer';
-import { SWAMP_RULES } from '@rotp/randomizer';
-import { WOODS_RULES } from '@rotp/randomizer';
-import { THIEVES_DEN_RULES } from '@rotp/randomizer';
-import { ICE_RULES } from '@rotp/randomizer';
-import { MIRE_RULES } from '@rotp/randomizer';
-import { TURTLE_RULES } from '@rotp/randomizer';
-import { FINAL_TOWER_RULES } from '@rotp/randomizer';
-import type { LocationKey } from '@rotp/randomizer';
-import type { RuleEntry } from '@rotp/randomizer';
+import { buildNormalPlacement, normalWorldOptions, buildWorld, CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS, WORLD_EVENT_IDS, isShopSlotLocation, capacityPondSpots, capacitySpots, POND_INSTANCES, POND_LOCATION_SET, ESCAPE_DARK_LOCATIONS, LAMP_LOCATIONS, BUNNY_ACCESSIBLE_LOCATIONS, FULL_ACCESS_ALWAYS_ALLOW, PRICED_ENTRIES, GLOBAL_MISC_RULES, DEFAULT_OVERWORLD_RULES, STANDARD_RULES, LAMP_RULES, COMPLETION_RULES, FIRST_CASTLE_RULES, CASTLE_TOWER_RULES, EAST_PALACE_RULES, DESERT_PALACE_RULES, MOUNTAIN_TOWER_RULES, DARK_PALACE_RULES, SWAMP_RULES, WOODS_RULES, THIEVES_DEN_RULES, ICE_RULES, MIRE_RULES, TURTLE_RULES, FINAL_TOWER_RULES } from '@rotp/randomizer';
+import type { LocationKey, RuleEntry } from '@rotp/randomizer';
 
 const DECLARED: ReadonlySet<LocationKey> = new Set(buildWorld({
   ...normalWorldOptions({}),

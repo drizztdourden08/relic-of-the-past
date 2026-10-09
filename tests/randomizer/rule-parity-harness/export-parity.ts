@@ -1,12 +1,7 @@
 /* @layer tests @kind helper */
 import { all } from '@rotp/game-data';
-import { actTokensOf } from '@rotp/randomizer';
-import { compileRule } from '@rotp/randomizer';
-import { inlineHelpers, walkRuleNode } from '@rotp/randomizer';
-import { ruleNodesOfWorld } from '@rotp/randomizer';
-import type { Rule } from '@rotp/randomizer';
-import type { RuleNode } from '@rotp/randomizer';
-import type { OptionValue } from '@rotp/randomizer';
+import { actTokensOf, compileRule, inlineHelpers, walkRuleNode, ruleNodesOfWorld } from '@rotp/randomizer';
+import type { Rule, RuleNode, OptionValue } from '@rotp/randomizer';
 import type { ExportParity } from './rule-parity-harness.type';
 import { prepareState } from './prepare-state';
 import { seededRandom } from './seeded-random';
