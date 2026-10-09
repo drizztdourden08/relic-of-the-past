@@ -1,22 +1,27 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Audio-device probe. The core's mixer runs inside the wasm module, so instead of
- * reaching into it this opens a short-lived context to read the properties the
- * output device imposes on any context. That is the sample rate the resampler has to hit
- * and the buffer latency behind crackle reports.
- */
-import type { AudioDiagnostics } from './types';
+import type { AudioDiagnostics } from './diagnostics.type';
+
+const msOrUnknown = (seconds: number): number | null => (Number.isFinite(seconds) ? seconds * 1000 : null);
+
+const outputLatencyMsOf = (seconds: number): number | null =>
+  (Number.isFinite(seconds) && seconds > 0 ? seconds * 1000 : null);
+
+const closeQuietly = async (context: AudioContext | null): Promise<void> => {
+  try {
+    await context?.close();
+  } catch {
+    return;
+  }
+};
 
 const probeAudio = async (): Promise<AudioDiagnostics | null> => {
   let context: AudioContext | null = null;
   try {
     context = new AudioContext();
-    const outputLatency = context.outputLatency;
     const info: AudioDiagnostics = {
       sampleRate: context.sampleRate,
-      baseLatencyMs: Number.isFinite(context.baseLatency) ? context.baseLatency * 1000 : null,
-      // Reported as 0 until the graph has actually run; treat that as unknown.
-      outputLatencyMs: Number.isFinite(outputLatency) && outputLatency > 0 ? outputLatency * 1000 : null,
+      baseLatencyMs: msOrUnknown(context.baseLatency),
+      outputLatencyMs: outputLatencyMsOf(context.outputLatency),
       maxChannels: context.destination.maxChannelCount,
       state: context.state,
     };
@@ -24,11 +29,7 @@ const probeAudio = async (): Promise<AudioDiagnostics | null> => {
   } catch {
     return null;
   } finally {
-    try {
-      await context?.close();
-    } catch {
-      // already closed, or the context never opened
-    }
+    await closeQuietly(context);
   }
 };
 

@@ -1,24 +1,14 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Assembles the full debug-info block. `system` is null on any host without a main
- * process (web, mobile), so the host sections drop out and the renderer-side
- * ones still carry the report.
- */
-import type { SystemDiagnostics } from '@shared/types/diagnostics';
-import type { RendererDiagnostics } from '../types';
-import { renderSections } from './section';
-import { hardwareSection, systemSection } from './host-system';
+import type { DebugTextInput } from './debug-text.type';
+import { renderSections } from './render-sections';
+import { systemSection } from './system-section';
+import { hardwareSection } from './hardware-section';
 import { graphicsSection } from './graphics';
-import { displaysSection, windowSection } from './displays';
-import { audioSection, inputSection, processSection } from './renderer-env';
-
-interface DebugTextInput {
-  /** Leading identity lines (app version, runtime, engine, platform) owned by the caller. */
-  header: string[];
-  system: SystemDiagnostics | null;
-  renderer: RendererDiagnostics;
-  userAgent: string;
-}
+import { displaysSection } from './displays-section';
+import { windowSection } from './window-section';
+import { audioSection } from './audio-section';
+import { inputSection } from './input-section';
+import { processSection } from './process-section';
 
 const buildDebugText = ({ header, system, renderer, userAgent }: DebugTextInput): string => {
   const body = renderSections([

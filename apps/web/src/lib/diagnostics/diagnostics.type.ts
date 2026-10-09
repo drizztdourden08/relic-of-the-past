@@ -1,11 +1,4 @@
-/* @layer renderer-lib @kind logic */
-/**
- * What the renderer itself can see: the graphics stack WebGL exposes, the audio
- * device the mixer will land on, the display the window currently sits on, and the
- * input devices attached right now. Available on every host, including the web and
- * mobile builds where there is no main process to ask.
- */
-
+/* @layer renderer-lib @kind types */
 interface WebglDiagnostics {
   version: 1 | 2;
   vendor: string;
@@ -50,7 +43,6 @@ interface DeviceEnvironment {
   languages: string[];
   timeZone: string;
   online: boolean;
-  /** One entry per device SDL3 is reading directly. */
   hidDevices: string[];
 }
 

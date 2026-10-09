@@ -24,6 +24,71 @@ Indoors a fall hole crossing is the tile the player lands on and gets its own se
 Outdoors it is the pit itself and belongs with the other ways off the screen. A map marks
 crossings that are placed, available now, and not a landing.
 
+## diagnostics
+
+What the renderer itself can see: the graphics stack WebGL exposes, the audio device the
+mixer lands on, the display the window sits on, and the attached input devices. It works on
+every host, including web and mobile where there is no main process to ask; there the host
+sections (system, hardware, every attached display) drop out and the renderer sections still
+carry the report.
+
+- `build-report-subject.ts`: the prefilled report subject is the version and, while a game
+  runs, the screen it is on, then a colon for the person to finish the sentence.
+- `collect-save-states.ts`: a debug report packages every quick slot, the 5 newest normal
+  saves, the 2 newest auto saves, and one fresh live capture. The live capture writes to a
+  scratch WASM slot and unlinks it at once, so packaging a report never creates a save the
+  player did not ask for.
+- `collect-renderer.ts`: the refresh rate probe is the only slow one (it watches real
+  frames), so it runs alongside the audio probe.
+- `probe-audio.ts`: the mixer runs inside the wasm module, so the probe opens a short lived
+  `AudioContext` and reads what the output device imposes on any context: the sample rate the
+  resampler must hit and the buffer latency behind crackle reports. Output latency reads 0
+  until the graph has run, so 0 is reported as unknown.
+- `probe-device.ts`: `deviceMemory` and `performance.memory` are Chromium extensions with no
+  DOM typings. SDL3 claims every controller directly (the Gamepad API path is gone). The probe
+  reads the device snapshot from the controller layer, not the input manager's cache (which
+  exists only after the manager started) and not the reported input set (SDL emits state only
+  on change, so an untouched pad would be missing). Names come from the session's
+  `controller:added` cache, then the snapshot's fields. Device ids carry the vendor and
+  product pair a controller mapping report needs.
+- `probe-display.ts`: scale factor and colour capability decide how the pixel art scaler
+  behaves, so they matter for blurry or mis-sized output reports.
+- `probe-refresh-rate.ts`: measures the compositor's real frame cadence, the rate the
+  emulator is paced against, which can differ from the monitor's mode (a 144 Hz panel driven
+  at 60, a variable refresh panel in between). It takes the median so one hitch cannot skew
+  it, ignores gaps of 100 ms or more (a throttled tab or a stalled compositor), and gives up
+  after 2.5 s so a background window does not hold the copy button hostage.
+- `probe-webgl.ts`: prefers WebGL2 so the limits match the game canvas, and unmasks the real
+  adapter through the debug renderer extension. Browsers cap live WebGL contexts and the game
+  canvas needs one, so the probe context is released at once.
+- `format/`: the block is built as titled sections so a formatter can drop an empty line or
+  section without the caller knowing which parts are optional. Units are compact with no
+  locale separators, since the text is pasted into reports and diffed by eye. Every attached
+  display is listed and then the one the window is on as the renderer measures it, because a
+  mismatch between them is itself the bug in a multi monitor or mixed DPI report. Chromium
+  wraps the colour space in braces, which are dropped. Chromium reports several shades of
+  enabled for GPU features; only the disabled ones are listed. Host adapter facts and the
+  WebGL view share the graphics section because they answer the same question from two sides.
+- `session-log/`: the tap subscribes to the log bus at emit time, so lines the ring later
+  evicts still reach disk, and streams them in batches to the main process sink
+  `Data/debug/session.log`. It is installed once at renderer boot on every launch. A batch
+  goes out after a second of quiet or at 200 lines, so logging never costs one IPC round per
+  line, and a failed send drops the batch, never the app. The `core` channel carries the game
+  core's stdout and stderr, so its lines are tagged `[wasm]` in the file. The lookup of
+  `appendSessionLog` is guarded: a non Electron host's shim makes it a no op, and a preload
+  without the channel leaves the tap uninstalled. A last flush runs on `pagehide`.
+- `useAllowDebugLogging.ts`: settings are not a reactive store during gameplay, so this polls
+  the live snapshot the WASM bridge keeps primed, once a second like the navigation widget.
+- `useDebugText.ts`: the text is collected when the caller mounts, not on click, so no await
+  sits between the user's gesture and the moment the text is ready.
+- `useDebugTextBuilder.ts`: one builder backs the About page's copy button and the bug report
+  form's debug block, sourced from the platform facade. `__CAP_VERSION__` is injected at
+  build time for the Capacitor build only, so it is always read through `typeof`. Host
+  hardware exists only behind a main process.
+- `useReportContext.ts`: the running flag lives in the app lifecycle hook, not a store, so
+  the game UI store's mode stands in: `title` and `loading` are what it holds before a game
+  runs and while one boots. A palace index of `0xFF` means the room is not in a palace.
+
 ## dialog-texture
 
 - Twinkle gives every cell its own period and phase from a seeded hash, never

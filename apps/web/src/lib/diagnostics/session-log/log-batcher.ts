@@ -1,19 +1,12 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Line batcher for the session log: buffers pushed lines and hands them to
- * `send` as one batch: after `flushMs` of quiet, or immediately once
- * `maxLines` are buffered, so logging never costs one IPC round per line.
- * `send` failures are swallowed: the batcher must never throw into app code.
- */
-type LogBatcherOptions = {
-  flushMs: number;
-  maxLines: number;
-  send: (lines: string[]) => void;
-};
+import type { LogBatcher, LogBatcherOptions } from './log-batcher.type';
 
-type LogBatcher = {
-  push: (line: string) => void;
-  flush: () => void;
+const sendQuietly = (send: (lines: string[]) => void, batch: string[]): void => {
+  try {
+    send(batch);
+  } catch {
+    return;
+  }
 };
 
 const createLogBatcher = (options: LogBatcherOptions): LogBatcher => {
@@ -29,11 +22,7 @@ const createLogBatcher = (options: LogBatcherOptions): LogBatcher => {
     if (buffer.length === 0) return;
     const batch = buffer;
     buffer = [];
-    try {
-      send(batch);
-    } catch {
-      // Best-effort: a failed flush drops the batch, never the app.
-    }
+    sendQuietly(send, batch);
   };
 
   const push = (line: string): void => {
