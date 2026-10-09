@@ -46,10 +46,9 @@ the port:
 
 | Semantic concept | Current implementation |
 | --- | --- |
-| Room header and three object layers | `packages/asset-extraction/src/extraction/room-extractor.ts` |
-| Object and door decoding | `packages/asset-extraction/src/extraction/room-object-decoder.ts` |
-| Sprite spawn lists | `packages/asset-extraction/src/compile-dungeons.ts` |
-| Secrets, chests, pits, entrances | `packages/asset-extraction/src/extraction/` |
+| Room header, object layers and doors | `packages/asset-extraction/src/compile-dungeons/build-dungeon-rooms.ts` |
+| Sprite spawn lists | `packages/asset-extraction/src/compile-dungeons/build-dungeon-sprites.ts` |
+| Secrets, chests, pits, entrances | `packages/asset-extraction/src/compile-dungeons/` (`build-dungeon-secrets.ts`, `build-entrance-data.ts`) |
 | Runtime room consumption | `core/zelda3/src/dungeon.c` and `core/zelda3/src/sprite.c` |
 
 The GBA extractor should initially emit a neutral JSON record with equivalent fields.

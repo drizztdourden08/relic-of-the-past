@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../../item-ids.data';
+import { ITEM } from '../../item-ids';
 import { BOMBS_PER_ENEMY } from '../../state-helpers-world';
 import { any, has, helper } from '../rule-node-build';
 import { byrnaNode } from './byrna-node';

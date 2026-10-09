@@ -1,19 +1,10 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * R12: per-component folder-structure policy (warn, work toward error). A component
- * folder is any folder under ui/ containing <FolderName>.tsx; its root may hold only
- * <Name>.{tsx,css,type.ts,constants.ts} + index.ts, the rest goes under behavior/ or
- * sub-components/.
- */
+/* @layer tooling-scripts @kind logic */
 import path from 'path';
 
 const UI_PREFIX = 'apps/desktop/src/ui/';
 const posix = path.posix;
 
 const run = async (records) => {
-  // Reconstruct the folder tree (direct files + subdirs) from the file list.
   const byDir = new Map();
   const ensure = (d) => { if (!byDir.has(d)) byDir.set(d, { files: new Set(), subdirs: new Set() }); return byDir.get(d); };
   for (const r of records) {
@@ -25,7 +16,7 @@ const run = async (records) => {
   const findings = [];
   for (const [dir, info] of byDir) {
     const name = posix.basename(dir);
-    if (!info.files.has(`${name}.tsx`)) continue; // only validate component folders
+    if (!info.files.has(`${name}.tsx`)) continue;
     const allowed = new Set([`${name}.tsx`, `${name}.css`, `${name}.type.ts`, `${name}.constants.ts`, 'index.ts']);
     for (const f of info.files) {
       if (!allowed.has(f)) {

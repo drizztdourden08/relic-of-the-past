@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { bottleContentKeyOf } from '../../shops/shop-price-options.data';
+import { bottleContentKeyOf } from '../../shops/shop-price-options';
 import { blockedContentNote } from '../blocked-content-note';
 import { lostCauldronsOf } from './lost-cauldrons-of';
 import { potionPriceOverrides } from './potion-price-overrides';

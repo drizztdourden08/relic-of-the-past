@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 import { DOOR_LIST_END } from './second-cartridge-doors.constants';
-import { EXTRA_DUNGEON_DOORS } from './second-cartridge-doors.data';
+import { EXTRA_DUNGEON_DOORS } from './extra-dungeon-doors.constants';
 import { staysInDungeon } from './stays-in-dungeon';
 
 const doorListFor = (roomId: number): Buffer => {

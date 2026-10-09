@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { heartCapOfValues } from '../../difficulty/difficulty-from-snapshot';
 import { blockedContentsOfValues } from '../../potion-price/potion-price-rule';
-import { BOTTLE_CONTENTS, BOTTLE_KEY, CURRENCY_ROWS, bottleContentKeyOf } from '../shop-price-options.data';
+import { BOTTLE_CONTENTS, BOTTLE_KEY, CURRENCY_ROWS, bottleContentKeyOf } from '../shop-price-options';
 import { blockedCurrenciesOfValues } from '../shop-price-currency-rule';
 import { HEARTS_KEPT_ALIVE } from './shop-price-plan.constants';
 import { shopCurrencySettingOf } from './shop-currency-setting-of';

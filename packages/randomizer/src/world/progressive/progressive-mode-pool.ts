@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES } from './progressive-families.data';
-import { isRandomOrder } from './progressive-modes.data';
+import { PROGRESSIVE_FAMILIES } from './progressive-families.constants';
+import { isRandomOrder } from './progressive-modes';
 import { tickedIndexesOf } from './progressive-reach';
 import type { ProgressiveModeSetting, ProgressiveSetting } from './progressive.type';
 

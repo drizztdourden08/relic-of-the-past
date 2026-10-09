@@ -1,38 +1,17 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Supplies a fresh worktree with the gitignored essentials `git worktree add` leaves
- * out: the agent's instructions and skills, the ROM, the asset blob. Directories are
- * junctioned so a fix reaches every worktree at once; single files are copied, because
- * editors replace files instead of writing through a link (`wt doctor` re-copies them).
- */
 import { existsSync, mkdirSync, copyFileSync, cpSync, symlinkSync, unlinkSync, readdirSync, lstatSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, dirname, relative } from 'node:path';
 import { repoRoot } from './paths.mjs';
 
-/**
- * Junctioned (shared live). Only regenerable directories belong here: `git worktree
- * remove` follows a junction and deletes the target's contents (see unlinkSharedDirs).
- * Empty for now: the record dataset used to be the one entry, but it moved from a
- * vault-synced, gitignored tree to an ordinary tracked directory, so `git worktree add`
- * already gives every worktree its own copy with no linking needed. Left in place, not
- * deleted, for the next gitignored-but-regenerable directory that needs sharing.
- */
 const LINKED_DIRS = [];
 
-/**
- * Copied: user-provided or irreplaceable, so never exposed to the junction hazard.
- * .claude is copied, not linked, since the incident in unlinkSharedDirs; the ai-config
- * bootstrap regenerates it in seconds and `wt doctor` re-copies it when it drifts.
- */
 const COPIED_DIRS = ['test-roms', '.claude'];
 
-// Copied: small, and edited in place by tools that break links.
 const COPIED_FILES = ['CLAUDE.md', 'AGENTS.md', '.mcp.json', '.ai-config.json', 'assets/assets.dat'];
 
 const ROM_PATTERN = /\.(sfc|smc)$/i;
 
-/** A directory junction on Windows needs no admin rights; elsewhere a symlink. */
 const linkDir = (target, linkPath) => {
   if (process.platform === 'win32') {
     execFileSync('cmd', ['/c', 'mklink', '/J', linkPath, target], { stdio: 'ignore' });
@@ -67,19 +46,12 @@ const copyOne = (name, worktree) => {
   }
 };
 
-/** Finds user-provided ROMs in assets/ by extension, since their names vary per machine. */
 const romFiles = () => {
   const assets = join(repoRoot, 'assets');
   if (!existsSync(assets)) return [];
   return readdirSync(assets).filter((f) => ROM_PATTERN.test(f)).map((f) => join('assets', f));
 };
 
-/**
- * Never copied out of a COPIED_DIRS entry. `.claude/worktrees/` holds session worktrees,
- * so copying `.claude` wholesale duplicates whole checkouts (54,557 files, 0.9 GB) and,
- * worse, their node_modules junctions back into the main repo: the unlinkSharedDirs
- * hazard one level down.
- */
 const EXCLUDED_CHILDREN = new Set(['worktrees']);
 
 const isExcluded = (target, src) => {
@@ -117,15 +89,8 @@ const report = (results) => {
 const linkGitignoredDeps = (worktree) =>
   report([...LINKED_DIRS.map((name) => linkOne(name, worktree)), ...copyAll(worktree)]);
 
-/** Re-copy the small config files that drift (used by `wt doctor`). Files only. */
 const resyncCopiedFiles = (worktree) => COPIED_FILES.map((name) => copyOne(name, worktree));
 
-/**
- * Detach the shared directories, removing each link and never its contents. Must run
- * before any recursive delete: `git worktree remove` walks into a junction and deletes
- * what it points at (it emptied the main repo's .claude once). `rmdir` on Windows and
- * unlink elsewhere remove only the link.
- */
 const unlinkSharedDirs = (worktree, dirs = LINKED_DIRS) => {
   for (const name of dirs) {
     const linkPath = join(worktree, name);
@@ -138,8 +103,6 @@ const unlinkSharedDirs = (worktree, dirs = LINKED_DIRS) => {
   }
 };
 
-// Every reparse point under `dir`, found with lstat so a link is never followed.
-// Skips node_modules: its .bin links point inside the worktree and are not the hazard.
 const findLinks = (dir, base = dir, found = []) => {
   let entries;
   try {
@@ -152,18 +115,13 @@ const findLinks = (dir, base = dir, found = []) => {
     const full = join(dir, entry.name);
     if (entry.isSymbolicLink()) {
       found.push(relative(base, full));
-      continue;  // never descend through a link
+      continue;
     }
     if (entry.isDirectory()) findLinks(full, base, found);
   }
   return found;
 };
 
-/**
- * Refuse to continue while any link survives anywhere in the worktree. Checking only
- * LINKED_DIRS was not enough: a removal once passed those checks and still emptied the
- * main repo's .claude and record tree, so this walks the whole tree.
- */
 const assertNoSharedLinks = (worktree) => {
   const remaining = findLinks(worktree);
   if (remaining.length > 0) {

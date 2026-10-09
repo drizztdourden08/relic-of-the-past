@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.data';
-import { isRandomOrder } from '../progressive/progressive-modes.data';
-import { DEFAULT_COPY_MULTIPLIER } from './difficulty.data';
+import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.constants';
+import { isRandomOrder } from '../progressive/progressive-modes';
+import { DEFAULT_COPY_MULTIPLIER } from './difficulty';
 import { countInPool } from './count-in-pool';
 import type { ProgressiveModeSetting } from '../progressive/progressive.type';
 import type { CopyMultiplierSetting } from './difficulty.type';

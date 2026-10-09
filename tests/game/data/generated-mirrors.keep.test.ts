@@ -9,13 +9,13 @@ const ROOT = join(__dirname, '..', '..', '..');
 const SCRIPT = join('scripts', 'generate-from-records.mjs');
 
 const GENERATED = [
-  'packages/game-data/src/data/records/checks/events/event-bits.generated.ts',
-  'packages/game-data/src/data/taxonomy/screen-tags.generated.ts',
-  'packages/game-data/src/data/taxonomy/screen-tags.generated.type.ts',
-  'packages/game-data/src/data/taxonomy/connection-tags.generated.ts',
-  'packages/game-data/src/data/taxonomy/connection-tags.generated.type.ts',
-  'packages/game-data/src/data/taxonomy/check-content-tags.generated.ts',
-  'packages/game-data/src/data/taxonomy/check-content-tags.generated.type.ts',
+  'packages/game-data/src/data/records/checks/events/event-bits.constants.ts',
+  'packages/game-data/src/data/taxonomy/screen-tags.constants.ts',
+  'packages/game-data/src/data/taxonomy/screen-tags.type.ts',
+  'packages/game-data/src/data/taxonomy/connection-tags.constants.ts',
+  'packages/game-data/src/data/taxonomy/connection-tags.type.ts',
+  'packages/game-data/src/data/taxonomy/check-content-tags.constants.ts',
+  'packages/game-data/src/data/taxonomy/check-content-tags.type.ts',
   'core/game-hooks/story_events.c',
   'core/game-hooks/prize_presentation.c',
 ];

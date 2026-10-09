@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind barrel */
 export { dialogueFilename } from './dialogue-filename';
-export { kLanguages } from './language-data.data';
+export { kLanguages } from './language-data.constants';
 export { usesNewFormat } from './uses-new-format';
 export type { LanguageConfig } from './language-data.type';

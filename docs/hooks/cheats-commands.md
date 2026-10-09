@@ -5,7 +5,7 @@ Functions that change game state: pause/reset, the cheat menu, and the check/NPC
 power the delivery queue and randomizer. Most are `void` and take effect on the next frame.
 
 **Sources:** `core/game-hooks/cheats.c`, `core/game-hooks/cheat_inventory.c`, `core/game-hooks/cheat_capacity.c`, `core/game-hooks/check_triggers.c`, `core/wasm-build/emscripten_api.c`
-**Bridge:** `lib/game/cheats.ts`, `lib/game/delivery-queue.ts`, `lib/game/bridge/commands.ts`
+**Bridge:** `packages/game-core/src/cheats/`, `apps/desktop/src/game/delivery-queue/`, `packages/game-core/src/bridge/commands.ts`
 
 ---
 
@@ -44,7 +44,7 @@ power the delivery queue and randomizer. Most are `void` and take effect on the 
 | `WasmCheatKillAllEnemies` | `void(void)` | Kills active/stunned hostile sprites; skips friendlies and fully-immune sprites. |
 | `WasmCheatSetDamageMultiplier` | `void(int mult)` | Outgoing damage ×`mult`, clamped `[1, 255]`. Read back in `sprite.c` via `GameHook_GetDamageMultiplier`. |
 | `WasmCheatSetExtraArmorPct` | `void(int pct)` | Extra incoming-damage reduction `[0, 100]%`, stacks with armor. Read via `GameHook_GetExtraArmorPct`. |
-| `WasmCheatStartTrace` | `void(int frames)` | Logs an engine trace for N frames (console). `frames<1` → 60. |
+| `WasmCheatStartTrace` | `void(int frames)` | Logs an engine trace for N frames (console). `frames<1` means 60. |
 
 ## Delivery & checks (`cheats.c` + `check_triggers.c` · `delivery-queue.ts`)
 

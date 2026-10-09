@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { DARK_ROOM_LIGHT_FIELDS } from '../dark-room-lights.data';
+import { DARK_ROOM_LIGHT_FIELDS } from '../dark-room-lights.constants';
 import { darkRoomLightKeyOf } from './dark-room-light-key-of';
 import { DARK_ROOM_REQUIRED_KEY } from './dark-room-option-keys.constants';
 

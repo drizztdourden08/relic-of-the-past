@@ -1,14 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Facade entry for the project analysis harness.
- *   node scripts/analyze/analyze.mjs [--diff] [--ci] [--json] [--fix-tags]
- *     --diff      analyze only files changed vs HEAD (+ staged + untracked)
- *     --ci        exit 1 if there are gating violations
- *     --json      write full report to scripts/analyze/report.json
- *     --fix-tags  insert missing @layer/@kind headers, then analyze
- */
+/* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
 import { walkFiles } from './walk.mjs';
@@ -51,7 +41,7 @@ const main = async () => {
   if (args.has('--fix-tags')) {
     const { written, skipped } = writeTags(ROOT, records);
     console.log(`--fix-tags: wrote ${written} headers, skipped ${skipped}`);
-    records = classifyAll(rels, manifest); // re-read so report reflects new tags
+    records = classifyAll(rels, manifest);
   }
 
   const ctx = { root: ROOT, mode };

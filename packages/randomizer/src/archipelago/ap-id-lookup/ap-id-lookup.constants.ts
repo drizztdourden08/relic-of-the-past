@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
-import { AP_ITEM_IDS, AP_LOCATION_IDS } from '../ap-ids.data';
-import type { ItemKey } from '../../world/item-ids.data';
+import { AP_ITEM_IDS, AP_LOCATION_IDS } from '../ap-ids.constants';
+import type { ItemKey } from '../../world/item-ids';
 import type { LocationKey } from '../../world/location-key';
 
 const LOCATION_ID_BY_KEY: ReadonlyMap<LocationKey, number> = new Map(

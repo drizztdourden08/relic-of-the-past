@@ -1,5 +1,5 @@
 <!-- @layer docs @kind doc -->
-**[🏠 Home](Home.md)**
+**[Home](Home.md)**
 
 **Getting Started**
 

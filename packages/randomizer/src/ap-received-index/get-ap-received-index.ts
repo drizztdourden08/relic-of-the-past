@@ -6,7 +6,7 @@ const getApReceivedIndex = (): number | null => {
   const mod = getModule();
   if (!mod || !hasCoreExport(GET_EXPORT)) return null;
   try {
-    return mod.ccall(GET_EXPORT, 'number', [], []) as number;
+    return mod.ccall(GET_EXPORT, 'number', [], []);
   } catch {
     return null;
   }

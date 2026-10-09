@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import { canExtendMagic, canUseBombs, hasMeleeWeapon } from '../state-helpers';
 import { BYRNA_ENEMY_LIMIT } from './state-helpers-world.constants';
 import type { CollectionState } from '../collection-state.type';

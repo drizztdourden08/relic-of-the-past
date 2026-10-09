@@ -1,5 +1,5 @@
 /* @layer shared-features @kind constants */
-import { VANILLA_SAFE_LOCKED_SETTINGS } from './vanilla-safe-settings.data';
+import { VANILLA_SAFE_LOCKED_SETTINGS } from './vanilla-safe-locked-settings.constants';
 
 const HAPTICS_KEY_PREFIX = 'haptics';
 

@@ -16,9 +16,10 @@ const resolveCandidate = async (
   if (isZip(bytes)) {
     onPhase?.('extract');
     const found = (await unzip(bytes)).filter((entry) => spec.pattern.test(entry.name));
-    if (found.length === 0) return { ok: false, error: `No ${pretty} file found in the archive` };
+    const [only] = found;
+    if (only === undefined) return { ok: false, error: `No ${pretty} file found in the archive` };
     if (found.length > 1) return { ok: false, error: `Multiple ${pretty} files found (${found.length}). Provide exactly one.` };
-    return { ok: true, name: found[0].name, bytes: found[0].bytes };
+    return { ok: true, name: only.name, bytes: only.bytes };
   }
 
   if (spec.pattern.test(fileName)) return { ok: true, name: fileName, bytes };

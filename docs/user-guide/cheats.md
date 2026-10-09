@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Cheats
 
-The **Cheats widget** is a built-in panel for giving items, editing stats, and tweaking combat. It's handy for testing, practice, and exploring. Open it from the title bar or Menu → Widgets.
+The **Cheats widget** is a built-in panel for giving items, editing stats, and tweaking combat. It's handy for testing, practice, and exploring. Open it from the title bar or the menu's Widgets entry.
 
 ## Tabs
 

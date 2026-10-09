@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { modeOfDungeonItem, staysInDungeons } from '../../dungeon-items/dungeon-item-modes';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { DungeonItemSetting } from '../../dungeon-items/dungeon-item.type';
 
 const partitionDungeonItems = (

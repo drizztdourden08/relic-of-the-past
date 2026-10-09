@@ -13,7 +13,7 @@ const bakePaint = (paint: Paint | undefined, scope: Scope): Paint | undefined =>
 const bakeRadius = (radius: HudRadius | undefined, scope: Scope): HudRadius | undefined => {
   if (radius === undefined) return undefined;
   if (Array.isArray(radius)) return radius.map((corner) => bakeValue(corner, scope) as Value) as HudRadius;
-  return bakeValue(radius, scope) as Value;
+  return bakeValue(radius, scope);
 };
 
 const bakeStyle = (style: HudBoxStyle | undefined, scope: Scope): HudBoxStyle | undefined => {

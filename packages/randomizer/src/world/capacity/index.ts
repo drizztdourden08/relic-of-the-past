@@ -2,7 +2,7 @@
 export {
   EXPLOSIVES_TIERS, METER_LEVEL_LABELS, METER_TIERS, PROJECTILES_TIERS, VANILLA_RUNG, WALLET_LADDER,
   WALLET_LADDER_LAST,
-} from './capacity-ladders.data';
+} from './capacity-ladders.constants';
 export { EXPLOSIVES, FAMILIES, METER, PROJECTILES, WALLET, familyById, maxSpanOf } from './capacity-family';
 export type { CapacityFamily } from './capacity-family';
 export {
@@ -28,7 +28,7 @@ export {
 export type { ParsedCapacityProfile } from './capacity-profile-from-snapshot';
 export {
   CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP, DEFAULT_CAPACITY_BONUS, REFERENCE_CAPACITY_BONUS,
-} from './bonus/capacity-bonus.data';
+} from './bonus/capacity-bonus.constants';
 export { CAPACITY_BONUS_KEYS } from './bonus/capacity-bonus-keys.constants';
 export { capacityBonusBaseKeyOf } from './bonus/capacity-bonus-base-key-of';
 export { capacityBonusKeyOf } from './bonus/capacity-bonus-key-of';
@@ -39,7 +39,7 @@ export { capacityBonusFromSnapshot } from './bonus/capacity-bonus-from-snapshot'
 export { capacityBonusOfValues } from './bonus/capacity-bonus-of-values';
 export { capacityBonusValuesOf } from './bonus/capacity-bonus-values-of';
 export type { CapacityBonusSetting, FamilyBonus } from './bonus/capacity-bonus.type';
-export { CURVE_IDS, CURVE_LABELS } from './curves/curves.data';
+export { CURVE_IDS, CURVE_LABELS } from './curves/curve-ids.constants';
 export { CURVES } from './curves/curves.constants';
 export type { CurvePreset, CurvePresetId, Proportions } from './curves/curves.type';
 export { scaleToSpan } from './curves/scale-to-span';

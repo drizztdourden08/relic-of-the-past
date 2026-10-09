@@ -7,7 +7,7 @@ export { forcedDarkRoomLightReasons } from './forced-dark-room-light-reasons';
 export { maskDarkRoomLights } from './mask-dark-room-lights';
 export {
   DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS, DEFAULT_DARK_ROOM_SETTING, REFERENCE_DARK_ROOM_SETTING,
-} from './dark-room-lights.data';
+} from './dark-room-lights.constants';
 export {
   DARK_ROOM_LIGHT_KEYS, DARK_ROOM_OPTION_KEYS, DARK_ROOM_REQUIRED_KEY, darkRoomLightKeyOf,
   isDarkRoomOptionKey,

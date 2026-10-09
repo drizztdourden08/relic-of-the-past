@@ -49,8 +49,9 @@ offline SNES-format binaries. They are not input to extraction and contain no da
 captured from an emulator.
 
 The production compiler entry is
-`apps/desktop/electron/assets/compile-gba-alttp-assets.ts`, beside the existing SNES
-`compile-rom-assets.ts`. The command under `scripts/gba-alttp-re` is only a diagnostic
+`packages/asset-extraction/src/sources/compile-gba-alttp-source.ts` (it runs
+`compileGbaAlttpSupplement`), one of the optional sources in `sources/optional-sources.ts`
+that are compiled beside the SNES `compile-resources.ts`. The command under `scripts/gba-alttp-re` is only a diagnostic
 CLI that expands the packed result into inspectable per-room files and previews.
 
 `packages/asset-extraction/src/compile-alttp-asset-set.ts` is the source aggregator used by

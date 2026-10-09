@@ -2,10 +2,10 @@
 import { getItem, isProgressiveCapacityItemName } from '@rotp/game-data';
 import { familyOfDungeonItem } from '../../world/dungeon-items/dungeon-item-modes';
 import { itemKeyName } from '../../world/display-names/item-key-name';
-import { ITEM } from '../../world/item-ids.data';
+import { ITEM } from '../../world/item-ids';
 import { PROGRESSIVE_PREFIX } from '../receipt-text.constants';
 import { BOTTLES, CRYSTALS, PENDANTS } from './receipt-counts.constants';
-import type { ItemKey } from '../../world/item-ids.data';
+import type { ItemKey } from '../../world/item-ids';
 
 const countClassOf = (item: ItemKey): string | undefined => {
   const family = familyOfDungeonItem(item);

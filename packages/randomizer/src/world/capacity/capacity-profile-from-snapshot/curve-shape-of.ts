@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { CURVE_IDS } from '../curves/curves.data';
+import { CURVE_IDS } from '../curves/curve-ids.constants';
 import { isValidFreeSequence, parseFreeJumps } from '../curves/free-sequence';
 import { capacityFieldsOf, capacityKeyOf } from '../capacity-option-keys';
 import type { CapacityFamily } from '../capacity-family';

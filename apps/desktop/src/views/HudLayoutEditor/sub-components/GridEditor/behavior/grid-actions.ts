@@ -7,5 +7,3 @@ const gridActions = (ctx: GridActionContext): GridAction[] =>
   [...contextualActions(ctx), ...gestureActions(ctx)];
 
 export { gridActions };
-export { contextualActions } from './contextual-actions';
-export { gestureActions } from './gesture-actions';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../../item-ids.data';
+import { ITEM } from '../../item-ids';
 import { all, any, has, helper, option, when } from '../rule-node-build';
 import { MIN_ARROWS_ASKED } from './derived-nodes.constants';
 import { retroQuiverNode } from './retro-quiver-node';

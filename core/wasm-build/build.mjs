@@ -1,22 +1,4 @@
-// @layer core-wasm-build @kind build
-/**
- * Single source of truth for the zelda3 WASM build.
- *
- * Source list + emcc flags live HERE and nowhere else. build.bat (Windows),
- * the Makefile (`emmake make`), scripts/build-wasm-core.mjs (run by port-kit-ensure-wasm), and the CI workflows
- * all delegate to this script, so the build can never drift between platforms
- * again. Cross-platform: runs anywhere `emcc` is on PATH (Windows via emsdk_env,
- * Linux/macOS CI via emscripten-core/setup-emsdk).
- *
- * Prerequisite: the Emscripten SDK must be activated so `emcc` resolves.
- * Output: apps/desktop/public/wasm/zelda3.{js,wasm}, the path the renderer, the
- * electron build, and `cap sync` (Android) all consume.
- *
- * NOTE: there is no EXPORTED_FUNCTIONS list of Wasm* exports. Every JS-callable
- * function is tagged EMSCRIPTEN_KEEPALIVE in its .c file, which both retains and
- * exports the symbol, so that attribute is the single source of truth. Only the
- * runtime entry points JS calls directly are listed in EXPORTED_FUNCTIONS below.
- */
+/* @layer core-wasm-build @kind build */
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -37,9 +19,6 @@ const gameSrcs = [
   'util', 'zelda_rtl',
 ].map((f) => z('src', `${f}.c`));
 
-// The hardware the decompiled game still writes registers to: the graphics chip
-// (our renderer), the register-transfer unit, and the audio sample mixer. No CPU
-// is emulated, because the game's own processor code is what was decompiled into C.
 const snesSrcs = [
   'dma', 'dsp', 'ppu',
 ].map((f) => z('snes', `${f}.c`));
@@ -74,7 +53,6 @@ const hookSrcs = [
   'ap_received_index', 'ap_room_hash', 'foreign_item', 'foreign_icon', 'foreign_icon_bank', 'death_link',
 ].map((f) => h(`${f}.c`));
 
-// Our Emscripten entry points (replace the native main.c). Resolved from this dir.
 const emMain = [
   'emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_io.c',
   'emscripten_pacing.c', 'emscripten_sound_preview.c', 'emscripten_volumes.c',
@@ -90,8 +68,6 @@ const cflags = [
   '-Wno-unused-variable',
 ];
 
-// Wider widescreen frames overflow the default stack, so STACK_SIZE must stay in
-// lockstep with kPpuExtraLeftRight in core/zelda3/src/types.h.
 const emflags = [
   '-sUSE_SDL=2',
   '-sWASM=1',
@@ -122,9 +98,6 @@ const run = () => {
   console.log('Building zelda3 WASM...');
   console.log('============================================');
 
-  // The whole argument list rides in a response file: ~80 absolute source paths exceed the
-  // 8191-character command line cmd.exe allows once the checkout sits under a worktree path.
-  // Quoting mirrors emcc's own response-file writer (shlex rules: escape \ " ' and quote spaces).
   const rspDir = mkdtempSync(join(tmpdir(), 'zelda3-emcc-'));
   const rsp = join(rspDir, 'args.rsp.utf-8');
   const escapeArg = (a) => {
@@ -133,8 +106,6 @@ const run = () => {
   };
   writeFileSync(rsp, args.map(escapeArg).join('\n') + '\n');
 
-  // emcc is a .bat on Windows (not directly executable by CreateProcess), so go
-  // through cmd there; PATH-resolved binary everywhere else.
   const isWin = process.platform === 'win32';
   const cmd = isWin ? process.env.COMSPEC || 'cmd.exe' : 'emcc';
   const spawnArgs = isWin ? ['/c', 'emcc', `@${rsp}`] : [`@${rsp}`];
@@ -146,9 +117,6 @@ const run = () => {
     process.exit(result.status ?? 1);
   }
 
-  // zelda3.js is a CommonJS factory, but it sits inside the app package, which is an ES
-  // module package. This marker keeps Node's require() of it (tests, the layout probe,
-  // the headless harness) reading it as CommonJS.
   writeFileSync(join(outputDir, 'package.json'), `${JSON.stringify({ type: 'commonjs' })}\n`);
 
   console.log('\n============================================');
@@ -157,9 +125,6 @@ const run = () => {
   console.log(`        ${join(outputDir, 'zelda3.wasm')}`);
   console.log('============================================');
 
-  // The save state layout can only have moved if the core was just rebuilt, so the probe
-  // rides along here. This is what keeps the format id computed instead of declared:
-  // every path that rebuilds the core (dev, ensure-wasm, the release job) re-derives it.
   const probe = spawnSync(process.execPath, [join(here, 'layout-probe.mjs')], { stdio: 'inherit' });
   if (probe.status !== 0) {
     console.error('\nSave state layout probe FAILED. The format id was not refreshed.');

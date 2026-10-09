@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { buildAlwaysAllowEntries, buildItemRuleEntries } from '../tables/item-rules.data';
+import { buildAlwaysAllowEntries, buildItemRuleEntries } from '../tables/item-rules';
 import { registerBunnyRules } from '../bunny';
 import { registerPriceRules } from '../prices';
 import { registerPondDemandRules } from '../pond-demands';
@@ -30,8 +30,8 @@ const registerRules = (world: World): RuleCoverageReport => {
   }
   const exits = closeCoverage(exitNames, world.rules);
   openShopSlots(world);
-  const locations = closeCoverage(world.locationsByKey.keys(), world.locationRules as Map<string, Rule>);
-  closeCoverage(world.eventsByKey.keys(), world.eventRules as Map<string, Rule>);
+  const locations = closeCoverage(world.locationsByKey.keys(), world.locationRules);
+  closeCoverage(world.eventsByKey.keys(), world.eventRules);
   registerPriceRules(world);
   registerPondDemandRules(world);
   for (const [key, value] of seedValuesOfWorld(world)) world.seedValues.set(key, value);

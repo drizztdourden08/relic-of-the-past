@@ -1,6 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-// Joins the registry to live git state. Shared by list, claim, clean and doctor so
-// "is this safe to reuse or delete" is decided in exactly one place.
 import { readRegistry } from './registry.mjs';
 import { inspectWorktree } from './git-status.mjs';
 import { assess } from './verdict.mjs';

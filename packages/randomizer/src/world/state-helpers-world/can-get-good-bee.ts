@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import { BOTTLE_ITEMS } from '../item-groups';
-import { REGION } from '../region-ids.data';
+import { REGION } from '../region-ids.constants';
 import { hasSword } from '../state-helpers';
 import { isNotBunny } from './is-not-bunny';
 import type { CollectionState } from '../collection-state.type';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { optionFlagOf } from '../../option-flag-of';
-import { PROGRESSIVE_FAMILIES } from '../progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from '../progressive-families.constants';
 import { progressiveTierKeyOf } from '../progressive-option-keys';
 import { defaultTickOf } from './default-tick-of';
 import type { OptionValues } from '../../options.type';

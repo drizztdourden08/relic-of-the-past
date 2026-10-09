@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { PROGRESSIVE_FAMILIES } from './progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from './progressive-families.constants';
 import { progressiveTierKeyOf } from './progressive-option-keys';
 import { progressiveTierDescriptionOf } from './progressive-tier-description-of';
 import { progressiveTierSeed } from './progressive-tier-seed';

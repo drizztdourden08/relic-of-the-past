@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM_POWER_KEY } from '../item-power.data';
+import { ITEM_POWER_KEY } from '../item-power.constants';
 import type { OptionValue } from '../../options.type';
 import type { ItemPowerSetting } from '@rotp/game-core';
 

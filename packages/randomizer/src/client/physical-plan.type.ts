@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { CheckDetection } from './check-detection';
 import type { ScriptedGrantSurface } from '../scripted-grant-overrides/scripted-grant-overrides.type';

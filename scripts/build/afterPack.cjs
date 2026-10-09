@@ -3,15 +3,7 @@ const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-/**
- * Electron distribution files this app never loads; `files` cannot filter them.
- * Deliberately kept despite their size: vk_swiftshader.dll / vulkan-1.dll (software
- * renderer for machines with no usable GPU), libGLESv2 / libEGL / d3dcompiler
- * (ANGLE, how WebGL reaches the GPU), LICENSES.chromium.html (required attribution),
- * ffmpeg.dll (Chromium reaches for it in enough places that 2.9 MB is not worth the risk).
- */
 const UNUSED_ELECTRON_FILES = [
-  // DirectX shader compiler for WebGPU/Dawn; the core renders through WebGL.
   'dxcompiler.dll',
   'dxil.dll',
 ];
@@ -27,9 +19,6 @@ const trimUnusedFiles = (appOutDir) => {
   if (saved) console.log(`  • trimmed ${(saved / 1048576).toFixed(1)} MB of unused Electron files`);
 };
 
-// Velopack ships bindings for every platform (~18 MB); a build needs exactly one.
-// Not a `files` filter: that is the same for every platform, and dropping the wrong
-// one leaves the app unable to start (the updater is imported at the top of main).
 const VELOPACK_BINDING = {
   win32: 'velopack_nodeffi_win_x64_msvc.node',
   linux: 'velopack_nodeffi_linux_x64_gnu.node',
@@ -57,10 +46,11 @@ const trimForeignBindings = (appOutDir, platform, resourcesPath) => {
   if (saved) console.log(`  • dropped ${(saved / 1048576).toFixed(1)} MB of bindings for other platforms`);
 };
 
-/** @param {import('electron-builder').AfterPackContext} context */
+/**
+ * @param {import('electron-builder').AfterPackContext} context
+ */
 exports.default = async function afterPack(context) {
   const platform = context.electronPlatformName;
-  // macOS keeps its resources inside the bundle; the other two sit beside the binary.
   const resourcesPath = platform === 'darwin'
     ? path.join(`${context.packager.appInfo.productFilename}.app`, 'Contents', 'Resources')
     : 'resources';
@@ -73,8 +63,6 @@ exports.default = async function afterPack(context) {
   const exePath = path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.exe`);
   const icoPath = path.resolve(__dirname, '../../apps/desktop/public/logos/logo/logo.ico');
 
-  // The name Windows and browsers show for the exe ("Open Relic of the Past?") is its
-  // FileDescription; left alone it reads "Electron", so the app's own name goes in too.
   const { productName } = context.packager.appInfo;
   const version = context.packager.appInfo.version;
   const { rcedit } = require('rcedit');

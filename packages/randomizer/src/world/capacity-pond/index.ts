@@ -1,5 +1,5 @@
 /* @layer shared-game @kind barrel */
-export { CAPACITY_POND_NOTES } from './capacity-pond-notes.data';
+export { CAPACITY_POND_NOTES } from './capacity-pond-notes.constants';
 export { POND_FED_FAMILIES } from './capacity-pond.constants';
 export { fedFamiliesOf } from './fed-families-of';
 export { reconcileCapacityPond } from './reconcile-capacity-pond';

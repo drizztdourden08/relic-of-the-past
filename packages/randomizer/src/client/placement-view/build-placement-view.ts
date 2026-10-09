@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { checkIdOfLocation } from '../../world/location-record';
-import { isUnrecordedItem } from '../../world/item-ids.data';
+import { isUnrecordedItem } from '../../world/item-ids';
 import { foreignItemName, isForeignItem } from '../../archipelago/foreign-item';
 import { virtualCheckIdOf } from '../virtual-locations';
 import { emptyView } from './empty-view';
@@ -32,7 +32,7 @@ const buildPlacementView = (placement: Placement | null, foreignOwners: ForeignO
       view.unmatchedItems.push(`${location}: ${item}`);
       continue;
     }
-    view.itemByCheck.set(checkId, item as ItemId);
+    view.itemByCheck.set(checkId, item);
   }
 
   return view;

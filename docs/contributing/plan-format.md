@@ -26,7 +26,7 @@ presented as *the plan* gets the rendered page.
 3. **Filetree (CRUD):** the exact files created/modified/deleted, as a tree with
    change markers. This is mandatory for any change that adds/moves/removes files.
 4. **Data model:** when types/models change, show the **actual TS code** (new or
-   before→after), not a description.
+   before and after), not a description.
 5. **Key code:** real code blocks for the important new/changed units (signatures,
    component skeletons, the core function) so they can be seen before approval.
 6. **Flow / preview:** a data-flow, sequence, component-hierarchy, or UI-layout
@@ -70,7 +70,7 @@ type SaveSlot = {
 export type { SaveSlot };
 ```
 
-For changes, show before→after:
+For changes, show the code before and after:
 
 ```ts
 // before
@@ -167,7 +167,7 @@ components through the tokens and never inside the media query.
 ### Layout & components
 
 - Single centred spine at `--maxw`; `gap`-based flex/grid, not per-element margins.
-- **Masthead:** mono eyebrow → `h1` → standfirst → a **verdict strip** of 3-5 headline
+- **Masthead:** mono eyebrow, then `h1`, then standfirst, then a **verdict strip** of 3-5 headline
   numbers (`dl` grid with `gap: 1px` over a `--hairline` background for hairline dividers).
 - **`h2`:** mono, `border-bottom: 2px solid var(--accent)`, plus a small filled phase badge.
 - **Findings table:** mono ID column in `--accent`, a severity **chip** per row. Chips tint

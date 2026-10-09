@@ -1,28 +1,20 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Turning a pixel-art SVG into the files an app needs. A square icon keeps the pixels crisp
- * where they can be: at two or more times the art's width the art is scaled by a whole
- * number and centred; smaller than that it is drawn smooth, since whole pixels no longer fit.
- */
 import sharp from 'sharp';
 import pngToIco from 'png-to-ico';
 
 const SMOOTH_SOURCE_SCALE = 16;
 const WHOLE_PIXELS_FROM = 2;
 
-/** The art's own width and height, from its viewBox. */
 const sizeOf = (svg) => {
   const [w, h] = svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/).slice(1).map(Number);
   return { w, h };
 };
 
-/** The art at a whole-number scale, every pixel a crisp square. */
 const crisp = (svg, scale) => {
   const { w, h } = sizeOf(svg);
   return sharp(Buffer.from(svg)).resize(w * scale, h * scale, { kernel: 'nearest' }).png().toBuffer();
 };
 
-/** The art drawn smooth to fit inside `size` by `size`, from a large crisp render. */
 const smooth = async (svg, size) => {
   const { w, h } = sizeOf(svg);
   const fit = Math.min(size / w, size / h);
@@ -30,7 +22,6 @@ const smooth = async (svg, size) => {
   return sharp(big).resize(Math.max(1, Math.round(w * fit)), Math.max(1, Math.round(h * fit)), { kernel: 'lanczos3' }).png().toBuffer();
 };
 
-/** A transparent `size` by `size` PNG with the art centred. */
 const icon = async (svg, size) => {
   const { w, h } = sizeOf(svg);
   const scale = Math.floor(Math.min(size / w, size / h));
@@ -42,7 +33,6 @@ const icon = async (svg, size) => {
     .toBuffer();
 };
 
-/** A Windows .ico holding the art at each of `sizes`. */
 const ico = async (svg, sizes) => pngToIco(await Promise.all(sizes.map((size) => icon(svg, size))));
 
 export { sizeOf, crisp, icon, ico };

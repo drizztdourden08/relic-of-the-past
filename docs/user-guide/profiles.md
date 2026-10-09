@@ -11,14 +11,14 @@ A profile is a self-contained setup for the game. Each one keeps its own:
 
 ## Creating a profile
 
-1. Open the title-bar menu → **Data** → **Profiles**.
+1. Open the title-bar menu, then **Data**, then **Profiles**.
 2. Choose **Create Profile** and give it a name.
 3. Pick a ROM (import one first if you haven't).
 4. Choose a language.
 
 ## Using a different profile
 
-There's no live profile switch while you're playing. To use another profile, stop the game, open the title-bar menu → **Data** → **Profiles**, and pick or create one there. The app remembers the profile you used last and reopens it the next time you launch.
+There's no live profile switch while you're playing. To use another profile, stop the game, open the title-bar menu, go to **Data**, then **Profiles**, and pick or create one there. The app remembers the profile you used last and reopens it the next time you launch.
 
 ## What profiles are good for
 

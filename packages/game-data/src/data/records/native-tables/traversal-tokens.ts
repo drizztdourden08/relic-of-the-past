@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import type { TraversalRequirement } from '../../../pathfinding/nav-data.types';
-import type { ConnectionTag } from '../../taxonomy/connection-tags.generated.type';
+import type { ConnectionTag } from '../../taxonomy/connection-tags.type';
 import type { ItemId } from '../../types/ids';
 
 const ITEM_TO_TOKEN: Partial<Record<ItemId, TraversalRequirement>> = {

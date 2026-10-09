@@ -1,20 +1,12 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Flags `var(--x)` references whose custom property is never defined (CSS `--x:`,
- * JS inline-style key `'--x':`, or `setProperty('--x', ...)`). The defined-set walks
- * the whole tree, so a token-file definition still counts in --diff mode. Dynamic
- * refs like `var(--track-${i})` are skipped.
- */
+/* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
 import { walkFiles } from '../walk.mjs';
 
-const VAR_REF = /var\(\s*(--[\w-]+)/g;          // var(--x  → reference
-const CSS_DEF = /(--[\w-]+)\s*:/g;              // --x:     → CSS declaration
-const TS_OBJ_DEF = /['"`](--[\w-]+)['"`]\s*:/g; // '--x':   → JS inline-style custom prop
-const SET_PROP = /setProperty\(\s*['"`](--[\w-]+)['"`]/g; // el.style.setProperty('--x', ...)
+const VAR_REF = /var\(\s*(--[\w-]+)/g;
+const CSS_DEF = /(--[\w-]+)\s*:/g;
+const TS_OBJ_DEF = /['"`](--[\w-]+)['"`]\s*:/g;
+const SET_PROP = /setProperty\(\s*['"`](--[\w-]+)['"`]/g;
 
 let definedCache = null;
 
@@ -44,7 +36,6 @@ const run = async (records, ctx) => {
     for (const m of content.matchAll(VAR_REF)) {
       const name = m[1];
       if (defined.has(name) || seen.has(name)) continue;
-      // Skip dynamic refs like var(--track-${i}): the name is interpolated.
       const after = content[m.index + m[0].length];
       if (after === '$' || after === '{') continue;
       seen.add(name);

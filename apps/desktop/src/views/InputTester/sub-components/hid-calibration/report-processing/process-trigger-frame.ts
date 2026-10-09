@@ -2,6 +2,7 @@
 import type { HidButtonMapping, StickCandidate } from '../hid-calibration.type';
 import { TRIGGER_RANGE_THRESHOLD, TRIGGER_STABLE_FRAMES } from '../hid-calibration.constants';
 import { classifyTriggerByte } from '../trigger-classify';
+import { extremesCandidate } from './extremes-candidate';
 import { trackExtremes } from './track-extremes';
 import { PROCESS_EVERY_FRAMES, TRIGGER_BUFFER_FRAMES, TRIGGER_CANDIDATE_MIN_RANGE } from './report-processing.constants';
 import type { TriggerRefs } from './report-processing.type';
@@ -10,10 +11,8 @@ const topTriggerCandidate = (refs: TriggerRefs, mins: Uint8Array, maxs: Uint8Arr
   const candidates: StickCandidate[] = [];
   for (let i = 0; i < len; i++) {
     if (refs.capturedStickBytesRef.current.has(i) || refs.capturedTriggerBytesRef.current.has(i) || refs.excludedRef.current.has(i)) continue;
-    const range = maxs[i] - mins[i];
-    if (range >= TRIGGER_CANDIDATE_MIN_RANGE) {
-      candidates.push({ idx: i, range, min: mins[i], max: maxs[i], center: refs.baselineRef.current[i] ?? 0 });
-    }
+    const candidate = extremesCandidate(mins, maxs, i, refs.baselineRef.current[i] ?? 0);
+    if (candidate && candidate.range >= TRIGGER_CANDIDATE_MIN_RANGE) candidates.push(candidate);
   }
   candidates.sort((a, b) => b.range - a.range);
   return candidates[0] ?? null;

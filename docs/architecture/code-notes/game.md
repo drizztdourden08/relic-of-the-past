@@ -109,7 +109,7 @@ The `TEXT_CMD_*` values are the engine's own text command ids (`kTextCmd_*` in
 ### dialog/dialogue-charset
 
 What one language's message box can draw: its alphabet, plus the extra glyphs
-(`extra-glyphs.data.ts`) laid into the font's spare slots.
+(`extra-glyphs.constants.ts`) laid into the font's spare slots.
 
 The sheet holds 128 glyphs (the core has 256 tiles, a top and a bottom tile per glyph). A
 language uses the slots its alphabet and its width table cover; the rest are spare. The
@@ -131,7 +131,7 @@ into the core's escape bytes and the wrapper can measure it by its slot like any
   character (the modern font's lookup). `readableText` turns every slot token in composed text
   back into its character.
 
-### dialog/extra-glyphs.data.ts
+### dialog/extra-glyphs.constants.ts
 
 Glyphs the dialogue fonts lack, drawn in the game's own style, so any name another game sends
 shows as it was typed. The core writes each one into a spare slot of the active font
@@ -934,7 +934,7 @@ a marker names its row, a scroll parks on the bottom row, and no code means the 
 
 The push: every line from an edit onward gets the code the engine needs to put it where it now
 sits, and every other line stays as authored. A seed marks a line the author changed or a line
-just created. From a seed the walk keeps deriving codes forward; inserting a line really does
+just created. From a seed the walk keeps deriving codes forward; inserting a line does
 move the rows below it. The policy decides how far: continuous carries on past a wait, the other
 two stop at the end of the box.
 
@@ -1261,7 +1261,7 @@ place the policy is implemented, and the renderer copy can fold onto it when the
 - `MIN_PHRASE_LENGTH` is 2: a single character is never a phrase worth replacing, and would
   shred every line it appears in.
 - Occurrences never overlap: the scan moves past each match, so `aa` in `aaa` is one hit.
-- Lowercasing changes the length of a handful of exotic characters, which would misalign the
+- Lowercasing changes the length of a few exotic characters, which would misalign the
   offsets a caller slices with. When that happens the scan reads the original text, so a wrong
   span can never be offered. The cost is that near misses go unreported for that run.
 
@@ -1642,7 +1642,7 @@ about the build that wrote it, and the verdicts drawn from comparing them.
   that could not be reached, is unknown. Calling it `compatible` is how save states get lost
   without a word.
 
-### save-state/current-format.generated.ts
+### save-state/current-format.constants.ts
 
 Written by `core/wasm-build/layout-probe.mjs` during the wasm build; never edit it by hand.
 It carries only the `@kind data` header, so this note is where its purpose lives. It holds the save state layout this build produces:
@@ -1791,7 +1791,7 @@ Groups, filters and labels checks for the tracker. World, area, location and dun
 - Death Mountain is the one area that spans both worlds. Its label and its area facets split by the check's own screen: one facet per side.
 - A dungeon event with no screen of its own sits in its dungeon's world, read from the dungeon's first room.
 - Content facets come from the tag collection (`tagsFor('check')`) and test the real tags on `CheckRecord.tags`. `CHECK_FACET_DEFS` is built once, when the module loads.
-- `matchesSearch`: with a run loaded, the item a reader searches for is the one actually there. Matching the vanilla contents would answer "where was the lamp", not "where is it".
+- `matchesSearch`: with a run loaded, the item a reader searches for is the one the run placed there. Matching the vanilla contents would answer "where was the lamp", not "where is it".
 - `isListedRow` decides whether a row is in the list at all, before any search or facet: the Items, Events or Both switch, and on the plain game the shop shelves. The summary counts over the same answer, so the totals say what the list shows.
 - `buildGroupTree` nests 0 to 5 levels. Spheres sort by number. Other groups sort by name with "Other" and "Overworld" last.
 
@@ -1857,7 +1857,7 @@ Use `screenIdForGameId` to get our id string, never a hand formatted one. `gameI
 
 ### logic/queries/item-duplicates
 
-The vanilla duplicate item rule (`Link_HandleChest`, player.c:3850): a handful of chest items swap to an alternate when the primary is already owned. The lamp chest hands out 5 Rupees once the player has a lamp.
+The vanilla duplicate item rule (`Link_HandleChest`, player.c:3850): a few chest items swap to an alternate when the primary is already owned. The lamp chest hands out 5 Rupees once the player has a lamp.
 
 Four things name a chest's contents: the simulator's delivery, the sim log, the overlay annotation and the C hook. The first three apply this rule from here, or the overlay would promise a Lamp the run never delivers. The C hook applies the same rule as a backstop.
 
@@ -1998,7 +1998,7 @@ The BFS engine asks a layer strategy how the body moves. `SingleLayerStrategy` s
 
 ### navigation/strategies/ledge-crossings.ts
 
-The ledge hops a dual layer walk really landed, one entry per tile. This is not cliff preprocessing's wall run guess, which only walks layer 0 and cannot see where the drop ends. Nor is it one entry per body position: Link is 2 tiles wide, so an N tile ledge offers N minus 1 places to stand, and recording per body left the last tile of every ledge without an arrow and halved a 2 tile gap to one. A 1 tile gap records nothing, which is right, since the player cannot jump from it. `dr` gives the hop's axis: a vertical hop spans two columns, a horizontal one two rows.
+The ledge hops a dual layer walk landed, one entry per tile. This is not cliff preprocessing's wall run guess, which only walks layer 0 and cannot see where the drop ends. Nor is it one entry per body position: Link is 2 tiles wide, so an N tile ledge offers N minus 1 places to stand, and recording per body left the last tile of every ledge without an arrow and halved a 2 tile gap to one. A 1 tile gap records nothing, which is right, since the player cannot jump from it. `dr` gives the hop's axis: a vertical hop spans two columns, a horizontal one two rows.
 
 ### navigation/tile-classification
 
@@ -2281,7 +2281,7 @@ Turns one `ComparisonStrategy` into a `RecommendationDetector`, so the registry 
 
 A strategy supplies an `UnresolvableMapper` when it wants an `unresolvable` set finding surfaced; by default such a finding is dropped. It returns the bare `DraftRecommendation` union, not `DraftRecommendation<K>`, because the connection strategy's mapper proposes a `screen` record for an uncatalogued crossing destination, a different kind from the `connection` strategy that found it. Crossing that boundary is what the mapper is for.
 
-### recommendations/strategies/actor/actor.strategy.ts
+### recommendations/strategies/actor/actor-strategy.ts
 
 The `actor` comparison strategy. The engine allows one strategy per kind (`strategyFor(kind)` is a single lookup), so combat and spawns share it. An `ActorRecord` is not scoped to the current screen: a sprite type is catalogued once and can spawn anywhere. So `subjects` is the whole catalogue, and the combat probe's `applies` and `read` narrow it to what this pass observed.
 
@@ -2289,13 +2289,13 @@ The `actor` comparison strategy. The engine allows one strategy per kind (`strat
 
 Converts a resolved native combat row into the `ActorCombatProfile` shape `ActorRecord.combat` stores. The combat field probe and the spawns set probe (a proposed actor carries a profile when a combat row proves it fights) share it.
 
-### recommendations/strategies/actor/combat.probes.ts
+### recommendations/strategies/actor/combat-probe.ts
 
 Field probe over `ActorRecord.combat`: the health, `flags4` and per class damage facts `kSpriteInit_Health`, `kSpriteInit_Flags4` and the per class damage lookup report for a sprite type. The table is a native, enumerable fact about the sprite type and not inferred from watching a fight, so a disagreement is always `certain`.
 
 `spriteCombat` only carries rows for sprite types observed this pass. A type missing from it was not seen this time and is not proven to lack combat data, so `read` returns `unread()` for it. Returning `known(undefined)` would propose deleting a correct combat profile because this room did not spawn that sprite type.
 
-### recommendations/strategies/actor/spawns.set.ts
+### recommendations/strategies/actor/actor-spawns-probe.ts
 
 A live sprite spawn with no `ActorRecord` cataloguing its sprite type. The room's spawn table is fully enumerable, so a spawn no record's `gameId.spriteType` names is a proven gap: `certain`. Repeat spawns of one type on one screen collapse into a single live item.
 
@@ -2303,7 +2303,7 @@ The actor's `kind` is not provable from the spawn byte. The proposal is `enemy` 
 
 `removable: false`: the per room table only proves what this room spawns, never that another catalogued actor is wrong to exist.
 
-### recommendations/strategies/check/check.strategy.ts
+### recommendations/strategies/check/check-strategy.ts
 
 The `check` comparison strategy. The chest presence probe covers a chest the room draws that no record catalogues. The correction probes cover an existing record the same chest table proves wrong about its `kind` or `screenId`. `subjects` resolves each of the current room's chests to its own `CheckRecord` through `getCheckByGameId`. A check with no chest match gets no field correction; the presence probe proposes a record for it.
 
@@ -2315,7 +2315,7 @@ Returns the live chest a `CheckRecord`'s own room and chest index name, if the r
 
 The loaded room's index, or null when there is none to read (outdoors, or the room table was not read).
 
-### recommendations/strategies/check/chests.set.ts
+### recommendations/strategies/check/chest-presence-probe.ts
 
 A chest the loaded room draws that no `CheckRecord.gameId` covers. The chest table is enumerable (no chest has to be opened for it to report one), so the absence is proven: `certain`.
 
@@ -2326,7 +2326,7 @@ A chest the loaded room draws that no `CheckRecord.gameId` covers. The chest tab
 - `removable: false`: the chest table never proves an existing check wrong to exist, only that a new one is missing.
 - Big and small chests are not told apart: no native read distinguishes them yet, so the probe does not guess.
 
-### recommendations/strategies/check/corrections.probes.ts
+### recommendations/strategies/check/check-correction-probes.ts
 
 Two corrections the room's chest table proves about an already catalogued check: it is not recorded as a chest though a chest object draws it, or its `screenId` names a screen of a different room. Both read the same enumerable chest table as the presence probe, so both are `certain`.
 
@@ -2334,21 +2334,21 @@ Two corrections the room's chest table proves about an already catalogued check:
 - Chest contents are left alone by both probes: the check collection's `vanillaItemIds` is edited per dungeon reward in ways the raw chest byte cannot settle. That belongs to the item strategy.
 - The screen comparison goes through the recorded screen's own `roomIndex` and does not compare screen ids. One room can carry several screen records (a progress variant of the same interior), so a check attached to a variant this pass did not resolve is correct. Only a recorded screen in another room is a real mismatch.
 
-### recommendations/strategies/dungeon/dungeon.strategy.ts
+### recommendations/strategies/dungeon/dungeon-strategy.ts
 
 The `dungeon` comparison strategy: the loaded room resolves to a dungeon whose `roomScreenIds` does not list this screen. `subjects` is at most the one dungeon the loaded room's own palace index names; no other dungeon record has anything to say about this room. The live palace index is already carried on `liveGameId`.
 
-### recommendations/strategies/dungeon/rooms.probe.ts
+### recommendations/strategies/dungeon/room-screens-probe.ts
 
 `DungeonRecord.roomScreenIds` against the loaded room. The fix is an append, so this is a field probe whose `read` returns the union of the record's list and the current screen, never a smaller set, and an existing member is never dropped. A set probe does not fit an append onto one array field of a record that exists: a `missing-in-dataset` set finding always becomes a `create`.
 
 Room to dungeon membership is a native, enumerable fact about the loaded room (`cur_palace_index_x2` names the dungeon outright), so a missing entry is `certain`. The live value is the current screen's id, read from `observations.match?.screen.id` for the same reason as the check screen probe. With no resolved screen there is nothing provable to append.
 
-### recommendations/strategies/item/item.strategy.ts
+### recommendations/strategies/item/item-strategy.ts
 
 The `item` comparison strategy. The grant probes cover a native item id no record catalogues. The alias probes cover an existing record whose `aliasOf` duplicate swap rule an observed grant contradicts. `subjects` is the whole catalogue: an `ItemRecord` is not scoped to the current screen, so there is no narrower set to hand the alias probes.
 
-### recommendations/strategies/item/grants.set.ts
+### recommendations/strategies/item/grant-probes.ts
 
 A native item id no `ItemRecord.gameId.receiveItemId` covers, from the three places the game says so. Each is its own set probe because confidence and source are fixed per probe, not per live item, and the three differ in both:
 
@@ -2362,17 +2362,17 @@ One combined probe would give every finding one confidence and one source and ov
 
 The placeholder's `category` and `name` have no native answer and `ItemRecord` requires both, so it uses the dataset's neutral defaults. `origin: 'vanilla'` is provable: anything that reached this join (a chest's static contents or the native receive path) is a real in game item. `removable: false` on all three: none of these tables proves an existing `ItemRecord` wrong to exist.
 
-### recommendations/strategies/item/alias.probes.ts
+### recommendations/strategies/item/alias-probes.ts
 
 An existing record's `aliasOf` claims a duplicate swap rule (`resolveDuplicate`) that an observed grant contradicts: the record's own raw id was granted as is while its own item was already owned, at which point `resolveDuplicate` says the swap should have applied. The check uses only the record's own id and the observation's owned set snapshot.
 
 There are two probes on the same path because confidence is fixed per probe: a direct native tally (`fromInventoryDelta: false`) is `certain`, a tracker inventory delta is only `likely`. The two `applies` gates are exclusive on the same grant's flag, so at most one fires for a record in one pass. `format` shows the dataset side as the alias's display name, the item a reviewer recognises.
 
-### recommendations/strategies/screen/screen.strategy.ts
+### recommendations/strategies/screen/screen-strategy.ts
 
 The `screen` comparison strategy. Every field reads `ScreenObservations` directly. `subjects` is the current screen plus every screen a recorded palace mismatch names, deduped by id. Only the palace probe needs the extra screens, but every probe runs over `subjects`, so the dedup happens here once.
 
-### recommendations/strategies/screen/game-id.probes.ts
+### recommendations/strategies/screen/game-id-probes.ts
 
 Field probes over `ScreenGameId`, the native identifiers a screen record claims. Every value is read off a table fully enumerable for the loaded room, so every probe is `certain` and compares unconditionally: a wrong value is reported, not only a missing one.
 
@@ -2383,15 +2383,15 @@ Field probes over `ScreenGameId`, the native identifiers a screen record claims.
 - RAM $010E names the entrance a room was entered through only when it was entered directly. Walking in from another indoor room leaves it stale, and `entranceRooms[whichEntrance] === roomIndex` is the only way to tell.
 - RAM $010E holds 0 from boot and is not rewritten by loading a save state, so a live 0 cannot be told apart from walking through entrance 0x00. It is not evidence and reads as unread.
 
-### recommendations/strategies/screen/identity.probes.ts
+### recommendations/strategies/screen/identity-probes.ts
 
 The game reports a screen's kind only through `isIndoors`. Outdoors that bit proves `overworld`. Indoors it settles nothing: the record could be `dungeon`, `interior` or `cave`, and no native byte tells them apart, so a guess would be a finding the game never proved. Only the outdoor case is provable, and only for the currently loaded screen: `subjects` can include other screens named by a palace mismatch, and `isIndoors` is a global flag that says nothing about those. There is no probe for `position.floor`; inventing one without an observation would be a guess.
 
 ### recommendations/strategies/screen/palace-mismatches.ts
 
-Every palace mislabel the fallback rescued this session, folded with what the live match just resolved. The live match is folded in so a screen that appears in both yields one finding, not two that share an id. `screen.strategy.ts` uses it to widen `subjects` past the current screen, and the palace probe uses it again to read the value for whichever extra screen it is looking at.
+Every palace mislabel the fallback rescued this session, folded with what the live match just resolved. The live match is folded in so a screen that appears in both yields one finding, not two that share an id. `screen-strategy.ts` uses it to widen `subjects` past the current screen, and the palace probe uses it again to read the value for whichever extra screen it is looking at.
 
-### recommendations/strategies/screen/presence.set.ts
+### recommendations/strategies/screen/screen-presence-probe.ts
 
 The screen the player stands on has no record cataloguing it. Reaching this needs a pass that runs with a null `context.screenId`, which `use-detection-pass.ts` provides.
 
@@ -2408,7 +2408,7 @@ The screen the player stands on has no record cataloguing it. Reaching this need
 
 The minimal `ScreenRecord` a `create` proposes for an uncatalogued room or overworld index: everything besides the identity (`gameId`, `kind`) and the label, which differ by caller. The presence probe (the screen the player stands on) and the connection strategy's `onUnresolvable` mapper (a crossing destination) share it. Only the current screen's live registers carry a palace index; a crossing destination never can. Geography has no native answer, so the draft carries the placeholder area and location ids and an unfinished name. `validate-create.ts` refuses to let it reach disk.
 
-### recommendations/strategies/screen/spawns.set.ts
+### recommendations/strategies/screen/spawns-probe.ts
 
 `screen.spawns` against the live sprite spawn table. It is a field probe despite the file name. `SetProbe` works over whole records and `spawns` is one array field on a record that exists, so a set probe would turn a `missing-in-dataset` difference into a `create` of a second screen record for the same room (`direction-tag.detector.ts` met the same limit). Comparing the path as one array yields an `update`.
 
@@ -2417,7 +2417,7 @@ The minimal `ScreenRecord` a `create` proposes for an uncatalogued room or overw
 - A sprite type with no `ActorRecord` is skipped; that gap is the actor spawns probe's finding.
 - An empty union becomes `undefined`, not `[]`: an empty array is a real value and would make up a finding against an undefined `record.spawns`.
 
-### recommendations/strategies/screen/geography.detector.ts
+### recommendations/strategies/screen/screen-geography-detector.ts
 
 A screen whose two geography ids contradict each other: it names an area and a location, and the location record names a different area. It is hand written and not a field probe because there is no live signal: the game never reports which area or location a room sits in. This is the dataset disagreeing with itself, which only a detector reading the records can see. `screenBlockers` refuses such a pair at edit time; this detector is the read side of the same rule for records already on disk.
 

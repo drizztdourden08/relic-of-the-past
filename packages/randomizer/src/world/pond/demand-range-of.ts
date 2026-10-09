@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { EXPLOSIVES, PROJECTILES } from '../capacity/capacity-family';
 import { reachableTopOf } from '../capacity/reachable-top';
-import { POND_ASK_ROW_BY_KIND } from './pond-ask.data';
+import { POND_ASK_ROW_BY_KIND } from './pond-ask';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 import type { PondAskAmountKind, PondAskSetting } from './pond-ask.type';
 import type { PondPlan } from './pond-profile.type';

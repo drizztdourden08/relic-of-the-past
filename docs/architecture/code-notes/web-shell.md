@@ -106,7 +106,7 @@ Real-time game UI state, updated every frame by the ui-bridge polling loop. `_se
 
 The message box as the core's dialog mirror reports it, updated by the dialog bridge whenever it changes. `stale` is raised on a save-state load that brought no dialog hook state: the mirror cannot see what the loaded WRAM put on screen, so the host box holds back until the next message clears it. A load that put the mirror back (`state-dialog.ts`) lowers it instead through `markRestored`, so the next frame read is the loaded message as it was saved.
 
-`staleGeneration` is the mirror generation seen at the load. The mirror is trusted again once it moves on: a box that closes, or a message the engine started after the load, is clearly seen again.
+`staleGeneration` is the mirror generation seen at the load. The mirror is trusted again once it moves on: a box that closes, or a message the engine started after the load, is seen again.
 
 ## stores/sprite-availability-store
 
@@ -239,7 +239,7 @@ The two halves are deliberately different things. The bindings say where a slot 
 
 `persistAssignments` merge-writes the assignment table into the profile's own settings file, through the same `readConfig` and `writeConfig` seam every other setting uses. The writes are serialized, because two assignments made in quick succession would otherwise each read the config from before the change, and the second would drop the first.
 
-`enhancedPauseDrawn` answers whether `EnhancedPauseView` will actually be on screen. It mirrors the render condition of GameOverlay term for term, and it has to: the takeover parks the native pause menu (no input handling, no cursor, no redraw), so arming it while nothing is drawn on top hands the player a blank, frozen screen. Both host-drawn styles (Enhanced and Modern) render it. The Original style does not, and there the native menu is left to draw and close itself.
+`enhancedPauseDrawn` answers whether `EnhancedPauseView` will be on screen. It mirrors the render condition of GameOverlay term for term, and it has to: the takeover parks the native pause menu (no input handling, no cursor, no redraw), so arming it while nothing is drawn on top hands the player a blank, frozen screen. Both host-drawn styles (Enhanced and Modern) render it. The Original style does not, and there the native menu is left to draw and close itself.
 
 `migratedAssignments` returns the settings' assignment table keyed by slot number. A table written before contract section 19 is keyed by ids derived from position (`slot:NORTH`), and turning those into numbers needs the slot list, which lives on the input profile, not in settings. So the fast path comes first: a table that is already all numbers needs no list and no work, which is every table after the first save. Only an old one waits for bindings, and it is read again the moment they arrive (see `syncControlBindings`). `migrateScheme` throws on a key it cannot read instead of dropping it, so a table that cannot be migrated fails loudly instead of silently losing rows.
 
@@ -446,7 +446,7 @@ The four capacity family rows of a profile, derived once per input. The creation
 
 ## hooks/randomizer/item-power-rows.ts
 
-The items tab's own reading of the item power rows: which of them the blade ticks have already decided, and what the seed will really be built with.
+The items tab's own reading of the item power rows: which of them the blade ticks have already decided, and what the seed will be built with.
 
 The rule that decides them is the generator's own (`item-power/`), not a copy written here: the same function the fill and the running game are armed from, so a switch can never show one thing while the seed does another. A masked row shows on and inert with the reason beside it, and the player's stored answer stays exactly where it was: unticking is what gives the question back, not this file.
 
@@ -523,7 +523,7 @@ The option keys a tab claims by name, not by catalog section. The reference proj
 
 ## hooks/randomizer/pond-preview
 
-The throw prices, as this seed really asks for them.
+The throw prices, as this seed asks for them.
 
 A throw that hands over a prize asks for the demand its rung was rolled with (`pond/pond-demand-seed.ts`), and that is what its chip shows: the currency's own sprite and the amount she wants. A throw that wins nothing still costs its rupee price, so its chip reads as it always did. An item demand carries no amount at all, so its chip is the item's drawing and its name (`chipTextOf`).
 
@@ -541,7 +541,7 @@ The pond row, derived: a setting turned into everything the row draws. Pure, so 
 
 `settingOfState` is the inverse of `stateOfSetting`. Its ask part is left out while it is the rupees-only reading an absent ask already means, so an untouched block stores exactly what it stored before the block existed.
 
-`pondRowModelOf`: `ceilings` is what the wallet, bag and quiver can hold. No range control offers a stop above its own, so no thumb can ask for more than the profile can ever pay. `demands` is what the profile's own seed rolled (`pond/pond-demand-seed.ts`), so the preview shows the throws as they will really be asked for; none leaves every throw reading as its rupee price. `walletNote` is the dearest single rupee throw on the way to the last prize: what the wallet must hold.
+`pondRowModelOf`: `ceilings` is what the wallet, bag and quiver can hold. No range control offers a stop above its own, so no thumb can ask for more than the profile can ever pay. `demands` is what the profile's own seed rolled (`pond/pond-demand-seed.ts`), so the preview shows the throws as they will be asked for; none leaves every throw reading as its rupee price. `walletNote` is the dearest single rupee throw on the way to the last prize: what the wallet must hold.
 
 ## hooks/randomizer/capacity-row-state
 
@@ -752,7 +752,7 @@ Stages the profile's selected player sprite for the next boot; the bridge writes
 
 The storage side of profile creation: generate the randomizer placement (local mode), create the profile, pin any frozen settings into its config, save the placement. It is kept apart from `useProfileManagement` so the hook only orchestrates state, and so a generation failure aborts before anything reaches disk: local mode generates before the profile exists, so a failed generation aborts creation instead of leaving a profile with no placement.
 
-The overrides are a creation form preset's config values, then any setting the randomizer pinned on top. The pin always wins, since it is what makes the frozen placement play correctly. They are merged over the freshly written (empty) config, so the values are on disk from day one.
+The overrides are a creation form preset's config values, then any setting the randomizer pinned on top. The pin always wins, since it is what makes the frozen placement play as stored. They are merged over the freshly written (empty) config, so the values are on disk from day one.
 
 `withDeliverable`: an online profile keeps the probed spots on its config, so the player file written later randomizes the same npc, pond and world spots a local seed of this profile would.
 

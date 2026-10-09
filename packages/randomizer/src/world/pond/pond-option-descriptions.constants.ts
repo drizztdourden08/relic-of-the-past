@@ -1,7 +1,7 @@
 /* @layer shared-game @kind constants */
 import { POND_INSTANCES } from './pond-instances';
 import { POND_SHARE_KEY } from './pond-share';
-import { POND_SHARE_DESCRIPTION } from './pond-description-lines.data';
+import { POND_SHARE_DESCRIPTION } from './pond-description-lines.constants';
 import { pondDescriptionsOf } from './pond-descriptions-of';
 import type { OptionDescription } from '../option-description.type';
 

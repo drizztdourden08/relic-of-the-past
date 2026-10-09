@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 
 const countsOf = (items: Iterable<ItemKey>): Map<ItemKey, number> => {
   const counts = new Map<ItemKey, number>();

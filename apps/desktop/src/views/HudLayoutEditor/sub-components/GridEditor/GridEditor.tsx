@@ -4,14 +4,15 @@ import { Box } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { useGridSolve } from '../../behavior/grid-solve';
 import { GridLattice, occupantsOf, rowCountFor } from '../GridLattice';
-import { contextualActions, gridActions } from './behavior/grid-actions';
+import { contextualActions } from './behavior/contextual-actions';
+import { gridActions } from './behavior/grid-actions';
 import { cellStateOf, selectionBounds } from './behavior/grid-cell-state';
 import { handleGridKey } from './behavior/grid-keys';
 import { chipOf, statusOf } from './behavior/grid-status';
 import { useGridSelection } from './behavior/useGridSelection';
 import { applyTrackEdit, trackExtentOf } from './behavior/grid-track-actions';
 import { SelectionLegend, SelectionToolbar } from '../SelectionBands';
-import './HudLayoutEditor.grid.css';
+import './GridEditor.css';
 import type { KeyboardEvent } from 'react';
 import type { CellRef, GridActionContext, GridEditorProps, TrackAxis } from './GridEditor.type';
 

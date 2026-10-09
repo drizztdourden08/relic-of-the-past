@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { METER_LEVEL_LABELS } from '../../world/capacity/capacity-ladders.data';
+import { METER_LEVEL_LABELS } from '../../world/capacity/capacity-ladders.constants';
 import { familyById } from '../../world/capacity/capacity-family';
 import type { CapacityFamilyId } from '@rotp/game-data';
 

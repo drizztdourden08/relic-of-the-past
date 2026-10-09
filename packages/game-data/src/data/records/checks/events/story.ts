@@ -3,7 +3,7 @@ import type { CheckRecord, Requirement, ScreenId } from '../../../types';
 import type { EventSpec } from '../../../checks/event-spec.type';
 import { ITEM_GROUP_IDS } from '../../../item-groups';
 import { canLiftHeavyRocks, canSeeInDarkRooms, hasBeamSword, hasFireSource, hasSword } from '../../../requirements/helpers';
-import { EVENT_BIT as E } from './event-bits.generated';
+import { EVENT_BIT as E } from './event-bits.constants';
 
 const P = { indicator: 0, flags: 1, indicator3: 2, follower: 13, startPoint: 19, mapIcons: 20 } as const;
 

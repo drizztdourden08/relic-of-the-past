@@ -6,7 +6,7 @@ import { canCollectLocation } from '../world/rules/collect';
 import { countsOf } from './counts-of';
 import { sweepAutoGrantedSlots } from './sweep-auto-granted-slots';
 import { worldFromPlacement } from './world-from-placement';
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { Placement } from '../world/fill/placement.type';
 import type { PlacementReach } from './placement-availability.type';

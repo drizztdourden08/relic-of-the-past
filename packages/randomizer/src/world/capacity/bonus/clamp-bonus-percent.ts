@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP } from './capacity-bonus.data';
+import { CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP } from './capacity-bonus.constants';
 
 const clampBonusPercent = (percent: number): number => {
   if (!Number.isFinite(percent)) return 0;

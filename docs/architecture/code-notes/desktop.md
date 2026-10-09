@@ -473,7 +473,7 @@ The create, update and delete engine the record facade collections share. Everyt
 
 ### screen-editor/enumeration-writer/
 
-Creating, relabelling or removing a closed set enumeration entry. No other collection references an entry's id (`reference-usage.ts`), so there is no delete guard half. Every successful write also regenerates `enumeration/enumeration.generated.type.ts`, which the `World`, `ScreenKind` and similar unions come from. Duplicates are keyed on the category and value pair, since two categories may share a value (`check-kind:npc` and `actor-kind:npc`). `category` always precedes `value`, but hand authored rows are one object per line while `literal()` emits one field per line, so the gap is matched as whitespace of any width.
+Creating, relabelling or removing a closed set enumeration entry. No other collection references an entry's id (`reference-usage.ts`), so there is no delete guard half. Every successful write also regenerates `enumeration/enumeration.type.ts`, which the `World`, `ScreenKind` and similar unions come from. Duplicates are keyed on the category and value pair, since two categories may share a value (`check-kind:npc` and `actor-kind:npc`). `category` always precedes `value`, but hand authored rows are one object per line while `literal()` emits one field per line, so the gap is matched as whitespace of any width.
 
 The type regeneration is best effort: the entry write already landed, so a failure is logged, not reported; the next edit or `npm run generate:enum-types` catches it up. `root` must be passed to `generateEnumTypes`: its default guess is relative to its own file, which is wrong from the bundled main and once crashed every production launch on a nonexistent `dist/shared/...` path.
 

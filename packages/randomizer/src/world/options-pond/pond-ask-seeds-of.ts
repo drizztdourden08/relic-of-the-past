@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_BOTTLE_ROW } from '../pond/pond-ask.data';
+import { POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_BOTTLE_ROW } from '../pond/pond-ask';
 import {
   pondAskBottleContentKeyOf, pondAskBottleKeyOf, pondAskItemKeyOf, pondAskKeyOf,
 } from '../pond/pond-ask-keys';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { getCheck } from '@rotp/game-data';
-import { WORLD_EVENT_IDS } from './story-events.data';
+import { WORLD_EVENT_IDS } from './story-events.constants';
 import type { RegionId } from '@rotp/game-data';
 import type { WorldEvent } from '../region.type';
 

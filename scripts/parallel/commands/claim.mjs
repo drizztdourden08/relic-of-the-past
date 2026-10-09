@@ -1,10 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt claim <name>` / `wt claim --any`: take a worktree for this session. `--any`
- * picks the least-drifted free worktree, refreshes it, leases it and prints the
- * launch command (seconds, against ~5 minutes for `wt new`). A worktree holding
- * uncommitted or unlanded work is never handed out, and a dirty tree is never rebased.
- */
 import { updateRegistry, findRecord } from '../registry.mjs';
 import { surveyAll } from '../survey.mjs';
 import { bestToClaim, VERDICTS } from '../verdict.mjs';
@@ -20,7 +14,6 @@ const resolveTtl = (raw) => {
   return ms;
 };
 
-/** Explain refusals in terms of what the agent should do instead. */
 const refuse = (name, verdict) => {
   if (verdict === VERDICTS.LEASED) {
     throw new Error(`"${name}" is leased by another session. Use --any, or wait for the lease to expire.`);
@@ -66,7 +59,6 @@ const run = async ({ positional, options }) => {
   const lease = await updateRegistry((registry) => {
     const live = findRecord(registry, record.name);
     if (!live) throw new Error(`"${record.name}" disappeared from the registry.`);
-    // Re-check under the lock: another agent may have claimed it since the survey.
     if (isHeld(live.lease)) throw new Error(`"${record.name}" was just claimed by ${live.lease.holder}. Try again.`);
     live.lease = makeLease(ttlMs);
     live.lastUsedAt = new Date().toISOString();

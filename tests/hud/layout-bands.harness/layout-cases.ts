@@ -1,7 +1,8 @@
 /* @layer tests @kind helper */
 import { createElement as h } from 'react';
 import { GridLattice, occupantsOf, rowCountFor } from '@app/views/HudLayoutEditor/sub-components/GridLattice';
-import { contextualActions, gestureActions } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-actions';
+import { contextualActions } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/contextual-actions';
+import { gestureActions } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/gesture-actions';
 import { cellStateOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-cell-state';
 import { chipOf, statusOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-status';
 import { trackExtentOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-track-actions';

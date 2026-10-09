@@ -11,8 +11,8 @@ const DIFFICULTY_HEARTS_HEADING = 'Hearts';
 
 const NO_RUNGS_NOTE = 'No rungs left in this family, so there is nothing to multiply.';
 
-const FIRST_STEP = COPY_MULTIPLIERS[0];
-const LAST_STEP = COPY_MULTIPLIERS[COPY_MULTIPLIERS.length - 1];
+const FIRST_STEP = Math.min(...COPY_MULTIPLIERS);
+const LAST_STEP = Math.max(...COPY_MULTIPLIERS);
 
 export {
   DIFFICULTY_CAPTION,

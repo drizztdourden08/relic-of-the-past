@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import {
   DEFAULT_RETRO_BOW, RETRO_BOW_KEY, RETRO_PRICE_CEILING, RETRO_SILVER_COST_KEY, RETRO_WOOD_COST_KEY,
-} from '../retro-bow.data';
+} from '../retro-bow.constants';
 import type { OptionValues } from '../../options.type';
 import type { RetroBowSetting } from '../retro.type';
 

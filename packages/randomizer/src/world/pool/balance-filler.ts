@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { REPLACEMENT_FILLER } from './balance-filler.constants';
 import { isFillerItem } from './is-filler-item';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { FillerPicker } from './pool.type';
 
 const lastFiller: FillerPicker = (count) => count - 1;

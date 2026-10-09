@@ -2,7 +2,7 @@
 import { normalizeEnabled } from '../shop-scope';
 import {
   DEFAULT_SHOP_SHUFFLE_MODE, DEFAULT_SHOP_SLOT_DEPTH, SHOP_SLOT_ROWS,
-} from '../shop-slot-options.data';
+} from '../shop-slot-options';
 import type { ShopScope } from '../shop-scope.type';
 
 const defaultShopScope = (): ShopScope => ({

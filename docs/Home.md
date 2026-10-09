@@ -33,7 +33,7 @@ flowchart LR
 - **C / WASM core** (`core/`): the vendored decompilation plus *our* hook layer (`game-hooks/`)
   that exposes ~79 `Wasm*` functions and fires `GameHook_*` callbacks. See
   [The WASM Bridge](architecture/wasm-bridge.md).
-- **Bridge** (`apps/desktop/src/lib/game/`): the only TypeScript that talks to the WASM module.
+- **Bridge** (`packages/game-core/src/bridge/`): the TypeScript wrappers that call into the WASM module.
 - **TS app:** the Electron main process (ROMs, profiles, saves, HID) and the React renderer
   (UI, HUD, widgets, navigation overlay).
 
@@ -43,6 +43,6 @@ Pre-release and in active development, so expect rough edges.
 
 ---
 
-> 📌 **This wiki is generated from the [`docs/`](https://github.com/drizztdourden08/relic-of-the-past/tree/master/docs)
+> **This wiki is generated from the [`docs/`](https://github.com/drizztdourden08/relic-of-the-past/tree/master/docs)
 > folder in the main repo, which is the source of truth.** Edit the docs there; the wiki is synced
 > automatically. Don't edit wiki pages directly (changes will be overwritten).

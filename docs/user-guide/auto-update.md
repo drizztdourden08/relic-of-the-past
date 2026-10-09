@@ -9,7 +9,7 @@ applies them for you, and only the parts that changed come down.
 ## How It Works
 
 1. **On startup** the app checks the releases page five seconds after launch
-2. **Manual check** from Menu → Advanced → **Check for Updates** whenever you want
+2. **Manual check** whenever you want, from the menu under Advanced, with **Check for Updates**
 3. **Notification** puts an indicator in the title bar when a newer version exists
 4. **Download** runs inside the app, with a progress bar, when you accept
 5. **Restart** happens on its own: the app closes, the update is applied in about two
@@ -24,11 +24,11 @@ downloaded, so a typical update is a few MB, not the whole app.
 
 | Platform | Build | Auto-Update |
 |----------|-------|-------------|
-| Windows | Installer | ✅ Yes, downloading only what changed |
-| Windows | Portable | ✅ Yes, in place |
-| Linux | AppImage | ✅ Yes, replaces the AppImage |
-| Linux | .deb | ❌ No, download a new package |
-| macOS | DMG | ⚠️ Checks and tells you, but you download it yourself |
+| Windows | Installer | Yes, downloading only what changed |
+| Windows | Portable | Yes, in place |
+| Linux | AppImage | Yes, replaces the AppImage |
+| Linux | .deb | No, download a new package |
+| macOS | DMG | Partial: checks and tells you, but you download it yourself |
 
 On macOS the app can see that an update exists and shows you the release notes, but it
 can't install it: applying an update there requires an Apple-notarized signature this

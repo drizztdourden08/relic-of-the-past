@@ -7,11 +7,12 @@ const sampleFlakyBytes = (latestBytesRef: { current: Uint8Array }, excluded: Rea
     const mins: number[] = [];
     const maxs: number[] = [];
     const sample = () => {
-      const bytes = latestBytesRef.current;
-      for (let i = 0; i < bytes.length; i++) {
-        if (mins[i] === undefined || bytes[i] < mins[i]) mins[i] = bytes[i];
-        if (maxs[i] === undefined || bytes[i] > maxs[i]) maxs[i] = bytes[i];
-      }
+      latestBytesRef.current.forEach((value, i) => {
+        const min = mins[i];
+        const max = maxs[i];
+        if (min === undefined || value < min) mins[i] = value;
+        if (max === undefined || value > max) maxs[i] = value;
+      });
     };
     sample();
     const interval = setInterval(sample, FLAKY_SAMPLE_INTERVAL_MS);

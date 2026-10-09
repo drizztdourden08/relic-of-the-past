@@ -4,7 +4,7 @@ import { stageCellRects } from '../../behavior/stage-cells';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { hull } from './behavior/hull';
 import { DEFAULT_GUIDE } from './StageGridEcho.constants';
-import '../GridEditor/HudLayoutEditor.grid.css';
+import '../GridEditor/GridEditor.css';
 import type { HudGridContainer, PlacedNode } from '@rotp/hud';
 import type { StageGridEchoProps } from './StageGridEcho.type';
 

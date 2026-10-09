@@ -7,7 +7,7 @@ import { resolveAudioConfig } from './resolve-audio-config';
 const resolveMsuPlayback = (settings: GameSettings, pack: MsuPackProfile | null) => {
   const resolved = resolveAudioConfig(settings, pack);
   return {
-    enabled: !settings.vanillaSafe && !!pack && resolved.enableMSU !== 'false',
+    enabled: !settings.vanillaSafe && Boolean(pack) && resolved.enableMSU !== 'false',
     isDeluxe: pack?.isDeluxe ?? isDeluxeMode(resolved.enableMSU),
     resolved,
   };

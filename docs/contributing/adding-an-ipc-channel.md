@@ -6,19 +6,20 @@ end-to-end against a single contract in `apps/desktop/src/ipc/`, so the compiler
 three sites (handler, preload, renderer) in sync without relying on convention. See
 [Electron & IPC](../architecture/electron-ipc.md) for the architecture.
 
-> **Golden rule:** reach for the typed wrappers in `electron/lib/ipc/` instead of
-> calling `ipcMain` / `ipcRenderer` / `webContents.send` directly. Its two folders,
-> `handle/` and `bridge/`, are the only place raw Electron IPC belongs.
+> **Golden rule:** reach for Brock's typed wrappers (`handle`/`emit` from
+> `@drizztdourden08/brock-electron/main`, the preload bridge from
+> `@drizztdourden08/brock-electron/preload`) instead of calling `ipcMain` / `ipcRenderer` /
+> `webContents.send` directly. Raw Electron IPC belongs inside Brock, never in app code.
 
 ## Pick the direction
 
 | Direction | Contract | Main | Preload |
 |-----------|----------|------|---------|
-| Request → response | `InvokeContract` | `handle` | `invoke` |
-| Renderer → main, fire-and-forget | `SendContract` | `on` | `send` |
-| Main → renderer event | `EventContract` | `emit` | `subscribe` |
+| Request and response | `InvokeContract` | `handle` | `invoke` |
+| Renderer to main, fire-and-forget | `SendContract` | `on` | `send` |
+| Main to renderer event | `EventContract` | `emit` | `subscribe` |
 
-Channels are named **`domain:action`** (e.g. `profiles:list`, `saves:normal:create`).
+Channels are named **`domain:action`** (e.g. `msu:listPacks`, `msu:optimize:run`).
 
 ## Steps (invoke example: `foo:get`)
 
@@ -33,24 +34,24 @@ and extend `InvokeContract` with it. This is the single source of truth for the 
 'foo:get': (id: string) => Promise<FooResult>;
 ```
 
-### 2. Map a friendly name in `apps/desktop/src/ipc/maps/invoke-map.data.ts`
+### 2. Map a friendly name in `apps/desktop/src/ipc/contract.constants.ts`
 
-Add one line to `INVOKE_MAP`, the only place the method↔channel link is written.
-`satisfies` rejects a typo'd channel. `IpcApi` (the `window.api` type, in
-`apps/desktop/src/ipc/api.type.ts`) and the preload method are derived automatically, so
-`apps/desktop/src/env.d.ts` stays untouched.
+Add one entry to `APP_CHANNELS`, the only place the link between a method and its channel
+is written. The `invoke<...>()` helper ties the entry to the contract, so a typo'd channel
+does not compile. `AppApi` (the `window.api` type, in `apps/desktop/src/ipc/app-api.type.ts`)
+and the preload method are derived automatically.
 
 ```ts
-getFoo: 'foo:get',
+getFoo: invoke<RotpInvoke['foo:get']>()('foo:get'),
 ```
 
-### 3. Implement the handler in `electron/<domain>/ipc-handlers.ts`
+### 3. Implement the handler in `apps/desktop/electron/<domain>/ipc-handlers.ts`
 
 Use the typed `handle`; args and return type are inferred from the contract, so a
 mismatch won't compile:
 
 ```ts
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 
 const registerFooHandlers = (): void => {
   handle('foo:get', (_event, id) => getFoo(id)); // id: string, must return Promise<FooResult>
@@ -59,33 +60,45 @@ const registerFooHandlers = (): void => {
 export { registerFooHandlers };
 ```
 
-Register it by adding to the `IPC_HANDLERS` list in
-`electron/startup/ipc-handlers.constants.ts` (`{ register: registerFooHandlers }`,
-or `{ register, devOnly: true }` for dev-only tools).
+Register it from the domain's handler group,
+`apps/desktop/electron/handlers/foo-handlers.ts`:
+
+```ts
+import type { HandlerGroup } from '@drizztdourden08/brock-electron/main';
+import { registerFooHandlers } from '../foo/ipc-handlers';
+
+const fooHandlers: HandlerGroup = { id: 'foo', register: () => registerFooHandlers() };
+
+export { fooHandlers };
+```
+
+`brock sync` picks up every file in `electron/handlers/` and writes the generated
+`apps/desktop/.brock/handlers.main.ts`. Name the file `foo-handlers.dev.ts` for a dev-only tool.
 
 ### 4. Preload usually needs nothing
 
-Flat methods are generated from the maps by `buildInvoke`/`buildSend`/`buildEvents`
-(`electron/lib/ipc/bridge/`) in `electron/preload.ts`. The nested namespaces (`updater`, `shadowCasting`,
-`screenEditor`) are wired by hand, so add there with the typed `invoke`/`subscribe`
-if your channel belongs to one.
+Flat methods are generated from the maps by `createPreloadBridge` in
+`apps/desktop/electron/preload.ts`. The nested namespaces (`shadowCasting`, `screenEditor`)
+are wired by hand in `apps/desktop/electron/preload-namespaces/`, so add there with the
+typed `invoke` if your channel belongs to one.
 
-Call it from the renderer as `window.api.getFoo(id)`. The types come through.
+Call it from the renderer as `appApi().getFoo(id)` (`apps/desktop/src/ipc/app-api.ts`). The
+types come through.
 
 ## Events (`emit` / `subscribe`)
 
-Add to `EventContract` (the value is the listener signature), then to
-`EVENT_MAP` (`apps/desktop/src/ipc/maps/event-map.data.ts`) as `onFooChange: 'foo:change'`. Emit from main with
-`emit(win, 'foo:change', payload)`; the renderer gets `window.api.onFooChange(cb)`
+Add to `EventContract` (the value is the listener signature), then to `APP_CHANNELS` as
+`onFooChange: event<RotpEvent['foo:change']>()('foo:change')`. Emit from main with
+`emit(win, 'foo:change', payload)`; the renderer gets `appApi().onFooChange(cb)`
 returning an unsubscribe function (generated).
 
 ## Checklist
 
 - [ ] Channel named `domain:action`, with the correct direction (invoke/send/event).
 - [ ] Signature added to the matching contract in `apps/desktop/src/ipc/`.
-- [ ] Method↔channel line added to the join map (flat methods), or wired in a
-      nested namespace (preload). Leave `env.d.ts` alone.
-- [ ] Handler uses the typed `handle`/`on`/`emit` and is listed in `IPC_HANDLERS`.
-- [ ] Raw `ipcMain`/`ipcRenderer`/`webContents.send` stays inside `electron/lib/ipc/`.
+- [ ] Entry added to `APP_CHANNELS` (flat methods), or wired in a nested namespace (preload).
+- [ ] Handler uses the typed `handle`/`on`/`emit` and is registered from a handler group in
+      `apps/desktop/electron/handlers/`.
+- [ ] No raw `ipcMain`/`ipcRenderer`/`webContents.send` in app code.
 - [ ] `pnpm run lint` green (the contract makes any drift a type error).
 - [ ] No native module imported into the renderer, and no security flags weakened.

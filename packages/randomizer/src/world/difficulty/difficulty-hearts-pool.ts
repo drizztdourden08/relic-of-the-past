@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
-import type { ItemKey } from '../item-ids.data';
-import { REPLACEMENT_ITEM } from '../progressive/progressive-families.data';
-import { PIECES_PER_HEART, STARTING_HEARTS, asHeartCap } from './difficulty.data';
+import { ITEM } from '../item-ids';
+import type { ItemKey } from '../item-ids';
+import { REPLACEMENT_ITEM } from '../progressive/progressive-families.constants';
+import { PIECES_PER_HEART, STARTING_HEARTS, asHeartCap } from './difficulty';
 import { countInPool } from './count-in-pool';
 import { heartGrowthOf } from './heart-growth-of';
 

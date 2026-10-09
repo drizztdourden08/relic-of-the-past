@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { ActorId, CheckId, DungeonId, ItemGroupId, ItemId, RegionId, ScreenId, TagId } from '../ids';
-import type { CheckKind } from '../../enumeration/enumeration.generated.type';
+import type { CheckKind } from '../../enumeration/enumeration.type';
 import type { ReviewMark } from '../review';
 
 interface CheckGameId {

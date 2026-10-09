@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Controller Calibration
 
-The **Input Calibration** view, reached from Menu → controller diagnostics or the input-tester page,
+The **Input Calibration** view, reached from the menu's controller diagnostics or the input-tester page,
 detects your controller and tunes its analog inputs. It pairs with
 [Input & Controllers](input-controllers.md) for button mapping and [Haptics](haptics.md) for rumble.
 
@@ -11,7 +11,7 @@ detects your controller and tunes its analog inputs. It pairs with
 - **Stick calibration wizard:** rotate each stick through its full range. The tool fits that range and
   lets you set a dead zone per stick, with a tester circle showing the live stick position.
 - **Trigger calibration:** per analog axis such as L2 and R2: base value, max value, and deadzone, so
-  partial presses and resting values read correctly.
+  partial presses register and a resting trigger reads as released.
 - **Button mapping check:** press buttons to see them light up and confirm the device reports what you
   expect.
 - **Vibration test:** fire rumble to confirm haptics work on the device.

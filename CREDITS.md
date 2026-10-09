@@ -1,7 +1,7 @@
 <!-- @layer root-config @kind doc -->
 # Credits
 
-> Keep in sync with `shared/credits.ts`
+Keep in sync with the credits data in `apps/desktop/src/credits/`.
 
 > **Disclaimer:** This is an unofficial fan-made/open-source project. It is not affiliated with,
 > endorsed by, sponsored by, or approved by Nintendo. Nintendo, The Legend of Zelda, and related

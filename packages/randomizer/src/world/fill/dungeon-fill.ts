@@ -6,7 +6,7 @@ import {
   BIG_KEY_RANK, OTHER_DUNGEON_ITEM_RANK, SMALL_KEY_RANK, SPECIFIC_SORT_BONUS,
 } from './fill.constants';
 import type { Rng } from '../../rng';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { FillWorld } from './fill-world.type';
 
 const prefillDungeonItems = (fillWorld: FillWorld, rng: Rng): void => {

@@ -40,7 +40,7 @@ describe('generateEnumTypes(root) lets an explicit root win over the file-relati
 
     const outputPath = await generateEnumTypes(tempRoot);
 
-    expect(outputPath).toBe(join(enumDir, 'enumeration.generated.type.ts'));
+    expect(outputPath).toBe(join(enumDir, 'enumeration.type.ts'));
     const generated = readFileSync(outputPath, 'utf-8');
     expect(generated).toContain("type World = 'light' | 'dark';");
   });

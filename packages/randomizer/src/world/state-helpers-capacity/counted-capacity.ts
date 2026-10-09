@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { CAPACITY_SHOP } from '../capacity/capacity-shop.data';
+import { CAPACITY_SHOP } from '../capacity/capacity-shop.constants';
 import { familySettingOf } from './family-setting-of';
 import { tierReached } from './tier-reached';
 import { walletCapacity } from './wallet-capacity';

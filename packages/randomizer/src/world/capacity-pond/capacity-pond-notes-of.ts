@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { CAPACITY_POND_NOTES } from './capacity-pond-notes.data';
+import { CAPACITY_POND_NOTES } from './capacity-pond-notes.constants';
 import { anyFedFamilyInPool } from './any-fed-family-in-pool';
 import { isPondActive } from './is-pond-active';
 import type { CapacityPondSelection } from './capacity-pond-rule.type';

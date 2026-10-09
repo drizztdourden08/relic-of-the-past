@@ -17,28 +17,35 @@ flowchart LR
 Every channel's signature lives once, in a channel-keyed contract under
 `apps/desktop/src/ipc/`. The preload, the main-process handlers, and the renderer's
 `window.api` are all type-checked against it, so a wrong channel name, argument,
-or return type is a compile error in any of the three.
+or return type is a compile error in any of the three. The IPC machinery itself
+(channel maps, typed wrappers, the preload bridge) comes from Brock
+(`@drizztdourden08/brock-core` and `@drizztdourden08/brock-electron`); the app supplies
+only its own channels.
 
 - Contracts (`apps/desktop/src/ipc/`) are the single source of truth, split by direction:
-  `InvokeContract` (request→response, `invoke`/`handle`), `SendContract`
-  (fire-and-forget renderer→main, `send`/`on`), and `EventContract` (main→renderer,
-  `emit`/`subscribe`). Each lives in its own `*-contract.type.ts`; `InvokeContract`
-  joins one contract per domain (`apps/desktop/src/ipc/invoke/` and the `<domain>-contract`
+  `InvokeContract` (request and response, `invoke`/`handle`), `SendContract`
+  (fire-and-forget from renderer to main, `send`/`on`), and `EventContract` (main to
+  renderer, `emit`/`subscribe`). `contract.type.ts` adds the app's channels to Brock's
+  contract interfaces. The invoke side joins one contract per domain
+  (`invoke-contract.type.ts`, `apps/desktop/src/ipc/invoke/`, and the `<domain>-contract`
   files beside it).
-- The join maps (`apps/desktop/src/ipc/maps/*.data.ts`: `INVOKE_MAP`, `SEND_MAP`, `EVENT_MAP`)
-  are the only tables linking a friendly `window.api` method name to its channel.
-  `IpcApi` (the `window.api` type, in `apps/desktop/src/ipc/api.type.ts`, which
-  `apps/desktop/src/env.d.ts` puts on `window`) is derived from the contracts and maps, so a
-  method's signature is never hand-written twice.
-- Typed wrappers cover both sides. Main uses `handle`/`on`/`emit` (`electron/lib/ipc/handle/`);
-  preload uses `invoke`/`send`/`subscribe` plus the `buildInvoke`/`buildSend`/`buildEvents`
-  factories (`electron/lib/ipc/bridge/`). Raw `ipcMain`/`ipcRenderer`/
-  `webContents.send` appear only in these two folders.
+- `APP_CHANNELS` (`apps/desktop/src/ipc/contract.constants.ts`, built with Brock's
+  `defineChannels`) is the only table linking a friendly `window.api` method name to its
+  channel; `APP_INVOKE_MAP`, `APP_SEND_MAP` and `APP_EVENT_MAP` are its three halves.
+  `AppApi` (the `window.api` type, in `apps/desktop/src/ipc/app-api.type.ts`) is derived from
+  Brock's base maps plus these, so a method's signature is never hand-written twice. Renderer
+  code reaches it through `appApi()` (`apps/desktop/src/ipc/app-api.ts`).
+- Typed wrappers cover both sides. Main uses `handle`/`emit` from
+  `@drizztdourden08/brock-electron/main`; the preload (`apps/desktop/electron/preload.ts`)
+  calls `createPreloadBridge` from `@drizztdourden08/brock-electron/preload` with the composed
+  maps. App code never touches raw `ipcMain`/`ipcRenderer`/`webContents.send`.
 - The preload's flat methods are generated from the maps; nested namespaces
-  (`updater`, `shadowCasting`, `screenEditor`) are wired explicitly via `invoke`.
-- Each domain registers its handlers via a `register*()` function, listed in the
-  declarative `IPC_HANDLERS` (`electron/startup/ipc-handlers.constants.ts`) and registered
-  by `electron/startup/register-ipc-handlers.ts` (dev-only domains gated there).
+  (`shadowCasting`, `screenEditor`) are wired explicitly in
+  `apps/desktop/electron/preload-namespaces/`.
+- Each domain exports a `HandlerGroup` from `apps/desktop/electron/handlers/<domain>-handlers.ts`,
+  whose `register` calls the domain's `register*()` functions. `brock sync` collects every
+  group into the generated `apps/desktop/.brock/handlers.main.ts`, and groups in a `*.dev.ts`
+  file load in development only.
 - To add a channel, see [Adding an IPC Channel](../contributing/adding-an-ipc-channel.md)
   or the `electron` skill.
 
@@ -46,27 +53,30 @@ or return type is a compile error in any of the three.
 
 | Domain | Responsibility |
 |--------|----------------|
-| `profiles/` | Profile CRUD, last-played, app state. |
-| `roms/` | Import (file/URL), list, delete, ROM info. |
 | `assets/` | Check / load / extract `zelda3_assets.dat`. |
-| `saves/` | Save-state slots, screenshots, auto-state, config read/write. |
 | `sprites/` | Per-ROM sprite extraction + the sprite-debug store. |
 | `languages/` | Translation extraction + dialogue. |
 | `msu/` | MSU-1 pack import, listing, track files. |
 | `input/` | Input profiles + stick/trigger calibration; HID enumeration, read, write, vibrate. |
 | `connections/` · `screen-editor/` | Navigation connection/nav review + (dev) screen editing. |
 | `shadow-casting/` | Per-screen heightmap + lighting data. |
-| `sessions/` | Play-session history. |
-| `updater/` | Auto-update check/download/install. |
-| `protocol/` | Custom protocols (e.g. `app-sprite://`). |
-| `window/` · `dialogs/` | Window state (fullscreen, always-on-top, aspect lock), native dialogs. |
-| `debug/` · `test/` | `--dump-layers`/`--dump-nav` exporters and `--auto-state`/`--screenshot` test hooks. |
+| `hub/` · `sanctuary/` · `store/` | Hub sign-in, bug reports, and the community store. |
+| `recommendations/` · `documents/` · `diagnostics/` | Data-inspector recommendations, documents, debug reports. |
+| `tools/` | External tools such as ffmpeg. |
+| `protocol/` | The app's own custom protocols (e.g. `app-debug-capture://`). |
+| `debug/` · `automation/` | `--dump-layers`/`--dump-nav` exporters and `--auto-state`/`--screenshot` test hooks. |
+
+Shared domains come from Brock and do not live in this folder. Profiles, sessions, native
+dialogs, windows, storage and the `app-sprite://` scheme are part of
+`@drizztdourden08/brock-electron`; ROM identification and save states are in the `port-kit`
+module; auto-update is the `updater` module. `apps/desktop/brock.config.ts` lists the modules
+the app uses.
 
 ## Native modules
 
-The SDL3 controller addon lives only in the main process, not in `shared/` or the renderer.
-Controller input is read in main and forwarded to the renderer already decoded, via the
-`controller:*` channels; see [Input & Controllers](../user-guide/input-controllers.md) and
+The SDL3 controller addon lives only in the main process, never in a package or the renderer.
+It ships with Brock's `input` module. Controller input is read in main and forwarded to the
+renderer already decoded, via that module's `input:*` channels; see [Input & Controllers](../user-guide/input-controllers.md) and
 [Haptics](../user-guide/haptics.md).
 
 ## CLI / automation flags

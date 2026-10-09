@@ -48,7 +48,7 @@ Renders a placement's spoiler as text: the seed line, the two rolled medallions,
 
 Who this game is to an Archipelago server. `AP_GAME` is the game name a slot registers under, so it must match the world package exactly. `AP_ID_BASE` is the first numeric id the world owns: locations count up from it, and items from `AP_ITEM_ID_OFFSET` above it, so no item id can meet a location id. `AP_WORLD_VERSION` is the version of the world package that carries those tables.
 
-### archipelago/ap-ids.data
+### archipelago/ap-ids.constants
 
 Generated, then frozen: the Archipelago numeric id of every location and item this game can put in a multiworld, and the name the server shows for each. The tables are append only. A seed already generated carries these numbers, so an id handed out is never changed, reused or removed; a new key takes the next free id at the end of its table. `tests/randomizer/ap-ids.keep.test.ts` pins every id in use and fails on any edit to one. A story event carries no id: the world package creates it as an Archipelago event, which Archipelago gives none.
 
@@ -142,7 +142,7 @@ Everything one profile's world settles, as the package reads it: which locations
 
 ## ROM audit
 
-### audit/anchor-checks.data
+### audit/anchor-checks.constants
 
 Live-verified crosswalk anchors: each check paired with the room id and chest index it was confirmed to occupy in the native chest table. They are keyed by check id, because a record has one name and an audit that named a row by text would go stale the moment the name was edited. `strideGroups` lists checks expected to occupy consecutive chest-table entries, in listed order.
 
@@ -233,7 +233,7 @@ The jump one capacity upgrade performs, as receipt text. A receipt shows the jum
 
 ### receipt-text/capacity-rung-values
 
-What one capacity climb reads as on the receipt, for example "Your bomb bag swells 2 tiers. 10 > 20. 50 is the ceiling." The numbers are the point (tiers jumped, the capacity before and after, and where the family is headed), carried by a sentence the game would say. A rung reads as the family's own ladder entry (`capacity-ladders.data.ts`). The meter is the exception: its bar never grows, because its rungs are the cost tiers the game has, so a meter climb names those (none, normal, half, quarter). The wallet counts in rupee caps.
+What one capacity climb reads as on the receipt, for example "Your bomb bag swells 2 tiers. 10 > 20. 50 is the ceiling." The numbers are the point (tiers jumped, the capacity before and after, and where the family is headed), carried by a sentence the game would say. A rung reads as the family's own ladder entry (`capacity-ladders.constants.ts`). The meter is the exception: its bar never grows, because its rungs are the cost tiers the game has, so a meter climb names those (none, normal, half, quarter). The wallet counts in rupee caps.
 
 The ceiling sentence names the plan's final rung, not the next one (a phrase like "on the way to" read as the next pickup's rung, which it never was); on the last rung it says the climb has arrived. The composer may drop it when the box is short of rows, so the jump and the two values always survive. The family label carries the primary highlight, as an item name does, and opens a possessive clause so it reads as speech. Each family has its own growth verb so the four lines do not read as one template; the verb takes an "s" for a family whose label is a singular noun. The climb is the receipt's second page: the first is the line every item gets in that context, and the core joins the two (`receipt_pages.c`).
 
@@ -300,7 +300,7 @@ Counted amounts reuse the shop's price labels. A one-count label drops its plura
 
 ### world/display-names/item-key-name
 
-The engine keys items by id. This is the only place a name is made, and only for something shown: a receipt line, a spoiler line, a tracker row. An item with no record carries its own name behind the unrecorded prefix (see `item-ids.data.ts`), so one call answers for both. Another player's item from an online placement has no record either, and answers with the foreign item name.
+The engine keys items by id. This is the only place a name is made, and only for something shown: a receipt line, a spoiler line, a tracker row. An item with no record carries its own name behind the unrecorded prefix (see `item-ids.constants.ts`), so one call answers for both. Another player's item from an online placement has no record either, and answers with the foreign item name.
 
 `itemKeyOfName` goes the other way. Two callers need it, and both receive a name at a boundary: an online server sends a granted item as a name, because names are the wire protocol, and the counter catalog mints its rungs as names by formula. A name no record answers for comes back as the unrecorded key for that name, never undefined.
 
@@ -356,9 +356,9 @@ One dungeon as the rules and the fill see it, read off its record. The engine us
 
 ### world/final-fight.constants
 
-What the final fight asks of the bow, read off the core. The evidence, all in the vendored core (read only, never edited here): in `sprite_main.c`, the boss sprite's state 16, after the fourth ceiling fall the last phase opens with `sprite_health[k] = 96`. In the boss sprite's invincibility helper, a blade hit that lands while the hit timer reads 26 stuns the boss for 127 frames and switches its sprite type from 0xD6 to 0xD7 (`sprite_type[k] = 215`); state 19 switches it back. In `ancilla.c` `Ancilla_CheckDamageToSprite_aggressive`, an arrow (damage class 6) fired from the silver bow (`link_item_bow >= 3`) is promoted to class 9, and a class-9 hit on type 0xD7 starts the 32-frame recoil. The enemy damage table the ROM ships (asset `kEnemyDamageData` at 0x83e800, one nibble per damage class, unpacked by `DecompressEnemyDamageSubclasses`) gives type 0xD7 bucket 2 for class 9 and bucket 0 for every other class, and type 0xD6 bucket 0 for both arrow classes, so only a silver shot on the stunned form scores at all. In `sprite.c`, `kEnemyDamages[9 * 8 + 2] = 24` per such hit, and `Sprite_GiveDamage` ends the sprite the moment health minus damage reaches zero. 96 / 24 = 4 exactly: four silver shots, each landed on a fresh stun, and nothing can be farmed between them. Every reading that depends on the count (the final fight's rule, the retro wallet floor, the arrow capacity floor) takes it from here. `final-fight.data` re-exports these under the path the app imports.
+What the final fight asks of the bow, read off the core. The evidence, all in the vendored core (read only, never edited here): in `sprite_main.c`, the boss sprite's state 16, after the fourth ceiling fall the last phase opens with `sprite_health[k] = 96`. In the boss sprite's invincibility helper, a blade hit that lands while the hit timer reads 26 stuns the boss for 127 frames and switches its sprite type from 0xD6 to 0xD7 (`sprite_type[k] = 215`); state 19 switches it back. In `ancilla.c` `Ancilla_CheckDamageToSprite_aggressive`, an arrow (damage class 6) fired from the silver bow (`link_item_bow >= 3`) is promoted to class 9, and a class-9 hit on type 0xD7 starts the 32-frame recoil. The enemy damage table the ROM ships (asset `kEnemyDamageData` at 0x83e800, one nibble per damage class, unpacked by `DecompressEnemyDamageSubclasses`) gives type 0xD7 bucket 2 for class 9 and bucket 0 for every other class, and type 0xD6 bucket 0 for both arrow classes, so only a silver shot on the stunned form scores at all. In `sprite.c`, `kEnemyDamages[9 * 8 + 2] = 24` per such hit, and `Sprite_GiveDamage` ends the sprite the moment health minus damage reaches zero. 96 / 24 = 4 exactly: four silver shots, each landed on a fresh stun, and nothing can be farmed between them. Every reading that depends on the count (the final fight's rule, the retro wallet floor, the arrow capacity floor) takes it from here. `final-fight` re-exports these under the path the app imports.
 
-### world/region-ids.data
+### world/region-ids.constants
 
 The regions the logic helpers name directly, by id. A region is a record, so these are ids and the collection says which place each one is. `start` is the graph's own root (Menu): a place in the rules and nowhere in the game. `coldBeeCave` is the Good Bee Cave. `potionSeller` is the one shop selling unlimited green and blue potions, which is what the magic-extension branch of `can_extend_magic` reaches for. `capacityFairy` is the fairy's room where a vanilla bomb or arrow family is bought up to its top rung. `mountainShop` is the Light World Death Mountain Shop, the one region the reference's bunny pass handles apart. `desertPalaceOuter` is Desert Palace Main (Outer). `turtleRockTop` is the mountain plateau above Turtle Rock, not a room in it. `turtleRockSecondSection`, `eastDarkWorld`, `bigBombShop`, `blacksmithsHut` and `sanctuary` are what their names say.
 
@@ -370,7 +370,7 @@ World-zone marking: the port of `mark_light_world_regions` from Archipelago worl
 
 Region reachability sweep: the port of the reference generator's `update_reachable_regions` and `can_reach` semantics (python BaseClasses, as exercised by Archipelago worlds/alttp/Regions.py). The sweep starts from the start region and repeats full passes until no new region is admitted: a rule may read the partially built reachable set (event logic), and the retry passes mirror the python blocked-connection retries. Rules are monotone in collected items and reachability, so the fixpoint terminates. `computeReachableRegions` runs a fresh sweep and returns a copy of the reachable set.
 
-### world/pool-item-overrides.data
+### world/pool-item-overrides.constants
 
 Which item the baseline pool puts at a check, where it differs from the item the record names, keyed by the check's own id. This is translation and not a fact: the record says exactly what the unmodified game hands over at that spot; the baseline pool is stated in its own terms, and the two disagree wherever the pool models a family instead of a tier. Progressive gear stands in for the concrete tier: the four Progressive Swords cover the uncle's (`check-017`), the smithy's once the pair is reunited (`check-039`), the pedestal's (`check-072`) and the cursed water's (`check-266`); Progressive Bow covers her second grant (`check-267`); Progressive Shield covers the wishing water's second grant (`check-022`); Progressive Ocarina covers the flute spot's (`check-008`). A boss's heart container is the pool's own boss-drop item, never the pickup the game hands over (the ten boss checks). The three in-dungeon standing keys (`check-126`, `check-135`, `check-235`) name their per-dungeon key, which is removed from that dungeon's restricted set and not from the global pool. The wishing water (`check-021`) holds a red boomerang in the unmodified game, and so does the village hut's chest, but the pool holds one of each colour, so her slot takes the pool's blue one. Everything else reads its own record: a bottle gift is a plain bottle in both vocabularies, and so is every heart piece, rupee pile and key drop.
 
@@ -402,9 +402,9 @@ Capacity-aware readings of the collection state, over the family ladders: the fi
 
 ### world/state-helpers
 
-Equipment and capacity helpers ported from Archipelago worlds/alttp/StateHelpers.py (python `has_sword`, `has_beam_sword`, `has_melee_weapon`, `can_lift_rocks`, `can_lift_heavy_rocks`, `has_fire_source`, `can_melt_things`, `can_shoot_arrows`, `can_hold_arrows`, `can_use_bombs`, `can_bomb_or_bonk`, `bottle_count`, `heart_count`, `has_hearts`, `can_extend_magic`, `can_buy`, `can_buy_unlimited`). Baseline options are fixed: normal difficulty and item functionality, bombless start off, swordless off. Retro bow is a setting read off the world. The capacity readings come from the world's capacity profile, so the reference's shuffle-on and shuffle-off branches both live there. `BASELINE` is the normal-difficulty logic limits (python ItemPool `difficulties['normal']`).
+Equipment and capacity helpers ported from Archipelago worlds/alttp/StateHelpers.py (python `has_sword`, `has_beam_sword`, `has_melee_weapon`, `can_lift_rocks`, `can_lift_heavy_rocks`, `has_fire_source`, `can_melt_things`, `can_shoot_arrows`, `can_hold_arrows`, `can_use_bombs`, `can_bomb_or_bonk`, `bottle_count`, `heart_count`, `has_hearts`, `can_extend_magic`, `can_buy`, `can_buy_unlimited`). Baseline options are fixed: normal difficulty and normal `item_functionality`, bombless start off, swordless off. Retro bow is a setting read off the world. The capacity readings come from the world's capacity profile, so the reference's shuffle-on and shuffle-off branches both live there. `BASELINE` is the normal-difficulty logic limits (python ItemPool `difficulties['normal']`).
 
-Swordless is off in the baseline, so the medallion path of melting needs a sword. Shop purchases are out of scope (no shop pool): the python `can_buy` and `can_buy_unlimited` walk the shop objects, so anything that reaches for them is a porting error until shops are modeled. Arrows: with retro on there is no ammunition to carry, so the quiver becomes the question (held as a placed item where the shops are shuffled, bought off its shelf where they are not); with retro off an arrow capacity on the empty rung holds no arrow to fire. Bombs: the explosives capacity reached, against the 50 cap; a world carrying the player's own record asks one thing more, because the capacity is non-zero from the first frame and a player who has never found a bomb cannot throw one. A fill has no record, so there it is the reference reading exactly. Four pieces make a heart. The total magic check (python `can_extend_magic`, StateHelpers.py 70 to 84): 8 units at full cost, 16 at half, 32 at quarter, 0 without magic. The purchase branch (77 to 83): with an unlimited green or blue potion seller reachable, each carried bottle refills the meter; under normal item functionality that multiplies base magic by bottle count regardless of the full-refill flag (the hard and expert reductions are off the baseline). The only such seller under default shop inventories is the one shop region named in the data table, so `can_buy_unlimited` reduces to reaching it.
+Swordless is off in the baseline, so the medallion path of melting needs a sword. Shop purchases are out of scope (no shop pool): the python `can_buy` and `can_buy_unlimited` walk the shop objects, so anything that reaches for them is a porting error until shops are modeled. Arrows: with retro on there is no ammunition to carry, so the quiver becomes the question (held as a placed item where the shops are shuffled, bought off its shelf where they are not); with retro off an arrow capacity on the empty rung holds no arrow to fire. Bombs: the explosives capacity reached, against the 50 cap; a world carrying the player's own record asks one thing more, because the capacity is non-zero from the first frame and a player who has never found a bomb cannot throw one. A fill has no record, so there it is the reference reading exactly. Four pieces make a heart. The total magic check (python `can_extend_magic`, StateHelpers.py 70 to 84): 8 units at full cost, 16 at half, 32 at quarter, 0 without magic. The purchase branch (77 to 83): with an unlimited green or blue potion seller reachable, each carried bottle refills the meter; under normal `item_functionality` that multiplies base magic by bottle count regardless of the full-refill flag (the hard and expert reductions are off the baseline). The only such seller under default shop inventories is the one shop region named in the data table, so `can_buy_unlimited` reduces to reaching it.
 
 ### world/state-helpers-world
 
@@ -412,7 +412,7 @@ World and combat helpers ported from Archipelago worlds/alttp/StateHelpers.py (p
 
 `canRetrieveTablet` is python `can_retrieve_tablet`. The reference's swordless branch is asked as a setting instead of a mode: the hammer wakes a tablet when the player asked for it, and always when no beam blade could ever be found, which would otherwise leave the tablets behind a requirement nothing can meet. `canUseMedallion`: Rules.py `swordless_rules` 1076 to 1077, the medallion doors take no blade under the reference's swordless mode; asked as the setting that mode implied, so a seed with no blade can still open them.
 
-### world/item-ids.data
+### world/item-ids
 
 The record id of every item the engine names, under a code handle. The engine used to spell an item's name wherever a rule, the pool or a lock had to say which item it meant, which made the name a key: two records could not share one, a relabel moved a placement, and the engine's spelling and the record's had to agree by hand. An id is the record's own primary key, so each handle is a reference and never a second copy of the data. A name is read back off the record when something is displayed and is needed nowhere else. Same bargain as `ITEM_GROUP_IDS`: the ids resolve at compile time, so a call site reads a named property and stops typechecking if the handle is gone, while the record it points at is free to change anything but its id. The alternate bow row rides the same ladder as the main one. The flute has two rungs (the plain Flute, the Activated Flute that calls the bird as it is) and the family item the pool carries for them.
 
@@ -440,15 +440,15 @@ The capacity rows of the option catalog: synthetic, unlocked, group `items`. One
 
 The pond rows of the option catalog: synthetic, unlocked, group `items`, a block per pond under one switch that shares a single block across all three. Only a `pond_<id>_mode` row is meant to be read on its own; the value rows behind it are rendered by that pond's block. Every baseline is a row the pond's own default writes through the one writer the creation form uses, so a fresh profile and a bare catalog freeze can never disagree. Each counted ask row has a range the curve reads a rung's amount into; the share switch belongs to no single pond.
 
-### world/options-descriptions.data
+### world/options-descriptions.constants
 
 The one-line clarifier a catalog row carries when its label alone does not say what changes in play. A row whose label already says it has no entry. The locked rows all carry one: their labels are the source project's own field names, so a player has no way to know what "Beemizer" or "Scams" would do; the line says what the setting means, and the row's own tag says why it cannot be changed here. `PLACEMENT` covers the placement choices, including the two the generator cannot roll.
 
-### world/options.data
+### world/options
 
-The full option catalog transcribed from Archipelago worlds/alttp/Options.py: every option of the reference's `ALTTPOptions` dataclass that is a question about the seed, in dataclass order, with the source default, the value this app hard-sets (baseline), and an audited `implementation` class stating what the engine really does with it. Baselines of not-implemented options are their off or vanilla value, so a frozen snapshot never advertises a feature the engine lacks. The reference's display and quality-of-life block (palettes, heart colour and beep, menu speed, quickswap, music, reduced flashing, the two HUD readouts) is absent: those are settings this app already owns per profile. Also absent are the rows this app asks under a control of its own: a question offered twice is a duplicate, so the source's bundled spelling is deleted and not kept as a signpost; the guard test lists them and proves each is in the dataclass and out of the catalog. Two rows are gone for a plainer reason: the per-family order controls answer the tier-order question, and this app has no surface for hand-written game text. All entries are locked except key drop shuffle, the four dungeon-item placement rows, the three synthetic switches at the top (two scope, one dungeon prize) and the synthetic capacity rows that replace the reference's single capacity toggle. A synthetic row has no source default, so its source default is its baseline; the baselines of the unlocked rows are what a new profile starts from, and a stored snapshot missing one reads that baseline. `MEDALLION_OPTION_KEYS` names the two rows that say which medallion a sealed entrance asks for, so a consumer claims the pair by reference.
+The full option catalog transcribed from Archipelago worlds/alttp/Options.py: every option of the reference's `ALTTPOptions` dataclass that is a question about the seed, in dataclass order, with the source default, the value this app hard-sets (baseline), and an audited `implementation` class stating what the engine does with it. Baselines of not-implemented options are their off or vanilla value, so a frozen snapshot never advertises a feature the engine lacks. The reference's display and quality-of-life block (palettes, heart colour and beep, menu speed, quickswap, music, reduced flashing, the two HUD readouts) is absent: those are settings this app already owns per profile. Also absent are the rows this app asks under a control of its own: a question offered twice is a duplicate, so the source's bundled spelling is deleted and not kept as a signpost; the guard test lists them and proves each is in the dataclass and out of the catalog. Two rows are gone for a plainer reason: the per-family order controls answer the tier-order question, and this app has no surface for hand-written game text. All entries are locked except key drop shuffle, the four dungeon-item placement rows, the three synthetic switches at the top (two scope, one dungeon prize) and the synthetic capacity rows that replace the reference's single capacity toggle. A synthetic row has no source default, so its source default is its baseline; the baselines of the unlocked rows are what a new profile starts from, and a stored snapshot missing one reads that baseline. `MEDALLION_OPTION_KEYS` names the two rows that say which medallion a sealed entrance asks for, so a consumer claims the pair by reference.
 
-Row notes. `dungeon_prize_shuffle` is not a reference option: the reference always shuffles the ten dungeon rewards among the ten reward slots (Rules.py 204 to 211 restricts those slots to reward items), with no switch; this app offers one so a seed can keep each dungeon's own reward. The reference's own `shuffle_prizes` is a different feature (the enemy, tree-pull and bonk drop packs) and stays locked. Accessibility: the three contracts are all enforced (the fill relaxes for minimal, the self-locking allowances exist for anything but full, and the post-fill sweep asks the question the chosen mode asks); the baseline is `full`. `start_inventory_from_pool` is an items question wherever the reference files it, so it sits on the items tab. `mode`: the baseline diverges from the source default, because this app always plays the vanilla intro (the escape), which is the source's standard mode. The source asks the dark-room requirement as one three-way choice; this app asks the two questions inside it apart. The story gates replace three of the reference's own rows (the pyramid hole, the crystals for the tower and for the final boss) under the same keys. The source's four-step pool choice bundles two unrelated questions (its generous step duplicates a family's copies while its mean steps lower the ceiling); both are asked apart, with which rungs exist answered by the tier ticks. The source's four-step item functionality choice is asked as separate switches. The source's blade toggle is asked per rung, and unticking every blade rung is that setting. The reference asks the whole seed one question about tier order; this app asks it per family. Retro bow is live: arrows leave the world and the bow is fed rupees as it fires; the two per-shot costs are the app's own rows, because the reference fixes them in its patcher and a cost is a number a player should be able to move. `scams` is about what a merchant tells you before you pay, so it belongs with the shops. `shop_item_slots` counts how many of the ticked slots a counted mode opens; the source's range stops at 30 (ten shelf shops of three), while this app also offers the potion seller's three cauldrons and the bomb counter's one purchase, so the ceiling is the whole canonical list, and the panel never offers more than the player has ticked. `shop_price_modifier` is live: the percentage every rolled price is scaled by before it is clamped, the reference's own range and reading, where a hundred changes nothing. The reference's single capacity toggle is gone, decided per family by the synthetic rows. The pond rows sit on top of whatever the capacity families decided, with the legacy pond as baseline. The two session rows describe a session shared with other players, not the seed; DeathLink follows the profile's own toggle, so its row stays locked.
+Row notes. `dungeon_prize_shuffle` is not a reference option: the reference always shuffles the ten dungeon rewards among the ten reward slots (Rules.py 204 to 211 restricts those slots to reward items), with no switch; this app offers one so a seed can keep each dungeon's own reward. The reference's own `shuffle_prizes` is a different feature (the enemy, tree-pull and bonk drop packs) and stays locked. Accessibility: the three contracts are all enforced (the fill relaxes for minimal, the self-locking allowances exist for anything but full, and the post-fill sweep asks the question the chosen mode asks); the baseline is `full`. `start_inventory_from_pool` is an items question wherever the reference files it, so it sits on the items tab. `mode`: the baseline diverges from the source default, because this app always plays the vanilla intro (the escape), which is the source's standard mode. The source asks the dark-room requirement as one three-way choice; this app asks the two questions inside it apart. The story gates replace three of the reference's own rows (the pyramid hole, the crystals for the tower and for the final boss) under the same keys. The source's four-step pool choice bundles two unrelated questions (its generous step duplicates a family's copies while its mean steps lower the ceiling); both are asked apart, with which rungs exist answered by the tier ticks. The source's four-step `item_functionality` choice is asked as separate switches. The source's blade toggle is asked per rung, and unticking every blade rung is that setting. The reference asks the whole seed one question about tier order; this app asks it per family. Retro bow is live: arrows leave the world and the bow is fed rupees as it fires; the two per-shot costs are the app's own rows, because the reference fixes them in its patcher and a cost is a number a player should be able to move. `scams` is about what a merchant tells you before you pay, so it belongs with the shops. `shop_item_slots` counts how many of the ticked slots a counted mode opens; the source's range stops at 30 (ten shelf shops of three), while this app also offers the potion seller's three cauldrons and the bomb counter's one purchase, so the ceiling is the whole canonical list, and the panel never offers more than the player has ticked. `shop_price_modifier` is live: the percentage every rolled price is scaled by before it is clamped, the reference's own range and reading, where a hundred changes nothing. The reference's single capacity toggle is gone, decided per family by the synthetic rows. The pond rows sit on top of whatever the capacity families decided, with the legacy pond as baseline. The two session rows describe a session shared with other players, not the seed; DeathLink follows the profile's own toggle, so its row stays locked.
 
 A description entry is split into the two readings the catalog carries: the flattened string every plain consumer uses, and the lines a panel renders when the entry was written as a list. A row with no entry carries an empty description.
 
@@ -534,7 +534,7 @@ An act is a thing the player did once that changed the world for good: a wall bl
 - `check-332` and `check-333`: the two the rules cannot judge. One is hired for rupees the generator does not count; the other is a door pulled open with the gloves, and the event's own record carries that.
 - `BOMBS_HELD_CHECK`: not a place changed but a thing owned. The ledger is the only source for it.
 
-Story events that happen at a place (a boss beaten, the smiths reunited) are not here; the solver finds them in the world (`story-events.data.ts`).
+Story events that happen at a place (a boss beaten, the smiths reunited) are not here; the solver finds them in the world (`story-events.constants.ts`).
 
 A world built with `actTokens` answers from that record: an act it does not list has not happened. A world built without one falls back to the capability that would perform the act. `actGate` asks for an act by check id: it was done, or the means are in hand. An id with no gate row throws at build time and never opens silently. `RECORDED_ACTS` is every act a record can certify: the gated acts, then the story events.
 
@@ -542,7 +542,7 @@ A world built with `actTokens` answers from that record: an act it does not list
 
 An event is done once its region is reachable and its own rule holds, and doing it can open more, so a sweep grants events as it goes, beside the items it collects. `collectReachableEvents` repeats until one pass grants nothing. A world reading a save's record never infers an event: whether the floodgate lever was pulled is a fact the game wrote down, so such a world holds exactly the events its record lists.
 
-### world/events/story-events.data
+### world/events/story-events.constants
 
 Each story event is a ledger record (`records/checks/events/story.ts`) that the rules ask about and that happens at one place: the region its own record names, under the rule the tables give it. A seed never fills one and never counts one as a location. These eight differ from the other acts because their requirement is a place as much as an inventory: a boss room, the smiths' hut, a lever in the dam. `GOAL_EVENT` is Ganon beaten. `WORLD_EVENT_IDS` is the order the sweep asks them in.
 
@@ -558,7 +558,7 @@ Each story event happens in the region its own record names, the same field a lo
 
 ### world/item-power/item-power.type
 
-`ItemPowerSetting` holds the questions inside the reference's single four-step Item Functionality choice (`Options.py` `ItemFunctionality`: easy, normal, hard, expert), asked one at a time. That choice is a bundle: one step moves eight unrelated things at once, so a player who wants the barrier to stop protecting them would also lose their potions and fairies. Each step is a row of independent switches in the reference's own patcher (`Rom.py` 817 to 870 writes eight separate bytes per step), so the app exposes the switches and lets the bundle be a preset the player builds. Every default is the normal step, the unmodified game.
+`ItemPowerSetting` holds the questions inside the reference's single four-step `item_functionality` choice (`Options.py` `ItemFunctionality`: easy, normal, hard, expert), asked one at a time. That choice is a bundle: one step moves eight unrelated things at once, so a player who wants the barrier to stop protecting them would also lose their potions and fairies. Each step is a row of independent switches in the reference's own patcher (`Rom.py` 817 to 870 writes eight separate bytes per step), so the app exposes the switches and lets the bundle be a preset the player builds. Every default is the normal step, the unmodified game.
 
 - `catchFairies`: swinging the net at a fairy puts it in an empty bottle.
 - `byrnaInvulnerable`: the blue barrier makes the player untouchable while it is up.
@@ -571,13 +571,13 @@ Each story event happens in the region its own record names, the same field a lo
 - `hammerLastFight`: the hammer lands on the last fight, which otherwise refuses it. Reads as on whenever no beam sword can be found: the first sword scores nothing there.
 - `hammerTowerSeal`: the tower's seal breaks to a hammer and does not throw the blow back. Reads as on under the same condition.
 
-### world/item-power/item-power.data
+### world/item-power/item-power.constants
 
 The catalog keys the switches occupy, and the reading each has under the reference's four steps (`Rom.py` `patch_rom` 817 to 870, 1045 to 1047). `DEFAULT_ITEM_POWER` is the normal step (`Rom.py` 862 to 868), the unmodified game. What each of the four steps did is written on the locked transcription row's own description, beside the switches it points at.
 
-### world/item-power/item-power-options.data
+### world/item-power/item-power-options.constants
 
-The item-power rows of the option catalog: synthetic, unlocked, in the `items` group. They replace the reference's single Item Functionality choice, which stays in the catalog, locked, as the transcription of its dataclass. Every baseline is the normal step, so a fresh profile plays the unmodified game.
+The item-power rows of the option catalog: synthetic, unlocked, in the `items` group. They replace the reference's single `item_functionality` choice, which stays in the catalog, locked, as the transcription of its dataclass. Every baseline is the normal step, so a fresh profile plays the unmodified game.
 
 ### world/item-power/item-power-from-snapshot
 
@@ -621,7 +621,7 @@ Unlike the capacity and pond pair this one is not symmetric: a price cannot make
 
 What the file assumes about an unlit room. The reference asks this as one three-way choice (`Options.py` `DarkRoomLogic`: lamp, torches, none), which mixes two questions: must a room be lit at all, and which items count as a light. The app asks them apart, because only the second is a matter of taste: a player who accepts feeling their way through the dark wants it said once, not spelled into every item list. `DarkRoomLightField` lists the four things a player can carry into an unlit room and still see by. With `requireLight` true an unlit room is passable only while an accepted light is carried; with it false the room counts as passable in the dark, so the seed may send the player through blind. Accepting no light reads as requiring none.
 
-### world/dark-rooms/dark-room-lights.data
+### world/dark-rooms/dark-room-lights.constants
 
 The four lights and the item each stands for. Carrying one is the whole rule: a ticked item lights an unlit room by being in the inventory, with no meter charged, nothing held up and nothing to activate (`core/game-hooks/dark_room_lights.c` answers the game's own "is a light carried" question for all four). That is the lamp's own behaviour, given on purpose to every ticked light, so the rules and the running game always agree. The fields are in the order the option rows are shown. Of the two canes, the red one is the cane that lays blocks, not the one that raises the blue barrier, and the tile art uses the same lookup, so this name decides which colour the row shows. `REFERENCE_DARK_ROOM_SETTING` is the reference's reading: light required, the lamp alone provides it. `DEFAULT_DARK_ROOM_SETTING` is where a new profile starts and the rows' baseline: light required, and all four lights provide it.
 
@@ -649,7 +649,7 @@ The catalog keys the dark-room settings occupy, derived from the light fields so
 
 ### world/dark-rooms/dark-room-options
 
-The five dark-room rows of the option catalog: synthetic, unlocked, group `world`, so they list beside the other world settings and wear the same row as every toggle. They replace the reference's three-way choice, which stays in the catalog, locked, as the transcription of its dataclass: the requirement row covers its "none" value and the four light rows cover the rest. Every baseline is the fresh-profile reading. Descriptions merge in from `options-descriptions.data.ts` like every other row. A light row is titled with the item's own name (`display-names/`), the same lookup the tiles under the row use, so heading and art never disagree.
+The five dark-room rows of the option catalog: synthetic, unlocked, group `world`, so they list beside the other world settings and wear the same row as every toggle. They replace the reference's three-way choice, which stays in the catalog, locked, as the transcription of its dataclass: the requirement row covers its "none" value and the four light rows cover the rest. Every baseline is the fresh-profile reading. Descriptions merge in from `options-descriptions.constants.ts` like every other row. A light row is titled with the item's own name (`display-names/`), the same lookup the tiles under the row use, so heading and art never disagree.
 
 ## Difficulty and story gates
 
@@ -660,7 +660,7 @@ How generous a seed is with things a file can hold more than one of. The referen
 - How many copies each tiered family puts in the seed, as a multiple of what it normally carries. Normal is the reference pool byte for byte; double and triple multiply the copies the shuffle carries, and each extra copy displaces one filler item so the fill stays one item per open location.
 - How high the hearts climb (`heartCap`, the three starting hearts included).
 
-### world/difficulty/difficulty.data
+### world/difficulty/difficulty
 
 The numbers the setting is built from, each read off something real.
 
@@ -706,7 +706,7 @@ Which recorded event each of the game's story gates reads, and what the count ga
 - `vaneScene`: the weathervane scene and Stumpy follow the weathervane, never the Flute.
 - `mountainRespawn`: the Death Mountain respawn follows the Old Man's rescue, never the Mirror.
 
-### world/story-gates/story-gates.data
+### world/story-gates/story-gates.constants
 
 The default story gates: the story as the game tells it. The scenes read their recorded event, the counts are the original numbers. A snapshot with no row reads the same way.
 
@@ -718,7 +718,7 @@ The catalog keys the story gate rows occupy, one per field. The count rows reuse
 
 The story gate rows and the setting they stand for, both directions in one place. An absent row reads as the default. The pyramid row keeps the reference's own values: `closed` is the original, `goal` reads the same here, `auto` follows the tower count.
 
-### world/story-gates/story-gate-options.data
+### world/story-gates/story-gate-options.constants
 
 The story gate rows of the option catalog: synthetic, unlocked, group `goal`. Every baseline is the story as the game tells it. The three the reference already asks (crystals for the tower, crystals for Ganon, the pyramid hole) keep its keys and replace its locked rows.
 
@@ -736,15 +736,15 @@ The capacity profile: how each counter family with a ceiling is reshaped for a s
 
 `CustomFamilySetting` is flagged by the gate's qualifier-prefix rule, but the app imports it by that name, so it stays.
 
-### world/capacity/capacity-ladders.data
+### world/capacity/capacity-ladders.constants
 
-The value ladders of the four families, mirrors of the core's tier tables and rung convention (`core/game-hooks/capacity_tiers.h`). Every ladder opens with rung 0, the empty tier below the native grid: no explosives or projectiles at all, an unusable meter, a zero wallet. Rung r of 1 or more is native level r minus 1, so the native grids keep the engine's own arithmetic (+5 six times, then +10; three meter levels) one rung up, and a vanilla file stands on `VANILLA_RUNG` (the first native level, the 999 wallet). A start or max is always one of these values and a jump is a number of rungs.
+The value ladders of the four families, mirrors of the core's tier tables and rung convention (`core/game-hooks/capacity_tiers.h`). Every ladder opens with rung 0, the empty tier below the native grid: no explosives or projectiles at all, an unusable meter, a zero wallet. Rung r of 1 or more is native level r minus 1, so the native grids keep the engine's own arithmetic (+5 six times, then +10; three meter levels) one rung up, and a vanilla file stands on `VANILLA_RUNG` (the first native level, the 999 wallet). A start or max is always one of these values and a jump is a count of rungs.
 
 - Explosives and projectiles: rung 0 is none; rungs 1 to 8 are the native tier bytes 0 to 7.
 - Meter: rung 0 is no magic; rungs 1 to 3 are the native cost levels 0 to 2 (full, half, quarter). `METER_LEVEL_LABELS` names the rungs as the game does, by cost tier, because the meter is a fixed bar and a rung is what one use costs.
 - Wallet: the cap table is ours, so the ladder is as fine as the curves need: 100-rupee steps ending in 99 like the vanilla 999, from 0 to 9999, 101 values (index i of 1 or more is `100 * i - 1`; rung 10 is 999, rung 100 is 9999).
 
-### world/capacity/capacity-shop.data
+### world/capacity/capacity-shop.constants
 
 The capacity fairy's shop: where a vanilla bomb or arrow family climbs to its top rung, and what she charges for the first step. A family in the pool counts its items and never reads this (`state-helpers-capacity.ts`). It is no event and no location: the game writes no flag for it and the player does nothing recordable, so the rules read the two facts directly (the room reached, the rupees in the wallet), the way the potion seller is read for the magic extension. The price is the one the reference's shop table lists for a fairy slot.
 
@@ -788,7 +788,7 @@ What can set it:
 
 - The fixed prices (`rules/priced-entries.ts`): a check or passage charges what the unmodified game charges, and no option moves it.
 - A bottle content offered as a shelf price whose only repeatable source is a counter that sells it, because paying again means buying it again (`rules/shop-prices.ts`, `potion-price/potion-cauldrons`).
-- The paid-shot option, which asks for the first purchase and then the ending's shots back to back (`retro/retro-bow.data.ts`).
+- The paid-shot option, which asks for the first purchase and then the ending's shots back to back (`retro/retro-bow.constants.ts`).
 
 What cannot: a rolled shelf price (both ends of its range are already brought down to the cap the profile reaches, `shops/shop-price-plan.ts`), and the pond, held to the wallet the same way (`pond/pond-wallet-top.ts`). The paid-shot costs are read as stored, not as the reader hands them back: they are held to the wallet on read (`retro/retro-cost-ceiling.ts`), so from there they could never raise anything; read as asked, the cap grows to meet the costs, which is what a player setting them expects. A content whose counter went to the shuffle is counted too: it can only make the number smaller, so counting it keeps every price payable. The stored retro rows carry no capacity of their own, so reading them is never a write. `holdWalletToFloor` raises a Custom final cap below the floor onto it; a wallet left alone keeps the vanilla cap, which stands above every fixed price.
 
@@ -853,7 +853,7 @@ The pieces, in the order the rule uses them:
 - `settleCapacityPond`: the moved row speaks for itself; a wholesale profile change (a reset, or a row that is not pond-fed) is read as a whole. A row asking for nothing leaves the pond where the player put it.
 - The notes are standing explanations, not one-shot toasts. An active pond rules Vanilla out for the families it feeds; a family sitting in the pool rules the legacy mode out. They are separate now that Custom satisfies neither. The dropdown drops the legacy mode while a family sits in the pool.
 
-### world/capacity-pond/capacity-pond-notes.data
+### world/capacity-pond/capacity-pond-notes.constants
 
 The sentences the rule shows, kept as data so both tabs say the same thing about the same state. `off`: the master switch is off. `forcedInPool`: the pond sells throws, so the families it used to stock cannot stay on Vanilla (`forcedInPoolRetro` is the same with retro bow on, where only explosives is the pond's). `modeUnavailable`: the other half of the rule, said from the pond side. `retroProjectiles` is shown in red on the projectiles card while retro bow is on.
 
@@ -873,9 +873,9 @@ The retro bow setting: the bow stops eating ammunition and starts eating money. 
 
 So the two numbers a player would want to move are the two costs per shot (`woodArrowCost`, `silverArrowCost`, rupees per plain and silver shot), not shop prices; the quiver's 80 is the reference's constant. The costs default to the reference's own. `RetroCostCeilings.wood` is the most a plain shot may cost (the wallet's top under the core's ceiling); `silver` is the most a silver shot may cost (the final fight's shots must fit the wallet at once). A `RetroShelfStock` is one arrow shelf as the running game restocks it with vanilla shops: `role` says whether it sells the quiver first or only the refill, `refillItem` is what it sells once the quiver is owned, `refillPrice` is the shelf's own vanilla price, which the refill keeps, and `quiverPrice` is the reference's quiver price or 0 for a shelf that never sells one.
 
-### world/retro/retro-bow.data
+### world/retro/retro-bow.constants
 
-Every number here is one the reference's patcher writes. Plain shot 10: `Rom.py` 1453 writes `0x0A` to `0x180176`. Silver shot 50: `Rom.py` 1454 writes `0x32` to `0x180178`. The quiver 80: `Shops.py` `set_up_shops` locks the single-arrow purchase into one shelf at 80 and pushes it into five more shops at 80. It is bought once (`Rom.py` 1451) and lets the bow fire at all. The reference spells it as a single arrow because that is the receipt its patched game hands over; the app calls it a quiver, with its own picture and receipt line. No item record carries it yet, so it is an unrecorded key (`item-ids.data.ts`). Its price is a constant, not a slider. The single-arrow receipt (`0x43`) is the quiver's alias, because that receipt is what the running game reads as "the bow may fire" (`core/game-hooks/retro_bow.c`) and what the retro shelf sells as the quiver (`core/game-hooks/retro_shelf.c` `RETRO_QUIVER_RECEIPT`).
+Every number here is one the reference's patcher writes. Plain shot 10: `Rom.py` 1453 writes `0x0A` to `0x180176`. Silver shot 50: `Rom.py` 1454 writes `0x32` to `0x180178`. The quiver 80: `Shops.py` `set_up_shops` locks the single-arrow purchase into one shelf at 80 and pushes it into five more shops at 80. It is bought once (`Rom.py` 1451) and lets the bow fire at all. The reference spells it as a single arrow because that is the receipt its patched game hands over; the app calls it a quiver, with its own picture and receipt line. No item record carries it yet, so it is an unrecorded key (`item-ids.constants.ts`). Its price is a constant, not a slider. The single-arrow receipt (`0x43`) is the quiver's alias, because that receipt is what the running game reads as "the bow may fire" (`core/game-hooks/retro_bow.c`) and what the retro shelf sells as the quiver (`core/game-hooks/retro_shelf.c` `RETRO_QUIVER_RECEIPT`).
 
 `RETRO_PRICE_CEILING` is a vanilla wallet's top: a shot costing more than a file can carry could never fire. `RETRO_ARROW_PICKUPS` are the two arrow pickups the pool carries; retro leaves none of them in it, and each becomes `RETRO_REPLACEMENT_ITEM` (`ItemPool.py` 725 to 727). The reference also strips the arrow capacity upgrades under retro (`ItemPool.py` 726); the app reaches the same pool by another door: the projectiles family reads as Vanilla while retro is on (`capacity/retro-projectiles`), so its card goes inert with the reason on it and none of its upgrades enters the pool.
 
@@ -895,7 +895,7 @@ The retro rows and the setting, both directions in one place. An absent switch r
 
 What a retro seed asks for before a bow is worth anything: the quiver, held, and a wallet that can hold what the shots cost. How the quiver is held depends on the shops. Shuffled, it is an ordinary pool item, so the question is the item itself: the fill placed it somewhere reachable or the seed does not verify. Vanilla, it is stock on one shelf, so the question is that shelf reached and its 80 rupees affordable. Getting this wrong decides beatability, so the two readings are kept apart. The reference asks only the shop half (`StateHelpers.py` `can_shoot_arrows` through `can_buy('Single Arrow')`), because its costs are constants. The app asks the wallet too, since the costs are a setting: a wallet that cannot hold the price can never pay for a shot, and under full accessibility a rule pretending otherwise hands over a seed nobody can finish. The wallet is held to the final fight, not one shot; the plain cost is checked beside the silver one and never instead of it.
 
-### world/retro/retro-options.data
+### world/retro/retro-options
 
 The two shot-cost rows of the option catalog: synthetic, unlocked, group `items`, sitting under the retro switch they qualify. The switch is the reference's own `retro_bow` row and stays where the dataclass puts it; only the two costs are the app's own question, because the reference fixes them in its patcher. Both baselines are the reference's patched bytes, so a fresh profile that turns retro on fires at 10 and 50. `RETRO_OPTION_KEYS` is every key these rows own; the panel renders them inside the retro block.
 
@@ -903,7 +903,7 @@ The two shot-cost rows of the option catalog: synthetic, unlocked, group `items`
 
 Arrows out of the pool, and the quiver in. The reference swaps every arrow pickup for a five-rupee one (`ItemPool.py` 725 to 727), which is what makes retro retro: arrows stop being found because they stop being carried. Swapping keeps the transcribed pool size, as the tier ticks do. The arrow capacity upgrades are already out, one step earlier, because retro pins the projectiles family to Vanilla. With the shops shuffled the quiver becomes a placeable item and the pool carries one. It is not an extra item: the shelf it was locked to opens as an ordinary shuffled slot at the same time, so the quiver counts as one of the shop backfills the opened slots earn, and the pool still holds one item per open location (`pool/build-item-pool.ts`).
 
-### world/retro/retro-shelf.data
+### world/retro/retro-shelf.constants
 
 What the arrow shelf sells under retro once it has no arrows. The reference restocks the quiver's shelf, once the quiver is bought, with a random pick from a short list of shop staples (`Shops.py` `set_up_shops` `replacement_items`: the three potions, bombs, the blue shield, a heart). The app takes one, the red potion refill, and sells it at the shelf's own vanilla price, so a shelf that charged 30 for arrows charges 30 for the refill. The pick is an assumption written down here; change it and every arrow shelf follows.
 
@@ -919,11 +919,11 @@ Two ways to hand it over, by the shop mode. Vanilla: nothing is shuffled, so the
 
 Which tiers of a progressive family exist in a seed. The reference asks this as one blunt toggle per family at most (a swordless switch and nothing else), which mixes two questions: how many copies of the family's item the pool carries, and which concrete tiers those copies hand over. The app asks per tier, because that is how a player thinks: "no gold sword", "keep the first shield only", "no bow at all". Unticking every sword tier is the reference's swordless setting, derived and not asked twice. A tick list is read by position against the family's tier table: entry k is the k-th tier. Pickups climb the ticked tiers in order, so unticking a middle tier leaves no hole. A shorter or absent list reads as every tier ticked.
 
-`ProgressiveFamilyMode`: `progressive` is the reference's reading and the default: the pool carries one nameless copy per ticked rung, and each copy hands over the next rung up, so the first copy found is always the bottom of the ladder. `random` puts the rungs in as themselves: separate items found in any order, so the top of a ladder can turn up first and really is that tier. A rung found after a higher one is already held is surplus, not a step down; the core answers that because it resolves against live inventory, not a count.
+`ProgressiveFamilyMode`: `progressive` is the reference's reading and the default: the pool carries one nameless copy per ticked rung, and each copy hands over the next rung up, so the first copy found is always the bottom of the ladder. `random` puts the rungs in as themselves: separate items found in any order, so the top of a ladder can turn up first and is that tier. A rung found after a higher one is already held is surplus, not a step down; the core answers that because it resolves against live inventory, not a count.
 
 In `ProgressiveFamilyDef`, `label` is the card heading, `poolItem` is the item the pool carries one copy of per ticked tier, `tiers` are the concrete tiers in climb order, and `tierLabels` are short per-tier labels for the tick boxes. `referenceCopies` is how many copies the transcribed pool carries before any tick applies (omitted means one per tier); a family with fewer (the ocarina's pool holds one Flute) gains a copy per extra ticked tier, each taking a stand-in's place so the pool keeps its size. `defaultTicks` is what a new profile starts with and an absent row reads as (omitted means every tier).
 
-### world/progressive/progressive-families.data
+### world/progressive/progressive-families.constants
 
 The tiered families, their pool item and the tiers each copy hands over, transcribed from Archipelago `worlds/alttp/Items.py` (`progression_mapping`, lines 230 to 242) and `ItemPool.py` `difficulties['normal']` (lines 99 to 130), the row set the pool is pinned to. The mail family has no `progression_mapping` entry because its tiers are classed useful, not progression (no rule reads them), so it is here for the pool and the receipt ladder alone. Families are in the order the cards are shown.
 
@@ -949,7 +949,7 @@ The tier rows and the setting, both directions in one place (the dark-room modul
 
 For the mode rows an absent key falls back to in order, the baseline; anything but the one recognised alternative (`random`) reads as the reference. `progressiveModeValuesOf` writes a family the setting says nothing about with nothing behind its key, on purpose: the wiring guard reads the frozen map by value, so a mode field left off the choices must show as an unwired row and not freeze as the reference reading. Absent on the way back in is what means in order, and that is the only place it should mean anything.
 
-### world/progressive/progressive-modes.data
+### world/progressive/progressive-modes
 
 How each family's copies reach the player. Every family defaults to `progressive`, the reference's reading. `PROGRESSIVE_MODES` is in the order the control offers them; `PROGRESSIVE_MODE_LABELS` is the short wording shared by the card control and the catalog row. `isReferenceProgressiveModes` is true while every family is on the reference reading.
 
@@ -1026,7 +1026,7 @@ The rule taking a counted currency off the price list when the seed has nothing 
 
 A price in the terms the running game understands: a currency tag and one number. Counted currencies pass their amount through, hearts in whole hearts (the core multiplies by the eight units a heart is worth). A bottle price passes the byte the game stores in a bottle slot (2 is an empty bottle), so the core compares against the player's own bottles with no table of its own. The currency tags are shared with `core/game-hooks/shop_overrides.c`. An item price has no native form: it is shown and handed back, so nothing is deducted and no counter is compared, and the caller drops the override. `priceLabelOf` is human wording for the spoiler and the plan log; the item label is the only one naming a thing, because that price is shown and kept.
 
-### world/shops/shop-price-options.data
+### world/shops/shop-price-options
 
 The shop-price rows of the option catalog: synthetic, unlocked, group `shops`. One opt-in per currency plus the two ends of the range a roll is drawn from, and the bottle set as an opt-in plus one row per content it may demand. The panel renders each currency as one row (a checkbox and a two-thumb range), the way the capacity families render their value rows, so these keys stay out of the plain option list. Every currency and the bottle set are ticked for a fresh profile (`ROLLED_BY_DEFAULT`), over the full range each offers; a snapshot with none of the rows still reads as nothing rolled, so every shelf it froze charges the unmodified price. The reference's own price percentage (`shop_price_modifier`) rides in the same block but is a real source option and keeps its place in the catalog's dataclass order, so only its key and bounds are named here; 100 means the ranges exactly as set.
 
@@ -1050,7 +1050,7 @@ Catalog values to the shop scope and back: one reading shared by the generator, 
 
 A slot never sells the thing its own price is counted in. A price is gated on the ceiling the file can hold (`rules/shop-prices.ts`), so a slot charging five bombs asks for a bomb bag first. Put that family's own upgrade on that slot and the shelf sells the capacity its price is measured in. The fill takes it, because the assumed state owns every copy still unplaced, and only the post-fill sweep can tell whether another copy was reachable first: when none was, the seed is rerolled, and when the answer is yes by a thread the player reads a spoiler telling them to buy a bomb bag with bombs. Two playtest seeds died on this shape (issue #219), so it is refused at placement. A bottle price reads the same way: the vessel demanded may not be the vessel sold. Hearts have no upgrade item in the pool, so a heart price locks nothing out. An item price is the plainest case: the slot may not hold the item it names.
 
-### world/shops/shop-slot-options.data
+### world/shops/shop-slot-options
 
 The shop-scope rows of the option catalog: the shuffle mode, one tick per canonical slot, and the two counted rows the mode reads (how many slots, how deep each stocks). Synthetic, unlocked, group `shops`. The tick rows are generated from the shop-slot records, so a shop added there brings its own controls. A fresh profile shuffles exactly the ticked slots, two purchases deep; a snapshot with neither row still reads as it always did (the mode as Sequential, the depth as one). A slot's catalog key is built from the shop's name and shelf position, not its canonical index, so a stored snapshot says in plain text which shelf it ticked. A shelf with no recorded stock reads as "nothing recorded" and not blank. The potion seller's hut starts unticked: it is fully supported, but a cauldron holding a shuffled item is a bigger surprise than a shelf doing so, so it is opt-in; that is a default, not a fact about the shop. The panel renders all of these as one block (`ShopSlotsBlock`), so they stay out of the plain list.
 
@@ -1086,9 +1086,9 @@ What the fairy may ask for. A pond used to charge one thing, rupees, and a setti
 
 Every counted row is the same shape: a tick and two ends. The curve cuts the throw sequence once and each row reads the same position into its own two ends, so a rung halfway down the sequence asks for about half of whichever currency it drew. The bottle is a counted row too: its amount is how many bottles of the content she names. The rupee row's two ends are the pond's ladder ends; one key pair carries them, and a Custom setting reads the same pair for its start and final price, so the ladder a player cuts and the amounts the fairy asks for can never disagree. The item row has no number: she names one thing and wants to see it, so there is nothing to ramp. Hearts are deliberately missing: a rung sits behind the rung before it, so a heart cost compounds down the ladder into a file that cannot survive its own pond. `PondDemandView` maps a rung location to the demand that rung was rolled with, for one seed.
 
-### world/pond/pond-ladder.data
+### world/pond/pond-ladder.constants
 
-The pond's own ladders and fixed schedules. `POND_PRICE_LADDER` is the price a Custom throw may cost: rung 0 is free, every other rung is an amount the game itself hands out or charges somewhere, then round thousands up to the biggest wallet a capacity profile can build (9999). New rungs only go on the end, so a seed's rung indexes never move. The settings and the seed both cut the ladder at what the profile's wallet really reaches, so a vanilla wallet still stops at 999 (`POND_VANILLA_WALLET_TOP`). A Custom setting picks a start and a final rung with the two-thumb range, and the curves cut the span into one jump per further throw, so the cumulative ladder is the price list. `POND_MAX_THROWS` and `POND_MAX_ITEMS` are the most throws any mode sells and the most pool items a pond can carry.
+The pond's own ladders and fixed schedules. `POND_PRICE_LADDER` is the price a Custom throw may cost: rung 0 is free, every other rung is an amount the game itself hands out or charges somewhere, then round thousands up to the biggest wallet a capacity profile can build (9999). New rungs only go on the end, so a seed's rung indexes never move. The settings and the seed both cut the ladder at what the profile's wallet reaches, so a vanilla wallet still stops at 999 (`POND_VANILLA_WALLET_TOP`). A Custom setting picks a start and a final rung with the two-thumb range, and the curves cut the span into one jump per further throw, so the cumulative ladder is the price list. `POND_MAX_THROWS` and `POND_MAX_ITEMS` are the most throws any mode sells and the most pool items a pond can carry.
 
 Vanilla cost reproduces the native economy: the pond charges one hundred rupees per upgrade and a native file can buy fourteen of them (seven per counted family), so fourteen throws of a hundred is the same money for the same number of upgrades.
 
@@ -1108,7 +1108,7 @@ One switch, three ponds. With it on, the three fairies are configured once: ever
 
 What a pond's own region holds, in the order the pond hands it over. A pond's room is the one region whose locations are more than its check rows: a setting lets the pond sell a ladder as long as it asks for, and only the first two rungs are spots the unmodified game has. So the region's list is the whole ladder, with the pond's own records at the rungs they are and every rung above them a slot key. The capacity pond's pair heads two named ladders, so it sits ahead of the plain numbered series. The region is read off the pond's own slot records, never a name.
 
-### world/pond/rupee-gems.data
+### world/pond/rupee-gems.constants
 
 The six gems the game draws for a rupee amount, largest first (the order the greedy decomposition walks), each naming the item record whose art it is. The three small values share one numberless sheet and differ only by palette row; the three large ones each have their own sheet, which is why a toss can only show one of them at a time and the decomposition is spawned in volleys. Gems sharing a `decodeKey` come out of one decoded sheet and can be drawn together (with coloured rupees on, they need no different recolour). The native receipt id is not here: it is the item record's own `gameId.receiveItemId`, the same number `rupee_gem_draw.c` keys its colour table on. `POND_GEM_SLOTS` is how many gems the pond can have in the air at once: its own ancilla slots.
 
@@ -1116,7 +1116,7 @@ The six gems the game draws for a rupee amount, largest first (the order the gre
 
 An amount of rupees as the gems that depict it. Plain greedy over the six denominations, largest first: the fewest gems that add up exactly, and the reading a player does at a glance (300 is one gold; 427 is one gold, one silver, one red, one blue and two greens). A negative or zero amount shows nothing. The gems then leave in volleys: the game decodes one sprite sheet at a time for a group of flying receipts, so gems that need different sheets (or, with coloured rupees on, different recolours of the shared sheet) cannot be in the air together. Consecutive gems with the same decode key travel together, at most one slot-full each, so the same amount always decomposes and leaves the same way whichever setting is on. The mirror of this is `GameHook_PondTossRupees` (`core/game-hooks/pond_toss_draw.c`); the numbers here are what its unit test pins. `describeRupees` is the readout the panel and the logs show.
 
-### world/pond/pond-slot-models.data
+### world/pond/pond-slot-models.constants
 
 The randomizer's model of each pond slot, keyed by the slot's own check id. Neither half is a fact about the game. The lock is this generator's reading of what a slot is the only native source of, which decides whether emptying it would leave a hole in the seed. The grant is the pool item the slot's upgrade produces, in the pool's own words, which is what a wish pond at Vanilla locks into the slot; never the item she takes in trade. What each slot is, where it sits and what number it carries lives on its check record.
 
@@ -1140,7 +1140,7 @@ The snapshot keys of one pond: the mode the panel renders, the value rows behind
 
 The snapshot keys of one pond's ask block. Every key carries its pond (`pond_wishing_ask_bombs_max`), the way the pond's other rows do. The rupee row's two ends are the pond's ladder ends, so one key pair says what the ladder costs and what she asks for. The bottle carries a count, so it carries the same two range keys every other counted row does. `pondAskKeysOf` lists every ask key of one pond in the order the block stacks its rows.
 
-### world/pond/pond-ask.data
+### world/pond/pond-ask
 
 The rows a pond's ask block offers, and the ladders each ramps over. Rupees walk the pond's own price ladder, because the ladder is the rupee demand: its two ends are the row's two thumbs. Bombs and arrows get their own stops, which run up to the biggest bag and quiver a capacity profile can build (fifty and seventy). Bombs step through every count up to a native bag, then bag sizes; arrows coarsen as they climb. The settings cut those stops at what the profile's bag and quiver reach, and the roll holds both ends to the same reach, so a profile that shrinks a bag shrinks the demand with it. A fresh row still opens inside a native bag and quiver. The bottle row counts bottles: a file has four slots and no upgrade path to a fifth, so its stops are one to four and a fresh row asks for one. The bottle contents are the shop's own list, so the two rooms agree. Every row but rupees is off for a fresh profile, so an untouched profile asks for rupees and nothing else, as the unmodified game does. `asksOnlyRupees` is true while an ask is the one an absent ask stands for.
 
@@ -1174,7 +1174,7 @@ A prize ladder needs that pond's physical seam proven deliverable first, because
 
 ### world/pond/pond-vanilla-slots
 
-What a wish pond's mode does to her own two slots, rungs 1 and 2 of her ladder. Capacity (Vanilla grants): locked to what her upgrade produces (the slot's `vanillaGrant`), and that item leaves the pool. The item she takes in trade stays in the pool, so the player can still find it and throw it. This is its own table on purpose: the npc scope's translation of the same rows is pool accounting for its switch, and at the wishing pond it names the boomerang she consumes. Vanilla cost: untouched; the two slots are the pond's two checks and the npc scope decides them. Custom: sold as prizes once the pond really carries rungs. The core shuts the pond after its last rung, so her upgrade can never run: the two names are prizes 1 and 2 of the ladder, and the npc scope no longer decides them. Her vanilla items stay in the pool, because the silver bow and the golden sword have nowhere else to come from.
+What a wish pond's mode does to her own two slots, rungs 1 and 2 of her ladder. Capacity (Vanilla grants): locked to what her upgrade produces (the slot's `vanillaGrant`), and that item leaves the pool. The item she takes in trade stays in the pool, so the player can still find it and throw it. This is its own table on purpose: the npc scope's translation of the same rows is pool accounting for its switch, and at the wishing pond it names the boomerang she consumes. Vanilla cost: untouched; the two slots are the pond's two checks and the npc scope decides them. Custom: sold as prizes once the pond carries rungs. The core shuts the pond after its last rung, so her upgrade can never run: the two names are prizes 1 and 2 of the ladder, and the npc scope no longer decides them. Her vanilla items stay in the pool, because the silver bow and the golden sword have nowhere else to come from.
 
 A custom pond with no rung in the world (no pool item, or a seam the probe did not certify) arms nothing in the core, so the native upgrade still runs and both slots stay what the npc scope makes them. `followMode` false is the reference oracles' world: the slots answer to the npc scope alone whatever the mode says.
 
@@ -1194,7 +1194,7 @@ The facts an item demand's eligibility is read from. The fairy names an item and
 
 The self-lock needs no row here: it keeps the named item off the rung that asks for it, which is a placement rule applied after this roll, and every pool item has other locations to go to, so it never removes a candidate. `UNHELD_ITEMS` lists holdable-looking items the player can still lose: the game keeps one inventory byte for each of three pairs, so picking up one of a pair writes over the other, and the witch takes the mushroom.
 
-### world/pond/pond-demand-order.data
+### world/pond/pond-demand-order
 
 How early in a run each demandable item turns up, for the curve an item demand climbs. The roll runs before the fill, so this seed's own spheres do not exist yet and cannot be the measure. What is fixed ahead of any seed is the order the unmodified game hands these items over along its standard route: the castle escape (lamp, sword, shield), the three pendants, then the seven crystals. That order is the shared sense of early and late a player carries into a seed. A seed moves every item, so this is a prior, but one that means something for items held once. Order is position in the list. A family's pool item stands where its first rung is handed over, because a demand for it asks for that rung or better. An eligible name missing from the list ranks after every listed one (the keep test pins that the list covers them all).
 
@@ -1244,7 +1244,7 @@ Dungeon-restricted items never enter the global pool. Under the baseline shuffle
 
 The capacity profile adds its families' upgrade items and trims one filler per item past the spots that became checks. The profile also decides which starting weapons are usable at the escape and whether the wallet items count as progression. The default bottle picker takes the first content: the reference randomizes bottle contents and logic does not care.
 
-The passes run in a fixed order, and the order matters. The progressive ticks run after the scope subtraction, never before, so a tick only removes a copy the shuffle was really going to carry. The per-family mode runs next on the copies that survived: a random-order family's copies stop being steps and become the rungs themselves, one name for one name, so the pool size holds. Retro follows on the same terms: an arrow pickup the shuffle carries becomes a small rupee pickup, because a retro seed has no ammunition to find. The heart ceiling comes next: a pickup the seed no longer carries becomes the stand-in rupee pickup. The copy multiples run last of the passes over a tiered family, so they multiply names the ticks and the order pass have already settled; this one grows the pool, so its count joins the capacity upgrades' filler arithmetic.
+The passes run in a fixed order, and the order matters. The progressive ticks run after the scope subtraction, never before, so a tick only removes a copy the shuffle was going to carry. The per-family mode runs next on the copies that survived: a random-order family's copies stop being steps and become the rungs themselves, one name for one name, so the pool size holds. Retro follows on the same terms: an arrow pickup the shuffle carries becomes a small rupee pickup, because a retro seed has no ammunition to find. The heart ceiling comes next: a pickup the seed no longer carries becomes the stand-in rupee pickup. The copy multiples run last of the passes over a tiered family, so they multiply names the ticks and the order pass have already settled; this one grows the pool, so its count joins the capacity upgrades' filler arithmetic.
 
 A pair slot sold as a prize rung is a location the reference counted as a vanilla grant and this world does not, while its vanilla item stays in the pool. A vanilla grant the pool had no copy of is a locked slot with nothing removed for it. One filler leaves for each.
 
@@ -1296,7 +1296,7 @@ Item-pool composition rows for the baseline seed, ported from Archipelago worlds
 
 Row sources: always items are ItemPool.py 25 to 28, with the Flute carried as the ocarina family's one reference copy. Gloves are line 29 (progressive on). Legacy insanity items are line 31: entrance shuffle is not insanity legacy, so both go to the pool. Base items are lines 46 to 47 (`normalbaseitems`). Four bottles are lines 646 to 651, contents drawn per bottle from `normalbottles` at random; logic treats every bottle name identically (Items.py `item_name_groups` "Bottles"), so the port pins the plain bottle unless a picker is injected. Shield, armor, magic and bow rows are lines 104, 107, 109 and 113 with progressive on. Swords are line 111, progressive on and swordless off. The extras are lines 48 to 52, the five normal-difficulty blocks in order. The total of 153 is line 64, the fixed non-dungeon pool size.
 
-### world/pool/prize-items.data
+### world/pool/prize-items.constants
 
 The prize pool: the ten crystal and pendant items placed on the ten dungeon prize locations (the reference's `pre_fill` in worlds/alttp/__init__.py, transcribed from the Items.py `item_table` Crystal rows). They never sit in the shuffled pool.
 
@@ -1310,13 +1310,13 @@ The dungeon keys answer here too: Items.py classes every `Small Key (...)` and `
 
 Pool-side arithmetic of the npc-scope lock, per locked location: every locked location keeps its vanilla item, so that item leaves the pool the same way the key-drop option's locked keys leave their dungeon sets. The caller supplies the locked location set (all of the scope with the option off, the undeliverable remainder with it on). Global-pool removals are exact-name, with one tolerance: a locked plain Bottle consumes whichever rolled bottle variant the pool holds, because contents are cosmetic and logic treats the group as one item. A removal that finds nothing is a porting bug and throws. Both scope surfaces are iterated together, since a locked row can come from either. Small keys are per-dungeon and leave dungeon sets, not the pool (`scope-locked-key-counts`).
 
-### world/pool/standard-escape.data
+### world/pool/standard-escape
 
 Standard-mode escape assurance tables, transcribed from Archipelago worlds/alttp/ItemPool.py `generate_itempool` 294 to 317. With no starting melee weapon (the baseline has no precollected items), the mentor check must hold a weapon the escape can be fought with. The scan lists mirror the source exactly: one sword tier, first found (line 302); one bow, first found (line 306); each named arsenal item once (line 309); and the bomb pack (lines 312 to 313, the bombless start toggle is off, so the upgrade branch at 315 to 317 never applies). The escape-assist block (320 to 328) is off under default enemy health. `UNCLE_LOCATION` is the mentor's own check. `UNCLE_USABLE_WEAPONS` is every item the assurance may place, the acceptance set a stored standard placement is verified against.
 
 ### world/pool/uncle-usability
 
-Which starting weapons the escape can actually be fought with. A family standing on its empty rung when the file starts makes its weapon dead on arrival: no bombs to hold, no arrows to fire, no meter for the rod and the canes. The assurance scan and the stored-placement check both filter through this, so a weapon that cannot be used is never the one handed over. A weapon absent from the family table needs no capacity.
+Which starting weapons the escape can be fought with. A family standing on its empty rung when the file starts makes its weapon dead on arrival: no bombs to hold, no arrows to fire, no meter for the rod and the canes. The assurance scan and the stored-placement check both filter through this, so a weapon that cannot be used is never the one handed over. A weapon absent from the family table needs no capacity.
 
 Retro takes the bow out on its own terms. There, arrows are not a capacity at all: the bow fires only once the quiver has been bought, and the escape happens before any shop can be reached. So a bow handed over at the start of a retro seed can never be fired, whatever the arrow capacity says. The flag is only whether shots are bought, not the whole retro setting. Vanilla start rungs with retro off admit every candidate, so the reference scan is unchanged there.
 
@@ -1336,7 +1336,7 @@ Restrictive prefill of the dungeon-restricted items into the dungeons: the port 
 
 The restriction follows the source's two name sets (Dungeons.py 199 to 223). Everything reaching this pass is `dungeon_local`; a family that left the dungeons never arrives here, because the pool builder puts it in the shuffled pool. Only the families in `dungeon_specific_item_names` (the original-dungeon ones) are also pinned to the dungeon that owns them. `SPECIFIC_SORT_BONUS` is the source's own `+5` (231 to 232): those items are the hardest to place, so they go first. It is constant across every item under the baseline, which leaves the order the stable sort has always produced. Under minimal accessibility the prefill relaxes reachability once the game is beaten.
 
-### world/fill/dungeon-order.data
+### world/fill/dungeon-order.constants
 
 The order the fill walks the dungeons in. It is not a fact about any dungeon, which is why it is not on the records: it is the order the prefill pass pushes each dungeon's restricted items in, and the placement depends on it, so it belongs to the fill. It is ported from Archipelago worlds/alttp/Dungeons.py `create_dungeons` (open mode), whose call order this is.
 
@@ -1344,7 +1344,7 @@ The order the fill walks the dungeons in. It is not a fact about any dungeon, wh
 
 Snapshot to fill-world options: the one reading of the option keys the generator and the pool accounting share, so the In Pool column and the seed can never disagree about what a snapshot means. The deliverable sets name the scope locations and fairy slots the app proved physically deliverable; an absent set counts as empty, so everything of that scope stays locked vanilla.
 
-The shop seed is the placement's own seed. The random shop mode draws its slots from it and stores it on the scope, so a session rebuilding the scope opens the identical shelves. Every other mode ignores it, which is why the live panel may read a snapshot with none. Under retro no shop may still be selling arrows, so the arrow shelves open whatever the mode drew, and the scope every consumer sees is the one the seed is really built from: the mode's own slots plus those shelves. With retro off it is the scope untouched. Every seed rolled from a snapshot lets a wish pond's mode decide her two vanilla slots (`POND_SLOTS_FOLLOW_MODE_FROM_SNAPSHOT`).
+The shop seed is the placement's own seed. The random shop mode draws its slots from it and stores it on the scope, so a session rebuilding the scope opens the identical shelves. Every other mode ignores it, which is why the live panel may read a snapshot with none. Under retro no shop may still be selling arrows, so the arrow shelves open whatever the mode drew, and the scope every consumer sees is the one the seed is built from: the mode's own slots plus those shelves. With retro off it is the scope untouched. Every seed rolled from a snapshot lets a wish pond's mode decide her two vanilla slots (`POND_SLOTS_FOLLOW_MODE_FROM_SNAPSHOT`).
 
 `shufflePrizesFromSnapshot` says whether the ten dungeon rewards are shuffled over the ten reward slots. It is read here and not in the generator, so every consumer of a snapshot reads the option once. Only an explicit false turns it off: an absent row is its baseline.
 
@@ -1390,7 +1390,7 @@ The assumed-state sweep the fill runs before every placement: the port of the re
 
 ### world/fill/verify-placement
 
-Verification sweep over a completed placement: from an empty inventory, repeatedly collect every collectable location's item in sphere batches until a fixpoint. What the sweep reports is the same in every accessibility contract: the spheres, the locations it never reached and the story events it never made happen. Which of those actually invalidate the seed is the contract's question, asked of the accessibility check. The batches double as the placement's spoiler spheres. The story events within reach of each batch's state happen with it; they are no location, so a round that only made events happen is no sphere.
+Verification sweep over a completed placement: from an empty inventory, repeatedly collect every collectable location's item in sphere batches until a fixpoint. What the sweep reports is the same in every accessibility contract: the spheres, the locations it never reached and the story events it never made happen. Which of those invalidate the seed is the contract's question, asked of the accessibility check. The batches double as the placement's spoiler spheres. The story events within reach of each batch's state happen with it; they are no location, so a round that only made events happen is no sphere.
 
 ### world/fill/verify-standard
 
@@ -1432,7 +1432,7 @@ The candidate pool an item demand names from is this snapshot's own pool, built 
 
 What the shelves charge, rolled before the world is built, because the access rules read these amounts back: a shelf the file could never pay for is out of logic, and the fill has to know that before it places anything. The roll runs on the attempt's own rng, so a retry rolls fresh prices and no stored seed moves. The pond demands used to roll here on the same stream; they now come from the seed alone so the options panel can show them before anything is generated. A pond asking for rupees and nothing else drew nothing from this stream, so the move left every placement where it was.
 
-### world/fill/location-order.data
+### world/fill/location-order.constants
 
 The order a region hands its locations to the fill, where record order is not it. This is a fill order, not a fact about the game. The fill shuffles one candidate list built region by region, so the order a region lists its rows in decides which item lands where. The reference builds a dungeon's rows in walk order, with a key drop sitting where the pot it comes from stands; the records number the same rows by kind, key drops last. The two agree everywhere except the seven regions listed. Dropping this table moved 9 to 14 rows of every seed in tests/regression when it had nine entries (measured); the other two only ordered a story event, which is no location any more. Nothing else reads it. Every other region comes out in record order, which is already the reference's, and the world builder throws when a row here is not exactly that region's own set.
 
@@ -1450,7 +1450,7 @@ Location collectability: `canCollectLocation` mirrors the reference's `Location.
 
 ### world/rules/heart-capacity
 
-How many hearts a file can hold: the three it starts with, every container, and a heart per four pieces. No cap is applied, because a heart price is paid out of what the file really holds.
+How many hearts a file can hold: the three it starts with, every container, and a heart per four pieces. No cap is applied, because a heart price is paid out of what the file holds.
 
 ### world/rules/helper-definition.type
 
@@ -1520,7 +1520,7 @@ The seed table: every value a seeded rule reads, as one world settled it. The ru
 
 A pond rung is a ladder, and this is the rule that says so. Rung k asks for three things: the pond reachable (its region rule, already registered), rung k-1 taken, and its own demand payable. The middle one is what a ladder means: to stand at rung k the player must have made every throw before it, so rung k carries the demands of rungs 0 to k, AND-composed in rung order. That is the same reading the wallet overlay already makes of a rupee ladder, widened to every currency a demand can name. Every currency is read by the shop's own price rule, so a bomb demand at a pond and a bomb price on a shelf ask for the same thing. An item demand also locks its own rung against the item it names: a rung reachable only by holding item X cannot be the rung that hands X over.
 
-The climb runs over every rung, because a rung this world does not sell still had to be paid through; a rung past the plan, or one nothing was rolled for, demands `none` in the seed table and adds nothing. Only a prize slot the world really sells, with a demand of its own, carries the rule (the `pondGated` flag). A pond handing over its own pair asks for that pair on its own terms. Every pond's ladder is registered the same way for every setting and seed; nothing rolled (every pond legacy) leaves every rung ungated. Which ponds may carry a demand is the roll's question (a custom pond and nothing else); this reads whatever the placement carries and never re-decides it, which keeps a generated seed on the rules it was verified against.
+The climb runs over every rung, because a rung this world does not sell still had to be paid through; a rung past the plan, or one nothing was rolled for, demands `none` in the seed table and adds nothing. Only a prize slot the world sells, with a demand of its own, carries the rule (the `pondGated` flag). A pond handing over its own pair asks for that pair on its own terms. Every pond's ladder is registered the same way for every setting and seed; nothing rolled (every pond legacy) leaves every rung ungated. Which ponds may carry a demand is the roll's question (a custom pond and nothing else); this reads whatever the placement carries and never re-decides it, which keeps a generated seed on the rules it was verified against.
 
 ### world/rules/bunny
 
@@ -1530,7 +1530,7 @@ Lines 1761 to 1767: affected multi-entrance interiors lock their exits; the reco
 
 ### world/rules/rule-node.type
 
-A rule as data: the tree every access rule of the randomizer is written in, so it can be read, walked and exported as JSON (the Interpreter pattern: the interpreter compiles a tree into the closure the engine calls, and the closure is only a cache of the tree). The op set is kept to what the rules really ask. A leaf that reads the collection answers one primitive question; anything that needs arithmetic over raw state (a capacity ladder, the magic meter, the hearts) is a named helper with arguments. A leaf that reads the world's settings is an option test against one named reading, so a setting that changes a rule changes it inside the tree.
+A rule as data: the tree every access rule of the randomizer is written in, so it can be read, walked and exported as JSON (the Interpreter pattern: the interpreter compiles a tree into the closure the engine calls, and the closure is only a cache of the tree). The op set is kept to what the rules ask. A leaf that reads the collection answers one primitive question; anything that needs arithmetic over raw state (a capacity ladder, the magic meter, the hearts) is a named helper with arguments. A leaf that reads the world's settings is an option test against one named reading, so a setting that changes a rule changes it inside the tree.
 
 Semantics, each the engine's own reading: `has` is at least `count` copies (default 1), and usable; `hasAny` is any one of the items held and usable; `hasDistinct` is how many of the listed items are held and usable, at least `atLeast`; `countGroup` is the raw summed count of the listed items, usability ignored, at least `atLeast`; `all` and `any` short-circuit, left to right; `if` is `cond ? then : else`; `region` is the region reachable; `location` is the location existing, its region reachable and its own rule holding; `exit` is the rule registered on that exit holding (an unruled exit holds); `placedAt` is the fill seam holding that item at that location; `option` is the named setting reading equal to the value; `seed` is the named seed-table value equal to the value; `helper` is the named helper asked with its arguments. A count may name a setting reading instead of a number, for the gates whose number is a setting. A count, a helper argument or the item of a `has` may name a seed-table value: the numbers the app settles for one profile before any fill (a shelf's price, a pond rung's demand), so a tree keeps one shape for every seed and the values travel beside it. Primitive helpers read raw state no primitive op can express; python implements exactly these. Derived helpers are a tree of primitives, kept by name so the tables stay readable.
 
@@ -1552,7 +1552,7 @@ For an item price, holding the named item is the whole rule. Every other currenc
 
 The wallet overlay: every priced check and passage additionally needs a wallet that can hold its price, read off the wallet ladder the profile and the collected upgrades reach. It is applied after coverage is closed and AND-composed onto whatever the reference registered, so the source's rule and always-open partition (and its pinned counts) is untouched, and a vanilla wallet (999, above every price) changes nothing. A row naming a fairy slot absent from this world (its family is vanilla) is skipped; any other unknown name is a porting error.
 
-The pond is the one priced surface whose price is not fixed: under a non-legacy mode its plan says what each throw costs, so the plan's own price replaces the table's hundred for every prize slot. That price is the guaranteed worst case: the dearest single throw that must be paid to reach this prize, every earlier throw included. Only a prize slot this world really sells is priced: a pond handing over its own pair charges nothing for it, and a ladder the world does not carry (its seam unproven) prices nothing, so those names keep the rules they have always had. Every pond slot this world holds is priced from the seed table (0 asks nothing), the same way for every slot, which keeps the tree the same for every setting.
+The pond is the one priced surface whose price is not fixed: under a non-legacy mode its plan says what each throw costs, so the plan's own price replaces the table's hundred for every prize slot. That price is the guaranteed worst case: the dearest single throw that must be paid to reach this prize, every earlier throw included. Only a prize slot this world sells is priced: a pond handing over its own pair charges nothing for it, and a ladder the world does not carry (its seam unproven) prices nothing, so those names keep the rules they have always had. Every pond slot this world holds is priced from the seed table (0 asks nothing), the same way for every slot, which keeps the tree the same for every setting.
 
 Each shelf slot this world opened charges the price the seed rolled for it, or its own vanilla price when nothing was rolled. A restocked slot charges that price again and not a multiple of it: the rules express that the wallet can hold the price, and rupees are farmable between purchases, so a slot's third item needs the same wallet rung as its first. The tree reads the price off the seed table, so it keeps one shape for every seed; the item rule is a placement predicate and reads the price itself. The price also decides what the slot may hold: a shelf never sells the capacity its own price is counted in.
 
@@ -1564,33 +1564,33 @@ There is no always-open list. A passage with no rule on it is an open passage, w
 
 ## Rule tables
 
-### world/rules/tables/region-graph.data
+### world/rules/tables/region-graph.constants
 
 The reachability graph: every passage between two regions, in one table. The reference states this twice, as the exits each region owns and as the wiring that names each exit's target, across seven files. One row states it once: where the passage starts, where it ends, and the name the rule tables key its requirement by. The four parts are its four taxonomies (first world, second world, caves and houses, dungeon interiors), in their own order, because the graph's order is the order the sweep and the fill walk it in.
 
 A row is logic, not a place. The exit name is the key the rule tables hang their requirement off. `connectionId` is the one place a row touches the map, naming the crossing the records draw for that passage where exactly one of them joins the same pair of regions; 187 of the 392 rows carry none, which is honest, because a mirror spot, a retry from the menu and a wing boundary inside one room cross no tile, and a pair joined by two doors cannot say which of them the passage is. The rows are folded from Archipelago worlds/alttp/Regions.py (`create_regions`, the exits of each region) and EntranceShuffle.py (`mandatory_connections`, `default_connections`, `default_dungeon_connections`), open mode with entrance shuffle off.
 
-### world/rules/tables/bunny-lists.data
+### world/rules/tables/bunny-lists
 
 The locations the transformed state can still pick up, from Archipelago worlds/alttp/Rules.py `set_bunny_rules` 1668 to 1673, as check ids. Two of them are story events of the world (the purple chest found, the smiths reunited), which the source keeps as event locations, so the same exemption covers them. The regions that list named (1663 to 1666, and the one shop handled apart at 1769 to 1771) are gone from here: being impassable while transformed is a fact about the place, so it is a `bunnyImpassable` flag on the region record. In order: the mentor's at the start (`check-017`), the elder's gift (`check-033`), the bedridden child's (`check-041`), the hidden clearing (`check-043`), the felled tree (`check-044`), the tiled cave (`check-047`), the cauldron room's own chest (`check-056`), the cave under the lookout (`check-061`), the standing item on the pyramid (`check-076`), the generous one deep in the cave (`check-088`), the cave under the pegs (`check-271`), the ledge past the bumper cave (`check-272`), the ruined smiths' chest found (`check-337`), the standing item on the lookout (`check-071`), the southern tablet (`check-080`), the northern tablet (`check-070`), the purple chest delivered (`check-010`), the smith's reward (`check-039`), the smiths reunited (`check-336`), the pedestal (`check-072`), the bottle seller (`check-007`), the item under the water (`check-009`), and the desert ledge (`check-059`).
 
-### world/rules/tables/completion.data
+### world/rules/tables/completion
 
 Goal wiring for the boss-defeat baseline, from Archipelago worlds/alttp/Rules.py: the final fight's rule (611 `GanonDefeatRule`, then 95 to 97 the second tower fight and 616 to 617 the seven-crystal requirement add on; the goal is the ledger's "Ganon beaten" event), the drop into the fight (618), the pyramid opening (734, where `open_pyramid` resolves `goal` to closed for this goal, leaving only the second tower fight), and the bomb-delivery fairy (1354 plus 1397 to 1401: the delivery shop sits at its vanilla entrance, one of the southern second-world doors). The drop asks for a blow the last fight will feel, so the hammer stands in for the beam blade on the same switch the fight itself reads. The fairy's wall is already blown open, or the shop has put the bomb on sale to blow it. Crossing the peg bridge (hammer and pearl) is Rules.py 1357 to 1358.
 
-### world/rules/tables/bosses.data
+### world/rules/tables/bosses
 
 Boss defeat rules, ported from Archipelago worlds/alttp/Bosses.py (each `*DefeatRule`, lines 36 to 157), specialized to the baseline: swordless off (the swordless branches drop), glitches `no_glitches` (the final fight's silverless branch drops). Boss placement is vanilla (boss shuffle off), so the per-dungeon lookup reads the boss off the dungeon record (`DungeonRecord.bossActorId`) and finds the rule by that actor (Rules.py 149 to 151), plus the fixed final-tower sub-boss trio (Dungeons.py 169 to 171). Source lines per boss: armos 36 to 46, lanmolas 49 to 56, moldorm 59 to 60, helmasaur 63 to 66, arrghus 69 to 80, mothula 83 to 92, blind 95 to 96, kholdstare 99 to 118 (only the sworded branches remain), vitreous 121 to 124, trinexx 127 to 132, agahnim 135 to 136 (both tower fights share it). The three-headed boss of the mountain dungeon is three actors and one fight, so all three heads resolve to one rule; the two tower fights are one actor and resolve to one rule the same way.
 
 The last fight takes a hammer while that switch is on, which is the reference's own swordless branch. Ganon's rule is Bosses.py 139 to 156, the strict silvers path with the swordless branch. The reference asks for arrows and stops; the last phase takes the final fight's silver shots back to back, so the arrow capacity has to hold that many at once, and under retro the wallet has to.
 
-### world/rules/tables/item-rules.data
+### world/rules/tables/item-rules
 
 Item-placement constraints of the baseline path, from the source Rules.py: the prize-slot restriction (204 to 211: prize slots only carry prize items; the goal lock at 203 has no row, because the final fight is a story event, never a location an item could sit at), the swamp big-key forbid (404 to 405), and every `set_always_allow` and `allow_self_locking_items` row the source installs. The reference's `allow_self_locking_items` is modelled as the always-allow predicate it installs. The swamp forbid is guarded by `not small_key_shuffle`, and a Choice is falsy only at value 0, so it exists exactly while the small keys stay pinned to their own dungeon (the glitch half of the guard is fixed at `no_glitches`).
 
 Always-allow rows: 327 to 328 (`check-119`), 387 to 388 (`check-137`), 401 to 402 (`check-159`, self-locking), 431 to 432 (`check-186`, self-locking), 533 to 534 (`check-145`), 538 to 539 (`check-154`), 1232 to 1234 (`check-224`), and the forest-den allowance 419 to 420 (`check-178`), which exists only with the key-drop option off. The palace of darkness rows ask for five keys held. `FULL_ACCESS_ALWAYS_ALLOW` is what the reference keeps when accessibility is full: only the unconditional 327 to 328 row survives, since every other row is guarded by `accessibility != 'full'` (387, 401, 419, 431, 533, 538, 1232). The fill-facing world builder prunes the registry to this set when that is the contract in force.
 
-### world/rules/tables/lamps.data
+### world/rules/tables/lamps
 
 The dark spots of the world: every exit and location the reference gates on light, ported from Archipelago worlds/alttp/Rules.py `add_conditional_lamps` (lines 989 to 1037, non-inverted spots) under the baseline: neither light cone is set, so every conditional spot is listed. Exits by source line: Vitreous 1003, the two dark rooms of Turtle Rock 1004 and 1005, the dark palace big key door 1006 and maze door 1007, Agahnim 1 at 1013, the old man cave and return cave exits 1023 to 1025, the old man house 1026 to 1027. Locations: `check-149` 1008, `check-150` 1010, `check-113` to `check-115` 1014 to 1016, `check-060` 1022, `check-123` and `check-124` 1028 to 1029, `check-119` 1030, `check-121` and `check-122` 1031 to 1032.
 
@@ -1598,68 +1598,68 @@ What each spot asks is not written here. The reference resolves it against one t
 
 The three unlit spots of the opening escape (1034 to 1037: both ways into the stretch, `Sewers Back Door` and `Throne Room`, and the check standing in it) are listed too, where the source skips them in the mode this app always plays. That is the one deliberate divergence, and it goes the strict way: they are the rooms a player is most often left feeling through, so they answer to the same switch as every other dark spot. With the requirement on, a light is guaranteed before them, since the fill has only the handful of rooms ahead of the escape to place one in. With it off they open as the original does. The two remaining names inside the unlit stretch are covered by these three: both ways in are gated, so nothing beyond them is reachable without a light. The escape spots have one seam: a placement the reference generated was rolled with them ungated, so the parity harness that replays one says so through the world option. No app path sets it.
 
-### world/rules/tables/global-misc.data
+### world/rules/tables/global-misc
 
 Non-dungeon rows of Archipelago worlds/alttp/Rules.py `global_rules` (lines 200 to 303, and 620), baseline options: enemy shuffle off, enemy health default, pot shuffle off, `can_take_damage` true. Constant sub-terms the fixed options force true are collapsed. By source line: 216 to 221 the mountain save-and-quit spot opens once its cave dweller is reachable; 223 to 226 the water item, the purple chest found and delivered; 227 to 228 the tablet and the pedestal; 230 to 234 the smiths reunited (the ledger's event), the smith's reward, the powder, the bottle seller and the boots spot; 239 to 244 the bombs branch stays (enemy shuffle off, enemy health default); 246 the elder; 248 to 252 bomb walls; 253 to 255 bomb-or-bonk; 256 to 270 the mini moldorm cave chests; 271 to 272 bomb walls; 273 to 277 the kill room chests; 278 to 281 bomb walls; 282 to 285 the mountain shop and the two brothers house; 287 to 293 the spike cave (`can_take_damage` is true in the baseline, no OHKO timer); 295 to 302 the hookshot cave; 620 the weathervane. Any bottle at all counts, raw: an empty one is still somewhere to put the prize.
 
-### world/rules/tables/default-overworld.data
+### world/rules/tables/default-overworld
 
 Overworld rows of Archipelago worlds/alttp/Rules.py `default_rules` (lines 623 to 734, non-inverted) merged with the `no_glitches_rules` overworld rows (lines 910 to 919) that set the same names afterwards, so only the surviving final rule is kept. Dungeon-entrance rows live in the per-dungeon tables; the goal and pyramid rows in the completion table. The first-world part runs 627 to 672, the second-world part 674 to 731, then 685 (the southern tablet), `forbid_bomb_jump_requirements` 960, and `no_glitches_rules` 911 to 916 (the rows not overriding a default row). Overrides: 669 (a nonexistent-item rule) is overridden by 919 under no glitches; 684 is overridden by 914 (no glitches drops the mirror escape); 689 is overridden by 915.
 
 The bird comes to an active flute: the plain flute woken at the weathervane, or the Activated Flute, an item a check gives already awake. The tomb wall was dashed open once and stays open, so the act carries the boots. Three pegs hammered in behind a heavy rock open the warp tile for good. The peg field was flattened once, so the act carries the hammer.
 
-### world/rules/tables/standard.data
+### world/rules/tables/standard
 
 Standard-mode rules, ported from Archipelago worlds/alttp/Rules.py `standard_rules` (lines 1090 to 1121) for the fixed baseline: small keys stay in their own dungeon, never universal, so the 1099 to 1116 branch applies; enemy health is default, so the guarded chest's kill clause collapses to true (1110 to 1115). The escape gating: the throne door opens only once the cell chest is collectable (1093); the two upper castle exits (1094 to 1095), the church spawn and the home's front door open only once the church is reachable through the escape (1096 to 1097). Every escape kill check uses the start-arsenal helper (StateHelpers.py `can_kill_standard_start`). The start connection itself (`Uncle S&Q`, 1091 to 1092) is a row of the first-world graph and carries no rule. Rows 1100 to 1109 and 1117 to 1119 are the castle chests; 1106 to 1107 replaces the `global_rules` 304 to 305 most-things kill. The reference gates the home spawn itself, which puts the home chest after the escape. The game opens in that house with the chest in reach before anything else, so the gate sits on its front door: the chest is sphere 0 and the fields still wait for the church.
 
-### world/rules/tables/dungeon-first-castle.data
+### world/rules/tables/dungeon-first-castle
 
 The first castle and its sewers: the mode-independent rows from Archipelago worlds/alttp/Rules.py `global_rules` 304 to 312 (the 309 universal-key clause is off in the baseline). The 304 to 305 guard-drop kill rule is later replaced by the standard-mode table, as `standard_rules` re-sets it after `global_rules` in the source. 307 to 311 are the sewer doors; 312 the secret room.
 
-### world/rules/tables/dungeon-castle-tower.data
+### world/rules/tables/dungeon-castle-tower
 
 The castle tower, from Archipelago worlds/alttp/Rules.py: the barrier entrance (`default_rules` 662), the tower climb (`global_rules` 314 to 326) and the first tower fight's defeat rule (`dungeon_boss_rules` 176 to 197). Lamp requirements come from the lamp table. The barrier falls to the cape, a beam sword, or the win, and, on the switch the swordless branch arms, to the hammer; cutting it is an act the game writes down and the cape is not, because one slips past a barrier that is still standing. The seal takes a hammer while that switch is on. On 314 to 315, Rules.py `swordless_rules` adds that with no blade anywhere in the seed the entrance asks only what the fight itself asks, which the hammer and the net already satisfy.
 
-### world/rules/tables/dungeon-east-palace.data
+### world/rules/tables/dungeon-east-palace
 
 The eastern palace, from Archipelago worlds/alttp/Rules.py `global_rules` 327 to 358 (enemy shuffle off, so the boss needs arrows, 348 to 350; enemy health default, so the pot-kill block 352 to 358 is skipped). Lamp requirements come from the lamp table; the big-key self-allowance lives in the item-rules table. Rows: 329 to 333, 334 to 335, 336 to 337, and boss access 340 to 350 (big key, both keys, the boss fight, and arrows).
 
-### world/rules/tables/dungeon-desert-palace.data
+### world/rules/tables/dungeon-desert-palace
 
 The desert palace, from Archipelago worlds/alttp/Rules.py: the book entrance and outer rocks (`default_rules` 640, 659 to 660) and the interior (`global_rules` 360 to 372). The stairs are open because the prayer was said, and the book is what says it, so the act carries the book and the stairs ask for the act. Rows 360 to 361, 363 to 366, then 367 to 368 (full keys, big key, a fire source and the boss fight). The prize guard (370 to 372) says the prize must not lock the keys needed to reach it. It is guarded by `not (small_key_shuffle and big_key_shuffle)`: a Choice is falsy only at value 0, so the guard drops only once both key families have left their own dungeon, at which point neither key can be locked behind the prize; otherwise the outer palace must be reachable.
 
-### world/rules/tables/dungeon-mountain-tower.data
+### world/rules/tables/dungeon-mountain-tower
 
 The mountaintop tower, from Archipelago worlds/alttp/Rules.py `global_rules` 374 to 388 (enemy shuffle off, so the big-key door needs a real weapon, 380 to 384) plus the boss defeat rule from `dungeon_boss_rules`. The small-key self-allowance lives in the item-rules table. Rows 374 to 375, 376, 377 then 380 to 384, 385 to 386.
 
-### world/rules/tables/dungeon-dark-palace.data
+### world/rules/tables/dungeon-dark-palace
 
 The eastern second-world palace, from Archipelago worlds/alttp/Rules.py: the toll entrance (`default_rules` 681), `global_rules` 517 to 541 (enemy shuffle off, so the bonk wall needs arrows, 519 to 520; pot shuffle off, so 527 to 529 are skipped) and the boss defeat rule. Lamp rows come from the lamp table; the two small-key self-allowances live in the item-rules table. The gatekeeper wants the real traveler, and the door is opened once, by the porter who was hired for it; no inventory says whether he was, so a world with no record to read keeps the old answer. Rows 519 to 521, 522 to 524, 525 to 526, 531 to 532, 536 to 537, 541.
 
-### world/rules/tables/dungeon-swamp.data
+### world/rules/tables/dungeon-swamp
 
 The swamp palace, from Archipelago worlds/alttp/Rules.py `global_rules` 390 to 410 (pot shuffle off, so 396 to 398 and 408 to 410 are skipped) plus the moat mirror requirement (109 to 110: the swamp was not moved, entrance shuffle is vanilla) and the boss defeat rule. The big-key forbid and self-allowance live in the item-rules table. Row 390, then 109 to 110 adds the mirror; 391 to 395; 399 to 403; the boss rule, then 406 to 407 add the full key count.
 
-### world/rules/tables/dungeon-woods.data
+### world/rules/tables/dungeon-woods
 
 The forest dungeon, from Archipelago worlds/alttp/Rules.py: the entrance rows (`default_rules` 694 to 695, where drops under bushes stay bunny-proof, and 715, where the thorns burned away once and stay burned, so the act carries the fire), `global_rules` 425 to 435 (all first-section doors cost the full key count, 426 to 429), the glitch-jump lockout (`forbid_bomb_jump_requirements` 961) and the boss defeat rule; 434 to 435 add the full key count after it. The big-chest self-allowance lives in the item-rules table. At 433 the hanging cloth door needs a blade to cut, unless the switch that lets it be pulled down is on, which is the reference's own swordless branch.
 
-### world/rules/tables/dungeon-thieves-den.data
+### world/rules/tables/dungeon-thieves-den
 
 The outcast-village hideout, from Archipelago worlds/alttp/Rules.py: the pull entrance (`default_rules` 693), `global_rules` 412 to 423 (vanilla boss, so the fight door needs keys and bombs, 413 to 414) and the boss defeat rule. The big-chest self-allowance (key-drop off only) lives in the item-rules table. The way in is a door somebody already pulled open with the gloves, and the act's own record carries that; nothing in an inventory says whether it was pulled, so a world with no record keeps the old answer. 415 to 416 follow the reference's operator precedence: three keys, or self-placed and two keys, and the hammer. Rows 417 to 418 and 421 to 423 follow.
 
-### world/rules/tables/dungeon-ice.data
+### world/rules/tables/dungeon-ice
 
 The lake-island dungeon, from Archipelago worlds/alttp/Rules.py `global_rules` 437 to 461 (swordless off; `can_take_damage` true collapses the spike-crossing clause of the east door, 459 to 460) plus the boss defeat rule. Rows 437 to 439, 441 to 443, 453 to 460 (the big key in the far side lowers the key need to four; the damage-tank alternative is always available in the baseline), 461.
 
-### world/rules/tables/dungeon-mire.data
+### world/rules/tables/dungeon-mire
 
 The swamp-of-despair dungeon, from Archipelago worlds/alttp/Rules.py: the medallion entrance (`default_rules` 716; the medallion opened it once and the seal stays down, so the act carries the casting), `global_rules` 463 to 488 (`can_take_damage` true keeps the hearts alternative live) and the boss defeat rule. The Vitreous-room lamp comes from the lamp table. Rows 463, 464 to 468, 470 to 476, 478 to 482 (a key placed west is safe only when the big key locks it), 483 to 485, 486 to 488.
 
-### world/rules/tables/dungeon-turtle.data
+### world/rules/tables/dungeon-turtle
 
 The mountain shell dungeon, from Archipelago worlds/alttp/Rules.py: the medallion entrance (`default_rules` 732; the medallion opened it once and the seal stays down, so the act carries the casting), `global_rules` 490 to 515 (`fix_trock_doors` is false for vanilla entrances and open mode, so the bomb-wall rows 511 to 515 apply) and `set_trock_key_rules` 1136 to 1234. Under vanilla wiring the locked-door probe resolves to: front reachable, middle, big chest and back unreachable, so the not-`can_reach_back` branch applies (1183 to 1208), no forbids fire (1211 needs an unreachable front), and the self-allowance (1232 to 1234) lives in the item-rules table. Dark-room lamp rows come from the lamp table. The front-locked chests are 1153. Rows: 490 to 491, 492 to 496, 497 to 499 (the big-key door rule is re-set identically at 1167), 500 to 501, 502 to 503, 504 to 507 (the laser bridge), 508, 509 plus 512, 513 to 515, 1170 to 1171, 1183 to 1196, and 1198 to 1208, where the keys needed depend on what sits in the chest itself.
 
-### world/rules/tables/dungeon-final-tower.data
+### world/rules/tables/dungeon-final-tower
 
 The final tower, from Archipelago worlds/alttp/Rules.py: the crystal gate (122, since the earlier lock at 114 to 118 is immediately re-set and dead; the doors were opened once and stayed open, so the act carries the crystal count), `global_rules` 543 to 609 (enemy shuffle off, so the big-key door needs arrows, 597 to 599; the double-switch row at 552 is re-set by 564 and only the key count survives), the glitch-room hookshot requirement (`forbid_bomb_jump_requirements` 956 to 959) and `no_glitches_rules` 918 (the hookshot for the double-switch room). The chest groups are 544 to 546. Rows: 548 to 551, 555 to 556, 566 to 567, 570 to 571, 572 to 574, 577 to 578, 579 to 580, 582 to 584, 586, 588 to 593 (the bottom fight guards the big-key room), 597 to 599, 600 to 601 (the middle fight guards the torch climb), 602 to 606, 607 to 608 (the top fight guards the gap), 609 (the second tower fight), 957 to 959.

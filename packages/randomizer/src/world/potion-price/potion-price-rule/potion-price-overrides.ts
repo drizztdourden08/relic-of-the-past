@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { bottleContentKeyOf } from '../../shops/shop-price-options.data';
+import { bottleContentKeyOf } from '../../shops/shop-price-options';
 import { blockedContentsOf } from './blocked-contents-of';
 import type { OptionValue } from '../../options.type';
 import type { ShopScope } from '../../shops/shop-scope.type';

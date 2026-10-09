@@ -2,7 +2,7 @@
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { DEFAULT_GUIDE } from './StageGridEcho/StageGridEcho.constants';
-import './GridEditor/HudLayoutEditor.grid.css';
+import './GridEditor/GridEditor.css';
 import type { HudContainer } from '@rotp/hud';
 import type { StageFlexEchoProps } from './StageFlexEcho.type';
 

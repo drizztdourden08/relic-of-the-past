@@ -3,7 +3,7 @@ import type { ActorId, ConnectionId, DungeonId, ScreenId, TagId } from '../ids';
 import type { Requirement } from '../check';
 import type { ConnectionNavData } from '../../../pathfinding/nav-data.types';
 import type { ReviewMark } from '../review';
-import type { ConnectionKind, ConnectionSide } from '../../enumeration/enumeration.generated.type';
+import type { ConnectionKind, ConnectionSide } from '../../enumeration/enumeration.type';
 
 interface ConnectionGameId {
   entranceId?: number;

@@ -1,8 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt refresh <name>`: fetch and rebase one worktree, or all of them. Claiming refreshes
- * automatically, so this is for a worktree already in hand that fell behind mid-task.
- */
 import { surveyAll, surveyOne } from '../survey.mjs';
 import { refreshWorktree } from '../refresh.mjs';
 import { flag } from '../args.mjs';

@@ -6,8 +6,8 @@ const stripDirection = (value: string): string => value.replace(DIRECTION_PREFIX
 
 const parseGamepadMapping = (mapping: string): ParsedMapping | null => {
   const parts = mapping.split(',').map((p) => p.trim()).filter(Boolean);
-  if (parts.length < 2) return null;
   const [guid, name, ...fields] = parts;
+  if (guid === undefined || name === undefined) return null;
   const buttonIndexToKey = new Map<number, string>();
   const hatToKey = new Map<string, string>();
   const axisIndexToKey = new Map<number, string>();

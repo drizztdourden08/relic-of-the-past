@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { isValidFreeSequence } from '../../capacity/curves/free-sequence';
-import { POND_PRICE_LADDER } from '../pond-ladder.data';
+import { POND_PRICE_LADDER } from '../pond-ladder.constants';
 import { pondCeilingRungOf } from './pond-ceiling-rung-of';
 import type { PondInstance } from '../pond-instance.type';
 import type { PondCustomSetting } from '../pond-profile.type';

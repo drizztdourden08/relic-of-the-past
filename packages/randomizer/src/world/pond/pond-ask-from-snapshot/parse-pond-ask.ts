@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { asksOnlyRupees } from '../pond-ask.data';
+import { asksOnlyRupees } from '../pond-ask';
 import { readPondAsk } from './read-pond-ask';
 import type { PartialOptionValues } from '../../options.type';
 import type { PondAskSetting } from '../pond-ask.type';

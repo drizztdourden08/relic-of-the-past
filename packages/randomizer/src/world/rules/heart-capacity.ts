@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import { PIECES_PER_HEART, STARTING_HEARTS } from './heart-capacity.constants';
 import type { CollectionState } from '../collection-state.type';
 

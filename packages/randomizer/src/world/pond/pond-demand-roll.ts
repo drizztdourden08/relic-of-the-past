@@ -9,7 +9,7 @@ import { demandRangeOf } from './demand-range-of';
 import { demandKindsOf } from './demand-kinds-of';
 import { bottleContentPicker } from './bottle-content-picker';
 import { bracketCountOf } from './bracket-count-of';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { CapacityProfile, CurveShape } from '../capacity/capacity-profile.type';
 import type { PondAskSetting, PondDemandView } from './pond-ask.type';
 import type { PondPlan } from './pond-profile.type';

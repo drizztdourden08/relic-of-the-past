@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { DUNGEON_ORDER } from '../fill/dungeon-order.data';
+import { DUNGEON_ORDER } from '../fill/dungeon-order.constants';
 import { worldDungeonOf } from '../world-dungeon';
 import type { ItemId } from '@rotp/game-data';
 

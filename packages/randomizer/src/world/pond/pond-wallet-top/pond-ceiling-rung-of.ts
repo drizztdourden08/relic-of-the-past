@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POND_PRICE_LADDER } from '../pond-ladder.data';
+import { POND_PRICE_LADDER } from '../pond-ladder.constants';
 
 const pondCeilingRungOf = (walletTop: number): number => {
   let rung = 0;

@@ -1,7 +1,7 @@
 /* @layer shared-game-data @kind logic */
 import type { SoundChannel } from '../../manifest/msu-manifest.type';
 import type { GameSound } from './game-sounds.type';
-import { GAME_SOUNDS } from './game-sounds.data';
+import { GAME_SOUNDS } from './game-sounds.constants';
 import { withSoundName } from './with-sound-name';
 
 const gameSound = (channel: SoundChannel, id: number): GameSound | undefined => {

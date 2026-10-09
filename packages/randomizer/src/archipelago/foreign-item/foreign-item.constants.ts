@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import type { ItemKey } from '../../world/item-ids.data';
+import type { ItemKey } from '../../world/item-ids';
 
 const FOREIGN_ITEM_KEY: ItemKey = 'item-foreign';
 

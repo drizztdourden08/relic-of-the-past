@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '../scope-tables';
 import type { LocationKey } from '../location-key';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 
 const scopeCopiesOf = (item: ItemKey, lockedScope: ReadonlySet<LocationKey>): number =>
   [...NPC_SCOPE_LOCATIONS, ...WORLD_ITEM_SCOPE_LOCATIONS]

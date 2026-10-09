@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import {
   SHOP_PRICE_MODIFIER_DEFAULT, SHOP_PRICE_MODIFIER_KEY, SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_MIN,
-} from '../shop-price-options.data';
+} from '../shop-price-options';
 import type { OptionValues } from '../../options.type';
 
 const shopPriceModifierOf = (values: OptionValues): number => {

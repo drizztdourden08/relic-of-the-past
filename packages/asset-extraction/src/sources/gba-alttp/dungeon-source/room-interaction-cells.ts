@@ -1,7 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 import type { DungeonInteractionCell, DungeonRoomRecord } from '../../../dungeon/model';
 import { ROOM_MAP_SIDE } from './dungeon-source.constants';
-import { INTERACTION_ATTRIBUTES } from './dungeon-source.data';
+import { INTERACTION_ATTRIBUTES } from './interaction-attributes.constants';
 
 const roomInteractionCells = (room: DungeonRoomRecord): DungeonInteractionCell[] => {
   const result: DungeonInteractionCell[] = [];

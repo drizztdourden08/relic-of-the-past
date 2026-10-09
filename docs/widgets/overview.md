@@ -2,7 +2,7 @@
 # Widgets Overview
 
 Widgets are overlay panels that show information and tools while you play. Open them from the title
-bar or Menu → **Widgets**, and you can have several open at once.
+bar or from **Widgets** in the Menu, and you can have several open at once.
 
 ## Layout
 

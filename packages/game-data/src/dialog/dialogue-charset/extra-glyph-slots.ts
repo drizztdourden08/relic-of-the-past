@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { EXTRA_GLYPHS } from '../extra-glyphs.data';
+import { EXTRA_GLYPHS } from '../extra-glyphs.constants';
 import type { ExtraGlyphSlot } from './dialogue-charset.type';
 import { GLYPH_SLOTS } from './dialogue-charset.constants';
 import { alphabetChars } from './alphabet-chars';

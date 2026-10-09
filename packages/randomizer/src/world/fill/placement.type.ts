@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 import type { MedallionId } from '../item-groups';
 import type { AccessibilityMode } from '../accessibility/accessibility.type';

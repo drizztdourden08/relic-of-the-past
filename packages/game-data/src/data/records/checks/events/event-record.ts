@@ -2,8 +2,8 @@
 import type { CheckRecord } from '../../../types';
 import type { EventSpec } from '../../../checks/event-spec.type';
 import { eventId } from '../../../checks/event-id';
-import { EVENT_SCREENS } from './event-screens.data';
-import { EVENT_REGIONS } from './event-regions.data';
+import { EVENT_SCREENS } from './event-screens.constants';
+import { EVENT_REGIONS } from './event-regions.constants';
 
 const eventRecord = (spec: EventSpec): CheckRecord => {
   const { n, name, group, gameId = {}, dungeonId, subArea, derived, reachAny, now, derivedDungeon, statusOnly, requirements, actorId } = spec;
@@ -11,7 +11,7 @@ const eventRecord = (spec: EventSpec): CheckRecord => {
     id: eventId(n),
     gameId,
     kind: 'event',
-    name: name,
+    name,
     vanillaItemIds: [],
     eventGroup: group,
     ...(EVENT_SCREENS[n] !== undefined ? { screenId: EVENT_SCREENS[n] } : {}),

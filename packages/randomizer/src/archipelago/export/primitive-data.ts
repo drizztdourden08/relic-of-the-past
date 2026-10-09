@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../../world/item-ids.data';
-import { CAPACITY_SHOP } from '../../world/capacity/capacity-shop.data';
-import { REGION } from '../../world/region-ids.data';
+import { ITEM } from '../../world/item-ids';
+import { CAPACITY_SHOP } from '../../world/capacity/capacity-shop.constants';
+import { REGION } from '../../world/region-ids.constants';
 import { BOTTLE_ITEMS } from '../../world/item-groups';
 import { BASELINE } from '../../world/state-helpers';
 import { meterConsumingItems } from '../../world/item-usability';

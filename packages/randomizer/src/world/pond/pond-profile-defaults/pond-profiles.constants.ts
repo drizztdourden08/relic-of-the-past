@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { LEGACY_POND_SETTING } from './pond-profile-defaults.data';
+import { LEGACY_POND_SETTING } from './pond-profile-defaults.constants';
 import { DEFAULT_SETTING_BY_ID } from './pond-settings-by-id.constants';
 import { pondProfilesOf } from './pond-profiles-of';
 import type { PondProfiles } from '../pond-profiles.type';

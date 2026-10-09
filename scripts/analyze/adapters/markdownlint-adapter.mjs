@@ -1,12 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * markdownlint adapter (docs quality). Built-in MD### findings are 'warn': docs
- * follow the conventions but do not gate commits on prose style. The repo's own
- * ROTP### rules (the AI-writing gate, scripts/lint/markdown-rules/) are 'error'
- * and do gate, matching the ESLint side.
- */
+/* @layer tooling-scripts @kind logic */
 import { batchQuoted, sh, toolExists } from './_run.mjs';
 
 const LINE = /^(.+?):(\d+)(?::\d+)?\s+(?:\w+\s+)?((?:MD|ROTP)\d+\/[\w-]+)\s+(.*)$/;
@@ -14,8 +6,6 @@ const GATING = /^ROTP\d+\//;
 
 const run = async (records, ctx) => {
   const { root, mode } = ctx;
-  // --no-globs in diff mode: without it the config's "**/*.md" is added back and
-  // every doc in the repo is linted just to have its findings filtered out again.
   if (!records.length) return [];
   const targets = mode === 'diff'
     ? batchQuoted(records.map((r) => r.rel)).map((b) => `--no-globs ${b}`)

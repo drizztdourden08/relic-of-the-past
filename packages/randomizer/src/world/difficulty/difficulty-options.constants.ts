@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
-import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.data';
-import { DEFAULT_HEART_CAP, MAX_HEART_CAP, STARTING_HEARTS } from './difficulty.data';
+import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.constants';
+import { DEFAULT_HEART_CAP, MAX_HEART_CAP, STARTING_HEARTS } from './difficulty';
 import { HEART_CAP_KEY, difficultyCopiesKeyOf } from './difficulty-option-keys';
 import { difficultyCopiesSeed } from './difficulty-copies-seed';
 import type { OptionSeed } from '../options.type';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { pondRupeesOnlyAsk } from '../pond-ask.data';
+import { pondRupeesOnlyAsk } from '../pond-ask';
 import type { PondAskSetting } from '../pond-ask.type';
 import type { PondSetting } from '../pond-profile.type';
 

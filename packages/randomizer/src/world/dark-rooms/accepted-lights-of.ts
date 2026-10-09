@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { DARK_ROOM_LIGHT_FIELDS } from './dark-room-lights.data';
+import { DARK_ROOM_LIGHT_FIELDS } from './dark-room-lights.constants';
 import type { DarkRoomLightField, DarkRoomSetting } from '@rotp/game-core';
 
 const acceptedLightsOf = (setting: DarkRoomSetting): readonly DarkRoomLightField[] =>

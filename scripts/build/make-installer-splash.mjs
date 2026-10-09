@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Builds the installer splash as an animated GIF, matching the app's boot splash
- * (apps/desktop/src/splash.html) frame for frame: black ground, 192px mark, a 28px ring
- * whose top quarter is gold, one revolution every 0.7s.
- */
 import { createRequire } from 'module';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
@@ -14,11 +9,9 @@ const sharp = require('sharp');
 const ROOT = process.cwd();
 const OUT = process.argv[2] ?? join(ROOT, 'build', 'installer-splash.gif');
 
-// Window, mirroring the splash BrowserWindow in window/boot/splash-window.ts.
 const W = 480;
 const H = 360;
 
-// From the boot splash CSS: 192px logo, 28px spinner, 28px gap, column centred.
 const LOGO = 192;
 const RING = 28;
 const GAP = 28;
@@ -26,7 +19,7 @@ const STROKE = 3;
 const TRACK = 'rgba(255,255,255,0.12)';
 const GOLD = '#c8a84e';
 
-const FRAMES = 14;          // 14 x 50ms = 700ms, the CSS animation duration
+const FRAMES = 14;
 const DELAY_MS = 50;
 
 const contentH = LOGO + GAP + RING;
@@ -34,8 +27,6 @@ const logoTop = Math.round((H - contentH) / 2);
 const ringTop = logoTop + LOGO + GAP;
 const ringLeft = Math.round((W - RING) / 2);
 
-// The gold quarter, centred on twelve o'clock, drawn as an arc so it matches the
-// CSS border-top-color trick instead of approximating it.
 const arcPath = () => {
   const c = RING / 2;
   const r = (RING - STROKE) / 2;
@@ -79,13 +70,10 @@ for (let i = 0; i < FRAMES; i += 1) {
   frames.push(frame);
 }
 
-// Animated output takes its frames stacked vertically, one page each.
 const stacked = Buffer.concat(frames);
 await sharp(stacked, {
   raw: { width: W, height: H * FRAMES, channels: 4, pageHeight: H },
 })
-  // No dithering: the mark is a smooth gold gradient, and dither turns it into
-  // speckle. Zero interframe error keeps the ring crisp per frame.
   .gif({
     loop: 0,
     delay: new Array(FRAMES).fill(DELAY_MS),

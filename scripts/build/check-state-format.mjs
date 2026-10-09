@@ -1,27 +1,15 @@
-// @layer tooling-scripts @kind build
-/**
- * Release gate for the save state format. The id is computed by the build
- * (core/wasm-build/layout-probe.mjs); this refuses to publish one that no
- * KNOWN_FORMATS row describes. The emitted asset carries the id in its filename,
- * `state-format-<id>.json`, so an older build can answer "will my save states still
- * load?" from the release listing alone.
- *
- * Usage:
- *   node scripts/build/check-state-format.mjs                  # gate only
- *   node scripts/build/check-state-format.mjs --emit <dir>     # gate, then write the asset
- */
+/* @layer tooling-scripts @kind build */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..', '..');
-const generatedPath = join(root, 'packages', 'game-core', 'src', 'save-state', 'current-format.generated.ts');
+const generatedPath = join(root, 'packages', 'game-core', 'src', 'save-state', 'current-format.constants.ts');
 const formatsPath = join(root, 'packages', 'game-core', 'src', 'save-state', 'formats.ts');
 const pkgPath = join(root, 'package.json');
 
-// Read as text, not imported: this runs as plain node with no TypeScript loader.
 const readGenerated = () => {
   if (!existsSync(generatedPath)) {
-    fail('packages/game-core/src/save-state/current-format.generated.ts is missing. Run the wasm build (it runs the layout probe).');
+    fail('packages/game-core/src/save-state/current-format.constants.ts is missing. Run the wasm build (it runs the layout probe).');
   }
   const src = readFileSync(generatedPath, 'utf8');
   const id = src.match(/id:\s*'([0-9a-f]+)'/)?.[1];
@@ -30,7 +18,6 @@ const readGenerated = () => {
   return { id, totalBytes };
 };
 
-/** Deduped: BASELINE repeats the original id, and listing it twice reads like a bug. */
 const readKnownIds = () => [
   ...new Set([...readFileSync(formatsPath, 'utf8').matchAll(/id:\s*'([0-9a-f]+)'/g)].map((m) => m[1])),
 ];
@@ -66,7 +53,6 @@ const run = () => {
 
   const { version } = JSON.parse(readFileSync(pkgPath, 'utf8'));
   const name = `state-format-${id}.json`;
-  // The filename is what readers use; the body is for a human who opens it.
   writeFileSync(join(dir, name), `${JSON.stringify({ id, totalBytes, app: version }, null, 2)}\n`);
   console.log(`[state-format] wrote ${join(dir, name)}`);
 };

@@ -3,7 +3,7 @@ import { getModule } from '@rotp/game-core';
 
 const wishPondThrowsTaken = (pond: number): number => {
   const mod = getModule();
-  return mod ? (mod.ccall('WasmWishPondThrowsTaken', 'number', ['number'], [pond]) as number) : 0;
+  return mod ? (mod.ccall('WasmWishPondThrowsTaken', 'number', ['number'], [pond])) : 0;
 };
 
 export { wishPondThrowsTaken };

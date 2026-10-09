@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { ITEM_POWER_KEY } from './item-power.data';
+import { ITEM_POWER_KEY } from './item-power.constants';
 
 const FORCED_WITHOUT_BLADE: readonly string[] = [
   ITEM_POWER_KEY.swordlessMedallions,

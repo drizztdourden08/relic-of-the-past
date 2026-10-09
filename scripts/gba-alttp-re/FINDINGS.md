@@ -162,7 +162,7 @@ node scripts/gba-alttp-re/correlate-snes.mjs --room 0x12 --chunk 16 --stride 8
 ## 2026-08-20: debugger transport check
 
 - mGBA 0.10.5's Qt GDB server accepted an ARM GDB connection on port `2345`.
-- GDB read live `pc`, `sp`, `lr`, and `cpsr` registers and IWRAM successfully.
+- GDB read live `pc`, `sp`, `lr`, and `cpsr` registers and IWRAM.
 - The sampled ranges at `0x030038F0` and `0x03003100` were zero while the game was
   outside active gameplay. This confirms transport and addressability, not the
   published meanings of those fields.

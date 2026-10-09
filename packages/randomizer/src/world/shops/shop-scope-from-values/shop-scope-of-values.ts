@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { clampDepth } from '../shop-slots';
 import { isShopShuffleMode } from '../shop-scope';
-import { SHOP_MODE_KEY, SHOP_SLOT_COUNT_KEY, SHOP_SLOT_DEPTH_KEY } from '../shop-slot-options.data';
+import { SHOP_MODE_KEY, SHOP_SLOT_COUNT_KEY, SHOP_SLOT_DEPTH_KEY } from '../shop-slot-options';
 import { enabledSlotsOf } from './enabled-slots-of';
 import type { OptionValues } from '../../options.type';
 import type { ShopScope, ShopShuffleMode } from '../shop-scope.type';

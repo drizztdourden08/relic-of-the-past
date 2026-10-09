@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { DEFAULT_PROGRESSIVE_SETTING } from './progressive-families.data';
+import { DEFAULT_PROGRESSIVE_SETTING } from './progressive-families.constants';
 import { progressiveTierKeyOf } from './progressive-option-keys';
 import { progressiveFamilyName, progressiveTierName } from './progressive-display-names';
 import { PROGRESSIVE_TIER_ROW } from './progressive-tier-row.constants';

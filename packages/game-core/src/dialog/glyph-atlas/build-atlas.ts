@@ -14,7 +14,9 @@ const paintTile = (ctx: CanvasRenderingContext2D, tiles: Uint8Array, tile: numbe
     for (let px = 0; px < 8; px++) {
       const value = pixels[py * 8 + px];
       if (value === 0) continue;
-      ctx.fillStyle = ramp[value];
+      const color = value === undefined ? undefined : ramp[value];
+      if (color === undefined) throw new RangeError(`glyph pixel ${String(value)} has no palette color`);
+      ctx.fillStyle = color;
       ctx.fillRect(x + px, y + py, 1, 1);
     }
   }

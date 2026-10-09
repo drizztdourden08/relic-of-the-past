@@ -117,7 +117,8 @@ int GameHook_ReceiptMessageOverride(uint8 item_id, int vanilla_msg) {
 }
 
 // No gate test here: records only, per the file comment. TS passes ids from
-// RANDOMIZER_RECEIPT_MSG (randomizer-templates.ts), which mirrors kReceiptMsg_*.
+// RANDOMIZER_RECEIPT_MSG (asset-extraction text/data/randomizer-templates), which
+// mirrors kReceiptMsg_*.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetNextReceiptMessage(int msg_id) {
   g_next_receipt_msg = msg_id;

@@ -5,6 +5,8 @@ const DISABLED_SETTING_MESSAGES: Record<string, string> = {
   cheatsEnabled: 'Cheats are disabled',
   trackerEnabled: 'Tracker is disabled',
   devNavigationData: 'Navigation data is disabled',
+  onlineOnly: 'These options belong to online randomizer profiles. Open a profile that plays an Archipelago room to set them.',
+  mobileOnly: 'These options apply to the phone and tablet app only.',
 };
 
 export { DISABLED_SETTING_MESSAGES };

@@ -9,7 +9,7 @@
 //
 // The lines are randomizer template lines, positions 6-14 of the list the language bake
 // appends after the canonical vanilla dialogue (packages/asset-extraction/src/text/data/
-// randomizer-templates/randomizer-templates.data.ts). Same frozen contract kReceiptMsg_* and the archery refusal
+// randomizer-templates/randomizer-templates.constants.ts). Same frozen contract kReceiptMsg_* and the archery refusal
 // answer to: the order here MUST match that list. A blob baked before these lines existed
 // stops short of them, and an index past its end would open an empty box, so a fallback
 // is said instead. The refusal itself and the beep are the same either way.

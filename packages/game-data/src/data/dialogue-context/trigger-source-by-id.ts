@@ -2,7 +2,7 @@
 import type { TriggerSourceRow } from './dialogue-context.type';
 import { triggerSourceRows } from './trigger-source';
 
-const triggerSourceById: Map<number, TriggerSourceRow> = new Map(
+const triggerSourceById = new Map<number, TriggerSourceRow>(
   triggerSourceRows.map((row) => [row.id, row]),
 );
 

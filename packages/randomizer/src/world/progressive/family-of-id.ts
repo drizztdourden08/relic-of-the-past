@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES } from './progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from './progressive-families.constants';
 import type { ProgressiveFamilyDef, ProgressiveFamilyId } from './progressive.type';
 
 const familyOfId = (id: ProgressiveFamilyId): ProgressiveFamilyDef => {

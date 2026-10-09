@@ -5,7 +5,7 @@ interface IdleSampler {
   x: StickCandidate;
   y: StickCandidate | null;
   startedAt: number;
-  runs: number[][];
+  runs: [number[]] | [number[], number[]];
 }
 
 interface IdleAxisResult {

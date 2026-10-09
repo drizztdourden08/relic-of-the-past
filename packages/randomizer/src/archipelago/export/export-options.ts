@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { optionCatalog } from '../../world/options.data';
+import { optionCatalog } from '../../world/options';
 import { choicesOf } from './choices-of';
 import { PACKAGE_ROWS } from './export-options.constants';
 import type { OptionDef } from '../../world/options.type';

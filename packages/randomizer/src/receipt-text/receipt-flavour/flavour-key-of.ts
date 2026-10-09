@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { itemKeyOfName } from '../../world/display-names/item-key-name';
-import { RETRO_QUIVER_ITEM } from '../../world/retro/retro-bow.data';
+import { RETRO_QUIVER_ITEM } from '../../world/retro/retro-bow.constants';
 import { countClassOf } from '../receipt-counts';
 import { DIRECT_FLAVOUR_KEYS } from './receipt-flavour.constants';
 import type { FlavourKey } from './receipt-flavour.type';

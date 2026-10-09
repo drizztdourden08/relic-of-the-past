@@ -25,11 +25,12 @@ Put ROMs in `./test-roms` (gitignored; created automatically). On each deploy:
 
 1. Install **VirtualBox 7+** and the **Extension Pack**.
 2. Create a VM and install **Ubuntu 26.04 LTS Desktop**.
-3. Add a Host-Only network: **File → Tools → Network Manager → Host-only Networks →
-   Create** (gives `VirtualBox Host-Only Ethernet Adapter`, `192.168.56.1`).
-4. VM **Settings → Network**:
+3. Add a Host-Only network: open **File**, then **Tools**, **Network Manager**,
+   **Host-only Networks**, and **Create** (gives `VirtualBox Host-Only Ethernet Adapter`,
+   `192.168.56.1`).
+4. In the VM's **Settings**, open **Network**:
    - **Adapter 1 = NAT** (internet).
-   - **Adapter 2 = Host-Only Adapter** → `VirtualBox Host-Only Ethernet Adapter`.
+   - **Adapter 2 = Host-Only Adapter**, attached to `VirtualBox Host-Only Ethernet Adapter`.
 5. Install the VirtualBox Guest Additions, then reboot.
 6. In the VM, run `setup-vm-runtime.sh`, then `vm-harden.sh`. This sets up sshd, DNS,
    the Host-Only static IP `192.168.56.50`, and auto-mounts `~/test-roms`.

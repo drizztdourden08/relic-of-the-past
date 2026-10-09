@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { baselineValues, optionByKey } from '../world/options.data';
+import { baselineValues, optionByKey } from '../world/options';
 import { OPTIONS_SCHEMA } from './options-snapshot.constants';
 import type { OptionValue, OptionValues, RandomizerOptionsSnapshot } from '../world/options.type';
 

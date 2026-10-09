@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { RETRO_BOW_KEY } from '../../retro/retro-bow.data';
+import { RETRO_BOW_KEY } from '../../retro/retro-bow.constants';
 import { FAMILIES, familyById } from '../capacity-family';
 import { capacityKeyOf } from '../capacity-option-keys';
 import { REFERENCE_CAPACITY_PROFILE } from '../capacity-profile-defaults';

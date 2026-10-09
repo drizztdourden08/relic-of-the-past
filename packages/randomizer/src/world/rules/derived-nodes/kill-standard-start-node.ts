@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../../item-ids.data';
+import { ITEM } from '../../item-ids';
 import { any, has, hasAny, helper } from '../rule-node-build';
 import { byrnaNode } from './byrna-node';
 import type { RuleNode } from '../rule-node.type';

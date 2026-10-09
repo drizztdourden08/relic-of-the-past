@@ -1,10 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt new <name>` creates a worktree, provisions its profile and makes it launchable.
- * The expensive path (~825 MB, ~5 min); prefer `wt claim --any` when the pool has a
- * free one. `name` is the worktree directory, the branch suffix (agent/<name>) and
- * the game profile id, so an instance launch needs no lookup.
- */
 import { existsSync, mkdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { updateRegistry, findRecord, createRecord } from '../registry.mjs';
@@ -17,7 +11,6 @@ import { flag } from '../args.mjs';
 
 const NAME_RULE = /^[a-z0-9][a-z0-9-]{0,38}$/;
 
-/** Matches the app's own --instance validation: the name becomes a directory. */
 const assertName = (name) => {
   if (!name) throw new Error('Usage: pnpm wtnew <name> [--from <ref>] [--rom <file>] [--quick-slot <N>] [--no-build]');
   if (!NAME_RULE.test(name)) {
@@ -25,8 +18,6 @@ const assertName = (name) => {
   }
 };
 
-// `--quick-slot` takes the 1-based "Slot N" shown in the save UI and converts it to
-// the 0-based index `--auto-state=<number>` and `saveN.sav` use.
 const resolveQuickSlot = (raw) => {
   if (raw == null) return null;
   const human = Number(raw);
@@ -37,7 +28,6 @@ const resolveQuickSlot = (raw) => {
 };
 
 const assertBranchFree = (branch) => {
-  // A clear message here beats letting `worktree add` fail cryptically.
   if (git(['rev-parse', '--verify', branch], repoRoot)) {
     throw new Error(`Branch ${branch} already exists. Pick another name, or: pnpm wtclean <name>`);
   }

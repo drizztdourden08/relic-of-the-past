@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 import type { DialogCell, DialogFrame } from '@rotp/game-data';
 
-const rowChanged = (a: DialogCell[], b: DialogCell[]): boolean => {
-  if (a.length !== b.length) return true;
-  for (let i = 0; i < a.length; i++) {
-    if (a[i].glyph !== b[i].glyph || a[i].x !== b[i].x || a[i].w !== b[i].w || a[i].highlight !== b[i].highlight) return true;
-  }
-  return false;
+const cellChanged = (a: DialogCell, b: DialogCell | undefined): boolean =>
+  b === undefined || a.glyph !== b.glyph || a.x !== b.x || a.w !== b.w || a.highlight !== b.highlight;
+
+const rowChanged = (a: DialogCell[], b: DialogCell[] | undefined): boolean => {
+  if (b === undefined || a.length !== b.length) return true;
+  return a.some((cell, i) => cellChanged(cell, b[i]));
 };
 
 const dialogFrameChanged = (prev: DialogFrame, next: DialogFrame): boolean => {

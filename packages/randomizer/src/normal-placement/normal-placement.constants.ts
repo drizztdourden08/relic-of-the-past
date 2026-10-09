@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../world/item-ids.data';
-import { REFERENCE_DARK_ROOM_SETTING } from '../world/dark-rooms/dark-room-lights.data';
+import { ITEM } from '../world/item-ids';
+import { REFERENCE_DARK_ROOM_SETTING } from '../world/dark-rooms/dark-room-lights.constants';
 import { VANILLA_MEDALLIONS } from '../world/item-groups';
 import type { ItemId } from '@rotp/game-data';
 import type { DungeonItemField } from './normal-placement.type';

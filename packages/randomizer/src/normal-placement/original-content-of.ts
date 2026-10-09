@@ -2,11 +2,11 @@
 import {
   KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS,
 } from '../world/scope-tables';
-import { ITEM } from '../world/item-ids.data';
+import { ITEM } from '../world/item-ids';
 import { checkIdOfLocation } from '../world/location-record';
 import { DUNGEON_FIELD_OF_GENERIC_ITEM } from './normal-placement.constants';
 import type { CheckId, ItemId, RegionId } from '@rotp/game-data';
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { WorldDungeon } from '../world/region.type';
 import type { World } from '../world/world.type';

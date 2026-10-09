@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt clean`: remove finished worktrees. Dry run unless --yes; refuses anything
- * holding uncommitted or unlanded work; leaves leased worktrees alone. Also removes
- * the worktree's game profile and its save states. Only registry ids are candidates.
- */
 import { rmSync, existsSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { updateRegistry } from '../registry.mjs';
@@ -17,7 +12,6 @@ import { createSnapshot, verifyAgainst } from '../../safety/snapshot.mjs';
 import { pruneSnapshots } from '../../safety/retention.mjs';
 import { flag } from '../args.mjs';
 
-/** Which records the given switches select, and why each other one is spared. */
 const selectTargets = ({ entries, name, merged, staleMs, now }) => {
   const chosen = [];
   const spared = [];
@@ -40,7 +34,6 @@ const selectTargets = ({ entries, name, merged, staleMs, now }) => {
       spared.push({ entry, why: 'used too recently' });
       continue;
     }
-    // With no selector at all, only obviously-finished worktrees are offered.
     if (!name && !merged && staleMs === null && assessment.verdict === VERDICTS.READY) {
       spared.push({ entry, why: 'unused and ready, so it stays warm in the pool' });
       continue;
@@ -61,14 +54,9 @@ const describe = ({ record, status, assessment }) => {
 
 const removeWorktree = (record) => {
   if (existsSync(record.path)) {
-    // Detach the junctions first and refuse to go further if any survives: a recursive
-    // delete walks into a junction and empties the main repo's directory.
     unlinkSharedDirs(record.path);
     assertNoSharedLinks(record.path);
 
-    // Not `git worktree remove`: on Windows its recursive delete follows junctions
-    // (it emptied the main repo's .claude and record tree once). removeTreeSafely
-    // unlinks reparse points instead of descending through them.
     const links = removeTreeSafely(record.path);
     if (links > 0) console.log(`  [wt] unlinked ${links} link(s) without following them`);
     if (existsSync(record.path)) {
@@ -83,9 +71,6 @@ const removeWorktree = (record) => {
     console.warn(`  [wt] Branch ${record.branch} was left in place (delete it by hand if unwanted).`);
   }
 
-  // A profile stamped automation:false (a real profile sharing a worktree's name) is
-  // refused. A missing `automation` field predates the marker, so only an explicit
-  // false blocks the delete.
   const profileDir = gameDataPath('profiles', record.name);
   const profilePath = `${profileDir}/profile.json`;
   if (existsSync(profilePath)) {
@@ -143,7 +128,6 @@ const run = async ({ positional, options }) => {
     return;
   }
 
-  // Snapshot first: everything below deletes.
   const snapshot = createSnapshot('wt-clean');
   console.log(`\n[wt] Safety snapshot ${snapshot.ref}`);
 
@@ -152,7 +136,6 @@ const run = async ({ positional, options }) => {
     removeWorktree(entry.record);
   }
 
-  // The worktrees sit outside the main checkout, so nothing protected should have moved.
   const check = verifyAgainst(snapshot.ref);
   if (check.ok) {
     console.log('\n[wt] Verified: no protected file went missing.');

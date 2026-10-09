@@ -1,10 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * The composed pieces, drawn by the same layout code the app runs: Sentri at rest from the
- * mascot's pieces, and the Hookshop highlight from Sentri, the hookshot and the bag. The
- * layout modules are TypeScript with the app's path aliases, so they are loaded through
- * Vite rather than copied here. Each returns one SVG that places the piece SVGs.
- */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createServer } from 'vite';
@@ -21,7 +15,6 @@ const ALIAS = {
 const inner = (file) => readFileSync(file, 'utf8').replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
 const viewBox = (file) => readFileSync(file, 'utf8').match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/).slice(1).map(Number);
 
-/** One placed part: its SVG scaled into its box and turned around its origin, like the CSS does. */
 const place = (file, p) => {
   const [w, h] = viewBox(file);
   return `<g transform="translate(${p.left} ${p.top}) rotate(${p.angle} ${p.originX} ${p.originY})">`
@@ -41,7 +34,6 @@ const HOOKSHOP_FILES = {
   handle: 'hookshot-handle.svg', linkFace: 'hookshot-link-face.svg', linkEdge: 'hookshot-link-edge.svg', head: 'hookshot-head.svg',
 };
 
-/** Loads the app's layout modules; call `close` when done or the process stays up. */
 const openLayouts = async () => {
   const server = await createServer({
     configFile: false, root: DESIGN, logLevel: 'silent', appType: 'custom',
@@ -61,14 +53,12 @@ const openLayouts = async () => {
   };
 };
 
-/** Sentri at rest: every piece where the app puts it, on the body's own grid. */
 const sentriSvg = ({ mascot }) => {
   const pieces = mascot.layout();
   const { w, h } = mascot.parts.body;
   return wrap(pieces.map((p) => place(resolve(MASCOT, MASCOT_FILES[p.piece]), p)).join(''), w, h);
 };
 
-/** The Hookshop highlight: Sentri pulling the bag in, with the stars behind the bag and the head clipped at its front edge. */
 const highlightSvg = (layouts, sentri) => {
   const { scene } = layouts;
   const L = scene.layout(scene.parts);

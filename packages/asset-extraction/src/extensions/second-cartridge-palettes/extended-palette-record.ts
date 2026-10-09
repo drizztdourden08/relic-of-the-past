@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-import { EXTENDED_PALETTES } from './second-cartridge-palettes.data';
+import { EXTENDED_PALETTES } from './second-cartridge-palettes.constants';
 
 const extendedPaletteRecord = (paletteId: number): Buffer | null => {
   const colors = EXTENDED_PALETTES[paletteId];

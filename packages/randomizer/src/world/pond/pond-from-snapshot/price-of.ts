@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { optionNumberOf } from '../../capacity/option-number-of';
-import { POND_PRICE_LADDER } from '../pond-ladder.data';
+import { POND_PRICE_LADDER } from '../pond-ladder.constants';
 import { rungOf } from '../pond-plan';
 import type { OptionValue } from '../../options.type';
 import type { PondInstance } from '../pond-instance.type';

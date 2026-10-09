@@ -8,7 +8,7 @@ import {
 } from './behavior/lattice-geometry';
 import { idOf } from './behavior/cell-id';
 import { headTitle } from './behavior/head-title';
-import './HudLayoutEditor.lattice.css';
+import './GridLattice.css';
 import type { CSSProperties } from 'react';
 import type { GridLatticeProps } from './GridLattice.type';
 

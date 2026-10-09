@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { normalizeEnabled } from '../shop-scope';
-import { SHOP_SLOT_ROWS } from '../shop-slot-options.data';
+import { SHOP_SLOT_ROWS } from '../shop-slot-options';
 import type { OptionValues } from '../../options.type';
 
 const enabledSlotsOf = (values: OptionValues): readonly number[] => normalizeEnabled(

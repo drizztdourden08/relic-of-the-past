@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS } from './dark-room-lights.data';
+import { DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS } from './dark-room-lights.constants';
 import { compileRule } from '../rules/rule-eval';
 import { all, any, countGroup, option } from '../rules/rule-node-build';
 import type { DarkRoomLightField } from '@rotp/game-core';

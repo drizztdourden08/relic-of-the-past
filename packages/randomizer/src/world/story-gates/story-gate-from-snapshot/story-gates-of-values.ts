@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { optionFlagOf } from '../../option-flag-of';
-import { DEFAULT_STORY_GATES } from '../story-gates.data';
+import { DEFAULT_STORY_GATES } from '../story-gates.constants';
 import { STORY_GATE_KEY as K } from '../story-gate-option-keys';
 import {
   BARRIER_GATES, BOMB_SHOP_GATES, COUNT_KINDS, MAX_GATE_COUNT, PEDESTAL_GATES, PYRAMID_GATE_OF_VALUE, SAHASRAHLA_GATES,

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES } from '../progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from '../progressive-families.constants';
 import { progressiveModeKeyOf } from '../progressive-mode-keys';
 import type { OptionValues } from '../../options.type';
 import type { ProgressiveFamilyMode, ProgressiveModeSetting } from '../progressive.type';

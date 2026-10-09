@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt release <name>`: free the lease, nothing else. A holder mismatch is reported,
- * not refused, or a lease left by a dead session would strand the worktree until its
- * TTL ran out. Removal is `wt clean`.
- */
 import { updateRegistry, findRecord } from '../registry.mjs';
 import { currentHolder, isHeld } from '../lease.mjs';
 

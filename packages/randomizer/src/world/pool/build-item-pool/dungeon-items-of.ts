@@ -2,7 +2,7 @@
 import { scopeLockedKeyCounts } from '../scope-locked-key-counts';
 import { lockedDropCounts } from './locked-drop-counts';
 import { removeCounted } from './remove-counted';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { LocationKey } from '../../location-key';
 import type { WorldDungeon } from '../../region.type';
 

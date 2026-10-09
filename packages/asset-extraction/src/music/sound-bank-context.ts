@@ -4,7 +4,7 @@ import type { MusicEntity, Pattern, Phrase, Song, SongList } from './extract-typ
 import { copySoundBank } from './copy-sound-bank';
 import { createMusicEntity } from './create-music-entity';
 import { noteToStr } from './note-to-str';
-import { kEffectByteLength, kEffectNames } from './spc-command-tables.data';
+import { kEffectByteLength, kEffectNames } from './spc-command-tables.constants';
 
 class SoundBankContext {
   memory: (number | null)[] = new Array(65536).fill(null);

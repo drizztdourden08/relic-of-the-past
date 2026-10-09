@@ -7,7 +7,7 @@ const writeCachedGame = (game: string, data: ApGameData): void => {
   try {
     localStorage.setItem(cacheKey(game, data.checksum), JSON.stringify(data));
   } catch {
-    return;
+    
   }
 };
 

@@ -1,15 +1,7 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Loads the file-tags.jsonc manifest and matches paths against its globs. All
- * matching entries merge (later keys win). Highest-precedence tag source; see classify.mjs.
- */
+/* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
 
-// Whole-line `//` comments only: globs contain `/*` and `*/` (e.g. `**/*.json`), so
-// block-comment stripping would corrupt them.
 const stripJsonc = (s) => s.split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
 
 const globToRegex = (glob) => {

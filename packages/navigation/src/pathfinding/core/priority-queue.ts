@@ -1,4 +1,6 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
+
 class PriorityQueue<T> {
   private heap: T[] = [];
   private compare: (a: T, b: T) => number;
@@ -16,9 +18,9 @@ class PriorityQueue<T> {
   }
 
   pop(): T | undefined {
-    if (this.heap.length === 0) return undefined;
     const top = this.heap[0];
-    const last = this.heap.pop()!;
+    const last = this.heap.pop();
+    if (last === undefined) return undefined;
     if (this.heap.length > 0) {
       this.heap[0] = last;
       this.sinkDown(0);
@@ -28,25 +30,41 @@ class PriorityQueue<T> {
 
   peek(): T | undefined { return this.heap[0]; }
 
-  private bubbleUp(idx: number): void {
+  private swap(a: number, b: number): void {
+    const first = itemAt(this.heap, a);
+    this.heap[a] = itemAt(this.heap, b);
+    this.heap[b] = first;
+  }
+
+  private order(a: number, b: number): number {
+    return this.compare(itemAt(this.heap, a), itemAt(this.heap, b));
+  }
+
+  private less(a: number, b: number): boolean {
+    return this.order(a, b) < 0;
+  }
+
+  private bubbleUp(start: number): void {
+    let idx = start;
     while (idx > 0) {
       const parent = (idx - 1) >> 1;
-      if (this.compare(this.heap[idx], this.heap[parent]) >= 0) break;
-      [this.heap[idx], this.heap[parent]] = [this.heap[parent], this.heap[idx]];
+      if (this.order(idx, parent) >= 0) break;
+      this.swap(idx, parent);
       idx = parent;
     }
   }
 
-  private sinkDown(idx: number): void {
+  private sinkDown(start: number): void {
     const len = this.heap.length;
+    let idx = start;
     while (true) {
       let smallest = idx;
       const left = 2 * idx + 1;
       const right = 2 * idx + 2;
-      if (left < len && this.compare(this.heap[left], this.heap[smallest]) < 0) smallest = left;
-      if (right < len && this.compare(this.heap[right], this.heap[smallest]) < 0) smallest = right;
+      if (left < len && this.less(left, smallest)) smallest = left;
+      if (right < len && this.less(right, smallest)) smallest = right;
       if (smallest === idx) break;
-      [this.heap[idx], this.heap[smallest]] = [this.heap[smallest], this.heap[idx]];
+      this.swap(idx, smallest);
       idx = smallest;
     }
   }

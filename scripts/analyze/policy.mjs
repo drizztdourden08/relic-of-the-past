@@ -1,11 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind config
- *
- * Per-kind policy. Baseline cap is 200 code lines; variances live here. `max: null`
- * exempts a kind from the cap (still classified and linted). `linters` lists the
- * adapters a kind must satisfy.
- */
+/* @layer tooling-scripts @kind config */
 const BASELINE = 200;
 
 const KIND_POLICY = {
@@ -15,9 +8,9 @@ const KIND_POLICY = {
   types: { max: BASELINE, linters: ['eslint', 'tsc'] },
   constants: { max: BASELINE, linters: ['eslint', 'tsc'] },
   barrel: { max: 80, linters: ['eslint', 'tsc'] },
-  native: { max: BASELINE, linters: ['clang-format'] },        // our C (game-hooks, wasm-build)
-  style: { max: 300, linters: ['stylelint'] },                 // CSS: rule groups run longer
-  test: { max: 300, linters: ['eslint', 'tsc'] },              // fixtures + cases
+  native: { max: BASELINE, linters: ['clang-format'] },
+  style: { max: 300, linters: ['stylelint'] },
+  test: { max: 300, linters: ['eslint', 'tsc'] },
   data: { max: null, linters: ['tsc'], mustLiveIn: ['/data/', '.data.'] },
   generated: { max: null, linters: [] },
   doc: { max: null, linters: ['markdownlint'] },
@@ -27,8 +20,6 @@ const KIND_POLICY = {
   asset: { max: null, linters: [] },
 };
 
-// Vendored = the upstream zelda3 decompilation (another project, not fully ours).
-// Still classified + analyzed, but findings are downgraded to hints (never gate).
 const isVendored = (rel) => rel.startsWith('core/zelda3/');
 
 const capFor = (kind) => (KIND_POLICY[kind] ?? { max: BASELINE }).max;

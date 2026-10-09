@@ -4,7 +4,7 @@
 Live display toggles, feature flags, FPS, and the HUD-less "clean frame" used by the edge-glow
 shader. All live in `emscripten_api.c`; setters are callable while the game runs.
 
-**Source:** `core/wasm-build/emscripten_api.c` · **Bridge:** `lib/game/live-settings.ts`, `lib/game/bridge/render.ts`, `lib/game/bridge/ui-state.ts`, `lib/game/fps.ts`
+**Source:** `core/wasm-build/emscripten_api.c` · **Bridge:** `packages/game-core/src/live-settings/`, `packages/game-core/src/bridge/render/`, `packages/game-core/src/bridge/ui-state/`, `packages/game-core/src/fps.ts`
 
 ---
 

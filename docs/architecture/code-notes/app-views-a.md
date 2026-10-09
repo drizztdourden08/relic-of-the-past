@@ -108,7 +108,7 @@ The capacity families and the wishing pond share the same physical slots, so tho
 
 Vanilla shops shuffle nothing, so with the shop mode on vanilla every control under it, the price rows included, is frozen.
 
-`ShopSlotsBlock` gets the seed so the random mode draws its shelves from it, and the cards show the set this profile will really open.
+`ShopSlotsBlock` gets the seed so the random mode draws its shelves from it, and the cards show the set this profile will open.
 
 Only an edit to the capacity pond settles the capacity and pond pair through `withCapacityPondRule`; the other two ponds stand alone. While sharing, every edit lands on the capacity pond, so every edit settles it.
 
@@ -214,7 +214,7 @@ A manifest is written whole, so every function here touches one channel and copi
 
 ### DataManager/sub-components/msu/behavior/sound-subtitle.ts
 
-The sentence under a sound channel's title. Effects channels say how much of the range the game raises; the ambient channel says how much is hidden. Each effects port names itself so two lists of the same ids do not read as one. `raisedCount` counts the rows the generated catalogue has a call site for; `reachableCount` (ambient only) the rows the game can actually reach; `hiddenCount` the rows the reachable trim holds back.
+The sentence under a sound channel's title. Effects channels say how much of the range the game raises; the ambient channel says how much is hidden. Each effects port names itself so two lists of the same ids do not read as one. `raisedCount` counts the rows the generated catalogue has a call site for; `reachableCount` (ambient only) the rows the game can reach; `hiddenCount` the rows the reachable trim holds back.
 
 ### DataManager/sub-components/msu/behavior/track-file-name/
 
@@ -528,7 +528,7 @@ Converts and stops: originals stay on disk as the fallback, and removing them is
 
 ### DataManager/sub-components/msu/OptimizeDialog/sub-components/PreviewStep/
 
-Only measured rows are summed (`previewTotals`): folding an unmeasured file in at its current size would present a guess as part of a measured total. Growth counts like saving, so a pack of mp3s shows the total getting bigger instead of a flattering net figure. `convertibleCount` is how many rows a run would really convert; excluded rows are not counted. The net label reads as a minus sign for bytes saved and a plus sign when the pack grows.
+Only measured rows are summed (`previewTotals`): folding an unmeasured file in at its current size would present a guess as part of a measured total. Growth counts like saving, so a pack of mp3s shows the total getting bigger instead of a flattering net figure. `convertibleCount` is how many rows a run would convert; excluded rows are not counted. The net label reads as a minus sign for bytes saved and a plus sign when the pack grows.
 
 A file that would grow reads `+` in the danger colour and stays in the run (`CandidateRow`): one format is the point, and an already compressed file pays in bytes, not quality.
 
@@ -931,7 +931,7 @@ Content is set with `emitUpdate: false` so the reset does not echo back as an ed
 A design system `Select` draws its list through a portal, so the list is not inside the card.
 A press on one of its values looks like a press outside the card.
 Checking whether the portal's popover layer holds anything tells those two cases apart.
-A press that really is elsewhere still closes the list, and the next press closes the card.
+A press that lands elsewhere still closes the list, and the next press closes the card.
 
 ### DataManager/sub-components/language-editor/editor-ui/popovers/PopoverShell.tsx
 
@@ -939,7 +939,7 @@ Every toolbar card is drawn in this shell, anchored under its own button.
 It floats over the content, because a toolbar that changes height moves the text away from the pointer.
 `keepFocus` swallows `mousedown` for a card that holds only buttons, which keeps the caret alive in the text.
 A card holding a field must not swallow it, or the field could never be typed in.
-The editor restores its stored selection before it places a token, so the insert lands correctly either way.
+The editor restores its stored selection before it places a token, so the insert lands at that selection either way.
 The toolbar owns which card is open and every way of closing it.
 
 ### DataManager/sub-components/language-editor/editor-ui/popovers/PopoverShell.css
@@ -1228,7 +1228,7 @@ The editor view's data: the draft, edits, glyph packs, schemes, sample state and
 The open layout is captured once, so a save that forks does not reopen the editor on the layout it just left.
 A save points the edited scheme at what was saved, because a fork nothing wears would be a copy made for no reason.
 One solve feeds both the panel's lattice and the stage's overlay and echo, so a panel cell has the stage cell's shape.
-One placement feeds the flex strip, so each cell is drawn at the size its child was really given.
+One placement feeds the flex strip, so each cell is drawn at the size its child was given.
 Deleting the selected glyph pack falls back to Auto, because a deleted pack left selected would silently fall through to the device family.
 The whole document's validator blocks Save: any invalid expression makes `errors` non empty, and `warnings` are the reflow notes from `validate-motion-warnings.ts`, shown on the node's Motion section.
 
@@ -1267,7 +1267,7 @@ A cursor row that names four arrow caps claims none of them.
 
 ### HudLayoutEditor/behavior/align-options
 
-The alignment values each engine really has, one row of tiles per axis.
+The alignment values each engine supports, one row of tiles per axis.
 A 3x3 pad could not show distribution: nine cells cross two positions, so `between` and `stretch` had no cell.
 One row per axis has room for six values and a diagram large enough to read.
 Only values the engine supports get a tile.
@@ -1412,7 +1412,7 @@ An unknown name is the one error that is not the parser's.
 
 ### HudLayoutEditor/behavior/flex-slots
 
-Where a flex container's children actually landed; it is to the flex editor what `grid-solve` is to the lattice.
+Where a flex container's children landed; it is to the flex editor what `grid-solve` is to the lattice.
 The strip draws the stage's own placement, read from `usePlacedLayout`, so a panel cell has the shape of the cell on the stage.
 A flex container has no lattice to solve, so where its children were placed is the arrangement.
 It is a context, not a prop, because it is a fact about the preview, not about the selected node.
@@ -1468,7 +1468,7 @@ A null pack means Auto, which is whatever generic draws.
 
 The lookup behind `GridSolveContext`: every grid on the stage, solved once, keyed by container id.
 `solveGrid` gets the container's real placed rectangle and the same `MeasureContext` that `StageGridEcho` and `ContainerOverlay` read, so panel and stage cells match by construction.
-The solve's unit is the container's own placed scale, so a grid inside a scaled subtree solves against the area it really has; the compact layout runs at 0.75.
+The solve's unit is the container's own placed scale, so a grid inside a scaled subtree solves against the area it has; the compact layout runs at 0.75.
 Track sizes come back in authored pixels, so the panel can draw them as `fr` weights and the stage at the display scale.
 A repeat's copies share one id, and the first one is taken.
 
@@ -1629,7 +1629,7 @@ So the solve runs in game pixels at the container's own placed scale, then multi
 
 ### HudLayoutEditor/behavior/stage-slot-rects.ts
 
-A flex container's slots: the box each child was actually placed in, so the space between them reads as a gap.
+A flex container's slots: the box each child was placed in, so the space between them reads as a gap.
 There is nothing to solve: a flex child either took part in the flow or left it (`collapsed` in `place-flow.ts`), so where children landed is the arrangement.
 Placed ids are unique after `expand.ts` suffixes repeat copies with `#i`, so matching by id cannot pick up another instance.
 
@@ -1689,7 +1689,7 @@ A move out of range is refused, not clamped, so a button that should be disabled
 Two subsections of Motion write that one field, so the merge lives here, owned by neither.
 Unchecking the last property must not drop an enter, and clearing an exit must not drop the properties.
 The object becomes `undefined` only when nothing is left: no properties, no enter, no exit.
-Which properties something actually drives is an annotation, not a filter; every property is offered.
+Which properties something drives is an annotation, not a filter; every property is offered.
 `position` counts as driven only inside a `repeat`, the one case where placement moves without a bound field naming it.
 An explicit `undefined` in the patch means clear the key, so such keys are removed and no `"easing": undefined` reaches the saved JSON.
 The six properties follow the order of `hud-motion.ts`.
@@ -2025,7 +2025,7 @@ Every expanded copy whose authored id was picked lights up.
 
 The editor's global settings strip, under the preview in the centre column, where the maintainer put it.
 It holds one setting and is built to hold more: `STEP 1 · 2 · 4 · 8`, how far one `−` or `+` in the inspector moves a number.
-8 is there because the game's grid is 8px, and 4 and 8 are the gaps people actually type.
+8 is there because the game's grid is 8px, and 4 and 8 are the gaps people type most.
 It lives in the centre column because a setting that changes every stepped field cannot sit inside one section without reading as that section's property.
 It is view only: the View reads `hud-editor-view-store` and passes the value and setter.
 
@@ -2109,7 +2109,7 @@ Only positions the current cluster draws are offered, because a glyph for a cont
 
 The Glyph insert, picked by eye: tabs are the packs and tiles are the artwork.
 It replaced a nested menu that asked players to recognise a control by its SDL name, such as `LEFT_SHOULDER`.
-Each tile resolves through the live HUD's fallback chain (pack, its fallback, generic), so a position shows the picture it would really get.
+Each tile resolves through the live HUD's fallback chain (pack, its fallback, generic), so a position shows the picture it would get in game.
 A position nothing draws is left out.
 
 ### HudLayoutEditor/sub-components/GradientRamp.tsx
@@ -2486,7 +2486,7 @@ The flex flow row is icon buttons on the panel background with no border, wrappi
 ### HudLayoutEditor/sub-components/HudLayoutEditor.motion.css
 
 Styles for Motion: the keyframe track, the easing tiles, the transport and a transition row.
-The rail is inset by a margin, not padding: an absolutely positioned child resolves `left: 0%` and `100%` against the padding box, so padding would not keep a diamond inside.
+The rail is inset by a margin, not padding: a child with `position: absolute` resolves `left: 0%` and `100%` against the padding box, so padding would not keep a diamond inside.
 With a margin, the space the pointer is measured in and the surface the author sees are the same rectangle, and the 11px diamond at `at: 1` hangs into the margin.
 Each key's `left` is set inline, the one computed value here.
 The transport only stops the play button from stretching; the slider fills the rest.

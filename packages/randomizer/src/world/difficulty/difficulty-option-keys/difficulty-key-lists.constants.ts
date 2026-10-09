@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { PROGRESSIVE_FAMILIES } from '../../progressive/progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from '../../progressive/progressive-families.constants';
 import { difficultyCopiesKeyOf } from './difficulty-copies-key-of';
 import { HEART_CAP_KEY } from './difficulty-option-keys.constants';
 

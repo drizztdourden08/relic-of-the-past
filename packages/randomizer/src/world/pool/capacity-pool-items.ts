@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { CAPACITY_UPGRADE_LOCATIONS } from '../scope-tables';
 import { familyOfSpot } from '../capacity/capacity-spots';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 import type { CapacityFamilyId } from '../capacity/capacity-profile.type';
 import type { CapacityPlans } from './pool.type';

@@ -7,12 +7,14 @@ import { popcount } from './popcount';
 const findButtonBits = (bl: Uint8Array, pressed: Uint8Array, excluded: Set<number>): ButtonDiff[] => {
   const out: ButtonDiff[] = [];
   for (let i = 0; i < Math.min(bl.length, pressed.length); i++) {
-    if (excluded.has(i)) continue;
-    const xor = bl[i] ^ pressed[i];
+    const restValue = bl[i];
+    const pressedValue = pressed[i];
+    if (excluded.has(i) || restValue === undefined || pressedValue === undefined) continue;
+    const xor = restValue ^ pressedValue;
     if (!xor) continue;
-    const delta = Math.abs(pressed[i] - bl[i]);
+    const delta = Math.abs(pressedValue - restValue);
     const isAnalog = delta >= ANALOG_THRESHOLD_DELTA && popcount(xor) > ANALOG_MIN_CHANGED_BITS;
-    out.push({ byteIndex: i, bitMask: xor, analog: isAnalog, restValue: bl[i], pressedValue: pressed[i] });
+    out.push({ byteIndex: i, bitMask: xor, analog: isAnalog, restValue, pressedValue });
   }
   return out;
 };

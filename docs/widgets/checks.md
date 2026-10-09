@@ -4,7 +4,7 @@
 Tracks every collectible check, meaning every item location in the game. This is the foundation for
 randomizer support. It records which locations you've checked, regardless of what was found there.
 
-## Features
+## Tracking, grouping and filters
 
 - Per-location status: done, available, or blocked.
 - Grouping by location, dungeon, area, or type.

@@ -3,7 +3,7 @@ import type { SceneFiles } from '../scene.type';
 import { sceneFileUrl } from './scene-file-url';
 import { sceneFileVariants } from './scene-file-variants';
 
-const LIGHT_FILES = import.meta.glob('../../../assets/title-scene/light/*.png', { eager: true, import: 'default' }) as Record<string, string>;
+const LIGHT_FILES = import.meta.glob('../../../../assets/title-scene/light/*.png', { eager: true, import: 'default' }) as Record<string, string>;
 
 const LIGHT_SCENE_FILES: SceneFiles = {
   sky: sceneFileUrl(LIGHT_FILES, 'skybg'),

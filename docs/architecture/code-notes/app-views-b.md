@@ -77,7 +77,7 @@ The page's activity feed is drawn through the shared `LogPanel`, so it gets the 
 
 ## Randomizer/sub-components/SpoilerPanel.tsx
 
-The spoiler is the same checks tracker the Checks widget renders, given the room to be read properly, plus the one grouping only a run offers: the sweep sphere. Locations the placement carries that the app's check dataset does not are reported, never dropped: a spoiler that omits rows is worse than one that says how many it could not place.
+The spoiler is the same checks tracker the Checks widget renders, given the room to be read in full, plus the one grouping only a run offers: the sweep sphere. Locations the placement carries that the app's check dataset does not are reported, never dropped: a spoiler that omits rows is worse than one that says how many it could not place.
 
 ## Randomizer/sub-components/WishingPondSection.tsx
 
@@ -410,7 +410,7 @@ Merges the report's steps with the wizard's dynamic step list into one strip. Th
 ## InputTester/sub-components/diagnostics-wizard/positional-capture/positional-capture.type.ts
 
 - A target is a fixed, ordered ask ("press A", "move the LEFT stick") built from SDL's own capability report for the connected device before any input arrives. A record is the outcome once the user answers it or skips it.
-- The joystick-level index that actually fired is compared against the SDL position's own index, so a mismatch (something firing at a different raw index than the name SDL gave it) is visible in the recorded data.
+- The joystick-level index that fired is compared against the SDL position's own index, so a mismatch (something firing at a different raw index than the name SDL gave it) is visible in the recorded data.
 - `expectedIndex` is the `SDL_BUTTON` index for a button target's own position, and null for an axis target, which has no comparable single index.
 - `firedIndex` is the joystick-level button or axis index that fired, and `firedPositionalName` the positional name at that index (SOUTH, LEFT_TRIGGER, and so on). Both are null when skipped.
 - `mismatch` is true only when `firedIndex` and `expectedIndex` are both known and disagree.

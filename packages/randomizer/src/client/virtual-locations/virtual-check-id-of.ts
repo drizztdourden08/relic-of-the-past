@@ -7,6 +7,6 @@ const slugKeepingUnderscores = (name: string): string =>
   name.toLowerCase().replace(/[^a-z0-9_]+/g, '-').replace(/(^-|-$)/g, '');
 
 const virtualCheckIdOf = (location: LocationKey): CheckId =>
-  `${VIRTUAL_PREFIX}${slugKeepingUnderscores(location)}` as CheckId;
+  `${VIRTUAL_PREFIX}${slugKeepingUnderscores(location)}`;
 
 export { virtualCheckIdOf };

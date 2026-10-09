@@ -1,13 +1,4 @@
 /* @layer tooling-scripts @kind build */
-/**
- * Check that Electron's prebuilt binary is present and usable before dev/build.
- * `node_modules/electron` is two parts (the JS shim and the downloaded binary in
- * `dist/` + `path.txt`), and either can go missing on its own; both look like an
- * opaque `Error: Electron uninstall` from electron-vite. Repairs: shim intact but
- * binary missing/stale, run install.js; shim broken, reinstall the package first.
- * Wired as postinstall and predev/prebuild. Locked files are reported, never
- * force-killed: the user may be running the app alongside.
- */
 import { existsSync, readFileSync, realpathSync, rmSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -34,8 +25,6 @@ const readText = (file) => {
   }
 };
 
-// Outside an Electron process, `require('electron')` resolves to the binary path
-// string (read from the package's path.txt); it throws when that file is missing.
 const binaryPath = () => {
   try {
     const resolved = require('electron');
@@ -45,7 +34,6 @@ const binaryPath = () => {
   }
 };
 
-// A human reason the package can't be used as-is, or null when it's healthy.
 const brokenReason = () => {
   const shimVersion = readJson(join(packageDir, 'package.json'))?.version;
   if (!shimVersion) {
@@ -63,8 +51,6 @@ const brokenReason = () => {
   return null;
 };
 
-// node_modules/electron is a pnpm link into node_modules/.pnpm. Clear the real folder
-// so the forced install below writes it again from the store.
 const realPackageDir = () => {
   try {
     return realpathSync(packageDir);
@@ -78,11 +64,9 @@ const runInstallScript = () => {
   try {
     execSync(`node "${installScript}"`, { cwd: packageDir, stdio: 'inherit' });
   } catch {
-    /* fall through to the post-repair check, which reports what's still wrong */
   }
 };
 
-// Reinstall from the lockfile, so a repair can't drift the tree.
 const reinstallPackage = () => {
   console.log('[ensure-electron] Reinstalling electron from the lockfile (this downloads ~100 MB)...');
   try {

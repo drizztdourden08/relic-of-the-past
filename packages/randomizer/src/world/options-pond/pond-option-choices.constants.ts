@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
-import { CURVE_LABELS } from '../capacity/curves/curves.data';
-import { POND_PRICE_LADDER } from '../pond/pond-ladder.data';
+import { CURVE_LABELS } from '../capacity/curves/curve-ids.constants';
+import { POND_PRICE_LADDER } from '../pond/pond-ladder.constants';
 import type { OptionChoice } from '../options.type';
 
 const POND_MODE_CHOICES: readonly OptionChoice[] = [

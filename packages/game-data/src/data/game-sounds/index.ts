@@ -1,5 +1,5 @@
 /* @layer shared-game-data @kind barrel */
-export { GAME_SOUNDS, SOUND_CHANNEL_PORTS } from './game-sounds.data';
+export { GAME_SOUNDS, SOUND_CHANNEL_PORTS } from './game-sounds.constants';
 export { soundsOfChannel } from './sounds-of-channel';
 export { gameSound } from './game-sound';
 export { soundName } from '../sound-names';

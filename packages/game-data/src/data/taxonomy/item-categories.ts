@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { ItemCategory } from '../enumeration/enumeration.generated.type';
+import type { ItemCategory } from '../enumeration/enumeration.type';
 
 const ITEM_CATEGORY_LABELS: Record<ItemCategory, string> = {
   weapon: 'Weapon',

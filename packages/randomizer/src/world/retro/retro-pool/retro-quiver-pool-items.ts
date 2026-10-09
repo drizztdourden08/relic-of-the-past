@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import { RETRO_QUIVER_ITEM } from '../retro-bow.data';
+import { RETRO_QUIVER_ITEM } from '../retro-bow.constants';
 import { retroQuiverInPool } from '../retro-shops';
 import type { ShopScope } from '../../shops/shop-scope.type';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { RetroBowSetting } from '../retro.type';
 
 const retroQuiverPoolItems = (

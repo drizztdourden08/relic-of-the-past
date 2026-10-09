@@ -1,22 +1,14 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Lease arithmetic for the worktree pool. A lease carries an expiry instead of relying
- * on a clean release, so an agent whose session ends abruptly cannot hold a worktree
- * forever. The holder is informational; releasing does not require a matching holder,
- * or a lease left by a dead session could never be cleared.
- */
 
 const DEFAULT_TTL_MS = 4 * 60 * 60 * 1000;
 
 const TTL_UNITS = { s: 1000, m: 60_000, h: 3_600_000, d: 86_400_000 };
 
-/** Parse "4h" / "90m" / "7d" into milliseconds. Returns null when unparseable. */
 const parseDuration = (text) => {
   const match = /^(\d+)\s*([smhd])$/.exec(String(text ?? '').trim());
   return match ? Number(match[1]) * TTL_UNITS[match[2]] : null;
 };
 
-/** Who holds this lease: the chat session when known, otherwise the machine user. */
 const currentHolder = () =>
   process.env.ROTP_SESSION ?? process.env.CLAUDE_SESSION_ID ?? process.env.USERNAME ?? process.env.USER ?? 'local';
 
@@ -35,10 +27,8 @@ const isExpired = (lease, now = Date.now()) => {
   return Number.isNaN(expiry) || expiry <= now;
 };
 
-/** An active lease blocks other agents; an expired one is treated as absent. */
 const isHeld = (lease, now = Date.now()) => Boolean(lease) && !isExpired(lease, now);
 
-/** Human "3h 12m left" / "expired 20m ago" for the list view. */
 const describeLease = (lease, now = Date.now()) => {
   if (!lease) return '-';
   const deltaMs = Date.parse(lease.expiresAt) - now;

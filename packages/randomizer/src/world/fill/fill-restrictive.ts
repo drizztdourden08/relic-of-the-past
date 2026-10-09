@@ -3,7 +3,7 @@ import { canFillLocation } from './can-fill-location';
 import { createAssumedState } from './create-assumed-state';
 import { FillError } from './fill-error';
 import { MAX_SWAPS_PER_ITEM } from './fill.constants';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 import type { CollectionState } from '../collection-state';
 import type { FillRestrictiveInput } from './fill.type';

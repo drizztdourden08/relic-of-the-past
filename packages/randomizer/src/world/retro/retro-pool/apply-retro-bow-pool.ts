@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { RETRO_ARROW_PICKUPS, RETRO_REPLACEMENT_ITEM } from '../retro-bow.data';
+import { RETRO_ARROW_PICKUPS, RETRO_REPLACEMENT_ITEM } from '../retro-bow.constants';
 import type { ItemId } from '@rotp/game-data';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { RetroBowSetting } from '../retro.type';
 
 const applyRetroBowPool = (pool: ItemKey[], setting: RetroBowSetting): void => {

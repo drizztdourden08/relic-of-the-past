@@ -10,7 +10,7 @@ const buildConnect = (params: ConnectParams): ApConnectPacket => {
     cmd: 'Connect',
     game,
     name: slotName,
-    password: password ? password : null,
+    password: password || null,
     uuid,
     version,
     items_handling: ITEMS_HANDLING_ALL,

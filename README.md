@@ -58,7 +58,7 @@ Download the latest build for your platform from the
 | macOS \* | `.dmg` |
 | Linux    | `.AppImage` or `.deb` |
 
-\* Special instruction. See [here](https://github.com/drizztdourden08/relic-of-the-past/wiki/Getting-Started-Installation#relic-of-the-past-is-damaged-and-cant-be-opened).
+\* Special instruction. See [macOS: "Relic of the Past is damaged and can't be opened"](https://github.com/drizztdourden08/relic-of-the-past/wiki/Getting-Started-Installation#relic-of-the-past-is-damaged-and-cant-be-opened).
 
 Then launch the app and select your ROM when prompted. See the [Quick Start](docs/getting-started/quick-start.md)
 and [Installation](docs/getting-started/installation.md) guides for details.
@@ -92,7 +92,7 @@ flowchart LR
     W -->|"ccall / EM_ASM"| UI["React UI in Electron<br/>renderer + main process"]
 ```
 
-A three-layer architecture: the vendored C decompilation, our C↔JS hook layer compiled to WASM, and
+A three-layer architecture: the vendored C decompilation, our C <-> JS hook layer compiled to WASM, and
 the TypeScript/React renderer.
 
 ## Documentation
@@ -102,7 +102,7 @@ The full documentation lives in **[`docs/`](docs/)** (also published to the proj
 - **Start here:** [Quick Start](docs/getting-started/quick-start.md) · [Installation](docs/getting-started/installation.md)
 - **User guide:** [profiles](docs/user-guide/profiles.md), [save states](docs/user-guide/save-states.md), [controllers](docs/user-guide/input-controllers.md), [MSU audio](docs/user-guide/audio-msu.md), [HUD](docs/user-guide/hud.md), and more under [docs/user-guide/](docs/user-guide/)
 - **Architecture:** [overview](docs/architecture/overview.md) · [the WASM bridge](docs/architecture/wasm-bridge.md) · [asset extraction](docs/architecture/asset-extraction.md)
-- **Game hooks reference:** [the C↔JS boundary](docs/hooks/overview.md), covering every `Wasm*` export & callback
+- **Game hooks reference:** [the C <-> JS boundary](docs/hooks/overview.md), covering every `Wasm*` export & callback
 - **Contributing:** [guide](docs/contributing/index.md) · [coding standards](docs/contributing/coding-standards.md) · [design system](docs/contributing/design-system.md)
 
 ## Credits & license

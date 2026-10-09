@@ -3,7 +3,7 @@ import { createRng } from '../../rng';
 import { buildFillWorld } from './fill-world';
 import { fillOptionsFromSnapshot } from './fill-options-from-snapshot';
 import { pondItemPoolStreamOf } from '../pond/pond-demand-seed';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { DeliverableSets } from './fill.type';
 import type { RandomizerOptionsSnapshot } from '../options.type';
 

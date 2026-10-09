@@ -2,7 +2,7 @@
 import { pondKeyOf } from './pond-option-keys';
 import {
   CAPACITY_POND_MODE_DESCRIPTION, POND_ITEMS_DESCRIPTION, POND_JUMPS_DESCRIPTION, WISH_POND_MODE_DESCRIPTION,
-} from './pond-description-lines.data';
+} from './pond-description-lines.constants';
 import type { OptionDescription } from '../option-description.type';
 import type { PondInstance } from './pond-instance.type';
 

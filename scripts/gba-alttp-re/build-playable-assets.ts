@@ -37,9 +37,6 @@ const build = async (): Promise<void> => {
     gbaAlttp: loadGbaAlttpRomFromBuffer(readFileSync(gbaPath)),
   });
 
-  // Each optional cartridge carries its own error boundary, so a failure here names a container
-  // that could not be read instead of a missing file. Reporting the reason is the whole point of
-  // that boundary: silence would look identical to "this ROM has no supplement".
   for (const outcome of set.supplements) {
     if (!outcome.ok) throw new Error(`The ${outcome.id} supplement was not produced: ${outcome.reason}`);
   }

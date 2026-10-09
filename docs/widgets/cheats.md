@@ -14,5 +14,5 @@ Item delivery is gated by `WasmCanReceiveItem`, so it won't corrupt state, and c
 checks complete. Values are clamped to safe ranges.
 
 > Full behavior, ranges, and the underlying functions: [Cheats & Commands hooks](../hooks/cheats-commands.md)
-> and the user-guide [Cheats](../user-guide/cheats.md) page. Bridge: `lib/game/cheats.ts`,
-> `lib/game/delivery-queue.ts`.
+> and the user-guide [Cheats](../user-guide/cheats.md) page. Bridge: `packages/game-core/src/cheats/`,
+> `apps/desktop/src/game/delivery-queue/`.

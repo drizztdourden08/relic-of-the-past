@@ -1,10 +1,10 @@
 /* @layer shared-game @kind logic */
 import { familyById } from '../capacity/capacity-family';
 import { startTierOf } from '../capacity/family-plan';
-import { UNCLE_BOW_CANDIDATES } from './standard-escape.data';
+import { UNCLE_BOW_CANDIDATES } from './standard-escape';
 import { START_FAMILY_OF_WEAPON } from './uncle-usability.constants';
 import type { ItemId } from '@rotp/game-data';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 
 const uncleWeaponUsableAtStart = (

@@ -144,7 +144,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 - `kCompSpritePtrs`: SNES addresses of the LZ-compressed sprite sheet tileset data. The first 12 sheets are stored uncompressed.
 - `kCompBgPtrs`: SNES addresses of the compressed background tilesets.
 
-### asset-extraction/extensions/second-cartridge-animated-tiles/second-cartridge-animated-tiles.data.ts
+### asset-extraction/extensions/second-cartridge-animated-tiles/animated-tile-bytes.constants.ts
 
 - The engine animates a fixed window of background tiles by holding three frames in memory and uploading one each time the animation advances. This dungeon reuses that window, so its own frames must occupy it or the base game's water animation overwrites the art the rooms reference.
 - Only one of the three frames is in the cartridge's static tile sheet, so these bytes are the live tile memory of the running cartridge, read in a water room, in the order it cycles them.
@@ -170,7 +170,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 - 0x0a is the engine's short water ladder: a water cell the player can climb out onto.
 - Tiles 0x1b6 to 0x1b9 are the water surface tiles the cartridge animates. Every cell drawn with one is deep water; without that the surface is plain floor and the room's current has nothing to carry.
 
-### asset-extraction/extensions/second-cartridge-attrs/second-cartridge-attrs.data.ts
+### asset-extraction/extensions/second-cartridge-attrs/wall-and-water-tiles.constants.ts
 
 - Wall art tiles: the port redrew these ids as wall crenellation, but their vanilla attributes (which the engine's per-tile table still carries outside the aux region) are walkable. They were measured as pass-through gaps in the hub's and chamber's outer walls. The overrides apply to attributes_for_tile for every bank room.
 - Water rim tiles: the base game's table calls these four a ledge. Swimming into a ledge hops the player out of the water wherever he touches it, which against a wall lands him out of bounds. They are the pool's rim, so they are wall. Making them walkable was tried and is worse: it opens the whole rim and a swimmer can push onto the floor.
@@ -190,7 +190,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 - The room grid is 16 rooms wide, so a direction moves the room id by -16, 16, -1 or 1 (north, south, west, east).
 - Door types 6, 10, 12, 14, 16 and 18 leave for the overworld; their destination comes from the exit table, so the adjacency rule does not apply to them.
 
-### asset-extraction/extensions/second-cartridge-doors/second-cartridge-doors.data.ts
+### asset-extraction/extensions/second-cartridge-doors/extra-dungeon-doors.constants.ts
 
 - A door is not part of a room's tilemap. The engine reaches doors past a marker in the room's object stream and reads them as two-byte records, and drawing one is what registers it: the tilemap address, type and slot, direction and the doorway's transit attribute all come from that pass. The cartridge ships its rooms pre-expanded, so the records were baked away and every room came out sealed.
 - The records were recovered by enumerating every type, position and direction the engine's door drawer can draw and matching each against the room's baked maps. A record is listed when every cell it writes is already present exactly as the engine would write it. The results agree across room boundaries (each north door is answered by a south door in the room above), which is the check that this is recovery and not pattern matching.
@@ -246,7 +246,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 - The base game's palette set table ships 41 entries; this dungeon's entry is appended after them.
 - The background colours still come from the cartridge, one record per room.
 
-### asset-extraction/extensions/second-cartridge-palettes/second-cartridge-palettes.data.ts
+### asset-extraction/extensions/second-cartridge-palettes/second-cartridge-palettes.constants.ts
 
 - The extended palette ids index past the cartridge's palette table, so their records cannot be extracted from ROM. Each entry is the live palette RAM of the running cartridge, read in the room that uses the id: background rows 2 to 7, sixteen BGR555 colours per row, the same six-row block a room palette record carries.
 - Palette 0x29 was captured standing in the water room (room 0xdd). Row 7 carries the water surface blues.
@@ -415,7 +415,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 
 - The palette is picked from the icons' pixels. The core shows the icons against a private palette bank of these colours (`foreign_icon_bank.c`).
 - Fixed entries come first: black, white, every tone all the icons share (the outline, and the Archipelago badge's colours, so the badge reads the same on every icon), and every grey covering at least an eighth of one icon (the fused shadow's two greys).
-- The remaining entries come from a weighted k-medoids over the other tones, measured in OKLab with lightness at half weight, as the matcher measures them. Seeds are picked farthest first: each takes the tone the entries so far serve worst, weighted by area. A medoid is a real tone of the art, so every entry is a colour an icon actually uses.
+- The remaining entries come from a weighted k-medoids over the other tones, measured in OKLab with lightness at half weight, as the matcher measures them. Seeds are picked farthest first: each takes the tone the entries so far serve worst, weighted by area. A medoid is a real tone of the art, so every entry is a colour an icon uses.
 - A grey and a colour never serve each other, so their distance is infinite.
 - Every entry is snapped to SNES 15 bit colour. Index 0 is transparent; entries run greys dark to light, then colours by hue.
 
@@ -513,7 +513,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 
 - Holds the SPC memory state while decoding, and decodes song, phrase and pattern structures from it.
 
-### asset-extraction/music/spc-command-tables.data.ts
+### asset-extraction/music/spc-command-tables.constants.ts
 
 - The SPC command tables shared by extraction and compilation. Command `0xe0 + n` is effect `n`, which takes `kEffectByteLength[n]` argument bytes. Notes 72 and 73 are `-+-` and `---`.
 
@@ -644,11 +644,11 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 - Index 0 is background (transparent), 1 the dark blue edge, 2 the mid highlight, 3 the white fill. The values are SNES 5-bit colours expanded to 8-bit.
 - It lives on its own so the extraction that cuts characters to files and the editor that redraws them from a pack's font agree.
 
-### asset-extraction/text/data/language-data/language-data.data.ts
+### asset-extraction/text/data/language-data/language-data.constants.ts
 
 - Language definitions for the game's text compression and decompression, one config per language, ported from upstream's text_compression.py.
 
-### asset-extraction/text/data/randomizer-templates/randomizer-templates.data.ts
+### asset-extraction/text/data/randomizer-templates/randomizer-templates.constants.ts
 
 - Randomizer template lines are appended after the 397 canonical vanilla dialogue lines at bake time (build-language-entry), never persisted into a pack's dialogue.txt, so every language entry gains them on its next compile whenever the pack was extracted.
 - The order is a frozen contract with the C side: `kReceiptMsg_*` and `kRandomizerMsg_*` in `core/game-hooks/game_hooks.h` index these lines as dialogue message id 397 plus position. Append new templates at the end only, and bump CURRENT_BAKE_VERSION (bake-version.ts) so cached blobs are recompiled.
@@ -813,13 +813,13 @@ The turbo speed ladder. The upstream desktop build ran 16x while its key was hel
 
 `DEFAULT_TURBO_SPEED` is fast enough to matter and slow enough to still read dialog. `turboSpeedIndex` snaps an unknown stored value to the nearest rung. `turboSpeedAt` clamps to the ladder. `turboSpeedPercent` is the whole percent value the core takes, snapped to the ladder so an odd stored value never leaks through.
 
-## Features
+## Feature registry and gates
 
 ### features/feature-registry/
 
-The registry lists every feature that departs from vanilla, one data file per settings group, joined in a fixed order by `features.data.ts`. `FEATURES_BY_ID` indexes the joined list.
+The registry lists every feature that departs from vanilla, one data file per settings group, joined in a fixed order by `features.constants.ts`. `FEATURES_BY_ID` indexes the joined list.
 
-The 42 split bug fix toggles come from `bundle-fixes.generated.ts`, written by `scripts/build/gen-bundle-flags.mjs` from `scripts/build/bundle-settings.json`, so they stay in step with the C gate sites.
+The 42 split bug fix toggles come from `bundle-fixes.constants.ts`, written by `scripts/build/gen-bundle-flags.mjs` from `scripts/build/bundle-settings.json`, so they stay in step with the C gate sites.
 
 The rendering dependency chain is: extended rendering, then linear world tilemap, then ultrawide or tall. Camera lock needs extended rendering, and smooth transitions need camera lock.
 
@@ -864,7 +864,7 @@ Field meanings:
 - `affectsVanillaParity`: true when the feature shifts render output or RAM. It gets the parity disclaimer and Vanilla Safe forces it off.
 - `live`: false when the feature needs a restart to take effect.
 
-### features/gba-differences.data.ts
+### features/gba-differences.constants.ts
 
 A read only catalogue of everything the Game Boy Advance release changes. It is `@kind data`, which is why the game's own proper names are allowed in it while code, labels and comments elsewhere stay neutral.
 
@@ -1061,7 +1061,7 @@ This is the one seam between an expression result and every consumer (a size, a 
 
 Backs the "did you mean" hint on an unknown variable error. It only offers a name within a small edit distance; otherwise it suggests nothing.
 
-### hud/data/variables/variables.data.ts
+### hud/data/variables/variables-table.constants.ts
 
 The one flat table every HUD expression evaluates against, so the editor's variable picker lists itself from this file. Names follow `<thing>_current` / `<thing>_max`, and each maps to a field the HUD already reads. A layout observes the game and never changes it. `index`, `count` and `item` are not table entries: they only have a value inside a `repeat`.
 
@@ -1293,7 +1293,7 @@ One reader for built-in and custom layouts; nothing downstream can tell them apa
 
 ### hud/layouts/migrate-gap.ts
 
-The §57 rewrite: a flex container's single `gap` becomes the `{ x, y }` pair a grid always had. It runs once on load on the raw value; no alias survives, so a stored document opens correctly and is saved in the new shape. It is pixel identical because the flow engine already spent the one number on both the main axis and the wrapped line gap. A bound gap copies the same expression to both axes. A grid, or a gap that already names `x` or `y`, is untouched, so re-running it is a no op and it can run on every load with no version flag. A bound `Value` is a record too, which is why only a record naming `x` or `y` counts as a pair.
+The §57 rewrite: a flex container's single `gap` becomes the `{ x, y }` pair a grid always had. It runs once on load on the raw value; no alias survives, so a stored document opens as it was laid out and is saved in the new shape. It is pixel identical because the flow engine already spent the one number on both the main axis and the wrapped line gap. A bound gap copies the same expression to both axes. A grid, or a gap that already names `x` or `y`, is untouched, so re-running it is a no op and it can run on every load with no version flag. A bound `Value` is a record too, which is why only a record naming `x` or `y` counts as a pair.
 
 ### hud/layouts/migrate-legacy-vitals.ts
 
@@ -1483,7 +1483,7 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 
 - Measured from a real pad (057e:2073, sdlType 'gamecube'): 16 buttons (four face, GUIDE, START, both shoulders, d-pad, MISC1 to MISC4) and 6 axes including the triggers. No BACK and no stick clicks.
 - RIGHT_SHOULDER is the Z button. MISC1 is Capture, MISC2 the C button. MISC3 and MISC4 are the digital clicks at the bottom of the L and R triggers' analog travel, so they reuse the trigger glyphs.
-- SDL labels EAST as X and WEST as B correctly; only the glyphs were crossed, so the icons pair each position with its own art.
+- SDL's labels are right: EAST is X and WEST is B; only the glyphs were crossed, so the icons pair each position with its own art.
 - gc_button_c.svg on disk is the C stick artwork despite its name. The round C button glyph is gc_button_chat.svg.
 - SNES L and R default to the trigger clicks (MISC3, MISC4), not the shoulders, because RIGHT_SHOULDER is Z. Z stays unbound.
 - A licensed wireless GameCube style pad uses an ERM motor with spin-up lag (unlike the Switch Pro's near-instant LRA), so short bursts are stretched to 90 ms (minDurationMs).
@@ -1740,7 +1740,7 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 
 - Rebinding keeps the slot number, so the slot's item and HUD place stay put. Position and icon move with the binding when known and are cleared otherwise, so old pad art never stays on a slot that now reads a key.
 
-### input/sdl-buttons/sdl-buttons.data.ts
+### input/sdl-buttons/sdl-buttons.constants.ts
 
 - Button indices are positional. SOUTH is the bottom face button and EAST the right one on every pad, whatever letter the vendor prints on it. One vendor labels the bottom button A, another B; binding by position lands both right.
 - Presets index into the positional button array the native layer emits. An older scheme used bare numbers from two sources (browser gamepad order and per-device byte layout), which meant different buttons once the source changed.
@@ -2639,7 +2639,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 - The layout document is what a built in JSON file holds and what the editor saves; only the `builtIn` flag tells them apart.
 - A layout is one tree hanging off the screen. It used to be two positioning systems: a `screen` container and a `regions[]` array of nine named anchors, which were a 3x3 grid wearing nine words (`top-left` is cell (1,1) hugging start and start, `center` is (2,2), `bottom-right` is (3,3) hugging end and end). Section 42 folded them in: the screen is a grid and a former region is an ordinary child with a `place`. A child of a grid can be in any cell of any template, can span, and can share a cell. Moving the wallet is picking a cell.
-- Anchoring happens once, at the screen, and everything below is in the flow, so a layout never grows an absolute escape hatch halfway down. The numbers inside it are distances and relationships, not screen coordinates, which is what lets one document read correctly at 16:9, 21:9 and in 240 line mode.
+- Anchoring happens once, at the screen, and everything below is in the flow, so a layout never grows an absolute escape hatch halfway down. The numbers inside it are distances and relationships, not screen coordinates, which is what lets one document lay out the same at 16:9, 21:9 and in 240 line mode.
 - `HudScreenRoot` is the document's one root and the only node whose size is not a question. It is an ordinary `HudContainer` with the same decoration and choice of engine, held apart only because its rectangle is not authored: it is always exactly the view. So `size`, `min`, `max`, `margin`, `scale` and the child placement fields are refused on it by `validate-layout.ts`. Locking that in the validator and not in the type is deliberate: a hand edited file gets the same named error as any other bad field, not a silently ignored key.
 - The screen's engine, columns and rows are the author's (section 42, reversing section 38.4). The default template is `[auto, fill, auto]` each way, the middle track eating the free space so the outer bands hug the edges, which is exactly the nine anchors. Its `padding` is the one inset every child sits inside, so a safe area margin is one number in one place.
 - `HudClusterReveal` says when the button map is on screen during play. It is a property of the whole map, since showing only while something has just changed is a statement about a group of controls over time, which no single box can make.
@@ -2785,12 +2785,12 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 - Optimizing normalises a pack to one audio format. Every audio file is a candidate, compressed ones included: an mp3 is decoded once and stored exactly (lossless but bigger, shown as a negative saving). A file already in the target format is not a candidate, and neither is an original a previous run already converted.
 - Only a file no probe can read (a custom wrapper, a corrupt file) is excluded, through `excludedBecause`.
-- The estimate is measured, never a flat ratio: FLAC on 16-bit stereo lands anywhere from 40% to 70% depending on the material. A short slice (`OPTIMIZE_SLICE_SECONDS`) is really encoded and the ratio scaled up.
+- The estimate is measured, never a flat ratio: FLAC on 16-bit stereo lands anywhere from 40% to 70% depending on the material. A short slice (`OPTIMIZE_SLICE_SECONDS`) is encoded for real and the ratio scaled up.
 - `estimatedBytes` is null when nothing could be measured (excluded, or unknown duration). A value bigger than `currentBytes` is normal for a compressed source.
 - `carryLoopSample` is the repeat point to move into the manifest before the file's format changes. It lives in the MSU-1 header and dies with the container, so a run writes it into the layer's `loopSample` first; an intro then loop track that loses it repeats from zero.
 - `alreadyTargetCount` counts files already held in the target format (the file itself, or a converted copy beside it), so the preview can say the pack is part way there.
 - `OptimizeProgress.index` is the 1-based position of the file being worked on.
-- `OptimizeConversion.outputName` keeps the same stem in the target format, suffixed if that name was taken. `bytes` is the size it really came out at.
+- `OptimizeConversion.outputName` keeps the same stem in the target format, suffixed if that name was taken. `bytes` is the size it came out at.
 - `loopPointsCarried` counts repeat points written into the manifest before the first encode ran.
 
 ### types/msu1-format/msu1-format.constants.ts
@@ -2823,7 +2823,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 
 - `extendedRendering` is the master gate. Off: the engine always runs 4:3 vanilla and no sub settings appear in the UI. On: the aspect ratio selector and all extended rendering options become available.
 - `aspectRatio`: `auto` is the current app viewport (notch aware); `screen` is the full device screen; a preset (`4:3` through `32:9`) is fixed; `custom` uses `customAspectW` and `customAspectH`. It is re-resolved on every game start, and applied only when `extendedRendering` is on; otherwise the engine receives 4:3. A custom width or height of 0 means auto detect from the screen.
-- `widescreenSprites` extends sprite spawn and despawn ranges so enemies and objects revealed by the wider view behave correctly. Default on; only relevant when wide.
+- `widescreenSprites` extends sprite spawn and despawn ranges so enemies and objects revealed by the wider view spawn and act as they would on screen. Default on; only relevant when wide.
 - `widescreenVisualFixes` applies the widescreen graphics corrections (edges and sprites that assume a 4:3 screen). Default on; only relevant when wide.
 - `linearWorldTilemap` uses a clamped linear BG fetch in place of the wrapping 512px SNES tilemap, which prevents tile garbage at edges in wide views. Required for any ratio above about 19:9. Memory cost: one world tile buffer per BG layer. Default true (auto enabled with extended rendering).
 - `ultrawideRendering` unlocks ratios above 19:9 up to 32:9 (the engine's full 1024px budget). Requires `linearWorldTilemap`. Default true when the linear tilemap is on.
@@ -2879,7 +2879,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `prefillFileName` names a new file Link with the naming strip parked on End. Non vanilla.
 - `allowDiving` lets B while swimming duck under for a moment, as the handheld port allows. Non vanilla. The extra dungeon forces it on, because its water room is built around it.
 - `miscBugFixes` and `gameChangingBugFixes` are legacy bundle masters that enable all split fixes of the MiscBugFixes and GameChangingBugFixes origin unless overridden.
-- `bugFixToggles` holds granular overrides for the 42 split bug fixes, keyed by feature id (see packages/features/src). Unset inherits the legacy bundle master; an explicit true or false overrides it.
+- `bugFixToggles` holds per-fix overrides for the 42 split bug fixes, keyed by feature id (see packages/features/src). Unset inherits the legacy bundle master; an explicit true or false overrides it.
 - `archeryNeedsBow` lets the archery host refuse the fee when the shots it buys could not be fired.
 - `extraDungeon` says whether the optional extra dungeon carried by the second cartridge is offered. It is separate from whether its data is present: owning the cartridge and leaving this off must give an untouched overworld. Off by default, so a profile that never sets it behaves like the base game.
 

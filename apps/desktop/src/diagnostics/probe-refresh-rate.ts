@@ -4,7 +4,11 @@ import { GIVE_UP_AFTER_MS, MAX_PLAUSIBLE_GAP_MS, SAMPLE_FRAMES } from './probe-r
 const median = (values: number[]): number => {
   const sorted = [...values].sort((a, b) => a - b);
   const middle = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+  const upper = sorted[middle];
+  if (upper === undefined) return Number.NaN;
+  if (sorted.length % 2) return upper;
+  const lower = sorted[middle - 1] ?? Number.NaN;
+  return (lower + upper) / 2;
 };
 
 const probeRefreshRate = (): Promise<number | null> =>

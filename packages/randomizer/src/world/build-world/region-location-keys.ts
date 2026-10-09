@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { getCheck } from '@rotp/game-data';
 import { isSeedLocation } from '../seed-locations';
-import { REGION_LOCATION_ORDER } from '../fill/location-order.data';
+import { REGION_LOCATION_ORDER } from '../fill/location-order.constants';
 import { POND_REGION_LOCATIONS } from '../pond/pond-region-locations';
 import { checksByRegion } from '../world-from-records';
 import type { RegionId } from '@rotp/game-data';

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { optionFlagOf } from '../../option-flag-of';
 import { includeWorldItemsOf } from '../../scope-option-keys';
-import { DARK_ROOM_LIGHT_FIELDS, DEFAULT_DARK_ROOM_SETTING } from '../dark-room-lights.data';
+import { DARK_ROOM_LIGHT_FIELDS, DEFAULT_DARK_ROOM_SETTING } from '../dark-room-lights.constants';
 import { maskDarkRoomLights } from '../mask-dark-room-lights';
 import { darkRoomLightKeyOf, DARK_ROOM_REQUIRED_KEY } from '../dark-room-option-keys';
 import type { OptionValues } from '../../options.type';

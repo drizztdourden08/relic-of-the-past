@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POND_VANILLA_PRICE, POND_VANILLA_THROWS } from '../pond-ladder.data';
+import { POND_VANILLA_PRICE, POND_VANILLA_THROWS } from '../pond-ladder.constants';
 import { customPricesOf } from './custom-prices-of';
 import { leadingPrizes } from './leading-prizes';
 import type { ActivePondSetting, PondSchedule } from '../pond.type';

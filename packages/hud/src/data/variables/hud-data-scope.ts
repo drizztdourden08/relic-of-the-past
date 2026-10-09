@@ -1,5 +1,5 @@
 /* @layer shared-hud @kind logic */
-import { FULL_MAGIC, IDLE_COUNTDOWN } from './variables.data';
+import { FULL_MAGIC, IDLE_COUNTDOWN } from './variables-table.constants';
 import type { HudCountdownSource, HudVitalsSource } from './variables.type';
 
 const hudDataScope = (

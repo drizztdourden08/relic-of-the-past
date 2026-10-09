@@ -6,7 +6,7 @@ The first time you open Relic of the Past, nothing is loaded yet. The app needs 
 ## Step 1 · Import your ROM
 
 1. Open the menu (the hamburger icon in the title bar, or press `Escape`).
-2. Go to **Data** → **ROMs**.
+2. Go to **Data**, then **ROMs**.
 3. Choose **Import ROM** and select your `.sfc` or `.smc` file.
 
 The game runs on the **US (NTSC) ROM** only. ROMs from other regions can be imported too, but only to extract their **language** for in-game text, and those ROMs don't run the game. The ROM is copied into the app's data directory, so you can move or delete the original afterward.
@@ -17,7 +17,7 @@ When you import a ROM, the app extracts its assets (graphics, maps, audio, and t
 
 ## Step 2 · Create a profile
 
-1. Choose **Create Profile** (or go to **Data** → **Profiles**).
+1. Choose **Create Profile** (or go to **Data**, then **Profiles**).
 2. Give it a name.
 3. Select the ROM to use.
 4. Choose a language.
@@ -49,8 +49,8 @@ While playing:
 
 ### Widgets
 
-From **Menu → Widgets** you can open overlay panels, among them the inventory tracker, checks tracker, cheats, and logs. Widgets dock to any screen edge or float freely.
+From the **Widgets** entry in the menu you can open overlay panels, among them the inventory tracker, checks tracker, cheats, and logs. Widgets dock to any screen edge or float freely.
 
 ## Updating the app
 
-Installed builds (Windows installer, macOS DMG, Linux AppImage/`.deb`) check for updates on startup and show a notice in the title bar when one's available; you can also check via **Menu → Advanced → Check for Updates**. The portable Windows build doesn't auto-update, so grab new versions from the [Releases page](https://github.com/drizztdourden08/relic-of-the-past/releases). See [Auto-Update](../user-guide/auto-update.md) for details.
+Installed builds (Windows installer, macOS DMG, Linux AppImage/`.deb`) check for updates on startup and show a notice in the title bar when one's available; you can also check from the menu under **Advanced**, with **Check for Updates**. The portable Windows build doesn't auto-update, so grab new versions from the [Releases page](https://github.com/drizztdourden08/relic-of-the-past/releases). See [Auto-Update](../user-guide/auto-update.md) for details.

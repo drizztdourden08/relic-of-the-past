@@ -49,7 +49,7 @@ the whole value. The fourth does not. The launcher register packs two facts into
 
 So the type is the step of two and "is anything on hand" is the remaining half. `kind` `3` therefore
 takes a **type**, `0` or `1`, and the C side derives the byte from that type plus the carrying half
-read back out of the live value, so `1`↔`3` and `2`↔`4`, never `2`→`3`. A write computed from the type
+read back out of the live value, so `1` and `3` swap with each other, as do `2` and `4`, and `2` never becomes `3`. A write computed from the type
 alone would empty a full quiver or hand over a free supply, which is the one thing a menu about
 which ammunition is nocked must not do.
 
@@ -62,7 +62,7 @@ Ownership is host-side: `lib/game/gear-ownership.ts` keeps a high-water mark per
 and the arrow row's mark is the highest **type** ever observed, not the raw register, whose other
 half moves with every shot.
 
-Both exits guard on the pause menu actually being the running module (main module `14`, messaging
+Both exits guard on the pause menu being the running module (main module `14`, messaging
 submodule `1`). `overworld_map_state` is shared with the dungeon map and the overworld map, which
 run under the same main module on other submodules.
 

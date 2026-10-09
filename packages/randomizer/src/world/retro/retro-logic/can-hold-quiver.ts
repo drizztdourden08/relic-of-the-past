@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { RETRO_QUIVER_ITEM } from '../retro-bow.data';
+import { RETRO_QUIVER_ITEM } from '../retro-bow.constants';
 import { retroQuiverInPool } from '../retro-shops';
 import { canAffordShots } from './can-afford-shots';
 import { canBuyQuiver } from './can-buy-quiver';

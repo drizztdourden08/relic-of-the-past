@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POND_PRICE_LADDER } from '../pond-ladder.data';
+import { POND_PRICE_LADDER } from '../pond-ladder.constants';
 
 const rungOf = (price: number): number => {
   const rung = POND_PRICE_LADDER.indexOf(price);

@@ -4,7 +4,7 @@ import type { CheckId } from '@rotp/game-data';
 
 const isReportableCheck = (checkId: string): boolean => {
   try {
-    getCheck(checkId as CheckId);
+    getCheck(checkId);
     return true;
   } catch {
     return false;

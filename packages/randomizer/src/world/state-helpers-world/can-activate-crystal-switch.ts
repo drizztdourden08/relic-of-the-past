@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import { canShootArrows, canUseBombs, hasMeleeWeapon } from '../state-helpers';
 import type { CollectionState } from '../collection-state.type';
 

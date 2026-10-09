@@ -7,12 +7,18 @@ import { retroVanillaNote } from './retro-vanilla-note';
 const shelfNameOf = ({ shopName, position }: ShopSlotFacts): string =>
   (position === 'Single' ? shopName : `${shopName} ${position}`);
 
+const canonicalSlotAt = (index: number): ShopSlotFacts => {
+  const slot = CANONICAL_SLOTS[index];
+  if (slot === undefined) throw new Error(`No canonical shop slot at index ${index}`);
+  return slot;
+};
+
 const retroShopNoteOf = (scope: ShopScope, setting: RetroBowSetting | undefined): string | null => {
-  if (setting === undefined || !setting.enabled) return null;
-  const quiver = CANONICAL_SLOTS[RETRO_QUIVER_SLOT_INDEX];
+  if (!setting?.enabled) return null;
+  const quiver = canonicalSlotAt(RETRO_QUIVER_SLOT_INDEX);
   const others = ARROW_SLOT_INDEXES
     .filter((index) => index !== RETRO_QUIVER_SLOT_INDEX)
-    .map((index) => shelfNameOf(CANONICAL_SLOTS[index]));
+    .map((index) => shelfNameOf(canonicalSlotAt(index)));
   const shelf = {
     quiverShelf: shelfNameOf(quiver),
     quiverPrice: RETRO_QUIVER_PRICE,

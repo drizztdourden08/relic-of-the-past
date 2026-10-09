@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt doctor`: reconcile the registry with disk. Drops records whose checkout is gone,
- * releases expired leases, re-copies drifted config files, and reports (never deletes)
- * agent profiles with no record. Anything that could destroy work belongs to `wt clean`.
- */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { readRegistry, updateRegistry } from '../registry.mjs';
@@ -13,8 +8,6 @@ import { resyncCopiedFiles } from '../link-deps.mjs';
 import { gameDataPath, repoRoot, worktreeRoot } from '../paths.mjs';
 import { flag } from '../args.mjs';
 
-// Orphaned agent profiles, identified by the display name the provisioner writes
-// ("agent/<name>"), not by the id: a user profile's random id looks like a slug too.
 const orphanProfiles = () => {
   const known = new Set(readRegistry().worktrees.map((w) => w.name));
   const dir = gameDataPath('profiles');

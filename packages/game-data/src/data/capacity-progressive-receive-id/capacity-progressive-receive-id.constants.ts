@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { CAPACITY_FAMILY_IDS } from '../capacity-upgrade-names.data';
+import { CAPACITY_FAMILY_IDS } from '../capacity-upgrade-names.constants';
 
 const PROGRESSIVE_CAPACITY_VIRT_FIRST = 0x77;
 const PROGRESSIVE_CAPACITY_VIRT_LAST = PROGRESSIVE_CAPACITY_VIRT_FIRST + CAPACITY_FAMILY_IDS.length - 1;

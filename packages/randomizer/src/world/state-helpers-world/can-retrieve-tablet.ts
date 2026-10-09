@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import { hasBeamSword } from '../state-helpers';
 import { itemPowerOf } from '../item-power/item-power-rule';
 import type { CollectionState } from '../collection-state.type';

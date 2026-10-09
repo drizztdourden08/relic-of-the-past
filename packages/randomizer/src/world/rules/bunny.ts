@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
-import { BUNNY_ACCESSIBLE_LOCATIONS } from './tables/bunny-lists.data';
-import { REGION } from '../region-ids.data';
+import { ITEM } from '../item-ids';
+import { BUNNY_ACCESSIBLE_LOCATIONS } from './tables/bunny-lists';
+import { REGION } from '../region-ids.constants';
 import { bunnyImpassableRegionIds } from '../world-from-records';
 import {
   allOf, anyOf, canReach, exitRule as registeredExitRule, hasItem,
@@ -64,11 +64,11 @@ const registerBunnyRules = (world: World): void => {
     const rule = bunnyRegionRule(world, region);
     for (const location of region.locations) {
       if (BUNNY_ACCESSIBLE_LOCATIONS.has(location.key as CheckId)) continue;
-      addRule(world.locationRules as Map<string, Rule>, location.key, rule);
+      addRule(world.locationRules, location.key, rule);
     }
     for (const event of region.events) {
       if (BUNNY_ACCESSIBLE_LOCATIONS.has(event.key)) continue;
-      addRule(world.eventRules as Map<string, Rule>, event.key, rule);
+      addRule(world.eventRules, event.key, rule);
     }
   }
 };

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
 import { BOTTLE_ITEMS } from '../item-groups';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { CapacityFamilyId } from '../capacity/capacity-profile.type';
 import type { ShopCountedCurrency } from './shop-price.type';
 

@@ -1,11 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Builds a FileRecord per file by resolving its tags with precedence:
- *   manifest  >  in-file @layer/@kind header  >  heuristic.
- * Reuses the heuristic engine in scripts/analyze/classify-rules.mjs.
- */
+/* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
 import { classifyLang, classifyRole, classifyType, readLayerTag } from './classify-rules.mjs';
@@ -26,7 +19,7 @@ const classifyFile = (root, rel, manifest) => {
     raw = content.split('\n').length;
     code = codeLineCount(content);
     headerLayer = readLayerTag(content);
-    heur = classifyType(rel, content); // heur.source==='tag' when an @kind header exists
+    heur = classifyType(rel, content);
   }
 
   const kind = man.kind ?? heur.type;

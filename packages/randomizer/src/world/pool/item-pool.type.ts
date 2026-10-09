@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 
 interface ItemPool {
   pool: readonly ItemKey[];

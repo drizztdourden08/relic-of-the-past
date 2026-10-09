@@ -1,10 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Takes a new worktree from `git worktree add` to launchable. Each worktree has its
- * own node_modules, WASM core and dist. Only the WASM step is serialised across
- * worktrees (lockfile): parallel emcc runs share the emsdk cache under $EMSDK, and a
- * cold cache lets two compilers race on the same sysroot artifacts.
- */
 import { execFileSync } from 'node:child_process';
 import { writeFileSync, rmSync, existsSync, statSync } from 'node:fs';
 import { wasmLockPath } from './paths.mjs';
@@ -30,7 +24,6 @@ const wasmLockHeld = () => {
   return true;
 };
 
-/** Build the core with at most one emcc running across all worktrees. */
 const buildWasmExclusively = async (cwd) => {
   let waited = false;
   while (wasmLockHeld()) {
@@ -49,13 +42,10 @@ const buildWasmExclusively = async (cwd) => {
   }
 };
 
-/** Prepare `worktree` for use. Returns the build timestamps for the registry. */
 const bootstrapWorktree = async ({ worktree, skipBuild }) => {
   console.log('\n[wt] Supplying the files git does not carry:');
   linkGitignoredDeps(worktree);
 
-  // Report only: the record tree is junctioned from the main checkout, so a real sync
-  // here would write through the junction and commit to the vault from a worktree.
   runIn(worktree, 'node', ['scripts/vault/sync.mjs', '--status'], 'Checking vault material');
 
   if (skipBuild) {
@@ -69,7 +59,6 @@ const bootstrapWorktree = async ({ worktree, skipBuild }) => {
   await buildWasmExclusively(worktree);
   const wasmAt = new Date().toISOString();
 
-  // The app's own build (brock build in apps/desktop), not the root `pnpm run build`: that one packages and deletes dist/.
   runIn(worktree, 'pnpm', ['--filter', './apps/desktop', 'build'], 'Building the app');
   const distAt = new Date().toISOString();
 

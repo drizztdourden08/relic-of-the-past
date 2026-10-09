@@ -137,12 +137,12 @@ marked done by hand.
 would remove, and only acts with `--yes`. Removing a worktree also removes its game
 profile **and that profile's save states**.
 
-> ⚠️ **Remove worktrees with `wt clean`, never with `git worktree remove` directly.**
+> **Remove worktrees with `wt clean`, never with `git worktree remove` directly.**
 > A worktree links to the main repo's `.claude/` and record dataset, and
 > `git worktree remove` follows those links and deletes the contents of the real
 > directories. `wt clean` detaches the links first and refuses to continue if any
-> remain. If you ever do lose them: `.claude/` is restored by the ai-config bootstrap
-> and the dataset by `pnpm run vault:sync`.
+> remain. If you ever do lose them: `.claude/` is restored by rendering the local tooling
+> config again, and the dataset by `pnpm run vault:sync`.
 
 ## Keeping branches in step
 

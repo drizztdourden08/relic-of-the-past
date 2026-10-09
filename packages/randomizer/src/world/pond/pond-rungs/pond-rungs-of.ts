@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POND_MAX_ITEMS } from '../pond-ladder.data';
+import { POND_MAX_ITEMS } from '../pond-ladder.constants';
 import { pondRungKey } from '../../location-key';
 import type { LocationKey } from '../../location-key';
 import type { PondInstance } from '../pond-instance.type';

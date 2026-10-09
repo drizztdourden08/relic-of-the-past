@@ -1,7 +1,7 @@
 /* @layer shared-game @kind barrel */
 export {
   DEFAULT_PROGRESSIVE_SETTING, PROGRESSIVE_FAMILIES, PROGRESSIVE_FAMILY_IDS, REPLACEMENT_ITEM,
-} from './progressive-families.data';
+} from './progressive-families.constants';
 export { familyOfId } from './family-of-id';
 export {
   progressiveFamilyName, progressiveFamilyNameOf, progressiveTierName, progressiveTierNameOf,
@@ -16,7 +16,7 @@ export {
 export {
   DEFAULT_PROGRESSIVE_MODES, PROGRESSIVE_MODES, PROGRESSIVE_MODE_LABELS, defaultProgressiveModes,
   isRandomOrder, isReferenceProgressiveModes,
-} from './progressive-modes.data';
+} from './progressive-modes';
 export {
   progressiveModeValuesOf, progressiveModesFromSnapshot, progressiveModesOfValues,
 } from './progressive-mode-from-snapshot';

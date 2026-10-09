@@ -41,19 +41,19 @@ export {
   canBootsClipDw,
   canGetGlitchedSpeedDw,
 } from './state-helpers-world';
-export { ITEM, UNRECORDED, isUnrecordedItem } from './item-ids.data';
-export type { ItemKey, UnrecordedItem } from './item-ids.data';
+export { ITEM, UNRECORDED, isUnrecordedItem } from './item-ids';
+export type { ItemKey, UnrecordedItem } from './item-ids';
 export { itemKeyName } from './display-names/item-key-name';
 export { BOTTLE_ITEMS, CRYSTAL_ITEMS, MEDALLION_ITEMS, VANILLA_MEDALLIONS } from './item-groups';
 export type { MedallionId } from './item-groups';
-export { REGION } from './region-ids.data';
+export { REGION } from './region-ids.constants';
 export { PROGRESSION_TIERS } from './progressive/progression-tiers.constants';
 export { isSlotKey, pondRungKey, shopLocationKey } from './location-key';
 export type { LocationKey, ShopLocationKey, SlotKey } from './location-key';
 export { checkIdOfLocation, locationKeyOfCheck } from './location-record';
 export { isSeedLocation } from './seed-locations';
 export { locationDisplayName } from './display-names/location-display-name';
-export { DUNGEON_ORDER } from './fill/dungeon-order.data';
+export { DUNGEON_ORDER } from './fill/dungeon-order.constants';
 export { worldDungeonOf } from './world-dungeon';
 export {
   CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES,
@@ -66,7 +66,7 @@ export { canReachEvent, collectReachableEvents, GOAL_EVENT, STORY_EVENT, WORLD_E
 export { buildItemPool } from './pool/build-item-pool';
 export type { BottlePicker } from './pool/build-item-pool';
 export type { ItemPool } from './pool/item-pool.type';
-export { PRIZE_ITEMS } from './pool/prize-items.data';
+export { PRIZE_ITEMS } from './pool/prize-items.constants';
 export type { Rule, ItemRule, AlwaysAllowRule, World, WorldOptions } from './world.type';
 export type {
   RegionGraphRow,
@@ -91,7 +91,7 @@ export { takeUncleWeapon, uncleWeaponCandidates } from './pool/uncle-weapon';
 export type { WeaponPicker, WeaponFilter } from './pool/uncle-weapon';
 export {
   UNCLE_LOCATION, UNCLE_USABLE_WEAPONS,
-} from './pool/standard-escape.data';
+} from './pool/standard-escape';
 export { generatePlacement } from './fill/generate';
 export { MAX_PLACEMENT_ATTEMPTS } from './fill/fill.constants';
 export type { Placement, PlacementStats } from './fill/placement.type';

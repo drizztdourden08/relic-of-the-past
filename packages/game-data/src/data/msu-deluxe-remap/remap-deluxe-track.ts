@@ -1,6 +1,6 @@
 /* @layer shared-game-data @kind logic */
 import type { RemapContext } from './msu-deluxe-remap.type';
-import { ENTRANCE_TRACKS, NO_REPLACEMENT, OVERWORLD_AREA_TRACKS, TRACK_REMAP_KIND } from './msu-deluxe-remap.data';
+import { ENTRANCE_TRACKS, NO_REPLACEMENT, OVERWORLD_AREA_TRACKS, TRACK_REMAP_KIND } from './msu-deluxe-remap-tables.constants';
 import { REMAP_BY_AREA, REMAP_BY_ENTRANCE, REMAP_KEEP } from './msu-deluxe-remap.constants';
 
 const remapDeluxeTrack = (track: number, ctx: RemapContext): number => {

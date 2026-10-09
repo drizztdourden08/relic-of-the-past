@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import { canUseBombs } from '../state-helpers';
 import { isNotBunny } from './is-not-bunny';
 import type { Region } from '../region.type';

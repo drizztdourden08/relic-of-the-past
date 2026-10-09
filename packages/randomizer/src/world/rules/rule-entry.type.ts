@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key.type';
 import type { AlwaysAllowRule, Rule } from '../world.type';
 

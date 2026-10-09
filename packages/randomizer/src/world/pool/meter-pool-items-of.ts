@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { MAGIC_ITEMS } from './pool-tables.constants';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { MeterPoolItems } from './pool.type';
 
 const meterPoolItemsOf = (meterItems: readonly ItemKey[], meterSpotLocked: boolean): MeterPoolItems => {

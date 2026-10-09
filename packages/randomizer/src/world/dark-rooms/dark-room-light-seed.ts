@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { itemKeyName } from '../display-names/item-key-name';
-import { DARK_ROOM_LIGHT_ITEMS, DEFAULT_DARK_ROOM_SETTING } from './dark-room-lights.data';
+import { DARK_ROOM_LIGHT_ITEMS, DEFAULT_DARK_ROOM_SETTING } from './dark-room-lights.constants';
 import { darkRoomLightKeyOf } from './dark-room-option-keys';
 import { DARK_ROOM_TOGGLE } from './dark-room-toggle.constants';
 import type { OptionSeed } from '../options.type';

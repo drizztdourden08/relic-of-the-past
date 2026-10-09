@@ -1,5 +1,5 @@
 /* @layer shared-hud @kind constants */
-import { HUD_SCOPE_EXTRAS, HUD_VARIABLES } from './variables.data';
+import { HUD_SCOPE_EXTRAS, HUD_VARIABLES } from './variables-table.constants';
 
 const HUD_VARIABLE_NAMES: ReadonlySet<string> = new Set(HUD_VARIABLES.map((entry) => entry.name));
 

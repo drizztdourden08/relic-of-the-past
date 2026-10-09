@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { canCollectLocation } from '../rules/collect';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 import type { CollectionState } from '../collection-state';
 

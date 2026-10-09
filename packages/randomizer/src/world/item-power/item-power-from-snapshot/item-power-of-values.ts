@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { optionFlagOf } from '../../option-flag-of';
-import { DEFAULT_ITEM_POWER, ITEM_POWER_KEY } from '../item-power.data';
+import { DEFAULT_ITEM_POWER, ITEM_POWER_KEY } from '../item-power.constants';
 import type { OptionValues } from '../../options.type';
 import type { ItemPowerSetting } from '@rotp/game-core';
 

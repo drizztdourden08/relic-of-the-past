@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { capacityPlansOf } from '../../capacity/family-plan';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { FillWorld } from '../../fill/fill-world.type';
 
 const planItemsOf = (fillWorld: FillWorld): ReadonlySet<ItemKey> =>

@@ -1,10 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Shared command runner + helpers for analyzer adapters. Captures stdout even
- * when a linter exits non-zero (linters return 1 on findings).
- */
+/* @layer tooling-scripts @kind logic */
 import { spawnSync } from 'child_process';
 import path from 'path';
 
@@ -17,8 +11,6 @@ const toolExists = (bin, root) => sh(`${bin} --version`, root).error == null;
 
 const toRel = (abs, root) => path.relative(root, abs).replace(/\\/g, '/');
 
-// Windows caps a command line at 8191 characters. Split a file list into quoted
-// batches that stay under budget, so a wide changeset still gets linted.
 const CMD_BUDGET = 6000;
 const batchQuoted = (rels, budget = CMD_BUDGET) => {
   const out = [];

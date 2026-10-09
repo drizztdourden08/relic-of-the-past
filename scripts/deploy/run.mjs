@@ -1,5 +1,4 @@
 /* @layer tooling-scripts @kind script */
-/** Shell helpers shared by the deploy scripts. */
 import { execFileSync } from 'node:child_process';
 
 const log = (msg) => console.log(`\x1b[36m[deploy]\x1b[0m ${msg}`);
@@ -16,7 +15,6 @@ const wsl = (distro, bashCmd, opts = {}) => run('wsl', ['-d', distro, 'bash', '-
 const wslCapture = (distro, bashCmd, opts = {}) =>
   capture('wsl', ['-d', distro, 'bash', '-lc', bashCmd], opts);
 
-// Synchronous sleep (no busy-wait) for polling the emulator boot state.
 const sleep = (ms) => {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 };

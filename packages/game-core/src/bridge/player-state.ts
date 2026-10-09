@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { callWhenRunning } from './wasm-call';
+import { readU8, callWhenRunning } from './wasm-call';
 import type { PlayerStateInfo } from './player-state.type';
 
 const enum Byte {
@@ -19,13 +19,13 @@ const wasmGetPlayerStateInfo = (): PlayerStateInfo | null =>
     if (!ptr) return null;
     const b = mod.HEAPU8.subarray(ptr, ptr + 8);
     return {
-      handlerState: b[Byte.handlerState],
-      sleepStep: b[Byte.sleepStep],
+      handlerState: readU8(b, Byte.handlerState),
+      sleepStep: readU8(b, Byte.sleepStep),
       isRunning: b[Byte.isRunning] !== 0,
       isBunny: b[Byte.isBunny] !== 0,
       inDeepWater: b[Byte.inDeepWater] !== 0,
       grabbingWall: b[Byte.grabbingWall] !== 0,
-      progressFlags: b[Byte.progressFlags],
+      progressFlags: readU8(b, Byte.progressFlags),
       incapacitated: b[Byte.incapacitated] !== 0,
     };
   });

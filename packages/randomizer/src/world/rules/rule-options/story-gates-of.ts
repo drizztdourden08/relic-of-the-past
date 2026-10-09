@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { DEFAULT_STORY_GATES } from '../../story-gates/story-gates.data';
+import { DEFAULT_STORY_GATES } from '../../story-gates/story-gates.constants';
 import type { StoryGateSetting } from '../../story-gates/story-gate.type';
 import type { World } from '../../world.type';
 

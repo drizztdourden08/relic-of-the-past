@@ -56,21 +56,21 @@ The app isn't code-signed, so Windows may show a "Windows protected your PC" war
 3. On first launch, right-click the app and choose **Open**, then confirm in the dialog
 
 The app is ad-hoc signed but not notarized by Apple, so macOS shows it as coming
-from an unidentified developer. Right-click → **Open** clears this, and you only
+from an unidentified developer. Right-clicking and choosing **Open** clears this, and you only
 see it once.
 
 ### "Relic of the Past is damaged and can't be opened"
 
 If macOS says the app is **damaged** and offers only to move it to the Bin, the
-file picked up a quarantine flag during download. The app isn't actually damaged.
+file picked up a quarantine flag during download. The app isn't damaged.
 Clear the flag in Terminal:
 
 ```bash
 xattr -dr com.apple.quarantine "/Applications/Relic of the Past.app"
 ```
 
-Then open the app normally. Alternatively, copying the `.dmg` onto the Mac from a
-USB drive or another computer avoids the quarantine flag entirely.
+Then open the app normally. Copying the `.dmg` onto the Mac from a USB drive or
+another computer avoids the quarantine flag entirely.
 
 The app checks for updates and tells you when one is out, but it can't install it
 for you: applying an update on macOS requires an Apple-notarized signature, which
@@ -106,10 +106,10 @@ package, or use the AppImage if you want automatic updates.
 
 | Platform | Build Type | Auto-Update |
 |----------|-----------|-------------|
-| Windows | Installer | ✅ Yes, and only the changes are downloaded |
-| Linux | AppImage | ✅ Yes, in place |
-| Linux | .deb | ❌ No, download a new one |
-| macOS | DMG | ⚠️ Tells you an update exists, but you download it yourself |
+| Windows | Installer | Yes, and only the changes are downloaded |
+| Linux | AppImage | Yes, in place |
+| Linux | .deb | No, download a new one |
+| macOS | DMG | Partial: tells you an update exists, but you download it yourself |
 
 See [Auto-Update](../user-guide/auto-update.md) for details on how the update system works.
 

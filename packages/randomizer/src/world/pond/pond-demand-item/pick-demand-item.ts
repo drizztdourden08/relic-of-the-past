@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { WINDOW_SHARE } from './pond-demand-item.constants';
 import type { Rng } from '../../../rng';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 
 const nearestUnused = (
   candidates: readonly ItemKey[], centre: number, used: ReadonlySet<ItemKey>,

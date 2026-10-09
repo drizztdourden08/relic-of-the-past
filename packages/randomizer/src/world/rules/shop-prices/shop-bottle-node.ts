@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { REGION } from '../../region-ids.data';
+import { REGION } from '../../region-ids.constants';
 import { BASELINE } from '../../state-helpers';
 import { BOTTLE_ITEMS } from '../../item-groups';
 import { cauldronPriceOf } from '../../potion-price/cauldron-price-of';

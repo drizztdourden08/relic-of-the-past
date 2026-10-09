@@ -2,7 +2,7 @@
 import type { ActorId } from '../ids';
 import type { Requirement } from '../check';
 import type { ActorCombatProfile } from '../combat';
-import type { ActorKind } from '../../enumeration/enumeration.generated.type';
+import type { ActorKind } from '../../enumeration/enumeration.type';
 import type { ReviewMark } from '../review';
 
 interface ActorGameId {

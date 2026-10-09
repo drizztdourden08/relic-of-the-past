@@ -1,24 +1,4 @@
 /* @layer tooling-scripts @kind build */
-/**
- * Trigger the GitHub "Release" workflow (workflow_dispatch) from the terminal, with
- * the same params as the UI button. The workflow does the version bump, the
- * "release: vX.Y.Z" commit, the tag and the build; nothing is committed or tagged
- * locally here.
- *
- * Usage (the version can be positional or a flag; a leading "v" is optional):
- *   pnpm release 0.9.0                # positional
- *   pnpm release --version 0.9.0      # long flag (also --version=0.9.0)
- *   pnpm release -v 0.9.0             # short flag (also -v0.9.0 / --v0.9.0)
- *   pnpm release 0.9.0 --latest       # publish immediately as the latest release
- *   pnpm release 0.9.0 --prerelease   # publish for pre-release testers only
- *   pnpm release 0.9.0 --full         # also build the installer + portable downloads
- *   pnpm release:last                 # highest release-notes/v*.md, published as latest
- *   pnpm release --last               # highest release-notes/v*.md (add --latest to publish)
- *
- * Preconditions (also enforced server-side by the workflow):
- *   - release-notes/v<version>.md exists and is committed/pushed to master
- *   - the v<version> tag does not already exist
- */
 
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
@@ -46,13 +26,13 @@ const parseArgs = (argv) => {
     } else if (arg === '--last') {
       last = true;
     } else if (/^--?(?:v|version)=/.test(arg)) {
-      version = arg.split('=')[1]; // --version=0.9.0 / --v=0.9.0 / -v=0.9.0
+      version = arg.split('=')[1];
     } else if (/^--?(?:v|version)$/.test(arg)) {
-      version = rest[(i += 1)]; // --version 0.9.0 / --v 0.9.0 / -v 0.9.0
+      version = rest[(i += 1)];
     } else if (/^--?v(\d.*)$/.test(arg)) {
-      version = arg.match(/^--?v(\d.*)$/)[1]; // glued: -v0.9.0 / --v0.9.0
+      version = arg.match(/^--?v(\d.*)$/)[1];
     } else if (!arg.startsWith('-') && version === undefined) {
-      version = arg; // positional
+      version = arg;
     }
   }
 
@@ -70,7 +50,7 @@ const highestNotesVersion = () => {
     const [bMaj, bMin, bPatch] = parts(b);
     return bMaj - aMaj || bMin - aMin || bPatch - aPatch;
   });
-  return files[0].replace(/\.md$/, ''); // e.g. "v0.9.0"
+  return files[0].replace(/\.md$/, '');
 };
 
 const fail = (message) => {
@@ -78,8 +58,6 @@ const fail = (message) => {
   process.exit(1);
 };
 
-// What the release will BE, for the confirmation line. A pre-release is published
-// (a draft's assets cannot be downloaded) but never becomes the latest download.
 const modeLabel = ({ setLatest, prerelease, fullInstaller }) => {
   const mode = prerelease ? 'pre-release' : setLatest ? 'publish as latest' : 'draft';
   return fullInstaller ? `${mode}, full installer` : mode;
@@ -93,8 +71,6 @@ const run = () => {
     fail('Missing version. Examples: pnpm release 0.9.0   |   pnpm release 0.9.0 --prerelease   |   pnpm release:last');
   }
 
-  // The workflow would honour both at once and hand GitHub a pre-release marked as
-  // the latest download, which is the one thing a pre-release is meant not to be.
   if (setLatest && prerelease) {
     fail('--latest and --prerelease are mutually exclusive. A pre-release never becomes the latest download.');
   }

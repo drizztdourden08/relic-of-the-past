@@ -1,7 +1,7 @@
 <!-- @layer root-config @kind doc -->
 # Contributing to Relic of the Past
 
-Thanks for your interest in improving the project! This guide covers how to get set up and the
+Thanks for your interest in improving the project. This guide covers how to get set up and the
 conventions we follow. By participating you agree to keep interactions respectful and constructive.
 
 > [!IMPORTANT]
@@ -12,7 +12,7 @@ conventions we follow. By participating you agree to keep interactions respectfu
 ## Prerequisites
 
 - **Node.js ≥ 24** (see [`.nvmrc`](.nvmrc))
-- **pnpm 10**. Run `corepack enable` once and Node provides the version `package.json` pins.
+- pnpm 10: run `corepack enable` once and Node provides the version `package.json` pins.
 - A legally obtained *A Link to the Past* ROM, supplied at runtime (never committed)
 - The WebAssembly core is committed prebuilt, so a normal build does **not** require the Emscripten
   SDK. You only need it when changing C code under `core/`.
@@ -29,9 +29,9 @@ See the [Quick Start](docs/getting-started/quick-start.md) for first-run details
 
 ## Project layout
 
-A three-layer architecture (C → WASM bridge → React/Electron). Read these before diving in:
+A three-layer architecture (C -> WASM bridge -> React/Electron). Read these before diving in:
 
-- [CLAUDE.md](CLAUDE.md) is the project guide and architecture overview
+- [docs/architecture/wasm-bridge.md](docs/architecture/wasm-bridge.md) explains how the C core and the app talk
 - [docs/architecture/overview.md](docs/architecture/overview.md) has the zone map and dependency invariants
 - [docs/contributing/design-system.md](docs/contributing/design-system.md) covers component tiers and design tokens
 

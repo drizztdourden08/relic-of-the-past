@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POOL_ITEM_OVERRIDES } from './pool-item-overrides.data';
+import { POOL_ITEM_OVERRIDES } from './pool-item-overrides.constants';
 import type { ItemId, CheckRecord } from '@rotp/game-data';
 
 const poolItemOfCheck = (check: CheckRecord): ItemId | undefined =>

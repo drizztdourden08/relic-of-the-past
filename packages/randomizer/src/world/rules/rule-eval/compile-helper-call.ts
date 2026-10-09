@@ -8,7 +8,7 @@ const compileHelperCall = (node: HelperNode): RuleCheck => {
   const { body } = helperDefinition(node.name);
   const args = node.args ?? [];
   if (args.every((arg) => typeof arg !== 'object')) {
-    const fixed = args as readonly (number | string | boolean)[];
+    const fixed = args;
     return (state) => body(state, ...fixed);
   }
   return (state) => body(state, ...args.map((arg) => ruleArgOf(state, arg)));

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import type { ItemId } from '@rotp/game-data';
 
 const ALWAYS_ITEMS: readonly ItemId[] = [

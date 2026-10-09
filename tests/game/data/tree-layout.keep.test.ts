@@ -13,7 +13,7 @@ const COLLECTIONS = [
   'sprite-manifest', 'tags',
 ];
 
-const EVENT_SUPPORT = ['event-bits.generated.ts', 'event-record.ts', 'event-screens.data.ts'];
+const EVENT_SUPPORT = ['event-bits.constants.ts', 'event-record.ts', 'event-screens.constants.ts'];
 
 const walk = (dir: string): string[] => readdirSync(dir).flatMap((name) => {
   const path = join(dir, name);
@@ -52,7 +52,7 @@ describe('the record tree', () => {
     const shapes = {
       screens: /^(light|dark)-world\/([a-z-]+\/[a-z\d-]+)\.ts$/,
       connections: /^(light|dark)-world\/([a-z-]+\/[a-z\d-]+)\.ts$/,
-      checks: /^((light|dark)-world\/([a-z-]+\/)?[a-z-]+|events\/([a-z-]+\/)?[a-z-]+(\.data|\.generated)?)\.ts$/,
+      checks: /^((light|dark)-world\/([a-z-]+\/)?[a-z-]+|events\/([a-z-]+\/)?[a-z-]+(\.constants|\.generated)?)\.ts$/,
       items: /^([a-z-]+|dungeon-items\/(light|dark)-world\/[a-z-]+)\.ts$/,
       dungeons: /^(light|dark)-world\/[a-z-]+\.ts$/,
       regions: /^(light|dark)-world\/[a-z-]+\.ts$/,

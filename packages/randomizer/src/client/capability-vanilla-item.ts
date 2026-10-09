@@ -2,7 +2,7 @@
 import {
   CAPACITY_UPGRADE_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS,
 } from '../world/scope-tables';
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { ScopeFlags } from './scope-lock.type';
 

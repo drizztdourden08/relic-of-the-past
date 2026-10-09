@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { currencyKeyOf } from '../shop-price-options.data';
+import { currencyKeyOf } from '../shop-price-options';
 import { blockedCurrenciesOfValues } from './blocked-currencies-of-values';
 import type { OptionValues } from '../../options.type';
 

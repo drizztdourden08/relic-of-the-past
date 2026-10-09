@@ -4,7 +4,7 @@
 Engine bring-up, per-frame input injection, and save-state / SRAM persistence.
 
 **Source:** `core/wasm-build/emscripten_io.c`
-**Bridge:** `lib/game/save-states.ts`, `lib/game/sram-sync.ts`, `lib/game/auto-save.ts`, `lib/game/wasm-bridge.ts`
+**Bridge:** `apps/desktop/src/game/save-states/`, `apps/desktop/src/game/sram-sync/`, `apps/desktop/src/game/auto-save/`, `packages/game-core/src/wasm-bridge/`
 
 ---
 
@@ -17,7 +17,7 @@ Engine bring-up, per-frame input injection, and save-state / SRAM persistence.
 | `WasmSetInputMode` | `void(int jsMode)` | `1` = take input from `WasmSetInput`; `0` = native keyboard (and clears the held mask). |
 
 The SNES button bitmask (`mask`) packs the standard buttons (B, Y, Select, Start, D-pad, A, X, L, R);
-see how `lib/input/` composes it before calling `WasmSetInput`.
+see how `apps/desktop/src/input/` composes it before calling `WasmSetInput`.
 
 ## Save states & SRAM
 

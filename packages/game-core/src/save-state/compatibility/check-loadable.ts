@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { CURRENT_STATE_FORMAT } from '../current-format.generated';
+import { CURRENT_STATE_FORMAT } from '../current-format.constants';
 import { readSnapshotBytes, readStamp } from '../state-file';
 import type { Loadability } from '../save-state.type';
 

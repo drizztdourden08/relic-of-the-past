@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ItemKey } from '../../world/item-ids.data';
+import type { ItemKey } from '../../world/item-ids';
 import type { LocationKey } from '../../world/location-key';
 
 interface ReceiptCount {

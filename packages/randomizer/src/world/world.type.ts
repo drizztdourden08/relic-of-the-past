@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
 import type { CheckId, RegionId } from '@rotp/game-data';
 import type { WorldDungeon, WorldEvent, WorldLocation, Region } from './region.type';
-import type { ItemKey } from './item-ids.data';
+import type { ItemKey } from './item-ids';
 import type { LocationKey } from './location-key.type';
 import type { MedallionId } from './item-groups';
 import type { ActToken } from './events/event-gate.type';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { REGION } from '../region-ids.data';
+import { REGION } from '../region-ids.constants';
 import { meterUsesMultiplier } from '../state-helpers-capacity';
 import { bottleCount } from './bottle-count';
 import { MAGIC_UNITS_AT_FULL_COST } from './state-helpers.constants';

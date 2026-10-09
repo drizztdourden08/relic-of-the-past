@@ -1,12 +1,12 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../../item-ids.data';
+import { ITEM } from '../../item-ids';
 import { allOf, hasItem } from '../../rules/combinators';
 import {
   canLiftHeavyRocks, canUseMedallion, hasBeamSword, hasMireMedallion, hasTurtleRockMedallion,
 } from '../../rules/helper-rules';
 import { bombShopRule, towerRule } from '../../rules/story-gate-rules';
 import { BOMBS_HELD_CHECK } from '../bombs-record.constants';
-import { WORLD_EVENT_IDS } from '../story-events.data';
+import { WORLD_EVENT_IDS } from '../story-events.constants';
 import type { ActToken, EventGate } from '../event-gate.type';
 
 const EVENT_GATES: readonly EventGate[] = [

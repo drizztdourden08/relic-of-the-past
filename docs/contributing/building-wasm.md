@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Building the WASM Core
 
-> ⚠️ **You only need this when you change the C code.** `pnpm run dev` and `pnpm run build` run an
+> **You only need this when you change the C code.** `pnpm run dev` and `pnpm run build` run an
 > `ensure-wasm` step that rebuilds the WASM core automatically whenever it's missing or a C source is
 > newer than the last build, so normal app work needs nothing extra. The build output is gitignored,
 > not committed. C changes under `core/` take effect on the next `dev`/`build`. To force a
@@ -37,8 +37,8 @@ between platforms:
 | Entry point | When | Notes |
 |------|------|-------|
 | `build.mjs` | direct (`node build.mjs`) | The actual build. Cross-platform; needs `emcc` on PATH. |
-| `build.bat` | Windows / `ensure-wasm` | Thin wrapper → `build.mjs`. |
-| `Makefile` (`make`) | CI / Unix habit | Thin wrapper → `build.mjs`. |
+| `build.bat` | Windows / `ensure-wasm` | Thin wrapper around `build.mjs`. |
+| `Makefile` (`make`) | CI / Unix habit | Thin wrapper around `build.mjs`. |
 
 There is no per-function `EXPORTED_FUNCTIONS` list. Every `Wasm*` export is tagged
 `EMSCRIPTEN_KEEPALIVE` in its `.c` file, which both retains *and* exports the symbol. Nothing has to be
@@ -46,7 +46,7 @@ kept in sync and no symbol has to be added when you write a new export (see
 [Adding a WASM Function](adding-a-wasm-function.md)). Forget the `KEEPALIVE` tag and the function
 compiles fine but throws at the `ccall` site at runtime.
 
-## Notes
+## What the build compiles
 
 - `emscripten_main.c` is the entry point; the app ships through Electron, not an SDL window.
 - `core/zelda3/snes/` builds three units: `ppu.c` (the renderer), `dma.c` and `dsp.c` (audio).

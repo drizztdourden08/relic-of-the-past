@@ -1,5 +1,4 @@
 /* @layer scripts @kind tooling */
-/** Debug pictures of an exported room: its layers drawn with its palette, and its collision. */
 
 import { PNG } from 'pngjs';
 import { decode4bppTile } from '@rotp/asset-extraction';

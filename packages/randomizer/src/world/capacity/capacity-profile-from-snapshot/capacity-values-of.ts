@@ -18,7 +18,7 @@ const capacityValuesOf = (profile: CapacityProfile): Record<string, OptionValue>
       curve: custom?.shape.curve ?? 'equal',
       jumps: custom?.shape.curve === 'free' ? custom.shape.jumps.join(',') : '',
     };
-    for (const field of capacityFieldsOf(id as CapacityFamilyId)) values[capacityKeyOf(id, field)] = fields[field];
+    for (const field of capacityFieldsOf(id)) values[capacityKeyOf(id, field)] = fields[field];
   }
   return values;
 };

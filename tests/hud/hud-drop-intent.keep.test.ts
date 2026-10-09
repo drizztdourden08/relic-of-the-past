@@ -190,7 +190,7 @@ describe('the one write', () => {
 describe('single ownership, and the new dismiss level', () => {
   it('leaves `moveNode` exactly one caller in the whole editor', () => {
     const callers = tsIn(EDITOR)
-      .filter((f) => !/behavior[\\/](drop-intent|node-edits)\.ts$/.test(f))
+      .filter((f) => !/behavior[\\/](drop-intent[\\/]move-all|node-edits)\.ts$/.test(f))
       .filter((f) => /\bmoveNode\s*\(/.test(readFileSync(f, 'utf8')));
     expect(callers).toEqual([]);
   });

@@ -54,7 +54,7 @@ describe('selecting a cell writes NOTHING, fixing the bug §50 was opened for', 
     mountGrid();
     expect(Array.from(document.querySelectorAll('.hud-lattice__occupant')).map((el) => el.textContent))
       .toEqual(['vitals', 'wallet']);
-    const sheet = readFileSync(`${EDITOR}/sub-components/GridLattice/HudLayoutEditor.lattice.css`, 'utf8');
+    const sheet = readFileSync(`${EDITOR}/sub-components/GridLattice/GridLattice.css`, 'utf8');
     expect(sheet).toMatch(/\.hud-lattice__occupant\s*\{[^}]*pointer-events:\s*none/);
   });
 });

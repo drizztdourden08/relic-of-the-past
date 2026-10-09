@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
 import type { DoorKind } from '../types/native-tables';
-import type { ConnectionTag } from '../taxonomy/connection-tags.generated.type';
+import type { ConnectionTag } from '../taxonomy/connection-tags.type';
 import type { ItemId } from '../types/ids';
 import type { TraversalRequirement } from '../../pathfinding/nav-data.types';
 import { NO_BARRIERS } from './native-table-fallbacks.constants';

@@ -10,7 +10,7 @@ import { DIRECTIONS, ENTRANCE_REACH } from './grid.constants';
 const bodyStartRequirements = (row: number, col: number, grid: TilePassability[][], inventory: Set<string>): Set<string> => {
   const reqs = new Set<string>();
   for (const [r, c] of bodyTiles(row, col)) {
-    const t = grid[r][c];
+    const t = cellAt(grid, r, c);
     if (t.type === 'obstacle' && inventory.has(t.req)) reqs.add(t.req);
     if (t.type === 'water' && inventory.has('flippers')) reqs.add('flippers');
   }
@@ -52,23 +52,23 @@ const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, ent
   if (startBody) {
     const startReqs = bodyStartRequirements(startBody.row, startBody.col, startGrid, inventory);
     deque.push({ row: startBody.row, col: startBody.col, layer: startLayer, requirements: startReqs });
-    bodyReached[startLayer][startBody.row][startBody.col] = startReqs;
+    itemAt(bodyReached[startLayer], startBody.row)[startBody.col] = startReqs;
   }
 
   for (const seed of extraSeeds ?? []) {
     const seedBody = findStartBody(seed.row, seed.col, startGrid, inventory, minRow, maxRow, minCol, maxCol);
-    if (seedBody && bodyReached[startLayer][seedBody.row][seedBody.col] === null) {
+    if (seedBody && cellAt(bodyReached[startLayer], seedBody.row, seedBody.col) === null) {
       const seedReqs = bodyStartRequirements(seedBody.row, seedBody.col, startGrid, inventory);
       deque.push({ row: seedBody.row, col: seedBody.col, layer: startLayer, requirements: seedReqs });
-      bodyReached[startLayer][seedBody.row][seedBody.col] = seedReqs;
+      itemAt(bodyReached[startLayer], seedBody.row)[seedBody.col] = seedReqs;
     }
   }
 
-  while (deque.length > 0) {
-    const cell = deque.shift()!;
+  for (let cell = deque.shift(); cell !== undefined; cell = deque.shift()) {
     const { row, col, layer, requirements } = cell;
 
-    const existing = bodyReached[layer][row][col]!;
+    const existing = cellAt(bodyReached[layer], row, col);
+    if (existing === null) throw new Error(`Queued cell ${row},${col} on layer ${layer} was never reached`);
     if (existing.size < requirements.size) continue;
 
     for (const [r, c] of bodyTiles(row, col)) {

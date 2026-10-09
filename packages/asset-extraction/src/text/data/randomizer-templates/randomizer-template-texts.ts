@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-import { RANDOMIZER_DIALOGUE_TEMPLATES, TEMPLATE_TRANSLATIONS } from './randomizer-templates.data';
+import { RANDOMIZER_DIALOGUE_TEMPLATES, TEMPLATE_TRANSLATIONS } from './randomizer-templates.constants';
 
 const randomizerTemplateTexts = (code: string): readonly string[] => {
   const translated = TEMPLATE_TRANSLATIONS[code];

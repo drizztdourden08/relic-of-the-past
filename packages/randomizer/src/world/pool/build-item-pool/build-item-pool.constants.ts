@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../../item-ids.data';
-import type { ItemKey } from '../../item-ids.data';
+import { ITEM } from '../../item-ids';
+import type { ItemKey } from '../../item-ids';
 
 const SHOP_BACKFILL_ITEM: ItemKey = ITEM.rupees50;
 

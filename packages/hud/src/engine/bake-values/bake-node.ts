@@ -6,7 +6,7 @@ import type { HudNode } from '../../types/hud-node';
 import type { Scope } from '../engine.type';
 
 const bakeNode = (node: HudNode, scope: Scope): HudNode => {
-  const boxed = { ...node, ...bakeBox(node, scope), ...bakeElement(node, scope) } as HudNode;
+  const boxed = { ...node, ...bakeBox(node, scope), ...bakeElement(node, scope) };
   if (boxed.kind === 'container') return { ...boxed, ...bakeContainerExtras(boxed, scope) } as HudNode;
   return boxed;
 };

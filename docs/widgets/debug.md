@@ -16,5 +16,5 @@ engine is doing frame to frame.
 ## Data source
 
 This reflects the full per-frame snapshot from `WasmGetGameUIState`, parsed in
-`lib/game/bridge/ui-bridge-parser.ts` and held in `stores/game-ui-store.ts`. The byte layout is
-documented under [Inventory & Progress hooks → WasmGetGameUIState](../hooks/state-queries-inventory.md).
+`packages/game-core/src/ui-bridge-parser/` and held in `apps/desktop/src/stores/game-ui-store/`. The byte layout is
+documented under [WasmGetGameUIState in the Inventory & Progress hooks](../hooks/state-queries-inventory.md#wasmgetgameuistate).

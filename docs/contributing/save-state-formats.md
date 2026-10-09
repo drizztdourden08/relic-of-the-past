@@ -21,7 +21,7 @@ would not.
 
 `core/wasm-build/layout-probe.mjs` computes it. It compiles `state-layout-probe.c` with the
 same compiler and headers the real build uses, runs it, and writes
-`packages/game-core/src/save-state/current-format.generated.ts`.
+`packages/game-core/src/save-state/current-format.constants.ts`.
 
 The probe records region lengths through a callback that never reads the data pointer, so it
 works against zeroed structs: no ROM, no assets, no booted game. That is what lets it run on
@@ -92,5 +92,5 @@ region walks for real but mirrors that function's eight plain literals. A change
 those constants alone would not move the id.
 
 That is covered from the other side: the renderer compares the snapshot length the core
-actually wrote against the length this build declares, and logs loudly on a mismatch the first
+wrote against the length this build declares, and logs loudly on a mismatch the first
 time anything is saved.

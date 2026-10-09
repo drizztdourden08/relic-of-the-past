@@ -5,7 +5,7 @@ This folder is the **source of truth** for all project documentation. It is also
 project **GitHub Wiki** automatically (see [Wiki sync](#wiki-sync) below). The content is written
 to read well both when browsing the repo and on the Wiki tab.
 
-**👉 Start at [Home](Home.md)**, or jump straight in:
+**Start at [Home](Home.md)**, or jump straight in:
 
 | Section | What's inside |
 |---------|---------------|
@@ -13,7 +13,7 @@ to read well both when browsing the repo and on the Wiki tab.
 | [User Guide](user-guide/profiles.md) | Every user-facing feature: saves, display, audio, input, cheats, navigation, and more |
 | [Widgets](widgets/overview.md) | The floating panels (inventory, checks, cheats, navigation, debug, logs, dataset) |
 | [Architecture](architecture/overview.md) | Zones & invariants, the WASM bridge, asset extraction, navigation, Electron/IPC |
-| [Game Hooks Reference](hooks/overview.md) | Every `Wasm*` export and `GameHook_*` callback crossing the C↔JS boundary |
+| [Game Hooks Reference](hooks/overview.md) | Every `Wasm*` export and `GameHook_*` callback crossing the C <-> JS boundary |
 | [Contributing](contributing/index.md) | Build from source, WASM build, coding standards, testing, design system |
 | [Legal](legal/third-party-notices.md) | Third-party licenses bundled with the app |
 

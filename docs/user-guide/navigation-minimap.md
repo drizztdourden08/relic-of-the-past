@@ -5,7 +5,7 @@ A pathfinding and minimap system that shows where Link can reach from where he's
 screens and rooms connect. You get to it through the Navigation widget and an on-canvas overlay.
 
 > This is an active, in-progress area. For how it's built, see
-> [Architecture → Navigation](../architecture/navigation.md).
+> [Architecture: Navigation](../architecture/navigation.md).
 
 ## The overlay
 

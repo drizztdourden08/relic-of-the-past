@@ -24,6 +24,6 @@ minimaps, pathfinding, and the dev editors.
 
 The widget pulls collision grids, doors, stairs, and navigation tables from the core through the bridge.
 See the [rooms](../hooks/state-queries-rooms.md), [navigation tables](../hooks/state-queries-navigation.md),
-and [sprites](../hooks/state-queries-sprites.md) hooks. The pure logic lives in `shared/game/navigation/`
-([Architecture → Navigation](../architecture/navigation.md)), and overlay state is in
-`stores/navigation-overlay-store.ts`.
+and [sprites](../hooks/state-queries-sprites.md) hooks. The pure logic lives in `packages/navigation/src/`
+([Navigation architecture](../architecture/navigation.md)), and overlay state is in
+`apps/desktop/src/stores/navigation-overlay-store/`.

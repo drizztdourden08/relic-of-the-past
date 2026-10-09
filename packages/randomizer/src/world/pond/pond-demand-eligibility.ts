@@ -3,7 +3,7 @@ import { prizeReceiveIdOfName, progressiveReceiveIdOfName } from '@rotp/game-dat
 import { UNHELD_ITEMS } from './holdable-items.constants';
 import { FAMILY_TIER_ITEMS, HOLDABLE_RECORD_NAMES } from './pond-demand-eligibility.constants';
 import { itemKeyName } from '../display-names/item-key-name';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 
 const isDemandableItem = (item: ItemKey): boolean => {
   const name = itemKeyName(item);

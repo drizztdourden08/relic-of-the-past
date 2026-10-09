@@ -1,16 +1,16 @@
 /* @layer bridge-wasm @kind logic */
-import { callPtr } from '../wasm-call';
+import { readU8, callPtr } from '../wasm-call';
 import { LAYOUT_SHAPES, NOT_MERGED_BY_BLASTWALL } from './room-layout.constants';
 import type { RoomEdge, RoomLayoutInfo } from './room-layout.type';
 
 const wasmGetRoomLayoutInfo = (): RoomLayoutInfo | null =>
   callPtr('WasmGetRoomLayoutInfo', (mod, ptr) => {
     const heap = mod.HEAPU8;
-    const layout = heap[ptr];
-    const qfx = heap[ptr + 1];
-    const qfy = heap[ptr + 2];
-    const qx = heap[ptr + 3];
-    const qy = heap[ptr + 4];
+    const layout = readU8(heap, ptr);
+    const qfx = readU8(heap, ptr + 1);
+    const qfy = readU8(heap, ptr + 2);
+    const qx = readU8(heap, ptr + 3);
+    const qy = readU8(heap, ptr + 4);
     const shape = LAYOUT_SHAPES[layout] ?? '1x1';
 
     const intraEdges: RoomEdge[] = [];

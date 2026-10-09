@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { CAPACITY_BONUS_MAX, DEFAULT_CAPACITY_BONUS } from './capacity-bonus.data';
+import { CAPACITY_BONUS_MAX, DEFAULT_CAPACITY_BONUS } from './capacity-bonus.constants';
 import { capacityBonusBaseKeyOf } from './capacity-bonus-base-key-of';
 import { capacityBonusKeyOf } from './capacity-bonus-key-of';
 import { CAPACITY_BONUS_ROW } from './capacity-bonus-row.constants';

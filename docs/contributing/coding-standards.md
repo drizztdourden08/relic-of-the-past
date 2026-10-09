@@ -27,7 +27,7 @@ Barrel `index.ts` files are the exception: they only re-export, as in `export { 
 
 ## Destructure on the first line
 
-When a function, hook, or component takes a params or props object, destructure it on the first line of the body. That documents what the code actually uses, right up front.
+When a function, hook, or component takes a params or props object, destructure it on the first line of the body. That documents what the code uses, right up front.
 
 ## Group by concept, in deep folders
 
@@ -44,7 +44,7 @@ ComponentName/
 └── index.ts                    barrel re-export
 ```
 
-A small single-file component doesn't need a folder, and there's no need to over-split. A folder holding one trivial file isn't worth it unless it will clearly grow.
+A small single-file component doesn't need a folder, and there's no need to over-split. A folder holding one trivial file isn't worth it unless it is sure to grow.
 
 ## Hooks
 
@@ -72,15 +72,18 @@ When a familiar problem turns up, use the pattern that fits and mention it in yo
 
 ## Writing: comments, strings, and docs
 
-Comments, UI strings, and docs are held to the same bar as the code: short sentences, plain words, no padding. Three lint rules block the writing habits that keep coming back. They run over TS/JS comments, string literals, and JSX text; over Markdown prose; and, through the analyze harness, over C, CSS, shell, and config files.
+Comments, UI strings, and docs are held to the same bar as the code: short sentences, plain words, no padding. The writing rules come from the shared Brock lint config and block the habits that keep coming back. They run over TS/JS comments, string literals, and JSX text, and over Markdown prose.
 
 | Rule (ESLint / markdownlint) | Blocks | Write |
 |---|---|---|
-| `local/no-em-dash` / `ROTP001` | em dash, en dash | Rewrite the sentence. See below. |
-| `local/no-smart-punctuation` / `ROTP002` | unicode ellipsis, curly quotes | `...`, `'`, `"` |
-| `local/no-slop-prose` / `ROTP003` | `rather than`; `not just X, but Y`; stock phrases (`in order to`, `as well as`, `keep in mind`, `make sure to`); sentence-opening connectors (`Furthermore`, `Note that`, `That said`); slop words (`robust`, `seamless`, `crucial`, `leverage`, `enhance`, `optimal`); filler adverbs (`simply`, `truly`, `cleanly`); `ensure` as a prose verb | a plain word, or delete the phrase |
+| `local/no-em-dash` / `BROCK001` | em dash, en dash | Rewrite the sentence. See below. |
+| `local/no-smart-punctuation` / `BROCK002` | unicode ellipsis, curly quotes, emoji, arrow glyphs | `...`, `'`, `"`, `->`, or words |
+| `local/no-slop-prose` / `BROCK003` | `rather than`; `not just X, but Y`; stock phrases (`in order to`, `as well as`, `keep in mind`, `make sure to`); sentence-opening connectors (`Furthermore`, `Note that`, `That said`); slop words (`robust`, `seamless`, `crucial`, `leverage`, `enhance`, `optimal`); filler adverbs (`simply`, `truly`, `cleanly`, `actually`, `really`); `ensure` as a prose verb | a plain word, or delete the phrase |
+| `BROCK004` (Markdown) | template headings such as `Summary`, `Overview`, `Notes` | a heading that names the subject |
+| `BROCK005` (Markdown) | bullets that open with a bold label and a colon | a sentence, or a table |
+| `local/no-tool-brand-words` / `BROCK007` | names of coding-assistant tools and their vendors | say what the code does |
 
-None of the three has an auto-fix, and that is the point. A mechanical swap is the exact mistake these rules exist to catch.
+None of them has an auto-fix, and that is the point. A mechanical swap is the exact mistake these rules exist to catch.
 
 ### The dash rule: rewrite, do not substitute
 
@@ -94,12 +97,9 @@ A dash is a sentence-shape problem, not a punctuation problem. The shape is a ma
 
 A numeric range (`1-2`), a table separator, and a UI label that joins two labels take a plain hyphen. If your edit changed no word, it was the wrong edit.
 
-### Escape hatches
+### Allowed words
 
-- One line of TS/JS: `// eslint-disable-next-line local/no-slop-prose`
-- One line of Markdown: `<!-- markdownlint-disable-next-line no-slop-prose -->`
-- One line of C, CSS, shell, or config: put `slop-ok` in a comment on that line.
-- A domain term that is never slop belongs in the allowlist, not behind a disable comment. `navigate`, `navigation`, `harness`, `unlock`, `underscore`, and `enhanced` (the HUD feature) are already there. Add yours to `SLOP_ALLOW` in `eslint.config.mjs`, or to `DEFAULT_ALLOW` in `scripts/lint/slop-patterns.mjs` when the word should pass for every tool. A lowercase entry matches any casing. An entry with a capital matches only that casing, so a word can pass as a setting name and still fail in a sentence.
+A domain term that is never slop belongs in the allowlist, not behind a disable comment. `enhanced` (the HUD feature) is already there. Add yours to `options.allow` in `standards.config.mjs`. A lowercase entry matches any casing. An entry with a capital matches only that casing, so a word can pass as a setting name and still fail in a sentence. Disable comments are not the place for an exception: when a rule is wrong for a whole class of files, the fix belongs in the shared lint config.
 
 Identifiers are never flagged: `ensureWasm`, `ensure-wasm`, and `ENSURE_OK` all pass, and so does anything inside a Markdown code fence or code span.
 

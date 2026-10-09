@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { RETRO_QUIVER_ITEM } from '../../retro/retro-bow.data';
+import { RETRO_QUIVER_ITEM } from '../../retro/retro-bow.constants';
 import { retroQuiverRegions } from '../../retro/retro-shops';
 import { all, any, has, helper, option, optionRef, region, when } from '../rule-node-build';
 import type { RuleNode } from '../rule-node.type';

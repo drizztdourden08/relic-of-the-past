@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.constants';
 import { progressiveFamilyName } from '../progressive/progressive-display-names';
-import { COPY_MULTIPLIERS, DEFAULT_COPY_MULTIPLIER } from './difficulty.data';
+import { COPY_MULTIPLIERS, DEFAULT_COPY_MULTIPLIER } from './difficulty';
 import { difficultyCopiesKeyOf } from './difficulty-option-keys';
 import type { OptionSeed } from '../options.type';
 

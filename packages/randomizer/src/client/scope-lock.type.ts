@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { ShopScope } from '../world/shops/shop-scope.type';
 import type { ShopPriceView } from '../world/shops/shop-price.type';

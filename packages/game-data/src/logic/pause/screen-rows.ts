@@ -26,11 +26,11 @@ const itemScreenRows = (ctx: PauseContext): RowSegment[][] => {
 
 const gearScreenRows = (): RowSegment[][] => [
   ...GEAR_LADDER_KINDS.map((kind) => [{ section: kind, start: 0, length: gearTierCount(kind), column: 0 }]),
-  [{ section: 'passive' as PauseSection, start: 0, length: PASSIVE_COUNT, column: 0 }],
+  [{ section: 'passive', start: 0, length: PASSIVE_COUNT, column: 0 }],
 ];
 
 const statusScreenRows = (): RowSegment[][] =>
-  [[{ section: 'actions' as PauseSection, start: 0, length: ACTION_COUNT, column: 0 }]];
+  [[{ section: 'actions', start: 0, length: ACTION_COUNT, column: 0 }]];
 
 const screenRows = (screen: PauseScreen, ctx: PauseContext): RowSegment[][] => {
   if (screen === 'items') return itemScreenRows(ctx);

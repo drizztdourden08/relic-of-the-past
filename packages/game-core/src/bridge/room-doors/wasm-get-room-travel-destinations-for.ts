@@ -1,10 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-import { callPtr } from '../wasm-call';
+import { callPtr, readU8 } from '../wasm-call';
 
 const wasmGetRoomTravelDestinationsFor = (roomId: number): number[] | null =>
-  callPtr('WasmGetRoomTravelDestinationsFor', (mod, ptr) => {
-    const heap = mod.HEAPU8;
-    return [heap[ptr], heap[ptr + 1], heap[ptr + 2], heap[ptr + 3], heap[ptr + 4]];
-  }, { argTypes: ['number'], args: [roomId] });
+  callPtr(
+    'WasmGetRoomTravelDestinationsFor',
+    (mod, ptr) => Array.from({ length: 5 }, (_v, i) => readU8(mod.HEAPU8, ptr + i)),
+    { argTypes: ['number'], args: [roomId] },
+  );
 
 export { wasmGetRoomTravelDestinationsFor };

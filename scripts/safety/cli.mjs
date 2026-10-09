@@ -1,13 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `pnpm safety<command>`: manual control of the snapshots.
- *
- *   snapshot [label]   take one now
- *   list               every snapshot, newest first, and what retention would do
- *   verify <ref>       compare a snapshot against what is on disk now
- *   restore <ref>      write the snapshot's protected files back over the working tree
- *   prune              apply retention (older than 7 days, but never below the last 2)
- */
 import { createSnapshot, restoreFrom, verifyAgainst } from './snapshot.mjs';
 import { listSnapshots, pruneSnapshots, selectExpired } from './retention.mjs';
 import { PROTECTED_ROOTS } from './roots.mjs';

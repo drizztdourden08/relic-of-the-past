@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POND_ASK_ROW_BY_KIND } from '../pond-ask.data';
+import { POND_ASK_ROW_BY_KIND } from '../pond-ask';
 import { pondAskMaxKeyOf, pondAskMinKeyOf } from '../pond-ask-keys';
 import type { PartialOptionValues } from '../../options.type';
 import type { PondAskAmountKind } from '../pond-ask.type';

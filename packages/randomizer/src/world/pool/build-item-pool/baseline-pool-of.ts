@@ -5,7 +5,7 @@ import {
   GLOVE_ITEMS, LEGACY_INSANITY_ITEMS, SHIELD_ITEMS, SWORD_ITEMS,
   TOTAL_ITEMS_TO_PLACE,
 } from '../pool-tables.constants';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { BottlePicker } from '../pool.type';
 
 const baselinePoolOf = (pickBottle: BottlePicker, magicRow: readonly ItemKey[]): ItemKey[] => {

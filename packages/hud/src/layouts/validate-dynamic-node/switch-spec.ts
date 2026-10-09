@@ -32,7 +32,7 @@ const switchSpec = (
     .filter((entry): entry is HudSwitchCase => entry !== null);
   if (cases.length !== value.cases.length) return null;
   const otherwise = value.otherwise === undefined ? undefined
-    : isRecord(value.otherwise) ? validateNode(value.otherwise, `${path}.otherwise`, issues, seen, insideRepeat) as HudNode | null
+    : isRecord(value.otherwise) ? validateNode(value.otherwise, `${path}.otherwise`, issues, seen, insideRepeat)
       : (issues.push(`${path}.otherwise: expected a node`), null);
   if (value.otherwise !== undefined && !otherwise) return null;
   return { type: 'switch', cases, ...(otherwise ? { otherwise } : {}) };

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { DEFAULT_HEART_CAP, asHeartCap } from '../difficulty.data';
+import { DEFAULT_HEART_CAP, asHeartCap } from '../difficulty';
 import { HEART_CAP_KEY } from '../difficulty-option-keys';
 import type { OptionValues } from '../../options.type';
 

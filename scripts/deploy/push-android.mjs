@@ -1,11 +1,4 @@
 /* @layer tooling-scripts @kind script */
-/**
- * Bring up the Android emulator and deploy the Capacitor build to it.
- *
- *   pnpm emulator:start                 boot the AVD and wait until it's ready
- *   pnpm push:android                   build + install + launch on the emulator/device
- *   pnpm push:android --apk <path>      install a prebuilt APK instead
- */
 import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
@@ -18,11 +11,6 @@ const tool = (sub, name) => (sdk ? join(sdk, sub, name + ext) : name + ext);
 const adb = tool('platform-tools', 'adb');
 const emulatorBin = tool('emulator', 'emulator');
 const APP_ID = 'com.relicofthepast.app';
-// The debug variant installs under its own id (app/build.gradle sets
-// applicationIdSuffix), so it can sit beside an installed release build
-// instead of replacing it. Everything this script drives is that debug
-// variant, so force-stop and launch have to name the suffixed id or they
-// address an app that may not be installed at all.
 const DEBUG_APP_ID = `${APP_ID}.debug`;
 
 const onlineDevices = () =>
@@ -33,8 +21,6 @@ const onlineDevices = () =>
 
 const deviceSerial = () => {
   const online = onlineDevices().map((line) => line.split(/\s+/)[0]);
-  // Honor ANDROID_SERIAL when it names an online device, so you can target a real
-  // phone (e.g. 192.168.2.31:5555) while an emulator is also connected.
   const preferred = process.env.ANDROID_SERIAL;
   if (preferred && online.includes(preferred)) return preferred;
   return online[0] ?? null;
@@ -46,7 +32,6 @@ const waitForBoot = () => {
     try {
       if (capture(adb, ['shell', 'getprop', 'sys.boot_completed']) === '1') return;
     } catch {
-      // device not answering yet, so keep polling
     }
     sleep(1000);
   }
@@ -63,7 +48,6 @@ const bootEmulator = (avd) => {
   waitForBoot();
 };
 
-// Copy the local ./test-roms folder to /sdcard/Download on the device.
 const pushRoms = (serial) => {
   const local = join(process.cwd(), 'test-roms');
   mkdirSync(local, { recursive: true });
@@ -73,7 +57,6 @@ const pushRoms = (serial) => {
   }
   log('Pushing test-roms -> /sdcard/Download/test-roms...');
   run(adb, ['-s', serial, 'push', local, '/sdcard/Download/']);
-  // Register the files in MediaStore so they appear in the file picker.
   run(
     adb,
     [
@@ -86,7 +69,6 @@ const pushRoms = (serial) => {
   );
 };
 
-// Build the debug APK (web build, cap sync, Gradle assembleDebug), then install + launch it via adb.
 const deployCapacitor = (serial) => {
   const android = join(process.cwd(), 'apps', 'desktop', 'mobile', 'android');
   if (!existsSync(android)) {
@@ -97,8 +79,6 @@ const deployCapacitor = (serial) => {
   const apk = join(android, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
   log(`Installing + launching on ${serial}...`);
   run(adb, ['-s', serial, 'install', '-r', apk]);
-  // Force-stop first so a still-running instance reloads the freshly-installed web
-  // bundle instead of keeping the old one in its WebView.
   run(adb, ['-s', serial, 'shell', 'am', 'force-stop', DEBUG_APP_ID], { stdio: 'ignore' });
   run(adb, ['-s', serial, 'shell', 'monkey', '-p', DEBUG_APP_ID, '-c', 'android.intent.category.LAUNCHER', '1'], {
     stdio: 'ignore',

@@ -2,7 +2,7 @@
 import { POND_INSTANCES } from '../pond-instances';
 import { presentRungsOf } from '../pond-spots';
 import { NO_SLOT_RULE } from './pond-vanilla-slots.constants';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { LocationKey } from '../../location-key';
 import type { PondInstance } from '../pond-instance.type';
 import type { PondProfiles } from '../pond-profiles.type';

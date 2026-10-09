@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { isFillerItem } from './is-filler-item';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 
 const fillerCountOf = (pool: readonly ItemKey[]): number => pool.filter(isFillerItem).length;
 

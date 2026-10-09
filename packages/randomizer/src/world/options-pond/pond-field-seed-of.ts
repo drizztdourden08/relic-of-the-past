@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POND_MAX_ITEMS, POND_MAX_THROWS } from '../pond/pond-ladder.data';
+import { POND_MAX_ITEMS, POND_MAX_THROWS } from '../pond/pond-ladder.constants';
 import { pondKeyOf } from '../pond/pond-option-keys';
 import { POND_CURVE_CHOICES, POND_MODE_CHOICES } from './pond-option-choices.constants';
 import type { PondField } from '../pond/pond.type';

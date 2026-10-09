@@ -1,7 +1,7 @@
 /* @layer shared-game @kind barrel */
 import { registerStrategy } from '../../compare';
-import { dungeonStrategy } from './dungeon.strategy';
+import { dungeonStrategy } from './dungeon-strategy';
 
 registerStrategy(dungeonStrategy);
 
-export { dungeonStrategy } from './dungeon.strategy';
+export { dungeonStrategy } from './dungeon-strategy';

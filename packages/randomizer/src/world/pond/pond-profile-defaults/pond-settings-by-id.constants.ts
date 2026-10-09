@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
-import { pondRupeesOnlyAsk } from '../pond-ask.data';
-import { DEFAULT_POND_SETTING } from './pond-profile-defaults.data';
+import { pondRupeesOnlyAsk } from '../pond-ask';
+import { DEFAULT_POND_SETTING } from './pond-profile-defaults.constants';
 import type { PondId } from '../pond-instance.type';
 import type { PondSetting } from '../pond-profile.type';
 

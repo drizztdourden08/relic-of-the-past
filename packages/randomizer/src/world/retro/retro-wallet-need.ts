@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { RETRO_QUIVER_PRICE } from './retro-bow.data';
+import { RETRO_QUIVER_PRICE } from './retro-bow.constants';
 import { retroShotWalletNeed } from './retro-shot-wallet-need';
 import type { RetroBowSetting } from './retro.type';
 

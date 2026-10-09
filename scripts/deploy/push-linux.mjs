@@ -1,21 +1,4 @@
 /* @layer tooling-scripts @kind script */
-/**
- * Build the Linux app directly inside the VirtualBox test VM and launch it.
- * No WSL build step, because the VM is both the build machine and the test target.
- *
- *   pnpm push:linux                     build, push test-roms, launch on VM
- *   pnpm push:linux --build-only        build only (no launch)
- *
- * One-time VM setup required before the first run:
- *   ssh rotp@192.168.56.50 'bash -s' < scripts/deploy/setup-vm-builder.sh
- *
- * Flow:
- *   1. Mount Windows source tree into the VM via a transient VirtualBox shared folder.
- *   2. SSH → rsync shared folder to ~/relic (a local VM copy, which avoids building over slow vboxsf).
- *   3. SSH → build: pnpm install + electron-builder → AppImage staged to ~/rotp-linux.AppImage.incoming.
- *   4. Mount test-roms shared folder in VM.
- *   5. SSH → vm-launch.sh: atomic swap + launch.
- */
 import { copyFileSync, mkdirSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { loadConfig, VM_CONFIG_PATH } from './config.mjs';
@@ -25,18 +8,14 @@ const VBOXMANAGE = process.env.VBOXMANAGE || 'C:\\Program Files\\Oracle\\Virtual
 const ROMS_DIR = 'test-roms';
 const SRC_SHARE = 'relic-src';
 
-// Unix path (/home/x/y) → Windows UNC path via WSL (\\wsl.localhost\distro\home\x\y).
-// Used only when identityFile is a WSL path (starts with /).
 const toUnc = (distro, wslPath) =>
   `\\\\wsl.localhost\\${distro}${wslPath.replace(/\//g, '\\')}`;
 
-// Copy the SSH identity file to %TEMP%\rotp_vm_key with owner-only ACL so
-// Windows OpenSSH accepts it. Supports both Windows paths and WSL paths.
 const prepareWinKey = (config, identityFile) => {
   const dst = join(process.env.TEMP || 'C:\\Windows\\Temp', 'rotp_vm_key');
   try {
     run('icacls', [dst, '/grant', `${process.env.USERNAME}:F`], { stdio: 'ignore' });
-  } catch { /* no existing key to unlock */ }
+  } catch { }
   rmSync(dst, { force: true });
   const isWinPath = /^[A-Za-z]:[\\\/]/.test(identityFile);
   const src = isWinPath ? identityFile : toUnc(config.wslDistro, identityFile);
@@ -46,14 +25,13 @@ const prepareWinKey = (config, identityFile) => {
   return dst;
 };
 
-// Add a transient VirtualBox shared folder and mount it in the VM.
 const mountShare = (vmName, shareName, hostPath, sshArgs, target, mountPoint) => {
   mkdirSync(hostPath, { recursive: true });
   try {
     run(VBOXMANAGE, ['sharedfolder', 'add', vmName, '--name', shareName, '--hostpath', hostPath, '--transient'], {
       stdio: 'ignore',
     });
-  } catch { /* share already mapped */ }
+  } catch { }
   run('ssh', [
     ...sshArgs,
     target,
@@ -95,23 +73,18 @@ const main = () => {
   const scpArgs = [...(port ? ['-P', String(port)] : []), ...idFlag, ...sslOpt];
   const sshArgs = ['-n', ...(port ? ['-p', String(port)] : []), ...idFlag, ...sslOpt];
 
-  // 1. Mount Windows source tree into VM
   log(`Mounting source tree → ${target}:~/relic-src`);
   mountShare(config.vmName, SRC_SHARE, process.cwd(), sshArgs, target, '~/relic-src');
 
-  // 2. Rsync to local VM copy
   syncFromShare(sshArgs, target);
 
-  // 3. Build in VM
   buildInVm(sshArgs, target);
 
   if (buildOnly) return;
 
-  // 4. Mount test-roms
   log(`Mounting ${ROMS_DIR} → ${target}:~/${ROMS_DIR}`);
   mountShare(config.vmName, ROMS_DIR, join(process.cwd(), ROMS_DIR), sshArgs, target, `~/${ROMS_DIR}`);
 
-  // 5. Install desktop entry + launch
   const installer = resolve(import.meta.dirname, 'vm-install-desktop.sh');
   const icon = resolve(import.meta.dirname, '../../apps/desktop/public/logos/logo/logo-256.png');
   run('ssh', [...sshArgs, target, 'mkdir', '-p', '.local/share/icons', '.local/share/applications']);

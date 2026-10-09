@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { REFERENCE_CAPACITY_PROFILE } from '../../capacity/capacity-profile-defaults';
-import { CURRENCY_ROWS } from '../shop-price-options.data';
+import { CURRENCY_ROWS } from '../shop-price-options';
 import { shopPriceCeilingOf } from '../shop-price-ceiling-of';
 import type { CapacityProfile } from '../../capacity/capacity-profile.type';
 import type { Rng } from '../../../rng';

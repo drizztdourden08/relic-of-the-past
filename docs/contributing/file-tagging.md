@@ -15,7 +15,7 @@ Each file carries two tags:
   `style` · `constants` · `barrel` · `generated` · `test` · `config` · `build` ·
   `doc` · `native` · `asset`.
 
-### Two tag channels (precedence: manifest → header → heuristic)
+### Two tag channels (the manifest wins over the header, the header over the heuristic)
 
 1. **In-file header:** for any file that can hold a comment:
 
@@ -29,7 +29,7 @@ Each file carries two tags:
    `core/zelda3/**`). Manifest entries are authoritative.
 
 Add/refresh headers automatically: **`pnpm run analyze:tag`** (idempotent, so it skips
-files already tagged). New comment-less or vendored files → add a manifest glob.
+files already tagged). New comment-less or vendored files get a manifest glob.
 
 ## Per-kind policy (`scripts/analyze/policy.mjs`)
 

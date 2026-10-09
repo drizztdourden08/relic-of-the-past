@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../../world/item-ids.data';
+import { ITEM } from '../../world/item-ids';
 import type { ShopBottleContent } from '../../world/shops/shop-price.type';
 import type { PondDemandPlace } from './pond-demand-lines.type';
 

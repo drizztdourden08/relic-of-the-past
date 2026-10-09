@@ -6,5 +6,5 @@ export { extractPalaceSpritePalettes } from './extract-palace-sprite-palettes';
 export {
   DUNGEON_PALETTE_BASE, DUNGEON_PALETTE_SIZE, SPRITE_SHEET_POINTER_TABLE, SPRITE_TILESET_TABLE,
 } from './graphics-source.constants';
-export { PALACE_SHEETS, PALACE_SPRITE_PALETTES } from './graphics-source.data';
+export { PALACE_SHEETS, PALACE_SPRITE_PALETTES } from './palace-sheets.constants';
 export type { DungeonSpriteGraphics, SheetSource, SpritePaletteSource, SpriteSheet } from './graphics-source.type';

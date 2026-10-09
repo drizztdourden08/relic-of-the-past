@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { dungeonItemReceiveIdOfRecord, getItem, prizeReceiveIdOfName, progressiveReceiveIdOfName, upgradeReceiveIdOfName } from '@rotp/game-data';
 import { itemKeyName } from '../../world/display-names/item-key-name';
-import { RETRO_QUIVER_GRANT_ITEM, RETRO_QUIVER_ITEM } from '../../world/retro/retro-bow.data';
+import { RETRO_QUIVER_GRANT_ITEM, RETRO_QUIVER_ITEM } from '../../world/retro/retro-bow.constants';
 import { sessionWalletTable } from '../session-wallet-table';
 import { flavorBaseName } from './flavor-base-name';
 import { itemByName } from './item-by-name';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { POND_GEM_SLOTS } from '../rupee-gems.data';
+import { POND_GEM_SLOTS } from '../rupee-gems.constants';
 import { decomposeRupees } from './decompose-rupees';
 import type { RupeeDenomination } from '../pond.type';
 

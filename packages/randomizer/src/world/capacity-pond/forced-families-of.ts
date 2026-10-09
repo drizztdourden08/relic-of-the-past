@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { isPinnedUnderRetro } from '../capacity/retro-projectiles';
-import { CAPACITY_POND_NOTES } from './capacity-pond-notes.data';
+import { CAPACITY_POND_NOTES } from './capacity-pond-notes.constants';
 import { NO_FORCED_FAMILIES, POND_FED_FAMILIES } from './capacity-pond.constants';
 import type { CapacityFamilyId } from '../capacity/capacity-profile.type';
 import type { CapacityPondSelection } from './capacity-pond-rule.type';

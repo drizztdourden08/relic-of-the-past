@@ -1,5 +1,5 @@
 /* @layer shared-game-data @kind constants */
-import { ENTRANCE_TRACKS, NO_REPLACEMENT, OVERWORLD_AREA_TRACKS } from './msu-deluxe-remap.data';
+import { ENTRANCE_TRACKS, NO_REPLACEMENT, OVERWORLD_AREA_TRACKS } from './msu-deluxe-remap-tables.constants';
 
 const REMAP_KEEP = 0;
 const REMAP_BY_AREA = 1;

@@ -2,7 +2,7 @@
 import { accessibilityFailures } from '../accessibility/accessibility-check';
 import { FillError } from './fill-error';
 import { verifyStandardEscape } from './verify-standard';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 import type { FillWorld } from './fill-world.type';
 import type { PlacementSweep } from './fill.type';

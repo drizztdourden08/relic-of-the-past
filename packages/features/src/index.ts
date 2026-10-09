@@ -1,13 +1,13 @@
 /* @layer package @kind barrel */
 export { ONLINE_NOTICE_KINDS } from './archipelago/online-notice-settings/online-notice-kinds.constants';
 export type { OnlineNoticeKind, OnlineNoticeSettingKey, OnlineNoticeSettings } from './archipelago/online-notice-settings/online-notice-settings.type';
-export { BUNDLE_FIXES } from './bundle-fixes.generated';
+export { BUNDLE_FIXES } from './bundle-fixes.constants';
 export { CHEAT_ACTIONS, DEFAULT_FUNCTION_MAPPINGS, FUNCTION_ACTION_LABELS, SHORTCUT_ACTIONS } from './controls/functions/functions.constants';
 export type { FunctionAction, FunctionMapping } from './controls/functions/functions.type';
 export { FEATURES_BY_ID } from './feature-registry/feature-registry.constants';
-export { FEATURES } from './feature-registry/features.data';
+export { FEATURES } from './feature-registry/features.constants';
 export type { GbaDifference, GbaGroup } from './gba-difference.type';
-export { GBA_DIFFERENCES } from './gba-differences.data';
+export { GBA_DIFFERENCES } from './gba-differences.constants';
 export { controlSchemeOf } from './hud-style/control-scheme-of';
 export { hostDrawnHud } from './hud-style/host-drawn-hud';
 export { detectMsuMismatch } from './msu-auto-config/detect-msu-mismatch';

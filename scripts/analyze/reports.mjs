@@ -1,12 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Design-system enforcement reports. Reads scripts/analyze/report.json (run
- * `pnpm run analyze` first; the `report*` package scripts do this) and
- * prints the raw-HTML (R11), structure (R12), and token (R13) findings.
- * Usage: node scripts/analyze/reports.mjs [html|structure|tokens|all]
- */
+/* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
 

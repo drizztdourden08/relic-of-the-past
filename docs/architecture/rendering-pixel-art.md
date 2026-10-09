@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Pixel Art & Rendering
 
-This doc exists so screenshots of the running game can be interpreted **correctly**.
+This doc exists so screenshots of the running game are read **without misreading them**.
 Low-resolution pixel art is read *differently* from photographs: in a photo,
 recognition comes from abundant detail; in pixel art, **every pixel is a
 deliberate decision** and meaning comes from *limitation, not abundance*. When a
@@ -15,16 +15,16 @@ are looking at is coarse by design, and small offsets matter a lot.
 
 ## 1. How the game renders (the ground truth)
 
-Source: `core/wasm-build/emscripten_main.c`, `shared/game/navigation/`.
+Source: `core/wasm-build/emscripten_main.c`, `packages/navigation/src/pathfinding/`.
 
 | Property | Value |
 |----------|-------|
 | Native frame | **256×224 px** (`g_snes_width = aspect*2 + 256`, `g_snes_height = 224`; 240 if `extend_y`) |
-| Base tile | **8×8 px**, **4 bits-per-pixel → 16 colors per palette** (SNES standard) |
-| Map tile ("Map16") | **16×16 px** = a 2×2 block of 8×8 tiles (overworld & dungeon collision granularity) |
+| Base tile | **8×8 px**, **4 bits-per-pixel, so 16 colors per palette** (SNES standard) |
+| Map tile ("Map16") | **16×16 px** = a 2×2 block of 8×8 tiles (the unit of overworld & dungeon collision) |
 | Screen / room | **512×512 px** = **64×64** base tiles (`Math.floor(linkX / 512)` selects the screen) |
-| Link's hitbox | ~**16 px wide ≈ 2 tiles** (`grid-utils.ts`: "2-tile perpendicular clearance for Link's 16px width") |
-| Color | SNES CGRAM, 15-bit BGR (5 bits/channel) → expanded to RGBA at extraction |
+| Link's hitbox | ~**16 px wide ≈ 2 tiles** (`pathfinding/core/has-two-tile-clearance.ts`: 2-tile perpendicular clearance for Link's 16px width) |
+| Color | SNES CGRAM, 15-bit BGR (5 bits/channel), expanded to RGBA at extraction |
 
 **Coordinate model for position bugs:** world space is continuous pixels; a
 *screen/room* is a 512px cell; *collision* is reasoned in 16px Map16 tiles;
@@ -51,9 +51,9 @@ and a blurred edge can look like a real sub-pixel feature that isn't there.
 
 ---
 
-## 3. Reading pixel art correctly (principles from the references)
+## 3. Reading pixel art (principles from the references)
 
-From the three reference guides (sprite-ai.art, civitai, ai-media-studio):
+From three published pixel-art reference guides:
 
 1. **Every pixel is intentional.** Unlike a downsampled photo, there's no noise. If
    a pixel is a different color, it *means* something (an edge, a highlight, a
@@ -86,14 +86,14 @@ then judge the screenshot against that ground truth.
 
 Extracted by `apps/desktop/electron/sprites/ipc-handlers.ts` via
 `packages/asset-extraction/src/item-sprites/`, driven by
-`shared/game/sprites/definitions.json`.
+`packages/game-data/src/data/records/sprite-manifest/definitions.json`.
 
 - **Location:** `%AppData%\relic-of-the-past\sprites\<rom-stem>\<file>.png`
   (Windows resolved: `C:\Users\<user>\AppData\Roaming\relic-of-the-past\sprites\...`).
 - **Read them directly** with the Read tool (they're PNGs; Read renders images).
-- ⚠️ **Path drift:** older builds wrote to `%AppData%\alttp-pc\sprites\...`. If the
+- **Path drift:** older builds wrote to `%AppData%\alttp-pc\sprites\...`. If the
   `relic-of-the-past` folder is empty, sprites may only exist under `alttp-pc`,
-  or need re-extraction in-app (ROM screen → extract sprites).
+  or need re-extraction in-app (on the ROM screen, extract sprites).
 
 ### What IS extracted (250 definitions)
 
@@ -114,5 +114,5 @@ When interpreting a screenshot would be more reliable with a reference sprite th
 **is not currently extracted**, do not guess and move on. **Raise a flag**: name
 the specific sprite needed (e.g. "Link walking south, green tunic" or "overworld
 grass Map16 tile") and ask the user to extract it, so the reference library, and its
-accuracy, grow over time. Extraction is done one-at-a-time as needed, never as a
-bulk pass. This rule is mirrored in the root `CLAUDE.md` so it always applies.
+accuracy, grow over time. Extraction is done one sprite at a time, when one is
+missing, never as a bulk pass. This rule is mirrored in the root `CLAUDE.md` so it always applies.

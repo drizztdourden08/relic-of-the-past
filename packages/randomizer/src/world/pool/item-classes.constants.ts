@@ -1,9 +1,9 @@
 /* @layer shared-game @kind constants */
 import { EXPLOSIVES_UPGRADE_NAMES, PROJECTILES_UPGRADE_NAMES } from '@rotp/game-data';
 import { itemKeyOfName } from '../display-names/item-key-name';
-import { RETRO_QUIVER_ITEM } from '../retro/retro-bow.data';
+import { RETRO_QUIVER_ITEM } from '../retro/retro-bow.constants';
 import { itemsClassed } from './items-classed';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 
 const PROGRESSION_ITEMS: ReadonlySet<ItemKey> = new Set<ItemKey>([
   ...itemsClassed('progression'),

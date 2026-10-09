@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { DARK_ROOM_LIGHT_FIELDS } from './dark-room-lights.data';
+import { DARK_ROOM_LIGHT_FIELDS } from './dark-room-lights.constants';
 import { forcedDarkRoomLightReasons } from './forced-dark-room-light-reasons';
 import type { DarkRoomLights } from '@rotp/game-core';
 

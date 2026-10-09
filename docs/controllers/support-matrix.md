@@ -5,14 +5,14 @@ Which controllers work on each platform, over which connection, and where featur
 limited. Input parsing, controller presets, calibration, and haptics are the same
 everywhere; only how the device is reached differs per platform.
 
-Legend: ✅ supported · ⚠️ needs one-time setup · ❌ not available.
+Legend: **Yes** means supported, **Setup** needs a one-time setup, **No** is not available.
 
 ## Connections per platform
 
 | Connection | Windows | macOS | Linux | Android |
 |------------|:--:|:--:|:--:|:--:|
-| Raw HID (full feature access) | ✅ | ✅ | ⚠️ udev rules | ✅ USB-OTG only |
-| Standard gamepad (buttons/axes/rumble) | ✅ | ✅ | ✅ | ✅ |
+| Raw HID (full feature access) | Yes | Yes | Setup (udev rules) | Yes (USB-OTG only) |
+| Standard gamepad (buttons/axes/rumble) | Yes | Yes | Yes | Yes |
 
 On Android, raw HID is available over a **wired USB-OTG** connection only. **Bluetooth**
 controllers come through the standard gamepad layer (buttons, axes, basic rumble).
@@ -21,28 +21,28 @@ controllers come through the standard gamepad layer (buttons, axes, basic rumble
 
 | Feature | Windows | macOS | Linux | Android (USB-OTG) | Android (Bluetooth) |
 |---|:--:|:--:|:--:|:--:|:--:|
-| Standard input (buttons/axes) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Precise raw-HID input | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
-| Output writes (LEDs/config) | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
-| Basic rumble | ✅ | ✅ | ✅ | ✅ | ✅ (device-dependent) |
-| Advanced HID haptics | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
-| Switch / NSO controller init | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
-| Stick / trigger calibration | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Standard input (buttons/axes) | Yes | Yes | Yes | Yes | Yes |
+| Precise raw-HID input | Yes | Yes | Setup (udev) | Yes | No |
+| Output writes (LEDs/config) | Yes | Yes | Setup (udev) | Yes | No |
+| Basic rumble | Yes | Yes | Yes | Yes | Yes (device-dependent) |
+| Advanced HID haptics | Yes | Yes | Setup (udev) | Yes | No |
+| Switch / NSO controller init | Yes | Yes | Setup (udev) | Yes | No |
+| Stick / trigger calibration | Yes | Yes | Yes | Yes | Yes |
 
-On Linux, the ⚠️ features need the controller udev rules from [linux-setup.md](linux-setup.md).
-The `.deb` installs them automatically.
+On Linux, the features marked **Setup** need the controller udev rules from
+[linux-setup.md](linux-setup.md). The `.deb` installs them automatically.
 
 ## By controller
 
 | Controller | Windows / macOS | Linux | Android (USB-OTG) | Android (Bluetooth) |
 |---|:--:|:--:|:--:|:--:|
-| Xbox | ✅ | ✅ | ✅ | ✅ |
-| PlayStation (DS4 / DualSense) | ✅ | ✅ | ✅ | ✅ standard |
-| 8BitDo / generic pads | ✅ | ✅ | ✅ | ✅ standard |
-| Switch Pro Controller | ✅ | ✅ | ✅ | ✅ standard |
-| Switch Pro Controller 2 | ✅ | ✅ | ✅ | ❌ |
-| NSO GameCube | ✅ | ✅ | ✅ | ❌ |
-| Keyboard | ✅ | ✅ | ✅ | ✅ |
+| Xbox | Yes | Yes | Yes | Yes |
+| PlayStation (DS4 / DualSense) | Yes | Yes | Yes | Yes (standard) |
+| 8BitDo / generic pads | Yes | Yes | Yes | Yes (standard) |
+| Switch Pro Controller | Yes | Yes | Yes | Yes (standard) |
+| Switch Pro Controller 2 | Yes | Yes | Yes | No |
+| NSO GameCube | Yes | Yes | Yes | No |
+| Keyboard | Yes | Yes | Yes | Yes |
 
 ## Limitations
 

@@ -1,18 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind config
- *
- * The one source of truth for the AI-writing patterns this repo blocks.
- * Read by the local ESLint rules (eslint.config.mjs), the markdownlint custom
- * rules (scripts/lint/markdown-rules/) and the analyze harness adapter
- * (scripts/analyze/adapters/slop-adapter.mjs).
- *
- * Each entry carries the advice that goes into the lint message, so a report
- * always says what to write, not only what is banned.
- *
- * This file spells the banned words out on purpose. eslint.config.mjs switches
- * the three local rules off for scripts/lint/** for that reason.
- */
+/* @layer tooling-scripts @kind config */
 
 const w = (words) => new RegExp(`\\b(?:${words})\\b`, 'gi');
 
@@ -49,11 +35,6 @@ const CONNECTORS = [
   'In conclusion|Overall|Importantly|Crucially|Note that|Notably|Ultimately|Essentially|Interestingly',
 ].join('|');
 
-// group decides which rule reports the hit:
-//   dash  -> local/no-em-dash          punct -> local/no-smart-punctuation
-//   prose -> local/no-slop-prose
-// `word: true`  runs the identifier guard (ensureWasm, ensure-wasm, obj.ensure()).
-// `prefix: true` means group 1 is the lead-in and group 2 is the reported text.
 const PATTERNS = [
   {
     id: 'em-dash',
@@ -132,12 +113,6 @@ const PATTERNS = [
   },
 ];
 
-// Domain terms this repo uses for real. An entry with an uppercase letter matches
-// case-sensitively, so `Enhanced` (a UI setting name) passes and "enhanced
-// performance" in prose still fails.
-// Domain words this project uses literally, so the prose rules skip them.
-// `enhanced` names a real feature (the enhanced HUD overlay and the
-// `hudMode: 'original' | 'enhanced'` setting), not a vague quality claim.
 const DEFAULT_ALLOW = [
   'navigate', 'navigates', 'navigating', 'navigation',
   'harness', 'harnesses',
@@ -155,8 +130,6 @@ const compileAllow = (allow) =>
 
 const isIdentChar = (c) => c !== undefined && /[A-Za-z0-9_$-]/.test(c);
 
-// Skip anything that is part of a name rather than a word in a sentence:
-// ensure-wasm, ENSURE_OK, obj.ensure(), $enhanced.
 const isIdentifierUse = (text, index, length) => {
   const before = text[index - 1];
   const after = text[index + length];
@@ -167,11 +140,9 @@ const isIdentifierUse = (text, index, length) => {
 };
 
 /**
- * Find every banned pattern in `text`.
  * @param {string} text
  * @param {{ allow?: string[], groups?: string[] }} [opts]
  * @returns {{ id: string, group: string, index: number, length: number, match: string, message: string }[]}
- *   Sorted by index, with overlapping hits collapsed to the longest one.
  */
 const findSlop = (text, opts = {}) => {
   const allow = compileAllow(opts.allow ?? DEFAULT_ALLOW);

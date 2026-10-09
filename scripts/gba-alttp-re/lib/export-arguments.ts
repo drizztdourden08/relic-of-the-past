@@ -1,9 +1,7 @@
 /* @layer scripts @kind tooling */
-/** Command-line arguments for export-palace-dungeon.ts. */
 
 interface CliArguments {
   rom?: string;
-  /** The base cartridge. The supplement is compiled against it, so it has no default. */
   snes?: string;
   out?: string;
   'allow-unknown-rom'?: boolean;

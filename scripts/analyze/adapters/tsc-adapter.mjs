@@ -1,18 +1,10 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * TypeScript typecheck adapter. tsc is project-wide, so it always runs the full
- * program; the facade filters findings to the changed set in diff mode.
- */
+/* @layer tooling-scripts @kind logic */
 import { sh } from './_run.mjs';
 
 const LINE = /^(.+?)\((\d+),\d+\):\s+error\s+(TS\d+):\s+(.*)$/;
 
 const run = async (records, ctx) => {
   const { root, mode } = ctx;
-  // Perf: in diff mode the facade passes only changed TS files; if none changed,
-  // skip the full project typecheck entirely (keeps the per-prompt gate fast).
   if (mode === 'diff' && records.length === 0) return [];
   const { stdout } = sh('pnpm exec tsc --noEmit --pretty false', root);
   const out = [];

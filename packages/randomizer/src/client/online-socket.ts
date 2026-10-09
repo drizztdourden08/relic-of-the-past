@@ -43,7 +43,7 @@ const openSocketLink = (
       try {
         current?.send(data);
       } catch {
-        return;
+        
       }
     },
     close() {

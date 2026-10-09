@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { uncleWeaponCandidates } from './uncle-weapon-candidates';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { WeaponFilter, WeaponPicker } from '../pool.type';
 
 const takeUncleWeapon = (pool: ItemKey[], pick: WeaponPicker, isUsable?: WeaponFilter): ItemKey => {

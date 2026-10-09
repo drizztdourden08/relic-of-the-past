@@ -1,18 +1,8 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * ESLint adapter (TS/JS quality: max-lines, func-style, exports-at-end, the
- * AI-writing rules, ...). Full mode lints `.`; diff mode lints only the changed
- * files, in batches: Windows caps a command line at 8191 characters, and a wide
- * changeset used to blow past that and report nothing at all.
- */
+/* @layer tooling-scripts @kind logic */
 import { batchQuoted, sh, toolExists, toRel } from './_run.mjs';
 
 const LANGS = new Set(['TypeScript', 'TypeScript-React', 'JavaScript', 'JavaScript-React']);
 const lint = (target, root) => {
-  // Changed files are passed explicitly, so a config-ignored one (vite.config.ts) would
-  // otherwise come back as a "File ignored" warning instead of being skipped.
   const { stdout } = sh(`pnpm exec eslint ${target} -f json --no-warn-ignored`, root);
   const start = stdout.indexOf('[');
   if (start < 0) return [];

@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Contributing Guide
 
-Thanks for helping improve Relic of the Past! This is the contributor hub; the repo-root
+Thanks for helping improve Relic of the Past. This is the contributor hub; the repo-root
 [`CONTRIBUTING.md`](https://github.com/drizztdourden08/relic-of-the-past/blob/master/CONTRIBUTING.md)
 is the short version GitHub surfaces, and points here.
 
@@ -12,11 +12,11 @@ is the short version GitHub surfaces, and points here.
 ## Start here
 
 1. [Build from Source](build-from-source.md) needs Node ≥ 24, pnpm 10, `pnpm install`, `pnpm run dev`. The WASM
-   core is committed prebuilt, so you don't need Emscripten for normal work.
+   core is built on demand by `dev` and `build`; see [Building the WASM Core](building-wasm.md).
 2. [Coding Standards](coding-standards.md) sets ≤200 lines/file, arrow functions, exports at end,
    one-thing-per-file, deep folders. ESLint and hooks enforce all of it.
 3. Under [File Tagging & Analysis](file-tagging.md), every file carries `@layer`/`@kind`, and `pnpm run analyze`
-   gates changed files. New file → `pnpm run analyze:tag`.
+   gates changed files. Tag a new file with `pnpm run analyze:tag`.
 4. Under [Plan Format](plan-format.md), every implementation plan names its design pattern(s), shows a
    CRUD filetree, the data model in TS, and a flow diagram.
 
@@ -25,8 +25,8 @@ is the short version GitHub surfaces, and points here.
 | Area | Read |
 |------|------|
 | C / the game core | [Building the WASM Core](building-wasm.md), [Adding a WASM Function](adding-a-wasm-function.md) |
-| The C↔JS boundary | [Game Hooks Reference](../hooks/overview.md) |
-| Renderer ↔ main (Electron IPC) | [Adding an IPC Channel](adding-an-ipc-channel.md), [Electron & IPC](../architecture/electron-ipc.md) |
+| The boundary between C and JS | [Game Hooks Reference](../hooks/overview.md) |
+| Renderer and main process (Electron IPC) | [Adding an IPC Channel](adding-an-ipc-channel.md), [Electron & IPC](../architecture/electron-ipc.md) |
 | Architecture / where code goes | [Architecture overview](../architecture/overview.md) |
 | UI components | [Design System](design-system.md), [Design Language](design-language.md) |
 | The in-game HUD, its layouts or its glyphs | [HUD Layouts & Glyph Packs](hud-layouts.md) |

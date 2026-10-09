@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { scopeRows } from './scope-rows';
 import { isDungeonScopedItem } from './is-dungeon-scoped-item';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 
 const scopeLockedKeyCounts = (

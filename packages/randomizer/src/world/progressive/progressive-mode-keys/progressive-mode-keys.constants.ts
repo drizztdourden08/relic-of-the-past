@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { PROGRESSIVE_FAMILIES } from '../progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from '../progressive-families.constants';
 import { progressiveModeKeyOf } from './progressive-mode-key-of';
 
 const PROGRESSIVE_MODE_KEYS: readonly string[] =

@@ -1,4 +1,4 @@
-// @layer installer @kind config
+/* @layer installer @kind config */
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -38,8 +38,6 @@ const LIBS = [
   'bcrypt.lib',
 ];
 
-// The brand art lives with the app, not beside the installer, so it is pulled in
-// at build time instead of being duplicated in the tree.
 const ASSETS = [
   ['apps/desktop/public/logos/logo/logo-256.png', 'logo-256.png'],
   ['apps/desktop/public/logos/logo/logo.ico', 'app.ico'],
@@ -66,12 +64,6 @@ const stageAssets = () => {
   }
 };
 
-/**
- * `--manifest-url <url>` builds a stub that reads its recipe from somewhere other
- * than the release page, so the download-and-install path can be run against a local
- * server. It is written as a header, not a /D define, because escaping a wide string
- * literal through cmd is its own small nightmare.
- */
 const manifestOverride = () => {
   const i = process.argv.indexOf('--manifest-url');
   const url = i > -1 ? process.argv[i + 1] : null;
@@ -82,8 +74,6 @@ const manifestOverride = () => {
   return ' /DROTP_HAS_URL_OVERRIDE /I out';
 };
 
-// One shell keeps the compiler environment alive across both tools; the
-// variables vcvars sets do not survive a separate invocation.
 const runToolchain = (vcvars) => {
   const rc = 'rc.exe /nologo /I res /fo out\\resources.res res\\resources.rc';
   const cl = [

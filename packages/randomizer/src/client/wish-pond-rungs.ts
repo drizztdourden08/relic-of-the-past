@@ -15,7 +15,7 @@ const vanillaSlotGrant = (entry: PlanEntry | undefined, location: LocationKey): 
   if (entry?.planClass !== 'override-npc' || entry.npcOverride === undefined || entry.checkId === undefined) {
     return `"${location}" has no npc override armed, so a vanilla grant there would pay nothing`;
   }
-  const { itemId } = getCheck(entry.checkId as CheckId).gameId;
+  const { itemId } = getCheck(entry.checkId).gameId;
   if (itemId === undefined || itemId !== entry.npcOverride.vanillaItemId) {
     return `"${location}" has no vanilla receive id matching its npc override`;
   }

@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
-import { PIECES_PER_HEART } from './difficulty.data';
+import { ITEM } from '../item-ids';
+import { PIECES_PER_HEART } from './difficulty';
 import { countInPool } from './count-in-pool';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 
 const heartGrowthOf = (pool: readonly ItemKey[]): number =>
   countInPool(pool, ITEM.bossHeartContainer)

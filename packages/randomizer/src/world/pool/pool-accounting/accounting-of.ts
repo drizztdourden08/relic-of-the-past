@@ -3,7 +3,7 @@ import { buildFillWorld, fillEligibleLocations } from '../../fill/fill-world';
 import { fillOptionsFromSnapshot } from '../../fill/fill-options-from-snapshot';
 import { fillerCountOf } from '../filler-count-of';
 import { planItemsOf } from './plan-items-of';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { DeliverableSets } from '../../fill/fill-options-from-snapshot';
 import type { RandomizerOptionsSnapshot } from '../../options.type';
 import type { PoolAccounting } from '../pool.type';

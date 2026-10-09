@@ -1,11 +1,11 @@
 /* @layer shared-game @kind barrel */
 import { registerStrategy } from '../../compare';
 import { registerDetector } from '../../registry';
-import { screenGeographyDetector } from './geography.detector';
-import { screenStrategy } from './screen.strategy';
+import { screenGeographyDetector } from './screen-geography-detector';
+import { screenStrategy } from './screen-strategy';
 
 registerStrategy(screenStrategy);
 registerDetector(screenGeographyDetector);
 
-export { screenGeographyDetector } from './geography.detector';
-export { screenStrategy } from './screen.strategy';
+export { screenGeographyDetector } from './screen-geography-detector';
+export { screenStrategy } from './screen-strategy';

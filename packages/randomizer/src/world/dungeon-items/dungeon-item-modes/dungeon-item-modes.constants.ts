@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
 import { all } from '@rotp/game-data';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type {
   DungeonItemFamily, DungeonItemSetting,
 } from '../dungeon-item.type';

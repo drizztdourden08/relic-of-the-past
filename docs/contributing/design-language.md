@@ -6,7 +6,7 @@
 > this doc covers the visual rules: surfaces, elevation, color roles, controls,
 > spacing, type, sizing, and hierarchy. Read it before designing anything new.
 >
-> One style covers the whole app. The exception is `domains/hud/**`, which
+> One style covers the whole app. The exception is the HUD (`hud/**`), which
 > replicates the SNES game HUD with its own pixel-art primitives and the exact
 > game palette, and sits deliberately outside everything below.
 
@@ -29,6 +29,7 @@ All color comes from Tessera's tokens and the RotP palette (`palettes/rotp.css`)
 not raw hex/rgb, which stylelint enforces. Pick by role, not by hue:
 
 ### 1.1 The surface elevation ladder
+
 The surfaces are neutral near-black, with no blue tint. Higher = closer to the user.
 
 | Level | Token | Value | Use for |
@@ -43,6 +44,7 @@ The surfaces are neutral near-black, with no blue tint. Higher = closer to the u
 and leave the three solid tiers as they are.
 
 ### 1.2 Surface tints (state overlays, not new colors)
+
 | Token | Use |
 |---|---|
 | `--color-surface-hover` (white 4%) | hover on a transparent/ghost control |
@@ -51,16 +53,19 @@ and leave the three solid tiers as they are.
 | `--color-surface-selected` (gold 8%) | selected/active background tint |
 
 ### 1.3 Borders
+
 `--color-border-subtle` `#2a2a30` (default hairline) · `--color-border-default`
 `#333340` (controls) · `--color-border-strong` `#444450` (hover/emphasis) ·
 `--color-border-hover` (white 10%, on glass).
 
 ### 1.4 Text
+
 `--color-text-primary` `#e8e8ec` · `--color-text-secondary` `#a0a0a8` ·
 `--color-text-muted` `#666670` · `--color-text-faint` `#44444c`.
 There's no `tertiary`; use `muted` instead.
 
 ### 1.5 What each accent hue means
+
 This is the rule that fixes most of today's inconsistency:
 
 | Role | Hue | Tokens | Where it's allowed |
@@ -88,6 +93,7 @@ This is the rule that fixes most of today's inconsistency:
 ## 2. Elevation: shadow + blur
 
 ### 2.1 Shadow ladder (3 steps: use the token, not a raw shadow)
+
 | Token | Value | Use |
 |---|---|---|
 | `--shadow-sm` *(=overlay)* | `0 4px 16px rgb(0 0 0 / .4)` | tooltips, small poppers |
@@ -99,6 +105,7 @@ This is the rule that fixes most of today's inconsistency:
 > aliases so the names read as a ladder.
 
 ### 2.2 Backdrop blur (2 tiers only)
+
 | Token | Value | Use |
 |---|---|---|
 | `--blur-sm` | `4px` | light scrims (save-state, pause), save-slot action overlays |
@@ -108,6 +115,7 @@ This is the rule that fixes most of today's inconsistency:
 > two blur tokens.
 
 ### 2.3 Scrims (two modal backdrop tiers)
+
 | Token | Value | Use |
 |---|---|---|
 | `--color-scrim` | `rgb(0 0 0 / .6)` | standard modal/dialog backdrop |
@@ -120,32 +128,42 @@ This is the rule that fixes most of today's inconsistency:
 ## 3. Shape, spacing, type, motion
 
 ### 3.1 Radius
+
 `--radius-sm 4` · `--radius-md 6` · `--radius-lg 8` · `--radius-xl 12`.
 **Convention:** chips/inputs/small buttons = `sm`; cards/panels = `lg`; dialogs/large
 surfaces = `lg`; pills = a deliberate full-round (define `--radius-pill: 999px`).
-> `3px` appears **35×** as an off-scale workaround → snap to `--radius-sm` (4). Pills at
-> `10px` → `--radius-pill`.
+
+> `3px` appears **35×** as an off-scale workaround; snap it to `--radius-sm` (4). Pills at
+> `10px` move to `--radius-pill`.
 
 ### 3.2 Spacing
+
 One scale for gap/margin/padding: `--space-xs 4 · -sm 8 · -md 12 · -lg 16 · -xl 24 · -2xl 32`.
+
 > Spacing is only **38% tokenized** today. `2px`(95×), `6px`(75×), `3px`(31×), `10px`(17×)
-> dominate. Rule: use a token. `6px`→`sm`(8) or `xs`(4); `3px`/`2px`→`xs`(4) or 0;
-> `10px`→`md`(12). Reserve hairline `1-2px` for borders and optical nudges, keeping it out of layout.
+> dominate. Rule: use a token. `6px` becomes `sm`(8) or `xs`(4); `3px`/`2px` become `xs`(4)
+> or 0; `10px` becomes `md`(12). Reserve hairline `1-2px` for borders and optical nudges,
+> keeping it out of layout.
 
 ### 3.3 Type
+
 Family `--font-sans` (UI) / `--font-mono` (ids, code, numbers).
 Sizes: `--text-xs 10 · -sm 11 · -base 13 · -lg 16 · -xl 20`. Weights `400/500/600`.
+
 > Font-size is **57% tokenized**. The real gaps: `12px`(24×, between sm & base) and
-> `9px`(12×, below xs). Rule: snap `12→base(13)` or `sm(11)`, `9/8→xs(10)`. Keep the
-> scale as-is and densify by weight and color instead of inventing sizes.
+> `9px`(12×, below xs). Rule: snap `12` to `base`(13) or `sm`(11), and `9`/`8` to `xs`(10).
+> Keep the scale as-is and densify by weight and color instead of inventing sizes.
 
 ### 3.4 Motion
+
 `--transition-fast .1s` (hover/press) · `--transition-normal .15s` (enter/layout).
-Dialog enter = fade+scale 0.95→1 over .15s. Use these tokens, not hand-rolled durations.
+Dialog enter = fade+scale from 0.95 to 1 over .15s. Use these tokens, not hand-rolled durations.
 
 ### 3.5 Z-index always uses the token, not a raw number
+
 `--z-base 1 · -sticky 10 · -nav-overlay 20 · -backdrop 50 · -panel 100 · -floating 110 ·
 -modal 200 · -popover 250 · -toast 300 · -tooltip 400`. Portal layers mirror these.
+
 > Components currently hard-code `z-index: 100/200/300`. Replace with the token. Two
 > things at `200` (dropdown + widget-settings) is a real collision risk.
 
@@ -167,10 +185,11 @@ already covers the control. Primitives and their canonical look:
 | `TagPicker` | chip, radius `sm`, `2px 8px` | **gold** text + gold-glow bg |
 
 **Rules**
-1. **Tab decks → `TabBar`.** Use it instead of a hand-rolled deck. (4 hand-rolled today:
+
+1. Tab decks use **`TabBar`** instead of a hand-rolled deck. (4 hand-rolled today:
    data-manager, profile-hub, controls-settings, cheats-widget.)
-2. **Selectable chips/tags → `TagPicker`.** (tracker filters, conn-editor tags today.)
-3. **Mutually-exclusive options → `SegmentedControl`/`RadioGroup`.**
+2. Selectable chips and tags use **`TagPicker`**. (tracker filters, conn-editor tags today.)
+3. Mutually-exclusive options use **`SegmentedControl`/`RadioGroup`**.
 4. **One primary `Button` (green) per view/section.** Everything else is `secondary`/`ghost`.
 5. **Selected = gold, always.** A control's "active" state uses gold tokens regardless
    of which widget it lives in.
@@ -182,21 +201,26 @@ already covers the control. Primitives and their canonical look:
 ## 5. Containers: cards, dialogs, panels, widgets
 
 ### 5.1 Card (`Card` primitive)
+
 bg `raised`, border `subtle`, radius `lg`, padding `md`/`lg`. Variants: default,
-interactive (hover → border `strong` + bg `elevated`), danger.
+interactive (on hover, border `strong` and bg `elevated`), danger.
 
 ### 5.2 Dialogs (`DialogShell` / `WizardDialogShell`)
+
 Surface `elevated`, border `default`, radius `lg`, shadow `lg`, scrim `--color-scrim`.
 **Two widths only:** `--dialog-w-sm 400` (confirm/about), `--dialog-w-md 600`
-(forms/wizards). Wizards: header (title + right-aligned meta) → step bar → body → actions.
+(forms/wizards). Wizards: header (title + right-aligned meta) -> step bar -> body -> actions.
 
 ### 5.3 Floating panels over the game (tracker, shadow editor, log overlay)
+
 Glass surface `--color-bg-overlay`, `--blur-md`, border `subtle`, radius `lg`,
 shadow `md`. **Fixed widths from a token set:** `--panel-w-sm 200 · -md 280 · -lg 380`.
+
 > Today these are blue-tinted `rgb(20 20 30 ...)` at random widths (180/260/420). Move them to
 > the neutral glass token and a panel-width token.
 
 ### 5.4 Widgets (`Widget` composite)
+
 Docked = surface `raised`, square edges; floating = glass + blur-md + shadow-md +
 radius `lg`. **Minimum width `--widget-w-min: 240px`.** The runtime opacity var
 (`--widget-frame-opacity`) is a legitimate user setting, so keep it, but derive the
@@ -206,10 +230,10 @@ color from the neutral glass token instead of a one-off blue rgb.
 
 ## 6. Hierarchy rules (how to compose a screen)
 
-1. **Surfaces step exactly one level.** canvas → page(base) → card(raised) → popover(elevated).
+1. **Surfaces step exactly one level.** canvas -> page(base) -> card(raised) -> popover(elevated).
 2. **One primary action (green) per surface.** Secondary actions stay quiet.
 3. **Gold marks the current/selected thing**, with at most one "active" per group.
-4. **Section headers**: `text-secondary`, `xs`/`sm`, uppercase, `letter-spacing .04em`.
+4. Section headers use `text-secondary`, `xs`/`sm`, uppercase, `letter-spacing .04em`.
 5. **Body text** `secondary`; **emphasis** `primary`; **meta/ids** `muted` + `font-mono`.
 6. **Spacing rhythm:** `sm`(8) between controls, `md`(12) between groups, `lg`(16)+
    section padding. Reach for a token instead of eyeballing px.
@@ -227,7 +251,7 @@ color from the neutral glass token instead of a one-off blue rgb.
 - [ ] `z-index` is a **token** (§3.5).
 - [ ] Selected = **gold**; the one CTA = **green**; destructive = **danger**; info = **blue (text only)**.
 - [ ] Widths come from the **dialog/panel/widget width tokens** (§5).
-- [ ] Run `pnpm run report` → stylelint/structure/raw-html all clean.
+- [ ] `pnpm run report` comes back with stylelint, structure and raw-html all clean.
 
 ---
 
@@ -246,23 +270,35 @@ These are referenced by the rules but not yet defined. Add them to `tokens/`:
 ```
 
 And alias or remove the ghost tokens that components reference but that don't exist
-(they silently no-op today): `--color-bg-sunken`→`bg-base`, `--color-bg-active`→
-`surface-selected`, `--color-bg-hover`→`surface-hover`, `--color-bg-input`→`bg-raised`,
-`--color-bg-surface`→`bg-raised`, `--color-accent-default`→`gold-base`,
-`--color-accent-subtle`→`gold-glow`, `--color-accent-text`→`gold-bright`,
-`--color-text-tertiary`→`text-muted`, `--color-danger/-default`→`danger-base`,
-`--color-success`→`green-base`, `--color-error`→`danger-base`,
-`--color-border-focus`→`gold-base`, `--radius-full`→`radius-pill`.
+(they silently no-op today):
+
+| Ghost token | Alias to |
+|---|---|
+| `--color-bg-sunken` | `bg-base` |
+| `--color-bg-active` | `surface-selected` |
+| `--color-bg-hover` | `surface-hover` |
+| `--color-bg-input` | `bg-raised` |
+| `--color-bg-surface` | `bg-raised` |
+| `--color-accent-default` | `gold-base` |
+| `--color-accent-subtle` | `gold-glow` |
+| `--color-accent-text` | `gold-bright` |
+| `--color-text-tertiary` | `text-muted` |
+| `--color-danger/-default` | `danger-base` |
+| `--color-success` | `green-base` |
+| `--color-error` | `danger-base` |
+| `--color-border-focus` | `gold-base` |
+| `--radius-full` | `radius-pill` |
 
 ## Token enforcement makes colors tokens-only, and blocks the rest
 
 Raw colors are gating errors, not conventions. Two blockers:
 
-1. **CSS** (`.stylelintrc.json`): `color-no-hex` + `color-named` (error) and a
+1. **CSS** (`stylelint.config.mjs`): `color-no-hex` + `color-named` (error) and a
    `function-disallowed-list` banning `rgb() / rgba() / hsl() / hsla() / hwb()` in
-   all `apps/desktop/src/ui/**/*.css`. Use `var(--c-*)` / `var(--color-*)`.
-2. **Inline styles / TS** (`eslint.config.mjs` → `local/no-raw-color`, error): bans
-   hex/rgb/hsl literals assigned to colour-ish style properties (`color`,
+   every stylesheet under a `src/` folder (`**/src/**/*.css`), the token sheets excepted.
+   Use `var(--c-*)` / `var(--color-*)`.
+2. **Inline styles / TS** (`eslint.config.mjs`, rule `local/no-raw-color` at error level):
+   bans hex/rgb/hsl literals assigned to colour-ish style properties (`color`,
    `background`, `borderColor`, `fill`, `stroke`, `boxShadow`, and so on). Dynamic values
    (`color: cond ? a : b`, `fn()`) and canvas `ctx.fillStyle = ...` assignments fall
    outside the rule, and they're the legitimate escape hatches below.
@@ -272,19 +308,19 @@ Raw colors are gating errors, not conventions. Two blockers:
 | Where | Why |
 |-------|-----|
 | `tokens/**` | The token definitions themselves. |
-| `domains/hud/**` | Replicates the in-game HUD with the exact SNES palette. Game-accurate, not design tokens. |
+| `hud/**` | Replicates the in-game HUD with the exact SNES palette. Game-accurate, not design tokens. |
 | Canvas rendering (`navigation-overlay/draw/*`, shadow `render*`, `gizmo-render`) | `ctx.fillStyle`/`ImageData` need real colour strings; a CSS `var()` can't be used. |
 | Categorical data-viz palettes (`EDGE_COLORS`, `DIR_COLORS`, `ReqIcon`, HID byte-roles in `ByteGrid`/`wizard-helpers`, sprite-category hues, driver-type badge, log `CHANNEL_COLORS`) | Fixed distinct hues that **encode categories** (like chart colours), not theme accents. Centralised constants, not scattered literals. |
 | Dynamic frame opacity (`Widget`/`TrackerView` frames) | `rgb(... / calc(α * var(--frame-opacity)))`: per-instance runtime opacity, not a flat token. Opted out per-line with `/* stylelint-disable-line function-disallowed-list */`. |
 | `DebugWidget` | Deliberate retro green-on-black terminal. |
-| Electron main process (`electron/**`) | Native `BrowserWindow` options (e.g. window `backgroundColor`), not renderer CSS. |
+| Electron main process (`apps/desktop/electron/**`) | Native `BrowserWindow` options (e.g. window `backgroundColor`), not renderer CSS. |
 
 Sub-10px font sizes in dense debug widgets are left as-is (the type scale floors
 at `--text-xs` = 10px).
 
 ### Dimensional tokens are forced now too
 
-Beyond color, these are hard-blocked in `ui/**` CSS (stylelint
+Beyond color, these are hard-blocked in `src/**` CSS (stylelint
 `declaration-property-value-disallowed-list`), tokens + HUD exempt:
 
 | Property | Rule | Token |

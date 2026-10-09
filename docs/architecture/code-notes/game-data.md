@@ -6,27 +6,28 @@ under `shared/game/data/`. The records hold the data; this page holds the why.
 
 ## Generated files
 
-A file whose name holds `.generated` is written by a script. Never edit one by hand: change
-its source and run the script again. The generated file carries the gate's `@layer`/`@kind`
-header and no other comment, so what it comes from is written here.
+The files below are written by a script. Never edit one by hand: change its source and run
+the script again. A generated file carries the gate's `@layer`/`@kind` header and no other
+comment, so what it comes from is written here. Its name follows the structure rules like any
+other file: tables are `*.constants.ts`, unions are `*.type.ts`.
 
-- `records/checks/events/event-bits.generated.ts`, from the `EventId` enum in
+- `records/checks/events/event-bits.constants.ts`, from the `EventId` enum in
   `core/game-hooks/events/event_ids.h` (the event ledger's bit order), by
   `pnpm run generate` (`scripts/generate-from-records.mjs`). The order is frozen, so these
   numbers are save file facts. A new event is appended at the end of the header, never
   inserted. The boss killed and prize taken runs are arrays indexed by the palace index, the
   Skull Woods front entrances by entrance number. `LAST_EVENT_BIT` is the entry before
   `kEventCount`, the highest bit the core's list holds.
-- `taxonomy/screen-tags.generated.ts` and `.generated.type.ts`, from every tag record that
+- `taxonomy/screen-tags.constants.ts` and `screen-tags.type.ts`, from every tag record that
   applies to a screen, by the same script. This is our own vocabulary for sorting screens, not
   a game value. A screen's tags are read through `tags/screen-tag-keys-of.ts`.
-- `taxonomy/connection-tags.generated.ts` and `.generated.type.ts`, from every tag record that
+- `taxonomy/connection-tags.constants.ts` and `connection-tags.type.ts`, from every tag record that
   applies to a connection. Direction is read off `canExit` (`connections/derive.ts`), so the
   retired `dir:one-way` and `dir:two-way` terms have no replacement here.
-- `taxonomy/check-content-tags.generated.ts` and `.generated.type.ts`, from every tag record
+- `taxonomy/check-content-tags.constants.ts` and `check-content-tags.type.ts`, from every tag record
   that applies to a check. A check's content is the one check tag family no other record
   states, so it is stored and not recomputed on every read.
-- `enumeration/enumeration.generated.type.ts`, one union per category of `ALL_ENUMERATION`
+- `enumeration/enumeration.type.ts`, one union per category of `ALL_ENUMERATION`
   (`records/enumeration/enumeration.ts`), by `pnpm run generate:enum-types`
   (`scripts/generate-enum-types.mjs`). The dev editor's enumeration writer runs it after
   every write.
@@ -34,6 +35,21 @@ header and no other comment, so what it comes from is written here.
 `pnpm run generate:check` writes nothing and fails on a file that differs from a fresh run;
 `tests/game/data/generated-mirrors.keep.test.ts` runs it, and
 `tests/game/data/enumeration-generated-types.keep.test.ts` does the same for the unions.
+
+The same script splices one C table, `kVanillaPrizeItem` in `core/game-hooks/prize_presentation.c`,
+between a pair of `generated: begin` and `generated: end` block comments, in the file's own line
+ending, and leaves the hand C around it alone. Four tables are not generated, because no record
+holds what they state; each is a record gap first:
+
+- `events/event_areas.h`: 22 of its 56 head rows are the extra area heads a large dark world
+  region covers, which no record lists, and 13 of its 19 entrance rows need an `overworldIndex`
+  that 56 overworld screens do not carry.
+- `kSubstitutionBits` in `npc_overrides.c`: the (byte, mask) allocation is a save layout fact
+  owned by `save_bytes.h`, and three of its keys are ids no game value backs.
+- `inventory-layouts/*.ts`: a slot needs a save slot, a display name and one icon for the whole
+  tier family, and an item record carries none of the three.
+- `records/native-tables/*.ts`: these transcribe the decompilation's switch statements and display
+  words, not a byte table in the cartridge, so there is no address to read them from.
 
 ## records/actors/bosses.ts
 
@@ -141,7 +157,7 @@ header and no other comment, so what it comes from is written here.
   dungeons' extra stages (`dungeons/`), 200 to 307 the held items, fairies, areas, places and
   combined rows (`world.ts`), 310 and up the overworld acts (`acts.ts`). Numbers 1, 4 and 5 are left
   unused so the others keep their ids.
-- `event-screens.data.ts` and `event-regions.data.ts` are generated: the screen each event lists
+- `event-screens.constants.ts` and `event-regions.constants.ts` are generated: the screen each event lists
   under, and its region (the one its screen carries, or for a dungeon stage the wing its dungeon is
   entered through; number 37 keeps the region the reference gives it). An event that stands for no
   place (a held item, a status, a combined row) has no entry. The event names live in the rows, the
@@ -610,7 +626,7 @@ ranges below, which the core resolves at every substitution and receipt seam.
   `SpriteSfx_QueueSfx1WithPan`); the only other writer is `overworld_music[...] >> 4`, a four bit
   nibble; and `Ancilla_Sfx1_Pan` is dead code. A `bed` starts a loop, the one `control` id clears the
   bed (silence), and a `cue` is a one off stinger.
-- `game-sounds.data.ts` is transcribed from the decompilation and can be regenerated. The id is the
+- `game-sounds.constants.ts` is transcribed from the decompilation and can be regenerated. The id is the
   low 6 bits of the channel write (bits 6 and 7 carry stereo pan). `triggers` are the functions that
   raise the sound, busiest first, and `sites` how many call sites do. A pack replaces a sound by
   claiming its id; anything unclaimed plays from the chip. Channel ports: ambient APUI01, sfx1
@@ -688,7 +704,7 @@ What opens each dialogue entry, and for a prompt, where its options lead.
 - Ids are 1 based over the normalized 397 entry array, the `DialogueLine.id` the editor shows. The
   core's own counter (`dialogue_message_index`) is 0 based over the same array: id equals that index
   plus 1.
-- A ROM that decodes to 396 strings is missing one that is really there; the pipeline puts it back
+- A ROM that decodes to 396 strings is missing one that the ROM holds; the pipeline puts it back
   at array position 4 (`normalizeTexts`) before packing the blob the core reads. So the core always
   indexes the 397 entry array, and every number here was read off it.
 - Proven against an independently decoded 397 string ROM: position 4 (id 5) is the very string the
@@ -775,7 +791,7 @@ path as an absent entry. `hasNativeTables` says whether the tables are there at 
   groups into the outdoor map and the indoor map.
 - The dispatcher's only context input is `is_indoors`, so the two maps are the complete keying: no
   palace, theme or entrance matters. A group carries an `interior` value only where the switch
-  really branches on that flag. Seven of its eight such branches change the class (C lines 271,
+  branches on that flag. Seven of its eight such branches change the class (C lines 271,
   277, 284, 424, 506, 512, 518); the eighth (263) only sets an outdoor bookkeeping bit.
 - All 256 bytes are covered: the switch ends in `assert(0)` (C line 523), so a missing byte would be
   one the engine treats as impossible.

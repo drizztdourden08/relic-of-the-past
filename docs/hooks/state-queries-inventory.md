@@ -6,12 +6,13 @@ pointer into `HEAPU8`; read the documented bytes immediately. See [Overview](ove
 buffer convention.
 
 **Sources:** `core/game-hooks/state_queries.c`, `core/game-hooks/ui_state.c`
-**Bridge:** `lib/game/bridge/progress.ts`, `lib/game/bridge/ui-state.ts`, `lib/game/tracker/bridge.ts`, `lib/game/tracker/flag-polling.ts`
+**Bridge:** `packages/game-core/src/bridge/progress/`, `packages/game-core/src/bridge/ui-state/`, `apps/desktop/src/game/tracker/bridge/`, `packages/navigation/src/tracker/flag-polling/`
 
 ---
 
-### WasmGetInventoryState
-`int WasmGetInventoryState(void)` → pointer to a 40-byte buffer (bytes 0-33 used).
+## WasmGetInventoryState
+
+`int WasmGetInventoryState(void)` returns a pointer to a 40-byte buffer (bytes 0-33 used).
 
 | Off | Field | | Off | Field |
 |----:|-------|-|----:|-------|
@@ -21,23 +22,27 @@ buffer convention.
 | 25 | armor || 32 | heart pieces |
 | | || 33 | health capacity |
 
-### WasmGetRoomFlags
-`int WasmGetRoomFlags(void)` → pointer to `save_dung_info`, the saved dungeon room-flag bitset holding
-per-room chest/enemy/event progress. Read as needed; it's the live SRAM array.
+## WasmGetRoomFlags
 
-### WasmGetLiveRoomFlags
-`int WasmGetLiveRoomFlags(void)` → 4-byte buffer for the room Link is currently in:
+`int WasmGetRoomFlags(void)` returns a pointer to `save_dung_info`, the saved dungeon room-flag bitset holding
+per-room chest/enemy/event progress. It is the live SRAM array, so read it when you need it.
+
+## WasmGetLiveRoomFlags
+
+`int WasmGetLiveRoomFlags(void)` returns a 4-byte buffer for the room Link is currently in:
 
 | Off | Field |
 |----:|-------|
 | 0-1 | current `dungeon_room_index` (u16) |
 | 2-3 | live state bits = `dung_savegame_state_bits >> 4` (u16) |
 
-### WasmGetOverworldFlags
-`int WasmGetOverworldFlags(void)` → pointer to `save_ow_event_info` (bit-packed overworld event flags).
+## WasmGetOverworldFlags
 
-### WasmGetProgressFlags
-`int WasmGetProgressFlags(void)` → 19-byte buffer (bytes 0-18 used). The three room words at
+`int WasmGetOverworldFlags(void)` returns a pointer to `save_ow_event_info` (bit-packed overworld event flags).
+
+## WasmGetProgressFlags
+
+`int WasmGetProgressFlags(void)` returns a 19-byte buffer (bytes 0-18 used). The three room words at
 9-11 only fit their low byte there; bytes 16-18 carry the matching high byte, since a room
 word's bits span all 16 bits:
 
@@ -54,8 +59,9 @@ word's bits span all 16 bits:
 | 8 | magic consumption | 18 | `save_dung_info[0x11E]` high byte |
 | 9 | `save_dung_info[0x109]` low byte | | |
 
-### WasmGetViewportInfo
-`int WasmGetViewportInfo(void)` → 20-byte buffer holding camera and Link world position plus module:
+## WasmGetViewportInfo
+
+`int WasmGetViewportInfo(void)` returns a 20-byte buffer holding camera and Link world position plus module:
 
 | Off | Field | Off | Field |
 |----:|-------|----:|-------|
@@ -68,8 +74,9 @@ word's bits span all 16 bits:
 | 6-7 | viewport width (u16) | | |
 | 8-9 | viewport height (u16, 224 or 240) | | |
 
-### WasmGetGameUIState
-`int WasmGetGameUIState(void)` → 256-byte buffer (bytes 0-124 used). This is the all-in-one frame
+## WasmGetGameUIState
+
+`int WasmGetGameUIState(void)` returns a 256-byte buffer (bytes 0-124 used). This is the all-in-one frame
 snapshot the React HUD overlay polls every `requestAnimationFrame`. Layout by byte range:
 
 | Bytes | Group | Bytes | Group |
@@ -84,9 +91,10 @@ snapshot the React HUD overlay polls every `requestAnimationFrame`. Layout by by
 | 53-60 | dungeon progress: pendants, crystals, map/compass/bigkey (u16 each) | 119-124 | extended location: which entrance, lower level, Link X/Y (u16) |
 
 > The exact per-byte assignment lives in `ui_state.c` (lines 18-155). Treat that file as the source of
-> truth if you extend the parser in `lib/game/bridge/ui-bridge-parser.ts`.
+> truth if you extend the parser in `packages/game-core/src/ui-bridge-parser/`.
 
-### WasmGetUIOverlayMode / WasmSetUIOverlayMode
+## WasmGetUIOverlayMode / WasmSetUIOverlayMode
+
 `int WasmGetUIOverlayMode(void)` · `void WasmSetUIOverlayMode(int mode)` get and set an overlay
 bitmask used to suppress native rendering when the React overlay takes over (echoed at UI-state
 byte 108).

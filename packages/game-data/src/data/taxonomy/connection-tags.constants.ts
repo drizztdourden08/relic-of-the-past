@@ -1,0 +1,53 @@
+/* @layer shared-game @kind data */
+import type { ConnectionTagMetadata, ConnectionTagNamespace } from './connection-tags.type';
+
+const CONNECTION_TAG_NAMESPACES: { id: ConnectionTagNamespace; label: string }[] = [
+  { id: 'transit', label: 'Transit' },
+  { id: 'barrier', label: 'Barrier' },
+  { id: 'ctx', label: 'Context' },
+];
+
+const CONNECTION_TAG_METADATA: ConnectionTagMetadata[] = [
+  { id: 'transit:door', label: 'Door', namespace: 'transit' },
+  { id: 'transit:hole', label: 'Hole / Drop-in', namespace: 'transit' },
+  { id: 'transit:ledge', label: 'Ledge Drop', namespace: 'transit' },
+  { id: 'transit:stairs', label: 'Stairs', namespace: 'transit' },
+  { id: 'transit:warp', label: 'Warp / Teleporter', namespace: 'transit' },
+  { id: 'transit:mirror', label: 'Magic Mirror', namespace: 'transit' },
+  { id: 'transit:waterfall', label: 'Waterfall', namespace: 'transit' },
+  { id: 'transit:walk', label: 'Walk', namespace: 'transit' },
+  { id: 'transit:swim', label: 'Swim', namespace: 'transit' },
+  { id: 'transit:grave', label: 'Grave Push', namespace: 'transit' },
+  { id: 'transit:bomb', label: 'Bomb Wall', namespace: 'transit' },
+  { id: 'transit:bonk', label: 'Bonk / Dash', namespace: 'transit' },
+  { id: 'transit:rock', label: 'Rock Lift', namespace: 'transit' },
+  { id: 'transit:push', label: 'Push Block', namespace: 'transit' },
+  { id: 'transit:hookshot', label: 'Hookshot', namespace: 'transit' },
+  { id: 'barrier:none', label: 'No Barrier', namespace: 'barrier' },
+  { id: 'barrier:small-key', label: 'Small Key', namespace: 'barrier' },
+  { id: 'barrier:big-key', label: 'Big Key', namespace: 'barrier' },
+  { id: 'barrier:bomb', label: 'Bomb', namespace: 'barrier' },
+  { id: 'barrier:gloves', label: 'Gloves', namespace: 'barrier' },
+  { id: 'barrier:hammer', label: 'Hammer', namespace: 'barrier' },
+  { id: 'barrier:dark', label: 'Dark Room', namespace: 'barrier' },
+  { id: 'barrier:medallion', label: 'Medallion', namespace: 'barrier' },
+  { id: 'barrier:crystals', label: 'Crystals', namespace: 'barrier' },
+  { id: 'barrier:event', label: 'Event', namespace: 'barrier' },
+  { id: 'barrier:dash', label: 'Dash / Boots', namespace: 'barrier' },
+  { id: 'barrier:hookshot', label: 'Hookshot', namespace: 'barrier' },
+  { id: 'barrier:swim', label: 'Swim / Flippers', namespace: 'barrier' },
+  { id: 'barrier:fire', label: 'Fire Source', namespace: 'barrier' },
+  { id: 'barrier:book', label: 'Book of Mudora', namespace: 'barrier' },
+  { id: 'barrier:glitch', label: 'Glitch', namespace: 'barrier' },
+  { id: 'ctx:entrance', label: 'Entrance', namespace: 'ctx' },
+  { id: 'ctx:exit', label: 'Exit', namespace: 'ctx' },
+  { id: 'ctx:internal', label: 'Internal', namespace: 'ctx' },
+  { id: 'ctx:cross-world', label: 'Cross-World', namespace: 'ctx' },
+  { id: 'ctx:save-quit', label: 'Save & Quit', namespace: 'ctx' },
+  { id: 'ctx:boss', label: 'Boss Door', namespace: 'ctx' },
+  { id: 'ctx:overworld', label: 'Overworld', namespace: 'ctx' },
+  { id: 'ctx:dungeon-enter', label: 'Dungeon Entrance', namespace: 'ctx' },
+  { id: 'ctx:shortcut', label: 'Shortcut', namespace: 'ctx' },
+];
+
+export { CONNECTION_TAG_METADATA, CONNECTION_TAG_NAMESPACES };

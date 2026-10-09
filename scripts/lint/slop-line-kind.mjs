@@ -1,12 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Per-line comment/string classifier for the languages ESLint and markdownlint
- * do not cover (C, CSS, shell, YAML, batch, XML, JSON...). The AI-writing gate
- * uses it to decide where prose patterns apply: word patterns only inside
- * comments and string literals, character patterns anywhere.
- */
+/* @layer tooling-scripts @kind logic */
 
 const SLASH = { line: '//', open: '/*', close: '*/' };
 const HASH = { line: '#' };
@@ -39,9 +31,6 @@ const startsComment = (trimmed, m) =>
   (m.line === '::' && /^rem\b/i.test(trimmed));
 
 /**
- * Classify each line of `text` as 'comment' | 'string' | 'other'.
- * Block comments are tracked across lines; a line holding both code and a
- * trailing comment counts as a comment, which is deliberately generous.
  * @param {string} text
  * @param {string} lang analyze-harness language name
  * @returns {string[]} one kind per line

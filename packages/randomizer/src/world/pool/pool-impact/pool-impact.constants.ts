@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
 import { POND_MODE_KEYS } from '../../pond/pond-option-keys';
-import { SHOP_MODE_KEY } from '../../shops/shop-slot-options.data';
+import { SHOP_MODE_KEY } from '../../shops/shop-slot-options';
 import type { OptionImplementation, OptionValue } from '../../options.type';
 import type { PoolImpact } from '../pool.type';
 

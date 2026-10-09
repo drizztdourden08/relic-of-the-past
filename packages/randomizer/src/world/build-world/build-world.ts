@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
-import { DUNGEON_ORDER } from '../fill/dungeon-order.data';
+import { DUNGEON_ORDER } from '../fill/dungeon-order.constants';
 import { worldDungeonOf } from '../world-dungeon';
-import { GOAL_EVENT } from '../events/story-events.data';
+import { GOAL_EVENT } from '../events/story-events.constants';
 import { ALLOW_ANY_ITEM } from './build-world.constants';
 import { wiredRegionsOf } from './wired-regions-of';
 import type { CheckId } from '@rotp/game-data';

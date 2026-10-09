@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { CapacityFamilyId, FamilyPlan } from '../capacity/capacity-profile.type';
 
 type FillerPicker = (count: number) => number;

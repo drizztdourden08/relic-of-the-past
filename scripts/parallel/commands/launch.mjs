@@ -1,11 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt launch <name> [-- <app flags>]`: run the built app (dist/electron/main.js) from
- * the worktree's own directory as a named instance. Flags after `--` are forwarded
- * (--auto-state, --screenshot, --dump-nav, --sim-run).
- *
- *   pnpm wt launch big-key -- --auto-state=test-jail-cell --screenshot=check
- */
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';

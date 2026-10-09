@@ -2,7 +2,7 @@
 import { MEDALLION_ITEMS, VANILLA_MEDALLIONS } from '../../world/item-groups';
 import { itemKeyOfName } from '../../world/display-names/item-key-name';
 import type { MedallionId } from '../../world/item-groups';
-import type { ItemKey } from '../../world/item-ids.data';
+import type { ItemKey } from '../../world/item-ids';
 import type { RotpSlotData } from '../../archipelago/slot-data.type';
 import type { Medallions } from './slot-data-values.type';
 

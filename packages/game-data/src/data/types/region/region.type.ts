@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { AreaId, DungeonId, LocationId, RegionId, ScreenId } from '../ids';
-import type { World } from '../../enumeration/enumeration.generated.type';
+import type { World } from '../../enumeration/enumeration.type';
 import type { ReviewMark } from '../review';
 
 interface AreaRecord {

@@ -4,7 +4,7 @@
 A real-time log viewer for app, game, and input events. It's handy for troubleshooting or just seeing
 what the app is doing internally.
 
-## Features
+## Entry display
 
 - Entries are colour-coded by channel, so you can tell app, game, and input apart at a glance.
 - Every entry carries a timestamp.

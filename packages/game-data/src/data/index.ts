@@ -9,7 +9,7 @@ export {
   getScreenByGameId, getTag,
 } from './facade';
 export * from './types';
-export { EVENT_BIT, LAST_EVENT_BIT } from './records/checks/events/event-bits.generated';
+export { EVENT_BIT, LAST_EVENT_BIT } from './records/checks/events/event-bits.constants';
 export { PALACE_INDEX_NAMES } from './palace-names';
 export { NATIVE_RECEIVE_TABLE_SIZE, asNativeReceiveId, isNativeReceiveId } from './native-receive-id';
 export {
@@ -32,7 +32,7 @@ export {
 export type { CapacityUpgradeItem } from './capacity-upgrade-item';
 export {
   CAPACITY_FAMILY_IDS, CAPACITY_PROGRESSIVE_NAMES, CAPACITY_RECEIPT_LABELS, CAPACITY_UPGRADE_NAMES,
-} from './capacity-upgrade-names.data';
+} from './capacity-upgrade-names.constants';
 export type { CapacityFamilyId, StepFamilyId } from './capacity-family.type';
 export {
   WALLET_SLOT_COUNT, walletJumpOfSlot, walletJumpTableOf, walletSlotOfJump,
@@ -55,12 +55,12 @@ export {
   screenTagKeysOf, splitTagKey, tagById, tagByKey, tagIdForKey, tagIdsForKeys, tagKey, tagKeysOf, tagsFor,
   unregisterTag,
 } from './tags';
-export { TAG_METADATA, TAG_NAMESPACES } from './taxonomy/screen-tags.generated';
-export type { ScreenTag } from './taxonomy/screen-tags.generated.type';
-export { CONNECTION_TAG_METADATA, CONNECTION_TAG_NAMESPACES } from './taxonomy/connection-tags.generated';
-export type { ConnectionTag } from './taxonomy/connection-tags.generated.type';
-export { CONTENT_TAG_METADATA, CONTENT_TAG_NAMESPACES } from './taxonomy/check-content-tags.generated';
-export type { ContentTag } from './taxonomy/check-content-tags.generated.type';
+export { TAG_METADATA, TAG_NAMESPACES } from './taxonomy/screen-tags.constants';
+export type { ScreenTag } from './taxonomy/screen-tags.type';
+export { CONNECTION_TAG_METADATA, CONNECTION_TAG_NAMESPACES } from './taxonomy/connection-tags.constants';
+export type { ConnectionTag } from './taxonomy/connection-tags.type';
+export { CONTENT_TAG_METADATA, CONTENT_TAG_NAMESPACES } from './taxonomy/check-content-tags.constants';
+export type { ContentTag } from './taxonomy/check-content-tags.type';
 export { ITEM_CATEGORY_LABELS } from './taxonomy/item-categories';
 export {
   ALL_ITEM_GROUPS, ITEM_GROUP_IDS, itemGroupById, membersOf, registerItemGroupRecord, replaceItemGroupRecord,

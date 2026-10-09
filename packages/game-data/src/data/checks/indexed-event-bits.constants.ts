@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { EVENT_BIT } from '../records/checks/events/event-bits.generated';
+import { EVENT_BIT } from '../records/checks/events/event-bits.constants';
 
 const PALACE_COUNT = 14;
 const SKULL_WOODS_FRONT_ENTRANCE_COUNT = 5;

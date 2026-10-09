@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-import { OBJ_PALETTE_ROWS } from './second-cartridge-palettes.data';
+import { OBJ_PALETTE_ROWS } from './second-cartridge-palettes.constants';
 
 const objPaletteRecords = (): Buffer => Buffer.concat(OBJ_PALETTE_ROWS.map(({ row, colors }) => {
   const record = Buffer.alloc(1 + colors.length * 2);

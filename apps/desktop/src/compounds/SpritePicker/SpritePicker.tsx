@@ -14,7 +14,7 @@ const SpritePicker = (props: SpritePickerProps) => {
 
   if (!open) return null;
 
-  const activeCategory = present.includes(category) ? category : present[0];
+  const activeCategory = present.includes(category) ? category : (present[0] ?? '');
   const tiles = sprites.filter((sprite) => sprite.category === activeCategory);
 
   return (

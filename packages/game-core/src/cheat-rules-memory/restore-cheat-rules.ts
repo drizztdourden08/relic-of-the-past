@@ -6,7 +6,10 @@ import { rulesMemoryState } from './rules-memory-state';
 
 const restoreCheatRules = (): void => {
   const saved = readSavedRules();
-  for (const [key, apply] of rulesMemoryState.appliers) if (key in saved) apply(saved[key]);
+  for (const [key, apply] of rulesMemoryState.appliers) {
+    const value = saved[key];
+    if (key in saved && value !== undefined) apply(value);
+  }
   for (const listener of rulesMemoryState.restoredListeners) listener();
 };
 

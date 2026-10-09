@@ -76,12 +76,12 @@ app extracts what it needs locally. See [Quick Start](../getting-started/quick-s
 |------|------|
 | `core/zelda3/` | Vendored C decompilation (treat as upstream). |
 | `core/game-hooks/` · `core/wasm-build/` | Our C hook layer + Emscripten build. |
-| `apps/desktop/src/` | React renderer (`lib/game/` is the bridge; `stores/`, `ui/`). |
+| `apps/desktop/src/` | React renderer (`game/`, `stores/`, `views/`, `widgets/`, `hud/`). |
 | `apps/desktop/electron/` | Main process + preload ([Electron & IPC](../architecture/electron-ipc.md)). |
-| `shared/` | Pure code shared by renderer + electron ([asset-extraction](../architecture/asset-extraction.md), [navigation](../architecture/navigation.md), types). |
+| `packages/` | Workspace packages shared by renderer + electron, imported as `@rotp/*`: `game-core` (the WASM bridge), [asset-extraction](../architecture/asset-extraction.md), [navigation](../architecture/navigation.md), `game-data`, and more. |
 | `tests/` · `scripts/` · `docs/` | Tests, build helpers, documentation. |
 
-Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`. See the
+The path alias `@app/*` points at `apps/desktop/src/`. See the
 [Architecture overview](../architecture/overview.md) for zones and dependency invariants.
 
 ## The private companion repository (optional)

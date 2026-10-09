@@ -1,8 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt list`: every worktree, its verdict (derived live from git), and what it was last
- * used for. `--json` prints the same survey for an agent to read directly.
- */
 import { surveyAll } from '../survey.mjs';
 import { describeLease } from '../lease.mjs';
 import { flag } from '../args.mjs';

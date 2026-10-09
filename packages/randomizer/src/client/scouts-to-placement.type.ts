@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type { DeliverableSets } from '../world/fill/fill-options-from-snapshot';
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { RotpSlotData } from '../archipelago/slot-data.type';
 import type { ApNetworkItem } from './ap-protocol.type';

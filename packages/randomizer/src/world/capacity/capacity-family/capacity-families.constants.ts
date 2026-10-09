@@ -1,7 +1,7 @@
 /* @layer shared-game @kind constants */
 import {
   EXPLOSIVES_TIERS, METER_TIERS, PROJECTILES_TIERS, WALLET_LADDER,
-} from '../capacity-ladders.data';
+} from '../capacity-ladders.constants';
 import { capacityFamilyOf } from './capacity-family-of';
 import type { CapacityFamilyId } from '../capacity-profile.type';
 import type { CapacityFamily } from './capacity-family.type';

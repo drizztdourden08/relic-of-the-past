@@ -3,7 +3,7 @@ import { POTION_CAULDRONS } from '../../potion-price/potion-cauldrons.constants'
 import { PRICED_ENTRIES } from '../../rules/priced-entries';
 import { retroWalletNeed } from '../../retro/retro-wallet-need';
 import { storedRetroBowOf } from '../../retro/retro-from-snapshot';
-import { BOTTLE_KEY, bottleContentKeyOf } from '../../shops/shop-price-options.data';
+import { BOTTLE_KEY, bottleContentKeyOf } from '../../shops/shop-price-options';
 import type { OptionValues, PartialOptionValues } from '../../options.type';
 import type { WalletDemand } from './wallet-floor.type';
 

@@ -1,10 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Per-kind line-count policy, applied to every language (CSS, C, TS, ...), not just
- * eslint-able files. Reads caps from policy.mjs.
- */
+/* @layer tooling-scripts @kind logic */
 import { capFor } from '../policy.mjs';
 
 const run = async (records) =>

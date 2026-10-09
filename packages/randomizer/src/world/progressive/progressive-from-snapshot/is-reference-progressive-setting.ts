@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES } from '../progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from '../progressive-families.constants';
 import { defaultTickOf } from './default-tick-of';
 import type { ProgressiveSetting } from '../progressive.type';
 

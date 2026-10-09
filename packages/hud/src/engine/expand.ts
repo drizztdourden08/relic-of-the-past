@@ -24,7 +24,7 @@ const expandNode = (
     budget.remaining -= 1;
     const children = node.children.flatMap((child) => expandNode(child, ctx, scope, budget, insideRepeat));
     const container = { ...node, children };
-    return [insideRepeat ? (bakeNode(container, scope) as typeof container) : container];
+    return [insideRepeat ? (bakeNode(container, scope)) : container];
   }
 
   const { element } = node;

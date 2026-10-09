@@ -7,7 +7,7 @@ Please **do not** open a public issue for security vulnerabilities.
 
 Instead, report privately via GitHub's
 [**Private vulnerability reporting**](https://github.com/drizztdourden08/relic-of-the-past/security/advisories/new)
-("Security" tab → "Report a vulnerability"). Include:
+(the "Security" tab, then "Report a vulnerability"). Include:
 
 - a description of the issue and its impact,
 - steps to reproduce, and
@@ -21,7 +21,7 @@ coordinate disclosure.
 This is a desktop Electron app that talks to USB/HID controllers, reads user-provided ROM files, and
 runs a WebAssembly game core. Areas of particular interest:
 
-- Electron main ↔ renderer IPC and the preload bridge
+- Electron main <-> renderer IPC and the preload bridge
 - File-system access (ROM loading, profiles, saves, config)
 - USB/HID device handling
 

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { createCollectionState } from '../collection-state';
 import { sweepPlacedItems } from './sweep-placed-items';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 import type { World } from '../world.type';
 import type { AssumedState } from './fill.type';

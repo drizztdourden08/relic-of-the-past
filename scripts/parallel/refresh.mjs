@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Brings a worktree up to date with the base branch. All worktrees share one .git, so
- * a single fetch updates origin/master for every one. Refuses on a dirty tree: a
- * rebase over uncommitted changes is the silent damage this tooling exists to prevent.
- */
 import { execFileSync } from 'node:child_process';
 import { baseRef, fetchBase, inspectWorktree } from './git-status.mjs';
 
@@ -35,7 +30,6 @@ const refreshWorktree = (record) => {
     run(['rebase', base], record.path);
     return true;
   } catch {
-    // Leave the conflicted rebase in place: resolving it is a judgement call.
     console.error(`[wt] ${record.name}: rebase onto ${base} hit a conflict. Resolve it in ${record.path}.`);
     return false;
   }

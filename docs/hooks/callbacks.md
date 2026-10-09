@@ -1,9 +1,9 @@
 <!-- @layer docs @kind doc -->
-# Callbacks (C→JS events)
+# Callbacks (C to JS events)
 
 The other direction: functions the game core calls at gameplay events. There are 15
-`GameHook_*` callbacks. Three of them surface to the renderer via `EM_ASM` → a `window.__on*` callback;
-the rest are C→C, meaning engine-internal accessors and the wrappers invoked by the `Wasm*` exports.
+`GameHook_*` callbacks. Three of them surface to the renderer, through `EM_ASM` calling a `window.__on*` callback;
+the rest are C to C, meaning engine-internal accessors and the wrappers invoked by the `Wasm*` exports.
 
 **Sources:** `haptic_events.c`, `game_hooks.c`, `check_triggers.c`, `item_overrides.c`, `cheats.c`,
 `transition_events.c`
@@ -15,10 +15,12 @@ the rest are C→C, meaning engine-internal accessors and the wrappers invoked b
 The renderer installs these globals; the core calls them when something happens.
 
 ### `window.__onItemReceived(itemId, method)`
+
 Fired by `GameHook_NotifyItemReceived(item_id, method)` whenever Link receives an item (chest, NPC,
 drop). `method` distinguishes receipt styles. Drives the inventory/checks trackers.
 
 ### `window.__onHapticEvent(type, param)`
+
 Fired by the eight haptic hooks in `haptic_events.c`. `type` is the event enum below; `param` carries
 intensity data (damage, item id, swing type) or `0`. The renderer maps these to controller
 rumble, described in [Haptics](../user-guide/haptics.md). `type` has to match `HapticEventType` in the JS
@@ -36,6 +38,7 @@ rumble, described in [Haptics](../user-guide/haptics.md). `type` has to match `H
 | 7 | `GameHook_NotifyBoomerangCatch` | 0 |
 
 ### `window.__onTransitionSettled(module, fromSubmodule, isIndoors, roomIndex, owScreenIndex)`
+
 Fired by `GameHook_ModuleFrameEnd`, called once per frame from `Module_MainRouting`. Reports the
 frame the game hands control back to the player: `main_module_index` enters a gameplay module (7
 dungeon, 9 overworld), or `submodule_index` inside one returns to 0. That is the frame on which a
@@ -48,7 +51,7 @@ and the renderer subscription.
 Gated on the **Developer Tools** setting (off by default): the hook makes zero host-calls, and
 `GameHook_ModuleFrameEnd` costs nothing beyond the flag check, when it's off.
 
-## C→C callbacks (no JS event)
+## C to C callbacks (no JS event)
 
 These are called from the vendored game code or from the `Wasm*` wrappers. They're useful to know when
 tracing behavior, but you don't register anything for them.
@@ -63,7 +66,7 @@ tracing behavior, but you don't register anything for them.
 
 ## Adding a new event
 
-A new C→JS event mirrors an export's two-place rule in reverse: add the `GameHook_*` function
+A new C to JS event mirrors an export's two-place rule in reverse: add the `GameHook_*` function
 (declared in `game_hooks.h`), `EM_ASM` a `window.__on*` call, insert the call-site in the vendored
 core at the right gameplay event, and register the handler in the renderer. See the `add-wasm-function`
 skill and [Adding a WASM Function](../contributing/adding-a-wasm-function.md).

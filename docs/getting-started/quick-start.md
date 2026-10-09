@@ -11,7 +11,7 @@ Full details: [Installation](installation.md).
 
 ## 2 · Import your ROM
 
-Open the title-bar menu → **Data** → **ROMs** → **Import ROM**, and pick your US `.sfc`/`.smc`. The app checks the file and extracts the assets it needs locally, which takes a few seconds.
+Open the title-bar menu, go to **Data**, then **ROMs**, choose **Import ROM**, and pick your US `.sfc`/`.smc`. The app checks the file and extracts the assets it needs locally, which takes a few seconds.
 
 More on this: [Importing a ROM & Assets](importing-a-rom.md).
 
@@ -31,9 +31,9 @@ Hit **Play**. The game runs right in the app window.
 | Open the menu | the hamburger icon, or `Escape` |
 | Quick save | hold the save button (Select by default), covered in [Save States](../user-guide/save-states.md) |
 | Mute | the speaker icon in the title bar |
-| Open a widget | menu → Widgets, listed in the [overview](../widgets/overview.md) |
+| Open a widget | the menu's Widgets entry, listed in the [overview](../widgets/overview.md) |
 
-## Next steps
+## Tune the game and your controller
 
 - Tune [Display & Graphics](../user-guide/display-graphics.md), the [HUD](../user-guide/hud.md), and [Audio & MSU-1](../user-guide/audio-msu.md).
 - Set up your controller: [Input & Controllers](../user-guide/input-controllers.md) and [Calibration](../user-guide/controller-calibration.md).

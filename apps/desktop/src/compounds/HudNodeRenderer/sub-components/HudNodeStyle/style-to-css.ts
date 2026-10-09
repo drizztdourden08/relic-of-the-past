@@ -2,7 +2,7 @@
 import { resolveValue } from '@rotp/hud';
 import type { CSSProperties } from 'react';
 import type { HudBorder, HudBoxStyle, HudRadius, HudShadow, Paint } from '@rotp/hud';
-import { BORDER_SIDES } from './HudNodeStyle.constants';
+import { BORDER_SIDE_CAPS, BORDER_SIDES } from './HudNodeStyle.constants';
 import type { StyleScope } from './HudNodeStyle.type';
 
 const num = (value: Parameters<typeof resolveValue>[0], scope: StyleScope): number => resolveValue(value, scope);
@@ -21,7 +21,7 @@ const paintToCss = (paint: Paint | undefined, scope: StyleScope): string | undef
 const backgroundCss = (paint: Paint | undefined, scope: StyleScope): CSSProperties => {
   const css = paintToCss(paint, scope);
   if (css === undefined) return {};
-  if (typeof paint === 'object' && paint !== null && 'image' in paint) {
+  if (typeof paint === 'object' && 'image' in paint) {
     return {
       backgroundImage: css,
       backgroundRepeat: paint.repeat === 'none' || paint.repeat === undefined ? 'no-repeat' : paint.repeat,
@@ -39,7 +39,7 @@ const borderCss = (border: HudBorder | undefined, scope: StyleScope): CSSPropert
   const css: CSSProperties = {};
   BORDER_SIDES.forEach((side) => {
     const drawn = border.sides?.[side] ?? true;
-    const cap = `${side[0].toUpperCase()}${side.slice(1)}` as 'Top' | 'Right' | 'Bottom' | 'Left';
+    const cap = BORDER_SIDE_CAPS[side];
     (css as Record<string, string>)[`border${cap}Width`] = `${drawn ? width : 0}px`;
     (css as Record<string, string>)[`border${cap}Style`] = style;
     (css as Record<string, string>)[`border${cap}Color`] = color;

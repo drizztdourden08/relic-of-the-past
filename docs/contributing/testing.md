@@ -26,7 +26,7 @@ The app can drive itself from the command line, which is usually quicker than a 
 | Flag | What it does |
 |------|--------------|
 | `--auto-state=N` | start with the active profile and load save-state slot N |
-| `--screenshot=NAME` | capture the window to `tests/screenshots/NAME.png` |
+| `--screenshot=NAME` | capture the window to `Data/screenshots/NAME.png` in the app's user-data folder |
 | `--dump-layers=N` | write the collision grid for slot N to `debug-output/dump-layers.json` |
 | `--dump-nav=N` | write the navigation state for slot N to `debug-output/dump-nav.json` |
 | `--muted` | mute audio |
@@ -36,7 +36,7 @@ The app can drive itself from the command line, which is usually quicker than a 
 For example:
 
 ```bash
-pnpm exec electron dist/electron/main.js --no-focus --muted --instance=big-key --auto-state=test-jail-cell --screenshot=snapshot
+pnpm exec electron apps/desktop/dist/electron/main.js --no-focus --muted --instance=big-key --auto-state=test-jail-cell --screenshot=snapshot
 ```
 
 The JSON dumps are the most reliable way to check navigation and collision behavior, so read those instead of squinting at a screenshot.
@@ -62,7 +62,7 @@ shares:
 
 | Shared file | What it controls | On an automated launch |
 |---|---|---|
-| `Data/app.json` → `lastProfileId` | which profile opens by default | never written |
+| `lastProfileId` in `Data/app.json` | which profile opens by default | never written |
 | `Data/config/window-state.json` | window size, position, maximized/fullscreen | never written |
 
 So forgetting `--instance` cannot repoint the default profile or move the window. It
@@ -72,7 +72,7 @@ to prevent. Pass the flag.
 ### `--instance` sandboxes profile data, not app-wide tool state
 
 `--instance` selects a game **profile** (`app.getPath('userData')` is one fixed directory
-regardless of the flag, as `apps/desktop/electron/lib/paths/init-paths.ts` shows), so anything that isn't
+regardless of the flag, as `initPaths` in `@drizztdourden08/brock-electron` shows), so anything that isn't
 stored inside `Data/profiles/<id>/` is shared across every instance, named or not. Besides
 the two enforced-read-only files above, five files sit directly under `Data/` and are
 **global by design:** they're tool/UI preferences, not gameplay state, so
@@ -101,4 +101,4 @@ Playwright specs are **throwaway by default**. The app changes quickly and specs
 
 A spec becomes permanent only when the maintainer asks for it. Those live in `tests/e2e/` with a `.keep.spec.ts` suffix and are documented in that folder's README, which records what each one guards against. Don't add one, or move a spec there, on your own initiative. If a throwaway looks worth keeping, say so and ask.
 
-A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/test/ipc-handlers.ts` and `apps/desktop/src/App/behavior/useAutoTest.ts`. If you think one needs to change, check with the maintainer first.
+A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/handlers/test-handlers.ts` and `apps/desktop/src/views/GameSession/behavior/useAutoTest.ts`. If you think one needs to change, check with the maintainer first.

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../../item-ids.data';
+import { ITEM } from '../../item-ids';
 import type { MedallionId } from '../../item-groups';
 
 const GATE_MEDALLIONS: readonly MedallionId[] = [ITEM.bombos, ITEM.ether, ITEM.quake];

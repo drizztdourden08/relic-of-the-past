@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { REGION } from './region-ids.data';
+import { REGION } from './region-ids.constants';
 import type { World } from './world.type';
 import type { CollectionState } from './collection-state.type';
 

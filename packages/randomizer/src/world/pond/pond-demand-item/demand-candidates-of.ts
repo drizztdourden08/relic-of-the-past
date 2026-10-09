@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
 import { isDemandableItem } from '../pond-demand-eligibility';
-import { DEMAND_ITEM_RANK } from '../pond-demand-order.data';
+import { DEMAND_ITEM_RANK } from '../pond-demand-order';
 import type { ItemId } from '@rotp/game-data';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 
 const rankOf = (item: ItemKey): number => DEMAND_ITEM_RANK.get(item as ItemId) ?? DEMAND_ITEM_RANK.size;
 

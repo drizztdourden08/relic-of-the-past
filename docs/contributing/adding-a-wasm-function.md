@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Adding a WASM Function
 
-Crossing the C↔TS boundary touches two places. Miss one and it either fails silently, since the
+Crossing the boundary between C and TypeScript touches two places. Miss one and it either fails silently, since the
 dead code gets stripped, or throws at the `ccall`. Do both, then [rebuild WASM](building-wasm.md).
 Pick the direction first. The repo's `add-wasm-function` skill scaffolds this, and the
 [hooks reference](../hooks/overview.md) covers the existing surface and buffer conventions.
@@ -32,7 +32,7 @@ void WasmSetMyThing(int value) { /* ... */ }
 `EXPORTED_FUNCTIONS` list to edit in `build.bat`/`Makefile`. Add a declaration to `game_hooks.h` only
 when other C code calls it.
 
-**2 · TypeScript caller** in `apps/desktop/src/lib/game/` (the right `bridge/*` facade or domain module):
+**2 · TypeScript caller** in `packages/game-core/src/bridge/` (the right facade folder, or a domain module of the package):
 
 ```ts
 const flag = mod.ccall('WasmGetMyFlag', 'number', [], []) as number;   // scalar

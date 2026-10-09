@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Writes one side of the comparison onto the other and commits the vault when it
- * changed. Commits on whatever branch is checked out; never creates or switches a
- * branch, never pushes. Sending the commit on is a person's decision.
- */
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -17,7 +12,6 @@ const remove = (path) => {
   if (existsSync(path)) rmSync(path, { force: true });
 };
 
-/** `pull` writes vault → repo, `push` writes repo → vault; `*-deleted` removes on the receiving side. */
 const applyEntries = ({ entries, root, treeDir }) => {
   const applied = { pulled: 0, pushed: 0, removed: 0 };
 
@@ -49,7 +43,6 @@ const applyEntries = ({ entries, root, treeDir }) => {
 const run = (args, cwd) =>
   execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 
-/** Commit what the apply step wrote into the vault. Returns the short hash, or null when nothing changed. */
 const commitVault = (vaultDir, subject) => {
   if (run(['status', '--porcelain'], vaultDir).trim() === '') return null;
   run(['add', '-A'], vaultDir);

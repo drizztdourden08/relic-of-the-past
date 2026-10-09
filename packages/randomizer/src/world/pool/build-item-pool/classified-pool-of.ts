@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 import { USEFUL_ITEMS } from '../item-classes.constants';
 import { isProgressionUnder } from '../progression-class';
-import { PRIZE_ITEMS } from '../prize-items.data';
+import { PRIZE_ITEMS } from '../prize-items.constants';
 import { PROMOTED_HEART_CONTAINERS } from './build-item-pool.constants';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { CapacityProfile } from '../../capacity/capacity-profile.type';
 import type { ItemPool } from '../item-pool.type';
 

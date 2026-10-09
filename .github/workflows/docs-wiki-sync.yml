@@ -4,7 +4,7 @@
 #
 # One-time prerequisite: enable the Wiki in repo Settings and create one page so
 # the <repo>.wiki.git repository exists before the first sync.
-name: Sync docs → Wiki
+name: Sync docs to the Wiki
 
 on:
   push:

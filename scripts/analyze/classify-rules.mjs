@@ -1,7 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-// Classification rules: language (by extension), architectural role (by path), and
-// file type (path + content heuristics). A header `@layer <role>` / `@kind <type>`
-// overrides the heuristics; see classifyType().
 
 const BINARY_EXT = new Set(['wav', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'svg', 'sfc', 'dat', 'bin', 'ttf', 'woff', 'woff2', 'zip', 'exe', 'icns']);
 
@@ -14,7 +11,6 @@ const LANG_BY_EXT = {
   yml: 'YAML', yaml: 'YAML', toml: 'TOML',
 };
 
-// Ordered: first matching path prefix wins.
 const ROLE_RULES = [
   ['core/zelda3/', 'core-zelda3'],
   ['core/game-hooks/', 'core-game-hooks'],
@@ -26,7 +22,7 @@ const ROLE_RULES = [
   ['apps/desktop/src/widgets/', 'renderer-widgets'],
   ['apps/desktop/src/hud/', 'renderer-hud'],
   ['apps/desktop/src/tokens/', 'renderer-design-system'],
-  ['apps/desktop/src/fonts/', 'renderer-design-system'],
+  ['apps/desktop/fonts/', 'renderer-design-system'],
   ['apps/desktop/src/compounds/', 'renderer-components'],
   ['apps/desktop/src/views/', 'renderer-components'],
   ['apps/desktop/src/', 'renderer-other'],
@@ -52,7 +48,6 @@ const ROLE_RULES = [
   ['.claude/', 'claude-config'],
 ];
 
-// Paths whose TS/JS content is predominantly literal data tables.
 const DATA_PATH_HINTS = [
   'packages/game-data/src/data/',
   'packages/input-mapping/src/presets/',
@@ -79,7 +74,6 @@ const classifyRole = (p) => {
   return 'root-config';
 };
 
-// Returns { type, source } where source is 'tag' | 'heuristic'.
 const classifyType = (p, content) => {
   const lang = classifyLang(p);
   const head = content.slice(0, 1200);

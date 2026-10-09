@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { optionByKey } from '../world/options.data';
+import { optionByKey } from '../world/options';
 import { choiceIdOf } from './export/choice-id-of';
 import { ARCHIPELAGO_ROLL_WORD } from './archipelago.constants';
 

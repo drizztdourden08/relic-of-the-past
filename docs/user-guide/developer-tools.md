@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Developer Tools
 
-Debugging and diagnostic tools available from Menu → Advanced.
+Debugging and diagnostic tools available from the menu, under **Advanced**.
 
 ---
 
@@ -15,7 +15,7 @@ Opens Chromium DevTools, the same developer tools you get in Chrome and Edge. Us
 - Monitoring network requests
 - Profiling performance
 
-Shortcut: accessible from Menu → Advanced → **Dev Console**.
+Open it from the menu under **Advanced**, with **Dev Console**.
 
 ---
 
@@ -42,7 +42,7 @@ A controller diagnostic panel, also covered in [Input & Controllers](input-contr
 
 ## Logs Widget
 
-The real-time log viewer lives under Menu → Widgets → Logs, but it earns its place among the dev tools:
+The real-time log viewer lives in the menu under **Widgets**, as **Logs**, but it earns its place among the dev tools:
 
 - Shows internal app events
 - Filters by log level

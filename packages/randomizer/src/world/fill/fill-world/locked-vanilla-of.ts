@@ -2,7 +2,7 @@
 import {
   CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS,
 } from '../../scope-tables';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { LocationKey } from '../../location-key';
 import type { World } from '../../world.type';
 

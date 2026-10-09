@@ -12,7 +12,7 @@ import {
   medallionsOfSlot, preRolledDeliverable, preRolledPondDemands, preRolledShopPrices, snapshotOfSlot,
 } from './slot-data-values';
 import type { DeliverableSets } from '../world/fill/fill-options-from-snapshot';
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { Placement } from '../world/fill/placement.type';
 import type { RotpSlotData } from '../archipelago/slot-data.type';

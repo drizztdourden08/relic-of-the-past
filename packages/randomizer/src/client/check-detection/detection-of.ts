@@ -7,7 +7,7 @@ import { detectionOfGameId } from './detection-of-game-id';
 const detectionOf = (checkId: string): CheckDetection | null => {
   let check: CheckRecord;
   try {
-    check = getCheck(checkId as CheckId);
+    check = getCheck(checkId);
   } catch {
     return null;
   }

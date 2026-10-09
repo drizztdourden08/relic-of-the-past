@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../../item-ids.data';
+import { ITEM } from '../../item-ids';
 import { TRUE, all, has, hasDistinct, optionSwitch } from '../rule-node-build';
 import { ALL_PENDANTS, DARK_WORLD_CRYSTALS, PENDANTS } from './story-gate-items.constants';
 import { pendantsNode } from './pendants-node';

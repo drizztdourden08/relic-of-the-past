@@ -23,7 +23,7 @@ settled, since room tags and door processing only run then.
 ## Behind a setting
 
 Gated on the **Developer Tools** master flag (`kFeatures0_DeveloperTools`), off by default,
-under Profile → Developer. Off, `GameHook_ModuleFrameEnd` returns immediately, before doing
+in the Developer section of the profile. Off, `GameHook_ModuleFrameEnd` returns immediately, before doing
 anything else, exactly like the haptics gate. No `EM_ASM`, no host-call, no cost beyond the
 flag check.
 

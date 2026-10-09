@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { REGION } from '../../region-ids.data';
+import { REGION } from '../../region-ids.constants';
 import { BOTTLE_ITEMS } from '../../item-groups';
 import { POTION_CAULDRONS } from '../../potion-price/potion-cauldrons.constants';
 import { FALSE, TRUE, all, countGroup, helper, region, seedIs, seedRef, when } from '../rule-node-build';

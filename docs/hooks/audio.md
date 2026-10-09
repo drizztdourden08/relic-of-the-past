@@ -4,7 +4,7 @@
 Three volume setters, all on a 0-128 scale that maps to `SDL_MIX_MAXVOLUME`. The music and SFX setters
 target the live DSP channels; if the SPC player isn't up yet, the value is stashed and applied on init.
 
-**Source:** `core/wasm-build/emscripten_api.c` · **Bridge:** `lib/game/live-settings.ts`
+**Source:** `core/wasm-build/emscripten_api.c` · **Bridge:** `packages/game-core/src/live-settings/`
 
 | Function | Signature | Effect |
 |----------|-----------|--------|

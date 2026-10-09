@@ -6,7 +6,7 @@ import { screensOfRegions } from '@rotp/game-data';
 import { locationKeyOfCheck } from '../../world/location-record';
 import { completedLocationKeys } from '../check-names';
 import { VIRTUAL_PREFIX, virtualLocationOf } from '../virtual-locations';
-import type { ItemKey } from '../../world/item-ids.data';
+import type { ItemKey } from '../../world/item-ids';
 import type { LocationKey } from '../../world/location-key';
 import type { Placement } from '../../world/fill/placement.type';
 import type { CheckId, CheckRecord, ItemId, CheckStatus } from '@rotp/game-data';

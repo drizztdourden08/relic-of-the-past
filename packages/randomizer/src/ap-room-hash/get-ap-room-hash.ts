@@ -6,7 +6,7 @@ const getApRoomHash = (): number => {
   const mod = getModule();
   if (!mod || !hasCoreExport(GET_EXPORT)) return NO_ROOM;
   try {
-    return (mod.ccall(GET_EXPORT, 'number', [], []) as number) >>> 0;
+    return (mod.ccall(GET_EXPORT, 'number', [], [])) >>> 0;
   } catch {
     return NO_ROOM;
   }

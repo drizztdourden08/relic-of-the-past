@@ -1,11 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * clang-format adapter for OUR C (game-hooks, wasm-build). Only enabled when a
- * .clang-format style exists at the repo root (otherwise it would flag the LLVM
- * default everywhere). Vendored zelda3 C is excluded by appliesTo.
- */
+/* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
 import { sh, toolExists } from './_run.mjs';

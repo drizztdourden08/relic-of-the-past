@@ -40,14 +40,14 @@ A pack made in this app can stack several sounds on one track. A pack might hold
 
 The game plays audio on four separate channels: its music, a looping ambient bed, and two channels of one-shot sound effects. A pack can replace any of them, **one sound at a time**.
 
-Each sound the game can play has a number, and a pack only takes over the numbers it actually provides audio for. Everything else keeps coming from the game exactly as before. A pack can replace the storm rain and leave every other sound untouched, or swap a single sound effect and nothing more. The Data Manager lists every sound with a short description of what triggers it, and you pick which ones to replace.
+Each sound the game can play has a number, and a pack only takes over the numbers it provides audio for. Everything else keeps coming from the game exactly as before. A pack can replace the storm rain and leave every other sound untouched, or swap a single sound effect and nothing more. The Data Manager lists every sound with a short description of what triggers it, and you pick which ones to replace.
 
 Every sound and every music slot can be listened to before you decide. Each row has an outline play
 button that plays the game's own version, and a filled one that plays the pack's, so on anything the
 pack answers you can hear the two back to back. Only one plays at a time, so they never overlap.
 
 Each channel lists **every** id it can carry, with a plain-language name and, underneath, the game
-functions that raise it. The heading says how many of them the game actually asks for; the rest are
+functions that raise it. The heading says how many of them the game asks for; the rest are
 ids the channel can still carry, and you can replace those too, though nothing in the game will
 trigger them. Ids the sound chip makes no sound for at all are marked as silent.
 

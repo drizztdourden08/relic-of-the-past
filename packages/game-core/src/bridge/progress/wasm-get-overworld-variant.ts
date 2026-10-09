@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { callWhenRunning } from '../wasm-call';
+import { readU8, callWhenRunning } from '../wasm-call';
 import { phaseLabelFor } from './phase-label-for';
 import { EVENT_OVERLAY_BIT, OW_SCREEN_INDEX_MASK } from './progress.constants';
 import type { OverworldVariantInfo } from './progress.type';
@@ -10,11 +10,11 @@ const wasmGetOverworldVariant = (screenIndex: number): OverworldVariantInfo | nu
 
     const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
     if (!progPtr) return null;
-    const progressIndicator = heap[progPtr];
+    const progressIndicator = readU8(heap, progPtr);
 
     const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []) as number;
     if (!owPtr) return null;
-    const screenEventFlags = heap[owPtr + (screenIndex & OW_SCREEN_INDEX_MASK)];
+    const screenEventFlags = readU8(heap, owPtr + (screenIndex & OW_SCREEN_INDEX_MASK));
     const eventOverlayActive = !!(screenEventFlags & EVENT_OVERLAY_BIT);
 
     return {

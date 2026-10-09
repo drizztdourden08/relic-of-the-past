@@ -7,7 +7,7 @@ import { startTierOf } from '../capacity/family-plan';
 import { MAX_PRICE } from '../rules/priced-entries';
 import { walletRungFor } from '../state-helpers-capacity';
 import { PROGRESSION_ITEMS } from './item-classes.constants';
-import type { ItemKey } from '../item-ids.data';
+import type { ItemKey } from '../item-ids';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 
 const isProgressionUnder = (profile: CapacityProfile) => {

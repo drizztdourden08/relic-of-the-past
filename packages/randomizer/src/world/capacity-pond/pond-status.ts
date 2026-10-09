@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { pondPlanOf } from '../pond/pond-plan';
-import { POND_VANILLA_PRICE } from '../pond/pond-ladder.data';
+import { POND_VANILLA_PRICE } from '../pond/pond-ladder.constants';
 import { FED_FAMILY_LABEL, POND_FED_FAMILIES } from './capacity-pond.constants';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 import type { PondPlan, PondSetting } from '../pond/pond-profile.type';

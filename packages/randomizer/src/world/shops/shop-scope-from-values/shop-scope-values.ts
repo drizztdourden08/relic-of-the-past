@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import {
   SHOP_MODE_KEY, SHOP_SLOT_COUNT_KEY, SHOP_SLOT_DEPTH_KEY, SHOP_SLOT_ROWS,
-} from '../shop-slot-options.data';
+} from '../shop-slot-options';
 import type { OptionValues } from '../../options.type';
 import type { ShopScope } from '../shop-scope.type';
 

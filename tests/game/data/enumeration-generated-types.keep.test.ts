@@ -6,11 +6,11 @@ import { ALL_ENUMERATION } from '@rotp/game-data';
 import { buildGeneratedTypesSource, CATEGORY_TYPE_NAMES } from '../../../scripts/generate-enum-types.mjs';
 import { describeDataset } from '../../dataset-guard';
 
-const GENERATED_FILE = resolve(__dirname, '../../../packages/game-data/src/data/enumeration/enumeration.generated.type.ts');
+const GENERATED_FILE = resolve(__dirname, '../../../packages/game-data/src/data/enumeration/enumeration.type.ts');
 
 const GENERATED_CATEGORIES = new Set(Object.keys(CATEGORY_TYPE_NAMES as Record<string, string>));
 
-describeDataset('enumeration/enumeration.generated.type.ts', () => {
+describeDataset('enumeration/enumeration.type.ts', () => {
   it('matches what generate-enum-types.mjs would emit from the current ALL_ENUMERATION', () => {
     const committed = readFileSync(GENERATED_FILE, 'utf8');
     const fresh = buildGeneratedTypesSource(ALL_ENUMERATION);
@@ -55,7 +55,7 @@ describeDataset('review-status category', () => {
     }
   });
 
-  it('regenerated a real ReviewStatus union in enumeration.generated.type.ts', () => {
+  it('regenerated a real ReviewStatus union in enumeration.type.ts', () => {
     const source = readFileSync(GENERATED_FILE, 'utf8');
     expect(source).toContain("type ReviewStatus = 'untouched' | 'in-review' | 'needs-work' | 'accepted' | 'verified';");
     expect(source).toMatch(/export type \{[\s\S]*\bReviewStatus\b[\s\S]*\};/);

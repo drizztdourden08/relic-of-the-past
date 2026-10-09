@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import { projectilesCapacity } from '../state-helpers-capacity';
 import { canHoldQuiver } from '../retro/retro-logic';
 import { canHoldArrows } from './can-hold-arrows';

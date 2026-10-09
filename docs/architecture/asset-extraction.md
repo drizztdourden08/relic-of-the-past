@@ -21,7 +21,7 @@ Public surface is the barrel `packages/asset-extraction/src/index.ts`.
 
 | Path | Role |
 |------|------|
-| `rom/` | ROM loading; **SNES address → linear** conversion (`snesToLinear`). |
+| `rom/` | ROM loading; conversion from a **SNES address to a linear offset** (`snesToLinear`). |
 | `compression/` | LZ decompression, BRR audio. |
 | `graphics/` | Tile/bitplane decode, palette assembly. |
 | `text/` · `music/` · `data/` · `dungeon/` · `item-sprites/` · `title-screen/` · `story-intro/` | Domain helpers. |
@@ -30,16 +30,16 @@ Public surface is the barrel `packages/asset-extraction/src/index.ts`.
 
 ## Rules
 
-- Match the granularity: one `compile-*` file or folder per asset domain. Add a new one instead of bolting onto an existing one.
+- Keep one `compile-*` file or folder per asset domain. Add a new one instead of bolting onto an existing one.
 - Addresses are SNES addresses. Always convert with `snesToLinear` before indexing a linear
   buffer, and don't hardcode linear offsets.
 - Validate the ROM against `ZELDA3_SHA1` / `ZELDA3_SHA1_US` so the wrong ROM fails loudly.
 - Tests live in `tests/asset-extraction/`. Run only the relevant file
-  (`npx vitest run tests/asset-extraction/<file>`).
+  (`pnpm exec vitest run tests/asset-extraction/<file>`).
 
 ## Where it runs
 
 Extraction is driven from the Electron main process when a profile/ROM is imported (see
 [Data Manager](../user-guide/data-manager.md) and [Importing a ROM](../getting-started/importing-a-rom.md)).
-Because `shared/` is the leaf zone, the extractor stays pure and testable, with no Electron or DOM
+The package imports no app code, so the extractor stays pure and testable, with no Electron or DOM
 dependencies (see the [architecture invariants](overview.md)).

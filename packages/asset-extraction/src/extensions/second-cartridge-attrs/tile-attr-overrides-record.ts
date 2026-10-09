@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 import { TILE_OVERRIDE_RECORD_BYTES, WALL } from './second-cartridge-attrs.constants';
-import { WALL_ART_TILES, WATER_RIM_TILES } from './second-cartridge-attrs.data';
+import { WALL_ART_TILES, WATER_RIM_TILES } from './wall-and-water-tiles.constants';
 
 const tileAttrOverridesRecord = (): Buffer => {
   const overrides = [...WALL_ART_TILES, ...WATER_RIM_TILES].map(tile => ({ tile, attr: WALL }));

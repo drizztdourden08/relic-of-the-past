@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
 import { all } from '@rotp/game-data';
-import { unrecordedItem } from '../../item-ids.data';
+import { unrecordedItem } from '../../item-ids';
 import type { ItemId } from '@rotp/game-data';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 
 let itemIdByName: Map<string, ItemId> | null = null;
 

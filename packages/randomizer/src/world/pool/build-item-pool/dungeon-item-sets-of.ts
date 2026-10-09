@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { dungeonItemsOf } from './dungeon-items-of';
 import { partitionDungeonItems } from './partition-dungeon-items';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { LocationKey } from '../../location-key';
 import type { World } from '../../world.type';
 import type { DungeonItemSetting } from '../../dungeon-items/dungeon-item.type';

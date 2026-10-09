@@ -1,27 +1,16 @@
 /* @layer tooling-scripts @kind build */
-/**
- * Build a flat, GitHub-Wiki-compatible copy of docs/ in .wiki-build/ (consumed by
- * the docs-wiki-sync workflow). GitHub wikis only render root-level pages, so every
- * page is flattened to a slug and intra-doc links are rewritten. The slug is the
- * Title-Cased folder path with an acronym map ("user-guide/audio-msu" ->
- * "User-Guide-Audio-MSU"), or `<!-- @wiki-title: My Title -->` near the top of the
- * page, verbatim (spaces -> "-"). Docs in EXCLUDE are not published; links to them
- * become plain text.
- */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, statSync } from 'node:fs';
 import { join, relative, sep, posix } from 'node:path';
 
 const DOCS_DIR = 'docs';
 const OUT_DIR = '.wiki-build';
 
-// Docs that exist for AI tooling (CLAUDE.md / skills) but are kept off the human wiki.
 const EXCLUDE = new Set([
   'architecture/rendering-pixel-art.md',
   'contributing/plan-format.md',
   'contributing/file-tagging.md',
 ]);
 
-// Words rendered in all-caps within path-derived titles.
 const ACRONYMS = {
   msu: 'MSU', hud: 'HUD', fps: 'FPS', wasm: 'WASM', ipc: 'IPC', rom: 'ROM',
   roms: 'ROMs', ui: 'UI', io: 'IO', snes: 'SNES', ppu: 'PPU', sram: 'SRAM',
@@ -40,14 +29,11 @@ const collectDocs = (dir, base = dir) => {
   return out;
 };
 
-// docs-relative path without extension → path-derived Title-Cased slug.
 const toSlug = (posixNoExt) => {
   if (!posixNoExt.includes('/')) return posixNoExt;
   return posixNoExt.split('/').flatMap((seg) => seg.split('-')).map(titleWord).join('-');
 };
 
-// Resolve a file's wiki slug: an explicit @wiki-title wins (non-root files only),
-// otherwise fall back to the path-derived slug.
 const slugFor = (f) => {
   const head = readFileSync(join(DOCS_DIR, f), 'utf8').slice(0, 500);
   const m = head.match(/@wiki-title:\s*([^\n>]+?)\s*-->/);
@@ -60,8 +46,6 @@ const published = new Map(files.map((f) => [f.replace(/\.md$/i, ''), slugFor(f)]
 
 const isExternal = (target) => /^(?:[a-z][a-z0-9+.-]*:|#|\/)/i.test(target);
 
-// Rewrite every inline link `[text](target)`: relink published targets to their
-// slug, keep external/anchor links, and drop links to unpublished pages to text.
 const rewriteLinks = (body, fromDir) =>
   body.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (match, text, target) => {
     if (isExternal(target)) return match;

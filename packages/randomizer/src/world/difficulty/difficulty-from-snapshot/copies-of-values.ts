@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES } from '../../progressive/progressive-families.data';
-import { DEFAULT_COPY_MULTIPLIER, asCopyMultiplier } from '../difficulty.data';
+import { PROGRESSIVE_FAMILIES } from '../../progressive/progressive-families.constants';
+import { DEFAULT_COPY_MULTIPLIER, asCopyMultiplier } from '../difficulty';
 import { difficultyCopiesKeyOf } from '../difficulty-option-keys';
 import type { OptionValues } from '../../options.type';
 import type { CopyMultiplier, CopyMultiplierSetting } from '../difficulty.type';

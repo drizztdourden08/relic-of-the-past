@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt`: the agent-worktree pool CLI. A dispatcher only: every verb is a module under
- * commands/ exporting `{ summary, usage, run }`. Full workflow:
- * docs/contributing/parallel-worktrees.md
- */
 import { parseArgs } from './args.mjs';
 
 const COMMANDS = [

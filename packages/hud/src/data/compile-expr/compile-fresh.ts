@@ -45,7 +45,7 @@ const compileFresh = (source: string): CompileResult => {
       variables,
       evaluate: (scope) => {
         try {
-          const value = parsed.evaluate(scope as Record<string, number>);
+          const value = parsed.evaluate(scope);
           return { ok: true, value: typeof value === 'number' ? value : Number(value) };
         } catch (err) {
           return { ok: false, message: messageOf(err) };

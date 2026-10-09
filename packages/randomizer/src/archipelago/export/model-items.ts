@@ -4,7 +4,7 @@ import { isProgressionUnder } from '../../world/pool/progression-class';
 import { modeOfDungeonItem, staysInOwnDungeon } from '../../world/dungeon-items/dungeon-item-modes';
 import { PINNED_SORT_BONUS } from './model-items.constants';
 import type { FillWorld } from '../../world/fill/fill-world.type';
-import type { ItemKey } from '../../world/item-ids.data';
+import type { ItemKey } from '../../world/item-ids';
 import type { LocationKey } from '../../world/location-key';
 import type { ItemClass, ItemHalf, ItemHalfInput, WorldModel } from './export.type';
 

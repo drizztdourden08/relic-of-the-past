@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
-import { UNCLE_LOCATION } from '../../world/pool/standard-escape.data';
-import { PRIZE_ITEMS } from '../../world/pool/prize-items.data';
+import { UNCLE_LOCATION } from '../../world/pool/standard-escape';
+import { PRIZE_ITEMS } from '../../world/pool/prize-items.constants';
 import { VANILLA_PRIZES } from '../../world/scope-tables';
 import { ruleOptionsOfWorld } from '../../world/rules/rule-options';
 import { progressiveSettingOf, progressiveTierMapOf } from '../../world/progressive/progressive-reach';

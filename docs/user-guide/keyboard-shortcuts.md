@@ -2,7 +2,7 @@
 # Keyboard Shortcuts
 
 Beyond the gameplay controls (which you remap under [Input & Controllers](input-controllers.md)), the
-app has a handful of global shortcuts handled by the renderer's `useKeyboardShortcuts` hook.
+app has a few global shortcuts handled by the renderer's `useKeyboardShortcuts` hook.
 
 | Shortcut | Action |
 |----------|--------|

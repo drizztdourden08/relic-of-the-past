@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { PRIZE_LOCATIONS } from '../../world/scope-tables';
 import { capabilityVanillaItemOf } from '../capability-vanilla-item';
-import type { ItemKey } from '../../world/item-ids.data';
+import type { ItemKey } from '../../world/item-ids';
 import type { LocationKey } from '../../world/location-key';
 import type { CheckDetection } from '../check-detection';
 import type { ScopeFlags } from '../scope-lock';

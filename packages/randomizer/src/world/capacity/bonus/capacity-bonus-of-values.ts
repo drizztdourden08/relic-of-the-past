@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { CAPACITY_FAMILY_IDS } from '@rotp/game-data';
 import { optionNumberOf } from '../option-number-of';
-import { DEFAULT_CAPACITY_BONUS } from './capacity-bonus.data';
+import { DEFAULT_CAPACITY_BONUS } from './capacity-bonus.constants';
 import { capacityBonusBaseKeyOf } from './capacity-bonus-base-key-of';
 import { capacityBonusKeyOf } from './capacity-bonus-key-of';
 import { clampBonusPercent } from './clamp-bonus-percent';

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../item-ids.data';
+import { ITEM } from '../item-ids';
 import type { ItemCategory } from '@rotp/game-data';
 
 const HOLDABLE_CATEGORIES: ReadonlySet<ItemCategory> =

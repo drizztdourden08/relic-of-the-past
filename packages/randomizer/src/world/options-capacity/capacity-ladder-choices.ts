@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { METER_LEVEL_LABELS } from '../capacity/capacity-ladders.data';
+import { METER_LEVEL_LABELS } from '../capacity/capacity-ladders.constants';
 import type { CapacityFamily } from '../capacity/capacity-family';
 import type { OptionChoice } from '../options.type';
 

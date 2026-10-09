@@ -9,7 +9,6 @@ test('decompresses GBA LZ77 literals', () => {
 });
 
 test('decompresses overlapping GBA LZ77 back-references', () => {
-  // Literal A, then copy five bytes from one byte behind.
   const source = Buffer.from([0x10, 0x06, 0, 0, 0x40, 0x41, 0x20, 0x00]);
   assert.equal(decompressGbaLz77(source).output.toString('ascii'), 'AAAAAA');
 });

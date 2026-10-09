@@ -1,7 +1,7 @@
 /* @layer shared-game @kind barrel */
 export {
   POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER, POND_VANILLA_PRICE, POND_VANILLA_THROWS,
-} from './pond-ladder.data';
+} from './pond-ladder.constants';
 export {
   CAPACITY_POND, POND_IDS, POND_INSTANCES, POND_INSTANCE_BY_ID, pondInstanceOf,
 } from './pond-instances';
@@ -19,7 +19,7 @@ export {
   POND_ARROW_STOPS, POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_ASK_ROW_BY_CURRENCY,
   POND_ASK_ROW_BY_KIND, POND_BOMB_STOPS, POND_BOTTLE_ROW, POND_BOTTLE_STOPS, asksOnlyRupees,
   pondRupeesOnlyAsk,
-} from './pond-ask.data';
+} from './pond-ask';
 export type { PondAskRow, PondCurrencyRow, PondAskRange, PondField, ParsedPondSetting, ParsedPondProfiles, RupeeDenomination, HeldPondSetting, PondCeilings } from './pond.type';
 export type {
   PondAskAmountKind, PondAskCurrency, PondAskSetting, PondBottleAsk, PondDemandView,
@@ -32,7 +32,7 @@ export { askOfSetting, parsePondAsk, pondAskValuesOf, readPondAsk } from './pond
 export { demandCandidatesOf, pickDemandItem } from './pond-demand-item';
 export { isDemandableItem } from './pond-demand-eligibility';
 export { HOLDABLE_CATEGORIES, UNHELD_ITEMS } from './holdable-items.constants';
-export { DEMAND_ITEM_ORDER, DEMAND_ITEM_RANK } from './pond-demand-order.data';
+export { DEMAND_ITEM_ORDER, DEMAND_ITEM_RANK } from './pond-demand-order';
 export { rollPondDemands } from './pond-demand-roll';
 export { amountAt, curvePositionsOf, stopIndexOf } from './pond-demand-ramp';
 export { POND_SHARE_KEY, effectivePondProfiles, readsPondShare } from './pond-share';
@@ -49,7 +49,7 @@ export {
   POND_CERTIFIED_SPOTS, isPondDeliverable, isPondExtraLocation, pondCertifiedSpotsOf, pondPrizeLocations,
   presentPondSlots,
 } from './pond-spots';
-export { POND_GEM_SLOTS, RUPEE_DENOMINATIONS } from './rupee-gems.data';
+export { POND_GEM_SLOTS, RUPEE_DENOMINATIONS } from './rupee-gems.constants';
 export { decomposeRupees, describeRupees, rupeeVolleysOf } from './rupee-gems';
 export { holdPondToWallet, pondCeilingRungOf, pondWalletTopOf } from './pond-wallet-top';
 export { VANILLA_POND_CEILINGS, pondCeilingsOf } from './pond-ceilings';

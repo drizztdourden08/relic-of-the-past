@@ -6,7 +6,7 @@ import { recordedContents } from './recorded-contents';
 import { normalPlacementStats } from './normal-placement-stats';
 import { normalWorldOptions } from './normal-world-options';
 import { NORMAL_DARK_ROOMS, NORMAL_SEED, ORIGINAL_MEDALLIONS } from './normal-placement.constants';
-import type { ItemKey } from '../world/item-ids.data';
+import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { Placement } from '../world/fill/placement.type';
 import type { NormalPlacementParams } from './normal-placement.type';

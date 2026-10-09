@@ -28,7 +28,7 @@ const childAfter = (child: HudNode, edit: TrackEdit, count: number): HudNode => 
   });
   if (next === undefined) {
     const { place: _dropped, ...rest } = child;
-    return rest as HudNode;
+    return rest;
   }
   return { ...child, place: next };
 };

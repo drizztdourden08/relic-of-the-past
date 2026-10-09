@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { optionNumberOf } from '../../capacity/option-number-of';
-import { POND_MAX_ITEMS } from '../pond-ladder.data';
+import { POND_MAX_ITEMS } from '../pond-ladder.constants';
 import { DEFAULT_POND_ITEMS } from '../pond-profile-defaults';
 import { pondKeyOf } from '../pond-option-keys';
 import { clamped } from './clamped';

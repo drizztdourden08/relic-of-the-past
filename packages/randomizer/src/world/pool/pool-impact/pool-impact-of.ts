@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { optionByKey } from '../../options.data';
+import { optionByKey } from '../../options';
 import { accountingOf } from '../pool-accounting';
 import { familyImpactOf } from './family-impact-of';
 import { LOCKED_NOTE, NEUTRAL_VALUE, NO_IMPACT } from './pool-impact.constants';

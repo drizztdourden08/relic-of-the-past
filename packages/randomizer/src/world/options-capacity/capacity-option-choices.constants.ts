@@ -1,7 +1,7 @@
 /* @layer shared-game @kind constants */
 import { DEFAULT_CAPACITY_PROFILE } from '../capacity/capacity-profile-defaults';
 import { capacityValuesOf } from '../capacity/capacity-profile-from-snapshot';
-import { CURVE_LABELS } from '../capacity/curves/curves.data';
+import { CURVE_LABELS } from '../capacity/curves/curve-ids.constants';
 import type { OptionChoice } from '../options.type';
 
 const CAPACITY_MODE_CHOICES: readonly OptionChoice[] = [

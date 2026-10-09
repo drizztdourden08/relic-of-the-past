@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf } from '../shop-price-options.data';
+import { currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf } from '../shop-price-options';
 import type { OptionValues } from '../../options.type';
 import type { ShopCountedCurrency, ShopCurrencySetting } from '../shop-price.type';
 

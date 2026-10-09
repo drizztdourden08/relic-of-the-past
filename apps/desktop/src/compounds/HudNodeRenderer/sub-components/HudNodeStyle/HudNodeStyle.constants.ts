@@ -5,4 +5,6 @@ const OUTLINE_MAX_WIDTH = 2;
 
 const BORDER_SIDES = ['top', 'right', 'bottom', 'left'] as const;
 
-export { BORDER_SIDES, OUTLINE_DIRECTIONS, OUTLINE_MAX_WIDTH };
+const BORDER_SIDE_CAPS = { top: 'Top', right: 'Right', bottom: 'Bottom', left: 'Left' } as const;
+
+export { BORDER_SIDE_CAPS, BORDER_SIDES, OUTLINE_DIRECTIONS, OUTLINE_MAX_WIDTH };

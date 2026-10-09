@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 import {
   UNCLE_ARSENAL_CANDIDATES, UNCLE_BOMB_CANDIDATE, UNCLE_BOW_CANDIDATES, UNCLE_SWORD_CANDIDATES,
-} from '../standard-escape.data';
+} from '../standard-escape';
 import type { ItemId } from '@rotp/game-data';
-import type { ItemKey } from '../../item-ids.data';
+import type { ItemKey } from '../../item-ids';
 import type { WeaponFilter } from '../pool.type';
 
 const everyWeapon: WeaponFilter = () => true;

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ReviewStatus } from '../../enumeration/enumeration.generated.type';
+import type { ReviewStatus } from '../../enumeration/enumeration.type';
 
 type ReviewSource = 'person' | 'rom' | 'live';
 

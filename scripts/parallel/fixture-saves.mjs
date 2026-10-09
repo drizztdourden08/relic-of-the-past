@@ -1,11 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Seeds a profile's named saves from `tests/fixtures/save-states/` so
- * `--auto-state=test-jail-cell` works on a fresh profile. Fixtures are name-keyed
- * (`test-jail-cell.sav`); the profile's `saves/normal/` store is id-keyed (`{id}.sav`,
- * see manifest-store.ts), so the job is that rename. Additive and idempotent: names
- * already in the manifest are skipped, never overwritten.
- */
 import { existsSync, mkdirSync, readFileSync, writeFileSync, cpSync } from 'node:fs';
 import { join } from 'node:path';
 import { locateVault, treeDirOf } from '../vault/locate.mjs';
@@ -21,7 +14,6 @@ const readJson = (path, fallback) => {
   }
 };
 
-/** The repo's own copy if `vault:sync` has run, else read straight from the vault checkout. */
 const resolveFixtureDir = (repoRoot) => {
   const local = join(repoRoot, ...FIXTURE_REL_PATH);
   if (existsSync(join(local, 'manifest.json'))) return local;
@@ -32,10 +24,6 @@ const resolveFixtureDir = (repoRoot) => {
   return existsSync(join(fromVault, 'manifest.json')) ? fromVault : null;
 };
 
-/**
- * Copy every fixture into `name`'s `saves/normal/`, skipping names already present.
- * Returns how many were added, or null when no fixture source exists (no vault access).
- */
 const seedFixtureSaves = (repoRoot, name) => {
   const fixtureDir = resolveFixtureDir(repoRoot);
   if (!fixtureDir) return null;

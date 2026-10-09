@@ -9,18 +9,19 @@ const observeFrame = (tracker: NoiseTracker, bytes: Uint8Array): void => {
     tracker.frames = 0;
     return;
   }
-  for (let i = 0; i < bytes.length; i++) {
-    if (bytes[i] !== tracker.prev[i]) tracker.counts[i]++;
-    tracker.prev[i] = bytes[i];
-  }
+  bytes.forEach((value, i) => {
+    const count = tracker.counts[i];
+    if (count !== undefined && value !== tracker.prev[i]) tracker.counts[i] = count + 1;
+    tracker.prev[i] = value;
+  });
   tracker.frames++;
   if (tracker.frames < WINDOW_FRAMES) return;
 
   const next = new Set<number>();
   const floor = tracker.frames * NOISE_RATIO;
-  for (let i = 0; i < tracker.counts.length; i++) {
-    if (tracker.counts[i] > floor) next.add(i);
-  }
+  tracker.counts.forEach((count, i) => {
+    if (count > floor) next.add(i);
+  });
   tracker.noisy = next;
   tracker.counts.fill(0);
   tracker.frames = 0;

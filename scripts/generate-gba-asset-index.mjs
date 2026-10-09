@@ -1,34 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Generates `core/game-hooks/gba_asset_index.generated.h` from
- * `GBA_ALTTP_ASSET_MANIFEST`: one `kGbaAsset<Name>` enum member per supplement
- * asset, in the manifest's own order, plus the total count as the final member.
- *
- * The GBA ALttP supplement container is read positionally by the C engine:
- * an asset's "index" is just its position among the `assets.add*` calls in
- * `compile-resources-gba-alttp.ts`. That compiler now iterates
- * `GBA_ALTTP_ASSET_MANIFEST` to decide call order (see that file), and this
- * script reads the same manifest to emit the matching C side. Inserting,
- * removing or reordering an asset therefore only ever means editing the one
- * manifest, and both languages move together instead of silently drifting apart.
- *
- * `GBA_ALTTP_ASSET_MANIFEST` is imported directly from its `.ts` source. Node 24
- * strips erasable TypeScript syntax natively and the module has no runtime deps,
- * so no ts-node or build step is needed here (same approach as
- * `generate-enum-types.mjs`).
- *
- * Run with: `npm run generate:gba-asset-index` (which runs
- * `generate-gba-asset-index-cli.mjs`, the only file that ever invokes
- * `generateGbaAssetIndex` unprompted; `generate-enum-types-cli.mjs` explains why
- * that trigger lives in its own never-imported file).
- *
- * The repo root defaults to a path relative to THIS script's own file, which is
- * correct for the CLI because the script always runs from its real, unbundled
- * location. A caller that already knows the real repo root may
- * pass it in and skip the guess entirely.
- */
+/* @layer tooling-scripts @kind logic */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
@@ -55,7 +25,6 @@ const FOOTER = `// clang-format on
 #endif  // ZELDA3_GBA_ASSET_INDEX_GENERATED_H_
 `;
 
-/** `kGbaPalaceRoomIds` / `kGbaAlttpTextIds` -> `kGbaAssetRoomIds` / `kGbaAssetTextIds`. */
 const enumMemberNameFor = (assetName) => {
   const suffix = assetName.replace(/^kGba(Palace|Alttp)/, '');
   if (suffix === assetName) {
@@ -64,7 +33,6 @@ const enumMemberNameFor = (assetName) => {
   return `kGbaAsset${suffix}`;
 };
 
-/** One enum line per manifest entry, plus a trailing count member. */
 const buildGeneratedHeaderSource = (manifest) => {
   if (manifest.length === 0) {
     throw new Error('generate-gba-asset-index: GBA_ALTTP_ASSET_MANIFEST is empty');
@@ -84,19 +52,11 @@ const buildGeneratedHeaderSource = (manifest) => {
   return `${HEADER}\nenum {\n${lines.join('\n')}\n  kGbaAlttpAssetCount,\n};\n${FOOTER}`;
 };
 
-/**
- * A cache-busting query string on every import, matching
- * `generate-enum-types.mjs`. It is harmless for the one-shot CLI, and correct for
- * any future long-lived caller that regenerates repeatedly in one process.
- */
 const loadManifest = async (manifestSource) => {
   const mod = await import(`${pathToFileURL(manifestSource).href}?t=${Date.now()}`);
   return mod.GBA_ALTTP_ASSET_MANIFEST;
 };
 
-/**
- * The core generation step: reads the real manifest and writes the generated header.
- */
 const generateGbaAssetIndex = async (root = DEFAULT_ROOT) => {
   const manifest = await loadManifest(manifestSourceFor(root));
   const source = buildGeneratedHeaderSource(manifest);
@@ -105,10 +65,6 @@ const generateGbaAssetIndex = async (root = DEFAULT_ROOT) => {
   return outputPath;
 };
 
-/**
- * The check mode: writes nothing and reports whether the committed header matches the
- * manifest. Line endings are compared normalized, since git may check the header out with CRLF.
- */
 const checkGbaAssetIndex = async (root = DEFAULT_ROOT) => {
   const manifest = await loadManifest(manifestSourceFor(root));
   const expected = buildGeneratedHeaderSource(manifest);

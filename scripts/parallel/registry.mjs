@@ -1,10 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Reads and writes registry.json, the shared record of every agent worktree. Every
- * mutation runs under an exclusive-create lock file; a lock older than LOCK_STALE_MS
- * is assumed to belong to a crashed process and is broken. Only facts git cannot
- * supply are stored; dirty/ahead/behind/merged are computed on read by git-status.mjs.
- */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, statSync } from 'node:fs';
 import { registryPath, lockPath, worktreeRoot } from './paths.mjs';
 
@@ -63,7 +57,6 @@ const acquireLock = async () => {
 
 const releaseLock = () => rmSync(lockPath, { force: true });
 
-/** Run `mutate(registry)` under the lock and persist whatever it returns. */
 const updateRegistry = async (mutate) => {
   await acquireLock();
   try {
@@ -78,7 +71,6 @@ const updateRegistry = async (mutate) => {
 
 const findRecord = (registry, name) => registry.worktrees.find((w) => w.name === name) ?? null;
 
-/** A brand-new record. `name` doubles as the branch suffix and the game profile id. */
 const createRecord = ({ name, path, branch, baseCommit }) => ({
   name,
   path,

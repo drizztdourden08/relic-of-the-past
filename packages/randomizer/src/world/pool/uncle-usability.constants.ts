@@ -1,6 +1,6 @@
 /* @layer shared-game @kind constants */
-import { ITEM } from '../item-ids.data';
-import type { ItemKey } from '../item-ids.data';
+import { ITEM } from '../item-ids';
+import type { ItemKey } from '../item-ids';
 import type { CapacityFamilyId } from '../capacity/capacity-profile.type';
 
 const START_FAMILY_OF_WEAPON: ReadonlyMap<ItemKey, CapacityFamilyId> = new Map<ItemKey, CapacityFamilyId>([

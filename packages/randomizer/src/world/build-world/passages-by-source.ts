@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { REGION_GRAPH } from '../rules/tables/region-graph.data';
+import { REGION_GRAPH } from '../rules/tables/region-graph.constants';
 import type { RegionId } from '@rotp/game-data';
 import type { RegionGraphRow } from '../region.type';
 

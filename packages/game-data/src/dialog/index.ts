@@ -19,7 +19,7 @@ export { extraGlyphSlots } from './dialogue-charset/extra-glyph-slots';
 export { extraSlotOfToken } from './dialogue-charset/extra-slot-of-token';
 export { readableText } from './dialogue-charset/readable-text';
 export { extraGlyphTiles } from './extra-glyph-tiles';
-export { EXTRA_GLYPHS } from './extra-glyphs.data';
+export { EXTRA_GLYPHS } from './extra-glyphs.constants';
 export { cornerAtInset } from './frame-geometry/corner-at-inset';
 export { cornerPlacements } from './frame-geometry/corner-placements';
 export { framePath } from './frame-geometry/frame-path';

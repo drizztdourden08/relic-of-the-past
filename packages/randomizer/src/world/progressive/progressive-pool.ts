@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES, REPLACEMENT_ITEM } from './progressive-families.data';
+import { PROGRESSIVE_FAMILIES, REPLACEMENT_ITEM } from './progressive-families.constants';
 import { referenceCopiesOf } from './reference-copies-of';
 import { tickedCountOf } from './progressive-reach';
 import type { ProgressiveSetting } from './progressive.type';

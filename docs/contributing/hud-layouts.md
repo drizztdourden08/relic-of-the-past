@@ -11,9 +11,9 @@ For the player-facing description of the same screens, see
 [HUD settings](../user-guide/hud.md).
 
 > **Where the code lives.** The model and all its maths are portable and React-free:
-> types in `shared/types/hud/`, geometry in `packages/hud/src/layouts/`, glyph resolution in
+> types in `packages/hud/src/types/`, geometry in `packages/hud/src/layouts/`, glyph resolution in
 > `packages/input-mapping/src/glyphs/`. The renderer half is `HudLayoutView` (live HUD) and
-> `HudLayoutEditor` (the editor), with per-profile storage in `apps/desktop/src/lib/hud/`.
+> `HudLayoutEditor` (the editor), with per-profile storage in `apps/desktop/src/hud/`.
 
 ## The layout model
 
@@ -204,7 +204,7 @@ cannot drift.
 ### Custom packs
 
 A custom pack is an **override, never a replacement**: it holds only the positions the
-player actually imported and names a built-in as its `fallbackPack`. That makes
+player imported and names a built-in as its `fallbackPack`. That makes
 importing one button a one-minute job instead of a twenty-glyph commitment.
 
 Images are stored the way user sprites are, as raw bytes in the platform file store
@@ -228,7 +228,7 @@ same route every other per-profile blob takes.
 
 The profile is resolved by `activeProfileId()`. It is **told** first: the settings
 screen calls `setHudProfileId(id)` while it is mounted, because it is the one place
-holding the profile object that is actually being edited, and clears it on the way
+holding the profile object under edit, and clears it on the way
 out. Failing that it infers, in order, the running game's profile, the profile a
 `--profile` launch pinned, then the app state's last-selected one, because the
 editor is deliberately usable with no game running.
@@ -250,20 +250,19 @@ is a far likelier cause than a real request for no interface at all.
 The two exhaustive `switch`es make the compiler most of your checklist: add the id
 first and `tsc` will point at every site that has to answer for it.
 
-1. **`shared/types/hud/hud-layout.ts`**: add the id to `HudElementId`.
-2. **`packages/hud/src/layouts/element-sizes.ts`**: add its natural size constant and a
-   `case` in `naturalSize`. If the size depends on live state, add a field to
-   `NaturalSizeContext` instead of reading a store from this layer.
-3. **`packages/hud/src/layouts/default-layout.ts`**: add a `hudPlacement(...)` line to
-   `DEFAULT_HUD_LAYOUT.placements`. The other presets map over the default's
-   placements, so they pick the element up for free.
+1. Add the id to `HudElementId` in the HUD layout types (`packages/hud/src/types/`).
+2. Give it a natural size constant and a `case` in `naturalSize`
+   (`packages/hud/src/layouts/element-sizes/`). If the size depends on live state, add a
+   field to `NaturalSizeContext` instead of reading a store from this layer.
+3. Add a `hudPlacement(...)` line to `DEFAULT_HUD_LAYOUT.placements`. The other presets
+   map over the default's placements, so they pick the element up for free.
 4. **Build the element itself** as a HUD compound under
    `apps/desktop/src/compounds/`. Keep it bare and presentational, taking a
    `scale` and its data as props. See [Design System](design-system.md) for the tiers.
-5. **`HudLayoutView.elementFor`**: add the `case` that renders it.
-6. **`HudLayoutEditor.constants.ts`**: add the id to `ELEMENT_ORDER` and a label to
+5. Add the `case` that renders it to `HudLayoutView.elementFor`.
+6. In `HudLayoutEditor.constants.ts`, add the id to `ELEMENT_ORDER` and a label to
    `ELEMENT_LABELS`, then a `case` in `StageElement` so the editor previews it.
-7. **`HudLayoutEditor/behavior/sample-state.ts`**: give it plausible sample data, so
+7. Give it plausible sample data in `HudLayoutEditor/behavior/sample-state/`, so
    the editor still previews with no game running.
 
 Existing saved layouts will not contain a placement for the new id. That is fine
@@ -287,7 +286,7 @@ was a decision, not an oversight:
   sizing the plan wanted falls out of the geometry for free.
 - **Auto-switching on a pad drop would move the player's HUD without being asked**,
   and would fight a layout they had deliberately chosen.
-- The three shipped presets instead differ along the axes players actually ask about:
+- The three shipped presets instead differ along the axes players ask about:
   overall size (`compact` is the baseline at 0.75) and which corner the cluster sits
   in (`bottom-right`).
 

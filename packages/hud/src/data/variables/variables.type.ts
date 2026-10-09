@@ -1,5 +1,5 @@
 /* @layer shared-hud @kind types */
-import type { HUD_SCOPE_EXTRAS } from './variables.data';
+import type { HUD_SCOPE_EXTRAS } from './variables-table.constants';
 
 interface HudVariableDef {
   name: string;

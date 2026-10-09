@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { optionNumberOf } from '../../capacity/option-number-of';
-import { POND_MAX_THROWS } from '../pond-ladder.data';
+import { POND_MAX_THROWS } from '../pond-ladder.constants';
 import { DEFAULT_POND_CUSTOM } from '../pond-profile-defaults';
 import { pondKeyOf } from '../pond-option-keys';
 import { pondAskMaxKeyOf, pondAskMinKeyOf } from '../pond-ask-keys';

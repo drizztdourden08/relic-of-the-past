@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { CANONICAL_SLOTS } from '../../shops/shop-slot-facts';
-import { RETRO_QUIVER_PRICE } from '../retro-bow.data';
-import { RETRO_REFILL_ITEM } from '../retro-shelf.data';
+import { RETRO_QUIVER_PRICE } from '../retro-bow.constants';
+import { RETRO_REFILL_ITEM } from '../retro-shelf.constants';
 import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX } from './retro-shops.constants';
 import { shopsShuffled } from './shops-shuffled';
 import type { ShopScope } from '../../shops/shop-scope.type';

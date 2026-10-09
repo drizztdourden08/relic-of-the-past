@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { RUPEE_DENOMINATIONS } from '../rupee-gems.data';
+import { RUPEE_DENOMINATIONS } from '../rupee-gems.constants';
 import type { RupeeDenomination } from '../pond.type';
 
 const decomposeRupees = (amount: number): RupeeDenomination[] => {

@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind constants */
-import { kEffectNames, kKeys } from './spc-command-tables.data';
+import { kEffectNames, kKeys } from './spc-command-tables.constants';
 
 const OCTAVES = [0, 1, 2, 3, 4, 5];
 

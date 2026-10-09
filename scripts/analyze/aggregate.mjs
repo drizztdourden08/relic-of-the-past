@@ -1,11 +1,4 @@
-/**
- * @layer tooling-scripts
- * @kind logic
- *
- * Merge FileRecords + Findings into one report. Vendored (zelda3) findings are
- * downgraded to 'info' hints and never count as violations. Prints summary
- * tables + violations and returns the report object.
- */
+/* @layer tooling-scripts @kind logic */
 const countBy = (rows, key) => {
   const m = {};
   for (const r of rows) m[r[key]] = (m[r[key]] ?? 0) + 1;

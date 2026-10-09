@@ -2,6 +2,7 @@
 import type { RingFrame, RingSlot } from './oam-ring.type';
 import { getModule, getGameState } from './wasm-bridge';
 import { HEAD, SLOTS, SLOT_BYTES, HIDDEN_Y, Y_HIGH_NINTH_BIT_SET } from './oam-ring.constants';
+import { readU8 } from "./bridge/wasm-call";
 
 const s16 = (v: number): number => (v >= 0x8000 ? v - 0x10000 : v);
 
@@ -16,9 +17,9 @@ const readOamRing = (): RingFrame[] | null => {
 
   const heap = mod.HEAPU8;
   const written =
-    heap[headPtr] | (heap[headPtr + 1] << 8) | (heap[headPtr + 2] << 16) | (heap[headPtr + 3] << 24);
-  const capacity = heap[headPtr + 4] | (heap[headPtr + 5] << 8);
-  const stride = heap[headPtr + 6] | (heap[headPtr + 7] << 8);
+    (heap[headPtr] ?? 0) | ((heap[headPtr + 1] ?? 0) << 8) | ((heap[headPtr + 2] ?? 0) << 16) | ((heap[headPtr + 3] ?? 0) << 24);
+  const capacity = (heap[headPtr + 4] ?? 0) | ((heap[headPtr + 5] ?? 0) << 8);
+  const stride = (heap[headPtr + 6] ?? 0) | ((heap[headPtr + 7] ?? 0) << 8);
   if (!capacity || !stride) return null;
 
   const count = Math.min(written, capacity);
@@ -27,16 +28,16 @@ const readOamRing = (): RingFrame[] | null => {
 
   for (let n = 0; n < count; n++) {
     const p = base + ((first + n) % capacity) * stride;
-    const u16 = (at: number): number => heap[p + at] | (heap[p + at + 1] << 8);
+    const u16 = (at: number): number => (heap[p + at] ?? 0) | ((heap[p + at + 1] ?? 0) << 8);
     const tallBudget = u16(6);
     const shiftY = s16(u16(4));
     const slots: RingSlot[] = [];
     for (let i = 0; i < SLOTS; i++) {
       const slotAt = p + HEAD + i * SLOT_BYTES;
-      const y = heap[slotAt];
-      const yHigh = heap[slotAt + 1];
-      const x = heap[slotAt + 4];
-      const ext = heap[slotAt + 5];
+      const y = readU8(heap, slotAt);
+      const yHigh = readU8(heap, slotAt + 1);
+      const x = readU8(heap, slotAt + 4);
+      const ext = readU8(heap, slotAt + 5);
       const x9 = x + (ext & 1) * 256;
       let resolved = y;
       if (tallBudget && yHigh !== 0) {
@@ -48,7 +49,7 @@ const readOamRing = (): RingFrame[] | null => {
         slot: i,
         y,
         yHigh,
-        charnum: heap[slotAt + 2],
+        charnum: readU8(heap, slotAt + 2),
         resolvedY: resolved,
         hidden: y === HIDDEN_Y,
         drawn: heap[slotAt + 3] === 1,

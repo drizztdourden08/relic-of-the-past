@@ -5,7 +5,7 @@ The app ships with no game data. You point it at your own legally obtained ROM o
 
 ## Import
 
-1. Open the title-bar menu → **Data** → **ROMs**.
+1. Open the title-bar menu, then **Data**, then **ROMs**.
 2. Choose **Import ROM** and select your `.sfc`/`.smc` file (you can also import from a URL).
 3. The ROM is copied into the app's data directory, so you can move or delete the original afterward.
 

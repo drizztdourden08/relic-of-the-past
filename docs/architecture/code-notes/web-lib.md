@@ -166,7 +166,7 @@ and a door to a header travel slot uses the portal.
 
 - Writes every boot input into the Emscripten MEMFS during preRun: game assets, the INI, SRAM and the custom player sprite.
 - `__relicDebug.forceAspect` is a dev and test aid that swaps the W:H token on the ExtendedAspectRatio line. It does nothing normally.
-- The INI's LinkGraphics key points at /link_sprite.zspr (serializeToIni to ApplyCustomLinkGraphics).
+- The INI's LinkGraphics key names /link_sprite.zspr (serializeToIni to ApplyCustomLinkGraphics).
 
 ## game/bridge/announce-music.ts
 
@@ -237,7 +237,7 @@ and a door to a header travel slot uses the portal.
 - Live player-state bytes for the widget's state chips (WasmGetPlayerStateInfo). Byte layout mirrors state_queries.c.
 - Kept apart from the flag snapshot on purpose: the simulator diffs that buffer to detect checks, and these values change every frame, so folding them in would fabricate check events.
 - `handlerState` is a kPlayerState_* value: what the player handler is doing right now.
-- `sleepStep` is the step inside the sleeping handler, 0 while actually asleep.
+- `sleepStep` is the step inside the sleeping handler, 0 while asleep.
 - `isRunning` means dashing with the Pegasus boots.
 - `progressFlags` is sram_progress_flags, which holds the named story bits.
 - `incapacitated` is nonzero while stunned or recoiling.
@@ -399,7 +399,7 @@ and a door to a header travel slot uses the portal.
 - The TS half of the capacity profile contract with core/game-hooks/capacity_profile.c and wallet_grants.c. Moved to capacity-profile/capacity-profile.constants.ts.
 - CAPACITY_FAMILY_INDEX is the index WasmSetCapacityProfile addresses each family by (the core's enum order).
 - CAPACITY_FAMILY_LAST_TIER is the last rung per family: the eighth pond level, the bat's quarter setting, the wallet ladder top.
-- The ladders and the wallet's virtual id range are owned by the shared model (capacity-ladders.data.ts, upgrade-receive-id.ts, wallet-jump-table.ts) and only re-exported, so the bridge cannot drift from the pool, the names and the receipt export.
+- The ladders and the wallet's virtual id range are owned by the shared model (capacity-ladders.constants.ts, upgrade-receive-id.ts, wallet-jump-table.ts) and only re-exported, so the bridge cannot drift from the pool, the names and the receipt export.
 - WALLET_JUMP_SLOTS is sixteen slots, virtual ids 0x67 to 0x76.
 - The unused helpers walletReceiveIdOfSlot (WALLET_VIRT_FIRST plus slot) and walletCapOfIndex (ladder index i gives cap 0, then 100 times i minus 1, clamped) were removed; isWalletReceiveId is still in @shared/game/data.
 
@@ -462,7 +462,7 @@ and a door to a header travel slot uses the portal.
 - `window.__trace(frames)` is a dev console helper that starts a core trace (WasmCheatStartTrace); output is logged with a [TRACE] prefix.
 - BottleContents are the values stored in link_bottle_info[0..3]. None means no bottle in the slot.
 - Gate word 3 holds the cheat gates: bit 1 is the master switch, the other bits one category each. It mirrors kFeatures3_* in core/zelda3/src/features.h.
-- The gate is read from the word in effect on the core's WRAM (WasmGetEffectiveGateWord), not the last request (WasmGetGateWord), which disagrees once Vanilla Safe masks bits off. Before the first simulated frame it reads 0, which correctly refuses everything. An older core without the export also reads 0, so nothing undeliverable is queued.
+- The gate is read from the word in effect on the core's WRAM (WasmGetEffectiveGateWord), not the last request (WasmGetGateWord), which disagrees once Vanilla Safe masks bits off. Before the first simulated frame it reads 0, which refuses everything, as it should. An older core without the export also reads 0, so nothing undeliverable is queued.
 - A gated-off grant is refused here, not queued: the queue would accept work the core silently drops.
 - Item giving is routed through the delivery queue.
 - Capacity setters take a wanted count, not the tier index the core stores. The core snaps it to the nearest legal upgrade tier, so a percentage of MAGIC_FULL or BOMB_CAPACITY_MAX is a valid argument.
@@ -545,7 +545,7 @@ and a door to a header travel slot uses the portal.
 
 ## game/crossings/sources/exit-table.ts
 
-- Touched door spots are distinct PHYSICAL doors back outside that the flood actually TOUCHED. Several entrance ids can share one door, and an id whose transition never fired, or never passed the item gate, is not a way out the room has demonstrated.
+- Touched door spots are distinct PHYSICAL doors back outside that the flood TOUCHED. Several entrance ids can share one door, and an id whose transition never fired, or never passed the item gate, is not a way out the room has demonstrated.
 - The exit table's own answer: every room it lists HAS a way back outside, even when the flood never touched a door. Room 0xe2's spawn sits at row 59 and its floor ends at row 55, so nothing else emits its way out and it would read as a dead end.
 - The table names the destination without saying where the door is, so the crossing carries a placeholder tile and is screen wide (exempt from the reach test).
 
@@ -563,7 +563,7 @@ and a door to a header travel slot uses the portal.
 ## game/crossings/sources/indoor-spawns.ts
 
 - A SpawnRow's `layer` is the floor the row puts the player on: 0 upper, 1 lower. `doorArea` is the overworld area the row's door sits on, when it is a door at all; `holeArea` is the area a fall hole drops from, when the row is a hole.
-- Spawn areas are the overworld sub screens each entrance row's door or pit physically stands on. A 2x2 area records its entrances on the HEAD screen, so the raw tables name the head for all four quarters. The enriched list resolves each row to the quarter it really sits on, the same read the traversal graph makes, so both name one screen for one door.
+- Spawn areas are the overworld sub screens each entrance row's door or pit physically stands on. A 2x2 area records its entrances on the HEAD screen, so the raw tables name the head for all four quarters. The enriched list resolves each row to the quarter it sits on, the same read the traversal graph makes, so both name one screen for one door.
 - Spawn rows are entrance rows whose destination is this room, placed on their spawn tile.
 - Exit door records are readable only for the room the game currently holds.
 - Only the door rows compete for an exit door record, so a respawn never takes the door's tile.
@@ -731,7 +731,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - Derives ScreenAnnotations for one screen from the SAME game reads the simulator's discovery uses, so what the overlay draws is what the run acts on. Nothing here derives game facts again: doors (including cell locks), sprites with their key carrier markers, chests and room tags all arrive from the existing bridge queries.
 - Ways on and off the screen are NOT annotations. Those are crossings (lib/game/crossings), with their own producer and renderer. This file only orchestrates; mapping per family lives in `annotate/`.
 - Room header tags 0x01 to 0x13 are kill gates: the room's doors open when it is cleared (see sim kill triggers). The same range is KILL_GATE_TAG in packages/navigation/src/simulation/engine/discover.ts.
-- A chest is named by what it will ACTUALLY yield: the vanilla duplicate rule swaps an already owned item for its alternate, so a save that owns the lamp must not be promised a Lamp when the run would deliver 5 Rupees. The item name IS the label, so the detail carries the slot instead (repeating the name renders "Lamp Lamp"); the slot tells two chests with the same item apart.
+- A chest is named by what it WILL yield: the vanilla duplicate rule swaps an already owned item for its alternate, so a save that owns the lamp must not be promised a Lamp when the run would deliver 5 Rupees. The item name IS the label, so the detail carries the slot instead (repeating the name renders "Lamp Lamp"); the slot tells two chests with the same item apart.
 - A big chest is its own kind: it is gated on the big key, so it must not read as an ordinary available check.
 - A big area's spawn table lists every screen's sprites, already resolved to their true screen, so one belonging to a neighbour is drawn when THAT screen is annotated.
 - Reachability marking runs last: the flood decides what is touchable, so it must run after every family has contributed.
@@ -748,11 +748,11 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 
 - Names an NPC sprite as the CHECK it is. `npc 0x73` tells a reader nothing; the check's own name tells them what the run is standing next to. Sprite 0x73 spawns in two rooms and only one is a check, hence the room narrowing.
 - `checkId` is the identity; `name` is for drawing only.
-- It uses the SAME matcher the simulator triggers through. It once had its own copy of the rule, so when the simulator learned that a sprite type is not unique across the two worlds the widget would have gone on labelling the light world flute boy as the dark world stump, showing a check the run correctly refuses to take.
+- It uses the SAME matcher the simulator triggers through. It once had its own copy of the rule, so when the simulator learned that a sprite type is not unique across the two worlds the widget would have gone on labelling the light world flute boy as the dark world stump, showing a check the run rightly refuses to take.
 
 ## game/flood/annotate/reachability.ts
 
-- Marks an annotation `blocked` when the flood cannot walk to it. The Secret Passage forced this: the uncle stands in the corridor, the flood correctly stops at him, but the chest behind him was still listed as an available check.
+- Marks an annotation `blocked` when the flood cannot walk to it. The Secret Passage forced this: the uncle stands in the corridor, the flood stops at him as it should, but the chest behind him was still listed as an available check.
 - A feature's own tile is often solid (a chest IS a wall tile, a door IS the doorway), so reachability is judged over the tiles AROUND it: if any tile within TOUCH (2) is reachable, the player can interact.
 - Screen wide facts (the kill trigger) carry a placeholder tile (0,0) because they describe the whole room, so reachability says nothing about them. Judging them would label every kill gate room unreachable because tile 0,0 is a wall.
 - PHYSICAL kinds' state means lock or physical position, not check progress. They keep their open or shut state (a shut door being unreachable is already implied) and gain an "unreachable" detail; checks flip to 'blocked' so the tally and the panel agree.
@@ -808,7 +808,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - MAX_INDOOR_ROOMS (8) bounds rooms discovered indoors: a dungeon's room graph runs far deeper than the local area a flood describes. Same order as a big screen group (1 to 4 screens), still covering a short chain like the first castle's entrance hall.
 - Indoors the caller only computed the primary room's entrances; a newly discovered room needs its OWN list or propagation could only reach one room deep. These lists are cached per room.
 - A landing tile is offered to the screen it lands on and queues another flood only when the tile is new AND the last flood could not already walk there, so passes converge instead of bouncing back and forth. The offer reads `dirty` at call time, which is the set for the NEXT pass.
-- The primary starts at the player's position; every other screen starts on the first crossing that reached it. The REST of the accumulated seeds ride along either way. Only the screen the player really stands in can claim the live position.
+- The primary starts at the player's position; every other screen starts on the first crossing that reached it. The REST of the accumulated seeds ride along either way. Only the screen the player stands in can claim the live position.
 - Room stair and walk boundary ids (at or above STAIR_ID_BASE) name a room to grow into; anything below leaves the indoor graph and is reported as an exit, not propagated.
 
 ## game/flood/flood-options.ts
@@ -1040,7 +1040,7 @@ cached by the warmup) and compiled here.
 - Builds the two extra bitmask words (features1/features2): the split bug-fix toggles from the generated registry plus the hand-authored features2 bits. Every id goes through the Vanilla Safe resolver first, so a parity-affecting bit is dropped before it is packed.
 - The hand-authored features2 bits start at bit 24 (kFeatures2_WidescreenPlayArea, kFeatures2_WidescreenIdleAI, kFeatures2_TitleOverride, kFeatures2_HostMenu, kFeatures2_ModernControls, kFeatures2_AllowDiving = bits 24 to 29). The generated bug-fix catalog (BUNDLE_FIXES) owns features2 from bit 0 upward. Values must match features.h; bug-fix bits must match features_bugfixes.h.
 - The JS key widescreenIdleEnemies is kFeatures2_WidescreenIdleAI in C ("AI" there means enemy behaviour).
-- Each bug fix is on when its granular toggle is set, falling back to the legacy bundle setting it was split from, so existing profiles keep their behaviour.
+- Each bug fix is on when its own toggle is set, falling back to the legacy bundle setting it was split from, so existing profiles keep their behaviour.
 - The wide-view bits stay separate because they depend on aspectRatio, not on another feature id.
 - The title hide is registered, so Vanilla Safe strips it through the same resolver.
 - The modern control scheme may drive the item register. It IS the Modern HUD style, which is also the HUD that can show the bindings, so this is one condition and never two that disagree.
@@ -1102,7 +1102,7 @@ cached by the warmup) and compiled here.
 - coloredRupees, itemSheen and archeryNeedsBow (world-item presentation and the archery host's refusal) have their bits in features3, not features0. The resolver cares only about ids, so they cascade and strip like the rest.
 - Some ids have no boolean field of the same name: the three-way off-screen mode requests its 'idle' or 'paused' id, and the play-area toggle is optional on GameSettings. Without the derived ids the resolver never sees them and their bits are never sent.
 - The widescreen corrections are one setting: the Display switch, on by default with extended rendering, covers the core bit and every fix split from that bundle. No per-fix override.
-- Any other unset granular fix toggle inherits the bundle master it was split from, the same fallback buildFeatureWords relies on.
+- Any other unset per-fix toggle inherits the bundle master it was split from, the same fallback buildFeatureWords relies on.
 
 ## game/live-settings-keys.ts
 
@@ -1110,7 +1110,7 @@ cached by the warmup) and compiled here.
 - Feature flags are synced every frame via g_wanted_zelda_features; PPU flags (noSpriteLimits, newRenderer, enhancedMode7) are read every frame.
 - extraDungeon is second-cartridge content: it gates the extra dungeon's overworld entrance.
 - The extended-rendering bits listed (cameraLockToViewport, smoothTransitions, widescreenPlayArea, offscreenAI, widescreenSprites, widescreenVisualFixes) are pure per-frame flags with no buffer-geometry change. The geometry settings beside them (extendedRendering, aspectRatio, ultrawideRendering, tallRendering, extendY) are baked at init and are deliberately absent.
-- Granular bug-fix toggles and the newer gameplay flags sync every frame via features1/features2. World-item presentation and the archery host's refusal sync via features3, the same path as cheatsEnabled.
+- Per-fix bug-fix toggles and the newer gameplay flags sync every frame via features1/features2. World-item presentation and the archery host's refusal sync via features3, the same path as cheatsEnabled.
 - Dialog pacing values are pushed as plain values, gated by the DialogControls bit in features3. The dialog box look is a React overlay plus one hidden flag the core reads every frame. The highlight colours are the host box's colours and two words the core draws with.
 - Title screen: React overlay plus the hide bit in features2 and one wanted flag the core reconciles.
 - Window settings are managed by Electron. syncedRefreshRate is a host-side display switch, applied on the next fullscreen transition. pixelPerfect recomputes the canvas fit from a React prop.
@@ -1148,7 +1148,7 @@ cached by the warmup) and compiled here.
 - Turbo speed lives in the same pacing unit as vsync and has its own guard inside.
 - The native gameplay HUD and pause menu are hidden when the enhanced overlay draws them.
 - The extra dungeon export is guarded like its neighbours: an older WASM build has none, and the base game must not care. It reaches the core only through the live path, so without the reassert a boot that loads straight into a save state leaves the extra content off until a setting is touched.
-- features1/features2 have no INI path (config.c parses features0 only), so they become non-zero only through a ccall. Priming cannot ccall (the module is not running yet), so without the reassert the granular fix words stayed zero all session, and a state load that skipped them left every feature in those words off.
+- features1/features2 have no INI path (config.c parses features0 only), so they become non-zero only through a ccall. Priming cannot ccall (the module is not running yet), so without the reassert the per-fix words stayed zero all session, and a state load that skipped them left every feature in those words off.
 - Without primed settings there is nothing truthful to send: rebuilding features0 from DEFAULT_SETTINGS would push a 4:3 non-extended word over the boot INI values.
 - Gate word 3 is re-pushed before the hide reasserts: the C boot seed (emscripten_main.c) rebuilds word 3 from the INI (cheat bits only), landing after pushLiveSettings and dropping hudOverride, trackerNotifications and playerSpriteOverride. The hide requests must already be permitted when the core reconciles them.
 - The turbo speed is a pacing global no boot file carries: without the reassert the key does nothing after a start until another setting change pushes the settings again.
@@ -1571,7 +1571,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 
 ## game/randomizer-client/foreign-item-line.ts
 
-- The receipt line a location shows when its item belongs to another player: what it was and who it went to, "Progressive Scale sent to Zelda!". One line per such location, composed with the session's other lines, so the pickup says where the item went instead of showing a class template.
+- The receipt line a location shows when its item belongs to another player: what it was and who it went to, `Progressive Scale sent to Zelda!`. One line per such location, composed with the session's other lines, so the pickup says where the item went instead of showing a class template.
 - The line comes as candidates, fullest first (receipt-line.type.ts), and the composer keeps the first that fits the box: the item name loses words from its end, then characters (cuts of 16, 12, 8 tried longest first), and says so with "...", before the line falls back to naming the player alone. The player is never shortened.
 - The item carries the primary highlight and a named player the secondary.
 - ForeignItemOf answers undefined when the room named nothing. ForeignOwners is location to the owning player, as an online session keeps it beside its placement.
@@ -1602,7 +1602,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - A dungeon flavoured record answers with the targeted id of the dungeon it belongs to (dungeon-item-receive-id.ts). Its native id credits whichever dungeon the player stands in, which is right only while the family cannot leave its dungeon, so the targeted id is used for every mode, including the baseline, where it lands on the same dungeon the native grant would have.
 - A flavoured name with no record of its own falls back one hop to the base family item ("Small Key (Ice Palace)" to the small key record).
 - Every native id is range checked: the native grant tables hold 76 entries, so an id outside 0x00 to 0x4B resolves as undefined instead of reaching the core.
-- The retro quiver has no record: it resolves to the single arrow receipt it is granted as (retro-bow.data.ts).
+- The retro quiver has no record: it resolves to the single arrow receipt it is granted as (retro-bow.constants.ts).
 - itemIdByStandardName is for display (label, sprite) and skips the native id range check because nothing is granted through it.
 
 ## game/randomizer-client/key-drop-size.ts
@@ -1804,7 +1804,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Before any of it, the save in play is bound to the room, or the session ends when it belongs to another (online-room-identity.ts), so nothing of another room's save reaches this one.
 - A slot from another world package version is refused (storeSlot returns the refusal message), and the slot data's DeathLink decides over the profile's (slot-death-link.ts).
 - isKnownReported: whether the server already holds this key's check. A key it has no id for never reports, except the goal check, which counts as reported once the goal is reached.
-- First connect scouts the plan, trimmed to locations the slot really has. A reconnect whose earlier connection dropped before the answer came asks again, or nothing would ever arm.
+- First connect scouts the plan, trimmed to locations the slot has. A reconnect whose earlier connection dropped before the answer came asks again, or nothing would ever arm.
 
 ## game/randomizer-client/online-context.type.ts
 
@@ -1892,7 +1892,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 
 ## game/randomizer-client/online-overrides.ts
 
-- Online scout plumbing: maps every server location of this game to the key it stands for, through the frozen id table (ap-ids.data.ts). The wire speaks ids, the app keys by location key.
+- Online scout plumbing: maps every server location of this game to the key it stands for, through the frozen id table (ap-ids.constants.ts). The wire speaks ids, the app keys by location key.
 - What each scouted location arms is decided by the shared start sequence over the placement the scouts become (online-scouted.ts). Server items no in-world pickup covers are delivered by server-delivery.ts.
 - Scout-first dedup: every scouted location id joins `overriddenLocationIds` before the scout is sent. Once the scouts are armed, the set keeps exactly the locations the game grants in-world, so their receive-path delivery is swallowed (online-received.ts).
 - `pollEntries` is what to poll before the scouts are armed. The armed plan replaces it.
@@ -2336,7 +2336,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `checks` carries both real CheckRecords and the virtual ones virtual-locations.ts synthesizes for every world location none of those cover (shop slots, chiefly). A virtual id is never in the live-polled completedChecks set, so its status reads off completedLocations / available by its own name.
 - completedLocations answers for both kinds. A real check whose normal detection cannot fire in this seed would be stuck at reachable forever: the pond's two named slots keep the records the reference's names gave them and poll the capacity counter bytes, and a randomized pond hands over a pool item without writing either one.
 - The completed set carries the event rows too, the record of what the player did. Handing the ids over lets the rules ask about an act instead of guessing it from an item or from the lever being within reach.
-- `heldItemIds` are the dataset item ids the player is really holding, which the seed world reads by pool name.
+- `heldItemIds` are the dataset item ids the player is holding, which the seed world reads by pool name.
 - `bigKeyDoors` off (the tracker's "Big Key doors" switch) reads every big key door as open by putting the keys in the state's hands: a door whose key is held is open, so no rule needs a second version (world/big-keys.ts). `smallKeyDoors` off does the same with each dungeon's small keys, as many as any rule counts (world/small-keys.ts).
 - `reachableScreens` are the dataset screens the engine's regions come out to, for the rows read from the records. computeTrackerSnapshot is for a caller with no use for the screens.
 
@@ -2363,7 +2363,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - The slug keeps underscores, because a shop key uses them (`kakariko-shop-shelf_left-slot_2`). A key is already slug-shaped, so mapping a virtual id back to its location is exact.
 - The virtual id is shared with placement-view.ts so a virtual check's row and its placed-item lookup can never drift onto two ids for the same location. tracker-availability now reads VIRTUAL_PREFIX from here too.
 - One cache slot: placements do not change mid-session, and this only runs against the active one.
-- placementCheckRecords is every real record this seed's placement names plus a virtual one for every location none cover. A handful of checks (the intro's story beats such as "Link Wakes Up", "Rescued Zelda") track real vanilla progress but were never world locations, so counting them would inflate the total; they stay in the base checkRecords array for the normal profile.
+- placementCheckRecords is every real record this seed's placement names plus a virtual one for every location none cover. A few checks (the intro's story beats such as "Link Wakes Up", "Rescued Zelda") track real vanilla progress but were never world locations, so counting them would inflate the total; they stay in the base checkRecords array for the normal profile.
 - The event records are shown on every profile and are never part of a seed's total. No event is a location of any world, so that list and the placement's never overlap.
 
 ## game/randomizer-client/wish-pond-lines.ts
@@ -2622,7 +2622,7 @@ chains: a replacement's own characters resolve once more, no further.
 
 ### game/session-dialogue/extra-glyphs
 
-Hands the extra glyphs (extra-glyphs.data.ts) to the core, which writes them into the active
+Hands the extra glyphs (extra-glyphs.constants.ts) to the core, which writes them into the active
 font's spare slots (core/game-hooks/dialog_extra_glyphs.c). One table entry per glyph,
 `ENTRY_BYTES` (34) long: its slot, its width, then its two tiles from `TILE_OFFSET` (2). The core
 keeps the copy it built while the table stays the same, so loading on every compose costs a
@@ -2747,7 +2747,7 @@ pixels.
 - A CheckLog is a verified check pinned to WHERE in the walked path it happened: `atPathIndex` indexes `path` at the moment it verified, and `items` is the inventory then, as display names. An item that LEAVES this list between two checks was clobbered. Item names are resolved at the point of logging and stored nowhere else.
 - A LogLine is one narrative level line the engine emitted, in order (trigger attempts, unlocks, resets, trap slams): the widget's log wording, persisted so a headless stall can be read back afterward.
 - Screen flood stats are captured on entry and on unlock, with the same numbers as the widget.
-- The tally answers whether the region memory path actually fires, counted from the engine's own events.
+- The tally answers whether the region memory path fires, counted from the engine's own events.
 - Only the 'idle' and 'observing' phases run `observe`, which is what records exits. 'traversing' means the route has further hops to make, so that screen is passed through and never observed.
 - `target` means physically traversed to (visited), not only reachable by flood.
 
@@ -2874,7 +2874,7 @@ pixels.
 - A candidate is validated against the DESTINATION room's own grids: exit doors back to the overworld share the same door table encoding, so mirroring one into the neighbouring room id fabricates a connection into solid wall (for example the castle's front entrance doors "leading" into the basement jail rooms below).
 - Rooms are laid out 16 per row, 20 rows; ROOM_EDGE_ADJ proposes the room id plus or minus 1 or 16 as a neighbour.
 - Entrance rooms are the rooms an overworld entrance points at: the MOUTH of a standalone place. Two mouths never scroll into one another; each is the way into a different cave, house or dungeon. ROOM_EDGE_ADJ proposes neighbours regardless, which is how room 0x10a "scrolled north" into 0xfa and the run walked from the desert to the mountain summit through two unrelated caves. A mouth scrolling INWARD is fine (that is what a dungeon's entrance hall does), so only a crossing from mouth to mouth is rejected. The set is memoized only once the table has loaded.
-- Door trigger tiles sit a few tiles INSIDE the wall (a south door's record is about row 55, a north one about row 4); records in the middle of the grid (for example row 36, the lower page's top) are internal quadrant doors, not ways out of the room. Hence the outer wall bands below 8 and at or above 52.
+- Door trigger tiles sit a few tiles INSIDE the wall (a south door's record is about row 55, a north one about row 4); records in the middle of the grid (for example row 36, the lower page's top) are internal quadrant doors, not ways out of the room. That is why the outer wall bands sit below 8 and at or above 52.
 - Wall strip attrs that mean "crossing here never scrolls to the adjacent room": 0x8E is the exit door trigger (walks OUT of the dungeon), 0xF0 to 0xF7 is a flag gated door, solid until its story flag, as the sanctuary's escape door is. `exitDoorAt` checks the strip at the position (the notches are 2 wide) up to 14 deep, on any layer.
 - `doorwayLandingOpen` is the reality check that kills fabricated connections: the DESTINATION room must have walkable floor (or door passage) behind the doorway, on any layer, against its OPPOSITE wall. A real doorway lines up with its opening: the old 14 deep by 9 wide window accepted any room with floor loosely near that wall, which is how unrelated caves at consecutive room indices "scrolled" into one another. The window is now 3 deep and 3 wide.
 
@@ -2888,7 +2888,7 @@ pixels.
 
 ## game/simulator/scan-sprite.ts
 
-- Answers where the game actually puts a given sprite. A check's room index comes from our own data, and when that index is wrong the failure is silent: the room exists, it just holds something else, so the check never fires and nothing says why. Asking every room's spawn table settles it against the game, not the dataset.
+- Answers where the game puts a given sprite. A check's room index comes from our own data, and when that index is wrong the failure is silent: the room exists, it just holds something else, so the check never fires and nothing says why. Asking every room's spawn table settles it against the game, not the dataset.
 - Indoor room indices run 0x000 to 0x17F (LAST_ROOM).
 - Which overworld screen a room is entered from is what names it; a room index alone cannot be checked against anything.
 
@@ -3498,7 +3498,7 @@ order:
    button held from the press that opened the menu does not rise again. The shadowed slots are
    recomputed per menu frame; caching would add one more thing to invalidate on a rebind.
 2. Modern, menu closed. The frame is remapped to a console mask, and if a pressed slot holds
-   an item the save actually has, the equipped item register is written first. The core reads
+   an item the save has, the equipped item register is written first. The core reads
    the register on the frame Y is pressed, so writing it after the mask would fire the
    previous item once on every switch. An active item of 0 means leave the core's own item
    alone; it is not an item id.

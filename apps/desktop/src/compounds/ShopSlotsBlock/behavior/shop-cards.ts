@@ -25,7 +25,9 @@ const shopCardsOf = (scope: ShopScope): readonly ShopCardModel[] => {
   return SHOP_IDS.map((shopId) => {
     const rows = rowsOfShop(shopId);
     const slots = rows.map((row) => toggleOf(row, rows.length, ticked));
-    const [{ slot: first }] = rows;
+    const [firstRow] = rows;
+    if (firstRow === undefined) throw new Error(`Shop ${shopId} has no slot rows`);
+    const first = firstRow.slot;
     return {
       id: shopId,
       name: shortShopNameOf(shopId, first.shopName),

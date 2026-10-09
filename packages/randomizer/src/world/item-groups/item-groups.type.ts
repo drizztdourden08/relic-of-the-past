@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { ITEM } from '../item-ids.data';
+import type { ITEM } from '../item-ids';
 
 type MedallionId = typeof ITEM.bombos | typeof ITEM.ether | typeof ITEM.quake;
 

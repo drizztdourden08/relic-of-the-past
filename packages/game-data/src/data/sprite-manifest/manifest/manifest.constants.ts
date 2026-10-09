@@ -29,7 +29,7 @@ const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
 const SPRITE_MANIFEST: SpriteManifestEntry[] = SPRITE_DEFINITIONS.map(sprite => ({
   file: sprite.file,
   label: sprite.label,
-  category: sprite.category as SpriteCategory,
+  category: sprite.category,
   box: boxForExtract(sprite.extract),
 }));
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { DEFAULT_ITEM_POWER } from '../../world/item-power/item-power.data';
+import { DEFAULT_ITEM_POWER } from '../../world/item-power/item-power.constants';
 import { retroVanillaShelves } from '../../world/retro/retro-shops';
 import { derivedItemPower } from '../../world/item-power/item-power-rule';
 import {

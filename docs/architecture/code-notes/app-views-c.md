@@ -246,7 +246,7 @@ on the grid.
 ### compounds/ModeBadge/ModeBadge.tsx
 
 The badge says at a glance what kind of playthrough a profile is. The art lives in
-`apps/desktop/src/assets/mode-badges/` as `mode-<id>.png`: a 128 pixel transparent square (the
+`apps/desktop/assets/mode-badges/` as `mode-<id>.png`: a 128 pixel transparent square (the
 source art trimmed, squared and downscaled with a quality filter), drawn smoothly at
 `--mode-badge-d`. The glob in `behavior/mode-badge-src.constants.ts` resolves to an empty map
 until a file exists, so dropping a PNG in swaps the monogram chip for the image with no code
@@ -405,7 +405,7 @@ row and is null on an unrandomized profile.
 
 ### compounds/ProfileHero/behavior/hero-art-src.ts
 
-Hero art lives in `apps/desktop/src/assets/home-hero/` as `hero-art-<mode>.png`: a 128 pixel square
+Hero art lives in `apps/desktop/assets/home-hero/` as `hero-art-<mode>.png`: a 128 pixel square
 piece of pixel art on a transparent ground, drawn at twice its pixels so it stays pixel art. A
 mode without its piece shows the backdrop alone.
 
@@ -809,7 +809,7 @@ the words of its catalog row, the mode dropdown, and the In Pool cell, so every 
 Pool cell in the panel lines up. Under the head comes one line per fact: the Custom lines (range,
 items, jumps) only while the mode is Custom; the pickup bonus whenever the family hands out
 upgrade items (Custom or in pool); and the ladder in every mode, which says what the player
-actually gets. The wallet has no vanilla upgrades to pool, so it offers no "in pool" mode. A
+gets. The wallet has no vanilla upgrades to pool, so it offers no "in pool" mode. A
 family a sibling setting decided (`forced`) renders inert with the reason in red under its head:
 the controls grey out, the sentence does not, the same as a forced plain option row.
 `CapacityRowState` holds ladder indexes and choices, never ladder values; the curve choice is a
@@ -848,7 +848,7 @@ this component) draws inert. Then the cards, split into the two halves of the ma
 shop, because the ticks are what every mode draws from; then the count, whose maximum is the size
 of the ticked set, so the control never offers a slot that does not exist; then the depth and what
 the two cost the seed. The count control and the total sentence read the same number off the
-summary (the slots this scope really opens), so they never disagree. The retro note sits under the
+summary (the slots this scope opens), so they never disagree. The retro note sits under the
 mode because retro is decided on the Items tab but its one shop consequence depends on the mode
 chosen here. The block's fixed copy lives in ShopSlotsBlock.constants.ts so the sentences a player
 reads are one short file to review. No handler renders the read-only Options page.
@@ -863,7 +863,7 @@ under their headings.
 ### compounds/ShopSlotsBlock/behavior/shop-scope-edits/index.ts
 
 One number drives both the count control and the total sentence: `opened`, the size of the set
-this scope really opens (`shop-scope.ts`). The counted modes take it out of the ticked set, and in
+this scope opens (`shop-scope.ts`). The counted modes take it out of the ticked set, and in
 the custom mode it is the ticked set, so a control fed the stored `slotCount` would sit still while
 the ticks moved and its fill would climb as the ceiling under it dropped. The stored count is
 re-clamped after every edit, not only the slider's, so it never outruns a ticked set the player has
@@ -1043,7 +1043,7 @@ about composing the game view.
 ### views/AppMain/AppMain.css
 
 In the notch "usable space" mode the whole app is inset away from the camera cutout. The padding
-goes on `.app`, the flex parent, so the absolutely positioned layers inside `.app__content` shrink
+goes on `.app`, the flex parent, so the `position: absolute` layers inside `.app__content` shrink
 with it. The default notch fill mode renders edge to edge.
 
 ### views/BootProgressBar/BootProgressBar.tsx
@@ -1104,8 +1104,8 @@ news. Nothing shows outside a file in play, and what turns up right after the sa
 state load, a file entered) belongs to that file and shows nothing (`play-quiet.ts`); the quiet
 window after a load is two sweeps long so the combined rows land too. More than `MAX_BURST` rows
 at once is a load, not something the player just did. An item received within
-`RECEIPT_WINDOW_MS` belongs to the chest that just completed, which tells what a swap chest really
-paid. Turned off, the hook still follows both sources, so turning it on never replays what happened
+`RECEIPT_WINDOW_MS` belongs to the chest that just completed, which tells what a swap chest
+paid out. Turned off, the hook still follows both sources, so turning it on never replays what happened
 meanwhile.
 
 ### views/CheckToasts/behavior/useOnlineNoticeToasts.ts

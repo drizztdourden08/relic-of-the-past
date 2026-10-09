@@ -8,7 +8,7 @@ const wasmGetEntranceSpawns = (): Array<EntranceSpawn> | null =>
     decodeCountPrefixed(mod, ptr, { countBytes: 2, dataStart: 2, stride: 5 }, (heap, o) => ({
       x: readU16(heap, o),
       y: readU16(heap, o + 2),
-      startingLayer: heap[o + 4] >> STARTING_BG_SHIFT,
+      startingLayer: (heap[o + 4] ?? 0) >> STARTING_BG_SHIFT,
     })),
   );
 

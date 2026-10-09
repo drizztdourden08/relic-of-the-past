@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-import { kKeys } from './spc-command-tables.data';
+import { kKeys } from './spc-command-tables.constants';
 
 const noteToStr = (note: number): string => {
   if (note >= 72) {

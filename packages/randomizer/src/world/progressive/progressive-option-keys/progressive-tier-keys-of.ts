@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { PROGRESSIVE_FAMILIES } from '../progressive-families.data';
+import { PROGRESSIVE_FAMILIES } from '../progressive-families.constants';
 import { progressiveTierKeyOf } from './progressive-tier-key-of';
 import type { ProgressiveFamilyId } from '../progressive.type';
 

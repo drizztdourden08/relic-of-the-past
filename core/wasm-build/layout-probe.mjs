@@ -1,20 +1,4 @@
-// @layer core-wasm-build @kind build
-/**
- * Computes the save state format id and writes the generated module the app imports.
- *
- * Compiles state-layout-probe.c against the same headers and the same compiler the real
- * build uses, so the region sizes it reports carry the real wasm32 ABI and not the
- * host's. Runs it, hashes the region sequence, and writes
- * packages/game-core/src/save-state/current-format.generated.ts.
- *
- * That generated file is COMMITTED. `npm run ci` does not build wasm, so a gitignored
- * module would break typecheck on a fresh clone. Committing it also means a change to the
- * save state layout shows up as a reviewable one-line diff instead of a surprise at
- * release time.
- *
- * Prerequisite: emcc on PATH (emsdk activated), same as build.mjs.
- * Idempotent: re-running with an unchanged layout rewrites identical bytes.
- */
+/* @layer core-wasm-build @kind build */
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
@@ -25,23 +9,17 @@ const here = import.meta.dirname;
 const zelda3 = resolve(here, '..', 'zelda3');
 const hooks = resolve(here, '..', 'game-hooks');
 const generatedPath = resolve(
-  here, '..', '..', 'packages', 'game-core', 'src', 'save-state', 'current-format.generated.ts',
+  here, '..', '..', 'packages', 'game-core', 'src', 'save-state', 'current-format.constants.ts',
 );
 
-/** Only the translation units that own a region walk. The rest of the core is irrelevant. */
-const probeSrcs = [
+const translationUnitsThatOwnARegionWalk = [
   join(here, 'state-layout-probe.c'),
   join(zelda3, 'snes', 'dsp.c'),
   join(zelda3, 'snes', 'dma.c'),
   join(zelda3, 'snes', 'ppu.c'),
 ];
 
-/**
- * Those three units reference symbols that live in the rest of the core, none of which
- * the probe's single call path reaches. Letting them stay undefined is what keeps this a
- * four-file compile instead of a whole-core link.
- */
-const emflags = [
+const emflagsLeavingUnreachedCoreSymbolsUndefined = [
   '-O0',
   '-I', zelda3,
   '-I', hooks,
@@ -54,14 +32,13 @@ const emflags = [
 ];
 
 const runEmcc = (outFile) => {
-  const args = [...emflags, ...probeSrcs, '-o', outFile];
+  const args = [...emflagsLeavingUnreachedCoreSymbolsUndefined, ...translationUnitsThatOwnARegionWalk, '-o', outFile];
   const isWin = process.platform === 'win32';
   const cmd = isWin ? process.env.COMSPEC || 'cmd.exe' : 'emcc';
   const spawnArgs = isWin ? ['/c', 'emcc', ...args] : args;
   return spawnSync(cmd, spawnArgs, { encoding: 'utf8' });
 };
 
-/** Runs the compiled probe and parses its two lines into a sequence + total. */
 const readLayout = (probeJs) => {
   const run = spawnSync(process.execPath, [probeJs], { encoding: 'utf8' });
   if (run.status !== 0) {
@@ -76,15 +53,9 @@ const readLayout = (probeJs) => {
   return { regions, total };
 };
 
-/** The id: first 12 hex of sha256 over the comma-joined sequence. Short enough to read. */
-const idFor = (regions) =>
+const shortSha256IdFor = (regions) =>
   createHash('sha256').update(regions.join(',')).digest('hex').slice(0, 12);
 
-/**
- * The module carries only the gate header. Its .generated name says it is generated, and
- * docs/architecture/code-notes/game.md ("save-state/current-format.generated.ts") says what
- * it holds and why it is committed.
- */
 const renderModule = ({ id, regions, total }) => `/* @layer shared-game @kind data */
 const CURRENT_STATE_FORMAT = {
   id: '${id}',
@@ -95,37 +66,45 @@ const CURRENT_STATE_FORMAT = {
 export { CURRENT_STATE_FORMAT };
 `;
 
+const compileProbe = (probeJs) => {
+  const compile = runEmcc(probeJs);
+  if (compile.status !== 0 || !existsSync(probeJs)) {
+    console.error(compile.stderr || compile.stdout);
+    throw new Error('emcc failed to build the layout probe');
+  }
+};
+
+const reportRewrite = (prev, id, total) => {
+  const prevId = prev?.match(/id: '([0-9a-f]+)'/)?.[1] ?? null;
+  console.log(`[layout-probe] ${prevId ? 'rewritten' : 'created'} as format ${id} (${total} bytes)`);
+  if (prevId && prevId !== id) {
+    console.log(`[layout-probe] LAYOUT CHANGED: ${prevId} -> ${id}.`);
+    console.log('[layout-probe] Add a KNOWN_FORMATS row saying what moved, or the release will refuse to publish.');
+  }
+};
+
+const writeFormat = (probeJs) => {
+  const { regions, total } = readLayout(probeJs);
+  const id = shortSha256IdFor(regions);
+  const next = renderModule({ id, regions, total });
+  const prev = existsSync(generatedPath) ? readFileSync(generatedPath, 'utf8') : null;
+
+  if (prev === next) {
+    console.log(`[layout-probe] unchanged, still format ${id} (${total} bytes)`);
+    return;
+  }
+
+  mkdirSync(dirname(generatedPath), { recursive: true });
+  writeFileSync(generatedPath, next);
+  reportRewrite(prev, id, total);
+};
+
 const run = () => {
   const workDir = mkdtempSync(join(tmpdir(), 'rotp-layout-probe-'));
   const probeJs = join(workDir, 'probe.js');
   try {
-    const compile = runEmcc(probeJs);
-    if (compile.status !== 0 || !existsSync(probeJs)) {
-      console.error(compile.stderr || compile.stdout);
-      throw new Error('emcc failed to build the layout probe');
-    }
-
-    const { regions, total } = readLayout(probeJs);
-    const id = idFor(regions);
-    const next = renderModule({ id, regions, total });
-    const prev = existsSync(generatedPath) ? readFileSync(generatedPath, 'utf8') : null;
-
-    if (prev === next) {
-      console.log(`[layout-probe] unchanged, still format ${id} (${total} bytes)`);
-      return;
-    }
-
-    mkdirSync(dirname(generatedPath), { recursive: true });
-    writeFileSync(generatedPath, next);
-
-    // Only an id change is a layout change. Rewording the header of this file is not,
-    // and saying so would train everyone to ignore the line that actually matters.
-    const prevId = prev?.match(/id: '([0-9a-f]+)'/)?.[1] ?? null;
-    console.log(`[layout-probe] ${prevId ? 'rewritten' : 'created'} as format ${id} (${total} bytes)`);
-    if (prevId && prevId !== id) {
-      console.log(`[layout-probe] LAYOUT CHANGED: ${prevId} -> ${id}.`);
-      console.log('[layout-probe] Add a KNOWN_FORMATS row saying what moved, or the release will refuse to publish.');
-    }
+    compileProbe(probeJs);
+    writeFormat(probeJs);
   } finally {
     rmSync(workDir, { recursive: true, force: true });
   }

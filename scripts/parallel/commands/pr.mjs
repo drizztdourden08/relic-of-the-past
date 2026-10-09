@@ -1,9 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * `wt pr <name> <url|number>` records the pull request opened from this worktree.
- * Bookkeeping only; whether the work landed comes from git (`merged` in
- * git-status.mjs). Does not open, push or merge anything.
- */
 import { updateRegistry, findRecord } from '../registry.mjs';
 
 const PR_URL = /^https?:\/\/\S+\/pull\/(\d+)\/?$/;

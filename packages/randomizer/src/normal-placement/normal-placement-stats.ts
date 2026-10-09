@@ -1,14 +1,14 @@
 /* @layer shared-game @kind logic */
 import { REFERENCE_CAPACITY_PROFILE } from '../world/capacity/capacity-profile-defaults';
-import { REFERENCE_CAPACITY_BONUS } from '../world/capacity/bonus/capacity-bonus.data';
+import { REFERENCE_CAPACITY_BONUS } from '../world/capacity/bonus/capacity-bonus.constants';
 import { capacityPoolCountsOf } from '../world/capacity/family-plan';
 import { LEGACY_POND_PROFILES } from '../world/pond/pond-profile-defaults';
 import { NO_SHOP_SCOPE } from '../world/shops/shop-scope-from-values';
-import { DEFAULT_PROGRESSIVE_SETTING } from '../world/progressive/progressive-families.data';
-import { DEFAULT_PROGRESSIVE_MODES } from '../world/progressive/progressive-modes.data';
-import { DEFAULT_RETRO_BOW } from '../world/retro/retro-bow.data';
-import { DEFAULT_ITEM_POWER } from '../world/item-power/item-power.data';
-import { DEFAULT_STORY_GATES } from '../world/story-gates/story-gates.data';
+import { DEFAULT_PROGRESSIVE_SETTING } from '../world/progressive/progressive-families.constants';
+import { DEFAULT_PROGRESSIVE_MODES } from '../world/progressive/progressive-modes';
+import { DEFAULT_RETRO_BOW } from '../world/retro/retro-bow.constants';
+import { DEFAULT_ITEM_POWER } from '../world/item-power/item-power.constants';
+import { DEFAULT_STORY_GATES } from '../world/story-gates/story-gates.constants';
 import { DEFAULT_DUNGEON_ITEM_SETTING } from '../world/dungeon-items/dungeon-item-modes';
 import { DEFAULT_ACCESSIBILITY } from '../world/accessibility/accessibility-from-snapshot';
 import type { PlacementStats } from '../world/fill/placement.type';

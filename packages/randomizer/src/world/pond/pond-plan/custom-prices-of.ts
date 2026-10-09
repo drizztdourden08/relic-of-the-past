@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import { jumpsOf } from '../../capacity/curves/jumps-of';
 import { ladderOf } from '../../capacity/curves/ladder-of';
-import { POND_PRICE_LADDER } from '../pond-ladder.data';
+import { POND_PRICE_LADDER } from '../pond-ladder.constants';
 import { rungOf } from './rung-of';
 import type { PondCustomSetting } from '../pond-profile.type';
 

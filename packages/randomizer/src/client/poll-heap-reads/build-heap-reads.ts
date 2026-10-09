@@ -5,10 +5,10 @@ import type { HeapReads } from './poll-heap-reads.type';
 const buildHeapReads = (mod: NonNullable<ReturnType<typeof getModule>>): HeapReads | null => {
   const heap = (mod as unknown as { HEAPU8?: Uint8Array }).HEAPU8;
   if (!heap) return null;
-  const roomPtr = mod.ccall('WasmGetRoomFlags', 'number', [], []) as number;
-  const livePtr = mod.ccall('WasmGetLiveRoomFlags', 'number', [], []) as number;
-  const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []) as number;
-  const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+  const roomPtr = mod.ccall('WasmGetRoomFlags', 'number', [], []);
+  const livePtr = mod.ccall('WasmGetLiveRoomFlags', 'number', [], []);
+  const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []);
+  const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []);
   if (!roomPtr) return null;
   let liveRoomId = -1;
   let liveFlags = 0;

@@ -5,7 +5,7 @@ import {
   ANIMATED_SLOT_6_FIRST_TILE, ANIMATED_SLOT_6_SHEET, ANIMATED_SLOT_7_FIRST_TILE, ANIMATED_SLOT_7_SHEET,
   ANIMATED_SOURCE_END_TILE, ANIMATED_SOURCE_FIRST_TILE, PALACE_TILE_COUNT, TILE_BYTES,
 } from './graphics-source.constants';
-import { PALACE_SHEETS } from './graphics-source.data';
+import { PALACE_SHEETS } from './palace-sheets.constants';
 import { loadPalaceSheet } from './load-palace-sheet';
 
 const copyAnimatedTiles = (rom: GbaRomReader, packed: Buffer, sheetAddress: number, firstTile: number): void => {

@@ -46,7 +46,7 @@ only proves presence and must not be written unreviewed.
 ### data-inspector/accept-recommendation.keep.test.ts
 
 Accepting writes first and records the verdict second; a verdict before the write would
-mark done a finding nobody applied. The four collaborators are mocked because each really
+mark done a finding nobody applied. The four collaborators are mocked because each
 writes to disk or to the store. An update is keyed by `targetId`, the identity the store
 reconciles on.
 
@@ -1572,7 +1572,7 @@ at 0.75) solves with its own unit: a 124px authored band is 93 game pixels wide.
 Two gate layers must both pass for an in game event to rumble. The C master gate is
 `kFeatures0_Haptics` (bit value 1048576, matching `features.h` and
 `live-settings-flags.ts`), reached through the boot INI `Haptics` key and the live push.
-Then seven granular gates in the haptic service, one per event category. Spin attack
+Then seven fine-grained gates in the haptic service, one per event category. Spin attack
 release shares the sword swing toggle, death shares damage taken, and the mirror warp
 polling path shares environmental effects.
 
@@ -1820,7 +1820,7 @@ inside the generator already proved full access and the goal.
   Custom, since that is the pond's own ladder.
 - At Vanilla grants exactly the produced items leave the pool; what she takes in trade stays
   findable.
-- The beatable sweep uses a wide price range so the curve really has eight throws to cut.
+- The beatable sweep uses a wide price range so the curve has all eight throws to cut.
 - A dear pond under the lowest wallet a seed can roll with has its range pulled down to what
   that wallet holds. The wallet asks for 0 and reads 599, the floor a fixed 500 rupee purchase
   in the price table sets, so a 900 to 999 range is held at 500. The wallet starts empty and
