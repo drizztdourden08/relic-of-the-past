@@ -1,43 +1,16 @@
 /* @layer shared-game @kind logic */
-/**
- * Receipt item classification: sorts a community-standard item name into the
- * contextual message class its receipt line is rendered from. Progressive and
- * dungeon-restricted items are recognized from the standard name's own shape;
- * a capacity upgrade is recognized from the name tables (the name carries its
- * family and jump, so no session table is needed here), a progressive
- * capacity item before the progressive-equipment prefix, since its name
- * starts the same way but its jump is the plan's, not the name's; junk is
- * everything the reference item table classifies as filler (neither
- * progression nor useful, see item-classes.data.ts).
- */
-
 import { upgradeItemOfName } from '@shared/game/data/capacity-upgrade-item';
 import { progressiveCapacityFamilyOf } from '@shared/game/data/capacity-progressive-item';
 import { PROGRESSION_ITEMS, USEFUL_ITEMS } from '../world/pool/item-classes.data';
 import { itemKeyOfName } from '../world/display-names/item-key-name';
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import { DUNGEON_ITEM_RE, PROGRESSIVE_PREFIX } from './receipt-text.constants';
+import { PIECE_BY_BASE } from './receipt-item-class.constants';
 import type { ItemId } from '@shared/game/data/types/ids';
+import type { ReceiptItemClass } from './receipt-item-class.type';
 
-const PROGRESSIVE_PREFIX = 'Progressive ';
-
-/** "Small Key (Palace Name)" style dungeon-restricted items. */
-const DUNGEON_ITEM_RE = /^(Small Key|Big Key|Map|Compass) \((.+)\)$/;
-
-type DungeonPiece = 'small-key' | 'big-key' | 'map' | 'compass';
-
-type ReceiptItemClass =
-  | { kind: 'progressive'; slot: string }
-  | { kind: 'dungeon-item'; piece: DungeonPiece; base: string; dungeon: string }
-  | { kind: 'capacity'; family: CapacityFamilyId; jump: number }
-  | { kind: 'capacity-progressive'; family: CapacityFamilyId }
-  | { kind: 'junk' }
-  | { kind: 'standard' };
-
-const PIECE_BY_BASE: Readonly<Record<string, DungeonPiece>> = {
-  'Small Key': 'small-key',
-  'Big Key': 'big-key',
-  Map: 'map',
-  Compass: 'compass',
+const isJunkName = (itemName: string): boolean => {
+  const itemId = itemKeyOfName(itemName) as ItemId | undefined;
+  return itemId === undefined || (!PROGRESSION_ITEMS.has(itemId) && !USEFUL_ITEMS.has(itemId));
 };
 
 const classifyReceiptItem = (itemName: string): ReceiptItemClass => {
@@ -53,13 +26,8 @@ const classifyReceiptItem = (itemName: string): ReceiptItemClass => {
   }
   const upgrade = upgradeItemOfName(itemName);
   if (upgrade !== undefined) return { kind: 'capacity', family: upgrade.family, jump: upgrade.jump };
-  // The two classes are id sets now, and the caller has a name because the wire speaks names.
-  const itemId = itemKeyOfName(itemName) as ItemId | undefined;
-  if (itemId === undefined || (!PROGRESSION_ITEMS.has(itemId) && !USEFUL_ITEMS.has(itemId))) {
-    return { kind: 'junk' };
-  }
+  if (isJunkName(itemName)) return { kind: 'junk' };
   return { kind: 'standard' };
 };
 
 export { classifyReceiptItem };
-export type { DungeonPiece, ReceiptItemClass };
