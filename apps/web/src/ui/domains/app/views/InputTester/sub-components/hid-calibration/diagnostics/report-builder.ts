@@ -1,24 +1,6 @@
 /* @layer renderer-components @kind logic */
-/**
- * Assembles the final GamepadDiagnosticsReport from the pieces the wizard
- * gathered along the way: device identity and native-capture status. The
- * captures themselves travel with the report as separate artefacts, each in
- * its own shape, not flattened into this summary.
- */
-import type { DeviceEntry } from '@shared/ipc';
-import type { DevicePreset } from '@shared/types/controls';
-import type { NativeCaptureStatus } from './hooks/useNativeCaptures';
 import type { GamepadDiagnosticsReport } from './diagnostics.type';
-
-interface BuildReportArgs {
-  deviceKey: string;
-  name: string;
-  deviceEntry: DeviceEntry | null;
-  preset: DevicePreset | null;
-  nativeStatus: NativeCaptureStatus;
-  platform: string;
-  appVersion: string;
-}
+import type { BuildReportArgs } from './report-builder.type';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 

@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Usage instructions for the HID Calibration Wizard, covering how to read the byte
- * grid and avoid binding a button to the wrong (or noisy) byte. Open by
- * default (still collapsible) because most calibration mistakes come from
- * skipping this.
- */
 import { Box, Text } from '../../../../../../../design-system/primitives';
 
 const InstructionsPanel = () => {

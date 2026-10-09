@@ -1,25 +1,9 @@
 /* @layer renderer-components @kind hook */
-/**
- * Owns the lifecycle of the two SDL3 diagnostic captures for the wizard's
- * device: a raw HID byte capture (vendorId/productId, best-effort, since SDL's
- * own joystick handle can hold the device exclusively) and a joystick-level
- * capture (needs an SDL joystick id, so only runs once the device is
- * SDL-claimed). Starts both on mount, stops both on unmount.
- */
 import { useEffect, useState } from 'react';
 import * as nativeCapture from '@app/lib/input/native-capture-store';
 import type { DeviceEntry, JoystickInfo } from '@shared/ipc';
-
-interface NativeCaptureStatus {
-  rawAvailable: boolean;
-  rawUnavailableReason: string | null;
-  mappingString: string | null;
-  joystickCounts: JoystickInfo | null;
-}
-
-const EMPTY_STATUS: NativeCaptureStatus = {
-  rawAvailable: false, rawUnavailableReason: 'not-found', mappingString: null, joystickCounts: null,
-};
+import { EMPTY_STATUS } from './useNativeCaptures.constants';
+import type { NativeCaptureStatus } from './useNativeCaptures.type';
 
 const useNativeCaptures = (deviceEntry: DeviceEntry | null): NativeCaptureStatus => {
   const [status, setStatus] = useState<NativeCaptureStatus>(EMPTY_STATUS);

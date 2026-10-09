@@ -1,21 +1,12 @@
 /* @layer renderer-components @kind component */
-// Shared by the standalone diagnostics dialog and the controller report, so both render the same steps.
-import type { RefObject } from 'react';
 import { Box } from '@ds/primitives';
-import type { HidWizardHandle } from '../HidCalibrationWizard';
-import type { DiagnosticsWizardState } from './behavior/useDiagnosticsWizardState';
+import type { DiagnosticsFlowBodyProps } from './diagnostics-wizard.type';
 import { IntroStep } from './sub-components/IntroStep';
 import { ChooseControllerStep } from './sub-components/ChooseControllerStep';
 import { ByteCaptureStep } from './sub-components/ByteCaptureStep';
 import { PositionalCaptureStep } from './sub-components/PositionalCaptureStep';
 import { SummaryStep } from './sub-components/SummaryStep';
 import { LayoutCaptureOverlay } from './sub-components/LayoutCaptureOverlay';
-
-interface DiagnosticsFlowBodyProps {
-  wizard: DiagnosticsWizardState;
-  wizardRef: RefObject<HidWizardHandle | null>;
-  onCapturedCountChange: (count: number) => void;
-}
 
 const DiagnosticsFlowBody = (props: DiagnosticsFlowBodyProps) => {
   const { wizard, wizardRef, onCapturedCountChange } = props;

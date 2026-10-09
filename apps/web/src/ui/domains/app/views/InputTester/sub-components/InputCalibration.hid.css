@@ -275,7 +275,6 @@
   margin-bottom: var(--space-sm);
 }
 
-/* The idle read is a real step, so its prompt carries the same weight as the live-capture readout. */
 .hid-cal__stick-idle-prompt {
   margin: var(--space-xs) 0;
   padding: var(--space-xs) var(--space-sm);
@@ -300,8 +299,6 @@
   transition: border-color 0.05s, background 0.05s, color 0.05s, opacity 0.1s;
 }
 
-/* Change magnitude, drawn on the cell's top border so it can sit on top of any
-   cell state. Width and colour are set inline from the byte's own delta. */
 .hid-cal__byte-change {
   position: absolute;
   top: calc(var(--space-2xs) * -1);

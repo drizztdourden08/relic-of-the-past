@@ -1,15 +1,6 @@
 /* @layer renderer-components @kind component */
-/** Async status line for a hold release/restore transition: a spinner while
- *  the native call is in flight, then a settled state once it resolves. */
 import { Box, Spinner, Text } from '@ds/primitives';
-import type { HoldTransitionStatus } from '../behavior/useHoldTransition';
-
-interface HoldStatusLineProps {
-  status: HoldTransitionStatus;
-  pendingText: string;
-  doneText: string;
-  errorText: string;
-}
+import type { HoldStatusLineProps } from './diagnostics-steps.type';
 
 const HoldStatusLine = (props: HoldStatusLineProps) => {
   const { status, pendingText, doneText, errorText } = props;

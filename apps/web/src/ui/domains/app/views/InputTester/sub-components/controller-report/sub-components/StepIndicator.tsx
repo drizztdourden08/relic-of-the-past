@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@ds/primitives';
+import type { StepIndicatorProps } from '../controller-report.type';
 
-interface StepIndicatorProps {
-  labels: readonly string[];
-  current: number;
-}
-
-/** Persistent "where am I" strip across the four report steps. */
 const StepIndicator = (props: StepIndicatorProps) => {
   const { labels, current } = props;
 

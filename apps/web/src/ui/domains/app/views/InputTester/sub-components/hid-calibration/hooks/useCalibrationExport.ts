@@ -1,20 +1,12 @@
 /* @layer renderer-components @kind hook */
-/**
- * Export actions for a finished calibration: assembling the HidControllerMap,
- * copying it to the clipboard, saving it to the debug folder, and handing it
- * to onComplete. Split out of useCalibrationActions.ts for file-size compliance.
- */
 import { useCallback } from 'react';
 import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from '../hid-calibration.type';
-import type { ActionDeps } from './action-deps';
+import type { ActionDeps } from './action-deps.type';
 import { guessConnectionHint } from '../connection-hint';
 
 const useCalibrationExport = (d: ActionDeps) => {
   const buildCalibrationMap = useCallback((): HidControllerMap => {
     const buttons: Record<string, HidButtonMapping> = {}; const axes: Record<string, HidAxisMapping> = {};
-    // An axis item can hold either shape. A trigger that turned out to be a
-    // switch carries a bit mapping, not a range, and matching only on kind
-    // dropped both of them from the report while the UI showed them captured.
     for (const item of d.itemsRef.current) {
       if (item.axisMapping) axes[item.id] = item.axisMapping;
       else if (item.mapping) buttons[item.id] = item.mapping;
@@ -31,8 +23,6 @@ const useCalibrationExport = (d: ActionDeps) => {
       devicePath: raw.path, connectionHint: guessConnectionHint(raw.busType),
       rawManufacturer: raw.manufacturer, rawProduct: raw.product, serialNumber: raw.serialNumber,
       platform: d.platform, appVersion: d.appVersion,
-      // Read from the same entry the layout came from, so the identity and
-      // the capability view in a report always describe one observation.
       guid: entry?.guid ?? null,
       sdlMapping: entry?.mapping ?? null,
       sdlType: entry?.sdlType ?? null,

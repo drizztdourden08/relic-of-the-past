@@ -1,14 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@ds/primitives';
-import type { UseControllerReportForm } from '../controller-report-form.type';
+import type { ConfirmStepProps } from '../controller-report-form.type';
 import { ReportSection } from './ReportSection';
 
-type ConfirmStepProps = Pick<
-  UseControllerReportForm,
-  'me' | 'email' | 'name' | 'additionalInfo' | 'debugText' | 'detection' | 'calibrationMap' | 'diagnosticsReport' | 'status'
->;
-
-/** Step 4: review EVERYTHING that will be sent. Dense sections stay collapsed, but nothing is left out. */
 const ConfirmStep = (props: ConfirmStepProps) => {
   const { me, email, name, additionalInfo, debugText, detection, calibrationMap, diagnosticsReport, status } = props;
   const contact = me ? me.user.displayName : `${email}${name.trim() ? ` (${name.trim()})` : ''}`;
@@ -51,4 +45,3 @@ const ConfirmStep = (props: ConfirmStepProps) => {
 };
 
 export { ConfirmStep };
-export type { ConfirmStepProps };

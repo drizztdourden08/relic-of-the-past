@@ -1,14 +1,10 @@
 /* @layer renderer-components @kind hook */
-/**
- * Stick calibration action handlers for the HID Calibration Wizard.
- * Split out of useCalibrationActions.ts for file-size compliance.
- */
 import { useCallback } from 'react';
 import type { StickCandidate, StickSide } from '../hid-calibration.type';
-import type { ActionDeps } from './action-deps';
+import type { ActionDeps } from './action-deps.type';
 import { finalizeStickCalibration, resetStick } from '../stick-trigger-handlers';
-import { createIdleSampler, IDLE_SAMPLE_MS } from '../stick-center';
-import type { IdleResult } from '../stick-center';
+import { BYTE_MAX, BYTE_MID } from '../hid-calibration.constants';
+import { useStickIdleActions } from './useStickIdleActions';
 
 const useStickActions = (d: ActionDeps) => {
   const finalizeStick = useCallback((c1: StickCandidate, c2: StickCandidate | null) => {
@@ -17,68 +13,11 @@ const useStickActions = (d: ActionDeps) => {
   }, [d.addLog, d.updateByteStatuses]);
   d.finalizeStickRef.current = finalizeStick;
 
-  /**
-   * Reads the stick where it sits, on demand. Started by the user because only
-   * they know the stick is actually free, and it keeps the extremes instead of
-   * waiting for stillness, so a stick that drifts still produces an answer.
-   */
-  const handleStickIdle = useCallback((side: StickSide) => {
-    const xId = side === 'left' ? 'leftX' : 'rightX';
-    const yId = side === 'left' ? 'leftY' : 'rightY';
-    const items = d.itemsRef.current;
-    const x = items.find((it) => it.id === xId)?.axisMapping;
-    const y = items.find((it) => it.id === yId)?.axisMapping;
-    if (!x) { d.addLog('Map the stick first, then read its idle.'); return; }
-
-    const asCandidate = (m: typeof x) => ({ idx: m.byteIndex, range: m.max - m.min, min: m.min, max: m.max, center: m.center });
-    d.activeStickRef.current = side; d.setActiveStick(side); d.setStickBusy(true);
-    d.stickIdleRef.current = createIdleSampler(asCandidate(x), y ? asCandidate(y) : null, Date.now());
-    d.setStickLiveInfo('Reading idle...');
-    d.addLog(`Reading ${side === 'left' ? 'LEFT' : 'RIGHT'} stick idle. Leave the stick alone.`);
-  }, [d.addLog]);
-
-  /** Writes a finished idle reading over the stick's stored centre. */
-  const applyIdle = useCallback((result: IdleResult) => {
-    const side = d.activeStickRef.current ?? 'left';
-    const label = side === 'left' ? 'LEFT' : 'RIGHT';
-    const xId = side === 'left' ? 'leftX' : 'rightX';
-    const yId = side === 'left' ? 'leftY' : 'rightY';
-    const byIdx = new Map<string, typeof result.x>([[xId, result.x]]);
-    if (result.y) byIdx.set(yId, result.y);
-
-    d.setItems((prev) => prev.map((it) => {
-      const measured = byIdx.get(it.id);
-      if (!measured || !it.axisMapping) return it;
-      const mapping = { ...it.axisMapping, center: measured.center, idle: measured.idle };
-      return { ...it, axisMapping: mapping, result: `byte[${mapping.byteIndex}] ${mapping.min}..${mapping.center}..${mapping.max} (idle drift ${measured.idle.drift})` };
-    }));
-
-    // Also recorded as an idle byte reading, which is what the report carries
-    // as idleData. One action, so there is nothing to run separately and
-    // nothing that can disagree with the mapping it just wrote.
-    d.recordIdleResult(`${label} Stick`, {
-      label: `${label} Stick`,
-      durationMs: IDLE_SAMPLE_MS,
-      frameCount: result.x.idle.frames,
-      bytes: [result.x, ...(result.y ? [result.y] : [])].map((axis) => ({
-        byteIndex: axis.idx,
-        min: axis.idle.min,
-        max: axis.idle.max,
-        range: axis.idle.max - axis.idle.min,
-        average: axis.center,
-        uniqueCount: axis.idle.uniqueCount,
-        uniqueValues: `${axis.idle.uniqueCount} values`,
-      })),
-    });
-    d.addLog(`✓ ${label} idle: centre ${result.x.center}${result.y ? `, ${result.y.center}` : ''} (drift ${result.x.idle.drift}${result.y ? `, ${result.y.idle.drift}` : ''})`);
-    d.setStickBusy(false); d.setActiveStick(null); d.activeStickRef.current = null; d.setStickLiveInfo('');
-    if (d.latestBytes.length > 0) d.updateByteStatuses(d.latestBytes.length);
-  }, [d.addLog, d.latestBytes.length, d.updateByteStatuses, d.recordIdleResult]);
-  d.applyIdleRef.current = applyIdle;
+  const { handleStickIdle } = useStickIdleActions(d);
 
   const handleStartCircle = useCallback((side: StickSide) => {
     d.activeStickRef.current = side; d.setActiveStick(side); const len = d.baselineRef.current.length;
-    d.stickMinsRef.current = new Uint8Array(len).fill(255); d.stickMaxsRef.current = new Uint8Array(len).fill(0);
+    d.stickMinsRef.current = new Uint8Array(len).fill(BYTE_MAX); d.stickMaxsRef.current = new Uint8Array(len).fill(0);
     d.stickCounterBytesRef.current = new Set(); d.stickSamplesRef.current = 0; d.stickStableCountRef.current = 0; d.stickLastTop2Ref.current = ''; d.stickBufferRef.current = [];
     d.stickCaptureStartedAtRef.current = Date.now(); d.stickReclaimAttemptedRef.current = false;
     d.stickRecordingRef.current = true; d.setStickBusy(true); d.setStickLiveInfo('Rotate the stick slowly...');
@@ -106,7 +45,7 @@ const useStickActions = (d: ActionDeps) => {
   const handleConfirmPick = useCallback(() => {
     if (d.stickPickedBytes.length === 0) return;
     const bl = d.baselineRef.current; const mins = d.stickMinsRef.current; const maxs = d.stickMaxsRef.current; const bytes = d.latestBytes;
-    const makeCand = (i: number): StickCandidate => ({ idx: i, range: mins.length > i ? maxs[i] - mins[i] : 0, min: mins.length > i ? mins[i] : 0, max: maxs.length > i ? maxs[i] : 255, center: bl.length > i ? bl[i] : (bytes.length > i ? bytes[i] : 128) });
+    const makeCand = (i: number): StickCandidate => ({ idx: i, range: mins.length > i ? maxs[i] - mins[i] : 0, min: mins.length > i ? mins[i] : 0, max: maxs.length > i ? maxs[i] : BYTE_MAX, center: bl.length > i ? bl[i] : (bytes.length > i ? bytes[i] : BYTE_MID) });
     const c1 = makeCand(d.stickPickedBytes[0]); const c2 = d.stickPickedBytes.length >= 2 ? makeCand(d.stickPickedBytes[1]) : null;
     d.setStickPickMode(false); d.setStickPickedBytes([]); d.finalizeStickRef.current(c1, c2);
   }, [d.stickPickedBytes, d.latestBytes]);

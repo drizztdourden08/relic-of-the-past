@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@ds/primitives';
 
-/** Step 1 explains what the report does before asking for anything. */
 const IntroStep = () => {
   return (
     <>

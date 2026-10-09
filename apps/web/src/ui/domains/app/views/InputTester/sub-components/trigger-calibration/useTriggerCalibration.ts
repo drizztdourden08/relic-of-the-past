@@ -1,33 +1,11 @@
 /* @layer renderer-components @kind hook */
-/**
- * State management hook for 2-step analog trigger calibration.
- */
-
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { controllerInputStore } from '../../../../../../../lib/input/controller-input-store';
-
-// ── Types ──
-
-interface TriggerCalibrationData {
-  base: number;
-  max: number;
-  deadzone: number;
-}
-
-type Step = 'rest' | 'max' | 'review';
-
-interface UseTriggerCalibrationOptions {
-  axisIndex: number;
-  deviceKey?: string;
-  existingCalibration?: TriggerCalibrationData | null;
-}
-
-// ── Constants ──
-
-const REST_SAMPLE_FRAMES = 60;
-const DEFAULT_DEADZONE = 0.05;
-
-// ── Hook ──
+import {
+  DEFAULT_DEADZONE, LEFT_TRIGGER_AXIS, LEFT_TRIGGER_BYTE,
+  REST_SAMPLE_FRAMES, RIGHT_TRIGGER_AXIS, RIGHT_TRIGGER_BYTE,
+} from './trigger-calibration.constants';
+import type { Step, UseTriggerCalibrationOptions } from './trigger-calibration.type';
 
 const useTriggerCalibration = (options: UseTriggerCalibrationOptions) => {
   const { axisIndex, deviceKey, existingCalibration } = options;
@@ -36,20 +14,16 @@ const useTriggerCalibration = (options: UseTriggerCalibrationOptions) => {
   const [rawValue, setRawValue] = useState(0);
   const [rawByte, setRawByte] = useState<number | null>(null);
 
-  // Rest sampling
   const restSamplesRef = useRef<number[]>([]);
   const [restDone, setRestDone] = useState(false);
   const [restProgress, setRestProgress] = useState(0);
   const [baseValue, setBaseValue] = useState(existingCalibration?.base ?? 0);
 
-  // Max tracking
   const [maxValue, setMaxValue] = useState(existingCalibration?.max ?? 0);
   const maxRef = useRef(0);
 
-  // Review
   const [deadzone, setDeadzone] = useState(existingCalibration?.deadzone ?? DEFAULT_DEADZONE);
 
-  // Refs for step/restDone so the subscription callback always sees current values
   const stepRef = useRef<Step>(step);
   stepRef.current = step;
   const restDoneRef = useRef(restDone);
@@ -63,13 +37,13 @@ const useTriggerCalibration = (options: UseTriggerCalibrationOptions) => {
       setRawValue(val);
 
       if (state.rawBytes) {
-        const byteOffset = axisIndex === 4 ? 61 : axisIndex === 5 ? 62 : null;
+        const byteOffset = axisIndex === LEFT_TRIGGER_AXIS ? LEFT_TRIGGER_BYTE
+          : axisIndex === RIGHT_TRIGGER_AXIS ? RIGHT_TRIGGER_BYTE : null;
         if (byteOffset !== null && state.rawBytes.length > byteOffset) {
           setRawByte(state.rawBytes[byteOffset]);
         }
       }
 
-      // Rest sampling
       if (stepRef.current === 'rest' && !restDoneRef.current) {
         restSamplesRef.current.push(val);
         const count = restSamplesRef.current.length;
@@ -82,7 +56,6 @@ const useTriggerCalibration = (options: UseTriggerCalibrationOptions) => {
         }
       }
 
-      // Max tracking
       if (stepRef.current === 'max' && val > maxRef.current) {
         maxRef.current = val;
         setMaxValue(val);
@@ -99,17 +72,17 @@ const useTriggerCalibration = (options: UseTriggerCalibrationOptions) => {
     return (normalized - deadzone) / (1 - deadzone);
   }, [rawValue, baseValue, maxValue, deadzone]);
 
-  const resetRest = () => {
+  const resetRest = useCallback(() => {
     restSamplesRef.current = [];
     setRestDone(false);
     setRestProgress(0);
-  };
+  }, []);
 
-  const advanceToMax = () => {
+  const advanceToMax = useCallback(() => {
     maxRef.current = baseValue;
     setMaxValue(baseValue);
     setStep('max');
-  };
+  }, [baseValue]);
 
   return {
     step, setStep,
@@ -123,5 +96,4 @@ const useTriggerCalibration = (options: UseTriggerCalibrationOptions) => {
   };
 };
 
-export { useTriggerCalibration, DEFAULT_DEADZONE };
-export type { TriggerCalibrationData, Step };
+export { useTriggerCalibration };

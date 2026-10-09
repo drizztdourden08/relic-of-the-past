@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@ds/primitives';
+import type { ReportSectionProps } from '../controller-report.type';
 
-interface ReportSectionProps {
-  label: string;
-  text: string;
-}
-
-/** Collapsible text block, the same pattern as the bug report's debug-info preview. */
 const ReportSection = (props: ReportSectionProps) => {
   const { label, text } = props;
 

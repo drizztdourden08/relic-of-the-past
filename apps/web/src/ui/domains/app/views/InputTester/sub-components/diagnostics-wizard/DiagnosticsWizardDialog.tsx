@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * Gamepad diagnostics as a modal wizard: shut SDL down, pick a controller, byte capture (byte-capable
- * devices only), positional re-capture after the hold is restored, summary. Not dismissable by
- * backdrop, Escape or close while a run is in progress, since this wizard owns whether SDL is up;
- * only its own Cancel/Restart/Close actions, which always restore the hold.
- */
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { DialogShell } from '@ds/composites/DialogShell';
 import { Button } from '@ds/primitives';
 import type { HidWizardHandle } from '../HidCalibrationWizard';
@@ -27,24 +21,27 @@ const DiagnosticsWizardDialog = (props: DiagnosticsWizardDialogProps) => {
   const { handleCopyJson, handleSaveToDisk } = useSummaryExport(wizard.byteCapture, wizard.positionalRecords);
   const [copyStatus, flashCopy] = useFlashStatus();
   const [saveStatus, flashSave] = useFlashStatus();
+  const { finishAndClose, goNext } = wizard;
 
-  const handleClose = () => wizard.finishAndClose(onClose);
+  const handleClose = useCallback(() => finishAndClose(onClose), [finishAndClose, onClose]);
 
-  const handleByteCaptureNext = () => {
+  const handleByteCaptureNext = useCallback(() => {
     wizardRef.current?.finish();
-    wizard.goNext();
-  };
+    goNext();
+  }, [goNext]);
 
-  // Cancel appears on every step so a misbehaving step is never a dead end; it always restores the hold.
+  const handleSave = useCallback(() => handleSaveToDisk().then(flashSave), [handleSaveToDisk, flashSave]);
+  const handleCopy = useCallback(() => handleCopyJson().then(flashCopy), [handleCopyJson, flashCopy]);
+
   const cancel = <Button variant="danger" onClick={handleClose}>Cancel</Button>;
 
   const actions = wizard.step === 'summary' ? (
     <>
       <Button variant="secondary" onClick={wizard.restart}>Restart on another controller</Button>
-      <Button variant={saveStatus === 'error' ? 'danger' : 'tertiary'} onClick={() => handleSaveToDisk().then(flashSave)}>
+      <Button variant={saveStatus === 'error' ? 'danger' : 'tertiary'} onClick={handleSave}>
         {saveStatus === 'ok' ? 'Saved' : saveStatus === 'error' ? 'Failed' : 'Write to disk'}
       </Button>
-      <Button variant={copyStatus === 'error' ? 'danger' : 'tertiary'} onClick={() => handleCopyJson().then(flashCopy)}>
+      <Button variant={copyStatus === 'error' ? 'danger' : 'tertiary'} onClick={handleCopy}>
         {copyStatus === 'ok' ? 'Copied' : copyStatus === 'error' ? 'Failed' : 'Copy JSON'}
       </Button>
       <Button variant="primary" onClick={handleClose}>Close</Button>

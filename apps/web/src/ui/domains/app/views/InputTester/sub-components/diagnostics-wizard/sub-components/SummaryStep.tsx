@@ -1,19 +1,7 @@
 /* @layer renderer-components @kind component */
-/** Final step: the byte-level capture and the positional capture side by
- *  side (the latter absent when the chosen controller has no byte
- *  capability and that step never ran). The four actions this step holds
- *  live in the dialog's own footer, the same place every other step's
- *  Back/Next buttons live. */
 import { Box, Text } from '@ds/primitives';
-import type { HidControllerMap } from '../../HidCalibrationWizard';
-import type { PositionalCaptureRecord } from '../positional-capture/positional-capture.type';
 import { ReportSection } from '../../controller-report/sub-components/ReportSection';
-
-interface SummaryStepProps {
-  byteCapture: HidControllerMap | null;
-  hasByteCapability: boolean;
-  positionalRecords: PositionalCaptureRecord[];
-}
+import type { SummaryStepProps } from './diagnostics-steps.type';
 
 const SummaryStep = (props: SummaryStepProps) => {
   const { byteCapture, hasByteCapability, positionalRecords } = props;

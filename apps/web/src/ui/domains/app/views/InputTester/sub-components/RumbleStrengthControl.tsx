@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Per-device rumble multiplier on top of the family strength curve (see
- * shared/input/family/vibration-shaping.ts). Neutral at 1, persisted per device key.
- */
 import { useCallback, useEffect, useState } from 'react';
 import { getPlatform } from '@app/platform/get-platform';
 import { readRumbleStrength, writeRumbleStrength } from '@shared/storage/rumble-strength';
@@ -13,10 +9,7 @@ import {
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { NumberInput } from '../../../../../design-system/primitives/NumberInput';
-
-interface RumbleStrengthControlProps {
-  deviceKey: string;
-}
+import type { RumbleStrengthControlProps } from './RumbleStrengthControl.type';
 
 const RumbleStrengthControl = ({ deviceKey }: RumbleStrengthControlProps) => {
   const [strength, setStrength] = useState<number>(() => getCachedRumbleStrength(deviceKey));
@@ -55,4 +48,3 @@ const RumbleStrengthControl = ({ deviceKey }: RumbleStrengthControlProps) => {
 };
 
 export { RumbleStrengthControl };
-export type { RumbleStrengthControlProps };

@@ -1,16 +1,8 @@
 /* @layer renderer-components @kind hook */
-/** Copy-to-clipboard and debug-folder save for the summary step's combined
- *  payload: the byte capture and the positional records together, exactly
- *  what the summary step displays. */
 import { useCallback } from 'react';
 import type { HidControllerMap } from '../../HidCalibrationWizard';
 import type { PositionalCaptureRecord } from '../positional-capture/positional-capture.type';
-
-interface SummaryPayload {
-  createdAt: number;
-  byteCapture: HidControllerMap | null;
-  positionalCapture: PositionalCaptureRecord[];
-}
+import type { SummaryPayload } from '../diagnostics-wizard.type';
 
 const useSummaryExport = (byteCapture: HidControllerMap | null, positionalRecords: PositionalCaptureRecord[]) => {
   const buildPayload = useCallback((): SummaryPayload => ({

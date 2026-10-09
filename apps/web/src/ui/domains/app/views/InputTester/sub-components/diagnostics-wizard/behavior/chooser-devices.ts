@@ -1,41 +1,10 @@
 /* @layer renderer-components @kind logic */
-/**
- * Step 2's device list is the union of two sources, because neither alone is
- * honest about what is connected:
- *  - the raw HID enumeration (see HidListedDevice), which works while SDL's
- *    gamepad backend is released (step 1 onward), but a controller read
- *    through XInput and not HID (most Xbox-style pads) never appears
- *    here at all;
- *  - the SDL-claimed snapshot taken BEFORE step 1 releases the hold, the
- *    only source that ever sees an XInput-only pad, since SDL's own gamepad
- *    backend claims those independently of HID.
- * Byte capability is derived structurally from membership in the first list,
- * never from a vendor/product id: present there means a raw HID open can
- * reach the device, absent means it cannot.
- */
 import type { DeviceEntry, HidListedDevice } from '@shared/ipc';
-
-interface ChooserDevice {
-  deviceKey: string;
-  vendorId: number;
-  productId: number;
-  /** Present only for a device the controller layer had claimed before the
-   *  run released it. The raw enumeration reports no name of its own. */
-  name?: string;
-  /** Captured before the run released the hold; the mapping table cannot be
-   *  queried while the gamepad subsystem is down. */
-  mapping?: string;
-  product: string;
-  busType: DeviceEntry['busType'];
-  hasByteCapability: boolean;
-  sdlId?: number;
-  guid?: string;
-  hasGyro?: boolean;
-  hasRumble?: boolean;
-}
+import type { ChooserDevice } from '../diagnostics-wizard.type';
+import { toHex4 } from './to-hex4';
 
 const vidPidKey = (vendorId: number, productId: number): string =>
-  `${vendorId.toString(16).padStart(4, '0')}:${productId.toString(16).padStart(4, '0')}`;
+  `${toHex4(vendorId)}:${toHex4(productId)}`;
 
 const buildChooserDevices = (
   hidListed: readonly HidListedDevice[],
@@ -68,5 +37,5 @@ const buildChooserDevices = (
   return Array.from(byKey.values());
 };
 
-export { buildChooserDevices, vidPidKey };
+export { buildChooserDevices };
 export type { ChooserDevice };

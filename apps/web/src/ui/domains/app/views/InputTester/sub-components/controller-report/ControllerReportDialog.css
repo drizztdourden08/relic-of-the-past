@@ -13,7 +13,6 @@
   min-width: 60rem;
 }
 
-/* Header (title + step strip) and footer (actions) stay put; only the body scrolls. */
 .controller-report .dialog__header,
 .controller-report .dialog__actions {
   flex-shrink: 0;

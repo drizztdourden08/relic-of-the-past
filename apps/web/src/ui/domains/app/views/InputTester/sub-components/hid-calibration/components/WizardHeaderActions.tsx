@@ -1,21 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * Header action buttons for the byte-capture screen: copy/save/finish/cancel.
- * Split out of HidCalibrationWizard.tsx for file-size compliance.
- */
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../../design-system/primitives/Button';
-import type { FlashStatus } from '../hooks/useFlashStatus';
-
-interface WizardHeaderActionsProps {
-  copyStatus: FlashStatus;
-  saveStatus: FlashStatus;
-  capturedCount: number;
-  onCopyJson: () => void;
-  onSaveDebugFile: () => void;
-  onFinish: () => void;
-  onCancel: () => void;
-}
+import type { WizardHeaderActionsProps } from './WizardHeaderActions.type';
 
 const WizardHeaderActions = (props: WizardHeaderActionsProps) => {
   const { copyStatus, saveStatus, capturedCount, onCopyJson, onSaveDebugFile, onFinish, onCancel } = props;

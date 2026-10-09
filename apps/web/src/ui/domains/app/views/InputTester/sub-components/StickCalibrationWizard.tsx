@@ -1,4 +1,4 @@
-/* @layer renderer-components @kind component */
+/* @layer renderer-components @kind barrel */
 
-export { StickCalibrationWizard, applyCalibration } from './stick-calibration';
+export { StickCalibrationWizard } from './stick-calibration';
 export type { DeviceStickCalibration, StickCalibrationData, StickCal } from './stick-calibration';

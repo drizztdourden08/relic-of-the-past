@@ -1,46 +1,22 @@
-/* @layer renderer-components @kind data */
-/**
- * Live byte grid visualization for the HID Calibration Wizard.
- */
+/* @layer renderer-components @kind component */
 import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
-import type { ByteStatus, GyroState } from '../hid-calibration.type';
 import { hex } from '../hid-analysis';
-import type { ByteColorResult } from '../wizard-helpers';
-import { ByteChangeDot, rampColor } from './ByteChangeDot';
+import { ByteChangeDot } from './ByteChangeDot';
+import { rampColor } from './ramp-color';
+import type { ByteGridProps } from './ByteGrid.type';
 
-// Categorical data-viz swatch colors (fixed hues that ENCODE byte roles, not theme colors).
-const SWATCH: Record<string, CSSProperties> = {
+const swatch: Record<string, CSSProperties> = {
   unknown: { background: '#4a5568' },
   excluded: { background: '#555' },
   stick: { background: '#38bdf8' },
   trigger: { background: '#fb923c' },
   button: { background: '#4ade80' },
-  // Reads as the indicator itself: green at rest, red at full travel.
   changed: { background: `linear-gradient(90deg, ${rampColor(0)}, ${rampColor(0.5)}, ${rampColor(1)})` },
   gyro: { background: '#f87171' },
   selected: { background: '#c084fc' },
 };
-
-interface ByteGridProps {
-  latestBytes: Uint8Array;
-  byteStatuses: ByteStatus[];
-  gyroState: GyroState;
-  stickPickMode: boolean;
-  stickPickedBytes: number[];
-  triggerPickMode: boolean;
-  triggerPickedByte: number | null;
-  inputPhaseActive: boolean;
-  lastReportId: number;
-  baselineRef: React.MutableRefObject<Uint8Array>;
-  excludedRef: React.MutableRefObject<Set<number>>;
-  itemsRef: React.MutableRefObject<{ id: string; label: string; status: string }[]>;
-  activeIdxRef: React.MutableRefObject<number>;
-  inputPhaseActiveRef: React.MutableRefObject<boolean>;
-  getByteColor: (idx: number) => ByteColorResult;
-  onByteClick: (idx: number) => void;
-}
 
 const ByteGrid = (props: ByteGridProps) => {
   const {
@@ -58,7 +34,6 @@ const ByteGrid = (props: ByteGridProps) => {
           const colors = getByteColor(i);
           const hasBaseline = baselineRef.current.length > i;
           const delta = hasBaseline && !excludedRef.current.has(i) ? b - baselineRef.current[i] : 0;
-          // Only an axis byte's sign means anything; a bitmask just differs.
           const signed = byteStatuses[i] === 'stick' || byteStatuses[i] === 'trigger';
           const isPicked = (stickPickMode && stickPickedBytes.includes(i)) || (triggerPickMode && triggerPickedByte === i);
           const pickHighlight = (stickPickMode || triggerPickMode) && !isPicked;
@@ -88,20 +63,20 @@ const ByteGrid = (props: ByteGridProps) => {
       </Box>
       {latestBytes.length === 0 && <Box className="hid-cal__desc">Waiting for HID reports...</Box>}
       <Box className="hid-cal__byte-legend">
-        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.unknown} /> Unknown</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.excluded} /> Excluded</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.stick} /> Stick</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.trigger} /> Trigger</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.button} /> Button</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.changed} /> Changed (top edge, by amount)</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={swatch.unknown} /> Unknown</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={swatch.excluded} /> Excluded</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={swatch.stick} /> Stick</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={swatch.trigger} /> Trigger</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={swatch.button} /> Button</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={swatch.changed} /> Changed (top edge, by amount)</Text>
         {gyroState === 'recording' && (
-          <Text><Text className="hid-cal__legend-swatch" style={SWATCH.gyro} /> Gyro</Text>
+          <Text><Text className="hid-cal__legend-swatch" style={swatch.gyro} /> Gyro</Text>
         )}
         {stickPickMode && (
-          <Text><Text className="hid-cal__legend-swatch" style={SWATCH.selected} /> Selected</Text>
+          <Text><Text className="hid-cal__legend-swatch" style={swatch.selected} /> Selected</Text>
         )}
         {triggerPickMode && (
-          <Text><Text className="hid-cal__legend-swatch" style={SWATCH.selected} /> Selected</Text>
+          <Text><Text className="hid-cal__legend-swatch" style={swatch.selected} /> Selected</Text>
         )}
       </Box>
     </Box>

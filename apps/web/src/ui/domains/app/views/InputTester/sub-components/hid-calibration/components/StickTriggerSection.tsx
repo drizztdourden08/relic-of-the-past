@@ -1,17 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * Sticks + triggers calibration cards, shown once the gyro/idle prereqs are
- * done. Split out of HidCalibrationWizard.tsx for file-size compliance.
- * Takes the whole wizard state bag since it is purely a wiring layer between
- * useHidCalibration and StickCards/TriggerCards.
- */
-import type { useHidCalibration } from '../hooks';
 import { StickCards } from './StickCards';
 import { TriggerCards } from './TriggerCards';
-
-interface StickTriggerSectionProps {
-  wiz: ReturnType<typeof useHidCalibration>;
-}
+import type { StickTriggerSectionProps } from './StickTriggerSection.type';
 
 const StickTriggerSection = (props: StickTriggerSectionProps) => {
   const { wiz } = props;

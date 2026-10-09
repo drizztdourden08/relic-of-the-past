@@ -1,12 +1,9 @@
 /* @layer renderer-components @kind hook */
-/**
- * Trigger calibration action handlers for the HID Calibration Wizard.
- * Split out of useCalibrationActions.ts for file-size compliance.
- */
 import { useCallback } from 'react';
 import type { HidButtonMapping, StickCandidate, TriggerSide } from '../hid-calibration.type';
-import type { ActionDeps } from './action-deps';
+import type { ActionDeps } from './action-deps.type';
 import { finalizeDigitalTrigger, finalizeTriggerCalibration, resetTrigger } from '../stick-trigger-handlers';
+import { BYTE_MAX } from '../hid-calibration.constants';
 
 const useTriggerActions = (d: ActionDeps) => {
   const finalizeTrigger = useCallback((c: StickCandidate) => {
@@ -23,7 +20,7 @@ const useTriggerActions = (d: ActionDeps) => {
 
   const handleStartTrigger = useCallback((side: TriggerSide) => {
     d.activeTriggerRef.current = side; d.setActiveTrigger(side); const len = d.baselineRef.current.length;
-    d.triggerMinsRef.current = new Uint8Array(len).fill(255); d.triggerMaxsRef.current = new Uint8Array(len).fill(0);
+    d.triggerMinsRef.current = new Uint8Array(len).fill(BYTE_MAX); d.triggerMaxsRef.current = new Uint8Array(len).fill(0);
     d.triggerSamplesRef.current = 0; d.triggerStableCountRef.current = 0; d.triggerLastTopRef.current = ''; d.triggerBufferRef.current = [];
     d.triggerRecordingRef.current = true; d.setTriggerBusy(true); d.setTriggerLiveInfo('Press the trigger fully and release...');
     d.addLog(`Recording ${side === 'left' ? 'LEFT' : 'RIGHT'} trigger. Press fully and release a few times.`);
@@ -47,7 +44,7 @@ const useTriggerActions = (d: ActionDeps) => {
   const handleConfirmTriggerPick = useCallback(() => {
     if (d.triggerPickedByte === null) return;
     const bl = d.baselineRef.current; const mins = d.triggerMinsRef.current; const maxs = d.triggerMaxsRef.current; const bytes = d.latestBytes; const i = d.triggerPickedByte;
-    const c: StickCandidate = { idx: i, range: mins.length > i ? maxs[i] - mins[i] : 0, min: mins.length > i ? mins[i] : 0, max: maxs.length > i ? maxs[i] : 255, center: bl.length > i ? bl[i] : (bytes.length > i ? bytes[i] : 0) };
+    const c: StickCandidate = { idx: i, range: mins.length > i ? maxs[i] - mins[i] : 0, min: mins.length > i ? mins[i] : 0, max: maxs.length > i ? maxs[i] : BYTE_MAX, center: bl.length > i ? bl[i] : (bytes.length > i ? bytes[i] : 0) };
     d.setTriggerPickMode(false); d.setTriggerPickedByte(null); d.finalizeTriggerRef.current(c);
   }, [d.triggerPickedByte, d.latestBytes]);
 
