@@ -1,21 +1,10 @@
 /* @layer renderer-components @kind logic */
-/**
- * A music pack's listing without its audio: the zip directory from the end of the file, then
- * the manifest entry. A track's bytes are read later, only when its play button is pressed.
- */
 import { readZipDirectory, entryData } from '@shared/store/manifest/zip-directory';
-import type { ZipEntry } from '@shared/store/manifest/zip-directory';
 import { STORE_LIMITS } from '@shared/store/limits';
 import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
 import { parseManifest } from '@shared/storage/msu-edit';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import type { PackSource } from '../../../pack-source.type';
-
-type MusicPack = {
-  manifest: MsuPackManifest;
-  /** Every archive entry by name, for reading a file on demand. */
-  entries: ReadonlyMap<string, ZipEntry>;
-};
+import type { MusicPack } from '../PackContents.type';
 
 const readMusicPack = async (source: PackSource): Promise<MusicPack> => {
   const list = await readZipDirectory(source);
@@ -28,4 +17,3 @@ const readMusicPack = async (source: PackSource): Promise<MusicPack> => {
 };
 
 export { readMusicPack };
-export type { MusicPack };

@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The dialogue, read only: a search over the whole set, then the entry list. An open entry
- * reads as prose, or as the player meets it in the game's box when the set has a font.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, EmptyState, SectionHeader, TextInput } from '@ds/primitives';
 import { EntryListItem } from '../../../entry';
@@ -13,15 +9,7 @@ import { useTranslationSearch } from '../../../../behavior/useTranslationSearch'
 import { filterEntriesByHits } from '../../../../behavior/entry-selectors';
 import { MODES_WITH_FONT, MODES_WITHOUT_FONT } from '../../DialogueBrowser.constants';
 import type { ChangeEvent } from 'react';
-import type { LanguageSet } from '@shared/game/language';
-import type { SetFontAssets } from '../../../../behavior/set-font-assets';
-import type { SetVariables } from '../../../../behavior/useSetVariables';
-
-type DialogueListProps = {
-  set: LanguageSet;
-  font: SetFontAssets | null;
-  vars: SetVariables;
-};
+import type { DialogueListProps } from '../../DialogueBrowser.type';
 
 const DialogueList = (props: DialogueListProps) => {
   const { set, font, vars } = props;
@@ -77,4 +65,3 @@ const DialogueList = (props: DialogueListProps) => {
 };
 
 export { DialogueList };
-export type { DialogueListProps };

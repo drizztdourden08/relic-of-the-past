@@ -1,17 +1,9 @@
 /* @layer renderer-components @kind hook */
-/**
- * Full-set search: dialogue text and notes, chips, glossary keys and values,
- * and every name-table value. Case-insensitive substring matching; the query
- * is debounced before it reaches the memoized scan.
- */
 import { useEffect, useMemo, useState } from 'react';
 import type { LanguageSet } from '@shared/game/language';
 import type { TranslationSearchState } from './translation-search.type';
 import { findTranslationHits } from './find-translation-hits';
-
-const SEARCH_DEBOUNCE_MS = 180;
-
-const NO_HITS: TranslationSearchState['hits'] = [];
+import { NO_HITS, SEARCH_DEBOUNCE_MS } from './language-behavior.constants';
 
 const useTranslationSearch = (set: LanguageSet | null, query: string): TranslationSearchState => {
   const typed = query.trim();
@@ -30,4 +22,4 @@ const useTranslationSearch = (set: LanguageSet | null, query: string): Translati
   return { hits, count: hits.length, applied, pending: applied !== typed };
 };
 
-export { SEARCH_DEBOUNCE_MS, useTranslationSearch };
+export { useTranslationSearch };

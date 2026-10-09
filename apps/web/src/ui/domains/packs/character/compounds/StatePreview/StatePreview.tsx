@@ -4,21 +4,10 @@ import { Text } from '@ds/primitives/Text';
 import { Badge } from '@ds/primitives/Badge';
 import { PoseCanvas } from '../PoseCanvas';
 import { facingsOf, framesOf, FACING_LABELS } from '@shared/game/data/native-tables/player-pose-atlas';
-import type { PoseState } from '@shared/game/data/native-tables/player-pose-atlas.type';
 import { labelFor } from '@shared/game/data/native-tables/player-state-labels';
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
-import type { ResolvedRow } from '@app/lib/game/player-sheet/resolve-palette';
+import type { StatePreviewProps } from './StatePreview.type';
 import './StatePreview.css';
 
-interface StatePreviewProps {
-  sheet: PlayerSheet;
-  row: ResolvedRow;
-  state: PoseState;
-  tick: number;
-  scale: number;
-}
-
-/** One state, every facing it distinguishes, each looping on the shared clock. */
 const StatePreview = (props: StatePreviewProps) => {
   const { sheet, row, state, tick, scale } = props;
   const meta = labelFor(state.action);
@@ -52,4 +41,3 @@ const StatePreview = (props: StatePreviewProps) => {
 };
 
 export { StatePreview };
-export type { StatePreviewProps };

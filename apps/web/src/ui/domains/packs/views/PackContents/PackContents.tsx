@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * What is inside a pack, drawn by the viewer for its kind: the track list, the sprite sheet or
- * the dialogue. The one piece of the packs domain that reads, and only through the source it is
- * handed, so the app and the store show a pack the same way wherever its bytes live.
- */
 import { Box } from '@ds/primitives';
 import { MusicContents } from './sub-components/MusicContents';
 import { CharacterContents } from './sub-components/CharacterContents';

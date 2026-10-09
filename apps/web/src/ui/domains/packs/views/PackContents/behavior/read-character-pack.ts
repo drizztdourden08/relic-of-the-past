@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind logic */
-/** A character pack's sheet. The `.rsp` carries its own palettes, so no ROM is needed to draw it. */
 import { parseRsp } from '@shared/storage/link-sprites/parse-rsp';
 import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
 import type { PackSource } from '../../../pack-source.type';

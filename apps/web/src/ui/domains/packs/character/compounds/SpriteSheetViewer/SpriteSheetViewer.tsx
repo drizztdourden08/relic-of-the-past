@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * A player sprite sheet, read only: what it wears, one state with every facing, every state at
- * once, or the raw tile grid, all on one animation clock. The Studio draws its sheet through
- * this and puts its palette editor in `aside`; the store draws a pack's sheet through it.
- */
 import { useEffect, useMemo, useState } from 'react';
 import { Box } from '@ds/primitives';
 import { stateFor } from '@shared/game/data/native-tables/player-pose-atlas';
@@ -34,8 +29,6 @@ const SpriteSheetViewer = (props: SpriteSheetViewerProps) => {
   const state = useMemo(() => stateFor(action), [action]);
   const row = useMemo(() => resolvePalette(sheet, wearing.wearing), [sheet, wearing.wearing]);
 
-  // Selecting the bunny art without its own palette reads as a bug, not a choice,
-  // so picking that state moves the outfit with it.
   useEffect(() => {
     if (action === BUNNY_ACTION) setOutfit('bunny');
   }, [action, setOutfit]);

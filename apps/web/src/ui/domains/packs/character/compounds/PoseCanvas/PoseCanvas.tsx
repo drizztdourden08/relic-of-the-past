@@ -2,27 +2,12 @@
 import { useRef, useEffect } from 'react';
 import { Canvas } from '@ds/primitives/Canvas';
 import { poseCanvasSize, framesOf } from '@shared/game/data/native-tables/player-pose-atlas';
-import type { PoseState } from '@shared/game/data/native-tables/player-pose-atlas.type';
-import type { Facing } from '@shared/game/data/native-tables/player-pose-atlas';
-import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
 import { composeFrame } from '@app/lib/game/player-sheet/compose-frame';
-import type { ResolvedRow } from '@app/lib/game/player-sheet/resolve-palette';
+import type { PoseCanvasProps } from './PoseCanvas.type';
 import './PoseCanvas.css';
-
-interface PoseCanvasProps {
-  sheet: PlayerSheet;
-  row: ResolvedRow;
-  state: PoseState;
-  facing: Facing;
-  /** Shared clock; the canvas takes it modulo its own frame count. */
-  tick: number;
-  scale: number;
-  className?: string;
-}
 
 const { width, height, originX, originY } = poseCanvasSize();
 
-/** One facing of one state, drawn at the shared clock's current frame. */
 const PoseCanvas = (props: PoseCanvasProps) => {
   const { sheet, row, state, facing, tick, scale, className = '' } = props;
   const ref = useRef<HTMLCanvasElement>(null);
@@ -61,4 +46,3 @@ const PoseCanvas = (props: PoseCanvasProps) => {
 };
 
 export { PoseCanvas };
-export type { PoseCanvasProps };

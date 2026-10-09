@@ -1,25 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The entry as the player meets it: one real box at a time, drawn with the
- * pack's own pixels, advanced by pressing the box.
- *
- * It holds exactly two pieces of state: which box is showing, and the sample
- * values standing in for the engine's own substitutions. The samples are
- * editable because they change the answer: a six-glyph name and a one-glyph name
- * are different rows, and "does this fit" is the question this view is being
- * asked. They default to the shared worst-case stand-ins, so the first look is
- * the cautious one.
- *
- * Everything about what is ON each box comes from `preview-screens.ts`, which
- * reads the engine's own walk. In particular a later box shows the rows it
- * INHERITS, dimmed: the pixel buffer is cleared once per message and never
- * again, so those rows really are still there, and a preview that dropped them
- * would be showing a screen the game never draws.
- *
- * The box is the button: it is focusable, focused when the mode opens, and
- * reacts to a click, Space or Enter. A box carrying a choice prompt also moves
- * its cursor with the arrow keys (`usePreviewControls`).
- */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, EmptyState, Text, TextInput } from '@ds/primitives';
 import { MAX_NAME_GLYPHS } from '@shared/game/language';
@@ -29,22 +8,10 @@ import { PreviewPrompt } from './PreviewPrompt';
 import { previewScreens } from './preview-screens';
 import { usePreviewControls } from './behavior/usePreviewControls';
 import type { ChangeEvent } from 'react';
-import type { BlockDoc, GlossaryTerm, GlyphMetrics, GlyphSheet } from '@shared/game/language';
-import type { PreviewScreen } from './preview-screens';
+import { LOADING_MESSAGE, NO_SCREENS_MESSAGE } from './preview.constants';
+import type { PreviewScreen, PreviewViewProps } from './preview.type';
 import './PreviewView.css';
 
-type PreviewViewProps = {
-  blocks: BlockDoc;
-  /** Every variable carrying literal text, so a reference can be expanded. */
-  terms: GlossaryTerm[];
-  metrics: GlyphMetrics | null;
-  sheet: GlyphSheet | null;
-};
-
-const NO_SCREENS_MESSAGE = 'This entry cannot be drawn until its unresolved variables are fixed.';
-const LOADING_MESSAGE = 'Reading this set\'s font...';
-
-/** The row the cursor sits on for this box and selection, or null without a prompt. */
 const cursorRowOf = (screen: PreviewScreen | undefined, selected: number): number | null => {
   if (screen === undefined || screen.choice === null) return null;
   const { rows } = screen.choice;
@@ -153,4 +120,3 @@ const PreviewView = (props: PreviewViewProps) => {
 };
 
 export { PreviewView };
-export type { PreviewViewProps };

@@ -1,16 +1,7 @@
 /* @layer renderer-components @kind hook */
-/**
- * Runs one pack reader against a source and holds the result. A new source starts over, and a
- * read that finishes after its source was replaced is dropped.
- */
 import { useEffect, useState } from 'react';
 import type { PackSource } from '../../../pack-source.type';
-
-type PackRead<T> = {
-  data: T | null;
-  error: string | null;
-  loading: boolean;
-};
+import type { PackRead } from '../PackContents.type';
 
 const usePackRead = <T,>(source: PackSource, read: (source: PackSource) => Promise<T>): PackRead<T> => {
   const [state, setState] = useState<PackRead<T>>({ data: null, error: null, loading: true });
@@ -33,4 +24,3 @@ const usePackRead = <T,>(source: PackSource, read: (source: PackSource) => Promi
 };
 
 export { usePackRead };
-export type { PackRead };

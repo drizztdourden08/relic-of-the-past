@@ -1,26 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * The metadata for one open entry: a label/value list, with the validation
- * problems underneath.
- *
- * It sits above the three views, not inside any of them, because it is
- * true of the entry however the entry is being shown. Reading, editing and
- * previewing all want to know who says the line.
- *
- * Every value comes in already worded (`entry-meta.model.ts`); this is layout
- * and nothing else. A value stating an ABSENCE is styled as one, so "not
- * recorded" cannot be mistaken for a fact.
- */
 import { Badge, Box, Text } from '@ds/primitives';
-import type { MetaRow } from './entry-meta.model';
+import type { EntryMetaPanelProps, MetaRow } from './entry.type';
 import './EntryMetaPanel.css';
-
-type EntryMetaPanelProps = {
-  rows: MetaRow[];
-  /** Already-worded validation problems; empty when the entry is clean. */
-  issues: string[];
-  /** Measured rows, one fit bar each. Empty while the font is still loading. */
-};
 
 const cellClass = (row: MetaRow): string => [
   'entry-meta__value',
@@ -55,4 +36,3 @@ const EntryMetaPanel = (props: EntryMetaPanelProps) => {
 };
 
 export { EntryMetaPanel };
-export type { EntryMetaPanelProps };

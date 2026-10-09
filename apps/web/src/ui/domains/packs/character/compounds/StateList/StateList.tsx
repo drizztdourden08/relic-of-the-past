@@ -6,17 +6,10 @@ import { TextInput } from '@ds/primitives/TextInput';
 import { Button } from '@ds/primitives/Button';
 import { POSE_ATLAS, facingsOf, framesOf } from '@shared/game/data/native-tables/player-pose-atlas';
 import { STATE_LABELS, GROUP_LABELS, labelFor } from '@shared/game/data/native-tables/player-state-labels';
-import type { StateGroup } from '@shared/game/data/native-tables/player-state-labels';
+import { GROUP_ORDER } from './StateList.constants';
+import type { StateListProps } from './StateList.type';
 import './StateList.css';
 
-interface StateListProps {
-  selected: number;
-  onSelect: (action: number) => void;
-}
-
-const GROUP_ORDER: readonly StateGroup[] = ['movement', 'combat', 'carrying', 'water', 'hazard', 'special'];
-
-/** Every action the engine can draw, grouped and filterable. */
 const StateList = (props: StateListProps) => {
   const { selected, onSelect } = props;
   const [filter, setFilter] = useState('');
@@ -64,4 +57,3 @@ const StateList = (props: StateListProps) => {
 };
 
 export { StateList };
-export type { StateListProps };

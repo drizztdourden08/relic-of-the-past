@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Inside the card, under its row, so a playing file reads as one object. */
 .msu-file-player {
   display: flex;
   flex-direction: column;

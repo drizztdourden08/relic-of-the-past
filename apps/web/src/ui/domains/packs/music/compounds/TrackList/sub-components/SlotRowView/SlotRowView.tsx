@@ -1,18 +1,7 @@
 /* @layer renderer-components @kind component */
-/** One slot: its number, its name, how many layers it has, and every file it plays. */
 import { Badge, Box, Text } from '@ds/primitives';
 import { SlotFile } from '../SlotFile';
-import type { Audition } from '../../../../behavior/file-audition';
-import type { SlotRow } from '../../TrackList.type';
-
-type SlotRowViewProps = {
-  row: SlotRow;
-  playing: string | null;
-  loading: string | null;
-  audition: Audition | null;
-  notes: ReadonlyMap<string, string>;
-  onPlay: (fileName: string) => void;
-};
+import type { SlotRowViewProps } from '../../TrackList.type';
 
 const SlotRowView = (props: SlotRowViewProps) => {
   const { row, playing, loading, audition, notes, onPlay } = props;
@@ -41,4 +30,3 @@ const SlotRowView = (props: SlotRowViewProps) => {
 };
 
 export { SlotRowView };
-export type { SlotRowViewProps };

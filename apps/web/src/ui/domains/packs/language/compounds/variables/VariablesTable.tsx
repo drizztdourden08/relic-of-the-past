@@ -1,48 +1,13 @@
 /* @layer renderer-components @kind component */
-/**
- * The set's substitution list. ONE list, in place of the glossary and the menu
- * name table that came before it.
- *
- * The two old tables looked alike, could not reach each other, and forced a
- * translator to know which of them a given piece of text lived in before they
- * could change it. Everything that varies in shown text is now one row here,
- * whether it is theirs to change or the game's, and `kind` is a filter, not
- * a second table.
- *
- * Presentational. The rows arrive already filtered and counted; every edit,
- * addition, removal and the scan are reported upward. Without `onChangeValue`
- * the table is read only, and each missing handler hides its own control.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Button, EmptyState, SectionHeader, SegmentedControl, TextInput } from '@ds/primitives';
 import { VariableRow } from './VariableRow';
-import { countByFilter, FILTER_ORDER, FILTER_WORDS } from './variable-groups';
+import { countByFilter } from './variable-groups/count-by-filter';
+import { FILTER_ORDER, FILTER_WORDS } from './variables.constants';
 import type { ChangeEvent } from 'react';
 import type { SegmentOption } from '@ds/primitives';
-import type { GlossaryTerm, Variable } from '@shared/game/language';
-import type { VariableFilter } from './variable-groups';
+import type { VariableFilter, VariablesTableProps } from './variables.type';
 import './VariablesTable.css';
-
-type VariablesTableProps = {
-  /** The whole list, unfiltered, since the filter lives here. */
-  variables: Variable[];
-  /** Already-filtered rows to draw. */
-  rows: Variable[];
-  /** Entries referencing each key. */
-  used: Record<string, number>;
-  filter: VariableFilter;
-  query: string;
-  onFilterChange: (filter: VariableFilter) => void;
-  onQueryChange: (query: string) => void;
-  /** Absent for a read-only table: values show as text. */
-  onChangeValue?: (variable: Variable, value: string) => void;
-  /** Absent hides the add row. */
-  onAddTerm?: (term: GlossaryTerm) => void;
-  /** Absent hides every remove button. */
-  onRemoveTerm?: (key: string) => void;
-  /** Absent hides the scan button. */
-  onFindHardcoded?: () => void;
-};
 
 const VariablesTable = (props: VariablesTableProps) => {
   const {
@@ -132,4 +97,3 @@ const VariablesTable = (props: VariablesTableProps) => {
 };
 
 export { VariablesTable };
-export type { VariablesTableProps };

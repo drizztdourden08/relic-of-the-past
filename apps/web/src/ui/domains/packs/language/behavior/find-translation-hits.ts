@@ -1,20 +1,11 @@
 /* @layer renderer-components @kind logic */
-/**
- * Pure full-set text search for a lowercased needle. Dialogue is searched on
- * its concatenated `text` runs, so a control code mid-sentence never breaks a
- * match; chips (control-code names, references) are searched separately and
- * reported as their own field.
- */
 import type { DialogueEntry, LanguageSet, Token } from '@shared/game/language';
 import type { SearchHit } from './translation-search.type';
+import { PREVIEW_SPAN } from './language-behavior.constants';
 
-const PREVIEW_SPAN = 56;
-
-/** The tokens' visible text, exactly what a text search should see. */
 const plainTextOf = (tokens: Token[]): string =>
   tokens.reduce((acc, token) => (token.t === 'text' ? acc + token.v : acc), '');
 
-/** The searchable name of a non-text token, or null for a plain line break. */
 const chipNameOf = (token: Token): string | null => {
   if (token.t === 'cmd') return token.name;
   if (token.t === 'ref') return token.key;
@@ -22,7 +13,6 @@ const chipNameOf = (token: Token): string | null => {
   return null;
 };
 
-/** A single-line window around the match, elided on whichever side is cut. */
 const excerpt = (text: string, at: number): string => {
   const flat = text.replace(/\s+/g, ' ');
   if (flat.length <= PREVIEW_SPAN) return flat;
@@ -85,14 +75,13 @@ const nameHits = (set: LanguageSet, needle: string): SearchHit[] => {
   return found;
 };
 
-/** Every hit for an already-lowercased, already-trimmed needle. */
-const findTranslationHits = (set: LanguageSet, needle: string): SearchHit[] => {
-  if (needle.length === 0) return [];
+const findTranslationHits = (set: LanguageSet, lowercaseTrimmedNeedle: string): SearchHit[] => {
+  if (lowercaseTrimmedNeedle.length === 0) return [];
   const found: SearchHit[] = [];
-  for (const entry of set.dialogue) found.push(...dialogueHits(entry, needle));
-  found.push(...glossaryHits(set, needle));
-  found.push(...nameHits(set, needle));
+  for (const entry of set.dialogue) found.push(...dialogueHits(entry, lowercaseTrimmedNeedle));
+  found.push(...glossaryHits(set, lowercaseTrimmedNeedle));
+  found.push(...nameHits(set, lowercaseTrimmedNeedle));
   return found;
 };
 
-export { findTranslationHits, plainTextOf };
+export { findTranslationHits };

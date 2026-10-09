@@ -1,31 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * One variable: its key, what kind it is, its value, how many entries use it,
- * and whether the value is the translator's to change.
- *
- * LOCKED means the game owns the value, not that the variable is unavailable.
- * The engine substitutes a save file's name field and one digit of a live
- * counter itself, so there is nothing to translate. A line may still reference
- * either, and the picker still offers both. So the row shows the note
- * instead of a field, marks itself locked, and stays exactly as insertable as
- * every other row. Hiding it would only make a translator wonder where the
- * player's name went.
- */
 import { useCallback } from 'react';
 import { Badge, Box, IconButton, Text, TextInput } from '@ds/primitives';
-import { KIND_WORDS } from './variable-groups';
+import { KIND_WORDS } from './variables.constants';
 import type { ChangeEvent } from 'react';
-import type { Variable } from '@shared/game/language';
-
-type VariableRowProps = {
-  variable: Variable;
-  /** Entries that reference this key. */
-  used: number;
-  /** Absent for a read-only row: the value shows as text. */
-  onChangeValue?: (variable: Variable, value: string) => void;
-  /** Absent for a row that cannot be removed (engine-owned, or a menu slot). */
-  onRemove?: (key: string) => void;
-};
+import type { VariableRowProps } from './variables.type';
 
 const VariableRow = (props: VariableRowProps) => {
   const { variable, used, onChangeValue, onRemove } = props;
@@ -82,4 +60,3 @@ const VariableRow = (props: VariableRowProps) => {
 };
 
 export { VariableRow };
-export type { VariableRowProps };

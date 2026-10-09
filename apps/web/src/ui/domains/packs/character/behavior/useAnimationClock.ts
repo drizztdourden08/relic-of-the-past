@@ -1,17 +1,6 @@
 /* @layer renderer-hooks @kind logic */
-/**
- * One frame ticker for the whole studio.
- *
- * The contact sheet animates every state at once, so a clock per canvas would mean dozens
- * of independent timers drifting apart. A single counter shared by every canvas keeps them
- * in step and costs one animation frame regardless of how many poses are on screen; each
- * canvas takes the tick modulo its own frame count.
- */
 import { useState, useEffect, useRef, useCallback } from 'react';
-
-const DEFAULT_FPS = 8;
-const MIN_FPS = 1;
-const MAX_FPS = 30;
+import { DEFAULT_FPS, MAX_FPS, MIN_FPS } from './useAnimationClock.constants';
 
 const useAnimationClock = (initialFps: number = DEFAULT_FPS) => {
   const [tick, setTick] = useState(0);
@@ -44,7 +33,4 @@ const useAnimationClock = (initialFps: number = DEFAULT_FPS) => {
   return { tick, fps, setFps: clampFps, playing, setPlaying, stepOnce, MIN_FPS, MAX_FPS };
 };
 
-type AnimationClock = ReturnType<typeof useAnimationClock>;
-
-export { useAnimationClock, DEFAULT_FPS };
-export type { AnimationClock };
+export { useAnimationClock };

@@ -1,19 +1,9 @@
 /* @layer renderer-components @kind hook */
-/**
- * A set's variables as a viewer reads them: the one list, the literal terms the measuring walks
- * take, and the index an entry's prose is expanded with. Keyed on the three stored fields, so a
- * new set object with the same tables keeps every layout already measured.
- */
 import { useMemo } from 'react';
 import { buildVariableIndex } from '@shared/game/language';
-import type { GlossaryTerm, LanguageSet, Variable, VariableIndex } from '@shared/game/language';
+import type { LanguageSet } from '@shared/game/language';
 import { literalTermsOf, variablesOf } from './set-variables';
-
-type SetVariables = {
-  variables: Variable[];
-  terms: GlossaryTerm[];
-  index: VariableIndex;
-};
+import type { SetVariables } from './language-behavior.type';
 
 const useSetVariables = (set: LanguageSet): SetVariables => {
   const { glossary, names, variables: stored } = set;
@@ -24,4 +14,4 @@ const useSetVariables = (set: LanguageSet): SetVariables => {
 };
 
 export { useSetVariables };
-export type { SetVariables };
+export type { SetVariables } from './language-behavior.type';

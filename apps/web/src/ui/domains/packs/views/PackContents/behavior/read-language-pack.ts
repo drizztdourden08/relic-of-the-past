@@ -1,15 +1,8 @@
 /* @layer renderer-components @kind logic */
-/** A language pack's set and its drawable font, opened in memory. */
 import { readRlangBytes } from '@shared/storage/languages/read-rlang-bytes';
-import type { LanguageSet } from '@shared/game/language';
 import { setFontAssets } from '../../../language/behavior/set-font-assets';
-import type { SetFontAssets } from '../../../language/behavior/set-font-assets';
 import type { PackSource } from '../../../pack-source.type';
-
-type LanguagePack = {
-  set: LanguageSet;
-  font: SetFontAssets | null;
-};
+import type { LanguagePack } from '../PackContents.type';
 
 const readLanguagePack = async (source: PackSource): Promise<LanguagePack> => {
   const { set, font } = await readRlangBytes(await source.range(0, source.bytes));
@@ -17,4 +10,3 @@ const readLanguagePack = async (source: PackSource): Promise<LanguagePack> => {
 };
 
 export { readLanguagePack };
-export type { LanguagePack };
