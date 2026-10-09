@@ -7,8 +7,8 @@ three sites (handler, preload, renderer) in sync without relying on convention. 
 [Electron & IPC](../architecture/electron-ipc.md) for the architecture.
 
 > **Golden rule:** reach for the typed wrappers in `electron/lib/ipc/` instead of
-> calling `ipcMain` / `ipcRenderer` / `webContents.send` directly. Those two files are
-> the only place raw Electron IPC belongs.
+> calling `ipcMain` / `ipcRenderer` / `webContents.send` directly. Its two folders,
+> `handle/` and `bridge/`, are the only place raw Electron IPC belongs.
 
 ## Pick the direction
 
@@ -22,19 +22,23 @@ Channels are named **`domain:action`** (e.g. `profiles:list`, `saves:normal:crea
 
 ## Steps (invoke example: `foo:get`)
 
-### 1. Declare the channel in `shared/ipc/invoke-contract.ts`
+### 1. Declare the channel in its domain's invoke contract
 
-This is the single source of truth for the signature:
+`InvokeContract` (`shared/ipc/invoke-contract.type.ts`) joins one contract per domain:
+`shared/ipc/invoke/*-invoke-contract.type.ts`, or a `<domain>-contract.type.ts` (or
+folder) beside it. Add the line to the one your channel belongs to, or add a contract
+and extend `InvokeContract` with it. This is the single source of truth for the signature:
 
 ```ts
 'foo:get': (id: string) => Promise<FooResult>;
 ```
 
-### 2. Map a friendly name in `shared/ipc/maps.ts`
+### 2. Map a friendly name in `shared/ipc/maps/invoke-map.data.ts`
 
 Add one line to `INVOKE_MAP`, the only place the method↔channel link is written.
-`satisfies` rejects a typo'd channel. `IpcApi` (the `window.api` type) and the
-preload method are derived automatically, so `env.d.ts` stays untouched.
+`satisfies` rejects a typo'd channel. `IpcApi` (the `window.api` type, in
+`shared/ipc/api.type.ts`) and the preload method are derived automatically, so
+`apps/web/src/env.d.ts` stays untouched.
 
 ```ts
 getFoo: 'foo:get',
@@ -55,13 +59,14 @@ const registerFooHandlers = (): void => {
 export { registerFooHandlers };
 ```
 
-Register it in `main.ts` by adding to the `IPC_HANDLERS` list (`{ register: registerFooHandlers }`,
+Register it by adding to the `IPC_HANDLERS` list in
+`electron/startup/ipc-handlers.constants.ts` (`{ register: registerFooHandlers }`,
 or `{ register, devOnly: true }` for dev-only tools).
 
 ### 4. Preload usually needs nothing
 
 Flat methods are generated from the maps by `buildInvoke`/`buildSend`/`buildEvents`
-in `preload.ts`. The nested namespaces (`updater`, `shadowCasting`,
+(`electron/lib/ipc/bridge/`) in `electron/preload.ts`. The nested namespaces (`updater`, `shadowCasting`,
 `screenEditor`) are wired by hand, so add there with the typed `invoke`/`subscribe`
 if your channel belongs to one.
 
@@ -70,7 +75,7 @@ Call it from the renderer as `window.api.getFoo(id)`. The types come through.
 ## Events (`emit` / `subscribe`)
 
 Add to `EventContract` (the value is the listener signature), then to
-`EVENT_MAP` as `onFooChange: 'foo:change'`. Emit from main with
+`EVENT_MAP` (`shared/ipc/maps/event-map.data.ts`) as `onFooChange: 'foo:change'`. Emit from main with
 `emit(win, 'foo:change', payload)`; the renderer gets `window.api.onFooChange(cb)`
 returning an unsubscribe function (generated).
 
@@ -80,7 +85,7 @@ returning an unsubscribe function (generated).
 - [ ] Signature added to the matching contract in `shared/ipc/`.
 - [ ] Method↔channel line added to the join map (flat methods), or wired in a
       nested namespace (preload). Leave `env.d.ts` alone.
-- [ ] Handler uses the typed `handle`/`on`/`emit` and is registered in `main.ts`.
+- [ ] Handler uses the typed `handle`/`on`/`emit` and is listed in `IPC_HANDLERS`.
 - [ ] Raw `ipcMain`/`ipcRenderer`/`webContents.send` stays inside `electron/lib/ipc/`.
 - [ ] `pnpm run lint` green (the contract makes any drift a type error).
 - [ ] No native module imported into the renderer, and no security flags weakened.

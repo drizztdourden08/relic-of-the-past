@@ -72,7 +72,7 @@ to prevent. Pass the flag.
 ### `--instance` sandboxes profile data, not app-wide tool state
 
 `--instance` selects a game **profile** (`app.getPath('userData')` is one fixed directory
-regardless of the flag, as `apps/desktop/electron/lib/paths.ts` shows), so anything that isn't
+regardless of the flag, as `apps/desktop/electron/lib/paths/init-paths.ts` shows), so anything that isn't
 stored inside `Data/profiles/<id>/` is shared across every instance, named or not. Besides
 the two enforced-read-only files above, five files sit directly under `Data/` and are
 **global by design:** they're tool/UI preferences, not gameplay state, so

@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-type OffscreenAiMode = 'idle' | 'vanilla' | 'paused';
+type OffscreenEnemyMode = 'idle' | 'vanilla' | 'paused';
 
 interface AspectSettings {
   extendedRendering: boolean;
@@ -15,7 +15,7 @@ interface AspectSettings {
   cameraLockToViewport: boolean;
   smoothTransitions?: boolean;
   widescreenPlayArea?: boolean;
-  offscreenAI?: OffscreenAiMode;
+  offscreenAI?: OffscreenEnemyMode;
 }
 
-export type { AspectSettings, OffscreenAiMode };
+export type { AspectSettings, OffscreenEnemyMode };

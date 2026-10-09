@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
+import type { GameSettings, OffscreenEnemyMode } from '@shared/types/settings';
 
-const offscreenEnemyMode = (s: GameSettings): OffscreenAiMode => {
+const offscreenEnemyMode = (s: GameSettings): OffscreenEnemyMode => {
   return s.offscreenAI ?? 'idle';
 };
 

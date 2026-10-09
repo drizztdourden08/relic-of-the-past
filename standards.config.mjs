@@ -1,6 +1,6 @@
 /* @layer root-config @kind config */
 export default {
   options: {
-    allow: ['enhanced'],
+    allow: ['enhanced', 'Modern', 'AI'],
   },
 };

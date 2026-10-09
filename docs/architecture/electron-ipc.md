@@ -22,19 +22,23 @@ or return type is a compile error in any of the three.
 - Contracts (`shared/ipc/`) are the single source of truth, split by direction:
   `InvokeContract` (request→response, `invoke`/`handle`), `SendContract`
   (fire-and-forget renderer→main, `send`/`on`), and `EventContract` (main→renderer,
-  `emit`/`subscribe`).
-- The join map (`shared/ipc/maps.ts`) is the only table linking a friendly
-  `window.api` method name to its channel. `IpcApi` (the `window.api` type, in
-  `env.d.ts`) is derived from the contracts and maps, so a method's signature is
-  never hand-written twice.
-- Typed wrappers cover both sides. Main uses `handle`/`on`/`emit` (`electron/lib/ipc/handle.ts`);
+  `emit`/`subscribe`). Each lives in its own `*-contract.type.ts`; `InvokeContract`
+  joins one contract per domain (`shared/ipc/invoke/` and the `<domain>-contract`
+  files beside it).
+- The join maps (`shared/ipc/maps/*.data.ts`: `INVOKE_MAP`, `SEND_MAP`, `EVENT_MAP`)
+  are the only tables linking a friendly `window.api` method name to its channel.
+  `IpcApi` (the `window.api` type, in `shared/ipc/api.type.ts`, which
+  `apps/web/src/env.d.ts` puts on `window`) is derived from the contracts and maps, so a
+  method's signature is never hand-written twice.
+- Typed wrappers cover both sides. Main uses `handle`/`on`/`emit` (`electron/lib/ipc/handle/`);
   preload uses `invoke`/`send`/`subscribe` plus the `buildInvoke`/`buildSend`/`buildEvents`
-  factories (`electron/lib/ipc/bridge.ts`). Raw `ipcMain`/`ipcRenderer`/
-  `webContents.send` appear only in these two files.
+  factories (`electron/lib/ipc/bridge/`). Raw `ipcMain`/`ipcRenderer`/
+  `webContents.send` appear only in these two folders.
 - The preload's flat methods are generated from the maps; nested namespaces
   (`updater`, `shadowCasting`, `screenEditor`) are wired explicitly via `invoke`.
-- Each domain registers its handlers via a `register*()` function, wired in
-  `main.ts` through the declarative `IPC_HANDLERS` list (dev-only domains gated there).
+- Each domain registers its handlers via a `register*()` function, listed in the
+  declarative `IPC_HANDLERS` (`electron/startup/ipc-handlers.constants.ts`) and registered
+  by `electron/startup/register-ipc-handlers.ts` (dev-only domains gated there).
 - To add a channel, see [Adding an IPC Channel](../contributing/adding-an-ipc-channel.md)
   or the `electron` skill.
 

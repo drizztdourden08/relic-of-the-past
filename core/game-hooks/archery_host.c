@@ -37,7 +37,7 @@
 // The host's refusal, position 5 of the randomizer template lines the language bake appends after
 // the canonical vanilla ones. Same frozen contract kReceiptMsg_* answers to (game_hooks.h): the
 // order here MUST match the template list in
-// shared/asset-extraction/text/data/randomizer-templates.ts.
+// shared/asset-extraction/text/data/randomizer-templates/randomizer-templates.data.ts.
 #define ARCHERY_NO_BOW_MSG (kReceiptMsgBase + 5)
 
 // Set by the guard when IT was what refused, read by the message call that follows it in

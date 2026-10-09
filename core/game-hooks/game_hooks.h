@@ -576,7 +576,8 @@ bool GameHook_DrawDugUpItemOverride(int k, int x, int y);
 
 // Message ids of the randomizer template lines the language bake appends after the 397 canonical
 // vanilla dialogue lines of every baked language. The order here MUST match the template list in
-// shared/asset-extraction/text/data/randomizer-templates.ts (the TS side of the same contract), and
+// shared/asset-extraction/text/data/randomizer-templates/randomizer-templates.data.ts (the TS side
+// of the same contract), and
 // a new line is only ever APPENDED, since every id already baked into a player's asset blob is fixed.
 // The first five are the receipt classes; the rest belong to whichever seam names them.
 enum {

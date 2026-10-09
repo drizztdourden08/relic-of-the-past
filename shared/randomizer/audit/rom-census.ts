@@ -3,7 +3,7 @@
  * S1 census: reads the ROM's native chest table and produces the physical
  * ground truth used to verify the dataset's check records.
  *
- * Table layout (same parse as asset-extraction/compile-dungeon-rooms.ts):
+ * Table layout (same parse as asset-extraction/compile-dungeons/build-dungeon-rooms.ts):
  * base SNES address 0x81e96e, 168 entries, 3 bytes each, a little-endian
  * room word at +0 (bit 15 = big-chest flag, low 15 bits = room id) and an
  * item byte at +2. A chest's index is its order among the chests of its own

@@ -89,7 +89,7 @@ const readRomNativeTables = (romBytes: Uint8Array): RomNativeTables => {
   };
 
   // overworld.c:157 keeps this table by hand as kOverworldAreaHeads; the cartridge holds it here,
-  // and compile-overworld-utils.ts reads the same 64 bytes.
+  // and compile-overworld/build-overworld-context.ts reads the same 64 bytes.
   const areaHeads: number[] = [];
   for (let i = 0; i < AREA_COUNT; i++) areaHeads.push(byteAt(0x82a5ec + i));
   const headOf = (area: number): number =>

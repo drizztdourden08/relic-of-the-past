@@ -64,7 +64,7 @@ The `appStateChange` listener mirrors the device port's own `onAppPause` listene
 
 Assigns and frees `vid:pid` device keys for connected Android SDL3 gamepads, keyed by SDL joystick id. Bindings, profiles and calibration are keyed by a `vid:pid` string (4 lowercase hex digits each), and that must keep working for the common case of one device per `vid:pid`. A second device with the same `vid:pid` gets a `#N` suffix, so two physical pads never collide on one key. The slot is freed when its device is removed, so a later connect can reuse it without disturbing a device still connected.
 
-This is a deliberate copy of the same rule in `apps/desktop/electron/input/sdl3-device-key.ts`. That module lives in the Electron main process zone, not in `shared/`, and the renderer's module graph cannot reach it.
+This is a deliberate copy of the same rule in `apps/desktop/electron/input/sdl3-device-key/`. That module lives in the Electron main process zone, not in `shared/`, and the renderer's module graph cannot reach it.
 
 ## platform/hosts/capacitor/controller-sdl3-plugin
 

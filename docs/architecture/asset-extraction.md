@@ -11,8 +11,8 @@ upstream's Python tools, and it lives in `shared/asset-extraction/`.
 flowchart TD
     ROM["user ROM (.sfc)"] -->|"rom/ · load · SNES↔linear · SHA-1 validation"| COMP["compression/ · LZ + BRR decoders"]
     COMP --> GFX["graphics/ · 2/3/4bpp tile decode, palettes"]
-    GFX --> CMP["compile-*.ts · one extractor per asset domain"]
-    CMP --> AB["asset-builder.ts · serializes → zelda3_assets.dat"]
+    GFX --> CMP["compile-* · one extractor per asset domain"]
+    CMP --> AB["asset-builder/ · serializes → zelda3_assets.dat"]
 ```
 
 Public surface is the barrel `shared/asset-extraction/index.ts`.
@@ -24,13 +24,13 @@ Public surface is the barrel `shared/asset-extraction/index.ts`.
 | `rom/` | ROM loading; **SNES address → linear** conversion (`snesToLinear`). |
 | `compression/` | LZ decompression, BRR audio. |
 | `graphics/` | Tile/bitplane decode, palette assembly. |
-| `text/` · `music/` · `data/` · `extraction/` · `item-sprites/` | Domain helpers. |
-| `compile-*.ts` | One file per domain: `graphics`, `dungeons`, `dungeon-rooms`, `dungeon-entrance`, `overworld`(+`-exits`/`-sprites`/`-travel`/`-utils`), `dialogue`, `sound`, `resources`. |
-| `asset-builder.ts` | Serializes everything into the `.dat`. |
+| `text/` · `music/` · `data/` · `dungeon/` · `item-sprites/` · `title-screen/` · `story-intro/` | Domain helpers. |
+| `compile-*` | One per domain. A small domain is one file (`compile-dialogue.ts`, `compile-sound.ts`); a large one is a folder of `build-*` steps behind an `index.ts`: `compile-graphics/`, `compile-dungeons/` (rooms, entrances, map, sprites, secrets), `compile-overworld/` (tables, exits, sprites, travel), and `compile-resources-gba-alttp/` for the second cartridge's supplement. `compile-resources.ts` runs the steps into one builder; `compile-alttp-asset-set.ts` adds the optional sources around it. |
+| `asset-builder/` | Serializes everything into the `.dat` (`asset-builder.ts`). |
 
 ## Rules
 
-- Match the granularity: one `compile-*.ts` per asset domain. Add a new file instead of bolting onto an existing one.
+- Match the granularity: one `compile-*` file or folder per asset domain. Add a new one instead of bolting onto an existing one.
 - Addresses are SNES addresses. Always convert with `snesToLinear` before indexing a linear
   buffer, and don't hardcode linear offsets.
 - Validate the ROM against `ZELDA3_SHA1` / `ZELDA3_SHA1_US` so the wrong ROM fails loudly.
