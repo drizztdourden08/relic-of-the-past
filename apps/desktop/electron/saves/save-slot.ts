@@ -1,12 +1,15 @@
 /* @layer electron-main @kind logic */
-/** Stat a save's .sav file and probe for a sibling .png screenshot. */
 import { stat } from 'fs/promises';
+import type { SaveSlotStat } from './save-slot.type';
 
-interface SaveSlotStat {
-  size: number;
-  mtimeMs: number;
-  hasScreenshot: boolean;
-}
+const screenshotExists = async (pngPath: string): Promise<boolean> => {
+  try {
+    await stat(pngPath);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const statSaveSlot = async (savPath: string, pngPath: string): Promise<SaveSlotStat | null> => {
   let size: number;
@@ -19,11 +22,7 @@ const statSaveSlot = async (savPath: string, pngPath: string): Promise<SaveSlotS
     return null;
   }
 
-  let hasScreenshot = false;
-  try {
-    await stat(pngPath);
-    hasScreenshot = true;
-  } catch { /* no screenshot */ }
+  const hasScreenshot = await screenshotExists(pngPath);
 
   return { size, mtimeMs, hasScreenshot };
 };

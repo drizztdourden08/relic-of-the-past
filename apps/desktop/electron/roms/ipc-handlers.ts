@@ -10,20 +10,24 @@ import { makeImportReporter } from '../lib/import-progress';
 import { listRoms, hasAssetForRom, getAssetFileName } from './store';
 import { listProfiles, deleteProfile } from '../profiles/store';
 import { loadAppState, saveAppState } from '../profiles/app-state';
-
-const RAW_ROM_MAX_BYTES = 8 * 1024 * 1024;
+import { RAW_ROM_MAX_BYTES } from './ipc-handlers.constants';
 
 const fail = (err: unknown): ImportResult =>
   ({ success: false, error: errMessage(err), romFile: '' });
 
-// Copy a resolved ROM into the roms dir, reporting whether it already existed.
+const isAlreadyImported = async (localRomPath: string): Promise<boolean> => {
+  try {
+    await access(localRomPath);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const importRomFile = async (romPath: string): Promise<ImportResult> => {
   const romFile = basename(romPath);
   const localRomPath = getUserDataPath('roms', romFile);
-  try {
-    await access(localRomPath);
-    return { success: true, romFile, alreadyExists: true };
-  } catch { /* not imported yet */ }
+  if (await isAlreadyImported(localRomPath)) return { success: true, romFile, alreadyExists: true };
   await copyFile(romPath, localRomPath);
   return { success: true, romFile, alreadyExists: false };
 };
@@ -34,7 +38,6 @@ const selectSingleRom = (files: string[]): string => {
   return files[0];
 };
 
-// URL fallback: the download wasn't an archive, so accept it as a raw ROM if plausible.
 const importRawDownload = async (downloadedPath: string, url: string): Promise<ImportResult> => {
   const s = await stat(downloadedPath);
   if (s.size === 0 || s.size > RAW_ROM_MAX_BYTES) {
@@ -59,7 +62,9 @@ const registerRomHandlers = (): void => {
         try {
           const s = await stat(getUserDataPath('assets', getAssetFileName(romFile)));
           assetSize = s.size;
-        } catch { /* ignore */ }
+        } catch {
+          assetSize = null;
+        }
       }
       results.push({ romFile, hasAssets, assetSize });
     }
@@ -97,8 +102,6 @@ const registerRomHandlers = (): void => {
       return fail(err);
     }
     try {
-      // A non-archive download is accepted as a raw ROM. A real archive with no
-      // ROM falls through to selectSingleRom's error.
       const result = (!resolved.extractedArchive && resolved.downloadedPath)
         ? await importRawDownload(resolved.downloadedPath, url)
         : await importRomFile(selectSingleRom(resolved.files));

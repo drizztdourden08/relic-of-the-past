@@ -1,25 +1,11 @@
 /* @layer electron-main @kind logic */
-/**
- * Generic manifest-backed save store: `{id}.sav` + optional `{id}.png` pairs in
- * a per-profile directory, tracked by `manifest.json`. Shared by the normal and
- * auto save stores, which supply directory resolution and the entry-to-info
- * mapping and compose overwrite/rename/prune from the returned primitives.
- */
 import { join } from 'path';
-import { writeFile, readFile, unlink, mkdir } from 'fs/promises';
+import { writeFile, readFile, mkdir } from 'fs/promises';
 import { readJson, writeJson } from '../lib/json-store';
 import { MSU_SIDECAR_SUFFIX } from '@shared/storage/save-paths';
 import { statSaveSlot, type SaveSlotStat } from './save-slot';
-
-interface ManifestEntry {
-  id: string;
-  timestamp: number;
-}
-
-interface ManifestStoreConfig<TEntry extends ManifestEntry, TInfo> {
-  getDir: (profileId: string) => string;
-  toInfo: (entry: TEntry, slot: SaveSlotStat) => TInfo;
-}
+import { removeIfPresent } from './remove-if-present';
+import type { ManifestEntry, ManifestStoreConfig } from './manifest-store.type';
 
 const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: ManifestStoreConfig<TEntry, TInfo>) => {
   const { getDir, toInfo } = config;
@@ -27,7 +13,6 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
   const savPaths = (dir: string, id: string): { sav: string; png: string } =>
     ({ sav: join(dir, `${id}.sav`), png: join(dir, `${id}.png`) });
 
-  /** The save's music-resume sidecar. The audio engine writes it, the save owns it. */
   const msuPath = (dir: string, id: string): string => join(dir, `${id}${MSU_SIDECAR_SUFFIX}`);
 
   const manifestPath = (profileId: string): string => join(getDir(profileId), 'manifest.json');
@@ -38,15 +23,13 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
   const writeManifest = (profileId: string, entries: TEntry[]): Promise<void> =>
     writeJson(manifestPath(profileId), entries);
 
-  // Writing over a save invalidates its resume sidecar: the position belonged to the
-  // state that was there before. A caller with a fresh snapshot writes it afterwards.
   const writePair = async (profileId: string, id: string, data: Buffer, screenshot?: Buffer): Promise<void> => {
     const dir = getDir(profileId);
     const { sav, png } = savPaths(dir, id);
     await mkdir(dir, { recursive: true });
     await writeFile(sav, data);
     if (screenshot) await writeFile(png, screenshot);
-    try { await unlink(msuPath(dir, id)); } catch { /* ignore */ }
+    await removeIfPresent(msuPath(dir, id));
   };
 
   const append = async (profileId: string, entry: TEntry, data: Buffer, screenshot?: Buffer): Promise<void> => {
@@ -63,9 +46,10 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
     for (const entry of manifest) {
       const { sav, png } = savPaths(dir, entry.id);
       const slot = await statSaveSlot(sav, png);
-      if (slot) valid.push({ entry, slot }); // missing file: orphaned manifest entry, skipped
+      if (slot) valid.push({ entry, slot });
     }
-    valid.sort((a, b) => b.entry.timestamp - a.entry.timestamp); // newest first
+    const newestFirst = (a: { entry: TEntry }, b: { entry: TEntry }): number => b.entry.timestamp - a.entry.timestamp;
+    valid.sort(newestFirst);
     return valid.map(({ entry, slot }) => toInfo(entry, slot));
   };
 
@@ -82,9 +66,9 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
     await writeManifest(profileId, manifest.filter((e) => e.id !== id));
     const dir = getDir(profileId);
     const { sav, png } = savPaths(dir, id);
-    try { await unlink(sav); } catch { /* ignore */ }
-    try { await unlink(png); } catch { /* ignore */ }
-    try { await unlink(msuPath(dir, id)); } catch { /* ignore */ }
+    await removeIfPresent(sav);
+    await removeIfPresent(png);
+    await removeIfPresent(msuPath(dir, id));
   };
 
   return {
