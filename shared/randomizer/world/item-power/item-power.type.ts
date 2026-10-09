@@ -1,5 +1,4 @@
 /* @layer shared-game @kind types */
-import type { OptionDef } from '../options.type';
 
 interface ItemPowerSetting {
   catchFairies: boolean;
@@ -14,6 +13,4 @@ interface ItemPowerSetting {
   hammerTowerSeal: boolean;
 }
 
-type ItemPowerOptionSeed = Omit<OptionDef, 'description'>;
-
-export type { ItemPowerOptionSeed, ItemPowerSetting };
+export type { ItemPowerSetting };

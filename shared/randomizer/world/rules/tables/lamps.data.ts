@@ -24,7 +24,7 @@
  * three and carry no row of their own: both ways in are gated here, so
  * nothing beyond them is reachable without a light either.
  */
-import { canCrossDarkRoom } from '../../dark-rooms/dark-room-light';
+import { canCrossDarkRoom } from '../../dark-rooms/can-cross-dark-room';
 import { compileRule } from '../rule-eval';
 import { any, option } from '../rule-node-build';
 import type { LocationKey } from '../../location-key';

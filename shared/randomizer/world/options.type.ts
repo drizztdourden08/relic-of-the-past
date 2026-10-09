@@ -96,7 +96,10 @@ interface RandomizerOptionsSnapshot {
 
 type OptionValues = Readonly<Record<string, OptionValue>>;
 
+type OptionSeed = Omit<OptionDef, 'description'>;
+
 export type {
+  OptionSeed,
   OptionValues,
   OptionChoice,
   OptionDef,

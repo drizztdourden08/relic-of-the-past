@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import { DEFAULT_ITEM_POWER, ITEM_POWER_KEY } from './item-power.data';
-import type { ItemPowerOptionSeed } from './item-power.type';
+import type { OptionSeed } from '../options.type';
 
 const ITEM_POWER_TOGGLE = {
   group: 'items' as const,
@@ -9,7 +9,7 @@ const ITEM_POWER_TOGGLE = {
   synthetic: true,
 };
 
-const ITEM_POWER_OPTION_SEEDS: readonly ItemPowerOptionSeed[] = [
+const ITEM_POWER_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...ITEM_POWER_TOGGLE, key: ITEM_POWER_KEY.catchFairies, displayName: 'Net catches fairies', kind: 'toggle',
     sourceDefault: DEFAULT_ITEM_POWER.catchFairies, baseline: DEFAULT_ITEM_POWER.catchFairies,
