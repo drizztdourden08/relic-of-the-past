@@ -1351,6 +1351,21 @@ equals its resolved box; `measureBox` proves the same width box side. The test s
 bands each way with the root in the top left cell, what `anchor: 'top-left'` used to say. A
 hidden bar takes its gap with it.
 
+### hud/hud-object-catalogue
+
+Phase 3 of the HUD data binding plan: the four objects (`text`, `repeat`, `switch`, `button`)
+and `expand.ts`, the pass that turns a dynamic tree into a static one before measuring. The
+worked example is the hearts: a `repeat` over containers with a per heart `switch` choosing the
+sprite, two levels of dynamic behaviour from the two new kinds. Expressions use `and`, `or` and
+`not`, never `&&` or `||` (contract §22.6). Repeat widths stay at or under 16, the leaf's natural
+size, so the box width is always the constraint of contain and centre. A switch with no match and
+no `otherwise` places only the wrapping row. A runaway count clamps to `MAX_REPEAT_COUNT` (200),
+and a NaN count is zero instances. The budget validator refuses two nested repeats of 200 (40,000
+worst case nodes) by name. Text resolves literal strings as given and pads bound numbers; the game
+font snaps to multiples of its 16px design size; a sprite face is a fixed 8px row. A button's slot
+bind derives `dimWhenEmpty` from its index, a missing state face falls back to idle, and state
+priority is pressed, held, unassigned, idle.
+
 ### hud/hud-presets.keep.test.ts
 
 Phase 5 of the HUD data binding plan: the eight prebuilt subtrees, the migration that rewrites a
