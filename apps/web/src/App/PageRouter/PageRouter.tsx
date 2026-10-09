@@ -1,64 +1,18 @@
 /* @layer renderer-appshell @kind component */
 import { useCallback } from 'react';
-import { HubGameControls, ProfileHub } from '../ui/domains/app/views/ProfileHub';
-import { DataManager } from '../ui/domains/app/views/DataManager';
-import { Store } from '../ui/domains/app/views/Store';
-import { HudLayoutEditor } from '../ui/domains/app/views/HudLayoutEditor';
-import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
-import { Randomizer } from '../ui/domains/app/views/Randomizer';
-import { SIMPLE_PAGES } from './simple-pages';
-import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
-import { WorkspaceSwitch, type Workspace } from '../ui/domains/app/compounds/WorkspaceSwitch';
-import type { PageId, RomDisplayInfo } from './types';
-import type { GameSettings } from '@shared/types/settings';
-import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
-import type { ProfileHubTab } from '../ui/domains/app/views/ProfileHub/ProfileHub.type';
-
-interface PageRouterProps {
-  nav: {
-    activePage: PageId;
-    setActivePage: (page: PageId) => void;
-    closePage: () => void;
-  };
-  profileMgmt: {
-    profiles: Profile[];
-    activeProfile: Profile | null;
-    romDisplayInfos: RomDisplayInfo[];
-    importingRom: boolean;
-    loadingProfile: string | null;
-    loadProfileForGame: (profile: Profile) => Promise<void>;
-    refreshProfilesAndRoms: () => Promise<unknown>;
-    handleSelectProfile: (profile: Profile) => Promise<void>;
-    handleCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
-    handleDeleteProfile: (id: string) => void;
-    handleImportRom: () => Promise<void>;
-    handleExtractAssets: (romFile: string) => Promise<void>;
-    handleDeleteRom: (romFile: string) => void;
-  };
-  game: {
-    isRunning: boolean;
-    stop: () => void;
-  };
-  display: {
-    handleWindowModeChange: (mode: GameSettings['windowMode']) => void;
-    handleConstraintSettingsChange: (constraint: GameSettings['viewportConstraint'], ar: GameSettings['aspectRatio']) => void;
-    handleDisplayPerfChange: (enabled: boolean) => void;
-    handleEdgeEffectChange: (enabled: boolean) => void;
-    handleShadowCastingChange: (enabled: boolean) => void;
-    handlePixelPerfectChange: (enabled: boolean) => void;
-  };
-  audio: {
-    handleMasterVolumeChange: (volume: number) => void;
-    muteOverride: { volume: number; version: number } | null;
-  };
-  saveState: {
-    handleSaveSlotSettingsChange: (enabled: boolean, duration: number) => void;
-  };
-  handleDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  dataTab: string;
-  profileHubTab: ProfileHubTab;
-  onProfileHubTabChange: (tab: ProfileHubTab) => void;
-}
+import type { ReactNode } from 'react';
+import { HubGameControls, ProfileHub } from '../../ui/domains/app/views/ProfileHub';
+import { DataManager } from '../../ui/domains/app/views/DataManager';
+import type { DataTab } from '../../ui/domains/app/views/DataManager/DataManager.type';
+import { Store } from '../../ui/domains/app/views/Store';
+import { HudLayoutEditor } from '../../ui/domains/app/views/HudLayoutEditor';
+import { SpriteDebug } from '../../ui/domains/app/views/SpriteDebug';
+import { Randomizer } from '../../ui/domains/app/views/Randomizer';
+import { FullScreenLayer } from '../../ui/design-system/composites/FullScreenLayer';
+import { WorkspaceSwitch, type Workspace } from '../../ui/domains/app/compounds/WorkspaceSwitch';
+import type { CreateProfileOptions } from '@shared/types/profile';
+import type { PageRouterProps } from './PageRouter.type';
+import { TITLED_PAGES } from './PageRouter.constants';
 
 const PageRouter = (props: PageRouterProps) => {
   const { nav, profileMgmt, game, display, audio, saveState, handleDeleteConfirm, dataTab, profileHubTab, onProfileHubTabChange } = props;
@@ -77,13 +31,12 @@ const PageRouter = (props: PageRouterProps) => {
     }
   }, [profileMgmt, game]);
 
-  // ProfileHub stays mounted to preserve scroll/state; other pages use early returns
-  let otherPage: React.ReactNode = null;
+  let otherPage: ReactNode = null;
   const switchTo = (current: Workspace) => (
     <WorkspaceSwitch current={current} hasProfile={!!profileMgmt.activeProfile} hasRandomizer={!!profileMgmt.activeProfile?.randomizer} onSelect={nav.setActivePage} />
   );
 
-  const simplePage = SIMPLE_PAGES[nav.activePage];
+  const titledPage = TITLED_PAGES[nav.activePage];
 
   if (nav.activePage === 'data') {
     otherPage = (
@@ -94,7 +47,6 @@ const PageRouter = (props: PageRouterProps) => {
           onSelectProfile={(p: Profile) => { profileMgmt.handleSelectProfile(p); nav.setActivePage('profile'); }}
           onCreateProfile={async (opts: CreateProfileOptions) => {
             const result = await profileMgmt.handleCreateProfile(opts);
-            // Only leave the form on success. A failure keeps it open to show the error.
             if (result.success) nav.setActivePage('profile');
             return result;
           }}
@@ -105,7 +57,7 @@ const PageRouter = (props: PageRouterProps) => {
           onRefresh={profileMgmt.refreshProfilesAndRoms}
           onDeleteConfirm={handleDeleteConfirm}
           loadingProfile={profileMgmt.loadingProfile}
-          initialTab={dataTab as any}
+          initialTab={dataTab as DataTab}
           isGameRunning={game.isRunning}
         />
       </FullScreenLayer>
@@ -117,17 +69,15 @@ const PageRouter = (props: PageRouterProps) => {
       </FullScreenLayer>
     );
   } else if (nav.activePage === 'hud-layout') {
-    // The editor brings its own FullScreenLayer (title + close), the way the
-    // sprite studio does, because it wants the whole width for a true-scale stage.
     otherPage = <HudLayoutEditor onClose={nav.closePage} />;
-  } else if (simplePage) {
+  } else if (titledPage) {
+    const { title, View } = titledPage;
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title={simplePage.title}>
-        {simplePage.render()}
+      <FullScreenLayer onClose={nav.closePage} title={title}>
+        <View />
       </FullScreenLayer>
     );
   } else if (nav.activePage === 'sprite-debug') {
-    // SpriteDebug brings its own FullScreenLayer (title + close), so render it directly.
     otherPage = <SpriteDebug onClose={nav.closePage} romFile={profileMgmt.activeProfile?.romFile ?? ''} />;
   } else if (nav.activePage === 'randomizer') {
     otherPage = (

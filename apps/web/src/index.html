@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!-- `booting` suppresses the entrance animations of whatever the app lands on. They are
-     polish for opening a page mid-session; during boot they mean the window is revealed
-     partway through a fade-and-scale, so the screen finishes appearing after the window
-     is already visible. Removed by useShellReady. -->
 <html lang="en" class="booting">
   <head>
     <meta charset="UTF-8" />
@@ -12,11 +8,6 @@
       content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file: app-sprite: app-debug-capture: https://*.backblazeb2.com; media-src 'self' app-debug-capture:; font-src 'self' data:; connect-src 'self' ws: wss:"
     />
     <title>Relic of the Past</title>
-    <!-- Boot splash: painted instantly (no bundle/JS/WASM needed). React replaces
-         #root on first render, so the splash tears itself down for free.
-         Desktop no longer relies on this. It has its own splash WINDOW (splash.html)
-         and keeps this one invisible until the shell settles. It stays for web and
-         Android, where nothing else covers the gap before React mounts. -->
     <style>
       #boot-splash {
         position: fixed;

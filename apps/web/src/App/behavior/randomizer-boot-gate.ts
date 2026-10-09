@@ -1,38 +1,12 @@
 /* @layer renderer-appshell @kind logic */
-/**
- * Pre-boot gate for randomized profiles. Local mode needs a placement this build can
- * read, rolled again from the seed when the file is older; online mode needs a server URL. The live server pre-flight only
- * logs: a server that is down never blocks play, the session retries it. On success the
- * boot's session material is parked in the session store's pending slot, where
- * the auto-start hook (useRandomizerBoot) consumes it once the game is running.
- * On failure the caller aborts the boot with the returned reason.
- */
 import { log } from '../../lib/log-bus';
-import { loadRandomizerPlacement, saveRandomizerPlacement } from '../../lib/randomizer-placement-io';
-import { rollPlacement } from './roll-placement';
-import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import { loadRandomizerPlacement } from '../../lib/randomizer-placement-io';
 import {
   normalizeServerUrl, probeOnlineServer, setPendingBoot,
 } from '../../lib/game/randomizer-client';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
-
-type GateResult = { ok: true } | { ok: false; reason: string };
-
-/**
- * A placement file this build cannot read (missing, or written under an older schema) is
- * rolled again from the profile's own seed and options, then saved, so the profile boots.
- */
-const rerollPlacement = async (profileId: string, config: ProfileRandomizerConfig): Promise<Placement | null> => {
-  try {
-    const placement = rollPlacement(config);
-    await saveRandomizerPlacement(profileId, placement);
-    log.randomizer(`[Boot] Placement file unreadable by this build; rolled seed ${config.seed} again`, 'warn');
-    return placement;
-  } catch (error) {
-    log.error(`Randomizer generation failed: ${error instanceof Error ? error.message : String(error)}`);
-    return null;
-  }
-};
+import type { GateResult } from './randomizer-boot-gate.type';
+import { rerollPlacement } from './reroll-placement';
 
 const gateRandomizerBoot = async (profileId: string, config: ProfileRandomizerConfig): Promise<GateResult> => {
   if (config.mode === 'local') {

@@ -24,7 +24,6 @@ const useGameLifecycle = () => {
     setAssetData(data);
     setConfigIni(ini);
     setGameCrashed(false);
-    // These bytes were just read from disk, so this is the generation it plays.
     markBooted();
   }, [markBooted]);
 

@@ -1,0 +1,20 @@
+/* @layer renderer-appshell @kind logic */
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { ProfileRandomizerConfig } from '@shared/types/profile';
+import { log } from '../../lib/log-bus';
+import { saveRandomizerPlacement } from '../../lib/randomizer-placement-io';
+import { rollPlacement } from './roll-placement';
+
+const rerollPlacement = async (profileId: string, config: ProfileRandomizerConfig): Promise<Placement | null> => {
+  try {
+    const placement = rollPlacement(config);
+    await saveRandomizerPlacement(profileId, placement);
+    log.randomizer(`[Boot] Placement file unreadable by this build; rolled seed ${config.seed} again`, 'warn');
+    return placement;
+  } catch (error) {
+    log.error(`Randomizer generation failed: ${error instanceof Error ? error.message : String(error)}`);
+    return null;
+  }
+};
+
+export { rerollPlacement };

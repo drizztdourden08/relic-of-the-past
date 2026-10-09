@@ -1,8 +1,8 @@
 /* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@shared/types/settings';
 import type { WindowControlsPort } from '@shared/platform';
-import { TITLEBAR_HEIGHT } from '../constants';
-import { getGameRatio } from './getGameRatio';
+import { TITLEBAR_HEIGHT } from '../App.constants';
+import { getGameRatio } from './get-game-ratio';
 
 const syncAspectRatioLock = (
   win: WindowControlsPort,

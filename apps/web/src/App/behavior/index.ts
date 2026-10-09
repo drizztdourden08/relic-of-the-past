@@ -10,5 +10,5 @@ export { useProfileManagement } from './useProfileManagement';
 export { useSaveOverlay } from './useSaveOverlay';
 export { useSaveStateSettings } from './useSaveStateSettings';
 export { useStartup } from './useStartup';
-export { getGameRatio } from './getGameRatio';
-export { syncAspectRatioLock } from './syncAspectRatioLock';
+export { getGameRatio } from './get-game-ratio';
+export { syncAspectRatioLock } from './sync-aspect-ratio-lock';

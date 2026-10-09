@@ -1,46 +1,16 @@
 /* @layer renderer-appshell @kind hook */
-/**
- * Debug hook: reacts to the --sim-run CLI flag.
- *
- * Starts the game, optionally loads a save slot, force-enables auto-skip-dialog
- * and developer tools, drives the gameplay simulator headlessly to its stop
- * condition, writes a SimRunReport to debug-output/sim-run.json, then exits.
- * Powers the in-chat data-correction loop (run → read suggestions → apply → re-run).
- */
-
 import { useEffect, useRef } from 'react';
-import { subscribeGameState, loadState, loadStateRef, wasmGetViewportInfo, wasmGetSpriteCombat, wasmGetCombatTables } from '../../lib/game';
-import { readLoadout } from '../../lib/game/simulator/read-loadout';
-import { linkStartTile } from '@shared/game/navigation/link-start-tile';
-import { createLiveGamePort, runSimulation, floodOverworldScreen, probeRoom, scanRoomsForSprite } from '@app/lib/game/simulator';
+import { loadState, loadStateRef } from '../../lib/game';
+import { createLiveGamePort } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
-import { overworldOrigin } from '@app/lib/game/flood';
-import { buildSimRunReport, formatEndSummary } from '@shared/game/simulation';
-import { getDungeon, getItem } from '@shared/game/data';
-import { getModule } from '../../lib/game';
+import type { SimRunDeps } from './useSimRun.type';
+import { FEATURE_LATCH_MS, SIM_START_SETTLE_MS } from './sim-run.constants';
+import { EXIT_DELAY_MS, RENDER_SETTLE_MS } from './auto-launch.constants';
+import { waitForGameRunning } from './wait-for-game-running';
+import { runSimDiagnostic } from './run-sim-diagnostic';
+import { runFullSimulation } from './run-full-simulation';
 
-/** Bit that excludes a sprite from a room-clear count, per Sprite_CheckIfRoomIsClear. */
-const ROOM_CLEAR_EXEMPT_BIT = 0x40;
-
-interface SimRunDeps {
-  activeProfile: Profile | null;
-  loadProfileForGame: (profile: Profile) => Promise<void>;
-}
-
-/** The features word the core has been ASKED for. It latches on the next frame.
- *  -1 means the module was not reachable, which is NOT the same as no features. */
-const readWantedFeatures = (): number => {
-  const mod = getModule();
-  if (!mod) return -1;
-  try { return Number(mod.ccall('WasmGetFeatures', 'number', [], [])); } catch { return -2; }
-};
-
-const waitForRunning = (): Promise<void> =>
-  new Promise((resolve) => {
-    const unsub = subscribeGameState((state) => {
-      if (state.status === 'running') { unsub(); resolve(); }
-    });
-  });
+const neverCancelled = (): boolean => false;
 
 const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
   const didRun = useRef(false);
@@ -55,127 +25,37 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
 
       console.log(`[SimRun] Starting game for profile: ${activeProfile.name}`);
       await loadProfileForGame(activeProfile);
-      await waitForRunning();
+      await waitForGameRunning(neverCancelled);
 
       if (config.stateName !== null) {
         const ok = await loadStateRef(config.stateName);
         console.log(`[SimRun] loadStateRef(${config.stateName}) → ${ok}`);
-        await new Promise((r) => setTimeout(r, 2000));
+        await new Promise((r) => setTimeout(r, RENDER_SETTLE_MS));
       } else if (config.startSlot !== null) {
         const loaded = await loadState(config.startSlot);
         console.log(`[SimRun] loadState(${config.startSlot}) → ${loaded}`);
         if (!loaded) {
           await window.api.writeSimRun({ error: `loadState(${config.startSlot}) failed`, config });
-          setTimeout(() => window.close(), 500);
+          setTimeout(() => window.close(), EXIT_DELAY_MS);
           return;
         }
       }
-      await new Promise((r) => setTimeout(r, 3000));
+      await new Promise((r) => setTimeout(r, SIM_START_SETTLE_MS));
 
-      // Developer tools unlock the combat-table queries below and the full simulation.
-      // The sim run is itself a developer tool, so it may switch the gate on for its own
-      // duration without touching the user's persisted setting, and must switch it back off.
       const port = createLiveGamePort();
       pauseSramSync();
-      // Arms the WasmSim* mutators (kHostGate_SimulatorSupport) for this run; without it every
-      // door-unlock/kill-drop/cell-lock trigger silently no-ops. Dropped in the finally below.
       port.setSimulatorSupport(true);
       port.setAutoSkipDialog(true);
       port.setDeveloperTools(true);
-      // A features word set from here is only WANTED until the core latches it on its
-      // next frame (zelda_rtl.c:989), so the queries the gate unlocks answer with
-      // nothing if they run in the same tick. Give the core frames to pick it up.
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, FEATURE_LATCH_MS));
       try {
-        // Diagnostic: addressable flood of one screen. Validates the sim's flood
-        // matches the normal in-game flood without running the whole simulation.
-        if (config.floodScreen !== null) {
-          // Seed from the live player tile only when the game is actually standing on
-          // the flooded overworld screen; otherwise flood seedless (remote screen).
-          const vp = wasmGetViewportInfo();
-          const liveScreen = vp ? ((((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7)) : -1;
-          const startPos = config.probeTile ?? (vp && liveScreen === config.floodScreen
-            ? linkStartTile({
-                linkX: vp.linkX, linkY: vp.linkY,
-                screenWorldX: overworldOrigin(config.floodScreen).x,
-                screenWorldY: overworldOrigin(config.floodScreen).y,
-              })
-            : undefined);
-          const items = ['lift.1', ...(config.probeItems ?? [])] as Parameters<typeof floodOverworldScreen>[2];
-          const flood = floodOverworldScreen(config.floodScreen, startPos, items);
-          console.log(`[SimRun] flood seed=${JSON.stringify(startPos)} liveScreen=0x${liveScreen.toString(16)}`);
-          console.log(`[SimRun] flood screen 0x${config.floodScreen.toString(16)}: ${JSON.stringify(flood && { reachable: flood.reachableCount, total: flood.totalTiles, entrances: flood.entranceCount, edges: flood.edgeCount, ledges: flood.ledgeCount })}`);
-          await window.api.writeSimRun({ floodScreen: config.floodScreen, items, flood });
-          setTimeout(() => window.close(), 500);
+        const diagnostic = runSimDiagnostic(config);
+        if (diagnostic !== null) {
+          await window.api.writeSimRun(diagnostic);
+          setTimeout(() => window.close(), EXIT_DELAY_MS);
           return;
         }
-
-        // Diagnostic: which rooms hold a given sprite? A dataset room index that
-        // points at the wrong cave is invisible until you ask the game itself.
-        if (config.scanSprite !== null) {
-          const hits = scanRoomsForSprite(config.scanSprite);
-          console.log(`[SimRun] sprite 0x${config.scanSprite.toString(16)} in ${hits.length} rooms`);
-          await window.api.writeSimRun({ scanSprite: config.scanSprite, hits });
-          setTimeout(() => window.close(), 500);
-          return;
-        }
-
-        // Diagnostic: why does one room read as a dead end? Dumps the tables that
-        // decide it (entrance seeds, fall holes, exit-screen entry, detected exits).
-        if (config.probeRoom !== null) {
-          const probe = probeRoom(config.probeRoom, config.probeTile ?? undefined,
-            ['lift.1', ...(config.probeItems ?? [])] as Parameters<typeof probeRoom>[2]);
-          console.log(`[SimRun] room 0x${config.probeRoom.toString(16)}: ${JSON.stringify(probe)}`);
-          await window.api.writeSimRun({ probe });
-          setTimeout(() => window.close(), 500);
-          return;
-        }
-
-        // Diagnostic: dump one sprite type's resolved combat row plus the shared
-        // ancilla/tile combat tables. A `null` query result is flagged explicitly so
-        // developer tools being off is never mistaken for a sprite that deals no damage.
-        if (config.combatSprite !== null) {
-          // The damage rows are unpacked from a compressed asset when a file is
-          // loaded (select_file.c:228), so this reads all zeros unless the run also
-          // loads a state. Pair `combat=` with `slot=` or `state=`.
-          const spriteCombat = wasmGetSpriteCombat(config.combatSprite);
-          const tables = wasmGetCombatTables();
-          const combat = {
-            combatSprite: config.combatSprite,
-            spriteQueryFailed: spriteCombat === null,
-            tablesQueryFailed: tables === null,
-            health: spriteCombat?.health ?? null,
-            flags4: spriteCombat?.flags4 ?? null,
-            countsTowardRoomClear: spriteCombat === null ? null : (spriteCombat.flags4 & ROOM_CLEAR_EXEMPT_BIT) === 0,
-            damageByClass: spriteCombat?.damageByClass ?? null,
-            nonZeroAncillaDamageClasses: tables?.ancillaDamageClass.filter((c) => c !== 0).length ?? null,
-            projectileBlockingTiles: tables?.projectileTileCollision.filter((v) => v === 1).length ?? null,
-            featuresWanted: readWantedFeatures(),
-          };
-          console.log(`[SimRun] combat sprite 0x${config.combatSprite.toString(16)}: ${JSON.stringify(combat)}`);
-          await window.api.writeSimRun(combat);
-          setTimeout(() => window.close(), 500);
-          return;
-        }
-
-        const { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks, log, tally, endSummary } = await runSimulation(port, config);
-        const report = buildSimRunReport(state, recorder, { config, steps, reachedTarget });
-        for (const line of formatEndSummary(endSummary)) console.log(`[SimRun] END ${line}`);
-        console.log(`[SimRun] outcome=${report.outcome} reachedTarget=${reachedTarget} steps=${steps} checks=${report.verifiedChecks.length} floods=${screenFloods.length}`);
-        // Id first so the entry is unambiguous and sorts stably, name after so a
-        // person can read the artifact. The name is resolved here and stored nowhere.
-        const inventory = {
-          items: [...state.inventory].sort().map((id) => `${id} ${getItem(id).name}`),
-          keys: Object.fromEntries([...state.keys].filter(([, n]) => n > 0)),
-          bigKeys: [...state.bigKeys].sort().map((id) => `${id} ${getDungeon(id).name}`),
-          events: [...state.events].sort(),
-          // What the player actually holds, read from the save, not tallied from
-          // check names: hearts, equipment tiers and the per-dungeon
-          // map/compass/big-key state the run does not track.
-          loadout: readLoadout(),
-        };
-        const outPath = await window.api.writeSimRun({ ...report, screenFloods, visits, path, checks, log, inventory, tally, endSummary });
-        console.log(`[SimRun] Written to: ${outPath}`);
+        await runFullSimulation(port, config);
       } finally {
         port.setAutoSkipDialog(null);
         port.setDeveloperTools(null);
@@ -183,7 +63,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
         resumeSramSync();
       }
 
-      setTimeout(() => window.close(), 500);
+      setTimeout(() => window.close(), EXIT_DELAY_MS);
     })();
   }, [activeProfile]);
 };

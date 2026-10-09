@@ -1,7 +1,6 @@
 /* @layer renderer-other @kind config */
 /// <reference types="vite/client" />
 
-// WebUSB API type declarations (Chromium/Electron)
 interface USBDeviceFilter {
   vendorId?: number;
   productId?: number;

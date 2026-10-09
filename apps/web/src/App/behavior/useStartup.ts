@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { log } from '../../lib/log-bus';
 import { getAppState } from '../../lib/storage/profile-store';
 import { instanceProfile } from '../../lib/instance';
-import type { PageId } from '../types';
+import type { PageId } from '../App.type';
 
 const useStartup = (
   profileMgmt: {
@@ -12,8 +12,6 @@ const useStartup = (
   },
   nav: { setActivePage: (page: PageId) => void },
 ) => {
-  // Startup owns which page the app lands on, so it also owns the moment the shell
-  // stops moving. useShellReady waits for that before it reveals the window.
   const [settled, setSettled] = useState(false);
 
   useEffect(() => {
@@ -28,15 +26,9 @@ const useStartup = (
         const dumpSlot = await window.api.getDumpLayersSlot();
         const dumpNavSlot = await window.api.getDumpNavSlot();
         const simRun = await window.api.getSimRunConfig();
-        // Automation launches (--fresh, --sim-run, --dump-*, --auto-state, --auto-start,
-        // --screenshot, --instance) start straight in the game view: the game only
-        // reaches 'running' on the game view, which the sim waits for.
         const wanted = instanceProfile();
         const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null || dumpNavSlot !== null || simRun !== null || window.api.startup.fresh || window.api.startup.autoStart || wanted !== null;
 
-        // A named instance pins its own profile, matched by id first then by name. An
-        // unknown name stops here instead of falling through to the user's profile: a
-        // run that silently used the wrong save data is worse than one that fails.
         if (wanted !== null) {
           const pinned = profileList.find((p) => p.id === wanted) ?? profileList.find((p) => p.name === wanted);
           if (!pinned) {
@@ -72,8 +64,6 @@ const useStartup = (
         log.error(`Startup failed: ${err}`);
         nav.setActivePage('data');
       } finally {
-        // Runs on every exit path above, early returns included. A boot that failed
-        // still has to end with a visible window.
         setSettled(true);
       }
     })();
