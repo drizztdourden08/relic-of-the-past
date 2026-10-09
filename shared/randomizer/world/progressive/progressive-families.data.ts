@@ -1,31 +1,14 @@
 /* @layer shared-game @kind data */
-/**
- * The tiered families, their pool item and the concrete tiers each copy
- * hands over, transcribed from Archipelago worlds/alttp/Items.py
- * (progression_mapping, lines 230-242) and ItemPool.py difficulties['normal']
- * (lines 99-130), which is the row set this app's pool is pinned to. The mail
- * family has no progression_mapping entry because its tiers are classed
- * useful, not progression (no rule reads them), so it appears here
- * for the pool and the receipt ladder alone.
- *
- * Tier counts ARE the reference's normal-difficulty copy counts: four blades,
- * three shields, two mails, two gloves, two bows. That is why one tick per
- * tier is also one tick per pool copy, so the two questions coincide at this
- * difficulty and the tick list can answer both.
- *
- * REPLACEMENT_ITEM is the reference's own stand-in for a copy that is not
- * there: swordless swaps the four blades for four twenty-rupee pickups
- * (ItemPool.py 76/108/140/172, `swordless=['Rupees (20)'] * 4`). Using it for
- * every family keeps the fixed 153-item pool size exactly as transcribed.
- */
 import { ITEM } from '../item-ids.data';
 import type { ItemId } from '@shared/game/data/types/ids';
-import type { ProgressiveFamilyDef, ProgressiveFamilyId, ProgressiveSetting } from './progressive.type';
+import type {
+  ProgressiveFamilyDef, ProgressiveFamilyId, ProgressiveSetting, ProgressiveTierTicks,
+} from './progressive.type';
 
-/** ItemPool.py 76: what a missing copy leaves behind, so the pool size never moves. */
 const REPLACEMENT_ITEM: ItemId = ITEM.rupees20;
 
-/** In the order the cards are shown. */
+const OCARINA_DEFAULT_TICKS: ProgressiveTierTicks = [true, false];
+
 const PROGRESSIVE_FAMILIES: readonly ProgressiveFamilyDef[] = [
   {
     id: 'sword',
@@ -63,40 +46,30 @@ const PROGRESSIVE_FAMILIES: readonly ProgressiveFamilyDef[] = [
     tierLabels: ['Plain', 'Silver'],
   },
   {
-    // The reference pool holds one Flute, woken at the weathervane in play. Ticking the second
-    // rung puts the Activated Flute in the pool too, as a second copy.
     id: 'ocarina',
     label: 'Ocarina',
     poolItem: ITEM.progressiveOcarina,
     tiers: [ITEM.flute, ITEM.activatedFlute],
     tierLabels: ['Flute', 'Activated'],
     referenceCopies: 1,
-    defaultTicks: [true, false],
+    defaultTicks: OCARINA_DEFAULT_TICKS,
   },
 ];
 
-const PROGRESSIVE_FAMILY_IDS: readonly ProgressiveFamilyId[] =
-  PROGRESSIVE_FAMILIES.map((family) => family.id);
+const PROGRESSIVE_FAMILY_IDS: readonly ProgressiveFamilyId[] = ['sword', 'shield', 'mail', 'glove', 'bow', 'ocarina'];
 
-const familyOfId = (id: ProgressiveFamilyId): ProgressiveFamilyDef => {
-  const found = PROGRESSIVE_FAMILIES.find((family) => family.id === id);
-  if (found === undefined) throw new Error(`no progressive family: ${id}`);
-  return found;
+const DEFAULT_PROGRESSIVE_SETTING: ProgressiveSetting = {
+  sword: [true, true, true, true],
+  shield: [true, true, true],
+  mail: [true, true],
+  glove: [true, true],
+  bow: [true, true],
+  ocarina: OCARINA_DEFAULT_TICKS,
 };
-
-/** Each family's default ticks (every tier, unless the family says otherwise): what an absent row reads as. */
-const DEFAULT_PROGRESSIVE_SETTING: ProgressiveSetting = Object.fromEntries(
-  PROGRESSIVE_FAMILIES.map((family) => [family.id, family.defaultTicks ?? family.tiers.map(() => true)]),
-) as unknown as ProgressiveSetting;
-
-/** How many copies the transcribed pool carries for a family before its ticks apply. */
-const referenceCopiesOf = (family: ProgressiveFamilyDef): number => family.referenceCopies ?? family.tiers.length;
 
 export {
   DEFAULT_PROGRESSIVE_SETTING,
   PROGRESSIVE_FAMILIES,
   PROGRESSIVE_FAMILY_IDS,
   REPLACEMENT_ITEM,
-  familyOfId,
-  referenceCopiesOf,
 };

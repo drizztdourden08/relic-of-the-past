@@ -13,8 +13,8 @@
 
 import { DIFFICULTY_OPTION_DESCRIPTIONS } from './difficulty/difficulty-options.constants';
 import { POND_OPTION_DESCRIPTIONS } from './pond/pond-option-descriptions.data';
-import { PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive/progressive-options.data';
-import { PROGRESSIVE_MODE_DESCRIPTIONS } from './progressive/progressive-mode-options.data';
+import { PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive/progressive-options.constants';
+import { PROGRESSIVE_MODE_DESCRIPTIONS } from './progressive/progressive-mode-options.constants';
 import { RETRO_OPTION_DESCRIPTIONS } from './retro/retro-options.data';
 import { SHOP_SLOT_DESCRIPTIONS } from './shops/shop-slot-options.data';
 import type { OptionDescription, OptionDetail } from './option-description.type';

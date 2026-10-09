@@ -47,7 +47,7 @@ export { itemKeyName } from './display-names/item-key-name';
 export { BOTTLE_ITEMS, CRYSTAL_ITEMS, MEDALLION_ITEMS, VANILLA_MEDALLIONS } from './item-groups';
 export type { MedallionId } from './item-groups';
 export { REGION } from './region-ids.data';
-export { PROGRESSION_TIERS } from './progressive/progression-tiers.data';
+export { PROGRESSION_TIERS } from './progressive/progression-tiers.constants';
 export { isSlotKey, pondRungKey, shopLocationKey } from './location-key';
 export type { LocationKey, ShopLocationKey, SlotKey } from './location-key';
 export { checkIdOfLocation, locationKeyOfCheck } from './location-record';

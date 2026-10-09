@@ -35,8 +35,8 @@ import { DARK_ROOM_OPTION_SEEDS } from './dark-rooms/dark-room-options.constants
 import { DIFFICULTY_OPTION_SEEDS } from './difficulty/difficulty-options.constants';
 import { ITEM_POWER_OPTION_SEEDS } from './item-power/item-power-options.data';
 import { STORY_GATE_OPTION_SEEDS } from './story-gates/story-gate-options.data';
-import { PROGRESSIVE_OPTION_SEEDS } from './progressive/progressive-options.data';
-import { PROGRESSIVE_MODE_OPTION_SEEDS } from './progressive/progressive-mode-options.data';
+import { PROGRESSIVE_OPTION_SEEDS } from './progressive/progressive-options.constants';
+import { PROGRESSIVE_MODE_OPTION_SEEDS } from './progressive/progressive-mode-options.constants';
 import { RETRO_OPTION_SEEDS } from './retro/retro-options.data';
 import { POND_OPTION_SEEDS } from './options-pond.data';
 import { STANDARD_SHOP_SLOT_COUNT } from './shops/shop-slot-facts';
