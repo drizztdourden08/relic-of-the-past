@@ -1639,6 +1639,31 @@ offset pair (the section's top row, two numbers in `PositionInput`'s shell) stay
 limits keep one row per axis, and the lattice's six cells clear 24px on both axes (§48: they were
 57.3 x 12, failing WCAG 2.2 SC 2.5.8 on the short axis).
 
+### hud/hud-inspector-layout-widths
+
+Phase 7 of the inspector UX review: the Layout section's controls measured at 289 / 232 / 188 px,
+stylesheets walked (this phase added `HudLayoutEditor.layout.css`).
+
+- `AlignmentTiles` at 188 (§56) is the one to prove. The 3x3 pad it replaced was a fixed 82px, so
+  the only question was whether it fit; a row of tiles is elastic. Round 10 drew a flex
+  container's six main axis tiles at 30px beside three 48px cross axis tiles, so every tile in a
+  component is one size (the track count is the widest row's). Round 12 let six values wrap
+  freely into three ragged lines with the cap floating mid block; round 17 held six on one line
+  at about 26px, where between, around and evenly differ by a pixel. So a row longer than four
+  folds at a fixed count, positions over distributions, every line full. Tiles stop growing at
+  72px instead of letterboxing.
+- The track strip is gone (§48): one `GridEditor` replaced `TrackListField`'s chip strips and its
+  44px miniature, so the lattice's 24px floor per cell is measured instead (the old drawing was
+  57.3 x 12 at 188, failing SC 2.5.8). §50 made cells proportional; the floor survived. Three
+  columns fit at every rail, so nothing scrolls; twelve is `hud-grid-editor-metrics`.
+- The picked track editor (rebuilt here, since SSR cannot click a header) keeps a typeable extent
+  field beside its four 26px tools at 188.
+- Labels and hints stay on one line; the pad's self explaining label is the longest.
+- `ColorField` gives a hex 253 / 196 / 152px; the old raw hex box beside a swatch with no
+  `min-width: 0` had the paint row's 13.9px shape.
+- The direction control is two 26px buttons and a 2px gap, 54px at every rail; it was 82 with
+  three until §42 gave `stack` back to the grid.
+
 ### hud/hud-inspector-property-rows.keep.test.ts
 
 Phase 3 of the inspector UX review covers finding F3: a design system with a `Field`, and a panel
