@@ -1405,6 +1405,33 @@ or the template. Original mode rounds a heart's fill up to the next quarter as t
 The deleted kind never appears in the migrated document, and a `scale` authored on the old node
 survives onto the replacement subtree's root.
 
+### hud/hud-appearance-controls
+
+Phase 8 of the inspector UX review, Appearance measured at 289 / 232 / 188 px with the stylesheets
+walked (this phase added `HudLayoutEditor.appearance.css`).
+
+- The claim to prove is height. The case for `SubsectionGroup` is that closed, the redesign is one
+  screen tall; the section was about 1800px of flat scroll with everything on. SSR renders the
+  initial state, every group collapsed, so the measurement needs no mocks or clicks. The rail is
+  the window less the editor chrome (16px padding twice, an 8px gap, a ~34px toolbar: H minus 74);
+  on a 768px laptop that is 694px, the Inspector label and eight other headers take ~180, so
+  Appearance's body has ~500px. Against `expanded`, the same six groups open (the old shape), the
+  closed groups are under a third of the height; the unconditional rows (visible, opacity, radius,
+  clip, dim when empty) are excluded because they would only dilute the ratio. The open bodies use
+  today's controls, which are shorter than the old ones, so the comparison understates the win.
+- Each header is one line whatever its value (the summary ellipses, since a wrapping header costs
+  what opening would), states its value closed, and carries a 16px colour chip (a gradient paints a
+  real gradient).
+- Every colour row clears 100px of hex at 188 (seven times §34's 13.9px, against about 50px for
+  `#rrggbb` at `--text-sm`): background, border, outline, tint, both shadows, and a gradient stop
+  nested inside the ramp. All are the same `ColorField`. The hex is found by the aria-label
+  `ColorField` writes, scoped to a case because a group's editor labels its colour plainly.
+- The border sides are a 46x34 box instead of four checkboxes, the gradient ramp takes the full row
+  at 18px tall, the paint kind is three 26px icons (82px) instead of a `Select` taking 75% of the
+  row, and four slot chips fit one row at the default rail.
+- The probe keys elements by their `hud-` class, since `Text`, `Flex` and `Box` prepend their own
+  primitive class. Nothing escapes the rail and every label stays on one line.
+
 ### hud/hud-appearance-escape.keep.test.ts
 
 The prerequisite of the appearance phase, checked against what was built. The inspector UX
