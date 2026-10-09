@@ -1,28 +1,7 @@
 /* @layer electron-main @kind logic */
-/**
- * GPU readout. The renderer can only see the ANGLE string WebGL hands it; the main
- * process additionally knows the PCI ids, the driver version, which adapter is
- * active on a hybrid-graphics machine, and which accelerated features Chromium
- * actually turned on.
- */
 import { app } from 'electron';
 import type { GpuDevice, GpuDiagnostics } from '@shared/types/diagnostics';
-
-// getGPUInfo resolves an untyped bag whose shape varies by platform and driver;
-// these narrow only the fields reported below.
-interface RawGpuDevice {
-  vendorId?: number;
-  deviceId?: number;
-  driverVendor?: string;
-  driverVersion?: string;
-  deviceString?: string;
-  active?: boolean;
-}
-
-interface RawGpuInfo {
-  gpuDevice?: RawGpuDevice[];
-  auxAttributes?: Record<string, unknown>;
-}
+import type { RawGpuDevice, RawGpuInfo } from './collect-gpu.type';
 
 const text = (value: unknown): string | null => (typeof value === 'string' && value ? value : null);
 
@@ -30,7 +9,6 @@ const readGpuInfo = async (): Promise<RawGpuInfo> => {
   try {
     return (await app.getGPUInfo('complete')) as RawGpuInfo;
   } catch {
-    // --disable-gpu, or the info process never reported back
     return {};
   }
 };

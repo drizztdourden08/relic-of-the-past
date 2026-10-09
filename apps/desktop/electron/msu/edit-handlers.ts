@@ -1,13 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Pack-editing IPC: the `.msul` manifest plus per-file create/rename/delete. Same
- * operations as shared/storage/msu-edit, expressed over Node fs; the manifest format
- * and validation come from that module so the two never drift.
- *
- * Paths and manifest reads/writes come from ./pack-fs, which is also what guards every
- * renderer-supplied name against traversal before it becomes a path segment. Every write into a
- * pack the Hookshop installed is refused there too.
- */
 import { join, dirname } from 'path';
 import { writeFile, readdir, rename, rm, stat, mkdir } from 'fs/promises';
 import type { MsuPackManifest, MsuPackMeta } from '@shared/types/msu-manifest';
@@ -18,6 +9,11 @@ import {
   packFilePath, packPath, pathExists, readPackManifest, refuseInstalledPack, writePackManifest,
 } from './pack-fs';
 
+const rewriteManifestUnderNewName = async (pack: string): Promise<void> => {
+  const manifest = await readPackManifest(pack);
+  if (manifest) await writePackManifest(pack, manifest);
+};
+
 const registerMsuEditHandlers = (): void => {
   handle('msu:listAudioFiles', async (_event, packName: string) => {
     try {
@@ -27,7 +23,9 @@ const registerMsuEditHandlers = (): void => {
         try {
           const st = await stat(join(dir, f));
           if (st.isFile()) out.push({ name: f, size: st.size });
-        } catch { /* skip */ }
+        } catch {
+          continue;
+        }
       }
       return out;
     } catch { return []; }
@@ -52,9 +50,7 @@ const registerMsuEditHandlers = (): void => {
     await refuseInstalledPack(from);
     await refuseInstalledPack(to);
     await rename(packPath(from), packPath(to));
-    // Rewritten so the name inside its settings becomes the new folder name.
-    const manifest = await readPackManifest(to);
-    if (manifest) await writePackManifest(to, manifest);
+    await rewriteManifestUnderNewName(to);
   });
 
   handle('msu:renameTrackFile', async (_event, packName: string, from: string, to: string) => {

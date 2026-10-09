@@ -1,12 +1,6 @@
 /* @layer electron-main @kind logic */
-/**
- * Opacity ramp for a BrowserWindow. setOpacity is a no-op without a compositing
- * window manager (a bare X11 session), so nothing downstream may depend on the
- * ramp running.
- */
 import type { BrowserWindow } from 'electron';
-
-const FRAME_MS = 16;
+import { FRAME_MS } from './fade-window.constants';
 
 const fadeWindow = (
   win: BrowserWindow,

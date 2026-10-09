@@ -1,32 +1,8 @@
 /* @layer electron-main @kind logic */
-/**
- * macOS refresh-rate driver, via CoreGraphics + CoreFoundation through koffi.
- *
- * CGDisplayModeGetRefreshRate returns 0 for displays that do not report a rate, so a 0
- * means "unknown" and is filtered out.
- *
- * NOT VERIFIED ON HARDWARE. Written from the documented CoreGraphics surface (opaque
- * handles only), and every path reports failure softly, so the worst case on an untested
- * Mac is the setting declaring itself unavailable.
- */
-import type { DisplayModeDriver } from './types';
+import type { DisplayModeDriver } from './display-mode-driver.type';
 import { loadKoffi } from './koffi-loader';
-
-const CORE_GRAPHICS = '/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics';
-const CORE_FOUNDATION = '/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation';
-
-interface MacBindings {
-  mainDisplayId: (...args: unknown[]) => number;
-  copyAllModes: (...args: unknown[]) => unknown;
-  copyCurrentMode: (...args: unknown[]) => unknown;
-  refreshRate: (...args: unknown[]) => number;
-  width: (...args: unknown[]) => number;
-  height: (...args: unknown[]) => number;
-  count: (...args: unknown[]) => number;
-  valueAt: (...args: unknown[]) => unknown;
-  setMode: (...args: unknown[]) => number;
-  release: (...args: unknown[]) => void;
-}
+import { CORE_FOUNDATION, CORE_GRAPHICS } from './macos.constants';
+import type { MacBindings } from './macos.type';
 
 let bindings: MacBindings | null = null;
 let bindingError = '';
@@ -63,10 +39,14 @@ const getBindings = (): MacBindings | null => {
   return bindings;
 };
 
-/**
- * Run `fn` against the modes matching the current resolution, then release: the two Copy
- * calls transfer ownership, so skipping it would leak on every poll.
- */
+const releaseIfHeld = (api: MacBindings, ref: unknown): void => {
+  try {
+    if (ref) api.release(ref);
+  } catch {
+    return;
+  }
+};
+
 const withModes = <T>(fn: (api: MacBindings, modes: unknown[], current: unknown) => T, fallback: T): T => {
   const api = getBindings();
   if (!api) return fallback;
@@ -89,8 +69,8 @@ const withModes = <T>(fn: (api: MacBindings, modes: unknown[], current: unknown)
   } catch {
     return fallback;
   } finally {
-    try { if (list) api.release(list); } catch { /* already gone */ }
-    try { if (current) api.release(current); } catch { /* already gone */ }
+    releaseIfHeld(api, list);
+    releaseIfHeld(api, current);
   }
 };
 

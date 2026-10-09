@@ -1,10 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Per-save music-resume sidecars over Node fs. Each `{save}.msu.json` is written beside
- * the save it belongs to. Quick slots carry no manifest, so a sidecar is the one mechanism
- * that fits all three save kinds; the naming comes from shared/storage/save-paths so
- * the renderer's FileStore path and this one address the same file.
- */
 import { dirname } from 'path';
 import { readFile, writeFile, rm, mkdir } from 'fs/promises';
 import type { MsuResumeState } from '@shared/types/msu-manifest';
@@ -12,8 +6,7 @@ import type { SaveKind } from '@shared/storage/save-paths';
 import { MSU_SIDECAR_SUFFIX, saveStem } from '@shared/storage/save-paths';
 import { handle } from '../lib/ipc/handle';
 import { getUserDataPath } from '../lib/paths';
-
-const SAVE_KINDS: readonly SaveKind[] = ['quick', 'normal', 'auto'];
+import { SAVE_KINDS } from './resume-handlers.constants';
 
 const resumeFile = (profileId: string, kind: SaveKind, id: string | number): string => {
   if (!SAVE_KINDS.includes(kind)) throw new Error(`Unknown save kind: ${kind}`);

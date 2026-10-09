@@ -1,10 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Preload bridge. The flat `window.api` methods are GENERATED from the join maps
- * (buildInvoke/buildSend/buildEvents); only the non-IPC helpers and the nested
- * namespaces are spelled out. `const api: IpcApi` ties the whole surface to the
- * shared contract.
- */
 import { contextBridge, webUtils } from 'electron';
 import { parse } from 'path';
 import type { IpcApi } from '@shared/ipc';
@@ -13,41 +7,32 @@ import { invoke, subscribe, buildInvoke, buildSend, buildEvents } from './lib/ip
 
 const romStem = (romFile: string): string => parse(romFile).name;
 
-/** Read a `--flag=value` argument forwarded from main via additionalArguments. */
 const forwardedFlag = (flag: string): string | null =>
   process.argv.find((a) => a.startsWith(`${flag}=`))?.slice(flag.length + 1) || null;
 
 const api: IpcApi = {
-  // Non-IPC helpers
   isDev: process.env.NODE_ENV !== 'production',
   autoFlood: process.argv.includes('--auto-flood'),
   os: process.platform,
   getSpritesBaseUrl: (romFile) => `app-sprite://sprites/${romStem(romFile)}/`,
   getFilePath: (file) => webUtils.getPathForFile(file),
-  // Test/automation layout flags, forwarded from main via additionalArguments.
   startup: {
     fresh: process.argv.includes('--startup-fresh'),
     widgets: (process.argv.find((a) => a.startsWith('--startup-widgets='))?.slice('--startup-widgets='.length).split(',').filter(Boolean)) ?? [],
-    // True for any test/automation launch, which must not write shared configuration.
     automation: process.argv.includes('--startup-automation'),
-    // Starting master volume at zero; the in-app control still owns the state.
     muted: process.argv.includes('--startup-muted'),
     sound: process.argv.includes('--startup-sound'),
     autoStart: process.argv.includes('--startup-auto-start'),
   },
-  // Named-instance identity (--instance / --profile), null on a normal launch. The
-  // renderer marks the window with the name and boots straight into `profile`.
   instance: {
     name: forwardedFlag('--startup-instance'),
     profile: forwardedFlag('--startup-profile'),
   },
 
-  // Flat methods generated from the channel maps
   ...buildInvoke(INVOKE_MAP),
   ...buildSend(SEND_MAP),
   ...buildEvents(EVENT_MAP),
 
-  // Nested namespaces (still typed via invoke/subscribe)
   shadowCasting: {
     load: () => invoke('shadow-casting:load'),
     save: (data) => invoke('shadow-casting:save', data),
@@ -109,8 +94,6 @@ const api: IpcApi = {
 
 contextBridge.exposeInMainWorld('api', api);
 
-// Dev/test aid, not part of the IpcApi contract: RELIC_FORCE_ASPECT (e.g. '16:9' from a
-// Playwright launch) overrides the profile's aspect ratio at boot. Null in normal runs.
 contextBridge.exposeInMainWorld('__relicDebug', {
   forceAspect: process.env.RELIC_FORCE_ASPECT || null,
 });

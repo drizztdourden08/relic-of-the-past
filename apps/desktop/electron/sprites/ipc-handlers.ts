@@ -21,9 +21,8 @@ const registerSpriteHandlers = (): void => {
     const outDir = spriteDir(romFile);
     const report = makeImportReporter('sprite', basename(romFile, extname(romFile)));
 
-    // Success for zero files would read as "this ROM has no sprites", not "this
-    // build cannot do it". Say which one it is.
-    if (SPRITE_DEFINITIONS.length === 0) {
+    const buildCarriesNoDefinitions = SPRITE_DEFINITIONS.length === 0;
+    if (buildCarriesNoDefinitions) {
       const msg = 'This build carries no sprite definitions, so there is nothing to extract.';
       logToRenderer('error', 'error', `Sprite extraction failed: ${msg}`);
       report('error', undefined, undefined, msg);
@@ -40,7 +39,6 @@ const registerSpriteHandlers = (): void => {
     await mkdir(outDir, { recursive: true });
 
     logToRenderer('app', 'info', `Extracting sprites from ${romFile}...`);
-    // Extraction is synchronous and fast, so the "decode" phase is indeterminate.
     report('decode', undefined, undefined, 'Extracting sprites...');
 
     try {
@@ -54,9 +52,6 @@ const registerSpriteHandlers = (): void => {
       if (result.removedStale > 0) {
         logToRenderer('app', 'info', `Removed ${result.removedStale} stale sprite files`);
       }
-      // The receipt is what stops the completeness check re-running the whole
-      // extraction on every launch when a definition this ROM cannot satisfy
-      // leaves its file missing. Written after the files, never before.
       await writeExtractionReceipt(outDir);
       report('done');
       return { success: true, count: result.total };
@@ -68,8 +63,6 @@ const registerSpriteHandlers = (): void => {
     }
   });
 
-  // "Complete against the current manifest", not "has any files at all". See
-  // extraction-state.ts for why the difference is the whole point.
   handle('sprites:check', async (_e, romFile: string) => checkExtraction(spriteDir(romFile)));
 
   handle('sprites:delete', async (_e, romFile: string) => {
@@ -86,12 +79,10 @@ const registerSpriteHandlers = (): void => {
     return join(spriteDir(romFile), `${file}.png`);
   });
 
-  // Sprite debug data
   handle('spriteDebug:load', () => readJson(getUserDataPath('sprite-debug.json'), {}));
   handle('spriteDebug:save', (_e, data: unknown) =>
     writeJson(getUserDataPath('sprite-debug.json'), data));
 
-  // Sprite review data
   handle('spriteReview:load', () => readJson(getUserDataPath('sprite-review.json'), {}));
   handle('spriteReview:save', (_e, data: unknown) =>
     writeJson(getUserDataPath('sprite-review.json'), data));

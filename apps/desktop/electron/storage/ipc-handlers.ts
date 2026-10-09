@@ -1,34 +1,12 @@
 /* @layer electron-main @kind logic */
-/**
- * Storage-info IPC: where data lives, revealing it in the OS file manager, and a
- * per-domain usage summary (immediate entry count + recursive byte size). Backs
- * the platform StoragePort on Electron.
- */
 import { shell } from 'electron';
 import { readdir, stat } from 'fs/promises';
 import { join } from 'path';
-import type { DataDomain, DataLocation, DomainUsage, StorageSummary } from '@shared/platform';
+import type { DataLocation, DomainUsage, StorageSummary } from '@shared/platform';
 import { getUserDataPath } from '../lib/paths';
 import { handle } from '../lib/ipc/handle';
+import { DOMAINS, OS_LABEL } from './ipc-handlers.constants';
 
-const OS_LABEL: Record<string, string> = {
-  win32: 'Windows (AppData)',
-  darwin: 'macOS (Application Support)',
-  linux: 'Linux (~/.config)',
-};
-
-const DOMAINS: { domain: DataDomain; label: string; dir: string }[] = [
-  { domain: 'profiles', label: 'Profiles', dir: 'profiles' },
-  { domain: 'roms', label: 'ROMs', dir: 'roms' },
-  { domain: 'sprites', label: 'Sprites', dir: 'sprites' },
-  { domain: 'linkSprites', label: 'Link Sprites', dir: 'link-sprites' },
-  { domain: 'languages', label: 'Language Studio', dir: 'languages' },
-  { domain: 'msu', label: 'MSU packs', dir: 'msu' },
-  { domain: 'assets', label: 'Assets', dir: 'assets' },
-];
-
-// Strips anything outside [A-Za-z0-9_-] so an id can never contain a path
-// separator, '..', or a drive letter.
 const sanitizeId = (id: string): string => id.replace(/[^A-Za-z0-9_-]/g, '_');
 
 const dirBytes = async (dir: string): Promise<number> => {
@@ -38,7 +16,7 @@ const dirBytes = async (dir: string): Promise<number> => {
   for (const entry of entries) {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) total += await dirBytes(full);
-    else { try { total += (await stat(full)).size; } catch { /* skip unreadable */ } }
+    else { try { total += (await stat(full)).size; } catch { continue; } }
   }
   return total;
 };

@@ -1,8 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Diagnostics IPC: one read-only channel returning the host hardware/OS readout
- * that backs the About page's debug-info block.
- */
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import { handle } from '../lib/ipc/handle';
 import { collectCpu, collectMemory, collectOs, collectVersions } from './collect-host';

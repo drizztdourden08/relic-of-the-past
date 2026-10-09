@@ -1,14 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * IPC handlers for the recommendation store.
- *
- * The store itself lives here, not in the renderer, because both of its
- * mutating operations are read-modify-write over a whole collection file, and
- * splitting them across an IPC round trip would put the read and the write on
- * opposite sides of a boundary two callers can interleave on. Keeping the
- * collection on this side means one queue (see `recommendation-files.ts`) makes
- * every caller's operations sequential, which is what a batch accept relies on.
- */
 import { createRecommendationStore } from '@shared/game/recommendations';
 import { handle } from '../lib/ipc/handle';
 import { loadRecommendationFile, queued, recommendationStorage } from './recommendation-files';

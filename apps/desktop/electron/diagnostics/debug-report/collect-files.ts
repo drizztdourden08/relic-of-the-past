@@ -1,27 +1,10 @@
 /* @layer electron-main @kind logic */
-/**
- * Gathers everything a debug report bundles besides the save state, which the renderer
- * already holds: the profile's settings and randomizer config (read straight off disk, so
- * the renderer never has to thread live GameSettings down through the packaging call), plus
- * whatever of the app's always-on log files exist for this session.
- */
 import { readFile } from 'fs/promises';
 import { getUserDataPath } from '../../lib/paths';
 import { readJson } from '../../lib/json-store';
 import type { Profile } from '@shared/types/profile';
-
-interface DebugReportLogFile {
-  name: string;
-  contents: string;
-}
-
-interface DebugReportCollectedFiles {
-  settingsJson: unknown;
-  profileJson: unknown;
-  randomizerJson: unknown;
-  inputProfilesJson: unknown;
-  logFiles: DebugReportLogFile[];
-}
+import { LOG_FILES } from './collect-files.constants';
+import type { DebugReportCollectedFiles, DebugReportLogFile } from './collect-files.type';
 
 const tryReadText = async (path: string): Promise<string | null> => {
   try {
@@ -30,8 +13,6 @@ const tryReadText = async (path: string): Promise<string | null> => {
     return null;
   }
 };
-
-const LOG_FILES = ['main-console.log', 'session.log', 'session-1.log'];
 
 const collectLogFiles = async (): Promise<DebugReportLogFile[]> => {
   const files: DebugReportLogFile[] = [];

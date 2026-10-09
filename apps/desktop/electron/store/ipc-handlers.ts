@@ -1,9 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * The Hookshop channels. Every read goes to the store API with the device token from the
- * main process; install, uninstall and duplicate run here too, so the renderer holds neither
- * the token nor a download URL, and only this process writes into an installed item.
- */
 import { handle } from '../lib/ipc/handle';
 import { fetchHome, fetchItem, fetchItems } from './catalog';
 import { duplicateInstalled } from './duplicate';

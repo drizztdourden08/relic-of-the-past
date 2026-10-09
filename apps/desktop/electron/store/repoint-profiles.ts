@@ -1,16 +1,8 @@
 /* @layer electron-main @kind logic */
-/**
- * A pack a profile selects is never left dangling. Each kind lives in one field: a music pack
- * in the profile's `msuPack`, a language set in its `language`, a character in its config's
- * `linkSprite`. Every profile is checked, since the library is global. An update points the
- * selection at the new copy; an uninstall passes null, which is each field's default.
- */
 import type { FileStore } from '@shared/platform';
 import { listProfiles, readConfig, updateProfile, writeConfig } from '@shared/storage/profiles';
-import type { InstalledPack } from '@shared/store/installed-types';
 import type { Profile } from '@shared/types/profile';
-
-type SelectedPack = Pick<InstalledPack, 'kind' | 'installedName'>;
+import type { SelectedPack } from './repoint-profiles.type';
 
 const repointOne = async (
   files: FileStore, profile: Profile, pack: SelectedPack, replacement: string | null,
@@ -32,7 +24,6 @@ const repointOne = async (
   return true;
 };
 
-/** The ids of the profiles that changed. */
 const repointProfiles = async (
   files: FileStore, pack: SelectedPack, replacement: string | null,
 ): Promise<string[]> => {

@@ -1,34 +1,13 @@
 /* @layer electron-main @kind logic */
-/**
- * Resolve an import source (a local path or a URL) to the matching files inside it,
- * handling direct files, archives (.zip/.7z/.rar) and downloads, plus a cleanup() for temps.
- */
 import { extname } from 'path';
 import { rm } from 'fs/promises';
-import { extractArchiveToTemp, walkFiles } from './archive';
-import { downloadToTemp } from './download';
+import { extractArchiveToTempDir, walkFiles } from './archive';
+import { downloadToTempFile } from './download';
 import { ARCHIVE_EXTENSIONS } from './extensions';
-
-type ImportSource =
-  | { kind: 'path'; path: string }
-  | { kind: 'url'; url: string };
-
-interface ResolvedSource {
-  /** Absolute paths of files matching the requested extensions. */
-  files: string[];
-  /** True if the source was successfully opened as an archive (vs a raw file). */
-  extractedArchive: boolean;
-  /** The temp file a URL was downloaded to (null for path sources). */
-  downloadedPath: string | null;
-  /** Remove every temp file/dir this resolution created. */
-  cleanup: () => Promise<void>;
-}
+import type { ImportSource, ResolvedSource, SourceProgress } from './import-source.type';
 
 const isArchive = (filePath: string): boolean =>
   ARCHIVE_EXTENSIONS.has(extname(filePath).toLowerCase());
-
-/** Reports the resolver's source stages (download bytes, archive extraction). */
-type SourceProgress = (stage: { phase: 'download' | 'extract'; loaded?: number; total?: number }) => void;
 
 const resolveSourceFiles = async (source: ImportSource, matchExtensions: Set<string>, onProgress?: SourceProgress): Promise<ResolvedSource> => {
   const temps: string[] = [];
@@ -39,26 +18,24 @@ const resolveSourceFiles = async (source: ImportSource, matchExtensions: Set<str
   let localPath: string;
   let downloadedPath: string | null = null;
   if (source.kind === 'url') {
-    downloadedPath = await downloadToTemp(source.url, '.zip', (loaded, total) => onProgress?.({ phase: 'download', loaded, total }));
+    downloadedPath = await downloadToTempFile(source.url, '.zip', (loaded, total) => onProgress?.({ phase: 'download', loaded, total }));
     temps.push(downloadedPath);
     localPath = downloadedPath;
   } else {
     localPath = source.path;
   }
 
-  // A matching file handed in directly (e.g. a bare .sfc or .pcm).
-  if (matchExtensions.has(extname(localPath).toLowerCase())) {
+  const isMatchingFile = matchExtensions.has(extname(localPath).toLowerCase());
+  if (isMatchingFile) {
     return { files: [localPath], extractedArchive: false, downloadedPath, cleanup };
   }
 
-  // An archive, or any URL download (always attempted as an archive first).
   if (isArchive(localPath) || source.kind === 'url') {
     try {
-      const dir = await extractArchiveToTemp(localPath, (extracted, total) => onProgress?.({ phase: 'extract', loaded: extracted, total }));
+      const dir = await extractArchiveToTempDir(localPath, (extracted, total) => onProgress?.({ phase: 'extract', loaded: extracted, total }));
       temps.push(dir);
       return { files: await walkFiles(dir, matchExtensions), extractedArchive: true, downloadedPath, cleanup };
     } catch (err) {
-      // A URL that isn't an archive: the caller may treat downloadedPath as a raw file.
       if (source.kind === 'url') return { files: [], extractedArchive: false, downloadedPath, cleanup };
       await cleanup();
       throw err;

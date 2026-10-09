@@ -1,25 +1,14 @@
 /* @layer electron-main @kind logic */
-/**
- * Resolves the window/taskbar icon. A named instance (an agent launch) wears Sentri so it
- * is recognisable from the taskbar. Windows renders a multi-resolution .ico better than a
- * downscaled PNG, so it gets the .ico first and the PNG after. Every candidate is optional;
- * the logo's PNG is the last resort, so a missing asset never breaks a launch. The files
- * come from `npm run logos` (apps/web/public/logos).
- */
 import { join } from 'path';
 import { existsSync } from 'fs';
 import { is } from '@electron-toolkit/utils';
+import { LOGO_CANDIDATES, SENTRI_CANDIDATES } from './window-icon.constants';
 
-const LOGO_CANDIDATES = ['logo/logo.ico', 'logo/logo-256.png'];
-const SENTRI_CANDIDATES = ['sentri/sentri.ico', 'sentri/sentri-256.png'];
-
-/** Dev serves from the source tree; a packaged build serves from the bundled renderer. */
 const logoPath = (file: string): string =>
   is.dev
     ? join(__dirname, '../../apps/web/public/logos', file)
     : join(__dirname, '../renderer/logos', file);
 
-/** The .ico is Windows only; elsewhere the PNG is the one that shows. */
 const forPlatform = (candidates: string[]): string[] =>
   (process.platform === 'win32' ? candidates : candidates.filter((file) => !file.endsWith('.ico')));
 

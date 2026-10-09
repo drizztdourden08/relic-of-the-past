@@ -10,7 +10,6 @@ const registerConnectionHandlers = (): void => {
   handle('connectionReview:save', (_e, data: unknown) =>
     writeJson(getUserDataPath('connection-review.json'), data));
 
-  // Nav review data (per-screen connection point reviews with comments)
   handle('navReview:load', () =>
     readJson(getUserDataPath('nav-review.json'), {}));
 

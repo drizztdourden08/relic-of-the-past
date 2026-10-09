@@ -1,12 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Native text interaction for the main window: a right-click context menu
- * (Copy / Paste / Select All, shown only where they make sense) and a
- * main-process Ctrl/Cmd+C handler. The renderer hosts a live game whose input
- * layer sits on the same key events, so handling the copy chord at the
- * before-input-event stage guarantees a selection always copies regardless of
- * what page-level handlers do with the keystroke.
- */
 import { Menu } from 'electron';
 import type { BrowserWindow, MenuItemConstructorOptions } from 'electron';
 

@@ -1,38 +1,10 @@
 /* @layer electron-main @kind logic */
-/**
- * Windows refresh-rate driver, via user32 through koffi.
- *
- * Two things learned the hard way and encoded here:
- *  - Electron reports DIPs while the OS reports physical pixels (a 4K screen at 200% scaling
- *    is 1920x1080 to Electron and 3840x2160 to user32), so mode matching must use the values
- *    read back from EnumDisplaySettingsW, never Electron's display size.
- *  - Windows rounds rates to whole numbers, reporting 119 and 120 instead of 119.88.
- *
- * CDS_FULLSCREEN asks Windows to treat the change as belonging to this process, so the
- * original mode comes back on its own if we crash instead of leaving the user stranded.
- */
-import type { DisplayModeDriver } from './types';
+import type { DisplayModeDriver } from './display-mode-driver.type';
 import { loadKoffi } from './koffi-loader';
-
-const ENUM_CURRENT_SETTINGS = 0xFFFFFFFF;
-const CDS_FULLSCREEN = 0x00000004;
-const DISP_CHANGE_SUCCESSFUL = 0;
-/** Every resolution x rate x depth pair is its own entry, so the list is long. */
-const MAX_MODES = 20000;
-
-interface DevMode {
-  dmSize: number;
-  dmPelsWidth: number;
-  dmPelsHeight: number;
-  dmDisplayFrequency: number;
-  dmFields: number;
-}
-
-interface Win32Bindings {
-  enumDisplaySettings: (index: number) => DevMode | null;
-  changeDisplaySettings: (mode: DevMode) => number;
-  sizeofDevMode: number;
-}
+import {
+  CDS_FULLSCREEN, DISP_CHANGE_SUCCESSFUL, DM_DISPLAYFREQUENCY, DM_PELSHEIGHT, DM_PELSWIDTH, ENUM_CURRENT_SETTINGS, MAX_MODES,
+} from './windows.constants';
+import type { DevMode, Win32Bindings } from './windows.type';
 
 let bindings: Win32Bindings | null = null;
 let bindingError = '';
@@ -84,7 +56,7 @@ const buildBindings = (): Win32Bindings | null => {
     const changeFn = user32.func(
       'long __stdcall ChangeDisplaySettingsExW(const char16_t *lpszDeviceName, _In_ DEVMODEW *lpDevMode, void *hwnd, uint32_t dwflags, void *lParam)',
     );
-    const sizeofDevMode = koffi.sizeof(DEVMODEW) as number;
+    const sizeofDevMode = koffi.sizeof(DEVMODEW);
 
     return {
       sizeofDevMode,
@@ -114,10 +86,8 @@ const listRates = (): number[] => {
   for (let i = 0; i < MAX_MODES; i++) {
     const mode = api.enumDisplaySettings(i);
     if (!mode) break;
-    // Physical pixels on both sides of this comparison. See the header note.
-    if (mode.dmPelsWidth === current.dmPelsWidth && mode.dmPelsHeight === current.dmPelsHeight) {
-      rates.add(mode.dmDisplayFrequency);
-    }
+    const samePhysicalResolution = mode.dmPelsWidth === current.dmPelsWidth && mode.dmPelsHeight === current.dmPelsHeight;
+    if (samePhysicalResolution) rates.add(mode.dmDisplayFrequency);
   }
   return [...rates].sort((a, b) => a - b);
 };
@@ -133,11 +103,6 @@ const setRate = (hz: number): boolean => {
   if (!api) return false;
   const current = api.enumDisplaySettings(ENUM_CURRENT_SETTINGS);
   if (!current) return false;
-  // Ask for the rate while restating the resolution, so a driver that ignores a partial
-  // DEVMODE cannot reinterpret this as a resolution change.
-  const DM_PELSWIDTH = 0x00080000;
-  const DM_PELSHEIGHT = 0x00100000;
-  const DM_DISPLAYFREQUENCY = 0x00400000;
   const target: DevMode = {
     ...current,
     dmDisplayFrequency: hz,

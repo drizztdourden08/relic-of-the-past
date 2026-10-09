@@ -1,21 +1,10 @@
 /* @layer electron-main @kind logic */
-/**
- * Turns a timed pattern of {durationMs, intensity} segments into one SDL
- * rumble(low, high, durationMs) call per segment, waiting durationMs + gapMs
- * between. In the main process so timing never drifts under renderer load.
- * A new pattern on a device cancels whatever was still playing on it.
- */
 import { sdl3Source } from './sdl3-source';
-
-interface VibrateSegment {
-  durationMs: number;
-  intensity: number;
-}
+import type { VibrateSegment } from './haptic-pattern-player.type';
 
 class HapticPatternPlayer {
   private timers = new Map<string, ReturnType<typeof setTimeout>>();
 
-  /** Cancel any in-flight pattern for `deviceKey`. */
   cancel(deviceKey: string): void {
     const timer = this.timers.get(deviceKey);
     if (!timer) return;
@@ -23,13 +12,12 @@ class HapticPatternPlayer {
     this.timers.delete(deviceKey);
   }
 
-  /** Play `pattern` on `deviceKey`, one rumble call per segment, `gapMs` between segments. */
   play(deviceKey: string, pattern: readonly VibrateSegment[], gapMs: number): { ok: boolean; error?: string } {
     this.cancel(deviceKey);
     if (pattern.length === 0) return { ok: true };
 
-    // A silent rumble stops the motor and doubles as an existence check.
-    if (!sdl3Source.rumble(deviceKey, 0, 0, 0)) {
+    const silentRumbleReachedDevice = sdl3Source.rumble(deviceKey, 0, 0, 0);
+    if (!silentRumbleReachedDevice) {
       return { ok: false, error: `Device not found or has no rumble: "${deviceKey}"` };
     }
 
@@ -56,5 +44,5 @@ class HapticPatternPlayer {
 
 const hapticPatternPlayer = new HapticPatternPlayer();
 
-export { HapticPatternPlayer, hapticPatternPlayer };
+export { hapticPatternPlayer };
 export type { VibrateSegment };

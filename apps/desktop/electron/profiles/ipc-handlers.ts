@@ -41,8 +41,6 @@ const registerProfileHandlers = (): void => {
     }
   });
 
-  // Whitelist by design, shared with the renderer's store (shared/storage/profile-patch.ts):
-  // absent leaves a field alone, null clears it, and of `randomizer` only the connection moves.
   handle('profiles:update', async (_event, id: string, patch: ProfilePatch) => {
     const profile = await loadProfile(id);
     if (!profile) return null;

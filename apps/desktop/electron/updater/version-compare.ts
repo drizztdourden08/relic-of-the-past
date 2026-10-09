@@ -1,10 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Version ordering, on its own so both the feed and the format check can use it without
- * importing each other.
- */
-
-/** Numeric compare on x.y.z; a build with a pre-release suffix sorts below a plain one. */
 const compareVersions = (a: string, b: string): number => {
   const parts = (v: string) => v.split('-')[0].split('.').map((n) => parseInt(n, 10) || 0);
   const [pa, pb] = [parts(a), parts(b)];

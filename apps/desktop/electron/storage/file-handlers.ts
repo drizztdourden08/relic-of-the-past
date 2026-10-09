@@ -1,10 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Generic file-store IPC, rooted at the Data folder. Renderer-supplied paths are
- * POSIX and relative; resolution blocks traversal outside the root. Backs the
- * platform FileStore port on Electron. Every write, removal and new folder inside an item the
- * Hookshop installed is refused (./installed-guard).
- */
 import { readFile, writeFile, readdir, rm, mkdir, stat } from 'fs/promises';
 import { join, normalize, dirname, relative, isAbsolute } from 'path';
 import { shell } from 'electron';
@@ -53,7 +47,6 @@ const registerFileHandlers = (): void => {
     await refuseInstalledRemoval(path);
     await rm(full, { recursive: true, force: true });
   });
-  // To the Recycle Bin (the Trash on macOS), so a delete can be undone there; no-op if missing.
   handle('file:trash', async (_e, path) => {
     const full = resolveSafe(path);
     await refuseInstalledRemoval(path);

@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { handle } from '../lib/ipc/handle';
 import { getUserDataPath } from '../lib/paths';
 import { readJson, writeJson } from '../lib/json-store';
@@ -30,15 +31,13 @@ import {
   pruneAutoSaves,
 } from './auto-store';
 
-const registerSaveHandlers = (): void => {
-  // ─── SRAM ───
+const registerSramAndQuickHandlers = (): void => {
   handle('saves:writeSram', (_event, profileId: string, data: ArrayBuffer) =>
     writeSramFile(profileId, Buffer.from(data)));
 
   handle('saves:readSram', async (_event, profileId: string) =>
     toArrayBufferOrNull(await readSramFile(profileId)));
 
-  // ─── Quick Save States ───
   handle('saves:writeState', (_event, profileId: string, slot: number, data: ArrayBuffer) =>
     writeQuickState(profileId, slot, Buffer.from(data)));
 
@@ -54,8 +53,9 @@ const registerSaveHandlers = (): void => {
     toBase64OrNull(await readQuickScreenshot(profileId, slot)));
 
   handle('saves:getSlotInfos', (_event, profileId: string) => getQuickSlotInfos(profileId));
+};
 
-  // ─── Normal Saves ───
+const registerNormalSaveHandlers = (): void => {
   handle('saves:normal:create', (_event, profileId: string, name: string, data: ArrayBuffer, screenshot?: ArrayBuffer) =>
     createNormalSave(profileId, name, Buffer.from(data), toOptionalBuffer(screenshot)));
 
@@ -74,8 +74,9 @@ const registerSaveHandlers = (): void => {
 
   handle('saves:normal:rename', (_event, profileId: string, id: string, newName: string) =>
     renameNormalSave(profileId, id, newName));
+};
 
-  // ─── Auto Saves ───
+const registerAutoSaveHandlers = (): void => {
   handle('saves:auto:create', (_event, profileId: string, trigger: 'timer' | 'quit', data: ArrayBuffer, screenshot?: ArrayBuffer) =>
     createAutoSave(profileId, trigger, Buffer.from(data), toOptionalBuffer(screenshot)));
 
@@ -91,13 +92,21 @@ const registerSaveHandlers = (): void => {
 
   handle('saves:auto:prune', (_event, profileId: string, maxEntries: number) =>
     pruneAutoSaves(profileId, maxEntries));
+};
 
-  // ─── Config (per-profile settings) ───
+const registerProfileConfigHandlers = (): void => {
   handle('config:read', (_event, profileId) =>
     readJson<Record<string, unknown> | null>(getUserDataPath('profiles', profileId, 'config.json'), null));
 
   handle('config:write', (_event, profileId, settings) =>
     writeJson(getUserDataPath('profiles', profileId, 'config.json'), settings));
+};
+
+const registerSaveHandlers = (): void => {
+  registerSramAndQuickHandlers();
+  registerNormalSaveHandlers();
+  registerAutoSaveHandlers();
+  registerProfileConfigHandlers();
 };
 
 export { registerSaveHandlers };

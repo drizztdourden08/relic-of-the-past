@@ -18,7 +18,6 @@ const registerAspectRatioHandlers = (): void => {
       return;
     }
 
-    // Snap: shrink the window to fit the ratio. Never grow.
     const [w, h] = mainWindow.getSize();
     const contentH = h - extraHeight;
     const wForH = Math.round(contentH * ratio);
@@ -35,7 +34,6 @@ const registerAspectRatioHandlers = (): void => {
     }
   });
 
-  // Manual enforcement with will-resize to correctly handle the titlebar offset.
   app.on('browser-window-created', (_event, win) => {
     win.on('will-resize', (e, newBounds, details) => {
       if (lockedRatio <= 0) return;
@@ -55,7 +53,6 @@ const registerAspectRatioHandlers = (): void => {
         targetW = Math.round(contentH * lockedRatio);
         targetH = newBounds.height;
       } else {
-        // Corner drag fits within the proposed bounds, never exceeding either dimension
         const contentH = newBounds.height - lockedExtraHeight;
         const wForH = Math.round(contentH * lockedRatio);
         const hForW = Math.round(newBounds.width / lockedRatio) + lockedExtraHeight;
