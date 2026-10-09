@@ -1,5 +1,5 @@
 /* @layer site-kit @kind component */
-import { PROVIDER_LABELS } from '@shared/hub/providers';
+import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { ProviderButton } from '../ProviderButton/ProviderButton';

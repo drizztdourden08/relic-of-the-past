@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '../manifest';
 import { isManifest } from './is-manifest';
 
 const parseManifest = (text: string | null): MsuPackManifest | null => {

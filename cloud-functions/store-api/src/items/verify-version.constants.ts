@@ -1,5 +1,5 @@
 /* @layer store-api @kind constants */
-import type { FirstEntryFailure } from '../../../../shared/store/manifest/read-first-entry';
+import type { FirstEntryFailure } from '@rotp/hub-contracts';
 
 const FIRST_ENTRY_REFUSALS: Record<FirstEntryFailure, string> = {
   'not-zip': 'The upload is not a ZIP archive.',

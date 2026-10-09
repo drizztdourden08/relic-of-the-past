@@ -6,8 +6,8 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { require as tsxRequire } from 'tsx/cjs/api';
 
-const { portFor } = tsxRequire('../../shared/config/port-for.ts', import.meta.url);
-const { readPortSlot } = tsxRequire('../../shared/config/port-slot.ts', import.meta.url);
+const { portFor } = tsxRequire('@rotp/hub-contracts', import.meta.url);
+const { readPortSlot } = tsxRequire('@rotp/hub-contracts/node', import.meta.url);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '../..');

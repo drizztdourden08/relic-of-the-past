@@ -60,6 +60,7 @@
     "@iconify/react": "^6.0.2",
     "@rotp/asset-extraction": "workspace:*",
     "@rotp/game-data": "workspace:*",
+    "@rotp/hub-contracts": "workspace:*",
     "@tiptap/core": "^3.30.2",
     "@tiptap/extension-document": "^3.30.2",
     "@tiptap/extension-paragraph": "^3.30.2",

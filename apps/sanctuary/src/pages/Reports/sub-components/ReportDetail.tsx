@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
-import { LIMITS } from '@shared/sanctuary/limits';
+import { LIMITS } from '@rotp/hub-contracts';
 import { Button, Link } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';

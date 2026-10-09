@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { InstalledRecord } from '@drizztdourden08/brock-catalog/main';
-import { isStoreKind } from '@shared/store/installed-types';
+import { isStoreKind } from '@rotp/hub-contracts';
 import { repointProfiles } from '../../repoint-profiles';
 
 const releasePack = async (record: InstalledRecord, replacement: string | null): Promise<number> => {

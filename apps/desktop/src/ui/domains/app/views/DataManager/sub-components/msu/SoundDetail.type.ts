@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import type { LayerEditorProps } from './LayerEditor';
 
 interface SoundDetailProps extends LayerEditorProps {

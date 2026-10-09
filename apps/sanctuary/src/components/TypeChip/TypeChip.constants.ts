@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind constants */
 import type { TagLook } from '@drizztdourden08/tessera/primitives';
-import type { FileType } from '@shared/sanctuary/file-types';
+import type { FileType } from '@rotp/hub-contracts';
 
 const LOOKS: Record<FileType, TagLook> = {
   build: { variant: 'category', color: 'amber' },

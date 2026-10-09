@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { rm, stat } from 'fs/promises';
 import type { OptimizeConversion, OptimizeRunResult } from '@shared/types/msu-optimize';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { withFileRenamed, withLoopSampleCarried } from '@shared/storage/msu-layer-edit';
 import { withSupersededRepointed } from '@shared/storage/msu-superseded';
 import { errMessage } from '../../lib/result';

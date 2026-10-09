@@ -1,6 +1,6 @@
 /* @layer store-site @kind types */
-import type { ItemCreateBody, ListingPatchBody } from '@shared/store/schemas';
-import type { Container } from '@shared/store/types';
+import type { ItemCreateBody, ListingPatchBody } from '@rotp/hub-contracts';
+import type { Container } from '@rotp/hub-contracts';
 import type { Picture } from '../lib/resize-image.type';
 
 type PublishTarget = {

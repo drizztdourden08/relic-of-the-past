@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { Device } from '@shared/hub/device-types';
+import type { Device } from '@rotp/hub-contracts';
 
 type DeviceRowProps = {
   device: Device;

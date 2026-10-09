@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LayerPlayMode } from '@shared/types/msu-manifest';
+import type { LayerPlayMode } from '@rotp/game-data';
 
 interface PlayModeFieldsProps {
   mode: LayerPlayMode;

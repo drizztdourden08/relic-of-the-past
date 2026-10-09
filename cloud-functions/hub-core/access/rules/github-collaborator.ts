@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { DEFAULT_GROUP_ID } from '../../../../shared/hub';
+import { DEFAULT_GROUP_ID } from '@rotp/hub-contracts';
 import { readHubEnv } from '../../env';
 import type { GroupRule } from '../access-rule.type';
 import { GITHUB_API, IS_COLLABORATOR } from './github-collaborator.constants';

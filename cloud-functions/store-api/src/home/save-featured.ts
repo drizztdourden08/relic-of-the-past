@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { Person } from '../../../../shared/store/types';
+import type { Person } from '@rotp/hub-contracts';
 import { now } from '../../../hub-core/db/firestore';
 import { itemsRepo } from '../db/items-repo';
 import { settingsRepo } from '../db/settings-repo';

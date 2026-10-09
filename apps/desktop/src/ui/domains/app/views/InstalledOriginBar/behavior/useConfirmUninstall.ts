@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback } from 'react';
-import type { InstalledPack } from '@shared/store/installed-types';
+import type { InstalledPack } from '@rotp/hub-contracts';
 import { useInstalledActions } from '@app/hooks/useInstalledActions';
 import { uninstallMessage, uninstallTitle } from '../../../compounds/InstalledOrigin';
 import type { ConfirmRequest } from '../InstalledOriginBar.type';

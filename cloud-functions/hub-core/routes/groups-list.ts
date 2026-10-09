@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES } from '../../../shared/hub';
-import type { Group, HubUser } from '../../../shared/hub';
+import { HUB_ROUTES } from '@rotp/hub-contracts';
+import type { Group, HubUser } from '@rotp/hub-contracts';
 import { requireAdmin } from '../auth/require-admin';
 import { membershipOf } from '../access/membership';
 import { groupsRepo } from '../db/groups-repo';

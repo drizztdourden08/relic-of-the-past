@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { Group, Rights, RightsModel } from '../../../shared/hub';
+import type { Group, Rights, RightsModel } from '@rotp/hub-contracts';
 
 const resolveRights = (model: RightsModel, groups: Group[], admin: boolean): Rights => {
   const permissions = admin ? [...model.all] : groups.flatMap((group) => group.rights[model.site] ?? []);

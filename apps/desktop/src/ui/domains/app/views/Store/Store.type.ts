@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind types */
 import type { CatalogInstallBarProps, CatalogLink } from '@drizztdourden08/brock-catalog/renderer';
-import type { InstalledPack } from '@shared/store/installed-types';
-import type { HomeResponse, ItemResponse } from '@shared/store/api-types';
-import type { ItemCardView } from '@shared/store/home-types';
+import type { InstalledPack } from '@rotp/hub-contracts';
+import type { HomeResponse, ItemResponse } from '@rotp/hub-contracts';
+import type { ItemCardView } from '@rotp/hub-contracts';
 import type { StoreItemStatus } from '../../compounds/StoreItemCard';
 import type { useStore } from './behavior/useStore';
 import type { useStoreAccount } from './behavior/useStoreAccount';

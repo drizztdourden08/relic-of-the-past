@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { Rating, Stars } from '../../../../shared/store/rating-types';
+import type { Rating, Stars } from '@rotp/hub-contracts';
 import { pairId, storeCollection } from './collections';
 
 const ratings = () => storeCollection('ratings');

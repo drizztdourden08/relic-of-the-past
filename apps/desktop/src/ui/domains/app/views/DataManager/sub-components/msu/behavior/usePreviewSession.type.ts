@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import type { MsuEngine } from '@app/lib/msu/engine';
 import type { PreviewReport } from './preview-report-store.type';
 

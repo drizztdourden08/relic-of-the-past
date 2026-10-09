@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackManifest, MsuSoundDef, SoundChannel } from '@shared/types/msu-manifest';
+import type { MsuPackManifest, MsuSoundDef, SoundChannel } from '@rotp/game-data';
 import type { Audition } from '../../behavior/file-audition';
 
 type SlotRow = {

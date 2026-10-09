@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
-import { VANILLA_TRACK_COUNT } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
+import { VANILLA_TRACK_COUNT } from '@rotp/hub-contracts';
 import { DELUXE_TRACKS } from '@rotp/game-data';
 import { detectMsuPackProfile } from '@shared/features/msu-auto-config';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';

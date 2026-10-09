@@ -1,5 +1,5 @@
 /* @layer electron-main @kind constants */
-import type { SiteId } from '@shared/hub';
+import type { SiteId } from '@rotp/hub-contracts';
 import { SANCTUARY_API, STORE_API } from './endpoints';
 import type { HubApi } from './endpoints';
 

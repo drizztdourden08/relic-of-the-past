@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { AuthorResponse } from '@shared/store/api-types';
+import type { AuthorResponse } from '@rotp/hub-contracts';
 import { formatDay } from '@site-kit/lib/format-date';
 import { formatAverage, formatCount, plural } from '../../../lib/format-count';
 

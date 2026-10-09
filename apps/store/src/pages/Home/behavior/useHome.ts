@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useEffect, useMemo, useState } from 'react';
-import type { HomeView, ItemCardView } from '@shared/store/home-types';
-import type { StoreKind } from '@shared/store/types';
+import type { HomeView, ItemCardView } from '@rotp/hub-contracts';
+import type { StoreKind } from '@rotp/hub-contracts';
 import { errorMessage } from '@site-kit/api/api-error';
 import { getHome } from '../../../api/catalog-endpoints';
 import { useStoreData } from '../../../data/store-data-context';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { LayerPlayMode } from '@shared/types/msu-manifest';
+import type { LayerPlayMode } from '@rotp/game-data';
 import type { PlayModeKind } from './layer-ops.type';
 
 const DEFAULT_CROSSFADE_SECONDS = 0;

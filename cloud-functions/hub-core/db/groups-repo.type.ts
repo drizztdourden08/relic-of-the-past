@@ -1,5 +1,5 @@
 /* @layer hub-core @kind types */
-import type { Group } from '../../../shared/hub';
+import type { Group } from '@rotp/hub-contracts';
 
 type GroupPatch = Partial<Pick<Group, 'name' | 'discordRoleId' | 'rights'>>;
 

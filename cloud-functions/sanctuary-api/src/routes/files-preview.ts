@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { LIMITS, SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
+import { LIMITS, SANCTUARY_ROUTES } from '@rotp/hub-contracts';
 import { conflict } from '../../../hub-core/http/http-error';
 import { queryParam } from '../../../hub-core/http/query';
 import { requireMember } from '../../../hub-core/auth/require-member';

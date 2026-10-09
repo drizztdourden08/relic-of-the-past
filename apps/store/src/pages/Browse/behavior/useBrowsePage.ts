@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo } from 'react';
-import type { StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 import { navigate } from '@site-kit/router/useLocation';
 import { useSurfaceView } from '@site-kit/views/useSurfaceView';
 import { filterRows } from '@site-kit/views/filter-rows';

@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { VersionCompleteResponse } from '@shared/store/api-types';
+import type { VersionCompleteResponse } from '@rotp/hub-contracts';
 import { storeApi } from '../store-client';
 
 const completeVersion = (id: string, n: number, etags: string[]) =>

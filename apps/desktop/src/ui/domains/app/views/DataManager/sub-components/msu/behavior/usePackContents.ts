@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { effectiveManifest } from './pack-manifest';
 import { getTrackNumber } from './get-track-number';

@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
-import { packOfRecord } from '@shared/store/installed-types';
-import type { InstalledPack } from '@shared/store/installed-types';
+import { packOfRecord } from '@rotp/hub-contracts';
+import type { InstalledPack } from '@rotp/hub-contracts';
 import { hookshopHolder } from './hookshop-holder';
 
 const installedPacks = async (): Promise<InstalledPack[]> => {

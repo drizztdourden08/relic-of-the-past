@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 
 interface Msu1ExportProgress {
   trackNum: number;

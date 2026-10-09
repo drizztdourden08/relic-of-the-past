@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { Container } from '@shared/store/types';
+import type { Container } from '@rotp/hub-contracts';
 
 type InstallButtonProps = {
   itemId: string;

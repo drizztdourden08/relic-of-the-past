@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { StoreItem } from '@shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { changedText } from './changed-text';
 import { listingErrors } from './listing-errors';
 import { textOf } from './text-of';

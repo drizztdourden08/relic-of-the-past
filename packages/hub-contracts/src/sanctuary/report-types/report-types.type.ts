@@ -1,5 +1,5 @@
 /* @layer shared-sanctuary @kind types */
-import type { ControllerReportPayload } from '../../types/github-issue';
+import type { ControllerReportPayload } from '../../github-issue';
 
 type ReportKind = 'player' | 'controller';
 

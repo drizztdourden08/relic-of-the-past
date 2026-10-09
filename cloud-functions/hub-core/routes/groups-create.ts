@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES, createGroupSchema } from '../../../shared/hub';
-import type { Group } from '../../../shared/hub';
+import { HUB_ROUTES, createGroupSchema } from '@rotp/hub-contracts';
+import type { Group } from '@rotp/hub-contracts';
 import { parseBody } from '../http/parse-body';
 import { requireAdmin } from '../auth/require-admin';
 import { invalidateGroups } from '../access/cached-groups';

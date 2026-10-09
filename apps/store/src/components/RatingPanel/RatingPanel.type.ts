@@ -1,6 +1,6 @@
 /* @layer store-site @kind types */
-import type { ItemStats } from '@shared/store/types';
-import type { Stars as StarCount } from '@shared/store/rating-types';
+import type { ItemStats } from '@rotp/hub-contracts';
+import type { Stars as StarCount } from '@rotp/hub-contracts';
 
 type RatingPanelProps = {
   stats: ItemStats;

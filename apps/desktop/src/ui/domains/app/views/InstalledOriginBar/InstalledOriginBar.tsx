@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { copyRefusal } from '@shared/store/licenses';
+import { copyRefusal } from '@rotp/hub-contracts';
 import { storeItemUrl } from '@app/lib/store/store-site';
 import { useInstalledActions } from '@app/hooks/useInstalledActions';
 import { InstalledOrigin } from '../../compounds/InstalledOrigin';

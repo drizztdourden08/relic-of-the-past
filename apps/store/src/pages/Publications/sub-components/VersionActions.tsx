@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
-import type { StoreItem, StoreVersion } from '@shared/store/types';
-import { actionsFor } from '@shared/store/version-flow';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
+import { actionsFor } from '@rotp/hub-contracts';
 import { AUTHOR } from './VersionActions.constants';
 import type { VersionActionsProps } from './VersionActions.type';
 

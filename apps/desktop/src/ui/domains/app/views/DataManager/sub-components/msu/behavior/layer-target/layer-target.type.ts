@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuLayer, MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuLayer, MsuPackManifest } from '@rotp/game-data';
 
 interface LayerTarget {
   previewKey: string;

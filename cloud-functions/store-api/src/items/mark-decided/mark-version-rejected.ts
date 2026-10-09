@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreItem } from '../../../../../shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import type { ItemPatch } from '../../db/items-repo.type';
 import { moveVersion } from '../move-version';
 import { REVIEWER } from './mark-decided.constants';

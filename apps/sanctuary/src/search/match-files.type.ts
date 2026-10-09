@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
 
 type FileMatchGroup = { type: FileType; files: SanctuaryFile[] };
 

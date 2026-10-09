@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES } from '../../../shared/hub';
+import { HUB_ROUTES } from '@rotp/hub-contracts';
 import { notFound } from '../http/http-error';
 import { requireCaller } from '../auth/require-caller';
 import { viewsRepo } from '../db/views-repo';

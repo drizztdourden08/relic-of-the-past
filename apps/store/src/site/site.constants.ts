@@ -1,5 +1,5 @@
 /* @layer store-site @kind constants */
-import { STORE_RIGHTS } from '@shared/store/store-rights';
+import { STORE_RIGHTS } from '@rotp/hub-contracts';
 import type { SiteDefinition } from '@site-kit/site/site-definition.type';
 import { StoreDataProvider } from '../data/StoreDataProvider';
 import { StoreSearchResults } from '../search/StoreSearchResults/StoreSearchResults';

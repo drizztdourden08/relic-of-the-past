@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
-import type { ItemChangeResponse } from '@shared/store/api-types';
-import type { ListingPatchBody } from '@shared/store/schemas';
+import type { ItemChangeResponse } from '@rotp/hub-contracts';
+import type { ListingPatchBody } from '@rotp/hub-contracts';
 import { storeApi } from '../store-client';
 
 const submitListing = (id: string, body: ListingPatchBody) =>

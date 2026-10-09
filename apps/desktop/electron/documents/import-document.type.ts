@@ -1,5 +1,5 @@
 /* @layer electron-main @kind types */
-import type { Container } from '@shared/store/types';
+import type { Container } from '@rotp/hub-contracts';
 
 type OpenedContainer = Extract<Container, 'rsp' | 'rlang'>;
 

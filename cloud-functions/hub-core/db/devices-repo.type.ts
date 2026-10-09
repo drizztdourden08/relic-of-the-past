@@ -1,5 +1,5 @@
 /* @layer hub-core @kind types */
-import type { Device } from '../../../shared/hub';
+import type { Device } from '@rotp/hub-contracts';
 
 type CodeStatus = 'pending' | 'confirmed' | 'denied';
 type DeviceCode = { userCode: string; pollSecretHash: string; expiresAt: number; status: CodeStatus };

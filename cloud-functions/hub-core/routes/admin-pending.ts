@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES } from '../../../shared/hub';
+import { HUB_ROUTES } from '@rotp/hub-contracts';
 import { requireAdmin } from '../auth/require-admin';
 import { siteUserOf } from '../access/site-user';
 import { usersRepo } from '../db/users-repo';

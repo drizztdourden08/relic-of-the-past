@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import type { Rating, Stars } from '../../../../shared/store/rating-types';
-import type { StoreItem } from '../../../../shared/store/types';
+import type { Rating, Stars } from '@rotp/hub-contracts';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { notFound } from '../../../hub-core/http/http-error';
 import { db, now } from '../../../hub-core/db/firestore';
 import { itemsRepo } from '../db/items-repo';

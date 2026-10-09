@@ -4,8 +4,10 @@
   "private": true,
   "description": "Reads a user ROM and builds the asset blob the game core loads.",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
+    "./node": "./src/node.ts",
     "./package.json": "./package.json"
   },
   "dependencies": {

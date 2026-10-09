@@ -1,5 +1,5 @@
 /* @layer store-api @kind types */
-import type { HomeView } from '../../../../../shared/store/home-types';
+import type { HomeView } from '@rotp/hub-contracts';
 
 type HomeCacheEntry = { view: HomeView; at: number };
 

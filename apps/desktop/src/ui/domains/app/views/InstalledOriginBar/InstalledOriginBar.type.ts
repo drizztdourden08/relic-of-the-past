@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { InstalledPack } from '@shared/store/installed-types';
+import type { InstalledPack } from '@rotp/hub-contracts';
 
 interface InstalledOriginBarProps {
   pack: InstalledPack;

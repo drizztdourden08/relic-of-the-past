@@ -1,7 +1,7 @@
 /* @layer shared-store @kind logic */
-import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
-import { parseManifest } from '@shared/storage/msu-edit';
+import { DELUXE_TRACK_THRESHOLD } from '../../../manifest';
+import type { MsuPackManifest } from '../../../manifest';
+import { parseManifest } from '../../../edit/parse-manifest';
 import type { KindFacts } from '../../types';
 import type { FirstEntry } from '../read-first-entry';
 

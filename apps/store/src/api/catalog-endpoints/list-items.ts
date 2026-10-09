@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ItemsListResponse } from '@shared/store/api-types';
+import type { ItemsListResponse } from '@rotp/hub-contracts';
 import { storeApi } from '../store-client';
 
 const listItems = (cursor: string | null) =>

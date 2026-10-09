@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import type { ItemResponse } from '@shared/store/api-types';
+import type { ItemResponse } from '@rotp/hub-contracts';
 import { errorMessage } from '@site-kit/api/api-error';
 import { getItem } from '../api/catalog-endpoints';
 

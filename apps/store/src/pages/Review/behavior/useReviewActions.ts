@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useState } from 'react';
-import type { ReviewEntry } from '@shared/store/api-types';
-import type { ReviewDecision } from '@shared/store/review-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
+import type { ReviewDecision } from '@rotp/hub-contracts';
 import { errorMessage } from '@site-kit/api/api-error';
 import { deleteVersion } from '../../../api/publish-endpoints';
 import { decideReview, unlistItem } from '../../../api/review-endpoints';

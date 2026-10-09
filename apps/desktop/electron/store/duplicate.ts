@@ -2,8 +2,8 @@
 import { isCatalogItemId } from '@drizztdourden08/brock-catalog/main';
 import type { StoreDuplicateResult } from '@shared/ipc';
 import type { BasedOn } from '@rotp/game-data';
-import type { InstalledPack } from '@shared/store/installed-types';
-import { copyRefusal } from '@shared/store/licenses';
+import type { InstalledPack } from '@rotp/hub-contracts';
+import { copyRefusal } from '@rotp/hub-contracts';
 import { selectDuplicate } from '@shared/storage/duplicate/select-duplicate';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
 import { logToRenderer } from '../lib/renderer-log';

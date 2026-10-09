@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { HubUser } from '../../../shared/hub';
+import type { HubUser } from '@rotp/hub-contracts';
 import { notFound } from '../http/http-error';
 import { usersRepo } from '../db/users-repo';
 import type { SiteConfig } from '../site-config.type';

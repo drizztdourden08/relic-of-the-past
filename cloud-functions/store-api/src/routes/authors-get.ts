@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { AuthorResponse } from '../../../../shared/store/api-types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { AuthorResponse } from '@rotp/hub-contracts';
 import { notFound } from '../../../hub-core/http/http-error';
 import { usersRepo } from '../../../hub-core/db/users-repo';
 import type { Route } from '../../../hub-core/route.type';

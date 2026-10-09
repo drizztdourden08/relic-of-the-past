@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { exportMsulPack } from '@app/lib/msu/export/export-msul';
 import { exportMsu1Pack } from '@app/lib/msu/export/export-msu1';
 import { decodeAudioFile } from '@app/lib/msu/decode/decode-audio-file';

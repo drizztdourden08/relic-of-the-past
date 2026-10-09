@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { FileType } from '@shared/sanctuary/file-types';
+import type { FileType } from '@rotp/hub-contracts';
 import { ALL_SCOPE_ID } from '../../Files.constants';
 import { isFileType } from '../is-file-type';
 

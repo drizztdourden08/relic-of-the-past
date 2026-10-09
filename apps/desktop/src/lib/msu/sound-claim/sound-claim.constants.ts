@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind constants */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import type { SoundClaim } from './sound-claim.type';
 
 const SOUND_CHANNELS: readonly SoundChannel[] = ['ambient', 'sfx1', 'sfx2'];

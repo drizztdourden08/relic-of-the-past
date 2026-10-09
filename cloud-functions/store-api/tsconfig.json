@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
@@ -10,9 +10,16 @@
     "noEmit": true,
     "baseUrl": "../..",
     "paths": {
-      "@shared/*": ["shared/*"]
+      "@shared/*": [
+        "shared/*"
+      ]
     }
   },
-  "include": ["src", "../hub-core", "../../shared/hub", "../../shared/store"],
-  "exclude": ["../hub-core/node_modules", "../../shared/store/install"]
+  "include": [
+    "src",
+    "../hub-core"
+  ],
+  "exclude": [
+    "../hub-core/node_modules"
+  ]
 }

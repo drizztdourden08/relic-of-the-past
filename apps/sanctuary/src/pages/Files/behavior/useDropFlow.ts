@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { nextVersionNumber } from '../../../files/file-versions';
 import type { UploadMeta } from '../../../upload/upload-target.type';
 import { sameNameMatch } from './same-name-match';

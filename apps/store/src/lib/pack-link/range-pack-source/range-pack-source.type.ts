@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { PackLinkResponse } from '@shared/store/api-types';
+import type { PackLinkResponse } from '@rotp/hub-contracts';
 
 type RenewLink = () => Promise<PackLinkResponse>;
 

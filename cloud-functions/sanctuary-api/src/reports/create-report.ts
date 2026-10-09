@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
-import { LIMITS } from '../../../../shared/sanctuary';
-import type { Report, SubmitReportRequest, SubmitReportResult } from '../../../../shared/sanctuary';
+import { LIMITS } from '@rotp/hub-contracts';
+import type { Report, SubmitReportRequest, SubmitReportResult } from '@rotp/hub-contracts';
 import { badRequest, tooMany } from '../../../hub-core/http/http-error';
 import type { Caller } from '../../../hub-core/auth/require-caller';
 import { usersRepo } from '../../../hub-core/db/users-repo';

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { LayerResume } from '@shared/types/msu-manifest';
+import type { LayerResume } from '@rotp/game-data';
 import type { LayerActivity, LayerContext, LayerScheduler } from './scheduler.type';
 import type { Voice } from '../voice';
 

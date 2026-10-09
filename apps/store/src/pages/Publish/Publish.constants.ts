@@ -1,7 +1,7 @@
 /* @layer store-site @kind constants */
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
-import { CONTAINERS } from '@shared/store/containers';
-import { LICENSES } from '@shared/store/licenses';
+import { CONTAINERS } from '@rotp/hub-contracts';
+import { LICENSES } from '@rotp/hub-contracts';
 import type { PublishMode } from './Publish.type';
 
 const LICENSE_OPTIONS: SelectOption[] = LICENSES.map(({ id, label, description }) => ({ value: id, label, description }));

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useState } from 'react';
-import type { InstalledPack } from '@shared/store/installed-types';
+import type { InstalledPack } from '@rotp/hub-contracts';
 import { hookshopReads } from '@app/lib/store/hookshop-reads';
 import { liveVersionOf } from '../../Store/behavior/item-facts';
 

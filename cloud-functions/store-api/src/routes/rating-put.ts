@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { RatingResponse } from '../../../../shared/store/api-types';
-import { ratingSchema } from '../../../../shared/store/schemas';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { RatingResponse } from '@rotp/hub-contracts';
+import { ratingSchema } from '@rotp/hub-contracts';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import type { Route } from '../../../hub-core/route.type';
 import { requirePlayer } from '../auth/player';

@@ -1,5 +1,5 @@
 /* @layer root-config @kind constants */
-import type { ReportKind } from '../../../../shared/sanctuary';
+import type { ReportKind } from '@rotp/hub-contracts';
 import { renderPlayerBody } from './issue-body-player';
 import { renderControllerBody } from './issue-body-controller';
 import type { IssueBodyRenderer } from './issue-body.type';

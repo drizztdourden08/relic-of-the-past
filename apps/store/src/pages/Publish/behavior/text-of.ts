@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { StoreItem } from '@shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { EMPTY } from './text-of.constants';
 import type { ListingText } from './useListingFields.type';
 

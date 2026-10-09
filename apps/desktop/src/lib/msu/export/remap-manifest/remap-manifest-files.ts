@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { mapLayers } from '@shared/storage/msu-layer-edit';
 import { mapName } from './map-name';
 

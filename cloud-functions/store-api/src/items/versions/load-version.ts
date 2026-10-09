@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreVersion } from '../../../../../shared/store/types';
+import type { StoreVersion } from '@rotp/hub-contracts';
 import { notFound } from '../../../../hub-core/http/http-error';
 import { versionOf } from './version-of';
 import type { VersionList } from './versions.type';

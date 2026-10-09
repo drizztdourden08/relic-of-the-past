@@ -1,5 +1,5 @@
 /* @layer site-kit @kind constants */
-import type { DevicePlatform } from '@shared/hub/device-types';
+import type { DevicePlatform } from '@rotp/hub-contracts';
 
 const PLATFORM_LABELS: Record<DevicePlatform, string> = {
   windows: 'Windows',

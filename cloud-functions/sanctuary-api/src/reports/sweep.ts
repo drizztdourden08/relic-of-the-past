@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { Report } from '../../../../shared/sanctuary';
+import type { Report } from '@rotp/hub-contracts';
 import { reportsRepo } from '../db/reports-repo';
 import { now } from '../../../hub-core/db/firestore';
 import { github } from '../github/issues';

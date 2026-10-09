@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { InstalledPack } from '@shared/store/installed-types';
+import type { InstalledPack } from '@rotp/hub-contracts';
 import { installedPacks } from '../../store/hookshop';
 import { GUARDED_TOP } from './installed-guard.constants';
 import { normalizeRel } from './normalize-rel';

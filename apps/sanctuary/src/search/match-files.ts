@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind logic */
-import { FILE_TYPES, FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import { FILE_TYPES, FILE_TYPE_LABELS } from '@rotp/hub-contracts';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import type { FileMatchGroup } from './match-files.type';
 
 const searchableText = (file: SanctuaryFile): (string | null)[] => [

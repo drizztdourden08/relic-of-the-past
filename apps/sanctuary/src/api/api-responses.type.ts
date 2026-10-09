@@ -1,8 +1,8 @@
 /* @layer sanctuary-site @kind types */
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
-import type { Report, ReportReporter } from '@shared/sanctuary/report-types';
-import type { SignedParts } from '@shared/hub/upload/run-multipart';
-import type { UploadedParts } from '@shared/hub/upload/uploaded-part.type';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
+import type { Report, ReportReporter } from '@rotp/hub-contracts';
+import type { SignedParts } from '@rotp/hub-contracts';
+import type { UploadedParts } from '@rotp/hub-contracts';
 
 type VersionBeginResponse = {
   fileId: string;

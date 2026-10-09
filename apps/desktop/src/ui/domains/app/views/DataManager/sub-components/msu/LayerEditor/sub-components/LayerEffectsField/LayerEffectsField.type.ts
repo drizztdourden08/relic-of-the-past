@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LayerEffect } from '@shared/types/msu-manifest';
+import type { LayerEffect } from '@rotp/game-data';
 
 interface LayerEffectsFieldProps {
   effects: LayerEffect[];

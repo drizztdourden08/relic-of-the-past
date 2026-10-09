@@ -1,6 +1,6 @@
 /* @layer site-kit @kind constants */
 import { defineStatuses } from '@drizztdourden08/tessera/primitives';
-import type { AccessState } from '@shared/hub/types';
+import type { AccessState } from '@rotp/hub-contracts';
 
 const ACCESS_STATUSES = defineStatuses({
   admin: { label: 'admin', tone: 'primary' },

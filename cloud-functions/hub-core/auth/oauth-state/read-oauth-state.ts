@@ -1,7 +1,7 @@
 /* @layer hub-core @kind logic */
 import { jwtVerify } from 'jose';
 import type { Request, Response } from '@google-cloud/functions-framework';
-import type { Provider } from '../../../../shared/hub';
+import type { Provider } from '@rotp/hub-contracts';
 import { badRequest } from '../../http/http-error';
 import { readSlot, writeSlot } from '../../http/session-jar';
 import { signingKey } from '../signing-key';

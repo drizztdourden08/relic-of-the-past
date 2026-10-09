@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import type { ExportFormat } from './behavior/usePackExport.type';
 import type { PreviewReportStore } from './behavior/preview-report-store.type';

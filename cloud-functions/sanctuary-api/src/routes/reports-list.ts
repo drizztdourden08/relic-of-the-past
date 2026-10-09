@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { SANCTUARY_ROUTES, canSeeReports } from '../../../../shared/sanctuary';
+import { SANCTUARY_ROUTES, canSeeReports } from '@rotp/hub-contracts';
 import { badRequest } from '../../../hub-core/http/http-error';
 import { queryFlag, queryParam } from '../../../hub-core/http/query';
 import { requireMember } from '../../../hub-core/auth/require-member';

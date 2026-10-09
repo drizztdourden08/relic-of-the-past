@@ -1,5 +1,5 @@
 /* @layer shared-store @kind types */
-import type { FileVersion } from '@shared/sanctuary/file-types';
+import type { FileVersion } from '../../sanctuary/file-types';
 import type { ListingEditState, Review } from '../review-types';
 
 type StoreKind = 'music' | 'character' | 'language';

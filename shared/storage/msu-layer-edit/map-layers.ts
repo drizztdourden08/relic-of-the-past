@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { mapSounds } from './map-sounds';
 import type { LayerTransform } from './msu-layer-edit.type';
 

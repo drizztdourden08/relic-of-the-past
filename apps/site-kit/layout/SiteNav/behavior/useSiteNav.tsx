@@ -2,8 +2,8 @@
 import { useCallback, useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import type { SideNavConfig, SideNavItem } from '@drizztdourden08/tessera/composites';
-import { hasRight } from '@shared/hub/rights';
-import type { Rights } from '@shared/hub/group-types';
+import { hasRight } from '@rotp/hub-contracts';
+import type { Rights } from '@rotp/hub-contracts';
 import { useSessionContext } from '../../../session/session-context';
 import { useLocation } from '../../../router/useLocation';
 import { useSiteDefinition } from '../../../site/site-context';

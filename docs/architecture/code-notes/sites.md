@@ -705,7 +705,7 @@ The object is hashed as a stream so a large pack never sits in memory.
 
 ## cloud-functions/store-api/src/storage/store-bucket.ts
 
-Uploads live under incoming/, approved packs under packs/, pictures under media/. Keys are spelled by shared/store/keys only.
+Uploads live under incoming/, approved packs under packs/, pictures under media/. Keys are spelled by packages/hub-contracts/src/store/keys only.
 
 ## cloud-functions/store-api/src/routes/download.ts
 
@@ -804,7 +804,7 @@ Replaces the person's manual groups only. Their Discord groups are not the admin
 
 ## apps/site-kit/api/hub-responses.type.ts
 
-The request bodies come from shared/hub/schemas; a site's own answers live beside its own endpoints.
+The request bodies come from packages/hub-contracts/src/hub/schemas; a site's own answers live beside its own endpoints.
 MeResponse.rights is the union of the caller's groups on this site.
 GroupView.manualCount counts the members an admin added by hand.
 DiscordRolesResponse.available is false when the API has no bot.
@@ -989,7 +989,7 @@ Every write reloads the list because member counts are computed by the API. save
 
 ## apps/site-kit/pages/Admin/sub-components/GroupEditor.constants.ts
 
-GROUP_NAME_MAX_CHARS mirrors MAX_GROUP_NAME_CHARS in shared/hub/schemas/group-schemas.ts, which does not export it.
+GROUP_NAME_MAX_CHARS mirrors MAX_GROUP_NAME_CHARS in packages/hub-contracts/src/hub/schemas/group-schemas.ts, which does not export it.
 
 ## apps/site-kit/pages/Admin/sub-components/GroupEditor.tsx
 
@@ -1049,7 +1049,7 @@ Restore moves the file's current version back to `n`. No bytes are copied.
 
 ## apps/sanctuary/src/api/api-responses.type.ts
 
-Request bodies come from shared/sanctuary/schemas; the account answers are the site kit's. POST /files/:id/complete and PATCH /files/:id both answer with the record. A reporter as the API returns it carries the GitHub login when one is linked.
+Request bodies come from packages/hub-contracts/src/sanctuary/schemas; the account answers are the site kit's. POST /files/:id/complete and PATCH /files/:id both answer with the record. A reporter as the API returns it carries the GitHub login when one is linked.
 
 ## apps/sanctuary/src/components/UploadDialog/UploadDialog.tsx
 

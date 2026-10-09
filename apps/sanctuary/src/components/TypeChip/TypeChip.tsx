@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind component */
 import { Tag } from '@drizztdourden08/tessera/primitives';
-import { FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
+import { FILE_TYPE_LABELS } from '@rotp/hub-contracts';
 import { LOOKS } from './TypeChip.constants';
 import type { TypeChipProps } from './TypeChip.type';
 

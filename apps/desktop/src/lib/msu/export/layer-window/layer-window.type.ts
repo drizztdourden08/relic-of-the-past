@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
 
 interface ResolvedLayer {
   layer: MsuLayer;

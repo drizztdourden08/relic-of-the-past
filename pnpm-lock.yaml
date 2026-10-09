@@ -298,6 +298,9 @@ importers:
       '@rotp/game-data':
         specifier: workspace:*
         version: link:packages/game-data
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:packages/hub-contracts
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -484,6 +487,9 @@ importers:
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../../packages/game-data
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../../packages/hub-contracts
       '@tiptap/core':
         specifier: ^3.30.2
         version: 3.30.2(@tiptap/pm@3.30.2)
@@ -648,6 +654,9 @@ importers:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../../packages/hub-contracts
       typescript:
         specifier: catalog:functions
         version: 5.9.3
@@ -689,6 +698,9 @@ importers:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../../packages/hub-contracts
       esbuild:
         specifier: 'catalog:'
         version: 0.25.12
@@ -720,6 +732,9 @@ importers:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../../packages/hub-contracts
       esbuild:
         specifier: 'catalog:'
         version: 0.25.12
@@ -736,7 +751,23 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0
 
-  packages/game-data: {}
+  packages/game-data:
+    dependencies:
+      '@rotp/asset-extraction':
+        specifier: workspace:*
+        version: link:../asset-extraction
+
+  packages/hub-contracts:
+    dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.36.0
+        version: 0.36.0
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
 
 packages:
 

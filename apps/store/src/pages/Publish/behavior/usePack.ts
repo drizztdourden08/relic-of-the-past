@@ -1,8 +1,8 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { CONTAINER_KIND, isContainer } from '@shared/store/containers';
-import { STORE_LIMITS } from '@shared/store/limits';
-import type { StoreKind } from '@shared/store/types';
+import { CONTAINER_KIND, isContainer } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import type { StoreKind } from '@rotp/hub-contracts';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { KIND_LABELS } from '../../../lib/kinds';
 import type { PackCheck } from './usePack.type';

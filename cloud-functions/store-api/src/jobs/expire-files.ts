@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
-import type { VersionRef } from '../../../../shared/store/api-types';
-import type { RemovalReason, StoreItem, StoreVersion } from '../../../../shared/store/types';
-import { fileExpiresAt } from '../../../../shared/store/version-flow';
+import type { VersionRef } from '@rotp/hub-contracts';
+import type { RemovalReason, StoreItem, StoreVersion } from '@rotp/hub-contracts';
+import { fileExpiresAt } from '@rotp/hub-contracts';
 import { itemsRepo } from '../db/items-repo';
 import { removeFile, stampRemoved } from '../items/remove-file';
 import { replaceVersion, versionOf } from '../items/versions';

@@ -1,5 +1,5 @@
 /* @layer hub-core @kind constants */
-import { HUB_LIMITS } from '../../../../shared/hub';
+import { HUB_LIMITS } from '@rotp/hub-contracts';
 import type { JarSlot } from './session-jar.type';
 
 const FIREBASE_FORWARDED_COOKIE = '__session';

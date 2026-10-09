@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { HomeResponse } from '@shared/store/api-types';
+import type { HomeResponse } from '@rotp/hub-contracts';
 import { ANSWER_UNREADABLE, HOME_SHELVES } from '../hookshop.constants';
 import { isObject } from './is-object';
 

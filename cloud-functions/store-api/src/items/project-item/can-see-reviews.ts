@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import { hasRight } from '../../../../../shared/hub/rights';
-import type { StoreItem } from '../../../../../shared/store/types';
+import { hasRight } from '@rotp/hub-contracts';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { isAuthor } from './is-author';
 import type { Viewer } from './project-item.type';
 

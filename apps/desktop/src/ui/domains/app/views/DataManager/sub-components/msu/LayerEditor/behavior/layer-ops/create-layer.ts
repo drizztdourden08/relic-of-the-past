@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
 import { newId } from '@drizztdourden08/brock-core';
 import { DEFAULT_MODES } from './layer-ops.constants';
 

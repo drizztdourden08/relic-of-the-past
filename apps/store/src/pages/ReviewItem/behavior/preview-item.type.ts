@@ -1,6 +1,6 @@
 /* @layer store-site @kind types */
-import type { ItemCardView } from '@shared/store/home-types';
-import type { StoreItem, StoreVersion } from '@shared/store/types';
+import type { ItemCardView } from '@rotp/hub-contracts';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 
 type ItemPreview = {
   item: StoreItem;

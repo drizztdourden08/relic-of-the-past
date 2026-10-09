@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { ItemResponse } from '@shared/store/api-types';
+import type { ItemResponse } from '@rotp/hub-contracts';
 
 type UseRatingParams = {
   data: ItemResponse | null;

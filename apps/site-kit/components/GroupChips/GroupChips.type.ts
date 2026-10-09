@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { Group } from '@shared/hub/group-types';
+import type { Group } from '@rotp/hub-contracts';
 
 type GroupChipsProps = {
   groups: readonly Pick<Group, 'id' | 'name'>[];

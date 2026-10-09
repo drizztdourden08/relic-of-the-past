@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Markdown, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
-import type { StoreItem } from '@shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { formatDay } from '@site-kit/lib/format-date';
 import { KindChip } from '../../../components/KindChip/KindChip';

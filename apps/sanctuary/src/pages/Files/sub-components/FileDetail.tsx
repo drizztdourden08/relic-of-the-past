@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { Button, Text } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';

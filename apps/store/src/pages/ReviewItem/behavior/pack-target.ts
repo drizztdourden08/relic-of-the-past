@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ReviewEntry } from '@shared/store/api-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { versionOfEntry } from '../../../review/review-row';
 import type { PackTarget } from './pack-target.type';

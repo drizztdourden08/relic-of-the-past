@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { Install } from '../../../../shared/store/rating-types';
+import type { Install } from '@rotp/hub-contracts';
 import { db } from '../../../hub-core/db/firestore';
 import { itemsRepo } from '../db/items-repo';
 import { installsRepo } from '../db/installs-repo';

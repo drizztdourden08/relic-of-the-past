@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import { SOUND_CHANNELS } from '@app/lib/msu/sound-claim';
 import type { SoundClaim } from '@app/lib/msu/sound-claim';
 import { voidCall } from '../wasm-call';

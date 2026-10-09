@@ -2,7 +2,7 @@
 import JSZip from 'jszip';
 import { freeSpriteName, readLinkSprite, spriteStem, writeLinkSprite } from '../link-sprites/link-sprites';
 import { isRspManifest, isRspName } from '../link-sprites/parse-rsp';
-import { MANIFEST_ENTRY } from '../link-sprites/rsp.constants';
+import { MANIFEST_ENTRY } from '@rotp/hub-contracts';
 import type { DuplicateInstalled } from './duplicate.type';
 
 const duplicateSprite: DuplicateInstalled = async (files, installedName, basedOn) => {

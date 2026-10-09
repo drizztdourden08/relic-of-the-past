@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES } from '../../../shared/hub';
+import { HUB_ROUTES } from '@rotp/hub-contracts';
 import { notFound } from '../http/http-error';
 import { requireSession } from '../auth/require-session';
 import { devicesRepo } from '../db/devices-repo';

@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
-import type { StoreItem, StoreVersion } from '@shared/store/types';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import { AppLink } from '@site-kit/router/AppLink';
 import { itemPath } from '../../../catalog/item-paths';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import { SOUND_CHANNEL_TAGS } from '../sound-labels';
 
 const PORT_TAGS: [SoundChannel, string][] = [

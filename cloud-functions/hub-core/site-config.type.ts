@@ -1,5 +1,5 @@
 /* @layer hub-core @kind types */
-import type { AccessPolicy, GroupRights, RightsModel, SiteId } from '../../shared/hub';
+import type { AccessPolicy, GroupRights, RightsModel, SiteId } from '@rotp/hub-contracts';
 
 type DefaultGroupSeed = {
   name: string;

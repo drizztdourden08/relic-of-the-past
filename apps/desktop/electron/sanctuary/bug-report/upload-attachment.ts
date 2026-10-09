@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFile } from 'fs/promises';
-import type { SubmitReportResult } from '@shared/sanctuary';
+import type { SubmitReportResult } from '@rotp/hub-contracts';
 import { markSessionsSent } from '../../diagnostics/debug-report/capture-manifest';
 import { messageOf, uploadReportZip } from '../submit-report';
 import type { BuiltReportZip } from './bug-report.type';

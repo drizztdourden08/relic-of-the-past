@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind constants */
-import { SANCTUARY_VIEW_SURFACES } from '@shared/sanctuary/view-surfaces';
+import { SANCTUARY_VIEW_SURFACES } from '@rotp/hub-contracts';
 import { createViewKeys } from '@site-kit/views/create-view-keys';
 import { createViewStorage } from '@site-kit/views/create-view-storage';
 

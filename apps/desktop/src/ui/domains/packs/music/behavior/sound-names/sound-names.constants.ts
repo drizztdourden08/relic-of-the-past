@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 
 const SOUND_CHANNEL_LABELS: Record<SoundChannel, string> = {
   ambient: 'Ambient', sfx1: 'Effects 1', sfx2: 'Effects 2',

@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { HeaderAnchorNavItem } from '@drizztdourden08/tessera/composites';
-import type { StoreItem } from '@shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { PUBLICATION_SCOPES } from './publication-scopes.constants';
 import { scopePredicate } from './scope-predicate';
 

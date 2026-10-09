@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { FeaturedResponse } from '../../../../shared/store/api-types';
-import { featuredSchema } from '../../../../shared/store/schemas';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { FeaturedResponse } from '@rotp/hub-contracts';
+import { featuredSchema } from '@rotp/hub-contracts';
 import { badRequest } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import type { Route } from '../../../hub-core/route.type';

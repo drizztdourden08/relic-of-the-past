@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind types */
-import type { StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 import type { LanguageSet } from '@shared/game/language';
-import type { ZipEntry } from '@shared/store/manifest/zip-directory';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { ZipEntry } from '@rotp/hub-contracts';
+import type { MsuPackManifest } from '@rotp/game-data';
 import type { SetFontAssets } from '../../language/behavior/language-behavior.type';
 import type { PackSource } from '../../pack-source.type';
 

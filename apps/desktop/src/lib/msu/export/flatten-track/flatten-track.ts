@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuTrackDef } from '@shared/types/msu-manifest';
+import type { MsuTrackDef } from '@rotp/game-data';
 import { MSU1_CHANNELS, MSU1_SAMPLE_RATE } from '../../decode/parse-msu1';
 import { dominantLoopLayer, renderWindowSeconds, resolveLayers } from '../layer-window';
 import { scheduleLayer } from '../schedule-layer';

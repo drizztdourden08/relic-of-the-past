@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
-import type { DownloadResponse } from '@shared/store/api-types';
-import type { DownloadBody } from '@shared/store/schemas';
+import type { DownloadResponse } from '@rotp/hub-contracts';
+import type { DownloadBody } from '@rotp/hub-contracts';
 import { storeApi } from '../store-client';
 
 const requestDownload = (id: string, body: DownloadBody = {}) =>

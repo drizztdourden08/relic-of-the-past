@@ -1,6 +1,6 @@
 /* @layer site-kit @kind component */
 import { Spinner, Center, Button } from '@drizztdourden08/tessera/primitives';
-import { hasRight } from '@shared/hub/rights';
+import { hasRight } from '@rotp/hub-contracts';
 import { useLocation } from '../router/useLocation';
 import { Redirect } from '../router/Redirect';
 import { resolveRoute } from '../router/route-table';

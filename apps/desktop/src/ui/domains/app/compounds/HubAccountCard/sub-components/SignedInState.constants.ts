@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { AccessState } from '@shared/hub';
+import type { AccessState } from '@rotp/hub-contracts';
 import type { StatusTone } from '@drizztdourden08/tessera/primitives';
 
 const ACCESS_VARIANT: Record<AccessState, StatusTone> = {

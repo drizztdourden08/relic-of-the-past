@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
 import type { BatchActions } from '../behavior/useBatchActions.type';
 import type { BatchDownload } from '../behavior/useBatchDownload.type';
 

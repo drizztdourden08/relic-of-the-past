@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { LanguageConfig } from '@rotp/game-data';
+import type { LanguageConfig } from '@rotp/asset-extraction';
 import type { GlyphMetrics } from '../types';
 
 const buildGlyphMetrics = (cfg: LanguageConfig, fontWidth: Uint8Array): GlyphMetrics => ({

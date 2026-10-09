@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { SanctuaryFile } from '../../../../shared/sanctuary';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { fileKey } from '../storage/keys';
 import type { StoredFile } from './upgrade-file.type';
 

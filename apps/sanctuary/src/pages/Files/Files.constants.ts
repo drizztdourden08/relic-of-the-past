@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind constants */
-import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@shared/sanctuary/file-types';
-import type { FileType } from '@shared/sanctuary/file-types';
+import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@rotp/hub-contracts';
+import type { FileType } from '@rotp/hub-contracts';
 import type { Scope } from './Files.type';
 
 const ALL_SCOPE_ID = 'all';

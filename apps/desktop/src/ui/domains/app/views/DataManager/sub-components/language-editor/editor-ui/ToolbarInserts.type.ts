@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { Token, Variable } from '@shared/game/language';
-import type { LanguageConfig } from '@rotp/game-data';
+import type { LanguageConfig } from '@rotp/asset-extraction';
 import type { GlyphFont } from './editor-ui.type';
 
 type ToolbarInsertsProps = {

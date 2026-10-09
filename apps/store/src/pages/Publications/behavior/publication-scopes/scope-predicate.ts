@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { StoreItem } from '@shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import type { ItemPredicate } from './publication-scopes.type';
 
 const hasEntryIn = (item: StoreItem, state: 'waiting' | 'rejected') =>

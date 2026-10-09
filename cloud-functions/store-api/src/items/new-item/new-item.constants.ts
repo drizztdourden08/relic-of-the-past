@@ -1,5 +1,5 @@
 /* @layer store-api @kind constants */
-import type { ItemStats } from '../../../../../shared/store/types';
+import type { ItemStats } from '@rotp/hub-contracts';
 
 const EMPTY_STATS: ItemStats = {
   installs: 0,

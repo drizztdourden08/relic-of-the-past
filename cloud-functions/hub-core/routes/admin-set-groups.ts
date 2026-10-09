@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES, setGroupsSchema } from '../../../shared/hub';
+import { HUB_ROUTES, setGroupsSchema } from '@rotp/hub-contracts';
 import { badRequest, notFound } from '../http/http-error';
 import { parseBody } from '../http/parse-body';
 import { requireAdmin } from '../auth/require-admin';

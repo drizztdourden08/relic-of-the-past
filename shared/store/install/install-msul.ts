@@ -3,7 +3,7 @@ import type { FileStore } from '@drizztdourden08/brock-core';
 import { deletePack, renamePack } from '@shared/storage/msu';
 import { assertSafeName, packDir } from '@shared/storage/msu-paths';
 import { installMsulPack } from '@shared/storage/msul/install-msul-pack';
-import type { InstallProgress, PackInstaller } from './installer.type';
+import type { InstallProgress, PackInstaller } from '@rotp/hub-contracts';
 
 const install = async (bytes: Uint8Array, files: FileStore, onProgress: (p: InstallProgress) => void) => {
   const { pack, ownName } = await installMsulPack(files, bytes, {

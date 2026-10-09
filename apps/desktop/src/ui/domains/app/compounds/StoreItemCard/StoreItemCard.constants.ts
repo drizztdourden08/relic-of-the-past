@@ -2,7 +2,7 @@
 import musicIcon from '@iconify-icons/lucide/music';
 import personIcon from '@iconify-icons/lucide/person-standing';
 import languagesIcon from '@iconify-icons/lucide/languages';
-import type { StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 import type { KindIcon } from './StoreItemCard.type';
 
 const KIND_LABELS: Record<StoreKind, string> = {

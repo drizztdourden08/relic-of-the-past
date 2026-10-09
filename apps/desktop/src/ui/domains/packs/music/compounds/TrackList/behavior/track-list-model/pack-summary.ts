@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import { DELUXE_TRACK_THRESHOLD } from '@rotp/hub-contracts';
+import type { MsuPackManifest } from '@rotp/game-data';
 import type { PackSummaryLine } from '../../TrackList.type';
 import { filesOf } from './files-of';
 import { soundsOf } from './sounds-of';

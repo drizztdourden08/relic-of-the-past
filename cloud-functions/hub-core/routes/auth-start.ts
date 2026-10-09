@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
 import { generateCodeVerifier } from 'arctic';
-import { HUB_ROUTES } from '../../../shared/hub';
+import { HUB_ROUTES } from '@rotp/hub-contracts';
 import { badRequest } from '../http/http-error';
 import { queryParam } from '../http/query';
 import { callbackUrlFor } from '../auth/callback-url';

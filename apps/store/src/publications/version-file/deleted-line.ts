@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { FileRemoval, StoreItem } from '@shared/store/types';
+import type { FileRemoval, StoreItem } from '@rotp/hub-contracts';
 import { formatDay } from '@site-kit/lib/format-date';
 
 const deletedLine = (item: StoreItem, { at, by }: FileRemoval): string => {

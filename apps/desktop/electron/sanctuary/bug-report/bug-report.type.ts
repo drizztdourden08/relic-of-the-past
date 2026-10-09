@@ -1,6 +1,6 @@
 /* @layer electron-main @kind types */
 import type { DebugZipEntry } from '@drizztdourden08/brock-electron/main';
-import type { ReportZip } from '@shared/sanctuary';
+import type { ReportZip } from '@rotp/hub-contracts';
 
 interface SaveInReport {
   kind: 'quick' | 'normal' | 'auto' | 'live';

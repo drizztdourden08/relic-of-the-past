@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useMemo } from 'react';
-import type { StoreItem } from '@shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { itemPack } from '../../../api/catalog-endpoints';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { usePackLink } from '../../../lib/pack-link/usePackLink';

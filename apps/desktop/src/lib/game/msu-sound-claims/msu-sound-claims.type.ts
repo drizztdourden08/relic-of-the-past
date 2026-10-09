@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 
 interface SoundReplacement {
   ambient: boolean;

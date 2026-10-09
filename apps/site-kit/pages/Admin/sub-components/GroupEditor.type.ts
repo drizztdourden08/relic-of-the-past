@@ -1,6 +1,6 @@
 /* @layer site-kit @kind types */
-import type { DiscordRole, Group } from '@shared/hub/group-types';
-import type { CreateGroupBody } from '@shared/hub/schemas/group-schemas';
+import type { DiscordRole, Group } from '@rotp/hub-contracts';
+import type { CreateGroupBody } from '@rotp/hub-contracts';
 import type { RightsEditorSlot } from '../../../site/site-definition.type';
 
 type GroupEditorProps = {

@@ -35,7 +35,7 @@ pnpm run dev -- --no-focus --muted
 ## Local ports
 
 Every local server the project runs sits in one fixed block of ports. The base and each role
-are defined once, in `shared/config/ports.constants.ts`; nothing else writes a port number.
+are defined once, in `packages/hub-contracts/src/ports/ports.constants.ts`; nothing else writes a port number.
 
 | Offset | Role |
 |---|---|

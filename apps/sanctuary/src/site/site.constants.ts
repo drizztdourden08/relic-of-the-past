@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind constants */
-import { SANCTUARY_RIGHTS } from '@shared/sanctuary/sanctuary-rights';
-import { STORE_RIGHTS } from '@shared/store/store-rights';
+import { SANCTUARY_RIGHTS } from '@rotp/hub-contracts';
+import { STORE_RIGHTS } from '@rotp/hub-contracts';
 import type { SiteDefinition } from '@site-kit/site/site-definition.type';
 import { SiteDataProvider } from '../data/SiteDataProvider';
 import { SearchResults } from '../search/SearchResults/SearchResults';

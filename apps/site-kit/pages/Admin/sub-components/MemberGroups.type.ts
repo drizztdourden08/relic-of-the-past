@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { SiteUser } from '@shared/hub/site-types';
+import type { SiteUser } from '@rotp/hub-contracts';
 import type { GroupView } from '../../../api/hub-responses.type';
 
 type MemberGroupsProps = {

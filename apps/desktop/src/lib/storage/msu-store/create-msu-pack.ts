@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuPackMeta } from '@shared/types/msu-manifest';
+import type { MsuPackMeta } from '@rotp/game-data';
 import * as msu from '@shared/storage/msu';
 import { platformFiles } from '../platform-files';
 

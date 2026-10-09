@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES, devicePollSchema } from '../../../shared/hub';
+import { HUB_ROUTES, devicePollSchema } from '@rotp/hub-contracts';
 import { forbidden, notFound } from '../http/http-error';
 import { parseBody } from '../http/parse-body';
 import { newDeviceToken, sha256 } from '../auth/device-token';

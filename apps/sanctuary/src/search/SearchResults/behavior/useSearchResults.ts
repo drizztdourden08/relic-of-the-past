@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { navigate } from '@site-kit/router/useLocation';
 import { useSiteData } from '../../../data/useSiteData';
 import { useSessionContext } from '@site-kit/session/session-context';
-import { canSeeReports, visibleFileTypes } from '@shared/sanctuary/sanctuary-rights';
+import { canSeeReports, visibleFileTypes } from '@rotp/hub-contracts';
 import { toFileRow } from '../../../files/file-row';
 import { buildFileSchema } from '../../../files/file-schema';
 import { toReportRow } from '../../../reports/report-row';

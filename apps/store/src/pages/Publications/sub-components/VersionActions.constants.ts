@@ -1,5 +1,5 @@
 /* @layer store-site @kind constants */
-import type { Actor } from '@shared/store/version-flow';
+import type { Actor } from '@rotp/hub-contracts';
 
 const AUTHOR: readonly Actor[] = ['author'];
 

@@ -3,7 +3,7 @@ import JSZip from 'jszip';
 import type { PlayerSheet } from '@rotp/game-data';
 import type { RspWriteOptions } from './rsp.type';
 import { SHEET_BYTES } from '@rotp/game-data';
-import { MANIFEST_ENTRY, SHEET_ENTRY, PREVIEW_ENTRY } from '@shared/storage/link-sprites/rsp.type';
+import { MANIFEST_ENTRY, SHEET_ENTRY, PREVIEW_ENTRY } from '@rotp/hub-contracts';
 import { renderSheetPng } from '../player-sheet/sheet-png';
 import { manifestOf } from './manifest-of';
 

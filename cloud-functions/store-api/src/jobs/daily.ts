@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
-import type { DailyJobResponse, VersionRef } from '../../../../shared/store/api-types';
-import { STORE_LIMITS } from '../../../../shared/store/limits';
-import type { StoreItem } from '../../../../shared/store/types';
+import type { DailyJobResponse, VersionRef } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { now } from '../../../hub-core/db/firestore';
 import { itemsRepo } from '../db/items-repo';
 import { dailyRepo } from '../db/daily-repo';

@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { FileUpload } from '../../../../../shared/sanctuary';
+import type { FileUpload } from '@rotp/hub-contracts';
 import { now } from '../../../../hub-core/db/firestore';
 
 const withPartsDone = (upload: FileUpload, partsDone: number): FileUpload =>

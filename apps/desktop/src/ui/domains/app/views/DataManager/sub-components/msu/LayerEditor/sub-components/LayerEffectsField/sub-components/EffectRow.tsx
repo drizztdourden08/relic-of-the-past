@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Flex, IconButton, NumberInput, Select, Text } from '@drizztdourden08/tessera/primitives';
-import type { LayerEffect } from '@shared/types/msu-manifest';
+import type { LayerEffect } from '@rotp/game-data';
 import { DEFAULT_EFFECT, EFFECT_KIND_OPTIONS, MAX_DB, MAX_HZ, MIN_HZ } from '../LayerEffectsField.constants';
 import type { EffectRowProps } from '../LayerEffectsField.type';
 

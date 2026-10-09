@@ -1,5 +1,5 @@
 /* @layer site-kit @kind component */
-import { PROVIDERS } from '@shared/hub/providers';
+import { PROVIDERS } from '@rotp/hub-contracts';
 import { Box, Stack, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SitePage } from '../../layout/SitePage/SitePage';

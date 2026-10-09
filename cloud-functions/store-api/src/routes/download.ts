@@ -1,11 +1,11 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { DownloadResponse } from '../../../../shared/store/api-types';
-import { HUB_LIMITS } from '../../../../shared/hub/limits';
-import { isPackKey, packName } from '../../../../shared/store/keys';
-import { STORE_LIMITS } from '../../../../shared/store/limits';
-import { downloadSchema } from '../../../../shared/store/schemas';
-import type { StoreItem, StoreVersion } from '../../../../shared/store/types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { DownloadResponse } from '@rotp/hub-contracts';
+import { HUB_LIMITS } from '@rotp/hub-contracts';
+import { isPackKey, packName } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import { downloadSchema } from '@rotp/hub-contracts';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { notFound, tooMany } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { now } from '../../../hub-core/db/firestore';

@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ListingPatchBody } from '@shared/store/schemas';
+import type { ListingPatchBody } from '@rotp/hub-contracts';
 import type { ListingText } from './useListingFields.type';
 
 const sameTags = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((tag, i) => tag === b[i]);

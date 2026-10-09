@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
+import { DELUXE_TRACK_THRESHOLD } from '@rotp/hub-contracts';
 import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { MsuPackHeader } from './MsuPackHeader';

@@ -1,0 +1,18 @@
+{
+  "name": "@rotp/hub-contracts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Types, schemas, rights and routes shared by the desktop app, the sites and the APIs.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@drizztdourden08/brock-core": "^0.36.0",
+    "@rotp/game-data": "workspace:*",
+    "zod": "catalog:"
+  }
+}

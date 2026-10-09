@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ReviewEntry } from '@shared/store/api-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDateTime } from '@site-kit/lib/format-date';
 import type { ReviewRow } from './review-row.type';

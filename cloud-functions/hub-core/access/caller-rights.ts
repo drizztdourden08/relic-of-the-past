@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { HubUser } from '../../../shared/hub';
+import type { HubUser } from '@rotp/hub-contracts';
 import type { SiteConfig } from '../site-config.type';
 import type { CallerRights } from './caller-rights.type';
 import { cachedGroups } from './cached-groups';

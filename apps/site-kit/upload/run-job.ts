@@ -1,5 +1,5 @@
 /* @layer site-kit @kind logic */
-import { keptParts, runMultipart } from '@shared/hub/upload/run-multipart';
+import { keptParts, runMultipart } from '@rotp/hub-contracts';
 import { formatBytes } from '../lib/format-bytes';
 import { putPart } from './put-part';
 import { dropRecord, saveRecord } from './upload-records';

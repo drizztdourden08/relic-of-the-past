@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
-import { LIMITS, SANCTUARY_ROUTES, beginVersionSchema } from '../../../../shared/sanctuary';
-import type { FileVersion } from '../../../../shared/sanctuary';
+import { LIMITS, SANCTUARY_ROUTES, beginVersionSchema } from '@rotp/hub-contracts';
+import type { FileVersion } from '@rotp/hub-contracts';
 import { conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { requireMember } from '../../../hub-core/auth/require-member';

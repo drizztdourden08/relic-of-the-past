@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Button, Flex } from '@drizztdourden08/tessera/primitives';
-import { KIND_CONTAINER } from '@shared/store/containers';
+import { KIND_CONTAINER } from '@rotp/hub-contracts';
 import { InstallButton } from '../../../components/InstallButton/InstallButton';
 import { FeatureButton } from './FeatureButton';
 import type { ItemActionsProps } from './ItemActions.type';

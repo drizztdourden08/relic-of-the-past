@@ -1,5 +1,5 @@
 /* @layer shared-store @kind logic */
-import { isRspManifest } from '@shared/storage/link-sprites/parse-rsp';
+import { isRspManifest } from '../../../link-sprites/parse-rsp/is-rsp-manifest';
 import type { KindFacts } from '../../types';
 import type { FirstEntry } from '../read-first-entry';
 

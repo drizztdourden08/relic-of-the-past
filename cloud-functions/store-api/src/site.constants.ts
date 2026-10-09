@@ -1,5 +1,5 @@
 /* @layer store-api @kind constants */
-import { STORE_RIGHTS } from '../../../shared/store/store-rights';
+import { STORE_RIGHTS } from '@rotp/hub-contracts';
 import type { SiteConfig } from '../../hub-core/site-config.type';
 import { readStoreEnv } from './env';
 

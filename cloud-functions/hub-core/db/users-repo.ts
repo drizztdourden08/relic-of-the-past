@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
 import { FieldValue } from '@google-cloud/firestore';
-import type { HubUser, SiteAccess, SiteId } from '../../../shared/hub';
+import type { HubUser, SiteAccess, SiteId } from '@rotp/hub-contracts';
 import { collection, now } from './firestore';
 import { ACCESS_STATES } from './users-repo.constants';
 import type { SignUpProfile, StoredUser, UserSummary } from './users-repo.type';

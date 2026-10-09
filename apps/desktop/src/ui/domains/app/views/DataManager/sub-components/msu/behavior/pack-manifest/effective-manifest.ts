@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { effectivePackManifest } from '@shared/storage/msu-classic-manifest';
 import type { TrackInfo } from '../../msu.type';
 

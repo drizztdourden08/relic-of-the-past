@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { ReportReporter } from '../../../../shared/sanctuary';
+import type { ReportReporter } from '@rotp/hub-contracts';
 import { identitiesRepo } from '../../../hub-core/db/identities-repo';
 
 const reporterLine = async (reporter: ReportReporter | null): Promise<string> => {

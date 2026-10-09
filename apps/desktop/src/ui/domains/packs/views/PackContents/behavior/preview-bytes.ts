@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { entryData } from '@shared/store/manifest/zip-directory';
-import type { ZipEntry } from '@shared/store/manifest/zip-directory';
+import { entryData } from '@rotp/hub-contracts';
+import type { ZipEntry } from '@rotp/hub-contracts';
 import type { PackSource } from '../../../pack-source.type';
 import { MAX_PREVIEW_BYTES, PCM_PREVIEW_BYTES, TOO_LARGE } from '../PackContents.constants';
 

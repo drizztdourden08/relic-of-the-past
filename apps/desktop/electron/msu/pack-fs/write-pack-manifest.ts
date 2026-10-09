@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { serializeManifest } from '@shared/storage/msu-edit';
 import { manifestPath } from './manifest-path';
 import { packInventory } from './pack-inventory';

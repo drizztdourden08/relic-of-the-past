@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useState } from 'react';
-import type { ItemResponse } from '@shared/store/api-types';
+import type { ItemResponse } from '@rotp/hub-contracts';
 import { hookshopReads } from '@app/lib/store/hookshop-reads';
 
 const useItemDetail = (itemId: string | null, signedIn: boolean) => {

@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { currentVersionOf } from '../../../files/file-versions';
 import { COPY_OR_VERSION_SUFFIX } from './same-name-match.constants';
 

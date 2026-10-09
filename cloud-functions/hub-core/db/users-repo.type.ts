@@ -1,5 +1,5 @@
 /* @layer hub-core @kind types */
-import type { AccessCheck, HubUser } from '../../../shared/hub';
+import type { AccessCheck, HubUser } from '@rotp/hub-contracts';
 
 type SignUpProfile = { handle: string; avatarUrl: string | null };
 type UserSummary = { userId: string; displayName: string };

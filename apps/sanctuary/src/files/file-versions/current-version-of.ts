@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { FileVersion } from '@shared/sanctuary/file-types';
+import type { FileVersion } from '@rotp/hub-contracts';
 import type { Versioned } from './file-versions.type';
 
 const versionByNumber = (file: Versioned, n: number): FileVersion | null =>

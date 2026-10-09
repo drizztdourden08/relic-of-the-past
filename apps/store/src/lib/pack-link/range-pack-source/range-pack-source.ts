@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { PackSource } from '@domains/packs/pack-source.type';
-import type { PackLinkResponse } from '@shared/store/api-types';
+import type { PackLinkResponse } from '@rotp/hub-contracts';
 import type { RenewLink } from './range-pack-source.type';
 import { readRange } from './read-range';
 import { isLapsed } from './is-lapsed';

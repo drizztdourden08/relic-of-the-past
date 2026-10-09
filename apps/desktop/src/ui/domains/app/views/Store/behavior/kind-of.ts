@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 import type { StoreSection } from '../Store.type';
 
 const kindOf = (section: StoreSection): StoreKind | null =>

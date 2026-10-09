@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { Group } from '../../../../shared/hub';
+import type { Group } from '@rotp/hub-contracts';
 import { readHubEnv } from '../../env';
 import { knownIds } from '../membership';
 import type { GroupRule } from '../access-rule.type';

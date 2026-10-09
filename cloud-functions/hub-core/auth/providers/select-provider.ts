@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { isProvider } from '../../../../shared/hub';
+import { isProvider } from '@rotp/hub-contracts';
 import type { OAuthProvider } from './provider.type';
 import { PROVIDERS } from './select-provider.constants';
 

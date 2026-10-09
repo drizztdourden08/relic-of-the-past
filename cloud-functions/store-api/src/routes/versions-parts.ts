@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { UploadedPartsResponse } from '../../../../shared/store/api-types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { UploadedPartsResponse } from '@rotp/hub-contracts';
 import { conflict } from '../../../hub-core/http/http-error';
 import type { Route } from '../../../hub-core/route.type';
 import { requirePlayer } from '../auth/player';

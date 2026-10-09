@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
 import { layerPositions } from './active-layers';
 import type { ChannelResume, SoundProgram } from './channel.type';
 import type { ActiveProgram } from './stateful-channel.type';

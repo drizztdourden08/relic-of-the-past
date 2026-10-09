@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { ItemCreateResponse } from '../../../../shared/store/api-types';
-import { itemCreateSchema } from '../../../../shared/store/schemas';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { ItemCreateResponse } from '@rotp/hub-contracts';
+import { itemCreateSchema } from '@rotp/hub-contracts';
 import { tooMany } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { now } from '../../../hub-core/db/firestore';

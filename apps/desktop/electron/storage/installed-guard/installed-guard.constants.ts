@@ -1,5 +1,5 @@
 /* @layer electron-main @kind constants */
-import type { StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 
 const INSTALLED_ROOTS: Record<StoreKind, (name: string) => string> = {
   music: (name) => `msu/${name}`,

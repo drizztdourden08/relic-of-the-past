@@ -1,6 +1,6 @@
 /* @layer store-site @kind types */
-import type { ItemResponse } from '@shared/store/api-types';
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemResponse } from '@rotp/hub-contracts';
+import type { ItemCardView } from '@rotp/hub-contracts';
 
 type ItemSideCardProps = {
   item: ItemCardView;

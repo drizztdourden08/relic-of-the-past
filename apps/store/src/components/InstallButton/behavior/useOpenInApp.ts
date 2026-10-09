@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useRef } from 'react';
-import { formatInstallLink } from '@shared/store/deep-link';
+import { formatInstallLink } from '@rotp/hub-contracts';
 import { toast } from '@drizztdourden08/tessera/composites';
 import { ANSWER_MS, NOT_ANSWERED, NOT_ANSWERED_MS } from './useOpenInApp.constants';
 

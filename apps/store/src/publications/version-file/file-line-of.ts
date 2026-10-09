@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
-import type { StoreItem, StoreVersion } from '@shared/store/types';
-import { fileExpiresAt } from '@shared/store/version-flow';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
+import { fileExpiresAt } from '@rotp/hub-contracts';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { plural } from '../../lib/format-count/plural';
 import { DAY_MS, REMOVED_LINES } from './version-file.constants';

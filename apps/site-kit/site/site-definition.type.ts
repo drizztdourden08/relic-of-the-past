@@ -1,7 +1,7 @@
 /* @layer site-kit @kind types */
 import type { ComponentType, ReactNode } from 'react';
 import type { IconifyIcon } from '@iconify/react/offline';
-import type { RightsModel, SiteId } from '@shared/hub';
+import type { RightsModel, SiteId } from '@rotp/hub-contracts';
 import type { ViewKeys } from '../views/create-view-keys';
 
 type SiteSection = {

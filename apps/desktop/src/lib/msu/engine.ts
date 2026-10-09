@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuResumeState } from '@shared/types/msu-manifest';
+import type { MsuResumeState } from '@rotp/game-data';
 import { remapDeluxeTrack } from '@rotp/game-data';
 import { buildChannels } from './build-channels';
 import type { ChannelReport, MsuChannelName } from './channel';

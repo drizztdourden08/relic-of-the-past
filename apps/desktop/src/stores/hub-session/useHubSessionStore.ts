@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
 import { useSignInStore } from '@drizztdourden08/brock-secrets/renderer';
-import { SITE_IDS } from '@shared/hub/site-types';
+import { SITE_IDS } from '@rotp/hub-contracts';
 import { fetchHubMe } from './fetch-hub-me';
 import { signOutOfHub } from './sign-out-of-hub';
 import type { HubSessionStore } from './hub-session.type';

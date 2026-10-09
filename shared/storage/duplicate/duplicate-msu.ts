@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { synthesizeClassicManifest } from '../msu-classic-manifest';
 import {
   getTrackList, listPackEntries, readManifest, readTrackFile, writeManifest, writeTrackFile,

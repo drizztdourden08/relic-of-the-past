@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { LanguageConfig } from '@rotp/game-data';
+import type { LanguageConfig } from '@rotp/asset-extraction';
 import { kCmdInfo } from '@rotp/asset-extraction';
 import { ORG_PARAM_RANGE, ORG_PARAM_SLOT_BYTES } from './code-catalog.constants';
 

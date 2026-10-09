@@ -7,7 +7,7 @@ import refreshIcon from '@iconify-icons/lucide/refresh-cw';
 import trashIcon from '@iconify-icons/lucide/trash-2';
 import { Box, Button, Card, Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
-import { licenseById } from '@shared/store/licenses';
+import { licenseById } from '@rotp/hub-contracts';
 import { HookshopChip } from '../HookshopChip';
 import { READ_ONLY_NOTE, uninstallMessage, uninstallTitle } from './InstalledOrigin.constants';
 import type { InstalledOriginProps } from './InstalledOrigin.type';

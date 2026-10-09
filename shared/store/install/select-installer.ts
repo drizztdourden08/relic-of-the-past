@@ -1,6 +1,6 @@
 /* @layer shared-store @kind logic */
-import type { Container } from '../types';
-import type { PackInstaller } from './installer.type';
+import type { Container } from '@rotp/hub-contracts';
+import type { PackInstaller } from '@rotp/hub-contracts';
 import { INSTALLERS } from './select-installer.constants';
 
 const selectInstaller = (container: Container): PackInstaller => INSTALLERS[container];

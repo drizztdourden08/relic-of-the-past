@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
 import { SOUND_CHANNEL_LABELS } from '@domains/packs/music/behavior/sound-names';
 

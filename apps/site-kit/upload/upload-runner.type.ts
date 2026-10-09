@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { BegunMultipart } from '@shared/hub/upload/run-multipart';
+import type { BegunMultipart } from '@rotp/hub-contracts';
 import type { StepState, UploadResume, UploadStep } from './upload-job.type';
 import type { FileFacts } from './upload-record.type';
 

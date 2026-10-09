@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ListingEdit, StoreItem } from '../../../../../shared/store/types';
+import type { ListingEdit, StoreItem } from '@rotp/hub-contracts';
 import { notFound } from '../../../../hub-core/http/http-error';
 
 const editOf = (item: StoreItem, editId: string): ListingEdit => {

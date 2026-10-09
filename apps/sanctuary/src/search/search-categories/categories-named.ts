@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { FileType } from '@shared/sanctuary/file-types';
+import type { FileType } from '@rotp/hub-contracts';
 import { SEARCH_CATEGORIES } from './search-categories.constants';
 import type { CategoryRights, SearchCategory } from './search-categories.type';
 

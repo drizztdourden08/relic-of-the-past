@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { InstalledOrigin } from '@shared/store/installed-types';
+import type { InstalledOrigin } from '@rotp/hub-contracts';
 
 interface InstalledOriginProps {
   origin: InstalledOrigin;

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MsuLayer, MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
+import type { MsuLayer, MsuPackManifest, SoundChannel } from '@rotp/game-data';
 import { soundDefsOfChannel } from './sound-defs-of-channel';
 
 const layersOfSound = (

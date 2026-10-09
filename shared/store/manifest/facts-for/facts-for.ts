@@ -1,7 +1,7 @@
 /* @layer shared-store @kind logic */
-import { CONTAINER_MANIFEST } from '../../containers';
-import type { Container, KindFacts } from '../../types';
-import type { FirstEntry } from '../read-first-entry';
+import { CONTAINER_MANIFEST } from '@rotp/hub-contracts';
+import type { Container, KindFacts } from '@rotp/hub-contracts';
+import type { FirstEntry } from '@rotp/hub-contracts';
 import { FACTS } from './facts-for.constants';
 
 const factsFor = (container: Container, entry: FirstEntry): KindFacts | null =>

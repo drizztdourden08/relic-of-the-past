@@ -1,5 +1,5 @@
 /* @layer store-api @kind constants */
-import type { StoreKind } from '../../../../shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 
 const KINDS: readonly StoreKind[] = ['music', 'character', 'language'];
 

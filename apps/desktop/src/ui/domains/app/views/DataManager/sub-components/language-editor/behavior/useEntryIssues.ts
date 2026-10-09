@@ -2,7 +2,7 @@
 import { useMemo, useRef } from 'react';
 import type { GlossaryTerm, LanguageSet } from '@shared/game/language';
 import { validateEntry } from '@shared/game/language';
-import { kLanguages } from '@rotp/game-data';
+import { kLanguages } from '@rotp/asset-extraction';
 import { NO_ISSUES } from './useEntryIssues.constants';
 import type { EntryIssueMap } from '../language-editor.type';
 import type { CacheRow } from './useEntryIssues.type';

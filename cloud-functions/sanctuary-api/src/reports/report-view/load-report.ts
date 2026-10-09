@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { Report } from '../../../../../shared/sanctuary';
+import type { Report } from '@rotp/hub-contracts';
 import { notFound } from '../../../../hub-core/http/http-error';
 import { reportsRepo } from '../../db/reports-repo';
 

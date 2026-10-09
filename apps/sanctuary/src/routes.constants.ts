@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind constants */
 import { createElement } from 'react';
-import { REPORTS_PERMISSION } from '@shared/sanctuary/sanctuary-rights';
+import { REPORTS_PERMISSION } from '@rotp/hub-contracts';
 import type { RouteEntry } from '@site-kit/router/route-table';
 import { SignIn } from '@site-kit/pages/SignIn/SignIn';
 import { Account } from '@site-kit/pages/Account/Account';

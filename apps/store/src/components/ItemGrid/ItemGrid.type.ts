@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 import type { OwnedState } from '../ItemCard/ItemCard.type';
 
 type ItemGridProps = {

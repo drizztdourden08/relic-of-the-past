@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Status, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { PROVIDER_LABELS } from '@shared/hub';
+import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import type { SignedInStateProps } from '../HubAccountCard.type';
 import { ACCESS_VARIANT } from './SignedInState.constants';
 

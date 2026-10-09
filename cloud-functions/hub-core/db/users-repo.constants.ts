@@ -1,5 +1,5 @@
 /* @layer hub-core @kind constants */
-import type { AccessState } from '../../../shared/hub';
+import type { AccessState } from '@rotp/hub-contracts';
 
 const ACCESS_STATES: readonly AccessState[] = ['admin', 'member', 'pending', 'revoked'];
 

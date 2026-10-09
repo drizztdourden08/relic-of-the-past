@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
 import { writeMsuManifest } from '@app/lib/storage/msu-store';
 import { createLayer, moveItem, normalizeLayers, validateLayers } from './layer-ops';
 import type { LayerEditorState } from './useLayerEditor.type';

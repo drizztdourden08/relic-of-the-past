@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { Group } from '../../../../shared/hub';
+import type { Group } from '@rotp/hub-contracts';
 import { groupsRepo } from '../../db/groups-repo';
 import { now } from '../../db/firestore';
 import type { SiteConfig } from '../../site-config.type';

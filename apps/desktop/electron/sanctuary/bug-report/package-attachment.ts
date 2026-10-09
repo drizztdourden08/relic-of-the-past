@@ -3,7 +3,7 @@ import { rm } from 'fs/promises';
 import type { BugReportPayload } from '@drizztdourden08/brock-core/types';
 import type { MainContext } from '@drizztdourden08/brock-electron/main';
 import type { SanctuaryReportSnapshot } from '@shared/ipc';
-import { LIMITS } from '@shared/sanctuary';
+import { LIMITS } from '@rotp/hub-contracts';
 import { messageOf } from '../submit-report';
 import type { PackagedAttachment } from './bug-report.type';
 import { TOO_LARGE_ERROR } from './bug-report.constants';

@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
 import type { Request } from '@google-cloud/functions-framework';
-import type { SiteAccess } from '../../../shared/hub';
+import type { SiteAccess } from '@rotp/hub-contracts';
 import { forbidden, unauthorized } from '../http/http-error';
 import { usersRepo } from '../db/users-repo';
 import { callerRights } from '../access/caller-rights';

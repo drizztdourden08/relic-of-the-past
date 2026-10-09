@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
-import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
-import type { FileVersion, SanctuaryFile } from '../../../../shared/sanctuary';
+import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
+import type { FileVersion, SanctuaryFile } from '@rotp/hub-contracts';
 import { requireMember } from '../../../hub-core/auth/require-member';
 import { assertOwnerOrAdmin, loadVisibleFile } from '../files/file-guards';
 import { filesRepo } from '../db/files-repo';

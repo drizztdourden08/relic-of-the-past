@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind constants */
 import { DEFAULT_SLOT_NAME } from '@app/lib/game/randomizer-client/online-config-of-profile';
-import { ARCHIPELAGO_DEFAULT_PORT } from '@shared/config/ports.constants';
+import { ARCHIPELAGO_DEFAULT_PORT } from '@rotp/hub-contracts';
 import type { ServerSetupDraft } from './server-setup-draft.type';
 
 const DEFAULT_PORT = String(ARCHIPELAGO_DEFAULT_PORT);

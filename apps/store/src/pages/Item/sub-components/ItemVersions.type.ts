@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { StoreItem, StoreVersion } from '@shared/store/types';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 
 type ItemVersionsProps = {
   item: StoreItem;

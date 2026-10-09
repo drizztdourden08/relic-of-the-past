@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import { MAX_TAGS } from '@shared/hub/schemas/common';
+import { MAX_TAGS } from '@rotp/hub-contracts';
 import { FIELD_LABELS, FIELD_MESSAGES } from '../Publish.constants';
 import type { FieldErrors } from '../Publish.type';
 import { compactErrors } from './compact-errors';

@@ -3,7 +3,7 @@ import type { IconifyIcon } from '@iconify/react/offline';
 import discordMark from '@iconify-icons/simple-icons/discord';
 import githubMark from '@iconify-icons/simple-icons/github';
 import googleMark from '@iconify-icons/logos/google-icon';
-import type { Provider } from '@shared/hub/providers';
+import type { Provider } from '@rotp/hub-contracts';
 
 const PROVIDER_MARKS: Record<Provider, IconifyIcon> = {
   discord: discordMark,

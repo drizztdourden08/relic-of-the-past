@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { LayerEffect } from '@shared/types/msu-manifest';
+import type { LayerEffect } from '@rotp/game-data';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import type { EffectPreset } from './LayerEffectsField.type';
 

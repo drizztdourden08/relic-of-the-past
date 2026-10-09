@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { PathParams, RouteDef } from '@shared/hub/api-contract';
+import type { PathParams, RouteDef } from '@rotp/hub-contracts';
 import type { createApiClient } from './create-api-client';
 
 type QueryParams = Record<string, string | number | boolean | undefined>;

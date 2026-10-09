@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { BeginVersionBody } from '@shared/sanctuary/schemas/file-schemas';
+import type { BeginVersionBody } from '@rotp/hub-contracts';
 import { sanctuaryApi } from '../sanctuary-client';
 import type { VersionBeginResponse } from '../api-responses.type';
 

@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDateTime } from '@site-kit/lib/format-date';
 import { versionLabel } from '../file-versions';

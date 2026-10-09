@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import { createSoundChannel } from '../channel';
 import type { MsuChannelName, SoundChannelApi } from '../channel';
 import type { BuildChannelsParams } from './build-channels.type';

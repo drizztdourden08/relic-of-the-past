@@ -1,8 +1,8 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { SignPartsResponse } from '../../../../shared/store/api-types';
-import { signPartsSchema } from '../../../../shared/store/schemas';
-import type { StoreVersion } from '../../../../shared/store/types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { SignPartsResponse } from '@rotp/hub-contracts';
+import { signPartsSchema } from '@rotp/hub-contracts';
+import type { StoreVersion } from '@rotp/hub-contracts';
 import { badRequest, conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { now } from '../../../hub-core/db/firestore';

@@ -1,5 +1,5 @@
 /* @layer shared-features @kind logic */
-import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
+import { DELUXE_TRACK_THRESHOLD } from '@rotp/hub-contracts';
 import type { MsuPackProfile, MsuTrackInfo } from './msu-auto-config.type';
 
 const detectMsuPackProfile = (tracks: MsuTrackInfo[], isLayered = false): MsuPackProfile => ({

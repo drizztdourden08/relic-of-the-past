@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { DiscordRole } from '@shared/hub/group-types';
+import type { DiscordRole } from '@rotp/hub-contracts';
 
 type DiscordRolesState = {
   roles: DiscordRole[];

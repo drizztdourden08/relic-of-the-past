@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ItemStatus } from '../../../../../shared/store/types';
+import type { ItemStatus } from '@rotp/hub-contracts';
 import { hasWaitingVersion } from './has-waiting-version';
 import type { StatusInput } from './item-status.type';
 

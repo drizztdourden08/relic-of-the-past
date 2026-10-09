@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ListingEdit } from '../../../../../shared/store/types';
+import type { ListingEdit } from '@rotp/hub-contracts';
 import { signPatchRef } from './sign-patch-ref';
 
 const signEdit = async (edit: ListingEdit): Promise<ListingEdit> => {

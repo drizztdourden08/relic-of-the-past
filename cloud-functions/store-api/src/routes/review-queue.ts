@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { ReviewQueueResponse } from '../../../../shared/store/api-types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { ReviewQueueResponse } from '@rotp/hub-contracts';
 import type { Route } from '../../../hub-core/route.type';
 import { requirePermission } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';

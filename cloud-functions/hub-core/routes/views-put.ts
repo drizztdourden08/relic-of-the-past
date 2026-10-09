@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES, idSchema, putViewSchema } from '../../../shared/hub';
-import type { SavedView } from '../../../shared/hub';
+import { HUB_ROUTES, idSchema, putViewSchema } from '@rotp/hub-contracts';
+import type { SavedView } from '@rotp/hub-contracts';
 import { badRequest, notFound } from '../http/http-error';
 import { parseBody } from '../http/parse-body';
 import { requireCaller } from '../auth/require-caller';

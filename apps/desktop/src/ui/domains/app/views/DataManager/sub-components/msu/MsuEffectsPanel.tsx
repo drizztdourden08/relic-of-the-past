@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import { Box, Button, EmptyState, Field, SectionHeader, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { SoundListItem } from './SoundListItem';
 import { parseEffectQuery } from './behavior/effect-query';

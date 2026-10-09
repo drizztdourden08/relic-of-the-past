@@ -1,5 +1,5 @@
 /* @layer hub-core @kind constants */
-import { HUB_LIMITS } from '../../../../shared/hub';
+import { HUB_LIMITS } from '@rotp/hub-contracts';
 
 const TTL_SECONDS = HUB_LIMITS.sessionDays * 24 * 60 * 60;
 

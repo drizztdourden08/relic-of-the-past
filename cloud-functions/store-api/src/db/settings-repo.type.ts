@@ -1,5 +1,5 @@
 /* @layer store-api @kind types */
-import type { Person } from '../../../../shared/store/types';
+import type { Person } from '@rotp/hub-contracts';
 
 type FeaturedSettings = { itemIds: string[]; updatedBy: Person; updatedAt: number };
 

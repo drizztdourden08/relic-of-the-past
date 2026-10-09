@@ -3,7 +3,7 @@ import type { IconifyIcon } from '@iconify/react/offline';
 import musicIcon from '@iconify-icons/lucide/music';
 import characterIcon from '@iconify-icons/lucide/person-standing';
 import languageIcon from '@iconify-icons/lucide/languages';
-import type { StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 
 const STORE_KINDS: readonly StoreKind[] = ['music', 'character', 'language'];
 

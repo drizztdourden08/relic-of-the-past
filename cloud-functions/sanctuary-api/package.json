@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "bundle": "esbuild src/index.ts --bundle --platform=node --format=cjs --target=node24 --outfile=dist/index.js --external:@google-cloud/* --external:@aws-sdk/*",
+    "bundle": "esbuild src/index.ts --bundle --platform=node --format=cjs --target=node24 --outfile=dist/index.js --external:@google-cloud/* --external:@aws-sdk/* --loader:.svg=text",
     "typecheck": "tsc --noEmit",
     "start": "functions-framework --target=sanctuaryApi --source=dist"
   },
@@ -18,6 +18,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@rotp/hub-contracts": "workspace:*",
     "esbuild": "catalog:",
     "typescript": "catalog:functions"
   }

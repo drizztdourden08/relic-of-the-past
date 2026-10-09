@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ReviewEntry } from '@shared/store/api-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
 
 const editOfEntry = (entry: ReviewEntry) => {
   const { item, target } = entry;

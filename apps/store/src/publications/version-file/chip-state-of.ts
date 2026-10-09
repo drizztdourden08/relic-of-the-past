@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { StoreVersion } from '@shared/store/types';
+import type { StoreVersion } from '@rotp/hub-contracts';
 import type { ReviewChipState } from '../../components/ReviewChip/ReviewChip.type';
 
 const chipStateOf = (version: StoreVersion): ReviewChipState =>

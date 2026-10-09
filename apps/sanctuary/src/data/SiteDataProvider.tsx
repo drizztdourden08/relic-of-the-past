@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSessionContext } from '@site-kit/session/session-context';
 import { UploadLayer } from '@site-kit/components/UploadLayer';
-import { canSeeReports } from '@shared/sanctuary/sanctuary-rights';
+import { canSeeReports } from '@rotp/hub-contracts';
 import { useFiles } from '../files/useFiles';
 import { useReports } from '../reports/useReports';
 import { sanctuaryQueue } from '../upload/sanctuary-queue';

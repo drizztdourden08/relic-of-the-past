@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { MsuLayer } from '@shared/types/msu-manifest';
-import { MAX_CROSSFADE_SECONDS } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
+import { MAX_CROSSFADE_SECONDS } from '@rotp/hub-contracts';
 
 const isLegalCrossfade = (seconds: number | undefined): boolean =>
   seconds === undefined

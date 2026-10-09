@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
+import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
 import { requireMember } from '../../../hub-core/auth/require-member';
 import { loadVisibleReport, viewReport } from '../reports/report-view';
 import type { Route } from '../../../hub-core/route.type';

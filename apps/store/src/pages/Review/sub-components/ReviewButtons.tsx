@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
-import { actionsFor } from '@shared/store/version-flow';
+import { actionsFor } from '@rotp/hub-contracts';
 import { EDIT_ACTIONS, REVIEWER } from './ReviewButtons.constants';
 import type { ReviewButtonsProps } from './ReviewButtons.type';
 

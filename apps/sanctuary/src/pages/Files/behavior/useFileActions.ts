@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
-import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
+import type { PatchFileBody } from '@rotp/hub-contracts';
 import { deleteFile, downloadFile, patchFile } from '../../../api/files-endpoints';
 import { deleteVersion, downloadVersion, restoreVersion } from '../../../api/versions-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';

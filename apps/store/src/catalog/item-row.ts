@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 import type { ItemRow } from './item-row.type';
 
 const toItemRow = (item: ItemCardView): ItemRow => ({

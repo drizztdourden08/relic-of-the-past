@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { kLanguages } from '../../../text/data/language-data/language-data.data';
+import { kLanguages } from '@rotp/asset-extraction';
 import { SPRITE_DEFINITIONS } from '../manifest';
 import type { GlyphSpan, PictureGlyphSprite } from './picture-glyph-sprites.type';
 import { asGlyphExtract } from './as-glyph-extract';

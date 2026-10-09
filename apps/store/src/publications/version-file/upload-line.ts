@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { StoreVersion } from '@shared/store/types';
+import type { StoreVersion } from '@rotp/hub-contracts';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { PERCENT } from './version-file.constants';
 

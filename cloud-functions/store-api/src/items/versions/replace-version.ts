@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreVersion } from '../../../../../shared/store/types';
+import type { StoreVersion } from '@rotp/hub-contracts';
 import type { VersionList } from './versions.type';
 
 const replaceVersion = (item: VersionList, next: StoreVersion): StoreVersion[] =>

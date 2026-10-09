@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { mapLayers } from '../msu-layer-edit';
 import { repointFiles } from './repoint-files';
 import { targetsByStem } from './targets-by-stem';

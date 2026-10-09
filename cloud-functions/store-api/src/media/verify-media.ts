@@ -1,8 +1,8 @@
 /* @layer store-api @kind logic */
-import type { ListingPatchBody } from '../../../../shared/store/schemas';
-import type { MediaRole } from '../../../../shared/store/keys';
-import { STORE_LIMITS } from '../../../../shared/store/limits';
-import type { MediaRef } from '../../../../shared/store/types';
+import type { ListingPatchBody } from '@rotp/hub-contracts';
+import type { MediaRole } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import type { MediaRef } from '@rotp/hub-contracts';
 import { badRequest } from '../../../hub-core/http/http-error';
 import { storeBucket } from '../storage/store-bucket';
 

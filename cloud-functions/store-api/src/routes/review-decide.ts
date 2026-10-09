@@ -1,10 +1,10 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { ItemChangeResponse } from '../../../../shared/store/api-types';
-import { reviewDecideSchema } from '../../../../shared/store/schemas';
-import type { ReviewDecideBody } from '../../../../shared/store/schemas';
-import type { ReviewTarget } from '../../../../shared/store/api-types';
-import type { StoreItem } from '../../../../shared/store/types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { ItemChangeResponse } from '@rotp/hub-contracts';
+import { reviewDecideSchema } from '@rotp/hub-contracts';
+import type { ReviewDecideBody } from '@rotp/hub-contracts';
+import type { ReviewTarget } from '@rotp/hub-contracts';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { forbidden } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { now } from '../../../hub-core/db/firestore';

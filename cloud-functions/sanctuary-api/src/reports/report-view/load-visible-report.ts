@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
-import { canSeeReports } from '../../../../../shared/sanctuary';
-import type { Report } from '../../../../../shared/sanctuary';
+import { canSeeReports } from '@rotp/hub-contracts';
+import type { Report } from '@rotp/hub-contracts';
 import { notFound } from '../../../../hub-core/http/http-error';
 import type { Member } from '../../../../hub-core/auth/require-member';
 import { loadReport } from './load-report';

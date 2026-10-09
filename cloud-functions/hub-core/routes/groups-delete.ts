@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { DEFAULT_GROUP_ID, HUB_ROUTES } from '../../../shared/hub';
+import { DEFAULT_GROUP_ID, HUB_ROUTES } from '@rotp/hub-contracts';
 import { conflict, notFound } from '../http/http-error';
 import { requireAdmin } from '../auth/require-admin';
 import { invalidateGroups } from '../access/cached-groups';

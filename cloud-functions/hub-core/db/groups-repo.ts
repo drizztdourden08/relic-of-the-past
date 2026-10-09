@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
-import { DEFAULT_GROUP_ID } from '../../../shared/hub';
-import type { Group } from '../../../shared/hub';
+import { DEFAULT_GROUP_ID } from '@rotp/hub-contracts';
+import type { Group } from '@rotp/hub-contracts';
 import { readHubEnv } from '../env';
 import type { DefaultGroupSeed } from '../site-config.type';
 import { collection, now } from './firestore';

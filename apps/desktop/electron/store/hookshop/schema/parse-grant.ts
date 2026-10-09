@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { parseGrant as parseCatalogGrant } from '@drizztdourden08/brock-catalog/main';
 import type { CatalogGrant } from '@drizztdourden08/brock-catalog/main';
-import { KIND_CONTAINER } from '@shared/store/containers';
-import { isInstalledOrigin, isStoreKind } from '@shared/store/installed-types';
+import { KIND_CONTAINER } from '@rotp/hub-contracts';
+import { isInstalledOrigin, isStoreKind } from '@rotp/hub-contracts';
 import { ANSWER_UNREADABLE, GRANT_REFUSED } from '../hookshop.constants';
 import { isObject } from './is-object';
 

@@ -4,7 +4,7 @@ import { parseRsp, isRspName } from '@shared/storage/link-sprites/parse-rsp';
 import {
   deleteLinkSprite, freeSpriteName, readLinkSprite, safeFileName, writeLinkSprite,
 } from '@shared/storage/link-sprites/link-sprites';
-import type { InstallProgress, PackInstaller } from './installer.type';
+import type { InstallProgress, PackInstaller } from '@rotp/hub-contracts';
 
 const install = async (bytes: Uint8Array, files: FileStore, onProgress: (p: InstallProgress) => void) => {
   const sheet = await parseRsp(bytes);

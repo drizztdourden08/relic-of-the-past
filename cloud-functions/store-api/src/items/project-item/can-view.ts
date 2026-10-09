@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreItem } from '../../../../../shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { canSeeReviews } from './can-see-reviews';
 import type { Viewer } from './project-item.type';
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
+import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
 import { manifestSoundIds, soundClaimMask, SOUND_CHANNELS } from '../../msu/sound-claim';
 import { setExternalAmbient, setExternalSfx } from '../bridge/host-gates';
 import { setSoundClaim } from '../bridge/sound-claim';

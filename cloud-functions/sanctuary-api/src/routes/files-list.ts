@@ -1,7 +1,7 @@
 /* @layer root-config @kind logic */
-import { FILE_TYPES, SANCTUARY_ROUTES, canSeeType, fileTypeSchema } from '../../../../shared/sanctuary';
-import type { FileType } from '../../../../shared/sanctuary';
-import type { Rights } from '../../../../shared/hub';
+import { FILE_TYPES, SANCTUARY_ROUTES, canSeeType, fileTypeSchema } from '@rotp/hub-contracts';
+import type { FileType } from '@rotp/hub-contracts';
+import type { Rights } from '@rotp/hub-contracts';
 import { badRequest } from '../../../hub-core/http/http-error';
 import { queryParam } from '../../../hub-core/http/query';
 import { requireMember } from '../../../hub-core/auth/require-member';

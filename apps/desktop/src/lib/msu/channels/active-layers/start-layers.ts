@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
 import { createScheduler } from '../../schedulers/create-scheduler';
 import { publishMsuDebug } from '../../debug-bus';
 import type { LoadedLayer } from '../../track-loader';

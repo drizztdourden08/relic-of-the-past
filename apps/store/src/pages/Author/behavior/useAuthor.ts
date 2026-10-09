@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useEffect, useState } from 'react';
-import type { AuthorResponse } from '@shared/store/api-types';
+import type { AuthorResponse } from '@rotp/hub-contracts';
 import { errorMessage } from '@site-kit/api/api-error';
 import { getAuthor } from '../../../api/catalog-endpoints';
 

@@ -13,8 +13,8 @@ import {
   ListPartsCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { HUB_LIMITS } from '../../../shared/hub';
-import type { UploadedPart } from '../../../shared/hub';
+import { HUB_LIMITS } from '@rotp/hub-contracts';
+import type { UploadedPart } from '@rotp/hub-contracts';
 import type { StorageConfig } from './create-storage.type';
 import { attachmentDisposition } from './safe-name';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
 
 const bodyLayer = (trackNum: number, files: string[]): MsuLayer => ({
   id: `track-${trackNum}`,

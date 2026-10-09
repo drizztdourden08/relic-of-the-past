@@ -1,5 +1,5 @@
 /* @layer store-site @kind constants */
-import type { ReviewEntry } from '@shared/store/api-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
 
 const NO_ENTRIES: ReviewEntry[] = [];
 

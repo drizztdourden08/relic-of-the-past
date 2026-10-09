@@ -1,7 +1,7 @@
 /* @layer site-kit @kind component */
 import { useCallback } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { PROVIDER_LABELS } from '@shared/hub/providers';
+import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { authStartHref } from '../../api/hub-endpoints';
 import { PROVIDER_MARKS } from './provider-marks';

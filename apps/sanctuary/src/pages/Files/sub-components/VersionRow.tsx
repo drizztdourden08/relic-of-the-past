@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind component */
-import type { FileVersion } from '@shared/sanctuary/file-types';
+import type { FileVersion } from '@rotp/hub-contracts';
 import { Button, Flex, Status, Tag, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatAgo } from '@site-kit/lib/format-date';

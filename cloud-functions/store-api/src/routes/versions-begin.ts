@@ -1,13 +1,13 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { VersionBeginResponse } from '../../../../shared/store/api-types';
-import { HUB_LIMITS } from '../../../../shared/hub/limits';
-import { KIND_CONTAINER } from '../../../../shared/store/containers';
-import { STORE_KEYS, packName } from '../../../../shared/store/keys';
-import { STORE_LIMITS } from '../../../../shared/store/limits';
-import { versionBeginSchema } from '../../../../shared/store/schemas';
-import type { StoreVersion } from '../../../../shared/store/types';
-import { isInFlight } from '../../../../shared/store/version-flow';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { VersionBeginResponse } from '@rotp/hub-contracts';
+import { HUB_LIMITS } from '@rotp/hub-contracts';
+import { KIND_CONTAINER } from '@rotp/hub-contracts';
+import { STORE_KEYS, packName } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import { versionBeginSchema } from '@rotp/hub-contracts';
+import type { StoreVersion } from '@rotp/hub-contracts';
+import { isInFlight } from '@rotp/hub-contracts';
 import { badRequest, conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { now } from '../../../hub-core/db/firestore';

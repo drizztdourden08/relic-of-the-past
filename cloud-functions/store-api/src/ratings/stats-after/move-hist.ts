@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import type { Stars } from '../../../../../shared/store/rating-types';
-import type { ItemStats } from '../../../../../shared/store/types';
+import type { Stars } from '@rotp/hub-contracts';
+import type { ItemStats } from '@rotp/hub-contracts';
 
 const moveHist = (hist: ItemStats['ratingHist'], previous: Stars | null, next: Stars | null): ItemStats['ratingHist'] => {
   const moved: ItemStats['ratingHist'] = [...hist];

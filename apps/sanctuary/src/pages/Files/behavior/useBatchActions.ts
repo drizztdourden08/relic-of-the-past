@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
-import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
 import { deleteFile, patchFile } from '../../../api/files-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';
 import { fileLink } from './file-link';

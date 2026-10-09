@@ -1,8 +1,8 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { ItemsListResponse } from '../../../../shared/store/api-types';
-import { STORE_LIMITS } from '../../../../shared/store/limits';
-import type { StoreKind } from '../../../../shared/store/types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { ItemsListResponse } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import type { StoreKind } from '@rotp/hub-contracts';
 import { badRequest } from '../../../hub-core/http/http-error';
 import { queryParam } from '../../../hub-core/http/query';
 import type { Route } from '../../../hub-core/route.type';

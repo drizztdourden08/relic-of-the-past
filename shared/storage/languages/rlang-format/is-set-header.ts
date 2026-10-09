@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import { kLanguages } from '@rotp/game-data';
+import { kLanguages } from '@rotp/asset-extraction';
 import { SET_FORMAT } from '../format-2';
 import type { SetHeader } from './rlang-format.type';
 

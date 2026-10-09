@@ -1,6 +1,6 @@
 /* @layer store-site @kind constants */
-import { STORE_LIMITS } from '@shared/store/limits';
-import type { FileRemoval, RemovalReason, StoreItem } from '@shared/store/types';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import type { FileRemoval, RemovalReason, StoreItem } from '@rotp/hub-contracts';
 import { deletedLine } from './deleted-line';
 
 const DAY_MS = 24 * 60 * 60 * 1000;

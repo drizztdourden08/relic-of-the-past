@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { SANCTUARY_ROUTES, patchFileSchema } from '../../../../shared/sanctuary';
+import { SANCTUARY_ROUTES, patchFileSchema } from '@rotp/hub-contracts';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { requireMember } from '../../../hub-core/auth/require-member';
 import { assertOwnerOrAdmin, assertVisibleType, loadVisibleFile } from '../files/file-guards';

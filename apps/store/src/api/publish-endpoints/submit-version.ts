@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ItemChangeResponse } from '@shared/store/api-types';
+import type { ItemChangeResponse } from '@rotp/hub-contracts';
 import { storeApi } from '../store-client';
 
 const submitVersion = (id: string, n: number) =>

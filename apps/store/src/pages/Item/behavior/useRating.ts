@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useState } from 'react';
-import type { ItemResponse } from '@shared/store/api-types';
-import type { Stars } from '@shared/store/rating-types';
+import type { ItemResponse } from '@rotp/hub-contracts';
+import type { Stars } from '@rotp/hub-contracts';
 import { errorMessage } from '@site-kit/api/api-error';
 import { rateItem, unrateItem } from '../../../api/catalog-endpoints';
 import type { UseRatingParams } from './useRating.type';

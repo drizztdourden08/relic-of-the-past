@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { useSessionContext } from '@site-kit/session/session-context';
 import { FeaturedHero } from '../../components/FeaturedHero/FeaturedHero';

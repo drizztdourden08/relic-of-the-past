@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { FileVersion, SanctuaryFile } from '../../../../../shared/sanctuary';
+import type { FileVersion, SanctuaryFile } from '@rotp/hub-contracts';
 import { notFound } from '../../../../hub-core/http/http-error';
 import { versionOf } from './version-of';
 

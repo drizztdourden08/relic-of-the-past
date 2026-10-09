@@ -1,5 +1,5 @@
 /* @layer hub-core @kind constants */
-import type { Provider } from '../../../../shared/hub';
+import type { Provider } from '@rotp/hub-contracts';
 import { discordProvider } from './discord';
 import { githubProvider } from './github';
 import { googleProvider } from './google';

@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { PackLinkResponse, ReviewTarget } from '@shared/store/api-types';
+import type { PackLinkResponse, ReviewTarget } from '@rotp/hub-contracts';
 import { storeApi } from '../store-client';
 import { reviewTargetParam } from './review-target-param';
 

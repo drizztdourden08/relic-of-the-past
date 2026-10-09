@@ -1,5 +1,5 @@
 /* @layer store-api @kind constants */
-import type { Actor, VersionAction } from '../../../../shared/store/version-flow';
+import type { Actor, VersionAction } from '@rotp/hub-contracts';
 
 const DONE: Record<VersionAction, string> = {
   submit: 'sent for review',

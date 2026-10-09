@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { Report } from '../../../../shared/sanctuary';
+import type { Report } from '@rotp/hub-contracts';
 import { ORPHAN_CAP_MS, RETENTION_AFTER_CLOSE_MS } from './expiry.constants';
 
 const expiryOf = ({ issue, extendedUntil, createdAt }: Report): number =>

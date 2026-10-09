@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { SITE_IDS } from '@shared/hub';
+import { SITE_IDS } from '@rotp/hub-contracts';
 import type { MainContext } from '@drizztdourden08/brock-electron/main';
 import { getSecrets } from '@drizztdourden08/brock-secrets/main';
 import { SANCTUARY_API } from './endpoints';

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import type { MsuEngine } from '../../msu/engine';
 import type { LoadBytes } from '../../msu/track-loader';
 

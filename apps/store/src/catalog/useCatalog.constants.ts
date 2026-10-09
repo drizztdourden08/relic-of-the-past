@@ -1,5 +1,5 @@
 /* @layer store-site @kind constants */
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 
 const NO_ITEMS: ItemCardView[] = [];
 

@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import { STORE_KEYS } from '../../../../shared/store/keys';
-import type { StoreItem, StoreVersion } from '../../../../shared/store/types';
+import { STORE_KEYS } from '@rotp/hub-contracts';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { itemsRepo } from '../db/items-repo';
 import { storeBucket } from '../storage/store-bucket';
 import { markVersionApproved } from './mark-decided';

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { LayerPlayMode } from '@shared/types/msu-manifest';
+import type { LayerPlayMode } from '@rotp/game-data';
 import type { LayerContext, LayerScheduler } from './scheduler.type';
 import { createOnceScheduler } from './once-scheduler';
 import { createLoopScheduler } from './loop-scheduler';

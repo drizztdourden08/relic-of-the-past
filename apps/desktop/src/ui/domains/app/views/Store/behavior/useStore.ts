@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 import { useInstalledPacks } from '@app/hooks/useInstalledPacks';
 import type { StoreProps, StoreSection } from '../Store.type';
 import { GRID_SECTIONS } from '../Store.constants';

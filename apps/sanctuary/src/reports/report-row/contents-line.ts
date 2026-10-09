@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { ReportContents } from '@shared/sanctuary/report-types';
+import type { ReportContents } from '@rotp/hub-contracts';
 
 const contentsLine = (contents: ReportContents | undefined): string => {
   if (!contents) return 'no attachment';

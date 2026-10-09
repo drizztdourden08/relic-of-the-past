@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { ReviewEntry } from '@shared/store/api-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
 import { navigate } from '@site-kit/router/useLocation';
 import { useSurfaceView } from '@site-kit/views/useSurfaceView';
 import { filterRows } from '@site-kit/views/filter-rows';

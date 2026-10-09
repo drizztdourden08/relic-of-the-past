@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { StoreItem } from '@shared/store/types';
-import { hasRight } from '@shared/hub/rights';
+import type { StoreItem } from '@rotp/hub-contracts';
+import { hasRight } from '@rotp/hub-contracts';
 import { useSessionContext } from '@site-kit/session/session-context';
 import { useItem } from '../../../catalog/useItem';
 import { approvedVersions, liveVersionOf } from '../../../catalog/approved-versions';

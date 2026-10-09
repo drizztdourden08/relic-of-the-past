@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { LayerEffect } from '@shared/types/msu-manifest';
+import type { LayerEffect } from '@rotp/game-data';
 import type { EffectChain } from './layer-effects.type';
 import { EQ_HIGH_HZ, EQ_LOW_HZ, EQ_MID_HZ, EQ_MID_Q } from './layer-effects.constants';
 

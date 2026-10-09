@@ -16,6 +16,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@rotp/hub-contracts": "workspace:*",
     "typescript": "catalog:functions"
   }
 }

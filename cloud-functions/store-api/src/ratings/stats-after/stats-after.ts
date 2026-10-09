@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { Stars } from '../../../../../shared/store/rating-types';
+import type { Stars } from '@rotp/hub-contracts';
 import { weightedScore } from '../score';
 import { moveHist } from './move-hist';
 import type { RatingTotals } from './stats-after.type';

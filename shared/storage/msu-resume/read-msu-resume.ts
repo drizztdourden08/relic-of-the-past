@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import type { MsuResumeState } from '@shared/types/msu-manifest';
+import type { MsuResumeState } from '@rotp/game-data';
 import type { SaveKind } from '../save-paths';
 import { isResumeState } from './is-resume-state';
 import { resumePath } from './resume-path';

@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind constants */
-import type { StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 import { duplicateLanguage } from './duplicate-language';
 import { duplicateMsu } from './duplicate-msu';
 import { duplicateSprite } from './duplicate-sprite';

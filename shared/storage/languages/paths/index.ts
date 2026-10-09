@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind barrel */
-export { SET_FILES } from './paths.constants';
+export { SET_FILES } from '@rotp/hub-contracts';
 export { setDir } from './set-dir';
 export { setFilePath } from './set-file-path';
 export { setMetaPath } from './set-meta-path';

@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
+import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
 import { conflict, notFound } from '../../../hub-core/http/http-error';
 import { requireMember } from '../../../hub-core/auth/require-member';
 import { assertOwnerOrAdmin, loadVisibleFile } from '../files/file-guards';

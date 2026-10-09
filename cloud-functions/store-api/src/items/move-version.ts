@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreItem } from '../../../../shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { notFound } from '../../../hub-core/http/http-error';
 import type { ItemPatch } from '../db/items-repo.type';
 import { statusAfter } from './item-status';

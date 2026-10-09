@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ReviewEntry } from '../../../../shared/store/api-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
 import { versionOf } from '../items/versions';
 import { signItem } from '../media/sign-media';
 import { storeBucket } from '../storage/store-bucket';

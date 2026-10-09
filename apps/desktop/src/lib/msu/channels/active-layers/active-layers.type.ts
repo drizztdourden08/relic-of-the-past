@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { LayerResume, MsuLayer } from '@shared/types/msu-manifest';
+import type { LayerResume, MsuLayer } from '@rotp/game-data';
 import type { LoadedLayer } from '../../track-loader';
 import type { SoundProgram } from '../channel.type';
 

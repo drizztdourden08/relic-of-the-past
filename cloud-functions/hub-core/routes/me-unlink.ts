@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES, isProvider } from '../../../shared/hub';
+import { HUB_ROUTES, isProvider } from '@rotp/hub-contracts';
 import { badRequest, conflict, notFound } from '../http/http-error';
 import { requireSession } from '../auth/require-session';
 import { refreshAccess } from '../access/refresh-access';

@@ -1,5 +1,5 @@
 /* @layer site-kit @kind constants */
-import type { AccessSource } from '@shared/hub/types';
+import type { AccessSource } from '@rotp/hub-contracts';
 
 const ANCHORS = [
   { id: 'name', label: 'Name' },

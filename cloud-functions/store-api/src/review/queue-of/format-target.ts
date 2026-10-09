@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ReviewTarget } from '../../../../../shared/store/api-types';
+import type { ReviewTarget } from '@rotp/hub-contracts';
 
 const formatTarget = (target: ReviewTarget): string => (target.kind === 'version' ? `v${target.n}` : target.editId);
 

@@ -1,5 +1,5 @@
 /* @layer hub-core @kind types */
-import type { DiscordRole } from '../../../shared/hub';
+import type { DiscordRole } from '@rotp/hub-contracts';
 
 type RawRole = { id: string; name: string; color: number; position: number; managed: boolean };
 

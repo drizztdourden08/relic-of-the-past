@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { AccessCheck, AccessSource, HubUser } from '../../../shared/hub';
+import type { AccessCheck, AccessSource, HubUser } from '@rotp/hub-contracts';
 import { identitiesRepo } from '../db/identities-repo';
 import { grantsRepo } from '../db/grants-repo';
 import { groupsRepo } from '../db/groups-repo';

@@ -2,8 +2,8 @@
 import JSZip from 'jszip';
 import { SHEET_BYTES } from '@rotp/game-data';
 import type { PlayerSheet } from '@rotp/game-data';
-import { MANIFEST_ENTRY, SHEET_ENTRY } from '../rsp.constants';
-import { isRspManifest } from './is-rsp-manifest';
+import { MANIFEST_ENTRY, SHEET_ENTRY } from '@rotp/hub-contracts';
+import { isRspManifest } from '@rotp/hub-contracts';
 import { looksLikeZip } from './looks-like-zip';
 
 const parseRsp = async (bytes: Uint8Array): Promise<PlayerSheet | null> => {

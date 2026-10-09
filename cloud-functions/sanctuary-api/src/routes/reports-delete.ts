@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
+import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
 import { requireAdmin } from '../../../hub-core/auth/require-admin';
 import { reportsRepo } from '../db/reports-repo';
 import { loadReport } from '../reports/report-view';

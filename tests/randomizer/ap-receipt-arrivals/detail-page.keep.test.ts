@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { packPackedBytes } from '@rotp/asset-extraction';
 import { RANDOMIZER_MSG_BASE } from '@rotp/asset-extraction';
-import { kLanguages } from '@rotp/game-data';
+import { kLanguages } from '@rotp/asset-extraction';
 import { dialogueCharsetOf } from '@rotp/game-data';
 import { progressiveCapacityItemName } from '@rotp/game-data';
 import { renderCapacityStep } from '@shared/randomizer/receipt-text/capacity-rung-values';

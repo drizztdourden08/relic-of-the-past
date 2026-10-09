@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { MsuTrackDef } from '@shared/types/msu-manifest';
+import type { MsuTrackDef } from '@rotp/game-data';
 import { trackRepeats } from '@rotp/game-data';
 import type { ClassicTrack } from './msu-classic-manifest.type';
 

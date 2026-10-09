@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { RspSource, RspExtras } from '@shared/storage/link-sprites/rsp.type';
+import type { RspSource, RspExtras } from '@rotp/hub-contracts';
 
 interface RspWriteOptions {
   source?: RspSource;

@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { MediaRef, StoreKind } from '@shared/store/types';
+import type { MediaRef, StoreKind } from '@rotp/hub-contracts';
 
 type ItemPictureProps = {
   picture: MediaRef | null;

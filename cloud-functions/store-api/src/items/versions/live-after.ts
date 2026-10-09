@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreVersion } from '../../../../../shared/store/types';
+import type { StoreVersion } from '@rotp/hub-contracts';
 
 const liveAfter = (versions: readonly StoreVersion[]): number | null => {
   const live = versions.filter((version) => version.review.state === 'approved' && !version.removed);

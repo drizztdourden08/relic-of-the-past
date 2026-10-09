@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { Identity, SiteUser } from '@shared/hub';
+import type { Identity, SiteUser } from '@rotp/hub-contracts';
 
 type HubMe = {
   user: SiteUser;

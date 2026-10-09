@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import downloadIcon from '@iconify-icons/lucide/download';
 import { Field, Link, Stack, Text, Textarea } from '@drizztdourden08/tessera/primitives';
-import type { ReviewEntry } from '@shared/store/api-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
 import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { AppLink } from '@site-kit/router/AppLink';

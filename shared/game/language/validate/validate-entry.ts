@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { LanguageConfig } from '@rotp/game-data';
+import type { LanguageConfig } from '@rotp/asset-extraction';
 import type { Token } from '../types';
 import type { EntryIssue } from './validate.type';
 

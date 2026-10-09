@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { SanctuaryFile } from '../../../../../shared/sanctuary';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { forbidden } from '../../../../hub-core/http/http-error';
 import type { Member } from '../../../../hub-core/auth/require-member';
 import { isOwnerOrAdmin } from './is-owner-or-admin';

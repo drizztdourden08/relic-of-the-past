@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
+import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
 import { soundTitle } from '../sound-labels';
 import type { FileUsageMap } from './useFileUsage.type';
 

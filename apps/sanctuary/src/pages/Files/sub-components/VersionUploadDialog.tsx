@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind component */
 import { useEffect, useRef, useState } from 'react';
-import { LIMITS } from '@shared/sanctuary/limits';
+import { LIMITS } from '@rotp/hub-contracts';
 import { Button, Field, Stack, StatRow, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@site-kit/lib/format-bytes';

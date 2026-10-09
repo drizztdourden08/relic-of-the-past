@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
+import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
 
 interface SoundGroupFieldProps {
   pack: string;

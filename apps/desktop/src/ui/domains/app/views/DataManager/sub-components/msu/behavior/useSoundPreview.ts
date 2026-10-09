@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
+import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
 import type { MsuEngine } from '@app/lib/msu/engine';
 import { usePreviewSession } from './usePreviewSession';
 import type { PreviewReport } from './preview-report-store.type';

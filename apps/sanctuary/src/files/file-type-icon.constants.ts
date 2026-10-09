@@ -6,7 +6,7 @@ import imageIcon from '@iconify-icons/lucide/image';
 import musicIcon from '@iconify-icons/lucide/music';
 import fileTextIcon from '@iconify-icons/lucide/file-text';
 import fileIcon from '@iconify-icons/lucide/file';
-import type { FileType } from '@shared/sanctuary/file-types';
+import type { FileType } from '@rotp/hub-contracts';
 
 const FILE_TYPE_ICONS: Record<FileType, IconifyIcon> = {
   build: packageIcon,

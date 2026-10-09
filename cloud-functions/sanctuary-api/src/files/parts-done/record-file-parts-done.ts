@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { SanctuaryFile } from '../../../../../shared/sanctuary';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { filesRepo } from '../../db/files-repo';
 import { currentVersionOf, replaceVersion } from '../versions';
 import { withPartsDone } from './with-parts-done';

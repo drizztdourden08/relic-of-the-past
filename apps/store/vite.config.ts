@@ -10,7 +10,7 @@ import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'path';
 
-const SITE_ROOT = __dirname;
+const SITE_ROOT = import.meta.dirname;
 const WEB_SRC = resolve(SITE_ROOT, '../desktop/src');
 
 export default defineConfig({

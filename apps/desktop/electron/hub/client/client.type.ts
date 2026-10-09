@@ -1,5 +1,5 @@
 /* @layer electron-main @kind types */
-import type { PathParams, RouteDef } from '@shared/hub';
+import type { PathParams, RouteDef } from '@rotp/hub-contracts';
 import type { QueryParams } from '../endpoints';
 
 type HubApiError = Error & { status: number };

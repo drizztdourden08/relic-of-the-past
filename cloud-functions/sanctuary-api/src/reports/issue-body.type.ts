@@ -1,5 +1,5 @@
 /* @layer root-config @kind types */
-import type { SubmitReportRequest } from '../../../../shared/sanctuary';
+import type { SubmitReportRequest } from '@rotp/hub-contracts';
 
 type IssueBodyInput = SubmitReportRequest & { reporterLine: string; reportId: string };
 

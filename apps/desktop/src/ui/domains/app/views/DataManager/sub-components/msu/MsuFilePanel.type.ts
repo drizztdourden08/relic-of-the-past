@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import type { MsuFile } from './msu.type';
 
 interface MsuFilePanelProps {

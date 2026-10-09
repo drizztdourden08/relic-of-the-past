@@ -1,9 +1,9 @@
 /* @layer electron-main @kind logic */
 import { readFile, stat } from 'fs/promises';
 import { basename } from 'path';
-import { CONTAINER_KIND } from '@shared/store/containers';
+import { CONTAINER_KIND } from '@rotp/hub-contracts';
 import { selectInstaller } from '@shared/store/install/select-installer';
-import { STORE_LIMITS } from '@shared/store/limits';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
 import { createNodeFileStore } from '../lib/node-file-store';
 import { logToRenderer } from '../lib/renderer-log';

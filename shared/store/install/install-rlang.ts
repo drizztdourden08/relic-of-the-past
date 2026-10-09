@@ -3,7 +3,7 @@ import type { FileStore } from '@drizztdourden08/brock-core';
 import { importRlang } from '@shared/storage/languages/import-rlang';
 import { assertValidSetId } from '@shared/storage/languages/set-id';
 import { remove } from '@shared/storage/languages/write';
-import type { InstallProgress, PackInstaller } from './installer.type';
+import type { InstallProgress, PackInstaller } from '@rotp/hub-contracts';
 
 const install = async (bytes: Uint8Array, files: FileStore, onProgress: (p: InstallProgress) => void) => {
   const { id } = await importRlang(files, bytes, {

@@ -1,9 +1,9 @@
 /* @layer store-api @kind logic */
-import { readFirstEntry } from '../../../../shared/store/manifest/read-first-entry';
+import { readFirstEntry } from '@rotp/hub-contracts';
 import { factsFor } from '../../../../shared/store/manifest/facts-for';
-import { CONTAINER_MANIFEST } from '../../../../shared/store/containers';
-import { STORE_LIMITS } from '../../../../shared/store/limits';
-import type { KindFacts, StoreItem, StoreVersion } from '../../../../shared/store/types';
+import { CONTAINER_MANIFEST } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import type { KindFacts, StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { badRequest } from '../../../hub-core/http/http-error';
 import { verifyUpload } from '../../../hub-core/storage/verify-upload';
 import { storeBucket } from '../storage/store-bucket';

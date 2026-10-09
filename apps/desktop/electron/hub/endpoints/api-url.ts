@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
-import { formatPath } from '@shared/hub';
-import type { PathParams, RouteDef } from '@shared/hub';
+import { formatPath } from '@rotp/hub-contracts';
+import type { PathParams, RouteDef } from '@rotp/hub-contracts';
 import type { HubApi, QueryParams } from './endpoints.type';
 import { queryString } from './query-string';
 

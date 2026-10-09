@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import type { HomeView } from '../../../../../shared/store/home-types';
-import { STORE_LIMITS } from '../../../../../shared/store/limits';
+import type { HomeView } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
 import { now } from '../../../../hub-core/db/firestore';
 import { buildHome } from '../build-home';
 import { homeCacheSlot } from './home-cache-slot';

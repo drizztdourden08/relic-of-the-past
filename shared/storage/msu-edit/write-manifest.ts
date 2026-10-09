@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { listPackEntries } from '../msu-inventory';
 import { assertSafeName } from '../msu-paths';
 import { manifestPath } from './manifest-path';

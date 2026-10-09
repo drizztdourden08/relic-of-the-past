@@ -1,7 +1,7 @@
 /* @layer site-kit @kind component */
 import { Fragment, useState } from 'react';
-import type { GroupRights } from '@shared/hub/group-types';
-import { createGroupSchema } from '@shared/hub/schemas/group-schemas';
+import type { GroupRights } from '@rotp/hub-contracts';
+import { createGroupSchema } from '@rotp/hub-contracts';
 import { Button, Field, Flex, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { RightsEditorSlot } from '../../../site/site-definition.type';
 import { RolePicker } from './RolePicker';

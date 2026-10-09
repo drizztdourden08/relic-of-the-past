@@ -1,8 +1,8 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { StoreItem } from '@shared/store/types';
-import { STORE_LIMITS } from '@shared/store/limits';
-import { isInFlight } from '@shared/store/version-flow';
+import type { StoreItem } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import { isInFlight } from '@rotp/hub-contracts';
 import { FIELD_MESSAGES } from '../Publish.constants';
 import type { PublishMode } from '../Publish.type';
 import { formErrors } from './form-errors';

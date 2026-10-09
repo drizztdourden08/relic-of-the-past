@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Status, Box, Field, Flex, NumberInput, Slider } from '@drizztdourden08/tessera/primitives';
-import { MAX_CROSSFADE_SECONDS } from '@shared/types/msu-manifest';
+import { MAX_CROSSFADE_SECONDS } from '@rotp/hub-contracts';
 import { CROSSFADE_HINT, CROSSFADE_LABEL } from '../PlayModeFields/PlayModeFields.constants';
 import type { CrossfadeFieldProps } from './CrossfadeField.type';
 

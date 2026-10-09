@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
-import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
+import { MSUL_MANIFEST_NAME } from '@rotp/hub-contracts';
 import { isZip, unzip } from '@shared/storage/archive';
 import type { ArchiveEntry } from '@shared/storage/archive';
 import type { MsulPack } from './import-msul.type';

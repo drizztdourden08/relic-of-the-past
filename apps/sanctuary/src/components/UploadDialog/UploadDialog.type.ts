@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { FileType } from '@shared/sanctuary/file-types';
+import type { FileType } from '@rotp/hub-contracts';
 import type { UploadMeta } from '../../upload/upload-target.type';
 
 type UploadDialogProps = {

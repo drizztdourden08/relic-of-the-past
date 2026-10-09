@@ -1,8 +1,8 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { ItemChangeResponse } from '../../../../shared/store/api-types';
-import type { StoreItem } from '../../../../shared/store/types';
-import { isInFlight } from '../../../../shared/store/version-flow';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { ItemChangeResponse } from '@rotp/hub-contracts';
+import type { StoreItem } from '@rotp/hub-contracts';
+import { isInFlight } from '@rotp/hub-contracts';
 import { conflict } from '../../../hub-core/http/http-error';
 import { now } from '../../../hub-core/db/firestore';
 import type { Route } from '../../../hub-core/route.type';

@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuTrackDef } from '@shared/types/msu-manifest';
+import type { MsuTrackDef } from '@rotp/game-data';
 import { zipEntries } from '@shared/storage/archive-write';
 import type { ZipEntry } from '@shared/storage/archive-write';
 import { flattenTrack } from '../flatten-track';

@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { Device } from '../../../shared/hub';
+import type { Device } from '@rotp/hub-contracts';
 import type { DeviceDoc } from './devices-repo.type';
 import { collection, now } from './firestore';
 

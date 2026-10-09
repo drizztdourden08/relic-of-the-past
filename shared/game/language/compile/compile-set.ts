@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { PackedLangEntry } from '@rotp/asset-extraction';
 import { buildPackedEntry } from '@rotp/asset-extraction';
-import { kLanguages } from '@rotp/game-data';
+import { kLanguages } from '@rotp/asset-extraction';
 import type { LanguageSet } from '../types';
 import { buildVariableIndex } from '../variables/variable-index';
 import { resolve } from '../variables/resolve';

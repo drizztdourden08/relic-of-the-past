@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
-import { FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
-import type { FileType } from '@shared/sanctuary/file-types';
+import { FILE_TYPE_LABELS } from '@rotp/hub-contracts';
+import type { FileType } from '@rotp/hub-contracts';
 import { Button, Field, Flex, Select, Stack } from '@drizztdourden08/tessera/primitives';
 import { TagInput } from '@drizztdourden08/tessera/composites';
 import { validateTag } from '../../../files/validate-tag';

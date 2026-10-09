@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { LayerPlayMode, MsuLayer } from '@shared/types/msu-manifest';
-import { MAX_CROSSFADE_SECONDS } from '@shared/types/msu-manifest';
+import type { LayerPlayMode, MsuLayer } from '@rotp/game-data';
+import { MAX_CROSSFADE_SECONDS } from '@rotp/hub-contracts';
 import { DEFAULT_CROSSFADE_SECONDS } from './layer-ops.constants';
 
 const clampCrossfade = (seconds: number | undefined): number => {

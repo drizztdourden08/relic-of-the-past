@@ -1,5 +1,5 @@
 /* @layer site-kit @kind logic */
-import type { Provider } from '@shared/hub/providers';
+import type { Provider } from '@rotp/hub-contracts';
 import { hubApi } from '../hub-client';
 import type { AuthIntent } from './hub-endpoints.type';
 

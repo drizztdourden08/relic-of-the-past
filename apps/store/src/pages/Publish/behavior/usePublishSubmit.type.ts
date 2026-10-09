@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { StoreItem, StoreKind } from '@shared/store/types';
+import type { StoreItem, StoreKind } from '@rotp/hub-contracts';
 import type { Picture } from '../../../lib/resize-image';
 import type { ListingText } from './useListingFields.type';
 import type { PackState } from './usePack.type';

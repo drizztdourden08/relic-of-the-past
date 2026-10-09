@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { isGlyphName } from '@shared/game/language';
-import type { LanguageConfig } from '@rotp/game-data';
+import type { LanguageConfig } from '@rotp/asset-extraction';
 import { BRACKETED } from './glyph-names.constants';
 
 const glyphNamesOf = (cfg: LanguageConfig): Set<string> => {

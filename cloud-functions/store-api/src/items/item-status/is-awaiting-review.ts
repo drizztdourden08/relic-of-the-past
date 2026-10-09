@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreItem } from '../../../../../shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { hasWaitingVersion } from './has-waiting-version';
 
 const isAwaitingReview = (item: Pick<StoreItem, 'versions' | 'listingEdits'>): boolean =>

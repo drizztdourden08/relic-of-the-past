@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { VersionCompleteResponse } from '../../../../shared/store/api-types';
-import { versionCompleteSchema } from '../../../../shared/store/schemas';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { VersionCompleteResponse } from '@rotp/hub-contracts';
+import { versionCompleteSchema } from '@rotp/hub-contracts';
 import { badRequest, conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import type { Route } from '../../../hub-core/route.type';

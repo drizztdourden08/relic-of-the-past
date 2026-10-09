@@ -1,5 +1,5 @@
 /* @layer site-kit @kind component */
-import { PROVIDERS } from '@shared/hub/providers';
+import { PROVIDERS } from '@rotp/hub-contracts';
 import { Flex, Stack } from '@drizztdourden08/tessera/primitives';
 import { SiteFrame } from '../../layout/SiteFrame/SiteFrame';
 import { Gate } from '../../components/Gate/Gate';

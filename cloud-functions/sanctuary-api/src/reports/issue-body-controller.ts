@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { SubmitReportRequest } from '../../../../shared/sanctuary';
+import type { SubmitReportRequest } from '@rotp/hub-contracts';
 import { debugInfoBlock } from './debug-info-block';
 import { detailsBlock } from './details-block';
 import type { IssueBodyRenderer } from './issue-body.type';

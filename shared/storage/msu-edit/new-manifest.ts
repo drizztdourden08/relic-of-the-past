@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { MsuPackManifest, MsuPackMeta } from '@shared/types/msu-manifest';
+import type { MsuPackManifest, MsuPackMeta } from '@rotp/game-data';
 
 const newManifest = (pack: string, meta?: Partial<MsuPackMeta>): MsuPackManifest => {
   const now = Date.now();

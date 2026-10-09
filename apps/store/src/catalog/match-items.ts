@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 
 const haystackOf = (item: ItemCardView): string =>
   [item.name, item.summary, item.author.displayName, item.kind, item.slug].join(' ').toLowerCase();

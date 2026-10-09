@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { SavedView } from '../../../shared/hub';
+import type { SavedView } from '@rotp/hub-contracts';
 import { collection } from './firestore';
 
 const views = () => collection('views');

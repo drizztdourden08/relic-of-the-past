@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
-import { HUB_LIMITS, HUB_ROUTES } from '@shared/hub';
-import type { SiteId } from '@shared/hub';
+import { HUB_LIMITS, HUB_ROUTES } from '@rotp/hub-contracts';
+import type { SiteId } from '@rotp/hub-contracts';
 import type { SignInBegin, SignInPoll, SignInProvider } from '@drizztdourden08/brock-secrets/main';
 import { callApi } from '../client';
 import { deviceLabel, devicePlatform } from '../device';

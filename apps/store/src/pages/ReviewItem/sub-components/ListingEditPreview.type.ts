@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { ListingEdit, StoreItem } from '@shared/store/types';
+import type { ListingEdit, StoreItem } from '@rotp/hub-contracts';
 
 type ListingEditPreviewProps = {
   item: StoreItem;

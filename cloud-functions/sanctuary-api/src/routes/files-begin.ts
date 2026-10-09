@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
-import { LIMITS, SANCTUARY_ROUTES, createFileSchema } from '../../../../shared/sanctuary';
-import type { FileOwner, SanctuaryFile } from '../../../../shared/sanctuary';
+import { LIMITS, SANCTUARY_ROUTES, createFileSchema } from '@rotp/hub-contracts';
+import type { FileOwner, SanctuaryFile } from '@rotp/hub-contracts';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { requireMember } from '../../../hub-core/auth/require-member';
 import { assertVisibleType } from '../files/file-guards';

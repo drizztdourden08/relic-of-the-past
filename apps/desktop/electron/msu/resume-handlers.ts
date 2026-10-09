@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { dirname } from 'path';
 import { readFile, writeFile, rm, mkdir } from 'fs/promises';
-import type { MsuResumeState } from '@shared/types/msu-manifest';
+import type { MsuResumeState } from '@rotp/game-data';
 import type { SaveKind } from '@shared/storage/save-paths';
 import { MSU_SIDECAR_SUFFIX, saveStem } from '@shared/storage/save-paths';
 import { handle, getUserDataPath } from '@drizztdourden08/brock-electron/main';

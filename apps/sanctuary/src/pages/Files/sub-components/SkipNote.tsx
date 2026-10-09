@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind component */
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { NAMES_SHOWN } from './SkipNote.constants';
 import type { SkipNoteProps } from './SkipNote.type';

@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { AccessCheck, HubUser, SiteAccess } from '../../../shared/hub';
+import type { AccessCheck, HubUser, SiteAccess } from '@rotp/hub-contracts';
 import { now } from '../db/firestore';
 import type { SiteConfig } from '../site-config.type';
 import type { FreshToken } from './access-rule.type';

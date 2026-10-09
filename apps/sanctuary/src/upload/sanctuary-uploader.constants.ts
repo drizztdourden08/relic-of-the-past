@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind constants */
-import { LIMITS } from '@shared/sanctuary/limits';
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import { LIMITS } from '@rotp/hub-contracts';
+import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { hashFile } from '@site-kit/upload/hash-file';
 import { fileSteps } from '@site-kit/upload/upload-steps';
 import type { UploadRunner } from '@site-kit/upload/upload-runner.type';

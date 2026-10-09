@@ -1,6 +1,6 @@
 /* @layer store-api @kind constants */
-import { HUB_ROUTES } from '../../../../shared/hub/api-contract';
-import type { RouteDef } from '../../../../shared/hub/api-contract';
+import { HUB_ROUTES } from '@rotp/hub-contracts';
+import type { RouteDef } from '@rotp/hub-contracts';
 
 const SANCTUARY_ONLY: readonly RouteDef[] = [
   HUB_ROUTES.adminPending,

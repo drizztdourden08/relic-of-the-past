@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 
 type FeaturedHeroProps = {
   items: readonly ItemCardView[];

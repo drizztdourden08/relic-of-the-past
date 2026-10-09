@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
 import { FieldValue } from '@google-cloud/firestore';
-import type { FileType, SanctuaryFile } from '../../../../shared/sanctuary';
+import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
 import { notFound } from '../../../hub-core/http/http-error';
 import { upgradeFile } from '../files/upgrade-file';
 import type { StoredFile } from '../files/upgrade-file.type';

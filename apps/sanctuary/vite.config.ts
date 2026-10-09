@@ -8,10 +8,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { portFor } from '../../shared/config/port-for';
-import { readPortSlot } from '../../shared/config/port-slot';
+import { portFor } from '@rotp/hub-contracts';
+import { readPortSlot } from '@rotp/hub-contracts/node';
 
-const SITE_ROOT = __dirname;
+const SITE_ROOT = import.meta.dirname;
 const WEB_SRC = resolve(SITE_ROOT, '../desktop/src');
 const PORT_SLOT = readPortSlot(resolve(SITE_ROOT, '../..'));
 

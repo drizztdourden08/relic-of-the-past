@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import type { HomeView, ItemCardView } from '../../../../shared/store/home-types';
-import type { StoreItem } from '../../../../shared/store/types';
+import type { HomeView, ItemCardView } from '@rotp/hub-contracts';
+import type { StoreItem } from '@rotp/hub-contracts';
 import { itemsRepo } from '../db/items-repo';
 import { settingsRepo } from '../db/settings-repo';
 import { toCardView } from '../items/card-view';

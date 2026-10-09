@@ -1,5 +1,5 @@
 /* @layer hub-core @kind types */
-import type { Provider } from '../../../../shared/hub';
+import type { Provider } from '@rotp/hub-contracts';
 
 type ProviderProfile = {
   subject: string;

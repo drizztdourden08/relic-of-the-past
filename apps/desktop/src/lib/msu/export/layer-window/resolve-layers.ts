@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuTrackDef } from '@shared/types/msu-manifest';
+import type { MsuTrackDef } from '@rotp/game-data';
 import type { ResolvedLayer } from './layer-window.type';
 
 const resolveLayers = (track: MsuTrackDef, files: Map<string, AudioBuffer>): ResolvedLayer[] => {

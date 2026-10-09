@@ -1,6 +1,6 @@
 /* @layer hub-core @kind types */
 import type { Request, Response } from '@google-cloud/functions-framework';
-import type { HttpMethod } from '../../shared/hub';
+import type { HttpMethod } from '@rotp/hub-contracts';
 
 type RouteContext = {
   req: Request;

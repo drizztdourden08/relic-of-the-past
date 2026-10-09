@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { ReviewEntry } from '@shared/store/api-types';
+import type { ReviewEntry } from '@rotp/hub-contracts';
 import type { ReviewActions } from '../../Review/behavior/useReviewActions.type';
 
 type DecisionPanelProps = {

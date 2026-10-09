@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { LayerResume, MsuLayer, SoundChannel } from '@shared/types/msu-manifest';
+import type { LayerResume, MsuLayer, SoundChannel } from '@rotp/game-data';
 import type { EffectChain } from '../layer-effects';
 import type { LayerActivity, LayerScheduler } from '../schedulers/scheduler.type';
 import type { LoadBytes } from '../track-loader';

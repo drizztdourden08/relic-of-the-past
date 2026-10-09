@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { ReportIssue } from '@shared/sanctuary/report-types';
+import type { ReportIssue } from '@rotp/hub-contracts';
 
 type IssueStateChipProps = {
   issue: Pick<ReportIssue, 'number' | 'state'> & { url?: string };

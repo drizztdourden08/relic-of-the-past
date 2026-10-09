@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 
 const matchesQuery = (item: ItemCardView, needle: string): boolean =>
   item.name.toLowerCase().includes(needle)

@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Box, EmptyState, Flex, Pressable, Stack, Tag, Text } from '@drizztdourden08/tessera/primitives';
-import { KIND_CONTAINER } from '@shared/store/containers';
+import { KIND_CONTAINER } from '@rotp/hub-contracts';
 import { AppLink } from '@site-kit/router/AppLink';
 import { formatAverage } from '../../lib/format-count/format-average';
 import { formatCount } from '../../lib/format-count/format-count';

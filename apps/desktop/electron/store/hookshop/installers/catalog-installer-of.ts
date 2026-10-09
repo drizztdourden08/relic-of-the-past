@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { readFile } from 'fs/promises';
 import type { CatalogInstaller, InstallInput } from '@drizztdourden08/brock-catalog/main';
-import type { PackInstaller } from '@shared/store/install/installer.type';
+import type { PackInstaller } from '@rotp/hub-contracts';
 import { storeFiles } from '../../store-files';
 
 const catalogInstallerOf = (pack: PackInstaller): CatalogInstaller => {

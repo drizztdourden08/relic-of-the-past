@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { MsuResumeState } from '@shared/types/msu-manifest';
+import type { MsuResumeState } from '@rotp/game-data';
 
 const isResumeState = (value: unknown): value is MsuResumeState => {
   const s = value as MsuResumeState | null;

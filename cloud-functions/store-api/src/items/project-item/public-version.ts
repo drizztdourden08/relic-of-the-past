@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreVersion } from '../../../../../shared/store/types';
+import type { StoreVersion } from '@rotp/hub-contracts';
 
 const publicVersion = (version: StoreVersion): StoreVersion => ({
   ...version,

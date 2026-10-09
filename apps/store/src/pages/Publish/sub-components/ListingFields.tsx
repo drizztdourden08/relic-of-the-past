@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Field, Flex, Select, Text, TextInput, Textarea } from '@drizztdourden08/tessera/primitives';
 import { TagInput } from '@drizztdourden08/tessera/composites';
-import { tagsSchema } from '@shared/hub/schemas/common';
+import { tagsSchema } from '@rotp/hub-contracts';
 import { FIELD_LABELS, FIELD_MESSAGES, LICENSE_OPTIONS } from '../Publish.constants';
 import { LISTING_CAPS } from '../behavior/listing-errors.constants';
 import { ColorField } from './ColorField';

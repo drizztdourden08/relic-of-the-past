@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
+import type { PatchFileBody } from '@rotp/hub-contracts';
 import { sanctuaryApi } from '../sanctuary-client';
 import type { FileResponse } from '../api-responses.type';
 

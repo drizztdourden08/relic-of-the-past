@@ -1,6 +1,6 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import type { CreateGroupBody } from '@shared/hub/schemas/group-schemas';
+import type { CreateGroupBody } from '@rotp/hub-contracts';
 import { createGroup, deleteGroup, listGroups, patchGroup } from '../../../api/groups-endpoints';
 import { errorMessage } from '../../../api/api-error';
 import type { GroupView } from '../../../api/hub-responses.type';

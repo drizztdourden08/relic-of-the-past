@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { GroupRights, RightsModel } from '../../../shared/hub';
+import type { GroupRights, RightsModel } from '@rotp/hub-contracts';
 import { badRequest } from '../http/http-error';
 
 const assertKnownRights = (rights: GroupRights | undefined, model: RightsModel): void => {

@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { Stars as StarCount } from '@shared/store/rating-types';
+import type { Stars as StarCount } from '@rotp/hub-contracts';
 
 type StarsProps = {
   value: number | null;

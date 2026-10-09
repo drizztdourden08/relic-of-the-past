@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { Identity } from '../../../shared/hub';
+import type { Identity } from '@rotp/hub-contracts';
 import { collection } from './firestore';
 
 const identities = () => collection('identities');

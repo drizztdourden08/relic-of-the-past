@@ -1,6 +1,6 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import type { Device } from '@shared/hub/device-types';
+import type { Device } from '@rotp/hub-contracts';
 import { listDevices, revokeDevice } from '../../../api/hub-endpoints';
 import { errorMessage } from '../../../api/api-error';
 

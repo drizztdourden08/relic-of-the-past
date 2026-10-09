@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { SANCTUARY_ROUTES, submitReportSchema } from '../../../../shared/sanctuary';
+import { SANCTUARY_ROUTES, submitReportSchema } from '@rotp/hub-contracts';
 import { clientIp } from '../../../hub-core/http/client-ip';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { readCaller } from '../../../hub-core/auth/require-caller';

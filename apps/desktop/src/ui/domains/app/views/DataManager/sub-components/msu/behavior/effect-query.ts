@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import { PORT_TAGS } from './effect-query.constants';
 import type { EffectQuery } from './effect-query.type';
 

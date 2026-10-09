@@ -7,7 +7,7 @@ import { fitReceiptLine } from '@app/lib/game/session-dialogue/wrap-message';
 import { toDialogueText } from '@app/lib/game/session-dialogue/dialogue-text';
 import { dialogueCharsetOf, extraGlyphSlots, readableText } from '@rotp/game-data';
 import { stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup';
-import { kLanguages } from '@rotp/game-data';
+import { kLanguages } from '@rotp/asset-extraction';
 import { buildForeignIconsFile, FOREIGN_ICON_FILES, FOREIGN_ICON_PALETTE_BYTES } from '@rotp/asset-extraction';
 import { chromaOf, toOklab } from '@rotp/asset-extraction';
 import { snesToRgba } from '@rotp/asset-extraction';

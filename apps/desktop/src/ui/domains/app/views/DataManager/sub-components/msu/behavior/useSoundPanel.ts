@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import { writeMsuManifest } from '@app/lib/storage/msu-store';
 import { useAudibleIds } from './useAudibleIds';
 import { useOriginalPreview } from './useOriginalPreview';

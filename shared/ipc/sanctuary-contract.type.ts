@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { ReportContext, SubmitReportRequest } from '@shared/sanctuary';
+import type { ReportContext, SubmitReportRequest } from '@rotp/hub-contracts';
 
 type SanctuarySubmitInput = {
   request: Omit<SubmitReportRequest, 'attachment'>;

@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { Container, StoreKind } from '@shared/store/types';
+import type { Container, StoreKind } from '@rotp/hub-contracts';
 import type { usePack } from './usePack';
 
 type PackCheck = { container: Container | null; kind: StoreKind | null; problem: string | null };

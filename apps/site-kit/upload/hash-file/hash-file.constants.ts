@@ -1,5 +1,5 @@
 /* @layer site-kit @kind constants */
-import { HUB_LIMITS } from '@shared/hub/limits';
+import { HUB_LIMITS } from '@rotp/hub-contracts';
 
 const HASH_MAX_BYTES = HUB_LIMITS.partBytes;
 

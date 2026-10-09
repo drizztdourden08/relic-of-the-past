@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import type { LayerTarget } from '../behavior/layer-target';
 import type { PreviewReportStore } from '../behavior/preview-report-store.type';
 

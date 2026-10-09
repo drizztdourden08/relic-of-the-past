@@ -1,7 +1,7 @@
 /* @layer shared-store @kind constants */
-import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
-import { MANIFEST_ENTRY } from '@shared/storage/link-sprites/rsp.type';
-import { SET_FILES } from '@shared/storage/languages/paths';
+import { MSUL_MANIFEST_NAME } from '../../manifest';
+import { MANIFEST_ENTRY } from '../../link-sprites/rsp.type';
+import { SET_FILES } from '../../sets/paths/paths.constants';
 import type { Container, StoreKind } from '../types';
 
 const CONTAINERS: readonly Container[] = ['msul', 'rsp', 'rlang'];

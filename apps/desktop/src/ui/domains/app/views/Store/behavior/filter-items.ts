@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { ItemCardView } from '@shared/store/home-types';
-import type { StoreKind } from '@shared/store/types';
+import type { ItemCardView } from '@rotp/hub-contracts';
+import type { StoreKind } from '@rotp/hub-contracts';
 import { matchesQuery } from './matches-query';
 
 const filterItems = (items: ItemCardView[], kind: StoreKind | null, query: string): ItemCardView[] => {

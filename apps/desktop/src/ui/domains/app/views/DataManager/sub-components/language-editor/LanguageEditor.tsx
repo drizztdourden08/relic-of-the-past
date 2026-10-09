@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Tabs, EmptyState, Spinner } from '@drizztdourden08/tessera/primitives';
 import { buildVariableIndex } from '@shared/game/language';
-import { kLanguages } from '@rotp/game-data';
+import { kLanguages } from '@rotp/asset-extraction';
 import { useLanguageEditor } from './behavior/useLanguageEditor';
 import { useTranslationSearch } from '@domains/packs/language/behavior/useTranslationSearch';
 import { useEntryLayout } from '@domains/packs/language/behavior/useEntryLayout';

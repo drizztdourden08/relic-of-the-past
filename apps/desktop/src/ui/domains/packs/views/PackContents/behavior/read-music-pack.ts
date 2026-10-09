@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { readZipDirectory, entryData } from '@shared/store/manifest/zip-directory';
-import { STORE_LIMITS } from '@shared/store/limits';
-import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
+import { readZipDirectory, entryData } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import { MSUL_MANIFEST_NAME } from '@rotp/hub-contracts';
 import { parseManifest } from '@shared/storage/msu-edit';
 import type { PackSource } from '../../../pack-source.type';
 import type { MusicPack } from '../PackContents.type';

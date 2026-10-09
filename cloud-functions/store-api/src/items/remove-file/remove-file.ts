@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { StoreVersion } from '../../../../../shared/store/types';
+import type { StoreVersion } from '@rotp/hub-contracts';
 import { storeBucket } from '../../storage/store-bucket';
 
 const fileKeyOf = (version: Pick<StoreVersion, 'key' | 'packKey'>): string => version.packKey ?? version.key;

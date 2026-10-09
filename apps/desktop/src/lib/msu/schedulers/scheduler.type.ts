@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { LayerResume } from '@shared/types/msu-manifest';
+import type { LayerResume } from '@rotp/game-data';
 import type { Voice, VoiceFade, VoiceOptions } from '../voice';
 import type { DecodedAudio } from '../decode/decode-audio-file';
 

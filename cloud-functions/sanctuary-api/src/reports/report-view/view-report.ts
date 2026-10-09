@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { Report } from '../../../../../shared/sanctuary';
+import type { Report } from '@rotp/hub-contracts';
 import type { Member } from '../../../../hub-core/auth/require-member';
 
 const viewReport = (report: Report, { access }: Member): Report =>

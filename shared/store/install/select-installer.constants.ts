@@ -1,9 +1,9 @@
 /* @layer shared-store @kind constants */
-import type { Container } from '../types';
+import type { Container } from '@rotp/hub-contracts';
 import { msulInstaller } from './install-msul';
 import { rlangInstaller } from './install-rlang';
 import { rspInstaller } from './install-rsp';
-import type { PackInstaller } from './installer.type';
+import type { PackInstaller } from '@rotp/hub-contracts';
 
 const INSTALLERS: Record<Container, PackInstaller> = {
   msul: msulInstaller,

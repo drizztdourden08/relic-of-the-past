@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import type { MsuPackManifest } from '@rotp/game-data';
 import { layersOfTrack } from './layers-of-track';
 import { withTrackFiles } from './with-track-files';
 

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback } from 'react';
-import type { LayerPlayMode } from '@shared/types/msu-manifest';
+import type { LayerPlayMode } from '@rotp/game-data';
 import { SINGLE_DISCARD_TITLE } from '../LayerCard.constants';
 import { singleDiscardMessage } from './single-discard-message';
 import type { ModeChangeParams } from './useModeChange.type';

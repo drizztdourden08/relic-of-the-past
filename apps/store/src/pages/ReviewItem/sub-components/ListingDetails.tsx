@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { Box, Flex, StatRow, Text } from '@drizztdourden08/tessera/primitives';
-import type { MediaRef } from '@shared/store/types';
+import type { MediaRef } from '@rotp/hub-contracts';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { itemColorStyle } from '../../../lib/item-color-style';
 import type { ListingDetailsProps } from './ListingDetails.type';

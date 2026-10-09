@@ -1,5 +1,5 @@
 /* @layer hub-core @kind types */
-import type { Group, Identity, Provider, HubUser } from '../../../shared/hub';
+import type { Group, Identity, Provider, HubUser } from '@rotp/hub-contracts';
 import type { GrantDoc } from '../db/grants-repo.type';
 
 type FreshToken = { provider: Provider; accessToken: string };

@@ -2,7 +2,7 @@
 export {
   type RomData, type RomLanguage, type RomIdentEntry,
   snesToLinear, advanceAddress, advanceAddressWord,
-  loadRom, loadRomFromBuffer, ZELDA3_SHA1, ZELDA3_SHA1_US,
+  loadRomFromBuffer, ZELDA3_SHA1, ZELDA3_SHA1_US,
   RomReader,
 } from './rom';
 
@@ -22,10 +22,7 @@ export {
 
 export { kCompSpritePtrs, kCompBgPtrs } from './data';
 
-export {
-  extractAllItemSprites, extractAllItemSpritesFromRom,
-  type ExtractionResult,
-} from './item-sprites';
+export type { ExtractionResult } from './item-sprites';
 
 export { ALTTP_GBA_US_SHA256, GbaRomReader, loadGbaAlttpRomFromBuffer } from './rom/gba-rom';
 export { GbaAlttpDungeonSource, PALACE_ROOM_IDS, extractPalaceSnes4bppTiles } from './sources/gba-alttp';
@@ -87,3 +84,5 @@ export { decodeMenuText } from './text/menu-text/decode-stripe-text';
 export type { DecodedLine } from './text/menu-text/menu-text.type';
 export { dialogueTexts } from './text/parse-dialogue-text/dialogue-texts';
 export { parseDialogueText } from './text/parse-dialogue-text/parse-dialogue-text';
+export { kLanguages } from './text/data/language-data/language-data.data';
+export type { LanguageConfig } from './text/data/language-data/language-data.type';

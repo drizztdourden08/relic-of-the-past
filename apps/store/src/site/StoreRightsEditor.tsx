@@ -1,5 +1,5 @@
 /* @layer store-site @kind component */
-import { STORE_RIGHTS } from '@shared/store/store-rights';
+import { STORE_RIGHTS } from '@rotp/hub-contracts';
 import { Checkbox, Stack } from '@drizztdourden08/tessera/primitives';
 import type { RightsEditorProps } from '@site-kit/site/site-definition.type';
 

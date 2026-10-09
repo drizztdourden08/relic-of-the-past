@@ -187,8 +187,7 @@ export type { QuietReceiptKind, QuietReceiptSettings } from './quiet-receipts/qu
 export { SDL_AXIS, SDL_BUTTON, SDL_GAMEPAD_TYPES } from './sdl-buttons/sdl-buttons.data';
 export type { SdlAxisName, SdlButtonName, SdlGamepadType } from './sdl-buttons/sdl-buttons.type';
 export type { BasedOn } from './store/based-on/based-on.type';
-export { kLanguages } from './text/data/language-data/language-data.data';
-export type { LanguageConfig } from './text/data/language-data/language-data.type';
+export type { LanguageConfig } from '@rotp/asset-extraction';
 export type { TitleFrame, TitlePiece, TitleProgress } from './title/title-frame.type';
 export { CASTLE_TOP, FRAME_H, FRAME_W, GLINT_RUN_MAX, GLINT_TOP_OFFSET, GLINT_X, HILT_SPARKLE_AT, HORIZON_Y, LOGO_AT, LOGO_BARS_OVER_BLADE, MIRRORED_PIECE, PIECE_SIZE, PROMPT_START_H, PROMPT_START_Y, PROMPT_STORY_H, PROMPT_STORY_Y, SWORD_REST_BASE, SWORD_TOP_FOR_BASE, SWORD_X } from './title/title-layout';
 export { brightness } from './title/title-phase/brightness';

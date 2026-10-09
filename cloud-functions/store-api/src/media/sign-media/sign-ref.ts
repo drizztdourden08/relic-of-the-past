@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { MediaRef } from '../../../../../shared/store/types';
+import type { MediaRef } from '@rotp/hub-contracts';
 import { storeBucket } from '../../storage/store-bucket';
 import { WEBP } from './sign-media.constants';
 

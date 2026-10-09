@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { LayerResume, MsuLayer } from '@shared/types/msu-manifest';
+import type { LayerResume, MsuLayer } from '@rotp/game-data';
 
 const createTriggerPool = () => {
   const last = new Map<string, number>();

@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { ListingEditState, Review } from '../../../../../shared/store/review-types';
+import type { ListingEditState, Review } from '@rotp/hub-contracts';
 import { conflict } from '../../../../hub-core/http/http-error';
 import type { Decided } from './mark-decided.type';
 

@@ -1,5 +1,5 @@
 /* @layer store-api @kind constants */
-import { STORE_LIMITS } from '../../../../shared/store/limits';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
 
 const OVER_CAP = `You have opened ${STORE_LIMITS.packPreviewsPerDay} pack previews today. Previews open again tomorrow.`;
 

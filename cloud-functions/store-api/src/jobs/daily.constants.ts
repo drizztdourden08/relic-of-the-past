@@ -1,5 +1,5 @@
 /* @layer store-api @kind constants */
-import type { Actor } from '../../../../shared/store/version-flow';
+import type { Actor } from '@rotp/hub-contracts';
 import { DAY_MS } from '../db/daily-repo.constants';
 
 const STALE_UPLOAD_MS = 2 * DAY_MS;

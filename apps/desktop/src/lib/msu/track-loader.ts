@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
 import { decodeAudioFile } from './decode/decode-audio-file';
 import type { DecodedAudio } from './decode/decode-audio-file';
 import type { LoadBytes, LoadedLayer } from './track-loader.type';

@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { InstalledPack } from '@shared/store/installed-types';
+import type { InstalledPack } from '@rotp/hub-contracts';
 import { foldCase } from './fold-case';
 import { INSTALLED_ROOTS } from './installed-guard.constants';
 

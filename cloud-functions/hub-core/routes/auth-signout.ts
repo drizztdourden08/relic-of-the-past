@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES } from '../../../shared/hub';
+import { HUB_ROUTES } from '@rotp/hub-contracts';
 import { queryFlag } from '../http/query';
 import { clearSessionCookie, readSession } from '../auth/session';
 import { usersRepo } from '../db/users-repo';

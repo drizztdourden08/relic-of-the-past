@@ -1,8 +1,8 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { PackLinkResponse } from '../../../../shared/store/api-types';
-import { HUB_LIMITS } from '../../../../shared/hub/limits';
-import type { StoreVersion } from '../../../../shared/store/types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { PackLinkResponse } from '@rotp/hub-contracts';
+import { HUB_LIMITS } from '@rotp/hub-contracts';
+import type { StoreVersion } from '@rotp/hub-contracts';
 import { badRequest, conflict, notFound } from '../../../hub-core/http/http-error';
 import type { Route } from '../../../hub-core/route.type';
 import { requirePermission } from '../auth/player';

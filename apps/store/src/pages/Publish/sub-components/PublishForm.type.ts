@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { StoreItem } from '@shared/store/types';
+import type { StoreItem } from '@rotp/hub-contracts';
 import type { PublishMode } from '../Publish.type';
 
 type PublishFormProps = {

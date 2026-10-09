@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import { layersOfSound, withSoundLayers } from '../sound-manifest';
 import { soundPreviewKey } from '../preview-key';
 import { soundTitle } from '../../sound-labels';

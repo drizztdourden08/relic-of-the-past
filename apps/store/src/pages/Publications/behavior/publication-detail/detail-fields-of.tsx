@@ -1,7 +1,7 @@
 /* @layer store-site @kind logic */
 import type { ReactNode } from 'react';
-import type { Review } from '@shared/store/review-types';
-import type { ListingEdit, StoreItem, StoreVersion } from '@shared/store/types';
+import type { Review } from '@rotp/hub-contracts';
+import type { ListingEdit, StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDateTime } from '@site-kit/lib/format-date';

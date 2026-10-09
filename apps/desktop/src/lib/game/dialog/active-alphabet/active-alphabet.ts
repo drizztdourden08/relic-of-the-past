@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { kLanguages } from '@rotp/game-data';
+import { kLanguages } from '@rotp/asset-extraction';
 import { displayAlphabetOf } from '@rotp/game-data';
 import { loadedExtraGlyphs } from '../../session-dialogue/extra-glyphs';
 import { FALLBACK_CODE } from './active-alphabet.constants';

@@ -1,9 +1,9 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { MediaUploadResponse } from '../../../../shared/store/api-types';
-import { HUB_LIMITS } from '../../../../shared/hub/limits';
-import { STORE_KEYS } from '../../../../shared/store/keys';
-import { mediaUploadSchema } from '../../../../shared/store/schemas';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { MediaUploadResponse } from '@rotp/hub-contracts';
+import { HUB_LIMITS } from '@rotp/hub-contracts';
+import { STORE_KEYS } from '@rotp/hub-contracts';
+import { mediaUploadSchema } from '@rotp/hub-contracts';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import type { Route } from '../../../hub-core/route.type';
 import { requirePlayer } from '../auth/player';

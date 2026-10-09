@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
-import { STORE_LIMITS } from '../../../../shared/store/limits';
-import type { StoreItem, StoreVersion } from '../../../../shared/store/types';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { itemsRepo } from '../db/items-repo';
 import { removeFile, stampRemoved } from './remove-file';
 

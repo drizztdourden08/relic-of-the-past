@@ -8,9 +8,9 @@ import fileTextIcon from '@iconify-icons/lucide/file-text';
 import fileIcon from '@iconify-icons/lucide/file';
 import flagIcon from '@iconify-icons/lucide/flag';
 import gamepadIcon from '@iconify-icons/lucide/gamepad-2';
-import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@shared/sanctuary/file-types';
-import type { FileType } from '@shared/sanctuary/file-types';
-import type { ReportKind } from '@shared/sanctuary/report-types';
+import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@rotp/hub-contracts';
+import type { FileType } from '@rotp/hub-contracts';
+import type { ReportKind } from '@rotp/hub-contracts';
 import { REPORT_SCOPE_IDS } from '../../pages/Reports/Reports.constants';
 import type { SearchCategory } from './search-categories.type';
 

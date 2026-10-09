@@ -1,6 +1,6 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import type { SavedView } from '@shared/hub/types';
+import type { SavedView } from '@rotp/hub-contracts';
 import { emptySnapshot, isViewSnapshot } from '@drizztdourden08/tessera/data';
 import { listViews, putView, deleteView } from '../api/views-endpoints';
 import { errorMessage } from '../api/api-error';

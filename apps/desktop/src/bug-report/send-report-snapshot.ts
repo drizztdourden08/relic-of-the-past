@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { useProfilesStore } from '@drizztdourden08/brock-react';
-import type { ReportContext } from '@shared/sanctuary';
+import type { ReportContext } from '@rotp/hub-contracts';
 import { appApi } from '@app/ipc/app-api';
 import type { AppApi } from '@app/ipc/app-api.type';
 import { captureStateBuffer } from '@app/lib/game/state-buffers';

@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import type { LayerTransform, SoundsByChannel } from './msu-layer-edit.type';
 
 const mapSounds = (sounds: SoundsByChannel, transform: LayerTransform): SoundsByChannel => {

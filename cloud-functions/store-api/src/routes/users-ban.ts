@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { BanResponse } from '../../../../shared/store/api-types';
-import type { SiteAccess } from '../../../../shared/hub/site-types';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { BanResponse } from '@rotp/hub-contracts';
+import type { SiteAccess } from '@rotp/hub-contracts';
 import { conflict, notFound } from '../../../hub-core/http/http-error';
 import { now } from '../../../hub-core/db/firestore';
 import { usersRepo } from '../../../hub-core/db/users-repo';

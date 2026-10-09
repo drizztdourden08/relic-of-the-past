@@ -1,5 +1,5 @@
 /* @layer store-api @kind logic */
-import type { HomeSettings } from '../../../../shared/store/home-types';
+import type { HomeSettings } from '@rotp/hub-contracts';
 import { storeCollection } from './collections';
 import { FEATURED_DOC, HOME_DOC } from './settings-repo.constants';
 import type { FeaturedSettings } from './settings-repo.type';

@@ -81,7 +81,7 @@ module.exports = {
   protocols: [
     {
       name: 'Relic of the Past',
-      // INSTALL_SCHEME in shared/store/deep-link/deep-link.constants.ts; browsers show it when they ask to open the app.
+      // INSTALL_SCHEME in packages/hub-contracts/src/store/deep-link/deep-link.constants.ts; browsers show it when they ask to open the app.
       schemes: ['relic-of-the-past'],
     },
   ],

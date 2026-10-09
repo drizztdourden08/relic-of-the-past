@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { CatalogItem } from '@drizztdourden08/brock-catalog/main';
-import type { ItemResponse } from '@shared/store/api-types';
+import type { ItemResponse } from '@rotp/hub-contracts';
 import { ANSWER_UNREADABLE } from '../hookshop.constants';
 import { isObject } from './is-object';
 

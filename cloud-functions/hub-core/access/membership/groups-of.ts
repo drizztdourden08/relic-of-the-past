@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import type { Group, HubUser } from '../../../../shared/hub';
+import type { Group, HubUser } from '@rotp/hub-contracts';
 import { membershipOf } from './membership-of';
 
 const groupsOf = (user: HubUser, groups: Group[]): Group[] => {

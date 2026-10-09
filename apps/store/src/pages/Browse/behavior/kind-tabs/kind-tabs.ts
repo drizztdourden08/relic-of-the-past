@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { HeaderAnchorNavItem } from '@drizztdourden08/tessera/composites';
-import type { ItemCardView } from '@shared/store/home-types';
+import type { ItemCardView } from '@rotp/hub-contracts';
 import { KIND_PLURALS, STORE_KINDS } from '../../../../lib/kinds';
 import { ALL_TAB } from './kind-tabs.constants';
 

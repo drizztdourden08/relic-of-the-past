@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind constants */
-import { FILE_TYPES } from '@shared/sanctuary/file-types';
+import { FILE_TYPES } from '@rotp/hub-contracts';
 import type { SchemaConfig, TableColumn } from '@drizztdourden08/tessera/data';
 import type { FileRow } from './file-row';
 

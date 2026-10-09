@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
-import type { VersionBeginResponse } from '@shared/store/api-types';
-import type { VersionBeginBody } from '@shared/store/schemas';
+import type { VersionBeginResponse } from '@rotp/hub-contracts';
+import type { VersionBeginBody } from '@rotp/hub-contracts';
 import { storeApi } from '../store-client';
 
 const beginVersion = (id: string, body: VersionBeginBody) =>

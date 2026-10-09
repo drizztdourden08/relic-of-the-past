@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import { compressStrings } from '@rotp/asset-extraction';
-import { kLanguages } from '@rotp/game-data';
+import { kLanguages } from '@rotp/asset-extraction';
 import { kFontTypes } from '@rotp/asset-extraction';
 import { GLYPH_SLOTS, alphabetChars, dialogueCharsetOf, displayAlphabetOf, extraGlyphSlots, extraSlotOfToken, readableText } from '@rotp/game-data';
 import { EXTRA_GLYPHS } from '@rotp/game-data';

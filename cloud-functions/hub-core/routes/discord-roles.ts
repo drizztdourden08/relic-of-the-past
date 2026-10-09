@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
-import { HUB_ROUTES } from '../../../shared/hub';
-import type { DiscordRole } from '../../../shared/hub';
+import { HUB_ROUTES } from '@rotp/hub-contracts';
+import type { DiscordRole } from '@rotp/hub-contracts';
 import { readHubEnv } from '../env';
 import { badGateway } from '../http/http-error';
 import { requireAdmin } from '../auth/require-admin';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MsuLayer, MsuPackManifest, MsuTrackDef } from '@shared/types/msu-manifest';
+import type { MsuLayer, MsuPackManifest, MsuTrackDef } from '@rotp/game-data';
 
 const withTrackLayers = (
   manifest: MsuPackManifest, trackNum: number, layers: MsuLayer[],

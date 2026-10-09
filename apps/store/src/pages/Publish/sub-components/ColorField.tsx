@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import { ColorSwatch, Field } from '@drizztdourden08/tessera/primitives';
-import { DEFAULT_ITEM_COLOR } from '@shared/store/item-color';
+import { DEFAULT_ITEM_COLOR } from '@rotp/hub-contracts';
 import { FIELD_LABELS } from '../Publish.constants';
 import type { ColorFieldProps } from './ColorField.type';
 

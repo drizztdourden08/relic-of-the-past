@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import type { StoreItem, StoreVersion } from '@shared/store/types';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import type { ProjectedVersion } from './approved-versions.type';
 
 const isApproved = (version: ProjectedVersion): boolean =>

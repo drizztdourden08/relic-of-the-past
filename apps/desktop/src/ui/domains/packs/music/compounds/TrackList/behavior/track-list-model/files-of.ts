@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { MsuLayer } from '@rotp/game-data';
 
 const filesOf = (layers: MsuLayer[]): string[] => [...new Set(layers.flatMap((layer) => layer.files))];
 

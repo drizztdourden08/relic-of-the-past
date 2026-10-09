@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@rotp/game-data';
 import { SOUND_CHANNEL_PORTS } from '@rotp/game-data';
 import { AMBIENT_BLURB } from './sound-subtitle.constants';
 import type { SubtitleCounts } from './sound-subtitle.type';

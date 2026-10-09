@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { MediaRef, StoreKind } from '@shared/store/types';
+import type { MediaRef, StoreKind } from '@rotp/hub-contracts';
 import type { PictureState } from '../behavior/usePicture.type';
 
 type PictureFieldProps = {

@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@rotp/hub-contracts';
 
 type StoreResult<T> = { ok: true; data: T } | { ok: false; error: string; signedOut: boolean };
 

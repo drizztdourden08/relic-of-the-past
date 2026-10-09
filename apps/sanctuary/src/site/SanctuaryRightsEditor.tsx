@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind component */
-import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@shared/sanctuary/file-types';
-import type { FileType } from '@shared/sanctuary/file-types';
-import { REPORTS_PERMISSION, SANCTUARY_RIGHTS, filePermission } from '@shared/sanctuary/sanctuary-rights';
+import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@rotp/hub-contracts';
+import type { FileType } from '@rotp/hub-contracts';
+import { REPORTS_PERMISSION, SANCTUARY_RIGHTS, filePermission } from '@rotp/hub-contracts';
 import { Checkbox, Field, Flex, Toggle } from '@drizztdourden08/tessera/primitives';
 import type { RightsEditorProps } from '@site-kit/site/site-definition.type';
 

@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { WelcomeResponse } from '../../../../shared/store/api-types';
-import { welcomeSchema } from '../../../../shared/store/schemas';
+import { STORE_ROUTES } from '@rotp/hub-contracts';
+import type { WelcomeResponse } from '@rotp/hub-contracts';
+import { welcomeSchema } from '@rotp/hub-contracts';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { now } from '../../../hub-core/db/firestore';
 import type { Route } from '../../../hub-core/route.type';

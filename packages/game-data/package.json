@@ -4,8 +4,16 @@
   "private": true,
   "description": "The A Link to the Past dataset: records, screen ids, logic, game types and the facade that reads them.",
   "type": "module",
+  "sideEffects": [
+    "./src/data/bootstrap.ts",
+    "./src/data/index.ts",
+    "./src/index.ts"
+  ],
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@rotp/asset-extraction": "workspace:*"
   }
 }

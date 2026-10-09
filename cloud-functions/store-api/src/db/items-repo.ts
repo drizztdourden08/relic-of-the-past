@@ -1,6 +1,6 @@
 /* @layer store-api @kind logic */
 import { FieldValue } from '@google-cloud/firestore';
-import type { ItemStatus, StoreItem, StoreKind } from '../../../../shared/store/types';
+import type { ItemStatus, StoreItem, StoreKind } from '@rotp/hub-contracts';
 import { notFound } from '../../../hub-core/http/http-error';
 import { db, decodeCursor, encodeCursor } from '../../../hub-core/db/firestore';
 import { isAwaitingReview } from '../items/item-status';

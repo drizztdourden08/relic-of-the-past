@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import type { Report } from '../../../../shared/sanctuary';
+import type { Report } from '@rotp/hub-contracts';
 import { decodeCursor, encodeCursor } from '../../../hub-core/db/firestore';
 import { sanctuaryCollection } from './collections';
 import type { ReportFilter, ReportPage, ReportPatch } from './reports-repo.type';

@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { FileType } from '@shared/sanctuary/file-types';
+import type { FileType } from '@rotp/hub-contracts';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
 import { FILE_SCOPES } from '../../Files.constants';
 import type { Scope } from '../../Files.type';

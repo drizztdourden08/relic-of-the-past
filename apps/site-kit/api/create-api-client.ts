@@ -1,6 +1,6 @@
 /* @layer site-kit @kind logic */
-import { formatPath } from '@shared/hub/api-contract';
-import type { RouteDef } from '@shared/hub/api-contract';
+import { formatPath } from '@rotp/hub-contracts';
+import type { RouteDef } from '@rotp/hub-contracts';
 import { ApiError } from './api-error';
 import { API_BASE } from './create-api-client.constants';
 import type { RequestOptions, RouteName } from './create-api-client.type';

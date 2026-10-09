@@ -1,5 +1,5 @@
 /* @layer site-kit @kind component */
-import { DEFAULT_GROUP_ID } from '@shared/hub/group-types';
+import { DEFAULT_GROUP_ID } from '@rotp/hub-contracts';
 import { Button, Flex, Tag, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { GroupRowProps } from './GroupRow.type';

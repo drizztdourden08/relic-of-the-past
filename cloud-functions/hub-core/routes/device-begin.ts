@@ -1,5 +1,5 @@
 /* @layer hub-core @kind logic */
-import { HUB_LIMITS, HUB_ROUTES, deviceBeginSchema } from '../../../shared/hub';
+import { HUB_LIMITS, HUB_ROUTES, deviceBeginSchema } from '@rotp/hub-contracts';
 import { parseBody } from '../http/parse-body';
 import { newDeviceToken, newUserCode, sha256 } from '../auth/device-token';
 import { devicesRepo } from '../db/devices-repo';

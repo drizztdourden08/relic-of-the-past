@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { FileVersion } from '@shared/sanctuary/file-types';
+import type { FileVersion } from '@rotp/hub-contracts';
 
 type VersionRowProps = {
   version: FileVersion;
