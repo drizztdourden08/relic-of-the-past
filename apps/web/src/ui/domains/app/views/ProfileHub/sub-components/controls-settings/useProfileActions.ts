@@ -1,21 +1,11 @@
 /* @layer renderer-components @kind hook */
-/**
- * Profile loading, CRUD, selection, persistence.
- */
-
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { GameSettings } from '@shared/types/settings';
 import type { InputProfile } from '@shared/types/controls';
 import { KEYBOARD_DEFAULT } from '@shared/input';
 import { getInputManager, profileFromPreset } from '../../../../../../../lib/input/input-manager';
 import { readInputProfiles, writeInputProfiles } from '@app/lib/storage/profile-data-store';
 import { migrateProfilesLoudly } from '@app/lib/input/migrate-profiles';
-
-interface UseProfileActionsArgs {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-  profileId: string;
-}
+import type { UseProfileActionsArgs } from './controls-settings.type';
 
 const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsArgs) => {
   const [profiles, setProfiles] = useState<InputProfile[]>([]);
@@ -24,15 +14,12 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
   const [newlyCreatedId, setNewlyCreatedId] = useState<string | null>(null);
   const loadedRef = useRef(false);
 
-  // ─── Load profiles from disk ───
   useEffect(() => {
     if (loadedRef.current) return;
     loadedRef.current = true;
 
     (async () => {
       const raw = await readInputProfiles(profileId);
-      // Numbered slots, or a loud console error and that profile left out. See
-      // migrate-profiles.ts. Never a silent half-load.
       let loaded: InputProfile[] = migrateProfilesLoudly(raw);
 
       if (loaded.length === 0) {
@@ -50,7 +37,6 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     })();
   }, [profileId, settings.activeInputProfileId]);
 
-  // ─── Reflect profile-cycle shortcut (PageUp/PageDown) into the UI + settings ───
   useEffect(() => {
     return getInputManager().onActiveProfileChange((profile) => {
       setActiveProfile(profile);
@@ -58,7 +44,6 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     });
   }, [onChange]);
 
-  // ─── Persist helper ───
   const persistProfiles = useCallback(async (updated: InputProfile[]) => {
     setProfiles(updated);
     getInputManager().setProfiles(updated);
@@ -71,7 +56,6 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     onChange({ activeInputProfileId: profile.id });
   }, [onChange]);
 
-  // ─── Create new profile ───
   const handleCreate = useCallback(() => {
     const newProfile: InputProfile = {
       id: `custom-${Date.now()}`,
@@ -90,7 +74,6 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     setNewlyCreatedId(newProfile.id);
   }, [profiles, persistProfiles, selectProfile]);
 
-  // ─── Rename profile ───
   const handleRename = useCallback((profile: InputProfile, newName: string) => {
     const trimmed = newName.trim();
     if (!trimmed || trimmed === profile.name) return;
@@ -112,7 +95,6 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     persistProfiles(updatedProfiles);
   }, [profiles, activeProfile, persistProfiles]);
 
-  // ─── Delete profile ───
   const handleDeleteConfirm = useCallback(() => {
     if (!deleteTarget) return;
     const updated = profiles.filter(p => p.id !== deleteTarget.id);
@@ -124,7 +106,6 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     setDeleteTarget(null);
   }, [deleteTarget, profiles, activeProfile, persistProfiles, selectProfile]);
 
-  // ─── Update active profile in-place (used by binding/preset hooks) ───
   const updateActiveProfile = useCallback((updatedProfile: InputProfile) => {
     setActiveProfile(updatedProfile);
     getInputManager().setProfile(updatedProfile);

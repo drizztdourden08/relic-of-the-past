@@ -1,8 +1,6 @@
-/* @layer renderer-components @kind logic */
-/** Section config for the Developer settings tab. */
+/* @layer renderer-components @kind constants */
 import type { Section } from '../../../compounds/SettingsLayout';
 
-/** The row DeveloperSettings swaps for the account card; it maps to no setting. */
 const SANCTUARY_ACCOUNT_KEY = 'sanctuaryAccount';
 
 const SECTIONS: Section[] = [
@@ -29,7 +27,6 @@ const SECTIONS: Section[] = [
     title: 'Sanctuary account',
     items: [
       {
-        // Not a GameSettings key: DeveloperSettings renders the account card for it.
         key: SANCTUARY_ACCOUNT_KEY,
         label: 'Sanctuary account',
         description: 'Sign in so bug reports carry your name and appear on the hub.',

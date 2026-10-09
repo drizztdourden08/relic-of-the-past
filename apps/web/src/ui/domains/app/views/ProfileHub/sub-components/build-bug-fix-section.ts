@@ -1,28 +1,7 @@
-/* @layer renderer-components @kind data */
-/**
- * Section builder for the "Bug Fixes" tab, generated from the registry (the 42 split
- * bug-fixes). Pure data with no JSX, kept separate from bugfix-settings-controls.tsx (which
- * renders the per-fix Toggle) so it can be imported by non-React consumers (the search catalog).
- */
-import type { GameSettings } from '@shared/types/settings';
+/* @layer renderer-components @kind logic */
 import type { Section } from '../../../compounds/SettingsLayout';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
-import { rendersExtended } from '@app/lib/game/ratio-capability';
-
-// The widescreen corrections are not here: they are one switch on the Display tab, which covers the
-// core bit and the fix split from that bundle together.
-const BUNDLE_GROUPS = [
-  { origin: 'MiscBugFixes', id: 'bugfixes-misc', title: 'General fixes' },
-  { origin: 'GameChangingBugFixes', id: 'bugfixes-gamechanging', title: 'Gameplay-altering bug fixes' },
-] as const;
-
-// A fix with no explicit toggle inherits the legacy bundle master it came from.
-const legacyMaster = (origin: string | undefined, s: GameSettings): boolean =>
-  origin === 'GameChangingBugFixes'
-    ? s.gameChangingBugFixes
-    : origin === 'WidescreenVisualFixes'
-      ? rendersExtended(s) && s.widescreenVisualFixes
-      : s.miscBugFixes;
+import { BUNDLE_GROUPS } from './bugfix-settings.constants';
 
 const buildBugFixSection = (): Section => {
   const groups = BUNDLE_GROUPS.map((g) => ({
@@ -53,4 +32,4 @@ const buildBugFixSection = (): Section => {
   };
 };
 
-export { buildBugFixSection, legacyMaster };
+export { buildBugFixSection };

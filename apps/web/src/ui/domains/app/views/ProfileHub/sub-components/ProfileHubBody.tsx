@@ -1,14 +1,6 @@
 /* @layer renderer-components @kind component */
-/**
- * ProfileHub's nav and content pane. The pane shows the active tab as a page.
- * While the search field has focus or holds text, no tab is selected and the
- * pane shows the search: an empty state until something is typed, then every
- * matching setting from every tab. Picking a tab (from the nav or a result),
- * or leaving the field empty, ends the search.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import type { GameSettings } from '@shared/types/settings';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { SectionNav, type SectionNavConfig } from '../../../../../design-system/composites/SectionNav';
 import { RandomizerLockContext, SettingsPageContext } from '../../../compounds/SettingsLayout';
@@ -18,22 +10,9 @@ import { runKindOfProfile } from '@app/lib/game/randomizer-client';
 import { isHubTabShown, PROFILE_HUB_NAV_GROUPS, PROFILE_HUB_TABS } from '../ProfileHub.constants';
 import { ProfileHubTabContent } from './ProfileHubTabContent';
 import { HubSearchResults } from './hub-search/HubSearchResults';
-import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
-
-interface ProfileHubBodyProps {
-  activeTab: ProfileHubTab;
-  setActiveTab: (t: ProfileHubTab) => void;
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-  profile: ProfileHubProps['profile'];
-  isGameRunning: boolean;
-  onStartGame: () => void;
-  onStopGame: () => void;
-  onResetGame: () => void;
-}
-
-/** A page header is short, so its water line sits low to keep the castle in view. */
-const HEADER_HORIZON = 0.72;
+import type { ProfileHubTab } from '../ProfileHub.type';
+import { HEADER_HORIZON } from './ProfileHubBody.constants';
+import type { ProfileHubBodyProps } from './ProfileHubBody.type';
 
 const navItem = (tab: ProfileHubTab) => ({
   id: tab,
@@ -46,13 +25,10 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
   const { info } = usePlatform();
   const [query, setQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
-  // In the field, or holding a query: no tab is current and the pane belongs to the search.
   const searching = searchFocused || query.trim() !== '';
   const isOnline = runKindOfProfile(profile.randomizer) === 'online';
-  // A profile switch away from Archipelago drops the Online tab; its page goes with it.
   const activeTab = chosenTab === 'online' && !isOnline ? 'home' : chosenTab;
 
-  // Mobile options have their own tab, shown only on mobile; the Online tab only for Archipelago.
   const groups = useMemo(
     () => PROFILE_HUB_NAV_GROUPS.map((group) => ({
       ...group,
@@ -70,8 +46,12 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
     setQuery('');
     setActiveTab(tab);
   }, [setActiveTab]);
+  const handleSelect = useCallback((id: string) => openTab(id as ProfileHubTab), [openTab]);
+  const search = useMemo(
+    () => ({ value: query, onChange: setQuery, placeholder: 'Search all settings', onFocusChange: setSearchFocused }),
+    [query],
+  );
 
-  // Keys the profile's randomizer config pins; SettingsLayout locks these controls.
   const randomizerFrozenKeys = useMemo(
     () => Object.keys(profile.randomizer?.frozenSettings ?? {}),
     [profile.randomizer],
@@ -90,8 +70,8 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
         <SectionNav
           config={navConfig}
           activeId={searching ? '' : activeTab}
-          onSelect={(id) => openTab(id as ProfileHubTab)}
-          search={{ value: query, onChange: setQuery, placeholder: 'Search all settings', onFocusChange: setSearchFocused }}
+          onSelect={handleSelect}
+          search={search}
         />
 
         <Box className="profile-hub__content">

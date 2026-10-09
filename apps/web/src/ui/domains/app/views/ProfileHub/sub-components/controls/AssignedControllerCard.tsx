@@ -1,30 +1,10 @@
-/* @layer renderer-components @kind data */
-/**
- * Shows the controller assigned to the active profile.
- * Displays connection/activation status, controller info, and an unassign button.
- */
-
+/* @layer renderer-components @kind component */
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
-import type { AssignedDevice, DetectedDevice } from '@shared/types/controls';
+import { FAMILY_EMOJI } from './controls.constants';
+import type { AssignedDeviceCardProps } from './controls.type';
 import './AssignedControllerCard.css';
-
-interface AssignedDeviceCardProps {
-  assigned: AssignedDevice;
-  /** Live device matching the assigned controller, if connected */
-  liveDevice: DetectedDevice | null;
-  onUnassign: () => void;
-}
-
-const FAMILY_EMOJI: Record<string, string> = {
-  xbox: '🎮',
-  playstation: '🎮',
-  nintendo: '🎮',
-  '8bitdo': '🎮',
-  keyboard: '⌨️',
-  generic: '🎮',
-};
 
 const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
   const { assigned, liveDevice, onUnassign } = props;

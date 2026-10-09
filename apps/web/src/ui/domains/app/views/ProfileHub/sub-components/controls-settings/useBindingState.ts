@@ -1,16 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * Rebind listening, capture, and clear logic for SNES button mappings,
- * function-action mappings, and (under the modern scheme) the ten core verbs
- * and the player's numbered slots.
- *
- * Core and slot captures are handed straight to useModernScheme's writers:
- * this hook owns "what are we listening for", never the shape of what a
- * modern profile stores.
- */
-
 import { useState, useCallback, useMemo } from 'react';
-import type { GameSettings } from '@shared/types/settings';
 import type { CoreVerb } from '@shared/input/scheme';
 import type {
   InputProfile,
@@ -19,35 +8,19 @@ import type {
   SnesButton,
   FunctionAction,
   FunctionMapping,
-  DetectedDevice,
 } from '@shared/types/controls';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { resolveFunctionMappingIcon } from '../../../../../../../lib/input/input-manager';
 import { allowedDevices } from '@app/lib/input/profile-devices';
 import { resolveLiveFamilyIcon } from './family-icon-map';
-import { padHex } from './controls-settings.type';
-
-type ListeningTarget =
-  | { type: 'snes'; button: SnesButton }
-  | { type: 'function'; action: FunctionAction }
-  | { type: 'core'; verb: CoreVerb }
-  | { type: 'slot'; slot: ModernSlot };
-
-interface UseBindingStateArgs {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-  activeProfile: InputProfile | null;
-  updateActiveProfile: (profile: InputProfile) => void;
-  devices: DetectedDevice[];
-  applyCoreBinding: (verb: CoreVerb, binding: InputBinding) => void;
-  applySlotBinding: (slot: ModernSlot, binding: InputBinding) => void;
-}
+import { findLiveDevice } from './live-device';
+import { padHex } from './pad-hex';
+import type { ListeningTarget, UseBindingStateArgs } from './controls-settings.type';
 
 const useBindingState = (args: UseBindingStateArgs) => {
   const { settings, onChange, activeProfile, updateActiveProfile, devices, applyCoreBinding, applySlotBinding } = args;
   const [listeningFor, setListeningFor] = useState<ListeningTarget | null>(null);
 
-  // ─── Function mappings resolution ───
   const functionMappings: FunctionMapping[] = useMemo(() => {
     if (settings.functionMappings && settings.functionMappings.length > 0) {
       const existing = new Set(settings.functionMappings.map(m => m.action));
@@ -66,17 +39,13 @@ const useBindingState = (args: UseBindingStateArgs) => {
     return functionMappings.map(m => {
       const vid = m.sourceVid ? padHex(m.sourceVid) : null;
       const pid = m.sourcePid ? padHex(m.sourcePid) : null;
-      const liveDevice = vid && pid
-        ? devices.find(d => d.type === 'gamepad' && d.connected && d.vendorId && d.productId &&
-            padHex(d.vendorId) === vid && padHex(d.productId) === pid)
-        : undefined;
+      const liveDevice = vid && pid ? findLiveDevice(vid, pid, devices) : undefined;
       const icon = resolveFunctionMappingIcon(m, liveDevice?.sdlType);
       const deviceIconUrl = multiController && vid && pid ? resolveLiveFamilyIcon({ vid, pid, devices }) : null;
       return { ...(icon ? { ...m, icon } : m), deviceIconUrl };
     });
   }, [functionMappings, devices, multiController]);
 
-  // ─── Rebind handlers ───
   const handleSnesRebind = useCallback((snesButton: SnesButton) => {
     setListeningFor({ type: 'snes', button: snesButton });
   }, []);
@@ -93,7 +62,6 @@ const useBindingState = (args: UseBindingStateArgs) => {
     setListeningFor({ type: 'slot', slot });
   }, []);
 
-  // ─── Clear a SNES button binding ───
   const handleSnesClear = useCallback((snesButton: SnesButton) => {
     if (!activeProfile) return;
     const updatedMappings = activeProfile.mappings.map(m => {
@@ -104,7 +72,6 @@ const useBindingState = (args: UseBindingStateArgs) => {
     updateActiveProfile(updatedProfile);
   }, [activeProfile, updateActiveProfile]);
 
-  // ─── Clear a function action binding ───
   const handleFunctionClear = useCallback((action: FunctionAction) => {
     const updatedFn = functionMappings.map(m => {
       if (m.action !== action) return m;
@@ -113,7 +80,6 @@ const useBindingState = (args: UseBindingStateArgs) => {
     onChange({ functionMappings: updatedFn });
   }, [functionMappings, onChange]);
 
-  // ─── Handle captured input ───
   const handleCapture = useCallback((binding: InputBinding, sourceDeviceKey?: string, vendorId?: string | null, productId?: string | null) => {
     if (!listeningFor) return;
     setListeningFor(null);

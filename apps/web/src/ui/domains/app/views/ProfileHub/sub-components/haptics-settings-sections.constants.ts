@@ -1,6 +1,4 @@
-/* @layer renderer-components @kind data */
-/** Section config for the Haptics settings tab. Keys use a dotted `haptics.*`
- *  path (they live under settings.haptics, not top-level), unlike every other tab. */
+/* @layer renderer-components @kind constants */
 import type { Section } from '../../../compounds/SettingsLayout';
 
 const SECTIONS: Section[] = [

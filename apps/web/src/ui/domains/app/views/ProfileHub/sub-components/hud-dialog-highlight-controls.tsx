@@ -1,5 +1,4 @@
-/* @layer renderer-components @kind component */
-/** Control renderer for the Highlights subsection of the Dialog Box settings. Both boxes draw them. */
+/* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';

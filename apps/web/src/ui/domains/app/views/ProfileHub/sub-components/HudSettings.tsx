@@ -1,17 +1,13 @@
 /* @layer renderer-components @kind component */
-import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
-import { SECTIONS } from './hud-settings-sections';
-import { renderControl, isDisabled } from './hud-settings-controls';
+import { SECTIONS } from './hud-settings-sections.constants';
+import { renderControl } from './hud-settings-controls';
+import { isHudSettingDisabled } from './hud-settings-disabled';
+import type { SettingsTabProps } from './settings-controls.type';
 
-interface HudSettingsProps {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-}
-
-const HudSettings = ({ settings, onChange }: HudSettingsProps) => {
+const HudSettings = ({ settings, onChange }: SettingsTabProps) => {
   return (
     <SettingsLayout
       sections={SECTIONS}
@@ -19,7 +15,7 @@ const HudSettings = ({ settings, onChange }: HudSettingsProps) => {
       defaults={DEFAULT_SETTINGS}
       onChange={onChange}
       renderControl={renderControl}
-      isDisabled={isDisabled}
+      isDisabled={isHudSettingDisabled}
       onOpenVanillaSafeSettings={openVanillaSafeSettings}
     />
   );

@@ -1,11 +1,4 @@
-/* @layer renderer-components @kind logic */
-/**
- * Section config for the Audio settings tab.
- *
- * Ordered by what a person actually reaches for: levels first, then the music pack, and the
- * device settings last, because those three are derived from the pack in Auto, so they are the ones a
- * person should rarely need to open at all.
- */
+/* @layer renderer-components @kind constants */
 import type { Section } from '../../../compounds/SettingsLayout';
 
 const SECTIONS: Section[] = [

@@ -1,20 +1,131 @@
 /* @layer renderer-components @kind types */
-/**
- * Types & utilities for controls-settings sub-hooks.
- */
-
 import type { GameSettings } from '@shared/types/settings';
-import type { InputProfile } from '@shared/types/controls';
+import type { CoreVerb, ControlSchemeId } from '@shared/input/scheme';
+import type { ResolvedControl } from '@shared/input/family';
+import type { DeviceEntry } from '@shared/ipc';
+import type { HudLayout } from '@shared/types/hud';
+import type {
+  ButtonIcon, CoreBindings, DetectedDevice, FunctionAction, InputBinding, InputProfile,
+  ModernSlot, SlotAssignment, SlotIndex, SnesButton,
+} from '@shared/types/controls';
+
+type SettingsChange = (patch: Partial<GameSettings>) => void;
 
 interface UseControlsSettingsArgs {
   settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
+  onChange: SettingsChange;
   profileId: string;
 }
 
-const padHex = (v: string): string => {
-  return v.toLowerCase().padStart(4, '0');
-};
+type ControlsTab = 'controls' | 'modern' | 'shortcuts' | 'cheats';
 
-export type { UseControlsSettingsArgs };
-export { padHex };
+type ListeningTarget =
+  | { type: 'snes'; button: SnesButton }
+  | { type: 'function'; action: FunctionAction }
+  | { type: 'core'; verb: CoreVerb }
+  | { type: 'slot'; slot: ModernSlot };
+
+interface UseBindingStateArgs {
+  settings: GameSettings;
+  onChange: SettingsChange;
+  activeProfile: InputProfile | null;
+  updateActiveProfile: (profile: InputProfile) => void;
+  devices: DetectedDevice[];
+  applyCoreBinding: (verb: CoreVerb, binding: InputBinding) => void;
+  applySlotBinding: (slot: ModernSlot, binding: InputBinding) => void;
+}
+
+type CoreIcons = Partial<Record<CoreVerb, ButtonIcon | null>>;
+
+interface UseCoreIconsArgs {
+  activeProfile: InputProfile | null;
+  devices: DetectedDevice[];
+  core: CoreBindings;
+}
+
+interface UseDisplayMappingsArgs {
+  activeProfile: InputProfile | null;
+  devices: DetectedDevice[];
+}
+
+interface RequiredInput {
+  type: 'keyboard' | 'gamepad';
+  label: string;
+  iconSrc: string;
+  connected: boolean;
+}
+
+interface UseDragDropArgs {
+  devices: DetectedDevice[];
+  entries: DeviceEntry[];
+  scheme: ControlSchemeId;
+  activeProfile: InputProfile | null;
+  updateActiveProfile: (profile: InputProfile) => void;
+}
+
+interface PendingPreset {
+  sdlType: string;
+  deviceName: string;
+  vid: string;
+  pid: string;
+}
+
+interface UseHapticsToggleArgs {
+  settings: GameSettings;
+  onChange: SettingsChange;
+}
+
+interface UseModernSchemeArgs {
+  settings: GameSettings;
+  onChange: SettingsChange;
+  activeProfile: InputProfile | null;
+  updateActiveProfile: (profile: InputProfile) => void;
+  controls: ResolvedControl[];
+}
+
+interface AbsentAssignment {
+  index: SlotIndex;
+  assignment: SlotAssignment;
+}
+
+interface UseProfileActionsArgs {
+  settings: GameSettings;
+  onChange: SettingsChange;
+  profileId: string;
+}
+
+interface UseSchemeLayoutArgs {
+  activeProfile: InputProfile | null;
+  updateActiveProfile: (profile: InputProfile) => void;
+}
+
+interface SchemeLayout {
+  layoutId: string;
+  layouts: readonly HudLayout[];
+  setLayoutId: (id: string) => void;
+}
+
+interface SlotDisplay {
+  position?: ModernSlot['position'];
+  icon?: ModernSlot['icon'];
+  label?: string;
+}
+
+interface DeviceIdentity {
+  vid: string;
+  pid: string;
+  sdlType?: string | null;
+}
+
+interface LiveFamilyIconParams {
+  vid: string;
+  pid: string;
+  devices: DetectedDevice[];
+}
+
+export type {
+  AbsentAssignment, ControlsTab, CoreIcons, DeviceIdentity, ListeningTarget, LiveFamilyIconParams,
+  PendingPreset, RequiredInput, SchemeLayout, SettingsChange, SlotDisplay, UseBindingStateArgs,
+  UseControlsSettingsArgs, UseCoreIconsArgs, UseDisplayMappingsArgs, UseDragDropArgs,
+  UseHapticsToggleArgs, UseModernSchemeArgs, UseProfileActionsArgs, UseSchemeLayoutArgs,
+};

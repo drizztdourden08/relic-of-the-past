@@ -1,35 +1,20 @@
 /* @layer renderer-components @kind component */
-/**
- * Game Boy Advance tab: everything the second cartridge changes. Every difference row
- * is read-only reference material; the only interactive control is the Extra Dungeon
- * toggle at the top, which is itself gated on the supplement being imported.
- */
 import { useCallback, useMemo, useState } from 'react';
-import type { GameSettings } from '@shared/types/settings';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { Toggle } from '../../../../../design-system/primitives/Toggle';
-import { Field } from '../../../../../design-system/primitives/Field';
-import { TextInput } from '../../../../../design-system/primitives/TextInput';
-import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { SettingsSection } from '../../../../../design-system/composites/SettingsSection';
-import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
-import { GbaDifferenceRow } from './gba-settings/GbaDifferenceRow';
-import { useGbaAvailability } from './gba-settings/behavior/useGbaAvailability';
-import { groupFilteredDifferences, type EvidenceFilter } from './gba-settings/group-differences';
-import './gba-settings/GbaSettings.css';
-
-const EVIDENCE_OPTIONS: { value: EvidenceFilter; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'extracted', label: 'Extracted only' },
-];
-
-const EXTRA_DUNGEON_DESCRIPTION = 'Adds the optional post-game dungeon and its overworld entrance. Requires the second cartridge.';
-
-interface GbaSettingsProps {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-}
+import type { ChangeEvent } from 'react';
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
+import { Toggle } from '../../../../../../design-system/primitives/Toggle';
+import { Field } from '../../../../../../design-system/primitives/Field';
+import { TextInput } from '../../../../../../design-system/primitives/TextInput';
+import { SegmentedControl } from '../../../../../../design-system/primitives/SegmentedControl';
+import { SettingsSection } from '../../../../../../design-system/composites/SettingsSection';
+import { EmptyState } from '../../../../../../design-system/primitives/EmptyState';
+import { GbaDifferenceRow } from './GbaDifferenceRow';
+import { useGbaAvailability } from './behavior/useGbaAvailability';
+import { groupFilteredDifferences } from './group-differences';
+import { EVIDENCE_OPTIONS, EXTRA_DUNGEON_DESCRIPTION } from './gba-settings.constants';
+import type { EvidenceFilter, GbaSettingsProps } from './gba-settings.type';
+import './GbaSettings.css';
 
 const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
   const { hasSupplement } = useGbaAvailability();
@@ -40,6 +25,7 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
     (extraDungeon: boolean) => onChange({ extraDungeon }),
     [onChange],
   );
+  const handleQueryChange = useCallback((e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value), []);
 
   const groups = useMemo(() => groupFilteredDifferences(query, evidenceFilter), [query, evidenceFilter]);
 
@@ -70,7 +56,7 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
               type="text"
               placeholder="Search differences..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={handleQueryChange}
             />
           </Field>
           <SegmentedControl

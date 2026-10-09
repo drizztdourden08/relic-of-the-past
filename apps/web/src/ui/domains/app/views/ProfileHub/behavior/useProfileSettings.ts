@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind hook */
-/** Settings load/persist/live-push and restart toasts for ProfileHub. */
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { usePlatform } from '@app/platform';
@@ -10,7 +9,9 @@ import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../../../../lib/log-bus';
 import type { ProfileHubProps } from '../ProfileHub.type';
 import { readConfig } from '@app/lib/storage/profile-store';
-import { applySettingsSideEffects, syncHudStore } from './apply-settings-effects';
+import { applySettingsSideEffects } from './apply-settings-effects';
+import { syncHudStore } from './sync-hud-store';
+import { RESTART_TOAST_ID } from './settings-effects.constants';
 import { syncDialogStore } from './sync-dialog-store';
 import { syncTitleStore } from './sync-title-store';
 import { setHudProfileId } from '@app/lib/hud/active-profile';
@@ -31,26 +32,21 @@ const useProfileSettings = (props: ProfileHubProps) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const restartToastShownRef = useRef(false);
   const wasRunningRef = useRef(isGameRunning);
-  /** Whether the profile's file has been read: no change is written before it is. */
   const loadedRef = useRef(false);
   const pendingRef = useRef<Partial<GameSettings>>({});
 
-  // Push live settings when game starts; clear restart toast when it stops.
   useEffect(() => {
     if (!wasRunningRef.current && isGameRunning) {
       pushLiveSettings(settings);
     }
     if (wasRunningRef.current && !isGameRunning) {
       restartToastShownRef.current = false;
-      setToasts((prev) => prev.filter((t) => t.id !== 'restart-required'));
+      setToasts((prev) => prev.filter((t) => t.id !== RESTART_TOAST_ID));
     }
     wasRunningRef.current = isGameRunning;
   }, [isGameRunning]);
 
   const handleSettingsChange = useCallback((patch: Partial<GameSettings>) => {
-    // Until the profile's file has been read, `settings` still holds the app defaults, and
-    // applying a change here would write those defaults over the whole file. So a change that
-    // arrives first (the launch's mute, re-pressed after a reload) waits and lands on the file.
     if (!loadedRef.current) {
       pendingRef.current = { ...pendingRef.current, ...patch };
       return;
@@ -58,7 +54,6 @@ const useProfileSettings = (props: ProfileHubProps) => {
     const changedKeys = Object.keys(patch) as (keyof GameSettings)[];
     const details = changedKeys.map((k) => `${k}=${JSON.stringify(patch[k])}`).join(', ');
 
-    // Log outside setSettings to avoid triggering setState in another component during render
     queueMicrotask(() => {
       log.app(`Settings changed: ${details}`);
       if (isGameRunning) {
@@ -81,23 +76,15 @@ const useProfileSettings = (props: ProfileHubProps) => {
     });
   }, [profile.id, isGameRunning, win]);
 
-  // Apply master volume override from titlebar mute toggle
   useEffect(() => {
     if (masterVolumeOverride != null) {
       handleSettingsChange({ masterVolume: masterVolumeOverride.volume });
     }
   }, [masterVolumeOverride?.version]);
 
-  // The latest handler, so the queued change lands through the current render's closure.
   const handleRef = useRef(handleSettingsChange);
   handleRef.current = handleSettingsChange;
 
-  // Load settings from disk on mount, then apply whatever change arrived before the file did.
-  //
-  // The HUD storage layer is TOLD which profile this screen is editing instead of left to
-  // infer it: the layout editor opens from here, and this component is holding the profile
-  // object. The id is cleared again on the way out so the inference chain of running game,
-  // pinned launch and last-selected takes over when no settings screen is mounted.
   useEffect(() => {
     setHudProfileId(profile.id);
     loadedRef.current = false;
@@ -116,9 +103,6 @@ const useProfileSettings = (props: ProfileHubProps) => {
           syncHudStore(merged);
           syncDialogStore(merged);
           syncTitleStore(merged);
-          // The control-scheme store and the per-frame router are driven off a game-UI-store
-          // subscription, which only ticks while the core is running. Without this the player's
-          // own slot assignments would not reach either of them until a game started.
           syncControlSettings(merged);
           onWindowModeChange?.(merged.windowMode);
           onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
@@ -128,16 +112,17 @@ const useProfileSettings = (props: ProfileHubProps) => {
           onShadowCastingChange?.(merged.postProcessingShadows);
           onPixelPerfectChange?.(merged.pixelPerfect);
           getInputManager().setFunctionMappings(merged.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
-          // Always attempt to push. If the module isn't running yet, it's a no-op.
           pushLiveSettings(merged);
         }
-      } catch { /* use defaults */ }
+      } catch {
+        flushPending();
+        return;
+      }
       flushPending();
     })();
     return () => setHudProfileId(null);
   }, [profile.id]);
 
-  // Listen for external settings change requests (e.g. from debug widget)
   useEffect(() => {
     const handler = (e: Event) => {
       const patch = (e as CustomEvent).detail as Partial<GameSettings>;
@@ -147,9 +132,6 @@ const useProfileSettings = (props: ProfileHubProps) => {
     return () => window.removeEventListener('settings:change', handler);
   }, [handleSettingsChange]);
 
-  // A host-drawn style has lost the width it needs. A settings change that narrowed the
-  // ratio asks for the drop, or the overlay does on seeing the window itself get smaller. Both
-  // routes land here so the style is dropped once and the notice worded once.
   useEffect(() => {
     const handler = () => {
       handleSettingsChange({ hudStyle: 'vanilla' });

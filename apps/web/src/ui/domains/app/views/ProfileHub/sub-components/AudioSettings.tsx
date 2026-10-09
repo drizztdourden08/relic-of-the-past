@@ -4,17 +4,13 @@ import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
-import { SECTIONS } from './audio-settings-sections';
-import { renderControl, isDisabled } from './audio-settings-controls';
+import { SECTIONS } from './audio-settings-sections.constants';
+import { renderControl } from './audio-settings-controls';
+import { isAudioSettingDisabled } from './audio-settings-disabled';
 import { useMsuPackProfile } from './useMsuPackProfile';
+import type { ProfileScopedTabProps } from './settings-controls.type';
 
-interface AudioSettingsProps {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-  profileId: string;
-}
-
-const AudioSettings = (props: AudioSettingsProps) => {
+const AudioSettings = (props: ProfileScopedTabProps) => {
   const { settings, onChange, profileId } = props;
   const { pack } = useMsuPackProfile(profileId);
   const boundRenderControl = useCallback(
@@ -28,7 +24,7 @@ const AudioSettings = (props: AudioSettingsProps) => {
       defaults={DEFAULT_SETTINGS}
       onChange={onChange}
       renderControl={boundRenderControl}
-      isDisabled={isDisabled}
+      isDisabled={isAudioSettingDisabled}
       onOpenVanillaSafeSettings={openVanillaSafeSettings}
     />
   );

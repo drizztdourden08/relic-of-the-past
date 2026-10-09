@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind types */
+import type { IconifyIcon } from '@iconify/react/offline';
 import type { Profile } from '@shared/types/profile';
 import type { GameSettings } from '@shared/types/settings';
+import type { Section } from '../../compounds/SettingsLayout';
 
 type ProfileHubTab =
   | 'home'
-  | 'settings' // Display: screen geometry and performance
+  | 'settings'
   | 'camera'
   | 'window'
   | 'graphics'
@@ -14,7 +16,7 @@ type ProfileHubTab =
   | 'hud'
   | 'controls'
   | 'haptics'
-  | 'online' // Archipelago profiles only
+  | 'online'
   | 'developer'
   | 'gba'
   | 'mobile';
@@ -38,7 +40,30 @@ interface ProfileHubProps {
   onTabChange?: (tab: ProfileHubTab) => void;
 }
 
+interface ProfileHubTabSpec {
+  icon: string;
+  navIcon: IconifyIcon;
+  label: string;
+  sections?: (settings: GameSettings) => Section[];
+  mobileOnly?: boolean;
+  onlineOnly?: boolean;
+}
+
+interface TabShownContext {
+  isMobile: boolean;
+  isOnline: boolean;
+}
+
+interface ProfileHubNavGroup {
+  id: string;
+  label: string;
+  tabs: ProfileHubTab[];
+}
+
 export type {
+  ProfileHubNavGroup,
   ProfileHubProps,
   ProfileHubTab,
+  ProfileHubTabSpec,
+  TabShownContext,
 };

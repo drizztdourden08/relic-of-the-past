@@ -1,45 +1,27 @@
 /* @layer renderer-components @kind component */
-/**
- * Full input mapping UI.
- *
- * Layout:  sidebar (profiles) | main (tabbed binding editor) | devices column,
- * plus rebind-listener + confirm-preset/delete modals. Logic lives in
- * useControlsSettings; columns live in ./controls/*.
- */
-
-import type { GameSettings } from '@shared/types/settings';
-import type { ListeningTarget } from './controls-settings/useBindingState';
-import { SNES_BUTTON_LABELS, FUNCTION_ACTION_LABELS } from '@shared/types/controls';
+import { useCallback } from 'react';
 import { openSettingsTarget } from '@app/stores/search-store';
 import { BindingListener } from './controls/BindingListener';
-import { CORE_VERB_LABELS } from './controls/core-verbs';
 import { ControlsSidebar } from './controls/ControlsSidebar';
 import { ControlsMain } from './controls/ControlsMain';
 import { ControlsDevices } from './controls/ControlsDevices';
 import { Dialog } from '../../../../../design-system/composites/Dialog/Dialog';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { useControlsSettings } from './useControlsSettings';
+import { listeningLabel } from './controls-settings/listening-label';
+import type { ProfileScopedTabProps } from './settings-controls.type';
 import './ControlsSettings.css';
 
-interface ControlsSettingsProps {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-  profileId: string;
-}
+const openCheatsSettings = () => openSettingsTarget('cheatsEnabled');
+const openHudStyle = () => openSettingsTarget('hudStyle');
 
-/** What the capture modal says it is listening for. */
-const listeningLabel = (target: ListeningTarget): string => {
-  switch (target.type) {
-    case 'snes': return SNES_BUTTON_LABELS[target.button];
-    case 'function': return FUNCTION_ACTION_LABELS[target.action];
-    case 'core': return CORE_VERB_LABELS[target.verb];
-    case 'slot': return target.slot.label;
-  }
-};
-
-const ControlsSettings = (props: ControlsSettingsProps) => {
+const ControlsSettings = (props: ProfileScopedTabProps) => {
   const { settings, onChange, profileId } = props;
   const ctrl = useControlsSettings({ settings, onChange, profileId });
+  const { setListeningFor, setConfirmPreset, setDeleteTarget } = ctrl;
+  const cancelListening = useCallback(() => setListeningFor(null), [setListeningFor]);
+  const cancelPreset = useCallback(() => setConfirmPreset(null), [setConfirmPreset]);
+  const cancelDelete = useCallback(() => setDeleteTarget(null), [setDeleteTarget]);
 
   return (
     <Box className="controls-settings">
@@ -47,21 +29,19 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
       <ControlsMain
         ctrl={ctrl}
         cheatsEnabled={settings.cheatsEnabled}
-        onOpenCheatsSettings={() => openSettingsTarget('cheatsEnabled')}
-        onOpenHudStyle={() => openSettingsTarget('hudStyle')}
+        onOpenCheatsSettings={openCheatsSettings}
+        onOpenHudStyle={openHudStyle}
       />
       <ControlsDevices ctrl={ctrl} />
 
-      {/* Rebind listener modal */}
       {ctrl.listeningFor && (
         <BindingListener
           actionLabel={listeningLabel(ctrl.listeningFor)}
           onCapture={ctrl.handleCapture}
-          onCancel={() => ctrl.setListeningFor(null)}
+          onCancel={cancelListening}
         />
       )}
 
-      {/* Confirm preset dialog */}
       <Dialog
         open={!!ctrl.confirmPreset}
         title="Apply Controller Preset"
@@ -69,10 +49,9 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
         confirmLabel="Apply"
         cancelLabel="Cancel"
         onConfirm={ctrl.handleApplyPreset}
-        onCancel={() => ctrl.setConfirmPreset(null)}
+        onCancel={cancelPreset}
       />
 
-      {/* Delete profile dialog */}
       <Dialog
         open={!!ctrl.deleteTarget}
         title="Delete Input Profile"
@@ -81,7 +60,7 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
         confirmLabel="Delete"
         cancelLabel="Cancel"
         onConfirm={ctrl.handleDeleteConfirm}
-        onCancel={() => ctrl.setDeleteTarget(null)}
+        onCancel={cancelDelete}
       />
     </Box>
   );

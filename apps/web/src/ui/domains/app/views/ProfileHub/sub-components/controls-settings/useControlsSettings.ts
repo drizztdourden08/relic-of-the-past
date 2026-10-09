@@ -1,16 +1,7 @@
 /* @layer renderer-components @kind hook */
-/**
- * Thin orchestrator composing focused sub-hooks.
- *
- * Order matters in one place only: the resolved control list for the active
- * profile's device feeds both the scheme hook (which owns the slot list) and
- * the drag/drop hook (which builds a dropped device's modern bindings), so it
- * is computed once here instead of twice below.
- */
-
 import { useEffect, useMemo, useState } from 'react';
-import type { UseControlsSettingsArgs } from './controls-settings.type';
-import { controlsForProfile } from './profile-controls';
+import type { ControlsTab, UseControlsSettingsArgs } from './controls-settings.type';
+import { controlsForProfile } from './controls-for-profile';
 import { useProfileActions } from './useProfileActions';
 import { useDeviceSync } from './useDeviceSync';
 import { useModernScheme } from './useModernScheme';
@@ -20,8 +11,6 @@ import { useDragDrop } from './useDragDrop';
 import { useDisplayMappings } from './useDisplayMappings';
 import { useCoreIcons } from './useCoreIcons';
 import { useHapticsToggle } from './useHapticsToggle';
-
-type ControlsTab = 'controls' | 'modern' | 'shortcuts' | 'cheats';
 
 const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSettingsArgs) => {
   const [activeTab, setActiveTab] = useState<ControlsTab>('controls');
@@ -83,20 +72,12 @@ const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSetti
 
   const { requiredInputs, displayMappings } = useDisplayMappings({ activeProfile, devices });
 
-  // The HUD layout is a property of the SCHEME, so it is edited here beside the
-  // slot list instead of in the HUD settings. Switching control profile then
-  // switches the arrangement with the buttons.
   const schemeLayout = useSchemeLayout({ activeProfile, updateActiveProfile });
 
-  // Both binding tabs draw the core verbs, so the glyph for each one is
-  // resolved here instead of inside either tab (see useCoreIcons).
   const coreIcons = useCoreIcons({ activeProfile, devices, core: coreBindings });
 
   const { hapticsEnabled, setHapticsEnabled } = useHapticsToggle({ settings, onChange });
 
-  // Each scheme greys out the other's binding tab, so a HUD-style change (which
-  // is what moves the scheme now) while that tab is open moves to its
-  // counterpart instead of leaving the screen parked on a disabled tab.
   useEffect(() => {
     if (scheme === 'modern' && activeTab === 'controls') setActiveTab('modern');
     if (scheme === 'classic' && activeTab === 'modern') setActiveTab('controls');

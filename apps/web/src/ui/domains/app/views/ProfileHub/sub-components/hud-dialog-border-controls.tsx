@@ -1,48 +1,11 @@
-/* @layer renderer-components @kind component */
-/** Control renderer for the Border subsection of the Dialog Box settings. */
+/* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { Slider } from '../../../../../design-system/primitives/Slider';
 import { DialogColorControl } from './dialog-color-control';
-
-const BORDER_OPTIONS = [
-  { value: 'original', label: 'Original' },
-  { value: 'none', label: 'None' },
-  { value: 'single', label: 'Single' },
-  { value: 'double', label: 'Double' },
-];
-
-const THICKNESS_OPTIONS = [
-  { value: 'thin', label: 'Thin' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'thick', label: 'Thick' },
-];
-
-const CORNER_OPTIONS = [
-  { value: 'square', label: 'Square' },
-  { value: 'rounded', label: 'Rounded' },
-  { value: 'chamfered', label: 'Chamfered' },
-];
-
-const MARK_OPTIONS = [
-  { value: 'none', label: 'None' },
-  { value: 'circle', label: 'Circle' },
-  { value: 'square', label: 'Square' },
-  { value: 'triforce', label: 'Triforce' },
-];
-
-/** Thickness and colour describe a drawn line, so the game's tiles and no border leave them idle. */
-const drawnBorder = (settings: GameSettings): boolean =>
-  settings.dialogBorder === 'single' || settings.dialogBorder === 'double';
-
-const isBorderDisabled = (key: string, settings: GameSettings): boolean => {
-  if (key === 'dialogBorderThickness' || key === 'dialogBorderColor') return !drawnBorder(settings);
-  if (key === 'dialogCornerMarkAngle') return settings.dialogCornerMark === 'none' || settings.dialogCornerMark === 'circle';
-  if (key === 'dialogCornerMark') return !drawnBorder(settings);
-  return false;
-};
+import { BORDER_OPTIONS, CORNER_OPTIONS, MARK_OPTIONS, THICKNESS_OPTIONS } from './hud-settings.constants';
 
 const renderBorderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void, disabled: boolean): ReactNode | null => {
   switch (key) {
@@ -120,4 +83,4 @@ const renderBorderControl = (key: string, settings: GameSettings, onChange: (pat
   }
 };
 
-export { renderBorderControl, isBorderDisabled };
+export { renderBorderControl };

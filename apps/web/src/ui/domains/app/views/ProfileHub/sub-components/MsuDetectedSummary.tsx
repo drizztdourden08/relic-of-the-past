@@ -1,42 +1,10 @@
 /* @layer renderer-components @kind component */
-/** Read-only Auto-mode row for the Audio tab: the format read off the assigned pack, and the
- *  audio settings that follow from it. */
-import type { GameSettings } from '@shared/types/settings';
-import type { MsuPackProfile, ResolvedAudioConfig } from '@shared/features/msu-auto-config';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
+import { MODE_LABELS } from './MsuDetectedSummary.constants';
+import { packDetail } from './pack-detail';
+import type { MsuDetectedSummaryProps } from './MsuDetectedSummary.type';
 import './MsuDetectedSummary.css';
-
-interface MsuDetectedSummaryProps {
-  /** Null when no pack is assigned to this profile. */
-  pack: MsuPackProfile | null;
-  resolved: ResolvedAudioConfig;
-}
-
-/** The pack formats, named the way the wider MSU community names them. */
-const MODE_LABELS: Record<GameSettings['enableMSU'], string> = {
-  false: 'Off',
-  true: 'MSU',
-  deluxe: 'Deluxe',
-  opuz: 'OPUZ',
-  'deluxe-opuz': 'Deluxe OPUZ',
-  msul: 'MSUL',
-};
-
-/**
- * What else is true about the pack beyond its format name. A layered pack reports as MSUL, but
- * its track numbering and audio format still matter and would otherwise go unmentioned.
- */
-const packDetail = (pack: MsuPackProfile, resolved: ResolvedAudioConfig): string => {
-  const parts: string[] = [];
-  if (pack.isLayered) {
-    parts.push('layered');
-    if (pack.isDeluxe) parts.push('extended slots');
-  }
-  parts.push(`${resolved.audioFreq} Hz`);
-  parts.push(resolved.audioChannels === 1 ? 'Mono' : 'Stereo');
-  return parts.join(' · ');
-};
 
 const MsuDetectedSummary = (props: MsuDetectedSummaryProps) => {
   const { pack, resolved } = props;

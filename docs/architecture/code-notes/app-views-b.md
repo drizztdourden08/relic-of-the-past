@@ -593,3 +593,520 @@ The fixed wizard steps, in order. Byte capture shows only for a controller the r
 - `DiagnosticsWizardDialog.css`: the layout overlay covers the step instead of replacing it, so the choice stays visible behind the read and the dialog does not change size mid-transition.
 - `InputCalibration.css`: the card shimmer runs continuously, so a stutter means the UI thread is blocked.
 - `InputCalibration.hid.css`: the idle read is a real step, so its prompt carries the same weight as the live-capture readout. The change magnitude mark is drawn on the byte cell's top border so it can sit on top of any cell state, and its width and colour are set inline from the byte's own delta.
+
+## ProfileHub/ProfileHub.constants.ts
+
+- `PROFILE_HUB_TABS` is the single registry of every ProfileHub tab: icons, label, and (when the tab is a SettingsLayout screen) the function that builds its sections from the current settings. It is a `Record<ProfileHubTab, ...>`, so adding a tab to the union without describing it here is a compile error. That keeps it in sync with the hub's nav, its search results and the search palette's catalog with no manual bookkeeping.
+- `buildPerformanceSection` normally takes the live refresh rate and synced-rate status, which come from hooks and not settings. The search catalog only needs the section's labels and keywords for indexing, so it is built with the neutral `NEUTRAL_SYNCED_RATE` placeholder.
+- The GBA tab is a read-only reference catalogue, not a SettingsLayout screen, so it has no sections to index.
+- `PROFILE_HUB_NAV_GROUPS` are the nav's groups in order. Home is not in a group: it is pinned above them.
+
+## ProfileHub/ProfileHub.type.ts
+
+- The `settings` tab is Display: screen geometry and performance. The `online` tab is for Archipelago profiles only.
+- `ProfileHubTabSpec`: `icon` is the emoji for the search palette's rows and `navIcon` the line icon for the hub's nav and page headers. `sections` is omitted for tabs with no SettingsLayout (Home, and the custom binding UI of Controls). `mobileOnly` tabs are listed only on the mobile form factor and `onlineOnly` tabs only for an online (Archipelago) profile.
+
+## ProfileHub/behavior/is-hub-tab-shown.ts
+
+Whether a tab is listed. The NavRail and the search catalog ask the same question.
+
+## ProfileHub/ProfileHub.tsx
+
+- The profile window's body. Its title bar belongs to the host layer, which shows the game controls there off the home tab.
+- The per-profile notch preference is reflected on the html element whenever it changes.
+- Search palette bridge: while this profile's hub is mounted it is the only reader and writer of GameSettings, so it registers them and lets the palette show and flip inline toggles.
+- A pending tab switch (for example from a DisabledOverlay's "Open Settings" action) is consumed before the anchor effect runs, so the scroll happens on the tab it just landed on. A pending search deep link is consumed once the target tab's content is showing.
+
+## ProfileHub/behavior/apply-settings-effects.ts
+
+- The side effects of a settings change: persist, parent notifications, HUD sync, live push and toast. A failed save shows a toast so settings never fail to save silently.
+- Changing the player sprite swaps the sheet in the running core so the choice shows without a restart.
+- Control scheme and slot assignments go to the store and to the scheme runtime, which the per-frame router reads to turn a pressed button into an item id and the Y bit. Pushing here, not leaving it to the store's own game UI subscription, makes an assignment take effect the moment it is made: that subscription only ticks while the core runs.
+- A host-drawn HUD style needs a 16:9 or wider display to have room for the HUD and the menu. If the ratio is narrowed while it is active, it drops back to the original style and says why, since a clipped menu would be worse than losing the style. The correction is queued, because this runs inside the `setSettings` updater and feeding a second change straight back would re-enter it. Shrinking the window can do the same with no settings change; that route raises the same request from GameOverlay, so the drop and its wording live in one place.
+- When the game is running, settings are pushed live, and a change that needs a restart shows the restart toast once.
+
+## ProfileHub/behavior/swap-player-sprite.ts
+
+Applies a sprite choice to the running core and stages it again for the next boot. Staging matters even when the live swap succeeds, because the core reads the staged bytes again when the game restarts.
+
+## ProfileHub/behavior/sync-hud-store.ts
+
+Vanilla Safe brings the native HUD back in the core (its HudOverride bit is masked), so the host overlay has to stand down at the same moment. Locking the setting only greys the control out: the stored value stays enhanced, and the overlay would keep drawing over the native HUD the core just restored, which is the doubled HUD. Original is the stock HUD here. The saved preference is untouched, so it returns when Vanilla Safe goes off.
+
+## ProfileHub/behavior/settings-effects.constants.ts
+
+- `HUD_STORE_KEYS` are the keys the HUD render store mirrors. A change to any of them syncs it again.
+- `CONTROL_STORE_KEYS` are the keys the control-scheme store and the per-frame input router are derived from. `syncControlSettings` gets the whole settings object, not a patch: the scheme and the takeover it arms are both derived from the HUD style, and Vanilla Safe strips them.
+- `ASPECT_KEYS` are the keys that can change the display ratio a host-drawn style is measured against.
+
+## ProfileHub/behavior/sync-dialog-store.ts
+
+Mirrors the dialog settings into the overlay's store: the message box look, plus the pacing controls the button prompts describe. Vanilla Safe stands the overlay down the way it does the HUD: it masks the override the enhanced box hides the native one through, so the overlay reads original while the saved preference stays put. It masks the pacing gate too, so none of the pacing controls act and none are prompted.
+
+## ProfileHub/behavior/sync-title-store.ts
+
+Mirrors the title screen settings into the overlay's store. Vanilla Safe masks the bit the native title is hidden through, so the overlay reads original while the saved preference stays put.
+
+## ProfileHub/behavior/useGamePause.ts
+
+Tracks the running game's pause state from the InputManager and toggles it.
+
+## ProfileHub/behavior/useProfileSettings.ts
+
+- Settings load, persist and live push, and the restart toasts, for ProfileHub. Live settings are pushed when the game starts, and the restart toast clears when it stops.
+- `loadedRef` says whether the profile's file has been read. Until then `settings` holds the app defaults, and applying a change would write those defaults over the whole file. So a change that arrives first (the launch's mute, pressed again after a reload) waits and lands on the file once it is loaded, through the latest handler.
+- The change is logged outside `setSettings` to avoid setting state in another component during render.
+- The master volume override comes from the title bar mute toggle.
+- The HUD storage layer is told which profile this screen edits instead of inferring it: the layout editor opens from here, and this component holds the profile. The id is cleared on the way out so the inference chain (running game, pinned launch, last selected) takes over when no settings screen is mounted.
+- On load the control-scheme store is synced too. It and the per-frame router are driven off a game UI store subscription that only ticks while the core runs, so without this the player's slot assignments would not reach them until a game started. The live push on load is a no-op when the module is not running. A failed read keeps the defaults.
+- It listens for external settings change requests, for example from the debug widget.
+- A host-drawn style that lost the width it needs is dropped here, whether a narrowed ratio or the overlay seeing the window shrink asked for it, so the style is dropped once and the notice worded once.
+
+## ProfileHub/sub-components/audio-settings-sections.constants.ts
+
+The Audio tab is ordered by what a person reaches for: levels first, then the music pack, and the device settings last. Those three are derived from the pack in Auto, so they are the ones a person should rarely need to open.
+
+## ProfileHub/sub-components/haptics-settings-sections.constants.ts
+
+The Haptics tab's keys use a dotted `haptics.*` path, because they live under `settings.haptics` and not at the top level, unlike every other tab.
+
+## ProfileHub/sub-components/developer-settings-sections.constants.ts
+
+`SANCTUARY_ACCOUNT_KEY` is the row DeveloperSettings swaps for the account card. It is not a GameSettings key and maps to no setting.
+
+## ProfileHub/sub-components/gameplay-settings-sections.constants.ts
+
+Save states and turbo share the Game Flow section: both act on the running game from outside its own rules, one moving where you resume, the other how fast it runs. Save states live in Gameplay, not a tab of their own, because they are part of how the game is played, not a property of the host. `GAME_FLOW_SECTION` is exported because its controls are rendered by `gameplay-settings-controls`.
+
+## ProfileHub/sub-components/build-bug-fix-section.ts
+
+The Bug Fixes section is generated from the registry (the 42 split bug fixes). It has no JSX and stays apart from `bugfix-settings-controls.tsx`, which renders the per-fix toggle, so non-React consumers (the search catalog) can import it. The widescreen corrections are not here: they are one switch on the Display tab, which covers the core bit and the fix split from that bundle together.
+
+## ProfileHub/sub-components/legacy-master.ts
+
+A fix with no explicit toggle inherits the legacy bundle master it came from.
+
+## ProfileHub/sub-components/bugfix-settings-controls.tsx
+
+Each fix is an opt-in toggle stored in `settings.bugFixToggles`. When a fix has no explicit override it inherits the legacy bundle master it was extracted from, so existing profiles keep their behaviour. This mirrors `buildFeatureWords` in the bridge (`live-settings-flags.ts`).
+
+## ProfileHub/sub-components/build-window-section.ts
+
+Pixel Perfect only has meaning under Letterbox. Fit and Stretch bypass the fit math entirely.
+
+## ProfileHub/sub-components/refresh-advisory.ts
+
+The game advances exactly 60 times a second, so a display running at a whole multiple of 60 shows every frame for the same length of time. One that does not holds some frames longer than others, and no pacing on our side can even that out. The V-Sync description says so and names the rate that would help, so the player is not left wondering why V-Sync did nothing.
+
+## ProfileHub/sub-components/synced-rate-description.ts
+
+The synced refresh rate switch describes what it will do, including handing the display back, because changing a system setting on someone's behalf should never be a surprise.
+
+## ProfileHub/sub-components/build-performance-section.ts
+
+The target refresh rate picker appears only once the switch is on and there is a real choice to make.
+
+## ProfileHub/sub-components/SettingsView.constants.ts
+
+- Shadow Casting (`postProcessingShadows`) is not exposed in the Enhancements section yet, because the subsystem is a work in progress.
+- `REQUIRES_LINEAR` holds the wide presets that need Linear World Tilemap, `REQUIRES_ULTRAWIDE` the ones that also need Ultrawide, and `TALL_PRESET_VALUES` the tall presets shown only when Tall Rendering is on.
+
+## ProfileHub/sub-components/SettingsView.display.ts
+
+Builds the Display section from the current settings. With Extended Rendering on, the order is: capability toggles first (enable a capability, then the picker below reflects it), then the aspect ratio picker showing only the presets those capabilities unlocked, then sprite and enemy behaviour, which only matters past the original picture. Camera is a separate section behind the same Extended Rendering gate, all off by default.
+
+## ProfileHub/sub-components/SettingsView.tsx
+
+- How the game reaches the screen, drawn as three tabs that share one set of controls and cascades: Display (rendering geometry and frame pacing), Camera and Window. `part` says which of the three tabs this view is.
+- `withAspectCascade` resets the ratio when a capability is turned off, so the active ratio stays valid.
+- Pushing the synced rate preference also arms it for the session. The host applies it on the next fullscreen transition, not on this call.
+
+## ProfileHub/sub-components/SettingsView.controls.tsx
+
+The per-key control renderer for the Display tab: aspect ratio, window, viewport, off-screen behaviour and refresh rate. The off-screen behaviour description is shown under the control for whichever option is selected, so each option explains itself and the player does not have to guess what Idle does to an enemy they can see that is ignoring them. The `offscreenAI` setting key keeps its name, since it is part of the shared settings type.
+
+## ProfileHub/sub-components/online-settings-sections.constants.ts
+
+- The Online tab is for Archipelago profiles only.
+- The session's switches live on the profile's connection, not in GameSettings, so their keys name no setting: a section reset and the search palette's inline toggle pass them by, and OnlineSettings draws them itself. A switch's `fallback` is the value a profile that never set it runs with.
+
+## ProfileHub/sub-components/OnlineSettings.tsx
+
+The Online tab: the session's two switches (DeathLink, tracking the other players), then which notices of an Archipelago session show as toasts. The switches belong to the profile's connection, not its settings, so they read and save through the profile (`useProfileConnection`), which reconnects a running session on the new values. The same component is the Online tab of the Randomizer page.
+
+## ProfileHub/sub-components/audio-settings-controls.tsx
+
+- The per-key control renderer for the Audio tab. The pack format, the output rate, the channel count and the buffer are technical values with one correct answer per pack, so in Auto they are shown as derived and locked. Manual unlocks every one of them and adds the warning that says when a combination is wrong.
+- `MSU_OPTIONS` covers every pack shape: the four distributed formats, our layered one, and off.
+- `AUTO_NOTE` is appended to a control whose value Auto chooses, so a locked row explains itself.
+- A locked control shows the resolved value that will be used, not a stale one.
+- Master, Music, Ambience and SFX are plain sliders of one shape, so they render in `audio-volume-sliders.tsx`.
+- Replacement music has no gate-word bit of its own, so Vanilla Safe suppresses it in the playback plan whatever this control says, and the Pack Format control is locked the way a registered feature is.
+
+## ProfileHub/sub-components/audio-settings-disabled.ts
+
+- The pack-dependent switches only mean something while a pack plays at all. Only Manual mode's own switch can turn them off: in Auto, whether a pack plays is decided by the pack being assigned, so a stale `enableMSU` from a profile saved before that change must not grey them out.
+- The Music, Ambience and SFX sliders only act once the independent-mix toggle is on.
+
+## ProfileHub/sub-components/audio-volume-sliders.tsx
+
+The volume group sliders: master, music, ambience and SFX. Master always applies. The three group sliders only act once the independent-mix toggle is on, so they render disabled until then. Ambience is app-mixed only: the sound chip cannot split its own ambience out of its mix, so that slider governs the replacement ambient bed a pack plays, never the original audio.
+
+## ProfileHub/sub-components/BugFixesSettings.tsx
+
+The bundle masters plus the 42 split per-fix toggles.
+
+## ProfileHub/sub-components/DeveloperSettings.tsx
+
+The account row is the one item on the Developer tab that is not a toggle.
+
+## ProfileHub/sub-components/gameplay-settings-controls.tsx
+
+Only the keys that need something other than a switch have a renderer. Every plain boolean (including `mapOnSelect`) falls through to SettingsLayout's own toggle, built from the section's label and description. The disabled rule is the one hook a plain boolean still gets.
+
+## ProfileHub/sub-components/gameplay-settings-disabled.ts
+
+Under Modern the map is a core verb of its own, so Open Map with Select has nothing to do. It is greyed and kept in place, like every other gated setting in the app: an option that vanishes when a neighbouring one changes reads as a bug.
+
+## ProfileHub/sub-components/GraphicsSettings.tsx
+
+How the picture is drawn: renderer, quality, post-processing effects and player appearance.
+
+## ProfileHub/sub-components/graphics-settings-disabled.ts
+
+- Pixel Perfect promises whole, identical source pixels, and bilinear interpolation would break that before anything else runs, so the core is handed Linear Filtering off and the control follows.
+- Enhanced Mode 7 and No Sprite Limit are not registered feature definitions yet, so the DisabledOverlay lock (driven by `feature-registry.ts`) cannot reach them. They are locked by hand under Vanilla Safe, matching how `buildPpuFlags` forces both off. Optimized PPU stays enabled on purpose: it is a pure engine swap, not a divergence from stock rendering.
+
+## ProfileHub/sub-components/haptics-settings-disabled.ts
+
+Every haptic setting except the master switch is disabled while haptics is off.
+
+## ProfileHub/sub-components/MobileSettings.tsx
+
+Mobile and device-specific display options.
+
+## ProfileHub/sub-components/hud-settings-controls.tsx
+
+- The per-key control renderer for the HUD tab. The Title Screen and Dialog Box sections live in their own renderers to keep this file small.
+- Enhanced and Modern are the host-drawn HUD plus the host-owned menu, so choosing either one also sets the overlay settings it depends on instead of leaving the user to find them. `mergeSettings` applies the same rule to a stored profile.
+
+## ProfileHub/sub-components/hud-ratio-options.ts
+
+Fixed HUD ratio presets wider than the screen are disabled, since the HUD clamps to the screen anyway. Match and Custom stay open.
+
+## ProfileHub/sub-components/hud-settings-disabled.ts
+
+The Title Screen and Dialog Box sections carry dependent rows. Every other HUD row is always live.
+
+## ProfileHub/sub-components/hud-title-disabled.ts
+
+Every title row but the switch describes the reimagined title, so the original one idles them.
+
+## ProfileHub/sub-components/hud-dialog-controls.tsx
+
+The Dialog Box section's renderer: the box, text and background rows live here, the border, texture and highlight rows in their own renderers.
+
+## ProfileHub/sub-components/hud-dialog-disabled.ts
+
+`EITHER_BOX_KEYS` act on both boxes, so the original box leaves them live. Every other row describes the enhanced box, so the original box idles them all.
+
+## ProfileHub/sub-components/hud-dialog-border-disabled.ts
+
+Thickness and colour describe a drawn line, so the game's tiles and no border leave them idle.
+
+## ProfileHub/sub-components/hud-dialog-texture-disabled.ts
+
+Only the rows the texture subsection owns get an answer. The Dialog Box section runs every one of its keys through this rule, so claiming a key that belongs to another subsection would idle that row too.
+
+## ProfileHub/sub-components/hud-settings.constants.ts
+
+`DIALOG_TEXTURE_SCALES` are the cell size multipliers the pattern Size slider offers.
+
+## ProfileHub/sub-components/hud-dialog-highlight-controls.tsx
+
+The Highlights subsection. Both boxes draw the highlights.
+
+## ProfileHub/sub-components/TurboSpeedControl.tsx
+
+The turbo rungs are not evenly spaced (1.25x to 10x, widening as they climb), so the range input walks the ladder by index and the label shows the multiplier at that rung.
+
+## ProfileHub/sub-components/dialog-stop-slider.tsx
+
+One slider over a ladder of stops. The stops are not evenly spaced (1x, 1.5x, 2x, then instant), so the range input walks the ladder by index and the label shows the stop at that index. An off-ladder stored value snaps to the nearest stop. `formatStop` defaults to the pacing form: Original, Instant, or "1.5x". Shared by the text speed, hold speed and font size rows.
+
+## ProfileHub/sub-components/dialog-hold-row.tsx
+
+The hold-to-accelerate row: one setting item with two values. The toggle on the left turns the hold on, and the slider to its right picks the speed the hold plays at, dimmed while the toggle is off.
+
+## ProfileHub/sub-components/dialog-color-control.tsx
+
+A settings row for one hex colour (`#rrggbb`): the label and description on the left, a swatch on the right that opens the colour picker beside it. `original` is the value a fresh profile carries, offered as the picker's reset target.
+
+## ProfileHub/sub-components/AspectRatioControl.tsx
+
+The aspect ratio picker has two modes. Legacy (HUD) passes `presetOptions` and shows a single Preset tab. Split (game) passes `widePresets` and/or `tallPresets` and shows Wide and Tall tabs (omit `tallPresets` when tall rendering is off). The other tabs (Auto, Screen, Custom) are always rendered from `options`. `descriptions` holds per-mode text, and `recommendedNote` appears in gold when the selected mode matches `recommendedValue`. The current value is resolved to the top-level tab it belongs to.
+
+## ProfileHub/sub-components/HudStyleControl.tsx
+
+- Original, Enhanced and Modern all rebuild the SNES HUD from the active ROM's extracted sprites, so all three are locked when none exist. The two app-drawn styles also need a 16:9 or wider display, because their groups and their host-drawn menu live in the side bands a narrower view does not have. Modern is Enhanced plus the modern control scheme, so it has exactly Enhanced's requirements. When sprites are missing a notice offers a one-click extract that unlocks every style once it succeeds.
+- Availability is checked again on mount, since sprites may have been extracted from the Data Manager.
+- The notice names only the condition the user can act on, one fix at a time: missing sprites is the blocking one (it locks all three styles), and the aspect rule is only raised once the sprites are there. When neither applies there is no notice.
+
+## ProfileHub/sub-components/PlayerSpriteSelector.tsx
+
+A card grid picker for the profile's player sprite. It reads the global player sprite library, and Original is the default. Each card is a `SpriteChoiceCard`.
+
+## ProfileHub/sub-components/MsuDetectedSummary.tsx
+
+The read-only Auto mode row of the Audio tab: the format read off the assigned pack, and the audio settings that follow from it. `pack` is null when no pack is assigned. `MODE_LABELS` names the pack formats the way the wider MSU community names them.
+
+## ProfileHub/sub-components/pack-detail.ts
+
+What else is true about the pack beyond its format name. A layered pack reports as MSUL, but its track numbering and audio format still matter and would otherwise go unmentioned.
+
+## ProfileHub/sub-components/MsuMismatchCallout.tsx
+
+Warns that manual audio settings disagree with the chosen pack format, so music will play at the wrong speed. The old core only ever reported this to stderr.
+
+## ProfileHub/sub-components/useMsuPackProfile.ts
+
+Detects the assigned MSU pack's contents for the Audio tab's Auto mode. It reads the profile fresh from storage instead of trusting the profile object passed down from the app shell, because that object is a snapshot from profile load time and a pack assigned in Data Manager afterwards never reaches it. AudioSettings mounts again on every tab activation, so the read is current whenever the tab opens. The manifest is read too, because it is what makes a pack layered: track names alone cannot tell a layered pack from a classic one.
+
+## ProfileHub/sub-components/SanctuaryAccount.tsx
+
+The Sanctuary account row of the Contributor tab: the shared account card, given the Sanctuary's wording and wired to the session store. `window.open` on an external URL is routed to the system browser by the main process.
+
+## ProfileHub/sub-components/HubGameControls.tsx
+
+The game controls: Play when stopped, otherwise Pause, Stop and Reset. On the home tab they sit in the hero under the mode, and on every other tab in the window's title bar (title bar buttons are small, the hero's are the regular size). Stop is slow (save on quit, then teardown), so it shows progress and ignores repeat clicks until the game has stopped.
+
+## ProfileHub/sub-components/gba-settings/GbaSettings.tsx
+
+The Game Boy Advance tab: everything the second cartridge changes. Every difference row is read-only reference material. The only interactive control is the Extra Dungeon toggle at the top, which is gated on the supplement being imported.
+
+## ProfileHub/sub-components/gba-settings/GbaDifferenceRow.tsx
+
+One read-only row of the difference catalogue: label, detail text and an evidence badge. Presentational only, with no data fetching and no state.
+
+## ProfileHub/sub-components/gba-settings/group-differences.ts
+
+Filters and groups the GBA difference catalogue for the settings list. Groups come out in the order `GBA_GROUP_ORDER` declares, so the list reads the same every time whichever rows survive the filter.
+
+## ProfileHub/sub-components/gba-settings/behavior/useGbaAvailability.ts
+
+Whether a Game Boy Advance supplement cartridge has been imported, so the Extra Dungeon toggle knows whether it has anything to gate.
+
+## ProfileHub/sub-components/ProfileHubBody.tsx
+
+- ProfileHub's nav and content pane. The pane shows the active tab as a page. While the search field has focus or holds text, no tab is selected and the pane shows the search: an empty state until something is typed, then every matching setting from every tab. Picking a tab (from the nav or a result), or leaving the field empty, ends the search.
+- A profile switch away from Archipelago drops the Online tab, and its page goes with it.
+- Mobile options have their own tab, shown only on mobile, and the Online tab only for Archipelago.
+- `randomizerFrozenKeys` are the keys the profile's randomizer config pins. SettingsLayout locks those controls.
+- `HEADER_HORIZON` is low because a page header is short, which keeps the castle in view.
+
+## ProfileHub/sub-components/ProfileHubTabContent.tsx
+
+The content of one hub tab, shared by the active page and the search results pane, which draws the same components through SettingsPageContext. The GBA tab is a reference page with its own layout, not a SettingsLayout, so the page draws its header. The Controls binding screen lays out and scrolls its own columns, so its page only draws the header.
+
+## ProfileHub/sub-components/ControlsSettings.tsx
+
+The full input mapping UI. The layout is a sidebar (profiles), a main column (the tabbed binding editor) and a devices column, plus the rebind listener and the confirm-preset and delete-profile dialogs. The logic lives in `useControlsSettings` and the columns in `controls/`. `useControlsSettings.ts` beside it re-exports the hook from `controls-settings/` so existing imports keep working.
+
+## ProfileHub/sub-components/controls-settings/listening-label.ts
+
+What the capture modal says it is listening for.
+
+## ProfileHub/sub-components/controls-settings/build-modern-bindings.ts
+
+- The modern bindings a profile starts with, for the device it is assigned to. It is one entry point for the two callers that need it (dropping a controller onto a profile while the modern scheme is active, and switching a profile to the modern scheme for the first time), so they can never disagree about what a fresh modern profile looks like.
+- It returns null when there is nothing to build from: a gamepad profile whose device has never been seen (no live capabilities, no remembered SDL type) has no control list, and inventing one would fabricate buttons the pad may not have.
+- It prefills two things together on purpose: the slot list and the HUD layout this scheme wears. A dropped controller with a slot list but no layout would have working buttons with nowhere on screen to see them.
+- What lands on disk is a prefill, and from then on it is the slot list: every reader reads it back as written (`effectiveSlots`), and the player adds to it, removes from it and binds it again on the controls screen. Nothing derives it again behind them. That is what makes the list open-ended, and it is the reversal contract section 19 records.
+
+## ProfileHub/sub-components/controls-settings/controls-settings.constants.ts
+
+`FAMILY_ICON_MAP` holds one brand silhouette per controller family, shared by the required-inputs strip and the per-binding device glyph so both show the same icon for a family. The drag data keys match the ones `controls/device-drag-data.ts` writes.
+
+## ProfileHub/sub-components/controls-settings/family-icon-map.ts
+
+`resolveLiveFamilyIcon` resolves which family a vid:pid belongs to, preferring this session's remembered SDL type and falling back to a connected device's own live family, the same precedence the required-inputs strip used before it was shared.
+
+## ProfileHub/sub-components/controls-settings/live-device.ts
+
+"Is the pad this binding came from plugged in right now?" for the controls screen. It is shared because several lenses ask it for the same reason: a live device carries an `sdlType`, and that lets `resolveIconByVidPid` answer for a pad this session's family cache has never seen. The SNES mapping rows and the core verb rows both resolve their glyph that way.
+
+## ProfileHub/sub-components/controls-settings/modern-slots.ts
+
+- Slot list presentation for the controls screen. Identity is a number now (contract section 19) and `slotName` in `@shared/input/scheme` spells it, so the old `slotIdLabel`, which unpicked a position out of a `slot:NORTH` string, is gone with the ids.
+- What remains is the one thing only this screen can answer: when the player binds a slot to a different control, which picture the slot should now wear. `position` and `icon` are display only, so they have to follow the binding or the row keeps drawing the artwork of a button that no longer does anything. The live control list is the only place that artwork exists.
+- A pad control the device reports brings its own position, artwork and name. A key or a control this pad does not report brings none of the three, on purpose: the glyph chain then draws the binding (a key cap, or the generic button art), which is the control the player presses. Every row still shows a glyph, since `binding-display.ts` has no text-only branch for a bound control.
+
+## ProfileHub/sub-components/controls-settings/profile-controls.ts
+
+"What does this profile's device physically have?" for the controls screen. The modern scheme prefills its slot list from the device's resolved control list, so the screen needs that list for the profile being edited even while the pad is unplugged, or the slot list would empty itself the moment a controller sleeps. Three sources, in order:
+
+1. A live SDL entry for the profile's assigned vid:pid, which carries the real hasButton and hasAxis, so only what the unit reports appears.
+2. This session's remembered SDL type for that vid:pid, expanded through the same synthetic "assume every position present" list the saved binding icon lookup uses. A disconnected pad keeps its slots. The identity's own `sdlType` is the fallback when the cache has none.
+3. Nothing, for a keyboard profile (SDL never enumerates one) or a profile with no device assigned. The keyboard's modern bindings come from `keyboardModernBindings()`, which needs no control list.
+
+## ProfileHub/sub-components/controls-settings/useBindingState.ts
+
+Rebind listening, capture and clear logic for SNES button mappings, function action mappings, and (under the modern scheme) the ten core verbs and the player's numbered slots. Core and slot captures go straight to useModernScheme's writers: this hook owns what is being listened for, never the shape of what a modern profile stores.
+
+## ProfileHub/sub-components/controls-settings/useControlsSettings.ts
+
+- A thin orchestrator composing the focused hooks. Order matters in one place: the resolved control list for the active profile's device feeds both the scheme hook (which owns the slot list) and the drag and drop hook (which builds a dropped device's modern bindings), so it is computed once.
+- The HUD layout is a property of the scheme, so it is edited beside the slot list and not in the HUD settings. Switching control profile switches the arrangement with the buttons.
+- Both binding tabs draw the core verbs, so each verb's glyph is resolved here and not inside either tab.
+- Each scheme greys out the other's binding tab, so a HUD style change (which is what moves the scheme) while that tab is open moves to its counterpart instead of leaving the screen on a disabled tab.
+
+## ProfileHub/sub-components/controls-settings/useCoreIcons.ts
+
+- Resolves the device glyph for each of the ten core verbs. The SNES mapping rows have carried a resolved icon since the family layer landed, the core verb rows never did, and passing no icon is not neutral: `getBindingIconUrl` ends its chain on a generic keyed off the binding's shape alone, so on a pad every core button row drew the same generic button. Pause, Map, Confirm, Cancel and the two screen verbs were six identical circles, one tab away from the same buttons drawn as real artwork.
+- So this resolves through the same `resolveIconByVidPid` that tab uses (device override, then family, then generic, plus `resolveStickDirectionIcon` for an axis, so the four movement rows get four different glyphs).
+- A core binding carries no source vid:pid of its own, so the profile's assigned device supplies it: the same device `controlsForProfile` prefills the slot list from, so the two lists on this tab cannot disagree about which pad they describe.
+- Keyboard and unbound verbs resolve to null on purpose: a keyboard glyph comes from its key code further down `getBindingIconUrl`'s chain, and `none` draws nothing.
+
+## ProfileHub/sub-components/controls-settings/useDeviceSync.ts
+
+Detects and tracks connected input devices. `devices` and `filteredDevices` stay sourced from the InputManager, because drag and drop preset assignment, haptics and the display mappings lookup all key off that shape. `controllerGroups` is the newer SDL3 device list the device column renders gamepads from (ready or unavailable status, adapter grouping, capabilities), sourced separately so none of the other consumers had to change.
+
+## ProfileHub/sub-components/controls-settings/useDisplayMappings.ts
+
+- Derived display data: the required inputs strip and the display mappings.
+- When more than one physical controller feeds the profile's bindings, each binding row also shows which one it came from. A single-controller profile never needs that.
+- Every binding shape is resolved again, axes included. A stored axis icon can only be a stick's neutral base key, because a family declares one key per stick shared by its X and Y, so honouring it drew the same undeflected stick on all four movement rows. Only `resolveIconByVidPid` knows which end of the axis the binding is, and it reaches `resolveStickDirectionIcon`. `build-console-defaults` no longer stores one, and this also fixes the profiles that already have one.
+
+## ProfileHub/sub-components/controls-settings/useDragDrop.ts
+
+- Drag over and drop handling, and applying console defaults. A dropped device carries only its sdlType (plus vid and pid), and there is no per-model preset. The keyboard is the one sentinel case (sdlType `keyboard`, see `device-detector.ts`) still resolved from its hand-authored `KEYBOARD_DEFAULT`. Every gamepad's defaults come from the family layer's console defaults through `buildConsoleDefaultMappings`.
+- The dragged card carries its own resolved name (`device-drag-data.ts`). Only a legacy drag source without one falls back to the device list.
+- Icons are never stored on a freshly applied binding, since they resolve live from the source vid and pid plus the binding's index, like any other saved binding.
+- Under the modern scheme the same drop also gives the profile its modern bindings, derived from what SDL says the dropped device has. A device with nothing to resolve from yields null and keeps whatever the profile had. The classic console default mappings are written either way: the two live side by side on the profile, so switching schemes back never has to rebuild the other one.
+
+## ProfileHub/sub-components/controls-settings/useHapticsToggle.ts
+
+The profile-level haptics switch. When on, every controller the profile uses receives rumble. There is no per-device list to curate here: the routing in `lib/input/haptic-bridge.ts` reads the profile's own device set live.
+
+## ProfileHub/sub-components/controls-settings/useModernScheme.ts
+
+- The scheme half of the controls screen. The slot list is the player's, and this is where they build it. It is stored on the profile, prefilled from the device the first time one is dropped on, and from then on added to, removed from and bound here. There is one row per slot, numbered Slot 1, Slot 2 and so on, with no cap and no category filter, so a thirty-button pad is thirty rows and a keyboard is as many as the player wants (contract section 19).
+- That reverses the old rule, which derived the list on every read from the live device filtered to two categories. Deriving made the list uneditable: anything the player added was recomputed away on the next render, and anything the device did not report could never be added.
+- The HUD layout this scheme wears sits on the same profile beside the slot list (`modern.layoutId`) and is edited by `useSchemeLayout`. Every write here carries it through untouched, so a slot edit can never move the player's HUD back to the default.
+- What a slot fires lives in settings (`modernScheme.assignments`), keyed by slot number, and is never pruned here. Removing a slot closes the gap, so the assignments below it move up with the numbering. `remapAssignments` is that move, which is why a removal writes both halves in one call, so the items can never end up one button out of step.
+- The scheme is read, never set. It is derived from the HUD style (`controlSchemeOf`), so there is no setter and no moment at which switching to Modern builds a profile's modern bindings. `coreBindings` falls back to the device's defaults and `effectiveSlots` prefills the list from the device, so a profile that never carried a `modern` block lists its slots the first time it is opened.
+- With no stored core, the core is the device's defaults. A gamepad with no control list resolves to an all-unbound core instead of borrowing the keyboard's, because an empty list means the pad is unknown.
+- A profile written before section 19 still carries `slot:NORTH` ids and an assignment table keyed by them. `migrateScheme` keys both again together, in slot order, and throws instead of dropping anything it cannot read. It is idempotent.
+- `effectiveSlots` is the same function the runtime lens resolves through (`lib/input/resolve-bindings.ts`), so this screen and the HUD cluster read one list.
+- An absent assignment sits on a number the current list does not reach. It is kept, never deleted: a layout may still draw slot 7 for a scheme with five.
+- `hasSlotSource` is true once there is anything to build a list from.
+- A core rebind writes only the core. Slots no longer move with it: binding a gameplay verb onto a control a slot also reads leaves both rows on screen, so the clash is visible and removing the slot is one click.
+- A slot rebind keeps the slot's number and moves only what fires it, and its picture follows the new control. A new slot has a number and no binding, which is what a free button looks like.
+
+## ProfileHub/sub-components/controls-settings/useProfileActions.ts
+
+Input profile loading, create, rename, delete, selection and persistence. Loading migrates to numbered slots, or logs a loud console error and leaves that profile out (see `migrate-profiles.ts`), never a silent half load. The profile cycle shortcut (PageUp and PageDown) is reflected into the UI and the settings.
+
+## ProfileHub/sub-components/controls-settings/useSchemeLayout.ts
+
+- The HUD layout this control scheme wears, and the list of layouts to choose from (shipped first, then the player's own). It lives on the input profile beside the slot list, not in a global HUD setting, because it is a property of the scheme: switching the active control profile from the keyboard to a pad swaps the slot list, the assignments and the HUD arrangement in one step.
+- Two schemes may name the same layout. Editing it edits it for both, and "save a copy" in the editor is how one of them forks. The id is the only join, as the slot number is on the other half of the screen.
+- A profile that names nothing reads as the shipped default, so nothing on disk needs migrating.
+- The layout is written to the profile, so it travels with the control profile. The live HUD follows because the layout store subscribes to the resolved bindings. A profile with no modern block yet is left alone: the scheme is built in `build-modern-bindings`, and a layout without a slot list would be a scheme that draws nothing.
+
+## ProfileHub/sub-components/controls/controls.constants.ts
+
+- The ten core verbs fall in three groups because they answer three questions: where do I walk, what opens the two screens, and what drives the menu once one is open. The four menu verbs are live only while the pause menu is open, so they do not take a button out of circulation (contract section 11), and the same physical button can be both a menu verb and a gameplay slot in the Modern Controls tab.
+- `SDL_TYPE_ICON` maps a specific SDL type to a more accurate icon than its family default.
+- `CANCEL_ARM_DELAY_MS` and `LISTEN_ARM_DELAY_MS` keep the binding listener from capturing stale input right after it opens.
+
+## ProfileHub/sub-components/controls/device-drag-data.ts
+
+Sets the drag payload a device card uses to hand itself to the binding editor. `useDragDrop` reads the same keys back, and both take them from `controls-settings.constants.ts`, so DeviceCard and AdapterDeviceCard agree on the wire format.
+
+## ProfileHub/sub-components/controls/AbsentAssignments.tsx
+
+Lists assignments on a slot number the list does not reach. A number can outrun the list: remove slots until there are four and an assignment on slot seven has nowhere to sit. It is kept anyway, and adding three slots back reattaches it, because assignment and slot are joined by the number alone (contract section 19). They are shown, muted, not hidden: an assignment that exists but does nothing is the kind of state a settings screen should not keep secret.
+
+## ProfileHub/sub-components/controls/BindingListHeader.tsx
+
+The five-cell header the four binding lists share. Only the middle column differs (the console button on the classic list, the group on the core list, the assignment on the slot list), so it is the only label a caller passes, and it is omitted for lists whose middle cell stays empty.
+
+## ProfileHub/sub-components/controls/BindingRow.tsx
+
+One input mapping row (SNES buttons, shortcuts, cheats): action label, optional middle icon and label, binding icon and binding label. The whole row is clickable to start rebinding. The source controller icon shows only when the profile mixes more than one controller.
+
+## ProfileHub/sub-components/controls/BindingListener.tsx
+
+- A modal that captures the next key or gamepad button press through the InputManager's raw input events, so every source (keyboard, Web Gamepad API, SDL3 controllers) works the same everywhere. Escape cancels, Delete or Backspace clears the binding, and a bare modifier press waits for the real key.
+- The one-shot `captured` guard is a synchronous local, not React state. A stick pushed slightly off-axis crosses two axes' thresholds in the same frame, and the dispatcher fires one event per crossing before React can apply the first capture. Without the flag the second event (often incidental drift on the other axis) overwrites the first, which is how a rebind could point at the wrong axis or two actions end up bound the same.
+
+## ProfileHub/sub-components/controls/HapticsToggle.tsx
+
+One switch for the profile's rumble: when on, every controller assigned to the profile receives it. It sits top right of the mapping heading row because it is a property of the profile's mapping, not of one device. State lives in `useHapticsToggle`.
+
+## ProfileHub/sub-components/controls/SchemeBanner.tsx
+
+Shown on the Controls screen while the profile is on the Classic scheme. There is no scheme control: the scheme follows the HUD style, and the Modern style turns it on. A control here would be a second switch for one fact that changed the HUD without saying so, so the banner says where the switch is and deep links there (`SETTINGS_TARGETS.hudStyle`, the same link the Cheats lock uses). Under Modern nothing is drawn.
+
+## ProfileHub/sub-components/controls/ShortcutsTab.tsx
+
+The app-level shortcut bindings, plus the one reserved key (Esc opens the menu and cannot be rebound).
+
+## ProfileHub/sub-components/controls/CheatBindingsTab.tsx
+
+The cheat bindings, scrimmed while the master cheats toggle is off, since they do nothing then. The overlay is `contained` because the bindings container clips overflow and the header sits flush above it, so the default overhang would bleed onto it or be clipped.
+
+## ProfileHub/sub-components/controls/ControlsSidebar.tsx
+
+The left column: the input profile list, which collapses to an icon strip for quick selection.
+
+## ProfileHub/sub-components/controls/ControlsMain.tsx
+
+The centre column: a banner where the scheme control used to be, plus the tabbed binding editor. The scheme is derived from the HUD style, so under Classic the screen says so once and links to where it is set, and under Modern it says nothing. The two binding tabs gate each other by scheme: the inactive one stays visible and greyed with its reason.
+
+## ProfileHub/sub-components/controls/ControlsTabs.tsx
+
+The tab strip, with disabled tabs. Greyed, not removed, is the agreed behaviour, because a tab that vanishes reads as the screen having lost something. The reason shows under the strip and on the tab's tooltip. The design system TabBar has no disabled state and belongs to another owner, so the strip is built from Button primitives.
+
+## ProfileHub/sub-components/controls/CoreBindingsGroup.tsx
+
+The ten core verbs, grouped and rebindable, shown in both binding tabs on purpose: the menu verbs drive the pause menu under either scheme, and movement, pause and map are what the modern scheme subtracts from the slot list. `icons` is not decoration: a row given no icon resolves one from the binding's shape alone, which on a pad is the same generic circle for every button. The device's real artwork comes from `useCoreIcons`.
+
+## ProfileHub/sub-components/controls/SchemeLayoutRow.tsx
+
+Which HUD arrangement this control scheme wears. It sits on the controls screen because the layout is a property of the scheme. Two schemes may name the same layout, and the picker allows it: editing a shared layout edits it for both, and "save a copy" forks one. It is disabled while the profile has no modern block, since there is no scheme to hang a layout on.
+
+## ProfileHub/sub-components/controls/SlotRow.tsx
+
+One numbered slot under the modern scheme. The row is named for its number because that is the slot's whole identity (contract section 19). The binding is shown as a glyph, never bare text, and an unbound slot draws none. What a slot fires is chosen in the pause menu, so the assignment cell is display only and the row click rebinds. A slot with its binding cleared still exists and keeps its number: an empty numbered slot is how a player sees a free button. Only the remove button takes one out. `assignmentLabel` uses neutral wording, since the item's own name belongs to the data layer and is shown by the pause menu.
+
+## ProfileHub/sub-components/controls/GameControlsTab.tsx
+
+The classic per-button mapping list. It carries the core verbs too, because the menu verbs drive the pause menu under the classic scheme as well.
+
+## ProfileHub/sub-components/controls/ModernControlsTab.tsx
+
+- The player's own slot list plus the core verbs. The list is built here, not derived: Add slot appends an empty numbered slot, and the minus on a row removes one and closes the gap. There is no cap and no category filter (contract section 19). An empty slot is a row on purpose: it has a number and draws in the HUD.
+- The HUD layout sits at the foot of the list because it belongs to the scheme.
+- The component name keeps "Modern", the name of the control scheme.
+
+## ProfileHub/sub-components/controls/ControlsDevices.tsx
+
+The right column: detected input devices, draggable or clickable to assign. Gamepads render from the SDL3 controller snapshot (ready or unavailable, adapter grouping), and the keyboard entry still comes from the InputManager's device list.
+
+## ProfileHub/sub-components/controls/DeviceCard.tsx
+
+A detected input device. The controller icon on the left is the status light and the assign button, the label and capabilities are on the right. An unavailable gamepad shows the same explain and remedy notice as the Input Calibration page and cannot be dragged or assigned: SDL3 never opened it.
+
+## ProfileHub/sub-components/controls/AdapterDeviceCard.tsx
+
+One card for a device that presents one entry per port (for example a 4-port wired adapter). Assigning applies to the adapter as a whole, since every port shares one vendor:product id, so the drag and click live on the card and the port rows are informational. Its stylesheet is `DeviceCard.css`, loaded by DeviceCard, which ControlsDevices imports first.
+
+## ProfileHub/sub-components/controls/AssignedControllerCard.tsx
+
+The controller assigned to the active profile: connection and activation status, controller info and an unassign button.
+
+## ProfileHub/sub-components/controls/InputProfileList.tsx
+
+The saved input profiles, with the active one highlighted, and create, delete, select and rename. A newly created profile opens straight into rename. Escape in the rename field is consumed there, so the dismiss stack leaves the page alone.

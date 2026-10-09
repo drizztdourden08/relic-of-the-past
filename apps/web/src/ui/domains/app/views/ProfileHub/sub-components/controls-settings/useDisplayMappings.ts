@@ -1,27 +1,19 @@
 /* @layer renderer-components @kind hook */
-/**
- * Derived display data: requiredInputs and displayMappings.
- */
-
 import { useMemo } from 'react';
-import type { InputProfile, DetectedDevice } from '@shared/types/controls';
 import { SNES_BUTTONS } from '@shared/types/controls';
 import { allowedDevices } from '@app/lib/input/profile-devices';
 import { recallControllerName } from '@app/lib/input/controller-name-cache';
 import { resolveIconByVidPid } from '@app/lib/input/profile-utils';
-import { FAMILY_ICON_MAP, resolveLiveFamilyIcon } from './family-icon-map';
+import { resolveLiveFamilyIcon } from './family-icon-map';
+import { FAMILY_ICON_MAP } from './controls-settings.constants';
 import { findLiveDevice } from './live-device';
-import { padHex } from './controls-settings.type';
-
-interface UseDisplayMappingsArgs {
-  activeProfile: InputProfile | null;
-  devices: DetectedDevice[];
-}
+import { padHex } from './pad-hex';
+import type { RequiredInput, UseDisplayMappingsArgs } from './controls-settings.type';
 
 const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) => {
   const requiredInputs = useMemo(() => {
     if (!activeProfile) return [];
-    const inputs: Array<{ type: 'keyboard' | 'gamepad'; label: string; iconSrc: string; connected: boolean }> = [];
+    const inputs: RequiredInput[] = [];
     const { keyboard: hasKeyboard, gamepadKeys: usedDeviceKeys } = allowedDevices(activeProfile);
     const hasGamepad = activeProfile.mappings.some(m => m.binding.type !== 'keyboard');
 
@@ -60,9 +52,6 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
     return inputs;
   }, [activeProfile, devices]);
 
-  // More than one physical controller feeding this profile's bindings, so each
-  // binding row then also shows which one it came from (see BindingRow's
-  // deviceIconUrl). A single-controller profile never needs that disambiguation.
   const multiController = useMemo(() => allowedDevices(activeProfile).gamepadKeys.size > 1, [activeProfile]);
 
   const displayMappings = useMemo(() => {
@@ -81,13 +70,6 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
         return { ...existing, icon: existing.icon?.key ? existing.icon : null, deviceIconUrl: null };
       }
 
-      // Every shape re-resolves, an axis INCLUDED. A stored axis icon can only
-      // ever be a stick's neutral base key, because one key is all a family declares
-      // per stick, shared by its X and its Y. So honouring it drew the same
-      // undeflected stick on all four movement rows. Only `resolveIconByVidPid`
-      // knows which END of the axis this binding is, and it is the half that
-      // reaches `resolveStickDirectionIcon`. `build-console-defaults` no longer
-      // stores one at all; this also re-resolves the profiles that already have.
       const deviceIconUrl = multiController ? resolveLiveFamilyIcon({ vid, pid, devices }) : null;
       const liveSdlType = findLiveDevice(vid, pid, devices)?.sdlType;
       const icon = resolveIconByVidPid(vid, pid, existing.binding, liveSdlType);

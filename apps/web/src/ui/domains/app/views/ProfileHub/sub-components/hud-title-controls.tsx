@@ -1,5 +1,4 @@
-/* @layer renderer-components @kind component */
-/** Control renderer + disabled rules for the Title Screen section of the HUD settings tab. */
+/* @layer renderer-components @kind logic */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { nextTitleSword, titleSwordLabel } from '@shared/game/title/title-swords';
@@ -7,22 +6,8 @@ import { Button } from '../../../../../design-system/primitives/Button';
 import { Field } from '../../../../../design-system/primitives/Field';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { Toggle } from '../../../../../design-system/primitives/Toggle';
-
-const SCREEN_OPTIONS = [
-  { value: 'original', label: 'Original' },
-  { value: 'reimagined', label: 'Reimagined' },
-];
-
-const MOTION_OPTIONS = [
-  { value: 'still', label: 'Still' },
-  { value: 'drifting', label: 'Drifting' },
-];
-
-const TITLE_KEYS = new Set(['titleScreen', 'titleMotion', 'titleFollowsProgress', 'titleSword']);
-
-/** Every row but the switch describes the reimagined title, so the original one idles them. */
-const isTitleDisabled = (key: string, settings: GameSettings): boolean =>
-  key !== 'titleScreen' && TITLE_KEYS.has(key) && settings.titleScreen === 'original';
+import { MOTION_OPTIONS, SCREEN_OPTIONS } from './hud-settings.constants';
+import { isTitleDisabled } from './hud-title-disabled';
 
 const renderTitleControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   const disabled = isTitleDisabled(key, settings);
@@ -71,4 +56,4 @@ const renderTitleControl = (key: string, settings: GameSettings, onChange: (patc
   }
 };
 
-export { isTitleDisabled, renderTitleControl };
+export { renderTitleControl };

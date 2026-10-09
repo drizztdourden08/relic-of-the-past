@@ -1,11 +1,5 @@
-/* @layer renderer-components @kind data */
-/**
- * One card for a device that presents one entry per
- * port (e.g. a 4-port wired adapter), instead of several near-identical
- * DeviceCards. Assigning a preset applies to the adapter as a whole (every
- * port shares the same vendor:product id), so the drag/click affordance
- * lives on the card, not per port; the port rows below are informational.
- */
+/* @layer renderer-components @kind component */
+import { useCallback } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
@@ -13,43 +7,28 @@ import { Image } from '../../../../../../design-system/primitives/Image';
 import { ControllerPortRow } from '../../../../compounds/ControllerPortRow';
 import { UnavailableControllerNotice } from '../../../../compounds/UnavailableControllerNotice';
 import { controllerCardInfo } from '../../../../../../../lib/input/controller-card-info';
-import type { ControllerDeviceGroup } from '../../../../../../../lib/input/controller-device-groups';
-import { publicAsset } from '@app/lib/assets/public-asset';
 import { setDeviceDragData } from './device-drag-data';
-import type { DeviceAssignInfo } from './DeviceCard.type';
-import './DeviceCard.css';
-
-const FAMILY_ICON: Record<string, string> = {
-  xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
-  playstation: publicAsset('buttons/generic/generic_joystick.svg'),
-  nintendo: publicAsset('buttons/switch/controller_switch_pro.svg'),
-  '8bitdo': publicAsset('buttons/generic/generic_joystick.svg'),
-  generic: publicAsset('buttons/generic/generic_joystick.svg'),
-};
-
-interface AdapterDeviceCardProps {
-  group: ControllerDeviceGroup;
-  onAssign?: (device: DeviceAssignInfo) => void;
-  onAddMapping?: (mapping: string) => Promise<boolean>;
-}
+import { ADAPTER_FAMILY_ICON } from './controls.constants';
+import type { AdapterDeviceCardProps } from './controls.type';
 
 const AdapterDeviceCard = (props: AdapterDeviceCardProps) => {
   const { group, onAssign, onAddMapping } = props;
   const info = controllerCardInfo(group.ports[0].entry);
   const hasReadyPort = group.ports.some((port) => port.entry.status === 'ready');
   const hasUnavailablePort = group.ports.some((port) => port.entry.status === 'unavailable');
+  const { sdlType, displayName, vendorId, productId } = info;
 
-  const handleDragStart = (e: React.DragEvent) => {
+  const handleDragStart = useCallback((e: React.DragEvent) => {
     if (!hasReadyPort) { e.preventDefault(); return; }
-    setDeviceDragData(e, { id: `adapter-${info.vendorId}-${info.productId}`, displayName: info.displayName, sdlType: info.sdlType, vendorId: info.vendorId, productId: info.productId });
-  };
+    setDeviceDragData(e, { id: `adapter-${vendorId}-${productId}`, displayName, sdlType, vendorId, productId });
+  }, [hasReadyPort, displayName, sdlType, vendorId, productId]);
 
-  const handleAssign = () => {
+  const handleAssign = useCallback(() => {
     if (!hasReadyPort) return;
-    onAssign?.({ sdlType: info.sdlType, displayName: info.displayName, vendorId: info.vendorId, productId: info.productId });
-  };
+    onAssign?.({ sdlType, displayName, vendorId, productId });
+  }, [hasReadyPort, onAssign, sdlType, displayName, vendorId, productId]);
 
-  const iconSrc = FAMILY_ICON[info.deviceFamily] ?? FAMILY_ICON.generic;
+  const iconSrc = ADAPTER_FAMILY_ICON[info.deviceFamily] ?? ADAPTER_FAMILY_ICON.generic;
 
   return (
     <Box className={`device-card ${hasReadyPort ? '' : 'device-card--disconnected'}`} draggable={hasReadyPort} onDragStart={handleDragStart}>

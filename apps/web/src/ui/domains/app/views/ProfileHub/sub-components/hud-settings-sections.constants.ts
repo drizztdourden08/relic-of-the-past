@@ -1,5 +1,4 @@
-/* @layer renderer-components @kind logic */
-/** Section config for the HUD settings tab. */
+/* @layer renderer-components @kind constants */
 import type { Section } from '../../../compounds/SettingsLayout';
 
 const SECTIONS: Section[] = [

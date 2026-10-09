@@ -1,20 +1,14 @@
 /* @layer renderer-components @kind component */
-import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
-import { SECTIONS, SANCTUARY_ACCOUNT_KEY } from './developer-settings-sections';
+import { SECTIONS, SANCTUARY_ACCOUNT_KEY } from './developer-settings-sections.constants';
 import { SanctuaryAccount } from './SanctuaryAccount';
+import type { SettingsTabProps } from './settings-controls.type';
 
-interface DeveloperSettingsProps {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-}
-
-/** The account row is the one item here that is not a toggle. */
 const renderControl = (key: string) => (key === SANCTUARY_ACCOUNT_KEY ? <SanctuaryAccount /> : null);
 
-const DeveloperSettings = (props: DeveloperSettingsProps) => {
+const DeveloperSettings = (props: SettingsTabProps) => {
   const { settings, onChange } = props;
   return (
     <SettingsLayout

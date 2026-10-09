@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind hook */
-/** Tracks the running game's pause state from the InputManager and toggles it. */
 import { useCallback, useEffect, useState } from 'react';
 import { getInputManager } from '../../../../../../lib/game';
 

@@ -1,12 +1,8 @@
-/* @layer renderer-components @kind logic */
-/** Section config for the Gameplay settings tab. */
+/* @layer renderer-components @kind constants */
 import type { Section } from '../../../compounds/SettingsLayout';
 
 const TURBO_KEYWORDS = 'turbo fast forward speed up faster skip hold multiplier speedrun grind';
 
-// Save states and turbo share a section: both act on the running game from outside its own
-// rules, one moving where you resume, the other how fast it runs. Exported because its
-// controls are rendered by gameplay-settings-controls.
 const GAME_FLOW_SECTION: Section = {
   id: 'game-flow',
   title: 'Game Flow',
@@ -41,8 +37,6 @@ const GAME_FLOW_SECTION: Section = {
 };
 
 const SECTIONS: Section[] = [
-  // Save states live here instead of in a tab of their own. They are part of how the game is
-  // played, not a property of the host.
   GAME_FLOW_SECTION,
   {
     id: 'received-items',
@@ -132,4 +126,4 @@ const SECTIONS: Section[] = [
   },
 ];
 
-export { SECTIONS, GAME_FLOW_SECTION };
+export { SECTIONS, GAME_FLOW_SECTION, TURBO_KEYWORDS };

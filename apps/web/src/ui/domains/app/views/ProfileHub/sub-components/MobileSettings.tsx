@@ -1,23 +1,15 @@
 /* @layer renderer-components @kind component */
-/** Mobile and device-specific display options. */
-import type { GameSettings } from '@shared/types/settings';
-import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
+import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
-import { MOBILE_SECTION } from './SettingsView.constants';
+import { MOBILE_SECTIONS } from './SettingsView.constants';
+import type { SettingsTabProps } from './settings-controls.type';
 
-interface MobileSettingsProps {
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-}
-
-const SECTIONS: Section[] = [MOBILE_SECTION];
-
-const MobileSettings = (props: MobileSettingsProps) => {
+const MobileSettings = (props: SettingsTabProps) => {
   const { settings, onChange } = props;
   return (
     <SettingsLayout
-      sections={SECTIONS}
+      sections={MOBILE_SECTIONS}
       settings={settings}
       defaults={DEFAULT_SETTINGS}
       onChange={onChange}

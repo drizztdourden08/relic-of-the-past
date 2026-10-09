@@ -1,20 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * BindingListHeader is the column header above a BindingRow list.
- *
- * One copy of the five-cell header the four binding lists all share; the
- * middle column is the only one that differs between them (the console button
- * on the classic list, the group on the core list, the assignment on the slot
- * list), so it is the only label a caller passes.
- */
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
-
-interface BindingListHeaderProps {
-  /** Middle column heading. Omitted for lists whose middle cell stays empty. */
-  middleLabel?: string;
-  actionLabel?: string;
-}
+import type { BindingListHeaderProps } from './controls.type';
 
 const BindingListHeader = ({ middleLabel = '', actionLabel = 'Action' }: BindingListHeaderProps) => {
   return (
