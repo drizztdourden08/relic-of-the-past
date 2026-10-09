@@ -4,7 +4,6 @@ import { TYPE_SCALE, SPACE_SCALE, RADIUS_SCALE, SHADOW_SCALE } from '../../Desig
 import { Swatch } from '../Swatch';
 import { Specimen } from '../Specimen';
 
-/** Foundations: type / spacing / radius / elevation scales. */
 const ScaleStory = () => (
   <Box className="dg-stack">
     <Specimen label="Type scale" hint="Tight 5-step scale. Densify with weight & color, not new sizes.">

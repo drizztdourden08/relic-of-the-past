@@ -1,6 +1,5 @@
 /* @layer renderer-app @kind style */
 
-/* Fixed bottom track spanning the viewport, above app content. */
 .boot-bar {
   position: fixed;
   inset: auto 0 0;
@@ -18,7 +17,6 @@
   opacity: 0;
 }
 
-/* Base label: white, centered across the whole track. */
 .boot-bar__label {
   position: absolute;
   inset: 0;
@@ -30,7 +28,6 @@
   white-space: nowrap;
 }
 
-/* Gold fill grows left to right; clips the black duplicate label to its width. */
 .boot-bar__fill {
   position: absolute;
   inset: 0 auto 0 0;
@@ -40,16 +37,11 @@
   transition: width var(--transition-normal);
 }
 
-/* Duplicate label sized to the full viewport so it aligns exactly under the base
-   label; the fill's overflow clip reveals only the portion over the gold. */
 .boot-bar__label--over {
   width: 100vw;
   color: var(--color-bg-deep);
 }
 
-/* Indeterminate stages (glue load / compile): sweep a gold band across. The
-   moving fill would drag the black duplicate off-center, so hide it here and let
-   the white base label read straight through. */
 .boot-bar--indeterminate .boot-bar__fill {
   width: 35%;
   transition: none;
@@ -62,5 +54,5 @@
 
 @keyframes boot-bar-sweep {
   0%   { transform: translateX(-100%); }
-  100% { transform: translateX(285.7%); } /* (100/35)*100 to cross the full width */
+  100% { transform: translateX(285.7%); }
 }

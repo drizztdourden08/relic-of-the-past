@@ -4,7 +4,6 @@ import { Specimen } from '../Specimen';
 
 const CHECK_PATH = ['M3.5 8.5 l3 3 l6 -7'];
 
-/** Components › data display & headers. */
 const DataStory = () => (
   <Box className="dg-stack">
     <Specimen label="SectionHeader" hint="title + subtitle + action slot">

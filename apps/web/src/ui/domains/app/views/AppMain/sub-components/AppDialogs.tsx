@@ -1,25 +1,9 @@
 /* @layer renderer-app @kind component */
-/** Every app-level dialog/overlay that isn't part of the main content stack: the generic
- *  confirm dialog, the updater, the bug-report form, and the boot progress bar. Split out of
- *  AppMain so that component stays about composing the game view, not every dialog's props. */
 import { Dialog } from '@ds/composites/Dialog';
-import type { ConfirmDialog } from '@app/App/types';
-import type { useAutoUpdate } from '@app/hooks/useAutoUpdate';
 import { BootProgressBar } from '../../BootProgressBar';
 import { UpdateDialog } from '../../../compounds/UpdateDialog';
 import { BugReportDialog } from '../../BugReport';
-
-interface AppDialogsProps {
-  dialog: ConfirmDialog | null;
-  dismissDialog: () => void;
-  canUpdate: boolean;
-  update: ReturnType<typeof useAutoUpdate>;
-  showUpdateDialog: boolean;
-  setShowUpdateDialog: (open: boolean) => void;
-  showBugReportDialog: boolean;
-  setShowBugReportDialog: (open: boolean) => void;
-  profileId: string | null;
-}
+import type { AppDialogsProps } from '../AppMain.type';
 
 const AppDialogs = (props: AppDialogsProps) => {
   const {

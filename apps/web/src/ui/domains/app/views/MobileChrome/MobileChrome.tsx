@@ -1,25 +1,11 @@
 /* @layer renderer-app @kind component */
-/**
- * The mobile replacement for the desktop TitleBar (rendered when
- * !windowChrome). The Android back gesture/button opens the Options drawer (the full
- * menu plus FPS, quick mute and Quit); Home lives inside it. Back
- * also closes the drawer first, then any open page, mirroring desktop Esc. Reuses the
- * same callbacks + menu model as TitleBar.
- */
 import { usePlatform } from '@app/platform';
 import { Drawer } from '@ds/composites/Drawer';
 import { buildTitleBarMenuItems } from '../TitleBar/behavior/title-bar-menu';
 import { OptionsDrawer } from './sub-components/OptionsDrawer';
 import { useMobileChrome } from './behavior/useMobileChrome';
 import './MobileChrome.css';
-import type { PageId } from '@app/App/types';
-import type { TitleBarProps } from '../TitleBar/TitleBar.type';
-import type { DrawerMenuItem } from './MobileChrome.type';
-
-interface MobileChromeProps extends TitleBarProps {
-  activePage: PageId;
-  onClosePage: () => void;
-}
+import type { DrawerMenuItem, MobileChromeProps } from './MobileChrome.type';
 
 const MobileChrome = (props: MobileChromeProps) => {
   const { window: win } = usePlatform();

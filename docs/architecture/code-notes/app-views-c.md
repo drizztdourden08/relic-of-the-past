@@ -1041,4 +1041,136 @@ the shelves its shop scope opened, so that switch shows on the plain game only. 
 off on the plain game and on for a seed (`smallKeyDoorsOf`). `behavior/active-logic-toggles.ts`
 counts the switches away from their default for the drawer's badge.
 
+## Views
+
+### views/About/About.tsx
+
+The About page renders inside a FullScreenLayer through the PageRouter. Its rows and the debug
+text for the copy button both come from the shared platform diagnostics builder. Copying falls
+back to a hidden textarea and `execCommand` when the clipboard API refuses.
+
+### views/AppMain/AppMain.tsx
+
+Widget layout and widget content prefs share one debounced, flushed writer
+(`lib/storage/widget-state`). `useDevToolsWidgetGate` is the master gate for developer only UI
+(widgets, dev pages, the shadow editor) and closes dev only widgets the moment it flips off. The
+Vanilla Safe and per widget `requiresSetting` gates cover the affected widgets with an overlay in
+place of hiding them. A music pack opened from the desktop imports itself (`useMsulOpen`), and a
+store install link the browser opened lands on the Hookshop tab (`useStoreLinks`). A core crash
+surfaces its own evidence: the logs widget opens on the spot. On electron the splash hands over
+to the main window only once startup has settled and painted, so the first frame the player sees
+is the finished shell. `AppDialogs` holds every app level dialog outside the main content stack
+(the confirm dialog, the updater, the bug report form and the boot progress bar), so AppMain stays
+about composing the game view.
+
+### views/AppMain/AppMain.css
+
+In the notch "usable space" mode the whole app is inset away from the camera cutout. The padding
+goes on `.app`, the flex parent, so the absolutely positioned layers inside `.app__content` shrink
+with it. The default notch fill mode renders edge to edge.
+
+### views/BootProgressBar/BootProgressBar.tsx
+
+The label flips from white to black over the gold fill through a clipped duplicate label: the
+duplicate is sized to the full viewport so it sits exactly under the base label, and the fill's
+overflow clip reveals only the part over the gold. The minimum time on screen is cosmetic and
+never gates readiness. Indeterminate stages (glue load, compile) sweep a gold band across; the
+moving fill would drag the black duplicate off centre, so it is hidden there and the white label
+reads straight through. The sweep ends at 285.7%, which is 100 over 35 times 100, so the 35% band
+crosses the full width.
+
+### views/BugReport/BugReportDialog.tsx
+
+Attaching a debug report only makes sense while logging is on for the profile. The dialog is
+reached from several places (the floating button, "Report a bug" in the menu, the updater), and
+this check is the one gate they all share, so a caller never tracks the live setting itself.
+`window.open` on an external URL is routed to the system browser by the main process. The picker
+column gets the larger share of the dialog because its two column preview grid needs real width to
+keep each card legible.
+
+### views/BugReport/behavior/useBugReportForm.ts
+
+The main process builds the debug zip at submit time from the saves collected here and the
+sessions the picker had checked, files the report and uploads the zip in one call. A failed upload
+leaves the report filed and can be retried against the same report id. The subject follows the
+running game until the player edits it. The email check only asks for an @ and a dot with an
+extension.
+
+### views/BugReport/behavior/useCaptureSessions.ts
+
+Every load re-defaults the selection: unsent sessions start checked and sent ones do not, so "new"
+always means unsent, never "since I last looked". Deletion goes straight to disk; the picker gets
+the player's confirmation first. A null `profileId` (logging off, or no active profile) means
+nothing to attach: the list stays empty and nothing calls the main process.
+
+### views/CheckToasts/CheckToasts.tsx
+
+A toast per check or event the player just completed, stacked at the bottom left of the play area
+(the game picture, never the whole window), laid over the picture the same way the HUD overlay is.
+Each toast is the tracker's own card, a size up because it is read at a glance over the game, and
+it reads the same run context as the tracker's rows, so a card and a row never show two items for
+one check. A status only row ticks and unticks with the live state, so it raises no toast. An
+online session's notices (items both ways, the connection, DeathLink and the rest, each kind
+toggled in the Online settings) join the same stack, one line each, with item and player names in
+the highlight colours the profile chose (gold and green when none is set).
+
+### views/CheckToasts/behavior/useCheckToasts.ts
+
+Two sources finish a row on a seed. The tracker's completed set, diffed on every change, covers
+every row the game writes a flag for. The substitution seam's own reports
+(`override-fire-registry.ts`) are the only word on a row no check record can see: a shop shelf, a
+pond prize past the reference's two, any virtual row. Those never reach the completed set, so on a
+seed they once passed silently. A reported location shows its check record, or the virtual row the
+seed minted for it. Every report of one synchronous burst lands in one batch, so a backfilled
+session arming reads as one jump, and whatever the seam reported before the hook mounted is not
+news. Nothing shows outside a file in play, and what turns up right after the save changes (a
+state load, a file entered) belongs to that file and shows nothing (`play-quiet.ts`); the quiet
+window after a load is two sweeps long so the combined rows land too. More than `MAX_BURST` rows
+at once is a load, not something the player just did. An item received within
+`RECEIPT_WINDOW_MS` belongs to the chest that just completed, which tells what a swap chest really
+paid. Turned off, the hook still follows both sources, so turning it on never replays what happened
+meanwhile.
+
+### views/CheckToasts/behavior/useOnlineNoticeToasts.ts
+
+A kind the profile's settings turn off shows nothing, and a burst folds into one summary
+(`notice-burst.ts`). The settings are read as each notice arrives, so a toggle acts at once.
+Outside a file in play the room's news stays in the log only, with nothing on screen to tie it to.
+A notice line's parts never reorder, so their index is a stable key.
+
+### views/InstalledOriginBar/InstalledOriginBar.tsx
+
+The origin bar wired to the store IPC: Duplicate, Update, Open on the site and Uninstall. Every
+editor that shows an installed item puts it at its top and is told what to select after each
+action: `onDuplicated` gets the name the editable copy was written under, and `onUpdated` the name
+the update landed under, which a new version may have changed.
+
+### views/InstalledOriginBar/behavior/useConfirmUninstall.ts
+
+An editor's Delete on an installed item runs the same uninstall the Hookshop tab runs, asked with
+the same words through the editor's confirm dialog, so the install record and the profiles that use
+the item stay right.
+
+### views/InstalledOriginBar/behavior/useUpdateTo.ts
+
+The store is asked once per item and installed version. Signed out, the store does not answer, so
+no update is offered.
+
+### views/MobileChrome/MobileChrome.tsx
+
+The mobile replacement for the desktop TitleBar, rendered when there is no window chrome. The
+Android back gesture or button opens the Options drawer (the full menu plus FPS, quick mute and
+Quit), and Home lives inside it. It reuses the TitleBar's callbacks and menu model. FPS is polled
+only while the drawer is open and a game runs. Back routing is registered once and reads the
+latest state through a ref: an open drawer closes first (either edge); the left edge (Esc) closes
+the current page or else opens Home; the right edge opens the Options menu.
+
+### views/DesignGallery/DesignGallery.tsx
+
+An in-app storybook built from the design system, reachable from the title bar's Advanced menu.
+The gallery sits inside the padded FullScreenLayer, so it drops the settings shell's own padding
+and the nav and content line up with the window title. No primitive exists for a glass card or a
+selected card, so the container demos are styled in DesignGallery.css. The selection controls
+story shows that an active state is always gold.
+
 ENDMARK

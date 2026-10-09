@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * The store's live version of an installed item when it differs from the installed one, or
- * null. Asked of the store once per item and installed version; signed out, the store does not
- * answer, so no update is offered.
- */
 import { useEffect, useState } from 'react';
 import type { InstalledPack } from '@shared/store/installed-types';
 import { liveVersionOf } from '../../Store/behavior/item-facts';

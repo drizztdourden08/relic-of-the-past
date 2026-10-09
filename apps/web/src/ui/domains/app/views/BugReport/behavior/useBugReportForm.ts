@@ -5,26 +5,12 @@ import { collectSaveStates } from '@app/lib/diagnostics/collect-save-states';
 import { useReportContext } from '@app/lib/diagnostics/useReportContext';
 import { useHubSessionStore } from '@app/stores/hub-session';
 import type { DebugReportSaveEntry } from '@shared/types/debug-report';
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // only requires an @ and a dot with an extension
-
-type SubmitStatus = 'idle' | 'submitting' | 'done' | 'error';
-type UploadStatus = 'idle' | 'uploading' | 'done' | 'error';
-
-interface FiledReport {
-  reportId: string;
-  issueUrl: string;
-  sanctuaryUrl: string;
-}
+import type { FiledReport, SubmitStatus, UploadStatus } from '../BugReportDialog.type';
+import { EMAIL_RE } from './useBugReportForm.constants';
 
 const messageOf = (err: unknown, fallback: string): string =>
   (err instanceof Error && err.message.length > 0 ? err.message : fallback);
 
-/** `profileId` is only set when debug logging is on and a profile is active (see
- *  BugReportDialog); that is the whole gate for whether a debug report is attempted at all.
- *  The main process builds the zip at submit time, from the saves collected here and the
- *  sessions the picker had checked, files the report and uploads the zip in one call. A
- *  failed upload leaves the report filed and can be retried against the same report id. */
 const useBugReportForm = (profileId: string | null, sessionKeys: string[]) => {
   const me = useHubSessionStore((s) => s.me);
   const refreshSession = useHubSessionStore((s) => s.refresh);
@@ -50,7 +36,6 @@ const useBugReportForm = (profileId: string | null, sessionKeys: string[]) => {
     setEmailTouched(true);
   }, []);
 
-  // The subject follows the running game until the person edits it.
   const subject = editedSubject ?? prefilledSubject;
   const setSubject = useCallback((value: string) => setEditedSubject(value), []);
 

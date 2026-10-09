@@ -2,7 +2,6 @@
 import { Box, Text, Card } from '../../../../../../design-system/primitives';
 import { Specimen } from '../Specimen';
 
-/** Components › containers: cards, selected state, glass panel. */
 const ContainerStory = () => (
   <Box className="dg-stack">
     <Specimen label="Card" hint="default / interactive / danger">

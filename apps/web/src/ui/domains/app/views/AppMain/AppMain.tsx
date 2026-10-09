@@ -5,12 +5,10 @@ import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { WIDGET_CONTENT, WIDGET_SETTINGS_CONTENT } from '@domains/widgets';
 import { widgetLayoutIO } from '@app/lib/storage/widget-state';
-import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
 import { useDevToolsWidgetGate } from '@app/App/behavior/useDevToolsWidgetGate';
 import { useWidgetPrefs } from '@app/App/behavior/useWidgetPrefs';
 import { useWidgetDisabledGate } from '@app/App/behavior/useWidgetDisabledGate';
-import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
 import { PageRouter } from '@app/App/PageRouter';
 import { useAppNavigation } from '@app/App/behavior/useAppNavigation';
@@ -42,6 +40,7 @@ import type { TitleBarProps } from '../TitleBar/TitleBar.type';
 import { GameLayer } from '../GameLayer';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
 import { DebugFloatingControls } from '../../compounds/DebugFloatingControls';
+import { applyLoadedProfile } from './behavior/apply-loaded-profile';
 import { AppDialogs } from './sub-components/AppDialogs';
 import './AppMain.css';
 
@@ -57,34 +56,13 @@ const AppMain = () => {
   const profileMgmt = useProfileManagement({
     showDialog,
     dismissDialog,
-    onProfileLoaded: (data) => {
-      primeLiveSettings(data.settings);
-      applyNotchMode(data.settings.renderIntoNotch);
-      game.setGameData(data.assetData, data.configIni);
-      display.initFromSettings({
-        windowMode: data.settings.windowMode,
-        viewportConstraint: data.settings.viewportConstraint,
-        aspectRatio: data.settings.aspectRatio,
-        displayPerfInTitle: data.settings.displayPerfInTitle,
-        overworldEdgeEffect: data.settings.overworldEdgeEffect,
-        postProcessingShadows: data.settings.postProcessingShadows,
-        startFullscreen: data.settings.startFullscreen,
-        pixelPerfect: data.settings.pixelPerfect,
-      });
-      audio.initFromSettings(data.settings.masterVolume);
-      saveState.initFromSettings(data.settings.enhancedSaveSlotShortcut, data.settings.saveHoldDuration);
-    },
+    onProfileLoaded: (data) => applyLoadedProfile(data, { game, display, audio, saveState }),
     onGameClear: () => game.clearGame(),
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
-  // Layout and content prefs share one debounced, flushed writer (lib/storage/widget-state).
   const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetLayoutIO, window.api.startup);
   useWidgetPrefs(profileMgmt.activeProfile?.id ?? null);
-  // Master gate for developer-only UI (widgets, dev pages, shadow editor); also closes
-  // devOnly widgets the moment it flips off.
   const developerToolsEnabled = useDevToolsWidgetGate(widgets.layout, widgets.close, window.api.startup.widgets);
-  // Vanilla Safe + per-widget requiresSetting gates: covers affected widgets with an overlay
-  // instead of hiding them.
   const { vanillaSafe, settings: liveSettings, onOpenSettings: onOpenWidgetSettings } = useWidgetDisabledGate(nav.setActivePage);
   const setExclusiveInsets = useExclusiveInsetsStore((s) => s.setInsets);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
@@ -106,18 +84,13 @@ const AppMain = () => {
   useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
   useRandomizerBoot(profileMgmt.activeProfile?.id ?? null);
   useIpcLogBridge();
-  // A music pack opened from the desktop imports itself.
   useMsulOpen();
-  // A store install link the browser opened lands on the Hookshop tab.
   useStoreLinks(nav.setActivePage);
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
-  // A core crash surfaces its own evidence: the logs widget opens on the spot.
   useEffect(() => subscribeGameState((state) => {
     if (state.status === 'error') widgets.open('logs');
   }), [widgets.open]);
 
-  // Splash window → main window: reveal only once startup has settled and painted,
-  // so the first frame the user sees is the finished shell (electron only).
   useShellReady(startup.settled);
 
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);

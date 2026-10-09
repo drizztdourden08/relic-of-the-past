@@ -1,8 +1,8 @@
 /* @layer renderer-app @kind component */
 import { Box, Text } from '../../../../../design-system/primitives';
 import type { TokenSpec } from '../DesignGallery.constants';
+import './Swatch.css';
 
-/** One token chip: a color/elevation preview box + its name, var, value, note. */
 const Swatch = ({ token, kind }: { token: TokenSpec; kind?: 'color' | 'shadow' }) => {
   const { name, cssVar, value, note } = token;
   const previewStyle = kind === 'shadow'

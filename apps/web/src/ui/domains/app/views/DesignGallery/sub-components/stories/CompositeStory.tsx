@@ -23,7 +23,6 @@ const SHELLS = [
   'Toast: transient notifications (bottom corner).',
 ];
 
-/** Components: composites (live where inline-able, documented for shells/overlays). */
 const CompositeStory = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [navId, setNavId] = useState('audio');

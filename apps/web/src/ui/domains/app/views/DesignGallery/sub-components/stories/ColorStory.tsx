@@ -4,7 +4,6 @@ import { COLOR_GROUPS } from '../../DesignGallery.constants';
 import { Swatch } from '../Swatch';
 import { Specimen } from '../Specimen';
 
-/** Foundations › color roles & surfaces. */
 const ColorStory = () => (
   <Box className="dg-stack">
     {COLOR_GROUPS.map(group => (

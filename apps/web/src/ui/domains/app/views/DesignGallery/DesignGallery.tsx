@@ -1,5 +1,4 @@
 /* @layer renderer-app @kind component */
-// In-app "storybook" built FROM the design system; reachable from the title-bar Advanced menu.
 import { useState, useMemo } from 'react';
 import { Box, Text } from '../../../../design-system/primitives';
 import { SettingsShell } from '../../../../design-system/composites/SettingsShell';

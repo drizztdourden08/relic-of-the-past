@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Laid over the game picture, the same box the HUD overlay uses. */
 .check-toasts {
   position: absolute;
   inset: 0;
@@ -9,7 +8,6 @@
   z-index: var(--z-nav-overlay);
 }
 
-/* The tracker's card, a size up: it is read at a glance over the game, not in a list. */
 .check-toast {
   min-width: 16rem;
   max-width: 22rem;
@@ -25,9 +23,6 @@
   font-size: var(--text-sm);
 }
 
-/* An online notice: the same card surface, text only. Item and player names take the message
-   highlight colours the profile chose (set on .check-toasts), with the app's gold and green
-   when none is set. */
 .online-notice-toast {
   min-width: 16rem;
   max-width: 22rem;

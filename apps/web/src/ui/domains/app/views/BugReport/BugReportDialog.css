@@ -19,8 +19,6 @@
   min-width: 0;
 }
 
-/* The picker's two-column preview grid is the point of this dialog, so that column gets the
-   bigger share - it needs real width, not just more height, to keep each card legible. */
 .bug-report--with-capture .bug-report__body {
   grid-template-columns: 0.75fr auto 1.4fr;
 }
