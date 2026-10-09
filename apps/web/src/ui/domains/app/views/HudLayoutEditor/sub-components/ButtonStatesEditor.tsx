@@ -1,16 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * A `button`'s whole Content: which control it binds to, then a face per
- * state, as in `plans/hud-data-binding.html`'s wireframe 4. Binding by VERB or by
- * SLOT NUMBER (uncapped and 1-based, since a keyboard alone reaches 107 glyphs), never
- * validated against a device.
- *
- * The slot half is `SlotRefField` now (phase 9). It retired the third and last
- * copy of the "any number, not capped or validated against a device" paragraph,
- * which is a policy that is true everywhere and therefore explains nothing
- * here. The field shows the glyph that number currently draws instead, which
- * is what a person was reading the paragraph hoping to learn.
- */
 import { Box } from '@ds/primitives/Box';
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
@@ -19,16 +7,9 @@ import { Select } from '@ds/primitives/Select';
 import { useSlotScheme } from '../behavior/slot-scheme';
 import { ButtonStateRow } from './ButtonStateRow';
 import { SlotRefField } from './SlotRefField';
-import type { GlyphPack, HudButtonBind, HudButtonSpec, HudButtonVerb } from '@shared/types/hud';
-
-const VERBS: readonly HudButtonVerb[] = ['up', 'down', 'left', 'right', 'pause', 'map'];
-const STATES = ['pressed', 'held', 'unassigned'] as const;
-
-interface ButtonStatesEditorProps {
-  spec: HudButtonSpec;
-  onChange: (patch: Partial<HudButtonSpec>) => void;
-  glyphPacks: readonly GlyphPack[];
-}
+import { STATES, VERBS } from './ButtonStatesEditor.constants';
+import type { HudButtonBind, HudButtonVerb } from '@shared/types/hud';
+import type { ButtonStatesEditorProps } from './ButtonStatesEditor.type';
 
 const ButtonStatesEditor = (props: ButtonStatesEditorProps) => {
   const { spec, onChange, glyphPacks } = props;
@@ -77,4 +58,4 @@ const ButtonStatesEditor = (props: ButtonStatesEditorProps) => {
 };
 
 export { ButtonStatesEditor };
-export type { ButtonStatesEditorProps };
+export type { ButtonStatesEditorProps } from './ButtonStatesEditor.type';
