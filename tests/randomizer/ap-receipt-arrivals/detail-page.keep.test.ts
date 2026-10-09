@@ -1,15 +1,6 @@
 /* @layer tests @kind test */
-/**
- * A received item's receipt line. The line takes a slot of a fixed ring of 32 at the front of
- * the session dialogue when its delivery reaches the front of the queue, and hands it back when
- * the delivery completes (a burst of any size: ap-receipt-burst.keep.test.ts),
- * so a long session never grows the pool and no refresh of the planned lines, of any length,
- * can move an arrival a queued delivery still holds. Runs the real composer against the
- * recording core (ap-fake-module.ts), which adopts each composed blob and answers with its
- * line count, as the core does; the server delivery runs against a recording queue.
- */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { packPackedBytes, unpackPackedBytes } from '@shared/asset-extraction/packed-bytes';
+import { packPackedBytes } from '@shared/asset-extraction/packed-bytes';
 import { RANDOMIZER_MSG_BASE } from '@shared/asset-extraction/text/data/randomizer-templates';
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
 import { dialogueCharsetOf } from '@shared/game/dialog/dialogue-charset';
@@ -19,13 +10,14 @@ import { stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup
 import { renderFromServer, renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
 import { renderReceiptMessage } from '@shared/randomizer/receipt-text/render-receipt-message';
 import {
-  appendSessionReceiptMessage, clearSessionDialogue, prepareLine, releaseSessionReceiptMessage, setSessionReceiptMessages,
+  clearSessionDialogue, prepareLine, setSessionReceiptMessages,
 } from '@app/lib/game/session-dialogue/session-dialogue';
-import { ARRIVAL_SLOTS } from '@app/lib/game/session-dialogue/arrival-ring';
-import { cancelServerDeliveries, deliverServerItem } from '@app/lib/game/randomizer-client/server-delivery';
-import { installFakeModule } from './ap-fake-module';
-import type { FakeModule } from './ap-fake-module';
+import { cancelServerDeliveries } from '@app/lib/game/randomizer-client/server-delivery';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { installFakeModule } from '../ap-fake-module';
+import type { FakeModule } from '../ap-fake-module';
+import { plannedLines as planned } from './planned-lines';
+import { sessionChunks } from './session-chunks';
 
 const bridge = vi.hoisted(() => ({ mod: null as unknown }));
 const queue = vi.hoisted(() => ({
@@ -47,7 +39,6 @@ vi.mock('@app/lib/game/delivery-api', () => ({
   ) => {
     if (!queue.ready) return null;
     const id = `dlv_${queue.entries.length}`;
-    // The queue asks a function for its id when the entry reaches the front (delivery-execute.ts).
     const messageOf = typeof messageId === 'function' ? messageId : () => messageId;
     queue.entries.push({ id, messageOf, onComplete, onGranted });
     return id;
@@ -59,8 +50,6 @@ vi.mock('@app/lib/game/delivery-queue', () => ({
     return true;
   },
 }));
-// The baked dialogue needs a real asset blob; a stand-in with every baked line present is
-// what the composer builds on, and the session lines are encoded for real.
 vi.mock('@app/lib/game/session-dialogue/active-dialogue', () => ({
   readActiveDialogue: () => ({
     code: 'us',
@@ -70,22 +59,7 @@ vi.mock('@app/lib/game/session-dialogue/active-dialogue', () => ({
   }),
 }));
 
-const SESSION_FILE = '/session_dialogue.bin';
-
 let fake: FakeModule;
-
-/** Every line chunk of the last adopted blob. */
-const chunks = (): Uint8Array[] => {
-  const blob = fake.files.get(SESSION_FILE);
-  return blob === undefined ? [] : unpackPackedBytes(unpackPackedBytes(blob)[1]);
-};
-
-const chunkAt = (id: number): Uint8Array | undefined => chunks()[id];
-
-const planned = (found: number): string[] => [
-  `Bow at Link's House. ${found} of 2 found.`,
-  `Lamp at the Sanctuary. ${found} of 2 found.`,
-];
 
 beforeEach(() => {
   fake = installFakeModule((mod) => { bridge.mod = mod; });
@@ -100,58 +74,17 @@ afterEach(() => {
   fake.remove();
 });
 
-describe('a received item\'s receipt line', () => {
-  it('sits in the ring in front of the planned lines and survives a refresh of any length', () => {
-    const ids = setSessionReceiptMessages(planned(0)) as number[];
-    const arrival = appendSessionReceiptMessage('Zelda sent you the Hookshot.') as number;
-    expect(arrival).toBe(ids[0] - ARRIVAL_SLOTS);
-    const line = chunkAt(arrival);
-    expect(setSessionReceiptMessages(planned(1))).toEqual(ids);
-    expect(setSessionReceiptMessages(planned(1).slice(0, 1))).toEqual([ids[0]]);
-    const longer = setSessionReceiptMessages([...planned(2), 'One line more.']);
-    expect(longer).toEqual([...ids, ids[1] + 1]);
-    expect(chunkAt(arrival)).toEqual(line);
-  });
-
-  it('reuses an id once its delivery completed, and never grows the pool', () => {
-    setSessionReceiptMessages(planned(0));
-    const size = chunks().length;
-    const taken = Array.from({ length: ARRIVAL_SLOTS }, (_, i) => appendSessionReceiptMessage(`Item ${i}.`) as number);
-    expect(new Set(taken).size).toBe(ARRIVAL_SLOTS);
-    expect(appendSessionReceiptMessage('One too many.')).toBeNull();
-    releaseSessionReceiptMessage(taken[5]);
-    expect(appendSessionReceiptMessage('The next one.')).toBe(taken[5]);
-    for (let i = 0; i < 100; i += 1) {
-      const id = appendSessionReceiptMessage(`Round ${i}.`);
-      if (id === null) releaseSessionReceiptMessage(taken[i % ARRIVAL_SLOTS]);
-      else releaseSessionReceiptMessage(id);
-    }
-    expect(chunks().length).toBe(size);
-  });
-
-  it('a session stop drops the arrivals with the pool', () => {
-    setSessionReceiptMessages(planned(0));
-    const first = appendSessionReceiptMessage('Zelda sent you the Hookshot.');
-    clearSessionDialogue();
-    setSessionReceiptMessages(planned(0));
-    expect(appendSessionReceiptMessage('Zelda sent you the Lamp.')).toBe(first);
-  });
-});
-
 const US = kLanguages.us;
 const CHARSET = dialogueCharsetOf(US.alphabet, new Uint8Array(US.alphabet.length).fill(6), []);
 const WAITKEY = '[Waitkey]';
 const ROW_BREAK_RE = /\[(?:2|3|Scroll)\]/;
 
-/** The message as the core shows it: the receipt's own line, then the detail page joined behind it. */
 const joined = (first: ReceiptLine, detail?: ReceiptLine): string =>
   `${prepareLine(first, CHARSET)}${detail === undefined ? '' : prepareLine(detail, CHARSET)}`;
 
-/** Each page of a message, as its rows (a page opens on its first row break). */
 const pagesOf = (message: string): string[][] =>
   message.split(WAITKEY).map((page, index) => page.split(ROW_BREAK_RE).slice(index === 0 ? 0 : 1));
 
-/** A page read as one sentence, markup and padding rows dropped. */
 const readPage = (rows: readonly string[]): string => stripHighlight(rows.filter((row) => row !== '').join(' '));
 
 const WALLET = progressiveCapacityItemName('wallet');
@@ -210,42 +143,6 @@ describe('a receipt with a detail page', () => {
 
   it('composes a detail page into the pool like any other line', () => {
     const ids = setSessionReceiptMessages([...planned(0), WALLET_STEP]) as number[];
-    expect(chunkAt(ids[2])?.length).toBeGreaterThan(0);
-  });
-});
-
-describe('a server delivery', () => {
-  it('grants through onGranted only, frees its line on completion, and withdraws what still waits', () => {
-    setSessionReceiptMessages(planned(0));
-    const granted: string[] = [];
-    expect(deliverServerItem('Hookshot', 'Zelda', () => granted.push('Hookshot'))).toBe('delivered');
-    expect(deliverServerItem('Lamp', 'Zelda', () => granted.push('Lamp'))).toBe('delivered');
-    const [first, second] = queue.entries;
-    expect(granted).toEqual([]);
-    // The line is taken at the front of the queue, and a retry after a refusal keeps it.
-    const firstId = first.messageOf();
-    expect(first.messageOf()).toBe(firstId);
-    first.onGranted?.();
-    expect(granted).toEqual(['Hookshot']);
-    first.onComplete?.();
-    // The second delivery still waits and holds no slot: every other slot taken, the one the
-    // completed delivery held is the one left.
-    for (let i = 1; i < ARRIVAL_SLOTS; i += 1) appendSessionReceiptMessage(`Filler ${i}.`);
-    expect(appendSessionReceiptMessage('Reuses the first line.')).toBe(firstId);
-    cancelServerDeliveries();
-    expect(queue.removed).toEqual([second.id]);
-    queue.ready = false;
-    expect(deliverServerItem('Bow', 'Zelda', () => granted.push('Bow'))).toBe('not-ready');
-    expect(granted).toEqual(['Hookshot']);
-  });
-
-  it('gives an item the server itself sent the server line, not a player line', () => {
-    setSessionReceiptMessages(planned(0));
-    expect(deliverServerItem('Lamp', null, () => undefined)).toBe('delivered');
-    const sent = chunkAt(queue.entries[0].messageOf() as number);
-    const serverLine = chunkAt(appendSessionReceiptMessage(renderFromServer('Lamp')) as number);
-    const playerLine = chunkAt(appendSessionReceiptMessage(renderOnline('Server', 'Lamp')) as number);
-    expect(sent).toEqual(serverLine);
-    expect(sent).not.toEqual(playerLine);
+    expect(sessionChunks(fake)[ids[2]]?.length).toBeGreaterThan(0);
   });
 });
