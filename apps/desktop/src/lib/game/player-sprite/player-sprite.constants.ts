@@ -1,4 +1,4 @@
 /* @layer bridge-wasm @kind constants */
-const MEMFS_PATH = '/link_sprite.zspr';
+const PLAYER_SPRITE_MEMFS_PATH = '/link_sprite.zspr';
 
-export { MEMFS_PATH };
+export { PLAYER_SPRITE_MEMFS_PATH };

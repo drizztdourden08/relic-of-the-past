@@ -2,7 +2,7 @@
 import { log } from '../../log-bus';
 import { getModule } from '../wasm-bridge';
 import { isZspr } from '../zspr';
-import { MEMFS_PATH } from './player-sprite.constants';
+import { PLAYER_SPRITE_MEMFS_PATH } from './player-sprite.constants';
 
 const applyPlayerSprite = (bytes: Uint8Array): boolean => {
   const mod = getModule();
@@ -12,8 +12,8 @@ const applyPlayerSprite = (bytes: Uint8Array): boolean => {
     return false;
   }
   try {
-    mod.FS.writeFile(MEMFS_PATH, bytes);
-    const ok = mod.ccall('WasmApplyPlayerSpriteFile', 'number', ['string'], [MEMFS_PATH]);
+    mod.FS.writeFile(PLAYER_SPRITE_MEMFS_PATH, bytes);
+    const ok = mod.ccall('WasmApplyPlayerSpriteFile', 'number', ['string'], [PLAYER_SPRITE_MEMFS_PATH]);
     if (!ok) log.app('[PlayerSprite] Core rejected the sheet');
     return !!ok;
   } catch (err) {

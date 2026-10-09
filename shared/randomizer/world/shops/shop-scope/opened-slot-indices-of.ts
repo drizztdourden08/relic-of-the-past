@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { createRng } from '../../../rng';
-import { clampCount } from './clamp-count';
+import { clampSlotCount } from './clamp-count';
 import { normalizeEnabled } from './normalize-enabled';
 import type { ShopScope } from '../shop-scope.type';
 
@@ -9,7 +9,7 @@ const openedSlotIndicesOf = (scope: ShopScope): readonly number[] => {
   const enabled = normalizeEnabled(scope.enabled);
   if (mode === 'vanilla') return [];
   if (mode === 'custom') return enabled;
-  const wanted = clampCount(slotCount, enabled.length);
+  const wanted = clampSlotCount(slotCount, enabled.length);
   if (mode === 'sequential') return enabled.slice(0, wanted);
   return createRng(`${seed}:shop-slots`).shuffle(enabled).slice(0, wanted).sort((a, b) => a - b);
 };

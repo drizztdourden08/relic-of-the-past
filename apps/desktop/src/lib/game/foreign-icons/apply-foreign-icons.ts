@@ -4,7 +4,7 @@ import * as spritesStore from '../../storage/sprites-store';
 import { activeRomFile } from '../active-rom-file';
 import { getModule } from '../wasm-bridge';
 import { hasCoreExport } from '../has-core-export';
-import { MEMFS_PATH } from './foreign-icons.constants';
+import { FOREIGN_ICONS_MEMFS_PATH } from './foreign-icons.constants';
 
 const applyForeignIcons = async (tag: string): Promise<boolean> => {
   const mod = getModule();
@@ -16,8 +16,8 @@ const applyForeignIcons = async (tag: string): Promise<boolean> => {
     return false;
   }
   try {
-    mod.FS.writeFile(MEMFS_PATH, bytes);
-    const ok = mod.ccall('WasmApplyForeignIconsFile', 'number', ['string'], [MEMFS_PATH]) !== 0;
+    mod.FS.writeFile(FOREIGN_ICONS_MEMFS_PATH, bytes);
+    const ok = mod.ccall('WasmApplyForeignIconsFile', 'number', ['string'], [FOREIGN_ICONS_MEMFS_PATH]) !== 0;
     log.randomizer(`${tag} Foreign icons: ${ok ? 'applied' : 'refused by the core'} (${bytes.length} B from ${romFile})`,
       ok ? 'info' : 'warn');
     return ok;

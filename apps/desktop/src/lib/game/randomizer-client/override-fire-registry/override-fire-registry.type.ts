@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind types */
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 
-type ReportingSession = { reportCheck(location: LocationKey): void };
+type FireReportingSession = { reportCheck(location: LocationKey): void };
 type FiredLocationListener = (location: LocationKey) => void;
 
 interface FireRegistryState {
@@ -13,4 +13,4 @@ interface FireRegistryState {
   nextFireId: number;
 }
 
-export type { FiredLocationListener, FireRegistryState, ReportingSession };
+export type { FiredLocationListener, FireRegistryState, FireReportingSession };

@@ -1,4 +1,4 @@
 /* @layer bridge-wasm @kind constants */
-const UNREACHED = 0xffff;
+const SCREEN_EXIT_UNREACHED = 0xffff;
 
-export { UNREACHED };
+export { SCREEN_EXIT_UNREACHED };

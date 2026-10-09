@@ -1,4 +1,4 @@
 /* @layer bridge-wasm @kind constants */
-const MEMFS_PATH = '/currency-symbols.4bpp';
+const CURRENCY_SYMBOLS_MEMFS_PATH = '/currency-symbols.4bpp';
 
-export { MEMFS_PATH };
+export { CURRENCY_SYMBOLS_MEMFS_PATH };

@@ -11,7 +11,7 @@ import { stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, reachedG
 import { detectRoom } from './room-exits';
 import { dedupe } from './dedupe';
 import { locationForScreen } from './screen-location';
-import { UNREACHED } from './screen-exits.constants';
+import { SCREEN_EXIT_UNREACHED } from './screen-exits.constants';
 import type { DetectedScreen, OrderedExit, OverworldExitPass } from './screen-exits.type';
 
 const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
@@ -88,7 +88,7 @@ const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: Grid
     const ordered = overworldExitFor(crossing, pass);
     if (!ordered) continue;
     exits.push(ordered.exit);
-    const base = ordered.exit.fromTile ? distanceAt(dist, ordered.exit.fromTile) : UNREACHED;
+    const base = ordered.exit.fromTile ? distanceAt(dist, ordered.exit.fromTile) : SCREEN_EXIT_UNREACHED;
     scores.push(base + (inArea && ordered.leavesArea ? AREA_EXIT_BIAS : 0));
   }
   return { flood: summarizeRun(run, items), exits: dedupe(sortExitsByDistance(exits, scores)), reached: reachedGrid(run.result.reachable) };

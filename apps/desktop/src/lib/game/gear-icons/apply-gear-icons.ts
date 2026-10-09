@@ -5,7 +5,7 @@ import { activeRomFile } from '../active-rom-file';
 import { setGearArtActive } from '../live-settings-flags';
 import { reassertGateWord3 } from '../live-settings';
 import { getModule } from '../wasm-bridge';
-import { MEMFS_PATH } from './gear-icons.constants';
+import { GEAR_ICONS_MEMFS_PATH } from './gear-icons.constants';
 
 const applyGearIcons = async (tag: string): Promise<boolean> => {
   const mod = getModule();
@@ -17,8 +17,8 @@ const applyGearIcons = async (tag: string): Promise<boolean> => {
     return false;
   }
   try {
-    mod.FS.writeFile(MEMFS_PATH, bytes);
-    const ok = mod.ccall('WasmApplyGearIconsFile', 'number', ['string'], [MEMFS_PATH]) !== 0;
+    mod.FS.writeFile(GEAR_ICONS_MEMFS_PATH, bytes);
+    const ok = mod.ccall('WasmApplyGearIconsFile', 'number', ['string'], [GEAR_ICONS_MEMFS_PATH]) !== 0;
     if (ok) {
       setGearArtActive(true);
       reassertGateWord3();

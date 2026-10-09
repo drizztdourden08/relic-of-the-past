@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { armNpcOverrideGate } from './arm-npc-override-gate';
-import { CLASS_TEMPLATE_MESSAGE, NO_FIRE_ID } from './npc-grant-overrides.constants';
+import { CLASS_TEMPLATE_MESSAGE, NPC_NO_FIRE_ID } from './npc-grant-overrides.constants';
 import { refuseNpcOverride } from './refuse-npc-override';
 
 const setNpcGrantSpriteOverride = (
@@ -9,7 +9,7 @@ const setNpcGrantSpriteOverride = (
   vanillaItem: number,
   newItem: number,
   messageId = CLASS_TEMPLATE_MESSAGE,
-  fireId = NO_FIRE_ID,
+  fireId = NPC_NO_FIRE_ID,
 ): void => {
   if (refuseNpcOverride(vanillaItem, newItem, `sprite 0x${spriteType.toString(16)}`)) return;
   const mod = armNpcOverrideGate();

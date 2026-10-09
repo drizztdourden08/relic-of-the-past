@@ -3,7 +3,7 @@ import { log } from '../../log-bus';
 import * as spritesStore from '../../storage/sprites-store';
 import { activeRomFile } from '../active-rom-file';
 import { getModule } from '../wasm-bridge';
-import { MEMFS_PATH } from './quiver-icon.constants';
+import { QUIVER_ICON_MEMFS_PATH } from './quiver-icon.constants';
 
 const applyQuiverIcon = async (tag: string): Promise<boolean> => {
   const mod = getModule();
@@ -15,8 +15,8 @@ const applyQuiverIcon = async (tag: string): Promise<boolean> => {
     return false;
   }
   try {
-    mod.FS.writeFile(MEMFS_PATH, bytes);
-    const ok = mod.ccall('WasmApplyQuiverIconFile', 'number', ['string'], [MEMFS_PATH]) !== 0;
+    mod.FS.writeFile(QUIVER_ICON_MEMFS_PATH, bytes);
+    const ok = mod.ccall('WasmApplyQuiverIconFile', 'number', ['string'], [QUIVER_ICON_MEMFS_PATH]) !== 0;
     log.randomizer(`${tag} Quiver art: ${ok ? 'applied' : 'refused by the core'} (${bytes.length} B from ${romFile})`,
       ok ? 'info' : 'warn');
     return ok;

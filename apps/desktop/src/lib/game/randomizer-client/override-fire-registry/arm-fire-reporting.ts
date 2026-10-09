@@ -2,9 +2,9 @@
 import { log } from '../../../log-bus';
 import { armOverrideFiredEvents } from '../../override-fired';
 import { fireRegistryState } from './fire-registry-state';
-import type { ReportingSession } from './override-fire-registry.type';
+import type { FireReportingSession } from './override-fire-registry.type';
 
-const armFireReporting = (session: ReportingSession): void => {
+const armFireReporting = (session: FireReportingSession): void => {
   const { locationByFireId, fired, firedLocationKeys, firedListeners } = fireRegistryState;
   armOverrideFiredEvents((fireId) => {
     const location = locationByFireId.get(fireId);

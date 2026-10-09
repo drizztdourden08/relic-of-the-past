@@ -4,10 +4,10 @@ import { isArmableOverrideId } from '../foreign-item-id';
 import { getModule } from '../wasm-bridge';
 import { setDropOverridesActive } from '../live-settings-flags';
 import { reassertGateWord3 } from '../live-settings';
-import { NO_FIRE_ID, TEMPLATE_MESSAGE } from './drop-overrides.constants';
+import { DROP_NO_FIRE_ID, TEMPLATE_MESSAGE } from './drop-overrides.constants';
 
 const setDropOverride = (
-  roomId: number, big: boolean, newItem: number, messageId = TEMPLATE_MESSAGE, fireId = NO_FIRE_ID,
+  roomId: number, big: boolean, newItem: number, messageId = TEMPLATE_MESSAGE, fireId = DROP_NO_FIRE_ID,
 ): void => {
   if (!isArmableOverrideId(newItem)) {
     log.error(`[Randomizer] Drop override refused: item 0x${newItem.toString(16)} `

@@ -2,7 +2,7 @@
 export {
   fileTypeSchema,
   createFileSchema,
-  signPartsSchema,
+  fileSignPartsSchema,
   completeFileSchema,
   patchFileSchema,
   beginVersionSchema,

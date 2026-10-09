@@ -1,5 +1,6 @@
 packages:
   - 'apps/desktop'
+  - 'packages/*'
   - 'cloud-functions/*'
 
 catalog:

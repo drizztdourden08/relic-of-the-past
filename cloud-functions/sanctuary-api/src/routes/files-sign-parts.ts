@@ -1,5 +1,5 @@
 /* @layer root-config @kind logic */
-import { SANCTUARY_ROUTES, signPartsSchema } from '../../../../shared/sanctuary';
+import { SANCTUARY_ROUTES, fileSignPartsSchema } from '../../../../shared/sanctuary';
 import { badRequest, conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { requireMember } from '../../../hub-core/auth/require-member';
@@ -17,7 +17,7 @@ const filesSignParts: Route = {
     const file = await loadVisibleFile(params.id, member);
     assertOwner(file, member);
     if (file.status !== 'uploading' || !file.upload) throw conflict('This file is not being uploaded.');
-    const { parts, partsDone } = parseBody(signPartsSchema, req.body);
+    const { parts, partsDone } = parseBody(fileSignPartsSchema, req.body);
     const total = file.upload.parts;
     if (parts.some((part) => part > total)) throw badRequest(`This upload has ${total} parts.`);
     if (partsDone !== undefined) await recordFilePartsDone(file.id, partsDone);

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-const UNREACHED = 0xffff;
+const ROOM_EXIT_UNREACHED = 0xffff;
 const OUTSIDE_ORIGINS: ReadonlySet<string> = new Set(['room-door', 'exit-table']);
 
-export { UNREACHED, OUTSIDE_ORIGINS };
+export { ROOM_EXIT_UNREACHED, OUTSIDE_ORIGINS };

@@ -125,6 +125,7 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "catalog:",
     "@drizztdourden08/brock-build": "catalog:",
+    "@drizztdourden08/brock-core": "^0.36.0",
     "@drizztdourden08/brock-lint-config": "catalog:",
     "@drizztdourden08/brock-plugin-snes": "catalog:",
     "@drizztdourden08/brock-thread": "catalog:",
