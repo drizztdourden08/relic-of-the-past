@@ -1,7 +1,7 @@
 /* @layer renderer-other @kind hook */
 import { useLayoutEffect, useState } from 'react';
 import type { RefObject } from 'react';
-import { DEFAULT_REM_PX } from './useIsNarrow.constants';
+import { DEFAULT_REM_PX } from './use-is-narrow.constants';
 
 const remPx = (): number => {
   if (typeof document === 'undefined') return DEFAULT_REM_PX;

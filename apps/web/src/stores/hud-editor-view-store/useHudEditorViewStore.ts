@@ -2,8 +2,8 @@
 import { create } from 'zustand';
 import type { HudEditorViewStore } from './hud-editor-view-store.type';
 import { EDITOR_STEPS, PANEL_DEFAULT_WIDTH } from './hud-editor-view-store.constants';
-import { clampPanelWidth } from './clampPanelWidth';
-import { sameEcho } from './sameEcho';
+import { clampPanelWidth } from './clamp-panel-width';
+import { sameEcho } from './same-echo';
 
 const useHudEditorViewStore = create<HudEditorViewStore>()((set) => ({
   gridOverlayEnabled: false,

@@ -10,7 +10,7 @@ import { poolListingGroupsOf } from './pool-listing-model';
 import { startingWeaponGroupOf, withStartingWeaponGroup } from './starting-weapon-group';
 import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
 import type { PoolListingGroup } from '@domains/app/compounds/PoolListing';
-import { NO_GROUPS } from './usePoolListing.constants';
+import { NO_GROUPS } from './use-pool-listing.constants';
 
 const usePoolListing = (
   snapshot: RandomizerOptionsSnapshot, romFile: string | null, seed = '',

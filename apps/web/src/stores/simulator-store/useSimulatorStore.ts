@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
 import type { SimulatorStore, TrailStop } from './simulator-store.type';
-import { emptyProgress } from './emptyProgress';
+import { emptyProgress } from './empty-progress';
 
 const useSimulatorStore = create<SimulatorStore>()((set) => ({
   status: 'idle',

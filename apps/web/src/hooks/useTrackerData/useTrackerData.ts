@@ -17,11 +17,11 @@ import type { ViewMode } from '../../ui/domains/app/compounds/ChecksTracker';
 import { CLOSED_PANELS } from '../../ui/domains/app/compounds/ChecksTracker';
 import type { TrackerPanels } from '../../ui/domains/app/compounds/ChecksTracker';
 import { useWidgetPref } from '../useWidgetPref';
-import type { TrackerDataOptions } from './useTrackerData.type';
-import { DEFAULT_GROUPING, EMPTY_FILTER, NO_GROUPS } from './useTrackerData.constants';
+import type { TrackerDataOptions } from './use-tracker-data.type';
+import { DEFAULT_GROUPING, EMPTY_FILTER, NO_GROUPS } from './use-tracker-data.constants';
 import { useLiveTrackerInputs } from './useLiveTrackerInputs';
-import { mergeStatusOnlyChecks } from './mergeStatusOnlyChecks';
-import { countTrackerStats } from './countTrackerStats';
+import { mergeStatusOnlyChecks } from './merge-status-only-checks';
+import { countTrackerStats } from './count-tracker-stats';
 
 const useTrackerData = (options: TrackerDataOptions = {}) => {
   const { initialGrouping = DEFAULT_GROUPING, initialViewMode = 'visual', prefKey = null } = options;

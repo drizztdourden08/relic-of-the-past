@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { getPlatform } from '../get-platform';
-import { PlatformContext } from '../PlatformContext';
+import { PlatformContext } from '../platform-context';
 import { usePlatformRootClass } from './behavior/usePlatformRootClass';
 
 const PlatformProvider = ({ children }: { children: ReactNode }) => {

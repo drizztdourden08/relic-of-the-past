@@ -2,9 +2,9 @@
 import { create } from 'zustand';
 import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
 import type { ShadowEditorStore } from './shadow-editor-store.type';
-import { ensureScreenData } from './ensureScreenData';
-import { screenEditActions } from './screenEditActions';
-import { historyActions } from './historyActions';
+import { ensureScreenData } from './ensure-screen-data';
+import { screenEditActions } from './screen-edit-actions';
+import { historyActions } from './history-actions';
 
 const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   open: false,

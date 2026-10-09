@@ -1,6 +1,6 @@
 /* @layer renderer-other @kind logic */
-import type { DatePreset } from './formatDate.type';
-import { PRESET_OPTS } from './formatDate.constants';
+import type { DatePreset } from './format-date.type';
+import { PRESET_OPTS } from './format-date.constants';
 
 const formatDate = (ts: number, preset: DatePreset = 'short'): string => {
   if (!ts) return 'Never';

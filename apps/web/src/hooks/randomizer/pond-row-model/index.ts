@@ -1,4 +1,4 @@
 /* @layer renderer-hooks @kind barrel */
-export { pondRowModelOf } from './pondRowModelOf';
-export { settingOfState } from './settingOfState';
-export { stateOfSetting } from './stateOfSetting';
+export { pondRowModelOf } from './pond-row-model-of';
+export { settingOfState } from './setting-of-state';
+export { stateOfSetting } from './state-of-setting';

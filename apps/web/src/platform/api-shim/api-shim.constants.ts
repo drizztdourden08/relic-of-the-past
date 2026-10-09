@@ -1,6 +1,6 @@
 /* @layer renderer-other @kind constants */
 import type { ScreenEditorApi } from '@shared/ipc';
-import { refuseEdit } from './refuseEdit';
+import { refuseEdit } from './refuse-edit';
 
 const EMPTY_ARRAY_METHODS = new Set<string>([
   'listProfiles', 'listRoms', 'listRomsWithStatus', 'listStates', 'listSessions',

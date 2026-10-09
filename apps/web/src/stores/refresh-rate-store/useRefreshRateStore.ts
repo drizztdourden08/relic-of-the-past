@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { measureRefreshRate } from '../../hooks/measure-refresh-rate';
 import type { RefreshRateState } from './refresh-rate-store.type';
 import { EMPTY_REFRESH_RATE } from './refresh-rate-store.constants';
-import { readHostRefreshRate } from './readHostRefreshRate';
+import { readHostRefreshRate } from './read-host-refresh-rate';
 
 const useRefreshRateStore = create<RefreshRateState>((set, get) => ({
   info: EMPTY_REFRESH_RATE,

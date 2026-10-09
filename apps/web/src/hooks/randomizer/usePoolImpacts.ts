@@ -7,8 +7,8 @@ import { poolImpactCell } from './impact-cell';
 import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
 import type { PoolImpact } from '@shared/randomizer/world/pool/pool-impact';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { PoolImpacts } from './usePoolImpacts.type';
-import { UNAVAILABLE } from './usePoolImpacts.constants';
+import type { PoolImpacts } from './use-pool-impacts.type';
+import { UNAVAILABLE } from './use-pool-impacts.constants';
 
 const messageOf = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 

@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { DEFAULT_LAYOUT } from '@shared/hud/layouts';
 import type { HudLayoutStore } from './hud-layout-store.type';
-import { resolveLayout } from './resolveLayout';
+import { resolveLayout } from './resolve-layout';
 
 const useHudLayoutStore = create<HudLayoutStore>()((set) => ({
   layout: DEFAULT_LAYOUT,

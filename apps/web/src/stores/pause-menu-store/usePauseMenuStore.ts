@@ -3,11 +3,11 @@ import { create } from 'zustand';
 import { reducePause } from '@shared/game/logic/pause';
 import type { PauseMenuStore } from './pause-menu-store.type';
 import { CLOSED, NO_ACTIONS } from './pause-menu-store.constants';
-import { pauseContext } from './pauseContext';
-import { cursorActionsAt } from './cursorActionsAt';
-import { assignFromCursor } from './assignFromCursor';
-import { performConfirm } from './performConfirm';
-import { performExit } from './performExit';
+import { pauseContext } from './pause-context';
+import { cursorActionsAt } from './cursor-actions-at';
+import { assignFromCursor } from './assign-from-cursor';
+import { performConfirm } from './perform-confirm';
+import { performExit } from './perform-exit';
 
 const usePauseMenuStore = create<PauseMenuStore>()((set, get) => ({
   state: CLOSED,

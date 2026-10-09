@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import type { ImportProgress } from '@shared/ipc';
 import { formatBytes } from '@app/utils/formatBytes';
 import { subscribeImportProgress } from '@app/lib/storage/import-progress-bus';
-import type { ImportKind, ImportProgressState } from './useImportProgress.type';
-import { IDLE, PHASE_VERB } from './useImportProgress.constants';
+import type { ImportKind, ImportProgressState } from './use-import-progress.type';
+import { IDLE, PHASE_VERB } from './use-import-progress.constants';
 
 const buildLabel = (progress: ImportProgress, percent: number | null): string => {
   const { phase, loaded, total, message } = progress;

@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import type { InstalledPack } from '@shared/store/installed-types';
 import { useInstalledStore } from '@app/stores/installed-store';
-import type { InstalledActions } from './useInstalledActions.type';
+import type { InstalledActions } from './use-installed-actions.type';
 
 const useInstalledActions = () => {
   const reload = useInstalledStore((state) => state.reload);

@@ -4,7 +4,7 @@ import { updateProfile } from '@app/lib/storage/profile-store';
 import { reconnectProfileSession } from '@app/lib/game/randomizer-client';
 import { useProfileConnectionStore } from '@app/stores/profile-connection-store';
 import type { RandomizerConnectionPatch } from '@shared/types/profile';
-import type { ProfileConnection } from './useProfileConnection.type';
+import type { ProfileConnection } from './use-profile-connection.type';
 
 const useProfileConnection = (profile: Profile | null): ProfileConnection => {
   const profileId = profile?.id ?? null;

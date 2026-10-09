@@ -1,8 +1,8 @@
 /* @layer renderer-other @kind hook */
 import { useState, useEffect, useCallback } from 'react';
 import type { UpdaterCapabilities, UpdaterPrefs } from '@shared/ipc/updater-contract';
-import type { UpdateState } from './useAutoUpdate.type';
-import { INITIAL } from './useAutoUpdate.constants';
+import type { UpdateState } from './use-auto-update.type';
+import { INITIAL } from './use-auto-update.constants';
 
 const useAutoUpdate = () => {
   const [state, setState] = useState<UpdateState>(INITIAL);

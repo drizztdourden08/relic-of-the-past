@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { captureGameFrameBlob } from '@app/lib/game/capture-frame';
 import type { DebugCaptureStore } from './debug-capture-store.type';
 import { MAX_RECORDING_MS, MAX_SNAPSHOTS, SAMPLE_INTERVAL_MS } from './debug-capture-store.constants';
-import { takeSnapshot } from './takeSnapshot';
+import { takeSnapshot } from './take-snapshot';
 
 let timer: ReturnType<typeof setTimeout> | null = null;
 let generation = 0;

@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { SyncedRateStatus } from '@shared/types/display';
 import { UNSUPPORTED_SYNCED_RATE } from '@shared/platform';
 import { getPlatform } from '../platform/get-platform';
-import type { SyncedRateControl } from './useSyncedRate.type';
+import type { SyncedRateControl } from './use-synced-rate.type';
 
 const useSyncedRate = (enabled: boolean, targetHz: number): SyncedRateControl => {
   const [status, setStatus] = useState<SyncedRateStatus>(UNSUPPORTED_SYNCED_RATE);

@@ -3,8 +3,8 @@ import { useMemo } from 'react';
 import { FAMILIES, NO_WALLET_FLOOR } from '@shared/randomizer/world/capacity';
 import { capacityRowModelOf } from './capacity-row-model';
 import type { CapacityRowModel } from '@domains/app/compounds/CapacityFamilyRow';
-import type { CapacityRowsInput } from './useCapacityRows.type';
-import { NO_FORCED } from './useCapacityRows.constants';
+import type { CapacityRowsInput } from './use-capacity-rows.type';
+import { NO_FORCED } from './use-capacity-rows.constants';
 
 const useCapacityRows = (input: CapacityRowsInput): readonly CapacityRowModel[] => {
   const { profile, fillerHeadroom, progressive = false, forced = NO_FORCED, walletFloor = NO_WALLET_FLOOR, bonus } = input;

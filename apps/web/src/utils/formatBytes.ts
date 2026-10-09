@@ -1,5 +1,5 @@
 /* @layer renderer-other @kind logic */
-import type { FormatBytesOptions } from './formatBytes.type';
+import type { FormatBytesOptions } from './format-bytes.type';
 
 const formatBytes = (bytes: number | null | undefined, options: FormatBytesOptions = {}): string => {
   const { nullText = '0 B', kbDecimals = 1 } = options;

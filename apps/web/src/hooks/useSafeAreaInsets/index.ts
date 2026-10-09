@@ -1,4 +1,4 @@
 /* @layer renderer-other @kind barrel */
 export { useSafeAreaInsets } from './useSafeAreaInsets';
-export { applyNotchMode } from './applyNotchMode';
-export type { SafeAreaInsets } from './useSafeAreaInsets.type';
+export { applyNotchMode } from './apply-notch-mode';
+export type { SafeAreaInsets } from './use-safe-area-insets.type';

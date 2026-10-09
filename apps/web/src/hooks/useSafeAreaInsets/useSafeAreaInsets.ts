@@ -1,7 +1,7 @@
 /* @layer renderer-other @kind hook */
 import { useEffect, useState } from 'react';
-import type { SafeAreaInsets } from './useSafeAreaInsets.type';
-import { ZERO } from './useSafeAreaInsets.constants';
+import type { SafeAreaInsets } from './use-safe-area-insets.type';
+import { ZERO } from './use-safe-area-insets.constants';
 
 const readInsets = (): SafeAreaInsets => {
   const s = getComputedStyle(document.documentElement);

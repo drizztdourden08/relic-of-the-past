@@ -1,2 +1,2 @@
 /* @layer renderer-other @kind barrel */
-export { installApiShim } from './installApiShim';
+export { installApiShim } from './install-api-shim';

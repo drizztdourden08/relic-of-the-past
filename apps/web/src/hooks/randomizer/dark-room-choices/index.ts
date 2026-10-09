@@ -1,3 +1,3 @@
 /* @layer renderer-hooks @kind barrel */
-export { darkRoomSettingOfChoices } from './darkRoomSettingOfChoices';
-export { withDarkRoomSetting } from './withDarkRoomSetting';
+export { darkRoomSettingOfChoices } from './dark-room-setting-of-choices';
+export { withDarkRoomSetting } from './with-dark-room-setting';

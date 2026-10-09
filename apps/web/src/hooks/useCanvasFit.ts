@@ -1,7 +1,7 @@
 /* @layer renderer-other @kind hook */
 import { useState, useCallback, useEffect } from 'react';
-import type { CanvasFitParams, FitSize } from './useCanvasFit.type';
-import { BUFFER_OVERSAMPLE } from './useCanvasFit.constants';
+import type { CanvasFitParams, FitSize } from './use-canvas-fit.type';
+import { BUFFER_OVERSAMPLE } from './use-canvas-fit.constants';
 
 const getPixelRatio = (): number => {
   return window.devicePixelRatio || 1;

@@ -1,4 +1,4 @@
 /* @layer renderer-other @kind barrel */
-export { assignDeviceKey } from './assignDeviceKey';
-export { releaseDeviceKey } from './releaseDeviceKey';
-export { deviceKeyForId } from './deviceKeyForId';
+export { assignDeviceKey } from './assign-device-key';
+export { releaseDeviceKey } from './release-device-key';
+export { deviceKeyForId } from './device-key-for-id';

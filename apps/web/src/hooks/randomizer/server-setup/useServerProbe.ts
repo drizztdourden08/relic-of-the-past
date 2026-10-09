@@ -5,8 +5,8 @@ import { serverAddressError } from '@app/lib/game/randomizer-client/server-addre
 import { serverUrlOf } from './server-setup-draft';
 import type { ProbeResult } from '@app/lib/game/randomizer-client/online-probe';
 import type { ServerSetupDraft } from './server-setup-draft';
-import type { ServerProbe, ServerProbeState } from './useServerProbe.type';
-import { IDLE } from './useServerProbe.constants';
+import type { ServerProbe, ServerProbeState } from './use-server-probe.type';
+import { IDLE } from './use-server-probe.constants';
 
 const plainReason = (reason: string): string => {
   if (reason.startsWith('no room info within')) return `no answer within ${PROBE_TIMEOUT_MS / 1000} seconds`;

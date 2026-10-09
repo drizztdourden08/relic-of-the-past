@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { setSchemeAssignments } from '@app/lib/input/scheme-runtime';
 import type { Assignments, ControlSchemeStore } from './control-scheme-store.type';
-import { persistAssignments } from './persistAssignments';
+import { persistAssignments } from './persist-assignments';
 
 const commit = (set: (patch: Partial<ControlSchemeStore>) => void, assignments: Assignments): void => {
   set({ assignments });
