@@ -1,18 +1,7 @@
 /* @layer shared-game @kind logic */
-/**
- * An extra glyph's pixel rows (extra-glyphs.data.ts) as the font sheet stores a glyph: two 8x8
- * 2bpp tiles, the top 8 rows then the bottom 8. Each pixel row is two bytes, bit plane 0 then bit
- * plane 1, leftmost pixel in bit 7, the SNES layout the engine reads (messaging.c VWF_RenderSingle).
- */
-import type { ExtraGlyph } from './extra-glyphs.data';
+import type { ExtraGlyph } from './extra-glyph.type';
+import { COLUMNS, PALETTE_ENTRY_OF_PIXEL, ROWS, TILE_BYTES } from './extra-glyph-tiles.constants';
 
-const ROWS = 16;
-const COLUMNS = 8;
-const TILE_BYTES = 16;
-/** Pixel symbol to palette entry: ground, edge, body. */
-const ENTRY: Readonly<Record<string, number>> = { ' ': 0, '.': 1, '#': 2 };
-
-/** The glyph's 32 bytes, top tile then bottom tile. */
 const extraGlyphTiles = (glyph: ExtraGlyph): Uint8Array => {
   const { rows } = glyph;
   const bytes = new Uint8Array(TILE_BYTES * 2);
@@ -20,7 +9,7 @@ const extraGlyphTiles = (glyph: ExtraGlyph): Uint8Array => {
     let plane0 = 0;
     let plane1 = 0;
     for (let x = 0; x < COLUMNS; x++) {
-      const value = ENTRY[rows[y]?.[x] ?? ' '] ?? 0;
+      const value = PALETTE_ENTRY_OF_PIXEL[rows[y]?.[x] ?? ' '] ?? 0;
       plane0 |= (value & 1) << (7 - x);
       plane1 |= (value >> 1) << (7 - x);
     }
