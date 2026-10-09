@@ -1736,6 +1736,35 @@ engines. Both engines mount a manipulation component that asks the platform for 
 key's name, hence the platform stub. Behaviour is `hud-grid-settings`, geometry is
 `hud-grid-strip`, and the stage's reaction is the e2e layout options specs.
 
+### hud/hud-grid-editor
+
+§50's grid editor, driven.
+
+- A press on a cell writes nothing: a click, a modifier click, a Shift click and a drag all leave
+  the document byte identical (the selection changes, which is what a press is for). §48 armed a
+  placement on the selected child, so picking a cell to insert a column beside it moved the child.
+- There is no child in the table: no state offers place, move, span, clear span or self alignment,
+  and the component takes no prop that could write a child. This is structural, because a deleted
+  assertion cannot prove absence; the capability would return with a prop. Occupancy is still
+  drawn, so a track edit's blast radius shows, with `pointer-events: none` so the drawing is not a
+  target.
+- One table drives the toolbar and the legend (`gridActions`), so neither is compared against a
+  second copy of strings. Since §54 there is no persistent group (the properties are the settings
+  sections); with nothing selected only the pointer gestures appear. A cell range offers insertion
+  around it and nothing about its occupants (a range over one child's origin used to grow a span
+  row). A track offers reorder, insert and remove but not size (§55): the size lives on the track
+  header, where the extent is already printed, which lets the strip fit one row at 232px. The
+  first column's move earlier and the last's move later are disabled in place, not removed, so the
+  next button never slides under the cursor, and they carry no run or shortcut. The legend shows a
+  key cap per shortcut and a mouse glyph per gesture, with the platform's own modifier on the cap.
+- The keyboard looks each action up by the cap the legend prints (`grid-keys.ts`), so the real
+  presses are asserted: left arrow reorders, Delete removes. Delete on an occupied column works and
+  the children follow onto the track that took its index; §48's refusal is gone, checked end to end
+  through the validator and engine. The only refusal left is the structural floor of one column.
+  Shift extends from the anchor the modifier click left, giving one column of three cells.
+- Escape clears the selection and leaves the editor up, through a real `FullScreenLayer` (the
+  lattice sits on the dismiss stack at `popover`).
+
 ### hud/hud-grid-track-edits.keep.test.ts
 
 §50's document rule: a track edit just happens and the children follow. §48 refused to remove a
