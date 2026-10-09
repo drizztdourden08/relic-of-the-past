@@ -1,9 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The widget's "On this screen" list must show everything the overlay draws, so
- * these tests pin the place that could silently swallow an item, the grouping: an
- * unmapped kind must land in "Unmapped" and not vanish.
- */
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '../../shared/game/simulation';
 import { roomTagName } from '../../shared/game/simulation';

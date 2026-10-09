@@ -4,9 +4,6 @@ import type { ObservedCheck } from '../../shared/game/simulation/recording/recor
 import { createRecorder, recordCheck } from '../../shared/game/simulation/recording/recorder';
 import { buildDatasetSuggestions } from '../../shared/game/simulation/recording/dataset-updates';
 
-// recordCheck: dedup key includes location. Unidentified observations carry a
-// null checkId, so an identity-only key would collapse them to the first seen.
-
 const unidentifiedAt = (screenId: string, roomId: number, row: number, col: number): ObservedCheck => ({
   checkId: null,
   screenId,

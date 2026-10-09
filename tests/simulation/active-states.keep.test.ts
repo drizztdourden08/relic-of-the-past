@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The widget's "States" row. Several states hold at once, so the registry
- * returns a LIST (the original answered one boolean, "is the princess
- * following"). Names come from the decompilation routine that sets each
- * tagalong id; an id with no confirmed source is reported by number.
- */
 import { describe, it, expect } from 'vitest';
 import { activeStates, SLOT } from '../../apps/web/src/lib/game/active-states';
 import type { StateSnapshot } from '../../apps/web/src/lib/game/active-states';
@@ -41,8 +35,6 @@ describe('active game states', () => {
   });
 
   it('holds several states at once, which is the whole point of a list', () => {
-    // Progress BITS come from the live player-state bytes, not this buffer, so
-    // they are asserted in player-state-rules.test.ts instead.
     const s = snap({ [SLOT.progressIndicator]: 2, [SLOT.bigKey]: 1, [SLOT.smallKeys]: 3 }, 1);
     expect(ids(s)).toEqual(['follower', 'progress-2', 'big-key', 'small-keys']);
   });
@@ -61,11 +53,9 @@ describe('active game states', () => {
   it('names the story beats the progress indicator counts off', () => {
     expect(labels(snap({ [SLOT.progressIndicator]: 1 }))).toContain('Sword received');
     expect(labels(snap({ [SLOT.progressIndicator]: 2 }))).toContain('Princess delivered');
-    // An unmapped tier must not invent a beat.
     expect(ids(snap({ [SLOT.progressIndicator]: 9 }))).toEqual([]);
   });
 
-  // link_num_keys is 0xFF outside a dungeon, which once rendered as "255 small keys".
   it('treats the 0xFF key sentinel as "no count", not 255 keys', () => {
     expect(ids(snap({ [SLOT.smallKeys]: 0xff }))).toEqual([]);
   });

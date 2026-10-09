@@ -1,0 +1,9 @@
+/* @layer tests @kind constants */
+const CHEST_ROOM = 0x104;
+const HOUSE_ROOM = 0x104;
+const PASSAGE_ROOM = 0x55;
+const SCREENS_PER_ROW = 8;
+const HEAD_SCREEN = 24;
+const SOUTH_SCREEN = HEAD_SCREEN + SCREENS_PER_ROW;
+
+export { CHEST_ROOM, HEAD_SCREEN, HOUSE_ROOM, PASSAGE_ROOM, SOUTH_SCREEN };

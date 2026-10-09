@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/**
- * The live-player-state chips. These assert STRINGS, not bytes. The sleep case
- * bit us: `player_sleep_in_bed_state` is a step counter INSIDE the sleeping
- * handler and reads 0 while asleep, so an earlier version reported "Asleep in
- * bed" in every save. Asleep comes from the handler state now.
- */
 import { describe, it, expect } from 'vitest';
 import { playerStates, PlayerState } from '../../apps/web/src/lib/game/player-state-rules';
 import type { PlayerStateInfo } from '../../apps/web/src/lib/game/bridge/player-state';
@@ -39,7 +33,6 @@ describe('player activity states', () => {
   });
 
   it('does NOT claim asleep just because the step counter is set', () => {
-    // The counter is stale garbage outside the sleeping handler.
     expect(labels(info({ handlerState: PlayerState.ground, sleepStep: 5 }))).toEqual([]);
   });
 
@@ -81,7 +74,6 @@ describe('progress flag bits', () => {
     const states = playerStates(info({ progressFlags: 0x01 }));
     expect(states[0].label).toBe('Uncle gave the sword');
     expect(states[0].hint).toBe('sram_progress_flags 0x01');
-    // Provenance stays out of the visible chip.
     expect(states[0].detail).toBeUndefined();
   });
 

@@ -1,25 +1,4 @@
 /* @layer tests @kind test */
-/**
- * PERMANENT (`.keep.spec.ts`). Do not delete with the scratch specs.
- *
- * Ledges are easy to break without noticing: a wrong one still produces a
- * plausible number. Four states pin every kind:
- *
- *   test-cliffs-uncle-west       straight north and south, plus all four diagonals
- *   test-cliffs-uncle-east       the same, and the widest ledge count on one screen
- *   test-cliffs-haunted-terrace  diagonals used to read as north-to-south, which
- *                                let the run take `Cave 45` via a mirror-only ledge
- *   test-castle-bridge           the ONLY dual-layer (indoor) case: the void gap
- *                                either side of the bridge deck reads as bare 0x00
- *                                on both layers but is not a surface. Treating it
- *                                as floor drew a column of phantom jump arrows.
- *
- * Counts are asserted by DIRECTION, not total, because these bugs move a jump
- * between directions: south-west produced nothing for a long time, north-east
- * landings pointed south-west, and the bridge's phantom column was "e"/"w" hops.
- *
- * Requires the private vault; without it each case skips.
- */
 import { test, expect } from '@playwright/test';
 import { _electron as electron } from 'playwright';
 import { join } from 'path';
@@ -32,13 +11,13 @@ const DUMP_PATH = join(PROJECT_ROOT, 'debug-output', 'dump-nav.json');
 
 interface Expected {
   state: string;
-  /** Which dump field identifies the location, either overworld screen or indoor room. */
   location: { field: 'overworldScreenIndexHex'; hex: string } | { field: 'roomIndexHex'; hex: string };
   reachable: number;
   ledges: number;
-  /** Ledge count per travel direction, derived from start → end. */
   byDir: Record<string, number>;
 }
+
+const ignoreAlreadyExited = (): void => undefined;
 
 const CASES: Expected[] = [
   {
@@ -71,7 +50,6 @@ const CASES: Expected[] = [
   },
 ];
 
-/** Travel direction of a ledge, from its start and landing tiles. */
 const directionOf = (l: { startRow: number; startCol: number; endRow: number; endCol: number }): string => {
   const dr = Math.sign(l.endRow - l.startRow);
   const dc = Math.sign(l.endCol - l.startCol);
@@ -90,7 +68,7 @@ const dumpFor = async (state: string): Promise<Record<string, unknown>> => {
     if (!existsSync(DUMP_PATH)) throw new Error(`--dump-nav=${state} wrote no dump`);
     return JSON.parse(readFileSync(DUMP_PATH, 'utf8'));
   } finally {
-    await app.close().catch(() => { /* already exited itself */ });
+    await app.close().catch(ignoreAlreadyExited);
   }
 };
 
@@ -119,10 +97,6 @@ for (const expected of CASES) {
     }
     expect(byDir).toEqual(expected.byDir);
 
-    // A diagonal hop is NOT 45 degrees: LinkHop_FindLandingSpotDiagonallyDown
-    // (player.c:1115) steps x by 8 and y by 9, so the row delta can exceed the
-    // column delta by one. A hop spanning many columns means the landing came
-    // from running ALONG the face.
     for (const l of dump.floodFill.ledges) {
       const d = directionOf(l);
       if (d.length !== 2) continue;

@@ -1,16 +1,10 @@
 /* @layer tests @kind test */
-/**
- * The duplicate-item rule must give the SAME answer to the simulator's
- * delivery, the sim log and the overlay. It used to live inside the trigger,
- * so the overlay promised a Lamp where the run would hand over 5 Rupees.
- */
 import { describe, it, expect } from 'vitest';
 import { resolveDuplicate, isDuplicated, itemLabel } from '../../shared/game/logic/queries/item-duplicates';
 import type { ItemId } from '../../shared/game/data';
 import { describeDataset } from '../dataset-guard';
 
 const EMPTY = new Set<ItemId>();
-/** Owned sets are dataset ids: item-019 Lamp, item-013/item-043 the boomerangs. */
 const WITH_LAMP = new Set<ItemId>(['item-019']);
 
 describeDataset('duplicate item alternates', () => {

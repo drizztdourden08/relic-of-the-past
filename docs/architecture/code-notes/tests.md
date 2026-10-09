@@ -127,6 +127,116 @@ no single target kind and each id resolves by its own prefix.
 The `isTagKey` gate in `create-tag.ts` never runs on a direct edit, so `writeTag` checks that
 `name` reads `namespace:value` and refuses the save before the write channel.
 
+## e2e
+
+`tests/e2e/README.md` describes what each permanent spec guards. The notes below hold what
+the code itself used to say.
+
+Every automated launch here leaves the owner's session alone: its own `--instance`, its own
+copy of `.user-data` at a short path where one is used (a long path breaks `app-sprite://`),
+`--no-focus --muted`, and nothing saved. A widget button is pressed with
+`dispatchEvent('click')`, never `click()`: Playwright's click calls `Page.bringToFront()`,
+which raises the window on Windows and steals focus.
+
+### e2e/ensure-test-profile
+
+Every permanent spec launches into one automation profile, `e2e-tests`; no automated launch
+touches the profile that opens by default. `provisionProfile` (the same call `wt new` uses)
+is an idempotent create or repair seeded from the maintainer's named manual saves, so this
+also copies every checked in save state fixture into the profile's manual saves, skipping
+ids already there. The `.mjs` tooling is loaded with a dynamic `import()`, because Playwright
+compiles the file to CommonJS and a static import of an `.mjs` with `import.meta` breaks.
+
+### e2e/state-harness and e2e/state-readers
+
+`withState` boots the built app on a named manual save with the navigation widget open,
+waits 16 s for the core to report live memory, hands the body a reader and always closes. A
+missing build or fixture skips. The keyboard codes per SNES button follow
+`shared/input/keyboard-default.ts`. Input is gated on the active profile's device map, so
+`enableKeyboard` binds the default layout in the live input manager, in memory only. A press
+must outlast one input poll.
+
+The readers anchor on section title text ("States", "On this screen"), since the widget
+renders inline styled divs: a restyle cannot break them, only a rename. Every poll waits on a
+predicate. Order matters: groups, rows, tags and the check summary report nothing until the
+flood has run, and reading them first looks exactly like the regression the specs catch. A
+multi screen area sums its sub screens, so the flood total climbs for a moment before it
+settles.
+
+### e2e/flood-parity.keep.spec.ts
+
+The widget, the simulator's runner and the `--dump-nav` dumper must flood a location to the
+same number. They once disagreed (Jail Cell: dumper 590, widget 608) because the dumper used
+an empty inventory and a fixed interior tile context. `--dump-nav` writes the dump and exits
+by itself, so the spec polls for the file.
+
+### e2e/hud-layout-options
+
+The rig for pressing every option of the HUD Layout panel in the built app. `readShape`
+reads every control of one section as tags, names and rectangles, without each control's own
+lit or checked state, which is the one thing an option may change about itself.
+`readPlaced` reads every node's placed box off the stage. The page readers are self
+contained functions, because `page.evaluate` does not carry a closure. A tall viewport keeps
+a whole section in one capture; `element.screenshot` paints black past the viewport.
+
+The rule: press an option, and its section comes back with the same controls, rectangles and
+box (`stable`), while the option's own state did move (`flipped`), or the case is vacuous.
+`stageState` includes the overlay's cell boundaries: a grid whose outer tracks are `auto`
+around a `fill` track answers add, insert and gap by resizing the fill track, so no child
+rectangle moves while the cells do (they come from `stageCellRects`). A grid line paints its
+background and a flex slot its border, which is why the overlay colour reads one or the
+other. An inserted `auto` column is empty and solves to zero width, so a track edit is judged
+by the occupancy map it rewrites (children are renumbered). Pressing an alignment tile that
+is already lit writes the value it had, so nothing may move.
+
+The screen root is the subject because alignment, flow and distribution only show in a
+container with room to spare; the root is the full play field with three children and can
+take either engine. Each spec is one serial `describe` sharing one app, so the cases depend
+on order (the flex spec starts by flipping the engine). In the grid spec, the alignment case
+first sizes column 1 and row 1 to `fill`, because `auto` tracks hug their content and leave
+nothing to align. Sizing a column that was `auto` to `px` then `%` carries the number zero,
+so `%` moves no pixel and is exempt from the solve check. Wrap on a flex row whose children
+already fit moves nothing; what wrap does when it applies is pinned in
+`hud-layout-engine.keep.test.ts`. A flex overlay draws one slot per child and no lines. The
+gap field's formula promotion floats the control and must not reflow its row.
+
+### e2e/hud-style-drives-scheme.keep.spec.ts
+
+The hub's side navigation shows labels only while open, so a tab is picked by its accessible
+name. The slot list sits inside the column's own scroller, so the shot scrolls the last row
+into view and clips to the visible rows. The migrated profile is stored as
+`hudStyle: 'extended'` with `controlScheme: 'modern'` and four assignments keyed by the old
+`slot:kb:*` ids; the value rename, the style collapse and the slot renumbering must all land.
+Original is pressed first so a rerun never depends on how the last run ended, and every
+setting changed is changed back.
+
+### e2e/ledge-baseline.keep.spec.ts
+
+Four states pin every ledge kind (see the README). Counts are asserted per direction, because
+these bugs move a jump between directions while the total holds. A diagonal hop is not 45
+degrees: `LinkHop_FindLandingSpotDiagonallyDown` (player.c:1115) steps x by 8 and y by 9, so
+the row delta may exceed the column delta by one; a hop spanning many columns came from
+running along the face.
+
+### e2e/state specs
+
+- `state-big-screen`: the castle exterior is a four screen area (0x1B, 0x1C, 0x23, 0x24); one
+  screen is 64x64 = 4096 tiles, so the total must be 16384.
+- `state-intro-bed`: the sleep handler waits for a button, so beats need taps; A and B
+  alternate so a stuck auto repeat cannot stall. The tap budget is a ceiling, checked before
+  each tap. The first frame is the zero baseline for progress flags.
+- `state-jail-cell`: the flood now reaches past the cell, so the summary counts a third
+  check outside it, already done; the two behind the lock are what the state guards.
+- `state-links-house`: a follower in tow is what makes this the intro and not a later visit.
+- `state-sanctuary-grounds`: the single screen outdoor case, on purpose.
+- `state-secret-passage`: room 0x55 is claimed by two screen records (a dam room and a
+  castle passage). Neither carries an entrance id or variant, so resolution returns
+  `screen-170`, not `screen-171`; the spec asserts what the widget renders today.
+- `state-tag-room`: the flood derives the annotations, so it runs first; the tag must decode,
+  not show raw 0x08.
+- `state-throne-room`: the state is saved without a follower, so the push wall
+  (`nativeType 0x14`) must read shut.
+
 ## electron/recommendation-files.keep.test.ts
 
 Every recommendation operation reads, changes and writes a whole collection file. The per
@@ -720,6 +830,133 @@ The ui-views module keeps its cache and timer as private module state, so each t
 imports it fresh after `vi.resetModules()`. That also defers the log bus's
 `window.addEventListener` until `window` is stubbed. Loading another key rides the shared
 in-flight load, which flushes the pending cold start write before it resolves.
+
+## simulation
+
+### simulation/active-states.keep.test.ts
+
+The widget's States row returns a list, since several states hold at once. Names come from
+the decompilation routine that sets each tagalong id; an id with no confirmed source is
+reported by number. Progress bits come from the live player state bytes and are tested in
+`player-state-rules`. An unmapped progress tier invents no story beat. `link_num_keys` is
+0xFF outside a dungeon, which once rendered as "255 small keys".
+
+### simulation/annotation-coverage.keep.test.ts
+
+The annotation list is generated, so a new mechanic could produce a kind nothing draws.
+`EXPECTED_KINDS` mirrors the `AnnotationKind` union, because a type cannot be enumerated at
+runtime. `kill-trigger` describes the whole room and has no tile, so it is panel only.
+
+### simulation/annotation-reachability.keep.test.ts
+
+The Secret Passage case: the uncle blocks the corridor, so the chest behind him must not read
+as available. A feature's own tile is usually solid (a chest is a wall tile), so reachability
+is judged from the tiles around it.
+
+### simulation/cross-world-gating.keep.test.ts
+
+`screen-030` is `lw-10`, `screen-260` is `west-dark-world` and `screen-463` is
+`superbunny-cave-top`. The rain intro run with an empty inventory once warped from `lw-10`
+into the dark world. The light world must still be broadly reachable, or a zero dark result
+would mean nothing. The `screen-463` crossing carries no `ctx:cross-world` tag; only the
+world aware detection catches it.
+
+### simulation/discover
+
+A chest is a solid 2x2 block anchored at its top left tile; the game opens it only from the
+tile directly below the footprint, facing up. A reachable tile above or beside it does not
+count.
+
+A `CHECK_NPC_FLAGS` config that pins a `room` binds only there: sprite 0x73 matches in room
+0x55 (the check) and not in room 0x104 (the scripted opening). Room less configs match by
+type anywhere and still honour their presence condition: 0x52 is present only while the
+swimming item is unowned, 0x16 is the first sage, 0xEE is no check NPC. Sprites use coarse
+reachability there (`posKnown: false`) because matching is under test, not tiles.
+
+A 2x2 overworld area returns its whole sprite table for any of its screens, each spawn
+resolved to the screen it sits on; a target is judged against that screen's flood only.
+Traversal is virtual, so the observed screen comes from the run's own position.
+
+### simulation/dungeon-ledger
+
+The sewers (room 0x11, palace 0x00) are reachable only through the castle above (palace
+0x02), the one case the ledger groups. Traversal ids are the game's room numbers. Item
+`item-041`, the bomb pickup, grants the `bombs` token.
+
+### simulation/enemy-reach
+
+Inventories are dataset ids: `item-012` bow, `item-074` tier 1 sword, `item-004` tier 4
+sword, `item-013` blue boomerang, `item-008` fire rod. A tier 1 sword is damage class 1; the
+blue boomerang fires ancilla 0x05, damage class 0, which is a real class and not harmless.
+The fire rod is ancilla 0x02 and reaches without bound. The multi section case splits the
+room west and east with the player in the west section.
+
+### simulation/engine-loop
+
+A synthetic three screen world with chests wired to real rooms, so the matcher names them. A
+is the start; the chest in room 0x103 hands over the Hammer that unlocks the B to C door. C
+holds the chest in room 0x104, the goal. A one sided point resolves its partner through the
+global facade (`toScreenIdOf` calls `getConnection`), so the world's points are registered in
+the real session registry. The Hammer pickup bumps the epoch; reaching C proves the re-flood.
+
+### simulation/engine-review-fixes
+
+Each `describe` pins one finding of an engine review: visited and failed clear on an epoch
+reset; visited pass through screens are backtracked with one event and no new discovery; a
+blocked next hop aborts the route instead of teleporting; an unknown position chest is still
+discovered; a trigger with no flag change is recorded as failed and retried after a reset; a
+generic key is credited to the matched check's dungeon. 2x2 overworld areas pack the second
+screen's coordinates past the first, so a known tile can land outside the 64x64 flood grid.
+
+### simulation/exit-distance.keep.test.ts
+
+The ordering score packs real steps, an out of area bias (0x1000) and an unknown distance
+sentinel (999) into one number; `steps` must only hold a real distance, never "4096 steps".
+The walk BFS follows ledge hops. A ledge drop is one way, so its landing costs more than any
+walk on the current footing; otherwise the run drops off with work pending above and, the
+screen being marked visited, never comes back. A solid target tile measures from the nearest
+walkable tile within four.
+
+### simulation/flag-snapshot.keep.test.ts
+
+The chest open bit for slot 0 is 0x10, the same native fact the matcher uses. Room 0x104 chest
+0 is `check-026`; no check maps to room 0x02 chest 0. Overworld byte 0x81 bit 0x40 and
+progress byte 2 bit 0x02 are real flags (a ledge item and a merchant).
+
+### simulation/npc-check-naming.keep.test.ts
+
+An NPC marker carries the check id it is plus the name to draw. Sprite 0x73 spawns in the
+scripted opening room (no check) and in the passage where the sword is handed over (the
+check). Completion is asked by id because names are not unique. Configs with no `room` mean
+the sprite type is that check wherever it spawns, the same contract as the flag matcher.
+
+### simulation/overworld-sprite-trigger.keep.test.ts
+
+Outdoor discovery uses the same kind based dispatch as indoors: NPC sprites resolve their
+flag and item from the check records' `gameId` by sprite type; anything else maps to null and
+is skipped, with no invented overworld mask.
+
+### simulation/player-state-rules.keep.test.ts
+
+`player_sleep_in_bed_state` is a step counter inside the sleeping handler and reads 0 while
+asleep, so asleep comes from the handler state; the counter is stale outside it. The bit mask
+goes in the chip's hint, never its visible detail.
+
+### simulation/recorder.keep.test.ts
+
+The dedup key includes the location: unidentified observations carry a null `checkId`, so an
+identity only key would collapse them into the first one seen.
+
+### simulation/run-trail.keep.test.ts
+
+A stop stores the check tally on arrival, so its haul is the next stop's arrival minus its
+own; the last stop has no successor. `screenId` holds a traversal id (`ow:<n>` or
+`room:<n>`), which `haulAt` never inspects.
+
+### simulation/screen-panel.keep.test.ts
+
+The "On this screen" list must show everything the overlay draws; an unmapped kind lands in
+"Unmapped" and never vanishes.
 
 ## snapshot.spec.ts
 
