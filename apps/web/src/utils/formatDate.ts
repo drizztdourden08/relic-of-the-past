@@ -1,12 +1,6 @@
 /* @layer renderer-other @kind logic */
-/** Shared timestamp formatter. Presets replace the per-card duplicated Date logic. */
-type DatePreset = 'short' | 'long' | 'session';
-
-const PRESET_OPTS: Record<DatePreset, Intl.DateTimeFormatOptions> = {
-  short: { month: 'short', day: 'numeric', year: 'numeric' },
-  long: { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' },
-  session: { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' },
-};
+import type { DatePreset } from './formatDate.type';
+import { PRESET_OPTS } from './formatDate.constants';
 
 const formatDate = (ts: number, preset: DatePreset = 'short'): string => {
   if (!ts) return 'Never';

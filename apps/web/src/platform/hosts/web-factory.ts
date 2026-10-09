@@ -1,14 +1,10 @@
 /* @layer renderer-other @kind logic */
-/**
- * Plain-browser host adapter (renderer opened over http without Electron or
- * Capacitor). Also the resolve fallback. No window chrome, no persistent storage.
- */
 import { UNSUPPORTED_SYNCED_RATE } from '@shared/platform';
-import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, StorageSummary, FilePickerPort, ControllerHost, DevicePort, DisplayPort } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort, ControllerHost, DevicePort, DisplayPort } from '@shared/platform';
+import { EMPTY_SUMMARY } from './web-factory.constants';
 
 const noopUnsub = () => () => {};
 
-// Best-effort browser device hooks (wake lock / vibrate / visibility).
 const createDevice = (): DevicePort => {
   let wakeLock: { release: () => Promise<void> } | null = null;
   return {
@@ -17,7 +13,7 @@ const createDevice = (): DevicePort => {
       nav.wakeLock?.request('screen').then((l) => { wakeLock = l; }).catch(() => {});
     },
     allowSleep: () => { wakeLock?.release().catch(() => {}); wakeLock = null; },
-    vibrate: (durationMs) => { try { navigator.vibrate?.(Math.max(1, Math.round(durationMs))); } catch { /* ignore */ } },
+    vibrate: (durationMs) => { try { navigator.vibrate?.(Math.max(1, Math.round(durationMs))); } catch { return; } },
     onAppPause: (cb) => {
       const handler = () => { if (document.visibilityState === 'hidden') cb(); };
       document.addEventListener('visibilitychange', handler);
@@ -42,12 +38,6 @@ const createWindowControls = (): WindowControlsPort => ({
   onFullscreenChange: noopUnsub,
 });
 
-const EMPTY_SUMMARY: StorageSummary = {
-  location: { path: '(browser)', osLabel: 'Browser', canReveal: false },
-  domains: [],
-  totalBytes: 0,
-};
-
 const createStorage = (): StoragePort => ({
   getLocation: async () => EMPTY_SUMMARY.location,
   reveal: async () => {},
@@ -68,8 +58,6 @@ const createFileStore = (): FileStore => ({
   stat: async () => null,
 });
 
-// No OS-level source in a browser: there is no standard refresh-rate API, so the renderer's
-// frame-timing measurement is the only signal and this reports nothing instead of guessing.
 const createDisplay = (): DisplayPort => ({
   getRefreshRate: async () => ({ reportedHz: null, measuredHz: null, modes: [] }),
   getSyncedRateStatus: async () => UNSUPPORTED_SYNCED_RATE,
@@ -88,8 +76,6 @@ const createFilePicker = (): FilePickerPort => ({
     };
     input.click();
   }),
-  // A browser cannot tell whether the download completed, so a started download is
-  // reported as saved. There is no cancel signal to distinguish.
   saveFile: async ({ name, bytes }) => {
     const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'application/octet-stream' }));
     const link = document.createElement('a');

@@ -1,3 +1,5 @@
 /* @layer renderer-other @kind barrel */
-export { PlatformProvider, PlatformContext } from './PlatformProvider';
-export { usePlatform, useCapability } from './usePlatform';
+export { PlatformProvider } from './PlatformProvider';
+export { PlatformContext } from './PlatformContext';
+export { usePlatform } from './usePlatform';
+export { useCapability } from './useCapability';

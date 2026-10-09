@@ -1,24 +1,8 @@
 /* @layer renderer-other @kind logic */
-/**
- * Capacitor StoragePort, giving an app-private location and per-domain usage
- * via the Filesystem plugin. No "reveal" on mobile (revealDataFolder is false); the home
- * page shows the path read-only.
- */
-import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Filesystem } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
-import type { StoragePort, StorageSummary, DomainUsage, DataDomain, DataLocation } from '@shared/platform';
-
-const DIR = Directory.Data;
-
-const DOMAINS: { domain: DataDomain; label: string; dir: string }[] = [
-  { domain: 'profiles', label: 'Profiles', dir: 'profiles' },
-  { domain: 'roms', label: 'ROMs', dir: 'roms' },
-  { domain: 'sprites', label: 'Sprites', dir: 'sprites' },
-  { domain: 'linkSprites', label: 'Link Sprites', dir: 'link-sprites' },
-  { domain: 'languages', label: 'Language Studio', dir: 'languages' },
-  { domain: 'msu', label: 'MSU packs', dir: 'msu' },
-  { domain: 'assets', label: 'Assets', dir: 'assets' },
-];
+import type { StoragePort, StorageSummary, DomainUsage, DataLocation } from '@shared/platform';
+import { DIR, DOMAINS } from './capacitor.constants';
 
 const dirBytes = async (dir: string): Promise<number> => {
   let total = 0;
@@ -28,7 +12,9 @@ const dirBytes = async (dir: string): Promise<number> => {
       if (f.type === 'directory') total += await dirBytes(`${dir}/${f.name}`);
       else total += f.size ?? 0;
     }
-  } catch { /* missing dir → 0 */ }
+  } catch {
+    return total;
+  }
   return total;
 };
 
@@ -36,15 +22,15 @@ const immediateCount = async (dir: string): Promise<number> => {
   try { return (await Filesystem.readdir({ path: dir, directory: DIR })).files.length; } catch { return 0; }
 };
 
-const getLocation = async (): Promise<DataLocation> => {
-  let path = '';
-  try { path = (await Filesystem.getUri({ path: '', directory: DIR })).uri; } catch { /* ignore */ }
-  return {
-    path,
-    osLabel: Capacitor.getPlatform() === 'ios' ? 'iOS (app storage)' : 'Android (app storage)',
-    canReveal: false,
-  };
+const readDataUri = async (): Promise<string> => {
+  try { return (await Filesystem.getUri({ path: '', directory: DIR })).uri; } catch { return ''; }
 };
+
+const getLocation = async (): Promise<DataLocation> => ({
+  path: await readDataUri(),
+  osLabel: Capacitor.getPlatform() === 'ios' ? 'iOS (app storage)' : 'Android (app storage)',
+  canReveal: false,
+});
 
 const createCapacitorStorage = (): StoragePort => ({
   getLocation,
