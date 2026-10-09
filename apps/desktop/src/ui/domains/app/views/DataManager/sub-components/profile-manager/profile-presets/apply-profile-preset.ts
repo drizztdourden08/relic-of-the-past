@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { ENHANCED_CONFIG_OVERRIDES, VANILLA_CONFIG_OVERRIDES } from './profile-presets.data';
 import type { ProfilePresetId } from './profile-presets.type';
 

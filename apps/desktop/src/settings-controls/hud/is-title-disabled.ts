@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { TITLE_SETTING_KEYS } from './hud-controls.constants';
 
 const isTitleDisabled = (key: string, settings: GameSettings): boolean =>

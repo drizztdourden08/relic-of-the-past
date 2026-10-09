@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { GBA_DIFFERENCES } from '@shared/features/gba-differences.data';
-import type { GbaDifference } from '@shared/features/gba-difference.type';
+import { GBA_DIFFERENCES } from '@rotp/features';
+import type { GbaDifference } from '@rotp/features';
 import { GBA_GROUP_ORDER } from './gba-settings.constants';
 import type { EvidenceFilter, GbaGroupRows } from './gba-settings.type';
 

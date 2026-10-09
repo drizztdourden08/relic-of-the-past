@@ -1,5 +1,5 @@
 /* @layer shared-features @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '../settings';
 import { OPUS_SAMPLE_RATE, PCM_SAMPLE_RATE } from './msu-auto-config.constants';
 
 const requiredSampleRate = (mode: GameSettings['enableMSU']): number | null => {

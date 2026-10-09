@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind data */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 
 const VANILLA_CONFIG_OVERRIDES: Partial<GameSettings> = {
   aspectRatio: '4:3',

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import type { MsuPackManifest } from '@rotp/game-data';
 import { VANILLA_TRACK_COUNT } from '@rotp/hub-contracts';
 import { DELUXE_TRACKS } from '@rotp/game-data';
-import { detectMsuPackProfile } from '@shared/features/msu-auto-config';
+import { detectMsuPackProfile } from '@rotp/features';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { msuTrackName } from '@rotp/game-data';

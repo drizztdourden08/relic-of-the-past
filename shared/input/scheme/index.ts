@@ -33,4 +33,4 @@ export { remapForScheme } from './remap-for-scheme';
 export type { RemapRequest, RemapStrategy } from './remap-for-scheme.type';
 export { remapModern } from './remap-modern';
 export type { OwnsItem } from './remap-modern.type';
-export type { ControlSchemeId, RemapResult } from './remap.type';
+export type { ControlSchemeId, RemapResult } from '@rotp/features';

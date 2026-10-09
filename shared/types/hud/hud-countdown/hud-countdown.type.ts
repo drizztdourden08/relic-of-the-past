@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { GameSettings } from '../../settings';
+import type { GameSettings } from '@rotp/features';
 
 type HudCountdownVariantId = GameSettings['hudCountdownStyle'];
 

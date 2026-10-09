@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import type { Section } from '@drizztdourden08/brock-react';
-import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
+import { BUNDLE_FIXES } from '@rotp/features';
 import { BUNDLE_GROUPS, FIX_HINT } from './bugfixes.constants';
 
 const buildBugFixSection = (): Section => {

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import type { LiveHides } from './live-settings.type';
 
 const liveHidesOf = (settings: GameSettings): LiveHides => {

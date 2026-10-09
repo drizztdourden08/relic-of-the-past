@@ -1,5 +1,5 @@
 /* @layer shared-features @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '../settings';
 import { DEFAULT_BUFFER, OPUS_SAMPLE_RATE, PCM_SAMPLE_RATE } from './msu-auto-config.constants';
 import type { MsuPackProfile, ResolvedAudioConfig } from './msu-auto-config.type';
 import { modeForPack } from './mode-for-pack';

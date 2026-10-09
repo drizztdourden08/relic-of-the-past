@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { GbaGroup } from '@shared/features/gba-difference.type';
+import type { GbaGroup } from '@rotp/features';
 import type { EvidenceFilter, GbaAvailability } from './gba-settings.type';
 
 const EVIDENCE_OPTIONS: { value: EvidenceFilter; label: string }[] = [

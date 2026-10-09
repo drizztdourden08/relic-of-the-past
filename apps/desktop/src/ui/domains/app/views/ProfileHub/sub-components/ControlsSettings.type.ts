@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 
 interface ControlsSettingsProps {
   settings: GameSettings;

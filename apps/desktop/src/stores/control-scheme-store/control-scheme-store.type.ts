@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind types */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import type { ControlSchemeId } from '@shared/input/scheme';
 import type { ModernBindings, SlotAssignment, SlotIndex } from '@rotp/game-data';
 

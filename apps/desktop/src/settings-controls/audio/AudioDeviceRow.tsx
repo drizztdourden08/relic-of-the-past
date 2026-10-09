@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { Stack } from '@drizztdourden08/tessera/primitives';
-import { detectMsuMismatch, resolveAudioConfig } from '@shared/features/msu-auto-config';
+import { detectMsuMismatch, resolveAudioConfig } from '@rotp/features';
 import { ControlRow } from '../ControlRow';
 import { useSettingItemText } from '../ControlRow/behavior/useSettingItemText';
 import { MsuMismatchCallout } from './MsuMismatchCallout';

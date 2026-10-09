@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { getModule } from '../wasm-bridge';
 import { turboPercentFor } from './turbo-percent-for';
 

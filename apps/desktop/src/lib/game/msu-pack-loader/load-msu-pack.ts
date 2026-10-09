@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import * as msuStore from '@app/lib/storage/msu-store';
-import { detectMsuPackProfile, resolveMsuPlayback } from '@shared/features/msu-auto-config';
+import { detectMsuPackProfile, resolveMsuPlayback } from '@rotp/features';
 import { stopMsuSession } from '../msu-session';
 import { msuPackSessionOwner } from './msu-pack-session-owner';
 import type { Settings } from './msu-pack-loader.type';

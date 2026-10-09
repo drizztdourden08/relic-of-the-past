@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import type { ReactNode } from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { renderAudioControl } from './audio/render-audio-control';
 import { renderBugFixControl } from './bugfixes/render-bug-fix-control';
 import { renderDisplayControl } from './display/render-display-control';

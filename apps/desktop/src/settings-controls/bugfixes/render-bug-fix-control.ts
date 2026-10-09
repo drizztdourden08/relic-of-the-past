@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
-import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
+import { BUNDLE_FIXES } from '@rotp/features';
 import { KeyedControlRow } from '../KeyedControlRow';
 import { legacyMaster } from './legacy-master';
 import type { ControlContext } from '../settings-controls.type';

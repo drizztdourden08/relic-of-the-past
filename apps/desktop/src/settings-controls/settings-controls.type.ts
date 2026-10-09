@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind types */
 import type { ReactNode } from 'react';
 import type { LockOverlayProps, RenderControl, SettingLockCause } from '@drizztdourden08/brock-react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import type { AppSettings } from '@app/settings.type';
 
 type SettingsPatch = (patch: Partial<GameSettings>) => void;

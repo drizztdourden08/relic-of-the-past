@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { liveSettingsNow } from '@app/lib/game/live-settings';
 import { enhancedAspectAllowed } from '@app/lib/game/settings';
 import { requestEnhancedFallback } from '@app/lib/game/enhanced-fallback';
-import { hostDrawnHud } from '@shared/features/hud-style';
+import { hostDrawnHud } from '@rotp/features';
 import { RESIZE_SETTLE_MS } from '../GameOverlay.constants';
 
 const useEnhancedAspectWatch = (): void => {

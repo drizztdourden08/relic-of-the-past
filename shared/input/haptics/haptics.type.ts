@@ -1,6 +1,6 @@
 /* @layer shared-input @kind types */
 import type { VibrationSegment } from '../vibration-segment.type';
-import type { HapticSettings } from '../../types/settings';
+import type { HapticSettings } from '@rotp/features';
 
 type VibrateFunction = (pattern: VibrationSegment[], gapMs?: number, minDurationExempt?: boolean) => void;
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { aspectRatioValue, parseRatioString } from '@app/lib/game/aspect-ratio';
 import { ASPECT_OPTIONS } from './hud-controls.constants';
 

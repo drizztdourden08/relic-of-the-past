@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { SegmentedControl, Button, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import { enhancedAspectAllowed } from '@app/lib/game/settings';

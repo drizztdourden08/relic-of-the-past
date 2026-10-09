@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { TALL_PRESETS } from './display.constants';
 import type { AspectChoices } from './display.type';
 

@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind hook */
 import { useProfiles } from '@drizztdourden08/brock-react';
-import type { MsuPackProfile } from '@shared/features/msu-auto-config';
+import type { MsuPackProfile } from '@rotp/features';
 import { useMsuPackProfile } from './useMsuPackProfile';
 
 const useActiveMsuPack = (): MsuPackProfile | null => {

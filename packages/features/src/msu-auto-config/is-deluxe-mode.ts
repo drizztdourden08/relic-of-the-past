@@ -1,5 +1,5 @@
 /* @layer shared-features @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '../settings';
 
 const isDeluxeMode = (mode: GameSettings['enableMSU']): boolean =>
   mode === 'deluxe' || mode === 'deluxe-opuz';

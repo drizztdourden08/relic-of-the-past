@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { isAudioSettingDisabled } from './audio/is-audio-disabled';
 import { isDisplaySettingDisabled } from './display/is-display-disabled';
 import { isGameplaySettingDisabled } from './gameplay/is-gameplay-disabled';

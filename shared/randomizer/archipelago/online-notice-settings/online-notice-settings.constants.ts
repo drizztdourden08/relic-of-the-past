@@ -1,7 +1,7 @@
 /* @layer shared-game @kind constants */
 import { noticeSettingKey } from './notice-setting-key';
-import { ONLINE_NOTICE_KINDS } from './online-notice-kinds.constants';
-import type { OnlineNoticeSettingKey, OnlineNoticeSettings } from './online-notice-settings.type';
+import { ONLINE_NOTICE_KINDS } from '@rotp/features';
+import type { OnlineNoticeSettingKey, OnlineNoticeSettings } from '@rotp/features';
 
 const ONLINE_NOTICE_DEFAULTS: OnlineNoticeSettings = {
   apNotifyItemReceived: true,

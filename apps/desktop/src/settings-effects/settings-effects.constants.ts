@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 
 const HUD_STORE_KEYS: (keyof GameSettings)[] = [
   'hudMode', 'hudStyle', 'hudRatio', 'customHudAspectW', 'customHudAspectH', 'hudEnhancedParts',

@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
-import type { GameSettings } from '@shared/types/settings';
-import { hostDrawnHud } from '@shared/features/hud-style';
+import type { GameSettings } from '@rotp/features';
+import { hostDrawnHud } from '@rotp/features';
 import { useSpriteAvailabilityStore } from '../sprite-availability-store';
 
 const enhancedPauseDrawn = (settings: GameSettings): boolean =>

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { allowedRatio, ratioToString, rendersExtended } from '../ratio-capability';
 import { boolToIni } from './bool-to-ini';
 import { offscreenEnemyMode } from './offscreen-enemy-mode';

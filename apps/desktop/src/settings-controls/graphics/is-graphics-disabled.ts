@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 
 const isGraphicsSettingDisabled = (key: string, settings: GameSettings): boolean => {
   if (key === 'linearFiltering') return settings.pixelPerfect;

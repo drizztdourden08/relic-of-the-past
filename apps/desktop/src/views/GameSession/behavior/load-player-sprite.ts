@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { setLinkSpriteData } from '@app/lib/game';
 import { log } from '@app/lib/log-bus';
 import { readSpriteAsZspr } from '@app/lib/game/player-sheet/load-sheet';

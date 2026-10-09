@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { parseRatioString, detectScreenRatio, detectViewportRatio } from '@app/lib/game/aspect-ratio';
 
 const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {

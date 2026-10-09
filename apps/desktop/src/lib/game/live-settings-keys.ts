@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind data */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { ONLINE_NOTICE_SETTING_KEYS } from '@shared/randomizer/archipelago/online-notice-settings';
 
 const LIVE_SETTING_KEYS = [

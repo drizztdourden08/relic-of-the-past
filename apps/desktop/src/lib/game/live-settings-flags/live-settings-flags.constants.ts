@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import type { SessionGate } from '../session-gate-flags';
 
 const FEATURE_FLAGS = {

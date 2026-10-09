@@ -133,6 +133,7 @@
     "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.60.0",
     "@rotp/asset-extraction": "workspace:*",
+    "@rotp/features": "workspace:*",
     "@rotp/game-data": "workspace:*",
     "@rotp/hub-contracts": "workspace:*",
     "@types/js-yaml": "^4.0.9",

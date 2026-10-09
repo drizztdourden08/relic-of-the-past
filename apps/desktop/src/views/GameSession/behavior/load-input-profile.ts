@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import type { InputProfile } from '@shared/types/controls/devices/devices.type';
 import { getInputManager } from '@app/lib/game';
 import { log } from '@app/lib/log-bus';

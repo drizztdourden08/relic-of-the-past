@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { MsuPackProfile, ResolvedAudioConfig } from '@shared/features/msu-auto-config';
+import type { MsuPackProfile, ResolvedAudioConfig } from '@rotp/features';
 
 const packDetail = (pack: MsuPackProfile, resolved: ResolvedAudioConfig): string => {
   const parts: string[] = [];

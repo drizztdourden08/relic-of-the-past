@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
-import { hostDrawnHud } from '@shared/features/hud-style';
+import type { GameSettings } from '@rotp/features';
+import { hostDrawnHud } from '@rotp/features';
 import { DEFAULT_SETTINGS } from './default-settings';
 import { LEGACY_ENHANCED, REMOVED_SETTING_KEYS } from './settings.constants';
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '../../input/haptic-bridge';
 import { log } from '../../log-bus';
 import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords } from '../live-settings-flags';

@@ -1,5 +1,5 @@
 /* @layer shared-features @kind types */
-import type { GameSettings } from '../../types/settings';
+import type { GameSettings } from '../settings';
 
 type HudStyle = GameSettings['hudStyle'];
 

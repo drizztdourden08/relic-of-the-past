@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { migrateScheme } from '@shared/input/scheme';
 import type { Assignments } from './control-scheme-store.type';
 import { useControlSchemeStore } from './useControlSchemeStore';

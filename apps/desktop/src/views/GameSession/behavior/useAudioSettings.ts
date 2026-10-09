@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { appApi } from '@app/ipc/app-api';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { setMasterVolume, subscribeGameState } from '@app/lib/game';
 
 const useAudioSettings = () => {

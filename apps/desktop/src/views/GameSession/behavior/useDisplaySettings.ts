@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useState, useCallback, useEffect, useRef } from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import { syncAspectRatioLock } from './sync-aspect-ratio-lock';
 import { CANVAS_POLL_ATTEMPTS, CANVAS_POLL_MS } from './useDisplaySettings.constants';

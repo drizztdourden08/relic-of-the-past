@@ -4,7 +4,7 @@ import {
   addSlot, defaultCoreBindings, effectiveSlots, keyboardModernBindings, migrateScheme,
   remapAssignments, removeSlot, setSlotBinding,
 } from '@shared/input/scheme';
-import { controlSchemeOf } from '@shared/features/hud-style';
+import { controlSchemeOf } from '@rotp/features';
 import { slotDisplay } from './modern-slots';
 import type { CoreBindings, InputBinding, ModernSlot, SlotIndex } from '@rotp/game-data';
 import type { AbsentAssignment, UseModernSchemeArgs } from './controls-settings.type';

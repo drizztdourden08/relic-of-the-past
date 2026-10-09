@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { PPU_FLAGS } from './live-settings-ppu-flags.constants';
 
 const buildPpuFlags = (s: GameSettings): number => {

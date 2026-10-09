@@ -2,8 +2,8 @@
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { DIALOG_FONT_SCALES, DIALOG_STROKE_WIDTHS } from '@rotp/game-data';
-import { hostDrawnHud } from '@shared/features/hud-style';
-import type { GameSettings } from '@shared/types/settings';
+import { hostDrawnHud } from '@rotp/features';
+import type { GameSettings } from '@rotp/features';
 import { HudStyleControl } from '../HudStyleControl';
 import { stopSliderRow } from '../IndexSliderRow';
 import { KeyedControlRow } from '../KeyedControlRow';

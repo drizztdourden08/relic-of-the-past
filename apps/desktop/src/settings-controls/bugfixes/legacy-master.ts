@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { rendersExtended } from '@app/lib/game/ratio-capability';
 
 const legacyMaster = (origin: string | undefined, s: GameSettings): boolean => {

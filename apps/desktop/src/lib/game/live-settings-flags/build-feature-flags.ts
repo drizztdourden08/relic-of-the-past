@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { effectiveFeatureIds } from '../live-settings-gate';
 import { offscreenEnemyMode, rendersExtended } from '../settings';
 import { featureOverrides } from './feature-overrides';

@@ -3,7 +3,7 @@ import { BIT } from './remap-modern.constants';
 import type { FunctionMask } from './function-mask';
 import type { ModernScheme, SlotAssignment } from '@rotp/game-data';
 import type { OwnsItem } from './remap-modern.type';
-import type { RemapResult } from './remap.type';
+import type { RemapResult } from '@rotp/features';
 
 const remapModern = (pressed: FunctionMask, scheme: ModernScheme, ownsItem: OwnsItem): RemapResult => {
   const { dpad, pause, map, slots } = pressed;

@@ -1,5 +1,5 @@
 /* @layer shared-features @kind types */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '../settings';
 
 interface MsuTrackInfo {
   trackNum: number;

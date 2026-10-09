@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind types */
 import type { buildDeviceProfileFromSdlType } from '@shared/input';
-import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
+import type { FunctionMapping } from '@rotp/features';
 
 type AxisEntry = ReturnType<typeof buildDeviceProfileFromSdlType>['axes'][number];
 

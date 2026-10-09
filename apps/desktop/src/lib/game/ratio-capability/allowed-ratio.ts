@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { requestedRatio } from './requested-ratio';
 import { LINEAR_RATIO, TALL_RATIO, ULTRAWIDE_RATIO } from './ratio-capability.constants';
 

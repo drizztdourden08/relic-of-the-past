@@ -2,7 +2,7 @@
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import type { SettingsInput } from '@drizztdourden08/tessera/composites';
-import type { HapticSettings } from '@shared/types/settings';
+import type { HapticSettings } from '@rotp/features';
 import { KeyedControlRow } from '../KeyedControlRow';
 import { hapticPatch } from './haptic-patch';
 import type { ControlContext } from '../settings-controls.type';

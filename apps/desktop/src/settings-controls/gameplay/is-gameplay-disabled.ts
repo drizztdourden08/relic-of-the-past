@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { GameSettings } from '@shared/types/settings';
-import { controlSchemeOf } from '@shared/features/hud-style';
+import type { GameSettings } from '@rotp/features';
+import { controlSchemeOf } from '@rotp/features';
 
 const isGameplaySettingDisabled = (key: string, settings: GameSettings): boolean => {
   if (key === 'saveHoldDuration') return !settings.enhancedSaveSlotShortcut;

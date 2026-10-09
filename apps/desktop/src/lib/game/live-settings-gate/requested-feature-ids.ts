@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
-import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
+import type { GameSettings } from '@rotp/features';
+import { BUNDLE_FIXES } from '@rotp/features';
 import { offscreenEnemyMode } from '../settings';
 import { rendersExtended } from '../ratio-capability';
 import { GAME_CHANGING_FIX_BUNDLE, RAW_FEATURE_KEYS, WIDESCREEN_FIX_BUNDLE } from './live-settings-gate.constants';

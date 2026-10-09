@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { isTitleDisabled } from './is-title-disabled';
 import { isDialogDisabled } from './is-dialog-disabled';
 

@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { DEVICE_KEYS, GROUP_VOLUME_KEYS, PACK_DEPENDENT_KEYS } from './audio-controls.constants';
 
 const isAudioSettingDisabled = (key: string, settings: GameSettings): boolean => {

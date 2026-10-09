@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { BUNDLE_FIXES } from '../../shared/features/bundle-fixes.generated';
-import { FEATURES } from '../../shared/features/feature-registry';
+import { BUNDLE_FIXES } from '@rotp/features';
+import { FEATURES } from '@rotp/features';
 
 const stripComments = (src: string): string =>
   src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');

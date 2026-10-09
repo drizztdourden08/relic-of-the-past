@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import type { WindowControlsPort } from '@drizztdourden08/brock-core';
 import { TITLEBAR_HEIGHT } from '@app/views/GameSession/GameSession.constants';
 import { getGameRatio } from './get-game-ratio';

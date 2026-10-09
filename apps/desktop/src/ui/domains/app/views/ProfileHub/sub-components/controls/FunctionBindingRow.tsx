@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { FUNCTION_ACTION_LABELS } from '@shared/types/controls/functions/functions.constants';
+import { FUNCTION_ACTION_LABELS } from '@rotp/features';
 import { BindingRow } from './BindingRow';
 import type { FunctionBindingRowProps } from './controls.type';
 

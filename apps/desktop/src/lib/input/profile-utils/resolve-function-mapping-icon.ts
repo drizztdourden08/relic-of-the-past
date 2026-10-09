@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
+import type { FunctionMapping } from '@rotp/features';
 import type { ButtonIcon } from '@rotp/game-data';
 import { resolveIconByVidPid } from './resolve-icon-by-vid-pid';
 

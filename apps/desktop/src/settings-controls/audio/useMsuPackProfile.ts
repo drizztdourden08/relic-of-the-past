@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect } from 'react';
-import type { MsuPackProfile } from '@shared/features/msu-auto-config';
-import { detectMsuPackProfile } from '@shared/features/msu-auto-config';
+import type { MsuPackProfile } from '@rotp/features';
+import { detectMsuPackProfile } from '@rotp/features';
 import * as msuStore from '@app/lib/storage/msu-store';
 import * as profileStore from '@app/lib/storage/profile-store';
 

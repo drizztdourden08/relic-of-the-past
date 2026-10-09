@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind component */
 import { useCallback } from 'react';
-import { resolveAudioConfig } from '@shared/features/msu-auto-config';
-import type { GameSettings } from '@shared/types/settings';
+import { resolveAudioConfig } from '@rotp/features';
+import type { GameSettings } from '@rotp/features';
 import { KeyedControlRow } from '../KeyedControlRow';
 import { MsuDetectedSummary } from './MsuDetectedSummary';
 import { MSU_OPTIONS } from './audio-controls.constants';

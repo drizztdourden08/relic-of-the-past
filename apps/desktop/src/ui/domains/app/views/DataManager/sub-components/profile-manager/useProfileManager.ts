@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback } from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { readConfig } from '../../../../../../../lib/storage/profile-store';
 import { listLanguages } from '../../../../../../../lib/storage/languages-store';
 import { listMsuPacks } from '../../../../../../../lib/storage/msu-store';

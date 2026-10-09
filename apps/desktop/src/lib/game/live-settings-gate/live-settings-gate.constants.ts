@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 
 const RAW_FEATURE_KEYS = [
   'extendedRendering', 'linearWorldTilemap', 'ultrawideRendering', 'tallRendering',

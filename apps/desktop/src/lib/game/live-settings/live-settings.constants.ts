@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { QUIET_RECEIPT_KEY, QUIET_RECEIPT_KINDS } from '@rotp/game-data';
 import { LIVE_SETTING_KEYS } from '../live-settings-keys';
 

@@ -295,6 +295,9 @@ importers:
       '@rotp/asset-extraction':
         specifier: workspace:*
         version: link:packages/asset-extraction
+      '@rotp/features':
+        specifier: workspace:*
+        version: link:packages/features
       '@rotp/game-data':
         specifier: workspace:*
         version: link:packages/game-data
@@ -484,6 +487,9 @@ importers:
       '@rotp/asset-extraction':
         specifier: workspace:*
         version: link:../../packages/asset-extraction
+      '@rotp/features':
+        specifier: workspace:*
+        version: link:../../packages/features
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../../packages/game-data
@@ -750,6 +756,15 @@ importers:
       pngjs:
         specifier: 'catalog:'
         version: 7.0.0
+
+  packages/features:
+    dependencies:
+      '@rotp/game-data':
+        specifier: workspace:*
+        version: link:../game-data
+      '@rotp/hub-contracts':
+        specifier: workspace:*
+        version: link:../hub-contracts
 
   packages/game-data:
     dependencies:

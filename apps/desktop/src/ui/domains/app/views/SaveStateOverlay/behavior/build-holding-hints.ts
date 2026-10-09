@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { FunctionMapping } from '@shared/types/controls/functions/functions.type';
+import type { FunctionMapping } from '@rotp/features';
 import type { SlotHint } from '../SaveStateOverlay.type';
 import { getSlotBinding } from './get-slot-binding';
 

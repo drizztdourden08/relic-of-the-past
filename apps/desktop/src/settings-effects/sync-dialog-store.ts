@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { useDialogSettingsStore } from '@app/stores/dialog-settings-store';
 
 const syncDialogStore = (s: GameSettings): void => {

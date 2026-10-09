@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackProfile, ResolvedAudioConfig } from '@shared/features/msu-auto-config';
+import type { MsuPackProfile, ResolvedAudioConfig } from '@rotp/features';
 
 interface MsuDetectedSummaryProps {
   pack: MsuPackProfile | null;

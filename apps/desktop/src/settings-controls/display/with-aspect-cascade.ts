@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESET_VALUES } from './display.constants';
 
 const turnedOff = (patch: Partial<GameSettings>, key: 'linearWorldTilemap' | 'ultrawideRendering' | 'tallRendering'): boolean =>

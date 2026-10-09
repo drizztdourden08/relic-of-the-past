@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type React from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 
 interface ParentCallbacks {
   onWindowModeChange?: (mode: GameSettings['windowMode']) => void;

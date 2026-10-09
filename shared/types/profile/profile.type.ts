@@ -1,7 +1,7 @@
 /* @layer shared-types @kind types */
 import type { RandomizerOptionsSnapshot } from '../../randomizer/world/options.type';
 import type { DeliverableLists } from '../../randomizer/world/fill/deliverable-lists';
-import type { GameSettings } from '../settings';
+import type { GameSettings } from '@rotp/features';
 
 interface ProfileRandomizerConfig {
   mode: 'local' | 'online';

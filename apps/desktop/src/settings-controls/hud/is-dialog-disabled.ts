@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { EITHER_BOX_KEYS, MODERN_ONLY_KEYS } from './hud-controls.constants';
 import { isBorderDisabled } from './is-border-disabled';
 import { isTextureDisabled } from './is-texture-disabled';

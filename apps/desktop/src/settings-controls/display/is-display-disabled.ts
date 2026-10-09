@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { EXTENDED_ONLY_KEYS } from './display.constants';
 
 const isDisplaySettingDisabled = (key: string, settings: GameSettings): boolean => {

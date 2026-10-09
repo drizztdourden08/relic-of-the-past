@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { FunctionAction } from '@shared/types/controls/functions/functions.type';
+import type { FunctionAction } from '@rotp/features';
 
 type FunctionKeyUpListener = (action: FunctionAction) => void;
 

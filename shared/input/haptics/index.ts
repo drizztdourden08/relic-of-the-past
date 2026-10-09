@@ -11,4 +11,4 @@ export { resetDashState } from './reset-dash-state';
 export { setVibrateFunction } from './set-vibrate-function';
 export { updateHapticSettings } from './update-haptic-settings';
 export type { HapticEventTypeValue } from '../haptic-events';
-export type { HapticSettings } from '../../types/settings';
+export type { HapticSettings } from '@rotp/features';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { GameSettings } from '@shared/types/settings';
-import type { GbaDifference, GbaGroup } from '@shared/features/gba-difference.type';
+import type { GameSettings } from '@rotp/features';
+import type { GbaDifference, GbaGroup } from '@rotp/features';
 
 type EvidenceFilter = 'all' | 'extracted';
 

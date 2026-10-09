@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { GameSettings } from '@shared/types/settings';
-import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
+import type { GameSettings } from '@rotp/features';
+import { BUNDLE_FIXES } from '@rotp/features';
 import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '../../apps/desktop/src/lib/game/live-settings-flags';
 
 const allOff = {

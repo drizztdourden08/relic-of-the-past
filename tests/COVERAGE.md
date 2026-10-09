@@ -205,7 +205,7 @@ The two rows above cover the multi-source aggregator (the base stays byte-identi
 without a supplement) and the second-cartridge extractor. Neither exercises the base-only
 compile path itself, which remains untested.
 
-## Feature gating (`shared/features/`)
+## Feature gating (`packages/features/src/`)
 
 | Area | Tests | Verdict |
 |---|---|---|

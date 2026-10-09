@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 
 const MODE_LABELS: Record<GameSettings['enableMSU'], string> = {
   false: 'Off',

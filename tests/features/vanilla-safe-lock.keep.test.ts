@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { resolveGates } from '../../shared/features/resolve-gates';
-import { FEATURES, FEATURES_BY_ID } from '../../shared/features/feature-registry';
+import { resolveGates } from '@rotp/features';
+import { FEATURES, FEATURES_BY_ID } from '@rotp/features';
 
 describe('Vanilla Safe makes resolveGates lock out every parity-affecting feature', () => {
   it('requesting every registered feature id with vanillaSafe leaves none of them parity-affecting', () => {

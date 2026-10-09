@@ -1,8 +1,8 @@
 // @layer scripts @kind generated-source
 // Generates the split bug-fix feature flags from the Wave-1b catalog (scripts/build/bundle-settings.json):
 //   - core/zelda3/src/features_bugfixes.h   (kFeatures1_* / kFeatures2_* C enums; #included by features.h)
-//   - shared/features/bundle-fixes.generated.ts  (FeatureDef[] for the registry/UI)
-//   - shared/features/bundle-flags.generated.json (id -> {flag,word,bit,sites,...} for the split-wave agents + bridge)
+//   - packages/features/src/bundle-fixes.generated.ts  (FeatureDef[] for the registry/UI)
+//   - packages/features/src/bundle-flags.generated.json (id -> {flag,word,bit,sites,...} for the split-wave agents + bridge)
 // Run: node scripts/build/gen-bundle-flags.mjs   (re-run if the catalog changes; outputs are generated, do not hand-edit)
 
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -88,11 +88,11 @@ ${allocated.map(tsEntry).join('\n')}
 
 export { BUNDLE_FIXES };
 `
-writeFileSync(resolve(root, 'shared/features/bundle-fixes.generated.ts'), ts)
+writeFileSync(resolve(root, 'packages/features/src/bundle-fixes.generated.ts'), ts)
 
 // --- JSON map (for split-wave agents + bridge) -------------------------------
 const map = {}
 for (const a of allocated) map[a.id] = { flag: a.flag, word: a.word, bit: a.mask >>> 0, bundleFlag: a.bundleFlag, category: a.category, sites: a.sites || [] }
-writeFileSync(resolve(root, 'shared/features/bundle-flags.generated.json'), JSON.stringify({ total: allocated.length, flags: map }, null, 2))
+writeFileSync(resolve(root, 'packages/features/src/bundle-flags.generated.json'), JSON.stringify({ total: allocated.length, flags: map }, null, 2))
 
 console.log(`Generated ${allocated.length} split bug-fix flags (features1: ${allocated.filter((a) => a.word === 1).length}, features2: ${allocated.filter((a) => a.word === 2).length}).`)

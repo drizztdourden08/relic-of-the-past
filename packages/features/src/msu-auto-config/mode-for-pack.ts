@@ -1,5 +1,5 @@
 /* @layer shared-features @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '../settings';
 import type { MsuPackProfile } from './msu-auto-config.type';
 
 const modeForPack = (pack: MsuPackProfile): GameSettings['enableMSU'] => {

@@ -1,7 +1,7 @@
 /* @layer shared-input @kind logic */
 import { SELECT_BIT, X_BIT } from './remap-classic.constants';
 import type { ClassicOptions } from './remap-classic.type';
-import type { RemapResult } from './remap.type';
+import type { RemapResult } from '@rotp/features';
 
 const swapMapAndSelect = (mask: number): number => {
   const x = (mask & X_BIT) !== 0;

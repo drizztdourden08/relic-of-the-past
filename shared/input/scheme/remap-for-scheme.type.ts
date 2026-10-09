@@ -2,7 +2,7 @@
 import type { FunctionMask } from './function-mask';
 import type { OwnsItem } from './remap-modern.type';
 import type { ModernScheme } from '@rotp/game-data';
-import type { ControlSchemeId, RemapResult } from './remap.type';
+import type { ControlSchemeId, RemapResult } from '@rotp/features';
 
 interface RemapRequest {
   scheme: ControlSchemeId;

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { setMasterVolume } from '../audio-volume';
 import { msuSyncVolume } from '../msu-session';
 import type { EmscriptenModule } from '../types';

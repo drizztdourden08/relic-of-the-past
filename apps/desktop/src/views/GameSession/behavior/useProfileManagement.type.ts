@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind types */
 import type { Dispatch, SetStateAction } from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import type { ConfirmDialog } from '@app/views/GameSession/GameSession.type';
 
 interface ProfileLoadedData {

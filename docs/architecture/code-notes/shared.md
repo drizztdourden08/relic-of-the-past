@@ -2838,7 +2838,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `masterVolume`, `musicVolume`, `sfxVolume` and `ambientVolume` range 0 to 100.
 - `perGroupVolume` is the explicit opt in for the per group (music and SFX) DSP mix. Off gives the bit identical stock audio mix and the Music and SFX sliders are inert; on makes them take effect. Master volume is unaffected either way.
 - `ambientVolume` and `ambientMuted` govern the replacement ambient bed only. The sound chip cannot split its ambience out of its mix, so they govern replacement audio, which is where a bed loud enough to fight the music comes from.
-- `msuConfigMode`: `auto` (default) derives `enableMSU`, `audioFreq` and `audioChannels` from the assigned pack's contents (shared/features/msu-auto-config.ts), not user edited. `manual` leaves the three free form.
+- `msuConfigMode`: `auto` (default) derives `enableMSU`, `audioFreq` and `audioChannels` from the assigned pack's contents (packages/features/src/msu-auto-config.ts), not user edited. `manual` leaves the three free form.
 - `enableMSU` names the pack format. `msul` is this project's layered container, whose manifest decides what each slot plays in place of one file per slot.
 - `resetMSUAtTitle` makes reaching the title screen forget every remembered position. Resuming is meant for a run in progress; carried across runs it starts the opening in the middle of itself and drops a fresh file into the last file's music.
 - `packReplaceAmbient` and `packReplaceSfx`: a pack may replace ambient beds and sound effects, not only music. They are separate switches because someone may want an authored rain bed while keeping every native effect. Off means the core never reports those sounds to the app, so an unused group costs nothing.
@@ -2879,7 +2879,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `prefillFileName` names a new file Link with the naming strip parked on End. Non vanilla.
 - `allowDiving` lets B while swimming duck under for a moment, as the handheld port allows. Non vanilla. The extra dungeon forces it on, because its water room is built around it.
 - `miscBugFixes` and `gameChangingBugFixes` are legacy bundle masters that enable all split fixes of the MiscBugFixes and GameChangingBugFixes origin unless overridden.
-- `bugFixToggles` holds granular overrides for the 42 split bug fixes, keyed by feature id (see shared/features). Unset inherits the legacy bundle master; an explicit true or false overrides it.
+- `bugFixToggles` holds granular overrides for the 42 split bug fixes, keyed by feature id (see packages/features/src). Unset inherits the legacy bundle master; an explicit true or false overrides it.
 - `archeryNeedsBow` lets the archery host refuse the fee when the shots it buys could not be fired.
 - `extraDungeon` says whether the optional extra dungeon carried by the second cartridge is offered. It is separate from whether its data is present: owning the cartridge and leaving this off must give an untouched overworld. Off by default, so a profile that never sets it behaves like the base game.
 
@@ -2909,7 +2909,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 ### types/settings/hud-settings.type.ts
 
 - `hudStyle`: `vanilla` rebuilds the original look from extracted sprites; `enhanced` is the same sprite set driven by the host (host owned pause menu, free HUD layout) and needs a 16:9 or wider display; `modern` is Enhanced plus the modern control scheme.
-- The stored value and the label are the same word on purpose (section 59.7): `enhanced` was stored as `extended` until the label was corrected. `mergeSettings` migrates the old spelling on every read. There is no separate control scheme key; the scheme is derived from this field (see shared/features/hud-style.ts).
+- The stored value and the label are the same word on purpose (section 59.7): `enhanced` was stored as `extended` until the label was corrected. `mergeSettings` migrates the old spelling on every read. There is no separate control scheme key; the scheme is derived from this field (see packages/features/src/hud-style.ts).
 - `customHudAspectW` and `customHudAspectH` apply when `hudRatio` is `custom`; 0 means auto detect from the screen.
 - Title screen fields are on the HUD tab: the host draws the title over the hidden native one. `titleMotion: 'drifting'` adds a slow parallax and drifting clouds while the title idles. `titleFollowsProgress` takes the world, and the sword when it is set to progress, from the most advanced save. `titleSword` is the sword planted in the title, or the save's own.
 

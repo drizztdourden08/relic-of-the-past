@@ -9,7 +9,7 @@ import { DialogView } from '../../../hud/views/DialogView';
 import { useLocationNotification } from '../../../hud/hooks/useLocationNotification';
 import { isMainHudVisibleForMode } from '../../../hud/hud-visibility';
 import { useEnhancedAspectWatch } from './behavior/useEnhancedAspectWatch';
-import { hostDrawnHud } from '@shared/features/hud-style';
+import { hostDrawnHud } from '@rotp/features';
 import { useHudSettingsStore } from '../../../../../stores/hud-settings-store';
 import { useDialogSettingsStore } from '../../../../../stores/dialog-settings-store';
 import { useTitleSettingsStore } from '../../../../../stores/title-settings-store';

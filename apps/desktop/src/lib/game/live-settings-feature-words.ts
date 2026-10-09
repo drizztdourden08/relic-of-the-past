@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
-import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
-import { controlSchemeOf, hostDrawnHud } from '@shared/features/hud-style';
+import type { GameSettings } from '@rotp/features';
+import { BUNDLE_FIXES } from '@rotp/features';
+import { controlSchemeOf, hostDrawnHud } from '@rotp/features';
 import { effectiveFeatureIds } from './live-settings-gate';
 import { offscreenEnemyMode } from './settings';
 import { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS } from './live-settings-feature-words.constants';

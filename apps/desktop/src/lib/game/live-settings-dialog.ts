@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import { toQ4 } from '@rotp/game-data';
 import { hexToSnes15 } from '@rotp/game-data';
 import { isQuietReceipt } from '@rotp/game-data';

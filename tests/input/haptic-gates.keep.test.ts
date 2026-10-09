@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import type { HapticSettings } from '@shared/types/settings';
+import type { HapticSettings } from '@rotp/features';
 import {
   HapticEventType, EnvironmentalEvent,
   updateHapticSettings, setVibrateFunction, handleHapticEvent,

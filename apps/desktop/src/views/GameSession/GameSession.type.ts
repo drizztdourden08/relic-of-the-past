@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind types */
 import type { ReactNode } from 'react';
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings } from '@rotp/features';
 import type { useAudioSettings } from './behavior/useAudioSettings';
 import type { useConfirmDialog } from './behavior/useConfirmDialog';
 import type { useDisplaySettings } from './behavior/useDisplaySettings';
