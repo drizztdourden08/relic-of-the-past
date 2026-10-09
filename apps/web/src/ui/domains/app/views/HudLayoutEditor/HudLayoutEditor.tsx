@@ -61,6 +61,7 @@ import { OutlinePanel } from './sub-components/OutlinePanel';
 import { PresetBar } from './sub-components/PresetBar';
 import './HudLayoutEditor.css';
 import './sub-components/HudLayoutEditor.panels.css';
+import './sub-components/HudLayoutEditor.outline.css';
 import './sub-components/HudLayoutEditor.pickers.css';
 import './sub-components/HudLayoutEditor.inspector.css';
 import './sub-components/HudLayoutEditor.fields.css';

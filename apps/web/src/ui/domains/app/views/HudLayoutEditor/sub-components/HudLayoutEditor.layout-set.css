@@ -1,0 +1,75 @@
+/* @layer renderer-components @kind style */
+
+.hud-layout-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-sm);
+  align-items: center;
+  min-width: 0;
+}
+
+.hud-layout-set__piece {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  min-width: 0;
+}
+
+.hud-layout-set__piece--grow {
+  flex: 1 1 120px;
+}
+
+.hud-layout-set__label {
+  flex: 0 0 auto;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hud-layout-set__overlay {
+  position: relative;
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+}
+
+.hud-layout-set__gaps {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.hud-layout-set__gap {
+  display: flex;
+  flex: 1 1 0;
+  gap: var(--space-2xs);
+  align-items: center;
+  min-width: 40px;
+}
+
+.hud-layout-set__cap {
+  flex: 0 0 auto;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.hud-layout-set__gap > .hud-value-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.hud-extent--bare {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.hud-engine-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-sm);
+  align-items: center;
+  min-width: 0;
+}

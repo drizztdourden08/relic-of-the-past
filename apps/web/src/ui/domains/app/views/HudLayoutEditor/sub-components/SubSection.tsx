@@ -2,6 +2,7 @@
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import './HudLayoutEditor.layout.css';
+import './HudLayoutEditor.layout-set.css';
 import type { SubSectionProps } from './SubSection.type';
 
 const SubSection = (props: SubSectionProps) => {

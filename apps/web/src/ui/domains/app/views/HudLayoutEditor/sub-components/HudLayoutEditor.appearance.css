@@ -1,32 +1,11 @@
 /* @layer renderer-components @kind style */
 
-/* Phase 8 of `plans/hud-inspector-ux-review.html` builds Appearance's own
-   controls: the collapsible sub-group with a summary in its header, the border's box
-   diagram, the gradient ramp, and the slot chips.
-
-   A SHEET OF ITS OWN, for the reason phase 7 recorded one file over.
-   `inspector.css` is at 226 code lines, `panels.css` at 287, `fields.css` at 39
-   and `layout.css` at 150, and two other phases are writing into that folder in
-   the same tree. Every class below is namespaced to a control this phase built.
-
-   IT IS IMPORTED BY ITS COMPONENTS, not by the view, matching `ValueInput.css`
-   and `layout.css`, so `HudLayoutEditor.tsx` was never touched. */
-
-/* ── SubsectionGroup ──
-
-   The header row is the whole design: a checkbox, a name, a swatch, the value
-   in words, and a caret. It is NOT a `SectionAccordion` with extra props.
-   That one is a plain title bar for a section that is always available, and
-   this one has to say what it holds while shut. */
-
 .hud-subgroup {
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--r-sm);
   background: var(--c-sunken);
 }
 
-/* Open reads as raised out of the list instead of as a second border, so a
-   stack of six closed groups and one open one still scans as one list. */
 .hud-subgroup.is-open {
   background: var(--c-surface);
   border-color: var(--c-border-strong);
@@ -40,8 +19,6 @@
   min-width: 0;
 }
 
-/* The trigger takes the rest of the row so the whole line is the hit target.
-   The checkbox and the optional action are the only things beside it. */
 .hud-subgroup__trigger {
   display: flex;
   flex: 1;
@@ -57,14 +34,10 @@
   flex: none;
 }
 
-/* An off group's own name goes quiet with it; the row stays legible, but it
-   stops competing with the four groups that are actually painting something. */
 .hud-subgroup[data-on='false'] .hud-subgroup__name {
   color: var(--c-text-muted);
 }
 
-/* The colour, drawn. `background` is set inline because it IS the value.
-   `swatchOf()` hands over a flat colour, a real gradient, or a hatch. */
 .hud-subgroup__swatch {
   width: var(--icon-md);
   height: var(--icon-md);
@@ -73,9 +46,6 @@
   border-radius: var(--r-sm);
 }
 
-/* The summary is the only thing on the row allowed to run out of space, and it
-   ellipses instead of wrapping: a header that grows to two lines is a header
-   that costs what opening the group would have cost. */
 .hud-subgroup__summary {
   flex: 1;
   min-width: 0;
@@ -100,12 +70,6 @@
   padding: var(--space-2xs) var(--space-xs) var(--space-xs);
   border-top: var(--border-width-thin) solid var(--c-border);
 }
-
-/* ── SidesField ──
-
-   The same box the box model draws, at the size a border control can afford.
-   The bars are 7px instead of the wireframe's 3px because a 3px target cannot
-   be hit; the dotted centre is the node's own ink, and is not a control. */
 
 .hud-sides {
   position: relative;
@@ -156,10 +120,6 @@
   border: var(--border-width-thin) dotted var(--c-border);
 }
 
-/* ── GradientRamp ── */
-
-/* The gradient itself, full width, with the stops standing on it. The inline
-   `background` is the value being edited, same rule as the swatch above. */
 .hud-ramp__track {
   position: relative;
   height: 18px;
@@ -168,8 +128,6 @@
   border-radius: var(--r-sm);
 }
 
-/* Taller than the track and centred on its own position, so a stop at 0 or 1
-   is still fully grabbable at the very edge of the ramp. */
 .hud-ramp__stop {
   position: absolute;
   top: -4px;
@@ -192,8 +150,6 @@
   align-self: flex-end;
 }
 
-/* ── SlotChips ── */
-
 .hud-slot-chips__chip {
   display: flex;
   gap: var(--space-2xs);
@@ -215,8 +171,6 @@
   color: var(--c-text-muted);
 }
 
-/* The entry is a number, not a rail-wide field: three digits is every slot
-   this game has, and the chips beside it are what the row is for. */
 .hud-slot-chips__entry {
   width: 56px;
   flex: none;

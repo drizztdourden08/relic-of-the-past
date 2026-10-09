@@ -8,6 +8,7 @@ import { DirectionControl } from './DirectionControl';
 import { SubSection } from './SubSection';
 import { WRAP_LABEL } from './FlowSettings.constants';
 import './HudLayoutEditor.layout.css';
+import './HudLayoutEditor.layout-set.css';
 import type { FlowSettingsProps } from './FlowSettings.type';
 
 const FlowSettings = (props: FlowSettingsProps) => {

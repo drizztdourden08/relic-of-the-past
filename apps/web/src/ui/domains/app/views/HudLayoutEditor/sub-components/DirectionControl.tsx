@@ -5,6 +5,7 @@ import { Field } from '@ds/primitives/Field';
 import { IconButton } from '@ds/primitives/IconButton';
 import { DIRECTIONS } from './DirectionControl.constants';
 import './HudLayoutEditor.layout.css';
+import './HudLayoutEditor.layout-set.css';
 import type { DirectionControlProps } from './DirectionControl.type';
 
 const DirectionControl = (props: DirectionControlProps) => {
