@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Kind-specific. It dispatches to the one editor that actually knows this
- * element's own shape. A container has no Content section at all
- * (`NodeInspector` only renders this section for an `element`); a `spacer`
- * needs nothing beyond its box.
- */
 import { Text } from '@ds/primitives/Text';
 import { ButtonContent } from '../content/ButtonContent';
 import { CountdownContent } from '../content/CountdownContent';
@@ -15,17 +9,8 @@ import { SlotContent } from '../content/SlotContent';
 import { SpriteContent } from '../content/SpriteContent';
 import { SwitchContent } from '../content/SwitchContent';
 import { TextContent } from '../content/TextContent';
-import type { GlyphPack, HudElement, HudElementSpec } from '@shared/types/hud';
-
-interface ContentSectionProps {
-  node: HudElement;
-  onPatch: (patch: Partial<HudElement>) => void;
-  scope: Readonly<Record<string, number>>;
-  insideRepeat?: boolean;
-  glyphPacks: readonly GlyphPack[];
-  selectedId: string | null;
-  onSelectNode: (id: string) => void;
-}
+import type { HudElementSpec } from '@shared/types/hud';
+import type { ContentSectionProps } from './ContentSection.type';
 
 const ContentSection = (props: ContentSectionProps) => {
   const { node, onPatch, scope, insideRepeat, glyphPacks, selectedId, onSelectNode } = props;
@@ -58,4 +43,4 @@ const ContentSection = (props: ContentSectionProps) => {
 };
 
 export { ContentSection };
-export type { ContentSectionProps };
+export type { ContentSectionProps } from './ContentSection.type';

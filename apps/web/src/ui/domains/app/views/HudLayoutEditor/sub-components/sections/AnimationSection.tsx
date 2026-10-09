@@ -1,30 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Motion's FIRST block: the animations. Each is a clock the document drives for its
- * own sake, gated by an expression. Phase 10 of
- * `plans/hud-inspector-ux-review.html` rebuilt three things here.
- *
- * AN ANIMATION HAS AN IDENTITY NOW. It was "an unlabelled card distinguished
- * only by its property dropdown, with the delete × loose beside the gate
- * toggle". It is a `SubsectionGroup` (phase 8's, consumed unchanged): the
- * property names it, a one-line summary says what it does while closed
- * (`300ms · loop · gated`), and delete is the header's own action. Three
- * animations on one node are now three readable rows, not three identical
- * cards.
- *
- * THE REFLOW WARNING LANDS ON THE PROPERTY THAT CAUSED IT. §27.3 computes it
- * per node and per property (`validate-motion-warnings.ts` writes the property
- * name into the string), so it is matched to the card that animates that
- * property and rendered under that card's own property control, not as a
- * banner at the top of the section naming a node the author is already looking
- * at. The generic "width and height can reflow siblings" note stays for the
- * case the document-level walk cannot see: an animation just switched to
- * `width` that has not been saved yet.
- *
- * ONE TRANSPORT, NOT ONE PER CARD. Every animation on the surface samples ONE
- * shared clock (§27.7, which is the whole staggering mechanism), so a play
- * button per card would be three buttons driving one thing.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';
@@ -41,28 +15,10 @@ import { KeyframeTrack } from '../KeyframeTrack';
 import { MotionTransport } from '../MotionTransport';
 import { SubsectionGroup } from '../SubsectionGroup';
 import { ValueField } from '../ValueField';
-import type { HudAnimatableProperty, HudAnimation, HudAnimationLoop, HudNode } from '@shared/types/hud';
+import type { HudAnimatableProperty, HudAnimation, HudAnimationLoop } from '@shared/types/hud';
 import { MS_STEP } from '../../HudLayoutEditor.constants';
-
-const PROPERTIES: readonly HudAnimatableProperty[] = ['scale', 'opacity', 'x', 'y', 'rotate', 'tint', 'width', 'height'];
-const LOOPS: readonly { value: HudAnimationLoop; label: string }[] = [
-  { value: 'none', label: 'none' }, { value: 'loop', label: 'loop' }, { value: 'ping-pong', label: 'ping' },
-];
-const REFLOW = new Set<HudAnimatableProperty>(['width', 'height']);
-
-const BLANK: HudAnimation = { property: 'scale', keyframes: [{ at: 0, value: 1 }, { at: 1, value: 1.1 }], duration: 300, loop: 'none' };
-
-interface AnimationSectionProps {
-  node: HudNode;
-  onPatch: (patch: Partial<HudNode>) => void;
-  scope: Readonly<Record<string, number>>;
-  insideRepeat?: boolean;
-  /** This node's own reflow-warning lines, already filtered by id. */
-  warnings: readonly string[];
-  /** Which card is expanded, owned by `MotionSection` so one is open at a time. */
-  openIndex: number | null;
-  onOpen: (index: number | null) => void;
-}
+import { BLANK, LOOPS, PROPERTIES, REFLOW } from './AnimationSection.constants';
+import type { AnimationSectionProps } from './AnimationSection.type';
 
 const msOf = (animation: HudAnimation, scope: Readonly<Record<string, number>>): { delay: number; duration: number } => ({
   delay: animation.delay === undefined ? 0 : resolveValue(animation.delay, scope),
@@ -99,9 +55,6 @@ const AnimationSection = (props: AnimationSectionProps) => {
             action={{
               label: `Remove the ${animation.property} animation`,
               icon: '✕',
-              // The LAST one deleted clears the field instead of leaving an
-              // empty array behind. `[]` and absent read the same to the
-              // renderer, but only absent keeps the saved document clean.
               onClick: () => { const rest = animations.filter((_unused, at) => at !== i); onPatch({ animation: rest.length > 0 ? rest : undefined }); },
             }}
           >
@@ -153,4 +106,4 @@ const AnimationSection = (props: AnimationSectionProps) => {
 };
 
 export { AnimationSection };
-export type { AnimationSectionProps };
+export type { AnimationSectionProps } from './AnimationSection.type';
