@@ -1,9 +1,10 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import type { CSSProperties } from 'react';
 import type { LanguageSetSummary } from '@shared/storage/languages';
 import { ImportForm } from './ImportForm';
-import { LANGUAGE_NAMES } from './language-names';
+import { LANGUAGE_NAMES } from './language-names.constants';
+import { IL } from './LanguageManager.constants';
+import type { LanguageManagerProps } from './LanguageManager.type';
 import { LanguageEditor } from './language-editor';
 import { SetCreateForm } from './language-editor/sub-components/SetCreateForm';
 import * as languagesStore from '@app/lib/storage/languages-store';
@@ -15,15 +16,6 @@ import { Box } from '../../../../../design-system/primitives/Box';
 import { Select } from '../../../../../design-system/primitives/Select';
 import { Field } from '../../../../../design-system/primitives/Field';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
-
-const IL: Record<string, CSSProperties> = {
-  importForm: { marginBottom: 0, paddingBottom: 'var(--space-xs)' },
-};
-
-interface LanguageManagerProps {
-  romStatuses: RomDisplayInfo[];
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-}
 
 const LanguageManager = (props: LanguageManagerProps) => {
   const { onDeleteConfirm } = props;
@@ -46,7 +38,6 @@ const LanguageManager = (props: LanguageManagerProps) => {
     [],
   );
 
-  // Both writes rebake the asset blobs, so the list is locked while one runs.
   const handleCreate = useCallback(async (id: string, name: string, base: string) => {
     setBusy(true);
     try {
@@ -93,7 +84,6 @@ const LanguageManager = (props: LanguageManagerProps) => {
     await refresh();
   }, [selected, refresh]);
 
-  // An installed set is uninstalled the way the Hookshop tab does it, so its record goes too.
   const handleDelete = useCallback((code: string) => {
     const owner = packFor(code);
     if (owner) {
@@ -108,11 +98,9 @@ const LanguageManager = (props: LanguageManagerProps) => {
   }, [packFor, confirmUninstall, forget, onDeleteConfirm]);
 
   const isInstalled = useCallback((code: string) => packFor(code) !== null, [packFor]);
-  // An installed set is copied through its origin bar, which checks the licence and keeps the credit.
   const ownSets = useMemo(() => languages.filter((set) => !isInstalled(set.id)), [languages, isInstalled]);
 
-  // After a duplicate or an update the set to show may be one the list has not read yet.
-  const select = useCallback((code: string) => {
+  const refreshThenSelect = useCallback((code: string) => {
     void refresh().then(() => setSelected(code));
   }, [refresh]);
 
@@ -169,7 +157,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   );
 
   const origin = installed === null ? null : (
-    <InstalledOriginBar pack={installed} onDuplicated={select} onUpdated={select} onUninstalled={handleUninstalled} />
+    <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdated={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
   const detail = <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} />;
 
@@ -177,4 +165,3 @@ const LanguageManager = (props: LanguageManagerProps) => {
 };
 
 export { LanguageManager };
-export type { LanguageManagerProps };

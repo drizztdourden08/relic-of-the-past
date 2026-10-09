@@ -1,13 +1,6 @@
 /* @layer renderer-components @kind component */
-/** `button` is a thin pass-through to `ButtonStatesEditor`. */
 import { ButtonStatesEditor } from '../ButtonStatesEditor';
-import type { GlyphPack, HudButtonSpec } from '@shared/types/hud';
-
-interface ButtonContentProps {
-  spec: HudButtonSpec;
-  onChange: (patch: Partial<HudButtonSpec>) => void;
-  glyphPacks: readonly GlyphPack[];
-}
+import type { ButtonContentProps } from './ButtonContent.type';
 
 const ButtonContent = (props: ButtonContentProps) => {
   const { spec, onChange, glyphPacks } = props;
@@ -15,4 +8,4 @@ const ButtonContent = (props: ButtonContentProps) => {
 };
 
 export { ButtonContent };
-export type { ButtonContentProps };
+export type { ButtonContentProps } from './ButtonContent.type';

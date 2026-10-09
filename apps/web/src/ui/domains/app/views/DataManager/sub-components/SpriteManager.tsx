@@ -15,13 +15,8 @@ import { ImportProgress } from './ImportProgress';
 import { useImportProgress } from '@app/hooks/useImportProgress';
 import * as spritesStore from '@app/lib/storage/sprites-store';
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
+import type { ExtractedStatus, SpriteManagerProps } from './SpriteManager.type';
 import './SpriteManager.css';
-
-interface SpriteManagerProps {
-  romStatuses: RomDisplayInfo[];
-}
-
-type ExtractedStatus = { extracted: boolean; count: number };
 
 const SpriteManager = (props: SpriteManagerProps) => {
   const { romStatuses } = props;
@@ -41,8 +36,6 @@ const SpriteManager = (props: SpriteManagerProps) => {
     setExtractedMap(Object.fromEntries(entries));
   }, [romsWithAssets]);
 
-  // Also re-read when the background extraction for the active ROM lands, so a set
-  // that appeared on its own moves from "available" to "imported" without a remount.
   const spritesAvailable = useSpriteAvailabilityStore((s) => s.available);
   useEffect(() => { refreshExtracted(); }, [refreshExtracted, spritesAvailable]);
 
@@ -55,7 +48,6 @@ const SpriteManager = (props: SpriteManagerProps) => {
     [romsWithAssets, extractedMap]
   );
 
-  // Keep a valid imported ROM selected for the detail pane.
   useEffect(() => {
     if (importedRoms.length === 0) { setSelectedRom(''); return; }
     if (!importedRoms.some(r => r.romFile === selectedRom)) setSelectedRom(importedRoms[0].romFile);
@@ -156,4 +148,3 @@ const SpriteManager = (props: SpriteManagerProps) => {
 };
 
 export { SpriteManager };
-export type { SpriteManagerProps };

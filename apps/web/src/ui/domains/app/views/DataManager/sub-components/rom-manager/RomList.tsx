@@ -1,25 +1,12 @@
 /* @layer renderer-components @kind component */
-/**
- * Combined ROM list: base cartridges with their extraction status, and supplement
- * cartridges with their attachment status. A supplement has no extraction of its own,
- * only a sidecar per attached base.
- */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
 import { IconButton } from '@ds/primitives/IconButton';
 import { EmptyState } from '@ds/primitives/EmptyState';
 import { ListItemRow } from '@ds/composites/ListItemRow';
 import { ROM_KINDS } from '@shared/storage/rom-kinds';
-import type { SupplementStatus } from '@shared/storage/roms';
 import { formatBytes } from '@app/utils/formatBytes';
-
-interface RomListProps {
-  romStatuses: RomDisplayInfo[];
-  supplements: SupplementStatus[];
-  selected: string | null;
-  onSelect: (romFile: string) => void;
-  onDelete: (romFile: string) => void;
-}
+import type { RomListProps } from './RomList.type';
 
 const RomList = (props: RomListProps) => {
   const { romStatuses, supplements, selected, onSelect, onDelete } = props;
@@ -78,4 +65,3 @@ const RomList = (props: RomListProps) => {
 };
 
 export { RomList };
-export type { RomListProps };

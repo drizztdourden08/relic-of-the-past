@@ -1,27 +1,11 @@
 /* @layer renderer-components @kind hook */
-/**
- * State and handlers for RomManager: which import lane is active, the supplement
- * list (fetched separately from the base `romStatuses` prop, since supplements
- * carry no extraction status of their own), detail-panel loading, and kind-aware
- * import handlers.
- *
- * A supplement only reaches the game through a rebuild of the base blob that
- * carries it, so a successful supplement import re-triggers `onExtractAssets`
- * for every base cartridge that already has assets built. It is the same call the
- * base lane uses for itself, fanned out.
- */
 import { useState, useEffect, useCallback } from 'react';
 import type { RomKind } from '@shared/storage/rom-kinds';
 import { ROM_KINDS } from '@shared/storage/rom-kinds';
 import type { SupplementStatus } from '@shared/storage/roms';
 import * as romsStore from '@app/lib/storage/roms-store';
-import type { RomDetail } from './types';
-
-interface UseRomManagerParams {
-  romStatuses: RomDisplayInfo[];
-  onRefresh: () => void;
-  onExtractAssets: (romFile: string) => void;
-}
+import type { RomDetail } from './rom-detail.type';
+import type { UseRomManagerParams } from './useRomManager.type';
 
 const importMessage = (kind: RomKind, romFile: string, alreadyExists: boolean): string =>
   alreadyExists ? `${ROM_KINDS[kind].label} already imported` : `Imported ${romFile}`;
@@ -38,8 +22,6 @@ const useRomManager = (params: UseRomManagerParams) => {
     romsStore.listSupplements().then(setSupplements);
   }, []);
 
-  // A supplement's `attachedTo` only becomes true once the rebuild that
-  // `romStatuses` reports on finishes, so re-list whenever that prop changes.
   useEffect(() => { refreshSupplements(); }, [romStatuses, refreshSupplements]);
 
   useEffect(() => {
@@ -90,4 +72,3 @@ const useRomManager = (params: UseRomManagerParams) => {
 };
 
 export { useRomManager };
-export type { UseRomManagerParams };

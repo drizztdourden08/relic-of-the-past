@@ -1,50 +1,11 @@
 /* @layer renderer-components @kind hook */
-/**
- * The working layout, kept as a Memento.
- *
- * The editor never touches the live layout. It takes a copy of the one in force
- * when it opened (`origin`, which is never written to), edits `draft`, and only
- * on an explicit Save does the draft reach storage and the layout store. So
- * closing the editor on purpose or by walking away leaves the HUD
- * exactly as it was found, and Reset goes back to the memento instead of
- * replaying an undo log.
- *
- * `dirty` is a comparison against that same memento, not a flag: there is no
- * second piece of state to keep in step, and an edit that happens to restore
- * the original correctly reports nothing to save.
- *
- * A built-in layout cannot be saved over because it is a file in this repository,
- * not data. Editing one and pressing Save is a fork, which is what "Save as..."
- * makes explicit.
- *
- * IT OWNS THE DOCUMENT, NOT THE EDITS. `apply` takes a pure transform over the
- * whole layout and is the ONE way anything changes it, so the tree operations
- * (`node-edits.ts`) stay pure functions with no React in them and this file
- * stays about the memento. The toolbar's insert, the outline's drag and the
- * inspector's field all arrive through that one door.
- */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHudLayoutStore } from '@app/stores/hud-layout-store';
 import {
   forkLayout, listLayouts, resolveStoredLayout, saveCustomLayout,
 } from '@app/lib/hud/layout-document-io';
 import type { HudLayout } from '@shared/types/hud';
-
-interface LayoutDraft {
-  draft: HudLayout | null;
-  /** The one door every tree edit comes through. */
-  apply: (change: (doc: HudLayout) => HudLayout) => void;
-  /** Every layout the "start from" list offers: shipped ones, then custom. */
-  layouts: readonly HudLayout[];
-  dirty: boolean;
-  busy: boolean;
-  rename: (name: string) => void;
-  setGlyphPack: (glyphPack: string) => void;
-  startFrom: (layout: HudLayout) => void;
-  reset: () => void;
-  save: () => Promise<HudLayout | null>;
-  saveAs: (name: string) => Promise<HudLayout | null>;
-}
+import type { LayoutDraft } from './useLayoutDraft.type';
 
 const sameLayout = (a: HudLayout | null, b: HudLayout | null): boolean =>
   JSON.stringify(a) === JSON.stringify(b);
@@ -82,9 +43,6 @@ const useLayoutDraft = (layoutId: string, onCommitted?: (layout: HudLayout) => v
     setDraft((current) => (current ? { ...current, glyphPack } : current));
   }, []);
 
-  /** Adopting another layout keeps the draft's own identity when it already has
-   *  one, so "start from" restyles the layout being edited instead of silently
-   *  switching which layout is open. */
   const startFrom = useCallback((source: HudLayout) => {
     setDraft((current) => {
       const copy = structuredClone(source);
@@ -114,7 +72,6 @@ const useLayoutDraft = (layoutId: string, onCommitted?: (layout: HudLayout) => v
 
   const save = useCallback(async () => {
     if (!draft) return null;
-    // A shipped layout is a file in this repository; saving one is always a fork.
     return draft.builtIn ? commit(forkLayout(draft, `${draft.name} (edited)`)) : commit(draft);
   }, [commit, draft]);
 
@@ -124,4 +81,4 @@ const useLayoutDraft = (layoutId: string, onCommitted?: (layout: HudLayout) => v
 };
 
 export { useLayoutDraft };
-export type { LayoutDraft };
+export type { LayoutDraft } from './useLayoutDraft.type';

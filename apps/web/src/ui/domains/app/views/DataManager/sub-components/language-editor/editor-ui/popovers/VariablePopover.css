@@ -1,11 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/*
- * The variable list: a filter over a scrolling column of plain rows. No kind
- * chips and no counts. The label is what a translator is looking for, and
- * anything beside it competes with the word itself.
- */
-
 .variable-popover__filter {
   width: 100%;
 }
@@ -33,7 +26,6 @@
   white-space: nowrap;
 }
 
-/* The game owns this value: readable, never loud. */
 .variable-popover__row-lock {
   flex: none;
   color: var(--color-text-secondary);

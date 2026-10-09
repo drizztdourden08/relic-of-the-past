@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind hook */
-// The pack list, selection, and whole-pack operations. Manifests are read here so rows need not ask storage.
 import { useCallback, useEffect, useState } from 'react';
 import * as msuStore from '@app/lib/storage/msu-store';
+import { failure } from './failure';
 import type { ActionResult, MsuPackRow } from '../msu.type';
-
-const failure = (err: unknown, fallback: string): ActionResult => ({
-  success: false, message: err instanceof Error ? err.message : fallback,
-});
 
 const usePackList = (onRefresh: () => void) => {
   const [packs, setPacks] = useState<MsuPackRow[]>([]);
@@ -15,8 +11,6 @@ const usePackList = (onRefresh: () => void) => {
   const refresh = useCallback(async () => {
     const list = await msuStore.listMsuPacks();
     const rows = await Promise.all(list.map(async (pack): Promise<MsuPackRow> => {
-      // listMsuPacks counts only the two MSU extensions, so a layered pack full of wav/flac
-      // would report nothing. The audio listing is the one that sees every playable file.
       const audio = await msuStore.listMsuAudioFiles(pack.name);
       return {
         name: pack.name,
@@ -57,4 +51,4 @@ const usePackList = (onRefresh: () => void) => {
   return { packs, selected, setSelected, refresh, createPack, renamePack };
 };
 
-export { usePackList, failure };
+export { usePackList };

@@ -1,6 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/* Scrolls only on the inside: the header and tabs stay put. */
 .language-editor {
   display: flex;
   flex-direction: column;
@@ -9,13 +7,6 @@
   gap: var(--space-xs);
 }
 
-/*
- * Selection opted back in for the pane and every descendant. The app-wide reset
- * resolves `none` down the whole tree, and an element that cannot be selected
- * cannot start a selection either, so a press outside the typing surface left
- * the old highlight painted. Naming the descendants too is what makes it stick
- * (same fix as the log panel).
- */
 .language-editor,
 .language-editor * {
   user-select: text;

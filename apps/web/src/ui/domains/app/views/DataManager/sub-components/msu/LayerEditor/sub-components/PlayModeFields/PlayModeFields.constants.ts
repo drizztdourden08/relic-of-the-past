@@ -1,8 +1,8 @@
-/* @layer renderer-components @kind data */
-// The wait-for-completion hint is written per state: what matters is the audible consequence now.
+/* @layer renderer-components @kind constants */
 import type { SegmentOption } from '@ds/primitives/SegmentedControl';
 import { MODE_LABELS } from '../../behavior/layer-ops';
 import type { PlayModeKind } from '../../behavior/layer-ops';
+import type { LoopOrder } from './PlayModeFields.type';
 
 const MODE_OPTIONS: SegmentOption<PlayModeKind>[] = (Object.keys(MODE_LABELS) as PlayModeKind[])
   .map((kind) => ({ value: kind, label: MODE_LABELS[kind] }));
@@ -15,15 +15,12 @@ const MODE_HINTS: Record<PlayModeKind, string> = {
   interval: 'Fires at fixed times measured from the start of the slot.',
 };
 
-type LoopOrder = 'sequential' | 'random' | 'single';
-
 const ORDER_OPTIONS: SegmentOption<LoopOrder>[] = [
   { value: 'sequential', label: 'Sequential' },
   { value: 'random', label: 'Shuffle' },
   { value: 'single', label: 'Single' },
 ];
 
-/** Read under the control, because which one is selected changes what the layer even is. */
 const ORDER_HINTS: Record<LoopOrder, string> = {
   sequential: 'Plays the files in the order listed, then starts over.',
   random: 'Draws a different file each pass.',
@@ -49,4 +46,3 @@ export {
   MODE_OPTIONS, MODE_HINTS, ORDER_OPTIONS, ORDER_HINTS,
   CROSSFADE_LABEL, CROSSFADE_HINT, WAIT_LABEL, WAIT_HINTS,
 };
-export type { LoopOrder };

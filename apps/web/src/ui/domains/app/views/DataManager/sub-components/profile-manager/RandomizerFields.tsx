@@ -1,29 +1,13 @@
 /* @layer renderer-components @kind component */
-/**
- * Randomizer section of the profile-creation form: enable toggle, then seed +
- * mode, and the server setup when Archipelago is picked (ArchipelagoFields.tsx).
- *
- * The seed arrives already thrown (build-randomizer-config.ts) so the options
- * panel can preview what it rolls. Typing over it is the point; emptying it is
- * refused, because there is then nothing to preview from.
- */
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Toggle } from '../../../../../../design-system/primitives/Toggle';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
 import { Field } from '../../../../../../design-system/primitives/Field';
 import { ArchipelagoFields } from './ArchipelagoFields';
+import { MODE_OPTIONS } from './RandomizerFields.constants';
 import type { RandomizerFormState } from './build-randomizer-config';
-
-interface RandomizerFieldsProps {
-  value: RandomizerFormState;
-  onChange: (next: RandomizerFormState) => void;
-}
-
-const MODE_OPTIONS = [
-  { value: 'local', label: 'Local' },
-  { value: 'online', label: 'Archipelago' },
-];
+import type { RandomizerFieldsProps } from './RandomizerFields.type';
 
 const RandomizerFields = (props: RandomizerFieldsProps) => {
   const { value, onChange } = props;
@@ -66,4 +50,3 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
 };
 
 export { RandomizerFields };
-export type { RandomizerFieldsProps };

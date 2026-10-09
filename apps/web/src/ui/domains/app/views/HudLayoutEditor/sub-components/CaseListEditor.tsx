@@ -1,29 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * A `switch`'s cases. They reorder, because the ORDER IS THE LOGIC: first
- * match wins, top to bottom (`plans/hud-data-binding.html`'s wireframe 5).
- * Plus an `otherwise` row and "+ add case".
- *
- * A CASE'S OWN `node` IS A FULL SUBTREE, not a field this editor owns. This
- * only edits `when` and the case's place in the list. Its content (which
- * sprite, which text and so on) is tuned the same way any other node's is. Select
- * it in the outline, which lists it now (`node-edits.ts`'s own extension), and the
- * rest of the panel takes over. The button here jumps the selection there
- * directly, so a player never has to go hunting for the row it made.
- *
- * WHICH BRANCH IS WINNING IS DRAWN, NOT DEDUCED (phase 9). The order being the
- * logic is only useful if the reader can see the logic run, and until now they
- * could not: the panel printed `item >= 4`, the stage drew a half heart, and
- * joining those two facts was arithmetic done in the author's head against a
- * scope they had to remember. `behavior/case-match.ts` asks the ENGINE'S own
- * predicate, so the marker cannot disagree with what the stage drew. And
- * inside a repeat it reports a COUNT (`matches 6 of 20`) instead of picking
- * one instance and presenting it as the answer.
- *
- * AND THE CASE'S NODE IS A `ReferenceField`, on the same argument as every
- * other reference in this section: `sprite hud-silver-arrow-icon · sprite-3f21`
- * is a slug and an id where the editor owns the picture.
- */
 import './HudLayoutEditor.content.css';
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
@@ -35,17 +10,8 @@ import { caseMatches, matchLabel } from '../behavior/case-match';
 import { useInstanceScopes } from '../behavior/formula-scope';
 import { nodeArtOf } from '../behavior/node-art';
 import { placeholderChild } from '../behavior/new-node';
-import type { GlyphPack, HudNode, HudSwitchCase, HudSwitchSpec } from '@shared/types/hud';
-
-interface CaseListEditorProps {
-  spec: HudSwitchSpec;
-  onChange: (patch: Partial<HudSwitchSpec>) => void;
-  scope: Readonly<Record<string, number>>;
-  insideRepeat?: boolean;
-  glyphPacks: readonly GlyphPack[];
-  selectedId: string | null;
-  onSelectNode: (id: string) => void;
-}
+import type { HudNode, HudSwitchCase } from '@shared/types/hud';
+import type { CaseListEditorProps } from './CaseListEditor.type';
 
 const move = <T,>(list: readonly T[], from: number, to: number): T[] => {
   const next = [...list];
@@ -59,8 +25,6 @@ const CaseListEditor = (props: CaseListEditorProps) => {
   const { cases, otherwise } = spec;
   const instances = useInstanceScopes();
 
-  // Inside a repeat a switch is evaluated once per instance, so the previewed
-  // data is the whole set of them; outside one it is the single data scope.
   const scopes = insideRepeat && instances.length > 0 ? instances : [scope];
   const matches = caseMatches(cases, scopes);
 
@@ -131,4 +95,4 @@ const CaseListEditor = (props: CaseListEditorProps) => {
 };
 
 export { CaseListEditor };
-export type { CaseListEditorProps };
+export type { CaseListEditorProps } from './CaseListEditor.type';

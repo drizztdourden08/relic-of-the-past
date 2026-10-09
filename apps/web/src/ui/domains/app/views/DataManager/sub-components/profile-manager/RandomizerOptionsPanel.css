@@ -1,14 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/* ─── Randomizer options panel (profile creation) ───
-   Hosted in the master-detail DETAIL pane, which already draws the surface,
-   border and padding. The panel fills it with a split: the catalog on the
-   left behind its tab strip, the item pool on the right behind its rail.
-   Only the tab BODY scrolls: the header, the tabs and the pool total stay
-   put, so the feedback for an edit never scrolls away with the rows. */
-
-/* The measured box: the panel reads its own width here to choose between the
-   split and the pool as a tab, so it fills its host in both. */
 .randomizer-options__root {
   display: flex;
   flex-direction: column;
@@ -41,8 +31,6 @@
   padding-right: var(--space-sm);
 }
 
-/* The changed-count badge a tab wears: gold, so "you moved something in
-   here" reads at a glance against the strip's muted default. */
 .randomizer-options .tab-bar__badge {
   background: var(--c-gold-soft);
   color: var(--c-gold-bright);
@@ -62,8 +50,6 @@
   letter-spacing: 0.5px;
 }
 
-/* The split needs both columns; on a narrow window the options stack below
-   the form column instead of squeezing beside it. */
 @media (width <= 900px) {
   .master-detail--rand-options {
     grid-template-columns: 1fr;

@@ -1,0 +1,12 @@
+/* @layer renderer-components @kind barrel */
+export { exprOf } from './expr-of';
+export { FORMULA_PREFIX } from './value-text.constants';
+export { isFormulaText } from './is-formula-text';
+export { isNumeral } from './is-numeral';
+export { literalTextOf } from './literal-text-of';
+export { stepsAsNumber } from './steps-as-number';
+export { textOf } from './text-of';
+export { textOfTextValue } from './text-of-text-value';
+export { textValueOf } from './text-value-of';
+export { valueOf } from './value-of';
+export { withFormulaMarker } from './with-formula-marker';

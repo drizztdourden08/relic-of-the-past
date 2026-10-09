@@ -7,16 +7,7 @@ import { EmptyState } from '@ds/primitives/EmptyState';
 import { ListItemRow } from '@ds/composites/ListItemRow';
 import { formatBytes } from '@app/utils/formatBytes';
 import { HookshopChip } from '@domains/app/compounds/HookshopChip';
-import type { MsuPackRow } from './msu.type';
-
-interface MsuPackListProps {
-  packs: MsuPackRow[];
-  selected: string | null;
-  /** True for a pack installed from the Hookshop: its row carries the lock, and Delete uninstalls it. */
-  isInstalled: (name: string) => boolean;
-  onSelect: (name: string) => void;
-  onDelete: (name: string) => void;
-}
+import type { MsuPackListProps } from './MsuPackList.type';
 
 const MsuPackList = (props: MsuPackListProps) => {
   const { packs, selected, isInstalled, onSelect, onDelete } = props;
@@ -69,4 +60,3 @@ const MsuPackList = (props: MsuPackListProps) => {
 };
 
 export { MsuPackList };
-export type { MsuPackListProps };

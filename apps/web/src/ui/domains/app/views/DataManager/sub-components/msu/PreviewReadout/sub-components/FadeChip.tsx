@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// Sits beside the position reading, not in place of it: the sound still advances while its level moves.
 import { Box } from '@ds/primitives/Box';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
 import { Text } from '@ds/primitives/Text';

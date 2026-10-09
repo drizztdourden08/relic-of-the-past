@@ -1,54 +1,14 @@
 /* @layer renderer-components @kind component */
-/**
- * SIZE, THEN LIMITS, THEN THE BOX, THEN THE TRANSFORM. That is the order every
- * inspector in the discipline uses, in four controls instead of nine rows.
- *
- * The section was two extents spending two rows each on four modes, four
- * checkboxes and four sentences for two optional ranges, and eight unlabelled
- * `t r b l` spinners. It is now `ExtentField` x2 on one row, one `MinMaxField`,
- * one `BoxModelField`, and `scale`.
- *
- * MARGIN IS NO LONGER THE HIDDEN POSITION EDITOR. `margin.left`/`margin.top`
- * are the node's offset and Placement owns them (`behavior/offset.ts`); this
- * section shows them dimmed inside the ring with the reason under it.
- *
- * THE SCREEN'S LOCK IS A SCRIM, NOT FIVE DISABLED INPUTS AND A NOTE PLACED
- * BETWEEN THE FIELDS IT COVERS AND THE ONES IT DOES NOT. Everything the screen
- * cannot author stays visible under one `DisabledReason`, with size and limits
- * together, the margin ring locked in place and `scale` read-only. Its
- * PADDING, the one thing it does author, stays live and outside the scrim.
- * `inert` on the covered subtree is what actually makes it unreachable; the
- * old `disabled` props left the fields in the tab order.
- */
 import { Box } from '@ds/primitives/Box';
 import { BoxModelField } from '../BoxModelField';
 import { DisabledReason } from '../DisabledReason';
 import { ExtentField } from '../ExtentField';
 import { MinMaxField } from '../MinMaxField';
 import { ValueInput } from '../ValueInput';
-import type { Extent, HudNode } from '@shared/types/hud';
-
-const SCREEN_REASON = 'The screen is always exactly the view, at every aspect and every resolution.';
-
-interface SizeBoxSectionProps {
-  node: HudNode;
-  onPatch: (patch: Partial<HudNode>) => void;
-  scope: Readonly<Record<string, number>>;
-  insideRepeat?: boolean;
-  /** The whole-screen root: padding only, everything else locked. */
-  isScreen?: boolean;
-}
-
-/** What the middle of the box model reads. The AUTHORED size, not the resolved
- *  rectangle. The panel does not have the placed rect, the stage does, and a
- *  number labelled "resolved" that was not would be worse than none. */
-const extentText = (extent: Extent | undefined): string => {
-  if (extent === undefined || extent === 'auto') return 'auto';
-  if (extent === 'fill') return 'fill';
-  if ('pct' in extent) return typeof extent.pct === 'number' ? `${extent.pct}%` : '% ƒx';
-  if ('px' in extent) return typeof extent.px === 'number' ? String(extent.px) : 'ƒx';
-  return 'ƒx';
-};
+import { extentText } from '../../behavior/extent-text';
+import type { Extent } from '@shared/types/hud';
+import { SCREEN_REASON } from './SizeBoxSection.constants';
+import type { SizeBoxSectionProps } from './SizeBoxSection.type';
 
 const SizeBoxSection = (props: SizeBoxSectionProps) => {
   const { node, onPatch, scope, insideRepeat, isScreen = false } = props;
@@ -104,5 +64,5 @@ const SizeBoxSection = (props: SizeBoxSectionProps) => {
   );
 };
 
-export { SizeBoxSection, extentText };
-export type { SizeBoxSectionProps };
+export { SizeBoxSection };
+export type { SizeBoxSectionProps } from './SizeBoxSection.type';

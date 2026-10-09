@@ -1,35 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * The bubbled-up option rows of one tab: the sections a tab owns, each still
- * under its own catalog heading, each row carrying its In Pool cell. Given no
- * change handler the rows render as the catalog's own fixed values, and the
- * shape the locked sections take. `frozenKeys` names the rows a sibling
- * setting has taken out of the player's hands, so they grey out instead of
- * offering a control that could not change the seed, and `notes` carries the
- * sentence saying which setting did it, one per row, so the reason sits on the
- * row it explains instead of in a list underneath them all.
- */
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
-import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
-import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
-
-interface OptionGroupListProps {
-  groups: readonly LockedOptionGroup[];
-  /** The value each row shows. */
-  valueOf: (option: OptionDef) => OptionValue;
-  cellOf: (key: string) => ImpactCell;
-  /** The player's own sections; absent renders the group as a fixed one. */
-  live?: boolean;
-  /** Unlocked rows this tab freezes anyway, where a sibling setting decides them. */
-  frozenKeys?: ReadonlySet<string>;
-  /** Per-row reason a frozen row is showing a value the player did not choose. */
-  notes?: ReadonlyMap<string, string>;
-  onRowChange?: (key: string, next: OptionValue) => void;
-  /** Every row shows its value as a tag: the read-only panel. */
-  readout?: boolean;
-}
+import type { OptionGroupListProps } from './OptionGroupList.type';
 
 const OptionGroupList = (props: OptionGroupListProps) => {
   const { groups, valueOf, cellOf, live = false, frozenKeys, notes, onRowChange, readout } = props;
@@ -57,4 +29,3 @@ const OptionGroupList = (props: OptionGroupListProps) => {
 };
 
 export { OptionGroupList };
-export type { OptionGroupListProps };

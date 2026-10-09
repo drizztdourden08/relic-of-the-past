@@ -1,34 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * One collapsible section of the inspector. Nine of these are what let a
- * panel that has grown from six properties to thirty stay scannable at 232px
- * (`plans/hud-data-binding.html`, "The property panel").
- *
- * THE HEADER CARRIES A BOUND-COUNT BADGE (`● n`) so a section that is doing
- * something can be told apart from one that is not WITHOUT opening it. The
- * whole reason nine sections fit in this width is that most stay closed most
- * of the time. Empty when nothing on this node is bound to data; never shown
- * as `● 0`.
- *
- * OPEN STATE IS THE PARENT'S, not this component's own. `NodeInspector` is
- * what enforces "only two or three open at once" by closing the oldest
- * section when a new one opens, which only works if one place owns the set.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
-import type { ReactNode } from 'react';
-
-interface SectionAccordionProps {
-  title: string;
-  open: boolean;
-  onToggle: () => void;
-  /** The bound-value count, when this section has any. Renders as `● n`. */
-  boundCount?: number;
-  /** A short note beside the title, e.g. "of the selected child". */
-  note?: string;
-  children: ReactNode;
-}
+import type { SectionAccordionProps } from './SectionAccordion.type';
 
 const SectionAccordion = (props: SectionAccordionProps) => {
   const { title, open, onToggle, boundCount, note, children } = props;
@@ -52,4 +26,4 @@ const SectionAccordion = (props: SectionAccordionProps) => {
 };
 
 export { SectionAccordion };
-export type { SectionAccordionProps };
+export type { SectionAccordionProps } from './SectionAccordion.type';

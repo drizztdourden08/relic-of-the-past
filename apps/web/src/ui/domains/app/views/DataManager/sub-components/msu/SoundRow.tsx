@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Identity reads name-then-evidence: the catalogue name on top (a best guess) and the game's own
- * function names beneath (not a guess). An id with no name is named by its functions. The full
- * trigger list stays on the tooltip. `showChannel` is set wherever one list carries more than one
- * channel, because the channels do NOT share an id space.
- */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -22,12 +16,9 @@ const SoundRow = (props: SoundRowProps) => {
   const { soundId, hex, label, triggers, sites, layerCount, unlisted, role, unreachable } = row;
   const replaced = layerCount > 0;
   const summary = triggerSummary(triggers);
-  // A named sound keeps its triggers as evidence underneath; an unnamed one is named by them.
   const name = label ?? (summary.length > 0 ? summary : 'Unnamed sound');
   const under = label !== null ? summary : `${sites} call site${sites === 1 ? '' : 's'}`;
-  // Play never becomes stop on an effects channel: pressing it again is meant to add a sound.
   const stoppable = playing && !additive;
-  // With nothing to replace it, play means the chip's own version, which IS the sound here.
   const playsOriginal = !replaced;
 
   return (
@@ -46,11 +37,9 @@ const SoundRow = (props: SoundRowProps) => {
         )}
       </Box>
 
-      {/* What the id does on its channel, which is what decides whether a replacement can work. */}
       {role !== null && (
         <Badge variant="neutral" title={AMBIENT_ROLE_HINTS[role]}>{AMBIENT_ROLE_LABELS[role]}</Badge>
       )}
-      {/* Shown only because the unreachable ids were asked for, so say why it was hidden. */}
       {unreachable && (
         <Badge variant="warning" title="Nothing in the game writes this id, so a sound put here never plays">
           Never raised
@@ -59,7 +48,6 @@ const SoundRow = (props: SoundRowProps) => {
 
       <Badge variant={replaced ? 'success' : 'neutral'}>{replaced ? 'Replaced' : 'Native'}</Badge>
       {layerCount > 1 && <Badge variant="neutral">{layerCount} layers</Badge>}
-      {/* Only worth saying on an id with nothing to it: the pack could still put a sound there. */}
       {chipAudible === false && !replaced && <Badge variant="neutral">Silent</Badge>}
 
       <Box className="msu-track-row__actions">

@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * One sound channel on its own tab. The filter is owned here, not in the hook, because a list
- * built from more than one channel has to put one query across all of them.
- */
 import { useCallback, useState } from 'react';
-import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { EmptyState } from '@ds/primitives/EmptyState';
@@ -18,33 +13,16 @@ import { soundPanelSubtitle } from './behavior/sound-subtitle';
 import { useSoundPanel } from './behavior/useSoundPanel';
 import { SOUND_CHANNEL_LABELS, soundTitle } from './sound-labels';
 import { SOUND_FILTER_HINT, SOUND_FILTER_PLACEHOLDER, UNREACHABLE_DESCRIPTION } from './msu.constants';
-import type { MsuFile } from './msu.type';
-
-interface MsuSoundPanelProps {
-  pack: string;
-  channel: SoundChannel;
-  /** What the rows and the editor SHOW. */
-  manifest: MsuPackManifest;
-  /** What a save WRITES into. See LayerEditorProps.saveBase. */
-  saveBase: MsuPackManifest;
-  files: MsuFile[];
-  isLayered: boolean;
-  /** An installed pack: sounds play, nothing changes. */
-  readOnly: boolean;
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  onReload: () => void;
-}
+import type { MsuSoundPanelProps } from './MsuSoundPanel.type';
 
 const MsuSoundPanel = (props: MsuSoundPanelProps) => {
   const { pack, channel, manifest, saveBase, files, isLayered, readOnly, onDeleteConfirm, onReload } = props;
   const [filter, setFilter] = useState('');
-  // Off by default: the ids it reveals are ones nothing in the game can raise.
   const [showUnreachable, setShowUnreachable] = useState(false);
   const sound = useSoundPanel({
     pack, channel, manifest, saveBase, files, filter, showUnreachable, reload: onReload,
   });
   const { rows, replacedCount, total, playing } = sound;
-  // Non-zero only where a reachable set exists to hide anything, which is the ambient channel.
   const hasHidden = sound.unreachableCount > 0;
   const availableFiles = files.map((file) => file.name);
 
@@ -129,4 +107,3 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
 };
 
 export { MsuSoundPanel };
-export type { MsuSoundPanelProps };

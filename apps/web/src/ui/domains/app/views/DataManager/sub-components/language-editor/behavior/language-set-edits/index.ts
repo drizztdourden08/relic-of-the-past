@@ -1,0 +1,9 @@
+/* @layer renderer-components @kind barrel */
+export { withEntryNote } from './with-entry-note';
+export { withEntryTokens } from './with-entry-tokens';
+export { withGlossaryTerm } from './with-glossary-term';
+export { withManyEntryTokens } from './with-many-entry-tokens';
+export { withNameValue } from './with-name-value';
+export { withStructure } from './with-structure';
+export { withTextValue } from './with-text-value';
+export { withoutGlossaryTerm } from './without-glossary-term';

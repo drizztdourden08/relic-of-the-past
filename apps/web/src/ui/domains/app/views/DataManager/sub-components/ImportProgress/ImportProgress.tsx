@@ -3,14 +3,8 @@ import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Spinner } from '../../../../../../design-system/primitives/Spinner';
 import { ProgressBar } from '../../../../../../design-system/primitives/ProgressBar';
-import type { ImportProgressState } from '@app/hooks/useImportProgress';
+import type { ImportProgressProps } from './ImportProgress.type';
 import './ImportProgress.css';
-
-interface ImportProgressProps {
-  state: ImportProgressState;
-  /** Shown before the first progress event arrives (e.g. the form's "Downloading..."). */
-  fallbackLabel?: string;
-}
 
 const ImportProgress = (props: ImportProgressProps) => {
   const { state, fallbackLabel } = props;
@@ -35,4 +29,3 @@ const ImportProgress = (props: ImportProgressProps) => {
 };
 
 export { ImportProgress };
-export type { ImportProgressProps };

@@ -1,38 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * THE DRAWING, and since §55 the track controls that stand on it. Two
- * controls mount this and they mean opposite things (`GridEditor` edits the
- * GRID, `CellPicker` edits one CHILD's cell), so neither owns it: it takes what
- * a cell looks like and what a press means as props, and writes nothing itself.
- * A mount that passes no `onAddTrack`/`onSizeTrack` gets a pure drawing, which
- * is exactly what `CellPicker` needs.
- *
- * `+` IS THE LAST HEADER, ON BOTH STRIPS (§55). "the add column or row should be
- * at the very end of the grid component (next to the column selection last
- * column on its right) and same for row but on the bottom of that row selection
- * last. just a + icon." So the template grows one 22px column and one 22px row
- * for them, and §54's `TRACKS` row (`3 columns [+]  3 rows [+]`, 47px of panel
- * naming a count nobody was reading) is deleted. A `+` beside the strip it
- * extends says where the new track lands without a word.
- *
- * THE CELLS MATCH THE REAL TRACKS (§50). Column widths and row heights are the
- * engine's own solve, entered as `fr` weights under a `minmax(24px, ...)` floor,
- * over a body whose height is definite (`latticeHeight`) so the row weights have
- * something to divide. Past the point where every track can still clear 24px the
- * body overflows and SCROLLS, with both header strips `position: sticky` as
- * frozen panes, because the strips are the only thing that identifies a cell.
- *
- * OCCUPANCY IS DRAWN, NEVER TOUCHED. A child's label sits over the cells it
- * covers with `pointer-events: none`, so the author can see what a track edit
- * will move but cannot edit the child from here, which is the confusion §50
- * exists to end.
- *
- * ONE TAB STOP. The body is the focusable thing and the cursor is
- * `aria-activedescendant`; a `<Button>` per cell would make a 6x4 grid 24 tab
- * stops on the way to the fields below it. The two `+`s and a selected track's
- * size button are real buttons and are the exception. They are four stops in
- * total, and each is a thing a keyboard has no other route to.
- */
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { trackText } from '../../behavior/track-extents';
@@ -40,19 +6,14 @@ import { AddTrackButton } from './sub-components/AddTrackButton';
 import { TrackHead } from './sub-components/TrackHead';
 import {
   ADD, GUTTER, HEAD, emptyOn, latticeHeight, occupantsAt, trackTemplate,
-} from './lattice-geometry';
+} from './behavior/lattice-geometry';
+import { idOf } from './behavior/cell-id';
+import { headTitle } from './behavior/head-title';
 import './HudLayoutEditor.lattice.css';
 import type { CSSProperties } from 'react';
 import type { GridLatticeProps } from './GridLattice.type';
 
-const idOf = (column: number, row: number): string => `hud-lattice-cell-${column}-${row}`;
-
 const series = (count: number): number[] => Array.from({ length: count }, (_unused, i) => i + 1);
-
-/** An empty `auto` track is drawn at the floor, and the note says so instead of
- *  letting 24px pass for a size the track does not have. */
-const headTitle = (kind: string, index: number, text: string, empty: boolean): string =>
-  `${kind} ${index} is ${text}${empty ? ' (empty, drawn at the 24px minimum)' : ''}`;
 
 const GridLattice = (props: GridLatticeProps) => {
   const {
@@ -173,4 +134,4 @@ const GridLattice = (props: GridLatticeProps) => {
   );
 };
 
-export { GridLattice, idOf };
+export { GridLattice };

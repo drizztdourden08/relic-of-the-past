@@ -1,36 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * SECTION THREE IS THE GRID COMPONENT, AND NOTHING ELSE (§55). The maintainer:
- * "then another section like that with the grid component ONLY."
- *
- * SO THIS FILE HAS NO SETTINGS LEFT IN IT AND NO BOX AROUND IT. §54's
- * `GridSettings` panel (engine, guide, tracks, gap, items alignment) is
- * sections one and two now, `.hud-grid`'s own border and `--c-surface` card are
- * deleted, and so is the old `THIS CONTAINER'S COLUMNS AND ROWS` grid heading box:
- * the section's gold rule says what this is. What is left is three bands that
- * are all the same subject, the lattice:
- *
- * - `SelectionToolbar` holds actions on the SELECTION, and only those. Sticky, one
- *   row. Shared with the flex manipulation section since §58.
- * - `GridLattice` is the drawing, and since §55 the tracks' own controls too.
- * - `SelectionLegend` shows what is selected and what can be pressed right now.
- *
- * THE TRACK CONTROLS MOVED ONTO THE DRAWING, which is what finally fits the
- * strip in one row at the 232px rail. "the add column or row should be at the
- * very end of the grid component (next to the column selection last column on
- * its right) and same for row but on the bottom of that row selection last. just
- * a + icon", so the two `+`s are the lattice's own last header cells, beside
- * the strip they extend, and §54's `TRACKS` row is gone. The selected track's
- * SIZE went the same way: the header already prints `auto`/`fill`, so the
- * selected header's label IS the menu button, and the 81px `[size ▾]` field that
- * forced the toolbar onto two rows at 232 is gone from it.
- *
- * A PRESS STILL WRITES NOTHING (§50, unchanged and pinned). Clicking,
- * `{mod}`-clicking, `Shift`-clicking and dragging across cells all leave the
- * document byte-identical; what they choose is the context the toolbar and the
- * stage echo read. There is no child manipulation here at all. A child's own
- * cell is set in its own Placement section, by `CellPicker`.
- */
 import { useCallback, useEffect, useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
@@ -40,19 +8,12 @@ import { contextualActions, gridActions } from './behavior/grid-actions';
 import { cellStateOf, selectionBounds } from './behavior/grid-cell-state';
 import { handleGridKey } from './behavior/grid-keys';
 import { chipOf, statusOf } from './behavior/grid-status';
-import { useGridSelection } from './behavior/use-grid-selection';
+import { useGridSelection } from './behavior/useGridSelection';
 import { applyTrackEdit, trackExtentOf } from './behavior/grid-track-actions';
 import { SelectionLegend, SelectionToolbar } from '../SelectionBands';
 import './HudLayoutEditor.grid.css';
 import type { KeyboardEvent } from 'react';
-import type { HudGridContainer } from '@shared/types/hud';
-import type { CellRef, GridActionContext, TrackAxis } from './GridEditor.type';
-
-interface GridEditorProps {
-  container: HudGridContainer;
-  /** The ONLY door out of this control, and it names the container alone. */
-  onPatchContainer: (patch: Partial<HudGridContainer>) => void;
-}
+import type { CellRef, GridActionContext, GridEditorProps, TrackAxis } from './GridEditor.type';
 
 const GridEditor = (props: GridEditorProps) => {
   const { container, onPatchContainer } = props;
@@ -151,4 +112,4 @@ const GridEditor = (props: GridEditorProps) => {
 };
 
 export { GridEditor };
-export type { GridEditorProps };
+export type { GridEditorProps } from './GridEditor.type';

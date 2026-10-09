@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// Kept sorted and de-duplicated: two identical offsets would schedule the same sound twice.
 import { useState } from 'react';
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';

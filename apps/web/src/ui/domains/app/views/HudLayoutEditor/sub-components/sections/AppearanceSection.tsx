@@ -1,27 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * `opacity`, `visible`, `background`, `border`, `radius`, `shadow`, `outline`,
- * `tint`, `clip`, `dim when empty`. This is how a box is PAINTED, never its geometry
- * (that's Size & Box).
- *
- * PHASE 8: THE SECTION IS A LIST OF APPLIED EFFECTS. It was ~1800px of flat
- * scroll with six identical-looking headings, two of which were plain booleans
- * (`Clip children`, `Visible`) and four of which revealed a sub-editor.
- * They were indistinguishable until you flipped one. Background, Border, Outline, Tint
- * and each Shadow are `SubsectionGroup`s now: one header row carrying the
- * enable box, a swatch and the value in words, closed by default. The
- * unconditional rows that are left are visible, opacity, radius, clip and dim
- * when empty, which are not a sub-editor and never were.
- *
- * ONE GROUP OPEN AT A TIME, and this file is where that is enforced, for the
- * same reason `NodeInspector` enforces it for the nine sections: it only works
- * if ONE place owns the set. `openKey` spans the shadow cards too, which is why
- * `ShadowListEditor` takes it instead of tracking its own.
- *
- * NOTHING EXPANDS INLINE WITHOUT COLLAPSING SOMETHING ELSE, so the section's
- * height with everything enabled is one screen plus whichever single group is
- * open. The flat scroll could not have that property at any density.
- */
 import { useState } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Field } from '@ds/primitives/Field';
@@ -39,23 +16,9 @@ import { ValueField } from '../ValueField';
 import {
   borderSummary, outlineSummary, paintText, shadowListSummary, swatchOf, tintSummary,
 } from '../../behavior/appearance-summary';
-import type { HudBorder, HudBorderStyle, HudNode, HudRadius, HudTintMode, Value } from '@shared/types/hud';
-
-interface AppearanceSectionProps {
-  node: HudNode;
-  onPatch: (patch: Partial<HudNode>) => void;
-  scope: Readonly<Record<string, number>>;
-  insideRepeat?: boolean;
-}
-
-const BORDER_STYLES: readonly HudBorderStyle[] = ['solid', 'dashed', 'dotted'];
-/** A ring around the ink is drawn as stacked filters. That is cheap at one or two
- *  pixels and expensive past that. See `hud-style.ts`'s own header. */
-const MAX_OUTLINE_PX = 2;
-/** The CSS `border-radius` shorthand order, kept as initials: a 2-up grid at
- *  the 188px rail gives each label ~88px, which `BOTTOM RIGHT` does not fit on
- *  one line at `--text-xs` once `Field` uppercases and letter-spaces it. */
-const CORNERS = ['TL', 'TR', 'BR', 'BL'] as const;
+import type { HudBorder, HudBorderStyle, HudRadius, HudTintMode, Value } from '@shared/types/hud';
+import { BORDER_STYLES, CORNERS, MAX_OUTLINE_PX } from './AppearanceSection.constants';
+import type { AppearanceSectionProps } from './AppearanceSection.type';
 
 const radiusIsSplit = (r: HudRadius | undefined): r is [Value, Value, Value, Value] => Array.isArray(r);
 
@@ -66,7 +29,6 @@ const AppearanceSection = (props: AppearanceSectionProps) => {
 
   const [openKey, setOpenKey] = useState<string | null>(null);
   const toggle = (key: string): void => setOpenKey((prev) => (prev === key ? null : key));
-  /** Enabling a group opens it: the author asked for it, so show it. */
   const enable = (key: string, on: boolean, patch: typeof style): void => {
     setOpenKey(on ? key : (prev) => (prev === key ? null : prev));
     setStyle(patch);
@@ -173,4 +135,4 @@ const AppearanceSection = (props: AppearanceSectionProps) => {
 };
 
 export { AppearanceSection };
-export type { AppearanceSectionProps };
+export type { AppearanceSectionProps } from './AppearanceSection.type';

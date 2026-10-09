@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
-// Deliberately no drop zone: files are a pack-level pool, and a per-slot target implied ownership.
 import { Box } from '@ds/primitives/Box';
 import { LayerEditor } from './LayerEditor';
-import type { LayerEditorProps } from './LayerEditor';
-
-interface TrackDetailProps extends LayerEditorProps {
-  trackNum: number;
-}
+import type { TrackDetailProps } from './TrackDetail.type';
 
 const TrackDetail = (props: TrackDetailProps) => {
   const {
@@ -33,4 +28,3 @@ const TrackDetail = (props: TrackDetailProps) => {
 };
 
 export { TrackDetail };
-export type { TrackDetailProps };

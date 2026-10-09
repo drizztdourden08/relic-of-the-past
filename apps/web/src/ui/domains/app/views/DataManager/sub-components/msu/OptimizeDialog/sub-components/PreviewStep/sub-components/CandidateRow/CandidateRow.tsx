@@ -1,16 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * A file that would grow reads `+` in the danger colour and stays in the run: one format is the
- * point, and an already-compressed file pays in bytes, not quality.
- */
 import type { OptimizeCandidate } from '@shared/types/msu-optimize';
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { formatBytes } from '@app/utils/formatBytes';
+import { UNKNOWN } from './CandidateRow.constants';
 import type { CandidateRowProps } from './CandidateRow.type';
-
-const UNKNOWN = '-';
 
 const deltaLabel = (row: OptimizeCandidate): string => {
   if (row.estimatedBytes === null) return UNKNOWN;
@@ -55,4 +50,3 @@ const CandidateRow = (props: CandidateRowProps) => {
 };
 
 export { CandidateRow };
-export type { CandidateRowProps };

@@ -1,42 +1,14 @@
 /* @layer renderer-components @kind component */
-/**
- * The fixed-text tab: the groups on the left, the chosen group's slots as rows.
- *
- * These are the words the engine draws in fixed places, not in a message
- * box. Every one of them has a stated budget and a surface that may not be able
- * to draw every letter, so the row states both instead of letting a translator
- * find out from the running game.
- *
- * CAPPED, NOT VIRTUALIZED. One group runs to the high hundreds of slots and each
- * row holds a live field; drawing them all costs far more than a translator can
- * read at once. So a fixed number are drawn and the rest are stated plainly as
- * not drawn. The search is the way to them, which is also how anyone finds one
- * slot among hundreds anyway.
- *
- * Presentational. The groups, the chosen one and the words arrive from above and
- * every edit is reported back; the search and the toggle are this tab's own.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Checkbox, EmptyState, ScrollArea, SectionHeader, Text, TextInput } from '@ds/primitives';
 import { TextGroupRail } from './TextGroupRail';
 import { TextSlotRow } from './TextSlotRow';
-import { ROW_CAP, selectSlots } from './text-groups.model';
+import { selectSlots } from './select-slots';
+import { ROW_CAP } from './text-groups.constants';
+import { NO_SLOTS } from './TextGroupsTab.constants';
 import type { ChangeEvent } from 'react';
-import type { TextGroup, TextGroupId, TextSlot } from '@shared/game/language';
+import type { TextGroupsTabProps } from './TextGroupsTab.type';
 import './TextGroupsTab.css';
-
-const NO_SLOTS: TextSlot[] = [];
-
-type TextGroupsTabProps = {
-  groups: TextGroup[];
-  activeGroup: TextGroupId;
-  /** The translator's overrides for the active group; missing key = untranslated. */
-  values: Record<string, string>;
-  /** An installed set: every slot shows, none can be changed. */
-  readOnly?: boolean;
-  onSelectGroup: (id: TextGroupId) => void;
-  onChangeValue: (key: string, value: string) => void;
-};
 
 const TextGroupsTab = (props: TextGroupsTabProps) => {
   const { groups, activeGroup, values, readOnly = false, onSelectGroup, onChangeValue } = props;
@@ -123,4 +95,3 @@ const TextGroupsTab = (props: TextGroupsTabProps) => {
 };
 
 export { TextGroupsTab };
-export type { TextGroupsTabProps };

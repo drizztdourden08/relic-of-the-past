@@ -1,0 +1,132 @@
+/* @layer renderer-components @kind style */
+
+.hud-outline,
+.hud-inspect {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+  padding: var(--space-sm);
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.hud-outline__rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-outline__row {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  border-top: var(--border-width-thin) solid transparent;
+  border-bottom: var(--border-width-thin) solid transparent;
+  cursor: grab;
+  user-select: none;
+}
+
+.hud-outline__row:hover {
+  background: var(--color-surface-hover);
+}
+
+.hud-outline__row.is-selected {
+  background: var(--color-surface-selected);
+}
+
+.hud-outline__row.is-screen {
+  cursor: default;
+  border-bottom-color: var(--c-border);
+}
+
+.hud-outline__row.is-screen .hud-outline__text {
+  color: var(--c-gold-bright);
+  font-weight: var(--weight-semi);
+}
+
+.hud-outline__caret,
+.hud-outline__caret-spacer {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.hud-outline__caret {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--c-text-muted);
+}
+
+.hud-outline__row:hover .hud-outline__caret,
+.hud-outline__row.is-selected .hud-outline__caret {
+  color: var(--c-text);
+}
+
+.hud-outline__caret:hover {
+  color: var(--c-gold-bright);
+}
+
+.hud-outline__caret-mark {
+  transition: transform var(--transition-fast);
+}
+
+.hud-outline__caret.is-open .hud-outline__caret-mark {
+  transform: rotate(90deg);
+}
+
+.hud-outline__row.is-dragging {
+  opacity: var(--opacity-muted);
+}
+
+.hud-outline__row.is-drop-before {
+  border-top-color: var(--c-gold-bright);
+}
+
+.hud-outline__row.is-drop-after {
+  border-bottom-color: var(--c-gold-bright);
+}
+
+.hud-outline__row.is-drop-inside {
+  background: var(--color-surface-selected);
+  outline: var(--border-width-thin) dashed var(--c-gold-bright);
+  outline-offset: calc(-1 * var(--border-width-thick));
+}
+
+.hud-outline__name {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: baseline;
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2xs) 0;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.hud-outline__text {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hud-outline__badge {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.hud-outline__note {
+  font-size: var(--text-xs);
+  color: var(--c-info);
+}
+
+.hud-outline__row.is-locked {
+  opacity: var(--opacity-muted);
+  cursor: default;
+}

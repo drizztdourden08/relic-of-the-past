@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// "Standard"/"Extended" matches the audio settings wording; "Layered"/"Classic" is whether a manifest exists.
 import { useEffect, useState } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -8,24 +7,7 @@ import { Flex } from '@ds/primitives/Flex';
 import { Text } from '@ds/primitives/Text';
 import { TextInput } from '@ds/primitives/TextInput';
 import { formatBytes } from '@app/utils/formatBytes';
-import type { ExportFormat } from './behavior/usePackExport';
-import type { PackFormat } from './msu.type';
-
-interface MsuPackHeaderProps {
-  pack: string;
-  format: PackFormat;
-  slotCount: number;
-  fileCount: number;
-  totalSize: number;
-  isDeluxe: boolean;
-  hasOpuz: boolean;
-  busy: boolean;
-  /** An installed pack keeps its name; it still exports. */
-  readOnly: boolean;
-  exporting: ExportFormat | null;
-  onRename: (name: string) => void;
-  onExport: (format: ExportFormat) => void;
-}
+import type { MsuPackHeaderProps } from './MsuPackHeader.type';
 
 const MsuPackHeader = (props: MsuPackHeaderProps) => {
   const {
@@ -77,4 +59,3 @@ const MsuPackHeader = (props: MsuPackHeaderProps) => {
 };
 
 export { MsuPackHeader };
-export type { MsuPackHeaderProps };

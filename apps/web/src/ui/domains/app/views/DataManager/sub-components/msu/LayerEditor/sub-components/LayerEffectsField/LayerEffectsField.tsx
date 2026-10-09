@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The preset picker derives its value by comparing the chain to each preset instead of remembering
- * the choice, so it never claims a state the numbers underneath do not bear out.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';
@@ -15,7 +11,6 @@ import type { LayerEffectsFieldProps } from './LayerEffectsField.type';
 
 const sameChain = (a: LayerEffect[], b: LayerEffect[]): boolean => JSON.stringify(a) === JSON.stringify(b);
 
-/** The preset id the chain currently matches, or '' when it matches none (including empty). */
 const presetOf = (effects: LayerEffect[]): string =>
   PRESETS.find((preset) => sameChain(preset.effects, effects))?.id ?? '';
 
@@ -42,7 +37,6 @@ const LayerEffectsField = (props: LayerEffectsFieldProps) => {
 
       {effects.map((effect, index) => (
         <EffectRow
-          // Index-keyed on purpose: an effect has no identity of its own beyond its place in the chain.
           key={index}
           effect={effect}
           index={index}

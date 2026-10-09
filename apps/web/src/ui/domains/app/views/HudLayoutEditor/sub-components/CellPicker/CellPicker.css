@@ -1,0 +1,19 @@
+/* @layer renderer-components @kind style */
+
+.hud-cellpick {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding: var(--space-2xs);
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-sm);
+}
+
+.hud-cellpick__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-xs);
+  min-width: 0;
+}

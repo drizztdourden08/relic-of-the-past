@@ -1,16 +1,10 @@
 /* @layer renderer-components @kind style */
 
-/* The editor is a full page now, reached from the Advanced menu, so it fills
-   whatever the layer gives it instead of floating over another screen. */
 .hud-editor-portal {
   height: 100%;
   min-height: 0;
 }
 
-/* Toolbar across the top, with the outline, stage and inspector columns under it.
-   The rails are fixed and the stage takes the rest, because the stage is the
-   thing whose proportions are being judged and it must not jump when a panel
-   beside it grows a row. */
 .hud-editor {
   display: flex;
   flex-direction: column;
@@ -29,13 +23,6 @@
   min-height: 0;
 }
 
-/* Width is set inline, in px, from `hud-editor-view-store`'s own
-   `outlineWidth`/`inspectorWidth`. The seam's drag previews straight onto
-   this element's own `style.width` and commits to the store on release, so
-   there is nothing left for this rule to fix. `scrollbar-gutter: stable`
-   reserves the thumb's own width whether or not this rail is tall enough to
-   need one right now, so the scrolling content's padding never runs under it
-   and back out again as the panel's height changes. */
 .hud-editor__rail {
   display: flex;
   flex-direction: column;
@@ -47,10 +34,6 @@
   scrollbar-gutter: stable;
 }
 
-/* The stage keeps the play field's aspect at whatever width it is given, so on a
-   short window it can end up taller than the panel. Scrolling the column is the
-   guard: an element pushed past the fold stays reachable instead of being
-   silently unclickable, which is what stranded the bottom-left wallet. */
 .hud-editor__stage-column {
   display: flex;
   flex-direction: column;
@@ -62,17 +45,6 @@
   scrollbar-gutter: stable;
 }
 
-/* ── the editor's own global settings (§55) ── */
-
-/* UNDER THE PREVIEW, IN THE CENTRE COLUMN. The maintainer asked for it there:
-   "that setting should be in a global settings at the bottom of the layout
-   preview (bottom center column)". `margin-top: auto` pins it to the bottom of
-   the column however tall the stage above it is, so it reads as the column's
-   footer instead of one more thing under the hint.
-
-   A RULE, NOT A CARD. Same reasoning as `.hud-subsec`: a line says "a different
-   kind of thing starts here" for one pixel, where a bordered box costs eight of
-   padding on four sides and another frame to look past. */
 .hud-editor__globals {
   display: flex;
   gap: var(--space-sm);
@@ -82,13 +54,10 @@
   border-top: var(--border-width-thin) solid var(--c-border);
 }
 
-/* The track is intrinsically sized, so the label does not stretch away from it
-   the way `.segmented`'s own `space-between` would across the whole column. */
 .hud-editor__globals > .segmented {
   flex: 0 0 auto;
   gap: var(--space-xs);
 }
-
 
 .hud-editor__label {
   font-size: var(--text-xs);
@@ -103,7 +72,6 @@
   color: var(--c-text-muted);
 }
 
-/* ── stage ── */
 .hud-editor-stage {
   position: relative;
   width: 100%;
@@ -123,7 +91,6 @@
     linear-gradient(to bottom, var(--c-border-strong) var(--border-width-thin), transparent var(--border-width-thin));
 }
 
-/* ── the layout list ── */
 .hud-editor-list {
   display: flex;
   flex-direction: column;
@@ -174,7 +141,6 @@
   color: var(--c-warning);
 }
 
-/* ── glyph packs ── */
 .hud-editor-packs,
 .hud-editor-packs__custom {
   display: flex;

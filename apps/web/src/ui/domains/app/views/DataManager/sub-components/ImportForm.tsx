@@ -6,19 +6,7 @@ import { Box } from '../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../design-system/primitives/Button';
 import { ImportProgress } from './ImportProgress';
 import { useImportProgress } from '@app/hooks/useImportProgress';
-import type { ImportKind } from '@app/hooks/useImportProgress';
-
-interface ImportFormProps {
-  /** Which import this form drives. It scopes the progress events the form listens to. */
-  kind: ImportKind;
-  placeholder?: string;
-  accept?: string[];
-  dropLabel?: string;
-  dropHint?: string;
-  disabled?: boolean;
-  onUrlImport: (url: string) => Promise<{ success: boolean; message: string }>;
-  onFileImport: (files: File[]) => Promise<{ success: boolean; message: string }>;
-}
+import type { ImportFormProps } from './ImportForm.type';
 
 const ImportForm = (props: ImportFormProps) => {
   const {
@@ -117,4 +105,3 @@ const ImportForm = (props: ImportFormProps) => {
 };
 
 export { ImportForm };
-export type { ImportFormProps };

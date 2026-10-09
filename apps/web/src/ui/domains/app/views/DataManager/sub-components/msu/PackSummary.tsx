@@ -1,31 +1,9 @@
 /* @layer renderer-components @kind component */
-/**
- * The format breakdown lives here because it decides whether a pack plays everywhere (only MSU-1
- * pcm is native to every build). The remove-superseded button only appears once there is something
- * to remove.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
 import { formatBytes } from '@app/utils/formatBytes';
-import type { FormatCount } from './behavior/useFilePanel';
-
-interface PackSummaryProps {
-  fileCount: number;
-  totalSize: number;
-  /** One entry per format present, the biggest group first. */
-  formats: FormatCount[];
-  /** How many files no slot and no sound names. */
-  unusedCount: number;
-  /** Originals a same-stem converted file has already taken over from. */
-  supersededCount: number;
-  supersededBytes: number;
-  /** Why normalising is not on offer, or null when it is. */
-  optimizeBlockedBecause: string | null;
-  busy: boolean;
-  onOptimize: () => void;
-  onRemoveSuperseded: () => void;
-}
+import type { PackSummaryProps } from './PackSummary.type';
 
 const PackSummary = (props: PackSummaryProps) => {
   const {
@@ -85,4 +63,3 @@ const PackSummary = (props: PackSummaryProps) => {
 };
 
 export { PackSummary };
-export type { PackSummaryProps };

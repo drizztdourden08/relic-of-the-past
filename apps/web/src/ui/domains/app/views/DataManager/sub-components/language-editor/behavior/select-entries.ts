@@ -1,15 +1,7 @@
 /* @layer renderer-components @kind logic */
-/** Narrows the entry list to what a filter asks for, after search. "Warnings"
- *  collects the lines that would fail to encode, invisible until a save refuses them. */
 import { contextFor } from '@shared/game/data/dialogue-context';
 import type { DialogueEntry } from '@shared/game/language';
-import type { EntryIssueMap } from '../language-editor.type';
-
-type SelectParams = {
-  entries: DialogueEntry[];
-  filter: 'all' | 'warnings' | 'choices';
-  issues: EntryIssueMap;
-};
+import type { SelectParams } from './select-entries.type';
 
 const selectEntries = (params: SelectParams): DialogueEntry[] => {
   const { entries, filter, issues } = params;
@@ -21,4 +13,3 @@ const selectEntries = (params: SelectParams): DialogueEntry[] => {
 };
 
 export { selectEntries };
-export type { SelectParams };

@@ -1,10 +1,9 @@
 /* @layer renderer-components @kind hook */
-// Auditions one music slot as the game would hear it. The session underneath owns context, engine and polling.
 import { useCallback, useEffect, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import type { MsuEngine } from '@app/lib/msu/engine';
 import { usePreviewSession } from './usePreviewSession';
-import type { PreviewReport } from './preview-report-store';
+import type { PreviewReport } from './preview-report-store.type';
 import { trackPreviewKey } from './preview-key';
 import { singleTrackManifest } from './pack-manifest';
 
@@ -35,11 +34,9 @@ const useTrackPreview = (pack: string | null, manifest: MsuPackManifest) => {
       read: readTrack,
       begin: (engine) => engine.onMusicCtrl(trackNum, 0, 0, 0),
     });
-    // Only clear the row this call was for: another slot may already have superseded it.
     if (!started) setPlaying((current) => (current === trackNum ? null : current));
   }, [manifest, start]);
 
-  // Leaving the panel, or switching packs, must silence whatever is playing.
   useEffect(() => stop, [pack, stop]);
 
   return { playing, previewError: error, play, stop, reportStore };

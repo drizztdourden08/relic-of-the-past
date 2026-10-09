@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Repeat points are reported first: a loop position dies with the file's container, so it is
- * written into the manifest before any format changes, and the count makes that verifiable.
- */
 import { Box } from '@ds/primitives/Box';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
 import { Text } from '@ds/primitives/Text';
@@ -59,4 +55,3 @@ const RunStep = (props: RunStepProps) => {
 };
 
 export { RunStep };
-export type { RunStepProps };

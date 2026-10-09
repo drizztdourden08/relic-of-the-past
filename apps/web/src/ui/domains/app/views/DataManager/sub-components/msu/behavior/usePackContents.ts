@@ -1,10 +1,9 @@
 /* @layer renderer-components @kind hook */
-// The selected pack's files, slots and manifest. `reload` re-reads after every edit.
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { effectiveManifest } from './pack-manifest';
-import { getTrackNumber } from '../msu.type';
+import { getTrackNumber } from './get-track-number';
 import type { MsuFile, TrackInfo } from '../msu.type';
 
 const usePackContents = (pack: string | null) => {
@@ -17,7 +16,6 @@ const usePackContents = (pack: string | null) => {
 
   const reload = useCallback(() => { setGeneration((n) => n + 1); }, []);
 
-  // Only a pack SWITCH starts from nothing. A reload keeps the contents up, so `loaded` survives it.
   useEffect(() => { setLoaded(false); }, [pack]);
 
   useEffect(() => {

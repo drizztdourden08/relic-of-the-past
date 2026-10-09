@@ -1,35 +1,10 @@
 /* @layer renderer-components @kind component */
-/** One titled band of slots, with the expanded slot's editor spliced in directly beneath its row. */
-import type { ReactNode } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { TrackRow } from './TrackRow';
 import { PreviewReadout } from './PreviewReadout';
 import { trackPreviewKey } from './behavior/preview-key';
-import type { PreviewReportStore } from './behavior/preview-report-store';
-import type { MatchedTrack, MsuFile } from './msu.type';
-import type { SelectOption } from '@ds/primitives/Select';
-
-interface TrackSectionProps {
-  title: string;
-  rows: MatchedTrack[];
-  files: MsuFile[];
-  fileOptions: SelectOption[];
-  playing: number | null;
-  /** Which slot's original is sounding, if any. */
-  playingOriginal: number | null;
-  /** Feeds the live readout that opens under whichever row is playing. */
-  reportStore: PreviewReportStore;
-  openTrack: number | null;
-  busy: boolean;
-  readOnly: boolean;
-  onAssign: (trackNum: number, fileName: string) => void;
-  onPreview: (trackNum: number) => void;
-  onStopPreview: () => void;
-  onPlayOriginal: (trackNum: number) => void;
-  onToggleLayers: (trackNum: number) => void;
-  renderDetail: (trackNum: number) => ReactNode;
-}
+import type { TrackSectionProps } from './TrackSection.type';
 
 const TrackSection = (props: TrackSectionProps) => {
   const {
@@ -79,4 +54,3 @@ const TrackSection = (props: TrackSectionProps) => {
 };
 
 export { TrackSection };
-export type { TrackSectionProps };

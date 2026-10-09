@@ -1,20 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * One `ButtonState`'s face. It is an image, chosen from the same sprite grid the
- * toolbar's own Sprite insert uses, or a glyph chosen VISUALLY from
- * `GlyphPickerGrid` (never typed by name). An absent optional state says it
- * falls back to `idle`, which is the one state this row never lets go empty.
- *
- * BOTH FACES ARE `ReferenceField`S NOW (phase 9), and the image one has lost
- * its text box entirely. This row had the two halves of the same bug side by
- * side: the glyph face printed `generic · A` beside a `choose...` link, and the
- * image face offered a raw `TextInput` over the sprite slug beside a `pick...`
- * link. In that field a typo produced a face that silently draws nothing.
- * Neither can be typed into any more, which is the rule the sprite branch set
- * for the whole section (contract §31.4: "nothing in the section can be typed
- * into any more"). Four faces per button, so this is where the slug-reading
- * cost the most.
- */
 import { useRef, useState } from 'react';
 import { Flex } from '@ds/primitives/Flex';
 import { SegmentedControl } from '@ds/primitives/SegmentedControl';
@@ -27,15 +11,7 @@ import { spriteLabel, spriteUrl } from '../behavior/node-art';
 import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { ReferenceField } from './ReferenceField';
 import { SpriteExtractionNotice } from './SpriteExtractionNotice';
-import type { GlyphPack, HudButtonFace } from '@shared/types/hud';
-
-interface ButtonStateRowProps {
-  state: string;
-  required?: boolean;
-  face: HudButtonFace | undefined;
-  glyphPacks: readonly GlyphPack[];
-  onChange: (next: HudButtonFace | undefined) => void;
-}
+import type { ButtonStateRowProps } from './ButtonStateRow.type';
 
 const ButtonStateRow = (props: ButtonStateRowProps) => {
   const { state, required, face, glyphPacks, onChange } = props;
@@ -103,4 +79,4 @@ const ButtonStateRow = (props: ButtonStateRowProps) => {
 };
 
 export { ButtonStateRow };
-export type { ButtonStateRowProps };
+export type { ButtonStateRowProps } from './ButtonStateRow.type';

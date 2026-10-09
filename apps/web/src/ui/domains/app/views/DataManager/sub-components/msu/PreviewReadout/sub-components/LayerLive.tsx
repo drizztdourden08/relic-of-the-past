@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Subscribes on its own behalf so the layer card stays presentational and a frame redraws this
- * line, not the card's inputs. An unsaved layer is not playing yet: null, not an error.
- */
 import { usePreviewReport } from '../../behavior/usePreviewReport';
 import { LayerMeter } from './LayerMeter';
 import '../PreviewReadout.css';

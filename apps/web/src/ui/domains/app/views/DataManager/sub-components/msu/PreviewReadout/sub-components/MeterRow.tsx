@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The bar is drawn only when the row has a denominator: a bar at zero reads as stuck, not as "no
- * measurement". Green for something sounding, gold for the thing being waited for.
- */
 import { Box } from '@ds/primitives/Box';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
 import { Text } from '@ds/primitives/Text';

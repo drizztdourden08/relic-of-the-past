@@ -1,20 +1,10 @@
 /* @layer renderer-components @kind component */
-/** The language sets on this computer. A set installed from the Hookshop carries the lock, and its Delete uninstalls. */
-import type { LanguageSetSummary } from '@shared/storage/languages';
 import { HookshopChip } from '@domains/app/compounds/HookshopChip';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
 import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
-
-interface LanguageSetListProps {
-  sets: LanguageSetSummary[];
-  selected: string | null;
-  labelOf: (set: LanguageSetSummary) => string;
-  isInstalled: (id: string) => boolean;
-  onSelect: (id: string) => void;
-  onDelete: (id: string) => void;
-}
+import type { LanguageSetListProps } from './LanguageSetList.type';
 
 const LanguageSetList = (props: LanguageSetListProps) => {
   const { sets, selected, labelOf, isInstalled, onSelect, onDelete } = props;
@@ -48,4 +38,3 @@ const LanguageSetList = (props: LanguageSetListProps) => {
 };
 
 export { LanguageSetList };
-export type { LanguageSetListProps };

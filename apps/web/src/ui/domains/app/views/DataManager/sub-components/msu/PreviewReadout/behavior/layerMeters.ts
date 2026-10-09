@@ -1,21 +1,10 @@
 /* @layer renderer-components @kind logic */
-/**
- * One layer's live report as meter rows: ONE ROW PER AUDIBLE SOUND, oldest first, plus the wait
- * before the next one. A sound can outlast its own gap, so folding them into one bar would hide
- * the overlap worth watching.
- *
- * Rows come from the REPORT, except that only gap modes get a `next` row: a loop has no next event,
- * and a gap mode keeps its row even without a countdown ("waiting for this sound to end" is a
- * state). A countdown fills towards the next sound, with the wait it started from as denominator;
- * a fade fills the same way.
- */
 import type { LayerReport } from '@app/lib/msu/engine';
 import { clock } from '@domains/packs/music/behavior/clock';
-import { shortName, voiceCaptions } from './voiceCaptions';
+import { voiceCaptions } from './voiceCaptions';
+import { shortName } from './shortName';
+import { GAP_MODES } from './layerMeters.constants';
 import type { FadeMeter, LayerMeterRow, LayerMeters, ReportedVoice } from '../PreviewReadout.type';
-
-/** The modes that schedule a next event, and so have a gap to count down. */
-const GAP_MODES = ['random', 'interval'];
 
 const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
 
@@ -29,7 +18,6 @@ const fadeMeter = (fade: ReportedVoice['fade']): FadeMeter | null => {
   };
 };
 
-// An MSU-1 loop point is usually not the start; saying so keeps the position dropping back from looking broken.
 const loopNote = (loopSeconds: number | null, durationSeconds: number): string =>
   loopSeconds !== null && loopSeconds > 0 && loopSeconds < durationSeconds
     ? ` · repeats from ${clock(loopSeconds)}`
@@ -53,7 +41,6 @@ const voiceRow = (voice: ReportedVoice, index: number, caption: string, title: s
   };
 };
 
-// The row a silent layer keeps. Gap modes carry silence in the countdown row, so only continuous modes need this.
 const silentRow = (report: LayerReport): LayerMeterRow => ({
   id: 'voice-silent',
   kind: 'voice',
@@ -81,12 +68,10 @@ const nextRow = (report: LayerReport, hasGap: boolean): LayerMeterRow | null => 
   if (nextEventInSeconds !== null) {
     return {
       ...row,
-      // A zero-length gap has no window to fill; the number still reads.
       fill: waitSeconds !== null && waitSeconds > 0 ? clamp01(1 - nextEventInSeconds / waitSeconds) : null,
       label: `next in ${nextEventInSeconds.toFixed(1)}s`,
     };
   }
-  // No countdown chosen yet: with wait-for-completion the gap only begins once this sound ends.
   if (sounding) return { ...row, fill: null, label: 'waiting for this sound to finish' };
   return { ...row, fill: null, label: 'idle' };
 };

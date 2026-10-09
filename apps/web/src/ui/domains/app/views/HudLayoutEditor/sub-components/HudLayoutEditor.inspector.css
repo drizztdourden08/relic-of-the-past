@@ -1,12 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Phase 7 (`plans/hud-data-binding.html`): the nine-section accordion panel
-   and every new control it is built from. Kept in its own sheet because the
-   pre-existing `HudLayoutEditor.panels.css` is at its own length already, and
-   this is one coherent feature, not "one screen region". */
-
-/* ── SectionAccordion ── a full-width bar; the gold rule under it, open
-   only, is the accent that separates the title from the body. */
 .hud-section {
   border-bottom: var(--border-width-thin) solid var(--c-border);
 }
@@ -59,12 +52,6 @@
   padding: var(--space-xs) var(--space-xs) var(--space-sm);
 }
 
-/* ── ValueField / ExpressionInput ──
-   Both are one `ValueInput` behind their own prop shapes now, and it brings its
-   own sheet. What is left here is the row participation the SECTIONS depend on:
-   a value field is a flex child of `.hud-inspect__row` and must be able to
-   shrink. `.hud-value-field--wide` (ValueInput.css) overrides the basis while a
-   formula is being edited. */
 .hud-value-field {
   flex: 1;
   min-width: 0;
@@ -75,9 +62,6 @@
   color: var(--c-danger);
 }
 
-/* Kept when `ExpressionInput`'s own footer went: `DataSection` reads the same
-   live result for every bound path on the node, and it is the one place in the
-   panel that is a REPORT, not a field. */
 .hud-expr__live {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -105,12 +89,6 @@
   overflow-wrap: anywhere;
 }
 
-/* ── PaintField ──
-   The twelve column stacks and the six rows that used to be declared here are
-   `Field size="sm"` and `Flex gap="2xs"` now, because phase 2 gave `SpaceToken` the
-   `2xs` member these rules existed to work around. What is left is what a
-   primitive cannot express: a padded card, a border, an anchor's `position`. */
-
 .hud-paint-field__swatch-wrap {
   position: relative;
   display: flex;
@@ -124,7 +102,6 @@
   padding-left: var(--space-sm);
 }
 
-/* ── CaseListEditor ── */
 .hud-case-list__row {
   padding: var(--space-2xs);
   border: var(--border-width-thin) solid var(--c-border);
@@ -152,7 +129,6 @@
   border-radius: var(--radius-sm);
 }
 
-/* ── GridTemplateEditor / ContainerOverlay ── */
 .hud-grid-template__guide {
   position: relative;
   display: flex;
@@ -180,23 +156,12 @@
   height: 1px;
 }
 
-/* A FLEX child's slot: an outline, so the flow's own spacing reads as a gap
-   between two boxes instead of as one continuous wash.
-
-   DASHED, AND INSET BY A PIXEL (§58). §57.8 photographed the defect and left it:
-   "a flex container's first child starts at the container's content origin, so
-   that slot's left and top borders sit exactly under the gold selection outline",
-   and the pair read as ONE box with a cut down one side instead of as a
-   selection with a slot inside it. A dash cannot be mistaken for the solid
-   selection rectangle at any zoom, and the 1px inset means the two lines are
-   never actually co-located even when the geometry says they should be. */
 .hud-overlay__slot {
   position: absolute;
   border: var(--border-width-thin) dashed;
   opacity: 0.85;
 }
 
-/* ── ButtonStatesEditor / ButtonStateRow ── */
 .hud-button-state {
   padding: var(--space-2xs);
   border: var(--border-width-thin) solid var(--c-border);
@@ -207,11 +172,6 @@
   border-color: var(--c-gold);
 }
 
-/* `.hud-button-state__face` is gone with the row it laid out: a state's face is
-   a `ReferenceField` now (phase 9), and it brings its own. */
-
-
-/* ── DataSection ── */
 .hud-data-row {
   padding: var(--space-2xs);
   background: var(--color-surface-inset);
@@ -224,7 +184,6 @@
   color: var(--c-info);
 }
 
-/* ── stage: the measured badge (the snap guide went with §47's drag) ── */
 .hud-stage__measured {
   position: absolute;
   right: 0;
@@ -236,10 +195,4 @@
   background: var(--color-surface-inset);
   border-radius: var(--radius-sm);
   white-space: nowrap;
-}
-
-/* ── outline: a repeat/switch-embedded row, unreachable by drag ── */
-.hud-outline__row.is-locked {
-  opacity: var(--opacity-muted);
-  cursor: default;
 }

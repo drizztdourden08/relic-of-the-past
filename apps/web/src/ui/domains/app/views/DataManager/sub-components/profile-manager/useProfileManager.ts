@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind hook */
-
 import { useState, useEffect, useCallback } from 'react';
-import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
 import type { GameSettings } from '@shared/types/settings';
 import { readConfig } from '../../../../../../../lib/storage/profile-store';
 import { listLanguages } from '../../../../../../../lib/storage/languages-store';
@@ -10,13 +8,7 @@ import {
   buildRandomizerConfig, freshRandomizerForm, randomizerFormError, type RandomizerFormState,
 } from './build-randomizer-config';
 import { applyProfilePreset, type ProfilePresetId } from './profile-presets';
-
-interface UseProfileManagerParams {
-  profiles: Profile[];
-  romStatuses: RomDisplayInfo[];
-  onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
-  onRefresh: () => void;
-}
+import type { UseProfileManagerParams } from './useProfileManager.type';
 
 const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }: UseProfileManagerParams) => {
   const [selected, setSelected] = useState<string | null>(null);
@@ -25,8 +17,6 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
   const [formRom, setFormRom] = useState('');
   const [formLang, setFormLang] = useState('');
   const [formMsu, setFormMsu] = useState('');
-  // A seed is thrown as the form opens, and again after each create, so the
-  // panel's seeded previews always have one to read.
   const [formRandomizer, setFormRandomizer] = useState<RandomizerFormState>(freshRandomizerForm);
   const [formPreset, setFormPreset] = useState<ProfilePresetId>('enhanced');
   const [formConfigOverrides, setFormConfigOverrides] = useState<Partial<GameSettings>>(applyProfilePreset('enhanced'));
@@ -86,7 +76,6 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') void handleCreate();
-    // Consumed here, so abandoning the new-profile row does not also close the page.
     if (e.key === 'Escape') { e.preventDefault(); setCreating(false); }
   };
 

@@ -13,21 +13,11 @@ import { SegmentedControl } from '../../../../../design-system/primitives/Segmen
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
 import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
 import { formatRelativeTime } from '../../../../../../utils';
-import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
 import { useProfileManager } from './profile-manager/useProfileManager';
 import { ProfileDetailPanel } from './profile-manager/ProfileDetailPanel';
 import { RandomizerFields } from './profile-manager/RandomizerFields';
 import { RandomizerOptionsPanel } from './profile-manager/RandomizerOptionsPanel';
-
-interface ProfileManagerProps {
-  profiles: Profile[];
-  romStatuses: RomDisplayInfo[];
-  onSelectProfile: (profile: Profile) => void;
-  onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
-  onDeleteProfile: (id: string) => void;
-  onRefresh: () => void;
-  isGameRunning: boolean;
-}
+import type { ProfileManagerProps } from './ProfileManager.type';
 
 const ProfileManager = (props: ProfileManagerProps) => {
   const { profiles, romStatuses, onSelectProfile, onCreateProfile, onDeleteProfile, onRefresh, isGameRunning } = props;
@@ -140,18 +130,12 @@ const ProfileManager = (props: ProfileManagerProps) => {
     </>
   );
 
-  // While the creation form has the randomizer enabled, the option catalog
-  // takes over the whole detail pane, so the form keeps the fixed-width list
-  // column and the options get the remaining side with their own scroll.
   const showOptionsPane = creating && formRandomizer.enabled;
 
   const detail = showOptionsPane ? (
     <RandomizerOptionsPanel
       romFile={formRom}
       seed={formRandomizer.seed}
-      // The form state IS the choices plus the connection fields, so it is
-      // handed over whole: re-listing the option fields here is the second
-      // list that forgets a row the catalog gained.
       value={formRandomizer}
       onChange={(next) => setFormRandomizer({ ...formRandomizer, ...next })}
     />
@@ -180,4 +164,3 @@ const ProfileManager = (props: ProfileManagerProps) => {
 };
 
 export { ProfileManager };
-export type { ProfileManagerProps };

@@ -1,18 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The variable list: everything a line can hold that stands in for text the set
- * does not spell out.
- *
- * A filter, not sections. A set can carry a hundred menu names, and a
- * translator reaching for one knows its word, not which family it belongs to.
- * The field therefore takes focus on open and typing narrows the list. Enter takes the
- * first row, which is the whole gesture for a name that is already unique.
- *
- * Which token a row inserts is not decided here: a variable the engine owns has
- * to stay a control code all the way into the packed dialogue, and everything
- * else becomes a reference that survives a later rename. `tokenForVariable` is
- * the one place that choice is made.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { ScrollArea, Text, TextInput } from '@ds/primitives';
 import { PopoverShell } from './PopoverShell';
@@ -20,14 +6,9 @@ import { VariableChoice } from './VariableChoice';
 import { filterVariables } from '@domains/packs/language/compounds/variables/variable-groups';
 import { tokenForVariable } from '../../sub-components/variables/variable-token';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import type { Token, Variable } from '@shared/game/language';
+import type { Variable } from '@shared/game/language';
+import type { VariablePopoverProps } from './VariablePopover.type';
 import './VariablePopover.css';
-
-type VariablePopoverProps = {
-  label: string;
-  variables: Variable[];
-  onInsert: (tokens: Token[]) => void;
-};
 
 const VariablePopover = (props: VariablePopoverProps) => {
   const { label, variables, onInsert } = props;
@@ -76,4 +57,3 @@ const VariablePopover = (props: VariablePopoverProps) => {
 };
 
 export { VariablePopover };
-export type { VariablePopoverProps };

@@ -1,37 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * Identity card for the language set being edited: what it is called, what it
- * was made from, how big it is, and whether the last edit reached disk.
- *
- * A translator can have several sets open over a session, one from a ROM and a
- * duplicate they are reworking, so the set's name and origin stay on screen
- * instead of being implied by whatever is highlighted in the list.
- */
 import { useMemo } from 'react';
 import { Box, Text, Badge, Button } from '@ds/primitives';
-import { LANGUAGE_NAMES } from '../../language-names';
-import type { LanguageSet } from '@shared/game/language';
+import { LANGUAGE_NAMES } from '../../language-names.constants';
+import type { BundleHeaderProps } from './BundleHeader.type';
 import './BundleHeader.css';
 
-type BundleHeaderProps = {
-  set: LanguageSet;
-  /** Entries carrying a validation issue, across the whole set. */
-  warnings: number;
-  dirty: boolean;
-  saving: boolean;
-  saveError: string | null;
-  /** An installed set: nothing is ever written, so the save state reads "Read only". */
-  readOnly?: boolean;
-  onDuplicate?: () => void;
-  onSaveNow?: () => void;
-  /** Saves the set as a `.rlang` file. */
-  onExport?: () => void;
-  exporting?: boolean;
-  /** What the last export did, or why it failed. */
-  exportStatus?: string | null;
-};
-
-/** The base language in words, falling back to its bare code. */
 const baseLabel = (base: string): string => LANGUAGE_NAMES[base] ?? base;
 
 const BundleHeader = (props: BundleHeaderProps) => {
@@ -83,4 +56,3 @@ const BundleHeader = (props: BundleHeaderProps) => {
 };
 
 export { BundleHeader };
-export type { BundleHeaderProps };

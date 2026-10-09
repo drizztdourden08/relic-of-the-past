@@ -6,11 +6,8 @@ import { Button } from '@ds/primitives/Button';
 import { Spinner } from '@ds/primitives/Spinner';
 import { useStorageSummary } from './behavior/useStorageSummary';
 import { formatBytes } from './behavior/formatBytes';
+import { DOMAIN_ICONS } from './DataHome.constants';
 import './DataHome.css';
-
-const DOMAIN_ICONS: Record<string, string> = {
-  profiles: '👤', roms: '🎮', sprites: '🖼️', linkSprites: '🧝', languages: '🌐', msu: '🎵', assets: '📦', saves: '💾',
-};
 
 const DataHome = () => {
   const { storage, capabilities } = usePlatform();

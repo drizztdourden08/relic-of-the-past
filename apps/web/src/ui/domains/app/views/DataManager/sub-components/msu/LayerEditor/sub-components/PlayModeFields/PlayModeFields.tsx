@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Switching mode replaces the parameters wholesale; edits within a mode spread the current mode so
- * changing the order does not reset the crossfade. Crossfade and wait switch get their own framed
- * blocks because both were missed among look-alike controls. Repeatable controls take an id from
- * the layer: the switch otherwise derives its id from its label, and two random layers collide.
- */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
 import { Field } from '@ds/primitives/Field';
@@ -45,7 +39,6 @@ const PlayModeFields = (props: PlayModeFieldsProps) => {
             disabled={disabled}
             onChange={(order) => onChange({ ...mode, order })}
           />
-          {/* Nothing to cross into when one track repeats on itself, so the control is not offered. */}
           {mode.order !== 'single' && (
             <CrossfadeField
               seconds={mode.crossfadeSeconds ?? 0}

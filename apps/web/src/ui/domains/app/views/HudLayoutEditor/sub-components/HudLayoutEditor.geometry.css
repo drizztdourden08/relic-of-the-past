@@ -1,25 +1,9 @@
 /* @layer renderer-components @kind style */
 
-/* Phases 5 and 6 of `plans/hud-inspector-ux-review.html` build the geometry half
-   of the inspector: Position & placement, and Size & box. Its own sheet because
-   `inspector.css` (226) and `panels.css` (287) are close enough to the 300-line
-   cap that this would not fit either, and because a sheet per feature is what
-   lets two phases be built at once without colliding in one file.
-
-   Every rule here is a rule the primitives cannot express: a nested box model
-   is a drawing. The grid miniature that used to live here went with
-   `GridCellField` (§48), and its lattice has a sheet of its own. */
-
-/* ── OffsetField ──────────────────────────────────────────────────────────
-   Nothing but the row participation. The pair itself is `PositionInput` at
-   `sm`, whose shell lives in the design system where it belongs. */
 .hud-offset .position-input {
   width: 100%;
 }
 
-/* ── DisabledReason ── the composite's own scrim, at the panel's density: a
-   232px rail cannot spend 16px of padding and a semibold 13px line on a lock,
-   and the reason is a sentence, not a heading. */
 .hud-disabled-reason .disabled-overlay__scrim {
   gap: var(--space-2xs);
   padding: var(--space-xs);
@@ -30,8 +14,6 @@
   font-weight: var(--weight-normal);
 }
 
-/* ── ExtentField ── one field whose unit suffix is the mode. The suffix is a
-   button, so it must not shrink; the number takes what is left. */
 .hud-extent {
   display: flex;
   gap: var(--space-2xs);
@@ -58,7 +40,6 @@
   color: var(--c-text-muted);
 }
 
-/* ── MinMaxField ── two rows, an axis cap and two optional numbers. */
 .hud-minmax > .field__control {
   display: flex;
   flex-direction: column;
@@ -78,10 +59,6 @@
   color: var(--c-text-dim);
 }
 
-/* ── BoxModelField ── nested rectangles, an editable number on every edge.
-   The edge columns are elastic with a floor: fixed columns would waste the
-   289px rail and fold at 188. Four of them (two rings) is what the drawing
-   costs, and it is what buys each edge a legible cell. */
 .hud-box-model__ring {
   position: relative;
   display: grid;
@@ -124,8 +101,6 @@
 .hud-box-model__edge--bottom { grid-area: bottom; }
 .hud-box-model__edge--left { grid-area: left; }
 
-/* Position owns `margin.left`/`margin.top`. Dimmed and inert instead of
-   hidden: the ring would be lying about what a margin is. */
 .hud-box-model__ring .hud-box-model__edge[readonly] {
   color: var(--c-text-dim);
   border-style: dashed;
@@ -143,8 +118,6 @@
   white-space: nowrap;
 }
 
-/* The chain is padding's alone because two of margin's four edges belong to another
-   section, so "all four the same" is not an operation this ring can make. */
 .hud-box-model__ring .hud-box-model__link {
   grid-area: link;
   font-size: var(--text-xs);

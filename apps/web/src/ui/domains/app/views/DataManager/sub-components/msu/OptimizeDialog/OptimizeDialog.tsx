@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Converts and STOPS: originals stay on disk as the fallback, and removing them is a separate
- * confirmed action. The run cannot be dismissed because it writes the manifest as it goes.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
@@ -16,7 +12,6 @@ import type { OptimizeDialogProps } from './OptimizeDialog.type';
 
 const OptimizeDialog = (props: OptimizeDialogProps) => {
   const { open, pack, onClose, onConverted } = props;
-  // The pack is re-read the moment a run settles, not on the way out; see useOptimize.
   const optimize = useOptimize({ pack, open, onRunSettled: onConverted });
   const { step, tool, analysis, progress, result, error, convertibleCount } = optimize;
 
@@ -87,4 +82,3 @@ const OptimizeDialog = (props: OptimizeDialogProps) => {
 };
 
 export { OptimizeDialog };
-export type { OptimizeDialogProps };

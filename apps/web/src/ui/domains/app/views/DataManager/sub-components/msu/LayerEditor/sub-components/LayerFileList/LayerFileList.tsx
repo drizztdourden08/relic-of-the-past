@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Order matters (sequential loops play top to bottom, the resume snapshot stores an index), so
- * reordering is an explicit move. A pool capped at one file says so in words instead of showing a
- * greyed-out picker, since the reason lives two controls further up the card.
- */
 import { useMemo, useState } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -12,16 +7,12 @@ import { IconButton } from '@ds/primitives/IconButton';
 import { Select } from '@ds/primitives/Select';
 import { Text } from '@ds/primitives/Text';
 import { moveItem } from '../../behavior/layer-ops';
+import { ONE_FILE_NOTE } from './LayerFileList.constants';
 import type { LayerFileListProps } from './LayerFileList.type';
-
-const ONE_FILE_NOTE
-  = 'One file only while the order is Single, and that one track repeats on itself. Remove it to '
-  + 'choose another, or pick Sequential or Shuffle to play several.';
 
 const LayerFileList = (props: LayerFileListProps) => {
   const { files, available, oneFileOnly = false, disabled = false, onChange } = props;
   const [picked, setPicked] = useState('');
-  // An empty single-file layer still needs its one file, so the cap only closes the door once full.
   const full = oneFileOnly && files.length > 0;
 
   const options = useMemo(

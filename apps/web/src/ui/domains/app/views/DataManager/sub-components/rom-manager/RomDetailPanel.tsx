@@ -1,49 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * Detail panel for the selected ROM. A base cartridge keeps its extract-assets
- * affordance. A supplement has none, because there is nothing to extract from it on its
- * own, so it shows which bases currently carry its sidecar.
- */
-import type { CSSProperties } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
-import { Button } from '@ds/primitives/Button';
-import type { SupplementStatus } from '@shared/storage/roms';
 import { formatBytes } from '@app/utils/formatBytes';
-import type { RomDetail } from './types';
-
-const IL: Record<string, CSSProperties> = {
-  mono: { fontFamily: 'var(--font-mono)' },
-  green: { color: 'var(--c-green)' },
-  gold: { color: 'var(--c-gold)' },
-};
-
-interface RomDetailPanelProps {
-  selected: string | null;
-  loadingDetail: boolean;
-  detail: RomDetail | null;
-  selectedBase: RomDisplayInfo | undefined;
-  selectedSupplement: SupplementStatus | undefined;
-  onExtractAssets: (romFile: string) => void;
-}
-
-const AssetsRow = ({ base, onExtractAssets }: { base: RomDisplayInfo; onExtractAssets: (romFile: string) => void }) => {
-  if (base.extractionStatus === 'ready') {
-    return <Text style={IL.green}>✓ Extracted{base.assetSize ? ` (${formatBytes(base.assetSize)})` : ''}</Text>;
-  }
-  if (base.extractionStatus === 'extracting') return <Text style={IL.gold}>⟳ Extracting...</Text>;
-  return (
-    <Button variant="primary" size="sm" onClick={() => onExtractAssets(base.romFile)}>
-      Extract Assets
-    </Button>
-  );
-};
-
-const SupplementRow = ({ supplement }: { supplement: SupplementStatus }) => (
-  supplement.attachedTo.length > 0
-    ? <Text style={IL.green}>✓ Attached to {supplement.attachedTo.join(', ')}{supplement.bytes ? ` (${formatBytes(supplement.bytes)})` : ''}</Text>
-    : <Text style={IL.gold}>Not attached to any base cartridge yet</Text>
-);
+import { AssetsRow } from './AssetsRow';
+import { SupplementRow } from './SupplementRow';
+import { IL } from './RomDetailPanel.constants';
+import type { RomDetailPanelProps } from './RomDetailPanel.type';
 
 const RomDetailPanel = (props: RomDetailPanelProps) => {
   const { selected, loadingDetail, detail, selectedBase, selectedSupplement, onExtractAssets } = props;
@@ -80,4 +42,3 @@ const RomDetailPanel = (props: RomDetailPanelProps) => {
 };
 
 export { RomDetailPanel };
-export type { RomDetailPanelProps };

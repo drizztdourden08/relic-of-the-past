@@ -1,20 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Phase 9 of `plans/hud-inspector-ux-review.html` puts the Content section's own
-   controls in their own sheet.
- *
- * WHY A SEVENTH SHEET AND NOT A RULE IN `inspector.css`. Every editor sheet is
- * near its 300-line cap and three phases are landing into them at once; this
- * one is imported by the components that need it (`ReferenceField`,
- * `SlotRefField`, `BoundedValueField`, `TextValueField`), exactly the way
- * `ValueInput.css` is, so it arrives with them or not at all.
- *
- * `.hud-sprite-field` USED TO LIVE IN `pickers.css` AND IS GONE FROM THERE.
- * The sprite branch built the shape this whole phase generalises; keeping a
- * second, sprite-only copy of it would have meant two rules to change the day
- * the row's height moves. `.hud-ref-field` IS that rule, one class wider. */
-
-/* ── ReferenceField: the referent, drawn, as the control that changes it ── */
 .hud-ref-field {
   display: flex;
   gap: var(--space-xs);
@@ -32,16 +17,11 @@
   image-rendering: pixelated;
 }
 
-/* A reference inside a case/state card is one line in a stack of them, so its
-   picture is the row's height, not twice it. */
 .hud-ref-field--compact .hud-ref-field__thumb {
   width: 1.25rem;
   height: 1.25rem;
 }
 
-/* `min-width: 0` is load-bearing, not tidiness: a flex item will not shrink
-   below its content, so without it a long manifest label pushes the caret past
-   the rail instead of ellipsising. The picture never shrinks; the name does. */
 .hud-ref-field__name {
   flex: 1 1 auto;
   min-width: 0;
@@ -52,8 +32,6 @@
   text-overflow: ellipsis;
 }
 
-/* The kind, and (for a subtree reference) the id. Demoted, never deleted, so
-   "which of these two sprite children is this" stays answerable. */
 .hud-ref-field__kind {
   flex-shrink: 0;
   font-family: var(--font-mono);
@@ -68,8 +46,6 @@
   color: var(--c-text-dim);
 }
 
-/* A specimen stands in where the artwork is TYPE instead of a picture: the
-   text face draws `07` in the face being chosen. */
 .hud-ref-field__specimen {
   display: flex;
   flex-shrink: 0;
@@ -82,7 +58,6 @@
   border-radius: var(--radius-sm);
 }
 
-/* ── SlotRefField: a number, with what that number currently draws ── */
 .hud-slot-ref__note {
   display: block;
   margin-top: var(--space-2xs);
@@ -90,10 +65,6 @@
   color: var(--c-warning);
 }
 
-/* ── BoundedValueField: the range, drawn, beside the number ──
-   The design system's `Slider` is built for a settings row: a 16px gap and a
-   base-size label. In a 188px rail that is most of the row, so the inspector
-   tightens its own copy instead of asking the primitive to grow a size. */
 .hud-bounded__slider {
   padding: 0 var(--space-2xs);
 }
@@ -116,7 +87,6 @@
   text-align: right;
 }
 
-/* ── CaseListEditor: which branch is winning, where the branches are listed ── */
 .hud-case-list__live {
   margin-left: var(--space-xs);
   padding: 0 var(--space-2xs);
@@ -130,7 +100,6 @@
   border-color: var(--c-gold);
 }
 
-/* ── TextValueField: one field, and the digits-only warning beside the face ── */
 .hud-text-face__warn {
   font-size: var(--text-xs);
   color: var(--c-warning);

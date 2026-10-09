@@ -1,6 +1,4 @@
 /* @layer renderer-components @kind component */
-
-import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Badge } from '../../../../../../design-system/primitives/Badge';
@@ -9,25 +7,11 @@ import { Button } from '../../../../../../design-system/primitives/Button';
 import { formatRelativeTime } from '../../../../../../../utils';
 import { updateProfile } from '../../../../../../../lib/storage/profile-store';
 import { reloadMsuForProfile } from '@app/lib/game/msu-pack-loader';
-import { languageLabel } from '../language-names';
-
-const IL: Record<string, CSSProperties> = {
-  col: { display: 'flex', flexDirection: 'column', height: '100%' },
-  mbMd: { marginBottom: 'var(--space-md)' },
-  actionRow: { display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-md)' },
-  scroll: { flex: 1, overflow: 'auto', marginTop: 'var(--space-xs)' },
-};
-import { formatSettingValue, SETTINGS_SECTIONS } from './settings-sections';
-
-interface ProfileDetailPanelProps {
-  profile: Profile;
-  settings: Record<string, unknown> | null;
-  languages: Array<{ code: string }>;
-  msuPacks: Array<{ name: string }>;
-  isGameRunning: boolean;
-  onSelectProfile: (profile: Profile) => void;
-  onRefresh: () => void;
-}
+import { languageLabel } from '../language-label';
+import { IL } from './ProfileDetailPanel.constants';
+import { SETTINGS_SECTIONS } from './settings-sections.constants';
+import { formatSettingValue } from './format-setting-value';
+import type { ProfileDetailPanelProps } from './ProfileDetailPanel.type';
 
 const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
   const { profile, settings, languages, msuPacks, isGameRunning, onSelectProfile, onRefresh } = props;
@@ -61,7 +45,6 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
             value={profile.msuPack || ''}
             onChange={async (val) => {
               await updateProfile(profile.id, { msuPack: val || null });
-              // Audible now, not at the next boot. A no-op unless this profile is the one playing.
               await reloadMsuForProfile(profile.id);
               onRefresh();
             }}
@@ -115,4 +98,3 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
 };
 
 export { ProfileDetailPanel };
-export type { ProfileDetailPanelProps };

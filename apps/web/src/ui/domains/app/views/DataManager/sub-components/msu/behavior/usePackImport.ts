@@ -1,18 +1,12 @@
 /* @layer renderer-components @kind hook */
-// Reads a dropped `.msul` into a pack. The install lives in shared/storage/msul/install-msul-pack, shared with the file-association path and the store.
 import { useCallback } from 'react';
 import { installMsulFile } from '@app/lib/storage/msu-store';
 import { publishImportProgress } from '@app/lib/storage/import-progress-bus';
 import { stemOf } from './track-file-name';
-import { failure } from './usePackList';
+import { failure } from './failure';
+import { isMsulName } from './is-msul-name';
 import type { ActionResult } from '../msu.type';
-
-interface PackImportParams {
-  refresh: () => Promise<void>;
-  onImported: (pack: string) => void;
-}
-
-const isMsulName = (fileName: string): boolean => /\.msul$/i.test(fileName);
+import type { PackImportParams } from './usePackImport.type';
 
 const usePackImport = (params: PackImportParams) => {
   const { refresh, onImported } = params;
@@ -23,7 +17,6 @@ const usePackImport = (params: PackImportParams) => {
       const result = await installMsulFile(bytes, desiredName || stemOf(file.name));
       await refresh();
       onImported(result.pack);
-      // A pack that lists more than it holds is worth naming at once, while the archive is to hand.
       const missing = result.missingFiles.length > 0
         ? `. The archive was missing ${result.missingFiles.length}: ${result.missingFiles.join(', ')}`
         : '';
@@ -38,5 +31,4 @@ const usePackImport = (params: PackImportParams) => {
   return { importMsul, isMsulName };
 };
 
-export { usePackImport, isMsulName };
-export type { PackImportParams };
+export { usePackImport };

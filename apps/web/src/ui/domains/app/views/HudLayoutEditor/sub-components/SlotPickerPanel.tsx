@@ -1,20 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The Slot insert: never a fixed range. A slot number in a layout is not
- * validated against a device. A keyboard alone reaches 107 glyphs, and an
- * author can place slot 40 with nothing plugged in (see
- * `plans/hud-data-binding.html`, "The button object", where the outline flags an
- * out-of-range number as a note, never an error). So this offers the numbers
- * the previewed scheme actually has as a convenience, plus a plain numeric
- * field with no ceiling for anything past that.
- *
- * TWO CALLERS, TWO QUESTIONS (phase 9). The toolbar's Slot insert asks "make
- * me WHICH KIND of object for this number" and so offers two actions per row.
- * `SlotRefField` asks only "which number", for a field that already exists.
- * So `onPickNumber`, when given, collapses each row to one click and hides the
- * pair of kind buttons. One panel, because the list, the uncapped entry and
- * the popover behaviour are the same question either way.
- */
 import { useState } from 'react';
 import { Portal, usePickerPopover } from '@ds/primitives/Portal';
 import { Box } from '@ds/primitives/Box';
@@ -23,22 +7,7 @@ import { IconButton } from '@ds/primitives/IconButton';
 import { NumberInput } from '@ds/primitives/NumberInput';
 import { Text } from '@ds/primitives/Text';
 import { EmptyState } from '@ds/primitives/EmptyState';
-import type { RefObject } from 'react';
-
-interface SlotPickerPanelProps {
-  open: boolean;
-  anchorRef: RefObject<HTMLElement | null>;
-  /** Slot numbers the previewed scheme currently has. They are a shortcut,
-   *  never the only numbers that can be authored. */
-  slotNumbers: readonly number[];
-  onClose: () => void;
-  /** The insert's two kinds. Ignored and not rendered when `onPickNumber`
-   *  is given, because a field that already exists is not choosing a kind. */
-  onPickItem?: (index: number) => void;
-  onPickGlyph?: (index: number) => void;
-  /** A field asking only for a number: one click per row. */
-  onPickNumber?: (index: number) => void;
-}
+import type { SlotPickerPanelProps } from './SlotPickerPanel.type';
 
 const SlotPickerPanel = (props: SlotPickerPanelProps) => {
   const { open, anchorRef, slotNumbers, onClose, onPickItem, onPickGlyph, onPickNumber } = props;
@@ -65,7 +34,6 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
       >
         <Box className="hud-slot-picker__manual">
           <Text className="hud-slot-picker__label">Any slot</Text>
-          {/* No `max`, because a slot number is never capped. */}
           <NumberInput min={1} value={manual} onChange={setManual} />
           {onPickNumber ? (
             <IconButton
@@ -116,4 +84,4 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
 };
 
 export { SlotPickerPanel };
-export type { SlotPickerPanelProps };
+export type { SlotPickerPanelProps } from './SlotPickerPanel.type';

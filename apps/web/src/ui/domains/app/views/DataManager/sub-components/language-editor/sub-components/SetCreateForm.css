@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/*
- * Collapsed, this is a single quiet button; open, a short stack of fields above
- * the set list.
- */
-
 .set-create {
   display: flex;
   flex-direction: column;

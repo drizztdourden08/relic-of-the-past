@@ -1,12 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Edits one slot's layers and writes them to the pack's manifest.
- *
- * Saving a pack that has no manifest yet writes one for the WHOLE pack, not just this slot: the
- * draft is seeded from the synthesized single-layer view, so the other slots are preserved
- * exactly as they played before. That is the moment a classic pack becomes a layered one, and
- * the notice below says so before the user commits to it.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { ButtonRow } from '@ds/primitives/ButtonRow';
@@ -29,7 +21,6 @@ const LayerEditor = (props: LayerEditorProps) => {
     layers, dirty, saving, error, addLayer, removeLayer, moveLayer, updateLayer, save, revert,
   } = useLayerEditor({ pack, target, manifest, saveBase, onSaved });
   const locked = saving || readOnly;
-  // A loop point applies to a single-file layer, so only each layer's first file is consulted.
   const fileLoopSamples = useFileLoopSamples(
     pack, [...new Set(layers.map((layer) => layer.files[0]).filter((name) => name !== undefined))],
   );

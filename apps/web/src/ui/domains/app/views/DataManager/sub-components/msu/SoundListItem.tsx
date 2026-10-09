@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Shared by the ambient list and the merged effects list so the row, readout and editor stay
- * together. The channel's controller arrives whole; a merged list picks one per row.
- */
 import { Box } from '@ds/primitives/Box';
 import { PreviewReadout } from './PreviewReadout';
 import { SoundDetail } from './SoundDetail';

@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind hook */
-/**
- * One sound channel's tab, wired. The filter and unreachable toggle are owned by the list, so two
- * channels shown as one list search as one. "Replace" only opens the editor: an empty claim would
- * silence the chip's version, so the editor's save writes the claim. Un-claiming is a real write.
- */
 import { useCallback, useState } from 'react';
-import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
+import type { SoundChannel } from '@shared/types/msu-manifest';
 import { writeMsuManifest } from '@app/lib/storage/msu-store';
 import { useAudibleIds } from './useAudibleIds';
 import { useOriginalPreview } from './useOriginalPreview';
@@ -13,24 +8,10 @@ import { useSoundPreview } from './useSoundPreview';
 import { useSoundRows } from './useSoundRows';
 import { useSoundUpload } from './useSoundUpload';
 import { withoutSound } from './sound-manifest';
-import { failure } from './usePackList';
+import { failure } from './failure';
 import { soundTitle } from '../sound-labels';
-import type { ActionResult, MsuFile } from '../msu.type';
-
-interface SoundPanelParams {
-  pack: string;
-  channel: SoundChannel;
-  /** The query this channel's rows are narrowed by. Owned by the list, so several can share one. */
-  filter: string;
-  /** Whether to include the ids nothing in the game raises. Shared for the same reason. */
-  showUnreachable: boolean;
-  /** What the rows and the editor SHOW. */
-  manifest: MsuPackManifest;
-  /** What a write goes into, which is the pack's own manifest when it has one. */
-  saveBase: MsuPackManifest;
-  files: MsuFile[];
-  reload: () => void;
-}
+import type { ActionResult } from '../msu.type';
+import type { SoundPanelParams } from './useSoundPanel.type';
 
 const useSoundPanel = (params: SoundPanelParams) => {
   const { pack, channel, manifest, saveBase, files, filter, showUnreachable, reload } = params;
@@ -45,7 +26,6 @@ const useSoundPanel = (params: SoundPanelParams) => {
   const original = useOriginalPreview(channel);
   const { upload, uploading } = useSoundUpload({ pack, files, reload });
 
-  // One thing sounds at a time, so each start silences the other.
   const play = useCallback((soundChannel: SoundChannel, soundId: number) => {
     original.stop();
     void playPack(soundChannel, soundId);
@@ -65,8 +45,6 @@ const useSoundPanel = (params: SoundPanelParams) => {
     setOpenSound((open) => (open === soundId ? null : soundId));
   }, []);
 
-  // For a list drawing on more than one channel: opening a row there has to shut the row open on
-  // the other, or two editors sit open at once over one shared save.
   const closeLayers = useCallback(() => { setOpenSound(null); }, []);
 
   const stopReplacing = useCallback(async (soundId: number) => {
@@ -99,4 +77,3 @@ const useSoundPanel = (params: SoundPanelParams) => {
 };
 
 export { useSoundPanel };
-export type { SoundPanelParams };

@@ -1,27 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * Which surface the HUD is being arranged over.
- *
- * Five flat grounds cut from the game itself (turf, an indoor floor, sand, and
- * water at two depths), tiled behind the stage. It matters more than it sounds:
- * two defects in one week were "invisible against the background it was
- * actually drawn on", a silhouette that was black on black and a dimmed chip
- * that vanished over grass. Arranging over a real surface makes that whole
- * class of mistake visible while the arrangement is being made.
- *
- * Each swatch is the tile itself, not a colour, so the choice is made by
- * recognising the ground instead of by reading its name.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import { EDITOR_GROUNDS } from '../HudLayoutEditor.constants';
-
-interface GroundPickerProps {
-  value: string;
-  onChange: (file: string) => void;
-}
+import type { GroundPickerProps } from './GroundPicker.type';
 
 const GroundPicker = (props: GroundPickerProps) => {
   const { value, onChange } = props;
@@ -49,4 +32,4 @@ const GroundPicker = (props: GroundPickerProps) => {
 };
 
 export { GroundPicker };
-export type { GroundPickerProps };
+export type { GroundPickerProps } from './GroundPicker.type';

@@ -16,4 +16,11 @@ interface EffectRowProps {
   onRemove: () => void;
 }
 
-export type { LayerEffectsFieldProps, EffectRowProps };
+interface EffectPreset {
+  id: string;
+  label: string;
+  description: string;
+  effects: LayerEffect[];
+}
+
+export type { LayerEffectsFieldProps, EffectRowProps, EffectPreset };

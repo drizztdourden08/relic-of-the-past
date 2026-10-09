@@ -1,22 +1,10 @@
 /* @layer renderer-components @kind style */
-
-/*
- * Edit mode for one entry, plus the whole-message settings strip and its fields.
- * They share this file the way the chips share theirs: none of them appears
- * anywhere else, so one prefix and one stylesheet keeps the relationship obvious.
- *
- * The identity of the entry is NOT here. The panel around this draws it, along
- * with the metadata and the view switch, so edit mode is only the work and the
- * two buttons that end it.
- */
-
 .entry-editor {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
 }
 
-/* The commit pair, at the end of the card so it lands in the same place always. */
 .entry-editor__actions {
   display: flex;
   gap: var(--space-xs);
@@ -24,10 +12,6 @@
   justify-content: flex-end;
 }
 
-/*
- * Why the save is refused. It is long on purpose, a whole sentence, because "too
- * long" on its own reads as though the text will be trimmed, and it will not.
- */
 .entry-editor__blocked {
   max-width: 60ch;
   align-self: flex-end;
@@ -35,8 +19,6 @@
   line-height: var(--leading-tight);
   text-align: end;
 }
-
-/* ─── Whole-message settings strip ─── */
 
 .entry-editor__settings {
   display: flex;

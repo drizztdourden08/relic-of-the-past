@@ -1,25 +1,13 @@
 /* @layer renderer-components @kind hook */
-/**
- * "Assign this file to slot N" as a change on disk. Classic packs have no manifest, so the
- * FILENAME is the assignment and the file is renamed; a layered pack's manifest is, so files stay.
- */
 import { useCallback, useState } from 'react';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { withTrackFile } from './pack-manifest';
 import { parkFile } from './park-file';
 import { canonicalTrackName, extensionOf, namePrefixOf, uniqueFileName } from './track-file-name';
-import { failure } from './usePackList';
-import { getTrackNumber } from '../msu.type';
-import type { ActionResult, MsuFile, PackFormat } from '../msu.type';
-
-interface TrackAssignParams {
-  pack: string | null;
-  format: PackFormat;
-  manifest: MsuPackManifest;
-  files: MsuFile[];
-  reload: () => void;
-}
+import { failure } from './failure';
+import { getTrackNumber } from './get-track-number';
+import type { ActionResult } from '../msu.type';
+import type { TrackAssignParams } from './useTrackAssign.type';
 
 const useTrackAssign = (params: TrackAssignParams) => {
   const { pack, format, manifest, files, reload } = params;
@@ -29,8 +17,6 @@ const useTrackAssign = (params: TrackAssignParams) => {
     if (!pack) return { success: false, message: 'No pack selected' };
     const names = files.map((f) => f.name);
     const taken = new Set(names);
-    // Occupancy is a question about the NUMBER, not the name: `pack-5.pcm` and `pack-5.wav`
-    // would both claim slot 5, so an exact-name check would happily leave the pack ambiguous.
     const occupant = names.find((n) => n !== fileName && getTrackNumber(n) === trackNum);
 
     if (!fileName) {
@@ -49,8 +35,6 @@ const useTrackAssign = (params: TrackAssignParams) => {
       const parked = await parkFile(pack, occupant, taken);
       return { success: true, message: `Slot ${trackNum} now plays "${fileName}". "${occupant}" moved aside as "${parked}"` };
     }
-    // A true swap, so neither file is lost: the displaced audio takes the name the
-    // newly-assigned file gave up, which keeps it visible in the pack.
     const hold = uniqueFileName(`swap.${extensionOf(occupant)}`, taken);
     await msuStore.renameMsuTrackFile(pack, occupant, hold);
     await msuStore.renameMsuTrackFile(pack, fileName, target);
@@ -79,4 +63,3 @@ const useTrackAssign = (params: TrackAssignParams) => {
 };
 
 export { useTrackAssign };
-export type { TrackAssignParams };

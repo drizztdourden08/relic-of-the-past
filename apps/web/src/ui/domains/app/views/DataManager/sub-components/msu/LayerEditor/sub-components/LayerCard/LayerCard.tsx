@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// Presentational: every edit leaves as a patch, so the card never knows whether it is savable.
 import { Box } from '@ds/primitives/Box';
 import { Card } from '@ds/primitives/Card';
 import { Flex } from '@ds/primitives/Flex';
@@ -12,10 +11,8 @@ import { LayerFileList } from '../LayerFileList';
 import { LoopPointField } from '../LoopPointField';
 import { PlayModeFields } from '../PlayModeFields';
 import { useModeChange } from './behavior/useModeChange';
+import { NO_EFFECTS } from './LayerCard.constants';
 import type { LayerCardProps } from './LayerCard.type';
-
-/** Stable empty chain, so a layer without effects is not handed a fresh array on every render. */
-const NO_EFFECTS: never[] = [];
 
 const LayerCard = (props: LayerCardProps) => {
   const {
@@ -23,7 +20,6 @@ const LayerCard = (props: LayerCardProps) => {
     onConfirm, onChange, onMove, onRemove,
   } = props;
   const { changeMode } = useModeChange({ layer, onConfirm, onChange });
-  // One track repeating on itself: the layer holds exactly that file, and it has an end of its own.
   const single = layer.mode.kind === 'loop' && layer.mode.order === 'single';
 
   return (
@@ -71,8 +67,6 @@ const LayerCard = (props: LayerCardProps) => {
         onChange={(volume) => onChange({ volume })}
       />
 
-      {/* Rolled each time the layer starts. Some effects fire on a fixed cycle, which a real
-          recording turns into a metronome; thinning them here breaks that up. */}
       <Slider
         label="Chance"
         description="How often this layer actually sounds when it starts. 100% is every time."
@@ -93,7 +87,6 @@ const LayerCard = (props: LayerCardProps) => {
         onChange={changeMode}
       />
 
-      {/* Only the single-file order ever reaches a file's own end. */}
       {single && (
         <LoopPointField
           loopSample={layer.loopSample}

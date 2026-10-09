@@ -1,20 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * Starts a new language set, either from a base language's text or as a copy of
- * an existing set. Collapsed until asked for, so the set list stays the first
- * thing in the pane.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Button, ButtonRow, Field, Select, TextInput } from '@ds/primitives';
-import type { LanguageSetSummary } from '@shared/storage/languages';
+import type { SetCreateFormProps } from './SetCreateForm.type';
 import './SetCreateForm.css';
-
-type SetCreateFormProps = {
-  sets: LanguageSetSummary[];
-  busy?: boolean;
-  onCreate: (id: string, name: string, base: string) => void;
-  onDuplicate: (sourceId: string, id: string, name: string) => void;
-};
 
 const SetCreateForm = (props: SetCreateFormProps) => {
   const { sets, busy, onCreate, onDuplicate } = props;
@@ -86,4 +74,3 @@ const SetCreateForm = (props: SetCreateFormProps) => {
 };
 
 export { SetCreateForm };
-export type { SetCreateFormProps };

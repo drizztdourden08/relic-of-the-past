@@ -1,14 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Phase 10 of `plans/hud-inspector-ux-review.html` covers Motion. A SHEET OF ITS
-   OWN, for §38's reason: three agents were rebuilding three sections in one
-   tree, and `inspector.css`/`panels.css`/`fields.css` were each within a few
-   lines of their cap before any of us started. Nothing here is added to those;
-   they keep the two `.hud-keyframes__*` rules the old, non-draggable track
-   used, which this phase's own components no longer render. */
-
-/* ── KeyframeTrack: the rail ───────────────────────────────────────────── */
-
 .hud-kftrack__group {
   display: flex;
   flex-direction: column;
@@ -32,13 +23,6 @@
   color: var(--c-text-muted);
 }
 
-/* THE RAIL IS INSET BY A MARGIN, NOT PADDING, and that is not a taste choice:
-   an absolutely-positioned child resolves `left: 0%`/`100%` against its
-   containing block's PADDING box, so padding would not hold a diamond at
-   either end inside the surface. It would be ignored. A margin makes
-   the rail itself narrower, so the coordinate space the pointer is measured
-   in and the surface the author sees are the same rectangle, and the 11 px
-   diamond at `at: 1` hangs into the margin instead of out of the panel. */
 .hud-kftrack__rail {
   position: relative;
   height: var(--space-lg);
@@ -59,7 +43,6 @@
   transform: translateY(-50%);
 }
 
-/* Left is set inline, per keyframe. It is the one computed value here. */
 .hud-kftrack__key {
   position: absolute;
   top: 50%;
@@ -96,8 +79,6 @@
   background: var(--c-gold-bright);
   pointer-events: none;
 }
-
-/* ── EasingPicker: the curves, drawn ───────────────────────────────────── */
 
 .hud-easing {
   display: flex;
@@ -143,10 +124,6 @@
   height: 100%;
 }
 
-/* ── The transport, and a transition row ───────────────────────────────── */
-
-/* The `Slider` beside the play button is `flex: 1` inside its own track, so
-   the only thing this row has to do is stop the button from stretching. */
 .hud-transport {
   display: flex;
   gap: var(--space-2xs);
@@ -166,12 +143,6 @@
   gap: var(--space-2xs);
 }
 
-/* AN `input[type=range]` HAS AN INTRINSIC ~129 px WIDTH, which on a flex item
-   is its automatic minimum, so `flex: 1` alone will not take it below that, and
-   `Slider`'s own `--space-lg` gap is another 16. Measured overflowing the rail
-   by 14 px at 232 and 36 px at 188 before these two rules; `Slider` itself is
-   untouched, because the settings screens it was built for have the width it
-   assumes and this 188 px column is the exception. */
 .hud-kftrack__group .slider,
 .hud-transport .slider {
   gap: var(--space-2xs);

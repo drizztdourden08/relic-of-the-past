@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * The variables tab's state: filtering, usage counts, and the hardcoded-name
- * scan. The scan runs only when the dialog opens; `findHardcoded` walks every
- * text run against every candidate phrase. Applying a report is one edit, so
- * the debounced save sees a single new set.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { findHardcoded } from '@shared/game/language';
 import { countVariableUses } from '@domains/packs/language/behavior/entry-selectors';
@@ -12,30 +6,8 @@ import { filterVariables } from '@domains/packs/language/compounds/variables/var
 import type { VariableFilter } from '@domains/packs/language/compounds/variables/variable-groups';
 import { acceptedOf, groupHardcoded } from './hardcoded-report';
 import { applyHardcoded } from './apply-hardcoded';
-import type { DialogueEntry, Token, Variable } from '@shared/game/language';
-import type { HardcodedGroup } from './hardcoded-report';
-
-type UseVariablesTabParams = {
-  dialogue: DialogueEntry[];
-  variables: Variable[];
-  onRewrite: (edits: { entryId: number; tokens: Token[] }[]) => void;
-};
-
-type VariablesTabState = {
-  filter: VariableFilter;
-  query: string;
-  rows: Variable[];
-  used: Record<string, number>;
-  scanOpen: boolean;
-  groups: HardcodedGroup[];
-  setFilter: (filter: VariableFilter) => void;
-  setQuery: (query: string) => void;
-  openScan: () => void;
-  closeScan: () => void;
-  applyScan: (variableKeys: string[]) => void;
-};
-
-const NO_GROUPS: HardcodedGroup[] = [];
+import { NO_GROUPS } from './useVariablesTab.constants';
+import type { UseVariablesTabParams, VariablesTabState } from './useVariablesTab.type';
 
 const useVariablesTab = (params: UseVariablesTabParams): VariablesTabState => {
   const { dialogue, variables, onRewrite } = params;
@@ -69,4 +41,3 @@ const useVariablesTab = (params: UseVariablesTabParams): VariablesTabState => {
 };
 
 export { useVariablesTab };
-export type { VariablesTabState };

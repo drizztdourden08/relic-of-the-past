@@ -1,16 +1,7 @@
 /* @layer renderer-components @kind component */
-/**
- * One preset in a value list. Its own component so the click handler is bound
- * once per value, not rebuilt inline on every render of the list.
- */
 import { useCallback } from 'react';
 import { Button } from '@ds/primitives';
-import type { Preset } from './presets';
-
-type PresetChoiceProps = {
-  preset: Preset;
-  onPick: (param: number) => void;
-};
+import type { PresetChoiceProps } from './PresetChoice.type';
 
 const PresetChoice = (props: PresetChoiceProps) => {
   const { preset, onPick } = props;
@@ -25,4 +16,3 @@ const PresetChoice = (props: PresetChoiceProps) => {
 };
 
 export { PresetChoice };
-export type { PresetChoiceProps };

@@ -1,20 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * The creation form's Archipelago part: the server setup the Network tab also edits later,
- * with its Test connection, then the two session switches a new profile starts with. After
- * creation both switches live in the profile's Online settings.
- */
 import { Toggle } from '@ds/primitives';
 import { ServerSetup } from '@domains/app/compounds/ServerSetup';
 import { absorbPort, withHost } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { useServerProbe } from '@app/hooks/randomizer/server-setup/useServerProbe';
 import type { ServerSetupDraft } from '@app/hooks/randomizer/server-setup/server-setup-draft';
-import type { RandomizerFormState } from './build-randomizer-config';
-
-interface ArchipelagoFieldsProps {
-  value: RandomizerFormState;
-  onChange: (part: Partial<RandomizerFormState>) => void;
-}
+import type { ArchipelagoFieldsProps } from './ArchipelagoFields.type';
 
 const ArchipelagoFields = ({ value, onChange }: ArchipelagoFieldsProps) => {
   const { server } = value;
@@ -41,4 +31,3 @@ const ArchipelagoFields = ({ value, onChange }: ArchipelagoFieldsProps) => {
 };
 
 export { ArchipelagoFields };
-export type { ArchipelagoFieldsProps };

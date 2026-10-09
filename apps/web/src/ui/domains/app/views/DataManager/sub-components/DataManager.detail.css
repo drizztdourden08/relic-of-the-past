@@ -1,92 +1,4 @@
 /* @layer renderer-components @kind style */
-
-/* ─── Import form ─── */
-
-.import-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  padding: var(--space-md);
-  background: var(--c-hover);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
-}
-
-.import-form__url-row {
-  display: flex;
-  gap: var(--space-xs);
-}
-
-.import-form__url-input {
-  flex: 1;
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-inset);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  color: var(--c-text);
-  font-size: var(--text-sm);
-  font-family: inherit;
-  outline: none;
-  transition: border-color var(--transition-fast);
-}
-
-.import-form__url-input:focus {
-  border-color: var(--c-gold);
-}
-
-.import-form__url-input::placeholder {
-  color: var(--c-text-muted);
-}
-
-.import-form__download-btn {
-  padding: var(--space-xs) var(--space-md);
-  background: var(--c-gold);
-  border: none;
-  border-radius: var(--radius-sm);
-  color: var(--c-bg);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background var(--transition-fast);
-}
-
-.import-form__download-btn:hover:not(:disabled) {
-  background: var(--c-gold-bright);
-}
-
-.import-form__download-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.import-form__divider {
-  text-align: center;
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.import-form__status {
-  font-size: var(--text-xs);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-sm);
-  text-align: center;
-}
-
-.import-form__status--success {
-  color: var(--c-green);
-  background: var(--c-green-soft);
-}
-
-.import-form__status--error {
-  color: var(--c-danger);
-  background: var(--c-danger-soft);
-}
-
-/* ─── Detail panel ─── */
-
 .detail-panel__title {
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
@@ -127,8 +39,6 @@
   border-bottom: 1px solid var(--c-border);
 }
 
-/* ─── Track list (MSU) ─── */
-
 .track-list {
   display: flex;
   flex-direction: column;
@@ -164,8 +74,6 @@
   font-size: var(--text-xs);
 }
 
-/* ─── Dialogue viewer (Language) ─── */
-
 .dialogue-viewer {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -176,75 +84,6 @@
   max-height: 100%;
   overflow-y: auto;
 }
-
-/* ─── Profile create form ─── */
-
-.profile-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  padding: var(--space-md);
-  background: var(--c-hover);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
-}
-
-.profile-form__field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.profile-form__label {
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.profile-form__input {
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-inset);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  color: var(--c-text);
-  font-size: var(--text-sm);
-  font-family: inherit;
-  outline: none;
-}
-
-.profile-form__input:focus {
-  border-color: var(--c-gold);
-}
-
-.profile-form__select {
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-inset);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  color: var(--c-text);
-  font-size: var(--text-sm);
-  font-family: inherit;
-  outline: none;
-  cursor: pointer;
-}
-
-.profile-form__select:focus {
-  border-color: var(--c-gold);
-}
-
-.profile-form__actions {
-  display: flex;
-  gap: var(--space-xs);
-  justify-content: flex-end;
-  margin-top: var(--space-xs);
-}
-
-.profile-form__error {
-  color: var(--c-danger);
-}
-
-/* ─── Profile overview (right panel) ─── */
 
 .profile-overview__settings {
   display: flex;

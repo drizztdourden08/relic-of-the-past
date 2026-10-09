@@ -1,28 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * THE RAMP IS THE THING BEING EDITED, SO THE RAMP IS DRAWN.
- *
- * What it replaces: two stops as two rows of `position + swatch + clipped hex +
- * ✕`, with nothing anywhere rendering the gradient. A fourth stop cost a fourth
- * row and you still could not see it. Every tool that edits gradients (Figma,
- * Photoshop, devtools, Blender's colour ramp) draws the ramp and puts the
- * stops on it, because a gradient is a picture and a list of numbers is not.
- *
- * ONLY THE SELECTED STOP OCCUPIES ROWS. `n` stops cost one ramp plus two rows,
- * whatever `n` is; the old shape cost `n` rows and never showed the result.
- *
- * THREE GESTURES, AND A KEYBOARD PATH FOR EACH. Click selects, drag moves,
- * double-click on the ramp adds a stop where you clicked. Drag is the one a
- * keyboard cannot reach, so the arrow keys nudge the focused stop by 1% (10%
- * with shift) and `at` is also a plain number field beneath. That is the same value,
- * twice, because dragging is for feel and typing is for `0.5` exactly.
- *
- * STOPS ARE SORTED ON EVERY WRITE, and selection follows the moved stop instead
- * of the index, so dragging one past another does not silently start editing
- * its neighbour. `at` is a bare `number` in `hud-value.ts` and not a `Value`,
- * so this is a `NumberInput` and not a `ValueInput`; a stop position is not
- * bindable in the document model and the field must not pretend it is.
- */
 import { useRef, useState } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -35,15 +11,10 @@ import { swatchOf } from '../behavior/appearance-summary';
 import './HudLayoutEditor.appearance.css';
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
 import type { GradientStop } from '@shared/types/hud';
+import type { GradientRampProps } from './GradientRamp.type';
 
 const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));
 const round2 = (n: number): number => Math.round(n * 100) / 100;
-
-interface GradientRampProps {
-  stops: readonly GradientStop[];
-  onChange: (next: GradientStop[]) => void;
-  kind: 'linear' | 'radial';
-}
 
 const GradientRamp = (props: GradientRampProps) => {
   const { stops, onChange, kind } = props;
@@ -52,7 +23,6 @@ const GradientRamp = (props: GradientRampProps) => {
   const index = Math.min(selected, stops.length - 1);
   const stop = stops[index];
 
-  /** Sorted on write, and the selection re-found by identity afterwards. */
   const commit = (next: GradientStop[], keep: GradientStop): void => {
     const sorted = [...next].sort((a, b) => a.at - b.at);
     setSelected(Math.max(0, sorted.indexOf(keep)));
@@ -146,4 +116,4 @@ const GradientRamp = (props: GradientRampProps) => {
 };
 
 export { GradientRamp };
-export type { GradientRampProps };
+export type { GradientRampProps } from './GradientRamp.type';

@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * Every vanilla slot is listed, filled or not; extended slots join only for an extended pack. A
- * number the game never asks for is NOT a slot, so such files show only in the file list as unused.
- */
 import { useMemo } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { VANILLA_TRACK_COUNT } from '@shared/types/msu-manifest';
@@ -26,11 +22,8 @@ const useTrackRows = (manifest: MsuPackManifest, files: MsuFile[]) => {
   const extended = profile.isDeluxe;
 
   const rows = useMemo((): MatchedTrack[] => {
-    // The vanilla range is a property of the FORMAT, not the name dataset, which would
-    // otherwise turn a slot with no name into a slot that is not there.
     const numbers = new Set<number>();
     for (let trackNum = 1; trackNum <= VANILLA_TRACK_COUNT; trackNum += 1) numbers.add(trackNum);
-    // Extended slots come from the tables, so an extended pack shows every slot it COULD fill.
     if (extended) for (const trackNum of DELUXE_TRACKS) numbers.add(trackNum);
     return [...numbers].sort((a, b) => a - b).map((trackNum) => {
       const layers = byTrack.get(trackNum)?.layers ?? [];
