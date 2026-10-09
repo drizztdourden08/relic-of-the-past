@@ -325,9 +325,11 @@ const C_TABLES = [
   {
     file: 'core/game-hooks/prize_presentation.c',
     name: 'kVanillaPrizeItem',
-    build: (data) => `static const uint8 kVanillaPrizeItem[${PALACE_SLOTS - 1}] = {
+    build: (data) => `// clang-format off
+static const uint8 kVanillaPrizeItem[${PALACE_SLOTS - 1}] = {
   ${vanillaPrizeItem(data).map(cByte).join(', ')},
-};`,
+};
+// clang-format on`,
   },
 ];
 

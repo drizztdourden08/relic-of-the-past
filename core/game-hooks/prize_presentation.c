@@ -33,9 +33,11 @@
 // dungeons that have no falling prize. Mirrors kBossFinishedFallingItem (dungeon.c) and
 // kDungeonCrystalPendantBit (zelda_rtl.c), which agree on which three dungeons hold pendants.
 /* generated: begin kVanillaPrizeItem */
+// clang-format off
 static const uint8 kVanillaPrizeItem[13] = {
   0, 0, 0x37, 0x39, 0, 0x20, 0x20, 0x20, 0x20, 0x20, 0x38, 0x20, 0x20,
 };
+// clang-format on
 /* generated: end kVanillaPrizeItem */
 
 // Ancilla_SpawnFallingPrize's kind argument for each native prize id.
