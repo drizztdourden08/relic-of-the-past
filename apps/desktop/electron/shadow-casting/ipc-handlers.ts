@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { is } from '@electron-toolkit/utils';
 import type { ShadowCastingProject } from '@shared/types/shadow-casting';
 import { loadShadowProject, saveShadowProject, getScreenData } from './store';

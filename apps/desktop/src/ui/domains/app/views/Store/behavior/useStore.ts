@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ItemCardView } from '@shared/store/home-types';
 import type { StoreProps, StoreSection } from '../Store.type';
 import { GRID_SECTIONS } from '../Store.constants';
@@ -16,8 +16,9 @@ import { useStoreAccount } from './useStoreAccount';
 import { useUninstall } from './useUninstall';
 
 const useStore = (props: StoreProps) => {
-  const { onLibraryChanged, onDeleteConfirm } = props;
-  const [section, setSection] = useState<StoreSection>('home');
+  const { onLibraryChanged, onDeleteConfirm, section: requested } = props;
+  const [section, setSection] = useState<StoreSection>(requested ?? 'home');
+  useEffect(() => { if (requested) setSection(requested); }, [requested]);
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 

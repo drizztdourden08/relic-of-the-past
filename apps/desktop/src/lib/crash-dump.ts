@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import { getEntries } from './log-bus';
-import { getPlatform } from '@app/platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 
 const formatEntry = (timestamp: number, channel: string, level: string, message: string): string =>
   `${new Date(timestamp).toISOString()} [${channel}] ${level.toUpperCase().padEnd(5)} ${message}`;

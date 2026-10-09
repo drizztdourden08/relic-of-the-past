@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { VibrationSegment } from '@shared/input/vibration-segment.type';
-import { getPlatform } from '@app/platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 import { HID_WORKER_OVERHEAD_MS } from './haptic-bridge.constants';
 import { hapticState } from './haptic-state';
 import { sendToController } from './send-to-controller';

@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { allocateActor, deleteActor, writeActorRecord } from './actor-writer';
 import { allocateCheck, deleteCheck, writeCheckRecord } from './check-writer';
 import { allocateDungeon, deleteDungeon, writeDungeonRecord } from './dungeon-writer';

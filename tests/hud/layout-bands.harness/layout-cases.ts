@@ -8,9 +8,9 @@ import { trackExtentOf } from '../../../apps/desktop/src/ui/domains/app/views/Hu
 import { SelectionLegend } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionLegend';
 import { SelectionToolbar } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionToolbar';
 import { LayoutSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
-import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
+import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { ReactNode } from 'react';
-import type { Platform } from '../../../shared/platform';
+import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudContainer, HudGridContainer, HudNode } from '../../../shared/types/hud';
 import type { GridActionContext, GridSelection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 import { SELECTIONS } from './layout-bands.constants';

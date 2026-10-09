@@ -1,9 +1,8 @@
 /* @layer electron-main @kind logic */
 import type { StoreInstallRequest, StoreInstallResult } from '@shared/ipc';
 import type { InstallProgress } from '@shared/store/install/installer.type';
-import { emit } from '../../lib/ipc/handle';
+import { emit, getMainWindow } from '@drizztdourden08/brock-electron/main';
 import { logToRenderer } from '../../lib/renderer-log';
-import { getMainWindow } from '../../window';
 import { assertItemId } from '../catalog';
 import { installItem } from '../install';
 import { beginJob, endJob } from '../install-jobs';

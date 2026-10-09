@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { replaceItemGroupRecord } from '@shared/game/data';
 import type { ItemGroupRecord } from '@shared/game/data';
 import type { PendingItemGroupRecord } from '@shared/game/data/record-codegen';
@@ -9,7 +10,7 @@ import { settleWrite } from './settle-write';
 const writeItemGroupRecord: RecordWriter = async (row) => {
   const record = row as unknown as ItemGroupRecord;
   const { id, ...rest } = record;
-  settleWrite(await window.api.screenEditor.writeItemGroup({ groupId: id, record: rest as PendingItemGroupRecord }));
+  settleWrite(await appApi().screenEditor.writeItemGroup({ groupId: id, record: rest as PendingItemGroupRecord }));
   replaceItemGroupRecord(record);
   updateIdRefOption('item-group', id);
 };

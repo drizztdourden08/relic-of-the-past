@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { NumberInput } from '@drizztdourden08/tessera/primitives';
 import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
-import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { SCREEN_LIMIT_HINT } from './SimulatorWidgetSettings.constants';
 
 const SimulatorWidgetSettings = () => {

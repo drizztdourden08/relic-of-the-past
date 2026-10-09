@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
-const restoreHold = (): Promise<boolean> => window.api.restoreControllerHold();
+import { appApi } from '@app/ipc/app-api';
+const restoreHold = (): Promise<boolean> => appApi().restoreControllerHold();
 
 export { restoreHold };

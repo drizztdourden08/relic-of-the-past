@@ -1,6 +1,9 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Status, Button, IconButton, Select, TextInput, Field, EmptyState, ButtonRow, SegmentedControl } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Status, Button, IconButton, Select, TextInput, Field, EmptyState, ButtonRow, SegmentedControl, Spinner } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout, ListItemRow } from '@drizztdourden08/tessera/composites';
+import './DataManager.lists.css';
+import './DataManager.forms.css';
+import './DataManager.detail.css';
 import { formatRelativeTime } from '../../../../../../utils';
 import { useProfileManager } from './profile-manager/useProfileManager';
 import { ProfileDetailPanel } from './profile-manager/ProfileDetailPanel';
@@ -9,7 +12,7 @@ import { RandomizerOptionsPanel } from './profile-manager/RandomizerOptionsPanel
 import type { ProfileManagerProps } from './ProfileManager.type';
 
 const ProfileManager = (props: ProfileManagerProps) => {
-  const { profiles, romStatuses, onSelectProfile, onCreateProfile, onDeleteProfile, onRefresh, isGameRunning } = props;
+  const { profiles, romStatuses, onSelectProfile, onCreateProfile, onDeleteProfile, onRefresh, isGameRunning, loadingProfile = null } = props;
 
   const {
     selected, setSelected,
@@ -33,6 +36,11 @@ const ProfileManager = (props: ProfileManagerProps) => {
 
   const list = (
     <>
+      {loadingProfile && (
+        <Box className="data-list__loading">
+          <ListItemRow selected icon={<Spinner size="sm" />} name={`Loading profile: ${loadingProfile}...`} />
+        </Box>
+      )}
       {creating ? (
         <Box className="profile-form" onKeyDown={handleKeyDown}>
           <Field label="Profile Name">

@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
-const mappingForGuid = (guid: string): Promise<string | null> => window.api.mappingForGuid(guid);
+import { appApi } from '@app/ipc/app-api';
+const mappingForGuid = (guid: string): Promise<string | null> => appApi().mappingForGuid(guid);
 
 export { mappingForGuid };

@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { randomUUID } from 'crypto';
-import { handle } from '../../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import type {
   DebugCaptureFinalizeResult, DebugReportBuildResult,
   DebugCaptureSessionSummary, DebugCaptureDeleteSessionResult,

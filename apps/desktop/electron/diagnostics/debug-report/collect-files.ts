@@ -1,7 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFile } from 'fs/promises';
-import { getUserDataPath } from '../../lib/paths';
-import { readJson } from '../../lib/json-store';
+import { getUserDataPath, readJsonFile } from '@drizztdourden08/brock-electron/main';
 import type { Profile } from '@shared/types/profile';
 import { LOG_FILES } from './collect-files.constants';
 import type { DebugReportCollectedFiles, DebugReportLogFile } from './collect-files.type';
@@ -25,9 +24,9 @@ const collectLogFiles = async (): Promise<DebugReportLogFile[]> => {
 
 const collectDebugReportFiles = async (profileId: string): Promise<DebugReportCollectedFiles> => {
   const [settingsJson, profile, inputProfilesJson, logFiles] = await Promise.all([
-    readJson<Record<string, unknown>>(getUserDataPath('profiles', profileId, 'config.json'), {}),
-    readJson<Profile | null>(getUserDataPath('profiles', profileId, 'profile.json'), null),
-    readJson<unknown>(getUserDataPath('profiles', profileId, 'input-profiles.json'), null),
+    readJsonFile<Record<string, unknown>>(getUserDataPath('profiles', profileId, 'config.json'), {}),
+    readJsonFile<Profile | null>(getUserDataPath('profiles', profileId, 'profile.json'), null),
+    readJsonFile<unknown>(getUserDataPath('profiles', profileId, 'input-profiles.json'), null),
     collectLogFiles(),
   ]);
   return {

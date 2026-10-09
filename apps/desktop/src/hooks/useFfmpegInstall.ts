@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useCallback, useEffect, useState } from 'react';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
 
@@ -9,18 +10,18 @@ const useFfmpegInstall = (active: boolean) => {
   useEffect(() => {
     if (!active) { setState(null); return undefined; }
     let live = true;
-    void window.api.getFfmpegState()
+    void appApi().getFfmpegState()
       .then((current) => { if (live) setState(current); })
       .catch(() => { if (live) setState({ status: 'failed', reason: 'Could not read the tool state.' }); });
     return () => { live = false; };
   }, [active]);
 
-  useEffect(() => (active ? window.api.onFfmpegProgress(setState) : undefined), [active]);
+  useEffect(() => (active ? appApi().onFfmpegProgress(setState) : undefined), [active]);
 
   const install = useCallback(async (): Promise<FfmpegState> => {
     setInstalling(true);
     try {
-      const settled = await window.api.installFfmpeg();
+      const settled = await appApi().installFfmpeg();
       setState(settled);
       return settled;
     } finally {

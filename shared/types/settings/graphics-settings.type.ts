@@ -9,7 +9,7 @@ interface GraphicsSettings {
   dimFlashes: boolean;
   linkSprite: string | null;
   outputMethod: 'SDL' | 'SDL-Software' | 'OpenGL' | 'OpenGL ES';
-  windowMode: 'default' | 'borderless';
+  windowMode: 'windowed' | 'borderless' | 'fullscreen';
   startFullscreen: boolean;
   viewportConstraint: 'none' | 'fit' | 'fill';
   pixelPerfect: boolean;

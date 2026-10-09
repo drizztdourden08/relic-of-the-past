@@ -1,29 +1,46 @@
-/* @layer renderer-other @kind component */
-import './platform/install-api-shim';
+/* @layer renderer-app @kind entry */
+import '@drizztdourden08/tessera/tokens.css';
+import '../.brock/palette.css';
+import './theme.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from './App';
-import { PlatformProvider } from './platform';
-import { pollInventoryState, getCompletedChecks, getCurrentInventory } from './lib/game/tracker';
-import { deliverItem, deliverNpcCheck } from './lib/game/delivery-api';
-import { deliveryQueue } from './lib/game/delivery-queue';
-import { cheatTriggerNpcCheck } from './lib/game/cheats';
-import { installSessionLogTap } from './lib/diagnostics/session-log';
-import '@drizztdourden08/tessera/tokens.css';
-import '@drizztdourden08/tessera/palettes/rotp.css';
-import './theme.css';
-import type { LiveTestWindow } from './main.type';
+import { BrockApp } from '@drizztdourden08/brock-react';
+import { rendererModules } from '../.brock/modules.renderer';
+import { rendererBootTasks } from '../.brock/boot.renderer';
+import { screenTree } from '../.brock/screens';
+import { appWidgetLayout, appWidgets } from '../.brock/widgets';
+import { appReview } from '../.brock/review';
+import { appTitleBar } from '../.brock/title-bar';
+import { appTours } from '../.brock/tours';
+import { installAppShim } from './platform/api-shim';
+import { rotpShellModule } from './shell/rotp-shell-module';
+import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
+import { SETTINGS } from './main.constants';
+import { product } from './product';
+import type { AppSettings } from './settings.type';
+import './lib/log-bus';
 
-installSessionLogTap();
+installAppShim();
 
-const liveTestWindow = window as LiveTestWindow;
-liveTestWindow.__trackerBridge = { pollInventoryState, getCompletedChecks, getCurrentInventory };
-liveTestWindow.__deliveryApi = { deliverItem, deliverNpcCheck, getQueueState: deliveryQueue.getState, triggerNpcCheck: cheatTriggerNpcCheck };
+const modules = [...rendererModules, rotpShellModule];
 
-createRoot(document.getElementById('root') as HTMLElement).render(
+const root = document.getElementById('root');
+if (!root) throw new Error('index.html has no #root element');
+
+createRoot(root).render(
   <StrictMode>
-    <PlatformProvider>
-      <App />
-    </PlatformProvider>
+    <BrockApp<AppSettings>
+      product={product}
+      settings={SETTINGS}
+      screenTree={screenTree}
+      modules={modules}
+      bootTasks={rendererBootTasks}
+      widgets={appWidgets}
+      widgetLayout={appWidgetLayout}
+      review={appReview}
+      titleBar={appTitleBar}
+      tours={appTours}
+      profileHooks={rotpProfileHooks}
+    />
   </StrictMode>,
 );

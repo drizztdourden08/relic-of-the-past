@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useCallback, useEffect, useState } from 'react';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@shared/types/msu-optimize';
 import { useFfmpegInstall } from '@app/hooks/useFfmpegInstall';
@@ -28,14 +29,14 @@ const useOptimize = (params: OptimizeParams) => {
     setError(null);
   }, [open]);
 
-  useEffect(() => (open ? window.api.onMsuOptimizeProgress(setProgress) : undefined), [open]);
+  useEffect(() => (open ? appApi().onMsuOptimizeProgress(setProgress) : undefined), [open]);
 
   const measure = useCallback(async (): Promise<void> => {
     setStep('measuring');
     setProgress(null);
     setError(null);
     try {
-      setAnalysis(await window.api.analyzeMsuOptimize(pack));
+      setAnalysis(await appApi().analyzeMsuOptimize(pack));
       setStep('preview');
     } catch (err) {
       setError(messageOf(err, 'Could not measure this pack.'));
@@ -57,7 +58,7 @@ const useOptimize = (params: OptimizeParams) => {
     setProgress(null);
     setError(null);
     try {
-      setResult(await window.api.runMsuOptimize(pack, names));
+      setResult(await appApi().runMsuOptimize(pack, names));
       setStep('result');
     } catch (err) {
       setError(messageOf(err, 'Could not convert this pack.'));

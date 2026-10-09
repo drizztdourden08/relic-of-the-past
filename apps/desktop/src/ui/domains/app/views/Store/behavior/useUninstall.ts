@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useCallback, useState } from 'react';
 import { uninstallMessage, uninstallTitle } from '../../../compounds/InstalledOrigin';
 import type { UninstallParams } from '../Store.type';
@@ -11,7 +12,7 @@ const useUninstall = (params: UninstallParams) => {
   const run = useCallback(async (itemId: string) => {
     setUninstallingId(itemId);
     setUninstallError(null);
-    const result = await window.api.storeUninstall(itemId);
+    const result = await appApi().storeUninstall(itemId);
     setUninstallingId(null);
     if (!result.ok) setUninstallError(result.error);
     onUninstalled();

@@ -1,10 +1,9 @@
 /* @layer electron-main @kind logic */
-import { getUserDataPath } from '../../lib/paths';
-import { readJson } from '../../lib/json-store';
+import { getUserDataPath, readJsonFile } from '@drizztdourden08/brock-electron/main';
 import { TRIGGER_CAL_FILE } from './calibration-store.constants';
 import type { TriggerCalibrationStore } from './calibration-store.type';
 
 const readTriggerCalibration = (): Promise<TriggerCalibrationStore> =>
-  readJson<TriggerCalibrationStore>(getUserDataPath(TRIGGER_CAL_FILE), {});
+  readJsonFile<TriggerCalibrationStore>(getUserDataPath(TRIGGER_CAL_FILE), {});
 
 export { readTriggerCalibration };

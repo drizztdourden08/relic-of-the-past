@@ -43,7 +43,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   linkSprite: null,
   outputMethod: 'SDL',
 
-  windowMode: 'default',
+  windowMode: 'windowed',
   startFullscreen: false,
   viewportConstraint: 'none',
   pixelPerfect: false,

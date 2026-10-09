@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync } from 'fs';
 import { ContainerOverlay } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ContainerOverlay';
 import { LayoutSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
-import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
+import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { HudFlexContainer, HudGridContainer } from '@shared/types/hud';
 import type { PlacedNode } from '@shared/hud/engine';
 import { ED, GUIDE, PLATFORM } from './section-controls.constants';

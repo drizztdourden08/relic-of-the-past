@@ -11,15 +11,15 @@ import { HealthSection } from './sub-components/HealthSection';
 import { ProgressSection } from './sub-components/ProgressSection';
 import { PlayersSection } from './sub-components/PlayersSection';
 import { ServerSection } from './sub-components/ServerSection';
-import { NETWORK_ANCHORS, NETWORK_PANELS } from '../../Randomizer.constants';
+import { NETWORK_PANELS } from '../../Randomizer.constants';
 import type { NetworkTabProps } from './NetworkTab.type';
 import './NetworkTab.css';
 
-const NetworkTab = ({ config, onSaveConnection, frame }: NetworkTabProps) => {
+const NetworkTab = ({ config, onSaveConnection }: NetworkTabProps) => {
   const { status, last, now } = useNetworkStatus();
   const view = useMemo(() => networkViewOf(status, last, config), [status, last, config]);
 
-  return frame(
+  return (
     <Grid minColWidth={PANEL_MIN_WIDTH} gap="lg" dense className="network-tab">
       <DashboardCard placement={NETWORK_PANELS.setup} title="Server setup">
         {config === null
@@ -31,8 +31,7 @@ const NetworkTab = ({ config, onSaveConnection, frame }: NetworkTabProps) => {
       <ProgressSection placement={NETWORK_PANELS.progress} view={view} />
       <PlayersSection placement={NETWORK_PANELS.players} view={view} />
       <ServerSection placement={NETWORK_PANELS.server} view={view} />
-    </Grid>,
-    NETWORK_ANCHORS,
+    </Grid>
   );
 };
 

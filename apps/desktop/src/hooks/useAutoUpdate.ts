@@ -1,4 +1,5 @@
 /* @layer renderer-other @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useState, useEffect, useCallback } from 'react';
 import type { UpdaterCapabilities, UpdaterPrefs } from '@shared/ipc/updater-contract';
 import type { UpdateState } from './use-auto-update.type';
@@ -9,36 +10,36 @@ const useAutoUpdate = () => {
   const [caps, setCaps] = useState<UpdaterCapabilities>({ canCheck: false, canInstall: false });
 
   useEffect(() => {
-    window.api.updater.capabilities().then(setCaps);
-    window.api.updater.getPrefs().then((prefs) => setState((s) => ({ ...s, prefs })));
-    window.api.updater.getVersion().then((currentVersion) => setState((s) => ({ ...s, currentVersion })));
+    appApi().updater.capabilities().then(setCaps);
+    appApi().updater.getPrefs().then((prefs) => setState((s) => ({ ...s, prefs })));
+    appApi().updater.getVersion().then((currentVersion) => setState((s) => ({ ...s, currentVersion })));
   }, []);
 
   useEffect(() => {
     if (!caps.canCheck) return;
     const cleanups: (() => void)[] = [];
 
-    cleanups.push(window.api.updater.onUpdateAvailable((info) => {
+    cleanups.push(appApi().updater.onUpdateAvailable((info) => {
       setState((s) => ({ ...s, status: 'available', info, error: null }));
     }));
 
-    cleanups.push(window.api.updater.onUpToDate(() => {
+    cleanups.push(appApi().updater.onUpToDate(() => {
       setState((s) => ({ ...s, status: 'idle' }));
     }));
 
-    cleanups.push(window.api.updater.onDownloadProgress(({ percent }) => {
+    cleanups.push(appApi().updater.onDownloadProgress(({ percent }) => {
       setState((s) => ({ ...s, status: 'downloading', percent }));
     }));
 
-    cleanups.push(window.api.updater.onDownloadComplete(() => {
+    cleanups.push(appApi().updater.onDownloadComplete(() => {
       setState((s) => ({ ...s, status: 'ready', percent: 100 }));
     }));
 
-    cleanups.push(window.api.updater.onError((error) => {
+    cleanups.push(appApi().updater.onError((error) => {
       setState((s) => ({ ...s, status: 'error', error }));
     }));
 
-    window.api.updater.getAvailable().then((info) => {
+    appApi().updater.getAvailable().then((info) => {
       if (info) setState((s) => ({ ...s, status: 'available', info, error: null }));
     });
 
@@ -48,7 +49,7 @@ const useAutoUpdate = () => {
   const check = useCallback(async () => {
     setState((s) => ({ ...s, status: 'checking', error: null }));
     try {
-      await window.api.updater.check();
+      await appApi().updater.check();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       setState((s) => ({ ...s, status: 'error', error: message }));
@@ -56,24 +57,24 @@ const useAutoUpdate = () => {
   }, []);
 
   const loadVersions = useCallback(async () => {
-    const versions = await window.api.updater.listVersions();
+    const versions = await appApi().updater.listVersions();
     setState((s) => ({ ...s, versions }));
   }, []);
 
   const setPrefs = useCallback(async (prefs: UpdaterPrefs) => {
     setState((s) => ({ ...s, prefs }));
-    await window.api.updater.setPrefs(prefs);
-    const versions = await window.api.updater.listVersions();
+    await appApi().updater.setPrefs(prefs);
+    const versions = await appApi().updater.listVersions();
     setState((s) => ({ ...s, versions }));
   }, []);
 
   const apply = useCallback(async (version: string | null) => {
     setState((s) => ({ ...s, status: 'downloading', percent: 0, error: null }));
-    await window.api.updater.apply(version);
+    await appApi().updater.apply(version);
   }, []);
 
   const openReleasePage = useCallback(async (version: string | null) => {
-    await window.api.updater.openReleasePage(version);
+    await appApi().updater.openReleasePage(version);
   }, []);
 
   return {

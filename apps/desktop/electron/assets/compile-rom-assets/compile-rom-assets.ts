@@ -2,7 +2,7 @@
 import { writeFile, access } from 'fs/promises';
 import { loadRom } from '@shared/asset-extraction/rom/load-rom-file';
 import { compileResources } from '@shared/asset-extraction/compile-resources';
-import { getUserDataPath } from '../../lib/paths';
+import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { getAssetFileName } from '../../roms/store';
 import { logToRenderer } from '../../lib/renderer-log';
 import { loadCompiledLanguages } from '../load-compiled-languages';

@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { registerRecord } from '@shared/game/data';
 import { screenRecordFile } from '@shared/game/data/record-file-targets';
 import type { ScreenRecord } from '@shared/game/data';
@@ -15,7 +16,7 @@ const createScreen: RecordCreator = async (draft) => {
   if (covered) return { success: false, error: alreadyCoveredMessage(covered.id), needsReview: true };
   const target = screenRecordFile(draft as unknown as ScreenHome);
   if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_SOURCE_FILE };
-  const result = await window.api.screenEditor.writeScreen({
+  const result = await appApi().screenEditor.writeScreen({
     filePath: target.relativePath,
     record: draft as unknown as PendingScreenRecord,
     replaceId: null,

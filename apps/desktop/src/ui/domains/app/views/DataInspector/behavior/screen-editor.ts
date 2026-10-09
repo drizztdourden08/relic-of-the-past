@@ -1,4 +1,6 @@
 /* @layer renderer-app @kind logic */
-const screenEditor = (): typeof window.api.screenEditor => window.api.screenEditor;
+import { appApi } from '@app/ipc/app-api';
+import type { ScreenEditorApi } from '@shared/ipc';
+const screenEditor = (): ScreenEditorApi => appApi().screenEditor;
 
 export { screenEditor };

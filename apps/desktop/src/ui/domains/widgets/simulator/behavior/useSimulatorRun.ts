@@ -14,7 +14,7 @@ import type { DetectCache } from '../../../../../lib/game/simulator/observe';
 import { fanOutEvents, screenFloodEvent, exitsEvent, sequenceEvent } from './runner-loop';
 import { computeProgress } from './compute-progress';
 import { buildRunResults } from './build-run-results';
-import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { FEATURES_LATCH_WAIT_MS, PAUSED_POLL_MS, SAFETY_CAP, SEQUENCE_PREFIX } from '../SimulatorWidget.constants';
 import type { RunControl } from '../SimulatorWidget.type';
 

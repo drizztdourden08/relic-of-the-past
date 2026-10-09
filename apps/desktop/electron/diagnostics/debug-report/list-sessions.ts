@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { readdir, stat } from 'fs/promises';
 import { join } from 'path';
-import { getUserDataPath } from '../../lib/paths';
+import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { readCaptureManifest } from './capture-manifest';
 import { CAPTURES_SUBDIR, PACKAGED_SUBDIR } from './finalize-capture-session';
 import type { DebugCaptureSessionSummary } from '@shared/types/debug-report';

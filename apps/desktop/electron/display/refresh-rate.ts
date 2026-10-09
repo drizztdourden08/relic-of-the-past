@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { screen } from 'electron';
-import { getMainWindow } from '../window';
+import { getMainWindow } from '@drizztdourden08/brock-electron/main';
 import { getDisplayModeDriver } from './native';
 import type { RefreshRateInfo } from '@shared/types/display';
 

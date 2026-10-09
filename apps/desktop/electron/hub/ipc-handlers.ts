@@ -1,8 +1,7 @@
 /* @layer electron-main @kind logic */
 import type { SiteId } from '@shared/hub';
 import type { HubSignInResult } from '@shared/ipc';
-import { handle, emit } from '../lib/ipc/handle';
-import { getMainWindow } from '../window';
+import { handle, emit, getMainWindow } from '@drizztdourden08/brock-electron/main';
 import { beginDeviceSignIn, cancelDeviceSignIn } from './device-auth';
 import { SANCTUARY_API } from './endpoints';
 import type { HubApi } from './endpoints';

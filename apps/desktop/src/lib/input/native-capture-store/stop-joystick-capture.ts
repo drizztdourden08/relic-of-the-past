@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
-const stopJoystickCapture = (): Promise<void> => window.api.stopJoystickCapture();
+import { appApi } from '@app/ipc/app-api';
+const stopJoystickCapture = (): Promise<void> => appApi().stopJoystickCapture();
 
 export { stopJoystickCapture };

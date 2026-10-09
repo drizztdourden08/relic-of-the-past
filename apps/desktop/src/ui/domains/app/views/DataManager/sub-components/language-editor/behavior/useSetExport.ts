@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import { RLANG_EXTENSION } from '@shared/storage/languages';
 import { exportLanguageSet } from '@app/lib/storage/languages-store';
-import { getPlatform } from '@app/platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 import type { SetExportParams } from './useSetExport.type';
 
 const useSetExport = (params: SetExportParams) => {

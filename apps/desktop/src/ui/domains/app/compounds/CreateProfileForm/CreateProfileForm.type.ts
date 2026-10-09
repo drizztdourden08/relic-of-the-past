@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind types */
-﻿interface CreateProfileFormProps {
+interface CreateProfileFormProps {
   readyRoms: RomDisplayInfo[];
-  onCreate: (name: string, romFile: string) => void;
-  onCancel: () => void;
+  romFile: string;
+  extracting: boolean;
+  onRomChange: (romFile: string) => void;
+  onImportRom: () => void;
 }
 
 export type {

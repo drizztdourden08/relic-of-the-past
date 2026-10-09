@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { getInputManager } from '../../input/input-manager';
 import { destroyHapticBridge } from '../../input/haptic-bridge';
-import { getPlatform } from '../../../platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 import { stopAutoSave } from '../auto-save';
 import { resetMasterVolume } from '../audio-volume';
 import { resetHostGates } from '../bridge/host-gates';

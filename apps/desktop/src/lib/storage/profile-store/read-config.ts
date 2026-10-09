@@ -1,7 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import * as store from '@shared/storage/profiles';
-import { platformFiles } from '../platform-files';
+import { readConfig as readStoredConfig } from '@drizztdourden08/brock-react';
 
-const readConfig = (id: string): Promise<Record<string, unknown> | null> => store.readConfig(platformFiles(), id);
+const readConfig = (id: string): Promise<Record<string, unknown> | null> => readStoredConfig(id);
 
 export { readConfig };

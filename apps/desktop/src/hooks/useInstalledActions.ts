@@ -1,4 +1,5 @@
 /* @layer renderer-other @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useCallback, useState } from 'react';
 import type { InstalledPack } from '@shared/store/installed-types';
 import { useInstalledStore } from '@app/stores/installed-store';
@@ -22,21 +23,21 @@ const useInstalledActions = () => {
 
   const uninstall = useCallback(async (pack: InstalledPack): Promise<boolean> => {
     begin();
-    const result = await window.api.storeUninstall(pack.itemId);
+    const result = await appApi().storeUninstall(pack.itemId);
     await finish(result.ok ? null : result.error);
     return result.ok;
   }, [begin, finish]);
 
   const duplicate = useCallback(async (pack: InstalledPack): Promise<string | null> => {
     begin();
-    const result = await window.api.storeDuplicate(pack.itemId);
+    const result = await appApi().storeDuplicate(pack.itemId);
     await finish(result.ok ? null : result.error);
     return result.ok ? result.data.name : null;
   }, [begin, finish]);
 
   const update = useCallback(async (pack: InstalledPack): Promise<string | null> => {
     begin();
-    const result = await window.api.storeInstall({ itemId: pack.itemId, version: null });
+    const result = await appApi().storeInstall({ itemId: pack.itemId, version: null });
     const wroteNothing = result.ok || result.cancelled;
     await finish(wroteNothing ? null : result.error);
     return result.ok ? result.pack.installedName : null;

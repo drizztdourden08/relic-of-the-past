@@ -1,4 +1,5 @@
 /* @layer renderer-stores @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { create } from 'zustand';
 import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
 import type { ShadowEditorStore } from './shadow-editor-store.type';
@@ -82,7 +83,7 @@ const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
     const state = get();
     if (!state.dirty) return;
     try {
-      await window.api.shadowCasting.save(state.project);
+      await appApi().shadowCasting.save(state.project);
       set({ dirty: false });
     } catch (err) {
       console.error('[ShadowEditor] Save failed:', err);

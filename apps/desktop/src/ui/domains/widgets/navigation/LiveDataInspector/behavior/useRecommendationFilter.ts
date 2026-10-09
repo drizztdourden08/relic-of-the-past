@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
 import type { Recommendation } from '@shared/game/recommendations';
-import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { buildFilterTabs } from './build-filter-tabs';
 import { filterEntries } from './filter-entries';
 import type { RecommendationFilter, UseRecommendationFilterResult } from '../LiveDataInspector.type';

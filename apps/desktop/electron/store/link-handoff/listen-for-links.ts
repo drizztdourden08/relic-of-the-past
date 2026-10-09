@@ -2,14 +2,14 @@
 import { rm } from 'fs/promises';
 import { createServer } from 'net';
 import type { InstallLink } from '@shared/store/deep-link';
-import { isAutomationLaunch } from '../../instance';
+import { rotpAutomationFlags } from '../../automation/rotp-automation-flags';
 import { isStaleSocket } from './is-stale-socket';
 import { listenOnPipe } from './listen-on-pipe';
 import { pipePath } from './pipe-path';
 import { serveOne } from './serve-one';
 
 const listenForLinks = async (onLink: (link: InstallLink) => void): Promise<void> => {
-  if (isAutomationLaunch()) return;
+  if (rotpAutomationFlags.isAutomationLaunch()) return;
   const path = pipePath();
   const server = createServer((socket) => serveOne(socket, onLink));
   try {

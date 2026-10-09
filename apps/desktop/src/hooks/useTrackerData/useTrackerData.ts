@@ -16,7 +16,7 @@ import type { PlacementView } from '../../lib/game/randomizer-client';
 import type { ViewMode } from '../../ui/domains/app/compounds/ChecksTracker';
 import { CLOSED_PANELS } from '../../ui/domains/app/compounds/ChecksTracker';
 import type { TrackerPanels } from '../../ui/domains/app/compounds/ChecksTracker';
-import { useWidgetPref } from '../useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import type { TrackerDataOptions } from './use-tracker-data.type';
 import { DEFAULT_GROUPING, EMPTY_FILTER, NO_GROUPS } from './use-tracker-data.constants';
 import { useLiveTrackerInputs } from './useLiveTrackerInputs';

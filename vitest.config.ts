@@ -18,10 +18,12 @@ export default defineConfig({
   },
   esbuild: { jsx: 'automatic' },
   resolve: {
-    alias: {
-      '@shared': resolve(__dirname, 'shared'),
-      '@app': resolve(__dirname, 'apps/desktop/src'),
-      '@domains': resolve(__dirname, 'apps/desktop/src/ui/domains'),
-    },
+    alias: [
+      { find: '@shared', replacement: resolve(__dirname, 'shared') },
+      { find: '@app', replacement: resolve(__dirname, 'apps/desktop/src') },
+      { find: '@domains', replacement: resolve(__dirname, 'apps/desktop/src/ui/domains') },
+      { find: /^@drizztdourden08\/brock-react$/, replacement: resolve(__dirname, 'apps/desktop/node_modules/@drizztdourden08/brock-react/src/index.ts') },
+      { find: /^@drizztdourden08\/brock-core$/, replacement: resolve(__dirname, 'apps/desktop/node_modules/@drizztdourden08/brock-core/src/index.ts') },
+    ],
   },
 });

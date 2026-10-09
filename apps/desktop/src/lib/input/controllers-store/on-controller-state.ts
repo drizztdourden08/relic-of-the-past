@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { getPlatform } from '@app/platform/get-platform';
+import { controllerHostPort } from '@app/platform/controller-host-port';
 
 const onControllerState = (cb: (deviceKey: string, buttons: boolean[], axes: number[]) => void) =>
-  getPlatform().controllers.onControllerState(cb);
+  controllerHostPort().onControllerState(cb);
 
 export { onControllerState };

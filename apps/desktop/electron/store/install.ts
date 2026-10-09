@@ -33,7 +33,7 @@ const settledName = async (installer: PackInstaller, installed: InstallOutcome, 
   const { installedName, ownName } = installed;
   if (!installer.settleName || !ownName) return installedName;
   const settled = await installer.settleName(installedName, ownName, storeFiles);
-  if (settled !== installedName) await repointProfiles(storeFiles, { kind, installedName }, settled);
+  if (settled !== installedName) await repointProfiles({ kind, installedName }, settled);
   return settled;
 };
 

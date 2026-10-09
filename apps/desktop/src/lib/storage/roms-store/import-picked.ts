@@ -2,7 +2,7 @@
 import type { RomImportResult } from '@shared/storage/roms';
 import type { RomKind } from '@shared/storage/rom-kinds';
 import * as roms from '@shared/storage/roms';
-import { getPlatform } from '@app/platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 import { platformFiles } from '../platform-files';
 import { emitRomProgress } from './emit-rom-progress';
 import { finalizeRomImport } from './finalize-rom-import';

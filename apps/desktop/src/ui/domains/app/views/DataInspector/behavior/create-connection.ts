@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { pendingPartnerId, pendingPartnerScreenId, registerRecord } from '@shared/game/data';
 import { connectionRecordFile } from '@shared/game/data/record-file-targets';
 import type { ConnectionKind, ConnectionRecord, ScreenId } from '@shared/game/data';
@@ -33,7 +34,7 @@ const registerCreated = (record: ConnectionRecord): void => {
 };
 
 const insertSingle = async (near: PendingConnectionRecord, filePath: string): Promise<CreateOutcome> => {
-  const result = await window.api.screenEditor.writeConnections({ mode: 'insert', filePath, records: [near] });
+  const result = await appApi().screenEditor.writeConnections({ mode: 'insert', filePath, records: [near] });
   if (!result.success) return { success: false, error: result.error };
   const id = result.ids[0];
   registerCreated({ id, ...near } as unknown as ConnectionRecord);
@@ -47,7 +48,7 @@ const insertPair = async (
   if (!farTarget.relativePath) return { success: false, error: farTarget.unresolved ?? NO_SOURCE_FILE };
   const far = buildFarHalf(near, farScreenId);
 
-  const result = await window.api.screenEditor.writeConnectionPair({
+  const result = await appApi().screenEditor.writeConnectionPair({
     near: { filePath: nearPath, record: near },
     far: { filePath: farTarget.relativePath, record: far },
   });

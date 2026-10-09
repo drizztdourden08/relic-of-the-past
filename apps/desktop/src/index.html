@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="booting" data-palette="rotp">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -8,42 +8,9 @@
       content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file: app-sprite: app-debug-capture: https://*.backblazeb2.com; media-src 'self' app-debug-capture:; font-src 'self' data:; connect-src 'self' ws: wss:"
     />
     <title>Relic of the Past</title>
-    <style>
-      #boot-splash {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 28px;
-        background: #000;
-      }
-      #boot-splash img {
-        width: 192px;
-        height: 192px;
-        image-rendering: auto;
-      }
-      #boot-splash .boot-splash__spinner {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: 3px solid rgba(255, 255, 255, 0.12);
-        border-top-color: #c8a84e;
-        animation: boot-splash-rotate 0.7s linear infinite;
-      }
-      @keyframes boot-splash-rotate {
-        to { transform: rotate(360deg); }
-      }
-    </style>
   </head>
   <body>
-    <div id="root">
-      <div id="boot-splash">
-        <img src="./logos/logo/logo-256.png" alt="" />
-        <div class="boot-splash__spinner"></div>
-      </div>
-    </div>
+    <div id="root"></div>
     <script type="module" src="./main.tsx"></script>
   </body>
 </html>

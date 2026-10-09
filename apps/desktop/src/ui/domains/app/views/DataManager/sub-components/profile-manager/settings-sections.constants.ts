@@ -25,7 +25,7 @@ const SETTINGS_SECTIONS: SettingsSection[] = [
       { key: 'cameraLockToViewport', label: 'Lock Camera to View' },
       { key: 'widescreenSprites', label: 'Widescreen Sprites' },
       { key: 'widescreenVisualFixes', label: 'Widescreen Fixes' },
-      { key: 'windowMode', label: 'Window Mode', format: (v) => String(v ?? 'default') },
+      { key: 'windowMode', label: 'Window Mode', format: (v) => String(v ?? 'windowed') },
       { key: 'startFullscreen', label: 'Start Fullscreen' },
       { key: 'viewportConstraint', label: 'Viewport Constraint', format: (v) => String(v ?? 'none') },
       { key: 'pixelPerfect', label: 'Pixel Perfect' },

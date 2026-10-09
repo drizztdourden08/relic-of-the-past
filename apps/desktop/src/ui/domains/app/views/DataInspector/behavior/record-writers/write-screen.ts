@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { screenRecordFile } from '@shared/game/data/record-file-targets';
 import { variantBlockers } from '@shared/game/logic/queries/screen-validity';
 import type { ScreenRecord } from '@shared/game/data';
@@ -12,7 +13,7 @@ const writeScreen: RecordWriter = async (row) => {
   const variantIssue = variantBlockers(rest)[0];
   if (variantIssue) throw new Error(`This screen needs ${variantIssue}.`);
   const filePath = pathOf(screenRecordFile({ id, ...rest }));
-  settleWrite(await window.api.screenEditor.writeScreen({
+  settleWrite(await appApi().screenEditor.writeScreen({
     filePath,
     record: rest as PendingScreenRecord,
     replaceId: id,

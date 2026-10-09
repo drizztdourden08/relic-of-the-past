@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { SegmentedControl, Toggle } from '@drizztdourden08/tessera/primitives';
 import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
-import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import type { ViewMode } from '@domains/app/compounds/ChecksTracker';
 import { useStickyHeader } from '../behavior/useStickyHeader';
 import {

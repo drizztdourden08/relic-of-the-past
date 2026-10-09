@@ -4,7 +4,7 @@ import { GridSolveContext } from '../../../apps/desktop/src/ui/domains/app/views
 import { CellPicker } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
 import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
 import { StageGridEcho } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/StageGridEcho';
-import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
+import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { HudGridContainer } from '../../../shared/types/hud';
 import type { PlacedNode } from '../../../shared/hud/engine';
 import type { EditorSampleState } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/useSampleState.type';

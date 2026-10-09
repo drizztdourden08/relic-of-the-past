@@ -1,11 +1,13 @@
 /* @layer renderer-widgets @kind hook */
+import { appApi } from '@app/ipc/app-api';
+import type { ScreenEditorApi } from '@shared/ipc';
 import { useCallback, useMemo } from 'react';
 import type { DatasetSuggestion } from '@shared/game/simulation';
 import { RECORD_REQUIRED } from '../SimulatorWidget.constants';
 import type { ApplyResult, CheckWriter } from '../SimulatorWidget.type';
 
 const useDatasetSuggestions = () => {
-  const editor = window.api.screenEditor as typeof window.api.screenEditor & { writeCheck?: CheckWriter };
+  const editor = appApi().screenEditor as ScreenEditorApi & { writeCheck?: CheckWriter };
   const canApplyCheck = useMemo(() => typeof editor.writeCheck === 'function', [editor]);
 
   const apply = useCallback(async (suggestion: DatasetSuggestion): Promise<ApplyResult> => {

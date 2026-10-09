@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { app } from 'electron';
 import type { BrowserWindow } from 'electron';
-import { emit } from '../lib/ipc/handle';
+import { emit } from '@drizztdourden08/brock-electron/main';
 import { importOpenedDocument } from '../documents/import-document';
 import { EXTENSION_KINDS } from './open-file.constants';
 import type { OpenedKind } from './open-file.type';

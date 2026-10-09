@@ -1,4 +1,5 @@
 /* @layer renderer-stores @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { create } from 'zustand';
 import { captureGameFrameBlob } from '@app/lib/game/capture-frame';
 import type { DebugCaptureStore } from './debug-capture-store.type';
@@ -57,7 +58,7 @@ const useDebugCaptureStore = create<DebugCaptureStore>((set, get) => ({
     set({ isCapturing: false, snapshots: [], screenshots: [] });
     if (!profileId || (snapshots.length === 0 && screenshots.length === 0)) return;
     const sessionKey = `session-${startedAt ?? Date.now()}`;
-    void window.api.finalizeDebugCaptureSession({ profileId, sessionKey, snapshots, screenshots });
+    void appApi().finalizeDebugCaptureSession({ profileId, sessionKey, snapshots, screenshots });
   },
   toggle: (profileId: string) => {
     const state = get();

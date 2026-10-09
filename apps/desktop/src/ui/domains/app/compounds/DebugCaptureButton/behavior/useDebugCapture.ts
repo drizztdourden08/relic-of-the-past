@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useCallback, useState } from 'react';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
 
@@ -15,7 +16,7 @@ const useDebugCapture = (profileId: string) => {
       useDebugCaptureStore.getState().stop();
       return;
     }
-    const ffmpeg = await window.api.getFfmpegState().catch(() => null);
+    const ffmpeg = await appApi().getFfmpegState().catch(() => null);
     if (ffmpeg?.status !== 'ready') {
       setShowFfmpegPrompt(true);
       return;

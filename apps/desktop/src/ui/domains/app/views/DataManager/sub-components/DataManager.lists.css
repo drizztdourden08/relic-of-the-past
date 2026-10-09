@@ -1,0 +1,10 @@
+/* @layer renderer-components @kind style */
+.data-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.data-list__loading {
+  padding-bottom: var(--space-sm);
+}

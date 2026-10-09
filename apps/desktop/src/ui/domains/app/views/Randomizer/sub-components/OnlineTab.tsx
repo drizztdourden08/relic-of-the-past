@@ -1,18 +1,15 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { useSearchStore } from '@app/stores/search-store';
+import { useSettings } from '@drizztdourden08/brock-react';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import type { AppSettings } from '@app/settings.type';
 import { OnlineSettings } from '../../ProfileHub/sub-components';
 import type { OnlineTabProps } from './OnlineTab.type';
 
 const OnlineTab = ({ profile }: OnlineTabProps) => {
-  const settings = useSearchStore((state) => state.settings);
-  const applyPatch = useSearchStore((state) => state.applyPatch);
-  if (settings === null || applyPatch === null) {
-    return <Box className="randomizer-online"><Text className="randomizer-page__hint">No profile is loaded.</Text></Box>;
-  }
+  const { settings, patch } = useSettings<AppSettings>();
   return (
     <Box className="randomizer-online">
-      <OnlineSettings profile={profile} settings={settings} onChange={applyPatch} />
+      <OnlineSettings profile={profile} settings={settings} onChange={patch} />
     </Box>
   );
 };

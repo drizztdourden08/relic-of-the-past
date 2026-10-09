@@ -1,12 +1,13 @@
 /* @layer renderer-widgets @kind hook */
+import { isAutoFlood } from '@app/lib/startup/is-auto-flood';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { listedCrossings } from '@app/lib/crossing-sections';
 import { annotateFlooded } from './nav-flood/annotate-flooded';
 import { liveGameStates } from '../../../../lib/game/live-game-states';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
-import { useWidgetUiStore } from '../../../../stores/widget-ui-store';
-import { useWidgetPref } from '../../../../hooks/useWidgetPref';
+import { useWidgetStateReady } from '@drizztdourden08/brock-react';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import type { NavMode } from '../../../../stores/navigation-overlay-store';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
@@ -37,7 +38,7 @@ const useNavigation = () => {
   const autoRun = mode === 'auto';
 
   const [savedMode, setSavedMode] = useWidgetPref<NavMode>('navigation', 'mode', 'manual');
-  const prefsHydrated = useWidgetUiStore(s => s.hydrated);
+  const prefsHydrated = useWidgetStateReady();
 
   const [running, setRunning] = useState(false);
   const [variant, setVariant] = useState<OverworldVariantInfo | null>(null);
@@ -185,7 +186,7 @@ const useNavigation = () => {
   }, [prefsHydrated, savedMode, mode]);
 
   useEffect(() => {
-    if (!window.api.autoFlood || didApplyAutoFloodFlag) return;
+    if (!isAutoFlood() || didApplyAutoFloodFlag) return;
     if (activeScreenIndex === null || running) return;
     didApplyAutoFloodFlag = true;
     overlayStore.setMode('auto');

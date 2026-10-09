@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import type { InstallLink } from '@shared/store/deep-link';
-import { isAutomationLaunch } from '../../instance';
-import { emit } from '../../lib/ipc/handle';
+import { emit } from '@drizztdourden08/brock-electron/main';
+import { rotpAutomationFlags } from '../../automation/rotp-automation-flags';
 import { bringForward } from './bring-forward';
 import { installLinkState } from './install-link-state';
 
@@ -11,7 +11,7 @@ const deliverInstallLink = (link: InstallLink): void => {
     queued.push(link);
     return;
   }
-  if (!isAutomationLaunch()) bringForward(target);
+  if (!rotpAutomationFlags.isAutomationLaunch()) bringForward(target);
   emit(target, 'store:openInstall', { itemId: link.itemId, version: link.version });
 };
 

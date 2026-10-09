@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { join } from 'path';
 import { writeFile, readFile, mkdir } from 'fs/promises';
-import { readJson, writeJson } from '../lib/json-store';
+import { readJsonFile, writeJsonFile } from '@drizztdourden08/brock-electron/main';
 import { MSU_SIDECAR_SUFFIX } from '@shared/storage/save-paths';
 import { statSaveSlot, type SaveSlotStat } from './save-slot';
 import { removeIfPresent } from './remove-if-present';
@@ -18,10 +18,10 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
   const manifestPath = (profileId: string): string => join(getDir(profileId), 'manifest.json');
 
   const readManifest = (profileId: string): Promise<TEntry[]> =>
-    readJson<TEntry[]>(manifestPath(profileId), []);
+    readJsonFile<TEntry[]>(manifestPath(profileId), []);
 
   const writeManifest = (profileId: string, entries: TEntry[]): Promise<void> =>
-    writeJson(manifestPath(profileId), entries);
+    writeJsonFile(manifestPath(profileId), entries);
 
   const writePair = async (profileId: string, id: string, data: Buffer, screenshot?: Buffer): Promise<void> => {
     const dir = getDir(profileId);

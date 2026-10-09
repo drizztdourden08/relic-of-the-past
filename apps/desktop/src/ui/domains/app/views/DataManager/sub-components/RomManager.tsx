@@ -8,6 +8,9 @@ import { EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { IMPORT_LANE_CONFIG } from './rom-manager/import-lane-config.constants';
 import type { RomManagerProps } from './RomManager.type';
+import './DataManager.lists.css';
+import './DataManager.forms.css';
+import './DataManager.detail.css';
 
 const RomManager = (props: RomManagerProps) => {
   const { romStatuses, onExtractAssets, onDeleteRom, onRefresh } = props;

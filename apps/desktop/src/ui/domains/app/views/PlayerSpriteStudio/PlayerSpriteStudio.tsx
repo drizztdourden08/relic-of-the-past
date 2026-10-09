@@ -14,6 +14,9 @@ import { PaletteEditor } from './sub-components/PaletteEditor';
 import { StudioToolbar } from './sub-components/StudioToolbar';
 import { fetchToBytes } from '@shared/storage/download';
 import './PlayerSpriteStudio.css';
+import '../DataManager/sub-components/DataManager.lists.css';
+import '../DataManager/sub-components/DataManager.forms.css';
+import '../DataManager/sub-components/DataManager.detail.css';
 import type { PlayerSpriteStudioProps } from './PlayerSpriteStudio.type';
 
 const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {

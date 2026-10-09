@@ -1,7 +1,6 @@
 /* @layer electron-main @kind logic */
 import { shell } from 'electron';
-import { handle, emit } from '../lib/ipc/handle';
-import { getMainWindow } from '../window';
+import { handle, emit, getMainWindow } from '@drizztdourden08/brock-electron/main';
 import { applyVersion } from './apply-update';
 import { refreshVersions } from './refresh-versions';
 import { releasePageUrl } from './release-page-url';

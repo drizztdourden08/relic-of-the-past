@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useState } from 'react';
-import { getPlatform } from '@app/platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 import { readRumbleStrength, writeRumbleStrength } from '@shared/storage/rumble-strength';
 import {
   DEFAULT_RUMBLE_STRENGTH, MAX_RUMBLE_STRENGTH, MIN_RUMBLE_STRENGTH,

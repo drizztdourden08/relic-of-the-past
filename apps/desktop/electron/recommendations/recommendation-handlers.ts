@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { createRecommendationStore } from '@shared/game/recommendations';
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { loadRecommendationFile, queued, recommendationStorage } from './recommendation-files';
 
 const store = createRecommendationStore(recommendationStorage);

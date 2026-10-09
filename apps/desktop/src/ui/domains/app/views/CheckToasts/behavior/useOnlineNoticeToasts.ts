@@ -2,11 +2,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { onOnlineNotice, queueNotice } from '@app/lib/game/randomizer-client';
 import type { NoticeEntry } from '@app/lib/game/randomizer-client';
-import { useSearchStore } from '@app/stores/search-store';
+import { useSettings } from '@drizztdourden08/brock-react';
+import type { AppSettings } from '@app/settings.type';
 import { isToastQuiet } from '@app/lib/game/play-quiet';
 
 const useOnlineNoticeToasts = () => {
-  const settings = useSearchStore((state) => state.settings);
+  const { settings } = useSettings<AppSettings>();
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
   const [entries, setEntries] = useState<readonly NoticeEntry[]>([]);

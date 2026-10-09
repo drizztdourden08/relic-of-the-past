@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
-const releaseHold = (): Promise<boolean> => window.api.releaseControllerHold();
+import { appApi } from '@app/ipc/app-api';
+const releaseHold = (): Promise<boolean> => appApi().releaseControllerHold();
 
 export { releaseHold };

@@ -1,12 +1,13 @@
 /* @layer renderer-lib @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import type { HubSession } from './hub-session.type';
 
 const electronHubSession: HubSession = {
-  signIn: (site) => window.api.beginHubSignIn(site),
-  cancel: () => window.api.cancelHubSignIn(),
-  signOut: () => window.api.hubSignOut(),
-  me: () => window.api.hubMe(),
-  subscribeDeviceCode: (listener) => window.api.onHubDeviceCode(listener),
+  signIn: (site) => appApi().beginHubSignIn(site),
+  cancel: () => appApi().cancelHubSignIn(),
+  signOut: () => appApi().hubSignOut(),
+  me: () => appApi().hubMe(),
+  subscribeDeviceCode: (listener) => appApi().onHubDeviceCode(listener),
 };
 
 export { electronHubSession };

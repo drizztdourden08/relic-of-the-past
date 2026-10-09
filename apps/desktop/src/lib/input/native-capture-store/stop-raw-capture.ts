@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
-const stopRawCapture = (): Promise<void> => window.api.stopControllerRawCapture();
+import { appApi } from '@app/ipc/app-api';
+const stopRawCapture = (): Promise<void> => appApi().stopControllerRawCapture();
 
 export { stopRawCapture };

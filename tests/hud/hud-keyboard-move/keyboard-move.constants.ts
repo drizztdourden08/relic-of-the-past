@@ -1,5 +1,5 @@
 /* @layer tests @kind constants */
-import type { Platform } from '../../../shared/platform';
+import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudLayout, HudNode } from '../../../shared/types/hud';
 
 const leaf = (id: string): HudNode => ({ id, kind: 'element', element: { type: 'spacer' } } as unknown as HudNode);

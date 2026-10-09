@@ -1,10 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import type { LogListener } from './log-bus.type';
-import { logRing } from './log-ring';
+import { getAppLog } from '@drizztdourden08/brock-react';
+import type { LogEntry, LogListener } from './log-bus.type';
 
-const subscribe = (listener: LogListener): () => void => {
-  logRing.listeners.add(listener);
-  return () => logRing.listeners.delete(listener);
-};
+const subscribe = (listener: LogListener): () => void =>
+  getAppLog().subscribe((entry) => listener(entry as LogEntry));
 
 export { subscribe };

@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { getUserDataPath } from '../../lib/paths';
+import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 
 const ffmpegToolDir = (): string => getUserDataPath('tools', 'ffmpeg');
 

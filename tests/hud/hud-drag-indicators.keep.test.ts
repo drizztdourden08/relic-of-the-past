@@ -7,9 +7,9 @@ import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
 import { GhostCard } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/DragGhost';
 import { CellPicker } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
-import { PlatformContext } from '../../apps/desktop/src/platform/PlatformProvider';
+import { PlatformContext } from '@drizztdourden08/brock-react';
 import { ghostPosition } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-ghost';
-import type { Platform } from '../../shared/platform';
+import type { Platform } from '@drizztdourden08/brock-core';
 
 const ROOT = resolve(__dirname, '../..');
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;

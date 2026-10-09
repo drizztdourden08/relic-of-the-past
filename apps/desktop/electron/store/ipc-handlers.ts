@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { fetchHome, fetchItem, fetchItems } from './catalog';
 import { duplicateInstalled } from './duplicate';
 import { cancelJob } from './install-jobs';

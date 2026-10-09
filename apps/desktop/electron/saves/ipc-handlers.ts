@@ -1,8 +1,6 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
-import { getUserDataPath } from '../lib/paths';
-import { readJson, writeJson } from '../lib/json-store';
-import { toArrayBufferOrNull, toOptionalBuffer, toBase64OrNull } from '../lib/buffer';
+import { handle, toArrayBufferOrNull } from '@drizztdourden08/brock-electron/main';
+import { toOptionalBuffer, toBase64OrNull } from '../lib/buffer';
 import {
   writeSramFile,
   readSramFile,
@@ -94,19 +92,10 @@ const registerAutoSaveHandlers = (): void => {
     pruneAutoSaves(profileId, maxEntries));
 };
 
-const registerProfileConfigHandlers = (): void => {
-  handle('config:read', (_event, profileId) =>
-    readJson<Record<string, unknown> | null>(getUserDataPath('profiles', profileId, 'config.json'), null));
-
-  handle('config:write', (_event, profileId, settings) =>
-    writeJson(getUserDataPath('profiles', profileId, 'config.json'), settings));
-};
-
 const registerSaveHandlers = (): void => {
   registerSramAndQuickHandlers();
   registerNormalSaveHandlers();
   registerAutoSaveHandlers();
-  registerProfileConfigHandlers();
 };
 
 export { registerSaveHandlers };

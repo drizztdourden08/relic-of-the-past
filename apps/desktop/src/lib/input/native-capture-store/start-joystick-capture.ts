@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind logic */
+import { appApi } from '@app/ipc/app-api';
 const startJoystickCapture = (joystickId: number): Promise<boolean> =>
-  window.api.startJoystickCapture(joystickId);
+  appApi().startJoystickCapture(joystickId);
 
 export { startJoystickCapture };

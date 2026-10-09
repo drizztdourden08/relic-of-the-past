@@ -2,7 +2,7 @@
 import type { BrowserWindow } from 'electron';
 import * as sdl3 from './native/sdl3';
 import type { Sdl3Event } from './native/sdl3';
-import { emit } from '../lib/ipc/handle';
+import { emit } from '@drizztdourden08/brock-electron/main';
 import { DeviceKeyAssigner } from './sdl3-device-key';
 import { listDevices } from './device-lister';
 import { buildDeviceSnapshot } from './controller-snapshot';

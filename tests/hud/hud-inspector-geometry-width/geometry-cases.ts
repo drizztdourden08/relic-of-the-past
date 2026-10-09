@@ -6,8 +6,8 @@ import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLa
 import { MinMaxField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/MinMaxField';
 import { OffsetField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OffsetField';
 import { SizeBoxSection } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/sections/SizeBoxSection';
-import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
-import type { Platform } from '../../../shared/platform';
+import { PlatformContext } from '@drizztdourden08/brock-react';
+import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudGridContainer, HudNode } from '../../../shared/types/hud';
 
 const noop = (): void => {};

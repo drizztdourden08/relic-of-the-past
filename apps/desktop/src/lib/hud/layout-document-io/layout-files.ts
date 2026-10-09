@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { getPlatform } from '@app/platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 
 const layoutFiles = {
   store: () => getPlatform().files,

@@ -4,7 +4,7 @@ import { Box, Text, Button, Select, Toggle, ProgressBar } from '@drizztdourden08
 import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { describeTargetCompat } from '@shared/game/save-state';
 import type { TargetCompat } from '@shared/game/save-state';
-import { BugReportButton } from '../BugReportButton';
+import { BugReportButton } from '@drizztdourden08/brock-react';
 import { renderNotes } from './behavior/render-notes';
 import { useVersionChoice } from './behavior/useVersionChoice';
 import { ReleaseNotes } from './sub-components/ReleaseNotes';
@@ -150,7 +150,7 @@ const UpdateDialog = (props: UpdateDialogProps) => {
             Any earlier version can be picked above if something stops working. Please report it
             either way, so it gets fixed.
           </Text>
-          <BugReportButton onClick={onReportBug} />
+          <BugReportButton onBeforeOpen={onReportBug} />
         </Box>
       </Box>
     </DialogShell>

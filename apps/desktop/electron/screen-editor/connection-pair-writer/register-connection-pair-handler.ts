@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { refusal } from '../refusal';
 import { getWorkspaceRoot } from '../workspace-root';
 import { writeConnectionPair } from './write-connection-pair';

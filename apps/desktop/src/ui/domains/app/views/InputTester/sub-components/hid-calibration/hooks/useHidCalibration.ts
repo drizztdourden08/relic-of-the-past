@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
-import { usePlatform } from '@app/platform';
+import { usePlatform } from '@drizztdourden08/brock-react';
 import { useAppVersion } from '@app/hooks/useAppVersion';
 import type { ControllerInputState } from '../../../../../../../../lib/input/controller-input-store';
 import type { DeviceProfile } from '@shared/input';

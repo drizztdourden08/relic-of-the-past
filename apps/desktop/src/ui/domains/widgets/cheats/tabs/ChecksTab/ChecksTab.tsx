@@ -9,7 +9,7 @@ import {
 import type { CheckGrantPlan } from '@app/lib/game';
 import { trackerCheckRecords } from '@app/lib/game/tracker/tracker-roster';
 import { getSessionState, subscribeSessionStore } from '@app/lib/game/randomizer-client';
-import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import type { CheatTabProps } from '../../CheatsWidget.type';
 import './ChecksTab.css';

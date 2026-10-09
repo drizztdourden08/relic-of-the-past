@@ -1,7 +1,6 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
+import { handle, getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { access, rm } from 'fs/promises';
-import { getUserDataPath } from '../lib/paths';
 import { logToRenderer } from '../lib/renderer-log';
 import { resolveSourceFiles, type ImportSource } from '../lib/import-source';
 import { ROM_EXTENSIONS } from '../lib/extensions';

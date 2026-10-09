@@ -1,8 +1,7 @@
 /* @layer electron-main @kind logic */
 import { app } from 'electron';
 import type { UpdateInfo as VelopackUpdateInfo } from 'velopack';
-import { emit } from '../lib/ipc/handle';
-import { getMainWindow } from '../window';
+import { emit, getMainWindow } from '@drizztdourden08/brock-electron/main';
 import { getUpdateManager } from './update-manager';
 import type { VersionCandidate } from './updater.type';
 

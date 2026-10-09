@@ -2,13 +2,20 @@
 import { mkdtemp, rm } from 'fs/promises';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createRecommendationStore } from '@shared/game/recommendations';
-import { initPaths } from '../../apps/desktop/electron/lib/paths';
+import { initPaths } from '../../apps/desktop/node_modules/@drizztdourden08/brock-electron/src/main/paths/init-paths';
 import {
   loadRecommendationFile, queued, recommendationFilePath, recommendationStorage,
 } from '../../apps/desktop/electron/recommendations/recommendation-files';
 import type { Recommendation } from '@shared/game/recommendations';
+
+vi.mock('../../apps/desktop/node_modules/@drizztdourden08/brock-electron/src/main/index.ts', async () => ({
+  ...(await import('../../apps/desktop/node_modules/@drizztdourden08/brock-electron/src/main/paths/get-user-data-path')),
+  ...(await import('../../apps/desktop/node_modules/@drizztdourden08/brock-electron/src/main/files/read-json-file')),
+  ...(await import('../../apps/desktop/node_modules/@drizztdourden08/brock-electron/src/main/files/write-json-file')),
+  handle: vi.fn(),
+}));
 
 let root = '';
 

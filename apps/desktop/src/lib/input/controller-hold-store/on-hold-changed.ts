@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind logic */
+import { appApi } from '@app/ipc/app-api';
 const onHoldChanged = (callback: (held: boolean) => void): (() => void) =>
-  window.api.onControllerHoldChanged(callback);
+  appApi().onControllerHoldChanged(callback);
 
 export { onHoldChanged };

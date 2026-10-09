@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { join } from 'path';
-import { getUserDataPath } from '../../../lib/paths';
+import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { CAPTURES_SUBDIR } from '../finalize-capture-session';
 
 const captureManifestPath = (profileId: string): string =>

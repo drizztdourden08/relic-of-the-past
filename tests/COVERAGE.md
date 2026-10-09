@@ -18,7 +18,7 @@
 |---|---|---|
 | DataInspector (record browser/editor + recommendation review) | tests/data-inspector/*.keep.test.ts (18 files) | covered |
 | DataManager (ROM/profile/save/language/sprite hub) | none | none |
-| SearchPalette (catalog build + ranking) | tests/search/catalog.coverage.keep.test.ts, tests/search/match.keep.test.ts | partial. Hooks (useSearchPalette/useSearchResults/run-target) untested |
+| Search palette and hub search | none in RotP | Brock owns them (brock-react search: buildCatalog, rankEntries), tested in Brock |
 | TrackerView (item/check tracker overlay) | none | none |
 | ProfileHub (the settings screens: HUD Style, Controls, Gameplay) | tests/e2e/hud-style-drives-scheme.keep.spec.ts | partial. §59's one rule is driven in the built app on two real profiles: the Style row offers Original / Enhanced / Modern with every segment live and NO notice under them, the Controls screen carries the banner and no scheme control with the Modern Controls tab greyed, the banner's button deep-links to the Style row, pressing Modern drops the banner and lights that tab with its slots, `Open Map with Select` flips and survives leaving the tab, and a stored `controlScheme: 'modern'` + `hudStyle: 'extended'` profile comes back as Modern with its four slot assignments intact, which shows the value rename (§59.7) and the scheme collapse running off the same stored word. Screenshots in `tests/screenshots/hud-style/`. Every other ProfileHub tab is still untested, and nothing here asserts how any of it looks |
 | GameLayer + shadow-editor-overlay | none directly | partial. See the shadow-casting row below |
@@ -110,7 +110,7 @@ RotP's own copy of the design system is gone. Every primitive, composite, field 
 | Display (mode-switch, refresh-rate) | none | none |
 | Diagnostics (collect-displays/gpu/host) | none | none |
 | dialogs, github, languages ipc-handlers, sessions, sprites ipc-handlers, storage file-handlers, ui-views ipc-handlers, wasm ipc-handlers, connections, protocol, instance-config/identity, updater | none directly | none/partial |
-| Automation-launch predicate | tests/parallel/automation-launch.keep.test.ts | covered |
+| Automation-launch predicate | none here. Brock owns it now (`createAutomationFlags` in brock-core, tested in Brock) | covered in Brock |
 | Shadow-casting (electron store + shared/web split) | not confidently traced this pass | **flagged. Needs a dedicated follow-up pass** |
 
 ## Shared game logic (`shared/game/`)
@@ -236,4 +236,4 @@ compile path itself, which remains untested.
 
 ## Not counted as app-feature coverage
 
-`tests/parallel/*` (automation-launch, link-deps, verdict) test the `scripts/parallel/*.mjs` worktree/agent-orchestration CLI, which is dev tooling and not an app feature. Kept for completeness, excluded from the verdicts above.
+`tests/parallel/*` (link-deps, verdict) test the `scripts/parallel/*.mjs` worktree/agent-orchestration CLI, which is dev tooling and not an app feature. Kept for completeness, excluded from the verdicts above.

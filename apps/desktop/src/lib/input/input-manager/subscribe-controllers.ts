@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import * as controllersStore from '../controllers-store';
 import { onControllerRaw } from '../native-capture-store';
 import { startControllerNameCache } from '../controller-name-cache';
@@ -26,7 +27,7 @@ const subscribeControllers = (m: InputManager): void => {
   m.ipcControllerStateUnsub = controllersStore.onControllerState((deviceKey, buttons, axes) => {
     controllerInputStore.handleControllerState(deviceKey, buttons, axes);
   });
-  m.controllerRemovedUnsub = window.api.onControllerRemoved((deviceKey) => {
+  m.controllerRemovedUnsub = appApi().onControllerRemoved((deviceKey) => {
     controllerInputStore.handleControllerRemoved(deviceKey);
   });
   m.controllerRawUnsub = onControllerRaw((report) => {

@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { CellPicker } from '../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/CellPicker';
-import { PlatformContext } from '../../apps/desktop/src/platform/PlatformProvider';
-import type { Platform } from '../../shared/platform';
+import { PlatformContext } from '@drizztdourden08/brock-react';
+import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudGridContainer, HudNode } from '../../shared/types/hud';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

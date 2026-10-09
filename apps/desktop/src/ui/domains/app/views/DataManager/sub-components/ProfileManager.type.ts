@@ -9,6 +9,7 @@ interface ProfileManagerProps {
   onDeleteProfile: (id: string) => void;
   onRefresh: () => void;
   isGameRunning: boolean;
+  loadingProfile?: string | null;
 }
 
 export type { ProfileManagerProps };

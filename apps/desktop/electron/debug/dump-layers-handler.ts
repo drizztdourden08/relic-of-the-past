@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { app } from 'electron';
 import { join } from 'path';
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { getWorkspaceRoot } from '../screen-editor/workspace-root';
 import { writeFile, mkdir } from 'fs/promises';
 

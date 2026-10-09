@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useCallback, useEffect, useState } from 'react';
 import { useDebugTextBuilder, useDebugText } from '@app/lib/diagnostics';
 import { useReportContext } from '@app/lib/diagnostics/useReportContext';
@@ -49,7 +50,7 @@ const useControllerReportForm = (deviceKey: string) => {
     if (!canSubmit || !calibrationMap || debugText === null) return;
     setStatus('submitting');
     try {
-      const result = await window.api.submitSanctuaryReport({
+      const result = await appApi().submitSanctuaryReport({
         request: {
           kind: 'controller',
           subject: `${subjectPrefix}Controller ${detection.detectedName} (${detection.vendorId}:${detection.productId})`,

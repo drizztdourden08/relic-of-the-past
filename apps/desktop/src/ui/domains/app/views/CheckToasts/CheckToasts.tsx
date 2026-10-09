@@ -9,7 +9,7 @@ import {
 } from '@app/lib/game/randomizer-client';
 import { CheckCard } from '@domains/app/compounds/ChecksTracker';
 import { CHECKS_PREF_KEY, NOTIFY_PREF, NOTIFY_WHEN_CLOSED_PREF } from '@domains/widgets/checks/checks.constants';
-import { useWidgetPref } from '../../../../../hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { useTrackerPresenceStore } from '@app/stores/tracker-presence-store';
 import { useCheckToasts } from './behavior/useCheckToasts';
 import { useOnlineNoticeToasts } from './behavior/useOnlineNoticeToasts';

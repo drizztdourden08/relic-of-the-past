@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { warmupState } from './warmup-state';
 
 const isHttpRenderer = (): boolean =>
@@ -18,7 +19,7 @@ const loadWasmBytes = async (onProgress?: (ratio: number) => void): Promise<Arra
   if (warmupState.cachedBytes) return warmupState.cachedBytes;
 
   if (!isHttpRenderer()) {
-    warmupState.cachedBytes = await window.api.readWasmBytes();
+    warmupState.cachedBytes = await appApi().readWasmBytes();
     onProgress?.(1);
     return warmupState.cachedBytes;
   }

@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFile, readdir } from 'fs/promises';
-import { getUserDataPath } from '../../lib/paths';
+import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { languagePackPaths } from './language-pack-paths';
 
 const hasMeta = async (code: string): Promise<boolean> => {

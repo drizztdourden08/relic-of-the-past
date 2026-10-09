@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { OutfitId, PlayerSheet, SheetMeta } from '@shared/game/data/player-sheet/types';
-import type { RomDisplayInfo } from '../../../../../App/types';
+import type { RomDisplayInfo } from '@app/views/GameSession/GameSession.type';
 
 interface PlayerSpriteStudioProps {
   romStatuses: RomDisplayInfo[];

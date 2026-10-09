@@ -1,7 +1,8 @@
 /* @layer renderer-lib @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import type { ControllerJoystickSample } from '@shared/ipc';
 
 const onControllerJoystick = (cb: (sample: ControllerJoystickSample) => void): (() => void) =>
-  window.api.onControllerJoystick(cb);
+  appApi().onControllerJoystick(cb);
 
 export { onControllerJoystick };

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { usePlatform } from '@app/platform';
+import { usePlatform } from '@drizztdourden08/brock-react';
 import { useGridSolve } from '../../behavior/grid-solve';
 import { GridLattice, covers, occupantsOf, rowCountFor } from '../GridLattice';
 import { PointerCaps } from '../SelectionBands';

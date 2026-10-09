@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { submitReport, uploadPendingZip } from './submit-report';
 
 const registerSanctuaryHandlers = (): void => {

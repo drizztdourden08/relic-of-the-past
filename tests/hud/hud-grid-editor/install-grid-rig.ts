@@ -3,7 +3,7 @@ import { afterEach } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
-import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
+import { PlatformContext } from '@drizztdourden08/brock-react';
 import { PLATFORM } from './grid-editor.constants';
 import { screenRoot } from './screen-root';
 

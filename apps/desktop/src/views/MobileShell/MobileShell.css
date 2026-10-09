@@ -1,0 +1,62 @@
+/* @layer renderer-app @kind style */
+
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.mobile-menu__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.mobile-menu__logo {
+  width: 32px;
+  height: 32px;
+  flex: none;
+}
+
+.mobile-menu__title {
+  flex: 1;
+  color: var(--c-primary);
+}
+
+.mobile-menu__fps {
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.mobile-menu__quick {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.mobile-menu__list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-sm);
+  scrollbar-gutter: stable;
+}
+
+.mobile-menu__group {
+  padding: var(--space-sm) 0;
+}
+
+.mobile-menu__group-title {
+  display: block;
+  padding: var(--space-xs) var(--space-md);
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+}
+
+.mobile-menu__item {
+  justify-content: flex-start;
+  min-height: var(--size-48);
+}

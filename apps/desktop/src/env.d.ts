@@ -119,7 +119,3 @@ interface RomDisplayInfo extends RomInfo {
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;
-
-interface Window {
-  api: import('@shared/ipc').IpcApi;
-}

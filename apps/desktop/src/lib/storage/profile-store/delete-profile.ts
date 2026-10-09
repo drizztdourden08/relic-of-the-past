@@ -1,7 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import * as store from '@shared/storage/profiles';
-import { platformFiles } from '../platform-files';
+import { useProfilesStore } from '@drizztdourden08/brock-react';
 
-const deleteProfile = (id: string): Promise<void> => store.deleteProfile(platformFiles(), id);
+const deleteProfile = (id: string): Promise<void> => useProfilesStore.getState().remove(id);
 
 export { deleteProfile };

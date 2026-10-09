@@ -11,6 +11,8 @@ export default defineBrockConfig({
     author: { name: 'drizztdourden_', email: 'drizztdourden08@users.noreply.github.com' },
     repo: { owner: 'drizztdourden08', name: 'relic-of-the-past' },
     icons: { brand: 'rotp' },
+    dataDirs: ['assets', 'roms', 'profiles', 'config', 'msu', 'languages', 'sprites', 'link-sprites'],
+    schemes: [{ scheme: 'app-sprite', dir: 'sprites' }, { scheme: 'app-debug-capture', stream: true }],
   },
   targets: ['desktop', 'android', 'web'],
   modules: [],

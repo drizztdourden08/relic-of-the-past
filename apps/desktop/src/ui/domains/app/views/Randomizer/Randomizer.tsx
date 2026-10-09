@@ -1,42 +1,23 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useMemo, useState } from 'react';
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import { Box } from '@drizztdourden08/tessera/primitives';
-import { SideNav, type SideNavConfig } from '@drizztdourden08/tessera/composites';
+import { useCallback, useMemo } from 'react';
 import { useRandomizerSession } from './behavior/useRandomizerSession';
 import { useRoomMessages } from './behavior/useRoomMessages';
 import { useProfileConnection } from '@app/hooks/randomizer/useProfileConnection';
+import { useGameSession } from '@app/hooks/useGameSession';
+import { RANDOMIZER_BUCKET } from './Randomizer.constants';
 import { RandomizerPageContent } from './sub-components/RandomizerPageContent';
-import { RANDOMIZER_NAV_GROUPS, RANDOMIZER_TABS } from './Randomizer.constants';
-import type { RandomizerProps, RandomizerTab } from './Randomizer.type';
+import type { RandomizerProps } from './Randomizer.type';
 import './Randomizer.css';
 
-const navItem = (tab: RandomizerTab) => ({
-  id: tab,
-  label: RANDOMIZER_TABS[tab].label,
-  icon: <IconifyIcon icon={RANDOMIZER_TABS[tab].navIcon} />,
-});
-
-const navConfigFor = (archipelago: boolean): SideNavConfig => ({
-  groups: RANDOMIZER_NAV_GROUPS
-    .map((group) => ({ ...group, tabs: group.tabs.filter((tab) => archipelago || !RANDOMIZER_TABS[tab].archipelagoOnly) }))
-    .filter((group) => group.tabs.length > 0)
-    .map((group) => ({ id: group.id, label: group.label, items: group.tabs.map(navItem) })),
-});
-
-const Randomizer = ({ activeProfile }: RandomizerProps) => {
+const Randomizer = (props: RandomizerProps) => {
+  const { tab, open } = props;
+  const { activeProfile } = useGameSession().profileMgmt;
   const { session, placement, source, status, gameRunning, entries } = useRandomizerSession();
   const roomLines = useRoomMessages(session);
-  const [chosenTab, setTab] = useState<RandomizerTab>('run');
   const { config, saveConnection } = useProfileConnection(activeProfile);
-  const archipelago = config?.mode === 'online';
-  const tabDroppedWithArchipelago = RANDOMIZER_TABS[chosenTab].archipelagoOnly && !archipelago;
-  const tab = tabDroppedWithArchipelago ? 'run' : chosenTab;
-  const openNetwork = useCallback(() => setTab('network'), []);
-  const openOptions = useCallback(() => setTab('options'), []);
-  const openLog = useCallback(() => setTab('logs'), []);
-  const selectTab = useCallback((id: string) => setTab(id as RandomizerTab), []);
-  const navConfig = useMemo(() => navConfigFor(archipelago), [archipelago]);
+  const openNetwork = useCallback(() => open(`${RANDOMIZER_BUCKET}/network`), [open]);
+  const openOptions = useCallback(() => open(`${RANDOMIZER_BUCKET}/options`), [open]);
+  const openLog = useCallback(() => open(`${RANDOMIZER_BUCKET}/logs`), [open]);
   const log = useMemo(() => ({ entries, roomLines }), [entries, roomLines]);
   const profileId = activeProfile?.id ?? null;
   const profileName = activeProfile?.name ?? null;
@@ -55,20 +36,16 @@ const Randomizer = ({ activeProfile }: RandomizerProps) => {
   const online = useMemo(() => ({ profile: activeProfile }), [activeProfile]);
 
   return (
-    <Box className="randomizer-page">
-      <SideNav config={navConfig} activeId={tab} onSelect={selectTab} />
-      <Box className="randomizer-page__content">
-        <RandomizerPageContent
-          tab={tab}
-          run={run}
-          options={options}
-          network={network}
-          online={online}
-          log={log}
-          placedCount={placement ? Object.keys(placement.locations).length : null}
-        />
-      </Box>
-    </Box>
+    <RandomizerPageContent
+      tab={tab}
+      archipelago={config?.mode === 'online'}
+      run={run}
+      options={options}
+      network={network}
+      online={online}
+      log={log}
+      placedCount={placement ? Object.keys(placement.locations).length : null}
+    />
   );
 };
 

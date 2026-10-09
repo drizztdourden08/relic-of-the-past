@@ -9,6 +9,9 @@ import * as spritesStore from '@app/lib/storage/sprites-store';
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import type { ExtractedStatus, SpriteManagerProps } from './SpriteManager.type';
 import './SpriteManager.css';
+import './DataManager.lists.css';
+import './DataManager.forms.css';
+import './DataManager.detail.css';
 
 const SpriteManager = (props: SpriteManagerProps) => {
   const { romStatuses } = props;

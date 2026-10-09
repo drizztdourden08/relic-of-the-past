@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { BrowserWindow } from 'electron';
-import { emit } from '../lib/ipc/handle';
+import { emit } from '@drizztdourden08/brock-electron/main';
 import { findNewerRelease } from './latest-release';
 import { canCheckForUpdates, currentVersion } from './update-manager';
 import { readPrefs } from './updater-prefs';

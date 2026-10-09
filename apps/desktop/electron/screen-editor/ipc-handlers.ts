@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { resolveSourceFile } from './resolve-source-file';
 import { insertBeforeArrayClose, replaceById } from './source-writers';
 import { registerConnectionPairHandler } from './connection-pair-writer';

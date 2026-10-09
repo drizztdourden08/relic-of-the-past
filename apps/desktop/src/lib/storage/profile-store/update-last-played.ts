@@ -1,7 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import * as store from '@shared/storage/profiles';
-import { platformFiles } from '../platform-files';
+import { touchProfile } from '@drizztdourden08/brock-react';
 
-const updateLastPlayed = (id: string): Promise<void> => store.updateLastPlayed(platformFiles(), id);
+const updateLastPlayed = (id: string): Promise<void> => touchProfile(id);
 
 export { updateLastPlayed };

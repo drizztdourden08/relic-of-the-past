@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useCallback, useEffect, useState } from 'react';
 import type { InstallJob, InstallParams } from '../Store.type';
 import { IDLE_JOB } from '../Store.constants';
@@ -12,13 +13,13 @@ const useInstall = (params: InstallParams) => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = window.api.onStoreInstallProgress?.(({ itemId, progress }) => patch(itemId, { progress }));
+    const unsubscribe = appApi().onStoreInstallProgress?.(({ itemId, progress }) => patch(itemId, { progress }));
     return () => { unsubscribe?.(); };
   }, [patch]);
 
   const install = useCallback(async (itemId: string, version: number | null = null) => {
     patch(itemId, { running: true, progress: null, error: null });
-    const result = await window.api.storeInstall({ itemId, version });
+    const result = await appApi().storeInstall({ itemId, version });
     if (result.ok) {
       patch(itemId, IDLE_JOB);
       onInstalled();
@@ -28,7 +29,7 @@ const useInstall = (params: InstallParams) => {
     patch(itemId, { running: false, progress: null, error: result.cancelled ? null : result.error });
   }, [patch, onInstalled, onSignedOut]);
 
-  const cancel = useCallback((itemId: string) => { void window.api.storeCancel(itemId); }, []);
+  const cancel = useCallback((itemId: string) => { void appApi().storeCancel(itemId); }, []);
 
   const jobOf = useCallback((itemId: string): InstallJob => jobs[itemId] ?? IDLE_JOB, [jobs]);
 

@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { net, protocol } from 'electron';
-import { getUserDataPath } from '../lib/paths';
+import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { captureFileUrlOf } from './debug-capture-file-path';
 
 const registerDebugCaptureProtocol = (): void => {

@@ -2,7 +2,50 @@
 import { buildScreenTree } from '@drizztdourden08/brock-react';
 import config from '../src/screens/screens.config';
 import { searchIndex } from './search';
+import { devScreens } from './screens.dev';
+import CreditsCard, { meta as creditsCardMeta } from '../src/screens/credits.card';
+import DataHomeHero, { meta as dataHomeHeroMeta } from '../src/screens/data/home.hero';
+import DataLibraryProfilesPage, { meta as dataLibraryProfilesPageMeta } from '../src/screens/data/library/profiles.page';
+import DataLibraryRomsPage, { meta as dataLibraryRomsPageMeta } from '../src/screens/data/library/roms.page';
+import DataLibrarySpritesPage, { meta as dataLibrarySpritesPageMeta } from '../src/screens/data/library/sprites.page';
+import DataStoragePage, { meta as dataStoragePageMeta } from '../src/screens/data/storage.page';
+import DataStudiosCharactersPage, { meta as dataStudiosCharactersPageMeta } from '../src/screens/data/studios/characters.page';
+import DataStudiosLanguagesPage, { meta as dataStudiosLanguagesPageMeta } from '../src/screens/data/studios/languages.page';
+import DataStudiosMsuPage, { meta as dataStudiosMsuPageMeta } from '../src/screens/data/studios/msu.page';
+import GameViewBase, { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
+import HudLayoutLayer, { meta as hudLayoutLayerMeta } from '../src/screens/hud-layout.layer';
+import InputCalibrationCard, { meta as inputCalibrationCardMeta } from '../src/screens/input-calibration.card';
+import ProfilesCard, { meta as profilesCardMeta } from '../src/screens/profiles.card';
+import RandomizerArchipelagoNetworkPage, { meta as randomizerArchipelagoNetworkPageMeta } from '../src/screens/randomizer/archipelago/network.page';
+import RandomizerArchipelagoOnlinePage, { meta as randomizerArchipelagoOnlinePageMeta } from '../src/screens/randomizer/archipelago/online.page';
+import RandomizerLogsPage, { meta as randomizerLogsPageMeta } from '../src/screens/randomizer/logs.page';
+import RandomizerOptionsPage, { meta as randomizerOptionsPageMeta } from '../src/screens/randomizer/options.page';
+import RandomizerRunPage, { meta as randomizerRunPageMeta } from '../src/screens/randomizer/run.page';
+import RandomizerSpoilerPage, { meta as randomizerSpoilerPageMeta } from '../src/screens/randomizer/spoiler.page';
+import StoreHookshopCustom, { meta as storeHookshopCustomMeta } from '../src/screens/store/hookshop.custom';
 
-const screenTree = buildScreenTree(config, [], searchIndex);
+const screenTree = buildScreenTree(config, [
+  { kind: 'card', id: 'credits', component: CreditsCard, meta: creditsCardMeta },
+  { kind: 'hero', bucket: 'data', id: 'home', component: DataHomeHero, meta: dataHomeHeroMeta },
+  { kind: 'page', bucket: 'data', group: 'library', id: 'profiles', component: DataLibraryProfilesPage, meta: dataLibraryProfilesPageMeta },
+  { kind: 'page', bucket: 'data', group: 'library', id: 'roms', component: DataLibraryRomsPage, meta: dataLibraryRomsPageMeta },
+  { kind: 'page', bucket: 'data', group: 'library', id: 'sprites', component: DataLibrarySpritesPage, meta: dataLibrarySpritesPageMeta },
+  { kind: 'page', bucket: 'data', id: 'storage', component: DataStoragePage, meta: dataStoragePageMeta },
+  { kind: 'page', bucket: 'data', group: 'studios', id: 'characters', component: DataStudiosCharactersPage, meta: dataStudiosCharactersPageMeta },
+  { kind: 'page', bucket: 'data', group: 'studios', id: 'languages', component: DataStudiosLanguagesPage, meta: dataStudiosLanguagesPageMeta },
+  { kind: 'page', bucket: 'data', group: 'studios', id: 'msu', component: DataStudiosMsuPage, meta: dataStudiosMsuPageMeta },
+  { kind: 'base', id: 'game-view', component: GameViewBase, meta: gameViewBaseMeta },
+  { kind: 'layer', id: 'hud-layout', component: HudLayoutLayer, meta: hudLayoutLayerMeta },
+  { kind: 'card', id: 'input-calibration', component: InputCalibrationCard, meta: inputCalibrationCardMeta },
+  { kind: 'card', id: 'profiles', component: ProfilesCard, meta: profilesCardMeta },
+  { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'network', component: RandomizerArchipelagoNetworkPage, meta: randomizerArchipelagoNetworkPageMeta },
+  { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'online', component: RandomizerArchipelagoOnlinePage, meta: randomizerArchipelagoOnlinePageMeta },
+  { kind: 'page', bucket: 'randomizer', id: 'logs', component: RandomizerLogsPage, meta: randomizerLogsPageMeta },
+  { kind: 'page', bucket: 'randomizer', id: 'options', component: RandomizerOptionsPage, meta: randomizerOptionsPageMeta },
+  { kind: 'page', bucket: 'randomizer', id: 'run', component: RandomizerRunPage, meta: randomizerRunPageMeta },
+  { kind: 'page', bucket: 'randomizer', id: 'spoiler', component: RandomizerSpoilerPage, meta: randomizerSpoilerPageMeta },
+  { kind: 'custom', bucket: 'store', id: 'hookshop', component: StoreHookshopCustom, meta: storeHookshopCustomMeta },
+  ...devScreens,
+], searchIndex);
 
 export { screenTree };

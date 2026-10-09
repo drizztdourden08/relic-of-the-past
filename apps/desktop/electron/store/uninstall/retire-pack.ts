@@ -5,7 +5,7 @@ import { repointProfiles } from '../repoint-profiles';
 import { storeFiles } from '../store-files';
 
 const retirePack = async (pack: InstalledPack, replacement: string | null): Promise<string[]> => {
-  const changed = await repointProfiles(storeFiles, pack, replacement);
+  const changed = await repointProfiles(pack, replacement);
   await selectInstaller(pack.container).uninstall(pack.installedName, storeFiles);
   return changed;
 };

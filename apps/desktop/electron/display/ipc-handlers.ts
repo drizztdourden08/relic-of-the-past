@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { readRefreshRate } from './refresh-rate';
 import { readStatus, setPreference, applyPermanently } from './mode-switch';
 

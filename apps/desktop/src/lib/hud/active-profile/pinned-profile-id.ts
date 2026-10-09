@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { instanceProfile } from '@app/lib/instance';
+import { instanceProfile } from '@drizztdourden08/brock-react';
 import { listProfiles } from '@app/lib/storage/profile-store';
 
 const pinnedProfileId = async (): Promise<string | null> => {

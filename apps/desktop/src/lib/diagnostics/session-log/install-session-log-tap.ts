@@ -1,11 +1,12 @@
 /* @layer renderer-lib @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { subscribe } from '../../log-bus';
 import { formatSessionLogLine } from './format-session-log-line';
 import { createLogBatcher } from './log-batcher';
 import { FLUSH_MS, MAX_BUFFERED_LINES } from './install-session-log-tap.constants';
 
 const installSessionLogTap = (): void => {
-  const appendSessionLog = window.api?.appendSessionLog;
+  const appendSessionLog = appApi()?.appendSessionLog;
   if (typeof appendSessionLog !== 'function') return;
 
   const send = (lines: string[]): void => {

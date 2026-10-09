@@ -8,9 +8,10 @@ import type { ActivityLogProps } from './ActivityLog.type';
 
 interface RandomizerPageContentProps {
   tab: RandomizerTab;
+  archipelago: boolean;
   run: RunTabProps;
   options: OptionsTabProps;
-  network: Omit<NetworkTabProps, 'frame'>;
+  network: NetworkTabProps;
   online: OnlineTabProps;
   log: ActivityLogProps;
   placedCount: number | null;

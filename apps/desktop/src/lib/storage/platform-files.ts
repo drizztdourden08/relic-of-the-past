@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { getPlatform } from '@app/platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
+import type { FileStore } from '@shared/platform';
 
-const platformFiles = () => getPlatform().files;
+const platformFiles = (): FileStore => getPlatform().files;
 
 export { platformFiles };

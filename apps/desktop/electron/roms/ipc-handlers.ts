@@ -1,15 +1,13 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
+import { handle, getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { basename, extname } from 'path';
 import { readFile, access, copyFile, rm, stat } from 'fs/promises';
-import { getUserDataPath } from '../lib/paths';
 import { resolveSourceFiles } from '../lib/import-source';
 import { ROM_EXTENSIONS } from '../lib/extensions';
 import { errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { listRoms, hasAssetForRom, getAssetFileName } from './store';
-import { listProfiles, deleteProfile } from '../profiles/store';
-import { loadAppState, saveAppState } from '../profiles/app-state';
+import { deleteRomProfiles } from './delete-rom-profiles';
 import { RAW_ROM_MAX_BYTES } from './ipc-handlers.constants';
 
 const fail = (err: unknown): ImportResult =>
@@ -119,18 +117,7 @@ const registerRomHandlers = (): void => {
   handle('roms:delete', async (_event, romFile: string) => {
     await rm(getUserDataPath('roms', romFile), { force: true });
     await rm(getUserDataPath('assets', getAssetFileName(romFile)), { force: true });
-
-    const profiles = await listProfiles();
-    for (const p of profiles) {
-      if (p.romFile === romFile) await deleteProfile(p.id);
-    }
-
-    const appState = await loadAppState();
-    const remaining = await listProfiles();
-    if (appState.lastProfileId && !remaining.find((p) => p.id === appState.lastProfileId)) {
-      appState.lastProfileId = null;
-      await saveAppState(appState);
-    }
+    await deleteRomProfiles(romFile);
   });
 
   handle('roms:getInfo', async (_event, romFile: string) => {

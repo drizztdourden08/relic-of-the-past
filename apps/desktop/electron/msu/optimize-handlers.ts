@@ -1,7 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { OptimizeProgress } from '@shared/types/msu-optimize';
-import { emit, handle } from '../lib/ipc/handle';
-import { getMainWindow } from '../window';
+import { emit, handle, getMainWindow } from '@drizztdourden08/brock-electron/main';
 import { locateFfmpeg } from '../tools/ffmpeg-locate';
 import { analyzePack } from './optimize/analyze';
 import { convertPack } from './optimize/run';

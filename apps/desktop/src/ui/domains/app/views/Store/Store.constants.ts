@@ -39,6 +39,8 @@ const EMPTY_CATALOG: CatalogState = { home: null, items: [], loading: false, err
 
 const IDLE_JOB: InstallJob = { running: false, progress: null, error: null };
 
+const STORE_SECTIONS: readonly StoreSection[] = ['home', 'browse', 'music', 'character', 'language', 'installed', 'updates'];
+
 const GRID_SECTIONS: readonly StoreSection[] = ['browse', 'music', 'character', 'language'];
 
 const GRID_TITLES: Partial<Record<StoreSection, string>> = {
@@ -72,5 +74,6 @@ export {
   SIGN_IN_LEAD,
   STORE_COPY,
   STORE_NAV,
+  STORE_SECTIONS,
   WAITING_LINK,
 };

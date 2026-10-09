@@ -1,10 +1,9 @@
 /* @layer renderer-lib @kind logic */
-import * as store from '@shared/storage/profiles';
-import { platformFiles } from '../platform-files';
+import { readConfig, writeConfig } from '@drizztdourden08/brock-react';
 
 const updateActiveInputProfileId = async (id: string, activeInputProfileId: string): Promise<void> => {
-  const current = (await store.readConfig(platformFiles(), id)) ?? {};
-  await store.writeConfig(platformFiles(), id, { ...current, activeInputProfileId });
+  const current = (await readConfig(id)) ?? {};
+  await writeConfig(id, { ...current, activeInputProfileId });
 };
 
 export { updateActiveInputProfileId };

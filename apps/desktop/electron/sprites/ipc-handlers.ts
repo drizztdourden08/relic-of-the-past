@@ -1,10 +1,8 @@
 /* @layer electron-main @kind logic */
 import { join, basename, extname } from 'path';
-import { handle } from '../lib/ipc/handle';
+import { handle, getUserDataPath, readJsonFile, writeJsonFile } from '@drizztdourden08/brock-electron/main';
 import { mkdir, access, rm } from 'fs/promises';
 import { checkExtraction, writeExtractionReceipt } from './extraction-state';
-import { getUserDataPath } from '../lib/paths';
-import { readJson, writeJson } from '../lib/json-store';
 import { logToRenderer } from '../lib/renderer-log';
 import { makeImportReporter } from '../lib/import-progress';
 import { extractAllItemSprites } from '@shared/asset-extraction/item-sprites/extract-items-node';
@@ -79,13 +77,13 @@ const registerSpriteHandlers = (): void => {
     return join(spriteDir(romFile), `${file}.png`);
   });
 
-  handle('spriteDebug:load', () => readJson(getUserDataPath('sprite-debug.json'), {}));
+  handle('spriteDebug:load', () => readJsonFile(getUserDataPath('sprite-debug.json'), {}));
   handle('spriteDebug:save', (_e, data: unknown) =>
-    writeJson(getUserDataPath('sprite-debug.json'), data));
+    writeJsonFile(getUserDataPath('sprite-debug.json'), data));
 
-  handle('spriteReview:load', () => readJson(getUserDataPath('sprite-review.json'), {}));
+  handle('spriteReview:load', () => readJsonFile(getUserDataPath('sprite-review.json'), {}));
   handle('spriteReview:save', (_e, data: unknown) =>
-    writeJson(getUserDataPath('sprite-review.json'), data));
+    writeJsonFile(getUserDataPath('sprite-review.json'), data));
 };
 
 export { registerSpriteHandlers };

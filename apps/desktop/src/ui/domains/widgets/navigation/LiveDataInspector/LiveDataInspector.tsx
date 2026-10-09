@@ -8,7 +8,7 @@ import { openInPassOrder, useRecommendations } from '@app/ui/domains/app/views/D
 import { defaultIdRefDisplay } from '@app/ui/domains/app/views/DataInspector/behavior/record-links';
 import { useIdRefNavigation } from '@app/ui/domains/app/views/DataInspector/behavior/useIdRefNavigation';
 import { useDataViewStore } from '@app/stores/data-view-store';
-import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import type { EntityKind, ScreenRecord } from '@shared/game/data';
 import { DEFAULT_KIND, NO_RECORDS_MESSAGE, SPAWNS_PATH } from './LiveDataInspector.constants';
 import type { LiveRecord } from './LiveDataInspector.type';

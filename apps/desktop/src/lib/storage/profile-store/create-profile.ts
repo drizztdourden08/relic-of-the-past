@@ -1,9 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import type { Profile, CreateProfileOptions } from '@shared/types/profile';
-import * as store from '@shared/storage/profiles';
-import { platformFiles } from '../platform-files';
+import { useProfilesStore } from '@drizztdourden08/brock-react';
+import type { CreateProfileOptions, Profile } from '@drizztdourden08/brock-core';
 
-const createProfile = (opts: CreateProfileOptions): Promise<Profile> =>
-  store.createProfile(platformFiles(), opts);
+const createProfile = (opts: CreateProfileOptions): Promise<Profile> => useProfilesStore.getState().create(opts);
 
 export { createProfile };

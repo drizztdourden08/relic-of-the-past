@@ -7,8 +7,8 @@ import { ghostFor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayo
 import { outlineIntent } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/behavior/drop-intent';
 import { DragGhost } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/DragGhost';
 import { OutlinePanel } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/OutlinePanel';
-import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
-import type { Platform } from '../../../shared/platform';
+import { PlatformContext } from '@drizztdourden08/brock-react';
+import type { Platform } from '@drizztdourden08/brock-core';
 import { DOC } from './ghost-doc.constants';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

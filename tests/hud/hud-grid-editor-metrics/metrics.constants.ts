@@ -1,6 +1,6 @@
 /* @layer tests @kind constants */
 import { resolve } from 'path';
-import type { Platform } from '../../../shared/platform';
+import type { Platform } from '@drizztdourden08/brock-core';
 import type { Extent, HudGridContainer, HudNode } from '../../../shared/types/hud';
 import type { MeasureContext } from '../../../shared/hud/engine/engine.type';
 

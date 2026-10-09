@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { writeJson } from '../../../lib/json-store';
+import { writeJsonFile } from '@drizztdourden08/brock-electron/main';
 import { captureManifestPath } from './capture-manifest-path';
 import { readCaptureManifest } from './read-capture-manifest';
 
@@ -7,7 +7,7 @@ const forgetSession = async (profileId: string, sessionKey: string): Promise<voi
   const manifest = await readCaptureManifest(profileId);
   if (!(sessionKey in manifest)) return;
   delete manifest[sessionKey];
-  await writeJson(captureManifestPath(profileId), manifest);
+  await writeJsonFile(captureManifestPath(profileId), manifest);
 };
 
 export { forgetSession };

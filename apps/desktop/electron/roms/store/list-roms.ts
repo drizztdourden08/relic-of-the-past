@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readdir, mkdir } from 'fs/promises';
-import { getUserDataPath } from '../../lib/paths';
+import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 
 const listRoms = async (): Promise<string[]> => {
   const romsDir = getUserDataPath('roms');

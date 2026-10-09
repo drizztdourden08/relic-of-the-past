@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
 import { PlayerTab } from './tabs/PlayerTab';
 import { ItemsTab } from './tabs/ItemsTab';

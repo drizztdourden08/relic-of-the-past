@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import type { EntityKind } from '@shared/game/data';
 import { storeRecommendations } from './store-recommendations';
 
@@ -7,7 +8,7 @@ const decideRecommendation = async (
   id: string,
   state: 'accepted' | 'dismissed',
 ): Promise<void> => {
-  storeRecommendations(kind, await window.api.decideRecommendation(kind, id, state));
+  storeRecommendations(kind, await appApi().decideRecommendation(kind, id, state));
 };
 
 export { decideRecommendation };

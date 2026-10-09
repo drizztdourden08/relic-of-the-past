@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Box, Text, Canvas } from '@drizztdourden08/tessera/primitives';
 import { useGameState } from './behavior/useGameState';
 import type { EdgeGlowRenderer } from '../../../../../lib/game/edge-glow';
@@ -7,7 +7,6 @@ import type { ShadowRenderer } from '../../../../../lib/game/shadow-casting';
 import type { ShadowCastingProject } from '@shared/types/shadow-casting';
 import { useCanvasFit } from '../../../../../hooks/useCanvasFit';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
-import { useExclusiveInsetsStore } from '../../../../../stores/exclusive-insets-store';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import { ProfileSwitcherOverlay } from './sub-components/ProfileSwitcherOverlay';
 import { useControllerOverlay } from './behavior/useControllerOverlay';
@@ -45,7 +44,6 @@ const GameLayer = (props: GameLayerProps) => {
   const hasStartedRef = useRef(false);
   const { bufSize, setBufSize } = useCanvasBufferSize(canvasRef, status, canvasKey);
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
-  const dockedWidgetInsets = useExclusiveInsetsStore((s) => s.insets);
 
   const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
@@ -71,16 +69,11 @@ const GameLayer = (props: GameLayerProps) => {
   const { controllerPaused, disconnectedName } = useControllerPause(status);
   const overlay = useControllerOverlay(controllerPaused);
   const profileSwitcher = useProfileSwitcher(status === 'running');
-  const { left, right, top, bottom } = dockedWidgetInsets;
-  const insetStyle = useMemo(
-    () => ((left || right || top || bottom) ? { left, right, top, bottom } : undefined),
-    [left, right, top, bottom],
-  );
   const running = status === 'running';
   const isManualPause = !disconnectedName || disconnectedName === MANUAL_PAUSE_NAME;
 
   return (
-    <Box className="game-layer" ref={containerRef} style={insetStyle}>
+    <Box className="game-layer" ref={containerRef}>
       {status === 'error' && (
         <Box className="game-layer__status-overlay">
           <Text className="game-layer__status-text game-layer__status-text--error">Error: {error}</Text>

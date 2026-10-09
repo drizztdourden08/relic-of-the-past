@@ -1,9 +1,7 @@
 /* @layer electron-main @kind logic */
 import { isAbsolute, join, normalize, relative } from 'path';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
-import { handle, emit } from '../lib/ipc/handle';
-import { getUserDataPath } from '../lib/paths';
-import { getMainWindow } from '../window';
+import { handle, emit, getUserDataPath, getMainWindow } from '@drizztdourden08/brock-electron/main';
 import { ffmpegState } from './ffmpeg-locate';
 import { installFfmpeg } from './ffmpeg-install';
 import { probeFile } from './ffmpeg-run';

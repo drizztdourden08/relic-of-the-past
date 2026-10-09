@@ -4,7 +4,7 @@ import { writeFile, readdir, rename, rm, stat, mkdir } from 'fs/promises';
 import type { MsuPackManifest, MsuPackMeta } from '@shared/types/msu-manifest';
 import { isAudioFile } from '@shared/storage/msu-paths';
 import { newManifest } from '@shared/storage/msu-edit';
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import {
   packFilePath, packPath, pathExists, readPackManifest, refuseInstalledPack, writePackManifest,
 } from './pack-fs';

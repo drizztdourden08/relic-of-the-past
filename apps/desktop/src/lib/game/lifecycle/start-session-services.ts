@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { getInputManager } from '../../input/input-manager';
 import { initHapticBridge } from '../../input/haptic-bridge';
-import { getPlatform } from '../../../platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 import { useDialogStore } from '../../../stores/dialog-store';
 import { useGameUIStore } from '../../../stores/game-ui-store';
 import { saveOnQuit, startAutoSave } from '../auto-save';

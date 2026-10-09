@@ -1,7 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFile } from 'fs/promises';
-import { handle } from '../lib/ipc/handle';
-import { toArrayBuffer } from '../lib/buffer';
+import { handle, toArrayBuffer } from '@drizztdourden08/brock-electron/main';
 import { WASM_PATH } from './ipc-handlers.constants';
 
 const registerWasmHandlers = (): void => {

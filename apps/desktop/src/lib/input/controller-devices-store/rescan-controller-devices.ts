@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
-const rescanControllerDevices = (): Promise<void> => window.api.rescanControllers();
+import { appApi } from '@app/ipc/app-api';
+const rescanControllerDevices = (): Promise<void> => appApi().rescanControllers();
 
 export { rescanControllerDevices };

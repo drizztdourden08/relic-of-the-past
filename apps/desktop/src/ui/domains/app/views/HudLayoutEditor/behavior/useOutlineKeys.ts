@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePlatform } from '@app/platform';
+import { usePlatform } from '@drizztdourden08/brock-react';
 import { isPrimaryModifier } from '@shared/platform';
 import { STEP_KEYS, stepIntent } from './step-intent';
 import { announcementFor, ghostFor } from './drop-ghost';

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useState, useEffect, useMemo, useRef, useReducer } from 'react';
 import { controllerInputStore } from '../../../../../../lib/input/controller-input-store';
 import type { ControllerInputState, DeviceStickCalibration } from '../../../../../../lib/input/controller-input-store';
@@ -48,11 +49,11 @@ const useInputCalibration = () => {
   }, [readyDeviceKeys]);
 
   useEffect(() => {
-    const unsubConnect = window.api.onControllerAdded((info) => {
+    const unsubConnect = appApi().onControllerAdded((info) => {
       forceUpdate();
       setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'connect', id: info.name || info.deviceKey }]);
     });
-    const unsubRemoved = window.api.onControllerRemoved((deviceKey) => {
+    const unsubRemoved = appApi().onControllerRemoved((deviceKey) => {
       setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'disconnect', id: deviceKey }]);
     });
     const unsubDisconnect = controllerInputStore.onDisconnect(() => {

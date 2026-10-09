@@ -1,14 +1,8 @@
 /* @layer shared-types @kind types */
 import type { InvokeContract } from './invoke-contract.type';
-import type { SendContract } from './send-contract.type';
 import type { EventContract } from './event-contract.type';
-import type { INVOKE_MAP, SEND_MAP, EVENT_MAP } from './maps';
 
 type Unsub = () => void;
-
-type InvokeApi = { [M in keyof typeof INVOKE_MAP]: InvokeContract[(typeof INVOKE_MAP)[M]] };
-type SendApi = { [M in keyof typeof SEND_MAP]: SendContract[(typeof SEND_MAP)[M]] };
-type EventApi = { [M in keyof typeof EVENT_MAP]: (callback: EventContract[(typeof EVENT_MAP)[M]]) => Unsub };
 
 interface UpdaterApi {
   capabilities: InvokeContract['updater:capabilities'];
@@ -66,30 +60,7 @@ interface ScreenEditorApi {
   deleteLocation: InvokeContract['screenEditor:deleteLocation'];
 }
 
-interface UiViewsApi {
-  load: InvokeContract['uiViews:load'];
-  save: InvokeContract['uiViews:save'];
-}
 
-interface ExtrasApi {
-  isDev: boolean;
-  autoFlood: boolean;
-  os: string;
-  getSpritesBaseUrl: (romFile: string) => string;
-  getFilePath: (file: File) => string;
-  startup: {
-    fresh: boolean; widgets: string[]; automation: boolean;
-    muted: boolean; sound: boolean;
-    autoStart: boolean;
-  };
-  instance: { name: string | null; profile: string | null };
-}
 
-type IpcApi = InvokeApi & SendApi & EventApi & ExtrasApi & {
-  updater: UpdaterApi;
-  shadowCasting: ShadowCastingApi;
-  screenEditor: ScreenEditorApi;
-  uiViews: UiViewsApi;
-};
 
-export type { IpcApi, UpdaterApi, ShadowCastingApi, ScreenEditorApi, UiViewsApi };
+export type { UpdaterApi, ShadowCastingApi, ScreenEditorApi };

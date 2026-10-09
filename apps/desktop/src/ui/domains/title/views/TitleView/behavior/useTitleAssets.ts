@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import type { TitleSwordPicture } from '@shared/game/title/title-swords';
-import { getPlatform } from '../../../../../../platform/get-platform';
+import { getPlatform } from '@drizztdourden08/brock-react';
 import { useSpriteAvailabilityStore } from '../../../../../../stores/sprite-availability-store';
 import { LIGHT_SCENE_FILES } from '../../../scene/scene-files';
 import type { Picture } from '../../../choreography/choreography.type';

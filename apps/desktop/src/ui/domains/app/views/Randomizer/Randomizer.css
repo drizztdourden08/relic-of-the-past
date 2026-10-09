@@ -1,21 +1,5 @@
 /* @layer renderer-components @kind style */
 
-.randomizer-page {
-  display: flex;
-  gap: var(--space-xl);
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.randomizer-page__content {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
 .randomizer-page__scroll {
   display: flex;
   flex-direction: column;

@@ -1,26 +1,7 @@
 /* @layer renderer-components @kind constants */
-import dicesIcon from '@iconify-icons/lucide/dices';
-import scrollTextIcon from '@iconify-icons/lucide/scroll-text';
-import listChecksIcon from '@iconify-icons/lucide/list-checks';
-import networkIcon from '@iconify-icons/lucide/network';
-import globeIcon from '@iconify-icons/lucide/globe';
-import slidersHorizontalIcon from '@iconify-icons/lucide/sliders-horizontal';
-import type { SettingsPageAnchor } from '@drizztdourden08/tessera/composites';
-import type { PanelPlacement, RandomizerNavGroup, RandomizerTab, RandomizerTabSpec } from './Randomizer.type';
+import type { PanelPlacement } from './Randomizer.type';
 
-const RANDOMIZER_TABS: Record<RandomizerTab, RandomizerTabSpec> = {
-  run: { label: 'Run', navIcon: dicesIcon },
-  options: { label: 'Options', navIcon: slidersHorizontalIcon, scroll: false },
-  logs: { label: 'Logs', navIcon: scrollTextIcon, scroll: false },
-  spoiler: { label: 'Spoiler', navIcon: listChecksIcon, scroll: false },
-  network: { label: 'Network', navIcon: networkIcon, archipelagoOnly: true },
-  online: { label: 'Online', navIcon: globeIcon, archipelagoOnly: true },
-};
-
-const RANDOMIZER_NAV_GROUPS: RandomizerNavGroup[] = [
-  { id: 'run', label: 'Run', tabs: ['run', 'options', 'logs', 'spoiler'] },
-  { id: 'archipelago', label: 'Archipelago', tabs: ['network', 'online'] },
-];
+const RANDOMIZER_BUCKET = 'randomizer';
 
 const RUN_PANELS = {
   summary: { section: 'summary', span: 1 },
@@ -33,17 +14,9 @@ const RUN_PANELS = {
 
 const NO_RUN_PANEL: PanelPlacement = { section: 'run', span: 'full' };
 
-const RUN_ANCHORS: SettingsPageAnchor[] = [
-  { id: RUN_PANELS.summary.section, label: 'Summary' },
-  { id: RUN_PANELS.progress.section, label: 'Progress' },
-  { id: RUN_PANELS.activity.section, label: 'Recent activity' },
-  { id: RUN_PANELS.players.section, label: 'Players' },
-  { id: RUN_PANELS.pool.section, label: 'Options summary' },
-];
-
-const LOCAL_RUN_ANCHORS: SettingsPageAnchor[] = RUN_ANCHORS.filter((anchor) => anchor.id !== RUN_PANELS.players.section);
-
 const NOT_RANDOMIZED = 'This profile is not randomized. Randomizer options are chosen when creating a profile.';
+
+const NOT_ARCHIPELAGO = 'This profile is not an Archipelago run. Network and Online settings apply to Archipelago profiles only.';
 
 const NETWORK_PANELS = {
   setup: { section: 'setup', span: 1 },
@@ -54,13 +27,4 @@ const NETWORK_PANELS = {
   server: { section: 'server', span: 1 },
 } as const satisfies Record<string, PanelPlacement>;
 
-const NETWORK_ANCHORS: SettingsPageAnchor[] = [
-  { id: NETWORK_PANELS.setup.section, label: 'Server setup' },
-  { id: NETWORK_PANELS.connection.section, label: 'Connection' },
-  { id: NETWORK_PANELS.health.section, label: 'Health' },
-  { id: NETWORK_PANELS.progress.section, label: 'Progress' },
-  { id: NETWORK_PANELS.players.section, label: 'Players' },
-  { id: NETWORK_PANELS.server.section, label: 'Server' },
-];
-
-export { LOCAL_RUN_ANCHORS, NETWORK_ANCHORS, NETWORK_PANELS, NO_RUN_PANEL, NOT_RANDOMIZED, RANDOMIZER_NAV_GROUPS, RANDOMIZER_TABS, RUN_ANCHORS, RUN_PANELS };
+export { NETWORK_PANELS, RANDOMIZER_BUCKET, NO_RUN_PANEL, NOT_ARCHIPELAGO, NOT_RANDOMIZED, RUN_PANELS };

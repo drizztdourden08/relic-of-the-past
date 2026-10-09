@@ -1,8 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import type { AppState } from '@shared/types/profile';
-import * as store from '@shared/storage/profiles';
-import { platformFiles } from '../platform-files';
+import { getAppState as getStoredAppState } from '@drizztdourden08/brock-react';
 
-const getAppState = (): Promise<AppState> => store.getAppState(platformFiles());
+const getAppState = (): Promise<{ lastProfileId: string | null }> => getStoredAppState();
 
 export { getAppState };

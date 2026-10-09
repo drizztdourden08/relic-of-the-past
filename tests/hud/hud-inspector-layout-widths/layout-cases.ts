@@ -7,8 +7,8 @@ import { DirectionControl } from '../../../apps/desktop/src/ui/domains/app/views
 import { ExtentField } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/ExtentField';
 import { IconButton } from '@drizztdourden08/tessera/primitives';
 import { GridEditor } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridEditor';
-import { PlatformContext } from '../../../apps/desktop/src/platform/PlatformProvider';
-import type { Platform } from '../../../shared/platform';
+import { PlatformContext } from '@drizztdourden08/brock-react';
+import type { Platform } from '@drizztdourden08/brock-core';
 import type { AlignRowSpec } from '../../../apps/desktop/src/ui/domains/app/views/HudLayoutEditor/sub-components/AlignmentTiles';
 import type { HudGridContainer } from '../../../shared/types/hud';
 

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import { usePlatform } from '@app/platform';
+import { usePlatform } from '@drizztdourden08/brock-react';
 import { useAppVersion } from '@app/hooks/useAppVersion';
 import type { GamepadDiagnosticsReport } from '../../hid-calibration/diagnostics';
 import { buildReport } from '../../hid-calibration/diagnostics/report-builder';

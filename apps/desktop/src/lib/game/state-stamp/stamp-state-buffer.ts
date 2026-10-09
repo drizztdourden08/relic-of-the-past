@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { CURRENT_STATE_FORMAT, appendStamp, readSnapshotBytes, readStamp } from '@shared/game/save-state';
 import { log } from '../../log-bus';
 import { stateStampState } from './state-stamp-state';
@@ -6,7 +7,7 @@ import { STAMP_VERSION, UNKNOWN_APP_VERSION } from './state-stamp.constants';
 
 const appVersion = async (): Promise<string> => {
   if (stateStampState.cachedVersion === null) {
-    stateStampState.cachedVersion = await window.api.updater.getVersion().catch(() => UNKNOWN_APP_VERSION);
+    stateStampState.cachedVersion = await appApi().updater.getVersion().catch(() => UNKNOWN_APP_VERSION);
   }
   return stateStampState.cachedVersion;
 };

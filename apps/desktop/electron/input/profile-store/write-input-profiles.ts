@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
-import { writeJson } from '../../lib/json-store';
+import { writeJsonFile } from '@drizztdourden08/brock-electron/main';
 import { profilesPath } from './profiles-path';
 
 const writeInputProfiles = (profileId: string, profiles: unknown[]): Promise<void> =>
-  writeJson(profilesPath(profileId), profiles);
+  writeJsonFile(profilesPath(profileId), profiles);
 
 export { writeInputProfiles };

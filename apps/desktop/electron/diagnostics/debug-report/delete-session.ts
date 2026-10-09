@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { rm } from 'fs/promises';
-import { getUserDataPath } from '../../lib/paths';
+import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { forgetSession } from './capture-manifest';
 import { CAPTURES_SUBDIR } from './finalize-capture-session';
 import type { DebugCaptureDeleteSessionResult } from '@shared/types/debug-report';

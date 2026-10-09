@@ -1,12 +1,10 @@
 /* @layer electron-main @kind logic */
 import { join, basename } from 'path';
 import { isAudioFile, trackNumberOf } from '@shared/storage/msu-paths';
-import { handle } from '../lib/ipc/handle';
+import { handle, getUserDataPath, toArrayBuffer } from '@drizztdourden08/brock-electron/main';
 import { readFile, readdir, mkdir, copyFile, rm, stat } from 'fs/promises';
-import { getUserDataPath } from '../lib/paths';
 import { resolveSourceFiles, type ImportSource } from '../lib/import-source';
 import { MSU_EXTENSIONS } from '../lib/extensions';
-import { toArrayBuffer } from '../lib/buffer';
 import { fail, errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { selectPackFiles } from './import-selection';

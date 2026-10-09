@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { isTagKey, replaceTagRecord } from '@shared/game/data';
 import type { TagRecord } from '@shared/game/data';
 import type { PendingTagRecord } from '@shared/game/data/record-codegen';
@@ -13,7 +14,7 @@ const writeTag: RecordWriter = async (row) => {
   const { id, ...rest } = record;
   const expectedName = `${record.namespace}:${record.value}`;
   if (!isTagKey(record.name) || record.name !== expectedName) throw new Error(TAG_NAME_MISMATCH);
-  settleWrite(await window.api.screenEditor.writeTag({ tagId: id, record: rest as PendingTagRecord }));
+  settleWrite(await appApi().screenEditor.writeTag({ tagId: id, record: rest as PendingTagRecord }));
   replaceTagRecord(record);
   invalidateTagSuggestions();
   updateIdRefOption('tag', id);

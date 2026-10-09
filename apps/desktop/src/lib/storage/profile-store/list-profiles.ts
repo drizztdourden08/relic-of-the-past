@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import type { Profile } from '@shared/types/profile';
-import * as store from '@shared/storage/profiles';
-import { platformFiles } from '../platform-files';
+import { listProfiles as listStoredProfiles } from '@drizztdourden08/brock-react';
+import type { Profile } from '@drizztdourden08/brock-core';
 
-const listProfiles = (): Promise<Profile[]> => store.listProfiles(platformFiles());
+const listProfiles = (): Promise<Profile[]> => listStoredProfiles();
 
 export { listProfiles };

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { appApi } from '@app/ipc/app-api';
 import { useEffect, useState } from 'react';
 import type { ItemResponse } from '@shared/store/api-types';
 
@@ -11,7 +12,7 @@ const useItemDetail = (itemId: string | null, signedIn: boolean) => {
     setError(null);
     if (!itemId || !signedIn) return undefined;
     let current = true;
-    void window.api.storeItem(itemId).then((result) => {
+    void appApi().storeItem(itemId).then((result) => {
       if (!current) return;
       if (result.ok) setDetail(result.data);
       else setError(result.error);

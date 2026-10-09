@@ -1,9 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import * as store from '@shared/storage/profiles';
-import { isAutomationLaunch } from '@app/lib/instance';
-import { platformFiles } from '../platform-files';
+import { isAutomationLaunch, setLastProfile as setStoredLastProfile } from '@drizztdourden08/brock-react';
 
-const setLastProfile = (id: string): Promise<void> =>
-  isAutomationLaunch() ? Promise.resolve() : store.setLastProfile(platformFiles(), id);
+const setLastProfile = (id: string): Promise<void> => (isAutomationLaunch() ? Promise.resolve() : setStoredLastProfile(id));
 
 export { setLastProfile };

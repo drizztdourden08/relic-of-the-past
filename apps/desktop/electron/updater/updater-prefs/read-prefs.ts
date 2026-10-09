@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { readFileSync } from 'fs';
-import { stripBom } from '../../lib/json-store';
+import { stripBom } from '@drizztdourden08/brock-core/storage';
 import type { UpdaterPrefs } from '../updater.type';
 import { prefsPath } from './prefs-path';
 import { DEFAULTS } from './updater-prefs.constants';

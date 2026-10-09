@@ -1,8 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { BrowserWindow } from 'electron';
-import { handle } from '../lib/ipc/handle';
-import { getUserDataPath } from '../lib/paths';
-import { writeJson } from '../lib/json-store';
+import { handle, getUserDataPath, writeJsonFile } from '@drizztdourden08/brock-electron/main';
 import { readInputProfiles, writeInputProfiles } from './profile-store';
 import {
   readStickCalibration,
@@ -86,7 +84,7 @@ const registerControllerHandlers = (): void => {
   handle('controller:write-debug-capture', async (_event, name: string, data: unknown) => {
     const filename = `${sanitizeFileStem(name)}-${Date.now()}.json`;
     const filePath = getUserDataPath('debug', filename);
-    await writeJson(filePath, data);
+    await writeJsonFile(filePath, data);
     return filePath;
   });
 

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback } from 'react';
-import { usePlatform } from '@app/platform';
+import { usePlatform } from '@drizztdourden08/brock-react';
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from '../../../../../../../lib/game';

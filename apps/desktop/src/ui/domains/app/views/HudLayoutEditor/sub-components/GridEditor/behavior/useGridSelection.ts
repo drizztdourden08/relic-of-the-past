@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { isPrimaryModifier } from '@shared/platform';
-import { usePlatform } from '@app/platform';
+import { usePlatform } from '@drizztdourden08/brock-react';
 import { cellKey, rectCells } from '../../GridLattice';
 import { nextIndexRun } from '../../../behavior/index-selection';
 import type { PointerEvent as ReactPointerEvent } from 'react';

@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { appApi } from '@app/ipc/app-api';
 import { isTagKey, registerTag } from '@shared/game/data';
 import type { TagRecord } from '@shared/game/data';
 import { TAG_NOT_CONVENTION } from '../../DataInspector.constants';
@@ -11,7 +12,7 @@ const createTagRecord: RecordCreator = async (draft) => {
   const value = String(draft.value ?? '').trim();
   const key = `${namespace}:${value}`;
   if (!isTagKey(key)) return { success: false, error: TAG_NOT_CONVENTION };
-  const result = await window.api.screenEditor.allocateTag({
+  const result = await appApi().screenEditor.allocateTag({
     key,
     appliesTo: (draft.appliesTo ?? []) as TagRecord['appliesTo'],
     label: draft.label as string | undefined,

@@ -2,7 +2,7 @@
 import { app, shell } from 'electron';
 import { join } from 'path';
 import { appendFile, mkdir, access } from 'fs/promises';
-import { handle } from '../lib/ipc/handle';
+import { handle } from '@drizztdourden08/brock-electron/main';
 import { getWorkspaceRoot } from '../screen-editor/workspace-root';
 import type { Result } from './sim-log-handler.type';
 

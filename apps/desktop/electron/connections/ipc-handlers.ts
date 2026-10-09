@@ -1,20 +1,18 @@
 /* @layer electron-main @kind logic */
-import { handle } from '../lib/ipc/handle';
-import { getUserDataPath } from '../lib/paths';
-import { readJson, writeJson } from '../lib/json-store';
+import { handle, getUserDataPath, readJsonFile, writeJsonFile } from '@drizztdourden08/brock-electron/main';
 
 const registerConnectionHandlers = (): void => {
   handle('connectionReview:load', () =>
-    readJson(getUserDataPath('connection-review.json'), {}));
+    readJsonFile(getUserDataPath('connection-review.json'), {}));
 
   handle('connectionReview:save', (_e, data: unknown) =>
-    writeJson(getUserDataPath('connection-review.json'), data));
+    writeJsonFile(getUserDataPath('connection-review.json'), data));
 
   handle('navReview:load', () =>
-    readJson(getUserDataPath('nav-review.json'), {}));
+    readJsonFile(getUserDataPath('nav-review.json'), {}));
 
   handle('navReview:save', (_e, data: unknown) =>
-    writeJson(getUserDataPath('nav-review.json'), data));
+    writeJsonFile(getUserDataPath('nav-review.json'), data));
 };
 
 export { registerConnectionHandlers };

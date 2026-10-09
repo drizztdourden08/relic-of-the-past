@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { ControlMenuRow } from '@drizztdourden08/tessera/composites';
-import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { useNavigationOverlayStore } from '@app/stores/navigation-overlay-store';
 import type { NavMode } from '@app/stores/navigation-overlay-store';
 import { MODE_OPTIONS } from './FunctionsPanel.constants';

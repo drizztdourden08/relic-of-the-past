@@ -14,6 +14,7 @@ type StoreSection = 'home' | 'browse' | 'music' | 'character' | 'language' | 'in
 interface StoreProps {
   onLibraryChanged: () => unknown;
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
+  section?: StoreSection;
 }
 
 interface InstallJob {

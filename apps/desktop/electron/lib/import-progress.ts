@@ -1,6 +1,5 @@
 /* @layer electron-main @kind logic */
-import { getMainWindow } from '../window';
-import { emit } from './ipc/handle';
+import { emit, getMainWindow } from '@drizztdourden08/brock-electron/main';
 import type { ImportKind, ImportPhase, ImportReporter } from './import-progress.type';
 
 const makeImportReporter = (kind: ImportKind, id: string): ImportReporter =>

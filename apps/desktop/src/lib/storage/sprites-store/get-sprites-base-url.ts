@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { getPlatform } from '@app/platform/get-platform';
+import { spritesBaseUrl } from '@app/platform/sprites-base-url';
 
-const getSpritesBaseUrl = (romFile: string): Promise<string> => getPlatform().storage.spritesBaseUrl(romFile);
+const getSpritesBaseUrl = (romFile: string): Promise<string> => spritesBaseUrl(romFile);
 
 export { getSpritesBaseUrl };

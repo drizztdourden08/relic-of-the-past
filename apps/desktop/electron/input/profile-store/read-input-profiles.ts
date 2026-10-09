@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
-import { readJson } from '../../lib/json-store';
+import { readJsonFile } from '@drizztdourden08/brock-electron/main';
 import { profilesPath } from './profiles-path';
 
 const readInputProfiles = (profileId: string): Promise<unknown[]> =>
-  readJson<unknown[]>(profilesPath(profileId), []);
+  readJsonFile<unknown[]>(profilesPath(profileId), []);
 
 export { readInputProfiles };
