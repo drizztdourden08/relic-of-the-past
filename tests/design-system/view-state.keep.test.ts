@@ -9,17 +9,11 @@ import {
 import type { ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 import { prune } from '../../apps/web/src/ui/design-system/data/view-state/prune';
 
-// A snapshot stores field paths, and a dataset changes shape underneath them.
-// Restoring must always prune, never throw, and never leave a table with no
-// columns at all.
-
 const ROWS = [
   { id: 'item-001', name: 'alpha', size: 1, tag: 'red' },
   { id: 'item-002', name: 'beta', size: 5, tag: 'blue' },
 ];
 
-// `name` is forced to a string so the operator-revalidation case below has a
-// field where `contains` is legitimate, next to `tag` where it is not.
 const CONFIG = { kinds: { name: 'string' } } as const;
 const schema = createSchemaIndex(buildSchema(ROWS, CONFIG));
 
@@ -47,8 +41,6 @@ describe('capture and restore make one memento round trip', () => {
     expect('tab' in capture(TABLE, [])).toBe(false);
   });
 
-  // The Data Inspector's fold state (CollapsibleDetail) persists through the
-  // same snapshot as the filters and the tab, keyed per collection.
   it('carries the collapsed flag out and back, alongside the tab', () => {
     const snapshot = capture(TABLE, [], 'json', true);
     expect(snapshot.collapsed).toBe(true);
@@ -103,7 +95,6 @@ describe('prune after schema drift', () => {
   });
 
   it('drops a filter whose operator no longer suits the field kind', () => {
-    // `tag` reads as an enum here, so a string operator is no longer evaluable.
     const snapshot: ViewSnapshot = {
       ...emptySnapshot(),
       columns: [{ path: 'id' }],

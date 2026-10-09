@@ -262,6 +262,32 @@ Both controls form one absolutely positioned cluster over the name, so the label
 whole cell; the label renders before the cluster, which puts it underneath. An unsorted caret is
 dimmed and hidden until hover.
 
+### design-system/data-table-menus
+
+The pure parts of the table chrome: the column menu, the footer menu, and nested group row
+identity. The field tree is in `data-table-field-tree` and rendering in `data-table-render`. In
+the add column submenus a branch opens further and only a leaf acts. Placing a column is the
+column menu's job; the footer's add covers the two cases it cannot: not caring where the column
+lands, and a table with no columns left.
+
+### design-system/data-table-sizing
+
+Sizing as pure functions: seam delta to width, fit to content, and the grid track per width
+mode; the gesture and the measuring need a browser.
+
+- Fit to content is a persistent mode, unlike grow: it does not wait for an overflow to act, so
+  its fallback is used as soon as a measurement lands.
+- A grow column fills only while space is left over. Once the table scrolls sideways it sizes
+  to content, and fills again when space returns. A table showing a filled column measures wide
+  because it is filled, so flexible columns are counted at content width first and both modes
+  agree.
+- The floor sits in front of the measured width: a narrower fallback could un-overflow the
+  table, restore the fill, and overflow it again.
+- The fallback is a render override that rides alongside the column list, so one list renders
+  both ways and still says the column grows.
+- A seam drag never goes through state while it runs; it writes the preview track list and
+  commits only the final width, so the preview and the commit must agree.
+
 ### design-system/data-table-measure.keep.test.ts
 
 With no DOM the browser rule is modelled: an element reports the box it is laid out in (`box`),
@@ -596,6 +622,34 @@ are exercised directly and the hook's sequences are replayed through them, which
 state machine. The insert index for "add column before" is that column's own index, and "after"
 is one past it; both are where the new column ends up. The generic sort fallback compares
 stringified values, so 9 would sort before 10 until a number comparator is registered.
+
+### design-system/use-view-state.keep.test.ts
+
+`useViewState` composes the durable store (`lib/storage/ui-views`) and the session store
+(`stores/data-view-store`). The contract: no key means no IPC and no store, ever; a real key
+means a loaded snapshot is pruned against the current schema before a caller sees it. The hook
+is re-imported per test after `window` is stubbed, because the storage layer reaches the log
+bus at load. `renderToStaticMarkup` never commits, so effects never fire and a keyed render
+shows zero calls too; the durable load path is covered by `view-state-load-race` and the
+storage suite.
+
+### design-system/view-state.keep.test.ts
+
+A snapshot stores field paths, and the dataset changes shape underneath them. Restoring must
+always prune, never throw, and never leave a table with no columns. `name` is forced to text so
+the operator check has a field where `contains` is legal next to `tag`, which reads as an enum
+and makes a string operator invalid. The Data Inspector's fold state (CollapsibleDetail)
+persists through the same snapshot as the filters and the tab, keyed per collection.
+
+### design-system/view-state-load-race.keep.test.ts
+
+The reported bug: clearing the filter clauses one at a time brought an earlier set back. A read
+still in flight when the user started editing came back with the old view and was applied
+unconditionally. With no DOM the sequence replays what the hook does: the real
+`beginDurableLoad`, the real repository, the real mark edited then write, with the disk answer
+held back until after the removals, so the race is deterministic. The stand in for the hook has
+local state, one guard and the two calls it makes. One hook instance can move between two keys;
+the effect re-runs for the second and there is nothing local to preserve.
 
 ### design-system/tag-input
 
