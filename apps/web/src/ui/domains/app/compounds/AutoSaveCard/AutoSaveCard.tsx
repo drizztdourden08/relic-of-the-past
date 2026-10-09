@@ -1,4 +1,4 @@
-/* @layer renderer-components @kind data */
+/* @layer renderer-components @kind component */
 import { Thumbnail } from '../../../../design-system/primitives/Thumbnail';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Flex } from '../../../../design-system/primitives/Flex';

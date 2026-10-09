@@ -7,7 +7,6 @@ interface ControllerPortRowProps {
   busType?: ControllerBusType;
   hasRumble?: boolean;
   hasGyro?: boolean;
-  /** Short live proof-of-life text for a ready port, e.g. a button/axis count. */
   liveHint?: string;
 }
 

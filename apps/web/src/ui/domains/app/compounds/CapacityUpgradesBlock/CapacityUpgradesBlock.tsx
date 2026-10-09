@@ -1,41 +1,10 @@
 /* @layer renderer-components @kind component */
-/**
- * The "Capacity upgrades" section of an options panel: its own live group
- * title (the same one the player's choices carry), the master switch for the
- * whole feature, the one progressive switch over every Custom family as a
- * plain option row, one CapacityFamilyRow per family, and the notes (every
- * fallback the profile reader applied, plus whatever the pond rule is
- * forcing) underneath. With the master switch off everything below it greys
- * out and freezes, because the families are not the player's to set while the
- * feature is out. Shared by the creation panel and the read-only Options
- * page, where `readOnly` draws the switches, modes and bonuses as tags; the
- * rows arrive derived, edits leave keyed by family.
- */
 import { Box, Text } from '@ds/primitives';
 import { CapacityFamilyRow } from '../CapacityFamilyRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { RandomizerOptionRow } from '../RandomizerOptionRow';
-import type { CapacityRowModel, CapacityRowState } from '../CapacityFamilyRow';
-import type { CapacityFamilyId, FamilyBonus } from '@shared/randomizer/world/capacity';
-import type { OptionDef } from '@shared/randomizer/world/options.type';
+import type { CapacityUpgradesBlockProps } from './CapacityUpgradesBlock.type';
 import './CapacityUpgradesBlock.css';
-
-interface CapacityUpgradesBlockProps {
-  rows: readonly CapacityRowModel[];
-  notes: readonly string[];
-  /** The catalog row of the master switch, rendered above everything else. */
-  enabledOption?: OptionDef;
-  /** The master switch itself; off greys and freezes the rest of the block. */
-  enabled?: boolean;
-  /** The catalog row of the progressive switch, rendered above the families. */
-  progressiveOption?: OptionDef;
-  progressive?: boolean;
-  readOnly?: boolean;
-  onChange?: (family: CapacityFamilyId, next: CapacityRowState) => void;
-  onBonusChange?: (family: CapacityFamilyId, next: FamilyBonus) => void;
-  onEnabledChange?: (enabled: boolean) => void;
-  onProgressiveChange?: (progressive: boolean) => void;
-}
 
 const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
   const {

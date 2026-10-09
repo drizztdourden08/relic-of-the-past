@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Fact strip layout; its glass surface is shared in Hero.css. */
 .hero__facts {
   display: flex;
   flex-direction: column;

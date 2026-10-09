@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* An informational callout, the same shape the panel's other notes take: a
-   thick rule down the left, an uppercase caption, then one sentence per line
-   with room to breathe between them. */
-
 .pond-status {
   display: flex;
   flex-direction: column;

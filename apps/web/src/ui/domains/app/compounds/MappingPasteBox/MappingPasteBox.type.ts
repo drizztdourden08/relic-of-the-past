@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind types */
 interface MappingPasteBoxProps {
-  /** Submits the pasted line; resolves false for a malformed mapping. */
   onSubmit: (mapping: string) => Promise<boolean>;
 }
 

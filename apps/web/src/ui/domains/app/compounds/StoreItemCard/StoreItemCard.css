@@ -17,7 +17,6 @@
   background: var(--c-selected);
 }
 
-/* Cards are uploaded at 16:9, so the frame keeps that shape at any column width. */
 .store-item-card__image {
   width: 100%;
   aspect-ratio: 16 / 9;

@@ -1,21 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The retro block: one switch and, under it, the two costs a shot takes out
- * of the wallet. The costs go inert with the switch, because they are only a
- * question once the bow is fed rupees.
- *
- * Both sliders stop where the seed's wallet does (retro/retro-cost-ceiling.ts):
- * the plain shot at the wallet's top, the silver shot at that top divided by
- * the final fight's count of back-to-back shots. A stored cost above the live
- * top reads as the top, and the one line under the sliders says where the two
- * tops come from. The plain cost goes inert with the reason on it while the
- * plain bow rung is unticked above: the first bow found already fires silver.
- *
- * Presentational only: the setting comes in as a prop and every edit leaves as
- * a whole new setting. An absent handler renders the block as a read-out, the
- * switch as a True or False tag and each cost as text, which is the read-only
- * Options page's face.
- */
 import { Box, Text, Toggle } from '@ds/primitives';
 import { OptionValueTag } from '../OptionValueTag';
 import { FINAL_FIGHT_SILVER_HITS } from '@shared/randomizer/world/final-fight.data';
@@ -27,14 +10,12 @@ import { retroCostCeilingsOf } from '@shared/randomizer/world/retro/retro-cost-c
 import { optionByKey } from '@shared/randomizer/world/options.data';
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
+import { ceilingNote } from './behavior/ceiling-note';
 import {
-  NO_PLAIN_BOW_NOTE, RETRO_COST_STEP, RETRO_SWITCH_LABEL, RETRO_TITLE, ceilingNote,
+  NO_PLAIN_BOW_NOTE, PLAIN_BOW_RUNG, RETRO_COST_STEP, RETRO_SWITCH_LABEL, RETRO_TITLE,
 } from './RetroBowBlock.constants';
 import type { RetroBowBlockProps } from './RetroBowBlock.type';
 import './RetroBowBlock.css';
-
-/** The first rung of the bow family is the plain bow; unticked, every bow found is silver. */
-const PLAIN_BOW_RUNG = 0;
 
 const nameOf = (key: string): string => optionByKey.get(key)?.displayName ?? key;
 const retroLine = (): string => {

@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Rescan glyph spins continuously while the teardown/repopulate
-   cycle a rescan triggers is still in flight. */
 .rescan-btn__icon--spinning {
   animation: rescan-btn-spin var(--duration-slow) linear infinite;
 }

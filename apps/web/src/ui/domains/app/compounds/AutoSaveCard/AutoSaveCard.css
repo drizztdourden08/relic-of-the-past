@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Thumb frame/placeholder chrome comes from the Thumbnail primitive. */
 .auto-save-card__thumb {
   width: 56px;
   height: 38px;

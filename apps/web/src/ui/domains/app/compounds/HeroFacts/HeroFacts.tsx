@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-/** Glass strip along a hero's bottom edge: one row of facts, and an optional second row. */
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import type { HeroFact, HeroFactsProps } from './HeroFacts.type';

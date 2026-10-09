@@ -3,7 +3,6 @@ import { Text } from '@ds/primitives';
 import type { ReportingAsLineProps } from './ReportingAsLine.type';
 import './ReportingAsLine.css';
 
-/** Who a report is filed as, in place of the email field once the app is signed in. */
 const ReportingAsLine = (props: ReportingAsLineProps) => {
   const { displayName, githubHandle } = props;
   const who = githubHandle ? `${displayName} (@${githubHandle})` : displayName;

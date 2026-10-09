@@ -1,14 +1,7 @@
 /* @layer renderer-components @kind logic */
-/**
- * Where each piece of the mascot goes, in mascot pixels. The pods sit behind the body and
- * turn around the point where they meet it; the visor sits on the face and the eyes move
- * inside it, whole pixels at a time so they stay on the grid.
- */
 import { MASCOT_PARTS } from '../Mascot.constants';
 import type { PieceName, PlacedPiece, PodAngles, Point } from '../Mascot.type';
-
-const LOOK_X = 2;
-const LOOK_Y = 1;
+import { LOOK_X, LOOK_Y } from './mascot-layout.constants';
 
 const clamp = (v: number, limit: number) => Math.max(-limit, Math.min(limit, Math.round(v)));
 

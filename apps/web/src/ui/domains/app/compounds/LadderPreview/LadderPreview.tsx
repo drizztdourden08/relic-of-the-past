@@ -1,16 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The ladder a capacity family produces, as chips: the start value, then a
- * jump label and a cumulative chip per pool item. Dim in Vanilla (the native
- * ladder, nothing in the pool); the last chip is flagged when its jump ran
- * past the top of the ladder; an ordered ladder numbers its jumps (1st,
- * 2nd ...) because pickups take them in that order. Values arrive formatted
- * and the compound only lays them out.
- *
- * A chip may also carry the sprite of the currency its value is asked in, and
- * then the picture says which currency and the number says how much, so a
- * price naming no amount is the icon on its own.
- */
 import { Box, Image, Text } from '@ds/primitives';
 import type { LadderPreviewProps } from './LadderPreview.type';
 import './LadderPreview.css';

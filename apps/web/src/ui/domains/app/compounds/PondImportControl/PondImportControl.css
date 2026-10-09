@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* The copy control: a label, the pond to copy from, and the press that does
-   it, on one line. It sits above the pond it writes to, so it keeps the
-   caption voice the rest of the block's small labels wear. */
-
 .pond-import {
   display: flex;
   flex-wrap: wrap;

@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Chrome (bg/border/radius/padding + danger variant) comes from the Card primitive. */
 .rom-card {
   align-items: center;
   justify-content: space-between;

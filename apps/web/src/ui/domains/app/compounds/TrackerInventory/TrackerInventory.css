@@ -65,8 +65,6 @@
   white-space: nowrap;
 }
 
-/* ─── In-game layout ─── */
-
 .tracker-inventory--ingame {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -106,8 +104,6 @@
   padding-top: var(--space-xs);
   border-top: 1px solid var(--c-border);
 }
-
-/* ─── Compact layout ─── */
 
 .tracker-inventory--compact {
   max-height: none;

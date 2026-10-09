@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Editable jump chips in a wrapping row, the Σ readout under them. */
-
 .jump-chips {
   display: flex;
   flex-direction: column;

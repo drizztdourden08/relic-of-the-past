@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * One Hookshop item in a grid or a shelf: its card picture, name, author and version, then its
- * stars, or whether it is installed or has an update. Bare: the host passes the item, what the
- * app has of it and the select handler.
- */
 import { useCallback } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';

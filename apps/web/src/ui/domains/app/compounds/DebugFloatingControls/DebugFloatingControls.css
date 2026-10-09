@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Sized/positioned against the actual game-render rectangle by its caller (exclusiveInsets),
-   not the wider .app__content box. No z-index of its own on purpose: a widget (explicit
-   z-index, --z-panel) then always wins the pointer hit-test over this zone wherever they
-   overlap, so hovering a widget never counts as hovering the game section - without trapping
-   the button stack's own (much higher) z-index inside a losing stacking context, which is
-   what made the buttons vanish behind any docked widget. */
 .debug-floating-controls__hover-zone {
   position: absolute;
   inset: 0;
@@ -21,10 +15,6 @@
   gap: var(--space-lg);
 }
 
-/* Shared round glass base for both buttons in the stack. Neutral icon color, same as every
-   other icon button in the app at rest (--c-text-dim, not an accent) - color never changes
-   state to state (hover included), only opacity and, for the capture button, the glow ring
-   communicate state, so the icon itself always stays legible. */
 .debug-round-button {
   position: relative;
   width: 40px;
@@ -56,17 +46,11 @@
   opacity: 1;
 }
 
-/* Actively doing something (recording, packaging) always reads at full opacity, hover or not.
-   Specificity bumped with :disabled so this reliably beats the base Button primitive's own
-   .btn:disabled{opacity:0.4} rule regardless of CSS load order. */
 .debug-round-button.debug-capture-button--active,
 .debug-round-button.debug-report-floating-button--busy:disabled {
   opacity: 1;
 }
 
-/* Shared by the capture timer and the send-report status text: same spot (left of the
-   button), same treatment, including a dark shadow so they stay legible over a bright/light
-   game background, not just the usual dark UI chrome. */
 .debug-floating-controls__status-label {
   position: absolute;
   top: 50%;

@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The free sequence: one editable chip per jump, each capped at the largest
- * jump an item carries, a remove control on each, an add control, and a Σ
- * readout against the span that reads as invalid until the sum is exact.
- * Validation wording comes from the caller.
- */
 import { Box, Button, IconButton, NumberInput, Text } from '@ds/primitives';
 import type { JumpChipsEditorProps } from './JumpChipsEditor.type';
 import './JumpChipsEditor.css';

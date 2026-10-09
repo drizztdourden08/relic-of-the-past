@@ -9,23 +9,14 @@ import { Image } from '@ds/primitives/Image';
 import { Video } from '@ds/primitives/Video';
 import { useCyclingFrame } from '../behavior/useCyclingFrame';
 import type { CaptureSessionRowProps } from '../CaptureSessionPicker.type';
-import '../CaptureSessionPicker.css';
-
-// Stable reference for a row with no frames to cycle, so useCyclingFrame never sees a fresh
-// array literal on every render.
-const NO_PREVIEW_FRAMES: string[] = [];
+import { NO_PREVIEW_FRAMES } from './CaptureSessionRow.constants';
+import './CaptureSessionRow.css';
 
 const formatTimestamp = (epochMs: number): string =>
   new Date(epochMs).toLocaleString(undefined, {
     month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
   });
 
-/** One recorded session, as a card: a large preview is the whole point of this picker (a
- *  looping video, or a cycling slideshow of the packaged PNG frames when there's no ffmpeg to
- *  encode one), so it fills the card with the checkbox and delete button overlaid on top of
- *  it. Timestamp and a "Sent" tag (once shipped in an earlier report) sit in a bar underneath.
- *  Purely presentational - the checked/deleted/confirmed decisions all come back up through
- *  callbacks. */
 const CaptureSessionRow = (props: CaptureSessionRowProps) => {
   const { session, checked, onToggle, onRequestDelete } = props;
   const cyclingFrameUrl = useCyclingFrame(session.previewKind === 'images' ? session.previewFrameUrls : NO_PREVIEW_FRAMES);

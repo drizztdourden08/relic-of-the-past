@@ -1,4 +1,4 @@
-/* @layer renderer-components @kind data */
+/* @layer renderer-components @kind component */
 import { Card } from '../../../../design-system/primitives/Card';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Flex } from '../../../../design-system/primitives/Flex';
@@ -6,7 +6,8 @@ import { Text } from '../../../../design-system/primitives/Text';
 import { Badge } from '../../../../design-system/primitives/Badge';
 import { Button } from '../../../../design-system/primitives/Button';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
-import { formatRomName, formatSize } from './behavior/formatters';
+import { formatRomName } from '../../../../../utils/formatRomName';
+import { formatSize } from './behavior/format-size';
 import './RomCard.css';
 import { type RomCardProps } from './RomCard.type';
 

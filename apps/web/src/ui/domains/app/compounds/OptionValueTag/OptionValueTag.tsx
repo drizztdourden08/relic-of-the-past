@@ -1,11 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * A setting's value drawn as a read-out in place of its control, for an
- * options panel shown read-only. A boolean is a True or False chip, green for
- * true and muted for false, so a switch reads at a glance. Any other value is
- * its own text on a neutral chip. A control that carried its own label keeps
- * it: the label sits before the chip.
- */
 import { Box, Chip, Text } from '@ds/primitives';
 import type { ChipTone } from '@ds/primitives';
 import type { OptionValueTagProps } from './OptionValueTag.type';

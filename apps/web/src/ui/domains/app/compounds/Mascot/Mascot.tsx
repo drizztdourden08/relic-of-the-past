@@ -1,29 +1,11 @@
 /* @layer renderer-components @kind component */
-/**
- * Sentri, the Relic of the Past mascot, built from its pieces: body, visor, two eyes and two pods.
- * The eyes can look around and each pod can turn, so a scene can pose it without new art.
- * It fills its positioned parent and sizes itself from the parent's --px, the size of one
- * mascot pixel.
- */
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import bodySrc from '@app/assets/mascot/mascot-body.svg';
-import visorSrc from '@app/assets/mascot/mascot-visor.svg';
-import eyeSrc from '@app/assets/mascot/mascot-eye.svg';
-import podLeftSrc from '@app/assets/mascot/mascot-pod-left.svg';
-import podRightSrc from '@app/assets/mascot/mascot-pod-right.svg';
 import { Box, Image } from '@ds/primitives';
 import { layoutMascot } from './behavior/mascot-layout';
-import type { MascotProps, PieceName, PlacedPiece } from './Mascot.type';
+import { SOURCES } from './behavior/piece-sources.constants';
+import type { MascotProps, PlacedPiece } from './Mascot.type';
 import './Mascot.css';
-
-const SOURCES: Record<PieceName, string> = {
-  body: bodySrc,
-  visor: visorSrc,
-  eye: eyeSrc,
-  podLeft: podLeftSrc,
-  podRight: podRightSrc,
-};
 
 const pieceStyle = (p: PlacedPiece): CSSProperties => ({
   '--part-x': p.left,

@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind constants */
-/** The words the origin bar and every uninstall of an installed item share. */
 
 const READ_ONLY_NOTE = 'Read only: it stays as its author published it. Duplicate it to make your own version.';
 

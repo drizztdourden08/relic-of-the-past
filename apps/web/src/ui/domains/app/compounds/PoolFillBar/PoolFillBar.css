@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* The segmented bar over its legend; the bar and legend draw their own colours. */
-
 .pool-fill {
   display: flex;
   flex-direction: column;

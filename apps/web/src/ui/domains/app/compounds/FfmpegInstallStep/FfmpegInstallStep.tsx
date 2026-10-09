@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Size and destination are stated up front because both are things a user might refuse over.
- * An unserved platform gets no button: unlike a failure, there is nothing to retry. Shared by
- * every ffmpeg-gated feature (MSU audio conversion, debug-report video capture), so a player
- * sees the exact same prompt and the exact same download regardless of which one asked for it.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { ProgressBar } from '@ds/primitives/ProgressBar';

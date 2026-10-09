@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Card/thumb chrome comes from SaveCard (feature) + Thumbnail. */
 .hero-save-card__thumb {
   width: 180px;
   height: 120px;
