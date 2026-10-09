@@ -1524,6 +1524,33 @@ transition. An enter only transition now validates (properties had to be non emp
 alone could not be expressed). A reflow warning names the animated property, so the section can
 put the note under the right card.
 
+### hud/hud-drag-ghost
+
+The drag ghost and the four states it must say. §44 shipped five, the fifth being the stage's
+nudge; §46 removed the stage's drop surface, so the outline's card is what is left. The words are
+tested, not the pixels: the plan's check is that the card's content makes a sentence (otherwise
+the ghost is decorative), and the `aria-live` announcement is the same lines flattened; geometry is
+`hud-drag-indicators`. The vocabulary is §42's: row, column, grid NxM, overlap, screen, never
+stack; overlap is the editor's word for a grid whose children share a cell, recognised by shape,
+while the document still says grid. A grid with one placed child is a grid (`isOverlay` is true of
+it for the reflow warning, but wrong as a name).
+
+- A flex drop names its position among the children it would have, counted after the removal when
+  the node already lives there (2 of 2, never 2 of 3).
+- An empty grid cell names the cell and `empty`; on the screen root this drop is the old anchor
+  picker (cell 3,1 is top right) with a one crumb path. A shared cell says `with` its occupant.
+- `refused` is the case it exists for. §43 recorded that a refused drop gave no feedback, and the
+  outline's row highlight was removed on the understanding that the ghost would answer it. A
+  refusal turns the whole card, names both nodes, keeps the breadcrumb (which tells how far out to
+  move), and lights no row.
+- Line 3 warns when a drop lands in a repeat template drawn N times.
+- The card sits +14, +18 from the cursor and flips above left within 150px of an edge by a
+  translation, so it never has to be laid out to learn its width and never lags.
+- The outline is driven end to end, working around the jsdom gap §43.8 recorded: `rowUnder` asks
+  `document.elementFromPoint`, which jsdom lacks, so every row of the flat fixed height list gets
+  a rect and the lookup is answered from y. That is not browser hit testing (no overlap, scroll
+  or occlusion), but it is the question `rowUnder` asks. Nothing shows before the slop threshold.
+
 ### hud/hud-drag-gesture.keep.test.ts
 
 Preview, then commit: a drag writes the document once. §37's stage nudge called `onOffset` on
