@@ -1,19 +1,8 @@
 /* @layer site-kit @kind hook */
-/**
- * The Discord server's roles, loaded once for the admin page. `available` is false when
- * the API has no bot to ask, and the editor then falls back to typing a role id.
- */
 import { useEffect, useMemo, useState } from 'react';
 import type { DiscordRole } from '@shared/hub/group-types';
 import { listDiscordRoles } from '../../../api/groups-endpoints';
-
-type DiscordRolesState = {
-  roles: DiscordRole[];
-  available: boolean;
-  loading: boolean;
-  /** Role id to its role, for naming a linked role in the group list. */
-  byId: ReadonlyMap<string, DiscordRole>;
-};
+import type { DiscordRolesState } from './useDiscordRoles.type';
 
 const useDiscordRoles = (): DiscordRolesState => {
   const [roles, setRoles] = useState<DiscordRole[]>([]);
@@ -38,4 +27,3 @@ const useDiscordRoles = (): DiscordRolesState => {
 };
 
 export { useDiscordRoles };
-export type { DiscordRolesState };

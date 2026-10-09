@@ -1,21 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-/**
- * Builds one zip in the browser from the files' download links. Each file is read in
- * turn, with its bytes counted as they arrive, then the zip is written without
- * compression: builds, saves and art are already packed, and storing is fast.
- */
-type ZipEntry = {
-  name: string;
-  /** Fetched only when the entry's turn comes, so a signed link is fresh when read. */
-  url: () => Promise<string>;
-};
-
-type ZipProgress = {
-  /** Bytes read so far, over every file. */
-  read: number;
-  /** Set while the zip itself is written, 0 to 100. */
-  packing: number | null;
-};
+import type { ZipEntry, ZipProgress } from './zip-files.type';
 
 const readBlob = async (url: string, onBytes: (n: number) => void): Promise<Blob> => {
   const response = await fetch(url);
@@ -36,9 +20,10 @@ const readBlob = async (url: string, onBytes: (n: number) => void): Promise<Blob
   return new Blob(chunks);
 };
 
+const loadJsZipOnFirstUse = async () => (await import('jszip')).default;
+
 const zipFiles = async (entries: readonly ZipEntry[], onProgress: (progress: ZipProgress) => void): Promise<Blob> => {
-  /* Loaded on the first batch download, so the site does not carry it on every page. */
-  const { default: JSZip } = await import('jszip');
+  const JSZip = await loadJsZipOnFirstUse();
   const zip = new JSZip();
   let read = 0;
   for (const entry of entries) {
@@ -55,4 +40,3 @@ const zipFiles = async (entries: readonly ZipEntry[], onProgress: (progress: Zip
 };
 
 export { zipFiles };
-export type { ZipEntry, ZipProgress };

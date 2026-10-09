@@ -1,40 +1,17 @@
 /* @layer store-site @kind component */
-/**
- * One item on a shelf or in a grid, as the plan mockup draws it: the card picture edge to
- * edge, then the name, a line with the author and the stars, and a line with the kind (and
- * what the player has of it) and one extra fact. The whole card is one link.
- */
-import type { ReactNode } from 'react';
 import { Flex } from '@ds/primitives/Flex';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import type { ItemCardView } from '@shared/store/home-types';
-import { Chip } from '@site-kit/components/Chip/Chip';
 import { Link } from '@site-kit/router/Link';
-import { formatAverage } from '../../lib/format-count';
+import { formatAverage } from '../../lib/format-count/format-average';
 import { itemColorStyle } from '../../lib/item-color-style';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { KindChip } from '../KindChip/KindChip';
 import { Stars } from '../Stars/Stars';
+import type { ItemCardProps } from './ItemCard.type';
+import { OWNED_CHIPS } from './ItemCard.constants';
 import './ItemCard.css';
-
-/** What the player has of the item: installed, or installed with a newer version out. */
-type OwnedState = 'installed' | 'update';
-
-type ItemCardProps = {
-  item: ItemCardView;
-  /** Where the card leads. */
-  to: string;
-  selected?: boolean;
-  owned?: OwnedState | null;
-  /** The right side of the last line, such as "1 880 this month". */
-  extra?: ReactNode;
-};
-
-const OWNED_CHIPS: Record<OwnedState, ReactNode> = {
-  installed: <Chip tone="green">installed</Chip>,
-  update: <Chip tone="gold">update</Chip>,
-};
 
 const byline = (item: ItemCardView) => (item.semver ? `${item.author.displayName} · v${item.semver}` : item.author.displayName);
 
@@ -65,4 +42,4 @@ const ItemCard = (props: ItemCardProps) => {
 };
 
 export { ItemCard };
-export type { ItemCardProps, OwnedState };
+export type { ItemCardProps, OwnedState } from './ItemCard.type';

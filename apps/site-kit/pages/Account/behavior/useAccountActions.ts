@@ -1,8 +1,4 @@
 /* @layer site-kit @kind hook */
-/**
- * The Account page's calls that change the session: re-check access, unlink a provider,
- * sign out here or everywhere. One busy flag and one error line cover all of them.
- */
 import { useCallback, useState } from 'react';
 import type { Provider } from '@shared/hub/providers';
 import { recheckAccess, unlinkProvider } from '../../../api/hub-endpoints';

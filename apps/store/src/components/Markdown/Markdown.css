@@ -1,6 +1,5 @@
 /* @layer store-site @kind style */
 
-/* Rendered markdown at reading width, in the page's own text colours. */
 .markdown {
   max-width: var(--welcome-maxw);
   color: var(--c-text-dim);

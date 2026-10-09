@@ -1,7 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/versions/:n/abort. The author, or a reviewer, gives up an upload in
- *  progress: the multipart upload is cancelled and the row stays as deleted, so the next
- *  version can start and the history still shows this one. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
 import { now } from '../../../hub-core/db/firestore';

@@ -1,14 +1,9 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * Every report, loaded once by the signed-in frame; an extend replaces its row, a delete
- * drops it. Without the reports right nothing is fetched and the list stays empty.
- */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { listReports } from '../api/reports-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';
-import type { ReportView } from '../api/types';
-
-const NO_REPORTS: ReportView[] = [];
+import type { ReportView } from '../api/api-responses.type';
+import { NO_REPORTS } from './useReports.constants';
 
 const byNewest = (a: ReportView, b: ReportView) => b.createdAt - a.createdAt;
 

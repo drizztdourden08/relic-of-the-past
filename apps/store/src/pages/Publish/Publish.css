@@ -3,8 +3,6 @@
   max-width: var(--store-form-maxw);
 }
 
-/* A picture at its own shape, the same width for the card and the banner, never stretched
-   to the drop zone's height. */
 .publish .publish__preview {
   position: relative;
   flex: 0 0 auto;
@@ -29,7 +27,6 @@
   object-fit: cover;
 }
 
-/* Shown over the preview while it is hovered or focused, when a picked picture can be adjusted. */
 .publish .publish__adjust {
   position: absolute;
   right: var(--space-sm);
@@ -62,12 +59,10 @@
   border-top: var(--border-width-thin) solid var(--c-border);
 }
 
-/* A reason no field can fix, such as a version already in review. */
 .publish .publish__note {
   color: var(--c-warning);
 }
 
-/* The count of fields still wrong, over the form once Submit is pressed. */
 .publish .publish__alert {
   padding: var(--space-sm) var(--space-md);
   border-left: var(--border-width-thick) solid var(--c-danger);
@@ -76,7 +71,6 @@
   color: var(--c-danger);
 }
 
-/* Under the description while it copies the short description. */
 .publish .publish__following {
   color: var(--c-green-bright);
 }

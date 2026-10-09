@@ -1,17 +1,10 @@
 /* @layer store-site @kind hook */
-/**
- * What an author can do from a row: send a ready version for review or resubmit a rejected
- * one, withdraw a waiting one, delete one, and download an approved one. Each change answers
- * with the item, which replaces it in the list.
- */
 import { useCallback, useState } from 'react';
-import type { StoreItem } from '@shared/store/types';
 import { errorMessage } from '@site-kit/api/api-error';
 import { abortVersion, deleteVersion, submitVersion, withdrawVersion } from '../../../api/publish-endpoints';
 import { useStoreData } from '../../../data/store-data-context';
 import { startDownload } from '../../../lib/start-download';
-
-type ItemChange = (itemId: string, n: number) => Promise<{ item: StoreItem }>;
+import type { ItemChange } from './usePublicationActions.type';
 
 const usePublicationActions = () => {
   const { onItem } = useStoreData();
@@ -62,7 +55,4 @@ const usePublicationActions = () => {
   return { busy, notice, submit, withdraw, remove, abort, download };
 };
 
-type PublicationActions = ReturnType<typeof usePublicationActions>;
-
 export { usePublicationActions };
-export type { PublicationActions };

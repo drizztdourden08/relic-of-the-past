@@ -1,12 +1,6 @@
 /* @layer store-site @kind hook */
-/**
- * Which featured item the hero shows: it moves on by itself every few seconds, stops while
- * the pointer or focus is on the hero, and never moves for a player who asked for reduced
- * motion. Picking a dot shows that one.
- */
 import { useCallback, useEffect, useState } from 'react';
-
-const ROTATE_MS = 8000;
+import { ROTATE_MS } from './useRotation.constants';
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

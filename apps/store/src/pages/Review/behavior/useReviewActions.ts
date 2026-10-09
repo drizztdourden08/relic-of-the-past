@@ -1,22 +1,12 @@
 /* @layer store-site @kind hook */
-/**
- * A reviewer's decisions on an entry: approve, reject with a note (store-api refuses a
- * rejection without one), delete a version, and unlist the whole item. A decision or a
- * delete settles the entry and calls `onSettled`; an unlist leaves it open.
- */
 import { useCallback, useState } from 'react';
 import type { ReviewEntry } from '@shared/store/api-types';
 import type { ReviewDecision } from '@shared/store/review-types';
 import { errorMessage } from '@site-kit/api/api-error';
 import { deleteVersion } from '../../../api/publish-endpoints';
 import { decideReview, unlistItem } from '../../../api/review-endpoints';
-
-type UseReviewActionsParams = {
-  /** Called once the entry is settled. */
-  onSettled: () => void;
-};
-
-const DONE: Record<ReviewDecision, string> = { approve: 'Approved.', reject: 'Rejected. The author sees your note.' };
+import { DONE } from './useReviewActions.constants';
+import type { UseReviewActionsParams } from './useReviewActions.type';
 
 const useReviewActions = (params: UseReviewActionsParams) => {
   const { onSettled } = params;
@@ -59,7 +49,4 @@ const useReviewActions = (params: UseReviewActionsParams) => {
   return { busy, notice, decide, remove, unlist };
 };
 
-type ReviewActions = ReturnType<typeof useReviewActions>;
-
 export { useReviewActions };
-export type { ReviewActions };

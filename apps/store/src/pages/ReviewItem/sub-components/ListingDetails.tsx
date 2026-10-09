@@ -1,18 +1,13 @@
 /* @layer store-site @kind component */
-/**
- * Every field of the listing as it will read once approved: the texts, tags, licence, its
- * colour with a swatch, and the size of each picture.
- */
 import { SettingsSection } from '@ds/composites/SettingsSection';
 import { Box } from '@ds/primitives/Box';
 import { Flex } from '@ds/primitives/Flex';
 import { StatRow } from '@ds/primitives/StatRow';
 import { Text } from '@ds/primitives/Text';
-import type { MediaRef, StoreItem } from '@shared/store/types';
+import type { MediaRef } from '@shared/store/types';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { itemColorStyle } from '../../../lib/item-color-style';
-
-type ListingDetailsProps = { item: StoreItem };
+import type { ListingDetailsProps } from './ListingDetails.type';
 
 const pictureSize = (picture: MediaRef | null): string =>
   (picture ? `${picture.width} × ${picture.height}` : 'none');
@@ -43,4 +38,3 @@ const ListingDetails = (props: ListingDetailsProps) => {
 };
 
 export { ListingDetails };
-export type { ListingDetailsProps };

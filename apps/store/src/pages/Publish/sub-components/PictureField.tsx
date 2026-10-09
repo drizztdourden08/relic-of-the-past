@@ -1,10 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * One picture of the listing: what is live now (or the new one once picked, exactly as it
- * will be sent) at its real shape, beside a drop zone that takes a picture by drop, pick or
- * paste and says, in green, when one is ready. A picked picture can be moved and zoomed in
- * the crop dialog, opened from its preview.
- */
 import { useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import cropIcon from '@iconify-icons/lucide/crop';
@@ -16,32 +10,13 @@ import type { DropZoneStatus } from '@ds/primitives/DropZone';
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
 import { Image } from '@ds/primitives/Image';
-import type { MediaRef, StoreKind } from '@shared/store/types';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { CropDialog } from '../../../components/CropDialog';
 import { ItemPicture } from '../../../components/ItemPicture/ItemPicture';
 import type { CropRect } from '../../../lib/picture-crop';
-import type { PictureState } from '../behavior/usePicture';
-
-type PictureFieldProps = {
-  label: string;
-  /** The size it is cut to, such as "1280 × 720". */
-  size: string;
-  role: 'card' | 'banner';
-  state: PictureState;
-  /** The picture the listing has now, if any. */
-  current: MediaRef | null;
-  kind: StoreKind;
-  /** The colour picked for the item, shown on the placeholder while there is no picture. */
-  color: string;
-  /** The error to show now, if any; the drop zone is outlined in red while there is one. */
-  error?: string;
-  /** Called once a picture is dropped or picked, so its error may show. */
-  onPick?: () => void;
-};
-
-const IMAGE_ACCEPT = ['image/*'];
-const IMAGE_ICON = <IconifyIcon icon={imageIcon} aria-hidden="true" />;
+import type { PictureState } from '../behavior/usePicture.type';
+import { IMAGE_ACCEPT } from './PictureField.constants';
+import type { PictureFieldProps } from './PictureField.type';
 
 const readyStatus = (state: PictureState, size: string): DropZoneStatus | undefined =>
   (state.picture ? { tone: 'success', message: `Ready: cut to ${size}, ${formatBytes(state.picture.blob.size)}` } : undefined);
@@ -74,7 +49,7 @@ const PictureField = (props: PictureFieldProps) => {
         <Flex direction="column" gap="xs" className="publish__picture-actions">
           <DropZone
             accept={IMAGE_ACCEPT}
-            icon={IMAGE_ICON}
+            icon={<IconifyIcon icon={imageIcon} aria-hidden="true" />}
             label={state.busy ? 'Preparing...' : 'Drop a picture here'}
             hint={`Cut to ${size}`}
             disabled={state.busy}
@@ -99,4 +74,3 @@ const PictureField = (props: PictureFieldProps) => {
 };
 
 export { PictureField };
-export type { PictureFieldProps };

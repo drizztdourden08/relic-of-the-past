@@ -1,21 +1,10 @@
 /* @layer store-site @kind logic */
-/**
- * The item as players would see it once the entry is approved: a listing edit's patch laid
- * over the listing, and the version under review (or the live one, for a listing edit) as
- * the version its card and its page show.
- */
 import type { ReviewEntry } from '@shared/store/api-types';
 import type { ItemCardView } from '@shared/store/home-types';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { editOfEntry, versionOfEntry } from '../../../review/review-row';
-
-type ItemPreview = {
-  item: StoreItem;
-  /** The version on show; null for a listing edit of an item with nothing approved. */
-  version: StoreVersion | null;
-  card: ItemCardView;
-};
+import type { ItemPreview } from './preview-item.type';
 
 const ratingAverage = ({ ratingSum, ratingCount }: StoreItem['stats']): number | null =>
   (ratingCount > 0 ? ratingSum / ratingCount : null);
@@ -44,4 +33,3 @@ const previewOf = (entry: ReviewEntry): ItemPreview => {
 };
 
 export { previewOf };
-export type { ItemPreview };

@@ -1,0 +1,12 @@
+/* @layer store-api @kind logic */
+import type { StoreItem, StoreVersion } from '../../../../../shared/store/types';
+import { notFound } from '../../../../hub-core/http/http-error';
+import { versionOf } from '../versions';
+
+const versionToDecide = (item: StoreItem, n: number): StoreVersion => {
+  const version = versionOf(item, n);
+  if (!version) throw notFound('No such version.');
+  return version;
+};
+
+export { versionToDecide };

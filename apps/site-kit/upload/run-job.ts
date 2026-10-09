@@ -1,11 +1,4 @@
 /* @layer site-kit @kind logic */
-/**
- * One job from where it stands to done: the site's own steps, then (for a job with a file)
- * the hash and begin unless the record is already open, the parts still missing, and
- * complete. A job restored after a reload asks the server which parts it already holds.
- * The record is saved after each step that changes it. Errors propagate: the queue decides
- * what a failure or a cancel means.
- */
 import { keptParts, runMultipart } from '@shared/hub/upload/run-multipart';
 import { formatBytes } from '../lib/format-bytes';
 import { putPart } from './put-part';
@@ -13,21 +6,9 @@ import { dropRecord, saveRecord } from './upload-records';
 import { createRate } from './upload-rate';
 import { formatProgress } from './upload-format';
 import { FILE_STEP, setStep, settleSteps } from './upload-steps';
-import type { LiveJob } from './live-job.type';
-import type { QueueState } from './queue-state';
+import { PROGRESS_REDRAW_MS } from './run-job.constants';
+import type { RunJobParams } from './run-job.type';
 import type { StepState, UploadResume } from './upload-job.type';
-import type { UploadRunner } from './upload-runner.type';
-
-type RunJobParams<T, R> = {
-  runner: UploadRunner<T, R>;
-  live: LiveJob<T>;
-  state: QueueState;
-  emit: (record: R) => void;
-  signal: AbortSignal;
-};
-
-/** How often a progress event may redraw the tray and the dialog. */
-const PROGRESS_MS = 250;
 
 const hashDetail = (sha256: string | null, bytes: number) => (sha256 ? `sha-256 · ${formatBytes(bytes)}` : formatBytes(bytes));
 
@@ -37,8 +18,6 @@ const runJob = async <T, R>(params: RunJobParams<T, R>): Promise<void> => {
   const { id } = record;
   const step = (stepId: string, stepState: StepState, detail?: string | null) =>
     state.patch(id, (job) => ({ steps: setStep(job.steps, stepId, stepState, detail) }));
-  // IndexedDB runs writes to one store in the order they began, so a save never lands
-  // before the first one. The drop waits for the file copy, which may still be writing.
   const save = () => saveRecord({ ...record, steps: state.job(id)?.steps ?? record.steps });
   const drop = async () => {
     await live.stored;
@@ -92,7 +71,7 @@ const runJob = async <T, R>(params: RunJobParams<T, R>): Promise<void> => {
   const onProgress = (sent: number) => {
     rate.sample(sent);
     const now = performance.now();
-    if (now - drawnAt < PROGRESS_MS && sent < bytes) return;
+    if (now - drawnAt < PROGRESS_REDRAW_MS && sent < bytes) return;
     drawnAt = now;
     const { bytesPerSecond, msLeft } = rate.estimate(sent, bytes);
     state.patch(id, (job) => ({ sent, bytesPerSecond, msLeft, steps: setStep(job.steps, FILE_STEP.upload, 'running', formatProgress(sent, bytes)) }));
@@ -125,4 +104,4 @@ const runJob = async <T, R>(params: RunJobParams<T, R>): Promise<void> => {
 };
 
 export { runJob };
-export type { RunJobParams };
+export type { RunJobParams } from './run-job.type';

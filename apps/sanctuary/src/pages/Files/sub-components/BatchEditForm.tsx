@@ -1,9 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The selection panel's edits: one type to set on every picked file, and tags to add to
- * or remove from all of them. Only the caller's own files are written; the panel says
- * which ones are skipped.
- */
 import { useState } from 'react';
 import { FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
@@ -14,19 +9,8 @@ import { Select } from '@ds/primitives/Select';
 import { Stack } from '@ds/primitives/Stack';
 import { TagInput } from '@ds/primitives/TagInput';
 import { validateTag } from '../../../files/validate-tag';
-
-type BatchEditFormProps = {
-  /** The types the caller may move a file to. */
-  types: readonly FileType[];
-  /** Offered while typing: every tag in use, and the ones on the picked files first. */
-  knownTags: readonly string[];
-  busy: boolean;
-  onSetType: (type: FileType) => void;
-  onAddTags: (tags: readonly string[]) => void;
-  onRemoveTags: (tags: readonly string[]) => void;
-};
-
-const NO_TAGS: readonly string[] = [];
+import { NO_TAGS } from './BatchEditForm.constants';
+import type { BatchEditFormProps } from './BatchEditForm.type';
 
 const BatchEditForm = (props: BatchEditFormProps) => {
   const { types, knownTags, busy, onSetType, onAddTags, onRemoveTags } = props;
@@ -60,4 +44,3 @@ const BatchEditForm = (props: BatchEditFormProps) => {
 };
 
 export { BatchEditForm };
-export type { BatchEditFormProps };

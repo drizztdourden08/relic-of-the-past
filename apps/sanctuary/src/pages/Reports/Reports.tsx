@@ -1,9 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * Reports: the scope tabs in the header, then the open count, the FilterBar and the
- * DataTable grouped by issue state, with the selected report's detail on the right.
- * Everything stateful lives in useReportsPage.
- */
 import { useMemo } from 'react';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
@@ -13,18 +8,12 @@ import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { Workbench } from '@site-kit/layout/Workbench/Workbench';
 import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
 import { reportRowId } from '../../reports/report-row';
-import { REPORT_DEFAULT_COLUMNS, REPORT_DEFAULT_GROUP_BY } from '../../reports/report-schema';
+import { REPORT_DEFAULT_COLUMNS, REPORT_DEFAULT_GROUP_BY } from '../../reports/report-schema.constants';
 import { useReportsPage } from './behavior/useReportsPage';
 import { ReportDetail } from './sub-components/ReportDetail';
+import { COUNT_LABEL, SEARCH_PLACEHOLDER } from './Reports.constants';
+import type { ReportsProps } from './Reports.type';
 import './Reports.css';
-
-type ReportsProps = {
-  /** From the `/reports/:id` route; selects that row. */
-  selectedId?: string;
-};
-
-const COUNT_LABEL = ['report', 'reports'] as const;
-const SEARCH_PLACEHOLDER = 'Search subject, reporter, issue...';
 
 const Reports = (props: ReportsProps) => {
   const { selectedId = null } = props;
@@ -85,4 +74,3 @@ const Reports = (props: ReportsProps) => {
 };
 
 export { Reports };
-export type { ReportsProps };

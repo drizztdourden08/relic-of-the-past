@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/versions/:n/withdraw. The author pulls a waiting version out of the
- *  queue. It goes back to ready and keeps its upload, so the author can send it again. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
 import type { Route } from '../../../hub-core/route.type';

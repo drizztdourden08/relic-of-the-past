@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** DELETE /items/:id/rating. Removes the caller's rating and takes it out of the item's
- *  totals in the same transaction. Removing a rating that is not there changes nothing. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { RatingResponse } from '../../../../shared/store/api-types';
 import type { Route } from '../../../hub-core/route.type';

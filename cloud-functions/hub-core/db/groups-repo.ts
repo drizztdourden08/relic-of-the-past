@@ -1,14 +1,10 @@
 /* @layer hub-core @kind logic */
-/** Groups, oldest first. The default group is written by the first read that misses it,
- *  with the rights the site that owns it seeds, so a fresh project and an existing one
- *  reach the same state without a migration step. */
 import { DEFAULT_GROUP_ID } from '../../../shared/hub';
 import type { Group } from '../../../shared/hub';
 import { readHubEnv } from '../env';
 import type { DefaultGroupSeed } from '../site-config.type';
 import { collection, now } from './firestore';
-
-type GroupPatch = Partial<Pick<Group, 'name' | 'discordRoleId' | 'rights'>>;
+import type { GroupPatch } from './groups-repo.type';
 
 const groups = () => collection('groups');
 
@@ -20,15 +16,15 @@ const defaultGroup = (seed: DefaultGroupSeed): Group => ({
   createdAt: now(),
 });
 
-/** Creates the default group unless another request already did, then reads it back. */
+const ignoreLostCreateRace = (): undefined => undefined;
+
 const seedDefault = async (seed: DefaultGroupSeed): Promise<Group> => {
   const ref = groups().doc(DEFAULT_GROUP_ID);
-  await ref.create(defaultGroup(seed)).catch(() => undefined);
+  await ref.create(defaultGroup(seed)).catch(ignoreLostCreateRace);
   const snap = await ref.get();
   return snap.data() as Group;
 };
 
-/** Every group; seeds the default one when `seed` is given and the group is missing. */
 const all = async (seed: DefaultGroupSeed | null): Promise<Group[]> => {
   const snap = await groups().orderBy('createdAt', 'asc').get();
   const list = snap.docs.map((doc) => doc.data() as Group);
@@ -41,7 +37,6 @@ const get = async (id: string): Promise<Group | null> => {
   return snap.exists ? (snap.data() as Group) : null;
 };
 
-/** Fails when the id is taken, so two creates of the same name cannot overwrite each other. */
 const create = async (group: Group): Promise<void> => {
   await groups().doc(group.id).create(group);
 };
@@ -57,4 +52,4 @@ const remove = async (id: string): Promise<void> => {
 const groupsRepo = { all, get, create, update, remove };
 
 export { groupsRepo };
-export type { GroupPatch };
+export type { GroupPatch } from './groups-repo.type';

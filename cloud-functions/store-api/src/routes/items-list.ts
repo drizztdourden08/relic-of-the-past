@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /items?kind&cursor. Published items as cards, newest first, in pages of
- *  STORE_LIMITS.itemsPageSize. Search, sort and filters run in the browser. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemsListResponse } from '../../../../shared/store/api-types';
 import { STORE_LIMITS } from '../../../../shared/store/limits';
@@ -12,8 +10,7 @@ import { requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
 import { toCardView } from '../items/card-view';
 import { signCards } from '../media/sign-media';
-
-const KINDS: readonly StoreKind[] = ['music', 'character', 'language'];
+import { KINDS } from './items-list.constants';
 
 const kindOf = (raw: string | undefined): StoreKind | null => {
   if (raw === undefined) return null;

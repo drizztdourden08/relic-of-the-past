@@ -1,11 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * One item, laid out like the app's Home tab: the kind's section and the Overview, Contents,
- * Versions and Ratings tabs in the header, then the item's hero (its banner as the scene, the name,
- * Install and the staff buttons) over the tab's content. A reviewer also gets Unlist or
- * Relist and a Delete on each approved version; a curator gets Feature or Unfeature.
- * Everything stateful lives in useItemPage.
- */
 import storeIcon from '@iconify-icons/lucide/store';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
@@ -19,9 +12,8 @@ import { useItemPage } from './behavior/useItemPage';
 import { ItemActions } from './sub-components/ItemActions';
 import { ItemOverview } from './sub-components/ItemOverview';
 import { ItemVersions } from './sub-components/ItemVersions';
+import type { ItemProps } from './Item.type';
 import './Item.css';
-
-type ItemProps = { id: string };
 
 const Item = (props: ItemProps) => {
   const { id } = props;
@@ -70,4 +62,4 @@ const Item = (props: ItemProps) => {
 };
 
 export { Item };
-export type { ItemProps };
+export type { ItemProps } from './Item.type';

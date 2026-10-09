@@ -1,27 +1,11 @@
 /* @layer store-site @kind component */
-/**
- * Items as a wrapping grid of cards, as many to a row as fit. Browse, the search and the
- * author page all lay their items out with it. `onOpen` hears a card being opened, for a
- * host that must react (the search ends itself).
- */
 import type { MouseEvent } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { EmptyState } from '@ds/primitives/EmptyState';
-import type { ItemCardView } from '@shared/store/home-types';
 import { ItemCard } from '../ItemCard/ItemCard';
-import type { OwnedState } from '../ItemCard/ItemCard';
+import type { ItemGridProps } from './ItemGrid.type';
+import { CARD_SELECTOR } from './ItemGrid.constants';
 import './ItemGrid.css';
-
-type ItemGridProps = {
-  items: readonly ItemCardView[];
-  itemPath: (item: ItemCardView) => string;
-  selectedId?: string | null;
-  ownedOf?: (item: ItemCardView) => OwnedState | null;
-  emptyMessage: string;
-  onOpen?: () => void;
-};
-
-const CARD_SELECTOR = '.item-card';
 
 const ItemGrid = (props: ItemGridProps) => {
   const { items, itemPath, selectedId = null, ownedOf, emptyMessage, onOpen } = props;
@@ -39,4 +23,4 @@ const ItemGrid = (props: ItemGridProps) => {
 };
 
 export { ItemGrid };
-export type { ItemGridProps };
+export type { ItemGridProps } from './ItemGrid.type';

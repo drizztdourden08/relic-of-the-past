@@ -1,18 +1,8 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * The inline link of one file's current version. It is fetched again whenever the file
- * or its current version changes; an answer for an older pair is ignored.
- */
 import { useEffect, useState } from 'react';
 import { previewFile } from '../api/files-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';
-
-type PreviewResult = {
-  /** The file and version the answer is for. */
-  key: string;
-  url: string | null;
-  error: string | null;
-};
+import type { PreviewResult } from './useFilePreview.type';
 
 const useFilePreview = (fileId: string, currentVersion: number) => {
   const key = `${fileId}:${currentVersion}`;
@@ -31,7 +21,4 @@ const useFilePreview = (fileId: string, currentVersion: number) => {
   return { url: current?.url ?? null, error: current?.error ?? null, loading: current === null };
 };
 
-type FilePreview = ReturnType<typeof useFilePreview>;
-
 export { useFilePreview };
-export type { FilePreview };

@@ -1,6 +1,5 @@
 /* @layer site-kit @kind style */
 
-/* A dark well the media sits centred in; its height follows the media up to the cap. */
 .media-preview__frame {
   display: flex;
   align-items: center;
@@ -25,7 +24,6 @@
   object-fit: contain;
 }
 
-/* A sprite fills the preview width with hard pixel edges; a large image is only shrunk. */
 .media-preview__media[data-pixel-art] {
   width: 100%;
   height: var(--media-preview-maxh);

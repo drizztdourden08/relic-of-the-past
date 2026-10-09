@@ -1,23 +1,6 @@
 /* @layer store-site @kind logic */
-/**
- * The row Browse filters and sorts: an item card's fields flattened to what a filter
- * clause can name. The author is their name, a missing rating is 0 so it sorts last, and
- * the live version reads as text.
- */
 import type { ItemCardView } from '@shared/store/home-types';
-import type { StoreKind } from '@shared/store/types';
-
-type ItemRow = {
-  id: string;
-  name: string;
-  summary: string;
-  kind: StoreKind;
-  author: string;
-  version: string;
-  rating: number;
-  ratings: number;
-  installs: number;
-};
+import type { ItemRow } from './item-row.type';
 
 const toItemRow = (item: ItemCardView): ItemRow => ({
   id: item.id,
@@ -32,4 +15,4 @@ const toItemRow = (item: ItemCardView): ItemRow => ({
 });
 
 export { toItemRow };
-export type { ItemRow };
+export type { ItemRow } from './item-row.type';

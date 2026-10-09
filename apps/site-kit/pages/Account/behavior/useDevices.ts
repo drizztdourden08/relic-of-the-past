@@ -1,5 +1,4 @@
 /* @layer site-kit @kind hook */
-/** The signed-in devices list: loaded on mount, one Revoke per row. */
 import { useCallback, useEffect, useState } from 'react';
 import type { Device } from '@shared/hub/device-types';
 import { listDevices, revokeDevice } from '../../../api/hub-endpoints';

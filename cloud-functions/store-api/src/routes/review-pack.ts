@@ -1,9 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /review/:itemId/:target/pack. For anyone holding the store's review permission, an
- *  inline signed link to a version's pack (`v<n>`), so the review page reads it in parts
- *  without downloading it: the file under packs/ once approved, else the upload under
- *  incoming/. The link lives as long as a preview link. A version still uploading, or whose
- *  file was removed, is refused with the reason. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { PackLinkResponse } from '../../../../shared/store/api-types';
 import { HUB_LIMITS } from '../../../../shared/hub/limits';

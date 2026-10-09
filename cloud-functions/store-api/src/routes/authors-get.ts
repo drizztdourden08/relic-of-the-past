@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /authors/:userId. The public author page: name, avatar, when they came to the store,
- *  their published items and the totals across them. Nothing unpublished shows. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { AuthorResponse } from '../../../../shared/store/api-types';
 import { notFound } from '../../../hub-core/http/http-error';

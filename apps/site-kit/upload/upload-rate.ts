@@ -1,21 +1,11 @@
 /* @layer site-kit @kind logic */
-/**
- * Upload speed and time left, smoothed so the numbers do not jump with every progress
- * event. Each sample moves the rate towards the speed since the last sample by a share that
- * grows with the time between them (an exponential average over about SMOOTH_MS). Samples
- * closer than MIN_GAP_MS are folded into the next one.
- */
-const SMOOTH_MS = 4000;
-const MIN_GAP_MS = 400;
-const MS_PER_S = 1000;
-
-type RateEstimate = { bytesPerSecond: number | null; msLeft: number | null };
+import { MIN_GAP_MS, MS_PER_S, SMOOTH_MS } from './upload-rate.constants';
+import type { RateEstimate } from './upload-rate.type';
 
 const createRate = () => {
   let last: { at: number; sent: number } | null = null;
   let rate: number | null = null;
 
-  /** Forgets the history, for a job that starts again after a pause. */
   const reset = () => {
     last = null;
     rate = null;
@@ -42,7 +32,5 @@ const createRate = () => {
   return { sample, estimate, reset };
 };
 
-type UploadRate = ReturnType<typeof createRate>;
-
 export { createRate };
-export type { RateEstimate, UploadRate };
+export type { RateEstimate, UploadRate } from './upload-rate.type';

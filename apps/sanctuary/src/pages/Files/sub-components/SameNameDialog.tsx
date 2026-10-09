@@ -1,9 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The question a dropped file with a known name asks: the dropped file beside the one it
- * matches, then keep it as a separate file or upload it as the match's next version.
- * Closing the dialog leaves that one file out of the drop.
- */
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
 import { Stack } from '@ds/primitives/Stack';
@@ -13,14 +8,7 @@ import { Row } from '@site-kit/components/Row/Row';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { nextVersionNumber, versionLabel } from '../../../files/file-versions';
-import type { SameNameQuestion } from '../behavior/drop-queue';
-
-type SameNameDialogProps = {
-  question: SameNameQuestion | null;
-  onSeparate: () => void;
-  onVersion: () => void;
-  onClose: () => void;
-};
+import type { SameNameDialogProps } from './SameNameDialog.type';
 
 const SameNameDialog = (props: SameNameDialogProps) => {
   const { question, onSeparate, onVersion, onClose } = props;
@@ -54,4 +42,3 @@ const SameNameDialog = (props: SameNameDialogProps) => {
 };
 
 export { SameNameDialog };
-export type { SameNameDialogProps };

@@ -1,8 +1,4 @@
 /* @layer store-api @kind logic */
-/** The daily job's file expiry. A rejected version keeps its file STORE_LIMITS.rejectedKeepDays
- *  after the rejection, and a ready version never sent for review keeps it
- *  STORE_LIMITS.readyKeepDays after its upload started (fileExpiresAt). Past that the file
- *  leaves the bucket and the row stays, stamped with the reason. */
 import type { VersionRef } from '../../../../shared/store/api-types';
 import type { RemovalReason, StoreItem, StoreVersion } from '../../../../shared/store/types';
 import { fileExpiresAt } from '../../../../shared/store/version-flow';
@@ -28,7 +24,6 @@ const expireFile = async ({ itemId, n }: VersionRef, at: number): Promise<void> 
   if (version?.removed?.at === at) await removeFile(version);
 };
 
-/** Removes every file past its keep time and answers which versions lost theirs. */
 const expireFiles = async (items: StoreItem[], at: number): Promise<VersionRef[]> => {
   const expired = items.flatMap((item) =>
     item.versions.filter((version) => isExpired(version, at)).map((version) => ({ itemId: item.id, n: version.n })));

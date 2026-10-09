@@ -1,6 +1,4 @@
 /* @layer hub-core @kind logic */
-/** POST /devices/:id/revoke, session only. The device's token stops working
- *  on its next call; the row stays so the Account page can show when. */
 import { HUB_ROUTES } from '../../../shared/hub';
 import { notFound } from '../http/http-error';
 import { requireSession } from '../auth/require-session';

@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** GET /me/publications. Every item the caller wrote and every version of each, with the
- *  full review record: state, reviewer, when, and the note. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { PublicationsResponse } from '../../../../shared/store/api-types';
 import type { Route } from '../../../hub-core/route.type';

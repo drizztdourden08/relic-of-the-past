@@ -1,9 +1,5 @@
 /* @layer store-site @kind style */
 
-/*
- * As the plan mockup: the picture edge to edge, the text under it, and a border in the
- * item's own colour (`--item-color`), softer at rest, full when hovered or picked.
- */
 .item-card {
   --card-color: var(--item-color, var(--c-gold));
 
@@ -43,7 +39,6 @@
   padding: var(--card-body-pad-top) var(--space-md) var(--space-md);
 }
 
-/* Two classes, so the text primitive's own colour and size never win on load order. */
 .item-card .item-card__name {
   overflow: hidden;
   color: var(--c-text);

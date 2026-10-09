@@ -1,8 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files/:id/complete { etags }. Completes the first multipart upload,
- *  HEADs the object against the declared size, and flips the record and its
- *  version 1 to ready. A size mismatch drops the object and marks the record
- *  deleted. */
 import { LIMITS, SANCTUARY_ROUTES, completeFileSchema } from '../../../../shared/sanctuary';
 import { badRequest, conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';

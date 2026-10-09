@@ -1,24 +1,10 @@
 /* @layer site-kit @kind component */
-/**
- * One sign-in method on the Account page: linked (handle, date, Unlink) or not linked
- * (a Link button). The last linked method cannot be unlinked, so its button is disabled.
- */
-import type { Provider } from '@shared/hub/providers';
 import { PROVIDER_LABELS } from '@shared/hub/providers';
-import type { Identity } from '@shared/hub/types';
 import { Button } from '@ds/primitives/Button';
 import { Row } from '../Row/Row';
 import { ProviderButton } from '../ProviderButton/ProviderButton';
 import { formatDay } from '../../lib/format-date';
-
-type IdentityRowProps = {
-  provider: Provider;
-  identity: Identity | null;
-  /** False when this is the only linked method. */
-  canUnlink: boolean;
-  busy: boolean;
-  onUnlink: (provider: Provider) => void;
-};
+import type { IdentityRowProps } from './IdentityRow.type';
 
 const IdentityRow = (props: IdentityRowProps) => {
   const { provider, identity, canUnlink, busy, onUnlink } = props;
@@ -36,4 +22,3 @@ const IdentityRow = (props: IdentityRowProps) => {
 };
 
 export { IdentityRow };
-export type { IdentityRowProps };

@@ -1,6 +1,4 @@
 /* @layer root-config @kind logic */
-/** GET /files/:id/versions/:n/parts. The parts of an uploading version already in the
- *  bucket, for the person uploading it only, so a resumed upload sends only what is missing. */
 import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import type { UploadedParts } from '../../../../shared/hub';
 import { conflict } from '../../../hub-core/http/http-error';

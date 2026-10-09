@@ -1,5 +1,4 @@
 /* @layer hub-core @kind logic */
-/** GET /me/views?surface. The caller's saved views for one of this site's surfaces, by name. */
 import { HUB_ROUTES } from '../../../shared/hub';
 import { badRequest } from '../http/http-error';
 import { queryParam } from '../http/query';

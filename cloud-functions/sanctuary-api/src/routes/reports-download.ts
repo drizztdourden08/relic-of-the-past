@@ -1,5 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /reports/:id/download. A presigned GET for the zip, ten minutes. */
 import { LIMITS, SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import { notFound } from '../../../hub-core/http/http-error';
 import { requireMember } from '../../../hub-core/auth/require-member';

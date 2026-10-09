@@ -1,5 +1,4 @@
 /* @layer store-site @kind logic */
-/** The catalogue items a search matches: every word must appear in the name, line, author or kind. */
 import type { ItemCardView } from '@shared/store/home-types';
 
 const haystackOf = (item: ItemCardView): string =>

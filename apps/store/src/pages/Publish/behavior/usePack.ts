@@ -1,17 +1,11 @@
 /* @layer store-site @kind hook */
-/**
- * The pack field: the one file dropped or picked, what kind it is by its extension, and why
- * it cannot be sent if it cannot: a file the store does not carry, the wrong kind for the
- * item, or larger than the kind's cap.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { CONTAINER_KIND, isContainer } from '@shared/store/containers';
 import { STORE_LIMITS } from '@shared/store/limits';
-import type { Container, StoreKind } from '@shared/store/types';
+import type { StoreKind } from '@shared/store/types';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { KIND_LABELS } from '../../../lib/kinds';
-
-type PackCheck = { container: Container | null; kind: StoreKind | null; problem: string | null };
+import type { PackCheck } from './usePack.type';
 
 const extensionOf = (name: string) => name.slice(name.lastIndexOf('.') + 1).toLowerCase();
 
@@ -26,7 +20,6 @@ const checkPack = (file: File | null, required: StoreKind | null): PackCheck => 
   return { container: ext, kind, problem: null };
 };
 
-/** `required` is the item's kind when adding a version; null for a new item. */
 const usePack = (required: StoreKind | null) => {
   const [file, setFile] = useState<File | null>(null);
   const check = useMemo(() => checkPack(file, required), [file, required]);
@@ -35,7 +28,4 @@ const usePack = (required: StoreKind | null) => {
   return { file, ...check, drop, clear };
 };
 
-type PackState = ReturnType<typeof usePack>;
-
 export { usePack };
-export type { PackState };

@@ -1,19 +1,11 @@
 /* @layer store-site @kind component */
-/**
- * The item's own colour: a swatch that opens the colour picker beside it. The colour draws
- * the card's border, and the stripes and glow of the placeholder while there is no picture.
- */
 import { useRef, useState } from 'react';
 import { ColorPickerPopover } from '@ds/composites/ColorPickerPopover';
 import { ColorSwatch } from '@ds/primitives/ColorSwatch';
 import { Field } from '@ds/primitives/Field';
 import { DEFAULT_ITEM_COLOR } from '@shared/store/item-color';
 import { FIELD_LABELS } from '../Publish.constants';
-
-type ColorFieldProps = {
-  value: string;
-  onChange: (hex: string) => void;
-};
+import type { ColorFieldProps } from './ColorField.type';
 
 const ColorField = (props: ColorFieldProps) => {
   const { value, onChange } = props;
@@ -47,4 +39,3 @@ const ColorField = (props: ColorFieldProps) => {
 };
 
 export { ColorField };
-export type { ColorFieldProps };

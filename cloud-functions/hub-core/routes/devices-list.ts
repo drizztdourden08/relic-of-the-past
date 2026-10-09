@@ -1,6 +1,4 @@
 /* @layer hub-core @kind logic */
-/** GET /devices, session only. The Account page's signed-in devices, without
- *  the token hashes. */
 import { HUB_ROUTES } from '../../../shared/hub';
 import { requireSession } from '../auth/require-session';
 import { devicesRepo } from '../db/devices-repo';

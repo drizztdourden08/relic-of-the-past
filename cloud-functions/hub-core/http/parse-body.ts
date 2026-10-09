@@ -1,6 +1,4 @@
 /* @layer hub-core @kind logic */
-/** Runs a request body through its zod schema and turns the first failure into
- *  a 400 with a one-line message naming the field. */
 import type { ZodTypeAny, output } from 'zod';
 import { badRequest } from './http-error';
 

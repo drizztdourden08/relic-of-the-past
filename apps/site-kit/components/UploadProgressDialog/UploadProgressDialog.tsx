@@ -1,10 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * The steps of one job, in a dialog the author can close at any time; the job goes on in
- * the tray. The running step spins, and the upload step shows its bar with the speed and the
- * time left. While the browser keeps its own copy of the file a warning says so. The footer
- * closes, and offers the site's follow-up once the job is done.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Stack } from '@ds/primitives/Stack';

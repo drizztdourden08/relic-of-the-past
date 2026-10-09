@@ -1,21 +1,14 @@
 /* @layer store-site @kind component */
-/**
- * The featured row, as the plan mockup draws it: one card with the item's banner on the
- * left (its card picture when it has none) and the copy on the right: the Featured chip, the
- * name, kind and stars, one line and the author, then Install, Open and the dots that pick
- * another featured item. The hero moves on by itself otherwise. With nothing featured, the
- * space holds an empty state.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import type { ItemCardView } from '@shared/store/home-types';
 import { KIND_CONTAINER } from '@shared/store/containers';
 import { Chip } from '@site-kit/components/Chip/Chip';
 import { Link } from '@site-kit/router/Link';
-import { formatAverage, formatCount } from '../../lib/format-count';
+import { formatAverage } from '../../lib/format-count/format-average';
+import { formatCount } from '../../lib/format-count/format-count';
 import { EmptyState } from '../EmptyState/EmptyState';
 import { InstallButton } from '../InstallButton/InstallButton';
 import { itemColorStyle } from '../../lib/item-color-style';
@@ -23,12 +16,8 @@ import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { KindChip } from '../KindChip/KindChip';
 import { Stars } from '../Stars/Stars';
 import { useRotation } from './behavior/useRotation';
+import type { FeaturedHeroProps } from './FeaturedHero.type';
 import './FeaturedHero.css';
-
-type FeaturedHeroProps = {
-  items: readonly ItemCardView[];
-  itemPath: (item: ItemCardView) => string;
-};
 
 const FeaturedHero = (props: FeaturedHeroProps) => {
   const { items, itemPath } = props;
@@ -72,4 +61,4 @@ const FeaturedHero = (props: FeaturedHeroProps) => {
 };
 
 export { FeaturedHero };
-export type { FeaturedHeroProps };
+export type { FeaturedHeroProps } from './FeaturedHero.type';

@@ -1,6 +1,5 @@
 /* @layer site-kit @kind style */
 
-/* The pill a search result opens with: the group's Open, and any "Open <category>" beside the summary. */
 .search-pill {
   display: inline-flex;
   align-items: center;
@@ -60,7 +59,6 @@
   margin-left: auto;
 }
 
-/* A long group scrolls inside its own table, so the next group stays in reach. */
 .search-group__table {
   display: flex;
   flex-direction: column;

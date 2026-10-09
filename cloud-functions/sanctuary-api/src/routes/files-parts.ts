@@ -1,6 +1,4 @@
 /* @layer root-config @kind logic */
-/** GET /files/:id/parts. The parts of a file's first upload already in the bucket, for its
- *  owner only, so an upload cut off by a reload sends only what is missing. */
 import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import type { UploadedParts } from '../../../../shared/hub';
 import { conflict } from '../../../hub-core/http/http-error';

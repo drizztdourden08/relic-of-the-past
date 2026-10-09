@@ -1,9 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * The uploads tray: floating bottom right above the page on every page of the site, one row
- * per job, newest first. A row opens that job's dialog. The header folds the list or closes
- * the tray until the next job; "Clear finished" drops the rows that are over.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';

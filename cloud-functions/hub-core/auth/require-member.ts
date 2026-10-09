@@ -1,18 +1,13 @@
 /* @layer hub-core @kind logic */
-/** A member or an admin of the site being called, by either credential, with their groups
- *  and rights resolved once for the request. Pending and revoked users are signed in but
- *  see nothing past the waiting page. An open site writes the caller's first record here. */
 import type { Request } from '@google-cloud/functions-framework';
-import type { Group, HubUser, Rights, SiteAccess } from '../../../shared/hub';
+import type { SiteAccess } from '../../../shared/hub';
 import { forbidden, unauthorized } from '../http/http-error';
 import { usersRepo } from '../db/users-repo';
 import { callerRights } from '../access/caller-rights';
 import { withSiteRecord } from '../access/with-site-record';
 import type { SiteConfig } from '../site-config.type';
 import { requireCaller } from './require-caller';
-import type { Caller } from './require-caller';
-
-type Member = { caller: Caller; user: HubUser; access: SiteAccess; groups: Group[]; rights: Rights };
+import type { Member } from './require-member.type';
 
 const isMemberState = (access: SiteAccess | undefined): access is SiteAccess =>
   access?.state === 'member' || access?.state === 'admin';
@@ -29,4 +24,4 @@ const requireMember = async (req: Request, site: SiteConfig): Promise<Member> =>
 };
 
 export { requireMember };
-export type { Member };
+export type { Member } from './require-member.type';

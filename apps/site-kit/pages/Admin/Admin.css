@@ -3,7 +3,6 @@
   max-width: var(--page-maxw);
 }
 
-/* The group editor sits under the group rows, set off like the detail pane's actions. */
 .group-editor {
   padding-top: var(--space-sm);
   border-top: var(--border-width-thin) solid var(--c-border);

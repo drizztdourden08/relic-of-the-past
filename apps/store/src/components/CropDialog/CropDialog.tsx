@@ -1,10 +1,4 @@
 /* @layer store-site @kind component */
-/**
- * Moving and zooming a picked picture inside a frame of the shape the store keeps. The
- * picture shows dimmed outside the frame, so the author sees what is left out. Apply hands
- * back the crop in the picture's own pixels.
- */
-import type { CSSProperties } from 'react';
 import { DialogShell } from '@ds/composites/DialogShell';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -12,34 +6,14 @@ import { Image } from '@ds/primitives/Image';
 import { Slider } from '@ds/primitives/Slider';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import { MAX_ZOOM } from '../../lib/picture-crop';
-import type { CropRect, Size } from '../../lib/picture-crop';
+import { MAX_ZOOM } from '../../lib/picture-crop/picture-crop.constants';
 import { useCropEditor } from './behavior/useCropEditor';
+import { pictureStyle } from './behavior/picture-style';
+import type { CropDialogProps } from './CropDialog.type';
+import { ZOOM_STEP } from './CropDialog.constants';
 import './CropDialog.css';
 
-type CropDialogProps = {
-  title: string;
-  source: File;
-  /** Width over height of the kept picture. */
-  ratio: number;
-  /** The crop in use, or null for the centred one. */
-  initial: CropRect | null;
-  onApply: (crop: CropRect) => void;
-  onClose: () => void;
-};
-
-const ZOOM_STEP = 0.01;
-
 const formatZoom = (value: number) => `${value.toFixed(1)}x`;
-
-/** The picture's place under the frame, in percent of the frame, so it follows the frame's size. */
-const pictureStyle = (crop: CropRect | null, size: Size | null): CSSProperties => (crop && size
-  ? {
-    width: `${(size.width / crop.width) * 100}%`,
-    left: `${(-crop.x / crop.width) * 100}%`,
-    top: `${(-crop.y / crop.height) * 100}%`,
-  }
-  : { visibility: 'hidden' });
 
 const CropDialog = (props: CropDialogProps) => {
   const { title, source, ratio, initial, onApply, onClose } = props;
@@ -77,4 +51,4 @@ const CropDialog = (props: CropDialogProps) => {
 };
 
 export { CropDialog };
-export type { CropDialogProps };
+export type { CropDialogProps } from './CropDialog.type';

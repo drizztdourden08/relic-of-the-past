@@ -1,12 +1,6 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The selected file, as a panel of the side column: a preview for an image or a video,
- * its fields, the note, the version history with its drop zone, and
- * the actions. Edit swaps the note for the inline form; Delete asks once and is offered
- * to the owner and to admins only.
- */
 import { useState } from 'react';
-import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
 import { Dialog } from '@ds/composites/Dialog';
@@ -18,25 +12,11 @@ import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDateTime } from '@site-kit/lib/format-date';
 import { versionLabel } from '../../../files/file-versions';
 import { mediaKindOf } from '@site-kit/lib/media-kind';
-import type { FileActions } from '../behavior/useFileActions';
 import { FileEditForm } from './FileEditForm';
 import { FileMedia } from './FileMedia';
 import { VersionsPanel } from './VersionsPanel';
-
-type FileDetailProps = {
-  file: SanctuaryFile;
-  knownTags: readonly string[];
-  /** The types the caller may move the file to. */
-  types: readonly FileType[];
-  canDelete: boolean;
-  canEdit: boolean;
-  actions: FileActions;
-  /** A file dropped on the history: the new version dialog opens for it. */
-  onDropVersion: (file: SanctuaryFile, dropped: File) => void;
-  onClose: () => void;
-};
-
-const SHA_SHOWN = 8;
+import { SHA_SHOWN } from './FileDetail.constants';
+import type { FileDetailProps } from './FileDetail.type';
 
 const shortSha = (sha: string | null) => (sha ? `${sha.slice(0, SHA_SHOWN)}...${sha.slice(-4)}` : 'not recorded');
 
@@ -126,4 +106,3 @@ const FileDetail = (props: FileDetailProps) => {
 };
 
 export { FileDetail };
-export type { FileDetailProps };

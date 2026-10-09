@@ -1,9 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * What staff change on one item from its page: a reviewer's unlist and relist (unlisting
- * hides a published item from the catalogue and keeps its files), and a curator's feature
- * and unfeature on the home page's featured row. The API answers with the item.
- */
 import { useCallback, useState } from 'react';
 import type { StoreItem } from '@shared/store/types';
 import { errorMessage } from '@site-kit/api/api-error';

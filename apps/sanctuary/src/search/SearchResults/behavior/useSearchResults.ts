@@ -1,13 +1,7 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * What the search pane draws for a query: the matching files and reports as table rows
- * under their category, the categories named by the query, the schemas the list pages
- * use, and the moves out of the search (open a category, open a row), each of which
- * ends the search. Categories and reports follow the caller's rights.
- */
 import { useCallback, useMemo } from 'react';
 import { navigate } from '@site-kit/router/useLocation';
-import { useSiteData } from '../../../data/site-data-context';
+import { useSiteData } from '../../../data/useSiteData';
 import { useSessionContext } from '@site-kit/session/session-context';
 import { canSeeReports, visibleFileTypes } from '@shared/sanctuary/sanctuary-rights';
 import { toFileRow } from '../../../files/file-row';
@@ -20,8 +14,7 @@ import { matchFiles } from '../../match-files';
 import { matchReports } from '../../match-reports';
 import { FILE_CATEGORIES, REPORT_CATEGORIES, categoriesNamed } from '../../search-categories';
 import type { SearchCategory } from '../../search-categories';
-
-type ResultGroup<Row> = { category: SearchCategory; rows: Row[] };
+import type { ResultGroup } from './useSearchResults.type';
 
 const useSearchResults = (query: string, onDone: () => void) => {
   const { files, reports, setScope } = useSiteData();
@@ -51,7 +44,6 @@ const useSearchResults = (query: string, onDone: () => void) => {
   const named = useMemo(() => categoriesNamed(query, categoryRights), [query, categoryRights]);
   const total = [...fileGroups, ...reportGroups].reduce((sum, group) => sum + group.rows.length, 0);
 
-  /** Opens the category's page on its tab, or one row of it when an id is given. */
   const open = useCallback((category: SearchCategory, id?: string) => {
     setScope(category.surface, category.scope);
     navigate(id === undefined ? category.path : `${category.path}/${id}`);
@@ -71,4 +63,3 @@ const useSearchResults = (query: string, onDone: () => void) => {
 };
 
 export { useSearchResults };
-export type { ResultGroup };

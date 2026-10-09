@@ -1,10 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * All of Browse's state, so the component stays a layout: the catalogue narrowed to the
- * kind the route names, the kind tabs, the view over the browse surface (clauses, search,
- * sort, saved views), the items shown in order, and the picked item with its full record.
- * Picking is the route: `/browse/:id` or `/<kind>/:id`.
- */
 import { useCallback, useMemo } from 'react';
 import type { StoreKind } from '@shared/store/types';
 import { navigate } from '@site-kit/router/useLocation';

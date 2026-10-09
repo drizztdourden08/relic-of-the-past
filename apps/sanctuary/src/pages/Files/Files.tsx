@@ -1,11 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * Files: the scope tabs in the header with the drop target at its end, the FilterBar and
- * the DataTable over the files (rows can be picked several at a time), and the side
- * column on the right with the picked file's details, or the selection panel when several
- * are picked, plus the three dialogs a drop can lead to. Uploads show in the site's tray.
- * Everything stateful lives in useFilesPage.
- */
 import { useMemo } from 'react';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
@@ -17,23 +10,17 @@ import { Workbench } from '@site-kit/layout/Workbench/Workbench';
 import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
 import { UploadDialog } from '../../components/UploadDialog/UploadDialog';
 import { fileRowId } from '../../files/file-row';
-import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema';
+import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema.constants';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { useFilesPage } from './behavior/useFilesPage';
 import { FileDetail } from './sub-components/FileDetail';
 import { SameNameDialog } from './sub-components/SameNameDialog';
-import { NewVersionDialog } from './sub-components/NewVersionDialog';
+import { VersionUploadDialog } from './sub-components/VersionUploadDialog';
 import { UploadActions } from './sub-components/UploadActions';
 import { SelectionPanel } from './sub-components/SelectionPanel';
+import { COUNT_LABEL, SEARCH_PLACEHOLDER } from './Files.constants';
+import type { FilesProps } from './Files.type';
 import './Files.css';
-
-type FilesProps = {
-  /** From the `/files/:id` route; selects that row. */
-  selectedId?: string;
-};
-
-const COUNT_LABEL = ['file', 'files'] as const;
-const SEARCH_PLACEHOLDER = 'Search files...';
 
 const Files = (props: FilesProps) => {
   const { selectedId = null } = props;
@@ -124,7 +111,7 @@ const Files = (props: FilesProps) => {
         </Stack>
       </SitePage>
       <SameNameDialog question={drops.asking} onSeparate={drops.separate} onVersion={drops.version} onClose={drops.skip} />
-      <NewVersionDialog request={drops.request} onConfirm={drops.confirmVersion} onCancel={drops.cancelVersion} />
+      <VersionUploadDialog request={drops.request} onConfirm={drops.confirmVersion} onCancel={drops.cancelVersion} />
       <UploadDialog
         files={drops.upload}
         types={page.types}
@@ -138,4 +125,3 @@ const Files = (props: FilesProps) => {
 };
 
 export { Files };
-export type { FilesProps };

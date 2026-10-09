@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** PUT /items/:id/rating { stars }. Sets or changes the caller's one rating of an item they
- *  installed and did not write; the item's totals move in the same transaction. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { RatingResponse } from '../../../../shared/store/api-types';
 import { ratingSchema } from '../../../../shared/store/schemas';

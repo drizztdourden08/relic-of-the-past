@@ -1,13 +1,7 @@
 /* @layer site-kit @kind logic */
-/**
- * The queue's observable state, outside React: an immutable snapshot of the jobs and the
- * open dialog, replaced on every change, and the listeners told about it. The tray and the
- * dialog read it through useSyncExternalStore, so a job outlives the page that started it.
- */
 import type { UploadJob } from './upload-job.type';
 import type { QueueSnapshot } from './upload-queue.type';
-
-type JobChange = Partial<UploadJob> | ((job: UploadJob) => Partial<UploadJob>);
+import type { JobChange } from './queue-state.type';
 
 const newestFirst = (a: UploadJob, b: UploadJob) => b.createdAt - a.createdAt;
 
@@ -48,7 +42,5 @@ const createQueueState = () => {
   return { subscribe, get, job, insert, patch, remove, open };
 };
 
-type QueueState = ReturnType<typeof createQueueState>;
-
 export { createQueueState };
-export type { QueueState, JobChange };
+export type { QueueState, JobChange } from './queue-state.type';

@@ -1,7 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files/:id/versions/:n/parts { parts: [n..m], partsDone? }. Presigned PUT URLs for
- *  a batch of the version's parts, for the person uploading it only. `partsDone` is how
- *  many parts the uploader already has up; the version keeps it. */
 import { SANCTUARY_ROUTES, signPartsSchema } from '../../../../shared/sanctuary';
 import { badRequest, conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';

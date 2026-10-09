@@ -1,14 +1,9 @@
 /* @layer site-kit @kind component */
-/** A file's tags as a row of small pills; empty renders a dash so the row keeps its height. */
 import { Flex } from '@ds/primitives/Flex';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
+import type { TagListProps } from './TagList.type';
 import './TagList.css';
-
-type TagListProps = {
-  tags: readonly string[];
-  className?: string;
-};
 
 const TagList = (props: TagListProps) => {
   const { tags, className = '' } = props;
@@ -23,4 +18,4 @@ const TagList = (props: TagListProps) => {
 };
 
 export { TagList };
-export type { TagListProps };
+export type { TagListProps } from './TagList.type';

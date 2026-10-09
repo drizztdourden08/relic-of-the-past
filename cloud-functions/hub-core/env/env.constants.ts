@@ -1,0 +1,11 @@
+/* @layer hub-core @kind constants */
+const REQUIRED = [
+  'DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET', 'DISCORD_GUILD_ID',
+  'GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET', 'GITHUB_READ_TOKEN',
+  'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET',
+  'SANCTUARY_SESSION_KEY',
+] as const;
+
+const DEFAULT_GITHUB_REPO = 'drizztdourden08/relic-of-the-past';
+
+export { REQUIRED, DEFAULT_GITHUB_REPO };

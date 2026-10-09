@@ -1,20 +1,14 @@
 /* @layer hub-core @kind logic */
-/** A maintainer read token asks the repository whether the linked login is a
- *  collaborator; the user's own token is not needed. 204 means yes, 404 no. A
- *  collaborator lands in the default group; the chain only asks when no other
- *  source gave the user a group. */
 import { DEFAULT_GROUP_ID } from '../../../../shared/hub';
 import { readHubEnv } from '../../env';
 import type { GroupRule } from '../access-rule.type';
-
-const API = 'https://api.github.com';
-const IS_COLLABORATOR = 204;
+import { GITHUB_API, IS_COLLABORATOR } from './github-collaborator.constants';
 
 const githubCollaboratorGroups: GroupRule = async ({ identities }) => {
   const github = identities.find((identity) => identity.provider === 'github');
   if (!github) return [];
   const env = readHubEnv();
-  const res = await fetch(`${API}/repos/${env.GITHUB_REPO}/collaborators/${encodeURIComponent(github.handle)}`, {
+  const res = await fetch(`${GITHUB_API}/repos/${env.GITHUB_REPO}/collaborators/${encodeURIComponent(github.handle)}`, {
     headers: {
       Authorization: `Bearer ${env.GITHUB_READ_TOKEN}`,
       Accept: 'application/vnd.github+json',

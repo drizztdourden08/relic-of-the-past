@@ -1,18 +1,11 @@
 /* @layer store-site @kind component */
-/** The pack's manifest as it sits in the file: the entry's name, then its JSON, laid out. */
 import { useMemo } from 'react';
 import { CodeBlock } from '@ds/composites/CodeBlock';
 import { SettingsSection } from '@ds/composites/SettingsSection';
 import { StatRow } from '@ds/primitives/StatRow';
 import { Text } from '@ds/primitives/Text';
-import type { PackSource } from '@domains/packs/pack-source.type';
 import { useManifest } from '../behavior/useManifest';
-
-type ManifestViewProps = {
-  source: PackSource | null;
-  /** Why there is no source, or null while its link loads. */
-  reason: string | null;
-};
+import type { ManifestViewProps } from './ManifestView.type';
 
 const ManifestView = (props: ManifestViewProps) => {
   const { source, reason } = props;
@@ -29,4 +22,3 @@ const ManifestView = (props: ManifestViewProps) => {
 };
 
 export { ManifestView };
-export type { ManifestViewProps };

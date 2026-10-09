@@ -1,14 +1,12 @@
 /* @layer root-config @kind logic */
-/** POST /reports/:id/extend. Pushes the expiry 30 days past its current value,
- *  never further than a year after the issue closed. Only a closed issue has
- *  a close to count from; an open one is not expiring on that clock yet. */
 import { LIMITS, SANCTUARY_ROUTES, extendReportSchema } from '../../../../shared/sanctuary';
 import { conflict } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';
 import { requireMember } from '../../../hub-core/auth/require-member';
 import { reportsRepo } from '../db/reports-repo';
 import { now } from '../../../hub-core/db/firestore';
-import { DAY_MS, expiryOf } from '../reports/expiry';
+import { expiryOf } from '../reports/expiry';
+import { DAY_MS } from '../reports/expiry.constants';
 import { loadVisibleReport, viewReport } from '../reports/report-view';
 import type { Route } from '../../../hub-core/route.type';
 import { SANCTUARY_SITE } from '../site';

@@ -4,10 +4,10 @@ import { RouteGuard } from '@site-kit/guard/RouteGuard';
 import { SiteFrame } from '@site-kit/layout/SiteFrame/SiteFrame';
 import { SignIn } from '@site-kit/pages/SignIn/SignIn';
 import { Pending } from './pages/Pending/Pending';
-import { SANCTUARY_SITE_UI } from './site/site';
-import { HOME_PATH, ROUTES } from './routes';
+import { SANCTUARY_SITE_UI } from './site/site.constants';
+import { HOME_PATH, ROUTES } from './routes.constants';
 
-const PENDING = <Pending />;
+const pendingPage = <Pending />;
 
 const renderSignIn = (returnTo: string | undefined) => <SignIn lead={SANCTUARY_SITE_UI.signIn.lead} returnTo={returnTo} />;
 
@@ -17,7 +17,7 @@ const App = () => (
       routes={ROUTES}
       homePath={HOME_PATH}
       signIn={renderSignIn}
-      pending={PENDING}
+      pending={pendingPage}
       frame={SiteFrame}
       siteName={SANCTUARY_SITE_UI.name}
     />

@@ -1,22 +1,10 @@
 /* @layer store-site @kind hook */
-/**
- * The entry a review page shows, found by its row id in the lists the Reviewer Hub reads:
- * the queue (waiting versions and listing edits) and the versions not submitted yet. The
- * entry is null while they load, and stays null with a reason when neither holds it.
- */
 import { useMemo } from 'react';
-import type { ReviewEntry } from '@shared/store/api-types';
 import { listUnsubmitted } from '../../../api/review-endpoints';
 import { entryId } from '../../../review/review-row';
 import { useReviewQueue } from '../../../review/useReviewQueue';
-
-type ReviewEntryState = {
-  entry: ReviewEntry | null;
-  loading: boolean;
-  error: string | null;
-};
-
-const GONE = 'This entry is not waiting for review any more.';
+import { GONE } from './useReviewEntry.constants';
+import type { ReviewEntryState } from './useReviewEntry.type';
 
 const useReviewEntry = (rowId: string): ReviewEntryState => {
   const queue = useReviewQueue();
@@ -31,4 +19,3 @@ const useReviewEntry = (rowId: string): ReviewEntryState => {
 };
 
 export { useReviewEntry };
-export type { ReviewEntryState };

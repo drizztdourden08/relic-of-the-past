@@ -1,8 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/listing { name?, summary?, description?, tags?, license?, card?, banner? }.
- *  An item never published changes at once, and its slug follows a new name. A published
- *  one queues the change for review; a newer edit replaces a waiting one, which is marked
- *  withdrawn. Named pictures are checked against the bucket first. */
 import { randomUUID } from 'node:crypto';
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
@@ -14,13 +10,12 @@ import { now } from '../../../hub-core/db/firestore';
 import type { Route } from '../../../hub-core/route.type';
 import { requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
-import type { ItemPatch } from '../db/items-repo';
+import type { ItemPatch } from '../db/items-repo.type';
 import { loadOwnItem } from '../items/item-guards';
 import { slugOf } from '../items/new-item';
 import { verifyListingMedia } from '../media/verify-media';
 import { signItem } from '../media/sign-media';
-
-const EDIT_ID_CHARS = 12;
+import { EDIT_ID_CHARS } from './items-listing.constants';
 
 const directChange = (patch: ListingPatchBody, at: number): ItemPatch =>
   ({ ...patch, ...(patch.name ? { slug: slugOf(patch.name) } : {}), updatedAt: at });

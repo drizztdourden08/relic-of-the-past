@@ -1,32 +1,13 @@
 /* @layer store-site @kind hook */
-/**
- * Sending the form: the whole publish (the draft for a new item, its pictures, the listing
- * changes, then the pack) goes to the store's upload queue as one job. Its dialog opens and
- * the page moves to My publications at once, so the form is gone while the job runs on in
- * the corner. A listing edit is the same job without the pack.
- */
 import { useCallback, useState } from 'react';
-import type { StoreItem, StoreKind } from '@shared/store/types';
 import { errorMessage } from '@site-kit/api/api-error';
 import { navigate } from '@site-kit/router/useLocation';
 import { useStoreData } from '../../../data/store-data-context';
-import type { Picture } from '../../../lib/resize-image';
 import type { PublishTarget } from '../../../upload/publish-target.type';
-import { changedText, textOf } from './useListingFields';
-import type { ListingText } from './useListingFields';
-import type { PackState } from './usePack';
-
-type Submission = {
-  item: StoreItem | null;
-  kind: StoreKind | null;
-  text: ListingText;
-  card: Picture | null;
-  banner: Picture | null;
-  pack: PackState;
-  changelog: string;
-};
-
-const PUBLICATIONS_PATH = '/publications';
+import { changedText } from './changed-text';
+import { textOf } from './text-of';
+import { PUBLICATIONS_PATH } from './usePublishSubmit.constants';
+import type { Submission } from './usePublishSubmit.type';
 
 const targetOf = (submission: Submission): PublishTarget => {
   const { item, kind, text, card, banner, pack, changelog } = submission;
@@ -56,10 +37,8 @@ const usePublishSubmit = () => {
     }
   }, [uploads]);
 
-  /** Handing a job to the queue is instant; the form never waits on the upload. */
   const busy = false;
   return { busy, error, submit };
 };
 
 export { usePublishSubmit };
-export type { Submission };

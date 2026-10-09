@@ -1,0 +1,9 @@
+/* @layer hub-core @kind barrel */
+export { HttpError } from './http-error';
+export { badRequest } from './bad-request';
+export { unauthorized } from './unauthorized';
+export { forbidden } from './forbidden';
+export { notFound } from './not-found';
+export { conflict } from './conflict';
+export { tooMany } from './too-many';
+export { badGateway } from './bad-gateway';

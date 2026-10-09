@@ -1,24 +1,11 @@
 /* @layer store-site @kind component */
-/**
- * Install in the app, and Download beside it. Install opens the item's install link, so the
- * browser asks once to open Relic of the Past and the app installs it at once; when nothing
- * answers the link, a toast says so and points at Download. Download is for a player without
- * the app: it saves the pack file itself.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import downloadIcon from '@iconify-icons/lucide/download';
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
-import type { Container } from '@shared/store/types';
 import { useDownload } from './behavior/useDownload';
 import { useOpenInApp } from './behavior/useOpenInApp';
-
-type InstallButtonProps = {
-  itemId: string;
-  /** The live version's file type, for the Download label; null while nothing is live. */
-  container: Container | null;
-  size?: 'sm' | 'md';
-};
+import type { InstallButtonProps } from './InstallButton.type';
 
 const InstallButton = (props: InstallButtonProps) => {
   const { itemId, container, size = 'sm' } = props;
@@ -46,4 +33,4 @@ const InstallButton = (props: InstallButtonProps) => {
 };
 
 export { InstallButton };
-export type { InstallButtonProps };
+export type { InstallButtonProps } from './InstallButton.type';

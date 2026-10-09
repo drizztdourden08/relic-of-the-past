@@ -1,6 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /reports/:id/complete { bytes, contents }, same caller as the create.
- *  HEADs the zip against the declared size and fills the record's zip block. */
 import { LIMITS, SANCTUARY_ROUTES, reportAttachmentSchema } from '../../../../shared/sanctuary';
 import { conflict, forbidden } from '../../../hub-core/http/http-error';
 import { parseBody } from '../../../hub-core/http/parse-body';

@@ -1,15 +1,9 @@
 /* @layer store-site @kind component */
-/**
- * Browse, and each kind's page: the kind tabs with their counts in the header, then the
- * count line, the FilterBar with the sort and the saved views, and the card grid, with the
- * picked item in the side column. Everything stateful lives in useBrowsePage.
- */
 import { Flex } from '@ds/primitives/Flex';
 import { Select } from '@ds/primitives/Select';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { FilterBar } from '@ds/composites/FilterBar';
-import type { StoreKind } from '@shared/store/types';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
 import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
@@ -18,16 +12,9 @@ import { KIND_SECTIONS } from '../../lib/kinds';
 import { plural } from '../../lib/format-count';
 import { useBrowsePage } from './behavior/useBrowsePage';
 import { ItemSideCard } from './sub-components/ItemSideCard';
+import { SEARCH_PLACEHOLDER } from './Browse.constants';
+import type { BrowseProps } from './Browse.type';
 import './Browse.css';
-
-type BrowseProps = {
-  /** The kind the route narrows to; null is every kind. */
-  kind: StoreKind | null;
-  /** From the `/browse/:id` or `/<kind>/:id` route; picks that item. */
-  selectedId?: string;
-};
-
-const SEARCH_PLACEHOLDER = 'Search items...';
 
 const Browse = (props: BrowseProps) => {
   const { kind, selectedId = null } = props;
@@ -70,4 +57,4 @@ const Browse = (props: BrowseProps) => {
 };
 
 export { Browse };
-export type { BrowseProps };
+export type { BrowseProps } from './Browse.type';

@@ -1,6 +1,5 @@
 /* @layer store-site @kind style */
 
-/* The content fills the page body, so the table scrolls, not the page. */
 .publications {
   flex: 1 1 auto;
   min-height: 0;
@@ -19,7 +18,6 @@
   align-self: center;
 }
 
-/* The detail pane's text blocks: the changes and the reviewer's note. */
 .publication-detail__text {
   margin: 0;
   padding: var(--space-sm) var(--space-md);

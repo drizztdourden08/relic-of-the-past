@@ -1,15 +1,9 @@
 /* @layer store-site @kind hook */
-/**
- * The home page's two settings, read from GET /home and saved on their own routes: the
- * featured row as an ordered list of item ids (reordered and trimmed here, then saved in one
- * call; items join it from their own page), and the welcome message's markdown.
- */
 import { useCallback, useEffect, useState } from 'react';
 import { errorMessage } from '@site-kit/api/api-error';
 import { getHome } from '../../../api/catalog-endpoints';
 import { putFeatured, putWelcome } from '../../../api/review-endpoints';
-
-type Move = -1 | 1;
+import type { Move } from './useHomeSettings.type';
 
 const useHomeSettings = () => {
   const [featured, setFeatured] = useState<string[] | null>(null);
@@ -70,7 +64,4 @@ const useHomeSettings = () => {
   return { featured, welcome, setWelcome, move, remove, saveFeatured, saveWelcome, busy, notice };
 };
 
-type HomeSettingsState = ReturnType<typeof useHomeSettings>;
-
 export { useHomeSettings };
-export type { HomeSettingsState };

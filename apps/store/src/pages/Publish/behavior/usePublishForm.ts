@@ -1,19 +1,12 @@
 /* @layer store-site @kind hook */
-/**
- * Everything the Publish form holds for one mode: the pack and what changed in it, the
- * listing text, the two pictures and the rights box, with an error for each field that is
- * wrong. Submit stays pressable: a press with fields still wrong shows every error and sends
- * nothing. A version still uploading, ready or in review blocks a new one, and a listing
- * edit needs a change.
- * Store-api numbers each version itself.
- */
 import { useCallback, useMemo, useState } from 'react';
 import type { StoreItem } from '@shared/store/types';
 import { STORE_LIMITS } from '@shared/store/limits';
 import { isInFlight } from '@shared/store/version-flow';
-import { FIELD_MESSAGES, needsALook } from '../Publish.constants';
-import type { PublishMode } from '../Publish.constants';
+import { FIELD_MESSAGES } from '../Publish.constants';
+import type { PublishMode } from '../Publish.type';
 import { formErrors } from './form-errors';
+import { needsALook } from './needs-a-look';
 import { useFieldErrors } from './useFieldErrors';
 import { useListingFields } from './useListingFields';
 import { usePack } from './usePack';
@@ -37,7 +30,6 @@ const usePublishForm = (mode: PublishMode, item: StoreItem | null) => {
   );
   const fields = useFieldErrors(errors);
 
-  /** A reason no field can fix, shown over the form from the start. */
   const note = mode === 'version' && item && inFlight(item) ? FIELD_MESSAGES.inFlight : null;
   const unchanged = mode === 'listing' && Object.keys(listing.patch).length === 0 && !card.picture && !banner.picture;
   const alertLine = useMemo(() => {
@@ -79,7 +71,4 @@ const usePublishForm = (mode: PublishMode, item: StoreItem | null) => {
   };
 };
 
-type PublishForm = ReturnType<typeof usePublishForm>;
-
 export { usePublishForm };
-export type { PublishForm };

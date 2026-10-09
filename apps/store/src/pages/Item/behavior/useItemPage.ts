@@ -1,9 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * All of the item page's state: the item as this player may see it, the header tab, the
- * live pack for the Contents tab, the approved versions, the player's rating, a reviewer's
- * unlist and relist, and a curator's feature and unfeature.
- */
 import { useCallback, useMemo, useState } from 'react';
 import type { StoreItem } from '@shared/store/types';
 import { hasRight } from '@shared/hub/rights';
@@ -15,8 +10,7 @@ import { FEATURE_PERMISSION, REVIEW_PERMISSION } from '../../../site/site-sectio
 import { plural } from '../../../lib/format-count';
 import { useLivePack } from './useLivePack';
 import { useRating } from './useRating';
-
-type ItemTab = 'overview' | 'contents' | 'versions' | 'ratings';
+import type { ItemTab } from './useItemPage.type';
 
 const useItemPage = (id: string) => {
   const { me, rights } = useSessionContext();
@@ -67,4 +61,3 @@ const useItemPage = (id: string) => {
 };
 
 export { useItemPage };
-export type { ItemTab };

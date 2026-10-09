@@ -1,19 +1,15 @@
 /* @layer store-api @kind logic */
-/** Sets or removes one player's rating in one transaction: the item, the install and the
- *  previous rating are read inside it, so the item's totals always match its ratings.
- *  `stars` null removes the rating; removing one that is not there changes nothing. */
 import type { Rating, Stars } from '../../../../shared/store/rating-types';
-import type { ItemStats, StoreItem } from '../../../../shared/store/types';
+import type { StoreItem } from '../../../../shared/store/types';
 import { notFound } from '../../../hub-core/http/http-error';
 import { db, now } from '../../../hub-core/db/firestore';
 import { itemsRepo } from '../db/items-repo';
 import { installsRepo } from '../db/installs-repo';
 import { ratingsRepo } from '../db/ratings-repo';
 import type { Viewer } from '../items/project-item';
+import type { RateResult } from './rate.type';
 import { ratingRefusal } from './rating-rules';
 import { statsAfter, statsFields } from './stats-after';
-
-type RateResult = { stats: ItemStats; myRating: Stars | null };
 
 const rate = (itemId: string, viewer: Viewer, stars: Stars | null): Promise<RateResult> =>
   db().runTransaction(async (tx) => {
@@ -38,4 +34,3 @@ const rate = (itemId: string, viewer: Viewer, stars: Stars | null): Promise<Rate
   });
 
 export { rate };
-export type { RateResult };

@@ -1,5 +1,4 @@
 /* @layer store-site @kind hook */
-/** The Download fallback: one request at a time, and the API's refusal shown as a toast. */
 import { useCallback, useState } from 'react';
 import { errorMessage } from '@site-kit/api/api-error';
 import { showToast } from '@site-kit/toast/toast-store';

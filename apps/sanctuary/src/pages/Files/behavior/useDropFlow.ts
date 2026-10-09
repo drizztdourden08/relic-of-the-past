@@ -1,13 +1,8 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * The dialogs a drop leads to on the Files page: the same-name question, the new version
- * dialog and the usual upload dialog, walked one dropped file at a time (drop-queue.ts).
- * Confirming a dialog starts the upload; the rest of the queue carries on after it.
- */
 import { useCallback, useMemo, useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { nextVersionNumber } from '../../../files/file-versions';
-import type { UploadMeta, UploadTarget } from '../../../upload/upload-target.type';
+import type { UploadMeta } from '../../../upload/upload-target.type';
 import { sameNameMatch } from './same-name-match';
 import {
   EMPTY_QUEUE,
@@ -19,12 +14,7 @@ import {
   uploadDone,
   versionDone,
 } from './drop-queue';
-
-type UseDropFlowParams = {
-  /** The files the caller sees; a dropped file is matched against these. */
-  files: readonly SanctuaryFile[];
-  start: (files: File[], target: UploadTarget) => void;
-};
+import type { UseDropFlowParams } from './useDropFlow.type';
 
 const useDropFlow = (params: UseDropFlowParams) => {
   const { files, start } = params;
@@ -36,7 +26,6 @@ const useDropFlow = (params: UseDropFlowParams) => {
   const version = useCallback(() => setState(asVersion), []);
   const skip = useCallback(() => setState((s) => skipAsked(s, matchOf)), [matchOf]);
 
-  /** A file dropped on one file's history: straight to the version dialog. */
   const dropOnFile = useCallback((file: SanctuaryFile, dropped: File) => {
     setState((s) => requestVersion(s, { file, dropped }));
   }, []);
@@ -74,7 +63,4 @@ const useDropFlow = (params: UseDropFlowParams) => {
   }), [state.asking, request, upload, drop, dropOnFile, separate, version, skip, confirmVersion, cancelVersion, confirmUpload, cancelUpload]);
 };
 
-type DropFlow = ReturnType<typeof useDropFlow>;
-
 export { useDropFlow };
-export type { DropFlow, UseDropFlowParams };

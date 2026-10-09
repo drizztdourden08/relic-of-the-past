@@ -1,13 +1,10 @@
 /* @layer hub-core @kind logic */
-/** The groups and rights of one user on the site being called. Only a member or an admin
- *  of that site holds any; a pending or revoked user resolves to nothing. */
-import type { Group, HubUser, Rights } from '../../../shared/hub';
+import type { HubUser } from '../../../shared/hub';
 import type { SiteConfig } from '../site-config.type';
+import type { CallerRights } from './caller-rights.type';
 import { cachedGroups } from './cached-groups';
 import { groupsOf } from './membership';
 import { resolveRights } from './resolve-rights';
-
-type CallerRights = { groups: Group[]; rights: Rights };
 
 const callerRights = async (user: HubUser, site: SiteConfig): Promise<CallerRights> => {
   const state = user.sites[site.id]?.state;
@@ -18,4 +15,4 @@ const callerRights = async (user: HubUser, site: SiteConfig): Promise<CallerRigh
 };
 
 export { callerRights };
-export type { CallerRights };
+export type { CallerRights } from './caller-rights.type';

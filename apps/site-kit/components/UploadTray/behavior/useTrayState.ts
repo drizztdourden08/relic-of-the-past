@@ -1,8 +1,4 @@
 /* @layer site-kit @kind hook */
-/**
- * Whether the tray shows and whether it is folded to its header. Closing hides it until a
- * newer job arrives; with no job left it is not shown at all.
- */
 import { useCallback, useState } from 'react';
 import { isFinished } from '../../../upload/upload-queue';
 import type { UploadJob } from '../../../upload/upload-job.type';
@@ -25,7 +21,4 @@ const useTrayState = (jobs: readonly UploadJob[]) => {
   };
 };
 
-type TrayState = ReturnType<typeof useTrayState>;
-
 export { useTrayState };
-export type { TrayState };

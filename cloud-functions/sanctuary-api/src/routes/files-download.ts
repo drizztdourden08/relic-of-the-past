@@ -1,6 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files/:id/download. Bumps the counter and returns a presigned GET for
- *  the current version, ten minutes, with its name in the content disposition. */
 import { LIMITS, SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import { conflict } from '../../../hub-core/http/http-error';
 import { requireMember } from '../../../hub-core/auth/require-member';

@@ -1,9 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The selected report: reporter (with the GitHub handle when the API gave one), the issue
- * chip, kind, version and platform, screen, contents, size, filed and expiry, then the
- * actions. Delete is for admins; everyone else sees it disabled with the reason.
- */
 import { useState } from 'react';
 import { LIMITS } from '@shared/sanctuary/limits';
 import { Button } from '@ds/primitives/Button';
@@ -12,21 +7,13 @@ import { DetailPane } from '@site-kit/components/DetailPane/DetailPane';
 import type { DetailField } from '@site-kit/components/DetailPane/DetailPane';
 import { IssueStateChip } from '../../../components/IssueStateChip/IssueStateChip';
 import { ExternalLink } from '@site-kit/components/ExternalLink/ExternalLink';
-import type { ReportView } from '../../../api/types';
+import type { ReportView } from '../../../api/api-responses.type';
 import { ANONYMOUS, contentsLine } from '../../../reports/report-row';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDateTime } from '@site-kit/lib/format-date';
-import type { ReportActions } from '../behavior/useReportActions';
 import { deadlineOf } from '../behavior/report-scopes';
-
-type ReportDetailProps = {
-  report: ReportView;
-  isAdmin: boolean;
-  actions: ReportActions;
-  onClose: () => void;
-};
-
-const KIND_LABELS = { player: 'player report', controller: 'controller report' } as const;
+import { KIND_LABELS } from './ReportDetail.constants';
+import type { ReportDetailProps } from './ReportDetail.type';
 
 const reporterLine = (report: ReportView): string => {
   const { reporter } = report;
@@ -97,4 +84,3 @@ const ReportDetail = (props: ReportDetailProps) => {
 };
 
 export { ReportDetail };
-export type { ReportDetailProps };

@@ -1,7 +1,5 @@
 /* @layer site-kit @kind logic */
-/** Byte counts as the site shows them: `1.2 MB`, `61 MB`, `2 GB`; whole numbers under a KB. */
-const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
-const STEP = 1024;
+import { STEP, UNITS } from './format-bytes.constants';
 
 const formatBytes = (bytes: number): string => {
   if (!Number.isFinite(bytes) || bytes < 0) return '';

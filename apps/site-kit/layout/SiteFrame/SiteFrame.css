@@ -1,7 +1,5 @@
 /* @layer site-kit @kind style */
 
-/* The frame is the viewport: pages that scroll do so inside main, not the document. A
-   black band carries the brand; under it the nav and the page start on the same line. */
 .site {
   height: 100vh;
   padding: 0 var(--space-md) var(--space-md);
@@ -18,7 +16,6 @@
   background: var(--c-bg);
 }
 
-/* The gap leaves room for the nav's round toggle on its right edge, as in the app. */
 .site__body {
   flex: 1 1 auto;
   min-height: 0;
@@ -34,7 +31,6 @@
   overflow: auto;
 }
 
-/* A page with no nav is one block, the brand over its card, centred in the viewport. */
 .site--bare {
   justify-content: center;
 }

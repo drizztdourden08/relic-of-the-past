@@ -1,5 +1,4 @@
 /* @layer store-site @kind hook */
-/** One author's public page: their name, when they joined, their totals and their published items. */
 import { useEffect, useState } from 'react';
 import type { AuthorResponse } from '@shared/store/api-types';
 import { errorMessage } from '@site-kit/api/api-error';

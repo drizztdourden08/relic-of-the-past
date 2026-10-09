@@ -1,25 +1,11 @@
 /* @layer store-site @kind component */
-/**
- * The buttons an author has on one version, read from the version flow table: Send for
- * review on a ready version, Resubmit on a rejected one while its file is kept, Withdraw on
- * a waiting one, Cancel upload on one still uploading, and Delete, which asks first. An
- * approved version with its file offers Download.
- */
 import { useState } from 'react';
 import { Button } from '@ds/primitives/Button';
 import { Dialog } from '@ds/composites/Dialog';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { actionsFor } from '@shared/store/version-flow';
-import type { Actor } from '@shared/store/version-flow';
-import type { PublicationActions } from '../behavior/usePublicationActions';
-
-type VersionActionsProps = {
-  item: StoreItem;
-  version: StoreVersion;
-  actions: PublicationActions;
-};
-
-const AUTHOR: readonly Actor[] = ['author'];
+import { AUTHOR } from './VersionActions.constants';
+import type { VersionActionsProps } from './VersionActions.type';
 
 const deleteMessage = (item: StoreItem, version: StoreVersion): string =>
   `Delete ${version.semver} of "${item.name}"? Its file is removed from the store and cannot come back. The row stays in your history, and you can upload a new version.`;
@@ -63,4 +49,3 @@ const VersionActions = (props: VersionActionsProps) => {
 };
 
 export { VersionActions };
-export type { VersionActionsProps };

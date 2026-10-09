@@ -1,7 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files. Creates the record as uploading, with its version 1, and starts
- *  the multipart upload; the browser then asks for part URLs in batches. Only a
- *  type the caller can see takes an upload. */
 import { LIMITS, SANCTUARY_ROUTES, createFileSchema } from '../../../../shared/sanctuary';
 import type { FileOwner, SanctuaryFile } from '../../../../shared/sanctuary';
 import { parseBody } from '../../../hub-core/http/parse-body';
@@ -14,8 +11,7 @@ import { filesBucket } from '../storage/files-bucket';
 import { versionKey } from '../storage/keys';
 import type { Route } from '../../../hub-core/route.type';
 import { SANCTUARY_SITE } from '../site';
-
-const FIRST_VERSION = 1;
+import { FIRST_VERSION } from './files-begin.constants';
 
 const filesBegin: Route = {
   ...SANCTUARY_ROUTES.filesCreate,

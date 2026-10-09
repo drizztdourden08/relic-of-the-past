@@ -1,18 +1,12 @@
 /* @layer root-config @kind logic */
-/** Files. Every read goes through upgradeFile, so a record stored before
- *  versions existed comes back with its version 1. */
 import { FieldValue } from '@google-cloud/firestore';
 import type { FileType, SanctuaryFile } from '../../../../shared/sanctuary';
 import { notFound } from '../../../hub-core/http/http-error';
 import { upgradeFile } from '../files/upgrade-file';
-import type { StoredFile } from '../files/upgrade-file';
+import type { StoredFile } from '../files/upgrade-file.type';
 import { db, decodeCursor, encodeCursor } from '../../../hub-core/db/firestore';
 import { sanctuaryCollection } from './collections';
-
-type FilePage = { items: SanctuaryFile[]; nextCursor: string | null };
-type FilePatch = Partial<Omit<SanctuaryFile, 'id' | 'owner' | 'stats' | 'createdAt'>>;
-/** Reads the latest record inside a transaction and answers the patch to write; throwing aborts. */
-type FileChange = (file: SanctuaryFile) => FilePatch;
+import type { FileChange, FilePage, FilePatch } from './files-repo.type';
 
 const files = () => sanctuaryCollection('files');
 
@@ -29,7 +23,6 @@ const update = async (id: string, patch: FilePatch): Promise<void> => {
   await files().doc(id).update(patch);
 };
 
-/** Read, change and write one file atomically; used wherever the versions list moves. */
 const mutate = (id: string, change: FileChange): Promise<SanctuaryFile> =>
   db().runTransaction(async (tx) => {
     const ref = files().doc(id);
@@ -42,10 +35,6 @@ const mutate = (id: string, change: FileChange): Promise<SanctuaryFile> =>
     return { ...file, ...patch };
   });
 
-/**
- * Ready files, newest first. `types` null means every type; one or more narrows the query
- * with the (status, type, createdAt) index. The cursor is the last row's createdAt.
- */
 const listReady = async (types: FileType[] | null, cursor: string | undefined, pageSize: number): Promise<FilePage> => {
   let query = files().where('status', '==', 'ready');
   if (types?.length === 1) query = query.where('type', '==', types[0]);
@@ -66,4 +55,3 @@ const bumpDownloads = async (id: string): Promise<void> => {
 const filesRepo = { create, get, update, mutate, listReady, bumpDownloads };
 
 export { filesRepo };
-export type { FilePage, FilePatch, FileChange };

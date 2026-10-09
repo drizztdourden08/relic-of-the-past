@@ -1,16 +1,7 @@
 /* @layer site-kit @kind logic */
-/** The rows a page shows: the clause list compiled once, then the free-text search over what is left. */
 import { compile } from '@ds/data/filter/clause';
-import type { FilterClause } from '@ds/data/filter/clause';
 import { compileTextSearch } from '@ds/data/filter/text-search';
-import type { SchemaLike } from '@ds/data/schema/build-schema';
-
-type FilterRowsParams<T> = {
-  rows: readonly T[];
-  schema: SchemaLike;
-  clauses: readonly FilterClause[];
-  search: string;
-};
+import type { FilterRowsParams } from './filter-rows.type';
 
 const filterRows = <T>(params: FilterRowsParams<T>): readonly T[] => {
   const { rows, schema, clauses, search } = params;
@@ -20,4 +11,4 @@ const filterRows = <T>(params: FilterRowsParams<T>): readonly T[] => {
 };
 
 export { filterRows };
-export type { FilterRowsParams };
+export type { FilterRowsParams } from './filter-rows.type';

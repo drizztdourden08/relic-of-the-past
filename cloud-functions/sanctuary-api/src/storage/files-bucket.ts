@@ -1,5 +1,4 @@
 /* @layer root-config @kind logic */
-/** The Sanctuary's bucket, with its own scoped key: shared files and report zips. */
 import { createStorage } from '../../../hub-core/storage/create-storage';
 import { readSanctuaryEnv } from '../env';
 

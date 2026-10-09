@@ -1,8 +1,4 @@
 /* @layer hub-core @kind logic */
-/** GET /auth/:provider/callback?code&state
- *  Sign in or link, one route: exchange the code, read the profile, bind the
- *  identity, create or reuse the user, decide their access to this site, set the
- *  session. The provider token lives in this function and nowhere else. */
 import { HUB_ROUTES } from '../../../shared/hub';
 import type { Identity } from '../../../shared/hub';
 import { badRequest } from '../http/http-error';

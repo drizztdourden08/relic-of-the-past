@@ -1,25 +1,13 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * What the detail pane can do to one file: download, copy its link, patch its fields,
- * delete it, and download, restore or delete one of its versions. Each call reports back through `notice`; a write hands the API's record to
- * the list, a delete drops the row and closes the pane.
- */
 import { useCallback, useState } from 'react';
-import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
 import { deleteFile, downloadFile, patchFile } from '../../../api/files-endpoints';
 import { deleteVersion, downloadVersion, restoreVersion } from '../../../api/versions-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';
 import { versionLabel } from '../../../files/file-versions';
-
-type UseFileActionsParams = {
-  onPatched: (file: SanctuaryFile) => void;
-  onDeleted: (id: string) => void;
-};
-
-const COPIED_MS = 1500;
-
-const fileLink = (id: string) => `${window.location.origin}/files/${id}`;
+import { fileLink } from './file-link';
+import { COPIED_MS } from './useFileActions.constants';
+import type { UseFileActionsParams } from './useFileActions.type';
 
 const useFileActions = (params: UseFileActionsParams) => {
   const { onPatched, onDeleted } = params;
@@ -91,7 +79,4 @@ const useFileActions = (params: UseFileActionsParams) => {
   };
 };
 
-type FileActions = ReturnType<typeof useFileActions>;
-
-export { useFileActions, fileLink };
-export type { FileActions, UseFileActionsParams };
+export { useFileActions };

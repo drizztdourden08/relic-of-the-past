@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** PUT /me/views/:id. Creates or replaces one saved view on one of this site's surfaces.
- *  The id is the client's, so a view can be saved before the server has seen it; a view
- *  id already owned by someone else is refused as absent. */
 import { HUB_ROUTES, idSchema, putViewSchema } from '../../../shared/hub';
 import type { SavedView } from '../../../shared/hub';
 import { badRequest, notFound } from '../http/http-error';

@@ -1,16 +1,12 @@
 /* @layer site-kit @kind component */
-/**
- * One job in the tray: its label and phase chip, the bar, how far it is with the speed and
- * the time left, and a note when it stopped or waits for its file. Clicking the row opens
- * the job's dialog; its buttons act on the job alone.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
 import { Text } from '@ds/primitives/Text';
 import { Chip } from '../Chip/Chip';
-import { percentOf, rowLines } from './behavior/row-lines';
+import { percentOf } from './behavior/percent-of';
+import { rowLines } from './behavior/row-lines';
 import { RowActions } from './sub-components/RowActions';
 import { BAR_VARIANTS, PHASE_CHIPS } from './UploadRow.constants';
 import type { UploadRowProps } from './UploadRow.type';

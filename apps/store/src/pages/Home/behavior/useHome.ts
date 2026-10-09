@@ -1,9 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * The home page's content: the welcome and the four lists from GET /home, and one shelf
- * per kind picked from the catalogue the frame already holds, most installed this month
- * first.
- */
 import { useEffect, useMemo, useState } from 'react';
 import type { HomeView, ItemCardView } from '@shared/store/home-types';
 import type { StoreKind } from '@shared/store/types';
@@ -11,8 +6,7 @@ import { errorMessage } from '@site-kit/api/api-error';
 import { getHome } from '../../../api/catalog-endpoints';
 import { useStoreData } from '../../../data/store-data-context';
 import { STORE_KINDS } from '../../../lib/kinds';
-
-const KIND_SHELF_SIZE = 8;
+import { KIND_SHELF_SIZE } from './useHome.constants';
 
 const byInstalls = (a: ItemCardView, b: ItemCardView) => b.installs30d - a.installs30d;
 

@@ -1,15 +1,12 @@
 /* @layer store-site @kind component */
-/**
- * The route table: a path pattern, who may see it, and what it renders. The kit's guard
- * walks this list in order, so `/publications/new` stands before `/publications/:rowId`.
- */
 import type { RouteEntry } from '@site-kit/router/route-table';
 import { SignIn } from '@site-kit/pages/SignIn/SignIn';
 import { Account } from '@site-kit/pages/Account/Account';
 import { Device } from '@site-kit/pages/Device/Device';
-import { STORE_KINDS, KIND_SECTIONS } from './lib/kinds';
-import { FEATURE_PERMISSION, REVIEW_PERMISSION } from './site/site-sections';
-import { STORE_SITE_UI } from './site/site';
+import { STORE_KINDS, KIND_SECTIONS } from './lib/kinds/kinds.constants';
+import { FEATURE_PERMISSION, REVIEW_PERMISSION } from './site/site-sections/site-sections.constants';
+import { STORE_SITE_UI } from './site/site.constants';
+import { HOME_PATH } from './routes.constants';
 import { Home } from './pages/Home/Home';
 import { Browse } from './pages/Browse/Browse';
 import { Item } from './pages/Item/Item';
@@ -20,19 +17,17 @@ import { Review } from './pages/Review/Review';
 import { ReviewItem } from './pages/ReviewItem/ReviewItem';
 import { Administration } from './pages/Administration/Administration';
 
-const HOME_PATH = '/home';
-
-const KIND_ROUTES: RouteEntry[] = STORE_KINDS.flatMap((kind): RouteEntry[] => [
+const kindRoutes: RouteEntry[] = STORE_KINDS.flatMap((kind): RouteEntry[] => [
   { pattern: `/${KIND_SECTIONS[kind]}`, access: 'member', render: () => <Browse kind={kind} /> },
   { pattern: `/${KIND_SECTIONS[kind]}/:id`, access: 'member', render: ({ id }) => <Browse kind={kind} selectedId={id} /> },
 ]);
 
-const ROUTES: RouteEntry[] = [
+const routes: RouteEntry[] = [
   { pattern: '/', access: 'member', render: () => <Home /> },
   { pattern: HOME_PATH, access: 'member', render: () => <Home /> },
   { pattern: '/browse', access: 'member', render: () => <Browse kind={null} /> },
   { pattern: '/browse/:id', access: 'member', render: ({ id }) => <Browse kind={null} selectedId={id} /> },
-  ...KIND_ROUTES,
+  ...kindRoutes,
   { pattern: '/items/:id', access: 'member', render: ({ id }) => <Item id={id} /> },
   { pattern: '/authors/:userId', access: 'member', render: ({ userId }) => <Author userId={userId} /> },
   { pattern: '/publications', access: 'member', render: () => <Publications /> },
@@ -48,4 +43,4 @@ const ROUTES: RouteEntry[] = [
   { pattern: '/signin', access: 'public', bare: true, render: () => <SignIn lead={STORE_SITE_UI.signIn.lead} /> },
 ];
 
-export { ROUTES, HOME_PATH };
+export { routes };

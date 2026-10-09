@@ -1,6 +1,4 @@
 /* @layer root-config @kind logic */
-/** DELETE /reports/:id, admin only. Removes the zip and the record; the sweep
- *  is the only other way a report goes away. */
 import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import { requireAdmin } from '../../../hub-core/auth/require-admin';
 import { reportsRepo } from '../db/reports-repo';

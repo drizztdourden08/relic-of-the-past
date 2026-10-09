@@ -1,8 +1,4 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The waiting page a signed-in user sees while no access rule matches them (pending) or
- * after an admin revoked them. Linking Discord is the self-serve way in.
- */
 import { useCallback, useState } from 'react';
 import { PROVIDER_LABELS } from '@shared/hub/providers';
 import { Stack } from '@ds/primitives/Stack';

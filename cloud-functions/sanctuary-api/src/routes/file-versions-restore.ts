@@ -1,6 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files/:id/versions/:n/restore. Owner or admin. Points the file back at
- *  an older version and mirrors its facts to the top of the record; no bytes move. */
 import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import { conflict, notFound } from '../../../hub-core/http/http-error';
 import { requireMember } from '../../../hub-core/auth/require-member';

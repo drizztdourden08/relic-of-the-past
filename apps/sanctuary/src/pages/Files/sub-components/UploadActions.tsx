@@ -1,21 +1,10 @@
 /* @layer sanctuary-site @kind component */
-/**
- * The Files header's end: the drop target, as tall as the header line. A drop or a click
- * starts the usual upload flow; the uploads themselves show in the site's tray.
- */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import uploadIcon from '@iconify-icons/lucide/upload';
 import { DropZone } from '@ds/primitives/DropZone';
 import { Flex } from '@ds/primitives/Flex';
-import { LIMITS } from '@shared/sanctuary/limits';
-import { formatBytes } from '@site-kit/lib/format-bytes';
-
-type UploadActionsProps = {
-  canUpload: boolean;
-  onDrop: (files: File[]) => void;
-};
-
-const DROP_HINT = `Up to ${formatBytes(LIMITS.fileBytes)} each, stored exactly as sent.`;
+import { DROP_HINT } from './UploadActions.constants';
+import type { UploadActionsProps } from './UploadActions.type';
 
 const UploadActions = (props: UploadActionsProps) => {
   const { canUpload, onDrop } = props;
@@ -34,4 +23,3 @@ const UploadActions = (props: UploadActionsProps) => {
 };
 
 export { UploadActions };
-export type { UploadActionsProps };

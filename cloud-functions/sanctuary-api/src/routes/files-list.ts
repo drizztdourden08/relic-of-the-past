@@ -1,8 +1,4 @@
 /* @layer root-config @kind logic */
-/** GET /files?type&cursor. Ready files of the types the caller can see, newest
- *  first, in pages of 200; `type` narrows to one type and is optional (the rail
- *  counts need every type at once). A type the caller cannot see lists empty.
- *  Search, clauses, sort and grouping run in the browser. */
 import { FILE_TYPES, SANCTUARY_ROUTES, canSeeType, fileTypeSchema } from '../../../../shared/sanctuary';
 import type { FileType } from '../../../../shared/sanctuary';
 import type { Rights } from '../../../../shared/hub';
@@ -12,10 +8,8 @@ import { requireMember } from '../../../hub-core/auth/require-member';
 import { filesRepo } from '../db/files-repo';
 import type { Route } from '../../../hub-core/route.type';
 import { SANCTUARY_SITE } from '../site';
+import { PAGE_SIZE } from './files-list.constants';
 
-const PAGE_SIZE = 200;
-
-/** null asks for every type; an empty list means nothing to show. */
 const typesToList = (requested: FileType | null, rights: Rights): FileType[] | null => {
   if (requested) return canSeeType(rights, requested) ? [requested] : [];
   const visible = FILE_TYPES.filter((type) => canSeeType(rights, type));

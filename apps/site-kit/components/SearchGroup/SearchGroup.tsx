@@ -1,20 +1,10 @@
 /* @layer site-kit @kind component */
-/** One group of search results: its icon, name and count, a way to open it, then its rows. */
-import type { ReactNode } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import type { IconifyIcon as IconData } from '@iconify/react/offline';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
+import type { SearchGroupProps } from './SearchGroup.type';
 import './SearchGroup.css';
-
-type SearchGroupProps = {
-  label: string;
-  icon: IconData;
-  count: number;
-  onOpen: () => void;
-  children: ReactNode;
-};
 
 const SearchGroup = (props: SearchGroupProps) => {
   const { label, icon, count, onOpen, children } = props;
@@ -32,4 +22,4 @@ const SearchGroup = (props: SearchGroupProps) => {
 };
 
 export { SearchGroup };
-export type { SearchGroupProps };
+export type { SearchGroupProps } from './SearchGroup.type';

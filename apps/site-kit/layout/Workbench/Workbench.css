@@ -27,8 +27,6 @@
   padding: 0;
 }
 
-/* The table owns its scrolling; the column hands it the height and caps its width, so
-   a wide column set scrolls inside the table instead of spilling under the detail. */
 .workbench__table {
   display: flex;
   flex: 1 1 auto;

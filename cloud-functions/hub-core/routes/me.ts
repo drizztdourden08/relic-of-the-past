@@ -1,7 +1,4 @@
 /* @layer hub-core @kind logic */
-/** GET /me. The site's first call and the app's identity check: the user, the
- *  linked identities, the access state on this site, and the caller's groups and
- *  rights so the site can hide what the API would refuse, by either credential. */
 import { HUB_ROUTES } from '../../../shared/hub';
 import { unauthorized } from '../http/http-error';
 import { requireCaller } from '../auth/require-caller';

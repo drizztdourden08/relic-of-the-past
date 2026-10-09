@@ -1,15 +1,8 @@
 /* @layer store-site @kind component */
-/**
- * Home: the welcome with the player's name, the featured row, then Popular this month,
- * Top rated, New and updated, and one shelf per kind. Publish sits in the header.
- */
-import { Icon as IconifyIcon } from '@iconify/react/offline';
-import plusIcon from '@iconify-icons/lucide/plus';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import type { ItemCardView } from '@shared/store/home-types';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
-import { Link } from '@site-kit/router/Link';
 import { useSessionContext } from '@site-kit/session/session-context';
 import { FeaturedHero } from '../../components/FeaturedHero/FeaturedHero';
 import { Shelf } from '../../components/Shelf/Shelf';
@@ -17,22 +10,17 @@ import { itemPath } from '../../catalog/item-paths';
 import { formatCount } from '../../lib/format-count';
 import { KIND_PLURALS, KIND_SECTIONS } from '../../lib/kinds';
 import { useHome } from './behavior/useHome';
+import { PublishAction } from './sub-components/PublishAction';
 import { Welcome } from './sub-components/Welcome';
 import './Home.css';
 
 const monthlyInstalls = (item: ItemCardView) => `${formatCount(item.installs30d)} this month`;
 
-const PUBLISH = (
-  <Link to="/publications/new" className="btn btn--secondary btn--sm home__publish">
-    <IconifyIcon icon={plusIcon} aria-hidden="true" /> Publish
-  </Link>
-);
-
 const Home = () => {
   const { me } = useSessionContext();
   const { home, loading, error, kindShelves } = useHome();
   return (
-    <SitePage section="home" actions={PUBLISH}>
+    <SitePage section="home" actions={<PublishAction />}>
       <Stack gap="xl" align="stretch" className="home">
         <Welcome name={me?.displayName ?? 'player'} message={home?.welcome ?? ''} />
         {error && <Text as="p" variant="caption" role="alert">{error}</Text>}

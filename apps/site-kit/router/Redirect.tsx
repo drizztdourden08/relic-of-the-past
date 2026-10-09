@@ -1,9 +1,7 @@
 /* @layer site-kit @kind component */
-/** Renders nothing and replaces the current entry with `to` once mounted. */
 import { useEffect } from 'react';
 import { navigate } from './useLocation';
-
-type RedirectProps = { to: string };
+import type { RedirectProps } from './Redirect.type';
 
 const Redirect = (props: RedirectProps) => {
   const { to } = props;

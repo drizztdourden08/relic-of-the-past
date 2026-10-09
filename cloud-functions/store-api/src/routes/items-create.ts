@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items { kind, name, summary, description, tags, license }. A draft listing owned by
- *  the caller; nothing is public until its first version is approved. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemCreateResponse } from '../../../../shared/store/api-types';
 import { itemCreateSchema } from '../../../../shared/store/schemas';
@@ -11,11 +9,9 @@ import { rateLimitRepo } from '../../../hub-core/db/rate-limit-repo';
 import type { Route } from '../../../hub-core/route.type';
 import { personOf, requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
-import { DAY_MS } from '../db/daily-repo';
+import { DAY_MS } from '../db/daily-repo.constants';
 import { newItem } from '../items/new-item';
-
-/** New listings one player may start in a day. */
-const CREATES_PER_DAY = 10;
+import { CREATES_PER_DAY } from './items-create.constants';
 
 const itemsCreate: Route = {
   ...STORE_ROUTES.itemsCreate,

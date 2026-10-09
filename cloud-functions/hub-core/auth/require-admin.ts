@@ -3,7 +3,7 @@ import type { Request } from '@google-cloud/functions-framework';
 import { forbidden } from '../http/http-error';
 import type { SiteConfig } from '../site-config.type';
 import { requireMember } from './require-member';
-import type { Member } from './require-member';
+import type { Member } from './require-member.type';
 
 const requireAdmin = async (req: Request, site: SiteConfig): Promise<Member> => {
   const member = await requireMember(req, site);

@@ -1,5 +1,4 @@
 /* @layer store-site @kind logic */
-/** What a version's manifest says, as one short line: "61 tracks · sounds included", "base en". */
 import type { KindFacts } from '@shared/store/types';
 import { plural } from '../lib/format-count';
 

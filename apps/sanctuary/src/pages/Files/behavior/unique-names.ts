@@ -1,11 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-/**
- * Entry names for a zip: two files with the same name would overwrite each other, so a
- * repeat gets " (2)", " (3)" before its extension. Names compare without case, the way
- * most file systems will unpack them.
- */
-
-const EXTENSION = /(\.[^./\\]+)$/;
+import { EXTENSION } from './unique-names.constants';
 
 const numbered = (name: string, n: number) => {
   const match = EXTENSION.exec(name);

@@ -1,35 +1,20 @@
 /* @layer store-site @kind component */
-/**
- * The Publish form for one mode: the pack (and what changed in it, for a new version), the
- * listing and its pictures, the rights box, then the submit button. A red line on top counts
- * the fields still wrong once Submit is pressed, and each of them is outlined in red.
- */
 import { Button } from '@ds/primitives/Button';
 import { Checkbox } from '@ds/primitives/Checkbox';
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import type { StoreItem } from '@shared/store/types';
-import { STORE_LIMITS } from '@shared/store/limits';
 import { navigate } from '@site-kit/router/useLocation';
 import { SUBMIT_LABELS } from '../Publish.constants';
-import type { PublishMode } from '../Publish.constants';
 import { usePublishForm } from '../behavior/usePublishForm';
 import { useScrollToFirstError } from '../behavior/useScrollToFirstError';
 import { ListingFields } from './ListingFields';
 import { PackField } from './PackField';
 import { ChangesField } from './ChangesField';
 import { PictureField } from './PictureField';
-
-type PublishFormProps = {
-  mode: PublishMode;
-  /** The item a version or an edit is for; null for a new item. */
-  item: StoreItem | null;
-};
-
-const RIGHTS_LINE = 'I made this, or I have the right to share it, and it holds nothing I may not share.';
-const { card: CARD, banner: BANNER } = STORE_LIMITS;
+import { BANNER, CARD, RIGHTS_LINE } from './PublishForm.constants';
+import type { PublishFormProps } from './PublishForm.type';
 
 const PublishForm = (props: PublishFormProps) => {
   const { mode, item } = props;
@@ -90,4 +75,3 @@ const PublishForm = (props: PublishFormProps) => {
 };
 
 export { PublishForm };
-export type { PublishFormProps };

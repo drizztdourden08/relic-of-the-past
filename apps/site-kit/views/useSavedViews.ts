@@ -1,22 +1,10 @@
 /* @layer site-kit @kind hook */
-/**
- * The user's named views of one surface: listed on mount, saved from the live arrangement,
- * renamed, deleted, and applied. Applying copies the view's snapshot into the surface's
- * live record and tells the page, which bumps its key nonce so the table reloads.
- */
 import { useCallback, useEffect, useState } from 'react';
 import type { SavedView } from '@shared/hub/types';
 import { emptySnapshot, isViewSnapshot } from '@ds/data/view-state/snapshot';
 import { listViews, putView, deleteView } from '../api/views-endpoints';
 import { errorMessage } from '../api/api-error';
-import type { SiteViews } from './create-view-storage';
-
-type UseSavedViewsParams = {
-  views: SiteViews;
-  surface: string;
-  /** Called after a view's snapshot became the live arrangement. */
-  onApplied: () => void;
-};
+import type { UseSavedViewsParams } from './useSavedViews.type';
 
 const useSavedViews = (params: UseSavedViewsParams) => {
   const { views: siteViews, surface, onApplied } = params;
@@ -55,7 +43,6 @@ const useSavedViews = (params: UseSavedViewsParams) => {
     setActiveId(saved.id);
   }), [run, surface, upsert, current]);
 
-  /** Overwrites the named view with the live arrangement. */
   const update = useCallback((id: string) => run(async () => {
     const view = views.find((row) => row.id === id);
     if (!view) return;
@@ -86,7 +73,4 @@ const useSavedViews = (params: UseSavedViewsParams) => {
   return { views, active, busy, error, saveAs, update, rename, remove, apply };
 };
 
-type SavedViewsState = ReturnType<typeof useSavedViews>;
-
 export { useSavedViews };
-export type { SavedViewsState, UseSavedViewsParams };

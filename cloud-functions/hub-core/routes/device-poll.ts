@@ -1,8 +1,4 @@
 /* @layer hub-core @kind logic */
-/** POST /device/poll { deviceId, pollSecret }, no auth. Pending until the code
- *  is confirmed, then the Bearer token exactly once: the token is minted on the
- *  delivering poll and only its hash stays. A second poll finds a closed
- *  handshake and gets `used`. */
 import { HUB_ROUTES, devicePollSchema } from '../../../shared/hub';
 import { forbidden, notFound } from '../http/http-error';
 import { parseBody } from '../http/parse-body';
@@ -10,8 +6,7 @@ import { newDeviceToken, sha256 } from '../auth/device-token';
 import { devicesRepo } from '../db/devices-repo';
 import { now } from '../db/firestore';
 import type { Route } from '../route.type';
-
-type PollStatus = 'pending' | 'confirmed' | 'denied' | 'expired' | 'used';
+import type { PollStatus } from './device-poll.type';
 
 const devicePoll: Route = {
   ...HUB_ROUTES.devicePoll,
@@ -35,4 +30,4 @@ const devicePoll: Route = {
 };
 
 export { devicePoll };
-export type { PollStatus };
+export type { PollStatus } from './device-poll.type';

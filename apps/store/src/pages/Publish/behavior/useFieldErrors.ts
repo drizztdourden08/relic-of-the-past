@@ -1,9 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * Which field errors the form shows: a field's own once it has been left, and every one
- * once Submit has been pressed. Each press is counted, so the page can move to the first
- * wrong field again on the next one.
- */
 import { useCallback, useMemo, useState } from 'react';
 import type { FieldErrors, FieldKey } from '../Publish.type';
 
@@ -25,7 +20,4 @@ const useFieldErrors = (errors: FieldErrors) => {
   return { shown, leave, attempt, attempts, count: Object.keys(errors).length };
 };
 
-type FieldErrorsState = ReturnType<typeof useFieldErrors>;
-
 export { useFieldErrors };
-export type { FieldErrorsState };

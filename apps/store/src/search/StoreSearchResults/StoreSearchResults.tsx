@@ -1,26 +1,16 @@
 /* @layer store-site @kind component */
-/**
- * The site's search pane, shown in place of the page while the nav's search is in use: an
- * empty state until something is typed, then every matching item from the catalogue as
- * cards. Opening one ends the search.
- */
 import { useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { EmptyState } from '@ds/primitives/EmptyState';
 import { Text } from '@ds/primitives/Text';
 import { SearchSpark } from '@ds/composites/SearchSpark';
-import { useStoreData } from '../../data/store-data-context';
+import { useStoreData } from '../../data/store-data-context/useStoreData';
 import { matchItems } from '../../catalog/match-items';
-import { itemPath } from '../../catalog/item-paths';
+import { itemPath } from '../../catalog/item-paths/item-path';
 import { ItemGrid } from '../../components/ItemGrid/ItemGrid';
+import type { StoreSearchResultsProps } from './StoreSearchResults.type';
+import { IDLE_MARK_SIZE } from './StoreSearchResults.constants';
 import './StoreSearchResults.css';
-
-type StoreSearchResultsProps = {
-  query: string;
-  onDone: () => void;
-};
-
-const IDLE_MARK_SIZE = 40;
 
 const summaryOf = (total: number, shown: string): string => {
   if (total === 0) return `Nothing matches "${shown}"`;
@@ -51,4 +41,3 @@ const StoreSearchResults = (props: StoreSearchResultsProps) => {
 };
 
 export { StoreSearchResults };
-export type { StoreSearchResultsProps };

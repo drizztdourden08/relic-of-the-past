@@ -1,18 +1,8 @@
 /* @layer sanctuary-site @kind component */
-/**
- * Said before any edit runs: which picked files the caller may not change, so the type,
- * tag and delete actions will leave them out. Nothing is drawn when every file is theirs.
- */
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { Text } from '@ds/primitives/Text';
-
-type SkipNoteProps = {
-  skipped: readonly SanctuaryFile[];
-  total: number;
-};
-
-/** Names listed before the rest is counted. */
-const NAMES_SHOWN = 4;
+import { NAMES_SHOWN } from './SkipNote.constants';
+import type { SkipNoteProps } from './SkipNote.type';
 
 const namesOf = (files: readonly SanctuaryFile[]) => {
   const names = files.slice(0, NAMES_SHOWN).map((file) => file.name).join(', ');
@@ -30,4 +20,3 @@ const SkipNote = (props: SkipNoteProps) => {
 };
 
 export { SkipNote };
-export type { SkipNoteProps };

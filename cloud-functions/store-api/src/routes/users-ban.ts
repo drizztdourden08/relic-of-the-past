@@ -1,8 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /users/:userId/ban. An admin bans a player from the store: their store record turns
- *  revoked, which every store route refuses and every later sign-in keeps, and their
- *  published items are unlisted. Their Sanctuary access is untouched. An admin is never
- *  banned, and never bans themselves. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { BanResponse } from '../../../../shared/store/api-types';
 import type { SiteAccess } from '../../../../shared/hub/site-types';

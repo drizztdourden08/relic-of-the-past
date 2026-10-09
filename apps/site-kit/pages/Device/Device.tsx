@@ -1,8 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * The device page the app opens at /device/<code>: the code is prefilled, the signed-in
- * user confirms it, and the page names the device that just signed in.
- */
 import { useCallback } from 'react';
 import type { ChangeEvent } from 'react';
 import { Stack } from '@ds/primitives/Stack';
@@ -12,11 +8,8 @@ import { TextInput } from '@ds/primitives/TextInput';
 import { SiteFrame } from '../../layout/SiteFrame/SiteFrame';
 import { Gate } from '../../components/Gate/Gate';
 import { useDeviceConfirm } from './behavior/useDeviceConfirm';
+import type { DeviceProps } from './Device.type';
 import './Device.css';
-
-type DeviceProps = {
-  code: string;
-};
 
 const Device = (props: DeviceProps) => {
   const { code: initialCode } = props;
@@ -59,4 +52,4 @@ const Device = (props: DeviceProps) => {
 };
 
 export { Device };
-export type { DeviceProps };
+export type { DeviceProps } from './Device.type';

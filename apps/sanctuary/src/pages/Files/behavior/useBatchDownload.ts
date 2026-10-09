@@ -1,34 +1,15 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * Downloads several files at once. Up to the zip limit they are read into one zip built
- * in the browser, with a progress bar over the bytes read and then the zip written. Past
- * it, each file is saved on its own, one after another with a short pause, so the
- * browser is never asked to hold them all in memory.
- */
 import { useCallback, useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { downloadFile } from '../../../api/files-endpoints';
 import { errorMessage } from '@site-kit/api/api-error';
 import { BATCH_SAVE_GAP_MS } from '../Files.constants';
 import { fitsInZip, totalBytes } from './batch-size';
+import { pickKeyOf } from './pick-key-of';
 import { saveBlob, saveUrl } from './save-link';
 import { uniqueNames } from './unique-names';
 import { zipFiles } from './zip-files';
-
-type DownloadStatus = {
-  running: boolean;
-  /** 0 to 100. */
-  percent: number;
-  /** What is happening, or how it ended; null before the first download. */
-  label: string | null;
-  failed: boolean;
-  /** The pick the last download was for (`pickKeyOf`), so its result is not shown under another. */
-  pickKey: string;
-};
-
-const IDLE: DownloadStatus = { running: false, percent: 0, label: null, failed: false, pickKey: '' };
-
-const pickKeyOf = (files: readonly SanctuaryFile[]) => files.map((file) => file.id).join(' ');
+import { IDLE } from './useBatchDownload.constants';
 
 const pause = (ms: number) => new Promise<void>((resolve) => { setTimeout(resolve, ms); });
 
@@ -37,7 +18,6 @@ const zipNameOf = (count: number) => `sanctuary-${count}-files.zip`;
 const useBatchDownload = () => {
   const [status, setStatus] = useState(IDLE);
 
-  /* Called per chunk read; only a new whole percent re-renders. */
   const show = useCallback((percent: number, label: string) => {
     const whole = Math.min(100, Math.floor(percent));
     setStatus((s) => (s.percent === whole && s.label === label ? s : { ...s, running: true, percent: whole, label }));
@@ -81,7 +61,4 @@ const useBatchDownload = () => {
   return { ...status, download };
 };
 
-type BatchDownload = ReturnType<typeof useBatchDownload>;
-
-export { useBatchDownload, pickKeyOf };
-export type { BatchDownload, DownloadStatus };
+export { useBatchDownload };

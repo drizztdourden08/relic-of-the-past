@@ -1,22 +1,10 @@
 /* @layer store-site @kind component */
-/**
- * The item page's Versions tab: the approved versions, each saying when its file was removed,
- * and for a reviewer a Delete on each row that asks first.
- */
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { Dialog } from '@ds/composites/Dialog';
-import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { VersionHistory } from '../../../components/VersionHistory/VersionHistory';
 import { useVersionDelete } from '../behavior/useVersionDelete';
-
-type ItemVersionsProps = {
-  item: StoreItem;
-  /** Approved versions, newest first. */
-  versions: readonly StoreVersion[];
-  canModerate: boolean;
-  onItem: (item: StoreItem) => void;
-};
+import type { ItemVersionsProps } from './ItemVersions.type';
 
 const ItemVersions = (props: ItemVersionsProps) => {
   const { item, versions, canModerate, onItem } = props;
@@ -49,4 +37,3 @@ const ItemVersions = (props: ItemVersionsProps) => {
 };
 
 export { ItemVersions };
-export type { ItemVersionsProps };

@@ -1,20 +1,8 @@
 /* @layer site-kit @kind component */
-/**
- * The centred column the public pages use: a title, one short paragraph, a stack of
- * full-width buttons and a footnote. Sign in, Pending and Device are all this shape.
- */
-import type { ReactNode } from 'react';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
+import type { GateProps } from './Gate.type';
 import './Gate.css';
-
-type GateProps = {
-  /** Optional: a page headed by the large brand needs no second title. */
-  title?: ReactNode;
-  lead?: ReactNode;
-  children?: ReactNode;
-  footnote?: ReactNode;
-};
 
 const Gate = (props: GateProps) => {
   const { title, lead, children, footnote } = props;
@@ -29,4 +17,4 @@ const Gate = (props: GateProps) => {
 };
 
 export { Gate };
-export type { GateProps };
+export type { GateProps } from './Gate.type';

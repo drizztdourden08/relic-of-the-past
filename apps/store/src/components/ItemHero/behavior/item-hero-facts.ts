@@ -1,5 +1,4 @@
 /* @layer store-site @kind logic */
-/** The facts along the bottom of an item's hero, for the version it shows. */
 import type { HeroFact } from '@domains/app/compounds/HeroFacts';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { formatDay } from '@site-kit/lib/format-date';

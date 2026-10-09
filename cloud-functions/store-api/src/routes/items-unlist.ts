@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/unlist. A reviewer hides a published item from the catalogue, the shelves
- *  and downloads. Its packs stay in the bucket, so a relist brings it back as it was. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
 import { conflict } from '../../../hub-core/http/http-error';

@@ -1,27 +1,16 @@
 /* @layer store-api @kind logic */
-/** The daily job. Recounts every item's installs over the last 30 days from the per-day
- *  counters and drops older counters. Ends versions whose upload was started and never
- *  finished, since the bucket cancels those uploads after two days: their rows stay as
- *  deleted. Removes the files of rejected and ready versions past their keep time. Reports
- *  versions that have waited so long the bucket will soon clear their upload from incoming/. */
 import type { DailyJobResponse, VersionRef } from '../../../../shared/store/api-types';
 import { STORE_LIMITS } from '../../../../shared/store/limits';
 import type { StoreItem } from '../../../../shared/store/types';
-import type { Actor } from '../../../../shared/store/version-flow';
 import { now } from '../../../hub-core/db/firestore';
 import { itemsRepo } from '../db/items-repo';
-import { DAY_MS, dailyRepo } from '../db/daily-repo';
+import { dailyRepo } from '../db/daily-repo';
+import { DAY_MS } from '../db/daily-repo.constants';
 import { storeBucket } from '../storage/store-bucket';
 import { moveVersion } from '../items/move-version';
 import { versionOf } from '../items/versions';
 import { expireFiles } from './expire-files';
-
-/** An upload started this long ago and never completed is abandoned. */
-const STALE_UPLOAD_MS = 2 * DAY_MS;
-/** A waiting version is reported this many days before the bucket clears its upload. */
-const WAITING_WARNING_DAYS = 7;
-/** The job acts for the store, so it may take any step either role could. */
-const JOB_ACTORS: readonly Actor[] = ['author', 'reviewer'];
+import { JOB_ACTORS, STALE_UPLOAD_MS, WAITING_WARNING_DAYS } from './daily.constants';
 
 const recount = async (items: StoreItem[], at: number): Promise<number> => {
   const counts = await dailyRepo.countsSince(dailyRepo.dayKey(at - (STORE_LIMITS.popularWindowDays - 1) * DAY_MS));

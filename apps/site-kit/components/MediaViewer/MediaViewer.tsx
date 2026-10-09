@@ -1,9 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * An image or a video over most of the app, on the modal backdrop. Escape, the close
- * button and a click on the backdrop close it. An image fits the view and toggles to its
- * real size (scrolling when larger); a video starts at the second the preview stood at.
- */
 import { useState } from 'react';
 import type { SyntheticEvent } from 'react';
 import { Box } from '@ds/primitives/Box';
@@ -12,17 +7,8 @@ import { Image } from '@ds/primitives/Image';
 import { Video } from '@ds/primitives/Video';
 import { usePixelArt } from '../MediaPreview/usePixelArt';
 import { DialogShell } from '@ds/composites/DialogShell';
-import type { MediaKind } from '../../lib/media-kind';
+import type { MediaViewerProps } from './MediaViewer.type';
 import './MediaViewer.css';
-
-type MediaViewerProps = {
-  kind: MediaKind;
-  src: string;
-  name: string;
-  /** Where a video starts, in seconds. */
-  startAt: number;
-  onClose: () => void;
-};
 
 const MediaViewer = (props: MediaViewerProps) => {
   const { kind, src, name, startAt, onClose } = props;
@@ -51,4 +37,4 @@ const MediaViewer = (props: MediaViewerProps) => {
 };
 
 export { MediaViewer };
-export type { MediaViewerProps };
+export type { MediaViewerProps } from './MediaViewer.type';

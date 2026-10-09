@@ -1,7 +1,4 @@
 /* @layer root-config @kind logic */
-/** The first line of every issue body. With a GitHub identity linked the login
- *  is mentioned, so GitHub's own notifications carry every later comment to the
- *  reporter. Without one the display name stands alone; no caller reads `anonymous`. */
 import type { ReportReporter } from '../../../../shared/sanctuary';
 import { identitiesRepo } from '../../../hub-core/db/identities-repo';
 

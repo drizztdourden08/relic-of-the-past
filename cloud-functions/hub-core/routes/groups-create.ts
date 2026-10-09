@@ -1,6 +1,4 @@
 /* @layer hub-core @kind logic */
-/** POST /groups, admin only. The id is made from the name and never changes,
- *  so a rename keeps every membership. */
 import { HUB_ROUTES, createGroupSchema } from '../../../shared/hub';
 import type { Group } from '../../../shared/hub';
 import { parseBody } from '../http/parse-body';

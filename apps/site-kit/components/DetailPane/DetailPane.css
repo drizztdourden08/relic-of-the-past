@@ -1,6 +1,5 @@
 /* @layer site-kit @kind style */
 
-/* The card scrolls on its own; the header's title wraps, since a file name can be long. */
 .detail {
   min-width: 0;
   min-height: 0;
@@ -17,7 +16,6 @@
   overflow-wrap: anywhere;
 }
 
-/* Keys read as the pane's own eyebrows; values keep the row's right alignment. */
 .detail .detail__field .stat-row__label {
   font-size: var(--text-xs);
   letter-spacing: var(--eyebrow-tracking);

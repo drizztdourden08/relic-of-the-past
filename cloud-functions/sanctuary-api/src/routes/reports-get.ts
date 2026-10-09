@@ -1,5 +1,4 @@
 /* @layer root-config @kind logic */
-/** GET /reports/:id. One report, the email redacted for non-admins. */
 import { SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import { requireMember } from '../../../hub-core/auth/require-member';
 import { loadVisibleReport, viewReport } from '../reports/report-view';

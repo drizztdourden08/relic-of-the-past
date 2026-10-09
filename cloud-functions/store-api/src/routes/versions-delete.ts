@@ -1,9 +1,4 @@
 /* @layer store-api @kind logic */
-/** DELETE /items/:id/versions/:n. The author deletes a ready, waiting or rejected version; a
- *  reviewer can also delete an approved one. The file leaves the bucket and the row stays as
- *  deleted, stamped with who and when. A deleted version never comes back; the next upload
- *  is a new version. Deleting the live version hands installs to the newest approved one
- *  left, or unpublishes the item when none is. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
 import { now } from '../../../hub-core/db/firestore';

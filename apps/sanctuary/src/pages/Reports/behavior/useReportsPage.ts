@@ -1,24 +1,18 @@
 /* @layer sanctuary-site @kind hook */
-/**
- * All of the Reports page's state, so the component stays a layout: the list and the
- * scope tab (both shared through the site data, so they outlive the page), the schema, the view (clauses, search, saved views), the kinds facet, the
- * selected report and its actions. Selection is the route: `/reports/:id`.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { navigate } from '@site-kit/router/useLocation';
 import { useSessionContext } from '@site-kit/session/session-context';
-import { useSiteData } from '../../../data/site-data-context';
+import { useSiteData } from '../../../data/useSiteData';
 import { toReportRow } from '../../../reports/report-row';
 import { buildReportSchema } from '../../../reports/report-schema';
 import { useSurfaceView } from '@site-kit/views/useSurfaceView';
-import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views';
+import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views.constants';
 import { useFacet } from '@site-kit/views/useFacet';
 import { filterRows } from '@site-kit/views/filter-rows';
 import type { ReportRow } from '../../../reports/report-row';
 import { scopePredicate, reportScopeTabs } from './report-scopes';
 import { useReportActions } from './useReportActions';
-
-const REPORTS_PATH = '/reports';
+import { REPORTS_PATH } from './useReportsPage.constants';
 
 const kindOf = (row: ReportRow) => row.kind;
 
@@ -30,10 +24,12 @@ const useReportsPage = (selectedId: string | null) => {
   const { reports: data, scopes, setScope } = useSiteData();
   const scopeId = scopes.reports;
   const setScopeId = useCallback((id: string) => setScope('reports', id), [setScope]);
-  // Read once per visit, so the tab counts and the filter agree on what "soon" is.
-  const [now] = useState(() => Date.now());
+  const [visitedAt] = useState(() => Date.now());
 
-  const inScope = useMemo(() => data.reports.filter(scopePredicate(scopeId, meId, now)), [data.reports, scopeId, meId, now]);
+  const inScope = useMemo(
+    () => data.reports.filter(scopePredicate(scopeId, meId, visitedAt)),
+    [data.reports, scopeId, meId, visitedAt],
+  );
   const rows = useMemo(() => inScope.map(toReportRow), [inScope]);
   const allRows = useMemo(() => data.reports.map(toReportRow), [data.reports]);
   const schema = useMemo(() => buildReportSchema(allRows), [allRows]);
@@ -45,7 +41,7 @@ const useReportsPage = (selectedId: string | null) => {
     [kinds, rows, schema, view.clauses, view.search],
   );
 
-  const tabs = useMemo(() => reportScopeTabs(data.reports, meId, now), [data.reports, meId, now]);
+  const tabs = useMemo(() => reportScopeTabs(data.reports, meId, visitedAt), [data.reports, meId, visitedAt]);
   const openCount = useMemo(() => inScope.filter((report) => report.issue.state === 'open').length, [inScope]);
 
   const selected = useMemo(

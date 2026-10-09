@@ -1,7 +1,4 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/versions/:n/parts { parts: [n..m], partsDone? }. Presigned PUT URLs for a
- *  batch of the version's parts, for its author only, while it uploads. `partsDone` is how
- *  many parts the uploader already has up; the entry keeps it with the time of the ask. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { SignPartsResponse } from '../../../../shared/store/api-types';
 import { signPartsSchema } from '../../../../shared/store/schemas';
@@ -19,7 +16,6 @@ import { storeBucket } from '../storage/store-bucket';
 const isUploading = (version: StoreVersion | null): version is StoreVersion =>
   version !== null && version.review.state === 'uploading' && version.upload !== null;
 
-/** Records the uploader's count on the entry, while the version is still uploading. */
 const recordPartsDone = (itemId: string, n: number, partsDone: number) =>
   itemsRepo.mutate(itemId, (latest) => {
     const version = versionOf(latest, n);

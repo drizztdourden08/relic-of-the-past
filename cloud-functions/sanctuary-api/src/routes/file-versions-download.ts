@@ -1,6 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /files/:id/versions/:n/download. A presigned GET for one version, ten
- *  minutes, named with that version's own file name. Counts as a download. */
 import { LIMITS, SANCTUARY_ROUTES } from '../../../../shared/sanctuary';
 import { conflict } from '../../../hub-core/http/http-error';
 import { requireMember } from '../../../hub-core/auth/require-member';

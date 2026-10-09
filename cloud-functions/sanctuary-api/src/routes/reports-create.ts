@@ -1,7 +1,4 @@
 /* @layer root-config @kind logic */
-/** POST /reports. Device, session or anonymous; an anonymous caller is
- *  rate-limited by address and must give a contact email, which stays on the
- *  record and never reaches the issue. */
 import { SANCTUARY_ROUTES, submitReportSchema } from '../../../../shared/sanctuary';
 import { clientIp } from '../../../hub-core/http/client-ip';
 import { parseBody } from '../../../hub-core/http/parse-body';

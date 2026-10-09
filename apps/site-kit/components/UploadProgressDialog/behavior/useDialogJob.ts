@@ -1,9 +1,4 @@
 /* @layer site-kit @kind hook */
-/**
- * The job the dialog shows, and what its footer offers: Close always, and the site's
- * follow-up (the store's "Send for review") for a job with a file that has not failed,
- * pressable once the job is done and until the action went through.
- */
 import { useCallback } from 'react';
 import { useUploadQueue } from '../../../upload/useUploadQueue';
 import { isMoving } from '../../../upload/useLeaveGuard';

@@ -1,6 +1,5 @@
 /* @layer store-site @kind style */
 
-/* As the plan mockup: one card, the banner in the wider column and the copy in the narrower. */
 .featured-hero {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
@@ -24,7 +23,6 @@
   padding: var(--hero-pad-y) var(--hero-pad-x);
 }
 
-/* Two classes, so the text primitive's own colour and size never win on load order. */
 .featured-hero .featured-hero__name {
   margin: 0;
   color: var(--c-text);
@@ -58,7 +56,6 @@
   background: var(--c-gold);
 }
 
-/* Below the compact breakpoint (--bp-compact) the copy stacks under the banner. */
 @media (width <= 820px) {
   .featured-hero {
     grid-template-columns: 1fr;

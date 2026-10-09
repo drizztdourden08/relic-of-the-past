@@ -1,9 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * The admin page: the groups first, then the pending queue, the members and the revoked
- * users. Each person gets a Groups menu for the groups an admin sets by hand; pending
- * users can be ignored and members revoked.
- */
 import { useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { AdminUser } from '../../api/hub-responses.type';
@@ -19,14 +14,8 @@ import { GroupsSection } from './sub-components/GroupsSection';
 import { MemberGroups } from './sub-components/MemberGroups';
 import { useAdminQueue } from './behavior/useAdminQueue';
 import { useGroups } from './behavior/useGroups';
+import { ANCHORS } from './Admin.constants';
 import './Admin.css';
-
-const ANCHORS = [
-  { id: 'groups', label: 'Groups' },
-  { id: 'pending', label: 'Pending' },
-  { id: 'members', label: 'Members' },
-  { id: 'revoked', label: 'Revoked' },
-];
 
 const Admin = () => {
   const { loading, byState, busyId, error, setGroups, revoke } = useAdminQueue();

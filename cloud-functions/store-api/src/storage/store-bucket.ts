@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** The store's bucket, with its own key scoped to it: uploads under incoming/, approved
- *  packs under packs/, pictures under media/. Keys are spelled by shared/store/keys only. */
 import { createStorage } from '../../../hub-core/storage/create-storage';
 import { readStoreEnv } from '../env';
 

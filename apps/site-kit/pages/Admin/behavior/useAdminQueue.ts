@@ -1,18 +1,9 @@
 /* @layer site-kit @kind hook */
-/**
- * The admin queue: everyone holding a record on this site, split by access state, with
- * their manual groups and Revoke. Setting groups sends the person's whole manual list and
- * reloads, since the API may move them between states. Ignore on a pending user is a
- * revoke: the row leaves the queue and the user stays out of the content until an admin
- * gives them a group.
- */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { AccessState } from '@shared/hub/types';
 import type { AdminUser } from '../../../api/hub-responses.type';
 import { listAdminQueue, setUserGroups, revokeAccess } from '../../../api/hub-endpoints';
 import { errorMessage } from '../../../api/api-error';
-
-type Grouped = Record<AccessState, AdminUser[]>;
+import type { Grouped } from './useAdminQueue.type';
 
 const emptyGroups = (): Grouped => ({ admin: [], member: [], pending: [], revoked: [] });
 

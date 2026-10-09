@@ -1,11 +1,4 @@
 /* @layer site-kit @kind component */
-/**
- * Decides what the current path shows from the session: signed out sees Sign in, a
- * pending or revoked user sees the waiting page, a member sees the page inside the
- * member frame, an admin route sends a non-admin home, and a route needing a permission
- * the caller lacks sends them home too.
- */
-import type { ComponentType, ReactNode } from 'react';
 import { Spinner } from '@ds/primitives/Spinner';
 import { Center } from '@ds/primitives/Center';
 import { Button } from '@ds/primitives/Button';
@@ -13,24 +6,10 @@ import { hasRight } from '@shared/hub/rights';
 import { useLocation } from '../router/useLocation';
 import { Redirect } from '../router/Redirect';
 import { resolveRoute } from '../router/route-table';
-import type { RouteEntry } from '../router/route-table';
 import { useSessionContext } from '../session/session-context';
 import { Gate } from '../components/Gate/Gate';
+import type { RouteGuardProps } from './RouteGuard.type';
 import './RouteGuard.css';
-
-type FrameProps = { bare?: boolean; children: ReactNode };
-
-type RouteGuardProps = {
-  routes: readonly RouteEntry[];
-  /** Where a route the caller may not see sends them. */
-  homePath: string;
-  /** The sign-in page, told where to return once signed in. */
-  signIn: (returnTo: string | undefined) => ReactNode;
-  /** The waiting page for a pending or revoked user. */
-  pending: ReactNode;
-  frame: ComponentType<FrameProps>;
-  siteName: string;
-};
 
 const RouteGuard = (props: RouteGuardProps) => {
   const { routes, homePath, signIn, pending, frame: Frame, siteName } = props;
@@ -76,10 +55,8 @@ const RouteGuard = (props: RouteGuardProps) => {
   if (entry.access === 'admin' && access.state !== 'admin') return <Redirect to="/" />;
   if (entry.permission && !hasRight(rights, entry.permission)) return <Redirect to={homePath} />;
   if (entry.bare) return entry.render(params);
-  // The one member frame: same element at the same place for every member route, so the
-  // nav, the search and the shared lists stay mounted while the page beneath them changes.
   return <Frame>{entry.render(params)}</Frame>;
 };
 
 export { RouteGuard };
-export type { RouteGuardProps, FrameProps };
+export type { RouteGuardProps, FrameProps } from './RouteGuard.type';

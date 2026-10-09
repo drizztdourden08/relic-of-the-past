@@ -1,6 +1,4 @@
 /* @layer store-api @kind logic */
-/** PUT /home/welcome { welcome }. The markdown message at the top of the home page, for
- *  anyone holding the store's feature permission. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { WelcomeResponse } from '../../../../shared/store/api-types';
 import { welcomeSchema } from '../../../../shared/store/schemas';

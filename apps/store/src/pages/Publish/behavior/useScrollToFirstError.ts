@@ -1,12 +1,6 @@
 /* @layer store-site @kind hook */
-/**
- * After each press of Submit, brings the first field outlined in red into view and puts the
- * cursor in its control when it has one. Smooth unless the player asked for less motion.
- */
 import { useEffect } from 'react';
-
-const INVALID_FIELD = '.publish .field--invalid';
-const FOCUSABLE = 'input:not([type="file"]), textarea, button';
+import { FOCUSABLE, INVALID_FIELD } from './useScrollToFirstError.constants';
 
 const useScrollToFirstError = (attempts: number) => {
   useEffect(() => {

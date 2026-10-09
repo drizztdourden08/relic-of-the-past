@@ -1,10 +1,5 @@
 /* @layer site-kit @kind component */
-/**
- * The Account page: display name, the access and groups rows, one row per sign-in method, the
- * signed-in devices and the two sign-out buttons.
- */
 import { PROVIDERS } from '@shared/hub/providers';
-import type { AccessSource } from '@shared/hub/types';
 import { Box } from '@ds/primitives/Box';
 import { Stack } from '@ds/primitives/Stack';
 import { Flex } from '@ds/primitives/Flex';
@@ -21,23 +16,8 @@ import { useSessionContext } from '../../session/session-context';
 import { formatDay } from '../../lib/format-date';
 import { useAccountActions } from './behavior/useAccountActions';
 import { useDevices } from './behavior/useDevices';
+import { ANCHORS, SOURCE_LABELS } from './Account.constants';
 import './Account.css';
-
-const ANCHORS = [
-  { id: 'name', label: 'Name' },
-  { id: 'access', label: 'Access' },
-  { id: 'sign-in', label: 'Sign-in' },
-  { id: 'devices', label: 'Devices' },
-];
-
-const SOURCE_LABELS: Record<AccessSource, string> = {
-  'admin-list': 'on the admin list',
-  'manual-grant': 'in a group an admin set',
-  'discord-role': 'via a Discord role',
-  'github-collaborator': 'via GitHub collaborator',
-  open: 'open to everyone signed in',
-  none: 'no rule matched',
-};
 
 const Account = () => {
   const { me, access, identities, groups } = useSessionContext();

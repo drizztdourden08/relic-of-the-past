@@ -1,23 +1,11 @@
 /* @layer site-kit @kind component */
-/**
- * One user in the admin queue: name, how they signed in, when, their groups (by hand or
- * from Discord) and the admin's buttons.
- */
-import type { ReactNode } from 'react';
 import { PROVIDER_LABELS } from '@shared/hub/providers';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import type { AdminUser, GroupView } from '../../../api/hub-responses.type';
 import { Row } from '../../../components/Row/Row';
 import { GroupChips } from '../../../components/GroupChips/GroupChips';
 import { formatDay } from '../../../lib/format-date';
-
-type AdminUserRowProps = {
-  row: AdminUser;
-  /** Every group, to name the ones this person is in. */
-  groups: readonly GroupView[];
-  action?: ReactNode;
-};
+import type { AdminUserRowProps } from './AdminUserRow.type';
 
 const AdminUserRow = (props: AdminUserRowProps) => {
   const { row, groups, action } = props;
@@ -34,4 +22,3 @@ const AdminUserRow = (props: AdminUserRowProps) => {
 };
 
 export { AdminUserRow };
-export type { AdminUserRowProps };

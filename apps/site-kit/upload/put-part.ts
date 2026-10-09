@@ -1,17 +1,5 @@
 /* @layer site-kit @kind logic */
-/**
- * One part PUT to its presigned URL. XMLHttpRequest instead of fetch because only it
- * reports upload progress. Resolves with the ETag the bucket answered, which complete
- * needs in part order. While the browser is offline the PUT waits for the connection
- * to come back, so a dropped network does not spend the part's tries. The signal cancels
- * the wait and the request.
- */
-type PutPartParams = {
-  url: string;
-  blob: Blob;
-  onProgress: (loaded: number) => void;
-  signal?: AbortSignal;
-};
+import type { PutPartParams } from './put-part.type';
 
 const waitOnline = (signal?: AbortSignal) => new Promise<void>((resolve, reject) => {
   if (navigator.onLine) {
@@ -31,7 +19,7 @@ const waitOnline = (signal?: AbortSignal) => new Promise<void>((resolve, reject)
   signal?.addEventListener('abort', stop, { once: true });
 });
 
-const send = (params: PutPartParams): Promise<string> => {
+const sendWithProgress = (params: PutPartParams): Promise<string> => {
   const { url, blob, onProgress, signal } = params;
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -70,8 +58,8 @@ const putPart = async (params: PutPartParams): Promise<string> => {
   const { signal } = params;
   signal?.throwIfAborted();
   await waitOnline(signal);
-  return send(params);
+  return sendWithProgress(params);
 };
 
 export { putPart };
-export type { PutPartParams };
+export type { PutPartParams } from './put-part.type';

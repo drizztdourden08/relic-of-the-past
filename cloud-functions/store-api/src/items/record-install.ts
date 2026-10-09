@@ -1,15 +1,10 @@
 /* @layer store-api @kind logic */
-/** Records one download as an install, in one transaction. The install record is what a
- *  rating needs. An item counts a player once in its total and once per day toward Popular,
- *  so downloading again the same day moves neither; the author's own downloads count for
- *  neither. */
 import type { Install } from '../../../../shared/store/rating-types';
 import { db } from '../../../hub-core/db/firestore';
 import { itemsRepo } from '../db/items-repo';
 import { installsRepo } from '../db/installs-repo';
 import { dailyRepo } from '../db/daily-repo';
-
-type InstallInput = { itemId: string; userId: string; version: number; isAuthor: boolean; at: number };
+import type { InstallInput } from './record-install.type';
 
 const recordInstall = ({ itemId, userId, version, isAuthor, at }: InstallInput): Promise<void> =>
   db().runTransaction(async (tx) => {

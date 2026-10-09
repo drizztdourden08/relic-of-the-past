@@ -1,30 +1,14 @@
 /* @layer store-site @kind component */
-/**
- * An author's public page: their name, the day they joined, how many items they published,
- * their installs and ratings, then their published items. Nothing waiting or rejected
- * shows here; that lives on their own My publications page.
- */
 import userIcon from '@iconify-icons/lucide/user';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import type { AuthorResponse } from '@shared/store/api-types';
-import { formatDay } from '@site-kit/lib/format-date';
 import { ItemGrid } from '../../components/ItemGrid/ItemGrid';
 import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { itemPath } from '../../catalog/item-paths';
-import { formatAverage, formatCount, plural } from '../../lib/format-count';
 import { useAuthor } from './behavior/useAuthor';
+import { totalsLine } from './behavior/totals-line';
+import type { AuthorProps } from './Author.type';
 import './Author.css';
-
-type AuthorProps = { userId: string };
-
-const totalsLine = (data: AuthorResponse): string => {
-  const { author, items } = data;
-  const rating = author.ratingAverage === null
-    ? 'no ratings yet'
-    : `★ ${formatAverage(author.ratingAverage)} from ${plural(author.ratingCount, 'rating', 'ratings')}`;
-  return `joined ${formatDay(author.joinedAt)} · ${formatCount(items.length)} published · ${plural(author.installs, 'install', 'installs')} · ${rating}`;
-};
 
 const Author = (props: AuthorProps) => {
   const { userId } = props;
@@ -45,4 +29,4 @@ const Author = (props: AuthorProps) => {
 };
 
 export { Author };
-export type { AuthorProps };
+export type { AuthorProps } from './Author.type';

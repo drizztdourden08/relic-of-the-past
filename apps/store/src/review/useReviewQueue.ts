@@ -1,19 +1,11 @@
 /* @layer store-site @kind hook */
-/**
- * A reviewer's list of entries, loaded when the page opens: by default the queue (every
- * waiting version and listing edit, oldest first), or whatever `load` answers, such as the
- * versions not submitted yet.
- */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReviewEntry } from '@shared/store/api-types';
 import { errorMessage } from '@site-kit/api/api-error';
-import { listReviewQueue } from '../api/review-endpoints';
+import { listReviewQueue } from '../api/review-endpoints/list-review-queue';
+import type { EntriesLoader } from './useReviewQueue.type';
+import { NO_ENTRIES } from './useReviewQueue.constants';
 
-type EntriesLoader = () => Promise<{ entries: ReviewEntry[] }>;
-
-const NO_ENTRIES: ReviewEntry[] = [];
-
-/** `load` must be stable, e.g. a module-level endpoint. */
 const useReviewQueue = (load: EntriesLoader = listReviewQueue) => {
   const [entries, setEntries] = useState<ReviewEntry[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +30,5 @@ const useReviewQueue = (load: EntriesLoader = listReviewQueue) => {
   );
 };
 
-type ReviewQueue = ReturnType<typeof useReviewQueue>;
-
 export { useReviewQueue };
-export type { ReviewQueue, EntriesLoader };
+export type { ReviewQueue, EntriesLoader } from './useReviewQueue.type';

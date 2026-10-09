@@ -1,9 +1,4 @@
 /* @layer store-site @kind hook */
-/**
- * All of the review page's state: the entry, the item as it will read once approved, the
- * header tab, the pack it reads and the link to it, and the reviewer's actions. A decision
- * or a delete goes back to the Reviewer Hub list.
- */
 import { useCallback, useMemo, useState } from 'react';
 import { navigate } from '@site-kit/router/useLocation';
 import { reviewPack } from '../../../api/review-endpoints';
@@ -12,12 +7,8 @@ import { useReviewActions } from '../../Review/behavior/useReviewActions';
 import { packTargetOf } from './pack-target';
 import { previewOf } from './preview-item';
 import { useReviewEntry } from './useReviewEntry';
-
-type ReviewItemTab = 'store' | 'contents' | 'details';
-
-const REVIEW_PATH = '/review';
-
-const NO_TARGET = { n: null, noPack: null, note: null };
+import { NO_TARGET, REVIEW_PATH } from './useReviewItemPage.constants';
+import type { ReviewItemTab } from './useReviewItemPage.type';
 
 const useReviewItemPage = (rowId: string) => {
   const { entry, loading, error } = useReviewEntry(rowId);
@@ -50,4 +41,3 @@ const useReviewItemPage = (rowId: string) => {
 };
 
 export { useReviewItemPage };
-export type { ReviewItemTab };

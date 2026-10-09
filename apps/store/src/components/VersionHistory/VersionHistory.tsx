@@ -1,27 +1,13 @@
 /* @layer store-site @kind component */
-/**
- * The approved versions of an item, newest first: the version number, the day it was
- * approved, what changed and its size. The live one is marked, and one whose file the store
- * removed says so in place of its size. Given `onDelete`, each row ends with a Delete button.
- */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
-import type { StoreVersion } from '@shared/store/types';
 import { Chip } from '@site-kit/components/Chip/Chip';
 import { formatBytes } from '@site-kit/lib/format-bytes';
 import { formatDay } from '@site-kit/lib/format-date';
-import { approvedAtOf } from '../../catalog/approved-versions';
+import { approvedAtOf } from '../../catalog/approved-versions/approved-at-of';
+import type { VersionHistoryProps } from './VersionHistory.type';
 import './VersionHistory.css';
-
-type VersionHistoryProps = {
-  /** Approved versions, newest first. */
-  versions: readonly StoreVersion[];
-  liveVersion: number | null;
-  /** A reviewer's delete; omitted, the table has no actions column. */
-  onDelete?: (version: StoreVersion) => void;
-  busy?: boolean;
-};
 
 const VersionHistory = (props: VersionHistoryProps) => {
   const { versions, liveVersion, onDelete, busy = false } = props;
@@ -58,4 +44,4 @@ const VersionHistory = (props: VersionHistoryProps) => {
 };
 
 export { VersionHistory };
-export type { VersionHistoryProps };
+export type { VersionHistoryProps } from './VersionHistory.type';

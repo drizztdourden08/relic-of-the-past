@@ -1,32 +1,13 @@
 /* @layer store-site @kind component */
-/**
- * An item's ratings: the average in large type with its stars and count, the spread by
- * star, then the player's own stars. The picker is live only when the host says the player
- * may rate; otherwise the reason stands in its place.
- */
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import type { ItemStats } from '@shared/store/types';
-import type { Stars as StarCount } from '@shared/store/rating-types';
 import { averageOf, formatAverage, plural } from '../../lib/format-count';
 import { Stars } from '../Stars/Stars';
 import { RatingHistogram } from './sub-components/RatingHistogram';
+import type { RatingPanelProps } from './RatingPanel.type';
 import './RatingPanel.css';
-
-type RatingPanelProps = {
-  stats: ItemStats;
-  myRating: StarCount | null;
-  /** Null when the player may rate; otherwise why they cannot, shown in place of the picker. */
-  blockedReason: string | null;
-  /** A line under the picker, such as when they installed it. */
-  note?: string;
-  busy: boolean;
-  error: string | null;
-  onRate: (stars: StarCount) => void;
-  onClear: () => void;
-};
 
 const RatingPanel = (props: RatingPanelProps) => {
   const { stats, myRating, blockedReason, note, busy, error, onRate, onClear } = props;
@@ -59,4 +40,4 @@ const RatingPanel = (props: RatingPanelProps) => {
 };
 
 export { RatingPanel };
-export type { RatingPanelProps };
+export type { RatingPanelProps } from './RatingPanel.type';
