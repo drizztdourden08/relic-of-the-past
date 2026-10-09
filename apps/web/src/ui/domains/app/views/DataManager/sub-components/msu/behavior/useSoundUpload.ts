@@ -1,19 +1,10 @@
 /* @layer renderer-components @kind hook */
-/**
- * Drops audio into the pack without claiming a slot: only a safe, unused name is needed. Not the
- * track upload with a flag, because that hook's weight is the `<prefix><n>.<ext>` slot naming.
- */
 import { useCallback, useState } from 'react';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { sanitizeFileName, uniqueFileName } from './track-file-name';
-import { failure } from './usePackList';
-import type { ActionResult, MsuFile } from '../msu.type';
-
-interface SoundUploadParams {
-  pack: string | null;
-  files: MsuFile[];
-  reload: () => void;
-}
+import { failure } from './failure';
+import type { ActionResult } from '../msu.type';
+import type { SoundUploadParams } from './useSoundUpload.type';
 
 const useSoundUpload = (params: SoundUploadParams) => {
   const { pack, files, reload } = params;
@@ -47,4 +38,3 @@ const useSoundUpload = (params: SoundUploadParams) => {
 };
 
 export { useSoundUpload };
-export type { SoundUploadParams };

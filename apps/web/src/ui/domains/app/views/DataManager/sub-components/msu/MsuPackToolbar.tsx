@@ -1,22 +1,11 @@
 /* @layer renderer-components @kind component */
-// One name field for both a new empty pack and an import: two fields invite filling in the wrong one.
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
 import { TextInput } from '@ds/primitives/TextInput';
-
-interface MsuPackToolbarProps {
-  name: string;
-  busy: boolean;
-  /** The name is a pack installed from the Hookshop, which nothing may write into. */
-  nameInstalled: boolean;
-  onNameChange: (name: string) => void;
-  onCreate: () => void;
-}
-
-const HINT = 'Names a new empty pack, or the pack an import creates.';
-const INSTALLED_HINT = 'That name is a pack installed from the Hookshop, which stays read only. Pick another.';
+import { HINT, INSTALLED_HINT } from './MsuPackToolbar.constants';
+import type { MsuPackToolbarProps } from './MsuPackToolbar.type';
 
 const MsuPackToolbar = (props: MsuPackToolbarProps) => {
   const { name, busy, nameInstalled, onNameChange, onCreate } = props;
@@ -43,4 +32,3 @@ const MsuPackToolbar = (props: MsuPackToolbarProps) => {
 };
 
 export { MsuPackToolbar };
-export type { MsuPackToolbarProps };

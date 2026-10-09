@@ -1,56 +1,18 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
 import { Box } from '@ds/primitives/Box';
 import { IconButton } from '@ds/primitives/IconButton';
 import { Text } from '@ds/primitives/Text';
-import type { SelectOption } from '@ds/primitives/Select';
 import { formatBytes } from '@app/utils/formatBytes';
 import { MsuPackHeader } from './MsuPackHeader';
 import { TrackDetail } from './TrackDetail';
 import { TrackSection } from './TrackSection';
 import { useOriginalPreview } from './behavior/useOriginalPreview';
 import { trackTarget } from './behavior/layer-target';
-import type { ExportFormat } from './behavior/usePackExport';
-import type { PreviewReportStore } from './behavior/preview-report-store';
-import type { MatchedTrack, MsuFile, PackFormat } from './msu.type';
+import type { MsuTrackPanelProps } from './MsuTrackPanel.type';
 import './msu-studio.css';
-
-interface MsuTrackPanelProps {
-  selected: string;
-  files: MsuFile[];
-  manifest: MsuPackManifest;
-  saveBase: MsuPackManifest;
-  format: PackFormat;
-  totalSize: number;
-  isDeluxe: boolean;
-  hasOpuz: boolean;
-  rows: MatchedTrack[];
-  unusedFiles: MsuFile[];
-  fileOptions: SelectOption[];
-  playing: number | null;
-  /** The preview's live per-layer feed, read only by the readouts that draw it. */
-  reportStore: PreviewReportStore;
-  openTrack: number | null;
-  busy: boolean;
-  /** An installed pack: slots play and export, nothing changes. */
-  readOnly: boolean;
-  exporting: ExportFormat | null;
-  statusMessage: string | null;
-  statusOk: boolean;
-  onTrackAssign: (trackNum: number, fileName: string) => void;
-  onTrackUpload: (trackNum: number, files: File[]) => void;
-  onToggleLayers: (trackNum: number) => void;
-  onPreview: (trackNum: number) => void;
-  onStopPreview: () => void;
-  onRename: (name: string) => void;
-  onExport: (format: ExportFormat) => void;
-  onDeleteFile: (fileName: string) => void;
-  /** The app's confirm dialog, for a layer edit that discards files. See `LayerEditorProps`. */
-  onConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  onReload: () => void;
-}
+import './msu-files.css';
 
 const MsuTrackPanel = (props: MsuTrackPanelProps) => {
   const {
@@ -62,10 +24,8 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
 
   const filled = rows.filter((r) => r.fileName !== null).length;
 
-  // The chip's own music. Owned here, not passed in: it needs only the slot number.
   const original = useOriginalPreview('music');
 
-  // One thing sounds at a time, so each start silences the other.
   const previewTrack = useCallback((trackNum: number) => {
     original.stop();
     onPreview(trackNum);
@@ -160,4 +120,3 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
 };
 
 export { MsuTrackPanel };
-export type { MsuTrackPanelProps };

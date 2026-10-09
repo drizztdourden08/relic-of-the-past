@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind style */
-
 .preview-readout {
   display: flex;
   flex-direction: column;
@@ -34,7 +33,6 @@
   color: var(--c-text-muted);
 }
 
-/* Pushed against the clock, not centred, so the head reads title ... note clock. */
 .preview-readout__detail {
   margin-inline-start: auto;
   color: var(--c-gold);
@@ -53,7 +51,6 @@
   min-width: 0;
 }
 
-/* Sounding-or-not is carried by this dot, so the state reads without parsing any text. */
 .layer-meter__pulse {
   flex: 0 0 auto;
   width: 0.5rem;
@@ -88,7 +85,6 @@
   border-radius: var(--radius-sm);
 }
 
-/* A layer shows a row per audible sound plus its countdown, stacked under the one head line. */
 .layer-meter__rows {
   display: flex;
   flex-direction: column;
@@ -102,7 +98,6 @@
   padding-left: var(--space-md);
 }
 
-/* Names the row after the file it is playing, so stacked rows are never ambiguous. */
 .layer-meter__caption {
   flex: 0 0 auto;
   width: 11rem;
@@ -114,7 +109,6 @@
   white-space: nowrap;
 }
 
-/* The countdown is a word, not a file; styled as a label so it never reads as one of the sounds. */
 .layer-meter__gauge[data-kind='next'] .layer-meter__caption {
   color: var(--c-text-muted);
   text-transform: uppercase;
@@ -136,7 +130,6 @@
   color: var(--c-text-dim);
 }
 
-/* No bar drawn: the wording takes the space the bar would have had, so rows stay aligned. */
 .layer-meter__gauge[data-bar='no'] .layer-meter__label {
   flex: 1 1 auto;
   color: var(--c-text-muted);
@@ -160,13 +153,10 @@
   white-space: nowrap;
 }
 
-/* A pass on its way in is arriving, so it takes the sounding colour; one on its way out keeps
-   the gold of something being waited on. Direction then reads without the words. */
 .layer-meter__fade[data-fade='in'] .layer-meter__fade-label {
   color: var(--c-green-bright);
 }
 
-/* Short on purpose: it measures the fade, not the file, and must not rival the position bar. */
 .layer-meter__fade-bar {
   flex: 0 0 auto;
   width: 3rem;

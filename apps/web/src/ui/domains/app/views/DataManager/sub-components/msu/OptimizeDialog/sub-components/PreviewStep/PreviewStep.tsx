@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// Pack figures sum only measured rows; see preview-totals for why unmeasured files are counted apart.
 import { useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { EmptyState } from '@ds/primitives/EmptyState';
@@ -9,7 +8,6 @@ import { previewTotals } from './behavior/preview-totals';
 import { CandidateRow } from './sub-components/CandidateRow';
 import type { PreviewStepProps } from './PreviewStep.type';
 
-/** `−1.2 MB` saved, or `+1.2 MB` if the pack grows. */
 const netLabel = (net: number): string => (net < 0 ? `+${formatBytes(-net)}` : `−${formatBytes(net)}`);
 
 const PreviewStep = (props: PreviewStepProps) => {
@@ -68,4 +66,3 @@ const PreviewStep = (props: PreviewStepProps) => {
 };
 
 export { PreviewStep };
-export type { PreviewStepProps };

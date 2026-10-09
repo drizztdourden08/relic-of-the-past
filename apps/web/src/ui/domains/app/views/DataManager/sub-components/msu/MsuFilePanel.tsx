@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The pack as files, not slots. The drop zone and the format conversion live here because the
- * files are one shared pool that every slot and sound draws from.
- */
 import { useCallback, useMemo, useState } from 'react';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { Box } from '@ds/primitives/Box';
 import { Checkbox } from '@ds/primitives/Checkbox';
 import { DropZone } from '@ds/primitives/DropZone';
@@ -22,29 +17,8 @@ import { useFilePanel } from './behavior/useFilePanel';
 import { useFileUsage } from './behavior/useFileUsage';
 import { useSupersededFiles } from './behavior/useSupersededFiles';
 import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
-import type { MsuFile } from './msu.type';
-
-interface MsuFilePanelProps {
-  pack: string;
-  /** What the rows credit a file to: the pack's own manifest, or the classic view of its files. */
-  manifest: MsuPackManifest;
-  /** What a rename WRITES into. Null for a classic pack, which stays classic. */
-  saveBase: MsuPackManifest | null;
-  files: MsuFile[];
-  /** An installed pack: files play, and none can be added, renamed, converted or deleted. */
-  readOnly: boolean;
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  onReload: () => void;
-}
-
-/** There is nothing to convert in a pack with no audio in it yet. */
-const EMPTY_PACK = 'Add some audio to this pack first.';
-
-/** Stable empty list, so a row with no uses is not handed a fresh array on every render. */
-const NO_USES: string[] = [];
-
-// Column headings in grid order; keep in step with the template that sizes them.
-const COLUMNS = ['Name', 'Format', 'Size', 'Length', 'Rate', 'Repeats', 'Played by', ''];
+import { COLUMNS, EMPTY_PACK, NO_USES } from './MsuFilePanel.constants';
+import type { MsuFilePanelProps } from './MsuFilePanel.type';
 
 const MsuFilePanel = (props: MsuFilePanelProps) => {
   const { pack, manifest, saveBase, files, readOnly, onDeleteConfirm, onReload } = props;
@@ -66,7 +40,6 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
     [rows, supersededOnly, covered.superseded],
   );
 
-  // Deleting a file a slot still names leaves that slot silent, so the confirmation says which.
   const confirmDelete = useCallback((fileName: string) => {
     const uses = usage.get(fileName) ?? NO_USES;
     const played = uses.length > 0 ? ` ${uses.join(', ')} will be left with nothing to play.` : '';
@@ -77,7 +50,6 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
     );
   }, [usage, onDeleteConfirm, deleteFile]);
 
-  // These are normally orphans; one still named by a slot is re-pointed to its converted file first.
   const confirmRemoveSuperseded = useCallback(() => {
     const doomed = [...covered.superseded];
     const stillNamed = doomed.filter((name) => (usage.get(name) ?? NO_USES).length > 0);
@@ -143,7 +115,6 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         </Text>
       )}
 
-      {/* Nothing until the first metadata read settles: an empty state would claim the pack has no files. */}
       {!panel.ready ? null : shown.length === 0 ? (
         <EmptyState message={metadata.length === 0
           ? 'This pack has no audio yet. Drop some in above'
@@ -155,7 +126,6 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         <Box className="msu-file-grid">
           <Box className="msu-file-grid__head" aria-hidden>
             {COLUMNS.map((label, index) => (
-              // The last column is the row's buttons, which need the width but not a heading.
               <Text key={label === '' ? `actions-${index}` : label} className="msu-file-grid__label">
                 {label}
               </Text>
@@ -194,4 +164,3 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
 };
 
 export { MsuFilePanel };
-export type { MsuFilePanelProps };

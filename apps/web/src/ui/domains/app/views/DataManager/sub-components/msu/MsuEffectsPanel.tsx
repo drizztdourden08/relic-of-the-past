@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Both effect channels as ONE list with one search box: guessing which of two lists held a sound
- * was the problem. The channels stay separate id spaces (0x12 differs per port), carried by each
- * row leading with its port. Each channel keeps its own controller; this component hands them one
- * query, picks the right one per row, and keeps them from sounding at once.
- */
 import { useCallback, useMemo, useState } from 'react';
 import type { SoundChannel } from '@shared/types/msu-manifest';
 import { Box } from '@ds/primitives/Box';
@@ -20,18 +14,14 @@ import { useSoundPanel } from './behavior/useSoundPanel';
 import { EFFECT_CHANNELS, soundTitle } from './sound-labels';
 import { SOUND_FILTER_HINT, SOUND_FILTER_PLACEHOLDER } from './msu.constants';
 import { soundPreviewKey } from './behavior/preview-key';
+import { EFFECTS_SUBTITLE } from './MsuEffectsPanel.constants';
 import type { MsuEffectsPanelProps } from './msu.type';
 
 const [FIRST, SECOND] = EFFECT_CHANNELS;
 
-const EFFECTS_SUBTITLE = 'The sound chip raises one-shot effects on two ports, each numbering its'
-  + ' sounds from scratch, so the same id is a different sound on each. Every row leads with the'
-  + ' port it belongs to.';
-
 const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   const { pack, manifest, saveBase, files, isLayered, readOnly, onDeleteConfirm, onReload } = props;
   const [filter, setFilter] = useState('');
-  // `sfx2` in the box means the port, not text to find, so it is applied to the merged list instead.
   const query = parseEffectQuery(filter);
   const shared = {
     pack, manifest, saveBase, files, filter: query.text, showUnreachable: false, reload: onReload,
@@ -49,8 +39,6 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
     [first, second],
   );
 
-  // One list, so the ids interleave: 0x01 on both ports, then 0x02 on both. Grouping by port
-  // instead would put the two lists back, only without the headings that made them navigable.
   const wanted = query.channel;
   const rows = useMemo(() => [
     ...(wanted === SECOND ? [] : first.rows.map((row) => ({ channel: FIRST, row }))),
@@ -58,7 +46,6 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   ].sort((a, b) => a.row.soundId - b.row.soundId || a.channel.localeCompare(b.channel)),
   [first.rows, second.rows, wanted]);
 
-  // Each channel silences only its own audition, so the list stops the other one itself.
   const play = useCallback((channel: SoundChannel, soundId: number) => {
     otherOf(channel).stop();
     panelOf(channel).play(channel, soundId);
@@ -69,8 +56,6 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
     panelOf(channel).playOriginal(soundId);
   }, [otherOf, panelOf]);
 
-  // Same reasoning for the editor: one row open at a time across the whole list, or two editors
-  // sit open over one shared save.
   const toggleLayers = useCallback((channel: SoundChannel, soundId: number) => {
     otherOf(channel).closeLayers();
     panelOf(channel).toggleLayers(soundId);
@@ -120,7 +105,6 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
         <Box className="track-list">
           {rows.map(({ channel, row }) => (
             <SoundListItem
-              // Keyed by channel AND id: the ports share id numbers, so the id alone repeats.
               key={soundPreviewKey(channel, row.soundId)}
               pack={pack}
               channel={channel}

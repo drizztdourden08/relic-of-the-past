@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind hook */
-/**
- * Subscribes one component to the live report, so only it redraws per frame. The key gets checked
- * because auditioning one thing while another is expanded is normal.
- */
 import { useCallback, useSyncExternalStore } from 'react';
-import type { PreviewReport, PreviewReportStore } from './preview-report-store';
+import type { PreviewReport, PreviewReportStore } from './preview-report-store.type';
 
 const usePreviewReport = (store: PreviewReportStore, previewKey: string): PreviewReport | null => {
   const getSnapshot = useCallback((): PreviewReport | null => {

@@ -1,21 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * One file in the pack: what it is, what plays it, and its name. The name is editable here because
- * in a pack without a manifest the name IS the wiring, and everywhere else it is the only handle
- * the layer editor gives you for picking a file.
- *
- * A rename commits when the field is left, never per keystroke: every commit copies the bytes to
- * the new name and re-points the manifest, which is not something to do once per letter.
- *
- * The card is the entry and the grid row is only its top line, so the player opens INSIDE the file
- * it belongs to instead of under it. Every cell sits in the column template the list declares, so
- * a row cannot lay itself out and drift out of line with the header.
- *
- * Length, rate and channels are known for MSU-1 pcm alone. That format fixes the rate and the
- * channel count, so all three follow from the byte count; an encoded file would have to be decoded
- * to answer, so it reads as unknown, not as zero. A repeat point needs the file itself, so
- * it appears once the file has been played and not before.
- */
 import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Badge } from '@ds/primitives/Badge';
@@ -27,34 +10,13 @@ import type { MsuFileMetadata } from '@shared/storage/msu';
 import { formatBytes } from '@app/utils/formatBytes';
 import { FilePlayer } from '@domains/packs/music/compounds/FilePlayer';
 import { clock } from '@domains/packs/music/behavior/clock';
-import type { Audition } from '@domains/packs/music/behavior/file-audition';
 import { listSummary } from './sound-labels';
-
-interface FileRowProps {
-  file: MsuFileMetadata;
-  /** The places that name this file; empty means nothing plays it. */
-  usedBy: string[];
-  /** Seconds it repeats from, null when it declares none, undefined until it has been played. */
-  loopSeconds: number | null | undefined;
-  playing: boolean;
-  /** True while its bytes are being fetched and decoded, before a note sounds. */
-  loading: boolean;
-  /** The handle on the sounding file, for the player this row opens. Null unless it is playing. */
-  audition: Audition | null;
-  busy: boolean;
-  /** An installed pack: the file plays, and it cannot be renamed or deleted. */
-  readOnly: boolean;
-  onPlay: (fileName: string) => void;
-  onRename: (from: string, to: string) => void;
-  onDelete: (fileName: string) => void;
-}
-
-const UNKNOWN = '-';
+import { UNKNOWN } from './FileRow.constants';
+import type { FileRowProps } from './FileRow.type';
 
 const channelName = (channels: number): string =>
   (channels === 1 ? 'mono' : channels === 2 ? 'stereo' : `${channels} ch`);
 
-/** `44.1 kHz · stereo`, or unknown for a format that would have to be decoded to say. */
 const rateSpec = (file: MsuFileMetadata): string => {
   const { sampleRate, channels } = file;
   if (sampleRate === null || channels === null) return UNKNOWN;
@@ -65,8 +27,6 @@ const FileRow = (props: FileRowProps) => {
   const { file, usedBy, loopSeconds, playing, loading, audition, busy, readOnly, onPlay, onRename, onDelete } = props;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(file.name);
-  // Escape has to be known to the blur that follows it, and it lands in the same tick, so it
-  // cannot go through state.
   const cancelled = useRef(false);
 
   useEffect(() => { setDraft(file.name); }, [file.name]);
@@ -80,8 +40,6 @@ const FileRow = (props: FileRowProps) => {
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === 'Enter') event.currentTarget.blur();
-    // preventDefault marks the key consumed here: abandoning a rename must not
-    // also close the page this row is on.
     else if (event.key === 'Escape') { event.preventDefault(); cancelled.current = true; event.currentTarget.blur(); }
   };
 
@@ -163,4 +121,3 @@ const FileRow = (props: FileRowProps) => {
 };
 
 export { FileRow };
-export type { FileRowProps };

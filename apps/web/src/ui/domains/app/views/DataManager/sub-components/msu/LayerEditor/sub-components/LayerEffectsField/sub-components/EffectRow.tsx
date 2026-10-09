@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// Changing the kind resets to that kind's default: a cutoff in Hz has no meaning as a band gain in dB.
 import { Box } from '@ds/primitives/Box';
 import { Flex } from '@ds/primitives/Flex';
 import { IconButton } from '@ds/primitives/IconButton';

@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * A blob download, the one save path both hosts share (there is no save-file IPC channel). The
- * desktop shell has no `will-download` handler, so Chromium shows a real save dialog.
- */
+import { REVOKE_AFTER_MS } from './save-bytes.constants';
 
 const saveBytesAsFile = (fileName: string, bytes: Uint8Array): void => {
   const copy = new Uint8Array(bytes.byteLength);
@@ -15,8 +12,7 @@ const saveBytesAsFile = (fileName: string, bytes: Uint8Array): void => {
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  // Revoking straight away can race the download starting, so let the task queue drain first.
-  window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  window.setTimeout(() => URL.revokeObjectURL(url), REVOKE_AFTER_MS);
 };
 
 export { saveBytesAsFile };

@@ -1,32 +1,13 @@
 /* @layer renderer-components @kind hook */
-/**
- * The files tab, wired. Metadata comes from `packFileMetadata`, which opens no file. A repeat
- * point is NOT read here: it needs the file's bytes, and a whole list would pull gigabytes through
- * memory. `useFileAudition` learns it on play.
- */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import type { MsuFileMetadata } from '@shared/storage/msu';
 import { withFileRenamed } from '@shared/storage/msu-layer-edit';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { extensionOf, sanitizeFileName } from './track-file-name';
-import { failure } from './usePackList';
+import { failure } from './failure';
 import { useSoundUpload } from './useSoundUpload';
-import type { ActionResult, MsuFile } from '../msu.type';
-
-interface FilePanelParams {
-  pack: string;
-  files: MsuFile[];
-  /** What a rename WRITES into. Null for a classic pack, which must stay classic. */
-  saveBase: MsuPackManifest | null;
-  reload: () => void;
-}
-
-/** How many files the pack holds of each format, the biggest group first. */
-interface FormatCount {
-  ext: string;
-  count: number;
-}
+import type { ActionResult } from '../msu.type';
+import type { FilePanelParams, FormatCount } from './useFilePanel.type';
 
 const formatCounts = (metadata: MsuFileMetadata[]): FormatCount[] => {
   const counts = new Map<string, number>();
@@ -36,7 +17,6 @@ const formatCounts = (metadata: MsuFileMetadata[]): FormatCount[] => {
     .sort((a, b) => b.count - a.count || a.ext.localeCompare(b.ext));
 };
 
-// Why this new name cannot be used, or null. The extension is held fixed: it says how the audio is encoded.
 const renameProblem = (from: string, to: string, taken: Set<string>): string | null => {
   if (to.length === 0) return 'Give the file a name.';
   if (to !== sanitizeFileName(to)) return 'That name has characters a file name cannot hold.';
@@ -48,14 +28,12 @@ const renameProblem = (from: string, to: string, taken: Set<string>): string | n
 const useFilePanel = (params: FilePanelParams) => {
   const { pack, files, saveBase, reload } = params;
   const [metadata, setMetadata] = useState<MsuFileMetadata[]>([]);
-  // Which pack the metadata has settled FOR. Until then the panel shows nothing, not a false empty state.
   const [settledPack, setSettledPack] = useState<string | null>(null);
   const [filter, setFilter] = useState('');
   const [working, setWorking] = useState(false);
   const [status, setStatus] = useState<ActionResult | null>(null);
   const { upload, uploading } = useSoundUpload({ pack, files, reload });
 
-  // `files` changing identity means disk moved on. Previous metadata stays up during the re-read.
   useEffect(() => {
     if (files.length === 0) { setMetadata([]); setSettledPack(pack); return undefined; }
     let live = true;
@@ -84,8 +62,6 @@ const useFilePanel = (params: FilePanelParams) => {
     void (async () => {
       try {
         await msuStore.renameMsuTrackFile(pack, from, wanted);
-        // Storage moves the bytes only, so a pack with a manifest has to be re-pointed in the same
-        // breath or every layer built on this file stops finding it.
         if (saveBase !== null) await msuStore.writeMsuManifest(pack, withFileRenamed(saveBase, from, wanted));
         setStatus({ success: true, message: `Renamed to "${wanted}"` });
       } catch (err) {
@@ -116,7 +92,6 @@ const useFilePanel = (params: FilePanelParams) => {
     void upload(dropped).then(setStatus);
   }, [upload]);
 
-  // Lets an action owned by the panel above (a bulk removal, say) land in the same status line.
   const report = useCallback((result: ActionResult) => { setStatus(result); }, []);
 
   return {
@@ -131,4 +106,4 @@ const useFilePanel = (params: FilePanelParams) => {
 };
 
 export { useFilePanel };
-export type { FilePanelParams, FormatCount };
+export type { FilePanelParams, FormatCount } from './useFilePanel.type';

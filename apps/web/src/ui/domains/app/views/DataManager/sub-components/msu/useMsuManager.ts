@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind hook */
-// Composes the hooks in ./behavior into one flat surface. Every action's outcome lands in one status line.
 import { useCallback, useMemo, useState } from 'react';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { usePackList } from './behavior/usePackList';
@@ -9,10 +8,10 @@ import { useTrackAssign } from './behavior/useTrackAssign';
 import { useTrackUpload } from './behavior/useTrackUpload';
 import { useTrackPreview } from './behavior/useTrackPreview';
 import { usePackExport } from './behavior/usePackExport';
-import { usePackImport, isMsulName } from './behavior/usePackImport';
+import { usePackImport } from './behavior/usePackImport';
+import { isMsulName } from './behavior/is-msul-name';
 import type { ActionResult, PackFormat } from './msu.type';
 
-// Both kinds of skip are normal for a pack that ships extras, but silence reads as "everything came in".
 const skipNote = (result: { skippedNested?: number; skippedDuplicate?: number }): string => {
   const parts: string[] = [];
   if (result.skippedNested) parts.push(`${result.skippedNested} in subfolders (alternates and extras)`);
@@ -97,7 +96,6 @@ const useMsuManager = (onRefresh: () => void) => {
 
   const handleFileImport = useCallback(async (dropped: File[]): Promise<ActionResult> => {
     if (dropped.length === 0) return { success: false, message: 'No file selected' };
-    // A .msul carries its own manifest, so it becomes a layered pack, not a raw copy.
     if (isMsulName(dropped[0].name)) {
       const result = await importMsul(dropped[0], newPackName.trim());
       if (result.success) setNewPackName('');
@@ -114,8 +112,6 @@ const useMsuManager = (onRefresh: () => void) => {
 
   return {
     packs, selected, setSelected, refresh,
-    // True only while a pack's FIRST read is in flight. A reload keeps the studio mounted with
-    // its current rows, so an edit never blanks the pane and throws the scroll position away.
     files, trackInfos, manifest, resolved, totalSize, loadingFiles: loading && !loaded, reload, format,
     newPackName, setNewPackName,
     rows, unusedFiles, fileOptions, isDeluxe, hasOpuz,
@@ -130,7 +126,5 @@ const useMsuManager = (onRefresh: () => void) => {
   };
 };
 
-type MsuManagerModel = ReturnType<typeof useMsuManager>;
-
 export { useMsuManager };
-export type { MsuManagerModel };
+export type { MsuManagerModel } from './useMsuManager.type';

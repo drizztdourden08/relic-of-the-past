@@ -18,7 +18,7 @@ export { LayerEditor } from './LayerEditor';
 export { PreviewReadout, LayerLive, LayerMeter } from './PreviewReadout';
 export { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
 export { SOUND_CHANNEL_LABELS, STUDIO_TABS, soundHexId, soundTitle, listSummary, triggerSummary } from './sound-labels';
-export { getTrackNumber } from './msu.type';
+export { getTrackNumber } from './behavior/get-track-number';
 export type { StudioTab } from './sound-labels';
 export type {
   PackFormat, MsuPack, MsuPackRow, MsuFile, TrackInfo, MatchedTrack, ActionResult,

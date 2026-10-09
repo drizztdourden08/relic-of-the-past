@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind style */
-
 .layer-editor {
   display: flex;
   flex-direction: column;
@@ -41,8 +40,6 @@
   gap: var(--space-sm);
 }
 
-/* The two optional scheduling settings. Framed, and inset from the controls above them, so
-   neither is mistaken for another volume-style slider or for body copy. Both were. */
 .layer-card__crossfade,
 .layer-card__switch {
   padding: var(--space-sm) var(--space-md);
@@ -52,8 +49,6 @@
   border-radius: var(--radius-md);
 }
 
-/* The exact-seconds box and the state chip sit beside the slider, so the slider needs a floor
-   wide enough to still be draggable and a ceiling that leaves room for them. */
 .layer-card__crossfade .slider {
   flex: 1 1 12rem;
   min-width: 10rem;
@@ -74,8 +69,6 @@
   max-width: 20rem;
 }
 
-/* The effect chain: the same framed, inset block as the scheduling settings, for the same reason.
-   Each effect is one line, its place in the chain leading, so the order reads top to bottom. */
 .layer-card__effects {
   display: flex;
   flex-direction: column;

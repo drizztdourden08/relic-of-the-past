@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind hook */
-// Filename -> the slots and sounds that name it. Built once per manifest so rows do not each scan it.
 import { useMemo } from 'react';
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
 import { soundTitle } from '../sound-labels';
-
-/** Filename -> the places that name it, in the wording the studio uses elsewhere. */
-type FileUsageMap = Map<string, string[]>;
+import type { FileUsageMap } from './useFileUsage.type';
 
 const useFileUsage = (manifest: MsuPackManifest): FileUsageMap => useMemo(() => {
   const usage: FileUsageMap = new Map();
@@ -31,4 +28,3 @@ const useFileUsage = (manifest: MsuPackManifest): FileUsageMap => useMemo(() => 
 }, [manifest]);
 
 export { useFileUsage };
-export type { FileUsageMap };

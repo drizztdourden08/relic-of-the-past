@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-// Presentational: handed a report and draws it. No "overlapping" marker; two rows ARE the overlap.
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { layerMeters } from '../behavior/layerMeters';

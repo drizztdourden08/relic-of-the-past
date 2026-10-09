@@ -1,17 +1,7 @@
 /* @layer renderer-components @kind constants */
-/**
- * A preset is a starting point, not a mode: choosing one writes its effects onto the layer. There
- * is no "custom" entry; the picker reads as none of the presets until the chain matches one again.
- */
 import type { LayerEffect } from '@shared/types/msu-manifest';
 import type { SelectOption } from '@ds/primitives/Select';
-
-interface EffectPreset {
-  id: string;
-  label: string;
-  description: string;
-  effects: LayerEffect[];
-}
+import type { EffectPreset } from './LayerEffectsField.type';
 
 const PRESETS: EffectPreset[] = [
   {
@@ -53,17 +43,14 @@ const EFFECT_KIND_OPTIONS: SelectOption[] = [
   { value: 'eq', label: '3-band EQ', description: 'Low, mid and high, in decibels' },
 ];
 
-/** Where a newly added effect of each kind starts, audible but not drastic. */
 const DEFAULT_EFFECT: Record<LayerEffect['kind'], LayerEffect> = {
   lowpass: { kind: 'lowpass', frequencyHz: 1200 },
   highpass: { kind: 'highpass', frequencyHz: 300 },
   eq: { kind: 'eq', lowDb: 0, midDb: 0, highDb: 0 },
 };
 
-/** The ear's range, give or take; a cutoff outside it does nothing a listener could hear. */
 const MIN_HZ = 20;
 const MAX_HZ = 20000;
-/** ±12 dB covers every tasteful move and most of the tasteless ones. */
 const MAX_DB = 12;
 
 const EFFECTS_LABEL = 'Effects';
@@ -73,4 +60,3 @@ export {
   PRESETS, PRESET_OPTIONS, EFFECT_KIND_OPTIONS, DEFAULT_EFFECT, MIN_HZ, MAX_HZ, MAX_DB,
   EFFECTS_LABEL, EFFECTS_HINT,
 };
-export type { EffectPreset };

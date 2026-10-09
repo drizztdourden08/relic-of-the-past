@@ -1,25 +1,11 @@
 /* @layer renderer-components @kind component */
-// The drop zone adds to the pack's pool, not to this sound; the editor below is where a file gets used.
 import { Box } from '@ds/primitives/Box';
 import { DropZone } from '@ds/primitives/DropZone';
 import { Text } from '@ds/primitives/Text';
 import { LayerEditor } from './LayerEditor';
-import type { LayerEditorProps } from './LayerEditor';
 import { SoundGroupField } from './SoundGroupField';
 import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
-import type { SoundChannel } from '@shared/types/msu-manifest';
-
-interface SoundDetailProps extends LayerEditorProps {
-  /** Which channel and id this sound is, for the sound-level fields beside the layer editor. */
-  channel: SoundChannel;
-  soundId: number;
-  /** The saved continuity group, or undefined for none. */
-  syncGroup: string | undefined;
-  /** True while nothing claims this sound yet, so the first save is what claims it. */
-  unclaimed: boolean;
-  uploading: boolean;
-  onUpload: (files: File[]) => void;
-}
+import type { SoundDetailProps } from './SoundDetail.type';
 
 const SoundDetail = (props: SoundDetailProps) => {
   const {
@@ -42,7 +28,6 @@ const SoundDetail = (props: SoundDetailProps) => {
         disabled={uploading || readOnly}
         onDrop={onUpload}
       />
-      {/* Sound-level, so it sits beside the editor. Meaningless until the sound is claimed. */}
       {!unclaimed && (
         <SoundGroupField
           pack={pack}
@@ -72,4 +57,3 @@ const SoundDetail = (props: SoundDetailProps) => {
 };
 
 export { SoundDetail };
-export type { SoundDetailProps };
