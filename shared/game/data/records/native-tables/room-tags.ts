@@ -1,14 +1,4 @@
 /* @layer shared-game @kind data */
-/**
- * Human names for the room-header TAG bytes, indexed exactly like the game's own
- * tag-routine dispatch table (`kDungTagroutines`, 0x00-0x3F).
- *
- * Entries the dispatch table sends to an unnamed stub are left out; the accessor
- * in `simulation/room-tags.ts` falls back to the hex value, so this table never
- * claims to know more than it does. Tags 0x01-0x13 are the clear-the-room family
- * the simulator gates on; that accessor handles them, so they are not listed here.
- */
-
 const ROOM_TAG_NAMES: Readonly<Record<number, string>> = {
   0x14: 'trigger → block door',
   0x15: 'prize → door',

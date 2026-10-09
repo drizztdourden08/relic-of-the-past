@@ -1,15 +1,7 @@
 /* @layer shared-game @kind data */
-/**
- * Static collision/behavior byte maps from the ROM's own tile-attribute tables.
- * `OVERWORLD_TILE_ATTRS` is the base map read by outdoor screens; `INTERIOR_ATTRS`
- * layers the indoor overrides (reverse-engineered from TileDetect_ExecuteInner's
- * is_indoors logic) on top of it. Consumers live in `navigation/overworld-attrs.ts`
- * and `navigation/interior-attrs.ts`, which keep the accessor functions.
- */
 import type { TileAttrDef } from '@shared/game/data/types/tile-attrs-types';
 
 const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
-  // Ground / Walkable
   0x00: { pass: 'free', labels: ['ground'],                           cat: 'ground' },
   0x04: { pass: 'free', labels: ['tall grass', 'cuttable'],           cat: 'ground' },
   0x05: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
@@ -73,13 +65,11 @@ const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0xBE: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
   0xBF: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
 
-  // Slopes and cliff edges. All impassable, and cliff jumps extend through them.
   0x11: { pass: 'blocked', labels: ['cliff edge south'],              cat: 'slope' },
   0x13: { pass: 'blocked', labels: ['cliff edge north'],              cat: 'slope' },
   0x19: { pass: 'blocked', labels: ['cliff edge east'],               cat: 'slope' },
   0x1B: { pass: 'blocked', labels: ['cliff edge west'],               cat: 'slope' },
 
-  // Walls
   0x01: { pass: 'blocked', labels: ['wall'],                          cat: 'wall' },
   0x02: { pass: 'blocked', labels: ['wall'],                          cat: 'wall' },
   0x03: { pass: 'blocked', labels: ['wall'],                          cat: 'wall' },
@@ -87,13 +77,11 @@ const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0x43: { pass: 'blocked', labels: ['wall'],                          cat: 'wall' },
   0x46: { pass: 'blocked', labels: ['wall', 'plaque'],                cat: 'wall' },
 
-  // Cliff faces. Blocked, then converted to ledges by cliff preprocessing.
   0x10: { pass: 'blocked', labels: ['cliff face south'],              cat: 'cliff-face' },
   0x12: { pass: 'blocked', labels: ['cliff face north'],              cat: 'cliff-face' },
   0x18: { pass: 'blocked', labels: ['cliff face east'],               cat: 'cliff-face' },
   0x1A: { pass: 'blocked', labels: ['cliff face west'],               cat: 'cliff-face' },
 
-  // Cliff triggers. Blocked directional ledge jump tiles.
   0x28: { pass: 'blocked', labels: ['ledge y axis'],                  cat: 'cliff-trigger' },
   0x29: { pass: 'blocked', labels: ['ledge y axis'],                  cat: 'cliff-trigger' },
   0x2A: { pass: 'blocked', labels: ['ledge x axis'],                  cat: 'cliff-trigger' },
@@ -103,18 +91,13 @@ const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0x2E: { pass: 'blocked', labels: ['ledge NW'],                      cat: 'cliff-trigger' },
   0x2F: { pass: 'blocked', labels: ['ledge SW'],                      cat: 'cliff-trigger' },
 
-  // Water
   0x08: { pass: 'water', req: 'flippers', labels: ['deep water'],     cat: 'water' },
   0x0B: { pass: 'water', req: 'flippers', labels: ['deep water'],     cat: 'water' },
 
-  // Pit
   0x20: { pass: 'pit', labels: ['pit', 'hole'],                       cat: 'pit' },
 
-  // Special
   0x27: { pass: 'blocked', labels: ['hookshot-grabbable', 'grapple point'], cat: 'special', hookTarget: true },
 
-  // Liftable / Clearable Obstacles
-  // ⚠️ lift.1 IS a real requirement. NEVER remove it. It gates BFS and must show pink on overlay.
   0x50: { pass: 'obstacle', req: 'lift.1', labels: ['bush', 'sign', 'pot'],    cat: 'liftable', hookTarget: true },
   0x51: { pass: 'obstacle', req: 'lift.1', labels: ['bush', 'sign'],           cat: 'liftable', hookTarget: true },
   0x52: { pass: 'obstacle', req: 'lift.2', labels: ['light rock'],             cat: 'liftable', hookTarget: true },
@@ -123,93 +106,159 @@ const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0x55: { pass: 'obstacle', req: 'lift.2', labels: ['light rock'],             cat: 'liftable', hookTarget: true },
   0x56: { pass: 'obstacle', req: 'lift.3', labels: ['dark rock'],              cat: 'liftable', hookTarget: true },
   0x57: { pass: 'obstacle', req: 'boots',  labels: ['bonk rock', 'dash target'], cat: 'liftable' },
+
+  0xD0: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD1: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD2: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD3: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD4: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD5: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD6: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD7: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD8: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xD9: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xDA: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xDB: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xDC: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xDD: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xDE: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xDF: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE0: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE1: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE2: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE3: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE4: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE5: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE6: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE7: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE8: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xE9: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xEA: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xEB: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xEC: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xED: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xEE: { pass: 'free', labels: ['floor'], cat: 'ground' },
+  0xEF: { pass: 'free', labels: ['floor'], cat: 'ground' },
 };
 
-// Range-based free tiles (0xD0-0xEF).
-// These are all walkable floor variants in dungeons. Registered programmatically.
-for (let attr = 0xD0; attr <= 0xEF; attr++) {
-  (OVERWORLD_TILE_ATTRS as Record<number, TileAttrDef>)[attr] = { pass: 'free', labels: ['floor'], cat: 'ground' };
-}
+const INTERIOR_ATTRS: Readonly<Record<number, TileAttrDef>> = {
+  ...OVERWORLD_TILE_ATTRS,
+  0x04: { pass: 'blocked', labels: ['wall'], cat: 'wall' },
+  0x0B: { pass: 'blocked', labels: ['wall'], cat: 'wall' },
+  0x6C: { pass: 'blocked', labels: ['wall'], cat: 'wall' },
+  0x6D: { pass: 'blocked', labels: ['wall'], cat: 'wall' },
+  0x6E: { pass: 'blocked', labels: ['wall'], cat: 'wall' },
+  0x6F: { pass: 'blocked', labels: ['wall'], cat: 'wall' },
 
-/** Builds the interior overlay once, on top of the overworld base map. */
-const buildInteriorAttrs = (): Readonly<Record<number, TileAttrDef>> => {
-  const t = { ...(OVERWORLD_TILE_ATTRS as Record<number, TileAttrDef>) };
+  0x58: { pass: 'blocked', labels: ['wall'], cat: 'special' },
+  0x59: { pass: 'blocked', labels: ['wall'], cat: 'special' },
+  0x5A: { pass: 'blocked', labels: ['wall'], cat: 'special' },
+  0x5B: { pass: 'blocked', labels: ['wall'], cat: 'special' },
+  0x5C: { pass: 'blocked', labels: ['wall'], cat: 'special' },
+  0x5D: { pass: 'blocked', labels: ['wall'], cat: 'special' },
+  0x63: { pass: 'blocked', labels: ['wall'], cat: 'special' },
+  0x67: { pass: 'blocked', labels: ['hammer peg'], cat: 'special' },
 
-  // Indoors overrides (reverse-engineered from TileDetect_ExecuteInner is_indoors logic)
-  t[0x04] = { pass: 'blocked', labels: ['wall'], cat: 'wall' }; // thick grass outdoors, blocked indoors
-  t[0x0B] = { pass: 'blocked', labels: ['wall'], cat: 'wall' }; // deep water outdoors, blocked indoors
-  t[0x6C] = { pass: 'blocked', labels: ['wall'], cat: 'wall' };
-  t[0x6D] = { pass: 'blocked', labels: ['wall'], cat: 'wall' };
-  t[0x6E] = { pass: 'blocked', labels: ['wall'], cat: 'wall' };
-  t[0x6F] = { pass: 'blocked', labels: ['wall'], cat: 'wall' };
+  0x70: { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' },
+  0x71: { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' },
+  0x72: { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' },
+  0x73: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x74: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x75: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x76: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x77: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x78: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x79: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x7A: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x7B: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x7C: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x7D: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x7E: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
+  0x7F: { pass: 'free', labels: ['pushable block'], cat: 'liftable' },
 
-  // Indoor-only interactive/structural tiles
-  t[0x58] = { pass: 'blocked', labels: ['wall'], cat: 'special' }; // chest / lock tile family
-  t[0x59] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
-  t[0x5A] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
-  t[0x5B] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
-  t[0x5C] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
-  t[0x5D] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
-  t[0x63] = { pass: 'blocked', labels: ['wall'], cat: 'special' }; // mini chest behavior
-  t[0x67] = { pass: 'blocked', labels: ['hammer peg'], cat: 'special' }; // crystal peg up
+  0x80: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x81: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x82: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x83: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x84: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x85: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x86: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x87: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x88: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x89: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x8A: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x8B: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x8C: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x8D: { pass: 'free', labels: ['door passage'], cat: 'ground' },
+  0x8E: { pass: 'free', labels: ['entrance'], cat: 'ground' },
+  0x8F: { pass: 'free', labels: ['entrance'], cat: 'ground' },
 
-  // Dynamic/manipulated set.
-  // 0x70-0x72 are liftable pot variants indoors (TileBehavior_ManipulablyReplaced).
-  t[0x70] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
-  t[0x71] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
-  t[0x72] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
-  // 0x73-0x7F share TileBehavior_ManipulablyReplaced with the pots above, but carry
-  // pushable blocks: the player shoves them aside with no item, so they never block navigation.
-  for (let attr = 0x73; attr <= 0x7F; attr++) {
-    t[attr] = { pass: 'free', labels: ['pushable block'], cat: 'liftable' };
-  }
-  // 0x80-0x8D are door passage tiles stamped by Dungeon_LoadDoorAttribute().
-  // They mark open doorways between rooms and must be passable for flood fill.
-  for (let attr = 0x80; attr <= 0x8D; attr++) {
-    t[attr] = { pass: 'free', labels: ['door passage'], cat: 'ground' };
-  }
-  // 0x8E-0x8F are interior entrance/staircase tiles (TileBehavior_Entrance).
-  t[0x8E] = { pass: 'free', labels: ['entrance'], cat: 'ground' };
-  t[0x8F] = { pass: 'free', labels: ['entrance'], cat: 'ground' };
-  // 0x90-0x97 are TileBehavior_LayerToggleShutterDoor, passable doors that toggle the player's layer.
-  // These are shutter doors (opened by killing enemies). They do NOT set collision bits.
-  for (let attr = 0x90; attr <= 0x97; attr++) {
-    t[attr] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  }
-  // 0x98-0x9F and 0xA8-0xAF are TileBehavior_LayerAndDungeonToggleShutterDoor, which toggles layer + dungeon.
-  for (let attr = 0x98; attr <= 0x9F; attr++) {
-    t[attr] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  }
-  // 0xA0-0xA1 and 0xA4-0xA5 are TileBehavior_DungeonToggleManualDoor, which toggles the dungeon only.
-  t[0xA0] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  t[0xA1] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  t[0xA4] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  t[0xA5] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  // 0xA2-0xA3 are TileBehavior_DungeonToggleShutterDoor, a dungeon shutter.
-  t[0xA2] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  t[0xA3] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  // 0xA6-0xA7 are TileBehavior_NothingOW, inert indoors with no collision and no behavior.
-  t[0xA6] = { pass: 'free', labels: ['ground'], cat: 'ground' };
-  t[0xA7] = { pass: 'free', labels: ['ground'], cat: 'ground' };
-  // 0xA8-0xAF: LayerAndDungeonToggleShutterDoor (same as 0x98-0x9F).
-  for (let attr = 0xA8; attr <= 0xAF; attr++) {
-    t[attr] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
-  }
-  // 0xC0-0xCF are TileBehavior_LightableTorch, solid until lit (R14 |= bits).
-  for (let attr = 0xC0; attr <= 0xCF; attr++) {
-    t[attr] = { pass: 'blocked', labels: ['torch'], cat: 'special' };
-  }
-  // 0xF0-0xFF are TileBehavior_FlaggableDoor, solid until a flag is set. In practice these are
-  // the bombable/cracked walls whose flag is set by blasting them open, so the player passes
-  // once they have bombs. Model them as a bomb-gated obstacle instead of a permanent wall.
-  for (let attr = 0xF0; attr <= 0xFF; attr++) {
-    t[attr] = { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' };
-  }
+  0x90: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x91: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x92: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x93: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x94: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x95: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x96: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x97: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x98: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x99: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x9A: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x9B: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x9C: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x9D: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x9E: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0x9F: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xA0: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xA1: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xA2: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xA3: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xA4: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xA5: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xA6: { pass: 'free', labels: ['ground'], cat: 'ground' },
+  0xA7: { pass: 'free', labels: ['ground'], cat: 'ground' },
+  0xA8: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xA9: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xAA: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xAB: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xAC: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xAD: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xAE: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
+  0xAF: { pass: 'free', labels: ['shutter door'], cat: 'ground' },
 
-  return t;
+  0xC0: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC1: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC2: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC3: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC4: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC5: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC6: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC7: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC8: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xC9: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xCA: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xCB: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xCC: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xCD: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xCE: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+  0xCF: { pass: 'blocked', labels: ['torch'], cat: 'special' },
+
+  0xF0: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF1: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF2: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF3: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF4: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF5: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF6: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF7: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF8: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xF9: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xFA: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xFB: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xFC: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xFD: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xFE: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
+  0xFF: { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' },
 };
-
-// Shared instance. All interior contexts use the same map until they diverge.
-const INTERIOR_ATTRS: Readonly<Record<number, TileAttrDef>> = buildInteriorAttrs();
 
 export { OVERWORLD_TILE_ATTRS, INTERIOR_ATTRS };

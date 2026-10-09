@@ -261,6 +261,157 @@ under `shared/game/data/`. The records hold the data; this page holds the why.
   route to that port is a four bit nibble from the overworld music table.
 - The file has no type import: the loader (`sound-names.ts`) casts it where it is read.
 
+## records/native-tables and native-tables/
+
+The native tile tables transcribe the original engine. `native-tables/index.ts` reads every export
+of `records/native-tables/` by name (`pickNativeTable`), since the folder holds about twenty
+differently shaped tables, not one collection. Export names are unique across the folder. Every
+table is keyed by byte, so a missing table falls back to an empty one, which takes the same miss
+path as an absent entry. `hasNativeTables` says whether the tables are there at all.
+
+### Tile behavior and tile visual
+
+- `tile-behavior.ts` and `tile-visual.ts` (with their `-structures.ts` halves) are lists of groups.
+  One group is one `case` group of `TileDetect_ExecuteInner` (tile_detect.c, lines 261 to 525), so
+  the list can be diffed against the C by eye and no entry claims a distinction the engine does not
+  make. `{ from, to }` is a run the engine writes as one long case run. `buildAttrMaps` turns the
+  groups into the outdoor map and the indoor map.
+- The dispatcher's only context input is `is_indoors`, so the two maps are the complete keying: no
+  palace, theme or entrance matters. A group carries an `interior` value only where the switch
+  really branches on that flag. Seven of its eight such branches change the class (C lines 271,
+  277, 284, 424, 506, 512, 518); the eighth (263) only sets an outdoor bookkeeping bit.
+- All 256 bytes are covered: the switch ends in `assert(0)` (C line 523), so a missing byte would be
+  one the engine treats as impossible.
+- Facts about single cases:
+  - 0x0B is a second deep water byte (high nibble flag), solid indoors. 0x6C to 0x6F are an unnamed
+    case, solid indoors and inert outdoors. 0x04 is tall grass outdoors, collision indoors.
+  - In the slope cases (0x10 to 0x13, 0x18 to 0x1B) the low two bits pick one of four directions
+    inside the case; there is no face or edge split.
+  - 0x20 and the run 0xB0 to 0xBD are one pit case.
+  - 0x22 and 0x30 to 0x37 (`TileHandlerIndoor_22`) raise only the visible stair flag, no
+    transition. 0x3D to 0x3F (`TileHandlerIndoor_3E`) is a fifth staircase case that raises the
+    in room staircase flag in the high nibble, which selects another submodule (player.c 4297).
+  - The diagonal ledge cases interleave: even bytes north, odd bytes south.
+  - 0x44 is a spike that hurts (spikes or cactus), not a dig patch. 0x4B is the warp; 0x49 is not.
+  - 0x60 is a rupee tile indoors only; outdoors it is plain ground.
+  - 0x42, 0x4C to 0x4D and 0x4E to 0x4F are outdoor only: indoors their body is skipped. The last
+    two feed the ledge hop checks next to the real ledge flags (player.c 5182), so they read as
+    ledges.
+  - 0x70 to 0x7F is one case (`TileBehavior_ManipulablyReplaced`) with no low and high split.
+  - The door cases skip bytes: 0x80 to 0x8D leaves out 0x82 and 0x83 (their own case), and the
+    manual door case 0xA0 to 0xA5 leaves out 0xA2 and 0xA3 (a shutter). The layer and dungeon
+    toggle shutter case spans two runs, 0x98 to 0x9F and 0xA8 to 0xAF.
+  - A case named `...ShutterDoor` also raises the second collision nibble (a door opened for the
+    player); `...ManualDoor` and the two `TileHandlerIndoor_8x` cases do not.
+  - None of the structural cases branch on `is_indoors`, even though only interior screens stamp
+    them.
+- Visual labels coalesce: many behaviors look alike (every door that is not a shutter reads as a
+  door frame), and the four staircase cases share one staircase graphic. One case is split instead:
+  `TileBehavior_Liftable` (0x50 to 0x56) is told apart downstream by `kTile50data` (tile_detect.c
+  392) and `kGetBestActionToPerformOnTile_a` (player.c 5553), the glove level compared against
+  `link_item_gloves`: 0x50 and 0x51 are bushes (bare hands, dashable), 0x54 is a sign (the byte the
+  read action keys off), 0x52 and 0x55 light rocks (first glove), 0x53 and 0x56 dark rocks (second
+  glove).
+- The overlay mask cases 0x0C and 0x1C feed the same pair of layer change flags (player.c 4206 to
+  4218), so both read as steps.
+
+### records/native-tables/tile-attrs.ts
+
+- `OVERWORLD_TILE_ATTRS` is the navigation map outdoor screens read; `INTERIOR_ATTRS` lays the
+  indoor overrides of `TileDetect_ExecuteInner` over it. The accessors live in
+  `navigation/overworld-attrs.ts` and `navigation/interior-attrs.ts`.
+- `req: 'lift.1'` on bushes, signs and pots is a real requirement and must stay: it gates the flood
+  and shows on the overlay.
+- Slopes and cliff edges are impassable, and cliff jumps extend through them. Cliff faces start
+  blocked and become ledges in cliff preprocessing.
+- 0xD0 to 0xEF are walkable dungeon floor variants.
+- Indoors: 0x58 to 0x5D are the chest and lock family, 0x63 the minigame chest, 0x67 a crystal peg.
+  0x70 to 0x72 are liftable pots; 0x73 to 0x7F share that case but are pushable blocks, shoved aside
+  with no item, so they never block. 0x80 to 0x8D are the open doorways stamped by
+  `Dungeon_LoadDoorAttribute`, which the flood must pass. Shutter doors set no collision bits. 0xC0
+  to 0xCF are torches, solid until lit. 0xF0 to 0xFF are flaggable doors, solid until a flag is set;
+  in practice the bombable walls, so they are a bomb gated obstacle.
+
+### records/native-tables/cliff-attrs.ts
+
+- These byte lists gather what three call sites used to hardcode (cliff preprocessing, indoor
+  ledge directions, the overlay's dot drawing). Each list is kept byte for byte as its call site
+  had it; the lists disagree with each other on purpose and none was unified.
+- The engine groups 0x10 to 0x13 as one slope case and 0x18 to 0x1B as another, with no face or
+  edge split. This project cuts them into faces (0x10, 0x12, 0x18, 0x1A) and edges (0x11, 0x13,
+  0x19, 0x1B), because the cliff preprocessor needs that split: a face extends a ledge run when the
+  player jumps into it, an edge does not.
+- `CLIFF_TRIGGER_BYTES` are the straight jump triggers; the diagonal ones (0x2C to 0x2F) run
+  through the diagonal pass (`VERTICAL_CLIFF_DIRS`). Indoors only 0x2F has a fixed direction; the
+  straight triggers are resolved per tile (`HORIZ_LEDGE_BYTES`, `VERT_LEDGE_BYTES`). Outdoors all
+  four straight triggers have one fixed direction.
+- The indoor wall list adds 0x04 because thick grass is a wall indoors.
+- `DIAG_EDGE_BYTES` is empty on purpose: diagonal cliffs never seed a south run.
+- `CLIFF_BORDER_BYTES` holds only the south and east faces (0x10, 0x18).
+- `VERTICAL_CLIFF_DIRS`: the tile decides north or south; which side resolves from the approach.
+- `DRAW_DOTS_LEDGE_BYTES` is a different, broader list: every trigger, the outdoor wall list, 0x11
+  and 0x19, and 0x3D, whose meaning there is not known.
+
+### records/native-tables/traversal-tokens.ts
+
+- It bridges item ids and the navigation's traversal tokens. Keys are item ids: display names
+  dropped two rows (no record is named "Bombs" or "Magic Hammer").
+- Bombs are a traversal item: interior bombable walls ask for `bombs`, and the well's own chests
+  hand over the bombs that open its top room. No record holds bomb capacity, so the bomb pickup
+  stands in.
+- Both native bow rows grant `bow`. Keys are handled elsewhere.
+- `IMPLIED_TOKENS` carries progression: `lift.3` implies the rungs under it. Bare hands (`lift.1`)
+  is granted to every run from the start.
+- `BARRIER_TO_TOKEN` is the fallback when a connection has no `nav.requirements`. `barrier:gloves`
+  is `lift.2`. Medallion, crystals, event and glitch barriers cannot be resolved from an edge alone,
+  so they map to `event:unmapped-barrier-*` tokens that keep the edge blocked.
+
+### records/native-tables (other tables)
+
+- `door-barriers.ts`: door kind to barrier tag, for the recorder's dataset suggestions. `null` means
+  no barrier (a normal door, or a trap door the simulator does not model).
+- `game-enums.ts`: display names over the engine's own enumerations, one to one with upstream's
+  `kEffectNames` and `kCollisionNames`. There is no room kind map: the game has no cave or house
+  field. `MANIPULABLE_NAMES` keys are `dung_replacement_tile_state` values for the 0x70 to 0x7F
+  family.
+- `room-tags.ts`: names indexed like `kDungTagroutines` (0x00 to 0x3F). Unnamed stubs are left out
+  and shown as hex. 0x01 to 0x13 (the clear the room family) are handled by the simulator's accessor.
+
+### native-tables/player-pose-atlas
+
+- The JSON transcribes six tables of the decompilation (player_oam.c, misc.c); regenerate it
+  instead of editing it. Facing indices follow `link_direction_facing >> 1`: 0 up, 1 down, 2 left,
+  3 right.
+- The engine draws the player as two 16x16 halves per frame: an upper half at an offset the frame
+  chooses, a lower half eight pixels below the origin. Each half reads four tiles from `off`,
+  `off + 0x20`, `off + 0x200` and `off + 0x220`. Either half can be hidden, so a frame has two quads,
+  one, or none. A frame with none is a real frame: the fall into a hole uses three of them for the
+  beats after the player is gone, and dropping them breaks the timing.
+- Frames are addressed by slot: 511 pose ids share 303 slots. A state that does not vary by facing
+  stores only facing 0. `bounds` is the union of every frame, so one canvas fits every pose.
+
+### native-tables/player-state-labels
+
+- The decompilation numbers the player actions but never names them. Each label was read off the
+  branch in `LinkOam_Main` that selects the id, and `from` quotes that condition so a label can be
+  checked. Frame counts come from the atlas.
+- Actions 0x01 and 0x28 and up never appear: 0x08 aliases 0x01's frame range in the offset table,
+  and the table stops at 40. An action the list lacks still renders, labelled by its id.
+
+### types/native-tables and types/tile-attrs-types
+
+- The shapes stay here even where the tables are absent, because a type is erased at runtime and
+  consumers still compile against it.
+- `DoorKind` mirrors the simulator's `SimDoor['kind']` without importing the engine type.
+- `TileReq`: `lift.1` bare hands (bush, pot, sign), `lift.2` first glove (light rocks), `lift.3`
+  second glove (dark rocks), `hammer` pegs, `boots` bonk rocks, `flippers` deep water, `hookshot`
+  posts across gaps, `bombs` cracked walls.
+- `TileAttrDef.labels`: the first label is the primary one, the rest are equivalent names. `req`
+  applies only when `pass` is not `free`. `hookTarget` marks a tile the hookshot can grab.
+- `TileBehavior` uses the engine's own `TileBehavior_*` names, so conformance can be checked by eye;
+  `indoor-stairs-3e` is named after its handler since it has no name of its own. `TileVisual` is
+  kept apart on purpose: two tiles can share a behavior and look nothing alike.
+
 ## records/screens and records/connections
 
 - `interiors/special.ts` in each world holds the screens, and their connections, that no area owns.

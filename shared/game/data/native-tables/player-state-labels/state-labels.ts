@@ -1,24 +1,5 @@
 /* @layer shared-game @kind data */
-/**
- * Names for the engine's player action ids.
- *
- * The decompilation numbers these and never names them, so every label here was read off
- * the branch in `LinkOam_Main` that selects the id. The condition it tests is quoted as
- * the `from` field so a label can be checked instead of trusted. Anything that reads wrong
- * in the studio is a one-line edit here; nothing downstream depends on the wording.
- *
- * Frame counts are not listed: they come from the atlas, which derives them.
- */
-
-type StateGroup = 'movement' | 'combat' | 'carrying' | 'water' | 'hazard' | 'special';
-
-interface StateLabel {
-  action: number;
-  label: string;
-  group: StateGroup;
-  /** The condition in LinkOam_Main that selects this id. */
-  from: string;
-}
+import type { StateGroup, StateLabel } from './player-state-labels.type';
 
 const GROUP_LABELS: Record<StateGroup, string> = {
   movement: 'Movement',
@@ -71,14 +52,4 @@ const STATE_LABELS: readonly StateLabel[] = [
   { action: 0x27, label: 'Charge', group: 'combat', from: 'button_b_frames, yt = 0x27' },
 ];
 
-/**
- * Actions 0x01 and 0x28+ never appear: 0x08 aliases 0x01's frame range in the offset table,
- * and the table stops at 40. Anything the atlas carries but this list omits still renders,
- * labelled by its id.
- */
-const labelFor = (action: number): StateLabel =>
-  STATE_LABELS.find((s) => s.action === action) ??
-  { action, label: `Action 0x${action.toString(16).padStart(2, '0')}`, group: 'special', from: 'unlabelled' };
-
-export { STATE_LABELS, GROUP_LABELS, labelFor };
-export type { StateGroup, StateLabel };
+export { GROUP_LABELS, STATE_LABELS };
