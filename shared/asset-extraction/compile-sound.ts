@@ -3,7 +3,8 @@ import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 import { bufToArr } from './asset-builder';
 import { extractSoundData } from './music/extract-music';
-import { compileSoundBank, produceLoadableSeq } from './music/compile-music';
+import { compileSoundBank } from './music/compile-music';
+import { produceLoadableSeq } from './music/produce-loadable-seq';
 
 const buildSoundBanks = (rom: RomData, A: AssetBuilder): void => {
   const extracted = extractSoundData(rom);

@@ -1,16 +1,4 @@
 /* @layer shared-storage @kind logic */
-/**
- * Reads a `.rlang` archive into a new language set folder, the inverse of ./export-rlang.
- *
- * The set always lands under a free id of its own, so an import never writes over a set that
- * is already there. `set.json` is written LAST: until it exists the folder is not listed as a
- * set, so a run that dies part way through leaves nothing the app would try to open. The
- * written set is then read back through the ordinary reader, and a set that does not open is
- * removed again.
- *
- * Every failure is something a user did (picked the wrong file, edited one by hand), so each
- * one throws a message written for them.
- */
 import type { FileStore } from '@shared/platform';
 import { isZip, unzip } from '../archive';
 import type { ArchiveEntry } from '../archive';
@@ -19,20 +7,9 @@ import { getSet, getSetFont } from './read';
 import { ACCEPTED_PAYLOAD, REQUIRED_PAYLOAD, RLANG_HEADER_ENTRY, isSetHeader } from './rlang-format';
 import type { SetHeader } from './rlang-format';
 import { SET_FILES, setFilePath, setMetaPath } from './paths';
+import type { RlangImportOptions, RlangImportResult } from './import-rlang.type';
 import { pickFreeSetId } from './set-id';
 import { remove } from './write';
-
-interface RlangImportOptions {
-  /** Id to aim for; the archive's own id when absent. A taken id gets a numbered suffix. */
-  desiredId?: string;
-  /** Called after each file is written. */
-  onProgress?: (done: number, total: number) => void;
-}
-
-interface RlangImportResult {
-  id: string;
-  name: string;
-}
 
 const readEntries = async (bytes: Uint8Array): Promise<ArchiveEntry[]> => {
   if (!isZip(bytes)) throw new Error('That file is not a language set. A .rlang file is an archive, and this one is not.');
@@ -57,7 +34,6 @@ const parseHeader = (entry: ArchiveEntry | undefined): SetHeader => {
   return parsed;
 };
 
-/** The reader falls back to an empty list on bad JSON, so the dialogue is checked here, before it lands. */
 const isJsonArray = (entry: ArchiveEntry | undefined): boolean => {
   if (!entry) return false;
   try {
@@ -67,7 +43,6 @@ const isJsonArray = (entry: ArchiveEntry | undefined): boolean => {
   }
 };
 
-/** The payload entries this build writes, first occurrence of each name, checked for completeness. */
 const payloadOf = (entries: ArchiveEntry[]): ArchiveEntry[] => {
   const byName = new Map<string, ArchiveEntry>();
   for (const entry of entries) {

@@ -1,10 +1,4 @@
 /* @layer shared-store @kind logic */
-/**
- * Music packs: the Data Manager's own `.msul` install, into a new folder under `msu/` named
- * after the pack itself. Uninstall removes that folder. After an update removed the version
- * before it, the new folder moves back to the pack's own name, so updates never pile up
- * "(2)" suffixes.
- */
 import type { FileStore } from '@shared/platform';
 import { deletePack, renamePack } from '@shared/storage/msu';
 import { assertSafeName, packDir } from '@shared/storage/msu-paths';

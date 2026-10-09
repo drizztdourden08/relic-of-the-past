@@ -13,9 +13,9 @@ export type {
   SubmitReportResult,
 } from './report-types';
 export { LIMITS } from './limits';
-export type { Limits } from './limits';
+export type { Limits } from './limits.type';
 export { SANCTUARY_ROUTES } from './api-contract';
-export type { SanctuaryRoute } from './api-contract';
+export type { SanctuaryRoute } from './api-contract.type';
 export {
   SANCTUARY_RIGHTS,
   REPORTS_PERMISSION,
@@ -26,5 +26,5 @@ export {
 } from './sanctuary-rights';
 export type { SanctuaryPermission, FilePermission } from './sanctuary-rights';
 export { SANCTUARY_VIEW_SURFACES } from './view-surfaces';
-export type { SanctuaryViewSurface } from './view-surfaces';
+export type { SanctuaryViewSurface } from './view-surfaces.type';
 export * from './schemas';

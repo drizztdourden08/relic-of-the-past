@@ -1,10 +1,5 @@
 /* @layer shared-hub @kind logic */
-/**
- * Runs a step up to `tries` times, waiting a little longer after each failure. A cancelled
- * run (its signal aborted) stops at once and throws the cancel, so a cancel is never retried.
- */
-const RETRY_BASE_MS = 1000;
-const RETRY_FACTOR = 3;
+import { RETRY_BASE_MS, RETRY_FACTOR } from './with-retry.constants';
 
 const pause = (ms: number, signal?: AbortSignal) => new Promise<void>((resolve, reject) => {
   if (signal?.aborted) {

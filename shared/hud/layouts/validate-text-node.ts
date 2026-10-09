@@ -1,21 +1,11 @@
 /* @layer shared-hud @kind logic */
-/**
- * `text` is a string or a number, drawn in a sprite set or a real font.
- * Checked the same way every other element spec is: one property at a time,
- * refusing instead of guessing at anything malformed.
- */
-
 import { checkKeys, isRecord, numberAt } from './validate-box';
 import { paintAt } from './validate-style';
 import { validateValue } from './validate-value';
+import { ALIGN, FONT_FAMILIES, PAD, SPRITE_SETS, TEXT_KEYS } from './validate-text-node.constants';
 import type { Issues } from './validate-box';
 import type { HudTextFace, HudTextFormat, HudTextSpec } from '../../types/hud/hud-text';
 import type { Paint, Value } from '../../types/hud/hud-value';
-
-const PAD = ['none', 'zero', 'space'] as const;
-const ALIGN = ['start', 'center', 'end'] as const;
-const SPRITE_SETS = ['hud-digits', 'pause-letters'] as const;
-const FONT_FAMILIES = ['game', 'sans', 'mono'] as const;
 
 const formatAt = (value: unknown, path: string, issues: Issues): HudTextFormat | undefined => {
   if (value === undefined) return undefined;
@@ -69,8 +59,6 @@ const strokeAt = (
   if (width === undefined || color === undefined) return undefined;
   return { width, color };
 };
-
-const TEXT_KEYS = ['type', 'value', 'format', 'face', 'color', 'stroke', 'align', 'tracking'] as const;
 
 const textSpec = (value: Record<string, unknown>, path: string, issues: Issues, insideRepeat = false): HudTextSpec | null => {
   checkKeys(value, TEXT_KEYS, path, issues);

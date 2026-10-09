@@ -1,0 +1,25 @@
+/* @layer shared-asset-extraction @kind logic */
+import { SLOT_BYTES, SLOT_SIDE, TILE_BYTES, TILE_ORIGINS } from './fixed-row-tiles.constants';
+
+const encodeTile = (indices: Uint8Array, ox: number, oy: number, out: Uint8Array, offset: number): void => {
+  for (let y = 0; y < 8; y++) {
+    const planes = [0, 0, 0, 0];
+    for (let x = 0; x < 8; x++) {
+      const index = indices[(oy + y) * SLOT_SIDE + ox + x];
+      const bit = 7 - x;
+      for (let p = 0; p < 4; p++) planes[p] |= ((index >> p) & 1) << bit;
+    }
+    out[offset + y * 2] = planes[0];
+    out[offset + y * 2 + 1] = planes[1];
+    out[offset + 16 + y * 2] = planes[2];
+    out[offset + 17 + y * 2] = planes[3];
+  }
+};
+
+const encodeIcon = (indices: Uint8Array): Uint8Array => {
+  const out = new Uint8Array(SLOT_BYTES);
+  TILE_ORIGINS.forEach(([ox, oy], tile) => encodeTile(indices, ox, oy, out, tile * TILE_BYTES));
+  return out;
+};
+
+export { encodeIcon };

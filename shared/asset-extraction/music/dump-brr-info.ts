@@ -1,7 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * BRR sample dumping and music_info.yaml generation.
- */
 import * as yaml from 'js-yaml';
 import { decodeBrr } from '../compression/brr-codec';
 import type { SoundBankContext } from './sound-bank-context';
@@ -56,7 +53,6 @@ const dumpBrrAndInfo = (ctx: SoundBankContext): { brr: Buffer[]; pcm: Buffer[]; 
   }
   musicInfo.samples = samples;
 
-  // Instruments
   const instruments: Record<string, unknown>[] = [];
   for (let i = 0; i < 25; i++) {
     const ea = 0x3d00 + i * 6;
@@ -72,7 +68,6 @@ const dumpBrrAndInfo = (ctx: SoundBankContext): { brr: Buffer[]; pcm: Buffer[]; 
   musicInfo.note_gate_off = Array.from({ length: 8 }, (_, i) => ctx.getByte(0x3d96 + i) ?? 0);
   musicInfo.note_volume = Array.from({ length: 16 }, (_, i) => ctx.getByte(0x3d9e + i) ?? 0);
 
-  // SFX instruments
   const sfxInstruments: Record<string, unknown>[] = [];
   for (let i = 0; i < 25; i++) {
     const ea = 0x3e00 + i * 9;

@@ -1,9 +1,5 @@
 /* @layer shared-platform @kind logic */
-/**
- * A FileStore held in memory (binary + text + mtime). Tests use it as a disk, and the pack
- * viewers use it to run a file-bound reader over bytes that never touch one.
- */
-import type { FileStore } from '@shared/platform';
+import type { FileStore } from './ports/file-store.type';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();

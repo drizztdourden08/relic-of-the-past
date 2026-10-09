@@ -1,29 +1,5 @@
 /* @layer shared-asset-extraction @kind data */
-/**
- * Single source of truth for the GBA ALttP supplement's asset ORDER.
- *
- * The supplement container is read positionally by the C engine. An index means
- * "the Nth `assets.add*` call" and nothing more, so the TS compiler
- * (`compile-resources-gba-alttp.ts`) and the C reader (`gba_alttp.c`) used to
- * each hand-maintain that ordering independently. Inserting or reordering an
- * entry in only one of them would silently desync the two: the engine would
- * keep reading index N as if it still meant the old asset, no error, just
- * wrong bytes.
- *
- * This manifest is the fix: the TS compiler iterates it to decide call order,
- * and `npm run generate:gba-asset-index` reads it to emit
- * `core/game-hooks/gba_asset_index.generated.h`, a C enum in the same order.
- * Add, remove or reorder an asset here and both sides move together.
- *
- * `name` is the exact string literal passed to `assets.add*`. It also
- * contributes to the container's key signature hash, so it must stay stable
- * for a given asset once shipped.
- */
-
-interface GbaAlttpAssetManifestEntry {
-  name: string;
-  description: string;
-}
+import type { GbaAlttpAssetManifestEntry } from './asset-manifest.type';
 
 const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
   { name: 'kGbaPalaceRoomIds', description: 'Native room id per palace room, in room order.' },
@@ -59,9 +35,5 @@ const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
   { name: 'kGbaPalaceTorches', description: "The dungeon's lightable-torch entries, appended to the engine's torch table: room, positions, terminator." },
 ];
 
-const GBA_ALTTP_ASSET_INDEX: Readonly<Record<string, number>> = Object.fromEntries(
-  GBA_ALTTP_ASSET_MANIFEST.map((entry, index) => [entry.name, index]),
-);
-
-export { GBA_ALTTP_ASSET_MANIFEST, GBA_ALTTP_ASSET_INDEX };
-export type { GbaAlttpAssetManifestEntry };
+export { GBA_ALTTP_ASSET_MANIFEST };
+export type { GbaAlttpAssetManifestEntry } from './asset-manifest.type';

@@ -1,10 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 import type { BinaryReader } from '../rom/binary-reader';
-
-interface GbaLz77Result {
-  data: Buffer;
-  compressedSize: number;
-}
+import type { GbaLz77Result } from './gba-lz77.type';
 
 const decompressGbaLz77 = (rom: BinaryReader, offset: number): GbaLz77Result => {
   if (rom.byte(offset) !== 0x10) throw new Error(`Expected GBA LZ77 stream at 0x${offset.toString(16)}`);

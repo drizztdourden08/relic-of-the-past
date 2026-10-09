@@ -1,8 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Final pipeline stage. Assembles every game asset into zelda3_assets.dat from ROM data.
- * Ported from upstream's compile_resources.py.
- */
 import type { RomData } from './rom/rom-types';
 import { AssetBuilder } from './asset-builder';
 import { buildSpriteGfx, buildBgGfx, buildPlayerGraphics, buildMisc, buildMap32ToMap16, buildTilemaps } from './compile-graphics';
@@ -10,16 +6,7 @@ import { buildOverworldCompressed, buildOverworldTables } from './compile-overwo
 import { buildDungeonRooms, buildDefaultAndOverlayRooms, buildDungeonSecrets, buildDungeonAttrs, buildEnemyDamageData, buildDungeonSprites, buildDungeonMap } from './compile-dungeons';
 import { buildDialogue } from './compile-dialogue';
 import { buildSoundBanks } from './compile-sound';
-import type { PackedLangEntry } from './text/build-language-entry';
-
-interface CompileOptions {
-  /** If true, skip dialogue (requires language extraction) */
-  skipDialogue?: boolean;
-  /** If true, skip sound banks (requires music compiler) */
-  skipMusic?: boolean;
-  /** Extra language packs to bake in alongside US (index 0). */
-  extraLanguages?: PackedLangEntry[];
-}
+import type { CompileOptions } from './compile-resources.type';
 
 const compileResources = (rom: RomData, options: CompileOptions = {}): Buffer => {
   const A = new AssetBuilder();

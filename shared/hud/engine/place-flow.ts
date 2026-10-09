@@ -1,42 +1,18 @@
 /* @layer shared-hud @kind logic */
-/**
- * Where each child of one FLEX container goes: the arithmetic of pass two,
- * with the recursion left to `place.ts`. `place-grid.ts` is the second engine,
- * beside this one - a container picks one or the other through `layout`.
- *
- * Everything in here works in the container's OWN authored units and converts
- * to the view's pixels once, through `unit` - the factor every ancestor's scale
- * has multiplied up to this point, which is what lets a subtree be authored at
- * one size and drawn at another with no number inside it changing.
- *
- * THE GAP IS `{ x, y }` HERE TOO (§57): a row separates its items by `x` and
- * its wrapped lines by `y`, a column the reverse, and `flowGaps` turns that
- * pair into the main and cross numbers this file spends. A document whose two
- * axes are equal - every migrated `gap: n` - lays out to the pixel as before.
- *
- * `fill` is resolved before wrapping, so "take what is left of this line" sees
- * fixed sizes and never produces a line whose only child wants a width the
- * line does not have. `order` sorts the children first (`inOrder`, shared with
- * the grid so one rule decides paint order under both engines); `alignSelf`
- * overrides the container's own `align` for one child.
- */
-
 import {
   crossMargin, crossOf, flowGaps, insetsOf, mainOf, outerCross, outerMain, toLines,
 } from './flow';
 import { inOrder } from './grid-cells';
 import { measureBox } from './measure';
-import { FILL, resolveExtent } from './resolve-extent';
+import { resolveExtent } from './resolve-extent';
+import { FILL } from './resolve-extent.constants';
 import { clampToBox, resolveGap, resolveVisible } from './resolve-box';
-import type { HudFlexContainer, HudNode } from '../../types/hud/hud-node';
+import type { HudFlexContainer } from '../../types/hud/hud-node';
 import type { FlowItem, Insets } from './flow';
 import type { MeasureContext } from './engine.type';
 import type { Rect, Size } from '../layouts/geometry.type';
+import type { ChildBox } from './place-flow.type';
 
-interface ChildBox { node: HudNode; box: Rect }
-
-/** A cross-axis `fill` is the whole cross extent less the child's own margins -
- *  there is nothing else to share it with. */
 const crossFill = (available: number, margin: Insets, row: boolean): number =>
   Math.max(0, available - crossMargin(margin, row));
 
@@ -54,9 +30,6 @@ const sizedItems = (
     const w = resolveExtent(child.size?.w, natural.w, available.w, ctx);
     const h = resolveExtent(child.size?.h, natural.h, available.h, ctx);
     const mainFill = (row ? w : h) === FILL;
-    // The MAIN-axis fill placeholder stays unclamped here: `shareRemaining`
-    // overwrites it with the real share and clamps THAT. The cross axis is
-    // fully resolved the moment `crossFill` runs, so it clamps now.
     const rawW = w === FILL ? (row ? 0 : crossFill(available.w, margin, row)) : w;
     const rawH = h === FILL ? (row ? crossFill(available.h, margin, row) : 0) : h;
     const size = {
@@ -69,9 +42,6 @@ const sizedItems = (
   return { items, fills };
 };
 
-/** Share whatever the fixed children left over, equally, among the fillers -
- *  then clamp each share to its OWN `min`/`max`: the fix for a `fill` child
- *  that would otherwise collapse to nothing. */
 const shareRemaining = (
   items: FlowItem[],
   fills: readonly boolean[],
@@ -97,31 +67,12 @@ const shareRemaining = (
   });
 };
 
-/** `stretch` reads as `start` in a flex line - nothing here stretches a child
- *  (`hud-node.ts`'s own rule), so a stray `alignSelf: 'stretch'` degrades to
- *  the same "leave it at the line's start" every other unset value gets. */
 const alignOffset = (align: HudFlexContainer['align'] | 'stretch', free: number): number => {
   if (align === 'center') return free / 2;
   if (align === 'end') return free;
   return 0;
 };
 
-/**
- * WHERE THE LINE STARTS AND HOW FAR APART ITS CHILDREN SIT, for one line's
- * leftover main-axis space. Three positions and three distributions, and the
- * three distributions are the only ones that touch `spread`:
- *
- * - `between` puts nothing at the ends and `free / (n - 1)` between each pair.
- * - `around` gives each child `free / n` of its own, HALF of it at each side,
- *   so the two end gaps are half the inner ones.
- * - `evenly` makes `n + 1` equal gaps, the two at the ends included.
- *
- * ONE CHILD FALLS BACK TO `start` UNDER ALL THREE. `between` has done that
- * since it was written (there is no pair to put anything between), and the
- * other two match it instead of inventing a centring the author did not ask
- * for. A line that overflows has a negative `free`, left to go negative, the
- * same as it always has: overflow is drawn, not clamped away.
- */
 const lineSpacing = (
   justify: HudFlexContainer['justify'], free: number, count: number,
 ): { lead: number; spread: number } => {
@@ -173,13 +124,8 @@ const flowBoxes = (
   return boxes;
 };
 
-/** A zero-width (or zero-height) box draws nothing and LEAVES THE FLOW, the
- *  same rule an invisible node follows - not a hole held open, not even its
- *  own gap. This is the magic bar's bound `size.w` answering "no mana shows
- *  no bar at all": at `magic_current == 0` the node is not there. */
 const collapsed = (item: FlowItem): boolean => item.size.w <= 0 || item.size.h <= 0;
 
-/** Every child of one flex container, boxed, in view pixels. */
 const childBoxes = (container: HudFlexContainer, box: Rect, unit: number, ctx: MeasureContext): ChildBox[] => {
   const pad = insetsOf(container.padding);
   const area: Rect = {
@@ -197,4 +143,3 @@ const childBoxes = (container: HudFlexContainer, box: Rect, unit: number, ctx: M
 };
 
 export { childBoxes };
-export type { ChildBox };

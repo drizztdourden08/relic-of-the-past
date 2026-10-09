@@ -1,35 +1,16 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * The polyhedral engine's face filler (Polyhedral_DrawFace and its helpers in
- * core/zelda3/src/poly.c), kept to the same integer widths so its edges land on the
- * same pixels. It writes 4bpp sprite tiles into a WRAM-shaped buffer at 0xe800, the
- * block the NMI copies to VRAM 0x5800.
- */
+import type { Edge, Raster } from './poly-raster.type';
 
 const u8 = (v: number): number => v & 0xff;
 const u16 = (v: number): number => v & 0xffff;
 
-/** The span masks of the left and right partial bytes of a line, doubled for two bitplanes. */
 const leftMask = (k: number): number => (0xff >> k) * 0x101;
 const rightMask = (k: number): number => ((0xff << (7 - k)) & 0xff) * 0x101;
 
-/** kPoly_RasterColors: every bitplane byte full where colour |c| has that bit set. */
 const planesOf = (c: number): [number, number] => {
   const plane = (bit: number): number => (c & (1 << bit) ? 0xff : 0) << ((bit & 1) * 8);
   return [plane(0) | plane(1), plane(2) | plane(3)];
 };
-
-interface Edge { cur: number; y: number; trig: number; target: number; frac: number; step: number; idx: number }
-
-interface Raster {
-  ram: Uint8Array;
-  xy: number[];
-  steps: number;
-  dst: number;
-  color: [number, number];
-  left: Edge;
-  right: Edge;
-}
 
 const word = (ram: Uint8Array, a: number): number => ram[a & 0xffff] | (ram[(a + 1) & 0xffff] << 8);
 const setWord = (ram: Uint8Array, a: number, v: number): void => {
@@ -66,7 +47,6 @@ const fillLine = (r: Raster): void => {
   blend(r.ram, ptr + 16, c1, left);
 };
 
-/** Polyhedral_SetLeft / SetRight: find the next vertex down this side. True ends the face. */
 const nextEdge = (r: Raster, e: Edge, step: (idx: number) => number): boolean => {
   let i: number;
   for (;;) {
@@ -100,7 +80,6 @@ const nextRow = (dst: number): number => {
   return (a ^ (a & 8 ? 0 : 0x19)) << 8;
 };
 
-/** Fills one convex face given as poly_xy_coords (count*2, then x,y pairs) in colour |c|. */
 const drawFace = (ram: Uint8Array, xy: number[], c: number): void => {
   let n = xy[0];
   let minY = xy[n];

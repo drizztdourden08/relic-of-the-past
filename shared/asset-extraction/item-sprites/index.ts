@@ -1,6 +1,7 @@
-/* @layer shared-asset-extraction @kind logic */
-export { extractAllItemSprites, extractAllItemSpritesFromRom } from './extract-items-node';
-export type { ExtractionResult } from './extract-items-node';
+/* @layer shared-asset-extraction @kind barrel */
+export { extractAllItemSprites } from './extract-items-node';
+export { extractAllItemSpritesFromRom } from './extract-all-item-sprites-from-rom';
+export type { ExtractionResult } from './extract-items-node.type';
 export { extractSpriteBuffers } from './extract-items';
 export type { SpriteDef } from './extract-items';
 export { EXTRACTION_STAMP_FILE, extractionVersionOf, parseExtractionStamp } from './extraction-stamp';

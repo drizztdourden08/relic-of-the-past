@@ -1,0 +1,27 @@
+/* @layer shared-store @kind constants */
+const HEADER_BYTES = 30;
+const SIGNATURE = [0x50, 0x4b, 0x03, 0x04] as const;
+const FLAG_ENCRYPTED = 0x0001;
+const FLAG_DATA_DESCRIPTOR = 0x0008;
+const SIZE_IN_ZIP64_EXTRA = 0xffffffff;
+
+const FLAGS_AT = 6;
+const METHOD_AT = 8;
+const COMPRESSED_SIZE_AT = 18;
+const UNCOMPRESSED_SIZE_AT = 22;
+const NAME_LENGTH_AT = 26;
+const EXTRA_LENGTH_AT = 28;
+
+export {
+  HEADER_BYTES,
+  SIGNATURE,
+  FLAG_ENCRYPTED,
+  FLAG_DATA_DESCRIPTOR,
+  SIZE_IN_ZIP64_EXTRA,
+  FLAGS_AT,
+  METHOD_AT,
+  COMPRESSED_SIZE_AT,
+  UNCOMPRESSED_SIZE_AT,
+  NAME_LENGTH_AT,
+  EXTRA_LENGTH_AT,
+};

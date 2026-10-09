@@ -1,9 +1,4 @@
 /* @layer shared-storage @kind logic */
-/**
- * A copy of an installed music pack: every file of its folder into `<name> copy` (then
- * `<name> copy 2` and on), and a manifest carrying the copy's name and `basedOn`. A pack with
- * no manifest gets the synthesized one the player already plays it with.
- */
 import type { FileStore } from '@shared/platform';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { synthesizeClassicManifest } from '../msu-classic-manifest';
@@ -35,7 +30,6 @@ const duplicateMsu: DuplicateInstalled = async (files, installedName, basedOn) =
     const bytes = await readTrackFile(files, installedName, entry);
     if (bytes) await writeTrackFile(files, name, entry, bytes);
   }
-  // Written last, so a copy that stops part way reads as a classic pack, never a broken layered one.
   await writeManifest(files, name, { ...manifest, meta: { ...manifest.meta, name, createdAt: Date.now(), basedOn } });
   return { name };
 };

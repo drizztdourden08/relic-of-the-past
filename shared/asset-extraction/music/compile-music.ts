@@ -1,10 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Compiles extracted music text back to SPC sound bank binary.
- * Ported from upstream's compile_music.py.
- */
 import * as yaml from 'js-yaml';
-import type { CompiledSong, CompiledSoundBank, MusicCompileInput } from './compile-types';
+import type { CompiledSong, CompiledSoundBank, MusicCompileInput } from './compile-types.type';
 import { NameRegistry } from './name-registry';
 import { MusicSerializer } from './music-serializer';
 import { parseFile } from './parse-music-file';
@@ -104,34 +100,4 @@ const writeIntroBank = (serializer: MusicSerializer, input: MusicCompileInput): 
   }
 };
 
-const produceLoadableSeq = (serializer_memory: (number | null)[]): Buffer => {
-  const chunks: Buffer[] = [];
-  let start = 0;
-
-  while (start < 0x10000) {
-    while (start < 0x10000 && serializer_memory[start] === null) start++;
-    if (start >= 0x10000) break;
-
-    let end = start;
-    while (end < 0x10000 && serializer_memory[end] !== null) end++;
-
-    const len = end - start;
-    const header = Buffer.alloc(4);
-    header.writeUInt16LE(len, 0);
-    header.writeUInt16LE(start, 2);
-    chunks.push(header);
-
-    const data = Buffer.alloc(len);
-    for (let i = 0; i < len; i++) {
-      data[i] = serializer_memory[start + i]!;
-    }
-    chunks.push(data);
-    start = end;
-  }
-
-  chunks.push(Buffer.alloc(2));
-  return Buffer.concat(chunks);
-};
-
-export { compileSoundBank, produceLoadableSeq };
-export type { CompiledSoundBank, MusicCompileInput };
+export { compileSoundBank };

@@ -1,6 +1,4 @@
 /* @layer shared-asset-extraction @kind data */
-/** Decode tables for receipt/chest-getter item sprites (from extract-item-sprites.py). */
-
 const kDecodeTab = [
   0x9c0, 0x30, 0x60, 0x90, 0xc0, 0x300, 0x318, 0x330,
   0x348, 0x360, 0x378, 0x390, 0x930, 0x3f0, 0x420, 0x450,
@@ -35,8 +33,7 @@ const kReceiveItemGfx = [
   0x34, 0x35, 0x31, 0x33, 2, 0x32, 0x36, 0x37, 0x2c, 6, 0xc, 0x38,
 ];
 
-/** Sword/shield palette configurations for receipt ID → [swordType, shieldType] */
-const PAL5_CONFIG: Record<number, [number, number]> = {
+const PAL5_CONFIG: Record<number, [swordType: number, shieldType: number]> = {
   0: [0, 0], 1: [1, 0], 2: [2, 0], 3: [3, 0],
   4: [0, 0], 5: [0, 1], 6: [0, 2], 73: [0, 0],
 };

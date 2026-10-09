@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
-import type { MusicEntity, Pattern, Phrase, Song, SongList } from './extract-types';
-import { toStr } from './extract-types';
+import type { MusicEntity, Pattern, Phrase, Song, SongList } from './extract-types.type';
+import { toStr } from './to-str';
 
 const formatPattern = (p: Pattern): string => {
   let r = `[Pattern_0x${p.ea.toString(16)}]\n`;

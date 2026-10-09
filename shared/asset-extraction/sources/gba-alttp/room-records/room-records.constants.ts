@@ -1,0 +1,21 @@
+/* @layer shared-asset-extraction @kind constants */
+const ENTITY_LIST_END = 0xff;
+
+const SECRET_LIST_END = 0xffff;
+
+const MAX_ROOM_RECORDS = 64;
+
+const ENTITY_RECORD_BYTES = 3;
+
+const SECRET_RECORD_BYTES = 3;
+
+const DEATH_MARKER_TYPE = 0xe4;
+
+const OVERLORD_MIN_X_BYTE = 0xe0;
+
+const SECRET_GRID_COLS = 64;
+
+export {
+  DEATH_MARKER_TYPE, ENTITY_LIST_END, ENTITY_RECORD_BYTES, MAX_ROOM_RECORDS, OVERLORD_MIN_X_BYTE, SECRET_GRID_COLS,
+  SECRET_LIST_END, SECRET_RECORD_BYTES,
+};

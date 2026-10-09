@@ -1,10 +1,4 @@
 /* @layer shared-config @kind logic */
-/**
- * Which port slot a checkout runs in. Node only: the dev-server configs and scripts read
- * it, the renderer never does. ROTP_PORT_SLOT wins when set; otherwise the slot file at the
- * checkout root, written once when a worktree is created; otherwise slot 0, the main
- * checkout.
- */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -23,4 +17,4 @@ const readPortSlot = (checkoutRoot: string, env: NodeJS.ProcessEnv = process.env
   return existsSync(file) ? (parseSlot(readFileSync(file, 'utf8')) ?? 0) : 0;
 };
 
-export { PORT_SLOT_ENV, PORT_SLOT_FILE, readPortSlot };
+export { readPortSlot };

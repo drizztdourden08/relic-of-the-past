@@ -1,0 +1,6 @@
+/* @layer shared-input @kind constants */
+const MIN_RUMBLE_STRENGTH = 0.5;
+const MAX_RUMBLE_STRENGTH = 3;
+const DEFAULT_RUMBLE_STRENGTH = 1;
+
+export { DEFAULT_RUMBLE_STRENGTH, MAX_RUMBLE_STRENGTH, MIN_RUMBLE_STRENGTH };

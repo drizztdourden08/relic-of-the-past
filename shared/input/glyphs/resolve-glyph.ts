@@ -1,41 +1,10 @@
 /* @layer shared-input @kind logic */
-/**
- * Which glyph to draw for one position, given the pack the player chose.
- *
- * Chain of responsibility, first answer wins:
- *   the chosen pack → the pack it names as its own fallback (followed as far
- *   as it goes) → the device's family pack → the generic pack.
- *
- * The pack id 'auto' means "whatever this device's family is", which is the
- * default: a player who never opens the glyph setting sees their own pad.
- * Choosing a pack explicitly is therefore an override of the device, not a
- * replacement for it. A custom pack that only draws four face buttons still
- * shows correct shoulders, because the device's own family answers for
- * everything the custom pack left out.
- *
- * A pack answering null for a position is not an error: the generic pack
- * covers every position, so null out the far end means the position has no
- * artwork anywhere and the caller should fall back to the control's label.
- */
 import { BUILT_IN_GLYPH_PACKS, GENERIC_PACK_ID, findGlyphPack } from './built-in-packs';
+import { AUTO_PACK_ID, FAMILY_PACK_IDS } from './resolve-glyph.constants';
 import type { SdlAxisName, SdlButtonName } from '../family';
 import type { DeviceFamily } from '../../types/controls';
 import type { GlyphPack, GlyphSource } from '@shared/types/hud/glyph-pack';
 
-/** The pack id that follows a device's own family. */
-const AUTO_PACK_ID = 'auto';
-
-const FAMILY_PACK_IDS: Record<DeviceFamily, string> = {
-  xbox: 'xbox',
-  playstation: 'playstation',
-  nintendo: 'switch',
-  '8bitdo': GENERIC_PACK_ID,
-  keyboard: 'keyboard',
-  generic: GENERIC_PACK_ID,
-};
-
-/** Walks a pack and its declared fallbacks. Cycle-safe: a pack already
- *  visited is never asked twice. */
 const fromPackChain = (
   packId: string,
   position: SdlButtonName | SdlAxisName,
@@ -72,4 +41,4 @@ const resolveGlyph = (
   return null;
 };
 
-export { AUTO_PACK_ID, FAMILY_PACK_IDS, resolveGlyph };
+export { resolveGlyph };

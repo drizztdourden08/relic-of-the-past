@@ -1,0 +1,16 @@
+/* @layer shared-asset-extraction @kind constants */
+import {
+  SHORT_DUMP_LINE_COUNT, SHORT_DUMP_MISSING_INDEX, SHORT_DUMP_MISSING_TEXT,
+} from '../dialogue-decoder/dialogue-decoder.constants';
+
+const EXTRA_STRING = SHORT_DUMP_MISSING_TEXT;
+
+const SHORT_ROM_LINE_COUNT = SHORT_DUMP_LINE_COUNT;
+
+const EXTRA_STRING_INDEX = SHORT_DUMP_MISSING_INDEX;
+
+const NEW_FORMAT_FLAG = 1;
+
+const NOT_US_ROM_FLAG = 2;
+
+export { EXTRA_STRING, EXTRA_STRING_INDEX, NEW_FORMAT_FLAG, NOT_US_ROM_FLAG, SHORT_ROM_LINE_COUNT };

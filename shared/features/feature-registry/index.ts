@@ -1,0 +1,10 @@
+/* @layer shared @kind barrel */
+export { AUDIO_FEATURES } from './audio.data';
+export { BUG_FIXES_FEATURES } from './bug-fixes.data';
+export { DEV_FEATURES } from './dev.data';
+export { DISPLAY_FEATURES } from './display.data';
+export { FEATURES } from './features.data';
+export { FEATURES_BY_ID } from './feature-registry.constants';
+export { GAMEPLAY_FEATURES } from './gameplay.data';
+export { HOST_QUERY_FEATURES } from './host-query.data';
+export { INPUT_FEATURES } from './input.data';

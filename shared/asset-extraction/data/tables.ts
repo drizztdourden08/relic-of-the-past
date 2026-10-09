@@ -1,11 +1,4 @@
-/* @layer shared-asset-extraction @kind logic */
-/**
- * Game data tables ported from upstream's tables.py.
- * Only the tables needed for item sprite extraction are included here;
- * remaining tables will be added as other extraction modules are ported.
- */
-
-/** SNES addresses of the LZ-compressed sprite sheet tileset data */
+/* @layer shared-asset-extraction @kind data */
 const kCompSpritePtrs: readonly number[] = [
   0x10f000, 0x10f600, 0x10fc00, 0x118200, 0x118800, 0x118e00, 0x119400, 0x119a00,
   0x11a000, 0x11a600, 0x11ac00, 0x11b200, 0x14fffc, 0x1585d4, 0x158ab6, 0x158fbe,
@@ -23,7 +16,6 @@ const kCompSpritePtrs: readonly number[] = [
   0x18aedf, 0x18af0d, 0x18b520, 0x18b953,
 ];
 
-/** Compressed background tileset pointers */
 const kCompBgPtrs: readonly number[] = [
   0x11b800, 0x11bce2, 0x11c15f, 0x11c675, 0x11cb84, 0x11cf4c, 0x11d2ce, 0x11d726,
   0x11d9cf, 0x11dec4, 0x11e393, 0x11e893, 0x11ed7d, 0x11f283, 0x11f746, 0x11fc21,

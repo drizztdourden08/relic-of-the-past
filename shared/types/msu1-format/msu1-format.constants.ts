@@ -1,0 +1,8 @@
+/* @layer shared-types @kind constants */
+const MSU1_MAGIC_TEXT = 'MSU1';
+const MSU1_HEADER_BYTES = 8;
+const MSU1_SAMPLE_RATE = 44100;
+const MSU1_CHANNELS = 2;
+const MSU1_BYTES_PER_FRAME = 4;
+
+export { MSU1_MAGIC_TEXT, MSU1_HEADER_BYTES, MSU1_SAMPLE_RATE, MSU1_CHANNELS, MSU1_BYTES_PER_FRAME };

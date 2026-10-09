@@ -7,4 +7,4 @@ export type { HudCountdownSource, HudScopeExtra, HudVariableDef, HudVitalsSource
 export { compileExpr, compileExprCacheSize, MAX_EXPR_LENGTH, REFUSED_FUNCTIONS } from './compile-expr';
 export type { CompiledExpr, CompileError, CompileOk, CompileResult } from './compile-expr';
 export { clampFinite, MAX_SAFE_RESULT, resolveValue } from './resolve-value';
-export { MAX_EXPANDED_NODES, MAX_REPEAT_COUNT } from './expand-limits';
+export { MAX_EXPANDED_NODES, MAX_REPEAT_COUNT } from './expand-limits.constants';

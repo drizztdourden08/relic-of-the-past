@@ -1,10 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * A 16x16 picture quantized to ONE fixed sprite palette row by how the colours look, for
- * pictures drawn with colours the row does not hold (the multiworld pool icons). The colour
- * choice is per picture (perceptual-match.ts): greys stay greys, hues go to the nearest hue,
- * and shades that would merge are kept apart where the row allows. Index 0 is transparent.
- */
 import { toOklab } from '../graphics/oklab';
 import { SLOT_SIDE } from './fixed-row-tiles';
 import { colorKey, matchTones } from './perceptual-match';
@@ -15,7 +9,6 @@ import type { Tone } from './perceptual-match';
 
 const pixelAt = (picture: ImageBuffer, i: number): RGBA => picture.getPixel(i % SLOT_SIDE, Math.floor(i / SLOT_SIDE));
 
-/** The picture's distinct opaque colours with their pixel counts. */
 const tonesOf = (picture: ImageBuffer): Tone[] => {
   const tones = new Map<number, Tone>();
   for (let i = 0; i < SLOT_SIDE * SLOT_SIDE; i++) {

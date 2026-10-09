@@ -1,14 +1,6 @@
 /* @layer shared-storage @kind logic */
-/**
- * The one rule for editing a randomizer profile after creation: only the connection of an
- * online profile changes. A patch naming any other key (the seed, the options, a pinned
- * setting) is refused whole, so nothing that shaped the seed can drift.
- */
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
-
-const TEXT_KEYS = ['serverUrl', 'slotName'] as const;
-const FLAG_KEYS = ['deathLink', 'trackOtherPlayers'] as const;
-const CONNECTION_KEYS: readonly string[] = [...TEXT_KEYS, ...FLAG_KEYS, 'password'];
+import { CONNECTION_KEYS, FLAG_KEYS, TEXT_KEYS } from './randomizer-connection-patch.constants';
 
 const refuse = (reason: string): never => {
   throw new Error(`Connection edit refused: ${reason}`);
@@ -32,7 +24,6 @@ const checkValues = (patch: RandomizerConnectionPatch): void => {
   if (password !== undefined && password !== null && typeof password !== 'string') refuse('password is not text');
 };
 
-/** A copy of `config` with the patch applied. Throws on a local profile or a foreign key. */
 const applyConnectionPatch = (
   config: ProfileRandomizerConfig | undefined, patch: RandomizerConnectionPatch,
 ): ProfileRandomizerConfig => {
@@ -47,4 +38,4 @@ const applyConnectionPatch = (
   return next;
 };
 
-export { applyConnectionPatch, CONNECTION_KEYS };
+export { applyConnectionPatch };
