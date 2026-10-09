@@ -1,18 +1,8 @@
 /* @layer renderer-components @kind component */
-/**
- * The mark of a swap chest: its item pays a stand-in once the player already holds it, so the
- * same chest reads two ways. Shown whichever of the two it holds now; the tooltip says both.
- */
 import { Badge } from '@ds/primitives';
 import { getItem } from '@shared/game/data';
-import type { CheckRecord, ItemId } from '@shared/game/data';
 import { chestSwapOf } from '@shared/game/logic/queries/chest-stand-ins';
-
-interface SwapBadgeProps {
-  check: CheckRecord;
-  /** The item the row shows right now. */
-  shown?: ItemId;
-}
+import type { SwapBadgeProps } from '../ChecksTracker.type';
 
 const SwapBadge = ({ check, shown }: SwapBadgeProps) => {
   const swap = chestSwapOf(check);

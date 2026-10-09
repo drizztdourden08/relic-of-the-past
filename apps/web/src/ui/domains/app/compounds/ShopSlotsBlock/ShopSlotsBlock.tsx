@@ -1,27 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The shop-scope section of an options panel, and everything the Shops tab
- * shows above the prices.
- *
- * The order is the decision order, and it starts with the mode because the
- * mode governs the rest: on vanilla nothing else on the tab can change the
- * seed, so every control under it (the cards, both sliders, the prices block
- * beyond this component) draws inert. Then the cards, split into the two
- * halves of the map and one per shop, because the ticks are what every mode
- * draws from; then the count, whose MAXIMUM is the size of the ticked set
- * instead of a number typed here, so the control can never offer a slot that
- * does not exist; then the depth and what the two of them cost the seed.
- *
- * The count control and the total sentence read the SAME number off the
- * summary (the slots this scope really opens), so they can never disagree,
- * and a mode that ignores the stored count (custom opens exactly what is
- * ticked) still shows the count it is really running. That mode gets a
- * read-out instead of a slider, because a track whose value is its own
- * maximum can only ever draw full (sub-components/ShopSlotCount).
- *
- * Shared by the creation panel and the read-only Options page; no handler
- * renders the whole section as a read-out, every control's value as a tag.
- */
 import { Box, Select, Slider, Text } from '@ds/primitives';
 import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
@@ -33,17 +10,9 @@ import { retroShopNoteOf } from './behavior/retro-shop-note';
 import { summaryOf, withDepth, withMode, withSlotCount, withSlotTicked } from './behavior/shop-scope-edits';
 import { DEPTH_LABEL, MODE_OPTIONS, MODE_TITLE, SLOTS_TITLE } from './ShopSlotsBlock.constants';
 import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '@shared/randomizer/world/shops/shop-slots';
-import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
-import type { ShopScope, ShopShuffleMode } from '@shared/randomizer/world/shops/shop-scope.type';
+import type { ShopShuffleMode } from '@shared/randomizer/world/shops/shop-scope.type';
+import type { ShopSlotsBlockProps } from './ShopSlotsBlock.type';
 import './ShopSlotsBlock.css';
-
-interface ShopSlotsBlockProps {
-  scope: ShopScope;
-  /** The Items tab's retro switch; on, the mode line says what the arrow shelves sell. */
-  retroBow?: RetroBowSetting;
-  /** Absent renders the section as a read-out, the read-only Options page. */
-  onChange?: (next: ShopScope) => void;
-}
 
 const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
   const { scope, retroBow, onChange } = props;

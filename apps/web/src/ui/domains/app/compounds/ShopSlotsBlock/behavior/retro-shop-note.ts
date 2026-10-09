@@ -1,24 +1,14 @@
 /* @layer renderer-components @kind logic */
-/**
- * The one line the Shops tab adds under the mode while retro bow is on: what
- * the shelves that sold arrows sell now, and whether any of it is shuffled.
- *
- * Retro is decided on the Items tab, and its one shop consequence depends on
- * the mode chosen HERE, so the sentence is drawn where the mode is. Both
- * shelf names and prices come off the dataset through the same helpers the
- * seed and the core read, so the note can never describe a shelf the game
- * does not stock that way.
- */
 import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX } from '@shared/randomizer/world/retro/retro-shops';
 import { RETRO_QUIVER_PRICE } from '@shared/randomizer/world/retro/retro-bow.data';
 import { RETRO_REFILL_ITEM } from '@shared/randomizer/world/retro/retro-shelf.data';
 import { CANONICAL_SLOTS } from '@shared/randomizer/world/shops/shop-slot-facts';
-import { retroShuffledNote, retroVanillaNote } from '../ShopSlotsBlock.constants';
 import type { ShopSlotFacts } from '@shared/randomizer/world/shops/shop-slot-facts';
 import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
 import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import { retroShuffledNote } from './retro-shuffled-note';
+import { retroVanillaNote } from './retro-vanilla-note';
 
-/** The shelf as its location is named: the shop, then the shelf position. */
 const shelfNameOf = ({ shopName, position }: ShopSlotFacts): string =>
   (position === 'Single' ? shopName : `${shopName} ${position}`);
 

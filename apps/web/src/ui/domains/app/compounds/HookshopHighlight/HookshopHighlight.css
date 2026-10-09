@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/*
- * Every length is a count of mascot pixels times --px, so the whole scene scales from one
- * value. Parts turn around their own origin, set by the layout.
- */
 .hookshop-highlight {
   position: relative;
   width: calc(var(--scene-w) * var(--px));

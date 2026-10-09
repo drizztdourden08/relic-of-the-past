@@ -784,4 +784,261 @@ The reset icon is a counter clockwise arrow: the arc, then the corner that heads
 `changedCount` is how many settings in the section differ from their default; zero rests the
 action.
 
+### compounds/HookshopHighlight/HookshopHighlight.tsx
+
+The mascot pulls a shop bag in with its hookshot. The mascot and the hookshot are built from their
+own pieces; this component places and turns them from the layout, and the sparkle, the stars and
+the speed lines exist only here. The hookshot crosses the bag's side and is clipped at the front
+face's edge, so its point goes in behind the front. The stars are drawn before the bag so it
+covers part of them. The stamp sits inside the bag's box, so it turns with the bag. `pixelSize`
+is the size of one mascot pixel in CSS pixels, and every length is a count of mascot pixels times
+`--px`, so the whole scene scales from that one value.
+
+### compounds/HookshopHighlight/HookshopHighlight.constants.ts
+
+Sizes and anchor points of the parts, in each part's own pixels; they describe the SVGs in
+assets/hookshop, so a redrawn part changes its numbers here. `scale` is the size of one part
+pixel in mascot pixels: the bag is drawn at four times the mascot's resolution, and the stamp
+(the app logo) at the bag's own size, so one logo pixel is one bag pixel. The bag is drawn in
+perspective, so its front's bottom edge is not level: `stampAngle` is that edge's angle, measured
+on the art, and the stamp sits square to it. `frontEdge` is the outer side of the front face's
+left outline, which the hookshot's head vanishes behind. The logo build script loads this file and
+`behavior/scene-layout.ts` by path, so both keep their names and exports.
+
+### compounds/HookshopHighlight/behavior/scene-layout.ts
+
+The mascot leans back and holds the hookshot in its right pod. The chain leaves at a fixed angle
+and bends along an even arc. The bag is placed so the head's point lands just past the front
+face's left edge at mid height, whatever the angles are, and the hookshot is clipped along that
+edge. The bag travels back along the chain, so the speed lines trail the other way.
+
+### compounds/HookshopHighlight/behavior/bag-effects.ts
+
+The effects are placed from points on the bag, in bag pixels, so they follow it whatever its
+angle. Two stars sit off its top right and bottom right corners. Three speed lines start just off
+its right side, bright end first, and fan out by their `spread` as they trail away opposite the
+pull.
+
+### compounds/HookshopHighlight/behavior/near-side-of.ts
+
+The half of the plane on the left of the line from `a` to `b`, as a polygon reaching well past the
+scene (`FAR`). It is the hookshot's clip.
+
+### compounds/CapacityFamilyRow/CapacityFamilyRow.tsx
+
+One capacity family, read top to bottom as a list of named lines. The head sits on the same label,
+control and impact grid as every plain option row: the family with what its modes do under it in
+the words of its catalog row, the mode dropdown, and the In Pool cell, so every control and In
+Pool cell in the panel lines up. Under the head comes one line per fact: the Custom lines (range,
+items, jumps) only while the mode is Custom; the pickup bonus whenever the family hands out
+upgrade items (Custom or in pool); and the ladder in every mode, which says what the player
+actually gets. The wallet has no vanilla upgrades to pool, so it offers no "in pool" mode. A
+family a sibling setting decided (`forced`) renders inert with the reason in red under its head:
+the controls grey out, the sentence does not, the same as a forced plain option row.
+`CapacityRowState` holds ladder indexes and choices, never ladder values; the curve choice is a
+generator, the free sequence or a named preset. `floorNote` says where the final max may not stop
+below and what asks for it, so a thumb that snaps back is never a mystery.
+
+### compounds/CapacityFamilyRow/CapacityFamilyRow.css
+
+Every line's label sits in one fixed narrow track so the family reads as a list, not a stack of
+captioned controls. The controls of a line sit side by side while there is room: a slider takes
+what is left, a dropdown or toggle keeps its width, and the curve keeps a fixed share so a long
+preset label never squeezes the count slider. A note under a line is quieter than a problem and
+louder than a caption. The ladder's label sits on the chips' baseline, not the control height.
+
+### compounds/CapacityFamilyRow/sub-components/LadderControls.tsx
+
+The Custom mode lines of a family: the range (start and max thumbs on the family's legal tiers,
+the readout beside them, the floor as the line's note), the items (the count between the floor
+the item cap sets and the ceiling the pool allows, with the curve dropdown beside it, presets
+under a divider) and, only while the curve is Free, the jumps. A span with a single possible
+count reads as text, and a family without a curve (the meter) says so in the curve's place. A
+`readout` render hands the same lines to LadderReadout, with values as tags.
+
+### compounds/CapacityFamilyRow/sub-components/BonusLine.tsx
+
+The percentage a capacity upgrade hands over beside the ceiling it raises, and the switch saying
+what that percentage is of. The catalog's clarifier sits under the two, because "of what" is
+exactly what a percentage cannot say by itself.
+
+### compounds/ShopSlotsBlock/ShopSlotsBlock.tsx
+
+The shop scope section, everything the Shops tab shows above the prices, in decision order. It
+starts with the mode because the mode governs the rest: on vanilla nothing else on the tab can
+change the seed, so every control under it (the cards, both sliders, and the prices block beyond
+this component) draws inert. Then the cards, split into the two halves of the map and one per
+shop, because the ticks are what every mode draws from; then the count, whose maximum is the size
+of the ticked set, so the control never offers a slot that does not exist; then the depth and what
+the two cost the seed. The count control and the total sentence read the same number off the
+summary (the slots this scope really opens), so they never disagree. The retro note sits under the
+mode because retro is decided on the Items tab but its one shop consequence depends on the mode
+chosen here. The block's fixed copy lives in ShopSlotsBlock.constants.ts so the sentences a player
+reads are one short file to review. No handler renders the read-only Options page.
+
+### compounds/ShopSlotsBlock/ShopSlotsBlock.css
+
+The reading order (what the seed may take, which spots, how many) is made visible: the mode, the
+cards under a heading per half of the map, then the two counted controls on their own plate under
+a hairline. The dropdown keeps the same indent as the cards and sliders, so the three line up
+under their headings.
+
+### compounds/ShopSlotsBlock/behavior/shop-scope-edits/index.ts
+
+One number drives both the count control and the total sentence: `opened`, the size of the set
+this scope really opens (`shop-scope.ts`). The counted modes take it out of the ticked set, and in
+the custom mode it is the ticked set, so a control fed the stored `slotCount` would sit still while
+the ticks moved and its fill would climb as the ceiling under it dropped. The stored count is
+re-clamped after every edit, not only the slider's, so it never outruns a ticked set the player has
+just made smaller. The edits live in a folder because
+`tests/randomizer/shop-slots-panel.keep.test.ts` imports `summaryOf` and `withSlotTicked` from this
+path.
+
+### compounds/ShopSlotsBlock/behavior/shop-count-control.ts
+
+A slider promises two things: the value can be dragged, and the filled part of its track means
+something. Only the counted modes keep both: they take a number out of the ticked set, so the fill
+is the share of that set this scope opens. The custom mode's opened set is the ticked set, so the
+value equals the maximum by definition and the bar would sit hard against the end while unticking
+a slot dropped the number and left the fill still. Vanilla opens nothing. Both get a read out: the
+same label, sentence and figure without a control that cannot move.
+
+### compounds/ShopSlotsBlock/behavior/shop-cards.ts
+
+Every derivation for the shop grid lives here, so the card stays presentational and this is the
+one place the shop slot records are read for the panel. A card's name is the short one, because the
+grid is headed by world and repeating it says nothing. A lone slot has no shelf position worth
+naming, so it wears its stock in its place. The stock line joins with a middle dot so it reads as
+one sentence of stock.
+
+### compounds/ShopSlotsBlock/behavior/shop-sections.ts
+
+The split into world sections is read off the shops themselves, so a shop added to the dataset
+lands in a section without this file changing, and a section with no shop is dropped. The light
+world comes first because the game opens there.
+
+### compounds/ShopSlotsBlock/behavior/shop-total-text.ts
+
+The total is a sentence (slots times items equals locations) and not three numbers, because the
+multiplication is the part the player is deciding about.
+
+### compounds/ShopSlotsBlock/behavior/retro-shop-note.ts
+
+Both shelf names and prices come off the dataset through the same helpers the seed and the core
+read, so the note never describes a shelf the game does not stock that way. With vanilla shops the
+stock changes in place and nothing is shuffled; with shuffled shops the quiver is in the item pool
+and its shelf always opens as a shuffled slot.
+
+### compounds/ShopSlotsBlock/sub-components/ShopSlotCard.tsx
+
+The slot boxes are the only control on a card. A shop is on because something in it is ticked, so
+a whole shop tick would repeat the boxes, and a shop that starts unticked wears an "Off by default"
+badge, because "nothing ticked here" otherwise looks like a setting that got lost. The card has
+three faces on `data-state`: on (a raised surface), off (nothing ticked, dimmed, so the grid reads
+as "these are in play") and disabled (vanilla mode or the frozen Run tab, flattened onto the page
+background with no dim, because the ticks already carry the disabled opacity and stacking a second
+one would push the text under contrast). "Nothing ticked" rides on its own `data-empty` attribute,
+carried by a dashed outline and a muted title, so it survives the inert face: a fresh profile opens
+on the mode that freezes the block, and folded into the state, the one shop that starts with
+nothing ticked drew exactly like the ten that start full. The slots sit on three fixed tracks so
+boxes are the same size in every card and a one slot shop does not stretch across. Boxes are
+squared off to read as shelf cells, and their height is fixed so a long label wrapping to two
+lines does not make its box taller than its neighbours.
+
+### compounds/ShopSlotsBlock/sub-components/ShopSlotCount.tsx
+
+The read out face stands where the slider stands and keeps the slider's type scale and inert dim,
+so switching modes changes what the control is without the row moving or changing weight.
+
+### compounds/ShopSlotsBlock/sub-components/ShopSlotSection.tsx
+
+Each world gets its own titled section, the same group every other part of the screen uses, and
+the heading is what lets the cards drop the world words from their names. The section is indented
+one step so its heading reads as a level below the group's title; the grid gives the padding back
+so the cards start on the block's margin. The grid uses auto fill tracks that follow the grid's own
+width, since the panel lives in a split pane, and `min()` keeps a single column from overflowing a
+pane narrower than one card.
+
+### compounds/ChecksTracker/ChecksTracker.tsx
+
+The summary bar, the filters and the grouped check tree, with every piece of data arriving as a
+prop, so the small Checks widget and the full size spoiler tab show a check the same way. The
+summary and the filters form one header band and the tree is the scroller under it: with
+`stickyHeader` the header holds its place and hands the list the height that is left, so only the
+list moves; without it the whole tracker scrolls as one, which a short widget wants. The header
+and the list are siblings, not layers, so the pinned header needs no ground of its own and a
+widget floating over the game stays translucent through it. With a `run`, checks show what this
+seed put in them; without one, a normal profile is unchanged. The subtotal line shows only while a
+search, facet, item filter or status filter narrows the set. `panels` and `expandedGroups` are the
+controlled form: a surface with somewhere to keep them passes them in so they outlive the tree
+being unmounted; otherwise each piece keeps its own state, closed on every mount. `eventStatus` is
+the live side of the reversible events, true while the state holds; absent hides the pill.
+
+### compounds/ChecksTracker/ChecksTracker.constants.ts
+
+The tracker once drew its states and view modes with text glyphs, which inherited the body font
+and sat at a different weight and baseline from every other control. The paths here are the same
+16 by 16 outline shapes the title bar and the search palette use, so a status reads as an icon
+everywhere: a checkmark for taken, a filled dot for available (the one solid mark in the set), the
+same dot hollow for left, and a stack of rows for every check. The summary words are the reader's,
+not the model's: taken, available, left. Five grouping axes is the tree's depth limit, past which a
+group holds one check.
+
+### compounds/ChecksTracker/ChecksTracker.css
+
+The shell sheet pulls in `sub-components/TrackerFilters.css` and `sub-components/CheckList.css` so
+any importer of it gets the whole tracker; the class sets are disjoint, so cascade order is
+unaffected. The sub-components import this shell sheet, and CheckToasts renders CheckCard on its
+own, which is why CheckCard keeps that import.
+
+### compounds/ChecksTracker/sub-components/CheckStatusIcon.tsx
+
+The one mark for a check's state, so the summary, the filter buttons and the rows never disagree
+about what "taken" looks like.
+
+### compounds/ChecksTracker/sub-components/CheckList.tsx
+
+The leaves of the check tree in the three view modes (compact rows, rows with items, item cards).
+A check with several vanilla items expands to one entry per item in the modes that show the item,
+but only without a run: once a seed has placed something there, the check holds exactly one thing
+and collapses back to a single row. Card columns come from the space there is, so the same grid
+reads in a 300px widget and across a full width spoiler pane.
+
+### compounds/ChecksTracker/sub-components/CheckCard.tsx
+
+The tracker's card view and the check toasts share this card. An event card carries the app's own
+mark where an item shows its sprite, and a gold frame tells it from an item while the left stripe
+still says its status. The live pill shows only once the row happened: "not now" on a row never
+done is noise. The item arrives resolved by the caller (`check-contents.ts`); a foreign item is the
+name of another player's item placed here online.
+
+### compounds/ChecksTracker/sub-components/SwapBadge.tsx
+
+A swap chest's item pays a stand-in once the player already holds it, so the same chest reads two
+ways. The badge shows whichever of the two the row holds now, and the tooltip says both.
+
+### compounds/ChecksTracker/sub-components/TrackerGroupTree.tsx
+
+Adapts the check group tree onto the shared GroupTree composite: the composite owns nesting and
+expansion, this file owns what a check group counts in its header and what a check row looks like.
+Each count in a group header carries its own word, because three bare numbers said nothing about
+which was which.
+
+### compounds/ChecksTracker/sub-components/TrackerFilters.tsx
+
+The search box is always there and the rest lives in a drawer. Items, events or both is the one
+switch always in reach above the drawer. Every control is a design system one, so the tracker picks
+up the app's segmented control and button treatment. The funnel's count sits in a corner so the
+funnel keeps its square footprint, the toolbar wraps so a narrow widget never scrolls sideways, and
+an icon segment is square while text segments keep the control's padding. The summary word is the
+first thing to go when the widget cannot fit the row.
+
+### compounds/ChecksTracker/sub-components/TrackerLogicToggles.tsx
+
+The drawer's switches over what the list holds and how its logic reads: small key doors, Big Key
+doors, unlit rooms, and on the plain game the shop shelves. A seed's roster already carries only
+the shelves its shop scope opened, so that switch shows on the plain game only. Small keys default
+off on the plain game and on for a seed (`smallKeyDoorsOf`). `behavior/active-logic-toggles.ts`
+counts the switches away from their default for the drawer's badge.
+
 ENDMARK

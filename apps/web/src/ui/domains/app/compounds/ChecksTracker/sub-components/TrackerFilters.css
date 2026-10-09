@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* ═══════════════════════════════════════════════════════════════
-   SUMMARY BAR
-   ═══════════════════════════════════════════════════════════════ */
-
 .tracker-summary {
   container-type: inline-size;
   display: flex;
@@ -37,14 +33,9 @@
 .tracker-summary__stat--completed .tracker-summary__stat-value { color: var(--c-green); }
 .tracker-summary__stat--reachable .tracker-summary__stat-value { color: var(--c-warning); }
 
-/* The word is the first thing to go when the widget cannot fit the row. */
 @container (max-width: 320px) {
   .tracker-summary__stat-label { display: none; }
 }
-
-/* ═══════════════════════════════════════════════════════════════
-   FILTERS & CONTROLS
-   ═══════════════════════════════════════════════════════════════ */
 
 .tracker-filters {
   display: flex;
@@ -75,7 +66,6 @@
   pointer-events: none;
 }
 
-/* Room for the leading icon, and a row height that matches the 26px buttons. */
 .tracker-filters__input {
   flex: 1;
   min-width: 0;
@@ -89,7 +79,6 @@
   flex-shrink: 0;
 }
 
-/* A corner count, so the funnel keeps its square footprint. */
 .tracker-filters__count {
   position: absolute;
   top: -5px;
@@ -101,7 +90,6 @@
   text-align: center;
 }
 
-/* Toolbar wraps, and never produces a horizontal scrollbar in a narrow widget. */
 .tracker-filters__controls {
   display: flex;
   flex-wrap: wrap;
@@ -109,7 +97,6 @@
   gap: var(--space-sm);
 }
 
-/* An icon segment is square; the text ones keep the control's own padding. */
 .tracker-filters__controls .segmented__btn {
   display: flex;
   align-items: center;
@@ -117,8 +104,6 @@
   padding: var(--space-2xs) var(--space-sm);
   min-height: 20px;
 }
-
-/* ─── Drawer panels (tags, grouping) ─── */
 
 .tracker-filters__panel {
   display: flex;

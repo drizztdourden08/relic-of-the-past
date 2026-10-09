@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind style */
 
-/* ═══════════════════════════════════════════════════════════════
-   GROUP TREE: structure lives in @ds/composites/GroupTree; only what a
-   CHECK group counts in its header is a tracker concern, so only that is here.
-   ═══════════════════════════════════════════════════════════════ */
-
 .tracker-groups {
   padding: 0;
 }
 
-/* Header counts inside the shared group tree's meta slot. Three bare numbers
-   said nothing about which was which, so each carries its own word. */
 .tracker-group__counts {
   display: inline-flex;
   align-items: baseline;
@@ -22,10 +15,6 @@
 .tracker-group__count--reachable { color: var(--c-warning); }
 .tracker-group__count--blocked { color: var(--c-text-dim); }
 .tracker-group__count-sep { color: var(--c-text-faint); }
-
-/* ═══════════════════════════════════════════════════════════════
-   CHECK ROWS (compact & detailed)
-   ═══════════════════════════════════════════════════════════════ */
 
 .tracker-checks--list {
   padding-left: var(--space-sm);
@@ -63,7 +52,6 @@
   text-transform: uppercase;
 }
 
-/* The live side of a reversible event: a small pill beside the row, never the tick. */
 .tracker-check__now {
   font-size: var(--text-xs);
   text-transform: uppercase;
@@ -86,12 +74,6 @@
 .tracker-check--reachable { color: var(--c-warning); }
 .tracker-check--blocked { color: var(--c-text-dim); }
 
-/* ═══════════════════════════════════════════════════════════════
-   VISUAL CHECK CARDS
-   ═══════════════════════════════════════════════════════════════ */
-
-/* Columns come from the space there is, not a fixed count: the same grid has to
-   read in a 300px widget and across a full-width spoiler pane. */
 .tracker-checks--visual {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -126,7 +108,6 @@
   opacity: 0.45;
 }
 
-/* An event card: a gold frame tells it from an item; the left stripe still says its status. */
 .tracker-card--event {
   border: 1px solid var(--c-gold);
   border-left-width: 3px;
@@ -141,13 +122,11 @@
   opacity: 0.85;
 }
 
-/* The live pill on a card sits at the far end, like the swap mark. */
 .tracker-card__now {
   margin-left: auto;
   flex-shrink: 0;
 }
 
-/* A swap chest's mark sits at the far end of its row or card. */
 .tracker-swap-badge {
   margin-left: auto;
   flex-shrink: 0;

@@ -1,25 +1,14 @@
 /* @layer renderer-components @kind logic */
-/**
- * Where each part of the Hookshop highlight sits and how it is turned, in mascot pixels.
- * The mascot leans back and holds the hookshot in its right pod. The chain leaves at a
- * fixed angle and bends along an even arc. The bag is placed so the head's point lands just
- * past the front face's left edge at mid-height, whatever the angles are, and the hookshot
- * is clipped along that edge so the point goes in behind the front. The stamp is placed
- * inside the bag's box, square to the front's bottom edge, so it turns with the bag.
- */
 import { hookshotCurve, layoutHookshot } from '../../Hookshot';
 import type { HookshopParts, HookshopLayout, Point } from '../HookshopHighlight.type';
 import { bagEffects } from './bag-effects';
-import { nearSideOf, placed, rightmost, turn } from './plane-geometry';
-
-const BOT_AT: Point = [2, 15];
-const BOT_ANGLE = -6;
-const HOOKSHOT_ANGLE = -11;
-const CHAIN_LENGTH = 30;
-const CHAIN_BEND = 12;
-const BAG_ANGLE = -15;
-const HEIGHT = 52;
-const MARGIN = 2;
+import { nearSideOf } from './near-side-of';
+import { placed } from './placed';
+import { rightmost } from './rightmost';
+import {
+  BAG_ANGLE, BOT_ANGLE, BOT_AT, CHAIN_BEND, CHAIN_LENGTH, HEIGHT, HOOKSHOT_ANGLE, MARGIN,
+} from './scene-layout.constants';
+import { turn } from './turn';
 
 const computeLayout = (parts: HookshopParts): HookshopLayout => {
   const { bot: b, bag: g, stamp: st, sparkle: sp } = parts;
@@ -40,9 +29,8 @@ const computeLayout = (parts: HookshopParts): HookshopLayout => {
   const sw = st.w * st.scale, sh = st.h * st.scale;
   const stamp = placed('stamp', g.stampCentre[0] * g.scale - sw / 2, g.stampCentre[1] * g.scale - sh / 2, sw, sh, g.stampAngle);
 
-  // the bag travels back along the chain, so the lines trail the other way
-  const trail = HOOKSHOT_ANGLE + CHAIN_BEND + 180;
-  const { stars, speedLines } = bagEffects(parts, onBag, trail);
+  const trailOppositeThePull = HOOKSHOT_ANGLE + CHAIN_BEND + 180;
+  const { stars, speedLines } = bagEffects(parts, onBag, trailOppositeThePull);
   const apex = turn([bot.left + b.w / 2, bot.top], botCentre, BOT_ANGLE);
   const effects = [placed('sparkle', apex[0] - sp.w / 2 - 1, apex[1] - sp.h / 2 + 2, sp.w, sp.h), ...speedLines];
   const width = Math.ceil(Math.max(...[bag, ...stars, ...speedLines].map(rightmost)) + MARGIN);

@@ -1,35 +1,15 @@
 /* @layer renderer-components @kind component */
-/**
- * The Custom-mode lines of a capacity family, one fact per line: the range
- * (the start-max thumbs on the family's legal tiers, the readout beside them,
- * the floor the final max may not stop below as the line's note); the items
- * (the count between the floor the item cap sets and the ceiling the pool
- * allows, with the curve dropdown beside it, presets under a divider); and,
- * only while the curve is Free, the jumps (the chip editor, which carries its
- * own sum and problem line). A span with a single possible count reads as
- * text; a family without a curve (the meter) says so in the curve's place.
- * A `readout` render hands the same lines to CustomReadout, values as tags.
- */
 import { Box, RangeSlider, Select, Slider, Text } from '@ds/primitives';
 import { JumpChipsEditor } from '../../JumpChipsEditor';
-import { CustomReadout } from './CustomReadout';
+import { LadderReadout } from './LadderReadout';
 import { RowLine } from './RowLine';
 import { itemsLabel } from '../behavior/items-label';
 import type { SelectGroup } from '@ds/primitives';
-import type { CapacityRowModel, CapacityRowState } from '../CapacityFamilyRow.type';
+import type { CapacityRowState, LadderControlsProps } from '../CapacityFamilyRow.type';
 
-interface CustomControlsProps {
-  model: CapacityRowModel;
-  readOnly: boolean;
-  /** Every value as a tag in place of its control: the read-only panel. */
-  readout?: boolean;
-  onChange: (part: Partial<CapacityRowState>) => void;
-}
-
-
-const CustomControls = (props: CustomControlsProps) => {
+const LadderControls = (props: LadderControlsProps) => {
   const { model, readOnly, readout = false, onChange } = props;
-  if (readout) return <CustomReadout model={model} />;
+  if (readout) return <LadderReadout model={model} />;
   const {
     stops, state, rangeStep, labelEvery, span, minCount, maxCount, maxJump, hasCurve, curveOptions,
     problem, label, floorNote,
@@ -96,5 +76,4 @@ const CustomControls = (props: CustomControlsProps) => {
   );
 };
 
-export { CustomControls };
-export type { CustomControlsProps };
+export { LadderControls };
