@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
 import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
-import { CSS_POSITION } from '../behavior/align-options';
+import { CSS_POSITION } from '@app/hud-layout-editing/align-options';
 import { BARS, FOLD_ABOVE } from './AlignmentTiles.constants';
 import './HudLayoutEditor.layout.css';
 import './HudLayoutEditor.layout-set.css';
-import type { AlignValue, FlowDirection } from '../behavior/align-options';
+import type { AlignValue, FlowDirection } from '@app/hud-layout-editing/align-options';
 import type { CSSProperties } from 'react';
 import type { AlignRowSpec, AlignmentTilesProps } from './AlignmentTiles.type';
 

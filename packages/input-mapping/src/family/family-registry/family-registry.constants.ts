@@ -1,9 +1,9 @@
 /* @layer shared-input @kind constants */
-import { GAMECUBE_FAMILY } from '../gamecube.family';
-import { GENERIC_FAMILY } from '../generic.family';
-import { NINTENDO_FAMILY } from '../nintendo.family';
-import { PLAYSTATION_FAMILY } from '../playstation.family';
-import { XBOX_FAMILY } from '../xbox.family';
+import { GAMECUBE_FAMILY } from '../gamecube-family';
+import { GENERIC_FAMILY } from '../generic-family';
+import { NINTENDO_FAMILY } from '../nintendo-family';
+import { PLAYSTATION_FAMILY } from '../playstation-family';
+import { XBOX_FAMILY } from '../xbox-family';
 import type { FamilyMetadata } from '../family.type';
 
 const EMPTY_FAMILY: FamilyMetadata = { types: [] };

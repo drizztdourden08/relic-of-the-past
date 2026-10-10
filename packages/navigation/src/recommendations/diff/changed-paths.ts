@@ -2,11 +2,12 @@
 import { childPath } from '../child-path';
 import { isAbsent } from '../compare/probe-reading';
 import { isPlainObject } from '../is-plain-object';
+import { isUnknownArray } from '../is-unknown-array';
 
 const bothUndefined = (a: unknown, b: unknown): boolean => a === undefined && b === undefined;
 
 const asArray = (value: unknown): unknown[] | null => {
-  if (Array.isArray(value)) return value;
+  if (isUnknownArray(value)) return value;
   return isAbsent(value) ? [] : null;
 };
 

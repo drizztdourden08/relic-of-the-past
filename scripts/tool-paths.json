@@ -1,0 +1,8 @@
+{
+  "toolFolder": ".claude",
+  "toolWorktrees": ".claude/worktrees",
+  "toolRole": "claude-config",
+  "projectGuide": "CLAUDE.md",
+  "protectedToolFiles": ["CLAUDE.md", "AGENTS.md", ".ai-config.json", ".mcp.json"],
+  "copiedToolFiles": ["CLAUDE.md", "AGENTS.md", ".mcp.json", ".ai-config.json"]
+}

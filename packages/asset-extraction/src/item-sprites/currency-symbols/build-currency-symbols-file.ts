@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { encodeIcon, quantizeIcon } from '../fixed-row-tiles';
 import { stripFrame } from './strip-frame';
 import {
@@ -17,11 +18,10 @@ const buildCurrencySymbolsFile = (
   pictures: ReadonlyMap<string, ImageBuffer>, paletteRows: readonly (readonly RGBA[])[],
 ): Uint8Array | null => {
   const out = new Uint8Array(STRIP_BYTES * CURRENCY_SYMBOL_FILES.length);
-  const row = paletteRows[CURRENCY_SYMBOL_PALETTE_ROW];
   for (const [id, file] of CURRENCY_SYMBOL_FILES.entries()) {
     const picture = pictures.get(file);
     if (!picture || !isStripSized(picture)) return null;
-    out.set(symbolBytes(picture, row), id * STRIP_BYTES);
+    out.set(symbolBytes(picture, itemAt(paletteRows, CURRENCY_SYMBOL_PALETTE_ROW, 'Icon palette row')), id * STRIP_BYTES);
   }
   return out;
 };

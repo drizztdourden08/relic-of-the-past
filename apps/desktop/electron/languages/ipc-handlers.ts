@@ -54,9 +54,10 @@ const extractFromSource = async (source: ImportSource, langCode: string): Promis
     return fail(err);
   }
   try {
-    if (resolved.files.length === 0) throw new Error('No ROM file (.sfc/.smc) found in the source');
-    if (resolved.files.length > 1) throw new Error(`Multiple ROM files found (${resolved.files.length}). Provide exactly one ROM.`);
-    return await extractDialogueFromRom(resolved.files[0], langCode);
+    const [rom, ...others] = resolved.files;
+    if (rom === undefined) throw new Error('No ROM file (.sfc/.smc) found in the source');
+    if (others.length > 0) throw new Error(`Multiple ROM files found (${resolved.files.length}). Provide exactly one ROM.`);
+    return await extractDialogueFromRom(rom, langCode);
   } catch (err) {
     report('error', undefined, undefined, errMessage(err));
     return fail(err);

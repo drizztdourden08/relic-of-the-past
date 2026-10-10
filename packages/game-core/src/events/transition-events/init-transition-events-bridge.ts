@@ -1,11 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 import { classifyTransition } from '../classify-transition';
-import type { TransitionSettled } from '../transition-events.type';
+import type { TransitionSettled, TransitionSettledArgs } from '../transition-events.type';
 import { transitionListeners } from './transition-listeners';
 
-const onTransitionSettled = (
-  module: number, fromSubmodule: number, indoors: number, roomIndex: number, owScreenIndex: number,
-): void => {
+const onTransitionSettled = (...args: TransitionSettledArgs): void => {
+  const [module, fromSubmodule, indoors, roomIndex, owScreenIndex] = args;
   const event: TransitionSettled = {
     kind: classifyTransition(module, fromSubmodule),
     module,

@@ -5,25 +5,27 @@ import { offscreenEnemyMode, rendersExtended } from '../settings';
 import { featureOverrides } from './feature-overrides';
 import { FEATURE_FLAGS, UNREGISTERED_QUALITY_OF_LIFE_KEYS } from './live-settings-flags.constants';
 
+const flagsFrom = (bits: readonly (readonly [boolean, number])[]): number =>
+  bits.reduce((flags, [on, bit]) => (on ? flags | bit : flags), 0);
+
 const registeredBits = (s: GameSettings): number => {
   const effective = effectiveFeatureIds(s);
   const isOn = (id: string): boolean => effective.has(id);
   const wideView = isOn('extendedRendering') && rendersExtended(s);
-  let flags = 0;
-  if (isOn('extendedRendering')) flags |= FEATURE_FLAGS.extendedRendering;
-  if (isOn('linearWorldTilemap')) flags |= FEATURE_FLAGS.linearWorldTilemap;
-  if (isOn('ultrawideRendering')) flags |= FEATURE_FLAGS.ultrawide;
-  if (isOn('tallRendering')) flags |= FEATURE_FLAGS.tallRender;
-  if (wideView && isOn('widescreenSprites')) flags |= FEATURE_FLAGS.extendScreen64;
-  if (wideView && isOn('widescreenVisualFixes')) flags |= FEATURE_FLAGS.widescreenVisualFixes;
-  if (isOn('cameraLockToViewport')) flags |= FEATURE_FLAGS.cameraLockToViewport;
-  if (isOn('smoothTransitions')) flags |= FEATURE_FLAGS.smoothTransitions;
-  if (isOn('pauseOffscreenAI') && offscreenEnemyMode(s) === 'paused') flags |= FEATURE_FLAGS.pauseOffscreenEnemies;
-  const autoSkipDialog = featureOverrides.autoSkipDialog ?? isOn('autoSkipDialog');
-  if (autoSkipDialog) flags |= FEATURE_FLAGS.autoSkipDialog;
-  if (isOn('prefillFileName')) flags |= FEATURE_FLAGS.prefillFileName;
-  if (isOn('perGroupVolume')) flags |= FEATURE_FLAGS.perGroupVolume;
-  return flags;
+  return flagsFrom([
+    [isOn('extendedRendering'), FEATURE_FLAGS.extendedRendering],
+    [isOn('linearWorldTilemap'), FEATURE_FLAGS.linearWorldTilemap],
+    [isOn('ultrawideRendering'), FEATURE_FLAGS.ultrawide],
+    [isOn('tallRendering'), FEATURE_FLAGS.tallRender],
+    [wideView && isOn('widescreenSprites'), FEATURE_FLAGS.extendScreen64],
+    [wideView && isOn('widescreenVisualFixes'), FEATURE_FLAGS.widescreenVisualFixes],
+    [isOn('cameraLockToViewport'), FEATURE_FLAGS.cameraLockToViewport],
+    [isOn('smoothTransitions'), FEATURE_FLAGS.smoothTransitions],
+    [isOn('pauseOffscreenAI') && offscreenEnemyMode(s) === 'paused', FEATURE_FLAGS.pauseOffscreenEnemies],
+    [featureOverrides.autoSkipDialog ?? isOn('autoSkipDialog'), FEATURE_FLAGS.autoSkipDialog],
+    [isOn('prefillFileName'), FEATURE_FLAGS.prefillFileName],
+    [isOn('perGroupVolume'), FEATURE_FLAGS.perGroupVolume],
+  ]);
 };
 
 const unregisteredBits = (s: GameSettings): number => {
@@ -32,7 +34,7 @@ const unregisteredBits = (s: GameSettings): number => {
   for (const key of UNREGISTERED_QUALITY_OF_LIFE_KEYS) {
     if (s[key]) flags |= FEATURE_FLAGS[key];
   }
-  if (s.haptics?.enabled) flags |= FEATURE_FLAGS.haptics;
+  if (s.haptics.enabled) flags |= FEATURE_FLAGS.haptics;
   const developerToolsWanted = featureOverrides.developerTools ?? s.developerToolsEnabled;
   if (developerToolsWanted) flags |= FEATURE_FLAGS.developerTools;
   return flags;

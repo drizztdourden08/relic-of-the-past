@@ -9,8 +9,8 @@ import { GroundPicker } from './GroundPicker';
 import { RatioPicker } from './RatioPicker';
 import { SlotPickerPanel } from './SlotPickerPanel';
 import { SpriteExtractionNotice } from './SpriteExtractionNotice';
-import { TOOLBAR_ICONS, buildToolbarGroups, presetItems, subtreePresetItems } from '../behavior/toolbar-menus';
-import { newElement } from '../behavior/new-node';
+import { TOOLBAR_ICONS, buildToolbarGroups, presetItems, subtreePresetItems } from '@app/hud-layout-editing/toolbar-menus';
+import { newElement } from '@app/hud-layout-editing/new-node';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import type { EditorToolbarProps } from './EditorToolbar.type';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { ProgressBar } from '@drizztdourden08/tessera/primitives';
 import { NetworkSection } from './NetworkSection';
-import { formatYesNo } from '../behavior/network-format';
+import { formatYesNo } from '../behavior/format-yes-no';
 import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
 import type { NetworkProgress } from '@app/game/randomizer-client';
 import type { NetworkRow } from './NetworkSection.type';

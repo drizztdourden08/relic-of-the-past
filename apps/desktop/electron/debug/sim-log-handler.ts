@@ -22,7 +22,7 @@ const registerSimLogHandlers = (): void => {
   handle('sim:appendLog', async (_event, args: { runId: string; line: string }): Promise<Result> => {
     try {
       await mkdir(getSimLogDir(), { recursive: true });
-      await appendFile(getSimLogPath(args.runId), args.line + '\n', 'utf-8');
+      await appendFile(getSimLogPath(args.runId), `${args.line}\n`, 'utf-8');
       return { success: true };
     } catch (e: unknown) {
       return { success: false, error: e instanceof Error ? e.message : 'Unknown error' };

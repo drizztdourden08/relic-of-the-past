@@ -46,8 +46,7 @@ interface LayerStrategy {
   getRawAttr(layer: 0 | 1): number[][];
   expand(
     cell: BFSCell,
-    dr: number,
-    dc: number,
+    step: readonly [number, number],
     inventory: Set<string>,
     bounds: QuadrantBounds,
   ): BFSExpansionResult[];

@@ -44,7 +44,7 @@ const buildConnectionNavUpdates = (input: ConnectionUpdaterInput): ConnectionNav
 
     const weight = transitType === 'walk' ? (overlapTiles?.length ?? 1) : 1;
     const nav: ConnectionNavData = { transitType, requirements, fromPoint, overlapTiles, weight };
-    if (transitType === 'walk' && overlapTiles && overlapTiles.length === 0) nav.invalid = true;
+    if (transitType === 'walk' && overlapTiles?.length === 0) nav.invalid = true;
 
     updates.push({ from: conn.from, to: conn.to, nav });
   }

@@ -87,8 +87,8 @@ const relax = (search: BfsSearch, result: BFSCell, requirements: Set<string>): v
 
 const expandCell = (search: BfsSearch, cell: BFSCell): void => {
   const { inventory, bounds } = search.request;
-  for (const [dr, dc] of DIRECTIONS) {
-    for (const result of search.strategy.expand(cell, dr, dc, inventory, bounds)) relax(search, result, cell.requirements);
+  for (const step of DIRECTIONS) {
+    for (const result of search.strategy.expand(cell, step, inventory, bounds)) relax(search, result, cell.requirements);
   }
 };
 

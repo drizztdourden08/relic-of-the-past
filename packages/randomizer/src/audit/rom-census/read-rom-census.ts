@@ -7,7 +7,7 @@ import type { RomCensus, RomChest } from './rom-census.type';
 
 const readRomCensus = (romBytes: Uint8Array): RomCensus => {
   const bytes = stripCopierHeader(romBytes);
-  const byteAt = (ea: number): number => bytes[snesToLinear(ea)];
+  const byteAt = (ea: number): number => bytes[snesToLinear(ea)] ?? 0;
 
   const chestsByRoom = new Map<number, RomChest[]>();
   const flat: RomChest[] = [];

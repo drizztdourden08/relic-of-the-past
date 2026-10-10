@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { createRng } from '../../rng';
 import { buildFillWorld } from './fill-world';
 import { fillOptionsFromSnapshot } from './fill-options-from-snapshot';
@@ -12,9 +13,9 @@ const pondCandidatePoolOf = (
 ): readonly ItemKey[] => {
   const rng = createRng(pondItemPoolStreamOf(seed));
   return buildFillWorld(fillOptionsFromSnapshot(snapshot, deliverable, {
-    pickBottle: (choices) => choices[rng.int(choices.length)],
+    pickBottle: (choices) => itemAt(choices, rng.int(choices.length)),
     pickFiller: (count) => rng.int(count),
-    pickWeapon: (choices) => choices[rng.int(choices.length)],
+    pickWeapon: (choices) => itemAt(choices, rng.int(choices.length)),
   }, seed)).pool.pool;
 };
 

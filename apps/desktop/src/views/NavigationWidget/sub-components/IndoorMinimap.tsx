@@ -13,8 +13,8 @@ import { AnnotationLayer } from './AnnotationLayer';
 import { EdgeBadge } from './EdgeBadge';
 import { groupByEdge } from '../behavior/group-by-edge';
 import { positionSpan } from '../behavior/position-span';
-import { COUNT_LABEL } from './IndoorMinimap.constants';
 import type { MinimapProps } from './IndoorMinimap.type';
+import './IndoorMinimap.css';
 
 const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomIndex }: MinimapProps) => {
   const EDGE_PAD = 18;
@@ -90,11 +90,11 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
   });
 
   return (
-    <Box style={{ position: 'relative', width: '100%', maxWidth: totalW, height: totalH, marginTop: 4, marginLeft: 'auto', marginRight: 'auto' }}>
-      <Box style={{ position: 'absolute', left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, borderRadius: 'var(--radius-sm)', background: 'var(--c-secondary-soft)', border: `${borderW}px solid var(--c-secondary-soft)`, overflow: 'hidden' }}>
+    <Box style={{ maxWidth: totalW, height: totalH }} className="nav-indoor-minimap__part-6">
+      <Box style={{ left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, border: `${borderW}px solid var(--c-secondary-soft)` }} className="nav-indoor-minimap__part-5">
         {primaryResult && <ReachabilityCanvas reachable={primaryResult.reachable} size={mapW} tileLayer={primaryResult.tileLayer} bounds={{ minRow: 0, maxRow: 63, minCol: 0, maxCol: 63 }} />}
         {primaryResult && (
-          <Box style={COUNT_LABEL}>
+          <Box className="nav-indoor-minimap__count-label">
             {primaryResult.reachableCount}/{primaryResult.totalTiles}
           </Box>
         )}
@@ -106,7 +106,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
         const sz = Math.max(6, mapW * 4 / 64);
         const { icon: markerIcon, color: markerColor } = crossingIcon(crossing);
         return (
-          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title={crossing.label}>
+          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: x - sz / 2, top: y - sz / 2, width: sz, height: sz }} title={crossing.label} className="nav-indoor-minimap__part-4">
             <Icon icon={markerIcon} width={sz} height={sz} style={{ color: markerColor, filter: 'drop-shadow(0 0 1px #000)' }} />
           </Box>
         );
@@ -117,14 +117,14 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
         const y = mapTop + ((crossing.tile.row + 0.5) / 64) * mapH;
         const sz = Math.max(6, mapW * 4 / 64);
         return (
-          <Box key={`fh-${screen.screenIndex}-${crossing.id}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, border: '1.5px solid var(--c-primary)', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, var(--c-primary) 0px, var(--c-primary) 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
+          <Box key={`fh-${screen.screenIndex}-${crossing.id}`} style={{ left: x - sz / 2, top: y - sz / 2, width: sz, height: sz }} className="nav-indoor-minimap__part-3" />
         );
       }))}
 
       {playerPos && bundle.screens.includes(playerPos.screen) && (() => {
         const x = mapLeft + ((playerPos.col + 0.5) / 64) * mapW;
         const y = mapTop + ((playerPos.row + 0.5) / 64) * mapH;
-        return <Box style={{ position: 'absolute', left: x - 3, top: y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-secondary)', boxShadow: '0 0 3px var(--c-secondary)', pointerEvents: 'none' }} />;
+        return <Box style={{ left: x - 3, top: y - 3 }} className="nav-indoor-minimap__part-2" />;
       })()}
 
       <AnnotationLayer annotations={annotations.find(a => a.screenIndex === roomIndex) ?? null} cellLeft={mapLeft} cellTop={mapTop} cellW={mapW} cellH={mapH} />
@@ -135,7 +135,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
       {renderVertEdge(byEdge.east, 'e', mapDivLeft + mapW + borderW)}
 
       {boundaryTiles.map((pt, i) => (
-        <Box key={`scroll-boundary-${i}`} style={{ position: 'absolute', left: pt.x - 1.5, top: pt.y - 1.5, width: 3, height: 3, borderRadius: '50%', background: pt.color, opacity: 0.8, pointerEvents: 'none' }} />
+        <Box key={`scroll-boundary-${i}`} style={{ left: pt.x - 1.5, top: pt.y - 1.5, background: pt.color }} className="nav-indoor-minimap__part-1" />
       ))}
     </Box>
   );

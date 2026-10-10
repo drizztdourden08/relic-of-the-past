@@ -11,7 +11,7 @@ const readShape = (title: string): Shape => {
     ?? el.getAttribute('data-index')
     ?? el.getAttribute('data-engine')
     ?? el.getAttribute('aria-label')
-    ?? (el.textContent ?? '').trim().slice(0, 24);
+    ?? el.textContent.trim().slice(0, 24);
   const wanted = 'button, input, select, [role="group"], [role="listbox"], [role="grid"], [role="option"], [role="gridcell"], .hud-layout-set__piece, .hud-align__row, .hud-flex-strip__cell';
   const controls = Array.from(section.querySelectorAll(wanted)).map((el) => {
     const r = el.getBoundingClientRect();

@@ -46,8 +46,8 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
       for (const door of obs.interactables?.doors ?? []) recordDoorGate(recorder, door);
 
       const { actions, events, nextState } = engine.step(state, obs);
-      recordEvents(recorder, events, checks, path.length - 1, steps, itemNames(nextState.inventory));
-      noteEvents(events, steps, log, path, tally);
+      recordEvents(recorder, events, checks, { pathIndex: path.length - 1, step: steps, items: itemNames(nextState.inventory) });
+      noteEvents(events, steps, { log, path, tally });
       for (const action of actions) await port.trigger(action);
 
       state = nextState;

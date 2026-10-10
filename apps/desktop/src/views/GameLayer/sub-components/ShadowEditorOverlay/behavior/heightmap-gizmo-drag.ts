@@ -60,8 +60,8 @@ const applyHeightmapGizmo = (a: HeightmapGizmoArgs): void => {
       break;
     }
     default: {
-      const m = part.match(/^vertex-(\d+)$/);
-      if (m) applyVertexDrag(a, parseInt(m[1], 10));
+      const vertexIndex = part.match(/^vertex-(\d+)$/)?.[1];
+      if (vertexIndex !== undefined) applyVertexDrag(a, parseInt(vertexIndex, 10));
       break;
     }
   }

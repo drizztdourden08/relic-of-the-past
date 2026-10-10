@@ -1,12 +1,12 @@
 /* @layer tests @kind helper */
 import { createElement as h } from 'react';
-import { GridSolveContext } from '@app/views/HudLayoutEditor/behavior/grid-solve';
+import { GridSolveContext } from '@app/hud-layout-editing/grid-solve';
 import { CellPicker } from '@app/views/HudLayoutEditor/sub-components/CellPicker';
 import { GridEditor } from '@app/views/HudLayoutEditor/sub-components/GridEditor';
 import { StageGridEcho } from '@app/views/HudLayoutEditor/sub-components/StageGridEcho';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { HudGridContainer, PlacedNode } from '@rotp/hud';
-import type { EditorSampleState } from '@app/views/HudLayoutEditor/behavior/useSampleState.type';
+import type { EditorSampleState } from '@app/hud-layout-editing/sample-state.type';
 import { CTX, ECHO_BOX, ECHO_GRID, ECHO_SCALE, PLATFORM, STATES, THREE, TWELVE } from './metrics.constants';
 import { solveOf } from './solve-of';
 

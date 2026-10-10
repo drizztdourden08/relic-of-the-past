@@ -1,5 +1,5 @@
 /* @layer shared-hub @kind types */
-import type { PROVIDERS } from './providers.data';
+import type { PROVIDERS } from './providers.constants';
 
 type Provider = (typeof PROVIDERS)[number];
 

@@ -8,10 +8,15 @@ interface EngineDeps {
   totalChecks?: number;
 }
 
+interface EngineEnv {
+  adjacency: Adjacency;
+  totalChecks: number | undefined;
+}
+
 interface StepResult {
   actions: TriggerAction[];
   events: SimEvent[];
   nextState: EngineState;
 }
 
-export type { EngineDeps, StepResult };
+export type { EngineDeps, EngineEnv, StepResult };

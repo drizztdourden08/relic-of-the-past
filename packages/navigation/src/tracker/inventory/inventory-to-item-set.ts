@@ -8,7 +8,10 @@ import { TOP_FLUTE_VALUE, UPGRADED_MIRROR_VALUE } from './inventory.constants';
 import { swordLevelOwned } from './sword-level-owned';
 import type { RawInventoryState } from './inventory.type';
 
-const bowRungs = (bow: number): number => (bow >= 3 ? 2 : bow >= 1 ? 1 : 0);
+const bowRungs = (bow: number): number => {
+  if (bow >= 3) return 2;
+  return bow >= 1 ? 1 : 0;
+};
 
 const addBottles = (items: Set<ItemId>, raw: RawInventoryState): void => {
   for (const slot of [raw.bottle1, raw.bottle2, raw.bottle3, raw.bottle4]) {

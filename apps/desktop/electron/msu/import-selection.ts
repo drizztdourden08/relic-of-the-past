@@ -3,7 +3,7 @@ import { dirname, basename } from 'path';
 import { trackNumberOf } from '@rotp/msu';
 import type { PackSelection } from './import-selection.type';
 
-const depthOf = (path: string): number => dirname(path).split(/[\/]/).length;
+const depthOf = (path: string): number => dirname(path).split(/[/]/).length;
 
 const selectPackFiles = (files: string[]): PackSelection => {
   if (files.length === 0) return { files: [], nested: [], duplicates: [] };

@@ -5,7 +5,7 @@ const notifyListener = (listener: () => void): void => {
   try {
     listener();
   } catch {
-    
+    return undefined;
   }
 };
 

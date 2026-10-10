@@ -10,12 +10,18 @@ import { SubsectionGroup } from '../SubsectionGroup';
 import { ValueField } from '../ValueField';
 import {
   borderSummary, outlineSummary, paintText, shadowListSummary, swatchOf, tintSummary,
-} from '../../behavior/appearance-summary';
+} from '@app/hud-layout-editing/appearance-summary';
 import type { HudBorder, HudBorderStyle, HudRadius, HudTintMode, Value } from '@rotp/hud';
 import { BORDER_STYLES, CORNERS, MAX_OUTLINE_PX } from './AppearanceSection.constants';
 import type { AppearanceSectionProps } from './AppearanceSection.type';
 
 const radiusIsSplit = (r: HudRadius | undefined): r is [Value, Value, Value, Value] => Array.isArray(r);
+
+const cornerValue = (radius: readonly [Value, Value, Value, Value], i: number): Value => {
+  const value = radius[i];
+  if (value === undefined) throw new Error(`corner radius ${i} is out of range`);
+  return value;
+};
 
 const AppearanceSection = (props: AppearanceSectionProps) => {
   const { node, onPatch, scope, insideRepeat } = props;
@@ -107,7 +113,7 @@ const AppearanceSection = (props: AppearanceSectionProps) => {
       {split ? (
         <Grid columns={2} gap="2xs">
           {CORNERS.map((corner, i) => (
-            <ValueField key={corner} label={corner} value={(style.radius as [Value, Value, Value, Value])[i]}
+            <ValueField key={corner} label={corner} value={cornerValue(style.radius as [Value, Value, Value, Value], i)}
               onChange={(v) => { const next = [...(style.radius as [Value, Value, Value, Value])] as [Value, Value, Value, Value]; next[i] = v; setStyle({ radius: next }); }}
               scope={scope} insideRepeat={insideRepeat} min={0} />
           ))}

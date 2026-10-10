@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { recordBy } from '../../../keyed-record';
 import { PROGRESSIVE_FAMILIES } from '../progressive-families.constants';
 import { progressiveModeKeyOf } from '../progressive-mode-keys';
 import type { OptionValues } from '../../options.type';
@@ -8,8 +9,6 @@ const modeAt = (values: OptionValues, key: string): ProgressiveFamilyMode =>
   (values[key] === 'random' ? 'random' : 'progressive');
 
 const progressiveModesOfValues = (values: OptionValues): ProgressiveModeSetting =>
-  Object.fromEntries(PROGRESSIVE_FAMILIES.map((family) => [
-    family.id, modeAt(values, progressiveModeKeyOf(family.id)),
-  ])) as unknown as ProgressiveModeSetting;
+  recordBy(PROGRESSIVE_FAMILIES, (family) => family.id, (family) => modeAt(values, progressiveModeKeyOf(family.id)));
 
 export { progressiveModesOfValues };

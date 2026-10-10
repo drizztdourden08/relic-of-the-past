@@ -2,6 +2,7 @@
 import { findOne } from '@rotp/game-data';
 import type { ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { ComparisonStrategy } from '../../compare/probe.type';
+import { eraseSetProbe } from '../../compare/erase-set-probe';
 import type { ScreenObservations } from '../../detection-types';
 import { gameIdProbes } from './game-id-probes';
 import { identityProbes } from './identity-probes';
@@ -24,7 +25,7 @@ const screenStrategy: ComparisonStrategy<'screen'> = {
   kind: 'screen',
   subjects: subjectsFor,
   fields: [...gameIdProbes, ...identityProbes, spawnsProbe],
-  sets: [screenPresenceProbe],
+  sets: [eraseSetProbe(screenPresenceProbe)],
 };
 
 export { screenStrategy };

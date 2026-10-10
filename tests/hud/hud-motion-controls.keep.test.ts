@@ -2,13 +2,13 @@
 import { describe, it, expect } from 'vitest';
 import {
   addKeyAt, atFromPointer, canRemoveKey, clampAt, MIN_GAP, moveKey, removeKey,
-} from '@app/views/HudLayoutEditor/behavior/keyframe-track';
+} from '@app/hud-layout-editing/keyframe-track';
 import {
   curvePath, DEFAULT_STEPS, NAMED_EASINGS, stepsCountOf, stepsName,
-} from '@app/views/HudLayoutEditor/behavior/easing-curves';
+} from '@app/hud-layout-editing/easing-curves';
 import {
   drivenProperties, mergeTransition, TRANSITION_PROPERTIES,
-} from '@app/views/HudLayoutEditor/behavior/transition-edits';
+} from '@app/hud-layout-editing/transition-edits';
 import { validateTransition, validateAnimations, collectReflowWarnings, easingFn, sampleKeyframes } from '@rotp/hud';
 import type { HudAnimationKeyframe, HudNode } from '@rotp/hud';
 

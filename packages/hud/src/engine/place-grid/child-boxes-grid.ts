@@ -10,6 +10,12 @@ import type { ChildBox } from '../place-flow.type';
 import type { MeasureContext } from '../engine.type';
 import type { Rect } from '../../layouts/geometry.type';
 
+const offsetIn = (placement: string, free: number): number => {
+  if (placement === 'center') return free / 2;
+  if (placement === 'end') return free;
+  return 0;
+};
+
 const placeInCell = (
   node: HudNode, cellW: number, cellH: number, ctx: MeasureContext,
   justifyItems: HudGridJustifyItems, alignItems: HudGridJustifyItems,
@@ -28,8 +34,8 @@ const placeInCell = (
   const h = clampToBox(node, 'h', rawH === 'fill' ? innerH : rawH, ctx);
   const freeW = innerW - w;
   const freeH = innerH - h;
-  const x = margin.left + (justify === 'center' ? freeW / 2 : justify === 'end' ? freeW : 0);
-  const y = margin.top + (align === 'center' ? freeH / 2 : align === 'end' ? freeH : 0);
+  const x = margin.left + offsetIn(justify, freeW);
+  const y = margin.top + offsetIn(align, freeH);
   return { w, h, x, y };
 };
 

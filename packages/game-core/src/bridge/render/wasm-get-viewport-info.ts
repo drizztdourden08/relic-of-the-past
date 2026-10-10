@@ -3,6 +3,11 @@ import { callPtr, readU8, readU16 } from '../wasm-call';
 import { DUNGEON_MODULE, EXTEND_Y_BOTTOM_LINES, EXTEND_Y_HEIGHT, OVERWORLD_MODULE } from './render.constants';
 import type { ViewportInfo } from './render.type';
 
+const bottomBudgetOf = (extraTopBottom: number, snesHeight: number): number => {
+  if (extraTopBottom > 0) return extraTopBottom;
+  return snesHeight === EXTEND_Y_HEIGHT ? EXTEND_Y_BOTTOM_LINES : 0;
+};
+
 const wasmGetViewportInfo = (): ViewportInfo | null =>
   callPtr('WasmGetViewportInfo', (mod, ptr) => {
     const heap = mod.HEAPU8;
@@ -32,8 +37,7 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
     const blackLeft = extraLeftRight - extraLeftCur;
     const blackRight = extraLeftRight - extraRightCur;
     const blackTop = extraTopBottom - extraTopCur;
-    const bottomBudget = extraTopBottom > 0 ? extraTopBottom : (snesHeight === EXTEND_Y_HEIGHT ? EXTEND_Y_BOTTOM_LINES : 0);
-    const blackBottom = bottomBudget - extraBottomCur;
+    const blackBottom = bottomBudgetOf(extraTopBottom, snesHeight) - extraBottomCur;
 
     const isGameplay = (locationModule === DUNGEON_MODULE || locationModule === OVERWORLD_MODULE);
 

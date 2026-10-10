@@ -3,17 +3,17 @@ import './HudLayoutEditor.content.css';
 import { Button, Flex, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { ExpressionInput } from './ExpressionInput';
 import { ReferenceField } from './ReferenceField';
-import { caseMatches, matchLabel } from '../behavior/case-match';
-import { useInstanceScopes } from '../behavior/formula-scope';
-import { nodeArtOf } from '../behavior/node-art';
-import { placeholderChild } from '../behavior/new-node';
+import { caseMatches, matchLabel } from '@app/hud-layout-editing/case-match';
+import { useInstanceScopes } from '@app/hud-layout-editing/formula-scope';
+import { nodeArtOf } from '@app/hud-layout-editing/node-art';
+import { placeholderChild } from '@app/hud-layout-editing/new-node';
 import type { HudNode, HudSwitchCase } from '@rotp/hud';
 import type { CaseListEditorProps } from './CaseListEditor.type';
 
 const move = <T,>(list: readonly T[], from: number, to: number): T[] => {
   const next = [...list];
-  const [item] = next.splice(from, 1);
-  next.splice(to, 0, item);
+  const moved = next.splice(from, 1);
+  next.splice(to, 0, ...moved);
   return next;
 };
 

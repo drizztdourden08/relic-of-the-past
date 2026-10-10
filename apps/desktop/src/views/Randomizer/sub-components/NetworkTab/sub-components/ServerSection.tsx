@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { NetworkSection } from './NetworkSection';
-import { DASH, formatValue, formatYesNo } from '../behavior/network-format';
+import { DASH } from '../behavior/network-format.constants';
+import { formatValue } from '../behavior/format-value';
+import { formatYesNo } from '../behavior/format-yes-no';
 import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
 import type { NetworkServer } from '@app/game/randomizer-client';
 import type { NetworkRow } from './NetworkSection.type';

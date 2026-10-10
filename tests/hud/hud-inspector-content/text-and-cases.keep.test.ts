@@ -17,8 +17,8 @@ vi.hoisted(() => {
 
 import { act, createElement as h } from 'react';
 import { expand } from '@rotp/hud';
-import { caseMatches, matchLabel, winnerIn } from '@app/views/HudLayoutEditor/behavior/case-match';
-import { textOfTextValue, textValueOf } from '@app/views/HudLayoutEditor/behavior/value-text';
+import { caseMatches, matchLabel, winnerIn } from '@app/hud-layout-editing/case-match';
+import { textOfTextValue, textValueOf } from '@app/hud-layout-editing/value-text';
 import { CaseListEditor } from '@app/views/HudLayoutEditor/sub-components/CaseListEditor';
 import { TextContent } from '@app/views/HudLayoutEditor/sub-components/content/TextContent';
 import type { HudNode, HudSwitchSpec } from '@rotp/hud';

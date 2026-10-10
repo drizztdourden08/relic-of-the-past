@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback } from 'react';
 import { Canvas } from '@drizztdourden08/tessera/primitives';
-import { CANVAS_STYLE } from './ReachabilityCanvas.constants';
+import './ReachabilityCanvas.css';
 
 const ReachabilityCanvas = ({ reachable, bounds, tileLayer }: {
   reachable: number[][];
@@ -42,7 +42,7 @@ const ReachabilityCanvas = ({ reachable, bounds, tileLayer }: {
     ctx.putImageData(img, 0, 0);
   }, [reachable, bounds, tileLayer]);
 
-  return <Canvas ref={ref} style={CANVAS_STYLE} />;
+  return <Canvas ref={ref} className="nav-reachability-canvas" />;
 };
 
 export { ReachabilityCanvas };

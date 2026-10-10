@@ -1,4 +1,6 @@
 /* @layer shared-game @kind logic */
+import './data';
+
 export type {
   BundleLayout, DungeonContext, DungeonScreen,
   InteriorContext, InteriorScreen, OverworldContext, OverworldScreen,
@@ -22,7 +24,6 @@ export type { DialogueChoice, DialogueContext, DialogueTrigger, TriggerSourceRow
 export { triggerSourceFor } from './data/dialogue-context/trigger-source-for';
 export { SOUND_CHANNEL_PORTS } from './data/game-sounds/game-sounds.constants';
 export { soundsOfChannel } from './data/game-sounds/sounds-of-channel';
-import './data';
 export { DELUXE_ENTRANCE_TRACKS, DELUXE_TRACKS } from './data/msu-deluxe-remap/msu-deluxe-remap.constants';
 export { remapDeluxeTrack } from './data/msu-deluxe-remap/remap-deluxe-track';
 export { msuTrackName } from './data/msu-track-names';

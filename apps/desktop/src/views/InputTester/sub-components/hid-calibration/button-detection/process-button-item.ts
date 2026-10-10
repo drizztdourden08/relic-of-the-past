@@ -35,7 +35,7 @@ const processButtonItem = (bytes: Uint8Array, item: InputItem, idx: number, refs
   const best = pickBestButtonDiff(fresh);
   const mapping = buildButtonMapping(best);
   const result = describeButtonMapping(mapping);
-  cb.addLog(`✓ ${item.label}: ${result}`);
+  cb.addLog(`OK ${item.label}: ${result}`);
   cb.setItems(prev => prev.map((it, i) => i === idx ? { ...it, status: 'captured' as const, result, mapping } : it));
   cb.updateByteStatuses(bytes.length);
   if (refs.autoAdvanceRef.current) scheduleAdvance(refs, cb);

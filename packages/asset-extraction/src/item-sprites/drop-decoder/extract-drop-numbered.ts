@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { ImageBuffer } from '../../graphics/png-writer';
 import { extractLarge, getSheetForChar } from '../drop-sprite-assembly';
 import { kNumChar, kNumExt, kNumX, kNumY } from '../drop-tables';
@@ -14,10 +15,10 @@ const extractDropNumbered = (_spriteType: number, paletteIdx: number, group: num
 
   for (let j = 0; j < 3; j++) {
     const ii = a + j;
-    const cid = kNumChar[ii];
+    const cid = itemAt(kNumChar, ii, 'Numbered drop character');
     const ext = kNumExt[ii];
-    const x = kNumX[ii];
-    const y = kNumY[ii];
+    const x = itemAt(kNumX, ii, 'Numbered drop x');
+    const y = itemAt(kNumY, ii, 'Numbered drop y');
     if (ext === 2) {
       const tileImg = extractLarge(cid, palette, dropSheets);
       img.paste(tileImg, x, y);

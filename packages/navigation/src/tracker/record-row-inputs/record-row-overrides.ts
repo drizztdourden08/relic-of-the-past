@@ -10,6 +10,9 @@ const pedestalRequirement = (gate: PedestalGate | undefined): Requirement => {
     case 'twoPendants': return { count: { groupId: ITEM_GROUP_IDS.Pendants, n: 2 } };
     case 'lightWorldDungeons': return LIGHT_WORLD_CLEARED;
     case 'open': return ALWAYS;
+    case 'pendants':
+    case 'anyThreeDungeons':
+    case undefined:
     default: return { count: { groupId: ITEM_GROUP_IDS.Pendants, n: 3 } };
   }
 };

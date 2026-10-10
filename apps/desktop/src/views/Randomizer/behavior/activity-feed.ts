@@ -20,8 +20,18 @@ const mergeByTime = (first: ActivityItem[], second: ActivityItem[]): ActivityIte
   const merged: ActivityItem[] = [];
   let i = 0;
   let j = 0;
-  while (i < first.length && j < second.length) {
-    merged.push(first[i].at <= second[j].at ? first[i++] : second[j++]);
+  let a = first[i];
+  let b = second[j];
+  while (a && b) {
+    if (a.at <= b.at) {
+      merged.push(a);
+      i += 1;
+      a = first[i];
+    } else {
+      merged.push(b);
+      j += 1;
+      b = second[j];
+    }
   }
   return merged.concat(first.slice(i), second.slice(j));
 };

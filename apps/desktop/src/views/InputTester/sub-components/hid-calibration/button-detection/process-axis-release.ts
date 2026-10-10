@@ -20,11 +20,11 @@ const finalizeAxisCapture = ({ bytes, bl, excl, item, idx, refs, cb }: AxisStepA
       const inverted = posVal < negVal;
       const axisMapping: HidAxisMapping = { byteIndex: bestByte, center: centerVal, min: Math.min(posVal, negVal), max: Math.max(posVal, negVal), inverted };
       const result = `byte[${bestByte}] ${axisMapping.min}..${centerVal}..${axisMapping.max}${inverted ? ' inv' : ''}`;
-      cb.addLog(`✓ ${item.label}: ${result}`);
+      cb.addLog(`OK ${item.label}: ${result}`);
       cb.setItems(prev => prev.map((it, i) => i === idx ? { ...it, status: 'captured' as const, result, axisMapping } : it));
       cb.updateByteStatuses(bytes.length);
     } else {
-      cb.addLog(`⚠ No axis data for ${item.label}`);
+      cb.addLog(`Warning: No axis data for ${item.label}`);
       cb.setItems(prev => prev.map((it, i) => i === idx ? { ...it, status: 'skipped' as const, result: 'no data' } : it));
     }
   }

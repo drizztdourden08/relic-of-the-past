@@ -9,7 +9,8 @@ const isInside = (path: string, root: string): boolean => path === root || path.
 
 const installedOwnerOf = async (rel: string): Promise<InstalledPack | null> => {
   const path = normalizeRel(rel);
-  if (!GUARDED_TOP.has(path.split('/')[0])) return null;
+  const [top] = path.split('/');
+  if (top === undefined || !GUARDED_TOP.has(top)) return null;
   for (const pack of await installedPacks()) {
     if (isInside(path, rootOf(pack))) return pack;
   }

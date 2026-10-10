@@ -151,10 +151,10 @@ const useEnhancedSaveSlot = (
 
       const loadMatch = action.match(/^load-state-(\d+)$/);
       const saveMatch = action.match(/^save-state-(\d+)$/);
-      const match = loadMatch || saveMatch;
-      if (!match) return;
+      const slotDigits = (loadMatch ?? saveMatch)?.[1];
+      if (slotDigits === undefined) return;
 
-      const slot = parseInt(match[1], 10) - 1;
+      const slot = parseInt(slotDigits, 10) - 1;
       if (holdSlotRef.current !== slot) return;
 
       const elapsed = holdStartRef.current != null

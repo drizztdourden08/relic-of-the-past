@@ -12,7 +12,7 @@ const check = async (files: FileStore, romFile: string): Promise<SpriteCheck> =>
   if (present.size === 0) return { extracted: false, count: 0 };
 
   const receipt = await readJson<ExtractionReceipt | null>(files, `${spriteDir(romFile)}/${RECEIPT_FILE}`, null);
-  if (receipt && receipt.manifest === spriteManifestDigest()) return { extracted: true, count: present.size };
+  if (receipt?.manifest === spriteManifestDigest()) return { extracted: true, count: present.size };
 
   return { extracted: expectedSpriteFiles().every((name) => present.has(name)), count: present.size };
 };

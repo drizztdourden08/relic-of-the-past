@@ -8,7 +8,7 @@ const touchesReachableTile = (reachable: number[][], r: number, c: number): bool
   for (let dr = -1; dr <= 1; dr++) {
     for (let dc = -1; dc <= 1; dc++) {
       const nr = r + dr, nc = c + dc;
-      if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE && reachable[nr][nc] === 1) return true;
+      if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE && reachable[nr]?.[nc] === 1) return true;
     }
   }
   return false;
@@ -24,7 +24,7 @@ const drawPitStripes = (dc: DrawContext, drawResults: FloodFillResult[]): void =
     const origin = getScreenWorldOrigin(drawResult.screenIndex);
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
-        if (drawResult.attrGrid[r][c] !== PIT_ATTR) continue;
+        if (drawResult.attrGrid[r]?.[c] !== PIT_ATTR) continue;
         if (!touchesReachableTile(drawResult.reachable, r, c)) continue;
 
         const screenX = origin.x + c * TILE_PX - viewLeft;

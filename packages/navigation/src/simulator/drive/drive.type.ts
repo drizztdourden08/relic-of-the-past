@@ -63,4 +63,16 @@ interface DriveResult {
   endSummary: ReturnType<typeof buildEndSummary>;
 }
 
-export type { DriveResult, ScreenFloodLog, VisitLog, PathStep, CheckLog, LogLine, DriveTally };
+interface DriveNotes {
+  log: LogLine[];
+  path: PathStep[];
+  tally: DriveTally;
+}
+
+interface CheckMoment {
+  pathIndex: number;
+  step: number;
+  items: string[];
+}
+
+export type { DriveResult, ScreenFloodLog, VisitLog, PathStep, CheckLog, LogLine, DriveTally, CheckMoment, DriveNotes };

@@ -8,7 +8,7 @@ type CurveId = 'equal' | 'front' | 'ramp' | 'reverse-fib' | 'geometric';
 
 type CurveShape = { curve: CurveId } | { curve: 'free'; jumps: readonly number[] };
 
-interface CustomFamilySetting {
+interface PlannedFamilySetting {
   mode: 'custom';
   start: number;
   max: number;
@@ -19,7 +19,7 @@ interface CustomFamilySetting {
 type FamilySetting =
   | { mode: 'vanilla' }
   | { mode: 'vanilla-in-pool' }
-  | CustomFamilySetting;
+  | PlannedFamilySetting;
 
 type WalletSetting = Exclude<FamilySetting, { mode: 'vanilla-in-pool' }>;
 
@@ -61,9 +61,9 @@ export type {
   CapacityShop,
   CurveId,
   CurveShape,
-  CustomFamilySetting,
   FamilyPlan,
   FamilySetting,
   ParsedCapacityProfile,
+  PlannedFamilySetting,
   WalletSetting,
 };

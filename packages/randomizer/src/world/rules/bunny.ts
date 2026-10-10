@@ -55,8 +55,9 @@ const registerBunnyRules = (world: World): void => {
     for (const exit of region.exits) addRule(world.rules, exit.name, rule);
   }
   const shop = world.regions.get(REGION.mountainShop);
-  if (shop !== undefined && shop.isDarkWorld && shop.entrances.length > 0) {
-    addRule(world.rules, shop.entrances[0].name, bunnyRegionRule(world, shop));
+  const shopEntrance = shop?.entrances[0];
+  if (shop !== undefined && shop.isDarkWorld && shopEntrance !== undefined) {
+    addRule(world.rules, shopEntrance.name, bunnyRegionRule(world, shop));
   }
   for (const region of world.regions.values()) {
     if (!region.isDarkWorld || region.entrances.length === 0) continue;

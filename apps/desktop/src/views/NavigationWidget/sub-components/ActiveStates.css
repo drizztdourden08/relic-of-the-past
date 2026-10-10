@@ -1,0 +1,33 @@
+/* @layer renderer-widgets @kind style */
+
+.nav-active-states__none {
+  font-size: var(--size-10);
+  color: var(--c-text-muted);
+  margin-top: var(--size-2);
+}
+
+.nav-active-states__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4);
+  margin-top: var(--size-2);
+}
+
+.nav-active-states__detail {
+  color: var(--c-text-muted);
+}
+
+.nav-active-states__chip {
+  font-size: var(--size-10);
+  padding: var(--size-1) var(--size-6);
+  border-radius: var(--radius-sm);
+  background: var(--c-hover);
+  border: var(--size-1) solid var(--c-border);
+  color: var(--c-text-dim);
+}
+
+.nav-active-states__chip--gating {
+  background: var(--c-secondary-soft);
+  border: var(--size-1) solid var(--c-secondary);
+  color: var(--c-secondary-bright);
+}

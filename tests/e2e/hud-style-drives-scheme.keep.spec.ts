@@ -56,7 +56,7 @@ const shootSlots = async (page: Page, name: string): Promise<void> => {
   const boxes = await page.locator('.slot-row').evaluateAll((rows) => rows
     .map((r) => r.getBoundingClientRect())
     .filter((b) => b.top >= 0 && b.bottom <= window.innerHeight)
-    .map((b) => [b.left, b.top, b.right, b.bottom]));
+    .map((b): [number, number, number, number] => [b.left, b.top, b.right, b.bottom]));
   const left = Math.min(...boxes.map((b) => b[0]));
   const top = Math.min(...boxes.map((b) => b[1]));
   await page.screenshot({
@@ -71,7 +71,7 @@ const shootSlots = async (page: Page, name: string): Promise<void> => {
 };
 
 const styleSegments = (page: Page) => page.$$eval(STYLE_SEGMENTS, (els) => els.map((el) => ({
-  label: (el.textContent ?? '').trim(),
+  label: el.textContent.trim(),
   disabled: (el as HTMLButtonElement).disabled,
   checked: el.getAttribute('aria-checked') === 'true',
 })));
@@ -84,82 +84,100 @@ const assignedSlots = (page: Page) => page.$$eval('.slot-row', (rows) => rows
   .filter((slot) => slot.what !== 'Unassigned')
   .map((slot) => `${slot.what} on ${slot.on}`));
 
+const labelsWhere = (page: Page, selector: string, attribute: string) =>
+  page.$$eval(selector, (els, attr) => els
+    .filter((el) => el.getAttribute(attr) === 'true')
+    .map((el) => el.textContent.trim()), attribute);
+
+const checkOriginalStyle = async ({ page, tab, shoot }: Hub): Promise<void> => {
+  await tab('HUD');
+  await page.locator(STYLE_SEGMENTS, { hasText: 'Original' }).click();
+  await page.waitForTimeout(800);
+  expect(await styleSegments(page)).toEqual([
+    { label: 'Original', disabled: false, checked: true },
+    { label: 'Enhanced', disabled: false, checked: false },
+    { label: 'Modern', disabled: false, checked: false },
+  ]);
+  await expect(page.locator('.hud-style-control__notice')).toHaveCount(0);
+  await shoot('01-style-three-options', STYLE_ROW);
+};
+
+const checkMapToggle = async ({ page, tab, shoot }: Hub): Promise<void> => {
+  await tab('Gameplay');
+  const mapToggle = page.locator(`${MAP_ROW} input`);
+  await expect(mapToggle).not.toBeChecked();
+  await expect(mapToggle).toBeEnabled();
+  await page.locator(`${MAP_ROW} label`).click();
+  await expect(mapToggle).toBeChecked();
+  await page.waitForTimeout(TOGGLE_TRAVEL_MS);
+  await shoot('05-map-on-select', MAP_ROW);
+  await tab('Display');
+  await tab('Gameplay');
+  await expect(page.locator(`${MAP_ROW} input`)).toBeChecked();
+  await page.locator(`${MAP_ROW} label`).click();
+  await expect(page.locator(`${MAP_ROW} input`)).not.toBeChecked();
+};
+
+const checkControlsBanner = async ({ page, tab, shoot }: Hub): Promise<void> => {
+  await tab('Controls');
+  await expect(page.locator('.scheme-banner')).toHaveCount(1);
+  await expect(page.locator('.scheme-banner')).toContainText('Modern controls are part of the Modern HUD style.');
+  await expect(page.locator('.scheme-control')).toHaveCount(0);
+  await expect(page.locator('[role="radiogroup"][aria-label="Control Scheme"]')).toHaveCount(0);
+  const modernTab = page.locator('.controls-tabs__tab', { hasText: 'Modern Controls' });
+  await expect(modernTab).toBeDisabled();
+  await expect(page.locator('.controls-tabs__reason')).toContainText('Modern HUD style');
+  await shoot('02-controls-banner', '.controls-settings__main');
+
+  await page.locator('.scheme-banner button').click();
+  await page.waitForTimeout(1200);
+  await expect(page.locator(STYLE_ROW)).toBeVisible();
+  await expect(page.locator(STYLE_ROW)).toBeInViewport();
+  await shoot('03-deep-link-to-style', STYLE_ROW);
+};
+
+const checkEnhancedStyle = async ({ page, shoot }: Hub): Promise<void> => {
+  await page.locator(STYLE_SEGMENTS, { hasText: 'Enhanced' }).click();
+  await page.waitForTimeout(1000);
+  expect(await styleSegments(page)).toEqual([
+    { label: 'Original', disabled: false, checked: false },
+    { label: 'Enhanced', disabled: false, checked: true },
+    { label: 'Modern', disabled: false, checked: false },
+  ]);
+  await expect(page.locator('.hud-style-control__notice')).toHaveCount(0);
+  expect(await labelsWhere(page, '[data-setting-key="hudMode"] .segmented__btn', 'aria-checked')).toEqual(['Enhanced']);
+  expect(await labelsWhere(page, '[data-setting-key="hudEnhancedParts"] button', 'aria-pressed')).toEqual(['Main', 'Pause']);
+  await shoot('08-enhanced-picked', '.settings-section__group');
+};
+
+const checkModernStyle = async ({ page, tab, shoot }: Hub): Promise<void> => {
+  await page.locator(STYLE_SEGMENTS, { hasText: 'Modern' }).click();
+  await page.waitForTimeout(1200);
+  await tab('Controls');
+  await expect(page.locator('.scheme-banner')).toHaveCount(0);
+  await expect(page.locator('.controls-tabs__tab', { hasText: 'Modern Controls' }))
+    .toHaveAttribute('aria-selected', 'true');
+  expect((await page.locator('.slot-row').count())).toBeGreaterThan(0);
+  await shoot('04-controls-modern', '.controls-settings__main');
+  await shootSlots(page, '04b-controls-modern-slots');
+
+  await tab('HUD');
+  await page.locator(STYLE_SEGMENTS, { hasText: 'Original' }).click();
+  await page.waitForTimeout(800);
+};
+
 test.describe('HUD style drives the control scheme', () => {
   test.skip(!existsSync(MAIN_JS), 'run `npx electron-vite build` first');
 
   test('Original profile: three live styles, a banner instead of a scheme control', async () => {
-    const { app, page, tab, shoot } = await openProfile('hud-style-spec', 'visual-test');
+    const hub = await openProfile('hud-style-spec', 'visual-test');
+    const { app } = hub;
     try {
-      await tab('HUD');
-      await page.locator(STYLE_SEGMENTS, { hasText: 'Original' }).click();
-      await page.waitForTimeout(800);
-      expect(await styleSegments(page)).toEqual([
-        { label: 'Original', disabled: false, checked: true },
-        { label: 'Enhanced', disabled: false, checked: false },
-        { label: 'Modern', disabled: false, checked: false },
-      ]);
-      await expect(page.locator('.hud-style-control__notice')).toHaveCount(0);
-      await shoot('01-style-three-options', STYLE_ROW);
-
-      await tab('Gameplay');
-      const mapToggle = page.locator(`${MAP_ROW} input`);
-      await expect(mapToggle).not.toBeChecked();
-      await expect(mapToggle).toBeEnabled();
-      await page.locator(`${MAP_ROW} label`).click();
-      await expect(mapToggle).toBeChecked();
-      await page.waitForTimeout(TOGGLE_TRAVEL_MS);
-      await shoot('05-map-on-select', MAP_ROW);
-      await tab('Display');
-      await tab('Gameplay');
-      await expect(page.locator(`${MAP_ROW} input`)).toBeChecked();
-      await page.locator(`${MAP_ROW} label`).click();
-      await expect(page.locator(`${MAP_ROW} input`)).not.toBeChecked();
-
-      await tab('Controls');
-      await expect(page.locator('.scheme-banner')).toHaveCount(1);
-      await expect(page.locator('.scheme-banner')).toContainText('Modern controls are part of the Modern HUD style.');
-      await expect(page.locator('.scheme-control')).toHaveCount(0);
-      await expect(page.locator('[role="radiogroup"][aria-label="Control Scheme"]')).toHaveCount(0);
-      const modernTab = page.locator('.controls-tabs__tab', { hasText: 'Modern Controls' });
-      await expect(modernTab).toBeDisabled();
-      await expect(page.locator('.controls-tabs__reason')).toContainText('Modern HUD style');
-      await shoot('02-controls-banner', '.controls-settings__main');
-
-      await page.locator('.scheme-banner button').click();
-      await page.waitForTimeout(1200);
-      await expect(page.locator(STYLE_ROW)).toBeVisible();
-      await expect(page.locator(STYLE_ROW)).toBeInViewport();
-      await shoot('03-deep-link-to-style', STYLE_ROW);
-
-      await page.locator(STYLE_SEGMENTS, { hasText: 'Enhanced' }).click();
-      await page.waitForTimeout(1000);
-      expect(await styleSegments(page)).toEqual([
-        { label: 'Original', disabled: false, checked: false },
-        { label: 'Enhanced', disabled: false, checked: true },
-        { label: 'Modern', disabled: false, checked: false },
-      ]);
-      await expect(page.locator('.hud-style-control__notice')).toHaveCount(0);
-      expect(await page.$$eval('[data-setting-key="hudMode"] .segmented__btn',
-        (els) => els.filter((el) => el.getAttribute('aria-checked') === 'true').map((el) => (el.textContent ?? '').trim()),
-      )).toEqual(['Enhanced']);
-      expect(await page.$$eval('[data-setting-key="hudEnhancedParts"] button',
-        (els) => els.filter((el) => el.getAttribute('aria-pressed') === 'true').map((el) => (el.textContent ?? '').trim()),
-      )).toEqual(['Main', 'Pause']);
-      await shoot('08-enhanced-picked', '.settings-section__group');
-
-      await page.locator(STYLE_SEGMENTS, { hasText: 'Modern' }).click();
-      await page.waitForTimeout(1200);
-      await tab('Controls');
-      await expect(page.locator('.scheme-banner')).toHaveCount(0);
-      await expect(page.locator('.controls-tabs__tab', { hasText: 'Modern Controls' }))
-        .toHaveAttribute('aria-selected', 'true');
-      expect((await page.locator('.slot-row').count())).toBeGreaterThan(0);
-      await shoot('04-controls-modern', '.controls-settings__main');
-      await shootSlots(page, '04b-controls-modern-slots');
-
-      await tab('HUD');
-      await page.locator(STYLE_SEGMENTS, { hasText: 'Original' }).click();
-      await page.waitForTimeout(800);
+      await checkOriginalStyle(hub);
+      await checkMapToggle(hub);
+      await checkControlsBanner(hub);
+      await checkEnhancedStyle(hub);
+      await checkModernStyle(hub);
     } finally {
       await app.close().catch(ignoreAlreadyClosed);
     }

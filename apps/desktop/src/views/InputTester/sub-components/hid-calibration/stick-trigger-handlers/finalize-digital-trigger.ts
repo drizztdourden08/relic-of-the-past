@@ -8,7 +8,7 @@ const finalizeDigitalTrigger = (mapping: HidButtonMapping, refs: TriggerFinalize
   const axisId = side === 'left' ? 'leftTrigger' : 'rightTrigger';
   const result = `byte[${mapping.byteIndex}] bit 0x${mapping.bitMask.toString(16)} (digital)`;
 
-  cb.addLog(`✓ ${label} Trigger: ${result}`);
+  cb.addLog(`OK ${label} Trigger: ${result}`);
   cb.setItems(prev => prev.map(it =>
     it.id === axisId ? { ...it, status: 'captured' as InputStatus, result, mapping } : it
   ));

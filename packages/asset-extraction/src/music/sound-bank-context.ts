@@ -1,8 +1,9 @@
 /* @layer shared-asset-extraction @kind logic */
 import type { RomData } from '../rom/rom-types';
-import type { MusicEntity, Pattern, Phrase, Song, SongList } from './extract-types.type';
+import type { MusicEntity, MusicEntityByType, MusicEntityType, Pattern, Phrase, Song } from './extract-types.type';
 import { copySoundBank } from './copy-sound-bank';
 import { createMusicEntity } from './create-music-entity';
+import { isMusicEntityOf } from './is-music-entity-of';
 import { decodePatternCommand } from './decode-pattern-command';
 import { readCommandPrefix } from './read-command-prefix';
 
@@ -37,19 +38,19 @@ class SoundBankContext {
     return copySoundBank(rom, ea, this.memory);
   }
 
-  getTypeForEa<T extends MusicEntity>(ea: number, type: T['type']): T | null {
+  getTypeForEa<K extends MusicEntityType>(ea: number, type: K): MusicEntityByType[K] | null {
     if (ea === 0) return null;
     if (ea < 256) throw new Error(`Invalid ea: 0x${ea.toString(16)}`);
 
     const existing = this.typesForEa.get(ea);
     if (existing) {
-      if (existing.type !== type) {
+      if (!isMusicEntityOf(existing, type)) {
         throw new Error(`Type mismatch at 0x${ea.toString(16)}: expected ${type}, got ${existing.type}`);
       }
-      return existing as T;
+      return existing;
     }
 
-    const entity = createMusicEntity<T>(ea, type);
+    const entity = createMusicEntity(ea, type);
     this.typesForEa.set(ea, entity);
     if (this.getByte(ea) !== null) {
       this.pqueue.push([ea, entity]);
@@ -63,21 +64,21 @@ class SoundBankContext {
 
   getPattern(ea: number): Pattern | null {
     if (ea === 0) return null;
-    return this.getTypeForEa<Pattern>(ea, 'Pattern');
+    return this.getTypeForEa(ea, 'Pattern');
   }
 
   getSong(ea: number, index: number): Song | null {
-    const song = this.getTypeForEa<Song>(ea, 'Song');
+    const song = this.getTypeForEa(ea, 'Song');
     if (song) song.index = index;
     return song;
   }
 
   getPhrase(ea: number): Phrase | null {
-    return this.getTypeForEa<Phrase>(ea, 'Phrase');
+    return this.getTypeForEa(ea, 'Phrase');
   }
 
   getSongList(ea: number, num: number): void {
-    const songList = this.getTypeForEa<SongList>(ea, 'SongList');
+    const songList = this.getTypeForEa(ea, 'SongList');
     if (songList) {
       songList.songs = [];
       for (let i = 0; i < num; i++) {

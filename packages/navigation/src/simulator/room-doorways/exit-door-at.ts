@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { EdgeName } from '../exit-order';
+import { alongEdge } from '../exit-order';
 import {
   EXIT_DOOR_SCAN_DEPTH, EXIT_DOOR_TRIGGER_ATTR, FLAG_GATED_DOOR_MAX, FLAG_GATED_DOOR_MIN, GRID,
 } from './room-doorways.constants';
@@ -14,8 +15,7 @@ const exitDoorAt = (roomId: number, edge: EdgeName, pos: number): boolean => {
     for (let dpos = -1; dpos <= 2; dpos++) {
       const p = pos + dpos;
       if (p < 0 || p >= GRID) continue;
-      const r = edge === 'north' ? depth : edge === 'south' ? 63 - depth : p;
-      const c = edge === 'west' ? depth : edge === 'east' ? 63 - depth : p;
+      const { row: r, col: c } = alongEdge(edge, p, { north: depth, south: 63 - depth, west: depth, east: 63 - depth });
       if (grids.some((g) => blockedTriggerAttr(g[r]?.[c] ?? 0))) return true;
     }
   }

@@ -1,11 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 import type { GridPos } from '@rotp/game-core';
 import type { EdgeName } from './exit-order.type';
+import { alongEdge } from './along-edge';
 
 const exitFromEdge = (edge: EdgeName, pos: number): GridPos =>
-  edge === 'north' ? { row: 0, col: pos }
-  : edge === 'south' ? { row: 63, col: pos }
-  : edge === 'west' ? { row: pos, col: 0 }
-  : { row: pos, col: 63 };
+  alongEdge(edge, pos, { north: 0, south: 63, west: 0, east: 63 });
 
 export { exitFromEdge };

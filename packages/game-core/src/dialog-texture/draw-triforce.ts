@@ -5,7 +5,7 @@ import { TRIFORCE_HEIGHT } from './patterns.constants';
 let triforceShape: Path2D | null = null;
 
 const shape = (): Path2D => {
-  if (!triforceShape) triforceShape = new Path2D(triforcePath(TRIFORCE_HEIGHT));
+  triforceShape ??= new Path2D(triforcePath(TRIFORCE_HEIGHT));
   return triforceShape;
 };
 

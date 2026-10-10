@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { getCheck } from '@rotp/game-data';
-import type { CheckId, RegionId } from '@rotp/game-data';
+import type { RegionId } from '@rotp/game-data';
 import type { PondInstance } from '../pond-instance.type';
 
 const regionOfPond = (pond: PondInstance): RegionId => {

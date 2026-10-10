@@ -6,8 +6,8 @@ const drawFreehandInProgress = (ctx: CanvasRenderingContext2D, vp: Vp, width: nu
   if (freehandPoints.length === 0) return;
   ctx.globalAlpha = 0.9;
   ctx.beginPath();
-  for (let i = 0; i < freehandPoints.length; i++) {
-    const dp = worldToDisplay(vp, width, height, freehandPoints[i].x, freehandPoints[i].y);
+  for (const [i, point] of freehandPoints.entries()) {
+    const dp = worldToDisplay(vp, width, height, point.x, point.y);
     if (i === 0) ctx.moveTo(dp.x, dp.y);
     else ctx.lineTo(dp.x, dp.y);
   }

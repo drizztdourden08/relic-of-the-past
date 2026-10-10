@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../../checked-access';
 import { optionNumberOf } from '../../capacity/option-number-of';
 import { POND_PRICE_LADDER } from '../pond-ladder.constants';
 import { rungOf } from '../pond-plan';
@@ -9,7 +10,7 @@ const priceOf = (raw: OptionValue | undefined, fallback: number, pond: PondInsta
   const value = optionNumberOf(raw);
   if (POND_PRICE_LADDER.includes(value)) return value;
   if (Number.isFinite(value)) {
-    const snapped = POND_PRICE_LADDER[rungOf(value)];
+    const snapped = itemAt(POND_PRICE_LADDER, rungOf(value));
     notes.push(`${pond.label}: ${value} is not a pond price, using ${snapped}`);
     return snapped;
   }

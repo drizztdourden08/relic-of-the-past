@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../checked-read';
 import type { RomData } from '../rom/rom-types';
 import type { OverworldContext } from './build-overworld-context.type';
 
@@ -6,7 +7,7 @@ const buildOverworldContext = (rom: RomData): OverworldContext => {
   const areaHeadTable: number[] = [];
   for (let i = 0; i < 64; i++) areaHeadTable.push(rom.getByte(0x82A5EC + i));
 
-  const isSmall = new Array(192).fill(0);
+  const isSmall = new Array<number>(192).fill(0);
   for (let i = 0; i < 192; i++) isSmall[i] = rom.getByte(0x82f88d + i);
 
   const isAreaHead = (i: number): boolean => {
@@ -24,7 +25,7 @@ const buildOverworldContext = (rom: RomData): OverworldContext => {
 
   for (let i = 0; i < 160; i++) {
     if (!isAreaHead(i)) continue;
-    if (i < 192) awrite(isSmall, i, i, isSmall[i]);
+    if (i < 192) awrite(isSmall, i, i, itemAt(isSmall, i, 'Overworld area size'));
   }
 
   return { isAreaHead, isSmall, awrite };

@@ -1,6 +1,6 @@
 /* @layer shared-input @kind types */
 import type { VibrationSegment } from '../../vibration-segment.type';
-import type { HAPTIC_PATTERN_RECIPES } from './haptic-pattern-recipes.data';
+import type { HAPTIC_PATTERN_RECIPES } from './haptic-pattern-recipes.constants';
 
 type VibrationShape =
   | { readonly kind: 'pulse' | 'doubleTap' | 'crescendo' | 'fadeOut'; readonly durationMs: number; readonly intensity: number }

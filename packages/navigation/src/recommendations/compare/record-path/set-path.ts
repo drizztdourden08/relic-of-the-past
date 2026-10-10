@@ -1,12 +1,13 @@
 /* @layer shared-game @kind logic */
 import { isContainer } from './is-container';
+import { isUnknownArray } from '../../is-unknown-array';
 import type { Segment } from './record-path.type';
 import { segmentsOf } from './segments-of';
 
 const emptyFor = (segment: Segment | undefined): unknown => (segment?.isIndex ? [] : {});
 
 const cloneContainer = (value: unknown, nextSegment: Segment | undefined): unknown => {
-  if (Array.isArray(value)) return [...value];
+  if (isUnknownArray(value)) return [...value];
   if (isContainer(value)) return { ...value };
   return emptyFor(nextSegment);
 };

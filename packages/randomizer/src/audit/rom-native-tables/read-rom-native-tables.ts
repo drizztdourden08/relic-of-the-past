@@ -16,7 +16,7 @@ const readRomNativeTables = (romBytes: Uint8Array): RomNativeTables => {
   const areaHeads: number[] = [];
   for (let i = 0; i < AREA_COUNT; i++) areaHeads.push(byteAt(AREA_HEADS_ADDRESS + i));
   const headOf = (area: number): number =>
-    area >= SPECIAL_SCREEN_FIRST ? area : areaHeads[area & 0x3f] | (area & 0x40);
+    area >= SPECIAL_SCREEN_FIRST ? area : (areaHeads[area & 0x3f] ?? 0) | (area & 0x40);
   const isAreaHead = (area: number): boolean => headOf(area) === area;
 
   const entranceRooms: number[] = [];

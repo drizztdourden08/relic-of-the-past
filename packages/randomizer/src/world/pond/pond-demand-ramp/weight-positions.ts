@@ -1,9 +1,10 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../../checked-access';
 import { CURVES } from '../../capacity/curves/curves.constants';
 import type { CurveShape } from '../../capacity/capacity-profile.type';
 
 const spread = (positions: readonly number[], count: number): number[] =>
-  Array.from({ length: count }, (_, index) => positions[Math.min(index, positions.length - 1)]);
+  Array.from({ length: count }, (_, index) => itemAt(positions, Math.min(index, positions.length - 1)));
 
 const weightPositions = (shape: CurveShape, count: number): number[] => {
   const weights = shape.curve === 'free' ? shape.jumps : CURVES[shape.curve](count - 1);

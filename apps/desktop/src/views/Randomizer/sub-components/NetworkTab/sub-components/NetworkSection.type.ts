@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { Chip } from '../behavior/network-tone';
+import type { Chip } from '../behavior/network-tone.type';
 import type { PanelPlacement } from '../../../Randomizer.type';
 
 interface NetworkRow {

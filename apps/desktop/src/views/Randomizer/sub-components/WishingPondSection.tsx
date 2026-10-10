@@ -6,6 +6,7 @@ import { OptionValueTag } from '@app/compounds/OptionValueTag';
 import { RandomizerOptionGroup } from '@app/compounds/RandomizerOptionGroup';
 import { POND_INSTANCES, pondCeilingsOf } from '@rotp/randomizer';
 import { PondInstanceRow } from './PondInstanceRow';
+import { firstPond } from '../behavior/first-pond';
 import type { PondId, PondSetting } from '@rotp/randomizer';
 import { NO_FROZEN, NO_NOTES, NOTICE, POND_TABS, SHARE_LABEL } from './WishingPondSection.constants';
 import type { WishingPondSectionProps } from './WishingPondSection.type';
@@ -16,9 +17,9 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
     profiles, capacity, share = false, demands, notes = NO_NOTES, readOnly = false,
     frozen = NO_FROZEN, onChange, onShareChange,
   } = props;
-  const [tab, setTab] = useState<PondId>(POND_INSTANCES[0].id);
+  const [tab, setTab] = useState<PondId>(() => firstPond().id);
   const ceilings = useMemo(() => pondCeilingsOf(capacity), [capacity]);
-  const pond = POND_INSTANCES.find((entry) => entry.id === tab) ?? POND_INSTANCES[0];
+  const pond = POND_INSTANCES.find((entry) => entry.id === tab) ?? firstPond();
   const pondId = pond.id;
   const sources = useMemo(() => (share ? [] : POND_TABS.filter((entry) => entry.id !== pondId)), [share, pondId]);
   const handleShareChange = useCallback((next: boolean) => onShareChange?.(next), [onShareChange]);

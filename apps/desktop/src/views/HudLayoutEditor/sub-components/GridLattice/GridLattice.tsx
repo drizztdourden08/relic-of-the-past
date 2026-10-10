@@ -1,11 +1,13 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { trackText } from '../../behavior/track-extents';
+import { trackText } from '@app/hud-layout-editing/track-extents';
 import { AddTrackButton } from './sub-components/AddTrackButton';
 import { TrackHead } from './sub-components/TrackHead';
-import {
-  ADD, GUTTER, HEAD, emptyOn, latticeHeight, occupantsAt, trackTemplate,
-} from './behavior/lattice-geometry';
+import { ADD, GUTTER, HEAD } from './behavior/lattice-geometry.constants';
+import { emptyOn } from './behavior/empty-on';
+import { latticeHeight } from './behavior/lattice-height';
+import { occupantsAt } from './behavior/occupants-at';
+import { trackTemplate } from './behavior/track-template';
 import { idOf } from './behavior/cell-id';
 import { headTitle } from './behavior/head-title';
 import './GridLattice.css';

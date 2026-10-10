@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { CSSProperties } from 'react';
-import type { GhostModel } from '../../behavior/drop-ghost';
+import type { GhostModel } from '@app/hud-layout-editing/drop-ghost';
 
 interface DragGhostProps {
   model: GhostModel | null;

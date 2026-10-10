@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 import { BOTTLE_CONTENTS } from '../../shops/shop-price-options';
-import { POND_PRICE_LADDER, POND_VANILLA_WALLET_TOP } from '../pond-ladder.constants';
+import { POND_PRICE_FLOOR, POND_PRICE_LADDER, POND_VANILLA_WALLET_TOP } from '../pond-ladder.constants';
 import type { PondAskRow, PondCurrencyRow } from '../pond.type';
 
 const POND_BOMB_STOPS: readonly number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 50];
@@ -14,7 +14,7 @@ const POND_ASK_ROWS: readonly PondCurrencyRow[] = [
     currency: 'rupees',
     label: 'Rupees',
     stops: POND_PRICE_LADDER,
-    defaultMin: POND_PRICE_LADDER[0],
+    defaultMin: POND_PRICE_FLOOR,
     defaultMax: POND_VANILLA_WALLET_TOP,
   },
   { currency: 'bombs', label: 'Bombs', stops: POND_BOMB_STOPS, defaultMin: 1, defaultMax: 5 },

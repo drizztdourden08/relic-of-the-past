@@ -1,4 +1,6 @@
 /* @layer shared-asset-extraction @kind types */
+import type { RGBA } from '../../graphics/palette';
+
 interface BgTileRequest {
   sheets: number[];
   upper: number[];
@@ -8,4 +10,12 @@ interface BgTileRequest {
   paletteAux: number[];
 }
 
-export type { BgTileRequest };
+interface BgQuadrant {
+  pixels: Uint8Array;
+  word: number;
+  row: RGBA[];
+  base: number;
+  at: [number, number];
+}
+
+export type { BgQuadrant, BgTileRequest };

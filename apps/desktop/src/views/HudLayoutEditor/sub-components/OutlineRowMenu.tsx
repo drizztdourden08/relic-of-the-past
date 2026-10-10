@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
-import { STEP_ICON, STEP_KEY, stepOptions } from '../behavior/step-intent';
+import { STEP_ICON, STEP_KEY, stepOptions } from '@app/hud-layout-editing/step-intent';
 import type { MenuNode } from '@drizztdourden08/tessera/composites';
 import type { OutlineRowMenuProps } from './OutlineRowMenu.type';
 

@@ -30,8 +30,9 @@ const dungeonItemsOf = (fillWorld: FillWorld): WorldModel['dungeonItems'] => {
 
 const commonestFiller = (filler: readonly string[]): string => {
   const counts = Object.entries(countsOf(filler)).sort(([a, left], [b, right]) => right - left || a.localeCompare(b));
-  if (counts.length === 0) throw new Error('pool carries no filler');
-  return counts[0][0];
+  const [top] = counts;
+  if (top === undefined) throw new Error('pool carries no filler');
+  return top[0];
 };
 
 const forbiddenOf = (

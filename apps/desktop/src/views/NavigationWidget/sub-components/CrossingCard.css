@@ -1,0 +1,24 @@
+/* @layer renderer-widgets @kind style */
+
+.nav-crossing-card__layer-tag {
+  font-size: var(--size-8);
+  color: var(--c-info);
+  margin-top: var(--size-1);
+}
+
+.nav-crossing-card__blocked-tag {
+  font-size: var(--size-8);
+  color: var(--c-warning);
+  margin-top: var(--size-1);
+}
+
+.nav-crossing-card__req-row {
+  display: flex;
+  gap: var(--size-2);
+  margin-top: var(--size-2);
+}
+
+.nav-card.nav-crossing-card--blocked {
+  opacity: 0.55;
+  border-color: var(--c-warning);
+}

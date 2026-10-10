@@ -36,7 +36,7 @@ const useCalibrationActions = (d: ActionDeps) => {
     const counters = findCounterBytes(d.gyroBufferRef.current); for (const c of counters) excl.add(c);
     d.excludedRef.current = excl; d.setGyroExcluded(new Set(excl)); d.setGyroState('done');
     d.gyroExcludedBytesRef.current = new Set(excl);
-    d.addLog(`✓ Gyro done: ${excl.size} bytes excluded (${counters.size} counters, ${excl.size - counters.size} gyro/accel)`);
+    d.addLog(`OK Gyro done: ${excl.size} bytes excluded (${counters.size} counters, ${excl.size - counters.size} gyro/accel)`);
     d.updateByteStatuses(len);
   }, [d.addLog, d.updateByteStatuses]);
 
@@ -49,8 +49,8 @@ const useCalibrationActions = (d: ActionDeps) => {
   const handleGyroSkip = useCallback(() => { d.setGyroState('done'); d.gyroExcludedBytesRef.current = new Set(); d.addLog('Gyro profiling skipped.'); }, [d.addLog]);
 
   const handleIdleCapture = useCallback(() => {
-    if (d.latestBytes.length === 0) { d.addLog('⚠ No reports received yet'); return; }
-    d.baselineRef.current = new Uint8Array(d.latestBytes); d.setIdleState('done'); d.addLog(`✓ Idle baseline captured: ${d.latestBytes.length} bytes`);
+    if (d.latestBytes.length === 0) { d.addLog('Warning: No reports received yet'); return; }
+    d.baselineRef.current = new Uint8Array(d.latestBytes); d.setIdleState('done'); d.addLog(`OK Idle baseline captured: ${d.latestBytes.length} bytes`);
   }, [d.latestBytes, d.addLog]);
 
   const handleIdleRedo = useCallback(() => { d.baselineRef.current = new Uint8Array(0); d.setIdleState('idle'); d.addLog('Idle baseline cleared.'); }, [d.addLog]);
@@ -67,10 +67,10 @@ const useCalibrationActions = (d: ActionDeps) => {
 
   const ensureBaseline = useCallback((): boolean => {
     if (d.baselineRef.current.length > 0) return true;
-    if (d.latestBytes.length === 0) { d.addLog('⚠ No reports received yet. Press nothing and try again.'); return false; }
+    if (d.latestBytes.length === 0) { d.addLog('Warning: No reports received yet. Press nothing and try again.'); return false; }
     d.baselineRef.current = new Uint8Array(d.latestBytes);
     d.setIdleState('done');
-    d.addLog(`✓ Idle baseline captured automatically: ${d.latestBytes.length} bytes`);
+    d.addLog(`OK Idle baseline captured automatically: ${d.latestBytes.length} bytes`);
     return true;
   }, [d.latestBytes, d.addLog]);
 
@@ -100,7 +100,7 @@ const useCalibrationActions = (d: ActionDeps) => {
     if (delta >= ANALOG_THRESHOLD_DELTA && popcount(xor) > ANALOG_MIN_CHANGED_BITS) {
       const threshold = baseVal + Math.floor(delta / ANALOG_THRESHOLD_FRACTION); mapping = { byteIndex: byteIdx, bitMask: FULL_BYTE_MASK, threshold, restValue: baseVal }; result = `byte[${byteIdx}] analog (rest=${baseVal}, threshold=${threshold}) (manual)`;
     } else { const bitMask = xor !== 0 ? xor : FULL_BYTE_MASK; mapping = { byteIndex: byteIdx, bitMask }; result = `byte[${byteIdx}] & 0x${hex(bitMask)} (manual)`; }
-    d.addLog(`✓ ${item.label}: ${result}`);
+    d.addLog(`OK ${item.label}: ${result}`);
     d.setItems(prev => prev.map((it, i) => i === idx ? { ...it, status: 'captured', result, mapping } : it));
     if (d.latestBytes.length > 0) d.updateByteStatuses(d.latestBytes.length);
   }, [d.addLog, d.latestBytes, d.updateByteStatuses]);
@@ -115,7 +115,7 @@ const useCalibrationActions = (d: ActionDeps) => {
     if (prevIdx < 0) return;
     d.setItems(prev => prev.map((it, i) => { if (i === d.activeIdxRef.current && it.status !== 'captured') return { ...it, status: 'pending' }; if (i === prevIdx) return { ...it, status: 'active', result: undefined, mapping: undefined, axisMapping: undefined }; return it; }));
     d.setActiveIndex(prevIdx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.releaseCountRef.current = 0; d.confirmCountRef.current = 0; d.detectedBtnRef.current = null; d.awaitingButtonRestRef.current = true;
-    d.addLog(`← Back to: ${d.itemsRef.current[prevIdx]?.label}`);
+    d.addLog(`Back to: ${d.itemsRef.current[prevIdx]?.label}`);
   }, [d.addLog]);
 
   const handleClickItem = useCallback((idx: number) => {
@@ -125,7 +125,7 @@ const useCalibrationActions = (d: ActionDeps) => {
     d.setItems(prev => prev.map((it, i) => { if (i === d.activeIdxRef.current && it.status === 'active') return { ...it, status: 'pending' }; if (i === idx && it.status !== 'captured') return { ...it, status: 'active' }; return it; }));
     d.setActiveIndex(idx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.releaseCountRef.current = 0; d.confirmCountRef.current = 0; d.detectedBtnRef.current = null; d.awaitingButtonRestRef.current = true;
     if (!d.inputPhaseActiveRef.current) { d.setAutoAdvanceWrapped(false); d.setInputPhaseActiveWrapped(true); }
-    d.addLog(`→ ${item.label}`);
+    d.addLog(`Next: ${item.label}`);
   }, [d.addLog, ensureBaseline]);
 
   const handleByteClick = useCallback((idx: number) => {

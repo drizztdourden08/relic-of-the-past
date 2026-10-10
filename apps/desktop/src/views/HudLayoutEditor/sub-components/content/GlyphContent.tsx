@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
 import { Box, Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
-import { glyphArtUrl } from '../../behavior/glyph-art';
-import { useSlotScheme } from '../../behavior/slot-scheme';
+import { glyphArtUrl } from '@app/hud-layout-editing/glyph-art';
+import { useSlotScheme } from '@app/hud-layout-editing/slot-scheme';
 import { GlyphPickerGrid } from '../GlyphPickerGrid';
 import { ReferenceField } from '../ReferenceField';
 import { SlotRefField } from '../SlotRefField';

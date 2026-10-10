@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { cellActions } from './cell-actions';
-import { trackActions } from './grid-track-actions';
+import { trackActions } from './track-actions';
 import type { GridAction, GridActionContext } from '../GridEditor.type';
 
 const contextualActions = (ctx: GridActionContext): GridAction[] => {

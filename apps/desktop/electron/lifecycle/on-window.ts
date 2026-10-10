@@ -5,7 +5,6 @@ import { registerDevicePermissions } from '../input';
 const forwardDumpLayersConsole = (win: BrowserWindow): void => {
   if (!process.argv.some((arg) => arg.startsWith('--dump-layers='))) return;
   win.webContents.on('console-message', (event) => {
-    // eslint-disable-next-line no-console
     console.log(`[renderer] ${event.message}`);
   });
 };

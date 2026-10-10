@@ -5,8 +5,9 @@ import type { LocationKey } from '../../location-key';
 import type { CapacityFamilyId } from '../capacity-profile.type';
 
 const familyOfCheck = (check: CheckRecord): CapacityFamilyId | undefined => {
-  if (check.vanillaItemIds.length !== 1 || (check.pond?.rung ?? 1) !== 1) return undefined;
-  return capacityFamilyOfItemName(getItem(check.vanillaItemIds[0]).name);
+  const [only] = check.vanillaItemIds;
+  if (only === undefined || check.vanillaItemIds.length !== 1 || (check.pond?.rung ?? 1) !== 1) return undefined;
+  return capacityFamilyOfItemName(getItem(only).name);
 };
 
 const spotsByFamily = (): ReadonlyMap<CapacityFamilyId, LocationKey> => {

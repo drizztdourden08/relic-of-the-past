@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { useSlotScheme } from '../../behavior/slot-scheme';
+import { useSlotScheme } from '@app/hud-layout-editing/slot-scheme';
 import { SlotRefField } from '../SlotRefField';
 import type { SlotContentProps } from './SlotContent.type';
 

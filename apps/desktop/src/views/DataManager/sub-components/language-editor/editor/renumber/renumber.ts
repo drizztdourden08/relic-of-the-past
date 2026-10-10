@@ -27,9 +27,11 @@ const firstStructuralChange = (before: PmNode, after: PmNode): number | null => 
   const old = linesOf(before);
   const now = linesOf(after);
   const shared = Math.min(old.length, now.length);
-  for (let i = 0; i < shared; i += 1) {
-    const a = old[i].node.attrs;
-    const b = now[i].node.attrs;
+  for (const [i, line] of old.slice(0, shared).entries()) {
+    const other = now[i];
+    if (other === undefined) throw new Error('the new document has fewer lines than the shared count');
+    const a = line.node.attrs;
+    const b = other.node.attrs;
     if (a.advanceKind !== b.advanceKind || a.advanceRow !== b.advanceRow || a.endsBox !== b.endsBox) {
       return i;
     }
@@ -52,8 +54,7 @@ const renumberPlugin = () => new Plugin({
     let touched = false;
     let previousRow = 0;
 
-    for (let i = 0; i < lines.length; i += 1) {
-      const { node, pos } = lines[i];
+    for (const [i, { node, pos }] of lines.entries()) {
       if (i <= changedAt) {
         previousRow = rowOfAdvance(advanceOfAttrs(node.attrs));
         continue;

@@ -34,7 +34,13 @@ const sentToOthers = (facts: NetworkFacts, slot: number | null): number => {
   return count;
 };
 
-const itemsHandedNotGranted = (room: OnlineRoom, receivedIndex: number): number =>
+const uuidShortOf = (uuid: string | null): string | null => {
+  if (uuid === null) return null;
+  const [head = ''] = uuid.split('-');
+  return head;
+};
+
+const itemsHandedNotGranted =(room: OnlineRoom, receivedIndex: number): number =>
   Math.max(0, room.cursor.queued - receivedIndex + room.cursor.handed.size - room.cursor.settled.size);
 
 const buildNetworkStatus = (input: NetworkStatusInput): NetworkStatus => {
@@ -52,7 +58,7 @@ const buildNetworkStatus = (input: NetworkStatusInput): NetworkStatus => {
       slot: room.slot,
       slotName: config.slotName,
       team: room.team,
-      uuidShort: facts.uuid === null ? null : facts.uuid.split('-')[0],
+      uuidShort: uuidShortOf(facts.uuid),
       worldVersion: facts.worldVersion,
       appWorldVersion: AP_WORLD_VERSION,
       deathLink: facts.deathLink,

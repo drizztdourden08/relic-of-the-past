@@ -2,8 +2,8 @@
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ChecksCell } from './ChecksCell';
 import { StateChip } from './StateChip';
-import { DASH } from '../behavior/network-format';
-import { onlineChip } from '../behavior/network-tone';
+import { DASH } from '../behavior/network-format.constants';
+import { onlineChip } from '../behavior/online-chip';
 import type { PlayerRowProps } from './PlayerRow.type';
 
 const PlayerRow = ({ player, compact = false }: PlayerRowProps) => {

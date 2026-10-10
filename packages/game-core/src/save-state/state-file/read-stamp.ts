@@ -5,14 +5,18 @@ import { trailerLength } from './trailer-length';
 
 const decoder = new TextDecoder();
 
+const isStamp = (value: unknown): value is StateStamp =>
+  typeof value === 'object' && value !== null
+  && Reflect.get(value, 'v') === 1 && typeof Reflect.get(value, 'formatId') === 'string';
+
 const readStamp = (buffer: ArrayBuffer): StateStamp | null => {
   const total = trailerLength(buffer);
   if (!total) return null;
   const jsonEnd = buffer.byteLength - TRAILER_FIXED;
   const json = decoder.decode(new Uint8Array(buffer, jsonEnd - (total - TRAILER_FIXED), total - TRAILER_FIXED));
   try {
-    const parsed = JSON.parse(json) as StateStamp;
-    return parsed?.v === 1 && typeof parsed.formatId === 'string' ? parsed : null;
+    const parsed: unknown = JSON.parse(json);
+    return isStamp(parsed) ? parsed : null;
   } catch {
     return null;
   }

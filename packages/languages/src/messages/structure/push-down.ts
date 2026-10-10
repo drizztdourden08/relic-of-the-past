@@ -13,7 +13,7 @@ const pushDown = (
   let previous: DialogueLineView | null = null;
 
   return lines.map((line, at) => {
-    const opensBox = previous !== null && previous.endsBox;
+    const opensBox = previous?.endsBox === true;
     if (opensBox && !policy.cascadesAcrossBlocks) pushing = false;
     if (seeds.has(at)) pushing = true;
 

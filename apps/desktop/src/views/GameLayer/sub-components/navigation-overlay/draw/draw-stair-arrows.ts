@@ -46,13 +46,13 @@ const drawStairArrows = (dc: DrawContext, drawResults: FloodFillResult[]): void 
     const visited = new Set<string>();
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
-        if (drawResult.reachable[r][c] !== STAIRS_TRAVERSAL_STATE) continue;
+        if (drawResult.reachable[r]?.[c] !== STAIRS_TRAVERSAL_STATE) continue;
         if (visited.has(`${r},${c}`)) continue;
         const minR = r;
         let maxR = r;
         visited.add(`${r},${c}`);
         let nr = r + 1;
-        while (nr < GRID_SIZE && drawResult.reachable[nr][c] === STAIRS_TRAVERSAL_STATE) {
+        while (nr < GRID_SIZE && drawResult.reachable[nr]?.[c] === STAIRS_TRAVERSAL_STATE) {
           visited.add(`${nr},${c}`);
           maxR = nr;
           nr++;

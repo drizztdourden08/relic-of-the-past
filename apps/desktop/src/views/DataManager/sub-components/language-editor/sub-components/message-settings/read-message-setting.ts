@@ -4,8 +4,8 @@ import type { Token } from '@rotp/languages';
 
 const readMessageSetting = (tokens: Token[], name: string): number | null => {
   const index = lastIndexOfSetting(tokens, name);
-  if (index < 0) return null;
   const token = tokens[index];
+  if (token === undefined) return null;
   return token.t === 'cmd' ? token.param ?? null : null;
 };
 

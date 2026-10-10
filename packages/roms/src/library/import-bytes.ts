@@ -4,15 +4,15 @@ import { sha256Hex } from '@drizztdourden08/brock-core';
 import { ROM_KINDS } from '../kinds';
 import type { RomKind } from '../kinds';
 import { resolveCandidate } from './resolve-candidate';
-import type { ImportPhase, RomImportResult } from './roms.type';
+import type { ImportPhase, RomBytes, RomImportResult } from './roms.type';
 
 const importBytes = async (
   files: FileStore,
-  fileName: string,
-  bytes: Uint8Array,
+  rom: RomBytes,
   kind: RomKind = 'snes-alttp',
   onPhase?: ImportPhase,
 ): Promise<RomImportResult> => {
+  const { fileName, bytes } = rom;
   const spec = ROM_KINDS[kind];
   const candidate = await resolveCandidate(fileName, bytes, kind, onPhase);
   if (!candidate.ok) return { success: false, error: candidate.error, romFile: '' };

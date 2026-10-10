@@ -3,13 +3,13 @@ import { handleDashPulse, handleDeath, resetDashState } from '@rotp/input-mappin
 import { DASH_CHARGED_BELOW, DASH_CHARGED_FROM, GAME_OVER_MODULE, UI_STATE_OFFSET } from './haptic-polling.constants';
 import { onHandlerStateChange } from './on-handler-state-change';
 import { pollingState } from './polling-state';
-import { readU8 } from "../bridge/wasm-call";
+import { readU8OrZero } from '../bridge/wasm-call';
 
 const pollHapticState = (heap: Uint8Array, ptr: number): void => {
-  const mainModule = readU8(heap, ptr + UI_STATE_OFFSET.mainModule);
-  const handlerState = readU8(heap, ptr + UI_STATE_OFFSET.handlerState);
-  const isRunning = readU8(heap, ptr + UI_STATE_OFFSET.isRunning);
-  const dashCtr = readU8(heap, ptr + UI_STATE_OFFSET.dashCounter);
+  const mainModule = readU8OrZero(heap, ptr + UI_STATE_OFFSET.mainModule);
+  const handlerState = readU8OrZero(heap, ptr + UI_STATE_OFFSET.handlerState);
+  const isRunning = readU8OrZero(heap, ptr + UI_STATE_OFFSET.isRunning);
+  const dashCtr = readU8OrZero(heap, ptr + UI_STATE_OFFSET.dashCounter);
 
   const isDashing = isRunning !== 0 && dashCtr < DASH_CHARGED_BELOW && dashCtr >= DASH_CHARGED_FROM;
 

@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { stepIntent, stepOptions } from '@app/views/HudLayoutEditor/behavior/step-intent';
-import { announcementFor, ghostFor } from '@app/views/HudLayoutEditor/behavior/drop-ghost';
+import { stepIntent, stepOptions } from '@app/hud-layout-editing/step-intent';
+import { announcementFor, ghostFor } from '@app/hud-layout-editing/drop-ghost';
 import type { HudLayout } from '@rotp/hud';
 import { DOC } from './keyboard-move.constants';
 

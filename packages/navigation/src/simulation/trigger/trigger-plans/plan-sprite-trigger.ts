@@ -7,7 +7,7 @@ import { indoorPickupSlot } from './indoor-pickup-slot';
 const planNpcTrigger = (sprite: SimSprite): TriggerAction | null => {
   const check = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
   const cfg = check?.gameId;
-  if (!cfg || cfg.itemId === undefined || cfg.flagType === undefined || cfg.flagMask === undefined) return null;
+  if (cfg?.itemId === undefined || cfg.flagType === undefined || cfg.flagMask === undefined) return null;
   if (cfg.roomFlag) {
     return { type: 'chest', roomId: cfg.roomFlag.roomId, chestIndex: cfg.roomFlag.chestIndex, itemId: cfg.itemId };
   }

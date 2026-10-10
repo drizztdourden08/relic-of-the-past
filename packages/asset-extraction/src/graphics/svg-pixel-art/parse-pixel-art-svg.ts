@@ -3,6 +3,7 @@ import { ImageBuffer } from '../png-writer';
 import type { RGBA } from '../palette';
 import { hexToRgba } from './hex-to-rgba';
 import { RECT_RE, VIEWBOX_RE } from './svg-pixel-art.constants';
+import type { PixelRect } from './svg-pixel-art.type';
 
 const attributeOf = (attributes: string, name: string): string | undefined =>
   new RegExp(`\\b${name}="([^"]*)"`).exec(attributes)?.[1];
@@ -15,7 +16,8 @@ const integerAttribute = (attributes: string, name: string, fallback: number): n
   return value;
 };
 
-const fillRect = (image: ImageBuffer, x: number, y: number, width: number, height: number, color: RGBA): void => {
+const fillRect = (image: ImageBuffer, rect: PixelRect, color: RGBA): void => {
+  const { x, y, width, height } = rect;
   const x0 = Math.max(0, x);
   const y0 = Math.max(0, y);
   const x1 = Math.min(image.width, x + width);
@@ -33,14 +35,13 @@ const parsePixelArtSvg = (svg: string): ImageBuffer => {
     const attributes = match[1] ?? '';
     const fill = attributeOf(attributes, 'fill');
     if (fill === undefined || fill === 'none') continue;
-    fillRect(
-      image,
-      integerAttribute(attributes, 'x', 0),
-      integerAttribute(attributes, 'y', 0),
-      integerAttribute(attributes, 'width', 0),
-      integerAttribute(attributes, 'height', 0),
-      hexToRgba(fill),
-    );
+    const rect: PixelRect = {
+      x: integerAttribute(attributes, 'x', 0),
+      y: integerAttribute(attributes, 'y', 0),
+      width: integerAttribute(attributes, 'width', 0),
+      height: integerAttribute(attributes, 'height', 0),
+    };
+    fillRect(image, rect, hexToRgba(fill));
   }
   return image;
 };

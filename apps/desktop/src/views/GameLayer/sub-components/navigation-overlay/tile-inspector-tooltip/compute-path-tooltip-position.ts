@@ -59,22 +59,23 @@ const computePathTooltipPosition = (params: PathTipParams): TooltipPosition => {
     y: (screenWorldY + p.row * TILE_PX + TILE_PX - viewTop) * scaleY,
   }));
   const debugLabel = pathRequirementsLabel(path, params);
-  const endPt = points[points.length - 1];
+  const endPt = points.at(-1);
+  if (!endPt) return defaultPosition;
   const pathTextRect: Rect = {
     x: endPt.x + 10, y: endPt.y - 22,
     w: Math.max(120, debugLabel.length * 7), h: 18,
   };
 
-  const overlapsPath = (r: Rect): boolean => {
-    for (let i = 1; i < points.length; i++) {
-      if (segmentOverlapsRect(points[i - 1], points[i], r, PATH_CLEARANCE_PX)) return true;
-    }
-    return false;
-  };
+  const overlapsPath = (r: Rect): boolean =>
+    points.slice(1).some((point, i) => {
+      const prev = points[i];
+      return prev !== undefined && segmentOverlapsRect(prev, point, r, PATH_CLEARANCE_PX);
+    });
 
   const candidates = tooltipCandidates(mx, my, width, height);
   const best = candidates.find(c => !rectsOverlap(c, pathTextRect) && !overlapsPath(c));
   const chosen = best ?? candidates[0];
+  if (!chosen) return defaultPosition;
   return { tipX: chosen.x, tipY: chosen.y };
 };
 

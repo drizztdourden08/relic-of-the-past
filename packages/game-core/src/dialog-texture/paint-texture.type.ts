@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind types */
 import type { DialogTexture, DialogTextureAnimation, DialogTextureSpeed } from '@rotp/game-data';
+import type { PatternSpec } from './patterns.type';
 
 interface TextureFrame {
   texture: DialogTexture;
@@ -16,4 +17,24 @@ interface TextureFrame {
   devicePx: number;
 }
 
-export type { TextureFrame };
+interface TextureGrid {
+  pattern: PatternSpec;
+  pitchX: number;
+  pitchY: number;
+  loose: number;
+  scale: number;
+  widthPx: number;
+  heightPx: number;
+  offsetX: number;
+  offsetY: number;
+  alphaAt: (row: number, col: number) => number;
+}
+
+interface GridSpan {
+  rowStart: number;
+  rowEnd: number;
+  colStart: number;
+  colEnd: number;
+}
+
+export type { GridSpan, TextureFrame, TextureGrid };

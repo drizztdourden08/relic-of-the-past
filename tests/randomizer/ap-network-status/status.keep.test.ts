@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import { PING_INTERVAL_MS, PING_TAG, AP_WORLD_VERSION } from '@rotp/randomizer';
-import { stateChip } from '@app/views/Randomizer/sub-components/NetworkTab/behavior/network-tone';
+import { stateChip } from '@app/views/Randomizer/sub-components/NetworkTab/behavior/state-chip';
 import type { LocationKey } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeServer } from '../ap-fake-server';

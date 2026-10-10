@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { GhostModel } from '../../behavior/drop-ghost';
+import type { GhostModel } from '@app/hud-layout-editing/drop-ghost';
 
 const TONE_CLASS: Readonly<Record<GhostModel['tone'], string>> = {
   move: '',

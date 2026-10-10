@@ -1,0 +1,75 @@
+/* @layer renderer-widgets @kind style */
+
+.nav-overworld-minimap__part-4 {
+  position: relative;
+  width: 100%;
+  margin-top: var(--size-4);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nav-overworld-minimap__part-3 {
+  position: absolute;
+  border-radius: var(--radius-sm);
+  font-size: var(--size-10);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.nav-overworld-minimap__cell-name {
+  font-weight: var(--weight-bold);
+  font-size: calc(var(--size-1) * 11);
+  position: relative;
+}
+
+.nav-overworld-minimap__cell-hex {
+  color: var(--c-text-muted);
+  font-size: calc(var(--size-1) * 9);
+  position: relative;
+}
+
+.nav-overworld-minimap__cell-count {
+  font-size: calc(var(--size-1) * 9);
+  color: var(--c-text-dim);
+  position: relative;
+}
+
+.nav-overworld-minimap__part-2 {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-overworld-minimap__part-1 {
+  position: absolute;
+  width: var(--size-6);
+  height: var(--size-6);
+  border-radius: 50%;
+  background: var(--c-secondary);
+  box-shadow: 0 0 calc(var(--size-1) * 3) var(--c-secondary);
+  pointer-events: none;
+}
+
+.nav-overworld-minimap__cell--active {
+  background: var(--c-secondary-soft);
+  border: var(--size-1) solid var(--c-secondary-soft);
+  color: var(--c-secondary-bright);
+}
+
+.nav-overworld-minimap__cell--analyzed {
+  background: var(--c-info-soft);
+  border: var(--size-1) solid var(--c-info-soft);
+  color: var(--c-info);
+}
+
+.nav-overworld-minimap__cell--idle {
+  background: var(--c-hover);
+  border: var(--size-1) solid var(--c-border);
+  color: var(--c-text-muted);
+}

@@ -2,7 +2,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { createElement as h } from 'react';
-import { EditorStepContext } from '@app/views/HudLayoutEditor/behavior/editor-step';
+import { EditorStepContext } from '@app/hud-layout-editing/editor-step';
 import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
 import type { HudContainer, HudNode, Value } from '@rotp/hud';
 import { installLayoutSectionRig } from './install-layout-section-rig';

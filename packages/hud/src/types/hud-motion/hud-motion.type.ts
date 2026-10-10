@@ -6,7 +6,7 @@ type HudAnimatableProperty = 'scale' | 'opacity' | 'x' | 'y' | 'rotate' | 'tint'
 type HudAnimationLoop = 'none' | 'loop' | 'ping-pong';
 
 type HudNamedEasing = 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out';
-type HudEasing = HudNamedEasing | string;
+type HudEasing = string;
 
 interface HudAnimationKeyframe { at: number; value: Value; easing?: HudEasing }
 

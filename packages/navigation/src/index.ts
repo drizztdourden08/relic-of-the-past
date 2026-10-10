@@ -1,4 +1,10 @@
 /* @layer package @kind barrel */
+import './recommendations/strategies/actor';
+import './recommendations/strategies/check';
+import './recommendations/strategies/dungeon';
+import './recommendations/strategies/item';
+import './recommendations/strategies/screen';
+import './recommendations/strategy-detectors';
 export { landingCrossings, listedCrossings, markerCrossings } from './crossing-sections';
 export { collectCrossings, togglesLayer } from './crossings';
 export { crossingIcon } from './entrance-icons';
@@ -34,23 +40,17 @@ export type { BFSCell, QuadrantBounds } from './pathfinding/strategies/layer-str
 export { classifyTile, resolveRoomContext, roomTypeLabel } from './pathfinding/tile-classification';
 export type { TileClassification, TileInteractable } from './pathfinding/tile-classification';
 export { GRID_SIZE, STAIRS_TRAVERSAL_STATE, TRAVERSAL_DIR_OFFSET } from './pathfinding/types/grid.constants';
-export { detectorFromStrategy, known, registerStrategy, unread } from './recommendations/compare';
-export type { ComparisonStrategy, FieldProbe, Probe, SetProbe, UnresolvableMapper } from './recommendations/compare';
+export { detectorFromStrategy, eraseSetProbe, known, registerStrategy, unread } from './recommendations/compare';
+export type { ComparisonStrategy, ErasedSetProbe, FieldProbe, Probe, SetProbe, UnresolvableMapper } from './recommendations/compare';
 export { changedPaths, createRecommendationStore, detectorsFor, diffsByRecordFrom, linesForPaths, memoryStorage, recommendationFile, recommendationId, reconcile, registerDetector, runDetection, runDetectionSweep, scopedToPass } from './recommendations';
 export type { Confidence, DetectionContext, Difference, DraftRecommendation, Recommendation, RecommendationAction, RecommendationStorage, ScreenObservations } from './recommendations';
 export type { PassResult } from './recommendations/store';
-import './recommendations/strategies/actor';
 export { actorStrategy } from './recommendations/strategies/actor';
-import './recommendations/strategies/check';
 export { checkStrategy } from './recommendations/strategies/check';
-import './recommendations/strategies/dungeon';
 export { dungeonStrategy } from './recommendations/strategies/dungeon';
-import './recommendations/strategies/item';
 export { itemStrategy } from './recommendations/strategies/item';
-import './recommendations/strategies/screen';
 export { screenStrategy } from './recommendations/strategies/screen';
 export { buildScreenDraftRecord } from './recommendations/strategies/screen/screen-draft';
-import './recommendations/strategy-detectors';
 export { offlineCompletedChecks } from './save-file/offline-progress';
 export { matchDiffs } from './simulation/detect/check-matcher';
 export { cloneSnapshot, diffSnapshots } from './simulation/detect/flag-snapshot';

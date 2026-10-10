@@ -6,8 +6,11 @@ import { dirname, resolve } from 'node:path';
 import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics, extractPalaceSnes4bppTiles } from '@rotp/asset-extraction/node';
 import { GBA_NEW_ENTITY_HANDLERS, PALACE_AUDIO_REFERENCES, PALACE_BEHAVIOR_SPECS, PALACE_ROOM_IDS, PALACE_BOSS_ROOMS, PALACE_ENTITY_TYPES, PALACE_PROGRESSION_ANCHORS, PALACE_ROOM_TAGS, extractDungeonPalette, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText, extractPalaceSpritePalettes, decodeGbaAlttpSaveProgression } from '@rotp/asset-extraction';
 import { parseArguments } from './lib/export-arguments';
-import { entityBytes, secretBytes, wordsToBuffer } from './lib/room-bytes';
-import { renderCollision, renderRoom } from './lib/room-images';
+import { entityBytes } from './lib/entity-bytes';
+import { secretBytes } from './lib/secret-bytes';
+import { wordsToBuffer } from './lib/words-to-buffer';
+import { renderCollision } from './lib/render-collision';
+import { renderRoom } from './lib/render-room';
 
 const args = parseArguments();
 const defaultRom = resolve('test-roms/Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba');

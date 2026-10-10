@@ -9,8 +9,11 @@ import type { GearModel } from '../EnhancedPauseView.type';
 
 const spriteOf = (recordId: string): string => spriteFilename(getItem(recordId).spriteId) ?? '';
 
-const passiveSprite = (records: readonly string[], level: number): string =>
-  spriteOf(records[Math.min(Math.max(level, 1), records.length) - 1]);
+const passiveSprite = (records: readonly string[], level: number): string => {
+  const record = records[Math.min(Math.max(level, 1), records.length) - 1];
+  if (record === undefined) throw new Error(`passive item ladder has no record for level ${level}`);
+  return spriteOf(record);
+};
 
 const useGearModel = (): GearModel => {
   const equipment = useGameUIStore((s) => s.equipment);
@@ -35,10 +38,11 @@ const useGearModel = (): GearModel => {
     }));
 
     const held = [equipment.gloves, equipment.boots, equipment.flippers, equipment.moonPearl];
-    const passives = PASSIVE_RECORDS.map((records, index) => ({
-      sprite: passiveSprite(records, held[index]),
-      owned: held[index] > 0,
-    }));
+    const passives = PASSIVE_RECORDS.map((records, index) => {
+      const level = held[index];
+      if (level === undefined) throw new Error(`no equipment level for passive item ${index}`);
+      return { sprite: passiveSprite(records, level), owned: level > 0 };
+    });
 
     return { ladders, passives };
   }, [equipment, items]);

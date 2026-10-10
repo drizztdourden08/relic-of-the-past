@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { SimEvent } from '../../types';
+import type { SimEvent, TriggerAction } from '../../types';
 import { narrative } from '../event-log/narrative';
 import { globalRefresh } from '../explorer/global-refresh';
 import type { EngineState } from '../state/state.type';
@@ -10,9 +10,9 @@ const emitSwitchPulled = (
   s: EngineState,
   events: SimEvent[],
   key: string,
-  roomId: number,
-  drain?: { screen: number; mask: number },
+  action: Extract<TriggerAction, { type: 'pullSwitch' }>,
 ): void => {
+  const { roomId, drain } = action;
   s.done.add(key);
   if (drain) {
     events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) and drained screen 0x${drain.screen.toString(16)}`));

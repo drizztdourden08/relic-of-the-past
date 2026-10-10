@@ -8,7 +8,7 @@ import { GOOGLE_CERTS, GOOGLE_ISSUERS, SWEEP_KEY_HEADER } from './scheduler-guar
 let jwks: ReturnType<typeof createRemoteJWKSet> | null = null;
 
 const googleKeys = () => {
-  if (!jwks) jwks = createRemoteJWKSet(GOOGLE_CERTS);
+  jwks ??= createRemoteJWKSet(GOOGLE_CERTS);
   return jwks;
 };
 

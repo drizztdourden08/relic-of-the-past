@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { TriggerAction } from '../simulation';
+import type { QueuedAction } from './trigger.type';
 import { itemLabel, resolveDuplicate } from '@rotp/game-data';
 import { enqueue } from '@rotp/randomizer';
 import { wasmTriggerOverworldCheck, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimOpenCellLock, wasmSimPushMantle, wasmSimMarkMapIcons } from '@rotp/game-core';
@@ -51,61 +52,71 @@ const runProgressStep = (step: Extract<TriggerAction, { type: 'progress' }>['ste
   else wasmSimFollowerRescue();
 };
 
+const enqueueAction = (action: QueuedAction, resolve: () => void): void => {
+  switch (action.type) {
+    case 'chest': {
+      const itemId = resolveDuplicate(action.itemId, getCurrentInventory());
+      enqueue(itemLabel(itemId), SOURCE,
+        { type: 'trigger_check', roomId: action.roomId, chestIndex: action.chestIndex, itemId },
+        resolve);
+      return;
+    }
+    case 'npc':
+      enqueue(itemLabel(action.itemId), SOURCE,
+        { type: 'trigger_npc_check', flagType: action.flagType, flagMask: action.flagMask, itemId: action.itemId, spriteType: NO_SPRITE, postGfx: 0 },
+        resolve);
+      return;
+    case 'overworld':
+      enqueue(itemLabel(action.itemId), SOURCE,
+        { type: 'custom', execute: () => wasmTriggerOverworldCheck(action.screen, action.mask, action.itemId) },
+        resolve);
+      return;
+    case 'boss':
+      enqueue(`boss room 0x${action.roomId.toString(16)}`, SOURCE,
+        { type: 'trigger_check', roomId: action.roomId, chestIndex: 0, itemId: action.itemId },
+        action.prizeId ? undefined : resolve);
+      if (action.prizeId) {
+        enqueue(itemLabel(action.prizeId), SOURCE, { type: 'give_item', itemId: action.prizeId }, resolve);
+      }
+  }
+};
+
+const runImmediate = (action: Exclude<TriggerAction, QueuedAction>): void => {
+  switch (action.type) {
+    case 'door':
+      if (action.cellLock) wasmSimOpenCellLock(action.roomId, action.doorIndex);
+      else unlockDoorBothSides(action.roomId, action.doorIndex, action.doorKind === 'small-key');
+      return;
+    case 'kill':
+      wasmSimKillDrop(action.roomId, action.itemId);
+      if (action.opensShutters) openShutShutters(action.roomId);
+      return;
+    case 'progress':
+      runProgressStep(action.step);
+      return;
+    case 'pullSwitch':
+      openShutShutters(action.roomId);
+      if (action.drain) wasmTriggerOverworldCheck(action.drain.screen, action.drain.mask, NO_ITEM);
+      return;
+    case 'bombWall':
+      markBombed(action.roomId, action.tile);
+      return;
+    case 'trapShutters':
+      forEachShutter(action.roomId, true, (i) => closeDoorBothSides(action.roomId, i));
+  }
+};
+
+const isQueued = (action: TriggerAction): action is QueuedAction =>
+  action.type === 'chest' || action.type === 'npc' || action.type === 'overworld' || action.type === 'boss';
+
 const trigger = (action: TriggerAction): Promise<void> =>
   new Promise((resolve) => {
-    switch (action.type) {
-      case 'chest': {
-        const itemId = resolveDuplicate(action.itemId, getCurrentInventory());
-        enqueue(itemLabel(itemId), SOURCE,
-          { type: 'trigger_check', roomId: action.roomId, chestIndex: action.chestIndex, itemId },
-          resolve);
-        return;
-      }
-      case 'npc':
-        enqueue(itemLabel(action.itemId), SOURCE,
-          { type: 'trigger_npc_check', flagType: action.flagType, flagMask: action.flagMask, itemId: action.itemId, spriteType: NO_SPRITE, postGfx: 0 },
-          resolve);
-        return;
-      case 'overworld':
-        enqueue(itemLabel(action.itemId), SOURCE,
-          { type: 'custom', execute: () => wasmTriggerOverworldCheck(action.screen, action.mask, action.itemId) },
-          resolve);
-        return;
-      case 'boss':
-        enqueue(`boss room 0x${action.roomId.toString(16)}`, SOURCE,
-          { type: 'trigger_check', roomId: action.roomId, chestIndex: 0, itemId: action.itemId },
-          action.prizeId ? undefined : resolve);
-        if (action.prizeId) {
-          enqueue(itemLabel(action.prizeId), SOURCE, { type: 'give_item', itemId: action.prizeId }, resolve);
-        }
-        return;
-      case 'door':
-        if (action.cellLock) wasmSimOpenCellLock(action.roomId, action.doorIndex);
-        else unlockDoorBothSides(action.roomId, action.doorIndex, action.doorKind === 'small-key');
-        resolve();
-        return;
-      case 'kill':
-        wasmSimKillDrop(action.roomId, action.itemId);
-        if (action.opensShutters) openShutShutters(action.roomId);
-        resolve();
-        return;
-      case 'progress':
-        runProgressStep(action.step);
-        resolve();
-        return;
-      case 'pullSwitch':
-        openShutShutters(action.roomId);
-        if (action.drain) wasmTriggerOverworldCheck(action.drain.screen, action.drain.mask, NO_ITEM);
-        resolve();
-        return;
-      case 'bombWall':
-        markBombed(action.roomId, action.tile);
-        resolve();
-        return;
-      case 'trapShutters':
-        forEachShutter(action.roomId, true, (i) => closeDoorBothSides(action.roomId, i));
-        resolve();
+    if (isQueued(action)) {
+      enqueueAction(action, resolve);
+      return;
     }
+    runImmediate(action);
+    resolve();
   });
 
 export { trigger };

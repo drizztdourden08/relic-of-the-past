@@ -11,7 +11,7 @@ const devicesRevoke: Route = {
   handler: async ({ req, res, params }) => {
     const { userId } = await requireSession(req);
     const device = await devicesRepo.get(routeParam(params, 'id'));
-    if (!device || device.userId !== userId) throw notFound('No such device.');
+    if (device?.userId !== userId) throw notFound('No such device.');
     if (!device.revokedAt) await devicesRepo.revoke(device.id);
     res.status(200).json({ ok: true });
   },

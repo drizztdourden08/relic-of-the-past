@@ -1,71 +1,37 @@
 /* @layer bridge-wasm @kind logic */
 import type { GameUIState } from '@rotp/game-data';
-import { INVENTORY_BOTTLE_SLOTS, INVENTORY_ITEM_SLOTS, INVENTORY_ORDER_SLOTS } from './ui-bridge-diff.constants';
+import {
+  COUNTDOWN_FIELDS, DUNGEON_PROGRESS_FIELDS, EQUIPMENT_FIELDS, FLOOR_INDICATOR_FIELDS, GAME_MODE_FIELDS, HOST_MENU_FIELDS,
+  HUD_FIELDS, INVENTORY_BOTTLE_SLOTS, INVENTORY_ITEM_SLOTS, INVENTORY_ORDER_SLOTS, MAP_FIELDS, SAVE_MENU_FIELDS,
+  TEXT_FIELDS,
+} from './ui-bridge-diff.constants';
 
-const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
-  if (a.mode !== b.mode) return true;
-  if (a.gameMode.mainModule !== b.gameMode.mainModule) return true;
-  if (a.gameMode.subModule !== b.gameMode.subModule) return true;
-  if (a.gameMode.subSubModule !== b.gameMode.subSubModule) return true;
+const fieldsDiffer = <T>(a: T, b: T, fields: readonly (keyof T)[]): boolean =>
+  fields.some((field) => a[field] !== b[field]);
 
-  const ah = a.hud, bh = b.hud;
-  if (ah.healthCurrent !== bh.healthCurrent || ah.healthCapacity !== bh.healthCapacity) return true;
-  if (ah.magicPower !== bh.magicPower || ah.halfMagic !== bh.halfMagic) return true;
-  if (ah.rupees !== bh.rupees || ah.rupeeTarget !== bh.rupeeTarget) return true;
-  if (ah.bombs !== bh.bombs || ah.arrows !== bh.arrows || ah.keys !== bh.keys) return true;
-  if (ah.equippedY !== bh.equippedY || ah.equippedX !== bh.equippedX) return true;
-  if (ah.equippedL !== bh.equippedL || ah.equippedR !== bh.equippedR) return true;
-  if (ah.heartsFiller !== bh.heartsFiller || ah.magicFiller !== bh.magicFiller) return true;
-  if (ah.bombFiller !== bh.bombFiller || ah.arrowFiller !== bh.arrowFiller) return true;
-  if (ah.maxRupees !== bh.maxRupees || ah.maxBombs !== bh.maxBombs || ah.maxArrows !== bh.maxArrows) return true;
+const slotsDiffer = (a: readonly unknown[], b: readonly unknown[], count: number): boolean =>
+  Array.from({ length: count }, (_slot, i) => i).some((i) => a[i] !== b[i]);
 
-  const ae = a.equipment, be = b.equipment;
-  if (ae.sword !== be.sword || ae.shield !== be.shield || ae.armor !== be.armor) return true;
-  if (ae.gloves !== be.gloves || ae.boots !== be.boots) return true;
-  if (ae.flippers !== be.flippers || ae.moonPearl !== be.moonPearl) return true;
-  if (ae.heartPieces !== be.heartPieces || ae.abilityFlags !== be.abilityFlags) return true;
+const inventoryChanged = (a: GameUIState, b: GameUIState): boolean =>
+  slotsDiffer(a.inventory.items, b.inventory.items, INVENTORY_ITEM_SLOTS)
+  || slotsDiffer(a.inventory.bottles, b.inventory.bottles, INVENTORY_BOTTLE_SLOTS)
+  || slotsDiffer(a.inventory.order, b.inventory.order, INVENTORY_ORDER_SLOTS);
 
-  const ad = a.dungeonProgress, bd = b.dungeonProgress;
-  if (ad.pendants !== bd.pendants || ad.crystals !== bd.crystals) return true;
-  if (ad.maps !== bd.maps || ad.compasses !== bd.compasses || ad.bigKeys !== bd.bigKeys) return true;
+const playerChanged = (a: GameUIState, b: GameUIState): boolean =>
+  a.mode !== b.mode
+  || fieldsDiffer(a.gameMode, b.gameMode, GAME_MODE_FIELDS)
+  || fieldsDiffer(a.hud, b.hud, HUD_FIELDS)
+  || fieldsDiffer(a.equipment, b.equipment, EQUIPMENT_FIELDS)
+  || fieldsDiffer(a.dungeonProgress, b.dungeonProgress, DUNGEON_PROGRESS_FIELDS);
 
-  const at = a.text, bt = b.text;
-  if (at.messageId !== bt.messageId || at.isActive !== bt.isActive) return true;
-  if (at.renderPhase !== bt.renderPhase || at.choice !== bt.choice) return true;
-  if (at.waitTimer !== bt.waitTimer || at.incrementalState !== bt.incrementalState) return true;
-
-  const am = a.map, bm = b.map;
-  if (am.overworldMapState !== bm.overworldMapState || am.dungeonFloor !== bm.dungeonFloor) return true;
-  if (am.dungeonIdx !== bm.dungeonIdx || am.roomIndex !== bm.roomIndex) return true;
-  if (am.currentFloor !== bm.currentFloor || am.dungeonInitState !== bm.dungeonInitState) return true;
-  if (am.overworldScreenIndex !== bm.overworldScreenIndex || am.isIndoors !== bm.isIndoors) return true;
-  if (am.isDarkWorld !== bm.isDarkWorld || am.overworldAreaIndex !== bm.overworldAreaIndex) return true;
-  if (am.whichEntrance !== bm.whichEntrance || am.linkLayer !== bm.linkLayer) return true;
-  if (am.linkX !== bm.linkX || am.linkY !== bm.linkY) return true;
-
-  const af = a.floorIndicator, bf = b.floorIndicator;
-  if (af.timer !== bf.timer || af.isVisible !== bf.isVisible) return true;
-
-  const ac = a.countdown, bc = b.countdown;
-  if (ac.seconds !== bc.seconds || ac.frames !== bc.frames) return true;
-
-  const as_ = a.saveMenu, bs = b.saveMenu;
-  if (as_.cursorPosition !== bs.cursorPosition || as_.sourceModule !== bs.sourceModule) return true;
-
-  const ahm = a.hostMenu, bhm = b.hostMenu;
-  if (ahm.holding !== bhm.holding || ahm.activeItem !== bhm.activeItem) return true;
-
-  for (let i = 0; i < INVENTORY_ITEM_SLOTS; i++) {
-    if (a.inventory.items[i] !== b.inventory.items[i]) return true;
-  }
-  for (let i = 0; i < INVENTORY_BOTTLE_SLOTS; i++) {
-    if (a.inventory.bottles[i] !== b.inventory.bottles[i]) return true;
-  }
-  for (let i = 0; i < INVENTORY_ORDER_SLOTS; i++) {
-    if (a.inventory.order[i] !== b.inventory.order[i]) return true;
-  }
-
-  return false;
-};
+const stateChanged = (a: GameUIState, b: GameUIState): boolean =>
+  playerChanged(a, b)
+  || fieldsDiffer(a.text, b.text, TEXT_FIELDS)
+  || fieldsDiffer(a.map, b.map, MAP_FIELDS)
+  || fieldsDiffer(a.floorIndicator, b.floorIndicator, FLOOR_INDICATOR_FIELDS)
+  || fieldsDiffer(a.countdown, b.countdown, COUNTDOWN_FIELDS)
+  || fieldsDiffer(a.saveMenu, b.saveMenu, SAVE_MENU_FIELDS)
+  || fieldsDiffer(a.hostMenu, b.hostMenu, HOST_MENU_FIELDS)
+  || inventoryChanged(a, b);
 
 export { stateChanged };

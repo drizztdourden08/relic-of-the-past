@@ -54,5 +54,5 @@ export { CURVE_PRESETS } from './curves/curve-presets.constants';
 export { presetMatching } from './curves/preset-matching';
 export type {
   CapacityFamilyId, CapacityMode, CapacityPoolCounts, CapacityProfile, CurveId, CurveShape,
-  CustomFamilySetting, FamilyPlan, FamilySetting, WalletSetting,
+  FamilyPlan, FamilySetting, PlannedFamilySetting, WalletSetting,
 } from './capacity-profile.type';

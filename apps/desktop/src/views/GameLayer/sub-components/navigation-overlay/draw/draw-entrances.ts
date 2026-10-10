@@ -2,19 +2,20 @@
 import type { ScreenCrossing, ScreenCrossings } from '@rotp/game-core';
 import { markerCrossings, crossingIcon } from '@rotp/navigation';
 import type { DrawContext } from './draw.type';
-import { EDGE_COLORS } from '../navigation-overlay.constants';
+import { ENTRANCE_COLOR } from '../navigation-overlay.constants';
 
 const iconImageCache = new Map<string, HTMLImageElement>();
 
 const getIconImageFor = (crossing: ScreenCrossing): HTMLImageElement | null => {
   const { icon, color } = crossingIcon(crossing);
   const key = `${icon.body.slice(0, 30)}_${color}`;
-  if (iconImageCache.has(key)) return iconImageCache.get(key)!;
+  const cached = iconImageCache.get(key);
+  if (cached) return cached;
   const w = icon.width ?? 512;
   const h = icon.height ?? 512;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${icon.body.replace(/currentColor/g, color)}</svg>`;
   const img = new Image();
-  img.src = 'data:image/svg+xml;base64,' + btoa(svg);
+  img.src = `data:image/svg+xml;base64,${btoa(svg)}`;
   iconImageCache.set(key, img);
   return img;
 };
@@ -23,7 +24,7 @@ const drawEntrances = (dc: DrawContext, crossings: readonly ScreenCrossings[], i
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.95;
-  ctx.fillStyle = EDGE_COLORS.entrance;
+  ctx.fillStyle = ENTRANCE_COLOR;
   for (const screen of crossings) {
     const origin = getScreenWorldOrigin(screen.screenIndex);
     for (const crossing of markerCrossings(screen, isIndoors)) {

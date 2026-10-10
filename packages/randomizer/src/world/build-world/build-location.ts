@@ -3,7 +3,7 @@ import {
   CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS,
 } from '../scope-tables';
 import { POND_LOCATION_SET } from '../pond/pond-rungs';
-import type { CheckId, ItemId, RegionId } from '@rotp/game-data';
+import type { ItemId, RegionId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
 import type { WorldLocation } from '../region.type';
 

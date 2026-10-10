@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Button, Icon } from '@drizztdourden08/tessera/primitives';
 import type { PrereqCardsProps } from './PrereqCards.type';
 
 const PrereqCards = (props: PrereqCardsProps) => {
@@ -10,7 +10,7 @@ const PrereqCards = (props: PrereqCardsProps) => {
       {hasGyro && (
         <Box className={`hid-cal__prereq-card${gyroState === 'done' ? ' hid-cal__prereq-card--done' : ''}`}>
           <Box className="hid-cal__prereq-title">
-            <Text>{gyroState === 'done' ? '✓' : '1.'} Gyro Profiling</Text>
+            <Text>{gyroState === 'done' ? <Icon name="check" /> : '1.'} Gyro Profiling</Text>
             {gyroState === 'done' && <Text className="hid-cal__prereq-badge">{gyroExcluded.size} excluded</Text>}
           </Box>
           <Text as="p" className="hid-cal__desc">
@@ -37,7 +37,7 @@ const PrereqCards = (props: PrereqCardsProps) => {
 
       <Box className={`hid-cal__prereq-card${idleState === 'done' ? ' hid-cal__prereq-card--done' : ''}`}>
         <Box className="hid-cal__prereq-title">
-          <Text>{idleState === 'done' ? '✓' : '2.'} Idle Baseline</Text>
+          <Text>{idleState === 'done' ? <Icon name="check" /> : '2.'} Idle Baseline</Text>
         </Box>
         <Text as="p" className="hid-cal__desc">
           {idleState === 'idle' && "Set controller down, don't touch it, then capture."}

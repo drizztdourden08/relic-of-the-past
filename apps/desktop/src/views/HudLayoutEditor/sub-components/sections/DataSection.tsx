@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { resolveValue } from '@rotp/hud';
 import { Box, EmptyState, Field, Flex, Text } from '@drizztdourden08/tessera/primitives';
-import { collectBoundValues } from '../../behavior/bound-values';
+import { collectBoundValues } from '@app/hud-layout-editing/bound-values';
 import type { DataSectionProps } from './DataSection.type';
 
 const round = (n: number): number => Math.round(n * 1000) / 1000;

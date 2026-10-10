@@ -5,6 +5,7 @@ export { sortExitsByDistance } from './sort-exits-by-distance';
 export { decodeScore } from './decode-score';
 export { entryFromEdge } from './entry-from-edge';
 export { exitFromEdge } from './exit-from-edge';
+export { alongEdge } from './along-edge';
 export { reachedGrid } from './reached-grid';
 export { AREA_EXIT_BIAS } from './exit-order.constants';
 export type { EdgeName } from './exit-order.type';

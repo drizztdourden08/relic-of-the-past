@@ -7,8 +7,8 @@ import { writeFile, mkdir } from 'fs/promises';
 
 const parseDumpNavSlot = (): number | string | null => {
   for (const arg of process.argv) {
-    const match = arg.match(/^--dump-nav=(.+)$/);
-    if (match) return /^\d+$/.test(match[1]) ? parseInt(match[1], 10) : match[1];
+    const value = /^--dump-nav=(.+)$/.exec(arg)?.[1];
+    if (value !== undefined) return /^\d+$/.test(value) ? parseInt(value, 10) : value;
   }
   return null;
 };

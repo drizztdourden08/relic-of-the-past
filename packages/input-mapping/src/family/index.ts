@@ -24,11 +24,11 @@ export { DEFAULT_TRIGGER_PRESS_THRESHOLD } from './live-control-state.constants'
 export type { LiveControlState } from './live-control-state.type';
 export { resolveStickDirectionIcon } from './stick-direction-icon';
 export { STICK_DIRECTION_DEADZONE } from './stick-direction-icon.constants';
-export { GAMECUBE_FAMILY } from './gamecube.family';
-export { GENERIC_FAMILY } from './generic.family';
-export { NINTENDO_FAMILY } from './nintendo.family';
-export { PLAYSTATION_FAMILY } from './playstation.family';
-export { XBOX_FAMILY } from './xbox.family';
+export { GAMECUBE_FAMILY } from './gamecube-family';
+export { GENERIC_FAMILY } from './generic-family';
+export { NINTENDO_FAMILY } from './nintendo-family';
+export { PLAYSTATION_FAMILY } from './playstation-family';
+export { XBOX_FAMILY } from './xbox-family';
 export type {
   AxisConsoleDefault,
   ConsoleButton,

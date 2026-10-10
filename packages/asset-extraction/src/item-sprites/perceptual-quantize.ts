@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../checked-read';
 import { toOklab } from '../graphics/oklab';
 import { SLOT_SIDE } from './fixed-row-tiles';
 import { colorKey, matchTones } from './perceptual-match';
@@ -35,7 +36,7 @@ const quantizeIconPerceptual = (picture: ImageBuffer, row: readonly RGBA[]): Qua
     const index = pixel[3] === 0 ? 0 : map.get(colorKey(pixel)) ?? 0;
     indices[i] = index;
     if (index === 0) continue;
-    error += squaredDistance(pixel, row[index]);
+    error += squaredDistance(pixel, itemAt(row, index, 'Icon palette colour'));
     opaque += 1;
   }
   return { indices, error: opaque === 0 ? 0 : error / opaque };

@@ -4,7 +4,7 @@ import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { isPrimaryModifier } from '@rotp/input-mapping';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import { cellKey, rectCells } from '../../GridLattice';
-import { nextIndexRun } from '../../../behavior/index-selection';
+import { nextIndexRun } from '@app/hud-layout-editing/index-selection';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { CellRef, GridSelection, TrackAxis } from '../GridEditor.type';
 

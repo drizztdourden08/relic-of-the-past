@@ -115,7 +115,7 @@ describe('the drag cannot come back unnoticed', () => {
     expect(src).not.toMatch(/onPointer(Move|Up|Cancel)/);
     expect(src).not.toContain('setPointerCapture');
     expect(src).not.toContain('useDragGesture');
-    expect(src).not.toMatch(/from '\.\.\/behavior\/offset'/);
+    expect(src).not.toMatch(/from '@app\/hud-layout-editing\/offset'/);
   });
 
   it('gives the stage no write prop to aim a drag at', () => {

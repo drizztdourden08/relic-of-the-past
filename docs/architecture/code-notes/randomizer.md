@@ -734,7 +734,7 @@ The capacity profile: how each counter family with a ceiling is reshaped for a s
 
 `FamilyPlan` is derived and never stored: `jumps` (empty for vanilla, the reference jumps, or generated or free), `ladder` (cumulative values for the preview: start, then one per jump), `items` (one pool item per jump; its length is the In Pool number), `spotIsCheck` (false only for vanilla or a family without a spot), and `progressive` (Custom under the progressive option: every item is the family's one progressive name, jumps taken in order). In `CapacityPoolCounts`, `poolDelta` is the sum of the per-family counts minus the spots that are checks: filler removed when positive, added when negative, to keep the fill one to one. `ParsedCapacityProfile.notes` has one line per fallback applied.
 
-`CustomFamilySetting` is flagged by the gate's qualifier-prefix rule, but the app imports it by that name, so it stays.
+`PlannedFamilySetting` is the setting of a family in Custom mode: a start, a final value, a count and a curve.
 
 ### world/capacity/capacity-ladders.constants
 

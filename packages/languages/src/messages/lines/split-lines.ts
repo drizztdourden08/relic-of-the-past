@@ -25,7 +25,7 @@ const splitDrafts = (tokens: Token[]): LineDraft[] => {
       continue;
     }
 
-    if (open === null) open = emptyDraft(null);
+    open ??= emptyDraft(null);
 
     if (isWaitToken(token)) {
       open.endsBox = true;

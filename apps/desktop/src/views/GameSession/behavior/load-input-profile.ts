@@ -11,9 +11,10 @@ const loadInputProfile = async (profileId: string, settings: GameSettings) => {
   try {
     const rawProfiles = await readInputProfiles(profileId);
     const inputProfiles: InputProfile[] = migrateProfilesLoudly(rawProfiles);
-    if (inputProfiles.length > 0) {
+    const [firstProfile] = inputProfiles;
+    if (firstProfile) {
       const activeId = settings.activeInputProfileId;
-      const active = inputProfiles.find(p => p.id === activeId) ?? inputProfiles[0];
+      const active = inputProfiles.find(p => p.id === activeId) ?? firstProfile;
       const mgr = getInputManager();
       mgr.setProfiles(inputProfiles);
       mgr.setActiveProfilePersist((id) => { void updateActiveInputProfileId(profileId, id); });

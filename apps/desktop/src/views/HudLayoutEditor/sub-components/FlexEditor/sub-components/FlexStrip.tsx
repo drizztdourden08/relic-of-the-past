@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { weightsOf } from '../behavior/weights-of';
-import './HudLayoutEditor.flex.css';
+import './FlexStrip.css';
 import type { CSSProperties } from 'react';
 import type { FlexStripProps } from './FlexStrip.type';
 

@@ -1,6 +1,5 @@
 /* @layer shared-game @kind data */
 import type { InventorySlot } from '../types/inventory';
-import type { ItemId } from '../types';
 
 const COMPACT_LAYOUT: InventorySlot[] = [
   { displayName: 'Fighter', trackerItemIds: ['item-074'], sprite: 'hud-fighter-sword' },

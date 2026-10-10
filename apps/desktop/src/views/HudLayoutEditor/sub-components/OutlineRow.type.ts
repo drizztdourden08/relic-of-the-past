@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
-import type { DropZone } from '../behavior/drop-intent';
+import type { DropZone } from '@app/hud-layout-editing/drop-intent';
 
 interface OutlineRowProps {
   id: string;

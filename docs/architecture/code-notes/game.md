@@ -460,7 +460,7 @@ The plain language control code catalog: the layer that turns a bracketed engine
   at all.
 - `StructuralEntry` names a dialogue entry a translator must never edit.
 
-### language/codes/code-catalog.data.ts
+### language/codes/code-catalog-entries.constants.ts
 
 One entry per control code the game's languages can emit, checked against the decompiled engine.
 It covers every name in every language's `commandNames`

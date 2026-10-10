@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { createRng } from '../../rng';
 import { buildFillWorld } from '../../world/fill/fill-world';
 import { fillOptionsFromSnapshot } from '../../world/fill/fill-options-from-snapshot';
@@ -14,9 +15,9 @@ const profileFillWorld = (
   const pondDemands = pondDemandsOfSnapshot(snapshot, seed, deliverable);
   const rng = createRng(seed);
   const fillOptions = fillOptionsFromSnapshot(snapshot, deliverable, {
-    pickBottle: (choices) => choices[rng.int(choices.length)],
+    pickBottle: (choices) => itemAt(choices, rng.int(choices.length)),
     pickFiller: (count) => rng.int(count),
-    pickWeapon: (choices) => choices[rng.int(choices.length)],
+    pickWeapon: (choices) => itemAt(choices, rng.int(choices.length)),
   }, seed);
   const shopPrices = rollPrices({ values: snapshot.values, options: fillOptions, rng });
   return buildFillWorld({ ...fillOptions, shopPrices, pondDemands });

@@ -1,0 +1,104 @@
+/* @layer renderer-widgets @kind style */
+
+.nav-screen-panel__summary {
+  display: flex;
+  gap: var(--size-8);
+  font-size: calc(var(--size-1) * 11);
+  margin-top: var(--size-2);
+}
+
+.nav-screen-panel__done-count {
+  color: var(--c-secondary-bright);
+}
+
+.nav-screen-panel__avail-count {
+  color: var(--c-info);
+}
+
+.nav-screen-panel__blocked-count {
+  color: var(--c-danger);
+}
+
+.nav-screen-panel__tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4);
+  margin-top: var(--size-2);
+}
+
+.nav-screen-panel__tag {
+  font-size: var(--size-10);
+  padding: var(--size-1) calc(var(--size-1) * 5);
+  border-radius: var(--radius-sm);
+  background: var(--c-hover);
+  border: var(--size-1) solid var(--c-border);
+  color: var(--c-text-muted);
+}
+
+.nav-screen-panel__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+  margin-top: var(--size-4);
+}
+
+.nav-screen-panel__group-title {
+  font-size: var(--size-10);
+  color: var(--c-text-muted);
+  letter-spacing: calc(var(--size-1) * 0.5);
+}
+
+.nav-screen-panel__glyph {
+  width: var(--size-12);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.nav-screen-panel__detail {
+  color: var(--c-text-muted);
+  font-size: var(--size-10);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.nav-screen-panel__row {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--size-1) * 5);
+  font-size: calc(var(--size-1) * 11);
+  cursor: pointer;
+}
+
+.nav-screen-panel__row--off {
+  opacity: 0.4;
+}
+
+.nav-screen-panel__glyph--settled {
+  opacity: 0.5;
+}
+
+.nav-screen-panel__label {
+  color: var(--c-text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-screen-panel__label--settled {
+  color: var(--c-text-muted);
+  text-decoration: line-through;
+}
+
+.nav-screen-panel__state {
+  font-size: var(--size-10);
+  color: var(--c-warning);
+  flex-shrink: 0;
+}
+
+.nav-screen-panel__state--settled {
+  color: var(--c-text-muted);
+}
+
+.nav-screen-panel__state--blocked {
+  color: var(--c-danger);
+}

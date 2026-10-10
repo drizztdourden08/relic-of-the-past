@@ -1,17 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { readU8, callWhenRunning } from './wasm-call';
 import type { PlayerStateInfo } from './player-state.type';
-
-const enum Byte {
-  handlerState = 0,
-  sleepStep = 1,
-  isRunning = 2,
-  isBunny = 3,
-  inDeepWater = 4,
-  grabbingWall = 5,
-  progressFlags = 6,
-  incapacitated = 7,
-}
+import { PLAYER_STATE_BYTE as Byte } from './player-state.constants';
 
 const wasmGetPlayerStateInfo = (): PlayerStateInfo | null =>
   callWhenRunning<PlayerStateInfo | null>(null, (mod) => {

@@ -4,8 +4,7 @@ import type { CheckGameId } from '@rotp/game-data';
 const thresholdMet = (val: number, compare: 'gte' | 'eq' | 'any-of', value: number | number[] | undefined): boolean => {
   if (compare === 'gte') return val >= (value as number);
   if (compare === 'eq') return val === (value as number);
-  if (compare === 'any-of') return (value as number[]).includes(val);
-  return false;
+  return (value as number[]).includes(val);
 };
 
 const isProgressFactMet = (gameId: CheckGameId, readProgByte: (bufferIndex: number) => number): boolean => {

@@ -7,9 +7,9 @@ import {
 
 const vertexHitOf = (lx: number, ly: number, ctx: GizmoContext): GizmoHit | null => {
   if (!ctx.vertices) return null;
-  for (let i = 0; i < ctx.vertices.length; i++) {
-    const vx = ctx.vertices[i].x;
-    const vy = ctx.vertices[i].y;
+  for (const [i, vertex] of ctx.vertices.entries()) {
+    const vx = vertex.x;
+    const vy = vertex.y;
     if ((lx - vx) ** 2 + (ly - vy) ** 2 < (VERTEX_RADIUS + 2) ** 2) {
       return { part: `vertex-${i}`, cursor: 'crosshair' };
     }

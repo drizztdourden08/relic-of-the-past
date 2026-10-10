@@ -3,7 +3,6 @@ import type { LocationKey } from '../world/location-key';
 import { getCheck } from '@rotp/game-data';
 import { pondPlanOf } from '../world/pond/pond-plan';
 import { WISH_POND_WATERS } from './wish-pond-rung-keys.constants';
-import type { CheckId } from '@rotp/game-data';
 import type { Placement } from '../world/fill/placement.type';
 import type { PondInstance } from '../world/pond/pond-instance.type';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';

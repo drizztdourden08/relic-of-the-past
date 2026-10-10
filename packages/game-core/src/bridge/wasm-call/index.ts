@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind barrel */
 export { readU8 } from './read-u8';
+export { readU8OrZero } from './read-u8-or-zero';
 export { readU16 } from './read-u16';
 export { callWhenRunning } from './call-when-running';
 export { decodeCountPrefixed } from './decode-count-prefixed';

@@ -8,10 +8,14 @@ const isLinkDown = (): boolean => {
   return state !== null && state.heap[state.ptr] === MODULE_GAME_OVER;
 };
 
+const hasKillExport = (mod: object): boolean => {
+  const exported: unknown = Reflect.get(mod, `_${KILL_EXPORT}`);
+  return typeof exported === 'function';
+};
+
 const killLinkInCore = (): KillOutcome => {
   const mod = getModule();
-  const exports = mod as unknown as Record<string, unknown> | null;
-  if (!mod || typeof exports?.[`_${KILL_EXPORT}`] !== 'function') return 'unsupported';
+  if (!mod || !hasKillExport(mod)) return 'unsupported';
   if (isLinkDown()) return 'down';
   try {
     mod.ccall(KILL_EXPORT, null, [], []);

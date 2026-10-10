@@ -27,7 +27,7 @@ const formatPattern = (p: Pattern): string => {
       } else {
         s += ' --';
       }
-      r += s + '\n';
+      r += `${s}\n`;
     }
   }
   return r;
@@ -36,7 +36,7 @@ const formatPattern = (p: Pattern): string => {
 const formatPhrase = (p: Phrase): string => {
   let s = `[Phrase_0x${p.ea.toString(16)}]\n`;
   for (const pat of p.patterns) {
-    s += (pat ? pat.name : 'None') + '\n';
+    s += `${pat ? pat.name : 'None'}\n`;
   }
   return s;
 };
@@ -45,7 +45,7 @@ const formatSong = (s: Song): string => {
   let r = `# Song index ${s.index}\n`;
   r += `[Song_0x${s.ea.toString(16)}]\n`;
   for (const phrase of s.phrases) {
-    r += phrase.name + '\n';
+    r += `${phrase.name}\n`;
   }
   return r;
 };
@@ -53,17 +53,17 @@ const formatSong = (s: Song): string => {
 const formatSongList = (sl: SongList): string => {
   let s = `[SongList_0x${sl.ea.toString(16)}]\n`;
   for (const song of sl.songs) {
-    s += (song ? song.name : 'None') + '\n';
+    s += `${song ? song.name : 'None'}\n`;
   }
   return s;
 };
 
 const formatEntity = (e: MusicEntity): string => {
   switch (e.type) {
-    case 'Song': return formatSong(e as Song);
-    case 'SongList': return formatSongList(e as SongList);
-    case 'Phrase': return formatPhrase(e as Phrase);
-    case 'Pattern': return formatPattern(e as Pattern);
+    case 'Song': return formatSong(e);
+    case 'SongList': return formatSongList(e);
+    case 'Phrase': return formatPhrase(e);
+    case 'Pattern': return formatPattern(e);
   }
 };
 

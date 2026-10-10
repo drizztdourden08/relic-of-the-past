@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '@rotp/navigation';
 import { roomTagName } from '@rotp/navigation';
-import { groupAnnotations } from '@app/views/NavigationWidget/sub-components/ScreenPanel/annotation-rows';
+import { groupAnnotations } from '@app/views/NavigationWidget/sub-components/ScreenPanel/behavior/annotation-rows';
 import { describeDataset } from '../dataset-guard';
 
 const at = (kind: ScreenAnnotation['kind'], label: string, extra: Partial<ScreenAnnotation> = {}): ScreenAnnotation =>
@@ -34,8 +34,8 @@ describeDataset('room tag names', () => {
   });
 
   it('labels the known door/water/hole mechanics', () => {
-    expect(roomTagName(0x14)).toBe('trigger → block door');
-    expect(roomTagName(0x26)).toBe('kill room → block');
+    expect(roomTagName(0x14)).toBe('trigger -> block door');
+    expect(roomTagName(0x26)).toBe('kill room -> block');
   });
 
   it('falls back to hex instead of claiming to know an unmapped tag', () => {

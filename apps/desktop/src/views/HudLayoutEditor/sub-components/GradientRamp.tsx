@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { Box, Field, Flex, IconButton, NumberInput, Pressable } from '@drizztdourden08/tessera/primitives';
 import { ColorField } from './ColorField';
-import { swatchOf } from '../behavior/appearance-summary';
+import { swatchOf } from '@app/hud-layout-editing/appearance-summary';
 import './HudLayoutEditor.appearance.css';
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
 import type { GradientStop } from '@rotp/hud';
@@ -25,6 +25,7 @@ const GradientRamp = (props: GradientRampProps) => {
   };
 
   const setStop = (patch: Partial<GradientStop>): void => {
+    if (!stop) return;
     const moved = { ...stop, ...patch };
     commit(stops.map((s, i) => (i === index ? moved : s)), moved);
   };
@@ -44,8 +45,9 @@ const GradientRamp = (props: GradientRampProps) => {
     const target = event.currentTarget;
     target.setPointerCapture(event.pointerId);
     const move = (e: PointerEvent): void => {
-      const at = atFromEvent(e.clientX);
-      const moved = { ...stops[i], at };
+      const dragged = stops[i];
+      if (!dragged) return;
+      const moved = { ...dragged, at: atFromEvent(e.clientX) };
       commit(stops.map((s, n) => (n === i ? moved : s)), moved);
     };
     const up = (): void => {
@@ -59,7 +61,7 @@ const GradientRamp = (props: GradientRampProps) => {
   const nudge = (event: ReactKeyboardEvent<HTMLButtonElement>): void => {
     const step = event.shiftKey ? 0.1 : 0.01;
     const delta = event.key === 'ArrowRight' ? step : event.key === 'ArrowLeft' ? -step : 0;
-    if (delta === 0) return;
+    if (delta === 0 || !stop) return;
     event.preventDefault();
     setStop({ at: round2(clamp01(stop.at + delta)) });
   };
@@ -89,7 +91,7 @@ const GradientRamp = (props: GradientRampProps) => {
         <IconButton variant="ghost" size="sm" label="Add a stop" onClick={() => addStop(0.5)}>+</IconButton>
         <IconButton
           variant="ghost" size="sm" label={`Remove stop ${index + 1}`} disabled={stops.length <= 2}
-          onClick={() => { const kept = stops.filter((_unused, i) => i !== index); commit(kept, kept[0]); }}
+          onClick={() => { const kept = stops.filter((_unused, i) => i !== index); const [first] = kept; if (first) commit(kept, first); }}
         >✕</IconButton>
       </Flex>
 

@@ -1,4 +1,5 @@
 /* @layer shared-game @kind constants */
+import { entryOf } from '../../../checked-access';
 import { CANONICAL_SLOTS } from '../shop-slot-facts';
 import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '../shop-slots';
 import { SHOP_SHUFFLE_MODES } from '../shop-scope';
@@ -28,7 +29,7 @@ const SHOP_MODE_SEED: OptionSeed = {
   group: 'shops',
   kind: 'choice',
   implementation: 'active',
-  choices: SHOP_SHUFFLE_MODES.map((mode) => ({ value: mode, sourceValue: mode, label: SHOP_MODE_LABELS[mode] })),
+  choices: SHOP_SHUFFLE_MODES.map((mode) => ({ value: mode, sourceValue: mode, label: entryOf(SHOP_MODE_LABELS, mode) })),
   sourceDefault: DEFAULT_SHOP_SHUFFLE_MODE,
   baseline: DEFAULT_SHOP_SHUFFLE_MODE,
   locked: false,

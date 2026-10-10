@@ -1,9 +1,11 @@
 /* @layer shared-storage @kind logic */
 import type { FileStore } from '@drizztdourden08/brock-core';
 import type { NormalSaveInfo } from '../../save-types';
+import type { SavePayload } from '../saves.type';
 import { normalSaves } from './normal-saves';
 
-const overwriteNormalSave = async (files: FileStore, p: string, id: string, data: Uint8Array, screenshot?: Uint8Array): Promise<NormalSaveInfo | null> => {
+const overwriteNormalSave = async (files: FileStore, p: string, id: string, payload: SavePayload): Promise<NormalSaveInfo | null> => {
+  const { data, screenshot } = payload;
   const s = normalSaves(files, p);
   const manifest = await s.readManifest();
   const entry = manifest.find((e) => e.id === id);

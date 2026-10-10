@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../checked-read';
 import { chromaOf, toOklab } from '../graphics/oklab';
 import { snesToRgba } from '../graphics/palette';
 import { NEUTRAL_CHROMA } from './perceptual-match';
@@ -32,7 +33,8 @@ const poolTones = (pictures: readonly ImageBuffer[]): PoolTone[] => {
       opaque += 1;
     }
     for (const [key, count] of counts) {
-      const tone = tones.get(key)!;
+      const tone = tones.get(key);
+      if (!tone) continue;
       tone.count += count;
       tone.pictures += 1;
       tone.share = Math.max(tone.share, count / opaque);
@@ -50,7 +52,7 @@ const fixedEntries = (tones: readonly PoolTone[], pictureCount: number): RGBA[] 
 };
 
 const nearest = (lab: Oklab, pool: readonly Oklab[]): number =>
-  pool.reduce((best, entry, at) => (distance(lab, entry) < distance(lab, pool[best]) ? at : best), 0);
+  pool.reduce((best, entry, at) => (distance(lab, entry) < distance(lab, itemAt(pool, best, 'Foreign icon palette pool')) ? at : best), 0);
 
 const medoidOf = (members: readonly PoolTone[]): PoolTone =>
   members.reduce((best, tone) => {
@@ -62,7 +64,7 @@ const farthestFirstSeeds = (hues: readonly PoolTone[], fixed: readonly Oklab[], 
   const medoids: PoolTone[] = [];
   while (medoids.length < count) {
     const pool = [...fixed, ...medoids.map((m) => m.lab)];
-    const cost = (t: PoolTone): number => (pool.length === 0 ? t.count : t.count * distance(t.lab, pool[nearest(t.lab, pool)]) ** 2);
+    const cost = (t: PoolTone): number => (pool.length === 0 ? t.count : t.count * distance(t.lab, itemAt(pool, nearest(t.lab, pool), 'Foreign icon palette pool')) ** 2);
     medoids.push(hues.filter((t) => !medoids.includes(t)).reduce((a, b) => (cost(b) > cost(a) ? b : a)));
   }
   return medoids;

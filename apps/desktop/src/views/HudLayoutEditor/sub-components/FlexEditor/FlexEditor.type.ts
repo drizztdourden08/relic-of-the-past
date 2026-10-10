@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { EditorAction, EditorShortcut } from '../SelectionBands';
-import type { IndexRun } from '../../behavior/index-selection';
-import type { DropIntent } from '../../behavior/drop-intent';
+import type { IndexRun } from '@app/hud-layout-editing/index-selection';
+import type { DropIntent } from '@app/hud-layout-editing/drop-intent';
 import type { HudFlexContainer } from '@rotp/hud';
 
 type FlexSelection = { kind: 'none' } | ({ kind: 'items' } & IndexRun);

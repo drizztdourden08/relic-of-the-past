@@ -12,8 +12,8 @@ const renderBgScreen = (src: TitleSource, mapBase: number, charBase: number): Im
     for (let tx = 0; tx < SCREEN_TILES; tx += 1) {
       const entry = src.vram[mapBase + ty * SCREEN_TILES + tx] ?? 0;
       const addr = charBase + (entry & CHAR_INDEX_MASK) * TILE_4BPP_WORDS;
-      drawTile(img, src, addr, (entry >> PALETTE_SHIFT) & PALETTE_MASK, {
-        x: tx * 8, y: ty * 8, flipX: (entry & FLIP_X_BIT) !== 0, flipY: (entry & FLIP_Y_BIT) !== 0,
+      drawTile(img, src, {
+        addr, row: (entry >> PALETTE_SHIFT) & PALETTE_MASK, x: tx * 8, y: ty * 8, flipX: (entry & FLIP_X_BIT) !== 0, flipY: (entry & FLIP_Y_BIT) !== 0,
       });
     }
   }

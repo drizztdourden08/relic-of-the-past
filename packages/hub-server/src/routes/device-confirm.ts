@@ -13,7 +13,7 @@ const deviceConfirm: Route = {
     const { userId } = await requireSession(req);
     const { userCode } = parseBody(deviceConfirmSchema, req.body);
     const device = await devicesRepo.byUserCode(userCode);
-    if (!device || !device.code || device.code.expiresAt < now()) throw notFound('That code is not waiting. Start again in the app.');
+    if (!device?.code || device.code.expiresAt < now()) throw notFound('That code is not waiting. Start again in the app.');
     await devicesRepo.confirm(device.id, userId, device.label);
     res.status(200).json({ device: { id: device.id, label: device.label, platform: device.platform } });
   },

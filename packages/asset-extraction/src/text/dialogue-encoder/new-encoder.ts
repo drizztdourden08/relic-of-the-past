@@ -1,21 +1,20 @@
 /* @layer shared-asset-extraction @kind logic */
-import type { CommandParamMap } from './dialogue-encoder.type';
 import { kCmdInfo } from './cmd-info';
 
 const newEncoder = (cmd: string, param: number | null): number[] => {
   const info = kCmdInfo[cmd];
   if (!info) throw new Error(`Invalid cmd: ${cmd}`);
-  if (info.length <= 1 || typeof info[1] === 'number') {
+  const [code, params] = info;
+  if (params === undefined || typeof params === 'number') {
     if (param !== null) throw new Error(`Invalid cmd params: ${cmd} ${param}`);
-    return [...info] as number[];
-  } else {
-    if (param === null || !info[1] || !(param in (info[1] as CommandParamMap))) {
-      throw new Error(`Invalid cmd params: ${cmd} ${param}`);
-    }
-    const r = (info[1] as CommandParamMap)[param];
-    if (r === undefined) throw new Error(`Invalid cmd params: ${cmd} ${param}`);
-    return r !== null ? [info[0], r] : [];
+    return params === undefined ? [code] : [code, params];
   }
+  if (param === null || !(param in params)) {
+    throw new Error(`Invalid cmd params: ${cmd} ${param}`);
+  }
+  const r = params[param];
+  if (r === undefined) throw new Error(`Invalid cmd params: ${cmd} ${param}`);
+  return r !== null ? [code, r] : [];
 };
 
 export { newEncoder };

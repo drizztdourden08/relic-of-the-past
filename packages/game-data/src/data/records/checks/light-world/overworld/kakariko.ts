@@ -2,7 +2,6 @@
 
 import type { CheckRecord } from '../../../../types';
 import { ITEM_GROUP_IDS } from '../../../../item-groups/ids';
-import { canLiftHeavyRocks } from '../../../../requirements/helpers';
 
 const LW_OVERWORLD_KAKARIKO_CHECKS: CheckRecord[] = [
   {

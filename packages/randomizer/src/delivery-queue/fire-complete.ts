@@ -2,7 +2,7 @@
 import type { DeliveryEntry } from './delivery-queue.type';
 
 const fireComplete = (entry: DeliveryEntry): void => {
-  try { entry.onComplete?.(); } catch {  }
+  try { entry.onComplete?.(); } catch { return undefined; }
 };
 
 export { fireComplete };

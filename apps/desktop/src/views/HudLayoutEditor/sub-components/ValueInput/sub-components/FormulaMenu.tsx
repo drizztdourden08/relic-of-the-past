@@ -2,8 +2,8 @@
 import { useRef } from 'react';
 import { Anchored, Box, Pressable, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { usePickerDismiss } from '@app/compounds/SpritePicker';
-import { formulaGroups } from '../../../behavior/formula-catalog';
-import { formulaStarters } from '../../../behavior/formula-starters';
+import { formulaGroups } from '@app/hud-layout-editing/formula-catalog';
+import { formulaStarters } from '@app/hud-layout-editing/formula-starters';
 import type { FormulaMenuProps } from './FormulaMenu.type';
 
 const matches = (name: string, filter: string): boolean =>

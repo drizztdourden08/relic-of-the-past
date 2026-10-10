@@ -1,90 +1,122 @@
 /* @layer shared-game @kind logic */
 import { childPath } from './child-path';
-import type { Frame } from './path-lines.type';
+import type { Frame, PathScan } from './path-lines.type';
 
 const isKeyChar = (ch: string): boolean => /[A-Za-z0-9_$]/.test(ch);
+const isSpace = (ch: string): boolean => /\s/.test(ch);
+const isQuote = (ch: string): boolean => ch === '"' || ch === "'" || ch === '`';
+
+const quotedKeyBefore = (source: string, quoteAt: number): string | null => {
+  const quote = source.charAt(quoteAt);
+  const start = source.lastIndexOf(quote, quoteAt - 1);
+  return start < 0 ? null : source.slice(start + 1, quoteAt);
+};
 
 const keyBefore = (source: string, colonAt: number): string | null => {
   let i = colonAt - 1;
-  while (i >= 0 && /\s/.test(source.charAt(i))) i -= 1;
+  while (i >= 0 && isSpace(source.charAt(i))) i -= 1;
   if (i < 0) return null;
   const quote = source.charAt(i);
-  if (quote === '"' || quote === "'") {
-    const start = source.lastIndexOf(quote, i - 1);
-    return start < 0 ? null : source.slice(start + 1, i);
-  }
+  if (quote === '"' || quote === "'") return quotedKeyBefore(source, i);
   const end = i;
   while (i >= 0 && isKeyChar(source.charAt(i))) i -= 1;
   return end > i ? source.slice(i + 1, end + 1) : null;
 };
 
-const pathLines = (source: string): ReadonlyMap<string, number> => {
-  const lines = new Map<string, number>();
-  const stack: Frame[] = [{ path: '', isArray: false, index: 0 }];
-  let line = 1;
-  let quote: string | null = null;
-  let pendingPath: string | null = null;
+const markLine = (scan: PathScan, path: string): void => {
+  if (!scan.lines.has(path)) scan.lines.set(path, scan.line);
+};
 
-  for (let i = 0; i < source.length; i += 1) {
-    const ch = source.charAt(i);
+const currentFrame = (scan: PathScan): Frame => {
+  const frame = scan.stack.at(-1);
+  if (frame === undefined) throw new Error('The path stack lost its root frame');
+  return frame;
+};
 
-    if (ch === '\n') { line += 1; continue; }
+const onColon = (scan: PathScan, frame: Frame): void => {
+  const key = keyBefore(scan.source, scan.i);
+  if (key === null) return;
+  scan.pendingPath = childPath(frame.path, key, false);
+  markLine(scan, scan.pendingPath);
+};
 
-    if (quote) {
-      if (ch === '\\') { i += 1; continue; }
-      if (ch === quote) quote = null;
-      continue;
-    }
-    if (ch === '"' || ch === "'" || ch === '`') { quote = ch; continue; }
+const openedPath = (scan: PathScan, frame: Frame): string => {
+  if (scan.pendingPath !== null) return scan.pendingPath;
+  return frame.isArray ? childPath(frame.path, String(frame.index), true) : frame.path;
+};
 
-    const frame = stack.at(-1);
-    if (frame === undefined) throw new Error('The path stack lost its root frame');
-
-    if (ch === ':' && !frame.isArray) {
-      const key = keyBefore(source, i);
-      if (key !== null) {
-        pendingPath = childPath(frame.path, key, false);
-        if (!lines.has(pendingPath)) lines.set(pendingPath, line);
-      }
-      continue;
-    }
-
-    if (ch === '{' || ch === '[') {
-      const path = pendingPath ?? (frame.isArray ? childPath(frame.path, String(frame.index), true) : frame.path);
-      if (frame.isArray && pendingPath === null) {
-        if (!lines.has(path)) lines.set(path, line);
-        frame.index += 1;
-      }
-      stack.push({ path, isArray: ch === '[', index: 0 });
-      pendingPath = null;
-      continue;
-    }
-
-    if (ch === '}' || ch === ']') {
-      if (stack.length > 1) stack.pop();
-      pendingPath = null;
-      continue;
-    }
-
-    if (ch === ',') { pendingPath = null; continue; }
-
-    if (frame.isArray && !/\s/.test(ch)) {
-      const path = childPath(frame.path, String(frame.index), true);
-      if (!lines.has(path)) lines.set(path, line);
-      while (i < source.length && source.charAt(i) !== ',' && source.charAt(i) !== ']') {
-        if (source.charAt(i) === '\n') line += 1;
-        if (source.charAt(i) === '"' || source.charAt(i) === "'") {
-          const end = source.indexOf(source.charAt(i), i + 1);
-          i = end < 0 ? source.length : end;
-        }
-        i += 1;
-      }
-      i -= 1;
-      frame.index += 1;
-    }
+const onOpen = (scan: PathScan, frame: Frame, ch: string): void => {
+  const path = openedPath(scan, frame);
+  if (frame.isArray && scan.pendingPath === null) {
+    markLine(scan, path);
+    frame.index += 1;
   }
+  scan.stack.push({ path, isArray: ch === '[', index: 0 });
+  scan.pendingPath = null;
+};
 
-  return lines;
+const onClose = (scan: PathScan): void => {
+  if (scan.stack.length > 1) scan.stack.pop();
+  scan.pendingPath = null;
+};
+
+const skipScalar = (scan: PathScan): void => {
+  const { source } = scan;
+  while (scan.i < source.length && source.charAt(scan.i) !== ',' && source.charAt(scan.i) !== ']') {
+    const ch = source.charAt(scan.i);
+    if (ch === '\n') scan.line += 1;
+    if (ch === '"' || ch === "'") {
+      const end = source.indexOf(ch, scan.i + 1);
+      scan.i = end < 0 ? source.length : end;
+    }
+    scan.i += 1;
+  }
+  scan.i -= 1;
+};
+
+const onScalar = (scan: PathScan, frame: Frame): void => {
+  markLine(scan, childPath(frame.path, String(frame.index), true));
+  skipScalar(scan);
+  frame.index += 1;
+};
+
+const onStructure = (scan: PathScan, ch: string): void => {
+  const frame = currentFrame(scan);
+  if (ch === ':' && !frame.isArray) return onColon(scan, frame);
+  if (ch === '{' || ch === '[') return onOpen(scan, frame, ch);
+  if (ch === '}' || ch === ']') return onClose(scan);
+  if (ch === ',') {
+    scan.pendingPath = null;
+    return;
+  }
+  if (frame.isArray && !isSpace(ch)) onScalar(scan, frame);
+};
+
+const onQuoted = (scan: PathScan, ch: string): void => {
+  if (ch === '\\') scan.i += 1;
+  else if (ch === scan.quote) scan.quote = null;
+};
+
+const step = (scan: PathScan): void => {
+  const ch = scan.source.charAt(scan.i);
+  if (ch === '\n') scan.line += 1;
+  else if (scan.quote) onQuoted(scan, ch);
+  else if (isQuote(ch)) scan.quote = ch;
+  else onStructure(scan, ch);
+};
+
+const pathLines = (source: string): ReadonlyMap<string, number> => {
+  const scan: PathScan = {
+    source,
+    lines: new Map<string, number>(),
+    stack: [{ path: '', isArray: false, index: 0 }],
+    line: 1,
+    quote: null,
+    pendingPath: null,
+    i: 0,
+  };
+  for (; scan.i < source.length; scan.i += 1) step(scan);
+  return scan.lines;
 };
 
 export { pathLines };

@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
-import { EXTENT_MODES, extentFor, modeOf } from '../../../behavior/track-extents';
+import { EXTENT_MODES, extentFor, modeOf } from '@app/hud-layout-editing/track-extents';
 import type { TrackHeadProps } from './TrackHead.type';
 
 const TrackHead = (props: TrackHeadProps) => {

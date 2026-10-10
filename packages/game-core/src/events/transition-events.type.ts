@@ -12,4 +12,8 @@ interface TransitionSettled {
 
 type TransitionListener = (event: TransitionSettled) => void;
 
-export type { TransitionKind, TransitionSettled, TransitionListener };
+type TransitionSettledArgs = [
+  module: number, fromSubmodule: number, indoors: number, roomIndex: number, owScreenIndex: number,
+];
+
+export type { TransitionKind, TransitionSettled, TransitionListener, TransitionSettledArgs };

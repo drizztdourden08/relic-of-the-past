@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import '../HudLayoutEditor.motion.css';
 import { Box, Button, Field, Flex, Slider } from '@drizztdourden08/tessera/primitives';
-import { addKeyAt, canRemoveKey, moveKey, removeKey } from '../../behavior/keyframe-track';
+import { addKeyAt, canRemoveKey, moveKey, removeKey } from '@app/hud-layout-editing/keyframe-track';
 import { EasingPicker } from '../EasingPicker';
 import { ValueInput } from '../ValueInput';
 import { KeyRail } from './sub-components/KeyRail';

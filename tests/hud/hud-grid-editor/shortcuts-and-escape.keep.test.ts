@@ -5,7 +5,7 @@ import { act, createElement as h } from 'react';
 import { layoutHud, placedById, validateLayout } from '@rotp/hud';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { GridEditor } from '@app/views/HudLayoutEditor/sub-components/GridEditor';
-import { patchNode } from '@app/views/HudLayoutEditor/behavior/node-edits';
+import { patchNode } from '@app/hud-layout-editing/node-edits';
 import type { HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
 import { VIEW } from './grid-editor.constants';
 import { installGridRig } from './install-grid-rig';

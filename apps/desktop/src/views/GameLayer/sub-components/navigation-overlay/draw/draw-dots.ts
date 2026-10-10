@@ -7,7 +7,7 @@ import {
   DOT_COLOR_REACHABLE, DOT_COLOR_REQ, RING_COLOR_ABOVE, RING_COLOR_BOTH, RING_COLOR_GROUND,
 } from './draw.constants';
 
-const isLedgeState = (s: number): boolean => s >= 2 && s <= 9;
+const isLedgeState = (s: number | undefined): boolean => s !== undefined && s >= 2 && s <= 9;
 
 const drawFloodStart = (dc: DrawContext, primaryResult: FloodFillResult | undefined): void => {
   if (!primaryResult?.startPos) return;
@@ -60,9 +60,11 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
     const singleLayerIsAbove = !isDualLayer && drawResult.indoors && (drawResult.startLayer ?? 0) === 0;
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
-        const layer0Reach = perLayer ? perLayer[0][r][c] !== 0 : false;
-        const layer1Reach = perLayer ? perLayer[1][r][c] !== 0 : false;
-        const mergedReachable = perLayer ? (layer0Reach || layer1Reach) : drawResult.reachable[r][c] === 1;
+        const layer0State = perLayer?.[0][r]?.[c];
+        const layer1State = perLayer?.[1][r]?.[c];
+        const layer0Reach = perLayer ? layer0State !== 0 : false;
+        const layer1Reach = perLayer ? layer1State !== 0 : false;
+        const mergedReachable = perLayer ? (layer0Reach || layer1Reach) : drawResult.reachable[r]?.[c] === 1;
         if (!mergedReachable) continue;
 
         const reachedOnBothLayers = isDualLayer && layer0Reach && layer1Reach;
@@ -70,8 +72,8 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
           ? drawResult.dualLayerGrids?.layer1?.[r]?.[c]
           : drawResult.attrGrid?.[r]?.[c];
         if (!reachedOnBothLayers && standingLayerAttr !== undefined && DRAW_DOTS_LEDGE_ATTRS.has(standingLayerAttr)) continue;
-        if (perLayer && (perLayer[0][r][c] === STAIRS_TRAVERSAL_STATE || perLayer[1][r][c] === STAIRS_TRAVERSAL_STATE)) continue;
-        if (perLayer && (isLedgeState(perLayer[0][r][c]) || isLedgeState(perLayer[1][r][c]))) continue;
+        if (perLayer && (layer0State === STAIRS_TRAVERSAL_STATE || layer1State === STAIRS_TRAVERSAL_STATE)) continue;
+        if (perLayer && (isLedgeState(layer0State) || isLedgeState(layer1State))) continue;
 
         const screenX = origin.x + c * TILE_PX + TILE_PX / 2 - viewLeft;
         const screenY = origin.y + r * TILE_PX + TILE_PX / 2 - viewTop;
@@ -80,7 +82,7 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
 
         const dx = screenX * scaleX;
         const dy = screenY * scaleY;
-        const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
+        const hasReq = drawResult.reqGrid && drawResult.reqGrid[r]?.[c] !== '';
         const radius = dotRadius * 0.6;
 
         ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;

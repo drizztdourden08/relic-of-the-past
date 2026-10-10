@@ -5,7 +5,7 @@ import { DisabledReason } from '../DisabledReason';
 import { ExtentField } from '../ExtentField';
 import { MinMaxField } from '../MinMaxField';
 import { ValueInput } from '../ValueInput';
-import { extentText } from '../../behavior/extent-text';
+import { extentText } from '@app/hud-layout-editing/extent-text';
 import type { Extent } from '@rotp/hud';
 import { SCREEN_REASON } from './SizeBoxSection.constants';
 import type { SizeBoxSectionProps } from './SizeBoxSection.type';

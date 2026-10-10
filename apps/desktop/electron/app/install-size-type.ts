@@ -9,8 +9,9 @@ const run = promisify(execFile);
 const readSize = async (): Promise<Reading | null> => {
   const { stdout } = await run('reg', ['query', KEY, '/v', VALUE]);
   const match = stdout.match(new RegExp(`${VALUE}\\s+(REG_\\w+)\\s+(\\S+)`));
-  if (!match) return null;
-  return { type: match[1], kilobytes: Number.parseInt(match[2], 16) };
+  const [, type, hex] = match ?? [];
+  if (type === undefined || hex === undefined) return null;
+  return { type, kilobytes: Number.parseInt(hex, 16) };
 };
 
 const registerInstallSize = async (): Promise<void> => {
@@ -24,7 +25,7 @@ const registerInstallSize = async (): Promise<void> => {
       'add', KEY, '/v', VALUE, '/t', 'REG_DWORD', '/d', String(current.kilobytes), '/f',
     ]);
   } catch {
-    return;
+    return undefined;
   }
 };
 

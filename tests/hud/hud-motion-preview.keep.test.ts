@@ -9,7 +9,7 @@ import type { EscapeStack } from '@drizztdourden08/tessera/primitives';
 import { MotionTransport } from '@app/views/HudLayoutEditor/sub-components/MotionTransport';
 import {
   MotionPreviewContext, useMotionPreviewState,
-} from '@app/views/HudLayoutEditor/behavior/motion-preview';
+} from '@app/hud-layout-editing/motion-preview';
 import {
   useReducedMotion,
 } from '@app/compounds/HudNodeRenderer/sub-components/HudNodeMotion/useReducedMotion';

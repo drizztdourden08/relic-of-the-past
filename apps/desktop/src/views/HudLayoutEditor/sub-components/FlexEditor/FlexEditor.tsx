@@ -2,13 +2,16 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
-import { capOf, runnerFor } from '../../behavior/action-keys';
-import { useFlexSlots } from '../../behavior/flex-slots';
+import { capOf, runnerFor } from '@app/hud-layout-editing/action-keys';
+import { useFlexSlots } from '@app/hud-layout-editing/flex-slots';
 import { SelectionLegend, SelectionToolbar } from '../SelectionBands';
-import { chipOf, contextualActions, flexActions, statusOf } from './behavior/flex-actions';
+import { chipOf } from './behavior/chip-of';
+import { contextualActions } from './behavior/contextual-actions';
+import { flexActions } from './behavior/flex-actions';
+import { statusOf } from './behavior/status-of';
 import { useFlexSelection } from './behavior/useFlexSelection';
 import { FlexStrip } from './sub-components/FlexStrip';
-import './sub-components/HudLayoutEditor.flex.css';
+import './FlexEditor.css';
 import type { KeyboardEvent } from 'react';
 import type { FlexActionContext, FlexEditorProps } from './FlexEditor.type';
 

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useState } from 'react';
 import { Portal } from '@drizztdourden08/tessera/primitives';
-import { ghostPosition } from '../../behavior/drop-ghost';
+import { ghostPosition } from '@app/hud-layout-editing/drop-ghost';
 import { GhostCard } from './sub-components/GhostCard';
 import '../HudLayoutEditor.drag.css';
 import type { DragGhostProps } from './DragGhost.type';

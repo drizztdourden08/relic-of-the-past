@@ -3,7 +3,7 @@ import type { RomData } from '../rom/rom-types';
 import type { AssetBuilder } from '../asset-builder';
 
 const buildDungeonSprites = (rom: RomData, A: AssetBuilder): void => {
-  const offsets = new Array(320).fill(0);
+  const offsets = new Array<number>(320).fill(0);
   const data: number[] = [0, 0xff];
   for (let i = 0; i < 320; i++) {
     let ea = 0x890000 + rom.getWord(0x89d62e + i * 2);

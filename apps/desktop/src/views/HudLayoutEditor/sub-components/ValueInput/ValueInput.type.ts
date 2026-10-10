@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
-import type { StarterRole } from '../../behavior/formula-starters';
+import type { StarterRole } from '@app/hud-layout-editing/formula-starters';
 import type { Value } from '@rotp/hud';
 
 interface ValueInputProps {

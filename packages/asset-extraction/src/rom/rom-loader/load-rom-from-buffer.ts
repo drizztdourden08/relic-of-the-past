@@ -17,17 +17,16 @@ const loadRomFromBuffer = (buffer: Buffer, supportMultilanguage = false): RomDat
     romBytes = romBytes.subarray(SMC_HEADER_BYTES);
   }
 
-  if (supportMultilanguage) {
-    if (!entry) {
-      throw new Error(`ROM with hash ${hash} not supported.`);
-    }
-  } else {
-    if (!entry || entry.language !== 'us') {
-      throw new Error(`ROM with hash ${hash} not supported. Expected US ROM.`);
-    }
+  if (!entry) {
+    throw new Error(supportMultilanguage
+      ? `ROM with hash ${hash} not supported.`
+      : `ROM with hash ${hash} not supported. Expected US ROM.`);
+  }
+  if (!supportMultilanguage && entry.language !== 'us') {
+    throw new Error(`ROM with hash ${hash} not supported. Expected US ROM.`);
   }
 
-  return createRomData(romBytes, entry!.language, entry!.description);
+  return createRomData(romBytes, entry.language, entry.description);
 };
 
 export { loadRomFromBuffer };

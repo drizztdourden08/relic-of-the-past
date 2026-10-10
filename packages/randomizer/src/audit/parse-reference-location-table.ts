@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../checked-access';
 import {
   ENTRY_PATTERN, MIN_EXPECTED_LOCATIONS, TABLE_END_MARKER, TABLE_START_MARKER,
 } from './reference-source.constants';
@@ -23,8 +24,8 @@ const parseReferenceLocationTable = (regionsPyText: string): ReferenceLocation[]
   const locations: ReferenceLocation[] = [];
   for (const match of block.matchAll(ENTRY_PATTERN)) {
     locations.push({
-      name: unquote(match[1]),
-      romAddress: match[2] === 'None' ? null : firstInt(match[2]),
+      name: unquote(itemAt(match, 1)),
+      romAddress: match[2] === 'None' ? null : firstInt(itemAt(match, 2)),
       isPrize: match[3] === 'True',
     });
   }

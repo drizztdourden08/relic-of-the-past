@@ -1,10 +1,10 @@
 /* @layer renderer-widgets @kind component */
 import type { ConnectionInfo } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../../../nav-widget/styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
-import { IL } from './InternalEdgesSection.constants';
+import { sourceSubName } from '../behavior/source-sub-name';
 import type { InternalEdgesSectionProps } from './InternalEdgesSection.type';
+import './InternalEdgesSection.css';
 
 const InternalEdgesSection = (props: InternalEdgesSectionProps) => {
   const { internalConnections, screenBundle } = props;
@@ -32,18 +32,18 @@ const InternalEdgesSection = (props: InternalEdgesSectionProps) => {
   const count = cards.length;
   return (
     <>
-      <Box style={{ ...S.meta, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({count})</Box>
-      <Box style={IL.wrapRow}>
+      <Box className="nav-internal-edges-section__meta">Internal ({count})</Box>
+      <Box className="nav-internal-edges-section__wrap-row">
         {cards.map(({ conn, paired }, i) => {
           if (screenBundle?.isMulti && !conn.isIntraRoom) {
-            const fromName = screenBundle.subNames[conn.sourceScreen!] ?? '?';
+            const fromName = sourceSubName(conn, screenBundle);
             const toName = screenBundle.subNames[conn.targetScreen] ?? '?';
             return (
-              <Box key={`int-${i}`} style={S.card}>
-                <Box style={S.cardGraphic}>
+              <Box key={`int-${i}`} className="nav-card">
+                <Box className="nav-card-graphic">
                   <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
                 </Box>
-                <Text style={{ fontSize: 8, color: conn.layerToggle ? 'var(--c-info)' : 'var(--c-secondary)', marginTop: 2 }}>
+                <Text className={conn.layerToggle ? 'nav-internal-edges-section__layer nav-val-info' : 'nav-internal-edges-section__layer nav-val-green'}>
                   {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
                 </Text>
               </Box>
@@ -52,11 +52,11 @@ const InternalEdgesSection = (props: InternalEdgesSectionProps) => {
           const fromCount = String(conn.freeTileCount);
           const toCount = String(paired?.freeTileCount ?? conn.freeTileCount);
           return (
-            <Box key={`int-${i}`} style={S.card}>
-              <Box style={S.cardGraphic}>
+            <Box key={`int-${i}`} className="nav-card">
+              <Box className="nav-card-graphic">
                 <InternalEdgeSvg edge={conn.edge} fromName={fromCount} toName={toCount} />
               </Box>
-              <Text style={IL.same}>
+              <Text className="nav-internal-edges-section__same">
                 ═ Same
               </Text>
             </Box>

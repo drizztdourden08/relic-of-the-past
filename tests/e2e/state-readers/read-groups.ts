@@ -8,7 +8,9 @@ const readGroups = async (window: Page): Promise<Record<string, number>> => {
   const out: Record<string, number> = {};
   for (const raw of found) {
     const m = /^(.+) \((\d+)\)$/.exec(raw.trim());
-    if (m) out[m[1]] = Number(m[2]);
+    const name = m?.[1];
+    const count = m?.[2];
+    if (name !== undefined && count !== undefined) out[name] = Number(count);
   }
   return out;
 };

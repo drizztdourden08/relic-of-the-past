@@ -1,8 +1,12 @@
 /* @layer shared-asset-extraction @kind types */
-interface TravelEntry {
-  romIndex: number;
-  birdTravelId?: number;
-  whirlpoolSrcArea?: number;
+type TravelEntry =
+  | { romIndex: number; birdTravelId: number }
+  | { romIndex: number; whirlpoolSrcArea: number };
+
+interface TravelTable {
+  asset: string;
+  base: number;
+  signed: boolean;
 }
 
-export type { TravelEntry };
+export type { TravelEntry, TravelTable };

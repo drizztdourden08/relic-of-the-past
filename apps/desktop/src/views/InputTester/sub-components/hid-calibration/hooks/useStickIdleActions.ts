@@ -38,7 +38,7 @@ const useStickIdleActions = (d: ActionDeps) => {
     }));
 
     d.recordIdleResult(`${label} Stick`, idleReadingRecord(`${label} Stick`, result));
-    d.addLog(`✓ ${label} idle: centre ${result.x.center}${result.y ? `, ${result.y.center}` : ''} (drift ${result.x.idle.drift}${result.y ? `, ${result.y.idle.drift}` : ''})`);
+    d.addLog(`OK ${label} idle: centre ${result.x.center}${result.y ? `, ${result.y.center}` : ''} (drift ${result.x.idle.drift}${result.y ? `, ${result.y.idle.drift}` : ''})`);
     d.setStickBusy(false); d.setActiveStick(null); d.activeStickRef.current = null; d.setStickLiveInfo('');
     if (d.latestBytes.length > 0) d.updateByteStatuses(d.latestBytes.length);
   }, [d.addLog, d.latestBytes.length, d.updateByteStatuses, d.recordIdleResult]);

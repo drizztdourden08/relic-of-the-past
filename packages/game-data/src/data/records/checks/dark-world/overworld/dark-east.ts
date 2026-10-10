@@ -1,7 +1,6 @@
 /* @layer shared-game @kind data */
 
 import type { CheckRecord } from '../../../../types';
-import { hasBeamSword } from '../../../../requirements/helpers';
 
 const DW_OVERWORLD_DARK_EAST_CHECKS: CheckRecord[] = [
   {

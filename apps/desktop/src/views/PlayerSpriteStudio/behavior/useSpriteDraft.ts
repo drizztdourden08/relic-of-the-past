@@ -7,6 +7,7 @@ import { loadStockSheet } from '@app/game/stock-player-sheet';
 import { applyPlayerSprite } from '@app/game/player-sprite';
 import type { OpenDraft } from '../PlayerSpriteStudio.type';
 import { isLiveSelection } from './is-live-selection';
+import { colorAt } from './color-at';
 
 const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => {
   const [draft, setDraft] = useState<OpenDraft | null>(null);
@@ -15,7 +16,7 @@ const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => 
   const open = useCallback(async (name: string) => {
     const sheet = await loadSheet(name, stockPalette);
     if (sheet) { setDraft({ file: name, sheet }); setApplied(null); }
-    return !!sheet;
+    return Boolean(sheet);
   }, [stockPalette]);
 
   const createNew = useCallback(async () => {
@@ -42,7 +43,7 @@ const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => 
   }, []);
 
   const resetColor = useCallback((outfit: OutfitId, index: number) => {
-    setDraft((d) => (d ? { ...d, sheet: { ...d.sheet, override: withColor(d.sheet, outfit, index, d.sheet.original.outfits[outfit][index]) } } : d));
+    setDraft((d) => (d ? { ...d, sheet: { ...d.sheet, override: withColor(d.sheet, outfit, index, colorAt(d.sheet.original.outfits[outfit], index)) } } : d));
   }, []);
 
   const revert = useCallback(() => {
@@ -59,7 +60,7 @@ const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => 
     return name;
   }, [draft]);
 
-  const dirty = useMemo(() => !!draft && !isEmptyOverride(draft.sheet.override), [draft]);
+  const dirty = useMemo(() => draft !== null && !isEmptyOverride(draft.sheet.override), [draft]);
 
   return { draft, dirty, applied, open, createNew, close, patch, setColor, setGloveColor, resetColor, revert, save };
 };

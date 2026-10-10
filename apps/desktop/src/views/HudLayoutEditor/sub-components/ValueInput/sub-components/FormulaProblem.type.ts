@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ExprProblem } from '../../../behavior/expr-errors';
+import type { ExprProblem } from '@app/hud-layout-editing/expr-errors';
 
 interface FormulaProblemProps {
   problem: ExprProblem | null;

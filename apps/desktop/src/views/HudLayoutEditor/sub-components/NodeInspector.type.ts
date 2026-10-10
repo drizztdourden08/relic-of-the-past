@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DropIntent } from '../behavior/drop-intent';
+import type { DropIntent } from '@app/hud-layout-editing/drop-intent';
 import type { GlyphPack } from '@rotp/input-mapping';
 import type { HudLayout, HudNode } from '@rotp/hud';
 

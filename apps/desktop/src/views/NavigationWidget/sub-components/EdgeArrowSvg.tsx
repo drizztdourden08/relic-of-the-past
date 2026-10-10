@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { Svg, SvgPath } from '@drizztdourden08/tessera/primitives';
 import { EDGE_COLORS } from '../NavigationWidget.constants';
-import { SVG_STYLE } from './EdgeArrowSvg.constants';
+import './EdgeArrowSvg.css';
 
 const EdgeArrowSvg = ({ edge, size }: { edge: string; size: number }) => {
   const color = EDGE_COLORS[edge] ?? 'var(--c-text-muted)';
@@ -12,7 +12,7 @@ const EdgeArrowSvg = ({ edge, size }: { edge: string; size: number }) => {
     east: 'M2 8 L12 8 M9 4 L13 8 L9 12',
   };
   return (
-    <Svg width={size} height={size} viewBox="0 0 16 16" style={SVG_STYLE}>
+    <Svg width={size} height={size} viewBox="0 0 16 16" className="nav-edge-arrow-svg">
       <SvgPath d={paths[edge] ?? paths.east} stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </Svg>
   );

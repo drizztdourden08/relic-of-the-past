@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
 import { resolveValue } from '@rotp/hud';
-import { readExpr } from '../../behavior/check-expr';
-import { useInstanceScopes } from '../../behavior/formula-scope';
-import { useTextValue } from '../../behavior/useTextValue';
+import { readExpr } from '@app/hud-layout-editing/check-expr';
+import { useInstanceScopes } from '@app/hud-layout-editing/formula-scope';
+import { useTextValue } from '@app/hud-layout-editing/useTextValue';
 import { FormulaFeedback, FormulaProblem, usePromoteOverlay } from '../ValueInput';
 import type { TextValueFieldProps } from './TextValueField.type';
 

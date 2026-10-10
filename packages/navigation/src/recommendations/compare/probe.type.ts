@@ -2,6 +2,7 @@
 import type { EntityKind, EntityRecordMap, ScreenId } from '@rotp/game-data';
 import type { ScreenObservations } from '../detection-types';
 import type { Confidence, ProposedRecord } from '../types';
+import type { SetDifference } from './difference.type';
 
 type Probe<V> = { known: false } | { known: true; value: V };
 
@@ -29,11 +30,18 @@ interface SetProbe<K extends EntityKind, Item> {
   removalConfidence?: Confidence;
 }
 
+interface ErasedSetProbe<K extends EntityKind> {
+  source: string;
+  confidence: Confidence;
+  removalConfidence?: Confidence;
+  compare: (observations: ScreenObservations, screenId: ScreenId | null) => readonly SetDifference<K>[];
+}
+
 interface ComparisonStrategy<K extends EntityKind> {
   kind: K;
   subjects: (observations: ScreenObservations, screenId: ScreenId | null) => readonly EntityRecordMap[K][];
   fields: readonly FieldProbe<K>[];
-  sets: readonly SetProbe<K, any>[];
+  sets: readonly ErasedSetProbe<K>[];
 }
 
-export type { ComparisonStrategy, FieldProbe, Probe, SetProbe };
+export type { ComparisonStrategy, ErasedSetProbe, FieldProbe, Probe, SetProbe };

@@ -5,7 +5,7 @@ import type { RosterName } from './players-reply.type';
 const teamSection = (text: string, team: number): string | null => {
   const parts = text.split(TEAM_SPLIT);
   for (let index = 1; index + 1 < parts.length; index += 2) {
-    if (Number(parts[index]) === team + 1) return parts[index + 1];
+    if (Number(parts[index]) === team + 1) return parts[index + 1] ?? null;
   }
   return null;
 };

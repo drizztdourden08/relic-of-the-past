@@ -5,7 +5,7 @@ import { readStates } from './read-states';
 
 const awaitState = async (window: Page, match: RegExp, timeoutMs = POLL_TIMEOUT_MS): Promise<string> => {
   const deadline = Date.now() + timeoutMs;
-  let last: string[] = [];
+  let last: string[];
   for (;;) {
     last = await readStates(window);
     const hit = last.find((s) => match.test(s));

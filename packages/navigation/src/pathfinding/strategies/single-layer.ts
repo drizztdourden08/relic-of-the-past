@@ -29,17 +29,17 @@ class SingleLayerStrategy implements LayerStrategy {
 
   expand(
     cell: BFSCell,
-    dr: number,
-    dc: number,
+    step: readonly [number, number],
     inventory: Set<string>,
     bounds: QuadrantBounds,
   ): BFSExpansionResult[] {
+    const [dr, dc] = step;
     const { row, col, requirements } = cell;
     const nr = row + dr;
     const nc = col + dc;
 
     if (bodyOutOfBounds(nr, nc, bounds)) return [];
-    if (!this.canLeaveBody(row, col, [dr, dc])) return [];
+    if (!this.canLeaveBody(row, col, step)) return [];
 
     const moved = enterTiles(getNewTiles(nr, nc, dr, dc), this.grid, { dr, dc, requirements, inventory });
     return moved ? [{ row: nr, col: nc, layer: 0, requirements: moved }] : [];

@@ -2,8 +2,8 @@
 import './HudLayoutEditor.content.css';
 import { useRef, useState } from 'react';
 import { Text } from '@drizztdourden08/tessera/primitives';
-import { glyphArtUrl } from '../behavior/glyph-art';
-import { slotInScheme, slotPositionOf } from '../behavior/slot-scheme';
+import { glyphArtUrl } from '@app/hud-layout-editing/glyph-art';
+import { slotInScheme, slotPositionOf } from '@app/hud-layout-editing/slot-scheme';
 import { ReferenceField } from './ReferenceField';
 import { SlotPickerPanel } from './SlotPickerPanel';
 import type { SlotRefFieldProps } from './SlotRefField.type';

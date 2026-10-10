@@ -1,27 +1,18 @@
 /* @layer shared-asset-extraction @kind logic */
-import type {
-  CompiledPattern,
-  CompiledPhrase,
-  CompiledSfxList,
-  CompiledSfxPattern,
-  CompiledSong,
-  CompiledSongList,
-  Entity,
-  SectionParser,
-} from './compile-types.type';
+import type { CompiledPattern, Entity, EntityByType, EntityType, SectionParser } from './compile-types.type';
 import { kEffectNamesDict, kKeysDict } from './compile-lookups.constants';
 import type { NameRegistry } from './name-registry';
 
 const argAt = (args: readonly string[], index: number): string => args[index] ?? '';
 
-const defineEntity = <T extends Entity>(registry: NameRegistry, caption: string, type: T['type']): T => {
-  const entity = registry.getOrCreate<T>(caption, type, true);
+const defineEntity = <K extends EntityType>(registry: NameRegistry, caption: string, type: K): EntityByType[K] => {
+  const entity = registry.getOrCreate(caption, type, true);
   if (entity === null) throw new Error(`Section ${caption} cannot be defined`);
   return entity;
 };
 
 const processSong: SectionParser = (caption, lines, registry) => {
-  const song = defineEntity<CompiledSong>(registry, caption, 'Song');
+  const song = defineEntity(registry, caption, 'Song');
   song.phrases = [];
   for (const line of lines) {
     const [lineCmd = '', ...lineArgs] = line.split(' ');
@@ -29,7 +20,7 @@ const processSong: SectionParser = (caption, lines, registry) => {
       const [loops, jmp] = lineArgs;
       song.phrases.push({ type: 'PhraseLoop', name: `PhraseLoop ${String(loops)} ${String(jmp)}`, loops: parseInt(loops ?? ''), jmp: parseInt(jmp ?? '') });
     } else {
-      const phrase = registry.getOrCreate<CompiledPhrase>(lineCmd, 'Phrase', false);
+      const phrase = registry.getOrCreate(lineCmd, 'Phrase', false);
       if (phrase === null) throw new Error(`${caption}: phrase None`);
       song.phrases.push(phrase);
     }
@@ -38,21 +29,21 @@ const processSong: SectionParser = (caption, lines, registry) => {
 };
 
 const processSongList: SectionParser = (caption, lines, registry) => {
-  const songList = defineEntity<CompiledSongList>(registry, caption, 'SongList');
-  songList.songs = lines.map(l => registry.getOrCreate<CompiledSong>(l, 'Song', false));
+  const songList = defineEntity(registry, caption, 'SongList');
+  songList.songs = lines.map(l => registry.getOrCreate(l, 'Song', false));
   return songList;
 };
 
 const processPhrase: SectionParser = (caption, lines, registry) => {
-  const phrase = defineEntity<CompiledPhrase>(registry, caption, 'Phrase');
-  phrase.patterns = lines.map(l => registry.getOrCreate<CompiledPattern>(l, 'Pattern', false));
+  const phrase = defineEntity(registry, caption, 'Phrase');
+  phrase.patterns = lines.map(l => registry.getOrCreate(l, 'Pattern', false));
   return phrase;
 };
 
 const pushPatternLine = (pattern: CompiledPattern, line: string, registry: NameRegistry): void => {
   const [lineCmd = '', ...lineArgs] = line.split(/\s+/);
   if (lineCmd === 'Call') {
-    pattern.lines.push(['Call', [registry.getOrCreate<CompiledPattern>(argAt(lineArgs, 0), 'Pattern', false), parseInt(argAt(lineArgs, 1))], null, null]);
+    pattern.lines.push(['Call', [registry.getOrCreate(argAt(lineArgs, 0), 'Pattern', false), parseInt(argAt(lineArgs, 1))], null, null]);
   } else if (lineCmd === 'Fallthrough') {
     pattern.fallthrough = true;
   } else if (kEffectNamesDict.has(lineCmd)) {
@@ -67,7 +58,7 @@ const pushPatternLine = (pattern: CompiledPattern, line: string, registry: NameR
 };
 
 const processPattern: SectionParser = (caption, lines, registry) => {
-  const pattern = defineEntity<CompiledPattern>(registry, caption, 'Pattern');
+  const pattern = defineEntity(registry, caption, 'Pattern');
   pattern.lines = [];
   pattern.fallthrough = false;
   for (const line of lines) pushPatternLine(pattern, line, registry);
@@ -75,19 +66,19 @@ const processPattern: SectionParser = (caption, lines, registry) => {
 };
 
 const processSfxPattern: SectionParser = (caption, lines, registry) => {
-  const pattern = defineEntity<CompiledSfxPattern>(registry, caption, 'SfxPattern');
+  const pattern = defineEntity(registry, caption, 'SfxPattern');
   pattern.lines = lines;
   return pattern;
 };
 
 const processSfxList: SectionParser = (caption, lines, registry) => {
-  const sfxList = defineEntity<CompiledSfxList>(registry, caption, 'SfxList');
+  const sfxList = defineEntity(registry, caption, 'SfxList');
   sfxList.patterns = [];
   sfxList.next = [];
   sfxList.echo = [];
   for (const line of lines) {
     const parts = line.split(',');
-    sfxList.patterns.push(registry.getOrCreate<CompiledSfxPattern>(argAt(parts, 0), 'SfxPattern', false));
+    sfxList.patterns.push(registry.getOrCreate(argAt(parts, 0), 'SfxPattern', false));
     sfxList.next.push(parseInt(argAt(parts, 1)));
     if (parts.length >= 3) sfxList.echo.push(parseInt(argAt(parts, 2)));
   }

@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { HeightmapElement, ShapeDefinition } from '../shadow-casting-types';
 import { distanceToShape } from './distance-to-shape';
+import type { HeightmapArea } from './heightmap-builder.type';
 
 const toLocal = (shape: ShapeDefinition, offsetX: number, offsetY: number): ShapeDefinition => ({
   ...shape,
@@ -9,7 +10,8 @@ const toLocal = (shape: ShapeDefinition, offsetX: number, offsetY: number): Shap
   points: shape.points?.map(p => ({ x: p.x - offsetX, y: p.y - offsetY })),
 });
 
-const rasterizeElement = (buffer: Uint8Array, bufWidth: number, bufHeight: number, element: HeightmapElement, offsetX: number, offsetY: number): void => {
+const rasterizeElement = (buffer: Uint8Array, area: HeightmapArea, element: HeightmapElement): void => {
+  const { width: bufWidth, height: bufHeight, offsetX = 0, offsetY = 0 } = area;
   const { shape, height } = element;
   const localShape = toLocal(shape, offsetX, offsetY);
 
@@ -24,22 +26,19 @@ const rasterizeElement = (buffer: Uint8Array, bufWidth: number, bufHeight: numbe
   for (let py = minY; py <= maxY; py++) {
     for (let px = minX; px <= maxX; px++) {
       const insideShape = distanceToShape(px, py, localShape) <= 0;
-      if (!insideShape) continue;
       const idx = py * bufWidth + px;
       const byteVal = Math.round(height * 255);
       const current = buffer[idx];
-      if (current !== undefined && byteVal > current) {
-        buffer[idx] = byteVal;
-      }
+      if (insideShape && current !== undefined && byteVal > current) buffer[idx] = byteVal;
     }
   }
 };
 
-const buildHeightmapTexture = (elements: HeightmapElement[], width: number, height: number, offsetX = 0, offsetY = 0): Uint8Array => {
-  const buffer = new Uint8Array(width * height);
+const buildHeightmapTexture = (elements: HeightmapElement[], area: HeightmapArea): Uint8Array => {
+  const buffer = new Uint8Array(area.width * area.height);
 
   for (const element of elements) {
-    rasterizeElement(buffer, width, height, element, offsetX, offsetY);
+    rasterizeElement(buffer, area, element);
   }
 
   return buffer;

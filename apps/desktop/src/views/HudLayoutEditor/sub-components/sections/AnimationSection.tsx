@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Field, SegmentedControl, Select, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import { cyclePosition, resolveValue } from '@rotp/hud';
-import { useMotionPreview } from '../../behavior/motion-preview';
+import { useMotionPreview } from '@app/hud-layout-editing/motion-preview';
 import { EasingPicker } from '../EasingPicker';
 import { ExpressionInput } from '../ExpressionInput';
 import { KeyframeTrack } from '../KeyframeTrack';

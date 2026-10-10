@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Pressable, Svg, SvgPath } from '@drizztdourden08/tessera/primitives';
-import { CURVE_BOX, curvePath } from '../behavior/easing-curves';
+import { CURVE_BOX, curvePath } from '@app/hud-layout-editing/easing-curves';
 import type { EasingCurveTileProps } from './EasingPicker.type';
 
 const EasingCurveTile = (props: EasingCurveTileProps) => {

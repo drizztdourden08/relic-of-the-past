@@ -3,7 +3,7 @@ import './HudLayoutEditor.motion.css';
 import { Box, Field, NumberInput, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import {
   DEFAULT_STEPS, MIN_STEPS, NAMED_EASINGS, stepsCountOf, stepsName,
-} from '../behavior/easing-curves';
+} from '@app/hud-layout-editing/easing-curves';
 import { EasingCurveTile } from './EasingCurveTile';
 import type { EasingPickerProps } from './EasingPicker.type';
 

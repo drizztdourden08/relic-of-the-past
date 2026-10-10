@@ -41,8 +41,9 @@ const SpriteManager = (props: SpriteManagerProps) => {
   );
 
   useEffect(() => {
-    if (importedRoms.length === 0) { setSelectedRom(''); return; }
-    if (!importedRoms.some(r => r.romFile === selectedRom)) setSelectedRom(importedRoms[0].romFile);
+    const [firstRom] = importedRoms;
+    if (firstRom === undefined) { setSelectedRom(''); return; }
+    if (!importedRoms.some(r => r.romFile === selectedRom)) setSelectedRom(firstRom.romFile);
   }, [importedRoms, selectedRom]);
 
   const [spriteBaseUrl, setSpriteBaseUrl] = useState('');

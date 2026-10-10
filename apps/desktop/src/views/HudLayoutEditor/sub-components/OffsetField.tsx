@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Field } from '@drizztdourden08/tessera/primitives';
 import { DynamicInput } from '@drizztdourden08/tessera/composites';
-import { offsetOf, withOffset } from '../behavior/offset';
+import { offsetOf, withOffset } from '@app/hud-layout-editing/offset';
 import { OFFSET_PATTERN } from './OffsetField.constants';
 import type { PatternSlotValue, PatternValue } from '@drizztdourden08/tessera/composites';
 import type { OffsetFieldProps } from './OffsetField.type';

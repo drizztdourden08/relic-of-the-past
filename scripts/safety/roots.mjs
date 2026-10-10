@@ -1,14 +1,13 @@
 /* @layer tooling-scripts @kind logic */
+import { TOOL_PATHS } from '../tool-paths.mjs';
+
 const PROTECTED_ROOTS = [
-  '.claude',
+  TOOL_PATHS.toolFolder,
   'packages/game-data/src/data/records',
   'tests/fixtures/save-states',
   'test-roms',
   'assets',
-  'CLAUDE.md',
-  'AGENTS.md',
-  '.ai-config.json',
-  '.mcp.json',
+  ...TOOL_PATHS.protectedToolFiles,
 ];
 
 const SAFETY_NAMESPACE = 'refs/safety';

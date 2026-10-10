@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { usePlatform } from '@drizztdourden08/brock-react';
-import { nextIndexRun } from '../../../behavior/index-selection';
+import { nextIndexRun } from '@app/hud-layout-editing/index-selection';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { FlexSelection } from '../FlexEditor.type';
 

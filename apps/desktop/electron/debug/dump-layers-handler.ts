@@ -7,16 +7,16 @@ import { writeFile, mkdir } from 'fs/promises';
 
 const parseDumpLayersSlot = (): number | null => {
   for (const arg of process.argv) {
-    const match = arg.match(/^--dump-layers=(\d+)$/);
-    if (match) return parseInt(match[1], 10);
+    const slot = /^--dump-layers=(\d+)$/.exec(arg)?.[1];
+    if (slot !== undefined) return parseInt(slot, 10);
   }
   return null;
 };
 
 const parseHoverTile = (): { col: number; row: number } | null => {
   for (const arg of process.argv) {
-    const match = arg.match(/^--hover-tile=(\d+),(\d+)$/);
-    if (match) return { col: parseInt(match[1], 10), row: parseInt(match[2], 10) };
+    const [, col, row] = /^--hover-tile=(\d+),(\d+)$/.exec(arg) ?? [];
+    if (col !== undefined && row !== undefined) return { col: parseInt(col, 10), row: parseInt(row, 10) };
   }
   return null;
 };

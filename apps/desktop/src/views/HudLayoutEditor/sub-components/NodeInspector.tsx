@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useState } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { boundCountsBySection } from '../behavior/bound-values';
-import { labelOf } from '../behavior/new-node';
-import { breadcrumbOf, enclosingRepeatOf, isInsideRepeat, realParentOf } from '../behavior/tree-context';
-import { FormulaScopeContext, instanceScopes } from '../behavior/formula-scope';
-import { walkNodes } from '../behavior/node-edits';
+import { boundCountsBySection } from '@app/hud-layout-editing/bound-values';
+import { labelOf } from '@app/hud-layout-editing/new-node';
+import { breadcrumbOf, enclosingRepeatOf, isInsideRepeat, realParentOf } from '@app/hud-layout-editing/tree-context';
+import { FormulaScopeContext, instanceScopes } from '@app/hud-layout-editing/formula-scope';
+import { walkNodes } from '@app/hud-layout-editing/node-edits';
 import { MotionSection } from './sections/MotionSection';
 import { AppearanceSection } from './sections/AppearanceSection';
 import { ContentSection } from './sections/ContentSection';

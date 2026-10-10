@@ -1,11 +1,29 @@
 /* @layer shared-asset-extraction @kind types */
-interface SfxLine {
-  kind: 'note' | 'effect' | 'restart' | 'fallthrough';
-  effectName?: string;
-  note?: string | null;
-  noteLength?: number | null;
-  volumeLeft?: number | null;
-  volumeRight?: number | null;
+type SfxLine =
+  | { kind: 'fallthrough' }
+  | { kind: 'restart' }
+  | { kind: 'effect'; effectName: string }
+  | {
+    kind: 'note';
+    note: string | null;
+    effectName?: string;
+    noteLength: number | null;
+    volumeLeft: number | null;
+    volumeRight: number | null;
+  };
+
+interface SfxPrefix {
+  command: number;
+  noteLength: number | null;
+  volumeLeft: number | null;
+  volumeRight: number | null;
+  next: number;
 }
 
-export type { SfxLine };
+interface DecodedSfxCommand {
+  line: SfxLine;
+  next: number;
+  end: boolean;
+}
+
+export type { DecodedSfxCommand, SfxLine, SfxPrefix };

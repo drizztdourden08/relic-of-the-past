@@ -3,12 +3,13 @@ import { existsSync, mkdirSync, copyFileSync, cpSync, symlinkSync, unlinkSync, r
 import { execFileSync } from 'node:child_process';
 import { join, dirname, relative } from 'node:path';
 import { repoRoot } from './paths.mjs';
+import { TOOL_PATHS } from '../tool-paths.mjs';
 
 const LINKED_DIRS = [];
 
-const COPIED_DIRS = ['test-roms', '.claude'];
+const COPIED_DIRS = ['test-roms', TOOL_PATHS.toolFolder];
 
-const COPIED_FILES = ['CLAUDE.md', 'AGENTS.md', '.mcp.json', '.ai-config.json', 'assets/assets.dat'];
+const COPIED_FILES = [...TOOL_PATHS.copiedToolFiles, 'assets/assets.dat'];
 
 const ROM_PATTERN = /\.(sfc|smc)$/i;
 
@@ -80,8 +81,8 @@ const report = (results) => {
   for (const { name, action } of results) {
     if (action !== 'absent') console.log(`  ${action.padEnd(8)} ${name}`);
   }
-  if (!results.some((r) => r.name === 'CLAUDE.md' && r.action === 'copied')) {
-    console.warn('  [wt] CLAUDE.md was not copied. An agent in this worktree has no project guide.');
+  if (!results.some((r) => r.name === TOOL_PATHS.projectGuide && r.action === 'copied')) {
+    console.warn(`  [wt] ${TOOL_PATHS.projectGuide} was not copied. An agent in this worktree has no project guide.`);
   }
   return results;
 };

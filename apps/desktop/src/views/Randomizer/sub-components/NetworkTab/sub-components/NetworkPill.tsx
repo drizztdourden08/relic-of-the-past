@@ -2,8 +2,9 @@
 import { Button, Text } from '@drizztdourden08/tessera/primitives';
 import { StateChip } from './StateChip';
 import { useNetworkStatus } from '../behavior/useNetworkStatus';
-import { formatMs } from '../behavior/network-format';
-import { healthChip, stateChip } from '../behavior/network-tone';
+import { formatMs } from '../behavior/format-ms';
+import { healthChip } from '../behavior/health-chip';
+import { stateChip } from '../behavior/state-chip';
 import type { NetworkStatus } from '@app/game/randomizer-client';
 import { NOT_CONNECTED_CHIP } from './NetworkPill.constants';
 import type { NetworkPillProps } from './NetworkPill.type';

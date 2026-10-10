@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { layoutHud, validateLayout, BUILT_IN_LAYOUTS, engineSwitchPatch, resolveValue } from '@rotp/hud';
-import { nodeById, patchNode } from '@app/views/HudLayoutEditor/behavior/node-edits';
+import { nodeById, patchNode } from '@app/hud-layout-editing/node-edits';
 import type { HudContainer, HudLayout, Value } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };

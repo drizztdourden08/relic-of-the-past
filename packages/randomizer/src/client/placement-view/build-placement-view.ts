@@ -6,7 +6,6 @@ import { virtualCheckIdOf } from '../virtual-locations';
 import { emptyView } from './empty-view';
 import type { LocationKey } from '../../world/location-key';
 import type { Placement } from '../../world/fill/placement.type';
-import type { ItemId } from '@rotp/game-data';
 import type { ForeignOwners } from '../foreign-item-line';
 import type { PlacementView } from './placement-view.type';
 

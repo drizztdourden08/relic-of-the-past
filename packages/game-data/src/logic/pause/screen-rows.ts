@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { PauseContext, PauseScreen, PauseSection, RowSegment } from './pause.type';
+import type { PauseContext, PauseScreen, RowSegment } from './pause.type';
 import { GEAR_LADDER_KINDS } from './gear-tiers.constants';
 import { gearTierCount } from './gear-tier-count';
 import {

@@ -50,10 +50,15 @@ const CASES: Expected[] = [
   },
 ];
 
+const stepLetter = (delta: number, negative: string, positive: string): string => {
+  if (delta < 0) return negative;
+  return delta > 0 ? positive : '';
+};
+
 const directionOf = (l: { startRow: number; startCol: number; endRow: number; endCol: number }): string => {
   const dr = Math.sign(l.endRow - l.startRow);
   const dc = Math.sign(l.endCol - l.startCol);
-  return `${dr < 0 ? 'n' : dr > 0 ? 's' : ''}${dc < 0 ? 'w' : dc > 0 ? 'e' : ''}` || '?';
+  return `${stepLetter(dr, 'n', 's')}${stepLetter(dc, 'w', 'e')}` || '?';
 };
 
 const dumpFor = async (state: string): Promise<Record<string, unknown>> => {
@@ -66,7 +71,7 @@ const dumpFor = async (state: string): Promise<Record<string, unknown>> => {
   try {
     for (let i = 0; i < 120 && !existsSync(DUMP_PATH); i++) await new Promise((r) => setTimeout(r, 1000));
     if (!existsSync(DUMP_PATH)) throw new Error(`--dump-nav=${state} wrote no dump`);
-    return JSON.parse(readFileSync(DUMP_PATH, 'utf8'));
+    return JSON.parse(readFileSync(DUMP_PATH, 'utf8')) as Record<string, unknown>;
   } finally {
     await app.close().catch(ignoreAlreadyExited);
   }

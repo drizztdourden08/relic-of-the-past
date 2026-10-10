@@ -1,6 +1,5 @@
 /* @layer electron-main @kind logic */
 import { serializeScreenRecord } from '@rotp/game-data';
-import type { ScreenRecord } from '@rotp/game-data';
 import type { WriteRecordResult, WriteScreenArgs } from '@app/ipc/screen-editor-contract';
 import { editSourceFile } from './edit-source-file';
 import { withAllocatedIds } from './id-allocator';
@@ -15,11 +14,12 @@ const writeScreen = (args: WriteScreenArgs): Promise<WriteRecordResult> => {
   const replaceId = args.replaceId;
 
   if (replaceId) {
-    const record = { id: replaceId, ...args.record } as ScreenRecord;
+    const record = { id: replaceId, ...args.record };
     return editSourceFile(path, content => replaceById(content, replaceId, serializeScreenRecord(record)), [replaceId]);
   }
   return withAllocatedIds(root, 'screen', 1, async ([id]) => {
-    const record = { id: id as ScreenRecord['id'], ...args.record } as ScreenRecord;
+    if (id === undefined) throw new Error('the id allocator returned no screen id');
+    const record = { id, ...args.record };
     const started = await startRecordFile(path, args.filePath, 'ScreenRecord');
     if (started) return { success: false, error: started };
     return editSourceFile(path, content => insertBeforeArrayClose(content, serializeScreenRecord(record)), [id]);

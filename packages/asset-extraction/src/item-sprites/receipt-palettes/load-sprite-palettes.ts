@@ -46,9 +46,7 @@ const loadArmorRow = (rom: RomData, palettes: RGBA[][]): void => {
 };
 
 const loadSpritePalettes = (rom: RomData): SpritePalettes => {
-  const palettes: RGBA[][] = Array.from({ length: 8 }, () =>
-    new Array(16).fill(TRANSPARENT) as RGBA[]
-  );
+  const palettes: RGBA[][] = Array.from({ length: 8 }, () => new Array<RGBA>(16).fill(TRANSPARENT));
   loadMainRows(rom, palettes);
   loadAux1Rows(rom, palettes);
   loadSwordAndShieldColors(rom, palettes);

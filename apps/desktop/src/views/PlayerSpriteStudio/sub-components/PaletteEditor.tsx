@@ -8,6 +8,7 @@ import { bgr555ToHex, hexToBgr555, isExactColor } from '@rotp/game-core';
 import { flattenPalette } from '@rotp/packs';
 import { OUTFIT_LABELS } from '@rotp/design/packs';
 import type { PaletteEditorProps, Slot } from '../PlayerSpriteStudio.type';
+import { colorAt } from '../behavior/color-at';
 
 const PaletteEditor = (props: PaletteEditorProps) => {
   const { sheet, outfit, readOnly = false, onColor, onGloveColor, onReset } = props;
@@ -25,10 +26,10 @@ const PaletteEditor = (props: PaletteEditorProps) => {
   }, [readOnly]);
 
   const wordOf = useCallback((s: Exclude<Slot, null>): number =>
-    (typeof s === 'number' ? colors[s] : live.gloves[s === 'g0' ? 0 : 1]), [colors, live.gloves]);
+    (typeof s === 'number' ? colorAt(colors, s) : live.gloves[s === 'g0' ? 0 : 1]), [colors, live.gloves]);
 
   const originalOf = useCallback((s: Exclude<Slot, null>): number =>
-    (typeof s === 'number' ? originals[s] : sheet.original.gloves[s === 'g0' ? 0 : 1]), [originals, sheet.original.gloves]);
+    (typeof s === 'number' ? colorAt(originals, s) : sheet.original.gloves[s === 'g0' ? 0 : 1]), [originals, sheet.original.gloves]);
 
   const change = useCallback((hex: string) => {
     if (slot === null) return;
@@ -72,7 +73,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
           {Array.from({ length: COLORS_PER_OUTFIT }, (_, i) => (
             <ColorSwatch
               key={i}
-              color={bgr555ToHex(colors[i])}
+              color={bgr555ToHex(colorAt(colors, i))}
               caption={i + 1}
               selected={slot === i}
               edited={colors[i] !== originals[i]}

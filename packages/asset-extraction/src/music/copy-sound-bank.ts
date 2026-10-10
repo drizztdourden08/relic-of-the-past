@@ -2,19 +2,17 @@
 import type { RomData } from '../rom/rom-types';
 
 const copySoundBank = (rom: RomData, ea: number, memory: (number | null)[]): number => {
-  let j = 0;
-  while (true) {
-    const numBytes = rom.getWord(ea);
-    const target = rom.getWord(ea + 2);
+  let at = ea;
+  for (let block = 0; block <= 256; block++) {
+    const numBytes = rom.getWord(at);
+    const target = rom.getWord(at + 2);
     if (numBytes === 0) return target;
-    ea += 4;
+    at += 4;
     for (let i = 0; i < numBytes; i++) {
-      memory[target + i] = rom.getByte(ea);
-      ea += 1;
-      if ((ea & 0xffff) < 0x8000) ea += 0x8000;
+      memory[target + i] = rom.getByte(at);
+      at += 1;
+      if ((at & 0xffff) < 0x8000) at += 0x8000;
     }
-    j++;
-    if (j > 256) break;
   }
   return 0;
 };

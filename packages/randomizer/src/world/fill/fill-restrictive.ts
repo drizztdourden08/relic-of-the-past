@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { canFillLocation } from './can-fill-location';
 import { createAssumedState } from './create-assumed-state';
 import { FillError } from './fill-error';
@@ -23,7 +24,7 @@ const fillRestrictive = (input: FillRestrictiveInput): void => {
     const checkAccess = !relaxWhenBeatable || !world.isBeaten(assumed.state);
     const spotIndex = locations.findIndex((key) => fits(assumed.state, item, key, checkAccess));
     if (spotIndex >= 0) {
-      const spot = locations.splice(spotIndex, 1)[0];
+      const spot = itemAt(locations.splice(spotIndex, 1), 0);
       world.placedItems.set(spot, item);
       placedHere.push(spot);
       continue;

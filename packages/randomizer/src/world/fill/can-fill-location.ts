@@ -10,7 +10,7 @@ const canFillLocation = (
   const { world } = state;
   if (!world.getItemRule(location)(item)) return false;
   const allow = world.alwaysAllow.get(location);
-  if (allow !== undefined && allow(state, item)) return true;
+  if (allow?.(state, item)) return true;
   return !checkAccess || canCollectLocation(state, location);
 };
 

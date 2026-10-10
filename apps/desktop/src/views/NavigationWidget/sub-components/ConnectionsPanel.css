@@ -1,0 +1,51 @@
+/* @layer renderer-widgets @kind style */
+
+.nav-connections-panel__first-sub-title {
+  font-size: var(--size-10);
+  color: var(--c-text-dim);
+  margin-bottom: var(--size-4);
+  margin-top: var(--size-2);
+  text-transform: uppercase;
+  letter-spacing: var(--size-1);
+}
+
+.nav-connections-panel__screen-label {
+  font-size: var(--size-10);
+  color: var(--c-info);
+  margin-top: var(--size-2);
+}
+
+.nav-connections-panel__none {
+  font-size: var(--size-10);
+  color: var(--c-text-muted);
+}
+
+.nav-connections-panel__sub-title {
+  font-size: var(--size-10);
+  color: var(--c-text-dim);
+  margin-bottom: var(--size-4);
+  margin-top: var(--size-8);
+  text-transform: uppercase;
+  letter-spacing: var(--size-1);
+}
+
+.nav-connections-panel__wrap-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-6);
+}
+
+.nav-connections-panel__hole-graphic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--size-48);
+  flex-shrink: 0;
+  background: repeating-linear-gradient(45deg, var(--c-primary) 0, var(--c-primary) var(--size-2), transparent var(--size-2), transparent var(--size-4));
+  border-radius: var(--radius-sm);
+}
+
+.nav-connections-panel__big-emoji {
+  font-size: calc(var(--size-1) * 18);
+}

@@ -37,7 +37,7 @@ const InputCalibration = () => {
       <Box className="input-cal__header">
         <Text className={`input-cal__status ${anyHidConnected ? 'input-cal__status--connected' : 'input-cal__status--disconnected'}`}>
           {anyHidConnected
-            ? `Connected ${'•'} ${connectedCount} controller(s)`
+            ? `Connected: ${connectedCount} controller(s)`
             : '0 controllers detected'}
         </Text>
         <RescanButton isPending={isRescanPending} onRescan={handleRescan} />

@@ -9,6 +9,12 @@ interface RegionJob {
 
 type RegionReachMap = Map<string, boolean[][]>;
 
+interface RegionProgress {
+  visited: Set<string>;
+  arrivals: Set<string>;
+  crossings?: Set<string>;
+}
+
 type CameFrom = { screenId: string; tile: GridPos } | null;
 
-export type { RegionJob, RegionReachMap, CameFrom };
+export type { RegionJob, RegionProgress, RegionReachMap, CameFrom };

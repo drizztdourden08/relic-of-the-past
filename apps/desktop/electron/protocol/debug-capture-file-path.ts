@@ -5,6 +5,7 @@ import { CAPTURES_SUBDIR } from '../diagnostics/debug-report/finalize-capture-se
 
 const captureRequestPath = (requestUrl: string): string => {
   const [profileId, sessionKey, ...rest] = decodeURIComponent(new URL(requestUrl).pathname.replace(/^\/+/, '')).split('/');
+  if (profileId === undefined || sessionKey === undefined) throw new TypeError(`capture request has no profile and session: ${requestUrl}`);
   return join(profileId, CAPTURES_SUBDIR, sessionKey, ...rest);
 };
 

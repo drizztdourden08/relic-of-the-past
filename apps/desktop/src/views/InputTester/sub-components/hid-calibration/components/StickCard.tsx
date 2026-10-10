@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Button, Icon } from '@drizztdourden08/tessera/primitives';
 import { DESC_SMALL } from './StickCards.constants';
 import type { StickCardProps } from './StickCards.type';
 
@@ -30,7 +30,7 @@ const StickCard = (props: StickCardProps) => {
   return (
     <Box className={`hid-cal__prereq-card${isDone ? ' hid-cal__prereq-card--done' : ''}`}>
       <Box className="hid-cal__prereq-title">
-        <Text>{isDone ? '✓' : '3.'} {label} Stick</Text>
+        <Text>{isDone ? <Icon name="check" /> : '3.'} {label} Stick</Text>
         {isDone && <Text className="hid-cal__prereq-badge">
           {xItem?.result ? xItem.result.split(' ')[0] : ''} {yItem?.result ? yItem.result.split(' ')[0] : ''}
         </Text>}

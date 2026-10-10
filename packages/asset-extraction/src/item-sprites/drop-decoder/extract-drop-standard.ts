@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { extractLarge, extractSmallCentered, extractTall } from '../drop-sprite-assembly';
 import { kAbsTab1, kTab1Sprite, kTab2Sprite } from '../drop-tables';
 import type { ImageBuffer } from '../../graphics/png-writer';
@@ -8,9 +9,9 @@ import { paletteRow } from '../receipt-palettes';
 
 const extractDropStandard = (spriteType: number, paletteIdx: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
   const idx = spriteType - 0xd8;
-  const base = kTab1Sprite[spriteType];
-  const cid = kTab2Sprite[base];
-  const dm = idx < kAbsTab1.length ? kAbsTab1[idx] : 2;
+  const base = itemAt(kTab1Sprite, spriteType, 'Drop sprite base');
+  const cid = itemAt(kTab2Sprite, base, 'Drop sprite character');
+  const dm = kAbsTab1[idx] ?? 2;
   const palette = paletteRow(spritePalettes, paletteIdx);
 
   if (dm === 0) return extractSmallCentered(cid, palette, dropSheets);

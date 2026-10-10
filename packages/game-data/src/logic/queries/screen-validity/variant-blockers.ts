@@ -11,7 +11,7 @@ const isRealTierRange = ([from, to]: TierRange): boolean =>
 
 const variantBlockers = (candidate: ScreenCandidate): readonly string[] => {
   const { variant } = candidate;
-  if (!variant || variant.progressTier === undefined) return [];
+  if (variant?.progressTier === undefined) return [];
 
   const range = tierRangeOf(variant.progressTier);
   if (!isRealTierRange(range)) return [NEEDS_REAL_TIER];

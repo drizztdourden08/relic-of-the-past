@@ -1,8 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import type { ShapeDefinition } from '../shadow-casting-types';
 import { ELLIPSE_MIN_SIDES } from './distance-to-shape.constants';
+import type { LocalPoint, NGonSpec } from './distance-to-shape.type';
 
-const distanceToNGon = (lx: number, ly: number, halfW: number, halfH: number, sides: number, cornerRadius: number): number => {
+const distanceToNGon = (local: LocalPoint, ngon: NGonSpec): number => {
+  const { x: lx, y: ly } = local;
+  const { halfW, halfH, sides, cornerRadius } = ngon;
   const nx = lx / halfW;
   const ny = ly / halfH;
 
@@ -51,42 +54,37 @@ const distanceToPolygonPoints = (px: number, py: number, points: { x: number; y:
   return inside ? -minDist : minDist;
 };
 
+const rotatedOffset = (px: number, py: number, shape: ShapeDefinition): LocalPoint => {
+  const rot = -(shape.rotation ?? 0) * Math.PI / 180;
+  const lx = px - shape.x;
+  const ly = py - shape.y;
+  if (rot === 0) return { x: lx, y: ly };
+  const cos = Math.cos(rot);
+  const sin = Math.sin(rot);
+  return { x: lx * cos - ly * sin, y: lx * sin + ly * cos };
+};
+
 const distanceToShape = (px: number, py: number, shape: ShapeDefinition): number => {
   if (shape.type === 'freehand' && shape.points && shape.points.length >= 3) {
     return distanceToPolygonPoints(px, py, shape.points);
   }
 
-  const rot = -(shape.rotation ?? 0) * Math.PI / 180;
   const scaleX = shape.scaleX ?? 1;
   const scaleY = shape.scaleY ?? 1;
-
-  let lx = px - shape.x;
-  let ly = py - shape.y;
-
-  if (rot !== 0) {
-    const cos = Math.cos(rot);
-    const sin = Math.sin(rot);
-    const nx = lx * cos - ly * sin;
-    const ny = lx * sin + ly * cos;
-    lx = nx;
-    ly = ny;
-  }
-
-  lx /= scaleX;
-  ly /= scaleY;
+  const rotated = rotatedOffset(px, py, shape);
+  const local = { x: rotated.x / scaleX, y: rotated.y / scaleY };
 
   const sides = shape.sides ?? 4;
-  const cornerRadius = shape.cornerRadius ?? 0;
   const halfW = shape.width / 2 / scaleX;
   const halfH = shape.height / 2 / scaleY;
 
   if (sides >= ELLIPSE_MIN_SIDES) {
-    const ex = lx / halfW;
-    const ey = ly / halfH;
+    const ex = local.x / halfW;
+    const ey = local.y / halfH;
     return (Math.sqrt(ex * ex + ey * ey) - 1) * Math.min(halfW, halfH);
   }
 
-  return distanceToNGon(lx, ly, halfW, halfH, sides, cornerRadius);
+  return distanceToNGon(local, { halfW, halfH, sides, cornerRadius: shape.cornerRadius ?? 0 });
 };
 
 export { distanceToShape };

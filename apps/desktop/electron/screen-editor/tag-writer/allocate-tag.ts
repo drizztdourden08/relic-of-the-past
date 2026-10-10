@@ -11,6 +11,9 @@ import { CONVENTION, NO_SCOPE, TAGS_FILE } from './tag-writer.constants';
 const alreadyPresent = (content: string, key: string): boolean =>
   content.includes(`name: '${key.replace(/'/g, "\\'")}',`);
 
+const filledOr = (text: string | undefined, fallback: string): string =>
+  (text === undefined || text === '' ? fallback : text);
+
 const allocateTag = async (root: string, args: AllocateTagArgs): Promise<AllocateTagResult> => {
   const key = args.key.trim();
   const parts = splitTagKey(key);
@@ -27,8 +30,8 @@ const allocateTag = async (root: string, args: AllocateTagArgs): Promise<Allocat
       name: key,
       namespace: parts.namespace,
       value: parts.value,
-      label: args.label?.trim() || parts.value,
-      namespaceLabel: args.namespaceLabel?.trim() || parts.namespace,
+      label: filledOr(args.label?.trim(), parts.value),
+      namespaceLabel: filledOr(args.namespaceLabel?.trim(), parts.namespace),
       appliesTo: [...args.appliesTo],
     };
     const fresh = await readFile(path, 'utf-8');

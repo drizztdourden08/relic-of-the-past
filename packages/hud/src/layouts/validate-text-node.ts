@@ -1,5 +1,5 @@
 /* @layer shared-hud @kind logic */
-import { checkKeys, isRecord, numberAt } from './validate-box';
+import { checkKeys, isRecord, numberAt, oneOf } from './validate-box';
 import { paintAt } from './validate-style';
 import { validateValue } from './validate-value';
 import { ALIGN, FONT_FAMILIES, PAD, SPRITE_SETS, TEXT_KEYS } from './validate-text-node.constants';
@@ -15,9 +15,7 @@ const formatAt = (value: unknown, path: string, issues: Issues): HudTextFormat |
   if (digits !== undefined && (!Number.isInteger(digits) || digits < 1)) {
     issues.push(`${path}.digits: expected a whole number of 1 or more`);
   }
-  const pad = value.pad === undefined ? undefined
-    : (PAD as readonly unknown[]).includes(value.pad) ? (value.pad as HudTextFormat['pad'])
-      : (issues.push(`${path}.pad: expected one of ${PAD.join(', ')}, got ${JSON.stringify(value.pad)}`), undefined);
+  const pad: HudTextFormat['pad'] = oneOf(value.pad, PAD, `${path}.pad`, issues);
   return { ...(digits !== undefined ? { digits } : {}), ...(pad ? { pad } : {}) };
 };
 
@@ -73,9 +71,7 @@ const textSpec = (value: Record<string, unknown>, path: string, issues: Issues, 
   if (!face) return null;
   const color = paintAt(value.color, `${path}.color`, issues, false, insideRepeat);
   const stroke = strokeAt(value.stroke, `${path}.stroke`, issues, insideRepeat);
-  const align = value.align === undefined ? undefined
-    : (ALIGN as readonly unknown[]).includes(value.align) ? (value.align as 'start' | 'center' | 'end')
-      : (issues.push(`${path}.align: expected one of ${ALIGN.join(', ')}, got ${JSON.stringify(value.align)}`), undefined);
+  const align: 'start' | 'center' | 'end' | undefined = oneOf(value.align, ALIGN, `${path}.align`, issues);
   const tracking = value.tracking !== undefined ? numberAt(value.tracking, `${path}.tracking`, issues) : undefined;
   return {
     type: 'text',

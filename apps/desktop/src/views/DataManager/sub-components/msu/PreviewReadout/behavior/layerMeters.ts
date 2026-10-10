@@ -54,8 +54,11 @@ const silentRow = (report: LayerReport): LayerMeterRow => ({
 const voiceRows = (report: LayerReport, hasGap: boolean): LayerMeterRow[] => {
   const captions = voiceCaptions(report.voices);
   if (report.voices.length > 0) {
-    return report.voices.map((voice, index) =>
-      voiceRow(voice, index, captions[index].caption, captions[index].title));
+    return report.voices.map((voice, index) => {
+      const label = captions[index];
+      if (label === undefined) throw new Error('voiceCaptions returned fewer captions than voices');
+      return voiceRow(voice, index, label.caption, label.title);
+    });
   }
   return hasGap ? [] : [silentRow(report)];
 };

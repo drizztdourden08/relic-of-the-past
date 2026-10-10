@@ -11,14 +11,11 @@ import type { GroupPatch } from '../db/groups-repo.type';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
 
-const withoutUndefinedFields = (patch: GroupPatch): GroupPatch =>
-  Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));
-
 const groupsPatch = (site: SiteConfig): Route => ({
   ...HUB_ROUTES.groupsPatch,
   handler: async ({ req, res, params }) => {
     await requireAdmin(req, site);
-    const patch = withoutUndefinedFields(parseBody(patchGroupSchema, req.body));
+    const patch: GroupPatch = parseBody(patchGroupSchema, req.body);
     assertKnownRights(patch.rights, site.rights);
     const group = await groupsRepo.get(routeParam(params, 'id'));
     if (!group) throw notFound('No such group.');

@@ -1,7 +1,10 @@
 /* @layer renderer-components @kind component */
 import { NetworkSection } from './NetworkSection';
-import { formatCountdown, formatSince, formatValue, formatYesNo } from '../behavior/network-format';
-import { stateChip } from '../behavior/network-tone';
+import { formatCountdown } from '../behavior/format-countdown';
+import { formatSince } from '../behavior/format-since';
+import { formatValue } from '../behavior/format-value';
+import { formatYesNo } from '../behavior/format-yes-no';
+import { stateChip } from '../behavior/state-chip';
 import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
 import type { NetworkConnection } from '@app/game/randomizer-client';
 import type { NetworkRow } from './NetworkSection.type';

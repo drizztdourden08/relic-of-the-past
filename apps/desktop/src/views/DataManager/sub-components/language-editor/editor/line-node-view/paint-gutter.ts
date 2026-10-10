@@ -11,6 +11,7 @@ const countOf = (tokens: ReturnType<typeof tokensOfLine>): number =>
 
 const paintGutter = (root: HTMLElement, node: PmNode, lineNo: number | null): void => {
   const [num, meter, px, ch] = Array.from(root.children) as HTMLElement[];
+  if (num === undefined || meter === undefined || px === undefined || ch === undefined) throw new Error('the line gutter is missing one of its four cells');
   const fill = meter.firstElementChild as HTMLElement;
   const { metrics, glossary } = editorRuntime;
 

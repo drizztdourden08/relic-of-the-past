@@ -19,7 +19,9 @@ const getSheetForChar = (charId: number, dropSheets: DropSheets): SheetForChar =
     sheetId = 7; high = false;
   }
 
-  return { sheet: dropSheets.sheets.get(sheetId)!, offset, high };
+  const sheet = dropSheets.sheets.get(sheetId);
+  if (!sheet) throw new Error(`Drop sheet ${sheetId} is not loaded`);
+  return { sheet, offset, high };
 };
 
 export { getSheetForChar };

@@ -1,5 +1,5 @@
 /* @layer shared-input @kind constants */
-import { GC_FILES, GENERIC_FILES, PLAYSTATION_FILES, SNES_FILES, SWITCH_FILES, XBOX_FILES } from './glyph-files.data';
+import { GC_FILES, GENERIC_FILES, PLAYSTATION_FILES, SNES_FILES, SWITCH_FILES, XBOX_FILES } from './glyph-files.constants';
 import { withFolder } from './with-folder';
 
 const GLYPH_ASSET_PATHS: Record<string, string> = {

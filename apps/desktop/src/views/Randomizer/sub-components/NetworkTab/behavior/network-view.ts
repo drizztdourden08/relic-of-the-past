@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { onlineConfigOfProfile } from '@app/game/randomizer-client';
-import { offlineChip } from './network-tone';
+import { offlineChip } from './offline-chip';
 import type { NetworkStatus } from '@app/game/randomizer-client';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { NetworkView } from './network-view.type';

@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { EmptyState, RadioGroup, Text } from '@drizztdourden08/tessera/primitives';
 import type { RadioOption } from '@drizztdourden08/tessera/primitives';
 import { toHex4 } from '../behavior/to-hex4';
+import { chooserDeviceLabel } from '../behavior/chooser-device-label';
 import type { ChooseControllerStepProps } from './diagnostics-steps.type';
 import { MatchedEntryPanel } from './MatchedEntryPanel';
 
@@ -11,7 +12,7 @@ const ChooseControllerStep = (props: ChooseControllerStepProps) => {
 
   const options: RadioOption[] = useMemo(() => devices.map((d) => ({
     value: d.deviceKey,
-    label: d.name || addedNames({ deviceKey: d.deviceKey, vendorId: d.vendorId, productId: d.productId }) || d.product || d.deviceKey,
+    label: chooserDeviceLabel(d, addedNames),
     description: `${toHex4(d.vendorId)}:${toHex4(d.productId)} · ${d.busType}${d.hasByteCapability ? '' : ' · no byte capture'}`,
   })), [devices, addedNames]);
 
@@ -31,7 +32,7 @@ const ChooseControllerStep = (props: ChooseControllerStepProps) => {
       {selectedEntry && (
         <MatchedEntryPanel
           entry={selectedEntry}
-          name={selectedEntry.name || addedNames({ deviceKey: selectedEntry.deviceKey, vendorId: selectedEntry.vendorId, productId: selectedEntry.productId }) || selectedEntry.product || selectedEntry.deviceKey}
+          name={chooserDeviceLabel(selectedEntry, addedNames)}
           mapping={mapping}
           profile={profile}
         />

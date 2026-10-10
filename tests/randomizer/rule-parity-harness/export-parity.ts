@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
 import { all } from '@rotp/game-data';
-import { actTokensOf, compileRule, inlineHelpers, walkRuleNode, ruleNodesOfWorld } from '@rotp/randomizer';
+import { actTokensOf, compileRule, inlineNamedRules, walkRuleNode, ruleNodesOfWorld } from '@rotp/randomizer';
 import type { Rule, RuleNode, OptionValue } from '@rotp/randomizer';
 import type { ExportParity } from './rule-parity-harness.type';
 import { prepareState } from './prepare-state';
@@ -13,7 +13,7 @@ const exportParity = (over: Record<string, OptionValue>, states: number, actReco
   const pairs: Array<[string, Rule, Rule]> = [];
   const leftHelpers = new Set<string>();
   const exported = (node: RuleNode): Rule => {
-    const inlined = inlineHelpers(node, world);
+    const inlined = inlineNamedRules(node, world);
     walkRuleNode(inlined, (visited) => { if (visited.op === 'helper') leftHelpers.add(visited.name); });
     return compileRule(inlined);
   };

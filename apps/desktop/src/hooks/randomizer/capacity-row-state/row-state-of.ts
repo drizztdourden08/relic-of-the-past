@@ -1,11 +1,11 @@
 /* @layer renderer-lib @kind logic */
 import { capacityFieldsOf, presetMatching } from '@rotp/randomizer';
-import type { CapacityFamily, CustomFamilySetting, FamilySetting } from '@rotp/randomizer';
+import type { CapacityFamily, FamilySetting, PlannedFamilySetting } from '@rotp/randomizer';
 import type { CapacityRowState, CurveChoice } from '@app/compounds/CapacityFamilyRow';
 import { hiddenPresetsOf } from './hidden-presets-of';
 import { customDefaultOf } from './custom-default-of';
 
-const curveChoiceOf = (capacityFamily: CapacityFamily, setting: CustomFamilySetting, span: number): CurveChoice => {
+const curveChoiceOf = (capacityFamily: CapacityFamily, setting: PlannedFamilySetting, span: number): CurveChoice => {
   const hasCurveRow = capacityFieldsOf(capacityFamily.id).includes('curve');
   if (!hasCurveRow) return 'equal';
   if (setting.shape.curve === 'free') return 'free';

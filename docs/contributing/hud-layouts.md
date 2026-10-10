@@ -262,7 +262,7 @@ first and `tsc` will point at every site that has to answer for it.
 5. Add the `case` that renders it to `HudLayoutView.elementFor`.
 6. In `HudLayoutEditor.constants.ts`, add the id to `ELEMENT_ORDER` and a label to
    `ELEMENT_LABELS`, then a `case` in `StageElement` so the editor previews it.
-7. Give it plausible sample data in `HudLayoutEditor/behavior/sample-state/`, so
+7. Give it plausible sample data in `hud-layout-editing/sample-state/`, so
    the editor still previews with no game running.
 
 Existing saved layouts will not contain a placement for the new id. That is fine

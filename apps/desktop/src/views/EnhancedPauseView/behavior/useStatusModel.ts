@@ -17,7 +17,7 @@ const useStatusModel = (): readonly DungeonItemCell[] => {
     const held = [dungeon.maps, dungeon.compasses, dungeon.bigKeys];
     return DUNGEON_RECORDS.map((recordId, index) => ({
       sprite: spriteOf(recordId),
-      owned: inDungeon && !!((held[index] << shift) & TOP_BIT),
+      owned: inDungeon && Boolean(((held[index] ?? 0) << shift) & TOP_BIT),
     }));
   }, [dungeon, palaceIndex]);
 };

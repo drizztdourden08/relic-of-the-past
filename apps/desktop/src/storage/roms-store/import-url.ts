@@ -14,7 +14,7 @@ const nameFromUrl = (url: string, kind: RomKind): string => {
 
 const importUrl = async (url: string, kind: RomKind = 'snes-alttp'): Promise<RomImportResult> => {
   const bytes = await fetchToBytes(url, (loaded, total) => emitRomProgress('download', loaded, total ?? undefined));
-  return finalizeRomImport(await roms.importBytes(platformFiles(), nameFromUrl(url, kind), bytes, kind, (phase) => emitRomProgress(phase)));
+  return finalizeRomImport(await roms.importBytes(platformFiles(), { fileName: nameFromUrl(url, kind), bytes }, kind, (phase) => emitRomProgress(phase)));
 };
 
 export { importUrl };

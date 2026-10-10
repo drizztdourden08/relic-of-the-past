@@ -2,6 +2,12 @@
 import { hashSeed } from './hash-seed';
 import type { Rng } from './rng.type';
 
+const swapAt = <T>(list: T[], i: number, j: number): void => {
+  const held = list.slice(i, i + 1);
+  list.splice(i, 1, ...list.slice(j, j + 1));
+  list.splice(j, 1, ...held);
+};
+
 const createRng = (seed: string): Rng => {
   let state = hashSeed(seed);
 
@@ -19,7 +25,7 @@ const createRng = (seed: string): Rng => {
     const out = [...arr];
     for (let i = out.length - 1; i > 0; i -= 1) {
       const j = int(i + 1);
-      [out[i], out[j]] = [out[j], out[i]];
+      swapAt(out, i, j);
     }
     return out;
   };

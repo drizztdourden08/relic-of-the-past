@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { encodeIcon, isSlotSized, quantizeIcon } from '../fixed-row-tiles';
 import { QUIVER_ICON_PALETTE_ROW, QUIVER_ICON_SPRITE } from './quiver-icon.constants';
 import type { ImageBuffer } from '../../graphics/png-writer';
@@ -9,7 +10,7 @@ const buildQuiverIconFile = (
 ): Uint8Array | null => {
   const picture = pictures.get(QUIVER_ICON_SPRITE);
   if (!picture || !isSlotSized(picture)) return null;
-  return encodeIcon(quantizeIcon(picture, paletteRows[QUIVER_ICON_PALETTE_ROW]).indices);
+  return encodeIcon(quantizeIcon(picture, itemAt(paletteRows, QUIVER_ICON_PALETTE_ROW, 'Icon palette row')).indices);
 };
 
 export { buildQuiverIconFile };

@@ -1442,7 +1442,7 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 - Intensity guide: 0.10 to 0.20 very faint (ambient), 0.20 to 0.35 faint (footsteps, small clicks), 0.35 to 0.55 medium (sword swing, item use), 0.55 to 0.75 strong (damage, hammer, explosions), 0.75 to 1.00 heavy (death, boss defeat, quake).
 - The global intensity slider scales every value.
 
-### input/data/haptics/combat.data.ts
+### input/data/haptics/combat-patterns.constants.ts
 
 - dashStep has no cooldown because the polling interval paces it, and it is exempt from the minimum-duration floor because it fires about 8 times a second.
 
@@ -1479,7 +1479,7 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 - minDurationMs is the shortest total duration a family's motor needs to spin up and be felt. Shorter patterns are stretched up to it; longer ones and intensity are untouched. A pattern opts out with HapticPatternEntry.minDurationExempt.
 - ResolvedControl.pressThreshold is set only for an axis in the 'trigger' category.
 
-### input/family/gamecube.family.ts
+### input/family/gamecube-family.ts
 
 - Measured from a real pad (057e:2073, sdlType 'gamecube'): 16 buttons (four face, GUIDE, START, both shoulders, d-pad, MISC1 to MISC4) and 6 axes including the triggers. No BACK and no stick clicks.
 - RIGHT_SHOULDER is the Z button. MISC1 is Capture, MISC2 the C button. MISC3 and MISC4 are the digital clicks at the bottom of the L and R triggers' analog travel, so they reuse the trigger glyphs.
@@ -1488,7 +1488,7 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 - SNES L and R default to the trigger clicks (MISC3, MISC4), not the shoulders, because RIGHT_SHOULDER is Z. Z stays unbound.
 - A licensed wireless GameCube style pad uses an ERM motor with spin-up lag (unlike the Switch Pro's near-instant LRA), so short bursts are stretched to 90 ms (minDurationMs).
 
-### input/family/generic.family.ts
+### input/family/generic-family.ts
 
 - Generic is the Null Object of the family layer: the fallback for 'standard' (a device the platform already normalizes) and 'unknown' (one SDL cannot classify), and the last link of every other family's chain. It covers every position so nothing reaches a bare positional name or an empty icon.
 - Its consoleDefaults are also read as a position to console button layout by the built-in glyph packs; dropping the d-pad entries would strip the d-pad glyphs from the Console and Keyboard packs.
@@ -1506,14 +1506,14 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 
 - A trigger SDL reports as an axis takes both value and pressed from the analog reading. A control SDL reports only as a button has pressed straight from the button state and a value of 0 or 1.
 
-### input/family/nintendo.family.ts
+### input/family/nintendo-family.ts
 
 - Covers the Switch Pro Controller and the three Joy-Con reports (left, right, paired).
 - Face button labels are set here because buttonIcons already commits to the layout (EAST is A and draws switch_button_a.svg). Readers with no live device (a saved binding for an unplugged pad, buildConsoleDefaultMappings, buildDeviceProfileFromSdlType) would otherwise show generic's "Button 2 (East)" beside the A glyph. A family's own name wins over SDL's live label (resolveButtonLabelSpecific). The d-pad stays with generic, which matches what the pad prints.
 - Each stick shares one base icon key for X and Y; direction glyphs and the neutral pose come from resolveStickDirectionIcon at render time.
 - The d-pad consoleDefaults are movement's second binding; they also feed the glyph pack layout.
 
-### input/family/playstation.family.ts
+### input/family/playstation-family.ts
 
 - Covers PS3, PS4 and PS5 reports (DualShock 4, DualSense, DualSense Edge).
 - Face labels are set for the same reason as the Nintendo family (EAST draws playstation_button_circle.svg). D-pad and shoulders come from the chain.
@@ -1551,12 +1551,12 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 
 - Xbox dual rumble is a linear ERM magnitude that barely moves below about 0.25, unlike Switch HD rumble. The curve lifts every non-zero intensity onto a 0.3 floor with a 0.85 gain so short combat pulses land. Strength only.
 
-### input/family/xbox.family.ts
+### input/family/xbox-family.ts
 
 - Covers Xbox 360 and Xbox One reports; Series X|S, Elite and Adaptive report as one of those two.
 - Face labels are set because SOUTH draws xbox_button_a.svg. D-pad and shoulders come from generic, whose "D-Pad Up" and "Left Bumper" match the pad.
 
-### input/glyphs/built-in-packs/built-in-packs.data.ts
+### input/glyphs/built-in-packs/built-in-pack-art.constants.ts
 
 - GENERIC_PACK_ART is about artwork, not the device. An unrecognized pad can stack four controls on one side (bumper, trigger, two paddles) and the generic family names them with two keys, which a labelled binding row can live with and a bare cluster chip cannot. Same silhouette down a side, solid then filled then outline for depth, and paddles take a third silhouette so a grip never reads as a trigger.
 
@@ -1566,12 +1566,12 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 - 'snes' draws the console's own art, placed through generic's console defaults. 'keyboard' places the keyboard preset's keys on the positions their console button occupies. Both are keyed by SDL position like every other pack.
 - Icon keys with no artwork on disk are dropped so the fallback chain answers for them.
 
-### input/glyphs/glyph-asset-paths/glyph-files.data.ts
+### input/glyphs/glyph-asset-paths/glyph-files.constants.ts
 
 - Paths are root-relative ('buttons/xbox/...') and never go through the renderer's publicAsset helper, because this layer is shared with the Node side, which has no import.meta.env. The renderer prefixes them.
 - A key with no artwork is absent; the generic pack covers every position.
 - 'ps-share' points at the Create art because the current PlayStation pad prints its Share button as "Create".
-- Generic triggers come in three silhouettes with solid, filled and outline variants for the glyph pack (see built-in-packs.data.ts).
+- Generic triggers come in three silhouettes with solid, filled and outline variants for the glyph pack (see built-in-pack-art.constants.ts).
 
 ### input/glyphs/keyboard-glyph-path.ts
 
@@ -2918,7 +2918,7 @@ The platform facade and composition root. `resolvePlatform` is the single Strate
 - `GameSettings` is the per profile game settings. It mirrors the zelda3 config.h and zelda3.ini fields. The online notice toggles (one `apNotify*` boolean per notice kind) come from online-notice-settings.ts, and the quiet rupees, bombs and arrows switches from quiet-receipts.ts.
 - The section interfaces it extends exist only to keep each part readable; settings are stored flat under these exact keys.
 
-### types/shadow-casting/shadow-casting.data.ts
+### types/shadow-casting/shadow-casting.constants.ts
 
 - `DEFAULT_LIGHTING_CONFIG` is used when no per screen data exists. `EMPTY_SHADOW_PROJECT` is the empty project template.
 

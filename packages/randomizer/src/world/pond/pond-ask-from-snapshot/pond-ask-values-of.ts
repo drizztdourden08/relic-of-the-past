@@ -11,10 +11,10 @@ import type { PondSetting } from '../pond-profile.type';
 
 const pondAskValuesOf = (setting: PondSetting, pond: PondInstance): Record<string, OptionValue> => {
   const ask = askOfSetting(setting);
-  const counted = (['bombs', 'arrows'] as const).flatMap((currency) => [
-    [pondAskKeyOf(pond, currency), ask[currency].enabled] as const,
-    [pondAskMinKeyOf(pond, currency), String(ask[currency].min)] as const,
-    [pondAskMaxKeyOf(pond, currency), String(ask[currency].max)] as const,
+  const counted = (['bombs', 'arrows'] as const).flatMap((currency): [string, OptionValue][] => [
+    [pondAskKeyOf(pond, currency), ask[currency].enabled],
+    [pondAskMinKeyOf(pond, currency), String(ask[currency].min)],
+    [pondAskMaxKeyOf(pond, currency), String(ask[currency].max)],
   ]);
   return {
     ...Object.fromEntries(counted),

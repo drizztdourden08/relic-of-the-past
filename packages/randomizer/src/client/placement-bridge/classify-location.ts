@@ -14,7 +14,6 @@ import { planItemLabel } from '../plan-item-label';
 import { targetLocalIdOf } from '../plan-target-id';
 import { lockedVanillaRow } from './locked-vanilla-row';
 import { npcGrantOf } from './npc-grant-of';
-import type { CheckId } from '@rotp/game-data';
 import type { ItemKey } from '../../world/item-ids';
 import type { LocationKey } from '../../world/location-key';
 import type { ScopeFlags } from '../scope-lock';

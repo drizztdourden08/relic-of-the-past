@@ -13,7 +13,7 @@ const mergeVariableMeta = (next: Variable[], previous: Variable[] | undefined): 
 
   return next.map((variable) => {
     const match = before.get(variable.key);
-    return match && match.kind === variable.kind ? kept(variable, match) : variable;
+    return match?.kind === variable.kind ? kept(variable, match) : variable;
   });
 };
 

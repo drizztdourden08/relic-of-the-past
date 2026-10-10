@@ -21,6 +21,8 @@ const crossingIcon = (crossing: ScreenCrossing): { icon: IconData; color: string
     case 'room-doorway': return { icon: ENTRANCE_ICONS.door, color: ENTRANCE_COLOR };
     case 'room-door':
     case 'exit-table': return { icon: ENTRANCE_ICONS.overworld, color: ENTRANCE_COLOR };
+    case 'ow-border':
+    case 'ow-entrance':
     default: return { icon: ENTRANCE_ICONS[destinationIconType(targetRoomOf(crossing))], color: ENTRANCE_COLOR };
   }
 };

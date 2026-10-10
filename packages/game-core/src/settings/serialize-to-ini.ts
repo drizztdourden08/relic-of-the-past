@@ -35,6 +35,8 @@ const renderFlagsIni = (settings: GameSettings, extendedRendering: boolean): str
     .join('\n');
 };
 
+const optionalLine = (key: string, value: string | undefined): string => (value ? `${key} = ${value}\n` : '');
+
 const serializeToIni = (settings: GameSettings, msuPath?: string, language?: string): string => {
   const er = !settings.vanillaSafe && settings.extendedRendering;
   const aspectValue = aspectRatioIni(settings, er);
@@ -46,7 +48,7 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   const linkGraphicsIni = !settings.vanillaSafe && settings.linkSprite ? LINK_GRAPHICS_LINE : '';
 
   return `[General]
-${language ? `Language = ${language}\n` : ''}Autosave = ${boolToIni(settings.autosave)}
+${optionalLine('Language', language)}Autosave = ${boolToIni(settings.autosave)}
 DisplayPerfInTitle = ${boolToIni(settings.displayPerfInTitle)}
 DisableFrameDelay = ${boolToIni(settings.disableFrameDelay)}
 ExtendedAspectRatio = ${aspectValue}
@@ -72,8 +74,7 @@ EnableMSU = ${msuEnabledIni}
 ResumeMSU = ${boolToIni(settings.resumeMSU)}
 MSUVolume = ${settings.musicVolume}
 PerGroupVolume = ${boolToIni(settings.perGroupVolume)}
-${msuPathIni ? `MSUPath = ${msuPathIni}
-` : ''}
+${optionalLine('MSUPath', msuPathIni)}
 [Features]
 AutoSkipDialog = ${boolToIni(settings.autoSkipDialog)}
 PrefillFileName = ${boolToIni(settings.prefillFileName)}
@@ -91,7 +92,7 @@ MiscBugFixes = ${boolToIni(settings.miscBugFixes)}
 GameChangingBugFixes = ${boolToIni(settings.gameChangingBugFixes)}
 CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
-Haptics = ${boolToIni(Boolean(settings.haptics?.enabled))}
+Haptics = ${boolToIni(settings.haptics.enabled)}
 DeveloperTools = ${boolToIni(settings.developerToolsEnabled)}
 CheatsEnabled = ${boolToIni(settings.cheatsEnabled)}
 VanillaSafe = ${boolToIni(settings.vanillaSafe)}

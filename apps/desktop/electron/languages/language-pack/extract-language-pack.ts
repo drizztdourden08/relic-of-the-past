@@ -9,7 +9,7 @@ const extractLanguagePack = async (rom: RomData, code: string): Promise<Language
   const dir = languagePackPaths.dir(code);
   await mkdir(dir, { recursive: true });
 
-  const dialogue = entry.lines.map((l) => `${l.id}: ${l.content}`).join('\n') + '\n';
+  const dialogue = `${entry.lines.map((l) => `${l.id}: ${l.content}`).join('\n')}\n`;
   const meta: LanguageMeta = {
     code,
     glyphCount: entry.glyphCount,

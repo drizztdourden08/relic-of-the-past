@@ -27,7 +27,7 @@ const onMsuDebug = (event: MsuDebugEvent): void => {
   const channel = event.channel as MusicDebugEvent['channel'];
   const outcome = event.passed ? 'played' : 'skipped';
   recordMusicEvent(
-    { channel, detail: `roll ${event.chance}% → ${outcome} - ${event.layerName}`, owner: event.passed ? 'pack' : 'skipped' },
+    { channel, detail: `roll ${event.chance}% -> ${outcome} - ${event.layerName}`, owner: event.passed ? 'pack' : 'skipped' },
     `roll:${event.channel}:${event.programId}:${event.layerId}`,
     `${event.layerName} @${event.chance}%`,
   );

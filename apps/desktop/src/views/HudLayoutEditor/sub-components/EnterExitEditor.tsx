@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Text, ToggleGroup } from '@drizztdourden08/tessera/primitives';
-import { mergeTransition } from '../behavior/transition-edits';
+import { mergeTransition } from '@app/hud-layout-editing/transition-edits';
 import { EasingPicker } from './EasingPicker';
 import { ValueField } from './ValueField';
 import type { HudEnterExitProperty, HudEnterExitTransition } from '@rotp/hud';

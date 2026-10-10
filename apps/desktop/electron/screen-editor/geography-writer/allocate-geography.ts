@@ -2,7 +2,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { serializeAreaRecord, serializeLocationRecord, areaRecordFile, locationRecordFile } from '@rotp/game-data';
-import type { FileTarget, AreaId, AreaRecord, LocationRecord } from '@rotp/game-data';
+import type { FileTarget, AreaRecord, LocationRecord } from '@rotp/game-data';
 import type { Allocated, AllocateGeographyArgs, AllocateGeographyResult } from '@app/ipc/screen-editor-contract';
 import { withAllocatedIds } from '../id-allocator';
 import { insertBeforeArrayClose } from '../source-writers';
@@ -26,7 +26,7 @@ const allocateGeography = async (root: string, args: AllocateGeographyArgs): Pro
 
   if (args.kind === 'area') {
     return withAllocatedIds(root, 'area', 1, async ([id]) => {
-      const record: AreaRecord = { id: id as AreaRecord['id'], world: args.world, name: name };
+      const record: AreaRecord = { id: id as AreaRecord['id'], world: args.world, name };
       const error = await append(dataFile(root, fileFor(areaRecordFile(record))), serializeAreaRecord(record));
       if (error) return { success: false, error };
       return { success: true, kind: 'area', record: record as Allocated<AreaRecord> };
@@ -36,8 +36,8 @@ const allocateGeography = async (root: string, args: AllocateGeographyArgs): Pro
   return withAllocatedIds(root, 'location', 1, async ([id]) => {
     const record: LocationRecord = {
       id: id as LocationRecord['id'],
-      areaId: args.areaId as AreaId,
-      name: name,
+      areaId: args.areaId,
+      name,
     };
     const error = await append(dataFile(root, fileFor(locationRecordFile(record))), serializeLocationRecord(record));
     if (error) return { success: false, error };

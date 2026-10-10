@@ -10,7 +10,7 @@ const checkExtraction = async (outDir: string): Promise<ExtractionStatus> => {
   if (present.size === 0) return { extracted: false, count: 0 };
 
   const receipt = await readJsonFile<ExtractionReceipt | null>(receiptPath(outDir), null);
-  if (receipt && receipt.manifest === spriteManifestDigest()) return { extracted: true, count: present.size };
+  if (receipt?.manifest === spriteManifestDigest()) return { extracted: true, count: present.size };
 
   return { extracted: expectedSpriteFiles().every(file => present.has(file)), count: present.size };
 };

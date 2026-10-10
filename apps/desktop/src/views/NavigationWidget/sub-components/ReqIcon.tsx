@@ -1,13 +1,14 @@
 /* @layer renderer-widgets @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
-import { IL, REQ_ICONS } from './ReqIcon.constants';
+import { REQ_ICONS } from './ReqIcon.constants';
+import './ReqIcon.css';
 
 const ReqIcon = ({ req }: { req: string }) => {
-  const info = REQ_ICONS[req];
-  if (info) {
-    return <Text title={req} style={IL.emoji}>{info.icon}</Text>;
+  const icon = REQ_ICONS[req];
+  if (icon) {
+    return <Text title={req} className="nav-req-icon">{icon}</Text>;
   }
-  return <Text style={IL.chip}>{req}</Text>;
+  return <Text className="nav-req-chip">{req}</Text>;
 };
 
 export { ReqIcon };

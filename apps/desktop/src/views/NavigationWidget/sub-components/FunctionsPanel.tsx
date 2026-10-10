@@ -1,6 +1,5 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Button, Icon, SegmentedControl, StatRow } from '@drizztdourden08/tessera/primitives';
-import { S } from '../../../nav-widget/styles';
 import { TileRecorderBtn } from './TileRecorderBtn';
 import { PathCopyBtn } from './PathCopyBtn';
 import type { FunctionsPanelProps } from './FunctionsPanel.type';
@@ -13,13 +12,13 @@ const FunctionsPanel = (props: FunctionsPanelProps) => {
   } = props;
 
   return (
-    <Box style={S.section}>
-      <Box style={S.sectionTitle}>Functions</Box>
+    <Box className="nav-section">
+      <Box className="nav-section-title">Functions</Box>
 
       <SegmentedControl value={mode} options={MODE_OPTIONS} onChange={setMode} />
 
       {mode === 'manual' && (
-        <Box style={S.fnRowTop}>
+        <Box className="nav-fn-row-top">
           <Button variant="secondary" size="xs" data-testid="nav-flood-btn" loading={running} icon={<Icon name="play" />} onClick={handleRun}>
             Flood Fill
           </Button>
@@ -29,7 +28,7 @@ const FunctionsPanel = (props: FunctionsPanelProps) => {
         </Box>
       )}
 
-      <Box style={S.fnRowTop}>
+      <Box className="nav-fn-row-top">
         <TileRecorderBtn attrGrid={result?.attrGrid ?? null} overworldScreenIndex={overworldScreenIndex} />
         <PathCopyBtn />
       </Box>

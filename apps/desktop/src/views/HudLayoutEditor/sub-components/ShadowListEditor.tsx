@@ -3,7 +3,7 @@ import { Button, Flex, Grid, Toggle } from '@drizztdourden08/tessera/primitives'
 import { PaintField } from './PaintField';
 import { SubsectionGroup } from './SubsectionGroup';
 import { ValueField } from './ValueField';
-import { shadowSummary, swatchOf } from '../behavior/appearance-summary';
+import { shadowSummary, swatchOf } from '@app/hud-layout-editing/appearance-summary';
 import { BLANK_SHADOW } from './ShadowListEditor.constants';
 import type { HudShadow } from '@rotp/hud';
 import type { ShadowListEditorProps } from './ShadowListEditor.type';

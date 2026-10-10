@@ -1222,7 +1222,7 @@ The motion transport is created here, the only tier allowed to own state the who
 The step strip sits under the preview because it changes how the panel behaves, not what the document says.
 The slot scheme, grid solve and flex slot contexts are provided around the inspector, because they are facts about the session.
 
-### HudLayoutEditor/behavior/useHudLayoutEditor.ts
+### hud-layout-editing/useHudLayoutEditor.ts
 
 The editor view's data: the draft, edits, glyph packs, schemes, sample state and the placed layout.
 The open layout is captured once, so a save that forks does not reopen the editor on the layout it just left.
@@ -1257,7 +1257,7 @@ The global settings strip sits under the preview, pinned to the column's bottom 
 It is separated by a rule, not a card, the same reasoning as `.hud-subsec`.
 The segmented track there is intrinsically sized so the label does not stretch away from it.
 
-### HudLayoutEditor/behavior/action-keys
+### hud-layout-editing/action-keys
 
 A key press is looked up by the cap label the legend draws, such as `←`, `Del` or `Esc`.
 Both manipulation components draw the same legend from the same kind of table, so both use this.
@@ -1265,7 +1265,7 @@ Because the pressed key becomes the cap label and is matched against the action 
 A row claims a press only when its caps are exactly that one key.
 A cursor row that names four arrow caps claims none of them.
 
-### HudLayoutEditor/behavior/align-options
+### hud-layout-editing/align-options
 
 The alignment values each engine supports, one row of tiles per axis.
 A 3x3 pad could not show distribution: nine cells cross two positions, so `between` and `stretch` had no cell.
@@ -1281,7 +1281,7 @@ A flex container's rows are `main` and `cross`, and the diagrams turn with `dire
 `stretch` falls back to `flex-start`, and the bars grow instead.
 `justify` runs along `direction` and `align` crosses it, so a row aligns down and a column aligns across.
 
-### HudLayoutEditor/behavior/appearance-summary
+### hud-layout-editing/appearance-summary
 
 What a collapsed group says about itself; the part of `SubsectionGroup` that is not a component.
 A closed group must still state its value, such as `2px solid #c8a84e`, or the author has to open every group to find the active one.
@@ -1294,7 +1294,7 @@ A shadow summary uses the CSS shorthand order, so it matches the rendered shadow
 `spread` appears only when it is not zero.
 The list summary shows the count so it is readable with every card shut.
 
-### HudLayoutEditor/behavior/bound-values
+### hud-layout-editing/bound-values
 
 Every data bound `Value` on one node, in one place.
 It is the reason the Data section exists, and it feeds the bound count badge on every other section's collapsed header.
@@ -1304,7 +1304,7 @@ It does not descend into a nested node (`child`, `node`, `otherwise`, `children`
 A path is classed by its first segment, since each section's fields share one: `style.*` is Appearance and `element.*` is Content.
 The counts per section drive the small `● n` badge.
 
-### HudLayoutEditor/behavior/case-match
+### hud-layout-editing/case-match
 
 Which case of a `switch` is winning for the data the stage previews.
 In a `switch` the order is the logic, and the reader cannot see it run, so this answers it next to the list of cases.
@@ -1315,7 +1315,7 @@ Inside a repeat there is no single answer, so the report is a count of instances
 `matches now` is kept for a single scope.
 An empty scope list means nothing is known, such as no provider or a repeat of 0, and nothing is marked.
 
-### HudLayoutEditor/behavior/check-expr.ts
+### hud-layout-editing/check-expr.ts
 
 Says whether an expression can be written as it stands, and what the author needs to hear if not.
 The field, the menu and the error line share this one entry point, so they never disagree.
@@ -1324,7 +1324,7 @@ It restates the name rule of `validate-value.ts` on purpose, because that file f
 `extraNames` carries `delta`, which is valid only in `transition.when`.
 `reads` is empty while the formula does not compile, because a half parsed name list is a guess.
 
-### HudLayoutEditor/behavior/drop-ghost
+### hud-layout-editing/drop-ghost
 
 What the drag ghost says: three lines in a fixed order, computed from one intent and nothing else.
 Line 1 states what kind of container the node is dropping into, which the maintainer asked for.
@@ -1350,7 +1350,7 @@ The card sits below and right of the cursor; anything closer than about 10px cov
 It flips to the other side within 150px of the viewport edge, the same reflex `usePickerPopover` has.
 The flip is a translation, so the card never needs a layout pass, which would make it lag the cursor by a frame.
 
-### HudLayoutEditor/behavior/drop-intent/
+### hud-layout-editing/drop-intent/
 
 What a drop would do, never how the pointer said it.
 The outline speaks in rows and zones and the keyboard in directions; both produce a `DropIntent`, and one function consumes it.
@@ -1373,7 +1373,7 @@ A `place` that no longer means anything is deleted on a reparenting drop; a node
 Entering a container without a cell writes no `place`, so it flows in document order.
 The refusal text names nodes by id, because `labelOf` gives the kind and would read `row is already inside row`.
 
-### HudLayoutEditor/behavior/easing-curves
+### hud-layout-editing/easing-curves
 
 The easings an author may pick, derived from the engine.
 `motion-easing.ts` decides what a curve does and `validate-motion.ts` decides what a document may hold; this offers their overlap: five named curves plus `steps(n)`.
@@ -1388,7 +1388,7 @@ The path flips y, because SVG y grows down and an easing's output grows up.
 An unknown name draws as linear, as it does at render time.
 `easingLabel` shows `default` when the field is unset and the animation's own easing applies.
 
-### HudLayoutEditor/behavior/editor-step
+### hud-layout-editing/editor-step
 
 The editor's step, carried to every number in the panel.
 `ValueInput` has taken a `step` for a long time, so a context lets the step reach about 25 fields without threading it through.
@@ -1396,7 +1396,7 @@ The editor's step, carried to every number in the panel.
 The default is 1, so a field rendered outside the provider, such as a measurement rig, steps by one.
 The View is the only provider, and the only reader of `hud-editor-view-store`.
 
-### HudLayoutEditor/behavior/expr-errors
+### hud-layout-editing/expr-errors
 
 Parse errors from expr-eval, turned into sentences an author can act on.
 Every message matched here was probed against the shipped parser, with assignment, function definitions, `in`, arrays and concatenation turned off.
@@ -1410,7 +1410,7 @@ An unclosed paren names its call, such as `ceil(`, because that helps in a formu
 `raw` is the parser's message as `compileExpr` returns it, never the file report wrapper from `validate-value.ts`.
 An unknown name is the one error that is not the parser's.
 
-### HudLayoutEditor/behavior/flex-slots
+### hud-layout-editing/flex-slots
 
 Where a flex container's children landed; it is to the flex editor what `grid-solve` is to the lattice.
 The strip draws the stage's own placement, read from `usePlacedLayout`, so a panel cell has the shape of the cell on the stage.
@@ -1423,7 +1423,7 @@ A repeat's copies share one authored id, so matching on it takes the first insta
 A slot's size is in game pixels and unit free, so the strip may draw it at any size.
 `useFlexSlots` never returns null, so no caller has to branch.
 
-### HudLayoutEditor/behavior/formula-catalog
+### hud-layout-editing/formula-catalog
 
 What the formula menu offers.
 A name that exists only in some places is listed, disabled, with its reason.
@@ -1436,7 +1436,7 @@ The list functions (`length`, `join`, `map`, `filter`, `fold`, `indexOf`, `fac`,
 `random()` is refused by `compile-expr.ts`.
 Groups show what the field can read first, then what it can do with it.
 
-### HudLayoutEditor/behavior/formula-scope
+### hud-layout-editing/formula-scope
 
 A formula inside a `repeat` produces `count` values, not one.
 `InstanceStrip` needs the whole set, so it needs the enclosing repeat's count and `item`.
@@ -1446,7 +1446,7 @@ The default is nothing known, not outside a repeat.
 A field outside the provider still says it is in a repeat when its own prop says so; it just cannot draw the strip.
 The count is floored and never negative, matching the clamp in `engine/expand.ts`; the strip caps its own drawing separately.
 
-### HudLayoutEditor/behavior/formula-starters
+### hud-layout-editing/formula-starters
 
 The corpus is ten formulas: across the three built in layouts and six presets there are 44 bound expressions and 10 distinct ones.
 24 of them are a bare variable name and the rest are four shapes.
@@ -1456,7 +1456,7 @@ The fraction pairs are generated from the `<thing>_current` and `<thing>_max` co
 `CONTAINER_SIZE` is 8 because one heart is eight eighths, so a capacity of 160 is 20 containers.
 A `count` is never offered a comparison and a `when` is never offered a fraction, which is why starters beat a flat palette.
 
-### HudLayoutEditor/behavior/glyph-art
+### hud-layout-editing/glyph-art
 
 Which picture a glyph position draws, resolved like the live HUD: this pack, then its fallback, then generic.
 It moved out of `GlyphPickerGrid` so `ReferenceField` and `SlotRefField` can show the artwork at rest.
@@ -1464,7 +1464,7 @@ The D pad cross is one picture for every pack, because DPAD is not a real SDL po
 A null pack means Auto, which is whatever generic draws.
 `undefined` is a real answer for a position nothing draws, and `Thumbnail` shows its placeholder.
 
-### HudLayoutEditor/behavior/grid-solve-lookup.ts
+### hud-layout-editing/grid-solve-lookup.ts
 
 The lookup behind `GridSolveContext`: every grid on the stage, solved once, keyed by container id.
 `solveGrid` gets the container's real placed rectangle and the same `MeasureContext` that `StageGridEcho` and `ContainerOverlay` read, so panel and stage cells match by construction.
@@ -1472,7 +1472,7 @@ The solve's unit is the container's own placed scale, so a grid inside a scaled 
 Track sizes come back in authored pixels, so the panel can draw them as `fr` weights and the stage at the display scale.
 A repeat's copies share one id, and the first one is taken.
 
-### HudLayoutEditor/behavior/grid-solve
+### hud-layout-editing/grid-solve
 
 The panel's lattice and the stage read one solve.
 An `auto` track's size is its widest child and a `fill` track's is what was left, so only `solveGrid` against a real box can answer.
@@ -1482,7 +1482,7 @@ A prop would pass through `NodeInspector`, `LayoutSection`, `GridTemplateEditor`
 Solved sizes are in game pixels, so the panel can draw them at any scale.
 `useGridSolve` never returns null.
 
-### HudLayoutEditor/behavior/index-selection
+### hud-layout-editing/index-selection
 
 Picking items out of a strip; the grid's track headers and the flex editor's child cells share this rule.
 A plain press picks one, `Shift` takes the run from the anchor, the primary modifier toggles one in or out, and an empty set is no selection.
@@ -1492,7 +1492,7 @@ Modifiers are taken as a plain shape so a test can press a key without a DOM.
 `held` is the current run only when the press lands on the same strip; a `Shift` across strips has no anchor, so the caller decides.
 `null` means nothing is selected, because the modifier removed the last member.
 
-### HudLayoutEditor/behavior/keyframe-track
+### hud-layout-editing/keyframe-track
 
 The arithmetic behind `KeyframeTrack`, kept out of the component so its two rules can be tested without a browser.
 Keys cannot cross: `sampleKeyframes` sorts by `at` on every sample, so a swap would make the dragged diamond edit a different point.
@@ -1506,7 +1506,7 @@ Track order relies on a stable sort, which `Array.prototype.sort` has been since
 An unmeasured rail reads as 0, not `NaN`, so nothing bad reaches the document.
 A key can be removed only while more than two remain, the validator's minimum, so the button and the handler agree.
 
-### HudLayoutEditor/behavior/layout-sides
+### hud-layout-editing/layout-sides
 
 The one place the two engines are translated into the shapes the sections take, so no section branches on the engine.
 Both engines store `gap: { x, y }`, so `gapCellsOf` gives the same two cells for both, and pressing Type leaves section one's shape alone.
@@ -1517,7 +1517,7 @@ A grid places items in cells on two fixed axes (`justifyItems`, `alignItems`, bo
 A flex container distributes along its flow (`justify`, six values) and positions across it (`align`, three values).
 Flex rows are named `main` and `cross`, and `main` points wherever `direction` points.
 
-### HudLayoutEditor/behavior/motion-preview
+### hud-layout-editing/motion-preview
 
 The editor's own transport (scrub, play, pause) for the stage's motion clock, so an author sees a heart pulse without reasoning about keyframes.
 It overrides a clock and does not add one.
@@ -1534,7 +1534,7 @@ The state hook is called once, by the View, and its animation frame loop runs on
 The clock wraps at the span, so play repeats one cycle and the scrub head stays meaningful.
 `useMotionPreview` returns null outside a provider, such as a test fixture with no stage.
 
-### HudLayoutEditor/behavior/new-node
+### hud-layout-editing/new-node
 
 Everything the toolbar can insert, built here and nowhere else.
 Each factory makes a node that is valid on its own: a fresh id and the minimum a validator accepts.
@@ -1550,7 +1550,7 @@ A new countdown has no `variant`, so it follows the profile's own pie until Cont
 `labelOf` shows a container's direction and an element's kind, with the number or button that tells it apart.
 `slotsOf` lists every slot number a node names; it flags an out of range slot in the outline, and the stage selection uses it.
 
-### HudLayoutEditor/behavior/node-art
+### hud-layout-editing/node-art
 
 What a reference to another node shows: its picture where the editor owns one, a human name, and its kind.
 A switch case and a repeat's child are references to whole subtrees, and used to print an id the author never chose.
@@ -1559,7 +1559,7 @@ The id is not dropped, it is demoted: `ReferenceField` shows the kind as the dim
 `src` is `undefined` when a kind has no artwork, and `placeholder` is what `Thumbnail` draws instead of a broken image.
 Each placeholder is a stand in with a shape, never `?`.
 
-### HudLayoutEditor/behavior/node-edits
+### hud-layout-editing/node-edits
 
 Editing the tree, as pure functions over a whole document.
 Each operation returns a new layout and mutates nothing, so the draft can be a memento: one value to compare against and one to reset to.
@@ -1579,7 +1579,7 @@ The screen cannot be deleted: a map that drops it, or returns something that is 
 `insertNode` appends when `at` is not given.
 `moveNode` refuses the screen, a target that is not a container, and a target inside the moved node, returning the document untouched.
 
-### HudLayoutEditor/behavior/offset
+### hud-layout-editing/offset
 
 A node's position is its `margin.left` and `margin.top`, and this is the only place that says so.
 The model has no `offset` property on purpose; a displacement already is a margin, which is how the button cluster's radial offsets are authored.
@@ -1590,7 +1590,7 @@ Zero is absent: an offset of 0 means wherever the parent put it, so committing i
 `EdgesInput` follows the same rule, so a box that was only looked at does not grow four margins.
 An edge set with nothing left in it becomes `undefined`, so a node moved back leaves the document as it was.
 
-### HudLayoutEditor/behavior/sample-state
+### hud-layout-editing/sample-state
 
 A plausible save to arrange a HUD against when no game is running.
 The editor is reached from settings, where the game is least likely to be up, and an empty save would draw no hearts and no chips.
@@ -1609,7 +1609,7 @@ The choice is fixed per slot number, not random, so a placeholder does not chang
 The second and fourth slots always hold the sword and the contextual action, because a layout must be judged with both and neither wears an item sprite.
 It never touches the player's own assignments.
 
-### HudLayoutEditor/behavior/slot-scheme
+### hud-layout-editing/slot-scheme
 
 The slot list the preview is drawn for, reachable from a field.
 A slot number is never validated against a device.
@@ -1618,7 +1618,7 @@ It is a context because the scheme is a fact about the editor session, not the s
 The default is an empty list, which means nothing is previewed, not that no slots exist; consumers draw the number they were given either way.
 `slotInScheme` only claims something about the preview, not the HUD.
 
-### HudLayoutEditor/behavior/stage-cells.ts
+### hud-layout-editing/stage-cells.ts
 
 A placed grid's cells in display pixels; the one door the stage's grid drawings use.
 `gridCellRects(container, box, unit, ctx)` is easy to break: `box` and its result share one coordinate space, and `unit` is that space's pixels per authored pixel.
@@ -1627,17 +1627,17 @@ Fixed tracks looked right, but `fill` tracks stayed in game pixels, so the grid 
 So the solve runs in game pixels at the container's own placed scale, then multiplies by the display scale, and a caller never sees either half.
 `hud-stage-cells.keep.test.ts` checks that no other editor file calls `gridCellRects`.
 
-### HudLayoutEditor/behavior/stage-slot-rects.ts
+### hud-layout-editing/stage-slot-rects.ts
 
 A flex container's slots: the box each child was placed in, so the space between them reads as a gap.
 There is nothing to solve: a flex child either took part in the flow or left it (`collapsed` in `place-flow.ts`), so where children landed is the arrangement.
 Placed ids are unique after `expand.ts` suffixes repeat copies with `#i`, so matching by id cannot pick up another instance.
 
-### HudLayoutEditor/behavior/scaled-rect.ts
+### hud-layout-editing/scaled-rect.ts
 
 The one display scale conversion both stage drawings share.
 
-### HudLayoutEditor/behavior/step-intent
+### hud-layout-editing/step-intent
 
 The keyboard producer: it turns a node and one of four directions into the same `DropIntent` the pointer makes.
 Reparenting is the main structural edit in this editor, and it was pointer only until this existed.
@@ -1652,7 +1652,7 @@ The menu rows follow the wireframe's order.
 A dimmed item that names its precondition teaches the rule, so `Move out of hud` keeps the parent's name even when dead, and `Move into...` stays an ellipsis until there is a sibling to name.
 `STEP_KEYS` is the one map the row handler and the menu's shortcut column read, so a hint never names a key that does something else.
 
-### HudLayoutEditor/behavior/toolbar-menus
+### hud-layout-editing/toolbar-menus
 
 Everything the toolbar's list style buttons can insert or start from.
 Sprite and Glyph are picked by eye in `SpritePicker` and `GlyphPickerGrid`, and Slot has its own panel (`SlotPickerPanel`), so they are not built here.
@@ -1669,7 +1669,7 @@ Each preset insert is a fresh copy from `instantiatePreset` with every id rekeye
 The start from list is the same list `PresetBar` shows.
 `GLYPH_POSITIONS` is every position a pack is keyed by, plus the synthetic whole D pad cross.
 
-### HudLayoutEditor/behavior/track-extents
+### hud-layout-editing/track-extents
 
 A grid's track list, as list edits.
 They live outside the component because a track list is the one thing in this section a document can get structurally wrong (`columns` may never be empty), and the edits are testable without rendering.
@@ -1683,7 +1683,7 @@ A range edit applies to every track the header selection named, not just the anc
 A new track lands after the one it was added from, where the strip's `+` sits.
 A move out of range is refused, not clamped, so a button that should be disabled cannot swap without notice.
 
-### HudLayoutEditor/behavior/transition-edits
+### hud-layout-editing/transition-edits
 
 `node.transition` holds two unrelated ideas: value transitions (a bound number changed, ease toward it) and enter and exit.
 Two subsections of Motion write that one field, so the merge lives here, owned by neither.
@@ -1694,7 +1694,7 @@ Which properties something drives is an annotation, not a filter; every property
 An explicit `undefined` in the patch means clear the key, so such keys are removed and no `"easing": undefined` reaches the saved JSON.
 The six properties follow the order of `hud-motion.ts`.
 
-### HudLayoutEditor/behavior/tree-context
+### hud-layout-editing/tree-context
 
 Questions the inspector's sections ask about where the selected node sits, which `siteOf` alone cannot answer now that repeat and switch nodes are reachable.
 `realParentOf` finds the real container a node's box is placed under, walking through repeat and switch ancestors as `validate-motion-warnings.ts` does, since they draw no box of their own.
@@ -1705,7 +1705,7 @@ The Placement section's cell fields and the Layout section's engine both key off
 `ancestorIdsOf` gives the ids between the root and the node, which the outline must expand before it can scroll to a row selected on the stage.
 `rootsOf` stays a function so every walk reads where the document starts from one place; it was a list while regions hung beside the screen.
 
-### HudLayoutEditor/behavior/use-drag-autoscroll
+### hud-layout-editing/use-drag-autoscroll
 
 The outline's drag reaches past the fold with a ramped animation frame pan on its scroller.
 Only the outline pans, because only it takes a drop; the stage column lost its drop surface, and a scroller that pans under a drag it can never accept moves for no reason.
@@ -1723,12 +1723,12 @@ Reduced motion halves the rate and never disables it, because disabling makes a 
 The setting is read once per drag, because `window.matchMedia` does not exist in every host.
 `scrollerFor` walks up to the nearest ancestor that can scroll, because which element scrolls is a CSS decision; `.hud-outline__rows` was not a scroller at first.
 
-### HudLayoutEditor/behavior/repeat-move.ts
+### hud-layout-editing/repeat-move.ts
 
 Re-emits the pointer's last position so the gesture re-resolves while the pointer is still.
 Auto scroll needs it: rows slide under a still cursor, and a hit test that only runs on `pointermove` keeps naming the old row.
 
-### HudLayoutEditor/behavior/useDragGesture.ts
+### hud-layout-editing/useDragGesture.ts
 
 The outline's drop gesture, now its only caller since the stage nudge was removed.
 It uses pointer events, not the HTML5 drag API.
@@ -1744,7 +1744,7 @@ Once the gesture is real, the trailing `click` is swallowed in the capture phase
 It registers only while a drag is live, so a press that never moved owns no key.
 `SLOP` is 2: below it a press is a click that wobbled.
 
-### HudLayoutEditor/behavior/useOutlineKeys.ts
+### hud-layout-editing/useOutlineKeys.ts
 
 The outline's keyboard path: four shortcuts on a focused row, and the sentence they announce.
 The modifier is `isPrimaryModifier`, not literal `Ctrl`: `metaKey` alone on macOS and iOS, `ctrlKey` alone elsewhere, either where the host cannot say.
@@ -1754,7 +1754,7 @@ It is bound on the row, not on `document`, so there is no second global listener
 One `aria-live` region, written only here, reads `announcementFor`, the ghost's lines flattened, so the announcement and the card share their phrasing.
 Nowhere to go is not a refusal: the row shakes 2px for `SHAKE_MS`, long enough to see and short enough that a held key still repeats.
 
-### HudLayoutEditor/behavior/useOutlineScroll.ts
+### hud-layout-editing/useOutlineScroll.ts
 
 Scrolls the outline to the selected row only when the selection came from outside the outline.
 `onSelect` is shared by the stage, the inspector and the outline's rows, so the origin is found by comparing with the last id the outline's own rows selected (`markSelf`).
@@ -1763,13 +1763,13 @@ Collapsed ancestors are expanded whatever the origin, because a hidden row must 
 `lastHandled` is separate from `lastSelf`, so an unrelated re-render cannot scroll again for an unchanged selection.
 The scroll waits one frame for the expanded row to exist.
 
-### HudLayoutEditor/behavior/usePanelResize.ts
+### hud-layout-editing/usePanelResize.ts
 
 The outline and inspector rails' resize wiring, kept out of the editor's view.
 Width comes from the view store, `useResize` drives the drag, and `onPreview` writes each rail's inline style so state only changes on release.
 The inspector's handle is on its own left edge, so `invert` flips the delta.
 
-### HudLayoutEditor/behavior/useSpringLoad.ts
+### hud-layout-editing/useSpringLoad.ts
 
 Hovering a collapsed row during a drag opens it after 500ms, like Finder and Explorer, at the low end of their 500 to 600ms range.
 Collapse state is `collapsedNodeIds` in the view store, because folding a row is a fact about how someone is looking at the tree.
@@ -1779,7 +1779,7 @@ A drag should not leave the view changed, but closing the row that just received
 A cancel closes every sprung row, since nothing landed.
 The timer resets on leaving the row, and `pending` drives the caret's wait, the only animation in the design.
 
-### HudLayoutEditor/behavior/useTextValue.ts
+### hud-layout-editing/useTextValue.ts
 
 The draft and commit half of `TextValueField`, applying `useValueInput`'s rules to a string.
 There is no mode switch: one field, one string, and a leading `=` is the only thing that means formula.
@@ -1790,7 +1790,7 @@ A blur with nothing uncommitted writes nothing, so a click that changed nothing 
 The `=` chip appears on focus and does what typing `=` does, keeping the text already there.
 `dirty` is an edit that has not reached the document, which is why a result is withheld.
 
-### HudLayoutEditor/behavior/useEditorSchemes.ts
+### hud-layout-editing/useEditorSchemes.ts
 
 The control scheme running right now, a quiet background fact and never a control set in this editor.
 Slot numbers are never validated against a device, so this exists for two things only.
@@ -1804,7 +1804,7 @@ Then the profile's own recorded choice, which outranks the input manager, becaus
 The manager is used only when there is no stored choice.
 A change is written to disk and to the running session; re-pushing the active profile rebuilds the bindings, and both the HUD layout store and the control scheme store follow them, so the game sees it at once.
 
-### HudLayoutEditor/behavior/useGlyphPacks.ts
+### hud-layout-editing/useGlyphPacks.ts
 
 Every glyph pack the editor can offer, and the operations on the player's own packs.
 Custom packs are loaded with the shipped ones and passed to the glyph chain as one list, so a custom pack is consulted first and falls through to the pack it names and then the device family.
@@ -1812,7 +1812,7 @@ Images are primed into the object URL cache as soon as packs are read, because r
 `version` bumps whenever an image is added or removed, because a re-import keeps the same file key and the pack object alone cannot say so.
 `packs` lists shipped packs first, then the player's own, as one stable array so the preview's memo holds.
 
-### HudLayoutEditor/behavior/useLayoutDraft.ts
+### hud-layout-editing/useLayoutDraft.ts
 
 The working layout, kept as a memento.
 The editor copies the layout in force when it opens (`origin`, never written), edits `draft`, and only Save reaches storage and the layout store.
@@ -1824,21 +1824,21 @@ The toolbar's insert, the outline's drag and the inspector's fields all arrive t
 Start from keeps the draft's own identity when it has one, so it restyles the open layout instead of switching layouts.
 The start from list holds the shipped layouts, then the custom ones.
 
-### HudLayoutEditor/behavior/useNodeEdits.ts
+### hud-layout-editing/useNodeEdits.ts
 
 Selection, and the things that can be done to the selected node.
 The selection is an id, not a node, because every edit rebuilds the tree and a held node would be stale one keystroke later.
 `drop` is the one door both surfaces' `DropIntent` comes through; `behavior/drop-intent/move-all.ts` is the only module that calls `moveNode`, and a test checks it.
 The newly inserted node becomes the selection, because the next step is usually to size or move it.
 
-### HudLayoutEditor/behavior/insert-site.ts
+### hud-layout-editing/insert-site.ts
 
 Where an insert lands.
 With a container selected it goes into that container.
 With an element selected it goes beside it, in its parent, right after it.
 With nothing selected it goes into the screen, so the toolbar is never inert.
 
-### HudLayoutEditor/behavior/useSampleState.ts
+### hud-layout-editing/useSampleState.ts
 
 What the editor's preview draws against.
 The vitals prefer the running game, and the slots never do.
@@ -1850,7 +1850,7 @@ The content has the same shape the live HUD passes the renderer, built by the sa
 A save with no heart containers has never been loaded, which is the whole liveness test.
 Bow tier 3 and up is the silver art, as the live HUD reads it, and health is stored in eighths of a heart.
 
-### HudLayoutEditor/behavior/useSampleState.type.ts
+### hud-layout-editing/sample-state.type.ts
 
 `live` is false when nothing is running and the values are made up.
 `filledSlots` lists slot numbers that fire something, for the layout pass's dim rule.
@@ -1858,7 +1858,7 @@ Bow tier 3 and up is the silver art, as the live HUD reads it, and health is sto
 `dataScope` is what every bound value, repeat and switch in the preview reads, built from the same vitals.
 An empty `slots` argument falls back to a plausible eight.
 
-### HudLayoutEditor/behavior/value-text
+### hud-layout-editing/value-text
 
 The one rule that replaced the `123 | ƒx` switch: what a person types, and what the document keeps.
 The leading `=` is the only thing that marks a formula, and it is never stored.
@@ -2213,14 +2213,14 @@ It is reachable without a pointer: four shortcuts on a focused row, a context me
 The spring load is settled from `commit` through a ref, before the drop, so rows the drag opened close again except the one it landed in.
 A refused drop has no row highlight; the ghost card turns and names both nodes instead.
 
-### HudLayoutEditor/behavior/outline-rows.ts
+### hud-layout-editing/outline-rows.ts
 
 Flattens the tree into outline rows; a collapsed row's descendants are not walked, so this is also the filter.
 A row has a subtree when it is a container with children, a repeat, or a switch.
 A direct child of the screen carries a badge naming its cell in the screen's grid; a child with no `place` flows automatically and has no single cell.
 A repeat's child and a switch's cases are locked rows: selectable and editable, but not draggable, since they sit in no container's `children` array.
 
-### HudLayoutEditor/behavior/row-under.ts
+### hud-layout-editing/row-under.ts
 
 The row under the pointer, looked up, not received: pointer capture makes every move report on the source row, which is also what lets the drag survive leaving the rail.
 A locked row is not a target.
@@ -2676,7 +2676,7 @@ The screen's lock is one `DisabledReason` scrim over size and limits, with the m
 The screen's padding, the one thing it authors, stays live outside the scrim. `inert` on the covered subtree takes it out of the tab order.
 `isScreen` marks the whole screen root.
 
-### HudLayoutEditor/behavior/extent-text.ts
+### hud-layout-editing/extent-text.ts
 
 What the middle of the box model reads: the authored size, not the resolved rectangle.
 The panel does not have the placed rectangle, the stage does, and a number labelled resolved that was not would be worse than none.
@@ -2794,7 +2794,7 @@ A cell's `weight` is the child's placed size along the flow in game pixels, `0` 
 
 Equal shares when nothing has a size yet, which says no proportions are known instead of guessing. The lattice makes the same fallback.
 
-### HudLayoutEditor/sub-components/FlexEditor/sub-components/HudLayoutEditor.flex.css
+### HudLayoutEditor/sub-components/FlexEditor/sub-components/FlexStrip.css
 
 The flex manipulation drawing. The toolbar and legend bands are `SelectionBands`, shared with the grid; only the drawing is here.
 `flex-direction` follows the container's `direction` and `flex-wrap` its `wrap`, so a column's children stack in the panel as on the stage.

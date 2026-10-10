@@ -55,7 +55,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
 
   const showKeys = data.keys !== 255 && data.keys !== 0xFF;
   const rupeeDigits = data.maxRupees > 999 ? 4 : 3;
-  const hasSilverArrows = data.items[0] >= 3;
+  const hasSilverArrows = (data.items[0] ?? 0) >= 3;
 
   const counts = (
     <>

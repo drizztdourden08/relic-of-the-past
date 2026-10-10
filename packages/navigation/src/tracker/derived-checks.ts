@@ -10,6 +10,20 @@ const dungeonMembers = (record: CheckRecord, checks: readonly CheckRecord[]): Ch
     && ((rule.kinds?.includes(c.kind) ?? false) || (rule.tag !== undefined && hasTagKey(c.tags ?? [], rule.tag))));
 };
 
+const isDerivedComplete = (
+  record: CheckRecord,
+  checks: readonly CheckRecord[],
+  items: ReadonlySet<ItemId>,
+  completed: Set<CheckId>,
+): boolean => {
+  if (record.derivedDungeon) {
+    const members = dungeonMembers(record, checks);
+    return members.length > 0 && members.every((m) => completed.has(m.id));
+  }
+  if (record.derived && evaluateRequirement(record.derived, items, completed)) return true;
+  return Boolean(record.fallback && evaluateRequirement(record.fallback, items, completed));
+};
+
 const resolveDerivedChecks = (
   completed: Set<CheckId>,
   inventory: ReadonlySet<ItemId> | null,
@@ -19,13 +33,7 @@ const resolveDerivedChecks = (
   const items = inventory ?? EMPTY_INVENTORY;
   for (const record of checks) {
     if (completed.has(record.id) || armed.has(record.id)) continue;
-    if (record.derivedDungeon) {
-      const members = dungeonMembers(record, checks);
-      if (members.length > 0 && members.every((m) => completed.has(m.id))) completed.add(record.id);
-      continue;
-    }
-    if (record.derived && evaluateRequirement(record.derived, items, completed)) { completed.add(record.id); continue; }
-    if (record.fallback && evaluateRequirement(record.fallback, items, completed)) completed.add(record.id);
+    if (isDerivedComplete(record, checks, items, completed)) completed.add(record.id);
   }
   return completed;
 };

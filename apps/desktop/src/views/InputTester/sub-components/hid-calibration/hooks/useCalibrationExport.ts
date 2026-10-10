@@ -36,10 +36,10 @@ const useCalibrationExport = (d: ActionDeps) => {
   const handleCopyJson = useCallback(async (): Promise<boolean> => {
     try {
       await navigator.clipboard.writeText(JSON.stringify(buildCalibrationMap(), null, 2));
-      d.addLog('✓ Copied calibration JSON to clipboard.');
+      d.addLog('OK Copied calibration JSON to clipboard.');
       return true;
     } catch (err) {
-      d.addLog(`⚠ Failed to copy JSON: ${err instanceof Error ? err.message : String(err)}`);
+      d.addLog(`Warning: Failed to copy JSON: ${err instanceof Error ? err.message : String(err)}`);
       return false;
     }
   }, [buildCalibrationMap, d.addLog]);
@@ -50,10 +50,10 @@ const useCalibrationExport = (d: ActionDeps) => {
     const map = buildCalibrationMap();
     try {
       const filePath = await appApi().writeHidDebugFile(map.name || map.profileId, map);
-      d.addLog(`✓ Saved calibration to ${filePath}`);
+      d.addLog(`OK Saved calibration to ${filePath}`);
       return true;
     } catch (err) {
-      d.addLog(`⚠ Failed to save debug file: ${err instanceof Error ? err.message : String(err)}`);
+      d.addLog(`Warning: Failed to save debug file: ${err instanceof Error ? err.message : String(err)}`);
       return false;
     }
   }, [buildCalibrationMap, d.addLog]);

@@ -23,6 +23,6 @@ const OPTION_TAB_LABELS: Readonly<Record<OptionTabId, string>> = {
 const OPTION_TABS: readonly OptionTabDef[] =
   OPTION_TAB_IDS.map((id) => ({ id, label: OPTION_TAB_LABELS[id] }));
 
-const FIRST_OPTION_TAB: OptionTabId = OPTION_TABS[0].id;
+const FIRST_OPTION_TAB: OptionTabId = OPTION_TAB_IDS[0];
 
 export { OPTION_TAB_LABELS, OPTION_TABS, FIRST_OPTION_TAB };

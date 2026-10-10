@@ -1,6 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { GridPos } from '@rotp/game-core';
 import type { ScreenGridBundle } from '../../types';
+import type { FiringScene } from './enemy-reach-geometry.type';
 import { attrGridsOf } from '../discover-bombs/attr-grids-of';
 import { MAX_SEARCH_STEPS, ORTHOGONAL_DIRECTIONS, PROJECTILE_BLOCKED } from './enemy-reach-geometry.constants';
 import { isStandable } from './is-standable';
@@ -8,13 +9,8 @@ import { isStandable } from './is-standable';
 const blocksProjectile = (bundle: ScreenGridBundle, tile: GridPos, collisionTable: number[]): boolean =>
   attrGridsOf(bundle).some((g) => collisionTable[g[tile.row]?.[tile.col] ?? 0] === PROJECTILE_BLOCKED);
 
-const findLineOfFirePosition = (
-  target: GridPos,
-  travel: number,
-  reached: boolean[][] | undefined,
-  bundle: ScreenGridBundle | undefined,
-  collisionTable: number[] | undefined,
-): GridPos | undefined => {
+const findLineOfFirePosition = (target: GridPos, travel: number, scene: FiringScene): GridPos | undefined => {
+  const { reached, bundle, collisionTable } = scene;
   if (!bundle || !collisionTable) return undefined;
   const maxSteps = Math.min(travel, MAX_SEARCH_STEPS);
   for (const dir of ORTHOGONAL_DIRECTIONS) {

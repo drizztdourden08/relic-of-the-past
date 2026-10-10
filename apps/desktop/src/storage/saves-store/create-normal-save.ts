@@ -5,6 +5,6 @@ import { platformFiles } from '../platform-files';
 import { saveBytes } from './save-bytes';
 
 const createNormalSave = async (p: string, name: string, data: ArrayBuffer, screenshot?: ArrayBuffer): Promise<NormalSaveInfo> =>
-  saves.createNormalSave(platformFiles(), p, name, await saveBytes.stamped(data), saveBytes.optional(screenshot));
+  saves.createNormalSave(platformFiles(), p, name, { data: await saveBytes.stamped(data), screenshot: saveBytes.optional(screenshot) });
 
 export { createNormalSave };

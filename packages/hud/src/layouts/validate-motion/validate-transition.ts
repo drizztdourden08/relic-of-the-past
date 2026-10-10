@@ -16,7 +16,7 @@ const enumArrayAt = <T extends string>(
     issues.push(`${path}: expected a non-empty array of ${allowed.join(', ')}`);
     return undefined;
   }
-  const bad = value.find((p) => !(allowed as readonly string[]).includes(p as string));
+  const bad: unknown = value.find((p: unknown) => !(allowed as readonly string[]).includes(p as string));
   if (bad !== undefined) { issues.push(`${path}: expected only ${allowed.join(', ')}, got ${JSON.stringify(bad)}`); return undefined; }
   return value as T[];
 };

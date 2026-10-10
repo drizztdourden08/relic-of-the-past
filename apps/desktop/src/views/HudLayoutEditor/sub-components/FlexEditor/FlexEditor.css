@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+
+.hud-flex {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}

@@ -18,7 +18,7 @@ const produceLoadableSeq = (serializer_memory: (number | null)[]): Buffer => {
 
     const data = Buffer.alloc(len);
     for (let i = 0; i < len; i++) {
-      data[i] = serializer_memory[start + i]!;
+      data[i] = serializer_memory[start + i] ?? 0;
     }
     chunks.push(data);
     start = end;

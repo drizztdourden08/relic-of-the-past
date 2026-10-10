@@ -5,4 +5,14 @@ interface Frame {
   index: number;
 }
 
-export type { Frame };
+interface PathScan {
+  source: string;
+  lines: Map<string, number>;
+  stack: Frame[];
+  line: number;
+  quote: string | null;
+  pendingPath: string | null;
+  i: number;
+}
+
+export type { Frame, PathScan };

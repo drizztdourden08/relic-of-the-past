@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { chromaOf, toOklab } from '../../graphics/oklab';
 import { colorKey } from './color-key';
 import { LIGHTNESS_WEIGHT, NEUTRAL_CHROMA, SPECK_PIXELS, SPREAD_LIMIT } from './perceptual-match.constants';
@@ -29,7 +30,7 @@ const placeGreys = (greys: readonly Tone[], neutral: readonly Entry[]): Map<numb
   const placed = new Map<number, number>();
   for (const tone of greys) {
     let best = 0;
-    neutral.forEach((e, at) => { if (Math.abs(e.lab[0] - tone.lab[0]) < Math.abs(neutral[best].lab[0] - tone.lab[0])) best = at; });
+    neutral.forEach((e, at) => { if (Math.abs(e.lab[0] - tone.lab[0]) < Math.abs(itemAt(neutral, best, 'Neutral palette entry').lab[0] - tone.lab[0])) best = at; });
     placed.set(tone.key, best);
   }
   for (let at = 1; at < neutral.length; at++) {
@@ -37,7 +38,7 @@ const placeGreys = (greys: readonly Tone[], neutral: readonly Entry[]): Map<numb
     if (here.length < 2 || [...placed.values()].includes(at - 1)) continue;
     placed.set(here.reduce((a, b) => (a.lab[0] <= b.lab[0] ? a : b)).key, at - 1);
   }
-  return new Map([...placed].map(([key, at]) => [key, neutral[at].index]));
+  return new Map([...placed].map(([key, at]) => [key, itemAt(neutral, at, 'Neutral palette entry').index]));
 };
 
 const nearestEntry = (lab: Oklab, pool: readonly Entry[]): Entry | undefined =>

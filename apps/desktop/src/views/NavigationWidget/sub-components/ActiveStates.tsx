@@ -1,20 +1,19 @@
 /* @layer renderer-widgets @kind component */
 import type { ActiveState } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../../../nav-widget/styles';
-import { IL } from './ActiveStates.constants';
+import './ActiveStates.css';
 
 const ActiveStates = ({ states }: { states: readonly ActiveState[] }) => (
-  <Box style={S.section}>
-    <Box style={S.sectionTitle}>States</Box>
+  <Box className="nav-section">
+    <Box className="nav-section-title">States</Box>
     {states.length === 0 ? (
-      <Text style={IL.none}>none active</Text>
+      <Text className="nav-active-states__none">none active</Text>
     ) : (
-      <Box style={IL.row}>
+      <Box className="nav-active-states__row">
         {states.map((state) => (
-          <Text key={state.id} style={{ ...IL.chip, ...(state.gating ? IL.chipGating : {}) }} title={state.hint ?? state.detail ?? state.label}>
+          <Text key={state.id} className={state.gating ? 'nav-active-states__chip nav-active-states__chip--gating' : 'nav-active-states__chip'} title={state.hint ?? state.detail ?? state.label}>
             {state.label}
-            {state.detail && <Text style={IL.detail}> · {state.detail}</Text>}
+            {state.detail && <Text className="nav-active-states__detail"> · {state.detail}</Text>}
           </Text>
         ))}
       </Box>

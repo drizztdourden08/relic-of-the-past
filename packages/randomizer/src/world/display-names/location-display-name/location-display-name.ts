@@ -1,5 +1,6 @@
 /* @layer shared-game @kind logic */
 import { getCheck, standardNameOfCheck } from '@rotp/game-data';
+import { itemAt } from '../../../checked-access';
 import { isSlotKey } from '../../location-key';
 import { shopSlotLocationOf } from '../../shops/shop-slots';
 import { POND_LABEL_BY_ID, POND_RUNG, RESTOCK_ORDINALS } from './location-display-name.constants';
@@ -8,7 +9,7 @@ import type { LocationKey } from '../../location-key';
 const slotName = (key: LocationKey): string => {
   const rung = POND_RUNG.exec(key);
   if (rung !== null) {
-    const label = POND_LABEL_BY_ID.get(rung[1]);
+    const label = POND_LABEL_BY_ID.get(itemAt(rung, 1));
     if (label !== undefined) return `${label} ${rung[2]}`;
   }
   return key;

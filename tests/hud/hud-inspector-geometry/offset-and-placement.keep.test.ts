@@ -5,7 +5,7 @@ import { act, createElement as h } from 'react';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { PlacementSection } from '@app/views/HudLayoutEditor/sub-components/sections/PlacementSection';
-import { offsetOf, withOffset } from '@app/views/HudLayoutEditor/behavior/offset';
+import { offsetOf, withOffset } from '@app/hud-layout-editing/offset';
 import { EDITOR, FLEX_PARENT, GRID_PARENT } from './geometry.constants';
 import { installPlatformHarness } from './install-platform-harness';
 import { spacerNode as node } from './spacer-node';
@@ -43,8 +43,8 @@ describe('a position is margin.left / margin.top, in one place', () => {
 
   it('routes its one remaining writer through that one module', () => {
     const reads = (f: string): string => readFileSync(join(EDITOR, f), 'utf8');
-    expect(reads('sub-components/OffsetField.tsx')).toContain("from '../behavior/offset'");
-    expect(reads('sub-components/StageSelection.tsx')).not.toMatch(/from '\.\.\/behavior\/offset'/);
+    expect(reads('sub-components/OffsetField.tsx')).toContain("from '@app/hud-layout-editing/offset'");
+    expect(reads('sub-components/StageSelection.tsx')).not.toMatch(/from '@app\/hud-layout-editing\/offset'/);
   });
 });
 

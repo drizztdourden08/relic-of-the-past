@@ -3,8 +3,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { ghostFor } from '@app/views/HudLayoutEditor/behavior/drop-ghost';
-import { outlineIntent } from '@app/views/HudLayoutEditor/behavior/drop-intent';
+import { ghostFor } from '@app/hud-layout-editing/drop-ghost';
+import { outlineIntent } from '@app/hud-layout-editing/drop-intent';
 import { DragGhost } from '@app/views/HudLayoutEditor/sub-components/DragGhost';
 import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { PlatformContext } from '@drizztdourden08/brock-react';

@@ -5,7 +5,7 @@ import type { ScreenLookup } from './detection.type';
 let cachedLookup: ScreenLookup | null = null;
 
 const getScreenLookup = (): ScreenLookup => {
-  if (!cachedLookup) cachedLookup = buildScreenLookup();
+  cachedLookup ??= buildScreenLookup();
   return cachedLookup;
 };
 

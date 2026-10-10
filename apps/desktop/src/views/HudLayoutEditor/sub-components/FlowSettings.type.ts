@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { FlowDirection } from '../behavior/align-options';
+import type { FlowDirection } from '@app/hud-layout-editing/align-options';
 
 interface FlowSettingsProps {
   direction: FlowDirection;

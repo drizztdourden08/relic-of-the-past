@@ -1,0 +1,4 @@
+/* @layer renderer-widgets @kind style */
+.nav-edge-arrow-svg {
+  flex-shrink: 0;
+}

@@ -1,0 +1,28 @@
+/* @layer renderer-widgets @kind style */
+
+.nav-internal-edges-section__meta {
+  font-size: var(--size-10);
+  color: var(--c-text-dim);
+  margin-bottom: var(--size-4);
+  margin-top: var(--size-8);
+  text-transform: uppercase;
+  letter-spacing: var(--size-1);
+}
+
+.nav-internal-edges-section__wrap-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-6);
+  justify-content: center;
+}
+
+.nav-internal-edges-section__layer {
+  font-size: var(--size-8);
+  margin-top: var(--size-2);
+}
+
+.nav-internal-edges-section__same {
+  font-size: var(--size-8);
+  color: var(--c-secondary);
+  margin-top: var(--size-2);
+}

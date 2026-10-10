@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useEditorStep } from '../behavior/editor-step';
+import { useEditorStep } from '@app/hud-layout-editing/editor-step';
 import { ValueInput } from './ValueInput';
 import type { ValueFieldProps } from './ValueField.type';
 

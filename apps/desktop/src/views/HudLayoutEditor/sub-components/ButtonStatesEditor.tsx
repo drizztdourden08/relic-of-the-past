@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Flex, SegmentedControl, Select } from '@drizztdourden08/tessera/primitives';
-import { useSlotScheme } from '../behavior/slot-scheme';
+import { useSlotScheme } from '@app/hud-layout-editing/slot-scheme';
 import { ButtonStateRow } from './ButtonStateRow';
 import { SlotRefField } from './SlotRefField';
 import { STATES, VERBS } from './ButtonStatesEditor.constants';

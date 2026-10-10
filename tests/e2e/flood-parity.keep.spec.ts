@@ -44,7 +44,7 @@ const dumpReachable = async (state: string): Promise<number> => {
       await new Promise((r) => setTimeout(r, 1000));
     }
     if (!existsSync(DUMP_PATH)) throw new Error(`--dump-nav=${state} wrote no dump`);
-    const dump = JSON.parse(readFileSync(DUMP_PATH, 'utf8'));
+    const dump = JSON.parse(readFileSync(DUMP_PATH, 'utf8')) as { error?: string; floodFill?: { reachableCount?: number } };
     if (dump.error) throw new Error(`--dump-nav=${state} reported: ${dump.error}`);
     return dump.floodFill?.reachableCount ?? -1;
   } finally {
@@ -57,7 +57,7 @@ for (const state of STATES) {
     test.setTimeout(600_000);
     const widget = await widgetReachable(state);
     const dump = await dumpReachable(state);
-    console.log(`PARITY ${state} widget=${widget} dump=${dump}`);
+    test.info().annotations.push({ type: 'parity', description: `${state} widget=${widget} dump=${dump}` });
     expect(widget, `widget reported ${widget} but --dump-nav reported ${dump} for ${state}`).toBe(dump);
   });
 }

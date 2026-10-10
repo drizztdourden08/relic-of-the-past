@@ -2,6 +2,7 @@
 import type { ScreenShadowData } from '../shadow-casting-types';
 import type { FBO } from '../webgl/gl-helpers';
 import type { getUniformLocations } from './get-uniform-locations';
+import type { LightUniforms } from './light-calculator.type';
 
 interface ShadowPrograms {
   shadow: WebGLProgram;
@@ -35,4 +36,10 @@ interface ShadowState {
   snesHeight: number;
 }
 
-export type { ShadowPrograms, ShadowUniforms, ShadowPipeline, ShadowState };
+interface ShadowFrame {
+  lighting: ScreenShadowData['lighting'];
+  lights: LightUniforms;
+  time: number;
+}
+
+export type { ShadowFrame, ShadowPrograms, ShadowUniforms, ShadowPipeline, ShadowState };

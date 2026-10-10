@@ -2,6 +2,7 @@
 import { getCheckByGameId } from '@rotp/game-data';
 import type { CheckRecord, ScreenId } from '@rotp/game-data';
 import type { ComparisonStrategy } from '../../compare/probe.type';
+import { eraseSetProbe } from '../../compare/erase-set-probe';
 import type { ScreenObservations } from '../../detection-types';
 import { chestPresenceProbe } from './chest-presence-probe';
 import { checkCorrectionProbes } from './check-correction-probes';
@@ -24,7 +25,7 @@ const checkStrategy: ComparisonStrategy<'check'> = {
   kind: 'check',
   subjects: subjectsFor,
   fields: checkCorrectionProbes,
-  sets: [chestPresenceProbe],
+  sets: [eraseSetProbe(chestPresenceProbe)],
 };
 
 export { checkStrategy };

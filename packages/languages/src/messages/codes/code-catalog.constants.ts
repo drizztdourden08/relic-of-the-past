@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import { CODE_CATALOG } from './code-catalog.data';
+import { CODE_CATALOG } from './code-catalog-entries.constants';
 
 const CATALOG_BY_NAME = new Map(CODE_CATALOG.map((info) => [info.name, info]));
 

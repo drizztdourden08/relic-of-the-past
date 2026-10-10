@@ -2,7 +2,7 @@
 import { warmupState } from './warmup-state';
 
 const loadGlueScript = (): Promise<void> => {
-  if ((window as unknown as { Zelda3?: unknown }).Zelda3) return Promise.resolve();
+  if (Reflect.get(window, 'Zelda3')) return Promise.resolve();
   if (warmupState.gluePromise) return warmupState.gluePromise;
   warmupState.gluePromise = new Promise<void>((resolve, reject) => {
     const el = document.createElement('script');

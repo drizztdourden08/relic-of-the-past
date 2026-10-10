@@ -8,15 +8,17 @@ const createSeedLedger = (): SeedLedger => {
 
   const add = (screenIndex: number, tile: GridPos): boolean => {
     let keys = seen.get(screenIndex);
-    if (!keys) {
+    let tiles = byScreen.get(screenIndex);
+    if (!keys || !tiles) {
       keys = new Set<string>();
+      tiles = [];
       seen.set(screenIndex, keys);
-      byScreen.set(screenIndex, []);
+      byScreen.set(screenIndex, tiles);
     }
     const key = `${tile.row},${tile.col}`;
     if (keys.has(key)) return false;
     keys.add(key);
-    byScreen.get(screenIndex)!.push(tile);
+    tiles.push(tile);
     return true;
   };
 

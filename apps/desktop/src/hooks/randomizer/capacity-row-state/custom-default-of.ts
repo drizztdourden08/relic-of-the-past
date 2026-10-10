@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { maxSpanOf } from '@rotp/randomizer';
-import type { CapacityFamily, CustomFamilySetting } from '@rotp/randomizer';
+import type { CapacityFamily, PlannedFamilySetting } from '@rotp/randomizer';
 
-const customDefaultOf = (capacityFamily: CapacityFamily): CustomFamilySetting => {
+const customDefaultOf = (capacityFamily: CapacityFamily): PlannedFamilySetting => {
   const { ladder, defaultCount, vanillaRung } = capacityFamily;
   return {
     mode: 'custom',

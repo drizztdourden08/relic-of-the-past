@@ -40,7 +40,7 @@ const migrateNode = (value: unknown): unknown => {
     if (value.element.type === 'switch') {
       const { element } = value;
       const cases = Array.isArray(element.cases)
-        ? element.cases.map((entry) => (isRecord(entry) ? { ...entry, node: migrateNode(entry.node) } : entry))
+        ? element.cases.map((entry: unknown) => (isRecord(entry) ? { ...entry, node: migrateNode(entry.node) } : entry))
         : element.cases;
       return {
         ...value,

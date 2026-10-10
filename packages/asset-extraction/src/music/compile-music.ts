@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 import * as yaml from 'js-yaml';
-import type { CompiledSong, CompiledSoundBank, MusicCompileInput, MusicInfo } from './compile-types.type';
+import type { CompiledSoundBank, MusicCompileInput, MusicInfo } from './compile-types.type';
 import { DUPLICATE_SAMPLE_SOURCES } from './compile-lookups.constants';
 import { NameRegistry } from './name-registry';
 import { MusicSerializer } from './music-serializer';
@@ -30,7 +30,7 @@ const compileSoundBank = (songName: string, input: MusicCompileInput): CompiledS
   }
 
   if (songName === 'indoor') {
-    const s = registry.getOrCreate<CompiledSong>('Song_0x2880', 'Song', false);
+    const s = registry.getOrCreate('Song_0x2880', 'Song', false);
     if (s) {
       s.defined = true;
       s.writeAddr = 0x2880;

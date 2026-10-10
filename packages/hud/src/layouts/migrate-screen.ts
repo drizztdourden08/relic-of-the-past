@@ -24,7 +24,7 @@ const migrateNode = (value: unknown): unknown => {
     if (element.type === 'repeat') return { ...value, element: { ...element, child: migrateNode(element.child) } };
     if (element.type !== 'switch') return value;
     const cases = Array.isArray(element.cases)
-      ? element.cases.map((c) => (isRecord(c) ? { ...c, node: migrateNode(c.node) } : c))
+      ? element.cases.map((c: unknown) => (isRecord(c) ? { ...c, node: migrateNode(c.node) } : c))
       : element.cases;
     const otherwise = element.otherwise === undefined ? {} : { otherwise: migrateNode(element.otherwise) };
     return { ...value, element: { ...element, cases, ...otherwise } };

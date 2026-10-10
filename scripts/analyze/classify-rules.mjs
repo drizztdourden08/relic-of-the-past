@@ -1,4 +1,5 @@
 /* @layer tooling-scripts @kind logic */
+import { TOOL_PATHS } from '../tool-paths.mjs';
 
 const BINARY_EXT = new Set(['wav', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'svg', 'sfc', 'dat', 'bin', 'ttf', 'woff', 'woff2', 'zip', 'exe', 'icns']);
 
@@ -45,7 +46,7 @@ const ROLE_RULES = [
   ['scripts/', 'tooling-scripts'],
   ['tests/', 'tests'],
   ['docs/', 'docs'],
-  ['.claude/', 'claude-config'],
+  [`${TOOL_PATHS.toolFolder}/`, TOOL_PATHS.toolRole],
 ];
 
 const DATA_PATH_HINTS = [

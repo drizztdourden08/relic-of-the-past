@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { decode2bppTile, snesToRgba } from '@rotp/asset-extraction';
-import type { GlyphAtlas } from './glyph-atlas.type';
+import type { GlyphAtlas, TileSpot } from './glyph-atlas.type';
 import {
   BOTTOM_TILE_STEP, CELL_H, CELL_W, COLUMNS, GLYPHS, TILE_BYTES, TILES_PER_GLYPH_ROW,
 } from './glyph-atlas.constants';
@@ -8,7 +8,8 @@ import {
 const rampOf = (palette: number[]): string[] =>
   palette.map((word) => { const [r, g, b] = snesToRgba(word); return `rgb(${r} ${g} ${b})`; });
 
-const paintTile = (ctx: CanvasRenderingContext2D, tiles: Uint8Array, tile: number, x: number, y: number, ramp: string[]): void => {
+const paintTile = (ctx: CanvasRenderingContext2D, spot: TileSpot): void => {
+  const { tiles, tile, x, y, ramp } = spot;
   const pixels = decode2bppTile(tiles, tile * TILE_BYTES);
   for (let py = 0; py < 8; py++) {
     for (let px = 0; px < 8; px++) {
@@ -35,8 +36,8 @@ const buildAtlas = (tiles: Uint8Array, widths: Uint8Array, palette: number[], ke
     if (top + BOTTOM_TILE_STEP >= tileCount) break;
     const x = (glyph % COLUMNS) * CELL_W;
     const y = Math.floor(glyph / COLUMNS) * CELL_H;
-    paintTile(ctx, tiles, top, x, y, ramp);
-    paintTile(ctx, tiles, top + BOTTOM_TILE_STEP, x, y + 8, ramp);
+    paintTile(ctx, { tiles, tile: top, x, y, ramp });
+    paintTile(ctx, { tiles, tile: top + BOTTOM_TILE_STEP, x, y: y + 8, ramp });
   }
   return { canvas, widths, key };
 };

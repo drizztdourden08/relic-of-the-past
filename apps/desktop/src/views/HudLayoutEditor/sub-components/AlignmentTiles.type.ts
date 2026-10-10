@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { AlignOption, AlignValue, FlowDirection } from '../behavior/align-options';
+import type { AlignOption, AlignValue, FlowDirection } from '@app/hud-layout-editing/align-options';
 
 interface AlignRowSpec {
   key: string;

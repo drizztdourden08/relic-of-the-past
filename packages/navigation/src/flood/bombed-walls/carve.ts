@@ -1,24 +1,26 @@
 /* @layer bridge-wasm @kind logic */
 import type { GridPos } from '@rotp/game-core';
+import type { PierceRun } from './carve.type';
 import { GRID, MAX_WALL_DEPTH, NEIGHBOURS, SOLID_ATTR, WALL_ATTRS } from './bombed-walls.constants';
 import { cellKey } from './cell-key';
 import { isBombableAttr } from './is-bombable-attr';
 
 const isPierceable = (attr: number): boolean => WALL_ATTRS.has(attr) || isBombableAttr(attr);
 
+const inGrid = (row: number, col: number): boolean => row >= 0 && row < GRID && col >= 0 && col < GRID;
+
 const markerPatch = (grid: number[][], tile: GridPos): GridPos[] => {
   const seen = new Set<string>([cellKey(tile.row, tile.col)]);
   const patch: GridPos[] = [];
   const queue: GridPos[] = [tile];
-  while (queue.length > 0) {
-    const cur = queue.shift() as GridPos;
+  for (let cur = queue.shift(); cur !== undefined; cur = queue.shift()) {
     if (!isBombableAttr(grid[cur.row]?.[cur.col] ?? 0)) continue;
     patch.push(cur);
     for (const [dr, dc] of NEIGHBOURS) {
       const row = cur.row + dr;
       const col = cur.col + dc;
       const key = cellKey(row, col);
-      if (row < 0 || row >= GRID || col < 0 || col >= GRID || seen.has(key)) continue;
+      if (!inGrid(row, col) || seen.has(key)) continue;
       seen.add(key);
       queue.push({ row, col });
     }
@@ -26,7 +28,8 @@ const markerPatch = (grid: number[][], tile: GridPos): GridPos[] => {
   return patch;
 };
 
-const pierce = (grid: number[][], lanes: number[], start: number, step: number, vertical: boolean): GridPos[] => {
+const pierce = (grid: number[][], lanes: number[], run: PierceRun): GridPos[] => {
+  const { start, step, vertical } = run;
   const cells: GridPos[] = [];
   for (let d = 1; d <= MAX_WALL_DEPTH; d++) {
     const at = start + step * d;
@@ -48,10 +51,10 @@ const carve = (grid: number[][], tile: GridPos): GridPos[] => {
   const rowLanes = [...new Set(rows)].sort((a, b) => a - b);
   return [
     ...patch,
-    ...pierce(grid, colLanes, Math.min(...rows), -1, true),
-    ...pierce(grid, colLanes, Math.max(...rows), +1, true),
-    ...pierce(grid, rowLanes, Math.min(...cols), -1, false),
-    ...pierce(grid, rowLanes, Math.max(...cols), +1, false),
+    ...pierce(grid, colLanes, { start: Math.min(...rows), step: -1, vertical: true }),
+    ...pierce(grid, colLanes, { start: Math.max(...rows), step: +1, vertical: true }),
+    ...pierce(grid, rowLanes, { start: Math.min(...cols), step: -1, vertical: false }),
+    ...pierce(grid, rowLanes, { start: Math.max(...cols), step: +1, vertical: false }),
   ];
 };
 

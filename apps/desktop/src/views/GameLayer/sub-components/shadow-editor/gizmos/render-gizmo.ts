@@ -97,10 +97,10 @@ const drawRotateAndCenter = (drawCtx: CanvasRenderingContext2D, highlight: IsHig
 
 const drawVertices = (drawCtx: CanvasRenderingContext2D, gizmoCtx: GizmoContext, highlight: IsHighlighted): void => {
   if (!gizmoCtx.vertices) return;
-  for (let i = 0; i < gizmoCtx.vertices.length; i++) {
-    const vx = gizmoCtx.vertices[i].x;
-    const vy = gizmoCtx.vertices[i].y;
-    const isHighlighted = highlight(`vertex-${i}` as GizmoPart);
+  for (const [i, vertex] of gizmoCtx.vertices.entries()) {
+    const vx = vertex.x;
+    const vy = vertex.y;
+    const isHighlighted = highlight(`vertex-${i}`);
     drawCtx.beginPath();
     drawCtx.arc(vx, vy, isHighlighted ? VERTEX_RADIUS + 2 : VERTEX_RADIUS, 0, Math.PI * 2);
     drawCtx.fillStyle = isHighlighted ? '#ffffff' : 'rgba(255,255,255,0.7)';

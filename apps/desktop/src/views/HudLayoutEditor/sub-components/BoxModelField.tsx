@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Box, Field, Icon, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { NumberCell } from './NumberCell';
-import { compactEdges } from '../behavior/offset';
+import { compactEdges } from '@app/hud-layout-editing/offset';
 import { OFFSET_SIDES, SIDES } from './BoxModelField.constants';
 import type { Edges } from '@rotp/hud';
 import type { BoxModelFieldProps, Side } from './BoxModelField.type';

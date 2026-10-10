@@ -48,7 +48,7 @@ const extractSoundData = (rom: RomData): MusicExtractionResult => {
     let text = '';
     for (const [, entity] of sorted) {
       if (!entity.isImported) {
-        text += formatEntity(entity) + '\n';
+        text += `${formatEntity(entity)}\n`;
       }
     }
     songTexts[`sound_${songName}.txt`] = text;

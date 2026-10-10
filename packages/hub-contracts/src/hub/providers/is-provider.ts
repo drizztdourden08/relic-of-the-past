@@ -1,5 +1,5 @@
 /* @layer shared-hub @kind logic */
-import { PROVIDERS } from './providers.data';
+import { PROVIDERS } from './providers.constants';
 import type { Provider } from './providers.type';
 
 const isProvider = (value: unknown): value is Provider =>

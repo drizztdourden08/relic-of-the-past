@@ -4,7 +4,7 @@ import type { AssignPlan, AssignTarget, PauseContext, PauseState, SlotAssignment
 import { assignTargetAt } from './assign-target-at';
 
 const sameTarget = (assignment: SlotAssignment | undefined, target: AssignTarget): boolean => {
-  if (!assignment || assignment.kind !== target.kind) return false;
+  if (assignment?.kind !== target.kind) return false;
   if (assignment.kind === 'item' && target.kind === 'item') return assignment.hudItem === target.hudItem;
   return true;
 };

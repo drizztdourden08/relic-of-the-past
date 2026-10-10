@@ -43,13 +43,14 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
   const { data, config } = usePauseMenu(scale);
   const { spritesBase } = config;
 
+  const bottleSlot = data.items[15] ?? 0;
   const displayItems = [...data.items];
-  if (displayItems[15] > 0) {
-    displayItems[15] = data.bottles[displayItems[15] - 1] ?? 0;
+  if (bottleSlot > 0) {
+    displayItems[15] = data.bottles[bottleSlot - 1] ?? 0;
   }
 
   const selectedSaveIdx = data.equippedY > 0 ? data.equippedY - 1 : -1;
-  const isBottleSelected = selectedSaveIdx === 15 && data.items[15] > 0;
+  const isBottleSelected = selectedSaveIdx === 15 && bottleSlot > 0;
 
   const [bottlePhase, setBottlePhase] = useState<'hidden' | 'expanding' | 'visible' | 'collapsing'>('hidden');
   const prevBottleRef = useRef(false);
@@ -78,19 +79,19 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
 
   const { itemName, bottleName } = useLocalizedNames();
   const selectedItemName = useMemo(() => {
-    if (isBottleSelected) return bottleName(data.bottles[data.items[15] - 1] ?? 0);
+    if (isBottleSelected) return bottleName(data.bottles[(data.items[15] ?? 0) - 1] ?? 0);
     const key = itemNameKeyForSlot(selectedSaveIdx, data.items);
     return key ? itemName(key.recordId, key.tier) : '';
   }, [isBottleSelected, bottleName, itemName, data.bottles, data.items, selectedSaveIdx]);
   const selectedNameLines = useMemo(() => wrapName(selectedItemName), [selectedItemName]);
 
   const selectedItemSprite = selectedSaveIdx >= 0
-    ? getSlotSprite(selectedSaveIdx, isBottleSelected ? (data.bottles[data.items[15] - 1] ?? 0) : (data.items[selectedSaveIdx] ?? 0)) : null;
+    ? getSlotSprite(selectedSaveIdx, isBottleSelected ? (data.bottles[bottleSlot - 1] ?? 0) : (data.items[selectedSaveIdx] ?? 0)) : null;
 
   const derivedAbilityFlags = data.abilityFlags || (
     (data.gloves > 0 ? 0x80 : 0) |
-    (data.items[14] > 0 ? 0x40 : 0) |
-    (data.items[14] > 0 ? 0x20 : 0) |
+    ((data.items[14] ?? 0) > 0 ? 0x40 : 0) |
+    ((data.items[14] ?? 0) > 0 ? 0x20 : 0) |
     0x08 |
     (data.boots > 0 ? 0x04 : 0) |
     (data.flippers > 0 ? 0x02 : 0)
@@ -143,7 +144,7 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
         >
           <PauseBottlePanel
             bottles={data.bottles}
-            selectedIndex={data.items[15] - 1}
+            selectedIndex={bottleSlot - 1}
             scale={scale}
             spritesBase={spritesBase}
           />

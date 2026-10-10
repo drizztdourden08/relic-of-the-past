@@ -13,14 +13,14 @@ const finalizeStickCalibration = (c1: StickCandidate, c2: StickCandidate | null,
 
   const xMapping: HidAxisMapping = { byteIndex: x.idx, center: x.center, min: x.min, max: x.max, inverted: false };
   const xResult = `byte[${x.idx}] ${x.min}..${x.center}..${x.max} (range ${x.range})`;
-  cb.addLog(`✓ ${label} X: ${xResult}`);
+  cb.addLog(`OK ${label} X: ${xResult}`);
 
   let yMapping: HidAxisMapping | null = null;
   let yResult = 'skipped (single byte)';
   if (y) {
     yMapping = { byteIndex: y.idx, center: y.center, min: y.min, max: y.max, inverted: false };
     yResult = `byte[${y.idx}] ${y.min}..${y.center}..${y.max} (range ${y.range})`;
-    cb.addLog(`✓ ${label} Y: ${yResult}`);
+    cb.addLog(`OK ${label} Y: ${yResult}`);
   } else {
     cb.addLog(`  ${label} Y: skipped (single byte stick)`);
   }

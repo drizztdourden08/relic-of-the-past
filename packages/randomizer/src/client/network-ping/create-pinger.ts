@@ -28,7 +28,7 @@ const createPinger = (deps: PingDeps): Pinger => {
   };
 
   return {
-    get lastMs() { return roundTrips.length > 0 ? roundTrips[roundTrips.length - 1] : null; },
+    get lastMs() { return roundTrips[roundTrips.length - 1] ?? null; },
     get meanMs() {
       return roundTrips.length > 0 ? Math.round(roundTrips.reduce((sum, ms) => sum + ms, 0) / roundTrips.length) : null;
     },

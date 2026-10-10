@@ -23,7 +23,7 @@ describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () =>
     const strategy = new DualLayerStrategy([upperLayer, lowerLayer], [zeros(), zeros()], true, 0);
 
     const bodyAboveLedge: BFSCell = { row: 10, col: 20, layer: 0, requirements: new Set() };
-    const results = strategy.expand(bodyAboveLedge, 1, 0, new Set(), FULL_BOUNDS);
+    const results = strategy.expand(bodyAboveLedge, [1, 0], new Set(), FULL_BOUNDS);
 
     expect(results).toHaveLength(1);
     expect(results[0]).toMatchObject({ row: 13, col: 20, layer: 1 });
@@ -38,7 +38,7 @@ describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () =>
     const strategy = new DualLayerStrategy([upperLayer, lowerLayer], [zeros(), zeros()], true, 0);
 
     const bodyBelowTrigger: BFSCell = { row: 21, col: 20, layer: 0, requirements: new Set() };
-    const results = strategy.expand(bodyBelowTrigger, -1, 0, new Set(), FULL_BOUNDS);
+    const results = strategy.expand(bodyBelowTrigger, [-1, 0], new Set(), FULL_BOUNDS);
 
     expect(results).toHaveLength(1);
     expect(results[0]).toMatchObject({ row: 16, col: 20, layer: 1 });
@@ -52,7 +52,7 @@ describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () =>
 
     for (const col of [19, 20]) {
       const cell: BFSCell = { row: 21, col, layer: 0, requirements: new Set() };
-      expect(strategy.expand(cell, -1, 0, new Set(), FULL_BOUNDS)).toHaveLength(0);
+      expect(strategy.expand(cell, [-1, 0], new Set(), FULL_BOUNDS)).toHaveLength(0);
     }
   });
 });

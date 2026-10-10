@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { EditorSampleState } from '../behavior/useSampleState.type';
+import type { EditorSampleState } from '@app/hud-layout-editing/sample-state.type';
 import type { PlacedNode } from '@rotp/hud';
 
 interface EditorStageProps {

@@ -3,8 +3,8 @@ import { useMemo, useRef, useState } from 'react';
 import { Anchored, Box, Image, Pressable, Tabs, Text } from '@drizztdourden08/tessera/primitives';
 import { usePickerDismiss } from '@app/compounds/SpritePicker';
 import { AUTO_PACK_ID, GENERIC_PACK_ID, findGlyphPack } from '@rotp/input-mapping';
-import { GLYPH_POSITIONS } from '../behavior/toolbar-menus';
-import { glyphSourceFor, glyphUrlOf } from '../behavior/glyph-art';
+import { GLYPH_POSITIONS } from '@app/hud-layout-editing/toolbar-menus';
+import { glyphSourceFor, glyphUrlOf } from '@app/hud-layout-editing/glyph-art';
 import type { HudGlyphPosition } from '@rotp/hud';
 import type { GlyphPickerGridProps } from './GlyphPickerGrid.type';
 

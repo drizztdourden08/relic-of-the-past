@@ -15,7 +15,7 @@ const roomInfoResult = (packet: ApRoomInfoPacket, url: string, game: string): Pr
 };
 
 const closeQuietly = (socket: ApSocket): void => {
-  try { socket.close(); } catch {  }
+  try { socket.close(); } catch { return undefined; }
 };
 
 const probeOnce = (url: string, config: ProbeConfig): Promise<AttemptResult> =>

@@ -1,39 +1,34 @@
 /* @layer shared-asset-extraction @kind logic */
-import type { Entity } from './compile-types.type';
+import type { Entity, EntityByType, EntityType } from './compile-types.type';
+import { COMPILE_ENTITY_FACTORIES } from './compile-entity.constants';
+import { isEntityOf } from './is-entity-of';
+
+const eaOfName = (name: string): number | null =>
+  name.includes('_0x') ? parseInt(name.slice(name.indexOf('_0x') + 3), 16) : null;
 
 class NameRegistry {
   private types = new Map<string, Entity>();
 
-  getOrCreate<T extends Entity>(name: string, type: string, isCreate: boolean): T | null {
+  getOrCreate<K extends EntityType>(name: string, type: K, isCreate: boolean): EntityByType[K] | null {
     if (name === 'None') return null;
 
     const existing = this.types.get(name);
     if (existing) {
+      if (!isEntityOf(existing, type)) throw new Error(`${name} is a ${existing.type}, not a ${type}`);
       if (isCreate) {
         if (existing.defined) throw new Error(`${name} already defined`);
         existing.defined = true;
       }
-      return existing as T;
+      return existing;
     }
 
-    const entity = {
-      type,
-      name,
-      defined: isCreate,
-      ea: null,
-      writeAddr: 0,
-    } as unknown as T;
-
-    if (name.includes('_0x')) {
-      (entity as Entity).ea = parseInt(name.slice(name.indexOf('_0x') + 3), 16);
-    }
-
-    this.types.set(name, entity as Entity);
+    const entity = COMPILE_ENTITY_FACTORIES[type](name, eaOfName(name), isCreate);
+    this.types.set(name, entity);
     return entity;
   }
 
   checkAllDefined(): void {
-    for (const [name, entity] of Array.from(this.types)) {
+    for (const [name, entity] of this.types) {
       if (!entity.defined) throw new Error(`Symbol ${name} not defined`);
     }
   }

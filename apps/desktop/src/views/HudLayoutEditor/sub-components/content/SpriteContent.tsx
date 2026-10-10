@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { SpritePicker } from '@app/compounds/SpritePicker';
 import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
-import { spriteLabel, spriteUrl } from '../../behavior/node-art';
+import { spriteLabel, spriteUrl } from '@app/hud-layout-editing/node-art';
 import { ReferenceField } from '../ReferenceField';
 import { SpriteExtractionNotice } from '../SpriteExtractionNotice';
 import type { SpriteContentProps } from './SpriteContent.type';

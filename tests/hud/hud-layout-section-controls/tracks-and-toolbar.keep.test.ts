@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
 import { layoutHud, placedById, validateLayout } from '@rotp/hud';
-import { insertTrack, moveTrack, removeTrack, setTrack, trackText } from '@app/views/HudLayoutEditor/behavior/track-extents';
-import { newGrid } from '@app/views/HudLayoutEditor/behavior/new-node';
-import { buildToolbarGroups } from '@app/views/HudLayoutEditor/behavior/toolbar-menus';
+import { insertTrack, moveTrack, removeTrack, setTrack, trackText } from '@app/hud-layout-editing/track-extents';
+import { newGrid } from '@app/hud-layout-editing/new-node';
+import { buildToolbarGroups } from '@app/hud-layout-editing/toolbar-menus';
 import type { MenuItem, MenuNode } from '@drizztdourden08/tessera/composites';
 import type { Extent, HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
 import { VIEW } from './section-controls.constants';

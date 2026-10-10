@@ -16,7 +16,7 @@ const boxForExtract = (extract: SpriteDefinition['extract']): SpriteBox | undefi
       return { w: TILE_PX, h: (def.tiles?.length ?? 0) * TILE_PX };
     case 'dialogue-glyph':
       return def.glyphRight === undefined ? { w: GLYPH_W, h: GLYPH_H } : undefined;
-    default:
+    case undefined:
       return undefined;
   }
 };

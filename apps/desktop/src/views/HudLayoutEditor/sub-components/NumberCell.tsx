@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { TextInput } from '@drizztdourden08/tessera/primitives';
-import { useEditorStep } from '../behavior/editor-step';
+import { useEditorStep } from '@app/hud-layout-editing/editor-step';
 import { NUMERAL } from './NumberCell.constants';
 import type { KeyboardEvent } from 'react';
 import type { NumberCellProps } from './NumberCell.type';

@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { SLOT_SIDE } from './fixed-row-tiles.constants';
 import type { ImageBuffer } from '../../graphics/png-writer';
 import type { RGBA } from '../../graphics/palette';
@@ -30,7 +31,7 @@ const quantizeIcon = (picture: ImageBuffer, row: readonly RGBA[]): QuantizedIcon
       const index = nearestRowIndex(pixel, row);
       indices[y * SLOT_SIDE + x] = index;
       if (index === 0) continue;
-      error += squaredDistance(pixel, row[index]);
+      error += squaredDistance(pixel, itemAt(row, index, 'Icon palette colour'));
       opaque += 1;
     }
   }

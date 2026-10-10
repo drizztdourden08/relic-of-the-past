@@ -19,7 +19,8 @@ const noticeOfChange = (
         : noticeOf('connection', [{ text: 'Could not reach the server, retrying' }]);
     case 'error':
       return noticeOf('connection', [{ text: error ? error.replace(LOG_PREFIX, '') : 'Connection ended' }]);
-    default:
+    case 'idle':
+    case 'connecting':
       return null;
   }
 };

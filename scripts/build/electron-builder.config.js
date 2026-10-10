@@ -6,7 +6,7 @@ module.exports = {
   appId: 'com.relicofthepast.app',
   productName: 'Relic of the Past',
   npmRebuild: false,
-  afterPack: '../../scripts/build/afterPack.cjs',
+  afterPack: '../../scripts/build/after-pack.mjs',
   publish: [{
     provider: 'github',
     owner: 'drizztdourden08',

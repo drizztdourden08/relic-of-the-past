@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
-import { DASH } from '../behavior/network-format';
+import { DASH } from '../behavior/network-format.constants';
 import type { ChecksCellProps } from './ChecksCell.type';
 
 const ChecksCell = ({ checked, total }: ChecksCellProps) => {

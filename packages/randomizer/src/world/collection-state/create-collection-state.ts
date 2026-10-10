@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { updateReachableRegions } from '../update-reachable-regions';
 import { isItemUsable } from '../item-usability';
 import { progressiveSettingOf, progressiveTierMapOf } from '../progressive/progressive-reach';
@@ -29,7 +30,7 @@ const createCollectionState = (world: World): CollectionState => {
       const tiers = tiersByItem.get(item);
       if (tiers) {
         const rank = Math.min(progItems.get(item) ?? 0, tiers.length);
-        if (rank > 0) add(tiers[rank - 1], 1);
+        if (rank > 0) add(itemAt(tiers, rank - 1), 1);
       }
       state.staleReachability = true;
     },
@@ -37,7 +38,7 @@ const createCollectionState = (world: World): CollectionState => {
       const tiers = tiersByItem.get(item);
       if (tiers) {
         const rank = Math.min(progItems.get(item) ?? 0, tiers.length);
-        if (rank > 0) add(tiers[rank - 1], -1);
+        if (rank > 0) add(itemAt(tiers, rank - 1), -1);
       }
       add(item, -1);
       state.staleReachability = true;

@@ -28,7 +28,7 @@ interface LightSource {
   y: number;
   intensity: number;
   radius: number;
-  color: 'sample' | string;
+  color: string;
   shape?: ShapeDefinition;
   castShadows: boolean;
 }

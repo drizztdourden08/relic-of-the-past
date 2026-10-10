@@ -16,9 +16,8 @@ const validateScreen = (value: unknown, issues: Issues, seen: Set<string>): HudS
     issues.push('layout.screen: the screen is a container - it is the box the whole layout sits inside');
     return null;
   }
-  const fields = node as unknown as Record<string, unknown>;
   for (const key of SCREEN_LOCKED) {
-    if (fields[key] !== undefined) {
+    if (Reflect.get(node, key) !== undefined) {
       issues.push(
         `layout.screen.${key}: the screen is always exactly the view - `
         + `${key} is not a question it can answer`,

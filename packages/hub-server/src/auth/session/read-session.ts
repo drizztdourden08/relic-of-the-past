@@ -14,7 +14,7 @@ const readSession = async (req: Request): Promise<Session | null> => {
     const { userId, v } = payload as UnverifiedSessionClaims;
     if (typeof userId !== 'string' || typeof v !== 'number') return null;
     const user = await usersRepo.get(userId);
-    return user && user.sessionVersion === v ? { userId, v } : null;
+    return user?.sessionVersion === v ? { userId, v } : null;
   } catch {
     return null;
   }

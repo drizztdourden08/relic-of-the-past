@@ -5,9 +5,7 @@ import type { ShadowCastingProject } from '@rotp/game-core';
 import { loadShadowProject, saveShadowProject, getScreenData } from './store';
 
 const registerShadowCastingHandlers = (): void => {
-  handle('shadow-casting:load', async () => {
-    return await loadShadowProject();
-  });
+  handle('shadow-casting:load', () => loadShadowProject());
 
   handle('shadow-casting:save', async (_event, data: ShadowCastingProject) => {
     if (!is.dev) {
@@ -17,9 +15,7 @@ const registerShadowCastingHandlers = (): void => {
     return { success: true };
   });
 
-  handle('shadow-casting:get-screen', async (_event, screenId: number) => {
-    return await getScreenData(screenId);
-  });
+  handle('shadow-casting:get-screen', (_event, screenId: number) => getScreenData(screenId));
 };
 
 export { registerShadowCastingHandlers };

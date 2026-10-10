@@ -1,7 +1,10 @@
 /* @layer shared-game @kind logic */
 import type { DialogTextureSpeed } from './box-style.type';
 
-const textureSpeedFactor = (speed: DialogTextureSpeed): number =>
-  speed === 'slow' ? 0.5 : speed === 'fast' ? 2 : 1;
+const textureSpeedFactor = (speed: DialogTextureSpeed): number => {
+  if (speed === 'slow') return 0.5;
+  if (speed === 'fast') return 2;
+  return 1;
+};
 
 export { textureSpeedFactor };

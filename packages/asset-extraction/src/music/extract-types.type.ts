@@ -47,6 +47,17 @@ type PatternLine =
 
 type MusicEntity = Song | SongList | Phrase | Pattern;
 
+interface MusicEntityByType {
+  Song: Song;
+  SongList: SongList;
+  Phrase: Phrase;
+  Pattern: Pattern;
+}
+
+type MusicEntityType = keyof MusicEntityByType;
+
+type MusicEntityFactories = { [K in MusicEntityType]: (ea: number) => MusicEntityByType[K] };
+
 interface CommandPrefix {
   cmd: number;
   noteLength: number | null;
@@ -71,6 +82,9 @@ export type {
   CommandPrefix,
   DecodedPatternLine,
   MusicEntity,
+  MusicEntityByType,
+  MusicEntityFactories,
+  MusicEntityType,
   MusicExtractionResult,
   Pattern,
   PatternLine,

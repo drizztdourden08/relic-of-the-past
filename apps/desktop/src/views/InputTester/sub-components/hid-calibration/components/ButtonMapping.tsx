@@ -2,7 +2,8 @@
 import { useCallback } from 'react';
 import { Box, Text, Button, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
-import { ITEM_STYLE, MANUAL_HINT } from './ButtonMapping.constants';
+import { InputStatusIcon } from './InputStatusIcon';
+import './ButtonMapping.css';
 import type { ButtonMappingProps } from './ButtonMapping.type';
 
 const ButtonMapping = (props: ButtonMappingProps) => {
@@ -40,14 +41,12 @@ const ButtonMapping = (props: ButtonMappingProps) => {
         {items.map((item, i) => {
           if (!includeStickTriggerIds && (STICK_IDS.has(item.id) || TRIGGER_IDS.has(item.id))) return null;
           const isActive = i === activeIndex && inputPhaseActive;
-          const icon = item.status === 'captured' ? '✓' : item.status === 'skipped' ? '⊘' : item.status === 'active' ? '►' : '·';
           const canClear = item.status === 'captured' || item.status === 'skipped';
           return (
             <Box key={item.id}
-              className={`hid-cal__input-item hid-cal__input-item--${item.status}${isActive ? ' hid-cal__input-item--focus' : ''}`}
-              style={ITEM_STYLE}>
-              <Text className="hid-cal__input-icon" onClick={() => prereqsDone && onClickItem(i)}>{icon}</Text>
-              <Text className="hid-cal__input-name" onClick={() => prereqsDone && onClickItem(i)}>{item.label}{item.kind === 'axis' ? ' 🕹️' : ''}</Text>
+              className={`hid-cal__input-item hid-cal__input-item--clickable hid-cal__input-item--${item.status}${isActive ? ' hid-cal__input-item--focus' : ''}`}>
+              <Text className="hid-cal__input-icon" onClick={() => prereqsDone && onClickItem(i)}><InputStatusIcon status={item.status} /></Text>
+              <Text className="hid-cal__input-name" onClick={() => prereqsDone && onClickItem(i)}>{item.label}{item.kind === 'axis' && <> <Icon name="gamepad-2" /></>}</Text>
               {item.result && <Text className="hid-cal__input-result">{item.result}</Text>}
               {canClear && (
                 <IconButton variant="ghost" tone="danger" size="xs" className="hid-cal__input-clear" label={`Clear ${item.label}`}
@@ -65,14 +64,14 @@ const ButtonMapping = (props: ButtonMappingProps) => {
           </Button>
         ) : autoAdvance ? (
           <>
-            <Button variant="tertiary" size="sm" onClick={onGoBack} disabled={activeIndex <= 0}>← Back</Button>
+            <Button variant="tertiary" size="sm" onClick={onGoBack} disabled={activeIndex <= 0}>Back</Button>
             <Button variant="tertiary" size="sm" onClick={onSkip}>Skip</Button>
             <Button variant="tertiary" size="sm" onClick={stopAuto}>Stop Auto</Button>
             <Button variant="tertiary" size="sm" onClick={pauseInput}>Pause</Button>
           </>
         ) : (
           <>
-            <Text style={MANUAL_HINT}>
+            <Text className="hid-cal__manual-hint">
               Click a button above to detect, or click a byte in the grid to assign manually.
             </Text>
             <Button variant="tertiary" size="sm" onClick={pauseInput}>Deselect</Button>

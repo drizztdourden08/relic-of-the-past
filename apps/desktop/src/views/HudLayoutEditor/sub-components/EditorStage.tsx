@@ -6,7 +6,7 @@ import { ContainerOverlay } from './ContainerOverlay';
 import { StageFlexEcho } from './StageFlexEcho';
 import { StageGridEcho } from './StageGridEcho';
 import { StageSelection } from './StageSelection';
-import { useMotionPreview } from '../behavior/motion-preview';
+import { useMotionPreview } from '@app/hud-layout-editing/motion-preview';
 import { GROUND_TILE } from '../HudLayoutEditor.constants';
 import { TILE } from './EditorStage.constants';
 import type { HudContainer, PlacedNode } from '@rotp/hud';

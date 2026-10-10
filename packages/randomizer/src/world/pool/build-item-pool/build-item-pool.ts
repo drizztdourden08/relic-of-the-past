@@ -27,11 +27,12 @@ import { dungeonItemSetsOf } from './dungeon-item-sets-of';
 import { openCapacitySpots } from './open-capacity-spots';
 import { openShopSlots } from './open-shop-slots';
 import type { LocationKey } from '../../location-key';
+import { itemAt } from '../../../checked-access';
 import type { World } from '../../world.type';
 import type { ItemPool } from '../item-pool.type';
 import type { BottlePicker, FillerPicker, WeaponPicker } from '../pool.type';
 
-const firstBottle: BottlePicker = (choices) => choices[0];
+const firstBottle: BottlePicker = (choices) => itemAt(choices, 0);
 
 const buildItemPool = (
   world: World, pickBottle: BottlePicker = firstBottle, lockedScopeLocations?: ReadonlySet<LocationKey>,

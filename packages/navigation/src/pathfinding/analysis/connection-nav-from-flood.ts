@@ -34,7 +34,7 @@ const buildFromPoint = (info: ConnectionInfo, requirements: RequirementSet): Con
 const buildConnectionNav = (info: ConnectionInfo, tags: readonly ConnectionTag[]): ConnectionNavData => {
   const transitType = transitTypeFromTags(tags);
   const requirements = requirementsFromFlood(info.requirements);
-  const positions = info.positions ?? [];
+  const { positions } = info;
   const hasCrossing = positions.length > 0;
 
   const nav: ConnectionNavData = {

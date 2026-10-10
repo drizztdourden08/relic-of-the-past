@@ -6,10 +6,10 @@ import type { OverworldContext } from './build-overworld-context.type';
 const buildOverworldSprites = (rom: RomData, A: AssetBuilder, ctx: OverworldContext): void => {
   const { isAreaHead, awrite } = ctx;
 
-  const sprOffs = new Array(144 * 3).fill(0);
+  const sprOffs = new Array<number>(144 * 3).fill(0);
   const sprData: number[] = [0xff];
-  const sprGfx = new Array(256).fill(0);
-  const sprPal = new Array(256).fill(0);
+  const sprGfx = new Array<number>(256).fill(0);
+  const sprPal = new Array<number>(256).fill(0);
 
   const readAndAppendSprites = (baseAddr: number, area: number, stageIdxs: number[]): void => {
         let ea = 0x890000 + rom.getWord(baseAddr + area * 2);

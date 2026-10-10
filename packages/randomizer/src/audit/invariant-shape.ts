@@ -52,6 +52,8 @@ const shapeErrors = (check: CheckRecord): string[] => {
       if (!hasRoomBit(g)) errors.push('potItem needs roomId plus mask or chestIndex');
       break;
     case 'prize':
+    case 'shop-slot':
+    case 'pond-slot':
       break;
   }
   if (check.kind !== 'prize' && check.kind !== 'event' && isEmptyGameId(g)) {

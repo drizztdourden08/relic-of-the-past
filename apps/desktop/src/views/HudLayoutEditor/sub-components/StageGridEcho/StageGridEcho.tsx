@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { stageCellRects } from '../../behavior/stage-cells';
+import { stageCellRects } from '@app/hud-layout-editing/stage-cells';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { hull } from './behavior/hull';
 import { DEFAULT_GUIDE } from './StageGridEcho.constants';

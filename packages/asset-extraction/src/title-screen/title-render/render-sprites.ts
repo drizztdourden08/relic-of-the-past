@@ -11,7 +11,7 @@ const renderSprites = (src: TitleSource, nameBase: number, row: number, pieces: 
     for (let q = 0; q < 4; q += 1) {
       const tile = char + (q & 1) + (q >> 1) * NAME_TABLE_ROW_CHARS;
       const dx = (flipX ? 1 - (q & 1) : q & 1) * 8;
-      drawTile(img, src, nameBase + tile * TILE_4BPP_WORDS, row, { x: x + dx, y: y + (q >> 1) * 8, flipX, flipY: false });
+      drawTile(img, src, { addr: nameBase + tile * TILE_4BPP_WORDS, row, x: x + dx, y: y + (q >> 1) * 8, flipX, flipY: false });
     }
   }
   return img;

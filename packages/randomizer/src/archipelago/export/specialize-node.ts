@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { expansionOf } from './expansion-of';
 import { RULE_FALSE, RULE_TRUE } from './specialize-node.constants';
 import type { World } from '../../world/world.type';
@@ -18,7 +19,7 @@ const join = (op: 'all' | 'any', parts: readonly RuleNode[]): RuleNode => {
   if (parts.some((part) => part.op === absorbing)) return op === 'all' ? RULE_FALSE : RULE_TRUE;
   const kept = parts.filter((part) => part.op !== (op === 'all' ? 'true' : 'false'));
   if (kept.length === 0) return op === 'all' ? RULE_TRUE : RULE_FALSE;
-  return kept.length === 1 ? kept[0] : { op, of: kept };
+  return kept.length === 1 ? itemAt(kept, 0) : { op, of: kept };
 };
 
 const specializeNode = (node: RuleNode, world: World, readings: Readings): RuleNode => {

@@ -25,6 +25,7 @@ const animationState = (animation: DialogTextureAnimation, speed: DialogTextureS
       return { ...still, cellAlpha: (row, col) => twinkleAlpha(t * s, row, col) };
     case 'pulse':
       return { ...still, fieldAlpha: 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * s * 1.4)) };
+    case 'none':
     default:
       return still;
   }

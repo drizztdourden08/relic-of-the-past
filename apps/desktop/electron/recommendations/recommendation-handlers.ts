@@ -9,7 +9,7 @@ const registerRecommendationHandlers = (): void => {
   handle('recommendations:load', async (_e, kind) => loadRecommendationFile(kind));
 
   handle('recommendations:applyPass', async (_e, kind, context, detectorIds, drafts) =>
-    queued(kind, () => store.applyPass(kind, context, detectorIds, drafts)));
+    queued(kind, () => store.applyPass(kind, context, { detectorIds, fresh: drafts })));
 
   handle('recommendations:decide', async (_e, kind, id, state) =>
     queued(kind, () => store.decide(kind, id, state)));

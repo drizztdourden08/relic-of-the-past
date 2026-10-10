@@ -6,7 +6,7 @@ const createProgram = (gl: WebGLRenderingContext, vertSrc: string, fragSrc: stri
   const frag = createShader(gl, gl.FRAGMENT_SHADER, fragSrc, label);
   if (!vert || !frag) return null;
 
-  const program = gl.createProgram();
+  const program = gl.createProgram() as WebGLProgram | null;
   if (!program) return null;
   gl.attachShader(program, vert);
   gl.attachShader(program, frag);

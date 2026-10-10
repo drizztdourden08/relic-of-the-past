@@ -73,9 +73,7 @@ const registerSpriteHandlers = (): void => {
     }
   });
 
-  handle('sprites:getPath', async (_e, romFile: string, file: string) => {
-    return join(spriteDir(romFile), `${file}.png`);
-  });
+  handle('sprites:getPath', (_e, romFile: string, file: string) => join(spriteDir(romFile), `${file}.png`));
 
   handle('spriteDebug:load', () => readJsonFile(getUserDataPath('sprite-debug.json'), {}));
   handle('spriteDebug:save', (_e, data: unknown) =>

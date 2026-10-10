@@ -1,76 +1,37 @@
 /* @layer shared-asset-extraction @kind logic */
 import type { SoundBankContext } from './sound-bank-context';
-import { noteToStr } from './note-to-str';
 import type { SfxLine } from './decode-sfx.type';
+import { decodeSfxCommand } from './decode-sfx-command';
+import { readSfxPrefix } from './read-sfx-prefix';
 
-const decodeSfx = (ctx: SoundBankContext, ea: number, nextAddr: number): SfxLine[] => {
+const decodeSfx = (ctx: SoundBankContext, start: number, nextAddr: number): SfxLine[] => {
   const r: SfxLine[] = [];
-  while (true) {
-    if (ea === nextAddr) {
-      r.push({ kind: 'fallthrough' });
-      return r;
-    }
-    let b = ctx.getByte(ea)!;
-    ea += 1;
-    if (b === 0) return r;
-
-    let noteLength: number | null = null;
-    let volumeLeft: number | null = null;
-    let volumeRight: number | null = null;
-
-    if (!(b & 0x80)) {
-      noteLength = b;
-      b = ctx.getByte(ea)!;
-      ea += 1;
-      if (!(b & 0x80)) {
-        volumeLeft = b;
-        b = ctx.getByte(ea)!;
-        ea += 1;
-        if (!(b & 0x80)) {
-          volumeRight = b;
-          b = ctx.getByte(ea)!;
-          ea += 1;
-        }
-      }
-    }
-
-    if (b === 0xe0) {
-      const instr = ctx.getByte(ea)!;
-      ea += 1;
-      r.push({ kind: 'effect', effectName: `SetInstrument ${instr}` });
-    } else if (b === 0xf9) {
-      const noteVal = ctx.getByte(ea)!;
-      ea += 1;
-      const b0 = ctx.getByte(ea)!;
-      const b1 = ctx.getByte(ea + 1)!;
-      const b2 = ctx.getByte(ea + 2)!;
-      ea += 3;
-      r.push({ kind: 'note', effectName: `PitchSlide ${b0} ${b1} ${b2}`, note: noteToStr(noteVal & 0x7f), noteLength, volumeLeft, volumeRight });
-    } else if (b === 0xf1) {
-      const b0 = ctx.getByte(ea)!;
-      const b1 = ctx.getByte(ea + 1)!;
-      const b2 = ctx.getByte(ea + 2)!;
-      ea += 3;
-      r.push({ kind: 'note', effectName: `PitchSlide ${b0} ${b1} ${b2}`, note: null, noteLength, volumeLeft, volumeRight });
-    } else if (b === 0xff) {
-      r.push({ kind: 'restart' });
-      return r;
-    } else {
-      r.push({ kind: 'note', note: noteToStr(b & 0x7f), noteLength, volumeLeft, volumeRight });
-    }
+  let ea = start;
+  while (ea !== nextAddr) {
+    const prefix = readSfxPrefix(ctx, ea);
+    if (prefix === null) return r;
+    const { line, next, end } = decodeSfxCommand(ctx, prefix);
+    r.push(line);
+    if (end) return r;
+    ea = next;
   }
+  r.push({ kind: 'fallthrough' });
+  return r;
 };
+
+const padded = (value: number | null, width: number, empty: string): string =>
+  value === null ? empty : String(value).padStart(width);
 
 const formatSfxLine = (line: SfxLine): string => {
   if (line.kind === 'fallthrough') return 'Fallthrough';
   if (line.kind === 'restart') return 'Restart';
-  if (line.kind === 'effect') return line.effectName!;
+  if (line.kind === 'effect') return line.effectName;
 
-  const aa = line.note === null ? '.  ' : line.note!;
-  const bb = line.noteLength === null ? '--' : String(line.noteLength).padStart(2);
-  const cc = line.volumeLeft === null ? '---' : String(line.volumeLeft).padStart(3);
-  const dd = line.volumeRight === null ? '---' : String(line.volumeRight).padStart(3);
-  const r0 = line.effectName ? ' ' + line.effectName : '';
+  const aa = line.note ?? '.  ';
+  const bb = padded(line.noteLength, 2, '--');
+  const cc = padded(line.volumeLeft, 3, '---');
+  const dd = padded(line.volumeRight, 3, '---');
+  const r0 = line.effectName ? ` ${line.effectName}` : '';
   return `${aa} ${bb} ${cc} ${dd}${r0}`;
 };
 
@@ -115,7 +76,7 @@ const printAllSfx = (ctx: SoundBankContext): string => {
     const nextAddr = sortedItems[i + 1] ?? 0;
     const rs = decodeSfx(ctx, item, nextAddr);
     for (const line of rs) {
-      output += formatSfxLine(line) + '\n';
+      output += `${formatSfxLine(line)}\n`;
     }
     output += '\n';
   }

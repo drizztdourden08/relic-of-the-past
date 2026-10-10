@@ -5,7 +5,7 @@ import { narrative } from '../event-log/narrative';
 import { arrivalKey } from '../regions/arrival-key';
 import { crossingKey } from '../regions/crossing-key';
 import type { EngineState } from '../state/state.type';
-import type { ScreenEdge } from '../traversal/traversal.type';
+import type { HopLink } from './hop.type';
 import { arrivalLabel } from './arrival-label';
 import { landingTile } from './landing-tile';
 import { positionMessage } from './position-message';
@@ -18,13 +18,14 @@ const narrateAreaChange = (s: EngineState, events: SimEvent[], exit?: SimExit): 
   s.area = destArea;
 };
 
-const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExit, edge?: ScreenEdge): void => {
+const emitHop = (s: EngineState, events: SimEvent[], next: string, link: HopLink): void => {
+  const { exit } = link;
   const from = s.virtual.screenId;
   events.push(narrative(s, positionMessage('END', exit?.fromTile ?? s.virtual.tile)));
   const via = exit?.via && exit.via !== from ? ` via ${screenLabel(exit.via)}` : '';
   events.push(narrative(s, `Exiting ${screenLabel(from)}${via}`));
   narrateAreaChange(s, events, exit);
-  const tile = landingTile(exit, edge);
+  const tile = landingTile(link);
   s.virtual = { screenId: next, tile };
   if (exit) s.arrivals.add(arrivalKey(next, exit.edgeSig));
   const crossed = exit ? crossingKey(from, next, exit.edgeSig) : null;

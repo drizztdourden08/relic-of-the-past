@@ -1,0 +1,29 @@
+/* @layer renderer-widgets @kind style */
+
+.nav-edge-card__blocked-tag {
+  font-size: calc(var(--size-1) * 9);
+  color: var(--c-warning);
+}
+
+.nav-edge-card__part-1 {
+  font-size: calc(var(--size-1) * 9);
+  padding: 0 var(--size-4);
+  border-radius: var(--radius-sm);
+  background: var(--c-border);
+  color: var(--c-text-muted);
+  margin-left: auto;
+}
+
+.nav-edge-card__layer-row {
+  font-size: calc(var(--size-1) * 9);
+  margin-top: var(--size-2);
+}
+
+.nav-edge-card__layer-target {
+  color: var(--c-info);
+}
+
+.nav-conn-card.nav-edge-card--blocked {
+  opacity: 0.55;
+  border-color: var(--c-warning);
+}

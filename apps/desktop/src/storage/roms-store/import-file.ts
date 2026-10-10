@@ -7,7 +7,7 @@ import { finalizeRomImport } from './finalize-rom-import';
 
 const importFile = async (file: File, kind: RomKind = 'snes-alttp'): Promise<RomImportResult> => {
   const bytes = new Uint8Array(await file.arrayBuffer());
-  return finalizeRomImport(await roms.importBytes(platformFiles(), file.name, bytes, kind, (phase) => emitRomProgress(phase)));
+  return finalizeRomImport(await roms.importBytes(platformFiles(), { fileName: file.name, bytes }, kind, (phase) => emitRomProgress(phase)));
 };
 
 export { importFile };

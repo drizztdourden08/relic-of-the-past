@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Button, Icon } from '@drizztdourden08/tessera/primitives';
 import { DESC_SMALL } from './StickCards.constants';
 import type { TriggerCardProps } from './TriggerCards.type';
 
@@ -30,7 +30,7 @@ const TriggerCard = (props: TriggerCardProps) => {
   return (
     <Box className={`hid-cal__prereq-card${isDone ? ' hid-cal__prereq-card--done' : ''}`}>
       <Box className="hid-cal__prereq-title">
-        <Text>{isDone ? '✓' : '⊳'} {label}</Text>
+        <Text>{isDone ? <Icon name="check" /> : <Icon name="play" />} {label}</Text>
         {isDone && item.result && <Text className="hid-cal__prereq-badge">{item.result.split(' ')[0]}</Text>}
       </Box>
 
@@ -62,7 +62,7 @@ const TriggerCard = (props: TriggerCardProps) => {
               disabled={idleRecording !== null}
               className={idleResults[label] ? 'input-cal__btn--done' : ''}
               onClick={recordIdle}>
-              {idleRecording === label ? 'Recording...' : idleResults[label] ? '✓ Idle' : 'Idle'}
+              {idleRecording === label ? 'Recording...' : <>{idleResults[label] && <Icon name="check" />} Idle</>}
             </Button>
           </>
         ) : (

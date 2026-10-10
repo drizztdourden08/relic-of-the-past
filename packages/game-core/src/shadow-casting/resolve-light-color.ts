@@ -4,6 +4,9 @@ import type { Rgb } from './light-calculator.type';
 
 const white = (): Rgb => [1, 1, 1];
 
+const insideCanvas = (px: number, py: number, canvas: HTMLCanvasElement): boolean =>
+  px >= 0 && px < canvas.width && py >= 0 && py < canvas.height;
+
 const sampleGameColor = (x: number, y: number, canvas: HTMLCanvasElement | null): Rgb => {
   if (!canvas) return white();
 
@@ -13,7 +16,7 @@ const sampleGameColor = (x: number, y: number, canvas: HTMLCanvasElement | null)
 
     const px = Math.round(x);
     const py = Math.round(y);
-    if (px < 0 || px >= canvas.width || py < 0 || py >= canvas.height) return white();
+    if (!insideCanvas(px, py, canvas)) return white();
 
     const pixel = ctx.getImageData(px, py, 1, 1).data;
     return [(pixel[0] ?? 0) / 255, (pixel[1] ?? 0) / 255, (pixel[2] ?? 0) / 255];

@@ -3,9 +3,10 @@ import type { SimEvent, DetectedCheck, RecorderState } from '../../simulation';
 import { getCheck } from '@rotp/game-data';
 import { recordCheck } from '../../simulation';
 import { locationForScreen } from '../screen-location';
-import type { CheckLog } from './drive.type';
+import type { CheckLog, CheckMoment } from './drive.type';
 
-const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: CheckLog[], pathIndex: number, step: number, items: string[]): void => {
+const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: CheckLog[], at: CheckMoment): void => {
+  const { pathIndex, step, items } = at;
   for (const event of events) {
     const detected = (event.data as { detected?: DetectedCheck } | undefined)?.detected;
     const checkId = detected?.checkId;

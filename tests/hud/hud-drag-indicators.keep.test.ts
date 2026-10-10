@@ -8,7 +8,7 @@ import { join, resolve } from 'path';
 import { GhostCard } from '@app/views/HudLayoutEditor/sub-components/DragGhost';
 import { CellPicker } from '@app/views/HudLayoutEditor/sub-components/CellPicker';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import { ghostPosition } from '@app/views/HudLayoutEditor/behavior/drop-ghost';
+import { ghostPosition } from '@app/hud-layout-editing/drop-ghost';
 import type { Platform } from '@drizztdourden08/brock-core';
 
 const ROOT = resolve(__dirname, '../..');

@@ -2,9 +2,9 @@
 import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext } from '../detection-types';
 import { reconcile, scopedToPass } from '../reconcile';
-import type { DraftRecommendation, Recommendation } from '../types';
+import type { Recommendation } from '../types';
 import { memoryStorage } from './memory-storage';
-import type { PassResult, RecommendationStorage } from './store.type';
+import type { DetectionPass, PassResult, RecommendationStorage } from './store.type';
 
 const unchanged = (previous: readonly Recommendation[], next: readonly Recommendation[]): boolean =>
   previous.length === next.length && next.every((entry, at) => entry === previous[at]);
@@ -15,10 +15,10 @@ const createRecommendationStore = (storage: RecommendationStorage = memoryStorag
   const applyPass = async (
     kind: EntityKind,
     context: DetectionContext,
-    detectorIds: readonly string[],
-    fresh: readonly DraftRecommendation[],
+    pass: DetectionPass,
     now?: number,
   ): Promise<PassResult> => {
+    const { detectorIds, fresh } = pass;
     const previous = await storage.load(kind);
     const entries = reconcile(previous, fresh, {
       inScope: scopedToPass(detectorIds, context.screenId),

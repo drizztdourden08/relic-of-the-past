@@ -2,8 +2,8 @@
 import { useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
-import { stageCellRects } from '../behavior/stage-cells';
-import { stageSlotRects } from '../behavior/stage-slot-rects';
+import { stageCellRects } from '@app/hud-layout-editing/stage-cells';
+import { stageSlotRects } from '@app/hud-layout-editing/stage-slot-rects';
 import { DEFAULT_GUIDE } from './ContainerOverlay.constants';
 import { OverlayFlexSlots } from './OverlayFlexSlots';
 import { OverlayGridLines } from './OverlayGridLines';

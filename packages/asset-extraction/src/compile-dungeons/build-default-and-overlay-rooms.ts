@@ -19,7 +19,7 @@ const buildDefaultAndOverlayRooms = (rom: RomData, A: AssetBuilder): void => {
   buildEntranceData(rom, A, 1, 7, 'kStartingPoint_');
 
   const defaultData: number[] = [];
-  const defaultOffs = new Array(8).fill(0);
+  const defaultOffs = new Array<number>(8).fill(0);
   for (let i = 0; i < 8; i++) {
     const p = 0x84ef2f + i * 3;
     const addr = rom.getByte(p) | (rom.getByte(p + 1) << 8) | (rom.getByte(p + 2) << 16);
@@ -30,7 +30,7 @@ const buildDefaultAndOverlayRooms = (rom: RomData, A: AssetBuilder): void => {
   A.addUint16('kDungeonRoomDefaultOffs', defaultOffs);
 
   const overlayData: number[] = [];
-  const overlayOffs = new Array(19).fill(0);
+  const overlayOffs = new Array<number>(19).fill(0);
   for (let i = 0; i < 19; i++) {
     const p = 0x84ecc0 + i * 3;
     const addr = rom.getByte(p) | (rom.getByte(p + 1) << 8) | (rom.getByte(p + 2) << 16);

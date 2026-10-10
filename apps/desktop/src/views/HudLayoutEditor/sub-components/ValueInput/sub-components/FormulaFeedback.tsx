@@ -7,6 +7,11 @@ import type { FormulaFeedbackProps } from './FormulaFeedback.type';
 
 const format = (n: number): string => String(Math.round(n * 1000) / 1000);
 
+const readValue = (scope: FormulaFeedbackProps['scope'], name: string): string => {
+  const value = name in scope ? scope[name] : undefined;
+  return value === undefined ? '-' : format(value);
+};
+
 const FormulaFeedback = (props: FormulaFeedbackProps) => {
   const { expr, reads, scope, instances, result, outOfRange } = props;
   const atCeiling = result !== null && Math.abs(result) === MAX_SAFE_RESULT;
@@ -24,7 +29,7 @@ const FormulaFeedback = (props: FormulaFeedbackProps) => {
             <Text key={name} className="hud-value-input__read">
               {name}
               {' '}
-              <Text as="b">{name in scope ? format(scope[name]) : '-'}</Text>
+              <Text as="b">{readValue(scope, name)}</Text>
             </Text>
           ))}
         </Box>

@@ -5,6 +5,7 @@ import { RescanButton } from '../../../../compounds/RescanButton';
 import { controllerCardInfo } from '@rotp/input-mapping';
 import { DeviceCard } from './DeviceCard';
 import { AdapterDeviceCard } from './AdapterDeviceCard';
+import { firstPort } from './first-port';
 import type { DeviceAssignInfo } from './DeviceCard.type';
 import type { CtrlProps } from './controls.type';
 
@@ -53,12 +54,12 @@ const ControlsDevices = ({ ctrl }: CtrlProps) => {
             );
           }
 
-          const entry = group.ports[0].entry;
+          const { entry, deviceKey } = firstPort(group);
           const info = controllerCardInfo(entry);
           return (
             <DeviceCard
-              key={group.ports[0].deviceKey}
-              id={group.ports[0].deviceKey}
+              key={deviceKey}
+              id={deviceKey}
               displayName={info.displayName}
               deviceFamily={info.deviceFamily}
               sdlType={info.sdlType}

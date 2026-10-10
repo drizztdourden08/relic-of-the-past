@@ -1,7 +1,5 @@
 /* @layer renderer-app @kind config */
-import { useProfilesStore } from '@drizztdourden08/brock-react';
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
-import { runKindOfProfile } from '@app/game/randomizer-client';
 
 const meta: ScreenMeta = { title: 'Online', icon: 'globe', order: 3, keywords: ['online', 'archipelago', 'multiworld', 'deathlink', 'notifications'] };
 
@@ -37,16 +35,7 @@ const online: Section[] = [
   },
 ];
 
-const notice: Section[] = [
-  { id: 'online-notice', title: 'Online profiles', items: [{ key: 'notice.onlineOnly', label: 'Online profiles only', noDescription: true, hint: 'Open an online randomizer profile to set these.' }] },
-];
-
-const isOnlineProfile = (): boolean => runKindOfProfile(useProfilesStore.getState().active?.randomizer) === 'online';
-
-const sections = (): Section[] => {
-  if (isOnlineProfile()) return online;
-  return notice;
-};
+const sections = (): Section[] => online;
 
 export default sections;
 export { meta };

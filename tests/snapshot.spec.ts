@@ -26,7 +26,7 @@ test('visual snapshot', async () => {
 
   const screenshotPath = join(PROJECT_ROOT, 'tests', 'screenshots', `${NAME}.png`);
   expect(existsSync(screenshotPath)).toBe(true);
-  console.log(`[snapshot] verified: ${screenshotPath}`);
+  test.info().annotations.push({ type: 'snapshot', description: `verified: ${screenshotPath}` });
 
   await app.close();
 });

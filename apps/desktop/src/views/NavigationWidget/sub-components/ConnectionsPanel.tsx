@@ -1,22 +1,21 @@
 /* @layer renderer-widgets @kind component */
 import { landingCrossings, listedCrossings } from '@rotp/navigation';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../../../nav-widget/styles';
 import { CrossingCard } from './CrossingCard';
 import { EdgeCard } from './EdgeCard';
 import { InternalEdgesSection } from './InternalEdgesSection';
-import { IL } from './ConnectionsPanel.constants';
 import type { ConnectionsPanelProps } from './ConnectionsPanel.type';
+import './ConnectionsPanel.css';
 
 const ConnectionsPanel = (props: ConnectionsPanelProps) => {
   const { entranceSum, crossings, screenBundle, isIndoors, externalEdges, internalConnections, playerDebug } = props;
   const landings = crossings.flatMap(screen => landingCrossings(screen, isIndoors));
   return (
-    <Box style={S.section}>
-      <Box style={S.sectionTitle}>Connections</Box>
+    <Box className="nav-section">
+      <Box className="nav-section-title">Connections</Box>
 
-      <Box style={IL.firstSubTitle}>Entrances ({entranceSum})</Box>
-      {entranceSum === 0 && <Box style={IL.none}>None</Box>}
+      <Box className="nav-connections-panel__first-sub-title">Entrances ({entranceSum})</Box>
+      {entranceSum === 0 && <Box className="nav-connections-panel__none">None</Box>}
       {crossings.map(screen => {
         const listed = listedCrossings(screen, isIndoors);
         if (listed.length === 0) return null;
@@ -25,8 +24,8 @@ const ConnectionsPanel = (props: ConnectionsPanelProps) => {
           : null;
         return (
           <Box key={`ent-${screen.screenIndex}`}>
-            {scrLabel && <Box style={IL.screenLabel}>{scrLabel}</Box>}
-            <Box style={IL.wrapRow}>
+            {scrLabel && <Box className="nav-connections-panel__screen-label">{scrLabel}</Box>}
+            <Box className="nav-connections-panel__wrap-row">
               {listed.map(crossing => (
                 <CrossingCard key={crossing.id} crossing={crossing} />
               ))}
@@ -35,7 +34,7 @@ const ConnectionsPanel = (props: ConnectionsPanelProps) => {
         );
       })}
 
-      <Box style={IL.subTitle}>Edges ({externalEdges.length})</Box>
+      <Box className="nav-connections-panel__sub-title">Edges ({externalEdges.length})</Box>
       {externalEdges.length > 0 ? (
         externalEdges.map(row => (
           <EdgeCard
@@ -47,22 +46,22 @@ const ConnectionsPanel = (props: ConnectionsPanelProps) => {
           />
         ))
       ) : (
-        <Box style={IL.none}>None</Box>
+        <Box className="nav-connections-panel__none">None</Box>
       )}
 
       <InternalEdgesSection internalConnections={internalConnections} screenBundle={screenBundle} />
 
       {landings.length > 0 && (
         <>
-          <Box style={IL.subTitle}>Fall Holes ({landings.length})</Box>
-          <Box style={IL.wrapRow}>
+          <Box className="nav-connections-panel__sub-title">Fall Holes ({landings.length})</Box>
+          <Box className="nav-connections-panel__wrap-row">
             {landings.map(crossing => (
-              <Box key={crossing.id} style={S.card} title={crossing.label}>
-                <Box style={IL.holeGraphic}>
-                  <Text style={IL.bigEmoji}>⬇</Text>
+              <Box key={crossing.id} title={crossing.label} className="nav-card">
+                <Box className="nav-connections-panel__hole-graphic">
+                  <Text className="nav-connections-panel__big-emoji">⬇</Text>
                 </Box>
-                <Text style={S.cardTitle}>Landing Zone</Text>
-                <Text style={S.cardSub}>r{crossing.tile.row} c{crossing.tile.col}</Text>
+                <Text className="nav-card-title">Landing Zone</Text>
+                <Text className="nav-card-sub">r{crossing.tile.row} c{crossing.tile.col}</Text>
               </Box>
             ))}
           </Box>

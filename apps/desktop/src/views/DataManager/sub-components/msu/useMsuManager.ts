@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import * as msuStore from '@app/storage/msu-store';
 import { usePackList } from './behavior/usePackList';
 import { usePackContents } from './behavior/usePackContents';
@@ -95,14 +95,15 @@ const useMsuManager = (onRefresh: () => void) => {
   }, [newPackName, refresh, setSelected]);
 
   const handleFileImport = useCallback(async (dropped: File[]): Promise<ActionResult> => {
-    if (dropped.length === 0) return { success: false, message: 'No file selected' };
-    if (isMsulName(dropped[0].name)) {
-      const result = await importMsul(dropped[0], newPackName.trim());
+    const [file] = dropped;
+    if (file === undefined) return { success: false, message: 'No file selected' };
+    if (isMsulName(file.name)) {
+      const result = await importMsul(file, newPackName.trim());
       if (result.success) setNewPackName('');
       return result;
     }
     const pack = newPackName.trim() || `pack-${Date.now()}`;
-    const result = await msuStore.importMsuFile(pack, dropped[0]);
+    const result = await msuStore.importMsuFile(pack, file);
     if (!result.success) return { success: false, message: result.error ?? 'Import failed' };
     await refresh();
     setSelected(pack);

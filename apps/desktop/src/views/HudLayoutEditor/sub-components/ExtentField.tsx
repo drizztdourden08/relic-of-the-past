@@ -3,8 +3,8 @@ import { useRef, useState } from 'react';
 import { Box, Field, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import { NumberCell } from './NumberCell';
-import { EXTENT_MODES as MODES, modeOf } from '../behavior/track-extents';
-import type { ExtentMode } from '../behavior/track-extents';
+import { EXTENT_MODES as MODES, modeOf } from '@app/hud-layout-editing/track-extents';
+import type { ExtentMode } from '@app/hud-layout-editing/track-extents';
 import type { Extent } from '@rotp/hud';
 import type { ExtentFieldProps } from './ExtentField.type';
 

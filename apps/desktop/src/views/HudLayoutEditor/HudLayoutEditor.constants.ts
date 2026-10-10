@@ -9,7 +9,7 @@ const SNES_LINES = 224;
 const ratio = (id: string, w: number, h: number): EditorRatio =>
   ({ id, label: id, view: { w: Math.round((SNES_LINES * w) / h), h: SNES_LINES } });
 
-const EDITOR_RATIOS: readonly EditorRatio[] = [
+const EDITOR_RATIOS: readonly [EditorRatio, ...EditorRatio[]] = [
   ratio('16:9', 16, 9),
   ratio('16:10', 16, 10),
   ratio('21:9', 21, 9),

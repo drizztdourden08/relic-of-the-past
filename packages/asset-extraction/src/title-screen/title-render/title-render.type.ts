@@ -7,6 +7,8 @@ interface TitleSource {
 }
 
 interface TilePlacement {
+  addr: number;
+  row: number;
   x: number;
   y: number;
   flipX: boolean;

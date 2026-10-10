@@ -1,6 +1,6 @@
 /* @layer shared-input @kind logic */
 import { findFamily } from '../family-registry';
-import { GENERIC_FAMILY } from '../generic.family';
+import { GENERIC_FAMILY } from '../generic-family';
 import type { DeviceOverride } from '../family.type';
 import type { DisplayContext, DisplayContextParams } from './resolve-display.type';
 

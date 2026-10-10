@@ -3,12 +3,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { compileAlttpAssetSet, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/node';
-
-interface Arguments {
-  snes?: string;
-  gba?: string;
-  out?: string;
-}
+import type { Arguments } from './build-playable-assets.type';
 
 const parseArguments = (): Arguments => {
   const result: Arguments = {};

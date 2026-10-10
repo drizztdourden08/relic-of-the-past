@@ -65,9 +65,9 @@ const validateBox = (value: Record<string, unknown>, path: string, issues: Issue
   if (typeof opacity === 'number' && (opacity < 0 || opacity > 1)) {
     issues.push(`${path}.opacity: must be between 0 and 1`);
   }
-  const visible = value.visible === undefined ? undefined
-    : typeof value.visible === 'boolean' ? value.visible
-      : validateValue(value.visible, `${path}.visible`, issues, context);
+  const visible = typeof value.visible === 'boolean'
+    ? value.visible
+    : validateValue(value.visible, `${path}.visible`, issues, context);
 
   const size = sizeAt(value.size, `${path}.size`, issues, insideRepeat);
   const min = minMaxAt(value.min, `${path}.min`, issues, insideRepeat);

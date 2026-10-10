@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
 import type { IconPath } from '@drizztdourden08/tessera/primitives';
-import type { DropZone } from '../behavior/drop-intent';
+import type { DropZone } from '@app/hud-layout-editing/drop-intent';
 
 const DROP_CLASS: Readonly<Record<DropZone, string>> = {
   before: 'is-drop-before',

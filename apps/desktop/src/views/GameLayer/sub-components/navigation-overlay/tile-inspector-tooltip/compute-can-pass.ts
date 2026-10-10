@@ -13,9 +13,9 @@ const computeCanPass = (
       case 'lift.1': canPass = true; break;
       case 'lift.2': canPass = equipment.gloves >= POWER_GLOVE_LEVEL; break;
       case 'lift.3': canPass = equipment.gloves >= TITANS_MITT_LEVEL; break;
-      case 'hammer': canPass = inventoryItems[HAMMER_INVENTORY_SLOT] >= 1; break;
-      case 'boots': canPass = !!equipment.boots; break;
-      case 'flippers': canPass = !!equipment.flippers; break;
+      case 'hammer': canPass = (inventoryItems[HAMMER_INVENTORY_SLOT] ?? 0) >= 1; break;
+      case 'boots': canPass = Boolean(equipment.boots); break;
+      case 'flippers': canPass = Boolean(equipment.flippers); break;
     }
   }
   return canPass;

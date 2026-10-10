@@ -1,20 +1,19 @@
 /* @layer renderer-widgets @kind component */
-import type { ReactNode, CSSProperties } from 'react';
+import type { ReactNode } from 'react';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../../../nav-widget/styles';
-import { IL } from './DescRow.constants';
+import './DescRow.css';
 
 const DescRow = ({ label, desc, children }: { label: string; desc: string; children: ReactNode }) => {
   const [open, setOpen] = useWidgetPref<boolean>('navigation', `desc:${label}`, false);
   return (
     <Box>
-      <Box style={S.infoRow}>
-        <Text style={{ ...S.infoLabel, cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: '2px' } as CSSProperties} onClick={() => setOpen(!open)}>{label}</Text>
-        <Text style={IL.valueRow}>{children}</Text>
+      <Box className="nav-info-row">
+        <Text onClick={() => setOpen(!open)} className="nav-desc-row__info-label">{label}</Text>
+        <Text className="nav-desc-row__value-row">{children}</Text>
       </Box>
       {open && (
-        <Box style={IL.body}>{desc}</Box>
+        <Box className="nav-desc-row__body">{desc}</Box>
       )}
     </Box>
   );

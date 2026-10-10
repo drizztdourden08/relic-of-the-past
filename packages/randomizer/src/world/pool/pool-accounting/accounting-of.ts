@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../../checked-access';
 import { buildFillWorld, fillEligibleLocations } from '../../fill/fill-world';
 import { fillOptionsFromSnapshot } from '../../fill/fill-options-from-snapshot';
 import { fillerCountOf } from '../filler-count-of';
@@ -8,7 +9,7 @@ import type { DeliverableSets } from '../../fill/fill-options-from-snapshot';
 import type { RandomizerOptionsSnapshot } from '../../options.type';
 import type { PoolAccounting } from '../pool.type';
 
-const firstChoice = (choices: readonly ItemKey[]): ItemKey => choices[0];
+const firstChoice = (choices: readonly ItemKey[]): ItemKey => itemAt(choices, 0);
 
 const accountingOf = (
   snapshot: RandomizerOptionsSnapshot, deliverable: DeliverableSets, shopSeed = '',

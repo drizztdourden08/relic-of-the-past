@@ -65,9 +65,10 @@ const LanguageManager = (props: LanguageManagerProps) => {
   }, [extractLang, refresh]);
 
   const handleFileImport = useCallback(async (files: File[]) => {
-    if (files.length === 0) return { success: false, message: 'No file selected' };
+    const [file] = files;
+    if (file === undefined) return { success: false, message: 'No file selected' };
     if (!extractLang) return { success: false, message: 'Select a language first' };
-    const result = await languagesStore.extractLanguageFromFile(files[0], extractLang);
+    const result = await languagesStore.extractLanguageFromFile(file, extractLang);
     if (result.success) {
       await refresh();
       setSelected(extractLang);

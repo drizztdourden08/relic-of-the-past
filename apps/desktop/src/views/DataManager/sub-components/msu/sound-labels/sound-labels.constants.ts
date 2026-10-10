@@ -7,7 +7,7 @@ const SOUND_CHANNEL_TAGS: Record<SoundChannel, string> = {
   ambient: 'AMB', sfx1: 'SFX1', sfx2: 'SFX2',
 };
 
-const EFFECT_CHANNELS: SoundChannel[] = ['sfx1', 'sfx2'];
+const EFFECT_CHANNELS: readonly [SoundChannel, SoundChannel] = ['sfx1', 'sfx2'];
 
 const STUDIO_TABS: TabItem[] = [
   { id: 'music', label: 'Music' },

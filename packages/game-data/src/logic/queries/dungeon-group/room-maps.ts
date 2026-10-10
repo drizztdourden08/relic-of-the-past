@@ -21,7 +21,7 @@ const buildRoomMaps = (): RoomMaps => {
 };
 
 const roomMaps = (): RoomMaps => {
-  if (!cachedMaps) cachedMaps = buildRoomMaps();
+  cachedMaps ??= buildRoomMaps();
   return cachedMaps;
 };
 

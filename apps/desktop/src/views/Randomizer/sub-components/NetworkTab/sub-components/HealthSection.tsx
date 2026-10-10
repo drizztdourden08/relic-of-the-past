@@ -1,7 +1,9 @@
 /* @layer renderer-components @kind component */
 import { NetworkSection } from './NetworkSection';
-import { formatAge, formatMs, formatYesNo } from '../behavior/network-format';
-import { healthChip } from '../behavior/network-tone';
+import { formatAge } from '../behavior/format-age';
+import { formatMs } from '../behavior/format-ms';
+import { formatYesNo } from '../behavior/format-yes-no';
+import { healthChip } from '../behavior/health-chip';
 import { NOT_CONNECTED_HINT } from '../behavior/network-view.constants';
 import type { NetworkStatus } from '@app/game/randomizer-client';
 import type { NetworkRow } from './NetworkSection.type';

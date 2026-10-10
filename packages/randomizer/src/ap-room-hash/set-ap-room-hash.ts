@@ -8,7 +8,7 @@ const setApRoomHash = (hash: number): void => {
   try {
     mod.ccall(SET_EXPORT, null, ['number'], [hash | 0]);
   } catch {
-    
+    return undefined;
   }
 };
 

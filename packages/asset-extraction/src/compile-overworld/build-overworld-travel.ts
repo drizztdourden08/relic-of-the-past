@@ -1,75 +1,67 @@
-﻿/* @layer shared-asset-extraction @kind logic */
+/* @layer shared-asset-extraction @kind logic */
 import type { RomData } from '../rom/rom-types';
 import type { AssetBuilder } from '../asset-builder';
 import type { OverworldContext } from './build-overworld-context.type';
 import type { TravelEntry } from './build-overworld-travel.type';
+import { BIRD_TRAVEL_COUNT, TRAVEL_SLOT_COUNT, TRAVEL_TABLES } from './build-overworld-travel.constants';
+
+const readTravelEntries = (rom: RomData): Map<number, TravelEntry[]> => {
+  const travelByArea = new Map<number, TravelEntry[]>();
+  for (let i = 0; i < TRAVEL_SLOT_COUNT; i++) {
+    const screenIndex = rom.getWord(0x82eae5 + i * 2);
+    const entry: TravelEntry = i < BIRD_TRAVEL_COUNT
+      ? { romIndex: i, birdTravelId: i }
+      : { romIndex: i, whirlpoolSrcArea: rom.getWord(0x82ecf8 + (i - BIRD_TRAVEL_COUNT) * 2) };
+    const entries = travelByArea.get(screenIndex) ?? [];
+    travelByArea.set(screenIndex, entries);
+    entries.push(entry);
+  }
+  return travelByArea;
+};
+
+const writeTravelRow = (rom: RomData, tables: number[][], slot: number, romIndex: number): void => {
+  for (const [k, { base, signed }] of TRAVEL_TABLES.entries()) {
+    const table = tables[k];
+    if (!table) continue;
+    const at = base + romIndex * 2;
+    table[slot] = signed ? rom.getInt8(at) : rom.getWord(at);
+  }
+};
+
+const addTravelTables = (A: AssetBuilder, tables: number[][]): void => {
+  for (const [k, { asset, signed }] of TRAVEL_TABLES.entries()) {
+    const table = tables[k] ?? [];
+    if (signed) A.addInt8(asset, table);
+    else A.addUint16(asset, table);
+  }
+};
 
 const buildOverworldTravel = (rom: RomData, A: AssetBuilder, ctx: OverworldContext): void => {
   const { isAreaHead } = ctx;
-
-  const travelScreenIdx = new Array(17).fill(0);
-  const travelLoadOff = new Array(17).fill(0);
-  const travelScrollX = new Array(17).fill(0);
-  const travelScrollY = new Array(17).fill(0);
-  const travelPlayerX = new Array(17).fill(0);
-  const travelPlayerY = new Array(17).fill(0);
-  const travelCamX = new Array(17).fill(0);
-  const travelCamY = new Array(17).fill(0);
-  const travelUnk1 = new Array(17).fill(0);
-  const travelUnk3 = new Array(17).fill(0);
-  const whirlpoolAreas = new Array(8).fill(0);
-
-  const travelByArea = new Map<number, TravelEntry[]>();
-  for (let i = 0; i < 17; i++) {
-    const screenIndex = rom.getWord(0x82eae5 + i * 2);
-    const entry: TravelEntry = { romIndex: i };
-    if (i < 9) {
-      entry.birdTravelId = i;
-    } else {
-      entry.whirlpoolSrcArea = rom.getWord(0x82ecf8 + (i - 9) * 2);
-    }
-    if (!travelByArea.has(screenIndex)) travelByArea.set(screenIndex, []);
-    travelByArea.get(screenIndex)!.push(entry);
-  }
+  const screenIndices = new Array<number>(TRAVEL_SLOT_COUNT).fill(0);
+  const tables = TRAVEL_TABLES.map(() => new Array<number>(TRAVEL_SLOT_COUNT).fill(0));
+  const whirlpoolAreas = new Array<number>(8).fill(0);
+  const travelByArea = readTravelEntries(rom);
 
   let nextWhirlpoolId = 0;
   for (let i = 0; i < 160; i++) {
     if (!isAreaHead(i)) continue;
-    const entries = travelByArea.get(i);
-    if (!entries) continue;
-    for (const t of entries) {
-      const ri = t.romIndex;
-      let j: number;
-      if (t.birdTravelId !== undefined) {
-        j = t.birdTravelId;
+    for (const t of travelByArea.get(i) ?? []) {
+      let slot: number;
+      if ('birdTravelId' in t) {
+        slot = t.birdTravelId;
       } else {
-        whirlpoolAreas[nextWhirlpoolId] = t.whirlpoolSrcArea!;
-        j = nextWhirlpoolId + 9;
+        whirlpoolAreas[nextWhirlpoolId] = t.whirlpoolSrcArea;
+        slot = nextWhirlpoolId + BIRD_TRAVEL_COUNT;
         nextWhirlpoolId++;
       }
-      travelScreenIdx[j] = i;
-      travelLoadOff[j] = rom.getWord(0x82eb07 + ri * 2);
-      travelScrollX[j] = rom.getWord(0x82eb4b + ri * 2);
-      travelScrollY[j] = rom.getWord(0x82eb29 + ri * 2);
-      travelPlayerX[j] = rom.getWord(0x82eb8f + ri * 2);
-      travelPlayerY[j] = rom.getWord(0x82eb6d + ri * 2);
-      travelCamX[j] = rom.getWord(0x82ebd3 + ri * 2);
-      travelCamY[j] = rom.getWord(0x82ebb1 + ri * 2);
-      travelUnk1[j] = rom.getInt8(0x82ebf5 + ri * 2);
-      travelUnk3[j] = rom.getInt8(0x82ec17 + ri * 2);
+      screenIndices[slot] = i;
+      writeTravelRow(rom, tables, slot, t.romIndex);
     }
   }
 
-  A.addUint16('kBirdTravel_ScreenIndex', travelScreenIdx);
-  A.addUint16('kBirdTravel_Map16LoadSrcOff', travelLoadOff);
-  A.addUint16('kBirdTravel_ScrollX', travelScrollX);
-  A.addUint16('kBirdTravel_ScrollY', travelScrollY);
-  A.addUint16('kBirdTravel_LinkXCoord', travelPlayerX);
-  A.addUint16('kBirdTravel_LinkYCoord', travelPlayerY);
-  A.addUint16('kBirdTravel_CameraXScroll', travelCamX);
-  A.addUint16('kBirdTravel_CameraYScroll', travelCamY);
-  A.addInt8('kBirdTravel_Unk1', travelUnk1);
-  A.addInt8('kBirdTravel_Unk3', travelUnk3);
+  A.addUint16('kBirdTravel_ScreenIndex', screenIndices);
+  addTravelTables(A, tables);
   A.addUint16('kWhirlpoolAreas', whirlpoolAreas);
 };
 

@@ -43,7 +43,7 @@ const reduceBrowsing = (
     case 'closed':
       return { phase: 'closed' };
     case 'slot':
-    default:
+    case 'opened':
       return state;
   }
 };

@@ -1,9 +1,9 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { compileExpr, validateValue } from '@rotp/hud';
-import { explainExprError, explainUnknownName } from '@app/views/HudLayoutEditor/behavior/expr-errors';
-import { readExpr } from '@app/views/HudLayoutEditor/behavior/check-expr';
-import { isFormulaText, stepsAsNumber, textOf, valueOf } from '@app/views/HudLayoutEditor/behavior/value-text';
+import { explainExprError, explainUnknownName } from '@app/hud-layout-editing/expr-errors';
+import { readExpr } from '@app/hud-layout-editing/check-expr';
+import { isFormulaText, stepsAsNumber, textOf, valueOf } from '@app/hud-layout-editing/value-text';
 
 const raw = (source: string): string => {
   const compiled = compileExpr(source);

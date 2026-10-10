@@ -6,7 +6,6 @@ type FixtureEntry = { id: string; name: string; timestamp: number };
 const restoreFixtureSaves = async (): Promise<void> => {
   const { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } = await import('node:fs');
   const { join } = await import('node:path');
-  // @ts-expect-error -- plain .mjs tooling module, no type declarations by design
   const { gameDataPath } = await import('../../../scripts/parallel/paths.mjs');
 
   const fixturesDir = join(__dirname, '..', '..', 'fixtures', 'save-states');

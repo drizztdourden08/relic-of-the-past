@@ -29,7 +29,7 @@ describe('saves store (over FileStore)', () => {
 
   it('normal saves: create / list / rename / delete', async () => {
     const f = createMemFileStore();
-    const a = await saves.createNormalSave(f, P, 'A', bytes(10, 1));
+    const a = await saves.createNormalSave(f, P, 'A', { data: bytes(10, 1) });
     expect((await saves.listNormalSaves(f, P)).map((s) => s.id)).toEqual([a.id]);
     await saves.renameNormalSave(f, P, a.id, 'A2');
     expect((await saves.listNormalSaves(f, P))[0].name).toBe('A2');

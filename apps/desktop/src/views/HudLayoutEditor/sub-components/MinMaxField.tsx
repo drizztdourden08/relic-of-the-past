@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Text } from '@drizztdourden08/tessera/primitives';
-import { useEditorStep } from '../behavior/editor-step';
+import { useEditorStep } from '@app/hud-layout-editing/editor-step';
 import { ValueInput } from './ValueInput';
 import { AXES } from './MinMaxField.constants';
 import type { Value } from '@rotp/hud';

@@ -29,13 +29,13 @@ const confirmPress = ({ bytes, bl, excl, item, refs, cb }: AxisStepArgs): void =
   if (refs.confirmCountRef.current < CONFIRM_FRAMES) return;
   const axisId = item.id;
   if (!refs.axisCapRef.current[axisId]) refs.axisCapRef.current[axisId] = { posBytes: null, negBytes: null };
-  const changes = diffs.map(d => `[${d.byteIndex}]:${d.baseVal}→${d.sampleVal}`).join(', ');
+  const changes = diffs.map(d => `[${d.byteIndex}]:${d.baseVal}->${d.sampleVal}`).join(', ');
   if (refs.axisSubStepRef.current === 'pos') {
     refs.axisCapRef.current[axisId].posBytes = new Uint8Array(bytes);
-    cb.addLog(`✓ ${item.label}+ on ${changes}`);
+    cb.addLog(`OK ${item.label}+ on ${changes}`);
   } else {
     refs.axisCapRef.current[axisId].negBytes = new Uint8Array(bytes);
-    cb.addLog(`✓ ${item.label}− on ${changes}`);
+    cb.addLog(`OK ${item.label}- on ${changes}`);
   }
   cb.setCaptureState('waiting-release');
 };

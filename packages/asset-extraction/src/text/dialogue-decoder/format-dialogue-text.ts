@@ -11,7 +11,7 @@ const formatDialogueText = (strings: DecodedString[]): string => {
       ...texts.slice(SHORT_DUMP_MISSING_INDEX),
     ];
   }
-  return texts.map((s, i) => `${i + 1}: ${s.text}`).join('\n') + '\n';
+  return `${texts.map((s, i) => `${i + 1}: ${s.text}`).join('\n')}\n`;
 };
 
 export { formatDialogueText };

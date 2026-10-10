@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
-import type { StepDirection } from '../behavior/step-intent';
+import type { StepDirection } from '@app/hud-layout-editing/step-intent';
 import type { HudLayout } from '@rotp/hud';
 
 interface OutlineRowMenuProps {

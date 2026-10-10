@@ -2,18 +2,24 @@
 import type { FloodFillResult } from '@rotp/game-core';
 import { REACH_BLOCKED, REACH_OPEN } from '../pathfinding/pathfinding.constants';
 
-const reachMark = (reach: number): string => (reach === REACH_BLOCKED ? '-' : reach === REACH_OPEN ? '+' : '~');
+const reachMark = (reach: number | undefined): string => {
+  if (reach === REACH_BLOCKED) return '-';
+  if (reach === REACH_OPEN) return '+';
+  return '~';
+};
+
+const cellText = (result: FloodFillResult, attrGrid: number[][], r: number, c: number): string => {
+  const attr = attrGrid[r]?.[c];
+  if (attr === undefined) throw new Error(`attribute grid has no tile at row ${r}, column ${c}`);
+  return `${attr.toString(16).padStart(2, '0')}${reachMark(result.reachable[r]?.[c])}`;
+};
 
 const tileBlockText = (result: FloodFillResult, attrGrid: number[][], r0: number, r1: number, c0: number, c1: number): string => {
   const indoors = result.indoors ?? false;
   const rows: string[] = [];
   for (let r = r0; r <= r1; r++) {
     const cells: string[] = [];
-    for (let c = c0; c <= c1; c++) {
-      const attr = attrGrid[r][c];
-      const reach = result.reachable[r][c];
-      cells.push(`${attr.toString(16).padStart(2, '0')}${reachMark(reach)}`);
-    }
+    for (let c = c0; c <= c1; c++) cells.push(cellText(result, attrGrid, r, c));
     rows.push(cells.join(' '));
   }
 

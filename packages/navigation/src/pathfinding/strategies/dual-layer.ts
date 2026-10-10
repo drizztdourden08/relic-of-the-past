@@ -43,11 +43,11 @@ class DualLayerStrategy implements LayerStrategy {
 
   expand(
     cell: BFSCell,
-    dr: number,
-    dc: number,
+    step: readonly [number, number],
     inventory: Set<string>,
     bounds: QuadrantBounds,
   ): BFSExpansionResult[] {
+    const [dr, dc] = step;
     const { row, col, layer, requirements } = cell;
     const next: GridPos = { row: row + dr, col: col + dc };
     if (bodyOutOfBounds(next.row, next.col, bounds)) return [];

@@ -8,7 +8,7 @@ import { RULE_TABLES } from './register.constants';
 import { applyEntry } from './apply-entry';
 import { closeCoverage } from './close-coverage';
 import { openShopSlots } from './open-shop-slots';
-import type { World, Rule } from '../../world.type';
+import type { World } from '../../world.type';
 import type { RuleCoverageReport } from '../rules.type';
 
 const registerRules = (world: World): RuleCoverageReport => {

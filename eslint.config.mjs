@@ -54,11 +54,21 @@ const rotpExtension = {
       glyphContent: [{
         files: ['apps/desktop/src/views/NavigationWidget/sub-components/ReqIcon.constants.ts'],
         why: 'The requirement icons of the navigation widget are emoji data, one per item requirement.',
+      }, {
+        files: ['packages/hud/src/presets/preset-sources.constants.ts'],
+        why: 'The HUD preset picker shows each preset by its game symbol (heart, diamond, key, coin), held as glyph data.',
       }],
       consoleGlobs: [
         '**/bin/**', '**/scripts/**', '**/tooling/**', '**/*.test.{ts,tsx,js,mjs}',
         'core/wasm-build/*.mjs', 'installer-stub/*.mjs', 'apps/desktop/public/logos/**/*.mjs',
         'apps/sanctuary-api/dev-server.mjs', 'apps/sanctuary-api/src/**', 'apps/store-api/src/**',
+        'packages/hub-server/src/router/create-router.ts',
+        'packages/game-core/src/cheats/actions/cheat-start-trace.ts',
+        'packages/game-core/src/webgl/gl-helpers/{create-shader,create-program}.ts',
+        'packages/game-core/src/{shadow-casting,edge-glow}/renderer.ts',
+        'packages/input-mapping/src/runtime/haptic-bridge/start-debug-log.ts',
+        'packages/input-mapping/src/runtime/migrate-profiles/migrate-profiles-loudly.ts',
+        'packages/input-mapping/src/runtime/scheme-runtime/rebuild-scheme-bindings.ts',
       ],
     },
     configs: [ONE_SOURCE_FACADE],

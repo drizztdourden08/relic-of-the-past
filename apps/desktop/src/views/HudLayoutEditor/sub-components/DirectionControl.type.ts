@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { IconifyIcon as IconifyIconData } from '@iconify/types';
-import type { FlowDirection } from '../behavior/align-options';
+import type { FlowDirection } from '@app/hud-layout-editing/align-options';
 
 interface DirectionOption {
   value: FlowDirection;

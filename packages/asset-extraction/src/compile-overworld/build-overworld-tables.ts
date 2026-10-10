@@ -11,11 +11,11 @@ import { buildOverworldTravel } from './build-overworld-travel';
 
 const buildAreaTables = (rom: RomData, A: AssetBuilder, ctx: OverworldContext): void => {
   const { isAreaHead, isSmall, awrite } = ctx;
-  const auxTile = new Array(128).fill(0);
-  const bgPal = new Array(136).fill(0);
-  const signText = new Array(128).fill(0);
-  const musicSets = new Array(256).fill(0);
-  const musicSets2 = new Array(96).fill(0);
+  const auxTile = new Array<number>(128).fill(0);
+  const bgPal = new Array<number>(136).fill(0);
+  const signText = new Array<number>(128).fill(0);
+  const musicSets = new Array<number>(256).fill(0);
+  const musicSets2 = new Array<number>(96).fill(0);
 
   for (let i = 0; i < 160; i++) {
     if (!isAreaHead(i)) continue;
@@ -41,9 +41,9 @@ const buildAreaTables = (rom: RomData, A: AssetBuilder, ctx: OverworldContext): 
 };
 
 const buildOverworldEntrances = (rom: RomData, A: AssetBuilder): void => {
-  const entArea = new Array(129).fill(0);
-  const entPos = new Array(129).fill(0);
-  const entId = new Array(129).fill(0);
+  const entArea = new Array<number>(129).fill(0);
+  const entPos = new Array<number>(129).fill(0);
+  const entId = new Array<number>(129).fill(0);
   for (let i = 0; i < 129; i++) {
     entArea[i] = rom.getWord(0x9bb96f + i * 2);
     entPos[i] = rom.getWord(0x9bba71 + i * 2);
@@ -75,7 +75,7 @@ const buildFallHolesSortedByEntrance = (rom: RomData, A: AssetBuilder): void => 
 
 const buildAreaHeadSecrets = (rom: RomData, A: AssetBuilder, ctx: OverworldContext): void => {
   const { isAreaHead, awrite } = ctx;
-  const secretOffs = new Array(128).fill(-1);
+  const secretOffs = new Array<number>(128).fill(-1);
   const secrets: number[] = [];
   for (let i = 0; i < 160; i++) {
     if (!isAreaHead(i)) continue;

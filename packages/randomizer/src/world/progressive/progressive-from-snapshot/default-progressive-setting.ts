@@ -1,10 +1,9 @@
 /* @layer shared-game @kind logic */
+import { recordBy } from '../../../keyed-record';
 import { DEFAULT_PROGRESSIVE_SETTING, PROGRESSIVE_FAMILIES } from '../progressive-families.constants';
-import type { ProgressiveSetting, ProgressiveTierTicks } from '../progressive.type';
+import type { ProgressiveSetting } from '../progressive.type';
 
 const defaultProgressiveSetting = (): ProgressiveSetting =>
-  Object.fromEntries(PROGRESSIVE_FAMILIES.map((family) => [
-    family.id, [...(DEFAULT_PROGRESSIVE_SETTING[family.id])],
-  ])) as unknown as ProgressiveSetting;
+  recordBy(PROGRESSIVE_FAMILIES, (family) => family.id, (family) => [...(DEFAULT_PROGRESSIVE_SETTING[family.id])]);
 
 export { defaultProgressiveSetting };

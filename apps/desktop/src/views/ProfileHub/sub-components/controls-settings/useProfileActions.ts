@@ -5,6 +5,7 @@ import { KEYBOARD_DEFAULT, profileFromPreset, migrateProfilesLoudly } from '@rot
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import { readInputProfiles, writeInputProfiles } from '@app/storage/profile-data-store';
 import type { UseProfileActionsArgs } from './controls-settings.type';
+import { firstProfile } from './first-profile';
 
 const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsArgs) => {
   const [profiles, setProfiles] = useState<InputProfile[]>([]);
@@ -29,7 +30,7 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
 
       setProfiles(loaded);
       const activeId = settings.activeInputProfileId;
-      const active = loaded.find(p => p.id === activeId) ?? loaded[0];
+      const active = loaded.find(p => p.id === activeId) ?? firstProfile(loaded);
       setActiveProfile(active);
       getInputManager().setProfiles(loaded);
       getInputManager().setProfile(active);

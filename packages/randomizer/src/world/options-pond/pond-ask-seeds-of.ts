@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { entryOf } from '../../checked-access';
 import { POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_BOTTLE_ROW } from '../pond/pond-ask';
 import {
   pondAskBottleContentKeyOf, pondAskBottleKeyOf, pondAskItemKeyOf, pondAskKeyOf,
@@ -9,7 +10,7 @@ import type { PondInstance } from '../pond/pond-instance.type';
 import type { OptionSeed, OptionValue, OptionValues } from '../options.type';
 
 const pondAskSeedsOf = (pond: PondInstance, rows: OptionValues): OptionSeed[] => {
-  const at = (key: string): OptionValue => rows[key];
+  const at = (key: string): OptionValue => entryOf(rows, key);
   const counted = POND_ASK_ROWS.flatMap((row) => [
     askToggleSeed(pondAskKeyOf(pond, row.currency), `${pond.label} asks for ${row.label.toLowerCase()}`,
       at(pondAskKeyOf(pond, row.currency))),

@@ -20,8 +20,8 @@ const drawHeightmaps = (ctx: CanvasRenderingContext2D, vp: Vp, width: number, he
     ctx.lineWidth = isSelected ? 2.5 : 1.5;
     if (el.shape.type === 'freehand' && el.shape.points) {
       ctx.beginPath();
-      for (let i = 0; i < el.shape.points.length; i++) {
-        const pp = worldToDisplay(vp, width, height, el.shape.points[i].x, el.shape.points[i].y);
+      for (const [i, point] of el.shape.points.entries()) {
+        const pp = worldToDisplay(vp, width, height, point.x, point.y);
         if (i === 0) ctx.moveTo(pp.x - dp.x, pp.y - dp.y);
         else ctx.lineTo(pp.x - dp.x, pp.y - dp.y);
       }

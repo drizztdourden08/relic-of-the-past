@@ -2,14 +2,14 @@
 import type { ConnectionInfo } from '@rotp/game-core';
 import type { ScreenBundleGrid } from '@rotp/game-data';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../../../nav-widget/styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import { ReqIcon } from './ReqIcon';
-import { REQ_ROW } from './InternalEdgeDiamond.constants';
 import type { DiamondPos } from './InternalEdgeDiamond.type';
+import { sourceSubName } from '../behavior/source-sub-name';
+import './InternalEdgeDiamond.css';
 
 const getEdgeDiamondPos = (conn: ConnectionInfo, bundle: ScreenBundleGrid): DiamondPos => {
-  const idx = bundle.screens.indexOf(conn.sourceScreen!);
+  const idx = conn.sourceScreen === undefined ? -1 : bundle.screens.indexOf(conn.sourceScreen);
   const col = idx % bundle.cols;
   const row = Math.floor(idx / bundle.cols);
   if (conn.edge === 'east') {
@@ -25,33 +25,33 @@ const InternalEdgeDiamond = ({ connections, screenBundle }: { connections: Conne
   }
 
   const renderCard = (conn: ConnectionInfo | null) => {
-    if (!conn) return <Box style={{ ...S.card, visibility: 'hidden' }} />;
-    const fromName = screenBundle.subNames[conn.sourceScreen!] ?? '?';
+    if (!conn) return <Box className="nav-internal-edge-diamond__card" />;
+    const fromName = sourceSubName(conn, screenBundle);
     const toName = screenBundle.subNames[conn.targetScreen] ?? '?';
     return (
-      <Box style={S.card}>
-        <Box style={S.cardGraphic}>
+      <Box className="nav-card">
+        <Box className="nav-card-graphic">
           <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
         </Box>
-        <Text style={S.cardSub}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</Text>
-        <Text style={{ fontSize: 8, color: conn.layerToggle ? 'var(--c-info)' : 'var(--c-secondary)', marginTop: 2 }}>
+        <Text className="nav-card-sub">{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</Text>
+        <Text className={conn.layerToggle ? 'nav-internal-edge-diamond__layer nav-val-info' : 'nav-internal-edge-diamond__layer nav-val-green'}>
           {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
         </Text>
         {conn.requirements.length > 0 && (
-          <Box style={REQ_ROW}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
+          <Box className="nav-internal-edge-diamond__req-row">{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
         )}
       </Box>
     );
   };
 
   return (
-    <Box style={S.diamond}>
-      {(slots.top) && <Box style={S.diamondRow}>{renderCard(slots.top)}</Box>}
-      <Box style={S.diamondMid}>
+    <Box className="nav-diamond">
+      {(slots.top) && <Box className="nav-diamond-row">{renderCard(slots.top)}</Box>}
+      <Box className="nav-diamond-mid">
         {renderCard(slots.left)}
         {renderCard(slots.right)}
       </Box>
-      {(slots.bottom) && <Box style={S.diamondRow}>{renderCard(slots.bottom)}</Box>}
+      {(slots.bottom) && <Box className="nav-diamond-row">{renderCard(slots.bottom)}</Box>}
     </Box>
   );
 };

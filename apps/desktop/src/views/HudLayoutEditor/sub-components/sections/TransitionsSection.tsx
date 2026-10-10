@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Checkbox, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
-import { drivenProperties, mergeTransition, TRANSITION_PROPERTIES } from '../../behavior/transition-edits';
+import { drivenProperties, mergeTransition, TRANSITION_PROPERTIES } from '@app/hud-layout-editing/transition-edits';
 import { EasingPicker } from '../EasingPicker';
 import { ValueField } from '../ValueField';
 import type { HudTransitionProperty } from '@rotp/hud';

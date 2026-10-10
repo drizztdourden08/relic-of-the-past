@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { Svg, SvgLine, SvgRect, SvgText } from '@drizztdourden08/tessera/primitives';
 import { EDGE_COLORS } from '../NavigationWidget.constants';
-import { SVG_STYLE } from './InternalEdgeSvg.constants';
+import './InternalEdgeSvg.css';
 
 const InternalEdgeSvg = ({ edge, fromName, toName }: { edge: string; fromName: string; toName: string }) => {
   const fromColor = EDGE_COLORS[edge] ?? 'var(--c-text-muted)';
@@ -16,7 +16,7 @@ const InternalEdgeSvg = ({ edge, fromName, toName }: { edge: string; fromName: s
     const W = SQ + 2;
     const H = SQ * 2 + 2;
     return (
-      <Svg width={W * 3} height={H} viewBox={`0 0 ${W * 3} ${H}`} style={SVG_STYLE}>
+      <Svg width={W * 3} height={H} viewBox={`0 0 ${W * 3} ${H}`} className="nav-internal-edge-svg">
         <SvgRect x={W} y="0" width={SQ} height={SQ} rx="3" ry="3" fill={fromColor} opacity="0.9" />
         <SvgRect x={W} y={SQ - 3} width={SQ} height="3" fill={fromColor} opacity="0.9" />
         <SvgText x={W + SQ / 2} y={SQ / 2 + 3} textAnchor="middle" fontSize="8" fontWeight="700" fill="#000">{fromName}</SvgText>
@@ -30,7 +30,7 @@ const InternalEdgeSvg = ({ edge, fromName, toName }: { edge: string; fromName: s
   const W = SQ * 2 + 2;
   const H = SQ + LINE_OVERFLOW * 2;
   return (
-    <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={SVG_STYLE}>
+    <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="nav-internal-edge-svg">
       <SvgRect x="0" y={LINE_OVERFLOW} width={SQ} height={SQ} rx="3" ry="3" fill={fromColor} opacity="0.9" />
       <SvgRect x={SQ - 3} y={LINE_OVERFLOW} width="3" height={SQ} fill={fromColor} opacity="0.9" />
       <SvgText x={SQ / 2} y={LINE_OVERFLOW + SQ / 2 + 3} textAnchor="middle" fontSize="8" fontWeight="700" fill="#000">{fromName}</SvgText>

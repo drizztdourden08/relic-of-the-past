@@ -1,16 +1,16 @@
 /* @layer shared-game @kind logic */
-import { find } from '../../../data';
+import { all } from '../../../data';
 import type { ScreenRecord } from '../../../data';
 
 let cachedByIndex: Map<number, ScreenRecord> | null = null;
 
+const indexedEntry = (screen: ScreenRecord): [number, ScreenRecord][] => {
+  const index = screen.gameId.overworldIndex;
+  return screen.kind === 'overworld' && index !== undefined ? [[index, screen]] : [];
+};
+
 const screenByIndex = (): Map<number, ScreenRecord> => {
-  if (!cachedByIndex) {
-    cachedByIndex = new Map(
-      find('screen', s => s.kind === 'overworld' && s.gameId.overworldIndex !== undefined)
-        .map(s => [s.gameId.overworldIndex!, s]),
-    );
-  }
+  cachedByIndex ??= new Map(all('screen').flatMap(indexedEntry));
   return cachedByIndex;
 };
 

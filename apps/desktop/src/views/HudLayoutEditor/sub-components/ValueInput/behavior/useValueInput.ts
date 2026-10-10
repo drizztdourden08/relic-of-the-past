@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useRef, useState } from 'react';
-import { exprOf, isFormulaText, stepsAsNumber, textOf, valueOf, withFormulaMarker } from '../../../behavior/value-text';
+import { exprOf, isFormulaText, stepsAsNumber, textOf, valueOf, withFormulaMarker } from '@app/hud-layout-editing/value-text';
 import { clampToRange } from './clamp-to-range';
 import { prefixAt } from './prefix-at';
 import type { UseValueInputParams } from './useValueInput.type';

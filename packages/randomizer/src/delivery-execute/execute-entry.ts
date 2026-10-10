@@ -4,7 +4,7 @@ import type { ExecuteOutcome } from './delivery-execute.type';
 import { executeAction } from './execute-action';
 
 const fireGranted = (entry: DeliveryEntry): void => {
-  try { entry.onGranted?.(); } catch {  }
+  try { entry.onGranted?.(); } catch { return undefined; }
 };
 
 const executeEntry = (entry: DeliveryEntry): ExecuteOutcome => {

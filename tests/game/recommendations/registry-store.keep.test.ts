@@ -68,8 +68,8 @@ describeDataset('the recommendation store', () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
 
-    const first = await store.applyPass('connection', context, run.detectorIds, run.drafts, 1000);
-    const second = await store.applyPass('connection', context, run.detectorIds, run.drafts, 2000);
+    const first = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
+    const second = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 2000);
 
     expect(second.entries).toHaveLength(first.entries.length);
     expect(second.entries.every(e => e.firstSeenAt === 1000)).toBe(true);
@@ -78,10 +78,10 @@ describeDataset('the recommendation store', () => {
   it('keeps a dismissal across a re-detection', async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
-    const { entries } = await store.applyPass('connection', context, run.detectorIds, run.drafts, 1000);
+    const { entries } = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
 
     await store.decide('connection', entries[0].id, 'dismissed', 1500);
-    const after = await store.applyPass('connection', context, run.detectorIds, run.drafts, 2000);
+    const after = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 2000);
 
     expect(after.entries.find(e => e.id === entries[0].id)?.state).toBe('dismissed');
     expect(after.entries.filter(e => e.id === entries[0].id)).toHaveLength(1);
@@ -90,11 +90,11 @@ describeDataset('the recommendation store', () => {
   it('does not resolve findings about a screen the pass never visited', async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
-    await store.applyPass('connection', context, run.detectorIds, run.drafts, 1000);
+    await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
 
     const elsewhere = all('screen').find(s => s.id !== screenId) as { id: ScreenId };
     const empty = contextFor(elsewhere.id, []);
-    const after = await store.applyPass('connection', empty, run.detectorIds, [], 2000);
+    const after = await store.applyPass('connection', empty, { detectorIds: run.detectorIds, fresh: [] }, 2000);
 
     expect(after.entries.every(e => e.state === 'open')).toBe(true);
   });
@@ -102,16 +102,16 @@ describeDataset('the recommendation store', () => {
   it('resolves a finding once the pass that owns it stops reproducing it', async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
-    await store.applyPass('connection', context, run.detectorIds, run.drafts, 1000);
+    await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
 
-    const after = await store.applyPass('connection', context, run.detectorIds, [], 2000);
+    const after = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: [] }, 2000);
     expect(after.entries.every(e => e.state === 'resolved')).toBe(true);
   });
 
   it('carries a record, not a code string, which was the whole point of the unification', async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
-    const { entries } = await store.applyPass('connection', context, run.detectorIds, run.drafts, 1000);
+    const { entries } = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
 
     for (const entry of entries) {
       expect(typeof entry.proposed).toBe('object');

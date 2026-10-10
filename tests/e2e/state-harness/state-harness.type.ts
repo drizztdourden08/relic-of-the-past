@@ -16,4 +16,15 @@ interface StateReader {
   press: (button: string, holdMs?: number) => Promise<void>;
 }
 
-export type { StateReader };
+interface PageInputManager {
+  keyboardMap: Map<string, string>;
+  allowed: { keyboard: boolean };
+}
+
+declare global {
+  interface Window {
+    __inputManager?: PageInputManager;
+  }
+}
+
+export type { PageInputManager, StateReader };

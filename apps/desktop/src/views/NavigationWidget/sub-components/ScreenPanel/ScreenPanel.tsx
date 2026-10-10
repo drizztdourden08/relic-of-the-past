@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
 import { ANNOTATION_STYLES } from '../../../GameLayer/sub-components/navigation-overlay/annotation-style';
-import { S } from '../../../../nav-widget/styles';
-import { PS } from './styles';
-import { groupAnnotations } from './annotation-rows';
+import { groupAnnotations } from './behavior/annotation-rows';
+import { annotationStateClass } from './behavior/annotation-state-class';
 import type { ScreenPanelProps } from './ScreenPanel.type';
+import './ScreenPanel.css';
 
 const ScreenPanel = ({ annotations }: ScreenPanelProps) => {
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
@@ -27,21 +27,21 @@ const ScreenPanel = ({ annotations }: ScreenPanelProps) => {
   const { done, available, blocked } = checks;
 
   return (
-    <Box style={S.section}>
-      <Box style={S.sectionTitle}>On this screen</Box>
+    <Box className="nav-section">
+      <Box className="nav-section-title">On this screen</Box>
 
       {(done > 0 || available > 0 || blocked > 0) && (
-        <Box style={PS.summary}>
-          <Text style={PS.doneCount}>{done} done</Text>
-          <Text style={PS.availCount}>{available} available</Text>
-          {blocked > 0 && <Text style={PS.blockedCount}>{blocked} unreachable</Text>}
+        <Box className="nav-screen-panel__summary">
+          <Text className="nav-screen-panel__done-count">{done} done</Text>
+          <Text className="nav-screen-panel__avail-count">{available} available</Text>
+          {blocked > 0 && <Text className="nav-screen-panel__blocked-count">{blocked} unreachable</Text>}
         </Box>
       )}
 
       {tags.length > 0 && (
-        <Box style={PS.tagRow}>
+        <Box className="nav-screen-panel__tag-row">
           {tags.map((tag, i) => (
-            <Text key={`tag-${i}-${tag.value}`} style={PS.tag} title={`tag 0x${tag.value.toString(16)}`}>
+            <Text key={`tag-${i}-${tag.value}`} title={`tag 0x${tag.value.toString(16)}`} className="nav-screen-panel__tag">
               {tag.name}
             </Text>
           ))}
@@ -49,8 +49,8 @@ const ScreenPanel = ({ annotations }: ScreenPanelProps) => {
       )}
 
       {groups.map((group) => (
-        <Box key={group.id} style={PS.group}>
-          <Box style={PS.groupTitle}>{group.title} ({group.items.length})</Box>
+        <Box key={group.id} className="nav-screen-panel__group">
+          <Box className="nav-screen-panel__group-title">{group.title} ({group.items.length})</Box>
           {group.items.map((item, i) => {
             const style = ANNOTATION_STYLES[item.kind] ?? ANNOTATION_STYLES.unknown;
             const settled = item.state === 'open' || item.state === 'done';
@@ -58,15 +58,15 @@ const ScreenPanel = ({ annotations }: ScreenPanelProps) => {
             return (
               <Box
                 key={`${group.id}-${i}-${item.kind}`}
-                style={{ ...PS.row, ...PS.rowToggle, ...(off ? PS.rowOff : {}) }}
+                className={off ? 'nav-screen-panel__row nav-screen-panel__row--off' : 'nav-screen-panel__row'}
                 onClick={() => toggleKind(item.kind)}
                 title={`${item.kind} at r${item.tile.row} c${item.tile.col}${item.layer !== undefined ? ` L${item.layer}` : ''}. Click to ${off ? 'show' : 'hide'}`}
               >
-                <Text style={{ ...PS.glyph, color: style.color, opacity: settled ? 0.5 : 1 }}>{style.glyph}</Text>
-                <Text style={{ ...PS.label, ...(settled ? PS.labelSettled : {}) }}>{item.label}</Text>
-                {item.detail && <Text style={PS.detail}>{item.detail}</Text>}
+                <Text style={{ color: style.color }} className={settled ? 'nav-screen-panel__glyph nav-screen-panel__glyph--settled' : 'nav-screen-panel__glyph'}>{style.glyph}</Text>
+                <Text className={settled ? 'nav-screen-panel__label nav-screen-panel__label--settled' : 'nav-screen-panel__label'}>{item.label}</Text>
+                {item.detail && <Text className="nav-screen-panel__detail">{item.detail}</Text>}
                 {item.state && (
-                  <Text style={item.state === 'blocked' ? PS.stateBlocked : settled ? PS.stateSettled : PS.state}>
+                  <Text className={annotationStateClass(item.state, settled)}>
                     {item.state === 'blocked' ? 'unreachable' : item.state}
                   </Text>
                 )}

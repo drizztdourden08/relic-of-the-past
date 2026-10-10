@@ -16,6 +16,9 @@ import type { ChildBox } from './place-flow.type';
 const crossFill = (available: number, margin: Insets, row: boolean): number =>
   Math.max(0, available - crossMargin(margin, row));
 
+const fillOr = (extent: number | typeof FILL, whenFill: () => number): number =>
+  (extent === FILL ? whenFill() : extent);
+
 const sizedItems = (
   container: HudFlexContainer,
   ctx: MeasureContext,
@@ -30,8 +33,8 @@ const sizedItems = (
     const w = resolveExtent(child.size?.w, natural.w, available.w, ctx);
     const h = resolveExtent(child.size?.h, natural.h, available.h, ctx);
     const mainFill = (row ? w : h) === FILL;
-    const rawW = w === FILL ? (row ? 0 : crossFill(available.w, margin, row)) : w;
-    const rawH = h === FILL ? (row ? crossFill(available.h, margin, row) : 0) : h;
+    const rawW = fillOr(w, () => (row ? 0 : crossFill(available.w, margin, row)));
+    const rawH = fillOr(h, () => (row ? crossFill(available.h, margin, row) : 0));
     const size = {
       w: row && mainFill ? rawW : clampToBox(child, 'w', rawW, ctx),
       h: !row && mainFill ? rawH : clampToBox(child, 'h', rawH, ctx),

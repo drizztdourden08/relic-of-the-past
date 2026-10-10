@@ -7,7 +7,7 @@ const getPath = (record: unknown, path: string): unknown => {
   let current: unknown = record;
   for (const segment of segmentsOf(path)) {
     if (!isContainer(current)) return undefined;
-    current = (current as Record<string, unknown>)[segment.key];
+    current = current[segment.key];
   }
   return current;
 };

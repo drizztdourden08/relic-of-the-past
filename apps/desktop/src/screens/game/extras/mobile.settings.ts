@@ -1,6 +1,5 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
-import { isMobileHost } from '@app/platform/is-mobile-host';
 
 const meta: ScreenMeta = { title: 'Mobile', icon: 'maximize-2', order: 6, keywords: ['mobile', 'phone', 'tablet', 'notch', 'cutout'] };
 
@@ -14,14 +13,7 @@ const mobile: Section[] = [
   },
 ];
 
-const notice: Section[] = [
-  { id: 'mobile-notice', title: 'Phone and tablet', items: [{ key: 'notice.mobileOnly', label: 'Phone and tablet only', noDescription: true, hint: 'Open the app on a phone or tablet to set these.' }] },
-];
-
-const sections = (): Section[] => {
-  if (isMobileHost()) return mobile;
-  return notice;
-};
+const sections = (): Section[] => mobile;
 
 export default sections;
 export { meta };

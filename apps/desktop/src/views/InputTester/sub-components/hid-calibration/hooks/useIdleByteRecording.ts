@@ -32,7 +32,7 @@ const useIdleByteRecording = (latestBytesRef: React.RefObject<Uint8Array>, addLo
       const analysis = idxs.map((byteIdx, col) => analyseColumn(frames, byteIdx, col));
       const out: IdleRecordResult = { label, durationMs: IDLE_RECORD_MS, frameCount: frames.length, bytes: analysis };
       setIdleResults(prev => ({ ...prev, [label]: out })); navigator.clipboard.writeText(JSON.stringify(out, null, 2));
-      addLog(`✓ Idle recorded for ${label}: ${frames.length} frames. Copied to clipboard.`); setIdleRecording(null);
+      addLog(`OK Idle recorded for ${label}: ${frames.length} frames. Copied to clipboard.`); setIdleRecording(null);
     }, IDLE_RECORD_MS);
   };
 

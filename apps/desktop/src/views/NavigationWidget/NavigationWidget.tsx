@@ -1,6 +1,5 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '../../nav-widget/styles';
 import { ScreenMapWithConnections } from './sub-components';
 import { FunctionsPanel } from './sub-components/FunctionsPanel';
 import { GameStatePanel } from './sub-components/GameStatePanel';
@@ -9,6 +8,8 @@ import { ConnectionsPanel } from './sub-components/ConnectionsPanel';
 import { ScreenPanel } from './sub-components/ScreenPanel';
 import { ActiveStates } from './sub-components/ActiveStates';
 import { useNavigation } from './behavior/useNavigation';
+import { worldTag } from './behavior/world-tag';
+import './NavigationWidget.css';
 
 const NavigationWidgetContent = () => {
   const {
@@ -16,14 +17,14 @@ const NavigationWidgetContent = () => {
   } = useNavigation();
 
   return (
-    <Box style={S.root}>
-      <Box style={S.section}>
-        <Box style={S.locName}>
+    <Box style={{ fontFamily: '\'JetBrains Mono\', monospace' }} className="nav-navigation-widget__root">
+      <Box className="nav-section">
+        <Box className="nav-loc-name">
           {screenBundle ? screenBundle.name : screenName}
-          {screenBundle?.isMulti && <Text style={S.multiCount}>({screenBundle.screens.length} {isIndoors ? 'rooms' : 'screens'})</Text>}
+          {screenBundle?.isMulti && <Text className="nav-multi-count">({screenBundle.screens.length} {isIndoors ? 'rooms' : 'screens'})</Text>}
         </Box>
-        <Box style={S.meta}>
-          {screenId ?? 'unmapped'} · 0x{(isIndoors ? roomIndex : overworldScreenIndex).toString(16).toUpperCase()} · {isIndoors ? 'INDOOR' : (isDarkWorld ? 'DW' : 'LW')}
+        <Box className="nav-meta">
+          {screenId ?? 'unmapped'} · 0x{(isIndoors ? roomIndex : overworldScreenIndex).toString(16).toUpperCase()} · {worldTag(isIndoors, isDarkWorld)}
           {!isIndoors && ` · R${(overworldScreenIndex >> 3) & 7} C${overworldScreenIndex & 7}`}
         </Box>
 

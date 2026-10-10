@@ -9,11 +9,12 @@ import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { EscapeLevel, EscapeStack } from '@drizztdourden08/tessera/primitives';
 import {
   applyDrop, outlineIntent, refusalFor, refusalText, zoneIn,
-} from '@app/views/HudLayoutEditor/behavior/drop-intent';
-import { siteOf } from '@app/views/HudLayoutEditor/behavior/node-edits';
+} from '@app/hud-layout-editing/drop-intent';
+import { siteOf } from '@app/hud-layout-editing/node-edits';
 import type { HudLayout, HudNode } from '@rotp/hud';
 
 const EDITOR = resolve(__dirname, '../../apps/desktop/src/views/HudLayoutEditor');
+const EDITING = resolve(__dirname, '../../apps/desktop/src/hud-layout-editing');
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -189,16 +190,16 @@ describe('the one write', () => {
 
 describe('single ownership, and the new dismiss level', () => {
   it('leaves `moveNode` exactly one caller in the whole editor', () => {
-    const callers = tsIn(EDITOR)
-      .filter((f) => !/behavior[\\/](drop-intent[\\/]move-all|node-edits)\.ts$/.test(f))
+    const callers = [...tsIn(EDITOR), ...tsIn(EDITING)]
+      .filter((f) => !/hud-layout-editing[\\/](drop-intent[\\/]move-all|node-edits)\.ts$/.test(f))
       .filter((f) => /\bmoveNode\s*\(/.test(readFileSync(f, 'utf8')));
     expect(callers).toEqual([]);
   });
 
   it('routes the outline through `applyDrop`, not through the tree', () => {
     const reads = (f: string): string => readFileSync(join(EDITOR, f), 'utf8');
-    expect(reads('behavior/useNodeEdits.ts')).toContain("from './drop-intent'");
-    expect(reads('sub-components/OutlinePanel.tsx')).toContain("from '../behavior/drop-intent'");
+    expect(readFileSync(join(EDITING, 'useNodeEdits.ts'), 'utf8')).toContain("from './drop-intent'");
+    expect(reads('sub-components/OutlinePanel.tsx')).toContain("from '@app/hud-layout-editing/drop-intent'");
   });
 
   it('puts `drag` above `popover`, so Escape mid-drag cancels the drag', () => {

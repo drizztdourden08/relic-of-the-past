@@ -3,7 +3,7 @@ export { primitiveHelperNames } from './helpers-registry';
 export { PRICED_ENTRIES } from './priced-entries';
 export type { RuleEntry } from './rule-entry.type';
 export { compileRule } from './rule-eval';
-export { inlineHelpers, walkRuleNode } from './rule-node-walk';
+export { inlineNamedRules, walkRuleNode } from './rule-node-walk';
 export type { RuleNode } from './rule-node.type';
 export { ruleForPrice } from './shop-prices';
 export { BUNNY_ACCESSIBLE_LOCATIONS } from './tables/bunny-lists';

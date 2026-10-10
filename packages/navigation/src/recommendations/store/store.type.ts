@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { EntityKind } from '@rotp/game-data';
-import type { Recommendation } from '../types';
+import type { DraftRecommendation, Recommendation } from '../types';
 import type { createRecommendationStore } from './create-recommendation-store';
 
 interface RecommendationStorage {
@@ -13,6 +13,11 @@ interface PassResult {
   entries: readonly Recommendation[];
 }
 
+interface DetectionPass {
+  detectorIds: readonly string[];
+  fresh: readonly DraftRecommendation[];
+}
+
 type RecommendationStore = ReturnType<typeof createRecommendationStore>;
 
-export type { PassResult, RecommendationStorage, RecommendationStore };
+export type { DetectionPass, PassResult, RecommendationStorage, RecommendationStore };

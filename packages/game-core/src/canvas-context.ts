@@ -3,7 +3,7 @@ import { RESTORE_TIMEOUT_MS } from './canvas-context.constants';
 
 const restoreLostContext = (canvas: HTMLCanvasElement): Promise<void> => {
   const gl = canvas.getContext('webgl');
-  if (!gl || !gl.isContextLost()) return Promise.resolve();
+  if (!gl?.isContextLost()) return Promise.resolve();
   const lose = gl.getExtension('WEBGL_lose_context');
   if (!lose) return Promise.resolve();
   return new Promise((resolve) => {

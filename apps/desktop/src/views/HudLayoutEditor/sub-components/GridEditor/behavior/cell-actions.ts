@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { boundsOf } from '../../GridLattice';
-import { GRID_ICONS } from './grid-icons';
-import { insertRun } from './grid-track-actions';
+import { GRID_ICONS } from './grid-icons.constants';
+import { insertRun } from './insert-run';
 import type { GridAction, GridActionContext } from '../GridEditor.type';
 
 const cellActions = (ctx: GridActionContext): GridAction[] => {

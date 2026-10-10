@@ -4,9 +4,10 @@ import type { CapacityFamilyId } from '../capacity-profile.type';
 
 const familyOfOptionKey = (key: string): CapacityFamilyId | undefined => {
   const match = CAPACITY_KEY_PATTERN.exec(key);
-  if (match === null) return undefined;
-  const family = match[1] as CapacityFamilyId;
-  return (CAPACITY_FIELDS_OF[family] as readonly string[]).includes(match[2]) ? family : undefined;
+  const [, name, field] = match ?? [];
+  if (name === undefined || field === undefined) return undefined;
+  const family = name as CapacityFamilyId;
+  return (CAPACITY_FIELDS_OF[family] as readonly string[]).includes(field) ? family : undefined;
 };
 
 export { familyOfOptionKey };

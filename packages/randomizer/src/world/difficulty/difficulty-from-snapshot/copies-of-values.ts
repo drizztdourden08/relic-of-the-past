@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { recordBy } from '../../../keyed-record';
 import { PROGRESSIVE_FAMILIES } from '../../progressive/progressive-families.constants';
 import { DEFAULT_COPY_MULTIPLIER, asCopyMultiplier } from '../difficulty';
 import { difficultyCopiesKeyOf } from '../difficulty-option-keys';
@@ -12,7 +13,6 @@ const multiplierAt = (values: OptionValues, key: string): CopyMultiplier => {
 };
 
 const copiesOfValues = (values: OptionValues): CopyMultiplierSetting =>
-  Object.fromEntries(PROGRESSIVE_FAMILIES.map((family) =>
-    [family.id, multiplierAt(values, difficultyCopiesKeyOf(family.id))])) as unknown as CopyMultiplierSetting;
+  recordBy(PROGRESSIVE_FAMILIES, (family) => family.id, (family) => multiplierAt(values, difficultyCopiesKeyOf(family.id)));
 
 export { copiesOfValues };

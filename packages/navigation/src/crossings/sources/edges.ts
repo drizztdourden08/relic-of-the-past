@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { ConnectionInfo, CrossingSpan, GridPos, ScreenCrossing } from '@rotp/game-core';
 import { wasmGetToggleFloorPositions } from '@rotp/game-core';
-import { exitFromEdge } from '../../simulator/exit-order';
+import { alongEdge, exitFromEdge } from '../../simulator/exit-order';
 import type { EdgeName } from '../../simulator/exit-order';
 import { overworldTarget, roomTarget } from '../resolve-target';
 import { makeCrossing } from '../make-crossing';
@@ -25,10 +25,7 @@ const midOf = (positions: readonly number[]): number =>
   positions[Math.floor(positions.length / 2)] ?? 32;
 
 const intraFromEdge = (edge: EdgeName, pos: number): GridPos =>
-  edge === 'north' ? { row: INTRA_FAR, col: pos }
-  : edge === 'south' ? { row: INTRA_NEAR, col: pos }
-  : edge === 'west' ? { row: pos, col: INTRA_FAR }
-  : { row: pos, col: INTRA_NEAR };
+  alongEdge(edge, pos, { north: INTRA_FAR, south: INTRA_NEAR, west: INTRA_FAR, east: INTRA_NEAR });
 
 const toggleTiles = (pass: CrossingPass): readonly TogglePosition[] =>
   pass.scope.isIndoors ? wasmGetToggleFloorPositions() : [];

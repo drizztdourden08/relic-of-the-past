@@ -70,6 +70,19 @@ type PatternLine = [string, (number | string | CompiledPattern | null)[], number
 type Entity = CompiledSong | CompiledPhrase | CompiledPattern |
   CompiledSfxPattern | CompiledSongList | CompiledSfxList;
 
+interface EntityByType {
+  Song: CompiledSong;
+  Phrase: CompiledPhrase;
+  Pattern: CompiledPattern;
+  SfxPattern: CompiledSfxPattern;
+  SongList: CompiledSongList;
+  SfxList: CompiledSfxList;
+}
+
+type EntityType = keyof EntityByType;
+
+type EntityFactories = { [K in EntityType]: (name: string, ea: number | null, defined: boolean) => EntityByType[K] };
+
 interface MusicCompileInput {
   songTexts: Record<string, string>;
   sfxText: string;
@@ -123,6 +136,9 @@ export type {
   CompiledSongList,
   CompiledSoundBank,
   Entity,
+  EntityByType,
+  EntityFactories,
+  EntityType,
   InstrumentInfo,
   MusicCompileInput,
   MusicInfo,

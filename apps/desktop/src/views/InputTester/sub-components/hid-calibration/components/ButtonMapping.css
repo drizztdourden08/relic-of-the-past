@@ -1,0 +1,9 @@
+/* @layer renderer-components @kind style */
+.hid-cal__input-item--clickable {
+  cursor: pointer;
+}
+
+.hid-cal__manual-hint {
+  font-size: calc(var(--size-1) * 11);
+  color: var(--c-text-dim);
+}

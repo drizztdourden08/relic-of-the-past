@@ -1,7 +1,7 @@
 /* @layer shared-input @kind constants */
 import { GAMECUBE_FAMILY, GENERIC_FAMILY, NINTENDO_FAMILY, PLAYSTATION_FAMILY, XBOX_FAMILY } from '../../family';
 import { GENERIC_PACK_ID } from './built-in-packs.constants';
-import { GENERIC_PACK_ART } from './built-in-packs.data';
+import { GENERIC_PACK_ART } from './built-in-pack-art.constants';
 import { keyboardPack } from './keyboard-pack';
 import { packFromFamily } from './pack-from-family';
 import { snesPack } from './snes-pack';

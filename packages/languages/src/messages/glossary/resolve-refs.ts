@@ -2,8 +2,8 @@
 import type { GlossaryTerm, Token } from '../types';
 
 const appendText = (resolved: Token[], text: string): void => {
-  const lastToken = resolved[resolved.length - 1];
-  if (lastToken !== undefined && lastToken.t === 'text') {
+  const lastToken = resolved.at(-1);
+  if (lastToken?.t === 'text') {
     lastToken.v += text;
   } else {
     resolved.push({ t: 'text', v: text });

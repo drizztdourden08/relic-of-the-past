@@ -36,8 +36,10 @@ const cutFirstOverlongLine = (tr: Transaction): boolean => {
 
     const spaceAt = offset + 1 + sizeOfTokens(cut.head);
     tr.delete(spaceAt, spaceAt + 1);
+    const lineType = tr.doc.type.schema.nodes[DIALOGUE_LINE_TYPE];
+    if (lineType === undefined) throw new Error('the dialogue schema has no line node type');
     tr.split(spaceAt, 1, [{
-      type: tr.doc.type.schema.nodes[DIALOGUE_LINE_TYPE],
+      type: lineType,
       attrs: attrsForLine(advance, wasEnding),
     }]);
     if (wasEnding) {

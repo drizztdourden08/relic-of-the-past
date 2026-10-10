@@ -5,7 +5,7 @@ const noteToStr = (note: number): string => {
   if (note >= 72) {
     if (note === 72) return '-+-';
     if (note === 73) return '---';
-    throw new Error(`Invalid note: ${note}`);
+    throw new Error(`Note ${note} is out of range`);
   }
   const octave = Math.floor(note / 12);
   const key = note % 12;

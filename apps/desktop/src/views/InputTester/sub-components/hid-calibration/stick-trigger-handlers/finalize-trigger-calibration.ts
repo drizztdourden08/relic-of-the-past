@@ -9,7 +9,7 @@ const finalizeTriggerCalibration = (c: StickCandidate, refs: TriggerFinalizeRefs
 
   const mapping: HidAxisMapping = { byteIndex: c.idx, center: c.center, min: c.min, max: c.max, inverted: false };
   const result = `byte[${c.idx}] ${c.min}..${c.center}..${c.max} (range ${c.range})`;
-  cb.addLog(`✓ ${label} Trigger: ${result}`);
+  cb.addLog(`OK ${label} Trigger: ${result}`);
 
   refs.excludedRef.current.add(c.idx);
   refs.capturedTriggerBytesRef.current.add(c.idx);

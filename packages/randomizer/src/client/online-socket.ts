@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind logic */
+import { itemAt } from '../checked-access';
 import type { ApSocket, CreateSocket } from './ap-socket.type';
 import type { SocketLink, SocketLinkHandlers } from './online-socket.type';
 
@@ -9,7 +10,7 @@ const openSocketLink = (
   let closing = false;
 
   const tryAt = (index: number): void => {
-    const url = candidates[index];
+    const url = itemAt(candidates, index);
     const hasNext = index + 1 < candidates.length;
     let socket: ApSocket;
     try {
@@ -43,7 +44,7 @@ const openSocketLink = (
       try {
         current?.send(data);
       } catch {
-        
+        return undefined;
       }
     },
     close() {

@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { ImageBuffer } from '../../graphics/png-writer';
 import { kDecodeTab } from '../drop-tables';
 import { decode3bppTile } from '../receipt-decoder/decode-3bpp-tile';
@@ -9,7 +10,7 @@ import { paletteRow } from '../receipt-palettes';
 const extractDropBigkey = (paletteIdx: number, spritePalettes: SpritePalettes, receiptSheets: ReceiptSheets): ImageBuffer => {
   const palette = paletteRow(spritePalettes, paletteIdx);
   const combined = Buffer.concat([receiptSheets.base, receiptSheets.sheet5B]);
-  const offset = kDecodeTab[0x22];
+  const offset = itemAt(kDecodeTab, 0x22, 'Big key graphic offset');
   const img = new ImageBuffer(16, 16);
   const tl = decode3bppTile(combined, offset, palette, true);
   const tr = decode3bppTile(combined, offset + 0x18, palette, true);

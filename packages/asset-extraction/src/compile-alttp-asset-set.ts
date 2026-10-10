@@ -6,10 +6,7 @@ import type { AlttpAssetSources, CompiledAlttpAssetSet, SourceOutcome } from './
 
 const reasonOf = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-const compileAlttpAssetSet = async (
-  sources: AlttpAssetSources,
-  options: CompileOptions = {},
-): Promise<CompiledAlttpAssetSet> => {
+const compileAlttpAssetSetNow = (sources: AlttpAssetSources, options: CompileOptions): CompiledAlttpAssetSet => {
   const base = compileResources(sources.snes, options);
 
   const resolved = { ...sources };
@@ -24,6 +21,14 @@ const compileAlttpAssetSet = async (
 
   return { base, supplements };
 };
+
+const compileAlttpAssetSet = (
+  sources: AlttpAssetSources,
+  options: CompileOptions = {},
+): Promise<CompiledAlttpAssetSet> =>
+  new Promise((resolve) => {
+    resolve(compileAlttpAssetSetNow(sources, options));
+  });
 
 export { compileAlttpAssetSet };
 export type { AlttpAssetSources, CompiledAlttpAssetSet };

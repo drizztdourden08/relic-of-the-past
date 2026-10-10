@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { REPLACEMENT_FILLER } from './balance-filler.constants';
 import { isFillerItem } from './is-filler-item';
 import type { ItemKey } from '../item-ids';
@@ -10,7 +11,7 @@ const balanceFiller = (pool: ItemKey[], delta: number, pickIndex: FillerPicker =
   for (let n = 0; n < delta; n += 1) {
     const fillerAt = pool.flatMap((item, index) => (isFillerItem(item) ? [index] : []));
     if (fillerAt.length === 0) throw new Error('no filler left to trim for capacity upgrades');
-    pool.splice(fillerAt[pickIndex(fillerAt.length)], 1);
+    pool.splice(itemAt(fillerAt, pickIndex(fillerAt.length)), 1);
   }
   for (let n = delta; n < 0; n += 1) pool.push(REPLACEMENT_FILLER);
 };

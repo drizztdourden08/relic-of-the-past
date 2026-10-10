@@ -1,14 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-import type { ScreenLightingConfig } from '../shadow-casting-types';
 import { drawQuad } from '../webgl/gl-helpers';
-import type { LightUniforms } from './light-calculator';
-import type { ShadowPipeline, ShadowState } from './shadow-programs.type';
+import type { ShadowFrame, ShadowPipeline, ShadowState } from './shadow-programs.type';
 
 const toRadians = (degrees: number): number => degrees * Math.PI / 180;
 
-const renderShadowPass = (
-  pipe: ShadowPipeline, state: ShadowState, lighting: ScreenLightingConfig, lights: LightUniforms, time: number,
-): void => {
+const renderShadowPass = (pipe: ShadowPipeline, state: ShadowState, frame: ShadowFrame): void => {
+  const { lighting, lights, time } = frame;
   const { gl, progs, quadBuffer, heightmapTex, gameTex } = pipe;
   const u = pipe.uniforms.shadow;
   gl.bindFramebuffer(gl.FRAMEBUFFER, state.shadowFBO.framebuffer);

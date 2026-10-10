@@ -5,7 +5,7 @@ import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { EditorStepContext } from '@app/views/HudLayoutEditor/behavior/editor-step';
+import { EditorStepContext } from '@app/hud-layout-editing/editor-step';
 import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import type { Value } from '@rotp/hud';
 

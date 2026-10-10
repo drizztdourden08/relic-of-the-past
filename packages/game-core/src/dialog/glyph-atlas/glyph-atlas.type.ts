@@ -5,4 +5,12 @@ interface GlyphAtlas {
   key: string;
 }
 
-export type { GlyphAtlas };
+interface TileSpot {
+  tiles: Uint8Array;
+  tile: number;
+  x: number;
+  y: number;
+  ramp: string[];
+}
+
+export type { GlyphAtlas, TileSpot };

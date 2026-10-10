@@ -3,7 +3,7 @@ import type { RomData } from '../rom/rom-types';
 import type { AssetBuilder } from '../asset-builder';
 
 const buildDungeonSecrets = (rom: RomData, A: AssetBuilder): void => {
-  const result = new Array(640).fill(0);
+  const result = new Array<number>(640).fill(0);
   for (let i = 0; i < 320; i++) {
     let ea = 0x810000 | rom.getWord(0x81db69 + i * 2);
     if (rom.getWord(ea) === 0xffff) {

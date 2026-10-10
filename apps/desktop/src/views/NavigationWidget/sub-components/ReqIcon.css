@@ -1,0 +1,14 @@
+/* @layer renderer-widgets @kind style */
+.nav-req-icon {
+  font-size: var(--text-xs);
+  margin-right: var(--space-2xs);
+}
+
+.nav-req-chip {
+  font-size: var(--size-10);
+  color: var(--c-warning);
+  margin-right: var(--space-xs);
+  background: var(--c-warning-soft);
+  padding: 0 calc(var(--size-6) / 2);
+  border-radius: var(--radius-sm);
+}

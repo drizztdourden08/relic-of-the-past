@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef } from 'react';
 import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import { atFromPointer } from '../../../behavior/keyframe-track';
+import { atFromPointer } from '@app/hud-layout-editing/keyframe-track';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { NUDGE, NUDGE_COARSE } from './KeyRail.constants';
 import type { KeyRailProps } from './KeyRail.type';
@@ -36,7 +36,9 @@ const KeyRail = (props: KeyRailProps) => {
     const step = shift ? NUDGE_COARSE : NUDGE;
     if (key !== 'ArrowLeft' && key !== 'ArrowRight') return;
     stop();
-    onMove(index, keyframes[index].at + (key === 'ArrowLeft' ? -step : step));
+    const keyframe = keyframes[index];
+    if (!keyframe) return;
+    onMove(index, keyframe.at + (key === 'ArrowLeft' ? -step : step));
   };
 
   return (

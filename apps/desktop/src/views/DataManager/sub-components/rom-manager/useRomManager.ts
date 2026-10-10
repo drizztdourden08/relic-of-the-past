@@ -51,8 +51,9 @@ const useRomManager = (params: UseRomManagerParams) => {
   }, [activeKind, onRefresh, triggerRebuild]);
 
   const handleFileImport = useCallback(async (files: File[]) => {
-    if (files.length === 0) return { success: false, message: 'No file selected' };
-    const result = await romsStore.importFile(files[0], activeKind);
+    const [file] = files;
+    if (file === undefined) return { success: false, message: 'No file selected' };
+    const result = await romsStore.importFile(file, activeKind);
     if (result.success) {
       onRefresh();
       if (!result.alreadyExists) triggerRebuild(activeKind, result.romFile);

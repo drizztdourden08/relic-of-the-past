@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind constants */
 import { HUD_EDGE_INSET, VITALS_RESERVE } from '@rotp/hud';
-import { SDL_AXIS, OUTFIT_IDS } from '@rotp/game-data';
+import { SDL_AXIS } from '@rotp/game-data';
 import type { GearLadderKind, PauseScreen, PauseSection, HeroPose, OutfitId } from '@rotp/game-data';
 import type { SdlPosition } from '@rotp/input-mapping';
 import type { GearSection } from '../../compounds/PauseGearScreen';
@@ -46,7 +46,7 @@ const PASSIVE_RECORDS: readonly (readonly string[])[] = [
   ['item-028', 'item-029'], ['item-076'], ['item-031'], ['item-032'],
 ];
 
-const ARMOUR_OUTFITS: readonly OutfitId[] = OUTFIT_IDS.slice(0, 3);
+const ARMOUR_OUTFITS: readonly [OutfitId, ...OutfitId[]] = ['green', 'blue', 'red'];
 const MAX_GLOVES = 2;
 
 const STICK_OF_AXIS: Record<number, SdlPosition> = {

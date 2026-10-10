@@ -1,5 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { SimSprite, ScreenGridBundle, SpriteCombatInfo } from '../../types';
+import type { SimSprite, SpriteCombatInfo } from '../../types';
+import type { FiringScene } from '../enemy-reach-geometry/enemy-reach-geometry.type';
 import { weaponsFor } from '../enemy-reach-weapons/weapons-for';
 import { findPositionFor } from '../enemy-reach-geometry/find-position-for';
 import type { EnemyReach, RoomThreat, RoomThreatParams, Weapon } from './enemy-reach.type';
@@ -10,15 +11,13 @@ const evaluateSprite = (
   sprite: SimSprite,
   info: SpriteCombatInfo | null,
   weapons: Weapon[],
-  reached: boolean[][] | undefined,
-  grids: ScreenGridBundle | undefined,
-  collisionTable: number[] | undefined,
+  scene: FiringScene,
 ): EnemyReach => {
   if (!info) return { sprite, health: 0, killable: false, blockedBy: 'gated-off' };
   const damaging = weapons.filter((w) => (info.damageByClass[w.damageClass] ?? 0) > 0);
   if (damaging.length === 0) return { sprite, health: info.health, killable: false, blockedBy: 'no-weapon' };
   for (const weapon of damaging) {
-    const from = findPositionFor(weapon, sprite.tile, reached, grids, collisionTable);
+    const from = findPositionFor(weapon, sprite.tile, scene);
     if (from) return { sprite, health: info.health, killable: true, by: weapon, from };
   }
   return { sprite, health: info.health, killable: false, blockedBy: 'no-line' };
@@ -33,7 +32,7 @@ const evaluateRoomThreat = (params: RoomThreatParams): RoomThreat => {
     .map((sprite) => ({ sprite, info: infoFor(sprite.spriteType) }))
     .filter(({ info }) => isGating(info))
     .filter(({ sprite }) => inSameSection(sprite.tile, split))
-    .map(({ sprite, info }) => evaluateSprite(sprite, info, weapons, reached, grids, tables?.projectileTileCollision));
+    .map(({ sprite, info }) => evaluateSprite(sprite, info, weapons, { reached, bundle: grids, collisionTable: tables?.projectileTileCollision }));
   return { gating, clearable: gating.every((e) => e.killable) };
 };
 

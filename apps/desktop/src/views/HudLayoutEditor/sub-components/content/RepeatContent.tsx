@@ -3,7 +3,7 @@ import { Box, Field } from '@drizztdourden08/tessera/primitives';
 import { ExpressionInput } from '../ExpressionInput';
 import { ReferenceField } from '../ReferenceField';
 import { ValueField } from '../ValueField';
-import { nodeArtOf } from '../../behavior/node-art';
+import { nodeArtOf } from '@app/hud-layout-editing/node-art';
 import { COUNT_STEP } from '../../HudLayoutEditor.constants';
 import type { RepeatContentProps } from './RepeatContent.type';
 

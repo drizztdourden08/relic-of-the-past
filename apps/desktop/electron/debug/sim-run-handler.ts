@@ -5,10 +5,8 @@ import { handle } from '@drizztdourden08/brock-electron/main';
 import { getWorkspaceRoot } from '../screen-editor/workspace-root';
 import { writeFile, mkdir } from 'fs/promises';
 import type { SimRunConfig } from '@rotp/navigation';
-import type { CheckId } from '@rotp/game-data';
 import { DEFAULT_MAX_STEPS } from './sim-run-handler.constants';
-
-const isCheckId = (value: string): value is CheckId => value.startsWith('check-');
+import { SIM_RUN_FIELDS } from './sim-run-fields.constants';
 
 const parseSimRunConfig = (): SimRunConfig | null => {
   const arg = process.argv.find((a) => a === '--sim-run' || a.startsWith('--sim-run='));
@@ -19,23 +17,8 @@ const parseSimRunConfig = (): SimRunConfig | null => {
   if (eq === -1) return config;
 
   for (const pair of arg.slice(eq + 1).split(';')) {
-    const [key, value] = pair.split('=');
-    if (!value) continue;
-    if (key === 'slot') config.startSlot = parseInt(value, 10);
-    else if (key === 'state') config.stateName = value;
-    else if (key === 'target') config.target = value;
-    else if (key === 'stop') config.stopAtCheckId = isCheckId(value) ? value : null;
-    else if (key === 'max') config.maxSteps = parseInt(value, 10);
-    else if (key === 'flood') config.floodScreen = parseInt(value, 16);
-    else if (key === 'items') config.probeItems = value.split(',').filter(Boolean);
-    else if (key === 'room') config.probeRoom = parseInt(value, 16);
-    else if (key === 'scan') config.scanSprite = parseInt(value, 16);
-    else if (key === 'combat') config.combatSprite = parseInt(value, 16);
-    else if (key === 'tile') {
-      const [row, col] = value.split(',').map((n) => parseInt(n, 10));
-      if (Number.isFinite(row) && Number.isFinite(col)) config.probeTile = { row, col };
-    }
-    else if (key === 'screens') config.screenWalkLimit = parseInt(value, 10);
+    const [key = '', value] = pair.split('=');
+    if (value) SIM_RUN_FIELDS.get(key)?.(config, value);
   }
   return config;
 };

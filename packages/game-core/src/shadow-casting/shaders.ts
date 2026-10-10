@@ -43,7 +43,7 @@ uniform float u_lightCastShadow[MAX_LIGHTS];
 float getHeight(vec2 uv) {
   // v_uv is in GL convention (Y-up: 0=bottom, 1=top) but the heightmap
   // was uploaded with row 0 = viewport top (stored at texture t=0 = bottom).
-  // Flip Y to map screen-top to data-row-0 correctly.
+  // Flip Y to map screen-top to data-row-0.
   vec2 hmUV = vec2(uv.x, 1.0 - uv.y);
   if (hmUV.x < 0.0 || hmUV.x > 1.0 || hmUV.y < 0.0 || hmUV.y > 1.0) return 0.0;
   return texture2D(u_heightmap, hmUV).r;

@@ -2,7 +2,6 @@
 import type { EntityKind, EntityRecordMap } from '@rotp/game-data';
 import type { DetectionContext, RecommendationDetector } from '../detection-types';
 import type { DraftRecommendation } from '../types';
-import { compareSet } from './compare-set';
 import type { UnresolvableMapper } from './detector-from-strategy.type';
 import type { Difference } from './difference.type';
 import type { ComparisonStrategy } from './probe.type';
@@ -47,7 +46,7 @@ const draftsForSet = <K extends EntityKind>(
   const detector = detectorIdOf(strategy.kind);
 
   for (const probe of strategy.sets) {
-    for (const difference of compareSet(probe, context.observations, context.screenId)) {
+    for (const difference of probe.compare(context.observations, context.screenId)) {
       const key = `${difference.noun}:${difference.key}`;
       if (difference.status === 'missing-in-dataset') {
         out.push({

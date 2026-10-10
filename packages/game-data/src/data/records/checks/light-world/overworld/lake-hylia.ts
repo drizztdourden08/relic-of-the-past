@@ -135,7 +135,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     review: {
       status: 'accepted',
       source: 'person',
-      note: 'record absent -> created (npc, bufferIndex 23 gte 1, vanilla item-132): Sprite_HappinessPond room gate sprite_main.c:11407 (room 21); explosives purchase ai state 8 writes link_bomb_upgrades (sprite_main.c:11511-11523), persisted at g_ram+0xF370 in the save block (variables.h:1103), exposed as progress buffer [23]; no other persistence exists (nothing else in the handler writes the save block beyond the deposit accumulator); substitution is the dedicated pond seam (call-site at case 8)',
+      note: 'record absent -> created (npc, bufferIndex 23 gte 1, vanilla item-132): Sprite_HappinessPond room gate sprite_main.c:11407 (room 21); explosives purchase handler state 8 writes link_bomb_upgrades (sprite_main.c:11511-11523), persisted at g_ram+0xF370 in the save block (variables.h:1103), exposed as progress buffer [23]; no other persistence exists (nothing else in the handler writes the save block beyond the deposit accumulator); substitution is the dedicated pond seam (call-site at case 8)',
       at: '2026-08-26T03:06:52.923Z',
     },
   },
@@ -207,7 +207,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     review: {
       status: 'accepted',
       source: 'person',
-      note: 'record absent -> created (npc, bufferIndex 24 gte 1, vanilla item-129): same handler, projectiles purchase ai state 12 writes link_arrow_upgrades (sprite_main.c:11548-11560), g_ram+0xF371 (variables.h:1104), progress buffer [24]; substitution at the case-12 call-site',
+      note: 'record absent -> created (npc, bufferIndex 24 gte 1, vanilla item-129): same handler, projectiles purchase handler state 12 writes link_arrow_upgrades (sprite_main.c:11548-11560), g_ram+0xF371 (variables.h:1104), progress buffer [24]; substitution at the case-12 call-site',
       at: '2026-08-26T03:06:52.923Z',
     },
   },

@@ -46,7 +46,7 @@ export { WALLET } from './world/capacity/capacity-family';
 export { capacityProfileFromSnapshot } from './world/capacity/capacity-profile-from-snapshot';
 export { capacityPondSpots, capacitySpots } from './world/capacity/capacity-spots';
 export { CAPACITY_BONUS_KEYS, CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP, CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, CURVE_IDS, CURVE_LABELS, CURVE_PRESETS, DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE, FAMILIES, METER_LEVEL_LABELS, NO_WALLET_FLOOR, REFERENCE_CAPACITY_PROFILE, capacityBonusBaseKeyOf, capacityBonusOfValues, capacityBonusValuesOf, capacityEnabledOf, capacityFieldsOf, capacityKeyOf, capacityProgressiveOf, capacityValuesOf, clampCount, customSetting, defaultFamilyBonus, familyById, familyOfOptionKey, freeSequenceProblem, heldMaxRungOf, holdWalletToFloor, isCapacityBonusKey, ladderClamps, maxFloorReasonOf, maxRungFloorOf, maxSpanOf, minCountFor, parseCapacityProfile, planOf, presetMatching, walletFloorOf } from './world/capacity';
-export type { CapacityBonusSetting, CapacityFamily, CapacityFamilyId, CapacityMode, CapacityProfile, CurveId, CurvePreset, CurvePresetId, CustomFamilySetting, FamilyBonus, FamilyPlan, FamilySetting, WalletFloor, WalletSetting } from './world/capacity';
+export type { CapacityBonusSetting, CapacityFamily, CapacityFamilyId, CapacityMode, CapacityProfile, CurveId, CurvePreset, CurvePresetId, FamilyBonus, FamilyPlan, FamilySetting, PlannedFamilySetting, WalletFloor, WalletSetting } from './world/capacity';
 export { reachableTopOf } from './world/capacity/reachable-top';
 export { createCollectionState } from './world/collection-state';
 export type { CollectionState, Holding } from './world/collection-state';

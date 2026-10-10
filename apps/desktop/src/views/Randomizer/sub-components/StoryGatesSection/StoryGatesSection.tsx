@@ -3,7 +3,14 @@ import { RandomizerOptionGroup } from '@app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@app/compounds/RandomizerOptionRow';
 import { storyGateValuesOf, storyGatesOfValues } from '@rotp/randomizer';
 import { STORY_GATE_OPTIONS, STORY_GATES_TITLE } from './StoryGatesSection.constants';
+import type { OptionValue } from '@rotp/randomizer';
 import type { StoryGatesSectionProps } from './StoryGatesSection.type';
+
+const valueFor = (values: Readonly<Record<string, OptionValue>>, key: string): OptionValue => {
+  const value = values[key];
+  if (value === undefined) throw new Error(`story gate setting has no value for ${key}`);
+  return value;
+};
 
 const StoryGatesSection = (props: StoryGatesSectionProps) => {
   const { setting, cellOf, onChange } = props;
@@ -15,7 +22,7 @@ const StoryGatesSection = (props: StoryGatesSectionProps) => {
         <RandomizerOptionRow
           key={option.key}
           option={option}
-          value={values[option.key]}
+          value={valueFor(values, option.key)}
           impact={cellOf?.(option.key)}
           readout={onChange === undefined}
           onChange={onChange === undefined

@@ -1,7 +1,7 @@
 /* @layer tests @kind helper */
 import { createElement as h } from 'react';
 import { AlignmentTiles } from '@app/views/HudLayoutEditor/sub-components/AlignmentTiles';
-import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '@app/views/HudLayoutEditor/behavior/align-options';
+import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '@app/hud-layout-editing/align-options';
 import { ColorField } from '@app/views/HudLayoutEditor/sub-components/ColorField';
 import { DirectionControl } from '@app/views/HudLayoutEditor/sub-components/DirectionControl';
 import { ExtentField } from '@app/views/HudLayoutEditor/sub-components/ExtentField';

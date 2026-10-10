@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
 import { gridCellRects } from '@rotp/hud';
-import { stageCellRects } from '@app/views/HudLayoutEditor/behavior/stage-cells';
+import { stageCellRects } from '@app/hud-layout-editing/stage-cells';
 import type { PlacedNode, HudGridContainer, Rect } from '@rotp/hud';
 
 const EDITOR = resolve(__dirname, '../../apps/desktop/src/views/HudLayoutEditor');

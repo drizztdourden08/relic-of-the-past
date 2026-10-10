@@ -5,12 +5,13 @@ import { ControllerPortRow } from '../../../../compounds/ControllerPortRow';
 import { UnavailableControllerNotice } from '../../../../compounds/UnavailableControllerNotice';
 import { controllerCardInfo } from '@rotp/input-mapping';
 import { setDeviceDragData } from './device-drag-data';
+import { firstPort } from './first-port';
 import { ADAPTER_FAMILY_ICON } from './controls.constants';
 import type { AdapterDeviceCardProps } from './controls.type';
 
 const AdapterDeviceCard = (props: AdapterDeviceCardProps) => {
   const { group, onAssign, onAddMapping } = props;
-  const info = controllerCardInfo(group.ports[0].entry);
+  const info = controllerCardInfo(firstPort(group).entry);
   const hasReadyPort = group.ports.some((port) => port.entry.status === 'ready');
   const hasUnavailablePort = group.ports.some((port) => port.entry.status === 'unavailable');
   const { sdlType, displayName, vendorId, productId } = info;

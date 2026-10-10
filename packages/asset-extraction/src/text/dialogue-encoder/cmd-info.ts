@@ -15,16 +15,16 @@ const kCmdInfo: Record<string, CommandInfo> = {
   Color: [0x87, sixteenFrom(0x10)],
   Number: [0x87, sixteenFrom(0x20)],
   Speed: [0x87, sixteenFrom(0x30)],
-  Sound: [0x87, { 45: 0x40, 64: null } as CommandParamMap],
+  Sound: [0x87, { 45: 0x40, 64: null }],
   Choose: [0x87, 0x80],
   Choose2: [0x87, 0x81],
   Choose3: [0x87, 0x82],
   Selchg: [0x87, 0x83],
   Item: [0x87, 0x84],
   NextPic: [0x87, 0x85],
-  Window: [0x87, { 0: null, 2: 0x86 } as CommandParamMap],
-  Position: [0x87, { 0: 0x87, 1: 0x88 } as CommandParamMap],
-  ScrollSpd: [0, { 0: null } as CommandParamMap],
+  Window: [0x87, { 0: null, 2: 0x86 }],
+  Position: [0x87, { 0: 0x87, 1: 0x88 }],
+  ScrollSpd: [0, { 0: null }],
 };
 
 export { kCmdInfo };
