@@ -1,5 +1,6 @@
 /* @layer renderer-hud @kind logic */
 import type { RidgeOptions, SceneGeometry, SceneLayer } from '../scene.type';
+import { itemAt } from '@app/checked-access';
 import { wrapX } from './wrap-x';
 
 const drawPiece = (ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: number, y: number, flip: boolean, rows: number): void => {
@@ -20,7 +21,7 @@ const ridgeLayer = ({ pieces, placed, parallax, rows }: RidgeOptions, geometry: 
   return {
     draw: (ctx, { drift }) => {
       for (const p of placed) {
-        const img = pieces[p.variant];
+        const img = itemAt(pieces, p.variant);
         const x = Math.round(wrapX(p.x - drift * parallax, span, width));
         drawPiece(ctx, img, x, p.y, p.flip, rows ?? img.height);
       }

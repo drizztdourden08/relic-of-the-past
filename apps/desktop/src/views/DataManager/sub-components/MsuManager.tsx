@@ -6,12 +6,12 @@ import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { canTrashMsuPack, deleteMsuPack } from '@app/storage/msu-store';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
-import { useMsuManager } from './msu/useMsuManager';
-import { MsuPackList } from './msu/MsuPackList';
-import { MsuPackToolbar } from './msu/MsuPackToolbar';
-import { MsuStudio } from './msu/MsuStudio';
-import type { StudioTab } from './msu/sound-labels';
-import type { MsuManagerProps } from './msu/msu.type';
+import { useMsuManager } from '../../../msu-studio/useMsuManager';
+import { MsuPackList } from '../../../msu-studio/MsuPackList';
+import { MsuPackToolbar } from '../../../msu-studio/MsuPackToolbar';
+import { MsuStudio } from '../../../msu-studio/MsuStudio';
+import type { StudioTab } from '../../../msu-studio/sound-labels';
+import type { MsuManagerProps } from '../../../msu-studio/msu.type';
 
 const MsuManager = (props: MsuManagerProps) => {
   const { onDeleteConfirm, onRefresh } = props;
@@ -40,9 +40,8 @@ const MsuManager = (props: MsuManagerProps) => {
       return;
     }
     const outcome = canTrashMsuPack() ? 'It goes to the Recycle Bin.' : 'This cannot be undone.';
-    onDeleteConfirm('Delete Music Pack', `Delete pack "${packName}"? ${outcome}`, async () => {
-      await deleteMsuPack(packName);
-      await forget(packName);
+    onDeleteConfirm('Delete Music Pack', `Delete pack "${packName}"? ${outcome}`, () => {
+      void deleteMsuPack(packName).then(() => forget(packName));
     });
   }, [packFor, confirmUninstall, forget, onDeleteConfirm]);
 

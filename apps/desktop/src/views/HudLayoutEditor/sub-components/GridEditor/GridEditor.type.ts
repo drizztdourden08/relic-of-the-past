@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { EditorAction, EditorActionKind, EditorShortcut } from '../SelectionBands';
+import type { EditorAction, EditorActionKind, EditorShortcut } from '@app/hud-layout-editing/selection-bands.type';
 import type { HudGridContainer } from '@rotp/hud';
 import type { OsKind } from '@drizztdourden08/brock-core';
 import type { CellRef, Occupant, TrackAxis } from '../GridLattice';

@@ -13,8 +13,8 @@ import { makeConnections } from './make-connections';
 import { runLoop } from './run-loop';
 
 const worldWithTavernItem = (tavernItemId: number): FakeWorld => new FakeWorld([
-  { screenId: 'A', roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: tavernItemId },
-  { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
+  { screenId: 'A', roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, isBig: false, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: tavernItemId },
+  { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, isBig: false, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
 ]);
 
 describeDataset('simulation engine loop', () => {

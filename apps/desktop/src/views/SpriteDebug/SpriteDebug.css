@@ -1,0 +1,169 @@
+/* @layer renderer-widgets @kind style */
+
+.sprite-debug-card-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: var(--size-1);
+}
+
+.sprite-debug-card-top {
+  display: flex;
+  align-items: center;
+  gap: var(--size-8);
+}
+
+.sprite-debug-file-name {
+  font-size: var(--size-10);
+  color: var(--c-text-muted);
+}
+
+.sprite-debug-grid {
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--size-1) * 280), 1fr));
+  gap: var(--size-6);
+  padding: var(--size-12);
+  align-content: start;
+}
+
+.sprite-debug-header {
+  display: flex;
+  align-items: center;
+  gap: var(--size-12);
+  padding: var(--size-8) var(--size-20);
+  border-bottom: var(--size-1) solid var(--c-border-strong);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.sprite-debug-header-buttons {
+  display: flex;
+  gap: var(--size-4);
+  margin-left: auto;
+}
+
+.sprite-debug-item-name {
+  font-size: var(--size-12);
+  color: var(--c-text-dim);
+  font-weight: var(--weight-semi);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sprite-debug-label-danger {
+  color: var(--c-danger);
+}
+
+.sprite-debug-label-dim {
+  color: var(--c-text-dim);
+}
+
+.sprite-debug-label-good {
+  color: var(--c-secondary-bright);
+}
+
+.sprite-debug-label-muted {
+  color: var(--c-text-muted);
+}
+
+.sprite-debug-label-warn {
+  color: var(--c-warning);
+}
+
+.sprite-debug-mode-hint {
+  font-size: calc(var(--size-1) * 11);
+  color: var(--c-text-muted);
+  font-style: italic;
+}
+
+.sprite-debug-sprite {
+  max-width: var(--size-32);
+  max-height: var(--size-32);
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.sprite-debug-sprite-wrap {
+  width: var(--size-40);
+  height: var(--size-40);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-bg);
+  border-radius: var(--size-4);
+}
+
+.sprite-debug-stats {
+  display: flex;
+  gap: var(--size-10);
+  font-size: var(--size-12);
+}
+
+.sprite-debug-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--size-6) var(--size-8);
+  border-radius: var(--size-6);
+  border: var(--size-2) solid var(--c-border);
+  background: var(--c-hover);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.sprite-debug-card[data-status='good'] {
+  border-color: var(--c-secondary-bright);
+  background: var(--c-secondary-soft);
+}
+
+.sprite-debug-card[data-status='bad'] {
+  border-color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+
+.sprite-debug-card[data-status='yellow'] {
+  border-color: var(--c-warning);
+  background: var(--c-warning-soft);
+}
+
+.sprite-debug-comment-input {
+  margin-top: var(--size-4);
+  padding: var(--size-4) var(--size-6);
+  background: var(--c-hover);
+  border: var(--size-1) solid var(--c-danger-soft);
+  border-radius: calc(var(--size-1) * 3);
+  color: var(--c-text-dim);
+  font-family: inherit;
+  font-size: calc(var(--size-1) * 11);
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sprite-debug-none-label {
+  font-size: calc(var(--size-1) * 9);
+  color: var(--c-text-muted);
+}
+
+.sprite-debug-category {
+  font-size: calc(var(--size-1) * 9);
+}
+
+.sprite-debug-category[data-tone='hud'] {
+  color: var(--c-sprite-cat-hud);
+}
+
+.sprite-debug-category[data-tone='fonts'] {
+  color: var(--c-sprite-cat-fonts);
+}
+
+.sprite-debug-category[data-tone='receipt'] {
+  color: var(--c-sprite-cat-receipt);
+}
+
+.sprite-debug-category[data-tone='other'] {
+  color: var(--c-sprite-cat-other);
+}

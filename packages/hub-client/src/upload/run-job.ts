@@ -1,16 +1,13 @@
 /* @layer site-kit @kind logic */
 import { keptParts, runMultipart } from '@rotp/hub-contracts';
 import { formatBytes } from '../format/format-bytes';
+import { createProgressHandlers } from './progress-handlers';
 import { putPart } from './put-part';
+import { resolveResume } from './resolve-resume';
 import { dropRecord, saveRecord } from './upload-records';
-import { createRate } from './upload-rate';
-import { formatProgress } from './upload-format';
 import { FILE_STEP, setStep, settleSteps } from './upload-steps';
-import { PROGRESS_REDRAW_MS } from './run-job.constants';
 import type { RunJobParams } from './run-job.type';
-import type { StepState, UploadResume } from './upload-job.type';
-
-const hashDetail = (sha256: string | null, bytes: number) => (sha256 ? `sha-256 · ${formatBytes(bytes)}` : formatBytes(bytes));
+import type { StepState } from './upload-job.type';
 
 const runJob = async <T, R>(params: RunJobParams<T, R>): Promise<void> => {
   const { runner, live, state, emit, signal } = params;
@@ -44,21 +41,7 @@ const runJob = async <T, R>(params: RunJobParams<T, R>): Promise<void> => {
   const bytes = file.size;
 
   const resumed = record.resume !== null;
-  let resume: UploadResume;
-  if (record.resume) {
-    resume = record.resume;
-  } else {
-    state.patch(id, { phase: 'hashing' });
-    step(FILE_STEP.hash, 'running');
-    const sha256 = await runner.hash(file);
-    signal.throwIfAborted();
-    step(FILE_STEP.hash, 'done', hashDetail(sha256, bytes));
-    resume = await runner.begin(record.target, facts, sha256);
-    record.resume = resume;
-    record.label = runner.labelOf(record.target, facts, resume.n);
-    state.patch(id, { resume, label: record.label });
-    await save();
-  }
+  const resume = await resolveResume({ runner, record, state, file, facts, signal, step, save });
   if (state.job(id)?.steps.find((entry) => entry.id === FILE_STEP.hash)?.state !== 'done') step(FILE_STEP.hash, 'done', formatBytes(bytes));
 
   const begun = runner.bind(record.target, resume);
@@ -66,24 +49,7 @@ const runJob = async <T, R>(params: RunJobParams<T, R>): Promise<void> => {
   state.patch(id, { phase: 'uploading', resume });
   step(FILE_STEP.upload, 'running');
 
-  const rate = createRate();
-  let drawnAt = 0;
-  const onProgress = (sent: number) => {
-    rate.sample(sent);
-    const now = performance.now();
-    if (now - drawnAt < PROGRESS_REDRAW_MS && sent < bytes) return;
-    drawnAt = now;
-    const { bytesPerSecond, msLeft } = rate.estimate(sent, bytes);
-    state.patch(id, (job) => ({ sent, bytesPerSecond, msLeft, steps: setStep(job.steps, FILE_STEP.upload, 'running', formatProgress(sent, bytes)) }));
-  };
-  const onPartsUp = () => state.patch(id, (job) => ({
-    phase: 'verifying',
-    sent: bytes,
-    bytesPerSecond: null,
-    msLeft: null,
-    steps: setStep(setStep(job.steps, FILE_STEP.upload, 'done', formatBytes(bytes)), FILE_STEP.verify, 'running'),
-  }));
-
+  const { onProgress, onPartsUp } = createProgressHandlers(state, id, bytes);
   const result = await runMultipart({
     source: file,
     begun,

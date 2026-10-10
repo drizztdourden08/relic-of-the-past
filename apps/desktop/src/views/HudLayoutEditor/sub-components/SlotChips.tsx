@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Box, Field, Flex, IconButton, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
-import './HudLayoutEditor.appearance.css';
 import type { SlotChipsProps } from './SlotChips.type';
 
 const SlotChips = (props: SlotChipsProps) => {

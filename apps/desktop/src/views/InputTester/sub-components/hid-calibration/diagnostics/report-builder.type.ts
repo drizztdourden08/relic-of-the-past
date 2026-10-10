@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DevicePreset } from '@rotp/input-mapping';
-import type { NativeCaptureStatus } from './hooks/useNativeCaptures.type';
+import type { NativeCaptureStatus } from './native-captures.type';
 
 interface BuildReportArgs {
   deviceKey: string;

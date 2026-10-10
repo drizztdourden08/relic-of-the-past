@@ -9,8 +9,6 @@ import { FilterBtns } from './FilterBtns';
 import { ReviewStats } from './ReviewStats';
 import { SpriteImageCard } from './SpriteImageCard';
 import { loadSpriteReview, saveSpriteReview } from '@app/storage/sprites-store';
-import { S } from '../SpriteDebug.constants';
-
 const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const [data, setData] = useState<ReviewData>({});
   const [loaded, setLoaded] = useState(false);
@@ -69,15 +67,15 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
 
   return (
     <>
-      <Box style={S.header}>
+      <Box className="sprite-debug-header">
         <Tabs tabs={catTabs} activeTab={catFilter} onTabChange={(id) => setCatFilter(id as 'all' | SpriteCategory)} />
         <ReviewStats counts={counts} total={SPRITE_MANIFEST.length} />
-        <Box style={S.headerButtons}>
+        <Box className="sprite-debug-header-buttons">
           <FilterBtns filter={filter} setFilter={setFilter} />
           <Button variant="danger" size="xs" onClick={() => { setData({}); saveSpriteReview({}); }}>Reset</Button>
         </Box>
       </Box>
-      <Box style={S.grid}>
+      <Box className="sprite-debug-grid">
         {filtered.map(sprite => (
           <SpriteImageCard
             key={sprite.file}

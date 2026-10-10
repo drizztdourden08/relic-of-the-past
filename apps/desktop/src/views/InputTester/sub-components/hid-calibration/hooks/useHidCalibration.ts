@@ -23,8 +23,8 @@ import { useCalibrationRefs } from './useCalibrationRefs';
 import { useReportSubscription } from './useReportSubscription';
 import { useSdlVersion } from './useSdlVersion';
 import { isAnalogItem } from './is-analog-item';
-import { LOG_KEEP_LINES } from './useHidCalibration.constants';
-import type { UseHidCalibrationProps } from './useHidCalibration.type';
+import { LOG_KEEP_LINES } from './hid-calibration-hook.constants';
+import type { UseHidCalibrationProps } from './hid-calibration-hook.type';
 
 const isDone = (it: InputItem): boolean => it.status === 'captured' || it.status === 'skipped';
 

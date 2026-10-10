@@ -29,7 +29,7 @@ describe('the capacity/pond rule leaves no seed without its upgrades', () => {
   it('takes the whole feature out when the master switch is off', () => {
     for (const { selection, authority } of combinations().filter((entry) => !entry.selection.enabled)) {
       const settled = reconcileCapacityPond(selection, authority);
-      expect(Object.values(settled.capacity).map((setting) => setting.mode)).toEqual(['vanilla', 'vanilla', 'vanilla', 'vanilla']);
+      expect(Object.values({ ...settled.capacity }).map((setting) => setting.mode)).toEqual(['vanilla', 'vanilla', 'vanilla', 'vanilla']);
       expect(settled.pond).toEqual(LEGACY_POND_SETTING);
       expect(settled.pondModes).toEqual(['capacity']);
       expect(settled.capacityEditable).toBe(false);
@@ -37,7 +37,9 @@ describe('the capacity/pond rule leaves no seed without its upgrades', () => {
       expect(authority).toBeDefined();
     }
   });
+});
 
+describe('the capacity/pond rule leaves no seed without its upgrades', () => {
   it('offers no pond mode that would open the hole', () => {
     for (const { selection, authority } of combinations()) {
       const settled = reconcileCapacityPond(selection, authority);

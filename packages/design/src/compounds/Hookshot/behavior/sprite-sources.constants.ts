@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind constants */
-import handleSrc from '../../../assets/hookshop/hookshot-handle.svg';
-import linkFaceSrc from '../../../assets/hookshop/hookshot-link-face.svg';
-import linkEdgeSrc from '../../../assets/hookshop/hookshot-link-edge.svg';
-import headSrc from '../../../assets/hookshop/hookshot-head.svg';
+import handleSrc from '../../../../art/hookshop/hookshot-handle.svg';
+import linkFaceSrc from '../../../../art/hookshop/hookshot-link-face.svg';
+import linkEdgeSrc from '../../../../art/hookshop/hookshot-link-edge.svg';
+import headSrc from '../../../../art/hookshop/hookshot-head.svg';
 import type { SpriteName } from '../Hookshot.type';
 
 const SOURCES: Record<SpriteName, string> = {

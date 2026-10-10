@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind style */
 
-.nav-edge-badge__part-1 {
+.nav-edge-badge__count {
   font-size: calc(var(--size-1) * 9);
   font-weight: var(--weight-bold);
   line-height: 1;

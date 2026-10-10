@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-import './HudLayoutEditor.content.css';
 import { Button, Flex, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { ExpressionInput } from './ExpressionInput';
 import { ReferenceField } from './ReferenceField';

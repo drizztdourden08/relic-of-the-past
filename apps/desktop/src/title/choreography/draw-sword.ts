@@ -4,13 +4,14 @@ import type { TitleFrame } from '@rotp/game-data';
 import type { Picture } from './choreography.type';
 import { drawStar } from './draw-star';
 import { STAR_ARM, STAR_CORE } from './draw-star.constants';
+import { itemAt } from '@app/checked-access';
 import { GLINT_H, HILT_SPARKLE_RADIUS, HILT_SPARKLE_STEPS } from './draw-sword.constants';
 
 const drawSword = (ctx: CanvasRenderingContext2D, { img, scale }: Picture, frame: TitleFrame, frameX: number, frameY: number): void => {
   const top = frameY + SWORD_TOP_FOR_BASE + frame.swordY;
   ctx.drawImage(img, frameX + SWORD_X, top, img.width / scale, img.height / scale);
   if (frame.sparklePhase === 1 && frame.sparkleIndex < HILT_SPARKLE_STEPS) {
-    drawStar(ctx, frameX + HILT_SPARKLE_AT.x + 4, frameY + HILT_SPARKLE_AT.y + 4, HILT_SPARKLE_RADIUS[frame.sparkleIndex]);
+    drawStar(ctx, frameX + HILT_SPARKLE_AT.x + 4, frameY + HILT_SPARKLE_AT.y + 4, itemAt(HILT_SPARKLE_RADIUS, frame.sparkleIndex));
     return;
   }
   if (frame.sparklePhase === 2 && frame.sparkleIndex < HILT_SPARKLE_STEPS) {

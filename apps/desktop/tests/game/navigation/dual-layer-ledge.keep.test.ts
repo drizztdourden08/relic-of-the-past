@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { DualLayerStrategy, GRID_SIZE } from '@rotp/navigation';
 import type { QuadrantBounds, BFSCell } from '@rotp/navigation';
 import type { TilePassability } from '@rotp/game-core';
+import { rowOf } from './grid-access';
 
 const fill = (tile: TilePassability): TilePassability[][] =>
   Array.from({ length: GRID_SIZE }, () => new Array<TilePassability>(GRID_SIZE).fill(tile));
@@ -16,7 +17,7 @@ describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () =>
   it('returns the landing cell on layer 1 when Link drops south off a 2-wide ledge', () => {
     const upperLayer = fill({ type: 'free' });
     for (const r of [11, 12]) {
-      for (const c of [20, 21]) upperLayer[r][c] = { type: 'ledge', dir: 's' };
+      for (const c of [20, 21]) rowOf(upperLayer, r)[c] = { type: 'ledge', dir: 's' };
     }
     const lowerLayer = fill({ type: 'free' });
 
@@ -32,7 +33,7 @@ describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () =>
   it('crosses a 1-deep north trigger line (leading edge fully on ledges)', () => {
     const upperLayer = fill({ type: 'free' });
     for (const r of [18, 19, 20]) {
-      for (const c of [20, 21]) upperLayer[r][c] = { type: 'ledge', dir: 'n' };
+      for (const c of [20, 21]) rowOf(upperLayer, r)[c] = { type: 'ledge', dir: 'n' };
     }
     const lowerLayer = fill({ type: 'free' });
     const strategy = new DualLayerStrategy([upperLayer, lowerLayer], [zeros(), zeros()], true, 0);
@@ -46,7 +47,7 @@ describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () =>
 
   it('refuses a 1-wide ledge, because the 2-wide leading edge cannot fit', () => {
     const upperLayer = fill({ type: 'free' });
-    for (const r of [18, 19, 20]) upperLayer[r][20] = { type: 'ledge', dir: 'n' };
+    for (const r of [18, 19, 20]) rowOf(upperLayer, r)[20] = { type: 'ledge', dir: 'n' };
     const lowerLayer = fill({ type: 'free' });
     const strategy = new DualLayerStrategy([upperLayer, lowerLayer], [zeros(), zeros()], true, 0);
 

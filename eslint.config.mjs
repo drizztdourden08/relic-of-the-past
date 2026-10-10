@@ -57,6 +57,12 @@ const rotpExtension = {
           'apps/store/src/pages/ReviewItem/sub-components/ListingDetails.tsx',
         ],
         why: 'The Hookshop draws values each item carries: its colour in --item-color, the crop rectangle of a picture and the share of each star in the histogram. No token can hold a value the API returns.',
+      }, {
+        files: [
+          'packages/design/src/compounds/HookshopHighlight/HookshopHighlight.tsx',
+          'packages/design/src/compounds/Hookshot/Hookshot.tsx',
+        ],
+        why: 'Each hookshot sprite takes the position, size and rotation computed for it per frame from the curve layout.',
       }],
       glyphContent: [{
         files: ['apps/desktop/src/views/NavigationWidget/sub-components/ReqIcon.constants.ts'],
@@ -70,6 +76,10 @@ const rotpExtension = {
         'core/wasm-build/*.mjs', 'installer-stub/*.mjs', 'apps/desktop/public/logos/**/*.mjs',
         'apps/sanctuary-api/dev-server.mjs', 'apps/sanctuary-api/src/**', 'apps/store-api/src/**',
         'packages/hub-server/src/router/create-router.ts',
+        'apps/desktop/electron/{debug,automation}/**',
+        'apps/desktop/electron/lifecycle/on-window.ts',
+        'apps/desktop/src/views/GameSession/behavior/{useDumpLayers,useDumpNav,useSimRun,capture-hover-tooltip,log-hover-verdict,verify-hover-tile,run-full-simulation,run-sim-diagnostic,sim-flood-screen,sim-combat-sprite,run-dump-flood,dump-flood-items}.ts',
+        'apps/desktop/electron/screen-editor/enumeration-writer/regenerate-types.ts',
         'packages/game-core/src/cheats/actions/cheat-start-trace.ts',
         'packages/game-core/src/webgl/gl-helpers/{create-shader,create-program}.ts',
         'packages/game-core/src/{shadow-casting,edge-glow}/renderer.ts',

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type React from 'react';
 import { sampleFlakyBytes } from '../flaky-byte-detect';
 import type { FlakyByte } from '../flaky-byte-detect';
-import { LIVE_REFRESH_MS } from './useFlakyByteWarning.constants';
+import { LIVE_REFRESH_MS } from './flaky-byte-warning.constants';
 
 const useFlakyByteWarning = (
   latestBytesRef: React.RefObject<Uint8Array>,

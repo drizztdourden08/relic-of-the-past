@@ -4,6 +4,7 @@ import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
 import { decode4bppTile, convertGbaMapWordToSnes, convertGbaSheetToSnes4bpp, decodeGbaPacked4bppTile, PALACE_ROOM_IDS, decodeGbaAlttpSaveProgression, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText } from '@rotp/asset-extraction';
 import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics } from '@rotp/asset-extraction/node';
+import { required } from './required';
 
 describe('GBA to SNES native translation', () => {
   it('moves GBA palette and flip bits into the SNES tilemap layout', () => {
@@ -27,17 +28,18 @@ const snesPath = snesFixture ? resolve('test-roms', snesFixture) : '';
 
 const integration = existsSync(romPath) && snesPath !== '' ? it : it.skip;
 
-integration('extracts and compiles every Palace room from the validated ROM', async () => {
+integration('extracts and compiles every Palace room from the validated ROM', () => {
   const rom = loadGbaAlttpRomFromBuffer(readFileSync(romPath));
   const rooms = new GbaAlttpDungeonSource(rom).palaceRooms();
   expect(rooms.map(room => room.id)).toEqual([...PALACE_ROOM_IDS]);
   expect(rooms.every(room => room.layers.length === 3)).toBe(true);
   expect(rooms.every(room => room.layers.every(layer => layer.snesWords.length === 4096))).toBe(true);
   expect(rooms.every(room => room.layers.every(layer => layer.collision.length === 4096))).toBe(true);
-  const entrance = rooms.find(room => room.id === 0x88)!;
+  const entrance = required(rooms.find(room => room.id === 0x88), 'the Palace entrance room');
   expect(entrance.provenance.tileAttributesAddress).toBe(0x0815e714);
-  expect(entrance.layers[0].collision[8 * 64 + 32]).toBe(0x00);
-  expect(entrance.layers[0].collision[9 * 64 + 32]).toBe(0x68);
+  const entranceFloor = required(entrance.layers[0], 'the entrance room first layer');
+  expect(entranceFloor.collision[8 * 64 + 32]).toBe(0x00);
+  expect(entranceFloor.collision[9 * 64 + 32]).toBe(0x68);
   const spriteGraphics = extractDungeonSpriteGraphics(rom, [44, 46, 47, 48, 49, 50, 51]);
   expect(spriteGraphics.tilesets.find(tileset => tileset.enemyBlockset === 44)?.sheetIds).toEqual([21, 255, 39, 29]);
   expect(spriteGraphics.tilesets.find(tileset => tileset.enemyBlockset === 51)?.sheetIds).toEqual([81, 44, 59, 82]);
@@ -46,7 +48,7 @@ integration('extracts and compiles every Palace room from the validated ROM', as
   expect(source.palaceTopology().some(edge => edge.insidePalace)).toBe(true);
   const handlers = extractEntityHandlerTable(rom);
   expect(handlers).toHaveLength(0xf8);
-  expect(handlers[0xf5].thumbAddress).toBe(0x080e5570);
+  expect(required(handlers[0xf5], 'entity handler 0xf5').thumbAddress).toBe(0x080e5570);
   const tagHandlers = extractRoomTagHandlerTable(rom);
   expect(tagHandlers).toHaveLength(0x43);
   expect(tagHandlers.slice(0x40).map(handler => handler.thumbAddress)).toEqual([
@@ -58,8 +60,8 @@ integration('extracts and compiles every Palace room from the validated ROM', as
   expect(rooms.flatMap(room => source.roomInteractions(room)).some(cell => cell.kind === 'conveyor-left')).toBe(true);
   const text = extractGbaAlttpText(rom);
   expect(text).toHaveLength(0x1c7);
-  expect(text[0x1a5].plainText.replace(/\s+/g, ' ')).toContain('only true heroes can enter this palace');
-  expect(text[0x1b2].plainText).toContain('Spin like a tornado');
+  expect(required(text[0x1a5], 'text 0x1a5').plainText.replace(/\s+/g, ' ')).toContain('only true heroes can enter this palace');
+  expect(required(text[0x1b2], 'text 0x1b2').plainText).toContain('Spin like a tornado');
   const snes = loadRomFromBuffer(readFileSync(snesPath));
   expect(compileGbaAlttpSupplement(rom, snes).length).toBeGreaterThan(100_000);
 }, 1_800_000);

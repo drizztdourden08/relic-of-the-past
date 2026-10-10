@@ -20,7 +20,7 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
 
     let cancelled = false;
 
-    (async () => {
+    void (async () => {
       const slot = await appApi().getDumpLayersSlot();
       const hoverTile = await appApi().getHoverTile();
       console.log(`[DumpLayers] hook fired. slot=${slot}, hoverTile=${JSON.stringify(hoverTile)}, profile=${activeProfile.name}`);

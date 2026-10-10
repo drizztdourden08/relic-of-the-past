@@ -7,7 +7,7 @@
 .sprite-manager__extract-btn {
   flex: 1;
   padding: var(--space-sm) var(--space-lg);
-  border: 1px solid var(--c-primary-dim);
+  border: var(--border-width-thin) solid var(--c-primary-dim);
   border-radius: var(--radius-md);
   background: var(--c-primary-soft);
   color: var(--c-primary-bright);
@@ -29,7 +29,7 @@
 
 .sprite-manager__delete-btn {
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--c-danger);
+  border: var(--border-width-thin) solid var(--c-danger);
   border-radius: var(--radius-md);
   background: var(--c-danger-soft);
   color: var(--c-danger);
@@ -90,7 +90,7 @@
   gap: var(--space-xs);
   padding: var(--space-sm);
   background: var(--c-hover);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
 }
@@ -101,8 +101,8 @@
 }
 
 .sprite-card__img {
-  max-width: 32px;
-  max-height: 32px;
+  max-width: var(--size-32);
+  max-height: var(--size-32);
   object-fit: contain;
   image-rendering: pixelated;
 }

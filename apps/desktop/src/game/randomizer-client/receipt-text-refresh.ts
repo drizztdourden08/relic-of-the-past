@@ -5,6 +5,7 @@ import { log } from '../../log-bus';
 import { setSessionReceiptMessages } from '../session-dialogue';
 import { getCompletedChecks, onCompletedChecksChanged } from '../tracker';
 import { firedLocations, onFiredLocation } from './override-fire-registry';
+import { itemAt } from '@app/checked-access';
 import type { CheckId } from '@rotp/game-data';
 
 const completedKeysOf = (checks: ReadonlySet<CheckId>): Set<LocationKey> =>
@@ -49,9 +50,9 @@ const startSessionReceiptTexts = (
     messageIdOf: (location) =>
       idAt(first.indexByLocation.get(location)) ?? first.fallbackByLocation.get(location) ?? -1,
     rungMessageIdOf: (family) =>
-      (messageIds === null ? undefined : first.rungIndexByFamily.get(family)?.map((index) => messageIds[index])),
+      (messageIds === null ? undefined : first.rungIndexByFamily.get(family)?.map((index) => itemAt(messageIds, index))),
     fixedLineMessages: messageIds === null ? [] : first.fixedLines.map(({ family, fromRung, jump, index }) =>
-      ({ family, fromRung, jump, messageId: messageIds[index] })),
+      ({ family, fromRung, jump, messageId: itemAt(messageIds, index) })),
     pondMessages: {
       priceMessageOf: (price) => idAt(first.pondLines.byPrice.get(price)) ?? -1,
       refundMessageOf: (refund) => idAt(first.pondLines.byRefund.get(refund)) ?? -1,

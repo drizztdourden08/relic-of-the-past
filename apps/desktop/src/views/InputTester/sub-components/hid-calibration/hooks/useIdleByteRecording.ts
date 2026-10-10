@@ -2,7 +2,7 @@
 import type React from 'react';
 import { useRef, useState } from 'react';
 import type { IdleByteAnalysis, IdleRecordResult } from '../hid-calibration.type';
-import { IDLE_RECORD_MS, IDLE_SAMPLE_INTERVAL_MS, MAX_LISTED_UNIQUE_VALUES } from './useIdleByteRecording.constants';
+import { IDLE_RECORD_MS, IDLE_SAMPLE_INTERVAL_MS, MAX_LISTED_UNIQUE_VALUES } from './idle-byte-recording.constants';
 
 const analyseColumn = (frames: number[][], byteIdx: number, col: number): IdleByteAnalysis => {
   const values = frames.map(f => f[col] ?? 0);

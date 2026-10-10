@@ -5,8 +5,8 @@ import { ImportForm } from './ImportForm';
 import { LANGUAGE_NAMES } from './language-names.constants';
 import { IL } from './LanguageManager.constants';
 import type { LanguageManagerProps } from './LanguageManager.type';
-import { LanguageEditor } from './language-editor';
-import { SetCreateForm } from './language-editor/sub-components/SetCreateForm';
+import { LanguageEditor } from '../../../language-editor';
+import { SetCreateForm } from '../../../language-editor/sub-components/SetCreateForm';
 import * as languagesStore from '@app/storage/languages-store';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
@@ -28,7 +28,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
     setLanguages(langs);
   }, []);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => { void refresh(); }, [refresh]);
 
   const setLabel = useCallback(
     (set: LanguageSetSummary) => (set.origin === 'rom' ? LANGUAGE_NAMES[set.id] ?? set.name : set.name),
@@ -89,9 +89,8 @@ const LanguageManager = (props: LanguageManagerProps) => {
       return;
     }
     const name = LANGUAGE_NAMES[code] ?? code;
-    onDeleteConfirm('Delete Language', `Delete language set "${name}"? This cannot be undone.`, async () => {
-      await languagesStore.deleteLanguage(code);
-      await forget(code);
+    onDeleteConfirm('Delete Language', `Delete language set "${name}"? This cannot be undone.`, () => {
+      void languagesStore.deleteLanguage(code).then(() => forget(code));
     });
   }, [packFor, confirmUninstall, forget, onDeleteConfirm]);
 

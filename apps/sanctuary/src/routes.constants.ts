@@ -1,6 +1,7 @@
 /* @layer sanctuary-site @kind constants */
 import { createElement } from 'react';
 import { REPORTS_PERMISSION } from '@rotp/hub-contracts';
+import { routeParam } from '@rotp/hub-client';
 import type { RouteEntry } from '@rotp/design';
 import { SignIn, Account, Admin, Device } from '@rotp/design';
 import { Files } from './pages/Files/Files';
@@ -22,7 +23,7 @@ const ROUTES: RouteEntry[] = [
   },
   { pattern: '/account', access: 'member', render: () => createElement(Account) },
   { pattern: '/admin', access: 'admin', render: () => createElement(Admin) },
-  { pattern: '/device/:code', access: 'member', bare: true, render: ({ code }) => createElement(Device, { code }) },
+  { pattern: '/device/:code', access: 'member', bare: true, render: (params) => createElement(Device, { code: routeParam(params, 'code') }) },
   { pattern: '/signin', access: 'public', bare: true, render: () => createElement(SignIn, { lead: SANCTUARY_SITE_UI.signIn.lead }) },
 ];
 

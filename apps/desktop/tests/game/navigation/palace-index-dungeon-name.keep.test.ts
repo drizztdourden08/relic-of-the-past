@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { getPalaceName, isDungeonPalace, dungeonForPalaceIndex, all } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
@@ -22,7 +22,7 @@ const EXPECTED: ReadonlyArray<readonly [number, string]> = [
 
 const hex = (n: number): string => `0x${n.toString(16).toUpperCase().padStart(2, '0')}`;
 
-describeDataset('palace index → dungeon record', () => {
+describeDataset('palace index -> dungeon record', () => {
   for (const [palace, fileStem] of EXPECTED) {
     it(`resolves ${hex(palace)} to ${fileStem}`, () => {
       expect(dungeonForPalaceIndex(palace)?.fileStem).toBe(fileStem);

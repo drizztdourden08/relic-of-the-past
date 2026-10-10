@@ -1,5 +1,5 @@
 /* @layer site-kit @kind logic */
-import { NAVIGATE_EVENT } from './useLocation.constants';
+import { NAVIGATE_EVENT } from './location.constants';
 
 const navigate = (path: string, options: { replace?: boolean } = {}) => {
   if (options.replace) window.history.replaceState(null, '', path);

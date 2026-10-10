@@ -22,12 +22,12 @@ vi.mock('@app/game/session-dialogue', () => ({
   appendSessionReceiptMessage: () => null,
   clearSessionDialogue: () => undefined,
 }));
-const iconSet = (name: string) => ({ [`apply${name}`]: async () => true, [`clear${name}`]: () => undefined });
+const iconSet = (name: string) => ({ [`apply${name}`]: () => Promise.resolve(true), [`clear${name}`]: () => undefined });
 vi.mock('@app/game/gear-icons', () => iconSet('GearIcons'));
 vi.mock('@app/game/quiver-icon', () => iconSet('QuiverIcon'));
 vi.mock('@app/game/currency-symbols', () => iconSet('CurrencySymbols'));
 vi.mock('@app/game/upgrade-icons', () => iconSet('UpgradeIcons'));
-vi.mock('@app/game/foreign-icons', () => ({ applyForeignIcons: async () => false, clearForeignIcons: () => undefined }));
+vi.mock('@app/game/foreign-icons', () => ({ applyForeignIcons: () => Promise.resolve(false), clearForeignIcons: () => undefined }));
 vi.mock('@app/game/randomizer-client/override-fire-registry', async (importOriginal) => {
   const real = await importOriginal<typeof FireRegistry>();
   return {
@@ -91,7 +91,7 @@ const roomOf = (overrides: Record<string, OptionValue>, foreignEvery: number | u
     }));
   const slotData = parseSlotData({
     worldVersion: '0.1.0', seed: placement.seed, options: snapshot.values, medallions: placement.medallions,
-    preRolled: { pondDemands: placement.pondDemands ?? {}, shopPrices: placement.shopPrices ?? {} }, deathLink: false,
+    preRolled: { pondDemands: placement.pondDemands, shopPrices: placement.shopPrices }, deathLink: false,
   });
   if (slotData.kind !== 'ok') throw new Error(`slot data: ${slotData.kind}`);
   return { scouts, slotData: slotData.slotData };

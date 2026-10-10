@@ -1,16 +1,14 @@
 /* @layer tests @kind helper */
 import { chromium } from 'playwright';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'fs';
 import type { Browser } from 'playwright';
 import { DESIGN_SYSTEM_DIR, EDITOR_DIR, RAILS, ROTP_THEME } from './layout-bands.constants';
 import type { Measured, Rig } from './layout-bands.type';
 import { layoutCases } from './layout-cases';
 import { probe } from './probe';
-
-const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
+import { EDITOR_THEME_SHEETS } from '../editor-theme-sheets.constants';
+import { cssIn } from '../files-in';
 
 const sheets = (): string[] => [
   ...cssIn(`${DESIGN_SYSTEM_DIR}/tokens`).filter((f) => !f.endsWith('index.css')),
@@ -18,6 +16,7 @@ const sheets = (): string[] => [
   ROTP_THEME,
   ...cssIn(`${DESIGN_SYSTEM_DIR}/primitives`),
   ...cssIn(`${DESIGN_SYSTEM_DIR}/composites`),
+  ...EDITOR_THEME_SHEETS,
   ...cssIn(EDITOR_DIR),
 ];
 

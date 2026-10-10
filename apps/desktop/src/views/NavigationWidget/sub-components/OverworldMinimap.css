@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind style */
 
-.nav-overworld-minimap__part-4 {
+.nav-overworld-minimap__root {
   position: relative;
   width: 100%;
   margin-top: var(--size-4);
@@ -8,7 +8,7 @@
   margin-right: auto;
 }
 
-.nav-overworld-minimap__part-3 {
+.nav-overworld-minimap__cell {
   position: absolute;
   border-radius: var(--radius-sm);
   font-size: var(--size-10);
@@ -38,7 +38,7 @@
   position: relative;
 }
 
-.nav-overworld-minimap__part-2 {
+.nav-overworld-minimap__marker {
   position: absolute;
   pointer-events: none;
   display: flex;
@@ -46,7 +46,7 @@
   justify-content: center;
 }
 
-.nav-overworld-minimap__part-1 {
+.nav-overworld-minimap__player-dot {
   position: absolute;
   width: var(--size-6);
   height: var(--size-6);

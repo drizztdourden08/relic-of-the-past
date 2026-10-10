@@ -1,5 +1,5 @@
 /* @layer site-kit @kind hook */
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { AdminUser } from '@rotp/hub-client';
 import { listAdminQueue, setUserGroups, revokeAccess, errorMessage } from '@rotp/hub-client';
 import type { Grouped } from './useAdminQueue.type';

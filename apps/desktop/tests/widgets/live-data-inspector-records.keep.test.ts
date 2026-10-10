@@ -1,11 +1,12 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all, find, getActorByGameId, getDungeonByGameId, getItemByGameId, getScreen } from '@rotp/game-data';
-import { recordsFor } from '@app/views/LiveDataInspector/behavior/use-current-records';
+import { recordsFor } from '@app/views/LiveDataInspector/behavior/records-for';
 import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext } from '@rotp/navigation';
 import type { LiveSpriteObservation } from '@rotp/game-core';
 import { describeDataset } from '../dataset-guard';
+import { required } from '../required';
 
 const baseContext = (over: Partial<DetectionContext> = {}): DetectionContext => ({
   origin: 'live',
@@ -20,13 +21,14 @@ const baseContext = (over: Partial<DetectionContext> = {}): DetectionContext => 
     floodConnections: [],
     existingConnections: [],
     palaceMismatches: [],
+    isDarkWorld: false,
     ...over.observations,
   },
   ...over,
 });
 
 describeDataset('recordsFor a screen', () => {
-  const screen = all('screen')[0];
+  const screen = required(all('screen')[0], 'the first screen');
 
   it('resolves the current screen\'s own record', () => {
     const ctx = baseContext({ screenId: screen.id });
@@ -63,7 +65,7 @@ describeDataset('recordsFor a check, every check that names this screen', () => 
     const expected = find('check', (check) => check.screenId === screenId);
     expect(result).toEqual(expected);
     expect(result.length).toBeGreaterThanOrEqual(2);
-    for (const check of result) expect(check.screenId).toBe(screenId);
+    for (const check of result) expect('screenId' in check ? check.screenId : undefined).toBe(screenId);
   });
 
   it('resolves nothing with no screen', () => {
@@ -78,10 +80,12 @@ describeDataset('recordsFor an actor, one card per DISTINCT sprite type, not per
     const [first, second] = actorsWithSpriteType;
     if (!first || !second) throw new Error('need two real actors with a sprite type');
 
+    const firstType = required(first.gameId.spriteType, 'the first sprite type');
+    const secondType = required(second.gameId.spriteType, 'the second sprite type');
     const liveSprites: readonly LiveSpriteObservation[] = [
-      { spriteType: first.gameId.spriteType!, col: 0, row: 0, floor: 0 },
-      { spriteType: first.gameId.spriteType!, col: 1, row: 1, floor: 0 },
-      { spriteType: second.gameId.spriteType!, col: 2, row: 2, floor: 0 },
+      { spriteType: firstType, col: 0, row: 0, floor: 0 },
+      { spriteType: firstType, col: 1, row: 1, floor: 0 },
+      { spriteType: secondType, col: 2, row: 2, floor: 0 },
     ];
     const ctx = baseContext({ observations: { liveSprites } as never });
 
@@ -104,26 +108,28 @@ describeDataset('recordsFor an item, one card per DISTINCT granted item, not per
     const [first, second] = itemsWithReceiveId;
     if (!first || !second) throw new Error('need two real items with a receive id');
 
+    const firstId = required(first.gameId?.receiveItemId, 'the first receive id');
+    const secondId = required(second.gameId?.receiveItemId, 'the second receive id');
     const ctx = baseContext({
       observations: {
         grantedItems: [
-          { itemId: first.gameId!.receiveItemId!, receiveCount: 1, ownedItemIds: [], fromInventoryDelta: false },
-          { itemId: first.gameId!.receiveItemId!, receiveCount: 2, ownedItemIds: [], fromInventoryDelta: false },
-          { itemId: second.gameId!.receiveItemId!, receiveCount: 1, ownedItemIds: [], fromInventoryDelta: false },
+          { itemId: firstId, receiveCount: 1, ownedItemIds: [], fromInventoryDelta: false },
+          { itemId: firstId, receiveCount: 2, ownedItemIds: [], fromInventoryDelta: false },
+          { itemId: secondId, receiveCount: 1, ownedItemIds: [], fromInventoryDelta: false },
         ],
       } as never,
     });
 
     const result = recordsFor('item', ctx);
     expect(result).toEqual([
-      getItemByGameId({ receiveItemId: first.gameId!.receiveItemId }),
-      getItemByGameId({ receiveItemId: second.gameId!.receiveItemId }),
+      getItemByGameId({ receiveItemId: firstId }),
+      getItemByGameId({ receiveItemId: secondId }),
     ]);
   });
 });
 
 describeDataset('recordsFor a dungeon, the one currently loaded', () => {
-  const dungeon = all('dungeon')[0];
+  const dungeon = required(all('dungeon')[0], 'the first dungeon');
 
   it('resolves the indoor palace by its live index', () => {
     const ctx = baseContext({
@@ -147,7 +153,7 @@ describeDataset('recordsFor a kind with no direct live link', () => {
   it.each(['area', 'location', 'tag', 'item-group', 'enumeration'] satisfies EntityKind[])(
     'resolves nothing for %s instead of guessing',
     (kind) => {
-      expect(recordsFor(kind, baseContext({ screenId: 'screen-1' as never }))).toEqual([]);
+      expect(recordsFor(kind, baseContext({ screenId: 'screen-1' }))).toEqual([]);
     },
   );
 });

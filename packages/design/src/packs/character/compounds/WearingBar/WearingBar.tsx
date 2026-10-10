@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, SegmentedControl } from '@drizztdourden08/tessera/primitives';
-import type { OutfitId, GloveLevel } from '@rotp/game-data';
+import type { GloveLevel } from '@rotp/game-data';
 import { GLOVE_OPTIONS, OUTFIT_OPTIONS } from './WearingBar.constants';
 import type { WearingBarProps } from './WearingBar.type';
 import './WearingBar.css';
@@ -14,7 +14,7 @@ const WearingBar = (props: WearingBarProps) => {
       <SegmentedControl
         value={outfit}
         options={OUTFIT_OPTIONS}
-        onChange={(v) => onOutfit(v as OutfitId)}
+        onChange={(v) => onOutfit(v)}
       />
       <Text className="wearing-bar__label">Gloves</Text>
       <SegmentedControl

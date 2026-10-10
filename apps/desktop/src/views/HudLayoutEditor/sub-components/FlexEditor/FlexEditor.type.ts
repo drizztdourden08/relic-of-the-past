@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { EditorAction, EditorShortcut } from '../SelectionBands';
+import type { EditorAction, EditorShortcut } from '@app/hud-layout-editing/selection-bands.type';
 import type { IndexRun } from '@app/hud-layout-editing/index-selection';
 import type { DropIntent } from '@app/hud-layout-editing/drop-intent';
 import type { HudFlexContainer } from '@rotp/hud';

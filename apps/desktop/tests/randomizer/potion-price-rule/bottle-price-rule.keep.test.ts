@@ -1,17 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { POTION_CAULDRONS, ruleForPrice, REGION } from '@rotp/randomizer';
-import type { CollectionState } from '@rotp/randomizer';
+import { POTION_CAULDRONS, ruleForPrice } from '@rotp/randomizer';
 import { CAULDRON } from './potion-price-rule.constants';
+import { stateWith } from './state-with';
 
 describe('paying a bottle price needs a source to buy the content back from', () => {
-  const stateWith = (bottles: number, atSeller: boolean): CollectionState => ({
-    world: { options: {} },
-    has: () => bottles > 0,
-    count: () => 0,
-    countGroup: () => bottles,
-    canReachRegion: (region: string) => atSeller && region === REGION.potionSeller,
-  } as unknown as CollectionState);
 
   it('asks a potion price for the hut and the bottle', () => {
     const rule = ruleForPrice({ currency: 'bottle', content: CAULDRON.content });

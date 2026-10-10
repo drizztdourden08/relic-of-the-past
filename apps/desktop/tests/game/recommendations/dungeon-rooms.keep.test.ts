@@ -1,10 +1,11 @@
 /* @layer test @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all, getScreen } from '@rotp/game-data';
 import type { DungeonRecord, ScreenId } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy, dungeonStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,
@@ -44,7 +45,7 @@ describeDataset('dungeon strategy (room-screens probe)', () => {
     }));
 
     expect(drafts).toHaveLength(1);
-    const [draft] = drafts;
+    const draft = required(drafts[0], 'the one draft');
     expect(draft.action).toBe('update');
     expect(draft.targetId).toBe(dungeon.id);
     expect(draft.detector).toBe('strategy:dungeon');
@@ -56,7 +57,7 @@ describeDataset('dungeon strategy (room-screens probe)', () => {
 
   it('proposes nothing when the screen is already a member of the resolved dungeon', () => {
     const dungeon = aDungeon();
-    const memberScreen = dungeon.roomScreenIds[0];
+    const memberScreen = required(dungeon.roomScreenIds[0], 'a member screen');
     const drafts = detector.detect(contextFor(memberScreen, {
       liveGameId: { palaceIndex: dungeon.gameId.palaceIndex },
     }));
@@ -65,7 +66,7 @@ describeDataset('dungeon strategy (room-screens probe)', () => {
 
   it('proposes nothing when the palace index resolves to no dungeon record', () => {
     const noSuchPalace = Math.max(...all('dungeon').map(d => d.gameId.palaceIndex ?? 0)) + 5;
-    const drafts = detector.detect(contextFor('screen-001' as ScreenId, {
+    const drafts = detector.detect(contextFor('screen-001', {
       liveGameId: { palaceIndex: noSuchPalace },
     }));
     expect(drafts).toEqual([]);
@@ -74,6 +75,6 @@ describeDataset('dungeon strategy (room-screens probe)', () => {
   it('stays silent without a live palace index or a resolved screen', () => {
     const dungeon = aDungeon();
     expect(detector.detect(contextFor(null, { liveGameId: { palaceIndex: dungeon.gameId.palaceIndex } }))).toEqual([]);
-    expect(detector.detect(contextFor('screen-001' as ScreenId, { liveGameId: null }))).toEqual([]);
+    expect(detector.detect(contextFor('screen-001', { liveGameId: null }))).toEqual([]);
   });
 });

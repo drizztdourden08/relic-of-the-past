@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { getCheck, hasTagKey } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 

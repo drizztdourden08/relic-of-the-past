@@ -2,6 +2,7 @@
 import { log } from '../../../log-bus';
 import { releaseSlot, takeSlot, sessionPool } from '@rotp/game-core';
 import { compose } from './compose';
+import { itemAt } from '@app/checked-access';
 import type { ReceiptLine } from '@rotp/game-core';
 
 const appendSessionReceiptMessage = (line: ReceiptLine): number | null => {
@@ -14,7 +15,7 @@ const appendSessionReceiptMessage = (line: ReceiptLine): number | null => {
   }
   if (!compose()) {
     releaseSlot(arrivals, slot);
-    arrivals.lines[slot] = previous[slot];
+    arrivals.lines[slot] = itemAt(previous, slot);
     return null;
   }
   return (sessionPool.baseId as number) + slot;

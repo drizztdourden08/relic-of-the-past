@@ -3,11 +3,12 @@ import { ladderClamps, planOf } from '@rotp/randomizer';
 import type { CapacityFamily, FamilyPlan, FamilySetting } from '@rotp/randomizer';
 import type { LadderPreviewProps } from '@app/compounds/LadderPreview';
 import { JUMP_LABEL, PROGRESSIVE_NOTE, VANILLA_NOTE } from './capacity-row-model.constants';
+import { itemAt } from '@app/checked-access';
 import { stopsOf } from './stops-of';
 
 const previewOf = (capacityFamily: CapacityFamily, setting: FamilySetting, plan: FamilyPlan): LadderPreviewProps => {
   const stops = stopsOf(capacityFamily);
-  const chipsOf = (ladder: readonly number[]) => ladder.map((value) => stops[capacityFamily.indexOf(value)]);
+  const chipsOf = (ladder: readonly number[]) => ladder.map((value) => itemAt(stops, capacityFamily.indexOf(value)));
   const jumpsOf = (jumps: readonly number[]) => jumps.map(JUMP_LABEL[capacityFamily.id]);
   if (setting.mode === 'vanilla') {
     const native = planOf(capacityFamily, { mode: 'vanilla-in-pool' });

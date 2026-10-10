@@ -34,7 +34,9 @@ describe('pond generation', () => {
     const placement = generatePlacement('pond-unproven', snapshot, EMPTY, EMPTY, EMPTY);
     expect(placement.stats.pondPrizeCount).toBe(0);
   }, 30_000);
+});
 
+describe('pond generation', () => {
   it('a prize past the reachable wallet is held to it, so the pond stays in logic', () => {
     const snapshot = snapshotOf({
       pond_capacity_mode: 'custom', pond_capacity_items: 2, pond_capacity_throws: 2, pond_capacity_ask_rupees_min: '900', pond_capacity_ask_rupees_max: '999',

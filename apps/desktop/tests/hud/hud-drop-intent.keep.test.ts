@@ -1,8 +1,9 @@
 /* @layer tests @kind test */
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join, resolve } from 'path';
+import { filesIn } from './files-in';
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
@@ -36,13 +37,12 @@ const escapeStack = (): EscapeStack => {
   if (!stack) throw new Error('the escape stack probe never rendered');
   return stack;
 };
-const tsIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? tsIn(join(dir, e.name)) : (/\.tsx?$/.test(e.name) ? [join(dir, e.name)] : [])));
+const tsIn = (dir: string): string[] => filesIn(dir, (name) => /\.tsx?$/.test(name));
 
 const leaf = (id: string, extra: Partial<HudNode> = {}): HudNode =>
   ({ id, kind: 'element', element: { type: 'spacer' }, ...extra }) as HudNode;
 const row = (id: string, children: HudNode[]): HudNode =>
-  ({ id, kind: 'container', direction: 'row', children }) as HudNode;
+  ({ id, kind: 'container', direction: 'row', children });
 
 const doc = (): HudLayout => ({
   id: 'l',
@@ -159,7 +159,7 @@ describe('the seven refusals, each naming both nodes', () => {
     const d2 = doc();
     const rep = d2.screen.children.find((c) => c.id === 'rep') as { element: Record<string, unknown> };
     rep.element = { ...rep.element, count: { from: 'data', expr: 'life_max' } };
-    (d2.screen.children as HudNode[]).push(big);
+    (d2.screen.children).push(big);
     expect(refusalFor(d2, ['big'], 'tpl')?.reason).toBe('budget');
     expect(refusalFor(d2, ['big'], 'hearts')).toBeNull();
   });

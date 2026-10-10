@@ -1,11 +1,15 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import type * as CacheModule from '@app/views/DataInspector/behavior/recommendations/recommendation-cache';
 import type { Recommendation } from '@rotp/navigation';
 
+type LoadRecommendations = (kind: string) => Promise<Recommendation[]>;
+type DecideRecommendation = (kind: string, id: string, state: string) => Promise<Recommendation[]>;
+
 let cache: typeof CacheModule;
-let loadRecommendations: ReturnType<typeof vi.fn>;
-let decideRecommendation: ReturnType<typeof vi.fn>;
+let loadRecommendations: Mock<LoadRecommendations>;
+let decideRecommendation: Mock<DecideRecommendation>;
 
 const entry = (id: string, over: Partial<Recommendation> = {}): Recommendation => ({
   id,
@@ -26,12 +30,18 @@ const entry = (id: string, over: Partial<Recommendation> = {}): Recommendation =
   ...over,
 } as Recommendation);
 
+const entriesOfKind = (kind: string): Recommendation[] => {
+  if (kind === 'tag') return [entry('r-tag')];
+  if (kind === 'item') return [entry('r-item', { kind: 'item' })];
+  return [];
+};
+
 const settle = (): Promise<void> => new Promise((resolve) => { setTimeout(resolve, 0); });
 
 beforeEach(async () => {
   vi.resetModules();
-  loadRecommendations = vi.fn().mockResolvedValue([]);
-  decideRecommendation = vi.fn().mockResolvedValue([]);
+  loadRecommendations = vi.fn<LoadRecommendations>().mockResolvedValue([]);
+  decideRecommendation = vi.fn<DecideRecommendation>().mockResolvedValue([]);
   vi.stubGlobal('window', { api: { loadRecommendations, decideRecommendation } });
   cache = await import('@app/views/DataInspector/behavior/recommendations/recommendation-cache');
 });
@@ -53,9 +63,7 @@ describe('loading', () => {
   });
 
   it('flattens what came back across collections', async () => {
-    loadRecommendations.mockImplementation((kind: string) => Promise.resolve(
-      kind === 'tag' ? [entry('r-tag')] : kind === 'item' ? [entry('r-item', { kind: 'item' })] : [],
-    ));
+    loadRecommendations.mockImplementation((kind: string) => Promise.resolve(entriesOfKind(kind)));
     cache.allRecommendations();
     await settle();
     expect(cache.allRecommendations().map(item => item.id).sort()).toEqual(['r-item', 'r-tag']);
@@ -68,7 +76,7 @@ describe('loading', () => {
     expect(cache.allRecommendations()).toEqual([]);
   });
 
-  it('hands back the same array until something actually changes', async () => {
+  it('hands back the same array until something changes', async () => {
     cache.allRecommendations();
     await settle();
     expect(cache.allRecommendations()).toBe(cache.allRecommendations());

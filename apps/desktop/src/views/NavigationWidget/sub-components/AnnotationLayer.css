@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind style */
 
-.nav-annotation-layer__part-1 {
+.nav-annotation-layer__marker {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;

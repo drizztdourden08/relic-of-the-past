@@ -605,7 +605,7 @@ matching neighbour and yields no ledge. The fan case is room 0x72's north jump.
 ## game/navigation/connection-audit-resolve.keep.test.ts
 
 Tag inference for a real crossing the dataset does not map, now done by `inferTags` in
-`points.set.ts`. A travel transition is a warp room door destination (header slots 3 and 4,
+`connection-crossing-probe.ts`. A travel transition is a warp room door destination (header slots 3 and 4,
 emitted only when the room has a warp type door), so a walk tag would be wrong on any record
 minted from it.
 
@@ -867,7 +867,7 @@ survives onto the replacement subtree's root.
 ### hud/hud-appearance-controls
 
 Phase 8 of the inspector UX review, Appearance measured at 289 / 232 / 188 px with the stylesheets
-walked (this phase added `HudLayoutEditor.appearance.css`).
+walked (this phase added `theme/hud-layout-editor/appearance.css`).
 
 - The claim to prove is height. The case for `SubsectionGroup` is that closed, the redesign is one
   screen tall; the section was about 1800px of flat scroll with everything on. SSR renders the
@@ -1419,7 +1419,7 @@ limits keep one row per axis, and the lattice's six cells clear 24px on both axe
 ### hud/hud-inspector-layout-widths
 
 Phase 7 of the inspector UX review: the Layout section's controls measured at 289 / 232 / 188 px,
-stylesheets walked (this phase added `HudLayoutEditor.layout.css`).
+stylesheets walked (this phase added `theme/hud-layout-editor/layout.css`).
 
 - `AlignmentTiles` at 188 (§56) is the one to prove. The 3x3 pad it replaced was a fixed 82px, so
   the only question was whether it fit; a row of tiles is elastic. Round 10 drew a flex
@@ -1984,7 +1984,7 @@ only fire on a core rebuild and cannot see TS. The test parses the header's flat
 `#define NAME 0xHEX` lines; generating the TS instead would only move the drift to a stale
 artifact.
 
-### randomizer/key-drop-size.keep.test.ts
+### packages/randomizer/tests/key-drop-size.keep.test.ts
 
 The core matches a drop override on room and drop size, so a key drop armed at the wrong size
 never fires and the vanilla key is granted. A drop whose vanilla item is its dungeon's Big
@@ -2009,7 +2009,7 @@ behind it. The price block's percentage is a number, every other key a tick. The
 pins the shop mode to vanilla, because a fresh profile starts shuffled; the shop cases stock
 one purchase per slot.
 
-### randomizer/plan-covers-placement.keep.test.ts
+### packages/randomizer/tests/plan-covers-placement.keep.test.ts
 
 Every location a placement names must appear in the physical plan as an entry or an explicit
 error; that gap once let shuffled dungeon prizes vanish between generation and the session.

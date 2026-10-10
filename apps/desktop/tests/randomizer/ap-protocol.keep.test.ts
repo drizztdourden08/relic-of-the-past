@@ -5,6 +5,7 @@ import { serverUrlCandidates } from '@rotp/randomizer';
 import { createFakeServer, VERSION } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import { boot, installClientHarness, item, makeRoom, OWN, settle } from './ap-protocol-harness';
+import { required } from '../required';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
@@ -18,12 +19,12 @@ describe('handshake', () => {
     const room = makeRoom({ password: 'pw' });
     const { server, session } = await boot(room, { deathLink: true });
     expect(server.urls).toEqual(['ws://localhost:38281']);
-    expect(server.of('GetDataPackage')[0].games.sort()).toEqual(['Other', OWN].sort());
+    expect(required(server.of('GetDataPackage')[0], 'GetDataPackage packet').games.sort()).toEqual(['Other', OWN].sort());
     const [connect] = server.of('Connect');
     expect(connect).toMatchObject({
       game: OWN, name: 'Link', password: 'pw', version: VERSION, items_handling: 0b111, tags: ['DeathLink'], slot_data: true,
     });
-    expect(connect.uuid).toBe(localStorage.getItem('rotp.ap.uuid'));
+    expect(required(connect, 'Connect packet').uuid).toBe(localStorage.getItem('rotp.ap.uuid'));
     expect(session.status).toBe('active');
   });
 
@@ -143,7 +144,7 @@ describe('messages', () => {
   it('renders PrintJSON with names from every game in the room', async () => {
     const { server, session } = await boot(makeRoom());
     const seen: string[] = [];
-    session.onMessages((messages) => seen.push(messages[messages.length - 1].text));
+    session.onMessages((messages) => seen.push(required(messages.at(-1), 'last message').text));
     server.push([{
       cmd: 'PrintJSON', type: 'ItemSend',
       data: [

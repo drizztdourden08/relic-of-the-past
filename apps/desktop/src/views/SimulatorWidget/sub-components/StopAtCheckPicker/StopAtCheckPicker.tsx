@@ -4,8 +4,8 @@ import { Anchored, Box, Button, Portal, Text, useEscapeStack } from '@drizztdour
 import { getCheck } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
 import { useStopAtChecks } from '../../behavior/useStopAtChecks';
-import { StopAtCheckFilters } from './StopAtCheckFilters';
-import { StopAtCheckList } from './StopAtCheckList';
+import { StopAtCheckFilters } from './sub-components/StopAtCheckFilters';
+import { StopAtCheckList } from './sub-components/StopAtCheckList';
 import { checkTypeIcon } from './behavior/check-type-icon';
 import type { StopAtCheckPickerProps } from './StopAtCheckPicker.type';
 import './StopAtCheckPicker.css';

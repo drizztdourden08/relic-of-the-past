@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { ScreenMapWithConnections } from './sub-components';
+import { ScreenMapWithConnections } from './sub-components/ScreenMapWithConnections';
 import { FunctionsPanel } from './sub-components/FunctionsPanel';
 import { GameStatePanel } from './sub-components/GameStatePanel';
 import { PlayerStatePanel } from './sub-components/PlayerStatePanel';
@@ -17,7 +17,7 @@ const NavigationWidgetContent = () => {
   } = useNavigation();
 
   return (
-    <Box style={{ fontFamily: '\'JetBrains Mono\', monospace' }} className="nav-navigation-widget__root">
+    <Box className="nav-navigation-widget__root">
       <Box className="nav-section">
         <Box className="nav-loc-name">
           {screenBundle ? screenBundle.name : screenName}

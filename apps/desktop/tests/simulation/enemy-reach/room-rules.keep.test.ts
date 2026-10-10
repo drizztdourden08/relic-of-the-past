@@ -6,6 +6,7 @@ import { BOW, DAMAGE_CLASS_COUNT, ROOM_CLEAR_EXEMPT_FLAG, SWORD_1, SWORD_4 } fro
 import { grids } from './grids';
 import { makeSprite } from './make-sprite';
 import { makeTables } from './make-tables';
+import { required } from '../../required';
 
 describeDataset('evaluateRoomThreat on room-clear-exempt sprites', () => {
   it('excludes a sprite whose flags4 carries the room-clear-exempt bit from gating', () => {
@@ -17,7 +18,7 @@ describeDataset('evaluateRoomThreat on room-clear-exempt sprites', () => {
       inventory: new Set(),
       combat: {
         tables: makeTables(),
-        bySpriteType: { 1: { health: 4, flags4: ROOM_CLEAR_EXEMPT_FLAG, damageByClass: new Array(DAMAGE_CLASS_COUNT).fill(0) } },
+        bySpriteType: { 1: { health: 4, flags4: ROOM_CLEAR_EXEMPT_FLAG, damageByClass: new Array<number>(DAMAGE_CLASS_COUNT).fill(0) } },
       },
     });
 
@@ -34,7 +35,7 @@ describeDataset('evaluateRoomThreat in a multi-section room', () => {
   it('gates only the sprite sharing the player\'s scroll section, and the room reads clearable', () => {
     const westGuard = makeSprite({ row: 48, col: 12 }, 0x42);
     const eastGuard = makeSprite({ row: 48, col: 52 }, 0x41);
-    const damageByClass = new Array(DAMAGE_CLASS_COUNT).fill(0);
+    const damageByClass = new Array<number>(DAMAGE_CLASS_COUNT).fill(0);
     damageByClass[1] = 3;
 
     const threat = evaluateRoomThreat({
@@ -53,8 +54,9 @@ describeDataset('evaluateRoomThreat in a multi-section room', () => {
     });
 
     expect(threat.gating).toHaveLength(1);
-    expect(threat.gating[0].sprite.spriteType).toBe(0x42);
-    expect(threat.gating[0].killable).toBe(true);
+    const gate = required(threat.gating[0], 'gating sprite');
+    expect(gate.sprite.spriteType).toBe(0x42);
+    expect(gate.killable).toBe(true);
     expect(threat.clearable).toBe(true);
   });
 });
@@ -71,8 +73,9 @@ describeDataset('evaluateRoomThreat when combat reasoning is unavailable', () =>
     });
 
     expect(threat.gating).toHaveLength(1);
-    expect(threat.gating[0].killable).toBe(false);
-    expect(threat.gating[0].blockedBy).toBe('gated-off');
+    const gate = required(threat.gating[0], 'gating sprite');
+    expect(gate.killable).toBe(false);
+    expect(gate.blockedBy).toBe('gated-off');
     expect(threat.clearable).toBe(false);
   });
 
@@ -87,6 +90,6 @@ describeDataset('evaluateRoomThreat when combat reasoning is unavailable', () =>
     });
 
     expect(threat.clearable).toBe(false);
-    expect(threat.gating[0].blockedBy).toBe('gated-off');
+    expect(required(threat.gating[0], 'gating sprite').blockedBy).toBe('gated-off');
   });
 });

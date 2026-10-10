@@ -18,8 +18,8 @@ vi.hoisted(() => {
 import { createElement as h } from 'react';
 import { nodeArtOf } from '@app/hud-layout-editing/node-art';
 import { ButtonStateRow } from '@app/views/HudLayoutEditor/sub-components/ButtonStateRow';
-import { GlyphContent } from '@app/views/HudLayoutEditor/sub-components/content/GlyphContent';
-import { RepeatContent } from '@app/views/HudLayoutEditor/sub-components/content/RepeatContent';
+import { GlyphContent } from '@app/views/HudLayoutEditor/sub-components/GlyphContent';
+import { RepeatContent } from '@app/views/HudLayoutEditor/sub-components/RepeatContent';
 import type { HudNode } from '@rotp/hud';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
@@ -43,7 +43,7 @@ describe('a reference shows the referent, and picking one round-trips', () => {
     click('.hud-ref-field');
     click('[title="EAST"]');
     expect(patches).toEqual([{ position: 'EAST' }]);
-    expect(roundTrips({ kind: 'element', id: 'g', element: { type: 'glyph', position: 'EAST' } } as HudNode)).toBe('round-trips');
+    expect(roundTrips({ kind: 'element', id: 'g', element: { type: 'glyph', position: 'EAST' } })).toBe('round-trips');
   });
 
   it('draws a button face as its artwork and writes back what the grid picked', () => {

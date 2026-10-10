@@ -1,9 +1,9 @@
 /* @layer tests @kind constants */
 import { POND_CERTIFIED_SPOTS, POND_INSTANCES, NPC_SCOPE_LOCATIONS } from '@rotp/randomizer';
-import type { OptionValue } from '@rotp/randomizer';
+import type { LocationKey, OptionValue } from '@rotp/randomizer';
 
 const DELIVERABLE = new Set(POND_CERTIFIED_SPOTS);
-const EMPTY: ReadonlySet<string> = new Set();
+const EMPTY: ReadonlySet<LocationKey> = new Set();
 
 const ALL_POND_SLOTS = new Set(POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key)));
 const ALL_NPC = new Set(NPC_SCOPE_LOCATIONS.keys());

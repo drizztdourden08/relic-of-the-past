@@ -10,6 +10,7 @@ import { AnnotationLayer } from './AnnotationLayer';
 import { EdgeBadge } from './EdgeBadge';
 import { groupByEdge } from '../behavior/group-by-edge';
 import { positionSpan } from '../behavior/position-span';
+import { markerTone } from '../behavior/marker-tone';
 import { cellTone } from '../behavior/cell-tone';
 import { cellLabel } from '../behavior/cell-label';
 import type { MinimapProps } from './IndoorMinimap.type';
@@ -61,7 +62,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
   });
 
   return (
-    <Box style={{ maxWidth: totalW, height: totalH }} className="nav-overworld-minimap__part-4">
+    <Box style={{ maxWidth: totalW, height: totalH }} className="nav-overworld-minimap__root">
       {bundle.screens.map((scr, idx) => {
         const col = idx % bundle.cols;
         const row = Math.floor(idx / bundle.cols);
@@ -69,7 +70,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         const analyzed = renderResults.some(r => r.screenIndex === scr);
         const scrResult = renderResults.find(r => r.screenIndex === scr);
         return (
-          <Box key={scr} style={{ left: EDGE_PAD + col * (cellW + GAP), top: EDGE_PAD + row * (cellH + GAP), width: cellW, height: cellH }} className={`nav-overworld-minimap__part-3 nav-overworld-minimap__cell--${cellTone(isActive, analyzed)}`}>
+          <Box key={scr} style={{ left: EDGE_PAD + col * (cellW + GAP), top: EDGE_PAD + row * (cellH + GAP), width: cellW, height: cellH }} className={`nav-overworld-minimap__cell nav-overworld-minimap__cell--${cellTone(isActive, analyzed)}`}>
             {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} tileLayer={scrResult.tileLayer} />}
             <Box className="nav-overworld-minimap__cell-name">{cellLabel(bundle, scr)}</Box>
             <Box className="nav-overworld-minimap__cell-hex">0x{scr.toString(16).toUpperCase()}</Box>
@@ -88,10 +89,10 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         const localX = (crossing.tile.col / 64) * cellW;
         const localY = (crossing.tile.row / 64) * cellH;
         const sz = Math.max(6, cellW * 4 / 64);
-        const { icon: markerIcon, color: markerColor } = crossingIcon(crossing);
+        const { icon: markerIcon } = crossingIcon(crossing);
         return (
-          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: cellLeft + localX - sz / 2, top: cellTop + localY - sz / 2, width: sz, height: sz }} title={crossing.label} className="nav-overworld-minimap__part-2">
-            <Icon icon={markerIcon} width={sz} height={sz} style={{ color: markerColor, filter: 'drop-shadow(0 0 1px #000)' }} />
+          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: cellLeft + localX - sz / 2, top: cellTop + localY - sz / 2, width: sz, height: sz }} title={crossing.label} className="nav-overworld-minimap__marker">
+            <Icon icon={markerIcon} width={sz} height={sz} className="nav-marker-icon nav-marker-icon--shadowed" data-tone={markerTone(crossing)} />
           </Box>
         );
       }))}
@@ -104,7 +105,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         const cellTop = EDGE_PAD + row * (cellH + GAP);
         const x = (playerPos.col / 64) * cellW;
         const y = (playerPos.row / 64) * cellH;
-        return <Box style={{ left: cellLeft + x - 3, top: cellTop + y - 3 }} className="nav-overworld-minimap__part-1" />;
+        return <Box style={{ left: cellLeft + x - 3, top: cellTop + y - 3 }} className="nav-overworld-minimap__player-dot" />;
       })()}
 
       {annotations.map((set) => {

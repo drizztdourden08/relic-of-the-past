@@ -1,8 +1,8 @@
 /* @layer shared-game @kind types */
 import type { EntityKind, EntityRecordMap, ScreenId } from '@rotp/game-data';
-import type { ScreenObservations } from '../detection-types';
+import type { RecommendationDetector, ScreenObservations } from '../detection-types';
 import type { Confidence, ProposedRecord } from '../types';
-import type { SetDifference } from './difference.type';
+import type { SetDifference, SubjectComparison } from './difference.type';
 
 type Probe<V> = { known: false } | { known: true; value: V };
 
@@ -44,4 +44,10 @@ interface ComparisonStrategy<K extends EntityKind> {
   sets: readonly ErasedSetProbe<K>[];
 }
 
-export type { ComparisonStrategy, ErasedSetProbe, FieldProbe, Probe, SetProbe };
+interface ErasedStrategy {
+  kind: EntityKind;
+  compare: (observations: ScreenObservations, screenId: ScreenId | null) => readonly SubjectComparison<EntityKind>[];
+  detector: () => RecommendationDetector;
+}
+
+export type { ComparisonStrategy, ErasedSetProbe, ErasedStrategy, FieldProbe, Probe, SetProbe };

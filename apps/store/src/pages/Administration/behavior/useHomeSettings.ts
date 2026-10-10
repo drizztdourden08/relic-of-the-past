@@ -30,8 +30,12 @@ const useHomeSettings = () => {
       const at = ids.indexOf(id);
       const to = at + by;
       if (at < 0 || to < 0 || to >= ids.length) return ids;
+      const moving = ids[at];
+      const other = ids[to];
+      if (moving === undefined || other === undefined) return ids;
       const next = [...ids];
-      [next[at], next[to]] = [next[to], next[at]];
+      next[at] = other;
+      next[to] = moving;
       return next;
     });
   }, []);

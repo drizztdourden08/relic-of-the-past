@@ -28,8 +28,8 @@ const EdgeCard = ({ row, screenBundle, isIndoors, playerLayer }: EdgeCardProps) 
         <EdgeArrowSvg edge={crossing.side ?? 'east'} size={16} />
         <Text className="nav-conn-title">{crossing.label}{fromLabel}</Text>
         {!crossing.available && <Text className="nav-edge-card__blocked-tag">blocked</Text>}
-        {span && <Text style={{ fontFamily: '\'JetBrains Mono\', monospace' }} className="nav-edge-card__part-1">{span}</Text>}
-        {tiles && <Text style={{ fontFamily: '\'JetBrains Mono\', monospace' }} className="nav-edge-card__part-1">{tiles}</Text>}
+        {span && <Text className="nav-edge-card__dim-badge">{span}</Text>}
+        {tiles && <Text className="nav-edge-card__dim-badge">{tiles}</Text>}
       </Box>
       {isIndoors && (
         <Box className={toggles ? 'nav-edge-card__layer-row nav-val-info' : 'nav-edge-card__layer-row nav-val-green'}>

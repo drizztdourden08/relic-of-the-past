@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { blockedContentsOf, potionPriceStateOfValues, reconcilePotionPrices, bottleContentKeyOf, rollShopPrices, shopPricePlanOf, shopSlotLocationsOf, shopScopeOfValues, createRng } from '@rotp/randomizer';
 import type { ShopBottleContent } from '@rotp/randomizer';
+import { required } from '../../required';
 import { ALL_PRICES, BLOCKED_SCOPE, CAULDRON } from './potion-price-rule.constants';
 import { cauldronSubsets } from './cauldron-subsets';
 import { combinations } from './combinations';
@@ -36,7 +37,8 @@ describe('a cauldron given to the shuffle takes its potion off the price list', 
       blockedSeen += blocked.size;
       const scope = shopScopeOfValues(values, 'guard-seed');
       const view = rollShopPrices(shopSlotLocationsOf(scope), shopPricePlanOf(values), createRng('guard-seed'));
-      for (const price of Object.values(view)) {
+      for (const entry of Object.values(view)) {
+        const price = required(entry, 'rolled price');
         if (price.currency !== 'bottle') continue;
         bottlePrices += 1;
         expect(blocked.has(price.content), `rolled ${price.content}`).toBe(false);

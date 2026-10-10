@@ -7,8 +7,8 @@ import { useAppVersion } from '@app/hooks/useAppVersion';
 import { buildDebugText } from '../diagnostics/format/debug-text';
 import { collectRendererDiagnostics } from '../diagnostics/collect-renderer';
 import type { SystemDiagnostics } from '@app/diagnostics-types';
-import type { DebugTextBuilder } from './useDebugTextBuilder.type';
-import { HOST_LABEL, OS_LABEL } from './useDebugTextBuilder.constants';
+import type { DebugTextBuilder } from './debug-text-builder.type';
+import { HOST_LABEL, OS_LABEL } from './debug-text-builder.constants';
 
 const capacitorVersion = (): string | null => capacitorCorePackage.version || null;
 

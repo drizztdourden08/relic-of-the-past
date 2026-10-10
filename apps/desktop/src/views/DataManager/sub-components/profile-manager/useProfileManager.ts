@@ -8,7 +8,7 @@ import {
   buildRandomizerConfig, freshRandomizerForm, randomizerFormError, type RandomizerFormState,
 } from './build-randomizer-config';
 import { applyProfilePreset, type ProfilePresetId } from './profile-presets';
-import type { UseProfileManagerParams } from './useProfileManager.type';
+import type { UseProfileManagerParams } from './profile-manager.type';
 
 const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }: UseProfileManagerParams) => {
   const [selected, setSelected] = useState<string | null>(null);
@@ -29,13 +29,13 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
   const selectedProfile = profiles.find((p) => p.id === selected);
 
   useEffect(() => {
-    listLanguages().then(setLanguages);
-    listMsuPacks().then(setMsuPacks);
+    void listLanguages().then(setLanguages);
+    void listMsuPacks().then(setMsuPacks);
   }, [creating]);
 
   useEffect(() => {
     if (!selected) { setSettings(null); return; }
-    readConfig(selected).then(setSettings);
+    void readConfig(selected).then(setSettings);
   }, [selected]);
 
   const handleCreate = useCallback(async () => {

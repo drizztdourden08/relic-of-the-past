@@ -1,7 +1,7 @@
 /* @layer site-kit @kind logic */
 import type { MenuGroup, MenuItem } from '@drizztdourden08/tessera/composites';
 import type { Prompt } from '../compounds/SavedViewsMenu/SavedViewsMenu.type';
-import type { SavedViewsState } from '../hooks/useSavedViews/useSavedViews.type';
+import type { SavedViewsState } from '../hooks/useSavedViews/saved-views.type';
 
 const savedViewGroups = (state: SavedViewsState, ask: (prompt: Prompt) => void): MenuGroup[] => {
   const { views, active } = state;

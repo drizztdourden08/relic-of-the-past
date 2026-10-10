@@ -2,7 +2,7 @@
 import { useMemo, useRef } from 'react';
 import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '../../../../stores/shadow-editor-store';
-import type { GizmoPart } from '../shadow-editor/gizmos';
+import type { GizmoPart } from './behavior/gizmo.type';
 import type { Vp, Point } from './behavior/overlay.type';
 import type { GizmoStart, ShadowEditorOverlayProps } from './ShadowEditorOverlay.type';
 import { useOverlayKeyboard } from './behavior/useOverlayKeyboard';

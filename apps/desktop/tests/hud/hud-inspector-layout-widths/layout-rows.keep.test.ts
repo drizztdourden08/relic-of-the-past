@@ -1,14 +1,15 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { measureLayout } from './measure-layout';
 import type { LayoutRig } from './layout-widths.type';
 
 const RAILS = [289, 232, 188];
 let rig: LayoutRig;
 
-beforeAll(async () => { rig = await measureLayout(RAILS); }, 60_000);
-
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureLayout(RAILS);
+  return () => rig.close();
+}, 60_000);
 
 describe('every Layout row, at 289 / 232 / 188 px', () => {
   it('keeps each label and hint on one line, down to the 188 px minimum', () => {

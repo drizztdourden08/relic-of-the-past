@@ -7,8 +7,8 @@ import type { RomFacts } from './rom-facts.type';
 
 const readRomFacts = (): RomFacts => {
   const rom = readRomNativeTables(usRom());
-  const screens = all('screen') as readonly ScreenRecord[];
-  const connections = all('connection') as readonly ConnectionRecord[];
+  const screens = all('screen');
+  const connections = all('connection');
   const mouthsById: RomFacts['mouthsById'] = new Map();
   for (const mouth of rom.mouths) {
     mouthsById.set(mouth.entranceId, [...(mouthsById.get(mouth.entranceId) ?? []), mouth]);

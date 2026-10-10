@@ -8,6 +8,7 @@ import {
 import { grids } from './grids';
 import { makeSprite } from './make-sprite';
 import { makeTables } from './make-tables';
+import { required } from '../../required';
 
 describeDataset('evaluateRoomThreat and the line of fire', () => {
   it('is blocked by a wall between the only standable tile and the target', () => {
@@ -16,7 +17,7 @@ describeDataset('evaluateRoomThreat and the line of fire', () => {
     const onlyStandableTile = { row: 10, col: 6 };
     grids.stamp2x2(reached, onlyStandableTile);
     const attrGrid = grids.openAttr();
-    attrGrid[10][8] = BLOCKING_ATTR;
+    required(attrGrid[10], 'attribute row 10')[8] = BLOCKING_ATTR;
 
     const threat = evaluateRoomThreat({
       sprites: [makeSprite(enemy)],
@@ -24,14 +25,15 @@ describeDataset('evaluateRoomThreat and the line of fire', () => {
       grids: grids.bundle(attrGrid),
       inventory: new Set([BOW]),
       combat: {
-        tables: makeTables({ ancillaDamageClass: (() => { const c = new Array(ANCILLA_COUNT).fill(0); c[ARROW_ANCILLA] = 5; return c; })() }),
-        bySpriteType: { 1: { health: 4, flags4: 0, damageByClass: (() => { const d = new Array(DAMAGE_CLASS_COUNT).fill(0); d[5] = 2; return d; })() } },
+        tables: makeTables({ ancillaDamageClass: (() => { const c = new Array<number>(ANCILLA_COUNT).fill(0); c[ARROW_ANCILLA] = 5; return c; })() }),
+        bySpriteType: { 1: { health: 4, flags4: 0, damageByClass: (() => { const d = new Array<number>(DAMAGE_CLASS_COUNT).fill(0); d[5] = 2; return d; })() } },
       },
     });
 
     expect(threat.gating).toHaveLength(1);
-    expect(threat.gating[0].killable).toBe(false);
-    expect(threat.gating[0].blockedBy).toBe('no-line');
+    const gate = required(threat.gating[0], 'gating sprite');
+    expect(gate.killable).toBe(false);
+    expect(gate.blockedBy).toBe('no-line');
     expect(threat.clearable).toBe(false);
   });
 });
@@ -46,20 +48,21 @@ describeDataset('evaluateRoomThreat on a zero damage class', () => {
       inventory: new Set([SWORD_1]),
       combat: {
         tables: makeTables(),
-        bySpriteType: { 1: { health: 4, flags4: 0, damageByClass: new Array(DAMAGE_CLASS_COUNT).fill(0) } },
+        bySpriteType: { 1: { health: 4, flags4: 0, damageByClass: new Array<number>(DAMAGE_CLASS_COUNT).fill(0) } },
       },
     });
 
-    expect(threat.gating[0].killable).toBe(false);
-    expect(threat.gating[0].blockedBy).toBe('no-weapon');
+    const gate = required(threat.gating[0], 'gating sprite');
+    expect(gate.killable).toBe(false);
+    expect(gate.blockedBy).toBe('no-weapon');
     expect(threat.clearable).toBe(false);
   });
 
   it('does not treat the boomerang (damage class 0) as automatically harmless', () => {
     const enemy = { row: 5, col: 5 };
-    const damageByClass = new Array(DAMAGE_CLASS_COUNT).fill(0);
+    const damageByClass = new Array<number>(DAMAGE_CLASS_COUNT).fill(0);
     damageByClass[0] = 3;
-    const ancillaDamageClass = new Array(ANCILLA_COUNT).fill(0);
+    const ancillaDamageClass = new Array<number>(ANCILLA_COUNT).fill(0);
     const threat = evaluateRoomThreat({
       sprites: [makeSprite(enemy)],
       reached: grids.fullyReached(),
@@ -68,8 +71,9 @@ describeDataset('evaluateRoomThreat on a zero damage class', () => {
       combat: { tables: makeTables({ ancillaDamageClass }), bySpriteType: { 1: { health: 2, flags4: 0, damageByClass } } },
     });
 
-    expect(threat.gating[0].killable).toBe(true);
-    expect(threat.gating[0].by?.label).toBe('boomerang');
+    const gate = required(threat.gating[0], 'gating sprite');
+    expect(gate.killable).toBe(true);
+    expect(gate.by?.label).toBe('boomerang');
   });
 });
 
@@ -79,9 +83,9 @@ describeDataset('evaluateRoomThreat with unbounded beam reach', () => {
     const reached = grids.emptyReached();
     const outOfContactRange = { row: 15, col: 0 };
     grids.stamp2x2(reached, outOfContactRange);
-    const ancillaDamageClass = new Array(ANCILLA_COUNT).fill(0);
+    const ancillaDamageClass = new Array<number>(ANCILLA_COUNT).fill(0);
     ancillaDamageClass[FIRE_ROD_ANCILLA] = 4;
-    const damageByClass = new Array(DAMAGE_CLASS_COUNT).fill(0);
+    const damageByClass = new Array<number>(DAMAGE_CLASS_COUNT).fill(0);
     damageByClass[4] = 1;
 
     const threat = evaluateRoomThreat({
@@ -92,9 +96,10 @@ describeDataset('evaluateRoomThreat with unbounded beam reach', () => {
       combat: { tables: makeTables({ ancillaDamageClass }), bySpriteType: { 1: { health: 1, flags4: 0, damageByClass } } },
     });
 
-    expect(threat.gating[0].killable).toBe(true);
-    expect(threat.gating[0].by?.kind).toBe('travelling');
-    expect(threat.gating[0].by?.travel).toBe(Infinity);
+    const gate = required(threat.gating[0], 'gating sprite');
+    expect(gate.killable).toBe(true);
+    expect(gate.by?.kind).toBe('travelling');
+    expect(gate.by?.travel).toBe(Infinity);
     expect(threat.clearable).toBe(true);
   });
 });

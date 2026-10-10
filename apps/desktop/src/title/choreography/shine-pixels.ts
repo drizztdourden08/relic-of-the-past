@@ -1,6 +1,7 @@
 /* @layer renderer-hud @kind logic */
 import { LOGO_AT, SWORD_REST_BASE, SWORD_TOP_FOR_BASE, SWORD_X } from '@rotp/game-data';
 import type { Picture, PixelSet, ShinePixels } from './choreography.type';
+import { itemAt } from '@app/checked-access';
 import { OPAQUE_ALPHA_FROM } from './shine-pixels.constants';
 
 const noPixels = (): PixelSet => ({ xs: new Int16Array(0), ys: new Int16Array(0) });
@@ -29,7 +30,7 @@ const opaquePixels = ({ img, scale }: Picture, atX: number, atY: number): PixelS
   const ys: number[] = [];
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      if (data[(y * w + x) * 4 + 3] < OPAQUE_ALPHA_FROM) continue;
+      if (itemAt(data, (y * w + x) * 4 + 3) < OPAQUE_ALPHA_FROM) continue;
       xs.push(atX + x);
       ys.push(atY + y);
     }

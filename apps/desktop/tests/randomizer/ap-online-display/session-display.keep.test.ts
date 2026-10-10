@@ -36,7 +36,10 @@ const createFakeOnline = (): FakeOnline => {
   const session = {
     kind: 'online',
     get status() { return status; },
-    start: async () => setStatus('active'),
+    start: () => {
+      setStatus('active');
+      return Promise.resolve();
+    },
     stop: () => setStatus('idle'),
     onStatusChange: (listener: (next: Status) => void) => {
       statusListeners.add(listener);

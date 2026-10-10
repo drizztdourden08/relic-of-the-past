@@ -27,6 +27,11 @@ const itemIds = Object.values(AP_ITEM_IDS);
 const missing = (keys: Iterable<string>, table: Readonly<Record<string, number>>): string[] =>
   [...keys].filter((key) => table[key] === undefined);
 
+const capacityItemsOf = (family: (typeof FAMILIES)[number]): string[] => [
+  family.progressiveItem,
+  ...Array.from({ length: family.maxJump }, (_unused, index) => family.itemFor(index + 1)),
+];
+
 describeDataset('Archipelago ids cover the whole world', () => {
   it('gives every location any option can declare an id', () => {
     expect(missing(apLocationUniverse(), AP_LOCATION_IDS)).toEqual([]);
@@ -36,10 +41,7 @@ describeDataset('Archipelago ids cover the whole world', () => {
 
   it('gives every item any option can pool an id', () => {
     const handles = Object.values(ITEM);
-    const capacity = FAMILIES.flatMap((family) => [
-      family.progressiveItem,
-      ...Array.from({ length: family.maxJump }, (_unused, index) => family.itemFor(index + 1)),
-    ]);
+    const capacity = FAMILIES.flatMap(capacityItemsOf);
     expect(missing(apItemUniverse(), AP_ITEM_IDS)).toEqual([]);
     expect(missing([...handles, ...capacity, ...PRIZE_ITEMS, RETRO_QUIVER_ITEM], AP_ITEM_IDS)).toEqual([]);
   });

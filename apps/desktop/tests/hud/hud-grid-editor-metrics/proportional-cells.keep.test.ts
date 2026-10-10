@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll, vi } from 'vitest';
 import { RAILS, THREE } from './metrics.constants';
 import { measureMetrics } from './measure-metrics';
 import { solveOf } from './solve-of';
@@ -15,9 +15,10 @@ vi.mock('@app/stores/hud-editor-view-store', async () => {
 
 let rig: MetricsRig;
 
-beforeAll(async () => { rig = await measureMetrics(); }, 60_000);
-
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureMetrics();
+  return () => rig.close();
+}, 60_000);
 
 describe('the cells match the real tracks, on both axes', () => {
   it('draws the screen root\'s middle band visibly wider AND taller than its edges', () => {

@@ -19,7 +19,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
   useEffect(() => {
     if (!activeProfile || didRun.current) return;
 
-    (async () => {
+    void (async () => {
       const config = await appApi().getSimRunConfig();
       if (config === null) return;
       didRun.current = true;

@@ -1,4 +1,6 @@
 /* @layer electron-main @kind constants */
 const ENUMERATION_FILE = ['packages', 'game-data', 'src', 'data', 'records', 'enumeration', 'enumeration.ts'] as const;
 
-export { ENUMERATION_FILE };
+const ENUM_TYPES_CLI = ['scripts', 'generate-enum-types-cli.mjs'] as const;
+
+export { ENUMERATION_FILE, ENUM_TYPES_CLI };

@@ -10,7 +10,7 @@ import { formatSettingValue } from './format-setting-value';
 import type { ProfileDetailPanelProps } from './ProfileDetailPanel.type';
 
 const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
-  const { profile, settings, languages, msuPacks, isGameRunning, onSelectProfile, onRefresh } = props;
+  const { profile, settings, languages, msuPacks, onSelectProfile, onRefresh } = props;
 
   return (
     <Box style={IL.col}>
@@ -23,7 +23,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
         <Box className="profile-form__field">
           <Text className="profile-form__label">Language</Text>
           <Select
-            value={profile.language || ''}
+            value={profile.language ?? ''}
             onChange={async (val) => {
               await updateProfile(profile.id, { language: val || null });
               onRefresh();
@@ -38,7 +38,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
         <Box className="profile-form__field">
           <Text className="profile-form__label">MSU Pack</Text>
           <Select
-            value={profile.msuPack || ''}
+            value={profile.msuPack ?? ''}
             onChange={async (val) => {
               await updateProfile(profile.id, { msuPack: val || null });
               await reloadMsuForProfile(profile.id);
@@ -81,7 +81,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
                 {section.keys.map(({ key, label, format }) => (
                   <Box key={key} className="profile-overview__setting">
                     <Text className="profile-overview__setting-label">{label}</Text>
-                    <Text className="profile-overview__setting-value">{formatSettingValue((settings as Record<string, unknown>)[key], format)}</Text>
+                    <Text className="profile-overview__setting-value">{formatSettingValue(settings[key], format)}</Text>
                   </Box>
                 ))}
               </Box>

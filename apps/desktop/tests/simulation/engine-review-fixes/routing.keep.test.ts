@@ -14,8 +14,8 @@ import { trackConnectionPairs } from './track-connection-pairs';
 const registerPair = trackConnectionPairs();
 
 const CHAIN: ConnectionRecord[] = [
-  registerPair('connection-t01', 'A', 'connection-t01r', 'B'),
-  registerPair('connection-t02', 'B', 'connection-t02r', 'C'),
+  registerPair({ fromId: 'connection-t01', from: 'A', toId: 'connection-t01r', to: 'B' }),
+  registerPair({ fromId: 'connection-t02', from: 'B', toId: 'connection-t02r', to: 'C' }),
 ];
 
 const target: SimTarget = {
@@ -23,7 +23,10 @@ const target: SimTarget = {
   roomId: KAKARIKO_TAVERN_ROOM,
   action: { type: 'chest', roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, itemId: BOMBS_ID },
   key: `chest:${KAKARIKO_TAVERN_ROOM}:0`,
+  role: 'check',
   label: 'chest (test)',
+  noun: 'chest',
+  verb: 'Opening',
 };
 
 describeDataset('resetFrontier and its epoch reset semantics', () => {
@@ -47,8 +50,8 @@ describeDataset('resetFrontier and its epoch reset semantics', () => {
 describeDataset('engine backtracks visited pass-through screens instead of re-exploring them', () => {
   it('routes through an already-visited screen with one Backtrack event and no re-discovery', () => {
     const world = new FakeWorld([
-      { screenId: 'B', roomId: CHICKEN_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: BOMBS_ID },
-      { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
+      { screenId: 'B', roomId: CHICKEN_HOUSE_ROOM, chestIndex: 0, isBig: false, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: BOMBS_ID },
+      { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, isBig: false, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
     const engine = createEngine({ adjacency: buildAdjacency(CHAIN) });
     let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { goalCheckId: HOUSE_CHECK });
@@ -73,7 +76,10 @@ describeDataset('engine backtracks visited pass-through screens instead of re-ex
 describeDataset('engine traverse never teleports through a blocked edge', () => {
   it('aborts the route when the next hop has no passable edge', () => {
     const conns: ConnectionRecord[] = [
-      registerPair('connection-t03', 'A', 'connection-t03r', 'C', { transitType: 'door', requirements: [['hammer']], weight: 1 }),
+      registerPair({
+        fromId: 'connection-t03', from: 'A', toId: 'connection-t03r', to: 'C',
+        nav: { transitType: 'door', requirements: [['hammer']], weight: 1 },
+      }),
     ];
     const engine = createEngine({ adjacency: buildAdjacency(conns) });
     const state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
@@ -104,13 +110,13 @@ describeDataset('engine handling of a failed trigger', () => {
 
     const obsWithChest = baseObs('A', emptySnapshot());
     obsWithChest.interactables = {
-      chests: [{ roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, posKnown: true, opened: false, itemId: BOMBS_ID }],
+      chests: [{ roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, isBig: false, tile: { row: 0, col: 0 }, posKnown: true, opened: false, itemId: BOMBS_ID }],
       sprites: [],
       doors: [],
     };
-    expect(discoverTargets(nextState, obsWithChest, null)).toHaveLength(0);
+    expect(discoverTargets(nextState, obsWithChest, undefined)).toHaveLength(0);
 
     resetFrontier(nextState);
-    expect(discoverTargets(nextState, obsWithChest, null)).toHaveLength(1);
+    expect(discoverTargets(nextState, obsWithChest, undefined)).toHaveLength(1);
   });
 });

@@ -18,10 +18,12 @@ const paintTile = (
     const bottom = edgeAt(rowOffset + y + 1, store.height, CELL_H);
 
     for (let x = 0; x < TILE_SIDE; x += 1) {
-      const value = pixels[y * TILE_SIDE + x];
+      const value = pixels[y * TILE_SIDE + x] ?? 0;
       if (value === 0) continue;
+      const fill = RAMP_FILL[value];
+      if (fill === undefined) throw new Error(`The glyph ramp has no shade ${value}`);
       const left = edgeAt(x, store.width, CELL_W);
-      ctx.fillStyle = RAMP_FILL[value];
+      ctx.fillStyle = fill;
       ctx.fillRect(left, top, edgeAt(x + 1, store.width, CELL_W) - left, bottom - top);
     }
   }

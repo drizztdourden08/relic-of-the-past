@@ -10,7 +10,7 @@ const storedProfile = (controlScheme: string, hudStyle: string): Record<string, 
   modernScheme: { assignments: { 1: { kind: 'sword' }, 2: { kind: 'action' } } },
 });
 
-const merge = (raw: Record<string, unknown>) => mergeSettings(raw as never) as unknown as Record<string, unknown>;
+const merge = (raw: Record<string, unknown>): Record<string, unknown> => ({ ...mergeSettings(raw) });
 
 describe('hostDrawnHud answers whether the app draws this HUD', () => {
   it('is false for the game\'s own HUD and true for both app-drawn styles', () => {

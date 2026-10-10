@@ -1,7 +1,7 @@
 /* @layer site-kit @kind hook */
 import { useCallback, useSyncExternalStore } from 'react';
 import { navigate } from './navigate';
-import { NAVIGATE_EVENT } from './useLocation.constants';
+import { NAVIGATE_EVENT } from './location.constants';
 
 const readPath = () => window.location.pathname;
 

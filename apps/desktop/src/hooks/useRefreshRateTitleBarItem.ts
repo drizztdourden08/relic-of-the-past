@@ -5,7 +5,7 @@ import { effectiveHz, isSyncedRate } from '@drizztdourden08/brock-display';
 import { useRefreshRate } from '@drizztdourden08/brock-display/renderer';
 import { useFpsReadout } from './useFpsReadout';
 import { useOptionalGameSession } from './useOptionalGameSession';
-import { REFRESH_RATE_HINT } from './useRefreshRateTitleBarItem.constants';
+import { REFRESH_RATE_HINT } from './refresh-rate-title-bar-item.constants';
 
 const useRefreshRateTitleBarItem = (): TitleBarItemSpec | null => {
   const session = useOptionalGameSession();

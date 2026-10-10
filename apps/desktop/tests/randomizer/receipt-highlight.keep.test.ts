@@ -8,8 +8,10 @@ import { primary, secondary, renderReceiptMessage, renderFromServer, renderJunk,
 import { hexToSnes15, dialogueCharsetOf } from '@rotp/game-data';
 import type { ReceiptLine } from '@rotp/game-core';
 import { REPO_ROOT } from '../repo-root';
+import { required } from '../required';
 
-const US = kLanguages.us;
+const US = required(kLanguages.us, 'US language');
+const BANG = String.fromCodePoint(0x21);
 const WIDTHS = new Uint8Array(US.alphabet.length).fill(6);
 const US_CHARSET = dialogueCharsetOf(US.alphabet, WIDTHS, []);
 
@@ -59,13 +61,13 @@ describe('widths ignore the markup', () => {
     const rows = wrapRows(`${primary('aaaa bbbb cccc dddd eeee ffff gggg hhhh')} done`, US.alphabet, WIDTHS);
     expect(rows.length).toBeGreaterThan(1);
     for (const row of rows.slice(0, -1)) expect(row.endsWith(HIGHLIGHT_END)).toBe(true);
-    expect(rows[1].startsWith(HIGHLIGHT_PRIMARY)).toBe(true);
+    expect(required(rows[1], 'second row').startsWith(HIGHLIGHT_PRIMARY)).toBe(true);
     expect(wrapMessageText(rows.join(' '), US.alphabet, WIDTHS)).toContain(`[2]${HIGHLIGHT_PRIMARY}`);
   });
 
   it('keeps a range on one row: no row ends on a value with the next one starting at the arrow', () => {
     const splitsRange = (rows: readonly string[]): boolean => rows.some((row, index) =>
-      index + 1 < rows.length && /\S$/u.test(stripHighlight(row)) && stripHighlight(rows[index + 1]).startsWith('>'));
+      index + 1 < rows.length && /\S$/u.test(stripHighlight(row)) && stripHighlight(required(rows[index + 1], 'next row')).startsWith('>'));
     const pages = [
       ...candidatesOf(renderCapacityStep('wallet', 0, 1, 100)),
       ...candidatesOf(renderCapacityStep('projectiles', 1, 3, 8)),
@@ -106,24 +108,26 @@ describe('every composer marks the item and the player', () => {
     const text = renderFromServer('Moon Pearl');
     expect(spansOf(text, HIGHLIGHT_PRIMARY)).toEqual(['Moon Pearl']);
     expect(spansOf(text, HIGHLIGHT_SECONDARY)).toEqual([]);
-    expect(stripHighlight(text)).toBe('The server sent you Moon Pearl!');
+    expect(stripHighlight(text)).toBe(`The server sent you Moon Pearl${BANG}`);
   });
 
   it('a capacity page takes the verb that agrees with its family label', () => {
-    const read = (line: ReceiptLine): string => stripHighlight(candidatesOf(line)[0]);
+    const read = (line: ReceiptLine): string => stripHighlight(required(candidatesOf(line)[0], 'first candidate'));
     expect(read(renderCapacityStep('projectiles', 1, 3, 8))).toMatch(/^Your arrows fill out 2 tiers\./);
     expect(read(renderCapacityStep('explosives', 1, 2, 8))).toMatch(/^Your bomb bag swells 1 tier\./);
     expect(read(renderCapacityStep('meter', 1, 2, 3))).toMatch(/^Your magic meter deepens 1 tier\./);
     expect(read(renderCapacityStep('wallet', 0, 1, 100))).toMatch(/^Your wallet stretches 1 tier\./);
   });
+});
 
+describe('every composer marks the item and the player', () => {
   it('a foreign line marks the item and the player it went to in every candidate', () => {
     const line = foreignItemLine({ owner: 'Zelda_', item: 'Progressive Scale' });
     const candidates = candidatesOf(line);
     for (const text of candidates) expect(spansOf(text, HIGHLIGHT_SECONDARY)).toEqual(['Zelda_']);
     for (const text of candidates.slice(0, -1)) expect(spansOf(text, HIGHLIGHT_PRIMARY)).toHaveLength(1);
-    expect(spansOf(candidates[0], HIGHLIGHT_PRIMARY)).toEqual(['Progressive Scale']);
-    expect(foreignItemLine(undefined)).toBe('Sent to another player!');
+    expect(spansOf(required(candidates[0], 'first candidate'), HIGHLIGHT_PRIMARY)).toEqual(['Progressive Scale']);
+    expect(foreignItemLine(undefined)).toBe(`Sent to another player${BANG}`);
   });
 
   it('a pond demand marks what she asks for in every line, capitalised past the marker', () => {

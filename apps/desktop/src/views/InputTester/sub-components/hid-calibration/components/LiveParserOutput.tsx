@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { sdlButtonNameForIndex } from '../diagnostics/sdl-names';
+import { sdlButtonNameForIndex } from '../diagnostics/sdl-button-name-for-index';
 import type { LiveParserOutputProps } from './LiveParserOutput.type';
 
 const LiveParserOutput = (props: LiveParserOutputProps) => {

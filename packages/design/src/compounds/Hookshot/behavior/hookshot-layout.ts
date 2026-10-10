@@ -4,6 +4,7 @@ import type { HookshotCurve, HookshotLayout, PlacedSprite, Point, SpriteName } f
 import { addPoints } from './add-points';
 import { DEG, PITCH } from './hookshot-layout.constants';
 import { pinChain } from './pin-chain';
+import { pointAt } from './point-at';
 import { turnPoint } from './turn-point';
 
 const angleOf = (a: Point, b: Point): number => Math.atan2(b[1] - a[1], b[0] - a[0]) * DEG;
@@ -16,7 +17,10 @@ const pinned = (sprite: SpriteName, anchor: Point, at: Point, angle: number): Pl
 const layoutHookshot = (curve: HookshotCurve): HookshotLayout => {
   const { handle, linkFace, linkEdge, head } = HOOKSHOT_PARTS;
   const pins = pinChain(curve, PITCH);
-  const chords = pins.slice(1).map((b, i) => ({ from: pins[i], angle: angleOf(pins[i], b) }));
+  const chords = pins.slice(1).map((b, i) => {
+    const from = pointAt(pins, i);
+    return { from, angle: angleOf(from, b) };
+  });
   const faces = chords.filter((_, i) => i % 2 === 0).map(({ from, angle }) => pinned('linkFace', linkFace.pinA, from, angle));
   const edges = chords.filter((_, i) => i % 2 === 1).map(({ from, angle }) => pinned('linkEdge', linkEdge.pinA, from, angle));
   const endAngle = angleOf(curve[2], curve[3]);

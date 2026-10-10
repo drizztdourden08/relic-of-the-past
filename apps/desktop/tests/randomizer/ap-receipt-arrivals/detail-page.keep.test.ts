@@ -13,8 +13,10 @@ import { installFakeModule } from '../ap-fake-module';
 import type { FakeModule } from '../ap-fake-module';
 import { plannedLines as planned } from './planned-lines';
 import { sessionChunks } from './session-chunks';
+import { required } from '../../required';
+import type { DeliverItemArgs } from './deliver-item-args.type';
 
-const bridge = vi.hoisted(() => ({ mod: null as unknown }));
+const bridge = vi.hoisted(() => ({ mod: null }));
 const queue = vi.hoisted(() => ({
   ready: true,
   entries: [] as { id: string; messageOf: () => number | undefined; onComplete?: () => void; onGranted?: () => void }[],
@@ -28,10 +30,7 @@ vi.mock('@app/log-bus', () => {
 vi.mock('../../../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
 vi.mock('../../../../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
 vi.mock('@app/game/delivery-api', () => ({
-  deliverItem: (
-    _id: number, _label: string, _source: string, messageId?: number | (() => number), onComplete?: () => void,
-    onGranted?: () => void,
-  ) => {
+  deliverItem: (...[, , , messageId, onComplete, onGranted]: DeliverItemArgs) => {
     if (!queue.ready) return null;
     const id = `dlv_${queue.entries.length}`;
     const messageOf = typeof messageId === 'function' ? messageId : () => messageId;
@@ -69,7 +68,7 @@ afterEach(() => {
   fake.remove();
 });
 
-const US = kLanguages.us;
+const US = required(kLanguages.us, 'US language');
 const CHARSET = dialogueCharsetOf(US.alphabet, new Uint8Array(US.alphabet.length).fill(6), []);
 const WAITKEY = '[Waitkey]';
 const ROW_BREAK_RE = /\[(?:2|3|Scroll)\]/;
@@ -138,6 +137,6 @@ describe('a receipt with a detail page', () => {
 
   it('composes a detail page into the pool like any other line', () => {
     const ids = setSessionReceiptMessages([...planned(0), WALLET_STEP]) as number[];
-    expect(sessionChunks(fake)[ids[2]]?.length).toBeGreaterThan(0);
+    expect(sessionChunks(fake)[required(ids[2], 'detail line id')]?.length).toBeGreaterThan(0);
   });
 });

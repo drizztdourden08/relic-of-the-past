@@ -8,7 +8,7 @@ import type { FileStore } from '@drizztdourden08/brock-core';
 
 const ROM = 'game.sfc';
 const DIR = 'sprites/game';
-const DEFS = SPRITE_DEFINITIONS as unknown as { file: string }[];
+const DEFS: readonly { file: string }[] = SPRITE_DEFINITIONS;
 const EXPECTED = sprites.extractedFileNames(DEFS);
 const VERSION = extractionVersionOf(DEFS as never);
 

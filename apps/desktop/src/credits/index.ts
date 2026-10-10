@@ -1,4 +1,4 @@
 /* @layer shared-other @kind barrel */
-export { CREDITS } from './credits.data';
+export { CREDITS } from './credits.constants';
 export { getUsageLabel } from './get-usage-label';
 export type { CreditCategory, CreditEntry, UsageLevel } from './credits.type';

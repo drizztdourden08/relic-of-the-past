@@ -7,7 +7,8 @@ import { useGameUIStore } from '@app/stores/game-ui-store';
 import { cheatSetHealth, cheatSetMaxHealth } from '@app/game';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
 import { useInPlay } from '../../../behavior/useInPlay';
-import { heartCellTitle, heartWrite } from '../behavior/heart-clicks';
+import { heartCellTitle } from '../behavior/heart-cell-title';
+import { heartWrite } from '../behavior/heart-write';
 import { HEART_CELLS, HEART_COLUMNS, HEART_UNITS, LIFE_HINTS, SNES_TILE } from '../PlayerTab.constants';
 import type { HeartButton, HudPieceProps } from '../PlayerTab.type';
 

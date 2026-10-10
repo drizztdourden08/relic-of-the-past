@@ -58,7 +58,7 @@ const ImportForm = (props: ImportFormProps) => {
   }, [onFileImport]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isDisabled) handleDownload();
+    if (e.key === 'Enter' && !isDisabled) void handleDownload();
   };
 
   const statusClass = status.variant ? `import-form__status import-form__status--${status.variant}` : 'import-form__status';

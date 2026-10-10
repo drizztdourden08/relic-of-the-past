@@ -8,11 +8,12 @@ const matchRoute = (pattern: string, path: string): RouteParams | null => {
   const have = splitPath(path);
   if (want.length !== have.length) return null;
   const params: RouteParams = {};
-  for (let i = 0; i < want.length; i += 1) {
-    const segment = want[i];
+  for (const [i, segment] of want.entries()) {
+    const actual = have[i];
+    if (actual === undefined) return null;
     if (segment.startsWith(':')) {
-      params[segment.slice(1)] = decodeURIComponent(have[i]);
-    } else if (segment !== have[i]) {
+      params[segment.slice(1)] = decodeURIComponent(actual);
+    } else if (segment !== actual) {
       return null;
     }
   }

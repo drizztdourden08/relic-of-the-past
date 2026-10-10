@@ -10,7 +10,9 @@ const createViewKeys = (prefix: string, surfaces: readonly string[]): ViewKeys =
       `${prefix}:${surface}${half === 'query' ? QUERY_SUFFIX : ''}${nonce ? `~${nonce}` : ''}`,
     parse: (key) => {
       const match = pattern.exec(key);
-      return match ? { surface: match[1], half: match[2] ? 'query' : 'table' } : null;
+      if (match === null) return null;
+      const [, surface, query] = match;
+      return surface === undefined ? null : { surface, half: query ? 'query' : 'table' };
     },
     currentViewId: (surface) => `${CURRENT_PREFIX}${surface}`,
     isCurrentViewId: (id) => id.startsWith(CURRENT_PREFIX),

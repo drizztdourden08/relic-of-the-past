@@ -3,7 +3,7 @@ import type { ScreenRecord } from '../../../data';
 import { scanForRoom } from '../palace-fallback';
 import { LAST_DUNGEON_INDEX } from './detection.constants';
 import type {
-  IndoorQuery, ScreenLookup, ScreenMatchMethod, ScreenMatchResult, VariantGameState,
+  IndoorQuery, ScreenLookup, ScreenMatchMethod, ScreenMatchResult, ScreenQuery, VariantGameState,
 } from './detection.type';
 import { getScreenLookup } from './get-screen-lookup';
 import { resolveVariant } from './resolve-variant';
@@ -61,10 +61,10 @@ const indoorMatch = (lookup: ScreenLookup, query: IndoorQuery): ScreenMatchResul
   return isKnownDungeon ? null : palaceScanMatch(lookup, roomIndex, palaceIndex);
 };
 
-const resolveCurrentScreenDetailed = (isIndoors: boolean, palaceIndex: number, roomIndex: number, overworldScreenIndex: number, whichEntrance?: number, variantState?: VariantGameState): ScreenMatchResult | null => {
+const resolveCurrentScreenDetailed = (query: ScreenQuery): ScreenMatchResult | null => {
   const lookup = getScreenLookup();
-  if (isIndoors) return indoorMatch(lookup, { palaceIndex, roomIndex, whichEntrance, variantState });
-  const ow = lookup.byOverworldScreen.get(overworldScreenIndex);
+  if (query.isIndoors) return indoorMatch(lookup, query);
+  const ow = lookup.byOverworldScreen.get(query.overworldScreenIndex);
   return ow ? { screen: ow, method: 'overworld' } : null;
 };
 

@@ -3,8 +3,8 @@ import type { EntityKind, EntityRecordMap } from '@rotp/game-data';
 import type { DetectionContext, RecommendationDetector } from '../detection-types';
 import type { DraftRecommendation } from '../types';
 import type { UnresolvableMapper } from './detector-from-strategy.type';
-import type { Difference } from './difference.type';
-import type { ComparisonStrategy } from './probe.type';
+import type { Difference, SetDifference } from './difference.type';
+import type { ComparisonStrategy, ErasedSetProbe } from './probe.type';
 import { setPath } from './record-path';
 import { runComparison } from './run-comparison';
 
@@ -37,42 +37,51 @@ const draftForField = <K extends EntityKind>(
   key: difference.path,
 });
 
+const setDraft = <K extends EntityKind>(
+  kind: K,
+  probe: ErasedSetProbe<K>,
+  difference: SetDifference<K>,
+  context: DetectionContext,
+): DraftRecommendation | null => {
+  const key = `${difference.noun}:${difference.key}`;
+  const detector = detectorIdOf(kind);
+  if (difference.status === 'missing-in-dataset') {
+    return {
+      kind, action: 'create', targetId: null, current: null, proposed: difference.proposed,
+      reason: `${difference.noun} ${difference.key}: in game, not in dataset.`,
+      detector,
+      evidence: [{ source: probe.source, detail: `live ${difference.noun} key ${difference.key} has no dataset match` }],
+      confidence: probe.confidence, screenId: context.screenId, origin: context.origin, key,
+    };
+  }
+  if (difference.status === 'unbacked-in-dataset') {
+    return {
+      kind, action: 'delete', targetId: difference.record.id, current: difference.record,
+      proposed: difference.record,
+      reason: `${difference.noun} ${difference.key}: in dataset, absent in game.`,
+      detector,
+      evidence: [{ source: probe.source, detail: `dataset ${difference.noun} key ${difference.key} has no live match` }],
+      confidence: probe.removalConfidence ?? probe.confidence,
+      screenId: context.screenId, origin: context.origin, key,
+    };
+  }
+  return null;
+};
+
 const draftsForSet = <K extends EntityKind>(
   strategy: ComparisonStrategy<K>,
   context: DetectionContext,
   onUnresolvable: UnresolvableMapper<K> | undefined,
 ): DraftRecommendation[] => {
   const out: DraftRecommendation[] = [];
-  const detector = detectorIdOf(strategy.kind);
-
   for (const probe of strategy.sets) {
     for (const difference of probe.compare(context.observations, context.screenId)) {
-      const key = `${difference.noun}:${difference.key}`;
-      if (difference.status === 'missing-in-dataset') {
-        out.push({
-          kind: strategy.kind, action: 'create', targetId: null, current: null, proposed: difference.proposed,
-          reason: `${difference.noun} ${difference.key}: in game, not in dataset.`,
-          detector,
-          evidence: [{ source: probe.source, detail: `live ${difference.noun} key ${difference.key} has no dataset match` }],
-          confidence: probe.confidence, screenId: context.screenId, origin: context.origin, key,
-        });
-      } else if (difference.status === 'unbacked-in-dataset') {
-        out.push({
-          kind: strategy.kind, action: 'delete', targetId: difference.record.id, current: difference.record,
-          proposed: difference.record,
-          reason: `${difference.noun} ${difference.key}: in dataset, absent in game.`,
-          detector,
-          evidence: [{ source: probe.source, detail: `dataset ${difference.noun} key ${difference.key} has no live match` }],
-          confidence: probe.removalConfidence ?? probe.confidence,
-          screenId: context.screenId, origin: context.origin, key,
-        });
-      } else if (onUnresolvable) {
-        const mapped = onUnresolvable(difference, context);
-        if (mapped) out.push(mapped);
-      }
+      const draft = difference.status === 'unresolvable'
+        ? onUnresolvable?.(difference, context) ?? null
+        : setDraft(strategy.kind, probe, difference, context);
+      if (draft) out.push(draft);
     }
   }
-
   return out;
 };
 

@@ -5,15 +5,42 @@ import { GLYPH_SLOTS, alphabetChars, dialogueCharsetOf, displayAlphabetOf, extra
 import { primary, secondary } from '@rotp/randomizer';
 import { stripHighlight, toDialogueText, compressMarkedStrings } from '@rotp/game-core';
 import type { DialogueCharset } from '@rotp/game-data';
+import { required } from '../required';
+
+type Glyph = (typeof EXTRA_GLYPHS)[number];
 
 const REQUIRED = "_-.,'()!?&+/:#%*\";=<>[]~@^`";
 const PRINTABLE_ASCII = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');
-const SAMPLES = ['Drizztdourden_', 'Bottle (Fairy)', "Kokiri's Emerald", 'Buy Deku Stick (1)', 'Rupees (100)', 'Ice Trap!', 'A&B'];
+const BANG = String.fromCodePoint(0x21);
+const SAMPLES = ['Drizztdourden_', 'Bottle (Fairy)', "Kokiri's Emerald", 'Buy Deku Stick (1)', 'Rupees (100)', `Ice Trap${BANG}`, 'A&B'];
+const NEIGHBOURS: readonly (readonly [number, number])[] = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+const alphabetOf = (code: string): string[] => required(kLanguages[code], `language ${code}`).alphabet;
+const widthCountOf = (code: string): number => required(kFontTypes[code], `font ${code}`).widthCount;
 
 const charsetOf = (code: string): DialogueCharset => {
-  const { alphabet } = kLanguages[code];
-  const widths = new Uint8Array(kFontTypes[code].widthCount).fill(6);
+  const alphabet = alphabetOf(code);
+  const widths = new Uint8Array(widthCountOf(code)).fill(6);
   return dialogueCharsetOf(alphabet, widths, extraGlyphSlots(alphabet, widths.length));
+};
+
+const cellAt = (glyph: Glyph, x: number, y: number): string => glyph.rows[y]?.[x] ?? ' ';
+
+const expectEdgeAround = (glyph: Glyph, x: number, y: number): void => {
+  for (const [dx, dy] of NEIGHBOURS) {
+    const nx = x + dx;
+    const ny = y + dy;
+    if (nx < 0 || ny < 0 || nx >= glyph.width || ny >= 16) continue;
+    expect(cellAt(glyph, nx, ny), `${glyph.char} ${nx},${ny}`).not.toBe(' ');
+  }
+};
+
+const expectGlyphRow = (glyph: Glyph, y: number): void => {
+  expect(glyph.rows[y], `${glyph.char} row ${y}`).toMatch(/^[ .#]{8}$/);
+  for (let x = glyph.width; x < 8; x++) expect(cellAt(glyph, x, y), `${glyph.char} ${x},${y}`).toBe(' ');
+  for (let x = 0; x < 8; x++) {
+    if (cellAt(glyph, x, y) === '#') expectEdgeAround(glyph, x, y);
+  }
 };
 
 const codesOf = (text: string, charset: DialogueCharset): number[] =>
@@ -46,14 +73,14 @@ describe('coverage of the native box', () => {
 
   it('lays the extra glyphs into spare slots only, past the alphabet and the width table', () => {
     for (const code of LANGUAGES) {
-      const { alphabet } = kLanguages[code];
-      const slots = extraGlyphSlots(alphabet, kFontTypes[code].widthCount);
-      const first = Math.max(alphabet.length, kFontTypes[code].widthCount);
+      const alphabet = alphabetOf(code);
+      const slots = extraGlyphSlots(alphabet, widthCountOf(code));
+      const first = Math.max(alphabet.length, widthCountOf(code));
       expect(slots.map((slot) => slot.slot)).toEqual(slots.map((_, i) => first + i));
       expect(slots.every((slot) => slot.slot < GLYPH_SLOTS && !alphabetChars(alphabet).has(slot.char))).toBe(true);
     }
-    expect(extraGlyphSlots(kLanguages.us.alphabet, 99)).toHaveLength(21);
-    expect(extraGlyphSlots(kLanguages.de.alphabet, 112)).toHaveLength(16);
+    expect(extraGlyphSlots(alphabetOf('us'), 99)).toHaveLength(21);
+    expect(extraGlyphSlots(alphabetOf('de'), 112)).toHaveLength(16);
   });
 
   it('knows the width of every glyph code a line can reach', () => {
@@ -83,18 +110,20 @@ describe('names and items keep their characters', () => {
   it('writes an extra glyph as its escape: 0x83 then the slot in US, 0x87 then the slot in Europe', () => {
     const us = charsetOf('us');
     const underscore = us.extras.find((extra) => extra.char === '_')?.slot ?? -1;
-    const [bytes] = compressMarkedStrings([toDialogueText('Zelda_', us)], 'us');
-    expect([...bytes]).toEqual([...compressStrings(['Zelda'], 'us')[0], 0x83, underscore]);
+    const bytes = required(compressMarkedStrings([toDialogueText('Zelda_', us)], 'us')[0], 'US bytes');
+    const usZelda = required(compressStrings(['Zelda'], 'us')[0], 'US Zelda bytes');
+    expect([...bytes]).toEqual([...usZelda, 0x83, underscore]);
     const de = charsetOf('de');
     const slot = de.extras.find((extra) => extra.char === '_')?.slot ?? -1;
     expect(slot).toBeGreaterThanOrEqual(0x60);
-    const [euBytes] = compressMarkedStrings([toDialogueText('Zelda_', de)], 'de');
-    expect([...euBytes]).toEqual([...compressStrings(['Zelda'], 'de')[0], 0x87, slot]);
+    const euBytes = required(compressMarkedStrings([toDialogueText('Zelda_', de)], 'de')[0], 'German bytes');
+    const euZelda = required(compressStrings(['Zelda'], 'de')[0], 'German Zelda bytes');
+    expect([...euBytes]).toEqual([...euZelda, 0x87, slot]);
   });
 
   it('shows the extra glyphs as their own characters in the modern face', () => {
     const us = charsetOf('us');
-    const display = displayAlphabetOf(kLanguages.us.alphabet, us.extras);
+    const display = displayAlphabetOf(alphabetOf('us'), us.extras);
     for (const extra of us.extras) expect(display[extra.slot]).toBe(extra.char);
   });
 });
@@ -129,26 +158,13 @@ describe('the extra glyphs are drawn as the font draws its own', () => {
       expect(glyph.rows, glyph.char).toHaveLength(16);
       expect(glyph.width).toBeGreaterThan(0);
       expect(glyph.width).toBeLessThanOrEqual(8);
-      const at = (x: number, y: number): string => glyph.rows[y]?.[x] ?? ' ';
-      for (let y = 0; y < 16; y++) {
-        expect(glyph.rows[y], `${glyph.char} row ${y}`).toMatch(/^[ .#]{8}$/);
-        for (let x = glyph.width; x < 8; x++) expect(at(x, y), `${glyph.char} ${x},${y}`).toBe(' ');
-        for (let x = 0; x < 8; x++) {
-          if (at(x, y) !== '#') continue;
-          for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
-            const nx = x + dx;
-            const ny = y + dy;
-            if (nx < 0 || ny < 0 || nx >= glyph.width || ny >= 16) continue;
-            expect(at(nx, ny), `${glyph.char} ${nx},${ny}`).not.toBe(' ');
-          }
-        }
-      }
+      for (let y = 0; y < 16; y++) expectGlyphRow(glyph, y);
     }
   });
 
   it('packs the rows as two 2bpp tiles, top then bottom', () => {
-    const underscore = EXTRA_GLYPHS.find((glyph) => glyph.char === '_');
-    const tiles = extraGlyphTiles(underscore!);
+    const underscore = required(EXTRA_GLYPHS.find((glyph) => glyph.char === '_'), 'underscore glyph');
+    const tiles = extraGlyphTiles(underscore);
     expect(tiles).toHaveLength(32);
     const bottomTileRow5 = 16 + 5 * 2;
     const bodyPlane = bottomTileRow5 + 1;

@@ -35,7 +35,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
         try {
           const b64 = await savesStore.readScreenshot(profileId, i);
           if (b64) {
-            screenshotUrl = 'data:image/png;base64,' + b64;
+            screenshotUrl = `data:image/png;base64,${b64}`;
           }
         } catch {
           screenshotUrl = null;
@@ -57,7 +57,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
     if (open) {
       setVisible(true);
       setAnimating('in');
-      loadSlots();
+      void loadSlots();
       timeoutRef.current = setTimeout(() => setAnimating(null), ANIM_MS);
     } else if (visible) {
       setAnimating('out');

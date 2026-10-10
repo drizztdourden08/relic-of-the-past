@@ -39,7 +39,7 @@ const collectNavDump = (slot: DumpSlot) => {
     progressTier: progressInfo?.tier,
     entranceId: whichEntrance || undefined,
   };
-  const detection = resolveCurrentScreenDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState);
+  const detection = resolveCurrentScreenDetailed({ isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState });
 
   const exitScreenMap = wasmGetExitScreenMap();
   const entranceRooms = wasmGetEntranceRooms();

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { FlashStatus } from '../hooks/useFlashStatus.type';
+import type { FlashStatus } from '../hooks/flash-status.type';
 
 interface WizardHeaderActionsProps {
   copyStatus: FlashStatus;

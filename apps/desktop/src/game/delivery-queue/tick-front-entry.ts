@@ -3,10 +3,10 @@ import { log } from '../../log-bus';
 import { executeEntry, DELIVERY_COOLDOWN, REFUSAL_RETRY_COOLDOWN, REFUSAL_WARN_EVERY, canReceive, fireComplete, notify, queueState } from '@rotp/randomizer';
 
 const tickFrontEntry = (): void => {
-  if (queueState.queue.length === 0) return;
+  const entry = queueState.queue[0];
+  if (entry === undefined) return;
   if (!canReceive()) return;
 
-  const entry = queueState.queue[0];
   const outcome = executeEntry(entry);
   if (outcome === 'refused') {
     entry.refusals = (entry.refusals ?? 0) + 1;

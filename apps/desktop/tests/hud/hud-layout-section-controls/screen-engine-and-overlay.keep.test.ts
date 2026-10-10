@@ -4,7 +4,7 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync } from 'fs';
 import { ContainerOverlay } from '@app/views/HudLayoutEditor/sub-components/ContainerOverlay';
-import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { HudFlexContainer, HudGridContainer, PlacedNode } from '@rotp/hud';
 import { ED, GUIDE, PLATFORM } from './section-controls.constants';
@@ -38,7 +38,7 @@ describe('the screen root chooses its engine like any other container (§42)', (
   });
 
   it('has no `isScreen` left to reason about at all', () => {
-    const src = readFileSync(`${ED}/sub-components/sections/LayoutSection.tsx`, 'utf8');
+    const src = readFileSync(`${ED}/sub-components/LayoutSection.tsx`, 'utf8');
     expect(src).not.toContain('isScreen');
     expect(readFileSync(`${ED}/sub-components/NodeInspector.tsx`, 'utf8'))
       .toMatch(/<SizeBoxSection[\s\S]{0,240}?isScreen=\{isScreen\}/);
@@ -52,7 +52,7 @@ describe('the screen root chooses its engine like any other container (§42)', (
         onPatch: (patch: unknown) => patches.push(patch), onPatchNode: noop, scope: {},
       })) as never);
     expect(markup).toContain('engine');
-    const src = readFileSync(`${ED}/sub-components/sections/LayoutSection.tsx`, 'utf8');
+    const src = readFileSync(`${ED}/sub-components/LayoutSection.tsx`, 'utf8');
     expect(src).toContain('engineSwitchPatch(');
     expect(src).not.toMatch(/const to(Flex|Grid)/);
   });
@@ -100,7 +100,7 @@ describe('the guide colour reaches the overlay it names', () => {
     expect(markup).toContain('left:1px');
     expect(markup).toContain('left:25px');
     expect(markup).toContain('width:18px');
-    expect(readFileSync(`${ED}/sub-components/HudLayoutEditor.inspector.css`, 'utf8'))
+    expect(readFileSync(`${ED}/../../theme/hud-layout-editor/inspector.css`, 'utf8'))
       .toMatch(/\.hud-overlay__slot\s*\{[^}]*dashed/);
     expect(markup).not.toContain('hud-overlay__line');
     expect(markup).not.toContain('onClick');

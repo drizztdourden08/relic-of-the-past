@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { readFileSync } from 'fs';
 import {
   GRID_EDITOR_SRC, LAYOUT_SECTION_SRC, RAILS, layoutCases, measureRails,
@@ -8,8 +8,10 @@ import type { Rig } from './layout-bands.harness';
 
 let rig: Rig;
 
-beforeAll(async () => { rig = await measureRails(); }, 60_000);
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureRails();
+  return () => rig.close();
+}, 60_000);
 
 const strip = (path: string): string =>
   readFileSync(path, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');

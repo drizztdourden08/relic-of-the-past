@@ -25,8 +25,8 @@ const DialogFrame = (props: DialogFrameProps) => {
   const join = corner === 'rounded' ? 'round' : 'miter';
   const outerInset = outerW / 2;
   const innerInset = outerW + gapW + innerW / 2;
-  const outerPath = framePath(width, height, outerInset, corner, cornerAtInset(corner, cornerSize, outerInset));
-  const innerPath = framePath(width, height, innerInset, corner, cornerAtInset(corner, cornerSize, innerInset));
+  const outerPath = framePath({ w: width, h: height, inset: outerInset }, corner, cornerAtInset(corner, cornerSize, outerInset));
+  const innerPath = framePath({ w: width, h: height, inset: innerInset }, corner, cornerAtInset(corner, cornerSize, innerInset));
   const ringW = border === 'double' ? outerW + gapW + innerW : outerW;
   const marks = mark === 'none' ? [] : cornerPlacements(width, height, ringW + tile * markDistance(mark));
 

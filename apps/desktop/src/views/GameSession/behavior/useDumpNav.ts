@@ -15,7 +15,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
     if (!activeProfile || didRun.current) return;
     let cancelled = false;
 
-    (async () => {
+    void (async () => {
       const slot = await appApi().getDumpNavSlot();
       if (slot === null) return;
       didRun.current = true;

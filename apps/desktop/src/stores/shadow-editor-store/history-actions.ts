@@ -5,8 +5,8 @@ import { ensureScreenData } from './ensure-screen-data';
 const historyActions = (set: ShadowEditorSet, get: ShadowEditorGet): HistoryActions => ({
   undo: (screenId) => {
     const state = get();
-    if (state.undoStack.length === 0) return;
-    const prev = state.undoStack[state.undoStack.length - 1];
+    const prev = state.undoStack.at(-1);
+    if (prev === undefined) return;
     const currentScreenData = ensureScreenData(state.project, screenId);
     set({
       project: { ...state.project, screens: { ...state.project.screens, [screenId]: prev } },
@@ -18,8 +18,8 @@ const historyActions = (set: ShadowEditorSet, get: ShadowEditorGet): HistoryActi
 
   redo: (screenId) => {
     const state = get();
-    if (state.redoStack.length === 0) return;
-    const next = state.redoStack[state.redoStack.length - 1];
+    const next = state.redoStack.at(-1);
+    if (next === undefined) return;
     const currentScreenData = ensureScreenData(state.project, screenId);
     set({
       project: { ...state.project, screens: { ...state.project.screens, [screenId]: next } },

@@ -5,8 +5,9 @@ import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import type { SpriteDebugProps, ReviewMode } from './SpriteDebug.type';
 import { SpriteReviewPanel } from './sub-components/SpriteReviewPanel';
 import { ItemReviewPanel } from './sub-components/ItemReviewPanel';
-import { MODES, S } from './SpriteDebug.constants';
+import { MODES } from './SpriteDebug.constants';
 import { getSpritesBaseUrl } from '@app/storage/sprites-store';
+import './SpriteDebug.css';
 
 const SpriteDebug = (props: SpriteDebugProps) => {
   const { onClose, romFile } = props;
@@ -22,7 +23,7 @@ const SpriteDebug = (props: SpriteDebugProps) => {
   return (
     <ScreenWindow onClose={onClose} title="Sprite Debug">
       <Tabs tabs={MODES} activeTab={mode} onTabChange={(id) => setMode(id as ReviewMode)} />
-      <Text style={S.modeHint}>
+      <Text className="sprite-debug-mode-hint">
         {mode === 'sprites'
           ? 'Does each extracted image look correct?'
           : 'Is each item mapped to the right sprite?'}

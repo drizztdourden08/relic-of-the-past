@@ -1,6 +1,7 @@
 /* @layer tests @kind test */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Recommendation } from '@rotp/navigation';
+import type { AcceptOutcome } from '@app/views/DataInspector/behavior/recommendations/recommendations.type';
 
 const mocks = vi.hoisted(() => ({
   create: vi.fn(),
@@ -45,6 +46,18 @@ const finding = (over: Partial<Recommendation> = {}): Recommendation => ({
   ...over,
 } as Recommendation);
 
+const NEW_TAG = {
+  id: 'tag-009',
+  name: 'area:cavern',
+  namespace: 'area',
+  value: 'cavern',
+  label: 'Cavern',
+  namespaceLabel: 'Area',
+  appliesTo: ['screen'],
+} as const;
+
+const errorOf = (outcome: AcceptOutcome): string | undefined => (outcome.success ? undefined : outcome.error);
+
 beforeEach(() => {
   mocks.create.mockReset().mockResolvedValue({ success: true, id: 'tag-009' });
   mocks.write.mockReset().mockResolvedValue(undefined);
@@ -54,7 +67,7 @@ beforeEach(() => {
 
 describe('acceptRecommendation uses one verb per action', () => {
   it('mints a record for a create, and reports the id that was allocated', async () => {
-    const entry = finding({ action: 'create', targetId: null, current: null, proposed: { value: 'cavern' } });
+    const entry = finding({ action: 'create', targetId: null, current: null, proposed: NEW_TAG });
     const outcome = await acceptRecommendation(entry, { value: 'cavern' });
 
     expect(mocks.create).toHaveBeenCalledWith({ value: 'cavern' });
@@ -96,7 +109,7 @@ describe('acceptRecommendation closing out', () => {
   });
 
   it('reports the ALLOCATED id after a create, not the absent target', async () => {
-    const entry = finding({ action: 'create', targetId: null, current: null, proposed: { value: 'cavern' } });
+    const entry = finding({ action: 'create', targetId: null, current: null, proposed: NEW_TAG });
     const outcome = await acceptRecommendation(entry, { value: 'cavern' });
     expect(outcome.success && outcome.id).toBe('tag-009');
   });
@@ -107,7 +120,7 @@ describe('acceptRecommendation closing out', () => {
     const outcome = await acceptRecommendation(entry, {});
 
     expect(outcome.success).toBe(false);
-    expect(outcome.error).toBe('no room');
+    expect(errorOf(outcome)).toBe('no room');
     expect(mocks.decide).not.toHaveBeenCalled();
   });
 
@@ -116,14 +129,14 @@ describe('acceptRecommendation closing out', () => {
     const outcome = await acceptRecommendation(finding(), { id: 'tag-001' });
 
     expect(outcome.success).toBe(false);
-    expect(outcome.error).toBe('the file is read-only');
+    expect(errorOf(outcome)).toBe('the file is read-only');
     expect(mocks.decide).not.toHaveBeenCalled();
   });
 
   it('refuses a collection with no write path instead of failing silently', async () => {
     const outcome = await acceptRecommendation(finding({ kind: 'screen' }), { id: 'screen-001' });
     expect(outcome.success).toBe(false);
-    expect(outcome.error).toContain('screen');
+    expect(errorOf(outcome)).toContain('screen');
     expect(mocks.decide).not.toHaveBeenCalled();
   });
 });

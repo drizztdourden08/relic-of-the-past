@@ -33,4 +33,9 @@ interface IndoorQuery {
   variantState?: VariantGameState;
 }
 
-export type { IndoorQuery, ScreenLookup, ScreenMatchMethod, ScreenMatchResult, VariantGameState };
+interface ScreenQuery extends IndoorQuery {
+  isIndoors: boolean;
+  overworldScreenIndex: number;
+}
+
+export type { IndoorQuery, ScreenLookup, ScreenQuery, ScreenMatchMethod, ScreenMatchResult, VariantGameState };

@@ -12,9 +12,15 @@ const readError = async (response: Response) => {
 };
 
 const createApiClient = <Routes extends Record<string, RouteDef>>(routes: Routes) => {
+  const routeDef = (route: RouteName<Routes>): RouteDef => {
+    const def = routes[route];
+    if (def === undefined) throw new Error(`Unknown API route: ${route}`);
+    return def;
+  };
+
   const buildUrl = (route: RouteName<Routes>, options: RequestOptions) => {
     const { params, query } = options;
-    const url = API_BASE + formatPath(routes[route].path, params);
+    const url = API_BASE + formatPath(routeDef(route).path, params);
     if (!query) return url;
     const search = new URLSearchParams();
     for (const [key, value] of Object.entries(query)) {
@@ -26,7 +32,7 @@ const createApiClient = <Routes extends Record<string, RouteDef>>(routes: Routes
 
   const request = async <T>(route: RouteName<Routes>, options: RequestOptions = {}): Promise<T> => {
     const { body } = options;
-    const { method } = routes[route];
+    const { method } = routeDef(route);
     const response = await fetch(buildUrl(route, options), {
       method,
       credentials: 'include',

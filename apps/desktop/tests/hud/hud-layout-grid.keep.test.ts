@@ -12,7 +12,7 @@ const cell = (id: string, extra: Partial<HudNode> = {}): HudNode => ({
 
 const grid = (children: HudNode[], extra: Partial<HudGridContainer> = {}): HudGridContainer => ({
   kind: 'container', id: 'grid', layout: 'grid', columns: [{ px: 20 }, { px: 20 }], rows: ROWS, children, ...extra,
-} as HudGridContainer);
+});
 
 const docOf = (root: HudGridContainer): HudLayout => ({
   id: 'test',

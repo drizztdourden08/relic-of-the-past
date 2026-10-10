@@ -11,11 +11,12 @@ import { absorbPort, draftError, draftOf, patchOf } from '@app/hooks/randomizer/
 import { createMemFileStore } from '../storage/mem-file-store';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
+import { required } from '../required';
 import type { FakeServer } from './ap-fake-server';
 import type { OnlineSessionConfig, RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
 
-const fake = vi.hoisted(() => ({ server: null as FakeServer | null }));
+const fake = vi.hoisted(() => ({ server: undefined as FakeServer | undefined }));
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
@@ -24,11 +25,11 @@ vi.mock('@app/log-bus', () => {
 vi.mock('@app/game/randomizer-client/local-session', () => ({ createLocalSession: () => null }));
 vi.mock('@app/game/randomizer-client/online-session', () => ({
   createOnlineSession: (config: OnlineSessionConfig) =>
-    createOnlineClient(config, { core: createFakeCore(), createSocket: fake.server!.createSocket }),
+    createOnlineClient(config, { core: createFakeCore(), createSocket: required(fake.server, 'fake server').createSocket }),
 }));
 
 const OWN = 'Relic of the Past';
-const OPTIONS = { schema: 'ap-options-v2' } as unknown as RandomizerOptionsSnapshot;
+const OPTIONS: RandomizerOptionsSnapshot = { schema: 'ap-options-v2', values: {} };
 
 const onlineConfig = (password: string): ProfileRandomizerConfig => ({
   mode: 'online', seed: 'seed-1', options: OPTIONS, serverUrl: 'ws://host:38290',
@@ -97,14 +98,15 @@ describe('fixing a wrong password from the Network tab (T30)', () => {
     fake.server = createRoom();
     const files = createMemFileStore();
     const { id, randomizer } = await createProfile(files, { name: 'AP', romFile: 'rom.sfc', randomizer: onlineConfig('nope') });
-    await startOnline(onlineConfigOfProfile(randomizer!), 'profile');
+    await startOnline(onlineConfigOfProfile(required(randomizer, 'stored randomizer config')), 'profile');
     await settle();
-    const refused = getSessionState().session!;
+    const refused = required(getSessionState().session ?? undefined, 'refused session');
     expect([refused.status, refused.kind === 'online' && refused.networkStatus.connection.error])
       .toEqual(['error', 'Wrong room password.']);
 
     const updated = await updateProfile(files, id, { randomizerConnection: { password: 'pw' } });
-    await reconnectProfileSession(id, updated!.randomizer!);
+    const updatedProfile = required(updated ?? undefined, 'updated profile');
+    await reconnectProfileSession(id, required(updatedProfile.randomizer, 'updated randomizer config'));
     await settle();
 
     const { session, source } = getSessionState();

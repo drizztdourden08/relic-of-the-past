@@ -3,13 +3,13 @@ import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import { PING_INTERVAL_MS, PING_TAG, AP_WORLD_VERSION } from '@rotp/randomizer';
 import { stateChip } from '@app/views/Randomizer/sub-components/NetworkTab/behavior/state-chip';
-import type { LocationKey } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeServer } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';
 import { OWN, boot, settle } from '../ap-protocol-harness';
 import { installNetworkHarness } from './install-network-harness';
 import { networkRoom as makeRoom } from './network-room';
+import { required } from '../../required';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
@@ -19,7 +19,7 @@ vi.mock('@app/log-bus', () => {
 const pings = (server: FakeServer) => server.of('Bounce').filter((packet) => packet.tags?.includes(PING_TAG));
 
 const echoLastPing = (server: FakeServer): void => {
-  const { tags, slots, data } = pings(server).at(-1)!;
+  const { tags, slots, data } = required(pings(server).at(-1), 'last ping');
   server.push([{ cmd: 'Bounced', tags, slots, data }]);
 };
 
@@ -34,7 +34,7 @@ describe('network status', () => {
       serverVersion: '0.6.3', slot: 1, slotName: 'Link', team: 0, worldVersion: '0.1.0',
       appWorldVersion: AP_WORLD_VERSION, deathLink: false, passwordUsed: true, connectedAt: 1_000_000, error: null,
     });
-    expect(connection.uuidShort).toBe(server.of('Connect')[0].uuid.split('-')[0]);
+    expect(connection.uuidShort).toBe(required(server.of('Connect')[0], 'Connect packet').uuid.split('-')[0]);
     expect(health.packetsIn).toBeGreaterThanOrEqual(4);
     expect(health.packetsOut).toBe(server.received.length);
     expect(health.lastPacketAt).toBe(1_000_000);
@@ -47,8 +47,8 @@ describe('network status', () => {
 
   it('counts a reported check holding another player\'s item as sent to them', async () => {
     const { session } = await boot(makeRoom());
-    session.reportCheck('check-001' as LocationKey);
-    session.reportCheck('check-002' as LocationKey);
+    session.reportCheck('check-001');
+    session.reportCheck('check-002');
     expect(session.networkStatus.progress.itemsSentToOthers).toBe(1);
   });
 
@@ -67,7 +67,9 @@ describe('network status', () => {
     await settle();
     expect(session.networkStatus.health).toMatchObject({ pingMs: 20, pingMeanMs: 30, pingSamples: 2 });
   });
+});
 
+describe('network status', () => {
   it('Join and Part mark the other players online or not; ours follows the connection', async () => {
     const { session, server } = await boot(makeRoom());
     const onlineOf = () => session.networkStatus.players.map((player) => [player.alias, player.online, player.self]);
@@ -105,7 +107,9 @@ describe('network status', () => {
       state: 'error', error: 'Wrong room password.',
     });
   });
+});
 
+describe('network status', () => {
   it('a try in flight reads as trying now, with no countdown; a refused one schedules the next', async () => {
     const room = makeRoom();
     const server = createFakeServer(room);
@@ -114,7 +118,7 @@ describe('network status', () => {
     session = createOnlineClient({ url: 'localhost:38281', slotName: 'Link' }, {
       core: createFakeCore(),
       createSocket: (url) => {
-        const { connection } = session!.networkStatus;
+        const { connection } = required(session ?? undefined, 'online session').networkStatus;
         const { state, reconnectAttempt, nextRetryAt, retryInFlight } = connection;
         atEachTry.push({ state, reconnectAttempt, nextRetryAt, retryInFlight, chip: stateChip(connection, Date.now()).label });
         return server.createSocket(url);

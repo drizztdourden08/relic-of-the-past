@@ -11,7 +11,7 @@ const useOverlayKeyboard = (a: OverlayKeyboardArgs): void => {
 
   useEffect(() => {
     if (!open) return;
-    (async () => {
+    void (async () => {
       try {
         const project = await appApi().shadowCasting.load();
         loadProject(project ?? { ...EMPTY_SHADOW_PROJECT });
@@ -36,7 +36,7 @@ const useOverlayKeyboard = (a: OverlayKeyboardArgs): void => {
           if (store.selectedType === 'heightmap') store.removeHeightmapElement(screenId, store.selectedElementId);
           else if (store.selectedType === 'light') store.removeLight(screenId, store.selectedElementId);
         }
-      } else if (e.ctrlKey && e.key === 's') { e.preventDefault(); store.save(); }
+      } else if (e.ctrlKey && e.key === 's') { e.preventDefault(); void store.save(); }
       else if (e.key === 'Escape') { store.setActiveTool('select'); store.setSelectedElement(null, null); }
     };
     document.addEventListener('keydown', handler);

@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { ENGINES } from './EngineToggle.constants';
-import './HudLayoutEditor.layout.css';
-import './HudLayoutEditor.layout-set.css';
 import type { EngineToggleProps } from './EngineToggle.type';
 
 const EngineToggle = (props: EngineToggleProps) => {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { EditorAction } from '@app/views/HudLayoutEditor/sub-components/SelectionBands';
+import type { EditorAction } from '@app/hud-layout-editing/selection-bands.type';
 
 const runnerFor = (actions: readonly EditorAction[], label: string): EditorAction | undefined =>
   actions.find((action) => action.run !== undefined

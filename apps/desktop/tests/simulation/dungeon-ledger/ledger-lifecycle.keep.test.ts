@@ -1,12 +1,16 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import type { DetectedCheck, SimEvent } from '@rotp/navigation';
+import type { DetectedCheck, EngineState, SimEvent } from '@rotp/navigation';
 import { chestKey, closeIdleDungeonGroups, reopenLedgersFor, onCheckVerified } from '@rotp/navigation';
 import { dungeonGroupOf } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import { BOMB_PICKUP, CASTLE_SCREEN, SEWERS_PALACE, SEWERS_ROOM, SEWERS_SCREEN } from './dungeon-ledger.constants';
 import { freshState } from './fresh-state';
 import { makeChest } from './make-chest';
+import { required } from '../../required';
+
+const ledgerOf = (state: EngineState, group: number) =>
+  required(state.ledgers.get(group), `ledger for group ${group}`);
 
 describeDataset('closeIdleDungeonGroups', () => {
   it('marks a group complete once its owed list is empty', () => {
@@ -16,7 +20,7 @@ describeDataset('closeIdleDungeonGroups', () => {
 
     closeIdleDungeonGroups(state, []);
 
-    const ledger = state.ledgers.get(group)!;
+    const ledger = ledgerOf(state, group);
     expect(ledger.complete).toBe(true);
     expect(ledger.exhausted).toBe(false);
   });
@@ -35,7 +39,7 @@ describeDataset('closeIdleDungeonGroups', () => {
     const events: SimEvent[] = [];
     closeIdleDungeonGroups(state, events);
 
-    const ledger = state.ledgers.get(group)!;
+    const ledger = ledgerOf(state, group);
     expect(ledger.exhausted).toBe(true);
     expect(ledger.complete).toBe(false);
     expect(ledger.reopensOn).toEqual(['bombs']);
@@ -55,7 +59,7 @@ describeDataset('closeIdleDungeonGroups', () => {
 
     closeIdleDungeonGroups(state, []);
 
-    expect(state.ledgers.get(group)!.exhausted).toBe(false);
+    expect(ledgerOf(state, group).exhausted).toBe(false);
   });
 });
 
@@ -78,7 +82,7 @@ describeDataset('reopenLedgersFor', () => {
   it('does not reopen on an unrelated acquisition', () => {
     const { state, group } = exhaustedState();
     reopenLedgersFor(state, ['hammer'], 'the hammer', []);
-    expect(state.ledgers.get(group)!.exhausted).toBe(true);
+    expect(ledgerOf(state, group).exhausted).toBe(true);
     expect(state.visited.has(SEWERS_SCREEN)).toBe(true);
   });
 
@@ -87,7 +91,7 @@ describeDataset('reopenLedgersFor', () => {
     const events: SimEvent[] = [];
     reopenLedgersFor(state, ['bombs'], 'bombs', events);
 
-    const ledger = state.ledgers.get(group)!;
+    const ledger = ledgerOf(state, group);
     expect(ledger.exhausted).toBe(false);
     expect(ledger.reopensOn).toEqual([]);
     expect(state.visited.has(SEWERS_SCREEN)).toBe(false);
@@ -113,7 +117,7 @@ describeDataset('onCheckVerified hooks reopen into the item-gained path', () => 
     const events: SimEvent[] = [];
     onCheckVerified(state, check, events);
 
-    const ledger = state.ledgers.get(group)!;
+    const ledger = ledgerOf(state, group);
     expect(ledger.exhausted).toBe(false);
     expect(state.visited.has(SEWERS_SCREEN)).toBe(false);
   });

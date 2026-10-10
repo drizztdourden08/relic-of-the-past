@@ -12,22 +12,20 @@ vi.hoisted(() => {
 import { chromium, type Browser } from 'playwright';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'fs';
 import { BoundedValueField } from '@app/views/HudLayoutEditor/sub-components/BoundedValueField';
 import { ReferenceField } from '@app/views/HudLayoutEditor/sub-components/ReferenceField';
 import { SlotRefField } from '@app/views/HudLayoutEditor/sub-components/SlotRefField';
-import { TextValueField } from '@app/views/HudLayoutEditor/sub-components/content/TextValueField';
-import { GlyphContent } from '@app/views/HudLayoutEditor/sub-components/content/GlyphContent';
+import { TextValueField } from '@app/views/HudLayoutEditor/sub-components/TextValueField';
+import { GlyphContent } from '@app/views/HudLayoutEditor/sub-components/GlyphContent';
 import type { ModernSlot } from '@rotp/game-data';
+import { cssIn } from './files-in';
 import { REPO_ROOT } from '../repo-root';
+import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
 
 const ROOT = REPO_ROOT;
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const ED = `${ROOT}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
-
-const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
@@ -35,6 +33,7 @@ const SHEETS = [
   `${ROOT}/apps/desktop/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
   ...cssIn(`${DS}/composites`),
+  ...EDITOR_THEME_SHEETS,
   ...cssIn(ED),
 ];
 
@@ -43,7 +42,7 @@ const scope = { life_current: 112, life_max: 160, bomb_current: 7 };
 
 const SLOTS: readonly ModernSlot[] = [1, 2, 3, 4].map((index) => ({
   index, binding: { type: 'none' }, label: `Slot ${index}`, position: 'SOUTH',
-} as ModernSlot));
+}));
 
 const CASES: Record<string, () => unknown> = {
   reference: () => h('div', null,
@@ -88,7 +87,7 @@ interface Measured {
 const probe = (): Measured[] => {
   const out: Measured[] = [];
   const px = (el: Element, side: string): number =>
-    parseFloat((getComputedStyle(el) as unknown as Record<string, string>)[side]) || 0;
+    parseFloat(getComputedStyle(el).getPropertyValue(side)) || 0;
   for (const sec of Array.from(document.querySelectorAll('[data-case]'))) {
     const rail = sec.getBoundingClientRect();
     const kase = (sec as HTMLElement).dataset.case ?? '?';
@@ -100,8 +99,8 @@ const probe = (): Measured[] => {
         width: Math.round(box.width * 10) / 10,
         height: Math.round(box.height * 10) / 10,
         overflow: Math.max(0, Math.round(box.right - rail.right)),
-        content: Math.round((box.width - px(el, 'paddingLeft') - px(el, 'paddingRight')
-          - px(el, 'borderLeftWidth') - px(el, 'borderRightWidth')) * 10) / 10,
+        content: Math.round((box.width - px(el, 'padding-left') - px(el, 'padding-right')
+          - px(el, 'border-left-width') - px(el, 'border-right-width')) * 10) / 10,
       });
     };
     for (const el of Array.from(sec.querySelectorAll('.hud-ref-field'))) add('row', el);
@@ -117,7 +116,7 @@ const probe = (): Measured[] => {
 
 const measured: Record<number, Measured[]> = {};
 const RAILS = [289, 232, 188];
-let browser: Browser;
+let browser: Browser | undefined;
 
 const at = (rail: number, kase: string, what: string): Measured => {
   const hit = (measured[rail] ?? []).find((m) => m.case === kase && m.what === what);
@@ -126,8 +125,9 @@ const at = (rail: number, kase: string, what: string): Measured => {
 };
 
 beforeAll(async () => {
-  browser = await chromium.launch();
-  const page = await browser.newPage();
+  const launched = await chromium.launch();
+  browser = launched;
+  const page = await launched.newPage();
   for (const rail of RAILS) {
     await page.setContent(document_(rail));
     measured[rail] = await page.evaluate(probe);

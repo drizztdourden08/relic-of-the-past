@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { listInputDevices } from './list-input-devices';
-import { useNativeCaptures } from '../diagnostics/hooks/useNativeCaptures';
-import type { NativeCaptureStatus } from '../diagnostics/hooks/useNativeCaptures';
+import { useNativeCaptures } from '../diagnostics/useNativeCaptures';
+import type { NativeCaptureStatus } from '../diagnostics/useNativeCaptures';
 import type { Phase } from '../hid-calibration.type';
 
 const useWizardRawCapture = (phase: Phase, deviceKey?: string): NativeCaptureStatus => {

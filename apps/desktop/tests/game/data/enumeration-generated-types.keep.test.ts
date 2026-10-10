@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { ALL_ENUMERATION } from '@rotp/game-data';
 import { buildGeneratedTypesSource, CATEGORY_TYPE_NAMES } from '../../../../../scripts/generate-enum-types.mjs';
 import { describeDataset } from '../../dataset-guard';
@@ -9,7 +9,7 @@ import { REPO_ROOT } from '../../repo-root';
 
 const GENERATED_FILE = resolve(REPO_ROOT, 'packages/game-data/src/data/enumeration/enumeration.type.ts');
 
-const GENERATED_CATEGORIES = new Set(Object.keys(CATEGORY_TYPE_NAMES as Record<string, string>));
+const GENERATED_CATEGORIES = new Set(Object.keys(CATEGORY_TYPE_NAMES));
 
 describeDataset('enumeration/enumeration.type.ts', () => {
   it('matches what generate-enum-types.mjs would emit from the current ALL_ENUMERATION', () => {
@@ -41,7 +41,7 @@ describeDataset('enumeration/enumeration.type.ts', () => {
 });
 
 describeDataset('review-status category', () => {
-  it('seeds exactly 5 values, in the untouched → verified progression', () => {
+  it('seeds exactly 5 values, in the untouched to verified progression', () => {
     const values = ALL_ENUMERATION.filter((entry) => entry.category === 'review-status').map((entry) => entry.value);
     expect(values).toEqual(['untouched', 'in-review', 'needs-work', 'accepted', 'verified']);
   });

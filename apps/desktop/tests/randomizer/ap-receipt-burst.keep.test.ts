@@ -8,8 +8,10 @@ import { ARRIVAL_SLOTS } from '@rotp/game-core';
 import { cancelServerDeliveries, deliverServerItem } from '@app/game/randomizer-client/server-delivery';
 import { installFakeModule } from './ap-fake-module';
 import type { FakeModule } from './ap-fake-module';
+import type { DeliverItemArgs } from './ap-receipt-arrivals/deliver-item-args.type';
+import { required } from '../required';
 
-const bridge = vi.hoisted(() => ({ mod: null as unknown }));
+const bridge = vi.hoisted(() => ({ mod: null }));
 const queue = vi.hoisted(() => ({
   entries: [] as { messageOf: () => number | undefined; onComplete?: () => void; onGranted?: () => void }[],
   warnings: [] as string[],
@@ -23,10 +25,7 @@ vi.mock('@app/log-bus', () => {
 vi.mock('../../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
 vi.mock('../../../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
 vi.mock('@app/game/delivery-api', () => ({
-  deliverItem: (
-    _id: number, _label: string, _source: string, messageId?: number | (() => number), onComplete?: () => void,
-    onGranted?: () => void,
-  ) => {
+  deliverItem: (...[, , , messageId, onComplete, onGranted]: DeliverItemArgs) => {
     const messageOf = typeof messageId === 'function' ? messageId : () => messageId;
     queue.entries.push({ messageOf, onComplete, onGranted });
     return `dlv_${queue.entries.length}`;
@@ -51,7 +50,7 @@ let fake: FakeModule;
 
 const chunkAt = (id: number): Uint8Array | undefined => {
   const blob = fake.files.get(SESSION_FILE);
-  return blob === undefined ? undefined : unpackPackedBytes(unpackPackedBytes(blob)[1])[id];
+  return blob === undefined ? undefined : unpackPackedBytes(required(unpackPackedBytes(blob)[1], 'session line chunks'))[id];
 };
 
 const burstItem = (i: number): { item: string; sender: string | null } => ({
@@ -77,7 +76,8 @@ afterEach(() => {
 it('gives each of 200 items received at once its own line at delivery time', () => {
   const planned = ['Bow at Link\'s House. 0 of 2 found.', WALLET_STEP];
   const plannedIds = setSessionReceiptMessages(planned) as number[];
-  const detailPage = chunkAt(plannedIds[1]);
+  const detailId = required(plannedIds[1], 'detail page id');
+  const detailPage = chunkAt(detailId);
   const items = Array.from({ length: BURST }, (_, i) => burstItem(i));
   for (const { item, sender } of items) expect(deliverServerItem(item, sender, () => undefined)).toBe('delivered');
   expect(queue.entries).toHaveLength(BURST);
@@ -90,7 +90,7 @@ it('gives each of 200 items received at once its own line at delivery time', () 
     expect(entry.messageOf()).toBe(id);
     held.add(id);
     shown.push(chunkAt(id));
-    expect(chunkAt(plannedIds[1])).toEqual(detailPage);
+    expect(chunkAt(detailId)).toEqual(detailPage);
     entry.onGranted?.();
     entry.onComplete?.();
   }
@@ -98,6 +98,6 @@ it('gives each of 200 items received at once its own line at delivery time', () 
   expect(queue.warnings).toEqual([]);
 
   const reference = setSessionReceiptMessages([...planned, ...items.map(lineOf)]) as number[];
-  items.forEach((_, i) => expect(shown[i]).toEqual(chunkAt(reference[planned.length + i])));
+  items.forEach((_, i) => expect(shown[i]).toEqual(chunkAt(required(reference[planned.length + i], `reference line ${i}`))));
   expect(new Set(shown.map((chunk) => chunk?.join(','))).size).toBe(new Set(items.map(lineOf)).size);
 });

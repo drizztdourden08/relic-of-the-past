@@ -5,9 +5,7 @@ import { getModule, getProfileId, sramSyncState, SRAM_PATH } from '@rotp/game-co
 
 const simpleHash = (data: Uint8Array): string => {
   let h = 0;
-  for (let i = 0; i < data.length; i++) {
-    h = ((h << 5) - h + data[i]) | 0;
-  }
+  for (const byte of data) h = ((h << 5) - h + byte) | 0;
   return h.toString(36);
 };
 

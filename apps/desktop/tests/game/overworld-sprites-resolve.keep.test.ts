@@ -13,6 +13,7 @@ vi.mock('../../../../packages/game-core/src', async (importOriginal) => ({
 
 import { wasmGetOverworldSpriteSpawns, wasmGetAreaHeads } from '@rotp/game-core';
 import { getOverworldSprites } from '@rotp/navigation';
+import { required } from '../required';
 
 const HEAD = 24;
 const heads = (() => {
@@ -51,7 +52,8 @@ describe('getOverworldSprites resolves spawns to their true screen', () => {
       { spriteType: 0xeb, row: 5, col: 5, carriesKey: false, carriesBigKey: false, floor: 0 },
     ]);
 
-    const [sprite] = getOverworldSprites(HEAD);
+    const [first] = getOverworldSprites(HEAD);
+    const sprite = required(first, 'the resolved sprite');
     expect(sprite.roomId).toBe(HEAD);
     expect(sprite.tile).toEqual({ row: 5, col: 5 });
   });

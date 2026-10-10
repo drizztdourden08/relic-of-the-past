@@ -2,7 +2,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { OUTFIT_IDS } from '@rotp/game-data';
 import type { OutfitId, GloveLevel, Wearing } from '@rotp/game-data';
-import { GLOVE_LABELS, GLOVE_LEVELS, OUTFIT_LABELS } from './useWearing.constants';
+import { GLOVE_LABELS, GLOVE_LEVELS, OUTFIT_LABELS } from './wearing.constants';
 
 const useWearing = () => {
   const [outfit, setOutfit] = useState<OutfitId>('green');

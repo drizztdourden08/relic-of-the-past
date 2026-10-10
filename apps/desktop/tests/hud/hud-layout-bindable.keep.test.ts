@@ -42,7 +42,7 @@ describe('the magic bar - size.w bound to an expression, no new element kind', (
     id: 'magic-bar',
     size: { w: { from: 'data', expr: 'magic_current / 128 * 24' }, h: { px: 8 } },
     element: { type: 'sprite', file: 'magic-fill' },
-  } as HudNode);
+  });
 
   it('a full bar resolves the expression to the full 24px width (box-side, via measureBox)', () => {
     expect(measureBox(magicBar(), { scope: { magic_current: 128 } }).w).toBe(24);
@@ -71,7 +71,7 @@ describe('the magic bar - size.w bound to an expression, no new element kind', (
 describe('visible, scale and opacity all accept a Value', () => {
   it('visible resolves truthy from data, not only from a literal boolean', () => {
     const doc = docOf(row([
-      leaf('a', { visible: { from: 'data', expr: 'arrow_current > 0' } } as Partial<HudNode>),
+      leaf('a', { visible: { from: 'data', expr: 'arrow_current > 0' } }),
       leaf('b'),
     ], { gap: { x: 4, y: 4 } }));
     expect(rectOf(doc, 'a', { arrow_current: 0 })).toBeUndefined();
@@ -81,13 +81,13 @@ describe('visible, scale and opacity all accept a Value', () => {
   });
 
   it('a literal Value resolves exactly as a bare number always has (scale)', () => {
-    const bound = docOf(row([leaf('a')], { scale: { from: 'data', expr: '0.5' } } as Partial<HudContainer>));
+    const bound = docOf(row([leaf('a')], { scale: { from: 'data', expr: '0.5' } }));
     const literal = docOf(row([leaf('a')], { scale: 0.5 }));
     expect(measureBox(bound.screen.children[0])).toEqual(measureBox(literal.screen.children[0]));
   });
 
   it('opacity resolves from data and is clamped to 0..1 even when the expression is not', () => {
-    const doc = docOf(row([leaf('a', { opacity: { from: 'data', expr: 'silver_arrows * 5' } } as Partial<HudNode>)]));
+    const doc = docOf(row([leaf('a', { opacity: { from: 'data', expr: 'silver_arrows * 5' } })]));
     expect(placedById(layoutHud(doc, VIEW, { scope: { silver_arrows: 1 } }), 'a')?.opacity).toBe(1);
     expect(placedById(layoutHud(doc, VIEW, { scope: { silver_arrows: 0 } }), 'a')?.opacity).toBe(0);
   });
@@ -103,29 +103,29 @@ describe('visible, scale and opacity all accept a Value', () => {
 describe('min/max on every extent - a fill child no longer collapses to nothing', () => {
   it('a fill child holds its min when the row has nothing left to give it', () => {
     const doc = docOf(row([
-      box('fixed', { size: { w: { px: 400 }, h: { px: 10 } } } as Partial<HudContainer>),
-      box('shrunk', { size: { w: 'fill', h: { px: 10 } }, min: { w: 20 } } as Partial<HudContainer>),
+      box('fixed', { size: { w: { px: 400 }, h: { px: 10 } } }),
+      box('shrunk', { size: { w: 'fill', h: { px: 10 } }, min: { w: 20 } }),
     ], { size: { w: { px: 100 } } }));
     expect(rectOf(doc, 'shrunk')?.w).toBe(20);
   });
 
   it('without a min the same layout collapses the fill child to zero (and it leaves the flow)', () => {
     const doc = docOf(row([
-      box('fixed', { size: { w: { px: 400 }, h: { px: 10 } } } as Partial<HudContainer>),
-      box('shrunk', { size: { w: 'fill', h: { px: 10 } } } as Partial<HudContainer>),
+      box('fixed', { size: { w: { px: 400 }, h: { px: 10 } } }),
+      box('shrunk', { size: { w: 'fill', h: { px: 10 } } }),
     ], { size: { w: { px: 100 } } }));
     expect(rectOf(doc, 'shrunk')).toBeUndefined();
   });
 
   it('max caps a size that would otherwise grow past it', () => {
     const doc = docOf(row([
-      box('a', { size: { w: 'fill', h: { px: 10 } }, max: { w: 40 } } as Partial<HudContainer>),
+      box('a', { size: { w: 'fill', h: { px: 10 } }, max: { w: 40 } }),
     ], { size: { w: { px: 200 } } }));
     expect(rectOf(doc, 'a')?.w).toBe(40);
   });
 
   it('min/max apply to a fixed px size exactly the same way - every extent, not only fill', () => {
-    const doc = docOf(row([box('a', { size: { w: { px: 5 }, h: { px: 10 } }, min: { w: 20 } } as Partial<HudContainer>)]));
+    const doc = docOf(row([box('a', { size: { w: { px: 5 }, h: { px: 10 } }, min: { w: 20 } })]));
     expect(rectOf(doc, 'a')?.w).toBe(20);
   });
 });

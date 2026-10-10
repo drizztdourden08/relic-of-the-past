@@ -11,6 +11,7 @@ export { formatAgo, formatDateTime, formatDay } from './format/format-date';
 export { mediaKindOf } from './media/media-kind';
 export type { MediaKind } from './media/media-kind';
 export { matchRoute } from './router/match-route';
+export { routeParam } from './router/route-param';
 export type { RouteParams } from './router/match-route.type';
 export { githubHandleOf } from './sanctuary/github-handle';
 export { SANCTUARY_SITE_HOST, SANCTUARY_SITE_URL } from './sanctuary/sanctuary-site';

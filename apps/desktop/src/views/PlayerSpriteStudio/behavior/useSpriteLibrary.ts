@@ -26,7 +26,7 @@ const useSpriteLibrary = () => {
     setLoading(false);
   }, []);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => { void refresh(); }, [refresh]);
 
   const importFiles = useCallback(async (fileList: File[]) => {
     let last = '';

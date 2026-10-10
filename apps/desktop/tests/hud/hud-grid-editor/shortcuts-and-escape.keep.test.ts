@@ -6,7 +6,7 @@ import { layoutHud, placedById, validateLayout } from '@rotp/hud';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { GridEditor } from '@app/views/HudLayoutEditor/sub-components/GridEditor';
 import { patchNode } from '@app/hud-layout-editing/node-edits';
-import type { HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
+import type { HudGridContainer, HudLayout } from '@rotp/hud';
 import { VIEW } from './grid-editor.constants';
 import { installGridRig } from './install-grid-rig';
 import { screenRoot } from './screen-root';
@@ -90,7 +90,7 @@ describe('removing an occupied column survives the validator and the engine', ()
     mount(h(GridEditor, {
       container: doc.screen as HudGridContainer,
       scope: {},
-      onPatchContainer: (patch) => { doc = patchNode(doc, 'screen', patch as Partial<HudNode>); },
+      onPatchContainer: (patch) => { doc = patchNode(doc, 'screen', patch); },
     }));
     down(header('column 1'));
     press('Delete');

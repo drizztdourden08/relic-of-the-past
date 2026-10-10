@@ -26,7 +26,7 @@ const sweep = (h: Heap) => computeCompletedChecks(readersOf(h), () => false);
 describe('T6: event records', () => {
   it('are unique, in range, and every combined event names records that exist', () => {
     const ids = new Set<string>();
-    const known = new Set(all('check').map((c) => c.id));
+    const known = new Set<string>(all('check').map((c) => c.id));
     for (const record of events()) {
       expect(ids.has(record.id), `duplicate ${record.id}`).toBe(false);
       ids.add(record.id);
@@ -48,7 +48,9 @@ describe('T6: event records', () => {
     const done = sweep(heap());
     expect(events().some((e) => done.has(e.id))).toBe(false);
   });
+});
 
+describe('T6: event records', () => {
   it('ledger bits and vanilla bits each complete their record', () => {
     const h = heap();
     h.ledger.add(EVENT_BIT.oldManRescued);
@@ -69,7 +71,9 @@ describe('T6: event records', () => {
     expect(done.has(byName('All pendants held').id)).toBe(true);
     expect(done.has(byName('All crystals held').id)).toBe(false);
   });
+});
 
+describe('T6: event records', () => {
   it('a reversible event reports its live status without unticking', () => {
     const state = buildPresenceState({
       progress: [0, 0, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12],
@@ -92,7 +96,7 @@ describe('T6: event records', () => {
       const { roomId, chestIndex, mask } = c.gameId;
       if (roomId === undefined) continue;
       const bit = chestIndex !== undefined ? [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400][chestIndex] : (mask ?? 0);
-      h.rooms.set(roomId, (h.rooms.get(roomId) ?? 0) | bit);
+      h.rooms.set(roomId, (h.rooms.get(roomId) ?? 0) | (bit ?? 0));
     }
     h.rooms.set(0x07, (h.rooms.get(0x07) ?? 0) | 0x800);
     h.rooms.set(0x31, (h.rooms.get(0x31) ?? 0) | 0x8000);

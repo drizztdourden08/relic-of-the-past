@@ -62,7 +62,7 @@ const POND_SLOTS: ReadonlySet<LocationKey> = new Set([
   ...POND_LOCATION_SET, ...CAPACITY_UPGRADE_LOCATIONS.keys(),
 ]);
 
-describe('every id-keyed table names a location the world really has', () => {
+describe('every id-keyed table names a location the world has', () => {
   for (const [label, keys] of KEYED_TABLES) {
     it(label, () => {
       expect(keys.length).toBeGreaterThan(0);

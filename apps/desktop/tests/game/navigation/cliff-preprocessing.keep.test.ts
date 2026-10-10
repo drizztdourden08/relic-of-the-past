@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { processStraightCliffs, GRID_SIZE } from '@rotp/navigation';
 import type { TilePassability, LedgeTraversal } from '@rotp/game-core';
+import { cellOf, rowOf } from './grid-access';
 
 const JUMP_TRIGGER = 0x28;
 
@@ -21,30 +22,30 @@ const run = (rawAttr: number[][]): { grid: TilePassability[][]; ledges: LedgeTra
 describe('processStraightCliffs (indoor) and the 2-wide same-direction rule', () => {
   it('drops a lone trigger beside a staircase whose neighbor infers the opposite direction', () => {
     const rawAttr = emptyAttr();
-    rawAttr[22][12] = JUMP_TRIGGER;
-    rawAttr[22][13] = JUMP_TRIGGER;
-    for (const r of [19, 20, 21]) { rawAttr[r][12] = 0x04; rawAttr[r][13] = 0x04; }
-    for (const r of [23, 24, 25]) rawAttr[r][12] = 0x04;
-    rawAttr[22][14] = 0x02;
+    rowOf(rawAttr, 22)[12] = JUMP_TRIGGER;
+    rowOf(rawAttr, 22)[13] = JUMP_TRIGGER;
+    for (const r of [19, 20, 21]) { rowOf(rawAttr, r)[12] = 0x04; rowOf(rawAttr, r)[13] = 0x04; }
+    for (const r of [23, 24, 25]) rowOf(rawAttr, r)[12] = 0x04;
+    rowOf(rawAttr, 22)[14] = 0x02;
 
     const { grid, ledges } = run(rawAttr);
 
-    expect(grid[22][13].type).not.toBe('ledge');
+    expect(cellOf(grid, 22, 13).type).not.toBe('ledge');
     expect(ledges.some(l => l.startRow === 22 && l.startCol === 13)).toBe(false);
   });
 
   it('keeps a wide same-direction fan (room 0x72 north jump)', () => {
     const rawAttr = emptyAttr();
     for (let c = 6; c <= 9; c++) {
-      rawAttr[53][c] = JUMP_TRIGGER;
-      rawAttr[52][c] = 0x01;
-      rawAttr[51][c] = 0x04;
+      rowOf(rawAttr, 53)[c] = JUMP_TRIGGER;
+      rowOf(rawAttr, 52)[c] = 0x01;
+      rowOf(rawAttr, 51)[c] = 0x04;
     }
 
     const { grid, ledges } = run(rawAttr);
 
     for (let c = 6; c <= 9; c++) {
-      expect(grid[53][c]).toEqual({ type: 'ledge', dir: 'n' });
+      expect(rowOf(grid, 53)[c]).toEqual({ type: 'ledge', dir: 'n' });
       expect(ledges.some(l => l.startRow === 53 && l.startCol === c)).toBe(true);
     }
   });

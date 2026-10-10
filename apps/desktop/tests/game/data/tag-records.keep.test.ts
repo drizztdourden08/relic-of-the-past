@@ -1,7 +1,8 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { ALL_TAGS, all, CONNECTION_TAG_METADATA, CONTENT_TAG_METADATA, find, getTag, tagById, tagByKey, tagIdForKey, tagIdsForKeys, tagKey, tagKeysOf, tagsFor, TAG_METADATA } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const SEED = [
   ...TAG_METADATA.map(entry => ({ ...entry, scope: 'screen' as const })),
@@ -45,7 +46,7 @@ describeDataset('the tag collection', () => {
 
   it('reaches the facade like any other kind', () => {
     expect(all('tag')).toHaveLength(ALL_TAGS.length);
-    expect(getTag('tag-001').name).toBe(ALL_TAGS[0].name);
+    expect(getTag('tag-001').name).toBe(required(ALL_TAGS[0], 'the first tag').name);
     expect(() => getTag('tag-999')).toThrow("no tag record with id 'tag-999'");
   });
 });
@@ -62,7 +63,7 @@ describeDataset('the seed, term by term', () => {
   });
 
   it('invents nothing, because every record maps back to a seeded term', () => {
-    const seeded = new Set(SEED.map(entry => entry.id));
+    const seeded = new Set<string>(SEED.map(entry => entry.id));
     for (const tag of ALL_TAGS) expect(seeded.has(tag.name), tag.name).toBe(true);
   });
 

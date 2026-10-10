@@ -1,18 +1,16 @@
 /* @layer tests @kind helper */
 import { chromium } from 'playwright';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'fs';
 import { layoutCases } from './layout-cases';
 import type { LayoutRig, Measured } from './layout-widths.type';
+import { cssIn } from '../files-in';
 import { REPO_ROOT } from '../../repo-root';
+import { EDITOR_THEME_SHEETS } from '../editor-theme-sheets.constants';
 
 const root = REPO_ROOT;
 const designSystem = `${root}/node_modules/@drizztdourden08/tessera/src`;
 const editor = `${root}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
-
-const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
 
 const sheets = (): string[] => [
   ...cssIn(`${designSystem}/tokens`).filter((f) => !f.endsWith('index.css')),
@@ -20,6 +18,7 @@ const sheets = (): string[] => [
   `${root}/apps/desktop/src/theme.css`,
   ...cssIn(`${designSystem}/primitives`),
   ...cssIn(`${designSystem}/composites`),
+  ...EDITOR_THEME_SHEETS,
   ...cssIn(editor),
 ];
 
@@ -38,7 +37,7 @@ const documentAt = (rail: number): string => {
 
 const probe = (): Measured[] => {
   const px = (el: Element, side: string): number =>
-    parseFloat((getComputedStyle(el) as unknown as Record<string, string>)[side]) || 0;
+    parseFloat(getComputedStyle(el).getPropertyValue(side)) || 0;
   const sel = [
     '.field__label', '.field__hint', '.hud-align', '.hud-align__row', '.hud-align__tiles',
     '.hud-align__diagram',
@@ -46,6 +45,17 @@ const probe = (): Measured[] => {
     '.hud-color-field', '.text-input', '.color-swatch', '.icon-btn',
     '.hud-grid__control', '.hud-extent', '.number-input',
   ].join(', ');
+  const firstClassOf = (el: Element): string => {
+    const [first = ''] = el.className.split(' ');
+    return first;
+  };
+  const textOf = (el: Element): string => {
+    const text = (el as HTMLElement).innerText;
+    if (text) return text;
+    const label = el.getAttribute('aria-label');
+    if (label) return label;
+    return '?';
+  };
   const out: Measured[] = [];
   for (const sec of Array.from(document.querySelectorAll('[data-case]'))) {
     const rail = sec.getBoundingClientRect();
@@ -54,12 +64,12 @@ const probe = (): Measured[] => {
       const line = parseFloat(getComputedStyle(el).lineHeight) || box.height;
       out.push({
         case: (sec as HTMLElement).dataset.case ?? '?',
-        kind: el.className.split(' ')[0],
-        name: ((el as HTMLElement).innerText || el.getAttribute('aria-label') || '?').replace(/\s+/g, ' '),
+        kind: firstClassOf(el),
+        name: textOf(el).replace(/\s+/g, ' '),
         width: Math.round(box.width * 10) / 10,
         height: Math.round(box.height * 10) / 10,
-        content: Math.round((box.width - px(el, 'paddingLeft') - px(el, 'paddingRight')
-          - px(el, 'borderLeftWidth') - px(el, 'borderRightWidth')) * 10) / 10,
+        content: Math.round((box.width - px(el, 'padding-left') - px(el, 'padding-right')
+          - px(el, 'border-left-width') - px(el, 'border-right-width')) * 10) / 10,
         lines: Math.max(1, Math.round(box.height / line)),
         overflow: Math.max(0, Math.round(box.right - rail.right)),
         scroll: Math.max(0, el.scrollWidth - el.clientWidth),

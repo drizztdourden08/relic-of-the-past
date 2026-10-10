@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
 import { compileAlttpAssetSet, compileResources, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/node';
+import { required } from './required';
 
 const snesPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past (USA).sfc');
 const gbaPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba');
@@ -29,7 +30,7 @@ describe('multi-source asset aggregation', () => {
 
     const combined = await compileAlttpAssetSet({ snes, gbaAlttp: gba }, { skipDialogue: true, skipMusic: true });
     expect(combined.supplements).toHaveLength(1);
-    const [supplement] = combined.supplements;
+    const supplement = required(combined.supplements[0], 'the supplement outcome');
     expect(supplement.id).toBe('gba-alttp');
     expect(supplement.ok).toBe(true);
     expect(combined.base).toEqual(baseOnly.base);
@@ -44,7 +45,7 @@ describe('multi-source asset aggregation', () => {
 
     const baseOnly = await compileAlttpAssetSet({ snes }, { skipDialogue: true, skipMusic: true });
     const combined = await compileAlttpAssetSet({ snes, gbaAlttp: gba }, { skipDialogue: true, skipMusic: true });
-    const [supplement] = combined.supplements;
+    const supplement = required(combined.supplements[0], 'the supplement outcome');
     expect(supplement.id).toBe('gba-alttp');
     expect(supplement.ok).toBe(false);
     if (!supplement.ok) expect(supplement.reason.length).toBeGreaterThan(0);

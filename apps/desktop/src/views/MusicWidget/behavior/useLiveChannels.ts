@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 import { useEffect, useMemo, useState } from 'react';
 import { isMsuSessionActive, msuChannelReport } from '@app/game/msu-session';
-import { createPreviewReportStore } from '@app/views/DataManager/sub-components/msu/behavior/preview-report-store';
+import { createPreviewReportStore } from '@app/msu-studio/behavior/preview-report-store';
 import { CHANNEL_TITLES, CHANNELS } from '../MusicWidget.constants';
 import type { LiveChannel } from '../MusicWidget.type';
 

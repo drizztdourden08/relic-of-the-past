@@ -5,6 +5,7 @@ import type { CapacityRowState } from '@app/compounds/CapacityFamilyRow';
 import { isPresetChoice } from './is-preset-choice';
 import { presetOfChoice } from './preset-of-choice';
 import { rowStateOf } from './row-state-of';
+import { itemAt } from '@app/checked-access';
 import { settingOfRowState } from './setting-of-row-state';
 
 const detachedFromReading = (
@@ -23,7 +24,7 @@ const applyRowChange = (
   const current = profile[family];
   const detached = detachedFromReading(capacityFamily, current, next);
   const seeded = detached.curve === 'free' && detached.jumps.length === 0 && current.mode === 'custom'
-    ? { ...detached, jumps: planOf(capacityFamily, { ...current, start: capacityFamily.ladder[detached.range[0]], max: capacityFamily.ladder[detached.range[1]] }).jumps }
+    ? { ...detached, jumps: planOf(capacityFamily, { ...current, start: itemAt(capacityFamily.ladder, detached.range[0]), max: itemAt(capacityFamily.ladder, detached.range[1]) }).jumps }
     : detached;
   const setting = settingOfRowState(capacityFamily, seeded, walletFloor);
   if (family === 'wallet') return { ...profile, wallet: (setting.mode === 'vanilla-in-pool' ? { mode: 'vanilla' } : setting) as WalletSetting };

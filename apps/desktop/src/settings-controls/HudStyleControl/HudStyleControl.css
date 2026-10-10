@@ -11,7 +11,7 @@
   justify-content: space-between;
   gap: var(--space-md);
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
   background: var(--c-surface);
 }

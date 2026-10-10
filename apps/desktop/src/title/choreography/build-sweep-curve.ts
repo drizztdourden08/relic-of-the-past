@@ -10,7 +10,7 @@ const buildSweepCurve = (): Float32Array => {
     travelled += 1 - (1 - DWELL_SPEED) * dip;
     table[i] = travelled;
   }
-  for (let i = 0; i <= CURVE_STEPS; i++) table[i] /= travelled;
+  for (const [i, value] of table.entries()) table[i] = value / travelled;
   return table;
 };
 

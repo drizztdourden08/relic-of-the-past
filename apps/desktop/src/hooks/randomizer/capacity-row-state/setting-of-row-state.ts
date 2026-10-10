@@ -3,6 +3,7 @@ import { NO_WALLET_FLOOR, clampCount, heldMaxRungOf } from '@rotp/randomizer';
 import type { CapacityFamily, FamilySetting, WalletFloor } from '@rotp/randomizer';
 import type { CapacityRowState } from '@app/compounds/CapacityFamilyRow';
 import { isPresetChoice } from './is-preset-choice';
+import { itemAt } from '@app/checked-access';
 import { presetOfChoice } from './preset-of-choice';
 
 const settingOfRowState = (
@@ -12,7 +13,7 @@ const settingOfRowState = (
   const high = heldMaxRungOf(capacityFamily, state.range[1], walletFloor);
   const low = Math.min(state.range[0], high);
   const span = high - low;
-  const base = { mode: 'custom' as const, start: capacityFamily.ladder[low], max: capacityFamily.ladder[high] };
+  const base = { mode: 'custom' as const, start: itemAt(capacityFamily.ladder, low), max: itemAt(capacityFamily.ladder, high) };
   if (state.curve === 'free') {
     return { ...base, count: state.jumps.length, shape: { curve: 'free', jumps: state.jumps } };
   }

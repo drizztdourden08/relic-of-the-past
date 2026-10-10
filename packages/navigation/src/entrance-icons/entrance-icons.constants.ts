@@ -13,6 +13,7 @@ import forestEntranceIcon from '@iconify-icons/game-icons/hills';
 import holeIcon from '@iconify-icons/game-icons/hole';
 import wellIcon from '@iconify-icons/game-icons/well';
 import portalIcon from '@iconify-icons/game-icons/magic-portal';
+import type { CrossingOrigin } from '@rotp/game-core';
 import type { EntranceType, IconData } from './entrance-icons.type';
 
 const ENTRANCE_ICONS: Record<EntranceType, IconData> = {
@@ -35,4 +36,15 @@ const WARP_ICON: IconData = portalIcon;
 const ENTRANCE_COLOR = '#ffcc44';
 const WALK_BOUNDARY_COLOR = '#cc88ff';
 
-export { ENTRANCE_ICONS, STAIR_ICON, WALK_BOUNDARY_ICON, WARP_ICON, ENTRANCE_COLOR, WALK_BOUNDARY_COLOR };
+const ORIGIN_ICONS: Partial<Record<CrossingOrigin, { icon: IconData; color: string }>> = {
+  'respawn': { icon: ENTRANCE_ICONS.respawn, color: ENTRANCE_COLOR },
+  'fall-hole': { icon: ENTRANCE_ICONS.hole, color: ENTRANCE_COLOR },
+  'room-stair': { icon: STAIR_ICON, color: ENTRANCE_COLOR },
+  'room-border': { icon: WALK_BOUNDARY_ICON, color: WALK_BOUNDARY_COLOR },
+  'warp-slot': { icon: WARP_ICON, color: ENTRANCE_COLOR },
+  'room-doorway': { icon: ENTRANCE_ICONS.door, color: ENTRANCE_COLOR },
+  'room-door': { icon: ENTRANCE_ICONS.overworld, color: ENTRANCE_COLOR },
+  'exit-table': { icon: ENTRANCE_ICONS.overworld, color: ENTRANCE_COLOR },
+};
+
+export { ORIGIN_ICONS, ENTRANCE_ICONS, STAIR_ICON, WALK_BOUNDARY_ICON, WARP_ICON, ENTRANCE_COLOR, WALK_BOUNDARY_COLOR };

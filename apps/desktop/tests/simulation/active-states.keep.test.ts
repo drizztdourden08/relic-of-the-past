@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { activeStates, SLOT } from '@rotp/game-core';
 import type { StateSnapshot } from '@rotp/game-core';
+import { required } from '../required';
 
 const snap = (over: Partial<Record<number, number>> = {}, follower = 0): StateSnapshot => {
   const progress = new Array(16).fill(0);
@@ -29,7 +30,7 @@ describe('active game states', () => {
   });
 
   it('reports an unmapped tagalong id by number instead of guessing', () => {
-    const state = activeStates(snap({}, 200))[0];
+    const state = required(activeStates(snap({}, 200))[0], 'first active state');
     expect(state.label).toBe('Follower #200 following');
     expect(state.detail).toBe('unmapped tagalong id');
   });

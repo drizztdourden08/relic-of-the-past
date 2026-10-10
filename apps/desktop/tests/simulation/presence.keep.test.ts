@@ -15,6 +15,12 @@ const baseState = (partial: Partial<PresenceGameState> = {}): PresenceGameState 
   ...partial,
 });
 
+const bytesWith = (index: number, value: number): number[] => {
+  const bytes = new Array<number>(index + 1).fill(0);
+  bytes[index] = value;
+  return bytes;
+};
+
 describe('evaluatePresence', () => {
   it('treats an absent condition as always present', () => {
     expect(evaluatePresence(undefined, baseState())).toBe(true);
@@ -51,14 +57,14 @@ describe('evaluatePresence', () => {
 
   it('owEvent bit clear/set', () => {
     const cond: PresenceCondition = { owEvent: { screen: 0x2f, mask: 0x20 }, state: 'set' };
-    expect(evaluatePresence(cond, baseState({ owEventInfo: { 0x2f: 0x20 } as unknown as ArrayLike<number> }))).toBe(true);
+    expect(evaluatePresence(cond, baseState({ owEventInfo: bytesWith(0x2f, 0x20) }))).toBe(true);
     expect(evaluatePresence(cond, baseState({ owEventInfo: [] }))).toBe(false);
   });
 
   it('roomBossDead reads the 0x8000 save_dung_info bit', () => {
     const room = 0x0a3;
     const dead: PresenceCondition = { roomBossDead: room, dead: true };
-    const roomState = { [room]: BOSS_DEAD_BIT } as unknown as ArrayLike<number>;
+    const roomState = bytesWith(room, BOSS_DEAD_BIT);
     expect(evaluatePresence(dead, baseState({ roomState }))).toBe(true);
     expect(evaluatePresence(dead, baseState({ roomState: [] }))).toBe(false);
     expect(evaluatePresence({ roomBossDead: room, dead: false }, baseState({ roomState: [] }))).toBe(true);

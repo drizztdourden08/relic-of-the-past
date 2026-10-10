@@ -2,6 +2,7 @@
 import { capacityRungLinesOf, capacityFixedLinesOf, NO_RUNG_LINES } from '@rotp/randomizer';
 import { setSessionReceiptMessages } from '../session-dialogue';
 import type { CapacityFamilyId, CapacityProfile, CapacityLineMessages, RungMessageIdOf } from '@rotp/randomizer';
+import { itemAt } from '@app/checked-access';
 import type { CapacityFixedLineArm } from '../capacity-fixed-lines';
 
 const composeRungMessages = (profile: CapacityProfile): RungMessageIdOf => {
@@ -21,7 +22,7 @@ const composeFixedMessages = (profile: CapacityProfile): readonly CapacityFixedL
   const entries = capacityFixedLinesOf(profile);
   const ids = setSessionReceiptMessages(entries.map((entry) => entry.line));
   if (ids === null) return [];
-  return entries.map(({ family, fromRung, jump }, index) => ({ family, fromRung, jump, messageId: ids[index] }));
+  return entries.map(({ family, fromRung, jump }, index) => ({ family, fromRung, jump, messageId: itemAt(ids, index) }));
 };
 
 const composeCapacityLineMessages = (profile: CapacityProfile, progressive: boolean): CapacityLineMessages =>

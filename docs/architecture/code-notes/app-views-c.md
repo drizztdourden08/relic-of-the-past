@@ -463,7 +463,7 @@ it. A `readout` row draws the value as a tag in the control's track. The frozen 
 no handler, so a range shows the recorded value without offering a drag that could not be saved.
 The In Pool cell sits on the title's baseline, not the description's.
 
-### compounds/RandomizerOptionRow/behavior/partitionCatalogByLock.ts
+### compounds/RandomizerOptionRow/behavior/partition-catalog-by-lock.ts
 
 Splits the option catalog by lock state so every consumer shows the same shape: the unlocked
 options first, flat in catalog order and also grouped by section (so a newly supported option

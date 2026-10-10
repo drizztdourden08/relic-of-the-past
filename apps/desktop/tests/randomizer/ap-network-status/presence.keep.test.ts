@@ -5,6 +5,7 @@ import type { FakeRoom, FakeServer } from '../ap-fake-server';
 import { boot, settle } from '../ap-protocol-harness';
 import { installNetworkHarness } from './install-network-harness';
 import { networkRoom as makeRoom } from './network-room';
+import { required } from '../../required';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
@@ -19,7 +20,8 @@ const trackedRoom = (overrides: Partial<FakeRoom> = {}): FakeRoom => makeRoom({
   playersReply: BOTH_ONLINE, tracked: { Zelda: { checked: [...ZELDA_CHECKED], missing: [...ZELDA_MISSING] } }, ...overrides,
 });
 
-const zelda = (session: Awaited<ReturnType<typeof boot>>['session']) => session.networkStatus.players[1];
+const zelda = (session: Awaited<ReturnType<typeof boot>>['session']) =>
+  required(session.networkStatus.players[1], 'Zelda player status');
 
 const trackerConnects = (server: FakeServer) => server.of('Connect').filter((packet) => packet.tags.includes('Tracker'));
 
@@ -28,12 +30,13 @@ installNetworkHarness();
 describe('presence and other players\' checks', () => {
   it('reads every slot\'s client status at connect, then follows its SetReply', async () => {
     const { session, server } = await boot(makeRoom({ clientStatus: { 1: 5, 2: 20 } }));
-    const keys = ['_read_client_status_0_1', '_read_client_status_0_2'];
+    const zeldaKey = '_read_client_status_0_2';
+    const keys = ['_read_client_status_0_1', zeldaKey];
     expect(server.of('Get')).toEqual([{ cmd: 'Get', keys }]);
     expect(server.of('SetNotify')).toEqual([{ cmd: 'SetNotify', keys }]);
     expect(session.networkStatus.players.map((player) => [player.status, player.online]))
       .toEqual([['connected', true], ['playing', true]]);
-    server.push([{ cmd: 'SetReply', key: keys[1], value: 30 }]);
+    server.push([{ cmd: 'SetReply', key: zeldaKey, value: 30 }]);
     await settle();
     expect(zelda(session).status).toBe('goal');
   });
@@ -57,9 +60,11 @@ describe('presence and other players\' checks', () => {
     expect(server.trackers()).toEqual(['Zelda']);
     const [connect] = trackerConnects(server);
     expect(connect).toMatchObject({ game: '', name: 'Zelda', items_handling: 0, slot_data: false, tags: ['Tracker', 'NoText'] });
-    expect(connect.uuid).toBe(`${server.of('Connect')[0].uuid}-tracker-2`);
+    const gameConnect = required(server.of('Connect')[0], 'game Connect packet');
+    expect(required(connect, 'tracker Connect packet').uuid).toBe(`${gameConnect.uuid}-tracker-2`);
     expect(zelda(session)).toMatchObject({ online: true, checked: 12, total: 50 });
-    server.pushTracker('Zelda', [{ cmd: 'RoomUpdate', checked_locations: [ZELDA_MISSING[0]] }]);
+    const firstMissing = required(ZELDA_MISSING[0], 'first missing location');
+    server.pushTracker('Zelda', [{ cmd: 'RoomUpdate', checked_locations: [firstMissing] }]);
     await settle();
     expect(zelda(session)).toMatchObject({ checked: 13, total: 50 });
     server.push([
@@ -69,7 +74,9 @@ describe('presence and other players\' checks', () => {
     await settle();
     expect(zelda(session).online).toBe(true);
   });
+});
 
+describe('presence and other players\' checks', () => {
   it('tracker links close with the connection, reopen after a reconnect, and close on stop', async () => {
     const { session, server } = await boot(trackedRoom());
     await settle();

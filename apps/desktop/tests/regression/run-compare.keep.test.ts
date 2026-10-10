@@ -24,9 +24,39 @@ const BASE = process.env.ROTP_NET_BASE ?? 'baseline';
 const CURRENT = process.env.ROTP_NET_CURRENT ?? 'current';
 const ready = process.env.ROTP_NET_BASE !== undefined && existsSync(shotPath(BASE)) && existsSync(shotPath(CURRENT));
 
-const allowed = (save: string, checkId: string, from: Status, to: Status): boolean =>
+const allowed = (save: string, checkId: string, from: Status, to: Status | undefined): boolean =>
   EXPECTED_STATUS_CHANGES.some((row) => (row.save === '*' || row.save === save)
     && row.checkId === checkId && row.from === from && row.to === to);
+
+const screenColumnChanged = (): boolean => EXPECTED_SCREEN_COLUMN_CHANGE;
+
+const saveDrift = (save: string, was: SaveShot, is: SaveShot): string[] => {
+  const wrong: string[] = [];
+  if (JSON.stringify(was.inventory) !== JSON.stringify(is.inventory)) wrong.push(`${save}: inventory`);
+  if (JSON.stringify(withoutAdded(was.completed)) !== JSON.stringify(withoutAdded(is.completed))) wrong.push(`${save}: completed`);
+  if (screenColumnChanged()) return wrong;
+  if (JSON.stringify(was.reachableScreens) !== JSON.stringify(withoutAddedScreens(is.reachableScreens))) {
+    wrong.push(`${save}: reachableScreens`);
+  }
+  return wrong;
+};
+
+const movedStatuses = (
+  { label, save, was, is }: { label: string; save: string; was: Record<string, Status>; is: Record<string, Status> | undefined },
+): string[] => {
+  const moved: string[] = [];
+  for (const [checkId, from] of Object.entries(was)) {
+    const to = is?.[checkId];
+    if (to !== from && !allowed(save, checkId, from, to)) moved.push(`${label}  ${save}  ${checkId}  ${from} -> ${to}`);
+  }
+  return moved;
+};
+
+const movedInSave = (save: string, was: SaveShot, is: SaveShot): string[] => [
+  ...movedStatuses({ label: 'normal', save, was: was.normal, is: is.normal }),
+  ...Object.entries(was.seeds).flatMap(([seed, shot]) =>
+    movedStatuses({ label: seed, save, was: shot.byCheck, is: is.seeds[seed]?.byCheck })),
+];
 
 const renamed = (old: string): string => EXPECTED_NAME_CHANGES[old] ?? old;
 
@@ -68,12 +98,7 @@ const withoutDropped = (placement: unknown): unknown => {
     for (const [save, was] of Object.entries(base.saves)) {
       const is = now.saves[save];
       if (is === undefined) { wrong.push(`${save}: missing`); continue; }
-      if (JSON.stringify(was.inventory) !== JSON.stringify(is.inventory)) wrong.push(`${save}: inventory`);
-      if (JSON.stringify(withoutAdded(was.completed)) !== JSON.stringify(withoutAdded(is.completed))) wrong.push(`${save}: completed`);
-      if (EXPECTED_SCREEN_COLUMN_CHANGE) continue;
-      if (JSON.stringify(was.reachableScreens) !== JSON.stringify(withoutAddedScreens(is.reachableScreens))) {
-        wrong.push(`${save}: reachableScreens`);
-      }
+      wrong.push(...saveDrift(save, was, is));
     }
     expect(wrong).toEqual([]);
   });
@@ -83,16 +108,7 @@ const withoutDropped = (placement: unknown): unknown => {
     for (const [save, was] of Object.entries(base.saves)) {
       const is = now.saves[save];
       if (is === undefined) continue;
-      for (const [checkId, from] of Object.entries(was.normal)) {
-        const to = is.normal[checkId];
-        if (to !== from && !allowed(save, checkId, from, to)) moved.push(`normal  ${save}  ${checkId}  ${from} -> ${to}`);
-      }
-      for (const [seed, shot] of Object.entries(was.seeds)) {
-        for (const [checkId, from] of Object.entries(shot.byCheck)) {
-          const to = is.seeds[seed]?.byCheck[checkId];
-          if (to !== from && !allowed(save, checkId, from, to)) moved.push(`${seed}  ${save}  ${checkId}  ${from} -> ${to}`);
-        }
-      }
+      moved.push(...movedInSave(save, was, is));
     }
     if (moved.length > 0) writeFileSync(resolve(ROOT, '.user-data/net/moved.txt'), moved.join('\n'));
     expect(moved.slice(0, 40)).toEqual([]);

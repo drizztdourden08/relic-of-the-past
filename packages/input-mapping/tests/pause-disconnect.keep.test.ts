@@ -21,7 +21,7 @@ const profile = (mappings: ButtonMapping[], assignedDevice: AssignedDevice | nul
 const device = (vid: string, pid: string, name: string): DetectedDevice => ({
   id: `hid-${vid}-${pid}`, type: 'gamepad', rawId: name, vendorId: vid, productId: pid,
   deviceFamily: 'generic', displayName: name, sdlType: null, connected: false,
-  activated: false, stale: false, brandLogoKey: null, inputApi: 'hid',
+  activated: false, brandLogoKey: null, inputApi: 'hid',
   hasRumble: false, hasGyro: false,
 });
 

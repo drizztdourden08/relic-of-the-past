@@ -1,10 +1,11 @@
 /* @layer test @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all, getActorByGameId, replaceRecord } from '@rotp/game-data';
 import type { ActorRecord } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy, actorStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,
@@ -42,7 +43,7 @@ describeDataset('actor strategy (combat probe)', () => {
     })).filter(d => d.targetId === actor.id);
 
     expect(drafts).toHaveLength(1);
-    const [draft] = drafts;
+    const draft = required(drafts[0], 'the one draft');
     expect(draft.action).toBe('update');
     expect(draft.detector).toBe('strategy:actor');
     expect(draft.confidence).toBe('certain');
@@ -61,8 +62,9 @@ describeDataset('actor strategy (combat probe)', () => {
         spriteCombat: { [spriteType]: { health: 99, flags4: 0, damageByClass: Array(16).fill(1) } },
       })).filter(d => d.targetId === actor.id);
       expect(drafts).toHaveLength(1);
-      expect((drafts[0].current as ActorRecord).combat?.health).toBe(5);
-      expect((drafts[0].proposed as ActorRecord).combat?.health).toBe(99);
+      const draft = required(drafts[0], 'the one draft');
+      expect((draft.current as ActorRecord).combat?.health).toBe(5);
+      expect((draft.proposed as ActorRecord).combat?.health).toBe(99);
     } finally {
       replaceRecord('actor', actor);
     }

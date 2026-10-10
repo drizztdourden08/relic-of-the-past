@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Flex, Text } from '@drizztdourden08/tessera/primitives';
-import { liveOnlySpawns } from '../behavior/spawn-diff';
+import { liveOnlySpawns } from '../behavior/live-only-spawns';
 import { SPAWNS_NONE, SPAWNS_TITLE } from '../LiveDataInspector.constants';
 import type { SpawnsSectionProps } from '../LiveDataInspector.type';
 import { SpawnRow } from './SpawnRow';

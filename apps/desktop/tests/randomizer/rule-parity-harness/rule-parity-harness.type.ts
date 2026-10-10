@@ -7,7 +7,7 @@ interface ParityDigest {
 interface ExportParity {
   asked: number;
   mismatches: string[];
-  leftHelpers: string[];
+  residualCalls: string[];
 }
 
 export type { ExportParity, ParityDigest };

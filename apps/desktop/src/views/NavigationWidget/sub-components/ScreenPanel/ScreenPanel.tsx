@@ -2,9 +2,8 @@
 import { useMemo } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
-import { ANNOTATION_STYLES } from '../../../GameLayer/sub-components/navigation-overlay/annotation-style';
 import { groupAnnotations } from './behavior/annotation-rows';
-import { annotationStateClass } from './behavior/annotation-state-class';
+import { AnnotationRow } from './sub-components/AnnotationRow';
 import type { ScreenPanelProps } from './ScreenPanel.type';
 import './ScreenPanel.css';
 
@@ -51,28 +50,9 @@ const ScreenPanel = ({ annotations }: ScreenPanelProps) => {
       {groups.map((group) => (
         <Box key={group.id} className="nav-screen-panel__group">
           <Box className="nav-screen-panel__group-title">{group.title} ({group.items.length})</Box>
-          {group.items.map((item, i) => {
-            const style = ANNOTATION_STYLES[item.kind] ?? ANNOTATION_STYLES.unknown;
-            const settled = item.state === 'open' || item.state === 'done';
-            const off = hiddenKinds.has(item.kind);
-            return (
-              <Box
-                key={`${group.id}-${i}-${item.kind}`}
-                className={off ? 'nav-screen-panel__row nav-screen-panel__row--off' : 'nav-screen-panel__row'}
-                onClick={() => toggleKind(item.kind)}
-                title={`${item.kind} at r${item.tile.row} c${item.tile.col}${item.layer !== undefined ? ` L${item.layer}` : ''}. Click to ${off ? 'show' : 'hide'}`}
-              >
-                <Text style={{ color: style.color }} className={settled ? 'nav-screen-panel__glyph nav-screen-panel__glyph--settled' : 'nav-screen-panel__glyph'}>{style.glyph}</Text>
-                <Text className={settled ? 'nav-screen-panel__label nav-screen-panel__label--settled' : 'nav-screen-panel__label'}>{item.label}</Text>
-                {item.detail && <Text className="nav-screen-panel__detail">{item.detail}</Text>}
-                {item.state && (
-                  <Text className={annotationStateClass(item.state, settled)}>
-                    {item.state === 'blocked' ? 'unreachable' : item.state}
-                  </Text>
-                )}
-              </Box>
-            );
-          })}
+          {group.items.map((item, i) => (
+            <AnnotationRow key={`${group.id}-${i}-${item.kind}`} item={item} tone={group.id} off={hiddenKinds.has(item.kind)} onToggle={toggleKind} />
+          ))}
         </Box>
       ))}
     </Box>

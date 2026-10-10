@@ -3,20 +3,20 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { chromium, type Browser } from 'playwright';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { existsSync, readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { existsSync, readFileSync } from 'fs';
+import { filesIn as filesMatching } from './files-in';
 import { EdgesField } from '@app/views/HudLayoutEditor/sub-components/EdgesField';
 import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import { Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { REPO_ROOT } from '../repo-root';
+import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
 
 const ROOT = REPO_ROOT;
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const EDITOR = `${ROOT}/apps/desktop/src/views/HudLayoutEditor`;
 const ED = `${EDITOR}/sub-components`;
 
-const filesIn = (dir: string, ext: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? filesIn(join(dir, e.name), ext) : (e.name.endsWith(ext) ? [join(dir, e.name)] : [])));
+const filesIn = (dir: string, ext: string): string[] => filesMatching(dir, (name) => name.endsWith(ext));
 
 const SHEETS = [
   ...filesIn(`${DS}/tokens`, '.css').filter((f) => !f.endsWith('index.css')),
@@ -24,6 +24,7 @@ const SHEETS = [
   `${ROOT}/apps/desktop/src/theme.css`,
   ...filesIn(`${DS}/primitives`, '.css'),
   ...filesIn(`${DS}/composites`, '.css'),
+  ...EDITOR_THEME_SHEETS,
   ...filesIn(ED, '.css'),
 ];
 
@@ -68,7 +69,18 @@ interface Measured {
 
 const probe = (): Measured[] => {
   const px = (el: Element, side: string): number =>
-    parseFloat((getComputedStyle(el) as unknown as Record<string, string>)[side]) || 0;
+    parseFloat(getComputedStyle(el).getPropertyValue(side)) || 0;
+  const firstClassOf = (el: Element): string => {
+    const [first = ''] = el.className.split(' ');
+    return first;
+  };
+  const textOf = (el: Element): string => {
+    const text = (el as HTMLElement).innerText;
+    if (text) return text;
+    const label = el.getAttribute('aria-label');
+    if (label) return label;
+    return '?';
+  };
   const out: Measured[] = [];
   for (const sec of Array.from(document.querySelectorAll('[data-case]'))) {
     const rail = sec.getBoundingClientRect();
@@ -78,11 +90,11 @@ const probe = (): Measured[] => {
       const line = parseFloat(getComputedStyle(el).lineHeight) || box.height;
       out.push({
         case: (sec as HTMLElement).dataset.case ?? '?',
-        kind: el.className.split(' ')[0],
-        name: ((el as HTMLElement).innerText || el.getAttribute('aria-label') || '?').replace(/\s+/g, ' '),
+        kind: firstClassOf(el),
+        name: textOf(el).replace(/\s+/g, ' '),
         width: Math.round(box.width * 10) / 10,
-        content: Math.round((box.width - px(el, 'paddingLeft') - px(el, 'paddingRight')
-          - px(el, 'borderLeftWidth') - px(el, 'borderRightWidth')) * 10) / 10,
+        content: Math.round((box.width - px(el, 'padding-left') - px(el, 'padding-right')
+          - px(el, 'border-left-width') - px(el, 'border-right-width')) * 10) / 10,
         lines: Math.max(1, Math.round(box.height / line)),
         overflow: Math.max(0, Math.round(box.right - rail.right)),
       });
@@ -93,14 +105,15 @@ const probe = (): Measured[] => {
 
 const measured: Record<number, Measured[]> = {};
 const RAILS = [289, 232, 188];
-let browser: Browser;
+let browser: Browser | undefined;
 
 const at = (rail: number, kind: string, kase?: string): Measured[] =>
   (measured[rail] ?? []).filter((m) => m.kind === kind && (kase === undefined || m.case === kase));
 
 beforeAll(async () => {
-  browser = await chromium.launch();
-  const page = await browser.newPage();
+  const launched = await chromium.launch();
+  browser = launched;
+  const page = await launched.newPage();
   for (const rail of RAILS) {
     await page.setContent(document_(rail));
     measured[rail] = await page.evaluate(probe);
@@ -137,15 +150,15 @@ describe('the inspector row is a Field, at sm, everywhere', () => {
   });
 
   it('spends the 2xs token instead of hand-writing it in the sheet', () => {
-    const sheet = readFileSync(`${ED}/HudLayoutEditor.inspector.css`, 'utf8');
+    const sheet = readFileSync(`${ROOT}/apps/desktop/src/theme/hud-layout-editor/inspector.css`, 'utf8');
     expect((sheet.match(/--space-2xs/g) ?? []).length).toBe(9);
     expect((sheet.match(/gap: var\(--space-2xs\)/g) ?? []).length).toBe(3);
   });
 
   it('says align self, names the four edges, and asks min and max the same way', () => {
     const read = (f: string): string => readFileSync(`${ED}/${f}`, 'utf8');
-    expect(read('sections/PlacementSection.tsx')).toContain("'align down' : 'align self'");
-    expect(read('sections/PlacementSection.tsx')).toContain('label="align across"');
+    expect(read('PlacementSection.tsx')).toContain("'align down' : 'align self'");
+    expect(read('PlacementSection.tsx')).toContain('label="align across"');
     expect(read('EdgesField.tsx')).toContain('label={side}');
     expect(read('BoxModelField.tsx')).toContain('`margin ${side}`');
     expect(read('MinMaxField.tsx')).toContain('Leave a field blank for no limit.');

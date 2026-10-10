@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../stores/navigation-overlay-store';
-import { ANNOTATION_STYLES } from '../../GameLayer/sub-components/navigation-overlay/annotation-style';
+import { ANNOTATION_STYLES } from '@app/navigation-overlay/annotation-style';
 import type { AnnotationLayerProps } from './AnnotationLayer.type';
 import './AnnotationLayer.css';
 
@@ -21,7 +21,7 @@ const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: Annot
           <Box
             key={`anno-${i}-${item.kind}`}
             title={`${item.label}${item.detail ? ` - ${item.detail}` : ''}`}
-            style={{ left: cellLeft + (item.tile.col / 64) * cellW - size / 2, top: cellTop + (item.tile.row / 64) * cellH - size / 2, width: size, height: size, background: style.color, opacity: settled ? 0.35 : 0.9, boxShadow: settled ? 'none' : '0 0 2px #000' }} className="nav-annotation-layer__part-1"
+            style={{ left: cellLeft + (item.tile.col / 64) * cellW - size / 2, top: cellTop + (item.tile.row / 64) * cellH - size / 2, width: size, height: size, background: style.color, opacity: settled ? 0.35 : 0.9, boxShadow: settled ? 'none' : '0 0 2px #000' }} className="nav-annotation-layer__marker"
           />
         );
       })}

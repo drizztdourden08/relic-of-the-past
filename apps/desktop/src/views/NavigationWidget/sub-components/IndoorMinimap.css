@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind style */
 
-.nav-indoor-minimap__part-6 {
+.nav-indoor-minimap__root {
   position: relative;
   width: 100%;
   margin-top: var(--size-4);
@@ -8,14 +8,14 @@
   margin-right: auto;
 }
 
-.nav-indoor-minimap__part-5 {
+.nav-indoor-minimap__map-frame {
   position: absolute;
   border-radius: var(--radius-sm);
   background: var(--c-secondary-soft);
   overflow: hidden;
 }
 
-.nav-indoor-minimap__part-4 {
+.nav-indoor-minimap__marker {
   position: absolute;
   pointer-events: none;
   display: flex;
@@ -23,7 +23,7 @@
   justify-content: center;
 }
 
-.nav-indoor-minimap__part-3 {
+.nav-indoor-minimap__fall-hole {
   position: absolute;
   border: calc(var(--size-1) * 1.5) solid var(--c-primary);
   border-radius: var(--size-1);
@@ -32,7 +32,7 @@
   opacity: 0.8;
 }
 
-.nav-indoor-minimap__part-2 {
+.nav-indoor-minimap__player-dot {
   position: absolute;
   width: var(--size-6);
   height: var(--size-6);
@@ -42,7 +42,7 @@
   pointer-events: none;
 }
 
-.nav-indoor-minimap__part-1 {
+.nav-indoor-minimap__boundary-dot {
   position: absolute;
   width: calc(var(--size-1) * 3);
   height: calc(var(--size-1) * 3);

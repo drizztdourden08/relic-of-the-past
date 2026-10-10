@@ -28,7 +28,7 @@
   gap: var(--space-xs);
   padding: var(--space-sm);
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
   cursor: pointer;
 }
@@ -39,7 +39,7 @@
 }
 
 .sprite-choice__preview {
-  width: 40px;
+  width: var(--size-40);
   height: 60px;
   object-fit: contain;
   image-rendering: pixelated;

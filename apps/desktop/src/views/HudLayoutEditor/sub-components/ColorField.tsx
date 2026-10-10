@@ -2,8 +2,6 @@
 import { useRef, useState } from 'react';
 import { Box, ColorSwatch, Field, TextInput } from '@drizztdourden08/tessera/primitives';
 import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
-import './HudLayoutEditor.layout.css';
-import './HudLayoutEditor.layout-set.css';
 import type { ColorFieldProps } from './ColorField.type';
 
 const ColorField = (props: ColorFieldProps) => {

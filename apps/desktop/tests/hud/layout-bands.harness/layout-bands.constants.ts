@@ -7,7 +7,7 @@ const DESIGN_SYSTEM_DIR = `${ROOT_DIR}/node_modules/@drizztdourden08/tessera/src
 const ROTP_THEME = `${ROOT_DIR}/apps/desktop/src/theme.css`;
 const EDITOR_DIR = `${ROOT_DIR}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
 const GRID_EDITOR_SRC = `${EDITOR_DIR}/GridEditor/GridEditor.tsx`;
-const LAYOUT_SECTION_SRC = `${EDITOR_DIR}/sections/LayoutSection.tsx`;
+const LAYOUT_SECTION_SRC = `${EDITOR_DIR}/LayoutSection.tsx`;
 
 const SELECTIONS: Readonly<Record<string, GridSelection>> = {
   none: { kind: 'none' },

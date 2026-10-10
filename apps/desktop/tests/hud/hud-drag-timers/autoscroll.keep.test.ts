@@ -29,7 +29,7 @@ describe('the ramp is the design decision, so it is pinned as arithmetic', () =>
 });
 
 describe('which element is panned is resolved, never assumed', () => {
-  it('walks up to the nearest ancestor that can actually scroll', () => {
+  it('walks up to the nearest ancestor that can scroll', () => {
     mountOutline();
     const rows = layOut();
     expect(scrollerFor(rowFor('a'))).toBe(rows);

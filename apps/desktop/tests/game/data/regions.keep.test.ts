@@ -132,7 +132,7 @@ describeDataset('a wing and its dungeon agree', () => {
   });
 
   it('gives a wing nothing but rooms of its own dungeon', () => {
-    const roomsOf = new Map(all('dungeon').map((dungeon) => [dungeon.id, new Set<string>(dungeon.roomScreenIds)]));
+    const roomsOf = new Map<string, Set<string>>(all('dungeon').map((dungeon) => [dungeon.id, new Set<string>(dungeon.roomScreenIds)]));
     const wrong = all('screen')
       .filter((screen) => screen.regionId !== undefined)
       .filter((screen) => getRegion(screen.regionId as string).dungeonId !== undefined)

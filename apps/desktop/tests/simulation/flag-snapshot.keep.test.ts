@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { emptySnapshot, cloneSnapshot, diffSnapshots, matchDiffs } from '@rotp/navigation';
 import { describeDataset } from '../dataset-guard';
 
@@ -17,7 +17,7 @@ describeDataset('flag-snapshot diffing', () => {
   it('reports the changed word, index, and newly-set bits for a room flag', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.dungInfo[STARTING_HOUSE_ROOM] |= CHEST_SLOT_0_MASK;
+    after.dungInfo[STARTING_HOUSE_ROOM] = (after.dungInfo[STARTING_HOUSE_ROOM] ?? 0) | CHEST_SLOT_0_MASK;
 
     const diffs = diffSnapshots(before, after);
     expect(diffs).toHaveLength(1);
@@ -27,8 +27,8 @@ describeDataset('flag-snapshot diffing', () => {
   it('diffs overworld and progress buffers independently', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.owEventInfo[0x81] |= 0x40;
-    after.progress[2] |= 0x02;
+    after.owEventInfo[0x81] = (after.owEventInfo[0x81] ?? 0) | 0x40;
+    after.progress[2] = (after.progress[2] ?? 0) | 0x02;
 
     const diffs = diffSnapshots(before, after);
     const kinds = diffs.map(d => d.kind).sort();
@@ -45,7 +45,7 @@ describeDataset('flag-snapshot diffing', () => {
   it('identifies a room-flag diff as the check whose chest bit it is', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.dungInfo[STARTING_HOUSE_ROOM] |= CHEST_SLOT_0_MASK;
+    after.dungInfo[STARTING_HOUSE_ROOM] = (after.dungInfo[STARTING_HOUSE_ROOM] ?? 0) | CHEST_SLOT_0_MASK;
     const matched = matchDiffs(diffSnapshots(before, after));
     expect(matched?.id).toBe('check-026');
     expect(matched?.gameId).toMatchObject({ roomId: STARTING_HOUSE_ROOM, chestIndex: 0 });
@@ -54,7 +54,7 @@ describeDataset('flag-snapshot diffing', () => {
   it('identifies nothing when no check owns the changed bit', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.dungInfo[UNCLAIMED_ROOM] |= CHEST_SLOT_0_MASK;
+    after.dungInfo[UNCLAIMED_ROOM] = (after.dungInfo[UNCLAIMED_ROOM] ?? 0) | CHEST_SLOT_0_MASK;
     expect(matchDiffs(diffSnapshots(before, after))).toBeUndefined();
   });
 });

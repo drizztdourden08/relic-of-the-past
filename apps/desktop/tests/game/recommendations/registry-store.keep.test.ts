@@ -1,5 +1,5 @@
 /* @layer test @kind test */
-import { describe, it, expect, beforeEach } from 'vitest';
+import { it, expect, beforeEach } from 'vitest';
 import { all, find, toScreenIdOf } from '@rotp/game-data';
 import type { ConnectionRecord, ScreenId } from '@rotp/game-data';
 import { createRecommendationStore, detectorsFor, memoryStorage, recommendationFile, runDetection } from '@rotp/navigation';
@@ -10,6 +10,7 @@ import '@rotp/navigation';
 import '@rotp/navigation';
 import '@app/nav-widget/recommendations/strategies/connection/wire-detector';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,
@@ -32,7 +33,7 @@ const auditableScreen = () => {
   const spare = all('screen').map(s => s.gameId.roomIndex).find((n): n is number => n != null);
   const realTransitions: ObservedTransition[] = [{ source: 'test', kind: 'room', index: spare as number }];
   const existingConnections = find('connection', c => c.screenId === screen.id || toScreenIdOf(c) === screen.id);
-  return { screenId: screen.id as ScreenId, realTransitions, existingConnections };
+  return { screenId: screen.id, realTransitions, existingConnections };
 };
 
 const contextFor = (screenId: ScreenId, realTransitions: ObservedTransition[], existingConnections: ConnectionRecord[] = []): DetectionContext =>
@@ -80,11 +81,12 @@ describeDataset('the recommendation store', () => {
     const run = runDetection('connection', context);
     const { entries } = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
 
-    await store.decide('connection', entries[0].id, 'dismissed', 1500);
+    const firstId = required(entries[0], 'the first entry').id;
+    await store.decide('connection', firstId, 'dismissed', 1500);
     const after = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 2000);
 
-    expect(after.entries.find(e => e.id === entries[0].id)?.state).toBe('dismissed');
-    expect(after.entries.filter(e => e.id === entries[0].id)).toHaveLength(1);
+    expect(after.entries.find(e => e.id === firstId)?.state).toBe('dismissed');
+    expect(after.entries.filter(e => e.id === firstId)).toHaveLength(1);
   });
 
   it('does not resolve findings about a screen the pass never visited', async () => {

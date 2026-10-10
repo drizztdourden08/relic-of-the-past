@@ -22,7 +22,7 @@ const loadInputProfile = async (profileId: string, settings: GameSettings) => {
       log.app(`Loaded input profile: ${active.name}`);
     }
   } catch {
-    return;
+    return undefined;
   }
 };
 

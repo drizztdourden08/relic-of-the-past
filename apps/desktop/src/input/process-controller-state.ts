@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { applyTriggerCalibration, useCalibrationStore } from '@drizztdourden08/brock-input/renderer';
 import { SDL_AXIS } from '@rotp/game-data';
+import { itemAt } from '@app/checked-access';
 import type { ControllerInputState, ControllerStateHost } from '@rotp/input-mapping';
 
 const markConnected = (host: ControllerStateHost, deviceKey: string): void => {
@@ -15,7 +16,7 @@ const processControllerState = (host: ControllerStateHost, deviceKey: string, bu
   const resolvedAxes = [...axes];
   for (let i: number = SDL_AXIS.LEFT_TRIGGER; i < resolvedAxes.length; i++) {
     const triggerCal = triggers[`${deviceKey}:${i}`];
-    if (triggerCal) resolvedAxes[i] = applyTriggerCalibration(resolvedAxes[i], triggerCal);
+    if (triggerCal) resolvedAxes[i] = applyTriggerCalibration(itemAt(resolvedAxes, i), triggerCal);
   }
 
   markConnected(host, deviceKey);

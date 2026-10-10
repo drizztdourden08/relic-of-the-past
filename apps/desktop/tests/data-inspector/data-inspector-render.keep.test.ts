@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import {
-  describe, it, expect, vi, beforeEach, afterEach,
+  it, expect, vi, beforeEach, afterEach,
 } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -10,6 +10,7 @@ import type * as SourcesModule from '@app/views/DataInspector/behavior/collectio
 import type * as SchemaModule from '@drizztdourden08/tessera/data';
 import type { DetailTab } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
+import { required } from '../required';
 
 const KINDS = ['screen', 'connection', 'check', 'item', 'dungeon', 'area', 'location', 'actor'] as const;
 const TABS: readonly DetailTab[] = ['json', 'ts', 'editor'];
@@ -84,7 +85,7 @@ describeDataset('DataInspector detail panel', () => {
 
   it('shows the record as JSON and as the source text a save would write', () => {
     for (const kind of KINDS) {
-      const id = COLLECTION_SOURCES[kind].getId(COLLECTION_SOURCES[kind].rows[0]);
+      const id = COLLECTION_SOURCES[kind].getId(required(COLLECTION_SOURCES[kind].rows[0], `a ${kind} row`));
       expect(renderDetail(kind, 'json'), kind).toContain(id);
       expect(renderDetail(kind, 'ts'), kind).toContain(id);
     }

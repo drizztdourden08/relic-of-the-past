@@ -2,9 +2,10 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { act, createElement as h } from 'react';
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
-import { PlacementSection } from '@app/views/HudLayoutEditor/sub-components/sections/PlacementSection';
+import { filesIn } from '../files-in';
+import { PlacementSection } from '@app/views/HudLayoutEditor/sub-components/PlacementSection';
 import { offsetOf, withOffset } from '@app/hud-layout-editing/offset';
 import { EDITOR, FLEX_PARENT, GRID_PARENT } from './geometry.constants';
 import { installPlatformHarness } from './install-platform-harness';
@@ -12,8 +13,7 @@ import { spacerNode as node } from './spacer-node';
 
 const { mount, rerender } = installPlatformHarness();
 
-const tsxIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? tsxIn(join(dir, e.name)) : (e.name.endsWith('.tsx') || e.name.endsWith('.ts') ? [join(dir, e.name)] : [])));
+const tsxIn = (dir: string): string[] => filesIn(dir, (name) => name.endsWith('.tsx') || name.endsWith('.ts'));
 
 describe('a position is margin.left / margin.top, in one place', () => {
   it('reads an unset margin as the origin and writes zero back as absence', () => {
@@ -50,7 +50,7 @@ describe('a position is margin.left / margin.top, in one place', () => {
 
 describe('the placement section', () => {
   it('no longer offers `order`, because the outline is the ordering control', () => {
-    const src = readFileSync(join(EDITOR, 'sub-components/sections/PlacementSection.tsx'), 'utf8');
+    const src = readFileSync(join(EDITOR, 'sub-components/PlacementSection.tsx'), 'utf8');
     expect(src).not.toContain('node.order');
     expect(src).not.toContain('label="order"');
     expect(src).not.toContain('onPatch({ order');

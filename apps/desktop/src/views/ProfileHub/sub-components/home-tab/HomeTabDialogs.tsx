@@ -17,13 +17,13 @@ const HomeTabDialogs = ({ saves }: HomeTabDialogsProps) => {
 
   const closeDialog = useCallback(() => setDialog({ type: null }), [setDialog]);
   const handleNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => setNewSaveName(e.target.value), [setNewSaveName]);
-  const handleNameKey = useCallback((e: KeyboardEvent) => { if (e.key === 'Enter') handleConfirmCreate(); }, [handleConfirmCreate]);
+  const handleNameKey = useCallback((e: KeyboardEvent) => { if (e.key === 'Enter') void handleConfirmCreate(); }, [handleConfirmCreate]);
   const handleConfirmChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => setImportConfirmText(e.target.value),
     [setImportConfirmText],
   );
   const handleConfirmKey = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Enter' && confirmWordTyped) handleConfirmImportSram();
+    if (e.key === 'Enter' && confirmWordTyped) void handleConfirmImportSram();
   }, [confirmWordTyped, handleConfirmImportSram]);
 
   return (

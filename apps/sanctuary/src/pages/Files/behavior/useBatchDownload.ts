@@ -28,10 +28,11 @@ const useBatchDownload = () => {
   const zipAll = useCallback(async (files: readonly SanctuaryFile[]) => {
     const bytes = Math.max(1, totalBytes(files));
     const names = uniqueNames(files.map((file) => file.name));
-    const entries = files.map((file, i) => ({
-      name: names[i],
-      url: async () => (await downloadFile(file.id)).url,
-    }));
+    const entries = files.map((file, i) => {
+      const name = names[i];
+      if (name === undefined) throw new Error(`No zip entry name for file ${i}`);
+      return { name, url: async () => (await downloadFile(file.id)).url };
+    });
     const blob = await zipFiles(entries, ({ read, packing }) => {
       if (packing === null) show((read / bytes) * 100, 'Reading files...');
       else show(packing, 'Writing the zip...');

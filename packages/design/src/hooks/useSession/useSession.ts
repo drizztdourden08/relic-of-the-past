@@ -2,8 +2,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getMe, signOut as signOutRequest, ApiError, errorMessage } from '@rotp/hub-client';
 import type { Session } from '../../session/session-context';
-import { SIGNED_OUT } from './useSession.constants';
-import type { SessionState } from './useSession.type';
+import { SIGNED_OUT } from './session.constants';
+import type { SessionState } from './session.type';
 
 const useSession = (): Session => {
   const [state, setState] = useState<SessionState>({ ...SIGNED_OUT, loading: true });

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { EntityKind } from '@rotp/game-data';
-import type { ComparisonStrategy } from '../probe.type';
+import type { ErasedStrategy } from '../probe.type';
 
-const registeredStrategies = new Map<EntityKind, ComparisonStrategy<EntityKind>>();
+const registeredStrategies = new Map<EntityKind, ErasedStrategy>();
 
 export { registeredStrategies };

@@ -1,11 +1,12 @@
 /* @layer test @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all, getItem, getItemByGameId } from '@rotp/game-data';
 import type { ItemId, ItemRecord } from '@rotp/game-data';
 import { registerDetector, runDetection, detectorFromStrategy, itemStrategy } from '@rotp/navigation';
 import type { ChestObservation } from '@rotp/game-core';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,
@@ -51,7 +52,7 @@ describeDataset('item strategy on create', () => {
     }));
 
     expect(drafts).toHaveLength(1);
-    const [draft] = drafts;
+    const draft = required(drafts[0], 'the one draft');
     expect(draft.targetId).toBeNull();
     expect(draft.detector).toBe('strategy:item');
     expect(draft.confidence).toBe('certain');
@@ -68,7 +69,7 @@ describeDataset('item strategy on create', () => {
       grantedItems: [{ itemId: unknown, receiveCount: 0, ownedItemIds: [], fromInventoryDelta: true }],
     }));
     expect(drafts).toHaveLength(1);
-    expect(drafts[0].confidence).toBe('likely');
+    expect(required(drafts[0], 'the one draft').confidence).toBe('likely');
   });
 
   it('proposes nothing for a granted id that already has a record', () => {
@@ -91,9 +92,9 @@ describeDataset('item strategy on chest contents', () => {
     const drafts = creates(contextFor({ chests: [roomChest(unknown)] }));
 
     expect(drafts).toHaveLength(1);
-    const [draft] = drafts;
+    const draft = required(drafts[0], 'the one draft');
     expect(draft.confidence).toBe('certain');
-    expect(draft.evidence[0].source).toBe('native:room-chests');
+    expect(required(draft.evidence[0], 'the first evidence').source).toBe('native:room-chests');
     expect(draft.key).toBe(`item:${unknown}`);
     expect((draft.proposed as ItemRecord).gameId?.receiveItemId).toBe(unknown);
   });
@@ -115,8 +116,9 @@ describeDataset('item strategy on chest contents', () => {
     }));
 
     expect(drafts).toHaveLength(1);
-    expect(drafts[0].confidence).toBe('certain');
-    expect(drafts[0].evidence[0].source).toBe('native:room-chests');
+    const draft = required(drafts[0], 'the one draft');
+    expect(draft.confidence).toBe('certain');
+    expect(required(draft.evidence[0], 'the first evidence').source).toBe('native:room-chests');
   });
 
   it('stays silent when neither the chest table nor the receive table was read', () => {
@@ -135,7 +137,7 @@ describeDataset('item strategy on an alias mismatch', () => {
     })).filter(d => d.targetId === item.id);
 
     expect(drafts).toHaveLength(1);
-    const [draft] = drafts;
+    const draft = required(drafts[0], 'the one draft');
     expect(draft.targetId).toBe(item.id);
     expect(draft.detector).toBe('strategy:item');
     expect(draft.confidence).toBe('certain');
@@ -150,7 +152,7 @@ describeDataset('item strategy on an alias mismatch', () => {
       grantedItems: [{ itemId: primary, receiveCount: 1, ownedItemIds: [item.id], fromInventoryDelta: true }],
     })).filter(d => d.targetId === item.id);
     expect(drafts).toHaveLength(1);
-    expect(drafts[0].confidence).toBe('likely');
+    expect(required(drafts[0], 'the one draft').confidence).toBe('likely');
   });
 
   it('proposes nothing when the item was not yet owned, because no swap was expected', () => {

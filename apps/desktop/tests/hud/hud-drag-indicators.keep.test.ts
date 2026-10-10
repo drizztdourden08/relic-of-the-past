@@ -3,21 +3,19 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { chromium, type Browser } from 'playwright';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'fs';
 import { GhostCard } from '@app/views/HudLayoutEditor/sub-components/DragGhost';
 import { CellPicker } from '@app/views/HudLayoutEditor/sub-components/CellPicker';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import { ghostPosition } from '@app/hud-layout-editing/drop-ghost';
 import type { Platform } from '@drizztdourden08/brock-core';
+import { cssIn } from './files-in';
 import { REPO_ROOT } from '../repo-root';
+import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
 
 const ROOT = REPO_ROOT;
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const ED = `${ROOT}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
-
-const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
@@ -25,6 +23,7 @@ const SHEETS = [
   `${ROOT}/apps/desktop/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
   ...cssIn(`${DS}/composites`),
+  ...EDITOR_THEME_SHEETS,
   ...cssIn(ED),
 ];
 
@@ -87,7 +86,7 @@ interface Probe {
 const probe = (): Probe => {
   const box: Probe['box'] = {};
   const style: Probe['style'] = {};
-  const want = ['borderTopWidth', 'borderLeftWidth', 'borderTopColor', 'backgroundImage', 'backgroundColor', 'boxShadow', 'borderStyle'];
+  const want = ['borderTopWidth', 'border-left-width', 'borderTopColor', 'backgroundImage', 'backgroundColor', 'boxShadow', 'borderStyle'];
   for (const sec of Array.from(document.querySelectorAll('[data-case]'))) {
     const name = (sec as HTMLElement).dataset.case ?? '?';
     for (const el of Array.from(sec.querySelectorAll('*'))) {
@@ -115,11 +114,12 @@ const probe = (): Probe => {
 };
 
 let read: Probe;
-let browser: Browser;
+let browser: Browser | undefined;
 
 beforeAll(async () => {
-  browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: VIEWPORT.w, height: VIEWPORT.h } });
+  const launched = await chromium.launch();
+  browser = launched;
+  const page = await launched.newPage({ viewport: { width: VIEWPORT.w, height: VIEWPORT.h } });
   await page.setContent(document_());
   read = await page.evaluate(probe);
 }, 60_000);

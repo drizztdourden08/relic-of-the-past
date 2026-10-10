@@ -31,7 +31,7 @@ describeDataset('an item record', () => {
     expect(await sourceOf('items/junk.ts')).not.toContain("id: 'item-001'");
   });
 
-  it('deletes a record from the file it really sits in', async () => {
+  it('deletes a record from the file it sits in', async () => {
     expect(await deleteItem(root(), { id: 'item-001' })).toEqual({ success: true, ids: ['item-001'] });
     expect(await sourceOf('items/randomizer.ts')).not.toContain("id: 'item-001'");
   });

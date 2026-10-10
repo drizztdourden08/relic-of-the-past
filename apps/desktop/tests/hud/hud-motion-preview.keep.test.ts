@@ -19,7 +19,7 @@ import {
 let reduced = false;
 
 const stubMatchMedia = (): void => {
-  window.matchMedia = ((query: string) => ({
+  window.matchMedia = (query: string) => ({
     matches: query.includes('reduced-motion') ? reduced : false,
     media: query,
     addEventListener: () => {},
@@ -28,7 +28,7 @@ const stubMatchMedia = (): void => {
     removeListener: () => {},
     onchange: null,
     dispatchEvent: () => false,
-  })) as unknown as typeof window.matchMedia;
+  });
 };
 
 let mounted: { root: Root; host: HTMLElement } | null = null;
@@ -70,7 +70,7 @@ const playButton = (): HTMLButtonElement => {
   const found = [...document.querySelectorAll('button')]
     .find((b) => (b.getAttribute('aria-label') ?? '').includes('the stage'));
   if (!found) throw new Error('no play/pause button rendered');
-  return found as HTMLButtonElement;
+  return found;
 };
 const scrub = (): HTMLInputElement => {
   const found = document.querySelector('.hud-transport .slider__input');

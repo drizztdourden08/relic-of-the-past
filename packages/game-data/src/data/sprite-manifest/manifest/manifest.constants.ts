@@ -12,12 +12,12 @@ import type { SpriteBox } from '../sprite-box';
 import type { SpriteCategory, SpriteDefinition, SpriteManifestEntry } from './manifest.type';
 
 const modules = import.meta.glob<{ default: { sprites?: SpriteDefinition[] } }>(
-  '../../records/sprite-manifest/definitions.json',
+  '../../../../data/sprite-manifest/definitions.json',
   { eager: true },
 );
 
 const EXTRACTED_DEFINITIONS: readonly SpriteDefinition[] =
-  Object.values(modules)[0]?.default?.sprites ?? [];
+  Object.values(modules)[0]?.default.sprites ?? [];
 
 const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
   EXTRACTED_DEFINITIONS.length === 0 ? [] : [

@@ -27,7 +27,7 @@ describe('reflow warnings - structured data, not just a comment', () => {
         }],
       }],
     },
-  } as HudLayout);
+  });
 
   it('warns when width/height animates inside a flow (row) container', () => {
     const { warnings, errors } = validateLayout(docWithAnimation('width', 'row'));

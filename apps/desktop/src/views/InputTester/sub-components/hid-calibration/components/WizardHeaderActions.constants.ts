@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { FlashStatus } from '../hooks/useFlashStatus.type';
+import type { FlashStatus } from '../hooks/flash-status.type';
 
 const COPY_LABEL: Record<FlashStatus, string> = { idle: 'Copy JSON', ok: 'Copied', error: 'Failed' };
 

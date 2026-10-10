@@ -5,8 +5,8 @@ import { screenIdForGameId } from '@rotp/game-data';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useDebugTextBuilder } from './useDebugTextBuilder';
 import { buildReportSubject } from '../diagnostics/build-report-subject';
-import type { MapSlice, ReportContextResult } from './useReportContext.type';
-import { NOT_ON_A_SCREEN, NO_PALACE } from './useReportContext.constants';
+import type { MapSlice, ReportContextResult } from './report-context.type';
+import { NOT_ON_A_SCREEN, NO_PALACE } from './report-context.constants';
 
 const gameIdOf = (mode: GameUIState['mode'], map: MapSlice): GameScreenId | null => {
   if (NOT_ON_A_SCREEN.has(mode)) return null;

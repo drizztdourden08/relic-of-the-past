@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { playerStates, PlayerState } from '@rotp/game-core';
 import type { PlayerStateInfo } from '@rotp/game-core';
+import { required } from '../required';
 
 const info = (over: Partial<PlayerStateInfo> = {}): PlayerStateInfo => ({
   handlerState: PlayerState.ground,
@@ -27,9 +28,9 @@ describe('player activity states', () => {
   });
 
   it('distinguishes waking up from being asleep', () => {
-    const states = playerStates(info({ handlerState: PlayerState.asleepInBed, sleepStep: 3 }));
-    expect(states[0].label).toBe('Waking up in bed');
-    expect(states[0].detail).toBe('wake step 3');
+    const first = required(playerStates(info({ handlerState: PlayerState.asleepInBed, sleepStep: 3 }))[0], 'first state');
+    expect(first.label).toBe('Waking up in bed');
+    expect(first.detail).toBe('wake step 3');
   });
 
   it('does NOT claim asleep just because the step counter is set', () => {
@@ -49,9 +50,9 @@ describe('player activity states', () => {
 
 describe('traversal-affecting states', () => {
   it('reports dashing, and flags it as affecting reach', () => {
-    const states = playerStates(info({ isRunning: true }));
-    expect(states[0].label).toBe('Dashing (boots)');
-    expect(states[0].gating).toBe(true);
+    const first = required(playerStates(info({ isRunning: true }))[0], 'first state');
+    expect(first.label).toBe('Dashing (boots)');
+    expect(first.gating).toBe(true);
   });
 
   it('explains what bunny form costs instead of just naming it', () => {
@@ -71,10 +72,10 @@ describe('traversal-affecting states', () => {
 
 describe('progress flag bits', () => {
   it('names each set bit and shows its mask so a label can be checked', () => {
-    const states = playerStates(info({ progressFlags: 0x01 }));
-    expect(states[0].label).toBe('Uncle gave the sword');
-    expect(states[0].hint).toBe('sram_progress_flags 0x01');
-    expect(states[0].detail).toBeUndefined();
+    const first = required(playerStates(info({ progressFlags: 0x01 }))[0], 'first state');
+    expect(first.label).toBe('Uncle gave the sword');
+    expect(first.hint).toBe('sram_progress_flags 0x01');
+    expect(first.detail).toBeUndefined();
   });
 
   it('reports every set bit, not just the first', () => {

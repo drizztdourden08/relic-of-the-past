@@ -7,9 +7,9 @@ import { cellStateOf } from '@app/views/HudLayoutEditor/sub-components/GridEdito
 import { chipOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/chip-of';
 import { statusOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/status-of';
 import { trackExtentOf } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/track-extent-of';
-import { SelectionLegend } from '@app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionLegend';
-import { SelectionToolbar } from '@app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionToolbar';
-import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { SelectionLegend } from '@app/views/HudLayoutEditor/sub-components/SelectionLegend';
+import { SelectionToolbar } from '@app/views/HudLayoutEditor/sub-components/SelectionToolbar';
+import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { ReactNode } from 'react';
 import type { Platform } from '@drizztdourden08/brock-core';

@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import defaultJson from '../../../../packages/hud/src/layouts/built-in/default.json';
+import defaultJson from '../../../../packages/hud/data/layouts/default.json';
 import { BUILT_IN_LAYOUTS, layoutById, loadLayout, tryLoadLayout, layoutHud } from '@rotp/hud';
 import type { HudLayout } from '@rotp/hud';
 

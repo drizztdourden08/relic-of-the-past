@@ -1,6 +1,14 @@
 /* @layer renderer-widgets @kind style */
 
-.nav-game-state-panel__part-1 {
+.nav-game-state-panel__scroll-tag {
   margin-left: var(--size-4);
   font-size: var(--size-10);
+}
+
+.nav-game-state-panel__scroll-tag--scroll {
+  color: var(--c-nav-scroll);
+}
+
+.nav-game-state-panel__dark-world {
+  color: var(--c-nav-dark-world);
 }

@@ -7,7 +7,7 @@ import { selectionOf } from './selection-of';
 import { settingFor } from './setting-for';
 
 describe('retro bow pins the projectiles family', () => {
-  const pair = selectionOf(true, 'capacity', 'vanilla', 'custom', true);
+  const pair = selectionOf({ enabled: true, pondMode: 'capacity', explosives: 'vanilla', projectiles: 'custom', retroBow: true });
 
   it('reads the family as Vanilla with the reason on its card, whatever was stored', () => {
     for (const mode of FAMILY_MODES) {

@@ -22,7 +22,7 @@ const CORPUS_SEEDS: Readonly<Record<string, () => Placement>> = {
     pond_capacity_ask_rupees_min: '25', pond_capacity_ask_rupees_max: '300',
     pond_capacity_ask_bombs: true, pond_capacity_ask_bombs_min: 5, pond_capacity_ask_bombs_max: 10,
   }), NONE, EVERY_POND_SPOT, NONE),
-  capacityLegacy: () => generatePlacement('net-capacity-legacy', buildOptionsSnapshot({
+  capacityModes: () => generatePlacement('net-capacity-legacy', buildOptionsSnapshot({
     capacity_explosives_mode: 'custom', capacity_projectiles_mode: 'custom',
     pond_capacity_mode: 'capacity', pond_wishing_mode: 'capacity', pond_cursed_mode: 'capacity',
   }), NONE, EVERY_POND_SPOT, NONE),

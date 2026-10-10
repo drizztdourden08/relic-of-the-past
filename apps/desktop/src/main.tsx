@@ -20,6 +20,9 @@ import { LEGAL_TEXT } from './legal.constants';
 import { product } from './product';
 import type { AppSettings } from './settings.type';
 import './log-bus';
+import './theme/hud-layout-editor/hud-layout-editor.css';
+import './theme/data-manager/data-manager.css';
+import './theme/dialogue-editor/lines.css';
 
 installAppShim();
 

@@ -55,7 +55,7 @@ const sorted = <T,>(entries: Iterable<[string, T]>): Record<string, T> =>
       reachableScreens: [...trackerReachableScreens(normalRun)].sort(),
       seeds: sorted(Object.entries(placements).map(([seed, placement]) => [seed, {
         byCheck: sorted(trackerStatuses({
-          placement, checks, inventory, completed: completed as ReadonlySet<CheckId>,
+          placement, checks, inventory, completed,
         })),
         available: [...computePlacementAvailability(placement, completed, true, new Set(), completed)].sort(),
       }])),

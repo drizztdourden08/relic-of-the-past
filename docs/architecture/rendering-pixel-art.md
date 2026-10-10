@@ -86,7 +86,7 @@ then judge the screenshot against that ground truth.
 
 Extracted by `apps/desktop/electron/sprites/ipc-handlers.ts` via
 `packages/asset-extraction/src/item-sprites/`, driven by
-`packages/game-data/src/data/records/sprite-manifest/definitions.json`.
+`packages/game-data/data/sprite-manifest/definitions.json`.
 
 - **Location:** `%AppData%\relic-of-the-past\sprites\<rom-stem>\<file>.png`
   (Windows resolved: `C:\Users\<user>\AppData\Roaming\relic-of-the-past\sprites\...`).

@@ -161,7 +161,7 @@ Memoised on the three stored fields, so a new set object with the same tables ke
 Text in a set is there to be read and copied, so text selection is turned back on for the whole viewer.
 The scroll list is the query container for its rows, the same as the editor's list: whether a closed row has room for the line's own words depends on the list's width.
 
-### packs/language/compounds/entry/entry-meta.model.ts
+### packs/language/compounds/entry/entry-meta-model.ts
 
 The open entry's metadata answers what a translator cannot read from the words: who opens the line, where, how the game finds it, how many boxes the player pages through, and what it pulls in at runtime.
 A row is left out when the fact does not apply, and stated as absent when it applies but is not known. An entry opened by the core has no place; two entries have no mined source and two type bytes carry no record. A plausible guess for either would be worse than saying nothing. `mono` marks a value that is an identifier, not prose.
@@ -172,7 +172,7 @@ The reading view and the closed row's excerpt run the shared expansion in previe
 Expansion is strict and throws on a reference the set has no variable for. That broken state is what a translator needs to see, so a failure falls back to a tolerant walk that shows the unresolved key in braces and keeps the rest of the line readable.
 Control codes add nothing, but a row break or a wait leaves one space so two lines do not run into one word. A bracketed name the code catalog does not claim is a picture character of the alphabet; it draws real ink, so it stays as its bracketed spelling.
 
-### packs/language/compounds/entry/entry-row.model.ts
+### packs/language/compounds/entry/entry-row-model.ts
 
 A closed row answers at a glance which entry it is, who says it, what opens it, how long it is, whether it fits, and where a prompt's options lead. For a source keyed by a place or a room, `who` is the place: which sign it is is the identifying fact, and the trigger badge already says it is a sign. The excerpt goes last because it is the only part that can be long.
 
@@ -420,11 +420,11 @@ A features word set from here is only wanted until the core latches it on its ne
 A check can flip the game's progress phase, so a change is surfaced as a Sequence marker. The flood and exits lines are re emitted on entering a new screen or after an unlock reseeds the frontier (an epoch bump), so a "Reset:" line is followed by the new reachability; never after the stop target or the run's end, and never on backtrack pass through hops, where the phase stays `traversing` over explored ground.
 Stop flips the store to done at once: the loop may be mid await (a trigger and a frame wait) and would leave the status on running until its next pass. `finishRun` still runs and is idempotent.
 
-### widgets/simulator/behavior/runner-loop/fan-out-events.ts
+### widgets/simulator/behavior/fan-out-events.ts
 
 Narrative events go to the store and the log bus; every event goes to the JSONL sink. A detected check carried on an event is fed into the recorder, so unmatched checks surface as dataset suggestions: an unidentified diff records a null check id, which is what the suggestion builder looks for.
 
-### widgets/simulator/behavior/runner-loop/exits-event.ts
+### widgets/simulator/behavior/exits-event.ts
 
 The exits line lists detected exits with their walk step distances, the closest first evidence. `steps` and `stepsNote` are already decoded from the ordering score (`exit-order.decodeScore`); the bias must not be derived again here.
 
@@ -436,15 +436,15 @@ Only check suggestions can be applied. The screen and connection channels take a
 
 The stop at check picker runs the checks widget's own snapshot pipeline (`tracker-statuses`, over the placement where nothing moved) and the shared `filterChecks`, so it offers the same search, tag, item and status filters as the checks widget.
 
-### widgets/simulator/behavior/log-events/classify-event.ts
+### widgets/simulator/behavior/classify-event.ts
 
 The order of the tests matters: specific prefixes come before the broad flood match, so the `Unlock! re-flooding` line is an unlock, not a flood line.
 
-### widgets/simulator/behavior/log-events/compute-indents.ts
+### widgets/simulator/behavior/compute-indents.ts
 
 Sequence markers and the final outcome sit at the base; an "Area" marker (a big multi sub screen group) opens one level in until "Leaving area"; screen markers sit one under their area (or the sequence outside areas); everything inside a screen goes one deeper.
 
-### widgets/simulator/behavior/log-events/to-log-rows.ts
+### widgets/simulator/behavior/to-log-rows.ts
 
 Line numbers are the event's position in the run (1 to N), never the engine step, which repeats. Position rows drop the START or END prefix because the tag already says it.
 
@@ -747,7 +747,7 @@ Form state to a `ScreenRecord` minus its id. The return type is the record shape
 
 `DungeonRecord` carries no area or location of its own, so a dungeon's geography comes from the rooms it lists: every room of a dungeon shares one `areaId`, one `locationId` and one world. This replaced a name keyed table whose lookup silently returned nothing once a dungeon was renamed.
 
-### widgets/navigation/recommendations/strategies/connection/connection.strategy.ts
+### widgets/navigation/recommendations/strategies/connection/connection-strategy.ts
 
 The `connection` comparison strategy. The tile data (`nav`) fix is a field probe. Direction is derived from `canExit` (`data/connections/derive.ts`), so no `dir:` tag backfill remains. The crossing probe covers entrance, stair, hole and travel crossings and the indoor edge probe covers indoor scroll edges; each says below why they are two probes. Unresolvable differences route through `wire-detector.ts`, not through this strategy's own `detectorFromStrategy` call. Importing the folder's `index.ts` installs the strategy.
 
@@ -755,11 +755,11 @@ The `connection` comparison strategy. The tile data (`nav`) fix is a field probe
 
 Registers the connection detector with its `onUnresolvable` mapper, apart from the generic pass in `strategy-detectors.ts`, which calls `detectorFromStrategy(strategy)` with no second argument and would drop every unresolved crossing if this registration lost the race. `detectorFromStrategy` always mints the id `strategy:${kind}` and `registerDetector` keys on id, so the last write wins: this import must run after `@shared/game/recommendations/strategy-detectors` (see the import order in `useDetectionPass`), while `index.ts` must run before it so the strategy is registered when the generic pass reads `allStrategies()`.
 
-### widgets/navigation/recommendations/strategies/connection/indoor-edge.set.ts
+### widgets/navigation/recommendations/strategies/connection/indoor-edge-probe.ts
 
 An outdoor scroll edge is flood only: the flood proves presence, never absence, so it is never proposed for removal. Indoors the room's walk boundary table enumerates every wall the room scrolls through, so an indoor edge is provable both ways once that table is read. The probe is gated on `walkBoundaries` and `doorBoundaries` both being present, not merely `realAvailable`; `doorBoundaries` carries no destination and only proves the room's exits were queried. A batch accept is gated on `certain`, so a wrong gate here would make it unsafe. The `realTransitions` entries with `source: 'walk'` come from the same native call but say nothing about the door table, which is why this probe reads `walkBoundaries` directly; the crossing probe leaves `walk` sources to this one.
 
-### widgets/navigation/recommendations/strategies/connection/points.set.ts
+### widgets/navigation/recommendations/strategies/connection/connection-crossing-probe.ts
 
 Every non edge crossing leaving the current screen, as one `SetProbe`: the missing, unresolvable and unbacked split falls out of `compareSet`'s own join. The live set is `realTransitions`, not the pre filtered unmatched crossings, so the join decides what is missing. Only enumerable sources count (exit, stair, travel, hole, entrance, doorway): a flood source proves presence only and can never back a removal, and `walk` belongs to the indoor edge probe. Live entries are deduplicated by resolved key, since two sources can name the same destination (a stair and a travel byte landing in one room) and `compareSet` does not dedupe its input.
 Removal needs the backing table to have been read: indoors no source enumerates fall holes, so a missing hole or drop proves nothing. Such a record is still matched by the far side pair check, which keeps the live crossing from being proposed twice.
@@ -780,11 +780,11 @@ The resolved destination screen id, or a sentinel unique to the raw kind and ind
 
 A stored pair already links this screen to the destination, but no exitable point on this screen carries it: the pair covers the crossing from the far side, so proposing it again would duplicate the dataset. The accepted cost is that a near side `canExit: false` error stays invisible.
 
-### widgets/navigation/recommendations/strategies/connection/nav.probe.ts
+### widgets/navigation/recommendations/strategies/connection/nav-probe.ts
 
 The tile data fix: where the crossing physically sits, from the live flood crossing. Flood evidence proves presence only, so it grades `likely`. A record that already has `nav` is complete, and an endpoint that does not resolve to a real screen gets no fix; inventing one is what the connection path refuses to do.
 
-### widgets/navigation/recommendations/strategies/connection/tiles.probe.ts
+### widgets/navigation/recommendations/strategies/connection/tiles-probe.ts
 
 Fills `placement.tiles`. The migration codemod left about 700 points with an empty tile list because a static rewrite cannot read room geometry. Indoors `wasmGetRoomWalkBoundaries` enumerates every walk boundary tile with the room it leads to, so the tiles sharing this point's destination room are its footprint; the table covers the whole wall, so an empty result is proof and this grades `certain`. It is gated on both boundary tables like the indoor edge probe, and only applies to a point on the currently loaded room. The screen is looked up with `get`, not `getScreen`, because a record being edited can name a screen nothing holds yet.
 
@@ -820,7 +820,7 @@ There is one store write per collection the sweep touched, keyed by the kind eac
 
 Per record live field differences for the inline diff display (`260 [0x0104]` in place of `260`). It is not folded into the detection pass effect: that one gates a persisted, async side effect, while this is a pure synchronous read over one screen's records, memoised on the same content signature with no second timer. `runComparison` therefore runs once more here than inside `detectorFromStrategy.detect()`. Sharing that call would force every detector's `detect` to expose the intermediate `Difference[]`, and the duplication is cheaper than that contract change.
 
-### widgets/navigation/LiveDataInspector/behavior/use-current-records
+### widgets/navigation/LiveDataInspector/behavior/useCurrentRecords.ts and records-for.ts
 
 Every record in the selected collection that relates to the current screen. A screen commonly owns several `connection` and `check` records, and `actor` and `item` can repeat too. Only kinds with a direct live link are handled; a collection without one (area, tag) shows nothing. `connection` reuses `observations.existingConnections` as is: it is already every point touching this screen, the same list the recommendation filtering trusts. Distinct spawns or grants of the same type resolve to one record, so there is one card per record, not one per spawn. `LiveRecord` is the element type every card renders.
 
@@ -828,7 +828,7 @@ Every record in the selected collection that relates to the current screen. A sc
 
 `wasmGetRoomChests` already reports the `ChestObservation` shape per chest, so the rows pass straight through. Outdoors there is no chest table, so this returns `undefined`, not an empty array: absent means not read, and an empty array would tell a detector the game had proved there is nothing here. The query's own `null` on a closed developer mode gate collapses into the same `undefined`.
 
-### widgets/navigation/LiveDataInspector/behavior/granted-items-store
+### widgets/navigation/LiveDataInspector/behavior/granted-item-ids.ts, granted-items-state.ts, subscribe-granted-items.ts
 
 Every raw item id the native receive path has granted this session, kept as a module set and not component state, because the tracker bridge listeners (`onItemReceived`, `onUnknownItem`) fire whether or not a widget is mounted. Both report ids in the same raw index space `GrantedItemObservation.itemId` wants, so both feed the one set. A granted id with no dataset record is the case the `create` draft of `item-grants` exists for. The snapshot `useSyncExternalStore` compares by reference is rebuilt only when the set changes, never per read: a fresh array on every call reads as changed every render and runs the subscriber into React's update depth limit. The listeners are wired once, however many hooks subscribe.
 
@@ -852,7 +852,7 @@ The screen and connection half of a live `ScreenObservations`: everything the ol
 
 The room addressable simulator queries (`wasmGetRoomSpriteSpawns`, `wasmGetOverworldSpriteSpawns`) already report the `LiveSpriteObservation` shape per spawn, so the rows pass straight through. `spriteCombat` reads one native row per distinct sprite type, never per spawn, so the wasm call count is bounded by kinds of actor, not copies.
 
-### widgets/navigation/LiveDataInspector/behavior/spawn-diff
+### widgets/navigation/LiveDataInspector/behavior/live-only-spawns.ts and spawn-key.ts
 
 `SPAWNS_PROBE` (`packages/navigation/src/recommendations/strategies/screen/spawns-probe.ts`) reports the union of the record's own spawns and every live spawn resolved this pass as `diff.liveValue`, so it is always a superset of the record's list; a reviewer only acts on the entries the record does not carry yet. A spawn's identity is its actor and tile, the same key the probe uses. `diff.liveValue` carries a `ScreenSpawn[]` by the probe's contract even though the comparison engine types a difference's payload `unknown`.
 

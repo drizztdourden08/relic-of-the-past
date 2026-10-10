@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { describe, expect, it } from 'vitest';
+import { expect, it } from 'vitest';
 import { all, getDungeon, actorRecordFile, areaRecordFile, checkRecordFile, dungeonRecordFile, itemRecordFile, locationRecordFile } from '@rotp/game-data';
 import type { ActorKind, ItemCategory } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
@@ -33,7 +33,7 @@ describeDataset('the file a check is filed in', () => {
     return new RegExp(`\\bn: ${n},`).test(readFileSync(dataFile(relativePath), 'utf-8'));
   };
 
-  it('names the file every committed record actually sits in', () => {
+  it('names the file every committed record sits in', () => {
     const misfiled: string[] = [];
     for (const check of checks) {
       const target = checkRecordFile(check);
@@ -48,7 +48,7 @@ describeDataset('the file a check is filed in', () => {
 
   it('resolves every check that names a dungeon or a screen', () => {
     const unresolved = checks
-      .filter(check => check.kind !== 'event' && (check.dungeonId || check.screenId))
+      .filter(check => check.kind !== 'event' && (check.dungeonId ?? check.screenId))
       .filter(check => !checkRecordFile(check).relativePath)
       .map(check => check.id);
     expect(unresolved).toEqual([]);
@@ -116,7 +116,7 @@ describeDataset('the file a new item is filed in', () => {
     expect(resolved(itemRecordFile({ category: 'junk', origin: 'randomizer' }))).toBe('items/randomizer.ts');
   });
 
-  it('names the file every committed record actually sits in', () => {
+  it('names the file every committed record sits in', () => {
     const misfiled = all('item')
       .map(item => ({ id: item.id, path: itemRecordFile(item).relativePath }))
       .filter(entry => !entry.path || !readFileSync(dataFile(entry.path), 'utf-8').includes(`id: '${entry.id}'`))
@@ -146,7 +146,7 @@ describeDataset('the file a new actor is filed in', () => {
     for (const kind of kinds) expect(EXPECTED[kind], kind).toBeDefined();
   });
 
-  it('names the file every committed record actually sits in', () => {
+  it('names the file every committed record sits in', () => {
     const misfiled = all('actor')
       .map(actor => ({ id: actor.id, path: actorRecordFile(actor).relativePath as string }))
       .filter(entry => !readFileSync(dataFile(entry.path), 'utf-8').includes(`id: '${entry.id}'`))

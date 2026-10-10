@@ -33,7 +33,7 @@ const useCanvasOverlayLoop = <R extends Disposable>(config: CanvasOverlayLoopCon
       rafId = requestAnimationFrame(loop);
     };
 
-    const startAfterSdlSizesCanvas = requestAnimationFrame(() => { start(); });
+    const startAfterSdlSizesCanvas = requestAnimationFrame(() => { void start(); });
 
     return () => {
       cancelled = true;

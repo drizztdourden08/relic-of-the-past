@@ -6,8 +6,8 @@ import type { ControllerInputState } from '../../../input/controller-input-store
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { useControllerDevices } from '../../../hooks/useControllerDevices';
-import { EVENT_LOG_KEEP } from './useInputCalibration.constants';
-import type { EventEntry } from './useInputCalibration.type';
+import { EVENT_LOG_KEEP } from './input-calibration.constants';
+import type { EventEntry } from './input-calibration.type';
 
 const useInputCalibration = () => {
   const [events, setEvents] = useState<EventEntry[]>([]);

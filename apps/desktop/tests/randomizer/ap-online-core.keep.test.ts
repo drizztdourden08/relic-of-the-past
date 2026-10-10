@@ -9,6 +9,7 @@ import { installFakeModule } from './ap-fake-module';
 import { createFakeServer } from './ap-fake-server';
 import { soloRoomOf } from './ap-solo-room';
 import { REPO_ROOT } from '../repo-root';
+import { required } from '../required';
 
 const lines = vi.hoisted(() => [] as unknown[]);
 
@@ -24,7 +25,7 @@ vi.mock('@app/game/session-dialogue', () => ({
   appendSessionReceiptMessage: () => null,
   clearSessionDialogue: () => undefined,
 }));
-const iconSet = (name: string) => ({ [`apply${name}`]: async () => true, [`clear${name}`]: () => undefined });
+const iconSet = (name: string) => ({ [`apply${name}`]: () => Promise.resolve(true), [`clear${name}`]: () => undefined });
 vi.mock('@app/game/gear-icons', () => iconSet('GearIcons'));
 vi.mock('@app/game/quiver-icon', () => iconSet('QuiverIcon'));
 vi.mock('@app/game/currency-symbols', () => iconSet('CurrencySymbols'));
@@ -94,13 +95,15 @@ describe('the real online core', () => {
     expect(Number(/^#define FOREIGN_ICON_FIRST (0x[0-9A-Fa-f]+)$/m.exec(source)?.[1])).toBe(FOREIGN_ICON_FIRST_ID);
     expect(Number(/^#define FOREIGN_ICON_LAST (0x[0-9A-Fa-f]+)$/m.exec(source)?.[1])).toBe(FOREIGN_ICON_LAST_ID);
   });
+});
 
+describe('the real online core', () => {
   it('arms another player\'s item as its game\'s icon id, saying what it was and who it went to', async () => {
     const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
     const placement = generateFromSnapshot('foreign-item', snapshot, probeDeliverableNpcLocations(),
       probeDeliverablePondLocations(), probeDeliverableWorldLocations());
     const room = soloRoomOf(placement, snapshot);
-    const location = AP_LOCATION_IDS['check-012'];
+    const location = required(AP_LOCATION_IDS['check-012'], 'check-012 location id');
     room.placements[location] = { item: 0x52510000, location, player: 2, flags: 0 };
     room.players.push({ team: 0, slot: 2, alias: 'Zelda_', name: 'Zelda_' });
     room.slotInfo['2'] = { name: 'Zelda_', game: 'Ship of Harkinian', type: 1, group_members: [] };
@@ -145,7 +148,9 @@ describe('the real online core', () => {
       core.remove();
     }
   });
+});
 
+describe('the real online core', () => {
   it('shows the room\'s checked locations done and takes them out of the poller, writing no flag', () => {
     const core = installFakeModule(setModule);
     try {

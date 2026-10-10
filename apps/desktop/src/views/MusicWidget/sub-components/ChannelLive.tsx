@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { Status, Box, StatRow } from '@drizztdourden08/tessera/primitives';
-import { PreviewReadout } from '@app/views/DataManager/sub-components/msu/PreviewReadout';
-import { usePreviewReport } from '@app/views/DataManager/sub-components/msu/behavior/usePreviewReport';
+import { PreviewReadout } from '@app/msu-studio/PreviewReadout';
+import { usePreviewReport } from '@app/msu-studio/behavior/usePreviewReport';
 import type { LiveChannel } from '../MusicWidget.type';
 
 const ChannelLive = (props: { channel: LiveChannel }) => {

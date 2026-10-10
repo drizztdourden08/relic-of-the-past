@@ -11,11 +11,11 @@ const screenOf = (doc: HudLayout): HudContainer => nodeById(doc, doc.screen.id) 
 
 const switched = (doc: HudLayout, engine: 'flex' | 'grid'): HudLayout => {
   const patch = engineSwitchPatch(screenOf(doc), engine);
-  return patch ? patchNode(doc, doc.screen.id, patch as never) : doc;
+  return patch ? patchNode(doc, doc.screen.id, patch) : doc;
 };
 
 describe('grid -> flex, with the gap that used to crash it', () => {
-  const withGap = patchNode(base, base.screen.id, { gap: { x: 2, y: 3 } } as never);
+  const withGap = patchNode(base, base.screen.id, { gap: { x: 2, y: 3 } });
   const flex = switched(withGap, 'flex');
   const node = screenOf(flex) as unknown as Record<string, unknown>;
 
@@ -32,7 +32,7 @@ describe('grid -> flex, with the gap that used to crash it', () => {
   });
 
   it('carries the guide colour across, because it is not the grid\'s', () => {
-    const withGuide = patchNode(base, base.screen.id, { guide: { show: true, color: '#abcdef' } } as never);
+    const withGuide = patchNode(base, base.screen.id, { guide: { show: true, color: '#abcdef' } });
     const asFlex = screenOf(switched(withGuide, 'flex')) as unknown as Record<string, unknown>;
     expect(asFlex.guide).toEqual({ show: true, color: '#abcdef' });
     expect(validateLayout(JSON.parse(JSON.stringify(switched(withGuide, 'flex')))).errors).toEqual([]);
@@ -66,7 +66,7 @@ describe('flex -> grid, and back again', () => {
   });
 
   it('passes a flex gap straight through to the grid (§57)', () => {
-    const gapped = patchNode(flex, flex.screen.id, { gap: { x: 4, y: 6 } } as never);
+    const gapped = patchNode(flex, flex.screen.id, { gap: { x: 4, y: 6 } });
     expect((screenOf(switched(gapped, 'grid')) as unknown as Record<string, unknown>).gap).toEqual({ x: 4, y: 6 });
   });
 

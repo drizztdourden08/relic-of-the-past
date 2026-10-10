@@ -54,13 +54,13 @@ const useHomeTabSaves = (params: UseHomeTabSavesParams) => {
   };
 
   useEffect(() => {
-    loadQuickSlots();
-    loadNormalSaves();
-    loadAutoSaves();
-    loadSessions();
+    void loadQuickSlots();
+    void loadNormalSaves();
+    void loadAutoSaves();
+    void loadSessions();
   }, [profileId]);
 
-  useEffect(() => onAutoSavesChanged(() => { loadAutoSaves(); }), [profileId]);
+  useEffect(() => onAutoSavesChanged(() => { void loadAutoSaves(); }), [profileId]);
 
   const handleQuickSave = useCallback(async (slot: number) => {
     setBusySlot(slot);

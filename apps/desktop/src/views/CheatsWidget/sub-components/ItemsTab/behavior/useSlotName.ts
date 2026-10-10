@@ -6,7 +6,8 @@ import { useLocalizedNames } from '@app/views/PauseMenuView/behavior/useLocalize
 import { itemNameKeyForSlot } from '@app/views/PauseMenuView/behavior/item-name-key';
 import { wrapName } from '@app/views/PauseMenuView/behavior/wrap-name';
 import { BOTTLE_SLOT_INDEX, EMPTY_BOTTLE, EMPTY_NAME } from '../ItemsTab.constants';
-import { isSlotOwned, slotValueOf } from './slot-value';
+import { isSlotOwned } from './is-slot-owned';
+import { slotValueOf } from './slot-value-of';
 import type { SlotName, SlotSpec } from '../ItemsTab.type';
 
 const useSlotName = (specs: Map<number, SlotSpec>) => {

@@ -8,8 +8,6 @@ import { SubSection } from './SubSection';
 import { ValueField } from './ValueField';
 import { TOOLBAR_ICONS } from '@app/hud-layout-editing/toolbar-menus';
 import { OVERLAY_LABEL } from './LayoutSettings.constants';
-import './HudLayoutEditor.layout.css';
-import './HudLayoutEditor.layout-set.css';
 import type { LayoutSettingsProps } from './LayoutSettings.type';
 
 const LayoutSettings = (props: LayoutSettingsProps) => {

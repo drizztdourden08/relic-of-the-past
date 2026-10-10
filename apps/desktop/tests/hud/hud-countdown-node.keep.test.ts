@@ -81,7 +81,7 @@ describe('an idle countdown is not placed and takes no space', () => {
     const doc = docOf([{
       kind: 'element', id: 'sw',
       element: { type: 'switch', cases: [{ when: 'countdown_seconds < 10 and countdown_frames > 0', node: countdown() }] },
-    } as HudNode]);
+    }]);
     expect(validateLayout(doc).errors).toEqual([]);
     expect(placedById(layoutHud(doc, { w: 398, h: 224 }, { scope: ACTIVE }), 'cd')).toBeUndefined();
     const late = { ...ACTIVE, countdown_seconds: 3 };

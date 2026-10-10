@@ -14,7 +14,13 @@ const sameGlyphs = (left: number[], right: number[]): boolean =>
 const wasStanding = (before: RowFit[], row: RowFit): boolean =>
   before.some((earlier) => sameGlyphs(earlier.glyphs, row.glyphs));
 
-const previewScreens = (params: ScreenParams): PreviewScreen[] => {
+const inheritedAt = (blocks: readonly Block[], at: number): RowFit[] => {
+  const block = blocks[at];
+  if (block === undefined) throw new Error(`The walked preview has no block ${at}`);
+  return block.inherited;
+};
+
+const previewScreens =(params: ScreenParams): PreviewScreen[] => {
   const { doc, metrics, terms, opts } = params;
   if (doc.blocks.length === 0) return [];
 
@@ -23,8 +29,8 @@ const previewScreens = (params: ScreenParams): PreviewScreen[] => {
   try {
     const walked = resolveInherited(probe, metrics, terms, opts);
     return doc.blocks.map((block, at) => {
-      const before = walked.blocks[at].inherited;
-      const shown = walked.blocks[at + 1].inherited;
+      const before = inheritedAt(walked.blocks, at);
+      const shown = inheritedAt(walked.blocks, at + 1);
       return {
         index: at,
         ends: block.ends,

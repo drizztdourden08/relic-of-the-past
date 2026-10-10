@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
-import { AppearanceSection } from '@app/views/HudLayoutEditor/sub-components/sections/AppearanceSection';
+import { AppearanceSection } from '@app/views/HudLayoutEditor/sub-components/AppearanceSection';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { EscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { HudNode } from '@rotp/hud';

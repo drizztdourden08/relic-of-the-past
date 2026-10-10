@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { pondPlanOf, POND_AWARD_LAST_LINE, POND_AWARD_MORE_LINE, POND_CLOSED_LINE, pondLinesOf } from '@rotp/randomizer';
 import { receiptLineCandidates } from '@rotp/game-core';
-import type { PondSetting } from '@rotp/randomizer';
+import { required } from '../../required';
 import { CUSTOM, LONGEST_FITTING_LINE } from './pond-model.constants';
 
 describe('pond receipt lines', () => {
@@ -33,7 +33,7 @@ describe('pond receipt lines', () => {
     const { prices, lines } = pondLinesOf(plan);
     expect(prices).toEqual(plan.throws.map((entry) => entry.price));
     prices.forEach((price, index) => {
-      for (const candidate of receiptLineCandidates(lines[index])) {
+      for (const candidate of receiptLineCandidates(required(lines[index], `line ${index}`))) {
         expect(candidate, `price ${price}`).toContain(String(price));
       }
     });
@@ -42,19 +42,19 @@ describe('pond receipt lines', () => {
   it('a free throw does not quote a price of zero', () => {
     const free = pondLinesOf(pondPlanOf(
       { mode: 'custom', start: 0, max: 0, throws: 1, items: 1, shape: { curve: 'equal' } }));
-    for (const candidate of receiptLineCandidates(free.lines[0])) {
+    for (const candidate of receiptLineCandidates(required(free.lines[0], 'free throw line'))) {
       expect(candidate).not.toContain('0 rupees');
       expect(candidate.toLowerCase()).toMatch(/free|house/);
     }
   });
 
   it('keeps a shortest candidate the text box can always show', () => {
-    const plan = pondPlanOf({ ...CUSTOM, start: 0, max: 999, throws: 19 } as PondSetting);
+    const plan = pondPlanOf({ ...CUSTOM, start: 0, max: 999, throws: 19 });
     const lines = [...pondLinesOf(plan).lines, POND_AWARD_MORE_LINE, POND_AWARD_LAST_LINE, POND_CLOSED_LINE];
     for (const line of lines) {
       const candidates = receiptLineCandidates(line);
       expect(candidates.length).toBeGreaterThan(0);
-      expect(candidates[candidates.length - 1].length).toBeLessThanOrEqual(LONGEST_FITTING_LINE);
+      expect(required(candidates[candidates.length - 1], 'shortest candidate').length).toBeLessThanOrEqual(LONGEST_FITTING_LINE);
     }
   });
 });

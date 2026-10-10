@@ -9,6 +9,27 @@ const KINDS = Object.keys(KIND_ID_PREFIXES) as EntityKind[];
 
 const UNPLACED = [PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID] as readonly string[];
 
+type LedgerRow = { readonly id: string; readonly kind: string; readonly bit: number };
+type BitGroup = [number, readonly LedgerRow[]];
+
+const isEventRow = (row: LedgerRow): boolean => row.kind === 'event';
+
+const eventsOnBit = ([bit, group]: BitGroup) => ({ bit, events: group.filter(isEventRow) });
+
+const sharedBitLine = ({ bit, events }: { bit: number; events: readonly LedgerRow[] }): string =>
+  `bit ${bit}: ${events.map((row) => row.id).join(', ')}`;
+
+const placesAndEventsOnBit = ([bit, group]: BitGroup) => ({
+  bit,
+  places: group.filter((row) => row.kind !== 'event'),
+  events: group.filter(isEventRow),
+});
+
+const placeLabel = (row: LedgerRow): string => `${row.id} (${row.kind})`;
+
+const unpairedBitLine = ({ bit, places }: { bit: number; places: readonly LedgerRow[] }): string =>
+  `bit ${bit}: ${places.map(placeLabel).join(', ')}`;
+
 describeDataset('every id a record points at', () => {
   const references = recordReferences();
 
@@ -129,21 +150,17 @@ describeDataset('the event ledger', () => {
 
   it('gives no two event rows the same bit', () => {
     const shared = [...byBit]
-      .map(([bit, group]) => ({ bit, events: group.filter((row) => row.kind === 'event') }))
+      .map(eventsOnBit)
       .filter((entry) => entry.events.length > 1)
-      .map((entry) => `bit ${entry.bit}: ${entry.events.map((row) => row.id).join(', ')}`);
+      .map(sharedBitLine);
     expect(shared).toEqual([]);
   });
 
   it('pairs every location on a bit with exactly one event row', () => {
     const wrong = [...byBit]
-      .map(([bit, group]) => ({
-        bit,
-        places: group.filter((row) => row.kind !== 'event'),
-        events: group.filter((row) => row.kind === 'event'),
-      }))
+      .map(placesAndEventsOnBit)
       .filter((entry) => entry.places.length > 0 && (entry.places.length > 1 || entry.events.length !== 1))
-      .map((entry) => `bit ${entry.bit}: ${entry.places.map((row) => `${row.id} (${row.kind})`).join(', ')}`);
+      .map(unpairedBitLine);
     expect(wrong).toEqual([]);
   });
 });

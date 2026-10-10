@@ -1,13 +1,14 @@
 /* @layer test @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all, findOne, registerRecord, unregisterRecord, toScreenIdOf } from '@rotp/game-data';
 import type { ConnectionId, ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy } from '@rotp/navigation';
 import { resolveRealDestId } from '@app/nav-widget/connection-audit-resolve';
-import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection.strategy';
+import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection-strategy';
 import { onUnresolvableConnection } from '@app/nav-widget/recommendations/strategies/connection/unresolvable-screen';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const detector = detectorFromStrategy(connectionStrategy, onUnresolvableConnection);
 
@@ -45,7 +46,7 @@ const contextFor = (screenId: ScreenId, observations: Partial<ScreenObservations
 
 describeDataset('connection strategy ADD side (SetProbe) against the real dataset', () => {
   const { from, to } = unmappedPair();
-  const destRoom = to.gameId.roomIndex!;
+  const destRoom = required(to.gameId.roomIndex, 'the destination room');
   const context = contextFor(from.id, { realTransitions: [{ source: 'stair', kind: 'room', index: destRoom }] });
 
   const drafts = detector.detect(context).filter(d => d.kind === 'connection');
@@ -55,11 +56,12 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
   });
 
   it('proposes a create for the real, resolvable destination', () => {
-    expect(drafts[0].action).toBe('create');
-    expect(drafts[0].targetId).toBeNull();
-    expect(drafts[0].current).toBeNull();
-    expect(drafts[0].proposed).not.toHaveProperty('id');
-    expect(drafts[0].key).toContain(to.id);
+    const first = required(drafts[0], 'the first draft');
+    expect(first.action).toBe('create');
+    expect(first.targetId).toBeNull();
+    expect(first.current).toBeNull();
+    expect(first.proposed).not.toHaveProperty('id');
+    expect(first.key).toContain(to.id);
   });
 
   it('grades a native crossing certain', () => {

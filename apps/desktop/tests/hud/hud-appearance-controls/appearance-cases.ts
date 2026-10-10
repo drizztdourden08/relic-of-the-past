@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
 import { createElement as h, type ReactNode } from 'react';
-import { AppearanceSection } from '@app/views/HudLayoutEditor/sub-components/sections/AppearanceSection';
+import { AppearanceSection } from '@app/views/HudLayoutEditor/sub-components/AppearanceSection';
 import { GradientRamp } from '@app/views/HudLayoutEditor/sub-components/GradientRamp';
 import { PaintField } from '@app/views/HudLayoutEditor/sub-components/PaintField';
 import { SidesField } from '@app/views/HudLayoutEditor/sub-components/SidesField';

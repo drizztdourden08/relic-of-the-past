@@ -3,6 +3,7 @@ export { classify } from './classify';
 export { compareField } from './compare-field';
 export { compareSet } from './compare-set';
 export { compareSets } from './compare-sets';
+export { eraseStrategy } from './erase-strategy';
 export { eraseSetProbe } from './erase-set-probe';
 export { deepEqual } from './deep-equal';
 export { detectorFromStrategy } from './detector-from-strategy';
@@ -15,7 +16,7 @@ export { getPath, setPath } from './record-path';
 export {
   allStrategies, clearStrategies, registerStrategy, strategyFor,
 } from './strategy-registry';
-export type { ComparisonStrategy, ErasedSetProbe, FieldProbe, Probe, SetProbe } from './probe.type';
+export type { ComparisonStrategy, ErasedSetProbe, ErasedStrategy, FieldProbe, Probe, SetProbe } from './probe.type';
 export type {
   Difference, DifferenceStatus, SetDifference, SetDifferenceStatus, SubjectComparison,
 } from './difference.type';

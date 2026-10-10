@@ -1,5 +1,5 @@
 /* @layer shared-game @kind constants */
-import atlasJson from './player-pose-atlas.json';
+import atlasJson from '../../../../data/player-pose-atlas.json';
 import type { Facing, PoseAtlas } from '../player-pose-atlas.type';
 
 const POSE_ATLAS = atlasJson as PoseAtlas;

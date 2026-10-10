@@ -3,8 +3,9 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { readFileSync, readdirSync } from 'fs';
-import { join, resolve } from 'path';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import { filesIn } from './files-in';
 import { EditorStepContext } from '@app/hud-layout-editing/editor-step';
 import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import type { Value } from '@rotp/hud';
@@ -59,9 +60,7 @@ describe('the editor\'s step is a default, and only a default', () => {
 });
 
 describe('every ValueField call site is either in pixels or names its step', () => {
-  const files = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-    .flatMap((e) => (e.isDirectory() ? files(join(dir, e.name))
-      : (e.name.endsWith('.tsx') ? [join(dir, e.name)] : [])));
+  const files = (dir: string): string[] => filesIn(dir, (name) => name.endsWith('.tsx'));
 
   const NOT_PIXELS = ['count', 'angle', 'duration (ms)', 'delay (ms)', 'opacity', 'amount'];
 
@@ -83,7 +82,7 @@ describe('every ValueField call site is either in pixels or names its step', () 
     const all = files(ED).map((f) => readFileSync(f, 'utf8')).join('\n');
     expect(all).not.toContain("from './StepNumberInput'");
     expect(all).not.toContain('<StepNumberInput');
-    expect(readFileSync(`${ED}/sub-components/HudLayoutEditor.layout.css`, 'utf8'))
+    expect(readFileSync(resolve(REPO_ROOT, 'apps/desktop/src/theme/hud-layout-editor/layout.css'), 'utf8'))
       .not.toContain('hud-value-input__spin');
   });
 });

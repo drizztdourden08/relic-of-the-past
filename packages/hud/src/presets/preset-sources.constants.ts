@@ -1,12 +1,12 @@
 /* @layer shared-hud @kind data */
-import arrowIndicatorJson from './arrow-indicator.json';
-import bombIndicatorJson from './bomb-indicator.json';
-import dpadGroupJson from './dpad-group.json';
-import faceGroupJson from './face-group.json';
-import heartsJson from './hearts.json';
-import keyIndicatorJson from './key-indicator.json';
-import magicBarJson from './magic-bar.json';
-import walletJson from './wallet.json';
+import arrowIndicatorJson from '../../data/presets/arrow-indicator.json';
+import bombIndicatorJson from '../../data/presets/bomb-indicator.json';
+import dpadGroupJson from '../../data/presets/dpad-group.json';
+import faceGroupJson from '../../data/presets/face-group.json';
+import heartsJson from '../../data/presets/hearts.json';
+import keyIndicatorJson from '../../data/presets/key-indicator.json';
+import magicBarJson from '../../data/presets/magic-bar.json';
+import walletJson from '../../data/presets/wallet.json';
 
 const PRESET_SOURCES = [
   { id: 'hearts', name: 'Hearts', icon: '♥', json: heartsJson },

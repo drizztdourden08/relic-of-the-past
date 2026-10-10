@@ -6,6 +6,7 @@ import { FEATURES0_DEVELOPER_TOOLS, SRAM_BASE, SRAM_SIZE, WRAM_SIZE } from './co
 import { assetBlobPath } from './asset-blob-path';
 import { fixturePath } from './fixture-path';
 import { maskOf } from './mask-of';
+import { required } from '../../required';
 import type { RawCore, Step } from './core-harness.type';
 
 class Core {
@@ -32,7 +33,7 @@ class Core {
     return this.raw.ccall(name, 'number', args.map(() => 'number'), args);
   }
 
-  get8(addr: number): number { return this.raw.HEAPU8[this.ram + addr]; }
+  get8(addr: number): number { return required(this.raw.HEAPU8[this.ram + addr], `WRAM byte ${addr}`); }
   heap(ptr: number, length: number): Uint8Array { return this.raw.HEAPU8.subarray(ptr, ptr + length); }
   set8(addr: number, value: number): void { this.raw.HEAPU8[this.ram + addr] = value & 0xff; }
   get16(addr: number): number { return this.get8(addr) | (this.get8(addr + 1) << 8); }

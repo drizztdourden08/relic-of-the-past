@@ -4,13 +4,24 @@ import {
   NO_DRAFT, editedDraft, isAmended, proposalOf, revertedDraft,
 } from '@app/views/DataInspector/behavior/recommendations/proposal-draft';
 import type { Recommendation } from '@rotp/navigation';
+import type { TagId, TagRecord } from '@rotp/game-data';
 
-const finding = (id: string, proposed: Record<string, unknown>): Recommendation => ({
+const tagRecord = (id: TagId, value: string) => ({
+  id,
+  name: `area:${value}`,
+  namespace: 'area',
+  value,
+  label: value,
+  namespaceLabel: 'Area',
+  appliesTo: ['screen'] as const,
+});
+
+const finding = (id: string, proposed: TagRecord): Recommendation => ({
   id,
   kind: 'tag',
   action: 'update',
   targetId: 'tag-001',
-  current: { id: 'tag-001', value: 'cave' },
+  current: tagRecord('tag-001', 'cave'),
   proposed,
   reason: 'the vocabulary spells it differently',
   detector: 'test',
@@ -21,10 +32,10 @@ const finding = (id: string, proposed: Record<string, unknown>): Recommendation 
   state: 'open',
   firstSeenAt: 1,
   decidedAt: null,
-} as Recommendation);
+});
 
-const ORIGINAL = { id: 'tag-001', value: 'cavern' };
-const AMENDED = { id: 'tag-001', value: 'grotto' };
+const ORIGINAL = tagRecord('tag-001', 'cavern');
+const AMENDED = tagRecord('tag-001', 'grotto');
 
 describe('the proposal shown', () => {
   it('is the detector\'s own draft until anybody edits it', () => {
@@ -65,10 +76,10 @@ describe('revert', () => {
 describe('an amendment belongs to one finding', () => {
   it('does not carry over to the next one selected', () => {
     const first = finding('r-1', ORIGINAL);
-    const second = finding('r-2', { id: 'tag-002', value: 'ledge' });
+    const second = finding('r-2', tagRecord('tag-002', 'ledge'));
     const amended = editedDraft(first, AMENDED);
 
-    expect(proposalOf(second, amended)).toEqual({ id: 'tag-002', value: 'ledge' });
+    expect(proposalOf(second, amended)).toEqual(tagRecord('tag-002', 'ledge'));
     expect(isAmended(second, amended)).toBe(false);
   });
 

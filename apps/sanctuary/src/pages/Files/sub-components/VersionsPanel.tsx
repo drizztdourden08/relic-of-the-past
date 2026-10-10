@@ -29,7 +29,10 @@ const VersionsPanel = (props: VersionsPanelProps) => {
           />
         ))}
       </ListItemList>
-      <DropZone label={`drop a file here for ${next}`} disabled={busy} onDrop={(files) => onDropVersion(files[0])} />
+      <DropZone label={`drop a file here for ${next}`} disabled={busy} onDrop={(files) => {
+        const [dropped] = files;
+        if (dropped) onDropVersion(dropped);
+      }} />
       <Dialog
         open={deleting !== null}
         title="Delete version"

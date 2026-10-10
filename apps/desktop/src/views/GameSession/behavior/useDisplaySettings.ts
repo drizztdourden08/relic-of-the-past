@@ -44,7 +44,7 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
   }, []);
 
   useEffect(() => {
-    win.isFullscreen().then(setIsFullscreen);
+    void win.isFullscreen().then(setIsFullscreen);
     return win.onFullscreenChange(setIsFullscreen);
   }, [win]);
 

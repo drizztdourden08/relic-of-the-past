@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { baselineValues, parsePondSetting, pondPlanOf, rollPondDemands, POND_ASK_ROW_BY_KIND, pondRupeesOnlyAsk, curvePositionsOf, POND_INSTANCE_BY_ID, REFERENCE_CAPACITY_PROFILE, createRng } from '@rotp/randomizer';
 import type { CurveId, PondAskAmountKind, PondAskSetting, PondSetting } from '@rotp/randomizer';
+import { required } from '../../required';
 import { CURVES } from './pond-model.constants';
 
 describe('one ramp per demand', () => {
@@ -9,12 +10,16 @@ describe('one ramp per demand', () => {
     ({ mode: 'custom', start: 0, max: 999, throws: 10, items: 10, shape: { curve } });
   const amountOf = (demand: unknown): number => (demand as { amount: number }).amount;
 
+  const kindAsk = (kind: PondAskAmountKind, min: number, max: number) => {
+    if (kind === 'bottle') return { bottle: { enabled: true, min, max, contents: ['fairy'] as const } };
+    if (kind === 'rupees') return {};
+    return { [kind]: { enabled: true, min, max } };
+  };
+
   const oneKind = (kind: PondAskAmountKind, min: number, max: number): PondAskSetting => ({
     ...pondRupeesOnlyAsk(0, 999),
     rupees: { enabled: kind === 'rupees', min: 0, max: 999 },
-    ...(kind === 'bottle'
-      ? { bottle: { enabled: true, min, max, contents: ['fairy'] as const } }
-      : kind === 'rupees' ? {} : { [kind]: { enabled: true, min, max } }),
+    ...kindAsk(kind, min, max),
   });
 
   it('every kind reaches its own two ends at the same two rungs', () => {
@@ -31,7 +36,7 @@ describe('one ramp per demand', () => {
         const { stops } = POND_ASK_ROW_BY_KIND[kind];
         amounts.forEach((amount, index) => {
           expect(stops, `${curve} ${kind}`).toContain(amount);
-          if (index > 0) expect(amount, `${curve} ${kind}`).toBeGreaterThanOrEqual(amounts[index - 1]);
+          if (index > 0) expect(amount, `${curve} ${kind}`).toBeGreaterThanOrEqual(required(amounts[index - 1], 'previous amount'));
         });
       }
     }

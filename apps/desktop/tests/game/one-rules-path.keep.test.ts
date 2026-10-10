@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
-import { describe, expect, it } from 'vitest';
-import { all, getDungeon, ITEM_GROUP_IDS, standardNameOfCheck, screensOfRegions } from '@rotp/game-data';
+import { expect, it } from 'vitest';
+import { all, getDungeon, ITEM_GROUP_IDS, screensOfRegions } from '@rotp/game-data';
 import { buildNormalPlacement } from '@rotp/randomizer';
 import { grantedInventory, recordRowOverrides } from '@rotp/navigation';
 import type { ItemId } from '@rotp/game-data';
@@ -18,12 +18,7 @@ const LIGHT_WORLD_REGION = 'region-002';
 const EASTERN_PALACE_REGION = 'region-168';
 const MENU_REGION = 'region-001';
 
-const normal = (): ReturnType<typeof buildNormalPlacement> =>
-  buildNormalPlacement({ standardNameOf: (checkId) => {
-    const check = all('check').find((row) => row.id === checkId);
-    if (check === undefined) throw new Error(`no check record: ${checkId}`);
-    return standardNameOfCheck(check);
-  } });
+const normal = (): ReturnType<typeof buildNormalPlacement> => buildNormalPlacement();
 
 describeDataset('regions to screens', () => {
   it('brings every real screen inside a region the engine reached', () => {

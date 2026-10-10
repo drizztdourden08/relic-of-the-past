@@ -5,30 +5,35 @@ import {
   getAppState, listProfiles, loadProfile, createProfile, updateProfile,
   deleteProfile, setLastProfile, readConfig, writeConfig,
 } from '@app/profiles/storage';
+import { required } from '../required';
 
 const memFiles = (): FileStore => {
   const store = new Map<string, string>();
   return {
-    readBytes: async () => null,
-    readText: async (p) => store.get(p) ?? null,
+    readBytes: () => Promise.resolve(null),
+    readText: (p) => Promise.resolve(store.get(p) ?? null),
     writeBytes: async () => {},
-    writeText: async (p, d) => { store.set(p, d); },
-    list: async (dir) => {
+    writeText: (p, d) => { store.set(p, d); return Promise.resolve(); },
+    list: (dir) => {
       const prefix = `${dir}/`;
       const names = new Set<string>();
       for (const key of store.keys()) {
-        if (key.startsWith(prefix)) names.add(key.slice(prefix.length).split('/')[0]);
+        if (key.startsWith(prefix)) names.add(required(key.slice(prefix.length).split('/')[0], 'a first path segment'));
       }
-      return [...names];
+      return Promise.resolve([...names]);
     },
-    remove: async (p) => {
+    remove: (p) => {
       for (const key of [...store.keys()]) {
         if (key === p || key.startsWith(`${p}/`)) store.delete(key);
       }
+      return Promise.resolve();
     },
-    exists: async (p) => store.has(p) || [...store.keys()].some((k) => k.startsWith(`${p}/`)),
+    exists: (p) => Promise.resolve(store.has(p) || [...store.keys()].some((k) => k.startsWith(`${p}/`))),
     mkdir: async () => {},
-    stat: async (p) => (store.has(p) ? { bytes: store.get(p)!.length, isDirectory: false } : null),
+    stat: (p) => {
+      const text = store.get(p);
+      return Promise.resolve(text === undefined ? null : { bytes: text.length, isDirectory: false, mtimeMs: 0 });
+    },
   };
 };
 

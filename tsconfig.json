@@ -5,7 +5,6 @@
       "node",
       "vite/client"
     ],
-    "noUncheckedIndexedAccess": false,
     "paths": {
       "@app/*": [
         "./apps/desktop/src/*"

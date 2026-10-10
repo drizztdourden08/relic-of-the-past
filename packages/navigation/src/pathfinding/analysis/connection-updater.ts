@@ -23,24 +23,24 @@ const bundleToConnectionPoint = (bundle: BorderBundle): ConnectionPointData => (
   oneWay: null,
 });
 
+const walkFromPoint = (from: string, input: ConnectionUpdaterInput): ConnectionPointData | undefined => {
+  const fromScreen = input.screenIndexMap.get(from);
+  const bundles = fromScreen !== undefined ? input.borderBundles.get(fromScreen) : undefined;
+  const firstBundle = bundles?.[0];
+  return firstBundle ? bundleToConnectionPoint(firstBundle) : undefined;
+};
+
 const buildConnectionNavUpdates = (input: ConnectionUpdaterInput): ConnectionNavUpdate[] => {
-  const { connections, borderBundles, overlapByKey, screenIndexMap } = input;
+  const { connections, overlapByKey } = input;
   const updates: ConnectionNavUpdate[] = [];
 
   for (const conn of connections) {
     const transitType = transitTypeFromTags(conn.tags);
     const requirements = requirementsFromTags(conn.tags);
 
-    let fromPoint: ConnectionPointData | undefined;
-    let overlapTiles: number[] | undefined;
-
-    if (transitType === 'walk') {
-      overlapTiles = overlapByKey.get(`${conn.from}|${conn.to}`);
-      const fromScreen = screenIndexMap.get(conn.from);
-      const bundles = fromScreen !== undefined ? borderBundles.get(fromScreen) : undefined;
-      const firstBundle = bundles?.[0];
-      if (firstBundle) fromPoint = bundleToConnectionPoint(firstBundle);
-    }
+    const isWalk = transitType === 'walk';
+    const overlapTiles = isWalk ? overlapByKey.get(`${conn.from}|${conn.to}`) : undefined;
+    const fromPoint = isWalk ? walkFromPoint(conn.from, input) : undefined;
 
     const weight = transitType === 'walk' ? (overlapTiles?.length ?? 1) : 1;
     const nav: ConnectionNavData = { transitType, requirements, fromPoint, overlapTiles, weight };

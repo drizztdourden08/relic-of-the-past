@@ -5,13 +5,13 @@ import { describe, expect, it } from 'vitest';
 import { all, actorRecordFile, areaRecordFile, checkRecordFile, connectionRecordFile, dungeonRecordFile, DUNGEON_FLOORS, itemRecordFile, locationRecordFile, recordArrayName, regionRecordFile, screenRecordFile, SPLIT_BY_HALF } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 import { REPO_ROOT } from '../../repo-root';
+import { required } from '../../required';
 
 const ROOT = join(REPO_ROOT, 'packages', 'game-data', 'src', 'data', 'records');
 
 const COLLECTIONS = [
   'actors', 'areas', 'checks', 'connections', 'dungeons', 'enumeration',
-  'item-groups', 'items', 'locations', 'names', 'native-tables', 'regions', 'screens',
-  'sprite-manifest', 'tags',
+  'item-groups', 'items', 'locations', 'names', 'native-tables', 'regions', 'screens', 'tags',
 ];
 
 const EVENT_SUPPORT = ['event-bits.constants.ts', 'event-record.ts', 'event-screens.constants.ts'];
@@ -35,6 +35,14 @@ const filings = <T extends { id: string }>(records: readonly T[], target: (recor
 const mismatched = (entries: { id: string; wanted: string | null; found: string | null }[]): string[] => entries
   .filter(entry => entry.wanted !== null && entry.wanted !== entry.found)
   .map(entry => `${entry.id}: sits in ${entry.found}, the layout says ${entry.wanted}`);
+
+const halfFilesOf = ([stem, names]: [string, readonly string[]]): string[] =>
+  names.map(name => `screens/dark-world/${stem}/${name}.ts`);
+
+const declaredFloors = (stem: string, floor: string): readonly number[] | undefined =>
+  DUNGEON_FLOORS[stem]?.find(([name]) => name === `floor-${floor}`)?.[1];
+
+const isEventSupportFile = (file: string): boolean => EVENT_SUPPORT.some(name => file === `checks/events/${name}`);
 
 describe('the record tree', () => {
   it('holds only the collections the layout declares', () => {
@@ -83,7 +91,7 @@ describe('the record tree', () => {
     const stems = new Set(all('dungeon').map(dungeon => dungeon.fileStem));
     const folders = FILES
       .filter(file => /^(screens|connections)\/(light|dark)-world\//.test(file))
-      .map(file => file.split('/')[2])
+      .map(file => required(file.split('/')[2], `the dungeon folder of ${file}`))
       .filter(folder => folder !== 'overworld' && folder !== 'interiors');
     for (const folder of new Set(folders)) expect(stems.has(folder), folder).toBe(true);
   });
@@ -93,8 +101,7 @@ describeDataset('every record sits where its own fields put it', () => {
   it('files a screen by its world, its area or its dungeon and floor', () => {
     const entries = filings(all('screen'), screen => screenRecordFile(screen).relativePath);
     expect(mismatched(entries)).toEqual([]);
-    const halves = Object.entries(SPLIT_BY_HALF)
-      .flatMap(([stem, names]) => names.map(name => `screens/dark-world/${stem}/${name}.ts`));
+    const halves = Object.entries(SPLIT_BY_HALF).flatMap(halfFilesOf);
     const unresolved = entries.filter(entry => entry.wanted === null);
     expect(unresolved.length).toBeGreaterThan(0);
     for (const entry of unresolved) expect(halves, entry.id).toContain(entry.found);
@@ -121,8 +128,9 @@ describeDataset('every record sits where its own fields put it', () => {
       const file = fileHolding(screen.id);
       const match = file && /^screens\/(light|dark)-world\/([a-z-]+)\/floor-([\db-]+)\.ts$/.exec(file);
       if (!match) continue;
-      const floors = DUNGEON_FLOORS[match[2]]?.find(([name]) => name === `floor-${match[3]}`);
-      if (!floors?.[1].includes(screen.position?.floor as number)) wrong.push(`${screen.id} in ${file}`);
+      const floors = declaredFloors(required(match[2], 'the dungeon stem'), required(match[3], 'the floor name'));
+      const floor = screen.position?.floor;
+      if (floor === undefined || !floors?.includes(floor)) wrong.push(`${screen.id} in ${file}`);
     }
     expect(wrong).toEqual([]);
   });
@@ -142,7 +150,7 @@ describeDataset('every record sits where its own fields put it', () => {
   });
 
   it('holds no support file under events that carries a record', () => {
-    const support = FILES.filter(file => EVENT_SUPPORT.some(name => file === `checks/events/${name}`));
+    const support = FILES.filter(isEventSupportFile);
     expect(support.length).toBe(EVENT_SUPPORT.length);
     for (const file of support) expect(SOURCES.get(file)?.includes("id: 'check-"), file).toBe(false);
   });

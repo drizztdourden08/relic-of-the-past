@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { DIRECTIONS } from './DirectionControl.constants';
-import './HudLayoutEditor.layout.css';
-import './HudLayoutEditor.layout-set.css';
 import type { DirectionControlProps } from './DirectionControl.type';
 
 const DirectionControl = (props: DirectionControlProps) => {

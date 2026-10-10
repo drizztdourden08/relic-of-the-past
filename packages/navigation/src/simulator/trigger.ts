@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { TriggerAction } from '../simulation';
 import type { QueuedAction } from './trigger.type';
+import type { SimDoorRaw } from '@rotp/game-core';
 import { itemLabel, resolveDuplicate } from '@rotp/game-data';
 import { enqueue } from '@rotp/randomizer';
 import { wasmTriggerOverworldCheck, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimOpenCellLock, wasmSimPushMantle, wasmSimMarkMapIcons } from '@rotp/game-core';
@@ -11,18 +12,21 @@ import {
   DOOR_RECORD_SLOTS, NO_ITEM, NO_SPRITE, SHUTTER_DOOR_KIND, SOURCE, TWIN_DOOR_TOLERANCE,
 } from './trigger.constants';
 
+const alongWall = (door: SimDoorRaw): number => (door.direction === 'north' || door.direction === 'south' ? door.col : door.row);
+
+const isTwinOf = (twin: SimDoorRaw, door: SimDoorRaw): boolean =>
+  twin.direction === OPPOSITE[door.direction] && twin.kind === door.kind
+  && Math.abs(alongWall(twin) - alongWall(door)) <= TWIN_DOOR_TOLERANCE;
+
 const doorRecordPair = (roomId: number, doorIndex: number): [number, number][] => {
   const out: [number, number][] = [[roomId, doorIndex]];
   const door = (wasmGetRoomDoorInfo(roomId) ?? [])[doorIndex];
   if (!door || !outerWall(door.direction, door.row, door.col)) return out;
   const adj = ROOM_EDGE_ADJ[door.direction](roomId);
   if (adj === null) return out;
-  const pos = door.direction === 'north' || door.direction === 'south' ? door.col : door.row;
   const twins = wasmGetRoomDoorInfo(adj) ?? [];
   for (const [i, t] of twins.slice(0, DOOR_RECORD_SLOTS).entries()) {
-    if (t.direction !== OPPOSITE[door.direction] || t.kind !== door.kind) continue;
-    const tpos = t.direction === 'north' || t.direction === 'south' ? t.col : t.row;
-    if (Math.abs(tpos - pos) <= TWIN_DOOR_TOLERANCE) out.push([adj, i]);
+    if (isTwinOf(t, door)) out.push([adj, i]);
   }
   return out;
 };

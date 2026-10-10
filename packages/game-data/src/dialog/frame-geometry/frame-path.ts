@@ -1,7 +1,9 @@
 /* @layer shared-game @kind logic */
 import type { DialogCorner } from '../box-style';
+import type { FrameBox } from './frame-geometry.type';
 
-const framePath = (w: number, h: number, inset: number, corner: DialogCorner, size: number): string => {
+const framePath = (box: FrameBox, corner: DialogCorner, size: number): string => {
+  const { w, h, inset } = box;
   const x0 = inset;
   const y0 = inset;
   const x1 = w - inset;

@@ -89,7 +89,7 @@ describe('acceptAllCertain with two findings in one source file', () => {
       if (inFlight > 1) overlapped = true;
       await Promise.resolve();
       inFlight -= 1;
-      return { success: true };
+      return { success: true, id: 'tag-001' };
     });
     expect(overlapped).toBe(false);
   });
@@ -105,7 +105,9 @@ describe('acceptAllCertain when a refusal lands mid-run', () => {
   it('carries on and reports what could not be written', async () => {
     const entries = [finding({ id: 'a' }), finding({ id: 'b' }), finding({ id: 'c' })];
     const result = await acceptAllCertain(entries, entry => Promise.resolve(
-      entry.id === 'b' ? { success: false, error: 'no write path' } : { success: true },
+      entry.id === 'b'
+        ? { success: false, reason: 'failed', error: 'no write path' } as const
+        : { success: true, id: entry.id } as const,
     ));
 
     expect(result.accepted).toBe(2);

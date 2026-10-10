@@ -9,8 +9,8 @@ const RatingHistogram = (props: RatingHistogramProps) => {
   const top = Math.max(1, ...hist);
   return (
     <Box className="rating-histogram" role="list" aria-label="Ratings by stars">
-      {STAR_ROWS.map((stars) => {
-        const count = hist[stars - 1];
+      {STAR_ROWS.map(({ stars, at }) => {
+        const count = hist[at];
         return (
           <Box key={stars} className="rating-histogram__row" role="listitem" aria-label={`${stars} stars: ${count}`}>
             <Text as="span" variant="caption" className="rating-histogram__stars">{stars}</Text>

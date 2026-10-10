@@ -1,6 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { formatDialogueText, parseDialogueText, dialogueTexts } from '@rotp/asset-extraction';
+import { required } from './required';
 
 describe('dialogue text round-trip', () => {
   const asDecoded = (texts: string[]) => texts.map((text) => ({ text, srcData: [] }));
@@ -29,8 +30,8 @@ describe('dialogue text round-trip', () => {
 
     expect(parsed).toHaveLength(397);
     const injectedControlIndex = 4;
-    expect(parsed[injectedControlIndex].content).toContain('[Number 00]');
-    expect(parsed[0].content).toBe('line 0');
+    expect(required(parsed[injectedControlIndex], 'the injected control entry').content).toContain('[Number 00]');
+    expect(required(parsed[0], 'the first entry').content).toBe('line 0');
   });
 
   it('ignores blank trailing lines', () => {

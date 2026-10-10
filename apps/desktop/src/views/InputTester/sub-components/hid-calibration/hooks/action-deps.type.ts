@@ -18,7 +18,7 @@ import type {
   StickSide,
   TriggerSide,
 } from '../hid-calibration.type';
-import type { RawHidInfo } from './useDeviceRawInfo.type';
+import type { RawHidInfo } from './device-raw-info.type';
 
 interface ActionDeps {
   latestBytes: Uint8Array;

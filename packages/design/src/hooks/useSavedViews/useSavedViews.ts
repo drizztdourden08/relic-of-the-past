@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { SavedView } from '@rotp/hub-contracts';
 import { emptySnapshot, isViewSnapshot } from '@drizztdourden08/tessera/data';
 import { listViews, putView, deleteView, errorMessage } from '@rotp/hub-client';
-import type { UseSavedViewsParams } from './useSavedViews.type';
+import type { UseSavedViewsParams } from './saved-views.type';
 
 const useSavedViews = (params: UseSavedViewsParams) => {
   const { views: siteViews, surface, onApplied } = params;

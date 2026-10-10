@@ -1,11 +1,12 @@
 /* @layer test @kind test */
-import { describe, it, expect, afterEach } from 'vitest';
+import { it, expect, afterEach } from 'vitest';
 import { all, getCheck, getItem, getScreen, registerRecord, replaceRecord, unregisterRecord } from '@rotp/game-data';
 import type { CheckRecord, ScreenId } from '@rotp/game-data';
 import type { ChestObservation } from '@rotp/game-core';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy, checkStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const ROOM = 260;
 const SCREEN: ScreenId = 'screen-204';
@@ -13,7 +14,7 @@ const CHECK_ID = 'check-026';
 
 const ORIGINAL: CheckRecord = getCheck(CHECK_ID);
 
-const CONTENTS = getItem(ORIGINAL.vanillaItemIds[0]).gameId?.receiveItemId as number;
+const CONTENTS = getItem(required(ORIGINAL.vanillaItemIds[0], 'the vanilla item')).gameId?.receiveItemId as number;
 
 const roomChest = (overrides: Partial<ChestObservation> = {}): ChestObservation => ({
   chestIndex: 0,
@@ -61,7 +62,7 @@ describeDataset('check strategy on create', () => {
     const drafts = detector.detect(contextFor({ chests: [roomChest()] }));
 
     expect(drafts).toHaveLength(1);
-    const [draft] = drafts;
+    const draft = required(drafts[0], 'the one draft');
     expect(draft.kind).toBe('check');
     expect(draft.action).toBe('create');
     expect(draft.targetId).toBeNull();
@@ -84,7 +85,7 @@ describeDataset('check strategy on create', () => {
 
     const drafts = detector.detect(contextFor({ chests: [roomChest({ itemId: unknown })] }));
 
-    expect((drafts[0].proposed as CheckRecord).vanillaItemIds).toEqual([]);
+    expect((required(drafts[0], 'the first draft').proposed as CheckRecord).vanillaItemIds).toEqual([]);
   });
 
   it('mints one finding per chest slot when a room draws several unknown ones', () => {
@@ -113,12 +114,13 @@ describeDataset('check strategy when already covered', () => {
 
 describeDataset('check strategy on update', () => {
   it('corrects a record catalogued as something other than a chest', () => {
-    replaceRecord('check', { ...ORIGINAL, kind: 'npc' });
+    const asNpc: CheckRecord = { ...ORIGINAL, kind: 'npc' };
+    replaceRecord('check', asNpc);
 
     const drafts = detector.detect(contextFor({ chests: [roomChest()] }));
 
     expect(drafts).toHaveLength(1);
-    const [draft] = drafts;
+    const draft = required(drafts[0], 'the one draft');
     expect(draft.action).toBe('update');
     expect(draft.targetId).toBe(CHECK_ID);
     expect(draft.confidence).toBe('certain');
@@ -129,12 +131,13 @@ describeDataset('check strategy on update', () => {
   it('corrects a record whose screen belongs to a different room', () => {
     const elsewhere = all('screen').find(s => s.gameId.roomIndex != null && s.gameId.roomIndex !== ROOM);
     if (!elsewhere) throw new Error('dataset has no screen for another room');
-    replaceRecord('check', { ...ORIGINAL, screenId: elsewhere.id });
+    const movedAway: CheckRecord = { ...ORIGINAL, screenId: elsewhere.id };
+    replaceRecord('check', movedAway);
 
     const drafts = detector.detect(contextFor({ chests: [roomChest()] }));
 
     expect(drafts).toHaveLength(1);
-    expect((drafts[0].proposed as CheckRecord).screenId).toBe(SCREEN);
+    expect((required(drafts[0], 'the one draft').proposed as CheckRecord).screenId).toBe(SCREEN);
   });
 });
 

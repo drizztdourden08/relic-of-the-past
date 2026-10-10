@@ -3,7 +3,6 @@ import { useRef, useState } from 'react';
 import { Box, Field, Flex, IconButton, NumberInput, Pressable } from '@drizztdourden08/tessera/primitives';
 import { ColorField } from './ColorField';
 import { swatchOf } from '@app/hud-layout-editing/appearance-summary';
-import './HudLayoutEditor.appearance.css';
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
 import type { GradientStop } from '@rotp/hud';
 import type { GradientRampProps } from './GradientRamp.type';

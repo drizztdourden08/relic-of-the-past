@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeEach } from 'vitest';
+import { it, expect, beforeEach } from 'vitest';
 import { resolveCurrentScreenDetailed, clearPalaceMismatches, getPalaceMismatches } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
@@ -10,7 +10,10 @@ const BASELINES = {
 } as const;
 
 const resolve = (state: typeof BASELINES[keyof typeof BASELINES]) =>
-  resolveCurrentScreenDetailed(state.isIndoors, state.palaceIndex, state.roomIndex, state.overworldScreenIndex, state.whichEntrance);
+  resolveCurrentScreenDetailed({
+    isIndoors: state.isIndoors, palaceIndex: state.palaceIndex, roomIndex: state.roomIndex,
+    overworldScreenIndex: state.overworldScreenIndex, whichEntrance: state.whichEntrance,
+  });
 
 describeDataset('screen detection resolves the blessed nav baselines without the palace fallback', () => {
   beforeEach(() => {
@@ -49,14 +52,14 @@ describeDataset('screen detection still catches a mislabelled room with the pala
   });
 
   it('resolves the room anyway and reports the mismatch', () => {
-    const match = resolveCurrentScreenDetailed(true, 0x00, 0x80, 0x00);
+    const match = resolveCurrentScreenDetailed({ isIndoors: true, palaceIndex: 0x00, roomIndex: 0x80, overworldScreenIndex: 0x00 });
     expect(match?.screen.id).toBe('screen-133');
     expect(match?.method).toBe('palace-scan');
     expect(match?.palaceMismatch).toEqual({ expected: 0x02, actual: 0x00 });
   });
 
   it('records the mismatch so a mislabel is observable, not silent', () => {
-    resolveCurrentScreenDetailed(true, 0x00, 0x80, 0x00);
+    resolveCurrentScreenDetailed({ isIndoors: true, palaceIndex: 0x00, roomIndex: 0x80, overworldScreenIndex: 0x00 });
     expect([...getPalaceMismatches().values()]).toEqual([
       { expected: 0x02, actual: 0x00, room: 0x80, screenId: 'screen-133' },
     ]);

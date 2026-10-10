@@ -57,7 +57,7 @@ describe('pond plan', () => {
   });
 
   it('custom with zero items is not a check source', () => {
-    const plan = pondPlanOf({ ...CUSTOM, items: 0 } as PondSetting);
+    const plan = pondPlanOf({ ...CUSTOM, items: 0 });
     expect(plan.locations).toEqual([]);
     expect(plan.throws.every((entry) => entry.prize === -1)).toBe(true);
   });
@@ -70,10 +70,10 @@ describe('pond plan', () => {
 
   it('the wallet reading of a prize is the worst case, never the last price', () => {
     const plan = pondPlanOf(CUSTOM);
-    plan.locations.forEach((_, prize) => {
+    for (const prize of plan.locations.keys()) {
       const at = plan.throws.findIndex((entry) => entry.prize === prize);
       const dearest = Math.max(...plan.throws.slice(0, at + 1).map((entry) => entry.price));
       expect(plan.worstPriceOfPrize[prize]).toBe(dearest);
-    });
+    }
   });
 });

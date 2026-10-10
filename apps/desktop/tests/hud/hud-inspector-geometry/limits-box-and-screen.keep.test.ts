@@ -4,8 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createElement as h } from 'react';
 import { BoxModelField } from '@app/views/HudLayoutEditor/sub-components/BoxModelField';
 import { MinMaxField } from '@app/views/HudLayoutEditor/sub-components/MinMaxField';
-import { SizeBoxSection } from '@app/views/HudLayoutEditor/sub-components/sections/SizeBoxSection';
-import type { HudNode } from '@rotp/hud';
+import { SizeBoxSection } from '@app/views/HudLayoutEditor/sub-components/SizeBoxSection';
 import { installPlatformHarness } from './install-platform-harness';
 import { spacerNode as node } from './spacer-node';
 
@@ -79,7 +78,7 @@ describe('the box model', () => {
 describe('the screen root cannot be given a size through any path', () => {
   const mountScreen = (): void => {
     mount(h(SizeBoxSection, {
-      node: node({ id: 'screen', kind: 'container', direction: 'row', children: [] } as Partial<HudNode>),
+      node: node({ id: 'screen', kind: 'container', direction: 'row', children: [] }),
       onPatch: () => {}, scope: {}, isScreen: true,
     }));
   };

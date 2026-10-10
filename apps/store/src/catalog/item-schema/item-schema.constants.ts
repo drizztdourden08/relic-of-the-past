@@ -22,7 +22,7 @@ const ITEM_SCHEMA_CONFIG: SchemaConfig = {
   kinds: { name: 'string', summary: 'string', author: 'string', version: 'string', kind: 'enum' },
 };
 
-const ITEM_SORTS: readonly ItemSort[] = [
+const ITEM_SORTS: readonly [ItemSort, ...ItemSort[]] = [
   { id: 'popular', label: 'Most installed', entry: { path: 'installs', dir: 'desc' } },
   { id: 'rated', label: 'Top rated', entry: { path: 'rating', dir: 'desc' } },
   { id: 'reviewed', label: 'Most ratings', entry: { path: 'ratings', dir: 'desc' } },

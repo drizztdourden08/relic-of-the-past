@@ -4,10 +4,15 @@ import { controllerInputStore } from '@app/input/controller-input-store';
 import type { ControllerJoystickSample } from '@drizztdourden08/brock-input';
 import type { InputItem } from '../../hid-calibration/hid-calibration.type';
 import { buildPositionalTargets } from './build-positional-targets';
-import {
-  buildRecord, describeRecord, detectFiredIndex, growAxisRanges, instructionFor,
-  isAtRest, startAxisRanges, trimTargetsToDevice, widestAxis,
-} from './positional-detect';
+import { buildRecord } from './build-record';
+import { describeRecord } from './describe-record';
+import { detectFiredIndex } from './detect-fired-index';
+import { growAxisRanges } from './grow-axis-ranges';
+import { instructionFor } from './instruction-for';
+import { isAtRest } from './is-at-rest';
+import { startAxisRanges } from './start-axis-ranges';
+import { trimTargetsToDevice } from './trim-targets-to-device';
+import { widestAxis } from './widest-axis';
 import { toInputItem as toItem } from './to-input-item';
 import type {
   AxisRanges, PositionalCaptureRecord, PositionalTarget, UsePositionalOneByOneProps,

@@ -23,16 +23,23 @@ const standingItemAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAn
   };
 };
 
-const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotation | null => {
-  const tile = sprite.tile;
+const pullSwitchDetail = (shutterCount: number): Pick<ScreenAnnotation, 'detail'> => {
+  if (shutterCount <= 0) return {};
+  return { detail: `opens ${shutterCount} shutter${shutterCount > 1 ? 's' : ''}` };
+};
 
+const guardOrSwitch = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotation | null => {
+  const tile = sprite.tile;
   if (sprite.carriesBigKey) return { kind: 'big-key-carrier', tile, label: 'big key guard', requires: ['sword'] };
   if (sprite.carriesKey) return { kind: 'key-carrier', tile, label: 'key guard', requires: ['sword'] };
+  if (isPullSwitch(sprite.spriteType)) return { kind: 'pull-switch', tile, label: 'pull switch', ...pullSwitchDetail(ctx.shutterCount) };
+  return null;
+};
 
-  if (isPullSwitch(sprite.spriteType)) {
-    return { kind: 'pull-switch', tile, label: 'pull switch',
-      ...(ctx.shutterCount > 0 ? { detail: `opens ${ctx.shutterCount} shutter${ctx.shutterCount > 1 ? 's' : ''}` } : {}) };
-  }
+const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotation | null => {
+  const tile = sprite.tile;
+  const guard = guardOrSwitch(sprite, ctx);
+  if (guard) return guard;
 
   const check = npcCheckFor(sprite.spriteType, sprite.roomId, ctx.completed, sprite.outdoor);
   if (check) {

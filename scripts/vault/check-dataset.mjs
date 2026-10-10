@@ -4,9 +4,9 @@ import { join, resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const RECORDS = join(ROOT, 'packages', 'game-data', 'src', 'data', 'records');
-const DEFINITIONS = join(RECORDS, 'sprite-manifest', 'definitions.json');
+const DEFINITIONS = join(ROOT, 'packages', 'game-data', 'data', 'sprite-manifest', 'definitions.json');
 
-const REQUIRED_ROOTS = ['actors', 'checks', 'connections', 'items', 'screens', 'sprite-manifest'];
+const REQUIRED_ROOTS = ['actors', 'checks', 'connections', 'items', 'screens'];
 
 const fail = (message) => {
   process.stdout.write(`::error::${message}\n`);

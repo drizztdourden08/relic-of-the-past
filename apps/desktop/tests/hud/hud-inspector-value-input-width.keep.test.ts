@@ -3,17 +3,15 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { chromium, type Browser } from 'playwright';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'fs';
 import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
+import { cssIn } from './files-in';
 import { REPO_ROOT } from '../repo-root';
+import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
 
 const ROOT = REPO_ROOT;
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const ED = `${ROOT}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
-
-const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
@@ -21,6 +19,7 @@ const SHEETS = [
   `${ROOT}/apps/desktop/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
   ...cssIn(`${DS}/composites`),
+  ...EDITOR_THEME_SHEETS,
   ...cssIn(ED),
 ];
 
@@ -70,7 +69,7 @@ const probe = (promote: boolean): Measured[] => {
     }
   }
   const px = (el: Element, side: string): number =>
-    parseFloat((getComputedStyle(el) as unknown as Record<string, string>)[side]) || 0;
+    parseFloat(getComputedStyle(el).getPropertyValue(side)) || 0;
   const out: Measured[] = [];
   for (const sec of Array.from(document.querySelectorAll('[data-case]'))) {
     const rail = sec.getBoundingClientRect();
@@ -79,8 +78,8 @@ const probe = (promote: boolean): Measured[] => {
       out.push({
         case: (sec as HTMLElement).dataset.case ?? '?',
         field: f.getAttribute('aria-label') ?? '?',
-        content: Math.round((box.width - px(f, 'paddingLeft') - px(f, 'paddingRight')
-          - px(f, 'borderLeftWidth') - px(f, 'borderRightWidth')) * 10) / 10,
+        content: Math.round((box.width - px(f, 'padding-left') - px(f, 'padding-right')
+          - px(f, 'border-left-width') - px(f, 'border-right-width')) * 10) / 10,
         overflow: Math.max(0, Math.round(box.right - rail.right)),
         top: Math.round(box.top - rail.top),
         left: Math.round(box.left - rail.left),
@@ -93,7 +92,7 @@ const probe = (promote: boolean): Measured[] => {
 const rest: Record<number, Measured[]> = {};
 const wide: Record<number, Measured[]> = {};
 const RAILS = [289, 232, 188];
-let browser: Browser;
+let browser: Browser | undefined;
 
 const find = (from: Record<number, Measured[]>, rail: number, field: string): Measured => {
   const hit = from[rail]?.find((m) => m.field === field);
@@ -102,8 +101,9 @@ const find = (from: Record<number, Measured[]>, rail: number, field: string): Me
 };
 
 beforeAll(async () => {
-  browser = await chromium.launch();
-  const page = await browser.newPage();
+  const launched = await chromium.launch();
+  browser = launched;
+  const page = await launched.newPage();
   for (const rail of RAILS) {
     await page.setContent(document_(rail));
     rest[rail] = await page.evaluate(probe, false);

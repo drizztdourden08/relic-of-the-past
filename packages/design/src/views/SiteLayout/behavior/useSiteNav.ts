@@ -9,6 +9,7 @@ import { useLocation } from '../../../hooks/useLocation';
 import { useSiteDefinition } from '../../../site/site-context';
 import type { SiteSection } from '../../../site/site-definition.type';
 import { ROOT_PATH } from '../SiteLayout.constants';
+import { sectionOf } from './section-of';
 
 const navItem = (section: SiteSection): SideNavItem => ({ id: section.id, label: section.label, icon: createElement(IconifyIcon, { icon: section.icon }) });
 
@@ -22,11 +23,11 @@ const useSiteNav = () => {
   const isAdmin = access?.state === 'admin';
 
   const config = useMemo<SideNavConfig>(() => ({
-    home: navItem(sections[home]),
+    home: navItem(sectionOf(sections, home)),
     groups: navGroups.map((group) => ({
       id: group.id,
       label: group.label,
-      items: group.sections.filter((id) => isVisible(sections[id], isAdmin, rights)).map((id) => navItem(sections[id])),
+      items: group.sections.filter((id) => isVisible(sectionOf(sections, id), isAdmin, rights)).map((id) => navItem(sectionOf(sections, id))),
     })).filter((group) => group.items.length > 0),
   }), [sections, home, navGroups, isAdmin, rights]);
 
@@ -35,7 +36,7 @@ const useSiteNav = () => {
     return Object.values(sections).find((section) => path.startsWith(section.path))?.id ?? home;
   }, [path, sections, home]);
 
-  const select = useCallback((id: string) => navigate(sections[id].path), [sections, navigate]);
+  const select = useCallback((id: string) => navigate(sectionOf(sections, id).path), [sections, navigate]);
 
   return { config, activeId, select };
 };

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '@app/hud-layout-editing/align-options';
-import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import { PLATFORM } from './section-controls.constants';
 

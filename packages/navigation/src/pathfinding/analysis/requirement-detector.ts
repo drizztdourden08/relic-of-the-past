@@ -1,12 +1,21 @@
 /* @layer shared-game @kind logic */
-import type { RequirementSet, TileReq } from '@rotp/game-data';
-import type { GridPos } from '@rotp/game-core';
+import type { RequirementSet, TileReq, TraversalRequirement } from '@rotp/game-data';
+import type { GridPos, ReachState } from '@rotp/game-core';
 import type { DetectedRequirement, RequirementDetectorInput } from './requirement-detector.type';
 import { GRID_SIZE } from '../types/grid.constants';
 import { floodFillScreen } from '../flood-fill/orchestrator';
 import { INVENTORY_PROGRESSION } from './analysis.constants';
 
 const posKey = (p: GridPos): string => `${p.row},${p.col}`;
+
+const reachesTarget = (reachable: ReachState[][], pos: GridPos): boolean => {
+  const row = Math.min(pos.row, GRID_SIZE - 1);
+  const col = Math.min(pos.col, GRID_SIZE - 1);
+  return Boolean(reachable[row]?.[col]);
+};
+
+const requirementsOf = (inventoryItems: readonly TraversalRequirement[]): RequirementSet =>
+  inventoryItems.length > 0 ? [inventoryItems.slice()] : [];
 
 const detectRequirements = (input: RequirementDetectorInput): DetectedRequirement[] => {
   const { screenIndex, getGrid, indoors, targetPositions } = input;
@@ -29,15 +38,9 @@ const detectRequirements = (input: RequirementDetectorInput): DetectedRequiremen
 
     for (const pos of targetPositions) {
       const key = posKey(pos);
-      if (reached.has(key)) continue;
-
-      const row = Math.min(pos.row, GRID_SIZE - 1);
-      const col = Math.min(pos.col, GRID_SIZE - 1);
-      if (!floodResult.reachable[row]?.[col]) continue;
-
+      if (reached.has(key) || !reachesTarget(floodResult.reachable, pos)) continue;
       reached.add(key);
-      const reqs: RequirementSet = inventoryItems.length > 0 ? [inventoryItems.slice()] : [];
-      results.push({ position: pos, requirements: reqs });
+      results.push({ position: pos, requirements: requirementsOf(inventoryItems) });
     }
   }
 

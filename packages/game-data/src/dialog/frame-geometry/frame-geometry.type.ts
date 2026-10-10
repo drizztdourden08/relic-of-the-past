@@ -11,4 +11,10 @@ interface GroundShape {
   clipPath?: string;
 }
 
-export type { CornerPlacement, GroundShape };
+interface FrameBox {
+  w: number;
+  h: number;
+  inset: number;
+}
+
+export type { CornerPlacement, FrameBox, GroundShape };

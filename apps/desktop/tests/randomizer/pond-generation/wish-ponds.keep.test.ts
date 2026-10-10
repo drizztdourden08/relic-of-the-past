@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { ITEM, generatePlacement, buildFillWorld, fillOptionsFromSnapshot, parsePondProfiles, POND_INSTANCES, POND_RUNGS_BY_ID } from '@rotp/randomizer';
 import { ALL_NPC, ALL_POND_SLOTS, DELIVERABLE, EMPTY } from './pond-generation.constants';
 import { snapshotOf } from './snapshot-of';
+import { required } from '../../required';
 
 describe('pond generation', () => {
   for (const pond of POND_INSTANCES.filter((entry) => entry.id !== 'capacity')) {
@@ -45,19 +46,22 @@ describe('pond generation', () => {
       }
     }, 30_000);
   }
+});
 
+describe('pond generation', () => {
   it('the shared switch gives all three ponds the capacity pond settings', () => {
     const separate = {
       pond_capacity_mode: 'custom', pond_capacity_items: 4, pond_capacity_throws: 4,
       pond_wishing_mode: 'vanilla-cost', pond_cursed_mode: 'capacity',
     };
-    const off = fillOptionsFromSnapshot(snapshotOf(separate), { capacity: ALL_POND_SLOTS }, {}, 's');
-    expect(off.ponds.wishing).toMatchObject({ mode: 'vanilla-cost' });
-    expect(off.ponds.cursed).toEqual({ mode: 'capacity' });
-    const on = fillOptionsFromSnapshot(
-      snapshotOf({ ...separate, pond_share: true }), { capacity: ALL_POND_SLOTS }, {}, 's');
-    for (const pond of POND_INSTANCES) expect(on.ponds[pond.id], pond.id).toEqual(on.ponds.capacity);
-    expect(on.ponds.capacity).toEqual(off.ponds.capacity);
+    const off = required(
+      fillOptionsFromSnapshot(snapshotOf(separate), { capacity: ALL_POND_SLOTS }, {}, 's').ponds, 'ponds with the switch off');
+    expect(off.wishing).toMatchObject({ mode: 'vanilla-cost' });
+    expect(off.cursed).toEqual({ mode: 'capacity' });
+    const on = required(fillOptionsFromSnapshot(
+      snapshotOf({ ...separate, pond_share: true }), { capacity: ALL_POND_SLOTS }, {}, 's').ponds, 'ponds with the switch on');
+    for (const pond of POND_INSTANCES) expect(on[pond.id], pond.id).toEqual(on.capacity);
+    expect(on.capacity).toEqual(off.capacity);
     expect(parsePondProfiles(snapshotOf({ ...separate, pond_share: true }).values).stored)
       .toEqual(parsePondProfiles(snapshotOf(separate).values).profiles);
     const placement = generatePlacement('pond-shared', snapshotOf({ ...separate, pond_share: true }), EMPTY, DELIVERABLE, EMPTY);

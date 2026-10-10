@@ -1,18 +1,17 @@
 /* @layer tests @kind helper */
 import { chromium } from 'playwright';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { readFileSync, readdirSync } from 'fs';
-import { join, resolve } from 'path';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { EDITOR_DIR, RAILS } from './metrics.constants';
 import { metricsCases } from './metrics-cases';
 import type { Cells, Frozen, Heads, MetricsRig, Read, Scroller } from './metrics.type';
+import { cssIn } from '../files-in';
 import { REPO_ROOT } from '../../repo-root';
+import { EDITOR_THEME_SHEETS } from '../editor-theme-sheets.constants';
 
 const designSystem = resolve(REPO_ROOT, 'node_modules/@drizztdourden08/tessera/src');
 const rotpTheme = resolve(REPO_ROOT, 'apps/desktop/src/theme.css');
-
-const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
 
 const sheets = (): string[] => [
   ...cssIn(`${designSystem}/tokens`).filter((f) => !f.endsWith('index.css')),
@@ -20,6 +19,7 @@ const sheets = (): string[] => [
   rotpTheme,
   ...cssIn(`${designSystem}/primitives`),
   ...cssIn(`${designSystem}/composites`),
+  ...EDITOR_THEME_SHEETS,
   ...cssIn(EDITOR_DIR),
 ];
 

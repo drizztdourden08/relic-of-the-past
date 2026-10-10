@@ -5,7 +5,7 @@ import { NEAR_LIMIT_RATIO, NOT_MEASURED } from './entry.constants';
 import type { FitChip } from './entry.type';
 
 const widest = (rows: RowFit[]): RowFit =>
-  rows.reduce((worst, row) => (row.widthPx > worst.widthPx ? row : worst), rows[0]);
+  rows.reduce((worst, row) => (row.widthPx > worst.widthPx ? row : worst));
 
 const fitChipOf = (rows: RowFit[]): FitChip => {
   if (rows.length === 0) return NOT_MEASURED;

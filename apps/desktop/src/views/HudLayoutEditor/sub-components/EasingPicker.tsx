@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-import './HudLayoutEditor.motion.css';
 import { Box, Field, NumberInput, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import {
   DEFAULT_STEPS, MIN_STEPS, NAMED_EASINGS, stepsCountOf, stepsName,

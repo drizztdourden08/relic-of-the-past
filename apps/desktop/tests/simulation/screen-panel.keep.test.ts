@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import type { ScreenAnnotation } from '@rotp/navigation';
 import { roomTagName } from '@rotp/navigation';
 import { groupAnnotations } from '@app/views/NavigationWidget/sub-components/ScreenPanel/behavior/annotation-rows';
@@ -19,7 +19,7 @@ describeDataset('annotation grouping', () => {
     const groups = groupAnnotations(items);
     expect(groups.map((g) => g.id)).toEqual(['checks', 'locks', 'triggers', 'other']);
     expect(groups.flatMap((g) => g.items)).toHaveLength(items.length);
-    expect(groups.find((g) => g.id === 'other')?.items[0].label).toBe('something new');
+    expect(groups.find((g) => g.id === 'other')?.items[0]?.label).toBe('something new');
   });
 
   it('drops empty groups instead of rendering headers with nothing under them', () => {

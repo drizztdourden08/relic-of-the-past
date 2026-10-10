@@ -2,6 +2,7 @@
 import { wasmGetEntranceRooms } from '../../game';
 import { roomEntrances, STAIR_ID_BASE } from '../../game/flood';
 import { FALL_HOLE_ENTRANCE_ID_FROM } from './nav-flood.constants';
+import { itemAt } from '@app/checked-access';
 import type { CollectArgs } from './nav-flood.type';
 
 const collectIndoorEntrances = (args: CollectArgs): Set<number> => {
@@ -21,7 +22,7 @@ const collectIndoorEntrances = (args: CollectArgs): Set<number> => {
   const rooms = wasmGetEntranceRooms();
   if (rooms) {
     for (let i = allEntrances.length - 1; i >= 0; i--) {
-      const e = allEntrances[i];
+      const e = itemAt(allEntrances, i);
       if (e.id >= FALL_HOLE_ENTRANCE_ID_FROM) continue;
       if (rooms[e.id] === primaryScreenIndex) continue;
       if (overworldDoorEntIds.has(e.id)) allEntrances.splice(i, 1);

@@ -9,11 +9,15 @@ import { defaultShopScope, SHOP_IDS, STANDARD_SHOP_SLOT_COUNT, DEFAULT_OFF_SHOPS
 import { EMPTY_RANDOMIZER_FORM } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config';
 import { snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import type { ShopScope } from '@rotp/randomizer';
+import { required } from '../required';
 
 const STALE_COUNT = 12;
 
 const scopeOf = (over: Partial<ShopScope>): ShopScope =>
   ({ ...defaultShopScope(), slotCount: STALE_COUNT, ...over });
+
+const namedCardsOf = (scope: ShopScope): string[] => shopSectionsOf(scope)
+  .flatMap((section) => section.cards.map((card) => `${section.world}:${card.name}`));
 
 describe('the count control and the total read the opened set', () => {
   it('shows the ticked count in custom mode, whatever the stored count says', () => {
@@ -27,7 +31,7 @@ describe('the count control and the total read the opened set', () => {
 
   it('drops both the count and the total when a slot is unticked', () => {
     const before = scopeOf({ mode: 'custom' });
-    const after = withSlotTicked(before, before.enabled[0], false);
+    const after = withSlotTicked(before, required(before.enabled[0], 'first ticked slot'), false);
     const [a, b] = [summaryOf(before), summaryOf(after)];
     expect(b.opened).toBe(a.opened - 1);
     expect(b.locations).toBe(a.locations - before.depth);
@@ -72,8 +76,7 @@ describe('the cards are split by world and named for their section', () => {
   });
 
   it('drops the world words but keeps what tells two shops apart', () => {
-    const named = shopSectionsOf(scopeOf({ mode: 'custom' }))
-      .flatMap((section) => section.cards.map((card) => `${section.world}:${card.name}`));
+    const named = namedCardsOf(scopeOf({ mode: 'custom' }));
     expect(named).toContain('light:Cave Shop (Lake Hylia)');
     expect(named).toContain('dark:Cave Shop (Death Mountain)');
     expect(named).toContain('light:Death Mountain Shop');
@@ -83,8 +86,7 @@ describe('the cards are split by world and named for their section', () => {
   });
 
   it('gives the one shop whose bare name is taken a title of its own', () => {
-    const named = shopSectionsOf(scopeOf({ mode: 'custom' }))
-      .flatMap((section) => section.cards.map((card) => `${section.world}:${card.name}`));
+    const named = namedCardsOf(scopeOf({ mode: 'custom' }));
     expect(named).toContain("light:Potion Seller's Hut");
     expect(named).toContain('dark:Potion Shop');
     expect(new Set(named).size).toBe(named.length);
@@ -142,8 +144,8 @@ describe('a brand-new profile starts on the shipped ticks', () => {
   it('carries those ticks through the frozen snapshot and back', () => {
     const values = normalizeRandomizerOptions(snapshotOfChoices(EMPTY_RANDOMIZER_FORM)).values;
     for (const index of hutSlots) {
-      const row = SHOP_SLOT_ROWS.find((candidate) => candidate.canonicalIndex === index);
-      expect(values[row!.key], row!.key).toBe(false);
+      const row = required(SHOP_SLOT_ROWS.find((candidate) => candidate.canonicalIndex === index), `slot row ${index}`);
+      expect(values[row.key], row.key).toBe(false);
     }
     expect(shopScopeOfValues(values).enabled).toEqual(EMPTY_RANDOMIZER_FORM.shops.enabled);
   });
@@ -153,8 +155,9 @@ describe('a brand-new profile starts on the shipped ticks', () => {
       .flatMap((section) => section.cards)
       .find((card) => DEFAULT_OFF_SHOPS.includes(card.id));
     expect(hut).toBeDefined();
-    expect(hut!.offByDefault).toBe(true);
-    expect(hut!.noneOn).toBe(true);
-    expect(hut!.slots.every((slot) => !slot.checked)).toBe(true);
+    const card = required(hut, 'hut card');
+    expect(card.offByDefault).toBe(true);
+    expect(card.noneOn).toBe(true);
+    expect(card.slots.every((slot) => !slot.checked)).toBe(true);
   });
 });

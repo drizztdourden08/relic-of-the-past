@@ -9,6 +9,7 @@ import {
   loadRecommendationFile, queued, recommendationFilePath, recommendationStorage,
 } from '../../electron/recommendations/recommendation-files';
 import type { Recommendation } from '@rotp/navigation';
+import { required } from '../required';
 
 vi.mock('../../node_modules/@drizztdourden08/brock-electron/src/main/index.ts', async () => ({
   ...(await import('../../node_modules/@drizztdourden08/brock-electron/src/main/paths/get-user-data-path')),
@@ -63,8 +64,8 @@ describe('the store, on disk', () => {
     const store = createRecommendationStore(recommendationStorage);
 
     const after = await store.decide('tag', 'r-1', 'accepted', 5000);
-    expect(after[0].state).toBe('accepted');
-    expect((await loadRecommendationFile('tag'))[0].decidedAt).toBe(5000);
+    expect(required(after[0], 'the decided entry').state).toBe('accepted');
+    expect(required((await loadRecommendationFile('tag'))[0], 'the stored entry').decidedAt).toBe(5000);
   });
 
   it('keeps each collection in its own file', async () => {
@@ -108,7 +109,7 @@ describe('two decisions on one collection', () => {
     const after = queued('tag', () => store.decide('tag', 'r-1', 'accepted', 3));
 
     await expect(boom).rejects.toThrow('disk error');
-    expect((await after)[0].state).toBe('accepted');
+    expect(required((await after)[0], 'the decided entry').state).toBe('accepted');
   });
 
   it('does not serialize across collections', async () => {

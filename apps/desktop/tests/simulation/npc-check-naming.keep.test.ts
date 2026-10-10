@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import type { CheckId } from '@rotp/game-data';
 import { npcCheckFor } from '@rotp/navigation';
 import { describeDataset } from '../dataset-guard';

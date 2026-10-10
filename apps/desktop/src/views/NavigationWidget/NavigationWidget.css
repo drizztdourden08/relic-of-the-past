@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind style */
 
 .nav-navigation-widget__root {
+  font-family: var(--font-debug-mono);
   background: var(--c-glass);
   color: var(--c-text-dim);
   font-size: var(--size-12);
@@ -177,4 +178,16 @@
 
 .nav-val-warning {
   color: var(--c-warning);
+}
+
+.nav-marker-icon[data-tone='entrance'] {
+  color: var(--c-nav-entrance);
+}
+
+.nav-marker-icon[data-tone='walk-boundary'] {
+  color: var(--c-nav-walk-boundary);
+}
+
+.nav-marker-icon--shadowed {
+  filter: drop-shadow(0 0 var(--size-1) var(--c-nav-marker-shadow));
 }

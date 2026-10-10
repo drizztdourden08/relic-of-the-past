@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { addSlot, remapAssignments, removeSlot, renumberSlots, setSlotBinding } from '@rotp/input-mapping';
 import type { ModernSlot, SlotAssignment } from '@rotp/game-data';
+import { required } from './required';
 
 const slot = (index: number, label = `Slot ${index}`): ModernSlot =>
   ({ index, binding: { type: 'none' }, label });
@@ -19,7 +20,7 @@ describe('the numbered slot list', () => {
     let slots: ModernSlot[] = [];
     for (let i = 0; i < 30; i += 1) slots = addSlot(slots).slots;
     expect(slots).toHaveLength(30);
-    expect(slots[29].index).toBe(30);
+    expect(required(slots[29], 'slot 30').index).toBe(30);
   });
 
   it('closes the gap on removal and renumbers what is below', () => {
@@ -49,7 +50,7 @@ describe('the numbered slot list', () => {
     const before = listOf(3);
     const after = setSlotBinding(before, 2, { type: 'keyboard', code: 'KeyX' });
     expect(after.map((s) => s.index)).toEqual([1, 2, 3]);
-    expect(after[1].binding).toMatchObject({ type: 'keyboard', code: 'KeyX' });
+    expect(required(after[1], 'the re-bound slot').binding).toMatchObject({ type: 'keyboard', code: 'KeyX' });
     expect(after[0]).toBe(before[0]);
     expect(after[2]).toBe(before[2]);
   });

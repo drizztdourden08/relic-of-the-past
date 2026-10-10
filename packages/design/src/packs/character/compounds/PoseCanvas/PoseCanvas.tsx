@@ -20,6 +20,7 @@ const PoseCanvas = (props: PoseCanvasProps) => {
     ctx.clearRect(0, 0, width, height);
     if (frames.length === 0) return;
     const frame = frames[tick % frames.length];
+    if (frame === undefined) throw new Error(`No pose frame for tick ${tick}`);
     const image = ctx.createImageData(width, height);
     composeFrame({
       dest: new Uint32Array(image.data.buffer),

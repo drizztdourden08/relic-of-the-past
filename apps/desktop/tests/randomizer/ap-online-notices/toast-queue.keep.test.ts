@@ -4,6 +4,7 @@ import { BURST_LIMIT, BURST_WINDOW_MS, queueNotice } from '@rotp/randomizer';
 import { ONLINE_NOTICE_DEFAULTS } from '@rotp/game-core';
 import type { OnlineNotice, NoticeEntry } from '@rotp/randomizer';
 import { installClientHarness } from '../ap-protocol-harness';
+import { required } from '../../required';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
@@ -36,15 +37,16 @@ describe('the toast queue', () => {
       .toEqual(Array(BURST_LIMIT).fill('Received Bow from Drizztdourden_'));
     const burst = run(Array(136).fill(received('Drizztdourden_')));
     expect(burst).toHaveLength(1);
-    expect(burst[0].count).toBe(136);
-    expect(burst[0].notice.text).toBe('136 items received from Drizztdourden_');
-    expect(burst[0].notice.parts.at(-1)).toEqual({ text: 'Drizztdourden_', tone: 'player' });
+    const folded = required(burst[0], 'folded burst entry');
+    expect(folded.count).toBe(136);
+    expect(folded.notice.text).toBe('136 items received from Drizztdourden_');
+    expect(folded.notice.parts.at(-1)).toEqual({ text: 'Drizztdourden_', tone: 'player' });
   });
 
   it('a burst forming never pushes out the lines before it', () => {
     const line = (kind: OnlineNotice['kind'], text: string): OnlineNotice => ({ kind, text, parts: [{ text }] });
     const before = [line('goal', 'goal'), line('release', 'release'), line('itemSent', 's'), line('connection', 'c')];
-    const queue = run([...before, ...Array(40).fill(received('Drizztdourden_'))]);
+    const queue = run([...before, ...Array<OnlineNotice>(40).fill(received('Drizztdourden_'))]);
     expect(queue.map((entry) => entry.notice.text)).toEqual(['goal', 'release', 's', 'c', '40 items received from Drizztdourden_']);
     expect(run(Array(9).fill(line('chat', 'hi')), ONLINE_NOTICE_DEFAULTS, BURST_WINDOW_MS + 1)).toHaveLength(0);
     expect(run(Array(9).fill(line('chat', 'hi')), { ...ONLINE_NOTICE_DEFAULTS, apNotifyChat: true }, BURST_WINDOW_MS + 1)).toHaveLength(5);
@@ -52,7 +54,9 @@ describe('the toast queue', () => {
 
   it('notices further apart than the window, or from another player, are no burst', () => {
     expect(run(Array(5).fill(received('Drizztdourden_')), ONLINE_NOTICE_DEFAULTS, BURST_WINDOW_MS + 1)).toHaveLength(5);
-    const mixed = run([...Array(3).fill(received('Drizztdourden_')), ...Array(2).fill(received('Zelda'))]);
+    const mixed = run([
+      ...Array<OnlineNotice>(3).fill(received('Drizztdourden_')), ...Array<OnlineNotice>(2).fill(received('Zelda')),
+    ]);
     expect(mixed.map((entry) => entry.count)).toEqual([1, 1, 1, 1, 1]);
   });
 });

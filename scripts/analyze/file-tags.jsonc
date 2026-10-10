@@ -38,10 +38,10 @@
   "apps/desktop/public/wasm/**": { "kind": "asset" },
   // Named save states the tests + nav baselines load; documented in their README.
   "tests/fixtures/save-states/**": { "kind": "asset" },
-  // Attribution for the ported world logic, kept beside the port itself.
-  // Documented in packages/randomizer/src/world/NOTICE.md.
-  "packages/randomizer/src/world/LICENSE": { "layer": "shared-game", "kind": "doc" },
-  "packages/randomizer/src/world/NOTICE.md": { "layer": "shared-game", "kind": "doc" },
+  // Attribution for the ported world logic in packages/randomizer/src/world.
+  // Documented in packages/randomizer/NOTICE.md.
+  "packages/randomizer/LICENSE-world": { "layer": "shared-game", "kind": "doc" },
+  "packages/randomizer/NOTICE.md": { "layer": "shared-game", "kind": "doc" },
   // Kept (permanent) app-driven specs. Documented in apps/desktop/tests/e2e/README.md.
   "apps/desktop/tests/e2e/**": { "kind": "test" },
   // The folder's own README is prose, or the rule above would lint it as a test.

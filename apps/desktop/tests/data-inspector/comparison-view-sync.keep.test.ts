@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createScrollSyncController } from './scroll-sync-controller';
@@ -109,26 +109,34 @@ describeDataset('the pane pair, wired as the component wires it', () => {
   });
 });
 
+const TAG_FIELDS = {
+  namespace: 'area',
+  value: 'cave',
+  label: 'Cave',
+  namespaceLabel: 'Area',
+  appliesTo: ['screen'],
+} as const;
+
+const entry: Recommendation = {
+  id: 'r-1',
+  kind: 'tag',
+  action: 'update',
+  targetId: 'tag-001',
+  current: { id: 'tag-001', name: 'area:cave', ...TAG_FIELDS },
+  proposed: { id: 'tag-001', name: 'area:cavern', ...TAG_FIELDS },
+  reason: 'the vocabulary spells it differently',
+  detector: 'test',
+  evidence: [{ source: 'test', detail: 'seen' }],
+  confidence: 'certain',
+  screenId: null,
+  origin: 'live',
+  state: 'open',
+  firstSeenAt: 1,
+  decidedAt: null,
+};
+
 describeDataset('the two panes share one tab', () => {
   let RecommendationDetail: typeof DetailModule.RecommendationDetail;
-
-  const entry: Recommendation = {
-    id: 'r-1',
-    kind: 'tag',
-    action: 'update',
-    targetId: 'tag-001',
-    current: { id: 'tag-001', name: 'area:cave' },
-    proposed: { id: 'tag-001', name: 'area:cavern' },
-    reason: 'the vocabulary spells it differently',
-    detector: 'test',
-    evidence: [{ source: 'test', detail: 'seen' }],
-    confidence: 'certain',
-    screenId: null,
-    origin: 'live',
-    state: 'open',
-    firstSeenAt: 1,
-    decidedAt: null,
-  } as Recommendation;
 
   beforeEach(async () => {
     vi.resetModules();

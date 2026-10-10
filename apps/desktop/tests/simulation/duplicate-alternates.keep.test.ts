@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { resolveDuplicate, isDuplicated, itemLabel } from '@rotp/game-data';
 import type { ItemId } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';

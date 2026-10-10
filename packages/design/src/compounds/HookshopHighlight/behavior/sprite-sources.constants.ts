@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind constants */
-import bagSrc from '../../../assets/hookshop/hookshop-bag.svg';
-import stampSrc from '../../../assets/hookshop/hookshop-stamp.svg';
-import sparkleSrc from '../../../assets/hookshop/hookshop-sparkle.svg';
-import starSrc from '../../../assets/hookshop/hookshop-star.svg';
-import speedLineSrc from '../../../assets/hookshop/hookshop-speed-line.svg';
+import bagSrc from '../../../../art/hookshop/hookshop-bag.svg';
+import stampSrc from '../../../../art/hookshop/hookshop-stamp.svg';
+import sparkleSrc from '../../../../art/hookshop/hookshop-sparkle.svg';
+import starSrc from '../../../../art/hookshop/hookshop-star.svg';
+import speedLineSrc from '../../../../art/hookshop/hookshop-speed-line.svg';
 import type { SpriteName } from '../HookshopHighlight.type';
 
 const SOURCES: Record<SpriteName, string> = {

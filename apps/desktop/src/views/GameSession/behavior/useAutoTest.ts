@@ -15,7 +15,7 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
     if (!activeProfile || didRun.current) return;
     let cancelled = false;
 
-    (async () => {
+    void (async () => {
       const args = await appApi().getTestArgs();
       const autoStart = isAutoStart();
       if (args.autoState === null && !args.screenshot && !autoStart) return;

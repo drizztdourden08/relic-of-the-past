@@ -1,6 +1,7 @@
 /* @layer renderer-hooks @kind logic */
 import { POND_PRICE_LADDER, asksOnlyRupees } from '@rotp/randomizer';
 import type { CurveId, PondSetting } from '@rotp/randomizer';
+import { itemAt } from '@app/checked-access';
 import type { PondRowState } from '@app/compounds/WishingPondRow';
 
 const askPart = (state: PondRowState, start: number, max: number) => {
@@ -11,8 +12,8 @@ const askPart = (state: PondRowState, start: number, max: number) => {
 const settingOfState = (state: PondRowState): PondSetting => {
   const [low, high] = state.range;
   if (state.mode === 'capacity') return { mode: 'capacity' };
-  const start = POND_PRICE_LADDER[low];
-  const max = POND_PRICE_LADDER[high];
+  const start = itemAt(POND_PRICE_LADDER, low);
+  const max = itemAt(POND_PRICE_LADDER, high);
   if (state.mode !== 'custom') return { mode: state.mode, items: state.items, ...askPart(state, start, max) };
   return {
     mode: 'custom',

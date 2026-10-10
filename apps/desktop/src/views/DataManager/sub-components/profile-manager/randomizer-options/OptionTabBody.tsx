@@ -25,6 +25,8 @@ import { FROZEN_PONDS } from './OptionTabBody.constants';
 import type { OptionDef } from '@rotp/randomizer';
 import type { OptionTabBodyProps } from './OptionTabBody.type';
 
+const pondFrozenKeys = (editable: boolean) => (editable ? NO_FROZEN_KEYS : FROZEN_POND_KEYS);
+
 const OptionTabBody = (props: OptionTabBodyProps) => {
   const {
     tab, groups, lockedGroups, values, valueOf, cellOf,
@@ -74,7 +76,7 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
   const listGroups = tab === 'pond' ? pondGroupsFor(groups.pond, rule.pondModes) : groups[tab];
   const frozenKeys = tab === 'items'
     ? forcedItemPower.keys
-    : (rule.pondEditable ? NO_FROZEN_KEYS : FROZEN_POND_KEYS);
+    : pondFrozenKeys(rule.pondEditable);
 
   return (
     <>

@@ -1,14 +1,15 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { buildAdjacency, reachableFrom, inventoryToReachTokens, requirementsMet } from '@rotp/navigation';
 import type { CanPass, ScreenEdge, ReachContext } from '@rotp/navigation';
 import { getScreen } from '@rotp/game-data';
+import type { DungeonId, ItemId } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 
 const emptyInventoryContext = (): ReachContext => ({
-  tokens: inventoryToReachTokens(new Set<string>()),
+  tokens: inventoryToReachTokens(new Set<ItemId>()),
   keyAvailable: () => false,
-  bigKeys: new Set<string>(),
+  bigKeys: new Set<DungeonId>(),
   events: new Set<string>(),
 });
 

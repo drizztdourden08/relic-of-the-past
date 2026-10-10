@@ -1,5 +1,6 @@
 /* @layer shared-game @kind logic */
-import type { SimObservation } from '../types';
+import type { RoomInteractables, SimObservation } from '../types';
+import type { LedgerScan } from './dungeon-ledger-scan.type';
 import type { DungeonId } from '@rotp/game-data';
 import { keyAvailable } from './explorer/key-available';
 import { chestKey } from './discover/chest-key';
@@ -18,20 +19,37 @@ const hasUnblastedWall = (obs: SimObservation): boolean => {
   return attrGridsOf(bundle).some(g => g.some(row => row.some(isBombableAttr)));
 };
 
+const hasShutDoor = (inter: RoomInteractables | undefined, kind: string): boolean =>
+  inter?.doors.some(d => d.kind === kind && !d.opened) ?? false;
+
 const guessBlocker = (state: EngineState, obs: SimObservation, dungeon: DungeonId | null): string | undefined => {
   const inter = obs.interactables;
-  if (!state.reachTokens.has('bombs')
-    && (hasUnblastedWall(obs) || (inter?.doors.some(d => d.kind === 'bombable' && !d.opened) ?? false))) {
-    return 'bombs';
-  }
+  if (!state.reachTokens.has('bombs') && (hasUnblastedWall(obs) || hasShutDoor(inter, 'bombable'))) return 'bombs';
   if (!dungeon) return undefined;
-  if (inter?.doors.some(d => d.kind === 'small-key' && !d.opened) && !keyAvailable(state, dungeon)) {
-    return `smallkey:${dungeon}`;
-  }
-  if (inter?.doors.some(d => d.kind === 'big-key' && !d.opened) && !state.bigKeys.has(dungeon)) {
-    return `bigkey:${dungeon}`;
-  }
+  if (hasShutDoor(inter, 'small-key') && !keyAvailable(state, dungeon)) return `smallkey:${dungeon}`;
+  if (hasShutDoor(inter, 'big-key') && !state.bigKeys.has(dungeon)) return `bigkey:${dungeon}`;
   return undefined;
+};
+
+const oweChests = (scan: LedgerScan, inter: RoomInteractables): void => {
+  const { state, ledger, handled, blockerFor } = scan;
+  for (const chest of inter.chests) {
+    const key = chestKey(chest);
+    handled.add(key);
+    if (chest.opened || state.done.has(key)) continue;
+    upsertOwed(ledger, key, chest.roomId, blockerFor(key));
+  }
+};
+
+const oweKeyCarriers = (scan: LedgerScan, inter: RoomInteractables): void => {
+  const { state, ledger, handled, blockerFor } = scan;
+  for (const sprite of inter.sprites) {
+    if (!sprite.carriesKey && !sprite.carriesBigKey) continue;
+    const key = spriteKey(sprite);
+    handled.add(key);
+    if (state.done.has(key)) continue;
+    upsertOwed(ledger, key, sprite.roomId, blockerFor(key));
+  }
 };
 
 const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: SimTarget[]): void => {
@@ -49,26 +67,14 @@ const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: S
 
   const dungeon = dungeonForScreen(state.virtual.screenId);
   const actionable = new Set(targets.map(t => t.key));
-  const handled = new Set<string>();
-  const blockerFor = (key: string): string | undefined => (actionable.has(key) ? undefined : guessBlocker(state, obs, dungeon));
-
-  for (const chest of inter.chests) {
-    const key = chestKey(chest);
-    handled.add(key);
-    if (chest.opened || state.done.has(key)) continue;
-    upsertOwed(ledger, key, chest.roomId, blockerFor(key));
-  }
-
-  for (const sprite of inter.sprites) {
-    if (!sprite.carriesKey && !sprite.carriesBigKey) continue;
-    const key = spriteKey(sprite);
-    handled.add(key);
-    if (state.done.has(key)) continue;
-    upsertOwed(ledger, key, sprite.roomId, blockerFor(key));
-  }
-
+  const scan: LedgerScan = {
+    state, ledger, handled: new Set<string>(),
+    blockerFor: (key) => (actionable.has(key) ? undefined : guessBlocker(state, obs, dungeon)),
+  };
+  oweChests(scan, inter);
+  oweKeyCarriers(scan, inter);
   for (const target of targets) {
-    if (target.role === 'gate' || handled.has(target.key)) continue;
+    if (target.role === 'gate' || scan.handled.has(target.key)) continue;
     upsertOwed(ledger, target.key, target.roomId, undefined);
   }
 };

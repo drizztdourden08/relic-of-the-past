@@ -11,7 +11,7 @@ import { screenDetector as detector } from './screen-detector';
 describeDataset('screen strategy: kind, and authoring gaps the game cannot settle', () => {
   it('proposes overworld kind for an outdoor screen when the record disagrees', () => {
     const screen = overworldScreen();
-    const match: ScreenMatchResult = { screen: { ...screen, kind: 'dungeon' } as ScreenRecord, method: 'overworld' };
+    const match: ScreenMatchResult = { screen: { ...screen, kind: 'dungeon' }, method: 'overworld' };
     const drafts = detector.detect(contextFor(observations({ match, liveGameId: screen.gameId, isIndoors: false })));
     expect(drafts.some(d => d.key === 'kind')).toBe(true);
   });

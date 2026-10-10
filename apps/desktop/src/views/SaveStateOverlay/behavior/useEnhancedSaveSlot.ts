@@ -129,7 +129,7 @@ const useEnhancedSaveSlot = (
       unsubs.push(inputMgr.onFunctionAction(`load-state-${i}` as FunctionAction, () => {
         if (!enabled) {
           log.app(`[LoadState] Loading slot ${slot}`);
-          withPauseGuard(() => loadState(slot));
+          void withPauseGuard(() => loadState(slot));
           return;
         }
         handleSlotAction(slot);
@@ -138,7 +138,7 @@ const useEnhancedSaveSlot = (
       unsubs.push(inputMgr.onFunctionAction(`save-state-${i}` as FunctionAction, () => {
         if (!enabled) {
           log.app(`[SaveState] Saving slot ${slot}`);
-          withPauseGuard(() => saveState(slot));
+          void withPauseGuard(() => saveState(slot));
           return;
         }
         handleSlotAction(slot);
@@ -164,11 +164,11 @@ const useEnhancedSaveSlot = (
       if (holdCompleteRef.current || elapsed >= holdDurationMs) {
         cancelHold();
         log.app(`[Enhanced] Save to slot ${slot}`);
-        withPauseGuard(() => saveState(slot)).then(() => close());
+        void withPauseGuard(() => saveState(slot)).then(() => close());
       } else if (elapsed < TAP_THRESHOLD_MS) {
         cancelHold();
         log.app(`[Enhanced] Load from slot ${slot}`);
-        withPauseGuard(() => loadState(slot)).then(() => close());
+        void withPauseGuard(() => loadState(slot)).then(() => close());
       } else {
         cancelHold();
         setHints(buildIdleHints(mappings, slot));

@@ -1,5 +1,6 @@
 /* @layer store-site @kind constants */
 import { createElement } from 'react';
+import { routeParam } from '@rotp/hub-client';
 import type { RouteEntry } from '@rotp/design';
 import { SignIn, Account, Device } from '@rotp/design';
 import { STORE_KINDS, KIND_SECTIONS } from './kinds/kinds.constants';
@@ -28,18 +29,21 @@ const ROUTES: RouteEntry[] = [
   { pattern: '/browse', access: 'member', render: () => createElement(Browse, { kind: null }) },
   { pattern: '/browse/:id', access: 'member', render: ({ id }) => createElement(Browse, { kind: null, selectedId: id }) },
   ...KIND_ROUTES,
-  { pattern: '/items/:id', access: 'member', render: ({ id }) => createElement(Item, { id }) },
-  { pattern: '/authors/:userId', access: 'member', render: ({ userId }) => createElement(Author, { userId }) },
+  { pattern: '/items/:id', access: 'member', render: (params) => createElement(Item, { id: routeParam(params, 'id') }) },
+  { pattern: '/authors/:userId', access: 'member', render: (params) => createElement(Author, { userId: routeParam(params, 'userId') }) },
   { pattern: '/publications', access: 'member', render: () => createElement(Publications) },
   { pattern: '/publications/new', access: 'member', render: () => createElement(Publish, { mode: 'new' }) },
   { pattern: '/publications/:itemId/version', access: 'member', render: ({ itemId }) => createElement(Publish, { mode: 'version', itemId }) },
   { pattern: '/publications/:itemId/listing', access: 'member', render: ({ itemId }) => createElement(Publish, { mode: 'listing', itemId }) },
   { pattern: '/publications/:rowId', access: 'member', render: ({ rowId }) => createElement(Publications, { selectedId: rowId }) },
   { pattern: '/review', access: 'member', permission: REVIEW_PERMISSION, render: () => createElement(Review) },
-  { pattern: '/review/:rowId', access: 'member', permission: REVIEW_PERMISSION, render: ({ rowId }) => createElement(ReviewItem, { key: rowId, rowId }) },
+  { pattern: '/review/:rowId', access: 'member', permission: REVIEW_PERMISSION, render: (params) => {
+    const rowId = routeParam(params, 'rowId');
+    return createElement(ReviewItem, { key: rowId, rowId });
+  } },
   { pattern: '/admin', access: 'member', permission: FEATURE_PERMISSION, render: () => createElement(Administration) },
   { pattern: '/account', access: 'member', render: () => createElement(Account) },
-  { pattern: '/device/:code', access: 'member', bare: true, render: ({ code }) => createElement(Device, { code }) },
+  { pattern: '/device/:code', access: 'member', bare: true, render: (params) => createElement(Device, { code: routeParam(params, 'code') }) },
   { pattern: '/signin', access: 'public', bare: true, render: () => createElement(SignIn, { lead: STORE_SITE_UI.signIn.lead }) },
 ];
 

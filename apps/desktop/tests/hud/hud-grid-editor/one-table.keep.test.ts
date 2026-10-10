@@ -2,7 +2,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 import { gridActions } from '@app/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-actions';
-import { legendEntries } from '@app/views/HudLayoutEditor/sub-components/SelectionBands/SelectionLegend';
+import { legendEntries } from '@app/views/HudLayoutEditor/sub-components/SelectionLegend';
 import type {
   GridSelection,
 } from '@app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';

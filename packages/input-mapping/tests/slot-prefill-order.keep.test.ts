@@ -1,16 +1,17 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { defaultSlotList } from '@rotp/input-mapping';
-import type { ResolvedControl } from '@rotp/input-mapping';
+import type { ResolvedControl, SdlButtonName } from '@rotp/input-mapping';
 import type { CoreBindings } from '@rotp/game-data';
 
-const button = (position: string): ResolvedControl =>
-  ({ position, kind: 'button', category: 'face', label: position, icon: null } as ResolvedControl);
+const button = (position: SdlButtonName): ResolvedControl =>
+  ({ position, kind: 'button', category: 'face', label: position, icon: '' });
 
-const SDL_REPORT_ORDER = ['SOUTH', 'EAST', 'WEST', 'NORTH', 'DPAD_UP', 'DPAD_DOWN', 'DPAD_LEFT', 'DPAD_RIGHT'];
+const SDL_REPORT_ORDER: SdlButtonName[] = ['SOUTH', 'EAST', 'WEST', 'NORTH', 'DPAD_UP', 'DPAD_DOWN', 'DPAD_LEFT', 'DPAD_RIGHT'];
 
-const NO_CORE = { up: { type: 'none' }, down: { type: 'none' }, left: { type: 'none' },
-  right: { type: 'none' }, pause: { type: 'none' }, map: { type: 'none' } } as unknown as CoreBindings;
+const NO_CORE: CoreBindings = { up: { type: 'none' }, down: { type: 'none' }, left: { type: 'none' },
+  right: { type: 'none' }, pause: { type: 'none' }, map: { type: 'none' },
+  confirm: { type: 'none' }, cancel: { type: 'none' }, prevScreen: { type: 'none' }, nextScreen: { type: 'none' } };
 
 describe('the prefilled slot order', () => {
   it('puts the face cross on 1-4 and the d-pad on 5-8, whatever order the device reported', () => {

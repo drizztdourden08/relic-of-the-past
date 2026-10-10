@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { measureGeometry } from './measure-geometry';
 import type { GeometryRig, Measured } from './geometry-width.type';
 
@@ -12,9 +12,10 @@ const named = (rail: number, name: string): Measured => {
   return hit;
 };
 
-beforeAll(async () => { rig = await measureGeometry(RAILS); }, 60_000);
-
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureGeometry(RAILS);
+  return () => rig.close();
+}, 60_000);
 
 describe('the box model answers the four-spinner row it replaces', () => {
   it('gives every margin edge a typing surface at the 188 px minimum', () => {

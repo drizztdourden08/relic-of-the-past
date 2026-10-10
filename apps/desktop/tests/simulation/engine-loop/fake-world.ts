@@ -15,7 +15,7 @@ class FakeWorld {
   constructor(private chests: WorldChest[]) {}
 
   private chestOpened(c: WorldChest): boolean {
-    return (this.flags.dungInfo[c.roomId] & CHEST_OPEN_MASKS[c.chestIndex]) !== 0;
+    return ((this.flags.dungInfo[c.roomId] ?? 0) & (CHEST_OPEN_MASKS[c.chestIndex] ?? 0)) !== 0;
   }
 
   observe(state: EngineState): SimObservation {
@@ -37,7 +37,7 @@ class FakeWorld {
 
   apply(action: TriggerAction): void {
     if (action.type !== 'chest') return;
-    this.flags.dungInfo[action.roomId] |= CHEST_OPEN_MASKS[action.chestIndex];
+    this.flags.dungInfo[action.roomId] = (this.flags.dungInfo[action.roomId] ?? 0) | (CHEST_OPEN_MASKS[action.chestIndex] ?? 0);
     const item = getItemByGameId({ receiveItemId: action.itemId });
     this.pendingItem = item?.id;
     if (item) this.inventory.add(item.id);

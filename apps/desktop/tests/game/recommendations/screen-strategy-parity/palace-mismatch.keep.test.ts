@@ -2,7 +2,9 @@
 import { it, expect, beforeEach } from 'vitest';
 import { findOne, getScreenLookup, clearPalaceMismatches, getPalaceMismatches, scanForRoom } from '@rotp/game-data';
 import type { ScreenRecord, ScreenMatchResult } from '@rotp/game-data';
+import type { ScreenObservations } from '@rotp/navigation';
 import { describeDataset } from '../../../dataset-guard';
+import { required } from '../../../required';
 import { WRONG_PALACE } from './screen-strategy-parity.constants';
 import { contextFor } from './context-for';
 import { dungeonScreen } from './dungeon-screen';
@@ -10,14 +12,24 @@ import { observations } from './observations';
 import { palaceScanMatch } from './palace-scan-match';
 import { screenDetector as detector } from './screen-detector';
 
+const wrongPalaceDrafts = (screen: ScreenRecord, extra: Partial<ScreenObservations> = {}) => {
+  const match = palaceScanMatch(screen);
+  const liveGameId = { ...screen.gameId, palaceIndex: WRONG_PALACE };
+  return detector.detect(contextFor(observations({ match, ...extra, liveGameId, isIndoors: true })));
+};
+
+const recordWrongPalaceFor = (screen: ScreenRecord) => {
+  const room = screen.gameId.roomIndex as number;
+  scanForRoom(getScreenLookup().byDungeonRoom, room, WRONG_PALACE);
+  return [...getPalaceMismatches().values()];
+};
+
 describeDataset('screen strategy parity with screen-identity on palace mismatches', () => {
   beforeEach(() => { clearPalaceMismatches(); });
 
   it('proposes the live palace index for exactly the mismatch the correction described', () => {
     const screen = dungeonScreen();
-    const match = palaceScanMatch(screen);
-    const liveGameId = { ...screen.gameId, palaceIndex: WRONG_PALACE };
-    const drafts = detector.detect(contextFor(observations({ match, liveGameId, isIndoors: true })));
+    const drafts = wrongPalaceDrafts(screen);
     const palaceDraft = drafts.find(d => d.key === 'gameId.palaceIndex');
 
     expect(palaceDraft).toBeDefined();
@@ -30,11 +42,8 @@ describeDataset('screen strategy parity with screen-identity on palace mismatche
 
   it('changes nothing else about the record it patches', () => {
     const screen = dungeonScreen();
-    const match = palaceScanMatch(screen);
-    const liveGameId = { ...screen.gameId, palaceIndex: WRONG_PALACE };
-    const [draft] = detector.detect(contextFor(observations({ match, liveGameId, isIndoors: true })))
-      .filter(d => d.key === 'gameId.palaceIndex');
-    const proposed = draft.proposed as ScreenRecord;
+    const [first] = wrongPalaceDrafts(screen).filter(d => d.key === 'gameId.palaceIndex');
+    const proposed = required(first, 'the palace draft').proposed as ScreenRecord;
 
     expect({ ...proposed, gameId: null }).toEqual({ ...screen, gameId: null });
     expect(proposed.gameId).toEqual({ ...screen.gameId, palaceIndex: WRONG_PALACE });
@@ -47,10 +56,7 @@ describeDataset('screen strategy parity with screen-identity on palace mismatche
   });
 
   it('turns a recorded fallback hit into a fix, with no live match at all', () => {
-    const screen = dungeonScreen();
-    const room = screen.gameId.roomIndex as number;
-    scanForRoom(getScreenLookup().byDungeonRoom, room, WRONG_PALACE);
-    const recorded = [...getPalaceMismatches().values()];
+    const recorded = recordWrongPalaceFor(dungeonScreen());
     expect(recorded.length).toBeGreaterThan(0);
 
     const drafts = detector.detect(contextFor(observations({ palaceMismatches: recorded })));
@@ -64,13 +70,9 @@ describeDataset('screen strategy parity with screen-identity on palace mismatche
 
   it('emits one finding, not two, when the map and the live match name the same screen', () => {
     const screen = dungeonScreen();
-    const room = screen.gameId.roomIndex as number;
-    scanForRoom(getScreenLookup().byDungeonRoom, room, WRONG_PALACE);
-    const recorded = [...getPalaceMismatches().values()];
-    const match = palaceScanMatch(screen);
-    const liveGameId = { ...screen.gameId, palaceIndex: WRONG_PALACE };
+    const recorded = recordWrongPalaceFor(screen);
 
-    const drafts = detector.detect(contextFor(observations({ match, palaceMismatches: recorded, liveGameId, isIndoors: true })));
+    const drafts = wrongPalaceDrafts(screen, { palaceMismatches: recorded });
     const forScreen = drafts.filter(d => d.targetId === screen.id && d.key === 'gameId.palaceIndex');
     expect(forScreen).toHaveLength(1);
   });
@@ -78,9 +80,7 @@ describeDataset('screen strategy parity with screen-identity on palace mismatche
   it('proposes a fix for a palace mismatch on a screen that is NOT the current one, which is the bug the old detector had', () => {
     const current = dungeonScreen();
     const other = dungeonScreen(current.id);
-    const room = other.gameId.roomIndex as number;
-    scanForRoom(getScreenLookup().byDungeonRoom, room, WRONG_PALACE);
-    const recorded = [...getPalaceMismatches().values()];
+    const recorded = recordWrongPalaceFor(other);
     const match: ScreenMatchResult = { screen: current, method: 'exact' };
 
     const drafts = detector.detect(contextFor(observations({

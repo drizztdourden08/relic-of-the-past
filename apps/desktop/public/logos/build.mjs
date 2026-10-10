@@ -11,7 +11,7 @@ const ICON_SIZES = [16, 24, 32, 48, 64, 128, 256, 512];
 const ICO_SIZES = [16, 24, 32, 48, 64, 128, 256];
 const SITE_PUBLIC = ['apps/sanctuary/public', 'apps/store/public'];
 const SITE_SIZES = [32, 128];
-const STAMP = 'packages/design/src/assets/hookshop/hookshop-stamp.svg';
+const STAMP = 'packages/design/art/hookshop/hookshop-stamp.svg';
 const RENDER_SCALES = [1, 2, 4];
 const TRIMMED_SCALE = 8;
 

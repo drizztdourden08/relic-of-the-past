@@ -65,14 +65,14 @@ const ROW = 22;
 const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
 
 const rowsInOrder = (): HTMLElement[] =>
-  Array.from(document.querySelectorAll('[data-outline-row]')) as HTMLElement[];
+  Array.from(document.querySelectorAll('[data-outline-row]'));
 
 const layOutRows = (): void => {
   rowsInOrder().forEach((row, index) => {
     row.getBoundingClientRect = () => ({
       x: 0, y: index * ROW, width: 200, height: ROW, top: index * ROW, left: 0,
       right: 200, bottom: (index + 1) * ROW, toJSON: () => ({}),
-    }) as DOMRect;
+    });
   });
   document.elementFromPoint = (_x: number, y: number) => rowsInOrder()[Math.floor(y / ROW)] ?? null;
 };

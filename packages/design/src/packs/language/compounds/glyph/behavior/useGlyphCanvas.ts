@@ -14,16 +14,15 @@ const flushPaints = (): void => {
   frame = null;
   const jobs = pending;
   pending = [];
-  const stores = jobs.map((job) => measureStore(job.canvas, job.ratio));
-  jobs.forEach((job, at) => {
-    const store = stores[at];
+  const measured = jobs.map((job) => ({ job, store: measureStore(job.canvas, job.ratio) }));
+  for (const { job, store } of measured) {
     if (store !== null) paintGlyphCell(job.canvas, job.tiles, job.glyph, store);
-  });
+  }
 };
 
 const queuePaint = (job: PaintJob): void => {
   pending.push(job);
-  if (frame === null) frame = window.requestAnimationFrame(flushPaints);
+  frame ??= window.requestAnimationFrame(flushPaints);
 };
 
 const useGlyphCanvas = (

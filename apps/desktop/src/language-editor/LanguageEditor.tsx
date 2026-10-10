@@ -1,0 +1,170 @@
+/* @layer renderer-components @kind component */
+import { useCallback, useMemo, useState } from 'react';
+import { Box, Tabs, EmptyState, Spinner } from '@drizztdourden08/tessera/primitives';
+import { buildVariableIndex } from '@rotp/languages';
+import { kLanguages } from '@rotp/asset-extraction';
+import { useLanguageEditor } from './behavior/useLanguageEditor';
+import { useTranslationSearch, useEntryLayout, filterEntriesByHits, VariablesTable } from '@rotp/design/packs';
+import { useSetFont } from './behavior/useSetFont';
+import { useEntryOpen } from './behavior/useEntryOpen';
+import { useVariablesTab } from './behavior/useVariablesTab';
+import { useSetExport } from './behavior/useSetExport';
+import { BundleHeader } from './sub-components/BundleHeader';
+import { DialogueTab } from './sub-components/DialogueTab';
+import { TextGroupsTab } from './sub-components/text-groups';
+import { StaleGameNotice } from './sub-components/StaleGameNotice';
+import { UnbuiltPane } from './sub-components/UnbuiltPane';
+import { useTextGroups } from './behavior/useTextGroups';
+import { FindHardcodedDialog } from './sub-components/variables';
+import { selectEntries } from './behavior/select-entries';
+import type { EntryFilter } from './sub-components/DialogueTab.type';
+import type { TabItem } from '@drizztdourden08/tessera/primitives';
+import { LOCKED, NO_ENTRIES, TEXT_SUMMARY, VARIABLES_SUMMARY } from './LanguageEditor.constants';
+import type { LanguageEditorProps } from './LanguageEditor.type';
+import './LanguageEditor.css';
+
+const LanguageEditor = (props: LanguageEditorProps) => {
+  const { id, readOnly = false, origin = null } = props;
+  const editor = useLanguageEditor(id, readOnly);
+  const {
+    set, loading, error, dirty, saving, saveError, issues, variables, terms,
+    setEntryTokens, setManyEntryTokens, setStructureMode, setTextValue, setVariableValue,
+    upsertGlossaryTerm, removeGlossaryTerm, saveNow,
+  } = editor;
+
+  const [tab, setTab] = useState('dialogue');
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<EntryFilter>('all');
+
+  const dialogue = set?.dialogue ?? NO_ENTRIES;
+  const search = useTranslationSearch(set, query);
+  const { metrics, sheet } = useSetFont(id, set?.base);
+  const layout = useEntryLayout(metrics, terms);
+  const { view, draft, open, close, setMode } = useEntryOpen(dialogue, setEntryTokens);
+  const variablesTab = useVariablesTab({ dialogue, variables, onRewrite: setManyEntryTokens });
+  const { exporting, exportStatus, exportSet } = useSetExport({ id, dirty, saveNow });
+
+  const cfg = useMemo(() => (set ? kLanguages[set.base] ?? null : null), [set]);
+  const variableIndex = useMemo(() => buildVariableIndex(variables), [variables]);
+
+  const entries = useMemo(() => selectEntries({
+    entries: filterEntriesByHits(dialogue, search.hits, search.applied),
+    filter,
+    issues,
+  }), [dialogue, search.hits, search.applied, filter, issues]);
+
+  const warnings = useMemo(
+    () => Object.values(issues).filter((list) => list.length > 0).length,
+    [issues],
+  );
+
+  const text = useTextGroups(set, setTextValue);
+
+  const handleFilterChange = useCallback((next: EntryFilter) => setFilter(next), []);
+
+  const textSlotCount = useMemo(
+    () => text.groups.reduce((sum, group) => sum + group.slots.length, 0),
+    [text.groups],
+  );
+
+  const tabs = useMemo<TabItem[]>(() => [
+    { id: 'dialogue', label: 'Dialogue', badge: dialogue.length },
+    { id: 'variables', label: 'Variables', icon: LOCKED, badge: variables.length },
+    { id: 'text', label: 'Text', icon: LOCKED, badge: textSlotCount },
+  ], [dialogue.length, variables.length, textSlotCount]);
+
+  if (!id) return <EmptyState message="Select a language set to edit" />;
+  if (loading) return <Spinner />;
+  if (error || !set) return <EmptyState message={error ?? 'That language set could not be read'} />;
+
+  return (
+    <Box className="language-editor">
+      <StaleGameNotice />
+      {origin}
+      <BundleHeader
+        set={set}
+        warnings={warnings}
+        dirty={dirty}
+        saving={saving}
+        saveError={saveError}
+        readOnly={readOnly}
+        onSaveNow={saveNow}
+        onExport={exportSet}
+        exporting={exporting}
+        exportStatus={exportStatus}
+      />
+
+      <Tabs tabs={tabs} activeTab={tab} onTabChange={setTab} />
+
+      {tab === 'dialogue' && (
+        <DialogueTab
+          entries={entries}
+          total={dialogue.length}
+          issues={issues}
+          query={query}
+          filter={filter}
+          cfg={cfg}
+          glossary={terms}
+          variables={variables}
+          variableIndex={variableIndex}
+          metrics={metrics}
+          sheet={sheet}
+          layout={layout}
+          draft={draft}
+          view={view}
+          structureMode={set.structure ?? 'continuous'}
+          readOnly={readOnly}
+          onChangeStructureMode={setStructureMode}
+          onQueryChange={setQuery}
+          onFilterChange={handleFilterChange}
+          onOpen={open}
+          onClose={close}
+          onModeChange={setMode}
+        />
+      )}
+      {tab === 'variables' && (
+        <Box className="language-editor__pane">
+          <UnbuiltPane summary={VARIABLES_SUMMARY}>
+            <VariablesTable
+            variables={variables}
+            rows={variablesTab.rows}
+            used={variablesTab.used}
+            filter={variablesTab.filter}
+            query={variablesTab.query}
+            onFilterChange={variablesTab.setFilter}
+            onQueryChange={variablesTab.setQuery}
+            onChangeValue={readOnly ? undefined : setVariableValue}
+            onAddTerm={readOnly ? undefined : upsertGlossaryTerm}
+            onRemoveTerm={readOnly ? undefined : removeGlossaryTerm}
+              onFindHardcoded={readOnly ? undefined : variablesTab.openScan}
+            />
+          </UnbuiltPane>
+        </Box>
+      )}
+
+      {tab === 'text' && (
+        <Box className="language-editor__pane">
+          <UnbuiltPane summary={TEXT_SUMMARY}>
+            <TextGroupsTab
+              groups={text.groups}
+              activeGroup={text.activeGroup}
+              values={text.values}
+              readOnly={readOnly}
+              onSelectGroup={text.selectGroup}
+              onChangeValue={text.setValue}
+            />
+          </UnbuiltPane>
+        </Box>
+      )}
+
+      <FindHardcodedDialog
+        open={variablesTab.scanOpen}
+        groups={variablesTab.groups}
+        onApply={variablesTab.applyScan}
+        onClose={variablesTab.closeScan}
+      />
+    </Box>
+  );
+};
+
+export { LanguageEditor };

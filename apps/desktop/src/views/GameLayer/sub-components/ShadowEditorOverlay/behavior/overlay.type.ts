@@ -2,7 +2,7 @@
 import type { MutableRefObject, RefObject } from 'react';
 import type { ViewportInfo } from '@app/game';
 import type { HeightmapElement, LightSource, ShadowCastingProject } from '@rotp/game-core';
-import type { GizmoPart } from '../../shadow-editor/gizmos';
+import type { GizmoPart } from './gizmo.type';
 import type { GizmoStart } from '../ShadowEditorOverlay.type';
 
 type Vp = ViewportInfo;

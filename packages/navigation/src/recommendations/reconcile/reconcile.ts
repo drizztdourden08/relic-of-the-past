@@ -20,6 +20,14 @@ const payloadOf = <K extends EntityKind>(draft: DraftRecommendation<K>) => ({
 
 const isDecided = (entry: Recommendation): boolean => entry.state === 'accepted' || entry.state === 'dismissed';
 
+const refreshed = (entry: Recommendation, match: DraftRecommendation | undefined, now: number): Recommendation => {
+  if (match) return { ...entry, ...payloadOf(match), state: 'open', decidedAt: null };
+  return entry.state === 'open' ? { ...entry, state: 'resolved', decidedAt: now } : entry;
+};
+
+const carried = (entry: Recommendation, match: DraftRecommendation | undefined, inScope: (recommendation: Recommendation) => boolean, now: number): Recommendation =>
+  (isDecided(entry) || !inScope(entry) ? entry : refreshed(entry, match, now));
+
 const reconcile = (
   previous: readonly Recommendation[],
   fresh: readonly DraftRecommendation[],
@@ -37,17 +45,7 @@ const reconcile = (
     const match = freshById.get(entry.id);
     if (match) claimed.add(entry.id);
 
-    if (isDecided(entry) || !inScope(entry)) {
-      kept.push(entry);
-      continue;
-    }
-
-    if (match) {
-      kept.push({ ...entry, ...payloadOf(match), state: 'open', decidedAt: null });
-      continue;
-    }
-
-    kept.push(entry.state === 'open' ? { ...entry, state: 'resolved', decidedAt: now } : entry);
+    kept.push(carried(entry, match, inScope, now));
   }
 
   for (const [id, draft] of freshById) {

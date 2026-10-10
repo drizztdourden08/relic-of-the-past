@@ -112,7 +112,7 @@ export { smallKeyDoorsOf } from './logic/queries/check-grouping/small-key-doors-
 export { chestSwapOf } from './logic/queries/chest-stand-ins/chest-swap-of';
 export { liveChestItems } from './logic/queries/chest-stand-ins/live-chest-items';
 export { describeScreen } from './logic/queries/describe-screen/describe-screen';
-export type { ScreenMatchResult, VariantGameState } from './logic/queries/detection/detection.type';
+export type { ScreenMatchResult, ScreenQuery, VariantGameState } from './logic/queries/detection/detection.type';
 export { getScreenLookup } from './logic/queries/detection/get-screen-lookup';
 export { resolveCurrentScreenDetailed } from './logic/queries/detection/resolve-current-screen-detailed';
 export { resolveCurrentScreen } from './logic/queries/detection/resolve-current-screen';

@@ -279,7 +279,7 @@ holds what they state; each is a record gap first:
   core picks the rung from the live inventory. They still need a record, or a seed that places one
   shows "???" in a virtual slot and the wrong vanilla item in a real check.
 
-## records/names/msu-tracks.ts
+## data/msu-track-names.json (package root)
 
 - Tracks 1 to 34 are the vanilla music slots every MSU-1 pack uses. There is no track 35 or 36.
 - Tracks 37 to 58, 110 and 112 come from inverting `OVERWORLD_AREA_TRACKS`: each area index was
@@ -291,7 +291,7 @@ holds what they state; each is a record gap first:
 - A room number can hold several unrelated interiors in different quadrants (entrances 0x69 and 0x6A
   both land in room 0x10E), and interior screen records carry no quadrant. Where an interior could
   not be pinned down, its name states how it was derived.
-- The file has no type import: the loader (`msu-track-names.ts`) casts it where it is read.
+- The file is JSON, typed where it is read (`msu-track-names.constants.ts`).
 
 ## records/names/palaces.ts
 

@@ -1,14 +1,15 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { measureAppearance } from './measure-appearance';
 import type { AppearanceRig } from './appearance.type';
 
 const RAILS = [289, 232, 188];
 let rig: AppearanceRig;
 
-beforeAll(async () => { rig = await measureAppearance(RAILS); }, 60_000);
-
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureAppearance(RAILS);
+  return () => rig.close();
+}, 60_000);
 
 describe('the colour row, in every place Appearance draws one', () => {
   it('leaves a whole #rrggbb typeable at 289 / 232 / 188, in all six', () => {

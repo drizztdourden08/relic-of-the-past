@@ -37,8 +37,8 @@ const installOutlineRig = () => {
     nextFrame = 1;
     globalThis.requestAnimationFrame = ((cb: FrameRequestCallback) => {
       const id = nextFrame; nextFrame += 1; pending.set(id, cb); return id;
-    }) as typeof globalThis.requestAnimationFrame;
-    globalThis.cancelAnimationFrame = ((id: number) => { pending.delete(id); }) as typeof globalThis.cancelAnimationFrame;
+    });
+    globalThis.cancelAnimationFrame = ((id: number) => { pending.delete(id); });
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     useHudEditorViewStore.setState({ collapsedNodeIds: new Set() });
   });
@@ -52,12 +52,12 @@ const installOutlineRig = () => {
   });
 
   const rowsInOrder = (): HTMLElement[] =>
-    Array.from(document.querySelectorAll('[data-outline-row]')) as HTMLElement[];
+    Array.from(document.querySelectorAll('[data-outline-row]'));
 
   const rect = (box: typeof VIEW): DOMRect => ({
     x: box.left, y: box.top, width: box.right - box.left, height: box.bottom - box.top,
     top: box.top, left: box.left, right: box.right, bottom: box.bottom, toJSON: () => ({}),
-  }) as DOMRect;
+  });
 
   const layOut = (canScroll = true): HTMLElement => {
     rowsInOrder().forEach((row, index) => {

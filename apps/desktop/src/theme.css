@@ -4,10 +4,22 @@
 :root {
   --c-gold-shade: #8c6a2a;
   --c-gold-deep: #50431f;
-
+  --font-debug-mono: 'JetBrains Mono', monospace;
+  --c-nav-pickup: #7fb861;
+  --c-nav-lock: #e8a33d;
+  --c-nav-trigger: #c9663f;
+  --c-nav-info: #a89e8d;
+  --c-nav-entrance: #fc4;
+  --c-nav-walk-boundary: #c8f;
+  --c-nav-marker-shadow: #000;
+  --c-nav-scroll: #f84;
+  --c-nav-dark-world: #c8a;
+  --c-sprite-cat-hud: #8bb4e0;
+  --c-sprite-cat-fonts: #b89de0;
+  --c-sprite-cat-receipt: #c4a862;
+  --c-sprite-cat-other: #82c487;
   --duration-slice-exit: 0.5s;
   --duration-slice-pulse: 1.1s;
-
   --titlebar-btn-width: calc(46 * var(--size-1));
   --mode-badge-d: calc(80 * var(--size-1));
   --summary-fact-maxw: calc(220 * var(--size-1));

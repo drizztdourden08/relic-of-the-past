@@ -1,7 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useMemo } from 'react';
 import { DialogShell, LogPanel } from '@drizztdourden08/tessera/composites';
-import { eventsToText, toLogRows } from '../behavior/log-events';
+import { eventsToText } from '../behavior/events-to-text';
+import { toLogRows } from '../behavior/to-log-rows';
 import { LOG_KINDS } from '../SimulatorWidget.constants';
 import type { LogDialogProps } from '../SimulatorWidget.type';
 import './LogDialog.css';

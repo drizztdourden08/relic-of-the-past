@@ -2,6 +2,7 @@
 import { seededRandom } from '../scene/seeded-random';
 import type { PixelSet, Shine, ShinePixels, Sparkle } from './choreography.type';
 import { drawStar } from './draw-star';
+import { itemAt } from '@app/checked-access';
 import { PAUSE_SECONDS, SHINE_SEED_SALT, SPARKLE_DIAGONALS_FROM_RADIUS, SPARKLE_RADIUS_PER_STEP, STEP_SECONDS } from './draw-shine.constants';
 
 const createShine = (seed: number, pixels: ShinePixels): Shine => {
@@ -15,7 +16,7 @@ const createShine = (seed: number, pixels: ShinePixels): Shine => {
     if (total === 0) return null;
     let i = rng.int(0, total - 1);
     for (const s of sets) {
-      if (i < s.xs.length) return { x: s.xs[i], y: s.ys[i] };
+      if (i < s.xs.length) return { x: itemAt(s.xs, i), y: itemAt(s.ys, i) };
       i -= s.xs.length;
     }
     return null;
@@ -36,7 +37,7 @@ const createShine = (seed: number, pixels: ShinePixels): Shine => {
       }
       if (!current) return;
       const at = Math.min(SPARKLE_RADIUS_PER_STEP.length - 1, Math.floor((t - current.start) / current.step));
-      const radius = SPARKLE_RADIUS_PER_STEP[at];
+      const radius = itemAt(SPARKLE_RADIUS_PER_STEP, at);
       ctx.globalAlpha = alpha;
       drawStar(ctx, frameX + current.x, frameY + current.y, radius, radius >= SPARKLE_DIAGONALS_FROM_RADIUS);
       ctx.globalAlpha = 1;

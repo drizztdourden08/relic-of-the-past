@@ -9,20 +9,24 @@ import { BOSS_TAGS, CHEST_ROW_EXCEPTIONS, CORE, SPECIAL_SCREENS } from './rom-fa
 import { readRomFacts } from './read-rom-facts';
 import { roomOf } from './room-of';
 
+const chestScreenMismatches = (): string[] => {
+  const wrong: string[] = [];
+  for (const check of all('check')) {
+    const room = (check.gameId as { roomId?: number }).roomId;
+    if (check.kind !== 'chest' || room === undefined || !check.screenId) continue;
+    if (CHEST_ROW_EXCEPTIONS.includes(check.id)) continue;
+    if (roomOf(check.screenId) !== room) {
+      wrong.push(`${check.id}: chest in room 0x${room.toString(16)}, screen ${check.screenId}`);
+    }
+  }
+  return wrong;
+};
+
 describeRom('native dungeon and chest ids, against the cartridge', () => {
   const { rom, screens } = readRomFacts();
 
   it('puts a chest check on the screen that holds its room', () => {
-    const wrong: string[] = [];
-    for (const check of all('check')) {
-      const room = (check.gameId as { roomId?: number }).roomId;
-      if (check.kind !== 'chest' || room === undefined || !check.screenId) continue;
-      if (CHEST_ROW_EXCEPTIONS.includes(check.id)) continue;
-      if (roomOf(check.screenId) !== room) {
-        wrong.push(`${check.id}: chest in room 0x${room.toString(16)}, screen ${check.screenId}`);
-      }
-    }
-    expect(wrong).toEqual([]);
+    expect(chestScreenMismatches()).toEqual([]);
   });
 
   it('agrees with the dungeon map about which rooms belong to which dungeon', () => {

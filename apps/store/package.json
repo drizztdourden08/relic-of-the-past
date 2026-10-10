@@ -7,7 +7,7 @@
     "dev": "brock site dev",
     "build": "brock site build",
     "preview": "brock site preview",
-    "typecheck": "tsc --noEmit --noUncheckedIndexedAccess false",
+    "typecheck": "tsc --noEmit",
     "lint": "pnpm run typecheck && stylelint \"src/**/*.css\""
   },
   "dependencies": {

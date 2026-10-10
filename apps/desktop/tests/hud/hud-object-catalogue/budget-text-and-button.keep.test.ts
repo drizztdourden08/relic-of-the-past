@@ -17,7 +17,7 @@ describe('validate-expand-budget - the validator refuses a document that could e
         kind: 'element', id: 'inner', element: { type: 'repeat', count, child: leaf('leaf') },
       },
     },
-  } as HudNode);
+  });
 
   it('a plausible single repeat (well under budget) loads fine', () => {
     const doc = { id: 'ok', name: 'OK', builtIn: false, regions: [{ anchor: 'top-left', root: row([deepRepeat(1)]) }] };

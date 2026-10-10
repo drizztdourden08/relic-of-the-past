@@ -21,7 +21,7 @@ describe('the menu knows what is in scope, and says so where it is not', () => {
     }
   });
 
-  it('offers delta only where validate-motion.ts actually passes it', () => {
+  it('offers delta only where validate-motion.ts passes it', () => {
     expect(names(false).some((n) => n.name === 'delta')).toBe(false);
     const onTransition = names(false, ['delta']).find((n) => n.name === 'delta');
     expect(onTransition?.unavailable).toBeUndefined();
@@ -39,7 +39,7 @@ describe('the menu knows what is in scope, and says so where it is not', () => {
     expect(warnings).toContain('||');
   });
 
-  it('offers no dead end: every function listed actually evaluates', () => {
+  it('offers no dead end: every function listed evaluates', () => {
     const listed = names(false).map((n) => n.name).join(' ');
     for (const dead of ['length', 'join', 'map', 'filter', 'fold', 'indexOf', 'gamma']) {
       expect(`${dead}: ${listed.includes(dead)}`).toBe(`${dead}: false`);

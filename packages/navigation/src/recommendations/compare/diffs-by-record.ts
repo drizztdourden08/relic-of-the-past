@@ -1,19 +1,17 @@
 /* @layer shared-game @kind logic */
-import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext } from '../detection-types';
 import type { Difference } from './difference.type';
-import type { ComparisonStrategy } from './probe.type';
-import { runComparison } from './run-comparison';
+import type { ErasedStrategy } from './probe.type';
 import { allStrategies } from './strategy-registry';
 
 const diffsByRecordFrom = (
   context: DetectionContext,
-  strategies: readonly ComparisonStrategy<EntityKind>[] = allStrategies(),
+  strategies: readonly ErasedStrategy[] = allStrategies(),
 ): ReadonlyMap<string, ReadonlyMap<string, Difference>> => {
   const byRecord = new Map<string, Map<string, Difference>>();
 
   for (const strategy of strategies) {
-    const comparisons = runComparison(strategy, context.observations, context.screenId);
+    const comparisons = strategy.compare(context.observations, context.screenId);
     for (const { record, differences } of comparisons) {
       if (differences.length === 0) continue;
       const byPath = byRecord.get(record.id) ?? new Map<string, Difference>();

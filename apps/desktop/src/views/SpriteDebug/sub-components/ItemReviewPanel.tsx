@@ -6,7 +6,6 @@ import { FilterBtns } from './FilterBtns';
 import { ReviewStats } from './ReviewStats';
 import { ItemAssocCard } from './ItemAssocCard';
 import { ALL_ITEMS } from './ItemReviewPanel.constants';
-import { S } from '../SpriteDebug.constants';
 import { loadSpriteDebug, saveSpriteDebug } from '@app/storage/sprites-store';
 
 const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
@@ -61,14 +60,14 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
 
   return (
     <>
-      <Box style={S.header}>
+      <Box className="sprite-debug-header">
         <ReviewStats counts={counts} total={ALL_ITEMS.length} />
-        <Box style={S.headerButtons}>
+        <Box className="sprite-debug-header-buttons">
           <FilterBtns filter={filter} setFilter={setFilter} />
           <Button variant="danger" size="xs" onClick={() => { setData({}); saveSpriteDebug({}); }}>Reset</Button>
         </Box>
       </Box>
-      <Box style={S.grid}>
+      <Box className="sprite-debug-grid">
         {filtered.map(item => (
           <ItemAssocCard
             key={item.id}

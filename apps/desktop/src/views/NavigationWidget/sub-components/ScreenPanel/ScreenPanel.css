@@ -102,3 +102,19 @@
 .nav-screen-panel__state--blocked {
   color: var(--c-danger);
 }
+
+.nav-screen-panel__glyph[data-tone='checks'] {
+  color: var(--c-nav-pickup);
+}
+
+.nav-screen-panel__glyph[data-tone='locks'] {
+  color: var(--c-nav-lock);
+}
+
+.nav-screen-panel__glyph[data-tone='triggers'] {
+  color: var(--c-nav-trigger);
+}
+
+.nav-screen-panel__glyph[data-tone='other'] {
+  color: var(--c-nav-info);
+}

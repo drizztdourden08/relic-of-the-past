@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import '../HudLayoutEditor.motion.css';
 import { Box, Button, Field, Flex, Slider } from '@drizztdourden08/tessera/primitives';
 import { addKeyAt, canRemoveKey, moveKey, removeKey } from '@app/hud-layout-editing/keyframe-track';
 import { EasingPicker } from '../EasingPicker';

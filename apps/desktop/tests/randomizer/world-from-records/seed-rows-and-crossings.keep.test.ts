@@ -2,13 +2,19 @@
 import { expect, it } from 'vitest';
 import { all, getCheck } from '@rotp/game-data';
 import { REGION_GRAPH, isSeedLocation, CANONICAL_SLOTS, POND_INSTANCES, crossingsByRegion, regionRecords } from '@rotp/randomizer';
-import type { RegionId } from '@rotp/game-data';
+import type { ConnectionId, RegionId } from '@rotp/game-data';
+import type { World } from '@rotp/randomizer';
 import { describeDataset } from '../../dataset-guard';
 import {
   CROSSINGS_NO_PASSAGE_MAKES, DUNGEON_LOCATIONS, PASSAGES_WITH_A_CROSSING, PLACELESS_ROWS_AT_MOST,
   SCREENLESS_REGIONS_AT_MOST, SEED_LOCATIONS, WORLD_EVENTS, WORLD_LOCATIONS, WORLD_LOCATIONS_NO_KEY_DROPS,
 } from './world-from-records.constants';
 import { vanillaWorld } from './vanilla-world';
+
+const spotCountOf = (built: World, regions: readonly RegionId[]): number =>
+  regions.reduce((sum, id) => sum + (built.regions.get(id)?.locations.length ?? 0), 0);
+
+const pondRungKeys = () => POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key));
 
 describeDataset('the records say which rows a seed fills', () => {
   it('picks the spots out of the collection, and gives every one of them a region', () => {
@@ -26,15 +32,14 @@ describeDataset('the records say which rows a seed fills', () => {
 
   it('gives each dungeon the spots its own wings hold, in create order', () => {
     const built = vanillaWorld();
-    const counts = [...built.dungeons.values()].map((dungeon) => dungeon.regions
-      .reduce((sum, id) => sum + (built.regions.get(id)?.locations.length ?? 0), 0));
+    const counts = [...built.dungeons.values()].map((dungeon) => spotCountOf(built, dungeon.regions));
     expect(counts).toEqual(DUNGEON_LOCATIONS);
   });
 
   it('leaves the shelves and the pond rungs to their own switches, which open none by default', () => {
     const built = vanillaWorld();
     expect(CANONICAL_SLOTS.filter((row) => built.locationsByKey.has(row.checkId))).toEqual([]);
-    const rungs = POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key));
+    const rungs = pondRungKeys();
     expect(rungs.filter((key) => built.locationsByKey.has(key))).toEqual([]);
   });
 
@@ -53,7 +58,7 @@ describeDataset('the records say which rows a seed fills', () => {
 
 describeDataset('a passage names its crossing where the records can say which one', () => {
   it('names one where exactly one crossing joins the same pair', () => {
-    const byPair = new Map<string, RegionId[]>();
+    const byPair = new Map<string, ConnectionId[]>();
     for (const crossing of [...crossingsByRegion().values()].flat()) {
       const key = `${crossing.from}>${crossing.to}`;
       byPair.set(key, [...(byPair.get(key) ?? []), crossing.connectionId]);

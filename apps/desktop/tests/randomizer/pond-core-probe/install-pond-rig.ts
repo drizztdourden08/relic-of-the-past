@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { beforeAll, expect } from 'vitest';
 import { assetBlobPath } from '../../story-events/core-harness/asset-blob-path';
+import { required } from '../../required';
 import { FEATURES0_DEVELOPER_TOOLS, FIXTURE, NO_PRIZE, UNARMED_LINE, WASM_JS, WRAM } from './pond-core.constants';
 import type { Core, PondRig } from './pond-core.type';
 
@@ -13,7 +14,7 @@ const installPondRig = (): PondRig => {
   const call = (name: string, ...args: number[]): number =>
     core.ccall(name, 'number', args.map(() => 'number'), args);
   const set8 = (addr: number, value: number): void => { core.HEAPU8[ram + addr] = value; };
-  const get8 = (addr: number): number => core.HEAPU8[ram + addr];
+  const get8 = (addr: number): number => required(core.HEAPU8[ram + addr], `WRAM byte ${addr}`);
   const set16 = (addr: number, value: number): void => { set8(addr, value & 0xff); set8(addr + 1, value >> 8); };
   const get16 = (addr: number): number => get8(addr) | (get8(addr + 1) << 8);
   const frames = (n: number): void => { for (let i = 0; i < n; i += 1) expect(call('WasmDevRunFrame', 0)).toBe(1); };
@@ -39,7 +40,7 @@ const installPondRig = (): PondRig => {
   beforeAll(async () => {
     const factory = createRequire(import.meta.url)(WASM_JS) as (opts: object) => Promise<Core>;
     core = await factory({ noInitialRun: true, print: () => undefined, printErr: () => undefined });
-    core.FS.writeFile('/zelda3_assets.dat', readFileSync(assetBlobPath()!));
+    core.FS.writeFile('/zelda3_assets.dat', readFileSync(required(assetBlobPath(), 'asset blob path')));
     core.FS.mkdir('/saves');
     core.FS.writeFile('/saves/save0.sav', readFileSync(FIXTURE));
     call('WasmInitHeadless');

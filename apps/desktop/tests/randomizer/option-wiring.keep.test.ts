@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import { randomizerChoiceOverrides, snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
-import { partitionCatalogByLock } from '@app/compounds/RandomizerOptionRow/behavior/partitionCatalogByLock';
-import { OPTION_GROUPS, optionCatalog, DEFAULT_CAPACITY_BONUS, customSetting, DEFAULT_ITEM_POWER, DEFAULT_DARK_ROOM_SETTING, DEFAULT_ACCESSIBILITY, DEFAULT_DUNGEON_ITEM_SETTING, DARK_ROOM_OPTION_KEYS, DIFFICULTY_OPTION_KEYS, defaultDifficulty, defaultProgressiveSetting, defaultProgressiveModes, defaultRetroBow, LEGACY_POND_PROFILES, SHOP_PRICE_BLOCK_KEYS, SHOP_PRICE_OPTION_KEYS, SHOP_SCOPE_OPTION_KEYS, defaultShopScope, CANONICAL_SLOTS, accountingOf, fillFlagsOf } from '@rotp/randomizer';
+import { partitionCatalogByLock } from '@app/compounds/RandomizerOptionRow/behavior/partition-catalog-by-lock';
+import { OPTION_GROUPS, optionCatalog, DEFAULT_CAPACITY_BONUS, customSetting, DEFAULT_ITEM_POWER, DEFAULT_DARK_ROOM_SETTING, DEFAULT_ACCESSIBILITY, DEFAULT_DUNGEON_ITEM_SETTING, DEFAULT_STORY_GATES, DARK_ROOM_OPTION_KEYS, DIFFICULTY_OPTION_KEYS, defaultDifficulty, defaultProgressiveSetting, defaultProgressiveModes, defaultRetroBow, LEGACY_POND_PROFILES, SHOP_PRICE_BLOCK_KEYS, SHOP_PRICE_OPTION_KEYS, SHOP_SCOPE_OPTION_KEYS, defaultShopScope, CANONICAL_SLOTS, accountingOf, fillFlagsOf } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 const BASE: RandomizerOptionChoices = {
@@ -37,6 +37,7 @@ const BASE: RandomizerOptionChoices = {
   darkRoomLightFireRod: DEFAULT_DARK_ROOM_SETTING.lights.fireRod,
   darkRoomLightBombos: DEFAULT_DARK_ROOM_SETTING.lights.bombos,
   darkRoomLightRedCane: DEFAULT_DARK_ROOM_SETTING.lights.redCane,
+  storyGates: DEFAULT_STORY_GATES,
 };
 
 const NO_DELIVERABLE = {};
@@ -86,7 +87,7 @@ describe('the shop controls move the fill', () => {
     expect(opened.open).toBeGreaterThan(vanilla.open);
   });
 
-  it('carries an unticked slot through as unticked, so the block is really wired', () => {
+  it('carries an unticked slot through as unticked, so the block is wired', () => {
     const trimmed = defaultShopScope().enabled.filter((index) => index !== 0);
     const flags = fillFlagsOf(snapshotOfChoices(shopChoice({ enabled: trimmed, mode: 'custom' })));
     expect(flags.shops.enabled).toEqual(trimmed);

@@ -3,15 +3,18 @@ import { expect, it } from 'vitest';
 import { allocateCheck, deleteCheck, writeCheckRecord } from '../../../../electron/screen-editor/check-writer';
 import { allocateDungeon, deleteDungeon, writeDungeonRecord } from '../../../../electron/screen-editor/dungeon-writer';
 import { describeDataset } from '../../../dataset-guard';
+import { required } from '../../../required';
 import { recordsIn } from './records-in';
 import { setUpWriterWorkspace } from './set-up-writer-workspace';
 
 const { root, sourceOf } = setUpWriterWorkspace();
 
+const NO_DUNGEON_ITEMS = { bigKey: null, smallKey: null, smallKeyCount: 0, map: null, compass: null };
+
 describeDataset('a dungeon record', () => {
   it('creates into its own file and edits the one already there', async () => {
     const created = await allocateDungeon(root(), {
-      record: { gameId: { palaceIndex: 4 }, name: 'Second', fileStem: 'second', roomScreenIds: [] },
+      record: { gameId: { palaceIndex: 4 }, name: 'Second', fileStem: 'second', items: NO_DUNGEON_ITEMS, roomScreenIds: [], regionIds: [] },
     });
     expect(created.success ? '' : created.error).toBe('');
     if (!created.success) return;
@@ -20,7 +23,7 @@ describeDataset('a dungeon record', () => {
 
     await writeDungeonRecord(root(), {
       id: 'dungeon-001',
-      record: { gameId: { palaceIndex: 0 }, name: 'Renamed', fileStem: 'first', roomScreenIds: [] },
+      record: { gameId: { palaceIndex: 0 }, name: 'Renamed', fileStem: 'first', items: NO_DUNGEON_ITEMS, roomScreenIds: [], regionIds: [] },
     });
     expect(await sourceOf('dungeons/light-world/first.ts')).toContain("name: 'Renamed'");
 
@@ -72,7 +75,7 @@ describeDataset('a check record', () => {
 
     const [written] = recordsIn(await sourceOf('checks/dark-world/turtle-rock.ts'));
     expect(written).toEqual({ id: created.record.id, ...draft, review });
-    expect(Object.keys(written).at(-1)).toBe('review');
+    expect(Object.keys(required(written, 'written check record')).at(-1)).toBe('review');
   });
 
   it('refuses a check with no destination instead of picking one', async () => {

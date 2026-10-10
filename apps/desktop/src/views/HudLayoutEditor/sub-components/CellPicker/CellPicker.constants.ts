@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { LegendEntry } from '../SelectionBands';
+import type { LegendEntry } from '@app/hud-layout-editing/selection-bands.type';
 
 const CELL_PICK_KEYS: readonly LegendEntry[] = [
   { key: 'set', label: 'set the cell', shortcut: { mouse: 'left' } },

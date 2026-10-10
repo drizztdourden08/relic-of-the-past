@@ -10,6 +10,7 @@ import { freshState } from './fresh-state';
 const makeChest = (tile: { row: number; col: number }): SimChest => ({
   roomId: CHEST_ROOM,
   chestIndex: 0,
+  isBig: false,
   tile,
   posKnown: true,
   opened: false,
@@ -19,9 +20,8 @@ const makeChest = (tile: { row: number; col: number }): SimChest => ({
 const floodFrom = (rows: number[][]): boolean[][] => rows.map((r) => r.map(Boolean));
 
 const openBelowLeft = (r: number, c: number): boolean[][] => {
-  const rows: number[][] = [];
-  for (let row = 0; row <= r + 2; row++) rows.push(new Array(c + 2).fill(0));
-  rows[r + 2][c] = 1;
+  const rows = Array.from({ length: r + 3 }, (_, row) =>
+    Array.from({ length: c + 2 }, (_unused, col) => (row === r + 2 && col === c ? 1 : 0)));
   return floodFrom(rows);
 };
 

@@ -5,7 +5,7 @@ import { ExtentField } from '@app/views/HudLayoutEditor/sub-components/ExtentFie
 import { GridEditor } from '@app/views/HudLayoutEditor/sub-components/GridEditor';
 import { MinMaxField } from '@app/views/HudLayoutEditor/sub-components/MinMaxField';
 import { OffsetField } from '@app/views/HudLayoutEditor/sub-components/OffsetField';
-import { SizeBoxSection } from '@app/views/HudLayoutEditor/sub-components/sections/SizeBoxSection';
+import { SizeBoxSection } from '@app/views/HudLayoutEditor/sub-components/SizeBoxSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudGridContainer, HudNode } from '@rotp/hud';

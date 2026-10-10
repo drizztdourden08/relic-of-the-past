@@ -38,13 +38,13 @@ const useLocationNotification = () => {
 
       if (!store.showScreen && !store.showTransition) return;
 
-      const detected = resolveCurrentScreen(
-        map.isIndoors,
-        map.palaceIndex,
-        map.roomIndex,
-        map.overworldScreenIndex,
-        map.whichEntrance,
-      );
+      const detected = resolveCurrentScreen({
+        isIndoors: map.isIndoors,
+        palaceIndex: map.palaceIndex,
+        roomIndex: map.roomIndex,
+        overworldScreenIndex: map.overworldScreenIndex,
+        whichEntrance: map.whichEntrance,
+      });
 
       if (!detected) return;
 

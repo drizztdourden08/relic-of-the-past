@@ -97,10 +97,10 @@ describe('exported trees answer as the engine does', () => {
   });
   for (const parityCase of CASES) {
     it(parityCase.name, () => {
-      const { asked, mismatches, leftHelpers } = exportParity(parityCase.over, EXPORT_STATES, parityCase.actRecord);
+      const { asked, mismatches, residualCalls } = exportParity(parityCase.over, EXPORT_STATES, parityCase.actRecord);
       expect(asked).toBeGreaterThan(0);
       expect(mismatches).toEqual([]);
-      expect(leftHelpers.every((name) => PRIMITIVES.includes(name)), leftHelpers.join(' ')).toBe(true);
+      expect(residualCalls.every((name) => PRIMITIVES.includes(name)), residualCalls.join(' ')).toBe(true);
     }, 600_000);
   }
 });

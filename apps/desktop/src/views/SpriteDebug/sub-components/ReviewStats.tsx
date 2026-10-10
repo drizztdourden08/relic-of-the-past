@@ -1,15 +1,13 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { LABEL_STYLES, S } from '../SpriteDebug.constants';
-
 const ReviewStats = ({ counts, total }: { counts: { good: number; neutral: number; bad: number; yellow: number }; total: number }) => {
   return (
-    <Box style={S.stats}>
-      <Text style={LABEL_STYLES.good}>{counts.good} good</Text>
-      <Text style={LABEL_STYLES.warn}>{counts.yellow} re-review</Text>
-      <Text style={LABEL_STYLES.dim}>{counts.neutral} unchecked</Text>
-      <Text style={LABEL_STYLES.danger}>{counts.bad} bad</Text>
-      <Text style={LABEL_STYLES.muted}>/ {total}</Text>
+    <Box className="sprite-debug-stats">
+      <Text className="sprite-debug-label-good">{counts.good} good</Text>
+      <Text className="sprite-debug-label-warn">{counts.yellow} re-review</Text>
+      <Text className="sprite-debug-label-dim">{counts.neutral} unchecked</Text>
+      <Text className="sprite-debug-label-danger">{counts.bad} bad</Text>
+      <Text className="sprite-debug-label-muted">/ {total}</Text>
     </Box>
   );
 };

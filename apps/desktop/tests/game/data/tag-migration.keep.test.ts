@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all, CONNECTION_TAG_METADATA, tagById, tagKeysOf, TAG_METADATA } from '@rotp/game-data';
 import type { EntityKind } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
@@ -36,7 +36,7 @@ describeDataset('nothing was lost on the way', () => {
   it('still uses the same set of terms the taxonomy defines', () => {
     const used = new Set<string>();
     for (const kind of TAGGED) for (const key of tagKeysOf(storedTags(kind))) used.add(key);
-    const defined = new Set([
+    const defined = new Set<string>([
       ...TAG_METADATA.map(entry => entry.id),
       ...CONNECTION_TAG_METADATA.map(entry => entry.id),
     ]);

@@ -27,7 +27,7 @@ describe('sprite set activation without an active profile', () => {
 });
 
 describeDataset('sprite URLs a pool row can ask for', () => {
-  const emitted = new Set(extractedFileNames(SPRITE_DEFINITIONS as unknown as { file: string }[]));
+  const emitted = new Set(extractedFileNames(SPRITE_DEFINITIONS));
   const items = all('item') as ItemRecord[];
 
   it('names a file the current extraction writes, for every item that has art', () => {

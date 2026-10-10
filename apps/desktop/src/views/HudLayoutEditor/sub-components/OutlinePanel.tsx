@@ -17,7 +17,6 @@ import { useDragAutoScroll } from '@app/hud-layout-editing/use-drag-autoscroll';
 import { useSpringLoad } from '@app/hud-layout-editing/useSpringLoad';
 import { useOutlineKeys } from '@app/hud-layout-editing/useOutlineKeys';
 import { useOutlineScroll } from '@app/hud-layout-editing/useOutlineScroll';
-import './HudLayoutEditor.drag.css';
 import type { DropPreview, OutlinePanelProps } from './OutlinePanel.type';
 
 const samePreview = (a: DropPreview, b: DropPreview): boolean =>

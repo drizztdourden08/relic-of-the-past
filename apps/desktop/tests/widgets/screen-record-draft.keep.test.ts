@@ -68,7 +68,7 @@ describe('buildScreenRecord position and defaults', () => {
   });
 
   it('drops a term the vocabulary does not hold instead of writing it raw', () => {
-    const tags = ['nonsense:not-a-real-term'] as ScreenDraft['tags'];
+    const tags = ['nonsense:not-a-real-term'] as unknown as ScreenDraft['tags'];
     expect(buildScreenRecord(draft({ tags })).record?.tags).toEqual([]);
   });
 });

@@ -2,7 +2,10 @@
 import { useMemo } from 'react';
 import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { SlotSection } from './sub-components/SlotSection';
-import { packSummary, soundRows, summaryText, trackRows } from './behavior/track-list-model';
+import { packSummary } from './behavior/pack-summary';
+import { soundRows } from './behavior/sound-rows';
+import { summaryText } from './behavior/summary-text';
+import { trackRows } from './behavior/track-rows';
 import type { TrackListProps } from './TrackList.type';
 import './TrackList.css';
 

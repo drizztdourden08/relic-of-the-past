@@ -20,7 +20,7 @@ import { expand } from '@rotp/hud';
 import { caseMatches, matchLabel, winnerIn } from '@app/hud-layout-editing/case-match';
 import { textOfTextValue, textValueOf } from '@app/hud-layout-editing/value-text';
 import { CaseListEditor } from '@app/views/HudLayoutEditor/sub-components/CaseListEditor';
-import { TextContent } from '@app/views/HudLayoutEditor/sub-components/content/TextContent';
+import { TextContent } from '@app/views/HudLayoutEditor/sub-components/TextContent';
 import type { HudNode, HudSwitchSpec } from '@rotp/hud';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
@@ -75,7 +75,7 @@ describe('the live-match marker is the engine own answer', () => {
 
   it('picks the same branch expansion does, case by case', () => {
     for (const item of [0, 3, 4, 7, 8, 20]) {
-      const spec: HudSwitchSpec = { type: 'switch', cases, otherwise } as HudSwitchSpec;
+      const spec: HudSwitchSpec = { type: 'switch', cases, otherwise };
       const node = { kind: 'element', id: 'sw', element: spec } as HudNode;
       const drawn = expand(node, { scope: { item } });
       const marked = winnerIn(cases, { item });

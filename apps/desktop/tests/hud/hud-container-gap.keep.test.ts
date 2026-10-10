@@ -7,7 +7,7 @@ const VIEWS = [{ w: 398, h: 224 }, { w: 256, h: 224 }, { w: 512, h: 448 }, { w: 
 
 const box = (id: string): HudNode => ({
   kind: 'container', id, direction: 'row', size: { w: { px: 10 }, h: { px: 10 } }, children: [],
-} as HudNode);
+});
 
 const docOf = (root: unknown): Record<string, unknown> => ({
   id: 'gap', name: 'Gap', builtIn: false,

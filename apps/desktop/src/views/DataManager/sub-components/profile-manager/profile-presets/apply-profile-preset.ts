@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { ENHANCED_CONFIG_OVERRIDES, VANILLA_CONFIG_OVERRIDES } from './profile-presets.data';
+import { ENHANCED_CONFIG_OVERRIDES, VANILLA_CONFIG_OVERRIDES } from './profile-presets.constants';
 import type { ProfilePresetId } from './profile-presets.type';
 
 const applyProfilePreset = (id: ProfilePresetId): Partial<GameSettings> =>

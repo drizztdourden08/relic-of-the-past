@@ -2,6 +2,7 @@
 import { DITHER, EXIT_STEPS, INK, PULSE_LEVELS } from '../HudPixelPie.constants';
 import type { PieFrame, SliceMap } from '../HudPixelPie.type';
 import { buildSliceMap } from './build-slice-map';
+import { cellAt, itemAt } from '@app/checked-access';
 import { pushOffset } from './push-offset';
 
 const rimOf = (body: number): number => Math.max(INK.shade, body - 1);
@@ -20,7 +21,7 @@ const drawLeaving = (grid: Uint8Array, map: SliceMap, index: number, step: numbe
   for (let y = 0; y < gridSize; y += 1) {
     for (let x = 0; x < gridSize; x += 1) {
       const cell = y * gridSize + x;
-      if (owner[cell] !== index || DITHER[y & 1][x & 1] >= kept) continue;
+      if (owner[cell] !== index || cellAt(DITHER, y & 1, x & 1) >= kept) continue;
       const tx = x + dx;
       const ty = y + dy;
       if (tx < 0 || ty < 0 || tx >= gridSize || ty >= gridSize) continue;
@@ -34,11 +35,11 @@ const rasterizePie = (frame: PieFrame, sliceMap?: SliceMap): Uint8Array => {
   const map = sliceMap ?? buildSliceMap(gridSize, sliceCount);
   const count = map.sliceCount;
   const gone = count - Math.min(Math.max(0, Math.floor(slicesLeft)), count);
-  const nextBody = PULSE_LEVELS[((pulseStep % PULSE_LEVELS.length) + PULSE_LEVELS.length) % PULSE_LEVELS.length];
+  const nextBody = itemAt(PULSE_LEVELS, ((pulseStep % PULSE_LEVELS.length) + PULSE_LEVELS.length) % PULSE_LEVELS.length);
   const grid = new Uint8Array(gridSize * gridSize);
 
   for (let cell = 0; cell < grid.length; cell += 1) {
-    const index = map.owner[cell];
+    const index = itemAt(map.owner, cell);
     if (map.outline[cell] === 1) grid[cell] = INK.outline;
     else if (map.backing[cell] === 1 || (index >= 0 && index < gone)) grid[cell] = INK.backing;
     else if (index >= 0) grid[cell] = inkOf(index === gone ? nextBody : INK.lit, map, cell);

@@ -17,7 +17,7 @@ const useScreenDetection = (debugTick?: number): ScreenMatchResult | null => {
   }), [whichEntrance, progressInfo?.tier, debugTick]);
 
   const match = useMemo<ScreenMatchResult | null>(
-    () => resolveCurrentScreenDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState),
+    () => resolveCurrentScreenDetailed({ isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState }),
     [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState],
   );
 

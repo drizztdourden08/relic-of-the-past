@@ -3,6 +3,7 @@ import { currencySpriteOf, priceSpriteOf } from '../currency-sprites';
 import type { PondPlan, PondSetting } from '@rotp/randomizer';
 import type { LadderPreviewProps } from '@app/compounds/LadderPreview';
 import type { PondCharge } from './pond-preview.type';
+import { itemAt } from '@app/checked-access';
 import { pondPreviewNote } from './pond-preview-note';
 
 const chipTextOf = (charge: PondCharge, price: number): string => {
@@ -15,7 +16,7 @@ const chipTextOf = (charge: PondCharge, price: number): string => {
 const pondPreviewOf = (
   setting: PondSetting, plan: PondPlan, charges: readonly PondCharge[], prizeCount: number,
 ): LadderPreviewProps => ({
-  chips: plan.throws.map((entry, index) => chipTextOf(charges[index], entry.price)),
+  chips: plan.throws.map((entry, index) => chipTextOf(itemAt(charges, index), entry.price)),
   icons: charges.map((charge) => (charge.demand === undefined
     ? currencySpriteOf('rupees')
     : priceSpriteOf(charge.demand))),

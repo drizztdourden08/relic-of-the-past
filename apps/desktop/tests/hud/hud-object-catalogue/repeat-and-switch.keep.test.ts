@@ -27,7 +27,7 @@ describe('worked example 2 - the hearts (repeat over containers, switch per hear
         },
       },
     },
-  } as HudNode);
+  });
 
   it('life_current=100, life_max=160: 12 full, 1 half, 7 empty - 20 hearts total', () => {
     const placed = placedOf(hearts(), { life_current: 100, life_max: 160 });
@@ -65,7 +65,7 @@ describe('repeat - index, count and item reach the child', () => {
         count: 4,
         child: leaf('cell', { size: { w: { from: 'data', expr: 'count * 2 + index' } } }),
       },
-    } as HudNode;
+    };
     const placed = placedOf(rep, {});
     expect(placedById(placed, 'cell#0')?.rect.w).toBe(8);
     expect(placedById(placed, 'cell#3')?.rect.w).toBe(11);
@@ -76,7 +76,7 @@ describe('repeat - index, count and item reach the child', () => {
       kind: 'element',
       id: 'rep',
       element: { type: 'repeat', count: 3, child: leaf('cell', { size: { w: { from: 'data', expr: 'item + 5' } } }) },
-    } as HudNode;
+    };
     const placed = placedOf(rep, {});
     expect(placedById(placed, 'cell#0')?.rect.w).toBe(5);
     expect(placedById(placed, 'cell#2')?.rect.w).toBe(7);
@@ -95,7 +95,7 @@ describe('switch - first match wins, order is the logic', () => {
       ],
       otherwise: leaf('none'),
     },
-  } as HudNode);
+  });
 
   it('the FIRST matching case wins even when a later one would also match', () => {
     const placed = placedOf(pick(), { x: 1 });
@@ -110,7 +110,7 @@ describe('switch - first match wins, order is the logic', () => {
   });
 
   it('a switch with no matching case and no otherwise draws nothing at all', () => {
-    const bare: HudNode = { kind: 'element', id: 'sw', element: { type: 'switch', cases: [{ when: 'x >= 0', node: leaf('a') }] } } as HudNode;
+    const bare: HudNode = { kind: 'element', id: 'sw', element: { type: 'switch', cases: [{ when: 'x >= 0', node: leaf('a') }] } };
     const wrappingRowOnly = 1;
     expect(placedOf(bare, { x: -1 })).toHaveLength(wrappingRowOnly);
   });
@@ -120,7 +120,7 @@ describe('expand.ts guards a runaway expression', () => {
   it('ceil(1 / 0) does not become a repeat of a million - it clamps to MAX_REPEAT_COUNT (200)', () => {
     const rep: HudNode = {
       kind: 'element', id: 'rep', element: { type: 'repeat', count: { from: 'data', expr: 'ceil(1 / 0)' }, child: leaf('cell') },
-    } as HudNode;
+    };
     const placed = placedOf(rep, {});
     const cells = placed.filter((p) => p.id.startsWith('cell#'));
     expect(cells).toHaveLength(200);
@@ -129,7 +129,7 @@ describe('expand.ts guards a runaway expression', () => {
   it('a negative or NaN count resolves to zero instances, not a crash', () => {
     const rep: HudNode = {
       kind: 'element', id: 'rep', element: { type: 'repeat', count: { from: 'data', expr: '0 / 0' }, child: leaf('cell') },
-    } as HudNode;
+    };
     expect(placedOf(rep, {}).filter((p) => p.id.startsWith('cell#'))).toHaveLength(0);
   });
 });

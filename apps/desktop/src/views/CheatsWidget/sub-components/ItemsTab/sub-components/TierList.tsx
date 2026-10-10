@@ -4,8 +4,8 @@ import { useGameUIStore } from '@app/stores/game-ui-store';
 import { ChoicePopover } from '../../ChoicePopover';
 import type { ChoiceOption } from '../../ChoicePopover.type';
 import { BOTTLE_NOTICE } from '../ItemsTab.constants';
-import { isRemoval } from '../behavior/slot-specs';
-import { slotValueOf } from '../behavior/slot-value';
+import { isRemoval } from '../behavior/is-removal';
+import { slotValueOf } from '../behavior/slot-value-of';
 import type { SlotSpec, SlotWrite, TierListProps, TierOption } from '../ItemsTab.type';
 
 const hexOf = (id: number): string => `0x${id.toString(16).padStart(2, '0')}`;

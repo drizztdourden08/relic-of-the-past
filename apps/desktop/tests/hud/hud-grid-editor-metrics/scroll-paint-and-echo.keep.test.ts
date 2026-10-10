@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll, vi } from 'vitest';
 import { readFileSync } from 'fs';
 import { gridCellRects } from '@rotp/hud';
 import { hull } from '@app/views/HudLayoutEditor/sub-components/StageGridEcho';
@@ -17,9 +17,10 @@ vi.mock('@app/stores/hud-editor-view-store', async () => {
 
 let rig: MetricsRig;
 
-beforeAll(async () => { rig = await measureMetrics(); }, 60_000);
-
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureMetrics();
+  return () => rig.close();
+}, 60_000);
 
 describe('past the fit it scrolls, and the header strips do not go with it', () => {
   it('overflows a twelve-column grid instead of shrinking its cells', () => {

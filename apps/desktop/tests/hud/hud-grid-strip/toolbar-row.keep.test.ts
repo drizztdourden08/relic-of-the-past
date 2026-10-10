@@ -1,13 +1,15 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { ONE_ROW, RAILS, SELECTIONS, measureRails } from '../layout-bands.harness';
 import type { Rig } from '../layout-bands.harness';
 
 let rig: Rig;
 const selectionNames = Object.keys(SELECTIONS);
 
-beforeAll(async () => { rig = await measureRails(); }, 60_000);
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureRails();
+  return () => rig.close();
+}, 60_000);
 
 describe('the toolbar is ONE strip and ONE row, in every state and at every rail', () => {
   it('is exactly one row tall with nothing selected', () => {

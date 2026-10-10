@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { SlotMigrationError, migrateScheme, migrateSlotList } from '@rotp/input-mapping';
 import type { SlotAssignment } from '@rotp/game-data';
+import { required } from './required';
 
 const fixture = (name: string): unknown =>
   JSON.parse(readFileSync(resolve(__dirname, '../../../tests/fixtures', name), 'utf8'));
@@ -26,14 +27,15 @@ describe('numbered-slot migration, against the stored spc2-test profile', () => 
     const { slots } = migrateSlotList(profile.modern.slots);
     expect(slots).toHaveLength(OLD_IDS.length);
     expect(slots.map((slot) => slot.index)).toEqual(OLD_IDS.map((_, i) => i + 1));
-    expect(slots[0].position).toBe('NORTH');
-    expect(slots[11].position).toBe('RIGHT_STICK');
+    expect(required(slots[0], 'slot 1').position).toBe('NORTH');
+    expect(required(slots[11], 'slot 12').position).toBe('RIGHT_STICK');
   });
 
   it('keeps the binding and the position independent, as the fixture relies on', () => {
     const { slots } = migrateSlotList(profile.modern.slots);
-    expect(slots[0].position).toBe('NORTH');
-    expect(slots[0].binding).toMatchObject({ type: 'keyboard', code: 'KeyW' });
+    const first = required(slots[0], 'slot 1');
+    expect(first.position).toBe('NORTH');
+    expect(first.binding).toMatchObject({ type: 'keyboard', code: 'KeyW' });
   });
 
   it('moves every assignment onto its own slot number, losing none', () => {
@@ -67,14 +69,16 @@ describe('numbered-slot migration, against the stored spc2-test profile', () => 
     expect(assignments[4]).toEqual({ kind: 'sword' });
     expect(Object.keys(assignments)).toHaveLength(8);
   });
+});
 
+describe('numbered-slot migration, against the stored spc2-test profile', () => {
   it('recovers an assignment whose slot is not in the list at all', () => {
     const { slots, assignments } = migrateScheme(
       [{ id: 'slot:NORTH', binding: { type: 'none' }, position: 'NORTH', label: 'X' }],
       { 'slot:kb:KeyF': { kind: 'action' } },
     );
     expect(slots).toHaveLength(2);
-    expect(slots[1].binding).toMatchObject({ type: 'keyboard', code: 'KeyF' });
+    expect(required(slots[1], 'the recovered slot').binding).toMatchObject({ type: 'keyboard', code: 'KeyF' });
     expect(assignments[2]).toEqual({ kind: 'action' });
   });
 
@@ -102,8 +106,9 @@ describe('a real profile stored in SDL device order', () => {
       'NORTH', 'WEST', 'EAST', 'SOUTH',
       'DPAD_UP', 'DPAD_LEFT', 'DPAD_RIGHT', 'DPAD_DOWN',
     ]);
-    expect(slots[0].position).toBe('NORTH');
-    expect(slots[0].binding).toMatchObject({ type: 'gamepad-button', index: 3 });
+    const first = required(slots[0], 'slot 1');
+    expect(first.position).toBe('NORTH');
+    expect(first.binding).toMatchObject({ type: 'gamepad-button', index: 3 });
   });
 
   it('carries every assignment onto the number its own slot landed on', () => {

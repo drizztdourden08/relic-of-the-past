@@ -7,6 +7,7 @@ import { createFakeServer } from '../ap-fake-server';
 import type { FakeRoom } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';
 import { OWN, installClientHarness, settle } from '../ap-protocol-harness';
+import { required } from '../../required';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
@@ -83,10 +84,11 @@ describe('notices from the session', () => {
       'otherCheck: Drizztdourden_ sent Kokiri Sword to Zelda',
       'otherCheck: Drizztdourden_ found their Kokiri Sword',
     ]);
-    expect(got[0].parts).toEqual([
+    const receivedNotice = required(got[0], 'received notice');
+    expect(receivedNotice.parts).toEqual([
       { text: 'Received ' }, { text: 'Bow', tone: 'item' }, { text: ' from ' }, { text: 'Drizztdourden_', tone: 'player' },
     ]);
-    expect(got[0].counterpart).toBe('Drizztdourden_');
+    expect(receivedNotice.counterpart).toBe('Drizztdourden_');
     stop();
   });
 
@@ -105,26 +107,28 @@ describe('notices from the session', () => {
       "hintOwn: [Hint]: Link's Bow is at Mido Chest.",
       "hintOther: [Hint]: Zelda's Kokiri Sword is at Mido Chest.",
     ]);
-    expect(got[1].parts.filter((part) => part.tone)).toEqual([
+    expect(required(got[1], 'other hint notice').parts.filter((part) => part.tone)).toEqual([
       { text: 'Zelda', tone: 'player' }, { text: 'Kokiri Sword', tone: 'item' },
     ]);
     stop();
   });
+});
 
+describe('notices from the session', () => {
   it('joins, goals, release and collect, and chat; trackers and our own lines say nothing', async () => {
     const { push, stop } = await boot();
     const print = (type: string, slot: number, extra: Partial<ApServerPacket> = {}): ApServerPacket =>
       ({ cmd: 'PrintJSON', type, slot, team: 0, data: [{ text: `${type} line` }], ...extra }) as ApServerPacket;
     const got = await push([
-      print('Join', 2, { tags: ['AP'] } as Partial<ApServerPacket>),
-      print('Join', 3, { tags: ['Tracker'] } as Partial<ApServerPacket>),
-      print('Join', 1, { tags: ['AP'] } as Partial<ApServerPacket>),
+      print('Join', 2, { tags: ['AP'] }),
+      print('Join', 3, { tags: ['Tracker'] }),
+      print('Join', 1, { tags: ['AP'] }),
       print('Part', 2),
       print('Goal', 2), print('Goal', 1), print('Release', 3), print('Collect', 2),
-      print('Chat', 2, { message: 'hi' } as Partial<ApServerPacket>),
-      print('Chat', 1, { message: 'mine' } as Partial<ApServerPacket>),
+      print('Chat', 2, { message: 'hi' }),
+      print('Chat', 1, { message: 'mine' }),
       { cmd: 'PrintJSON', type: 'ServerChat', message: 'restarting soon', data: [{ text: 'restarting soon' }] },
-      print('Goal', 2, { team: 1 } as Partial<ApServerPacket>),
+      print('Goal', 2, { team: 1 }),
     ]);
     expect(lines(got)).toEqual([
       'join: Drizztdourden_ joined, playing Ship of Harkinian',
@@ -138,7 +142,9 @@ describe('notices from the session', () => {
     ]);
     stop();
   });
+});
 
+describe('notices from the session', () => {
   it('the connection: accepted, lost, accepted again', async () => {
     const { server, notices, stop } = await boot();
     expect(lines(notices)).toEqual(['connection: Connected to the room as Link']);

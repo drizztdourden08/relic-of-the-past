@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { mirror } from '@rotp/game-core';
 import { REPO_ROOT } from '../repo-root';
+import { required } from '../required';
 
 const HEADER = resolve(REPO_ROOT, 'core/game-hooks/save_bytes.h');
 
@@ -12,7 +13,8 @@ const parseHeader = (): Record<string, number> => {
   const defines: Record<string, number> = {};
   for (const line of source.split('\n')) {
     const match = /^#define\s+([A-Z0-9_]+)\s+(0[xX][0-9a-fA-F]+|\d+)\s*$/.exec(line.trim());
-    if (match !== null) defines[match[1]] = Number(match[2]);
+    const name = match?.[1];
+    if (name !== undefined) defines[name] = Number(match?.[2]);
   }
   return defines;
 };
@@ -37,8 +39,8 @@ const SPAN_NAMES = ['SAVE_BLOCK_BASE', 'HOOK_SAVE_FIRST', 'HOOK_SAVE_LAST'] as c
 describe('the hook-owned save-byte registry', () => {
   const defines = parseHeader();
   const spanOf = (base: string, count: string): [number, number] => {
-    const start = defines[base];
-    return [start, start + (count === '' ? 1 : defines[count])];
+    const start = required(defines[base], base);
+    return [start, start + (count === '' ? 1 : required(defines[count], count))];
   };
 
   it('parses every name the mirror restates', () => {
@@ -48,13 +50,13 @@ describe('the hook-owned save-byte registry', () => {
   });
 
   it('allocates no address twice and stays inside the span', () => {
-    let cursor = defines.HOOK_SAVE_FIRST;
+    let cursor = required(defines.HOOK_SAVE_FIRST, 'HOOK_SAVE_FIRST');
     for (const [base, count] of CLAIMS) {
       const [start, end] = spanOf(base, count);
       expect(start, `${base} overlaps the claim before it`).toBeGreaterThanOrEqual(cursor);
       cursor = end;
     }
-    expect(cursor - 1, 'the last claim runs past the span').toBeLessThanOrEqual(defines.HOOK_SAVE_LAST);
+    expect(cursor - 1, 'the last claim runs past the span').toBeLessThanOrEqual(required(defines.HOOK_SAVE_LAST, 'HOOK_SAVE_LAST'));
   });
 
   it('matches the TS mirror byte for byte', () => {

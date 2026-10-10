@@ -12,9 +12,15 @@ import type { PreviewScreen, PreviewViewProps } from './preview.type';
 import './PreviewView.css';
 
 const cursorRowOf = (screen: PreviewScreen | undefined, selected: number): number | null => {
-  if (screen === undefined || screen.choice === null) return null;
+  if (!screen?.choice) return null;
   const { rows } = screen.choice;
-  return rows[Math.min(selected, rows.length - 1)];
+  return rows[Math.min(selected, rows.length - 1)] ?? null;
+};
+
+const engineSample = (key: string): string => {
+  const sample = ENGINE_SAMPLES[key];
+  if (sample === undefined) throw new Error(`No engine sample for ${key}`);
+  return sample;
 };
 
 const stageLabel = (position: number, total: number, atEnd: boolean, hasChoice: boolean): string => {
@@ -27,8 +33,8 @@ const PreviewView = (props: PreviewViewProps) => {
   const { blocks, terms, metrics, sheet } = props;
 
   const [at, setAt] = useState(0);
-  const [nameSample, setNameSample] = useState<string>(ENGINE_SAMPLES[PLAYER_NAME_KEY]);
-  const [digit, setDigit] = useState<string>(ENGINE_SAMPLES[NUMBER_KEY]);
+  const [nameSample, setNameSample] = useState<string>(() => engineSample(PLAYER_NAME_KEY));
+  const [digit, setDigit] = useState<string>(() => engineSample(NUMBER_KEY));
 
   const opts = useMemo(() => ({ nameSample, numberDigit: digit }), [nameSample, digit]);
 

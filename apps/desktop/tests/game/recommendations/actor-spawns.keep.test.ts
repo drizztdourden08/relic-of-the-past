@@ -1,9 +1,10 @@
 /* @layer test @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy, actorStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const UNCATALOGUED = Math.max(...all('actor').map(a => a.gameId.spriteType ?? 0)) + 5;
 
@@ -35,7 +36,7 @@ describeDataset('actor strategy (spawns probe)', () => {
     }));
 
     expect(drafts).toHaveLength(1);
-    const [draft] = drafts;
+    const draft = required(drafts[0], 'the one draft');
     expect(draft.targetId).toBeNull();
     expect(draft.detector).toBe('strategy:actor');
     expect(draft.confidence).toBe('certain');
@@ -52,7 +53,7 @@ describeDataset('actor strategy (spawns probe)', () => {
     }));
 
     expect(drafts).toHaveLength(1);
-    const proposed = drafts[0].proposed as { kind: string; combat?: { health: number } };
+    const proposed = required(drafts[0], 'the one draft').proposed as { kind: string; combat?: { health: number } };
     expect(proposed.kind).toBe('enemy');
     expect(proposed.combat?.health).toBe(8);
   });

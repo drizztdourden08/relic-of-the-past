@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
 import { Box, Text, SegmentedControl, Slider } from '@drizztdourden08/tessera/primitives';
-import { HeightLevelPicker } from '../../shadow-editor/HeightLevelPicker';
+import { HeightLevelPicker } from './HeightLevelPicker';
 import { POLYGON_OPTIONS } from '../ShadowEditorPanel.constants';
 
 const ShapeToolOptions = () => {

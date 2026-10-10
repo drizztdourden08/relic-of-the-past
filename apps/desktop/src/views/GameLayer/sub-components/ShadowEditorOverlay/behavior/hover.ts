@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { hitTestGizmo, buildGizmoContext } from '../../shadow-editor/gizmos';
+import { hitTestGizmo } from './hit-test-gizmo';
+import { buildGizmoContext } from './build-gizmo-context';
 import { worldToDisplay } from './world-to-display';
 import { LIGHT_HANDLE_HIT_RADIUS_SQ } from './overlay.constants';
 import type { HoverArgs, HoverResult } from './overlay.type';

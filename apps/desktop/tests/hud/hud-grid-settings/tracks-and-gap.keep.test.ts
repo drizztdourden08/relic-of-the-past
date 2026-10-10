@@ -3,7 +3,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createElement as h } from 'react';
 import { EditorStepContext } from '@app/hud-layout-editing/editor-step';
-import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import type { HudContainer, HudNode, Value } from '@rotp/hud';
 import { installLayoutSectionRig } from './install-layout-section-rig';
 import { screenRoot } from './screen-root';

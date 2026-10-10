@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { OverworldEntrance } from '@rotp/game-core';
+import type { GridPos, OverworldEntrance } from '@rotp/game-core';
 import { wasmGetEntranceSpawns, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetFallHoles, wasmGetRoomExitDoors } from '@rotp/game-core';
 import { roomOrigin, tileInScreen } from '../world-origin';
 import { GRID } from './room-entrances.constants';
@@ -12,6 +12,11 @@ const inGrid = (row: number, col: number): boolean => row >= 0 && row < GRID && 
 const liveExitDoors = (isLive: boolean): ExitDoor[] => isLive
   ? wasmGetRoomExitDoors().map((d) => ({ row: d.row, col: d.col, direction: d.direction, used: false }))
   : [];
+
+const landingFor = (spawnTile: GridPos, leadsOutside: boolean, exitDoors: ExitDoor[]): GridPos => {
+  const door = leadsOutside ? claimNearestDoor(exitDoors, spawnTile.row, spawnTile.col) : null;
+  return door ? doorLandingTile(door) : spawnTile;
+};
 
 const spawnEntrances = (roomId: number, isLive: boolean): OverworldEntrance[] | null => {
   const spawns = wasmGetEntranceSpawns();
@@ -26,10 +31,7 @@ const spawnEntrances = (roomId: number, isLive: boolean): OverworldEntrance[] | 
     if (rooms[id] !== roomId || holeIds.has(id)) continue;
     const spawn = spawns[id];
     if (!spawn) continue;
-    const spawnTile = tileInScreen(spawn.x, spawn.y, origin);
-    const leadsOutside = exitScreen != null;
-    const door = leadsOutside ? claimNearestDoor(exitDoors, spawnTile.row, spawnTile.col) : null;
-    const tile = door ? doorLandingTile(door) : spawnTile;
+    const tile = landingFor(tileInScreen(spawn.x, spawn.y, origin), exitScreen != null, exitDoors);
     if (!inGrid(tile.row, tile.col)) continue;
     out.push({ area: roomId, pos: 0, id, gridRow: tile.row, gridCol: tile.col, roomId: exitScreen ?? 0 });
   }

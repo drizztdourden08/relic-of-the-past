@@ -1,12 +1,14 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { RAILS, measureRails } from '../layout-bands.harness';
 import type { Rig } from '../layout-bands.harness';
 
 let rig: Rig;
 
-beforeAll(async () => { rig = await measureRails(); }, 60_000);
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureRails();
+  return () => rig.close();
+}, 60_000);
 
 describe('three sections, flat on the panel, with nothing boxed', () => {
   it('titles them by CONCERN, and a flex container gets two extra', () => {

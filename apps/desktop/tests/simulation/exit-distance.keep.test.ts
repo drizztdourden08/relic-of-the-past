@@ -1,6 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { stepDistances, distanceAt, decodeScore } from '@rotp/navigation';
+import { required } from '../required';
 
 const GRID = 64;
 const UNREACHED = 0xffff;
@@ -43,7 +44,7 @@ describe('ledge hops in the walk BFS', () => {
     const dist = stepDistances(gridWithWall(10), { row: 5, col: 5 }, ledges);
     expect(dist[9 * GRID + 5]).toBe(4);
     expect(dist[11 * GRID + 5]).toBeGreaterThan(UNKNOWN_DISTANCE);
-    expect(dist[20 * GRID + 5]).toBe(dist[11 * GRID + 5] + 9);
+    expect(dist[20 * GRID + 5]).toBe(required(dist[11 * GRID + 5], 'distance past the ledge') + 9);
   });
 
   it('treats a ledge as one-way, so the far side cannot walk back up it', () => {

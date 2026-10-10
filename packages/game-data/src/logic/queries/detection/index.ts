@@ -2,4 +2,4 @@
 export { getScreenLookup } from './get-screen-lookup';
 export { resolveCurrentScreen } from './resolve-current-screen';
 export { resolveCurrentScreenDetailed } from './resolve-current-screen-detailed';
-export type { ScreenLookup, ScreenMatchMethod, ScreenMatchResult, VariantGameState } from './detection.type';
+export type { ScreenLookup, ScreenMatchMethod, ScreenMatchResult, ScreenQuery, VariantGameState } from './detection.type';

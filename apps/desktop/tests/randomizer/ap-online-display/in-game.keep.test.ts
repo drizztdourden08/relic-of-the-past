@@ -5,6 +5,7 @@ import { fitReceiptLine, toDialogueText, stripHighlight } from '@rotp/game-core'
 import { dialogueCharsetOf, extraGlyphSlots, readableText, POOL_SPRITE_DEFINITIONS } from '@rotp/game-data';
 import { kLanguages, buildForeignIconsFile, FOREIGN_ICON_FILES, FOREIGN_ICON_PALETTE_BYTES, chromaOf, toOklab, snesToRgba, NEUTRAL_CHROMA, extractArtBadge, artImage, quantizeIconPerceptual } from '@rotp/asset-extraction';
 import type { ImageBuffer, RGBA } from '@rotp/asset-extraction';
+import { required } from '../../required';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
@@ -19,8 +20,8 @@ const decodeIconFile = (file: Uint8Array, count: number): IconFile => {
     const y = i >> 4;
     const tile = n * 128 + ((y >> 3) * 2 + (x >> 3)) * 32;
     const bit = 7 - (x & 7);
-    const [p0, p1, p2, p3] = [0, 1, 16, 17].map((plane) => (file[tile + (y & 7) * 2 + plane] >> bit) & 1);
-    return p0 | (p1 << 1) | (p2 << 2) | (p3 << 3);
+    const planeBit = (plane: number): number => ((file[tile + (y & 7) * 2 + plane] ?? 0) >> bit) & 1;
+    return planeBit(0) | (planeBit(1) << 1) | (planeBit(16) << 2) | (planeBit(17) << 3);
   }));
   const view = new DataView(file.buffer, file.byteOffset);
   return { pictures, words: Array.from({ length: 16 }, (_, i) => view.getUint16(count * 128 + i * 2, true)) };
@@ -35,7 +36,7 @@ const poolPictures = (): Map<string, ImageBuffer> => new Map(POOL_SPRITE_DEFINIT
 }));
 
 describe('another player\'s item in the game itself', () => {
-  const US = kLanguages.us;
+  const US = required(kLanguages.us, 'US language');
   const WIDTHS = new Uint8Array(US.alphabet.length).fill(8);
   const CHARSET = dialogueCharsetOf(US.alphabet, WIDTHS, extraGlyphSlots(US.alphabet, WIDTHS.length));
   const shown = (line: ReturnType<typeof foreignItemLine>): string => readableText(stripHighlight(
@@ -53,7 +54,7 @@ describe('another player\'s item in the game itself', () => {
   });
 
   it('picks each game\'s own pool icon, and the Archipelago mark for any other game', () => {
-    const iconOf = (game: string): string => FOREIGN_ICON_FILES[foreignIconIdOfGame(game) - FOREIGN_ICON_FIRST_ID];
+    const iconOf = (game: string): string | undefined => FOREIGN_ICON_FILES[foreignIconIdOfGame(game) - FOREIGN_ICON_FIRST_ID];
     expect(iconOf('Ship of Harkinian')).toBe('pool-ocarina-of-time');
     expect(iconOf('Ocarina of Time')).toBe('pool-ocarina-of-time');
     expect(iconOf('Majora\'s Mask Recompiled')).toBe('pool-majoras-mask');
@@ -68,19 +69,23 @@ describe('another player\'s item in the game itself', () => {
     expect(FOREIGN_ICON_FIRST_ID + FOREIGN_ICON_FILES.length - 1).toBeLessThanOrEqual(FOREIGN_ICON_LAST_ID);
     expect([...FOREIGN_ICON_FILES].sort()).toEqual(POOL_SPRITE_DEFINITIONS.map((def) => def.file).sort());
   });
+});
 
+describe('another player\'s item in the game itself', () => {
   describe('the pool icons in the game', () => {
     const pictures = poolPictures();
-    const file = buildForeignIconsFile(pictures)!;
+    const file = required(buildForeignIconsFile(pictures) ?? undefined, 'foreign icons file');
     const decoded = decodeIconFile(file, FOREIGN_ICON_FILES.length);
     const palette = decoded.words.map((word, i): RGBA => (i === 0 ? [0, 0, 0, 0] : snesToRgba(word)));
+    const pictureOf = (name: string): ImageBuffer => required(pictures.get(name), `${name} picture`);
+    const paletteColor = (index: number): RGBA => required(palette[index], `palette colour ${index}`);
     const drawnColors = (name: string): Map<string, RGBA> => {
-      const picture = pictures.get(name)!;
-      const indices = decoded.pictures[FOREIGN_ICON_FILES.indexOf(name)];
+      const picture = pictureOf(name);
+      const indices = required(decoded.pictures[FOREIGN_ICON_FILES.indexOf(name)], `${name} decoded picture`);
       const map = new Map<string, RGBA>();
       indices.forEach((index, i) => {
         const source = picture.getPixel(i & 15, i >> 4);
-        if (source[3] !== 0) map.set(hexOf(source), palette[index]);
+        if (source[3] !== 0) map.set(hexOf(source), paletteColor(index));
       });
       return map;
     };
@@ -92,7 +97,7 @@ describe('another player\'s item in the game itself', () => {
       expect(decoded.words).toContain(0x0000);
       expect(decoded.words).toContain(0x7fff);
       FOREIGN_ICON_FILES.forEach((name, n) => {
-        const indices = quantizeIconPerceptual(pictures.get(name)!, palette).indices;
+        const indices = quantizeIconPerceptual(pictureOf(name), palette).indices;
         expect(decoded.pictures[n], name).toEqual(indices);
         expect(indices.filter((index) => index !== 0).length, name).toBeGreaterThan(64);
       });
@@ -104,26 +109,27 @@ describe('another player\'s item in the game itself', () => {
     });
 
     it('keeps the egg pink', () => {
-      const [r, g, b] = drawnColors('pool-links-awakening').get('ff6ee7')!;
+      const [r, g, b] = required(drawnColors('pool-links-awakening').get('ff6ee7'), 'egg pink');
       expect(r - g).toBeGreaterThan(80);
       expect(b - g).toBeGreaterThan(60);
     });
 
     it('draws every pixel from its own palette, greys as greys and hues as hues', () => {
       for (const [n, name] of FOREIGN_ICON_FILES.entries()) {
-        const picture = pictures.get(name)!;
-        decoded.pictures[n].forEach((index, i) => {
+        const picture = pictureOf(name);
+        required(decoded.pictures[n], `${name} decoded picture`).forEach((index, i) => {
           const source = picture.getPixel(i & 15, i >> 4);
           expect(index === 0, `${name} pixel ${i}`).toBe(source[3] === 0);
           if (index === 0) return;
-          expect(palette[index][3], `${name} pixel ${i}`).toBe(255);
-          expect(isGrey(palette[index]), `${name} #${hexOf(source)}`).toBe(isGrey(source));
+          expect(paletteColor(index)[3], `${name} pixel ${i}`).toBe(255);
+          expect(isGrey(paletteColor(index)), `${name} #${hexOf(source)}`).toBe(isGrey(source));
         });
       }
       const shield = drawnColors('pool-zelda-2');
       const goldShield = 'fcbb28';
       const paleCross = 'f5de82';
-      expect(hexOf(shield.get(goldShield)!)).not.toBe(hexOf(shield.get(paleCross)!));
+      expect(hexOf(required(shield.get(goldShield), 'gold shield colour')))
+        .not.toBe(hexOf(required(shield.get(paleCross), 'pale cross colour')));
     });
   });
 });

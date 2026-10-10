@@ -44,7 +44,7 @@ describe('a slot number past the previewed scheme', () => {
   });
 
   it('has retired all three copies of the standing disclaimer', () => {
-    for (const file of ['content/SlotContent.tsx', 'content/GlyphContent.tsx', 'ButtonStatesEditor.tsx']) {
+    for (const file of ['SlotContent.tsx', 'GlyphContent.tsx', 'ButtonStatesEditor.tsx']) {
       const src = readFileSync(`${EDITOR}/sub-components/${file}`, 'utf8');
       const kept = [/hint="Any number/, /hint="Draws whichever/, /aria-label="Slot number"/]
         .filter((pattern) => pattern.test(src));

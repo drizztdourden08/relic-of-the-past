@@ -2,6 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { parseSlotData, AP_WORLD_VERSION } from '@rotp/randomizer';
 import { boot, installClientHarness, makeRoom, settle } from './ap-protocol-harness';
+import { required } from '../required';
 import type { FakeRoom, FakeServer } from './ap-fake-server';
 
 vi.mock('@app/log-bus', () => {
@@ -65,10 +66,12 @@ describe('DeathLink', () => {
       cmd: 'Bounce', tags: ['DeathLink'], data: { time: Date.now() / 1000, source: 'Link', cause: 'Link died' },
     }]);
   });
+});
 
+describe('DeathLink', () => {
   it('the slot data decides once Connected, and a ConnectUpdate corrects the tags', async () => {
     const off = await boot(withDeathLink(false), { deathLink: true });
-    expect(off.server.of('Connect')[0].tags).toEqual(['DeathLink']);
+    expect(required(off.server.of('Connect')[0], 'Connect packet').tags).toEqual(['DeathLink']);
     expect(off.server.of('ConnectUpdate')).toEqual([{ cmd: 'ConnectUpdate', items_handling: 0b111, tags: [] }]);
     expect(off.core.deathLinkBits).toEqual([true, false]);
     off.server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source: 'Zelda', time: 0, cause: 'fell' } }]);
@@ -77,7 +80,7 @@ describe('DeathLink', () => {
     expect([off.core.kills, deathLinkBounces(off.server).length]).toEqual([0, 0]);
 
     const on = await boot(withDeathLink(true));
-    expect(on.server.of('Connect')[0].tags).toEqual([]);
+    expect(required(on.server.of('Connect')[0], 'Connect packet').tags).toEqual([]);
     expect(on.server.of('ConnectUpdate')).toEqual([{ cmd: 'ConnectUpdate', items_handling: 0b111, tags: ['DeathLink'] }]);
     on.server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source: 'Zelda', time: 0, cause: 'fell' } }]);
     await settle();

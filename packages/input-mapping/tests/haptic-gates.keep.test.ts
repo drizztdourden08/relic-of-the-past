@@ -55,7 +55,7 @@ describe('haptics master gate (C-side kFeatures0_Haptics)', () => {
   });
 });
 
-describe('haptics granular gates each block only their own category', () => {
+describe('haptics per-category gates each block only their own category', () => {
   it('sword swing', () => {
     updateHapticSettings(settings({ swordSwing: false }));
     handleHapticEvent(HapticEventType.SWORD_SWING, 0);
@@ -93,7 +93,9 @@ describe('haptics granular gates each block only their own category', () => {
     handleHapticEvent(HapticEventType.DAMAGE_TAKEN, 8);
     expect(calls).toBe(1);
   });
+});
 
+describe('haptics per-category gates each block only their own category', () => {
   it('item use (incl. hookshot-wall + boomerang-catch)', () => {
     updateHapticSettings(settings({ itemUse: false }));
     handleHapticEvent(HapticEventType.ITEM_USED, BOMBS_ITEM);

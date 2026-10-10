@@ -1,11 +1,12 @@
 /* @layer renderer-hooks @kind logic */
 import { POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_BOTTLE_ROW } from '@rotp/randomizer';
 import type { PondAskSetting, PondCeilings } from '@rotp/randomizer';
+import { itemAt } from '@app/checked-access';
 import type { PondAskModel, PondAskRowModel } from '@app/compounds/WishingPondRow';
 
 const nearestStop = (stops: readonly number[], amount: number): number =>
   stops.reduce((best, stop, index) =>
-    (Math.abs(stop - amount) < Math.abs(stops[best] - amount) ? index : best), 0);
+    (Math.abs(stop - amount) < Math.abs(itemAt(stops, best) - amount) ? index : best), 0);
 
 const stopsUnder = (stops: readonly number[], ceiling: number): readonly number[] => {
   const kept = stops.filter((stop) => stop <= ceiling);

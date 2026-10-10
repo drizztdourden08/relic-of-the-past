@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { createEngineState, addKey, spendKey, keyAvailable, buildReachContext, applyItem, syncReachTokens, onCheckVerified, requirementsMet, evaluateOutcome } from '@rotp/navigation';
 import type { DetectedCheck } from '@rotp/navigation';
+import type { RequirementSet } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 
 const EASTERN = 'dungeon-003';
@@ -27,7 +28,7 @@ describe('explorer with consumable small keys', () => {
 
   it('gates a smallkey requirement on the remaining key count', () => {
     const s = freshState();
-    const req = [[`smallkey:${EASTERN}`]];
+    const req: RequirementSet = [[`smallkey:${EASTERN}`]];
     expect(requirementsMet(req, buildReachContext(s))).toBe(false);
     addKey(s, EASTERN);
     expect(requirementsMet(req, buildReachContext(s))).toBe(true);

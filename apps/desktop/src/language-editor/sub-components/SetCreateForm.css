@@ -1,0 +1,15 @@
+/* @layer renderer-components @kind style */
+.set-create {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-bottom: var(--space-xs);
+}
+
+.set-create--open {
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+}

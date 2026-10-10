@@ -11,9 +11,7 @@ const gatesInto = (adjacency: Adjacency, screenId: string): TraversalRequirement
   const missing: TraversalRequirement[][] = [];
   for (const edges of adjacency.values()) {
     for (const edge of edges) {
-      if (edge.to === screenId) {
-        for (const group of edge.requirements) missing.push(group);
-      }
+      if (edge.to === screenId) missing.push(...edge.requirements);
     }
   }
   return missing;

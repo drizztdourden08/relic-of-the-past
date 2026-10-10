@@ -11,8 +11,10 @@ import { installFakeModule } from '../ap-fake-module';
 import type { FakeModule } from '../ap-fake-module';
 import { plannedLines as planned } from './planned-lines';
 import { sessionChunks } from './session-chunks';
+import { required } from '../../required';
+import type { DeliverItemArgs } from './deliver-item-args.type';
 
-const bridge = vi.hoisted(() => ({ mod: null as unknown }));
+const bridge = vi.hoisted(() => ({ mod: null }));
 const queue = vi.hoisted(() => ({
   ready: true,
   entries: [] as { id: string; messageOf: () => number | undefined; onComplete?: () => void; onGranted?: () => void }[],
@@ -26,10 +28,7 @@ vi.mock('@app/log-bus', () => {
 vi.mock('../../../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
 vi.mock('../../../../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
 vi.mock('@app/game/delivery-api', () => ({
-  deliverItem: (
-    _id: number, _label: string, _source: string, messageId?: number | (() => number), onComplete?: () => void,
-    onGranted?: () => void,
-  ) => {
+  deliverItem: (...[, , , messageId, onComplete, onGranted]: DeliverItemArgs) => {
     if (!queue.ready) return null;
     const id = `dlv_${queue.entries.length}`;
     const messageOf = typeof messageId === 'function' ? messageId : () => messageId;
@@ -74,12 +73,12 @@ describe('a received item\'s receipt line', () => {
   it('sits in the ring in front of the planned lines and survives a refresh of any length', () => {
     const ids = setSessionReceiptMessages(planned(0)) as number[];
     const arrival = appendSessionReceiptMessage('Zelda sent you the Hookshot.') as number;
-    expect(arrival).toBe(ids[0] - ARRIVAL_SLOTS);
+    expect(arrival).toBe(required(ids[0], 'first planned id') - ARRIVAL_SLOTS);
     const line = chunkAt(arrival);
     expect(setSessionReceiptMessages(planned(1))).toEqual(ids);
     expect(setSessionReceiptMessages(planned(1).slice(0, 1))).toEqual([ids[0]]);
     const longer = setSessionReceiptMessages([...planned(2), 'One line more.']);
-    expect(longer).toEqual([...ids, ids[1] + 1]);
+    expect(longer).toEqual([...ids, required(ids[1], 'second planned id') + 1]);
     expect(chunkAt(arrival)).toEqual(line);
   });
 
@@ -89,11 +88,11 @@ describe('a received item\'s receipt line', () => {
     const taken = Array.from({ length: ARRIVAL_SLOTS }, (_, i) => appendSessionReceiptMessage(`Item ${i}.`) as number);
     expect(new Set(taken).size).toBe(ARRIVAL_SLOTS);
     expect(appendSessionReceiptMessage('One too many.')).toBeNull();
-    releaseSessionReceiptMessage(taken[5]);
+    releaseSessionReceiptMessage(required(taken[5], 'sixth arrival id'));
     expect(appendSessionReceiptMessage('The next one.')).toBe(taken[5]);
     for (let i = 0; i < 100; i += 1) {
       const id = appendSessionReceiptMessage(`Round ${i}.`);
-      if (id === null) releaseSessionReceiptMessage(taken[i % ARRIVAL_SLOTS]);
+      if (id === null) releaseSessionReceiptMessage(required(taken[i % ARRIVAL_SLOTS], 'taken arrival id'));
       else releaseSessionReceiptMessage(id);
     }
     expect(chunks().length).toBe(size);
@@ -114,7 +113,8 @@ describe('a server delivery', () => {
     const granted: string[] = [];
     expect(deliverServerItem('Hookshot', 'Zelda', () => granted.push('Hookshot'))).toBe('delivered');
     expect(deliverServerItem('Lamp', 'Zelda', () => granted.push('Lamp'))).toBe('delivered');
-    const [first, second] = queue.entries;
+    const first = required(queue.entries[0], 'first queued delivery');
+    const second = required(queue.entries[1], 'second queued delivery');
     expect(granted).toEqual([]);
     const firstId = first.messageOf();
     expect(first.messageOf()).toBe(firstId);
@@ -133,7 +133,7 @@ describe('a server delivery', () => {
   it('gives an item the server itself sent the server line, not a player line', () => {
     setSessionReceiptMessages(planned(0));
     expect(deliverServerItem('Lamp', null, () => undefined)).toBe('delivered');
-    const sent = chunkAt(queue.entries[0].messageOf() as number);
+    const sent = chunkAt(required(queue.entries[0], 'queued delivery').messageOf() as number);
     const serverLine = chunkAt(appendSessionReceiptMessage(renderFromServer('Lamp')) as number);
     const playerLine = chunkAt(appendSessionReceiptMessage(renderOnline('Server', 'Lamp')) as number);
     expect(sent).toEqual(serverLine);

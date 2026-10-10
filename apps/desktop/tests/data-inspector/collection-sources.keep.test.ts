@@ -1,10 +1,11 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
 import { ENTITY_KINDS } from '@app/views/DataInspector/DataInspector.constants';
 import { resolveIdRef } from '@app/views/DataInspector/behavior/id-ref-target';
 import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
+import { required } from '../required';
 
 describeDataset('collection sources', () => {
   it('adapts every collection, with real rows behind each one', () => {
@@ -32,14 +33,14 @@ describeDataset('collection sources', () => {
   it('emits source text for every collection that has a serializer, and the record is in it', () => {
     for (const kind of ENTITY_KINDS) {
       const source = COLLECTION_SOURCES[kind];
-      const first = source.rows[0];
+      const first = required(source.rows[0], `a ${kind} row`);
       const code = source.serialize?.(first);
       expect(code, kind).toBeDefined();
       expect(code).toContain(source.getId(first));
     }
   });
 
-  it('names only paths the derived schema actually has in every default column set', () => {
+  it('names only paths the derived schema has in every default column set', () => {
     for (const kind of ENTITY_KINDS) {
       const source = COLLECTION_SOURCES[kind];
       const schema = createSchemaIndex(buildSchema(source.rows, source.config));
@@ -68,7 +69,7 @@ describeDataset('collection sources', () => {
 
 describeDataset('id reference resolution', () => {
   it('resolves the published target kind and a display name', () => {
-    const screen = COLLECTION_SOURCES.screen.rows[0];
+    const screen = required(COLLECTION_SOURCES.screen.rows[0], 'a screen row');
     const id = COLLECTION_SOURCES.screen.getId(screen);
     const target = resolveIdRef(id, 'screen');
     expect(target?.kind).toBe('screen');
@@ -77,12 +78,12 @@ describeDataset('id reference resolution', () => {
   });
 
   it('falls back to the id prefix when no target kind was published', () => {
-    const id = COLLECTION_SOURCES.item.getId(COLLECTION_SOURCES.item.rows[0]);
+    const id = COLLECTION_SOURCES.item.getId(required(COLLECTION_SOURCES.item.rows[0], 'an item row'));
     expect(resolveIdRef(id, undefined)?.kind).toBe('item');
   });
 
   it('ignores a target kind that names no collection', () => {
-    const id = COLLECTION_SOURCES.check.getId(COLLECTION_SOURCES.check.rows[0]);
+    const id = COLLECTION_SOURCES.check.getId(required(COLLECTION_SOURCES.check.rows[0], 'a check row'));
     expect(resolveIdRef(id, 'nonsense')?.kind).toBe('check');
   });
 
@@ -93,7 +94,7 @@ describeDataset('id reference resolution', () => {
   });
 
   it('trims a reference before resolving it', () => {
-    const id = COLLECTION_SOURCES.area.getId(COLLECTION_SOURCES.area.rows[0]);
+    const id = COLLECTION_SOURCES.area.getId(required(COLLECTION_SOURCES.area.rows[0], 'an area row'));
     expect(resolveIdRef(` ${id} `, undefined)?.id).toBe(id);
   });
 });

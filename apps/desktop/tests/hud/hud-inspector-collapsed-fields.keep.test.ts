@@ -3,20 +3,18 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { chromium, type Browser } from 'playwright';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'fs';
 import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import { KeyframeTrack } from '@app/views/HudLayoutEditor/sub-components/KeyframeTrack';
 import { PaintField } from '@app/views/HudLayoutEditor/sub-components/PaintField';
 import { Field, Select } from '@drizztdourden08/tessera/primitives';
+import { cssIn } from './files-in';
 import { REPO_ROOT } from '../repo-root';
+import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
 
 const ROOT = REPO_ROOT;
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
 const ED = `${ROOT}/apps/desktop/src/views/HudLayoutEditor/sub-components`;
-
-const cssIn = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? cssIn(join(dir, e.name)) : (e.name.endsWith('.css') ? [join(dir, e.name)] : [])));
 
 const SHEETS = [
   ...cssIn(`${DS}/tokens`).filter((f) => !f.endsWith('index.css')),
@@ -24,6 +22,7 @@ const SHEETS = [
   `${ROOT}/apps/desktop/src/theme.css`,
   ...cssIn(`${DS}/primitives`),
   ...cssIn(`${DS}/composites`),
+  ...EDITOR_THEME_SHEETS,
   ...cssIn(ED),
 ];
 
@@ -76,7 +75,7 @@ interface Measured { case: string; field: string; content: number; overflow: num
 
 const probe = (): Measured[] => {
   const px = (el: Element, side: string): number =>
-    parseFloat((getComputedStyle(el) as unknown as Record<string, string>)[side]) || 0;
+    parseFloat(getComputedStyle(el).getPropertyValue(side)) || 0;
   const out: Measured[] = [];
   for (const sec of Array.from(document.querySelectorAll('[data-case]'))) {
     const rail = sec.getBoundingClientRect();
@@ -86,8 +85,8 @@ const probe = (): Measured[] => {
       out.push({
         case: (sec as HTMLElement).dataset.case ?? '?',
         field: f.getAttribute('aria-label') ?? f.className,
-        content: Math.round((box.width - px(f, 'paddingLeft') - px(f, 'paddingRight')
-          - px(f, 'borderLeftWidth') - px(f, 'borderRightWidth')) * 10) / 10,
+        content: Math.round((box.width - px(f, 'padding-left') - px(f, 'padding-right')
+          - px(f, 'border-left-width') - px(f, 'border-right-width')) * 10) / 10,
         overflow: Math.max(0, Math.round(wrap.getBoundingClientRect().right - rail.right)),
       });
     }
@@ -96,7 +95,7 @@ const probe = (): Measured[] => {
 };
 
 const measured: Record<number, Measured[]> = {};
-let browser: Browser;
+let browser: Browser | undefined;
 
 const find = (rail: number, field: string): Measured => {
   const hit = measured[rail]?.find((m) => m.field === field);
@@ -105,8 +104,9 @@ const find = (rail: number, field: string): Measured => {
 };
 
 beforeAll(async () => {
-  browser = await chromium.launch();
-  const page = await browser.newPage();
+  const launched = await chromium.launch();
+  browser = launched;
+  const page = await launched.newPage();
   for (const rail of [289, 232, 188]) {
     await page.setContent(document_(rail));
     measured[rail] = await page.evaluate(probe);

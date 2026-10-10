@@ -29,7 +29,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
   }, [romsWithAssets]);
 
   const spritesAvailable = useSpriteAvailabilityStore((s) => s.available);
-  useEffect(() => { refreshExtracted(); }, [refreshExtracted, spritesAvailable]);
+  useEffect(() => { void refreshExtracted(); }, [refreshExtracted, spritesAvailable]);
 
   const importedRoms = useMemo(
     () => romsWithAssets.filter(r => extractedMap[r.romFile]?.extracted),
@@ -50,7 +50,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
   useEffect(() => {
     if (!selectedRom) { setSpriteBaseUrl(''); return; }
     let cancelled = false;
-    spritesStore.getSpritesBaseUrl(selectedRom).then((u) => { if (!cancelled) setSpriteBaseUrl(u); });
+    void spritesStore.getSpritesBaseUrl(selectedRom).then((u) => { if (!cancelled) setSpriteBaseUrl(u); });
     return () => { cancelled = true; };
   }, [selectedRom]);
 
@@ -123,7 +123,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
             onClick={() => setSelectedRom(r.romFile)}
             meta={`${extractedMap[r.romFile]?.count ?? 0} sprite images`}
             action={
-              <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); handleDelete(r.romFile); }}>
+              <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); void handleDelete(r.romFile); }}>
                 ✕
               </IconButton>
             }

@@ -6,6 +6,7 @@ import { all } from '@rotp/game-data';
 import { RECORD_CREATORS } from '@app/views/DataInspector/behavior/record-creators';
 import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
 import { resolveIdRefOptionsFor } from '@app/views/DataInspector/behavior/id-ref-options';
+import { required } from '../required';
 
 const stubApi = () => ({
   allocateTag: vi.fn(),
@@ -27,11 +28,12 @@ afterEach(() => {
 });
 
 describe('createTagRecord', () => {
-  const creator = RECORD_CREATORS.tag!;
+  const creator = required(RECORD_CREATORS.tag, 'the tag creator');
 
   it('refuses a namespace/value pair that would not read namespace:value', async () => {
     const result = await creator({ namespace: '', value: 'outdoor', appliesTo: ['screen'] });
-    expect(result).toEqual({ success: false, error: expect.stringContaining('namespace:value') });
+    const namespaceError: unknown = expect.stringContaining('namespace:value');
+    expect(result).toEqual({ success: false, error: namespaceError });
     expect(api.allocateTag).not.toHaveBeenCalled();
   });
 
@@ -64,7 +66,7 @@ describe('createTagRecord', () => {
 });
 
 describe('createItemGroupRecord', () => {
-  const creator = RECORD_CREATORS['item-group']!;
+  const creator = required(RECORD_CREATORS['item-group'], 'the item group creator');
 
   it('mints a group and folds it into the registry', async () => {
     const record = { id: 'ig-900', label: 'Bottles', memberIds: ['item-001'] };
@@ -81,7 +83,7 @@ describe('createItemGroupRecord', () => {
 });
 
 describe('a record-facade collection (check)', () => {
-  const creator = RECORD_CREATORS.check!;
+  const creator = required(RECORD_CREATORS.check, 'the check creator');
 
   it('sends the whole draft as the record and folds the allocated result back in', async () => {
     const record = { id: 'check-900', gameId: {}, kind: 'event', name: 'A brand-new check', vanillaItemIds: [] };

@@ -45,7 +45,7 @@ const GameStatePanel = (props: GameStatePanelProps) => {
                 return (
                   <DescRow label="Viewport" desc="Camera viewport of this room (width × height in screens). Based on the room's quadrant allocation + fullsize flags. 'open' = no internal camera scroll boundaries. 'scroll' = camera scrolls between quadrants.">
                     <Text className="nav-val-info">{effectiveShape}</Text>
-                    <Text style={{ color: hasScrollBoundaries ? '#f84' : 'var(--c-secondary)' }} className="nav-game-state-panel__part-1">{hasScrollBoundaries ? 'scroll' : 'open'}</Text>
+                    <Text className={hasScrollBoundaries ? 'nav-game-state-panel__scroll-tag nav-game-state-panel__scroll-tag--scroll' : 'nav-game-state-panel__scroll-tag nav-val-green'}>{hasScrollBoundaries ? 'scroll' : 'open'}</Text>
                     <Text className="nav-val-badge">raw={roomLayoutInfo.shape} idx={roomLayoutInfo.layout}</Text>
                   </DescRow>
                 );
@@ -77,7 +77,7 @@ const GameStatePanel = (props: GameStatePanelProps) => {
                 <Text>0x{overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')} (R{(overworldScreenIndex >> 3) & 7} C{overworldScreenIndex & 7})</Text>
               </DescRow>
               <DescRow label="World" desc="Light World or Dark World. The two 8×8 overworld grids occupy the same coordinate space but are separate maps.">
-                <Text style={{ color: isDarkWorld ? '#c8a' : 'var(--c-secondary)' }}>{isDarkWorld ? 'Dark World' : 'Light World'}</Text>
+                <Text className={isDarkWorld ? 'nav-game-state-panel__dark-world' : 'nav-val-green'}>{isDarkWorld ? 'Dark World' : 'Light World'}</Text>
               </DescRow>
             </>
           )}

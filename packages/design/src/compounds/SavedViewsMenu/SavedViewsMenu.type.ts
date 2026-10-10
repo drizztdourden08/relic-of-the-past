@@ -1,5 +1,5 @@
 /* @layer site-kit @kind types */
-import type { SavedViewsState } from '../../hooks/useSavedViews/useSavedViews.type';
+import type { SavedViewsState } from '../../hooks/useSavedViews/saved-views.type';
 
 type SavedViewsMenuProps = {
   state: SavedViewsState;

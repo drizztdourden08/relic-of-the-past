@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { DEFAULT_FPS, MAX_FPS, MIN_FPS } from './useAnimationClock.constants';
+import { DEFAULT_FPS, MAX_FPS, MIN_FPS } from './animation-clock.constants';
 
 const useAnimationClock = (initialFps: number = DEFAULT_FPS) => {
   const [tick, setTick] = useState(0);

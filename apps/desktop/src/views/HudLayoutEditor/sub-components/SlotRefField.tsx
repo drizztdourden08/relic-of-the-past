@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-import './HudLayoutEditor.content.css';
 import { useRef, useState } from 'react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { glyphArtUrl } from '@app/hud-layout-editing/glyph-art';

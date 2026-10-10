@@ -13,7 +13,7 @@ import type { EntityKind, ScreenRecord } from '@rotp/game-data';
 import { DEFAULT_KIND, NO_RECORDS_MESSAGE, SPAWNS_PATH } from './LiveDataInspector.constants';
 import type { LiveRecord } from './LiveDataInspector.type';
 import { useComparison } from './behavior/useComparison';
-import { useCurrentRecords } from './behavior/use-current-records';
+import { useCurrentRecords } from './behavior/useCurrentRecords';
 import { useDetectionPass } from './behavior/useDetectionPass';
 import { useLiveContext } from './behavior/useLiveContext';
 import { CollectionTabs } from './sub-components/CollectionTabs';

@@ -53,7 +53,7 @@ afterEach(() => {
 const pointer = (type: string, x: number, y: number): MouseEvent =>
   new MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y });
 
-const boxes = (): HTMLElement[] => Array.from(document.querySelectorAll('.hud-stage__pick')) as HTMLElement[];
+const boxes = (): HTMLElement[] => Array.from(document.querySelectorAll('.hud-stage__pick'));
 
 const boxFor = (id: string): HTMLElement => {
   const index = NODES.findIndex((node) => node.id === id);

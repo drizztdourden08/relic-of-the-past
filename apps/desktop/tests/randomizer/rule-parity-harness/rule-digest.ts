@@ -25,7 +25,7 @@ const ruleDigest = (over: Record<string, OptionValue>, states: number, actRecord
     for (const char of bits) if (char === '1') trues += 1;
     hash.update(bits);
   }
-  const names = [...locations.map(([key]) => key as LocationKey), ...exits.map(([name]) => name)].join('|');
+  const names = [...locations.map(([key]) => key), ...exits.map(([name]) => name)].join('|');
   hash.update(names);
   return { digest: hash.digest('hex').slice(0, DIGEST_LENGTH), trues };
 };

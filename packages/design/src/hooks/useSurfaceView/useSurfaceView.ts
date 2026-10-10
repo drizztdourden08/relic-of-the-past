@@ -4,7 +4,7 @@ import { useViewState, capture } from '@drizztdourden08/tessera/data';
 import type { SchemaLike, FilterClause } from '@drizztdourden08/tessera/data';
 import type { SiteViews } from '../../saved-views/create-view-storage.type';
 import { useSavedViews } from '../useSavedViews/useSavedViews';
-import { NO_COLUMNS, QUERY_HALF_TABLE } from './useSurfaceView.constants';
+import { NO_COLUMNS, QUERY_HALF_TABLE } from './surface-view.constants';
 
 const useSurfaceView = (views: SiteViews, surface: string, schema: SchemaLike) => {
   const { keys, storage } = views;

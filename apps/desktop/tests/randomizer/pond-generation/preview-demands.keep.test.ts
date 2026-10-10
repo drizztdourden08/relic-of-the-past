@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { generatePlacement, pondDemandsOfSnapshot, POND_PRIZE_LOCATIONS } from '@rotp/randomizer';
 import { DELIVERABLE, EMPTY, MIXED_ASK, SEEDS } from './pond-generation.constants';
 import { snapshotOf } from './snapshot-of';
+import { required } from '../../required';
 
 describe('pond demands come from the seed, so a preview cannot lie', () => {
   const snapshot = snapshotOf(MIXED_ASK);
@@ -20,7 +21,7 @@ describe('pond demands come from the seed, so a preview cannot lie', () => {
   }, 60_000);
 
   it('an attempt seed never reaches the roll', () => {
-    const seed = previewSeeds[0];
+    const seed = required(previewSeeds[0], 'first preview seed');
     const settled = pondDemandsOfSnapshot(snapshot, seed, { capacity: DELIVERABLE });
     expect(pondDemandsOfSnapshot(snapshot, `${seed}#retry1`, { capacity: DELIVERABLE })).not.toEqual(settled);
     expect(Object.keys(settled)).toEqual(POND_PRIZE_LOCATIONS.slice(0, 6));

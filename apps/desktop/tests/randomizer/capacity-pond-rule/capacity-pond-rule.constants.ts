@@ -2,12 +2,14 @@
 import { DEFAULT_ITEM_POWER, defaultProgressiveSetting, defaultShopScope } from '@rotp/randomizer';
 import type { CapacityPondAuthority, PondMode } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
+import { NEUTRAL_CHOICES } from '../neutral-choices';
 
 const POND_MODES: readonly PondMode[] = ['capacity', 'vanilla-cost', 'custom'];
 const FAMILY_MODES = ['vanilla', 'vanilla-in-pool', 'custom'] as const;
 const AUTHORITIES: readonly CapacityPondAuthority[] = ['pond', 'capacity', 'explosives', 'projectiles', 'meter', 'wallet'];
 
 const BASE_CHOICES: Omit<RandomizerOptionChoices, 'capacityEnabled' | 'capacity' | 'pond' | 'retroBow'> = {
+  ...NEUTRAL_CHOICES,
   keyDropShuffle: true,
   includeNpcChecks: false,
   includeWorldItems: false,

@@ -1,10 +1,10 @@
 /* @layer test @kind test */
-import { describe, it, expect, afterEach } from 'vitest';
+import { it, expect, afterEach } from 'vitest';
 import { all, getConnection, registerRecord, unregisterRecord } from '@rotp/game-data';
 import type { ConnectionId, ConnectionRecord, ScreenId } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy } from '@rotp/navigation';
-import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection.strategy';
+import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection-strategy';
 import { onUnresolvableConnection } from '@app/nav-widget/recommendations/strategies/connection/unresolvable-screen';
 import { describeDataset } from '../../dataset-guard';
 
@@ -39,15 +39,15 @@ afterEach(() => {
 const fixtureConn = (overrides: Partial<ConnectionRecord> & {
   toScreenId?: ScreenId; partnerCanExit?: boolean;
 } = {}): ConnectionRecord => {
-  const { toScreenId = 'screen-b' as ScreenId, partnerCanExit, ...rest } = overrides;
+  const { toScreenId = 'screen-b', partnerCanExit, ...rest } = overrides;
   const n = fixtureCount++;
-  const id = (rest.id as ConnectionId) ?? (`connection-fixture-${n}` as ConnectionId);
+  const id = rest.id ?? `connection-fixture-${n}`;
   const partnerId = `connection-fixture-partner-${n}` as ConnectionId;
   const canExit = rest.canExit ?? true;
   const conn: ConnectionRecord = {
     id,
     kind: 'stairs',
-    screenId: 'screen-a' as ScreenId,
+    screenId: 'screen-a',
     toConnectionId: partnerId,
     placement: EMPTY_PLACEMENT,
     canExit,
@@ -72,7 +72,7 @@ const fixtureConn = (overrides: Partial<ConnectionRecord> & {
 describeDataset('connection strategy REMOVE side (SetProbe) against the real dataset', () => {
   it('proposes a delete for a non-edge record no real transition backs', () => {
     const conn = fixtureConn({ kind: 'stairs' });
-    const context = contextFor('screen-a' as ScreenId, {
+    const context = contextFor('screen-a', {
       existingConnections: [conn],
       realTransitions: [{ source: 'stair', kind: 'room', index: 0x999 }],
     });
@@ -83,14 +83,14 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
 
   it('never proposes removing an OUTDOOR edge, because the flood cannot prove an absence', () => {
     const conn = fixtureConn({ kind: 'edge' });
-    const context = contextFor('screen-a' as ScreenId, { isIndoors: false, existingConnections: [conn] });
+    const context = contextFor('screen-a', { isIndoors: false, existingConnections: [conn] });
     const drafts = detector.detect(context);
     expect(drafts.some(d => d.targetId === conn.id)).toBe(false);
   });
 
   it('never proposes removing an indoor edge unless BOTH boundary tables were read (F3)', () => {
     const conn = fixtureConn({ kind: 'edge' });
-    const partiallyRead = contextFor('screen-a' as ScreenId, {
+    const partiallyRead = contextFor('screen-a', {
       isIndoors: true, existingConnections: [conn], walkBoundaries: [],
     });
     expect(detector.detect(partiallyRead).some(d => d.targetId === conn.id)).toBe(false);
@@ -98,7 +98,7 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
 
   it('proposes removing an indoor edge once both boundary tables are read and back nothing', () => {
     const conn = fixtureConn({ kind: 'edge' });
-    const context = contextFor('screen-a' as ScreenId, {
+    const context = contextFor('screen-a', {
       isIndoors: true, existingConnections: [conn], walkBoundaries: [], doorBoundaries: [],
     });
     const drafts = detector.detect(context);
@@ -106,9 +106,9 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
   });
 
   it('judges a one-way record only from the screen that can observe it (F4)', () => {
-    const conn = fixtureConn({ kind: 'stairs', canExit: true, toScreenId: 'screen-b' as ScreenId, partnerCanExit: false });
+    const conn = fixtureConn({ kind: 'stairs', canExit: true, toScreenId: 'screen-b', partnerCanExit: false });
     const partner = getConnection(conn.toConnectionId);
-    const fromTargetSide = contextFor('screen-b' as ScreenId, { existingConnections: [partner] });
+    const fromTargetSide = contextFor('screen-b', { existingConnections: [partner] });
     expect(detector.detect(fromTargetSide).some(d => d.targetId === partner.id)).toBe(false);
   });
 

@@ -3,7 +3,7 @@ import type { CombatTables } from '@rotp/navigation';
 import { ANCILLA_COUNT, BLOCKING_ATTR } from './enemy-reach.constants';
 
 const makeTables = (overrides: Partial<CombatTables> = {}): CombatTables => ({
-  ancillaDamageClass: new Array(ANCILLA_COUNT).fill(0),
+  ancillaDamageClass: new Array<number>(ANCILLA_COUNT).fill(0),
   projectileTileCollision: (() => {
     const table = new Array<number>(256).fill(0);
     table[BLOCKING_ATTR] = 1;

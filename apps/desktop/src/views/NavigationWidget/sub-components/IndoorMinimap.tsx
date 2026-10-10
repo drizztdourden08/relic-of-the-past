@@ -13,6 +13,7 @@ import { AnnotationLayer } from './AnnotationLayer';
 import { EdgeBadge } from './EdgeBadge';
 import { groupByEdge } from '../behavior/group-by-edge';
 import { positionSpan } from '../behavior/position-span';
+import { markerTone } from '../behavior/marker-tone';
 import type { MinimapProps } from './IndoorMinimap.type';
 import './IndoorMinimap.css';
 
@@ -90,8 +91,8 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
   });
 
   return (
-    <Box style={{ maxWidth: totalW, height: totalH }} className="nav-indoor-minimap__part-6">
-      <Box style={{ left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, border: `${borderW}px solid var(--c-secondary-soft)` }} className="nav-indoor-minimap__part-5">
+    <Box style={{ maxWidth: totalW, height: totalH }} className="nav-indoor-minimap__root">
+      <Box style={{ left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, border: `${borderW}px solid var(--c-secondary-soft)` }} className="nav-indoor-minimap__map-frame">
         {primaryResult && <ReachabilityCanvas reachable={primaryResult.reachable} size={mapW} tileLayer={primaryResult.tileLayer} bounds={{ minRow: 0, maxRow: 63, minCol: 0, maxCol: 63 }} />}
         {primaryResult && (
           <Box className="nav-indoor-minimap__count-label">
@@ -104,10 +105,10 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
         const x = mapLeft + ((crossing.tile.col + 0.5) / 64) * mapW;
         const y = mapTop + ((crossing.tile.row + 0.5) / 64) * mapH;
         const sz = Math.max(6, mapW * 4 / 64);
-        const { icon: markerIcon, color: markerColor } = crossingIcon(crossing);
+        const { icon: markerIcon } = crossingIcon(crossing);
         return (
-          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: x - sz / 2, top: y - sz / 2, width: sz, height: sz }} title={crossing.label} className="nav-indoor-minimap__part-4">
-            <Icon icon={markerIcon} width={sz} height={sz} style={{ color: markerColor, filter: 'drop-shadow(0 0 1px #000)' }} />
+          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: x - sz / 2, top: y - sz / 2, width: sz, height: sz }} title={crossing.label} className="nav-indoor-minimap__marker">
+            <Icon icon={markerIcon} width={sz} height={sz} className="nav-marker-icon nav-marker-icon--shadowed" data-tone={markerTone(crossing)} />
           </Box>
         );
       }))}
@@ -117,14 +118,14 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
         const y = mapTop + ((crossing.tile.row + 0.5) / 64) * mapH;
         const sz = Math.max(6, mapW * 4 / 64);
         return (
-          <Box key={`fh-${screen.screenIndex}-${crossing.id}`} style={{ left: x - sz / 2, top: y - sz / 2, width: sz, height: sz }} className="nav-indoor-minimap__part-3" />
+          <Box key={`fh-${screen.screenIndex}-${crossing.id}`} style={{ left: x - sz / 2, top: y - sz / 2, width: sz, height: sz }} className="nav-indoor-minimap__fall-hole" />
         );
       }))}
 
       {playerPos && bundle.screens.includes(playerPos.screen) && (() => {
         const x = mapLeft + ((playerPos.col + 0.5) / 64) * mapW;
         const y = mapTop + ((playerPos.row + 0.5) / 64) * mapH;
-        return <Box style={{ left: x - 3, top: y - 3 }} className="nav-indoor-minimap__part-2" />;
+        return <Box style={{ left: x - 3, top: y - 3 }} className="nav-indoor-minimap__player-dot" />;
       })()}
 
       <AnnotationLayer annotations={annotations.find(a => a.screenIndex === roomIndex) ?? null} cellLeft={mapLeft} cellTop={mapTop} cellW={mapW} cellH={mapH} />
@@ -135,7 +136,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
       {renderVertEdge(byEdge.east, 'e', mapDivLeft + mapW + borderW)}
 
       {boundaryTiles.map((pt, i) => (
-        <Box key={`scroll-boundary-${i}`} style={{ left: pt.x - 1.5, top: pt.y - 1.5, background: pt.color }} className="nav-indoor-minimap__part-1" />
+        <Box key={`scroll-boundary-${i}`} style={{ left: pt.x - 1.5, top: pt.y - 1.5, background: pt.color }} className="nav-indoor-minimap__boundary-dot" />
       ))}
     </Box>
   );

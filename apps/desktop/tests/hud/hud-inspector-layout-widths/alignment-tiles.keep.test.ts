@@ -1,14 +1,15 @@
 /* @layer tests @kind test */
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { measureLayout } from './measure-layout';
 import type { LayoutRig } from './layout-widths.type';
 
 const RAILS = [289, 232, 188];
 let rig: LayoutRig;
 
-beforeAll(async () => { rig = await measureLayout(RAILS); }, 60_000);
-
-afterAll(async () => { await rig?.close(); });
+beforeAll(async () => {
+  rig = await measureLayout(RAILS);
+  return () => rig.close();
+}, 60_000);
 
 describe('the alignment tiles, at the widths that broke the two rounds before', () => {
   const ALIGN_CASES = ['alignGrid', 'alignFlexRow', 'alignFlexColumn'];

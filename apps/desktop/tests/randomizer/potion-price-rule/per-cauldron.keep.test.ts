@@ -2,13 +2,14 @@
 import { describe, expect, it } from 'vitest';
 import { POTION_CAULDRONS, potionPriceStateOfValues, bottleContentKeyOf } from '@rotp/randomizer';
 import { bottleContentRowsOf } from '@app/compounds/ShopPricesBlock/behavior/bottle-content-rows';
+import { required } from '../../required';
 import { ALL_PRICES } from './potion-price-rule.constants';
 import { scopeWith } from './scope-with';
 import { valuesOf } from './values-of';
 
 describe('each cauldron answers for its own content alone', () => {
   const contentOf = (canonicalIndex: number) =>
-    POTION_CAULDRONS.find((row) => row.canonicalIndex === canonicalIndex)!.content;
+    required(POTION_CAULDRONS.find((row) => row.canonicalIndex === canonicalIndex), `cauldron ${canonicalIndex}`).content;
 
   it('blocks exactly the one content whose cauldron is ticked', () => {
     for (const cauldron of POTION_CAULDRONS) {
@@ -29,8 +30,9 @@ describe('each cauldron answers for its own content alone', () => {
       const rows = bottleContentRowsOf(valuesOf({ scope, prices: ALL_PRICES }));
       const blocked = rows.filter((row) => row.blocked);
       expect(blocked.map((row) => row.content)).toEqual([cauldron.content]);
-      expect(blocked[0].note).toContain(cauldron.label);
-      expect(blocked[0].checked).toBe(false);
+      const first = required(blocked[0], 'blocked row');
+      expect(first.note).toContain(cauldron.label);
+      expect(first.checked).toBe(false);
       for (const row of rows.filter((candidate) => !candidate.blocked)) {
         expect(row.note, row.content).toBe('');
         expect(row.checked, row.content).toBe(true);
@@ -44,7 +46,7 @@ describe('each cauldron answers for its own content alone', () => {
         .filter((row) => row !== cauldron)
         .map((row) => row.canonicalIndex);
       const rows = bottleContentRowsOf(valuesOf({ scope: scopeWith(others, 'custom'), prices: ALL_PRICES }));
-      const own = rows.find((row) => row.content === cauldron.content)!;
+      const own = required(rows.find((row) => row.content === cauldron.content), `${cauldron.content} row`);
       expect(own.blocked, cauldron.content).toBe(false);
       expect(own.checked).toBe(true);
       expect(new Set(rows.filter((row) => row.blocked).map((row) => row.content)))
@@ -56,7 +58,7 @@ describe('each cauldron answers for its own content alone', () => {
     const everyCauldron = POTION_CAULDRONS.map((row) => row.canonicalIndex);
     const rows = bottleContentRowsOf(valuesOf({ scope: scopeWith(everyCauldron, 'custom'), prices: ALL_PRICES }));
     for (const content of ['fairy', 'bee'] as const) {
-      expect(rows.find((row) => row.content === content)!.blocked, content).toBe(false);
+      expect(required(rows.find((row) => row.content === content), `${content} row`).blocked, content).toBe(false);
     }
   });
 });

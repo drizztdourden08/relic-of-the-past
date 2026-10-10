@@ -8,7 +8,7 @@ import { processButtonFrame } from '../button-detection';
 import { observeFrame } from '../noisy-bytes';
 import { observeIdleFrame } from '../stick-center';
 import { applyVidPid } from '../apply-vid-pid';
-import type { CalibrationRefs, ReportSubscriptionCallbacks } from './useReportSubscription.type';
+import type { CalibrationRefs, ReportSubscriptionCallbacks } from './report-subscription.type';
 
 const useReportSubscription = (phase: Phase, deviceKey: string | undefined, refs: CalibrationRefs, cb: ReportSubscriptionCallbacks): void => {
   useEffect(() => {

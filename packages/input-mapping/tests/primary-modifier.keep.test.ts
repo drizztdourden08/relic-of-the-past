@@ -26,7 +26,7 @@ describe('isPrimaryModifier', () => {
     expect(isPrimaryModifier(held(false, false))).toBe(false);
   });
 
-  it('labels itself with the key that actually works', () => {
+  it('labels itself with the key that works', () => {
     expect(primaryModifierLabel('macos')).toBe('Cmd');
     expect(primaryModifierLabel('windows')).toBe('Ctrl');
     expect(primaryModifierLabel('unknown')).toBe('Ctrl');

@@ -52,6 +52,6 @@ describe('pond item demand', () => {
     ];
     expect(roll(bare)).toEqual({});
     const withBombs = roll(bare, { ...ITEM_ONLY, bombs: { enabled: true, min: 1, max: 5 } });
-    expect(Object.values(withBombs).map((demand) => demand.currency)).toEqual(plan.locations.map(() => 'bombs'));
+    expect(Object.values(withBombs).map((demand) => demand?.currency)).toEqual(plan.locations.map(() => 'bombs'));
   });
 });

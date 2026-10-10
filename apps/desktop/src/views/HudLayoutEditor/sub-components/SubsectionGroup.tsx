@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { Box, Checkbox, IconButton, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import './HudLayoutEditor.appearance.css';
 import type { SubsectionGroupProps } from './SubsectionGroup.type';
 
 const SubsectionGroup = (props: SubsectionGroupProps) => {

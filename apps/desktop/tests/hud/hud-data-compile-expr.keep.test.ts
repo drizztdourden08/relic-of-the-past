@@ -18,7 +18,7 @@ describe('compileExpr - the worked examples, corrected dialect and all', () => {
   });
 });
 
-describe('compileExpr - disabled operators really are rejected', () => {
+describe('compileExpr - disabled operators are rejected', () => {
   it('refuses assignment', () => {
     expect(compileExpr(expressions.invalid.assignment).ok).toBe(false);
   });

@@ -7,7 +7,7 @@ import {
   InstructionsPanel, LiveParserOutput, PrereqCards, StickTriggerSection,
   ButtonMapping, ByteGrid, CalibrationLog, FlakyByteWarningDialog, WizardHeaderActions,
 } from './hid-calibration/components';
-import { RawAvailabilityNotice } from './hid-calibration/diagnostics/components';
+import { RawAvailabilityNotice } from './hid-calibration/components/RawAvailabilityNotice';
 import type { HidCalibrationWizardProps, HidWizardHandle } from './HidCalibrationWizard.type';
 
 const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardProps>((props, ref) => {

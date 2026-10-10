@@ -3,6 +3,9 @@ import { describe, it, expect } from 'vitest';
 import { changedPaths, linesForPaths } from '@rotp/navigation';
 import { serializeConnectionRecord } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
+import { required } from '../../required';
+
+const firstLine = (lines: readonly number[]): number => required(lines[0], 'the first mapped line');
 
 const base = (): ConnectionRecord => ({
   id: 'connection-001',
@@ -81,17 +84,17 @@ describe('linesForPaths', () => {
   const source = serializeConnectionRecord(base());
 
   it('maps a top-level field to the line it is written on', () => {
-    const [line] = linesForPaths(source, ['canExit']);
+    const line = firstLine(linesForPaths(source, ['canExit']));
     expect(source.split('\n')[line - 1]).toContain('canExit');
   });
 
   it('maps a nested path to the line holding that leaf', () => {
-    const [line] = linesForPaths(source, ['placement.rect.w']);
+    const line = firstLine(linesForPaths(source, ['placement.rect.w']));
     expect(source.split('\n')[line - 1]).toContain('w');
   });
 
   it('falls back to the nearest declared ancestor for a path the source lacks', () => {
-    const [line] = linesForPaths(source, ['placement.rect.zzz']);
+    const line = firstLine(linesForPaths(source, ['placement.rect.zzz']));
     expect(source.split('\n')[line - 1]).toContain('rect');
   });
 
@@ -103,13 +106,13 @@ describe('linesForPaths', () => {
 
   it('reads plain JSON and the record emitter output', () => {
     const json = JSON.stringify(base(), null, 2);
-    const [line] = linesForPaths(json, ['placement.rect.w']);
+    const line = firstLine(linesForPaths(json, ['placement.rect.w']));
     expect(json.split('\n')[line - 1]).toContain('"w"');
   });
 
   it('does not mistake a brace inside a string for a container', () => {
     const json = JSON.stringify({ name: 'a { b } c', canExit: true }, null, 2);
-    const [line] = linesForPaths(json, ['canExit']);
+    const line = firstLine(linesForPaths(json, ['canExit']));
     expect(json.split('\n')[line - 1]).toContain('"canExit"');
   });
 });

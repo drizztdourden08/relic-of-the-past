@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all } from '@rotp/game-data';
 import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
 import {
@@ -10,6 +10,7 @@ import { resolveIdRef } from '@app/views/DataInspector/behavior/id-ref-target';
 import { buildSchema } from '@drizztdourden08/tessera/data';
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
+import { required } from '../required';
 
 const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   const field = buildSchema(rows).find(entry => entry.path === path);
@@ -29,7 +30,7 @@ describeDataset('tags are a collection of their own', () => {
     const source = COLLECTION_SOURCES.tag;
     expect(source.rows.length).toBe(all('tag').length);
     expect(source.rows.length).toBeGreaterThan(0);
-    expect(source.serialize?.(source.rows[0])).toContain("id: 'tag-001'");
+    expect(source.serialize?.(required(source.rows[0], 'the first tag row'))).toContain("id: 'tag-001'");
   });
 
   it('derives the hierarchy as fields, so the collection can be searched by it', () => {

@@ -8,6 +8,7 @@ import {
 } from '@app/views/DataInspector/behavior/recommendations/recommendation-source';
 import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import type { Recommendation } from '@rotp/navigation';
+import { required } from '../required';
 
 const entry = (over: Partial<Recommendation> = {}): Recommendation => ({
   id: 'r1',
@@ -30,7 +31,7 @@ const entry = (over: Partial<Recommendation> = {}): Recommendation => ({
 
 describe('recommendationRows builds one flat, kind-agnostic table', () => {
   it('carries exactly the columns every finding can answer, whatever its collection', () => {
-    const [row] = recommendationRows([entry()]);
+    const row = required(recommendationRows([entry()])[0], 'the one row');
     expect(Object.keys(row).sort()).toEqual(
       ['action', 'confidence', 'firstSeenAt', 'id', 'kind', 'reason', 'screenId', 'targetId'],
     );
@@ -41,11 +42,14 @@ describe('recommendationRows builds one flat, kind-agnostic table', () => {
       entry({ id: 'a', kind: 'screen', targetId: 'screen-001' }),
       entry({ id: 'b', kind: 'item', targetId: 'item-004' }),
     ]);
-    expect(Object.keys(rows[0])).toEqual(Object.keys(rows[1]));
+    expect(Object.keys(required(rows[0], 'the screen row'))).toEqual(Object.keys(required(rows[1], 'the item row')));
   });
 
   it('keeps a create\'s missing target/screen as null, not a placeholder string', () => {
-    const [row] = recommendationRows([entry({ action: 'create', targetId: null, screenId: null })]);
+    const row = required(
+      recommendationRows([entry({ action: 'create', targetId: null, screenId: null })])[0],
+      'the create row',
+    );
     expect(row.targetId).toBeNull();
     expect(row.screenId).toBeNull();
   });
@@ -127,7 +131,7 @@ describe('the pseudo-collection source', () => {
 
   it('identifies a row by the finding id, and declares no write path', () => {
     const source = recommendationSource([entry({ id: 'r-42' })]);
-    expect(source.getId(source.rows[0])).toBe('r-42');
+    expect(source.getId(required(source.rows[0], 'the r-42 row'))).toBe('r-42');
     expect(source.onSave).toBeUndefined();
     expect(source.serialize).toBeUndefined();
   });

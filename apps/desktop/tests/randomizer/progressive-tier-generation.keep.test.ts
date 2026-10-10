@@ -8,7 +8,7 @@ const SEEDS = 30;
 const withUnticked = (...off: Array<[ProgressiveFamilyId, number]>): ProgressiveSetting => {
   const setting = defaultProgressiveSetting() as Record<ProgressiveFamilyId, boolean[]>;
   for (const [family, index] of off) setting[family][index] = false;
-  return setting as ProgressiveSetting;
+  return setting;
 };
 
 const snapshotOf = (setting: ProgressiveSetting) => buildOptionsSnapshot(progressiveValuesOf(setting));
@@ -63,7 +63,7 @@ describe('generation over representative tier tick sets', () => {
     }, 120_000);
   }
 
-  it('rolls beatable seeds with the ticks really biting, both scopes shuffled', () => {
+  it('rolls beatable seeds with the ticks biting, both scopes shuffled', () => {
     for (let index = 0; index < SEEDS; index += 1) {
       const placement = generatePlacement(
         `tier-scoped-${index}`, shuffledScopeSnapshot(NO_GOLD_SWORD), EVERY_SCOPE.npc, undefined, EVERY_SCOPE.world,

@@ -15,6 +15,19 @@ const isBetterLanding = (candidate: Landing, best: Landing | null): boolean => {
   return Math.abs(candidate.lateral) < Math.abs(best.lateral);
 };
 
+const landingAt = (
+  from: GridPos,
+  offset: readonly [number, number],
+  step: GridPos,
+  reachable: readonly ReachState[][] | undefined,
+): Landing | null => {
+  const [dr, dc] = offset;
+  if (dr === 0 && dc === 0) return null;
+  const tile = { row: from.row + dr, col: from.col + dc };
+  if (!inGrid(tile) || !isReached(reachable, tile.row, tile.col)) return null;
+  return { tile, inward: dr * step.row + dc * step.col, lateral: dr * step.col + dc * step.row };
+};
+
 const measuredLanding = (
   from: GridPos,
   side: DoorSide,
@@ -25,15 +38,8 @@ const measuredLanding = (
   let best: Landing | null = null;
   for (let dr = -radius; dr <= radius; dr++) {
     for (let dc = -radius; dc <= radius; dc++) {
-      if (dr === 0 && dc === 0) continue;
-      const tile = { row: from.row + dr, col: from.col + dc };
-      if (!inGrid(tile) || !isReached(reachable, tile.row, tile.col)) continue;
-      const candidate: Landing = {
-        tile,
-        inward: dr * step.row + dc * step.col,
-        lateral: dr * step.col + dc * step.row,
-      };
-      if (isBetterLanding(candidate, best)) best = candidate;
+      const candidate = landingAt(from, [dr, dc], step, reachable);
+      if (candidate && isBetterLanding(candidate, best)) best = candidate;
     }
   }
   return best?.tile ?? null;

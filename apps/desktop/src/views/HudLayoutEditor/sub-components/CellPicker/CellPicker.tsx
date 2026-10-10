@@ -3,7 +3,7 @@ import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import { useGridSolve } from '@app/hud-layout-editing/grid-solve';
 import { GridLattice, covers, occupantsOf, rowCountFor } from '../GridLattice';
-import { PointerCaps } from '../SelectionBands';
+import { PointerCaps } from '../SelectionLegend';
 import { useCellPick } from './behavior/useCellPick';
 import { CELL_PICK_KEYS } from './CellPicker.constants';
 import './CellPicker.css';

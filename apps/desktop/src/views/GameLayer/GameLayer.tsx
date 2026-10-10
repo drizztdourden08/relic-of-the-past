@@ -12,7 +12,7 @@ import { useProfileSwitcher } from './behavior/useProfileSwitcher';
 import { useCanvasDisplaySize } from './behavior/useCanvasDisplaySize';
 import { useCanvasBufferSize } from './behavior/useCanvasBufferSize';
 import { useControllerPause } from './behavior/useControllerPause';
-import { NavigationOverlay } from './sub-components/navigation-overlay';
+import { NavigationOverlay } from './sub-components/NavigationOverlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
 import { ShadowEditorPanel } from './sub-components/ShadowEditorPanel';
 import { ShadowElementList } from './sub-components/ShadowElementList';
@@ -53,7 +53,7 @@ const GameLayer = (props: GameLayerProps) => {
   useEffect(() => {
     if (assetData && status === 'idle' && canvasRef.current) {
       hasStartedRef.current = true;
-      start(canvasRef.current, assetData, configIni, profileId);
+      void start(canvasRef.current, assetData, configIni, profileId);
     }
   }, [assetData, status, start, configIni, profileId, canvasKey]);
 

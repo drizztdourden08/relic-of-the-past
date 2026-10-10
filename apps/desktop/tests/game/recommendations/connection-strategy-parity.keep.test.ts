@@ -1,5 +1,5 @@
 /* @layer test @kind test */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { all, connectionTagKeysOf, find, toScreenIdOf, toScreenIdOrNone } from '@rotp/game-data';
 import type { ConnectionRecord, ScreenId, ScreenRecord } from '@rotp/game-data';
 import type { ConnectionInfo } from '@rotp/game-core';
@@ -7,8 +7,9 @@ import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy } from '@rotp/navigation';
 import { CONNECTION_ISSUE, connectionIssues } from '@app/nav-widget/connection-issues';
 import { describeConnectionTiles, findFloodForTarget } from '@app/nav-widget/connection-tile-display';
-import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection.strategy';
+import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection-strategy';
 import { describeDataset } from '../../dataset-guard';
+import { required } from '../../required';
 
 const navDetector = detectorFromStrategy(connectionStrategy);
 
@@ -21,6 +22,7 @@ const contextFor = (
     match: null,
     liveGameId: null,
     isIndoors: false,
+    isDarkWorld: false,
     realTransitions: [],
     realAvailable: true,
     unmatchedCrossings: [],
@@ -59,7 +61,7 @@ const screenWithConnections = () => {
   for (const screen of all('screen')) {
     const connections = find('connection', c => c.screenId === screen.id);
     if (connections.length <= 1) continue;
-    if (!fallback) fallback = { screen, connections };
+    fallback ??= { screen, connections };
     if (floodBackedConnection(connections)) return { screen, connections };
   }
   if (!fallback) throw new Error('dataset has no screen with several outgoing connections');
@@ -117,7 +119,7 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
   });
 
   it('proposes no NAV fix for an unresolvable endpoint instead of inventing one', () => {
-    const broken: ConnectionRecord = { ...connections[0], toConnectionId: 'connection-999999' as ConnectionRecord['toConnectionId'] };
+    const broken: ConnectionRecord = { ...required(connections[0], 'the first connection'), toConnectionId: 'connection-999999' };
     expect(issuesFor(broken, [], screen.id).some(i => i.includes('unknown screen'))).toBe(true);
     expect(navDetector.detect(contextFor(screen.id, [broken])).filter(d => d.key === 'nav')).toEqual([]);
   });

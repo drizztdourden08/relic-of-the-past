@@ -51,7 +51,9 @@ describe('online recovery', () => {
     await settle();
     expect(core.disarms).toBe(disarmsAtStop + 1);
   });
+});
 
+describe('online recovery', () => {
   it('asks for the scouts again when a drop lost the answer, then delivers', async () => {
     const server = createFakeServer(makeRoom({ items: [item(100, 2, 900)] }));
     let swallowScout = true;
@@ -92,13 +94,17 @@ describe('online recovery', () => {
 });
 
 describe('the offline baseline', () => {
-  const plan = {
+  const plan: PhysicalPlan = {
     entries: [
       { location: 'check-019', item: 'item-bow', checkId: 'check-019', planClass: 'override-npc' },
       { location: 'check-001', item: 'item-bow', checkId: 'check-001', planClass: 'deliver' },
     ],
     errors: [],
-  } as unknown as PhysicalPlan;
+    counts: {
+      override: 0, overrideNpc: 0, overrideDrop: 0, overrideStanding: 0, overrideScripted: 0, overrideShop: 0,
+      deliver: 0, vanillaLocked: 0, pollBlind: 0, errors: 0,
+    },
+  };
   const completed = new Set(['check-019']);
   const input = {
     entries: baselineEntriesOf(plan),

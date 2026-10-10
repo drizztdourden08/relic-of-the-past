@@ -12,7 +12,7 @@ const notifySettingsParent = (patch: Partial<GameSettings>, next: GameSettings, 
   } = deps;
 
   if ('windowMode' in patch) onWindowModeChange?.(next.windowMode);
-  if ('startFullscreen' in patch) setFullscreen(!!next.startFullscreen);
+  if ('startFullscreen' in patch) setFullscreen(Boolean(next.startFullscreen));
   if ('viewportConstraint' in patch || 'aspectRatio' in patch) {
     onConstraintSettingsChange?.(next.viewportConstraint, next.aspectRatio);
   }

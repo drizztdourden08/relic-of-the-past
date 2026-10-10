@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Pressable } from '@drizztdourden08/tessera/primitives';
 import { SIDES } from './EdgesField.constants';
-import './HudLayoutEditor.appearance.css';
 import type { HudBorderSides } from '@rotp/hud';
 import type { BorderSide } from './EdgesField.type';
 import type { SidesFieldProps } from './SidesField.type';

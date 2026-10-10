@@ -7,6 +7,7 @@ import { describeDataset } from '../../dataset-guard';
 import { CASTLE_SCREEN, SEWERS_PALACE, SEWERS_ROOM, SEWERS_SCREEN } from './dungeon-ledger.constants';
 import { freshState } from './fresh-state';
 import { makeChest } from './make-chest';
+import { required } from '../../required';
 
 const baseObs = (flags: FlagSnapshot = emptySnapshot()): SimObservation => ({
   virtual: { screenId: SEWERS_SCREEN, tile: { row: 0, col: 0 } },
@@ -19,7 +20,7 @@ const baseObs = (flags: FlagSnapshot = emptySnapshot()): SimObservation => ({
 const bombableGrid = (): number[][] => [[0, 0], [0, BOMBABLE_ATTR_MIN]];
 
 const fakeTarget = (key: string, roomId: number): SimTarget => ({
-  screenId: SEWERS_SCREEN, roomId, key, label: key, noun: 'chest', verb: 'Opening',
+  screenId: SEWERS_SCREEN, roomId, key, role: 'check', label: key, noun: 'chest', verb: 'Opening',
   action: { type: 'chest', roomId, chestIndex: 0, itemId: 0 },
 });
 
@@ -48,7 +49,7 @@ describeDataset('updateDungeonLedger accumulates what is owed', () => {
 
     updateDungeonLedger(state, obs, []);
 
-    const ledger = state.ledgers.get(dungeonGroupOf(SEWERS_PALACE))!;
+    const ledger = required(state.ledgers.get(dungeonGroupOf(SEWERS_PALACE)), 'sewers ledger');
     expect(ledger.owed).toHaveLength(1);
     expect(ledger.owed[0]).toMatchObject({ checkId: chestKey(makeChest(0)), roomId: SEWERS_ROOM, blockedBy: 'bombs' });
   });
@@ -63,7 +64,7 @@ describeDataset('updateDungeonLedger accumulates what is owed', () => {
 
     updateDungeonLedger(state, obs, [fakeTarget(key, SEWERS_ROOM)]);
 
-    const ledger = state.ledgers.get(dungeonGroupOf(SEWERS_PALACE))!;
+    const ledger = required(state.ledgers.get(dungeonGroupOf(SEWERS_PALACE)), 'sewers ledger');
     expect(ledger.owed).toEqual([{ checkId: key, roomId: SEWERS_ROOM, blockedBy: undefined }]);
   });
 
@@ -72,11 +73,11 @@ describeDataset('updateDungeonLedger accumulates what is owed', () => {
     const obs = baseObs();
     obs.interactables = { chests: [makeChest(0)], sprites: [], doors: [] };
     updateDungeonLedger(state, obs, []);
-    expect(state.ledgers.get(dungeonGroupOf(SEWERS_PALACE))!.owed).toHaveLength(1);
+    expect(required(state.ledgers.get(dungeonGroupOf(SEWERS_PALACE)), 'sewers ledger').owed).toHaveLength(1);
 
     const openedObs = baseObs();
     openedObs.interactables = { chests: [makeChest(0, true)], sprites: [], doors: [] };
     updateDungeonLedger(state, openedObs, []);
-    expect(state.ledgers.get(dungeonGroupOf(SEWERS_PALACE))!.owed).toHaveLength(0);
+    expect(required(state.ledgers.get(dungeonGroupOf(SEWERS_PALACE)), 'sewers ledger').owed).toHaveLength(0);
   });
 });

@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 
 import { describe, it, expect } from 'vitest';
-import type { InputProfile } from '@rotp/input-mapping';
+import type { DeviceScopedMap, InputProfile } from '@rotp/input-mapping';
 import type { ButtonMapping, SnesButton } from '@rotp/game-data';
 import { SNES_BUTTON_BITS } from '@rotp/game-data';
 import { allowedDevices, computeBitmask, ANY_DEVICE } from '@rotp/input-mapping';
@@ -41,19 +41,22 @@ describe('allowedDevices', () => {
 
 describe('computeBitmask device gate', () => {
   const gamepadButtonMap = new Map([[ANY_DEVICE, new Map<number, SnesButton>([[0, 'A']])]]);
-  const empty = new Map();
+  const noKeys = new Map<string, boolean>();
+  const noKeyboardMap = new Map<string, SnesButton>();
+  const noButtonMap: DeviceScopedMap<number, SnesButton> = new Map();
+  const noAxisMap: DeviceScopedMap<string, SnesButton> = new Map();
 
   it('passes input from a device in the active profile map', () => {
     const allowed = { keyboard: false, gamepadKeys: new Set(['057e:2009']) };
     const hidStates = new Map([['057e:2009', { buttons: [true], axes: [] }]]);
-    const mask = computeBitmask(empty, empty, gamepadButtonMap, empty, hidStates, allowed);
+    const mask = computeBitmask(noKeys, noKeyboardMap, gamepadButtonMap, noAxisMap, hidStates, allowed);
     expect(mask).toBe(1 << SNES_BUTTON_BITS.A);
   });
 
   it('drops input from a connected device that is NOT in the map', () => {
     const allowed = { keyboard: false, gamepadKeys: new Set(['045e:02ff']) };
     const hidStates = new Map([['057e:2009', { buttons: [true], axes: [] }]]);
-    const mask = computeBitmask(empty, empty, gamepadButtonMap, empty, hidStates, allowed);
+    const mask = computeBitmask(noKeys, noKeyboardMap, gamepadButtonMap, noAxisMap, hidStates, allowed);
     expect(mask).toBe(0);
   });
 
@@ -61,7 +64,7 @@ describe('computeBitmask device gate', () => {
     const allowed = { keyboard: false, gamepadKeys: new Set<string>() };
     const keyStates = new Map([['KeyZ', true]]);
     const keyboardMap = new Map<string, SnesButton>([['KeyZ', 'A']]);
-    const mask = computeBitmask(keyStates, keyboardMap, empty, empty, new Map(), allowed);
+    const mask = computeBitmask(keyStates, keyboardMap, noButtonMap, noAxisMap, new Map(), allowed);
     expect(mask).toBe(0);
   });
 });

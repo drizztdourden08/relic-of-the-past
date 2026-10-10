@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { REPO_ROOT } from '../repo-root';
+import { required } from '../required';
 
 const ROOT = REPO_ROOT;
 const WASM_JS = resolve(ROOT, 'apps/desktop/public/wasm/zelda3.js');
@@ -46,7 +47,12 @@ interface Core {
   FS: { mkdir: (path: string) => void; writeFile: (path: string, data: Uint8Array) => void };
 }
 
-describeCore('progressive tier masks in the built core (headless)', () => {
+interface TierRig {
+  call: (name: string, ...args: number[]) => number;
+  grantAt: (virtualId: number, addr: number, raw: number) => number;
+}
+
+const installTierRig = (): TierRig => {
   let core: Core;
   let ram = 0;
 
@@ -65,7 +71,7 @@ describeCore('progressive tier masks in the built core (headless)', () => {
   beforeAll(async () => {
     const factory = createRequire(import.meta.url)(WASM_JS) as (opts: object) => Promise<Core>;
     core = await factory({ noInitialRun: true, print: () => undefined, printErr: () => undefined });
-    core.FS.writeFile('/zelda3_assets.dat', readFileSync(blob!));
+    core.FS.writeFile('/zelda3_assets.dat', readFileSync(required(blob, 'asset blob')));
     core.FS.mkdir('/saves');
     core.FS.writeFile('/saves/save0.sav', readFileSync(FIXTURE));
     call('WasmInitHeadless');
@@ -78,6 +84,12 @@ describeCore('progressive tier masks in the built core (headless)', () => {
     call('WasmSetGateWord', 3, FEATURES3_RECEIPT_EXPORT);
     frames(2);
   }, 120_000);
+
+  return { call, grantAt };
+};
+
+describeCore('progressive tier masks in the built core (headless)', () => {
+  const { call, grantAt } = installTierRig();
 
   it('unarmed: every rung is there, so a copy hands over the next tier as it always did', () => {
     call('WasmClearProgressiveTiers');

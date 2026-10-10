@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { ANNOTATION_STYLES, DRAWN_KINDS } from '@app/views/GameLayer/sub-components/navigation-overlay/annotation-style';
+import { ANNOTATION_STYLES, DRAWN_KINDS } from '@app/navigation-overlay/annotation-style';
 import type { AnnotationKind } from '@rotp/navigation';
 
 const EXPECTED_KINDS: AnnotationKind[] = [

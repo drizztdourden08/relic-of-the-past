@@ -1,11 +1,13 @@
 /* @layer site-kit @kind logic */
+import { optionalStorageManager } from '../browser-apis';
 import { withStore } from '../upload-db';
 import { FILES } from '../upload-db.constants';
 import { KEEP_MARGIN } from './upload-records.constants';
 
 const hasRoomFor = async (bytes: number): Promise<boolean> => {
-  if (!navigator.storage?.estimate) return false;
-  const { quota = 0, usage = 0 } = await navigator.storage.estimate();
+  const storage = optionalStorageManager();
+  if (!storage?.estimate) return false;
+  const { quota = 0, usage = 0 } = await storage.estimate();
   return quota - usage > bytes * KEEP_MARGIN;
 };
 

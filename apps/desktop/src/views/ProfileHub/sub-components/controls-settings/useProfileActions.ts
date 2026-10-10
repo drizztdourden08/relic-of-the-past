@@ -18,7 +18,7 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     if (loadedRef.current) return;
     loadedRef.current = true;
 
-    (async () => {
+    void (async () => {
       const raw = await readInputProfiles(profileId);
       let loaded: InputProfile[] = migrateProfilesLoudly(raw);
 
@@ -69,7 +69,7 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
       modifiedAt: Date.now(),
     };
     const updated = [...profiles, newProfile];
-    persistProfiles(updated);
+    void persistProfiles(updated);
     selectProfile(newProfile);
     setNewlyCreatedId(newProfile.id);
   }, [profiles, persistProfiles, selectProfile]);
@@ -92,13 +92,13 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
       setActiveProfile(updatedProfile);
       getInputManager().setProfile(updatedProfile);
     }
-    persistProfiles(updatedProfiles);
+    void persistProfiles(updatedProfiles);
   }, [profiles, activeProfile, persistProfiles]);
 
   const handleDeleteConfirm = useCallback(() => {
     if (!deleteTarget) return;
     const updated = profiles.filter(p => p.id !== deleteTarget.id);
-    persistProfiles(updated);
+    void persistProfiles(updated);
     if (activeProfile?.id === deleteTarget.id) {
       const fallback = updated[0] ?? null;
       if (fallback) selectProfile(fallback);
@@ -112,7 +112,7 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     const updatedProfiles = profiles.map(p =>
       p.id === updatedProfile.id ? updatedProfile : p
     );
-    persistProfiles(updatedProfiles);
+    void persistProfiles(updatedProfiles);
   }, [profiles, persistProfiles]);
 
   return {

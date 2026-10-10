@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudContainer, HudGridContainer } from '@rotp/hud';
@@ -73,7 +73,7 @@ describe('pressing Type changes which button is lit, and NOTHING else here', () 
     expect(barLit(sectionOne(render(FLEX)))).toBe(barLit(sectionOne(render(GRID))));
   });
 
-  it('still lights the button that was actually pressed', () => {
+  it('still lights the button that was pressed', () => {
     expect(sectionOne(render(GRID))).toMatch(/aria-pressed="true"[^>]*data-engine="grid"/);
     expect(sectionOne(render(FLEX))).toMatch(/aria-pressed="true"[^>]*data-engine="flex"/);
   });

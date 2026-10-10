@@ -5,7 +5,7 @@ import type { ActionDeps } from './action-deps.type';
 import { ANALOG_THRESHOLD_DELTA, BYTE_MAX, STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { findCounterBytes, hex, popcount } from '../hid-analysis';
 import { ANALOG_MIN_CHANGED_BITS, ANALOG_THRESHOLD_FRACTION, FULL_BYTE_MASK } from '../hid-analysis/hid-analysis.constants';
-import { DEFAULT_REPORT_LENGTH } from './useCalibrationActions.constants';
+import { DEFAULT_REPORT_LENGTH } from './calibration-actions.constants';
 import { useCalibrationExport } from './useCalibrationExport';
 import { useStickActions } from './useStickActions';
 import { useTriggerActions } from './useTriggerActions';

@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { locationDisplayName, POND_INSTANCES, POND_RUNGS_BY_ID, POND_REGION_LOCATIONS } from '@rotp/randomizer';
 import { find } from '@rotp/game-data';
 
+const slotKeys = () => POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key));
+
 describe('pond slot identity', () => {
   it('every pond slot is a location of the world', () => {
     const declared = new Set([...POND_REGION_LOCATIONS.values()].flat());
@@ -14,12 +16,12 @@ describe('pond slot identity', () => {
   });
 
   it('every slot is its pond and a number, never a side', () => {
-    expect(POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key))).toEqual([
+    expect(slotKeys()).toEqual([
       'check-273', 'check-274',
       'check-021', 'check-022',
       'check-266', 'check-267',
     ]);
-    expect(POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => locationDisplayName(slot.key)))).toEqual([
+    expect(slotKeys().map((key) => locationDisplayName(key))).toEqual([
       'Hylia Fairy Bombs 1', 'Hylia Fairy Arrows 1',
       'Waterfall Fairy 1', 'Waterfall Fairy 2',
       'Pyramid Fairy 1', 'Pyramid Fairy 2',

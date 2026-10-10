@@ -4,7 +4,7 @@ import { loadRomFromBuffer, loadGbaAlttpRomFromBuffer, compileAlttpAssetSet } fr
 import { compileSets } from '@rotp/languages';
 import type { SetBakeInput } from '@rotp/languages';
 import type { SpriteDef } from '@rotp/asset-extraction';
-import type { AssetsResult, SupplementRoms, WorkerScope } from './extract-assets.worker.type';
+import type { AssetsResult, SupplementRoms, WorkerScope } from './extract-assets-worker.type';
 
 const ctx = self as unknown as WorkerScope;
 

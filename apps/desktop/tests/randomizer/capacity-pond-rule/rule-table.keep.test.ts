@@ -7,7 +7,7 @@ import { selectionOf } from './selection-of';
 import { settingFor } from './setting-for';
 
 describe('the rule table, edit by edit', () => {
-  const vanillaPair = selectionOf(true, 'capacity', 'vanilla', 'custom');
+  const vanillaPair = selectionOf({ enabled: true, pondMode: 'capacity', explosives: 'vanilla', projectiles: 'custom' });
 
   it('pushes a Vanilla family into the pool when the pond leaves its legacy mode, and leaves Custom alone', () => {
     const settled = reconcileCapacityPond({ ...vanillaPair, pond: pondSettingForMode('custom', LEGACY_POND_SETTING) }, 'pond');

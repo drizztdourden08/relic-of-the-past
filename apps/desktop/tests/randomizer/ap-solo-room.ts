@@ -34,8 +34,8 @@ const soloRoomOf = (
       options: snapshot.values,
       medallions: placement.medallions,
       preRolled: {
-        pondDemands: placement.pondDemands ?? {},
-        shopPrices: placement.shopPrices ?? {},
+        pondDemands: placement.pondDemands,
+        shopPrices: placement.shopPrices,
         ...(deliverable !== undefined ? { deliverable } : {}),
       },
       deathLink: false,

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import { FLASH_DURATION_MS } from './useFlashStatus.constants';
-import type { FlashStatus } from './useFlashStatus.type';
+import { FLASH_DURATION_MS } from './flash-status.constants';
+import type { FlashStatus } from './flash-status.type';
 
 const useFlashStatus = (): [FlashStatus, (ok: boolean) => void] => {
   const [status, setStatus] = useState<FlashStatus>('idle');

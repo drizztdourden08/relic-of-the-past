@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import type { PlayerSheet } from '@rotp/game-data';
 import type { WearingState } from '../../behavior/useWearing';
-import type { AnimationClock } from '../../behavior/useAnimationClock.type';
+import type { AnimationClock } from '../../behavior/animation-clock.type';
 
 type SheetView = 'state' | 'contact' | 'sheet';
 

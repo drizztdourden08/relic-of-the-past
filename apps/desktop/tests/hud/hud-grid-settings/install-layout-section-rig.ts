@@ -3,7 +3,7 @@ import { afterEach } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { useHudEditorViewStore } from '../../../src/stores/hud-editor-view-store';
-import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/sections/LayoutSection';
+import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { HudContainer, HudGridContainer } from '@rotp/hud';
 import { PLATFORM } from './grid-settings.constants';

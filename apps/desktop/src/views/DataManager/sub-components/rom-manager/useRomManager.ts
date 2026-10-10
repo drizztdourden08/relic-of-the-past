@@ -4,7 +4,7 @@ import type { RomKind, SupplementStatus } from '@rotp/roms';
 import { ROM_KINDS } from '@rotp/roms';
 import * as romsStore from '@app/storage/roms-store';
 import type { RomDetail } from './rom-detail.type';
-import type { UseRomManagerParams } from './useRomManager.type';
+import type { UseRomManagerParams } from './rom-manager.type';
 
 const importMessage = (kind: RomKind, romFile: string, alreadyExists: boolean): string =>
   alreadyExists ? `${ROM_KINDS[kind].label} already imported` : `Imported ${romFile}`;
@@ -18,7 +18,7 @@ const useRomManager = (params: UseRomManagerParams) => {
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   const refreshSupplements = useCallback(() => {
-    romsStore.listSupplements().then(setSupplements);
+    void romsStore.listSupplements().then(setSupplements);
   }, []);
 
   useEffect(() => { refreshSupplements(); }, [romStatuses, refreshSupplements]);
@@ -26,7 +26,7 @@ const useRomManager = (params: UseRomManagerParams) => {
   useEffect(() => {
     if (!selected) { setDetail(null); return; }
     setLoadingDetail(true);
-    romsStore.getRomInfo(selected).then((info) => {
+    void romsStore.getRomInfo(selected).then((info) => {
       setDetail(info);
       setLoadingDetail(false);
     });
@@ -45,7 +45,7 @@ const useRomManager = (params: UseRomManagerParams) => {
     if (result.success) {
       onRefresh();
       if (!result.alreadyExists) triggerRebuild(activeKind, result.romFile);
-      return { success: true, message: importMessage(activeKind, result.romFile, !!result.alreadyExists) };
+      return { success: true, message: importMessage(activeKind, result.romFile, Boolean(result.alreadyExists)) };
     }
     return { success: false, message: result.error ?? 'Download failed' };
   }, [activeKind, onRefresh, triggerRebuild]);
@@ -57,7 +57,7 @@ const useRomManager = (params: UseRomManagerParams) => {
     if (result.success) {
       onRefresh();
       if (!result.alreadyExists) triggerRebuild(activeKind, result.romFile);
-      return { success: true, message: importMessage(activeKind, result.romFile, !!result.alreadyExists) };
+      return { success: true, message: importMessage(activeKind, result.romFile, Boolean(result.alreadyExists)) };
     }
     return { success: false, message: result.error ?? 'Import failed' };
   }, [activeKind, onRefresh, triggerRebuild]);

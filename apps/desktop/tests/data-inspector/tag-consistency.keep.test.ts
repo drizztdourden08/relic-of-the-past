@@ -52,9 +52,10 @@ describe('writeTag enforces the namespace:value convention on every edit', () =>
 
   it('accepts a consistent edit and reaches the write channel', async () => {
     await writeTag()(baseTag);
+    const consistentRecord: unknown = expect.objectContaining({ name: 'env:outdoor', namespace: 'env', value: 'outdoor' });
     expect(writeTagApi).toHaveBeenCalledWith({
       tagId: 'tag-999',
-      record: expect.objectContaining({ name: 'env:outdoor', namespace: 'env', value: 'outdoor' }),
+      record: consistentRecord,
     });
   });
 });

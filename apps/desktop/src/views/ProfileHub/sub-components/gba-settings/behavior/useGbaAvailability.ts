@@ -10,7 +10,7 @@ const useGbaAvailability = (): GbaAvailability => {
   useEffect(() => {
     let cancelled = false;
 
-    listSupplements().then((supplements) => {
+    void listSupplements().then((supplements) => {
       if (cancelled) return;
       const [first] = supplements;
       setAvailability(first ? { hasSupplement: true, supplementFile: first.romFile } : NO_SUPPLEMENT);
