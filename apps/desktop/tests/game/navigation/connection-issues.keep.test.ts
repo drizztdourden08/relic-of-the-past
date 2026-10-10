@@ -20,7 +20,7 @@ describeDataset('connectionIssues raises per-connection completeness warnings', 
   });
 
   it('flags missing tile data (replaces the silent blank)', () => {
-    expect(connectionIssues(complete, null)).toContain('⚠ no tile data');
+    expect(connectionIssues(complete, null)).toContain('no tile data');
   });
 
   it('flags unknown endpoints by id', () => {
@@ -28,12 +28,12 @@ describeDataset('connectionIssues raises per-connection completeness warnings', 
       { from: UNKNOWN_ID, to: 'also-bad', tags: complete.tags },
       'tiles: [1]',
     );
-    expect(issues).toContain(`⚠ unknown screen: ${UNKNOWN_ID}`);
-    expect(issues).toContain('⚠ unknown screen: also-bad');
+    expect(issues).toContain(`unknown screen: ${UNKNOWN_ID}`);
+    expect(issues).toContain('unknown screen: also-bad');
   });
 
   it('flags a missing transit tag', () => {
     const noTransit = connectionIssues({ ...complete, tags: [] as ConnectionTag[] }, 'tiles: [1]');
-    expect(noTransit).toContain('⚠ no transit type');
+    expect(noTransit).toContain('no transit type');
   });
 });
