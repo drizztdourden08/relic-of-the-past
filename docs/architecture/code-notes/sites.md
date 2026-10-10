@@ -1206,7 +1206,7 @@ A new file and a new version sign, list, complete and abort on different routes.
 
 UploadMeta is asked by the upload dialog before the first byte moves and is shared by every file of one drop. For a version target, `of` is the file's display name for the upload row, and `next` is the number the site expects; the API's answer replaces it.
 
-## apps/store/src/views/SiteShell/SiteShell.constants.ts
+## apps/store/src/views/HookshopShell/HookshopShell.constants.ts
 
 The sign in art sits above the sign in buttons. Its pixel size is a whole number of CSS pixels, which keeps it sharp.
 

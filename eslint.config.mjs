@@ -39,6 +39,13 @@ const rotpExtension = {
           'apps/desktop/src/hooks/{useHud,useLocationNotification,usePauseMenu}.ts',
         ],
         why: 'The HUD redraws the in-game interface pixel for pixel in the SNES palette, so its inline styles hold game positions and colours, not design tokens.',
+      }, {
+        files: [
+          'apps/store/src/components/{CropDialog,FeaturedHero,ItemPicture}/**/*.{ts,tsx}',
+          'apps/store/src/components/RatingPanel/sub-components/RatingHistogram.tsx',
+          'apps/store/src/pages/ReviewItem/sub-components/ListingDetails.tsx',
+        ],
+        why: 'The Hookshop draws values each item carries: its colour in --item-color, the crop rectangle of a picture and the share of each star in the histogram. No token can hold a value the API returns.',
       }],
     },
     configs: [ONE_SOURCE_FACADE],

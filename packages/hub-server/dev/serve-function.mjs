@@ -8,25 +8,20 @@ import { require as tsxRequire } from 'tsx/cjs/api';
 
 const USAGE = 'rotp-serve-function <entry point> <port role>, run in an API folder, such as rotp-serve-function storeApi storeApi';
 
-const [target, role] = process.argv.slice(2);
-if (!target || !role) {
-  console.error(USAGE);
+const fail = (message) => {
+  process.stderr.write(`${message}\n`);
   process.exit(1);
-}
+};
+
+const [target, role] = process.argv.slice(2);
+if (!target || !role) fail(USAGE);
 
 const apiDir = process.cwd();
 const { portFor } = tsxRequire('@rotp/hub-contracts', import.meta.url);
 const port = portFor(role, portSlotOf(apiDir));
 
-if (!Number.isInteger(port)) {
-  console.error(`No port role ${role} in packages/hub-contracts/src/ports/ports.constants.ts.`);
-  process.exit(1);
-}
-
-if (!existsSync(join(apiDir, 'dist', 'index.js'))) {
-  console.error(`No dist/index.js in ${apiDir}. Run pnpm run bundle there first.`);
-  process.exit(1);
-}
+if (!Number.isInteger(port)) fail(`No port role ${role} in packages/hub-contracts/src/ports/ports.constants.ts.`);
+if (!existsSync(join(apiDir, 'dist', 'index.js'))) fail(`No dist/index.js in ${apiDir}. Run pnpm run bundle there first.`);
 
 const frameworkBin = () => {
   const frameworkDir = join(apiDir, 'node_modules', '@google-cloud', 'functions-framework');
@@ -34,6 +29,6 @@ const frameworkBin = () => {
   return join(frameworkDir, manifest.bin['functions-framework']);
 };
 
-console.log(`${target} on http://localhost:${port}`);
+process.stdout.write(`${target} on http://localhost:${port}\n`);
 const child = spawn(process.execPath, [frameworkBin(), `--target=${target}`, '--source=dist', `--port=${port}`], { cwd: apiDir, stdio: 'inherit' });
 child.on('close', (code) => process.exit(code ?? 0));

@@ -23,7 +23,7 @@ const drawCrop = (bitmap: ImageBitmap, spec: PictureSpec, crop: CropRect): HTMLC
 const encode = (canvas: HTMLCanvasElement, quality: number): Promise<Blob> =>
   new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
-      if (blob && blob.type === 'image/webp') resolve(blob);
+      if (blob?.type === 'image/webp') resolve(blob);
       else reject(new Error('This browser cannot save webp pictures. Try another browser.'));
     }, 'image/webp', quality);
   });

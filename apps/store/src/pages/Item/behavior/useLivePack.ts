@@ -19,7 +19,7 @@ const useLivePack = (item: StoreItem | null, opened: boolean): LivePack => {
   const id = item?.id ?? null;
   const liveN = item?.liveVersion ?? null;
   const readable = opened && id !== null && noPack === null;
-  const load = useMemo(() => (readable && id !== null && liveN !== null ? () => itemPack(id) : null), [readable, id, liveN]);
+  const load = useMemo(() => (readable && liveN !== null ? () => itemPack(id) : null), [readable, id, liveN]);
   const pack = usePackLink(load);
   return { pack, noPack };
 };

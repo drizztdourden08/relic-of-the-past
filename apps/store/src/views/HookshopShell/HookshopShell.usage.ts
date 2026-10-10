@@ -11,9 +11,9 @@ const usage = {
   ],
   a11y: ['SiteLayout draws the header, the main page and the footer as landmarks.'],
   buildingBlock: true,
-  example: `import { SiteShell } from '@app/views/SiteShell';
+  example: `import { HookshopShell } from '@app/views/HookshopShell';
 
-const ShellSample = () => <SiteShell />;
+const ShellSample = () => <HookshopShell />;
 `,
   propsHash: '69a6789bb8733db8',
 } satisfies ComponentUsage;

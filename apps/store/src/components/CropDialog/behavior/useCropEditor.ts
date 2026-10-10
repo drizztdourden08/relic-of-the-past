@@ -30,7 +30,7 @@ const useCropEditor = (params: CropEditorParams) => {
     setCrop(initial ?? cropAt(picture, ratio));
   }, [initial, ratio]);
 
-  const picturePixelsPerScreenPixel = useCallback((current: CropRect) => current.width / (frameRef.current?.clientWidth || 1), []);
+  const picturePixelsPerScreenPixel = useCallback((current: CropRect) => current.width / Math.max(frameRef.current?.clientWidth ?? 0, 1), []);
 
   const onPointerDown = useCallback((event: PointerEvent<HTMLElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);

@@ -8,7 +8,7 @@ const pendingPage = <Pending />;
 
 const renderSignIn = (returnTo: string | undefined) => <SignIn lead={SANCTUARY_SITE_UI.signIn.lead} returnTo={returnTo} />;
 
-const SiteShell = () => (
+const SanctuaryShell = () => (
   <SiteKit site={SANCTUARY_SITE_UI}>
     <RouteGuard
       routes={ROUTES}
@@ -21,4 +21,4 @@ const SiteShell = () => (
   </SiteKit>
 );
 
-export { SiteShell };
+export { SanctuaryShell };

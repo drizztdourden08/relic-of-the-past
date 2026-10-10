@@ -53,18 +53,9 @@ const useBatchActions = (params: UseBatchActionsParams) => {
     return batchReport(tally, 'changed');
   }), [run, eachMine, onPatched]);
 
-  const setType = useCallback(
-    (files: readonly SanctuaryFile[], type: FileType) => patchEach(files, typePatch(type)),
-    [patchEach],
-  );
-  const addTags = useCallback(
-    (files: readonly SanctuaryFile[], tags: readonly string[]) => patchEach(files, addTagsPatch(tags)),
-    [patchEach],
-  );
-  const removeTags = useCallback(
-    (files: readonly SanctuaryFile[], tags: readonly string[]) => patchEach(files, removeTagsPatch(tags)),
-    [patchEach],
-  );
+  const setType = useCallback((files: readonly SanctuaryFile[], type: FileType) => patchEach(files, typePatch(type)), [patchEach]);
+  const addTags = useCallback((files: readonly SanctuaryFile[], tags: readonly string[]) => patchEach(files, addTagsPatch(tags)), [patchEach]);
+  const removeTags = useCallback((files: readonly SanctuaryFile[], tags: readonly string[]) => patchEach(files, removeTagsPatch(tags)), [patchEach]);
 
   const remove = useCallback((files: readonly SanctuaryFile[]) => run(async () => {
     const tally = await eachMine(files, async (file) => {

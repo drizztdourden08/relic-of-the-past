@@ -1,5 +1,5 @@
 /* @layer site-kit @kind hook */
-import { useCallback, useMemo } from 'react';
+import { createElement, useCallback, useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import type { SideNavConfig, SideNavItem } from '@drizztdourden08/tessera/composites';
 import { hasRight } from '@rotp/hub-contracts';
@@ -10,7 +10,7 @@ import { useSiteDefinition } from '../../../site/site-context';
 import type { SiteSection } from '../../../site/site-definition.type';
 import { ROOT_PATH } from '../SiteLayout.constants';
 
-const navItem = (section: SiteSection): SideNavItem => ({ id: section.id, label: section.label, icon: <IconifyIcon icon={section.icon} /> });
+const navItem = (section: SiteSection): SideNavItem => ({ id: section.id, label: section.label, icon: createElement(IconifyIcon, { icon: section.icon }) });
 
 const isVisible = (section: SiteSection, isAdmin: boolean, rights: Rights | null) =>
   (!section.adminOnly || isAdmin) && (!section.permission || hasRight(rights, section.permission));
