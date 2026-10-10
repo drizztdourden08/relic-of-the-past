@@ -1,23 +1,12 @@
-/* @layer renderer-app @kind constants */
-import type { SiteLink } from '@drizztdourden08/tessera/composites';
+/* @layer store-site @kind constants */
+import { createElement } from 'react';
+import { HookshopHighlight } from '@rotp/design/packs';
+import { Barred } from '../../pages/Barred/Barred';
 
-const SITE_PATHS = { home: '/', signIn: '/sign-in' } as const;
+const SIGN_IN_ART_PIXEL_SIZE = 3;
 
-const SITE_LINKS: SiteLink[] = [
-  { id: 'home', label: 'Home', href: SITE_PATHS.home },
-];
+const BARRED = createElement(Barred);
 
-const FOOTER_LINKS: SiteLink[] = [
-  { id: 'home', label: 'Home', href: SITE_PATHS.home },
-];
+const SIGN_IN_ART = createElement(HookshopHighlight, { pixelSize: SIGN_IN_ART_PIXEL_SIZE });
 
-const SHELL_TEXT = {
-  title: 'Store Next',
-  homeLabel: 'Store Next home',
-  signIn: 'Sign in',
-  signOut: 'Sign out',
-  footer: 'Store Next, drawn with Tessera.',
-  guest: 'Guest',
-} as const;
-
-export { SITE_PATHS, SITE_LINKS, FOOTER_LINKS, SHELL_TEXT };
+export { BARRED, SIGN_IN_ART };

@@ -5,6 +5,22 @@
   min-height: 0;
 }
 
+.publications__page {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.publications__body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.publications__aside {
+  flex: 0 0 var(--detail-w);
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .publications__totals {
   font-variant-numeric: tabular-nums;
 }

@@ -1,16 +1,15 @@
 /* @layer store-site @kind component */
+import { Icon as IconifyIcon } from '@iconify/react/offline';
 import reviewIcon from '@iconify-icons/lucide/clipboard-check';
-import { Flex, Text } from '@drizztdourden08/tessera/primitives';
-import { SideColumn, AppLink } from '@rotp/design';
-import { PackContentsPanel } from '../../components/PackContentsPanel/PackContentsPanel';
+import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { SettingsPage } from '@drizztdourden08/tessera/composites';
+import { AppLink } from '@rotp/design';
 import { ReviewChip } from '../../components/ReviewChip/ReviewChip';
-import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { KIND_ICONS } from '../../lib/kinds';
 import { editOfEntry, versionOfEntry } from '../../review/review-row';
 import { useReviewItemPage } from './behavior/useReviewItemPage';
 import { DecisionPanel } from './sub-components/DecisionPanel';
-import { PackDetails } from './sub-components/PackDetails';
-import { StorePagePreview } from './sub-components/StorePagePreview';
+import { ReviewItemTab } from './sub-components/ReviewItemTab';
 import type { ReviewItemProps } from './ReviewItem.type';
 import './ReviewItem.css';
 
@@ -22,9 +21,9 @@ const ReviewItem = (props: ReviewItemProps) => {
 
   if (!entry || !preview) {
     return (
-      <TitledPage icon={reviewIcon} title="Review" actions={back}>
+      <SettingsPage icon={<IconifyIcon icon={reviewIcon} />} title="Review" actions={back}>
         <Text as="p" variant="caption" role={page.error ? 'alert' : 'status'}>{page.loading ? 'Loading the entry...' : page.error}</Text>
-      </TitledPage>
+      </SettingsPage>
     );
   }
 
@@ -38,26 +37,16 @@ const ReviewItem = (props: ReviewItemProps) => {
       {back}
     </Flex>
   );
-  const aside = (
-    <SideColumn>
-      <DecisionPanel key={rowId} entry={entry} actions={page.actions} />
-    </SideColumn>
-  );
 
   return (
-    <TitledPage icon={KIND_ICONS[entry.item.kind]} title={preview.item.name} tabs={page.tabs} actions={header} aside={aside}>
-      {page.tab === 'store' && <StorePagePreview preview={preview} />}
-      {page.tab === 'contents' && (
-        <PackContentsPanel
-          kind={entry.item.kind}
-          pack={page.pack}
-          noPack={page.target.noPack}
-          note={page.target.note}
-          className="review-item__contents"
-        />
-      )}
-      {page.tab === 'details' && <PackDetails item={preview.item} version={version} pack={page.pack} noPack={page.target.noPack} />}
-    </TitledPage>
+    <Flex gap="md" align="stretch" className="review-item">
+      <SettingsPage icon={<IconifyIcon icon={KIND_ICONS[entry.item.kind]} />} title={preview.item.name} tabs={page.tabs} actions={header} className="review-item__page">
+        <ReviewItemTab page={page} entry={entry} preview={preview} version={version} />
+      </SettingsPage>
+      <Stack as="aside" align="stretch" className="review-item__aside">
+        <DecisionPanel key={rowId} entry={entry} actions={page.actions} />
+      </Stack>
+    </Flex>
   );
 };
 

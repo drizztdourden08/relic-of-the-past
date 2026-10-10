@@ -1,7 +1,7 @@
-/* @layer store-site @kind component */
+/* @layer site-kit @kind component */
 import { STORE_RIGHTS } from '@rotp/hub-contracts';
 import { Checkbox, Stack } from '@drizztdourden08/tessera/primitives';
-import type { RightsEditorProps } from '@rotp/design';
+import type { RightsEditorProps } from '../../site/site-definition.type';
 
 const withPermission = (value: readonly string[], permission: string, on: boolean): string[] =>
   STORE_RIGHTS.all.filter((entry) => (entry === permission ? on : value.includes(entry)));

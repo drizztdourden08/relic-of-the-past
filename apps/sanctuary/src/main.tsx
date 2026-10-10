@@ -1,18 +1,20 @@
-/* @layer sanctuary-site @kind component */
+/* @layer sanctuary-site @kind entry */
+import '@drizztdourden08/tessera/tokens.css';
+import '@drizztdourden08/tessera/palettes/rotp.css';
+import './theme.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { TesseraProvider } from '@drizztdourden08/tessera/primitives';
-import '@drizztdourden08/tessera/tokens.css';
-import '@drizztdourden08/tessera/palettes/rotp.css';
-import '@app/theme.css';
-import './site.css';
-import { App } from './App';
-import { SITE_TESSERA_OVERRIDES } from './site/tessera-overrides.constants';
+import { TESSERA_OVERRIDES } from './main.constants';
+import { SiteShell } from './views/SiteShell';
 
-createRoot(document.getElementById('root') as HTMLElement).render(
+const root = document.getElementById('root');
+if (!root) throw new Error('index.html has no #root element');
+
+createRoot(root).render(
   <StrictMode>
-    <TesseraProvider overrides={SITE_TESSERA_OVERRIDES}>
-      <App />
+    <TesseraProvider overrides={TESSERA_OVERRIDES}>
+      <SiteShell />
     </TesseraProvider>
   </StrictMode>,
 );

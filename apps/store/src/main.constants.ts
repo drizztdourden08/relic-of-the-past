@@ -1,4 +1,4 @@
-/* @layer renderer-app @kind constants */
+/* @layer store-site @kind constants */
 import type { TesseraOverrides } from '@drizztdourden08/tessera/primitives';
 
 const TESSERA_OVERRIDES: TesseraOverrides = {

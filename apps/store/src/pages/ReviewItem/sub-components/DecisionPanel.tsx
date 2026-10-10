@@ -44,7 +44,7 @@ const DecisionPanel = (props: DecisionPanelProps) => {
   );
 
   return (
-    <DetailPane title="Decision" fields={fieldsOf(entry)} actions={buttons} notice={actions.notice} className="side-panel review-item__decision">
+    <DetailPane title="Decision" fields={fieldsOf(entry)} actions={buttons} notice={actions.notice} className="review-item__decision">
       {version && (
         <Stack gap="xs" align="stretch">
           <Text as="span" variant="label">Changes</Text>

@@ -5,20 +5,26 @@
   min-height: 0;
 }
 
+.browse__page {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.browse__body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.browse__aside {
+  flex: 0 0 var(--detail-w);
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .browse__summary {
   font-variant-numeric: tabular-nums;
 }
 
-.browse__toolbar {
-  flex: 0 0 auto;
-}
-
-.browse__toolbar > .filter-bar {
-  flex: 1 1 auto;
-  min-width: 0;
-  padding: 0;
-}
-
-.browse__toolbar .browse__sort {
+.browse__sort {
   flex: 0 0 auto;
 }

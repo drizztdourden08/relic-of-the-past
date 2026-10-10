@@ -7,8 +7,8 @@
     "dev": "brock site dev",
     "build": "brock site build",
     "preview": "brock site preview",
-    "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit && stylelint \"src/**/*.css\""
+    "typecheck": "tsc --noEmit --noUncheckedIndexedAccess false",
+    "lint": "pnpm run typecheck && stylelint \"src/**/*.css\""
   },
   "dependencies": {
     "@drizztdourden08/tessera": "catalog:",

@@ -1,5 +1,21 @@
 /* @layer store-site @kind style */
 
+.review-item {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.review-item__page {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.review-item__aside {
+  flex: 0 0 var(--detail-w);
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .review-item__store,
 .review-item__details,
 .review-item__contents {

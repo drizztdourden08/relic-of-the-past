@@ -56,7 +56,7 @@ const ItemSideCard = (props: ItemSideCardProps) => {
       fields={fieldsOf(item, detail)}
       actions={actions}
       onClose={onClose}
-      className="side-panel item-side-card"
+      className="item-side-card"
     />
   );
 };

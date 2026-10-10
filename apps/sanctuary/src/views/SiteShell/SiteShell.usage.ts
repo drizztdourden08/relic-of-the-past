@@ -1,16 +1,15 @@
-/* @layer renderer-app @kind data */
+/* @layer sanctuary-site @kind data */
 import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
-  job: 'The frame of every page of the site: SiteHeader with the brand, the links and the signed-in person, the page, and SiteFooter.',
-  useWhen: ['The root of a site made with brock site add; each page renders inside it.'],
+  job: 'The root of the Sanctuary: the site definition, the session and the route guard, which draws each member page inside SiteLayout and each gate on the brand gradient.',
+  useWhen: ['The one root main.tsx renders inside TesseraProvider.'],
   avoidWhen: [{ case: 'The frame of the desktop app window.', use: 'WindowTitleBar' }],
   rules: [
-    'Route a new page by its path in SiteShell and add its link to SITE_LINKS.',
-    'Draw the signed-in person with profileAction, the same dropdown action the app title bar takes.',
-    'Keep the pages on the app parts; the header and the footer are the only site-only parts.',
+    'Route a new page in routes.constants.ts and give it a section in site-sections.constants.ts.',
+    'Keep the frame in SiteLayout of the design package; the pages use the app parts.',
   ],
-  a11y: ['The header, the main page and the footer are landmarks.'],
+  a11y: ['SiteLayout draws the header, the main page and the footer as landmarks.'],
   buildingBlock: true,
   example: `import { SiteShell } from '@app/views/SiteShell';
 

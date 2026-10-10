@@ -1,2 +1,2 @@
-/* @layer renderer-app @kind barrel */
+/* @layer store-site @kind barrel */
 export { SiteShell } from './SiteShell';

@@ -1,9 +1,0 @@
-/* @layer site-kit @kind style */
-
-.nav-avatar {
-  width: 1em;
-  height: 1em;
-  border-radius: var(--radius-pill);
-  border: var(--border-width-thin) solid var(--c-border-strong);
-  object-fit: cover;
-}

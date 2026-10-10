@@ -1,1 +1,7 @@
-/* @layer renderer-app @kind style */
+/* @layer sanctuary-site @kind style */
+:root {
+  --upload-list-maxh: 160px;
+  --selection-tile-h: 72px;
+  --selection-tile-icon: 28px;
+  --search-table-maxh: 320px;
+}

@@ -37,7 +37,7 @@ const PublicationDetail = (props: PublicationDetailProps) => {
       actions={buttons}
       notice={actions.notice ?? noteFor(item, version)}
       onClose={onClose}
-      className="side-panel publication-detail"
+      className="publication-detail"
     >
       {version?.changelog && (
         <Stack gap="xs" align="stretch">

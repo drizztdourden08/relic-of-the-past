@@ -2,6 +2,7 @@
 import { SessionProvider } from '../SessionProvider/SessionProvider';
 import { SiteContext } from '../../site/site-context';
 import type { SiteKitProps } from './SiteKit.type';
+import './SiteKit.css';
 
 const SiteKit = (props: SiteKitProps) => {
   const { site, children } = props;

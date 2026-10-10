@@ -1,0 +1,88 @@
+name: CI sanctuary
+run-name: CI sanctuary ${{ github.head_ref || github.ref_name }}
+
+# Managed by brock sync for the site in apps/sanctuary. A pull request checks and builds the site
+# only when it touches the site's files, a workspace package it depends on, or a file outside
+# every package. Brock deploys nothing: hosting the dist folder is the app's own workflow.
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-sanctuary-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  APP_DIR: apps/sanctuary
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.changed.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      # A pull request builds and reviews only the apps it touches: their own files, a workspace
+      # package they depend on, or a file outside every package. A manual run builds the app.
+      - name: Does this change touch the app
+        id: changed
+        shell: bash
+        env:
+          BASE: ${{ github.base_ref }}
+        run: echo "changed=$(pnpm exec brock affected "$APP_DIR" ${BASE:+"origin/$BASE"})" >> "$GITHUB_OUTPUT"
+
+  site:
+    needs: changes
+    if: needs.changes.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Typecheck and lint the site
+        run: pnpm --dir "$APP_DIR" run lint
+
+      - name: Build the site
+        run: pnpm --dir "$APP_DIR" exec brock site build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-sanctuary
+          path: ${{ env.APP_DIR }}/dist/
+          if-no-files-found: error

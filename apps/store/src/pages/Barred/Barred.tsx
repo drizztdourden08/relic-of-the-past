@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { useCallback, useState } from 'react';
 import { Button, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { SiteFrame, Gate, useSessionContext } from '@rotp/design';
+import { Gate, useSessionContext } from '@rotp/design';
 import { recheckAccess, errorMessage } from '@rotp/hub-client';
 
 const Barred = () => {
@@ -28,15 +28,13 @@ const Barred = () => {
     : 'The Hookshop has not set up your account yet.';
 
   return (
-    <SiteFrame bare>
-      <Gate title={revoked ? 'Account closed' : 'Almost there'} lead={lead}>
-        <Stack gap="sm" align="stretch">
-          {!revoked && <Button variant="primary" disabled={busy} onClick={() => void handleRecheck()}>Try again</Button>}
-          <Button variant="ghost" onClick={() => void signOut()}>Sign out</Button>
-          {error && <Text as="p" variant="caption" role="alert">{error}</Text>}
-        </Stack>
-      </Gate>
-    </SiteFrame>
+    <Gate title={revoked ? 'Account closed' : 'Almost there'} lead={lead}>
+      <Stack gap="sm" align="stretch">
+        {!revoked && <Button variant="primary" disabled={busy} onClick={() => void handleRecheck()}>Try again</Button>}
+        <Button variant="ghost" onClick={() => void signOut()}>Sign out</Button>
+        {error && <Text as="p" variant="caption" role="alert">{error}</Text>}
+      </Stack>
+    </Gate>
   );
 };
 

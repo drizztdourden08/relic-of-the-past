@@ -1,8 +1,8 @@
 /* @layer sanctuary-site @kind component */
 import { useMemo } from 'react';
-import { Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { DataTable, FilterBar } from '@drizztdourden08/tessera/composites';
-import { SitePage, Workbench, SavedViewsMenu } from '@rotp/design';
+import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { DataTable, FilterBar, SettingsPage } from '@drizztdourden08/tessera/composites';
+import { SavedViewsMenu, useSectionHeading } from '@rotp/design';
 import { reportRowId } from '../../reports/report-row';
 import { REPORT_DEFAULT_COLUMNS, REPORT_DEFAULT_GROUP_BY } from '../../reports/report-schema.constants';
 import { useReportsPage } from './behavior/useReportsPage';
@@ -14,6 +14,7 @@ import './Reports.css';
 const Reports = (props: ReportsProps) => {
   const { selectedId = null } = props;
   const page = useReportsPage(selectedId);
+  const heading = useSectionHeading('reports');
   const { data, scope, view, selected } = page;
   const headerTabs = useMemo(
     () => ({ items: scope.tabs, activeId: scope.activeId, onSelect: scope.select }),
@@ -21,18 +22,16 @@ const Reports = (props: ReportsProps) => {
   );
 
   const toolbar = (
-    <>
-      <FilterBar
-        schema={page.schema}
-        clauses={view.clauses}
-        onChange={view.setClauses}
-        search={view.search}
-        onSearchChange={view.setSearch}
-        searchPlaceholder={SEARCH_PLACEHOLDER}
-        searchLabel="Search reports"
-      />
-      <SavedViewsMenu state={view.savedViews} />
-    </>
+    <FilterBar
+      schema={page.schema}
+      clauses={view.clauses}
+      onChange={view.setClauses}
+      search={view.search}
+      onSearchChange={view.setSearch}
+      searchPlaceholder={SEARCH_PLACEHOLDER}
+      searchLabel="Search reports"
+      extra={<SavedViewsMenu state={view.savedViews} />}
+    />
   );
 
   const table = (
@@ -51,20 +50,24 @@ const Reports = (props: ReportsProps) => {
     />
   );
 
-  const detail = selected && (
-    <ReportDetail key={selected.id} report={selected} isAdmin={page.isAdmin} actions={page.actions} onClose={page.deselect} />
-  );
-
   return (
-    <SitePage section="reports" tabs={headerTabs} scroll={false}>
-      <Stack gap="md" align="stretch" className="reports">
-        <Text as="span" variant="caption" className="reports__summary">
-          {page.shown.length} shown · {scope.openCount} open
-        </Text>
-        {data.error && <Text as="p" variant="caption" role="alert">{data.error}</Text>}
-        <Workbench toolbar={toolbar} table={table} detail={detail} />
-      </Stack>
-    </SitePage>
+    <Flex gap="md" align="stretch" className="reports">
+      <SettingsPage icon={heading.icon} title={heading.title} tabs={headerTabs} scroll={false} className="reports__page">
+        <Stack gap="md" align="stretch" className="reports__body">
+          <Text as="span" variant="caption" className="reports__summary">
+            {page.shown.length} shown · {scope.openCount} open
+          </Text>
+          {data.error && <Text as="p" variant="caption" role="alert">{data.error}</Text>}
+          {toolbar}
+          {table}
+        </Stack>
+      </SettingsPage>
+      {selected && (
+        <Stack as="aside" align="stretch" className="reports__aside">
+          <ReportDetail key={selected.id} report={selected} isAdmin={page.isAdmin} actions={page.actions} onClose={page.deselect} />
+        </Stack>
+      )}
+    </Flex>
   );
 };
 
