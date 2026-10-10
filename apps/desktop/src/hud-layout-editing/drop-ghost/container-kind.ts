@@ -7,7 +7,7 @@ const gridSize = (node: HudGridContainer): string =>
 
 const containerKind = (node: HudNode | null, isScreen: boolean): string => {
   if (isScreen) return 'screen';
-  if (!node || node.kind !== 'container') return 'leaf';
+  if (node?.kind !== 'container') return 'leaf';
   if (node.layout !== 'grid') return node.direction;
   return node.children.length > 1 && isOverlay(node) ? 'overlap' : gridSize(node);
 };

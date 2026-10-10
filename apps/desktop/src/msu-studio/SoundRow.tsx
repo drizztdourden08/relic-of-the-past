@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Status, Box, Button, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { Status, Box, Button, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { soundChannelPort, soundChannelTag, triggerSummary } from './sound-labels';
 import { AMBIENT_ROLE_HINTS, AMBIENT_ROLE_LABELS } from './msu.constants';
 import type { SoundRowProps } from './msu.type';
@@ -54,7 +54,7 @@ const SoundRow = (props: SoundRowProps) => {
             active={playing}
             onClick={() => (stoppable ? onStopPreview() : onPreview(channel, soundId))}
           >
-            {stoppable ? '■' : '▶'}
+            <Icon name={stoppable ? 'square' : 'play'} />
           </IconButton>
         )}
         <IconButton
@@ -66,7 +66,7 @@ const SoundRow = (props: SoundRowProps) => {
           active={playingOriginal}
           onClick={() => onPlayOriginal(soundId)}
         >
-          {playingOriginal ? '■' : '▷'}
+          <Icon name={playingOriginal ? 'square' : 'volume-2'} />
         </IconButton>
         {replaced && (
           <IconButton
@@ -77,7 +77,7 @@ const SoundRow = (props: SoundRowProps) => {
             disabled={busy}
             onClick={() => onToggleLayers(soundId)}
           >
-            ☰
+            <Icon name="layers" />
           </IconButton>
         )}
         {replaced ? (

@@ -8,7 +8,7 @@
 // THE PICTURES come from the host: the sprite extraction reduces the nine currency
 // drawings to sprite palette row SYMBOL_PALETTE_ROW and encodes each as the two 4bpp
 // tiles of a 16x8 strip, 64 B in the order left tile, right tile, 576 B in all
-// (packages/asset-extraction/src/item-sprites/currency-symbols.ts), handed over through MEMFS
+// (packages/asset-extraction/src/item-sprites/currency-symbols/), handed over through MEMFS
 // (WasmApplyCurrencySymbolsFile). Where the drawing sits inside its strip is read off the
 // tiles when the file lands (the first and last painted column), so the shelf can butt
 // the picture against its digits whatever margin the drawing carries, and an 8 px wide

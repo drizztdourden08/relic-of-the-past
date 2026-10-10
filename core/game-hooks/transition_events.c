@@ -11,8 +11,8 @@
 // animation, shutter close, stair climb and scroll by construction, since the module's own
 // dispatch loop treats submodule 0 as "player has control" (Dungeon_HandleRoomTags and
 // friends only run then). Classification of which kind of transition this was happens in
-// JS (classify-transition.ts), not here; this file only detects the edge and reports raw
-// numbers.
+// JS (packages/game-core/src/events/classify-transition.ts), not here; this file only detects
+// the edge and reports raw numbers.
 
 static bool IsGameplayModule(uint8 m) { return m == 7 || m == 9; }
 

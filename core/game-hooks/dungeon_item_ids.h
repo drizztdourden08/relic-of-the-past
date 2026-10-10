@@ -1,7 +1,7 @@
 /* @layer core-game-hooks @kind native */
 // Virtual receive ids for the four DUNGEON-FLAVOURED item families: the encoding shared by
 // dungeon_item_grants.c and its probes, mirrored by
-// shared/game/data/dungeon-item-receive-id.ts.
+// packages/game-data/src/data/dungeon-item-receive-id/dungeon-item-receive-id.constants.ts.
 //
 // WHY AN ID PER (KIND, DUNGEON). Every record of a family shares one native receive id
 // (small key 0x24, big key 0x32, map 0x33, compass 0x25) and the native grant credits the

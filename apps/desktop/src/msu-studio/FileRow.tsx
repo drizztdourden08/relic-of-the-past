@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
-import { Status, Box, IconButton, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Status, Box, Icon, IconButton, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { MsuFileMetadata } from '@rotp/msu';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { FilePlayer, clock } from '@rotp/design/packs';
@@ -108,7 +108,7 @@ const FileRow = (props: FileRowProps) => {
             disabled={loading}
             onClick={() => onPlay(file.name)}
           >
-            {playing ? '■' : '▶'}
+            <Icon name={playing ? 'square' : 'play'} />
           </IconButton>
           <IconButton
             variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy || readOnly}

@@ -40,7 +40,7 @@ const ShadowEditorPanel = () => {
 
   const selectedHm = selectedType === 'heightmap' ? screenData.heightmap.find((e) => e.id === selectedElementId) : null;
   const selectedLight = selectedType === 'light' ? screenData.lights.find((l) => l.id === selectedElementId) : null;
-  const hasSelection = selectedHm || selectedLight;
+  const hasSelection = selectedHm ?? selectedLight;
 
   const handleDelete = useCallback(() => {
     if (!selectedElementId) return;

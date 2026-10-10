@@ -1041,7 +1041,7 @@ An entry with unsaved words is shown with them in every view.
 
 Only the card list scrolls, so the search box and filters stay in place.
 The list is the query container for its rows.
-Every row has the same fixed columns, so whether there is room for the line's words depends on the list's width, as `EntryCardCollapsed.css` reads it.
+Every row has the same fixed columns, so whether there is room for the line's words depends on the list's width, as `entry-row.css` reads it.
 
 ### language-editor/sub-components/EntryEditor.tsx
 

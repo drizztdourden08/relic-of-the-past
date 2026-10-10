@@ -99,7 +99,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
         alignItems: 'flex-start',
         paddingTop: 1.75 * tile,
         height: '100%',
-        width: hudWidth != null ? hudWidth : '100%',
+        width: hudWidth ?? '100%',
         margin: hudWidth != null ? '0 auto' : undefined,
       }}>
           <HudBox style={{ display: 'flex', alignItems: 'flex-start', marginLeft: 2 * tile }}>

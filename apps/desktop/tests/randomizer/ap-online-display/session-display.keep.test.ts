@@ -51,7 +51,7 @@ const createFakeOnline = (): FakeOnline => {
     },
     networkStatus: null,
     onNetworkStatus: () => () => undefined,
-  } as unknown as OnlineSession;
+  } as OnlineSession;
   return {
     session,
     setStatus,
@@ -62,7 +62,7 @@ const createFakeOnline = (): FakeOnline => {
 const placementOf = (locations: Record<string, string>): Placement => ({
   seed: 'test', medallions: { mire: ITEM.ether, turtleRock: ITEM.quake }, locations, shopPrices: {}, pondDemands: {},
   spheres: [{ index: 1, locations: Object.keys(locations) }], stats: {},
-}) as unknown as Placement;
+}) as Placement;
 
 const SCOUTED = placementOf({ 'check-001': FOREIGN_ITEM_KEY, 'check-002': FOREIGN_ITEM_KEY, 'check-003': ITEM.bow });
 const OWNERS: ForeignOwners = { 'check-001': 'Zelda' };

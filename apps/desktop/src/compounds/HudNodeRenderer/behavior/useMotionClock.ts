@@ -21,7 +21,7 @@ const useMotionClock = (active: boolean, override?: number | null): number => {
     return () => cancelAnimationFrame(frame);
   }, [active, parked]);
 
-  if (parked) return Math.max(0, override as number);
+  if (parked) return Math.max(0, override);
   return active ? nowMs : 0;
 };
 

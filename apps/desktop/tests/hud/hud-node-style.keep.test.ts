@@ -2,7 +2,8 @@
 import { describe, expect, it } from 'vitest';
 import defaultJson from '../../../../packages/hud/data/layouts/default.json';
 import { tryLoadLayout } from '@rotp/hud';
-import { OUTLINE_MAX_WIDTH, resolveNodeStyle } from '@app/compounds/HudNodeRenderer/sub-components/HudNodeStyle';
+import { OUTLINE_MAX_WIDTH } from '@app/compounds/HudNodeRenderer/behavior/hud-node-style.constants';
+import { resolveNodeStyle } from '@app/compounds/HudNodeRenderer/behavior/resolve-node-style';
 
 const edited = (change: (doc: Record<string, unknown>) => void): unknown => {
   const copy = JSON.parse(JSON.stringify(defaultJson)) as Record<string, unknown>;

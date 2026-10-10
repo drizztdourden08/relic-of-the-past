@@ -16,8 +16,8 @@ const logWater = (water: WishPondWaterPlan, tag: string): void => {
     return;
   }
   const route = mode === 'vanilla-cost' ? 'vanilla ids through the npc table' : 'placed items, fire-reported';
-  log.randomizer(`${tag} ${label} armed as pond ${pond}: ${rungs.length} rungs, one per visit, ${route}: `
-    + rungs.map((row) => `"${row.location}" -> ${hex(row.newItem)} (fire ${row.fireId})`).join(', '));
+  log.randomizer(`${tag} ${label} armed as pond ${pond}: ${rungs.length} rungs, one per visit, ${route}: ${
+     rungs.map((row) => `"${row.location}" -> ${hex(row.newItem)} (fire ${row.fireId})`).join(', ')}`);
 };
 
 const armWishPondSession = (plan: WishPondSessionPlan, tag: string): void => {

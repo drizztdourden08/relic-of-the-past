@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 import { Status, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { fitChipOf } from './fit-chip';
 import type { EntryCardCollapsedProps } from './entry.type';
-import './EntryCardCollapsed.css';
 
 const EntryCardCollapsed = (props: EntryCardCollapsedProps) => {
   const { model, rows, onOpen } = props;

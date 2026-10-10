@@ -15,7 +15,7 @@ const GlyphPackPicker = (props: GlyphPackPickerProps) => {
   );
 
   const selectedCustom = custom.find((pack) => pack.id === value) ?? null;
-  const target = (position || positions[0]) as GlyphPosition | undefined;
+  const target = (position || positions[0]);
   const overrides = Object.keys(selectedCustom?.glyphs ?? {}) as GlyphPosition[];
 
   return (

@@ -14,7 +14,7 @@ const iniToWrite = (configIni: string | undefined): string => {
 };
 
 const makeDirIfMissing = (mod: EmscriptenModule, path: string): void => {
-  try { mod.FS.mkdir(path); } catch { return; }
+  try { mod.FS.mkdir(path); } catch {  }
 };
 
 const writeBootFiles = (mod: EmscriptenModule, f: BootFiles): void => {

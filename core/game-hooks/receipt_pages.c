@@ -7,13 +7,14 @@
 // (GameHook_ArmReceiptDetailPage, receipt_messages.c). The receipt shows the first line; when
 // the engine loads it, the detail's bytes are appended to the loaded buffer.
 //
-// The detail line is composed by the host as a page already (page-message.ts): a key wait,
+// The detail line is composed by the host as a page already
+// (packages/game-core/src/session-dialogue/page-message.ts): a key wait,
 // then each row scrolled in, the way the game's own long lines move on to their next box. So
 // this file joins bytes and never lays anything out for it.
 //
 // A shelf selling another player's item (ReceiptPages_ChainAsPage, shop_refusal.c) chains the
 // shop's thanks and an ordinary line, so that line is laid out as a page while it is appended,
-// in the shape page-message.ts composes. When it does not fit, it replaces the thanks: the
+// in the shape the same page-message.ts composes. When it does not fit, it replaces the thanks: the
 // player is always told where the item went.
 //
 // Gate: kFeatures3_ReceiptMessages. Gate off, nothing is ever chained (the arm is gated) and

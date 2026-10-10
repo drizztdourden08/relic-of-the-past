@@ -22,12 +22,12 @@ const sizeWords = (blocks: number, lines: number): string =>
 const choiceWords = (choice: DialogueChoice): string => {
   const targets = [...new Set(choice.outcomes.map((outcome) => outcome.entry))];
   return targets.length > 0
-    ? `→ ${targets.map((entry) => `#${entry}`).join(' / ')}`
+    ? `-> ${targets.map((entry) => `#${entry}`).join(' / ')}`
     : `${choice.options} options`;
 };
 
 const choiceDetailWords = (choice: DialogueChoice): string => choice.outcomes
-  .map((outcome) => `option ${outcome.option} → #${outcome.entry}${outcome.when ? ` (${outcome.when})` : ''}`)
+  .map((outcome) => `option ${outcome.option} -> #${outcome.entry}${outcome.when ? ` (${outcome.when})` : ''}`)
   .join('\n');
 
 const entryRowModel = (params: EntryRowParams): EntryRowModel => {

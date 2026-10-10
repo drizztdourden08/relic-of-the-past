@@ -36,7 +36,7 @@ const PondPriceControls = (props: PondControlsProps) => {
           <Select
             size="sm"
             value={state.curve}
-            options={curveOptions as SelectOption[]}
+            options={curveOptions}
             disabled={readOnly}
             onChange={(curve) => onChange({ curve: curve as PondRowState['curve'] })}
           />

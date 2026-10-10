@@ -2,8 +2,8 @@
 import { HudBox } from '../../primitives/HudBox';
 import { drawOrigin } from './behavior/draw-origin';
 import { HudNodeArt } from './sub-components/HudNodeArt';
-import { useHudNodeMotion } from './sub-components/HudNodeMotion';
-import { resolveNodeStyle } from './sub-components/HudNodeStyle';
+import { useHudNodeMotion } from './behavior/useHudNodeMotion';
+import { resolveNodeStyle } from './behavior/resolve-node-style';
 import { EMPTY_SCOPE, ORIGIN } from './HudNodeRenderer.constants';
 import type { HudNodeRendererProps } from './HudNodeRenderer.type';
 import type { HudNode } from '@rotp/hud';

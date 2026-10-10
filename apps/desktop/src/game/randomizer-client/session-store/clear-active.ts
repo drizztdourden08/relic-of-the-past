@@ -7,7 +7,7 @@ import type { OnlineSession } from '../online-session';
 const keepLastNetworkStatus = (active: OnlineSession): void => {
   storeSlots.unsubscribeNetwork?.();
   storeSlots.unsubscribeNetwork = null;
-  try { rememberNetworkStatus(active.networkStatus); } catch { return; }
+  try { rememberNetworkStatus(active.networkStatus); } catch {  }
 };
 
 const clearActive = (): void => {

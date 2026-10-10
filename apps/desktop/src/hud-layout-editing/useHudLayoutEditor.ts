@@ -54,7 +54,7 @@ const useHudLayoutEditor = (props: HudLayoutEditorProps) => {
   const positions = useMemo(
     () => sample.slots
       .map((slot) => slot.position)
-      .filter((position): position is GlyphPosition => !!position),
+      .filter((position): position is GlyphPosition => Boolean(position)),
     [sample.slots],
   );
 

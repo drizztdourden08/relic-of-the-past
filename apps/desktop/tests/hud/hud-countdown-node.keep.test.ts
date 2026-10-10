@@ -8,9 +8,8 @@ import { parseGameUIBuffer } from '@rotp/game-core';
 import { countdownBox } from '@app/compounds/HudCountdown';
 import { HudNodeCountdown } from '@app/compounds/HudNodeRenderer/sub-components/HudNodeCountdown';
 import { drawOrigin } from '@app/compounds/HudNodeRenderer/behavior/draw-origin';
-import {
-  countdownInset, countdownVariantOf,
-} from '@app/compounds/HudNodeRenderer/behavior/countdown-art';
+import { countdownInset } from '@app/compounds/HudNodeRenderer/behavior/countdown-inset';
+import { countdownVariantOf } from '@app/compounds/HudNodeRenderer/behavior/countdown-variant-of';
 import { countdownContentOf } from '@app/views/HudLayoutView/behavior/countdown-content';
 import { occupantsOf } from '@app/views/HudLayoutEditor/sub-components/GridLattice';
 import type { PlacedNode, HudLayout, HudNode } from '@rotp/hud';

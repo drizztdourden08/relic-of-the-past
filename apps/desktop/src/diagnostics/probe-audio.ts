@@ -10,7 +10,7 @@ const closeQuietly = async (context: AudioContext | null): Promise<void> => {
   try {
     await context?.close();
   } catch {
-    return;
+    
   }
 };
 

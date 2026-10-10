@@ -15,7 +15,7 @@ import type { ContentSectionProps } from './ContentSection.type';
 const ContentSection = (props: ContentSectionProps) => {
   const { node, onPatch, scope, insideRepeat, glyphPacks, selectedId, onSelectNode } = props;
   const { element } = node;
-  const setElement = <T extends HudElementSpec>(patch: Partial<T>): void => onPatch({ element: { ...element, ...patch } as HudElementSpec });
+  const setElement = <T extends HudElementSpec>(patch: Partial<T>): void => onPatch({ element: { ...element, ...patch } });
 
   switch (element.type) {
     case 'sprite':

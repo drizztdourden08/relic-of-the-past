@@ -6,7 +6,8 @@
 // These are called from specific points in the game logic (player.c, sprite.c,
 // ancilla.c) to notify the frontend about combat/action events that should
 // produce vibration. Event-type constants (HAPTIC_*) live in game_constants.h
-// and must match HapticEventType in haptics.ts.
+// and must match HapticEventType in
+// packages/input-mapping/src/haptic-events/haptic-events.constants.ts.
 
 // Single JS-interop site: every notifier funnels through here so the
 // window-guard and the __onHapticEvent contract are defined exactly once.

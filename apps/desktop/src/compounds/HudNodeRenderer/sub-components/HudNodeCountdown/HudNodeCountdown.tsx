@@ -1,7 +1,8 @@
 /* @layer renderer-hud @kind component */
 import { HudBox } from '../../../../primitives/HudBox';
 import { HudCountdown } from '../../../HudCountdown';
-import { countdownInset, countdownVariantOf } from '../../behavior/countdown-art';
+import { countdownInset } from '../../behavior/countdown-inset';
+import { countdownVariantOf } from '../../behavior/countdown-variant-of';
 import type { HudNodeCountdownProps } from './HudNodeCountdown.type';
 
 const HudNodeCountdown = (props: HudNodeCountdownProps) => {

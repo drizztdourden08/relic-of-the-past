@@ -7,7 +7,7 @@ const primeGlyphUrls = async (packs: readonly GlyphPack[]): Promise<void> => {
   const profileId = await activeProfileId();
   if (!profileId) return;
   const keys = packs.flatMap((pack) => Object.values(pack.glyphs)
-    .filter((source): source is GlyphSource => !!source && source.kind === 'custom')
+    .filter((source): source is GlyphSource => Boolean(source) && source.kind === 'custom')
     .map((source) => (source.kind === 'custom' ? source.fileKey : '')));
   await Promise.all(keys.filter(Boolean).map((key) => glyphUrlCache.load(profileId, key)));
 };

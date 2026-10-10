@@ -1,6 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { summaryOf, withSlotTicked } from '@app/compounds/ShopSlotsBlock/behavior/shop-scope-edits';
+import { summaryOf } from '@app/compounds/ShopSlotsBlock/behavior/summary-of';
+import { withSlotTicked } from '@app/compounds/ShopSlotsBlock/behavior/with-slot-ticked';
 import { shopTotalTextOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-total-text';
 import { shopSectionsOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-sections';
 import { shopCountControlOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-count-control';

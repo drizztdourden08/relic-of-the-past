@@ -23,7 +23,7 @@ const LayoutSection = (props: LayoutSectionProps) => {
 
   const setEngine = (next: string): void => {
     const patch = engineSwitchPatch(node, next === 'grid' ? 'grid' : 'flex');
-    if (patch) onPatch(patch as Partial<HudContainer>);
+    if (patch) onPatch(patch);
   };
 
   const grid = node as HudGridContainer;

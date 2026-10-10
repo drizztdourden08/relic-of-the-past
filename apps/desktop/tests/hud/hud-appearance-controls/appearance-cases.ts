@@ -8,6 +8,7 @@ import { SlotChips } from '@app/views/HudLayoutEditor/sub-components/SlotChips';
 import { SubsectionGroup } from '@app/views/HudLayoutEditor/sub-components/SubsectionGroup';
 import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import type { HudNode } from '@rotp/hud';
+import { required } from '../../required';
 
 const noop = (): void => {};
 const scope = { life_current: 8 };
@@ -27,10 +28,12 @@ const loaded: HudNode = {
 };
 
 const group = (title: string, summary: string, swatch: string, ...body: ReactNode[]): ReactNode =>
-  h(SubsectionGroup, { key: title, title, summary, swatch, open: true, onToggle: noop, enabled: true, onEnabledChange: noop }, ...body);
+  h(SubsectionGroup, {
+    key: title, title, summary, swatch, open: true, onToggle: noop, enabled: true, onEnabledChange: noop, children: body,
+  });
 
 const shadowBody = (i: number): ReactNode[] => {
-  const shadow = (loaded.style?.shadow ?? [])[i];
+  const shadow = required((loaded.style?.shadow ?? [])[i], `shadow ${i + 1}`);
   return [
     h('div', { key: 'g', className: 'grid' },
       ...(['x', 'y', 'blur', 'spread'] as const).map((k) => h(ValueField, {
@@ -62,8 +65,11 @@ const appearanceCases: Record<string, () => unknown> = {
   borderOpen: () => h(SubsectionGroup, {
     title: 'Border', summary: '2px solid, no left', swatch: '#c8a84e', open: true, onToggle: noop,
     enabled: true, onEnabledChange: noop,
-  }, h(PaintField, { label: 'colour', value: '#c8a84e', onChange: noop, scope }),
-    h(SidesField, { label: 'sides', value: { left: false }, onChange: noop })),
+    children: [
+      h(PaintField, { key: 'c', label: 'colour', value: '#c8a84e', onChange: noop, scope }),
+      h(SidesField, { key: 's', label: 'sides', value: { left: false }, onChange: noop }),
+    ],
+  }),
   gradient: () => h(PaintField, {
     label: 'background', kinds: true, onChange: noop, scope,
     value: { gradient: 'linear', angle: 0, stops: [{ at: 0, color: '#ffffff' }, { at: 1, color: '#000000' }] },

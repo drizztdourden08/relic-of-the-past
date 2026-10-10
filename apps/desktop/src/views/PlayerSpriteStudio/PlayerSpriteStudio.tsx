@@ -78,7 +78,7 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
     <SpriteLibraryList
       entries={library.entries}
       selected={openFile}
-      canCreate={!!romWithAssets}
+      canCreate={Boolean(romWithAssets)}
       isInstalled={isInstalled}
       onSelect={(name) => run(() => draft.open(name))}
       onCreate={() => run(draft.createNew)}

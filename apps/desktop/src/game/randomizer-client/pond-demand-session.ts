@@ -10,9 +10,9 @@ const armPondDemandSession = (plan: PondDemandSessionPlan, tag: string): void =>
   for (const refusal of refusals) log.randomizer(`${tag} Pond demands NOT armed for ${refusal}`, 'warn');
   setPondDemands(rows);
   if (rows.length === 0) return;
-  log.randomizer(`${tag} Pond demands armed: `
-    + rows.map((row) => `"${row.location}" kind ${row.kind} amount ${row.amount} id ${hex(row.nativeId)} `
-      + `(lines ${row.askMessageId}/${row.refuseMessageId}/${row.awardMessageId})`).join(', '));
+  log.randomizer(`${tag} Pond demands armed: ${
+     rows.map((row) => `"${row.location}" kind ${row.kind} amount ${row.amount} id ${hex(row.nativeId)} `
+      + `(lines ${row.askMessageId}/${row.refuseMessageId}/${row.awardMessageId})`).join(', ')}`);
 };
 
 export { armPondDemandSession };

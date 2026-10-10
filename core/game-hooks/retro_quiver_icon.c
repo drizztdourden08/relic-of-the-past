@@ -38,8 +38,8 @@
 // The receipt the quiver arrives as (retro_shelf.c's RETRO_QUIVER_RECEIPT).
 #define QUIVER_RECEIPT 0x43
 // The sprite palette row the picture is quantized to. Mirrored by QUIVER_ICON_PALETTE_ROW
-// in packages/asset-extraction/src/item-sprites/quiver-icon.ts (the extractor that writes the
-// file): change both together. Row 4 fits the drawing's browns and gold best of the four
+// in packages/asset-extraction/src/item-sprites/quiver-icon/quiver-icon.constants.ts (read by
+// the extractor that writes the file): change both together. Row 4 fits the drawing's browns and gold best of the four
 // main sprite rows, and is the only one identical in both world halves.
 #define QUIVER_PALETTE_ROW 4
 // The OAM size flag kReceiveItem_Tab1 gives a wide (16x16) receipt.

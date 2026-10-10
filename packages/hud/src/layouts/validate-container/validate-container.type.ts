@@ -2,8 +2,12 @@
 import type { HudNode } from '../../types/hud-node';
 import type { Issues } from '../validate-box';
 
-type NodeValidator = (
-  value: unknown, path: string, issues: Issues, seen: Set<string>, insideRepeat?: boolean,
-) => HudNode | null;
+interface NodeContext {
+  issues: Issues;
+  seen: Set<string>;
+  insideRepeat: boolean;
+}
 
-export type { NodeValidator };
+type NodeValidator = (value: unknown, path: string, ctx: NodeContext) => HudNode | null;
+
+export type { NodeContext, NodeValidator };

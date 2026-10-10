@@ -20,7 +20,7 @@ const pollRoomFlags = (force = false): void => {
       }
     }
   } catch {
-    return;
+    
   }
 };
 

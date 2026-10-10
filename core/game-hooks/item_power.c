@@ -14,8 +14,8 @@
 // Two of the seven are not only the player's to set. A tier tick set with no beam blade in it
 // would leave the tablets behind a requirement nothing in the seed could meet, and one with no
 // blade at all would do the same to the medallion doors, so the session arms those two bits
-// from the tick set and from the switch (item-power/item-power-rule.ts derives the pair
-// on both sides, so the logic and the running game can never disagree). Nothing here knows
+// from the tick set and from the switch (packages/randomizer/src/world/item-power/item-power-rule/
+// derives the pair on both sides, so the logic and the running game can never disagree). Nothing here knows
 // that: it reads the bit it was given.
 #include "game_hooks_internal.h"
 

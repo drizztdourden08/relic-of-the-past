@@ -41,7 +41,7 @@ const useDraggablePosition = () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(offset));
     } catch {
-      return;
+      
     }
   }, [offset]);
 

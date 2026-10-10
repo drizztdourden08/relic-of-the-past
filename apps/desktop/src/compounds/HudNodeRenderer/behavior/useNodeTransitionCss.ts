@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { transitionCssValue } from './resolve-node-transition';
 import type { PlacedNode } from '@rotp/hud';
-import type { MotionScope, NodeSnapshot } from './HudNodeMotion.type';
+import type { MotionScope, NodeSnapshot } from './hud-node-motion.type';
 
 const snapshotOf = (placed: PlacedNode): NodeSnapshot => ({
   w: placed.rect.w, h: placed.rect.h, x: placed.rect.x, y: placed.rect.y, opacity: placed.opacity,

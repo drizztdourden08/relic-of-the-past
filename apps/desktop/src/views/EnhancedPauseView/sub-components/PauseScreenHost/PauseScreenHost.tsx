@@ -57,7 +57,7 @@ const PauseScreenHost = (props: PauseScreenHostProps) => {
     <PauseItemsScreen
       items={items.items}
       bottles={items.bottles}
-      section={section === 'bottles' ? 'bottles' : ('items' as ItemsSection)}
+      section={section === 'bottles' ? 'bottles' : ('items')}
       cursor={cursor}
       nameLines={items.nameLines}
       hintLines={hintLines}

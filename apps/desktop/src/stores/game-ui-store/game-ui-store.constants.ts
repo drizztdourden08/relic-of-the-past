@@ -2,7 +2,7 @@
 import type { GameUIState, UIMode } from '@rotp/game-data';
 
 const INITIAL_GAME_UI_STATE: GameUIState = {
-  mode: 'title' as UIMode,
+  mode: 'title',
   gameMode: { mainModule: 0, subModule: 0, subSubModule: 0 },
   hud: {
     healthCurrent: 0, healthCapacity: 0, magicPower: 0, halfMagic: false,

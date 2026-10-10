@@ -46,7 +46,7 @@ const buildSlotContent = (input: SlotContentInput): SlotContent => {
     if (spec.position === 'DPAD') return GROUP_GLYPH_ART.DPAD ?? null;
     if (spec.slot !== undefined) return glyphs.get(spec.slot) ?? null;
     if (!spec.position) return null;
-    return resolveGlyph(pack, spec.position as SdlButtonName | SdlAxisName, family, packs);
+    return resolveGlyph(pack, spec.position, family, packs);
   };
 
   const signature = [

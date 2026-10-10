@@ -24,7 +24,7 @@ const useOverlayRender = (a: OverlayRenderArgs): void => {
       const vp = wasmGetViewportInfo();
       vpRef.current = vp;
       ctx.clearRect(0, 0, width, height);
-      if (!vp || vp.locationModule !== OVERWORLD_MODULE) { rafRef.current = requestAnimationFrame(draw); return; }
+      if (vp?.locationModule !== OVERWORLD_MODULE) { rafRef.current = requestAnimationFrame(draw); return; }
       if (useShadowEditorStore.getState().previewMode) { rafRef.current = requestAnimationFrame(draw); return; }
       drawOverlay(ctx, vp, {
         width, height, selectedElementId, freehandPoints, isDrawingFreehand,

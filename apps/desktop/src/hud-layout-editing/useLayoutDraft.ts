@@ -75,7 +75,7 @@ const useLayoutDraft = (layoutId: string, onCommitted?: (layout: HudLayout) => v
     return draft.builtIn ? commit(forkLayout(draft, `${draft.name} (edited)`)) : commit(draft);
   }, [commit, draft]);
 
-  const dirty = useMemo(() => !!draft && !sameLayout(draft, origin), [draft, origin]);
+  const dirty = useMemo(() => Boolean(draft) && !sameLayout(draft, origin), [draft, origin]);
 
   return { draft, apply, layouts, dirty, busy, rename, setGlyphPack, startFrom, reset, save, saveAs };
 };

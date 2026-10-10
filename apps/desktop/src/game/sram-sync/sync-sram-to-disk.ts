@@ -27,7 +27,7 @@ const syncSramToDisk = async (): Promise<void> => {
     await savesStore.writeSram(profileId, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
     log.app(`[SRAM] Synced ${data.byteLength} bytes to disk (hash=${hash})`);
   } catch {
-    return;
+    
   }
 };
 

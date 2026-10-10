@@ -9,7 +9,7 @@ const reloadMsuForProfile = async (profileId: string): Promise<boolean> => {
   const profile = (await listProfiles()).find((p) => p.id === profileId);
   if (!profile) return false;
   const saved = await readConfig(profileId);
-  await loadMsuPack(profile, merge((saved ?? {}) as Parameters<typeof merge>[0]));
+  await loadMsuPack(profile, merge((saved ?? {})));
   return true;
 };
 

@@ -10,7 +10,7 @@ const pruneIfNeeded = async (maxEntries: number): Promise<void> => {
   try {
     await savesStore.pruneAutoSaves(profileId, maxEntries);
   } catch {
-    return;
+    
   }
 };
 

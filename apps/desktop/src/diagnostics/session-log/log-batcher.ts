@@ -5,7 +5,7 @@ const sendQuietly = (send: (lines: string[]) => void, batch: string[]): void => 
   try {
     send(batch);
   } catch {
-    return;
+    
   }
 };
 

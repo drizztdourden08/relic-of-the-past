@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { all } from '@rotp/game-data';
 import { actTokensOf } from '@rotp/randomizer';
-import type { LocationKey, OptionValue } from '@rotp/randomizer';
+import type { OptionValue } from '@rotp/randomizer';
 import { DIGEST_LENGTH } from './rule-parity-harness.constants';
 import type { ParityDigest } from './rule-parity-harness.type';
 import { prepareState } from './prepare-state';

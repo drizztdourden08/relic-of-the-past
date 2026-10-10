@@ -29,7 +29,7 @@ const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): voi
       }
     }
   } catch {
-    return;
+    
   }
 };
 

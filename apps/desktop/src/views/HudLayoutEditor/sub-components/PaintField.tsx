@@ -48,7 +48,7 @@ const PaintField = (props: PaintFieldProps) => {
       {mode === 'gradient' && typeof value !== 'string' && 'gradient' in value && (
         <>
           <GradientRamp kind={value.gradient} stops={value.stops} onChange={(stops) => onChange({ ...value, stops })} />
-          <ValueField label="angle" value={(value.angle ?? 0) as Value} onChange={(angle) => onChange({ ...value, angle })} scope={scope} insideRepeat={insideRepeat} step={ANGLE_STEP} />
+          <ValueField label="angle" value={(value.angle ?? 0)} onChange={(angle) => onChange({ ...value, angle })} scope={scope} insideRepeat={insideRepeat} step={ANGLE_STEP} />
         </>
       )}
 

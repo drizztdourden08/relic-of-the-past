@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useRef, useState } from 'react';
 import type { PlacedNode } from '@rotp/hud';
-import { POST_EXIT, PRE_ENTER } from './HudNodeMotion.constants';
-import type { EnterExitResult, Ghost } from './HudNodeMotion.type';
+import { POST_EXIT, PRE_ENTER } from './hud-node-motion.constants';
+import type { EnterExitResult, Ghost } from './hud-node-motion.type';
 
 const useEnterExit = (nodes: readonly PlacedNode[]): EnterExitResult => {
   const seenRef = useRef<Set<string>>(new Set());

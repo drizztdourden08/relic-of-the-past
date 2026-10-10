@@ -12,7 +12,7 @@ const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
   let link: SocketLink | null = null;
 
   const connectPacket = (packet: Extract<ApServerPacket, { cmd: 'RoomInfo' }>): ApConnectPacket => ({
-    cmd: 'Connect', game: '', name, password: password ? password : null, uuid, version: versionOf(packet),
+    cmd: 'Connect', game: '', name, password: password || null, uuid, version: versionOf(packet),
     items_handling: NO_ITEMS_HANDLING, tags: [...TRACKER_TAGS], slot_data: false,
   });
 

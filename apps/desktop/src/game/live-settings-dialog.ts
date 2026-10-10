@@ -8,7 +8,7 @@ const callUnlessCoreIsOlder = (call: () => void): void => {
   try {
     call();
   } catch {
-    return;
+    
   }
 };
 

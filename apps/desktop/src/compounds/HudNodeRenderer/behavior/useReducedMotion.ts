@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useState } from 'react';
-import { REDUCED_MOTION_QUERY } from './HudNodeMotion.constants';
+import { REDUCED_MOTION_QUERY } from './hud-node-motion.constants';
 
 const useReducedMotion = (): boolean => {
   const [reduced, setReduced] = useState(() => (

@@ -17,7 +17,7 @@ const refusalFor = (
   const target = siteOf(doc, parentId);
   for (const id of ids) {
     const site = siteOf(doc, id);
-    if (!site || !site.parent) return { reason: 'source-locked', nodeId: id };
+    if (!site?.parent) return { reason: 'source-locked', nodeId: id };
     if (id === parentId) return { reason: 'self', nodeId: id };
     if (site.node.kind === 'container' && subtreeIds(doc, site.node).has(parentId)) {
       return { reason: 'descendant', nodeId: parentId };

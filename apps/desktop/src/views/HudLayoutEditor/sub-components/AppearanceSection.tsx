@@ -68,7 +68,7 @@ const AppearanceSection = (props: AppearanceSectionProps) => {
             <Field size="sm" label="style">
               <Select size="sm" value={border.style ?? 'solid'} options={BORDER_STYLES.map((v) => ({ value: v, label: v }))} onChange={(v) => setStyle({ border: { ...border, style: v as HudBorderStyle } })} />
             </Field>
-            <SidesField label="sides" value={border.sides} onChange={(sides) => setStyle({ border: { ...border, sides } as HudBorder })} />
+            <SidesField label="sides" value={border.sides} onChange={(sides) => setStyle({ border: { ...border, sides } })} />
           </>
         )}
       </SubsectionGroup>

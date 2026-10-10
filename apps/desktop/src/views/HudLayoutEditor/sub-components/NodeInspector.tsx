@@ -48,7 +48,7 @@ const NodeInspector = (props: NodeInspectorProps) => {
     return next.length > MAX_OPEN ? next.slice(next.length - MAX_OPEN) : next;
   });
 
-  const isScreen = doc.screen !== undefined && doc.screen.id === node.id;
+  const isScreen = doc.screen?.id === node.id;
   const otherIds = walkNodes(doc).map((site) => site.node.id).filter((id) => id !== node.id);
   const parent = realParentOf(doc, node.id);
   const insideRepeat = isInsideRepeat(doc, node.id);
@@ -90,7 +90,7 @@ const NodeInspector = (props: NodeInspectorProps) => {
       {node.kind === 'container' && section('layout', 'Layout', counts.layout, (
         <LayoutSection
           node={node}
-          onPatch={(patch) => onPatch(patch as Partial<HudNode>)}
+          onPatch={(patch) => onPatch(patch)}
           onDrop={onDrop}
           scope={scope}
           insideRepeat={insideRepeat}
@@ -100,8 +100,8 @@ const NodeInspector = (props: NodeInspectorProps) => {
       {section('appearance', 'Appearance', counts.appearance, <AppearanceSection node={node} onPatch={onPatch} scope={scope} insideRepeat={insideRepeat} />)}
       {node.kind === 'element' && section('content', 'Content', counts.content, (
         <ContentSection
-          node={node as HudElement}
-          onPatch={(patch) => onPatch(patch as Partial<HudNode>)}
+          node={node}
+          onPatch={(patch) => onPatch(patch)}
           scope={scope}
           insideRepeat={insideRepeat}
           glyphPacks={glyphPacks}

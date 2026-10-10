@@ -27,23 +27,32 @@ const spansOf = (text: string, marker: string): string[] => {
 
 const candidatesOf = (line: ReceiptLine): readonly string[] => receiptLineCandidates(line);
 
+const encodedRun = (runs: readonly Uint8Array[], index: number): number[] => [...required(runs[index], `encoded run ${index}`)];
+
 describe('markup to control bytes', () => {
   it('writes 0x81 / 0x82 to open and 0x80 to close in the US encoding, between runs encoded on their own', () => {
     const text = `You got ${primary('Bow')} from ${secondary('Zelda')}!`;
-    const [bytes] = compressMarkedStrings([text], 'us');
-    const [you, bow, from, zelda, bang] = compressStrings(['You got ', 'Bow', ' from ', 'Zelda', '!'], 'us');
-    expect([...bytes]).toEqual([...you, 0x81, ...bow, 0x80, ...from, 0x82, ...zelda, 0x80, ...bang]);
+    const bytes = encodedRun(compressMarkedStrings([text], 'us'), 0);
+    const runs = compressStrings(['You got ', 'Bow', ' from ', 'Zelda', '!'], 'us');
+    const you = encodedRun(runs, 0);
+    const bow = encodedRun(runs, 1);
+    const from = encodedRun(runs, 2);
+    const zelda = encodedRun(runs, 3);
+    const bang = encodedRun(runs, 4);
+    expect(bytes).toEqual([...you, 0x81, ...bow, 0x80, ...from, 0x82, ...zelda, 0x80, ...bang]);
   });
 
   it('writes 0x87 then 0x50 + span in the European encoding', () => {
-    const [bytes] = compressMarkedStrings([`${primary('Bogen')}!`], 'de');
-    const [bogen, bang] = compressStrings(['Bogen', '!'], 'de');
-    expect([...bytes]).toEqual([0x87, 0x51, ...bogen, 0x87, 0x50, ...bang]);
+    const bytes = encodedRun(compressMarkedStrings([`${primary('Bogen')}!`], 'de'), 0);
+    const runs = compressStrings(['Bogen', '!'], 'de');
+    const bogen = encodedRun(runs, 0);
+    const bang = encodedRun(runs, 1);
+    expect(bytes).toEqual([0x87, 0x51, ...bogen, 0x87, 0x50, ...bang]);
   });
 
   it('leaves a line with no markup exactly as the plain encoder makes it', () => {
     const plain = 'The water has nothing left to give.';
-    expect([...compressMarkedStrings([plain], 'us')[0]]).toEqual([...compressStrings([plain], 'us')[0]]);
+    expect(encodedRun(compressMarkedStrings([plain], 'us'), 0)).toEqual(encodedRun(compressStrings([plain], 'us'), 0));
   });
 });
 

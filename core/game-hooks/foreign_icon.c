@@ -37,7 +37,8 @@
 // The sprite palette row the icon's OAM entries name. With the bank loaded the colours come
 // from the bank and the row only decides colour math (rows 4-7 take it, as every receipt
 // does); with a pictures-only file the pictures are quantized to it. Mirrored by
-// FOREIGN_ICON_PALETTE_ROW in packages/asset-extraction/src/item-sprites/foreign-icons.ts: change
+// FOREIGN_ICON_PALETTE_ROW in
+// packages/asset-extraction/src/item-sprites/foreign-icons/foreign-icons.constants.ts: change
 // both together. Row 4 is the one main sprite row identical in both world halves.
 #define FOREIGN_ICON_PALETTE_ROW 4
 // The palette after the pictures: 16 SNES words, the first one transparent.

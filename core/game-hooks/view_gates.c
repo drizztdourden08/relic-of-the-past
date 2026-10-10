@@ -57,8 +57,8 @@ bool GameHook_LightConeSuppressesExtraWidth(void) {
 // player_is_indoors is already set, so that crossing reads as the room it is throughout.
 //
 // This was gated on the area-seam pan alone, on the reading that a crossing keeping its view is the same
-// promise the pan makes. The pan is only offered with the camera lock (settings.ts writes
-// SmoothTransitions as lock AND smooth), and the lock is the one setting that pins the rendered view to
+// promise the pan makes. The pan is only offered with the camera lock
+// (packages/game-core/src/settings/serialize-to-ini.ts writes SmoothTransitions as lock AND smooth), and the lock is the one setting that pins the rendered view to
 // the map so no margin is ever left over. So the profiles that could turn this gate on were exactly the
 // profiles with nothing to lose, and every profile that could see the picture snap in to 4:3 was unable
 // to reach the gate at all. Jumping off a ledge into a hole showed it: 105 frames of the original

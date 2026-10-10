@@ -20,11 +20,11 @@
 }
 
 .input-cal__stick-circle {
-  width: 80px;
-  height: 80px;
+  width: var(--size-80);
+  height: var(--size-80);
   border-radius: 50%;
   background: var(--c-bg);
-  box-shadow: inset 0 0 0 1px var(--c-border);
+  box-shadow: inset 0 0 0 var(--size-1) var(--c-border);
   position: relative;
   overflow: hidden;
 }
@@ -49,21 +49,21 @@
   top: 50%;
   left: 0;
   right: 0;
-  height: 1px;
+  height: var(--size-1);
 }
 
 .input-cal__stick-crosshair::after {
   left: 50%;
   top: 0;
   bottom: 0;
-  width: 1px;
+  width: var(--size-1);
 }
 
 .input-cal__stick-line {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 2px;
+  width: var(--size-2);
   background: var(--c-primary);
   border-radius: var(--radius-sm);
   transform-origin: top center;
@@ -72,11 +72,11 @@
 
 .input-cal__stick-dot {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: var(--size-8);
+  height: var(--size-8);
   border-radius: 50%;
   background: var(--c-primary-bright);
-  box-shadow: 0 0 6px var(--c-primary-soft);
+  box-shadow: 0 0 var(--size-6) var(--c-primary-soft);
   transform: translate(-50%, -50%);
   transition: none;
 }
@@ -96,9 +96,9 @@
 .input-cal__log {
   padding: var(--space-md);
   background: var(--c-bg);
-  border: 1px solid var(--c-border);
+  border: var(--size-1) solid var(--c-border);
   border-radius: var(--radius-md);
-  max-height: 200px;
+  max-height: var(--input-cal-panel-max);
   overflow-y: auto;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -119,7 +119,7 @@
 
 .input-cal__result {
   background: var(--c-surface);
-  border: 1px solid var(--c-secondary-dim);
+  border: var(--size-1) solid var(--c-secondary-dim);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
 }
@@ -142,10 +142,10 @@
   background: var(--c-bg);
   padding: var(--space-sm);
   border-radius: var(--radius-sm);
-  max-height: 240px;
+  max-height: var(--input-cal-log-max);
   overflow: auto;
   color: var(--c-text-dim);
-  border: 1px solid var(--c-border);
+  border: var(--size-1) solid var(--c-border);
 }
 
 .input-cal__empty {

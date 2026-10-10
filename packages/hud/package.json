@@ -7,6 +7,7 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
+    "./data/*": "./data/*",
     "./package.json": "./package.json"
   },
   "dependencies": {

@@ -1,4 +1,5 @@
 /* @layer renderer-hud @kind barrel */
 export { HudButton } from './HudButton';
-export { faceFor, stateFor } from './behavior/hud-button-state';
+export { faceFor } from './behavior/face-for';
+export { stateFor } from './behavior/state-for';
 export type { ButtonInputs, HudButtonProps } from './HudButton.type';

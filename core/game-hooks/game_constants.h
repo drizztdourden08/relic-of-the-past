@@ -68,7 +68,8 @@
 #define SPRITE_UNCLE_PRIEST 0x73  // Uncle (sprite_E == 0) / Priest family
 
 // Haptic event types emitted to JS via window.__onHapticEvent.
-// MUST match HapticEventType in haptics.ts.
+// MUST match HapticEventType in
+// packages/input-mapping/src/haptic-events/haptic-events.constants.ts.
 #define HAPTIC_SWORD_SWING 0
 #define HAPTIC_SWORD_HIT_ENEMY 1
 #define HAPTIC_SWORD_CLINK 2

@@ -23,8 +23,8 @@ const setCapacityProfileFamily = (arm: CapacityFamilyArm): void => {
   openCapacityGate();
   mod.ccall('WasmSetCapacityProfile', null, ['number', 'number', 'number', 'number'],
     [CAPACITY_FAMILY_INDEX[family], custom ? 1 : 0, custom ? startTier : 0, custom ? maxTier : 0]);
-  log.randomizer(`[Randomizer] Capacity profile set: ${family} `
-    + (custom ? `custom tiers ${startTier}..${maxTier}` : 'native grid'));
+  log.randomizer(`[Randomizer] Capacity profile set: ${family} ${
+     custom ? `custom tiers ${startTier}..${maxTier}` : 'native grid'}`);
 };
 
 export { setCapacityProfileFamily };

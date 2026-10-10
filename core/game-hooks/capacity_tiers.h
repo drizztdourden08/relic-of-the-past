@@ -48,7 +48,8 @@ static inline uint16 WalletCapOfIndex(int i) {
 // The virtual receive ids of the PROGRESSIVE capacity items (capacity_progressive.c), one
 // per family in the profile's family order, above the wallet slots 0x67-0x76:
 //   0x77 explosives · 0x78 projectiles · 0x79 meter · 0x7A wallet
-// Mirrored by shared/game/data/capacity-progressive-receive-id.ts.
+// Mirrored by packages/game-data/src/data/capacity-progressive-receive-id/
+// capacity-progressive-receive-id.constants.ts.
 #define PROGRESSIVE_CAPACITY_VIRT_FIRST 0x77
 #define PROGRESSIVE_CAPACITY_VIRT_LAST 0x7A
 

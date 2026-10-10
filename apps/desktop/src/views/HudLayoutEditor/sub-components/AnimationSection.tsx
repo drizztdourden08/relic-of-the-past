@@ -80,7 +80,7 @@ const AnimationSection = (props: AnimationSectionProps) => {
               <ValueField label="delay (ms)" value={animation.delay ?? 0} onChange={(next) => setAnimation(i, { delay: next === 0 ? undefined : next })} scope={scope} insideRepeat={insideRepeat} step={MS_STEP} />
             </Box>
             <Field size="sm" label="loop">
-              <SegmentedControl size="sm" value={animation.loop} options={[...LOOPS]} onChange={(loop) => setAnimation(i, { loop: loop as HudAnimationLoop })} />
+              <SegmentedControl size="sm" value={animation.loop} options={[...LOOPS]} onChange={(loop) => setAnimation(i, { loop: loop })} />
             </Field>
             <EasingPicker label="easing" value={animation.easing} onChange={(easing) => setAnimation(i, { easing })} />
 

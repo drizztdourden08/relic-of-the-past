@@ -5,7 +5,7 @@ import { styleToCss } from './style-to-css';
 import { tintFilter } from './tint-filter';
 import type { CSSProperties } from 'react';
 import type { HudBoxStyle, Paint } from '@rotp/hud';
-import type { StyleScope } from './HudNodeStyle.type';
+import type { StyleScope } from './hud-node-style.type';
 
 const flatColor = (paint: Paint): string => (typeof paint === 'string' ? paint : '#000');
 

@@ -23,6 +23,7 @@ import './log-bus';
 import './theme/hud-layout-editor/hud-layout-editor.css';
 import './theme/data-manager/data-manager.css';
 import './theme/dialogue-editor/lines.css';
+import './theme/input-calibration/input-calibration.css';
 
 installAppShim();
 

@@ -12,9 +12,9 @@ const PauseEquipmentPanel = ({ sword, shield, armor, heartPieces, isInDungeon, b
   const innerRows = 7;
 
   const palaceShift = palaceIndex >> 1;
-  const hasMap = isInDungeon && !!((maps << palaceShift) & 0x8000);
-  const hasCompass = isInDungeon && !!((compasses << palaceShift) & 0x8000);
-  const hasBigKey = isInDungeon && !!((bigKeys << palaceShift) & 0x8000);
+  const hasMap = isInDungeon && Boolean((maps << palaceShift) & 0x8000);
+  const hasCompass = isInDungeon && Boolean((compasses << palaceShift) & 0x8000);
+  const hasBigKey = isInDungeon && Boolean((bigKeys << palaceShift) & 0x8000);
 
   return (
     <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>

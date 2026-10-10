@@ -46,7 +46,7 @@ const useDragAutoScroll = (input: DragAutoScrollInput): void => {
 
     const onMove = (event: PointerEvent | MouseEvent): void => {
       last.current = event;
-      if (frame.current === null) frame.current = requestAnimationFrame(tick);
+      frame.current ??= requestAnimationFrame(tick);
     };
     window.addEventListener('pointermove', onMove as EventListener);
     window.addEventListener('pointerup', stop);

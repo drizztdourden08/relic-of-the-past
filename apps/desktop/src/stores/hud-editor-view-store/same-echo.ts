@@ -2,11 +2,11 @@
 import type { FlexEcho, GridEcho } from './hud-editor-view-store.type';
 
 const sameGridEcho = (was: GridEcho | null, echo: GridEcho | null): boolean =>
-  was === echo || (!!was && !!echo && was.containerId === echo.containerId
+  was === echo || (Boolean(was) && Boolean(echo) && was.containerId === echo.containerId
     && was.c0 === echo.c0 && was.c1 === echo.c1 && was.r0 === echo.r0 && was.r1 === echo.r1);
 
 const sameFlexEcho = (was: FlexEcho | null, echo: FlexEcho | null): boolean =>
-  was === echo || (!!was && !!echo && was.containerId === echo.containerId
+  was === echo || (Boolean(was) && Boolean(echo) && was.containerId === echo.containerId
     && was.childIds.length === echo.childIds.length
     && was.childIds.every((id, i) => id === echo.childIds[i]));
 

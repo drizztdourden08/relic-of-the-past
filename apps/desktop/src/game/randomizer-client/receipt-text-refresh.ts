@@ -12,7 +12,7 @@ const completedKeysOf = (checks: ReadonlySet<CheckId>): Set<LocationKey> =>
   completedLocationKeys(checks, firedLocations());
 
 const ownLocations = (placement: Placement): Placement['locations'] =>
-  Object.fromEntries(Object.entries(placement.locations).filter(([, item]) => !isForeignItem(item))) as Placement['locations'];
+  Object.fromEntries(Object.entries(placement.locations).filter(([, item]) => !isForeignItem(item)));
 
 const startSessionReceiptTexts = (
   plan: PhysicalPlan, placement: Placement, tag: string, foreignItemOf?: ForeignItemOf,

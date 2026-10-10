@@ -1,5 +1,6 @@
 /* @layer renderer-design-system @kind style */
 @import url('@rotp/design/game-text.css');
+@import url('@rotp/design/packs.css');
 
 :root {
   --c-gold-shade: #8c6a2a;
@@ -43,4 +44,10 @@
   --store-card-w-min: calc(200 * var(--size-1));
   --store-detail-w: calc(340 * var(--size-1));
   --store-sign-in-w: calc(480 * var(--size-1));
+  --input-cal-byte-box: calc(38 * var(--size-1));
+  --input-cal-input-min: calc(200 * var(--size-1));
+  --input-cal-panel-max: calc(200 * var(--size-1));
+  --input-cal-log-max: calc(240 * var(--size-1));
+  --input-cal-alert-rule: calc(3 * var(--size-1));
+  --input-cal-step-tracking: calc(0.5 * var(--size-1));
 }

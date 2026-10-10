@@ -1,19 +1,22 @@
 /* @layer shared-hud @kind logic */
 import { BOX_KEYS, checkKeys, isRecord, numberAt, validateBox } from './validate-box';
-import { validateFlexContainer, validateGridContainer } from './validate-container';
+import { motionParts, validateFlexContainer, validateGridContainer } from './validate-container';
 import { repeatSpec, switchSpec } from './validate-dynamic-node';
 import { shapeSpec } from './validate-shape-node';
 import { countdownSpec } from './validate-countdown-node';
-import { validateAnimations, validateTransition } from './validate-motion';
-import { validateStyle } from './validate-style';
 import { buttonSpec } from './validate-button-node';
 import { textSpec } from './validate-text-node';
 import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import type { HudElement, HudElementSpec, HudGlyphPosition, HudNode } from '../types/hud-node';
 import type { Issues } from './validate-box';
+import type { NodeContext } from './validate-container';
+import type { SpecReader } from './validate-node.type';
 
 const isGlyphPosition = (value: string): value is HudGlyphPosition =>
   value === 'DPAD' || value in SDL_BUTTON || value in SDL_AXIS;
+
+const packOf = (value: Record<string, unknown>): { pack?: string } =>
+  (typeof value.pack === 'string' ? { pack: value.pack } : {});
 
 const boxSizeAt = (value: unknown, path: string, issues: Issues): { w: number; h: number } | undefined => {
   if (value === undefined) return undefined;
@@ -26,11 +29,19 @@ const boxSizeAt = (value: unknown, path: string, issues: Issues): { w: number; h
   return { w, h };
 };
 
+const slotNumberAt = (raw: unknown, path: string, issues: Issues): number | null => {
+  const slot = numberAt(raw, path, issues);
+  if (slot === undefined || !Number.isInteger(slot) || slot < 1) {
+    issues.push(`${path}: a slot number is 1 or more`);
+    return null;
+  }
+  return slot;
+};
+
 const glyphSpec = (value: Record<string, unknown>, path: string, issues: Issues): HudElementSpec | null => {
   checkKeys(value, ['type', 'position', 'slot', 'pack'], path, issues);
   const hasPosition = value.position !== undefined;
-  const hasSlot = value.slot !== undefined;
-  if (hasPosition === hasSlot) {
+  if (hasPosition === (value.slot !== undefined)) {
     issues.push(`${path}: a glyph names either a position or a slot, and exactly one of them`);
     return null;
   }
@@ -39,55 +50,50 @@ const glyphSpec = (value: Record<string, unknown>, path: string, issues: Issues)
       issues.push(`${path}.position: not an SDL position or 'DPAD': ${JSON.stringify(value.position)}`);
       return null;
     }
-    return { type: 'glyph', position: value.position, ...(typeof value.pack === 'string' ? { pack: value.pack } : {}) };
+    return { type: 'glyph', position: value.position, ...packOf(value) };
   }
-  const slot = numberAt(value.slot, `${path}.slot`, issues);
-  if (slot === undefined || !Number.isInteger(slot) || slot < 1) {
-    issues.push(`${path}.slot: a slot number is 1 or more`);
-    return null;
-  }
-  return { type: 'glyph', slot, ...(typeof value.pack === 'string' ? { pack: value.pack } : {}) };
+  const slot = slotNumberAt(value.slot, `${path}.slot`, issues);
+  return slot === null ? null : { type: 'glyph', slot, ...packOf(value) };
 };
 
-const elementSpec = (
-  value: unknown, path: string, issues: Issues, seen: Set<string>, insideRepeat: boolean,
-): HudElementSpec | null => {
-  if (!isRecord(value)) {
-    issues.push(`${path}: expected an element spec object`);
+const slotSpec = (value: Record<string, unknown>, path: string, issues: Issues): HudElementSpec | null => {
+  checkKeys(value, ['type', 'index'], path, issues);
+  const index = slotNumberAt(value.index, `${path}.index`, issues);
+  return index === null ? null : { type: 'slot', index };
+};
+
+const spriteSpec = (value: Record<string, unknown>, path: string, issues: Issues): HudElementSpec | null => {
+  checkKeys(value, ['type', 'file', 'box'], path, issues);
+  if (typeof value.file !== 'string' || !value.file.trim()) {
+    issues.push(`${path}.file: a sprite needs a file`);
     return null;
   }
-  const type = value.type;
-  if (type === 'spacer') {
-    checkKeys(value, ['type'], path, issues);
-    return { type: 'spacer' };
+  const box = boxSizeAt(value.box, `${path}.box`, issues);
+  if (value.box !== undefined && box === undefined) return null;
+  return { type: 'sprite', file: value.file, ...(box ? { box } : {}) };
+};
+
+const specReaders = new Map<string, SpecReader>([
+  ['spacer', (value, path, { issues }) => { checkKeys(value, ['type'], path, issues); return { type: 'spacer' }; }],
+  ['glyph', (value, path, { issues }) => glyphSpec(value, path, issues)],
+  ['slot', (value, path, { issues }) => slotSpec(value, path, issues)],
+  ['sprite', (value, path, { issues }) => spriteSpec(value, path, issues)],
+  ['text', (value, path, { issues, insideRepeat }) => textSpec(value, path, issues, insideRepeat)],
+  ['button', (value, path, { issues }) => buttonSpec(value, path, issues)],
+  ['shape', (value, path, { issues, insideRepeat }) => shapeSpec(value, path, issues, insideRepeat)],
+  ['countdown', (value, path, { issues }) => countdownSpec(value, path, issues)],
+  ['repeat', (value, path, ctx) => repeatSpec(value, path, ctx, validateNode)],
+  ['switch', (value, path, ctx) => switchSpec(value, path, ctx, validateNode)],
+]);
+
+const elementSpec = (value: unknown, path: string, ctx: NodeContext): HudElementSpec | null => {
+  if (!isRecord(value)) {
+    ctx.issues.push(`${path}: expected an element spec object`);
+    return null;
   }
-  if (type === 'glyph') return glyphSpec(value, path, issues);
-  if (type === 'slot') {
-    checkKeys(value, ['type', 'index'], path, issues);
-    const index = numberAt(value.index, `${path}.index`, issues);
-    if (index === undefined || !Number.isInteger(index) || index < 1) {
-      issues.push(`${path}.index: a slot number is 1 or more`);
-      return null;
-    }
-    return { type: 'slot', index };
-  }
-  if (type === 'sprite') {
-    checkKeys(value, ['type', 'file', 'box'], path, issues);
-    if (typeof value.file !== 'string' || !value.file.trim()) {
-      issues.push(`${path}.file: a sprite needs a file`);
-      return null;
-    }
-    const box = boxSizeAt(value.box, `${path}.box`, issues);
-    if (value.box !== undefined && box === undefined) return null;
-    return { type: 'sprite', file: value.file, ...(box ? { box } : {}) };
-  }
-  if (type === 'text') return textSpec(value, path, issues, insideRepeat);
-  if (type === 'button') return buttonSpec(value, path, issues);
-  if (type === 'shape') return shapeSpec(value, path, issues, insideRepeat);
-  if (type === 'countdown') return countdownSpec(value, path, issues);
-  if (type === 'repeat') return repeatSpec(value, path, issues, seen, validateNode, insideRepeat);
-  if (type === 'switch') return switchSpec(value, path, issues, seen, validateNode, insideRepeat);
-  issues.push(`${path}.type: unknown element type ${JSON.stringify(type)}`);
+  const reader = typeof value.type === 'string' ? specReaders.get(value.type) : undefined;
+  if (reader) return reader(value, path, ctx);
+  ctx.issues.push(`${path}.type: unknown element type ${JSON.stringify(value.type)}`);
   return null;
 };
 
@@ -95,50 +101,46 @@ const buttonDimWhenEmpty = (spec: HudElementSpec): number[] | undefined => (
   spec.type === 'button' && spec.bind.kind === 'slot' ? [spec.bind.index] : undefined
 );
 
-const validateElement = (
-  value: Record<string, unknown>, path: string, issues: Issues, seen: Set<string>, insideRepeat: boolean,
-): HudElement | null => {
+const validateElement = (value: Record<string, unknown>, path: string, ctx: NodeContext): HudElement | null => {
+  const { issues, insideRepeat } = ctx;
   checkKeys(value, [...BOX_KEYS, 'kind', 'element', 'fit'], path, issues);
   if (value.fit !== undefined && value.fit !== 'contain') {
     issues.push(`${path}.fit: 'contain' is the only fit there is - nothing ever stretches`);
   }
-  const spec = elementSpec(value.element, `${path}.element`, issues, seen, insideRepeat);
+  const spec = elementSpec(value.element, `${path}.element`, ctx);
   if (!spec) return null;
-  const style = validateStyle(value.style, `${path}.style`, issues, insideRepeat);
-  const animation = validateAnimations(value.animation, `${path}.animation`, issues, insideRepeat);
-  const transition = validateTransition(value.transition, `${path}.transition`, issues, insideRepeat);
+  const motion = motionParts(value, path, issues, insideRepeat);
   const dimWhenEmpty = buttonDimWhenEmpty(spec);
   return {
     ...validateBox(value, path, issues, insideRepeat),
     kind: 'element',
     element: spec,
     fit: 'contain',
-    ...(style ? { style } : {}),
-    ...(animation ? { animation } : {}),
-    ...(transition ? { transition } : {}),
+    ...motion,
     ...(dimWhenEmpty ? { dimWhenEmpty } : {}),
   };
 };
 
-const validateNode = (
-  value: unknown, path: string, issues: Issues, seen: Set<string>, insideRepeat = false,
-): HudNode | null => {
+const noteId = (value: Record<string, unknown>, path: string, ctx: NodeContext): void => {
+  const id = value.id;
+  if (typeof id !== 'string' || !id) return;
+  if (ctx.seen.has(id)) ctx.issues.push(`${path}.id: '${id}' is used more than once`);
+  ctx.seen.add(id);
+};
+
+const validateNode = (value: unknown, path: string, ctx: NodeContext): HudNode | null => {
   if (!isRecord(value)) {
-    issues.push(`${path}: expected a node object`);
+    ctx.issues.push(`${path}: expected a node object`);
     return null;
   }
-  const id = value.id;
-  if (typeof id === 'string' && id) {
-    if (seen.has(id)) issues.push(`${path}.id: '${id}' is used more than once`);
-    seen.add(id);
-  }
+  noteId(value, path, ctx);
   if (value.kind === 'container') {
     return value.layout === 'grid'
-      ? validateGridContainer(value, path, issues, seen, validateNode, insideRepeat)
-      : validateFlexContainer(value, path, issues, seen, validateNode, insideRepeat);
+      ? validateGridContainer(value, path, ctx, validateNode)
+      : validateFlexContainer(value, path, ctx, validateNode);
   }
-  if (value.kind === 'element') return validateElement(value, path, issues, seen, insideRepeat);
-  issues.push(`${path}.kind: expected 'container' or 'element', got ${JSON.stringify(value.kind)}`);
+  if (value.kind === 'element') return validateElement(value, path, ctx);
+  ctx.issues.push(`${path}.kind: expected 'container' or 'element', got ${JSON.stringify(value.kind)}`);
   return null;
 };
 

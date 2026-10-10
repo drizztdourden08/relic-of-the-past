@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind logic */
 import type { HudCountdownVariantChoice } from '@rotp/hud';
-import type { HudCountdownVariant } from '../../../HudCountdown';
+import type { HudCountdownVariant } from '../../HudCountdown';
 
 const countdownVariantOf = (
   choice: HudCountdownVariantChoice | undefined, setting: HudCountdownVariant,

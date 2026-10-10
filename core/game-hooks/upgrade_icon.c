@@ -39,8 +39,8 @@
 // The hold-up receipt ancilla.
 #define ANCILLA_ITEM_RECEIPT 0x22
 // The sprite palette row every icon is quantized to. Mirrored by CAPACITY_ICON_PALETTE_ROW
-// in packages/asset-extraction/src/item-sprites/capacity-icons.ts (the extractor that writes the
-// file): change both together. Row 4 fits all four pictures best, since it holds the badge's
+// in packages/asset-extraction/src/item-sprites/capacity-icons/capacity-icons.constants.ts
+// (read by the extractor that writes the file): change both together. Row 4 fits all four pictures best, since it holds the badge's
 // green, which the refill receipts' row 2 lacks.
 #define ICON_PALETTE_ROW 4
 // The OAM size flag kReceiveItem_Tab1 gives a wide (16x16) receipt; every icon is one.

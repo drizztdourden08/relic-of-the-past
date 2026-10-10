@@ -28,7 +28,7 @@ const StudioToolbar = (props: StudioToolbarProps) => {
       </Box>
 
       <Box className="studio-toolbar__row">
-        <Button variant="primary" size="sm" disabled={locked || (!dirty && !!file)} onClick={onSave}>Save</Button>
+        <Button variant="primary" size="sm" disabled={locked || (!dirty && Boolean(file))} onClick={onSave}>Save</Button>
         <Button variant="secondary" size="sm" disabled={locked} onClick={() => onSaveAs('rsp')}>Save as pack</Button>
         <Button variant="secondary" size="sm" disabled={locked} onClick={() => onSaveAs('zspr')}>Save as .zspr</Button>
         <Button variant="tertiary" size="sm" disabled={busy} onClick={() => onExport('rsp')}>Export .rsp</Button>

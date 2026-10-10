@@ -27,7 +27,7 @@ const mapTree = (doc: HudLayout, map: (node: HudNode) => HudNode | null): HudLay
     return { ...mapped, element: visitElementSpec(mapped.element, visit) };
   };
   const screen = visit(doc.screen);
-  return { ...doc, screen: screen && screen.kind === 'container' ? screen : doc.screen };
+  return { ...doc, screen: screen?.kind === 'container' ? screen : doc.screen };
 };
 
 export { mapTree };

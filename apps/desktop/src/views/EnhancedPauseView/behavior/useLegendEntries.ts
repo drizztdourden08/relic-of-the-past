@@ -76,7 +76,7 @@ const useLegendEntries = (
 
     return rowsFor(heldActions(cursorActions, canConfirm)).map((row) => {
       const held = row.verbs.map((verb) => core[verb]);
-      const glyphs = dedupe(held.map((b) => glyphFor(b, glyphPack, family, packs)).filter((g): g is GlyphSource => !!g));
+      const glyphs = dedupe(held.map((b) => glyphFor(b, glyphPack, family, packs)).filter((g): g is GlyphSource => Boolean(g)));
       const fallback = row.text ?? held.map(textFor).find((text) => text.length > 0) ?? '';
       return { id: row.id, glyphs, fallback, verb: row.verb };
     }).filter((entry) => entry.glyphs.length > 0 || entry.fallback.length > 0);

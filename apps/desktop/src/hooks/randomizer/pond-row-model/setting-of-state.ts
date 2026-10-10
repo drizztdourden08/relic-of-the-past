@@ -21,7 +21,7 @@ const settingOfState = (state: PondRowState): PondSetting => {
     max,
     throws: state.throws,
     items: state.items,
-    shape: state.curve === 'free' ? { curve: 'free', jumps: state.jumps } : { curve: state.curve as CurveId },
+    shape: state.curve === 'free' ? { curve: 'free', jumps: state.jumps } : { curve: state.curve },
     ...askPart(state, start, max),
   };
 };

@@ -6,7 +6,7 @@ import { useNodeTransitionCss } from './useNodeTransitionCss';
 import { useReducedMotion } from './useReducedMotion';
 import type { CSSProperties } from 'react';
 import type { PlacedNode } from '@rotp/hud';
-import type { HudNodeMotionResult, MotionScope } from './HudNodeMotion.type';
+import type { HudNodeMotionResult, MotionScope } from './hud-node-motion.type';
 
 const useHudNodeMotion = (
   nodes: readonly PlacedNode[], dataScope: MotionScope, displayScale: number, clockOverrideMs?: number | null,

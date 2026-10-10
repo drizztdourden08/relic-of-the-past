@@ -544,7 +544,7 @@ The fixed wizard steps, in order. Byte capture shows only for a controller the r
 - `DiagnosticsWizardDialog.css`: the title shares its row with a five-step strip, and the shared header style ellipsises the title when space runs short, which cut it to a single letter. The row wraps and the title keeps its natural width.
 - `DiagnosticsWizardDialog.css`: the layout overlay covers the step instead of replacing it, so the choice stays visible behind the read and the dialog does not change size mid-transition.
 - `InputCalibration.css`: the card shimmer runs continuously, so a stutter means the UI thread is blocked.
-- `InputCalibration.hid.css`: the idle read is a real step, so its prompt carries the same weight as the live-capture readout. The change magnitude mark is drawn on the byte cell's top border so it can sit on top of any cell state, and its width and colour are set inline from the byte's own delta.
+- `theme/input-calibration/hid-inputs.css`: the idle read is a real step, so its prompt carries the same weight as the live-capture readout. The change magnitude mark is drawn on the byte cell's top border so it can sit on top of any cell state, and its width and colour are set inline from the byte's own delta.
 
 ## ProfileHub/ProfileHub.constants.ts
 

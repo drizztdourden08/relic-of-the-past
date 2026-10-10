@@ -56,7 +56,7 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
   for (const drawResult of drawResults) {
     const origin = getScreenWorldOrigin(drawResult.screenIndex);
     const perLayer = layer1ReachableOverride;
-    const isDualLayer = !!perLayer;
+    const isDualLayer = Boolean(perLayer);
     const singleLayerIsAbove = !isDualLayer && drawResult.indoors && (drawResult.startLayer ?? 0) === 0;
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {

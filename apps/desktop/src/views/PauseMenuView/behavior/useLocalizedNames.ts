@@ -7,7 +7,7 @@ import { loadNameTable } from './load-name-table';
 import type { LocalizedNames } from '../PauseMenuView.type';
 
 const pick = (value: string | undefined, fallback: string): string =>
-  (value && value.trim() ? value : fallback);
+  (value?.trim() ? value : fallback);
 
 const useLocalizedNames = (): LocalizedNames => {
   const profileId = getActiveProfileId();

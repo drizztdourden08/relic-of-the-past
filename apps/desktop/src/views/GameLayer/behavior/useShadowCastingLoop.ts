@@ -48,7 +48,7 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
 
       const vp = wasmGetViewportInfo();
       let screenId = -1;
-      if (vp && vp.locationModule === OVERWORLD_MODULE) {
+      if (vp?.locationModule === OVERWORLD_MODULE) {
         screenId = overworldScreenIdOf(vp);
         const { viewLeft, viewTop } = viewOrigin(vp);
         renderer.setScreenOrigin(viewLeft, viewTop, vp.snesWidth, vp.snesHeight);

@@ -21,8 +21,8 @@ const setCapacityPlanJumps = (
     mod.ccall('WasmSetCapacityPlanJump', null, ['number', 'number', 'number', 'number'],
       [CAPACITY_FAMILY_INDEX[family], index, Math.max(MIN_JUMP, Math.trunc(jump)), messageIds[index] ?? NO_MESSAGE]);
   });
-  log.randomizer(`[Randomizer] Capacity plan set: ${family} [${jumps.join(', ')}]`
-    + (messageIds.length > 0 ? ` (lines ${messageIds[0]}..${messageIds[messageIds.length - 1]})` : ''));
+  log.randomizer(`[Randomizer] Capacity plan set: ${family} [${jumps.join(', ')}]${
+     messageIds.length > 0 ? ` (lines ${messageIds[0]}..${messageIds[messageIds.length - 1]})` : ''}`);
 };
 
 export { setCapacityPlanJumps };

@@ -9,8 +9,6 @@ import { useInputCalibration } from './useInputCalibration';
 import { DiagnosticsLog } from './DiagnosticsLog';
 import { RescanButton } from '../../../compounds/RescanButton';
 import './InputCalibration.css';
-import './InputCalibration.sticks.css';
-import './InputCalibration.hid.css';
 
 const S: Record<string, CSSProperties> = {
   hint: { fontSize: 'var(--text-sm)', opacity: 0.6 },

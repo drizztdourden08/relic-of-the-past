@@ -11,8 +11,8 @@
  * passes behind it.
  *
  * The base game already ships twins for two of these courses. The other two are appended to the
- * map16 table by packages/asset-extraction/src/extensions/second-cartridge-tiles.ts, which is why
- * their ids are positional.
+ * map16 table by appendWallPriorityTwins (packages/asset-extraction/src/extensions/
+ * second-cartridge-tiles/append-wall-priority-twins.ts), which is why their ids are positional.
  */
 enum { kBaseMap16Count = 3752 };
 

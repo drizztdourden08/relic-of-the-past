@@ -17,7 +17,7 @@ const DialogRows = (props: DialogRowsProps) => {
         {rows.map((cells, r) => (
           <HudBox key={r} style={{ position: 'absolute', top: r * rowH, left: 0, width: widthPx * unit, height: rowH }}>
             {original
-              ? <GlyphRow cells={cells} atlas={atlas as HTMLCanvasElement} highlightAtlases={highlight.atlases} unit={unit} widthPx={widthPx} />
+              ? <GlyphRow cells={cells} atlas={atlas} highlightAtlases={highlight.atlases} unit={unit} widthPx={widthPx} />
               : <TypefaceRow cells={cells} alphabet={alphabet} atlas={atlas} unit={unit} ink={ink} highlightInks={highlight.inks} stroke={stroke} strokeWidth={strokeWidth} />}
           </HudBox>
         ))}

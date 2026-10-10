@@ -178,8 +178,8 @@ void WasmHostMenuSetTakeover(int on) {
   g_host_owns_item = true;
   // Gated, unlike the record above: this one writes emulated WRAM, and a write made while the gate
   // is shut would be a divergence nobody asked for. The host re-asserts the takeover on every boot
-  // and after every teardown (host-menu.ts reassertHostMenu), so a request that arrives ahead of the
-  // gate word is replayed once the gate is open.
+  // and after every teardown (reassertHostMenu in packages/game-core/src/host-menu/), so a request
+  // that arrives ahead of the gate word is replayed once the gate is open.
   if (HostMenuGate())
     HostMenu_DropSecondaryItems();
 }

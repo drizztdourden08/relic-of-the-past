@@ -77,7 +77,7 @@ const PauseStatusScreen = (props: PauseStatusScreenProps) => {
       >
         {Array.from({ length: CRYSTAL_COUNT }, (_, bit) => (
           <HudBox key={bit} style={{ width: px(CRYSTAL_PITCH) }}>
-            <PauseCrystalIcon filled={!!(crystals & (1 << bit))} scale={scale} spritesBase={spritesBase} />
+            <PauseCrystalIcon filled={Boolean(crystals & (1 << bit))} scale={scale} spritesBase={spritesBase} />
           </HudBox>
         ))}
       </PauseStatusRow>

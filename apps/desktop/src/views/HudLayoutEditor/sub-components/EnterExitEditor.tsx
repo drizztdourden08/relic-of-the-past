@@ -30,7 +30,7 @@ const EnterExitEditor = (props: EnterExitEditorProps) => {
           <ToggleGroup
             value={[...(value?.properties ?? [])]}
             options={[...OPTIONS]}
-            onChange={(next) => setProperties(which, next as HudEnterExitProperty[])}
+            onChange={(next) => setProperties(which, next)}
           />
         </Field>
         {value && (

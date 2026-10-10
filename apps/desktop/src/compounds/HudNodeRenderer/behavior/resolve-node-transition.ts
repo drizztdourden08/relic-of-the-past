@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind logic */
 import { resolveValue, gateTruthy } from '@rotp/hud';
 import type { HudTransition } from '@rotp/hud';
-import { CSS_PROPERTIES } from './HudNodeMotion.constants';
-import type { MotionScope } from './HudNodeMotion.type';
+import { CSS_PROPERTIES } from './hud-node-motion.constants';
+import type { MotionScope } from './hud-node-motion.type';
 
 const transitionCssValue = (transition: HudTransition | undefined, scope: MotionScope, delta: number): string | undefined => {
   if (!transition || transition.properties.length === 0) return undefined;

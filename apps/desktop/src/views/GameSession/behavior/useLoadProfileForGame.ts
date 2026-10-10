@@ -25,7 +25,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
     log.app(`Loading profile: ${profile.name} (${profile.romFile})`);
 
     const savedSettings = await profileStore.readConfig(profile.id);
-    const settings = mergeSettings((savedSettings ?? {}) as Partial<GameSettings>);
+    const settings = mergeSettings((savedSettings ?? {}));
 
     await loadInputProfile(profile.id, settings);
     await loadMsuPack(profile, settings);

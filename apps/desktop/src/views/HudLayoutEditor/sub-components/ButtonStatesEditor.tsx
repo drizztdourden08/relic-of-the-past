@@ -23,13 +23,13 @@ const ButtonStatesEditor = (props: ButtonStatesEditorProps) => {
       </Field>
       {bind.kind === 'verb' ? (
         <Field size="sm" label="verb">
-          <Select size="sm" value={bind.verb} options={VERBS.map((v) => ({ value: v, label: v }))} onChange={(verb) => onChange({ bind: { kind: 'verb', verb: verb as HudButtonVerb } as HudButtonBind })} />
+          <Select size="sm" value={bind.verb} options={VERBS.map((v) => ({ value: v, label: v }))} onChange={(verb) => onChange({ bind: { kind: 'verb', verb: verb as HudButtonVerb } })} />
         </Field>
       ) : (
         <SlotRefField
           label="slot"
           value={bind.index}
-          onChange={(index) => onChange({ bind: { kind: 'slot', index } as HudButtonBind })}
+          onChange={(index) => onChange({ bind: { kind: 'slot', index } })}
           slots={slots}
           glyphPacks={glyphPacks}
         />

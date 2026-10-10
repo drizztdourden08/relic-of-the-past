@@ -15,7 +15,7 @@ const SectionAccordion = (props: SectionAccordionProps) => {
         <Text className="hud-section__caret" aria-hidden>{open ? '▾' : '▸'}</Text>
         <Text className="hud-section__title">{title}</Text>
         {note && <Text className="hud-section__note">{note}</Text>}
-        {!!boundCount && <Text className="hud-section__badge" title={`${boundCount} bound propert${boundCount === 1 ? 'y' : 'ies'}`}>● {boundCount}</Text>}
+        {Boolean(boundCount) && <Text className="hud-section__badge" title={`${boundCount} bound propert${boundCount === 1 ? 'y' : 'ies'}`}>● {boundCount}</Text>}
       </Pressable>
       {open && <Box className="hud-section__body">{children}</Box>}
     </Box>

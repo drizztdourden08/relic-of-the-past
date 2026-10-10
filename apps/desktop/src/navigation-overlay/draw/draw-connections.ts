@@ -32,7 +32,7 @@ const drawConnections = (dc: DrawContext, connections: ConnectionInfo[]): void =
       ? getScreenWorldOrigin(conn.sourceScreen)
       : { x: screenWorldX, y: screenWorldY };
     for (const pos of conn.positions) {
-      const tile = connectionTile(conn.edge, pos, !!conn.isIntraRoom);
+      const tile = connectionTile(conn.edge, pos, Boolean(conn.isIntraRoom));
       if (!tile) continue;
       const [r, c] = tile;
 

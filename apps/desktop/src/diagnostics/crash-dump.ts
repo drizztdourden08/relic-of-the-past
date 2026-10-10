@@ -19,7 +19,7 @@ const writeCrashDump = async (reason: string, stack?: string): Promise<void> => 
   try {
     await getPlatform().files.writeText(`debug/crash-${stamp}.log`, body);
   } catch {
-    return;
+    
   }
 };
 

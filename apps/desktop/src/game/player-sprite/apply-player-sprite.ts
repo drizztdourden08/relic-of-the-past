@@ -14,7 +14,7 @@ const applyPlayerSprite = (bytes: Uint8Array): boolean => {
     mod.FS.writeFile(PLAYER_SPRITE_MEMFS_PATH, bytes);
     const ok = mod.ccall('WasmApplyPlayerSpriteFile', 'number', ['string'], [PLAYER_SPRITE_MEMFS_PATH]);
     if (!ok) log.app('[PlayerSprite] Core rejected the sheet');
-    return !!ok;
+    return Boolean(ok);
   } catch (err) {
     log.error(`[PlayerSprite] Live apply failed: ${err instanceof Error ? err.message : err}`);
     return false;

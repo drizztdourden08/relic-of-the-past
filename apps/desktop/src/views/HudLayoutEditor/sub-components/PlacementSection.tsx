@@ -31,7 +31,7 @@ const PlacementSection = (props: PlacementSectionProps) => {
         onAction={parent && onSelectNode ? () => onSelectNode(parent.id) : undefined}
       >
         <CellPicker
-          container={isGrid ? (parent as HudGridContainer) : FLEX_STANDIN}
+          container={isGrid ? (parent) : FLEX_STANDIN}
           childId={node.id}
           place={node.place}
           onChange={(place) => onPatch({ place })}

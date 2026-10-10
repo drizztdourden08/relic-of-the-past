@@ -38,13 +38,13 @@
 #define GEAR_DECODE_SLOT 0xBD40
 #define GEAR_TILE_BYTES 32
 // The sprite palette row every picture is quantized to. Mirrored by GEAR_ICON_PALETTE_ROW
-// in packages/asset-extraction/src/item-sprites/gear-icons.ts (the extractor that writes the
-// file): change both together. Row 4 is the best fit of the four main sprite rows and the
+// in packages/asset-extraction/src/item-sprites/gear-icons/gear-icons.constants.ts (read by
+// the extractor that writes the file): change both together. Row 4 is the best fit of the four main sprite rows and the
 // only one whose colours are identical in both world halves.
 #define GEAR_PALETTE_ROW 4
 
-// The affected receipt ids, in the file's order. Mirrored by GEAR_RECEIPT_IDS in
-// gear-icons.ts. Derived from kWishPond2_OamFlags: these are its row-5 entries.
+// The affected receipt ids, in the file's order. Mirrored by GEAR_RECEIPT_IDS in the same
+// gear-icons.constants.ts. Derived from kWishPond2_OamFlags: these are its row-5 entries.
 static const uint8 kGearReceiptIds[GEAR_COUNT] = {0, 1, 2, 3, 4, 5, 6, 0x49};
 
 static uint8 g_gear[GEAR_FILE_BYTES];

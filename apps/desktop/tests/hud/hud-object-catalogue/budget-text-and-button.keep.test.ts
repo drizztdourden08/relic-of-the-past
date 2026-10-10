@@ -1,6 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { faceFor, stateFor } from '@app/compounds/HudButton/behavior/hud-button-state';
+import { faceFor } from '@app/compounds/HudButton/behavior/face-for';
+import { stateFor } from '@app/compounds/HudButton/behavior/state-for';
 import { resolveTextContent, snapGameFontSize, textIntrinsicSize, tryLoadLayout } from '@rotp/hud';
 import type { HudNode } from '@rotp/hud';
 import { leaf } from './leaf';

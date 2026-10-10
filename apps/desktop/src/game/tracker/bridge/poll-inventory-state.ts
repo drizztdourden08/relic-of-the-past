@@ -18,7 +18,7 @@ const readInventory = (heap: Uint8Array, ptr: number, force: boolean): void => {
 
 const pollInventory = (mod: EmscriptenModule, heap: Uint8Array, force: boolean): boolean => {
   try {
-    const ptr = mod.ccall('WasmGetInventoryState', 'number', [], []) as number;
+    const ptr = mod.ccall('WasmGetInventoryState', 'number', [], []);
     if (!ptr) return false;
     readInventory(heap, ptr, force);
   } catch {
@@ -39,7 +39,7 @@ const pollInventoryState = (force = false): void => {
   try {
     pollRoomFlags(force);
   } catch {
-    return;
+    
   }
 };
 

@@ -3,7 +3,8 @@
 // (WasmCheatSetInventorySlot, cheat_inventory.c). Slots 0-19 are the pause menu's own
 // save order, the twenty bytes at 0xF340..0xF353 with 15 holding the bottle index; the
 // seven after them are the passives and the three gear tiers, then the three progress
-// bytes; the pause menu draws all of those in its other panels. The TS side (lib/game/cheats.ts) spells the same numbers.
+// bytes; the pause menu draws all of those in its other panels. The TS side
+// (CheatSlot in packages/game-core/src/cheats/cheats.constants.ts) spells the same numbers.
 #ifndef GAME_HOOKS_CHEAT_INVENTORY_H
 #define GAME_HOOKS_CHEAT_INVENTORY_H
 

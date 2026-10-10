@@ -26,7 +26,7 @@ const useNavConnections = (
     return a.targetScreen - b.targetScreen;
   };
   const isInternalConn = useCallback((c: ConnectionInfo) => {
-    if (isIndoors) return !!c.isIntraRoom;
+    if (isIndoors) return Boolean(c.isIntraRoom);
     return bundleScreenSet.has(c.targetScreen);
   }, [isIndoors, bundleScreenSet]);
   const externalConnections = useMemo(() => connections.filter(c => !isInternalConn(c)).sort(sortConn), [connections, isInternalConn]);
@@ -49,7 +49,7 @@ const useNavConnections = (
     const rows: EdgeRow[] = [];
     for (const screen of crossings) {
       for (const crossing of screen.edges) {
-        const internal = isIndoors ? !!crossing.isIntraRoom : bundleScreenSet.has(nativeIndex(crossing));
+        const internal = isIndoors ? Boolean(crossing.isIntraRoom) : bundleScreenSet.has(nativeIndex(crossing));
         if (internal) continue;
         rows.push({ crossing, sourceScreen: screen.screenIndex });
       }

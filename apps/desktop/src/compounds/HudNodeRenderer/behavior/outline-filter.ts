@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind logic */
-import { OUTLINE_DIRECTIONS, OUTLINE_MAX_WIDTH } from './HudNodeStyle.constants';
+import { OUTLINE_DIRECTIONS, OUTLINE_MAX_WIDTH } from './hud-node-style.constants';
 
 const outlineFilter = (widthPx: number, color: string): string => {
   const width = Math.min(OUTLINE_MAX_WIDTH, Math.max(0, widthPx));

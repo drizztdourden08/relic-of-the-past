@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Tabs, EmptyState, Spinner } from '@drizztdourden08/tessera/primitives';
+import { Box, Tabs, EmptyState, Icon, Spinner } from '@drizztdourden08/tessera/primitives';
 import { buildVariableIndex } from '@rotp/languages';
 import { kLanguages } from '@rotp/asset-extraction';
 import { useLanguageEditor } from './behavior/useLanguageEditor';
@@ -19,7 +19,7 @@ import { FindHardcodedDialog } from './sub-components/variables';
 import { selectEntries } from './behavior/select-entries';
 import type { EntryFilter } from './sub-components/DialogueTab.type';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
-import { LOCKED, NO_ENTRIES, TEXT_SUMMARY, VARIABLES_SUMMARY } from './LanguageEditor.constants';
+import { LOCKED_ICON, NO_ENTRIES, TEXT_SUMMARY, VARIABLES_SUMMARY } from './LanguageEditor.constants';
 import type { LanguageEditorProps } from './LanguageEditor.type';
 import './LanguageEditor.css';
 
@@ -69,8 +69,8 @@ const LanguageEditor = (props: LanguageEditorProps) => {
 
   const tabs = useMemo<TabItem[]>(() => [
     { id: 'dialogue', label: 'Dialogue', badge: dialogue.length },
-    { id: 'variables', label: 'Variables', icon: LOCKED, badge: variables.length },
-    { id: 'text', label: 'Text', icon: LOCKED, badge: textSlotCount },
+    { id: 'variables', label: 'Variables', icon: <Icon name={LOCKED_ICON} />, badge: variables.length },
+    { id: 'text', label: 'Text', icon: <Icon name={LOCKED_ICON} />, badge: textSlotCount },
   ], [dialogue.length, variables.length, textSlotCount]);
 
   if (!id) return <EmptyState message="Select a language set to edit" />;

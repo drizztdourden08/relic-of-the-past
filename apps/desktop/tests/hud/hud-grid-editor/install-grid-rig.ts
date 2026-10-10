@@ -4,6 +4,7 @@ import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { GridEditor } from '@app/views/HudLayoutEditor/sub-components/GridEditor';
 import { PlatformContext } from '@drizztdourden08/brock-react';
+import type { HudGridContainer } from '@rotp/hud';
 import { PLATFORM } from './grid-editor.constants';
 import { screenRoot } from './screen-root';
 
@@ -66,14 +67,12 @@ const installGridRig = () => {
       .map((el) => (el as HTMLElement).dataset.action ?? '?');
 
   const legendCaps = (): string[] =>
-    Array.from(document.querySelectorAll('.hud-grid__key')).map((el) => el.textContent ?? '');
+    Array.from(document.querySelectorAll('.hud-grid__key')).map((el) => el.textContent);
 
   const status = (): string => document.querySelector('.hud-grid__status')?.textContent ?? '';
 
-  const mountGrid = (onPatchContainer: (patch: unknown) => void = ignore): void => {
-    mount(h(GridEditor, {
-      container: screenRoot(), scope: {}, onPatchContainer, onSetEngine: ignore,
-    }));
+  const mountGrid = (onPatchContainer: (patch: Partial<HudGridContainer>) => void = ignore): void => {
+    mount(h(GridEditor, { container: screenRoot(), onPatchContainer }));
   };
 
   return { mount, cell, header, down, enter, up, press, toolbarKeys, legendCaps, status, mountGrid };

@@ -39,7 +39,8 @@
 #define WISH_POND_ROOM_DARK 278
 #define WISH_POND_COUNT 2
 
-// The longest ladder a water can carry, matching the host's own ceiling (pond-ladder.constants.ts).
+// The longest ladder a water can carry, matching the host's own ceiling
+// (packages/randomizer/src/world/pond/pond-ladder.constants.ts).
 #define WISH_POND_MAX_RUNGS 20
 
 #define srm_wish_pond_throws(pond) (*(uint8 *)(g_ram + SRM_WISH_POND_THROWS + (pond)))

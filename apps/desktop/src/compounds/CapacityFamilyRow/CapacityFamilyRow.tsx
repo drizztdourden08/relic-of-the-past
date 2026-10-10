@@ -31,7 +31,7 @@ const CapacityFamilyRow = (props: CapacityFamilyRowProps) => {
             <Select
               size="sm"
               value={state.mode}
-              options={(offersInPool ? MODE_OPTIONS : WALLET_MODE_OPTIONS) as SelectOption[]}
+              options={(offersInPool ? MODE_OPTIONS : WALLET_MODE_OPTIONS)}
               onChange={(mode) => patch({ mode: mode as CapacityRowState['mode'] })}
               disabled={inert}
             />

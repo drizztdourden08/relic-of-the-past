@@ -10,7 +10,7 @@ import type { Issues } from './validate-box';
 import type { ValidationResult } from './validate-layout.type';
 
 const validateScreen = (value: unknown, issues: Issues, seen: Set<string>): HudScreenRoot | null => {
-  const node = validateNode(value, 'layout.screen', issues, seen);
+  const node = validateNode(value, 'layout.screen', { issues, seen, insideRepeat: false });
   if (!node) return null;
   if (node.kind !== 'container') {
     issues.push('layout.screen: the screen is a container - it is the box the whole layout sits inside');

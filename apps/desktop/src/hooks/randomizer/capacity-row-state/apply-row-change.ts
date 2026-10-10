@@ -27,7 +27,7 @@ const applyRowChange = (
     ? { ...detached, jumps: planOf(capacityFamily, { ...current, start: itemAt(capacityFamily.ladder, detached.range[0]), max: itemAt(capacityFamily.ladder, detached.range[1]) }).jumps }
     : detached;
   const setting = settingOfRowState(capacityFamily, seeded, walletFloor);
-  if (family === 'wallet') return { ...profile, wallet: (setting.mode === 'vanilla-in-pool' ? { mode: 'vanilla' } : setting) as WalletSetting };
+  if (family === 'wallet') return { ...profile, wallet: (setting.mode === 'vanilla-in-pool' ? { mode: 'vanilla' } : setting) };
   return { ...profile, [family]: setting };
 };
 

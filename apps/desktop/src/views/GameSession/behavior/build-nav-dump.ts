@@ -29,7 +29,7 @@ const buildNavDump = (parts: NavDumpParts) => {
       screenId: detection.screen.id,
       screenName: detection.screen.name,
       method: detection.method,
-      hasVariant: !!detection.screen.variant,
+      hasVariant: Boolean(detection.screen.variant),
       variantKey: detection.screen.variant?.key ?? null,
     } : null,
     exitScreen,

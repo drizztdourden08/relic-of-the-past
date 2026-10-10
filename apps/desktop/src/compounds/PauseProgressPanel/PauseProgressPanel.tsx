@@ -29,7 +29,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
             top: pos.y * tile,
           }}>
             <PauseCrystalIcon
-              filled={!!(crystals & (1 << idx))}
+              filled={Boolean(crystals & (1 << idx))}
               scale={scale}
               spritesBase={spritesBase}
             />

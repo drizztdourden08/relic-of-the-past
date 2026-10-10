@@ -18,7 +18,7 @@ const useHeroAnchor = (active: boolean): ScreenPoint | null => {
     const vp = wasmGetViewportInfo();
     if (!vp || vp.snesWidth === 0) return;
     const next = heroScreenPoint(vp);
-    setAnchor((prev) => (prev && prev.x === next.x && prev.y === next.y ? prev : next));
+    setAnchor((prev) => (prev?.x === next.x && prev.y === next.y ? prev : next));
   }, [active, linkX, linkY]);
 
   return anchor;

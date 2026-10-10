@@ -6,7 +6,6 @@ import { useGlyphCanvas } from './behavior/useGlyphCanvas';
 import type { CSSProperties } from 'react';
 import type { GlyphMetrics } from '@rotp/languages';
 import type { GlyphCellProps } from './glyph.type';
-import './GlyphChar.css';
 
 const advanceStyle = (glyph: number, metrics: GlyphMetrics | null): CSSProperties | undefined => {
   if (metrics === null) return undefined;

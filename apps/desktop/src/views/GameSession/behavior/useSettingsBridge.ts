@@ -18,10 +18,10 @@ import type { SettingsBridgeDeps } from '@app/settings-effects/settings-effects.
 import type { AppSettings } from '@app/settings.type';
 
 const normalisationPatch = (current: AppSettings): Partial<AppSettings> => {
-  const merged = mergeSettings(current) as AppSettings;
+  const merged = mergeSettings(current);
   return Object.fromEntries(
     Object.entries(merged).filter(([key, value]) => JSON.stringify(value) !== JSON.stringify(Reflect.get(current, key))),
-  ) as Partial<AppSettings>;
+  );
 };
 
 const announce = (patch: Partial<GameSettings>, isGameRunning: boolean): void => {

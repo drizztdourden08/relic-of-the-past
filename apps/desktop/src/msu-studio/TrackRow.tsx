@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Status, Box, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
+import { Status, Box, Icon, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import type { TrackRowProps } from './msu.type';
 
@@ -53,7 +53,7 @@ const TrackRow = (props: TrackRowProps) => {
             active={playing}
             onClick={() => (playing ? onStopPreview() : onPreview(trackNum))}
           >
-            {playing ? '■' : '▶'}
+            <Icon name={playing ? 'square' : 'play'} />
           </IconButton>
         )}
         <IconButton
@@ -65,7 +65,7 @@ const TrackRow = (props: TrackRowProps) => {
           active={playingOriginal}
           onClick={() => onPlayOriginal(trackNum)}
         >
-          {playingOriginal ? '■' : '▷'}
+          <Icon name={playingOriginal ? 'square' : 'volume-2'} />
         </IconButton>
         <IconButton
           variant="ghost"
@@ -75,7 +75,7 @@ const TrackRow = (props: TrackRowProps) => {
           disabled={busy}
           onClick={() => onToggleLayers(trackNum)}
         >
-          ☰
+          <Icon name="layers" />
         </IconButton>
       </Box>
     </Box>

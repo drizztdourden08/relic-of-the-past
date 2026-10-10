@@ -110,10 +110,10 @@ static inline bool SimMutateGate(void) {
 // each call site stays a single condition. The simulator half is SimMutateGate, not a bare
 // HostGate check so a check-trigger grant answers to the same dev-mode + run-scope requirement as
 // every other WasmSim* mutator. The delivery half is kFeatures3_ReceiptExport: a session (local or
-// online) arms it at start and disarms it at stop (receipt-grants.ts), it needs no cheat bit, and
-// the parity mask (zelda_rtl.c) strips it un-bypassably under Vanilla Safe, the same authority
-// WasmGrantItemWithReceipt already answers to. A refusal names itself so a mis-armed session shows
-// up in the log instead of silently dropping the grant.
+// online) arms it at start and disarms it at stop (packages/randomizer/src/receipt-grants/), it
+// needs no cheat bit, and the parity mask (zelda_rtl.c) strips it un-bypassably under Vanilla
+// Safe, the same authority WasmGrantItemWithReceipt already answers to. A refusal names itself
+// so a mis-armed session shows up in the log instead of silently dropping the grant.
 static inline bool TriggerGrantAllowed(void) {
   if (CheatGate(kFeatures3_CheatItemGrant) || SimMutateGate()) return true;
   if ((enhanced_features3 & kFeatures3_ReceiptExport) != 0) return true;

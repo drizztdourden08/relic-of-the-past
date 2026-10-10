@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind logic */
 import type { HudButtonState } from '@rotp/hud';
-import type { ButtonInputs } from '../../HudButton.type';
+import type { ButtonInputs } from '../HudButton.type';
 
 const stateFor = (inputs: ButtonInputs): HudButtonState => {
   if (inputs.pressed) return 'pressed';

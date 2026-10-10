@@ -43,13 +43,13 @@ const createCapacitorFileStore = (): FileStore => ({
       const s = await Filesystem.stat({ path, directory: DIR });
       if (s.type === 'directory') await Filesystem.rmdir({ path, directory: DIR, recursive: true });
       else await Filesystem.deleteFile({ path, directory: DIR });
-    } catch { return; }
+    } catch {  }
   },
   exists: async (path) => {
     try { await Filesystem.stat({ path, directory: DIR }); return true; } catch { return false; }
   },
   mkdir: async (dir) => {
-    try { await Filesystem.mkdir({ path: dir, directory: DIR, recursive: true }); } catch { return; }
+    try { await Filesystem.mkdir({ path: dir, directory: DIR, recursive: true }); } catch {  }
   },
   stat: async (path): Promise<FileStat | null> => {
     try {

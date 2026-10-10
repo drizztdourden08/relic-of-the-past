@@ -12,7 +12,8 @@
 // Everything lives in hook statics, never WRAM, so the save-state snapshot is untouched. A save made
 // by the host carries these statics beside the snapshot and hands them back on load
 // (dialog_hook_state.c). A load without them leaves the rows stale until the next message clears
-// them; the host knows when it loaded one and holds its box back until the next clear (dialog-store.ts).
+// them; the host knows when it loaded one and holds its box back until the next clear
+// (markStale in apps/desktop/src/stores/dialog-store/useDialogStore.ts).
 
 enum { kDialogRows = 3,
        kDialogCells = 40 };

@@ -20,8 +20,8 @@ const armCapacityProfile = (plan: CapacitySessionPlan, tag: string, lines: Capac
   }
   const custom = plan.families.filter((arm) => arm.custom)
     .map((arm) => `${arm.family} ${arm.startTier}..${arm.maxTier}`);
-  log.randomizer(`${tag} Capacity profile armed: ${custom.join(', ')}`
-    + (plan.walletTable.length > 0 ? `; wallet slots [${plan.walletTable.join(', ')}]` : ''));
+  log.randomizer(`${tag} Capacity profile armed: ${custom.join(', ')}${
+     plan.walletTable.length > 0 ? `; wallet slots [${plan.walletTable.join(', ')}]` : ''}`);
 };
 
 export { armCapacityProfile };

@@ -7,7 +7,8 @@
 
 #include "src/types.h"
 
-// Currency tags, shared with packages/randomizer/src/world/shops/shop-price-native.ts.
+// Currency tags, shared with NATIVE_CURRENCY in
+// packages/randomizer/src/world/shops/shop-price-native/shop-price-native.constants.ts.
 enum {
   kShopCurrency_Rupees = 0,
   kShopCurrency_Arrows = 1,

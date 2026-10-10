@@ -104,7 +104,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
       return;
     }
 
-    const bfsBlocked = !!result.dynamicBlockerCells?.some(p => p.row === tileRow && p.col === tileCol);
+    const bfsBlocked = Boolean(result.dynamicBlockerCells?.some(p => p.row === tileRow && p.col === tileCol));
     const spriteInfo = buildSpriteInfo(spriteRef.current, tileRow, tileCol, screenWorldX, screenWorldY);
 
     const activeTarget = pathPreviewState
@@ -117,7 +117,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
       ? computePathTooltipPosition({
           activeTarget, vp, screenWorldX, screenWorldY, viewLeft, viewTop,
           scaleX, scaleY, mx, my, width, height, result,
-          lockTarget: !!pathPreviewState?.lockTarget,
+          lockTarget: Boolean(pathPreviewState?.lockTarget),
         })
       : { tipX: mx + TOOLTIP_OFFSET_X, tipY: my + TOOLTIP_OFFSET_Y };
 
@@ -135,7 +135,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
     if (onHoverTile) onHoverTile(tileRow, tileCol);
   }, [width, height, result, overworldScreenIndex, roomIndex, isIndoors, palaceIndex, equipment, inventoryItems, onHoverTile, pathPreviewState, rectSel?.active, handleRectMouseMove, clearHover]);
 
-  const selecting = !!rectSel?.active;
+  const selecting = Boolean(rectSel?.active);
   const inspectorStyle = useMemo(() => ({
     position: 'absolute' as const,
     top: '50%',

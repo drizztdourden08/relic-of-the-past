@@ -860,7 +860,7 @@ cards under a heading per half of the map, then the two counted controls on thei
 a hairline. The dropdown keeps the same indent as the cards and sliders, so the three line up
 under their headings.
 
-### compounds/ShopSlotsBlock/behavior/shop-scope-edits/index.ts
+### compounds/ShopSlotsBlock/behavior (scope edits: summary-of, with-depth, with-mode, with-slot-count, with-slot-ticked)
 
 One number drives both the count control and the total sentence: `opened`, the size of the set
 this scope opens (`shop-scope.ts`). The counted modes take it out of the ticked set, and in

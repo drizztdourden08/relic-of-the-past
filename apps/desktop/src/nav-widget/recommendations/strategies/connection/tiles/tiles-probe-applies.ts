@@ -4,7 +4,7 @@ import type { ScreenObservations } from '@rotp/navigation';
 import { isCurrentRoom } from './is-current-room';
 
 const tilesProbeApplies = (observations: ScreenObservations, record: ConnectionRecord): boolean =>
-  !!observations.walkBoundaries && !!observations.doorBoundaries
+  Boolean(observations.walkBoundaries) && Boolean(observations.doorBoundaries)
   && record.placement.tiles.length === 0
   && isCurrentRoom(observations, record.screenId);
 

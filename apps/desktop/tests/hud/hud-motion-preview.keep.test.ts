@@ -12,7 +12,7 @@ import {
 } from '@app/hud-layout-editing/motion-preview';
 import {
   useReducedMotion,
-} from '@app/compounds/HudNodeRenderer/sub-components/HudNodeMotion/useReducedMotion';
+} from '@app/compounds/HudNodeRenderer/behavior/useReducedMotion';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

@@ -10,33 +10,39 @@ import type { HudGridContainer, HudLayout } from '@rotp/hud';
 import { VIEW } from './grid-editor.constants';
 import { installGridRig } from './install-grid-rig';
 import { screenRoot } from './screen-root';
+import { required } from '../../required';
 
 const { mount, cell, header, down, press, toolbarKeys, status, mountGrid } = installGridRig();
 
 const ignore = (): void => {};
 
+const patchSpy = () => vi.fn<(patch: Partial<HudGridContainer>) => void>();
+
+const firstPatch = (patch: ReturnType<typeof patchSpy>): Partial<HudGridContainer> =>
+  required(patch.mock.calls[0], 'the first patch')[0];
+
 describe('every shortcut does what the legend draws', () => {
   it('moves a selected column with the arrow on the cap', () => {
-    const patch = vi.fn();
+    const patch = patchSpy();
     mountGrid(patch);
     down(header('column 2'));
     expect(document.querySelector('.hud-grid__key[data-shortcut="move-earlier"]')?.textContent)
       .toContain('Left arrow');
     press('ArrowLeft');
     expect(patch).toHaveBeenCalledTimes(1);
-    expect(patch.mock.calls[0][0].columns).toEqual(['fill', 'auto', 'auto']);
+    expect(firstPatch(patch).columns).toEqual(['fill', 'auto', 'auto']);
   });
 
   it('removes a column on Del, WITHOUT asking whether a child is in the way', () => {
-    const patch = vi.fn();
+    const patch = patchSpy();
     mountGrid(patch);
     down(header('column 1'));
     expect(status()).toBe('column 1 of 3 holds vitals, wallet');
     press('Delete');
     expect(patch).toHaveBeenCalledTimes(1);
-    const written = patch.mock.calls[0][0] as HudGridContainer;
+    const written = firstPatch(patch);
     expect(written.columns).toEqual(['fill', 'auto']);
-    expect(written.children.map((c) => c.place)).toEqual([
+    expect(written.children?.map((c) => c.place)).toEqual([
       { column: 1, row: 1 }, { column: 1, row: 3 },
     ]);
   });

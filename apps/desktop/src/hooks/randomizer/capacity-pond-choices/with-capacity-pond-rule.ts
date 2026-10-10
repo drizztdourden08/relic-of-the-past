@@ -7,7 +7,7 @@ import type { RandomizerOptionChoices } from '../randomizer-choices';
 const keepingPinned = (settled: ReconciledCapacityPond, stored: CapacityProfile): CapacityProfile => {
   if (settled.forcedFamilies.size === 0) return settled.capacity;
   const kept = Object.fromEntries([...settled.forcedFamilies.keys()].map((family) => [family, stored[family]]));
-  return { ...settled.capacity, ...kept } as CapacityProfile;
+  return { ...settled.capacity, ...kept };
 };
 
 const withCapacityPondRule = (

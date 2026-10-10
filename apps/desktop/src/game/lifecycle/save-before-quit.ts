@@ -11,7 +11,7 @@ const saveBeforeQuit = async (): Promise<void> => {
     const profileId = getProfileId();
     if (config.maxEntries && profileId) await savesStore.pruneAutoSaves(profileId, config.maxEntries);
   } catch {
-    return;
+    
   }
 };
 

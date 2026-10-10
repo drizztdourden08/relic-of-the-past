@@ -2,8 +2,8 @@
 import { resolveValue } from '@rotp/hud';
 import type { CSSProperties } from 'react';
 import type { HudBorder, HudBoxStyle, HudRadius, HudShadow, Paint } from '@rotp/hud';
-import { BORDER_SIDE_CAPS, BORDER_SIDES } from './HudNodeStyle.constants';
-import type { StyleScope } from './HudNodeStyle.type';
+import { BORDER_SIDE_CAPS, BORDER_SIDES } from './hud-node-style.constants';
+import type { StyleScope } from './hud-node-style.type';
 
 const num = (value: Parameters<typeof resolveValue>[0], scope: StyleScope): number => resolveValue(value, scope);
 

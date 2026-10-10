@@ -19,7 +19,8 @@ static const AreaHeadEvent kAreaHeadEvents[] = {
   {0x03, kEvent_Area_DeathMountain},
   {0x05, kEvent_Area_EastDeathMountain},
   // Screens 0x0A and 0x4A carry no entry. The place each one names is a pocket behind a rock on a
-  // screen anyone can walk onto, so the tracker reads the cave behind the rock instead (world.ts).
+  // screen anyone can walk onto, so the tracker reads the cave behind the rock instead
+  // (packages/game-data/src/data/records/checks/events/world.ts).
   {0x1B, kEvent_Area_CastleGrounds},
   {0x30, kEvent_Area_Desert},
   {0x35, kEvent_Area_LakeHylia},

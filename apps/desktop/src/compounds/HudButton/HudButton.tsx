@@ -2,7 +2,8 @@
 import { TILE } from '@rotp/hud';
 import { HudGlyph } from '../../composites/HudGlyph';
 import { HudSprite } from '../../primitives/HudSprite';
-import { faceFor, stateFor } from './behavior/hud-button-state';
+import { faceFor } from './behavior/face-for';
+import { stateFor } from './behavior/state-for';
 import type { HudGlyphSpec } from '../HudNodeRenderer/HudNodeRenderer.type';
 import type { HudButtonProps } from './HudButton.type';
 

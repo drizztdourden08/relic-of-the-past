@@ -10,7 +10,8 @@
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./packs": "./src/packs.ts",
+    "./packs": "./src/packs/index.ts",
+    "./packs.css": "./src/theme/packs/index.css",
     "./game-text.css": "./game-text/index.css",
     "./package.json": "./package.json"
   },
