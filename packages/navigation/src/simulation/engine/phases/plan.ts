@@ -13,7 +13,6 @@ import { debug } from '../event-log/debug';
 import { screenLabel } from '../screen-label';
 import { takeRegionJob } from '../regions/take-region-job';
 import { itemAt } from '../../../checked-access';
-import { RIGHT_ARROW } from '../../arrow.constants';
 import { canPass } from './can-pass';
 import { finishRun } from './finish-run';
 
@@ -26,7 +25,7 @@ const planFrontier = (env: EngineEnv, s: EngineState, events: SimEvent[], target
   if (!path) return;
   s.route = path.slice(1);
   s.phase = 'traversing';
-  events.push(narrative(s, `Running ${screenLabel(s.virtual.screenId)} ${RIGHT_ARROW} ${screenLabel(target)}`));
+  events.push(narrative(s, `Running ${screenLabel(s.virtual.screenId)} -> ${screenLabel(target)}`));
 };
 
 const planRegionJob = (s: EngineState, events: SimEvent[]): boolean => {
@@ -34,7 +33,7 @@ const planRegionJob = (s: EngineState, events: SimEvent[]): boolean => {
   if (!regionRoute) return false;
   s.route = regionRoute;
   s.phase = 'traversing';
-  events.push(narrative(s, `Running ${screenLabel(s.virtual.screenId)} ${RIGHT_ARROW} ${screenLabel(itemAt(regionRoute, regionRoute.length - 1))} (new region)`));
+  events.push(narrative(s, `Running ${screenLabel(s.virtual.screenId)} -> ${screenLabel(itemAt(regionRoute, regionRoute.length - 1))} (new region)`));
   return true;
 };
 

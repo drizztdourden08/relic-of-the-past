@@ -9,6 +9,12 @@ import { observations } from './observations';
 import { overworldScreen } from './overworld-screen';
 import { screenDetector as detector } from './screen-detector';
 
+const entranceRoomsLeadingTo = (room: number): number[] => {
+  const entranceRooms: number[] = [];
+  entranceRooms[0x2b] = room;
+  return entranceRooms;
+};
+
 describeDataset('screen strategy: a WRONG value is reported, not just a missing one', () => {
   it('reports a wrong roomIndex', () => {
     const screen = dungeonScreen();
@@ -50,8 +56,7 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const room = screen.gameId.roomIndex as number;
     const liveGameId = { ...screen.gameId, entranceId: 0x2b };
-    const entranceRooms: number[] = [];
-    entranceRooms[0x2b] = room;
+    const entranceRooms = entranceRoomsLeadingTo(room);
 
     const drafts = detector.detect(contextFor(observations({ match, liveGameId, isIndoors: true, entranceRooms })));
     const entranceDrafts = drafts.filter(d => d.key === 'gameId.entranceId');
@@ -64,9 +69,8 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const room = screen.gameId.roomIndex as number;
     const liveGameId = { ...screen.gameId, entranceId: 0x2b };
-    const entranceRooms: number[] = [];
     const roomEntrance0x2bLeadsTo = room + 1;
-    entranceRooms[0x2b] = roomEntrance0x2bLeadsTo;
+    const entranceRooms = entranceRoomsLeadingTo(roomEntrance0x2bLeadsTo);
 
     const drafts = detector.detect(contextFor(observations({ match, liveGameId, isIndoors: true, entranceRooms })));
     expect(drafts.filter(d => d.key === 'gameId.entranceId')).toEqual([]);

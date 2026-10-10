@@ -11,7 +11,6 @@ import { REPO_ROOT } from '../repo-root';
 import { required } from '../required';
 
 const US = required(kLanguages.us, 'US language');
-const BANG = String.fromCodePoint(0x21);
 const WIDTHS = new Uint8Array(US.alphabet.length).fill(6);
 const US_CHARSET = dialogueCharsetOf(US.alphabet, WIDTHS, []);
 
@@ -108,7 +107,7 @@ describe('every composer marks the item and the player', () => {
     const text = renderFromServer('Moon Pearl');
     expect(spansOf(text, HIGHLIGHT_PRIMARY)).toEqual(['Moon Pearl']);
     expect(spansOf(text, HIGHLIGHT_SECONDARY)).toEqual([]);
-    expect(stripHighlight(text)).toBe(`The server sent you Moon Pearl${BANG}`);
+    expect(stripHighlight(text)).toBe('The server sent you Moon Pearl!');
   });
 
   it('a capacity page takes the verb that agrees with its family label', () => {
@@ -127,7 +126,7 @@ describe('every composer marks the item and the player', () => {
     for (const text of candidates) expect(spansOf(text, HIGHLIGHT_SECONDARY)).toEqual(['Zelda_']);
     for (const text of candidates.slice(0, -1)) expect(spansOf(text, HIGHLIGHT_PRIMARY)).toHaveLength(1);
     expect(spansOf(required(candidates[0], 'first candidate'), HIGHLIGHT_PRIMARY)).toEqual(['Progressive Scale']);
-    expect(foreignItemLine(undefined)).toBe(`Sent to another player${BANG}`);
+    expect(foreignItemLine(undefined)).toBe('Sent to another player!');
   });
 
   it('a pond demand marks what she asks for in every line, capitalised past the marker', () => {

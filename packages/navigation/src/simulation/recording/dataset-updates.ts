@@ -4,7 +4,6 @@ import { find, toScreenIdOf, DOOR_BARRIER } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
 import type { RecorderState, ObservedDoorGate } from './recorder';
 import type { UpdateDeps } from './dataset-updates.type';
-import { RIGHT_ARROW } from '../arrow.constants';
 
 const connectionKey = (from: string, to: string): string => `${from}|${to}`;
 
@@ -36,7 +35,7 @@ const doorSuggestions = (gates: ObservedDoorGate[]): DatasetSuggestion[] =>
       kind: 'connection',
       targetFile: 'connections',
       targetId: null,
-      code: `// room 0x${g.roomId.toString(16)} ${g.direction} door ${RIGHT_ARROW} add tag '${DOOR_BARRIER[g.kind]}'`,
+      code: `// room 0x${g.roomId.toString(16)} ${g.direction} door -> add tag '${DOOR_BARRIER[g.kind]}'`,
       reason: `Door 0x${g.roomId.toString(16)} ${g.direction}: ${g.kind} in game, no barrier tag.`,
     }));
 

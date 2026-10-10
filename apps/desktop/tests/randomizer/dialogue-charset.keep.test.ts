@@ -11,8 +11,7 @@ type Glyph = (typeof EXTRA_GLYPHS)[number];
 
 const REQUIRED = "_-.,'()!?&+/:#%*\";=<>[]~@^`";
 const PRINTABLE_ASCII = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');
-const BANG = String.fromCodePoint(0x21);
-const SAMPLES = ['Drizztdourden_', 'Bottle (Fairy)', "Kokiri's Emerald", 'Buy Deku Stick (1)', 'Rupees (100)', `Ice Trap${BANG}`, 'A&B'];
+const SAMPLES = ['Drizztdourden_', 'Bottle (Fairy)', "Kokiri's Emerald", 'Buy Deku Stick (1)', 'Rupees (100)', 'Ice Trap!', 'A&B'];
 const NEIGHBOURS: readonly (readonly [number, number])[] = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
 const alphabetOf = (code: string): string[] => required(kLanguages[code], `language ${code}`).alphabet;

@@ -41,7 +41,7 @@ const fixtureConn = (overrides: Partial<ConnectionRecord> & {
 } = {}): ConnectionRecord => {
   const { toScreenId = 'screen-b', partnerCanExit, ...rest } = overrides;
   const n = fixtureCount++;
-  const id = rest.id ?? `connection-fixture-${n}`;
+  const id: ConnectionId = rest.id ?? `connection-fixture-${n}`;
   const partnerId = `connection-fixture-partner-${n}` as ConnectionId;
   const canExit = rest.canExit ?? true;
   const conn: ConnectionRecord = {

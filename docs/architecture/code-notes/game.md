@@ -2613,9 +2613,9 @@ Maps a discovered interactable (chest, NPC sprite, standing or overworld item) t
 - `indoorPickupSlot`: indoors the game records a pickup in the room's own state bits (`HeartUpgrade_CheckIfAlreadyObtained`, `sprite_main.c`): 0x2000 when `sprite_x_hi & 1` is set (a column in the room's right half, from column 32, since a room is 64 columns of 8 pixels), 0x4000 otherwise. Both are room state slots (5 and 6), which the chest action already writes.
 - `checkForStandingItem` derives the check a standing or overworld pickup is from the same facts `planSpriteTrigger` writes, so the two cannot disagree.
 
-### simulation/arrow.constants.ts
+### simulation/room-tags.constants.ts
 
-`RIGHT_ARROW` is the arrow the log lines, the clear room tag name and the door suggestion code print. It matches the arrow in the other `ROOM_TAG_NAMES` entries, so every tag name reads the same way.
+The clear room tag name, the log lines and the door suggestion code print `->`, the same arrow the other `ROOM_TAG_NAMES` entries use, so every tag name reads the same way.
 
 ### simulation/engine/state
 

@@ -30,7 +30,7 @@ describeDataset('annotation grouping', () => {
 
 describeDataset('room tag names', () => {
   it('labels the whole clear-the-room family, not just one value', () => {
-    for (const tag of [0x01, 0x0a, 0x13]) expect(roomTagName(tag)).toBe('clear enemies → doors open');
+    for (const tag of [0x01, 0x0a, 0x13]) expect(roomTagName(tag)).toBe('clear enemies -> doors open');
   });
 
   it('labels the known door/water/hole mechanics', () => {

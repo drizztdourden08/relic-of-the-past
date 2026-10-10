@@ -11,7 +11,6 @@ import { landingTile } from '../hop/landing-tile';
 import { emitHop } from '../hop/emit-hop';
 import { spendKeysForEdge } from '../hop/spend-keys-for-edge';
 import { regionCovered } from '../regions/region-covered';
-import { RIGHT_ARROW } from '../../arrow.constants';
 import { canPass } from './can-pass';
 
 const hopLinkTo = (env: EngineEnv, s: EngineState, from: string, next: string): HopLink => {
@@ -29,7 +28,7 @@ const traverse = (env: EngineEnv, s: EngineState, events: SimEvent[]): void => {
   if (!link.exit && !link.edge) {
     s.route = [];
     s.phase = 'observing';
-    events.push(debug(s, `route aborted: no passable edge ${from} ${RIGHT_ARROW} ${next}`));
+    events.push(debug(s, `route aborted: no passable edge ${from} -> ${next}`));
     return;
   }
   if (link.edge) spendKeysForEdge(s, link.edge);
