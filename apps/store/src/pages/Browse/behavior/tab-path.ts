@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import { KIND_SECTIONS, STORE_KINDS } from '../../../../lib/kinds';
+import { KIND_SECTIONS, STORE_KINDS } from '../../../kinds';
 
 const tabPath = (tabId: string): string => {
   const kind = STORE_KINDS.find((entry) => entry === tabId);

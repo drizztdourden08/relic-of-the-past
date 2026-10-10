@@ -4,10 +4,13 @@ import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
 import { deleteFile, patchFile } from '../../../endpoints/files-endpoints';
 import { errorMessage } from '@rotp/hub-client';
 import { fileLink } from './file-link';
-import {
-  EMPTY_TALLY, addTagsPatch, batchReport, removeTagsPatch, splitByRight, typePatch,
-} from './batch-edits';
-import type { BatchTally, PatchOf } from './batch-edits';
+import { EMPTY_TALLY } from './batch-edits.constants';
+import { addTagsPatch } from './add-tags-patch';
+import { batchReport } from './batch-report';
+import { removeTagsPatch } from './remove-tags-patch';
+import { splitByRight } from './split-by-right';
+import { typePatch } from './type-patch';
+import type { BatchTally, PatchOf } from './batch-edits.type';
 import type { FileWrite, UseBatchActionsParams } from './useBatchActions.type';
 
 const useBatchActions = (params: UseBatchActionsParams) => {

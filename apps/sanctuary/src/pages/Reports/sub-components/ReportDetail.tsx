@@ -9,7 +9,7 @@ import { IssueStateChip } from '../../../components/IssueStateChip/IssueStateChi
 import type { ReportView } from '../../../endpoints/api-responses.type';
 import { ANONYMOUS, contentsLine } from '../../../reports/report-row';
 import { formatBytes, formatDateTime } from '@rotp/hub-client';
-import { deadlineOf } from '../behavior/report-scopes';
+import { deadlineOf } from '../behavior/deadline-of';
 import { KIND_LABELS } from './ReportDetail.constants';
 import type { ReportDetailProps } from './ReportDetail.type';
 

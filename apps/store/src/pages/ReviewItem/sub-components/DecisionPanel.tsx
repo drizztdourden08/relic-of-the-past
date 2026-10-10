@@ -9,7 +9,7 @@ import type { DetailField } from '@rotp/design';
 import { formatBytes } from '@rotp/hub-client';
 import { authorPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
-import { formatCount } from '../../../lib/format-count';
+import { formatCount } from '../../../format-count';
 import { editOfEntry, versionOfEntry } from '../../../review/review-row';
 import { ReviewButtons } from '../../Review/sub-components/ReviewButtons';
 import type { DecisionPanelProps } from './DecisionPanel.type';

@@ -12,7 +12,7 @@ import { Stars } from '../../../components/Stars/Stars';
 import { authorPath, itemPath } from '../../../catalog/item-paths';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
-import { formatAverage, formatCount, plural } from '../../../lib/format-count';
+import { formatAverage, formatCount, plural } from '../../../format-count';
 import type { ItemSideCardProps } from './ItemSideCard.type';
 
 const versionLine = (card: ItemCardView, detail: ItemResponse | null): string => {

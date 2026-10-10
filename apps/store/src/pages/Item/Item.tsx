@@ -7,7 +7,7 @@ import { ItemHero } from '../../components/ItemHero';
 import { PackContentsPanel } from '../../components/PackContentsPanel/PackContentsPanel';
 import { RatingPanel } from '../../components/RatingPanel/RatingPanel';
 import { liveVersionOf } from '../../catalog/approved-versions';
-import { KIND_ICONS, KIND_PLURALS } from '../../lib/kinds';
+import { KIND_ICONS, KIND_PLURALS } from '../../kinds';
 import { useItemPage } from './behavior/useItemPage';
 import { ItemActions } from './sub-components/ItemActions';
 import { ItemOverview } from './sub-components/ItemOverview';

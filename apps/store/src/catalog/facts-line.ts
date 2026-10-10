@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { KindFacts } from '@rotp/hub-contracts';
-import { plural } from '../lib/format-count';
+import { plural } from '../format-count';
 
 const factsLine = (facts: KindFacts | null): string | null => {
   if (!facts) return null;

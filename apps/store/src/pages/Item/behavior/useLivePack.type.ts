@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { PackLink } from '../../../lib/pack-link/usePackLink';
+import type { PackLink } from '../../../pack-link/pack-link.type';
 
 type LivePack = {
   pack: PackLink;

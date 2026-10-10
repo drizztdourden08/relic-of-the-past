@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { previewFile } from '../endpoints/files-endpoints';
 import { errorMessage } from '@rotp/hub-client';
-import type { PreviewResult } from './useFilePreview.type';
+import type { PreviewResult } from './file-preview.type';
 
 const useFilePreview = (fileId: string, currentVersion: number) => {
   const key = `${fileId}:${currentVersion}`;

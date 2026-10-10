@@ -1,9 +1,9 @@
 /* @layer sanctuary-site @kind hook */
-import { useCallback, useMemo } from 'react';
+import { createElement, useCallback, useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { DataTable } from '@drizztdourden08/tessera/composites';
-import type { SearchResultsGroup, SearchResultsJump } from '@drizztdourden08/tessera/composites';
+import type { DataTableProps, SearchResultsGroup, SearchResultsJump } from '@drizztdourden08/tessera/composites';
 import { fileRowId } from '../../../files/file-row';
 import { FILE_DEFAULT_COLUMNS } from '../../../files/file-schema.constants';
 import { reportRowId } from '../../../reports/report-row';
@@ -12,12 +12,11 @@ import type { SearchCategory } from '../../search-categories';
 import { FILE_COUNT, REPORT_COUNT } from '../SearchResults.constants';
 import type { SearchResultsState } from './useSearchResults.type';
 
-const headOf = (category: SearchCategory, count: number) => ({
-  id: category.key,
-  label: category.label,
-  icon: <IconifyIcon icon={category.icon} />,
-  count,
-});
+const iconOf = (category: SearchCategory) => createElement(IconifyIcon, { icon: category.icon });
+
+const headOf = (category: SearchCategory, count: number) => ({ id: category.key, label: category.label, icon: iconOf(category), count });
+
+const tableOf = <Row extends object>(props: DataTableProps<Row>) => createElement(Box, { className: 'site-search__table' }, createElement(DataTable<Row>, props));
 
 const useResultView = (results: SearchResultsState) => {
   const { fileGroups, reportGroups, named, open } = results;
@@ -25,39 +24,31 @@ const useResultView = (results: SearchResultsState) => {
   const groups = useMemo<SearchResultsGroup[]>(() => [
     ...fileGroups.map(({ category, rows }) => ({
       ...headOf(category, rows.length),
-      children: (
-        <Box className="site-search__table">
-          <DataTable
-            rows={rows}
-            schema={results.fileSchema}
-            getRowId={fileRowId}
-            fallbackColumns={FILE_DEFAULT_COLUMNS}
-            onSelect={(id) => open(category, id)}
-            countLabel={FILE_COUNT}
-          />
-        </Box>
-      ),
+      children: tableOf({
+        rows,
+        schema: results.fileSchema,
+        getRowId: fileRowId,
+        fallbackColumns: FILE_DEFAULT_COLUMNS,
+        onSelect: (id: string) => open(category, id),
+        countLabel: FILE_COUNT,
+      }),
     })),
     ...reportGroups.map(({ category, rows }) => ({
       ...headOf(category, rows.length),
-      children: (
-        <Box className="site-search__table">
-          <DataTable
-            rows={rows}
-            schema={results.reportSchema}
-            getRowId={reportRowId}
-            fallbackColumns={REPORT_DEFAULT_COLUMNS}
-            fallbackGroupBy={REPORT_DEFAULT_GROUP_BY}
-            onSelect={(id) => open(category, id)}
-            countLabel={REPORT_COUNT}
-          />
-        </Box>
-      ),
+      children: tableOf({
+        rows,
+        schema: results.reportSchema,
+        getRowId: reportRowId,
+        fallbackColumns: REPORT_DEFAULT_COLUMNS,
+        fallbackGroupBy: REPORT_DEFAULT_GROUP_BY,
+        onSelect: (id: string) => open(category, id),
+        countLabel: REPORT_COUNT,
+      }),
     })),
   ], [fileGroups, reportGroups, results.fileSchema, results.reportSchema, open]);
 
   const jumps = useMemo<SearchResultsJump[]>(
-    () => named.map((category) => ({ id: category.key, label: category.label, icon: <IconifyIcon icon={category.icon} /> })),
+    () => named.map((category) => ({ id: category.key, label: category.label, icon: iconOf(category) })),
     [named],
   );
 

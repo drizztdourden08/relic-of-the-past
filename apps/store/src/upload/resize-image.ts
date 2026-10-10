@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
-import { cropAt } from './picture-crop/crop-at';
-import type { CropRect } from './picture-crop/picture-crop.type';
+import { cropAt } from '../picture-crop/crop-at';
+import type { CropRect } from '../picture-crop/picture-crop.type';
 import type { Picture, PictureSpec } from './resize-image.type';
 import { QUALITIES_BEST_FIRST } from './resize-image.constants';
 

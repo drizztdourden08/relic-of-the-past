@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { errorMessage } from '@rotp/hub-client';
 import { rangePackSource } from './range-pack-source/range-pack-source';
 import type { RenewLink } from './range-pack-source/range-pack-source.type';
-import type { LinkResult, PackLink } from './usePackLink.type';
+import type { LinkResult, PackLink } from './pack-link.type';
 
 const usePackLink = (load: RenewLink | null): PackLink => {
   const [result, setResult] = useState<LinkResult | null>(null);
@@ -26,4 +26,4 @@ const usePackLink = (load: RenewLink | null): PackLink => {
 };
 
 export { usePackLink };
-export type { PackLink } from './usePackLink.type';
+export type { PackLink } from './pack-link.type';

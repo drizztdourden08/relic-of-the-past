@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { navigate } from '@rotp/design';
 import { reviewPack } from '../../../endpoints/review-endpoints';
-import { usePackLink } from '../../../lib/pack-link/usePackLink';
+import { usePackLink } from '../../../pack-link/usePackLink';
 import { useReviewActions } from '../../Review/behavior/useReviewActions';
 import { packTargetOf } from './pack-target';
 import { previewOf } from './preview-item';

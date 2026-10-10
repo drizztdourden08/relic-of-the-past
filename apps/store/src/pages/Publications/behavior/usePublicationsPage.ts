@@ -5,8 +5,9 @@ import { useStoreData } from '../../../data/store-data-context';
 import { STORE_VIEWS } from '../../../views/store-views';
 import { parseRowId, rowsOfItem } from '../../../publications/publication-row';
 import { buildPublicationSchema } from '../../../publications/publication-schema';
-import { averageOf, formatAverage, formatCount, plural } from '../../../lib/format-count';
-import { publicationTabs, scopePredicate } from './publication-scopes';
+import { averageOf, formatAverage, formatCount, plural } from '../../../format-count';
+import { publicationTabs } from './publication-tabs';
+import { scopePredicate } from './scope-predicate';
 import { usePublicationActions } from './usePublicationActions';
 import { PUBLICATIONS_PATH } from './usePublicationsPage.constants';
 

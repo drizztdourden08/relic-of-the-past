@@ -7,7 +7,7 @@ import { formatDay } from '@rotp/hub-client';
 import { KindChip } from '../../../components/KindChip/KindChip';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
-import { formatCount } from '../../../lib/format-count';
+import { formatCount } from '../../../format-count';
 import { SHA_EDGE } from './ItemOverview.constants';
 import type { ItemOverviewProps } from './ItemOverview.type';
 

@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { ReportView } from '../../../../endpoints/api-responses.type';
+import type { ReportView } from '../../../endpoints/api-responses.type';
 
 const deadlineOf = (report: ReportView): number | null => {
   const { expiresAt, extendedUntil } = report;

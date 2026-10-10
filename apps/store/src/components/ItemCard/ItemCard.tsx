@@ -2,7 +2,7 @@
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ItemCard as CatalogCard } from '@drizztdourden08/tessera/composites';
 import type { ItemCardView } from '@rotp/hub-contracts';
-import { formatAverage } from '../../lib/format-count/format-average';
+import { formatAverage } from '../../format-count/format-average';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { KindChip } from '../KindChip/KindChip';
 import { Stars } from '../Stars/Stars';

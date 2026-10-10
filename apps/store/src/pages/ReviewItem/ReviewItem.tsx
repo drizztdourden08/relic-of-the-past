@@ -5,7 +5,7 @@ import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { SettingsPage } from '@drizztdourden08/tessera/composites';
 import { AppLink } from '@rotp/design';
 import { ReviewChip } from '../../components/ReviewChip/ReviewChip';
-import { KIND_ICONS } from '../../lib/kinds';
+import { KIND_ICONS } from '../../kinds';
 import { editOfEntry, versionOfEntry } from '../../review/review-row';
 import { useReviewItemPage } from './behavior/useReviewItemPage';
 import { DecisionPanel } from './sub-components/DecisionPanel';

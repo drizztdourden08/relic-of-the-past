@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { VersionRequest } from '../behavior/drop-queue';
+import type { VersionRequest } from '../behavior/drop-queue.type';
 
 type VersionUploadDialogProps = {
   request: VersionRequest | null;

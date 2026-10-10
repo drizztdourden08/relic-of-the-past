@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { CSSProperties } from 'react';
-import type { CropRect, Size } from '../../../lib/picture-crop/picture-crop.type';
+import type { CropRect, Size } from '../../../picture-crop/picture-crop.type';
 
 const pictureStyle = (crop: CropRect | null, size: Size | null): CSSProperties => (crop && size
   ? {

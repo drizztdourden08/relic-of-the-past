@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { listFiles } from '../endpoints/files-endpoints';
 import { errorMessage } from '@rotp/hub-client';
-import { NO_FILES } from './useFiles.constants';
+import { NO_FILES } from './files.constants';
 
 const byNewest = (a: SanctuaryFile, b: SanctuaryFile) => b.createdAt - a.createdAt;
 

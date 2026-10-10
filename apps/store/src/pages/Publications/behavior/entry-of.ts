@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
 import type { StoreItem } from '@rotp/hub-contracts';
-import type { PublicationTarget } from '../../../../publications/publication-row';
+import type { PublicationTarget } from '../../../publications/publication-row';
 import type { Entry } from './publication-detail.type';
 
 const entryOf = (item: StoreItem, target: PublicationTarget): Entry => ({

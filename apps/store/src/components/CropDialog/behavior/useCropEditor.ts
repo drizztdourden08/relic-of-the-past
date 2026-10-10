@@ -1,11 +1,11 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PointerEvent, SyntheticEvent } from 'react';
-import { cropAt } from '../../../lib/picture-crop/crop-at';
-import { moveCrop } from '../../../lib/picture-crop/move-crop';
-import { zoomCrop } from '../../../lib/picture-crop/zoom-crop';
-import { zoomOf } from '../../../lib/picture-crop/zoom-of';
-import type { CropRect, Size } from '../../../lib/picture-crop/picture-crop.type';
+import { cropAt } from '../../../picture-crop/crop-at';
+import { moveCrop } from '../../../picture-crop/move-crop';
+import { zoomCrop } from '../../../picture-crop/zoom-crop';
+import { zoomOf } from '../../../picture-crop/zoom-of';
+import type { CropRect, Size } from '../../../picture-crop/picture-crop.type';
 import type { CropEditorParams } from './useCropEditor.type';
 import { ZOOM_PER_WHEEL_DELTA } from './useCropEditor.constants';
 

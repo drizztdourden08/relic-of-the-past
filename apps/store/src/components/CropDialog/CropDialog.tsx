@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { Box, Button, Image, Slider, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { MAX_ZOOM } from '../../lib/picture-crop/picture-crop.constants';
+import { MAX_ZOOM } from '../../picture-crop/picture-crop.constants';
 import { useCropEditor } from './behavior/useCropEditor';
 import { pictureStyle } from './behavior/picture-style';
 import type { CropDialogProps } from './CropDialog.type';

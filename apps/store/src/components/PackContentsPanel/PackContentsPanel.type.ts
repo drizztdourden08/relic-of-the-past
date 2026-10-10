@@ -1,6 +1,6 @@
 /* @layer store-site @kind types */
 import type { StoreKind } from '@rotp/hub-contracts';
-import type { PackLink } from '../../lib/pack-link/usePackLink.type';
+import type { PackLink } from '../../pack-link/pack-link.type';
 
 type PackContentsPanelProps = {
   kind: StoreKind;

@@ -4,16 +4,14 @@ import type { SanctuaryFile } from '@rotp/hub-contracts';
 import { nextVersionNumber } from '../../../files/file-versions';
 import type { UploadMeta } from '../../../upload/upload-target.type';
 import { sameNameMatch } from './same-name-match';
-import {
-  EMPTY_QUEUE,
-  asVersion,
-  dropFiles,
-  keepSeparate,
-  requestVersion,
-  skipAsked,
-  uploadDone,
-  versionDone,
-} from './drop-queue';
+import { EMPTY_QUEUE } from './drop-queue.constants';
+import { asVersion } from './as-version';
+import { dropFiles } from './drop-files';
+import { keepSeparate } from './keep-separate';
+import { requestVersion } from './request-version';
+import { skipAsked } from './skip-asked';
+import { uploadDone } from './upload-done';
+import { versionDone } from './version-done';
 import type { UseDropFlowParams } from './useDropFlow.type';
 
 const useDropFlow = (params: UseDropFlowParams) => {

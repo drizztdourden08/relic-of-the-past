@@ -2,7 +2,7 @@
 import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { fileExpiresAt } from '@rotp/hub-contracts';
 import { formatBytes } from '@rotp/hub-client';
-import { plural } from '../../lib/format-count/plural';
+import { plural } from '../../format-count/plural';
 import { DAY_MS, REMOVED_LINES } from './version-file.constants';
 import { uploadLine } from './upload-line';
 

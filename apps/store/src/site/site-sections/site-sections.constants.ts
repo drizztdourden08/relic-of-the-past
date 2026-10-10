@@ -7,7 +7,7 @@ import reviewIcon from '@iconify-icons/lucide/clipboard-check';
 import settingsIcon from '@iconify-icons/lucide/settings';
 import type { StorePermission } from '@rotp/hub-contracts';
 import type { SiteNavGroup, SiteSection } from '@rotp/design';
-import { KIND_ICONS, KIND_PLURALS, KIND_SECTIONS } from '../../lib/kinds';
+import { KIND_ICONS, KIND_PLURALS, KIND_SECTIONS } from '../../kinds';
 import type { StoreSectionId } from './site-sections.type';
 
 const REVIEW_PERMISSION: StorePermission = 'review';

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { listReports } from '../endpoints/reports-endpoints';
 import { errorMessage } from '@rotp/hub-client';
 import type { ReportView } from '../endpoints/api-responses.type';
-import { NO_REPORTS } from './useReports.constants';
+import { NO_REPORTS } from './reports.constants';
 
 const byNewest = (a: ReportView, b: ReportView) => b.createdAt - a.createdAt;
 

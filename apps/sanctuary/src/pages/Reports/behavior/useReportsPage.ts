@@ -5,7 +5,8 @@ import { useSiteData } from '../../../data/useSiteData';
 import { toReportRow } from '../../../reports/report-row';
 import { buildReportSchema } from '../../../reports/report-schema';
 import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views.constants';
-import { scopePredicate, reportScopeTabs } from './report-scopes';
+import { scopePredicate } from './scope-predicate';
+import { reportScopeTabs } from './report-scope-tabs';
 import { useReportActions } from './useReportActions';
 import { REPORTS_PATH } from './useReportsPage.constants';
 
