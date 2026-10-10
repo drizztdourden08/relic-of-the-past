@@ -1,5 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 import type { Edge, Raster } from './poly-raster.type';
+import { itemAt } from '../../checked-read';
 
 const u8 = (v: number): number => v & 0xff;
 const u16 = (v: number): number => v & 0xffff;
@@ -12,7 +13,9 @@ const planesOf = (c: number): [number, number] => {
   return [plane(0) | plane(1), plane(2) | plane(3)];
 };
 
-const word = (ram: Uint8Array, a: number): number => ram[a & 0xffff] | (ram[(a + 1) & 0xffff] << 8);
+const xyAt = (xy: readonly number[], i: number): number => itemAt(xy, i, 'Triforce face outline');
+
+const word = (ram: Uint8Array, a: number): number => (ram[a & 0xffff] ?? 0) | ((ram[(a + 1) & 0xffff] ?? 0) << 8);
 const setWord = (ram: Uint8Array, a: number, v: number): void => {
   ram[a & 0xffff] = v & 0xff;
   ram[(a + 1) & 0xffff] = (v >> 8) & 0xff;
@@ -53,13 +56,13 @@ const nextEdge = (r: Raster, e: Edge, step: (idx: number) => number): boolean =>
     r.steps = u8(r.steps - 1);
     if (r.steps & 0x80) return true;
     i = step(e.idx);
-    if (r.xy[i] < e.y) return true;
-    if (r.xy[i] !== e.y) break;
-    e.cur = r.xy[i - 1];
+    if (xyAt(r.xy, i) < e.y) return true;
+    if (xyAt(r.xy, i) !== e.y) break;
+    e.cur = xyAt(r.xy, i - 1);
     e.idx = i;
   }
-  e.trig = r.xy[i];
-  e.target = r.xy[i - 1];
+  e.trig = xyAt(r.xy, i);
+  e.target = xyAt(r.xy, i - 1);
   e.idx = i;
   const u = e.target - e.cur;
   const t = Math.floor(((Math.abs(u) & 0xff) << 8) / u8(e.trig - e.y));
@@ -68,7 +71,16 @@ const nextEdge = (r: Raster, e: Edge, step: (idx: number) => number): boolean =>
   return false;
 };
 
-const stepLeft = (r: Raster) => (idx: number): number => (idx - 2 === 0 ? r.xy[0] : idx - 2);
+const advanceEdge = (r: Raster, e: Edge, step: (idx: number) => number): boolean => {
+  if (e.y === e.trig) {
+    e.cur = e.target;
+    if (nextEdge(r, e, step)) return true;
+  }
+  e.y = u8(e.y + 1);
+  return false;
+};
+
+const stepLeft = (r: Raster) => (idx: number): number => (idx - 2 === 0 ? xyAt(r.xy, 0) : idx - 2);
 const stepRight = (r: Raster) => (idx: number): number => (idx === r.xy[0] ? 0 : idx) + 2;
 
 const rowAddress = (y: number): number =>
@@ -81,22 +93,20 @@ const nextRow = (dst: number): number => {
 };
 
 const drawFace = (ram: Uint8Array, xy: number[], c: number): void => {
-  let n = xy[0];
-  let minY = xy[n];
-  let minIdx = n;
-  while ((n -= 2)) if (xy[n] < minY) { minY = xy[n]; minIdx = n; }
-  const edge = (): Edge => ({ cur: xy[minIdx - 1], y: xy[minIdx], trig: 0, target: 0, frac: 0, step: 0, idx: minIdx });
-  const r: Raster = { ram, xy, steps: u8(xy[0] >> 1), dst: rowAddress(minY), color: planesOf(c), left: edge(), right: edge() };
+  const count = xyAt(xy, 0);
+  let minY = xyAt(xy, count);
+  let minIdx = count;
+  for (let n = count - 2; n !== 0; n -= 2) {
+    if (xyAt(xy, n) < minY) { minY = xyAt(xy, n); minIdx = n; }
+  }
+  const edge = (): Edge => ({ cur: xyAt(xy, minIdx - 1), y: xyAt(xy, minIdx), trig: 0, target: 0, frac: 0, step: 0, idx: minIdx });
+  const r: Raster = { ram, xy, steps: u8(count >> 1), dst: rowAddress(minY), color: planesOf(c), left: edge(), right: edge() };
   if (nextEdge(r, r.left, stepLeft(r)) || nextEdge(r, r.right, stepRight(r))) return;
   for (;;) {
     fillLine(r);
     r.dst = nextRow(r.dst);
     for (const [e, step] of [[r.left, stepLeft(r)], [r.right, stepRight(r)]] as const) {
-      if (e.y === e.trig) {
-        e.cur = e.target;
-        if (nextEdge(r, e, step)) return;
-      }
-      e.y = u8(e.y + 1);
+      if (advanceEdge(r, e, step)) return;
     }
     r.left.frac = u16(r.left.frac + r.left.step);
     r.right.frac = u16(r.right.frac + r.right.step);

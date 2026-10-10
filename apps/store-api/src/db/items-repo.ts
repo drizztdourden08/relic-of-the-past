@@ -66,7 +66,7 @@ const listPublished = async (kind: StoreKind | null, cursor: string | undefined,
   if (after !== null) query = query.startAfter(after);
   const snap = await query.get();
   const page = snap.docs.map((doc) => toItem(doc.data()));
-  const last = page[page.length - 1];
+  const last = page.at(-1);
   return { items: page, nextCursor: page.length === pageSize && last ? encodeCursor(last.createdAt) : null };
 };
 

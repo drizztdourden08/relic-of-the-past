@@ -4,6 +4,7 @@ import type { HidButtonMapping, StickCandidate, TriggerSide } from '../hid-calib
 import type { ActionDeps } from './action-deps.type';
 import { finalizeDigitalTrigger, finalizeTriggerCalibration, resetTrigger } from '../stick-trigger-handlers';
 import { BYTE_MAX } from '../hid-calibration.constants';
+import { byteCandidate } from './byte-candidate';
 
 const useTriggerActions = (d: ActionDeps) => {
   const finalizeTrigger = useCallback((c: StickCandidate) => {
@@ -43,8 +44,10 @@ const useTriggerActions = (d: ActionDeps) => {
 
   const handleConfirmTriggerPick = useCallback(() => {
     if (d.triggerPickedByte === null) return;
-    const bl = d.baselineRef.current; const mins = d.triggerMinsRef.current; const maxs = d.triggerMaxsRef.current; const bytes = d.latestBytes; const i = d.triggerPickedByte;
-    const c: StickCandidate = { idx: i, range: mins.length > i ? maxs[i] - mins[i] : 0, min: mins.length > i ? mins[i] : 0, max: maxs.length > i ? maxs[i] : BYTE_MAX, center: bl.length > i ? bl[i] : (bytes.length > i ? bytes[i] : 0) };
+    const c = byteCandidate({
+      idx: d.triggerPickedByte, mins: d.triggerMinsRef.current, maxs: d.triggerMaxsRef.current,
+      baseline: d.baselineRef.current, bytes: d.latestBytes, fallbackCenter: 0,
+    });
     d.setTriggerPickMode(false); d.setTriggerPickedByte(null); d.finalizeTriggerRef.current(c);
   }, [d.triggerPickedByte, d.latestBytes]);
 

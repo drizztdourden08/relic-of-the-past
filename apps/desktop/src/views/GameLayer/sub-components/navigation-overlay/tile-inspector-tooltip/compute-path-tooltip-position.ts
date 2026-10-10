@@ -46,10 +46,10 @@ const computePathTooltipPosition = (params: PathTipParams): TooltipPosition => {
 
   const goal2x2 = findNearest2x2Goal(activeTarget.row, activeTarget.col, result.reachable);
   const path = goal2x2
-    ? findPath2x2FromPlayer(
-        vp.linkX, vp.linkY + PLAYER_FOOT_OFFSET, screenWorldX, screenWorldY, goal2x2,
-        result.reachable, result.reachableByLayer, result.startLayer,
-      )
+    ? findPath2x2FromPlayer({
+        player: { x: vp.linkX, y: vp.linkY + PLAYER_FOOT_OFFSET }, screenWorld: { x: screenWorldX, y: screenWorldY }, goal: goal2x2,
+        reachable: result.reachable, layerGrids: result.reachableByLayer, startLayer: result.startLayer,
+      })
     : null;
 
   if (!path || path.length <= 1) return defaultPosition;

@@ -104,7 +104,7 @@ const run = () => {
     const escaped = a.replace(/[\\"']/g, (c) => `\\${c}`);
     return escaped.includes(' ') ? `"${escaped}"` : escaped;
   };
-  writeFileSync(rsp, args.map(escapeArg).join('\n') + '\n');
+  writeFileSync(rsp, `${args.map(escapeArg).join('\n')}\n`);
 
   const isWin = process.platform === 'win32';
   const cmd = isWin ? process.env.COMSPEC || 'cmd.exe' : 'emcc';
@@ -120,7 +120,7 @@ const run = () => {
   writeFileSync(join(outputDir, 'package.json'), `${JSON.stringify({ type: 'commonjs' })}\n`);
 
   console.log('\n============================================');
-  console.log('Build successful!');
+  console.log('Build successful.');
   console.log(`Output: ${join(outputDir, 'zelda3.js')}`);
   console.log(`        ${join(outputDir, 'zelda3.wasm')}`);
   console.log('============================================');

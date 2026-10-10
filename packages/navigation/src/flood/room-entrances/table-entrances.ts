@@ -6,9 +6,9 @@ import { BOUNDARY_ID_BASE, STAIR_ID_BASE, THRONE_DOOR } from './room-entrances.c
 const stairEntrances = (roomId: number, isLive: boolean): OverworldEntrance[] => {
   const stairs = isLive ? wasmGetRoomStairInfo() : wasmGetRoomStairInfoFor(roomId);
   const out: OverworldEntrance[] = [];
-  for (let i = 0; i < stairs.length; i++) {
-    if (stairs[i].destRoom === 0) continue;
-    out.push({ area: roomId, pos: 0, id: STAIR_ID_BASE + i, gridRow: stairs[i].row, gridCol: stairs[i].col, roomId: stairs[i].destRoom });
+  for (const [i, stair] of stairs.entries()) {
+    if (stair.destRoom === 0) continue;
+    out.push({ area: roomId, pos: 0, id: STAIR_ID_BASE + i, gridRow: stair.row, gridCol: stair.col, roomId: stair.destRoom });
   }
   return out;
 };
@@ -20,9 +20,9 @@ const boundaryEntrances = (roomId: number, isLive: boolean): OverworldEntrance[]
     && !isFollowerActive();
   if (followerGated) return [];
   const out: OverworldEntrance[] = [];
-  for (let i = 0; i < bounds.length; i++) {
-    if (bounds[i].destRoom === 0) continue;
-    out.push({ area: roomId, pos: 0, id: BOUNDARY_ID_BASE + i, gridRow: bounds[i].row, gridCol: bounds[i].col, roomId: bounds[i].destRoom });
+  for (const [i, bound] of bounds.entries()) {
+    if (bound.destRoom === 0) continue;
+    out.push({ area: roomId, pos: 0, id: BOUNDARY_ID_BASE + i, gridRow: bound.row, gridCol: bound.col, roomId: bound.destRoom });
   }
   return out;
 };

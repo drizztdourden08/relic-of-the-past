@@ -15,7 +15,7 @@ const screenBlockSource = (x: number, y: number): number => {
 };
 
 const cellAttribute = (attributes: Buffer, gbaWord: number, snesWord: number): number => {
-  const attribute = attributes[gbaWord & TILE_ATTRIBUTE_INDEX_MASK];
+  const attribute = attributes.readUInt8(gbaWord & TILE_ATTRIBUTE_INDEX_MASK);
   if (attribute >= FLIP_VARIANT_ATTR_FIRST && attribute < FLIP_VARIANT_ATTR_END) return attribute | (snesWord >>> SNES_FLIP_SHIFT);
   return attribute;
 };

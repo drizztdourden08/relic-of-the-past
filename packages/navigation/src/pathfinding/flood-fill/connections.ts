@@ -1,22 +1,24 @@
 /* @layer shared-game @kind logic */
-import type { BorderEdge, ConnectionInfo, FloodFillResult } from '@rotp/game-core';
+import type { BorderEdge, ConnectionInfo, FloodFillResult, ReachState } from '@rotp/game-core';
 import { GRID_SIZE } from '../types/grid.constants';
 import { getAdjacentScreen } from '../core/get-adjacent-screen';
 import { contiguousRuns } from './contiguous-runs';
 import { getAdjacentRoom } from './get-adjacent-room';
 import { BORDER_EDGES, OPPOSITE_EDGE, SCROLL_SEAM } from './flood-fill.constants';
 
+const seamOpenAt = (reachable: ReachState[][], edge: BorderEdge, i: number): boolean => {
+  if (edge === 'south' || edge === 'north') {
+    return Boolean(reachable[SCROLL_SEAM.before]?.[i] && reachable[SCROLL_SEAM.after]?.[i]);
+  }
+  const row = reachable[i];
+  return Boolean(row?.[SCROLL_SEAM.before] && row[SCROLL_SEAM.after]);
+};
+
 const seamCrossings = (result: FloodFillResult, edge: BorderEdge): ConnectionInfo[] => {
   const { reachable } = result;
   const positions: number[] = [];
-  if (edge === 'south' || edge === 'north') {
-    for (let col = 0; col < GRID_SIZE; col++) {
-      if (reachable[SCROLL_SEAM.before]?.[col] && reachable[SCROLL_SEAM.after]?.[col]) positions.push(col);
-    }
-  } else {
-    for (let row = 0; row < GRID_SIZE; row++) {
-      if (reachable[row]?.[SCROLL_SEAM.before] && reachable[row]?.[SCROLL_SEAM.after]) positions.push(row);
-    }
+  for (let i = 0; i < GRID_SIZE; i++) {
+    if (seamOpenAt(reachable, edge, i)) positions.push(i);
   }
   return contiguousRuns(positions).map((run) => ({
     edge,

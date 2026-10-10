@@ -12,33 +12,32 @@ import { createSnapshot, verifyAgainst } from '../../safety/snapshot.mjs';
 import { pruneSnapshots } from '../../safety/retention.mjs';
 import { flag } from '../args.mjs';
 
-const selectTargets = ({ entries, name, merged, staleMs, now }) => {
+const workReason = ({ status, assessment }, { merged }) => {
+  if (assessment.verdict === VERDICTS.MISSING) return null;
+  if (!assessment.deletable) {
+    return assessment.verdict === VERDICTS.LEASED ? 'leased' : 'holds uncommitted or unlanded work';
+  }
+  if (merged && !status.merged) return 'branch has not landed on the base';
+  return null;
+};
+
+const poolReason = ({ record, assessment }, { name, merged, staleMs, now }) => {
+  if (staleMs !== null) return now - Date.parse(record.lastUsedAt) < staleMs ? 'used too recently' : null;
+  if (!name && !merged && assessment.verdict === VERDICTS.READY) return 'unused and ready, so it stays warm in the pool';
+  return null;
+};
+
+const sparedReason = (entry, criteria) => workReason(entry, criteria) ?? poolReason(entry, criteria);
+
+const selectTargets = ({ entries, ...criteria }) => {
   const chosen = [];
   const spared = [];
 
   for (const entry of entries) {
-    const { record, status, assessment } = entry;
-
-    if (name && record.name !== name) continue;
-
-    if (!assessment.deletable && assessment.verdict !== VERDICTS.MISSING) {
-      const why = assessment.verdict === VERDICTS.LEASED ? 'leased' : 'holds uncommitted or unlanded work';
-      spared.push({ entry, why });
-      continue;
-    }
-    if (merged && !status.merged && assessment.verdict !== VERDICTS.MISSING) {
-      spared.push({ entry, why: 'branch has not landed on the base' });
-      continue;
-    }
-    if (staleMs !== null && now - Date.parse(record.lastUsedAt) < staleMs) {
-      spared.push({ entry, why: 'used too recently' });
-      continue;
-    }
-    if (!name && !merged && staleMs === null && assessment.verdict === VERDICTS.READY) {
-      spared.push({ entry, why: 'unused and ready, so it stays warm in the pool' });
-      continue;
-    }
-    chosen.push(entry);
+    if (criteria.name && entry.record.name !== criteria.name) continue;
+    const why = sparedReason(entry, criteria);
+    if (why === null) chosen.push(entry);
+    else spared.push({ entry, why });
   }
 
   return { chosen, spared };
@@ -88,14 +87,62 @@ const removeWorktree = (record) => {
   rmSync(profileDir, { recursive: true, force: true });
 };
 
+const parseStale = (staleRaw) => {
+  if (staleRaw === undefined) return null;
+  const staleMs = parseDuration(staleRaw);
+  if (staleMs === null) throw new Error(`Unparseable --stale "${staleRaw}". Use forms like 12h, 7d.`);
+  return staleMs;
+};
+
+const printPlan = (chosen) => {
+  console.log('\nWould remove:');
+  for (const entry of chosen) {
+    console.log(`  ${describe(entry)}`);
+    console.log(`    worktree ${entry.record.path}`);
+    console.log(`    branch   ${entry.record.branch}`);
+    console.log(`    profile  ${gameDataPath('profiles', entry.record.name)} (including its save states)`);
+  }
+};
+
+const reportSnapshotCheck = (snapshot) => {
+  const check = verifyAgainst(snapshot.ref);
+  if (check.ok) {
+    console.log('\n[wt] Verified: no protected file went missing.');
+    return;
+  }
+  console.error(`\n[wt] STOP. This removal made ${check.missing.length} protected file(s) disappear:`);
+  for (const path of check.missing.slice(0, 10)) console.error(`       ${path}`);
+  if (check.missing.length > 10) console.error(`       ...and ${check.missing.length - 10} more`);
+  console.error(`\n       Restore them with:  pnpm safety restore ${snapshot.ref}\n`);
+  process.exitCode = 1;
+};
+
+const removeChosen = async (chosen) => {
+  const snapshot = createSnapshot('wt-clean');
+  console.log(`\n[wt] Safety snapshot ${snapshot.ref}`);
+
+  for (const entry of chosen) {
+    console.log(`\n[wt] Removing ${entry.record.name}...`);
+    removeWorktree(entry.record);
+  }
+
+  reportSnapshotCheck(snapshot);
+
+  const pruned = pruneSnapshots();
+  if (pruned.length > 0) console.log(`[wt] Pruned ${pruned.length} expired snapshot(s).`);
+
+  const names = new Set(chosen.map((e) => e.record.name));
+  await updateRegistry((registry) => {
+    registry.worktrees = registry.worktrees.filter((w) => !names.has(w.name));
+  });
+
+  console.log(`\n[wt] Removed ${names.size} worktree(s).`);
+};
+
 const run = async ({ positional, options }) => {
   const now = Date.now();
   const [name] = positional;
-  const staleRaw = options.stale;
-  const staleMs = staleRaw === undefined ? null : parseDuration(staleRaw);
-  if (staleRaw !== undefined && staleMs === null) {
-    throw new Error(`Unparseable --stale "${staleRaw}". Use forms like 12h, 7d.`);
-  }
+  const staleMs = parseStale(options.stale);
 
   const entries = surveyAll(now);
   if (entries.length === 0) {
@@ -115,47 +162,14 @@ const run = async ({ positional, options }) => {
     return;
   }
 
-  console.log('\nWould remove:');
-  for (const entry of chosen) {
-    console.log(`  ${describe(entry)}`);
-    console.log(`    worktree ${entry.record.path}`);
-    console.log(`    branch   ${entry.record.branch}`);
-    console.log(`    profile  ${gameDataPath('profiles', entry.record.name)} (including its save states)`);
-  }
+  printPlan(chosen);
 
   if (!flag(options, 'yes')) {
     console.log('\n[wt] Dry run. Re-run with --yes to remove the above.');
     return;
   }
 
-  const snapshot = createSnapshot('wt-clean');
-  console.log(`\n[wt] Safety snapshot ${snapshot.ref}`);
-
-  for (const entry of chosen) {
-    console.log(`\n[wt] Removing ${entry.record.name}...`);
-    removeWorktree(entry.record);
-  }
-
-  const check = verifyAgainst(snapshot.ref);
-  if (check.ok) {
-    console.log('\n[wt] Verified: no protected file went missing.');
-  } else {
-    console.error(`\n[wt] STOP. This removal made ${check.missing.length} protected file(s) disappear:`);
-    for (const path of check.missing.slice(0, 10)) console.error(`       ${path}`);
-    if (check.missing.length > 10) console.error(`       ...and ${check.missing.length - 10} more`);
-    console.error(`\n       Restore them with:  pnpm safety restore ${snapshot.ref}\n`);
-    process.exitCode = 1;
-  }
-
-  const pruned = pruneSnapshots();
-  if (pruned.length > 0) console.log(`[wt] Pruned ${pruned.length} expired snapshot(s).`);
-
-  const names = new Set(chosen.map((e) => e.record.name));
-  await updateRegistry((registry) => {
-    registry.worktrees = registry.worktrees.filter((w) => !names.has(w.name));
-  });
-
-  console.log(`\n[wt] Removed ${names.size} worktree(s).`);
+  await removeChosen(chosen);
 };
 
 const command = {

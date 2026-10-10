@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { wrapTo15Bits } from './wrap-to-15-bits';
 
 const brrFilters = [
@@ -57,8 +58,8 @@ const encodeBrr = (data: Int16Array | number[], brrRepeat: number, olds: [number
         let success = true;
 
         for (let i = 0; i < 16; i++) {
-          const s = brrFilters[filter](old, older);
-          const xs = data[p + i] >> 1;
+          const s = itemAt(brrFilters, filter, 'BRR filter')(old, older);
+          const xs = (data[p + i] ?? 0) >> 1;
           let bestE = Number.MAX_SAFE_INTEGER;
           let bestJ = 0;
           let bestS0 = 0;

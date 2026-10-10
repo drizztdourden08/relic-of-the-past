@@ -15,6 +15,12 @@ const productNameOf = (entries: readonly DeviceEntry[]): string =>
 const busTypeOf = (entries: readonly DeviceEntry[]): DeviceEntry['busType'] =>
   entries.find((e) => e.busType !== 'unknown')?.busType ?? 'unknown';
 
+const firstOf = (group: readonly DeviceEntry[]): DeviceEntry => {
+  const [first] = group;
+  if (first === undefined) throw new Error('A controller group has no devices');
+  return first;
+};
+
 const groupControllerDevices = (entries: readonly DeviceEntry[]): ControllerDeviceGroup[] => {
   const byKey = new Map<string, DeviceEntry[]>();
   for (const entry of entries) {
@@ -25,8 +31,8 @@ const groupControllerDevices = (entries: readonly DeviceEntry[]): ControllerDevi
   }
 
   return Array.from(byKey.values()).map((group) => ({
-    vendorId: group[0].vendorId,
-    productId: group[0].productId,
+    vendorId: firstOf(group).vendorId,
+    productId: firstOf(group).productId,
     product: productNameOf(group),
     busType: busTypeOf(group),
     isAdapter: group.length > 1,

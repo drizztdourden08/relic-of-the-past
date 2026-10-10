@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../../checked-access';
 import { REFERENCE_CAPACITY_PROFILE } from '../../capacity/capacity-profile-defaults';
 import { CURRENCY_ROWS } from '../shop-price-options';
 import { shopPriceCeilingOf } from '../shop-price-ceiling-of';
@@ -23,7 +24,7 @@ const rollCounted = (
 };
 
 const rollBottle = (contents: readonly ShopBottleContent[], rng: Rng): ShopPrice =>
-  ({ currency: 'bottle', content: contents[rng.int(contents.length)] });
+  ({ currency: 'bottle', content: itemAt(contents, rng.int(contents.length)) });
 
 const rollShopPrices = (
   slots: readonly ShopSlotLocation[], plan: ShopPricePlan, rng: Rng,
@@ -36,7 +37,7 @@ const rollShopPrices = (
   for (const slot of slots) {
     const pick = rng.int(counted.length + (bottleUsable ? 1 : 0));
     view[slot.key] = pick < counted.length
-      ? rollCounted(counted[pick], plan, profile, rng)
+      ? rollCounted(itemAt(counted, pick), plan, profile, rng)
       : rollBottle(plan.bottle.contents, rng);
   }
   return view;

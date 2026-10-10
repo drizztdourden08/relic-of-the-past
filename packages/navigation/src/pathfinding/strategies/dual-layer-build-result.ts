@@ -1,90 +1,73 @@
 /* @layer shared-game @kind logic */
-import type { GridPos, ReachState } from '@rotp/game-core';
-import type { BuildDualLayerArgs, DualLayerTileResult, ReachedLayer } from './dual-layer-build-result.type';
+import type { ReachState, TilePassability } from '@rotp/game-core';
+import type { BuildDualLayerArgs, DualLayerTileResult, ReachedPair } from './dual-layer-build-result.type';
 import { getHookshotTargetTiles } from '../tile-attrs';
-import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types/grid.constants';
-import { bodyTiles } from './body-tiles';
-import { SWAP_STAIR_ATTRS } from './dual-layer.constants';
+import { GRID_SIZE } from '../types/grid.constants';
+import { cellAt, itemAt } from '../../checked-access';
+import { swapStairAt } from './swap-stair-at';
+import { collectHookTargets, filledGrid, joinReqs, keepFewer, reachStateOf, spreadBodyReach } from './tile-result';
 
-const emptyGrid = <T>(fill: T): T[][] => Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(fill));
-
-const keepFewer = (reached: ReachedLayer, row: number, col: number, reqs: Set<string>): void => {
-  const existing = reached[row]?.[col];
-  if (existing === null || existing.size > reqs.size) reached[row][col] = reqs;
+const fewestOf = (r0: Set<string> | null, r1: Set<string> | null): Set<string> | null => {
+  if (r0 === null || r1 === null) return r0 ?? r1;
+  return r0.size <= r1.size ? r0 : r1;
 };
 
-const fewestOf = (r0: Set<string> | null, r1: Set<string> | null): Set<string> | null =>
-  r0 !== null && r1 !== null ? (r0.size <= r1.size ? r0 : r1) : (r0 ?? r1);
-
-const buildDualLayerTileResult = (args: BuildDualLayerArgs): DualLayerTileResult => {
-  const { bodyReached, bounds, grids, rawAttrs, tileContext, traversedStairTiles, traversedLedgeTiles, ledgeCrossings } = args;
-  const { minRow, maxRow, minCol, maxCol } = bounds;
-  const isSwapStair = (r: number, c: number): boolean => SWAP_STAIR_ATTRS.has(rawAttrs[0][r]?.[c]) || SWAP_STAIR_ATTRS.has(rawAttrs[1][r]?.[c]);
-
-  const reached: [ReachedLayer, ReachedLayer] = [emptyGrid<Set<string> | null>(null), emptyGrid<Set<string> | null>(null)];
-
-  for (let layer = 0; layer < 2; layer++) {
-    for (let r = minRow; r < GRID_SIZE - 1 && r <= maxRow; r++) {
-      for (let c = minCol; c < GRID_SIZE - 1 && c <= maxCol; c++) {
-        const reqs = bodyReached[layer][r][c];
-        if (reqs === null) continue;
-        for (const [tr, tc] of bodyTiles(r, c)) {
-          if (!isSwapStair(tr, tc)) keepFewer(reached[layer], tr, tc, reqs);
-        }
-      }
-    }
-  }
-
+const reachedLayers = (args: BuildDualLayerArgs): ReachedPair => {
+  const { bodyReached, bounds, rawAttrs, traversedStairTiles, traversedLedgeTiles } = args;
+  const reached: ReachedPair = [filledGrid<Set<string> | null>(null), filledGrid<Set<string> | null>(null)];
+  const isSwapStair = (r: number, c: number): boolean => swapStairAt(rawAttrs, r, c);
+  spreadBodyReach(reached[0], bodyReached[0], bounds, isSwapStair);
+  spreadBodyReach(reached[1], bodyReached[1], bounds, isSwapStair);
   for (const { layer, row, col, reqs } of traversedStairTiles) keepFewer(reached[layer], row, col, reqs);
   for (const { row, col, reqs } of traversedLedgeTiles) keepFewer(reached[0], row, col, reqs);
+  return reached;
+};
 
+const bestLayerOf = (r0: Set<string> | null, r1: Set<string> | null): 0 | 1 => {
+  if (r0 !== null && r1 !== null) return r0.size <= r1.size ? 0 : 1;
+  return r0 !== null ? 0 : 1;
+};
+
+const tileLayerOf = (r0: Set<string> | null, r1: Set<string> | null): 0 | 1 | 2 => {
+  if (r0 !== null && r1 !== null) return 2;
+  return r1 !== null ? 1 : 0;
+};
+
+const scoreReach = (reached: ReachedPair, grids: [TilePassability[][], TilePassability[][]]): Omit<DualLayerTileResult, 'reqGrid' | 'hookTargets' | 'ledges'> => {
   let reachableCount = 0;
-  const reachable: ReachState[][] = emptyGrid(0);
-  const tileLayer: (0 | 1 | 2)[][] = emptyGrid<0 | 1 | 2>(0);
-  const reachableByLayer: [ReachState[][], ReachState[][]] = [emptyGrid(0), emptyGrid(0)];
+  const reachable: ReachState[][] = filledGrid(0);
+  const tileLayer: (0 | 1 | 2)[][] = filledGrid<0 | 1 | 2>(0);
+  const reachableByLayer: [ReachState[][], ReachState[][]] = [filledGrid(0), filledGrid(0)];
 
   for (let r = 0; r < GRID_SIZE; r++) {
     for (let c = 0; c < GRID_SIZE; c++) {
-      const r0 = reached[0][r][c];
-      const r1 = reached[1][r][c];
+      const r0 = cellAt(reached[0], r, c);
+      const r1 = cellAt(reached[1], r, c);
       if (r0 === null && r1 === null) continue;
 
-      const bestLayer = r0 !== null && r1 !== null ? (r0.size <= r1.size ? 0 : 1) : (r0 !== null ? 0 : 1);
-      const tile = grids[bestLayer][r][c];
-      if (tile.type === 'blocked') continue;
+      const state = reachStateOf(cellAt(grids[bestLayerOf(r0, r1)], r, c));
+      if (state === 0) continue;
+      if (state === 1) reachableCount++;
 
-      let state: ReachState;
-      if (tile.type === 'ledge') {
-        state = TRAVERSAL_DIR_OFFSET[tile.dir];
-      } else if (tile.type === 'stairs') {
-        state = STAIRS_TRAVERSAL_STATE;
-      } else {
-        state = 1;
-        reachableCount++;
-      }
-
-      reachable[r][c] = state;
-      if (r0 !== null) reachableByLayer[0][r][c] = state;
-      if (r1 !== null) reachableByLayer[1][r][c] = state;
-      tileLayer[r][c] = r0 !== null && r1 !== null ? 2 : (r1 !== null ? 1 : 0);
+      itemAt(reachable, r)[c] = state;
+      if (r0 !== null) itemAt(reachableByLayer[0], r)[c] = state;
+      if (r1 !== null) itemAt(reachableByLayer[1], r)[c] = state;
+      itemAt(tileLayer, r)[c] = tileLayerOf(r0, r1);
     }
   }
+  return { reachable, reachableCount, tileLayer, reachableByLayer };
+};
+
+const buildDualLayerTileResult = (args: BuildDualLayerArgs): DualLayerTileResult => {
+  const { grids, rawAttrs, tileContext, ledgeCrossings } = args;
+  const reached = reachedLayers(args);
+  const { reachable, reachableCount, tileLayer, reachableByLayer } = scoreReach(reached, grids);
 
   const reqGrid: string[][] = Array.from({ length: GRID_SIZE }, (_, r) =>
-    Array.from({ length: GRID_SIZE }, (_, c) => {
-      const best = fewestOf(reached[0][r][c], reached[1][r][c]);
-      return best && best.size > 0 ? [...best].join(',') : '';
-    }),
+    Array.from({ length: GRID_SIZE }, (_, c) => joinReqs(fewestOf(cellAt(reached[0], r, c), cellAt(reached[1], r, c)))),
   );
 
-  const hookSet = getHookshotTargetTiles(tileContext);
-  const hookTargets: GridPos[] = [];
-  for (let r = 0; r < GRID_SIZE; r++) {
-    for (let c = 0; c < GRID_SIZE; c++) {
-      if (!reachable[r][c]) continue;
-      if (hookSet.has(rawAttrs[0][r][c]) || hookSet.has(rawAttrs[1][r][c])) hookTargets.push({ row: r, col: c });
-    }
-  }
+  const hookTargets = collectHookTargets(reachable, getHookshotTargetTiles(tileContext), rawAttrs);
 
   return { reachable, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer, ledges: ledgeCrossings };
 };

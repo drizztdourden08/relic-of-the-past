@@ -39,7 +39,27 @@ const rotpExtension = {
           'apps/desktop/src/hooks/{useHud,useLocationNotification,usePauseMenu}.ts',
         ],
         why: 'The HUD redraws the in-game interface pixel for pixel in the SNES palette, so its inline styles hold game positions and colours, not design tokens.',
+      }, {
+        files: [
+          'apps/desktop/src/views/NavigationWidget/sub-components/{EdgeBadge,IndoorMinimap,OverworldMinimap,AnnotationLayer}.tsx',
+        ],
+        why: 'The minimap draws badges and overlays at the live position and span of each connection, computed per screen.',
+      }, {
+        files: [
+          'apps/desktop/src/views/HudLayoutEditor/HudLayoutEditor.tsx',
+          'apps/desktop/src/views/HudLayoutEditor/sub-components/EditorStage.tsx',
+        ],
+        why: 'The editor rails take the width the user drags them to, and the stage keeps the aspect ratio of the live game view.',
       }],
+      glyphContent: [{
+        files: ['apps/desktop/src/views/NavigationWidget/sub-components/ReqIcon.constants.ts'],
+        why: 'The requirement icons of the navigation widget are emoji data, one per item requirement.',
+      }],
+      consoleGlobs: [
+        '**/bin/**', '**/scripts/**', '**/tooling/**', '**/*.test.{ts,tsx,js,mjs}',
+        'core/wasm-build/*.mjs', 'installer-stub/*.mjs', 'apps/desktop/public/logos/**/*.mjs',
+        'apps/sanctuary-api/dev-server.mjs', 'apps/sanctuary-api/src/**', 'apps/store-api/src/**',
+      ],
     },
     configs: [ONE_SOURCE_FACADE],
   },

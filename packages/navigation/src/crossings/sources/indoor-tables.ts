@@ -16,8 +16,7 @@ const stairCrossings = (pass: CrossingPass): ScreenCrossing[] => {
   const roomIndex = pass.scope.roomIndex;
   const stairs = isLoaded(roomIndex) ? wasmGetRoomStairInfo() : wasmGetRoomStairInfoFor(roomIndex);
   const out: ScreenCrossing[] = [];
-  for (let i = 0; i < stairs.length; i++) {
-    const stair = stairs[i];
+  for (const [i, stair] of stairs.entries()) {
     if (stair.destRoom === 0) continue;
     out.push(makeCrossing(pass, {
       id: `stair:${STAIR_ID_BASE + i}`,
@@ -43,8 +42,7 @@ const boundaryCrossings = (pass: CrossingPass): ScreenCrossing[] => {
   if (bounds.length === 0) return [];
   const requirements = followerGated(roomIndex) ? [FOLLOWER_REQ] : [];
   const out: ScreenCrossing[] = [];
-  for (let i = 0; i < bounds.length; i++) {
-    const bound = bounds[i];
+  for (const [i, bound] of bounds.entries()) {
     if (bound.destRoom === 0) continue;
     out.push(makeCrossing(pass, {
       id: `bound:${BOUNDARY_ID_BASE + i}`,

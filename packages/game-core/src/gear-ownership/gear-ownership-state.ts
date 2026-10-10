@@ -6,7 +6,7 @@ const gearOwnershipState = {
   record: {} as SlotRecord,
   loaded: false,
   pending: null as GearTiers | null,
-  writeQueue: Promise.resolve() as Promise<void>,
+  writeQueue: Promise.resolve(),
 };
 
 export { gearOwnershipState };

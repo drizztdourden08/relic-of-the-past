@@ -7,6 +7,7 @@ import { refreshAccess } from '../access/refresh-access';
 import { grantsRepo } from '../db/grants-repo';
 import { usersRepo } from '../db/users-repo';
 import { now } from '../db/firestore';
+import { routeParam } from '../router';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
 
@@ -15,7 +16,7 @@ const adminRevoke = (site: SiteConfig): Route => ({
   handler: async ({ req, res, params }) => {
     const admin = await requireAdmin(req, site);
     const { note } = parseBody(adminRevokeSchema, req.body);
-    const user = await usersRepo.get(params.userId);
+    const user = await usersRepo.get(routeParam(params, 'userId'));
     if (!user) throw notFound('No such user.');
     if (user.id === admin.caller.userId) throw conflict('An admin cannot revoke their own access.');
     await grantsRepo.set({ userId: user.id, by: admin.caller.userId, note, at: now(), revoked: true });

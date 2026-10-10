@@ -25,12 +25,19 @@ const loopStartSeconds = (layer: MsuLayer, entry: LoadedLayer): number =>
     ? Math.min((layer.loopSample ?? 0) / MSU1_SAMPLE_RATE, entry.files[0]?.buffer.duration ?? 0)
     : 0);
 
+const fileAt = (entry: LoadedLayer, fileIndex: number): LoadedLayer['files'][number] => {
+  const file = entry.files[fileIndex];
+  if (file === undefined) throw new Error(`Layer ${String(entry.layerIndex)} has no file ${String(fileIndex)}`);
+  return file;
+};
+
 const startLayers = (params: StartLayersParams): ActiveLayer[] => {
   const { ctx, destination, channel, program, loaded, elapsedSeconds, resumeFor } = params;
   const layers: ActiveLayer[] = [];
 
   for (const entry of loaded) {
     const layer = program.layers[entry.layerIndex];
+    if (layer === undefined) throw new Error(`Program ${String(program.id)} has no layer ${String(entry.layerIndex)}`);
     if (!layerSounds(channel, program.id, layer)) continue;
     const effects = buildEffectChain(ctx, destination, layer.effects);
     const gain = ctx.createGain();
@@ -44,7 +51,7 @@ const startLayers = (params: StartLayersParams): ActiveLayer[] => {
       fileNames: entry.fileNames,
       elapsedSeconds,
       loopSeconds,
-      play: (fileIndex, opts) => createVoice(ctx, gain, entry.files[fileIndex], {
+      play: (fileIndex, opts) => createVoice(ctx, gain, fileAt(entry, fileIndex), {
         ...opts,
         loopSecondsOverride: loopSeconds > 0 ? loopSeconds : opts.loopSecondsOverride,
       }),

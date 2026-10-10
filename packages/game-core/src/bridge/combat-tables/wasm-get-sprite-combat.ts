@@ -5,7 +5,7 @@ import type { SpriteCombatInfo } from './combat-tables.type';
 
 const wasmGetSpriteCombat = (spriteType: number): SpriteCombatInfo | null =>
   callWhenRunning<SpriteCombatInfo | null>(null, (mod) => {
-    const ptr = mod.ccall('WasmGetSpriteCombat', 'number', ['number'], [spriteType]) as number;
+    const ptr = mod.ccall('WasmGetSpriteCombat', 'number', ['number'], [spriteType]);
     if (!ptr) return null;
     const heap = mod.HEAPU8;
     if (heap[ptr] !== FILLED) return null;

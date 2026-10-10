@@ -1,5 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { TilePassability } from '@rotp/game-core';
+import type { EntryContext } from './layer-strategy';
 import { canLeaveLedge } from './can-leave-ledge';
 
 const withRequirement = (requirements: Set<string>, req: string): Set<string> => {
@@ -9,7 +10,8 @@ const withRequirement = (requirements: Set<string>, req: string): Set<string> =>
   return next;
 };
 
-const evaluateEntry = (tile: TilePassability, dr: number, dc: number, requirements: Set<string>, inventory: Set<string>): { canEnter: boolean; newReqs: Set<string> } => {
+const evaluateEntry = (tile: TilePassability, entry: EntryContext): { canEnter: boolean; newReqs: Set<string> } => {
+  const { dr, dc, requirements, inventory } = entry;
   switch (tile.type) {
     case 'free':
     case 'pit':

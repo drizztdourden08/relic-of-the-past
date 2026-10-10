@@ -4,7 +4,6 @@ import { mkdirSync, writeFileSync, existsSync, rmSync, readdirSync, symlinkSync 
 import { execFileSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
-// @ts-expect-error -- plain .mjs tooling module, no type declarations by design
 import { assertNoSharedLinks, unlinkSharedDirs } from '../../scripts/parallel/link-deps.mjs';
 
 const ROOT = join(tmpdir(), 'rotp-link-deps-test');

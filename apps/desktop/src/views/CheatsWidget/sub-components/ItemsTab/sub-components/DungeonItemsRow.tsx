@@ -33,7 +33,7 @@ const DungeonItemsRow = ({ scale, spritesBase }: PanelProps) => {
           size={tile * 2}
           owned={held[kind]}
           menu={false}
-          ghost={`${spritesBase}${EQUIP_SPRITES[type][1]}.png`}
+          ghost={`${spritesBase}${EQUIP_SPRITES[type]?.[1]}.png`}
           title={`${label}: click to ${held[kind] ? 'take away' : 'give'}`}
           style={{ position: 'absolute', top: tile * EQUIP_PANEL.bottomRow, left: tile * col }}
           onClick={() => cheatSetDungeonItem(kind, palaceIndex, !held[kind])}

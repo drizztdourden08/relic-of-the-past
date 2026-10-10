@@ -6,7 +6,7 @@ const readEffectiveCheatWord = (): number => {
   const mod = getModule();
   if (!mod) return GATE_WORD_UNREADABLE;
   try {
-    return mod.ccall('WasmGetEffectiveGateWord', 'number', ['number'], [GATE_WORD_CHEATS]) as number;
+    return mod.ccall('WasmGetEffectiveGateWord', 'number', ['number'], [GATE_WORD_CHEATS]);
   } catch {
     return GATE_WORD_UNREADABLE;
   }

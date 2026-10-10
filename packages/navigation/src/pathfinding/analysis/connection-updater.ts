@@ -38,7 +38,8 @@ const buildConnectionNavUpdates = (input: ConnectionUpdaterInput): ConnectionNav
       overlapTiles = overlapByKey.get(`${conn.from}|${conn.to}`);
       const fromScreen = screenIndexMap.get(conn.from);
       const bundles = fromScreen !== undefined ? borderBundles.get(fromScreen) : undefined;
-      if (bundles?.length) fromPoint = bundleToConnectionPoint(bundles[0]);
+      const firstBundle = bundles?.[0];
+      if (firstBundle) fromPoint = bundleToConnectionPoint(firstBundle);
     }
 
     const weight = transitType === 'walk' ? (overlapTiles?.length ?? 1) : 1;

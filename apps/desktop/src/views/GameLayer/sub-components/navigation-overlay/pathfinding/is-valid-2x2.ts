@@ -1,12 +1,10 @@
 /* @layer renderer-components @kind logic */
-import { GRID_SIZE } from '@rotp/navigation';
 import type { ReachState } from '@rotp/game-core';
+import { bodyCells } from './body-cells';
+import { inGrid2x2 } from './in-grid-2x2';
 import { REACH_OPEN } from './pathfinding.constants';
 
-const isValid2x2 = (row: number, col: number, reachable: ReachState[][]): boolean => {
-  if (row < 0 || row + 1 >= GRID_SIZE || col < 0 || col + 1 >= GRID_SIZE) return false;
-  return reachable[row][col] === REACH_OPEN && reachable[row][col + 1] === REACH_OPEN &&
-         reachable[row + 1][col] === REACH_OPEN && reachable[row + 1][col + 1] === REACH_OPEN;
-};
+const isValid2x2 = (row: number, col: number, reachable: ReachState[][]): boolean =>
+  inGrid2x2(row, col) && bodyCells(reachable, row, col).every((cell) => cell === REACH_OPEN);
 
 export { isValid2x2 };

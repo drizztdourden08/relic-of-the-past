@@ -12,11 +12,11 @@ interface ByteGridProps {
   triggerPickedByte: number | null;
   inputPhaseActive: boolean;
   lastReportId: number;
-  baselineRef: React.MutableRefObject<Uint8Array>;
-  excludedRef: React.MutableRefObject<Set<number>>;
-  itemsRef: React.MutableRefObject<{ id: string; label: string; status: string }[]>;
-  activeIdxRef: React.MutableRefObject<number>;
-  inputPhaseActiveRef: React.MutableRefObject<boolean>;
+  baselineRef: React.RefObject<Uint8Array>;
+  excludedRef: React.RefObject<Set<number>>;
+  itemsRef: React.RefObject<{ id: string; label: string; status: string }[]>;
+  activeIdxRef: React.RefObject<number>;
+  inputPhaseActiveRef: React.RefObject<boolean>;
   getByteColor: (idx: number) => ByteColorResult;
   onByteClick: (idx: number) => void;
 }

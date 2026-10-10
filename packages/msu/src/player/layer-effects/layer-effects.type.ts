@@ -5,4 +5,11 @@ interface EffectChain {
   dispose: () => void;
 }
 
-export type { EffectChain };
+interface BiquadSpec {
+  type: BiquadFilterType;
+  frequency: number;
+  gainDb?: number;
+  q?: number;
+}
+
+export type { BiquadSpec, EffectChain };

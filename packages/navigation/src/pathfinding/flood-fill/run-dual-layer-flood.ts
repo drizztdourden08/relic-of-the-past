@@ -1,8 +1,9 @@
 /* @layer shared-game @kind logic */
 import type { FloodFillResult } from '@rotp/game-core';
 import type { TileReq } from '@rotp/game-data';
-import type { FloodFillOptions } from './flood-options';
+import type { DualLayerGrids, FloodFillOptions } from './flood-options';
 import { GRID_SIZE } from '../types/grid.constants';
+import { cellAt, itemAt } from '../../checked-access';
 import { runBFS } from '../core/bfs-engine';
 import { DualLayerStrategy } from '../strategies/dual-layer';
 import { prepareScreen, constrainVoidTiles, findStartPosition } from './screen-prep';
@@ -12,9 +13,9 @@ import { buildBorders } from './build-borders';
 import { boundsOrGrid } from './bounds-or-grid';
 import { boundsArea } from './bounds-area';
 
-const runDualLayerFlood = (screenIndex: number, options: FloodFillOptions): FloodFillResult => {
+const runDualLayerFlood = (screenIndex: number, options: FloodFillOptions, grids: DualLayerGrids): FloodFillResult => {
   const { indoors, inventory, startPos, dynamicBlockers, entrances = [], variant, quadrantBounds } = options;
-  const { layer0, layer1 } = options.dualLayerGrids!;
+  const { layer0, layer1 } = grids;
 
   const constrainedLayer0 = constrainVoidTiles(layer0, layer1);
   const constrainedLayer1 = constrainVoidTiles(layer1, layer0);
@@ -24,7 +25,7 @@ const runDualLayerFlood = (screenIndex: number, options: FloodFillOptions): Floo
   const lower = prepareScreen(constrainedLayer1, indoors, dynamicBlockers, true);
   for (let r = 0; r < GRID_SIZE; r++) {
     for (let c = 0; c < GRID_SIZE; c++) {
-      if (upperVoid[r][c]) upper.grid.tiles[r][c] = { type: 'blocked' };
+      if (cellAt(upperVoid, r, c)) itemAt(upper.grid.tiles, r)[c] = { type: 'blocked' };
     }
   }
 
@@ -40,7 +41,7 @@ const runDualLayerFlood = (screenIndex: number, options: FloodFillOptions): Floo
     indoors,
     startLayer,
   );
-  const bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, bounds, options.extraSeeds);
+  const bfsResult = runBFS(strategy, { start, entrancePositions, inventory: inv, bounds, extraSeeds: options.extraSeeds });
   const { reachable, transitions, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer } = bfsResult;
 
   return {

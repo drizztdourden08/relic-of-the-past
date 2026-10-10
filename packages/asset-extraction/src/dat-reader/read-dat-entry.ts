@@ -17,10 +17,11 @@ const readDatEntry = (dat: Uint8Array, key: string): Uint8Array | null => {
   for (let i = 0; i < count; i++) sizes.push(view.getUint32(HEADER_BYTES + i * 4, true));
 
   let at = HEADER_BYTES + count * 4 + keyLen;
-  for (let i = 0; i < index; i++) at = align4(at) + sizes[i];
+  for (const size of sizes.slice(0, index)) at = align4(at) + size;
   at = align4(at);
-  if (at + sizes[index] > dat.length) return null;
-  return dat.subarray(at, at + sizes[index]);
+  const size = sizes[index];
+  if (size === undefined || at + size > dat.length) return null;
+  return dat.subarray(at, at + size);
 };
 
 export { readDatEntry };

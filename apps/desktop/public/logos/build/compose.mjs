@@ -65,8 +65,8 @@ const highlightSvg = (layouts, sentri) => {
   const hs = scene.hookshot(L.hookshot);
   const file = (name) => resolve(HOOKSHOP, HOOKSHOP_FILES[name]);
   const bot = `<g transform="translate(${L.bot.left} ${L.bot.top}) rotate(${L.bot.angle} ${L.bot.originX} ${L.bot.originY})">${sentri.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')}</g>`;
-  const bag = `<g transform="translate(${L.bag.left} ${L.bag.top}) rotate(${L.bag.angle} ${L.bag.originX} ${L.bag.originY})">`
-    + place(file('bag'), { ...L.bag, left: 0, top: 0, angle: 0 }) + place(file('stamp'), L.stamp) + '</g>';
+  const bagOpen = `<g transform="translate(${L.bag.left} ${L.bag.top}) rotate(${L.bag.angle} ${L.bag.originX} ${L.bag.originY})">`;
+  const bag = `${bagOpen}${place(file('bag'), { ...L.bag, left: 0, top: 0, angle: 0 })}${place(file('stamp'), L.stamp)}</g>`;
   const clip = `<clipPath id="head"><polygon points="${L.hookshotClip.map((p) => p.join(',')).join(' ')}"/></clipPath>`;
   const chain = `<g clip-path="url(#head)">${[...hs.links, hs.handle, hs.head].map((p) => place(file(p.sprite), p)).join('')}</g>`;
   const effects = (list) => list.map((e) => place(file(e.part), e)).join('');

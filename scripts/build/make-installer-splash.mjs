@@ -1,6 +1,5 @@
 /* @layer tooling-scripts @kind logic */
 import { createRequire } from 'module';
-import { writeFileSync } from 'fs';
 import { join } from 'path';
 
 const require = createRequire(import.meta.url);

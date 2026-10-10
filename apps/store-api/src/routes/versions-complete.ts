@@ -35,7 +35,7 @@ const versionsComplete: Route = {
 
     const updated = await itemsRepo.mutate(item.id, (latest) => {
       const entry = versionOf(latest, version.n);
-      if (!entry || entry.review.state !== 'uploading') throw conflict('This version is not being uploaded.');
+      if (entry?.review.state !== 'uploading') throw conflict('This version is not being uploaded.');
       const ready = {
         ...entry,
         status: 'ready' as const,

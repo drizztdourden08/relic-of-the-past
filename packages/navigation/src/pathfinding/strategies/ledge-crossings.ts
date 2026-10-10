@@ -1,12 +1,14 @@
 /* @layer shared-game @kind logic */
-import type { LedgeTraversal } from '@rotp/game-core';
+import type { GridPos, LedgeTraversal } from '@rotp/game-core';
 import type { CrossingRecorder } from './ledge-crossings.type';
 
 const createCrossingRecorder = (): CrossingRecorder => {
   const crossings: LedgeTraversal[] = [];
   const seen = new Set<string>();
 
-  const add = (nr: number, nc: number, lr: number, lc: number, dr: number): void => {
+  const add = (from: GridPos, to: GridPos, dr: number): void => {
+    const { row: nr, col: nc } = from;
+    const { row: lr, col: lc } = to;
     const across: readonly [number, number][] = dr !== 0 ? [[0, 0], [0, 1]] : [[0, 0], [1, 0]];
     for (const [ar, ac] of across) {
       const key = `${nr + ar},${nc + ac},${lr + ar},${lc + ac}`;

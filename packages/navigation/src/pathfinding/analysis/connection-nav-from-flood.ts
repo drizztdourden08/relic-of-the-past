@@ -3,6 +3,7 @@ import type { BorderEdge, ConnectionInfo, GridPos } from '@rotp/game-core';
 import type { ConnectionNavData, ConnectionPointData, RequirementSet, TraversalRequirement, ConnectionTag } from '@rotp/game-data';
 import { GRID_SIZE } from '../types/grid.constants';
 import { transitTypeFromTags } from './transit-type-from-tags';
+import { itemAt } from '../../checked-access';
 import { EDGE_TO_DIR } from './connection-nav-from-flood.constants';
 
 const positionToGrid = (edge: BorderEdge, pos: number): GridPos => {
@@ -25,7 +26,7 @@ const buildFromPoint = (info: ConnectionInfo, requirements: RequirementSet): Con
     direction: dir,
     tiles: info.positions.slice(),
     requirements,
-    position: positionToGrid(info.edge, info.positions[0]),
+    position: positionToGrid(info.edge, itemAt(info.positions, 0)),
     oneWay: null,
   };
 };

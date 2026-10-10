@@ -6,12 +6,13 @@ import { requireAdmin } from '../auth/require-admin';
 import { invalidateGroups } from '../access/cached-groups';
 import { assertKnownRights } from '../access/check-rights';
 import { groupsRepo } from '../db/groups-repo';
+import { routeParam } from '../router';
 import type { GroupPatch } from '../db/groups-repo.type';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
 
 const withoutUndefinedFields = (patch: GroupPatch): GroupPatch =>
-  Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined)) as GroupPatch;
+  Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));
 
 const groupsPatch = (site: SiteConfig): Route => ({
   ...HUB_ROUTES.groupsPatch,
@@ -19,7 +20,7 @@ const groupsPatch = (site: SiteConfig): Route => ({
     await requireAdmin(req, site);
     const patch = withoutUndefinedFields(parseBody(patchGroupSchema, req.body));
     assertKnownRights(patch.rights, site.rights);
-    const group = await groupsRepo.get(params.id);
+    const group = await groupsRepo.get(routeParam(params, 'id'));
     if (!group) throw notFound('No such group.');
     await groupsRepo.update(group.id, patch);
     invalidateGroups();

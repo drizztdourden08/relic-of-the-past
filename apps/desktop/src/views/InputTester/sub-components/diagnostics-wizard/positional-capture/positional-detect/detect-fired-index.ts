@@ -14,9 +14,9 @@ const detectFiredIndex = (
     }
     return null;
   }
-  for (let i = 0; i < current.axes.length; i++) {
+  for (const [i, axis] of current.axes.entries()) {
     const base = baseline.axes[i] ?? 0;
-    if (Math.abs(current.axes[i] - base) >= AXIS_FIRED_THRESHOLD) return i;
+    if (Math.abs(axis - base) >= AXIS_FIRED_THRESHOLD) return i;
   }
   return null;
 };

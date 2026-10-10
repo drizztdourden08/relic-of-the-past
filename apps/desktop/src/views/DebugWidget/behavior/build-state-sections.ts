@@ -52,7 +52,7 @@ const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[
     { title: 'Inventory', rows: [
       ...inventory.items
         .map((v, i) => ({ label: ITEM_NAMES[i] ?? `Item ${i}`, value: String(v) }))
-        .filter((_, i) => inventory.items[i] > 0),
+        .filter((_, i) => (inventory.items[i] ?? 0) > 0),
       { label: 'Bottles', value: inventory.bottles.map((v) => (v > 0 ? (BOTTLE_NAMES[v] ?? `?${v}`) : '-')).join(', ') },
     ] },
     { title: 'Dungeon Progress', rows: [

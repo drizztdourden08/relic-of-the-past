@@ -4,7 +4,8 @@ import { REST } from './hero-idle.constants';
 
 const heroPoseAt = (state: HeroIdleState, now: number): HeroPose => {
   const { beats } = state.take;
-  if (beats.length === 0) return REST;
+  const last = beats[beats.length - 1];
+  if (last === undefined) return REST;
   let left = Math.max(0, Math.min(now - state.startedAt, state.take.frames - 1));
   let offsetX = 0;
   let offsetY = 0;
@@ -22,7 +23,6 @@ const heroPoseAt = (state: HeroIdleState, now: number): HeroPose => {
     offsetX += beat.vx * beat.hold;
     offsetY += beat.vy * beat.hold;
   }
-  const last = beats[beats.length - 1];
   return { action: last.action, frame: last.frame, facing: last.facing, offsetX, offsetY };
 };
 

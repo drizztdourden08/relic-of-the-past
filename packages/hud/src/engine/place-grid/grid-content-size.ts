@@ -11,8 +11,10 @@ const gridContentSize = (container: HudGridContainer, ctx: MeasureContext): Size
   const rows = rowCountOf(cells.values());
   const { columns, rows: rowTracks } = tracksOf(container, rows);
   const gap = resolveGap(container, ctx);
-  const colSizes = sizeTracks(columns, naturalPerTrack(columns.length, cells, 'column', ctx), Infinity, gap.x, ctx);
-  const rowSizes = sizeTracks(rowTracks, naturalPerTrack(rowTracks.length, cells, 'row', ctx), Infinity, gap.y, ctx);
+  const colNatural = naturalPerTrack(columns.length, cells, 'column', ctx);
+  const rowNatural = naturalPerTrack(rowTracks.length, cells, 'row', ctx);
+  const colSizes = sizeTracks({ tracks: columns, natural: colNatural, available: Infinity, gap: gap.x }, ctx);
+  const rowSizes = sizeTracks({ tracks: rowTracks, natural: rowNatural, available: Infinity, gap: gap.y }, ctx);
   const w = colSizes.reduce((sum, v) => sum + v, 0) + gap.x * Math.max(0, colSizes.length - 1);
   const h = rowSizes.reduce((sum, v) => sum + v, 0) + gap.y * Math.max(0, rowSizes.length - 1);
   return { w, h };

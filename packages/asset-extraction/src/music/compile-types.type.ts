@@ -1,4 +1,6 @@
 /* @layer shared-asset-extraction @kind types */
+import type { NameRegistry } from './name-registry';
+
 interface CompiledSong {
   type: 'Song';
   name: string;
@@ -63,7 +65,7 @@ interface CompiledSfxList {
   echo: number[];
 }
 
-type PatternLine = [string, (number | CompiledPattern | null)[], number | null, number | null];
+type PatternLine = [string, (number | string | CompiledPattern | null)[], number | null, number | null];
 
 type Entity = CompiledSong | CompiledPhrase | CompiledPattern |
   CompiledSfxPattern | CompiledSongList | CompiledSfxList;
@@ -80,6 +82,37 @@ interface CompiledSoundBank {
   memory: (number | null)[];
 }
 
+type SectionParser = (caption: string, lines: string[], registry: NameRegistry) => Entity;
+
+interface SfxLineBytes {
+  bytes: number[];
+  end: boolean;
+}
+
+interface InstrumentInfo {
+  sample: number;
+  decay: number;
+  attack: number;
+  sustain_level: number;
+  sustain_rate: number;
+  vxgain: number;
+  pitch_base: number;
+}
+
+interface SfxInstrumentInfo extends InstrumentInfo {
+  voll: number;
+  volr: number;
+  pitch: number;
+}
+
+interface MusicInfo {
+  samples: { file: string; repeat?: number }[];
+  instruments: InstrumentInfo[];
+  note_gate_off: number[];
+  note_volume: number[];
+  sfx_instruments: SfxInstrumentInfo[];
+}
+
 export type {
   CompiledPattern,
   CompiledPhrase,
@@ -90,6 +123,11 @@ export type {
   CompiledSongList,
   CompiledSoundBank,
   Entity,
+  InstrumentInfo,
   MusicCompileInput,
+  MusicInfo,
   PatternLine,
+  SectionParser,
+  SfxInstrumentInfo,
+  SfxLineBytes,
 };

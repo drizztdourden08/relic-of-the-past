@@ -1,16 +1,15 @@
 /* @layer renderer-components @kind logic */
 import type { ReachState } from '@rotp/game-core';
+import type { GridPos } from '../navigation-overlay.type';
+import { bodyCells } from './body-cells';
+import { isLedgeState } from './is-ledge-state';
 import { isTraversalDirCompatible } from './is-traversal-dir-compatible';
-import { LEDGE_STATE_MAX, LEDGE_STATE_MIN, REACH_BLOCKED } from './pathfinding.constants';
+import type { StepDir } from './pathfinding.type';
 
-const canLeave2x2 = (row: number, col: number, dr: number, dc: number, reachable: ReachState[][]): boolean => {
-  const positions: [number, number][] = [[row, col], [row, col + 1], [row + 1, col], [row + 1, col + 1]];
-  for (const [r, c] of positions) {
-    const state = reachable[r]?.[c] ?? REACH_BLOCKED;
-    const onLedge = state >= LEDGE_STATE_MIN && state <= LEDGE_STATE_MAX;
-    if (onLedge && !isTraversalDirCompatible(state, dr, dc)) return false;
-  }
-  return true;
+const canLeave2x2 = (pos: GridPos, dir: StepDir, reachable: ReachState[][]): boolean => {
+  const [dr, dc] = dir;
+  return bodyCells(reachable, pos.row, pos.col)
+    .every((cell) => cell === undefined || !isLedgeState(cell) || isTraversalDirCompatible(cell, dr, dc));
 };
 
 export { canLeave2x2 };

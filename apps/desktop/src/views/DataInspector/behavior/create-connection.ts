@@ -34,7 +34,8 @@ const registerCreated = (record: ConnectionRecord): void => {
 const insertSingle = async (near: PendingConnectionRecord, filePath: string): Promise<CreateOutcome> => {
   const result = await appApi().screenEditor.writeConnections({ mode: 'insert', filePath, records: [near] });
   if (!result.success) return { success: false, error: result.error };
-  const id = result.ids[0];
+  const [id] = result.ids;
+  if (id === undefined) throw new Error('connection insert returned no id');
   registerCreated({ id, ...near } as unknown as ConnectionRecord);
   return settleCreatedRecord('connection', id);
 };

@@ -8,6 +8,13 @@ interface BFSCell {
   requirements: Set<string>;
 }
 
+interface EntryContext {
+  dr: number;
+  dc: number;
+  requirements: Set<string>;
+  inventory: Set<string>;
+}
+
 interface QuadrantBounds {
   minRow: number;
   maxRow: number;
@@ -60,4 +67,4 @@ interface LayerStrategy {
   };
 }
 
-export type { BFSCell, QuadrantBounds, BFSExpansionResult, BFSResult, LayerStrategy };
+export type { BFSCell, EntryContext, QuadrantBounds, BFSExpansionResult, BFSResult, LayerStrategy };

@@ -38,8 +38,8 @@ const dumpBrrAndInfo = (ctx: SoundBankContext): { brr: Buffer[]; pcm: Buffer[]; 
     brr.push(brrData);
 
     const pcmBuf = Buffer.alloc(decoded.length * 2);
-    for (let i = 0; i < decoded.length; i++) {
-      pcmBuf.writeInt16LE(decoded[i], i * 2);
+    for (const [i, sample] of decoded.entries()) {
+      pcmBuf.writeInt16LE(sample, i * 2);
     }
     pcm.push(pcmBuf);
 

@@ -12,7 +12,7 @@ import type { SweepResult } from './sweep.type';
 const refreshIssue = async (report: Report): Promise<Report> => {
   if (report.issue.state === 'closed') return report;
   const issue = await github.getIssue(report.issue.number);
-  if (!issue || issue.state !== 'closed' || !issue.closed_at) return report;
+  if (issue?.state !== 'closed' || !issue.closed_at) return report;
   const closedAt = new Date(issue.closed_at).getTime();
   const updated: Report = { ...report, issue: { ...report.issue, state: 'closed', closedAt } };
   await reportsRepo.update(report.id, { issue: updated.issue, expiresAt: expiryOf(updated) });

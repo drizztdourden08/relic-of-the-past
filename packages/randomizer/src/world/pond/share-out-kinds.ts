@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import type { Rng } from '../../rng';
 
 const shareOutKinds = <K extends string>(
@@ -8,7 +9,7 @@ const shareOutKinds = <K extends string>(
   return Array.from({ length: rungCount }, () => {
     const open = kinds.filter((kind) => (left.get(kind) ?? 0) > 0);
     const from = open.length > 0 ? open : kinds;
-    const kind = from[from.length === 1 ? 0 : rng.int(from.length)];
+    const kind = itemAt(from, from.length === 1 ? 0 : rng.int(from.length));
     left.set(kind, (left.get(kind) ?? 0) - 1);
     return kind;
   });

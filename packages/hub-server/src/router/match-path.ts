@@ -4,11 +4,11 @@ const matchPath = (pattern: string, path: string): Record<string, string> | null
   const got = path.split('/');
   if (want.length !== got.length) return null;
   const params: Record<string, string> = {};
-  for (let i = 0; i < want.length; i += 1) {
-    const segment = want[i];
+  for (const [i, segment] of want.entries()) {
+    const actual = got[i] ?? '';
     if (segment.startsWith(':')) {
-      params[segment.slice(1)] = decodeURIComponent(got[i]);
-    } else if (segment !== got[i]) {
+      params[segment.slice(1)] = decodeURIComponent(actual);
+    } else if (segment !== actual) {
       return null;
     }
   }

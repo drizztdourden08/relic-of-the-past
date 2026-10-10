@@ -5,6 +5,7 @@ import { BindingListHeader } from './BindingListHeader';
 import { CoreBindingsGroup } from './CoreBindingsGroup';
 import { HapticsToggle } from './HapticsToggle';
 import type { CtrlProps } from './controls.type';
+import './GameControlsTab.css';
 
 const GameControlsTab = ({ ctrl }: CtrlProps) => {
   return (

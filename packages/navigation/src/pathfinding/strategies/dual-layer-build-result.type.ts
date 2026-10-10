@@ -3,6 +3,7 @@ import type { TilePassability, GridPos, ReachState, LedgeTraversal } from '@rotp
 import type { QuadrantBounds } from './layer-strategy';
 
 type ReachedLayer = (Set<string> | null)[][];
+type ReachedPair = [ReachedLayer, ReachedLayer];
 
 interface DualLayerTileResult {
   reachable: ReachState[][];
@@ -25,7 +26,7 @@ interface TraversedStairTile extends TraversedTile {
 }
 
 interface BuildDualLayerArgs {
-  bodyReached: [ReachedLayer, ReachedLayer];
+  bodyReached: ReachedPair;
   bounds: QuadrantBounds;
   grids: [TilePassability[][], TilePassability[][]];
   rawAttrs: [number[][], number[][]];
@@ -35,4 +36,4 @@ interface BuildDualLayerArgs {
   ledgeCrossings: LedgeTraversal[];
 }
 
-export type { BuildDualLayerArgs, DualLayerTileResult, ReachedLayer, TraversedStairTile, TraversedTile };
+export type { BuildDualLayerArgs, DualLayerTileResult, ReachedLayer, ReachedPair, TraversedStairTile, TraversedTile };

@@ -5,7 +5,7 @@ import type { IdleByteAnalysis, IdleRecordResult } from '../hid-calibration.type
 import { IDLE_RECORD_MS, IDLE_SAMPLE_INTERVAL_MS, MAX_LISTED_UNIQUE_VALUES } from './useIdleByteRecording.constants';
 
 const analyseColumn = (frames: number[][], byteIdx: number, col: number): IdleByteAnalysis => {
-  const values = frames.map(f => f[col]);
+  const values = frames.map(f => f[col] ?? 0);
   const min = Math.min(...values), max = Math.max(...values);
   const unique = [...new Set(values)].sort((a, b) => a - b);
   const avg = values.reduce((s, v) => s + v, 0) / values.length;
@@ -15,7 +15,7 @@ const analyseColumn = (frames: number[][], byteIdx: number, col: number): IdleBy
   };
 };
 
-const useIdleByteRecording = (latestBytesRef: React.MutableRefObject<Uint8Array>, addLog: (msg: string) => void) => {
+const useIdleByteRecording = (latestBytesRef: React.RefObject<Uint8Array>, addLog: (msg: string) => void) => {
   const [idleRecording, setIdleRecording] = useState<string | null>(null);
   const [idleResults, setIdleResults] = useState<Record<string, IdleRecordResult>>({});
   const idleRecordBufRef = useRef<{ byteIndices: number[]; frames: number[][] }>({ byteIndices: [], frames: [] });

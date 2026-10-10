@@ -1,6 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 import * as yaml from 'js-yaml';
-import type { CompiledSong, CompiledSoundBank, MusicCompileInput } from './compile-types.type';
+import type { CompiledSong, CompiledSoundBank, MusicCompileInput, MusicInfo } from './compile-types.type';
+import { DUPLICATE_SAMPLE_SOURCES } from './compile-lookups.constants';
 import { NameRegistry } from './name-registry';
 import { MusicSerializer } from './music-serializer';
 import { parseFile } from './parse-music-file';
@@ -47,33 +48,37 @@ const compileSoundBank = (songName: string, input: MusicCompileInput): CompiledS
   return { data, memory: mem };
 };
 
-const writeIntroBank = (serializer: MusicSerializer, input: MusicCompileInput): void => {
-  serializer.addr = 0x4000;
-  const musicInfo = yaml.load(input.musicInfoYaml) as Record<string, unknown>;
-  const samples = musicInfo.samples as { file: string; repeat?: number }[];
-  const sampleToAddr = new Map<string, number>();
+const sampleBytes = (input: MusicCompileInput, index: number): Buffer => {
+  const sampleIdx = DUPLICATE_SAMPLE_SOURCES.get(index) ?? index;
+  const sample = input.brrSamples[sampleIdx];
+  if (sample === undefined) throw new Error(`Missing BRR sample ${sampleIdx}`);
+  return sample;
+};
 
-  const kDupSamples: Record<number, number> = { 10: 9, 20: 19 };
-  for (let i = 0; i < samples.length; i++) {
-    const file = samples[i].file;
-    if (!sampleToAddr.has(file)) {
-      sampleToAddr.set(file, serializer.addr!);
-      const sampleIdx = kDupSamples[i] ?? i;
-      serializer.write(input.brrSamples[sampleIdx]);
+const writeSampleDirectory = (serializer: MusicSerializer, input: MusicCompileInput, musicInfo: MusicInfo): void => {
+  const sampleToAddr = new Map<string, number>();
+  for (const [i, { file, repeat }] of musicInfo.samples.entries()) {
+    let addr = sampleToAddr.get(file);
+    if (addr === undefined) {
+      addr = serializer.cursor();
+      sampleToAddr.set(file, addr);
+      serializer.write(sampleBytes(input, i));
     }
-    const addr = sampleToAddr.get(file)!;
     serializer.writeWord(0x3c00 + i * 4, addr);
-    const rep = samples[i].repeat;
-    serializer.writeWord(0x3c00 + i * 4 + 2, rep !== undefined ? addr + Math.floor(rep / 16) * 9 : serializer.addr!);
+    serializer.writeWord(0x3c00 + i * 4 + 2, repeat !== undefined ? addr + Math.floor(repeat / 16) * 9 : serializer.cursor());
   }
   for (let i = 0; i < 6; i++) {
     serializer.writeWord(0x3c64 + i * 2, 0xffff);
   }
+};
 
-  const instruments = musicInfo.instruments as Record<string, number>[];
-  for (let i = 0; i < instruments.length; i++) {
+const writeIntroBank = (serializer: MusicSerializer, input: MusicCompileInput): void => {
+  serializer.addr = 0x4000;
+  const musicInfo = yaml.load(input.musicInfoYaml) as MusicInfo;
+  writeSampleDirectory(serializer, input, musicInfo);
+
+  for (const [i, info] of musicInfo.instruments.entries()) {
     const ea = 0x3d00 + i * 6;
-    const info = instruments[i];
     serializer.memory[ea + 0] = info.sample;
     serializer.memory[ea + 1] = 0x80 | (info.decay << 4) | info.attack;
     serializer.memory[ea + 2] = (info.sustain_level << 5) | info.sustain_rate;
@@ -82,13 +87,11 @@ const writeIntroBank = (serializer: MusicSerializer, input: MusicCompileInput): 
     serializer.memory[ea + 5] = info.pitch_base & 0xff;
   }
 
-  serializer.writeAt(0x3d96, (musicInfo.note_gate_off as number[]));
-  serializer.writeAt(0x3d9e, (musicInfo.note_volume as number[]));
+  serializer.writeAt(0x3d96, musicInfo.note_gate_off);
+  serializer.writeAt(0x3d9e, musicInfo.note_volume);
 
-  const sfxInstruments = musicInfo.sfx_instruments as Record<string, number>[];
-  for (let i = 0; i < sfxInstruments.length; i++) {
+  for (const [i, info] of musicInfo.sfx_instruments.entries()) {
     const ea = 0x3e00 + i * 9;
-    const info = sfxInstruments[i];
     serializer.memory[ea + 0] = info.voll;
     serializer.memory[ea + 1] = info.volr;
     serializer.writeWord(ea + 2, info.pitch);

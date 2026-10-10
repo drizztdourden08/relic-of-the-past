@@ -2,9 +2,7 @@
 /* @layer scripts @kind tooling */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { compileAlttpAssetSet } from '@rotp/asset-extraction';
-import { loadGbaAlttpRomFromBuffer } from '@rotp/asset-extraction';
-import { loadRomFromBuffer } from '@rotp/asset-extraction';
+import { compileAlttpAssetSet, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/node';
 
 interface Arguments {
   snes?: string;

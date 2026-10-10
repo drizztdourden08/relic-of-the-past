@@ -3,34 +3,34 @@ import type React from 'react';
 import type { GyroReclaimRefs } from '../stick-gyro-reclaim';
 
 interface GyroRefs {
-  gyroMinsRef: React.MutableRefObject<Uint8Array>;
-  gyroMaxsRef: React.MutableRefObject<Uint8Array>;
-  gyroBufferRef: React.MutableRefObject<Uint8Array[]>;
+  gyroMinsRef: React.RefObject<Uint8Array>;
+  gyroMaxsRef: React.RefObject<Uint8Array>;
+  gyroBufferRef: React.RefObject<Uint8Array[]>;
 }
 
 interface StickRefs extends GyroReclaimRefs {
-  stickMinsRef: React.MutableRefObject<Uint8Array>;
-  stickMaxsRef: React.MutableRefObject<Uint8Array>;
-  stickCounterBytesRef: React.MutableRefObject<Set<number>>;
-  stickSamplesRef: React.MutableRefObject<number>;
-  stickStableCountRef: React.MutableRefObject<number>;
-  stickLastTop2Ref: React.MutableRefObject<string>;
-  stickBufferRef: React.MutableRefObject<Uint8Array[]>;
-  capturedStickBytesRef: React.MutableRefObject<Set<number>>;
-  baselineRef: React.MutableRefObject<Uint8Array>;
+  stickMinsRef: React.RefObject<Uint8Array>;
+  stickMaxsRef: React.RefObject<Uint8Array>;
+  stickCounterBytesRef: React.RefObject<Set<number>>;
+  stickSamplesRef: React.RefObject<number>;
+  stickStableCountRef: React.RefObject<number>;
+  stickLastTop2Ref: React.RefObject<string>;
+  stickBufferRef: React.RefObject<Uint8Array[]>;
+  capturedStickBytesRef: React.RefObject<Set<number>>;
+  baselineRef: React.RefObject<Uint8Array>;
 }
 
 interface TriggerRefs {
-  triggerMinsRef: React.MutableRefObject<Uint8Array>;
-  triggerMaxsRef: React.MutableRefObject<Uint8Array>;
-  triggerSamplesRef: React.MutableRefObject<number>;
-  triggerStableCountRef: React.MutableRefObject<number>;
-  triggerLastTopRef: React.MutableRefObject<string>;
-  triggerBufferRef: React.MutableRefObject<Uint8Array[]>;
-  capturedStickBytesRef: React.MutableRefObject<Set<number>>;
-  capturedTriggerBytesRef: React.MutableRefObject<Set<number>>;
-  excludedRef: React.MutableRefObject<Set<number>>;
-  baselineRef: React.MutableRefObject<Uint8Array>;
+  triggerMinsRef: React.RefObject<Uint8Array>;
+  triggerMaxsRef: React.RefObject<Uint8Array>;
+  triggerSamplesRef: React.RefObject<number>;
+  triggerStableCountRef: React.RefObject<number>;
+  triggerLastTopRef: React.RefObject<string>;
+  triggerBufferRef: React.RefObject<Uint8Array[]>;
+  capturedStickBytesRef: React.RefObject<Set<number>>;
+  capturedTriggerBytesRef: React.RefObject<Set<number>>;
+  excludedRef: React.RefObject<Set<number>>;
+  baselineRef: React.RefObject<Uint8Array>;
 }
 
 export type { GyroRefs, StickRefs, TriggerRefs };

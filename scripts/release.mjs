@@ -6,37 +6,42 @@ import { existsSync, readdirSync } from 'node:fs';
 const WORKFLOW = 'release.yml';
 const REF = 'master';
 
+const SWITCHES = {
+  '--latest': 'setLatest',
+  '--prerelease': 'prerelease',
+  '--pre': 'prerelease',
+  '--full': 'fullInstaller',
+  '--full-installer': 'fullInstaller',
+  '--last': 'last',
+};
+
+const versionFrom = (arg, next, current) => {
+  if (/^--?(?:v|version)=/.test(arg)) return { version: arg.split('=')[1], consumed: 0 };
+  if (/^--?(?:v|version)$/.test(arg)) return { version: next, consumed: 1 };
+  const inline = arg.match(/^--?v(\d.*)$/);
+  if (inline) return { version: inline[1], consumed: 0 };
+  if (!arg.startsWith('-') && current === undefined) return { version: arg, consumed: 0 };
+  return { version: current, consumed: 0 };
+};
+
 const parseArgs = (argv) => {
   const rest = argv.slice(2);
+  const flags = { setLatest: false, prerelease: false, fullInstaller: false, last: false };
   let version;
-  let setLatest = false;
-  let prerelease = false;
-  let fullInstaller = false;
-
-  let last = false;
 
   for (let i = 0; i < rest.length; i += 1) {
     const arg = rest[i];
-    if (arg === '--latest') {
-      setLatest = true;
-    } else if (arg === '--prerelease' || arg === '--pre') {
-      prerelease = true;
-    } else if (arg === '--full' || arg === '--full-installer') {
-      fullInstaller = true;
-    } else if (arg === '--last') {
-      last = true;
-    } else if (/^--?(?:v|version)=/.test(arg)) {
-      version = arg.split('=')[1];
-    } else if (/^--?(?:v|version)$/.test(arg)) {
-      version = rest[(i += 1)];
-    } else if (/^--?v(\d.*)$/.test(arg)) {
-      version = arg.match(/^--?v(\d.*)$/)[1];
-    } else if (!arg.startsWith('-') && version === undefined) {
-      version = arg;
+    const flagName = Object.hasOwn(SWITCHES, arg) ? SWITCHES[arg] : null;
+    if (flagName) {
+      flags[flagName] = true;
+      continue;
     }
+    const parsed = versionFrom(arg, rest[i + 1], version);
+    version = parsed.version;
+    i += parsed.consumed;
   }
 
-  return { version, setLatest, prerelease, fullInstaller, last };
+  return { version, ...flags };
 };
 
 const highestNotesVersion = () => {
@@ -54,12 +59,17 @@ const highestNotesVersion = () => {
 };
 
 const fail = (message) => {
-  console.error(`\n✖ ${message}\n`);
+  console.error(`\nerror: ${message}\n`);
   process.exit(1);
 };
 
+const publishMode = ({ setLatest, prerelease }) => {
+  if (prerelease) return 'pre-release';
+  return setLatest ? 'publish as latest' : 'draft';
+};
+
 const modeLabel = ({ setLatest, prerelease, fullInstaller }) => {
-  const mode = prerelease ? 'pre-release' : setLatest ? 'publish as latest' : 'draft';
+  const mode = publishMode({ setLatest, prerelease });
   return fullInstaller ? `${mode}, full installer` : mode;
 };
 
@@ -87,7 +97,7 @@ const run = () => {
     fail(`Tag ${tag} already exists. Pick a new version.`);
   }
 
-  console.log(`Dispatching Release workflow → ${tag} (${modeLabel({ setLatest, prerelease, fullInstaller })})\n`);
+  console.log(`Dispatching Release workflow -> ${tag} (${modeLabel({ setLatest, prerelease, fullInstaller })})\n`);
 
   execFileSync(
     'gh',

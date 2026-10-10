@@ -19,7 +19,8 @@ const createScreen: RecordCreator = async (draft) => {
     replaceId: null,
   });
   if (!result.success) return { success: false, error: result.error };
-  const id = result.ids[0];
+  const [id] = result.ids;
+  if (id === undefined) throw new Error('screen insert returned no id');
   registerRecord('screen', { id, ...draft } as unknown as ScreenRecord);
   return settleCreatedRecord('screen', id);
 };

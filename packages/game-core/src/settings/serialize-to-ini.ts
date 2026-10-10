@@ -21,14 +21,14 @@ const renderFlagsIni = (settings: GameSettings, extendedRendering: boolean): str
   const showsMoreThanOriginal = rendersExtended(settings);
   const renderFlags = {
     ExtendedRendering: er,
-    LinearWorldTilemap: er && !!settings.linearWorldTilemap,
-    UltrawideRendering: er && !!settings.ultrawideRendering,
-    TallRendering: er && !!settings.tallRendering,
+    LinearWorldTilemap: er && Boolean(settings.linearWorldTilemap),
+    UltrawideRendering: er && Boolean(settings.ultrawideRendering),
+    TallRendering: er && Boolean(settings.tallRendering),
     WidescreenSprites: showsMoreThanOriginal && settings.widescreenSprites,
     WidescreenVisualFixes: showsMoreThanOriginal && settings.widescreenVisualFixes,
     PauseOffscreenAI: er && offscreenEnemyMode(settings) === 'paused',
     CameraLock: er && settings.cameraLockToViewport,
-    SmoothTransitions: er && settings.cameraLockToViewport && !!settings.smoothTransitions,
+    SmoothTransitions: er && settings.cameraLockToViewport && Boolean(settings.smoothTransitions),
   };
   return Object.entries(renderFlags)
     .map(([k, v]) => `${k} = ${boolToIni(v)}`)
@@ -91,7 +91,7 @@ MiscBugFixes = ${boolToIni(settings.miscBugFixes)}
 GameChangingBugFixes = ${boolToIni(settings.gameChangingBugFixes)}
 CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
-Haptics = ${boolToIni(!!settings.haptics?.enabled)}
+Haptics = ${boolToIni(Boolean(settings.haptics?.enabled))}
 DeveloperTools = ${boolToIni(settings.developerToolsEnabled)}
 CheatsEnabled = ${boolToIni(settings.cheatsEnabled)}
 VanillaSafe = ${boolToIni(settings.vanillaSafe)}

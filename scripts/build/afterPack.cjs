@@ -1,5 +1,4 @@
 /* @layer tooling-scripts @kind logic */
-const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -16,7 +15,7 @@ const trimUnusedFiles = (appOutDir) => {
     saved += fs.statSync(target).size;
     fs.rmSync(target);
   }
-  if (saved) console.log(`  • trimmed ${(saved / 1048576).toFixed(1)} MB of unused Electron files`);
+  if (saved) console.log(`  - trimmed ${(saved / 1048576).toFixed(1)} MB of unused Electron files`);
 };
 
 const VELOPACK_BINDING = {
@@ -43,7 +42,7 @@ const trimForeignBindings = (appOutDir, platform, resourcesPath) => {
     saved += fs.statSync(target).size;
     fs.rmSync(target);
   }
-  if (saved) console.log(`  • dropped ${(saved / 1048576).toFixed(1)} MB of bindings for other platforms`);
+  if (saved) console.log(`  - dropped ${(saved / 1048576).toFixed(1)} MB of bindings for other platforms`);
 };
 
 /**
@@ -78,5 +77,5 @@ exports.default = async function afterPack(context) {
       CompanyName: productName,
     },
   });
-  console.log(`  • icon and name stamped: ${exePath}`);
+  console.log(`  - icon and name stamped: ${exePath}`);
 };

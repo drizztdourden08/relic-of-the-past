@@ -2,6 +2,7 @@
 import { FLOOR_ATTR } from './bombed-walls.constants';
 import { bombedWallsRegistry } from './bombed-walls-registry';
 import { carve } from './carve';
+import { itemAt } from '../../checked-access';
 import { cellKey } from './cell-key';
 
 const stampBombedWalls = (roomId: number, grids: number[][][]): void => {
@@ -12,7 +13,7 @@ const stampBombedWalls = (roomId: number, grids: number[][][]): void => {
   for (const tile of blasts) {
     for (const grid of grids) {
       for (const cell of carve(grid, tile)) {
-        grid[cell.row][cell.col] = FLOOR_ATTR;
+        itemAt(grid, cell.row)[cell.col] = FLOOR_ATTR;
         set.add(cellKey(cell.row, cell.col));
       }
     }

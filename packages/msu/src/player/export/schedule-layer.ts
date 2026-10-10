@@ -1,13 +1,13 @@
 /* @layer renderer-lib @kind logic */
 import type { ResolvedLayer } from './layer-window';
-import { intervalPoints } from './layer-window';
+import { bufferAt, intervalPoints } from './layer-window';
 import type { PlaySource, ScheduleOptions } from './place-source';
 import { MAX_EVENTS, startSource } from './place-source';
 import { nextIndex, nextInRange, streamFor } from './prng';
 import { scheduleLoop } from './schedule-loop';
 
 const scheduleOnce = (play: PlaySource, resolved: ResolvedLayer): void => {
-  play(resolved.buffers[0], 0);
+  play(bufferAt(resolved, 0), 0);
 };
 
 const scheduleRandom = (play: PlaySource,
@@ -20,7 +20,7 @@ const scheduleRandom = (play: PlaySource,
 
   let at = nextInRange(random, min, max);
   for (let events = 0; events < MAX_EVENTS && at < options.windowSeconds; events += 1) {
-    const buffer = resolved.buffers[nextIndex(random, resolved.buffers.length)];
+    const buffer = bufferAt(resolved, nextIndex(random, resolved.buffers.length));
     play(buffer, at);
     const gap = nextInRange(random, min, max);
     const step = waitForCompletion ? buffer.duration + gap : gap;
@@ -33,15 +33,15 @@ const scheduleInterval = (play: PlaySource,
   resolved: ResolvedLayer, options: ScheduleOptions): void => {
   if (resolved.layer.mode.kind !== 'interval') return;
   const points = intervalPoints(resolved.layer.mode.atSeconds);
-  if (points.length === 0) return;
-  const cycle = points[points.length - 1];
+  const cycle = points.at(-1);
+  if (cycle === undefined) return;
   const { buffers } = resolved;
 
   for (let event = 0; event < MAX_EVENTS; event += 1) {
     const point = event % points.length;
-    const at = Math.floor(event / points.length) * cycle + points[point];
+    const at = Math.floor(event / points.length) * cycle + (points[point] ?? 0);
     if (at >= options.windowSeconds) break;
-    play(buffers[buffers.length > 1 ? point % buffers.length : 0], at);
+    play(bufferAt(resolved, buffers.length > 1 ? point % buffers.length : 0), at);
     const firedOnceWithNoCycle = cycle <= 0 && point === points.length - 1;
     if (firedOnceWithNoCycle) break;
   }
@@ -61,6 +61,7 @@ const scheduleLayer = (resolved: ResolvedLayer, options: ScheduleOptions): void 
     case 'loop': scheduleLoop(play, resolved, options); break;
     case 'random': scheduleRandom(play, resolved, options); break;
     case 'interval': scheduleInterval(play, resolved, options); break;
+    case 'once':
     default: scheduleOnce(play, resolved); break;
   }
 };

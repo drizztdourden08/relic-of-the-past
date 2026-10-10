@@ -37,4 +37,11 @@ type CheatTabProps = {
   gates: CheatGates;
 };
 
-export type { CapacityLadder, CheatGates, CheatTab, CheatTabProps, PointerHintApi, PointerHintState };
+type NudgeParams = {
+  ladder: readonly number[] | undefined;
+  steps: readonly number[];
+  value: number;
+  dir: 1 | -1;
+};
+
+export type { CapacityLadder, CheatGates, CheatTab, CheatTabProps, NudgeParams, PointerHintApi, PointerHintState };

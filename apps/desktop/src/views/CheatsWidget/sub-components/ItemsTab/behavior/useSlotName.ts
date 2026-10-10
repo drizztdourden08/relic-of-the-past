@@ -16,16 +16,17 @@ const useSlotName = (specs: Map<number, SlotSpec>) => {
   const { itemName, bottleName } = useLocalizedNames();
 
   const gridName = useCallback((slot: number): SlotName => {
-    const owned = (items[slot] ?? 0) > 0;
+    const held = items[slot] ?? 0;
+    const owned = held > 0;
     const probe = owned ? items : items.map((value, i) => (i === slot ? 1 : value));
     const key = itemNameKeyForSlot(slot, probe);
     const keyName = key ? itemName(key.recordId, key.tier) : '';
     if (slot === BOTTLE_SLOT_INDEX) {
-      const content = owned ? (bottles[items[slot] - 1] ?? 0) : EMPTY_BOTTLE;
+      const content = owned ? (bottles[held - 1] ?? 0) : EMPTY_BOTTLE;
       const name = owned ? bottleName(content) : keyName;
       return { lines: wrapName(name), sprite: getSlotSprite(slot, content), owned };
     }
-    return { lines: wrapName(keyName), sprite: getSlotSprite(slot, probe[slot]), owned };
+    return { lines: wrapName(keyName), sprite: getSlotSprite(slot, probe[slot] ?? 1), owned };
   }, [items, bottles, itemName, bottleName]);
 
   const equipName = useCallback((spec: SlotSpec): SlotName => {

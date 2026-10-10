@@ -6,23 +6,24 @@ import { FULL_HEADER_BYTES } from '../header-record-length';
 const parseRoomHeader = (rom: GbaRomReader, address: number, storedBytes: number): DungeonRoomHeader => {
   const raw = Buffer.alloc(FULL_HEADER_BYTES);
   rom.romSlice(address, storedBytes).copy(raw);
-  const flags = raw[0];
-  const quadrants = [raw[7] & 3, (raw[7] >>> 2) & 3, (raw[7] >>> 4) & 3, raw[7] >>> 6, raw[8] & 3];
+  const byte = (index: number): number => raw.readUInt8(index);
+  const flags = byte(0);
+  const quadrantBits = byte(7);
   return {
     bg2: flags >>> 5,
     collision: (flags >>> 2) & 7,
     lightsOut: Boolean(flags & 1),
-    palette: raw[1],
-    blockset: raw[2],
-    enemyBlockset: raw[3],
-    effect: raw[4],
-    tags: [raw[5], raw[6]],
-    hole: { roomId: raw[9], quadrant: quadrants[0] },
+    palette: byte(1),
+    blockset: byte(2),
+    enemyBlockset: byte(3),
+    effect: byte(4),
+    tags: [byte(5), byte(6)],
+    hole: { roomId: byte(9), quadrant: quadrantBits & 3 },
     stairs: [
-      { roomId: raw[10], quadrant: quadrants[1] },
-      { roomId: raw[11], quadrant: quadrants[2] },
-      { roomId: raw[12], quadrant: quadrants[3] },
-      { roomId: raw[13], quadrant: quadrants[4] },
+      { roomId: byte(10), quadrant: (quadrantBits >>> 2) & 3 },
+      { roomId: byte(11), quadrant: (quadrantBits >>> 4) & 3 },
+      { roomId: byte(12), quadrant: quadrantBits >>> 6 },
+      { roomId: byte(13), quadrant: byte(8) & 3 },
     ],
     nativeBytes: Buffer.from(raw),
   };

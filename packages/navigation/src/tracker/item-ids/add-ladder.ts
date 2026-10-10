@@ -3,7 +3,10 @@ import type { ItemId } from '@rotp/game-data';
 import { addNative } from './add-native';
 
 const addLadder = (out: Set<ItemId>, ladder: readonly number[], held: number): void => {
-  for (let rung = 0; rung < held && rung < ladder.length; rung++) addNative(out, ladder[rung]);
+  for (const [rung, native] of ladder.entries()) {
+    if (rung >= held) break;
+    addNative(out, native);
+  }
 };
 
 export { addLadder };

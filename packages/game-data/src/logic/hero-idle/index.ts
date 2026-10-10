@@ -9,7 +9,7 @@ export { takeFor } from './take-for';
 export { pickInt } from './pick-int';
 export { pickWeighted } from './pick-weighted';
 export { seededRng } from './seeded-rng';
-export { WALK_CYCLE_FRAMES, WALK_PX_PER_FRAME } from './native-timings';
+export { WALK_CYCLE_FRAMES, WALK_PX_PER_FRAME } from './native-timings.constants';
 export type {
   FacingRule, HeroBeat, HeroIdleState, HeroPose, HeroRng, HeroSequenceDef,
   HeroSequenceId, HeroSequenceKind, HeroTake,

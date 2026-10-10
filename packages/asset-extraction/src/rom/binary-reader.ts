@@ -16,7 +16,7 @@ class BinaryReader {
 
   byte(offset: number): number {
     this.check(offset, 1);
-    return this.bytes[offset];
+    return this.bytes.readUInt8(offset);
   }
 
   word(offset: number): number {
@@ -26,7 +26,7 @@ class BinaryReader {
 
   uint24(offset: number): number {
     this.check(offset, 3);
-    return this.bytes[offset] | (this.bytes[offset + 1] << 8) | (this.bytes[offset + 2] << 16);
+    return this.bytes.readUIntLE(offset, 3);
   }
 
   uint32(offset: number): number {

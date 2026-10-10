@@ -4,7 +4,7 @@ import type { GameStateListener } from './wasm-bridge.type';
 
 const replayCurrentState = (fn: GameStateListener): void => {
   if (!bridgeState.listeners.has(fn)) return;
-  try { fn(bridgeState.currentState); } catch { return; }
+  try { fn(bridgeState.currentState); } catch {  }
 };
 
 const subscribeGameState = (fn: GameStateListener): () => void => {

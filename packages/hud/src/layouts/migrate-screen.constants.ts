@@ -1,8 +1,10 @@
 /* @layer shared-hud @kind constants */
 import type { Band, BandPair } from './migrate-screen.type';
 
+const TOP_LEFT_BAND: BandPair = { x: 'start', y: 'start' };
+
 const BANDS: Record<string, BandPair> = {
-  'top-left': { x: 'start', y: 'start' },
+  'top-left': TOP_LEFT_BAND,
   'top-center': { x: 'center', y: 'start' },
   'top-right': { x: 'end', y: 'start' },
   'mid-left': { x: 'start', y: 'center' },
@@ -25,4 +27,4 @@ const SCREEN_GRID = {
   alignItems: 'start',
 };
 
-export { BANDS, INDEX, ITEMS, SCREEN_GRID };
+export { BANDS, INDEX, ITEMS, SCREEN_GRID, TOP_LEFT_BAND };

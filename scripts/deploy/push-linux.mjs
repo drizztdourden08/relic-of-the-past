@@ -2,7 +2,7 @@
 import { copyFileSync, mkdirSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { loadConfig, VM_CONFIG_PATH } from './config.mjs';
-import { log, warn, fail, run } from './run.mjs';
+import { log, fail, run, runAllowingFailure } from './run.mjs';
 
 const VBOXMANAGE = process.env.VBOXMANAGE || 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe';
 const ROMS_DIR = 'test-roms';
@@ -13,11 +13,9 @@ const toUnc = (distro, wslPath) =>
 
 const prepareWinKey = (config, identityFile) => {
   const dst = join(process.env.TEMP || 'C:\\Windows\\Temp', 'rotp_vm_key');
-  try {
-    run('icacls', [dst, '/grant', `${process.env.USERNAME}:F`], { stdio: 'ignore' });
-  } catch { }
+  runAllowingFailure('icacls', [dst, '/grant', `${process.env.USERNAME}:F`], { stdio: 'ignore' });
   rmSync(dst, { force: true });
-  const isWinPath = /^[A-Za-z]:[\\\/]/.test(identityFile);
+  const isWinPath = /^[A-Za-z]:[\\/]/.test(identityFile);
   const src = isWinPath ? identityFile : toUnc(config.wslDistro, identityFile);
   copyFileSync(src, dst);
   run('icacls', [dst, '/inheritance:r'], { stdio: 'ignore' });
@@ -25,13 +23,11 @@ const prepareWinKey = (config, identityFile) => {
   return dst;
 };
 
-const mountShare = (vmName, shareName, hostPath, sshArgs, target, mountPoint) => {
+const mountShare = ({ vmName, shareName, hostPath, sshArgs, target, mountPoint }) => {
   mkdirSync(hostPath, { recursive: true });
-  try {
-    run(VBOXMANAGE, ['sharedfolder', 'add', vmName, '--name', shareName, '--hostpath', hostPath, '--transient'], {
-      stdio: 'ignore',
-    });
-  } catch { }
+  runAllowingFailure(VBOXMANAGE, ['sharedfolder', 'add', vmName, '--name', shareName, '--hostpath', hostPath, '--transient'], {
+    stdio: 'ignore',
+  });
   run('ssh', [
     ...sshArgs,
     target,
@@ -40,7 +36,7 @@ const mountShare = (vmName, shareName, hostPath, sshArgs, target, mountPoint) =>
 };
 
 const syncFromShare = (sshArgs, target) => {
-  log('Syncing source tree from shared folder → ~/relic...');
+  log('Syncing source tree from shared folder -> ~/relic...');
   run('ssh', [
     ...sshArgs,
     target,
@@ -62,7 +58,7 @@ const main = () => {
   const buildOnly = process.argv.slice(2).includes('--build-only');
 
   if (!config.vm) {
-    fail(`No VM target in ${VM_CONFIG_PATH}. Copy vm.example.json → vm.json and fill the "vm" block.`);
+    fail(`No VM target in ${VM_CONFIG_PATH}. Copy vm.example.json -> vm.json and fill the "vm" block.`);
   }
 
   const { host, user, identityFile, port } = config.vm;
@@ -73,8 +69,8 @@ const main = () => {
   const scpArgs = [...(port ? ['-P', String(port)] : []), ...idFlag, ...sslOpt];
   const sshArgs = ['-n', ...(port ? ['-p', String(port)] : []), ...idFlag, ...sslOpt];
 
-  log(`Mounting source tree → ${target}:~/relic-src`);
-  mountShare(config.vmName, SRC_SHARE, process.cwd(), sshArgs, target, '~/relic-src');
+  log(`Mounting source tree -> ${target}:~/relic-src`);
+  mountShare({ vmName: config.vmName, shareName: SRC_SHARE, hostPath: process.cwd(), sshArgs, target, mountPoint: '~/relic-src' });
 
   syncFromShare(sshArgs, target);
 
@@ -82,8 +78,10 @@ const main = () => {
 
   if (buildOnly) return;
 
-  log(`Mounting ${ROMS_DIR} → ${target}:~/${ROMS_DIR}`);
-  mountShare(config.vmName, ROMS_DIR, join(process.cwd(), ROMS_DIR), sshArgs, target, `~/${ROMS_DIR}`);
+  log(`Mounting ${ROMS_DIR} -> ${target}:~/${ROMS_DIR}`);
+  mountShare({
+    vmName: config.vmName, shareName: ROMS_DIR, hostPath: join(process.cwd(), ROMS_DIR), sshArgs, target, mountPoint: `~/${ROMS_DIR}`,
+  });
 
   const installer = resolve(import.meta.dirname, 'vm-install-desktop.sh');
   const icon = resolve(import.meta.dirname, '../../apps/desktop/public/logos/logo/logo-256.png');

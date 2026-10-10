@@ -22,7 +22,7 @@ const decompressGbaLz77 = (rom: BinaryReader, offset: number): GbaLz77Result => 
       const displacement = ((first & 0x0f) << 8 | second) + 1;
       if (displacement > destination) throw new Error('Invalid GBA LZ77 back-reference');
       for (let i = 0; i < length && destination < outputSize; i++) {
-        output[destination] = output[destination - displacement];
+        output[destination] = output[destination - displacement] ?? 0;
         destination++;
       }
     }

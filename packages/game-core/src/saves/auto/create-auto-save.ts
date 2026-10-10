@@ -8,7 +8,7 @@ const createAutoSave = async (files: FileStore, p: string, trigger: AutoTrigger,
   const timestamp = Date.now();
   const entry: AutoEntry = { id: String(timestamp), timestamp, trigger };
   await autoSaves(files, p).append(entry, data, screenshot);
-  return { id: entry.id, timestamp, size: data.byteLength, trigger, hasScreenshot: !!screenshot };
+  return { id: entry.id, timestamp, size: data.byteLength, trigger, hasScreenshot: Boolean(screenshot) };
 };
 
 export { createAutoSave };

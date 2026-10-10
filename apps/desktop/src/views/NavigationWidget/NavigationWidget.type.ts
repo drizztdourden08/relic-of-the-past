@@ -55,7 +55,12 @@ interface ConnectionStatusResult {
   unmatched: DetectedConnection[];
 }
 
+interface PositionSpan {
+  first: number;
+  last: number;
+}
+
 export type {
   ConnectionDraft, ConnectionIssueInput, ConnectionStatus, ConnectionStatusResult, DataCorrection, DetectedConnection, DetectionInput,
-  ScreenDataStatus, ScreenDataStatusResult,
+  PositionSpan, ScreenDataStatus, ScreenDataStatusResult,
 };

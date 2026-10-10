@@ -10,7 +10,9 @@ const addToken = (
   glyph: number,
   span: GlyphSpan,
 ): void => {
-  const token = kLanguages.us.alphabet[glyph];
+  const us = kLanguages.us;
+  if (us === undefined) throw new Error('the language table has no us alphabet');
+  const token = us.alphabet[glyph];
   if (token === undefined) return;
   map[token] = { file, glyph, span };
 };

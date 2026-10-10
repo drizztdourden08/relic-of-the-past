@@ -9,6 +9,7 @@ const classifyTile = (params: ClassifyTileParams): TileClassification => {
 
   const behavior = (indoors ? INTERIOR_TILE_BEHAVIOR : OVERWORLD_TILE_BEHAVIOR)[attr];
   const visual = (indoors ? INTERIOR_TILE_VISUAL : OVERWORLD_TILE_VISUAL)[attr];
+  if (behavior === undefined || visual === undefined) throw new Error(`No tile behavior or visual for attr ${attr}`);
   const collision = classifyTileAttr(attr, indoors);
   const interactable = resolveInteractable({ attr, behavior, replacementTileState, chestLocations, doors });
 

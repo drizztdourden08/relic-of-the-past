@@ -11,7 +11,8 @@ const before = readFileSync(beforePath);
 const after = readFileSync(afterPath);
 if (before.length !== after.length) throw new Error('Snapshots must have equal lengths');
 
-const inferredBase = before.length === 0x8000 ? 0x03000000 : before.length === 0x40000 ? 0x02000000 : null;
+const RAM_BASE_BY_SNAPSHOT_LENGTH = new Map([[0x8000, 0x03000000], [0x40000, 0x02000000]]);
+const inferredBase = RAM_BASE_BY_SNAPSHOT_LENGTH.get(before.length) ?? null;
 const base = args.base !== undefined ? parseInteger(args.base, 'base') : inferredBase;
 if (base === null) throw new Error('Cannot infer RAM base; provide --base 0x02000000 or --base 0x03000000');
 const mergeGap = parseInteger(args['merge-gap'] ?? '4', 'merge-gap');

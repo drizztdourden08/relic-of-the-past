@@ -1,19 +1,19 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability } from '@rotp/game-core';
-import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
+import type { GridPos, TilePassability } from '@rotp/game-core';
+import type { LayerStrategy, BFSCell, BFSExpansionResult, EntryContext, QuadrantBounds } from './layer-strategy';
 import type { DualLayerTileResult, TraversedStairTile, TraversedTile } from './dual-layer-build-result.type';
 import { GRID_SIZE } from '../types/grid.constants';
 import { isDoorPassageAttr } from '../tile-attrs';
+import { cellAt } from '../../checked-access';
 import { bodyTiles } from './body-tiles';
+import { bodyOutOfBounds } from './body-out-of-bounds';
 import { getNewTiles } from './new-tiles';
 import { canLeaveLedge } from './can-leave-ledge';
 import { enterTiles } from './enter-tiles';
 import { buildDualLayerTileResult } from './dual-layer-build-result';
 import { createCrossingRecorder } from './ledge-crossings';
-import { MAX_LAND_ATTEMPTS, SWAP_STAIR_ATTRS } from './dual-layer.constants';
-
-const outOfBounds = (r: number, c: number, bounds: QuadrantBounds): boolean =>
-  r < bounds.minRow || r + 1 > bounds.maxRow || c < bounds.minCol || c + 1 > bounds.maxCol;
+import { swapStairAt } from './swap-stair-at';
+import { MAX_LAND_ATTEMPTS } from './dual-layer.constants';
 
 class DualLayerStrategy implements LayerStrategy {
   readonly layerCount = 2 as const;
@@ -49,56 +49,53 @@ class DualLayerStrategy implements LayerStrategy {
     bounds: QuadrantBounds,
   ): BFSExpansionResult[] {
     const { row, col, layer, requirements } = cell;
-    const nr = row + dr;
-    const nc = col + dc;
+    const next: GridPos = { row: row + dr, col: col + dc };
+    if (bodyOutOfBounds(next.row, next.col, bounds)) return [];
 
-    if (outOfBounds(nr, nc, bounds)) return [];
-
-    const newTiles = getNewTiles(nr, nc, dr, dc);
-
-    const ledge = layer === 0 ? newTiles.map(([tr, tc]) => this.grids[0][tr][tc]).find((t) => t.type === 'ledge') : undefined;
-    if (ledge?.type === 'ledge') {
-      if (!canLeaveLedge(ledge.dir, dr, dc)) return [];
-      for (const [tr, tc] of newTiles) {
-        const t = this.grids[0][tr][tc];
-        if (t.type !== 'ledge' || !canLeaveLedge(t.dir, dr, dc)) return [];
-      }
-      return this.expandLedgeCross(nr, nc, dr, dc, requirements, inventory, bounds);
+    const entry: EntryContext = { dr, dc, requirements, inventory };
+    const newTiles = getNewTiles(next.row, next.col, dr, dc);
+    if (layer === 0 && newTiles.some(([tr, tc]) => this.isUpperLedge(tr, tc))) {
+      return this.canLeaveAll(newTiles, entry) ? this.expandLedgeCross(next, entry, bounds) : [];
     }
-
-    if (newTiles.some(([tr, tc]) => this.isSwapStair(tr, tc))) {
-      if (dc !== 0) return [];
-      return this.expandStairCross(nr, nc, dr, layer, requirements, inventory, bounds);
+    if (newTiles.some(([tr, tc]) => swapStairAt(this.rawAttrs, tr, tc))) {
+      return dc === 0 ? this.expandStairCross(next, layer, entry, bounds) : [];
     }
+    return this.expandFlat(next, layer, newTiles, entry);
+  }
 
+  private isUpperLedge(r: number, c: number): boolean {
+    return cellAt(this.grids[0], r, c).type === 'ledge';
+  }
+
+  private canLeaveAll(tiles: [number, number][], entry: EntryContext): boolean {
+    return tiles.every(([tr, tc]) => {
+      const t = cellAt(this.grids[0], tr, tc);
+      return t.type === 'ledge' && canLeaveLedge(t.dir, entry.dr, entry.dc);
+    });
+  }
+
+  private expandFlat(next: GridPos, layer: 0 | 1, newTiles: [number, number][], entry: EntryContext): BFSExpansionResult[] {
     const results: BFSExpansionResult[] = [];
-    const moved = enterTiles(newTiles, this.grids[layer], dr, dc, requirements, inventory);
-    if (moved) results.push({ row: nr, col: nc, layer, requirements: moved });
+    const moved = enterTiles(newTiles, this.grids[layer], entry);
+    if (moved) results.push({ ...next, layer, requirements: moved });
 
-    const other = (1 - layer) as 0 | 1;
+    const other = layer === 0 ? 1 : 0;
     if (!moved && newTiles.every(([tr, tc]) => isDoorPassageAttr(this.rawAttrs[other][tr]?.[tc] ?? 0))) {
-      results.push({ row: nr, col: nc, layer: other, requirements });
+      results.push({ ...next, layer: other, requirements: entry.requirements });
     }
     return results;
   }
 
-  private isSwapStair(r: number, c: number): boolean {
-    return SWAP_STAIR_ATTRS.has(this.rawAttrs[0][r]?.[c]) || SWAP_STAIR_ATTRS.has(this.rawAttrs[1][r]?.[c]);
-  }
-
-  private expandLedgeCross(
-    nr: number, nc: number, dr: number, dc: number,
-    requirements: Set<string>, inventory: Set<string>, bounds: QuadrantBounds,
-  ): BFSExpansionResult[] {
+  private expandLedgeCross(from: GridPos, entry: EntryContext, bounds: QuadrantBounds): BFSExpansionResult[] {
+    const { dr, dc, requirements } = entry;
     const ledgeTiles: [number, number][] = [];
     let landAttempts = 0;
 
     for (let step = 0; step < GRID_SIZE; step++) {
-      const lr = nr + step * dr;
-      const lc = nc + step * dc;
-      if (outOfBounds(lr, lc, bounds)) break;
+      const land: GridPos = { row: from.row + step * dr, col: from.col + step * dc };
+      if (bodyOutOfBounds(land.row, land.col, bounds)) break;
 
-      const onCliff = bodyTiles(lr, lc).filter(([br, bc]) => this.grids[0][br][bc].type === 'ledge');
+      const onCliff = bodyTiles(land.row, land.col).filter(([br, bc]) => this.isUpperLedge(br, bc));
       if (onCliff.length > 0) {
         ledgeTiles.push(...onCliff);
         continue;
@@ -106,31 +103,28 @@ class DualLayerStrategy implements LayerStrategy {
 
       if (++landAttempts > MAX_LAND_ATTEMPTS) return [];
 
-      const landed = enterTiles(bodyTiles(lr, lc), this.grids[1], dr, dc, requirements, inventory);
+      const landed = enterTiles(bodyTiles(land.row, land.col), this.grids[1], entry);
       if (landed) {
-        for (const [lr2, lc2] of ledgeTiles) {
-          this.traversedLedgeTiles.push({ row: lr2, col: lc2, reqs: requirements });
-        }
-        this.crossings.add(nr, nc, lr, lc, dr);
-        return [{ row: lr, col: lc, layer: 1, requirements: landed }];
+        for (const [lr, lc] of ledgeTiles) this.traversedLedgeTiles.push({ row: lr, col: lc, reqs: requirements });
+        this.crossings.add(from, land, dr);
+        return [{ ...land, layer: 1, requirements: landed }];
       }
     }
     return [];
   }
 
-  private expandStairCross(
-    nr: number, nc: number, dr: number,
-    layer: 0 | 1, requirements: Set<string>, inventory: Set<string>, bounds: QuadrantBounds,
-  ): BFSExpansionResult[] {
-    const otherLayer = (1 - layer) as 0 | 1;
+  private expandStairCross(from: GridPos, layer: 0 | 1, entry: EntryContext, bounds: QuadrantBounds): BFSExpansionResult[] {
+    const { dr, requirements } = entry;
+    const otherLayer = layer === 0 ? 1 : 0;
+    const nc = from.col;
     const stairTiles: [number, number][] = [];
     let landAttempts = 0;
 
     for (let step = 0; step < GRID_SIZE; step++) {
-      const lr = nr + step * dr;
-      if (outOfBounds(lr, nc, bounds)) break;
+      const lr = from.row + step * dr;
+      if (bodyOutOfBounds(lr, nc, bounds)) break;
 
-      const onStair = bodyTiles(lr, nc).filter(([br, bc]) => this.isSwapStair(br, bc));
+      const onStair = bodyTiles(lr, nc).filter(([br, bc]) => swapStairAt(this.rawAttrs, br, bc));
       if (onStair.length > 0) {
         stairTiles.push(...onStair);
         continue;
@@ -138,11 +132,9 @@ class DualLayerStrategy implements LayerStrategy {
 
       if (++landAttempts > MAX_LAND_ATTEMPTS) return [];
 
-      const landed = enterTiles(bodyTiles(lr, nc), this.grids[otherLayer], dr, 0, requirements, inventory);
+      const landed = enterTiles(bodyTiles(lr, nc), this.grids[otherLayer], { ...entry, dc: 0 });
       if (landed) {
-        for (const [sr, sc] of stairTiles) {
-          this.traversedStairTiles.push({ layer: otherLayer, row: sr, col: sc, reqs: requirements });
-        }
+        for (const [sr, sc] of stairTiles) this.traversedStairTiles.push({ layer: otherLayer, row: sr, col: sc, reqs: requirements });
         return [{ row: lr, col: nc, layer: otherLayer, requirements: landed }];
       }
     }

@@ -1,0 +1,14 @@
+/* @layer shared-asset-extraction @kind barrel */
+export { loadRom } from '../rom/load-rom-file';
+export { loadGbaAlttpRom } from '../rom/load-gba-rom-file';
+export { loadRomFromBuffer } from '../rom/rom-loader/load-rom-from-buffer';
+export { GbaRomReader } from '../rom/gba-rom/gba-rom-reader';
+export { loadGbaAlttpRomFromBuffer } from '../rom/gba-rom/load-gba-alttp-rom-from-buffer';
+export { GbaAlttpDungeonSource } from '../sources/gba-alttp/dungeon-source/gba-alttp-dungeon-source';
+export { extractDungeonSpriteGraphics } from '../sources/gba-alttp/graphics-source/extract-dungeon-sprite-graphics';
+export { extractPalaceSnes4bppTiles } from '../sources/gba-alttp/graphics-source/extract-palace-snes4bpp-tiles';
+export { compileGbaAlttpSupplement } from '../compile-resources-gba-alttp';
+export { compileAlttpAssetSet } from '../compile-alttp-asset-set';
+export { compileResources } from '../compile-resources';
+export { extractAllItemSprites } from '../item-sprites/extract-items-node';
+export { extractAllItemSpritesFromRom } from '../item-sprites/extract-all-item-sprites-from-rom';

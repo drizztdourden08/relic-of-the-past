@@ -11,6 +11,7 @@ import { requireSession } from '../auth/require-session';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
 import { INTENTS } from './auth-start.constants';
+import { routeParam } from '../router';
 
 const readIntent = (raw: string | undefined): OauthIntent =>
   (INTENTS as string[]).includes(raw ?? '') ? (raw as OauthIntent) : 'signin';
@@ -18,7 +19,7 @@ const readIntent = (raw: string | undefined): OauthIntent =>
 const authStart = (site: SiteConfig): Route => ({
   ...HUB_ROUTES.authStart,
   handler: async ({ req, res, params }) => {
-    const provider = selectProvider(params.provider);
+    const provider = selectProvider(routeParam(params, 'provider'));
     if (!provider) throw badRequest('Unknown sign-in provider.');
     const intent = readIntent(queryParam(req, 'intent'));
     if (intent === 'link') await requireSession(req);

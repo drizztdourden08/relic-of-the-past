@@ -37,19 +37,25 @@ const wrapTouched = (
 
   flattenBlocks(doc).forEach((line, at) => {
     const block = owners[at];
+    if (block === undefined) throw new Error(`Line ${String(at)} has no owning block`);
     if (!touched.has(at)) {
       out.push({ line, block, seeded: false });
       return;
     }
 
+    const heldIn = (): number => {
+      const count = held[block];
+      if (count === undefined) throw new Error(`Block ${String(block)} has no line count`);
+      return count;
+    };
     let rest = line;
-    let cut = cutFor(rest, ctx, policy.canOpenLine(held[block]));
+    let cut = cutFor(rest, ctx, policy.canOpenLine(heldIn()));
 
     while (cut !== null) {
       out.push({ line: { ...rest, tokens: cut.head, endsBox: false }, block, seeded: true });
-      held[block] += 1;
+      held[block] = heldIn() + 1;
       rest = { ...rest, tokens: cut.tail };
-      cut = cutFor(rest, ctx, policy.canOpenLine(held[block]));
+      cut = cutFor(rest, ctx, policy.canOpenLine(heldIn()));
     }
 
     out.push({ line: rest, block, seeded: true });

@@ -9,7 +9,6 @@ import type {
   IdleState, InputItem, Phase,
   StickSide, TriggerSide,
 } from '../hid-calibration.type';
-import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { applyVidPid } from '../apply-vid-pid';
 import { computeByteStatuses } from '../compute-byte-statuses';
 import { getInstructionText } from '../instruction-text';
@@ -23,6 +22,7 @@ import { useFlakyByteWarning } from './useFlakyByteWarning';
 import { useCalibrationRefs } from './useCalibrationRefs';
 import { useReportSubscription } from './useReportSubscription';
 import { useSdlVersion } from './useSdlVersion';
+import { isAnalogItem } from './is-analog-item';
 import { LOG_KEEP_LINES } from './useHidCalibration.constants';
 import type { UseHidCalibrationProps } from './useHidCalibration.type';
 
@@ -95,8 +95,9 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   }, []);
 
   const doAdvance = useCallback(() => {
-    const curItems = itemsRef.current; let nextIdx = activeIdxRef.current + 1;
-    while (nextIdx < curItems.length) { const it = curItems[nextIdx]; if (STICK_IDS.has(it.id) || TRIGGER_IDS.has(it.id)) { nextIdx++; continue; } if (!isDone(it)) break; nextIdx++; }
+    const curItems = itemsRef.current; const start = activeIdxRef.current + 1;
+    const found = curItems.findIndex((it, i) => i >= start && !isAnalogItem(it) && !isDone(it));
+    const nextIdx = found < 0 ? curItems.length : found;
     if (nextIdx >= curItems.length) { setInputPhaseActiveWrapped(false); addLog('All inputs mapped!'); return; }
     setActiveIndex(nextIdx); setCaptureState('waiting-press'); setAxisSubStep('pos');
     releaseCountRef.current = 0; confirmCountRef.current = 0; detectedBtnRef.current = null; awaitingButtonRestRef.current = true;
@@ -139,7 +140,7 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
 
   const prereqsDone = (hasGyro ? gyroState === 'done' : true) && idleState === 'done';
   const capturedCount = items.filter(isDone).length;
-  const buttonItems = items.filter(it => !STICK_IDS.has(it.id) && !TRIGGER_IDS.has(it.id));
+  const buttonItems = items.filter(it => !isAnalogItem(it));
   const buttonCapturedCount = buttonItems.filter(isDone).length;
 
   return {

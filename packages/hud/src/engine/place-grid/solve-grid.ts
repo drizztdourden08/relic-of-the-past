@@ -20,8 +20,10 @@ const solveGrid = (container: HudGridContainer, box: Rect, unit: number, ctx: Me
   const cells = assignCells(visible, Math.max(1, container.columns.length));
   const { columns, rows: rowTracks } = tracksOf(container, rowCountOf(cells.values()));
   const gap = resolveGap(container, ctx);
-  const colSizes = sizeTracks(columns, naturalPerTrack(columns.length, cells, 'column', ctx), area.w / unit, gap.x, ctx);
-  const rowSizes = sizeTracks(rowTracks, naturalPerTrack(rowTracks.length, cells, 'row', ctx), area.h / unit, gap.y, ctx);
+  const colNatural = naturalPerTrack(columns.length, cells, 'column', ctx);
+  const rowNatural = naturalPerTrack(rowTracks.length, cells, 'row', ctx);
+  const colSizes = sizeTracks({ tracks: columns, natural: colNatural, available: area.w / unit, gap: gap.x }, ctx);
+  const rowSizes = sizeTracks({ tracks: rowTracks, natural: rowNatural, available: area.h / unit, gap: gap.y }, ctx);
   return {
     area, visible, cells, gap, colSizes, rowSizes,
     colOffsets: offsetsOf(colSizes, gap.x),

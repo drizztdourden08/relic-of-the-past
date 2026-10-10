@@ -1,4 +1,7 @@
 /* @layer renderer-components @kind types */
+import type { FloodFillResult } from '@rotp/game-core';
+import type { MouseState } from '../navigation-overlay.type';
+
 interface ScreenOrigin {
   x: number;
   y: number;
@@ -52,4 +55,11 @@ interface LockedPathTile {
   attr: number;
 }
 
-export type { DrawContext, LiveSprite, LockedPathTile, ScreenOrigin, ViewportInfo };
+interface PathPreviewInput {
+  mouseState: MouseState;
+  result: FloodFillResult;
+  vp: { linkX: number; linkY: number };
+  setLockedPath: (path: LockedPathTile[] | null) => void;
+}
+
+export type { DrawContext, LiveSprite, LockedPathTile, PathPreviewInput, ScreenOrigin, ViewportInfo };

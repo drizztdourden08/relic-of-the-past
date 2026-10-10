@@ -527,7 +527,7 @@ Admin only. Besides this route, the sweep is the only way a report goes away.
 
 storeApi is one Gen2 HTTP function behind the store site's /api rewrite. The account routes come from hub-core, bound to the store's site config; the catalogue, versions, review, ratings, home and daily job routes are the store's own.
 
-## apps/store-api/src/window-api.d.ts
+## apps/store-api/src/window-api.type.ts
 
 shared/platform reads window.api, the app's preload bridge, to tell its host apart. The store's manifest readers reach that file through a type import only, and this function never runs in a window, so the typecheck gets the bridge as unknown.
 

@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../checked-read';
 import type { GbaRomReader } from '../rom/gba-rom';
 import type { RomData } from '../rom/rom-types';
 import { bankedRoomId } from './second-cartridge-bank';
@@ -23,10 +24,11 @@ const torchTableRecord = (gba: GbaRomReader, snes: RomData, roomIds: ReadonlySet
 
   const out: number[] = [];
   let read = 0;
+  const wordAt = (index: number): number => itemAt(words, index, 'Torch table word');
   while (read < words.length && words[read] !== ENTRY_TERMINATOR) {
-    const room = words[read++];
+    const room = wordAt(read++);
     const positions: number[] = [];
-    while (read < words.length && words[read] !== ENTRY_TERMINATOR) positions.push(words[read++]);
+    while (read < words.length && words[read] !== ENTRY_TERMINATOR) positions.push(wordAt(read++));
     read++;
     if (!roomIds.has(room) || positions.length === 0) continue;
     out.push(bankedRoomId(room), ...positions, ENTRY_TERMINATOR);

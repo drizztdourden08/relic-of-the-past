@@ -460,7 +460,7 @@ Reaching the configured stop check and completing the goal both read as success;
 
 The route the run walked, in order, with the checks each stop earned: the event log says what happened, the trail says where the run went. Stops come from the engine's own current screen, so the trail cannot disagree with the run.
 
-### widgets/simulator/sub-components/trail-haul.ts
+### widgets/simulator/behavior/trail-haul.ts
 
 A trail stop records the check tally on arrival, so the checks it earned are the next stop's arrival tally minus its own. The last stop has no successor and is closed against the live tally.
 
@@ -945,7 +945,7 @@ A pixel canvas drawing a flood fill reachability grid, one pixel per tile.
 
 ### widgets/navigation/sub-components/ReqIcon.tsx
 
-Renders a requirement as an emoji icon (known requirements) or a labelled chip. `REQ_ICONS` stays in this file: it is a categorical palette, and the lint exemption for raw colours names this file by path.
+Renders a requirement as an emoji icon (known requirements) or a labelled chip. `REQ_ICONS` lives in `ReqIcon.constants.ts`: it is a categorical palette of emoji and colours, and the lint exemptions for raw colours and glyphs name that file by path.
 
 ### widgets/navigation/sub-components/ScreenMapWithConnections.tsx
 

@@ -2,17 +2,18 @@
 import type { ButtonDiff } from '../hid-calibration.type';
 import { popcount } from './popcount';
 
+const swing = (d: ButtonDiff): number => Math.abs(d.pressedValue - d.restValue);
+
 const pickBestButtonDiff = (diffs: ButtonDiff[]): ButtonDiff => {
   const digital = diffs.filter(d => !d.analog);
   const analog = diffs.filter(d => d.analog);
-  if (digital.length > 0) {
-    let best = digital[0];
-    for (const d of digital) { if (popcount(d.bitMask) < popcount(best.bitMask)) best = d; }
-    return best;
+  const [firstDigital] = digital;
+  if (firstDigital) {
+    return digital.reduce((best, d) => (popcount(d.bitMask) < popcount(best.bitMask) ? d : best), firstDigital);
   }
-  let best = analog[0];
-  for (const d of analog) { if (Math.abs(d.pressedValue - d.restValue) > Math.abs(best.pressedValue - best.restValue)) best = d; }
-  return best;
+  const [firstAnalog] = analog;
+  if (!firstAnalog) throw new Error('no button diff to pick from');
+  return analog.reduce((best, d) => (swing(d) > swing(best) ? d : best), firstAnalog);
 };
 
 export { pickBestButtonDiff };

@@ -2,7 +2,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
-import { compileAlttpAssetSet, compileResources, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction';
+import { compileAlttpAssetSet, compileResources, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/node';
 
 const snesPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past (USA).sfc');
 const gbaPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba');

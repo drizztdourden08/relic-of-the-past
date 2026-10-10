@@ -13,4 +13,6 @@ const kKeysDict = new Map<string, number>([
 
 const kGapStartAddrs = new Set([0x2b00, 0x2880, 0xd000]);
 
-export { kEffectNamesDict, kGapStartAddrs, kKeysDict };
+const DUPLICATE_SAMPLE_SOURCES = new Map([[10, 9], [20, 19]]);
+
+export { DUPLICATE_SAMPLE_SOURCES, kEffectNamesDict, kGapStartAddrs, kKeysDict };

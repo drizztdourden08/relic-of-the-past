@@ -12,9 +12,10 @@ const naturalPerTrack = (
     const spanSizeOf = axis === 'column' ? cell.colSpan : cell.rowSpan;
     if (spanSizeOf !== 1) return;
     const index = (axis === 'column' ? cell.column : cell.row) - 1;
-    if (index < 0 || index >= count) return;
+    const current = sizes[index];
+    if (index < 0 || current === undefined) return;
     const natural = outerSize(node, ctx);
-    sizes[index] = Math.max(sizes[index], axis === 'column' ? natural.w : natural.h);
+    sizes[index] = Math.max(current, axis === 'column' ? natural.w : natural.h);
   });
   return sizes;
 };

@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-import { packArrays } from '../../asset-builder';
+import { packArrays } from '../../asset-builder/pack-arrays';
 import { RANDOMIZER_MSG_BASE, randomizerTemplateTexts } from '../data/randomizer-templates';
 import { compressStrings, encodeDictionary } from '../dialogue-encoder';
 import { normalizeTexts } from './normalize-texts';

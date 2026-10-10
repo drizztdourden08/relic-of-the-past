@@ -1,12 +1,14 @@
 /* @layer tooling-scripts @kind logic */
 
+const classifyWithoutBase = ({ local, remote }) => {
+  if (local && remote) return 'conflict';
+  return local ? 'local-only' : 'remote-only';
+};
+
 const classify = ({ local, remote, base }) => {
   if (local === remote) return 'same';
 
-  if (base === null || base === undefined) {
-    if (local && remote) return 'conflict';
-    return local ? 'local-only' : 'remote-only';
-  }
+  if (base === null || base === undefined) return classifyWithoutBase({ local, remote });
 
   if (local === base) return remote === null ? 'remote-deleted' : 'remote-newer';
   if (remote === base) return local === null ? 'local-deleted' : 'local-newer';

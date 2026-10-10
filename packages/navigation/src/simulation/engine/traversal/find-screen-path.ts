@@ -6,7 +6,8 @@ const rebuildPath = (prev: PathLinks, from: string, to: string): ScreenPathResul
   const edges: ScreenEdge[] = [];
   let cur = to;
   while (cur !== from) {
-    const link = prev.get(cur)!;
+    const link = prev.get(cur);
+    if (link === undefined) throw new Error(`No screen link back from ${cur}`);
     edges.unshift(link.edge);
     path.unshift(link.via);
     cur = link.via;
@@ -20,8 +21,7 @@ const findScreenPath = ({ adjacency, from, to, canPass }: PathQuery): ScreenPath
   const queue: string[] = [from];
   const seen = new Set<string>([from]);
 
-  while (queue.length > 0) {
-    const cur = queue.shift()!;
+  for (let cur = queue.shift(); cur !== undefined; cur = queue.shift()) {
     for (const edge of adjacency.get(cur) ?? []) {
       if (seen.has(edge.to) || !canPass(edge)) continue;
       seen.add(edge.to);

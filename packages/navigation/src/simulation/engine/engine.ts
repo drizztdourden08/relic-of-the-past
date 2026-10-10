@@ -40,6 +40,7 @@ import { inCompletedGroup } from './dungeon-ledger-lifecycle/in-completed-group'
 import type { EngineState } from './state/state.type';
 import { cloneState } from './state/clone-state';
 import type { EngineDeps, StepResult } from './engine.type';
+import { itemAt } from '../../checked-access';
 import { RIGHT_ARROW } from '../arrow.constants';
 
 const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps = {}) => {
@@ -114,7 +115,7 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     if (regionRoute) {
       s.route = regionRoute;
       s.phase = 'traversing';
-      events.push(narrative(s, `Running ${screenLabel(s.virtual.screenId)} ${RIGHT_ARROW} ${screenLabel(regionRoute[regionRoute.length - 1])} (new region)`));
+      events.push(narrative(s, `Running ${screenLabel(s.virtual.screenId)} ${RIGHT_ARROW} ${screenLabel(itemAt(regionRoute, regionRoute.length - 1))} (new region)`));
       return;
     }
     if (s.progressSinceEpoch) {

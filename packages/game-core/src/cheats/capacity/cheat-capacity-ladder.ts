@@ -9,7 +9,7 @@ const cheatCapacityLadder = (kind: CapacityKind): CapacityRung[] => {
   const out: CapacityRung[] = [];
   try {
     for (let rung = 0; rung <= WALLET_CEILING_RUNG; rung++) {
-      const cap = mod.ccall('WasmCheatCapacityRungCap', 'number', ['number', 'number'], [CAPACITY_KIND[kind], rung]) as number;
+      const cap = mod.ccall('WasmCheatCapacityRungCap', 'number', ['number', 'number'], [CAPACITY_KIND[kind], rung]);
       if (cap >= 0) out.push({ rung, cap });
     }
   } catch {

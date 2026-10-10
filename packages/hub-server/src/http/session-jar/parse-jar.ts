@@ -7,7 +7,7 @@ const parseJar = (raw: string | null): Jar => {
   try {
     const value = JSON.parse(Buffer.from(raw, 'base64url').toString('utf8')) as Record<string, unknown>;
     const jar: Jar = {};
-    for (const slot of SLOTS) if (typeof value[slot] === 'string') jar[slot] = value[slot] as string;
+    for (const slot of SLOTS) if (typeof value[slot] === 'string') jar[slot] = value[slot];
     return jar;
   } catch {
     return {};

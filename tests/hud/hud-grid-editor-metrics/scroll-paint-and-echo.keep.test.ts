@@ -75,7 +75,7 @@ describe('the stage echo is `gridCellRects`\' own answer, to the pixel', () => {
   });
 
   it('never takes the pointer, because the surface it replaces was clickable and §46 took that away', () => {
-    const sheet = readFileSync(`${EDITOR_DIR}/GridEditor/HudLayoutEditor.grid.css`, 'utf8');
+    const sheet = readFileSync(`${EDITOR_DIR}/GridEditor/GridEditor.css`, 'utf8');
     expect(sheet).toMatch(/\.hud-grid-echo\s*\{[^}]*pointer-events:\s*none/);
   });
 });

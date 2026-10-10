@@ -12,6 +12,7 @@ import { refreshAccess } from '../access/refresh-access';
 import { identitiesRepo } from '../db/identities-repo';
 import { usersRepo } from '../db/users-repo';
 import { now } from '../db/firestore';
+import { routeParam } from '../router';
 import type { SiteConfig } from '../site-config.type';
 import type { Route, RouteContext } from '../route.type';
 
@@ -41,7 +42,7 @@ const authCallback = (site: SiteConfig): Route => {
     ...HUB_ROUTES.authCallback,
     handler: async (ctx) => {
       const { req, res, params } = ctx;
-      const provider = selectProvider(params.provider);
+      const provider = selectProvider(routeParam(params, 'provider'));
       if (!provider) throw badRequest('Unknown sign-in provider.');
       const state = await readOauthState(req, res, provider.name);
       const code = queryParam(req, 'code');

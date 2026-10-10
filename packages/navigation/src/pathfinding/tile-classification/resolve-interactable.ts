@@ -3,6 +3,7 @@ import type { TileBehavior } from '@rotp/game-data';
 import type { SimDoor } from '../../simulation';
 import type { ResolveInteractableParams, TileInteractable } from './tile-classification.type';
 import { MANIPULABLE_NAMES } from '@rotp/game-data';
+import { itemAt } from '../../checked-access';
 import { CHEST_ATTR_BASE, CHEST_SHUT_FLAG, MANIPULABLE_KIND_MASK, SLOT_MASK } from './tile-classification.constants';
 
 const resolveDoor = (attr: number, doors: readonly SimDoor[]): TileInteractable | undefined => {
@@ -17,7 +18,7 @@ const resolveManipulable = (attr: number, replacementTileState: readonly number[
   const slot = attr & SLOT_MASK;
   if (slot >= replacementTileState.length) return undefined;
 
-  const kind = MANIPULABLE_NAMES[replacementTileState[slot] & MANIPULABLE_KIND_MASK];
+  const kind = MANIPULABLE_NAMES[itemAt(replacementTileState, slot) & MANIPULABLE_KIND_MASK];
   if (!kind) return undefined;
 
   return { family: 'manipulable', source: 'replacement-tile-state', slot, kind, state: 'unknown' };
@@ -27,7 +28,7 @@ const resolveChest = (attr: number, behavior: TileBehavior, chestLocations: read
   const slot = attr - CHEST_ATTR_BASE;
   if (slot < 0 || slot >= chestLocations.length) return undefined;
 
-  const shut = chestLocations[slot] >= CHEST_SHUT_FLAG;
+  const shut = itemAt(chestLocations, slot) >= CHEST_SHUT_FLAG;
   return { family: 'chest', source: 'chest-locations', slot, kind: behavior, state: shut ? 'shut' : 'open' };
 };
 

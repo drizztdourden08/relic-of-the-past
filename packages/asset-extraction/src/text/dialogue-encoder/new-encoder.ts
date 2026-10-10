@@ -13,6 +13,7 @@ const newEncoder = (cmd: string, param: number | null): number[] => {
       throw new Error(`Invalid cmd params: ${cmd} ${param}`);
     }
     const r = (info[1] as CommandParamMap)[param];
+    if (r === undefined) throw new Error(`Invalid cmd params: ${cmd} ${param}`);
     return r !== null ? [info[0], r] : [];
   }
 };

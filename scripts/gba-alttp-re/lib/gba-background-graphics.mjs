@@ -36,34 +36,41 @@ const decodeGbaPaletteBanks = (data, firstBank) => {
   return banks;
 };
 
+const paintTilePixel = ({ canvas, tile, palette, entry, tileX, tileY }, px, py) => {
+  const sourceX = entry.horizontalFlip ? 7 - px : px;
+  const sourceY = entry.verticalFlip ? 7 - py : py;
+  const colorIndex = tile[sourceY * GBA_TILE_SIZE + sourceX];
+  if (colorIndex === 0) return;
+  const color = palette[colorIndex];
+  const destination = ((tileY * 8 + py) * canvas.pixelWidth + tileX * 8 + px) * 4;
+  canvas.pixels[destination] = color[0];
+  canvas.pixels[destination + 1] = color[1];
+  canvas.pixels[destination + 2] = color[2];
+  canvas.pixels[destination + 3] = color[3];
+};
+
+const paintCell = ({ canvas, tiles, palettes, entry, tileX, tileY }) => {
+  const tile = tiles.get(entry.tile);
+  if (!tile) return;
+  const palette = palettes.get(entry.palette);
+  if (!palette) throw new Error(`Missing palette bank ${entry.palette} for tile ${entry.tile}`);
+  const placed = { canvas, tile, palette, entry, tileX, tileY };
+  for (let py = 0; py < GBA_TILE_SIZE; py++) {
+    for (let px = 0; px < GBA_TILE_SIZE; px++) paintTilePixel(placed, px, py);
+  }
+};
+
 const renderBackgroundRegion = ({ layers, tiles, palettes, x, y, width, height }) => {
   const pixelWidth = width * GBA_TILE_SIZE;
   const pixelHeight = height * GBA_TILE_SIZE;
   const pixels = Buffer.alloc(pixelWidth * pixelHeight * 4);
   for (let pixel = 0; pixel < pixelWidth * pixelHeight; pixel++) pixels[pixel * 4 + 3] = 0xff;
+  const canvas = { pixels, pixelWidth };
 
   for (let tileY = 0; tileY < height; tileY++) {
     for (let tileX = 0; tileX < width; tileX++) {
       for (const layer of layers) {
-        const entry = layer.cells[y + tileY][x + tileX];
-        const tile = tiles.get(entry.tile);
-        if (!tile) continue;
-        const palette = palettes.get(entry.palette);
-        if (!palette) throw new Error(`Missing palette bank ${entry.palette} for tile ${entry.tile}`);
-        for (let py = 0; py < GBA_TILE_SIZE; py++) {
-          for (let px = 0; px < GBA_TILE_SIZE; px++) {
-            const sourceX = entry.horizontalFlip ? 7 - px : px;
-            const sourceY = entry.verticalFlip ? 7 - py : py;
-            const colorIndex = tile[sourceY * GBA_TILE_SIZE + sourceX];
-            if (colorIndex === 0) continue;
-            const color = palette[colorIndex];
-            const destination = ((tileY * 8 + py) * pixelWidth + tileX * 8 + px) * 4;
-            pixels[destination] = color[0];
-            pixels[destination + 1] = color[1];
-            pixels[destination + 2] = color[2];
-            pixels[destination + 3] = color[3];
-          }
-        }
+        paintCell({ canvas, tiles, palettes, entry: layer.cells[y + tileY][x + tileX], tileX, tileY });
       }
     }
   }

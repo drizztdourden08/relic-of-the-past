@@ -2,6 +2,7 @@
 import { createHash } from 'crypto';
 import { stampBakeVersion } from '../bake-version';
 import { packArrays } from './pack-arrays';
+import { signedByteOf } from './signed-byte-of';
 import type { AssetEntry } from './asset-builder.type';
 
 const totalLen = (bufs: Buffer[]): number => {
@@ -17,19 +18,19 @@ class AssetBuilder {
 
   addUint16(name: string, data: number[]): void {
     const buf = Buffer.alloc(data.length * 2);
-    for (let i = 0; i < data.length; i++) buf.writeUInt16LE(data[i] & 0xffff, i * 2);
+    for (const [i, value] of data.entries()) buf.writeUInt16LE(value & 0xffff, i * 2);
     this.assets.set(name, { type: 'uint16', data: buf });
   }
 
   addInt8(name: string, data: number[]): void {
     const buf = Buffer.alloc(data.length);
-    for (let i = 0; i < data.length; i++) buf.writeInt8(data[i] & 0xff ? (data[i] > 127 ? data[i] - 256 : data[i]) : 0, i);
+    for (const [i, value] of data.entries()) buf.writeInt8(signedByteOf(value), i);
     this.assets.set(name, { type: 'int8', data: Buffer.from(new Int8Array(data).buffer) });
   }
 
   addInt16(name: string, data: number[]): void {
     const buf = Buffer.alloc(data.length * 2);
-    for (let i = 0; i < data.length; i++) buf.writeInt16LE(data[i], i * 2);
+    for (const [i, value] of data.entries()) buf.writeInt16LE(value, i * 2);
     this.assets.set(name, { type: 'int16', data: buf });
   }
 
@@ -39,7 +40,7 @@ class AssetBuilder {
 
   serialize(): Buffer {
     const keySig = Buffer.concat(
-      Array.from(this.assets.keys()).map(k => Buffer.from(k + '\0', 'utf8'))
+      Array.from(this.assets.keys()).map(k => Buffer.from(`${k}\0`, 'utf8'))
     );
     const assetsSig = Buffer.concat([
       Buffer.from('Zelda3_v0     \n\0', 'ascii'),
@@ -53,8 +54,8 @@ class AssetBuilder {
     hdr.writeUInt32LE(keySig.length, assetsSig.length + 32 + 4);
 
     const encodedSizes = Buffer.alloc(allData.length * 4);
-    for (let i = 0; i < allData.length; i++) {
-      encodedSizes.writeUInt32LE(allData[i].length, i * 4);
+    for (const [i, data] of allData.entries()) {
+      encodedSizes.writeUInt32LE(data.length, i * 4);
     }
 
     const parts: Buffer[] = [hdr, encodedSizes, keySig];

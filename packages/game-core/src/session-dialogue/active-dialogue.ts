@@ -15,8 +15,9 @@ const activeLanguageCode = (mod: EmscriptenModule): string => {
 const dialogueIndexOf = (dialogueMap: Uint8Array, code: string): number => {
   for (const entry of unpackPackedBytes(dialogueMap)) {
     const [codeBytes, conf] = unpackPackedBytes(entry);
-    if (codeBytes === undefined || conf === undefined || conf.length < 3) continue;
-    if (new TextDecoder().decode(codeBytes) === code) return conf[0];
+    const dialogueIndex = conf?.[0];
+    if (codeBytes === undefined || conf === undefined || conf.length < 3 || dialogueIndex === undefined) continue;
+    if (new TextDecoder().decode(codeBytes) === code) return dialogueIndex;
   }
   return 0;
 };

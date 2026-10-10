@@ -37,7 +37,8 @@ const encodeGreedyFromDict = (
 ): EncodedToken => {
   const a = s.slice(i);
 
-  const charMap = rev.get(a[0]);
+  const first = a.charAt(0);
+  const charMap = rev.get(first);
   if (charMap) {
     for (const [key, val] of Array.from(charMap)) {
       if (a.startsWith(key)) {
@@ -46,11 +47,11 @@ const encodeGreedyFromDict = (
     }
   }
 
-  if (a[0] === '[') return encodeCommand(a, a2i, info);
+  if (first === '[') return encodeCommand(a, a2i, info);
 
-  const idx = a2i.get(a[0]);
+  const idx = a2i.get(first);
   if (idx === undefined) {
-    throw new Error(`Character '${a[0]}' not found in alphabet for language ${info.id}`);
+    throw new Error(`Character '${first}' not found in alphabet for language ${info.id}`);
   }
   return { bytes: [idx], consumed: 1 };
 };

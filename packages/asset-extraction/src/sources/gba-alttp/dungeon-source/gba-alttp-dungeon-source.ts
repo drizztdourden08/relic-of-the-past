@@ -3,6 +3,7 @@ import type {
   DungeonInteractionCell, DungeonRoomRecord, DungeonTopologyEdge,
 } from '../../../dungeon/model';
 import type { GbaRomReader } from '../../../rom/gba-rom';
+import { itemAt } from '../../../checked-read';
 import { headerRecordLengths } from '../header-record-length';
 import { parseEntities, parseSecrets } from '../room-records';
 import {
@@ -39,7 +40,7 @@ class GbaAlttpDungeonSource {
     const secretAddress = readRoomPointer(this.rom, SECRET_POINTER_TABLE, roomId);
     const layerAddresses = LAYER_POINTER_TABLES.map(table => readRoomPointer(this.rom, table, roomId));
     const entities = parseEntities(this.rom, entityAddress);
-    const header = parseRoomHeader(this.rom, headerAddress, this.headerLengths[roomId]);
+    const header = parseRoomHeader(this.rom, headerAddress, itemAt(this.headerLengths, roomId, 'GBA room header length'));
     const attributes = this.dungeonTileAttributes(header.blockset);
     return {
       id: roomId,

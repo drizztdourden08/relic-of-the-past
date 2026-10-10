@@ -1,5 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 import { AssetBuilder } from '../asset-builder';
+import { itemAt } from '../checked-read';
 import type { GbaRomReader } from '../rom/gba-rom';
 import type { RomData } from '../rom/rom-types';
 import { doorListFor } from '../extensions/second-cartridge-doors';
@@ -62,7 +63,7 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
     kGbaPalaceSpriteGfxSnes4bpp: () => assets.addPacked('kGbaPalaceSpriteGfxSnes4bpp', spriteGraphics.sheets.map(sheet => sheet.snes4bpp)),
     kGbaPalaceSpritePaletteBanks: () => assets.addUint8('kGbaPalaceSpritePaletteBanks', spritePalettes.map(palette => palette.bank)),
     kGbaPalaceSpritePalettes: () => assets.addPacked('kGbaPalaceSpritePalettes', spritePalettes.map(palette => palette.bgr555)),
-    kGbaPalaceTileAttributes: () => assets.addUint8('kGbaPalaceTileAttributes', [...source.dungeonTileAttributes(rooms[0].header.blockset)]),
+    kGbaPalaceTileAttributes: () => assets.addUint8('kGbaPalaceTileAttributes', [...source.dungeonTileAttributes(itemAt(rooms, 0, 'Palace room').header.blockset)]),
     kGbaPalaceTopology: () => assets.addUint16('kGbaPalaceTopology', topology.flatMap(edge => [
       bankedRoomId(edge.fromRoomId),
       bankedRoomId(edge.toRoomId),

@@ -3,6 +3,7 @@ import type { HidAxisMapping } from '../hid-calibration.type';
 import { findAxisBytes } from '../hid-analysis';
 import { AXIS_FINAL_DELTA, AXIS_RELEASE_DELTA, AXIS_RELEASE_FRAMES } from './button-detection.constants';
 import { scheduleAdvance } from './schedule-advance';
+import { pickWidestAxisByte } from './pick-widest-axis-byte';
 import type { AxisStepArgs } from './button-detection.type';
 
 const finalizeAxisCapture = ({ bytes, bl, excl, item, idx, refs, cb }: AxisStepArgs): void => {
@@ -11,14 +12,11 @@ const finalizeAxisCapture = ({ bytes, bl, excl, item, idx, refs, cb }: AxisStepA
     const posD = findAxisBytes(bl, ac.posBytes, excl, AXIS_FINAL_DELTA);
     const negD = findAxisBytes(bl, ac.negBytes, excl, AXIS_FINAL_DELTA);
     const allB = new Set([...posD.map(d => d.byteIndex), ...negD.map(d => d.byteIndex)]);
-    let bestByte = -1, bestRange = 0;
-    for (const bi of allB) {
-      const r = Math.abs(ac.posBytes[bi] - ac.negBytes[bi]);
-      if (r > bestRange) { bestRange = r; bestByte = bi; }
-    }
-    if (bestByte >= 0) {
-      const posVal = ac.posBytes[bestByte], negVal = ac.negBytes[bestByte];
+    const best = pickWidestAxisByte(allB, ac.posBytes, ac.negBytes);
+    if (best) {
+      const { byte: bestByte, pos: posVal, neg: negVal } = best;
       const centerVal = bl[bestByte];
+      if (centerVal === undefined) throw new Error(`baseline has no byte ${String(bestByte)}`);
       const inverted = posVal < negVal;
       const axisMapping: HidAxisMapping = { byteIndex: bestByte, center: centerVal, min: Math.min(posVal, negVal), max: Math.max(posVal, negVal), inverted };
       const result = `byte[${bestByte}] ${axisMapping.min}..${centerVal}..${axisMapping.max}${inverted ? ' inv' : ''}`;

@@ -1,0 +1,7 @@
+{
+  "extends": "@drizztdourden08/brock-lint-config/tsconfig/react.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["**/*.ts"]
+}

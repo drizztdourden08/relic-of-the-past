@@ -8,12 +8,18 @@ const rowOf = (advance: LineAdvance): number | null => {
   return advance.kind === 'row' ? advance.row : null;
 };
 
+const firstOf = (options: readonly ChoiceOption[]): ChoiceOption => {
+  const [first] = options;
+  if (first === undefined) throw new Error('A choice has no options left');
+  return first;
+};
+
 const renumbered = (options: ChoiceOption[]): ChoiceOption[] => {
-  let previousRow = rowOf(options[0].advance);
+  let previousRow = rowOf(firstOf(options).advance);
 
   return options.map((option, index) => {
     if (index === 0) return option;
-    if (previousRow === null || option.advance === null || option.advance.kind !== 'row') {
+    if (previousRow === null || option.advance?.kind !== 'row') {
       previousRow = null;
       return option;
     }
@@ -31,7 +37,7 @@ const withRemovedOption = (shape: ChoiceShape, index: number): ChoiceShape | nul
   if (shape.options.length !== 3) return null;
   if (index < 0 || index >= shape.options.length) return null;
   const kept = renumbered(shape.options.filter((_, i) => i !== index));
-  return { ...shape, code: codeForPair(kept[0]), options: kept };
+  return { ...shape, code: codeForPair(firstOf(kept)), options: kept };
 };
 
 export { withRemovedOption };

@@ -1,2 +1,2 @@
 /* @layer shared-game @kind barrel */
-export type { FloodFillOptions } from './flood-options.type';
+export type { DualLayerGrids, FloodFillOptions } from './flood-options.type';

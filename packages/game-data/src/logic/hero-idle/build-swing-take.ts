@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { Facing } from '../../data/native-tables/player-pose-atlas';
 import type { HeroBeat } from './hero-idle.type';
-import { ACTION_SWING, SWING_HOLD } from './native-timings';
+import { ACTION_SWING, SWING_HOLD } from './native-timings.constants';
 import { drawBeats } from './draw-beats';
 import { posedBeat } from './posed-beat';
 

@@ -5,6 +5,19 @@ import type { TrackEdit } from './grid-track-edits.type';
 const clampIndex = (index: number, length: number): number =>
   Math.min(Math.max(Math.trunc(index), 0), Math.max(0, length));
 
+const removeTrack = (next: Extent[], index: number): Extent[] => {
+  if (index < 0 || index >= next.length) return next;
+  next.splice(index, 1);
+  return next;
+};
+
+const moveTrack = (next: Extent[], from: number, to: number): Extent[] => {
+  if (from < 0 || from >= next.length || to < 0 || to >= next.length) return next;
+  const [moved] = next.splice(from, 1);
+  if (moved !== undefined) next.splice(to, 0, moved);
+  return next;
+};
+
 const editTracks = (tracks: readonly Extent[], edit: TrackEdit): Extent[] => {
   const next = [...tracks];
   switch (edit.op) {
@@ -15,16 +28,10 @@ const editTracks = (tracks: readonly Extent[], edit: TrackEdit): Extent[] => {
       next.splice(clampIndex(edit.index, next.length), 0, 'auto');
       return next;
     case 'remove':
-      if (edit.index < 0 || edit.index >= next.length) return next;
-      next.splice(edit.index, 1);
-      return next;
-    case 'move': {
-      if (edit.from < 0 || edit.from >= next.length || edit.to < 0 || edit.to >= next.length) return next;
-      const [moved] = next.splice(edit.from, 1);
-      next.splice(edit.to, 0, moved);
-      return next;
-    }
-    default:
+      return removeTrack(next, edit.index);
+    case 'move':
+      return moveTrack(next, edit.from, edit.to);
+    case 'size':
       return next.map((track, at) => (edit.indices.includes(at) ? edit.extent : track));
   }
 };

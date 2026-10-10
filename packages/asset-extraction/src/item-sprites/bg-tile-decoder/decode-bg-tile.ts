@@ -5,9 +5,9 @@ const decodeBgTile = (sheet: Buffer, index: number): Uint8Array => {
   const offset = index * TILE_BYTES;
   const pixels = new Uint8Array(64);
   for (let y = 0; y < 8; y += 1) {
-    const d0 = sheet[offset + y * 2];
-    const d1 = sheet[offset + y * 2 + 1];
-    const d2 = sheet[offset + 16 + y];
+    const d0 = sheet[offset + y * 2] ?? 0;
+    const d1 = sheet[offset + y * 2 + 1] ?? 0;
+    const d2 = sheet[offset + 16 + y] ?? 0;
     for (let x = 0; x < 8; x += 1) {
       const bit = 7 - x;
       pixels[y * 8 + x] =

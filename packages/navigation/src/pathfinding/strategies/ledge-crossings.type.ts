@@ -1,8 +1,8 @@
 /* @layer shared-game @kind types */
-import type { LedgeTraversal } from '@rotp/game-core';
+import type { GridPos, LedgeTraversal } from '@rotp/game-core';
 
 interface CrossingRecorder {
-  add: (nr: number, nc: number, lr: number, lc: number, dr: number) => void;
+  add: (from: GridPos, to: GridPos, dr: number) => void;
   list: () => LedgeTraversal[];
 }
 

@@ -1,10 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 import type { GridPos } from '@rotp/game-core';
+import { itemAt } from '../checked-access';
 import { SCREEN_TILE_SPAN, SCREENS_PER_ROW, WORLD_SCREEN_COUNT } from './overworld-area.constants';
 
 const areaHeadOf = (screenIndex: number, heads: Uint8Array): number => {
   const worldOffset = screenIndex - (screenIndex % WORLD_SCREEN_COUNT);
-  return heads[screenIndex % WORLD_SCREEN_COUNT] + worldOffset;
+  return itemAt(heads, screenIndex % WORLD_SCREEN_COUNT) + worldOffset;
 };
 
 const resolveAreaSprite = (

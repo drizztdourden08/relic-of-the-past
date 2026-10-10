@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { GridPos } from '@rotp/game-core';
+import { itemAt } from '../../checked-access';
 import { EXIT_RING, GRID, UNREACHED } from './exit-order.constants';
 
 const distanceAt = (dist: Uint16Array, tile: GridPos): number => {
@@ -9,7 +10,7 @@ const distanceAt = (dist: Uint16Array, tile: GridPos): number => {
       const r = tile.row + dr;
       const c = tile.col + dc;
       if (r < 0 || r >= GRID || c < 0 || c >= GRID) continue;
-      const d = dist[r * GRID + c];
+      const d = itemAt(dist, r * GRID + c);
       if (d < best) best = d;
     }
   }

@@ -23,9 +23,10 @@ const TileRecorderBtn = ({ attrGrid, overworldScreenIndex }: { attrGrid: number[
         const tileRow = Math.floor((vp.linkY - screenWorldY) / 8);
         if (tileRow >= 0 && tileRow < 64 && tileCol >= 0 && tileCol < 64) {
           const key = `${tileRow},${tileCol}`;
-          if (key !== lastTile.current) {
+          const attr = attrGrid[tileRow]?.[tileCol];
+          if (attr !== undefined && key !== lastTile.current) {
             lastTile.current = key;
-            setTiles(prev => [...prev, { row: tileRow, col: tileCol, attr: attrGrid[tileRow][tileCol] }]);
+            setTiles(prev => [...prev, { row: tileRow, col: tileCol, attr }]);
           }
         }
       }

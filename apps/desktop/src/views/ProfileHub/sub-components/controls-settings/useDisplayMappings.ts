@@ -3,9 +3,10 @@ import { useMemo } from 'react';
 import { SNES_BUTTONS } from '@rotp/game-data';
 import { allowedDevices, recallControllerName, resolveIconByVidPid } from '@rotp/input-mapping';
 import { resolveLiveFamilyIcon } from './family-icon-map';
-import { FAMILY_ICON_MAP } from './controls-settings.constants';
+import { FAMILY_ICON_MAP, GENERIC_CONTROLLER_ICON, KEYBOARD_ICON } from './controls-settings.constants';
 import { findLiveDevice } from './live-device';
 import { padHex } from './pad-hex';
+import { splitDeviceKey } from './split-device-key';
 import type { RequiredInput, UseDisplayMappingsArgs } from './controls-settings.type';
 
 const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) => {
@@ -19,14 +20,14 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
       inputs.push({
         type: 'keyboard',
         label: 'Keyboard',
-        iconSrc: FAMILY_ICON_MAP.keyboard,
+        iconSrc: KEYBOARD_ICON,
         connected: devices.some(d => d.type === 'keyboard' && d.connected),
       });
     }
     if (hasGamepad) {
       if (usedDeviceKeys.size > 0) {
         for (const key of usedDeviceKeys) {
-          const [vid, pid] = key.split(':');
+          const [vid, pid] = splitDeviceKey(key);
           const liveDevice = findLiveDevice(vid, pid, devices);
           const displayName = recallControllerName({ vendorId: parseInt(vid, 16), productId: parseInt(pid, 16) })
             ?? liveDevice?.displayName ?? 'Controller';
@@ -34,7 +35,7 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
             type: 'gamepad',
             label: `${displayName} (${vid}:${pid})`,
             iconSrc: resolveLiveFamilyIcon({ vid, pid, devices }),
-            connected: !!liveDevice,
+            connected: Boolean(liveDevice),
           });
         }
       } else {
@@ -42,7 +43,7 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
         inputs.push({
           type: 'gamepad',
           label: activeProfile.name,
-          iconSrc: FAMILY_ICON_MAP[family] ?? FAMILY_ICON_MAP.generic,
+          iconSrc: FAMILY_ICON_MAP[family] ?? GENERIC_CONTROLLER_ICON,
           connected: devices.some(d => d.type === 'gamepad' && d.connected),
         });
       }

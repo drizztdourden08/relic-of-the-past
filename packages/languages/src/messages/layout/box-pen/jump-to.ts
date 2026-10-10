@@ -4,6 +4,7 @@ import { blankRow } from './blank-row';
 import { closeRun } from './close-run';
 import { emptyRun } from './empty-run';
 import { visibleRun } from './visible-run';
+import { slotAt } from './slot-at';
 
 const reopenRow = (buf: BoxRow): BoxRow => {
   if (!buf.drawn && buf.stale === null) return buf;
@@ -12,8 +13,7 @@ const reopenRow = (buf: BoxRow): BoxRow => {
 
 const jumpTo = (pen: Pen, row: number): void => {
   closeRun(pen);
-  const buf = pen.slots[row - 1];
-  pen.slots[row - 1] = pen.blankOnJump ? blankRow() : reopenRow(buf);
+  pen.slots[row - 1] = pen.blankOnJump ? blankRow() : reopenRow(slotAt(pen, row));
   pen.row = row;
   pen.edits += 1;
 };

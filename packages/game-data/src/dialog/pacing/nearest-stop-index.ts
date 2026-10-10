@@ -1,8 +1,15 @@
 /* @layer shared-game @kind logic */
 const nearestStopIndex = (stops: readonly number[], value: number): number => {
+  const [first] = stops;
+  if (first === undefined) return 0;
   let best = 0;
-  for (let i = 1; i < stops.length; i++) {
-    if (Math.abs(stops[i] - value) < Math.abs(stops[best] - value)) best = i;
+  let bestDistance = Math.abs(first - value);
+  for (const [i, stop] of stops.entries()) {
+    const distance = Math.abs(stop - value);
+    if (distance < bestDistance) {
+      best = i;
+      bestDistance = distance;
+    }
   }
   return best;
 };

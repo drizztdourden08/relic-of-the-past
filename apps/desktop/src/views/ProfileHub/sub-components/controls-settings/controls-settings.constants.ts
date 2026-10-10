@@ -2,12 +2,15 @@
 import { BUTTON_INDEX } from '@rotp/input-mapping';
 import { publicAsset } from '@app/public-asset/public-asset';
 
-const FAMILY_ICON_MAP: Record<string, string> = {
+const KEYBOARD_ICON = publicAsset('buttons/keyboard/keyboard.svg');
+const GENERIC_CONTROLLER_ICON = publicAsset('buttons/generic/generic_joystick.svg');
+
+const FAMILY_ICON_MAP: Partial<Record<string, string>> = {
   xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
   nintendo: publicAsset('buttons/switch/controller_switch_pro.svg'),
   playstation: publicAsset('buttons/playstation/controller_playstation5.svg'),
-  keyboard: publicAsset('buttons/keyboard/keyboard.svg'),
-  generic: publicAsset('buttons/generic/generic_joystick.svg'),
+  keyboard: KEYBOARD_ICON,
+  generic: GENERIC_CONTROLLER_ICON,
 };
 
 const AXIS_COUNT = 6;
@@ -22,5 +25,5 @@ const DRAG_PID = 'application/x-pid';
 
 export {
   ALL_AXES, ALL_BUTTONS, AXIS_COUNT, DRAG_DEVICE_ID, DRAG_DEVICE_NAME, DRAG_PID, DRAG_SDL_TYPE,
-  DRAG_VID, FAMILY_ICON_MAP,
+  DRAG_VID, FAMILY_ICON_MAP, GENERIC_CONTROLLER_ICON, KEYBOARD_ICON,
 };

@@ -1,8 +1,10 @@
 /* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
-import { DEFAULT_ALLOW, RULE_BY_GROUP, findSlop } from '../../lint/slop-patterns.mjs';
-import { classifyLines } from '../../lint/slop-line-kind.mjs';
+import { DEFAULT_ALLOW, RULE_BY_GROUP, findSlop } from '@drizztdourden08/brock-lint-config/slop-patterns';
+import { classifyLines } from '@drizztdourden08/brock-lint-config/slop-line-kind';
+
+const ALLOW = [...DEFAULT_ALLOW, 'enhanced'];
 
 const LINTED_ELSEWHERE = new Set([
   'TypeScript', 'TypeScript-React', 'JavaScript', 'JavaScript-React', 'Markdown', 'Binary',
@@ -27,7 +29,7 @@ const findingsFor = (rel, lang, text) => {
   for (let i = 0; i < lines.length; i++) {
     if (OPT_OUT.test(lines[i])) continue;
     const groups = kinds[i] === 'other' ? CHARS : ALL;
-    for (const hit of findSlop(lines[i], { allow: DEFAULT_ALLOW, groups })) {
+    for (const hit of findSlop(lines[i], { allow: ALLOW, groups })) {
       out.push({
         path: rel,
         tool: 'slop',

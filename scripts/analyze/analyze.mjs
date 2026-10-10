@@ -30,35 +30,44 @@ const gitChanged = () => {
 
 const classifyAll = (rels, manifest) => rels.map((rel) => classifyFile(ROOT, rel, manifest));
 
-const main = async () => {
-  const manifest = loadManifest(ROOT);
-  const mode = args.has('--diff') ? 'diff' : 'full';
-  let rels = walkFiles(ROOT);
-  if (mode === 'diff') { const changed = gitChanged(); rels = rels.filter((r) => changed.has(r)); }
+const selectFiles = (mode) => {
+  const rels = walkFiles(ROOT);
+  if (mode !== 'diff') return rels;
+  const changed = gitChanged();
+  return rels.filter((r) => changed.has(r));
+};
 
-  let records = classifyAll(rels, manifest);
+const classifyWithTags = (rels, manifest) => {
+  const records = classifyAll(rels, manifest);
+  if (!args.has('--fix-tags')) return records;
+  const { written, skipped } = writeTags(ROOT, records);
+  console.log(`--fix-tags: wrote ${written} headers, skipped ${skipped}`);
+  return classifyAll(rels, manifest);
+};
 
-  if (args.has('--fix-tags')) {
-    const { written, skipped } = writeTags(ROOT, records);
-    console.log(`--fix-tags: wrote ${written} headers, skipped ${skipped}`);
-    records = classifyAll(rels, manifest);
-  }
-
-  const ctx = { root: ROOT, mode };
-  const changedSet = new Set(rels);
+const runAdapters = async (records, ctx, changedSet) => {
   const findings = [];
   for (const a of ADAPTERS) {
     if (!(await a.available(ROOT))) { console.log(`(skip ${a.name}: not installed)`); continue; }
     const subset = records.filter((r) => a.appliesTo(r));
     const raw = await a.run(subset, ctx);
-    for (const f of raw) if (mode === 'full' || changedSet.has(f.path)) findings.push(f);
+    for (const f of raw) if (ctx.mode === 'full' || changedSet.has(f.path)) findings.push(f);
   }
+  return findings;
+};
+
+const main = async () => {
+  const manifest = loadManifest(ROOT);
+  const mode = args.has('--diff') ? 'diff' : 'full';
+  const rels = selectFiles(mode);
+  const records = classifyWithTags(rels, manifest);
+  const findings = await runAdapters(records, { root: ROOT, mode }, new Set(rels));
 
   const report = buildReport(records, findings, new Date(0).toISOString());
   printReport(report);
   if (args.has('--json')) {
     fs.writeFileSync(path.join(ROOT, 'scripts/analyze/report.json'), JSON.stringify(report, null, 2));
-    console.log('\nFull report → scripts/analyze/report.json');
+    console.log('\nFull report -> scripts/analyze/report.json');
   }
   if (args.has('--ci') && report.violations.length) process.exit(1);
 };

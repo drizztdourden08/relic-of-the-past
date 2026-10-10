@@ -1,5 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { FlagSnapshot, FlagDiff } from '../../types';
+import { itemAt } from '../../../checked-access';
 
 const diffBuffer = (
   kind: FlagDiff['kind'],
@@ -9,8 +10,8 @@ const diffBuffer = (
 ): void => {
   const len = Math.min(before.length, after.length);
   for (let i = 0; i < len; i++) {
-    const b = before[i];
-    const a = after[i];
+    const b = itemAt(before, i);
+    const a = itemAt(after, i);
     if (b === a) continue;
     out.push({ kind, index: i, before: b, after: a, setBits: (b ^ a) & a });
   }

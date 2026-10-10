@@ -98,46 +98,63 @@ const keyboardInputProfile = async (now) => {
   };
 };
 
+const pickSourceProfile = (name, inheritConfigFrom) => {
+  const others = existingProfiles().filter((p) => p.id !== name);
+  const human = others.filter((p) => !String(p.name ?? '').startsWith('agent/'));
+  const candidates = human.length > 0 ? human : others;
+  return candidates.find((p) => p.id === inheritConfigFrom) ?? candidates[0] ?? null;
+};
+
+const writeProfileIfAbsent = ({ dir, name, rom, source, now }) => {
+  const profilePath = join(dir, 'profile.json');
+  if (existsSync(profilePath)) return;
+  const profile = { id: name, name: `agent/${name}`, romFile: rom, created: now, lastPlayed: now, automation: true };
+  if (source?.language) profile.language = source.language;
+  writeJson(profilePath, profile);
+};
+
+const writeInputProfilesIfEmpty = (dir, keyboard) => {
+  const inputPath = join(dir, 'input-profiles.json');
+  const existingInput = readJson(inputPath, []);
+  if (!Array.isArray(existingInput) || existingInput.length === 0) {
+    writeJson(inputPath, [keyboard]);
+  }
+};
+
+const writeConfigIfAbsent = ({ dir, source, keyboard, seedCheats }) => {
+  const configPath = join(dir, 'config.json');
+  if (existsSync(configPath)) return;
+  const sourceConfig = source ? readJson(gameDataPath('profiles', source.id, 'config.json'), {}) : {};
+  const config = { ...sourceConfig, activeInputProfileId: keyboard.id };
+  if (seedCheats) config.cheatsEnabled = true;
+  writeJson(configPath, config);
+};
+
+const copySaves = ({ sourceId, name, withFixtures, quickSlot }) => ({
+  savesCopied: copyManualSaves(sourceId, name),
+  fixturesCopied: withFixtures ? seedFixtureSaves(repoRoot, name) : null,
+  quickSaveCopied: quickSlot != null ? copyQuickSave(sourceId, name, quickSlot) : false,
+});
+
 const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot, seedFixtureSaves: withFixtures = true, seedCheats = true }) => {
   const now = Date.now();
   const dir = gameDataPath('profiles', name);
 
-  const others = existingProfiles().filter((p) => p.id !== name);
-  const human = others.filter((p) => !String(p.name ?? '').startsWith('agent/'));
-  const candidates = human.length > 0 ? human : others;
-  const source = candidates.find((p) => p.id === inheritConfigFrom) ?? candidates[0] ?? null;
-  const sourceConfig = source ? readJson(gameDataPath('profiles', source.id, 'config.json'), {}) : {};
+  const source = pickSourceProfile(name, inheritConfigFrom);
   const rom = romFile ?? source?.romFile ?? defaultRom();
   assertRomExists(rom);
 
   mkdirSync(join(dir, 'saves'), { recursive: true });
+  writeProfileIfAbsent({ dir, name, rom, source, now });
 
-  const profilePath = join(dir, 'profile.json');
-  if (!existsSync(profilePath)) {
-    const profile = { id: name, name: `agent/${name}`, romFile: rom, created: now, lastPlayed: now, automation: true };
-    if (source?.language) profile.language = source.language;
-    writeJson(profilePath, profile);
-  }
-
-  const inputPath = join(dir, 'input-profiles.json');
-  const existingInput = readJson(inputPath, []);
   const keyboard = await keyboardInputProfile(now);
-  if (!Array.isArray(existingInput) || existingInput.length === 0) {
-    writeJson(inputPath, [keyboard]);
-  }
+  writeInputProfilesIfEmpty(dir, keyboard);
+  writeConfigIfAbsent({ dir, source, keyboard, seedCheats });
 
-  const configPath = join(dir, 'config.json');
-  if (!existsSync(configPath)) {
-    const config = { ...sourceConfig, activeInputProfileId: keyboard.id };
-    if (seedCheats) config.cheatsEnabled = true;
-    writeJson(configPath, config);
-  }
+  const sourceId = source?.id ?? null;
+  const copied = copySaves({ sourceId, name, withFixtures, quickSlot });
 
-  const savesCopied = copyManualSaves(source?.id ?? null, name);
-  const fixturesCopied = withFixtures ? seedFixtureSaves(repoRoot, name) : null;
-  const quickSaveCopied = quickSlot != null ? copyQuickSave(source?.id ?? null, name, quickSlot) : false;
-
-  return { dir, romFile: rom, inheritedFrom: source?.id ?? null, savesCopied, fixturesCopied, quickSaveCopied };
+  return { dir, romFile: rom, inheritedFrom: sourceId, ...copied };
 };
 
 export { provisionProfile };

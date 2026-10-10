@@ -1,5 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
-import { snesToRgba, TRANSPARENT } from '../../graphics/palette';
+import { itemAt } from '../../checked-read';
+import { TRANSPARENT } from '../../graphics/palette';
+import { writeColors } from './write-colors';
 import {
   ADDR_SPRITE_PALETTE_MAIN, ADDR_SPRITE_PALETTE_AUX1,
   ADDR_SPRITE_PALETTE_AUX3, ADDR_SWORD_PALETTE,
@@ -9,50 +11,38 @@ import type { RomData } from '../../rom/rom-types';
 import type { RGBA } from '../../graphics/palette';
 import type { SpritePalettes } from './receipt-palettes.type';
 
+const rowOf = (palettes: RGBA[][], row: number): RGBA[] => itemAt(palettes, row, 'Sprite palette row');
+
 const loadMainRows = (rom: RomData, palettes: RGBA[][]): void => {
   const mainSpr = rom.getWords(ADDR_SPRITE_PALETTE_MAIN, 120);
   for (let p = 0; p < 4; p++) {
-    for (let i = 0; i < 15; i++) {
-      palettes[p + 1][i + 1] = snesToRgba(mainSpr[p * 15 + i]);
-    }
+    writeColors(rowOf(palettes, p + 1), 1, mainSpr.slice(p * 15, p * 15 + 15));
   }
 };
 
 const loadAux1Rows = (rom: RomData, palettes: RGBA[][]): void => {
   const aux1 = rom.getWords(ADDR_SPRITE_PALETTE_AUX1, 168);
   for (const [sub, ai] of [[5, 0], [6, 7]] as const) {
-    for (let i = 0; i < 7; i++) {
-      palettes[sub][i + 1] = snesToRgba(aux1[ai * 7 + i]);
-    }
+    writeColors(rowOf(palettes, sub), 1, aux1.slice(ai * 7, ai * 7 + 7));
   }
-  for (let i = 0; i < 7; i++) {
-    palettes[6][i + 9] = snesToRgba(aux1[6 * 7 + i]);
-  }
+  writeColors(rowOf(palettes, 6), 9, aux1.slice(6 * 7, 6 * 7 + 7));
 };
 
 const loadSwordAndShieldColors = (rom: RomData, palettes: RGBA[][]): void => {
   const swordPal = rom.getWords(ADDR_SWORD_PALETTE, 12);
-  for (let i = 0; i < 3; i++) {
-    palettes[5][9 + i] = snesToRgba(swordPal[i]);
-  }
+  writeColors(rowOf(palettes, 5), 9, swordPal.slice(0, 3));
   const shieldPal = rom.getWords(ADDR_SHIELD_PALETTE, 12);
-  for (let i = 0; i < 4; i++) {
-    palettes[5][12 + i] = snesToRgba(shieldPal[i]);
-  }
+  writeColors(rowOf(palettes, 5), 12, shieldPal.slice(0, 4));
 };
 
 const loadAux3Row = (rom: RomData, palettes: RGBA[][]): void => {
   const aux3 = rom.getWords(ADDR_SPRITE_PALETTE_AUX3, 84);
-  for (let i = 0; i < 7; i++) {
-    palettes[0][i + 1] = snesToRgba(aux3[i]);
-  }
+  writeColors(rowOf(palettes, 0), 1, aux3.slice(0, 7));
 };
 
 const loadArmorRow = (rom: RomData, palettes: RGBA[][]): void => {
   const armorPal = rom.getWords(ADDR_ARMOR_PALETTE, 15);
-  for (let i = 0; i < 15; i++) {
-    palettes[7][i + 1] = snesToRgba(armorPal[i]);
-  }
+  writeColors(rowOf(palettes, 7), 1, armorPal.slice(0, 15));
 };
 
 const loadSpritePalettes = (rom: RomData): SpritePalettes => {

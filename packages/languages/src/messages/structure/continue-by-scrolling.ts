@@ -13,6 +13,7 @@ const continueByScrolling = (doc: BlockDoc, caret: Caret, ctx: StructureContext)
   const lines = flattenBlocks(doc);
   const lastAt = site.blockStart + site.linesInBlock - 1;
   const last = lines[lastAt];
+  if (last === undefined) throw new Error(`The block's last line ${String(lastAt)} does not exist`);
   const scrolled: DialogueLineView = {
     ...last,
     advance: { kind: 'scroll' },

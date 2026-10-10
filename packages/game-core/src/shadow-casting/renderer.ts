@@ -37,7 +37,7 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
   }
   const uniforms = getUniformLocations(gl, progs);
 
-  const quadBuffer = gl.createBuffer()!;
+  const quadBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(QUAD_STRIP), gl.STATIC_DRAW);
 
@@ -95,8 +95,8 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
     const lighting = screenData.lighting;
     const lights = computeLightUniforms(screenData.lights, gameCanvas);
     for (let i = 0; i < lights.numLights; i++) {
-      lights.positions[i * 3] -= state.viewOriginX;
-      lights.positions[i * 3 + 1] -= state.viewOriginY;
+      lights.positions[i * 3] = (lights.positions[i * 3] ?? 0) - state.viewOriginX;
+      lights.positions[i * 3 + 1] = (lights.positions[i * 3 + 1] ?? 0) - state.viewOriginY;
     }
 
     renderShadowPass(pipe, state, lighting, lights, time);

@@ -8,15 +8,16 @@ const compressStrings = (strings: string[], lang = 'us'): Uint8Array[] => {
   if (!info) throw new Error(`Unknown language: ${lang}`);
 
   const rev: DictionaryLookup = new Map();
-  for (let idx = 0; idx < info.dictionary.length; idx++) {
-    const word = info.dictionary[idx];
-    if (!rev.has(word[0])) rev.set(word[0], new Map());
-    rev.get(word[0])!.set(word, idx);
+  for (const [idx, word] of info.dictionary.entries()) {
+    const first = word.charAt(0);
+    const words = rev.get(first) ?? new Map<string, number>();
+    rev.set(first, words);
+    words.set(word, idx);
   }
 
   const a2i: AlphabetLookup = new Map();
-  for (let idx = 0; idx < info.alphabet.length; idx++) {
-    a2i.set(info.alphabet[idx], idx);
+  for (const [idx, char] of info.alphabet.entries()) {
+    a2i.set(char, idx);
   }
 
   return strings.map(s => {

@@ -39,4 +39,12 @@ interface LayerScheduler {
 
 type LiveVoice = { voice: Voice; fileIndex: number };
 
-export type { LayerContext, LayerScheduler, LayerActivity, SoundingVoice, LiveVoice };
+interface LiveActivityParams {
+  live: LiveVoice[];
+  fileNames: string[];
+  lastFileIndex: number | null;
+  nextEventInSeconds: number | null;
+  waitSeconds: number | null;
+}
+
+export type { LayerContext, LayerScheduler, LayerActivity, SoundingVoice, LiveVoice, LiveActivityParams };

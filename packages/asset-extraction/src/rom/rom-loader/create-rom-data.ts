@@ -10,7 +10,9 @@ const createRomData = (bytes: Buffer, language: RomLanguage, description: string
 
     getByte(ea: number): number {
       const offset = snesToLinear(ea);
-      return bytes[offset];
+      const value = bytes[offset];
+      if (value === undefined) throw new RangeError(`ROM read outside the image at SNES 0x${ea.toString(16)}`);
+      return value;
     },
 
     getWord(ea: number): number {
@@ -45,7 +47,7 @@ const createRomData = (bytes: Buffer, language: RomLanguage, description: string
     },
 
     getWords(addr: number, n: number): number[] {
-      const result: number[] = new Array(n);
+      const result = new Array<number>(n);
       let a = addr;
       for (let i = 0; i < n; i++) {
         result[i] = this.getWord(a);

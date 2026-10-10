@@ -24,9 +24,9 @@ const section = (title, list, topN = 15) => {
   if (byFile(list).length > topN) console.log(`  ... ${byFile(list).length - topN} more files`);
 };
 
-if (which === 'html' || which === 'all') section('R11  Raw HTML outside primitives (warn → error)', sel.html);
-if (which === 'structure' || which === 'all') section('R12  Component-structure violations (warn → error)', sel.structure, 40);
-if (which === 'tokens' || which === 'all') section('R13  Non-token colors in component CSS (warn → error)', sel.tokens);
+if (which === 'html' || which === 'all') section('R11  Raw HTML outside primitives (warn -> error)', sel.html);
+if (which === 'structure' || which === 'all') section('R12  Component-structure violations (warn -> error)', sel.structure, 40);
+if (which === 'tokens' || which === 'all') section('R13  Non-token colors in component CSS (warn -> error)', sel.tokens);
 
 if (which === 'all') {
   console.log(`\n── Totals ──  raw-HTML: ${sel.html.length}   structure: ${sel.structure.length}   tokens: ${sel.tokens.length}`);

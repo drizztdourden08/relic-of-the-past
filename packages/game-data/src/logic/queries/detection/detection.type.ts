@@ -26,4 +26,11 @@ interface ScreenMatchResult {
   progressTier?: number;
 }
 
-export type { ScreenLookup, ScreenMatchMethod, ScreenMatchResult, VariantGameState };
+interface IndoorQuery {
+  palaceIndex: number;
+  roomIndex: number;
+  whichEntrance?: number;
+  variantState?: VariantGameState;
+}
+
+export type { IndoorQuery, ScreenLookup, ScreenMatchMethod, ScreenMatchResult, VariantGameState };

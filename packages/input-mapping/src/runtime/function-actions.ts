@@ -2,6 +2,7 @@
 import type { FunctionMapping, FunctionAction } from '@rotp/features';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@rotp/features';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
+import { axisPressed } from './axis-pressed';
 import type { AllowedDevices } from './profile-devices';
 import { deviceKeyFor, scopedEntries, setScoped } from './device-scoped-map';
 import type { DeviceScopedMap } from './device-scoped-map';
@@ -95,15 +96,15 @@ class FunctionActionEngine {
   private processDeviceState(deviceKey: string, buttons: readonly boolean[], axes: readonly number[]): void {
     for (const [btnIndex, action] of scopedEntries(this.functionGamepadButtonMap, deviceKey)) {
       if (btnIndex >= buttons.length) continue;
-      this.edge(buttons[btnIndex], `${deviceKey}:btn:${btnIndex}`, action);
+      this.edge(buttons[btnIndex] ?? false, `${deviceKey}:btn:${btnIndex}`, action);
     }
     for (const [axisKey, action] of scopedEntries(this.functionGamepadAxisMap, deviceKey)) {
       const [axisStr, dir] = axisKey.split(':');
-      const axisIndex = parseInt(axisStr, 10);
+      const axisIndex = parseInt(axisStr ?? '', 10);
       if (axisIndex >= axes.length) continue;
       const val = axes[axisIndex];
       const threshold = resolveAxisPressThreshold(axisIndex, deviceKey);
-      const active = (dir === '+' && val > threshold) || (dir === '-' && val < -threshold);
+      const active = axisPressed(val, dir, threshold);
       this.edge(active, `${deviceKey}:axis:${axisKey}`, action);
     }
   }

@@ -9,6 +9,7 @@ import { groupsRepo } from '../db/groups-repo';
 import { grantsRepo } from '../db/grants-repo';
 import { usersRepo } from '../db/users-repo';
 import { now } from '../db/firestore';
+import { routeParam } from '../router';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
 
@@ -22,7 +23,7 @@ const adminSetGroups = (site: SiteConfig): Route => ({
   handler: async ({ req, res, params }) => {
     const admin = await requireAdmin(req, site);
     const { groupIds } = parseBody(setGroupsSchema, req.body);
-    const user = await usersRepo.get(params.userId);
+    const user = await usersRepo.get(routeParam(params, 'userId'));
     if (!user) throw notFound('No such user.');
     const known = (await groupsRepo.all(site.defaultGroup)).map((group) => group.id);
     const unknown = groupIds.find((id) => !known.includes(id));

@@ -9,26 +9,36 @@ import {
 
 const resolverOf = (charset: DialogueCharset): Resolver => ({
   drawn: alphabetChars(charset.alphabet),
-  tokens: new Map(charset.extras.map((extra) => [extra.char, charset.alphabet[extra.slot]])),
+  tokens: new Map(charset.extras.flatMap((extra) => {
+    const drawn = charset.alphabet[extra.slot];
+    return drawn === undefined ? [] : [[extra.char, drawn] as const];
+  })),
 });
 
 const baseFormOf = (ch: string): string => ch.normalize('NFKD').replace(COMBINING, '');
+
+const expansionOf = (ch: string): string | undefined => {
+  const typographic = TYPOGRAPHIC.get(ch.codePointAt(0) ?? 0);
+  if (typographic !== undefined) return typographic;
+  const base = baseFormOf(ch);
+  if (base !== '' && base !== ch) return base;
+  return LETTERS.get(ch) ?? NEAREST.get(ch);
+};
+
+const unexpandedOf = (ch: string, resolver: Resolver): string => {
+  if (SPACE.test(ch)) return resolver.drawn.has(' ') ? ' ' : '';
+  if (INVISIBLE.test(ch)) return '';
+  return UNKNOWN;
+};
 
 const resolveChar = (ch: string, resolver: Resolver, depth: number): string => {
   if (isHighlightMarker(ch) || resolver.drawn.has(ch)) return ch;
   const token = resolver.tokens.get(ch);
   if (token !== undefined) return token;
-  const again = (text: string): string =>
-    (depth >= MAX_DEPTH ? UNKNOWN : [...text].map((part) => resolveChar(part, resolver, depth + 1)).join(''));
-  const typographic = TYPOGRAPHIC.get(ch.codePointAt(0) ?? 0);
-  if (typographic !== undefined) return again(typographic);
-  const base = baseFormOf(ch);
-  if (base !== '' && base !== ch) return again(base);
-  const letters = LETTERS.get(ch) ?? NEAREST.get(ch);
-  if (letters !== undefined) return again(letters);
-  if (SPACE.test(ch)) return resolver.drawn.has(' ') ? ' ' : '';
-  if (INVISIBLE.test(ch)) return '';
-  return UNKNOWN;
+  const expansion = expansionOf(ch);
+  if (expansion === undefined) return unexpandedOf(ch, resolver);
+  if (depth >= MAX_DEPTH) return UNKNOWN;
+  return [...expansion].map((part) => resolveChar(part, resolver, depth + 1)).join('');
 };
 
 const toDialogueText = (text: string, charset: DialogueCharset): string => {

@@ -17,7 +17,7 @@ const buildCounterRows = (): Set<number> => {
 
 const readRow = (text: Buffer, offset: number): number[] | null => {
   if (text[offset] === EMPTY_ROW) return null;
-  const count = (text[offset + 1] + 1) >> 1;
+  const count = ((text[offset + 1] ?? 0) + 1) >> 1;
   return Array.from(text.subarray(offset + 2, offset + 2 + count));
 };
 
@@ -31,8 +31,8 @@ const decodeCredits = (rom: RomData): DecodedLine[] => {
   const lines: DecodedLine[] = [];
   let upperHalfRow: number | null = null;
 
-  for (let row = 0; row < ROW_COUNT; row++) {
-    const chars = readRow(text, offsets[row]);
+  for (const [row, offset] of offsets.entries()) {
+    const chars = readRow(text, offset);
     if (!chars) {
       upperHalfRow = null;
       continue;

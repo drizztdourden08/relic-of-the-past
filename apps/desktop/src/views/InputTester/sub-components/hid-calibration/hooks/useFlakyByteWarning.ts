@@ -6,8 +6,8 @@ import type { FlakyByte } from '../flaky-byte-detect';
 import { LIVE_REFRESH_MS } from './useFlakyByteWarning.constants';
 
 const useFlakyByteWarning = (
-  latestBytesRef: React.MutableRefObject<Uint8Array>,
-  excludedRef: React.MutableRefObject<Set<number>>,
+  latestBytesRef: React.RefObject<Uint8Array>,
+  excludedRef: React.RefObject<Set<number>>,
   syncExcludedState: (s: Set<number>) => void,
 ) => {
   const [open, setOpen] = useState(false);

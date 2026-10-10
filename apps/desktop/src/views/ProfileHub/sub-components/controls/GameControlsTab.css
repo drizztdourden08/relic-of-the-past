@@ -1,0 +1,64 @@
+/* @layer renderer-components @kind style */
+.controls-settings__used-inputs {
+  flex-shrink: 0;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.controls-settings__used-inputs-header {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--c-text-dim);
+  margin-bottom: var(--space-sm);
+}
+
+.controls-settings__used-inputs-list {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.controls-settings__used-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--c-text);
+}
+
+.controls-settings__used-input-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.controls-settings__used-input-dot--active {
+  background: var(--c-secondary-bright);
+  box-shadow: 0 0 4px var(--c-secondary);
+}
+
+.controls-settings__used-input-dot--disconnected {
+  background: var(--c-danger);
+  box-shadow: 0 0 4px var(--c-danger);
+}
+
+.controls-settings__used-input-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+.controls-settings__used-input-label--dim {
+  color: var(--c-text-muted);
+}
+
+@media (height <= 520px) {
+  .controls-settings__used-inputs {
+    display: none;
+  }
+}

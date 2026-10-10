@@ -11,14 +11,14 @@ const oneLine = (text) => {
 
 const run = async ({ positional }) => {
   const [name, ...promptParts] = positional;
-  if (!name) throw new Error('Usage: pnpm wtnote <name> "<the chat prompt>"');
+  if (!name) throw new Error('Usage: pnpm wt note <name> "<the chat prompt>"');
 
   const prompt = oneLine(promptParts.join(' '));
   if (!prompt) throw new Error('Nothing to record. Pass the prompt as the second argument.');
 
   await updateRegistry((registry) => {
     const record = findRecord(registry, name);
-    if (!record) throw new Error(`No worktree named "${name}". Run: pnpm wtlist`);
+    if (!record) throw new Error(`No worktree named "${name}". Run: pnpm wt list`);
     record.notes.push({ at: new Date().toISOString(), session: currentHolder(), prompt });
     record.lastUsedAt = new Date().toISOString();
   });
@@ -28,7 +28,7 @@ const run = async ({ positional }) => {
 
 const command = {
   summary: 'Record the prompt this turn worked on',
-  usage: 'pnpm wtnote <name> "<the chat prompt>"',
+  usage: 'pnpm wt note <name> "<the chat prompt>"',
   run,
 };
 

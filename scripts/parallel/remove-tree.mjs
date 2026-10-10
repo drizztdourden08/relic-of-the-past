@@ -2,54 +2,60 @@
 import { readdirSync, lstatSync, unlinkSync, rmdirSync, rmSync, chmodSync } from 'node:fs';
 import { join } from 'node:path';
 
-const forceUnlink = (path) => {
+const attempt = (action) => {
   try {
-    unlinkSync(path);
+    action();
+    return true;
   } catch {
-    try {
-      chmodSync(path, 0o666);
-      unlinkSync(path);
-    } catch {
-      rmSync(path, { force: true });
-    }
+    return false;
   }
 };
 
-const removeTreeSafely = (dir) => {
-  let links = 0;
-  let entries;
+const readOrNull = (read) => {
   try {
-    entries = readdirSync(dir, { withFileTypes: true });
+    return read();
   } catch {
+    return null;
+  }
+};
+
+const forceUnlink = (path) => {
+  if (attempt(() => unlinkSync(path))) return;
+  const unlockedAndRemoved = attempt(() => {
+    chmodSync(path, 0o666);
+    unlinkSync(path);
+  });
+  if (!unlockedAndRemoved) rmSync(path, { force: true });
+};
+
+const removeLinkWithoutFollowing = (full) => {
+  if (!attempt(() => unlinkSync(full))) attempt(() => rmdirSync(full));
+};
+
+const removeEntry = (full) => {
+  const stat = readOrNull(() => lstatSync(full));
+  if (stat === null) return 0;
+  if (stat.isSymbolicLink()) {
+    removeLinkWithoutFollowing(full);
+    return 1;
+  }
+  if (stat.isDirectory()) {
+    const links = removeTreeSafely(full);
+    attempt(() => rmdirSync(full));
     return links;
   }
+  forceUnlink(full);
+  return 0;
+};
 
-  for (const entry of entries) {
-    const full = join(dir, entry.name);
-    let stat;
-    try {
-      stat = lstatSync(full);
-    } catch {
-      continue;
-    }
-    if (stat.isSymbolicLink()) {
-      try {
-        unlinkSync(full);
-      } catch {
-        try { rmdirSync(full); } catch { }
-      }
-      links += 1;
-      continue;
-    }
-    if (stat.isDirectory()) {
-      links += removeTreeSafely(full);
-      try { rmdirSync(full); } catch { }
-      continue;
-    }
-    forceUnlink(full);
-  }
+const removeTreeSafely = (dir) => {
+  const entries = readOrNull(() => readdirSync(dir, { withFileTypes: true }));
+  if (entries === null) return 0;
 
-  try { rmdirSync(dir); } catch { }
+  let links = 0;
+  for (const entry of entries) links += removeEntry(join(dir, entry.name));
+
+  attempt(() => rmdirSync(dir));
   return links;
 };
 

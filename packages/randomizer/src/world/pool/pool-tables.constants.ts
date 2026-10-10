@@ -24,7 +24,7 @@ const BOTTLE_COUNT = 4;
 
 const SHIELD_ITEMS: readonly ItemId[] = Array<ItemId>(3).fill(ITEM.progressiveShield);
 const ARMOR_ITEMS: readonly ItemId[] = Array<ItemId>(2).fill(ITEM.progressiveMail);
-const MAGIC_ITEMS: readonly ItemId[] = [ITEM.magicUpgradeHalf, ITEM.rupees300];
+const MAGIC_ITEMS: readonly [ItemId, ItemId] = [ITEM.magicUpgradeHalf, ITEM.rupees300];
 const BOW_ITEMS: readonly ItemId[] = Array<ItemId>(2).fill(ITEM.progressiveBow);
 
 const SWORD_ITEMS: readonly ItemId[] = Array<ItemId>(4).fill(ITEM.progressiveSword);

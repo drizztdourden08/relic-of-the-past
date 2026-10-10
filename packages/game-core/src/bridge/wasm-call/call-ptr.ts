@@ -5,7 +5,7 @@ import type { CallArgs } from './wasm-call.type';
 
 const callPtr = <T>(exportName: string, fromPtr: (mod: EmscriptenModule, ptr: number) => T | null, call?: CallArgs): T | null =>
   callWhenRunning<T | null>(null, (mod) => {
-    const ptr = mod.ccall(exportName, 'number', call?.argTypes ?? [], call?.args ?? []) as number;
+    const ptr = mod.ccall(exportName, 'number', call?.argTypes ?? [], call?.args ?? []);
     if (!ptr) return null;
     return fromPtr(mod, ptr);
   });

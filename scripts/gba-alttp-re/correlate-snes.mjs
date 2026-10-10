@@ -20,28 +20,37 @@ const gba = readFileSync(gbaPath);
 
 const read24 = (buffer, offset) => buffer[offset] | (buffer[offset + 1] << 8) | (buffer[offset + 2] << 16);
 
+const readWord = (buffer, offset) => buffer[offset] | (buffer[offset + 1] << 8);
+
+const skipDoors = (buffer, from) => {
+  let cursor = from;
+  while (cursor + 1 < buffer.length) {
+    const door = readWord(buffer, cursor);
+    cursor += 2;
+    if (door === 0xffff) break;
+  }
+  return cursor;
+};
+
+const skipLayer = (buffer, from) => {
+  let cursor = from;
+  while (cursor + 1 < buffer.length) {
+    const word = readWord(buffer, cursor);
+    cursor += 2;
+    if (word === 0xffff) break;
+    if (word === 0xfff0) return skipDoors(buffer, cursor);
+    cursor += 1;
+  }
+  return cursor;
+};
+
 const findRoomSpan = (roomId) => {
   if (roomId < 0 || roomId >= 320) throw new Error('SNES room must be in the range 0..319');
   const pointerOffset = snesAddressToOffset(0x1f8000 + roomId * 3);
   const roomAddress = read24(snes, pointerOffset);
   const start = snesAddressToOffset(roomAddress);
   let cursor = start + 2;
-  for (let layer = 0; layer < 3; layer++) {
-    while (cursor + 1 < snes.length) {
-      const word = snes[cursor] | (snes[cursor + 1] << 8);
-      cursor += 2;
-      if (word === 0xffff) break;
-      if (word === 0xfff0) {
-        while (cursor + 1 < snes.length) {
-          const door = snes[cursor] | (snes[cursor + 1] << 8);
-          cursor += 2;
-          if (door === 0xffff) break;
-        }
-        break;
-      }
-      cursor += 1;
-    }
-  }
+  for (let layer = 0; layer < 3; layer++) cursor = skipLayer(snes, cursor);
   return { start, length: cursor - start, roomAddress };
 };
 

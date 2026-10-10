@@ -1,20 +1,17 @@
 /* @layer renderer-components @kind logic */
-import { GRID_SIZE } from '@rotp/navigation';
 import type { ReachState } from '@rotp/game-core';
+import type { GridPos } from '../navigation-overlay.type';
+import { bodyCells } from './body-cells';
+import { inGrid2x2 } from './in-grid-2x2';
 import { isTraversalDirCompatible } from './is-traversal-dir-compatible';
 import { LEDGE_STATE_MIN, REACH_BLOCKED } from './pathfinding.constants';
+import type { StepDir } from './pathfinding.type';
 
-const isValidMove2x2 = (nr: number, nc: number, dr: number, dc: number, reachable: ReachState[][]): boolean => {
-  if (nr < 0 || nr + 1 >= GRID_SIZE || nc < 0 || nc + 1 >= GRID_SIZE) return false;
-  const positions: [number, number][] = [[nr, nc], [nr, nc + 1], [nr + 1, nc], [nr + 1, nc + 1]];
-  for (const [r, c] of positions) {
-    const state = reachable[r][c];
-    if (state === REACH_BLOCKED) return false;
-    if (state >= LEDGE_STATE_MIN) {
-      if (!isTraversalDirCompatible(state, dr, dc)) return false;
-    }
-  }
-  return true;
+const isValidMove2x2 = (next: GridPos, dir: StepDir, reachable: ReachState[][]): boolean => {
+  const [dr, dc] = dir;
+  if (!inGrid2x2(next.row, next.col)) return false;
+  return bodyCells(reachable, next.row, next.col).every((cell) =>
+    cell === undefined || (cell !== REACH_BLOCKED && (cell < LEDGE_STATE_MIN || isTraversalDirCompatible(cell, dr, dc))));
 };
 
 export { isValidMove2x2 };

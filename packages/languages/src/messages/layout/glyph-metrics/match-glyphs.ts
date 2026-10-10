@@ -4,9 +4,10 @@ import type { GlyphRun } from './glyph-metrics.type';
 import { glyphIndexOf } from './glyph-index-of';
 
 const unmatchedAt = (text: string, at: number): string => {
-  if (text[at] !== '[') return text[at];
+  const ch = text.charAt(at);
+  if (ch !== '[') return ch;
   const closeAt = text.indexOf(']', at);
-  return closeAt < 0 ? text[at] : text.slice(at, closeAt + 1);
+  return closeAt < 0 ? ch : text.slice(at, closeAt + 1);
 };
 
 const matchGlyphs = (text: string, metrics: GlyphMetrics): GlyphRun => {

@@ -15,7 +15,7 @@ const channelSlices = (decoded: AudioBuffer, from: number, to: number): Float32A
   const slices: Float32Array<ArrayBuffer>[] = [];
   for (let channel = 0; channel < OPUZ_CHANNELS; channel += 1) {
     const source = decoded.getChannelData(Math.min(channel, decoded.numberOfChannels - 1));
-    slices.push(source.subarray(from, to) as Float32Array<ArrayBuffer>);
+    slices.push(source.subarray(from, to));
   }
   return slices;
 };
@@ -28,18 +28,24 @@ const decodeRange = async (range: OpuzRange): Promise<Float32Array<ArrayBuffer>[
   return channelSlices(decoded, from, Math.min(from + samples, decoded.length));
 };
 
+const partLength = (part: readonly Float32Array[]): number => {
+  const [first] = part;
+  if (first === undefined) throw new Error('An .opuz range decoded to no channels');
+  return first.length;
+};
+
 const decodeOpuz = async (ctx: BaseAudioContext, bytes: Uint8Array): Promise<DecodedAudio> => {
   const { ranges, loopRange } = parseOpuz(bytes);
   const parts = await Promise.all(ranges.map((range) => decodeRange(range)));
-  const lengths = parts.map((part) => part[0].length);
+  const lengths = parts.map(partLength);
   const total = lengths.reduce((sum, n) => sum + n, 0);
   if (total === 0) throw new Error('Unusable .opuz file: its packets decoded to no audio');
 
   const buffer = ctx.createBuffer(OPUZ_CHANNELS, total, OPUZ_SAMPLE_RATE);
   let at = 0;
-  parts.forEach((part, i) => {
+  parts.forEach((part) => {
     part.forEach((data, channel) => buffer.copyToChannel(data, channel, at));
-    at += lengths[i];
+    at += partLength(part);
   });
 
   const loopSample = loopRange === null

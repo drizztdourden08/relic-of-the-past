@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { buildDisplayContext, resolveBrandLogoKey, recallControllerSdlType } from '@rotp/input-mapping';
-import { FAMILY_ICON_MAP } from './controls-settings.constants';
+import { FAMILY_ICON_MAP, GENERIC_CONTROLLER_ICON } from './controls-settings.constants';
 import { findLiveDevice } from './live-device';
 import type { LiveFamilyIconParams } from './controls-settings.type';
 
@@ -11,7 +11,7 @@ const resolveLiveFamilyIcon = (params: LiveFamilyIconParams): string => {
   const family = sdlType
     ? (resolveBrandLogoKey(buildDisplayContext({ sdlType })) || 'generic')
     : (liveDevice?.deviceFamily ?? 'generic');
-  return FAMILY_ICON_MAP[family] ?? FAMILY_ICON_MAP.generic;
+  return FAMILY_ICON_MAP[family] ?? GENERIC_CONTROLLER_ICON;
 };
 
 export { resolveLiveFamilyIcon };

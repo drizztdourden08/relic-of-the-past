@@ -20,14 +20,23 @@ const nameKeyFor = (saveIndex: number, base: string, value: number, owned: boole
   return { kind: 'item', recordId: base, tier: 1 };
 };
 
-const buildInventoryCell = (index: number, items: readonly number[]): ItemCell => {
-  const hudItem = index + 1;
+const inventorySlot = (index: number): { saveIndex: number; base: string } => {
   const saveIndex = NEW_STYLE_SAVE_SLOTS[index];
   const base = BASE_RECORDS[index];
+  if (saveIndex === undefined || base === undefined) throw new Error(`no inventory slot at cell ${index}`);
+  return { saveIndex, base };
+};
+
+const ownedRecord = (saveIndex: number, value: number, base: string): string =>
+  VALUE_RECORDS[saveIndex]?.[value] ?? base;
+
+const buildInventoryCell = (index: number, items: readonly number[]): ItemCell => {
+  const hudItem = index + 1;
+  const { saveIndex, base } = inventorySlot(index);
   const value = items[saveIndex] ?? 0;
   const split = saveIndex === SPLIT_SAVE_INDEX;
   const owned = split ? isSplitCellOwned(hudItem, value) : value > 0;
-  const record = split ? base : (owned ? (VALUE_RECORDS[saveIndex]?.[value] ?? base) : base);
+  const record = split || !owned ? base : ownedRecord(saveIndex, value, base);
   return {
     hudItem,
     saveIndex,

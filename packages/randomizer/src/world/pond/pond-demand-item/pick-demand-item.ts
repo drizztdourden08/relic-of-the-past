@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../../checked-access';
 import { WINDOW_SHARE } from './pond-demand-item.constants';
 import type { Rng } from '../../../rng';
 import type { ItemKey } from '../../item-ids';
@@ -21,9 +22,9 @@ const pickDemandItem = (
   if (open.length === 0) {
     const nearest = nearestUnused(candidates, centre, used);
     if (nearest !== undefined) return nearest;
-    return candidates[low + (window === 1 ? 0 : rng.int(window))];
+    return itemAt(candidates, low + (window === 1 ? 0 : rng.int(window)));
   }
-  return open[open.length === 1 ? 0 : rng.int(open.length)];
+  return itemAt(open, open.length === 1 ? 0 : rng.int(open.length));
 };
 
 export { pickDemandItem };

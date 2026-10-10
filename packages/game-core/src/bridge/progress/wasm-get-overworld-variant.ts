@@ -8,14 +8,14 @@ const wasmGetOverworldVariant = (screenIndex: number): OverworldVariantInfo | nu
   callWhenRunning<OverworldVariantInfo | null>(null, (mod) => {
     const heap = mod.HEAPU8;
 
-    const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+    const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []);
     if (!progPtr) return null;
     const progressIndicator = readU8(heap, progPtr);
 
-    const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []) as number;
+    const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []);
     if (!owPtr) return null;
     const screenEventFlags = readU8(heap, owPtr + (screenIndex & OW_SCREEN_INDEX_MASK));
-    const eventOverlayActive = !!(screenEventFlags & EVENT_OVERLAY_BIT);
+    const eventOverlayActive = Boolean(screenEventFlags & EVENT_OVERLAY_BIT);
 
     return {
       progressIndicator,

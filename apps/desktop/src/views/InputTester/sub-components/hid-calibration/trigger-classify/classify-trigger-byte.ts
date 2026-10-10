@@ -7,7 +7,8 @@ const isSingleBit = (v: number): boolean => v !== 0 && (v & (v - 1)) === 0;
 const uniqueValuesAt = (frames: readonly Uint8Array[], idx: number): Set<number> => {
   const seen = new Set<number>();
   for (const f of frames) {
-    if (idx < f.length) seen.add(f[idx]);
+    const value = f[idx];
+    if (value !== undefined) seen.add(value);
   }
   return seen;
 };
@@ -27,7 +28,7 @@ const singleBitAgainstRest = (uniques: Set<number>, rest: number): number | null
 const classifyTriggerByte = (frames: readonly Uint8Array[], baseline: Uint8Array, idx: number): TriggerClassification => {
   const uniques = uniqueValuesAt(frames, idx);
   const uniqueCount = uniques.size;
-  const rest = idx < baseline.length ? baseline[idx] : 0;
+  const rest = baseline[idx] ?? 0;
   const bitMask = singleBitAgainstRest(uniques, rest);
 
   if (bitMask !== null && bitMask !== 0 && uniqueCount <= DIGITAL_MAX_UNIQUE) {

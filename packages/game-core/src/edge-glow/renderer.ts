@@ -33,7 +33,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
   }
   const uniforms = getUniformLocations(gl, progs);
 
-  const quadBuffer = gl.createBuffer()!;
+  const quadBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(QUAD_TRIANGLES), gl.STATIC_DRAW);
 
@@ -95,7 +95,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
       renderPassthrough(pipe, state);
       return;
     }
-    renderMirrorBlur(pipe, state, mirrorSrcTexture, !!cleanFrame);
+    renderMirrorBlur(pipe, state, mirrorSrcTexture, Boolean(cleanFrame));
     renderComposite(pipe, state, time / 1000.0);
   };
 

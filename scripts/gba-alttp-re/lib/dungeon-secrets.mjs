@@ -9,9 +9,9 @@ const decodeDungeonSecretRecord = (position, type) => {
   };
 };
 
-const parseDungeonSecretList = (rom, offset, maxRecords = 64) => {
-  if (offset < 0 || offset >= rom.length) throw new Error(`Secret list offset is out of range: ${offset}`);
-  const start = offset;
+const parseDungeonSecretList = (rom, start, maxRecords = 64) => {
+  if (start < 0 || start >= rom.length) throw new Error(`Secret list offset is out of range: ${start}`);
+  let offset = start;
   const records = [];
 
   while (offset + 1 < rom.length && rom.readUInt16LE(offset) !== 0xffff) {

@@ -11,7 +11,7 @@ const paletteFromWords = (words: Uint8Array): SheetPalette | null => {
     const colors: number[] = [];
     for (let i = 0; i < COLORS_PER_OUTFIT; i++) {
       const at = (slot * COLORS_PER_OUTFIT + i) * BYTES_PER_COLOR_WORD;
-      colors.push(words[at] | (words[at + 1] << 8));
+      colors.push((words[at] ?? 0) | ((words[at + 1] ?? 0) << 8));
     }
     outfits[id] = colors;
   });

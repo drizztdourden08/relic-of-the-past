@@ -16,18 +16,18 @@ const renderOriginalSound = (
       'WasmRenderSoundPreview', 'number',
       ['number', 'number', 'number', 'number'],
       [PREVIEW_PORT[target], soundId, FIND_BANK_FOR_SOUND, frames],
-    ) as number;
+    );
     if (sampleFrames <= 0) return null;
 
-    const ptr = mod.ccall('WasmSoundPreviewBuffer', 'number', [], []) as number;
+    const ptr = mod.ccall('WasmSoundPreviewBuffer', 'number', [], []);
     if (!ptr) return null;
 
     const view = new Int16Array(mod.HEAPU8.buffer, ptr, sampleFrames * STEREO_CHANNELS);
     const independentCopy = new Int16Array(view);
     return {
       samples: independentCopy,
-      sampleRate: mod.ccall('WasmSoundPreviewRate', 'number', [], []) as number,
-      bank: mod.ccall('WasmSoundPreviewBank', 'number', [], []) as number,
+      sampleRate: mod.ccall('WasmSoundPreviewRate', 'number', [], []),
+      bank: mod.ccall('WasmSoundPreviewBank', 'number', [], []),
     };
   } catch {
     return null;

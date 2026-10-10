@@ -4,7 +4,6 @@ import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../game';
-import type { ReachState } from '@rotp/game-core';
 import { buildDrawContext } from './draw/draw-context';
 import { drawReachableDots } from './draw/draw-dots';
 import { drawPathPreview } from './draw/draw-path';
@@ -46,7 +45,7 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
 
     const draw = () => {
       const vp = wasmGetViewportInfo();
-      if (!vp || !vp.isGameplay) {
+      if (!vp?.isGameplay) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         rafRef.current = requestAnimationFrame(draw);
         return;
@@ -58,7 +57,7 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
       const drawResults = results.length > 0 ? results : [result];
 
       drawReachableDots(dc, drawResults, layer1ReachableOverride);
-      drawPathPreview(dc, mouseStateRef.current, result, vp, setLockedPath);
+      drawPathPreview(dc, { mouseState: mouseStateRef.current, result, vp, setLockedPath });
       drawCliffArrows(dc, drawResults);
       drawStairArrows(dc, drawResults);
       drawConnections(dc, connections);

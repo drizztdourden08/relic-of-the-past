@@ -6,6 +6,8 @@ import { keyOf } from './key-of';
 import { isValid2x2 } from './is-valid-2x2';
 import { isValidMove2x2 } from './is-valid-move-2x2';
 import { canLeave2x2 } from './can-leave-2x2';
+import { popLowest } from './pop-lowest';
+import { rebuildPath } from './rebuild-path';
 import { PATH_DIRS } from './pathfinding.constants';
 
 const findPath2x2AStar = (start: GridPos, goal: GridPos, reachable: ReachState[][]): GridPos[] | null => {
@@ -17,48 +19,28 @@ const findPath2x2AStar = (start: GridPos, goal: GridPos, reachable: ReachState[]
   const fScore = new Map<string, number>([[keyOf(start), manhattan(start, goal)]]);
   const closed = new Set<string>();
 
-  while (open.length > 0) {
-    let bestIdx = 0;
-    let bestScore = Number.POSITIVE_INFINITY;
-    for (let i = 0; i < open.length; i++) {
-      const s = fScore.get(keyOf(open[i])) ?? Number.POSITIVE_INFINITY;
-      if (s < bestScore) { bestScore = s; bestIdx = i; }
-    }
+  const relax = (currentKey: string, next: GridPos): void => {
+    const nextKey = keyOf(next);
+    if (closed.has(nextKey)) return;
+    const tentativeG = (gScore.get(currentKey) ?? Number.POSITIVE_INFINITY) + 1;
+    if (tentativeG >= (gScore.get(nextKey) ?? Number.POSITIVE_INFINITY)) return;
+    cameFrom.set(nextKey, currentKey);
+    gScore.set(nextKey, tentativeG);
+    fScore.set(nextKey, tentativeG + manhattan(next, goal));
+    if (!open.some(p => p.row === next.row && p.col === next.col)) open.push(next);
+  };
+  const scoreOf = (pos: GridPos): number => fScore.get(keyOf(pos)) ?? Number.POSITIVE_INFINITY;
 
-    const current = open.splice(bestIdx, 1)[0];
+  let current = popLowest(open, scoreOf);
+  while (current !== undefined) {
     const currentKey = keyOf(current);
-    if (current.row === goal.row && current.col === goal.col) {
-      const path: GridPos[] = [current];
-      let walk = currentKey;
-      while (cameFrom.has(walk)) {
-        const prev = cameFrom.get(walk)!;
-        const [r, c] = prev.split(',').map(Number);
-        path.push({ row: r, col: c });
-        walk = prev;
-      }
-      path.reverse();
-      return path;
-    }
-
+    if (current.row === goal.row && current.col === goal.col) return rebuildPath(current, currentKey, cameFrom);
     closed.add(currentKey);
-
-    for (const [dr, dc] of PATH_DIRS) {
-      const nr = current.row + dr;
-      const nc = current.col + dc;
-      if (!canLeave2x2(current.row, current.col, dr, dc, reachable)) continue;
-      if (!isValidMove2x2(nr, nc, dr, dc, reachable)) continue;
-
-      const nextKey = `${nr},${nc}`;
-      if (closed.has(nextKey)) continue;
-
-      const tentativeG = (gScore.get(currentKey) ?? Number.POSITIVE_INFINITY) + 1;
-      if (tentativeG >= (gScore.get(nextKey) ?? Number.POSITIVE_INFINITY)) continue;
-
-      cameFrom.set(nextKey, currentKey);
-      gScore.set(nextKey, tentativeG);
-      fScore.set(nextKey, tentativeG + manhattan({ row: nr, col: nc }, goal));
-      if (!open.some(p => p.row === nr && p.col === nc)) open.push({ row: nr, col: nc });
+    for (const dir of PATH_DIRS) {
+      const next: GridPos = { row: current.row + dir[0], col: current.col + dir[1] };
+      if (canLeave2x2(current, dir, reachable) && isValidMove2x2(next, dir, reachable)) relax(currentKey, next);
     }
+    current = popLowest(open, scoreOf);
   }
   return null;
 };

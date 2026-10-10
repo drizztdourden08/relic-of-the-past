@@ -5,9 +5,9 @@ import { SHEET_BYTES, COLORS_PER_OUTFIT, OUTFIT_IDS, STOCK_GLOVES } from '@rotp/
 import { isZspr } from './is-zspr';
 import { BYTES_PER_WORD, GLOVE_BLOCK, HEADER_BYTES, OUTFIT_BLOCK, ZSPR_HEADER } from './zspr.constants';
 
-const word = (b: Uint8Array, i: number): number => b[i] | (b[i + 1] << 8);
+const word = (b: Uint8Array, i: number): number => (b[i] ?? 0) | ((b[i + 1] ?? 0) << 8);
 const dword = (b: Uint8Array, i: number): number =>
-  b[i] | (b[i + 1] << 8) | (b[i + 2] << 16) | (b[i + 3] << 24);
+  (b[i] ?? 0) | ((b[i + 1] ?? 0) << 8) | ((b[i + 2] ?? 0) << 16) | ((b[i + 3] ?? 0) << 24);
 
 const readUtf16 = (b: Uint8Array, at: number): ReadString => {
   const units: number[] = [];

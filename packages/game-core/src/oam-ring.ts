@@ -9,10 +9,10 @@ const s16 = (v: number): number => (v >= 0x8000 ? v - 0x10000 : v);
 const readOamRing = (): RingFrame[] | null => {
   const mod = getModule();
   if (!mod || getGameState().status !== 'running') return null;
-  const headPtr = mod.ccall('WasmGetOamRing', 'number', [], []) as number;
+  const headPtr = mod.ccall('WasmGetOamRing', 'number', [], []);
   const developerToolsOn = headPtr !== 0;
   if (!developerToolsOn) return null;
-  const base = mod.ccall('WasmGetOamRingBuffer', 'number', [], []) as number;
+  const base = mod.ccall('WasmGetOamRingBuffer', 'number', [], []);
   if (!base) return null;
 
   const heap = mod.HEAPU8;

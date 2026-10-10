@@ -4,9 +4,10 @@ import { kDecodeTab } from '../drop-tables';
 import { decode3bppTile } from '../receipt-decoder/decode-3bpp-tile';
 import type { ReceiptSheets } from '../receipt-decoder/receipt-decoder.type';
 import type { SpritePalettes } from '../receipt-palettes';
+import { paletteRow } from '../receipt-palettes';
 
 const extractDropBigkey = (paletteIdx: number, spritePalettes: SpritePalettes, receiptSheets: ReceiptSheets): ImageBuffer => {
-  const palette = spritePalettes.palettes[paletteIdx];
+  const palette = paletteRow(spritePalettes, paletteIdx);
   const combined = Buffer.concat([receiptSheets.base, receiptSheets.sheet5B]);
   const offset = kDecodeTab[0x22];
   const img = new ImageBuffer(16, 16);

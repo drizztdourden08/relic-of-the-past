@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import type { Storage } from '@rotp/hub-server';
 
 const hashObject = async (storage: Storage, key: string): Promise<string> => {
-  const reader = (await storage.readStream(key)).getReader();
+  const reader: ReadableStreamDefaultReader<unknown> = (await storage.readStream(key)).getReader();
   const hash = createHash('sha256');
   for (;;) {
     const { done, value } = await reader.read();

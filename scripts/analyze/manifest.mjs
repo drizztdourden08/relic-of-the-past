@@ -4,17 +4,29 @@ import path from 'path';
 
 const stripJsonc = (s) => s.split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
 
+const REGEX_SPECIALS = '.+?^${}()|[]\\';
+
+const starToken = (glob, i) => {
+  if (glob[i + 1] !== '*') return { text: '[^/]*', next: i + 1 };
+  return { text: '.*', next: glob[i + 2] === '/' ? i + 3 : i + 2 };
+};
+
+const globToken = (glob, i) => {
+  const c = glob[i];
+  if (c === '*') return starToken(glob, i);
+  if (REGEX_SPECIALS.includes(c)) return { text: `\\${c}`, next: i + 1 };
+  return { text: c, next: i + 1 };
+};
+
 const globToRegex = (glob) => {
   let re = '^';
-  for (let i = 0; i < glob.length; i++) {
-    const c = glob[i];
-    if (c === '*') {
-      if (glob[i + 1] === '*') { re += '.*'; i++; if (glob[i + 1] === '/') i++; }
-      else re += '[^/]*';
-    } else if ('.+?^${}()|[]\\'.includes(c)) re += '\\' + c;
-    else re += c;
+  let i = 0;
+  while (i < glob.length) {
+    const { text, next } = globToken(glob, i);
+    re += text;
+    i = next;
   }
-  return new RegExp(re + '$');
+  return new RegExp(`${re}$`);
 };
 
 const loadManifest = (root) => {

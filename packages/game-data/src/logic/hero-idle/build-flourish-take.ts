@@ -2,7 +2,7 @@
 import type { Facing } from '../../data/native-tables/player-pose-atlas';
 import type { HeroBeat } from './hero-idle.type';
 import { RAISE_BLADE_FRAMES } from './hero-idle.constants';
-import { ACTION_RAISE_BLADE, RAISE_BLADE_HOLD } from './native-timings';
+import { ACTION_RAISE_BLADE, RAISE_BLADE_HOLD } from './native-timings.constants';
 import { posedBeat } from './posed-beat';
 
 const buildFlourishTake = (facing: Facing): HeroBeat[] =>

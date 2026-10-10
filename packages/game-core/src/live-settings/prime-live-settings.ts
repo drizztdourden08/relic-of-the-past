@@ -9,13 +9,13 @@ const primeLiveSettings = (settings: GameSettings): void => {
   const hides = liveHidesOf(settings);
   state.settings = settings;
   state.hideSpaceBeyondWalls = hides.hideSpaceBeyondWalls;
-  state.vsync = !!settings.vsync;
+  state.vsync = Boolean(settings.vsync);
   state.hudHidden = hides.hudHidden;
   state.pauseHidden = hides.pauseHidden;
   state.masterVolume = settings.masterVolume;
   state.musicVol = toWasmVolume(settings.musicVolume, settings.musicMuted);
   state.sfxVol = toWasmVolume(settings.sfxVolume, settings.sfxMuted);
-  state.extraDungeon = !!settings.extraDungeon;
+  state.extraDungeon = Boolean(settings.extraDungeon);
 };
 
 export { primeLiveSettings };

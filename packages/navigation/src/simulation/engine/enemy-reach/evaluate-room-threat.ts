@@ -15,7 +15,7 @@ const evaluateSprite = (
   collisionTable: number[] | undefined,
 ): EnemyReach => {
   if (!info) return { sprite, health: 0, killable: false, blockedBy: 'gated-off' };
-  const damaging = weapons.filter((w) => info.damageByClass[w.damageClass] > 0);
+  const damaging = weapons.filter((w) => (info.damageByClass[w.damageClass] ?? 0) > 0);
   if (damaging.length === 0) return { sprite, health: info.health, killable: false, blockedBy: 'no-weapon' };
   for (const weapon of damaging) {
     const from = findPositionFor(weapon, sprite.tile, reached, grids, collisionTable);

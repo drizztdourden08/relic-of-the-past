@@ -8,4 +8,5 @@ export { spanSeconds } from './span-seconds';
 export { intervalPoints } from './interval-points';
 export { loopCrossfadeSeconds } from './loop-crossfade-seconds';
 export { crossfadeWindowSeconds } from './crossfade-window-seconds';
+export { bufferAt } from './buffer-at';
 export type { ResolvedLayer } from './layer-window.type';

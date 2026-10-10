@@ -108,6 +108,15 @@ interface StickCandidate {
   center: number;
 }
 
+interface ByteCandidateSource {
+  idx: number;
+  mins: Uint8Array;
+  maxs: Uint8Array;
+  baseline: Uint8Array;
+  bytes: Uint8Array;
+  fallbackCenter: number;
+}
+
 interface ByteColorResult {
   bg: string;
   border: string;
@@ -134,6 +143,7 @@ export type {
   InputStatus,
   Phase,
   StickCandidate,
+  ByteCandidateSource,
   StickSide,
   TriggerSide,
 };

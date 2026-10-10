@@ -11,9 +11,9 @@ const toInt16 = (sample: number): number => {
 };
 
 const stereoPair = (channels: Float32Array[]): [Float32Array, Float32Array] => {
-  if (channels.length === 0) return [new Float32Array(0), new Float32Array(0)];
-  if (channels.length === 1) return [channels[0], channels[0]];
-  return [channels[0], channels[1]];
+  const [left, right] = channels;
+  if (left === undefined) return [new Float32Array(0), new Float32Array(0)];
+  return [left, right ?? left];
 };
 
 const clampedLoop = (loopSample: number, frames: number): number =>
@@ -31,8 +31,8 @@ const writeMsu1Pcm = (channels: Float32Array[], loopSample: number): Uint8Array 
 
   let offset = MSU1_HEADER_BYTES;
   for (let i = 0; i < frames; i += 1) {
-    view.setInt16(offset, toInt16(left[i]), true);
-    view.setInt16(offset + 2, toInt16(right[i]), true);
+    view.setInt16(offset, toInt16(left[i] ?? 0), true);
+    view.setInt16(offset + 2, toInt16(right[i] ?? 0), true);
     offset += MSU1_BYTES_PER_FRAME;
   }
 

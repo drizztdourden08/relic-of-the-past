@@ -2,7 +2,7 @@
 import type { ByteStatus, InputItem } from './hid-calibration.type';
 
 const computeByteStatuses = (len: number, excluded: Set<number>, capturedStickBytes: Set<number>, capturedTriggerBytes: Set<number>, items: InputItem[]): ByteStatus[] => {
-  const statuses: ByteStatus[] = new Array(len).fill('unknown');
+  const statuses = Array.from({ length: len }, (): ByteStatus => 'unknown');
   for (const i of excluded) {
     if (i < len) statuses[i] = 'excluded';
   }

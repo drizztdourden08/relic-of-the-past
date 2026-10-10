@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import type { Rng } from '../../rng';
 import type { ShopBottleContent } from '../shops/shop-price.type';
 
@@ -9,7 +10,7 @@ const bottleContentPicker = (contents: readonly ShopBottleContent[], rng: Rng) =
     usedByAmount.set(amount, used);
     const open = contents.filter((content) => !used.has(content));
     const from = open.length > 0 ? open : contents;
-    const content = from.length === 1 ? from[0] : from[rng.int(from.length)];
+    const content = itemAt(from, from.length === 1 ? 0 : rng.int(from.length));
     used.add(content);
     return content;
   };

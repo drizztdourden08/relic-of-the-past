@@ -9,7 +9,7 @@ const pushTurboSpeed = (settings: GameSettings): void => {
   try {
     mod.ccall('WasmSetTurboSpeed', null, ['number'], [turboPercentFor(settings)]);
   } catch {
-    return;
+    
   }
 };
 

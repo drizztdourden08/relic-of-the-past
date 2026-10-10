@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind constants */
-const RAMP: { at: number; rgb: [number, number, number] }[] = [
+import type { RampStop } from './ramp-color.type';
+
+const RAMP: readonly [RampStop, ...RampStop[]] = [
   { at: 0, rgb: [74, 222, 128] },
   { at: 0.5, rgb: [251, 191, 36] },
   { at: 0.75, rgb: [251, 146, 60] },

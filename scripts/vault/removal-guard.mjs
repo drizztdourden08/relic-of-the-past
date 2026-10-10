@@ -28,13 +28,12 @@ const refusalLines = ({ outgoing, head }) => [
   'That many at once is far more often an accident than an intent, because an emptied managed root',
   'looks exactly like a deliberate delete by the time it reaches here.',
   '',
-  'Nothing has been changed on either side. The vault still holds every one of them' +
-    (head ? ` at ${head}.` : '.'),
+  `Nothing has been changed on either side. The vault still holds every one of them${head ? ` at ${head}.` : '.'}`,
   '',
   ...outgoing.slice(0, 10).map((entry) => `  would remove  ${entry.path}`),
   ...(outgoing.length > 10 ? [`  ...and ${outgoing.length - 10} more`] : []),
   '',
-  'If the files really should go, restore them locally first and delete them deliberately,',
+  'If the files should go, restore them locally first and delete them deliberately,',
   'or re-run with --force-push to declare this checkout correct.',
 ];
 

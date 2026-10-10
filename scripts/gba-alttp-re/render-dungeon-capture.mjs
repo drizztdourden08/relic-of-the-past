@@ -38,18 +38,28 @@ const layers = layerSources.map(source => ({
   map: parseDungeonRoomLayer(vram.subarray(source.screenBase, source.screenBase + 0x2000)),
 }));
 
+const layerColorAt = (layer, x, y) => {
+  const entry = layer.map.cells[y >>> 3][x >>> 3];
+  const tileX = entry.horizontalFlip ? 7 - (x & 7) : x & 7;
+  const tileY = entry.verticalFlip ? 7 - (y & 7) : y & 7;
+  const packed = vram[entry.tile * 32 + tileY * 4 + (tileX >>> 1)];
+  const color = tileX & 1 ? packed >>> 4 : packed & 0x0f;
+  return color === 0 ? null : entry.palette * 16 + color;
+};
+
+const pixelAt = (x, y) => {
+  let rgb = decodeColor(0);
+  for (const layer of layers) {
+    const index = layerColorAt(layer, x, y);
+    if (index !== null) rgb = decodeColor(index);
+  }
+  return rgb;
+};
+
 const png = new PNG({ width: WIDTH_TILES * TILE_SIZE, height: HEIGHT_TILES * TILE_SIZE });
 for (let y = 0; y < png.height; y++) {
   for (let x = 0; x < png.width; x++) {
-    let rgb = decodeColor(0);
-    for (const layer of layers) {
-      const entry = layer.map.cells[y >>> 3][x >>> 3];
-      const tileX = entry.horizontalFlip ? 7 - (x & 7) : x & 7;
-      const tileY = entry.verticalFlip ? 7 - (y & 7) : y & 7;
-      const packed = vram[entry.tile * 32 + tileY * 4 + (tileX >>> 1)];
-      const color = tileX & 1 ? packed >>> 4 : packed & 0x0f;
-      if (color !== 0) rgb = decodeColor(entry.palette * 16 + color);
-    }
+    const rgb = pixelAt(x, y);
     const out = (y * png.width + x) * 4;
     png.data[out] = rgb[0];
     png.data[out + 1] = rgb[1];

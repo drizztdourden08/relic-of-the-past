@@ -22,7 +22,7 @@ const findInvalidChars = (text: string, alphabet: ReadonlySet<string>): string[]
       }
     }
 
-    const ch = text[i];
+    const ch = text.charAt(i);
     if (!alphabet.has(ch)) offenders.push(ch);
     i += 1;
   }

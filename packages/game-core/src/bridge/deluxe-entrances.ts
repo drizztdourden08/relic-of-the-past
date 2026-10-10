@@ -10,7 +10,8 @@ const setDeluxeEntrances = (extended: boolean): void => {
   const words = new Array<number>(ENTRANCE_MASK_WORDS).fill(0);
   if (extended) {
     DELUXE_ENTRANCE_TRACKS.forEach((track, entrance) => {
-      if (track !== null) words[entrance >> ENTRANCES_PER_WORD_SHIFT] |= 1 << (entrance & ENTRANCE_BIT_MASK);
+      const word = entrance >> ENTRANCES_PER_WORD_SHIFT;
+      if (track !== null) words[word] = (words[word] ?? 0) | (1 << (entrance & ENTRANCE_BIT_MASK));
     });
   }
   words.forEach((bits, index) => pushMaskWord(index, bits));

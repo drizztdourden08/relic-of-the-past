@@ -1,5 +1,5 @@
 /* @layer shared-game @kind barrel */
-export type { LayerStrategy, BFSCell, BFSExpansionResult, BFSResult, QuadrantBounds } from './layer-strategy';
+export type { LayerStrategy, EntryContext, BFSCell, BFSExpansionResult, BFSResult, QuadrantBounds } from './layer-strategy';
 export { SingleLayerStrategy } from './single-layer';
 export { DualLayerStrategy } from './dual-layer';
 export { bodyTiles } from './body-tiles';

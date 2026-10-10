@@ -9,8 +9,9 @@ const startPress = ({ bytes, bl, excl, refs, cb }: AxisStepArgs): void => {
   refs.confirmCountRef.current = 0;
   refs.detectedBtnRef.current = null;
   const diffs = findAxisBytes(bl, bytes, excl, AXIS_PRESS_DELTA);
-  if (diffs.length > 0) {
-    refs.detectedBtnRef.current = { byteIndex: diffs[0].byteIndex, bitMask: 0 };
+  const [first] = diffs;
+  if (first) {
+    refs.detectedBtnRef.current = { byteIndex: first.byteIndex, bitMask: 0 };
     refs.confirmCountRef.current = 1;
     cb.setCaptureState('confirming-press');
   }

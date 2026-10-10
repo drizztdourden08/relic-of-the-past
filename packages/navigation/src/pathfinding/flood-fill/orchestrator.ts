@@ -7,11 +7,10 @@ import { LAYER_LOCKED_STAIRCASE } from './flood-fill.constants';
 
 const floodFillScreen = (rawAttrGrid: number[][], screenIndex: number, options: FloodFillOptions): FloodFillResult => {
   const layerBlocked = options.staircaseType === LAYER_LOCKED_STAIRCASE;
-  const useDualLayer = options.indoors && !!options.dualLayerGrids && !layerBlocked;
+  const { dualLayerGrids } = options;
 
-  return useDualLayer
-    ? runDualLayerFlood(screenIndex, options)
-    : runSingleLayerFlood(rawAttrGrid, screenIndex, options, layerBlocked);
+  if (options.indoors && dualLayerGrids && !layerBlocked) return runDualLayerFlood(screenIndex, options, dualLayerGrids);
+  return runSingleLayerFlood(rawAttrGrid, screenIndex, options, layerBlocked);
 };
 
 export { floodFillScreen };

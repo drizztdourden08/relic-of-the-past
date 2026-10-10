@@ -14,7 +14,7 @@ const pushDisplaySwitches = (mod: EmscriptenModule, settings: GameSettings): voi
     mod.ccall('WasmSetHideSpaceBeyondWalls', null, ['number'], [state.hideSpaceBeyondWalls ? 1 : 0]);
   });
   callIfExported(() => {
-    state.vsync = !!settings.vsync;
+    state.vsync = Boolean(settings.vsync);
     mod.ccall('WasmSetVsync', null, ['number'], [settings.vsync ? 1 : 0]);
   });
   pushTurboSpeed(settings);
@@ -27,7 +27,7 @@ const pushDisplaySwitches = (mod: EmscriptenModule, settings: GameSettings): voi
     mod.ccall('WasmSetPauseHidden', null, ['number'], [state.pauseHidden ? 1 : 0]);
   });
   callIfExported(() => {
-    state.extraDungeon = !!settings.extraDungeon;
+    state.extraDungeon = Boolean(settings.extraDungeon);
     mod.ccall('WasmSetExtraDungeonEnabled', null, ['number'], [settings.extraDungeon ? 1 : 0]);
   });
 };

@@ -12,10 +12,8 @@ import { guardMirroredDeletions, refusalLines } from './removal-guard.mjs';
 const STATE_FILE = join(ROOT, '.vault-state.json');
 
 const argv = process.argv.slice(2);
-const MODE = argv.includes('--status') ? 'status'
-  : argv.includes('--force-pull') ? 'force-pull'
-    : argv.includes('--force-push') ? 'force-push'
-      : 'sync';
+const MODE_FLAGS = [['--status', 'status'], ['--force-pull', 'force-pull'], ['--force-push', 'force-push']];
+const MODE = MODE_FLAGS.find(([flag]) => argv.includes(flag))?.[1] ?? 'sync';
 
 const say = (message) => process.stdout.write(`vault: ${message}\n`);
 
@@ -50,11 +48,16 @@ const managedRoots = (remoteIndex) => {
 
 const forced = (entries, winner) => entries.map(entry => {
   const present = winner === 'remote' ? entry.remote : entry.local;
-  const status = present
-    ? (winner === 'remote' ? 'remote-newer' : 'local-newer')
-    : (winner === 'remote' ? 'remote-deleted' : 'local-deleted');
+  const status = `${winner}-${present ? 'newer' : 'deleted'}`;
   return { ...entry, status, direction: winner === 'remote' ? 'pull' : 'push' };
 });
+
+const FORCED_WINNER = { 'force-pull': 'remote', 'force-push': 'local' };
+
+const entriesForMode = (compared) => {
+  const winner = FORCED_WINNER[MODE];
+  return winner ? forced(compared, winner) : compared;
+};
 
 const report = (entries) => {
   const counts = summarize(entries);
@@ -73,6 +76,27 @@ const report = (entries) => {
   }
 };
 
+const announceRemovals = (entries, guard) => {
+  const incoming = entries.filter((entry) => entry.status === 'remote-deleted').length;
+  if (incoming > 0) {
+    const snapshot = createSnapshot('vault-sync');
+    say(`safety snapshot ${snapshot.ref} holds the ${incoming} file(s) about to be removed here`);
+    pruneSnapshots();
+  }
+  if (guard.outgoing.length > 0) {
+    const where = guard.head ? `; ${guard.head} still holds them` : '';
+    say(`${guard.outgoing.length} file(s) gone locally will be removed from the vault${where}`);
+  }
+};
+
+const applyAndCommit = ({ entries, treeDir, vaultDir }) => {
+  const applied = applyEntries({ entries, root: ROOT, treeDir });
+  if (applied.pulled + applied.pushed + applied.removed === 0) return;
+  say(`pulled ${applied.pulled}, pushed ${applied.pushed}, removed ${applied.removed}`);
+  const committed = commitVault(vaultDir, `chore(tree): sync from the main repository (${MODE})`);
+  if (committed) say(`vault committed ${committed} (not pushed, that is yours to send)`);
+};
+
 const main = () => {
   const vaultDir = locateVault();
   if (!vaultDir) {
@@ -87,9 +111,7 @@ const main = () => {
   const base = readState();
 
   const compared = compareTrees({ local, remote, base });
-  const entries = MODE === 'force-pull' ? forced(compared, 'remote')
-    : MODE === 'force-push' ? forced(compared, 'local')
-      : compared;
+  const entries = entriesForMode(compared);
 
   say(`${vaultDir} · ${Object.keys(remote).length} file(s) in tree/`);
 
@@ -106,24 +128,8 @@ const main = () => {
     return;
   }
 
-  const incoming = entries.filter((entry) => entry.status === 'remote-deleted').length;
-  if (incoming > 0) {
-    const snapshot = createSnapshot('vault-sync');
-    say(`safety snapshot ${snapshot.ref} holds the ${incoming} file(s) about to be removed here`);
-    pruneSnapshots();
-  }
-  if (guard.outgoing.length > 0) {
-    const where = guard.head ? `; ${guard.head} still holds them` : '';
-    say(`${guard.outgoing.length} file(s) gone locally will be removed from the vault${where}`);
-  }
-
-  const applied = applyEntries({ entries, root: ROOT, treeDir });
-
-  if (applied.pulled + applied.pushed + applied.removed > 0) {
-    say(`pulled ${applied.pulled}, pushed ${applied.pushed}, removed ${applied.removed}`);
-    const committed = commitVault(vaultDir, `chore(tree): sync from the main repository (${MODE})`);
-    if (committed) say(`vault committed ${committed} (not pushed, that is yours to send)`);
-  }
+  announceRemovals(entries, guard);
+  applyAndCommit({ entries, treeDir, vaultDir });
 
   const settledRemote = indexTree(treeDir);
   const settledLocal = indexPaths(ROOT, managedRoots(settledRemote));

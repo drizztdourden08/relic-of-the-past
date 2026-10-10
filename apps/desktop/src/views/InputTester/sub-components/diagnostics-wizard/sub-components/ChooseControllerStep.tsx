@@ -23,7 +23,7 @@ const ChooseControllerStep = (props: ChooseControllerStepProps) => {
     <>
       <Text as="p">Pick which detected controller this run captures.</Text>
       <RadioGroup
-        value={selectedDeviceKey ?? options[0].value}
+        value={selectedDeviceKey ?? options[0]?.value ?? ''}
         options={options}
         onChange={onSelect}
         direction="vertical"

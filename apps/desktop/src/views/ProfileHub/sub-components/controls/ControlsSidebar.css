@@ -1,0 +1,31 @@
+/* @layer renderer-components @kind style */
+.controls-settings__sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 220px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--c-border);
+  padding-right: var(--space-sm);
+  transition: width 0.2s ease;
+}
+
+.controls-settings__sidebar--collapsed {
+  width: fit-content;
+}
+
+.controls-settings__sidebar--collapsed .controls-settings__sidebar-content {
+  display: none;
+}
+
+.controls-settings__sidebar-icons {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-xs) 0;
+  gap: var(--space-xs);
+}
+
+.controls-settings__sidebar--collapsed .controls-settings__sidebar-icons {
+  display: flex;
+}

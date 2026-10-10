@@ -2,7 +2,8 @@
 import type { Facing } from '../../data/native-tables/player-pose-atlas';
 import type { HeroBeat, HeroRng } from './hero-idle.type';
 import { MAX_LEG_CYCLES, STEP_BY_FACING } from './hero-idle.constants';
-import { ACTION_WALK, WALK_CYCLE_FRAMES, WALK_FRAMES, WALK_HOLDS } from './native-timings';
+import { ACTION_WALK, WALK_CYCLE_FRAMES, WALK_FRAMES, WALK_HOLDS } from './native-timings.constants';
+import { holdAt } from './hold-at';
 import { opposite } from './opposite';
 
 const walkCycle = (facing: Facing): HeroBeat[] => {
@@ -11,7 +12,7 @@ const walkCycle = (facing: Facing): HeroBeat[] => {
     action: ACTION_WALK,
     frame,
     facing,
-    hold: WALK_HOLDS[index],
+    hold: holdAt(WALK_HOLDS, index),
     vx: step.x,
     vy: step.y,
   }));

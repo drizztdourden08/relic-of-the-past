@@ -11,12 +11,16 @@ import { boundsOrGrid } from './bounds-or-grid';
 import { boundsArea } from './bounds-area';
 import { LEDGE_RESEED_PASSES } from './flood-fill.constants';
 
+const pickSingleLayerGrid = (rawAttrGrid: number[][], options: FloodFillOptions, layerBlocked: boolean): number[][] => {
+  const { dualLayerGrids } = options;
+  if (!layerBlocked || !dualLayerGrids) return rawAttrGrid;
+  return options.startLayer === 1 ? dualLayerGrids.layer1 : dualLayerGrids.layer0;
+};
+
 const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options: FloodFillOptions, layerBlocked: boolean): FloodFillResult => {
   const { indoors, inventory, startPos, dynamicBlockers, entrances = [], variant, quadrantBounds } = options;
 
-  const singleLayerGrid = layerBlocked && options.dualLayerGrids
-    ? (options.startLayer === 1 ? options.dualLayerGrids.layer1 : options.dualLayerGrids.layer0)
-    : rawAttrGrid;
+  const singleLayerGrid = pickSingleLayerGrid(rawAttrGrid, options, layerBlocked);
   const { grid, ledges, dynamicBlockerCells } = prepareScreen(singleLayerGrid, indoors, dynamicBlockers);
   const { screenEntrances, entrancePositions } = findEntrancePositions(entrances, screenIndex);
 
@@ -26,7 +30,7 @@ const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, optio
   const strategy = new SingleLayerStrategy(grid.tiles, grid.rawAttr, indoors);
 
   let seeds = options.extraSeeds ? [...options.extraSeeds] : [];
-  let bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, bounds, seeds.length > 0 ? seeds : undefined);
+  let bfsResult = runBFS(strategy, { start, entrancePositions, inventory: inv, bounds, extraSeeds: seeds.length > 0 ? seeds : undefined });
   for (let pass = 0; pass < LEDGE_RESEED_PASSES; pass++) {
     const landings = ledges.filter((l) =>
       bfsResult.reachable[l.startRow]?.[l.startCol]
@@ -34,7 +38,7 @@ const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, optio
       && grid.tiles[l.endRow]?.[l.endCol]?.type === 'free');
     if (landings.length === 0) break;
     seeds = [...seeds, ...landings.map((l) => ({ row: l.endRow, col: l.endCol }))];
-    bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, bounds, seeds);
+    bfsResult = runBFS(strategy, { start, entrancePositions, inventory: inv, bounds, extraSeeds: seeds });
   }
 
   const reachableLedges = ledges.filter((l) => bfsResult.reachable[l.startRow]?.[l.startCol]);

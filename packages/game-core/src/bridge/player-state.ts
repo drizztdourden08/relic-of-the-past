@@ -15,7 +15,7 @@ const enum Byte {
 
 const wasmGetPlayerStateInfo = (): PlayerStateInfo | null =>
   callWhenRunning<PlayerStateInfo | null>(null, (mod) => {
-    const ptr = mod.ccall('WasmGetPlayerStateInfo', 'number', [], []) as number;
+    const ptr = mod.ccall('WasmGetPlayerStateInfo', 'number', [], []);
     if (!ptr) return null;
     const b = mod.HEAPU8.subarray(ptr, ptr + 8);
     return {

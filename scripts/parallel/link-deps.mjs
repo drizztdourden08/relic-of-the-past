@@ -1,5 +1,5 @@
 /* @layer tooling-scripts @kind logic */
-import { existsSync, mkdirSync, copyFileSync, cpSync, symlinkSync, unlinkSync, readdirSync, lstatSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, copyFileSync, cpSync, symlinkSync, unlinkSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, dirname, relative } from 'node:path';
 import { repoRoot } from './paths.mjs';

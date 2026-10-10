@@ -13,7 +13,7 @@ const RungTile = (props: RungTileProps) => {
   const { spec, value, reason, onChange } = props;
   const { label, name, sprite, rungs } = spec;
   const disabled = reason !== undefined;
-  const changed = value !== rungs[0].value;
+  const changed = value !== rungs[0]?.value;
 
   return (
     <Box className="cheats-rung" data-state={stateOf(disabled, changed)} title={reason ?? label} role="group" aria-label={label}>

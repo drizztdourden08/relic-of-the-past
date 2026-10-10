@@ -11,7 +11,9 @@ const filterNameCode = (tile: number): number => {
 };
 
 const glyphText = (code: number): string => {
-  const glyph = kLanguages.us.alphabet[code] ?? ' ';
+  const us = kLanguages.us;
+  if (us === undefined) throw new Error('The us language table is missing');
+  const glyph = us.alphabet[code] ?? ' ';
   const isIconGlyph = glyph.startsWith('[');
   return isIconGlyph ? '?' : glyph;
 };
@@ -22,7 +24,7 @@ const offlinePlayerName = (sram: Uint8Array, slot: number): string | null => {
   let name = '';
   for (let i = 0; i < NAME_LENGTH; i++) {
     const at = base + NAME_OFFSET + i * 2;
-    const word = sram[at] | (sram[at + 1] << 8);
+    const word = (sram[at] ?? 0) | ((sram[at + 1] ?? 0) << 8);
     name += glyphText(filterNameCode((word & 0xf) | ((word >> 1) & 0xf0)));
   }
   const trimmed = name.trimEnd();

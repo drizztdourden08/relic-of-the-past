@@ -2,7 +2,7 @@
 const toPlainText = (bytes: Buffer): string => {
   let result = '';
   for (let index = 0; index < bytes.length; index++) {
-    const value = bytes[index];
+    const value = bytes[index] ?? 0;
     if (value === 0x1a) {
       index += 4;
       result += ' ';

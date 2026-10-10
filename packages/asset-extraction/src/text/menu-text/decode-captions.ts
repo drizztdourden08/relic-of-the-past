@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import type { RomData } from '../../rom/rom-types';
 import type { DecodedLine } from './menu-text.type';
 import { endingCharAt, isBlank, isLargeBottom, isLargeTop } from './charset';
@@ -8,7 +9,7 @@ const readScene = (data: Buffer, start: number, end: number): number[][] => {
   const records: number[][] = [];
   let p = start;
   while (p < end) {
-    const control = data[p + 2] | (data[p + 3] << 8);
+    const control = (data[p + 2] ?? 0) | ((data[p + 3] ?? 0) << 8);
     const count = ((control >> 9) & 0x7f) + 1;
     records.push(Array.from(data.subarray(p + RECORD_HEADER, p + RECORD_HEADER + count)));
     p += RECORD_HEADER + count;
@@ -35,7 +36,9 @@ const decodeEndingCaptions = (rom: RomData): DecodedLine[] => {
 
   for (let scene = 0; scene < SCENE_COUNT; scene++) {
     const seen = new Map<string, number>();
-    for (const chars of readScene(data, offsets[scene], offsets[scene + 1])) {
+    const sceneStart = itemAt(offsets, scene, 'Ending caption scene offset');
+    const sceneEnd = itemAt(offsets, scene + 1, 'Ending caption scene offset');
+    for (const chars of readScene(data, sceneStart, sceneEnd)) {
       if (isUpperHalfRecord(chars)) continue;
       const role = nextRoleSuffix(seen, isLowerHalfRecord(chars) ? 'location' : 'title');
       lines.push({

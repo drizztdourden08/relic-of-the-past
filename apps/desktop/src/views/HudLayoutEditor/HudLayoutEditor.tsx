@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { ScreenWindow, ResizeHandle } from '@drizztdourden08/tessera/composites';
+import type { ScreenWindowHeader } from '@drizztdourden08/tessera/composites';
 import { useReducedMotion } from '@app/compounds/HudNodeRenderer';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { MotionPreviewContext, useMotionPreviewState } from './behavior/motion-preview';
@@ -27,6 +28,8 @@ import './sub-components/HudLayoutEditor.fields.css';
 import './sub-components/HudLayoutEditor.geometry.css';
 import type { HudLayoutEditorProps } from './HudLayoutEditor.type';
 
+const pageHeader: ScreenWindowHeader = { icon: <Icon name="layout-list" /> };
+
 const HudLayoutEditor = (props: HudLayoutEditorProps) => {
   const { onClose } = props;
   const {
@@ -42,7 +45,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
   return (
     <MotionPreviewContext.Provider value={motionPreview}>
     <Box className="hud-editor-portal">
-      <ScreenWindow onClose={onClose} title="HUD Layout Editor">
+      <ScreenWindow onClose={onClose} title="HUD Layout Editor" header={pageHeader}>
         <Box className="hud-editor">
           <EditorToolbar
             insert={edits.insert}

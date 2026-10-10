@@ -1,10 +1,9 @@
 /* @layer renderer-components @kind logic */
 import { STAIRS_TRAVERSAL_STATE } from '@rotp/navigation';
 import type { ReachState } from '@rotp/game-core';
+import { bodyCells } from './body-cells';
 
-const hasStairInBody = (row: number, col: number, reachable: ReachState[][]): boolean => {
-  return reachable[row][col] === STAIRS_TRAVERSAL_STATE || reachable[row][col + 1] === STAIRS_TRAVERSAL_STATE ||
-         reachable[row + 1][col] === STAIRS_TRAVERSAL_STATE || reachable[row + 1][col + 1] === STAIRS_TRAVERSAL_STATE;
-};
+const hasStairInBody = (row: number, col: number, reachable: ReachState[][]): boolean =>
+  bodyCells(reachable, row, col).some((cell) => cell === STAIRS_TRAVERSAL_STATE);
 
 export { hasStairInBody };

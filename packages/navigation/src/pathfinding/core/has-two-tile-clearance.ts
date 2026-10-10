@@ -1,15 +1,14 @@
 /* @layer shared-game @kind logic */
+import type { GridPos } from '@rotp/game-core';
 import { GRID_SIZE } from '../types/grid.constants';
 
-const has2TileClearance = (row: number, col: number, dr: number, dc: number, isPassable: (r: number, c: number) => boolean): boolean => {
+const has2TileClearance = (pos: GridPos, step: readonly [number, number], isPassable: (r: number, c: number) => boolean): boolean => {
+  const { row, col } = pos;
+  const [dr] = step;
   if (dr !== 0) {
-    if (col > 0 && isPassable(row, col - 1)) return true;
-    if (col < GRID_SIZE - 1 && isPassable(row, col + 1)) return true;
-  } else {
-    if (row > 0 && isPassable(row - 1, col)) return true;
-    if (row < GRID_SIZE - 1 && isPassable(row + 1, col)) return true;
+    return (col > 0 && isPassable(row, col - 1)) || (col < GRID_SIZE - 1 && isPassable(row, col + 1));
   }
-  return false;
+  return (row > 0 && isPassable(row - 1, col)) || (row < GRID_SIZE - 1 && isPassable(row + 1, col));
 };
 
 export { has2TileClearance };

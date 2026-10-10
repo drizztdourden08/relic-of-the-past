@@ -7,7 +7,7 @@ const pixelWidthOf = (word: string, alphabet: readonly string[], widths: Uint8Ar
   for (const ch of word) {
     if (isHighlightMarker(ch)) continue;
     const index = alphabet.indexOf(ch);
-    px += index >= 0 && index < widths.length ? widths[index] : FALLBACK_WIDTH_PX;
+    px += widths[index] ?? FALLBACK_WIDTH_PX;
   }
   return px;
 };
@@ -21,9 +21,11 @@ const wrapUnits = (text: string): string[] => {
   const words = text.split(' ');
   const units: string[] = [];
   for (let i = 0; i < words.length; i += 1) {
-    const word = words[i];
-    if (isLoneSymbol(word) && units.length > 0 && i + 1 < words.length) {
-      units[units.length - 1] += ` ${word} ${words[i + 1]}`;
+    const word = words[i] ?? '';
+    const next = words[i + 1];
+    const joined = units.at(-1);
+    if (isLoneSymbol(word) && joined !== undefined && next !== undefined) {
+      units[units.length - 1] = `${joined} ${word} ${next}`;
       i += 1;
       continue;
     }

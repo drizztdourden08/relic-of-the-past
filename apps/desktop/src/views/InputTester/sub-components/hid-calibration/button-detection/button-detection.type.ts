@@ -9,23 +9,23 @@ interface AxisCapture {
 }
 
 interface ButtonRefs {
-  activeIdxRef: React.MutableRefObject<number>;
-  captureStateRef: React.MutableRefObject<CaptureState>;
-  axisSubStepRef: React.MutableRefObject<AxisSubStep>;
-  itemsRef: React.MutableRefObject<InputItem[]>;
-  releaseCountRef: React.MutableRefObject<number>;
-  detectedBtnRef: React.MutableRefObject<HidButtonMapping | null>;
-  confirmCountRef: React.MutableRefObject<number>;
-  axisCapRef: React.MutableRefObject<Record<string, AxisCapture>>;
-  advanceTimerRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
-  autoAdvanceRef: React.MutableRefObject<boolean>;
-  inputPhaseActiveRef: React.MutableRefObject<boolean>;
-  baselineRef: React.MutableRefObject<Uint8Array>;
-  excludedRef: React.MutableRefObject<Set<number>>;
-  noiseRef: React.MutableRefObject<NoiseTracker>;
-  awaitingButtonRestRef: React.MutableRefObject<boolean>;
-  heldAtActivationRef: React.MutableRefObject<Set<string>>;
-  lastDetectLogAtRef: React.MutableRefObject<number>;
+  activeIdxRef: React.RefObject<number>;
+  captureStateRef: React.RefObject<CaptureState>;
+  axisSubStepRef: React.RefObject<AxisSubStep>;
+  itemsRef: React.RefObject<InputItem[]>;
+  releaseCountRef: React.RefObject<number>;
+  detectedBtnRef: React.RefObject<HidButtonMapping | null>;
+  confirmCountRef: React.RefObject<number>;
+  axisCapRef: React.RefObject<Record<string, AxisCapture>>;
+  advanceTimerRef: React.RefObject<ReturnType<typeof setTimeout> | null>;
+  autoAdvanceRef: React.RefObject<boolean>;
+  inputPhaseActiveRef: React.RefObject<boolean>;
+  baselineRef: React.RefObject<Uint8Array>;
+  excludedRef: React.RefObject<Set<number>>;
+  noiseRef: React.RefObject<NoiseTracker>;
+  awaitingButtonRestRef: React.RefObject<boolean>;
+  heldAtActivationRef: React.RefObject<Set<string>>;
+  lastDetectLogAtRef: React.RefObject<number>;
 }
 
 interface ButtonCallbacks {
@@ -47,4 +47,10 @@ interface AxisStepArgs {
   cb: ButtonCallbacks;
 }
 
-export type { AxisCapture, AxisStepArgs, ButtonCallbacks, ButtonRefs };
+interface AxisPick {
+  byte: number;
+  pos: number;
+  neg: number;
+}
+
+export type { AxisCapture, AxisPick, AxisStepArgs, ButtonCallbacks, ButtonRefs };

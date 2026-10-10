@@ -24,10 +24,10 @@ class ImageBuffer {
   getPixel(x: number, y: number): RGBA {
     const offset = (y * this.width + x) * 4;
     return [
-      this.data[offset],
-      this.data[offset + 1],
-      this.data[offset + 2],
-      this.data[offset + 3],
+      this.data.readUInt8(offset),
+      this.data.readUInt8(offset + 1),
+      this.data.readUInt8(offset + 2),
+      this.data.readUInt8(offset + 3),
     ];
   }
 
@@ -37,10 +37,10 @@ class ImageBuffer {
         const srcOffset = (y * src.width + x) * 4;
         if (src.data[srcOffset + 3] === 0) continue;
         const dstOffset = ((dy + y) * this.width + (dx + x)) * 4;
-        this.data[dstOffset] = src.data[srcOffset];
-        this.data[dstOffset + 1] = src.data[srcOffset + 1];
-        this.data[dstOffset + 2] = src.data[srcOffset + 2];
-        this.data[dstOffset + 3] = src.data[srcOffset + 3];
+        this.data[dstOffset] = src.data.readUInt8(srcOffset);
+        this.data[dstOffset + 1] = src.data.readUInt8(srcOffset + 1);
+        this.data[dstOffset + 2] = src.data.readUInt8(srcOffset + 2);
+        this.data[dstOffset + 3] = src.data.readUInt8(srcOffset + 3);
       }
     }
   }
@@ -51,10 +51,7 @@ class ImageBuffer {
       for (let x = 0; x < this.width; x++) {
         const srcOffset = (y * this.width + x) * 4;
         const dstOffset = (y * this.width + (this.width - 1 - x)) * 4;
-        flipped.data[dstOffset] = this.data[srcOffset];
-        flipped.data[dstOffset + 1] = this.data[srcOffset + 1];
-        flipped.data[dstOffset + 2] = this.data[srcOffset + 2];
-        flipped.data[dstOffset + 3] = this.data[srcOffset + 3];
+        this.data.copy(flipped.data, dstOffset, srcOffset, srcOffset + 4);
       }
     }
     return flipped;
@@ -66,10 +63,7 @@ class ImageBuffer {
       for (let x = 0; x < this.width; x++) {
         const srcOffset = (y * this.width + x) * 4;
         const dstOffset = ((this.height - 1 - y) * this.width + x) * 4;
-        flipped.data[dstOffset] = this.data[srcOffset];
-        flipped.data[dstOffset + 1] = this.data[srcOffset + 1];
-        flipped.data[dstOffset + 2] = this.data[srcOffset + 2];
-        flipped.data[dstOffset + 3] = this.data[srcOffset + 3];
+        this.data.copy(flipped.data, dstOffset, srcOffset, srcOffset + 4);
       }
     }
     return flipped;
@@ -77,22 +71,10 @@ class ImageBuffer {
 
   scale(factor: number): ImageBuffer {
     const scaled = new ImageBuffer(this.width * factor, this.height * factor);
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        const srcOffset = (y * this.width + x) * 4;
-        const r = this.data[srcOffset];
-        const g = this.data[srcOffset + 1];
-        const b = this.data[srcOffset + 2];
-        const a = this.data[srcOffset + 3];
-        for (let dy = 0; dy < factor; dy++) {
-          for (let dx = 0; dx < factor; dx++) {
-            const dstOffset = ((y * factor + dy) * scaled.width + (x * factor + dx)) * 4;
-            scaled.data[dstOffset] = r;
-            scaled.data[dstOffset + 1] = g;
-            scaled.data[dstOffset + 2] = b;
-            scaled.data[dstOffset + 3] = a;
-          }
-        }
+    for (let y = 0; y < scaled.height; y++) {
+      for (let x = 0; x < scaled.width; x++) {
+        const srcOffset = (Math.floor(y / factor) * this.width + Math.floor(x / factor)) * 4;
+        this.data.copy(scaled.data, (y * scaled.width + x) * 4, srcOffset, srcOffset + 4);
       }
     }
     return scaled;

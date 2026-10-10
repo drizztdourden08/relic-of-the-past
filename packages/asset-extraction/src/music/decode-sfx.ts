@@ -110,10 +110,10 @@ const printAllSfx = (ctx: SoundBankContext): string => {
   }
 
   const sortedItems = Array.from(items).sort((a, b) => a - b);
-  for (let i = 0; i < sortedItems.length; i++) {
-    output += `[Sfx_0x${sortedItems[i].toString(16)}]\n`;
-    const nextAddr = i + 1 < sortedItems.length ? sortedItems[i + 1] : 0;
-    const rs = decodeSfx(ctx, sortedItems[i], nextAddr);
+  for (const [i, item] of sortedItems.entries()) {
+    output += `[Sfx_0x${item.toString(16)}]\n`;
+    const nextAddr = sortedItems[i + 1] ?? 0;
+    const rs = decodeSfx(ctx, item, nextAddr);
     for (const line of rs) {
       output += formatSfxLine(line) + '\n';
     }

@@ -40,8 +40,7 @@ class RawInputDispatcher {
       }
       const prevAxes = this.prevHidAxes.get(deviceKey) ?? [];
       const currAxes: AxisDirection[] = [];
-      for (let i = 0; i < state.axes.length; i++) {
-        const val = state.axes[i];
+      for (const [i, val] of state.axes.entries()) {
         const threshold = resolveAxisPressThreshold(i, deviceKey);
         const dir: AxisDirection = Math.abs(val) > threshold ? (val > 0 ? '+' : '-') : null;
         currAxes[i] = dir;

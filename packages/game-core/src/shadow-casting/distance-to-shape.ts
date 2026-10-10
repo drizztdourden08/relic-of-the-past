@@ -24,13 +24,14 @@ const distanceToNGon = (lx: number, ly: number, halfW: number, halfH: number, si
 };
 
 const distanceToPolygonPoints = (px: number, py: number, points: { x: number; y: number }[]): number => {
-  const n = points.length;
   let minDist = Infinity;
   let inside = false;
 
-  for (let i = 0, j = n - 1; i < n; j = i++) {
-    const xi = points[i].x, yi = points[i].y;
-    const xj = points[j].x, yj = points[j].y;
+  for (const [i, current] of points.entries()) {
+    const previous = points.at(i - 1);
+    if (previous === undefined) continue;
+    const xi = current.x, yi = current.y;
+    const xj = previous.x, yj = previous.y;
 
     if (((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) {
       inside = !inside;

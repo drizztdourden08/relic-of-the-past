@@ -16,12 +16,14 @@ const get = async (id: string): Promise<DeviceDoc | null> => {
 
 const byUserCode = async (userCode: string): Promise<DeviceDoc | null> => {
   const snap = await devices().where('code.userCode', '==', userCode).where('code.status', '==', 'pending').limit(1).get();
-  return snap.empty ? null : (snap.docs[0].data() as DeviceDoc);
+  const [doc] = snap.docs;
+  return doc === undefined ? null : (doc.data() as DeviceDoc);
 };
 
 const byTokenHash = async (tokenHash: string): Promise<DeviceDoc | null> => {
   const snap = await devices().where('tokenHash', '==', tokenHash).limit(1).get();
-  return snap.empty ? null : (snap.docs[0].data() as DeviceDoc);
+  const [doc] = snap.docs;
+  return doc === undefined ? null : (doc.data() as DeviceDoc);
 };
 
 const confirm = async (id: string, userId: string, label: string): Promise<void> => {

@@ -1,6 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
 import { decompress } from '../../compression/lz-decompress';
-import { kCompBgPtrs } from '../../data/tables';
 import { ImageBuffer } from '../../graphics/png-writer';
 import { dungeonBgPalette, overworldBgPalette } from '../bg-palettes';
 import { decodeBgTile } from './decode-bg-tile';
@@ -11,9 +10,10 @@ import type { RomData } from '../../rom/rom-types';
 import type { RGBA } from '../../graphics/palette';
 import type { BgPaletteRows } from '../bg-palettes';
 import type { BgTileRequest } from './bg-tile-decoder.type';
+import { bgSheetAddress } from '../../data/bg-sheet-address';
 
 const loadSheet = (rom: RomData, id: number): Buffer =>
-  decompress(kCompBgPtrs[id], (addr) => rom.getByte(addr), false);
+  decompress(bgSheetAddress(id), (addr) => rom.getByte(addr), false);
 
 const paletteFor = (rom: RomData, req: BgTileRequest): BgPaletteRows => {
   if (req.paletteSet === 'dungeon') return dungeonBgPalette(rom, req.paletteIndex);

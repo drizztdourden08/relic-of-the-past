@@ -19,7 +19,8 @@ const MagicLevelBar = ({ scale }: MagicLevelBarProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const live = settable && inPlay;
   const held = ladder.findIndex((r) => r.rung === rung);
-  const heldLabel = held >= 0 ? labelOfCap(ladder[held].cap) : '';
+  const heldRung = ladder[held];
+  const heldLabel = heldRung ? labelOfCap(heldRung.cap) : '';
   const hint = usePointerHintTarget(`Magic level: ${heldLabel}`, MAGIC_LEVEL_HINTS);
 
   const latest = useRef({ ladder, held, set, live });
@@ -27,8 +28,9 @@ const MagicLevelBar = ({ scale }: MagicLevelBarProps) => {
 
   const stepTo = useCallback((index: number) => {
     const { ladder: list, held: at, set: put, live: on } = latest.current;
-    if (!on || index < 0 || index >= list.length || index === at) return;
-    put(list[index].rung);
+    const target = list[index];
+    if (!on || target === undefined || index === at) return;
+    put(target.rung);
   }, []);
 
   const wheelRef = useWheel<HTMLDivElement>((dir) => stepTo(latest.current.held + dir));

@@ -2,7 +2,8 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
-import { compileGbaAlttpSupplement, decode4bppTile, convertGbaMapWordToSnes, convertGbaSheetToSnes4bpp, decodeGbaPacked4bppTile, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, PALACE_ROOM_IDS, decodeGbaAlttpSaveProgression, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText, extractDungeonSpriteGraphics } from '@rotp/asset-extraction';
+import { decode4bppTile, convertGbaMapWordToSnes, convertGbaSheetToSnes4bpp, decodeGbaPacked4bppTile, PALACE_ROOM_IDS, decodeGbaAlttpSaveProgression, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText } from '@rotp/asset-extraction';
+import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics } from '@rotp/asset-extraction/node';
 
 describe('GBA to SNES native translation', () => {
   it('moves GBA palette and flip bits into the SNES tilemap layout', () => {

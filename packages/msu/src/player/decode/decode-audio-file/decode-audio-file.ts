@@ -7,7 +7,9 @@ import { isOpuzName } from './is-opuz-name';
 
 const decodeMsu1 = (ctx: BaseAudioContext, bytes: Uint8Array): DecodedAudio => {
   const { channels, loopSample, sampleRate } = parseMsu1(bytes);
-  const buffer = ctx.createBuffer(channels.length, channels[0].length, sampleRate);
+  const [firstChannel] = channels;
+  if (firstChannel === undefined) throw new Error('An MSU-1 file decoded to no channels');
+  const buffer = ctx.createBuffer(channels.length, firstChannel.length, sampleRate);
   channels.forEach((data, i) => buffer.copyToChannel(data, i));
   return { buffer, loopSample };
 };
@@ -15,7 +17,7 @@ const decodeMsu1 = (ctx: BaseAudioContext, bytes: Uint8Array): DecodedAudio => {
 const decodeMedia = async (ctx: BaseAudioContext, bytes: Uint8Array): Promise<DecodedAudio> => {
   const detachableCopy = new Uint8Array(bytes.byteLength);
   detachableCopy.set(bytes);
-  const buffer = await ctx.decodeAudioData(detachableCopy.buffer as ArrayBuffer);
+  const buffer = await ctx.decodeAudioData(detachableCopy.buffer);
   return { buffer, loopSample: 0 };
 };
 

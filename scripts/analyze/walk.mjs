@@ -11,14 +11,15 @@ const SKIP_REL = [
 const SKIP_FILE =
   /(\.jsonl|\.bmp|\.map|\.csv|\.lock|pnpm-lock\.yaml|\.so(\.\d+)*|\.dylib|\.dll|\.node|\.a|\.lib|\.obj|\.pdb|\.exe)$/i;
 
+const isSkippedDir = (name, rel) => SKIP_DIRS.has(name) || SKIP_REL.some((s) => rel.startsWith(s));
+
 const walkFiles = (root, dir = root, acc = []) => {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name.startsWith('.') && entry.name !== '.claude') continue;
     const full = path.join(dir, entry.name);
     const rel = path.relative(root, full).replace(/\\/g, '/');
     if (entry.isDirectory()) {
-      if (SKIP_DIRS.has(entry.name) || SKIP_REL.some((s) => rel.startsWith(s))) continue;
-      walkFiles(root, full, acc);
+      if (!isSkippedDir(entry.name, rel)) walkFiles(root, full, acc);
     } else if (entry.isFile() && !SKIP_FILE.test(rel)) {
       acc.push(rel);
     }

@@ -12,8 +12,9 @@ const OUTDOOR_CLIFF_WALL = new Set([0x01, 0x02, 0x03, 0x1a, 0x12, 0x13, 0x1b]);
 const INDOOR_CLIFF_WALL = new Set([0x01, 0x02, 0x03, 0x04, 0x1a, 0x12, 0x13, 0x1b]);
 
 const DIAGONAL_VERTICAL: Record<number, -1 | 1> = { 0x2c: -1, 0x2e: -1, 0x2d: 1, 0x2f: 1 };
-const DIAGONAL_NAME: Record<string, 'ne' | 'nw' | 'se' | 'sw'> = {
-  '-1,-1': 'nw', '-1,1': 'ne', '1,-1': 'sw', '1,1': 'se',
+const DIAGONAL_NAME: Record<-1 | 1, Record<-1 | 1, 'ne' | 'nw' | 'se' | 'sw'>> = {
+  [-1]: { [-1]: 'nw', 1: 'ne' },
+  1: { [-1]: 'sw', 1: 'se' },
 };
 
 const TILE_PX = 8;

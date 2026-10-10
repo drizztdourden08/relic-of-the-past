@@ -47,6 +47,18 @@ type PatternLine =
 
 type MusicEntity = Song | SongList | Phrase | Pattern;
 
+interface CommandPrefix {
+  cmd: number;
+  noteLength: number | null;
+  volstuff: number | null;
+  next: number;
+}
+
+interface DecodedPatternLine {
+  line: PatternLine;
+  size: number;
+}
+
 interface MusicExtractionResult {
   songTexts: Record<string, string>;
   sfxText: string;
@@ -56,6 +68,8 @@ interface MusicExtractionResult {
 }
 
 export type {
+  CommandPrefix,
+  DecodedPatternLine,
   MusicEntity,
   MusicExtractionResult,
   Pattern,

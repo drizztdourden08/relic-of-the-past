@@ -63,7 +63,9 @@ const runInstallScript = () => {
   if (!existsSync(installScript)) return;
   try {
     execSync(`node "${installScript}"`, { cwd: packageDir, stdio: 'inherit' });
+    return true;
   } catch {
+    return false;
   }
 };
 

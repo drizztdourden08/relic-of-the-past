@@ -1,8 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
 import { decompress } from '../../compression/lz-decompress';
-import { kCompSpritePtrs } from '../../data/tables';
 import type { RomData } from '../../rom/rom-types';
 import type { DropSheets } from './drop-sprite-assembly.type';
+import { spriteSheetAddress } from '../../data/sprite-sheet-address';
 
 const loadDropSheets = (rom: RomData): DropSheets => {
   const getByte = (addr: number) => rom.getByte(addr);
@@ -11,13 +11,13 @@ const loadDropSheets = (rom: RomData): DropSheets => {
 
   for (const si of sheetIds) {
     if (si < 12) {
-      sheets.set(si, rom.getBytes(kCompSpritePtrs[si], 0x600));
+      sheets.set(si, rom.getBytes(spriteSheetAddress(si), 0x600));
     } else {
-      sheets.set(si, decompress(kCompSpritePtrs[si], getByte, false));
+      sheets.set(si, decompress(spriteSheetAddress(si), getByte, false));
     }
   }
 
-  const sheet96 = decompress(kCompSpritePtrs[96], getByte, false);
+  const sheet96 = decompress(spriteSheetAddress(96), getByte, false);
 
   return { sheets, sheet96 };
 };

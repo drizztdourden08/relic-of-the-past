@@ -2,12 +2,14 @@
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@rotp/game-core';
 import { markerCrossings, crossingIcon } from '@rotp/navigation';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../stores/navigation-overlay-store';
-import { EDGE_COLORS } from '../NavigationWidget.constants';
 import { getScreenDisplayName } from '../../../nav-widget/widget-helpers';
 import { ReachabilityCanvas } from './ReachabilityCanvas';
 import { AnnotationLayer } from './AnnotationLayer';
+import { EdgeBadge } from './EdgeBadge';
+import { groupByEdge } from '../behavior/group-by-edge';
+import { positionSpan } from '../behavior/position-span';
 import { IL } from './OverworldMinimap.constants';
 import type { MinimapProps } from './IndoorMinimap.type';
 
@@ -30,41 +32,30 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
   const crossings = useNavigationOverlayStore(s => s.crossings);
   const annotations = useNavigationOverlayStore(s => s.annotations);
 
-  const byEdge: Record<string, ConnectionInfo[]> = { north: [], south: [], east: [], west: [] };
-  for (const c of externalConns) {
-    if (byEdge[c.edge]) byEdge[c.edge].push(c);
-  }
+  const byEdge = groupByEdge(externalConns);
 
-  const textColor = (edge: string) => (edge === 'north' || edge === 'west' ? 'var(--c-text)' : '#000');
+  const screenSlot = (c: ConnectionInfo): number => (c.sourceScreen === undefined ? -1 : bundle.screens.indexOf(c.sourceScreen));
 
   const renderHorizEdge = (list: ConnectionInfo[], prefix: string, top: number) => list.map((c, i) => {
-    const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
+    const scrIdx = screenSlot(c);
     const col = scrIdx >= 0 ? scrIdx % bundle.cols : 0;
     const colStart = EDGE_PAD + col * (cellW + GAP);
-    const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+    const { first: p0, last: p1 } = positionSpan(c.positions);
     const x0 = (p0 / 64) * cellW;
     const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * cellW);
-    return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: colStart + x0, width: spanW, height: 14, borderRadius: 'var(--radius-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
-        <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
-      </Box>
-    );
+    const box = { top, left: colStart + x0, width: spanW, height: 14 };
+    return <EdgeBadge key={`${prefix}${i}`} connection={c} box={box} title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`} />;
   });
 
   const renderVertEdge = (list: ConnectionInfo[], prefix: string, left: number) => list.map((c, i) => {
-    const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
+    const scrIdx = screenSlot(c);
     const row = scrIdx >= 0 ? Math.floor(scrIdx / bundle.cols) : 0;
     const rowStart = EDGE_PAD + row * (cellH + GAP);
-    const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+    const { first: p0, last: p1 } = positionSpan(c.positions);
     const y0 = (p0 / 64) * cellH;
     const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * cellH);
-    return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: rowStart + y0, width: 14, height: spanH, borderRadius: 'var(--radius-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
-        <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
-      </Box>
-    );
+    const box = { top: rowStart + y0, left, width: 14, height: spanH };
+    return <EdgeBadge key={`${prefix}${i}`} connection={c} box={box} title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`} />;
   });
 
   return (

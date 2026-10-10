@@ -1,10 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
-export {
-  type RomData, type RomLanguage, type RomIdentEntry,
-  snesToLinear, advanceAddress, advanceAddressWord,
-  loadRomFromBuffer, ZELDA3_SHA1, ZELDA3_SHA1_US,
-  RomReader,
-} from './rom';
+export type { RomData, RomLanguage, RomIdentEntry } from './rom/rom-types';
+export { snesToLinear, advanceAddress, advanceAddressWord } from './rom/snes-address';
+export { ZELDA3_SHA1, ZELDA3_SHA1_US } from './rom/rom-loader/rom-loader.constants';
+export { RomReader } from './rom/reader';
 
 export {
   decompress, decompressFromRom, decompressFromRomWithLength,
@@ -24,13 +22,10 @@ export { kCompSpritePtrs, kCompBgPtrs } from './data';
 
 export type { ExtractionResult } from './item-sprites';
 
-export { ALTTP_GBA_US_SHA256, GbaRomReader, loadGbaAlttpRomFromBuffer } from './rom/gba-rom';
-export { GbaAlttpDungeonSource, PALACE_ROOM_IDS, extractPalaceSnes4bppTiles } from './sources/gba-alttp';
-export { compileGbaAlttpSupplement } from './compile-resources-gba-alttp';
-export { compileAlttpAssetSet } from './compile-alttp-asset-set';
+export { ALTTP_GBA_US_SHA256 } from './rom/gba-rom/gba-rom.constants';
+export { PALACE_ROOM_IDS } from './sources/gba-alttp/dungeon-source/dungeon-source.constants';
 export type { AlttpAssetSources, CompiledAlttpAssetSet } from './compile-alttp-asset-set';
 export { isCurrentBakeVersion } from './bake-version/is-current-bake-version';
-export { compileResources } from './compile-resources';
 export { findDatAsset } from './dat-container/find-dat-asset';
 export { readDatEntry } from './dat-reader/read-dat-entry';
 export { convertGbaMapWordToSnes } from './graphics/gba-native/convert-gba-map-word-to-snes';
@@ -60,7 +55,6 @@ export type { LanguageMeta, LanguagePack, LanguageSummary } from './sets-types/l
 export { extractEntityHandlerTable } from './sources/gba-alttp/behavior-source/extract-entity-handler-table';
 export { extractRoomTagHandlerTable } from './sources/gba-alttp/behavior-source/extract-room-tag-handler-table';
 export { extractDungeonPalette } from './sources/gba-alttp/graphics-source/extract-dungeon-palette';
-export { extractDungeonSpriteGraphics } from './sources/gba-alttp/graphics-source/extract-dungeon-sprite-graphics';
 export { extractPalaceSpritePalettes } from './sources/gba-alttp/graphics-source/extract-palace-sprite-palettes';
 export { GBA_NEW_ENTITY_HANDLERS, PALACE_AUDIO_REFERENCES, PALACE_BEHAVIOR_SPECS, PALACE_BOSS_ROOMS, PALACE_ENTITY_TYPES, PALACE_PROGRESSION_ANCHORS, PALACE_ROOM_TAGS } from './sources/gba-alttp/palace-metadata';
 export { decodeGbaAlttpSaveProgression } from './sources/gba-alttp/progression-source/decode-gba-alttp-save-progression';

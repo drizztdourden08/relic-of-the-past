@@ -2,7 +2,7 @@
 import type { CheckRecord } from '../../../data';
 import type { CheckStatus } from '../../check-status.type';
 import { OUTSIDE_SWEEP } from './check-grouping.constants';
-import type { GroupDimension, GroupNode, RunContext } from './check-grouping.type';
+import type { GroupDimension, GroupingPass, GroupNode, RunContext } from './check-grouping.type';
 import { getGroupValue } from './get-group-value';
 
 const computeStats = (checks: CheckRecord[], statuses: Map<string, CheckStatus>): GroupNode['stats'] => {
@@ -21,50 +21,43 @@ const sphereRank = (label: string): number =>
 
 const isTrailingLabel = (label: string): boolean => label === 'Other' || label === 'Overworld';
 
-const groupRecursive = (
-  checks: CheckRecord[],
-  dimensions: GroupDimension[],
-  depth: number,
-  statuses: Map<string, CheckStatus>,
-  run?: RunContext
-): GroupNode[] => {
-  if (depth >= dimensions.length) return [];
-
-  const dim = dimensions[depth];
+const bucketChecks = (checks: CheckRecord[], dim: GroupDimension, run?: RunContext): Map<string, CheckRecord[]> => {
   const buckets = new Map<string, CheckRecord[]>();
-
   for (const check of checks) {
     const value = getGroupValue(check, dim, run);
-    if (!buckets.has(value)) buckets.set(value, []);
-    buckets.get(value)!.push(check);
+    const bucket = buckets.get(value);
+    if (bucket) bucket.push(check);
+    else buckets.set(value, [check]);
   }
+  return buckets;
+};
 
-  const nodes: GroupNode[] = [];
-  for (const [label, groupChecks] of buckets) {
-    const node: GroupNode = {
-      key: `${dim}:${label}`,
-      label,
-      children: depth + 1 < dimensions.length
-        ? groupRecursive(groupChecks, dimensions, depth + 1, statuses, run)
-        : [],
-      checks: depth + 1 >= dimensions.length ? groupChecks : [],
-      stats: computeStats(groupChecks, statuses),
-    };
-    nodes.push(node);
-  }
-
-  if (dim === 'sphere') {
-    nodes.sort((a, b) => sphereRank(a.label) - sphereRank(b.label));
-    return nodes;
-  }
-
-  nodes.sort((a, b) => {
+const sortNodes = (nodes: GroupNode[], dim: GroupDimension): GroupNode[] => {
+  if (dim === 'sphere') return nodes.sort((a, b) => sphereRank(a.label) - sphereRank(b.label));
+  return nodes.sort((a, b) => {
     if (isTrailingLabel(a.label)) return 1;
     if (isTrailingLabel(b.label)) return -1;
     return a.label.localeCompare(b.label);
   });
+};
 
-  return nodes;
+const groupRecursive = (checks: CheckRecord[], depth: number, pass: GroupingPass): GroupNode[] => {
+  const { dimensions, statuses, run } = pass;
+  const dim = dimensions[depth];
+  if (depth >= dimensions.length || dim === undefined) return [];
+
+  const isLeaf = depth + 1 >= dimensions.length;
+  const nodes: GroupNode[] = [];
+  for (const [label, groupChecks] of bucketChecks(checks, dim, run)) {
+    nodes.push({
+      key: `${dim}:${label}`,
+      label,
+      children: isLeaf ? [] : groupRecursive(groupChecks, depth + 1, pass),
+      checks: isLeaf ? groupChecks : [],
+      stats: computeStats(groupChecks, statuses),
+    });
+  }
+  return sortNodes(nodes, dim);
 };
 
 const buildGroupTree = (
@@ -87,7 +80,7 @@ const buildGroupTree = (
     return root;
   }
 
-  root.children = groupRecursive(checks, dimensions, 0, statuses, run);
+  root.children = groupRecursive(checks, 0, { dimensions, statuses, run });
   root.stats = computeStats(checks, statuses);
   return root;
 };

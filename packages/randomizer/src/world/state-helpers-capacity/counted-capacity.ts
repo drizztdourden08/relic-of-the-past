@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { CAPACITY_SHOP } from '../capacity/capacity-shop.constants';
 import { familySettingOf } from './family-setting-of';
 import { tierReached } from './tier-reached';
@@ -13,9 +14,9 @@ const countedCapacity = (state: CollectionState, capacityFamily: CapacityFamily)
   const setting = familySettingOf(state, capacityFamily);
   const { ladder, vanillaRung } = capacityFamily;
   if (setting.mode === 'vanilla') {
-    return capacityShopOpen(state) ? ladder[ladder.length - 1] : ladder[vanillaRung];
+    return itemAt(ladder, capacityShopOpen(state) ? ladder.length - 1 : vanillaRung);
   }
-  return ladder[tierReached(state, capacityFamily, setting)];
+  return itemAt(ladder, tierReached(state, capacityFamily, setting));
 };
 
 export { countedCapacity };

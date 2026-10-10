@@ -1,6 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { GridPos } from '@rotp/game-core';
 import type { RegionReachMap } from './regions.type';
+import { itemAt } from '../../../checked-access';
 import { ENTRY_STAMP_RADIUS, REGION_GRID_SIZE } from './regions.constants';
 
 const emptyGrid = (): boolean[][] =>
@@ -12,7 +13,7 @@ const stampReach = (map: RegionReachMap, screenId: string, tile: GridPos): void 
     for (let dc = -ENTRY_STAMP_RADIUS; dc <= ENTRY_STAMP_RADIUS; dc++) {
       const r = tile.row + dr;
       const c = tile.col + dc;
-      if (r >= 0 && r < REGION_GRID_SIZE && c >= 0 && c < REGION_GRID_SIZE) grid[r][c] = true;
+      if (r >= 0 && r < REGION_GRID_SIZE && c >= 0 && c < REGION_GRID_SIZE) itemAt(grid, r)[c] = true;
     }
   }
   map.set(screenId, grid);

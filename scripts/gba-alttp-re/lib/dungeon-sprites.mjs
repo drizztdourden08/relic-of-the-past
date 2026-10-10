@@ -22,10 +22,10 @@ const decodeDungeonSpriteRecord = (roomId, y, x, type) => {
   };
 };
 
-const parseDungeonSpriteList = (rom, offset, roomId, maxRecords = 64) => {
-  if (offset < 0 || offset >= rom.length) throw new Error(`Sprite list offset is out of range: ${offset}`);
-  const start = offset;
-  const sortMode = rom[offset++];
+const parseDungeonSpriteList = (rom, start, roomId, maxRecords = 64) => {
+  if (start < 0 || start >= rom.length) throw new Error(`Sprite list offset is out of range: ${start}`);
+  const sortMode = rom[start];
+  let offset = start + 1;
   const records = [];
 
   while (offset < rom.length && rom[offset] !== 0xff) {

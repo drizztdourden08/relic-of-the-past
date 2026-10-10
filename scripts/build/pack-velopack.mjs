@@ -56,7 +56,7 @@ try {
   execFileSync(vpkCommand(), args, { stdio: 'inherit', cwd: root });
 } catch (err) {
   if (err.code === 'ENOENT') {
-    throw new Error('vpk is not installed. Run: dotnet tool install -g vpk --version 1.2.110-ge826545');
+    throw new Error('vpk is not installed. Run: dotnet tool install -g vpk --version 1.2.110-ge826545', { cause: err });
   }
   throw err;
 }
@@ -78,7 +78,13 @@ if (linux) {
   if (existsSync(spare)) unlinkSync(spare);
 }
 
-const expected = linux ? ['rotp-linux.AppImage'] : full ? ['rotp-windows-payload.exe', 'rotp-windows-directory.zip'] : [];
+const expectedOutputs = () => {
+  if (linux) return ['rotp-linux.AppImage'];
+  if (full) return ['rotp-windows-payload.exe', 'rotp-windows-directory.zip'];
+  return [];
+};
+
+const expected = expectedOutputs();
 const missing = expected.filter((name) => !existsSync(join(root, outputDir, name)));
 if (missing.length) {
   throw new Error(`Packed, but these expected outputs are missing from ${outputDir}: ${missing.join(', ')}. vpk's own naming probably changed.`);

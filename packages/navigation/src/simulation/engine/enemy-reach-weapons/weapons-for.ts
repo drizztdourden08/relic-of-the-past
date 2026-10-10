@@ -12,6 +12,7 @@ import {
   SWORD_BEAM_ANCILLA,
 } from './enemy-reach-weapons.constants';
 import { swordTier } from './sword-tier';
+import { itemAt } from '../../../checked-access';
 
 const damageClassFor = (ancillaType: number, tables: CombatTables): number => tables.ancillaDamageClass[ancillaType] ?? 0;
 
@@ -23,7 +24,7 @@ const swordWeapons = (tier: number, tables: CombatTables): Weapon[] => {
   if (tier > 0) {
     weapons.push({
       ancillaType: null,
-      damageClass: SWORD_BASE_DAMAGE_CLASS[tier - 1],
+      damageClass: itemAt(SWORD_BASE_DAMAGE_CLASS, tier - 1),
       kind: 'contact',
       travel: CONTACT_RADIUS,
       label: 'sword',

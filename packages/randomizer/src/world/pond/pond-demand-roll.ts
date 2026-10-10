@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { itemKeyName } from '../display-names/item-key-name';
 import { POND_LOCATION_SET } from './pond-rungs';
 import { amountAt, curvePositionsOf, curveWeightPositionsOf, stopsInRange } from './pond-demand-ramp';
@@ -15,6 +16,9 @@ import type { PondAskSetting, PondDemandView } from './pond-ask.type';
 import type { PondPlan } from './pond-profile.type';
 import type { Rng } from '../../rng';
 import type { ShopPrice } from '../shops/shop-price.type';
+
+const stopForPick = (stops: readonly number[], pick: number | undefined, width: number): number =>
+  (pick === undefined ? 0 : stops[Math.floor(pick / width)] ?? 0);
 
 const rollPondDemands = (
   plan: PondPlan, ask: PondAskSetting, shape: CurveShape, rng: Rng,
@@ -42,12 +46,12 @@ const rollPondDemands = (
     const stops = stopsInRange(demandRangeOf(kind, ask, plan, capacity));
     const width = kind === 'bottle' ? ask.bottle.contents.length : 1;
     const picks = distinctBrackets(mine.map(({ prize }) => positionOf(prize)), stops.length * width);
-    mine.forEach(({ index }, at) => amounts.set(index, stops[Math.floor(picks[at] / width)]));
+    mine.forEach(({ index }, at) => amounts.set(index, stopForPick(stops, picks[at], width)));
   });
   const bottleContentOf = bottleContentPicker(ask.bottle.contents, rng);
   const usedItems = new Set<ItemKey>();
   rungs.forEach(({ key, prize }, index) => {
-    const kind = assigned[index];
+    const kind = itemAt(assigned, index);
     if (kind === 'item') {
       const rank = rungs.length === 1 ? 0 : index / (rungs.length - 1);
       const demanded = pickDemandItem(candidates, rank, rng, usedItems);

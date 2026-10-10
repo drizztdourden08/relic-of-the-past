@@ -2,10 +2,10 @@
 import type React from 'react';
 
 interface GyroReclaimRefs {
-  excludedRef: React.MutableRefObject<Set<number>>;
-  gyroExcludedBytesRef: React.MutableRefObject<Set<number>>;
-  stickCaptureStartedAtRef: React.MutableRefObject<number>;
-  stickReclaimAttemptedRef: React.MutableRefObject<boolean>;
+  excludedRef: React.RefObject<Set<number>>;
+  gyroExcludedBytesRef: React.RefObject<Set<number>>;
+  stickCaptureStartedAtRef: React.RefObject<number>;
+  stickReclaimAttemptedRef: React.RefObject<boolean>;
 }
 
 export type { GyroReclaimRefs };

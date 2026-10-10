@@ -2,9 +2,10 @@
 import type { GlyphMetrics } from '../types';
 import { widthOf } from '../glyph-metrics';
 import type { Pen } from './box-pen.type';
+import { slotAt } from './slot-at';
 
 const drawGlyphs = (pen: Pen, glyphs: number[], metrics: GlyphMetrics): void => {
-  const buf = pen.slots[pen.row - 1];
+  const buf = slotAt(pen, pen.row);
   buf.drawn = true;
   pen.edits += 1;
 

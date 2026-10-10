@@ -1638,9 +1638,6 @@ about the build that wrote it, and the verdicts drawn from comparing them.
   epoch milliseconds. `dialog` is the core's dialog hook state at the save, in base64
   (`core/game-hooks/dialog_hook_state.c`). It is present only when a message was up and the host
   was allowed to draw it.
-- `TargetCompat` has `unverifiable` as a first class answer. A target that published nothing, or
-  that could not be reached, is unknown. Calling it `compatible` is how save states get lost
-  without a word.
 
 ### save-state/current-format.constants.ts
 
@@ -1689,18 +1686,10 @@ ignore it. The core does ignore it today; stripping means nothing depends on tha
 
 ### save-state/compatibility
 
-There are two compatibility questions, kept apart because they are answered differently. A file
-on disk can be inspected directly. A version being offered cannot: the running build can only
-compare against what that version published about itself. That is why `unverifiable` exists and
-never collapses into `compatible`.
+A file on disk is inspected directly, through the stamp this app writes on every save.
 
 - `checkLoadable`: every save this app writes carries a stamp, so a file without one was made by
   a version this build does not read.
-- `compareTargetFormat` compares a published id against this build's. Fetching the id is the
-  caller's job.
-- `describeTargetCompat` writes the update dialog's text. The reinstall line is the point of the
-  message and holds in both cases: an update replaces the installed application, while save
-  states live in the user data directory and an update never touches them.
 - `describeStamp` names the version a stamped save was made in, for any list of saves.
 
 ## types

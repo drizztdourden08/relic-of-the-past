@@ -4,24 +4,13 @@ import type { KeyboardEvent } from 'react';
 import { Anchored, Box, Button, Pressable, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { useAnchorRef } from '../behavior/useAnchorRef';
 import { useDismiss } from '../behavior/useDismiss';
+import { nudgeTarget } from '../behavior/nudge-target';
 import { NO_STEPS } from './NumberSetter.constants';
 import type { NumberSetterProps } from './NumberSetter.type';
 
 const clampTo = (min: number, max: number, n: number): number => Math.min(max, Math.max(min, Math.round(n)));
 
 const digits = (n: number): string => String(n);
-
-const rungShift = (onRung: boolean, dir: 1 | -1): number => {
-  if (dir === -1) return -1;
-  return onRung ? 1 : 0;
-};
-
-const rungStep = (ladder: readonly number[], value: number, dir: 1 | -1): number => {
-  const at = ladder.findIndex((rung) => rung >= value);
-  const index = at < 0 ? ladder.length - 1 : at;
-  const next = index + rungShift(ladder[index] === value, dir);
-  return ladder[Math.min(ladder.length - 1, Math.max(0, next))];
-};
 
 const NumberSetter = (props: NumberSetterProps) => {
   const { title, value, min, max, steps: stepList = NO_STEPS, ladder, format = digits, anchor, onCommit, onClose } = props;
@@ -42,12 +31,12 @@ const NumberSetter = (props: NumberSetterProps) => {
     if (e.key === 'Enter') { e.preventDefault(); commitDraft(); }
   };
   const byStep = (amount: number) => commit(value + amount);
-  const byRung = (dir: 1 | -1) => { if (ladder) commit(rungStep(ladder, value, dir)); };
+  const nudge = (dir: 1 | -1) => { const next = nudgeTarget({ ladder, steps: stepList, value, dir }); if (next !== null) commit(next); };
   return (
     <Anchored ref={ref} anchorRef={anchorRef} placement="bottom-start" layer="popover" className="cheats-popover cheats-setter" role="dialog" aria-label={title}>
       <Text className="cheats-popover__title">{title}</Text>
       <Box className="cheats-setter__row">
-        <Button variant="tertiary" size="sm" aria-label="Down" onClick={() => (ladder ? byRung(-1) : byStep(-stepList[0]))}>-</Button>
+        <Button variant="tertiary" size="sm" aria-label="Down" onClick={() => nudge(-1)}>-</Button>
         <TextInput
           className="cheats-setter__input"
           value={draft}
@@ -57,7 +46,7 @@ const NumberSetter = (props: NumberSetterProps) => {
           onKeyDown={onKeyDown}
           onBlur={commitDraft}
         />
-        <Button variant="tertiary" size="sm" aria-label="Up" onClick={() => (ladder ? byRung(1) : byStep(stepList[0]))}>+</Button>
+        <Button variant="tertiary" size="sm" aria-label="Up" onClick={() => nudge(1)}>+</Button>
       </Box>
       {stepList.length > 1 && (
         <Box className="cheats-setter__steps">

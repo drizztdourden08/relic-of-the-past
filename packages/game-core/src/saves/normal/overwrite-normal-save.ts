@@ -11,7 +11,7 @@ const overwriteNormalSave = async (files: FileStore, p: string, id: string, data
   entry.timestamp = Date.now();
   await s.writePair(id, data, screenshot);
   await s.writeManifest(manifest);
-  return { id, name: entry.name, timestamp: entry.timestamp, size: data.byteLength, hasScreenshot: !!screenshot };
+  return { id, name: entry.name, timestamp: entry.timestamp, size: data.byteLength, hasScreenshot: Boolean(screenshot) };
 };
 
 export { overwriteNormalSave };

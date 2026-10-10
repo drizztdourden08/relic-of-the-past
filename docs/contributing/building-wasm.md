@@ -24,7 +24,7 @@ source list and emcc flags); it writes straight to `apps/desktop/public/wasm/` (
 cmd /c "<emsdk>\emsdk_env.bat && cd /d <repo>\core\wasm-build && build.bat"
 ```
 
-On success it prints `Build successful!` and the two output files (`zelda3.js`, `zelda3.wasm`); on
+On success it prints `Build successful.` and the two output files (`zelda3.js`, `zelda3.wasm`); on
 failure `BUILD FAILED` with the compiler error. After building, restart `pnpm run dev` (or reload the
 renderer) to pick up the new module.
 

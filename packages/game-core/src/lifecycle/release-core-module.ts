@@ -6,7 +6,7 @@ const stopCoreMainLoop = (mod: EmscriptenModule): void => {
   try {
     mod.ccall('WasmStop', null, [], []);
   } catch {
-    return;
+    
   }
 };
 

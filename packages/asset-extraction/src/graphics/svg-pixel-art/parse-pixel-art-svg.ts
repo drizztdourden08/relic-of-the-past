@@ -30,7 +30,7 @@ const parsePixelArtSvg = (svg: string): ImageBuffer => {
   if (!box) throw new Error('pixel-art SVG: missing or non-integer viewBox');
   const image = new ImageBuffer(Number(box[1]), Number(box[2]));
   for (const match of svg.matchAll(RECT_RE)) {
-    const attributes = match[1];
+    const attributes = match[1] ?? '';
     const fill = attributeOf(attributes, 'fill');
     if (fill === undefined || fill === 'none') continue;
     fillRect(

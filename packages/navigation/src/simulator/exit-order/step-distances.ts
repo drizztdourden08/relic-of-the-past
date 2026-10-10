@@ -4,6 +4,7 @@ import {
   AREA_EXIT_BIAS, GRID, HOP_STEPS, LEDGE_COST, START_RING, STEP_DIRECTIONS, UNREACHED,
 } from './exit-order.constants';
 import { ledgeHops } from './ledge-hops';
+import { itemAt } from '../../checked-access';
 
 const inGrid = (r: number, c: number): boolean => r >= 0 && r < GRID && c >= 0 && c < GRID;
 const isReached = (reachable: ReachState[][], r: number, c: number): boolean => (reachable[r]?.[c] ?? 0) > 0;
@@ -25,7 +26,8 @@ const seedStartRing = (dist: Uint16Array, queue: number[], reachable: ReachState
 
 const walk = (dist: Uint16Array, queue: number[], reachable: ReachState[][], hops: Map<number, number[]>): void => {
   for (let head = 0; head < queue.length; head++) {
-    const cur = queue[head];
+    const cur = itemAt(queue, head);
+    const curDist = itemAt(dist, cur);
     const r = Math.floor(cur / GRID);
     const c = cur % GRID;
     for (const [dr, dc] of STEP_DIRECTIONS) {
@@ -34,12 +36,12 @@ const walk = (dist: Uint16Array, queue: number[], reachable: ReachState[][], hop
       if (!inGrid(nr, nc) || !isReached(reachable, nr, nc)) continue;
       const idx = nr * GRID + nc;
       if (dist[idx] !== UNREACHED) continue;
-      dist[idx] = dist[cur] + 1;
+      dist[idx] = curDist + 1;
       queue.push(idx);
     }
     for (const to of hops.get(cur) ?? []) {
       if (dist[to] !== UNREACHED) continue;
-      dist[to] = Math.min(dist[cur] + LEDGE_COST, AREA_EXIT_BIAS - 1);
+      dist[to] = Math.min(curDist + LEDGE_COST, AREA_EXIT_BIAS - 1);
       queue.push(to);
     }
   }
@@ -57,8 +59,9 @@ const markHopOnly = (dist: Uint16Array, reachable: ReachState[][]): void => {
 const stepDistances = (reachable: ReachState[][], start: GridPos, ledges: readonly LedgeTraversal[] = []): Uint16Array => {
   const dist = new Uint16Array(GRID * GRID).fill(UNREACHED);
   if (!inGrid(start.row, start.col)) return dist;
-  const queue: number[] = [start.row * GRID + start.col];
-  dist[queue[0]] = 0;
+  const startIdx = start.row * GRID + start.col;
+  const queue: number[] = [startIdx];
+  dist[startIdx] = 0;
   seedStartRing(dist, queue, reachable, start);
   walk(dist, queue, reachable, ledgeHops(ledges));
   markHopOnly(dist, reachable);

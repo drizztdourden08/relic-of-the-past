@@ -24,6 +24,7 @@ const applyEnter = (
 
   const lines = flattenBlocks(doc);
   const source = lines[at.line];
+  if (source === undefined) throw new Error(`The caret line ${String(at.line)} does not exist`);
   const head: DialogueLineView = {
     ...source,
     tokens: source.tokens.slice(0, at.token),

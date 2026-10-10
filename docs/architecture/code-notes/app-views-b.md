@@ -345,8 +345,6 @@ Every flagged byte starts checked, since excluding them all is the recommended a
 
 The gamepad diagnostics report: who the device is, what the input layer can say about it, and how it was identified. The wizard's byte capture and positional capture travel with the report as their own artefacts, each in its native shape, never flattened into the summary. Copy and save both report real success or failure. Two SDL3 captures run for the device: a raw HID byte capture (best effort, since SDL's own joystick handle can hold the device exclusively) and a joystick-level capture (needs an SDL joystick id, so only once SDL has claimed the device).
 
-`mapping-parser` turns a gamecontrollerdb mapping line into lookups from a raw joystick control (button index, hat index and mask, axis index) back to the SDL gamepad key, the inverse of the line itself. The key lists follow the fixed order of `SDL_BUTTON` and `SDL_AXIS` in `shared/input/sdl-buttons.ts`. Direction and inversion prefixes are stripped; only which control fired matters. No caller uses it today.
-
 ## InputTester/sub-components/ControllerDeviceList.tsx
 
 - One card per `ready` device. A device SDL has not claimed is shown by the module's Controllers screen.

@@ -42,7 +42,9 @@ const buildOggOpus = (packets: OpusPacket[], options: OggOpusOptions): Uint8Arra
     ...audioPages(packets),
   ];
   pages.forEach((page, i) => { page.sequence = i; });
-  pages[pages.length - 1].flags |= OGG_FLAG_EOS;
+  const lastPage = pages.at(-1);
+  if (lastPage === undefined) throw new Error('An Ogg-Opus stream has no pages');
+  lastPage.flags |= OGG_FLAG_EOS;
 
   const built = pages.map((page) => buildOggPage(page, serial));
   const total = built.reduce((sum, p) => sum + p.length, 0);

@@ -5,7 +5,7 @@ import type { GameProgressInfo } from './progress.type';
 
 const wasmGetProgressIndicator = (): GameProgressInfo | null =>
   callWhenRunning<GameProgressInfo | null>(null, (mod) => {
-    const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+    const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []);
     if (!progPtr) return null;
     const tier = readU8(mod.HEAPU8, progPtr);
     return { tier, label: phaseLabelFor(tier) };

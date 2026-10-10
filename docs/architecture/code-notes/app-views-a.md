@@ -1350,14 +1350,14 @@ The card sits below and right of the cursor; anything closer than about 10px cov
 It flips to the other side within 150px of the viewport edge, the same reflex `usePickerPopover` has.
 The flip is a translation, so the card never needs a layout pass, which would make it lag the cursor by a frame.
 
-### HudLayoutEditor/behavior/drop-intent.ts
+### HudLayoutEditor/behavior/drop-intent/
 
 What a drop would do, never how the pointer said it.
 The outline speaks in rows and zones and the keyboard in directions; both produce a `DropIntent`, and one function consumes it.
 The `grid` intent no longer has a producer since the stage stopped being a drop surface, but `applyDrop` still writes it.
-This is the only file that makes the move write.
+Its `move-all.ts` is the only file that makes the move write.
 A grid drop is two edits, `moveNode` and `patchNode`, applied as one entry.
-`hud-drop-intent.keep.test.ts` checks that no other editor file calls `moveNode`, which is why this file keeps its five functions together.
+`hud-drop-intent.keep.test.ts` checks that no other editor file calls `moveNode`; the one exception it allows is `move-all.ts`.
 Validity is checked after the target is chosen and never retargets, so every refusal names both nodes.
 `ids` is an array from the start and takes one entry; a multi drop keeps document order and lands contiguously.
 The outline can insert at the front of a container.
@@ -1828,7 +1828,7 @@ The start from list holds the shipped layouts, then the custom ones.
 
 Selection, and the things that can be done to the selected node.
 The selection is an id, not a node, because every edit rebuilds the tree and a held node would be stale one keystroke later.
-`drop` is the one door both surfaces' `DropIntent` comes through; `behavior/drop-intent.ts` is the only module that calls `moveNode`, and a test checks it.
+`drop` is the one door both surfaces' `DropIntent` comes through; `behavior/drop-intent/move-all.ts` is the only module that calls `moveNode`, and a test checks it.
 The newly inserted node becomes the selection, because the next step is usually to size or move it.
 
 ### HudLayoutEditor/behavior/insert-site.ts
@@ -2747,7 +2747,7 @@ So this is the same control one dimension down, with the same three bands.
 `FlexStrip` is the drawing: one cell per child, sized by the child's real placed size (`behavior/flex-slots.ts`), drawn along the container's direction and wrapping as it wraps.
 `SelectionLegend` shows what is selected and what can be pressed now, drawn with `KeyCap` and `MouseGlyph`.
 A press writes nothing: click, `{mod}` click and Shift click all leave the document byte identical, and only choose what the toolbar and the stage echo read.
-The one write goes through the one route. A reorder is a `moveNode`, and `behavior/drop-intent.ts` is the only module that calls one, which a grep test checks. This component hands a `DropIntent` up and never touches the tree.
+The one write goes through the one route. A reorder is a `moveNode`, and `behavior/drop-intent/move-all.ts` is the only module that calls one, which a grep test checks. This component hands a `DropIntent` up and never touches the tree.
 `moveNode` removes and then inserts, so its index is into the list without this child, which is exactly the destination slot in both directions. An earlier `+1` for the forward case sent "move later" to the end.
 The stage echoes what is picked, visually and never as an edit, keyed by the children's ids.
 `onDrop` is the editor's single `applyDrop` route. A harness without the view leaves it out and the strip is a read only drawing.
@@ -2766,7 +2766,7 @@ A selection is context, not an edit. Nothing in `FlexSelection` is ever written.
 One table, and every row is an action on the selection, the grid's rule kept. The toolbar, legend and keyboard all read these rows, so the legend never promises a shortcut the toolbar lacks.
 Four buttons, always, in reading order: start, earlier, later, end. A move that cannot apply is disabled in place, never removed. When they were dropped, a second press on the same spot undid the first, because the buttons shifted.
 `run` is left off a move that cannot apply, which also keeps its key from firing, since `runnerFor` answers only rows that can run.
-Moves need one picked child. A multi pick still names itself in the chip and echoes on the stage, but a run has no single place to land, so it refuses in the legend with `MANY`. The selection is a run from day one, for the same reason `drop-intent.ts`'s `ids` is an array.
+Moves need one picked child. A multi pick still names itself in the chip and echoes on the stage, but a run has no single place to land, so it refuses in the legend with `MANY`. The selection is a run from day one, for the same reason the `ids` of `drop-intent` is an array.
 The arrows follow the flow: a row's earlier is the left arrow and a column's is the up arrow, from the grid's `EARLIER_ICON` and `EARLIER_KEY` pair keyed by axis (`axisOf`). The two end moves use the arrow into a wall icons so they differ from one step moves.
 `GESTURES` are the three pointer gestures shown under every state. They write nothing.
 `moveRun` writes the multi pick refusal once instead of four times.
@@ -2957,7 +2957,7 @@ Every modifier goes through `isPrimaryModifier`, never a literal `ctrlKey`, so C
 Escape registers on the dismiss stack at `popover`, so it clears the selection and leaves the editor layer standing.
 The track pick rule is shared with the flex editor's cells through `behavior/index-selection.ts`.
 
-### HudLayoutEditor/sub-components/GridEditor/HudLayoutEditor.grid.css
+### HudLayoutEditor/sub-components/GridEditor/GridEditor.css
 
 What is left of the grid editor's own chrome once the bands moved to `SelectionBands`. The lattice has its own sheet beside `GridLattice`, since two controls stand on that drawing.
 `.hud-grid` is a bare column of three bands on the panel background. Its card, border, radius, title and settings well were removed to avoid boxes inside boxes.
@@ -3024,7 +3024,7 @@ A row header prints its number and swaps it for its size while selected. It has 
 The menu is `DropdownMenu`: portalled, since the lattice scrolls and would clip an inline menu, and registered on the dismiss stack at `menu`, so one Escape closes only the menu.
 `index` is 0 based, like the extent lists. `text` is what the header prints when not selected. `empty` means the track solved to nothing and is drawn at the 24px floor.
 
-### HudLayoutEditor/sub-components/GridLattice/HudLayoutEditor.lattice.css
+### HudLayoutEditor/sub-components/GridLattice/GridLattice.css
 
 The drawing two controls stand on (`GridEditor` and `CellPicker`), so it has its own sheet.
 Past the point where every track clears the 24px floor the body overflows and scrolls instead of shrinking a track, and both header strips stay put so a scrolled cell can be identified. 220px caps a ten row grid.

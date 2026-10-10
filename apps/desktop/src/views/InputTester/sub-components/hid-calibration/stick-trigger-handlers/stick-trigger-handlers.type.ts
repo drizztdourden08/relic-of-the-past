@@ -3,14 +3,14 @@ import type React from 'react';
 import type { InputItem, StickSide, TriggerSide } from '../hid-calibration.type';
 
 interface StickFinalizeRefs {
-  stickMinsRef: React.MutableRefObject<Uint8Array>;
-  stickMaxsRef: React.MutableRefObject<Uint8Array>;
-  stickCounterBytesRef: React.MutableRefObject<Set<number>>;
-  excludedRef: React.MutableRefObject<Set<number>>;
-  capturedStickBytesRef: React.MutableRefObject<Set<number>>;
-  leftStickBytesRef: React.MutableRefObject<Set<number>>;
-  rightStickBytesRef: React.MutableRefObject<Set<number>>;
-  activeStickRef: React.MutableRefObject<StickSide | null>;
+  stickMinsRef: React.RefObject<Uint8Array>;
+  stickMaxsRef: React.RefObject<Uint8Array>;
+  stickCounterBytesRef: React.RefObject<Set<number>>;
+  excludedRef: React.RefObject<Set<number>>;
+  capturedStickBytesRef: React.RefObject<Set<number>>;
+  leftStickBytesRef: React.RefObject<Set<number>>;
+  rightStickBytesRef: React.RefObject<Set<number>>;
+  activeStickRef: React.RefObject<StickSide | null>;
 }
 
 interface StickFinalizeCallbacks {
@@ -29,16 +29,16 @@ type StickResetCallbacks = Pick<StickFinalizeCallbacks, 'addLog' | 'updateByteSt
   setStickPickMode: (v: boolean) => void;
   setStickPickedBytes: (v: number[]) => void;
   setStickLiveInfo: (s: string) => void;
-  stickRecordingRef: React.MutableRefObject<boolean>;
+  stickRecordingRef: React.RefObject<boolean>;
 };
 
 interface TriggerFinalizeRefs {
-  excludedRef: React.MutableRefObject<Set<number>>;
-  capturedTriggerBytesRef: React.MutableRefObject<Set<number>>;
-  leftTriggerByteRef: React.MutableRefObject<number | null>;
-  rightTriggerByteRef: React.MutableRefObject<number | null>;
-  activeTriggerRef: React.MutableRefObject<TriggerSide | null>;
-  baselineRef: React.MutableRefObject<Uint8Array>;
+  excludedRef: React.RefObject<Set<number>>;
+  capturedTriggerBytesRef: React.RefObject<Set<number>>;
+  leftTriggerByteRef: React.RefObject<number | null>;
+  rightTriggerByteRef: React.RefObject<number | null>;
+  activeTriggerRef: React.RefObject<TriggerSide | null>;
+  baselineRef: React.RefObject<Uint8Array>;
 }
 
 interface TriggerFinalizeCallbacks {
@@ -57,7 +57,7 @@ type TriggerResetCallbacks = Pick<TriggerFinalizeCallbacks, 'addLog' | 'updateBy
   setTriggerPickMode: (v: boolean) => void;
   setTriggerPickedByte: (v: number | null) => void;
   setTriggerLiveInfo: (s: string) => void;
-  triggerRecordingRef: React.MutableRefObject<boolean>;
+  triggerRecordingRef: React.RefObject<boolean>;
 };
 
 export type {

@@ -11,7 +11,7 @@ const readMsu1LoopSample = async (
   const bytes = await files.readBytes(packFile(pack, fileName));
   if (bytes === null || bytes.byteLength < MSU1_HEADER_BYTES) return null;
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  const magic = String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3]);
+  const magic = String.fromCharCode(...bytes.subarray(0, 4));
   return magic === MSU1_MAGIC_TEXT ? view.getUint32(MSU1_LOOP_SAMPLE_OFFSET, true) : null;
 };
 

@@ -8,6 +8,12 @@ import { isVendored } from './policy.mjs';
 const codeLineCount = (content) =>
   content.split('\n').filter((l) => l.trim() && !/^\s*(\/\/|\*|\/\*|\*\/|#|REM|<!--)/.test(l)).length;
 
+const tagSourceOf = (man, heur, headerLayer) => {
+  if (man.kind || man.layer) return 'manifest';
+  if (heur.source === 'tag' || headerLayer) return 'header';
+  return 'heuristic';
+};
+
 const classifyFile = (root, rel, manifest) => {
   const lang = classifyLang(rel);
   const role = classifyRole(rel);
@@ -24,9 +30,7 @@ const classifyFile = (root, rel, manifest) => {
 
   const kind = man.kind ?? heur.type;
   const layer = man.layer ?? headerLayer ?? role;
-  const tagSource = man.kind || man.layer ? 'manifest'
-    : (heur.source === 'tag' || headerLayer) ? 'header'
-      : 'heuristic';
+  const tagSource = tagSourceOf(man, heur, headerLayer);
 
   return { rel, lang, layer, role, kind, tagSource, vendored: man.vendored ?? isVendored(rel), raw, code };
 };

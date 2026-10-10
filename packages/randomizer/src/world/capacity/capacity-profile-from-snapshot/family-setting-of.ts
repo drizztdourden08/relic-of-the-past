@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../../checked-access';
 import { maxSpanOf } from '../capacity-family';
 import { capacityKeyOf } from '../capacity-option-keys';
 import { maxFloorReasonOf } from '../max-floor-reason-of';
@@ -33,13 +34,13 @@ const familySettingOf = (
   const { id, ladder, defaultCount } = capacityFamily;
   const mode = values[capacityKeyOf(id, 'mode')];
   if (mode !== 'custom') return nonCustomSetting(id, mode, notes);
-  const start = ladderValue(capacityFamily, values[capacityKeyOf(id, 'start')], ladder[capacityFamily.vanillaRung], notes);
-  let max = ladderValue(capacityFamily, values[capacityKeyOf(id, 'max')], ladder[ladder.length - 1], notes);
+  const start = ladderValue(capacityFamily, values[capacityKeyOf(id, 'start')], itemAt(ladder, capacityFamily.vanillaRung), notes);
+  let max = ladderValue(capacityFamily, values[capacityKeyOf(id, 'max')], itemAt(ladder, ladder.length - 1), notes);
   if (max < start) {
     notes.push(`${id}: max ${max} is below start ${start}, clamping to ${start}`);
     max = start;
   }
-  const floor = ladder[maxRungFloorOf(capacityFamily, walletFloor)];
+  const floor = itemAt(ladder, maxRungFloorOf(capacityFamily, walletFloor));
   if (max < floor) {
     const why = maxFloorReasonOf(capacityFamily, walletFloor) ?? 'the seed asks for more';
     notes.push(`${id}: max ${max} is below the floor (${why}), using ${floor}`);

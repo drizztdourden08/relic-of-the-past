@@ -5,7 +5,7 @@ import { enrichEntrances, FALL_HOLE_ID_BASE } from '../../flood/overworld-entran
 import { roomOrigin } from '../../flood/world-origin';
 import { doorCrossingTile, matchDoorsToSpawns, spawnCrossingTile } from '../place-tile';
 import type { DoorRecord } from '../place-tile';
-import { noTarget, overworldTarget, roomTarget } from '../resolve-target';
+import { noTarget, overworldTarget } from '../resolve-target';
 import { entranceRequirements } from '../availability';
 import { makeCrossing } from '../make-crossing';
 import type { CrossingPass, CrossingParts } from '../crossings.type';

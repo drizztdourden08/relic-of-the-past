@@ -6,8 +6,8 @@ const isAtRest = (baseline: ControllerJoystickSample, current: ControllerJoystic
   for (let i = 0; i < current.buttons.length; i++) {
     if (current.buttons[i] && !baseline.buttons[i]) return false;
   }
-  for (let i = 0; i < current.axes.length; i++) {
-    if (Math.abs(current.axes[i] - (baseline.axes[i] ?? 0)) > REST_EPSILON) return false;
+  for (const [i, axis] of current.axes.entries()) {
+    if (Math.abs(axis - (baseline.axes[i] ?? 0)) > REST_EPSILON) return false;
   }
   return true;
 };

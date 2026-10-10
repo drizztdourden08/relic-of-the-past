@@ -13,8 +13,8 @@ const toAudioBuffer = (samples: Int16Array, sampleRate: number, frames: number):
   const left = buffer.getChannelData(0);
   const right = buffer.getChannelData(1);
   for (let i = 0; i < frames; i++) {
-    left[i] = samples[i * 2] / PCM_FULL_SCALE;
-    right[i] = samples[i * 2 + 1] / PCM_FULL_SCALE;
+    left[i] = (samples[i * 2] ?? 0) / PCM_FULL_SCALE;
+    right[i] = (samples[i * 2 + 1] ?? 0) / PCM_FULL_SCALE;
   }
   return buffer;
 };

@@ -18,50 +18,54 @@ const show = (snapshots) => {
 
 const reportVerify = (ref, result) => {
   if (result.ok) {
-    console.log(`✓ nothing from ${ref} is missing on disk` +
-      (result.changed.length ? ` (${result.changed.length} file(s) differ in content)` : ''));
+    const differ = result.changed.length ? ` (${result.changed.length} file(s) differ in content)` : '';
+    console.log(`ok: nothing from ${ref} is missing on disk${differ}`);
     return true;
   }
-  console.error(`\n✗ ${result.missing.length} protected file(s) present in ${ref} are GONE from disk:`);
+  console.error(`\nFAIL: ${result.missing.length} protected file(s) present in ${ref} are GONE from disk:`);
   for (const p of result.missing.slice(0, 20)) console.error(`    ${p}`);
   if (result.missing.length > 20) console.error(`    ...and ${result.missing.length - 20} more`);
-  console.error(`\nGet them back with:  pnpm safetyrestore ${ref}\n`);
+  console.error(`\nGet them back with:  pnpm safety restore ${ref}\n`);
   return false;
+};
+
+const requireRef = (arg, command) => {
+  if (!arg) throw new Error(`Usage: pnpm safety ${command} <branch-or-sha>`);
+  return arg;
+};
+
+const COMMANDS = {
+  snapshot: (arg) => {
+    const { ref, commit } = createSnapshot(arg ?? 'manual');
+    console.log(`Snapshot ${ref} (${commit.slice(0, 8)})`);
+    console.log(`Captured: ${PROTECTED_ROOTS.join(', ')}`);
+  },
+  list: () => show(listSnapshots()),
+  verify: (arg) => {
+    const ref = requireRef(arg, 'verify');
+    if (!reportVerify(ref, verifyAgainst(ref))) process.exitCode = 1;
+  },
+  restore: (arg) => {
+    const ref = requireRef(arg, 'restore');
+    const { files, roots } = restoreFrom(ref);
+    console.log(files > 0
+      ? `Restored ${files} file(s) from ${ref}: ${roots.join(', ')}`
+      : `${ref} holds none of the protected roots.`);
+  },
+  prune: () => {
+    const removed = pruneSnapshots();
+    console.log(removed.length ? `Pruned:\n  ${removed.join('\n  ')}` : 'Nothing to prune.');
+  },
 };
 
 const run = () => {
   const [command, arg] = process.argv.slice(2);
-
-  if (command === 'snapshot') {
-    const { ref, commit } = createSnapshot(arg ?? 'manual');
-    console.log(`Snapshot ${ref} (${commit.slice(0, 8)})`);
-    console.log(`Captured: ${PROTECTED_ROOTS.join(', ')}`);
+  const handler = Object.hasOwn(COMMANDS, command ?? '') ? COMMANDS[command] : null;
+  if (handler) {
+    handler(arg);
     return;
   }
-  if (command === 'list') {
-    show(listSnapshots());
-    return;
-  }
-  if (command === 'verify') {
-    if (!arg) throw new Error('Usage: pnpm safetyverify <branch-or-sha>');
-    if (!reportVerify(arg, verifyAgainst(arg))) process.exitCode = 1;
-    return;
-  }
-  if (command === 'restore') {
-    if (!arg) throw new Error('Usage: pnpm safetyrestore <branch-or-sha>');
-    const { files, roots } = restoreFrom(arg);
-    console.log(files > 0
-      ? `Restored ${files} file(s) from ${arg}: ${roots.join(', ')}`
-      : `${arg} holds none of the protected roots.`);
-    return;
-  }
-  if (command === 'prune') {
-    const removed = pruneSnapshots();
-    console.log(removed.length ? `Pruned:\n  ${removed.join('\n  ')}` : 'Nothing to prune.');
-    return;
-  }
-
-  console.log('Usage: pnpm safetysnapshot [label] | list | verify <ref> | restore <ref> | prune');
+  console.log('Usage: pnpm safety snapshot [label] | list | verify <ref> | restore <ref> | prune');
 };
 
 try {

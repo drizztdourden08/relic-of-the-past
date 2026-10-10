@@ -5,8 +5,8 @@ import type { AxisRanges } from '../positional-capture.type';
 const widestAxis = (ranges: AxisRanges): number | null => {
   let best = -1;
   let bestTravel = 0;
-  for (let i = 0; i < ranges.length; i++) {
-    const travel = ranges[i].max - ranges[i].min;
+  for (const [i, range] of ranges.entries()) {
+    const travel = range.max - range.min;
     if (travel > bestTravel) { bestTravel = travel; best = i; }
   }
   return bestTravel >= AXIS_TRAVEL_THRESHOLD ? best : null;

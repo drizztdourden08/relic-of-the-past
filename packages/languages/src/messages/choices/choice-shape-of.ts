@@ -12,24 +12,22 @@ const lineSpansOf = (tokens: Token[]): LineSpan[] => {
   const spans: LineSpan[] = [];
   let open: LineSpan | null = null;
 
-  tokens.forEach((token, index) => {
+  for (const [index, token] of tokens.entries()) {
     const advance = advanceOfToken(token);
     if (advance !== undefined) {
       if (open !== null) spans.push(open);
       open = { start: index, advance, contentStart: index + 1, end: index + 1, endsBox: false };
-      return;
+      continue;
     }
-    if (open === null) {
-      open = { start: index, advance: null, contentStart: index, end: index, endsBox: false };
-    }
+    open ??= { start: index, advance: null, contentStart: index, end: index, endsBox: false };
     if (isWaitToken(token)) {
       open.endsBox = true;
       spans.push(open);
       open = null;
-      return;
+      continue;
     }
     open.end = index + 1;
-  });
+  }
 
   if (open !== null) spans.push(open);
   return spans;
@@ -41,8 +39,8 @@ const optionOf = (tokens: Token[], span: LineSpan): ChoiceOption => ({
 });
 
 const choiceShapeOf = (tokens: Token[]): ChoiceShape | null => {
-  const last = tokens[tokens.length - 1];
-  if (last === undefined || last.t !== 'cmd' || last.param !== undefined) return null;
+  const last = tokens.at(-1);
+  if (last?.t !== 'cmd' || last.param !== undefined) return null;
   if (!isChoiceCode(last.name)) return null;
 
   const body = tokens.slice(0, -1);
@@ -52,10 +50,12 @@ const choiceShapeOf = (tokens: Token[]): ChoiceShape | null => {
 
   const optionSpans = spans.slice(-count);
   if (optionSpans.some((span) => span.endsBox)) return null;
+  const [firstSpan] = optionSpans;
+  if (firstSpan === undefined) throw new Error('A choice has no option spans');
 
   return {
     code: last.name,
-    question: body.slice(0, optionSpans[0].start),
+    question: body.slice(0, firstSpan.start),
     options: optionSpans.map((span) => optionOf(body, span)),
   };
 };

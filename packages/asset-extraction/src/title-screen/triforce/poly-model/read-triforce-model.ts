@@ -21,7 +21,7 @@ const readFaces = (rom: RomData): number[] => {
 const readTriforceModel = (rom: RomData): PolyModel => {
   const raw = rom.getBytes(ADDR_TRIFORCE_VERTICES, TRIFORCE_VERTEX_COUNT * 3);
   const vertices = Array.from({ length: TRIFORCE_VERTEX_COUNT }, (_, i): Vertex =>
-    [signed8(raw[i * 3]), signed8(raw[i * 3 + 1]), signed8(raw[i * 3 + 2])]);
+    [signed8(raw.readUInt8(i * 3)), signed8(raw.readUInt8(i * 3 + 1)), signed8(raw.readUInt8(i * 3 + 2))]);
   const sinCos = Array.from(rom.getBytes(ADDR_SIN_COS, SIN_COS_LENGTH), signed8);
   return { vertices, faces: readFaces(rom), faceCount: TRIFORCE_FACE_COUNT, sinCos };
 };

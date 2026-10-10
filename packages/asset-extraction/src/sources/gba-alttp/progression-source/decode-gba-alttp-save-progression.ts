@@ -15,7 +15,7 @@ const decodeGbaAlttpSaveProgression = (save: Uint8Array): GbaAlttpSaveSlotProgre
     const offset = GBA_SAVE_SLOT_DATA + slot * GBA_SAVE_SLOT_STRIDE;
     const type = normalized.subarray(header + 4, header + 8).toString('ascii');
     const initialized = type === INITIALIZED_SLOT_TYPE;
-    const powers = initialized ? normalized[offset] : 0;
+    const powers = initialized ? normalized.readUInt8(offset) : 0;
     const checksumStored = ((normalized.readUInt16LE(header) << 16) | normalized.readUInt16LE(header + 2)) >>> 0;
     const checksumCalculated = slotChecksum(
       normalized.subarray(header + 4, header + 8),

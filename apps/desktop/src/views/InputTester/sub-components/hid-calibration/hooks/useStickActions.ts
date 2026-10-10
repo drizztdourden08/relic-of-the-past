@@ -5,6 +5,7 @@ import type { ActionDeps } from './action-deps.type';
 import { finalizeStickCalibration, resetStick } from '../stick-trigger-handlers';
 import { BYTE_MAX, BYTE_MID } from '../hid-calibration.constants';
 import { useStickIdleActions } from './useStickIdleActions';
+import { byteCandidate } from './byte-candidate';
 
 const useStickActions = (d: ActionDeps) => {
   const finalizeStick = useCallback((c1: StickCandidate, c2: StickCandidate | null) => {
@@ -43,10 +44,11 @@ const useStickActions = (d: ActionDeps) => {
   }, [d.addLog]);
 
   const handleConfirmPick = useCallback(() => {
-    if (d.stickPickedBytes.length === 0) return;
-    const bl = d.baselineRef.current; const mins = d.stickMinsRef.current; const maxs = d.stickMaxsRef.current; const bytes = d.latestBytes;
-    const makeCand = (i: number): StickCandidate => ({ idx: i, range: mins.length > i ? maxs[i] - mins[i] : 0, min: mins.length > i ? mins[i] : 0, max: maxs.length > i ? maxs[i] : BYTE_MAX, center: bl.length > i ? bl[i] : (bytes.length > i ? bytes[i] : BYTE_MID) });
-    const c1 = makeCand(d.stickPickedBytes[0]); const c2 = d.stickPickedBytes.length >= 2 ? makeCand(d.stickPickedBytes[1]) : null;
+    const [first, second] = d.stickPickedBytes;
+    if (first === undefined) return;
+    const source = { mins: d.stickMinsRef.current, maxs: d.stickMaxsRef.current, baseline: d.baselineRef.current, bytes: d.latestBytes, fallbackCenter: BYTE_MID };
+    const c1 = byteCandidate({ ...source, idx: first });
+    const c2 = second === undefined ? null : byteCandidate({ ...source, idx: second });
     d.setStickPickMode(false); d.setStickPickedBytes([]); d.finalizeStickRef.current(c1, c2);
   }, [d.stickPickedBytes, d.latestBytes]);
 

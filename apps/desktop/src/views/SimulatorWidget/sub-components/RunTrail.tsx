@@ -2,7 +2,7 @@
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { getScreen } from '@rotp/game-data';
 import type { ScreenId } from '@rotp/game-data';
-import { haulAt } from './trail-haul';
+import { haulAt } from '../behavior/trail-haul';
 import type { RunTrailProps } from '../SimulatorWidget.type';
 
 const RunTrail = ({ trail, checksDone }: RunTrailProps) => {

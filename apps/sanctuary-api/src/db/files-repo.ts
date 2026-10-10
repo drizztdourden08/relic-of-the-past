@@ -43,7 +43,7 @@ const listReady = async (types: FileType[] | null, cursor: string | undefined, p
   if (after !== null) query = query.startAfter(after);
   const snap = await query.get();
   const items = snap.docs.map((doc) => upgradeFile(doc.data() as StoredFile));
-  const last = items[items.length - 1];
+  const last = items.at(-1);
   return { items, nextCursor: items.length === pageSize && last ? encodeCursor(last.createdAt) : null };
 };
 

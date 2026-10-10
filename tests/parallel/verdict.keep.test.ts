@@ -1,6 +1,5 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-// @ts-expect-error -- plain .mjs tooling module, no type declarations by design
 import { VERDICTS, assess, bestToClaim, verdictFor } from '../../scripts/parallel/verdict.mjs';
 
 const NOW = Date.parse('2026-07-25T12:00:00Z');
@@ -82,7 +81,7 @@ describe('bestToClaim', () => {
       { record: record({ name: 'fresh' }), status: status() },
     ].map((e) => ({ ...e, assessment: assess(e.record, e.status, NOW) }));
 
-    expect(bestToClaim(entries).record.name).toBe('fresh');
+    expect(bestToClaim(entries)?.record.name).toBe('fresh');
   });
 
   it('breaks ties on the least catching-up to do', () => {
@@ -91,6 +90,6 @@ describe('bestToClaim', () => {
       { record: record({ name: 'near' }), status: status({ behind: 2 }) },
     ].map((e) => ({ ...e, assessment: assess(e.record, e.status, NOW) }));
 
-    expect(bestToClaim(entries).record.name).toBe('near');
+    expect(bestToClaim(entries)?.record.name).toBe('near');
   });
 });

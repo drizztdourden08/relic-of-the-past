@@ -21,7 +21,7 @@ const collectedStepsOf = (state: CollectionState, capacityFamily: CapacityFamily
   const progressive = state.count(capacityFamily.progressiveItem);
   if (progressive > 0) {
     const jumps = planJumpsOf(capacityFamily, setting);
-    for (let k = 0; k < Math.min(progressive, jumps.length); k += 1) steps += jumps[k];
+    for (const jump of jumps.slice(0, Math.min(progressive, jumps.length))) steps += jump;
   }
   return steps;
 };

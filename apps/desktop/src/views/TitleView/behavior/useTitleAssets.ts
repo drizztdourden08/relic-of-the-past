@@ -8,8 +8,8 @@ import { LIGHT_SCENE_FILES } from '../../../title/scene/scene-files';
 import type { Picture } from '../../../title/choreography/choreography.type';
 import { OPENING_MARK_URL, SPRITE_SCHEME } from '../TitleView.constants';
 import type { PictureSource, TitleAssets } from '../TitleView.type';
-import { logoSourceFor } from './logoSourceFor';
-import { swordSourceFor } from './swordSourceFor';
+import { logoSourceFor } from './logo-source-for';
+import { swordSourceFor } from './sword-source-for';
 
 const load = (src: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
   const img = new Image();
@@ -22,7 +22,7 @@ const loadAll = (srcs: readonly string[]): Promise<HTMLImageElement[]> => Promis
 
 const sameOriginUrl = async (url: string): Promise<string> => {
   if (!url.startsWith(SPRITE_SCHEME)) return url;
-  const path = decodeURIComponent(url.slice(SPRITE_SCHEME.length).split('?')[0]);
+  const path = decodeURIComponent(url.slice(SPRITE_SCHEME.length).split('?')[0] ?? '');
   const bytes = await getPlatform().files.readBytes(path);
   return bytes ? URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'image/png' })) : url;
 };

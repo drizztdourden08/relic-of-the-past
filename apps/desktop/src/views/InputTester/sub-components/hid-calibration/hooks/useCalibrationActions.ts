@@ -9,6 +9,7 @@ import { DEFAULT_REPORT_LENGTH } from './useCalibrationActions.constants';
 import { useCalibrationExport } from './useCalibrationExport';
 import { useStickActions } from './useStickActions';
 import { useTriggerActions } from './useTriggerActions';
+import { isAnalogItem } from './is-analog-item';
 
 const useCalibrationActions = (d: ActionDeps) => {
   const handleProfileConfirm = useCallback(() => {
@@ -75,8 +76,7 @@ const useCalibrationActions = (d: ActionDeps) => {
 
   const handleStartButtons = useCallback(() => {
     if (!ensureBaseline()) return;
-    const curItems = d.itemsRef.current; let firstIdx = -1;
-    for (let i = 0; i < curItems.length; i++) { if (curItems[i].status !== 'captured' && curItems[i].status !== 'skipped' && !STICK_IDS.has(curItems[i].id) && !TRIGGER_IDS.has(curItems[i].id)) { firstIdx = i; break; } }
+    const firstIdx = d.itemsRef.current.findIndex((it) => it.status !== 'captured' && it.status !== 'skipped' && !STICK_IDS.has(it.id) && !TRIGGER_IDS.has(it.id));
     if (firstIdx < 0) { d.addLog('All inputs already mapped!'); return; }
     d.setActiveIndex(firstIdx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.setAutoAdvanceWrapped(true); d.setInputPhaseActiveWrapped(true);
     d.awaitingButtonRestRef.current = true;
@@ -111,7 +111,7 @@ const useCalibrationActions = (d: ActionDeps) => {
     if (d.activeIdxRef.current <= 0) return;
     if (d.advanceTimerRef.current) { clearTimeout(d.advanceTimerRef.current); d.advanceTimerRef.current = null; }
     let prevIdx = d.activeIdxRef.current - 1;
-    while (prevIdx >= 0 && (STICK_IDS.has(d.itemsRef.current[prevIdx]?.id) || TRIGGER_IDS.has(d.itemsRef.current[prevIdx]?.id))) prevIdx--;
+    while (prevIdx >= 0 && isAnalogItem(d.itemsRef.current[prevIdx])) prevIdx--;
     if (prevIdx < 0) return;
     d.setItems(prev => prev.map((it, i) => { if (i === d.activeIdxRef.current && it.status !== 'captured') return { ...it, status: 'pending' }; if (i === prevIdx) return { ...it, status: 'active', result: undefined, mapping: undefined, axisMapping: undefined }; return it; }));
     d.setActiveIndex(prevIdx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.releaseCountRef.current = 0; d.confirmCountRef.current = 0; d.detectedBtnRef.current = null; d.awaitingButtonRestRef.current = true;

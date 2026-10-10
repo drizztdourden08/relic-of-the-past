@@ -10,10 +10,9 @@ import {
   MODULE,
   UI_BUFFER as O,
 } from './ui-bridge-parser.constants';
-import { readU8 } from "../bridge/wasm-call";
 
 const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
-  const u8 = (at: number): number => readU8(heap, ptr + at);
+  const u8 = (at: number): number => heap[ptr + at] ?? 0;
   const u16 = (at: number): number => (heap[ptr + at] ?? 0) | ((heap[ptr + at + 1] ?? 0) << 8);
   const run = (at: number, count: number): number[] => Array.from({ length: count }, (_v, i) => u8(at + i));
 

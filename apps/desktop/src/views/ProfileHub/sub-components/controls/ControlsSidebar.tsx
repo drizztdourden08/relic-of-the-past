@@ -4,6 +4,7 @@ import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives
 import { InputProfileList } from './InputProfileList';
 import { SidebarProfileButton } from './SidebarProfileButton';
 import type { CtrlProps } from './controls.type';
+import './ControlsSidebar.css';
 
 const ControlsSidebar = ({ ctrl }: CtrlProps) => {
   const { setSidebarCollapsed, sidebarCollapsed, setDeleteTarget } = ctrl;

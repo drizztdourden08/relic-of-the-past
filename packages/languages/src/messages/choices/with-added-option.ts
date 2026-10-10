@@ -13,9 +13,10 @@ const advanceAfter = (last: LineAdvance): LineAdvance => {
 };
 
 const withAddedOption = (shape: ChoiceShape, tokens?: Token[]): ChoiceShape | null => {
-  if (shape.options.length !== 2) return null;
+  const [, second] = shape.options;
+  if (shape.options.length !== 2 || second === undefined) return null;
   const added: ChoiceOption = {
-    advance: advanceAfter(shape.options[1].advance),
+    advance: advanceAfter(second.advance),
     tokens: tokens ?? [{ t: 'text', v: CURSOR_COLUMN_SPACES }],
   };
   return { ...shape, code: 'Choose3', options: [...shape.options, added] };

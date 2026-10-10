@@ -67,7 +67,7 @@ const readSprites = (heap: Uint8Array, ptr: number): SpriteSlot[] =>
 const readOamSnapshot = (): OamSnapshot | null => {
   const mod = getModule();
   if (!mod || getGameState().status !== 'running') return null;
-  const ptr = mod.ccall('WasmGetOamSnapshot', 'number', [], []) as number;
+  const ptr = mod.ccall('WasmGetOamSnapshot', 'number', [], []);
   const developerToolsOn = ptr !== 0;
   if (!developerToolsOn) return null;
 

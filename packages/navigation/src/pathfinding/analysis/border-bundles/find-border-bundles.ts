@@ -2,6 +2,7 @@
 import type { FloodFillResult, ReachState } from '@rotp/game-core';
 import type { BorderBundle, BorderDir } from './border-bundles.type';
 import { GRID_SIZE } from '../../types/grid.constants';
+import { itemAt } from '../../../checked-access';
 import { BORDER_DIRS } from './border-bundles.constants';
 
 const borderCell = (grid: ReachState[][], direction: BorderDir, i: number): ReachState | undefined => {
@@ -25,7 +26,7 @@ const splitIntoBundles = (tiles: number[], direction: BorderDir, prefix: string)
   const bundles: BorderBundle[] = [];
   let bundleStart = 0;
   for (let i = 1; i <= tiles.length; i++) {
-    if (i === tiles.length || tiles[i] !== tiles[i - 1] + 1) {
+    if (i === tiles.length || itemAt(tiles, i) !== itemAt(tiles, i - 1) + 1) {
       bundles.push({
         id: `${prefix}-edge-${direction}-${bundles.length}`,
         direction,

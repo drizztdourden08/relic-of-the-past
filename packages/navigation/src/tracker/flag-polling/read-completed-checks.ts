@@ -6,6 +6,7 @@ import { withCollectedChecks } from '../collected-checks';
 import type { CheckId, ItemId } from '@rotp/game-data';
 import { BED_STATE_RAM, OUT_OF_BED_STATE, SAVE_DUNG_INFO_RAM } from './flag-polling.constants';
 import { roomWordReader } from './room-word-reader';
+import { itemAt } from '../../checked-access';
 import type { WasmModule } from './flag-polling.type';
 
 const readCompletedChecks = (mod: WasmModule, inventory: ReadonlySet<ItemId> | null = null): Set<CheckId> | null => {
@@ -22,13 +23,13 @@ const readCompletedChecks = (mod: WasmModule, inventory: ReadonlySet<ItemId> | n
   const words = roomPtr ? roomWordReader(heap, roomPtr, livePtr) : null;
   const newCompleted = computeCompletedChecks({
     readRoomWord: words ? words.read : null,
-    readOwByte: owPtr ? (owScreen: number): number => heap[owPtr + owScreen] : null,
-    readProgByte: progPtr ? (bufferIndex: number): number => heap[progPtr + bufferIndex] : null,
-    readEventByte: eventPtr ? (byteIndex: number): number => heap[eventPtr + byteIndex] : null,
+    readOwByte: owPtr ? (owScreen: number): number => heap[owPtr + owScreen] ?? 0 : null,
+    readProgByte: progPtr ? (bufferIndex: number): number => itemAt(heap, progPtr + bufferIndex) : null,
+    readEventByte: eventPtr ? (byteIndex: number): number => heap[eventPtr + byteIndex] ?? 0 : null,
     inventory,
   }, isCheckPhysicallyArmed);
 
-  if (roomPtr && heap[roomPtr - SAVE_DUNG_INFO_RAM + BED_STATE_RAM] >= OUT_OF_BED_STATE) {
+  if (roomPtr && itemAt(heap, roomPtr - SAVE_DUNG_INFO_RAM + BED_STATE_RAM) >= OUT_OF_BED_STATE) {
     const id = outOfBedCheckId();
     if (id) newCompleted.add(id);
   }

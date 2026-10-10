@@ -4,7 +4,9 @@ import { inBounds } from '../../core/in-bounds';
 import { isLandable } from './is-landable';
 import { HOP_DY_PX, MAX_HOP_STEPS, NEED_EAST, NEED_WEST, SAMPLE_DX, SAMPLE_DY, TILE_PX } from './cliff-preprocessing.constants';
 
-const findDiagonalLanding = (grid: TilePassability[][], row: number, col: number, dv: -1 | 1, dh: -1 | 1): GridPos | null => {
+const findDiagonalLanding = (grid: TilePassability[][], start: GridPos, slope: readonly [dv: -1 | 1, dh: -1 | 1]): GridPos | null => {
+  const { row, col } = start;
+  const [dv, dh] = slope;
   const need = dh < 0 ? NEED_WEST : NEED_EAST;
   let x = col * TILE_PX;
   let y = row * TILE_PX;

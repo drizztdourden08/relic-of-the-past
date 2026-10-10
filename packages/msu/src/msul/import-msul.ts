@@ -6,9 +6,9 @@ import type { ArchiveEntry } from '@rotp/roms';
 import type { MsulPack } from './import-msul.type';
 
 const isManifestShape = (value: unknown): value is MsuPackManifest => {
-  const manifest = value as MsuPackManifest | null;
-  return !!manifest && typeof manifest === 'object'
-    && !!manifest.meta && typeof manifest.meta.name === 'string'
+  if (typeof value !== 'object' || value === null) return false;
+  const manifest = value as MsuPackManifest;
+  return Boolean(manifest.meta) && typeof manifest.meta.name === 'string'
     && Array.isArray(manifest.tracks);
 };
 

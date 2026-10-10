@@ -3,8 +3,8 @@ const packPackedBytes = (parts: readonly Uint8Array[]): Uint8Array => {
   if (parts.length === 0) return new Uint8Array(0);
   const offsets: number[] = [];
   let offs = 0;
-  for (let i = 0; i < parts.length - 1; i++) {
-    offs += parts[i].length;
+  for (const part of parts.slice(0, -1)) {
+    offs += part.length;
     offsets.push(offs);
   }
   const wide = !(offs < 65536 && parts.length <= 8192);

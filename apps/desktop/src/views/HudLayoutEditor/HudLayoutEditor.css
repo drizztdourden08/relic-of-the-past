@@ -121,3 +121,22 @@
   gap: var(--space-xs);
   flex-wrap: wrap;
 }
+
+@media (width <= 900px) {
+  .hud-editor {
+    overflow-y: auto;
+  }
+
+  .hud-editor__body {
+    flex: none;
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
+
+  .hud-editor__rail,
+  .hud-editor__stage-column {
+    flex: 1 1 100%;
+    max-width: 100%;
+    overflow-y: visible;
+  }
+}

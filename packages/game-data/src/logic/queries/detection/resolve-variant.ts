@@ -6,17 +6,17 @@ import { evaluateCondition } from './evaluate-condition';
 const isDefaultVariant = (candidate: ScreenRecord): boolean =>
   !candidate.variant || candidate.variant.condition.type === 'always';
 
+const matchingVariant = (candidates: ScreenRecord[], state: VariantGameState): ScreenRecord | undefined =>
+  candidates.find((c) => c.variant !== undefined
+    && c.variant.condition.type !== 'always'
+    && evaluateCondition(c.variant.condition, state));
+
 const resolveVariant = (candidates: ScreenRecord[], state?: VariantGameState): ScreenRecord => {
-  if (candidates.length === 1) return candidates[0];
-  if (!state) return candidates.find(isDefaultVariant) ?? candidates[0];
-
-  for (const c of candidates) {
-    if (c.variant && c.variant.condition.type !== 'always') {
-      if (evaluateCondition(c.variant.condition, state)) return c;
-    }
-  }
-
-  return candidates.find(isDefaultVariant) ?? candidates[0];
+  const [first] = candidates;
+  if (first === undefined) throw new Error('resolveVariant needs at least one candidate screen');
+  if (candidates.length === 1) return first;
+  const matched = state ? matchingVariant(candidates, state) : undefined;
+  return matched ?? candidates.find(isDefaultVariant) ?? first;
 };
 
 export { resolveVariant };

@@ -16,7 +16,7 @@ const sampleGameColor = (x: number, y: number, canvas: HTMLCanvasElement | null)
     if (px < 0 || px >= canvas.width || py < 0 || py >= canvas.height) return white();
 
     const pixel = ctx.getImageData(px, py, 1, 1).data;
-    return [pixel[0] / 255, pixel[1] / 255, pixel[2] / 255];
+    return [(pixel[0] ?? 0) / 255, (pixel[1] ?? 0) / 255, (pixel[2] ?? 0) / 255];
   } catch {
     return white();
   }

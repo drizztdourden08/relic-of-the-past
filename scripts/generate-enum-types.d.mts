@@ -1,6 +1,6 @@
 /* @layer tooling-scripts @kind types */
-/** Ambient types for generate-enum-types.mjs's importable surface. Behavior lives in that file. */
 import type { EnumerationEntry } from '@rotp/game-data';
 
 export declare const buildGeneratedTypesSource: (allEnumeration: readonly EnumerationEntry[]) => string;
 export declare const generateEnumTypes: (root?: string) => Promise<string>;
+export declare const CATEGORY_TYPE_NAMES: Readonly<Record<string, string>>;

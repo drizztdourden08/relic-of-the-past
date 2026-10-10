@@ -11,9 +11,7 @@ const computeLightUniforms = (lights: LightSource[], gameCanvas: HTMLCanvasEleme
   const intensities = new Float32Array(MAX_LIGHTS);
   const castShadows = new Float32Array(MAX_LIGHTS);
 
-  for (let i = 0; i < numLights; i++) {
-    const light = lights[i];
-
+  for (const [i, light] of lights.slice(0, numLights).entries()) {
     positions[i * 3] = light.x;
     positions[i * 3 + 1] = light.y;
     positions[i * 3 + 2] = light.radius;

@@ -10,7 +10,7 @@ const decodeGatedTable = <T>(
   call?: CallArgs,
 ): T[] | null =>
   callWhenRunning<T[] | null>(null, (mod) => {
-    const ptr = mod.ccall(exportName, 'number', call?.argTypes ?? [], call?.args ?? []) as number;
+    const ptr = mod.ccall(exportName, 'number', call?.argTypes ?? [], call?.args ?? []);
     if (!ptr || mod.HEAPU8[ptr] === 0) return null;
     return decodeCountPrefixed(mod, ptr + 1, layout, decode);
   });

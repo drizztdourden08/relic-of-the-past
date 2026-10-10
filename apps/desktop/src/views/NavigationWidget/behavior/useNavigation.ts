@@ -146,6 +146,7 @@ const useNavigation = () => {
 
       const fillResults = responses.map(r => r.result);
       const primaryResult = fillResults.find(r => r.screenIndex === primaryScreenIndex) ?? fillResults[0];
+      if (primaryResult === undefined) return;
 
       const allConnections: ConnectionInfo[] = [];
       for (const r of responses) {

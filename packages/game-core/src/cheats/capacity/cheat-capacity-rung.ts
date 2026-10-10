@@ -7,7 +7,7 @@ const cheatCapacityRung = (kind: CapacityKind): number => {
   const mod = getModule();
   if (!mod) return OUTSIDE_GATE_RUNG;
   try {
-    return mod.ccall('WasmCheatCapacityRung', 'number', ['number'], [CAPACITY_KIND[kind]]) as number;
+    return mod.ccall('WasmCheatCapacityRung', 'number', ['number'], [CAPACITY_KIND[kind]]);
   } catch {
     return OUTSIDE_GATE_RUNG;
   }

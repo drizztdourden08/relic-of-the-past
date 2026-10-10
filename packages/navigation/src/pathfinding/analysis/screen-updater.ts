@@ -13,9 +13,8 @@ const obstaclesOf = (floodResult: FloodFillResult): NavObstacle[] => {
   const obstacles: NavObstacle[] = [];
   if (!floodResult.reqGrid) return obstacles;
   const seen = new Set<string>();
-  for (let r = 0; r < floodResult.reqGrid.length; r++) {
-    for (let c = 0; c < floodResult.reqGrid[r].length; c++) {
-      const req = floodResult.reqGrid[r][c];
+  for (const [r, reqRow] of floodResult.reqGrid.entries()) {
+    for (const [c, req] of reqRow.entries()) {
       if (!req) continue;
       const key = `${r},${c},${req}`;
       if (seen.has(key)) continue;

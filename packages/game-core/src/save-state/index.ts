@@ -3,6 +3,6 @@ export { CURRENT_STATE_FORMAT } from './current-format.constants';
 export { BASELINE, KNOWN_FORMATS } from './formats';
 export { formatById } from './format-by-id';
 export { isCurrentFormatRegistered } from './is-current-format-registered';
-export { checkLoadable, compareTargetFormat, describeStamp, describeTargetCompat } from './compatibility';
+export { checkLoadable, describeStamp } from './compatibility';
 export { appendStamp, readSnapshotBytes, readStamp, stripStamp } from './state-file';
-export type { KnownFormat, Loadability, StateStamp, TargetCompat } from './save-state.type';
+export type { KnownFormat, Loadability, StateStamp } from './save-state.type';

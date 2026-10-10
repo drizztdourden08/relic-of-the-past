@@ -7,7 +7,7 @@ const matchRoom = (diff: FlagDiff): CheckRecord | undefined => {
   for (const c of ALL_CHECKS) {
     const { roomId, chestIndex, mask } = c.gameId;
     if (roomId !== diff.index) continue;
-    if (chestIndex !== undefined && (CHEST_OPEN_MASKS[chestIndex] & diff.setBits) !== 0) return c;
+    if (chestIndex !== undefined && ((CHEST_OPEN_MASKS[chestIndex] ?? 0) & diff.setBits) !== 0) return c;
     if (mask !== undefined && chestIndex === undefined && (mask & diff.setBits) !== 0) return c;
   }
   return undefined;

@@ -28,8 +28,9 @@ const paletteToBytes = (palette: SheetPalette): Uint8Array => {
     const colors = palette.outfits[id];
     for (let i = 0; i < COLORS_PER_OUTFIT; i++) {
       const at = (slot * COLORS_PER_OUTFIT + i) * 2;
-      out[at] = colors[i] & 0xff;
-      out[at + 1] = (colors[i] >> 8) & 0xff;
+      const color = colors[i] ?? 0;
+      out[at] = color & 0xff;
+      out[at + 1] = (color >> 8) & 0xff;
     }
   });
   const view = new DataView(out.buffer);
@@ -41,9 +42,9 @@ const paletteToBytes = (palette: SheetPalette): Uint8Array => {
 const checksumOf = (bytes: Uint8Array): number => {
   const checksumAt = ZSPR_HEADER.checksum;
   let sum = CHECKSUM_SEED.reduce((a, b) => a + b, 0);
-  for (let i = 0; i < bytes.length; i++) {
+  for (const [i, byte] of bytes.entries()) {
     if (i >= checksumAt && i < checksumAt + CHECKSUM_SEED.length) continue;
-    sum = (sum + bytes[i]) & 0xffff;
+    sum = (sum + byte) & 0xffff;
   }
   sum &= 0xffff;
   return sum | ((0xffff - sum) << 16);

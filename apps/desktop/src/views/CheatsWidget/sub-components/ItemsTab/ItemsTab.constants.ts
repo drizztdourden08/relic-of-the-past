@@ -49,8 +49,8 @@ const ABILITY_WORDS = [
   { label: 'LIFT', bit: 7 }, { label: 'READ', bit: 6 }, { label: 'TALK', bit: 5 },
   { label: 'PULL', bit: 3 }, { label: 'RUN', bit: 2 }, { label: 'SWIM', bit: 1 },
 ];
-const ABILITY_SLOT_ORDER = [CheatSlot.Boots, CheatSlot.Gloves, CheatSlot.Flippers, CheatSlot.MoonPearl];
-const ABILITY_EQUIP_TYPE: Record<number, string> = {
+const ABILITY_SLOT_ORDER = [CheatSlot.Boots, CheatSlot.Gloves, CheatSlot.Flippers, CheatSlot.MoonPearl] as const;
+const ABILITY_EQUIP_TYPE: Record<(typeof ABILITY_SLOT_ORDER)[number], string> = {
   [CheatSlot.Boots]: 'boots', [CheatSlot.Gloves]: 'gloves', [CheatSlot.Flippers]: 'flippers', [CheatSlot.MoonPearl]: 'moonPearl',
 };
 const ABILITY_FLAG_LIFT = 0x80;

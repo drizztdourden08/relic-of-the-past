@@ -18,8 +18,7 @@ const doorRecordPair = (roomId: number, doorIndex: number): [number, number][] =
   if (adj === null) return out;
   const pos = door.direction === 'north' || door.direction === 'south' ? door.col : door.row;
   const twins = wasmGetRoomDoorInfo(adj) ?? [];
-  for (let i = 0; i < twins.length && i < DOOR_RECORD_SLOTS; i++) {
-    const t = twins[i];
+  for (const [i, t] of twins.slice(0, DOOR_RECORD_SLOTS).entries()) {
     if (t.direction !== OPPOSITE[door.direction] || t.kind !== door.kind) continue;
     const tpos = t.direction === 'north' || t.direction === 'south' ? t.col : t.row;
     if (Math.abs(tpos - pos) <= TWIN_DOOR_TOLERANCE) out.push([adj, i]);
@@ -37,8 +36,8 @@ const closeDoorBothSides = (roomId: number, doorIndex: number): void => {
 
 const forEachShutter = (roomId: number, wantOpen: boolean, apply: (index: number) => void): void => {
   const doors = wasmGetRoomDoorInfo(roomId) ?? [];
-  for (let i = 0; i < doors.length && i < DOOR_RECORD_SLOTS; i++) {
-    if (doors[i].kind === SHUTTER_DOOR_KIND && Boolean(doors[i].isOpen) === wantOpen) apply(i);
+  for (const [i, door] of doors.slice(0, DOOR_RECORD_SLOTS).entries()) {
+    if (door.kind === SHUTTER_DOOR_KIND && Boolean(door.isOpen) === wantOpen) apply(i);
   }
 };
 
@@ -106,7 +105,6 @@ const trigger = (action: TriggerAction): Promise<void> =>
       case 'trapShutters':
         forEachShutter(action.roomId, true, (i) => closeDoorBothSides(action.roomId, i));
         resolve();
-        return;
     }
   });
 

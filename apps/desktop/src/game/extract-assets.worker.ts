@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { loadRomFromBuffer, loadGbaAlttpRomFromBuffer, decodeCredits, decodeEndingCaptions, decodeMenuText, compileAlttpAssetSet, extractLangEntry, extractSpriteBuffers } from '@rotp/asset-extraction';
+import { decodeCredits, decodeEndingCaptions, decodeMenuText, extractLangEntry, extractSpriteBuffers } from '@rotp/asset-extraction';
+import { loadRomFromBuffer, loadGbaAlttpRomFromBuffer, compileAlttpAssetSet } from '@rotp/asset-extraction/node';
 import { compileSets } from '@rotp/languages';
 import type { SetBakeInput } from '@rotp/languages';
 import type { SpriteDef } from '@rotp/asset-extraction';

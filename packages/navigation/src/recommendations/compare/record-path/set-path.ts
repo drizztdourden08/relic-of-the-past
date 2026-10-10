@@ -13,6 +13,7 @@ const cloneContainer = (value: unknown, nextSegment: Segment | undefined): unkno
 
 const setAt = (target: unknown, segments: readonly Segment[], value: unknown): unknown => {
   const [head, ...rest] = segments;
+  if (head === undefined) throw new Error('A record path needs at least one segment');
   const clone = cloneContainer(target, head) as Record<string, unknown>;
   if (rest.length === 0) {
     clone[head.key] = value;

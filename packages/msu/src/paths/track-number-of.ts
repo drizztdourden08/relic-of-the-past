@@ -2,8 +2,8 @@
 import { TRACK_NUMBER_RE } from './msu-paths.constants';
 
 const trackNumberOf = (name: string): number | null => {
-  const match = name.match(TRACK_NUMBER_RE);
-  return match === null ? null : Number.parseInt(match[1], 10);
+  const digits = TRACK_NUMBER_RE.exec(name)?.[1];
+  return digits === undefined ? null : Number.parseInt(digits, 10);
 };
 
 export { trackNumberOf };

@@ -74,6 +74,57 @@ const classifyRole = (p) => {
   return 'root-config';
 };
 
+const TYPE_BY_LANG = {
+  Binary: 'asset',
+  Markdown: 'doc',
+  CSS: 'style',
+  SCSS: 'style',
+  JSON: 'config-data',
+  Make: 'build',
+  Batch: 'build',
+  Shell: 'build',
+  PowerShell: 'build',
+  YAML: 'build',
+  TOML: 'build',
+  C: 'native',
+  'C-Header': 'native',
+  'C++': 'native',
+};
+
+const LOGIC_LINE = /(=>|\bfunction\b|\bif\s*\(|\bfor\s*\(|\bwhile\s*\(|\bswitch\s*\(|\breturn\b|\bawait\b|\.map\(|\.filter\(|\.forEach\(|\.reduce\(|useState|useEffect|useCallback)/;
+
+const typeFromPathAndHead = (p, base, head) => {
+  if (/\.(test|spec)\.[tj]sx?$/.test(p)) return 'test';
+  if (/auto-?generated|do not edit/i.test(head)) return 'generated';
+  if (/\.(config|d)\.[tj]s$/.test(base) || /config/i.test(base)) return 'config';
+  return null;
+};
+
+const isDataFile = (p, content, codeLines) => {
+  if (DATA_PATH_HINTS.some((h) => p.includes(h))) return true;
+  const logic = codeLines.filter((l) => LOGIC_LINE.test(l)).length;
+  const dataScore = codeLines.length ? 1 - logic / codeLines.length : 0;
+  const hasLiteral = /=\s*[[{]|:\s*[A-Za-z0-9_<>[\]]+\s*=\s*\[/.test(content);
+  return hasLiteral && dataScore > 0.9 && codeLines.length > 40;
+};
+
+const typeFromContent = (p, base, content) => {
+  const codeLines = content.split('\n').filter((l) => l.trim() && !/^\s*(\/\/|\*|\/\*|\*\/)/.test(l));
+  const isBarrel = base === 'index.ts' && codeLines.length > 0 && codeLines.every((l) => /^\s*(export|import)\b/.test(l));
+  if (isBarrel) return 'barrel';
+  if (isDataFile(p, content, codeLines)) return 'data';
+  return null;
+};
+
+const typeFromName = (lang, base) => {
+  if (lang === 'TypeScript-React') return 'component';
+  if (/^use[A-Z]/.test(base)) return 'hook';
+  if (base === 'types.ts' || /^[A-Z].*\.types\.ts$/.test(base)) return 'types';
+  if (base === 'constants.ts') return 'constants';
+  if (base === 'styles.ts') return 'style';
+  return 'logic';
+};
+
 const classifyType = (p, content) => {
   const lang = classifyLang(p);
   const head = content.slice(0, 1200);
@@ -81,33 +132,11 @@ const classifyType = (p, content) => {
   if (tag) return { type: tag[1].toLowerCase(), source: 'tag' };
 
   const base = baseName(p);
-  if (lang === 'Binary') return { type: 'asset', source: 'heuristic' };
-  if (lang === 'Markdown') return { type: 'doc', source: 'heuristic' };
-  if (lang === 'CSS' || lang === 'SCSS') return { type: 'style', source: 'heuristic' };
-  if (lang === 'JSON') return { type: 'config-data', source: 'heuristic' };
-  if (['Make', 'Batch', 'Shell', 'PowerShell', 'YAML', 'TOML'].includes(lang)) return { type: 'build', source: 'heuristic' };
-  if (lang === 'C' || lang === 'C-Header' || lang === 'C++') return { type: 'native', source: 'heuristic' };
-  if (/\.(test|spec)\.[tj]sx?$/.test(p)) return { type: 'test', source: 'heuristic' };
-  if (/auto-?generated|do not edit/i.test(head)) return { type: 'generated', source: 'heuristic' };
-  if (/\.(config|d)\.[tj]s$/.test(base) || /config/i.test(base)) return { type: 'config', source: 'heuristic' };
-
-  const lines = content.split('\n');
-  const codeLines = lines.filter((l) => l.trim() && !/^\s*(\/\/|\*|\/\*|\*\/)/.test(l));
-  const isBarrel = base === 'index.ts' && codeLines.length > 0 && codeLines.every((l) => /^\s*(export|import)\b/.test(l));
-  if (isBarrel) return { type: 'barrel', source: 'heuristic' };
-
-  const logic = codeLines.filter((l) => /(=>|\bfunction\b|\bif\s*\(|\bfor\s*\(|\bwhile\s*\(|\bswitch\s*\(|\breturn\b|\bawait\b|\.map\(|\.filter\(|\.forEach\(|\.reduce\(|useState|useEffect|useCallback)/.test(l)).length;
-  const dataScore = codeLines.length ? 1 - logic / codeLines.length : 0;
-  const hasLiteral = /=\s*[[{]|:\s*[A-Za-z0-9_<>[\]]+\s*=\s*\[/.test(content);
-  const pathData = DATA_PATH_HINTS.some((h) => p.includes(h));
-  if (pathData || (hasLiteral && dataScore > 0.9 && codeLines.length > 40)) return { type: 'data', source: 'heuristic' };
-
-  if (lang === 'TypeScript-React') return { type: 'component', source: 'heuristic' };
-  if (/^use[A-Z]/.test(base)) return { type: 'hook', source: 'heuristic' };
-  if (base === 'types.ts' || /^[A-Z].*\.types\.ts$/.test(base)) return { type: 'types', source: 'heuristic' };
-  if (base === 'constants.ts') return { type: 'constants', source: 'heuristic' };
-  if (base === 'styles.ts') return { type: 'style', source: 'heuristic' };
-  return { type: 'logic', source: 'heuristic' };
+  const type = TYPE_BY_LANG[lang]
+    ?? typeFromPathAndHead(p, base, head)
+    ?? typeFromContent(p, base, content)
+    ?? typeFromName(lang, base);
+  return { type, source: 'heuristic' };
 };
 
 const readLayerTag = (content) => {

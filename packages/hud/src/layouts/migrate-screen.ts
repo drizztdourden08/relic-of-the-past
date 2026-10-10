@@ -1,6 +1,6 @@
 /* @layer shared-hud @kind logic */
 import { gapPatch } from './migrate-gap';
-import { BANDS, INDEX, ITEMS, SCREEN_GRID } from './migrate-screen.constants';
+import { BANDS, INDEX, ITEMS, SCREEN_GRID, TOP_LEFT_BAND } from './migrate-screen.constants';
 import type { Raw } from './migrate-gap.type';
 import type { BandPair } from './migrate-screen.type';
 
@@ -61,7 +61,7 @@ const cellFor = (band: BandPair): Raw => ({
 
 const regionChild = (region: unknown): unknown => {
   if (!isRecord(region)) return region;
-  const band = BANDS[String(region.anchor)] ?? BANDS['top-left'];
+  const band = BANDS[String(region.anchor)] ?? TOP_LEFT_BAND;
   const root = migrateNode(region.root);
   if (!isRecord(root)) return root;
   return { ...root, place: cellFor(band), ...alignmentFor(band) };

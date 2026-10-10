@@ -41,7 +41,9 @@ const compileCheck = (node: RuleNode): RuleCheck => {
       return (state) => children.some((child) => child(state));
     }
     case 'if': {
-      const [cond, whenTrue, whenFalse] = [node.cond, node.then, node.else].map(compileCheck);
+      const cond = compileCheck(node.cond);
+      const whenTrue = compileCheck(node.then);
+      const whenFalse = compileCheck(node.else);
       return (state) => (cond(state) ? whenTrue(state) : whenFalse(state));
     }
     case 'region': {

@@ -2,6 +2,7 @@
 import type { SnesButton } from '@rotp/game-data';
 import { SNES_BUTTON_BITS } from '@rotp/game-data';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
+import { axisPressed } from './axis-pressed';
 import type { AllowedDevices } from './profile-devices';
 import { scopedEntries } from './device-scoped-map';
 import type { DeviceScopedMap } from './device-scoped-map';
@@ -14,11 +15,11 @@ const applyDeviceState = (mask: number, deviceKey: string, buttons: readonly boo
   }
   for (const [key, snesBtn] of scopedEntries(gamepadAxisMap, deviceKey)) {
     const [axisStr, dir] = key.split(':');
-    const axisIndex = parseInt(axisStr, 10);
+    const axisIndex = parseInt(axisStr ?? '', 10);
     if (axisIndex < axes.length) {
       const val = axes[axisIndex];
       const threshold = resolveAxisPressThreshold(axisIndex, deviceKey);
-      if ((dir === '+' && val > threshold) || (dir === '-' && val < -threshold)) {
+      if (axisPressed(val, dir, threshold)) {
         mask |= (1 << SNES_BUTTON_BITS[snesBtn]);
       }
     }

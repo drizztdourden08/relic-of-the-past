@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { loadConfig } from './config.mjs';
-import { log, warn, fail, run, capture, sleep } from './run.mjs';
+import { log, warn, fail, run, capture, captureOrNull, sleep } from './run.mjs';
 
 const sdk = process.env.ANDROID_HOME || process.env.ANDROID_SDK_ROOT || '';
 const ext = process.platform === 'win32' ? '.exe' : '';
@@ -29,10 +29,7 @@ const deviceSerial = () => {
 const waitForBoot = () => {
   run(adb, ['wait-for-device']);
   for (let i = 0; i < 180; i += 1) {
-    try {
-      if (capture(adb, ['shell', 'getprop', 'sys.boot_completed']) === '1') return;
-    } catch {
-    }
+    if (captureOrNull(adb, ['shell', 'getprop', 'sys.boot_completed']) === '1') return;
     sleep(1000);
   }
   fail('Emulator did not finish booting within 3 minutes.');

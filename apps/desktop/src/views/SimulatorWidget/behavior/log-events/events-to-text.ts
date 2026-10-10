@@ -7,7 +7,7 @@ const eventsToText = (events: SimEvent[]): string => {
   const indents = computeIndents(events);
   return events.map((e, i) => {
     const { tag } = classifyEvent(e);
-    return `${'  '.repeat(indents[i])}${tag.replace(/[▸◂§▣] /, '')}\t${e.msg}`;
+    return `${'  '.repeat(indents[i] ?? 0)}${tag.replace(/[▸◂§▣] /, '')}\t${e.msg}`;
   }).join('\n');
 };
 

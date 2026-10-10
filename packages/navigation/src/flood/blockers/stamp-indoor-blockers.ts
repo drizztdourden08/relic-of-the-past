@@ -4,6 +4,7 @@ import { wasmGetIndoorUncleBlockers, wasmGetRoomSpriteSpawns, wasmGetViewportInf
 import { originContaining, tileInScreen } from '../world-origin';
 import { BLOCKED_ATTR, UNCLE_SPRITE } from './blockers.constants';
 import { uncleCollected } from './uncle-collected';
+import { itemAt } from '../../checked-access';
 import { footprint } from './footprint';
 
 const uncleCells = (roomId: number, isLiveRoom: boolean): GridPos[] => {
@@ -27,7 +28,7 @@ const stampIndoorBlockers = (roomId: number, grids: number[][][], isLiveRoom: bo
   if (uncleCollected()) return;
   const cells = uncleCells(roomId, isLiveRoom);
   for (const grid of grids) {
-    for (const { row, col } of cells) grid[row][col] = BLOCKED_ATTR;
+    for (const { row, col } of cells) itemAt(grid, row)[col] = BLOCKED_ATTR;
   }
 };
 

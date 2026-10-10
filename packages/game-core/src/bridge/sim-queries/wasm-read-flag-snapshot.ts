@@ -6,9 +6,9 @@ import type { SimFlagSnapshot } from './sim-queries.type';
 const wasmReadFlagSnapshot = (): SimFlagSnapshot | null =>
   callWhenRunning<SimFlagSnapshot | null>(null, (mod) => {
     const heap = mod.HEAPU8;
-    const dungPtr = mod.ccall('WasmGetRoomFlags', 'number', [], []) as number;
-    const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []) as number;
-    const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+    const dungPtr = mod.ccall('WasmGetRoomFlags', 'number', [], []);
+    const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []);
+    const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []);
     if (!dungPtr || !owPtr || !progPtr) return null;
     const dungInfo = new Uint16Array(DUNG_INFO_LEN);
     for (let i = 0; i < DUNG_INFO_LEN; i++) dungInfo[i] = readU16(heap, dungPtr + i * 2);

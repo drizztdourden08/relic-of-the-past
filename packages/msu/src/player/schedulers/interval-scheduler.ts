@@ -1,12 +1,14 @@
 /* @layer renderer-lib @kind logic */
 import type { LayerResume } from '@rotp/game-data';
 import type { LayerActivity, LayerContext, LayerScheduler, LiveVoice } from './scheduler.type';
-import type { Voice } from '../voice';
-import { soundingVoices } from './sounding-voices';
+import { liveActivity } from './live-activity';
+import { intervalPointAt } from './interval-point-at';
+import { playLiveVoice } from './play-live-voice';
 
 const createIntervalScheduler = (ctx: LayerContext, atSeconds: number[]): LayerScheduler => {
   const points = [...new Set(atSeconds.filter((s) => Number.isFinite(s) && s >= 0))].sort((a, b) => a - b);
-  const cycle = points.length > 0 ? points[points.length - 1] : 0;
+  const cycle = points.at(-1) ?? 0;
+  const pointAt = (index: number): number => intervalPointAt(points, index);
 
   let timer: ReturnType<typeof setTimeout> | null = null;
   let live: LiveVoice[] = [];
@@ -19,9 +21,7 @@ const createIntervalScheduler = (ctx: LayerContext, atSeconds: number[]): LayerS
     if (ctx.files.length === 0) return;
     const fileIndex = ctx.files.length > 1 ? index % ctx.files.length : 0;
     lastFileIndex = fileIndex;
-    const entry = { voice: null as unknown as Voice, fileIndex };
-    entry.voice = ctx.play(fileIndex, { loop: false, onEnded: () => { live = live.filter((v) => v !== entry); } });
-    live.push(entry);
+    live.push(playLiveVoice(ctx, fileIndex, (entry) => { live = live.filter((v) => v !== entry); }));
   };
 
   const gapAfter = (previous: number, next: number): number =>
@@ -35,8 +35,8 @@ const createIntervalScheduler = (ctx: LayerContext, atSeconds: number[]): LayerS
       fireIndex(pointIndex);
       pointIndex += 1;
       if (pointIndex >= points.length) pointIndex = 0;
-      const previous = points[(pointIndex - 1 + points.length) % points.length];
-      const next = points[pointIndex];
+      const previous = pointAt((pointIndex - 1 + points.length) % points.length);
+      const next = pointAt(pointIndex);
       scheduleIn(gapAfter(previous, next));
     }, Math.max(0, seconds) * 1000);
   };
@@ -44,7 +44,7 @@ const createIntervalScheduler = (ctx: LayerContext, atSeconds: number[]): LayerS
   const start = (resume: LayerResume | null): void => {
     if (points.length === 0) return;
     pointIndex = Math.min(resume?.fileIndex ?? 0, points.length - 1);
-    scheduleIn(resume?.nextEventInSeconds ?? points[pointIndex]);
+    scheduleIn(resume?.nextEventInSeconds ?? pointAt(pointIndex));
   };
 
   const position = (): LayerResume => ({
@@ -53,19 +53,13 @@ const createIntervalScheduler = (ctx: LayerContext, atSeconds: number[]): LayerS
     nextEventInSeconds: Math.max(0, dueAt - ctx.elapsedSeconds()),
   });
 
-  const activity = (): LayerActivity => {
-    const newest = live[live.length - 1];
-    return {
-      fileName: ctx.fileNames[newest?.fileIndex ?? lastFileIndex ?? 0] ?? null,
-      nextEventInSeconds: timer === null ? null : Math.max(0, dueAt - ctx.elapsedSeconds()),
-      waitSeconds: currentWait,
-      positionSeconds: newest?.voice.offsetSeconds() ?? null,
-      durationSeconds: newest?.voice.durationSeconds ?? null,
-      sounding: live.length > 0,
-      voiceCount: live.length,
-      voices: soundingVoices(live, ctx.fileNames),
-    };
-  };
+  const activity = (): LayerActivity => liveActivity({
+    live,
+    fileNames: ctx.fileNames,
+    lastFileIndex,
+    nextEventInSeconds: timer === null ? null : Math.max(0, dueAt - ctx.elapsedSeconds()),
+    waitSeconds: currentWait,
+  });
 
   const stop = (): void => {
     if (timer !== null) clearTimeout(timer);

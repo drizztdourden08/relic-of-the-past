@@ -10,7 +10,7 @@ const buildTitlePalette = (rom: RomData): RGBA[] => {
   for (const { rom: src, dst, count, rows } of TITLE_PALETTE_LOADS) {
     const words = rom.getWords(src, count * rows);
     for (let r = 0; r < rows; r += 1) {
-      for (let c = 0; c < count; c += 1) cgram[dst + r * ROW_WORDS + c] = words[r * count + c];
+      for (let c = 0; c < count; c += 1) cgram[dst + r * ROW_WORDS + c] = words[r * count + c] ?? 0;
     }
   }
   return cgram.map(snesToRgba);

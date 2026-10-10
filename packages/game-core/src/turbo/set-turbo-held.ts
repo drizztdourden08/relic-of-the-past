@@ -7,7 +7,7 @@ const setTurboHeld = (held: boolean): void => {
   try {
     mod.ccall('WasmSetTurboHeld', null, ['number'], [held ? 1 : 0]);
   } catch {
-    return;
+    
   }
 };
 

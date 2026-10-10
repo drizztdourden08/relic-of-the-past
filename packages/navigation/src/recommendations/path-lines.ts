@@ -6,15 +6,15 @@ const isKeyChar = (ch: string): boolean => /[A-Za-z0-9_$]/.test(ch);
 
 const keyBefore = (source: string, colonAt: number): string | null => {
   let i = colonAt - 1;
-  while (i >= 0 && /\s/.test(source[i])) i -= 1;
+  while (i >= 0 && /\s/.test(source.charAt(i))) i -= 1;
   if (i < 0) return null;
-  const quote = source[i];
+  const quote = source.charAt(i);
   if (quote === '"' || quote === "'") {
     const start = source.lastIndexOf(quote, i - 1);
     return start < 0 ? null : source.slice(start + 1, i);
   }
   const end = i;
-  while (i >= 0 && isKeyChar(source[i])) i -= 1;
+  while (i >= 0 && isKeyChar(source.charAt(i))) i -= 1;
   return end > i ? source.slice(i + 1, end + 1) : null;
 };
 
@@ -26,7 +26,7 @@ const pathLines = (source: string): ReadonlyMap<string, number> => {
   let pendingPath: string | null = null;
 
   for (let i = 0; i < source.length; i += 1) {
-    const ch = source[i];
+    const ch = source.charAt(i);
 
     if (ch === '\n') { line += 1; continue; }
 
@@ -37,7 +37,8 @@ const pathLines = (source: string): ReadonlyMap<string, number> => {
     }
     if (ch === '"' || ch === "'" || ch === '`') { quote = ch; continue; }
 
-    const frame = stack[stack.length - 1];
+    const frame = stack.at(-1);
+    if (frame === undefined) throw new Error('The path stack lost its root frame');
 
     if (ch === ':' && !frame.isArray) {
       const key = keyBefore(source, i);
@@ -70,10 +71,10 @@ const pathLines = (source: string): ReadonlyMap<string, number> => {
     if (frame.isArray && !/\s/.test(ch)) {
       const path = childPath(frame.path, String(frame.index), true);
       if (!lines.has(path)) lines.set(path, line);
-      while (i < source.length && source[i] !== ',' && source[i] !== ']') {
-        if (source[i] === '\n') line += 1;
-        if (source[i] === '"' || source[i] === "'") {
-          const end = source.indexOf(source[i], i + 1);
+      while (i < source.length && source.charAt(i) !== ',' && source.charAt(i) !== ']') {
+        if (source.charAt(i) === '\n') line += 1;
+        if (source.charAt(i) === '"' || source.charAt(i) === "'") {
+          const end = source.indexOf(source.charAt(i), i + 1);
           i = end < 0 ? source.length : end;
         }
         i += 1;

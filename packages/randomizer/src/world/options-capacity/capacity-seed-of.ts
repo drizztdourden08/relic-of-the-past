@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { entryOf } from '../../checked-access';
 import { maxSpanOf } from '../capacity/capacity-family';
 import { capacityKeyOf } from '../capacity/capacity-option-keys';
 import {
@@ -14,7 +15,7 @@ const rungNounOf = (family: CapacityFamily): string => (family.id === 'meter' ? 
 const capacitySeedOf = (capacityFamily: CapacityFamily, field: CapacityField): OptionSeed => {
   const { id, label } = capacityFamily;
   const key = capacityKeyOf(id, field);
-  const value = DEFAULT_CAPACITY_ROWS[key];
+  const value = entryOf(DEFAULT_CAPACITY_ROWS, key);
   const base = { key, group: 'items' as const, implementation: 'active' as const, locked: false, synthetic: true, sourceDefault: value, baseline: value };
   switch (field) {
     case 'mode':

@@ -7,7 +7,7 @@ import { withPartsDone } from './with-parts-done';
 const recordVersionPartsDone = (fileId: string, n: number, partsDone: number): Promise<SanctuaryFile> =>
   filesRepo.mutate(fileId, (latest) => {
     const version = versionOf(latest, n);
-    if (!version || version.status !== 'uploading' || !version.upload) return {};
+    if (version?.status !== 'uploading' || !version.upload) return {};
     return { versions: replaceVersion(latest, { ...version, upload: withPartsDone(version.upload, partsDone) }) };
   });
 

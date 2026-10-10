@@ -6,8 +6,8 @@ const encodeDictionary = (lang = 'us'): Uint8Array[] => {
   if (!info) throw new Error(`Unknown language: ${lang}`);
 
   const charToIdx = new Map<string, number>();
-  for (let i = 0; i < info.alphabet.length; i++) {
-    charToIdx.set(info.alphabet[i], i);
+  for (const [i, char] of info.alphabet.entries()) {
+    charToIdx.set(char, i);
   }
 
   return info.dictionary.map(line => {

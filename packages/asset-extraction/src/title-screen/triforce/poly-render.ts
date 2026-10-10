@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { itemAt } from '../../checked-read';
 import { drawFace } from './poly-raster';
 import { signed8 } from './poly-model';
 import type { PolyModel, PolyPose } from './poly-model';
@@ -18,9 +19,11 @@ const divide = (a: number, b: number): number => {
   return u16(negative ? -q : q);
 };
 
+const sinCosAt = (model: PolyModel, index: number): number => itemAt(model.sinCos, index, 'Triforce sine table');
+
 const rotationOf = (model: PolyModel, pose: PolyPose): Rotation => {
-  const sinA = model.sinCos[pose.a], cosA = model.sinCos[pose.a + COSINE_OFFSET];
-  const sinB = model.sinCos[pose.b], cosB = model.sinCos[pose.b + COSINE_OFFSET];
+  const sinA = sinCosAt(model, pose.a), cosA = sinCosAt(model, pose.a + COSINE_OFFSET);
+  const sinB = sinCosAt(model, pose.b), cosB = sinCosAt(model, pose.b + COSINE_OFFSET);
   const term = (p: number, q: number): number => s16(u16(((p * signed8(q)) >> 8) << 2));
   return { sinA, cosA, sinB, cosB, e0: term(sinB, sinA), e1: term(cosB, cosA), e2: term(cosB, sinA), e3: term(sinB, cosA) };
 };
@@ -40,29 +43,30 @@ const projectVertices = (model: PolyModel, pose: PolyPose): ProjectedVertices =>
   return { xs, ys };
 };
 
-const crossProduct = (xy: number[]): number => {
-  let t = u16((xy[3] - xy[1]) * signed8(xy[6] - xy[4]));
-  t = u16(t - (xy[5] - xy[3]) * signed8(xy[4] - xy[2]));
-  return t;
+const crossProduct = (xy: readonly number[]): number => {
+  const at = (i: number): number => itemAt(xy, i, 'Triforce face outline');
+  const t = u16((at(3) - at(1)) * signed8(at(6) - at(4)));
+  return u16(t - (at(5) - at(3)) * signed8(at(4) - at(2)));
 };
 
 const shadeOf = (cross: number): number => {
   const a = u8((cross << 1) >> 8);
-  return a <= 1 ? 1 : a >= 7 ? 7 : a;
+  return Math.min(7, Math.max(1, a));
 };
 
 const renderPolyhedron = (model: PolyModel, pose: PolyPose): Uint8Array => {
   const ram = new Uint8Array(RAM_BYTES);
   const { xs, ys } = projectVertices(model, pose);
+  const faceAt = (i: number): number => itemAt(model.faces, i, 'Triforce face list');
   let p = 0;
   for (let f = 0; f < model.faceCount; f += 1) {
-    const n = model.faces[p++];
+    const n = faceAt(p);
     const xy = [n * 2];
     for (let i = 0; i < n; i += 1) {
-      const v = model.faces[p++];
-      xy.push(xs[v], ys[v]);
+      const v = faceAt(p + 1 + i);
+      xy.push(itemAt(xs, v, 'Triforce vertex x'), itemAt(ys, v, 'Triforce vertex y'));
     }
-    p += 1;
+    p += n + 2;
     const cross = crossProduct(xy);
     if (s16(cross) > 0) drawFace(ram, xy, shadeOf(cross));
   }

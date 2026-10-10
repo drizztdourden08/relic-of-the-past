@@ -27,14 +27,15 @@ const rasterizeElement = (buffer: Uint8Array, bufWidth: number, bufHeight: numbe
       if (!insideShape) continue;
       const idx = py * bufWidth + px;
       const byteVal = Math.round(height * 255);
-      if (byteVal > buffer[idx]) {
+      const current = buffer[idx];
+      if (current !== undefined && byteVal > current) {
         buffer[idx] = byteVal;
       }
     }
   }
 };
 
-const buildHeightmapTexture = (elements: HeightmapElement[], width: number, height: number, offsetX: number = 0, offsetY: number = 0): Uint8Array => {
+const buildHeightmapTexture = (elements: HeightmapElement[], width: number, height: number, offsetX = 0, offsetY = 0): Uint8Array => {
   const buffer = new Uint8Array(width * height);
 
   for (const element of elements) {

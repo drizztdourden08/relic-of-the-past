@@ -15,7 +15,7 @@ import { storeBucket } from '../storage/store-bucket';
 const approvedVersion = (item: StoreItem, requested: number | undefined): StoreVersion & { packKey: string } => {
   const n = requested ?? item.liveVersion;
   const version = n === null ? null : versionOf(item, n);
-  if (!version || version.review.state !== 'approved' || !version.packKey || !isPackKey(version.packKey)) {
+  if (version?.review.state !== 'approved' || !version.packKey || !isPackKey(version.packKey)) {
     throw notFound('That version is not available.');
   }
   if (version.removed) {

@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import type { LayerResume } from '@rotp/game-data';
 import type { LayerActivity, LayerContext, LayerScheduler, LiveVoice } from './scheduler.type';
-import type { Voice } from '../voice';
-import { soundingVoices } from './sounding-voices';
+import { liveActivity } from './live-activity';
+import { playLiveVoice } from './play-live-voice';
 
 const createRandomScheduler = (
   ctx: LayerContext, minDelaySeconds: number, maxDelaySeconds: number, waitForCompletion = false,
@@ -22,15 +22,10 @@ const createRandomScheduler = (
     if (ctx.files.length === 0) return;
     const index = Math.floor(Math.random() * ctx.files.length);
     lastFileIndex = index;
-    const entry = { voice: null as unknown as Voice, fileIndex: index };
-    entry.voice = ctx.play(index, {
-      loop: false,
-      onEnded: () => {
-        live = live.filter((v) => v !== entry);
-        if (waitForCompletion) scheduleIn(gap());
-      },
-    });
-    live.push(entry);
+    live.push(playLiveVoice(ctx, index, (entry) => {
+      live = live.filter((v) => v !== entry);
+      if (waitForCompletion) scheduleIn(gap());
+    }));
   };
 
   const scheduleIn = (seconds: number): void => {
@@ -53,19 +48,13 @@ const createRandomScheduler = (
     nextEventInSeconds: Math.max(0, dueAt - ctx.elapsedSeconds()),
   });
 
-  const activity = (): LayerActivity => {
-    const newest = live[live.length - 1];
-    return {
-      fileName: ctx.fileNames[newest?.fileIndex ?? lastFileIndex ?? 0] ?? null,
-      nextEventInSeconds: timer === null ? null : Math.max(0, dueAt - ctx.elapsedSeconds()),
-      waitSeconds: timer === null ? null : currentWait,
-      positionSeconds: newest?.voice.offsetSeconds() ?? null,
-      durationSeconds: newest?.voice.durationSeconds ?? null,
-      sounding: live.length > 0,
-      voiceCount: live.length,
-      voices: soundingVoices(live, ctx.fileNames),
-    };
-  };
+  const activity = (): LayerActivity => liveActivity({
+    live,
+    fileNames: ctx.fileNames,
+    lastFileIndex,
+    nextEventInSeconds: timer === null ? null : Math.max(0, dueAt - ctx.elapsedSeconds()),
+    waitSeconds: timer === null ? null : currentWait,
+  });
 
   const stop = (): void => {
     if (timer !== null) clearTimeout(timer);

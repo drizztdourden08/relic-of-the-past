@@ -10,7 +10,7 @@ const decodeTable = <T>(
   call?: CallArgs,
 ): T[] =>
   callWhenRunning<T[]>([], (mod) => {
-    const ptr = mod.ccall(exportName, 'number', call?.argTypes ?? [], call?.args ?? []) as number;
+    const ptr = mod.ccall(exportName, 'number', call?.argTypes ?? [], call?.args ?? []);
     if (!ptr) return [];
     return decodeCountPrefixed(mod, ptr, layout, decode);
   });

@@ -13,7 +13,7 @@ const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 const resolveDeviceFromEntry = (entry: DeviceEntry): ResolvedDevice => {
   const vendorId = toHex4(entry.vendorId);
   const productId = toHex4(entry.productId);
-  const sdlType: SdlGamepadType = (entry.sdlType as SdlGamepadType | undefined) ?? 'unknown';
+  const sdlType: SdlGamepadType = (entry.sdlType) ?? 'unknown';
   const hasButton = entry.hasButton ?? [];
   const hasAxis = entry.hasAxis ?? [];
   const buttonLabels = entry.buttonLabels ?? [];

@@ -5,10 +5,11 @@ import { kNumChar, kNumExt, kNumX, kNumY } from '../drop-tables';
 import { decode3bppTile } from '../receipt-decoder/decode-3bpp-tile';
 import type { DropSheets } from '../drop-sprite-assembly';
 import type { SpritePalettes } from '../receipt-palettes';
+import { paletteRow } from '../receipt-palettes';
 
 const extractDropNumbered = (_spriteType: number, paletteIdx: number, group: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
   const a = (group - 1) * 3;
-  const palette = spritePalettes.palettes[paletteIdx];
+  const palette = paletteRow(spritePalettes, paletteIdx);
   const img = new ImageBuffer(16, 16);
 
   for (let j = 0; j < 3; j++) {

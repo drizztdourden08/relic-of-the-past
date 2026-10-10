@@ -3,17 +3,23 @@ import type { RomData } from '../rom/rom-types';
 import type { MusicEntity, Pattern, Phrase, Song, SongList } from './extract-types.type';
 import { copySoundBank } from './copy-sound-bank';
 import { createMusicEntity } from './create-music-entity';
-import { noteToStr } from './note-to-str';
-import { kEffectByteLength, kEffectNames } from './spc-command-tables.constants';
+import { decodePatternCommand } from './decode-pattern-command';
+import { readCommandPrefix } from './read-command-prefix';
 
 class SoundBankContext {
-  memory: (number | null)[] = new Array(65536).fill(null);
+  memory: (number | null)[] = new Array<number | null>(65536).fill(null);
   typesForEa = new Map<number, MusicEntity>();
   pqueue: [number, MusicEntity][] = [];
   songsInBank = 0;
 
   getByte(ea: number): number | null {
-    return this.memory[ea];
+    return this.memory[ea] ?? null;
+  }
+
+  readByte(ea: number): number {
+    const value = this.getByte(ea);
+    if (value === null) throw new Error(`Sound bank byte 0x${ea.toString(16)} is not loaded`);
+    return value;
   }
 
   getWord(ea: number): number {
@@ -27,7 +33,7 @@ class SoundBankContext {
 
   loadSoundBank(rom: RomData, ea: number, memIn?: (number | null)[]): number {
     if (memIn) this.memory = [...memIn];
-    else this.memory = new Array(65536).fill(null);
+    else this.memory = new Array<number | null>(65536).fill(null);
     return copySoundBank(rom, ea, this.memory);
   }
 
@@ -85,41 +91,14 @@ class SoundBankContext {
     const startEa = ea;
     pattern.lines = [];
 
-    while (true) {
-      if (ea !== startEa && ea === nextEa) {
-        pattern.lines.push({ kind: 'fallthrough' });
-        return;
-      }
-      let noteLength: number | null = null;
-      let volstuff: number | null = null;
-      let cmd = this.getByte(ea)!;
-      ea += 1;
-      if (cmd === 0) break;
-      if (!(cmd & 0x80)) {
-        noteLength = cmd;
-        cmd = this.getByte(ea)!;
-        ea += 1;
-        if (!(cmd & 0x80)) {
-          volstuff = cmd;
-          cmd = this.getByte(ea)!;
-          ea += 1;
-        }
-      }
-      if (cmd === 0xef) {
-        const addr = this.getWord(ea);
-        const loops = this.getByte(ea + 2)!;
-        ea += 3;
-        pattern.lines.push({ kind: 'call', name: 'Call', target: this.getPattern(addr), loops, noteLength, volstuff });
-      } else if (cmd >= 0xe0) {
-        const x = kEffectByteLength[cmd - 0xe0];
-        const args: number[] = [];
-        for (let i = 0; i < x; i++) args.push(this.getByte(ea + i)!);
-        ea += x;
-        pattern.lines.push({ kind: 'effect', name: kEffectNames[cmd - 0xe0], args, noteLength, volstuff });
-      } else {
-        pattern.lines.push({ kind: 'note', note: noteToStr(cmd & 0x7f), noteLength, volstuff });
-      }
+    while (ea === startEa || ea !== nextEa) {
+      const prefix = readCommandPrefix(this, ea);
+      if (prefix === null) return;
+      const { line, size } = decodePatternCommand(this, prefix);
+      pattern.lines.push(line);
+      ea = prefix.next + size;
     }
+    pattern.lines.push({ kind: 'fallthrough' });
   }
 
   decodePhrase(phrase: Phrase): void {
@@ -150,18 +129,20 @@ class SoundBankContext {
 
   decodeAny(what: MusicEntity, nextEa: number | null): void {
     switch (what.type) {
-      case 'Song': this.decodeSong(what as Song); break;
-      case 'Phrase': this.decodePhrase(what as Phrase); break;
-      case 'Pattern': this.decodePattern(what as Pattern, nextEa); break;
+      case 'Song': this.decodeSong(what); break;
+      case 'Phrase': this.decodePhrase(what); break;
+      case 'Pattern': this.decodePattern(what, nextEa); break;
       case 'SongList': break;
     }
   }
 
   processQueue(): void {
-    while (this.pqueue.length > 0) {
-      const [, item] = this.pqueue.shift()!;
-      const nextEa = this.pqueue.length > 0 ? this.pqueue[0][0] : null;
+    let head = this.pqueue.shift();
+    while (head !== undefined) {
+      const [, item] = head;
+      const nextEa = this.pqueue[0]?.[0] ?? null;
       this.decodeAny(item, nextEa);
+      head = this.pqueue.shift();
     }
   }
 

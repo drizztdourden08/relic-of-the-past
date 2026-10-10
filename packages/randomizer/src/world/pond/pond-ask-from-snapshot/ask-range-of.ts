@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../../checked-access';
 import { POND_ASK_ROW_BY_KIND } from '../pond-ask';
 import { pondAskMaxKeyOf, pondAskMinKeyOf } from '../pond-ask-keys';
 import type { PartialOptionValues } from '../../options.type';
@@ -14,8 +15,8 @@ const numberAt = (values: PartialOptionValues, key: string, fallback: number): n
 
 const askRangeOf = (values: PartialOptionValues, pond: PondInstance, kind: PondAskAmountKind): AskRange => {
   const { stops, defaultMin, defaultMax } = POND_ASK_ROW_BY_KIND[kind];
-  const floor = stops[0];
-  const ceiling = stops[stops.length - 1];
+  const floor = itemAt(stops, 0);
+  const ceiling = itemAt(stops, stops.length - 1);
   const low = numberAt(values, pondAskMinKeyOf(pond, kind), defaultMin);
   const high = numberAt(values, pondAskMaxKeyOf(pond, kind), defaultMax);
   const held = (amount: number): number => Math.min(ceiling, Math.max(floor, amount));

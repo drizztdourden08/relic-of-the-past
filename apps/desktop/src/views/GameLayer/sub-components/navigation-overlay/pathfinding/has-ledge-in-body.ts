@@ -1,17 +1,17 @@
 /* @layer renderer-components @kind logic */
-import { GRID_SIZE } from '@rotp/navigation';
 import type { ReachState } from '@rotp/game-core';
+import type { GridPos } from '../navigation-overlay.type';
+import { bodyCells } from './body-cells';
+import { inGrid2x2 } from './in-grid-2x2';
+import { isLedgeState } from './is-ledge-state';
 import { isTraversalDirCompatible } from './is-traversal-dir-compatible';
-import { LEDGE_STATE_MAX, LEDGE_STATE_MIN } from './pathfinding.constants';
+import type { StepDir } from './pathfinding.type';
 
-const hasLedgeInBody = (nr: number, nc: number, grid: ReachState[][], dr: number, dc: number): boolean => {
-  if (nr < 0 || nr + 1 >= GRID_SIZE || nc < 0 || nc + 1 >= GRID_SIZE) return false;
-  const positions: [number, number][] = [[nr, nc], [nr, nc + 1], [nr + 1, nc], [nr + 1, nc + 1]];
-  for (const [r, c] of positions) {
-    const state = grid[r][c];
-    if (state >= LEDGE_STATE_MIN && state <= LEDGE_STATE_MAX && isTraversalDirCompatible(state, dr, dc)) return true;
-  }
-  return false;
+const hasLedgeInBody = (next: GridPos, dir: StepDir, grid: ReachState[][]): boolean => {
+  const [dr, dc] = dir;
+  if (!inGrid2x2(next.row, next.col)) return false;
+  return bodyCells(grid, next.row, next.col)
+    .some((cell) => cell !== undefined && isLedgeState(cell) && isTraversalDirCompatible(cell, dr, dc));
 };
 
 export { hasLedgeInBody };

@@ -6,6 +6,7 @@ import { invalidateGroups } from '../access/cached-groups';
 import { refreshAccess } from '../access/refresh-access';
 import { groupsRepo } from '../db/groups-repo';
 import { usersRepo } from '../db/users-repo';
+import { routeParam } from '../router';
 import type { SiteConfig } from '../site-config.type';
 import type { Route } from '../route.type';
 
@@ -14,7 +15,7 @@ const groupsDelete = (site: SiteConfig): Route => ({
   handler: async ({ req, res, params }) => {
     await requireAdmin(req, site);
     if (params.id === DEFAULT_GROUP_ID) throw conflict('The default group cannot be deleted.');
-    const group = await groupsRepo.get(params.id);
+    const group = await groupsRepo.get(routeParam(params, 'id'));
     if (!group) throw notFound('No such group.');
     await groupsRepo.remove(group.id);
     invalidateGroups();

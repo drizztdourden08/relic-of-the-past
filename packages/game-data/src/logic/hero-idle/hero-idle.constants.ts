@@ -1,7 +1,7 @@
 /* @layer shared-game @kind constants */
 import type { Facing } from '../../data/native-tables/player-pose-atlas';
 import type { HeroPose } from './hero-idle.type';
-import { WALK_PX_PER_FRAME } from './native-timings';
+import { WALK_PX_PER_FRAME } from './native-timings.constants';
 import { FACING_TOWARD_VIEWER } from './sequence-table';
 
 const STANDING_FRAME = 0;

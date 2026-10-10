@@ -3,13 +3,16 @@ import { useMemo } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@rotp/game-core';
 import { landingCrossings, markerCrossings, crossingIcon } from '@rotp/navigation';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { wasmGetRoomLayoutInfo } from '../../../game';
 import { useNavigationOverlayStore } from '../../../stores/navigation-overlay-store';
-import { EDGE_COLORS } from '../NavigationWidget.constants';
+import { EDGE_COLOR_BY_SIDE as EDGE_COLORS } from '../NavigationWidget.constants';
 import { getScreenDisplayName } from '../../../nav-widget/widget-helpers';
 import { ReachabilityCanvas } from './ReachabilityCanvas';
 import { AnnotationLayer } from './AnnotationLayer';
+import { EdgeBadge } from './EdgeBadge';
+import { groupByEdge } from '../behavior/group-by-edge';
+import { positionSpan } from '../behavior/position-span';
 import { COUNT_LABEL } from './IndoorMinimap.constants';
 import type { MinimapProps } from './IndoorMinimap.type';
 
@@ -68,35 +71,22 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
     return result;
   }, [primaryResult, scrollBoundaries, mapLeft, mapTop, mapW, mapH]);
 
-  const byEdge: Record<string, ConnectionInfo[]> = { north: [], south: [], east: [], west: [] };
-  for (const c of externalConns) {
-    if (byEdge[c.edge]) byEdge[c.edge].push(c);
-  }
-
-  const textColor = (edge: string) => (edge === 'north' || edge === 'west' ? 'var(--c-text)' : '#000');
+  const byEdge = groupByEdge(externalConns);
 
   const renderHorizEdge = (list: ConnectionInfo[], prefix: string, top: number) => list.map((c, i) => {
-    const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+    const { first: p0, last: p1 } = positionSpan(c.positions);
     const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * mapW);
     const midX = mapLeft + ((p0 + p1 + 1) / 2 / 64) * mapW;
-    return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: Math.round(midX - spanW / 2), width: spanW, height: 14, borderRadius: 'var(--radius-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
-        <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
-      </Box>
-    );
+    const box = { top, left: Math.round(midX - spanW / 2), width: spanW, height: 14 };
+    return <EdgeBadge key={`${prefix}${i}`} connection={c} box={box} title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`} />;
   });
 
   const renderVertEdge = (list: ConnectionInfo[], prefix: string, left: number) => list.map((c, i) => {
-    const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+    const { first: p0, last: p1 } = positionSpan(c.positions);
     const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * mapH);
     const midY = mapTop + ((p0 + p1 + 1) / 2 / 64) * mapH;
-    return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: Math.round(midY - spanH / 2) - 1, width: 14, height: spanH, borderRadius: 'var(--radius-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
-        <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
-      </Box>
-    );
+    const box = { top: Math.round(midY - spanH / 2) - 1, left, width: 14, height: spanH };
+    return <EdgeBadge key={`${prefix}${i}`} connection={c} box={box} title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`} />;
   });
 
   return (

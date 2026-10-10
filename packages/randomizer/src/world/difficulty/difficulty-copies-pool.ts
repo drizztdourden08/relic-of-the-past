@@ -7,20 +7,17 @@ import type { ProgressiveModeSetting } from '../progressive/progressive.type';
 import type { CopyMultiplierSetting } from './difficulty.type';
 
 const carriedNamesOf = (
-  familyIndex: number, modes: ProgressiveModeSetting,
-): readonly string[] => {
-  const family = PROGRESSIVE_FAMILIES[familyIndex];
-  return isRandomOrder(modes, family.id) ? family.tiers : [family.poolItem];
-};
+  family: (typeof PROGRESSIVE_FAMILIES)[number], modes: ProgressiveModeSetting,
+): readonly string[] => (isRandomOrder(modes, family.id) ? family.tiers : [family.poolItem]);
 
 const applyCopyMultipliers = (
   pool: string[], modes: ProgressiveModeSetting, copies: CopyMultiplierSetting,
 ): number => {
   const added: string[] = [];
-  PROGRESSIVE_FAMILIES.forEach((family, index) => {
+  PROGRESSIVE_FAMILIES.forEach((family) => {
     const extra = (copies[family.id] ?? DEFAULT_COPY_MULTIPLIER) - DEFAULT_COPY_MULTIPLIER;
     if (extra <= 0) return;
-    for (const name of carriedNamesOf(index, modes)) {
+    for (const name of carriedNamesOf(family, modes)) {
       const carried = countInPool(pool, name);
       for (let copy = 0; copy < carried * extra; copy += 1) added.push(name);
     }

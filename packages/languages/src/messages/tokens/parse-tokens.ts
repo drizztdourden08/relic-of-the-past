@@ -17,11 +17,10 @@ const paramlessToken = (name: string): Token => {
 };
 
 const codeToken = (inner: string): Token => {
-  const withParam = PARAM_RE.exec(inner);
-  if (!withParam) return paramlessToken(inner);
+  const [, name, digits] = PARAM_RE.exec(inner) ?? [];
+  if (name === undefined || digits === undefined) return paramlessToken(inner);
 
-  const name = withParam[1];
-  const param = Number(withParam[2]);
+  const param = Number(digits);
   if (name === kNumberCommand) return { t: 'var', name: 'number', slot: param };
   return { t: 'cmd', name, param };
 };

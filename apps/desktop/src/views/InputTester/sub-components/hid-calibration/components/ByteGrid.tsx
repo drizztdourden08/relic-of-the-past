@@ -31,8 +31,8 @@ const ByteGrid = (props: ByteGridProps) => {
       <Box className="hid-cal__byte-grid">
         {Array.from(latestBytes).map((b, i) => {
           const colors = getByteColor(i);
-          const hasBaseline = baselineRef.current.length > i;
-          const delta = hasBaseline && !excludedRef.current.has(i) ? b - baselineRef.current[i] : 0;
+          const base = baselineRef.current[i];
+          const delta = base !== undefined && !excludedRef.current.has(i) ? b - base : 0;
           const signed = byteStatuses[i] === 'stick' || byteStatuses[i] === 'trigger';
           const isPicked = (stickPickMode && stickPickedBytes.includes(i)) || (triggerPickMode && triggerPickedByte === i);
           const pickHighlight = (stickPickMode || triggerPickMode) && !isPicked;

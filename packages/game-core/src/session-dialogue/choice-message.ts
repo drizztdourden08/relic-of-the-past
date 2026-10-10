@@ -1,11 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 import { toDialogueText } from './dialogue-text';
-import { VISIBLE_ROWS, fitsRows, wrapRows } from './wrap-message';
+import { VISIBLE_ROWS, fitsRows, lastOf, wrapRows } from './wrap-message';
 import { CHOOSE_COMMAND, ROW_COMMANDS, SCROLL_COMMAND, WAIT_COMMAND } from './message-commands.constants';
 import { INLINE_QUESTION_ROWS, NO_INDENT, YES_INDENT } from './choice-message.constants';
 import type { DialogueCharset } from '@rotp/game-data';
 import type { ChoiceReceiptLine } from '../receipt-text/receipt-line.type';
-
 const answerRowsOf = (line: ChoiceReceiptLine, charset: DialogueCharset): string[] => [
   `${YES_INDENT}${toDialogueText(line.yes, charset)}`,
   `${NO_INDENT}${toDialogueText(line.no, charset)}`,
@@ -20,7 +19,7 @@ const inlineText = (question: string, answers: readonly string[]): string =>
 const pagedText = (questionRows: readonly string[], recap: string, answers: readonly string[]): string => {
   const rows = questionRows.map((row, index) =>
     (index < ROW_COMMANDS.length ? `${ROW_COMMANDS[index]}${row}` : `${WAIT_COMMAND}${SCROLL_COMMAND}${row}`));
-  for (let index = questionRows.length; index < ROW_COMMANDS.length; index += 1) rows.push(ROW_COMMANDS[index]);
+  rows.push(...ROW_COMMANDS.slice(questionRows.length));
   const second = [recap, ...answers].map((row) => `${SCROLL_COMMAND}${row}`).join('');
   return `${rows.join('')}${WAIT_COMMAND}${second}${CHOOSE_COMMAND}`;
 };
@@ -29,12 +28,12 @@ const promptRowOf = (line: ChoiceReceiptLine, saidRows: readonly string[], chars
   const candidates = (line.prompt === undefined ? [] : [line.prompt].flat())
     .map((text) => toDialogueText(text, charset));
   const fits = fitCandidate(candidates, INLINE_QUESTION_ROWS, charset);
-  return fits ?? saidRows[saidRows.length - 1];
+  return fits ?? lastOf(saidRows, 'A choice question wrapped to no rows');
 };
 
 const choiceMessageText = (line: ChoiceReceiptLine, candidates: readonly string[], charset: DialogueCharset): string => {
   const answers = answerRowsOf(line, charset);
-  const said = fitCandidate(candidates, VISIBLE_ROWS, charset) ?? candidates[candidates.length - 1];
+  const said = fitCandidate(candidates, VISIBLE_ROWS, charset) ?? lastOf(candidates, 'A choice line has no text candidates');
   const saidRows = wrapRows(said, charset.alphabet, charset.widths);
   if (saidRows.length <= INLINE_QUESTION_ROWS) return inlineText(said, answers);
   return pagedText(saidRows, promptRowOf(line, saidRows, charset), answers);

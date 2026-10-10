@@ -2,6 +2,6 @@
 import { callWhenRunning } from '../wasm-call';
 
 const wasmGetStaircaseType = (): number | null =>
-  callWhenRunning<number | null>(null, (mod) => mod.ccall('WasmGetStaircaseType', 'number', [], []) as number);
+  callWhenRunning<number | null>(null, (mod) => mod.ccall('WasmGetStaircaseType', 'number', [], []));
 
 export { wasmGetStaircaseType };

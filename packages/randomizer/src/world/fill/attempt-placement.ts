@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../checked-access';
 import { createRng } from '../../rng';
 import { placementStatsOf } from './placement-stats';
 import { buildFillWorld, fillEligibleLocations } from './fill-world';
@@ -20,9 +21,9 @@ const attemptPlacement = (
 ): Placement => {
   const rng = createRng(attemptSeed);
   const fillOptions = fillOptionsFromSnapshot(snapshot, deliverable, {
-    pickBottle: (choices) => choices[rng.int(choices.length)],
+    pickBottle: (choices) => itemAt(choices, rng.int(choices.length)),
     pickFiller: (count) => rng.int(count),
-    pickWeapon: (choices) => choices[rng.int(choices.length)],
+    pickWeapon: (choices) => itemAt(choices, rng.int(choices.length)),
   }, seed);
   const shopPrices = rollPrices({ values: snapshot.values, options: fillOptions, rng });
   const fillWorld = buildFillWorld({ ...fillOptions, shopPrices, pondDemands });
@@ -40,7 +41,7 @@ const attemptPlacement = (
   if (openLocations.length !== rest.length) {
     throw new Error(`junk fill imbalance: ${openLocations.length} open vs ${rest.length} items`);
   }
-  openLocations.forEach((location, index) => world.placedItems.set(location, rest[index]));
+  openLocations.forEach((location, index) => world.placedItems.set(location, itemAt(rest, index)));
   const sweep = sweepPlacementSpheres(world);
   return {
     seed,

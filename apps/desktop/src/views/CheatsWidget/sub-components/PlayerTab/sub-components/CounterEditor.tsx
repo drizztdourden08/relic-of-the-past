@@ -13,7 +13,7 @@ import type { CounterEditorProps } from '../PlayerTab.type';
 const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
   const { kind, label, iconWidth, digits, steps, capacity } = spec;
   const hud = useGameUIStore((s) => s.hud);
-  const hasSilverArrows = useGameUIStore((s) => s.inventory.items[0] >= SILVER_BOW);
+  const hasSilverArrows = useGameUIStore((s) => (s.inventory.items[0] ?? 0) >= SILVER_BOW);
   const showMaxInYellow = useHudSettingsStore((s) => s.showMaxInYellow);
   const inPlay = useInPlay();
   const { ladder, settable, set } = useCapacityLadder(capacity ?? 'bombs');

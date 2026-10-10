@@ -15,14 +15,14 @@ import {
 
 const nativeHeaderBytes = (room: DungeonRoomRecord, rooms: ReadonlySet<number>): Buffer => {
   const bytes = Buffer.from(room.header.nativeBytes);
-  bytes[0] &= ~HEADER_LIGHTS_OUT;
-  const nativeEffect = bytes[EFFECT_BYTE];
+  bytes[0] = bytes.readUInt8(0) & ~HEADER_LIGHTS_OUT;
+  const nativeEffect = bytes.readUInt8(EFFECT_BYTE);
   if (nativeEffect === CARTRIDGE_WATER_EFFECT) {
     bytes[EFFECT_BYTE] = ENGINE_EFFECT_FLOWING_WATER;
-    bytes[0] = (bytes[0] & 0x1f) | (TRANSLUCENT_LAYER_DESIGNATION << 5);
+    bytes[0] = (bytes.readUInt8(0) & 0x1f) | (TRANSLUCENT_LAYER_DESIGNATION << 5);
   } else {
     if (nativeEffect >= ENGINE_EFFECT_COUNT) bytes[EFFECT_BYTE] = 0;
-    bytes[0] = (bytes[0] & 0x1f) | (OPAQUE_LAYER_DESIGNATION << 5);
+    bytes[0] = (bytes.readUInt8(0) & 0x1f) | (OPAQUE_LAYER_DESIGNATION << 5);
   }
 
   bytes[1] = EXTRA_DUNGEON_PALINFO;

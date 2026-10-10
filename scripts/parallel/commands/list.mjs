@@ -23,19 +23,26 @@ const drift = ({ dirty, ahead, behind }) => {
 
 const lastNote = (record) => record.notes?.[record.notes.length - 1] ?? null;
 
+const mergedCell = (status) => {
+  if (status.missing) return '-';
+  return status.merged ? 'yes' : 'no';
+};
+
+const rowOf = ({ record, status, assessment }) => [
+  record.name,
+  assessment.verdict + (assessment.staleLease ? '*' : ''),
+  status.missing ? '-' : drift(status),
+  mergedCell(status),
+  describeLease(record.lease),
+  String(record.notes?.length ?? 0),
+];
+
 const printTable = (entries) => {
   console.log(COLUMNS.map(([label, width]) => label.padEnd(width)).join(''));
   console.log(COLUMNS.map(([, width]) => '─'.repeat(width - 1).padEnd(width)).join(''));
 
-  for (const { record, status, assessment } of entries) {
-    const row = [
-      record.name,
-      assessment.verdict + (assessment.staleLease ? '*' : ''),
-      status.missing ? '-' : drift(status),
-      status.missing ? '-' : status.merged ? 'yes' : 'no',
-      describeLease(record.lease),
-      String(record.notes?.length ?? 0),
-    ];
+  for (const entry of entries) {
+    const row = rowOf(entry);
     console.log(row.map((cell, i) => String(cell).padEnd(COLUMNS[i][1])).join(''));
   }
 
@@ -57,7 +64,7 @@ const run = async ({ options }) => {
   }
 
   if (entries.length === 0) {
-    console.log(`No agent worktrees yet. Create one with:\n  pnpm wtnew <name>\n\nPool root: ${worktreeRoot}`);
+    console.log(`No agent worktrees yet. Create one with:\n  pnpm wt new <name>\n\nPool root: ${worktreeRoot}`);
     return;
   }
 
@@ -66,7 +73,7 @@ const run = async ({ options }) => {
 
 const command = {
   summary: 'Show every worktree with its live verdict',
-  usage: 'pnpm wtlist [--json]',
+  usage: 'pnpm wt list [--json]',
   run,
 };
 

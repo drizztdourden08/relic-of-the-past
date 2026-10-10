@@ -10,7 +10,7 @@ const appendWallPriorityTwins = (words: number[]): void => {
   }
   for (const cell of WALL_CELLS) {
     const at = cell * MAP8_WORDS_PER_MAP16_CELL;
-    for (let i = 0; i < MAP8_WORDS_PER_MAP16_CELL; i++) words.push(words[at + i] | MAP8_FOREGROUND_PRIORITY_BIT);
+    for (let i = 0; i < MAP8_WORDS_PER_MAP16_CELL; i++) words.push((words[at + i] ?? 0) | MAP8_FOREGROUND_PRIORITY_BIT);
   }
 };
 

@@ -7,7 +7,13 @@ import { DISABLED_SETTING_MESSAGES } from '@app/settings-controls/disabled-setti
 import { CATEGORIES, CATEGORY_LABEL, GATES_RECHECK_MS } from '../CheatsWidget.constants';
 import type { CheatGates } from '../CheatsWidget.type';
 
-const readGates = (): Record<CheatCategory, boolean> => {
+const cheatsOffMessage = (): string => {
+  const message = DISABLED_SETTING_MESSAGES.cheatsEnabled;
+  if (message === undefined) throw new Error('cheatsEnabled has no disabled-setting message');
+  return message;
+};
+
+const readGates =(): Record<CheatCategory, boolean> => {
   const allowed = {} as Record<CheatCategory, boolean>;
   for (const category of CATEGORIES) allowed[category] = cheatCategoryAllowed(category);
   return allowed;
@@ -29,7 +35,7 @@ const useCheatGates = (): CheatGates => {
 
   const enabled = CATEGORIES.some((category) => allowed[category]);
   const reason = (category: CheatCategory): string =>
-    (enabled ? `${CATEGORY_LABEL[category]} cheats are off for this profile` : DISABLED_SETTING_MESSAGES.cheatsEnabled);
+    (enabled ? `${CATEGORY_LABEL[category]} cheats are off for this profile` : cheatsOffMessage());
 
   return { enabled, allowed, reason };
 };

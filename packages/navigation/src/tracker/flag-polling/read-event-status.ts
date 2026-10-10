@@ -13,7 +13,7 @@ const readEventStatus = (mod: WasmModule, inventory: ReadonlySet<ItemId>): Map<C
   const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
   if (!roomPtr || !owPtr || !progPtr) return null;
   const roomState = new Uint16Array(heap.buffer, heap.byteOffset + roomPtr, ROOM_WORDS);
-  let statusPtr = 0;
+  let statusPtr: number;
   try { statusPtr = mod.ccall('WasmGetStoryStatusBytes', 'number', [], []) as number; } catch { statusPtr = 0; }
   const state = buildPresenceState({
     progress: heap.subarray(progPtr, progPtr + PROGRESS_BYTES),

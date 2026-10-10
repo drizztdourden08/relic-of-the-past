@@ -5,7 +5,7 @@ import { listInputDevices } from './list-input-devices';
 import { EMPTY_RAW_INFO } from './useDeviceRawInfo.constants';
 import type { RawHidInfo } from './useDeviceRawInfo.type';
 
-const useDeviceRawInfo = (deviceKey?: string): React.MutableRefObject<RawHidInfo> => {
+const useDeviceRawInfo = (deviceKey?: string): React.RefObject<RawHidInfo> => {
   const rawInfoRef = useRef<RawHidInfo>(EMPTY_RAW_INFO);
 
   useEffect(() => {

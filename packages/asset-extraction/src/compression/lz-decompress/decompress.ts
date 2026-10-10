@@ -63,7 +63,7 @@ function decompress(
         offs = ((offs >>> 8) | ((offs & 0xff) << 8)) & 0xffff;
       }
       for (let i = 0; i < lx; i++) {
-        result.push(result[offs]);
+        result.push(result[offs] ?? 0);
         offs += 1;
       }
     } else if ((cmd & 0x40) === 0) {

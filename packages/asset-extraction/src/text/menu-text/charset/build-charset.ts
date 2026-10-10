@@ -7,17 +7,18 @@ import {
 const buildCharset = (): string[] => {
   const set = new Array<string>(CHARSET_SIZE).fill(' ');
 
-  for (const start of SMALL_ALPHABET_STARTS) {
-    for (let i = 0; i < LETTERS.length; i++) set[start + i] = LETTERS[i];
-  }
+  const place = (first: number, glyphs: Iterable<string>): void => {
+    for (const [i, glyph] of [...glyphs].entries()) set[first + i] = glyph;
+  };
+  for (const start of SMALL_ALPHABET_STARTS) place(start, LETTERS);
   for (const [index, glyph] of Object.entries(SMALL_PUNCTUATION)) set[Number(index)] = glyph;
 
-  for (let i = 0; i < DIGITS.length; i++) set[LARGE_TOP_FIRST + i] = DIGITS[i];
-  for (let i = 0; i < LETTERS.length; i++) set[LARGE_LETTER_FIRST + i] = LETTERS[i];
+  place(LARGE_TOP_FIRST, DIGITS);
+  place(LARGE_LETTER_FIRST, LETTERS);
   set[LARGE_APOSTROPHE] = "'";
   set[LARGE_EXCLAMATION] = '!';
 
-  for (let i = LARGE_TOP_FIRST; i <= LARGE_TOP_LAST; i++) set[i + LARGE_BOTTOM_OFFSET] = set[i];
+  place(LARGE_TOP_FIRST + LARGE_BOTTOM_OFFSET, set.slice(LARGE_TOP_FIRST, LARGE_TOP_LAST + 1));
 
   set[BLANK_INDEX] = ' ';
   return set;

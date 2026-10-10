@@ -13,13 +13,8 @@ interface StateStamp {
   dialog?: string;
 }
 
-type TargetCompat =
-  | { kind: 'compatible' }
-  | { kind: 'incompatible'; targetId: string }
-  | { kind: 'unverifiable'; why: 'not-published' | 'unreachable' };
-
 type Loadability =
   | { ok: true; stamp: StateStamp }
   | { ok: false; stamp: StateStamp | null; reason: 'format-mismatch' | 'not-a-state'; message: string };
 
-export type { KnownFormat, Loadability, StateStamp, TargetCompat };
+export type { KnownFormat, Loadability, StateStamp };

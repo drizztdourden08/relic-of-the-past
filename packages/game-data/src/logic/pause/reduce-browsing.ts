@@ -19,7 +19,7 @@ const reduceBrowsing = (
 ): PauseState => {
   switch (event.type) {
     case 'move': {
-      const next = moveCursor(state.screen, state.section, state.cursor, event.dir, ctx);
+      const next = moveCursor(state, event.dir, ctx);
       return { phase: 'browsing', screen: state.screen, section: next.section, cursor: next.cursor };
     }
     case 'prevScreen':

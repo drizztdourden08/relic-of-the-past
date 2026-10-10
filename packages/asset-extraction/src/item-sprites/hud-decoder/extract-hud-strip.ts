@@ -9,10 +9,7 @@ const cropStrip = (img: ImageBuffer, fullW: number, cropWidth: number): ImageBuf
     for (let x = 0; x < cropWidth; x++) {
       const srcOff = (y * fullW + x) * 4;
       const dstOff = (y * cropWidth + x) * 4;
-      cropped.data[dstOff] = img.data[srcOff];
-      cropped.data[dstOff + 1] = img.data[srcOff + 1];
-      cropped.data[dstOff + 2] = img.data[srcOff + 2];
-      cropped.data[dstOff + 3] = img.data[srcOff + 3];
+      img.data.copy(cropped.data, dstOff, srcOff, srcOff + 4);
     }
   }
   return cropped;
@@ -21,8 +18,8 @@ const cropStrip = (img: ImageBuffer, fullW: number, cropWidth: number): ImageBuf
 const extractHudStrip = (tileIds: number[], sheets: Buffer[], palette: Map<number, RGBA>, cropWidth?: number): ImageBuffer => {
   const fullW = tileIds.length * 8;
   const img = new ImageBuffer(fullW, 8);
-  for (let i = 0; i < tileIds.length; i++) {
-    const tile = decodeHudTile(tileIds[i], sheets, palette);
+  for (const [i, tileId] of tileIds.entries()) {
+    const tile = decodeHudTile(tileId, sheets, palette);
     img.paste(tile, i * 8, 0);
   }
   if (cropWidth && cropWidth < fullW) return cropStrip(img, fullW, cropWidth);

@@ -1,12 +1,17 @@
 /* @layer shared-hud @kind logic */
 import { resolveExtent } from '../resolve-extent';
-import type { Extent } from '../../types/hud-node';
 import type { MeasureContext } from '../engine.type';
+import type { TrackSizing } from './grid-cells.type';
 
-const sizeTracks = (
-  tracks: readonly Extent[], natural: readonly number[], available: number, gap: number, ctx: MeasureContext,
-): number[] => {
-  const resolved = tracks.map((track, i) => resolveExtent(track, natural[i], available, ctx));
+const naturalAt = (natural: readonly number[], i: number): number => {
+  const size = natural[i];
+  if (size === undefined) throw new Error(`sizeTracks: no natural size for track ${i}`);
+  return size;
+};
+
+const sizeTracks = (sizing: TrackSizing, ctx: MeasureContext): number[] => {
+  const { tracks, natural, available, gap } = sizing;
+  const resolved = tracks.map((track, i) => resolveExtent(track, naturalAt(natural, i), available, ctx));
   if (!Number.isFinite(available)) return resolved.map((v) => (v === 'fill' ? 0 : v));
   const gapTotal = gap * Math.max(0, tracks.length - 1);
   const fixedTotal = resolved.reduce((sum: number, v) => sum + (v === 'fill' ? 0 : v), 0);

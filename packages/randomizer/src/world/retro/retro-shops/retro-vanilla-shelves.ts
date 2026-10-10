@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { itemAt } from '../../../checked-access';
 import { CANONICAL_SLOTS } from '../../shops/shop-slot-facts';
 import { RETRO_QUIVER_PRICE } from '../retro-bow.constants';
 import { RETRO_REFILL_ITEM } from '../retro-shelf.constants';
@@ -11,11 +12,12 @@ const retroVanillaShelves = (scope: ShopScope, setting: RetroBowSetting): readon
   if (!setting.enabled || shopsShuffled(scope)) return [];
   return ARROW_SLOT_INDEXES.map((index) => {
     const quiver = index === RETRO_QUIVER_SLOT_INDEX;
+    const slot = itemAt(CANONICAL_SLOTS, index);
     return {
-      ...CANONICAL_SLOTS[index],
+      ...slot,
       role: quiver ? 'quiver' : 'refill',
       refillItem: RETRO_REFILL_ITEM,
-      refillPrice: CANONICAL_SLOTS[index].price,
+      refillPrice: slot.price,
       quiverPrice: quiver ? RETRO_QUIVER_PRICE : 0,
     };
   });

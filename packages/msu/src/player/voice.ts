@@ -18,7 +18,7 @@ const scheduleEnvelope = (gain: AudioParam, startedAt: number, options: VoiceOpt
 };
 
 const stopIfPlaying = (source: AudioBufferSourceNode): void => {
-  try { source.stop(); } catch { return; }
+  try { source.stop(); } catch {  }
 };
 
 const createVoice = (ctx: BaseAudioContext, destination: AudioNode, decoded: DecodedAudio, options: VoiceOptions): Voice => {

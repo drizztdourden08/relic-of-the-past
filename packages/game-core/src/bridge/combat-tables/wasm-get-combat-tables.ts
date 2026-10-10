@@ -5,7 +5,7 @@ import type { CombatTables } from './combat-tables.type';
 
 const wasmGetCombatTables = (): CombatTables | null =>
   callWhenRunning<CombatTables | null>(null, (mod) => {
-    const ptr = mod.ccall('WasmGetCombatTables', 'number', [], []) as number;
+    const ptr = mod.ccall('WasmGetCombatTables', 'number', [], []);
     if (!ptr) return null;
     const heap = mod.HEAPU8;
     if (heap[ptr] !== FILLED) return null;

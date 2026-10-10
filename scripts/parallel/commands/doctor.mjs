@@ -24,22 +24,16 @@ const orphanProfiles = () => {
   });
 };
 
-const run = async ({ options }) => {
-  console.log(`[wt] Pool root: ${worktreeRoot}\n`);
-
-  execFileSync('git', ['worktree', 'prune'], { cwd: repoRoot, stdio: 'ignore' });
-
-  const entries = surveyAll();
-  const missing = entries.filter((e) => e.status.missing).map((e) => e.record.name);
-  const expired = entries.filter((e) => isExpired(e.record.lease)).map((e) => e.record.name);
-
+const resyncPresent = (entries) => {
   for (const { record, status } of entries) {
     if (status.missing) continue;
     const results = resyncCopiedFiles(record.path);
     const copied = results.filter((r) => r.action === 'copied').map((r) => r.name);
     if (copied.length > 0) console.log(`${record.name}: re-synced ${copied.join(', ')}`);
   }
+};
 
+const repairRegistry = async (missing, expired) => {
   if (missing.length > 0 || expired.length > 0) {
     await updateRegistry((registry) => {
       registry.worktrees = registry.worktrees.filter((w) => !missing.includes(w.name));
@@ -51,13 +45,30 @@ const run = async ({ options }) => {
 
   if (missing.length > 0) console.log(`Dropped ${missing.length} record(s) with no checkout: ${missing.join(', ')}`);
   if (expired.length > 0) console.log(`Released ${expired.length} expired lease(s): ${expired.join(', ')}`);
+};
 
+const reportOrphans = () => {
   const orphans = orphanProfiles();
   if (orphans.length > 0) {
     console.log(`\nProfiles with no registry record: ${orphans.join(', ')}`);
     console.log('Left in place. Remove one by hand if it is not yours:');
     for (const id of orphans) console.log(`  ${gameDataPath('profiles', id)}`);
   }
+  return orphans;
+};
+
+const run = async ({ options }) => {
+  console.log(`[wt] Pool root: ${worktreeRoot}\n`);
+
+  execFileSync('git', ['worktree', 'prune'], { cwd: repoRoot, stdio: 'ignore' });
+
+  const entries = surveyAll();
+  const missing = entries.filter((e) => e.status.missing).map((e) => e.record.name);
+  const expired = entries.filter((e) => isExpired(e.record.lease)).map((e) => e.record.name);
+
+  resyncPresent(entries);
+  await repairRegistry(missing, expired);
+  const orphans = reportOrphans();
 
   if (missing.length === 0 && expired.length === 0 && orphans.length === 0) {
     console.log('Nothing to repair.');

@@ -9,7 +9,7 @@ import { CAPACITY_RECHECK_MS } from '../CheatsWidget.constants';
 import type { CapacityLadder } from '../CheatsWidget.type';
 
 const sameLadder = (a: CapacityRung[], b: CapacityRung[]): boolean =>
-  a.length === b.length && a.every((r, i) => r.rung === b[i].rung && r.cap === b[i].cap);
+  a.length === b.length && a.every((r, i) => r.rung === b[i]?.rung && r.cap === b[i].cap);
 
 const readLadder = (kind: CapacityKind): CapacityRung[] => {
   const all = cheatCapacityLadder(kind);

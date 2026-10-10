@@ -3,13 +3,14 @@ import { HUB_ROUTES } from '@rotp/hub-contracts';
 import { notFound } from '../http/http-error';
 import { requireCaller } from '../auth/require-caller';
 import { viewsRepo } from '../db/views-repo';
+import { routeParam } from '../router';
 import type { Route } from '../route.type';
 
 const viewsDelete: Route = {
   ...HUB_ROUTES.viewsDelete,
   handler: async ({ req, res, params }) => {
     const caller = await requireCaller(req);
-    const view = await viewsRepo.get(params.id);
+    const view = await viewsRepo.get(routeParam(params, 'id'));
     if (!view || view.userId !== caller.userId) throw notFound('No such view.');
     await viewsRepo.remove(view.id);
     res.status(200).json({ ok: true });

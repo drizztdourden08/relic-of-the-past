@@ -8,8 +8,8 @@ const waterOverlay = (room: DungeonRoomRecord): AttrOverlayCell[] => {
   const floor = room.layers[0];
   if (!surface || !floor) return [];
   const cells: AttrOverlayCell[] = [];
-  for (let cell = 0; cell < surface.snesWords.length; cell++) {
-    const tile = surface.snesWords[cell] & TILE_NUMBER_MASK;
+  for (const [cell, word] of surface.snesWords.entries()) {
+    const tile = word & TILE_NUMBER_MASK;
     if (tile < WATER_TILE_FIRST || tile > WATER_TILE_LAST) continue;
     cells.push({ layer: 0, cell, attr: DEEP_WATER });
   }
