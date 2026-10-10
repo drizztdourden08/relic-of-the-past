@@ -122,7 +122,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build the site
-        run: pnpm run store:build
+        run: pnpm --filter @rotp/store build
 
       # The auth action exports GOOGLE_APPLICATION_CREDENTIALS, which firebase-tools
       # picks up on its own, so no login step follows.

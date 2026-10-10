@@ -1,18 +1,21 @@
 /* @layer site-kit @kind component */
+import type { ReactNode } from 'react';
 import { Spinner, Center, Button } from '@drizztdourden08/tessera/primitives';
-import { hasRight } from '@rotp/hub-contracts';
 import { useLocation } from '../../hooks/useLocation';
 import { Redirect } from '../Redirect/Redirect';
 import { resolveRoute } from '../../router/route-table';
 import { useSessionContext } from '../../session/session-context';
 import { Gate } from '../Gate/Gate';
+import { routeOutcome } from './behavior/route-outcome';
+import type { RouteOutcome } from './behavior/route-outcome.type';
 import type { RouteGuardProps } from './RouteGuard.type';
 import './RouteGuard.css';
 
 const RouteGuard = (props: RouteGuardProps) => {
   const { routes, homePath, signIn, pending, frame: Frame, siteName } = props;
   const { path } = useLocation();
-  const { me, access, rights, loading, error, refresh } = useSessionContext();
+  const session = useSessionContext();
+  const { loading, error, refresh } = session;
 
   if (loading) {
     return (
@@ -40,16 +43,15 @@ const RouteGuard = (props: RouteGuardProps) => {
   }
 
   const { entry, params } = match;
-  if (!me) {
-    if (entry.access === 'public') return entry.render(params);
-    return signIn(path === '/' ? undefined : path);
-  }
-  if (entry.access === 'public') return <Redirect to="/" />;
-  if (!access || access.state === 'pending' || access.state === 'revoked') return pending;
-  if (entry.access === 'admin' && access.state !== 'admin') return <Redirect to="/" />;
-  if (entry.permission && !hasRight(rights, entry.permission)) return <Redirect to={homePath} />;
-  if (entry.bare) return entry.render(params);
-  return <Frame>{entry.render(params)}</Frame>;
+  const outcomes: Record<RouteOutcome, () => ReactNode> = {
+    bare: () => entry.render(params),
+    'sign-in': () => signIn(path === '/' ? undefined : path),
+    root: () => <Redirect to="/" />,
+    home: () => <Redirect to={homePath} />,
+    pending: () => pending,
+    framed: () => <Frame>{entry.render(params)}</Frame>,
+  };
+  return outcomes[routeOutcome(entry, session)]();
 };
 
 export { RouteGuard };

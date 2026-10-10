@@ -41,15 +41,22 @@ are defined once, in `packages/hub-contracts/src/ports/ports.constants.ts`; noth
 |---|---|
 | +0 | the app's renderer dev server (`pnpm run dev`) |
 | +1 | reserved for a component catalogue |
-| +2 | the Sanctuary site (`pnpm run sanctuary:dev`) |
-| +3 | the Sanctuary API (`pnpm run sanctuary:api`), which the site proxies `/api` to |
+| +2 | the Sanctuary site (`pnpm --filter @rotp/sanctuary dev`) |
+| +3 | the Sanctuary API (`pnpm --filter @rotp/sanctuary-api dev`), which the site proxies `/api` to |
 | +4 | a static file server, for testing install manifests |
 | +5 | the mGBA Lua socket tracer |
-| +6 to +9 | free for other project tools |
+| +6 | the Hookshop site (`pnpm --filter @rotp/store dev`) |
+| +7 | the Hookshop API (`pnpm --filter @rotp/store-api dev`), which the store proxies `/api` to |
+| +8 to +9 | free for other project tools |
+
+The two sites are Brock side web apps: each `brock.site.ts` names its offset and its API's
+offset, and these must match the roles above. An API's `dev` script serves its bundle
+(`pnpm run bundle` first) on its own offset.
 
 A worktree can carry a `.rotp-port-slot` file holding a slot number N (or set
 `ROTP_PORT_SLOT`); the whole block then moves up by 10 x N, so two checkouts never ask for
-the same port. The main checkout is slot 0. The dev servers use `strictPort`, so a port
+the same port. The sites and their APIs read Brock's `.brock-port-slot` (or `BROCK_PORT_SLOT`)
+instead, which a worktree carries with the same slot. The main checkout is slot 0. The dev servers use `strictPort`, so a port
 already in use stops them with an error instead of moving them somewhere unexpected.
 
 ## Quality gate

@@ -35,10 +35,7 @@ const useSiteNav = () => {
     return Object.values(sections).find((section) => path.startsWith(section.path))?.id ?? home;
   }, [path, sections, home]);
 
-  const select = useCallback((id: string) => {
-    const section = sections[id];
-    if (section) navigate(section.path);
-  }, [sections, navigate]);
+  const select = useCallback((id: string) => navigate(sections[id].path), [sections, navigate]);
 
   return { config, activeId, select };
 };

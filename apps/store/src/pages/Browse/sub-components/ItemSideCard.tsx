@@ -26,7 +26,7 @@ const fieldsOf = (card: ItemCardView, detail: ItemResponse | null): DetailField[
   { label: 'author', value: <AppLink to={authorPath(card.author.userId)}>{card.author.displayName}</AppLink> },
   { label: 'version', value: versionLine(card, detail) },
   { label: 'installs', value: detail ? formatCount(detail.item.stats.installs) : `${formatCount(card.installs30d)} this month` },
-  { label: 'license', value: detail?.item.license || '-' },
+  { label: 'license', value: [detail?.item.license].find(Boolean) ?? '-' },
   { label: 'tags', value: <TagList tags={detail?.item.tags ?? []} /> },
   {
     label: 'rating',

@@ -19,7 +19,7 @@ const noteFor = (item: StoreItem, version: StoreVersion | null): string | null =
 const PublicationDetail = (props: PublicationDetailProps) => {
   const { item, target, actions, onClose } = props;
   const { version, edit } = entryOf(item, target);
-  const note = version?.review.note || edit?.review.note;
+  const note = [version?.review.note, edit?.review.note].find(Boolean);
 
   const buttons = (
     <>

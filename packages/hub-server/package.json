@@ -9,6 +9,9 @@
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
+  "bin": {
+    "rotp-serve-function": "./dev/serve-function.mjs"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "catalog:",
     "@aws-sdk/s3-request-presigner": "catalog:",
@@ -18,5 +21,9 @@
     "arctic": "catalog:",
     "jose": "catalog:",
     "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@drizztdourden08/brock-thread": "catalog:",
+    "tsx": "^4.23.12"
   }
 }

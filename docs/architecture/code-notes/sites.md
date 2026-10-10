@@ -342,10 +342,9 @@ The view id is the client's, so a view can be saved before the server has seen i
 
 The billing account is unlinked from the project the function runs in, read at runtime, so one build serves every project it is deployed to.
 
-## apps/sanctuary-api/dev-server.mjs
+## packages/hub-server/dev/serve-function.mjs
 
-Runs the bundled API locally for the Sanctuary dev site, on the port its /api proxy expects. Start it with `npm run sanctuary:api` from the repo root.
-Bundle first with `npm run bundle` in this folder. The deployed function never runs this file.
+The `rotp-serve-function` bin. Each API's `dev` script runs it in the API folder (`rotp-serve-function sanctuaryApi siteApi`, `rotp-serve-function storeApi storeApi`) to serve the bundled function on the port its site's /api proxy expects. Bundle first with `pnpm run bundle` in the API folder. The deployed functions never run this file.
 
 ## apps/sanctuary-api/src/index.ts
 
@@ -943,37 +942,25 @@ Toasts sit bottom left so they never cover the uploads tray on the right. The fr
 
 The Portal overlay layer is click-through; the tray sets pointer-events back to auto.
 
-## packages/design/src/compounds/Brand/Brand.css
+## packages/design/src/views/SiteLayout/SiteLayout.tsx
 
-The wordmark is a pixel face: whole game cells only, no letter spacing, no font smoothing. The text stroke is painted behind the fill so the pixel letterforms keep their full width. The hero wordmark is a whole multiple of the game cell height so the letters stay sharp.
+The frame of every member page (TX-54 B): Tessera's SiteHeader with the rotp mark, the site wordmark and the signed-in person as the title bar's dropdown action, then SideNavLayout with the sections and the site search, then SiteFooter. RouteGuard renders it around each member route, so it stays mounted while member pages change and the nav keeps its search text and its focus. While the search is in use the pane shows the results in place of the page; the route does not change, and picking a section clears the search.
 
-## packages/design/src/compounds/SiteFrame/SiteFrame.css
+## packages/design/src/views/SiteLayout/SiteLayout.css
 
-The frame is the viewport: pages scroll inside main, never the document. The body gap leaves room for the nav's round toggle on its right edge.
+The frame is the viewport: pages scroll inside main, never the document, and the footer stays in view.
 
-## packages/design/src/compounds/SiteFrame/sub-components/MemberFrame.tsx
+## packages/design/src/compounds/Gate/Gate.tsx
 
-The member frame stays mounted while member pages change, so the nav keeps its width, its search text and its focus. While the search is in use the pane shows the results in place of the page; the route does not change.
+Every page outside the member frame (sign-in, waiting for access, a device code, loading, unreachable, not found) is this one Card on the palette's dark gradient, under the rotp mark and the site wordmark, which link home.
 
-## packages/design/src/compounds/SiteNav/SiteNav.css
+## packages/design/src/compounds/RouteGuard/behavior/route-outcome.ts
 
-The brand shows its wordmark only while the nav is open, so it never widens the column when the nav is closed.
+The order of the checks is the access rule: a signed-out visitor reaches public routes only, a signed-in one never sees a public route, a waiting or revoked account sees the pending page before any other check, an admin route needs admin access, and a missing right sends the person to the site's home.
 
-## packages/design/src/compounds/SiteNav/sub-components/NavAvatar.css
+## A site page beside its detail
 
-The nav sizes its icons by font size, so the avatar is one em square, the same box an icon glyph takes.
-
-## packages/design/src/compounds/SitePage/SitePage.tsx
-
-The flex row is always rendered, so the card is not remounted when the aside comes and goes.
-
-## packages/design/src/compounds/SitePage/SitePage.css
-
-Header actions stretch to the full height of the header row so a drop target there is a real box, and they give up width when the line runs short.
-
-## packages/design/src/compounds/Workbench/Workbench.css
-
-The table owns its scrolling. The column gives it the height and caps its width, so a wide column set scrolls inside the table and does not spill under the detail pane.
+A page with a detail card (Files, Reports, Browse, Publications, a review entry) is a flex row of SettingsPage and an aside of var(--detail-w). The row is always rendered, so the page is not remounted when the aside comes and goes. The table owns its scrolling: the page body gives it the height, so a wide column set scrolls inside the table. The Files page lets its header actions stretch to the header row so the drop target there is a real box.
 
 ## packages/design/src/views/Admin/behavior/useAdminQueue.ts
 
@@ -1215,7 +1202,7 @@ A new file and a new version sign, list, complete and abort on different routes.
 
 UploadMeta is asked by the upload dialog before the first byte moves and is shared by every file of one drop. For a version target, `of` is the file's display name for the upload row, and `next` is the number the site expects; the API's answer replaces it.
 
-## apps/store/src/App.constants.ts
+## apps/store/src/views/SiteShell/SiteShell.constants.ts
 
 The sign in art sits above the sign in buttons. Its pixel size is a whole number of CSS pixels, which keeps it sharp.
 
@@ -1306,9 +1293,9 @@ Saved view keys are store:surface over the three list surfaces. store-api checks
 
 A section's path must not start another section's path, since the active section is the first whose path the location starts with.
 
-## apps/store/src/site/StoreRightsEditor.tsx
+## packages/design/src/compounds/StoreRightsEditor/StoreRightsEditor.tsx
 
-The Sanctuary's admin page imports this editor too, where groups are managed. Keep its path stable.
+Both sites list this editor in their rights editors: the Hookshop for its own groups, the Sanctuary because its admin page manages the groups of both sites.
 
 ## apps/store/src/lib/format-count/format-count.ts
 
@@ -1519,10 +1506,13 @@ EmptyState.css masks the stripes with two crossing linear gradients and mask-com
 Shelf.css stops each column at the card's widest, so the 16:9 picture never grows with the window; on a wide screen the row ends before the edge.
 ItemPicture.css draws the dark ground under the kind icon as three offset ellipses blurred into one shape, wider than the icon's glow, so the glow and the shadow read as two layers.
 
-## apps/store/src/site.css
+## packages/design/src/compounds/SiteKit/SiteKit.css
 
-The design system reset locks scrolling and text selection for the game shell; this site scrolls and lets text be copied, so the file overrides both.
-The first block of tokens is read by the site kit and holds the same values the Sanctuary sets. The second block sizes the store's own cards, shelves and pictures.
+The design system reset locks scrolling and text selection for the game shell; a site scrolls and lets text be copied, so this sheet overrides both for every site. Its tokens size the site kit's own parts.
+
+## apps/store/src/theme.css
+
+It takes the game text tokens and the dialogue face from `@rotp/design/game-text.css` for the pack viewers, then sizes the store's own cards, shelves and pictures.
 A card picture is 512 by 288 and a banner 1280 by 400; both keep that shape on screen.
 An empty part keeps the height its content would take: a row of cards, or the hero.
 
