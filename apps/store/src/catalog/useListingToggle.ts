@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import type { StoreItem } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { featureItem, relistItem, unfeatureItem, unlistItem } from '../api/review-endpoints';
+import { featureItem, relistItem, unfeatureItem, unlistItem } from '../endpoints/review-endpoints';
 
 const useListingToggle = (onItem: (item: StoreItem) => void) => {
   const [busy, setBusy] = useState(false);

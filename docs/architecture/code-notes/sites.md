@@ -958,6 +958,10 @@ Every page outside the member frame (sign-in, waiting for access, a device code,
 
 The order of the checks is the access rule: a signed-out visitor reaches public routes only, a signed-in one never sees a public route, a waiting or revoked account sees the pending page before any other check, an admin route needs admin access, and a missing right sends the person to the site's home.
 
+## The endpoints folder of a site
+
+A Brock site serves `src` as the page root, so a source folder named `api` would sit at `/api`, the path the dev server proxies to the API: the browser's module requests for those files would reach the function and fail. Each site keeps its calls to the API in `src/endpoints` for that reason.
+
 ## A site page beside its detail
 
 A page with a detail card (Files, Reports, Browse, Publications, a review entry) is a flex row of SettingsPage and an aside of var(--detail-w). The row is always rendered, so the page is not remounted when the aside comes and goes. The table owns its scrolling: the page body gives it the height, so a wide column set scrolls inside the table. The Files page lets its header actions stretch to the header row so the drop target there is a real box.
@@ -1010,31 +1014,31 @@ Storage runs over GET and PUT /me/views. One record per surface, the reserved `c
 
 The search text is never saved: old text silently hiding rows reads as data loss. Facets are transient for the same reason; the clause list is the durable filter. The query half stores clauses only, so its table part (QUERY_HALF_TABLE) is empty on purpose.
 
-## apps/sanctuary/src/api/files-endpoints/list-files.ts
+## apps/sanctuary/src/endpoints/files-endpoints/list-files.ts
 
 GET /files answers every ready file in one page. The rail counts and the type filter run in the browser.
 
-## apps/sanctuary/src/api/files-endpoints/sign-parts.ts
+## apps/sanctuary/src/endpoints/files-endpoints/sign-parts.ts
 
 `partsDone` is how many parts are already up; the file record keeps that count.
 
-## apps/sanctuary/src/api/files-endpoints/file-parts.ts
+## apps/sanctuary/src/endpoints/files-endpoints/file-parts.ts
 
 Lists the parts of a first upload already in the bucket, for a resumed upload.
 
-## apps/sanctuary/src/api/files-endpoints/preview-file.ts
+## apps/sanctuary/src/endpoints/files-endpoints/preview-file.ts
 
 The answer is an inline link to version `v`, or to the current version when `v` is left out. The browser shows it in an img or a video.
 
-## apps/sanctuary/src/api/versions-endpoints/sign-version-parts.ts
+## apps/sanctuary/src/endpoints/versions-endpoints/sign-version-parts.ts
 
 `partsDone` is how many parts are already up; the version keeps that count.
 
-## apps/sanctuary/src/api/versions-endpoints/restore-version.ts
+## apps/sanctuary/src/endpoints/versions-endpoints/restore-version.ts
 
 Restore moves the file's current version back to `n`. No bytes are copied.
 
-## apps/sanctuary/src/api/api-responses.type.ts
+## apps/sanctuary/src/endpoints/api-responses.type.ts
 
 Request bodies come from packages/hub-contracts/src/sanctuary/schemas; the account answers are the site kit's. POST /files/:id/complete and PATCH /files/:id both answer with the record. A reporter as the API returns it carries the GitHub login when one is linked.
 
@@ -1210,46 +1214,46 @@ The sign in art sits above the sign in buttons. Its pixel size is a whole number
 
 The kit's guard walks the route list in order, so /publications/new stands before /publications/:rowId.
 
-## apps/store/src/api/media-url.ts
+## apps/store/src/endpoints/media-url.ts
 
 The picture bucket is private. The API signs a short lived link onto every picture it hands out.
 A reference without a link draws the kind's icon instead.
 Every picture on the site goes through this one function.
 
-## apps/store/src/api/catalog-endpoints/item-pack.ts
+## apps/store/src/endpoints/catalog-endpoints/item-pack.ts
 
 The answer is an inline signed link to the live version's pack, for reading it in parts.
 Each call counts toward the daily preview cap.
 
-## apps/store/src/api/publish-endpoints/submit-listing.ts
+## apps/store/src/endpoints/publish-endpoints/submit-listing.ts
 
 The answer is the item as it now stands. On a published item the edit waits in listingEdits.
 
-## apps/store/src/api/publish-endpoints/sign-version-parts.ts
+## apps/store/src/endpoints/publish-endpoints/sign-version-parts.ts
 
 partsDone is how many parts are already up. The version's entry keeps that count.
 
-## apps/store/src/api/publish-endpoints/version-parts.ts
+## apps/store/src/endpoints/publish-endpoints/version-parts.ts
 
 Lists the parts of an uploading version already in the bucket, for a resumed upload.
 
-## apps/store/src/api/publish-endpoints/submit-version.ts
+## apps/store/src/endpoints/publish-endpoints/submit-version.ts
 
 Sends a ready version for review, or resubmits a rejected one while its file is kept.
 
-## apps/store/src/api/publish-endpoints/delete-version.ts
+## apps/store/src/endpoints/publish-endpoints/delete-version.ts
 
 Used by the author and by a reviewer. The file leaves the bucket and the row stays, marked deleted.
 
-## apps/store/src/api/review-endpoints/review-target-param.ts
+## apps/store/src/endpoints/review-endpoints/review-target-param.ts
 
 The :target route segment is v followed by the number for a version, or the edit's id for a listing edit.
 
-## apps/store/src/api/review-endpoints/list-unsubmitted.ts
+## apps/store/src/endpoints/review-endpoints/list-unsubmitted.ts
 
 Lists the ready versions no author has sent for review yet.
 
-## apps/store/src/api/review-endpoints/feature-item.ts
+## apps/store/src/endpoints/review-endpoints/feature-item.ts
 
 Adds a published item to the end of the featured row.
 

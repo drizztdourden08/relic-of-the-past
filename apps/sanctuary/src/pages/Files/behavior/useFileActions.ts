@@ -1,8 +1,8 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
 import type { PatchFileBody } from '@rotp/hub-contracts';
-import { deleteFile, downloadFile, patchFile } from '../../../api/files-endpoints';
-import { deleteVersion, downloadVersion, restoreVersion } from '../../../api/versions-endpoints';
+import { deleteFile, downloadFile, patchFile } from '../../../endpoints/files-endpoints';
+import { deleteVersion, downloadVersion, restoreVersion } from '../../../endpoints/versions-endpoints';
 import { errorMessage } from '@rotp/hub-client';
 import { versionLabel } from '../../../files/file-versions';
 import { fileLink } from './file-link';

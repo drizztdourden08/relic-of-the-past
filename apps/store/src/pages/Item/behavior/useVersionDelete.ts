@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { deleteVersion } from '../../../api/publish-endpoints';
+import { deleteVersion } from '../../../endpoints/publish-endpoints';
 
 const useVersionDelete = (itemId: string, onItem: (item: StoreItem) => void) => {
   const [asking, setAsking] = useState<StoreVersion | null>(null);

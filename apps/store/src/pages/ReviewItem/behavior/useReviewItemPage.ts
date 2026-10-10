@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
 import { navigate } from '@rotp/design';
-import { reviewPack } from '../../../api/review-endpoints';
+import { reviewPack } from '../../../endpoints/review-endpoints';
 import { usePackLink } from '../../../lib/pack-link/usePackLink';
 import { useReviewActions } from '../../Review/behavior/useReviewActions';
 import { packTargetOf } from './pack-target';

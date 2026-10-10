@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { HomeView, ItemCardView, StoreKind } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { getHome } from '../../../api/catalog-endpoints';
+import { getHome } from '../../../endpoints/catalog-endpoints';
 import { useStoreData } from '../../../data/store-data-context';
 import { STORE_KINDS } from '../../../lib/kinds';
 import { KIND_SHELF_SIZE } from './useHome.constants';

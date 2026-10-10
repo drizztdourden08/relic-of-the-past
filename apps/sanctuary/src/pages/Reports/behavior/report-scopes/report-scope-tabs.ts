@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind logic */
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
-import type { ReportView } from '../../../../api/api-responses.type';
+import type { ReportView } from '../../../../endpoints/api-responses.type';
 import { REPORT_SCOPES } from '../../Reports.constants';
 import { scopePredicate } from './scope-predicate';
 

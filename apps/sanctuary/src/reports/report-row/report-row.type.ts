@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { ReportView } from '../../api/api-responses.type';
+import type { ReportView } from '../../endpoints/api-responses.type';
 
 type ReportRow = Pick<ReportView, 'id' | 'subject' | 'kind' | 'issue' | 'appVersion' | 'platform' | 'screenId' | 'legacy'> & {
   reporter: { displayName: string; githubHandle: string | null };

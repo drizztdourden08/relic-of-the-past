@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
-import { createItem } from '../api/publish-endpoints/create-item';
-import { submitListing } from '../api/publish-endpoints/submit-listing';
+import { createItem } from '../endpoints/publish-endpoints/create-item';
+import { submitListing } from '../endpoints/publish-endpoints/submit-listing';
 import { STORE_STEP } from './publish-steps/publish-steps.constants';
 import { hasListingPatch } from './publish-steps/has-listing-patch';
 import { hasPictures } from './publish-steps/has-pictures';

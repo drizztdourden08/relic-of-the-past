@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 /* @layer hub-core @kind logic */
 import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { createRequire } from 'node:module';
-import { dirname, join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { portSlotOf } from '@drizztdourden08/brock-thread/ports';
 import { require as tsxRequire } from 'tsx/cjs/api';
 
@@ -30,9 +29,9 @@ if (!existsSync(join(apiDir, 'dist', 'index.js'))) {
 }
 
 const frameworkBin = () => {
-  const require = createRequire(join(apiDir, 'package.json'));
-  const manifestPath = require.resolve('@google-cloud/functions-framework/package.json');
-  return join(dirname(manifestPath), require(manifestPath).bin['functions-framework']);
+  const frameworkDir = join(apiDir, 'node_modules', '@google-cloud', 'functions-framework');
+  const manifest = JSON.parse(readFileSync(join(frameworkDir, 'package.json'), 'utf8'));
+  return join(frameworkDir, manifest.bin['functions-framework']);
 };
 
 console.log(`${target} on http://localhost:${port}`);

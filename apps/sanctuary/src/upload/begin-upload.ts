@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind logic */
 import type { UploadResume } from '@rotp/hub-client';
-import { beginFile } from '../api/files-endpoints';
-import { beginVersion } from '../api/versions-endpoints';
+import { beginFile } from '../endpoints/files-endpoints';
+import { beginVersion } from '../endpoints/versions-endpoints';
 import type { UploadTarget } from './upload-target.type';
 import type { UploadFacts } from './begin-upload.type';
 

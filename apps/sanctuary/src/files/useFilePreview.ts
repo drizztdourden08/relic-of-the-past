@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind hook */
 import { useEffect, useState } from 'react';
-import { previewFile } from '../api/files-endpoints';
+import { previewFile } from '../endpoints/files-endpoints';
 import { errorMessage } from '@rotp/hub-client';
 import type { PreviewResult } from './useFilePreview.type';
 

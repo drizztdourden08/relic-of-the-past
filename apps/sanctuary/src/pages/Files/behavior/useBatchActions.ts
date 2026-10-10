@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
 import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
-import { deleteFile, patchFile } from '../../../api/files-endpoints';
+import { deleteFile, patchFile } from '../../../endpoints/files-endpoints';
 import { errorMessage } from '@rotp/hub-client';
 import { fileLink } from './file-link';
 import {

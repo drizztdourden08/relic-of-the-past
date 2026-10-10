@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import type { ItemResponse, Stars } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { rateItem, unrateItem } from '../../../api/catalog-endpoints';
+import { rateItem, unrateItem } from '../../../endpoints/catalog-endpoints';
 import type { UseRatingParams } from './useRating.type';
 
 const blockedReasonOf = (data: ItemResponse | null, meId: string): string | null => {

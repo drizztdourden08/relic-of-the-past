@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { StoreItem } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { listPublications } from '../api/publish-endpoints/list-publications';
+import { listPublications } from '../endpoints/publish-endpoints/list-publications';
 import { NO_ITEMS } from './usePublications.constants';
 
 const latestUpdateFirst = (a: StoreItem, b: StoreItem) => b.updatedAt - a.updatedAt;

@@ -6,7 +6,7 @@ import { Dialog } from '@drizztdourden08/tessera/composites';
 import { DetailPane } from '@rotp/design';
 import type { DetailField } from '@rotp/design';
 import { IssueStateChip } from '../../../components/IssueStateChip/IssueStateChip';
-import type { ReportView } from '../../../api/api-responses.type';
+import type { ReportView } from '../../../endpoints/api-responses.type';
 import { ANONYMOUS, contentsLine } from '../../../reports/report-row';
 import { formatBytes, formatDateTime } from '@rotp/hub-client';
 import { deadlineOf } from '../behavior/report-scopes';

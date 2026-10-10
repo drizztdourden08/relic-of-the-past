@@ -1,5 +1,5 @@
 /* @layer store-site @kind logic */
-import { requestDownload } from '../api/catalog-endpoints';
+import { requestDownload } from '../endpoints/catalog-endpoints';
 import type { DownloadResponse } from '@rotp/hub-contracts';
 
 const startDownload = async (itemId: string, version?: number): Promise<DownloadResponse> => {

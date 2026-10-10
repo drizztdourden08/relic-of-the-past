@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ItemCardView } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { listItems } from '../api/catalog-endpoints';
+import { listItems } from '../endpoints/catalog-endpoints';
 import { NO_ITEMS } from './useCatalog.constants';
 
 const byName = (a: ItemCardView, b: ItemCardView) => a.name.localeCompare(b.name);

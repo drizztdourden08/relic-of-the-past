@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { downloadFile } from '../../../api/files-endpoints';
+import { downloadFile } from '../../../endpoints/files-endpoints';
 import { errorMessage } from '@rotp/hub-client';
 import { BATCH_SAVE_GAP_MS } from '../Files.constants';
 import { fitsInZip, totalBytes } from './batch-size';

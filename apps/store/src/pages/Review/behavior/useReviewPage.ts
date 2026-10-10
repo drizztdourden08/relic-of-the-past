@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ReviewEntry } from '@rotp/hub-contracts';
 import { navigate, useSurfaceView, filterRows } from '@rotp/design';
-import { listUnsubmitted } from '../../../api/review-endpoints';
+import { listUnsubmitted } from '../../../endpoints/review-endpoints';
 import { STORE_VIEWS } from '../../../views/store-views';
 import { toReviewRow } from '../../../review/review-row';
 import { buildReviewSchema } from '../../../review/review-schema';
