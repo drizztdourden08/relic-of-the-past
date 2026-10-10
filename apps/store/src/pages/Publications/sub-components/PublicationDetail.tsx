@@ -4,7 +4,9 @@ import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { DetailPane, AppLink } from '@rotp/design';
 import { itemPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
-import { detailFieldsOf, detailTitleOf, entryOf } from '../behavior/publication-detail';
+import { detailFieldsOf } from '../behavior/detail-fields-of';
+import { detailTitleOf } from '../behavior/detail-title-of';
+import { entryOf } from '../behavior/entry-of';
 import { STATE_NOTES } from './PublicationDetail.constants';
 import type { PublicationDetailProps } from './PublicationDetail.type';
 import { VersionActions } from './VersionActions';
@@ -19,7 +21,7 @@ const noteFor = (item: StoreItem, version: StoreVersion | null): string | null =
 const PublicationDetail = (props: PublicationDetailProps) => {
   const { item, target, actions, onClose } = props;
   const { version, edit } = entryOf(item, target);
-  const note = version?.review.note || edit?.review.note;
+  const note = [version?.review.note, edit?.review.note].find(Boolean);
 
   const buttons = (
     <>
@@ -37,7 +39,7 @@ const PublicationDetail = (props: PublicationDetailProps) => {
       actions={buttons}
       notice={actions.notice ?? noteFor(item, version)}
       onClose={onClose}
-      className="side-panel publication-detail"
+      className="publication-detail"
     >
       {version?.changelog && (
         <Stack gap="xs" align="stretch">

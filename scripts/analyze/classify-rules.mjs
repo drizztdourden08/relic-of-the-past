@@ -22,8 +22,6 @@ const ROLE_RULES = [
   ['apps/desktop/src/stores/', 'renderer-stores'],
   ['apps/desktop/src/widgets/', 'renderer-widgets'],
   ['apps/desktop/src/hud/', 'renderer-hud'],
-  ['apps/desktop/src/tokens/', 'renderer-design-system'],
-  ['apps/desktop/fonts/', 'renderer-design-system'],
   ['apps/desktop/src/compounds/', 'renderer-components'],
   ['apps/desktop/src/views/', 'renderer-components'],
   ['apps/desktop/src/', 'renderer-other'],

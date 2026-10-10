@@ -2,7 +2,7 @@
 import { DropZone, Field } from '@drizztdourden08/tessera/primitives';
 import type { DropZoneStatus } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@rotp/hub-client';
-import { KIND_LABELS } from '../../../lib/kinds';
+import { KIND_LABELS } from '../../../kinds';
 import { PACK_ACCEPT } from '../Publish.constants';
 import type { PackState } from '../behavior/usePack.type';
 import type { PackFieldProps } from './PackField.type';

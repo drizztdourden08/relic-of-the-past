@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ItemResponse } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { getItem } from '../api/catalog-endpoints';
+import { getItem } from '../endpoints/catalog-endpoints';
 
 const useItem = (id: string | null) => {
   const [data, setData] = useState<ItemResponse | null>(null);
@@ -28,4 +28,4 @@ const useItem = (id: string | null) => {
 };
 
 export { useItem };
-export type { ItemState } from './useItem.type';
+export type { ItemState } from './item.type';

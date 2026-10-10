@@ -14,8 +14,6 @@
   },
   "include": [
     "apps/desktop/src/**/*",
-    "apps/sanctuary/src/**/*",
-    "apps/store/src/**/*",
     "apps/desktop/electron/**/*",
     "packages/*/src/**/*"
   ],

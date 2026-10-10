@@ -88,7 +88,7 @@
     }
   ],
   "firestore": {
-    "rules": "apps/sanctuary/firestore.rules",
-    "indexes": "apps/sanctuary/firestore.indexes.json"
+    "rules": "packages/hub-server/firestore/firestore.rules",
+    "indexes": "packages/hub-server/firestore/firestore.indexes.json"
   }
 }

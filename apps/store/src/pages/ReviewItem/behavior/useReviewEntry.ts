@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useMemo } from 'react';
-import { listUnsubmitted } from '../../../api/review-endpoints';
+import { listUnsubmitted } from '../../../endpoints/review-endpoints';
 import { entryId } from '../../../review/review-row';
 import { useReviewQueue } from '../../../review/useReviewQueue';
 import { GONE } from './useReviewEntry.constants';

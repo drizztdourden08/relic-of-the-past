@@ -2,10 +2,10 @@
 import { Box, EmptyState, Flex, Pressable, Stack, Tag, Text } from '@drizztdourden08/tessera/primitives';
 import { KIND_CONTAINER } from '@rotp/hub-contracts';
 import { AppLink } from '@rotp/design';
-import { formatAverage } from '../../lib/format-count/format-average';
-import { formatCount } from '../../lib/format-count/format-count';
+import { formatAverage } from '../../format-count/format-average';
+import { formatCount } from '../../format-count/format-count';
 import { InstallButton } from '../InstallButton/InstallButton';
-import { itemColorStyle } from '../../lib/item-color-style';
+import { itemColorStyle } from '../../catalog/item-color-style';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { KindChip } from '../KindChip/KindChip';
 import { Stars } from '../Stars/Stars';

@@ -790,10 +790,14 @@ Roles:
 - `siteApi`: the Sanctuary API, run locally by the functions framework.
 - `static`: a static file server, for install manifests and previews.
 - `mgbaTracer`: the mGBA Lua socket tracer that reads the second cartridge live.
+- `store`: the Hookshop site, a Brock side web app.
+- `storeApi`: the store API, run locally by the functions framework.
+
+The two sites name their offsets in `brock.site.ts` (`ports.offset` and `api.portOffset`), which Brock loads as plain Node and so cannot read this file. The numbers there must match `site`, `siteApi`, `store` and `storeApi`.
 
 `ARCHIPELAGO_DEFAULT_PORT` is not part of the block. It belongs to the multiworld protocol.
 
-`portFor` (`config/port-for.ts`) turns a role and a slot into the port. `apps/sanctuary-api/dev-server.mjs` runs as plain Node, so it loads `port-for.ts` and `port-slot.ts` through tsx's `require` (`tsx/cjs/api`), which resolves their extensionless sibling imports the way the bundler does.
+`portFor` (`config/port-for.ts`) turns a role and a slot into the port. `packages/hub-server/dev/serve-function.mjs` runs as plain Node, so it loads `portFor` through tsx's `require` (`tsx/cjs/api`), which resolves its extensionless sibling imports the way the bundler does. It takes the slot from Brock's `portSlotOf`, the same reader the site's dev proxy uses, so a site and its API always land in one slot.
 
 ## Credits
 

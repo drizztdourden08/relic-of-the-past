@@ -1,12 +1,14 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { downloadFile } from '../../../api/files-endpoints';
+import { downloadFile } from '../../../endpoints/files-endpoints';
 import { errorMessage } from '@rotp/hub-client';
 import { BATCH_SAVE_GAP_MS } from '../Files.constants';
-import { fitsInZip, totalBytes } from './batch-size';
+import { fitsInZip } from './fits-in-zip';
+import { totalBytes } from './total-bytes';
 import { pickKeyOf } from './pick-key-of';
-import { saveBlob, saveUrl } from './save-link';
+import { saveBlob } from './save-blob';
+import { saveUrl } from './save-url';
 import { uniqueNames } from './unique-names';
 import { zipFiles } from './zip-files';
 import { IDLE } from './useBatchDownload.constants';

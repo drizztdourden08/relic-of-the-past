@@ -1,7 +1,29 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": [
-    "brock.workspace.mjs"
-  ],
-  "ignoreDependencies": []
+  "ignoreDependencies": [],
+  "workspaces": {
+    ".": {
+      "entry": [
+        "brock.workspace.mjs"
+      ]
+    },
+    "apps/sanctuary": {
+      "entry": [
+        "brock.site.ts",
+        "src/**/*.usage.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ]
+    },
+    "apps/store": {
+      "entry": [
+        "brock.site.ts",
+        "src/**/*.usage.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ]
+    }
+  }
 }

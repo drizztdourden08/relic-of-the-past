@@ -1,8 +1,8 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import { errorMessage } from '@rotp/hub-client';
-import { getHome } from '../../../api/catalog-endpoints';
-import { putFeatured, putWelcome } from '../../../api/review-endpoints';
+import { getHome } from '../../../endpoints/catalog-endpoints';
+import { putFeatured, putWelcome } from '../../../endpoints/review-endpoints';
 import type { Move } from './useHomeSettings.type';
 
 const useHomeSettings = () => {

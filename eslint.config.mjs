@@ -50,6 +50,13 @@ const rotpExtension = {
           'apps/desktop/src/views/HudLayoutEditor/sub-components/EditorStage.tsx',
         ],
         why: 'The editor rails take the width the user drags them to, and the stage keeps the aspect ratio of the live game view.',
+      }, {
+        files: [
+          'apps/store/src/components/{CropDialog,FeaturedHero,ItemPicture}/**/*.{ts,tsx}',
+          'apps/store/src/components/RatingPanel/sub-components/RatingHistogram.tsx',
+          'apps/store/src/pages/ReviewItem/sub-components/ListingDetails.tsx',
+        ],
+        why: 'The Hookshop draws values each item carries: its colour in --item-color, the crop rectangle of a picture and the share of each star in the histogram. No token can hold a value the API returns.',
       }],
       glyphContent: [{
         files: ['apps/desktop/src/views/NavigationWidget/sub-components/ReqIcon.constants.ts'],

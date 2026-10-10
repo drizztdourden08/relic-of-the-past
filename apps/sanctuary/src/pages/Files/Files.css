@@ -5,6 +5,22 @@
   min-height: 0;
 }
 
+.files__page {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.files__body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.files__aside {
+  flex: 0 0 var(--detail-w);
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .files__summary {
   font-variant-numeric: tabular-nums;
 }
@@ -19,10 +35,6 @@
   text-transform: uppercase;
 }
 
-.versions .dropzone {
-  padding: var(--space-sm);
-}
-
 .version-dialog {
   width: var(--dialog-w-sm);
 }
@@ -34,7 +46,7 @@
   overflow-wrap: anywhere;
 }
 
-.version-dialog__row .stat-row__value {
+.version-dialog__value {
   overflow-wrap: anywhere;
 }
 
@@ -53,10 +65,6 @@
   min-height: 0;
   padding: var(--space-lg);
   overflow-y: auto;
-}
-
-.selection-panel .selection-panel__head .window-header__title {
-  font-size: var(--text-base);
 }
 
 .selection-panel__total {

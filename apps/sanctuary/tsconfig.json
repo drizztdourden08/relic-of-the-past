@@ -1,12 +1,23 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "@drizztdourden08/brock-lint-config/tsconfig/react.json",
   "compilerOptions": {
-    "baseUrl": "../..",
     "types": [
+      "node",
       "vite/client"
-    ]
+    ],
+    "paths": {
+      "@app/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
-    "src/**/*"
+    "src",
+    "brock.site.ts",
+    "vite.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }

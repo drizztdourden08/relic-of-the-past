@@ -12,11 +12,12 @@ fits in the wider app, see @docs/architecture/overview.md.
 ```
 @drizztdourden08/tessera     tokens.css, palettes/rotp.css, primitives, composites,
                              data, field-kits, color-picker (reusable, domain-agnostic)
-apps/desktop/fonts/         the dialogue face (game-font.css, alttp-ext.woff2, licence)
+packages/design/game-text/  @rotp/design/game-text.css, shared by the app and the sites
+├── game-text.css           colours and geometry of text the game draws
+└── font/                   the dialogue face (game-font.css, alttp-ext.woff2, licence)
 apps/desktop/assets/        bundled pictures (mode badges, home hero, title scene)
 apps/desktop/src/
 ├── theme.css               RotP's own tokens, unlayered, imported after Tessera's
-├── tokens/game-text.css    colours and geometry of text the game draws
 ├── compounds/              tier 3 - domain presentational
 ├── views/                  tier 4 - page/feature with logic + data
 ├── widgets/                overlay widgets
@@ -27,7 +28,9 @@ Each app entry imports `@drizztdourden08/tessera/tokens.css`, then
 `@drizztdourden08/tessera/palettes/rotp.css`, then RotP's `theme.css`, and sets
 `data-palette="rotp"` on its root element. The root renders inside
 `TesseraProvider` (and, in the desktop app, `ViewStorageProvider` with RotP's
-saved view snapshots). The two sites (Sanctuary and the Hookshop store) do the same.
+saved view snapshots). The two sites (Sanctuary and the Hookshop store) are Brock side
+web apps and do the same with their own `src/theme.css`, which takes the game text from
+`@rotp/design/game-text.css` and never reads from `apps/desktop`.
 
 The alias `@app/*` points at `apps/desktop/src/*`; shared code comes from the workspace
 packages (`@rotp/*`). Non-presentational code (`App/`, `stores/`, `game/`, `hooks/`) stays

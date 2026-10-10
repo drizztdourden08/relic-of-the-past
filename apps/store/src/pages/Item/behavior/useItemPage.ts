@@ -7,7 +7,7 @@ import { useItem } from '../../../catalog/useItem';
 import { approvedVersions, liveVersionOf } from '../../../catalog/approved-versions';
 import { useListingToggle } from '../../../catalog/useListingToggle';
 import { FEATURE_PERMISSION, REVIEW_PERMISSION } from '../../../site/site-sections';
-import { plural } from '../../../lib/format-count';
+import { plural } from '../../../format-count';
 import { useLivePack } from './useLivePack';
 import { useRating } from './useRating';
 import type { ItemTab } from './useItemPage.type';

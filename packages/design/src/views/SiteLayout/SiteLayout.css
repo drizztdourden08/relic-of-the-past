@@ -1,0 +1,15 @@
+/* @layer site-kit @kind style */
+.site-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--c-bg);
+}
+
+.site-layout__body {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-md);
+}

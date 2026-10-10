@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { ReportView } from '../api/api-responses.type';
+import type { ReportView } from '../endpoints/api-responses.type';
 import { ANONYMOUS } from '../reports/report-row';
 import { REPORT_KINDS } from './search-categories';
 import type { ReportMatchGroup } from './match-reports.type';

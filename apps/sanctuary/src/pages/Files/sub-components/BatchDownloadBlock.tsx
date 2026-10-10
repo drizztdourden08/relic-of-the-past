@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind component */
 import { Button, Flex, ProgressBar, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { fitsInZip } from '../behavior/batch-size';
+import { fitsInZip } from '../behavior/fits-in-zip';
 import { pickKeyOf } from '../behavior/pick-key-of';
 import { OVER_LIMIT_NOTE } from './BatchDownloadBlock.constants';
 import type { BatchDownloadBlockProps } from './BatchDownloadBlock.type';

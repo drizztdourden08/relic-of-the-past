@@ -1,9 +1,9 @@
 /* @layer store-site @kind component */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { Box, Image } from '@drizztdourden08/tessera/primitives';
-import { mediaUrl } from '../../api/media-url';
-import { itemColorStyle } from '../../lib/item-color-style';
-import { KIND_ICONS } from '../../lib/kinds/kinds.constants';
+import { mediaUrl } from '../../endpoints/media-url';
+import { itemColorStyle } from '../../catalog/item-color-style';
+import { KIND_ICONS } from '../../kinds/kinds.constants';
 import type { ItemPictureProps } from './ItemPicture.type';
 import './ItemPicture.css';
 

@@ -1,6 +1,6 @@
 /* @layer store-site @kind style */
 
-.dialog.crop-dialog {
+.crop-dialog.crop-dialog {
   max-width: var(--crop-dialog-w);
 }
 

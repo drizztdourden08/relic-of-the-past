@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Tag } from '@drizztdourden08/tessera/primitives';
-import { KIND_LABELS } from '../../lib/kinds/kinds.constants';
+import { KIND_LABELS } from '../../kinds/kinds.constants';
 import type { KindChipProps } from './KindChip.type';
 import { KIND_TONES } from './KindChip.constants';
 

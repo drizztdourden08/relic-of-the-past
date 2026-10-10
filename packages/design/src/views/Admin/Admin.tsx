@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { AdminUser } from '@rotp/hub-client';
 import { Stack, Box, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
-import { ListItemList, SettingsSection } from '@drizztdourden08/tessera/composites';
-import { SitePage } from '../../compounds/SitePage/SitePage';
+import { ListItemList, SettingsPage, SettingsSection } from '@drizztdourden08/tessera/composites';
+import { useSectionHeading } from '../../hooks/useSectionHeading/useSectionHeading';
 import { AdminUserRow } from './sub-components/AdminUserRow';
 import { GroupsSection } from './sub-components/GroupsSection';
 import { MemberGroups } from './sub-components/MemberGroups';
@@ -16,6 +16,7 @@ import './Admin.css';
 const Admin = () => {
   const { loading, byState, busyId, error, setGroups, revoke } = useAdminQueue();
   const groupsState = useGroups();
+  const heading = useSectionHeading('admin');
   const { groups, reload } = groupsState;
 
   const changeGroups = useCallback((userId: string, groupIds: string[]) => {
@@ -45,7 +46,7 @@ const Admin = () => {
   const members = byState.member.length + byState.admin.length;
 
   return (
-    <SitePage section="admin" anchors={ANCHORS}>
+    <SettingsPage icon={heading.icon} title={heading.title} anchors={ANCHORS}>
       <Stack gap="xl" align="stretch" className="admin">
         <Box data-section="groups">
           <GroupsSection state={groupsState} />
@@ -77,7 +78,7 @@ const Admin = () => {
           </SettingsSection>
         </Box>
       </Stack>
-    </SitePage>
+    </SettingsPage>
   );
 };
 

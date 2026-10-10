@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import type { AuthorResponse } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { getAuthor } from '../../../api/catalog-endpoints';
+import { getAuthor } from '../../../endpoints/catalog-endpoints';
 
 const useAuthor = (userId: string) => {
   const [data, setData] = useState<AuthorResponse | null>(null);

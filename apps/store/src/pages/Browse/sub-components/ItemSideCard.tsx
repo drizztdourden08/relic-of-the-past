@@ -12,7 +12,7 @@ import { Stars } from '../../../components/Stars/Stars';
 import { authorPath, itemPath } from '../../../catalog/item-paths';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
-import { formatAverage, formatCount, plural } from '../../../lib/format-count';
+import { formatAverage, formatCount, plural } from '../../../format-count';
 import type { ItemSideCardProps } from './ItemSideCard.type';
 
 const versionLine = (card: ItemCardView, detail: ItemResponse | null): string => {
@@ -26,7 +26,7 @@ const fieldsOf = (card: ItemCardView, detail: ItemResponse | null): DetailField[
   { label: 'author', value: <AppLink to={authorPath(card.author.userId)}>{card.author.displayName}</AppLink> },
   { label: 'version', value: versionLine(card, detail) },
   { label: 'installs', value: detail ? formatCount(detail.item.stats.installs) : `${formatCount(card.installs30d)} this month` },
-  { label: 'license', value: detail?.item.license || '-' },
+  { label: 'license', value: [detail?.item.license].find(Boolean) ?? '-' },
   { label: 'tags', value: <TagList tags={detail?.item.tags ?? []} /> },
   {
     label: 'rating',
@@ -56,7 +56,7 @@ const ItemSideCard = (props: ItemSideCardProps) => {
       fields={fieldsOf(item, detail)}
       actions={actions}
       onClose={onClose}
-      className="side-panel item-side-card"
+      className="item-side-card"
     />
   );
 };

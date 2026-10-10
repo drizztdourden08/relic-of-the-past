@@ -7,7 +7,9 @@ import { STORE_VIEWS } from '../../../views/store-views';
 import { toItemRow } from '../../../catalog/item-row';
 import { buildItemSchema } from '../../../catalog/item-schema';
 import { useItem } from '../../../catalog/useItem';
-import { kindTabs, tabIdOf, tabPath } from './kind-tabs';
+import { kindTabs } from './kind-tabs';
+import { tabIdOf } from './tab-id-of';
+import { tabPath } from './tab-path';
 import { useGridSort } from './useGridSort';
 
 const useBrowsePage = (kind: StoreKind | null, selectedId: string | null) => {

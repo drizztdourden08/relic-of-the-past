@@ -1,0 +1,28 @@
+/* @layer store-site @kind style */
+@import url('@rotp/design/game-text.css');
+
+:root {
+  --item-card-ratio: 16 / 9;
+  --item-banner-ratio: 3 / 1;
+  --item-grid-min: 180px;
+  --item-kind-icon: 40px;
+  --welcome-title-size: 22px;
+  --hero-min-h: 190px;
+  --hero-pad-y: 18px;
+  --hero-pad-x: 20px;
+  --hero-gap: 10px;
+  --shelf-title-size: 15px;
+  --shelf-columns: 4;
+  --shelf-card-max-w: 280px;
+  --shelf-columns-compact: 2;
+  --empty-stripe: 8px;
+  --hero-dot-d: 8px;
+  --stars-size: 14px;
+  --stars-size-lg: 22px;
+  --histogram-bar-h: 8px;
+  --store-form-maxw: 720px;
+  --picture-preview-w: 320px;
+  --crop-dialog-w: 760px;
+  --review-card-w: 220px;
+  --review-swatch-size: 14px;
+}

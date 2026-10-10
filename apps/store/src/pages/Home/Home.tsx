@@ -1,12 +1,13 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { ItemCardView } from '@rotp/hub-contracts';
-import { SitePage, useSessionContext } from '@rotp/design';
+import { SettingsPage } from '@drizztdourden08/tessera/composites';
+import { useSectionHeading, useSessionContext } from '@rotp/design';
 import { FeaturedHero } from '../../components/FeaturedHero/FeaturedHero';
 import { Shelf } from '../../components/Shelf/Shelf';
 import { itemPath } from '../../catalog/item-paths';
-import { formatCount } from '../../lib/format-count';
-import { KIND_PLURALS, KIND_SECTIONS } from '../../lib/kinds';
+import { formatCount } from '../../format-count';
+import { KIND_PLURALS, KIND_SECTIONS } from '../../kinds';
 import { useHome } from './behavior/useHome';
 import { PublishAction } from './sub-components/PublishAction';
 import { Welcome } from './sub-components/Welcome';
@@ -17,8 +18,9 @@ const monthlyInstalls = (item: ItemCardView) => `${formatCount(item.installs30d)
 const Home = () => {
   const { me } = useSessionContext();
   const { home, loading, error, kindShelves } = useHome();
+  const heading = useSectionHeading('home');
   return (
-    <SitePage section="home" actions={<PublishAction />}>
+    <SettingsPage icon={heading.icon} title={heading.title} actions={<PublishAction />}>
       <Stack gap="xl" align="stretch" className="home">
         <Welcome name={me?.displayName ?? 'player'} message={home?.welcome ?? ''} />
         {error && <Text as="p" variant="caption" role="alert">{error}</Text>}
@@ -35,7 +37,7 @@ const Home = () => {
           <Shelf key={kind} title={KIND_PLURALS[kind]} items={items} itemPath={itemPath} seeAll={`/${KIND_SECTIONS[kind]}`} />
         ))}
       </Stack>
-    </SitePage>
+    </SettingsPage>
   );
 };
 

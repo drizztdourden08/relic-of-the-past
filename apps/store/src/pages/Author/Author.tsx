@@ -1,8 +1,9 @@
 /* @layer store-site @kind component */
+import { Icon as IconifyIcon } from '@iconify/react/offline';
 import userIcon from '@iconify-icons/lucide/user';
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { SettingsPage } from '@drizztdourden08/tessera/composites';
 import { ItemGrid } from '../../components/ItemGrid/ItemGrid';
-import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { itemPath } from '../../catalog/item-paths';
 import { useAuthor } from './behavior/useAuthor';
 import { totalsLine } from './behavior/totals-line';
@@ -13,7 +14,7 @@ const Author = (props: AuthorProps) => {
   const { userId } = props;
   const { data, error } = useAuthor(userId);
   return (
-    <TitledPage icon={userIcon} title={data?.author.displayName ?? 'Author'} scroll={false}>
+    <SettingsPage icon={<IconifyIcon icon={userIcon} />} title={data?.author.displayName ?? 'Author'} scroll={false}>
       <Stack gap="md" align="stretch" className="author">
         {!data && <Text as="p" variant="caption" role={error ? 'alert' : 'status'}>{error ?? 'Loading...'}</Text>}
         {data && (
@@ -23,7 +24,7 @@ const Author = (props: AuthorProps) => {
           </>
         )}
       </Stack>
-    </TitledPage>
+    </SettingsPage>
   );
 };
 

@@ -1,15 +1,13 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useMemo } from 'react';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { useSessionContext, useSurfaceView, filterRows } from '@rotp/design';
+import { useSessionContext } from '@rotp/design';
 import { visibleFileTypes } from '@rotp/hub-contracts';
 import { useSiteData } from '../../../data/useSiteData';
-import { toFileRow } from '../../../files/file-row';
-import { buildFileSchema } from '../../../files/file-schema';
-import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views.constants';
 import { DEFAULT_UPLOAD_TYPE } from '../Files.constants';
 import { isFileType } from './is-file-type';
-import { fileScopeTabs, scopePredicate, shownScopeId } from './file-scopes';
+import { shownScopeId } from './shown-scope-id';
+import { useFileRows } from './useFileRows';
 import { useBatchActions } from './useBatchActions';
 import { useBatchDownload } from './useBatchDownload';
 import { useFileActions } from './useFileActions';
@@ -26,21 +24,7 @@ const useFilesPage = (selectedId: string | null) => {
   const scopeId = shownScopeId(scopes.files, types);
   const setScopeId = useCallback((id: string) => setScope('files', id), [setScope]);
 
-  const rows = useMemo(() => data.files.map(toFileRow), [data.files]);
-  const schema = useMemo(() => buildFileSchema(rows), [rows]);
-  const view = useSurfaceView(SANCTUARY_VIEWS, 'files', schema);
-  const inScope = useMemo(() => rows.filter(scopePredicate(scopeId, meId)), [rows, scopeId, meId]);
-  const shown = useMemo(
-    () => filterRows({ rows: inScope, schema, clauses: view.clauses, search: view.search }),
-    [inScope, schema, view.clauses, view.search],
-  );
-
-  const tabs = useMemo(() => fileScopeTabs(rows, meId, types), [rows, meId, types]);
-  const scopeBytes = useMemo(() => inScope.reduce((sum, row) => sum + row.bytes, 0), [inScope]);
-  const knownTags = useMemo(
-    () => [...new Set(data.files.flatMap((file) => file.tags))].sort((a, b) => a.localeCompare(b)),
-    [data.files],
-  );
+  const { schema, view, shown, tabs, scopeBytes, knownTags } = useFileRows(data.files, scopeId, meId, types);
 
   const selection = useFileSelection(selectedId);
   const picked = useMemo(() => data.files.filter((file) => selection.ids.has(file.id)), [data.files, selection.ids]);
@@ -80,24 +64,9 @@ const useFilesPage = (selectedId: string | null) => {
   return {
     data,
     scope: { tabs, activeId: scopeId, select: selectScope, bytes: scopeBytes },
-    schema,
-    view,
-    shown,
-    knownTags,
-    selected,
-    picked,
-    pickedIds: selection.ids,
-    pick,
-    clearPick,
-    select,
-    deselect,
-    actions,
-    batch,
-    download,
-    canEdit,
-    drops,
-    types,
-    uploadType,
+    schema, view, shown, knownTags,
+    selected, picked, pickedIds: selection.ids, pick, clearPick, select, deselect,
+    actions, batch, download, canEdit, drops, types, uploadType,
   };
 };
 

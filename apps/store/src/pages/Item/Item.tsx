@@ -1,12 +1,13 @@
 /* @layer store-site @kind component */
+import { Icon as IconifyIcon } from '@iconify/react/offline';
 import storeIcon from '@iconify-icons/lucide/store';
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { SettingsPage } from '@drizztdourden08/tessera/composites';
 import { ItemHero } from '../../components/ItemHero';
 import { PackContentsPanel } from '../../components/PackContentsPanel/PackContentsPanel';
 import { RatingPanel } from '../../components/RatingPanel/RatingPanel';
-import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { liveVersionOf } from '../../catalog/approved-versions';
-import { KIND_ICONS, KIND_PLURALS } from '../../lib/kinds';
+import { KIND_ICONS, KIND_PLURALS } from '../../kinds';
 import { useItemPage } from './behavior/useItemPage';
 import { ItemActions } from './sub-components/ItemActions';
 import { ItemOverview } from './sub-components/ItemOverview';
@@ -21,9 +22,9 @@ const Item = (props: ItemProps) => {
 
   if (!data) {
     return (
-      <TitledPage icon={storeIcon} title="Item">
+      <SettingsPage icon={<IconifyIcon icon={storeIcon} />} title="Item">
         <Text as="p" variant="caption" role={page.error ? 'alert' : 'status'}>{page.error ?? 'Loading the item...'}</Text>
-      </TitledPage>
+      </SettingsPage>
     );
   }
 
@@ -31,7 +32,7 @@ const Item = (props: ItemProps) => {
   const actions = <ItemActions item={item} canModerate={page.canModerate} canFeature={page.canFeature} listing={listing} />;
 
   return (
-    <TitledPage icon={KIND_ICONS[item.kind]} title={KIND_PLURALS[item.kind]} tabs={page.tabs}>
+    <SettingsPage icon={<IconifyIcon icon={KIND_ICONS[item.kind]} />} title={KIND_PLURALS[item.kind]} tabs={page.tabs}>
       <Stack gap="lg" align="stretch">
         <ItemHero item={item} version={liveVersionOf(item)} actions={actions} />
         <Stack gap="md" align="stretch" className="item">
@@ -56,7 +57,7 @@ const Item = (props: ItemProps) => {
           )}
         </Stack>
       </Stack>
-    </TitledPage>
+    </SettingsPage>
   );
 };
 

@@ -1,9 +1,9 @@
 /* @layer store-site @kind hook */
 import { useCallback, useState } from 'react';
 import { errorMessage } from '@rotp/hub-client';
-import { abortVersion, deleteVersion, submitVersion, withdrawVersion } from '../../../api/publish-endpoints';
+import { abortVersion, deleteVersion, submitVersion, withdrawVersion } from '../../../endpoints/publish-endpoints';
 import { useStoreData } from '../../../data/store-data-context';
-import { startDownload } from '../../../lib/start-download';
+import { startDownload } from '../../../catalog/start-download';
 import type { ItemChange } from './usePublicationActions.type';
 
 const usePublicationActions = () => {

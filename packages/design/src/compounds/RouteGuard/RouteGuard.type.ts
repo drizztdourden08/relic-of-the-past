@@ -2,7 +2,7 @@
 import type { ComponentType, ReactNode } from 'react';
 import type { RouteEntry } from '../../router/route-table.type';
 
-type FrameProps = { bare?: boolean; children: ReactNode };
+type FrameProps = { children: ReactNode };
 
 type RouteGuardProps = {
   routes: readonly RouteEntry[];

@@ -1,13 +1,16 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useState } from 'react';
 import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
-import { deleteFile, patchFile } from '../../../api/files-endpoints';
+import { deleteFile, patchFile } from '../../../endpoints/files-endpoints';
 import { errorMessage } from '@rotp/hub-client';
 import { fileLink } from './file-link';
-import {
-  EMPTY_TALLY, addTagsPatch, batchReport, removeTagsPatch, splitByRight, typePatch,
-} from './batch-edits';
-import type { BatchTally, PatchOf } from './batch-edits';
+import { EMPTY_TALLY } from './batch-edits.constants';
+import { addTagsPatch } from './add-tags-patch';
+import { batchReport } from './batch-report';
+import { removeTagsPatch } from './remove-tags-patch';
+import { splitByRight } from './split-by-right';
+import { typePatch } from './type-patch';
+import type { BatchTally, PatchOf } from './batch-edits.type';
 import type { FileWrite, UseBatchActionsParams } from './useBatchActions.type';
 
 const useBatchActions = (params: UseBatchActionsParams) => {
@@ -50,18 +53,9 @@ const useBatchActions = (params: UseBatchActionsParams) => {
     return batchReport(tally, 'changed');
   }), [run, eachMine, onPatched]);
 
-  const setType = useCallback(
-    (files: readonly SanctuaryFile[], type: FileType) => patchEach(files, typePatch(type)),
-    [patchEach],
-  );
-  const addTags = useCallback(
-    (files: readonly SanctuaryFile[], tags: readonly string[]) => patchEach(files, addTagsPatch(tags)),
-    [patchEach],
-  );
-  const removeTags = useCallback(
-    (files: readonly SanctuaryFile[], tags: readonly string[]) => patchEach(files, removeTagsPatch(tags)),
-    [patchEach],
-  );
+  const setType = useCallback((files: readonly SanctuaryFile[], type: FileType) => patchEach(files, typePatch(type)), [patchEach]);
+  const addTags = useCallback((files: readonly SanctuaryFile[], tags: readonly string[]) => patchEach(files, addTagsPatch(tags)), [patchEach]);
+  const removeTags = useCallback((files: readonly SanctuaryFile[], tags: readonly string[]) => patchEach(files, removeTagsPatch(tags)), [patchEach]);
 
   const remove = useCallback((files: readonly SanctuaryFile[]) => run(async () => {
     const tally = await eachMine(files, async (file) => {

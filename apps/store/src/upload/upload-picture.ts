@@ -1,7 +1,7 @@
 /* @layer store-site @kind logic */
 import type { MediaRole, MediaRef } from '@rotp/hub-contracts';
-import { beginMedia } from '../api/publish-endpoints/begin-media';
-import type { Picture } from '../lib/resize-image.type';
+import { beginMedia } from '../endpoints/publish-endpoints/begin-media';
+import type { Picture } from './resize-image.type';
 import { hashPack } from './hash-pack';
 import { WEBP } from './upload-picture.constants';
 

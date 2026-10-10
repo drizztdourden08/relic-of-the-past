@@ -1,9 +1,9 @@
 /* @layer store-site @kind hook */
 import { useMemo } from 'react';
 import type { StoreItem } from '@rotp/hub-contracts';
-import { itemPack } from '../../../api/catalog-endpoints';
+import { itemPack } from '../../../endpoints/catalog-endpoints';
 import { liveVersionOf } from '../../../catalog/approved-versions';
-import { usePackLink } from '../../../lib/pack-link/usePackLink';
+import { usePackLink } from '../../../pack-link/usePackLink';
 import { NO_LIVE } from './useLivePack.constants';
 import type { LivePack } from './useLivePack.type';
 
@@ -19,7 +19,7 @@ const useLivePack = (item: StoreItem | null, opened: boolean): LivePack => {
   const id = item?.id ?? null;
   const liveN = item?.liveVersion ?? null;
   const readable = opened && id !== null && noPack === null;
-  const load = useMemo(() => (readable && id !== null && liveN !== null ? () => itemPack(id) : null), [readable, id, liveN]);
+  const load = useMemo(() => (readable && liveN !== null ? () => itemPack(id) : null), [readable, id, liveN]);
   const pack = usePackLink(load);
   return { pack, noPack };
 };

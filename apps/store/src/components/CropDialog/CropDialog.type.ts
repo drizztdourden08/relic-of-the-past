@@ -1,5 +1,5 @@
 /* @layer store-site @kind types */
-import type { CropRect } from '../../lib/picture-crop/picture-crop.type';
+import type { CropRect } from '../../picture-crop/picture-crop.type';
 
 type CropDialogProps = {
   title: string;

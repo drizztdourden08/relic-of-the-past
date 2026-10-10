@@ -1,9 +1,9 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import { errorMessage } from '@rotp/hub-client';
-import { resizeToWebp } from '../../../lib/resize-image';
-import type { Picture, PictureSpec } from '../../../lib/resize-image';
-import type { CropRect } from '../../../lib/picture-crop';
+import { resizeToWebp } from '../../../upload/resize-image';
+import type { Picture, PictureSpec } from '../../../upload/resize-image';
+import type { CropRect } from '../../../picture-crop';
 
 const usePicture = (spec: PictureSpec) => {
   const [source, setSource] = useState<File | null>(null);

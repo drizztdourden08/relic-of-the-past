@@ -2,8 +2,8 @@
 import { useCallback, useState } from 'react';
 import type { ReviewEntry, ReviewDecision } from '@rotp/hub-contracts';
 import { errorMessage } from '@rotp/hub-client';
-import { deleteVersion } from '../../../api/publish-endpoints';
-import { decideReview, unlistItem } from '../../../api/review-endpoints';
+import { deleteVersion } from '../../../endpoints/publish-endpoints';
+import { decideReview, unlistItem } from '../../../endpoints/review-endpoints';
 import { DONE } from './useReviewActions.constants';
 import type { UseReviewActionsParams } from './useReviewActions.type';
 

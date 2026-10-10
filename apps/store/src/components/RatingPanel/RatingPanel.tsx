@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 import { Button, Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { averageOf, formatAverage, plural } from '../../lib/format-count';
+import { averageOf, formatAverage, plural } from '../../format-count';
 import { Stars } from '../Stars/Stars';
 import { RatingHistogram } from './sub-components/RatingHistogram';
 import type { RatingPanelProps } from './RatingPanel.type';

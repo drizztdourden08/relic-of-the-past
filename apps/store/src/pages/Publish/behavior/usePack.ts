@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { CONTAINER_KIND, isContainer, STORE_LIMITS } from '@rotp/hub-contracts';
 import type { StoreKind } from '@rotp/hub-contracts';
 import { formatBytes } from '@rotp/hub-client';
-import { KIND_LABELS } from '../../../lib/kinds';
+import { KIND_LABELS } from '../../../kinds';
 import type { PackCheck } from './usePack.type';
 
 const extensionOf = (name: string) => name.slice(name.lastIndexOf('.') + 1).toLowerCase();

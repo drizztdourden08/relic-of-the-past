@@ -2,12 +2,12 @@
 import type { StoreItem } from '@rotp/hub-contracts';
 import { STORE_LIMITS } from '@rotp/hub-contracts';
 import type { UploadRunner } from '@rotp/hub-client';
-import { abortVersion } from '../../api/publish-endpoints/abort-version';
-import { beginVersion } from '../../api/publish-endpoints/begin-version';
-import { completeVersion } from '../../api/publish-endpoints/complete-version';
-import { signVersionParts } from '../../api/publish-endpoints/sign-version-parts';
-import { submitVersion } from '../../api/publish-endpoints/submit-version';
-import { versionParts } from '../../api/publish-endpoints/version-parts';
+import { abortVersion } from '../../endpoints/publish-endpoints/abort-version';
+import { beginVersion } from '../../endpoints/publish-endpoints/begin-version';
+import { completeVersion } from '../../endpoints/publish-endpoints/complete-version';
+import { signVersionParts } from '../../endpoints/publish-endpoints/sign-version-parts';
+import { submitVersion } from '../../endpoints/publish-endpoints/submit-version';
+import { versionParts } from '../../endpoints/publish-endpoints/version-parts';
 import { hashPack } from '../hash-pack';
 import { prepareListing } from '../prepare-listing';
 import { publishLabel } from '../publish-steps/publish-label';

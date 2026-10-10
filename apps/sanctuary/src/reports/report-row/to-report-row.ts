@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-import type { ReportView } from '../../api/api-responses.type';
+import type { ReportView } from '../../endpoints/api-responses.type';
 import { formatBytes, formatDateTime } from '@rotp/hub-client';
 import { ANONYMOUS } from './report-row.constants';
 import { contentsLine } from './contents-line';

@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import { errorMessage } from '@rotp/hub-client';
 import { toast } from '@drizztdourden08/tessera/composites';
-import { startDownload } from '../../../lib/start-download';
+import { startDownload } from '../../../catalog/start-download';
 
 const useDownload = (itemId: string) => {
   const [busy, setBusy] = useState(false);

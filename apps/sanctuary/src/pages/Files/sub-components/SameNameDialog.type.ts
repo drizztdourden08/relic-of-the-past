@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind types */
-import type { SameNameQuestion } from '../behavior/drop-queue';
+import type { SameNameQuestion } from '../behavior/drop-queue.type';
 
 type SameNameDialogProps = {
   question: SameNameQuestion | null;

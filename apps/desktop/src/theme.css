@@ -1,6 +1,5 @@
 /* @layer renderer-design-system @kind style */
-@import url('./tokens/game-text.css');
-@import url('../fonts/game-font.css');
+@import url('@rotp/design/game-text.css');
 
 :root {
   --c-gold-shade: #8c6a2a;

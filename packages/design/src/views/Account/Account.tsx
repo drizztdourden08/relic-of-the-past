@@ -1,8 +1,8 @@
 /* @layer site-kit @kind component */
 import { PROVIDERS } from '@rotp/hub-contracts';
 import { Box, Stack, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
-import { ListItemList, ListItemRow, SettingsSection } from '@drizztdourden08/tessera/composites';
-import { SitePage } from '../../compounds/SitePage/SitePage';
+import { ListItemList, ListItemRow, SettingsPage, SettingsSection } from '@drizztdourden08/tessera/composites';
+import { useSectionHeading } from '../../hooks/useSectionHeading/useSectionHeading';
 import { AccessChip } from '../../compounds/AccessChip/AccessChip';
 import { GroupChips } from '../../compounds/GroupChips/GroupChips';
 import { IdentityRow } from '../../compounds/IdentityRow/IdentityRow';
@@ -16,13 +16,14 @@ import './Account.css';
 const Account = () => {
   const { me, access, identities, groups } = useSessionContext();
   const actions = useAccountActions();
+  const heading = useSectionHeading('account');
   if (!me || !access) return null;
 
   const accessValue = `${SOURCE_LABELS[access.source]} · checked ${formatDay(access.checkedAt)}`;
   const recheckButton = <Button variant="ghost" size="sm" disabled={actions.busy} onClick={() => void actions.recheck()}>Re-check</Button>;
 
   return (
-    <SitePage section="account" anchors={ANCHORS}>
+    <SettingsPage icon={heading.icon} title={heading.title} anchors={ANCHORS}>
       <Stack gap="xl" align="stretch" className="account">
         <Box data-section="name">
           <SettingsSection title="Display name">
@@ -66,7 +67,7 @@ const Account = () => {
           {actions.error && <Text as="span" variant="caption" role="alert">{actions.error}</Text>}
         </Flex>
       </Stack>
-    </SitePage>
+    </SettingsPage>
   );
 };
 
