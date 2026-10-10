@@ -1737,7 +1737,7 @@ That API's drag image is a snapshot taken once at `dragstart`, which fights the 
 It keeps `useResize`'s discipline: pointer capture, a slop threshold, a preview on every move, and one commit on release.
 The drag never touches the document: `resolve` is pure and `commit` runs once on `pointerup`.
 So cancel is free, and the tree is not re solved under the pointer mid drag.
-The old stage nudge wrote the document on every `pointermove`; one drag is now one edit, counted in `tests/hud/hud-drag-gesture.keep.test.ts`.
+The old stage nudge wrote the document on every `pointermove`; one drag is now one edit, counted in `apps/desktop/tests/hud/hud-drag-gesture.keep.test.ts`.
 Capture is taken at the threshold, not the press, so a wobbling click is still a click.
 Once the gesture is real, the trailing `click` is swallowed in the capture phase, because a press and release on different rows still synthesise a click on their common ancestor.
 `Escape` cancels the drag and nothing else; it sits at the `drag` level of the dismiss stack, above `popover`.

@@ -1,5 +1,5 @@
 {
-  "$comment": "Named expression strings used by tests/hud/hud-data-*.keep.test.ts. `valid` are real formulas straight out of plans/hud-data-binding.html's worked examples (with `&&` corrected to `and` - see the test file's own note on that). `invalid` are the disabled-operator and malformed cases the parser must refuse.",
+  "$comment": "Named expression strings used by apps/desktop/tests/hud/hud-data-*.keep.test.ts. `valid` are real formulas straight out of plans/hud-data-binding.html's worked examples (with `&&` corrected to `and` - see the test file's own note on that). `invalid` are the disabled-operator and malformed cases the parser must refuse.",
   "valid": {
     "arrow-count": "arrow_current",
     "life-in-hearts": "life_current / 8",

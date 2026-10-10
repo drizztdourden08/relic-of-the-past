@@ -103,15 +103,19 @@ transcript-*.jsonl
 # Playwright test artifacts
 playwright-report/
 test-results/
-tests/test-results/
+apps/desktop/tests/test-results/
 tests/screenshots/
 # Ephemeral Playwright specs (write, run, delete). Never committed.
 tests/scratch/
 # Ephemeral Vitest tests, throwaway by default like the Playwright specs above.
 # A permanent one carries a .keep.test.ts suffix instead of .test.ts and is
 # excepted below. See docs/contributing/testing.md.
-tests/**/*.test.ts
-!tests/**/*.keep.test.ts
+apps/desktop/tests/**/*.test.ts
+!apps/desktop/tests/**/*.keep.test.ts
+packages/*/tests/**/*.test.ts
+!packages/*/tests/**/*.keep.test.ts
+scripts/**/tests/**/*.test.ts
+!scripts/**/tests/**/*.keep.test.ts
 
 # Temporary/throwaway scripts (not tracked)
 temp-scripts/

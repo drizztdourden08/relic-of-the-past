@@ -22,7 +22,8 @@
 // 0xF41E-0xF41F, 0xF45D-0xF4FD) are free.
 //
 // THE TS MIRROR. packages/game-core/src/save-file/hook-save-bytes.ts restates these
-// addresses for the offline save-file reader; tests/randomizer/hook-save-bytes.test.ts
+// addresses for the offline save-file reader;
+// apps/desktop/tests/randomizer/hook-save-bytes.keep.test.ts
 // parses THIS header and fails if the two ever disagree.
 #ifndef GAME_HOOKS_SAVE_BYTES_H
 #define GAME_HOOKS_SAVE_BYTES_H

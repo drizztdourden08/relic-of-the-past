@@ -6,12 +6,12 @@
 Logic is covered by Vitest. Run the file you're working on, not the whole suite:
 
 ```bash
-pnpm exec vitest run tests/<file>
+pnpm exec vitest run apps/desktop/tests/<file>
 ```
 
-Tests live under `tests/`.
+Tests live in the package they test, under `packages/<name>/tests/`. Tests that drive the app, or several packages at once, live under `apps/desktop/tests/`, and the tests of the worktree scripts under `scripts/parallel/tests/`. The save-state fixtures stay in `tests/fixtures/`.
 
-Vitest tests are **throwaway by default**, the same rule as Playwright specs below: write it, run it, delete it once it's done its job. A test becomes permanent only when the maintainer asks for it, and a permanent one carries a `.keep.test.ts` suffix instead of `.test.ts`, no matter where it lives under `tests/` (Vitest tests aren't segregated into a scratch vs. permanent folder the way Playwright specs are, since they're organized by subject, not by lifespan). `.gitignore` enforces the default: `tests/**/*.test.ts` is ignored, `tests/**/*.keep.test.ts` is excepted, so an un-kept test naturally never reaches a commit.
+Vitest tests are **throwaway by default**, the same rule as Playwright specs below: write it, run it, delete it once it's done its job. A test becomes permanent only when the maintainer asks for it, and a permanent one carries a `.keep.test.ts` suffix instead of `.test.ts`, no matter which `tests/` folder it lives in (Vitest tests aren't segregated into a scratch vs. permanent folder the way Playwright specs are, since they're organized by subject, not by lifespan). `.gitignore` enforces the default: `*.test.ts` under each of those `tests/` folders is ignored, `*.keep.test.ts` is excepted, so an un-kept test naturally never reaches a commit.
 
 Don't add the `.keep` suffix, or rename an existing test to add it, on your own initiative. If a throwaway looks worth keeping, say so and ask.
 
@@ -99,6 +99,6 @@ UI, or stop short of the save-triggering interaction.
 
 Playwright specs are **throwaway by default**. The app changes quickly and specs go stale within days, so a one-off check belongs in `tests/scratch/` (gitignored): write it, run it, delete it.
 
-A spec becomes permanent only when the maintainer asks for it. Those live in `tests/e2e/` with a `.keep.spec.ts` suffix and are documented in that folder's README, which records what each one guards against. Don't add one, or move a spec there, on your own initiative. If a throwaway looks worth keeping, say so and ask.
+A spec becomes permanent only when the maintainer asks for it. Those live in `apps/desktop/tests/e2e/` with a `.keep.spec.ts` suffix and are documented in that folder's README, which records what each one guards against. Don't add one, or move a spec there, on your own initiative. If a throwaway looks worth keeping, say so and ask.
 
 A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/handlers/test-handlers.ts` and `apps/desktop/src/views/GameSession/behavior/useAutoTest.ts`. If you think one needs to change, check with the maintainer first.

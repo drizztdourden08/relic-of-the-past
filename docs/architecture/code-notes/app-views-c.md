@@ -476,7 +476,7 @@ pond's value rows (the pond's mode row stays in the list, under its section, bec
 choice offered there), the progressive tier ticks and their per family order rows
 (ProgressiveTiersBlock), the five dark room rows (DarkRoomsSection), the retro switch with its
 two arrow prices, and the difficulty block's copy multiples and heart ceiling. The test in
-`tests/randomizer/option-wiring.keep.test.ts` imports this file by path, which is why it keeps
+`apps/desktop/tests/randomizer/option-wiring.keep.test.ts` imports this file by path, which is why it keeps
 its camelCase name. `catalog-by-lock.ts` partitions the shipped catalog once, since the catalog
 is static module data.
 
@@ -868,7 +868,7 @@ the custom mode it is the ticked set, so a control fed the stored `slotCount` wo
 the ticks moved and its fill would climb as the ceiling under it dropped. The stored count is
 re-clamped after every edit, not only the slider's, so it never outruns a ticked set the player has
 just made smaller. The edits live in a folder because
-`tests/randomizer/shop-slots-panel.keep.test.ts` imports `summaryOf` and `withSlotTicked` from this
+`apps/desktop/tests/randomizer/shop-slots-panel.keep.test.ts` imports `summaryOf` and `withSlotTicked` from this
 path.
 
 ### compounds/ShopSlotsBlock/behavior/shop-count-control.ts
@@ -1569,7 +1569,7 @@ The inspector's side nav: the eleven collections, then the review pass on its ow
 The eleven dataset collections as `CollectionSource`s. Adding a collection is this folder and nothing else.
 Rows are read once per collection, on first use, and kept. Writes go to the source files on disk, not the in memory registry, so a stable array is correct and keeps the derived schema memo stable.
 The serializers are the same emitters the write path uses, so the source tab shows exactly what a save would produce.
-`COLLECTION_SOURCES` is built lazily on first read, not at module scope. The record writers, the id reference options and the collection sources form an import cycle. Building at module scope ran while `RECORD_WRITERS` was still undefined, and every collection silently lost its write path. See `tests/data-inspector/module-init-order.keep.test.ts`.
+`COLLECTION_SOURCES` is built lazily on first read, not at module scope. The record writers, the id reference options and the collection sources form an import cycle. Building at module scope ran while `RECORD_WRITERS` was still undefined, and every collection silently lost its write path. See `apps/desktop/tests/data-inspector/module-init-order.keep.test.ts`.
 `refreshCollectionSource` drops a cached source so the next read sees a newly minted record. `rows` is a snapshot, so anything that grows a collection must call it.
 
 ### views/DataInspector/behavior/record-writers

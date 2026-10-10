@@ -57,7 +57,7 @@ the widget's Connections panel.
 
 The annotation kinds are exhaustive by type: `annotation-style/` must register a style, glyph and
 legend for every kind in the union, an unmapped kind still draws as a neutral marker, and
-`tests/simulation/annotation-coverage.keep.test.ts` makes a gap a test failure. A new mechanic cannot
+`apps/desktop/tests/simulation/annotation-coverage.keep.test.ts` makes a gap a test failure. A new mechanic cannot
 ship invisible.
 
 ## Renderer side

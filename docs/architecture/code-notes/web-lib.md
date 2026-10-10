@@ -891,7 +891,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 
 ## game/foreign-item-sentinel.ts
 
-- The foreign item sentinel as the core defines it (foreign_item.c FOREIGN_ITEM_ID), mirrored so a plan can carry it without a running core. tests/randomizer/ap-online-core.keep.test.ts parses the C source and fails the moment the two disagree.
+- The foreign item sentinel as the core defines it (foreign_item.c FOREIGN_ITEM_ID), mirrored so a plan can carry it without a running core. apps/desktop/tests/randomizer/ap-online-core.keep.test.ts parses the C source and fails the moment the two disagree.
 - The icon ids are the same item held up with a game icon: id FOREIGN_ICON_FIRST_ID plus n shows picture n of foreign-icons.4bpp (FOREIGN_ICON_FILES order). Mirrored from the core's FOREIGN_ICON_FIRST and FOREIGN_ICON_LAST the same way.
 - isForeignIconId moved to is-foreign-icon-id.ts, so the data file holds data only.
 
@@ -1824,7 +1824,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 
 ## game/randomizer-client/online-core.type.ts
 
-- Everything the online client asks of the game, behind one seam. The session speaks the protocol; this is the only way it reaches the core, so a test runs the whole client in node against a fake (tests/randomizer/ap-protocol.keep.test.ts) and the app passes the real one (online-core.ts).
+- Everything the online client asks of the game, behind one seam. The session speaks the protocol; this is the only way it reaches the core, so a test runs the whole client in node against a fake (apps/desktop/tests/randomizer/ap-protocol.keep.test.ts) and the app passes the real one (online-core.ts).
 - DeliveryOutcome 'not-ready': the game cannot take the item now, so the received index must not move past it.
 - ScoutedInput is the scout answer and what the room says about the slot. `seedName` is the room's seed name, standing in when the slot data names no seed; `itemName` is an item's name in its owner's game (the room's data package); `gameOf` is the game a slot plays, when the room said.
 - ScoutedOutcome armed: the placement the scouts became (null when the core keeps none), the player each foreign item belongs to, and the plan's poll entries (null keeps the ones polling already has). Refused: nothing is armed.
@@ -2457,7 +2457,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `hook-save-bytes.ts`: the TS mirror of the hook owned save byte registry. The addresses are
   allocated in `core/game-hooks/save_bytes.h`, the single source of truth with compile time
   no overlap checks; this mirror exists so the offline save reader and the headless probes name
-  the same bytes. Nothing may change here alone: `tests/randomizer/hook-save-bytes.keep.test.ts`
+  the same bytes. Nothing may change here alone: `apps/desktop/tests/randomizer/hook-save-bytes.keep.test.ts`
   parses the header and fails when the two disagree. `SAVE_BLOCK_BASE` (`0xF000`) is the base of
   the battery block the game saves and checksums; `0xF406` to `0xF4FD` is the hook layer's run.
   Owners: substitution completion bits, one per possession gated giver (`npc_overrides.c`); the

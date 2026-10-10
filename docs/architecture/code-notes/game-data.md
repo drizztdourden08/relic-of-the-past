@@ -33,8 +33,8 @@ other file: tables are `*.constants.ts`, unions are `*.type.ts`.
   every write.
 
 `pnpm run generate:check` writes nothing and fails on a file that differs from a fresh run;
-`tests/game/data/generated-mirrors.keep.test.ts` runs it, and
-`tests/game/data/enumeration-generated-types.keep.test.ts` does the same for the unions.
+`apps/desktop/tests/game/data/generated-mirrors.keep.test.ts` runs it, and
+`apps/desktop/tests/game/data/enumeration-generated-types.keep.test.ts` does the same for the unions.
 
 The same script splices one C table, `kVanillaPrizeItem` in `core/game-hooks/prize_presentation.c`,
 between a pair of `generated: begin` and `generated: end` block comments, in the file's own line
@@ -550,7 +550,7 @@ its loader, because the vault dataset imports it from there.
 - A screen sits in one world; `both` exists only for areas. `gameId.entranceId` (RAM $010E) tells
   apart rooms that share an index; `palaceIndex` comes from `cur_palace_index_x2`.
 - A screen's `regionId` is absent for a variant of another screen and for the places the reference
-  splits differently (tests/game/data/regions.keep.test.ts lists them).
+  splits differently (apps/desktop/tests/game/data/regions.keep.test.ts lists them).
 - `variant.progressTier` (one tier or an inclusive range) must agree with a `progress` condition;
   `screenBlockers` refuses a screen where they disagree.
 - `triggerIds` are the room header's tag mechanics, joined to trigger actors by `roomTag`. `spawns`

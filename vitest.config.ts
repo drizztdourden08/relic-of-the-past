@@ -4,7 +4,11 @@ import { resolve } from 'path';
 
 export default defineConfig({
   test: {
-    include: ['tests/**/*.test.ts'],
+    include: [
+      'apps/desktop/tests/**/*.test.{ts,tsx}',
+      'packages/*/tests/**/*.test.{ts,tsx}',
+      'scripts/**/tests/**/*.test.{ts,tsx}',
+    ],
     exclude: ['**/node_modules/**', '**/dist/**'],
     globals: true,
     // The default 5s is a measure of how loaded the machine is, not of whether a

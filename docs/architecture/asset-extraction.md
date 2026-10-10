@@ -34,8 +34,8 @@ Public surface is the barrel `packages/asset-extraction/src/index.ts`.
 - Addresses are SNES addresses. Always convert with `snesToLinear` before indexing a linear
   buffer, and don't hardcode linear offsets.
 - Validate the ROM against `ZELDA3_SHA1` / `ZELDA3_SHA1_US` so the wrong ROM fails loudly.
-- Tests live in `tests/asset-extraction/`. Run only the relevant file
-  (`pnpm exec vitest run tests/asset-extraction/<file>`).
+- Tests live in `packages/asset-extraction/tests/`. Run only the relevant file
+  (`pnpm exec vitest run packages/asset-extraction/tests/<file>`).
 
 ## Where it runs
 

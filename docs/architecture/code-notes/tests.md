@@ -2,7 +2,8 @@
 # Code notes: tests
 
 Facts about the test suites that the code cannot say on its own. Each heading names the
-file or folder the note belongs to, relative to `tests/`.
+file or folder the note belongs to, relative to `apps/desktop/tests/`, or by its full path for a
+suite that lives in a package or in `scripts/`.
 
 ## dataset-guard
 
@@ -15,12 +16,12 @@ The placeholder registers one skipped test so vitest does not report the file as
 
 A suite over records it builds itself keeps plain `describe`.
 
-## asset-extraction/alttp-asset-set.keep.test.ts
+## packages/asset-extraction/tests/alttp-asset-set.keep.test.ts
 
 The byte identity case compiles with full options on purpose. The cheap variant
 (`skipDialogue`, `skipMusic`) only proves identity for a blob the app never ships.
 
-## asset-extraction/gba-alttp-supplement.keep.test.ts
+## packages/asset-extraction/tests/gba-alttp-supplement.keep.test.ts
 
 The base game ROM is found by its `(USA).sfc` suffix, never named, because its filename
 carries the trademark. The USA image is the one the extractor validates.
@@ -135,7 +136,7 @@ suites went with it.
 
 ## e2e
 
-`tests/e2e/README.md` describes what each permanent spec guards. The notes below hold what
+`apps/desktop/tests/e2e/README.md` describes what each permanent spec guards. The notes below hold what
 the code itself used to say.
 
 Every automated launch here leaves the owner's session alone: its own `--instance`, its own
@@ -251,7 +252,7 @@ read the same snapshot, and a batch accept depends on it. Without the queue, eit
 later write overwrites the earlier verdict, or the two writes collide and the file reads
 back empty, which is why the unqueued case only asserts fewer than two verdicts.
 
-## features/all-off-vanilla.keep.test.ts
+## packages/features/tests/all-off-vanilla.keep.test.ts
 
 With every enhancement off, the bridge sends all zero feature words so the engine runs the
 verbatim vanilla path. `hudStyle: 'vanilla'` is the default Original HUD; a host drawn
@@ -262,7 +263,7 @@ The init time texture height follows the INI `extend_y`, which only applies with
 buffer. `extendY` defaults to true, so a vanilla profile with extended rendering off must
 still render the stock 224 lines.
 
-## features/bundle-flags-parity.keep.test.ts
+## packages/features/tests/bundle-flags-parity.keep.test.ts
 
 The split bug fix flags are generated into both the C header and the TS registry from one
 catalog (`scripts/build/gen-bundle-flags.mjs`). The word 3 gate bits in `features.h` and the
@@ -275,7 +276,7 @@ enum value is either a literal or a shift; anything else is skipped. Both word 2
 change what the game computes (the menu takeover and the item register), so both must be
 in the Vanilla Safe mask, and they are asserted by name so a removed entry fails.
 
-## features/hud-style-scheme.keep.test.ts
+## packages/features/tests/hud-style-scheme.keep.test.ts
 
 The HUD style is the one choice and the control scheme follows from it. A stored profile
 from before the rename carries the two old keys, `controlScheme` and `hudStyle`. The
@@ -283,14 +284,14 @@ migration runs on every profile read, so it must be idempotent and exact: a prof
 never lose the modern scheme it was saved with. A profile written after the rename has no
 `controlScheme`, so one carrying `enhanced` is never promoted again.
 
-## features/resolve-features.keep.test.ts
+## packages/features/tests/resolve-features.keep.test.ts
 
 The rendering requirement tree: `extendedRendering` then `linearWorldTilemap` then
 `ultrawideRendering` and `tallRendering`; `cameraLockToViewport` requires
 `extendedRendering`; `smoothTransitions` requires `cameraLockToViewport`. A child never
 resolves on while its parent is off.
 
-## features/vanilla-safe-lock.keep.test.ts
+## packages/features/tests/vanilla-safe-lock.keep.test.ts
 
 Vanilla Safe leaves nothing enabled that diverges from the stock cartridge, asked of the
 registry so new features are covered. The fixpoint matters more than the per feature flag:
@@ -1567,7 +1568,7 @@ the solve: all cells together are exactly the container's placed rect at the dis
 case shows what the old convention produced. A grid inside a scaled subtree (the compact layout
 at 0.75) solves with its own unit: a 124px authored band is 93 game pixels wide.
 
-## input/haptic-gates.keep.test.ts
+## packages/input-mapping/tests/haptic-gates.keep.test.ts
 
 Two gate layers must both pass for an in game event to rumble. The C master gate is
 `kFeatures0_Haptics` (bit value 1048576, matching `features.h` and
@@ -1580,13 +1581,13 @@ The suite advances `performance.now` by a large step on every read, so the per p
 cooldowns (module state that persists across cases) never block a fire. It asserts gating,
 not debounce timing.
 
-## input/slot-list.keep.test.ts
+## packages/input-mapping/tests/slot-list.keep.test.ts
 
 Slot numbers are contiguous, so removing slot 2 makes the old slot 3 the new slot 2. The
 assignment table is keyed by number, so `remapAssignments` must move each assignment with
 its slot, or an item lands one button up without warning.
 
-## input/slot-migration.keep.test.ts
+## packages/input-mapping/tests/slot-migration.keep.test.ts
 
 `fixtures/spc2-profile.json` and `fixtures/spc2-assignments.json` are a real profile written
 before slots were numbers: twelve slots keyed by SDL position and eight assignments keyed
@@ -1602,21 +1603,21 @@ and from a key binding. The boot path runs the migration more than once, so it m
 idempotent. A list that already carries numbers is the player's own order and is never
 sorted again.
 
-## input/slot-prefill-order.keep.test.ts
+## packages/input-mapping/tests/slot-prefill-order.keep.test.ts
 
 A HUD layout and a control scheme are joined only by the slot number. The built in HUD
 documents put slot 1 on the north face button through slot 8 on d-pad right. SDL reports
 its buttons from SOUTH, with the d-pad before the face cross is finished, so prefilling in
 device order would draw every shipped layout with the controls permuted.
 
-## input/vibration-shaping.keep.test.ts
+## packages/input-mapping/tests/vibration-shaping.keep.test.ts
 
 Shaping compensates for how each pad's rumble feels and only touches magnitude, never
 duration. Xbox dual rumble is linear and soft at low magnitudes, so it boosts onto a floor
 (0.3 plus 0.85 times the magnitude, clamped at 1). Switch HD rumble already feels strong, so
 it stays unchanged.
 
-## parallel/automation-launch.keep.test.ts
+## scripts/parallel/tests/automation-launch.keep.test.ts
 
 The automation predicate decides whether a launch may write the shared configuration
 (default profile, window position). It must answer yes for every automation flag, even a
@@ -1624,19 +1625,19 @@ run without `--instance`; a false no lets an agent run repoint the user's profil
 shared files are `app.json`, written by `loadProfileForGame` on the `--auto-state` and
 `--screenshot` paths, and `window-state.json`, written on close.
 
-## parallel/link-deps.keep.test.ts
+## scripts/parallel/tests/link-deps.keep.test.ts
 
 `git worktree remove --force` walks into a junction and deletes what it points at; it once
 emptied the real `.claude`. Links must be detached first, without touching their contents,
 and the test detaches before its own cleanup for the same reason. The production
 `LINKED_DIRS` list is empty now, so the test passes a made up directory name explicitly.
 
-## parallel/verdict.keep.test.ts
+## scripts/parallel/tests/verdict.keep.test.ts
 
 The case that matters is the refusal: uncommitted or unlanded work must never come out as
 claimable or deletable.
 
-## platform/primary-modifier.keep.test.ts
+## packages/input-mapping/tests/primary-modifier.keep.test.ts
 
 On macOS and iOS the primary modifier is Cmd alone; a bare Ctrl means something else there.
 An unknown OS accepts either key, because the web host reports `os: 'unknown'` and guessing
@@ -2254,7 +2255,7 @@ The "On this screen" list must show everything the overlay draws; an unmapped ki
 A visual snapshot driven by environment variables. The app loads the current profile and
 save state slot `SNAPSHOT_SLOT` (default 2), then its auto test hook writes
 `tests/screenshots/<SNAPSHOT_NAME>.png`. `SNAPSHOT_WAIT` is the time given to the app to
-finish (default 20000 ms). Run it with `npx playwright test tests/snapshot.spec.ts`.
+finish (default 20000 ms). Run it with `npx playwright test apps/desktop/tests/snapshot.spec.ts`.
 
 ## storage/sprite-set-freshness.keep.test.ts
 

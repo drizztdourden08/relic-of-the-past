@@ -86,7 +86,7 @@ app extracts what it needs locally. See [Quick Start](../getting-started/quick-s
 | `apps/desktop/src/` | React renderer (`game/`, `stores/`, `views/`, `widgets/`, `hud/`). |
 | `apps/desktop/electron/` | Main process + preload ([Electron & IPC](../architecture/electron-ipc.md)). |
 | `packages/` | Workspace packages shared by renderer + electron, imported as `@rotp/*`: `game-core` (the WASM bridge), [asset-extraction](../architecture/asset-extraction.md), [navigation](../architecture/navigation.md), `game-data`, and more. |
-| `tests/` · `scripts/` · `docs/` | Tests, build helpers, documentation. |
+| `tests/` · `scripts/` · `docs/` | Test fixtures and the coverage registry (each package and app keeps its tests in its own `tests/` folder), build helpers, documentation. |
 
 The path alias `@app/*` points at `apps/desktop/src/`. See the
 [Architecture overview](../architecture/overview.md) for zones and dependency invariants.

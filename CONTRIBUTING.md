@@ -59,7 +59,7 @@ list to maintain in `build.bat`/`Makefile`.
 
 Automated tests are intentionally minimal. Playwright is available as a **tool**, not a committed
 suite, so write throwaway specs in `tests/scratch/` (gitignored), run them, then delete them. The only permanent
-spec is `tests/snapshot.spec.ts` (the visual-snapshot harness). Prefer the app's built-in automation
+spec is `apps/desktop/tests/snapshot.spec.ts` (the visual-snapshot harness). Prefer the app's built-in automation
 flags (`--auto-state`, `--screenshot`, `--dump-layers`, `--dump-nav`). They are documented in
 [docs/contributing/testing.md](docs/contributing/testing.md).
 

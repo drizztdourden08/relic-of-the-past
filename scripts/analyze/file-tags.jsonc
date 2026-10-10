@@ -42,10 +42,10 @@
   // Documented in packages/randomizer/src/world/NOTICE.md.
   "packages/randomizer/src/world/LICENSE": { "layer": "shared-game", "kind": "doc" },
   "packages/randomizer/src/world/NOTICE.md": { "layer": "shared-game", "kind": "doc" },
-  // Kept (permanent) app-driven specs. Documented in tests/e2e/README.md.
-  "tests/e2e/**": { "kind": "test" },
+  // Kept (permanent) app-driven specs. Documented in apps/desktop/tests/e2e/README.md.
+  "apps/desktop/tests/e2e/**": { "kind": "test" },
   // The folder's own README is prose, or the rule above would lint it as a test.
-  "tests/e2e/*.md": { "kind": "doc" },
+  "apps/desktop/tests/e2e/*.md": { "kind": "doc" },
 
   "packages/game-data/src/data/**": { "kind": "data" },
   "packages/input-mapping/src/data/**":     { "kind": "data" },
