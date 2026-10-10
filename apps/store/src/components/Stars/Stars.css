@@ -13,7 +13,7 @@
 }
 
 .stars__star {
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
 
 .stars__star[data-on] {

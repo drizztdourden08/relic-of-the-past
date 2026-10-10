@@ -1510,7 +1510,7 @@ EmptyState.css masks the stripes with two crossing linear gradients and mask-com
 Shelf.css stops each column at the card's widest, so the 16:9 picture never grows with the window; on a wide screen the row ends before the edge.
 ItemPicture.css draws the dark ground under the kind icon as three offset ellipses blurred into one shape, wider than the icon's glow, so the glow and the shadow read as two layers.
 
-## packages/design/src/compounds/SiteKit/SiteKit.css
+## packages/design/src/site/theme.css
 
 The design system reset locks scrolling and text selection for the game shell; a site scrolls and lets text be copied, so this sheet overrides both for every site. Its tokens size the site kit's own parts.
 

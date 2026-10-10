@@ -33,7 +33,7 @@ const VersionUploadDialog = (props: VersionUploadDialogProps) => {
       {request && (
         <Stack gap="md" align="stretch">
           <Text as="p" className="version-dialog__lead">{next} of {request.file.name}</Text>
-          <StatRow label="file" value={`${request.dropped.name} · ${formatBytes(request.dropped.size)}`} className="version-dialog__row" />
+          <StatRow label="file" value={<Text as="span" className="version-dialog__value">{`${request.dropped.name} · ${formatBytes(request.dropped.size)}`}</Text>} className="version-dialog__row" />
           <Field label="What changed (optional)" htmlFor={NOTE_ID} hint={`${note.length} / ${LIMITS.noteMaxChars}`}>
             <TextInput
               id={NOTE_ID}

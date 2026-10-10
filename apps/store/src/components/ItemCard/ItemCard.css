@@ -1,5 +1,6 @@
 /* @layer store-site @kind style */
 
+/* stylelint-disable-next-line tessera/no-tessera-internals -- ItemCard has no prop for a picture taller than its media band */
 .store-card .item-card__media {
   block-size: auto;
 }
