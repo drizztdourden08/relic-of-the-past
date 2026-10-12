@@ -2,7 +2,7 @@
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
 import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
-import { allowedRatio, ratioToString, rendersExtended } from './ratio-capability';
+import { allowedRatio, ratioToString, renderHeight, rendersExtended, effectiveExtendY } from './ratio-capability';
 
 const DEFAULT_SETTINGS: GameSettings = {
   // General
@@ -219,10 +219,12 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   const er = !settings.vanillaSafe && settings.extendedRendering;
   const parts: string[] = [];
   if (er) {
-    if (settings.extendY) parts.push('extend_y');
+    if (effectiveExtendY(settings)) parts.push('extend_y');
     // The ratio the capabilities actually cover. Auto, Screen and Custom skip the picker's own gates, so
     // without this a wide monitor on Auto asked the core for a shape its feature bits were never set for.
-    parts.push(ratioToString(allowedRatio(settings)));
+    parts.push(settings.aspectRatio === 'original'
+      ? '4:3'
+      : ratioToString(allowedRatio(settings), renderHeight(settings)));
   } else {
     parts.push('4:3');
   }
@@ -377,7 +379,7 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   // Migration: new capability gates (default off). Existing profiles that already have a ratio
   // requiring these capabilities get them implicitly enabled so nothing silently regresses.
   if (!('extendedRendering' in raw)) {
-    merged.extendedRendering = merged.aspectRatio !== '4:3';
+    merged.extendedRendering = merged.aspectRatio !== 'original' && merged.aspectRatio !== '4:3';
   }
   if (!('linearWorldTilemap' in raw)) {
     const needsLinear = merged.aspectRatio === '21:9' || merged.aspectRatio === '32:9' ||

@@ -10,16 +10,20 @@
 import { aspectRatioValue } from './aspect-ratio';
 import type { GameSettings } from '@shared/types/settings';
 
-/** Above this a ratio needs the linear world tilemap, because the stock 512px fetch runs out. */
-const LINEAR_RATIO = 2.2;
-/** Above this it also needs the ultrawide switch. */
-const ULTRAWIDE_RATIO = 2.4;
-/** Below this it is taller than the original picture and needs the tall renderer. */
-const TALL_RATIO = 4 / 3;
+const BASE_WIDTH = 256;
+const BASE_HEIGHT = 224;
+const STOCK_TILEMAP_WIDTH = 512;
+const ULTRAWIDE_RATIO = 21 / 9;
+
+const effectiveExtendY = (s: GameSettings): boolean => s.aspectRatio !== 'original' || s.extendY;
+const renderHeight = (s: GameSettings): number => effectiveExtendY(s) ? 240 : BASE_HEIGHT;
+const baseRatio = (s: GameSettings): number => BASE_WIDTH / renderHeight(s);
 
 /** The ratio the settings ask for, before any capability is considered. */
 const requestedRatio = (s: GameSettings): number =>
-  aspectRatioValue(s.aspectRatio, s.customAspectW, s.customAspectH);
+  s.aspectRatio === 'original'
+    ? baseRatio(s)
+    : aspectRatioValue(s.aspectRatio, s.customAspectW, s.customAspectH, s.renderIntoNotch);
 
 /**
  * The ratio to render: the requested one, pulled back to what the switched-on capabilities support.
@@ -27,20 +31,21 @@ const requestedRatio = (s: GameSettings): number =>
  */
 const allowedRatio = (s: GameSettings): number => {
   const wanted = requestedRatio(s);
-  if (!s.extendedRendering || wanted <= 0) return TALL_RATIO;
-  if (wanted < TALL_RATIO) return s.tallRendering ? wanted : TALL_RATIO;
-  if (wanted > ULTRAWIDE_RATIO && !s.ultrawideRendering) {
-    return s.linearWorldTilemap ? ULTRAWIDE_RATIO : LINEAR_RATIO;
-  }
-  if (wanted > LINEAR_RATIO && !s.linearWorldTilemap) return LINEAR_RATIO;
+  if (!s.extendedRendering || wanted <= 0) return BASE_WIDTH / BASE_HEIGHT;
+  if (s.aspectRatio === 'original') return wanted;
+  const base = baseRatio(s);
+  if (wanted < base) return s.tallRendering ? wanted : base;
+  const linearLimit = STOCK_TILEMAP_WIDTH / renderHeight(s);
+  if (!s.linearWorldTilemap && wanted > linearLimit) return linearLimit;
+  if (!s.ultrawideRendering && wanted > ULTRAWIDE_RATIO) return ULTRAWIDE_RATIO;
   return wanted;
 };
 
 /** True when the view the profile renders is wider than the original picture. */
-const rendersWide = (s: GameSettings): boolean => s.extendedRendering && allowedRatio(s) > TALL_RATIO;
+const rendersWide = (s: GameSettings): boolean => s.extendedRendering && s.aspectRatio !== 'original' && allowedRatio(s) > baseRatio(s);
 
 /** True when it is taller. */
-const rendersTall = (s: GameSettings): boolean => s.extendedRendering && allowedRatio(s) < TALL_RATIO;
+const rendersTall = (s: GameSettings): boolean => s.extendedRendering && s.aspectRatio !== 'original' && allowedRatio(s) < baseRatio(s);
 
 /**
  * True when the view shows more than the original picture on any side, wider or taller. The
@@ -48,19 +53,17 @@ const rendersTall = (s: GameSettings): boolean => s.extendedRendering && allowed
  * drawn for the original screen, so it needs them too.
  */
 const rendersExtended = (s: GameSettings): boolean =>
-  s.extendedRendering && Math.abs(allowedRatio(s) - TALL_RATIO) > 1e-6;
+  s.extendedRendering && s.aspectRatio !== 'original' &&
+  Math.abs(allowedRatio(s) - baseRatio(s)) > 1e-6;
 
 /**
- * The "W:H" word the core's config parser reads. Built from the served height so the pair is exact for
- * the shape being asked for, and reduced, which is what the ratio pickers hand over too.
+ * The "W:H" word the core's config parser reads. Keep the rendered pixel dimensions unreduced:
+ * reducing 320:240 to 4:3 selects the core's legacy 4:3 branch, which adds no columns.
+ * The core adds columns in pairs, so round to the nearest width it can actually render.
  */
-const ratioToString = (ratio: number): string => {
-  const height = 224;
-  const width = Math.max(1, Math.round(ratio * height));
-  const divide = (a: number, b: number): number => (b === 0 ? a : divide(b, a % b));
-  const g = divide(width, height) || 1;
-  return `${width / g}:${height / g}`;
+const ratioToString = (ratio: number, height: number): string => {
+  const width = Math.max(2, Math.round(ratio * height / 2) * 2);
+  return `${width}:${height}`;
 };
 
-export { allowedRatio, requestedRatio, rendersWide, rendersTall, rendersExtended, ratioToString };
-export { LINEAR_RATIO, ULTRAWIDE_RATIO, TALL_RATIO };
+export { allowedRatio, requestedRatio, rendersWide, rendersTall, rendersExtended, ratioToString, renderHeight, effectiveExtendY };
