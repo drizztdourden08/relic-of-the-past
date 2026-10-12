@@ -11,6 +11,7 @@
  */
 import type { GameSettings } from '@shared/types/settings';
 import type { Section, SettingItem } from '../../../compounds/SettingsLayout';
+import { rendersExtended, rendersWide } from '@app/lib/game/ratio-capability';
 
 const EXTENDED_TOGGLE: SettingItem = {
   key: 'extendedRendering',
@@ -51,23 +52,31 @@ const buildDisplaySection = (s: GameSettings): Section => {
   });
 
   // ── 2. Aspect ratio picker — reflects the capabilities above ─────────────────
-  items.push(
-    {
-      key: 'aspectRatio',
-      label: 'Aspect Ratio',
-      description: 'Screen aspect ratio. Presets unlock as you enable capabilities above.',
-      keywords: 'widescreen 4:3 16:9 16:10 21:9 32:9 tall 3:4 custom auto detect',
-    },
-    {
+  items.push({
+    key: 'aspectRatio',
+    label: 'Aspect Ratio',
+    description: 'Original uses the game width. Wide, Tall, Auto, Screen and Custom use 240 lines.',
+    keywords: 'original widescreen 4:3 16:9 16:10 21:9 32:9 tall 3:4 custom auto detect',
+  });
+  if (s.aspectRatio === 'original') {
+    items.push({
       key: 'extendY',
       label: 'Extend Y',
-      description: 'Show 240 lines instead of 224.',
+      description: 'In Original mode, show 240 lines instead of 224.',
       keywords: 'height resolution vertical 240',
-    },
-  );
+    });
+  }
 
-  // ── 3. Sprite / AI behaviour (only relevant for non-4:3) ─────────────────────
-  const isWide = s.aspectRatio !== '4:3';
+  // ── 3. Sprite / AI behaviour ──────────────────────────────────────────────────
+  const isWide = rendersWide(s);
+  if (rendersExtended(s)) {
+    items.push({
+      key: 'widescreenVisualFixes',
+      label: 'Widescreen Visual Fixes',
+      description: 'Apply graphics corrections for the extended view.',
+      keywords: 'visual fixes widescreen tall tiles edges',
+    });
+  }
   if (isWide) {
     items.push(
       {
@@ -75,12 +84,6 @@ const buildDisplaySection = (s: GameSettings): Section => {
         label: 'Widescreen Sprites',
         description: 'Extend sprite spawn ranges so enemies and objects behave correctly in the wider view.',
         keywords: 'sprites widescreen spawn despawn ranges',
-      },
-      {
-        key: 'widescreenVisualFixes',
-        label: 'Widescreen Visual Fixes',
-        description: 'Apply graphics corrections for the wider view (edges and sprites that assume a 4:3 screen).',
-        keywords: 'visual fixes widescreen tiles edges',
       },
       {
         key: 'widescreenPlayArea',

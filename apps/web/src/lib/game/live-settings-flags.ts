@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /** Bitflag builders for live WASM settings — values must match features.h / ppu.h. */
 import type { GameSettings } from '@shared/types/settings';
+import { rendersExtended, rendersWide, effectiveExtendY } from './ratio-capability';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { effectiveFeatureIds } from './live-settings-gate';
 import { offscreenAiMode } from './settings';
@@ -174,7 +175,7 @@ const buildFeatureFlags = (s: GameSettings): number => {
   const isOn = (id: string): boolean => effective.has(id);
   // widescreenSprites/widescreenVisualFixes additionally need a genuinely wide ratio — that condition
   // isn't part of the requires graph (it depends on aspectRatio, not another feature id).
-  const wide = isOn('extendedRendering') && s.aspectRatio !== '4:3';
+  const wide = isOn('extendedRendering') && rendersExtended(s);
   if (isOn('extendedRendering')) flags |= FEATURE_FLAGS.extendedRendering;
   if (isOn('linearWorldTilemap')) flags |= FEATURE_FLAGS.linearWorldTilemap;
   if (isOn('ultrawideRendering')) flags |= FEATURE_FLAGS.ultrawide;
@@ -248,7 +249,7 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
   // Hand-authored features2 bits. Both are registered ids, so they go through the same Vanilla Safe
   // resolver as the generated fixes above; the wide-view condition stays separate because it depends on
   // aspectRatio rather than on another feature id.
-  const wide = effective.has('extendedRendering') && s.aspectRatio !== '4:3';
+  const wide = effective.has('extendedRendering') && rendersWide(s);
   if (wide) {
     if (effective.has('widescreenPlayArea')) f2 |= FEATURES2_FLAGS.widescreenPlayArea;
     if (effective.has('offscreenAI') && offscreenAiMode(s) === 'idle') f2 |= FEATURES2_FLAGS.widescreenIdleAI;
@@ -271,7 +272,7 @@ const buildPpuFlags = (s: GameSettings): number => {
   // (and never under Vanilla Safe — see serializeToIni). The render-buffer height is baked at init from
   // that INI value; setting the live Height240 flag without it would make the draw loop's botBudget
   // disagree with the allocated texture (ppu.c PpuSetExtraSideSpace).
-  if (!s.vanillaSafe && s.extendedRendering && s.extendY) flags |= PPU_FLAGS.height240;
+  if (!s.vanillaSafe && s.extendedRendering && effectiveExtendY(s)) flags |= PPU_FLAGS.height240;
   if (!s.vanillaSafe && s.noSpriteLimits) flags |= PPU_FLAGS.noSpriteLimits;
   return flags;
 };

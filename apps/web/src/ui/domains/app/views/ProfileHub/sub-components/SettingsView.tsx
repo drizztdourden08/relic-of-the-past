@@ -45,6 +45,7 @@ const TALL_PRESETS = [
 
 const getAspectOptions = (s: GameSettings) => {
   const opts = [
+    { value: 'original', label: 'Original' },
     { value: 'auto', label: 'Auto' },
     { value: 'screen', label: 'Screen' },
     { value: 'wide', label: 'Wide' },
