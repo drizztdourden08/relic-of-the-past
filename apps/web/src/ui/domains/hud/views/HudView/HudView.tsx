@@ -6,11 +6,12 @@ import { HudMagicMeter } from '../../composites/HudMagicMeter';
 import { HudCurrentItem } from '../../composites/HudCurrentItem';
 import { HudCount } from '../../composites/HudCount';
 import { HudLife } from '../../compounds/HudLife';
+import { HudCountdownSlot } from './sub-components/HudCountdownSlot';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { aspectRatioValue } from '@app/lib/game/aspect-ratio';
 
 const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) => {
-  const { heartMode, magicMode, countLayout, ratio: hudRatio, customW, customH, showMaxInYellow } = useHudSettingsStore();
+  const { heartMode, magicMode, countLayout, countdownStyle, ratio: hudRatio, customW, customH, showMaxInYellow } = useHudSettingsStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(2);
@@ -155,6 +156,9 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
               spritesBase={spritesBase}
             />
           </HudBox>
+
+          {/* Bottom centre: the countdown of the digging game and the Super Bomb. It draws nothing until one runs. */}
+          <HudCountdownSlot variant={countdownStyle} scale={scale} spritesBase={spritesBase} />
       </HudBox>
     </HudBox>
   );

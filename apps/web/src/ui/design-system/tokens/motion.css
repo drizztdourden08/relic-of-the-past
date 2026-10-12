@@ -10,6 +10,8 @@
   --duration-float:   1.6s;   /* armed glyph bob, one half-cycle */
   --duration-glow-drift: 2.6s; /* armed glow wander, one half-cycle */
   --duration-mascot-hop: 2.4s; /* empty-slot mascot, one full there-and-back cycle */
+  --duration-slice-exit: 0.5s;  /* HUD countdown slice, fade and slide out */
+  --duration-slice-pulse: 1.1s; /* HUD countdown slice breath, one half-cycle */
   --ease-standard:    ease;
   --ease-emphasized:  cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast:   0.1s ease;

@@ -157,6 +157,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudHeartMode: 'original',
   hudMagicMode: 'original',
   hudCountLayout: 'centered',
+  hudCountdownStyle: 'pixel',
   hudPauseStyle: 'vanilla',
   hudPauseHighlight: 'box',
 

@@ -31,7 +31,7 @@ const hex = (value: number, pad = 2): string => `0x${value.toString(16).padStart
 const yn = (v: boolean | number): string => (v ? '✓' : '-');
 
 const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[] => {
-  const { mode, gameMode, hud, inventory, equipment, dungeonProgress, text, map, floorIndicator, saveMenu } = state;
+  const { mode, gameMode, hud, inventory, equipment, dungeonProgress, text, map, floorIndicator, countdown, saveMenu } = state;
   return [
     { title: 'Mode', rows: [
       { label: 'UI Mode', value: String(mode) },
@@ -95,6 +95,11 @@ const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[
       { label: 'Visible', value: yn(floorIndicator.isVisible) },
       { label: 'Timer', value: String(floorIndicator.timer) },
       { label: 'Floor', value: String(floorIndicator.floor) },
+    ] },
+    { title: 'Countdown', rows: [
+      { label: 'Running', value: yn(countdown.isRunning) },
+      { label: 'Seconds', value: String(countdown.seconds) },
+      { label: 'Frames', value: String(countdown.frames) },
     ] },
     { title: 'Save Menu', rows: [
       { label: 'Cursor', value: String(saveMenu.cursorPosition) },

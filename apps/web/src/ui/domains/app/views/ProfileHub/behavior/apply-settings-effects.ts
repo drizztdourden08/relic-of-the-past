@@ -42,6 +42,7 @@ const syncHudStore = (s: GameSettings): void => {
     heartMode: s.hudHeartMode,
     magicMode: s.hudMagicMode,
     countLayout: s.hudCountLayout,
+    countdownStyle: s.hudCountdownStyle,
     pauseStyle: s.hudPauseStyle,
     pauseHighlight: s.hudPauseHighlight,
     showMaxInYellow: s.showMaxItemsInYellow,
@@ -132,7 +133,7 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   }
 
   // Sync HUD settings to store for live rendering
-  if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'customHudAspectW' in patch || 'customHudAspectH' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch || 'hudPauseStyle' in patch || 'hudPauseHighlight' in patch) {
+  if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'customHudAspectW' in patch || 'customHudAspectH' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch || 'hudCountdownStyle' in patch || 'hudPauseStyle' in patch || 'hudPauseHighlight' in patch) {
     syncHudStore(next);
   }
   if (touchesDialogStore(patch)) {

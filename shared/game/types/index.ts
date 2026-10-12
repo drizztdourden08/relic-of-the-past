@@ -18,6 +18,7 @@ export type {
   World,
 } from './screen';
 export type {
+  CountdownState,
   DungeonProgressState,
   EquipmentState,
   FloorIndicatorState,

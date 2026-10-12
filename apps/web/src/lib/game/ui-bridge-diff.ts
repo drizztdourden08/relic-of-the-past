@@ -46,6 +46,9 @@ const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
   const af = a.floorIndicator, bf = b.floorIndicator;
   if (af.timer !== bf.timer || af.isVisible !== bf.isVisible) return true;
 
+  const ac = a.countdown, bc = b.countdown;
+  if (ac.seconds !== bc.seconds || ac.frames !== bc.frames) return true;
+
   const as_ = a.saveMenu, bs = b.saveMenu;
   if (as_.cursorPosition !== bs.cursorPosition || as_.sourceModule !== bs.sourceModule) return true;
 

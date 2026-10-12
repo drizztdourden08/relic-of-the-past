@@ -146,6 +146,12 @@ int WasmGetGameUIState(void) {
   b[126] = (uint8)GameHook_CapacityMax(1, link_arrow_upgrades);
   PutU16(b, 127, GameHook_WalletMax((enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999));
 
+  // ─── Bytes 129-130: HUD Countdown (digging game, Super Bomb) ───
+  // 129 is the seconds left, with the sign bit set while no countdown runs. 130 is the frame
+  // counter inside the current second: it reloads to 62 when a second comes off.
+  b[129] = super_bomb_indicator_unk2;
+  b[130] = super_bomb_indicator_unk1;
+
   return (int)g_ui_state_buf;
 }
 

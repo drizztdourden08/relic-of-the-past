@@ -1,0 +1,13 @@
+/* @layer renderer-hud @kind style */
+.hud-countdown {
+  position: relative;
+}
+
+/* The digits sit over the middle of the pie. */
+.hud-countdown__number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

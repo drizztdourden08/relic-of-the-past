@@ -133,6 +133,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',
+  'hudCountdownStyle',
   'hudPauseStyle',
   'hudPauseHighlight',
   // Haptics (JS-only, no WASM restart needed)

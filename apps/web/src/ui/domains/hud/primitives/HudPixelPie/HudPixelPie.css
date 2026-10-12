@@ -1,0 +1,15 @@
+/* @layer renderer-hud @kind style */
+
+/* One canvas pixel per game pixel, scaled up with no smoothing. */
+.hud-pixel-pie {
+  display: block;
+  image-rendering: pixelated;
+
+  /* The palette paint-grid reads. Opaque colours only: the pie never blends. */
+  --hud-pixel-pie-outline: var(--c-bg);
+  --hud-pixel-pie-backing: var(--c-layer);
+  --hud-pixel-pie-deep: var(--c-gold-deep);
+  --hud-pixel-pie-shade: var(--c-gold-shade);
+  --hud-pixel-pie-lit: var(--c-gold);
+  --hud-pixel-pie-bright: var(--c-gold-bright);
+}

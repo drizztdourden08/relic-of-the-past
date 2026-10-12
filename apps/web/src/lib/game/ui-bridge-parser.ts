@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /** Parses the raw WASM UI-state buffer into a typed GameUIState. */
 import type {
+  CountdownState,
   DungeonProgressState,
   EquipmentState,
   FloorIndicatorState,
@@ -169,6 +170,10 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const maxArrows = b[p + 126];
   const maxRupees = b[p + 127] | (b[p + 128] << 8);
 
+  // HUD countdown (bytes 129-130)
+  const countdownSeconds = b[p + 129];
+  const countdownFrames = b[p + 130];
+
   // Derive mode
   const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer, overworldScreenIndex);
 
@@ -207,13 +212,20 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
     isVisible: floorTimer > 0 && (mainModule === 7),
   };
 
+  // The game parks the seconds at 0xFF or 0xFE, sign bit set, while no countdown runs.
+  const countdown: CountdownState = {
+    seconds: countdownSeconds,
+    frames: countdownFrames,
+    isRunning: (countdownSeconds & 0x80) === 0,
+  };
+
   const saveMenu: SaveMenuState = {
     cursorPosition: subSubModule,
     sourceModule,
     progressIndicator,
   };
 
-  return { mode, gameMode, hud, inventory: inventoryState, equipment, dungeonProgress, text, map, floorIndicator, saveMenu };
+  return { mode, gameMode, hud, inventory: inventoryState, equipment, dungeonProgress, text, map, floorIndicator, countdown, saveMenu };
 };
 
 export { parseGameUIBuffer };
