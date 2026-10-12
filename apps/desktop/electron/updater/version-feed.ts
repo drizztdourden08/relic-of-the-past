@@ -3,7 +3,7 @@
  * Every installable version, for the picker.
  *
  * Velopack's own check only ever reports the newest applicable release, so the list
- * comes from the release index it publishes beside each release. That index carries
+ * comes from the release indexes published beside the releases. They carry
  * the checksums, which is why the picker cannot be built from the GitHub API alone:
  * an entry without its hash fails verification at install time.
  *
@@ -113,15 +113,21 @@ const listVersions = async (currentVersion: string, allowPrerelease: boolean): P
   const releases = (await readReleases()).filter((r) => !r.draft && (allowPrerelease || !r.prerelease));
   const byVersion = new Map(releases.map((r) => [r.tag_name.replace(/^v/, ''), r]));
 
-  // The newest index lists every release Velopack knew about when it was packed, so
-  // one fetch covers the whole history.
-  const withFeed = releases.find((r) => r.assets?.some((a) => a.name === FEED_FILE));
-  const feedUrl = withFeed?.assets?.find((a) => a.name === FEED_FILE)?.browser_download_url;
-  if (!feedUrl) return [];
-
-  const res = await fetch(feedUrl);
-  if (!res.ok) throw new Error(`Could not read the release index (${res.status})`);
-  const assets = parseFeed(await res.json());
+  // Each release's index is only a snapshot of the packages available when it was
+  // packed. A later stable hotfix can therefore omit an older pre-release entirely.
+  // Read each release's own entry, so an opt-in sees pre-releases across branches.
+  const feeds = await Promise.allSettled(releases.map(async (release) => {
+    const feedUrl = release.assets?.find((asset) => asset.name === FEED_FILE)?.browser_download_url;
+    if (!feedUrl) return [];
+    const res = await fetch(feedUrl);
+    if (!res.ok) throw new Error(`Could not read the release index (${res.status})`);
+    const version = release.tag_name.replace(/^v/, '');
+    return parseFeed(await res.json()).filter((asset) => asset.Version === version);
+  }));
+  const assets = feeds.flatMap((feed) => feed.status === 'fulfilled' ? feed.value : []);
+  if (!assets.length && feeds.some((feed) => feed.status === 'rejected')) {
+    throw new Error('Could not read the release indexes');
+  }
 
   // Both tables are needed before any row can be planned: a chain is only known once
   // every version between here and there has been seen.
