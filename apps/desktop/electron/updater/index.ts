@@ -57,36 +57,13 @@ const runCheck = async (mainWindow: BrowserWindow): Promise<UpdateInfo | null> =
   }
 
   try {
-    const found = await manager.checkForUpdatesAsync();
-    if (!found) {
-      available = null;
-      emit(mainWindow, 'updater:up-to-date');
-      return null;
-    }
-
-    // AllowVersionDowngrade also makes this check answer with an older build, so a
-    // machine on the newest release was told an earlier version "is available".
-    const target = found.TargetFullRelease;
-    if (compareVersions(target.Version, currentVersion()) <= 0) {
-      available = null;
-      await refreshVersions();
-      emit(mainWindow, 'updater:up-to-date');
-      return null;
-    }
-
-    // The version list is fetched alongside so the picker is populated when it opens.
-    available = {
-      version: target.Version,
-      releaseNotes: target.NotesMarkdown ?? '',
-      releaseDate: '',
-      // Velopack's result carries no asset list; the release listing below fills it in.
-      saveStates: { kind: 'unverifiable', why: 'not-published' },
-    };
-    await refreshVersions();
-    const listed = versions.find((v) => v.version === target.Version);
-    if (listed) available = asUpdateInfo(listed);
-
-    emit(mainWindow, 'updater:update-available', available);
+    // GithubSource checks one GitHub release. That can be the recently published
+    // stable hotfix even when a higher-numbered pre-release is available. Use the
+    // same version list as the picker for the badge and the install target.
+    const listed = (await refreshVersions()).find((v) => compareVersions(v.version, currentVersion()) > 0);
+    available = listed ? asUpdateInfo(listed) : null;
+    if (available) emit(mainWindow, 'updater:update-available', available);
+    else emit(mainWindow, 'updater:up-to-date');
     return available;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
